@@ -1,0 +1,51 @@
+{
+  "schema": "first-frozen-input-admission-owner-v1",
+  "finishedAt": "2026-10-06T05:01:40.620Z",
+  "roots": 31,
+  "originalPureAuditActualExit": 1,
+  "originalBlockers": 154,
+  "blockerGroups": {
+    "currentDownloadedArtifacts": 10,
+    "native26DerivedSlices": 40,
+    "nativePin94FsOutputs": 72,
+    "fourFilePrepareFsOutputs": 32
+  },
+  "originalExclusions": 0,
+  "originalEntries": 2906,
+  "originalReceipts": 740,
+  "originalAggregates": 9,
+  "current981VerifiedExact": true,
+  "current981IndexSha256": "cedbf58fb411c7a183c60d183f6d36da8c853236ec7711f0b3ad679da2c2f467",
+  "originalFailureAndRawPreserved": true,
+  "noCollection": true,
+  "fullG7Verified": false,
+  "fullG8Verified": false,
+  "productionRequests": 0,
+  "scope": "Preparation/admission evidence; original audit1/154 remains failure. Subsequent new dialect reader has separate records.",
+  "preservedCommandReceipts": [
+    {
+      "file": "original-full-frozen-audit.result.json",
+      "bytes": 1344,
+      "sha256": "7113b29924a791dbc5690b243af694e43d268a7f0a2c44b8c06ca9864a36aeaf",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null
+    },
+    {
+      "file": "prepare-data-reader.result.json",
+      "bytes": 1014,
+      "sha256": "926a828f4d260e8d53f362f41ef6ea867a5118b6c5c7e47f374e0374871b8fa5",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null
+    },
+    {
+      "file": "prepare-final-config.result.json",
+      "bytes": 1053,
+      "sha256": "85a851ede47e4633fcbd143cf8de38923aae6d342ca2afbe72d56a25dc45d45e",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null
+    }
+  ]
+}

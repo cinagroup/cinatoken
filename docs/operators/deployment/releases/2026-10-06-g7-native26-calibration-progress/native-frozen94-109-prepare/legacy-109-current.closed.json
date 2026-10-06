@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-06T04:35:50.636Z",
+  "finishedAt": "2026-10-06T04:35:50.732Z",
+  "executable": "git",
+  "args": [
+    "show",
+    "dc7be6f8597333151c450bae3ae15e6585e3b2eb:scripts/db/cutover/postgres-replay-reservations.native.test.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\legacy-109-current.stdout.log",
+    "bytes": 37096,
+    "sha256": "9cb9a57a7a3edaff9f7a66a9c547a83d6f90ee8938d9a4ad8370194586b4ebe6"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\legacy-109-current.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

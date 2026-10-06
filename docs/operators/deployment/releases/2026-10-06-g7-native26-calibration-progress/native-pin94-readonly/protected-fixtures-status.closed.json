@@ -1,0 +1,29 @@
+{
+  "at": "2026-10-06T04:30:04.609Z",
+  "finishedAt": "2026-10-06T04:30:04.704Z",
+  "executable": "git",
+  "args": [
+    "status",
+    "--short",
+    "--",
+    "scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs",
+    "scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs",
+    "scripts/db/cutover/postgres-replay-reservations.native.test.mjs",
+    "scripts/db/cutover/postgres-replay-reservations-backend-lifecycle-successor.native.test.mjs",
+    "scripts/db/cutover/postgres-shared-key-stats-claim-reader-v349.native.test.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\protected-fixtures-status.stdout.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\protected-fixtures-status.stderr.log",
+    "bytes": 160,
+    "sha256": "6e1eceb7157a6dd83e27b00cc96938a50132ed7fadf81d3f0954f8257e1ba406"
+  }
+}

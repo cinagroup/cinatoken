@@ -1,0 +1,24 @@
+{
+  "at": "2026-10-06T04:12:50.940Z",
+  "finishedAt": "2026-10-06T04:12:50.997Z",
+  "executable": "git",
+  "args": [
+    "cat-file",
+    "blob",
+    "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc:packages/core/src/storage/postgres-jsonb-batch-native.test.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\v3-source-step-87.stdout.log",
+  "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\v3-source-step-87.stderr.log",
+  "stdoutInfo": {
+    "bytes": 9719,
+    "sha256": "578819e5078941a87c867e107201901785f23a1863560d4b1cd58528faac8158"
+  },
+  "stderrInfo": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

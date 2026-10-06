@@ -1,0 +1,188 @@
+{
+  "schema": "cinatoken.native26-ci-independent-peer.next-failure-diagnosis.v1",
+  "at": "2026-10-06T04:23:40.127Z",
+  "headSha": "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc",
+  "baseSha": "473de5fc520fc7d64db700db88a76c7a6b45c241",
+  "step": 94,
+  "fixture": "scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs",
+  "fixtureSource": {
+    "headSha": "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc",
+    "bytes": 52435,
+    "sha256": "90115e4345b635f37378b0c3b5d26c15000275577e14c69f00e408845e0f9fe2",
+    "snapshot": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\v3-source-step-94.stdout.log"
+  },
+  "actualLocation": {
+    "line": 187,
+    "column": 14,
+    "source": "      assert.equal(report.sourceSha256.historicalFixture, historicalFixtureSha256);"
+  },
+  "pinnedExpected": {
+    "line": 41,
+    "source": "const historicalFixtureSha256 = '603646803c82d3209987260ad682a34169b4e53ca7b03b672d818e3a28d7cc13';",
+    "sha256": "603646803c82d3209987260ad682a34169b4e53ca7b03b672d818e3a28d7cc13"
+  },
+  "historicalInput": {
+    "file": "scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs",
+    "base": {
+      "sha": "473de5fc520fc7d64db700db88a76c7a6b45c241",
+      "blob": "359689d1534cbbee9ea7f7211909d02fe5b33b1f",
+      "bytes": 50146,
+      "sha256": "dfe004034784018eb9c70502e19a2192c45e1e8982a96c98b03626f72f7cce1d"
+    },
+    "head": {
+      "sha": "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc",
+      "blob": "359689d1534cbbee9ea7f7211909d02fe5b33b1f",
+      "bytes": 50146,
+      "sha256": "dfe004034784018eb9c70502e19a2192c45e1e8982a96c98b03626f72f7cce1d"
+    },
+    "unchangedBy34FileCommit": true,
+    "actualNativeReadMatchesHeadGitBytes": true
+  },
+  "originalFailure": {
+    "tap": {
+      "tests": 1,
+      "pass": 0,
+      "fail": 1,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "rawExitCodes": [
+      1
+    ],
+    "group": {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\group-step-94.raw.log",
+      "bytes": 9949,
+      "sha256": "891ba26d3b0605270c2b65aa7f3d21b6b1d19728c25643f7e515ef80de3fbed1",
+      "startStringOffset": 546537,
+      "endStringOffset": 556480
+    },
+    "failedStep": {
+      "completedAt": "2026-10-06T04:20:20Z",
+      "conclusion": "failure",
+      "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+      "number": 94,
+      "startedAt": "2026-10-06T04:20:17Z",
+      "status": "completed"
+    }
+  },
+  "executed26Targets": {
+    "count": 20,
+    "tapShapes": [
+      {
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    ]
+  },
+  "commands": [
+    {
+      "at": "2026-10-06T04:23:39.873Z",
+      "finishedAt": "2026-10-06T04:23:39.942Z",
+      "executable": "git",
+      "args": [
+        "cat-file",
+        "blob",
+        "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc:scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\diagnose-step94-historical-head.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\diagnose-step94-historical-head.stderr.log",
+      "stdoutInfo": {
+        "bytes": 50146,
+        "sha256": "dfe004034784018eb9c70502e19a2192c45e1e8982a96c98b03626f72f7cce1d"
+      },
+      "stderrInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "at": "2026-10-06T04:23:39.944Z",
+      "finishedAt": "2026-10-06T04:23:40.004Z",
+      "executable": "git",
+      "args": [
+        "cat-file",
+        "blob",
+        "473de5fc520fc7d64db700db88a76c7a6b45c241:scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\diagnose-step94-historical-base.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\diagnose-step94-historical-base.stderr.log",
+      "stdoutInfo": {
+        "bytes": 50146,
+        "sha256": "dfe004034784018eb9c70502e19a2192c45e1e8982a96c98b03626f72f7cce1d"
+      },
+      "stderrInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "at": "2026-10-06T04:23:40.007Z",
+      "finishedAt": "2026-10-06T04:23:40.065Z",
+      "executable": "git",
+      "args": [
+        "rev-parse",
+        "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc:scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\diagnose-step94-historical-head-blob.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\diagnose-step94-historical-head-blob.stderr.log",
+      "stdoutInfo": {
+        "bytes": 41,
+        "sha256": "c2bef4f2eb3bce74c06e48058f987bf58163306eae895dce60a8a7b387388ecb"
+      },
+      "stderrInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "at": "2026-10-06T04:23:40.067Z",
+      "finishedAt": "2026-10-06T04:23:40.122Z",
+      "executable": "git",
+      "args": [
+        "rev-parse",
+        "473de5fc520fc7d64db700db88a76c7a6b45c241:scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\diagnose-step94-historical-base-blob.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\diagnose-step94-historical-base-blob.stderr.log",
+      "stdoutInfo": {
+        "bytes": 41,
+        "sha256": "c2bef4f2eb3bce74c06e48058f987bf58163306eae895dce60a8a7b387388ecb"
+      },
+      "stderrInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "conclusion": "The original step 94 successor has a historical-source pin mismatch at line 187; the historical input is byte-identical in base 473 and submitted dcc6. This next failure was exposed after the native chain advanced, and is not caused by changing that historical input in the 34-file commit.",
+  "scope": {
+    "repoWrites": 0,
+    "mdWrites": 0,
+    "gitWrites": 0,
+    "ciWrites": 0,
+    "appTestsRun": 0,
+    "dbWrites": 0,
+    "productionWrites": 0
+  }
+}

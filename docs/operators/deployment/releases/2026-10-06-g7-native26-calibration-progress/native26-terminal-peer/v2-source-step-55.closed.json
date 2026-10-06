@@ -1,0 +1,24 @@
+{
+  "at": "2026-10-06T04:12:00.711Z",
+  "finishedAt": "2026-10-06T04:12:00.761Z",
+  "executable": "git",
+  "args": [
+    "cat-file",
+    "blob",
+    "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc:scripts/db/cutover/postgres-complete-text-buyer-counter-cutover-v367.native.test.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\v2-source-step-55.stdout.log",
+  "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\v2-source-step-55.stderr.log",
+  "stdoutInfo": {
+    "bytes": 54887,
+    "sha256": "f4f8d4f0ee2d785818f24803b2f3d6cd771465d62347cf8473336351c3767e3c"
+  },
+  "stderrInfo": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

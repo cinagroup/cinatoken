@@ -1,0 +1,56 @@
+{
+  "schema": "v364-direct-address-repair-local-contract-v1",
+  "closed": true,
+  "actualLocalReviewOutcome": 0,
+  "checks": [
+    {
+      "name": "target-matches-original-gateway-and-holder-origin-path",
+      "actualOutcome": 0
+    },
+    {
+      "name": "actual-original-guard-rejects-failed-local-address",
+      "actualOutcome": 0
+    },
+    {
+      "name": "actual-original-guard-rejects-query-address",
+      "actualOutcome": 0
+    },
+    {
+      "name": "only-two-address-assignments-and-Request-target-changed-in-helper-AST",
+      "actualOutcome": 0
+    },
+    {
+      "name": "Node-Request-method-and-all-headers-preserved",
+      "actualOutcome": 0
+    },
+    {
+      "name": "Node-in-memory-Request-body-preserved",
+      "actualOutcome": 0
+    },
+    {
+      "name": "Node-Request-signal-remains-linked",
+      "actualOutcome": 0
+    },
+    {
+      "name": "other-five-package-workflow-source-bytes-unchanged",
+      "actualOutcome": 0
+    },
+    {
+      "name": "only-helper-descriptor-and-current-repair-preparation-head-changed-in-sealed-package",
+      "actualOutcome": 0
+    },
+    {
+      "name": "protected21-and-installed3-source-hashes-unchanged",
+      "actualOutcome": 0
+    }
+  ],
+  "originalGuard": "url.origin !== URL_ORIGIN || url.pathname !== URL_PATH || url.search || request.method !== \"POST\"",
+  "canonicalTarget": "https://holder.service.invalid/complete-text-attempt",
+  "originalStaticAdmissionGuardUsed": true,
+  "NodeConstructorControlOnly": true,
+  "realWorkerdExecuted": false,
+  "holderApplicationExecuted": false,
+  "helperApplicationExecuted": false,
+  "productionRequests": 0,
+  "oldRuntimeFailureUnchanged": true
+}

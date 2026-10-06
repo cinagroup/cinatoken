@@ -1,0 +1,1951 @@
+{
+  "closed": true,
+  "actualReadAnalysisOutcome": 0,
+  "runtimeOutcome": 1,
+  "originalStrictOutcome": 1,
+  "actualExecutorOutcome": 1,
+  "actualProcessExit": 1,
+  "runnerOutcomeCode": 1,
+  "files": [
+    {
+      "file": "closed-result.json",
+      "bytes": 22206,
+      "sha256": "f76dc98765d470f26434bb611bfceb098806b8b8987a0ec8d2088a684ff61a8d"
+    },
+    {
+      "file": "executor.closed.json",
+      "bytes": 5901,
+      "sha256": "9b505b71486eb69fa34203fd4e1c7d173a1aa12de2b0aa55d32552c5dba47113"
+    },
+    {
+      "file": "events.json.gz",
+      "bytes": 43245,
+      "sha256": "0d8d89c1a9e7b70bd09a2e0298f73631bbcfad4f8d273cf2f88548f7b050cbe7"
+    }
+  ],
+  "eventDecoded": {
+    "bytes": 575797,
+    "sha256": "504c40a249279483807f82fec2221690e772bbbcf7e68ed85b59fe9005cb1c51",
+    "count": 2434
+  },
+  "originalStreamAndCommandNotReexecuted": true,
+  "sourceModified": false,
+  "productionRequests": 0,
+  "closure": {
+    "authority": "this executor",
+    "subreaperEnabled": true,
+    "directChildReaped": true,
+    "groupGone": true,
+    "leftoverGroupKilled": false,
+    "signalAttempts": [],
+    "reapedDescendants": [
+      {
+        "pid": 2633,
+        "startTimeTicks": "22301",
+        "waitStatus": 0,
+        "waitExitCode": 0,
+        "source": "individually identified adopted zombie"
+      },
+      {
+        "pid": 2670,
+        "startTimeTicks": "22334",
+        "waitStatus": 0,
+        "waitExitCode": 0,
+        "source": "individually identified adopted zombie"
+      },
+      {
+        "pid": 2678,
+        "startTimeTicks": "22337",
+        "waitStatus": 0,
+        "waitExitCode": 0,
+        "source": "individually identified adopted zombie"
+      },
+      {
+        "pid": 2685,
+        "startTimeTicks": "22405",
+        "waitStatus": 0,
+        "waitExitCode": 0,
+        "source": "individually identified adopted zombie"
+      }
+    ],
+    "processCensus": [
+      {
+        "label": "before-initial-adopted-reap",
+        "elapsedMs": 37331.42770999999,
+        "pgrp": 2597,
+        "session": 2597,
+        "members": [
+          {
+            "pid": 2633,
+            "comm": "esbuild",
+            "state": "Z",
+            "ppid": 2595,
+            "pgrp": 2597,
+            "session": 2597,
+            "startTimeTicks": "22301"
+          },
+          {
+            "pid": 2670,
+            "comm": "esbuild",
+            "state": "Z",
+            "ppid": 2595,
+            "pgrp": 2597,
+            "session": 2597,
+            "startTimeTicks": "22334"
+          },
+          {
+            "pid": 2678,
+            "comm": "esbuild",
+            "state": "Z",
+            "ppid": 2595,
+            "pgrp": 2597,
+            "session": 2597,
+            "startTimeTicks": "22337"
+          },
+          {
+            "pid": 2685,
+            "comm": "esbuild",
+            "state": "Z",
+            "ppid": 2595,
+            "pgrp": 2597,
+            "session": 2597,
+            "startTimeTicks": "22405"
+          }
+        ],
+        "live": 0,
+        "zombies": 4,
+        "unknown": [],
+        "complete": true,
+        "groupExists": true
+      },
+      {
+        "label": "after-initial-adopted-reap",
+        "elapsedMs": 37337.531465000015,
+        "pgrp": 2597,
+        "session": 2597,
+        "members": [],
+        "live": 0,
+        "zombies": 0,
+        "unknown": [],
+        "complete": true,
+        "groupExists": false
+      },
+      {
+        "label": "after-term-before-reap",
+        "elapsedMs": 37343.387799,
+        "pgrp": 2597,
+        "session": 2597,
+        "members": [],
+        "live": 0,
+        "zombies": 0,
+        "unknown": [],
+        "complete": true,
+        "groupExists": false
+      },
+      {
+        "label": "after-term-after-reap",
+        "elapsedMs": 37349.21350699997,
+        "pgrp": 2597,
+        "session": 2597,
+        "members": [],
+        "live": 0,
+        "zombies": 0,
+        "unknown": [],
+        "complete": true,
+        "groupExists": false
+      },
+      {
+        "label": "final-adopt-drain",
+        "elapsedMs": 37355.10705099998,
+        "pgrp": 2597,
+        "session": 2597,
+        "members": [],
+        "live": 0,
+        "zombies": 0,
+        "unknown": [],
+        "complete": true,
+        "groupExists": false
+      },
+      {
+        "label": "final-post-reap",
+        "elapsedMs": 37361.077136999964,
+        "pgrp": 2597,
+        "session": 2597,
+        "members": [],
+        "live": 0,
+        "zombies": 0,
+        "unknown": [],
+        "complete": true,
+        "groupExists": false
+      }
+    ],
+    "apiDisposalReported": true,
+    "outerUnforcedGroupClose": true,
+    "gracefulWorkerdExitProven": false,
+    "miniflareDisposeMaySendSIGKILL": true,
+    "errors": []
+  },
+  "results": [
+    {
+      "caseId": "node-http-calibration-destroy",
+      "actualExit": 0,
+      "closed": true,
+      "hostKinds": {
+        "socket-connect": 1,
+        "first-frame": 1,
+        "client-cancel-invoke": 1,
+        "response-aborted": 1,
+        "response-close": 1,
+        "request-close": 1,
+        "socket-close": 1,
+        "client-cancel-settled": 1,
+        "server-socket-end": 1,
+        "server-response-close": 1,
+        "server-socket-close": 1
+      },
+      "workerKinds": {},
+      "cancellationRelevantWorkerRows": [],
+      "releaseReadObservations": [],
+      "closeEvents": [
+        {
+          "caseId": "node-http-calibration-destroy",
+          "kind": "client-cancel-invoke",
+          "hostMs": 3420.11812,
+          "wallMs": 1791252315862,
+          "mode": "destroy"
+        },
+        {
+          "caseId": "node-http-calibration-destroy",
+          "kind": "response-close",
+          "hostMs": 3420.547591,
+          "wallMs": 1791252315862,
+          "complete": false,
+          "destroyed": true
+        },
+        {
+          "caseId": "node-http-calibration-destroy",
+          "kind": "request-close",
+          "hostMs": 3420.8343649999997,
+          "wallMs": 1791252315863,
+          "destroyed": true
+        },
+        {
+          "caseId": "node-http-calibration-destroy",
+          "kind": "socket-close",
+          "hostMs": 3420.984365,
+          "wallMs": 1791252315863,
+          "hadError": false,
+          "destroyed": true,
+          "bytesRead": 158,
+          "bytesWritten": 538
+        },
+        {
+          "caseId": "node-http-calibration-destroy",
+          "kind": "client-cancel-settled",
+          "hostMs": 3421.052642,
+          "wallMs": 1791252315863,
+          "requestDestroyed": true,
+          "responseDestroyed": true,
+          "responseComplete": false,
+          "socketDestroyed": true
+        },
+        {
+          "caseId": "node-http-calibration-destroy",
+          "kind": "server-response-close",
+          "hostMs": 3421.646119,
+          "wallMs": 1791252315863,
+          "writableFinished": false
+        },
+        {
+          "caseId": "node-http-calibration-destroy",
+          "kind": "server-socket-close",
+          "hostMs": 3421.720477,
+          "wallMs": 1791252315864,
+          "hadError": false
+        }
+      ]
+    },
+    {
+      "caseId": "node-http-calibration-rst",
+      "actualExit": 0,
+      "closed": true,
+      "hostKinds": {
+        "socket-connect": 1,
+        "first-frame": 1,
+        "client-cancel-invoke": 1,
+        "client-rst-api-invoke": 1,
+        "response-aborted": 1,
+        "response-close": 1,
+        "request-close": 1,
+        "socket-close": 1,
+        "client-cancel-settled": 1,
+        "server-socket-error": 1,
+        "server-response-close": 1,
+        "server-socket-close": 1
+      },
+      "workerKinds": {},
+      "cancellationRelevantWorkerRows": [],
+      "releaseReadObservations": [],
+      "closeEvents": [
+        {
+          "caseId": "node-http-calibration-rst",
+          "kind": "client-cancel-invoke",
+          "hostMs": 3424.725759,
+          "wallMs": 1791252315867,
+          "mode": "rst"
+        },
+        {
+          "caseId": "node-http-calibration-rst",
+          "kind": "client-rst-api-invoke",
+          "hostMs": 3424.820255,
+          "wallMs": 1791252315867
+        },
+        {
+          "caseId": "node-http-calibration-rst",
+          "kind": "response-close",
+          "hostMs": 3425.041778,
+          "wallMs": 1791252315867,
+          "complete": false,
+          "destroyed": true
+        },
+        {
+          "caseId": "node-http-calibration-rst",
+          "kind": "request-close",
+          "hostMs": 3425.133038,
+          "wallMs": 1791252315867,
+          "destroyed": true
+        },
+        {
+          "caseId": "node-http-calibration-rst",
+          "kind": "socket-close",
+          "hostMs": 3425.245417,
+          "wallMs": 1791252315867,
+          "hadError": false,
+          "destroyed": true,
+          "bytesRead": 158,
+          "bytesWritten": 538
+        },
+        {
+          "caseId": "node-http-calibration-rst",
+          "kind": "client-cancel-settled",
+          "hostMs": 3425.296633,
+          "wallMs": 1791252315867,
+          "requestDestroyed": true,
+          "responseDestroyed": true,
+          "responseComplete": false,
+          "socketDestroyed": true
+        },
+        {
+          "caseId": "node-http-calibration-rst",
+          "kind": "server-response-close",
+          "hostMs": 3425.818065,
+          "wallMs": 1791252315868,
+          "writableFinished": false
+        },
+        {
+          "caseId": "node-http-calibration-rst",
+          "kind": "server-socket-close",
+          "hostMs": 3425.842921,
+          "wallMs": 1791252315868,
+          "hadError": true
+        }
+      ]
+    },
+    {
+      "caseId": "locked-bare-destroy",
+      "actualExit": 1,
+      "closed": true,
+      "originalWindow": {
+        "pollCount": 100,
+        "sleepMs": 10,
+        "elapsedMs": 1274.1735669999998,
+        "actual": null,
+        "expected": "observed",
+        "actualExit": 1
+      },
+      "tail": {
+        "elapsedMs": 4038.6711730000006,
+        "reads": 76,
+        "actual": null,
+        "usedForPass": false
+      },
+      "finalPreDisposeSnapshot": {
+        "cancel": null,
+        "release": null,
+        "accepted": "one",
+        "usedForPass": false
+      },
+      "hostKinds": {
+        "phase": 9,
+        "miniflare-log": 2,
+        "proc-census": 3,
+        "socket-connect": 1,
+        "workerd-log": 12,
+        "first-frame": 1,
+        "observer-kv-get-invoke": 182,
+        "observer-kv-get-settled": 182,
+        "client-cancel-invoke": 1,
+        "response-aborted": 1,
+        "response-close": 1,
+        "request-close": 1,
+        "socket-close": 1,
+        "client-cancel-settled": 1,
+        "pre-dispose-kv-snapshot": 1,
+        "dispose-invoke": 1,
+        "dispose-fulfilled": 1,
+        "case-closed": 1
+      },
+      "workerKinds": {
+        "signal-initial": 1,
+        "kv-invoke": 5,
+        "kv-fulfilled": 5
+      },
+      "cancellationRelevantWorkerRows": [
+        {
+          "caseId": "locked-bare-destroy",
+          "kind": "workerd-log",
+          "hostMs": 3691.283343,
+          "wallMs": 1791252316133,
+          "phase": "streaming",
+          "timestamp": 1791252316133,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"signal-initial\",\"wallMs\":1791252316132,\"aborted\":false}",
+          "diagnostic": {
+            "boundary": "holder",
+            "event": "signal-initial",
+            "wallMs": 1791252316132,
+            "aborted": false
+          }
+        }
+      ],
+      "releaseReadObservations": [
+        {
+          "caseId": "locked-bare-destroy",
+          "kind": "workerd-log",
+          "hostMs": 3698.181211,
+          "wallMs": 1791252316140,
+          "phase": "streaming",
+          "timestamp": 1791252316140,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-invoke\",\"wallMs\":1791252316140,\"operation\":2,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":1}",
+          "diagnostic": {
+            "boundary": "holder",
+            "event": "kv-invoke",
+            "wallMs": 1791252316140,
+            "operation": 2,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 1
+          }
+        },
+        {
+          "caseId": "locked-bare-destroy",
+          "kind": "workerd-log",
+          "hostMs": 3727.439007,
+          "wallMs": 1791252316169,
+          "phase": "streaming",
+          "timestamp": 1791252316141,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-fulfilled\",\"wallMs\":1791252316141,\"operation\":2,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":1}",
+          "diagnostic": {
+            "boundary": "holder",
+            "event": "kv-fulfilled",
+            "wallMs": 1791252316141,
+            "operation": 2,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 1
+          }
+        },
+        {
+          "caseId": "locked-bare-destroy",
+          "kind": "workerd-log",
+          "hostMs": 4777.402625,
+          "wallMs": 1791252317219,
+          "phase": "original-poll",
+          "timestamp": 1791252317219,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-invoke\",\"wallMs\":1791252317219,\"operation\":101,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":100}",
+          "diagnostic": {
+            "boundary": "holder",
+            "event": "kv-invoke",
+            "wallMs": 1791252317219,
+            "operation": 101,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 100
+          }
+        },
+        {
+          "caseId": "locked-bare-destroy",
+          "kind": "workerd-log",
+          "hostMs": 4777.451456,
+          "wallMs": 1791252317219,
+          "phase": "original-poll",
+          "timestamp": 1791252317219,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-fulfilled\",\"wallMs\":1791252317219,\"operation\":101,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":100}",
+          "diagnostic": {
+            "boundary": "holder",
+            "event": "kv-fulfilled",
+            "wallMs": 1791252317219,
+            "operation": 101,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 100
+          }
+        },
+        {
+          "caseId": "locked-bare-destroy",
+          "kind": "workerd-log",
+          "hostMs": 5847.030332,
+          "wallMs": 1791252318289,
+          "phase": "diagnostic-tail",
+          "timestamp": 1791252318289,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-invoke\",\"wallMs\":1791252318289,\"operation\":201,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":200}",
+          "diagnostic": {
+            "boundary": "holder",
+            "event": "kv-invoke",
+            "wallMs": 1791252318289,
+            "operation": 201,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 200
+          }
+        },
+        {
+          "caseId": "locked-bare-destroy",
+          "kind": "workerd-log",
+          "hostMs": 5847.495875,
+          "wallMs": 1791252318289,
+          "phase": "diagnostic-tail",
+          "timestamp": 1791252318289,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-fulfilled\",\"wallMs\":1791252318289,\"operation\":201,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":200}",
+          "diagnostic": {
+            "boundary": "holder",
+            "event": "kv-fulfilled",
+            "wallMs": 1791252318289,
+            "operation": 201,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 200
+          }
+        },
+        {
+          "caseId": "locked-bare-destroy",
+          "kind": "workerd-log",
+          "hostMs": 6913.659022,
+          "wallMs": 1791252319356,
+          "phase": "diagnostic-tail",
+          "timestamp": 1791252319355,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-invoke\",\"wallMs\":1791252319355,\"operation\":301,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":300}",
+          "diagnostic": {
+            "boundary": "holder",
+            "event": "kv-invoke",
+            "wallMs": 1791252319355,
+            "operation": 301,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 300
+          }
+        },
+        {
+          "caseId": "locked-bare-destroy",
+          "kind": "workerd-log",
+          "hostMs": 6914.009675,
+          "wallMs": 1791252319356,
+          "phase": "diagnostic-tail",
+          "timestamp": 1791252319356,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-fulfilled\",\"wallMs\":1791252319356,\"operation\":301,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":300}",
+          "diagnostic": {
+            "boundary": "holder",
+            "event": "kv-fulfilled",
+            "wallMs": 1791252319356,
+            "operation": 301,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 300
+          }
+        }
+      ],
+      "closeEvents": [
+        {
+          "caseId": "locked-bare-destroy",
+          "kind": "client-cancel-invoke",
+          "hostMs": 3734.839161,
+          "wallMs": 1791252316177,
+          "mode": "destroy"
+        },
+        {
+          "caseId": "locked-bare-destroy",
+          "kind": "response-close",
+          "hostMs": 3735.1745659999997,
+          "wallMs": 1791252316177,
+          "complete": false,
+          "destroyed": true
+        },
+        {
+          "caseId": "locked-bare-destroy",
+          "kind": "request-close",
+          "hostMs": 3735.6756399999995,
+          "wallMs": 1791252316178,
+          "destroyed": true
+        },
+        {
+          "caseId": "locked-bare-destroy",
+          "kind": "socket-close",
+          "hostMs": 3735.760749,
+          "wallMs": 1791252316178,
+          "hadError": false,
+          "destroyed": true,
+          "bytesRead": 127,
+          "bytesWritten": 538
+        },
+        {
+          "caseId": "locked-bare-destroy",
+          "kind": "client-cancel-settled",
+          "hostMs": 3735.812506,
+          "wallMs": 1791252316178,
+          "requestDestroyed": true,
+          "responseDestroyed": true,
+          "responseComplete": false,
+          "socketDestroyed": true
+        },
+        {
+          "caseId": "locked-bare-destroy",
+          "kind": "dispose-invoke",
+          "hostMs": 9065.274449,
+          "wallMs": 1791252321507,
+          "reason": "case-finally",
+          "nativeRuntimeDisposeMaySendSIGKILL": true
+        },
+        {
+          "caseId": "locked-bare-destroy",
+          "kind": "dispose-fulfilled",
+          "hostMs": 9073.151949000001,
+          "wallMs": 1791252321515,
+          "reason": "case-finally",
+          "gracefulRuntimeExitProven": false
+        }
+      ]
+    },
+    {
+      "caseId": "locked-bare-rst",
+      "actualExit": 1,
+      "closed": true,
+      "originalWindow": {
+        "pollCount": 100,
+        "sleepMs": 10,
+        "elapsedMs": 1227.3664480000007,
+        "actual": null,
+        "expected": "observed",
+        "actualExit": 1
+      },
+      "tail": {
+        "elapsedMs": 4033.7517499999994,
+        "reads": 76,
+        "actual": null,
+        "usedForPass": false
+      },
+      "finalPreDisposeSnapshot": {
+        "cancel": null,
+        "release": null,
+        "accepted": "one",
+        "usedForPass": false
+      },
+      "hostKinds": {
+        "phase": 9,
+        "miniflare-log": 2,
+        "proc-census": 3,
+        "socket-connect": 1,
+        "workerd-log": 6,
+        "first-frame": 1,
+        "observer-kv-get-invoke": 182,
+        "observer-kv-get-settled": 182,
+        "client-cancel-invoke": 1,
+        "client-rst-api-invoke": 1,
+        "response-aborted": 1,
+        "response-close": 1,
+        "request-close": 1,
+        "socket-close": 1,
+        "client-cancel-settled": 1,
+        "pre-dispose-kv-snapshot": 1,
+        "dispose-invoke": 1,
+        "dispose-fulfilled": 1,
+        "case-closed": 1
+      },
+      "workerKinds": {
+        "signal-initial": 1,
+        "kv-invoke": 2,
+        "kv-fulfilled": 2,
+        "signal-abort": 1
+      },
+      "cancellationRelevantWorkerRows": [
+        {
+          "caseId": "locked-bare-rst",
+          "kind": "workerd-log",
+          "hostMs": 9302.856217,
+          "wallMs": 1791252321745,
+          "phase": "streaming",
+          "timestamp": 1791252321743,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"signal-initial\",\"wallMs\":1791252321743,\"aborted\":false}",
+          "diagnostic": {
+            "boundary": "holder",
+            "event": "signal-initial",
+            "wallMs": 1791252321743,
+            "aborted": false
+          }
+        },
+        {
+          "caseId": "locked-bare-rst",
+          "kind": "workerd-log",
+          "hostMs": 9341.066005,
+          "wallMs": 1791252321783,
+          "phase": "original-poll",
+          "timestamp": 1791252321782,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"signal-abort\",\"wallMs\":1791252321782,\"aborted\":true}",
+          "diagnostic": {
+            "boundary": "holder",
+            "event": "signal-abort",
+            "wallMs": 1791252321782,
+            "aborted": true
+          }
+        }
+      ],
+      "releaseReadObservations": [
+        {
+          "caseId": "locked-bare-rst",
+          "kind": "workerd-log",
+          "hostMs": 9318.001965000001,
+          "wallMs": 1791252321760,
+          "phase": "streaming",
+          "timestamp": 1791252321760,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-invoke\",\"wallMs\":1791252321760,\"operation\":2,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":1}",
+          "diagnostic": {
+            "boundary": "holder",
+            "event": "kv-invoke",
+            "wallMs": 1791252321760,
+            "operation": 2,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 1
+          }
+        },
+        {
+          "caseId": "locked-bare-rst",
+          "kind": "workerd-log",
+          "hostMs": 9336.230231000001,
+          "wallMs": 1791252321778,
+          "phase": "streaming",
+          "timestamp": 1791252321762,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-fulfilled\",\"wallMs\":1791252321762,\"operation\":2,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":1}",
+          "diagnostic": {
+            "boundary": "holder",
+            "event": "kv-fulfilled",
+            "wallMs": 1791252321762,
+            "operation": 2,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 1
+          }
+        }
+      ],
+      "closeEvents": [
+        {
+          "caseId": "locked-bare-rst",
+          "kind": "client-cancel-invoke",
+          "hostMs": 9338.899136,
+          "wallMs": 1791252321781,
+          "mode": "rst"
+        },
+        {
+          "caseId": "locked-bare-rst",
+          "kind": "client-rst-api-invoke",
+          "hostMs": 9338.947176000001,
+          "wallMs": 1791252321781
+        },
+        {
+          "caseId": "locked-bare-rst",
+          "kind": "response-close",
+          "hostMs": 9339.210196,
+          "wallMs": 1791252321781,
+          "complete": false,
+          "destroyed": true
+        },
+        {
+          "caseId": "locked-bare-rst",
+          "kind": "request-close",
+          "hostMs": 9339.382918000001,
+          "wallMs": 1791252321781,
+          "destroyed": true
+        },
+        {
+          "caseId": "locked-bare-rst",
+          "kind": "socket-close",
+          "hostMs": 9339.475931,
+          "wallMs": 1791252321781,
+          "hadError": false,
+          "destroyed": true,
+          "bytesRead": 127,
+          "bytesWritten": 538
+        },
+        {
+          "caseId": "locked-bare-rst",
+          "kind": "client-cancel-settled",
+          "hostMs": 9339.52381,
+          "wallMs": 1791252321781,
+          "requestDestroyed": true,
+          "responseDestroyed": true,
+          "responseComplete": false,
+          "socketDestroyed": true
+        },
+        {
+          "caseId": "locked-bare-rst",
+          "kind": "dispose-invoke",
+          "hostMs": 14622.773016000001,
+          "wallMs": 1791252327065,
+          "reason": "case-finally",
+          "nativeRuntimeDisposeMaySendSIGKILL": true
+        },
+        {
+          "caseId": "locked-bare-rst",
+          "kind": "dispose-fulfilled",
+          "hostMs": 14635.533257000001,
+          "wallMs": 1791252327077,
+          "reason": "case-finally",
+          "gracefulRuntimeExitProven": false
+        }
+      ]
+    },
+    {
+      "caseId": "locked-direct-destroy",
+      "actualExit": 1,
+      "closed": true,
+      "originalWindow": {
+        "pollCount": 100,
+        "sleepMs": 10,
+        "elapsedMs": 1251.1428619999988,
+        "actual": null,
+        "expected": "observed",
+        "actualExit": 1
+      },
+      "tail": {
+        "elapsedMs": 4022.962382999998,
+        "reads": 76,
+        "actual": null,
+        "usedForPass": false
+      },
+      "finalPreDisposeSnapshot": {
+        "cancel": null,
+        "release": null,
+        "accepted": "one",
+        "usedForPass": false
+      },
+      "hostKinds": {
+        "phase": 9,
+        "miniflare-log": 2,
+        "proc-census": 3,
+        "socket-connect": 1,
+        "workerd-log": 15,
+        "first-frame": 1,
+        "observer-kv-get-invoke": 182,
+        "observer-kv-get-settled": 182,
+        "client-cancel-invoke": 1,
+        "response-aborted": 1,
+        "response-close": 1,
+        "request-close": 1,
+        "socket-close": 1,
+        "client-cancel-settled": 1,
+        "pre-dispose-kv-snapshot": 1,
+        "dispose-invoke": 1,
+        "dispose-fulfilled": 1,
+        "case-closed": 1
+      },
+      "workerKinds": {
+        "signal-initial": 3,
+        "binding-fetch": 1,
+        "kv-invoke": 5,
+        "kv-fulfilled": 5
+      },
+      "cancellationRelevantWorkerRows": [
+        {
+          "caseId": "locked-direct-destroy",
+          "kind": "workerd-log",
+          "hostMs": 14859.357993000001,
+          "wallMs": 1791252327301,
+          "phase": "streaming",
+          "timestamp": 1791252327301,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"gateway\",\"event\":\"signal-initial\",\"wallMs\":1791252327301,\"signalBoundary\":\"incoming\",\"aborted\":false}",
+          "diagnostic": {
+            "boundary": "gateway",
+            "event": "signal-initial",
+            "wallMs": 1791252327301,
+            "signalBoundary": "incoming",
+            "aborted": false
+          }
+        },
+        {
+          "caseId": "locked-direct-destroy",
+          "kind": "workerd-log",
+          "hostMs": 14859.673371,
+          "wallMs": 1791252327302,
+          "phase": "streaming",
+          "timestamp": 1791252327301,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"gateway\",\"event\":\"signal-initial\",\"wallMs\":1791252327301,\"signalBoundary\":\"forwarded-request-object\",\"aborted\":false}",
+          "diagnostic": {
+            "boundary": "gateway",
+            "event": "signal-initial",
+            "wallMs": 1791252327301,
+            "signalBoundary": "forwarded-request-object",
+            "aborted": false
+          }
+        },
+        {
+          "caseId": "locked-direct-destroy",
+          "kind": "workerd-log",
+          "hostMs": 14859.879625000001,
+          "wallMs": 1791252327302,
+          "phase": "streaming",
+          "timestamp": 1791252327302,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"signal-initial\",\"wallMs\":1791252327302,\"aborted\":false}",
+          "diagnostic": {
+            "boundary": "holder",
+            "event": "signal-initial",
+            "wallMs": 1791252327302,
+            "aborted": false
+          }
+        }
+      ],
+      "releaseReadObservations": [
+        {
+          "caseId": "locked-direct-destroy",
+          "kind": "workerd-log",
+          "hostMs": 14867.812189,
+          "wallMs": 1791252327310,
+          "phase": "streaming",
+          "timestamp": 1791252327310,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-invoke\",\"wallMs\":1791252327310,\"operation\":2,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":1}",
+          "diagnostic": {
+            "boundary": "holder",
+            "event": "kv-invoke",
+            "wallMs": 1791252327310,
+            "operation": 2,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 1
+          }
+        },
+        {
+          "caseId": "locked-direct-destroy",
+          "kind": "workerd-log",
+          "hostMs": 14883.652942,
+          "wallMs": 1791252327325,
+          "phase": "streaming",
+          "timestamp": 1791252327311,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-fulfilled\",\"wallMs\":1791252327311,\"operation\":2,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":1}",
+          "diagnostic": {
+            "boundary": "holder",
+            "event": "kv-fulfilled",
+            "wallMs": 1791252327311,
+            "operation": 2,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 1
+          }
+        },
+        {
+          "caseId": "locked-direct-destroy",
+          "kind": "workerd-log",
+          "hostMs": 15968.849774,
+          "wallMs": 1791252328411,
+          "phase": "original-poll",
+          "timestamp": 1791252328411,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-invoke\",\"wallMs\":1791252328411,\"operation\":101,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":100}",
+          "diagnostic": {
+            "boundary": "holder",
+            "event": "kv-invoke",
+            "wallMs": 1791252328411,
+            "operation": 101,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 100
+          }
+        },
+        {
+          "caseId": "locked-direct-destroy",
+          "kind": "workerd-log",
+          "hostMs": 15969.261191,
+          "wallMs": 1791252328411,
+          "phase": "original-poll",
+          "timestamp": 1791252328411,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-fulfilled\",\"wallMs\":1791252328411,\"operation\":101,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":100}",
+          "diagnostic": {
+            "boundary": "holder",
+            "event": "kv-fulfilled",
+            "wallMs": 1791252328411,
+            "operation": 101,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 100
+          }
+        },
+        {
+          "caseId": "locked-direct-destroy",
+          "kind": "workerd-log",
+          "hostMs": 17039.224618,
+          "wallMs": 1791252329481,
+          "phase": "diagnostic-tail",
+          "timestamp": 1791252329481,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-invoke\",\"wallMs\":1791252329481,\"operation\":201,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":200}",
+          "diagnostic": {
+            "boundary": "holder",
+            "event": "kv-invoke",
+            "wallMs": 1791252329481,
+            "operation": 201,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 200
+          }
+        },
+        {
+          "caseId": "locked-direct-destroy",
+          "kind": "workerd-log",
+          "hostMs": 17041.445827,
+          "wallMs": 1791252329483,
+          "phase": "diagnostic-tail",
+          "timestamp": 1791252329483,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-fulfilled\",\"wallMs\":1791252329483,\"operation\":201,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":200}",
+          "diagnostic": {
+            "boundary": "holder",
+            "event": "kv-fulfilled",
+            "wallMs": 1791252329483,
+            "operation": 201,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 200
+          }
+        },
+        {
+          "caseId": "locked-direct-destroy",
+          "kind": "workerd-log",
+          "hostMs": 18103.136199999997,
+          "wallMs": 1791252330545,
+          "phase": "diagnostic-tail",
+          "timestamp": 1791252330545,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-invoke\",\"wallMs\":1791252330545,\"operation\":301,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":300}",
+          "diagnostic": {
+            "boundary": "holder",
+            "event": "kv-invoke",
+            "wallMs": 1791252330545,
+            "operation": 301,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 300
+          }
+        },
+        {
+          "caseId": "locked-direct-destroy",
+          "kind": "workerd-log",
+          "hostMs": 18103.577242,
+          "wallMs": 1791252330545,
+          "phase": "diagnostic-tail",
+          "timestamp": 1791252330545,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-fulfilled\",\"wallMs\":1791252330545,\"operation\":301,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":300}",
+          "diagnostic": {
+            "boundary": "holder",
+            "event": "kv-fulfilled",
+            "wallMs": 1791252330545,
+            "operation": 301,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 300
+          }
+        }
+      ],
+      "closeEvents": [
+        {
+          "caseId": "locked-direct-destroy",
+          "kind": "client-cancel-invoke",
+          "hostMs": 14885.502318,
+          "wallMs": 1791252327327,
+          "mode": "destroy"
+        },
+        {
+          "caseId": "locked-direct-destroy",
+          "kind": "response-close",
+          "hostMs": 14885.713071,
+          "wallMs": 1791252327328,
+          "complete": false,
+          "destroyed": true
+        },
+        {
+          "caseId": "locked-direct-destroy",
+          "kind": "request-close",
+          "hostMs": 14885.857059,
+          "wallMs": 1791252327328,
+          "destroyed": true
+        },
+        {
+          "caseId": "locked-direct-destroy",
+          "kind": "socket-close",
+          "hostMs": 14885.944292,
+          "wallMs": 1791252327328,
+          "hadError": false,
+          "destroyed": true,
+          "bytesRead": 127,
+          "bytesWritten": 538
+        },
+        {
+          "caseId": "locked-direct-destroy",
+          "kind": "client-cancel-settled",
+          "hostMs": 14885.986551,
+          "wallMs": 1791252327328,
+          "requestDestroyed": true,
+          "responseDestroyed": true,
+          "responseComplete": false,
+          "socketDestroyed": true
+        },
+        {
+          "caseId": "locked-direct-destroy",
+          "kind": "dispose-invoke",
+          "hostMs": 20176.540332,
+          "wallMs": 1791252332618,
+          "reason": "case-finally",
+          "nativeRuntimeDisposeMaySendSIGKILL": true
+        },
+        {
+          "caseId": "locked-direct-destroy",
+          "kind": "dispose-fulfilled",
+          "hostMs": 20183.819627999997,
+          "wallMs": 1791252332626,
+          "reason": "case-finally",
+          "gracefulRuntimeExitProven": false
+        }
+      ]
+    },
+    {
+      "caseId": "locked-direct-rst",
+      "actualExit": 1,
+      "closed": true,
+      "originalWindow": {
+        "pollCount": 100,
+        "sleepMs": 10,
+        "elapsedMs": 1217.0151100000003,
+        "actual": null,
+        "expected": "observed",
+        "actualExit": 1
+      },
+      "tail": {
+        "elapsedMs": 4029.9668280000005,
+        "reads": 76,
+        "actual": null,
+        "usedForPass": false
+      },
+      "finalPreDisposeSnapshot": {
+        "cancel": null,
+        "release": null,
+        "accepted": "one",
+        "usedForPass": false
+      },
+      "hostKinds": {
+        "phase": 9,
+        "miniflare-log": 2,
+        "proc-census": 3,
+        "socket-connect": 1,
+        "workerd-log": 11,
+        "first-frame": 1,
+        "observer-kv-get-invoke": 182,
+        "observer-kv-get-settled": 182,
+        "client-cancel-invoke": 1,
+        "client-rst-api-invoke": 1,
+        "response-aborted": 1,
+        "response-close": 1,
+        "request-close": 1,
+        "socket-close": 1,
+        "client-cancel-settled": 1,
+        "pre-dispose-kv-snapshot": 1,
+        "dispose-invoke": 1,
+        "dispose-fulfilled": 1,
+        "case-closed": 1
+      },
+      "workerKinds": {
+        "signal-initial": 3,
+        "binding-fetch": 1,
+        "kv-invoke": 2,
+        "kv-fulfilled": 2,
+        "signal-abort": 3
+      },
+      "cancellationRelevantWorkerRows": [
+        {
+          "caseId": "locked-direct-rst",
+          "kind": "workerd-log",
+          "hostMs": 20440.591497999998,
+          "wallMs": 1791252332882,
+          "phase": "streaming",
+          "timestamp": 1791252332882,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"gateway\",\"event\":\"signal-initial\",\"wallMs\":1791252332882,\"signalBoundary\":\"incoming\",\"aborted\":false}",
+          "diagnostic": {
+            "boundary": "gateway",
+            "event": "signal-initial",
+            "wallMs": 1791252332882,
+            "signalBoundary": "incoming",
+            "aborted": false
+          }
+        },
+        {
+          "caseId": "locked-direct-rst",
+          "kind": "workerd-log",
+          "hostMs": 20440.894363,
+          "wallMs": 1791252332883,
+          "phase": "streaming",
+          "timestamp": 1791252332883,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"gateway\",\"event\":\"signal-initial\",\"wallMs\":1791252332883,\"signalBoundary\":\"forwarded-request-object\",\"aborted\":false}",
+          "diagnostic": {
+            "boundary": "gateway",
+            "event": "signal-initial",
+            "wallMs": 1791252332883,
+            "signalBoundary": "forwarded-request-object",
+            "aborted": false
+          }
+        },
+        {
+          "caseId": "locked-direct-rst",
+          "kind": "workerd-log",
+          "hostMs": 20441.101549,
+          "wallMs": 1791252332883,
+          "phase": "streaming",
+          "timestamp": 1791252332883,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"signal-initial\",\"wallMs\":1791252332883,\"aborted\":false}",
+          "diagnostic": {
+            "boundary": "holder",
+            "event": "signal-initial",
+            "wallMs": 1791252332883,
+            "aborted": false
+          }
+        },
+        {
+          "caseId": "locked-direct-rst",
+          "kind": "workerd-log",
+          "hostMs": 20469.258938,
+          "wallMs": 1791252332911,
+          "phase": "original-poll",
+          "timestamp": 1791252332909,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"gateway\",\"event\":\"signal-abort\",\"wallMs\":1791252332909,\"signalBoundary\":\"incoming\",\"aborted\":true}",
+          "diagnostic": {
+            "boundary": "gateway",
+            "event": "signal-abort",
+            "wallMs": 1791252332909,
+            "signalBoundary": "incoming",
+            "aborted": true
+          }
+        },
+        {
+          "caseId": "locked-direct-rst",
+          "kind": "workerd-log",
+          "hostMs": 20469.298371,
+          "wallMs": 1791252332911,
+          "phase": "original-poll",
+          "timestamp": 1791252332909,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"gateway\",\"event\":\"signal-abort\",\"wallMs\":1791252332909,\"signalBoundary\":\"forwarded-request-object\",\"aborted\":true}",
+          "diagnostic": {
+            "boundary": "gateway",
+            "event": "signal-abort",
+            "wallMs": 1791252332909,
+            "signalBoundary": "forwarded-request-object",
+            "aborted": true
+          }
+        },
+        {
+          "caseId": "locked-direct-rst",
+          "kind": "workerd-log",
+          "hostMs": 20469.367991,
+          "wallMs": 1791252332911,
+          "phase": "original-poll",
+          "timestamp": 1791252332910,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"signal-abort\",\"wallMs\":1791252332910,\"aborted\":true}",
+          "diagnostic": {
+            "boundary": "holder",
+            "event": "signal-abort",
+            "wallMs": 1791252332910,
+            "aborted": true
+          }
+        }
+      ],
+      "releaseReadObservations": [
+        {
+          "caseId": "locked-direct-rst",
+          "kind": "workerd-log",
+          "hostMs": 20448.659727,
+          "wallMs": 1791252332890,
+          "phase": "streaming",
+          "timestamp": 1791252332890,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-invoke\",\"wallMs\":1791252332890,\"operation\":2,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":1}",
+          "diagnostic": {
+            "boundary": "holder",
+            "event": "kv-invoke",
+            "wallMs": 1791252332890,
+            "operation": 2,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 1
+          }
+        },
+        {
+          "caseId": "locked-direct-rst",
+          "kind": "workerd-log",
+          "hostMs": 20464.438023,
+          "wallMs": 1791252332906,
+          "phase": "streaming",
+          "timestamp": 1791252332892,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-fulfilled\",\"wallMs\":1791252332892,\"operation\":2,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":1}",
+          "diagnostic": {
+            "boundary": "holder",
+            "event": "kv-fulfilled",
+            "wallMs": 1791252332892,
+            "operation": 2,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 1
+          }
+        }
+      ],
+      "closeEvents": [
+        {
+          "caseId": "locked-direct-rst",
+          "kind": "client-cancel-invoke",
+          "hostMs": 20467.250273999998,
+          "wallMs": 1791252332909,
+          "mode": "rst"
+        },
+        {
+          "caseId": "locked-direct-rst",
+          "kind": "client-rst-api-invoke",
+          "hostMs": 20467.325614999998,
+          "wallMs": 1791252332909
+        },
+        {
+          "caseId": "locked-direct-rst",
+          "kind": "response-close",
+          "hostMs": 20467.556385,
+          "wallMs": 1791252332909,
+          "complete": false,
+          "destroyed": true
+        },
+        {
+          "caseId": "locked-direct-rst",
+          "kind": "request-close",
+          "hostMs": 20467.876772,
+          "wallMs": 1791252332910,
+          "destroyed": true
+        },
+        {
+          "caseId": "locked-direct-rst",
+          "kind": "socket-close",
+          "hostMs": 20467.979203,
+          "wallMs": 1791252332910,
+          "hadError": false,
+          "destroyed": true,
+          "bytesRead": 127,
+          "bytesWritten": 538
+        },
+        {
+          "caseId": "locked-direct-rst",
+          "kind": "client-cancel-settled",
+          "hostMs": 20468.034266,
+          "wallMs": 1791252332910,
+          "requestDestroyed": true,
+          "responseDestroyed": true,
+          "responseComplete": false,
+          "socketDestroyed": true
+        },
+        {
+          "caseId": "locked-direct-rst",
+          "kind": "dispose-invoke",
+          "hostMs": 25729.684081,
+          "wallMs": 1791252338172,
+          "reason": "case-finally",
+          "nativeRuntimeDisposeMaySendSIGKILL": true
+        },
+        {
+          "caseId": "locked-direct-rst",
+          "kind": "dispose-fulfilled",
+          "hostMs": 25736.163126,
+          "wallMs": 1791252338178,
+          "reason": "case-finally",
+          "gracefulRuntimeExitProven": false
+        }
+      ]
+    },
+    {
+      "caseId": "locked-binding-destroy",
+      "actualExit": 1,
+      "closed": true,
+      "originalWindow": {
+        "pollCount": 100,
+        "sleepMs": 10,
+        "elapsedMs": 1214.981746999998,
+        "actual": null,
+        "expected": "observed",
+        "actualExit": 1
+      },
+      "tail": {
+        "elapsedMs": 4011.387015999997,
+        "reads": 76,
+        "actual": null,
+        "usedForPass": false
+      },
+      "finalPreDisposeSnapshot": {
+        "cancel": null,
+        "release": null,
+        "accepted": "one",
+        "usedForPass": false
+      },
+      "hostKinds": {
+        "phase": 9,
+        "miniflare-log": 2,
+        "proc-census": 3,
+        "socket-connect": 1,
+        "workerd-log": 15,
+        "first-frame": 1,
+        "observer-kv-get-invoke": 182,
+        "observer-kv-get-settled": 182,
+        "client-cancel-invoke": 1,
+        "response-aborted": 1,
+        "response-close": 1,
+        "request-close": 1,
+        "socket-close": 1,
+        "client-cancel-settled": 1,
+        "pre-dispose-kv-snapshot": 1,
+        "dispose-invoke": 1,
+        "dispose-fulfilled": 1,
+        "case-closed": 1
+      },
+      "workerKinds": {
+        "signal-initial": 3,
+        "binding-fetch": 1,
+        "kv-invoke": 5,
+        "kv-fulfilled": 5
+      },
+      "cancellationRelevantWorkerRows": [
+        {
+          "caseId": "locked-binding-destroy",
+          "kind": "workerd-log",
+          "hostMs": 25989.920692,
+          "wallMs": 1791252338432,
+          "phase": "streaming",
+          "timestamp": 1791252338432,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"gateway\",\"event\":\"signal-initial\",\"wallMs\":1791252338431,\"signalBoundary\":\"incoming\",\"aborted\":false}",
+          "diagnostic": {
+            "boundary": "gateway",
+            "event": "signal-initial",
+            "wallMs": 1791252338431,
+            "signalBoundary": "incoming",
+            "aborted": false
+          }
+        },
+        {
+          "caseId": "locked-binding-destroy",
+          "kind": "workerd-log",
+          "hostMs": 25990.217966,
+          "wallMs": 1791252338432,
+          "phase": "streaming",
+          "timestamp": 1791252338432,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"gateway\",\"event\":\"signal-initial\",\"wallMs\":1791252338432,\"signalBoundary\":\"forwarded-request-object\",\"aborted\":false}",
+          "diagnostic": {
+            "boundary": "gateway",
+            "event": "signal-initial",
+            "wallMs": 1791252338432,
+            "signalBoundary": "forwarded-request-object",
+            "aborted": false
+          }
+        },
+        {
+          "caseId": "locked-binding-destroy",
+          "kind": "workerd-log",
+          "hostMs": 25990.824617,
+          "wallMs": 1791252338433,
+          "phase": "streaming",
+          "timestamp": 1791252338433,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"signal-initial\",\"wallMs\":1791252338432,\"aborted\":false}",
+          "diagnostic": {
+            "boundary": "holder",
+            "event": "signal-initial",
+            "wallMs": 1791252338432,
+            "aborted": false
+          }
+        }
+      ],
+      "releaseReadObservations": [
+        {
+          "caseId": "locked-binding-destroy",
+          "kind": "workerd-log",
+          "hostMs": 25998.586814,
+          "wallMs": 1791252338440,
+          "phase": "streaming",
+          "timestamp": 1791252338440,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-invoke\",\"wallMs\":1791252338440,\"operation\":2,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":1}",
+          "diagnostic": {
+            "boundary": "holder",
+            "event": "kv-invoke",
+            "wallMs": 1791252338440,
+            "operation": 2,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 1
+          }
+        },
+        {
+          "caseId": "locked-binding-destroy",
+          "kind": "workerd-log",
+          "hostMs": 26013.460836,
+          "wallMs": 1791252338455,
+          "phase": "streaming",
+          "timestamp": 1791252338442,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-fulfilled\",\"wallMs\":1791252338442,\"operation\":2,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":1}",
+          "diagnostic": {
+            "boundary": "holder",
+            "event": "kv-fulfilled",
+            "wallMs": 1791252338442,
+            "operation": 2,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 1
+          }
+        },
+        {
+          "caseId": "locked-binding-destroy",
+          "kind": "workerd-log",
+          "hostMs": 27089.684203,
+          "wallMs": 1791252339532,
+          "phase": "original-poll",
+          "timestamp": 1791252339531,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-invoke\",\"wallMs\":1791252339531,\"operation\":101,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":100}",
+          "diagnostic": {
+            "boundary": "holder",
+            "event": "kv-invoke",
+            "wallMs": 1791252339531,
+            "operation": 101,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 100
+          }
+        },
+        {
+          "caseId": "locked-binding-destroy",
+          "kind": "workerd-log",
+          "hostMs": 27090.036659999998,
+          "wallMs": 1791252339532,
+          "phase": "original-poll",
+          "timestamp": 1791252339532,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-fulfilled\",\"wallMs\":1791252339532,\"operation\":101,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":100}",
+          "diagnostic": {
+            "boundary": "holder",
+            "event": "kv-fulfilled",
+            "wallMs": 1791252339532,
+            "operation": 101,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 100
+          }
+        },
+        {
+          "caseId": "locked-binding-destroy",
+          "kind": "workerd-log",
+          "hostMs": 28157.49829,
+          "wallMs": 1791252340599,
+          "phase": "diagnostic-tail",
+          "timestamp": 1791252340599,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-invoke\",\"wallMs\":1791252340599,\"operation\":201,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":200}",
+          "diagnostic": {
+            "boundary": "holder",
+            "event": "kv-invoke",
+            "wallMs": 1791252340599,
+            "operation": 201,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 200
+          }
+        },
+        {
+          "caseId": "locked-binding-destroy",
+          "kind": "workerd-log",
+          "hostMs": 28158.017798999997,
+          "wallMs": 1791252340600,
+          "phase": "diagnostic-tail",
+          "timestamp": 1791252340600,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-fulfilled\",\"wallMs\":1791252340600,\"operation\":201,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":200}",
+          "diagnostic": {
+            "boundary": "holder",
+            "event": "kv-fulfilled",
+            "wallMs": 1791252340600,
+            "operation": 201,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 200
+          }
+        },
+        {
+          "caseId": "locked-binding-destroy",
+          "kind": "workerd-log",
+          "hostMs": 29221.49557,
+          "wallMs": 1791252341663,
+          "phase": "diagnostic-tail",
+          "timestamp": 1791252341663,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-invoke\",\"wallMs\":1791252341663,\"operation\":301,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":300}",
+          "diagnostic": {
+            "boundary": "holder",
+            "event": "kv-invoke",
+            "wallMs": 1791252341663,
+            "operation": 301,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 300
+          }
+        },
+        {
+          "caseId": "locked-binding-destroy",
+          "kind": "workerd-log",
+          "hostMs": 29221.877672,
+          "wallMs": 1791252341664,
+          "phase": "diagnostic-tail",
+          "timestamp": 1791252341664,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-fulfilled\",\"wallMs\":1791252341664,\"operation\":301,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":300}",
+          "diagnostic": {
+            "boundary": "holder",
+            "event": "kv-fulfilled",
+            "wallMs": 1791252341664,
+            "operation": 301,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 300
+          }
+        }
+      ],
+      "closeEvents": [
+        {
+          "caseId": "locked-binding-destroy",
+          "kind": "client-cancel-invoke",
+          "hostMs": 26015.970734,
+          "wallMs": 1791252338458,
+          "mode": "destroy"
+        },
+        {
+          "caseId": "locked-binding-destroy",
+          "kind": "response-close",
+          "hostMs": 26016.131273,
+          "wallMs": 1791252338458,
+          "complete": false,
+          "destroyed": true
+        },
+        {
+          "caseId": "locked-binding-destroy",
+          "kind": "request-close",
+          "hostMs": 26016.355171,
+          "wallMs": 1791252338458,
+          "destroyed": true
+        },
+        {
+          "caseId": "locked-binding-destroy",
+          "kind": "socket-close",
+          "hostMs": 26016.431543,
+          "wallMs": 1791252338458,
+          "hadError": false,
+          "destroyed": true,
+          "bytesRead": 127,
+          "bytesWritten": 538
+        },
+        {
+          "caseId": "locked-binding-destroy",
+          "kind": "client-cancel-settled",
+          "hostMs": 26016.472309,
+          "wallMs": 1791252338458,
+          "requestDestroyed": true,
+          "responseDestroyed": true,
+          "responseComplete": false,
+          "socketDestroyed": true
+        },
+        {
+          "caseId": "locked-binding-destroy",
+          "kind": "dispose-invoke",
+          "hostMs": 31255.687586,
+          "wallMs": 1791252343698,
+          "reason": "case-finally",
+          "nativeRuntimeDisposeMaySendSIGKILL": true
+        },
+        {
+          "caseId": "locked-binding-destroy",
+          "kind": "dispose-fulfilled",
+          "hostMs": 31261.703802,
+          "wallMs": 1791252343704,
+          "reason": "case-finally",
+          "gracefulRuntimeExitProven": false
+        }
+      ]
+    },
+    {
+      "caseId": "locked-binding-rst",
+      "actualExit": 1,
+      "closed": true,
+      "originalWindow": {
+        "pollCount": 100,
+        "sleepMs": 10,
+        "elapsedMs": 1220.7450519999984,
+        "actual": null,
+        "expected": "observed",
+        "actualExit": 1
+      },
+      "tail": {
+        "elapsedMs": 4013.019505999997,
+        "reads": 76,
+        "actual": null,
+        "usedForPass": false
+      },
+      "finalPreDisposeSnapshot": {
+        "cancel": null,
+        "release": null,
+        "accepted": "one",
+        "usedForPass": false
+      },
+      "hostKinds": {
+        "phase": 9,
+        "miniflare-log": 2,
+        "proc-census": 3,
+        "socket-connect": 1,
+        "workerd-log": 9,
+        "first-frame": 1,
+        "observer-kv-get-invoke": 182,
+        "observer-kv-get-settled": 182,
+        "client-cancel-invoke": 1,
+        "client-rst-api-invoke": 1,
+        "response-aborted": 1,
+        "response-close": 1,
+        "request-close": 1,
+        "socket-close": 1,
+        "client-cancel-settled": 1,
+        "pre-dispose-kv-snapshot": 1,
+        "dispose-invoke": 1,
+        "dispose-fulfilled": 1,
+        "case-closed": 1
+      },
+      "workerKinds": {
+        "signal-initial": 3,
+        "binding-fetch": 1,
+        "kv-invoke": 2,
+        "kv-fulfilled": 2,
+        "signal-abort": 1
+      },
+      "cancellationRelevantWorkerRows": [
+        {
+          "caseId": "locked-binding-rst",
+          "kind": "workerd-log",
+          "hostMs": 31523.341268,
+          "wallMs": 1791252343965,
+          "phase": "streaming",
+          "timestamp": 1791252343965,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"gateway\",\"event\":\"signal-initial\",\"wallMs\":1791252343965,\"signalBoundary\":\"incoming\",\"aborted\":false}",
+          "diagnostic": {
+            "boundary": "gateway",
+            "event": "signal-initial",
+            "wallMs": 1791252343965,
+            "signalBoundary": "incoming",
+            "aborted": false
+          }
+        },
+        {
+          "caseId": "locked-binding-rst",
+          "kind": "workerd-log",
+          "hostMs": 31523.670651,
+          "wallMs": 1791252343966,
+          "phase": "streaming",
+          "timestamp": 1791252343965,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"gateway\",\"event\":\"signal-initial\",\"wallMs\":1791252343965,\"signalBoundary\":\"forwarded-request-object\",\"aborted\":false}",
+          "diagnostic": {
+            "boundary": "gateway",
+            "event": "signal-initial",
+            "wallMs": 1791252343965,
+            "signalBoundary": "forwarded-request-object",
+            "aborted": false
+          }
+        },
+        {
+          "caseId": "locked-binding-rst",
+          "kind": "workerd-log",
+          "hostMs": 31524.238598,
+          "wallMs": 1791252343966,
+          "phase": "streaming",
+          "timestamp": 1791252343966,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"signal-initial\",\"wallMs\":1791252343966,\"aborted\":false}",
+          "diagnostic": {
+            "boundary": "holder",
+            "event": "signal-initial",
+            "wallMs": 1791252343966,
+            "aborted": false
+          }
+        },
+        {
+          "caseId": "locked-binding-rst",
+          "kind": "workerd-log",
+          "hostMs": 31551.464853999998,
+          "wallMs": 1791252343993,
+          "phase": "original-poll",
+          "timestamp": 1791252343992,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"signal-abort\",\"wallMs\":1791252343992,\"aborted\":true}",
+          "diagnostic": {
+            "boundary": "holder",
+            "event": "signal-abort",
+            "wallMs": 1791252343992,
+            "aborted": true
+          }
+        }
+      ],
+      "releaseReadObservations": [
+        {
+          "caseId": "locked-binding-rst",
+          "kind": "workerd-log",
+          "hostMs": 31531.698807,
+          "wallMs": 1791252343974,
+          "phase": "streaming",
+          "timestamp": 1791252343973,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-invoke\",\"wallMs\":1791252343973,\"operation\":2,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":1}",
+          "diagnostic": {
+            "boundary": "holder",
+            "event": "kv-invoke",
+            "wallMs": 1791252343973,
+            "operation": 2,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 1
+          }
+        },
+        {
+          "caseId": "locked-binding-rst",
+          "kind": "workerd-log",
+          "hostMs": 31547.959607999997,
+          "wallMs": 1791252343990,
+          "phase": "streaming",
+          "timestamp": 1791252343975,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-fulfilled\",\"wallMs\":1791252343975,\"operation\":2,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":1}",
+          "diagnostic": {
+            "boundary": "holder",
+            "event": "kv-fulfilled",
+            "wallMs": 1791252343975,
+            "operation": 2,
+            "method": "get",
+            "category": "release",
+            "releaseReads": 1
+          }
+        }
+      ],
+      "closeEvents": [
+        {
+          "caseId": "locked-binding-rst",
+          "kind": "client-cancel-invoke",
+          "hostMs": 31549.699226999997,
+          "wallMs": 1791252343992,
+          "mode": "rst"
+        },
+        {
+          "caseId": "locked-binding-rst",
+          "kind": "client-rst-api-invoke",
+          "hostMs": 31549.733952,
+          "wallMs": 1791252343992
+        },
+        {
+          "caseId": "locked-binding-rst",
+          "kind": "response-close",
+          "hostMs": 31549.928433999998,
+          "wallMs": 1791252343992,
+          "complete": false,
+          "destroyed": true
+        },
+        {
+          "caseId": "locked-binding-rst",
+          "kind": "request-close",
+          "hostMs": 31550.182447,
+          "wallMs": 1791252343992,
+          "destroyed": true
+        },
+        {
+          "caseId": "locked-binding-rst",
+          "kind": "socket-close",
+          "hostMs": 31550.256434,
+          "wallMs": 1791252343992,
+          "hadError": false,
+          "destroyed": true,
+          "bytesRead": 127,
+          "bytesWritten": 538
+        },
+        {
+          "caseId": "locked-binding-rst",
+          "kind": "client-cancel-settled",
+          "hostMs": 31550.344848999997,
+          "wallMs": 1791252343992,
+          "requestDestroyed": true,
+          "responseDestroyed": true,
+          "responseComplete": false,
+          "socketDestroyed": true
+        },
+        {
+          "caseId": "locked-binding-rst",
+          "kind": "dispose-invoke",
+          "hostMs": 36798.798795999995,
+          "wallMs": 1791252349241,
+          "reason": "case-finally",
+          "nativeRuntimeDisposeMaySendSIGKILL": true
+        },
+        {
+          "caseId": "locked-binding-rst",
+          "kind": "dispose-fulfilled",
+          "hostMs": 36805.158188,
+          "wallMs": 1791252349247,
+          "reason": "case-finally",
+          "gracefulRuntimeExitProven": false
+        }
+      ]
+    }
+  ]
+}

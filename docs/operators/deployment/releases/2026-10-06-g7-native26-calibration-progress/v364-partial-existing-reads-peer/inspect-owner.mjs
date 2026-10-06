@@ -1,0 +1,3 @@
+import {readFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+const p='C:/Users/cina/AppData/Local/Temp/cinatoken-v364-direct-actual-review-DjepMs/FINAL-v364-direct-address-repair.json';const b=readFileSync(p);const r=JSON.parse(b);const info={bytes:b.length,sha256:createHash('sha256').update(b).digest('hex')};process.stdout.write(JSON.stringify({ownerFinal:{file:p,...info},report:r}));

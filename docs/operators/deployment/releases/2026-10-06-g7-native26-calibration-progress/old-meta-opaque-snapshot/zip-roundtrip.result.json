@@ -1,0 +1,29 @@
+{
+  "schema": "cinatoken-owned-opaque-snapshot-command-closed-v1",
+  "closed": true,
+  "beganAt": "2026-10-06T04:27:27.076Z",
+  "endedAt": "2026-10-06T04:27:43.501Z",
+  "program": "C:/Users/cina/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-old-meta-opaque-snapshot-eEXPR6/snapshot-opaque-meta.py"
+  ],
+  "cwd": "C:/Users/cina/AppData/Local/Temp/cinatoken-old-meta-opaque-snapshot-eEXPR6",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "timedOut": false,
+  "stdout": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-old-meta-opaque-snapshot-eEXPR6/zip-roundtrip.stdout.log",
+    "bytes": 1630,
+    "sha256": "8bfee0a718e6797357d9ece08ec438784a246c57e4e5a98e4a1b5f19333621bc"
+  },
+  "stderr": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-old-meta-opaque-snapshot-eEXPR6/zip-roundtrip.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "collectionOnly": true,
+  "applicationExecution": false,
+  "ciExecution": false,
+  "gatePassDerived": false
+}

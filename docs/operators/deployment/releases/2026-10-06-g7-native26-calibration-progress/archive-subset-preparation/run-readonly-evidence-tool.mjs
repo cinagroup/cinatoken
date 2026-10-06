@@ -1,0 +1,7 @@
+import fs from 'node:fs';import path from 'node:path';import {spawnSync} from 'node:child_process';import {createHash} from 'node:crypto';
+const root='C:/Users/cina/AppData/Local/Temp/cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd',sha=b=>createHash('sha256').update(b).digest('hex');
+const [id,...args]=process.argv.slice(2);if(!/^[a-z0-9-]+$/.test(id))throw new Error('Invalid new record id');
+const at=new Date().toISOString(),r=spawnSync(process.execPath,args,{cwd:'C:/cinagroup/cinatoken',timeout:60000,maxBuffer:20*1024*1024,encoding:null,windowsHide:true});const descriptors={};
+for(const [kind,b] of [['stdout',r.stdout??Buffer.alloc(0)],['stderr',r.stderr??Buffer.alloc(0)]]){const p=path.join(root,id+'.'+kind+'.log');fs.writeFileSync(p,b,{flag:'wx'});descriptors[kind]={path:p,bytes:b.length,sha256:sha(b)}}
+const receipt={at,finishedAt:new Date().toISOString(),executable:process.execPath,args,cwd:'C:/cinagroup/cinatoken',actualExit:r.status,signal:r.signal,spawnError:r.error?.code??null,...descriptors,scope:'Original exact synchronous child result for Temp evidence tool, no application tests or production'};
+fs.writeFileSync(path.join(root,id+'.result.json'),JSON.stringify(receipt,null,2)+'\n',{flag:'wx'});console.log(JSON.stringify(receipt));process.exitCode=r.status??1;

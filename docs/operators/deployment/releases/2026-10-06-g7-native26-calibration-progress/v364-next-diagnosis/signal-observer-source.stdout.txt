@@ -1,0 +1,226 @@
+{"file":"scripts/diagnostics/v364-owned-linux/gateway-observer.mjs","bytes":1244,"sha256":"3ec2e49a72697f61bd1867bcde369a7c508cdbf669cd86d7e0eebdfc41dcfe00"}
+1: import original from '__ORIGINAL__';
+2: const emit = (event, fields = {}) => {
+3:   try { console.log('V364_DIAG ' + JSON.stringify({ boundary: 'gateway', event, wallMs: Date.now(), ...fields })); } catch {}
+4: };
+5: function observe(signal, boundary) {
+6:   emit('signal-initial', { signalBoundary: boundary, aborted: signal.aborted });
+7:   signal.addEventListener('abort', () => emit('signal-abort', { signalBoundary: boundary, aborted: signal.aborted }), { once: true });
+8: }
+9: export default {
+10:   fetch(request, env, ctx) {
+11:     observe(request.signal, 'incoming');
+12:     const binding = env.TEXT_HOLDER;
+13:     const observedBinding = new Proxy(binding, {
+14:       get(target, property) {
+15:         if (property === 'fetch') return (...args) => {
+16:           if (args[0] instanceof Request) observe(args[0].signal, 'forwarded-request-object');
+17:           emit('binding-fetch');
+18:           return Reflect.apply(target.fetch, target, args);
+19:         };
+20:         const value = Reflect.get(target, property, target);
+21:         return typeof value === 'function' ? value.bind(target) : value;
+22:       },
+23:     });
+24:     // Forward the original Request, body, response, promise and context unchanged.
+25:     return original.fetch(request, { ...env, TEXT_HOLDER: observedBinding }, ctx);
+26:   },
+27: };
+28: 
+{"file":"scripts/diagnostics/v364-owned-linux/holder-observer.mjs","bytes":2461,"sha256":"740727cae646ae757fa50ef7bb6c02a9f9cb4b1b3aa64b0de539c88bbbe09a25"}
+1: import original from '__ORIGINAL__';
+2: const emit = (event, fields = {}) => {
+3:   try { console.log('V364_DIAG ' + JSON.stringify({ boundary: 'holder', event, wallMs: Date.now(), ...fields })); } catch {}
+4: };
+5: export default {
+6:   fetch(request, env, ctx) {
+7:     emit('signal-initial', { aborted: request.signal.aborted });
+8:     request.signal.addEventListener('abort', () => emit('signal-abort', { aborted: request.signal.aborted }), { once: true });
+9:     let operation = 0;
+10:     let releaseReads = 0;
+11:     const observedKV = new Proxy(env.OBSERVATIONS, {
+12:       get(target, property) {
+13:         if (property === 'put' || property === 'get') return (...args) => {
+14:           const category = String(args[0]).split(':', 1)[0];
+15:           const id = ++operation;
+16:           const sample = category !== 'release' || property === 'put' || [1, 100, 200, 300].includes(++releaseReads);
+17:           if (sample) emit('kv-invoke', { operation: id, method: property, category, releaseReads });
+18:           // No new KV write, no changed key/value/options, and no replacement promise.
+19:           let task;
+20:           try { task = Reflect.apply(target[property], target, args); }
+21:           catch (error) { emit('kv-throw', { operation: id, method: property, category, errorName: error?.name }); throw error; }
+22:           if (sample) task.then(
+23:             () => emit('kv-fulfilled', { operation: id, method: property, category, releaseReads }),
+24:             error => emit('kv-rejected', { operation: id, method: property, category, errorName: error?.name }),
+25:           );
+26:           return task;
+27:         };
+28:         const value = Reflect.get(target, property, target);
+29:         return typeof value === 'function' ? value.bind(target) : value;
+30:       },
+31:     });
+32:     const observedContext = new Proxy(ctx, {
+33:       get(target, property) {
+34:         if (property === 'waitUntil') return task => {
+35:           emit('waitUntil-register');
+36:           // Register the SAME original promise exactly once. Observers add no lifetime task.
+37:           const value = Reflect.apply(target.waitUntil, target, [task]);
+38:           task.then(() => emit('waitUntil-fulfilled'), error => emit('waitUntil-rejected', { errorName: error?.name }));
+39:           return value;
+40:         };
+41:         const value = Reflect.get(target, property, target);
+42:         return typeof value === 'function' ? value.bind(target) : value;
+43:       },
+44:     });
+45:     return original.fetch(request, { ...env, OBSERVATIONS: observedKV }, observedContext);
+46:   },
+47: };
+48: 
+{"file":"node_modules/miniflare/package.json","bytes":4185,"sha256":"d43d063fc65818a57e5df8c5503bcfddaef5320099d2479097b16b6cb7a5a288"}
+1: {
+2:   "name": "miniflare",
+3:   "version": "5.20260828.0-alpha",
+4:   "description": "Fun, full-featured, fully-local simulator for Cloudflare Workers",
+5:   "keywords": [
+6:     "cloudflare",
+7:     "cloudworker",
+8:     "local",
+9:     "worker",
+10:     "workers"
+11:   ],
+12:   "homepage": "https://github.com/cloudflare/workers-sdk/tree/main/packages/miniflare#readme",
+13:   "bugs": {
+14:     "url": "https://github.com/cloudflare/workers-sdk/issues"
+15:   },
+16:   "license": "MIT",
+17:   "author": "MrBBot <me@mrbbot.dev>",
+18:   "repository": {
+19:     "type": "git",
+20:     "url": "https://github.com/cloudflare/workers-sdk.git",
+21:     "directory": "packages/miniflare"
+22:   },
+23:   "files": [
+24:     "dist/src",
+25:     "dist/local-explorer-ui"
+26:   ],
+27:   "main": "./dist/src/index.js",
+28:   "types": "./dist/src/index.d.ts",
+29:   "publishConfig": {
+30:     "access": "public"
+31:   },
+32:   "dependencies": {
+33:     "@cspotcode/source-map-support": "0.8.1",
+34:     "sharp": "0.35.2",
+35:     "undici": "7.29.0",
+36:     "workerd": "1.20260828.1",
+37:     "ws": "8.21.0",
+38:     "youch": "4.1.0-beta.10"
+39:   },
+40:   "devDependencies": {
+41:     "@aws-crypto/sha256-js": "^5.2.0",
+42:     "@aws-sdk/client-s3": "^3.721.0",
+43:     "@aws-sdk/s3-request-presigner": "^3.721.0",
+44:     "@cloudflare/workers-types": "^5.20260828.1",
+45:     "@hey-api/openapi-ts": "0.94.0",
+46:     "@microsoft/api-extractor": "^7.52.8",
+47:     "@puppeteer/browsers": "^2.10.6",
+48:     "@smithy/signature-v4": "^4.2.4",
+49:     "@types/debug": "^4.1.7",
+50:     "@types/estree": "^1.0.0",
+51:     "@types/glob-to-regexp": "^0.4.1",
+52:     "@types/http-cache-semantics": "^4.0.1",
+53:     "@types/mime": "^3.0.4",
+54:     "@types/node": "22.15.17",
+55:     "@types/stoppable": "^1.1.1",
+56:     "@types/which": "^2.0.1",
+57:     "@types/ws": "^8.5.7",
+58:     "acorn": "8.16.0",
+59:     "acorn-import-phases": "^1.0.4",
+60:     "acorn-walk": "8.3.5",
+61:     "capnp-es": "0.0.16",
+62:     "capnweb": "0.5.0",
+63:     "chokidar": "^4.0.1",
+64:     "ci-info": "4.4.0",
+65:     "concurrently": "^8.2.2",
+66:     "devalue": "^5.6.3",
+67:     "devtools-protocol": "^0.0.1182435",
+68:     "esbuild": "0.28.1",
+69:     "expect-type": "^0.15.0",
+70:     "fast-xml-parser": "^4.4.1",
+71:     "get-port": "^7.1.0",
+72:     "glob-to-regexp": "0.4.1",
+73:     "hono": "^4.12.5",
+74:     "http-cache-semantics": "^4.1.0",
+75:     "jsonc-parser": "3.2.0",
+76:     "kleur": "^4.1.5",
+77:     "mime": "^3.0.0",
+78:     "postal-mime": "^2.4.3",
+79:     "pretty-bytes": "^6.0.0",
+80:     "source-map": "^0.6.1",
+81:     "stoppable": "1.1.0",
+82:     "ts-dedent": "^2.2.0",
+83:     "typescript": "5.8.3",
+84:     "vitest": "4.1.0",
+85:     "which": "^2.0.2",
+86:     "zod": "4.4.3",
+87:     "@cloudflare/cli-shared-helpers": "0.1.25",
+88:     "@cloudflare/config": "0.9.0",
+89:     "@cloudflare/containers-shared": "0.16.0",
+90:     "@cloudflare/kv-asset-handler": "0.5.0",
+91:     "@cloudflare/local-explorer-ui": "0.15.0",
+92:     "@cloudflare/workers-utils": "0.34.0",
+93:     "@cloudflare/workflows-shared": "0.13.0",
+94:     "@cloudflare/workers-shared": "0.19.9"
+95:   },
+96:   "engines": {
+97:     "node": ">=22.0.0"
+98:   },
+99:   "volta": {
+100:     "extends": "../../package.json"
+101:   },
+102:   "workers-sdk": {
+103:     "prerelease": true,
+104:     "npmPrereleaseIdentifier": "alpha"
+105:   },
+106:   "scripts": {
+107:     "build": "node scripts/build.mjs && pnpm run types:build",
+108:     "capnp:workerd": "capnp-es node_modules/workerd/workerd.capnp -ots:src/runtime/config/generated --src-prefix=node_modules/workerd",
+109:     "check:generate-api": "node -r esbuild-register scripts/check-generate-api.ts",
+110:     "check:type": "tsc",
+111:     "clean": "node -r esbuild-register ../../tools/clean/clean.ts ./dist ./dist-types",
+112:     "dev": "concurrently -n esbuild,typechk,typewrk -c yellow,blue,blue.dim \"node scripts/build.mjs --watch\" \"node scripts/types.mjs tsconfig.json --bundle --watch\" \"node scripts/types.mjs src/workers/tsconfig.json --watch\"",
+113:     "generate:api": "pnpm generate:openapi && pnpm generate:types",
+114:     "generate:openapi": "node -r esbuild-register scripts/filter-openapi.ts -i $OPENAPI_INPUT_PATH",
+115:     "generate:types": "openapi-ts && oxfmt src/workers/local-explorer/openapi.local.json src/workers/local-explorer/generated",
+116:     "test": "vitest run",
+117:     "posttest": "node -r esbuild-register ../../tools/clean/clean.ts ./.tmp",
+118:     "test:ci": "pnpm run test",
+119:     "types:build": "node scripts/types.mjs tsconfig.json --bundle && node scripts/types.mjs src/workers/tsconfig.json"
+120:   }
+121: }
+{"file":"node_modules/workerd/package.json","bytes":676,"sha256":"84a166529ea8d4de0bcdf2af781996846cd64e33367f357d88bbc3d514c06fe2"}
+1: {
+2:   "name": "workerd",
+3:   "version": "1.20260828.1",
+4:   "description": "👷 workerd, Cloudflare's JavaScript/Wasm Runtime",
+5:   "repository": "https://github.com/cloudflare/workerd",
+6:   "scripts": {
+7:     "postinstall": "node install.js"
+8:   },
+9:   "main": "lib/main.js",
+10:   "engines": {
+11:     "node": ">=16"
+12:   },
+13:   "bin": {
+14:     "workerd": "bin/workerd"
+15:   },
+16:   "optionalDependencies": {
+17:     "@cloudflare/workerd-darwin-arm64": "1.20260828.1",
+18:     "@cloudflare/workerd-darwin-64": "1.20260828.1",
+19:     "@cloudflare/workerd-linux-arm64": "1.20260828.1",
+20:     "@cloudflare/workerd-linux-64": "1.20260828.1",
+21:     "@cloudflare/workerd-windows-64": "1.20260828.1"
+22:   },
+23:   "license": "Apache-2.0"
+24: }
+25: 

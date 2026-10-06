@@ -1,0 +1,66 @@
+{
+  "schema": "v364-direct-closed-facts-readonly-v1",
+  "closed": true,
+  "actualReadonlyCheckOutcome": 0,
+  "originalStrict": {
+    "tests": 8,
+    "pass": 7,
+    "fail": 1,
+    "actualExit": 1
+  },
+  "nativeFourActualExit": 1,
+  "allOriginalWindows": {
+    "count": 4,
+    "polls": 100,
+    "sleepMs": 10,
+    "actual": null,
+    "tailActual": null,
+    "tailUsedForPass": false
+  },
+  "ndjsonEqualsEvents": true,
+  "eventCount": 1627,
+  "reaped": [
+    {
+      "pid": 2433,
+      "startTimeTicks": "32242",
+      "waitStatus": 0,
+      "waitExitCode": 0,
+      "source": "individually identified adopted zombie",
+      "observedComm": "esbuild",
+      "observedState": "Z"
+    },
+    {
+      "pid": 2471,
+      "startTimeTicks": "32266",
+      "waitStatus": 0,
+      "waitExitCode": 0,
+      "source": "individually identified adopted zombie",
+      "observedComm": "esbuild",
+      "observedState": "Z"
+    },
+    {
+      "pid": 2472,
+      "startTimeTicks": "32266",
+      "waitStatus": 0,
+      "waitExitCode": 0,
+      "source": "individually identified adopted zombie",
+      "observedComm": "esbuild",
+      "observedState": "Z"
+    },
+    {
+      "pid": 2484,
+      "startTimeTicks": "32319",
+      "waitStatus": 0,
+      "waitExitCode": 0,
+      "source": "individually identified adopted zombie",
+      "observedComm": "esbuild",
+      "observedState": "Z"
+    }
+  ],
+  "signalAttempts": [],
+  "actualProcessExit": 1,
+  "aggregateActualExit": 1,
+  "outerUnforcedGroupClose": true,
+  "gracefulWorkerdProven": false,
+  "realRuntimeReexecuted": false
+}

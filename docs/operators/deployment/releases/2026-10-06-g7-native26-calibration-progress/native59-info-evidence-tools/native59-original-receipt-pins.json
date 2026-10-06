@@ -1,0 +1,46 @@
+{
+  "root": "C:/Users/cina/AppData/Local/Temp/cinatoken-native59-full-inventory-10b2722ab06d4cf6b6305e24571b4a8d",
+  "scope": "Exactly two immutable original Info-only receipts; original producer timing/status and all Info descriptor bytes/SHA, no new execution",
+  "receipts": [
+    {
+      "file": "head.closed.json",
+      "bytes": 429,
+      "sha256": "f5c5ad8e69032204d8880d0c6718789c61f80570db63214d1b4f3e9bed1199bc",
+      "args": [
+        "rev-parse",
+        "HEAD"
+      ],
+      "actualExit": 0,
+      "at": "2026-10-06T03:36:03.154Z",
+      "finishedAt": "2026-10-06T03:36:03.213Z",
+      "stdoutInfo": {
+        "bytes": 41,
+        "sha256": "c4ebee2df777e13bda0448797a4a3ff3d1b55b51d8c3b314e2b84bb4f12dd76f"
+      },
+      "stderrInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "file": "protected-git.closed.json",
+      "bytes": 523,
+      "sha256": "d7a5bae3aa95e67a9abff091689689664ffc3798d5c0352cfbb2ea6603553a25",
+      "args": [
+        "cat-file",
+        "--batch"
+      ],
+      "actualExit": 0,
+      "at": "2026-10-06T03:39:50.518Z",
+      "finishedAt": "2026-10-06T03:39:50.681Z",
+      "stdoutInfo": {
+        "bytes": 9530706,
+        "sha256": "07d379e429a3c53153633fb10dce3a95d4ec8204e404e65bf908326d3079937a"
+      },
+      "stderrInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ]
+}

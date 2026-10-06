@@ -1,0 +1,454 @@
+{
+  "schema": "all-frozen-data-reader-preparation-v1",
+  "finishedAt": "2026-10-06T05:02:56.765Z",
+  "previousToolUnchanged": true,
+  "previousSourceRecoveredByteExactly": true,
+  "newSourcePins": [
+    {
+      "file": "evidence-lib.mjs",
+      "bytes": 56334,
+      "sha256": "0ad4b4ef3467b684743bb9a2d29f6780b47aa7e076174a5613e7ebf4a60628a1"
+    },
+    {
+      "file": "direct-socket-dialect.mjs",
+      "bytes": 12912,
+      "sha256": "6bda5d078b0c12ca7eab0bffd8e0cdae6fbaad86e381668bcca076ac8fadd934"
+    },
+    {
+      "file": "frozen-data-binding.mjs",
+      "bytes": 13826,
+      "sha256": "0e8e6f17a9c0b47f3c074ef35211f10ba42799076ceb364d80d4fe3faa085a18"
+    },
+    {
+      "file": "frozen-data-original-pins-v3.json",
+      "bytes": 233587,
+      "sha256": "dae1d173ef09c5e188f28328ff376a86dab083e679f686e186439975a26c22ae"
+    },
+    {
+      "file": "frozen-data-binding-controls.mjs",
+      "bytes": 10953,
+      "sha256": "ebbf81fe91e55f76b4f6d287184a35efd823b391abb13e031dbe50c53353f80e"
+    }
+  ],
+  "commands": [
+    {
+      "file": "add-final-peer-config.result.json",
+      "bytes": 961,
+      "sha256": "2d479647a619a5b42f44fc106e526fc68abe8e4f2ae3ed4c1c39873b529d01d3",
+      "actualExit": 0,
+      "startedAt": "2026-10-06T04:54:02.793Z",
+      "endedAt": "2026-10-06T04:54:02.874Z",
+      "outputs": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\add-final-peer-config.stdout.log",
+          "bytes": 79,
+          "sha256": "efd3341b2b4ea36c37abfa5f83d767af959a43701ab1b5d2b1f5fac82e3e674d"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\add-final-peer-config.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "file": "add-late-frozen-root.result.json",
+      "bytes": 959,
+      "sha256": "a3bd72346d40c98b9f7d8893e8852d73813b44d431d139e004fc9ac74cf879e9",
+      "actualExit": 0,
+      "startedAt": "2026-10-06T05:01:37.355Z",
+      "endedAt": "2026-10-06T05:01:37.551Z",
+      "outputs": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\add-late-frozen-root.stdout.log",
+          "bytes": 196,
+          "sha256": "e55d4af66017da7d5757266217c4a57fd9e8207b4c600d7e806f04b30ea06add"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\add-late-frozen-root.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "file": "add-stdin-exact-pins.result.json",
+      "bytes": 959,
+      "sha256": "e8cea3ca213f972fc46fef1cee8f74683f56307864d3aa63075ec171792391a3",
+      "actualExit": 0,
+      "startedAt": "2026-10-06T04:55:35.428Z",
+      "endedAt": "2026-10-06T04:55:35.532Z",
+      "outputs": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\add-stdin-exact-pins.stdout.log",
+          "bytes": 343,
+          "sha256": "f679ea37b57366f94c32138c018fc3516eb14a98b934cb57bd945460cd566e28"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\add-stdin-exact-pins.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "file": "exact-data-binding-controls.result.json",
+      "bytes": 983,
+      "sha256": "88319bff7c3174f012ea1b0e68670c95683e687b8874fbd132ebf83f5fe0d51d",
+      "actualExit": 0,
+      "startedAt": "2026-10-06T04:57:12.357Z",
+      "endedAt": "2026-10-06T04:57:19.345Z",
+      "outputs": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\exact-data-binding-controls.stdout.log",
+          "bytes": 11928,
+          "sha256": "cab9acdd8712d7fb9308dc96b4c88d335351120ea64d7a2600da0e250d2e1297"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\exact-data-binding-controls.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "file": "final-all-frozen-pure-audit.result.json",
+      "bytes": 1204,
+      "sha256": "23f9aa0e7924882d9e17d6aec9fb6b32c48c86aae2dddf6333d8e9ec7b907ba8",
+      "actualExit": 0,
+      "startedAt": "2026-10-06T04:57:46.545Z",
+      "endedAt": "2026-10-06T04:57:49.746Z",
+      "outputs": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\final-all-frozen-pure-audit.stdout.log",
+          "bytes": 61,
+          "sha256": "bd3a7562f8cf68656d6f2615d238bd979f940edcbc766c5083e6ff44d977a554"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\final-all-frozen-pure-audit.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "file": "first-data-bound-pure-audit.result.json",
+      "bytes": 1202,
+      "sha256": "d82845cc64081c08688adf0b7ffa3093be169d0b1c8e6d094bc554eab5e9aee1",
+      "actualExit": 1,
+      "startedAt": "2026-10-06T04:54:33.662Z",
+      "endedAt": "2026-10-06T04:54:36.879Z",
+      "outputs": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\first-data-bound-pure-audit.stdout.log",
+          "bytes": 232,
+          "sha256": "29d4e4543716a979797524244a575a18136f011ec2ff5bb9ee373eb2588ac3a2"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\first-data-bound-pure-audit.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "file": "new-data-module-syntax.result.json",
+      "bytes": 975,
+      "sha256": "da068d44a65a6b960624abd3e20deef70b6eb2df3f702c09e0947f56aa9dee99",
+      "actualExit": 0,
+      "startedAt": "2026-10-06T04:54:04.664Z",
+      "endedAt": "2026-10-06T04:54:04.737Z",
+      "outputs": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\new-data-module-syntax.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\new-data-module-syntax.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "file": "new-lib-syntax.result.json",
+      "bytes": 952,
+      "sha256": "2c8e42b85d6ab6176f3b38084cfa13a3a99df6806233c169d1c29d32eff325c7",
+      "actualExit": 0,
+      "startedAt": "2026-10-06T04:54:05.539Z",
+      "endedAt": "2026-10-06T04:54:05.608Z",
+      "outputs": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\new-lib-syntax.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\new-lib-syntax.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "file": "old-association28.result.json",
+      "bytes": 970,
+      "sha256": "7a941783198c223e68680ee799415388e8f71750893ef8ffc7b0649758d821ab",
+      "actualExit": 0,
+      "startedAt": "2026-10-06T04:57:39.788Z",
+      "endedAt": "2026-10-06T04:57:40.119Z",
+      "outputs": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\old-association28.stdout.log",
+          "bytes": 1608,
+          "sha256": "bd1126acf6c3c7aeb682a21794d40e7fc60a6c3b63fed3c7c112d6b2d7506e9f"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\old-association28.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "file": "old-closure10.result.json",
+      "bytes": 957,
+      "sha256": "174eb14a0caca656969b49f4b5fa3e6d2df60cdd587f42f81ea3eda63a4dde72",
+      "actualExit": 0,
+      "startedAt": "2026-10-06T04:57:38.616Z",
+      "endedAt": "2026-10-06T04:57:38.881Z",
+      "outputs": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\old-closure10.stdout.log",
+          "bytes": 876,
+          "sha256": "c1a188dc870c7af6f888f799c65c123d306c9e8f8eb0dc4c516897af53232af5"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\old-closure10.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "file": "old-direct64.result.json",
+      "bytes": 954,
+      "sha256": "56a13d28f26b3d4d3504ad6932d0b4ddfba517968671adf54e7de924f3b7334d",
+      "actualExit": 0,
+      "startedAt": "2026-10-06T04:57:42.215Z",
+      "endedAt": "2026-10-06T04:57:43.284Z",
+      "outputs": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\old-direct64.stdout.log",
+          "bytes": 2902,
+          "sha256": "1d8f51e42e80350083b8fb3c14ac977f51effa061e053cd7b8892d8dcc040be5"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\old-direct64.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "file": "old-g7-output37.result.json",
+      "bytes": 967,
+      "sha256": "6cc3f68a359072b427efa5a5bf50feda6f4bd95645189af851f5ae9e43d1dc7d",
+      "actualExit": 0,
+      "startedAt": "2026-10-06T04:57:40.972Z",
+      "endedAt": "2026-10-06T04:57:41.357Z",
+      "outputs": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\old-g7-output37.stdout.log",
+          "bytes": 1826,
+          "sha256": "7e8a375a476fb45e553296725a28f5ef307843135f0994ee646d743a9ef7ff51"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\old-g7-output37.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "file": "old-generic12.result.json",
+      "bytes": 952,
+      "sha256": "9aee23bb690e4514675c9b3cb91d9fabcc4496ac1995c4a6fb8e1a46d7734fc9",
+      "actualExit": 0,
+      "startedAt": "2026-10-06T04:57:38.598Z",
+      "endedAt": "2026-10-06T04:57:39.116Z",
+      "outputs": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\old-generic12.stdout.log",
+          "bytes": 1103,
+          "sha256": "95e2eeb2b256532f359f1d994e1e726a71da9befc98bd771b344b8049829a38c"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\old-generic12.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "file": "old-native59-info20.result.json",
+      "bytes": 968,
+      "sha256": "ad74360f57060c7a780a5d691adca02cb25da4f3fc4fb426092fa023d1ddc151",
+      "actualExit": 0,
+      "startedAt": "2026-10-06T04:57:43.497Z",
+      "endedAt": "2026-10-06T04:57:44.799Z",
+      "outputs": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\old-native59-info20.stdout.log",
+          "bytes": 1282,
+          "sha256": "22b8a1766b6873773f4ac3d93afd317bc3473f9c76ec4c8cd4ed63214bee1634"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\old-native59-info20.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "file": "patch-data-reader.result.json",
+      "bytes": 950,
+      "sha256": "23770618869e77c717c81f22a4fa3d3b1e7026543ee10fbe73ac2ed67eb64d77",
+      "actualExit": 0,
+      "startedAt": "2026-10-06T04:53:03.728Z",
+      "endedAt": "2026-10-06T04:53:03.850Z",
+      "outputs": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\patch-data-reader.stdout.log",
+          "bytes": 124,
+          "sha256": "92ea4ccb0b9f4b7257c8ed5b654c053439dadff084d9af8ef52038042941ce33"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\patch-data-reader.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "file": "prepare-data-reader-v2.result.json",
+      "bytes": 965,
+      "sha256": "363d41ecaad9acbc6f9f71b9ff7dc004017132e1a38eede0fe5a6ae79dda822a",
+      "actualExit": 1,
+      "startedAt": "2026-10-06T04:50:27.660Z",
+      "endedAt": "2026-10-06T04:50:27.740Z",
+      "outputs": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\prepare-data-reader-v2.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\prepare-data-reader-v2.stderr.log",
+          "bytes": 748,
+          "sha256": "8a7a069406e0e2ff98df993e34f1b33a2026ea27bd642d2a2df2fcd73285eb44"
+        }
+      ]
+    },
+    {
+      "file": "prepare-data-reader-v3.result.json",
+      "bytes": 965,
+      "sha256": "23f32ddfb8c6d23b7e6093ab1547d19a24af9baa9c7f4a638895c08c8a043a65",
+      "actualExit": 0,
+      "startedAt": "2026-10-06T04:50:43.229Z",
+      "endedAt": "2026-10-06T04:50:43.578Z",
+      "outputs": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\prepare-data-reader-v3.stdout.log",
+          "bytes": 179,
+          "sha256": "815c86c39c6c8c4f5f1218281056e0875d0cd3503c84aa248147d4e2c230aa57"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\prepare-data-reader-v3.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "file": "write-prepare-v3.result.json",
+      "bytes": 945,
+      "sha256": "116477235bcd8f5582443e8238d13c21d6bec4955be225807b10df7cfb5e5b4c",
+      "actualExit": 0,
+      "startedAt": "2026-10-06T04:50:41.410Z",
+      "endedAt": "2026-10-06T04:50:41.483Z",
+      "outputs": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\write-prepare-v3.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\write-prepare-v3.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    }
+  ],
+  "oldReaderControls": 171,
+  "newReaderControls": 153,
+  "pureReaderControlsOnly": true,
+  "lastClosedPureAudit": {
+    "rootCount": 33,
+    "entries": 3087,
+    "receipts": 746,
+    "nonzeroOrAbnormal": 36,
+    "aggregates": 9,
+    "reportOnlyDataBindings": 93,
+    "transportBindings": 2,
+    "exclusions": 0,
+    "blockers": 0,
+    "receipt": {
+      "file": "final-all-frozen-pure-audit.result.json",
+      "bytes": 1204,
+      "sha256": "23f9aa0e7924882d9e17d6aec9fb6b32c48c86aae2dddf6333d8e9ec7b907ba8"
+    },
+    "report": {
+      "file": "final-all-frozen-pure-audit.json",
+      "bytes": 3743564,
+      "sha256": "92614df7df5c04835409df8b2ea1dbc6070574843614104f3f22ef71c632a038"
+    }
+  },
+  "lateAdditionalRoot": {
+    "files": 100,
+    "totalBytes": 2231518,
+    "indexSha256": "2fc26c446fafbf5fc4110ef09eeed26bb4117180a42228166ea65dc6a4d7505d",
+    "all100BytesAndShaVerified": true,
+    "finalCombinedAuditStillPending": true
+  },
+  "baseFinalConfig": {
+    "file": "all-frozen-final-config-v3.json",
+    "bytes": 253296,
+    "sha256": "25fb24052120ea44665eae79e6db28b2cf566fac8218fa1503440f2d3e4749b8"
+  },
+  "preparedInputRoots": 34,
+  "firstFailureRootNowStopped": "C:/Users/cina/AppData/Local/Temp/cinatoken-g7-native26-final-config-4851c19d4cc24ecdae397bcb12a8ad30",
+  "original154FailurePreserved": true,
+  "secondOneBlockerFailurePreserved": true,
+  "newPrepareNegativePreserved": true,
+  "allFsReadReportsAreNonprocess": true,
+  "allSlicesAreNonprocess": true,
+  "stdinIsInputSnapshotOnly": true,
+  "originalImportedExecutorOutcomes": [
+    1,
+    1
+  ],
+  "sourceCommit": "dc7be6f8597333151c450bae3ae15e6585e3b2eb",
+  "newStaticPreparedCommit": "ee122dd4273e2db892daa724bc6417a9b02b280c",
+  "newStaticPreparedNativeResult": null,
+  "collectionOnly": true,
+  "gatePassDerived": false,
+  "fullG7Verified": false,
+  "fullG8Verified": false,
+  "productionRequests": 0,
+  "applicationNativeRuntimeExecuted": false,
+  "repositoryGitCiModified": false,
+  "scope": "Frozen new Temp reader package. The final combined input config/audit will be produced outside this root after this package and independent peer stop writing; none of these preparation commands are business gate results."
+}

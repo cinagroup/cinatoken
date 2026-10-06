@@ -1,0 +1,30 @@
+{
+  "closed": true,
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "executable": "node",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b/read-selected.mjs",
+    "node_modules/miniflare/dist/src/index.js::94020::94082",
+    "node_modules/miniflare/dist/src/index.js::113148::113202",
+    "node_modules/miniflare/dist/src/index.js::113656::113708",
+    "node_modules/miniflare/dist/src/index.d.ts::10000::10020"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "startedAt": "2026-10-06T03:25:02.334Z",
+  "finishedAt": "2026-10-06T03:25:02.495Z",
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\direct-socket-contract.stdout.txt",
+    "bytes": 9712,
+    "sha256": "6c90cc6a692edabe6561fc85bb3d2ffd88abee713807ab648751454a7dd80544"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\direct-socket-contract.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "operation": "read-only-diagnosis",
+  "realServiceOrCiExecution": false,
+  "productionRequests": 0
+}

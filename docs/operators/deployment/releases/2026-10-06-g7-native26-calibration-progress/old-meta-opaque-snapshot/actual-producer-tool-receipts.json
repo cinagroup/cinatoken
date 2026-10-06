@@ -1,0 +1,22 @@
+{
+  "schema": "cinatoken-original-tool-return-copies-opaque-snapshot-v1",
+  "source": "Exact observed exec_command/write_stdin return fields copied after each command actually completed; not inferred from report flags",
+  "collectionOnly": true,
+  "gatePassDerived": false,
+  "operations": [
+    {
+      "operation": "zip-roundtrip",
+      "initialExecReturn": { "chunk_id": "a4c766", "wall_time_seconds": 10.0152739, "session_id": 52336, "original_token_count": 0, "output": "" },
+      "terminalWriteStdinReturn": { "chunk_id": "db602d", "wall_time_seconds": 0.0000109, "exit_code": 0, "original_token_count": 51, "output": "{\"receipt\":\"C:\\\\Users\\\\cina\\\\AppData\\\\Local\\\\Temp\\\\cinatoken-old-meta-opaque-snapshot-eEXPR6\\\\zip-roundtrip.result.json\",\"closed\":true,\"actualExit\":0,\"signal\":null,\"timedOut\":false,\"collectionOnly\":true}\n" }
+    },
+    {
+      "operation": "historical-pin",
+      "terminalExecReturn": { "chunk_id": "7fbb8b", "wall_time_seconds": 0.5492706, "exit_code": 0, "original_token_count": 52, "output": "{\"receipt\":\"C:\\\\Users\\\\cina\\\\AppData\\\\Local\\\\Temp\\\\cinatoken-old-meta-opaque-snapshot-eEXPR6\\\\historical-pin.result.json\",\"closed\":true,\"actualExit\":0,\"signal\":null,\"timedOut\":false,\"collectionOnly\":true}\n" }
+    },
+    {
+      "operation": "seal-final",
+      "terminalExecReturn": { "chunk_id": "61c203", "wall_time_seconds": 0.3867921, "exit_code": 0, "original_token_count": 51, "output": "{\"receipt\":\"C:\\\\Users\\\\cina\\\\AppData\\\\Local\\\\Temp\\\\cinatoken-old-meta-opaque-snapshot-eEXPR6\\\\seal-final.result.json\",\"closed\":true,\"actualExit\":0,\"signal\":null,\"timedOut\":false,\"collectionOnly\":true}\n" }
+    }
+  ],
+  "limitation": "All three new operations only collect, inspect immutable local historical files, read a local Git blob, and seal the snapshot. Original CI/application/gate outcomes are not re-executed or upgraded. Initial session return was nonterminal; only the subsequent actual terminal return closes that command."
+}

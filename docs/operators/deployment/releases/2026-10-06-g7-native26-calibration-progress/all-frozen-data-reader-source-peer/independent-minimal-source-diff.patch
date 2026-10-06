@@ -1,0 +1,94 @@
+--- original/evidence-lib.mjs
++++ new/evidence-lib.mjs
+@@ -7,7 +7,8 @@
+ 
+ import { directSocketClosure, directSocketAggregate, validateDirectSocketFiles } from './direct-socket-dialect.mjs';
+ 
+-import { native59BindingDialect, validateNative59InfoBinding } from './native59-info-binding.mjs';
++import { native59BindingDialect, validateNative59InfoBinding } from './native59-info-binding.mjs';
++import { validateFrozenDataBinding, validateTransportedDirectBinding } from './frozen-data-binding.mjs';
+ 
+ export const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex');
+ const relativeSafe = (name) => typeof name === 'string' && name !== '' &&
+@@ -180,7 +181,7 @@
+   assert.ok(/^[a-z0-9][a-z0-9-]+$/u.test(config.releaseSlug));
+   assert.notEqual(config.releaseSlug, '2026-10-06-web-cutover-followup', 'Previous immutable release cannot be reused');
+   assert.ok(Array.isArray(config.roots) && config.roots.length > 0);
+-  const prefixes = new Set(), roots = new Set(), entries = [], exclusions = [], blockers = [], receipts = [], contexts = [], historicalNonterminal = [], aggregateReports = [];
++  const prefixes = new Set(), roots = new Set(), entries = [], exclusions = [], blockers = [], receipts = [], contexts = [], historicalNonterminal = [], aggregateReports = [], reportOnlyDataBindings = [], closedExecutorTransportBindings = [];
+   for (const input of config.roots) {
+     assert.ok(/^[a-z0-9][a-z0-9-]{0,63}$/u.test(input.id) && !prefixes.has(input.id), 'Unique stable root prefix required');
+     prefixes.add(input.id);
+@@ -210,7 +211,7 @@
+       assert.equal(excluded.has(item.file), false); excluded.set(item.file, item.reason);
+     }
+     const data = new Map(names.filter((name) => !excluded.has(name)).map((name) => [name, stableRead(path.join(root, name))]));
+-    contexts.push({ input, root, names, excluded, data, json: new Map(), receiptByName: new Map(), aggregateByName: new Map(), logs: new Map(), nonterminal: new Set() });
++    contexts.push({ input, root, names, excluded, data, json: new Map(), receiptByName: new Map(), aggregateByName: new Map(), logs: new Map(), dataBindings: new Map(), nonterminal: new Set() });
+   }
+   const pointer = (object, keys) => { assert.ok(Array.isArray(keys) && keys.every(x => typeof x === 'string' && !['__proto__', 'prototype', 'constructor'].includes(x))); return keys.reduce((value, key) => value?.[key], object); };
+   const locate = full => { const context = contexts.find(x => within(x.root, full)); if (!context) return null; const name = path.relative(context.root, full).split(path.sep).join('/'); const item = context.data.get(name); return item ? { context, name, item } : null; };
+@@ -253,7 +254,7 @@
+   for (const context of contexts) for (const [name, receipt] of context.receiptByName) {
+     const item = context.data.get(name), value = context.json.get(name);
+     if (['v364-direct-socket-executor-closed-v1', 'v364-direct-socket-no-child-preflight-rejection-v1'].includes(receipt.dialect)) {
+-      try { for (const rel of validateDirectSocketFiles({ receiptName: name, value, data: context.data, json: context.json, receiptMtime: item.mtimeMs })) associate(context, rel, receipt); }
++      try { const binding=(config.transportedDirectExecutorBindings??[]).find(b=>b.rootId===context.input.id&&b.executorFile===name); const transport=binding?validateTransportedDirectBinding(binding,contexts):null; for (const rel of validateDirectSocketFiles({ receiptName: name, value, data: context.data, json: context.json, receiptMtime: item.mtimeMs, transportBindingVerified:transport?.transportBindingVerified===true })) associate(context, rel, transport?{...receipt,transportBinding:transport}:receipt); if(transport)closedExecutorTransportBindings.push(transport); }
+       catch (error) { problem(context, name, `Direct-socket executor binding rejected: ${error.message}`); }
+       continue;
+     }
+@@ -487,16 +488,23 @@
+       } catch (error) { problem(copy.context, copy.name, `Explicit partial schema-log copy rejected: ${error.message}`); }
+     }
+   }
++  const seenDataBindings=new Set();
++  for(const binding of config.frozenInputDataBindings??[]){
++    const key=binding.rootId+'/'+(binding.reportFile??binding.file),context=contexts.find(c=>c.input.id===binding.rootId);assert.ok(context,'Data-binding source root not configured');
++    try{assert.equal(seenDataBindings.has(key),false,'Duplicate frozen input data binding');seenDataBindings.add(key);const result=validateFrozenDataBinding(binding,contexts);reportOnlyDataBindings.push(result.report);for(const name of result.names){if(!result.context.dataBindings.has(name))result.context.dataBindings.set(name,[]);result.context.dataBindings.get(name).push(result.report);}}
++    catch(error){problem(context,binding.reportFile??binding.file,'Frozen input report-only data binding rejected: '+error.message);}
++  }
++  for(const binding of config.transportedDirectExecutorBindings??[]){const context=contexts.find(c=>c.input.id===binding.rootId);assert.ok(context,'Transport binding source root not configured');if(!closedExecutorTransportBindings.some(t=>t.root===binding.rootId&&t.file===binding.executorFile))problem(context,binding.executorFile,'Declared transported executor binding was not validated');}
+   for (const context of contexts) for (const name of context.names) {
+     const { input, root, excluded, data, logs, receiptByName } = context;
+     if (excluded.has(name)) { exclusions.push({ root: input.id, file: name, reason: excluded.get(name) }); continue; }
+-    const item = data.get(name), logClosures = logs.get(name) ?? [], closure = receiptByName.get(name), aggregate = context.aggregateByName.get(name);
+-    if (logLike(name) && logClosures.length === 0) { problem(context, name, 'Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active'); continue; }
+-    entries.push({ sourceRootId: input.id, sourceRoot: root, sourceRelative: name, sourcePath: path.join(root, name), relative: `${input.id}/${name}`, phase: input.phase, materialKind: closure ? 'closed-command-receipt' : aggregate ? 'closed-aggregate-report' : logClosures.length ? 'closed-command-output' : context.nonterminal.has(name) ? 'historical-nonterminal-report' : 'immutable-source-or-report', closures: closure ? [closure] : logClosures, ...(aggregate ? { aggregateReport: aggregate } : {}), originalBytes: item.bytes.length, originalSha256: item.sha256, mtimeMs: item.mtimeMs });
++    const item = data.get(name), dataBindings = context.dataBindings.get(name) ?? [], logClosures = logs.get(name) ?? [], closure = receiptByName.get(name), aggregate = context.aggregateByName.get(name);
++    if (logLike(name) && logClosures.length === 0 && dataBindings.length === 0) { problem(context, name, 'Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active'); continue; }
++    entries.push({ sourceRootId: input.id, sourceRoot: root, sourceRelative: name, sourcePath: path.join(root, name), relative: `${input.id}/${name}`, phase: input.phase, materialKind: closure ? 'closed-command-receipt' : aggregate ? 'closed-aggregate-report' : logClosures.length ? 'closed-command-output' : dataBindings.length ? 'report-only-data-bound-material' : context.nonterminal.has(name) ? 'historical-nonterminal-report' : 'immutable-source-or-report', closures: closure ? [closure] : logClosures, ...(dataBindings.length ? {dataBindings} : {}), ...(aggregate ? { aggregateReport: aggregate } : {}), originalBytes: item.bytes.length, originalSha256: item.sha256, mtimeMs: item.mtimeMs });
+   }
+   entries.sort((a, b) => a.relative < b.relative ? -1 : a.relative > b.relative ? 1 : 0);
+   assert.equal(new Set(entries.map((entry) => entry.relative)).size, entries.length, 'Stable relative prefixes must not collide');
+-  return { entries, exclusions, blockers, receipts, aggregateReports, historicalNonterminal, sourceRootIds: [...prefixes] };
++  return { entries, exclusions, blockers, receipts, aggregateReports, historicalNonterminal, reportOnlyDataBindings, closedExecutorTransportBindings, sourceRootIds: [...prefixes] };
+ }
+ export function collect(config) {
+   assert.ok(/^[0-9a-f]{40}$/u.test(config.sourceCommit), 'Final full SHA must be supplied before collection');
+@@ -529,7 +537,7 @@
+     const { mtimeMs, ...descriptor } = original;
+     entries.push({ ...descriptor, storedRelative, encoding: gzip ? 'gzip' : 'identity', storedBytes: reread.length, storedSha256: sha256(reread), originalRoundtripExact: true, sourceBytesExact: true });
+   }
+-  const report = { schemaVersion: 1, releaseSlug: config.releaseSlug, sourceCommit: config.sourceCommit, createdAt: new Date().toISOString(), collectionOnly: true, gatePassDerived: false, productionRequests: 0, evidenceDirectory: config.releaseSlug, entries, exclusions: plan.exclusions, closedReceipts: plan.receipts, closedAggregateReports: plan.aggregateReports, historicalNonterminalReports: plan.historicalNonterminal, immutableCopyBindings: config.immutableCopyBindings ?? [], explicitByteCopyBindings: config.explicitByteCopyBindings ?? [], explicitCommandOutputBindings: config.explicitCommandOutputBindings ?? [], immutableSchemaCopies: config.immutableSchemaCopies ?? [], roots: config.roots.map(({ id, path, phase, excludeDirectories }) => ({ id, path, phase, ...(excludeDirectories?.length ? { excludeDirectories } : {}) })), totals: { files: entries.length, originalBytes: entries.reduce((n, x) => n + x.originalBytes, 0), storedBytes: entries.reduce((n, x) => n + x.storedBytes, 0), gzipFiles: entries.filter((x) => x.encoding === 'gzip').length, nonzeroOrAbnormalReceipts: plan.receipts.filter((x) => x.actualExit !== 0 || x.signal != null || x.spawnError != null).length }, semantics: config.semantics ?? { scope: 'Evidence collection; no complete G7/G8 claim' } };
++  const report = { schemaVersion: 1, releaseSlug: config.releaseSlug, sourceCommit: config.sourceCommit, createdAt: new Date().toISOString(), collectionOnly: true, gatePassDerived: false, productionRequests: 0, evidenceDirectory: config.releaseSlug, entries, exclusions: plan.exclusions, closedReceipts: plan.receipts, closedAggregateReports: plan.aggregateReports, reportOnlyDataBindings: plan.reportOnlyDataBindings, closedExecutorTransportBindings: plan.closedExecutorTransportBindings, frozenInputDataBindings: config.frozenInputDataBindings ?? [], transportedDirectExecutorBindings: config.transportedDirectExecutorBindings ?? [], historicalNonterminalReports: plan.historicalNonterminal, immutableCopyBindings: config.immutableCopyBindings ?? [], explicitByteCopyBindings: config.explicitByteCopyBindings ?? [], explicitCommandOutputBindings: config.explicitCommandOutputBindings ?? [], immutableSchemaCopies: config.immutableSchemaCopies ?? [], roots: config.roots.map(({ id, path, phase, excludeDirectories }) => ({ id, path, phase, ...(excludeDirectories?.length ? { excludeDirectories } : {}) })), totals: { files: entries.length, originalBytes: entries.reduce((n, x) => n + x.originalBytes, 0), storedBytes: entries.reduce((n, x) => n + x.storedBytes, 0), gzipFiles: entries.filter((x) => x.encoding === 'gzip').length, nonzeroOrAbnormalReceipts: plan.receipts.filter((x) => x.actualExit !== 0 || x.signal != null || x.spawnError != null).length }, semantics: config.semantics ?? { scope: 'Evidence collection; no complete G7/G8 claim' } };
+   const reportPath = path.join(output, `${config.releaseSlug}.json`);
+   fs.writeFileSync(reportPath, `${JSON.stringify(report, null, 2)}\n`, { flag: 'wx' });
+   return { reportPath, report, sha256: sha256(fs.readFileSync(reportPath)), bytes: fs.statSync(reportPath).size };
+--- original/direct-socket-dialect.mjs
++++ new/direct-socket-dialect.mjs
+@@ -86,13 +86,13 @@
+   return {dialect:nodeSchema,actualExit:value.actualExit,sourceSHA:value.checkoutSHA,aggregateOnly:true,childLogAuthority:false,
+     gatePassDerived:false,allComparisonsBaselineEligible:false,completeComparisonShape:complete,causeProven:false,fullNativeCancelVerified:false};
+ }
+-export function validateDirectSocketFiles({receiptName,value,data,json,receiptMtime}){
++export function validateDirectSocketFiles({receiptName,value,data,json,receiptMtime,transportBindingVerified=false}){
+   const prefix=path.posix.dirname(receiptName)==='.'?'':path.posix.dirname(receiptName)+'/';
+   const named=value.files.map(file=>prefix+file.path),expected=[...data.keys()].filter(name=>name.startsWith(prefix)&&!name.slice(prefix.length).includes('/')&&name!==receiptName);
+   assert.deepEqual([...named].sort(),expected.sort(),'Exact direct-socket output directory manifest set required');
+   assert.ok(value.files.some(file=>file.path==='executor.stdout.txt')&&value.files.some(file=>file.path==='executor.stderr.txt'),'Both original executor streams required');
+   for(const descriptor of value.files){const item=data.get(prefix+descriptor.path);assert.ok(item,'Original manifested output missing');
+-    assert.equal(item.bytes.length,descriptor.bytes);assert.equal(item.sha256,descriptor.sha256);assert.ok(item.mtimeMs<=receiptMtime,'Output newer than original executor receipt');}
++    assert.equal(item.bytes.length,descriptor.bytes);assert.equal(item.sha256,descriptor.sha256);assert.ok(item.mtimeMs<=receiptMtime||transportBindingVerified===true,'Output newer than original executor receipt');}
+   if(value.actualProcessExit===null){assert.ok(noChild(value),'Only exact no-child admission refusal supported');return named;}
+   const start=json.get(prefix+'executor-start.json');assert.ok(start&&start.schema==='v364-direct-socket-executor-start-v1','Original executor start receipt required');
+   assert.ok(typeof start.repo==='string'&&path.isAbsolute(start.repo)&&typeof start.output==='string'&&path.isAbsolute(start.output)&&start.repo!==start.output,'Original absolute repo/output start fields required');

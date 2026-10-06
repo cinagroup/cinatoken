@@ -1,0 +1,31 @@
+{
+  "schema": "all-frozen-config-preparation-v1",
+  "startedAt": "2026-10-06T04:46:06.105Z",
+  "finishedAt": "2026-10-06T04:46:12.243Z",
+  "actualCheckExit": 0,
+  "currentRootFiles": 981,
+  "currentRootBytes": 11305947,
+  "all981SetBytesAndSha256Match": true,
+  "roots": 31,
+  "config": {
+    "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native26-final-config-4851c19d4cc24ecdae397bcb12a8ad30\\all-frozen-config.json",
+    "bytes": 18365,
+    "sha256": "85b9a7347cf61f418a79f681d340c414f3df694977c9e83e676488b2f6f1e358"
+  },
+  "inventory": {
+    "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native26-final-config-4851c19d4cc24ecdae397bcb12a8ad30\\all-frozen-input-inventory.json",
+    "bytes": 589285,
+    "sha256": "dff7e36373e082267e717fce29a01a53901db255ae6aed46e6cac6c928673d63"
+  },
+  "indexRoot": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-current-frozen-index-input-VPltuE",
+  "externalIndex": {
+    "file": "C:/Users/cina/AppData/Local/Temp/cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d/frozen-current-root-index.json",
+    "bytes": 375872,
+    "sha256": "cedbf58fb411c7a183c60d183f6d36da8c853236ec7711f0b3ad679da2c2f467"
+  },
+  "noCollection": true,
+  "noRepoGitCiProductionMutation": true,
+  "futureUnfrozenRootsNotIncluded": [
+    "native-four-historical-snapshot-repair-peer"
+  ]
+}

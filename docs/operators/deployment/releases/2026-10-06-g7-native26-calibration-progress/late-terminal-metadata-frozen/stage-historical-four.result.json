@@ -1,0 +1,29 @@
+{
+  "at": "2026-10-06T04:55:31.660Z",
+  "finishedAt": "2026-10-06T04:55:31.767Z",
+  "executable": "C:/Program Files/Git/cmd/git.exe",
+  "args": [
+    "-c",
+    "core.longpaths=true",
+    "add",
+    "--",
+    "scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs",
+    "scripts/db/cutover/fixtures/historical-native/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs.txt",
+    "scripts/db/cutover/postgres-replay-reservations-backend-lifecycle-successor.native.test.mjs",
+    "scripts/db/cutover/fixtures/historical-native/postgres-replay-reservations.native.test.mjs.txt",
+    "docs/developers/architecture/web-frontend-migration.md"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\stage-historical-four.stdout.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\stage-historical-four.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

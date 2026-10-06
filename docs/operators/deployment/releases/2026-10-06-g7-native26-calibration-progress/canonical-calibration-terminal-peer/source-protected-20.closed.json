@@ -1,0 +1,24 @@
+{
+  "at": "2026-10-06T04:39:57.193Z",
+  "finishedAt": "2026-10-06T04:39:57.250Z",
+  "executable": "git",
+  "args": [
+    "cat-file",
+    "blob",
+    "dc7be6f8597333151c450bae3ae15e6585e3b2eb:docs/operators/deployment/releases/2026-10-06-native-g7-boundary-progress/root-progress/boundary-artifact/_temp/v364-boundary-once-37402302570-1/executor.closed.json"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-canonical-calibration-terminal-independent-peer-7c64bf0f365242ed9e43c275ac46721a\\source-protected-20.stdout.log",
+  "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-canonical-calibration-terminal-independent-peer-7c64bf0f365242ed9e43c275ac46721a\\source-protected-20.stderr.log",
+  "stdoutInfo": {
+    "bytes": 5901,
+    "sha256": "9b505b71486eb69fa34203fd4e1c7d173a1aa12de2b0aa55d32552c5dba47113"
+  },
+  "stderrInfo": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

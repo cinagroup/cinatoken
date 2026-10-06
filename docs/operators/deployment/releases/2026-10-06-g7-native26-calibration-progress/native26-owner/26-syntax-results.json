@@ -1,0 +1,603 @@
+{
+  "at": "2026-10-06T03:46:17.287Z",
+  "results": [
+    {
+      "step": 60,
+      "file": "scripts/db/cutover/postgres-legacy-buyer-windowed-app-privileges-v374.native.test.mjs",
+      "at": "2026-10-06T03:46:16.728Z",
+      "finishedAt": "2026-10-06T03:46:16.800Z",
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "scripts/db/cutover/postgres-legacy-buyer-windowed-app-privileges-v374.native.test.mjs"
+      ],
+      "actualExit": 0,
+      "signal": null,
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-60.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-60.stderr.log",
+      "stdoutInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderrInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "step": 61,
+      "file": "scripts/db/cutover/postgres-legacy-buyer-windowed-app-privileges-renewal-v376.native.test.mjs",
+      "at": "2026-10-06T03:46:16.738Z",
+      "finishedAt": "2026-10-06T03:46:16.814Z",
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "scripts/db/cutover/postgres-legacy-buyer-windowed-app-privileges-renewal-v376.native.test.mjs"
+      ],
+      "actualExit": 0,
+      "signal": null,
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-61.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-61.stderr.log",
+      "stdoutInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderrInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "step": 66,
+      "file": "scripts/db/cutover/postgres-complete-text-admission-buyer-v379.native.test.mjs",
+      "at": "2026-10-06T03:46:16.744Z",
+      "finishedAt": "2026-10-06T03:46:16.814Z",
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "scripts/db/cutover/postgres-complete-text-admission-buyer-v379.native.test.mjs"
+      ],
+      "actualExit": 0,
+      "signal": null,
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-66.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-66.stderr.log",
+      "stdoutInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderrInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "step": 69,
+      "file": "scripts/db/cutover/postgres-complete-text-no-fetch-close-blocker-v382.native.test.mjs",
+      "at": "2026-10-06T03:46:16.752Z",
+      "finishedAt": "2026-10-06T03:46:16.824Z",
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "scripts/db/cutover/postgres-complete-text-no-fetch-close-blocker-v382.native.test.mjs"
+      ],
+      "actualExit": 0,
+      "signal": null,
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-69.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-69.stderr.log",
+      "stdoutInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderrInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "step": 71,
+      "file": "scripts/db/cutover/postgres-complete-text-observed-holder-v384.native.test.mjs",
+      "at": "2026-10-06T03:46:16.805Z",
+      "finishedAt": "2026-10-06T03:46:16.880Z",
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "scripts/db/cutover/postgres-complete-text-observed-holder-v384.native.test.mjs"
+      ],
+      "actualExit": 0,
+      "signal": null,
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-71.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-71.stderr.log",
+      "stdoutInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderrInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "step": 72,
+      "file": "scripts/db/cutover/postgres-complete-text-platform-close-fence-v386.native.test.mjs",
+      "at": "2026-10-06T03:46:16.816Z",
+      "finishedAt": "2026-10-06T03:46:16.900Z",
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "scripts/db/cutover/postgres-complete-text-platform-close-fence-v386.native.test.mjs"
+      ],
+      "actualExit": 0,
+      "signal": null,
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-72.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-72.stderr.log",
+      "stdoutInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderrInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "step": 73,
+      "file": "scripts/db/cutover/postgres-complete-chat-holder-dispatch-v387.native.test.mjs",
+      "at": "2026-10-06T03:46:16.824Z",
+      "finishedAt": "2026-10-06T03:46:16.904Z",
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "scripts/db/cutover/postgres-complete-chat-holder-dispatch-v387.native.test.mjs"
+      ],
+      "actualExit": 0,
+      "signal": null,
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-73.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-73.stderr.log",
+      "stdoutInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderrInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "step": 74,
+      "file": "scripts/db/cutover/postgres-complete-text-no-fetch-platform-close-v388.native.test.mjs",
+      "at": "2026-10-06T03:46:16.834Z",
+      "finishedAt": "2026-10-06T03:46:16.916Z",
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "scripts/db/cutover/postgres-complete-text-no-fetch-platform-close-v388.native.test.mjs"
+      ],
+      "actualExit": 0,
+      "signal": null,
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-74.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-74.stderr.log",
+      "stdoutInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderrInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "step": 75,
+      "file": "scripts/db/cutover/postgres-complete-text-no-fetch-recovery-v389.native.test.mjs",
+      "at": "2026-10-06T03:46:16.884Z",
+      "finishedAt": "2026-10-06T03:46:16.958Z",
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "scripts/db/cutover/postgres-complete-text-no-fetch-recovery-v389.native.test.mjs"
+      ],
+      "actualExit": 0,
+      "signal": null,
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-75.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-75.stderr.log",
+      "stdoutInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderrInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "step": 76,
+      "file": "scripts/db/cutover/postgres-complete-text-holder-worker-v390.native.test.mjs",
+      "at": "2026-10-06T03:46:16.904Z",
+      "finishedAt": "2026-10-06T03:46:16.971Z",
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "scripts/db/cutover/postgres-complete-text-holder-worker-v390.native.test.mjs"
+      ],
+      "actualExit": 0,
+      "signal": null,
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-76.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-76.stderr.log",
+      "stdoutInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderrInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "step": 77,
+      "file": "scripts/db/cutover/postgres-complete-text-secretless-plan-v391.native.test.mjs",
+      "at": "2026-10-06T03:46:16.916Z",
+      "finishedAt": "2026-10-06T03:46:16.989Z",
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "scripts/db/cutover/postgres-complete-text-secretless-plan-v391.native.test.mjs"
+      ],
+      "actualExit": 0,
+      "signal": null,
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-77.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-77.stderr.log",
+      "stdoutInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderrInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "step": 78,
+      "file": "scripts/db/cutover/postgres-complete-text-response-observation-v392.native.test.mjs",
+      "at": "2026-10-06T03:46:16.926Z",
+      "finishedAt": "2026-10-06T03:46:16.999Z",
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "scripts/db/cutover/postgres-complete-text-response-observation-v392.native.test.mjs"
+      ],
+      "actualExit": 0,
+      "signal": null,
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-78.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-78.stderr.log",
+      "stdoutInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderrInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "step": 80,
+      "file": "scripts/db/cutover/postgres-personal-key-auth-period-v395.native.test.mjs",
+      "at": "2026-10-06T03:46:16.961Z",
+      "finishedAt": "2026-10-06T03:46:17.033Z",
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "scripts/db/cutover/postgres-personal-key-auth-period-v395.native.test.mjs"
+      ],
+      "actualExit": 0,
+      "signal": null,
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-80.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-80.stderr.log",
+      "stdoutInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderrInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "step": 81,
+      "file": "scripts/db/cutover/postgres-complete-text-routing-projection-v396.native.test.mjs",
+      "at": "2026-10-06T03:46:16.974Z",
+      "finishedAt": "2026-10-06T03:46:17.053Z",
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "scripts/db/cutover/postgres-complete-text-routing-projection-v396.native.test.mjs"
+      ],
+      "actualExit": 0,
+      "signal": null,
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-81.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-81.stderr.log",
+      "stdoutInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderrInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "step": 82,
+      "file": "scripts/db/cutover/postgres-complete-text-response-no-fetch-coinstall-v397.native.test.mjs",
+      "at": "2026-10-06T03:46:16.992Z",
+      "finishedAt": "2026-10-06T03:46:17.066Z",
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "scripts/db/cutover/postgres-complete-text-response-no-fetch-coinstall-v397.native.test.mjs"
+      ],
+      "actualExit": 0,
+      "signal": null,
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-82.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-82.stderr.log",
+      "stdoutInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderrInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "step": 83,
+      "file": "scripts/db/cutover/postgres-complete-text-auth-routing-recovery-coinstall-v400.native.test.mjs",
+      "at": "2026-10-06T03:46:17.003Z",
+      "finishedAt": "2026-10-06T03:46:17.078Z",
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "scripts/db/cutover/postgres-complete-text-auth-routing-recovery-coinstall-v400.native.test.mjs"
+      ],
+      "actualExit": 0,
+      "signal": null,
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-83.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-83.stderr.log",
+      "stdoutInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderrInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "step": 84,
+      "file": "scripts/db/cutover/postgres-exclusive-credential-free-chat-ingress-v401.native.test.mjs",
+      "at": "2026-10-06T03:46:17.036Z",
+      "finishedAt": "2026-10-06T03:46:17.115Z",
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "scripts/db/cutover/postgres-exclusive-credential-free-chat-ingress-v401.native.test.mjs"
+      ],
+      "actualExit": 0,
+      "signal": null,
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-84.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-84.stderr.log",
+      "stdoutInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderrInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "step": 85,
+      "file": "scripts/db/cutover/postgres-complete-text-platform-event-delivery-v402.native.test.mjs",
+      "at": "2026-10-06T03:46:17.057Z",
+      "finishedAt": "2026-10-06T03:46:17.133Z",
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "scripts/db/cutover/postgres-complete-text-platform-event-delivery-v402.native.test.mjs"
+      ],
+      "actualExit": 0,
+      "signal": null,
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-85.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-85.stderr.log",
+      "stdoutInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderrInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "step": 86,
+      "file": "scripts/db/cutover/postgres-complete-text-no-fetch-fence-v370.native.test.mjs",
+      "at": "2026-10-06T03:46:17.069Z",
+      "finishedAt": "2026-10-06T03:46:17.145Z",
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "scripts/db/cutover/postgres-complete-text-no-fetch-fence-v370.native.test.mjs"
+      ],
+      "actualExit": 0,
+      "signal": null,
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-86.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-86.stderr.log",
+      "stdoutInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderrInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "step": 88,
+      "file": "scripts/db/cutover/postgres-guardrail-admission-adapter-v352.native.test.mjs",
+      "at": "2026-10-06T03:46:17.081Z",
+      "finishedAt": "2026-10-06T03:46:17.158Z",
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "scripts/db/cutover/postgres-guardrail-admission-adapter-v352.native.test.mjs"
+      ],
+      "actualExit": 0,
+      "signal": null,
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-88.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-88.stderr.log",
+      "stdoutInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderrInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "step": 95,
+      "file": "scripts/db/cutover/postgres-buyer-split-grant-rerun-v348.native.test.mjs",
+      "at": "2026-10-06T03:46:17.118Z",
+      "finishedAt": "2026-10-06T03:46:17.198Z",
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "scripts/db/cutover/postgres-buyer-split-grant-rerun-v348.native.test.mjs"
+      ],
+      "actualExit": 0,
+      "signal": null,
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-95.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-95.stderr.log",
+      "stdoutInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderrInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "step": 96,
+      "file": "scripts/db/cutover/postgres-buyer-split-guardrail-v349.native.test.mjs",
+      "at": "2026-10-06T03:46:17.138Z",
+      "finishedAt": "2026-10-06T03:46:17.213Z",
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "scripts/db/cutover/postgres-buyer-split-guardrail-v349.native.test.mjs"
+      ],
+      "actualExit": 0,
+      "signal": null,
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-96.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-96.stderr.log",
+      "stdoutInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderrInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "step": 97,
+      "file": "scripts/db/cutover/postgres-shared-key-stats-auth-boundary-v346.native.test.mjs",
+      "at": "2026-10-06T03:46:17.149Z",
+      "finishedAt": "2026-10-06T03:46:17.226Z",
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "scripts/db/cutover/postgres-shared-key-stats-auth-boundary-v346.native.test.mjs"
+      ],
+      "actualExit": 0,
+      "signal": null,
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-97.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-97.stderr.log",
+      "stdoutInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderrInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "step": 98,
+      "file": "scripts/db/cutover/postgres-shared-key-stats-signed-claim-v348.native.test.mjs",
+      "at": "2026-10-06T03:46:17.160Z",
+      "finishedAt": "2026-10-06T03:46:17.230Z",
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "scripts/db/cutover/postgres-shared-key-stats-signed-claim-v348.native.test.mjs"
+      ],
+      "actualExit": 0,
+      "signal": null,
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-98.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-98.stderr.log",
+      "stdoutInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderrInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "step": 99,
+      "file": "scripts/db/cutover/postgres-shared-key-stats-claim-reader-v349-cjs-loader-successor.native.test.mjs",
+      "at": "2026-10-06T03:46:17.201Z",
+      "finishedAt": "2026-10-06T03:46:17.270Z",
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "scripts/db/cutover/postgres-shared-key-stats-claim-reader-v349-cjs-loader-successor.native.test.mjs"
+      ],
+      "actualExit": 0,
+      "signal": null,
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-99.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-99.stderr.log",
+      "stdoutInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderrInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "step": 106,
+      "file": "scripts/db/cutover/postgres-shared-key-credited-usage-reader.native.test.mjs",
+      "at": "2026-10-06T03:46:17.217Z",
+      "finishedAt": "2026-10-06T03:46:17.285Z",
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "scripts/db/cutover/postgres-shared-key-credited-usage-reader.native.test.mjs"
+      ],
+      "actualExit": 0,
+      "signal": null,
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-106.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-106.stderr.log",
+      "stdoutInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderrInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ]
+}

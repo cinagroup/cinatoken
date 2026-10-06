@@ -1,0 +1,7 @@
+{
+  "originalRootReaderActualExit": 1,
+  "sourceOrStoredContentBlock": false,
+  "reason": "Repository .gitignore line11 ignores *.log;1618 explicit archive log files were not staged by normal git add.",
+  "remediation": "Force add only the two intentional evidence directories, then repeat the same staged-set and bytes audit with fresh record names.",
+  "businessGatePassDerived": false
+}

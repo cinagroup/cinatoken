@@ -1,0 +1,21 @@
+{
+  "schema": "late-frozen-root-byte-proof-v1",
+  "finishedAt": "2026-10-06T05:01:37.535Z",
+  "sourceIndex": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-final-durable-collection-meta-S7NHM2/frozen-late-root-index.json",
+    "bytes": 39443,
+    "sha256": "2fc26c446fafbf5fc4110ef09eeed26bb4117180a42228166ea65dc6a4d7505d"
+  },
+  "copyIndex": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\frozen-late-root-index.json",
+    "bytes": 39443,
+    "sha256": "2fc26c446fafbf5fc4110ef09eeed26bb4117180a42228166ea65dc6a4d7505d"
+  },
+  "sourceRoot": "C:/Users/cina/AppData/Local/Temp/cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d",
+  "files": 100,
+  "totalBytes": 2231518,
+  "allSetBytesShaAndMtimeMatch": true,
+  "sourceRootUnchanged": true,
+  "newCiRuntimeVerified": false,
+  "gatePassDerived": false
+}

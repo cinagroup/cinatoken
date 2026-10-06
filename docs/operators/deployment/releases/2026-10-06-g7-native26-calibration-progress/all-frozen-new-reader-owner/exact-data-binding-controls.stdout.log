@@ -1,0 +1,154 @@
+ok 1 - exact original report-only exact-file-read-report-only-v1 actual-native-original-receipt.closed.json
+ok 2 - exact original report-only exact-file-read-report-only-v1 actual-native-raw.closed.json
+ok 3 - exact original report-only exact-file-read-report-only-v1 actual-step94-group.closed.json
+ok 4 - exact original report-only exact-file-read-report-only-v1 final-frozen-inventory.closed.json
+ok 5 - exact original report-only exact-file-read-report-only-v1 final-working-0.closed.json
+ok 6 - exact original report-only exact-file-read-report-only-v1 final-working-1.closed.json
+ok 7 - exact original report-only exact-file-read-report-only-v1 final-working-10.closed.json
+ok 8 - exact original report-only exact-file-read-report-only-v1 final-working-11.closed.json
+ok 9 - exact original report-only exact-file-read-report-only-v1 final-working-12.closed.json
+ok 10 - exact original report-only exact-file-read-report-only-v1 final-working-13.closed.json
+ok 11 - exact original report-only exact-file-read-report-only-v1 final-working-14.closed.json
+ok 12 - exact original report-only exact-file-read-report-only-v1 final-working-15.closed.json
+ok 13 - exact original report-only exact-file-read-report-only-v1 final-working-16.closed.json
+ok 14 - exact original report-only exact-file-read-report-only-v1 final-working-17.closed.json
+ok 15 - exact original report-only exact-file-read-report-only-v1 final-working-18.closed.json
+ok 16 - exact original report-only exact-file-read-report-only-v1 final-working-19.closed.json
+ok 17 - exact original report-only exact-file-read-report-only-v1 final-working-2.closed.json
+ok 18 - exact original report-only exact-file-read-report-only-v1 final-working-20.closed.json
+ok 19 - exact original report-only exact-file-read-report-only-v1 final-working-21.closed.json
+ok 20 - exact original report-only exact-file-read-report-only-v1 final-working-22.closed.json
+ok 21 - exact original report-only exact-file-read-report-only-v1 final-working-3.closed.json
+ok 22 - exact original report-only exact-file-read-report-only-v1 final-working-4.closed.json
+ok 23 - exact original report-only exact-file-read-report-only-v1 final-working-5.closed.json
+ok 24 - exact original report-only exact-file-read-report-only-v1 final-working-6.closed.json
+ok 25 - exact original report-only exact-file-read-report-only-v1 final-working-7.closed.json
+ok 26 - exact original report-only exact-file-read-report-only-v1 final-working-8.closed.json
+ok 27 - exact original report-only exact-file-read-report-only-v1 final-working-9.closed.json
+ok 28 - exact original report-only exact-file-read-report-only-v1 instructions-0.closed.json
+ok 29 - exact original report-only exact-file-read-report-only-v1 instructions-1.closed.json
+ok 30 - exact original report-only exact-file-read-report-only-v1 instructions-2.closed.json
+ok 31 - exact original report-only exact-file-read-report-only-v1 instructions-3.closed.json
+ok 32 - exact original report-only exact-file-read-report-only-v1 instructions-4.closed.json
+ok 33 - exact original report-only exact-file-read-report-only-v1 instructions-5.closed.json
+ok 34 - exact original report-only exact-file-read-report-only-v1 parent-terminal-final.closed.json
+ok 35 - exact original report-only exact-file-read-report-only-v1 working-legacy-109.closed.json
+ok 36 - exact original report-only exact-file-read-report-only-v1 working-legacy-94.closed.json
+ok 37 - exact original report-only exact-file-read-report-only-v1 fixture-instructions-v3.closed.json
+ok 38 - exact original report-only exact-file-read-report-only-v1 fixture-instructions.closed.json
+ok 39 - exact original report-only exact-file-read-report-only-v1 historical-instructions-v3.closed.json
+ok 40 - exact original report-only exact-file-read-report-only-v1 historical-instructions.closed.json
+ok 41 - exact original report-only exact-file-read-report-only-v1 instructions-0.closed.json
+ok 42 - exact original report-only exact-file-read-report-only-v1 instructions-1.closed.json
+ok 43 - exact original report-only exact-file-read-report-only-v1 instructions-2.closed.json
+ok 44 - exact original report-only exact-file-read-report-only-v1 instructions-3.closed.json
+ok 45 - exact original report-only exact-file-read-report-only-v1 instructions-4.closed.json
+ok 46 - exact original report-only exact-file-read-report-only-v1 instructions-5.closed.json
+ok 47 - exact original report-only exact-file-read-report-only-v1 prior-owner-final.closed.json
+ok 48 - exact original report-only exact-file-read-report-only-v1 prior-pin-final.closed.json
+ok 49 - exact original report-only exact-file-read-report-only-v1 working-legacy-109.closed.json
+ok 50 - exact original report-only exact-file-read-report-only-v1 working-legacy-94.closed.json
+ok 51 - exact original report-only exact-file-read-report-only-v1 working-wrapper-109.closed.json
+ok 52 - exact original report-only exact-file-read-report-only-v1 working-wrapper-94.closed.json
+ok 53 - exact original report-only exact-native-workflow-utf16-slice-v1 group-step-55.raw.log
+ok 54 - exact original report-only exact-native-workflow-utf16-slice-v1 group-step-56.raw.log
+ok 55 - exact original report-only exact-native-workflow-utf16-slice-v1 group-step-57.raw.log
+ok 56 - exact original report-only exact-native-workflow-utf16-slice-v1 group-step-58.raw.log
+ok 57 - exact original report-only exact-native-workflow-utf16-slice-v1 group-step-59.raw.log
+ok 58 - exact original report-only exact-native-workflow-utf16-slice-v1 group-step-60.raw.log
+ok 59 - exact original report-only exact-native-workflow-utf16-slice-v1 group-step-61.raw.log
+ok 60 - exact original report-only exact-native-workflow-utf16-slice-v1 group-step-62.raw.log
+ok 61 - exact original report-only exact-native-workflow-utf16-slice-v1 group-step-63.raw.log
+ok 62 - exact original report-only exact-native-workflow-utf16-slice-v1 group-step-64.raw.log
+ok 63 - exact original report-only exact-native-workflow-utf16-slice-v1 group-step-65.raw.log
+ok 64 - exact original report-only exact-native-workflow-utf16-slice-v1 group-step-66.raw.log
+ok 65 - exact original report-only exact-native-workflow-utf16-slice-v1 group-step-67.raw.log
+ok 66 - exact original report-only exact-native-workflow-utf16-slice-v1 group-step-68.raw.log
+ok 67 - exact original report-only exact-native-workflow-utf16-slice-v1 group-step-69.raw.log
+ok 68 - exact original report-only exact-native-workflow-utf16-slice-v1 group-step-70.raw.log
+ok 69 - exact original report-only exact-native-workflow-utf16-slice-v1 group-step-71.raw.log
+ok 70 - exact original report-only exact-native-workflow-utf16-slice-v1 group-step-72.raw.log
+ok 71 - exact original report-only exact-native-workflow-utf16-slice-v1 group-step-73.raw.log
+ok 72 - exact original report-only exact-native-workflow-utf16-slice-v1 group-step-74.raw.log
+ok 73 - exact original report-only exact-native-workflow-utf16-slice-v1 group-step-75.raw.log
+ok 74 - exact original report-only exact-native-workflow-utf16-slice-v1 group-step-76.raw.log
+ok 75 - exact original report-only exact-native-workflow-utf16-slice-v1 group-step-77.raw.log
+ok 76 - exact original report-only exact-native-workflow-utf16-slice-v1 group-step-78.raw.log
+ok 77 - exact original report-only exact-native-workflow-utf16-slice-v1 group-step-79.raw.log
+ok 78 - exact original report-only exact-native-workflow-utf16-slice-v1 group-step-80.raw.log
+ok 79 - exact original report-only exact-native-workflow-utf16-slice-v1 group-step-81.raw.log
+ok 80 - exact original report-only exact-native-workflow-utf16-slice-v1 group-step-82.raw.log
+ok 81 - exact original report-only exact-native-workflow-utf16-slice-v1 group-step-83.raw.log
+ok 82 - exact original report-only exact-native-workflow-utf16-slice-v1 group-step-84.raw.log
+ok 83 - exact original report-only exact-native-workflow-utf16-slice-v1 group-step-85.raw.log
+ok 84 - exact original report-only exact-native-workflow-utf16-slice-v1 group-step-86.raw.log
+ok 85 - exact original report-only exact-native-workflow-utf16-slice-v1 group-step-87.raw.log
+ok 86 - exact original report-only exact-native-workflow-utf16-slice-v1 group-step-88.raw.log
+ok 87 - exact original report-only exact-native-workflow-utf16-slice-v1 group-step-89.raw.log
+ok 88 - exact original report-only exact-native-workflow-utf16-slice-v1 group-step-90.raw.log
+ok 89 - exact original report-only exact-native-workflow-utf16-slice-v1 group-step-91.raw.log
+ok 90 - exact original report-only exact-native-workflow-utf16-slice-v1 group-step-92.raw.log
+ok 91 - exact original report-only exact-native-workflow-utf16-slice-v1 group-step-93.raw.log
+ok 92 - exact original report-only exact-native-workflow-utf16-slice-v1 group-step-94.raw.log
+ok 93 - exact original report-only exact-closed-command-input-snapshot-v1 git-inputs.stdin.log
+ok 94 - FS success status mutation 1
+ok 95 - FS success status mutation -15
+ok 96 - FS success status mutation 0
+ok 97 - FS success status mutation null
+ok 98 - FS success status mutation undefined
+ok 99 - unknown binding kind
+ok 100 - unknown root binding
+ok 101 - unpinned declaration field
+ok 102 - FS numeric zero cannot be declared real child
+ok 103 - FS signal rejected
+ok 104 - FS null not treated command close
+ok 105 - FS unknown read error
+ok 106 - FS missing output
+ok 107 - FS mutated output
+ok 108 - FS mutated producer
+ok 109 - FS missing source report
+ok 110 - slice UTF16 offset cannot be interpreted as byte index
+ok 111 - slice original raw mutation
+ok 112 - slice missing original download authority
+ok 113 - slice original download null not exit0
+ok 114 - slice producer process1 cannot be washed as close0
+ok 115 - slice source workflow SHA mutation
+ok 116 - slice raw SHA mutation
+ok 117 - slice newer than producing child closed
+ok 118 - stdin missing actual input file
+ok 119 - stdin mutation rejected
+ok 120 - stdin producer1 cannot be converted0
+ok 121 - exact transported executor remains runtime1 37414167261
+ok 122 - transport original mtime check still enforced without binding 37414167261
+ok 123 - transport unregistered SHA 37414167261
+ok 124 - transport unknown executor 37414167261
+ok 125 - transport download outcome null 37414167261
+ok 126 - transport download outcome 1 37414167261
+ok 127 - transport download outcome -9 37414167261
+ok 128 - transport missing metadata 37414167261
+ok 129 - transport altered metadata 37414167261
+ok 130 - transport missing index 37414167261
+ok 131 - transport altered index 37414167261
+ok 132 - transport forced cleanup cannot be rewritten 37414167261
+ok 133 - transport timeout cannot be rewritten 37414167261
+ok 134 - transport process0 cannot be borrowed from download 37414167261
+ok 135 - transport numeric1 not reassigned download zero 37414167261
+ok 136 - transport output mutation 37414167261
+ok 137 - exact transported executor remains runtime1 37412108171
+ok 138 - transport original mtime check still enforced without binding 37412108171
+ok 139 - transport unregistered SHA 37412108171
+ok 140 - transport unknown executor 37412108171
+ok 141 - transport download outcome null 37412108171
+ok 142 - transport download outcome 1 37412108171
+ok 143 - transport download outcome -9 37412108171
+ok 144 - transport missing metadata 37412108171
+ok 145 - transport altered metadata 37412108171
+ok 146 - transport missing index 37412108171
+ok 147 - transport altered index 37412108171
+ok 148 - transport forced cleanup cannot be rewritten 37412108171
+ok 149 - transport timeout cannot be rewritten 37412108171
+ok 150 - transport process0 cannot be borrowed from download 37412108171
+ok 151 - transport numeric1 not reassigned download zero 37412108171
+ok 152 - transport output mutation 37412108171
+ok 153 - full integration excludes FS and slices from closed receipts
+{"controls":153,"actualExit":0,"scope":"Pure Temp reader controls and immutable evidence reads only; no application/CI/native/runtime execution","gatePassDerived":false}

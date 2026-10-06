@@ -1,0 +1,68 @@
+{
+  "schema": "stopwrite-frozen-data-peer-v1",
+  "sealedAt": "2026-10-06T05:07:33.586163+00:00",
+  "sourceRoot": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-frozen-data-reader-peer-readonly-l04m66n6",
+  "entriesBeforeSelf": [
+    {
+      "file": "all-frozen-final-config-v3.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-frozen-data-reader-peer-readonly-l04m66n6\\all-frozen-final-config-v3.json",
+      "bytes": 253296,
+      "sha256": "25fb24052120ea44665eae79e6db28b2cf566fac8218fa1503440f2d3e4749b8"
+    },
+    {
+      "file": "direct-socket-dialect.mjs",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-frozen-data-reader-peer-readonly-l04m66n6\\direct-socket-dialect.mjs",
+      "bytes": 12912,
+      "sha256": "6bda5d078b0c12ca7eab0bffd8e0cdae6fbaad86e381668bcca076ac8fadd934"
+    },
+    {
+      "file": "evidence-lib.mjs",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-frozen-data-reader-peer-readonly-l04m66n6\\evidence-lib.mjs",
+      "bytes": 56334,
+      "sha256": "0ad4b4ef3467b684743bb9a2d29f6780b47aa7e076174a5613e7ebf4a60628a1"
+    },
+    {
+      "file": "exact-source-patches-final.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-frozen-data-reader-peer-readonly-l04m66n6\\exact-source-patches-final.json",
+      "bytes": 5888,
+      "sha256": "498ac76005ad1a8ff3b648ef19c9640324776632a3b1bba1f04d6fea7652a50a"
+    },
+    {
+      "file": "FINAL-frozen-data-reader-independent-peer-review.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-frozen-data-reader-peer-readonly-l04m66n6\\FINAL-frozen-data-reader-independent-peer-review.json",
+      "bytes": 108686,
+      "sha256": "0c66c6b40e3b380aa42dfd466fc14d323c783c2bca9990d9c58436f105648b33"
+    },
+    {
+      "file": "frozen-data-binding-controls.mjs",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-frozen-data-reader-peer-readonly-l04m66n6\\frozen-data-binding-controls.mjs",
+      "bytes": 10953,
+      "sha256": "ebbf81fe91e55f76b4f6d287184a35efd823b391abb13e031dbe50c53353f80e"
+    },
+    {
+      "file": "frozen-data-binding.mjs",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-frozen-data-reader-peer-readonly-l04m66n6\\frozen-data-binding.mjs",
+      "bytes": 13826,
+      "sha256": "0e8e6f17a9c0b47f3c074ef35211f10ba42799076ceb364d80d4fe3faa085a18"
+    },
+    {
+      "file": "frozen-data-original-pins-v3.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-frozen-data-reader-peer-readonly-l04m66n6\\frozen-data-original-pins-v3.json",
+      "bytes": 233587,
+      "sha256": "dae1d173ef09c5e188f28328ff376a86dab083e679f686e186439975a26c22ae"
+    },
+    {
+      "file": "independent-minimal-source-diff.patch",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-frozen-data-reader-peer-readonly-l04m66n6\\independent-minimal-source-diff.patch",
+      "bytes": 13871,
+      "sha256": "cbc229d6e1b83a17fa88016b40326e94f2ae219ec678fc57402b56c2069b015a"
+    }
+  ],
+  "filesBeforeSelf": 9,
+  "selfExcludedOnly": true,
+  "noFurtherWrites": true,
+  "collectionOnly": true,
+  "gatePassDerived": false,
+  "fullG7Verified": false,
+  "fullG8Verified": false
+}

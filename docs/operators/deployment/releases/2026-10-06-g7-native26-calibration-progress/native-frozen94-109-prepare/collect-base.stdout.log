@@ -1,0 +1,32 @@
+wrapper-94-historical-metadata
+2: // The historical v348 fixture, SQL proposals, test-only grants and denial assertions stay frozen.
+41: const historicalFixtureSha256 = '603646803c82d3209987260ad682a34169b4e53ca7b03b672d818e3a28d7cc13';
+118:       lineage: { historicalFixture: 'scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs',
+119:         historicalFixtureSha256, contract: 'explicit runtime read and buyer financial clients; exact aggregate reviewed-v1' },
+185:       report.sourceSha256.historicalFixture = digest(await readFile(new URL(
+186:         './postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs', import.meta.url)));
+187:       assert.equal(report.sourceSha256.historicalFixture, historicalFixtureSha256);
+341:       stage('synthetic-buyer-seller-and-frozen-quote-installed');
+wrapper-109-historical-metadata
+1: // Successor preserves the historical replay fixture and its SQL/ACL assertions.
+17: const historicalNativeTest = new URL('./postgres-replay-reservations.native.test.mjs', import.meta.url);
+18: const historicalNativeTestSha256 = 'd95055419a04465c7c172ff0b8426bd0b928bd538e4dad80f9442229abd5e269';
+90:       lineage: { historicalNativeTestSha256,
+94:         'The historical Linux runner failed with an uncaught postgres.js socket race during an intentionally terminated begin() transaction despite a PASS SQL summary; this successor requires the actual Node test runner to pass.',
+133:         ['historicalNativeTest', historicalNativeTest],
+143:       assert.equal(report.sourceSha256.historicalNativeTest, historicalNativeTestSha256);
+172:       const historical = 'replay-old-' + randomUUID();
+175:       assert.equal(await prepare(migrator, historical, oldExpiry), true);
+176:       assert.equal(await claim(migrator, historical, oldClaim), true);
+179:       [historical]);
+403:       // queued on the dead socket; the historical begin(callback) did that.
+489:       const payload = `{"dispatchClaimId":"${oldClaim}","intent":{"apiKeyId":"replay-key","attemptIndex":1,"contextSha256":"${context}","operation":"images.generations","requestId":"${historical}","userId":"replay-user","workspaceId":"replay-space"},"params":{},"recordedAtIso":"${recordedAt}","version":1}`;
+496:       [historical, context, oldClaim, payload, payloadHash, recordedAt]);
+500:       [historical, payloadHash, fact.created_at_ms]);
+501:       await assert.rejects(migrator.unsafe(`DELETE FROM ${schema}.request_dispatch_intents WHERE request_id=$1`, [historical]),
+503:       await assert.rejects(migrator.unsafe(`DELETE FROM ${schema}.request_dispatch_requests WHERE request_id=$1`, [historical]),
+505:       await assert.rejects(migrator.unsafe(`DELETE FROM ${schema}.request_dispatch_replay_tombstones WHERE request_id=$1`, [historical]),
+510:         WHERE request_id=$1`, [historical]), /immutable/);
+515:         (SELECT payload_sha256 FROM ${schema}.request_usage_settlements WHERE request_id=$1) AS fact_hash`, [historical]);
+620:       assert.equal(byId[historical].review_bucket, 'claimed_history_hold');
+{"actualExit":0,"baseCommit":"dc7be6f8597333151c450bae3ae15e6585e3b2eb","allowedPaths":["scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs","scripts/db/cutover/fixtures/historical-native/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs.txt","scripts/db/cutover/postgres-replay-reservations-backend-lifecycle-successor.native.test.mjs","scripts/db/cutover/fixtures/historical-native/postgres-replay-reservations.native.test.mjs.txt"],"rawHistoricalGitMatches":2,"repositoryWrites":0}

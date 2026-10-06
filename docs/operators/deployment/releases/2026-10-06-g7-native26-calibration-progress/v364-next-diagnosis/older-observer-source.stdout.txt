@@ -1,0 +1,373 @@
+{"file":"scripts/diagnostics/v364-owned-linux/gateway-observer.mjs","bytes":1244,"sha256":"3ec2e49a72697f61bd1867bcde369a7c508cdbf669cd86d7e0eebdfc41dcfe00"}
+1: import original from '__ORIGINAL__';
+2: const emit = (event, fields = {}) => {
+3:   try { console.log('V364_DIAG ' + JSON.stringify({ boundary: 'gateway', event, wallMs: Date.now(), ...fields })); } catch {}
+4: };
+5: function observe(signal, boundary) {
+6:   emit('signal-initial', { signalBoundary: boundary, aborted: signal.aborted });
+7:   signal.addEventListener('abort', () => emit('signal-abort', { signalBoundary: boundary, aborted: signal.aborted }), { once: true });
+8: }
+9: export default {
+10:   fetch(request, env, ctx) {
+11:     observe(request.signal, 'incoming');
+12:     const binding = env.TEXT_HOLDER;
+13:     const observedBinding = new Proxy(binding, {
+14:       get(target, property) {
+15:         if (property === 'fetch') return (...args) => {
+16:           if (args[0] instanceof Request) observe(args[0].signal, 'forwarded-request-object');
+17:           emit('binding-fetch');
+18:           return Reflect.apply(target.fetch, target, args);
+19:         };
+20:         const value = Reflect.get(target, property, target);
+21:         return typeof value === 'function' ? value.bind(target) : value;
+22:       },
+23:     });
+24:     // Forward the original Request, body, response, promise and context unchanged.
+25:     return original.fetch(request, { ...env, TEXT_HOLDER: observedBinding }, ctx);
+26:   },
+27: };
+28: 
+{"file":"scripts/diagnostics/v364-owned-linux/holder-observer.mjs","bytes":2461,"sha256":"740727cae646ae757fa50ef7bb6c02a9f9cb4b1b3aa64b0de539c88bbbe09a25"}
+1: import original from '__ORIGINAL__';
+2: const emit = (event, fields = {}) => {
+3:   try { console.log('V364_DIAG ' + JSON.stringify({ boundary: 'holder', event, wallMs: Date.now(), ...fields })); } catch {}
+4: };
+5: export default {
+6:   fetch(request, env, ctx) {
+7:     emit('signal-initial', { aborted: request.signal.aborted });
+8:     request.signal.addEventListener('abort', () => emit('signal-abort', { aborted: request.signal.aborted }), { once: true });
+9:     let operation = 0;
+10:     let releaseReads = 0;
+11:     const observedKV = new Proxy(env.OBSERVATIONS, {
+12:       get(target, property) {
+13:         if (property === 'put' || property === 'get') return (...args) => {
+14:           const category = String(args[0]).split(':', 1)[0];
+15:           const id = ++operation;
+16:           const sample = category !== 'release' || property === 'put' || [1, 100, 200, 300].includes(++releaseReads);
+17:           if (sample) emit('kv-invoke', { operation: id, method: property, category, releaseReads });
+18:           // No new KV write, no changed key/value/options, and no replacement promise.
+19:           let task;
+20:           try { task = Reflect.apply(target[property], target, args); }
+21:           catch (error) { emit('kv-throw', { operation: id, method: property, category, errorName: error?.name }); throw error; }
+22:           if (sample) task.then(
+23:             () => emit('kv-fulfilled', { operation: id, method: property, category, releaseReads }),
+24:             error => emit('kv-rejected', { operation: id, method: property, category, errorName: error?.name }),
+25:           );
+26:           return task;
+27:         };
+28:         const value = Reflect.get(target, property, target);
+29:         return typeof value === 'function' ? value.bind(target) : value;
+30:       },
+31:     });
+32:     const observedContext = new Proxy(ctx, {
+33:       get(target, property) {
+34:         if (property === 'waitUntil') return task => {
+35:           emit('waitUntil-register');
+36:           // Register the SAME original promise exactly once. Observers add no lifetime task.
+37:           const value = Reflect.apply(target.waitUntil, target, [task]);
+38:           task.then(() => emit('waitUntil-fulfilled'), error => emit('waitUntil-rejected', { errorName: error?.name }));
+39:           return value;
+40:         };
+41:         const value = Reflect.get(target, property, target);
+42:         return typeof value === 'function' ? value.bind(target) : value;
+43:       },
+44:     });
+45:     return original.fetch(request, { ...env, OBSERVATIONS: observedKV }, observedContext);
+46:   },
+47: };
+48: 
+{"file":"scripts/diagnostics/v364-owned-linux/run-v364-owned-diagnostic.mjs","bytes":22852,"sha256":"11850fbe29355f705e3bc4ec68c1b6416565b943dfb7a0f200d4090de5158666"}
+1: import assert from 'node:assert/strict';
+2: import { createHash, randomUUID } from 'node:crypto';
+3: import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
+4: import { createRequire } from 'node:module';
+5: import { dirname, join, resolve } from 'node:path';
+6: import { fileURLToPath } from 'node:url';
+7: import { performance } from 'node:perf_hooks';
+8: import { createServer, request as httpRequest } from 'node:http';
+9: import { spawn } from 'node:child_process';
+10: 
+11: const here = dirname(fileURLToPath(import.meta.url));
+12: const arg = name => { const i = process.argv.indexOf(name); return i < 0 ? undefined : process.argv[i + 1]; };
+13: const repo = resolve(arg('--repo') ?? process.cwd());
+14: const output = resolve(arg('--out') ?? join(here, 'prepared'));
+15: const execute = process.argv.includes('--execute-linux');
+16: const prepareOnly = process.argv.includes('--prepare-only');
+17: assert.notEqual(execute, prepareOnly, 'choose exactly one explicit mode');
+18: assert.ok(arg('--out'), 'explicit unique --out is required');
+19: let executorReceipt;
+20: if (execute) {
+21:   assert.equal(process.platform, 'linux', 'owned Linux only');
+22:   assert.equal(Number(process.versions.node.split('.')[0]), 22, 'use repository .nvmrc major 22');
+23:   assert.equal(arg('--executor-receipt'), join(output, 'executor-start.json'), 'Python executor must own fresh output');
+24:   executorReceipt = JSON.parse(readFileSync(arg('--executor-receipt'), 'utf8'));
+25:   assert.equal(executorReceipt.schema, 'v364-owned-linux-executor-start-v1');
+26:   assert.equal(executorReceipt.repo, repo); assert.equal(executorReceipt.output, output);
+27:   assert.equal(executorReceipt.freshOutputCreated, true);
+28: } else {
+29:   assert.equal(existsSync(output), false, 'prepare output must not exist');
+30:   mkdirSync(output);
+31: }
+32: const source = join(repo, 'packages/proxy/scripts/staging');
+33: const require = createRequire(join(repo, 'package.json'));
+34: const { build } = require('esbuild');
+35: const { Miniflare, convertV4MiniflareOptions, Log, LogLevel } = require('miniflare');
+36: const expected = { workerd: '1.20260828.1', miniflare: '5.20260828.0-alpha', wrangler: '4.127.1' };
+37: const versions = Object.fromEntries(Object.keys(expected).map(name => [name, require(`${name}/package.json`).version]));
+38: assert.deepEqual(versions, expected);
+39: assert.equal(process.env.MINIFLARE_WORKERD_PATH, undefined, 'no runtime override');
+40: const sha = bytes => createHash('sha256').update(bytes).digest('hex');
+41: const files = [
+42:   'packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs',
+43:   'packages/proxy/scripts/staging/chat-holder-binding-v364.node.test.mjs',
+44:   'packages/proxy/scripts/staging/chat-holder-gateway-v364.ts',
+45:   'packages/proxy/scripts/staging/chat-holder-private-v364.ts',
+46:   'packages/proxy/scripts/staging/chat-holder-synthetic-v364.ts',
+47:   'packages/proxy/scripts/staging/wrangler.chat-holder-gateway-v364.jsonc',
+48:   'packages/proxy/scripts/staging/wrangler.chat-holder-private-v364.jsonc',
+49:   'package-lock.json', '.nvmrc', '.github/workflows/proxy-dispatch-safety.yml',
+50: ];
+51: const snapshot = () => files.map(path => { const b = readFileSync(join(repo, path)); return { path, bytes: b.length, sha256: sha(b) }; });
+52: const inputsBefore = snapshot();
+53: const sealedInputs = JSON.parse(readFileSync(join(here, 'source-inputs.json'), 'utf8'));
+54: assert.deepEqual(inputsBefore, sealedInputs, 'exact reviewed source/config/lock/workflow bytes');
+55: const gatewayConfig = JSON.parse(readFileSync(join(source, files[5].split('/').at(-1)), 'utf8'));
+56: const holderConfig = JSON.parse(readFileSync(join(source, files[6].split('/').at(-1)), 'utf8'));
+57: for (const config of [gatewayConfig, holderConfig]) {
+58:   assert.deepEqual(config.compatibility_flags, ['nodejs_compat', 'enable_request_signal']);
+59:   assert.equal(config.compatibility_date, '2026-09-25');
+60:   assert.equal(config.workers_dev, false); assert.equal(config.preview_urls, false);
+61:   assert.deepEqual(config.routes, []); assert.deepEqual(config.triggers, { crons: [] });
+62: }
+63: assert.deepEqual(gatewayConfig.services, [{ binding: 'TEXT_HOLDER', service: holderConfig.name, remote: false }]);
+64: assert.deepEqual(holderConfig.kv_namespaces.map(v => v.binding), ['OBSERVATIONS']);
+65: assert.equal(holderConfig.services, undefined);
+66: async function bundle(path, wrapper) {
+67:   const opts = { bundle: true, format: 'esm', platform: 'browser', target: 'es2022', write: false };
+68:   if (wrapper) {
+69:     const text = readFileSync(join(here, wrapper), 'utf8').replace('__ORIGINAL__', join(source, path).replaceAll('\\', '/'));
+70:     opts.stdin = { contents: text, resolveDir: source, sourcefile: wrapper, loader: 'js' };
+71:   } else opts.entryPoints = [join(source, path)];
+72:   const result = await build(opts); assert.equal(result.outputFiles.length, 1); return result.outputFiles[0].text;
+73: }
+74: const bundles = {
+75:   gateway: await bundle(gatewayConfig.main), holder: await bundle(holderConfig.main),
+76:   observedGateway: await bundle(gatewayConfig.main, 'gateway-observer.mjs'),
+77:   observedHolder: await bundle(holderConfig.main, 'holder-observer.mjs'),
+78: };
+79: const syntheticBuilt = await build({ entryPoints: [join(source, 'chat-holder-synthetic-v364.ts')], bundle: true, format: 'esm', platform: 'node', write: false });
+80: const synthetic = await import('data:text/javascript;base64,' + Buffer.from(syntheticBuilt.outputFiles[0].text).toString('base64'));
+81: const { SYNTHETIC_CREDENTIAL_V364, SYNTHETIC_PROVIDER_URL_V364, SYNTHETIC_PUBLIC_BODY_V364, SYNTHETIC_QUOTE_V364, SYNTHETIC_ROUTE_V364 } = synthetic;
+82: for (const name of ['gateway', 'observedGateway']) {
+83:   assert.equal(bundles[name].includes(SYNTHETIC_CREDENTIAL_V364), false);
+84:   assert.equal(bundles[name].includes(SYNTHETIC_PROVIDER_URL_V364), false);
+85: }
+86: for (const name of ['holder', 'observedHolder']) {
+87:   assert.equal(bundles[name].includes(SYNTHETIC_CREDENTIAL_V364), true);
+88:   assert.equal(bundles[name].includes(SYNTHETIC_PROVIDER_URL_V364), true);
+89: }
+90: const envelope = () => ({ requestId: SYNTHETIC_QUOTE_V364.requestId, quoteId: SYNTHETIC_QUOTE_V364.quoteId,
+91:   attemptNonce: randomUUID(), candidateIndex: SYNTHETIC_ROUTE_V364.candidateIndex,
+92:   routeTargetId: SYNTHETIC_ROUTE_V364.targetId, finalBodyUtf8: SYNTHETIC_PUBLIC_BODY_V364 });
+93: const bundleHashes = Object.entries(bundles).map(([name, text]) => ({ name, bytes: Buffer.byteLength(text), sha256: sha(text) }));
+94: if (!execute) {
+95:   assert.deepEqual(snapshot(), inputsBefore);
+96:   writeFileSync(join(output, 'prepare-only.json'), JSON.stringify({ schema: 'v364-linux-diagnostic-prepare-v1', actualExit: 0,
+97:     runtimeExecuted: false, versions, runtimeCompatibilityDate: '2026-09-04', frozenConfigDate: '2026-09-25',
+98:     sourceUnchanged: true, inputsBefore, bundleHashes, productionRequests: 0, ciInvocations: 0 }, null, 2) + '\n');
+99:   console.log(JSON.stringify({ actualExit: 0, runtimeExecuted: false, output }));
+100:   process.exit(0);
+101: }
+102: const startedAt = new Date().toISOString();
+103: const start = performance.now();
+104: const events = [];
+105: const results = [];
+106: const active = new Set();
+107: const errorSafe = error => ({ name: error?.name, code: error?.code, message: String(error?.message ?? error).replaceAll(SYNTHETIC_CREDENTIAL_V364, '[synthetic-redacted]').replaceAll(SYNTHETIC_PROVIDER_URL_V364, '[synthetic-redacted]') });
+108: const event = (caseId, kind, fields = {}) => { if (events.length >= 15000) throw new Error('diagnostic event cap exceeded'); events.push({ caseId, kind, hostMs: performance.now() - start, wallMs: Date.now(), ...fields }); };
+109: const delay = ms => new Promise(resolveDelay => setTimeout(resolveDelay, ms));
+110: async function bounded(task, ms, label) {
+111:   let timer; try { return await Promise.race([task, new Promise((_, reject) => { timer = setTimeout(() => reject(new Error(`${label} deadline ${ms}ms`)), ms); })]); }
+112:   finally { clearTimeout(timer); }
+113: }
+114: class CaptureLog extends Log { constructor(caseId) { super(LogLevel.DEBUG); this.caseId = caseId; } log(message) { event(this.caseId, 'miniflare-log', { message: String(message) }); } }
+115: async function fixture(caseId, observed, signalPassthrough = false) {
+116:   const mf = new Miniflare(convertV4MiniflareOptions({ cf: false, host: '127.0.0.1', port: 0,
+117:     log: new CaptureLog(caseId),
+118:     handleStructuredLogs(log) { event(caseId, 'workerd-log', { timestamp: log.timestamp, level: log.level, message: String(log.message).replaceAll(SYNTHETIC_CREDENTIAL_V364, '[synthetic-redacted]').replaceAll(SYNTHETIC_PROVIDER_URL_V364, '[synthetic-redacted]') }); },
+119:     workers: [{ name: gatewayConfig.name, modules: true, script: observed ? bundles.observedGateway : bundles.gateway,
+120:       compatibilityDate: '2026-09-04', compatibilityFlags: signalPassthrough ? [...gatewayConfig.compatibility_flags, 'request_signal_passthrough'] : gatewayConfig.compatibility_flags,
+121:       serviceBindings: { TEXT_HOLDER: holderConfig.name } },
+122:     { name: holderConfig.name, modules: true, script: observed ? bundles.observedHolder : bundles.holder,
+123:       compatibilityDate: '2026-09-04', compatibilityFlags: holderConfig.compatibility_flags,
+124:       kvNamespaces: { OBSERVATIONS: holderConfig.kv_namespaces[0].id } }],
+125:   }));
+126:   active.add(mf);
+127:   assert.deepEqual(Object.keys(await mf.getBindings(gatewayConfig.name)), ['TEXT_HOLDER']);
+128:   const { OBSERVATIONS } = await mf.getBindings(holderConfig.name); assert.ok(OBSERVATIONS);
+129:   const url = new URL('/fixture/complete-text', await mf.ready); assert.equal(url.hostname, '127.0.0.1'); assert.equal(url.protocol, 'http:');
+130:   return { mf, observations: OBSERVATIONS, url };
+131: }
+132: function httpClient(caseId, url, body, mode) {
+133:   assert.equal(url.hostname, '127.0.0.1');
+134:   return new Promise((resolveClient, reject) => {
+135:     let response; let socket;
+136:     const request = httpRequest(url, { method: 'POST', agent: false, headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) } });
+137:     request.on('error', error => { event(caseId, 'request-error', errorSafe(error)); reject(error); });
+138:     request.once('close', () => event(caseId, 'request-close', { destroyed: request.destroyed }));
+139:     request.once('socket', value => {
+140:       socket = value;
+141:       for (const type of ['connect', 'end', 'close', 'error', 'timeout']) socket.on(type, data => event(caseId, 'socket-' + type,
+142:         type === 'error' ? errorSafe(data) : { hadError: typeof data === 'boolean' ? data : undefined, destroyed: socket.destroyed, bytesRead: socket.bytesRead, bytesWritten: socket.bytesWritten }));
+143:     });
+144:     request.setTimeout(10000, () => request.destroy(new Error('fixture HTTP socket timed out')));
+145:     request.once('response', value => {
+146:       response = value;
+147:       for (const type of ['aborted', 'close', 'end', 'error']) response.on(type, data => event(caseId, 'response-' + type, type === 'error' ? errorSafe(data) : { complete: response.complete, destroyed: response.destroyed }));
+148:       response.on('error', reject);
+149:       let first = Buffer.alloc(0);
+150:       const onData = chunk => {
+151:         first = Buffer.concat([first, chunk]);
+152:         if (first.length > 128) { request.destroy(); response.destroy(); reject(new Error('first SSE frame exceeded bound')); return; }
+153:         if (!first.includes('\n\n')) return;
+154:         response.pause(); response.removeListener('data', onData);
+155:         event(caseId, 'first-frame', { bytes: first.length });
+156:         resolveClient({ status: response.statusCode, contentType: response.headers['content-type'], first,
+157:           async cancel() {
+158:             event(caseId, 'client-cancel-invoke', { mode });
+159:             if (!response.closed) {
+160:               const closed = new Promise(resolveClosed => response.once('close', resolveClosed));
+161:               if (mode === 'rst') { assert.equal(typeof socket.resetAndDestroy, 'function'); assert.equal(socket.remoteAddress, '127.0.0.1'); socket.resetAndDestroy(); }
+162:               request.destroy(); response.destroy();
+163:               await bounded(closed, 10000, 'client response close');
+164:             }
+165:             const result = { requestDestroyed: request.destroyed, responseDestroyed: response.destroyed, responseComplete: response.complete };
+166:             event(caseId, 'client-cancel-settled', result); return result;
+167:           }, cleanup() { request.destroy(); response?.destroy(); },
+168:         });
+169:       };
+170:       response.on('data', onData);
+171:       response.once('end', () => reject(new Error('response ended before first frame')));
+172:     });
+173:     request.end(body);
+174:   });
+175: }
+176: async function readerClient(caseId, url, body) {
+177:   assert.equal(url.hostname, '127.0.0.1');
+178:   const controller = new AbortController();
+179:   const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body, signal: controller.signal });
+180:   const reader = response.body.getReader();
+181:   reader.closed.then(() => event(caseId, 'reader-closed-fulfilled'), error => event(caseId, 'reader-closed-rejected', errorSafe(error)));
+182:   let first = Buffer.alloc(0);
+183:   while (!first.includes('\n\n')) { const part = await reader.read(); assert.equal(part.done, false); first = Buffer.concat([first, part.value]); assert.ok(first.length <= 128); }
+184:   event(caseId, 'first-frame', { bytes: first.length });
+185:   return { status: response.status, contentType: response.headers.get('Content-Type'), first,
+186:     async cancel() { event(caseId, 'client-cancel-invoke', { mode: 'reader-cancel' }); await reader.cancel('synthetic client cancel'); event(caseId, 'client-cancel-settled'); return { readerCancelled: true }; },
+187:     cleanup() { controller.abort(); },
+188:   };
+189: }
+190: async function observedGet(caseId, observations, key, n, phase) {
+191:   event(caseId, 'observer-kv-get-invoke', { category: key.split(':', 1)[0], poll: n, phase });
+192:   const value = await observations.get(key);
+193:   event(caseId, 'observer-kv-get-settled', { category: key.split(':', 1)[0], poll: n, phase, value });
+194:   return value;
+195: }
+196: async function cancellationCase(caseId, observed, mode, signalPassthrough = false) {
+197:   let f; let client;
+198:   const result = { caseId, observed, mode, signalPassthrough, baselineEligible: !signalPassthrough, originalWindow: null, tail: null, actualExit: 1, closed: false };
+199:   try {
+200:     f = await fixture(caseId, observed, signalPassthrough); const e = envelope(); const body = JSON.stringify(e);
+201:     client = await bounded(mode === 'reader-cancel' ? readerClient(caseId, f.url, body) : httpClient(caseId, f.url, body, mode), 10000, 'first frame');
+202:     assert.equal(client.status, 200); assert.equal(client.contentType, 'text/event-stream');
+203:     assert.equal(await observedGet(caseId, f.observations, `accepted:${e.attemptNonce}`, 0, 'before'), 'one');
+204:     assert.equal(client.first.toString(), ': holder-ready\n\n');
+205:     const cancelled = await bounded(client.cancel(), 10000, 'cancel');
+206:     if (mode !== 'reader-cancel') assert.deepEqual(cancelled, { requestDestroyed: true, responseDestroyed: true, responseComplete: false });
+207:     const pollStart = performance.now(); let value = null; let count = 0;
+208:     // Exact original poll count, sleep, and expected value. Elapsed time is measured, not assumed 1s.
+209:     for (let n = 0; n < 100 && value === null; n++) { value = await observedGet(caseId, f.observations, `cancel:${e.attemptNonce}`, n, 'original'); count++; if (value === null) await delay(10); }
+210:     result.originalWindow = { pollCount: count, sleepMs: 10, elapsedMs: performance.now() - pollStart, actual: value, expected: 'observed', actualExit: value === 'observed' ? 0 : 1 };
+211:     try { assert.equal(value, 'observed'); } catch (error) { result.strictFailure = errorSafe(error); }
+212:     assert.equal(await observedGet(caseId, f.observations, `release:${e.attemptNonce}`, 0, 'after'), null);
+213:     assert.equal(await observedGet(caseId, f.observations, `accepted:${e.attemptNonce}`, 0, 'after'), 'one');
+214:     // Separate observational tail cannot overwrite originalWindow or turn a failure into success.
+215:     const tailStart = performance.now(); let tailCount = 0;
+216:     while (value === null && performance.now() - tailStart < 4000) { value = await observedGet(caseId, f.observations, `cancel:${e.attemptNonce}`, tailCount++, 'diagnostic-tail'); if (value === null) await delay(50); }
+217:     result.tail = { elapsedMs: performance.now() - tailStart, reads: tailCount, actual: value, usedForPass: false };
+218:     result.actualExit = result.originalWindow.actualExit;
+219:   } catch (error) { result.error = errorSafe(error); }
+220:   finally {
+221:     client?.cleanup();
+222:     if (f) { await bounded(f.mf.dispose(), 10000, 'Miniflare dispose'); active.delete(f.mf); result.closed = true; }
+223:     event(caseId, 'case-closed', { actualExit: result.actualExit, closed: result.closed }); results.push(result);
+224:   }
+225: }
+226: async function calibration(mode) {
+227:   const caseId = 'node-http-calibration-' + mode;
+228:   let requestCount = 0; let received = ''; let client;
+229:   const body = JSON.stringify(envelope());
+230:   let peerClose;
+231:   const closed = new Promise(resolveClose => { peerClose = resolveClose; });
+232:   const server = createServer((request, response) => {
+233:     requestCount++; request.setEncoding('utf8'); request.on('data', chunk => { received += chunk; });
+234:     request.socket.on('error', error => event(caseId, 'server-socket-error', errorSafe(error)));
+235:     request.socket.on('end', () => event(caseId, 'server-socket-end'));
+236:     request.socket.on('close', hadError => event(caseId, 'server-socket-close', { hadError }));
+237:     response.on('error', error => event(caseId, 'server-response-error', errorSafe(error)));
+238:     request.on('end', () => { response.writeHead(200, { 'Content-Type': 'text/event-stream' }); response.write(': holder-ready\n\n'); });
+239:     response.once('close', () => { event(caseId, 'server-response-close', { writableFinished: response.writableFinished }); peerClose(); });
+240:   });
+241:   const result = { caseId, mode, actualExit: 1, closed: false };
+242:   try {
+243:     await new Promise(resolveListen => server.listen(0, '127.0.0.1', resolveListen));
+244:     const url = new URL(`http://127.0.0.1:${server.address().port}/fixture/complete-text`);
+245:     client = await bounded(mode === 'reader-cancel' ? readerClient(caseId, url, body) : httpClient(caseId, url, body, mode), 10000, 'calibration first frame');
+246:     assert.equal(client.status, 200); assert.equal(client.contentType, 'text/event-stream'); assert.equal(client.first.toString(), ': holder-ready\n\n');
+247:     const cancellation = await bounded(client.cancel(), 10000, 'calibration cancel');
+248:     if (mode !== 'reader-cancel') assert.deepEqual(cancellation, { requestDestroyed: true, responseDestroyed: true, responseComplete: false });
+249:     await bounded(closed, 10000, 'server peer close'); assert.equal(requestCount, 1); assert.equal(received, body);
+250:     result.actualExit = 0;
+251:   } catch (error) { result.error = errorSafe(error); }
+252:   finally { client?.cleanup(); server.closeAllConnections(); await bounded(new Promise(resolveClose => server.close(resolveClose)), 10000, 'server dispose'); result.closed = true; results.push(result); }
+253: }
+254: async function strictBaseline() {
+255:   const env = { PATH: process.env.PATH, HOME: process.env.HOME, TMPDIR: process.env.TMPDIR, CI: 'true', NO_COLOR: '1' };
+256:   // Share the executor's isolated process group so outer termination includes all workerd descendants.
+257:   const child = spawn(process.execPath, ['--import', require.resolve('tsx'), '--test', 'scripts/staging/chat-holder-binding-v364.node.test.mjs', 'scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs'], { cwd: join(repo, 'packages/proxy'), env, stdio: ['ignore', 'pipe', 'pipe'] });
+258:   let stdout = ''; let stderr = ''; let timedOut = false;
+259:   const timer = setTimeout(() => { timedOut = true; child.kill('SIGKILL'); }, 90000);
+260:   child.stdout.on('data', b => { stdout += b; }); child.stderr.on('data', b => { stderr += b; });
+261:   let spawnError;
+262:   child.on('error', error => { spawnError = errorSafe(error); });
+263:   const [code, signal] = await new Promise(resolveClose => child.once('close', (...args) => resolveClose(args)));
+264:   clearTimeout(timer);
+265:   writeFileSync(join(output, 'original-strict.stdout.txt'), stdout); writeFileSync(join(output, 'original-strict.stderr.txt'), stderr);
+266:   return { code, signal, timedOut, spawnError, stdout: { bytes: Buffer.byteLength(stdout), sha256: sha(stdout) }, stderr: { bytes: Buffer.byteLength(stderr), sha256: sha(stderr) } };
+267: }
+268: let baseline; let fatal;
+269: try {
+270:   baseline = await strictBaseline();
+271:   if (baseline.timedOut || baseline.spawnError || baseline.signal) throw new Error('strict baseline did not close normally; outer executor owns process-group cleanup');
+272:   for (const mode of ['destroy', 'rst', 'reader-cancel']) await bounded(calibration(mode), 15000, 'calibration case');
+273:   await bounded(cancellationCase('locked-uninstrumented-destroy', false, 'destroy'), 30000, 'original transport case');
+274:   await bounded(cancellationCase('locked-observed-destroy', true, 'destroy'), 30000, 'observed original transport case');
+275:   await bounded(cancellationCase('locked-observed-rst', true, 'rst'), 30000, 'observed RST case');
+276:   await bounded(cancellationCase('locked-observed-reader-cancel', true, 'reader-cancel'), 30000, 'observed reader case');
+277:   await bounded(cancellationCase('locked-observed-destroy-passthrough-variant', true, 'destroy', true), 30000, 'isolated passthrough variant');
+278: } catch (error) { fatal = errorSafe(error); }
+279: finally {
+280:   for (const mf of active) { try { await bounded(mf.dispose(), 10000, 'final Miniflare dispose'); active.delete(mf); } catch (error) { event('finally', 'dispose-error', errorSafe(error)); } }
+281:   const inputsAfter = snapshot(); const sourceUnchanged = JSON.stringify(inputsBefore) === JSON.stringify(inputsAfter);
+282:   const eventsText = JSON.stringify(events, null, 2) + '\n'; writeFileSync(join(output, 'events.json'), eventsText);
+283:   const actualExit = !fatal && baseline?.code === 0 && results.length === 8 && results.every(v => v.actualExit === 0 && v.closed) && active.size === 0 && sourceUnchanged ? 0 : 1;
+284:   const report = { schema: 'v364-owned-linux-diagnostic-closed-v1', startedAt, endedAt: new Date().toISOString(), elapsedMs: performance.now() - start,
+285:     actualExit, outcome: actualExit === 0 ? 'STRICT_SYNTHETIC_ONLY_PASS' : 'STRICT_FAILURE_PRESERVED', baseline, results, fatal, versions,
+286:     executorReceipt, closureAuthority: 'executor.closed.json; bounded Promise does not cancel underlying task',
+287:     runtimeCompatibilityDate: '2026-09-04', frozenConfigDate: '2026-09-25', sourceUnchanged, inputsBefore, inputsAfter, bundleHashes,
+288:     activeMiniflare: active.size, events: { bytes: Buffer.byteLength(eventsText), sha256: sha(eventsText), count: events.length },
+289:     productionRequests: 0, realIdentity: false, defaultOffHolderChanged: false, dependencyChanged: false,
+290:     causeProven: false, lateObservationUpgradesPass: false, upstreamPatchApplied: false };
+291:   writeFileSync(join(output, 'closed-result.json'), JSON.stringify(report, null, 2) + '\n');
+292:   console.log(JSON.stringify({ actualExit, outcome: report.outcome, output, sourceUnchanged, activeMiniflare: active.size })); process.exitCode = actualExit;
+293: }
+294: 

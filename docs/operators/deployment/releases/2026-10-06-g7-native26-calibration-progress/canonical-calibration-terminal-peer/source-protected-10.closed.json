@@ -1,0 +1,24 @@
+{
+  "at": "2026-10-06T04:39:56.594Z",
+  "finishedAt": "2026-10-06T04:39:56.659Z",
+  "executable": "git",
+  "args": [
+    "cat-file",
+    "blob",
+    "dc7be6f8597333151c450bae3ae15e6585e3b2eb:scripts/diagnostics/v364-owned-linux/gateway-observer.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-canonical-calibration-terminal-independent-peer-7c64bf0f365242ed9e43c275ac46721a\\source-protected-10.stdout.log",
+  "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-canonical-calibration-terminal-independent-peer-7c64bf0f365242ed9e43c275ac46721a\\source-protected-10.stderr.log",
+  "stdoutInfo": {
+    "bytes": 1244,
+    "sha256": "3ec2e49a72697f61bd1867bcde369a7c508cdbf669cd86d7e0eebdfc41dcfe00"
+  },
+  "stderrInfo": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

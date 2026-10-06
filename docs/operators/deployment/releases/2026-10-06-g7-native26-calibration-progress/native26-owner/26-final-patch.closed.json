@@ -1,0 +1,47 @@
+{
+  "at": "2026-10-06T03:46:17.368Z",
+  "finishedAt": "2026-10-06T03:46:17.454Z",
+  "executable": "git",
+  "args": [
+    "diff",
+    "--",
+    "scripts/db/cutover/postgres-legacy-buyer-windowed-app-privileges-v374.native.test.mjs",
+    "scripts/db/cutover/postgres-legacy-buyer-windowed-app-privileges-renewal-v376.native.test.mjs",
+    "scripts/db/cutover/postgres-complete-text-admission-buyer-v379.native.test.mjs",
+    "scripts/db/cutover/postgres-complete-text-no-fetch-close-blocker-v382.native.test.mjs",
+    "scripts/db/cutover/postgres-complete-text-observed-holder-v384.native.test.mjs",
+    "scripts/db/cutover/postgres-complete-text-platform-close-fence-v386.native.test.mjs",
+    "scripts/db/cutover/postgres-complete-chat-holder-dispatch-v387.native.test.mjs",
+    "scripts/db/cutover/postgres-complete-text-no-fetch-platform-close-v388.native.test.mjs",
+    "scripts/db/cutover/postgres-complete-text-no-fetch-recovery-v389.native.test.mjs",
+    "scripts/db/cutover/postgres-complete-text-holder-worker-v390.native.test.mjs",
+    "scripts/db/cutover/postgres-complete-text-secretless-plan-v391.native.test.mjs",
+    "scripts/db/cutover/postgres-complete-text-response-observation-v392.native.test.mjs",
+    "scripts/db/cutover/postgres-personal-key-auth-period-v395.native.test.mjs",
+    "scripts/db/cutover/postgres-complete-text-routing-projection-v396.native.test.mjs",
+    "scripts/db/cutover/postgres-complete-text-response-no-fetch-coinstall-v397.native.test.mjs",
+    "scripts/db/cutover/postgres-complete-text-auth-routing-recovery-coinstall-v400.native.test.mjs",
+    "scripts/db/cutover/postgres-exclusive-credential-free-chat-ingress-v401.native.test.mjs",
+    "scripts/db/cutover/postgres-complete-text-platform-event-delivery-v402.native.test.mjs",
+    "scripts/db/cutover/postgres-complete-text-no-fetch-fence-v370.native.test.mjs",
+    "scripts/db/cutover/postgres-guardrail-admission-adapter-v352.native.test.mjs",
+    "scripts/db/cutover/postgres-buyer-split-grant-rerun-v348.native.test.mjs",
+    "scripts/db/cutover/postgres-buyer-split-guardrail-v349.native.test.mjs",
+    "scripts/db/cutover/postgres-shared-key-stats-auth-boundary-v346.native.test.mjs",
+    "scripts/db/cutover/postgres-shared-key-stats-signed-claim-v348.native.test.mjs",
+    "scripts/db/cutover/postgres-shared-key-stats-claim-reader-v349-cjs-loader-successor.native.test.mjs",
+    "scripts/db/cutover/postgres-shared-key-credited-usage-reader.native.test.mjs"
+  ],
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\26-final-patch.stdout.log",
+  "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\26-final-patch.stderr.log",
+  "stdoutInfo": {
+    "bytes": 76997,
+    "sha256": "0bbd224d0cba8a28360c9ff138371485d91890074d48abd8f68f5a462b366e27"
+  },
+  "stderrInfo": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

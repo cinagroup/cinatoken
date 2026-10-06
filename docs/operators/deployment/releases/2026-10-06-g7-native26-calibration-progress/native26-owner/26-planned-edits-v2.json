@@ -1,0 +1,1115 @@
+{
+  "at": "2026-10-06T03:44:40.259Z",
+  "actualExit": 0,
+  "baseCommit": "473de5fc520fc7d64db700db88a76c7a6b45c241",
+  "inventory": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native59-full-inventory-10b2722ab06d4cf6b6305e24571b4a8d/FINAL-native59-full-readonly-inventory.json",
+    "bytes": 635773,
+    "sha256": "67bf17ba71aa1b9a1b3eba948cc0f2a7e221e80a9e8a1ed3ee33eef8e5ceb6cb"
+  },
+  "instructions": [
+    {
+      "path": "C:/AGENTS.md",
+      "present": false
+    },
+    {
+      "path": "C:/cinagroup/AGENTS.md",
+      "present": false
+    },
+    {
+      "path": "C:/cinagroup/cinatoken/AGENTS.md",
+      "present": false
+    },
+    {
+      "path": "C:/cinagroup/cinatoken/scripts/AGENTS.md",
+      "present": false
+    },
+    {
+      "path": "C:/cinagroup/cinatoken/scripts/db/AGENTS.md",
+      "present": false
+    },
+    {
+      "path": "C:/cinagroup/cinatoken/scripts/db/cutover/AGENTS.md",
+      "present": false
+    }
+  ],
+  "files": [
+    {
+      "step": 60,
+      "file": "scripts/db/cutover/postgres-legacy-buyer-windowed-app-privileges-v374.native.test.mjs",
+      "baseGitBlob": "3c3da3b9fb1a853b34dae60bea5164ec9d02defb",
+      "before": {
+        "bytes": 59317,
+        "sha256": "15518430b8939e223da7a64c885fe0afd2e4b9accfd818b2db153d8440ca5567"
+      },
+      "after": {
+        "bytes": 59511,
+        "sha256": "8c2304a6dd54a0edab28361fde57d2aaae7bfe2ee799b1384bcf1817115c6fc2"
+      },
+      "operations": [
+        {
+          "kind": "owned-helper-import",
+          "needle": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';\n",
+          "replacement": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';\n"
+        },
+        {
+          "kind": "initial-fixed-pg73-loader",
+          "needle": "      const names = (await readdir(migrations)).filter(x => x.endsWith('.sql')).sort();\n",
+          "replacement": "      const names = await listPg73Migrations();\n"
+        },
+        {
+          "kind": "local-owned-grant-binding",
+          "needle": "      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });\n",
+          "replacement": "      // Keep original grant calls and rejection checks on the owned PG73 ledger.\n      const grantPostgresRuntime = ({ DATABASE_URL }) =>\n        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });\n      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });\n",
+          "occurrence": 0,
+          "originalOccurrences": 1
+        },
+        {
+          "kind": "remove-now-unused-readdir-import",
+          "needle": "import { readFile, readdir, writeFile } from 'node:fs/promises';\n",
+          "replacement": "import { readFile, writeFile } from 'node:fs/promises';\n"
+        }
+      ],
+      "originalGrantCalls": 2,
+      "originalAssertions": 69,
+      "preparedOnlyBeforeThisBatchWrite": true
+    },
+    {
+      "step": 61,
+      "file": "scripts/db/cutover/postgres-legacy-buyer-windowed-app-privileges-renewal-v376.native.test.mjs",
+      "baseGitBlob": "ea1b116061c1252dce32b309ec112fd31c6b902c",
+      "before": {
+        "bytes": 69558,
+        "sha256": "f2cfe7766b779d98c923d29733e0407c27eed7090d342a13d174e19d9267f3ea"
+      },
+      "after": {
+        "bytes": 69752,
+        "sha256": "dd1db4a5b1674139f0e70574ceb9658f4f8af928cd9d72fcdb87a01ce495ceba"
+      },
+      "operations": [
+        {
+          "kind": "owned-helper-import",
+          "needle": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';\n",
+          "replacement": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';\n"
+        },
+        {
+          "kind": "initial-fixed-pg73-loader",
+          "needle": "      const names = (await readdir(migrations)).filter(x => x.endsWith('.sql')).sort();\n",
+          "replacement": "      const names = await listPg73Migrations();\n"
+        },
+        {
+          "kind": "local-owned-grant-binding",
+          "needle": "      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });\n",
+          "replacement": "      // Keep original grant calls and rejection checks on the owned PG73 ledger.\n      const grantPostgresRuntime = ({ DATABASE_URL }) =>\n        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });\n      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });\n",
+          "occurrence": 0,
+          "originalOccurrences": 1
+        },
+        {
+          "kind": "remove-now-unused-readdir-import",
+          "needle": "import { readFile, readdir, writeFile } from 'node:fs/promises';\n",
+          "replacement": "import { readFile, writeFile } from 'node:fs/promises';\n"
+        }
+      ],
+      "originalGrantCalls": 2,
+      "originalAssertions": 72,
+      "preparedOnlyBeforeThisBatchWrite": true
+    },
+    {
+      "step": 66,
+      "file": "scripts/db/cutover/postgres-complete-text-admission-buyer-v379.native.test.mjs",
+      "baseGitBlob": "21833685b858a7c74a65f78245cf3243291a7716",
+      "before": {
+        "bytes": 68873,
+        "sha256": "f2284a67d9cb823956ceebf6f63c619359b7effe7f5ede7326a5e5547bb18d1a"
+      },
+      "after": {
+        "bytes": 69064,
+        "sha256": "63bd0f32f88cfd226db1d0dfa0ddafdb8701c84950747885fd52ecdf248ef116"
+      },
+      "operations": [
+        {
+          "kind": "owned-helper-import",
+          "needle": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';\r\n",
+          "replacement": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';\n"
+        },
+        {
+          "kind": "initial-fixed-pg73-loader",
+          "needle": "      const names = (await readdir(migrations)).filter(x => x.endsWith('.sql')).sort();\r\n",
+          "replacement": "      const names = await listPg73Migrations();\n"
+        },
+        {
+          "kind": "local-owned-grant-binding",
+          "needle": "      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });\r\n",
+          "replacement": "      // Keep original grant calls and rejection checks on the owned PG73 ledger.\n      const grantPostgresRuntime = ({ DATABASE_URL }) =>\n        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });\n      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });\r\n",
+          "occurrence": 0,
+          "originalOccurrences": 1
+        },
+        {
+          "kind": "remove-now-unused-readdir-import",
+          "needle": "import { readFile, readdir, writeFile } from 'node:fs/promises';\r\n",
+          "replacement": "import { readFile, writeFile } from 'node:fs/promises';\n"
+        }
+      ],
+      "originalGrantCalls": 2,
+      "originalAssertions": 54,
+      "preparedOnlyBeforeThisBatchWrite": true
+    },
+    {
+      "step": 69,
+      "file": "scripts/db/cutover/postgres-complete-text-no-fetch-close-blocker-v382.native.test.mjs",
+      "baseGitBlob": "34d349b5807dd79539f3cdc9ca57a0c62d83daad",
+      "before": {
+        "bytes": 50933,
+        "sha256": "ac4d3004c75856ccdeaf2f2e5462d9e07d30fe8f05cb83b348c0912f00ded89b"
+      },
+      "after": {
+        "bytes": 51124,
+        "sha256": "9881cf1ce90bcff2c71fe648e3c2cce589456ead69e6cc1ea5c66852274c2958"
+      },
+      "operations": [
+        {
+          "kind": "owned-helper-import",
+          "needle": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';\r\n",
+          "replacement": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';\n"
+        },
+        {
+          "kind": "initial-fixed-pg73-loader",
+          "needle": "      const migrationNames=(await readdir(migrationDir)).filter(x=>x.endsWith('.sql')).sort();\r\n",
+          "replacement": "      const migrationNames=await listPg73Migrations();\n"
+        },
+        {
+          "kind": "local-owned-grant-binding",
+          "needle": "      await grantPostgresRuntime({DATABASE_URL:migratorUrl});\r\n",
+          "replacement": "      // Keep original grant calls and rejection checks on the owned PG73 ledger.\n      const grantPostgresRuntime = ({ DATABASE_URL }) =>\n        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });\n      await grantPostgresRuntime({DATABASE_URL:migratorUrl});\r\n",
+          "occurrence": 0,
+          "originalOccurrences": 1
+        },
+        {
+          "kind": "remove-now-unused-readdir-import",
+          "needle": "import { readFile, readdir, writeFile } from 'node:fs/promises';\r\n",
+          "replacement": "import { readFile, writeFile } from 'node:fs/promises';\n"
+        }
+      ],
+      "originalGrantCalls": 1,
+      "originalAssertions": 67,
+      "preparedOnlyBeforeThisBatchWrite": true
+    },
+    {
+      "step": 71,
+      "file": "scripts/db/cutover/postgres-complete-text-observed-holder-v384.native.test.mjs",
+      "baseGitBlob": "d44b48f4bf9ea9a6fc7f6d2b221403f8bc188173",
+      "before": {
+        "bytes": 53272,
+        "sha256": "1676c3652e8cdb8064769525d10904897ffc45b02e27abfb61ce1f4a5a7d01fb"
+      },
+      "after": {
+        "bytes": 53464,
+        "sha256": "c2cd38948a4c70335c750a77b2c29d7b8b667a57c255ede0098f4b339f621b68"
+      },
+      "operations": [
+        {
+          "kind": "owned-helper-import",
+          "needle": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';\r\n",
+          "replacement": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';\n"
+        },
+        {
+          "kind": "initial-fixed-pg73-loader",
+          "needle": "      const migrationNames=(await readdir(migrationDir)).filter(x=>x.endsWith('.sql')).sort();\r\n",
+          "replacement": "      const migrationNames=await listPg73Migrations();\n"
+        },
+        {
+          "kind": "local-owned-grant-binding",
+          "needle": "      await grantPostgresRuntime({DATABASE_URL:migratorUrl});\r\n",
+          "replacement": "      // Keep original grant calls and rejection checks on the owned PG73 ledger.\n      const grantPostgresRuntime = ({ DATABASE_URL }) =>\n        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });\n      await grantPostgresRuntime({DATABASE_URL:migratorUrl});\r\n",
+          "occurrence": 0,
+          "originalOccurrences": 1
+        },
+        {
+          "kind": "remove-now-unused-readdir-import",
+          "needle": "import { readFile, readdir, writeFile } from 'node:fs/promises';\n",
+          "replacement": "import { readFile, writeFile } from 'node:fs/promises';\n"
+        }
+      ],
+      "originalGrantCalls": 1,
+      "originalAssertions": 110,
+      "preparedOnlyBeforeThisBatchWrite": true
+    },
+    {
+      "step": 72,
+      "file": "scripts/db/cutover/postgres-complete-text-platform-close-fence-v386.native.test.mjs",
+      "baseGitBlob": "8af35f6f6c273239fba08a9a4db563a6e33c24bd",
+      "before": {
+        "bytes": 57634,
+        "sha256": "7a3d419ffeb89a4d9663d5e0d8df1b80a3beb87dcaff02735c0d40293a6981bf"
+      },
+      "after": {
+        "bytes": 57825,
+        "sha256": "26adbc8e529ee9b4e435dbf8ce848065aa18892f726001336030547453c7ffd8"
+      },
+      "operations": [
+        {
+          "kind": "owned-helper-import",
+          "needle": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';\r\n",
+          "replacement": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';\n"
+        },
+        {
+          "kind": "initial-fixed-pg73-loader",
+          "needle": "      const migrationNames=(await readdir(migrationDir)).filter(x=>x.endsWith('.sql')).sort();\r\n",
+          "replacement": "      const migrationNames=await listPg73Migrations();\n"
+        },
+        {
+          "kind": "local-owned-grant-binding",
+          "needle": "      await grantPostgresRuntime({DATABASE_URL:migratorUrl});\r\n",
+          "replacement": "      // Keep original grant calls and rejection checks on the owned PG73 ledger.\n      const grantPostgresRuntime = ({ DATABASE_URL }) =>\n        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });\n      await grantPostgresRuntime({DATABASE_URL:migratorUrl});\r\n",
+          "occurrence": 0,
+          "originalOccurrences": 1
+        },
+        {
+          "kind": "remove-now-unused-readdir-import",
+          "needle": "import { readFile, readdir, writeFile } from 'node:fs/promises';\r\n",
+          "replacement": "import { readFile, writeFile } from 'node:fs/promises';\n"
+        }
+      ],
+      "originalGrantCalls": 1,
+      "originalAssertions": 67,
+      "preparedOnlyBeforeThisBatchWrite": true
+    },
+    {
+      "step": 73,
+      "file": "scripts/db/cutover/postgres-complete-chat-holder-dispatch-v387.native.test.mjs",
+      "baseGitBlob": "74569774e6dfc202e454d501a4ae158b10edcab9",
+      "before": {
+        "bytes": 50457,
+        "sha256": "1bad81ad6b611d261748be3361f86fa6e31aab707ae0a6d8df5fa693213cc488"
+      },
+      "after": {
+        "bytes": 50649,
+        "sha256": "44c0fad756bb9a080ada7358d5d135b74a9a8c74e0b224c0ae40162251e9a759"
+      },
+      "operations": [
+        {
+          "kind": "owned-helper-import",
+          "needle": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';\r\n",
+          "replacement": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';\n"
+        },
+        {
+          "kind": "initial-fixed-pg73-loader",
+          "needle": "      const migrationNames=(await readdir(migrationDir)).filter(x=>x.endsWith('.sql')).sort();\r\n",
+          "replacement": "      const migrationNames=await listPg73Migrations();\n"
+        },
+        {
+          "kind": "local-owned-grant-binding",
+          "needle": "      await grantPostgresRuntime({DATABASE_URL:migratorUrl});\r\n",
+          "replacement": "      // Keep original grant calls and rejection checks on the owned PG73 ledger.\n      const grantPostgresRuntime = ({ DATABASE_URL }) =>\n        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });\n      await grantPostgresRuntime({DATABASE_URL:migratorUrl});\r\n",
+          "occurrence": 0,
+          "originalOccurrences": 1
+        },
+        {
+          "kind": "remove-now-unused-readdir-import",
+          "needle": "import { readFile, readdir, writeFile } from 'node:fs/promises';\n",
+          "replacement": "import { readFile, writeFile } from 'node:fs/promises';\n"
+        }
+      ],
+      "originalGrantCalls": 1,
+      "originalAssertions": 89,
+      "preparedOnlyBeforeThisBatchWrite": true
+    },
+    {
+      "step": 74,
+      "file": "scripts/db/cutover/postgres-complete-text-no-fetch-platform-close-v388.native.test.mjs",
+      "baseGitBlob": "a8f2daeec528027defff842a812363f93b5b359f",
+      "before": {
+        "bytes": 64677,
+        "sha256": "0c452f274944e037fd44c25a1f6612c69adeda25d029bbc037709cd073b6ac4d"
+      },
+      "after": {
+        "bytes": 64868,
+        "sha256": "25863388488d38beff66c2344f9ac30335c11f874134325ce0b835f73cc5676e"
+      },
+      "operations": [
+        {
+          "kind": "owned-helper-import",
+          "needle": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';\r\n",
+          "replacement": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';\n"
+        },
+        {
+          "kind": "initial-fixed-pg73-loader",
+          "needle": "      const migrationNames=(await readdir(migrationDir)).filter(x=>x.endsWith('.sql')).sort();\r\n",
+          "replacement": "      const migrationNames=await listPg73Migrations();\n"
+        },
+        {
+          "kind": "local-owned-grant-binding",
+          "needle": "      await grantPostgresRuntime({DATABASE_URL:migratorUrl});\r\n",
+          "replacement": "      // Keep original grant calls and rejection checks on the owned PG73 ledger.\n      const grantPostgresRuntime = ({ DATABASE_URL }) =>\n        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });\n      await grantPostgresRuntime({DATABASE_URL:migratorUrl});\r\n",
+          "occurrence": 0,
+          "originalOccurrences": 1
+        },
+        {
+          "kind": "remove-now-unused-readdir-import",
+          "needle": "import { readFile, readdir, writeFile } from 'node:fs/promises';\r\n",
+          "replacement": "import { readFile, writeFile } from 'node:fs/promises';\n"
+        }
+      ],
+      "originalGrantCalls": 1,
+      "originalAssertions": 97,
+      "preparedOnlyBeforeThisBatchWrite": true
+    },
+    {
+      "step": 75,
+      "file": "scripts/db/cutover/postgres-complete-text-no-fetch-recovery-v389.native.test.mjs",
+      "baseGitBlob": "25016befdad483c83699adee549963ff4df57e70",
+      "before": {
+        "bytes": 64254,
+        "sha256": "290504a35be60c80e0998435608cef2bec4030a0cc2f119cde928c9bae3c7351"
+      },
+      "after": {
+        "bytes": 64445,
+        "sha256": "577390203dbdaf37afd99965329dd32b4a31981bcfe2fcc69a77d1f3a1ef9d6d"
+      },
+      "operations": [
+        {
+          "kind": "owned-helper-import",
+          "needle": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';\r\n",
+          "replacement": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';\n"
+        },
+        {
+          "kind": "initial-fixed-pg73-loader",
+          "needle": "      const migrationNames=(await readdir(migrationDir)).filter(x=>x.endsWith('.sql')).sort();\r\n",
+          "replacement": "      const migrationNames=await listPg73Migrations();\n"
+        },
+        {
+          "kind": "local-owned-grant-binding",
+          "needle": "      await grantPostgresRuntime({DATABASE_URL:migratorUrl});\r\n",
+          "replacement": "      // Keep original grant calls and rejection checks on the owned PG73 ledger.\n      const grantPostgresRuntime = ({ DATABASE_URL }) =>\n        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });\n      await grantPostgresRuntime({DATABASE_URL:migratorUrl});\r\n",
+          "occurrence": 0,
+          "originalOccurrences": 1
+        },
+        {
+          "kind": "remove-now-unused-readdir-import",
+          "needle": "import { readFile, readdir, writeFile } from 'node:fs/promises';\r\n",
+          "replacement": "import { readFile, writeFile } from 'node:fs/promises';\n"
+        }
+      ],
+      "originalGrantCalls": 1,
+      "originalAssertions": 119,
+      "preparedOnlyBeforeThisBatchWrite": true
+    },
+    {
+      "step": 76,
+      "file": "scripts/db/cutover/postgres-complete-text-holder-worker-v390.native.test.mjs",
+      "baseGitBlob": "21d96eca0644f30ed71605fd30650ce6902c13f7",
+      "before": {
+        "bytes": 47656,
+        "sha256": "3a13542df568c4c801ea657d21475dcd1ed39abfb86ec9a8f1a218760bb3e624"
+      },
+      "after": {
+        "bytes": 47848,
+        "sha256": "a16877174cb910f0d845bbd6ad86672319958b79292ffde938572d1fd17f0250"
+      },
+      "operations": [
+        {
+          "kind": "owned-helper-import",
+          "needle": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';\r\n",
+          "replacement": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';\n"
+        },
+        {
+          "kind": "initial-fixed-pg73-loader",
+          "needle": "      const migrationNames=(await readdir(migrationDir)).filter(x=>x.endsWith('.sql')).sort();\r\n",
+          "replacement": "      const migrationNames=await listPg73Migrations();\n"
+        },
+        {
+          "kind": "local-owned-grant-binding",
+          "needle": "      await grantPostgresRuntime({DATABASE_URL:migratorUrl});\r\n",
+          "replacement": "      // Keep original grant calls and rejection checks on the owned PG73 ledger.\n      const grantPostgresRuntime = ({ DATABASE_URL }) =>\n        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });\n      await grantPostgresRuntime({DATABASE_URL:migratorUrl});\r\n",
+          "occurrence": 0,
+          "originalOccurrences": 1
+        },
+        {
+          "kind": "remove-now-unused-readdir-import",
+          "needle": "import { readFile, readdir, writeFile } from 'node:fs/promises';\n",
+          "replacement": "import { readFile, writeFile } from 'node:fs/promises';\n"
+        }
+      ],
+      "originalGrantCalls": 1,
+      "originalAssertions": 67,
+      "preparedOnlyBeforeThisBatchWrite": true
+    },
+    {
+      "step": 77,
+      "file": "scripts/db/cutover/postgres-complete-text-secretless-plan-v391.native.test.mjs",
+      "baseGitBlob": "9f997affde2416b6da4b657acc89456f4bc47ed2",
+      "before": {
+        "bytes": 45757,
+        "sha256": "849eb920a8d6b33a2f0471df4fcbbd2dc9f839ea590e65dd0b2fcac44edafbb4"
+      },
+      "after": {
+        "bytes": 45949,
+        "sha256": "5090e3f047ec4272d172ac30af43dcfb73ed3e0c2c3335f82189c2638c04c1f8"
+      },
+      "operations": [
+        {
+          "kind": "owned-helper-import",
+          "needle": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';\r\n",
+          "replacement": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';\n"
+        },
+        {
+          "kind": "initial-fixed-pg73-loader",
+          "needle": "      const migrationNames=(await readdir(migrationDir)).filter(x=>x.endsWith('.sql')).sort();\r\n",
+          "replacement": "      const migrationNames=await listPg73Migrations();\n"
+        },
+        {
+          "kind": "local-owned-grant-binding",
+          "needle": "      await grantPostgresRuntime({DATABASE_URL:migratorUrl});\r\n",
+          "replacement": "      // Keep original grant calls and rejection checks on the owned PG73 ledger.\n      const grantPostgresRuntime = ({ DATABASE_URL }) =>\n        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });\n      await grantPostgresRuntime({DATABASE_URL:migratorUrl});\r\n",
+          "occurrence": 0,
+          "originalOccurrences": 1
+        },
+        {
+          "kind": "remove-now-unused-readdir-import",
+          "needle": "import { readFile, readdir, writeFile } from 'node:fs/promises';\n",
+          "replacement": "import { readFile, writeFile } from 'node:fs/promises';\n"
+        }
+      ],
+      "originalGrantCalls": 1,
+      "originalAssertions": 59,
+      "preparedOnlyBeforeThisBatchWrite": true
+    },
+    {
+      "step": 78,
+      "file": "scripts/db/cutover/postgres-complete-text-response-observation-v392.native.test.mjs",
+      "baseGitBlob": "90b4df41b06c98a86b3062f8c0e28c206e3a9b9c",
+      "before": {
+        "bytes": 53609,
+        "sha256": "8d2b7a3aa56330259dadc8b8c39c7c7c52dfa3e0f4943d527733fbdadc1f5a57"
+      },
+      "after": {
+        "bytes": 53800,
+        "sha256": "85e0bfb4c472ad594f51bd6eb08e2bfbb755f8508dd4f892a9830b9fe20686e0"
+      },
+      "operations": [
+        {
+          "kind": "owned-helper-import",
+          "needle": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';\r\n",
+          "replacement": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';\n"
+        },
+        {
+          "kind": "initial-fixed-pg73-loader",
+          "needle": "      const migrationNames=(await readdir(migrationDir)).filter(x=>x.endsWith('.sql')).sort();\r\n",
+          "replacement": "      const migrationNames=await listPg73Migrations();\n"
+        },
+        {
+          "kind": "local-owned-grant-binding",
+          "needle": "      await grantPostgresRuntime({DATABASE_URL:migratorUrl});\r\n",
+          "replacement": "      // Keep original grant calls and rejection checks on the owned PG73 ledger.\n      const grantPostgresRuntime = ({ DATABASE_URL }) =>\n        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });\n      await grantPostgresRuntime({DATABASE_URL:migratorUrl});\r\n",
+          "occurrence": 0,
+          "originalOccurrences": 1
+        },
+        {
+          "kind": "remove-now-unused-readdir-import",
+          "needle": "import { readFile, readdir, writeFile } from 'node:fs/promises';\r\n",
+          "replacement": "import { readFile, writeFile } from 'node:fs/promises';\n"
+        }
+      ],
+      "originalGrantCalls": 1,
+      "originalAssertions": 77,
+      "preparedOnlyBeforeThisBatchWrite": true
+    },
+    {
+      "step": 80,
+      "file": "scripts/db/cutover/postgres-personal-key-auth-period-v395.native.test.mjs",
+      "baseGitBlob": "e36a0f80e419caef5c69d1c0e92a7a2b10e89cf5",
+      "before": {
+        "bytes": 48241,
+        "sha256": "b0b894b574ef6489ed07077d577382199e2f5c96f69f235391c47af48ad764a6"
+      },
+      "after": {
+        "bytes": 48434,
+        "sha256": "bc995f17324366fb2dc5835b0b145f37e0d64e3e93e23dbb1f105c8e3eaea37c"
+      },
+      "operations": [
+        {
+          "kind": "owned-helper-import",
+          "needle": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';\n",
+          "replacement": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';\n"
+        },
+        {
+          "kind": "initial-fixed-pg73-loader",
+          "needle": "      const migrationNames=(await readdir(migrationDir)).filter(x=>x.endsWith('.sql')).sort();\r\n",
+          "replacement": "      const migrationNames=await listPg73Migrations();\n"
+        },
+        {
+          "kind": "local-owned-grant-binding",
+          "needle": "      await grantPostgresRuntime({DATABASE_URL:migratorUrl});\r\n",
+          "replacement": "      // Keep original grant calls and rejection checks on the owned PG73 ledger.\n      const grantPostgresRuntime = ({ DATABASE_URL }) =>\n        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });\n      await grantPostgresRuntime({DATABASE_URL:migratorUrl});\r\n",
+          "occurrence": 0,
+          "originalOccurrences": 1
+        },
+        {
+          "kind": "remove-now-unused-readdir-import",
+          "needle": "import { readFile, readdir, writeFile } from 'node:fs/promises';\n",
+          "replacement": "import { readFile, writeFile } from 'node:fs/promises';\n"
+        }
+      ],
+      "originalGrantCalls": 1,
+      "originalAssertions": 85,
+      "preparedOnlyBeforeThisBatchWrite": true
+    },
+    {
+      "step": 81,
+      "file": "scripts/db/cutover/postgres-complete-text-routing-projection-v396.native.test.mjs",
+      "baseGitBlob": "5a52d719dbf129ccd8780d3effa0229632506ce7",
+      "before": {
+        "bytes": 78702,
+        "sha256": "8a6b21fe4e6f80214c1ee2a687ea37e25c292ca554cfc769b44760d68eb5bd1e"
+      },
+      "after": {
+        "bytes": 78903,
+        "sha256": "10b8f69a54979b743db6be2fc5c23b525c616e910efd6b57d184371cffbadaf6"
+      },
+      "operations": [
+        {
+          "kind": "owned-helper-import",
+          "needle": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';\r\n",
+          "replacement": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';\n"
+        },
+        {
+          "kind": "initial-fixed-pg73-loader",
+          "needle": "      const migrationNames=(await readdir(migrationDir)).filter(x=>x.endsWith('.sql')).sort();\r\n",
+          "replacement": "      const migrationNames=await listPg73Migrations();\n"
+        },
+        {
+          "kind": "local-owned-grant-binding",
+          "needle": "      await grantPostgresRuntime({DATABASE_URL:migratorUrl});\r\n",
+          "replacement": "      // Keep original grant calls and rejection checks on the owned PG73 ledger.\n      const grantPostgresRuntime = ({ DATABASE_URL }) =>\n        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });\n      await grantPostgresRuntime({DATABASE_URL:migratorUrl});\r\n",
+          "occurrence": 0,
+          "originalOccurrences": 1
+        }
+      ],
+      "originalGrantCalls": 1,
+      "originalAssertions": 108,
+      "preparedOnlyBeforeThisBatchWrite": true
+    },
+    {
+      "step": 82,
+      "file": "scripts/db/cutover/postgres-complete-text-response-no-fetch-coinstall-v397.native.test.mjs",
+      "baseGitBlob": "688ad6cb0157c9114e80a5c1cfe17159549f1f43",
+      "before": {
+        "bytes": 87519,
+        "sha256": "1bec73e1b1ba5590506f3747f58b125bc3b7780a369ebc9d58745027b4bde47a"
+      },
+      "after": {
+        "bytes": 87669,
+        "sha256": "c8a2d1d51abc160dd3d51ba0c7b5f68ea71850a34e0a3f71da67022bd7971405"
+      },
+      "operations": [
+        {
+          "kind": "owned-helper-import",
+          "needle": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';\r\n",
+          "replacement": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';\n"
+        },
+        {
+          "kind": "initial-fixed-pg73-loader",
+          "needle": "      const migrationNames=(await readdir(migrationDir)).filter(x=>x.endsWith('.sql')).sort();\r\n",
+          "replacement": "      const migrationNames=await listPg73Migrations();\n"
+        },
+        {
+          "kind": "final-fixed-pg73-loader",
+          "needle": "      const finalMigrationNames=(await readdir(migrationDir)).filter(x=>x.endsWith('.sql')).sort();\r\n",
+          "replacement": "      const finalMigrationNames=await listPg73Migrations();\n"
+        },
+        {
+          "kind": "local-owned-grant-binding",
+          "needle": "      await grantPostgresRuntime({DATABASE_URL:migratorUrl});\r\n",
+          "replacement": "      // Keep original grant calls and rejection checks on the owned PG73 ledger.\n      const grantPostgresRuntime = ({ DATABASE_URL }) =>\n        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });\n      await grantPostgresRuntime({DATABASE_URL:migratorUrl});\r\n",
+          "occurrence": 0,
+          "originalOccurrences": 1
+        },
+        {
+          "kind": "remove-now-unused-readdir-import",
+          "needle": "import { readFile, readdir, writeFile } from 'node:fs/promises';\r\n",
+          "replacement": "import { readFile, writeFile } from 'node:fs/promises';\n"
+        }
+      ],
+      "originalGrantCalls": 1,
+      "originalAssertions": 121,
+      "preparedOnlyBeforeThisBatchWrite": true
+    },
+    {
+      "step": 83,
+      "file": "scripts/db/cutover/postgres-complete-text-auth-routing-recovery-coinstall-v400.native.test.mjs",
+      "baseGitBlob": "165173f57604fbe4817c8b50cf9d6671345dd678",
+      "before": {
+        "bytes": 132004,
+        "sha256": "26c35a4f62fdc5c73f0f1a29814308f99fccea19c2823c1a97e983bbd9add607"
+      },
+      "after": {
+        "bytes": 132164,
+        "sha256": "589b8d3584792147fb5ce2ed3da71d98257cc86fe1436f01c34a017fb13e7f2d"
+      },
+      "operations": [
+        {
+          "kind": "owned-helper-import",
+          "needle": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';\r\n",
+          "replacement": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';\n"
+        },
+        {
+          "kind": "initial-fixed-pg73-loader",
+          "needle": "      const migrationNames=(await readdir(migrationDir)).filter(x=>x.endsWith('.sql')).sort();\r\n",
+          "replacement": "      const migrationNames=await listPg73Migrations();\n"
+        },
+        {
+          "kind": "final-fixed-pg73-loader",
+          "needle": "      const finalMigrationNames=(await readdir(migrationDir)).filter(x=>x.endsWith('.sql')).sort();\r\n",
+          "replacement": "      const finalMigrationNames=await listPg73Migrations();\n"
+        },
+        {
+          "kind": "local-owned-grant-binding",
+          "needle": "      await grantPostgresRuntime({DATABASE_URL:migratorUrl});\r\n",
+          "replacement": "      // Keep original grant calls and rejection checks on the owned PG73 ledger.\n      const grantPostgresRuntime = ({ DATABASE_URL }) =>\n        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });\n      await grantPostgresRuntime({DATABASE_URL:migratorUrl});\r\n",
+          "occurrence": 0,
+          "originalOccurrences": 1
+        }
+      ],
+      "originalGrantCalls": 1,
+      "originalAssertions": 214,
+      "preparedOnlyBeforeThisBatchWrite": true
+    },
+    {
+      "step": 84,
+      "file": "scripts/db/cutover/postgres-exclusive-credential-free-chat-ingress-v401.native.test.mjs",
+      "baseGitBlob": "ab2215e9f7f34c4cf8c7b0f9fdf0d6ab5eb287ca",
+      "before": {
+        "bytes": 134192,
+        "sha256": "0eaafc257b6c4bc3e3c6370b1930d1612ba3fef05e89b754bd339abfa233419b"
+      },
+      "after": {
+        "bytes": 134352,
+        "sha256": "ea672eafb4dc988313c18b40f9579dadc0fc1d9ad03e362574f3ef8b10246f77"
+      },
+      "operations": [
+        {
+          "kind": "owned-helper-import",
+          "needle": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';\r\n",
+          "replacement": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';\n"
+        },
+        {
+          "kind": "initial-fixed-pg73-loader",
+          "needle": "      const migrationNames=(await readdir(migrationDir)).filter(x=>x.endsWith('.sql')).sort();\r\n",
+          "replacement": "      const migrationNames=await listPg73Migrations();\n"
+        },
+        {
+          "kind": "final-fixed-pg73-loader",
+          "needle": "      const finalMigrationNames=(await readdir(migrationDir)).filter(x=>x.endsWith('.sql')).sort();\r\n",
+          "replacement": "      const finalMigrationNames=await listPg73Migrations();\n"
+        },
+        {
+          "kind": "local-owned-grant-binding",
+          "needle": "      await grantPostgresRuntime({DATABASE_URL:migratorUrl});\r\n",
+          "replacement": "      // Keep original grant calls and rejection checks on the owned PG73 ledger.\n      const grantPostgresRuntime = ({ DATABASE_URL }) =>\n        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });\n      await grantPostgresRuntime({DATABASE_URL:migratorUrl});\r\n",
+          "occurrence": 0,
+          "originalOccurrences": 1
+        }
+      ],
+      "originalGrantCalls": 1,
+      "originalAssertions": 214,
+      "preparedOnlyBeforeThisBatchWrite": true
+    },
+    {
+      "step": 85,
+      "file": "scripts/db/cutover/postgres-complete-text-platform-event-delivery-v402.native.test.mjs",
+      "baseGitBlob": "2ff46b5e76ea8b42d67b623bec70f3c5f30fdbc3",
+      "before": {
+        "bytes": 142390,
+        "sha256": "df028aaf4e17b3f4093a32733b86944f899738adfca21a471edb083311734867"
+      },
+      "after": {
+        "bytes": 142550,
+        "sha256": "f8f0f8189d7c9323b7ee347e23395b36142ee3696e9b840d7c62aa1b5fd7e6cb"
+      },
+      "operations": [
+        {
+          "kind": "owned-helper-import",
+          "needle": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';\r\n",
+          "replacement": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';\n"
+        },
+        {
+          "kind": "initial-fixed-pg73-loader",
+          "needle": "      const migrationNames=(await readdir(migrationDir)).filter(x=>x.endsWith('.sql')).sort();\r\n",
+          "replacement": "      const migrationNames=await listPg73Migrations();\n"
+        },
+        {
+          "kind": "final-fixed-pg73-loader",
+          "needle": "      const finalMigrationNames=(await readdir(migrationDir)).filter(x=>x.endsWith('.sql')).sort();\r\n",
+          "replacement": "      const finalMigrationNames=await listPg73Migrations();\n"
+        },
+        {
+          "kind": "local-owned-grant-binding",
+          "needle": "      await grantPostgresRuntime({DATABASE_URL:migratorUrl});\r\n",
+          "replacement": "      // Keep original grant calls and rejection checks on the owned PG73 ledger.\n      const grantPostgresRuntime = ({ DATABASE_URL }) =>\n        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });\n      await grantPostgresRuntime({DATABASE_URL:migratorUrl});\r\n",
+          "occurrence": 0,
+          "originalOccurrences": 1
+        }
+      ],
+      "originalGrantCalls": 1,
+      "originalAssertions": 226,
+      "preparedOnlyBeforeThisBatchWrite": true
+    },
+    {
+      "step": 86,
+      "file": "scripts/db/cutover/postgres-complete-text-no-fetch-fence-v370.native.test.mjs",
+      "baseGitBlob": "3767e11c2144c24453ca0446141d718f4885a77a",
+      "before": {
+        "bytes": 50207,
+        "sha256": "8c3e541b0d349842ac66d3f6aba485b56580cda6efe83e826bcab2e4bd3a8951"
+      },
+      "after": {
+        "bytes": 50398,
+        "sha256": "7a54a0085abf5ab2095d7b49609acbdf4d9836915ed6942d017c7434c1c5d142"
+      },
+      "operations": [
+        {
+          "kind": "owned-helper-import",
+          "needle": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';\r\n",
+          "replacement": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';\n"
+        },
+        {
+          "kind": "initial-fixed-pg73-loader",
+          "needle": "      const migrationNames=(await readdir(migrationDir)).filter(x=>x.endsWith('.sql')).sort();\r\n",
+          "replacement": "      const migrationNames=await listPg73Migrations();\n"
+        },
+        {
+          "kind": "local-owned-grant-binding",
+          "needle": "      await grantPostgresRuntime({DATABASE_URL:migratorUrl});\r\n",
+          "replacement": "      // Keep original grant calls and rejection checks on the owned PG73 ledger.\n      const grantPostgresRuntime = ({ DATABASE_URL }) =>\n        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });\n      await grantPostgresRuntime({DATABASE_URL:migratorUrl});\r\n",
+          "occurrence": 0,
+          "originalOccurrences": 1
+        },
+        {
+          "kind": "remove-now-unused-readdir-import",
+          "needle": "import { readFile, readdir, writeFile } from 'node:fs/promises';\r\n",
+          "replacement": "import { readFile, writeFile } from 'node:fs/promises';\n"
+        }
+      ],
+      "originalGrantCalls": 1,
+      "originalAssertions": 77,
+      "preparedOnlyBeforeThisBatchWrite": true
+    },
+    {
+      "step": 88,
+      "file": "scripts/db/cutover/postgres-guardrail-admission-adapter-v352.native.test.mjs",
+      "baseGitBlob": "b696f3503504b6a8b6d588b690c822c3daa289c4",
+      "before": {
+        "bytes": 16478,
+        "sha256": "c9a628f01292f91023f83ce3c722acbbd45c9b0b2f1d2c4c3aa135444a885a7a"
+      },
+      "after": {
+        "bytes": 16668,
+        "sha256": "d183dd82c8b9e4162bb385dada778a2ca907873ca8174a41d4e7240397babfc8"
+      },
+      "operations": [
+        {
+          "kind": "owned-helper-import",
+          "needle": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';\n",
+          "replacement": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';\n"
+        },
+        {
+          "kind": "initial-fixed-pg73-loader",
+          "needle": "      const migrationNames=(await readdir(migrations)).filter(name=>name.endsWith('.sql')).sort();\n",
+          "replacement": "      const migrationNames=await listPg73Migrations();\n"
+        },
+        {
+          "kind": "local-owned-grant-binding",
+          "needle": "      await grantPostgresRuntime({DATABASE_URL:migratorUrl});\n",
+          "replacement": "      // Keep original grant calls and rejection checks on the owned PG73 ledger.\n      const grantPostgresRuntime = ({ DATABASE_URL }) =>\n        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });\n      await grantPostgresRuntime({DATABASE_URL:migratorUrl});\n",
+          "occurrence": 0,
+          "originalOccurrences": 1
+        },
+        {
+          "kind": "remove-now-unused-readdir-import",
+          "needle": "import { readFile, readdir, writeFile } from 'node:fs/promises';\n",
+          "replacement": "import { readFile, writeFile } from 'node:fs/promises';\n"
+        }
+      ],
+      "originalGrantCalls": 1,
+      "originalAssertions": 21,
+      "preparedOnlyBeforeThisBatchWrite": true
+    },
+    {
+      "step": 95,
+      "file": "scripts/db/cutover/postgres-buyer-split-grant-rerun-v348.native.test.mjs",
+      "baseGitBlob": "69469e820e1cf304210d4d51a51b0c536b676c30",
+      "before": {
+        "bytes": 18758,
+        "sha256": "e4eb49f7df9ad69769aec1e809979be7b03362579552cc42772a7f272fc6051d"
+      },
+      "after": {
+        "bytes": 18946,
+        "sha256": "d83c9dcabfb24ddd90c6006ac8ac6078583fc6439b39436708f73ee8099b23b1"
+      },
+      "operations": [
+        {
+          "kind": "owned-helper-import",
+          "needle": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';\n",
+          "replacement": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';\n"
+        },
+        {
+          "kind": "initial-fixed-pg73-loader",
+          "needle": "      const names = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();\n",
+          "replacement": "      const names = await listPg73Migrations();\n"
+        },
+        {
+          "kind": "local-owned-grant-binding",
+          "needle": "      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });\n",
+          "replacement": "      // Keep original grant calls and rejection checks on the owned PG73 ledger.\n      const grantPostgresRuntime = ({ DATABASE_URL }) =>\n        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });\n      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });\n",
+          "occurrence": 0,
+          "originalOccurrences": 2
+        },
+        {
+          "kind": "remove-now-unused-readdir-import",
+          "needle": "import { readFile, readdir, writeFile } from 'node:fs/promises';\n",
+          "replacement": "import { readFile, writeFile } from 'node:fs/promises';\n"
+        }
+      ],
+      "originalGrantCalls": 3,
+      "originalAssertions": 32,
+      "preparedOnlyBeforeThisBatchWrite": true
+    },
+    {
+      "step": 96,
+      "file": "scripts/db/cutover/postgres-buyer-split-guardrail-v349.native.test.mjs",
+      "baseGitBlob": "2f5ee6b5f6067ca9110e802e279d5a096ca1d942",
+      "before": {
+        "bytes": 23555,
+        "sha256": "63ea5d614be86a25724103ceedfa4a7b10f96a0ff5305ea6c265b4c93ce17026"
+      },
+      "after": {
+        "bytes": 23743,
+        "sha256": "c4adb632a2e237e0ed359f42686371bfad138f1ce4cc10c557d219e3ecb83d87"
+      },
+      "operations": [
+        {
+          "kind": "owned-helper-import",
+          "needle": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';\n",
+          "replacement": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';\n"
+        },
+        {
+          "kind": "initial-fixed-pg73-loader",
+          "needle": "      const names = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();\n",
+          "replacement": "      const names = await listPg73Migrations();\n"
+        },
+        {
+          "kind": "local-owned-grant-binding",
+          "needle": "      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });\n",
+          "replacement": "      // Keep original grant calls and rejection checks on the owned PG73 ledger.\n      const grantPostgresRuntime = ({ DATABASE_URL }) =>\n        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });\n      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });\n",
+          "occurrence": 0,
+          "originalOccurrences": 2
+        },
+        {
+          "kind": "remove-now-unused-readdir-import",
+          "needle": "import { readFile, readdir, writeFile } from 'node:fs/promises';\n",
+          "replacement": "import { readFile, writeFile } from 'node:fs/promises';\n"
+        }
+      ],
+      "originalGrantCalls": 4,
+      "originalAssertions": 44,
+      "preparedOnlyBeforeThisBatchWrite": true
+    },
+    {
+      "step": 97,
+      "file": "scripts/db/cutover/postgres-shared-key-stats-auth-boundary-v346.native.test.mjs",
+      "baseGitBlob": "c17ee08c0102ff1cf86e517076d15ae59b7f10fe",
+      "before": {
+        "bytes": 8718,
+        "sha256": "72fcf9bdca7437a76cbc8cfcd71efd77fd391a56cf68478555d6ef409450a219"
+      },
+      "after": {
+        "bytes": 8904,
+        "sha256": "46a13c44fec610692feb18ea0bf1d3bc10eb93a76e65d47edd326db13ea31e18"
+      },
+      "operations": [
+        {
+          "kind": "owned-helper-import",
+          "needle": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';\n",
+          "replacement": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';\n"
+        },
+        {
+          "kind": "initial-fixed-pg73-loader",
+          "needle": "      const files = (await readdir(migrationDir)).filter(name => name.endsWith('.sql')).sort();\n",
+          "replacement": "      const files = await listPg73Migrations();\n"
+        },
+        {
+          "kind": "local-owned-grant-binding",
+          "needle": "      await grantPostgresRuntime({ DATABASE_URL:\n",
+          "replacement": "      // Keep original grant calls and rejection checks on the owned PG73 ledger.\n      const grantPostgresRuntime = ({ DATABASE_URL }) =>\n        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });\n      await grantPostgresRuntime({ DATABASE_URL:\n",
+          "occurrence": 0,
+          "originalOccurrences": 1
+        },
+        {
+          "kind": "remove-now-unused-readdir-import",
+          "needle": "import { readFile, readdir, writeFile } from 'node:fs/promises';\n",
+          "replacement": "import { readFile, writeFile } from 'node:fs/promises';\n"
+        }
+      ],
+      "originalGrantCalls": 1,
+      "originalAssertions": 12,
+      "preparedOnlyBeforeThisBatchWrite": true
+    },
+    {
+      "step": 98,
+      "file": "scripts/db/cutover/postgres-shared-key-stats-signed-claim-v348.native.test.mjs",
+      "baseGitBlob": "c507a5f06ea6427c13556d8402f7278a3552842f",
+      "before": {
+        "bytes": 12550,
+        "sha256": "4336da8c3959942942fe77ba9b5ce0a6ca5e6ebddb3a99438fb8f704d928029a"
+      },
+      "after": {
+        "bytes": 12736,
+        "sha256": "7e0ae22d95b9cecc2fa154a2afd658868a31ece212aa60715021872e04557238"
+      },
+      "operations": [
+        {
+          "kind": "owned-helper-import",
+          "needle": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';\n",
+          "replacement": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';\n"
+        },
+        {
+          "kind": "initial-fixed-pg73-loader",
+          "needle": "      const files = (await readdir(migrationDir)).filter(name => name.endsWith('.sql')).sort();\n",
+          "replacement": "      const files = await listPg73Migrations();\n"
+        },
+        {
+          "kind": "local-owned-grant-binding",
+          "needle": "      await grantPostgresRuntime({ DATABASE_URL:\n",
+          "replacement": "      // Keep original grant calls and rejection checks on the owned PG73 ledger.\n      const grantPostgresRuntime = ({ DATABASE_URL }) =>\n        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });\n      await grantPostgresRuntime({ DATABASE_URL:\n",
+          "occurrence": 0,
+          "originalOccurrences": 2
+        },
+        {
+          "kind": "remove-now-unused-readdir-import",
+          "needle": "import { readFile, readdir, writeFile } from 'node:fs/promises';\n",
+          "replacement": "import { readFile, writeFile } from 'node:fs/promises';\n"
+        }
+      ],
+      "originalGrantCalls": 2,
+      "originalAssertions": 24,
+      "preparedOnlyBeforeThisBatchWrite": true
+    },
+    {
+      "step": 99,
+      "file": "scripts/db/cutover/postgres-shared-key-stats-claim-reader-v349-cjs-loader-successor.native.test.mjs",
+      "baseGitBlob": "72de1257f322ac587dc5c05dfa4525976ec293a4",
+      "before": {
+        "bytes": 29293,
+        "sha256": "82cbba9203902cdfdd2cebe686f5a2f9ce12502b952f4d299d5a415fb5fefab7"
+      },
+      "after": {
+        "bytes": 29481,
+        "sha256": "997c7ec3b5d83bafd8c386493d66a8fd461d86576ea31c6afe32672e995f0088"
+      },
+      "operations": [
+        {
+          "kind": "owned-helper-import",
+          "needle": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';\n",
+          "replacement": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';\n"
+        },
+        {
+          "kind": "initial-fixed-pg73-loader",
+          "needle": "      const files=(await readdir(migrationDir)).filter(name=>name.endsWith('.sql')).sort();\n",
+          "replacement": "      const files=await listPg73Migrations();\n"
+        },
+        {
+          "kind": "local-owned-grant-binding",
+          "needle": "      await grantPostgresRuntime({DATABASE_URL:\n",
+          "replacement": "      // Keep original grant calls and rejection checks on the owned PG73 ledger.\n      const grantPostgresRuntime = ({ DATABASE_URL }) =>\n        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });\n      await grantPostgresRuntime({DATABASE_URL:\n",
+          "occurrence": 0,
+          "originalOccurrences": 1
+        },
+        {
+          "kind": "remove-now-unused-readdir-import",
+          "needle": "import { readFile, readdir, writeFile } from 'node:fs/promises';\n",
+          "replacement": "import { readFile, writeFile } from 'node:fs/promises';\n"
+        }
+      ],
+      "originalGrantCalls": 1,
+      "originalAssertions": 74,
+      "preparedOnlyBeforeThisBatchWrite": true
+    },
+    {
+      "step": 106,
+      "file": "scripts/db/cutover/postgres-shared-key-credited-usage-reader.native.test.mjs",
+      "baseGitBlob": "97e58c0ebe8c232ad8f4cad9296106ea260e8db5",
+      "before": {
+        "bytes": 18415,
+        "sha256": "9cfe59b65acfe2ffe934d28f0db93c82421977925de7c0e551eb16c1fabad98b"
+      },
+      "after": {
+        "bytes": 18603,
+        "sha256": "fe62b22831e7b37e8c0377ed4e902ce0be499dd54ebea2d1e81b93c60c47d912"
+      },
+      "operations": [
+        {
+          "kind": "owned-helper-import",
+          "needle": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';\n",
+          "replacement": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';\n"
+        },
+        {
+          "kind": "initial-fixed-pg73-loader",
+          "needle": "      const files=(await readdir(migrationDir)).filter(name=>name.endsWith('.sql')).sort();\n",
+          "replacement": "      const files=await listPg73Migrations();\n"
+        },
+        {
+          "kind": "local-owned-grant-binding",
+          "needle": "      await grantPostgresRuntime({DATABASE_URL:\n",
+          "replacement": "      // Keep original grant calls and rejection checks on the owned PG73 ledger.\n      const grantPostgresRuntime = ({ DATABASE_URL }) =>\n        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });\n      await grantPostgresRuntime({DATABASE_URL:\n",
+          "occurrence": 0,
+          "originalOccurrences": 1
+        },
+        {
+          "kind": "remove-now-unused-readdir-import",
+          "needle": "import { readFile, readdir, writeFile } from 'node:fs/promises';\n",
+          "replacement": "import { readFile, writeFile } from 'node:fs/promises';\n"
+        }
+      ],
+      "originalGrantCalls": 1,
+      "originalAssertions": 34,
+      "preparedOnlyBeforeThisBatchWrite": true
+    }
+  ],
+  "originalActualCi": {
+    "runId": 37409463636,
+    "step": 60,
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504/native-terminal-log.stdout.log",
+    "bytes": 327916,
+    "sha256": "4203c059c01c7097c650376d0148120244536cd2fe6931095ee0414b930f00a5",
+    "downloadReceipt": {
+      "at": "2026-10-06T03:39:41.116Z",
+      "finishedAt": "2026-10-06T03:39:48.989Z",
+      "executable": "C:/Program Files/GitHub CLI/gh.exe",
+      "args": [
+        "run",
+        "view",
+        "37409463636",
+        "--repo",
+        "cinagroup/cinatoken",
+        "--job",
+        "112094395119",
+        "--log"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\native-terminal-log.stdout.log",
+        "bytes": 327916,
+        "sha256": "4203c059c01c7097c650376d0148120244536cd2fe6931095ee0414b930f00a5"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\native-terminal-log.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "actualFailure": "81 !== 73 at v374:125:14"
+  },
+  "allPreparedBeforeAnyRepositoryWrite": true
+}

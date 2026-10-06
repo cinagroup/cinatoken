@@ -1,0 +1,426 @@
+{"file":"scripts/diagnostics/v364-owned-linux-boundary/bare-async-source.mjs","bytes":1864,"sha256":"86b67412be0b8ef8434edfd0f44c8c6e5d306ce3f76ed3deed8305cca2771bfd"}
+1: // Owned diagnostic only: no Service Binding and no holder import.
+2: // The SSE source matches the frozen holder's async KV/timer pull and cancel lifetime.
+3: const encoder = new TextEncoder();
+4: export default {
+5:   async fetch(request, env, ctx) {
+6:     if (new URL(request.url).pathname !== '/fixture/complete-text' || request.method !== 'POST') return new Response(null, { status: 404 });
+7:     if (request.headers.get('Content-Type') !== 'application/json') return new Response(null, { status: 415 });
+8:     const input = await request.json();
+9:     if (!input || typeof input.attemptNonce !== 'string' || !/^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/u.test(input.attemptNonce)) return new Response(null, { status: 400 });
+10:     const attemptNonce = input.attemptNonce;
+11:     await env.OBSERVATIONS.put(`accepted:${attemptNonce}`, 'one');
+12:     let phase = 0;
+13:     const stream = new ReadableStream({
+14:       start(controller) { controller.enqueue(encoder.encode(': holder-ready\n\n')); },
+15:       async pull(controller) {
+16:         if (phase !== 0) return;
+17:         phase = 1;
+18:         for (let n = 0; n < 300; n++) {
+19:           if (await env.OBSERVATIONS.get(`release:${attemptNonce}`) === 'yes') {
+20:             controller.enqueue(encoder.encode('data: {"text":"synthetic streamed answer"}\n\ndata: [DONE]\n\n'));
+21:             controller.close();
+22:             return;
+23:           }
+24:           await new Promise(resolve => setTimeout(resolve, 10));
+25:         }
+26:         controller.error(new Error('synthetic stream release timed out'));
+27:       },
+28:       async cancel() {
+29:         const observation = env.OBSERVATIONS.put(`cancel:${attemptNonce}`, 'observed');
+30:         ctx?.waitUntil(observation);
+31:         await observation;
+32:       },
+33:     }, { highWaterMark: 0 });
+34:     return new Response(stream, { status: 200, headers: { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-store' } });
+35:   },
+36: };
+37: 
+{"file":"scripts/diagnostics/v364-owned-linux-boundary/direct-holder.mjs","bytes":785,"sha256":"4019fbebd9575bcad6dd3a987d320cd7eb96d646ab344bea5918f7305faaee84"}
+1: // Owned diagnostic only. Both observers and both original modules remain frozen.
+2: // Only the Service Binding transport is replaced with a local JS function call.
+3: import gateway from '__GATEWAY_OBSERVER__';
+4: import holder from '__HOLDER_OBSERVER__';
+5: export default {
+6:   fetch(request, env, ctx) {
+7:     const localHolder = {
+8:       fetch(holderRequest) {
+9:         if (!(holderRequest instanceof Request)) throw new TypeError('Expected the exact gateway-created Request');
+10:         return holder.fetch(holderRequest, env, ctx);
+11:       },
+12:     };
+13:     // Frozen gateway constructs its private URL/stream/signal Request and rewraps
+14:     // the returned Response body itself; this wrapper does not replace either.
+15:     return gateway.fetch(request, { ...env, TEXT_HOLDER: localHolder }, ctx);
+16:   },
+17: };
+18: 
+{"file":"scripts/diagnostics/v364-owned-linux-boundary/run-boundary.mjs","bytes":28489,"sha256":"9341885b2890b8270b2b9732cd46c169bb41c4a3a4f6d4eef5f662ee3cda7cda"}
+1: import assert from 'node:assert/strict';
+2: import { createHash, randomUUID } from 'node:crypto';
+3: import { readFileSync, writeFileSync, appendFileSync, mkdirSync, existsSync } from 'node:fs';
+4: import { createRequire } from 'node:module';
+5: import { dirname, join, resolve } from 'node:path';
+6: import { fileURLToPath } from 'node:url';
+7: import { performance } from 'node:perf_hooks';
+8: import { createServer, request as httpRequest } from 'node:http';
+9: import { spawn, execFileSync } from 'node:child_process';
+10: import { gunzipSync } from 'node:zlib';
+11: import { processCensus } from './proc-census.mjs';
+12: 
+13: const here = dirname(fileURLToPath(import.meta.url));
+14: const legacy = join(here, '..', 'v364-owned-linux');
+15: const arg = name => { const i = process.argv.indexOf(name); return i < 0 ? undefined : process.argv[i + 1]; };
+16: const repo = resolve(arg('--repo') ?? process.cwd());
+17: const output = resolve(arg('--out') ?? join(here, 'prepared'));
+18: const execute = process.argv.includes('--execute-linux');
+19: const prepareOnly = process.argv.includes('--prepare-only');
+20: assert.notEqual(execute, prepareOnly, 'choose exactly one explicit mode');
+21: assert.ok(arg('--out'), 'explicit unique --out is required');
+22: let executorReceipt;
+23: if (execute) {
+24:   assert.equal(process.platform, 'linux', 'owned Linux only');
+25:   assert.equal(Number(process.versions.node.split('.')[0]), 22, 'use repository .nvmrc major 22');
+26:   assert.equal(arg('--executor-receipt'), join(output, 'executor-start.json'), 'Python executor must own fresh output');
+27:   executorReceipt = JSON.parse(readFileSync(arg('--executor-receipt'), 'utf8'));
+28:   assert.equal(executorReceipt.schema, 'v364-owned-linux-boundary-executor-start-v1');
+29:   assert.equal(executorReceipt.repo, repo); assert.equal(executorReceipt.output, output);
+30:   assert.equal(executorReceipt.freshOutputCreated, true);
+31: } else {
+32:   assert.equal(existsSync(output), false, 'prepare output must not exist');
+33:   mkdirSync(output);
+34: }
+35: const source = join(repo, 'packages/proxy/scripts/staging');
+36: const require = createRequire(join(repo, 'package.json'));
+37: const { build } = require('esbuild');
+38: const { Miniflare, convertV4MiniflareOptions, Log, LogLevel } = require('miniflare');
+39: const expected = { workerd: '1.20260828.1', miniflare: '5.20260828.0-alpha', wrangler: '4.127.1' };
+40: const versions = Object.fromEntries(Object.keys(expected).map(name => [name, require(`${name}/package.json`).version]));
+41: assert.deepEqual(versions, expected);
+42: assert.equal(process.env.MINIFLARE_WORKERD_PATH, undefined, 'no runtime override');
+43: const sha = bytes => createHash('sha256').update(bytes).digest('hex');
+44: const sealedInputs = JSON.parse(readFileSync(join(here, 'source-inputs.json'), 'utf8'));
+45: assert.equal(sealedInputs.schema, 'v364-boundary-source-inputs-v1');
+46: const files = sealedInputs.files.map(v => v.path);
+47: const snapshot = () => files.map(path => { const b = readFileSync(join(repo, path)); return { path, bytes: b.length, sha256: sha(b) }; });
+48: const inputsBefore = snapshot();
+49: assert.deepEqual(inputsBefore, sealedInputs.files, 'exact frozen source/config/lock/legacy package and real prior evidence bytes');
+50: const checkoutSHA = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: repo, encoding: 'utf8' }).trim();
+51: for (const item of inputsBefore) {
+52:   const blob = execFileSync('git', ['show', 'HEAD:' + item.path], { cwd: repo });
+53:   assert.equal(blob.length, item.bytes); assert.equal(sha(blob), item.sha256, 'working tree must match checkout Git bytes');
+54: }
+55: if (execute) assert.equal(executorReceipt.checkoutSHA, checkoutSHA);
+56: const priorAnalysis = JSON.parse(readFileSync(join(repo, sealedInputs.priorAnalysisPath), 'utf8'));
+57: const priorExecutor = JSON.parse(readFileSync(join(repo, sealedInputs.priorArtifactRoot, 'executor.closed.json'), 'utf8'));
+58: const priorNode = JSON.parse(readFileSync(join(repo, sealedInputs.priorArtifactRoot, 'closed-result.json'), 'utf8'));
+59: assert.equal(priorAnalysis.capturedScope.runId, '37396338452');
+60: assert.equal(priorExecutor.actualExit, 1); assert.equal(priorExecutor.actualProcessExit, 1); assert.equal(priorExecutor.runnerOutcomeCode, 1);
+61: assert.equal(priorExecutor.closure.leftoverGroupKilled, true); assert.equal(priorNode.actualExit, 1);
+62: assert.equal(priorNode.baseline.code, 1); assert.equal(priorNode.results.length, 8);
+63: assert.equal(priorNode.results.filter(v => v.originalWindow?.actual === null && v.tail?.actual === null).length, 5);
+64: const priorEvents = gunzipSync(readFileSync(join(repo, sealedInputs.priorArtifactRoot, 'events.json.gz')));
+65: assert.equal(sha(priorEvents), priorNode.events.sha256); assert.equal(priorEvents.length, priorNode.events.bytes);
+66: const priorRun = { runId: '37396338452', checkoutSHA: priorExecutor.run.GITHUB_SHA, actualExit: priorExecutor.actualExit,
+67:   actualProcessExit: priorExecutor.actualProcessExit, runnerOutcomeCode: priorExecutor.runnerOutcomeCode,
+68:   leftoverGroupKilled: priorExecutor.closure.leftoverGroupKilled, reapedDescendants: priorExecutor.closure.reapedDescendants,
+69:   causeProven: false, unchangedHistoricalFailure: true };
+70: const gatewayConfig = JSON.parse(readFileSync(join(source, 'wrangler.chat-holder-gateway-v364.jsonc'), 'utf8'));
+71: const holderConfig = JSON.parse(readFileSync(join(source, 'wrangler.chat-holder-private-v364.jsonc'), 'utf8'));
+72: for (const config of [gatewayConfig, holderConfig]) {
+73:   assert.deepEqual(config.compatibility_flags, ['nodejs_compat', 'enable_request_signal']);
+74:   assert.equal(config.compatibility_date, '2026-09-25');
+75:   assert.equal(config.workers_dev, false); assert.equal(config.preview_urls, false);
+76:   assert.deepEqual(config.routes, []); assert.deepEqual(config.triggers, { crons: [] });
+77: }
+78: assert.deepEqual(gatewayConfig.services, [{ binding: 'TEXT_HOLDER', service: holderConfig.name, remote: false }]);
+79: assert.deepEqual(holderConfig.kv_namespaces.map(v => v.binding), ['OBSERVATIONS']);
+80: assert.equal(holderConfig.services, undefined);
+81: async function bundle(path, wrapper) {
+82:   const opts = { bundle: true, format: 'esm', platform: 'browser', target: 'es2022', write: false };
+83:   if (wrapper) {
+84:     const text = readFileSync(join(legacy, wrapper), 'utf8').replace('__ORIGINAL__', join(source, path).replaceAll('\\', '/'));
+85:     opts.stdin = { contents: text, resolveDir: source, sourcefile: wrapper, loader: 'js' };
+86:   } else opts.entryPoints = [join(source, path)];
+87:   const result = await build(opts); assert.equal(result.outputFiles.length, 1); return result.outputFiles[0].text;
+88: }
+89: async function boundaryBundle(entry) {
+90:   const result = await build({ entryPoints: [join(here, entry)], bundle: true, format: 'esm', platform: 'browser', target: 'es2022', write: false,
+91:     plugins: [{ name: 'frozen-observer-links', setup(plugin) {
+92:       plugin.onResolve({ filter: /^__GATEWAY_OBSERVER__$/ }, () => ({ path: join(legacy, 'gateway-observer.mjs') }));
+93:       plugin.onResolve({ filter: /^__HOLDER_OBSERVER__$/ }, () => ({ path: join(legacy, 'holder-observer.mjs') }));
+94:       plugin.onResolve({ filter: /^__ORIGINAL__$/ }, args => ({ path: join(source, args.importer.endsWith('gateway-observer.mjs') ? gatewayConfig.main : holderConfig.main) }));
+95:     } }],
+96:   });
+97:   assert.equal(result.outputFiles.length, 1); return result.outputFiles[0].text;
+98: }
+99: async function observedBareBundle() {
+100:   const contents = readFileSync(join(legacy, 'holder-observer.mjs'), 'utf8').replace('__ORIGINAL__', join(here, 'bare-async-source.mjs').replaceAll('\\', '/'));
+101:   const result = await build({ stdin: { contents, resolveDir: here, sourcefile: 'bare-observer.mjs', loader: 'js' }, bundle: true, format: 'esm', platform: 'browser', target: 'es2022', write: false });
+102:   assert.equal(result.outputFiles.length, 1); return result.outputFiles[0].text;
+103: }
+104: const bundles = {
+105:   gateway: await bundle(gatewayConfig.main), holder: await bundle(holderConfig.main),
+106:   observedGateway: await bundle(gatewayConfig.main, 'gateway-observer.mjs'),
+107:   observedHolder: await bundle(holderConfig.main, 'holder-observer.mjs'),
+108:   bare: await observedBareBundle(), direct: await boundaryBundle('direct-holder.mjs'),
+109: };
+110: const syntheticBuilt = await build({ entryPoints: [join(source, 'chat-holder-synthetic-v364.ts')], bundle: true, format: 'esm', platform: 'node', write: false });
+111: const synthetic = await import('data:text/javascript;base64,' + Buffer.from(syntheticBuilt.outputFiles[0].text).toString('base64'));
+112: const { SYNTHETIC_CREDENTIAL_V364, SYNTHETIC_PROVIDER_URL_V364, SYNTHETIC_PUBLIC_BODY_V364, SYNTHETIC_QUOTE_V364, SYNTHETIC_ROUTE_V364 } = synthetic;
+113: for (const name of ['gateway', 'observedGateway']) {
+114:   assert.equal(bundles[name].includes(SYNTHETIC_CREDENTIAL_V364), false);
+115:   assert.equal(bundles[name].includes(SYNTHETIC_PROVIDER_URL_V364), false);
+116: }
+117: for (const name of ['holder', 'observedHolder']) {
+118:   assert.equal(bundles[name].includes(SYNTHETIC_CREDENTIAL_V364), true);
+119:   assert.equal(bundles[name].includes(SYNTHETIC_PROVIDER_URL_V364), true);
+120: }
+121: const envelope = () => ({ requestId: SYNTHETIC_QUOTE_V364.requestId, quoteId: SYNTHETIC_QUOTE_V364.quoteId,
+122:   attemptNonce: randomUUID(), candidateIndex: SYNTHETIC_ROUTE_V364.candidateIndex,
+123:   routeTargetId: SYNTHETIC_ROUTE_V364.targetId, finalBodyUtf8: SYNTHETIC_PUBLIC_BODY_V364 });
+124: const bundleHashes = Object.entries(bundles).map(([name, text]) => ({ name, bytes: Buffer.byteLength(text), sha256: sha(text) }));
+125: if (!execute) {
+126:   assert.deepEqual(snapshot(), inputsBefore);
+127:   writeFileSync(join(output, 'prepare-only.json'), JSON.stringify({ schema: 'v364-linux-boundary-prepare-v1', actualExit: 0,
+128:     runtimeExecuted: false, versions, runtimeCompatibilityDate: '2026-09-04', frozenConfigDate: '2026-09-25',
+129:     sourceUnchanged: true, reviewBaseHEAD: sealedInputs.reviewBaseHEAD, checkoutSHA, priorRun, inputsBefore, bundleHashes, productionRequests: 0, ciInvocations: 0 }, null, 2) + '\n');
+130:   console.log(JSON.stringify({ actualExit: 0, runtimeExecuted: false, output }));
+131:   process.exit(0);
+132: }
+133: const startedAt = new Date().toISOString();
+134: const start = performance.now();
+135: const events = [];
+136: const results = [];
+137: const active = new Map();
+138: const observationFailures = [];
+139: const errorSafe = error => ({ name: error?.name, code: error?.code, message: String(error?.message ?? error).replaceAll(SYNTHETIC_CREDENTIAL_V364, '[synthetic-redacted]').replaceAll(SYNTHETIC_PROVIDER_URL_V364, '[synthetic-redacted]') });
+140: const event = (caseId, kind, fields = {}) => {
+141:   try {
+142:     if (events.length >= 20000) throw new Error('diagnostic event cap exceeded');
+143:     const row = { caseId, kind, hostMs: performance.now() - start, wallMs: Date.now(), ...fields };
+144:     events.push(row); appendFileSync(join(output, 'events.ndjson'), JSON.stringify(row) + '\n');
+145:   } catch (error) { if (observationFailures.length < 100) observationFailures.push({ caseId, kind, error: errorSafe(error) }); }
+146: };
+147: const phases = new Map();
+148: const phase = (caseId, value) => { phases.set(caseId, value); event(caseId, 'phase', { phase: value }); };
+149: const census = (caseId, label) => {
+150:   try {
+151:     const sample = processCensus(); event(caseId, 'proc-census', { phase: phases.get(caseId), label, census: sample });
+152:     if (!sample.complete) observationFailures.push({ caseId, label, incompleteProcCensus: true });
+153:     return sample.complete;
+154:   } catch (error) { const failure = { caseId, label, error: errorSafe(error) }; observationFailures.push(failure); event(caseId, 'proc-census-error', failure); return false; }
+155: };
+156: const delay = ms => new Promise(resolveDelay => setTimeout(resolveDelay, ms));
+157: async function bounded(task, ms, label) {
+158:   let timer; try { return await Promise.race([task, new Promise((_, reject) => { timer = setTimeout(() => reject(new Error(`${label} deadline ${ms}ms`)), ms); })]); }
+159:   finally { clearTimeout(timer); }
+160: }
+161: class CaptureLog extends Log {
+162:   constructor(caseId) { super(LogLevel.DEBUG); this.caseId = caseId; }
+163:   log(message) { event(this.caseId, 'miniflare-log', { phase: phases.get(this.caseId), message: String(message) }); }
+164: }
+165: function createFixture(caseId, kind) {
+166:   phase(caseId, 'fixture-create');
+167:   const kv = { OBSERVATIONS: holderConfig.kv_namespaces[0].id };
+168:   const common = { modules: true, compatibilityDate: '2026-09-04', compatibilityFlags: holderConfig.compatibility_flags };
+169:   const single = { ...common, name: 'v364-boundary-' + kind, script: kind === 'bare' ? bundles.bare : bundles.direct, kvNamespaces: kv };
+170:   const workers = kind === 'binding' ? [
+171:     { ...common, name: gatewayConfig.name, script: bundles.observedGateway, serviceBindings: { TEXT_HOLDER: holderConfig.name } },
+172:     { ...common, name: holderConfig.name, script: bundles.observedHolder, kvNamespaces: kv },
+173:   ] : [single];
+174:   const mf = new Miniflare(convertV4MiniflareOptions({ cf: false, host: '127.0.0.1', port: 0, log: new CaptureLog(caseId),
+175:     handleStructuredLogs(log) { event(caseId, 'workerd-log', { phase: phases.get(caseId), timestamp: log.timestamp, level: log.level,
+176:       message: String(log.message).replaceAll(SYNTHETIC_CREDENTIAL_V364, '[synthetic-redacted]').replaceAll(SYNTHETIC_PROVIDER_URL_V364, '[synthetic-redacted]') }); }, workers }));
+177:   const f = { caseId, kind, mf, owner: kind === 'binding' ? holderConfig.name : single.name, observations: null, url: null };
+178:   active.set(mf, f); return f; // register immediately before every readiness/binding await
+179: }
+180: async function readyFixture(f) {
+181:   phase(f.caseId, 'fixture-ready');
+182:   if (f.kind === 'binding') assert.deepEqual(Object.keys(await f.mf.getBindings(gatewayConfig.name)), ['TEXT_HOLDER']);
+183:   const bindings = await f.mf.getBindings(f.owner); assert.deepEqual(Object.keys(bindings), ['OBSERVATIONS']);
+184:   f.observations = bindings.OBSERVATIONS;
+185:   f.url = new URL('/fixture/complete-text', await f.mf.ready);
+186:   assert.equal(f.url.hostname, '127.0.0.1'); assert.equal(f.url.protocol, 'http:');
+187:   census(f.caseId, 'ready');
+188: }
+189: async function disposeFixture(f, reason) {
+190:   phase(f.caseId, 'dispose-start'); census(f.caseId, 'pre-dispose');
+191:   event(f.caseId, 'dispose-invoke', { reason, nativeRuntimeDisposeMaySendSIGKILL: true });
+192:   try {
+193:     await bounded(f.mf.dispose(), 10000, 'Miniflare dispose'); active.delete(f.mf);
+194:     phase(f.caseId, 'dispose-settled'); event(f.caseId, 'dispose-fulfilled', { reason, gracefulRuntimeExitProven: false });
+195:     census(f.caseId, 'post-dispose'); return true;
+196:   } catch (error) { event(f.caseId, 'dispose-error', { reason, ...errorSafe(error) }); return false; }
+197: }
+198: function httpClient(caseId, url, body, mode) {
+199:   assert.equal(url.hostname, '127.0.0.1');
+200:   return new Promise((resolveClient, reject) => {
+201:     let response; let socket; let socketCloseResolve;
+202:     const socketClosed = new Promise(resolveSocketClose => { socketCloseResolve = resolveSocketClose; });
+203:     const request = httpRequest(url, { method: 'POST', agent: false, headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) } });
+204:     request.on('error', error => { event(caseId, 'request-error', errorSafe(error)); reject(error); });
+205:     request.once('close', () => event(caseId, 'request-close', { destroyed: request.destroyed }));
+206:     request.once('socket', value => {
+207:       socket = value; socket.once('close', () => socketCloseResolve());
+208:       for (const type of ['connect', 'end', 'close', 'error', 'timeout']) socket.on(type, data => event(caseId, 'socket-' + type,
+209:         type === 'error' ? errorSafe(data) : { hadError: typeof data === 'boolean' ? data : undefined, destroyed: socket.destroyed, bytesRead: socket.bytesRead, bytesWritten: socket.bytesWritten }));
+210:     });
+211:     request.setTimeout(10000, () => request.destroy(new Error('fixture HTTP socket timed out')));
+212:     request.once('response', value => {
+213:       response = value;
+214:       for (const type of ['aborted', 'close', 'end', 'error']) response.on(type, data => event(caseId, 'response-' + type, type === 'error' ? errorSafe(data) : { complete: response.complete, destroyed: response.destroyed }));
+215:       response.on('error', reject);
+216:       let first = Buffer.alloc(0);
+217:       const onData = chunk => {
+218:         first = Buffer.concat([first, chunk]);
+219:         if (first.length > 128) { request.destroy(); response.destroy(); reject(new Error('first SSE frame exceeded bound')); return; }
+220:         if (!first.includes('\n\n')) return;
+221:         response.pause(); response.removeListener('data', onData);
+222:         event(caseId, 'first-frame', { bytes: first.length });
+223:         resolveClient({ status: response.statusCode, contentType: response.headers['content-type'], first,
+224:           async cancel() {
+225:             assert.equal(response.closed, false, 'response must still be open before explicit client cancellation');
+226:             assert.equal(socket.destroyed, false, 'socket must still be open before explicit client cancellation');
+227:             event(caseId, 'client-cancel-invoke', { mode });
+228:             if (!response.closed) {
+229:               const closed = new Promise(resolveClosed => response.once('close', resolveClosed));
+230:               if (mode === 'rst') { assert.equal(typeof socket.resetAndDestroy, 'function'); assert.equal(socket.remoteAddress, '127.0.0.1'); event(caseId, 'client-rst-api-invoke'); socket.resetAndDestroy(); }
+231:               request.destroy(); response.destroy();
+232:               await bounded(Promise.all([closed, socketClosed]), 10000, 'client response and socket close');
+233:             }
+234:             await bounded(socketClosed, 10000, 'client socket close');
+235:             const result = { requestDestroyed: request.destroyed, responseDestroyed: response.destroyed, responseComplete: response.complete, socketDestroyed: socket.destroyed };
+236:             event(caseId, 'client-cancel-settled', result); return result;
+237:           }, cleanup() { request.destroy(); response?.destroy(); },
+238:         });
+239:       };
+240:       response.on('data', onData);
+241:       response.once('end', () => reject(new Error('response ended before first frame')));
+242:     });
+243:     request.end(body);
+244:   });
+245: }
+246: async function observedGet(caseId, observations, key, n, phase) {
+247:   event(caseId, 'observer-kv-get-invoke', { category: key.split(':', 1)[0], poll: n, phase });
+248:   const value = await observations.get(key);
+249:   event(caseId, 'observer-kv-get-settled', { category: key.split(':', 1)[0], poll: n, phase, value });
+250:   return value;
+251: }
+252: async function cancellationCase(caseId, kind, mode) {
+253:   let f; let client; let e;
+254:   const result = { caseId, kind, mode, baselineEligible: false, diagnosticVariant: true, originalWindow: null, tail: null,
+255:     finalPreDisposeSnapshot: null, actualExit: 1, closed: false };
+256:   try {
+257:     f = createFixture(caseId, kind); await bounded(readyFixture(f), 10000, 'fixture readiness');
+258:     e = envelope(); const body = JSON.stringify(e); phase(caseId, 'streaming');
+259:     client = await bounded(httpClient(caseId, f.url, body, mode), 10000, 'first frame');
+260:     assert.equal(client.status, 200); assert.equal(client.contentType, 'text/event-stream');
+261:     assert.equal(await observedGet(caseId, f.observations, 'accepted:' + e.attemptNonce, 0, 'before'), 'one');
+262:     assert.equal(client.first.toString(), ': holder-ready\n\n');
+263:     phase(caseId, 'client-cancel'); const cancelled = await bounded(client.cancel(), 10000, 'cancel');
+264:     assert.deepEqual(cancelled, { requestDestroyed: true, responseDestroyed: true, responseComplete: false, socketDestroyed: true });
+265:     phase(caseId, 'original-poll'); const pollStart = performance.now(); let value = null; let count = 0;
+266:     for (let n = 0; n < 100 && value === null; n++) { value = await observedGet(caseId, f.observations, 'cancel:' + e.attemptNonce, n, 'original'); count++; if (value === null) await delay(10); }
+267:     result.originalWindow = { pollCount: count, sleepMs: 10, elapsedMs: performance.now() - pollStart, actual: value, expected: 'observed', actualExit: value === 'observed' ? 0 : 1 };
+268:     try { assert.equal(value, 'observed'); } catch (error) { result.strictFailure = errorSafe(error); }
+269:     assert.equal(await observedGet(caseId, f.observations, 'release:' + e.attemptNonce, 0, 'after'), null);
+270:     assert.equal(await observedGet(caseId, f.observations, 'accepted:' + e.attemptNonce, 0, 'after'), 'one');
+271:     phase(caseId, 'diagnostic-tail'); const tailStart = performance.now(); let tailCount = 0;
+272:     while (value === null && performance.now() - tailStart < 4000) { value = await observedGet(caseId, f.observations, 'cancel:' + e.attemptNonce, tailCount++, 'diagnostic-tail'); if (value === null) await delay(50); }
+273:     result.tail = { elapsedMs: performance.now() - tailStart, reads: tailCount, actual: value, usedForPass: false };
+274:     result.actualExit = result.originalWindow.actualExit;
+275:   } catch (error) { result.error = errorSafe(error); }
+276:   finally {
+277:     client?.cleanup();
+278:     if (f && e && f.observations) {
+279:       phase(caseId, 'pre-dispose-observation');
+280:       try {
+281:         const values = {};
+282:         for (const category of ['cancel', 'release', 'accepted']) values[category] = await bounded(observedGet(caseId, f.observations, category + ':' + e.attemptNonce, 0, 'pre-dispose'), 2000, 'final KV observation');
+283:         result.finalPreDisposeSnapshot = { ...values, usedForPass: false }; event(caseId, 'pre-dispose-kv-snapshot', result.finalPreDisposeSnapshot);
+284:       } catch (error) { result.preDisposeError = errorSafe(error); result.actualExit = 1; }
+285:     }
+286:     if (f) result.closed = await disposeFixture(f, 'case-finally');
+287:     event(caseId, 'case-closed', { actualExit: result.actualExit, closed: result.closed, baselineEligible: false }); results.push(result);
+288:   }
+289: }
+290: async function calibration(mode) {
+291:   const caseId = 'node-http-calibration-' + mode;
+292:   let requestCount = 0; let received = ''; let client; let peerWritableFinished;
+293:   const body = JSON.stringify(envelope());
+294:   let peerClose; let peerSocketClose;
+295:   const socketClosed = new Promise(resolveSocketClose => { peerSocketClose = resolveSocketClose; });
+296:   const closed = new Promise(resolveClose => { peerClose = resolveClose; });
+297:   const server = createServer((request, response) => {
+298:     requestCount++; request.setEncoding('utf8'); request.on('data', chunk => { received += chunk; });
+299:     request.socket.on('error', error => event(caseId, 'server-socket-error', errorSafe(error)));
+300:     request.socket.on('end', () => event(caseId, 'server-socket-end'));
+301:     request.socket.on('close', hadError => { event(caseId, 'server-socket-close', { hadError }); peerSocketClose(); });
+302:     response.on('error', error => event(caseId, 'server-response-error', errorSafe(error)));
+303:     request.on('end', () => { response.writeHead(200, { 'Content-Type': 'text/event-stream' }); response.write(': holder-ready\n\n'); });
+304:     response.once('close', () => { peerWritableFinished = response.writableFinished; event(caseId, 'server-response-close', { writableFinished: peerWritableFinished }); peerClose(); });
+305:   });
+306:   const result = { caseId, mode, baselineEligible: false, calibrationOnly: true, actualExit: 1, closed: false };
+307:   try {
+308:     await new Promise(resolveListen => server.listen(0, '127.0.0.1', resolveListen));
+309:     const url = new URL(`http://127.0.0.1:${server.address().port}/fixture/complete-text`);
+310:     client = await bounded(httpClient(caseId, url, body, mode), 10000, 'calibration first frame');
+311:     assert.equal(client.status, 200); assert.equal(client.contentType, 'text/event-stream'); assert.equal(client.first.toString(), ': holder-ready\n\n');
+312:     const cancellation = await bounded(client.cancel(), 10000, 'calibration cancel');
+313:     assert.deepEqual(cancellation, { requestDestroyed: true, responseDestroyed: true, responseComplete: false, socketDestroyed: true });
+314:     await bounded(Promise.all([closed, socketClosed]), 10000, 'server response and socket peer close'); assert.equal(requestCount, 1); assert.equal(received, body); assert.equal(peerWritableFinished, false);
+315:     result.actualExit = 0;
+316:   } catch (error) { result.error = errorSafe(error); }
+317:   finally {
+318:     client?.cleanup(); server.closeAllConnections();
+319:     try { await bounded(new Promise(resolveClose => server.close(resolveClose)), 10000, 'server dispose'); result.closed = true; }
+320:     catch (error) { result.cleanupError = errorSafe(error); result.actualExit = 1; }
+321:     results.push(result);
+322:   }
+323: }
+324: async function strictBaseline() {
+325:   const env = { PATH: process.env.PATH, HOME: process.env.HOME, TMPDIR: process.env.TMPDIR, CI: 'true', NO_COLOR: '1' };
+326:   // Share the executor's isolated process group so outer termination includes all workerd descendants.
+327:   const child = spawn(process.execPath, ['--import', require.resolve('tsx'), '--test', 'scripts/staging/chat-holder-binding-v364.node.test.mjs', 'scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs'], { cwd: join(repo, 'packages/proxy'), env, stdio: ['ignore', 'pipe', 'pipe'] });
+328:   let stdout = ''; let stderr = ''; let timedOut = false;
+329:   const timer = setTimeout(() => { timedOut = true; child.kill('SIGKILL'); }, 90000);
+330:   child.stdout.on('data', b => { stdout += b; }); child.stderr.on('data', b => { stderr += b; });
+331:   let spawnError;
+332:   child.on('error', error => { spawnError = errorSafe(error); });
+333:   const [code, signal] = await new Promise(resolveClose => child.once('close', (...args) => resolveClose(args)));
+334:   clearTimeout(timer);
+335:   writeFileSync(join(output, 'original-strict.stdout.txt'), stdout); writeFileSync(join(output, 'original-strict.stderr.txt'), stderr);
+336:   return { code, signal, timedOut, spawnError, stdout: { bytes: Buffer.byteLength(stdout), sha256: sha(stdout) }, stderr: { bytes: Buffer.byteLength(stderr), sha256: sha(stderr) } };
+337: }
+338: let baseline; let fatal;
+339: let sourceUnchanged = false;
+340: try {
+341:   baseline = await strictBaseline();
+342:   if (baseline.timedOut || baseline.spawnError || baseline.signal) throw new Error('strict baseline did not close normally; outer executor owns process-group cleanup');
+343:   for (const mode of ['destroy', 'rst']) await bounded(calibration(mode), 15000, 'calibration case');
+344:   for (const kind of ['bare', 'direct', 'binding']) for (const mode of ['destroy', 'rst']) {
+345:     await bounded(cancellationCase('locked-' + kind + '-' + mode, kind, mode), 30000, 'boundary cancellation case');
+346:   }
+347: } catch (error) { fatal = errorSafe(error); }
+348: finally {
+349:   for (const f of active.values()) await disposeFixture(f, 'outer-finally');
+350:   const inputsAfter = snapshot(); sourceUnchanged = JSON.stringify(inputsBefore) === JSON.stringify(inputsAfter);
+351:   const eventsText = JSON.stringify(events, null, 2) + '\n'; writeFileSync(join(output, 'events.json'), eventsText);
+352:   const actualExit = !fatal && observationFailures.length === 0 && baseline?.code === 0 && results.length === 8 && results.every(v => v.actualExit === 0 && v.closed) && active.size === 0 && sourceUnchanged ? 0 : 1;
+353:   const report = { schema: 'v364-owned-linux-boundary-closed-v1', startedAt, endedAt: new Date().toISOString(), elapsedMs: performance.now() - start,
+354:     actualExit, outcome: actualExit === 0 ? 'STRICT_SYNTHETIC_BOUNDARY_COMPARISON_ONLY' : 'STRICT_FAILURE_PRESERVED', baseline, results, fatal, versions,
+355:     executorReceipt, checkoutSHA, reviewBaseHEAD: sealedInputs.reviewBaseHEAD, priorRun, allComparisonsBaselineEligible: false, closureAuthority: 'executor.closed.json; bounded Promise does not cancel underlying task',
+356:     runtimeCompatibilityDate: '2026-09-04', frozenConfigDate: '2026-09-25', sourceUnchanged, inputsBefore, inputsAfter, bundleHashes,
+357:     activeMiniflare: active.size, observationFailures, events: { bytes: Buffer.byteLength(eventsText), sha256: sha(eventsText), count: events.length },
+358:     productionRequests: 0, realIdentity: false, defaultOffHolderChanged: false, dependencyChanged: false,
+359:     causeProven: false, lateObservationUpgradesPass: false, upstreamPatchApplied: false, flagsChanged: false,
+360:     limitations: ['Bare stream simplifies envelope validation and has no gateway/holder import; timing perturbation remains possible.',
+361:       'Direct arm changes request execution context topology by calling original holder locally and contains synthetic private literals; it cannot pass the original binding baseline.',
+362:       'Miniflare runtime dispose sends SIGKILL internally; API disposal fulfilled is not graceful workerd exit.',
+363:       'Host receipt phase is arrival-time attribution; preserve worker timestamps and do not assume all logs arrived before dispose.',
+364:       'Same runtime failure differences localize a boundary, not an upstream regression cause proof.'] };
+365:   writeFileSync(join(output, 'closed-result.json'), JSON.stringify(report, null, 2) + '\n');
+366:   console.log(JSON.stringify({ actualExit, outcome: report.outcome, output, sourceUnchanged, activeMiniflare: active.size })); process.exitCode = actualExit;
+367: }
+368: 

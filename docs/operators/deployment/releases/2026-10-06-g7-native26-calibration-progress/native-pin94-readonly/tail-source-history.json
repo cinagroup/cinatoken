@@ -1,0 +1,114 @@
+{
+  "at": "2026-10-06T04:28:39.012Z",
+  "pins": [
+    {
+      "step": 99,
+      "target": "scripts/db/cutover/postgres-shared-key-stats-claim-reader-v349.native.test.mjs",
+      "pin": "095f8ec4748cd92e35f37b86891ef8762bc8b8b5ca65ab49abc55b067c1d9be9",
+      "current": {
+        "bytes": 28167,
+        "sha256": "095f8ec4748cd92e35f37b86891ef8762bc8b8b5ca65ab49abc55b067c1d9be9"
+      }
+    },
+    {
+      "step": 109,
+      "target": "scripts/db/cutover/postgres-replay-reservations.native.test.mjs",
+      "pin": "d95055419a04465c7c172ff0b8426bd0b928bd538e4dad80f9442229abd5e269",
+      "current": {
+        "bytes": 37096,
+        "sha256": "9cb9a57a7a3edaff9f7a66a9c547a83d6f90ee8938d9a4ad8370194586b4ebe6"
+      }
+    }
+  ],
+  "readResults": [
+    {
+      "label": "source-step-99",
+      "bytes": 28167,
+      "sha256": "095f8ec4748cd92e35f37b86891ef8762bc8b8b5ca65ab49abc55b067c1d9be9"
+    },
+    {
+      "label": "source-log-step-99",
+      "bytes": 132,
+      "sha256": "d9de7db4b58f344112c87c4e0dc9a57c0e71b41cf6f13d9a4c7082fc651fcdcb"
+    },
+    {
+      "label": "pin-history-step-99",
+      "bytes": 137,
+      "sha256": "a16d3fce003f2984797f041039123fe4078fecbce7711c16dbb751e2a5ab56cb"
+    },
+    {
+      "label": "source-web-diff-step-99",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "source-step-109",
+      "bytes": 37096,
+      "sha256": "9cb9a57a7a3edaff9f7a66a9c547a83d6f90ee8938d9a4ad8370194586b4ebe6"
+    },
+    {
+      "label": "source-log-step-109",
+      "bytes": 271,
+      "sha256": "039cec450c59a573eef7ccaa6b2b4cd9701d34b6827282dbf4b17d85425295b7"
+    },
+    {
+      "label": "pin-history-step-109",
+      "bytes": 238,
+      "sha256": "f892144c9b22f138f0421a3e6b4938f67a0036e57da905b912ae6cf27f53dfba"
+    },
+    {
+      "label": "source-web-diff-step-109",
+      "bytes": 3144,
+      "sha256": "45f478a3d7d5b5facb00aa9dfb57ab9cebc87a30357a0070f531c96d79e6efc0"
+    }
+  ],
+  "actualRaw": {
+    "at": "2026-10-06T04:28:38.997Z",
+    "finishedAt": "2026-10-06T04:28:39.003Z",
+    "operation": "readFile",
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\native-terminal.stdout.log",
+    "actualExit": 0,
+    "signal": null,
+    "error": null,
+    "stdout": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\actual-native-raw.stdout.log",
+      "bytes": 556674,
+      "sha256": "c78e11593edf9b694d5a490647fd37f4863aa44f22be14d367e592975dbb8d28"
+    },
+    "stderr": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\actual-native-raw.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "originalReceipt": {
+    "schema": "cinatoken.native26-ci-independent-peer.command.v1",
+    "at": "2026-10-06T04:21:36.386Z",
+    "finishedAt": "2026-10-06T04:21:45.527Z",
+    "executable": "C:/Program Files/GitHub CLI/gh.exe",
+    "args": [
+      "run",
+      "view",
+      "37412060008",
+      "--repo",
+      "cinagroup/cinatoken",
+      "--job",
+      "112102451588",
+      "--log"
+    ],
+    "cwd": "C:/cinagroup/cinatoken",
+    "actualExit": 0,
+    "signal": null,
+    "spawnError": null,
+    "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\native-terminal.stdout.log",
+    "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\native-terminal.stderr.log",
+    "stdoutInfo": {
+      "bytes": 556674,
+      "sha256": "c78e11593edf9b694d5a490647fd37f4863aa44f22be14d367e592975dbb8d28"
+    },
+    "stderrInfo": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  }
+}

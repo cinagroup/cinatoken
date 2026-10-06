@@ -1,0 +1,1060 @@
+{
+  "schema": "v364-next-cancel-readonly-diagnosis-v1",
+  "operation": "local-read-only-source-and-closed-artifact-analysis",
+  "authority": {
+    "repo": "C:/cinagroup/cinatoken",
+    "preparedAtHead": "702c4d71379acb697024ef846725871582bff94f",
+    "priorRun": 37402302570,
+    "priorActualExit": 1,
+    "originalStrictActualExit": 1
+  },
+  "conclusion": "Original strict v364 remains failed. Next owned Linux diagnosis should use Miniflare's already-installed direct Workerd HTTP sockets, retain the unchanged original strict baseline, and add a real-Worker explicit reader.cancel calibration. No new runtime has run.",
+  "facts": [
+    {
+      "claim": "All existing bare/direct/binding native HTTP arms still reach Miniflare's core entry worker via mf.ready.",
+      "refs": [
+        "scripts/diagnostics/v364-owned-linux-boundary/run-boundary.mjs:165-185",
+        "node_modules/miniflare/dist/src/index.js:113484-113498",
+        "node_modules/miniflare/dist/src/index.js:113573-113583"
+      ],
+      "classification": "verified-installed-source"
+    },
+    {
+      "claim": "The core entry worker has compatibility date 2025-03-17 and flags nodejs_compat/service_binding_extra_handlers. It creates a Request twice and forwards to the selected worker with service.fetch; it lacks enable_request_signal.",
+      "refs": [
+        "node_modules/miniflare/dist/src/index.js:99394-99399",
+        "node_modules/miniflare/dist/src/workers/core/entry.worker.js:4938-4963",
+        "node_modules/miniflare/dist/src/workers/core/entry.worker.js:5112-5187"
+      ],
+      "classification": "verified-installed-source"
+    },
+    {
+      "claim": "The pinned Workerd compatibility schema requires explicit enable_request_signal; no default enable date appears for this flag.",
+      "url": "https://raw.githubusercontent.com/cloudflare/workerd/v1.20260828.1/src/workerd/io/compatibility-date.capnp",
+      "refs": [
+        "enableRequestSignal @90, lines 706-710"
+      ],
+      "classification": "verified-primary-source"
+    },
+    {
+      "claim": "Installed unsafeDirectSockets directly binds a native HTTP socket to the user worker service. unsafeGetDirectURL returns that actual socket URL, bypassing core ENTRY_WORKER for that request.",
+      "refs": [
+        "node_modules/miniflare/dist/src/index.js:94055-94061",
+        "node_modules/miniflare/dist/src/index.js:113163-113193",
+        "node_modules/miniflare/dist/src/index.js:113668-113689",
+        "node_modules/miniflare/dist/src/index.d.ts:10008-10014"
+      ],
+      "classification": "verified-installed-source"
+    },
+    {
+      "claim": "Archived RST cases recorded request abort inside original-poll: bare holder one; direct gateway incoming/forwarded and holder three; binding holder one. All six native arms still had null cancel KV through the original window and separate diagnostic tail.",
+      "refs": [
+        "actual-archived-boundary-analysis.stdout.txt",
+        "committed closed-result.json/executor.closed.json/events.json.gz"
+      ],
+      "classification": "verified-existing-linux-artifact"
+    },
+    {
+      "claim": "Destroy arms recorded no signal-abort and sampled successful release reads 1,100,200,300 after client close. RST arms stopped at sampled release read 1. These are observations within the recorded phase, not proof that a callback can never run.",
+      "classification": "verified-existing-linux-artifact"
+    },
+    {
+      "claim": "The original private-holder stream records cancellation only from its underlying stream cancel callback. It does not attach a request.signal listener; async pull itself does not stop on cancellation.",
+      "refs": [
+        "packages/proxy/scripts/staging/chat-holder-private-v364.ts:65-92",
+        "packages/proxy/scripts/staging/chat-holder-private-v364.ts:109-112"
+      ],
+      "classification": "verified-source"
+    },
+    {
+      "claim": "Active v390 holder and v401 ingress already contain explicit abort->reader.cancel paths with cleanup ownership registered before disconnect; adding that same logic blindly would duplicate existing behavior.",
+      "refs": [
+        "packages/proxy/src/runtime/complete-text-holder-worker-v390.ts:53-98",
+        "packages/proxy/src/runtime/complete-text-holder-worker-v390.ts:173-223",
+        "packages/proxy/src/services/credential-free-chat-ingress-v401.ts:124-173"
+      ],
+      "classification": "verified-source"
+    }
+  ],
+  "causalChain": [
+    "Node raw HTTP request reads first chunk and pauses response; destroy/RST closes client request/response/socket.",
+    "Current transport then enters Miniflare core ENTRY_WORKER; downstream gateway/holder request signals are created through native service requests. Signal observation and response-source cancellation are separate mechanisms.",
+    "Original holder async pull is awaiting KV/timers. Underlying source cancel must enter, call the original KV put, register the original same promise with ctx.waitUntil, and await fulfillment for the existing strict cancellation observation.",
+    "RST signal observation without cancel KV proves a request abort happened in those runs, but does not identify whether source cancellation was never entered, was dropped before logging/put, or lost during native request-context teardown.",
+    "Destroy with continued release reads is consistent with delayed/unobserved transport disconnect. This is an inference to test on the physical direct socket.",
+    "mf.dispose occurs only after the original window and diagnostic tail. Its promise fulfillment and outer process-group absence do not prove graceful Workerd shutdown."
+  ],
+  "nextExecutablePlan": [
+    {
+      "id": "unchanged-original-baseline",
+      "steps": [
+        "Execute the original v364 strict test source unchanged under the same pinned Linux runtime. Preserve all stdout/stderr, exit1/0, source SHA, all assertions and original 100x10ms cancel window.",
+        "Its result stays separate; no diagnostic variant can upgrade an original failure."
+      ]
+    },
+    {
+      "id": "physical-direct-socket",
+      "steps": [
+        "Use existing convertV4MiniflareOptions with unsafeDirectSockets:[{host:'127.0.0.1',port:0}] on the bare worker or binding gateway worker only.",
+        "Set the request URL from await mf.unsafeGetDirectURL(entryWorkerName), assert host/protocol, and assert it differs from mf.ready; prove actual runtime socket service targets the user worker from pinned source.",
+        "Use original frozen async source/holder/gateway and same compatibility date/flags. Execute bare destroy/RST and binding gateway destroy/RST, with fresh owned Miniflare contexts and original client teardown, exact first-frame/accepted/release/cancel assertions and window.",
+        "Retain incoming/forwarded/holder signal observations and original KV proxy observations; do not add waitUntil or an abort handler to the original source."
+      ]
+    },
+    {
+      "id": "native-explicit-reader-cancel-calibration",
+      "steps": [
+        "Within a real Workerd worker, call the same original holder/source, read its first frame, arrange a pending second read, then await its real reader.cancel. Observe the original cancel KV, original waitUntil registration and fulfillment.",
+        "Do not replace ctx.waitUntil or add lifetime protection. This calibrates native JS stream cancellation/KV observation independently of transport.",
+        "Its success would not prove pending original pull is quiescent, direct HTTP cancellation passed, or the old strict baseline passed."
+      ]
+    },
+    {
+      "id": "bounded-result-separation",
+      "steps": [
+        "Preserve source seals, real status or null/timeout, per-child raw SHA, process-group ownership and absence checks. Keep unknown exits failing and cleanup failures separate.",
+        "Record mf.dispose fulfillment as API completion only; retain forced-cleanup flags and do not call it graceful. Linux execution is future-only."
+      ]
+    }
+  ],
+  "decisionRules": [
+    "If direct sockets restore incoming abort but cancel KV stays null while native explicit reader.cancel succeeds, native response-pump teardown/context lifetime becomes the leading remaining hypothesis.",
+    "If direct sockets restore both cancellation observations, investigate the Miniflare core entry forwarding and compatibility flags in an isolated adapter qualification; do not change installed packages or claim production repair.",
+    "If native explicit reader.cancel fails, first diagnose async source cancellation/KV promise lifetime independently of HTTP; do not blame the HTTP ingress from absent observations alone.",
+    "A Workerd patch or package upgrade requires a pinned candidate, independent reproducible runtime source/build provenance and the unchanged original strict suite passing; open upstream PRs are not proof."
+  ],
+  "primarySources": [
+    {
+      "url": "https://github.com/cloudflare/workerd/issues/6832",
+      "kind": "upstream-issue",
+      "scope": "Reporter describes async stream cancel regression; supporting similarity only, not reproduced at our exact pin.",
+      "notCurrentFixProof": true
+    },
+    {
+      "url": "https://github.com/cloudflare/workerd/pull/6833",
+      "kind": "upstream-open-proposed-fix",
+      "scope": "Proposal schedules source cancellation on pump teardown and retains its asynchronous promise through drain. Page read as Open; no binary used here.",
+      "notCurrentFixProof": true
+    },
+    {
+      "url": "https://github.com/cloudflare/workerd/pull/6896",
+      "kind": "upstream-open-proposed-fix",
+      "scope": "Independent proposed pump cancellation fix. Comments raise cleanup-task versus waitUntil drain lifetime. Page read as Open; no binary used here.",
+      "notCurrentFixProof": true
+    },
+    {
+      "url": "https://developers.cloudflare.com/workers/configuration/compatibility-flags/",
+      "kind": "official-docs",
+      "scope": "Request signal flags behavior; exact pin schema checked separately."
+    }
+  ],
+  "limits": {
+    "realRuntimeExecuted": false,
+    "realCiExecuted": false,
+    "productionRequests": 0,
+    "repositoryModified": false,
+    "gitModified": false,
+    "originalStrictAssertionsModified": false,
+    "oldEvidenceModified": false,
+    "scopeOrGateChanged": false,
+    "workerdCppAtExactPinRetrieved": false,
+    "upstreamRootCauseAtOurPinProven": false,
+    "fullG7Passed": false,
+    "gracefulWorkerdProven": false
+  },
+  "sealedAt": "2026-10-06T03:28:22.602Z",
+  "closed": true,
+  "actualReadOnlyReviewOutcome": 0,
+  "sourceInputs": [
+    {
+      "file": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-owned-linux-boundary\\run-boundary.mjs",
+      "bytes": 28489,
+      "sha256": "9341885b2890b8270b2b9732cd46c169bb41c4a3a4f6d4eef5f662ee3cda7cda",
+      "relative": "scripts/diagnostics/v364-owned-linux-boundary/run-boundary.mjs"
+    },
+    {
+      "file": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-owned-linux-boundary\\bare-async-source.mjs",
+      "bytes": 1864,
+      "sha256": "86b67412be0b8ef8434edfd0f44c8c6e5d306ce3f76ed3deed8305cca2771bfd",
+      "relative": "scripts/diagnostics/v364-owned-linux-boundary/bare-async-source.mjs"
+    },
+    {
+      "file": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-owned-linux-boundary\\direct-holder.mjs",
+      "bytes": 785,
+      "sha256": "4019fbebd9575bcad6dd3a987d320cd7eb96d646ab344bea5918f7305faaee84",
+      "relative": "scripts/diagnostics/v364-owned-linux-boundary/direct-holder.mjs"
+    },
+    {
+      "file": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-owned-linux\\run-v364-owned-diagnostic.mjs",
+      "bytes": 22852,
+      "sha256": "11850fbe29355f705e3bc4ec68c1b6416565b943dfb7a0f200d4090de5158666",
+      "relative": "scripts/diagnostics/v364-owned-linux/run-v364-owned-diagnostic.mjs"
+    },
+    {
+      "file": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-owned-linux\\gateway-observer.mjs",
+      "bytes": 1244,
+      "sha256": "3ec2e49a72697f61bd1867bcde369a7c508cdbf669cd86d7e0eebdfc41dcfe00",
+      "relative": "scripts/diagnostics/v364-owned-linux/gateway-observer.mjs"
+    },
+    {
+      "file": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-owned-linux\\holder-observer.mjs",
+      "bytes": 2461,
+      "sha256": "740727cae646ae757fa50ef7bb6c02a9f9cb4b1b3aa64b0de539c88bbbe09a25",
+      "relative": "scripts/diagnostics/v364-owned-linux/holder-observer.mjs"
+    },
+    {
+      "file": "C:\\cinagroup\\cinatoken\\packages\\proxy\\scripts\\staging\\chat-holder-private-v364.ts",
+      "bytes": 5367,
+      "sha256": "44070fcbb7058b915329a150634eaa649c1b3601724495a1620e94ce2d54d1bf",
+      "relative": "packages/proxy/scripts/staging/chat-holder-private-v364.ts"
+    },
+    {
+      "file": "C:\\cinagroup\\cinatoken\\packages\\proxy\\scripts\\staging\\chat-holder-gateway-v364.ts",
+      "bytes": 1534,
+      "sha256": "8c85b01ba54daa9b7302c726d20693d08ccb3395350ea6a333817eed46441eaf",
+      "relative": "packages/proxy/scripts/staging/chat-holder-gateway-v364.ts"
+    },
+    {
+      "file": "C:\\cinagroup\\cinatoken\\packages\\proxy\\scripts\\staging\\chat-holder-binding-v364-http-cancel-successor.test.mjs",
+      "bytes": 13354,
+      "sha256": "d23d1c710b539b6c64655fbb1fa4e4de85b228bab19c757bc0e4de48528972e5",
+      "relative": "packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs"
+    },
+    {
+      "file": "C:\\cinagroup\\cinatoken\\packages\\proxy\\src\\runtime\\complete-text-holder-worker-v390.ts",
+      "bytes": 15088,
+      "sha256": "9211e86c8cc97af3a02456a372192b9977d6d171d7ae4926de2877559b144814",
+      "relative": "packages/proxy/src/runtime/complete-text-holder-worker-v390.ts"
+    },
+    {
+      "file": "C:\\cinagroup\\cinatoken\\packages\\proxy\\src\\services\\credential-free-chat-ingress-v401.ts",
+      "bytes": 20878,
+      "sha256": "c9a3567e6c0ae98e2a1316795b7c5a0cb98804c53213f3d45e84b5afc19163d6",
+      "relative": "packages/proxy/src/services/credential-free-chat-ingress-v401.ts"
+    },
+    {
+      "file": "C:\\cinagroup\\cinatoken\\node_modules\\miniflare\\package.json",
+      "bytes": 4185,
+      "sha256": "d43d063fc65818a57e5df8c5503bcfddaef5320099d2479097b16b6cb7a5a288",
+      "relative": "node_modules/miniflare/package.json"
+    },
+    {
+      "file": "C:\\cinagroup\\cinatoken\\node_modules\\workerd\\package.json",
+      "bytes": 676,
+      "sha256": "84a166529ea8d4de0bcdf2af781996846cd64e33367f357d88bbc3d514c06fe2",
+      "relative": "node_modules/workerd/package.json"
+    },
+    {
+      "file": "C:\\cinagroup\\cinatoken\\node_modules\\miniflare\\dist\\src\\index.js",
+      "bytes": 4843426,
+      "sha256": "58ca83056cf67838add064edcbfd1d654ed204527b8eb01307ba208d7e59fa20",
+      "relative": "node_modules/miniflare/dist/src/index.js"
+    },
+    {
+      "file": "C:\\cinagroup\\cinatoken\\node_modules\\miniflare\\dist\\src\\index.d.ts",
+      "bytes": 485080,
+      "sha256": "7e0c4b6c1cdf6b4207e4c8651e04a453b759a1cdc4a3cd5691da016050e9193a",
+      "relative": "node_modules/miniflare/dist/src/index.d.ts"
+    },
+    {
+      "file": "C:\\cinagroup\\cinatoken\\node_modules\\miniflare\\dist\\src\\workers\\core\\entry.worker.js",
+      "bytes": 184933,
+      "sha256": "e2434da3c39be4758dd323045dbc0b79bb2c0b2a5ba2ed02c6b271b1b676410d",
+      "relative": "node_modules/miniflare/dist/src/workers/core/entry.worker.js"
+    }
+  ],
+  "actualArtifactSummary": [
+    {
+      "caseId": "node-http-calibration-destroy",
+      "actualExit": 0,
+      "workerKinds": {},
+      "signalAborts": []
+    },
+    {
+      "caseId": "node-http-calibration-rst",
+      "actualExit": 0,
+      "workerKinds": {},
+      "signalAborts": []
+    },
+    {
+      "caseId": "locked-bare-destroy",
+      "actualExit": 1,
+      "originalWindow": {
+        "pollCount": 100,
+        "sleepMs": 10,
+        "elapsedMs": 1274.1735669999998,
+        "actual": null,
+        "expected": "observed",
+        "actualExit": 1
+      },
+      "tail": {
+        "elapsedMs": 4038.6711730000006,
+        "reads": 76,
+        "actual": null,
+        "usedForPass": false
+      },
+      "workerKinds": {
+        "signal-initial": 1,
+        "kv-invoke": 5,
+        "kv-fulfilled": 5
+      },
+      "signalAborts": []
+    },
+    {
+      "caseId": "locked-bare-rst",
+      "actualExit": 1,
+      "originalWindow": {
+        "pollCount": 100,
+        "sleepMs": 10,
+        "elapsedMs": 1227.3664480000007,
+        "actual": null,
+        "expected": "observed",
+        "actualExit": 1
+      },
+      "tail": {
+        "elapsedMs": 4033.7517499999994,
+        "reads": 76,
+        "actual": null,
+        "usedForPass": false
+      },
+      "workerKinds": {
+        "signal-initial": 1,
+        "kv-invoke": 2,
+        "kv-fulfilled": 2,
+        "signal-abort": 1
+      },
+      "signalAborts": [
+        {
+          "phase": "original-poll",
+          "diagnostic": {
+            "boundary": "holder",
+            "event": "signal-abort",
+            "wallMs": 1791252321782,
+            "aborted": true
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "locked-direct-destroy",
+      "actualExit": 1,
+      "originalWindow": {
+        "pollCount": 100,
+        "sleepMs": 10,
+        "elapsedMs": 1251.1428619999988,
+        "actual": null,
+        "expected": "observed",
+        "actualExit": 1
+      },
+      "tail": {
+        "elapsedMs": 4022.962382999998,
+        "reads": 76,
+        "actual": null,
+        "usedForPass": false
+      },
+      "workerKinds": {
+        "signal-initial": 3,
+        "binding-fetch": 1,
+        "kv-invoke": 5,
+        "kv-fulfilled": 5
+      },
+      "signalAborts": []
+    },
+    {
+      "caseId": "locked-direct-rst",
+      "actualExit": 1,
+      "originalWindow": {
+        "pollCount": 100,
+        "sleepMs": 10,
+        "elapsedMs": 1217.0151100000003,
+        "actual": null,
+        "expected": "observed",
+        "actualExit": 1
+      },
+      "tail": {
+        "elapsedMs": 4029.9668280000005,
+        "reads": 76,
+        "actual": null,
+        "usedForPass": false
+      },
+      "workerKinds": {
+        "signal-initial": 3,
+        "binding-fetch": 1,
+        "kv-invoke": 2,
+        "kv-fulfilled": 2,
+        "signal-abort": 3
+      },
+      "signalAborts": [
+        {
+          "phase": "original-poll",
+          "diagnostic": {
+            "boundary": "gateway",
+            "event": "signal-abort",
+            "wallMs": 1791252332909,
+            "signalBoundary": "incoming",
+            "aborted": true
+          }
+        },
+        {
+          "phase": "original-poll",
+          "diagnostic": {
+            "boundary": "gateway",
+            "event": "signal-abort",
+            "wallMs": 1791252332909,
+            "signalBoundary": "forwarded-request-object",
+            "aborted": true
+          }
+        },
+        {
+          "phase": "original-poll",
+          "diagnostic": {
+            "boundary": "holder",
+            "event": "signal-abort",
+            "wallMs": 1791252332910,
+            "aborted": true
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "locked-binding-destroy",
+      "actualExit": 1,
+      "originalWindow": {
+        "pollCount": 100,
+        "sleepMs": 10,
+        "elapsedMs": 1214.981746999998,
+        "actual": null,
+        "expected": "observed",
+        "actualExit": 1
+      },
+      "tail": {
+        "elapsedMs": 4011.387015999997,
+        "reads": 76,
+        "actual": null,
+        "usedForPass": false
+      },
+      "workerKinds": {
+        "signal-initial": 3,
+        "binding-fetch": 1,
+        "kv-invoke": 5,
+        "kv-fulfilled": 5
+      },
+      "signalAborts": []
+    },
+    {
+      "caseId": "locked-binding-rst",
+      "actualExit": 1,
+      "originalWindow": {
+        "pollCount": 100,
+        "sleepMs": 10,
+        "elapsedMs": 1220.7450519999984,
+        "actual": null,
+        "expected": "observed",
+        "actualExit": 1
+      },
+      "tail": {
+        "elapsedMs": 4013.019505999997,
+        "reads": 76,
+        "actual": null,
+        "usedForPass": false
+      },
+      "workerKinds": {
+        "signal-initial": 3,
+        "binding-fetch": 1,
+        "kv-invoke": 2,
+        "kv-fulfilled": 2,
+        "signal-abort": 1
+      },
+      "signalAborts": [
+        {
+          "phase": "original-poll",
+          "diagnostic": {
+            "boundary": "holder",
+            "event": "signal-abort",
+            "wallMs": 1791252343992,
+            "aborted": true
+          }
+        }
+      ]
+    }
+  ],
+  "commands": [
+    {
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\actual-archived-boundary-analysis.result.json",
+        "bytes": 1063,
+        "sha256": "9c7b363c5a5a74f7715a39a87a4012ac25ae92be1c86a7622aff5a7ecf7ebbe6"
+      },
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\actual-archived-boundary-analysis.stdout.txt",
+        "bytes": 62858,
+        "sha256": "dc92cebcbc24af66fb0ee804a1d6538a73ec858da53f2c8ccabb093f1d87c503"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\actual-archived-boundary-analysis.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\boundary-actual-closed.result.json",
+        "bytes": 1327,
+        "sha256": "2be83ce5b72dfb3b1d1d7318cc89ca0836c587e77646d639b5de3d6ebf4012f0"
+      },
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\boundary-actual-closed.stdout.txt",
+        "bytes": 36257,
+        "sha256": "9ffad5dce4b37e16b82a0c21e1a10aaeb402bb58c9599eff886fe498306c679a"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\boundary-actual-closed.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\boundary-runtime-core.result.json",
+        "bytes": 1107,
+        "sha256": "51725b4a0bb6ec8d1c6aef8f75654ef817a48a0dd3cb7a32ada8a5d438353b94"
+      },
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\boundary-runtime-core.stdout.txt",
+        "bytes": 15155,
+        "sha256": "705969575f17f48c6749de157519fe504ca2db77f5b7cd15ad2ed1ee21513ec5"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\boundary-runtime-core.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\boundary-source.result.json",
+        "bytes": 1231,
+        "sha256": "c1fbec5b4828f300da0e54665a8100a6c6348331d246f1a4fee8b0a10cce32c1"
+      },
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\boundary-source.stdout.txt",
+        "bytes": 33570,
+        "sha256": "4bbb964c110ac4bc5331d965f1c20105327317eb0291e1726c5da7260602ad3a"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\boundary-source.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\db-native-v364-locations.result.json",
+        "bytes": 1058,
+        "sha256": "4272d2f8fb6acfdefc9a610e4cff164eacf3cd07258a148d770e460f94bbed9b"
+      },
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\db-native-v364-locations.stdout.txt",
+        "bytes": 721,
+        "sha256": "bd34368e4eb2ebc43f0930b690082d34b545901a02ab595e6572553d527a9a6c"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\db-native-v364-locations.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\direct-socket-contract.result.json",
+        "bytes": 1282,
+        "sha256": "cd48fa41dc67c9ec38bc26eb9807806a55c618d5f22c01b035fc8dde63087638"
+      },
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\direct-socket-contract.stdout.txt",
+        "bytes": 9712,
+        "sha256": "6c90cc6a692edabe6561fc85bb3d2ffd88abee713807ab648751454a7dd80544"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\direct-socket-contract.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\direct-socket-options.result.json",
+        "bytes": 1284,
+        "sha256": "660e834d35582f6a08821201d623c228c36bf3455d063c0d4b46119533d8dbe8"
+      },
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\direct-socket-options.stdout.txt",
+        "bytes": 3154,
+        "sha256": "501dd40af6543919346ff0b63baf18bc47fd3dc8fe40bbbdd580267e477d4f6f"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\direct-socket-options.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\frozen-holder-gateway-contract-direct.result.json",
+        "bytes": 1355,
+        "sha256": "a3daf495a6870e3419e9cdacc79a2e53cd932ae6e7c42ddc3a52343f8fcda675"
+      },
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\frozen-holder-gateway-contract-direct.stdout.txt",
+        "bytes": 9522,
+        "sha256": "4247524f84aa31f190d32370f2e776d4c92fddcaa87265c50974c96bd61b0559"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\frozen-holder-gateway-contract-direct.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\frozen-holder-gateway-contract.result.json",
+        "bytes": 1317,
+        "sha256": "c51e8a51cd6eb454d15d3a6f262edfb47ea1baf5f67d243ffdb241805ef3a41f"
+      },
+      "actualExit": null,
+      "signal": null,
+      "spawnError": {
+        "code": "EPERM",
+        "name": "Error"
+      },
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\frozen-holder-gateway-contract.stdout.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\frozen-holder-gateway-contract.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\holder-gateway-full.result.json",
+        "bytes": 1258,
+        "sha256": "005fb08b82aa1ad979e2cf6965a33c67bf21f2d6f962644dbed9e3e7e847bfc0"
+      },
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\holder-gateway-full.stdout.txt",
+        "bytes": 18013,
+        "sha256": "e7a0bce6105152e4db2405548f85a9130d76a53724f8d6a5abf30f5601857585"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\holder-gateway-full.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\mf-entry-chain.result.json",
+        "bytes": 1172,
+        "sha256": "aa0c080ce49ff9b4d6394c45cc42e9a661e8dcb138c19c20e8703a9dc16283f2"
+      },
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\mf-entry-chain.stdout.txt",
+        "bytes": 7653,
+        "sha256": "f33be6382bb96acbf3bdc300d8a2f610f5afc7a7abaf2dd594c219aeedbc7319"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\mf-entry-chain.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\miniflare-cancel-symbols.result.json",
+        "bytes": 1169,
+        "sha256": "9d76b0a6feac51faa229db0e2ad0a0b6ee44dd2bdf2bc101a1d7e3da4685b766"
+      },
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\miniflare-cancel-symbols.stdout.txt",
+        "bytes": 3925,
+        "sha256": "e05a300a2715886318f2ccb9bee98a9e7e91bbd26fb0c669d9924d8e74ab57ce"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\miniflare-cancel-symbols.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\miniflare-config-socket-entry.result.json",
+        "bytes": 1232,
+        "sha256": "384a3d31ae2009a4fae263a779292ed61dcf2f64ccfbfbe745d00531abc90c85"
+      },
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\miniflare-config-socket-entry.stdout.txt",
+        "bytes": 7959,
+        "sha256": "286f7c36deaa3ecd77de1e3b0bbd3e4c9c15294ec5244db43ac6224a204bc7c3"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\miniflare-config-socket-entry.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\miniflare-core-files.result.json",
+        "bytes": 1099,
+        "sha256": "9bcec09fa72c2bb028b668977eeffaf0d396bbec5b46fd35560a59c711ffb57b"
+      },
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\miniflare-core-files.stdout.txt",
+        "bytes": 1200,
+        "sha256": "bea2ce39fbdf952779f617acb280e1b75cd0494dfd7b4bf54080e498bee2255f"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\miniflare-core-files.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\miniflare-entry-contract.result.json",
+        "bytes": 1178,
+        "sha256": "e88aec67944bc0537e877fb29438f89c3bba3e212cdce9ba94b8c13a70d818f4"
+      },
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\miniflare-entry-contract.stdout.txt",
+        "bytes": 2588,
+        "sha256": "8335fa6e2e30b6ac849b8025b3af65870adb9a4960342b98a2744abf6cd34cc3"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\miniflare-entry-contract.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\miniflare-entry-identification.result.json",
+        "bytes": 1237,
+        "sha256": "91a5c58c1cc5e0ec4e9454c3d3ac9aedde7108812b4767c2b98bbf7e174fe8c6"
+      },
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\miniflare-entry-identification.stdout.txt",
+        "bytes": 2558,
+        "sha256": "533ccdf55ce9dfab531cb069e7d78ca31a33bdd2d2983f4e58e5119c058decd6"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\miniflare-entry-identification.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\miniflare-fetch-stream-boundary.result.json",
+        "bytes": 1237,
+        "sha256": "ce88666e89ea8a44f8881ffaafc6bc324c156b3df4353881418f1ce170e32ecf"
+      },
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\miniflare-fetch-stream-boundary.stdout.txt",
+        "bytes": 10913,
+        "sha256": "8691e27c820d944371322f89f0b280ebb2c0f7b1c485ec8399d13f69c4139398"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\miniflare-fetch-stream-boundary.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\native-release-boundary-paths.result.json",
+        "bytes": 1228,
+        "sha256": "8c5419434fb4722e0f7f5b39826fa1acc1c3b1bf9dc3cfcf3b13645718c24687"
+      },
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\native-release-boundary-paths.stdout.txt",
+        "bytes": 41197,
+        "sha256": "cebf7a2c0bc7cf5393daf4db31859dfe68e01ebf893e6adaac967ab5619074d6"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\native-release-boundary-paths.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\older-observer-source.result.json",
+        "bytes": 1230,
+        "sha256": "cb9c827bd8b86030d6f1ecc2c45c88c3ea7e9965fb78b36d79372d1761675802"
+      },
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\older-observer-source.stdout.txt",
+        "bytes": 28691,
+        "sha256": "a40e9f76b308c93e28507f623e610ca349d2bac7310ad5f103b945d8b2190fbf"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\older-observer-source.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\product-cancel-signal-paths.result.json",
+        "bytes": 1309,
+        "sha256": "c9a37f03a246e9e9e7857855c35d2ce3177acd8fcb6e8e7db2776d4b82a0fdf8"
+      },
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\product-cancel-signal-paths.stdout.txt",
+        "bytes": 19044,
+        "sha256": "ee593e995d9709a503665dc2752c3f7190cfc2f69c27e79716a3c8326100edb4"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\product-cancel-signal-paths.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\real-holder-abort-product.result.json",
+        "bytes": 1276,
+        "sha256": "a989a80f17d454d8b7c0ae308b28dfa77da07aad4bfe5c186fa2591185f0a3dd"
+      },
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\real-holder-abort-product.stdout.txt",
+        "bytes": 10674,
+        "sha256": "11412c5011311ce6917f14d389761fb0810fa1ed415059a73669a511ac17bccc"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\real-holder-abort-product.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\signal-observer-source.result.json",
+        "bytes": 1242,
+        "sha256": "72435f1b6db395f2f5388907bebffb68819ff24592243aa776a48910b02a6814"
+      },
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\signal-observer-source.stdout.txt",
+        "bytes": 10028,
+        "sha256": "d4f680cfcc6261b7300d53aa0cd68e44d4dd02cd3d4fc4dc23d2b2df51ed8c1b"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\signal-observer-source.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\source-cancel-locations.result.json",
+        "bytes": 1104,
+        "sha256": "e346532e25c97f1ae57ac85aecdce41771d08db20e651ad40035c81d5db15a4a"
+      },
+      "actualExit": null,
+      "signal": null,
+      "spawnError": {
+        "code": "EPERM",
+        "name": "Error"
+      },
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\source-cancel-locations.stdout.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\source-cancel-locations.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\source-files-fallback.result.json",
+        "bytes": 1163,
+        "sha256": "d02cb04475982af0b908e4519d5cff7047263ddb9a57dc69170e565aa97a7c6d"
+      },
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\source-files-fallback.stdout.txt",
+        "bytes": 915,
+        "sha256": "a0a638dd17ca9705be54909350c1226c0bce11d85dfd381af457af5f5dc89376"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\source-files-fallback.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\source-files.result.json",
+        "bytes": 1164,
+        "sha256": "3c1e24648cb4e60f4b88f4efc3094c130dd4ef4941936455d947db11ad550adc"
+      },
+      "actualExit": null,
+      "signal": null,
+      "spawnError": {
+        "code": "EPERM",
+        "name": "Error"
+      },
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\source-files.stdout.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\source-files.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\source-head.result.json",
+        "bytes": 903,
+        "sha256": "5e2d7c4bdf92c25cee760293096939598bf84c9960387c2692d18174bb775e81"
+      },
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\source-head.stdout.txt",
+        "bytes": 41,
+        "sha256": "fff32ef2ef0512963718811a86fee69f969a818bab9eb447ceb7ca4514d3ada4"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\source-head.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\strict-and-active-owners.result.json",
+        "bytes": 1520,
+        "sha256": "0e3cbff2ad27f560a159e22e3c947335d4693fc8ba37556d3e800c86cc5d1b53"
+      },
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\strict-and-active-owners.stdout.txt",
+        "bytes": 12030,
+        "sha256": "578988af94504286c11a0072a100d06c09ec464814670549e3c281292698fe8c"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\strict-and-active-owners.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\upstream-candidate-existing.result.json",
+        "bytes": 1344,
+        "sha256": "8fa3e6989a7c38840ce1c77dafc34505912537e3a798c11bdf656e999a801edf"
+      },
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\upstream-candidate-existing.stdout.txt",
+        "bytes": 121200,
+        "sha256": "e11f160ad88c1cf7d00a057d42a736d4aecf391fd152db7a752f8714fce60da0"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\upstream-candidate-existing.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "readCommandCounts": {
+    "total": 28,
+    "exit0": 25,
+    "exit1": 0,
+    "unknownSpawnErrors": 3
+  },
+  "commandNegativeEvidencePreserved": true,
+  "reportProducerCurrentCommandReceiptExcludedUntilClosed": true
+}

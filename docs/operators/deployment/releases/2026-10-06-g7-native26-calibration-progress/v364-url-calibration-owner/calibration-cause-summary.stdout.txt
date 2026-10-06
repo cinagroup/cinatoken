@@ -1,0 +1,226 @@
+{
+  "calibration": {
+    "caseId": "native-worker-reader-cancel",
+    "calibrationOnly": true,
+    "baselineEligible": false,
+    "nativeWorkerExecuted": false,
+    "actualExit": 1,
+    "closed": true,
+    "error": {
+      "name": "AssertionError",
+      "code": "ERR_ASSERTION",
+      "message": "Expected values to be strictly equal:\n\n500 !== 200\n"
+    }
+  },
+  "logs": [
+    {
+      "caseId": "native-worker-reader-cancel",
+      "kind": "miniflare-log",
+      "hostMs": 3205.61204,
+      "wallMs": 1791259635374,
+      "phase": "fixture-ready",
+      "message": "[mf:info] Ready on http://127.0.0.1:37077"
+    },
+    {
+      "caseId": "native-worker-reader-cancel",
+      "kind": "workerd-log",
+      "hostMs": 3314.730006,
+      "wallMs": 1791259635483,
+      "phase": "native-reader-calibration",
+      "timestamp": 1791259635482,
+      "level": "log",
+      "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"signal-initial\",\"wallMs\":1791259635482,\"aborted\":false}"
+    },
+    {
+      "caseId": "native-worker-reader-cancel",
+      "kind": "workerd-log",
+      "hostMs": 3316.122053,
+      "wallMs": 1791259635484,
+      "phase": "native-reader-calibration",
+      "timestamp": 1791259635484,
+      "level": "error",
+      "message": "Uncaught exception: workerd/jsg/_virtual_includes/iterator/workerd/jsg/value.h:1477: failed: remote.jsg.Error: AssertionError: Values are not strictly equal:\n\n\n[Diff] Actual / Expected\n\n\n-   404\n+   200\n\nstack: /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@33a3bd0 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@33a486c /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@5998b48 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@31108fb /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@3111360 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@3111c8c /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@24368e8 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@57ffccf /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@58010da /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@5801d0f /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@57c27f0"
+    },
+    {
+      "caseId": "native-worker-reader-cancel",
+      "kind": "case-closed",
+      "hostMs": 3328.430265,
+      "wallMs": 1791259635497,
+      "actualExit": 1,
+      "closed": true,
+      "calibrationOnly": true,
+      "baselineEligible": false
+    }
+  ],
+  "closure": {
+    "authority": "this executor",
+    "subreaperEnabled": true,
+    "directChildReaped": true,
+    "groupGone": true,
+    "leftoverGroupKilled": false,
+    "signalAttempts": [],
+    "reapedDescendants": [
+      {
+        "pid": 2433,
+        "startTimeTicks": "32242",
+        "waitStatus": 0,
+        "waitExitCode": 0,
+        "source": "individually identified adopted zombie"
+      },
+      {
+        "pid": 2471,
+        "startTimeTicks": "32266",
+        "waitStatus": 0,
+        "waitExitCode": 0,
+        "source": "individually identified adopted zombie"
+      },
+      {
+        "pid": 2472,
+        "startTimeTicks": "32266",
+        "waitStatus": 0,
+        "waitExitCode": 0,
+        "source": "individually identified adopted zombie"
+      },
+      {
+        "pid": 2484,
+        "startTimeTicks": "32319",
+        "waitStatus": 0,
+        "waitExitCode": 0,
+        "source": "individually identified adopted zombie"
+      }
+    ],
+    "apiDisposalReported": true,
+    "outerUnforcedGroupClose": true,
+    "gracefulWorkerdExitProven": false,
+    "miniflareDisposeMaySendSIGKILL": true,
+    "errors": []
+  },
+  "cases": [
+    {
+      "id": "native-worker-reader-cancel",
+      "exit": 1,
+      "counts": {
+        "signal-initial": 1
+      },
+      "abort": [],
+      "ready": [
+        {
+          "caseId": "native-worker-reader-cancel",
+          "kind": "direct-socket-ready",
+          "hostMs": 3306.748857,
+          "wallMs": 1791259635475,
+          "entryWorkerName": "v364-direct-native-reader",
+          "directURL": "http://127.0.0.1:33947",
+          "coreEntryURL": "http://127.0.0.1:37077",
+          "coreEntryBypassed": true
+        }
+      ]
+    },
+    {
+      "id": "direct-socket-bare-destroy",
+      "exit": 1,
+      "counts": {
+        "signal-initial": 1,
+        "kv-invoke": 5,
+        "kv-fulfilled": 5
+      },
+      "abort": [],
+      "ready": [
+        {
+          "caseId": "direct-socket-bare-destroy",
+          "kind": "direct-socket-ready",
+          "hostMs": 3503.5228779999998,
+          "wallMs": 1791259635672,
+          "entryWorkerName": "v364-direct-bare",
+          "directURL": "http://127.0.0.1:33199",
+          "coreEntryURL": "http://127.0.0.1:46515",
+          "coreEntryBypassed": true
+        }
+      ]
+    },
+    {
+      "id": "direct-socket-bare-rst",
+      "exit": 1,
+      "counts": {
+        "signal-initial": 1,
+        "kv-invoke": 2,
+        "kv-fulfilled": 2,
+        "signal-abort": 1
+      },
+      "abort": [
+        {
+          "boundary": "holder",
+          "event": "signal-abort",
+          "wallMs": 1791259641186,
+          "aborted": true
+        }
+      ],
+      "ready": [
+        {
+          "caseId": "direct-socket-bare-rst",
+          "kind": "direct-socket-ready",
+          "hostMs": 8995.330052,
+          "wallMs": 1791259641164,
+          "entryWorkerName": "v364-direct-bare",
+          "directURL": "http://127.0.0.1:35921",
+          "coreEntryURL": "http://127.0.0.1:33455",
+          "coreEntryBypassed": true
+        }
+      ]
+    },
+    {
+      "id": "direct-socket-binding-destroy",
+      "exit": 1,
+      "counts": {
+        "signal-initial": 3,
+        "binding-fetch": 1,
+        "kv-invoke": 5,
+        "kv-fulfilled": 5
+      },
+      "abort": [],
+      "ready": [
+        {
+          "caseId": "direct-socket-binding-destroy",
+          "kind": "direct-socket-ready",
+          "hostMs": 14522.585923,
+          "wallMs": 1791259646691,
+          "entryWorkerName": "cinatoken-staging-chat-holder-gateway-fixture-v364",
+          "directURL": "http://127.0.0.1:39895",
+          "coreEntryURL": "http://127.0.0.1:33507",
+          "coreEntryBypassed": true
+        }
+      ]
+    },
+    {
+      "id": "direct-socket-binding-rst",
+      "exit": 1,
+      "counts": {
+        "signal-initial": 3,
+        "binding-fetch": 1,
+        "kv-invoke": 2,
+        "kv-fulfilled": 2,
+        "signal-abort": 1
+      },
+      "abort": [
+        {
+          "boundary": "holder",
+          "event": "signal-abort",
+          "wallMs": 1791259652327,
+          "aborted": true
+        }
+      ],
+      "ready": [
+        {
+          "caseId": "direct-socket-binding-rst",
+          "kind": "direct-socket-ready",
+          "hostMs": 20132.506271000002,
+          "wallMs": 1791259652301,
+          "entryWorkerName": "cinatoken-staging-chat-holder-gateway-fixture-v364",
+          "directURL": "http://127.0.0.1:39371",
+          "coreEntryURL": "http://127.0.0.1:39211",
+          "coreEntryBypassed": true
+        }
+      ]
+    }
+  ]
+}

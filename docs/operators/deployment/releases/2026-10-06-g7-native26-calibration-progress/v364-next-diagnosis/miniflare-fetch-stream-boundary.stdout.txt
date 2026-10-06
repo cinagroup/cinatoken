@@ -1,0 +1,255 @@
+{"file":"node_modules/miniflare/dist/src/index.js","bytes":4843426,"sha256":"58ca83056cf67838add064edcbfd1d654ed204527b8eb01307ba208d7e59fa20"}
+94620:   constructor() {
+94621:     super(0 /* NONE */);
+94622:   }
+94623:   log() {
+94624:   }
+94625:   error(_message) {
+94626:   }
+94627: };
+94628: function stripAnsi(value) {
+94629:   return (0, import_node_util3.stripVTControlCharacters)(value);
+94630: }
+94631: 
+94632: // src/shared/matcher.ts
+94633: var import_glob_to_regexp = __toESM(require_glob_to_regexp());
+94634: function globsToRegExps(globs = [], { endAnchor } = {}) {
+94635:   const include = [];
+94636:   const exclude = [];
+94637:   const opts = { globstar: true, flags: "g" };
+94638:   const suffix = endAnchor ? "$" : "";
+94639:   for (const glob of globs) {
+94640:     if (glob.startsWith("!")) {
+94641:       exclude.push(
+94642:         new RegExp((0, import_glob_to_regexp.default)(glob.slice(1), opts).source + suffix)
+94643:       );
+94644:     } else {
+94645:       include.push(new RegExp((0, import_glob_to_regexp.default)(glob, opts).source + suffix));
+94646:     }
+94647:   }
+94648:   return { include, exclude };
+94649: }
+94650: 
+94651: // src/shared/streams.ts
+94652: var import_web = require("node:stream/web");
+94653: function prefixStream(prefix, stream) {
+94654:   const identity = new import_web.TransformStream();
+94655:   const writer = identity.writable.getWriter();
+94656:   void writer.write(prefix).then(() => {
+94657:     writer.releaseLock();
+94658:     return stream.pipeTo(identity.writable);
+94659:   }).catch((error101) => {
+94660:     return writer.abort(error101);
+94661:   });
+94662:   return identity.readable;
+94663: }
+94664: async function readPrefix(stream, prefixLength) {
+94665:   const chunks = [];
+94666:   let chunksLength = 0;
+94667:   for await (const chunk of stream.values({ preventCancel: true })) {
+94668:     chunks.push(chunk);
+94669:     chunksLength += chunk.byteLength;
+94670:     if (chunksLength >= prefixLength) break;
+94671:   }
+94672:   if (chunksLength < prefixLength) {
+94673:     throw new RangeError(
+94674:       `Expected ${prefixLength} byte prefix, but received ${chunksLength} byte stream`
+94675:     );
+{"file":"node_modules/miniflare/dist/src/index.js","bytes":4843426,"sha256":"58ca83056cf67838add064edcbfd1d654ed204527b8eb01307ba208d7e59fa20"}
+112010:     return {
+112011:       name: getProxyBindingName(`${plugin}-internal`, serviceName, className),
+112012:       durableObjectNamespace: { serviceName, className }
+112013:     };
+112014:   });
+112015: }
+112016: var restrictedUndiciHeaders = [
+112017:   // From Miniflare 2:
+112018:   // https://github.com/cloudflare/miniflare/blob/9c135599dc21fe69080ada17fce6153692793bf1/packages/core/src/standards/http.ts#L129-L132
+112019:   "transfer-encoding",
+112020:   "connection",
+112021:   "keep-alive",
+112022:   "expect"
+112023: ];
+112024: var restrictedWebSocketUpgradeHeaders = [
+112025:   "upgrade",
+112026:   "connection",
+112027:   "sec-websocket-accept"
+112028: ];
+112029: function _transformsForContentEncodingAndContentType(encoding, type) {
+112030:   const encoders = [];
+112031:   if (!encoding) return encoders;
+112032:   if (!isCompressedByCloudflareFL(type)) return encoders;
+112033:   const codings = encoding.toLowerCase().split(",").map((x) => x.trim());
+112034:   for (const coding of codings) {
+112035:     if (/(x-)?gzip/.test(coding)) {
+112036:       encoders.push(import_node_zlib.default.createGzip());
+112037:     } else if (/(x-)?deflate/.test(coding)) {
+112038:       encoders.push(import_node_zlib.default.createDeflate());
+112039:     } else if (coding === "br") {
+112040:       encoders.push(import_node_zlib.default.createBrotliCompress());
+112041:     } else {
+112042:       encoders.length = 0;
+112043:       break;
+112044:     }
+112045:   }
+112046:   return encoders;
+112047: }
+112048: function safeReadableStreamFrom(iterable) {
+112049:   let iterator;
+112050:   return new import_web5.ReadableStream({
+112051:     async start() {
+112052:       iterator = iterable[Symbol.asyncIterator]();
+112053:     },
+112054:     // @ts-expect-error `pull` may return anything
+112055:     async pull(controller) {
+112056:       try {
+112057:         const { done, value } = await iterator.next();
+112058:         if (done) {
+112059:           queueMicrotask(() => controller.close());
+112060:         } else {
+112061:           const buf = Buffer.isBuffer(value) ? value : Buffer.from(value);
+112062:           controller.enqueue(new Uint8Array(buf));
+112063:         }
+112064:       } catch {
+112065:         queueMicrotask(() => controller.close());
+112066:       }
+112067:       return controller.desiredSize > 0;
+112068:     },
+112069:     async cancel() {
+112070:       await iterator.return?.();
+112071:     }
+112072:   });
+112073: }
+112074: function extractCustomService(customService) {
+112075:   const slashIndex = customService.indexOf("/");
+112076:   const workerIndex = parseInt(customService.substring(0, slashIndex));
+112077:   const serviceKind = customService[slashIndex + 1];
+112078:   const serviceName = customService.substring(slashIndex + 2);
+112079:   return { workerIndex, serviceKind, serviceName };
+112080: }
+112081: function getErrorMessage(error101) {
+112082:   if (error101 instanceof Error) {
+112083:     return error101.stack || error101.message;
+112084:   }
+112085:   if (typeof error101 === "string") {
+112086:     return error101;
+112087:   }
+112088:   try {
+112089:     return JSON.stringify(error101);
+112090:   } catch {
+112091:     return "Unknown error";
+112092:   }
+112093: }
+112094: var maybeInstanceRegistry;
+112095: function _initialiseInstanceRegistry() {
+112096:   return maybeInstanceRegistry = /* @__PURE__ */ new Map();
+112097: }
+112098: var WORKFLOW_STORAGE_EXTENSIONS = [".sqlite", ".sqlite-shm", ".sqlite-wal"];
+112099: var WORKFLOW_STORAGE_DELETE_RETRY_INTERVAL_MS = 50;
+112100: var WORKFLOW_STORAGE_DELETE_TIMEOUT_MS = 2e3;
+{"file":"node_modules/miniflare/dist/src/index.js","bytes":4843426,"sha256":"58ca83056cf67838add064edcbfd1d654ed204527b8eb01307ba208d7e59fa20"}
+113700:     const [initialSharedOpts, workerOpts] = validateOptions(opts);
+113701:     let sharedOpts = initialSharedOpts;
+113702:     if (sharedOpts.unsafeEnableSharedStorage && sharedOpts.resourcePersistencePath !== void 0) {
+113703:       sharedOpts = {
+113704:         ...sharedOpts,
+113705:         resourcePersistencePath: await canonicalisePersistRoot(
+113706:           sharedOpts.resourcePersistencePath
+113707:         )
+113708:       };
+113709:     }
+113710:     this.#previousSharedOpts = this.#sharedOpts;
+113711:     this.#previousWorkerOpts = this.#workerOpts;
+113712:     this.#sharedOpts = sharedOpts;
+113713:     this.#workerOpts = workerOpts;
+113714:     this.#log = this.#sharedOpts.log ?? this.#log;
+113715:     this.#hyperdriveProxyController.log = this.#log;
+113716:     const newExternalOnUpdate = sharedOpts.unsafeHandleDevRegistryUpdate;
+113717:     await this.#devRegistry.updateRegistryPath(
+113718:       sharedOpts.unsafeDevRegistryPath,
+113719:       (registry3) => {
+113720:         void this.#queueRegistryUpdate();
+113721:         newExternalOnUpdate?.(registry3);
+113722:       }
+113723:     );
+113724:     try {
+113725:       await this.#assembleAndUpdateConfig();
+113726:     } catch (error101) {
+113727:       this.#devRegistry.unregisterWorkers();
+113728:       throw error101;
+113729:     }
+113730:   }
+113731:   setOptions(opts) {
+113732:     this.#checkDisposed();
+113733:     this.#proxyClient?.poisonProxies();
+113734:     return this.#runtimeMutex.runWith(() => this.#setOptions(opts));
+113735:   }
+113736:   dispatchFetch = async (input, init3) => {
+113737:     this.#checkDisposed();
+113738:     await this.ready;
+113739:     (0, import_node_assert21.default)(this.#runtimeEntryURL !== void 0);
+113740:     (0, import_node_assert21.default)(this.#runtimeDispatcher !== void 0);
+113741:     const forward = new Request(input, init3);
+113742:     const url47 = new URL(forward.url);
+113743:     const actualRuntimeOrigin = this.#runtimeEntryURL.origin;
+113744:     const userRuntimeOrigin = url47.origin;
+113745:     url47.protocol = this.#runtimeEntryURL.protocol;
+113746:     url47.host = this.#runtimeEntryURL.host;
+113747:     if (forward.body !== null && forward.headers.get("Content-Length") === "0") {
+113748:       forward.headers.delete("Content-Length");
+113749:     }
+113750:     const cfBlob = forward.cf ? { ...fallbackCf, ...forward.cf } : void 0;
+113751:     const dispatcher = new DispatchFetchDispatcher(
+113752:       (0, import_undici8.getGlobalDispatcher)(),
+113753:       this.#runtimeDispatcher,
+113754:       actualRuntimeOrigin,
+113755:       userRuntimeOrigin,
+113756:       cfBlob
+113757:     );
+113758:     const forwardInit = forward;
+113759:     forwardInit.dispatcher = dispatcher;
+113760:     const response = await fetch5(url47, forwardInit);
+113761:     const stack = response.headers.get(CoreHeaders.ERROR_STACK);
+113762:     if (response.status === 500 && stack !== null) {
+113763:       const serialised = await response.text() || decodeErrorPayload(response);
+113764:       if (serialised === null) {
+113765:         throw new Error("Worker threw an uncaught exception");
+113766:       }
+113767:       const caught = JsonErrorSchema.parse(JSON.parse(serialised));
+113768:       throw reviveError(this.#workerOpts, caught);
+113769:     }
+113770:     const contentEncoding = response.headers.get("Content-Encoding");
+113771:     if (contentEncoding)
+113772:       response.headers.set("MF-Content-Encoding", contentEncoding);
+113773:     response.headers.delete("Content-Encoding");
+113774:     if (process.env.MINIFLARE_ASSERT_BODIES_CONSUMED === "true" && response.body !== null) {
+113775:       const originalLimit = Error.stackTraceLimit;
+113776:       Error.stackTraceLimit = Infinity;
+113777:       const error101 = new Error(
+113778:         "`body` returned from `Miniflare#dispatchFetch()` not consumed immediately"
+113779:       );
+113780:       Error.stackTraceLimit = originalLimit;
+113781:       setImmediate(() => {
+113782:         if (!response.bodyUsed) throw error101;
+113783:       });
+113784:     }
+113785:     return response;
+113786:   };
+113787:   /** @internal */
+113788:   async _getProxyClient() {
+113789:     this.#checkDisposed();
+113790:     await this.ready;
+113791:     (0, import_node_assert21.default)(this.#proxyClient !== void 0);
+113792:     return this.#proxyClient;
+113793:   }
+113794:   #findAndAssertWorkerIndex(workerName) {
+113795:     if (workerName === void 0) {
+113796:       return 0;
+113797:     } else {
+113798:       const index = this.#workerOpts.findIndex(
+113799:         ({ config: config3 }) => config3.name === workerName
+113800:       );
+113801:       if (index === -1) {
+113802:         throw new TypeError(`${JSON.stringify(workerName)} worker not found`);
+113803:       }
+113804:       return index;

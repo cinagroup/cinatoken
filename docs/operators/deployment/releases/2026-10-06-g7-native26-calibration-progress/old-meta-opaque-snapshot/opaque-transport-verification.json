@@ -1,0 +1,34 @@
+{
+  "schema": "cinatoken-frozen-old-metadata-opaque-lossless-verification-v1",
+  "startedAt": "2026-10-06T04:27:27.217647Z",
+  "endedAt": "2026-10-06T04:27:43.455777Z",
+  "closed": true,
+  "actualCollectionExit": 0,
+  "sourceRoot": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7",
+  "zip": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-old-meta-opaque-snapshot-eEXPR6/frozen-old-metadata-lossless.zip",
+    "bytes": 7175933,
+    "sha256": "abe62ed3262905377a11f430689c279fef8a23da0b6c3288984e6301b7d8643b"
+  },
+  "index": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-old-meta-opaque-snapshot-eEXPR6/frozen-old-metadata-index.json",
+    "bytes": 2274178,
+    "sha256": "d5a70a3428895028878782d751b8754e2b8b157f7025bd7763db01b6c8dc4265"
+  },
+  "regularFiles": 2353,
+  "sourceSetExact": true,
+  "zipEntrySetExact": true,
+  "everyDecodedByteComparedWithOriginal": true,
+  "everyDecodedBytesAndSHA256Exact": true,
+  "sourceIdentityAndSetUnchanged": true,
+  "exclusions": [],
+  "symlinkFollowing": false,
+  "originalJSONRawNumericNullAndLiteralPathsPreservedAsBytes": true,
+  "nestedOutputAndOldFullReleaseCopiesIncluded": true,
+  "collectionOnly": true,
+  "oldExecutionsRepeated": false,
+  "applicationRuns": 0,
+  "ciRunsTriggered": 0,
+  "productionRequests": 0,
+  "gatePassDerived": false
+}

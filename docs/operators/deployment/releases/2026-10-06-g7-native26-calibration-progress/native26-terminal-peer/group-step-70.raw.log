@@ -1,0 +1,29 @@
+##[group]Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:11:24.8527679Z ^[[36;1mgosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \^[[0m
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:11:24.8528478Z ^[[36;1m  node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-request-projection-v383.native.test.mjs^[[0m
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:11:24.8529072Z shell: sh -e {0}
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:11:24.8529267Z ##[endgroup]
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:11:24.9458799Z TAP version 13
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:11:26.7904717Z # Runtime grants applied: schema=cinatoken_gateway role=cinatoken_gateway_runtime migration=0074
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:11:26.9595208Z # Runtime grants applied: schema=cinatoken_gateway role=cinatoken_gateway_runtime migration=0074
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:11:26.9928599Z # Buyer split activated atomically: policy=v348
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:11:27.0130644Z # Buyer split runtime grants reconciled: policy=v348
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:11:27.0378432Z # Buyer Guardrail split activated atomically: policy=v349
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:11:27.0584179Z # Buyer Guardrail split runtime grants reconciled: policy=v349
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:11:33.3871816Z # legacy-buyer-request-projection-v383-report=/__w/cinatoken/cinatoken/docs/developers/architecture/implementation-evidence/C04-legacy-buyer-request-projection-v383-report.json
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:11:33.3882834Z # Subtest: v383 real buyer writer emits a narrow same-xact DB-log projection receipt
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:11:33.3890824Z ok 1 - v383 real buyer writer emits a narrow same-xact DB-log projection receipt
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:11:33.3894058Z   ---
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:11:33.3894470Z   duration_ms: 7722.441937
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:11:33.3894975Z   type: 'test'
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:11:33.3895271Z   ...
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:11:33.4145220Z 1..1
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:11:33.4145586Z # tests 1
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:11:33.4148715Z # suites 0
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:11:33.4149289Z # pass 1
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:11:33.4149656Z # fail 0
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:11:33.4150041Z # cancelled 0
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:11:33.4150440Z # skipped 0
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:11:33.4151285Z # todo 0
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:11:33.4152491Z # duration_ms 8480.659303
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	﻿2026-10-06T04:11:33.4259469Z 

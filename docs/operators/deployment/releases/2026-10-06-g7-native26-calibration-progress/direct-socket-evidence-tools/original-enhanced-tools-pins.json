@@ -1,0 +1,54 @@
+{
+  "originalDirectory": "C:/Users/cina/AppData/Local/Temp/cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd/enhanced-tools",
+  "pins": [
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\enhanced-tools\\collect-evidence.mjs",
+      "file": "collect-evidence.mjs",
+      "bytes": 1002,
+      "sha256": "95d1670211f5fdceb6bbdd2ce1db38036de4fb7c31e5d522eef10af3e479bdd5"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\enhanced-tools\\collector-closure-boundary-tests.mjs",
+      "file": "collector-closure-boundary-tests.mjs",
+      "bytes": 8703,
+      "sha256": "967171ef8a84ae50abb69549d85d2ed58aa3c481c27bb3ae456cad0e66f60eb6"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\enhanced-tools\\collector-controlled-tests.mjs",
+      "file": "collector-controlled-tests.mjs",
+      "bytes": 6887,
+      "sha256": "749953cc540f88e86822b33ade25daf4c59ef26864a7445bb413bb3c2f425614"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\enhanced-tools\\collector-explicit-association-tests.mjs",
+      "file": "collector-explicit-association-tests.mjs",
+      "bytes": 10741,
+      "sha256": "7580f6b13250d4a53ddd8b022dfaa48ef2fdc3382310fd60f010d035395b1f7c"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\enhanced-tools\\collector-g7-boundary-descriptor-tests.mjs",
+      "file": "collector-g7-boundary-descriptor-tests.mjs",
+      "bytes": 17869,
+      "sha256": "f983fe626f4d2b2d8af357cc36e8ff372f4bbee88ef316a1c9c274d945e9bf65"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\enhanced-tools\\collector-g7-producer-output-controls.mjs",
+      "file": "collector-g7-producer-output-controls.mjs",
+      "bytes": 7513,
+      "sha256": "0ad5dcdc4b5d001f85f0f8f498d0f6ba6d2e4dc0ecdc44c02d2de1a78f0e7cae"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\enhanced-tools\\evidence-lib.mjs",
+      "file": "evidence-lib.mjs",
+      "bytes": 52139,
+      "sha256": "1a94e0682a2f9782a0bcc28c4736ff49c0bf4db0b9e0cfe0f34ecb6918b22cb7"
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\enhanced-tools\\verify-evidence.mjs",
+      "file": "verify-evidence.mjs",
+      "bytes": 617,
+      "sha256": "ac6c531cc665341fbf51dc3ceed6adbd3f629ab5c17aef51a214de1f1613422d"
+    }
+  ],
+  "scope": "Original frozen package unmodified; only new copy evidence-lib adds exact direct-socket module calls, all old suites byte exact"
+}

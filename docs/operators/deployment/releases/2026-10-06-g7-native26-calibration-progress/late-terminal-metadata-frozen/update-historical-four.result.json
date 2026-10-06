@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-06T04:55:08.427Z",
+  "finishedAt": "2026-10-06T04:55:08.543Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d/update-historical-four-checklist.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\update-historical-four.stdout.log",
+    "bytes": 1375,
+    "sha256": "8eb65f7f8ff84434029be61be22de007939bd23559aa61a76e4eff724f51bfb3"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\update-historical-four.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

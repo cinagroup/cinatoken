@@ -1,0 +1,26 @@
+{
+  "closed": true,
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "executable": "node",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-direct-actual-review-DjepMs/update-helper-seal.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "startedAt": "2026-10-06T04:14:19.190Z",
+  "finishedAt": "2026-10-06T04:14:19.259Z",
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-actual-review-DjepMs\\update-owned-seal.stdout.txt",
+    "bytes": 330,
+    "sha256": "a9198a89f49dd45149bf4694cfced16896fa9683a9ef04a46399438fb1852f3b"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-actual-review-DjepMs\\update-owned-seal.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "operation": "local-source-preparation",
+  "realServiceOrCiExecution": false,
+  "productionRequests": 0
+}

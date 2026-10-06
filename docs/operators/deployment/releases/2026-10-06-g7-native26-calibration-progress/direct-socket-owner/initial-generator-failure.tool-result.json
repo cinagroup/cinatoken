@@ -1,0 +1,12 @@
+{
+  "kind": "original-codex-exec-command-tool-result-copy",
+  "chunk_id": "ecfd2c",
+  "wall_time_seconds": 0.2370193,
+  "exit_code": 1,
+  "original_token_count": 202,
+  "command": "node 'C:/Users/cina/AppData/Local/Temp/cinatoken-v364-direct-socket-prep-99dlWu/build-direct-package.mjs'",
+  "copyIsToolTranscriptCombinedOutput": true,
+  "notSeparateChildStdoutOrStderr": true,
+  "sourceModifiedBeforeFailure": "created empty owned directory only; generator writes source files after the failing assertion",
+  "output": "node:internal/modules/run_main:107\r\n    triggerUncaughtException(\r\n    ^\r\n\r\nAssertionError [ERR_ASSERTION]: v364-owned-linux-boundary-closed-v1\r\n\r\n2 !== 1\r\n\r\n    at replace (file:///C:/Users/cina/AppData/Local/Temp/cinatoken-v364-direct-socket-prep-99dlWu/build-direct-package.mjs:12:39)\r\n    at file:///C:/Users/cina/AppData/Local/Temp/cinatoken-v364-direct-socket-prep-99dlWu/build-direct-package.mjs:101:1\r\n    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)\r\n    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:661:26)\r\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {\r\n  generatedMessage: false,\r\n  code: 'ERR_ASSERTION',\r\n  actual: 2,\r\n  expected: 1,\r\n  operator: 'strictEqual',\r\n  diff: 'simple'\r\n}\r\n\r\nNode.js v24.14.1\r\n"
+}

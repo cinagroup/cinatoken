@@ -1,0 +1,239 @@
+{
+  "schema": "original-final39-unsupported-admission-v1",
+  "finishedAt": "2026-10-06T05:12:39.767Z",
+  "originalReaderActualExit": 1,
+  "roots": 39,
+  "admittedFiles": 3494,
+  "closedReceipts": 830,
+  "nonzeroOrAbnormal": 43,
+  "aggregateReports": 9,
+  "reportOnlyBindings": 93,
+  "originalImportedRuntimeExits": [
+    1,
+    1
+  ],
+  "blockers": [
+    {
+      "root": "ee122-native-terminal-independent-peer",
+      "file": "dispatch-group-v2-step-27.raw.log",
+      "reason": "Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active"
+    },
+    {
+      "root": "ee122-native-terminal-independent-peer",
+      "file": "git-source-batch.stdin.log",
+      "reason": "Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active"
+    },
+    {
+      "root": "ee122-native-terminal-independent-peer",
+      "file": "git-step24-source.stdin.log",
+      "reason": "Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active"
+    },
+    {
+      "root": "ee122-native-terminal-independent-peer",
+      "file": "native-group-step-10.raw.log",
+      "reason": "Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active"
+    },
+    {
+      "root": "ee122-native-terminal-independent-peer",
+      "file": "native-group-step-11.raw.log",
+      "reason": "Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active"
+    },
+    {
+      "root": "ee122-native-terminal-independent-peer",
+      "file": "native-group-step-12.raw.log",
+      "reason": "Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active"
+    },
+    {
+      "root": "ee122-native-terminal-independent-peer",
+      "file": "native-group-step-13.raw.log",
+      "reason": "Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active"
+    },
+    {
+      "root": "ee122-native-terminal-independent-peer",
+      "file": "native-group-step-14.raw.log",
+      "reason": "Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active"
+    },
+    {
+      "root": "ee122-native-terminal-independent-peer",
+      "file": "native-group-step-15.raw.log",
+      "reason": "Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active"
+    },
+    {
+      "root": "ee122-native-terminal-independent-peer",
+      "file": "native-group-step-16.raw.log",
+      "reason": "Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active"
+    },
+    {
+      "root": "ee122-native-terminal-independent-peer",
+      "file": "native-group-step-17.raw.log",
+      "reason": "Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active"
+    },
+    {
+      "root": "ee122-native-terminal-independent-peer",
+      "file": "native-group-step-18.raw.log",
+      "reason": "Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active"
+    },
+    {
+      "root": "ee122-native-terminal-independent-peer",
+      "file": "native-group-step-19.raw.log",
+      "reason": "Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active"
+    },
+    {
+      "root": "ee122-native-terminal-independent-peer",
+      "file": "native-group-step-20.raw.log",
+      "reason": "Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active"
+    },
+    {
+      "root": "ee122-native-terminal-independent-peer",
+      "file": "native-group-step-21.raw.log",
+      "reason": "Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active"
+    },
+    {
+      "root": "ee122-native-terminal-independent-peer",
+      "file": "native-group-step-22.raw.log",
+      "reason": "Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active"
+    },
+    {
+      "root": "ee122-native-terminal-independent-peer",
+      "file": "native-group-step-23.raw.log",
+      "reason": "Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active"
+    },
+    {
+      "root": "ee122-native-terminal-independent-peer",
+      "file": "native-group-step-24.raw.log",
+      "reason": "Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active"
+    },
+    {
+      "root": "ee122-native-terminal-independent-peer",
+      "file": "native-group-step-7.raw.log",
+      "reason": "Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active"
+    },
+    {
+      "root": "ee122-native-terminal-independent-peer",
+      "file": "native-group-step-8.raw.log",
+      "reason": "Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active"
+    },
+    {
+      "root": "ee122-native-terminal-independent-peer",
+      "file": "native-group-step-9.raw.log",
+      "reason": "Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active"
+    },
+    {
+      "root": "ee122-native-terminal-independent-peer",
+      "file": "native-group-v2-step-10.raw.log",
+      "reason": "Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active"
+    },
+    {
+      "root": "ee122-native-terminal-independent-peer",
+      "file": "native-group-v2-step-11.raw.log",
+      "reason": "Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active"
+    },
+    {
+      "root": "ee122-native-terminal-independent-peer",
+      "file": "native-group-v2-step-12.raw.log",
+      "reason": "Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active"
+    },
+    {
+      "root": "ee122-native-terminal-independent-peer",
+      "file": "native-group-v2-step-13.raw.log",
+      "reason": "Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active"
+    },
+    {
+      "root": "ee122-native-terminal-independent-peer",
+      "file": "native-group-v2-step-14.raw.log",
+      "reason": "Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active"
+    },
+    {
+      "root": "ee122-native-terminal-independent-peer",
+      "file": "native-group-v2-step-15.raw.log",
+      "reason": "Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active"
+    },
+    {
+      "root": "ee122-native-terminal-independent-peer",
+      "file": "native-group-v2-step-16.raw.log",
+      "reason": "Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active"
+    },
+    {
+      "root": "ee122-native-terminal-independent-peer",
+      "file": "native-group-v2-step-17.raw.log",
+      "reason": "Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active"
+    },
+    {
+      "root": "ee122-native-terminal-independent-peer",
+      "file": "native-group-v2-step-18.raw.log",
+      "reason": "Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active"
+    },
+    {
+      "root": "ee122-native-terminal-independent-peer",
+      "file": "native-group-v2-step-19.raw.log",
+      "reason": "Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active"
+    },
+    {
+      "root": "ee122-native-terminal-independent-peer",
+      "file": "native-group-v2-step-20.raw.log",
+      "reason": "Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active"
+    },
+    {
+      "root": "ee122-native-terminal-independent-peer",
+      "file": "native-group-v2-step-21.raw.log",
+      "reason": "Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active"
+    },
+    {
+      "root": "ee122-native-terminal-independent-peer",
+      "file": "native-group-v2-step-22.raw.log",
+      "reason": "Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active"
+    },
+    {
+      "root": "ee122-native-terminal-independent-peer",
+      "file": "native-group-v2-step-23.raw.log",
+      "reason": "Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active"
+    },
+    {
+      "root": "ee122-native-terminal-independent-peer",
+      "file": "native-group-v2-step-24.raw.log",
+      "reason": "Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active"
+    },
+    {
+      "root": "ee122-native-terminal-independent-peer",
+      "file": "native-group-v2-step-7.raw.log",
+      "reason": "Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active"
+    },
+    {
+      "root": "ee122-native-terminal-independent-peer",
+      "file": "native-group-v2-step-8.raw.log",
+      "reason": "Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active"
+    },
+    {
+      "root": "ee122-native-terminal-independent-peer",
+      "file": "native-group-v2-step-9.raw.log",
+      "reason": "Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active"
+    }
+  ],
+  "exclusions": 0,
+  "pureAuditReceipt": {
+    "file": "final-combined-39-pure-audit.result.json",
+    "bytes": 1245,
+    "sha256": "917caac6990e9361c29a23f76f42d74a7792a5990390efb6a59646c80e88cca9"
+  },
+  "rawStreams": [
+    {
+      "file": "final-combined-39-pure-audit.stdout.log",
+      "bytes": 7676,
+      "sha256": "a8fcb21f43e08143ea9669645f8303029738fa081411c4b1498c42e768f1b407"
+    },
+    {
+      "file": "final-combined-39-pure-audit.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "scope": "Original exact failed reader admission. The entire ee122 root will be retained in a new lossless opaque capsule with complete original-file index and replay verification, instead of interpreting its unsupported derived-output records as command exits.",
+  "losslessCapsuleStillPending": true,
+  "noOriginalFilesRemovedOrModified": true,
+  "noReaderCodeChangedAfter99Seal": true,
+  "gatePassDerived": false,
+  "fullG7Verified": false,
+  "fullG8Verified": false,
+  "newBusinessExecution": false,
+  "sourceCommit": "dc7be6f8597333151c450bae3ae15e6585e3b2eb"
+}

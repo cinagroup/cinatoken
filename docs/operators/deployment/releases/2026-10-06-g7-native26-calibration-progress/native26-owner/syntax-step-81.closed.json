@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-06T03:46:16.974Z",
+  "finishedAt": "2026-10-06T03:46:17.053Z",
+  "executable": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "--check",
+    "scripts/db/cutover/postgres-complete-text-routing-projection-v396.native.test.mjs"
+  ],
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-81.stdout.log",
+  "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\syntax-step-81.stderr.log",
+  "stdoutInfo": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stderrInfo": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-06T04:32:29.817Z",
+  "finishedAt": "2026-10-06T04:32:29.822Z",
+  "operation": "readFile",
+  "path": "C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\postgres-shared-key-credited-usage-reader.native.test.mjs",
+  "actualExit": 0,
+  "signal": null,
+  "error": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\final-working-12.stdout.log",
+    "bytes": 18603,
+    "sha256": "fe62b22831e7b37e8c0377ed4e902ce0be499dd54ebea2d1e81b93c60c47d912"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\final-working-12.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

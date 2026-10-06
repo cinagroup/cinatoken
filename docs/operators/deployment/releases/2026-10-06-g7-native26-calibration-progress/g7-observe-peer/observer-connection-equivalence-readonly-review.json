@@ -1,0 +1,132 @@
+{
+  "schema": "cinatoken.g7-observer-connection-equivalence-peer.v1",
+  "at": "2026-10-06T03:23:18.370797+00:00",
+  "readOnlyRecommendationComplete": true,
+  "finalCandidatePeerPendingAuthorFreeze": true,
+  "sources": [
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\core\\src\\storage\\context.ts",
+      "bytes": 2782,
+      "sha256": "9a0b0b4a6b3d8129b04aca4b8901fcc5b99adf6d4d9c2d62f7ead5b30c697a85"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\core\\src\\storage\\database-client.ts",
+      "bytes": 2030,
+      "sha256": "8b4f5abeec30c82215ab99e319e10e52e9cca99c70ca85ef08a97ed47f1c8881"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\core\\src\\storage\\drizzle\\client-postgres.ts",
+      "bytes": 2747,
+      "sha256": "8178fb1145d0492b9b962b1b14570da4d37ec69160dc06fd23c171958b4e661b"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\core\\src\\storage\\postgres-initialization.ts",
+      "bytes": 2136,
+      "sha256": "1bdb2198b428e5c68e65eae59689db18b9e1596efb004726dd4cc943940c1802"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\Dockerfile.admin",
+      "bytes": 4654,
+      "sha256": "8410d3d3f22c23d57f32b1a0a87c571fe824edfa92f99c827111625d39834fd1"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\node_modules\\postgres\\package.json",
+      "bytes": 1814,
+      "sha256": "944d492614959389a5739ef2893bc1830fb773ff042159d9b331d43b2f6792e9"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\node_modules\\postgres\\src\\index.js",
+      "bytes": 15428,
+      "sha256": "4e21f5733e70d79cffc10d10d4ef01031de4a9ac862210e43f8870029fd103ed"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\node_modules\\postgres\\src\\connection.js",
+      "bytes": 28690,
+      "sha256": "ee3a218d9aa6a6f2887c1a19da50009335fe84c11a5431d5cab72d6bc528632f"
+    }
+  ],
+  "originalFailureStderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-boundary-next-20261006-Zm6Z3E\\g7-artifact-after-seed\\web-platform-g7-07d19c1c941cc373019811be3dbf553c441a0ff3-37403868149-1\\083-docker.stderr.log",
+    "bytes": 865,
+    "sha256": "c0e4fbbd7226d65caaba75f92fb53d5da62be6133eff3b820a09d9f4b8c71e14"
+  },
+  "facts": [
+    {
+      "file": "packages/core/src/storage/context.ts",
+      "line": 26,
+      "fact": "StorageContext creates database client then repositories; seed retains this real production context."
+    },
+    {
+      "file": "packages/core/src/storage/database-client.ts",
+      "line": 42,
+      "fact": "Postgres database client imports initPostgresDrizzle and publishes raw postgres SQL."
+    },
+    {
+      "file": "packages/core/src/storage/drizzle/client-postgres.ts",
+      "line": 19,
+      "fact": "Exact session search_path constant is cinatoken_gateway, public."
+    },
+    {
+      "file": "packages/core/src/storage/drizzle/client-postgres.ts",
+      "line": 43,
+      "fact": "Core explicitly SETs same search_path before business queries; startup connection override applies at55–58; init63 sets before Drizzle."
+    },
+    {
+      "file": "Dockerfile.admin",
+      "line": 86,
+      "fact": "Admin image explicitly copies postgres to /app/node_modules/postgres; Core dist copied77–78; drizzle-orm is not an explicit copied package."
+    },
+    {
+      "file": "node_modules/postgres/package.json",
+      "line": 12,
+      "fact": "Installed postgres3.4.9 ESM entry is src/index.js."
+    },
+    {
+      "file": "node_modules/postgres/src/index.js",
+      "line": 484,
+      "fact": "Driver merges URL query keys over connection options; DATABASE_URL search empty is required and remains enforced."
+    },
+    {
+      "file": "node_modules/postgres/src/connection.js",
+      "line": 996,
+      "fact": "StartupMessage consumes options.connection."
+    }
+  ],
+  "minimalCandidateRequirements": {
+    "observeModule": "/app/node_modules/postgres/src/index.js",
+    "reasonAbsolutePath": "/qa script module resolution has no /app ancestor; use actual driver copied to image.",
+    "sharedOptions": {
+      "max": 1,
+      "prepare": false,
+      "fetch_types": false,
+      "connect_timeout": 5
+    },
+    "startupConnection": {
+      "search_path": "cinatoken_gateway, public"
+    },
+    "explicitInitialization": "await sql.unsafe(\"SET search_path TO cinatoken_gateway, public\")",
+    "seedLazyCoreOnly": true,
+    "sharedMigrationLedgerAndReadOnlyObservationSQLMustRemainExact": true,
+    "schemaFingerprintMigrationCorpusCountsIdentityAssertionsMustRemainExact": true,
+    "clientCreationAndSETWithinTry": true,
+    "finallyCloseIfCreated": {
+      "timeout": 5
+    },
+    "noInitRetryOrFallbackDatabase": true,
+    "safeDiagnosticsNoRawDriverMessageDsnKeysOrQueryParameters": true
+  },
+  "notes": [
+    "Existing max1 does not by itself establish search_path.",
+    "Direct observe driver needs no Drizzle or production repository entrypoint; seed must retain production parser/hash/encryption/repository validation.",
+    "If business failure and close failure occur, retain original failure stage or record close failure separately rather than reporting original errorName with unrelated stage.",
+    "Original runtime1/AdminmissingDrizzle1, wire0/seed0 and cleanup0 remain separately preserved; this recommendation does not rewrite any artifact.",
+    "Final source byte hashes/local check receipts and next same-SHA real Linux PG acceptance remain separate."
+  ],
+  "peerScope": {
+    "repoWrites": false,
+    "testsOrCLIOrDBExecuted": false,
+    "GitOrDockerOrCIExecuted": false,
+    "networkOrProductionRequests": 0,
+    "onlyNewTempReportWritten": true
+  }
+}

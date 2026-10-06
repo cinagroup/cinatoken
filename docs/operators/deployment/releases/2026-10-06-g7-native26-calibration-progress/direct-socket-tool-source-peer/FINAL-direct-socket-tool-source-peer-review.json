@@ -1,0 +1,844 @@
+{
+  "schema": "cinatoken-direct-socket-tool-source-independent-peer-v1",
+  "closed": true,
+  "actualReadReviewOutcome": 0,
+  "supportsExactDirectSchemaAdapterSource": true,
+  "blockers": [],
+  "scope": {
+    "sourceModuleAndLibraryHooksAndRecordedControlsOnly": true,
+    "currentModule12848FrozenByOwnerMessage": true,
+    "wholeNewToolRootFinalSealPending": true,
+    "expanded17RootConfigAuthorityNotApprovedByThisPeer": true,
+    "old2226ArchiveOrGrowingRootWalked": false,
+    "frozenExternalRootTreesWalked": false,
+    "repoOrOldToolOrOldRootWrites": 0,
+    "gitCalls": 0,
+    "testsOrCollectorRunByPeer": 0,
+    "appRuntimeDockerSqlG7CiProductionRunsByPeer": 0,
+    "ownWritesOnlyThisNewExclusiveTemp": true
+  },
+  "checks": [
+    {
+      "name": "new-library-exactly-six-specific-adapter-hooks-no-other-old-byte-change",
+      "actualReadReviewOutcome": 0
+    },
+    {
+      "name": "original-enhanced-library-still-frozen52139-sha",
+      "actualReadReviewOutcome": 0
+    },
+    {
+      "name": "all8-old-enhanced-inputs-and7-copied-wrappers-suites-exact",
+      "actualReadReviewOutcome": 0
+    },
+    {
+      "name": "module-final12848-sha-exact",
+      "actualReadReviewOutcome": 0
+    },
+    {
+      "name": "first12086-wrong-fatal-schema-source-preserved",
+      "actualReadReviewOutcome": 0
+    },
+    {
+      "name": "11-original-closed-command-receipts22-independent-raw-exact",
+      "actualReadReviewOutcome": 0
+    },
+    {
+      "name": "final64-direct-plus87-old-controls-zero-fail-no-skip-first49-and61-retained",
+      "actualReadReviewOutcome": 0
+    },
+    {
+      "name": "first-real-source-contract-negative1-stderr766-retained",
+      "actualReadReviewOutcome": 0
+    },
+    {
+      "name": "absent-fatal-only-node-and-baseline-flags-only-pass-gate",
+      "actualReadReviewOutcome": 0
+    },
+    {
+      "name": "new-integration-schema-specific-reject-does-not-fallthrough",
+      "actualReadReviewOutcome": 0
+    },
+    {
+      "name": "reported14-root-pure-audit674-entries122-receipts-no-exclusions-or-blockers",
+      "actualReadReviewOutcome": 0
+    }
+  ],
+  "inputs": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\evidence-lib.mjs",
+      "bytes": 52976,
+      "sha256": "0718f79578a91774001621430f63beba7a7a84d61eab85bafe2bb6eae26cf76c"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\direct-socket-dialect.mjs",
+      "bytes": 12848,
+      "sha256": "093bdeb9417ab0ca39ee7e876b5d8542f84dce9870fa315d6086835b5887c438"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\direct-socket-dialect-controls.mjs",
+      "bytes": 15434,
+      "sha256": "4590ea6e3248b7b1ee372268aa7a6c43f5c58a0f8bffad37e4fa1548ab5b5b92"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\prepare-tool-copy.mjs",
+      "bytes": 3164,
+      "sha256": "b0695674a71fb94c85547f82ee473d66ef35f96bb38524f42744a6f7c7a732ea"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\real-no-fatal-shape-contract.mjs",
+      "bytes": 1696,
+      "sha256": "4eb19a2535c6f47c8bf54d9e10d07998a69afc33cf77f89fa9cf8aac90c666ea"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\direct-socket-dialect-first-source.mjs",
+      "bytes": 12086,
+      "sha256": "c94757adf49ae1ca75d093bb61f561397507f70fbf6f48f5476f66f00a41ce8a"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\direct-socket-dialect-controls-first-source.mjs",
+      "bytes": 12350,
+      "sha256": "268752ff8e9d01d616695b5325608383caa63e65e815d70720b09a07f5067e2f"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\original-enhanced-tools-pins.json",
+      "bytes": 3052,
+      "sha256": "4c679f508acc37ecc0a2654a3bbcf1fda7437bb7f9e4f620f6590c5c0c1eaa52"
+    }
+  ],
+  "snapshots": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-tool-source-peer-readonly-541b7711f55b4066b8c28eb33962c0a0\\frozen-source\\evidence-lib.mjs",
+      "bytes": 52976,
+      "sha256": "0718f79578a91774001621430f63beba7a7a84d61eab85bafe2bb6eae26cf76c"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-tool-source-peer-readonly-541b7711f55b4066b8c28eb33962c0a0\\frozen-source\\direct-socket-dialect.mjs",
+      "bytes": 12848,
+      "sha256": "093bdeb9417ab0ca39ee7e876b5d8542f84dce9870fa315d6086835b5887c438"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-tool-source-peer-readonly-541b7711f55b4066b8c28eb33962c0a0\\frozen-source\\direct-socket-dialect-controls.mjs",
+      "bytes": 15434,
+      "sha256": "4590ea6e3248b7b1ee372268aa7a6c43f5c58a0f8bffad37e4fa1548ab5b5b92"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-tool-source-peer-readonly-541b7711f55b4066b8c28eb33962c0a0\\frozen-source\\prepare-tool-copy.mjs",
+      "bytes": 3164,
+      "sha256": "b0695674a71fb94c85547f82ee473d66ef35f96bb38524f42744a6f7c7a732ea"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-tool-source-peer-readonly-541b7711f55b4066b8c28eb33962c0a0\\frozen-source\\real-no-fatal-shape-contract.mjs",
+      "bytes": 1696,
+      "sha256": "4eb19a2535c6f47c8bf54d9e10d07998a69afc33cf77f89fa9cf8aac90c666ea"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-tool-source-peer-readonly-541b7711f55b4066b8c28eb33962c0a0\\frozen-source\\direct-socket-dialect-first-source.mjs",
+      "bytes": 12086,
+      "sha256": "c94757adf49ae1ca75d093bb61f561397507f70fbf6f48f5476f66f00a41ce8a"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-tool-source-peer-readonly-541b7711f55b4066b8c28eb33962c0a0\\frozen-source\\direct-socket-dialect-controls-first-source.mjs",
+      "bytes": 12350,
+      "sha256": "268752ff8e9d01d616695b5325608383caa63e65e815d70720b09a07f5067e2f"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-tool-source-peer-readonly-541b7711f55b4066b8c28eb33962c0a0\\frozen-source\\original-enhanced-tools-pins.json",
+      "bytes": 3052,
+      "sha256": "4c679f508acc37ecc0a2654a3bbcf1fda7437bb7f9e4f620f6590c5c0c1eaa52"
+    }
+  ],
+  "oldExactCopyPins": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\enhanced-tools\\collect-evidence.mjs",
+      "bytes": 1002,
+      "sha256": "95d1670211f5fdceb6bbdd2ce1db38036de4fb7c31e5d522eef10af3e479bdd5"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\collect-evidence.mjs",
+      "bytes": 1002,
+      "sha256": "95d1670211f5fdceb6bbdd2ce1db38036de4fb7c31e5d522eef10af3e479bdd5"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\enhanced-tools\\collector-closure-boundary-tests.mjs",
+      "bytes": 8703,
+      "sha256": "967171ef8a84ae50abb69549d85d2ed58aa3c481c27bb3ae456cad0e66f60eb6"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\collector-closure-boundary-tests.mjs",
+      "bytes": 8703,
+      "sha256": "967171ef8a84ae50abb69549d85d2ed58aa3c481c27bb3ae456cad0e66f60eb6"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\enhanced-tools\\collector-controlled-tests.mjs",
+      "bytes": 6887,
+      "sha256": "749953cc540f88e86822b33ade25daf4c59ef26864a7445bb413bb3c2f425614"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\collector-controlled-tests.mjs",
+      "bytes": 6887,
+      "sha256": "749953cc540f88e86822b33ade25daf4c59ef26864a7445bb413bb3c2f425614"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\enhanced-tools\\collector-explicit-association-tests.mjs",
+      "bytes": 10741,
+      "sha256": "7580f6b13250d4a53ddd8b022dfaa48ef2fdc3382310fd60f010d035395b1f7c"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\collector-explicit-association-tests.mjs",
+      "bytes": 10741,
+      "sha256": "7580f6b13250d4a53ddd8b022dfaa48ef2fdc3382310fd60f010d035395b1f7c"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\enhanced-tools\\collector-g7-boundary-descriptor-tests.mjs",
+      "bytes": 17869,
+      "sha256": "f983fe626f4d2b2d8af357cc36e8ff372f4bbee88ef316a1c9c274d945e9bf65"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\collector-g7-boundary-descriptor-tests.mjs",
+      "bytes": 17869,
+      "sha256": "f983fe626f4d2b2d8af357cc36e8ff372f4bbee88ef316a1c9c274d945e9bf65"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\enhanced-tools\\collector-g7-producer-output-controls.mjs",
+      "bytes": 7513,
+      "sha256": "0ad5dcdc4b5d001f85f0f8f498d0f6ba6d2e4dc0ecdc44c02d2de1a78f0e7cae"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\collector-g7-producer-output-controls.mjs",
+      "bytes": 7513,
+      "sha256": "0ad5dcdc4b5d001f85f0f8f498d0f6ba6d2e4dc0ecdc44c02d2de1a78f0e7cae"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\enhanced-tools\\evidence-lib.mjs",
+      "bytes": 52139,
+      "sha256": "1a94e0682a2f9782a0bcc28c4736ff49c0bf4db0b9e0cfe0f34ecb6918b22cb7"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\enhanced-tools\\verify-evidence.mjs",
+      "bytes": 617,
+      "sha256": "ac6c531cc665341fbf51dc3ceed6adbd3f629ab5c17aef51a214de1f1613422d"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\verify-evidence.mjs",
+      "bytes": 617,
+      "sha256": "ac6c531cc665341fbf51dc3ceed6adbd3f629ab5c17aef51a214de1f1613422d"
+    }
+  ],
+  "libraryDiff": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-tool-source-peer-readonly-541b7711f55b4066b8c28eb33962c0a0\\exact-library-hooks-diff.patch",
+  "sourceContractFindings": {
+    "executorExactSchemaLines": "direct-socket-dialect.mjs:25-58",
+    "nullOnlyExactNoChildLines": "14-31",
+    "signedProcessAndRunnerDistinctLines": "33,45-57",
+    "groupReapCompleteFinalCensusLines": "38-50",
+    "fullManifestSetSameRootHashesMtimeOriginalStartLines": "89-100",
+    "nodeAggregateOnlyAndFatalPartialLines": "69-87",
+    "nodeOriginalStartEventBaselineRawBindingLines": "101-113",
+    "schemaFallback": "Exact direct executor failed guard returnsnull directly; it cannot fall through to old generic closed. Exact Node schema is reserved aggregate before generic authority.",
+    "metadata": "Original executor and Node files remain manifest-bound entries with complete original bytes/SHA. Filtered derived closure fields do not overwrite or delete original fatal/signalAttempts/processCensus/errors/run/baseline metadata.",
+    "outcomes": "Numeric signed process and runner status stay distinct from overall0/1; timeout124/interruption130 are explicit runner outcomes. Forced/disposal/groupclose observations cannot become graceful proof, cause proof or complete native/G7/G8 gate claims.",
+    "partialNode": "Failed partial/missing baseline reports can remain aggregate1 only with source-safe fatal shape; their output closure comes only from the actual numeric executor and complete final group/reap/file evidence.",
+    "nestedDiagnostics": "Case rows and nested controlled child text do not create independent command receipts/raw streams."
+  },
+  "fixedRealSourceIssues": [
+    {
+      "finding": "Normal main letfatal is undefined and JSON omits it; first adapter incorrectly required null for pass.",
+      "source": "scripts/diagnostics/v364-direct-socket/run-direct-socket.mjs:1131,1193",
+      "firstActualContractExit": 1,
+      "firstStderrBytes": 766,
+      "finalActualContractExit": 0,
+      "resolution": "Only exact Node schema now treats absent/null nofatal equivalently, validatespresent fatal errorSafe object. Python executor fatal remains actualnull/object."
+    },
+    {
+      "finding": "Baseline code0 can remain literal while timeout/outputlimit/spawnError causes actualNodefatal+partial failure; rejecting the entire baseline would discard failed source metadata.",
+      "source": "scripts/diagnostics/v364-direct-socket/run-direct-socket.mjs:1035-1049,1135-1144",
+      "resolution": "Source shape now preservescode0 and flags in aggregate1, while pass explicitly excludesflag/signal/spawnError. Three source-failure preservation controls added; falseaggregate0 controls remainblocked."
+    },
+    {
+      "finding": "Original executor-start alwayshasabsolute repo/output.",
+      "resolution": "Only new exact start guard now validatesabsolute distinct paths; missing/relative negativecontrols retained."
+    }
+  ],
+  "recordedOriginalCommands": [
+    {
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\direct-socket-controls-first.result.json",
+        "bytes": 1085,
+        "sha256": "7b0659d8d4fc9fd24277dba923d0fbe7fcb1184260c9c6bb1150e006a2b27a7a"
+      },
+      "actualExit": 0,
+      "outputs": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\direct-socket-controls-first.stdout.log",
+          "bytes": 2194,
+          "sha256": "19edb138f6ab33ee3055b9abe966ef1fb62cdd6d8b86367352566f77dc24eebd"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\direct-socket-controls-first.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\direct-socket-controls-final.result.json",
+        "bytes": 1085,
+        "sha256": "550de03f25f4cd6ab71feba53416146737b6584cee5dad9a2247d2b26f543dfd"
+      },
+      "actualExit": 0,
+      "outputs": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\direct-socket-controls-final.stdout.log",
+          "bytes": 2684,
+          "sha256": "a5982bc71673931fa833d52c4bc7197834aaadfb785fbdbee20d3587a076d97f"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\direct-socket-controls-final.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\direct-socket-controls-final-v2.result.json",
+        "bytes": 1091,
+        "sha256": "7f64f8ade5810728fa52567ebe5d9bbef651744b7c51a31141cbb9b095b016cf"
+      },
+      "actualExit": 0,
+      "outputs": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\direct-socket-controls-final-v2.stdout.log",
+          "bytes": 2902,
+          "sha256": "850d07f4b935cce08326298b185583b31a8f9ecbe713e41113e51064810dfbae"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\direct-socket-controls-final-v2.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\no-fatal-source-contract-first.result.json",
+        "bytes": 1086,
+        "sha256": "ee08c382ccf9b2993d1e06d6b1584c861025143ba2597b81b47006c60325c877"
+      },
+      "actualExit": 1,
+      "outputs": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\no-fatal-source-contract-first.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\no-fatal-source-contract-first.stderr.log",
+          "bytes": 766,
+          "sha256": "ab189936488df7a75887bd69da8ff80fbe1d99cc095b983eda05333ec0a73d17"
+        }
+      ]
+    },
+    {
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\no-fatal-source-contract-final.result.json",
+        "bytes": 1086,
+        "sha256": "0636804a7a59e26c1f94baca85e7da1986121cd283aa0042d460c9442df68e14"
+      },
+      "actualExit": 0,
+      "outputs": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\no-fatal-source-contract-final.stdout.log",
+          "bytes": 114,
+          "sha256": "a1b831112c8918dba26686d6d658d571b1d047eb755f596c8d57fe6f3f23fc80"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\no-fatal-source-contract-final.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\unchanged-association-controls.result.json",
+        "bytes": 1095,
+        "sha256": "866c4acd4db6fb024536ff80a5a3357f7bdb42e48a47407f985c5503c9fdcc96"
+      },
+      "actualExit": 0,
+      "outputs": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\unchanged-association-controls.stdout.log",
+          "bytes": 1608,
+          "sha256": "7efada42fdba3c60a10a9129dcc6a41b7010cada2f49fa34ee8acfb3d6b09fd1"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\unchanged-association-controls.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\unchanged-closure-controls.result.json",
+        "bytes": 1082,
+        "sha256": "1e9adc74d8123adf472c7fbb8b076ee7e7c702befca7abae0d74f5a4adf78dfd"
+      },
+      "actualExit": 0,
+      "outputs": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\unchanged-closure-controls.stdout.log",
+          "bytes": 876,
+          "sha256": "aca92560d44c7394f5718b825b91bdb6d261cb07ae3cd514c5da06031e39fcfb"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\unchanged-closure-controls.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\unchanged-g7-producer-controls.result.json",
+        "bytes": 1096,
+        "sha256": "5512100b9649ac1458b70607f73d19021ce5329dcb2cab378a033bf68e753563"
+      },
+      "actualExit": 0,
+      "outputs": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\unchanged-g7-producer-controls.stdout.log",
+          "bytes": 1826,
+          "sha256": "dd3f8e0c6a3f06b56f67a18fc26b65f40aa7fe7892a33e804e4b70cbe5cceabd"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\unchanged-g7-producer-controls.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\unchanged-generic-controls.result.json",
+        "bytes": 1077,
+        "sha256": "40e31c68f57d1434228c5548715872d04bdc3c7f7072f88aa6bb86d10f04709f"
+      },
+      "actualExit": 0,
+      "outputs": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\unchanged-generic-controls.stdout.log",
+          "bytes": 1103,
+          "sha256": "507ed9774d1ec1668f1e37c167fa63bfbb281fd14f5f4f9eb426b0d2f466cca7"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\unchanged-generic-controls.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\dialect-syntax.result.json",
+        "bytes": 1060,
+        "sha256": "72e98d174d5bcc58d988fd6646cab06ccd1f7d452ce1217bd3e21c4674c53735"
+      },
+      "actualExit": 0,
+      "outputs": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\dialect-syntax.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\dialect-syntax.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\lib-syntax.result.json",
+        "bytes": 1043,
+        "sha256": "d789a4b6d584ea34e0c2508acba8498a648a03e4a79f99f73575ce527929cc48"
+      },
+      "actualExit": 0,
+      "outputs": [
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\lib-syntax.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\lib-syntax.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    }
+  ],
+  "controls": [
+    {
+      "name": "direct-socket-controls-first",
+      "pass": 49,
+      "fail": 0,
+      "skip": 0,
+      "cases": [
+        "exact-no-child-refusal-keeps-processnull-final1-and-no-Linux-proof",
+        "normal-numeric1-remains-original1-all-manifested-raw-bound",
+        "strict-synthetic0-still-no-cause-native-gate-or-grace-proof",
+        "unknown-executor-schema-blocked",
+        "null-child-without-exact-preflight-blocked",
+        "fractional-child-blocked",
+        "null-runner-blocked",
+        "fractional-runner-blocked",
+        "final-outcome-unknown-blocked",
+        "normal-runner-not-child-blocked",
+        "group-not-gone-blocked",
+        "direct-child-not-reaped-blocked",
+        "no-subreaper-blocked",
+        "incomplete-census-blocked",
+        "remaining-live-census-blocked",
+        "false-grace-claim-blocked",
+        "false-cause-claim-blocked",
+        "wrong-checkout-run-blocked",
+        "nochild-process-fake1-blocked",
+        "nochild-wrong-fatal-blocked",
+        "nochild-pretend-Linux-blocked",
+        "nochild-timeout-fake-blocked",
+        "signed-wait-signal-kept-negative-separately",
+        "timeout-runner124-versus-child-minus15-kept-negative-separately",
+        "interrupt-runner130-versus-child-minus9-kept-negative-separately",
+        "forced-leftover-cleanup-kept1-never-grace-proof",
+        "timeout-upgrade0-blocked",
+        "forced-upgrade0-blocked",
+        "numeric1-upgrade0-blocked",
+        "manifest-missing-stream-blocked",
+        "manifest-missing-baseline-stream-blocked",
+        "manifest-wrong-bytes-blocked",
+        "manifest-wrong-sha-blocked",
+        "manifest-duplicate-blocked",
+        "manifest-path-escape-blocked",
+        "reported-node-exit-mismatch-blocked",
+        "raw-missing-blocked",
+        "raw-tamper-blocked",
+        "reused-newer-raw-even-exact-sha-blocked",
+        "unlisted-extra-output-blocked",
+        "node-unknown-schema-blocked",
+        "node-fake-baseline0-report-blocked",
+        "node-baseline-raw-sha-blocked",
+        "node-event-sha-blocked",
+        "node-duplicate-case-blocked",
+        "node-eligible-true-blocked",
+        "node-original-start-drift-blocked",
+        "node-only-never-authorizes-baseline-or-executor-raw",
+        "partial-negative-node-remains-failed-and-manifest-authority-only"
+      ],
+      "inputSyntheticInertOnly": true
+    },
+    {
+      "name": "direct-socket-controls-final",
+      "pass": 61,
+      "fail": 0,
+      "skip": 0,
+      "cases": [
+        "exact-no-child-refusal-keeps-processnull-final1-and-no-Linux-proof",
+        "normal-numeric1-remains-original1-all-manifested-raw-bound",
+        "strict-synthetic0-still-no-cause-native-gate-or-grace-proof",
+        "unknown-executor-schema-blocked",
+        "null-child-without-exact-preflight-blocked",
+        "fractional-child-blocked",
+        "null-runner-blocked",
+        "fractional-runner-blocked",
+        "final-outcome-unknown-blocked",
+        "normal-runner-not-child-blocked",
+        "group-not-gone-blocked",
+        "direct-child-not-reaped-blocked",
+        "no-subreaper-blocked",
+        "incomplete-census-blocked",
+        "remaining-live-census-blocked",
+        "false-grace-claim-blocked",
+        "false-cause-claim-blocked",
+        "wrong-checkout-run-blocked",
+        "nochild-process-fake1-blocked",
+        "nochild-wrong-fatal-blocked",
+        "nochild-pretend-Linux-blocked",
+        "nochild-timeout-fake-blocked",
+        "signed-wait-signal-kept-negative-separately",
+        "timeout-runner124-versus-child-minus15-kept-negative-separately",
+        "interrupt-runner130-versus-child-minus9-kept-negative-separately",
+        "forced-leftover-cleanup-kept1-never-grace-proof",
+        "timeout-upgrade0-blocked",
+        "forced-upgrade0-blocked",
+        "numeric1-upgrade0-blocked",
+        "manifest-missing-stream-blocked",
+        "manifest-missing-baseline-stream-blocked",
+        "manifest-wrong-bytes-blocked",
+        "manifest-wrong-sha-blocked",
+        "manifest-duplicate-blocked",
+        "manifest-path-escape-blocked",
+        "reported-node-exit-mismatch-blocked",
+        "raw-missing-blocked",
+        "raw-tamper-blocked",
+        "reused-newer-raw-even-exact-sha-blocked",
+        "unlisted-extra-output-blocked",
+        "node-unknown-schema-blocked",
+        "node-fake-baseline0-report-blocked",
+        "node-baseline-raw-sha-blocked",
+        "node-event-sha-blocked",
+        "node-duplicate-case-blocked",
+        "node-eligible-true-blocked",
+        "node-original-start-drift-blocked",
+        "node-only-never-authorizes-baseline-or-executor-raw",
+        "partial-negative-node-remains-failed-and-manifest-authority-only",
+        "real-normal-undefined-fatal-is-omitted-and-remains-aggregate0-only",
+        "node-fatal-number-blocked",
+        "node-fatal-string-blocked",
+        "node-fatal-array-blocked",
+        "baseline-fake-spawn-error-numeric0-blocked",
+        "baseline-timeout-numeric0-blocked",
+        "baseline-outputlimit-numeric0-blocked",
+        "start-missing-repo-blocked",
+        "start-missing-output-blocked",
+        "start-relative-output-blocked",
+        "baseline-null-signal-status-remains-null-in-original-node-metadata",
+        "baseline-signed-spawn-error-remains-original-negative"
+      ],
+      "inputSyntheticInertOnly": true
+    },
+    {
+      "name": "direct-socket-controls-final-v2",
+      "pass": 64,
+      "fail": 0,
+      "skip": 0,
+      "cases": [
+        "exact-no-child-refusal-keeps-processnull-final1-and-no-Linux-proof",
+        "normal-numeric1-remains-original1-all-manifested-raw-bound",
+        "strict-synthetic0-still-no-cause-native-gate-or-grace-proof",
+        "unknown-executor-schema-blocked",
+        "null-child-without-exact-preflight-blocked",
+        "fractional-child-blocked",
+        "null-runner-blocked",
+        "fractional-runner-blocked",
+        "final-outcome-unknown-blocked",
+        "normal-runner-not-child-blocked",
+        "group-not-gone-blocked",
+        "direct-child-not-reaped-blocked",
+        "no-subreaper-blocked",
+        "incomplete-census-blocked",
+        "remaining-live-census-blocked",
+        "false-grace-claim-blocked",
+        "false-cause-claim-blocked",
+        "wrong-checkout-run-blocked",
+        "nochild-process-fake1-blocked",
+        "nochild-wrong-fatal-blocked",
+        "nochild-pretend-Linux-blocked",
+        "nochild-timeout-fake-blocked",
+        "signed-wait-signal-kept-negative-separately",
+        "timeout-runner124-versus-child-minus15-kept-negative-separately",
+        "interrupt-runner130-versus-child-minus9-kept-negative-separately",
+        "forced-leftover-cleanup-kept1-never-grace-proof",
+        "timeout-upgrade0-blocked",
+        "forced-upgrade0-blocked",
+        "numeric1-upgrade0-blocked",
+        "manifest-missing-stream-blocked",
+        "manifest-missing-baseline-stream-blocked",
+        "manifest-wrong-bytes-blocked",
+        "manifest-wrong-sha-blocked",
+        "manifest-duplicate-blocked",
+        "manifest-path-escape-blocked",
+        "reported-node-exit-mismatch-blocked",
+        "raw-missing-blocked",
+        "raw-tamper-blocked",
+        "reused-newer-raw-even-exact-sha-blocked",
+        "unlisted-extra-output-blocked",
+        "node-unknown-schema-blocked",
+        "node-fake-baseline0-report-blocked",
+        "node-baseline-raw-sha-blocked",
+        "node-event-sha-blocked",
+        "node-duplicate-case-blocked",
+        "node-eligible-true-blocked",
+        "node-original-start-drift-blocked",
+        "node-only-never-authorizes-baseline-or-executor-raw",
+        "partial-negative-node-remains-failed-and-manifest-authority-only",
+        "real-normal-undefined-fatal-is-omitted-and-remains-aggregate0-only",
+        "node-fatal-number-blocked",
+        "node-fatal-string-blocked",
+        "node-fatal-array-blocked",
+        "baseline-fake-spawn-error-numeric0-blocked",
+        "baseline-timeout-numeric0-blocked",
+        "baseline-outputlimit-numeric0-blocked",
+        "start-missing-repo-blocked",
+        "start-missing-output-blocked",
+        "start-relative-output-blocked",
+        "baseline-null-signal-status-remains-null-in-original-node-metadata",
+        "baseline-signed-spawn-error-remains-original-negative",
+        "baseline-zero-timeout-failure-keeps-original0-status-and-aggregate1",
+        "baseline-zero-outputlimit-failure-keeps-original0-status-and-aggregate1",
+        "baseline-zero-spawn-error-failure-keeps-original0-status-and-aggregate1"
+      ],
+      "inputSyntheticInertOnly": true
+    },
+    {
+      "name": "unchanged-association-controls",
+      "pass": 28,
+      "fail": 0,
+      "skip": 0,
+      "cases": [
+        "terminal-spawnSync-status1-sha-bound-two-outputs-preserved-despite-expected0",
+        "terminal-wrong-source-blocks",
+        "terminal-terminal-false-blocks",
+        "terminal-unknown-status-blocks",
+        "terminal-fractional-status-blocks",
+        "terminal-output-sha-tamper-blocks",
+        "terminal-output-byte-tamper-blocks",
+        "terminal-duplicate-output-blocks",
+        "terminal-output-cross-root-blocks",
+        "terminal-invalid-timeout-blocks",
+        "same-stem-without-explicit-binding-remains-blocked",
+        "pinned-explicit-closed-command-and-two-raw-hashes-retain-actual1",
+        "explicit-wrong-receipt-pin-blocks",
+        "explicit-wrong-output-sha-blocks",
+        "explicit-wrong-output-bytes-blocks",
+        "explicit-duplicate-output-blocks",
+        "explicit-output-path-escape-blocks",
+        "explicit-output-newer-than-pinned-receipt-blocks",
+        "explicit-binding-cannot-turn-aggregate0-with-no-program-into-command",
+        "partial-copy-without-explicit-schema-binding-stays-blocked",
+        "explicit-partial-stderr-only-copy-inherits-original1-full-empty-stdout-retained",
+        "partial-wrong-receipt-pin-blocks",
+        "partial-wrong-log-hash-blocks",
+        "partial-wrong-log-bytes-blocks",
+        "partial-wrong-original-stream-blocks",
+        "partial-duplicate-copy-log-blocks",
+        "partial-copy-requires-explicit-partial-declaration",
+        "partial-copy-cannot-inherit-original-report-without-own-recognized-terminal-authority"
+      ],
+      "inputSyntheticInertOnly": false
+    },
+    {
+      "name": "unchanged-closure-controls",
+      "pass": 10,
+      "fail": 0,
+      "skip": 0,
+      "cases": [
+        "executor-authority-nonstandard-name-seven-sha-bound-files-and-failure-retained",
+        "executor-manifest-log-tamper-blocks",
+        "executor-process-group-not-gone-cannot-close-logs",
+        "exact-no-child-preflight-rejection-preserved-without-linux-or-child-exit-proof",
+        "historical-closed-false-report-retained-without-command-proof",
+        "historical-exception-does-not-admit-active-command-logs",
+        "cross-root-copy-provenance-original-receipt-and-exact-negative-terminal-ci-bound",
+        "copied-log-without-explicit-binding-blocked",
+        "mismatched-terminal-ci-sha-blocked",
+        "copied-log-byte-mismatch-blocked"
+      ],
+      "inputSyntheticInertOnly": false
+    },
+    {
+      "name": "unchanged-g7-producer-controls",
+      "pass": 37,
+      "fail": 0,
+      "skip": 0,
+      "cases": [
+        "without-explicit-output-binding-real-number1-raw-stays-blocked",
+        "pinned-two-original-streams-close-at-their-original-numeric1",
+        "numeric0-kept-only-when-original-command-is0",
+        "g7-closed-false-blocks",
+        "g7-missing-number-blocks",
+        "g7-fractional-number-blocks",
+        "g7-negative-process-signal-number-blocks",
+        "g7-signal-with-fake-number-blocks",
+        "g7-spawn-error-with-fake-number-blocks",
+        "g7-wrong-producer-source-blocks",
+        "g7-missing-begin-blocks",
+        "g7-invalid-end-blocks",
+        "g7-backward-clock-blocks",
+        "g7-timeout-zero-blocks",
+        "g7-program-relative-blocks",
+        "g7-cwd-relative-blocks",
+        "g7-args-nonstring-blocks",
+        "g7-production-not-zero-blocks",
+        "g7-missing-output-blocks",
+        "g7-duplicate-output-blocks",
+        "g7-output-path-escape-blocks",
+        "g7-unknown-path-field-blocks",
+        "g7-wrong-original-output-bytes-blocks",
+        "g7-wrong-original-output-sha-blocks",
+        "binding-wrong-receipt-pin-blocks",
+        "binding-independent-stream-not-in-original-descriptors-blocks",
+        "binding-binding-original-descriptor-drift-blocks",
+        "binding-binding-duplicate-output-blocks",
+        "nested-child-diagnostics-never-become-independent-command-or-stream",
+        "newer-reused-log-even-exact-sha-blocks",
+        "raw-byte-tamper-remains-blocked",
+        "unchanged-root-runner-numeric0-preserves-original",
+        "unchanged-root-runner-numeric1-preserves-original",
+        "unchanged-root-runner-signal-null-process-preserves-original",
+        "unchanged-root-runner-spawn-null-process-preserves-original",
+        "unchanged-root-runner-null-without-signal-or-error-remains-unknown",
+        "unchanged-root-runner-nested-descriptor-sha-tamper-blocks"
+      ],
+      "inputSyntheticInertOnly": false
+    },
+    {
+      "name": "unchanged-generic-controls",
+      "pass": 12,
+      "fail": 0,
+      "skip": 0,
+      "cases": [
+        "all-three-real-closure-dialects-and-failures-preserved",
+        "large-binary-gzip-stored-original-source-exact",
+        "wx-repeat-never-overwrites",
+        "unclosed-log-blocked-before-output",
+        "missing-exit-is-not-zero",
+        "reused-late-log-blocked",
+        "receipt-path-escape-blocked",
+        "gzip-path-collision-blocked-before-output",
+        "repository-write-blocked",
+        "duplicate-root-blocked",
+        "stored-tamper-detected",
+        "exact-stored-directory-set-checked"
+      ],
+      "inputSyntheticInertOnly": false
+    }
+  ],
+  "controlCountMeaning": {
+    "latestDirect64": 64,
+    "oldUnchangedSuites87": 87,
+    "totalLatestPlusOld": 151,
+    "earlierDirect49And61HistoricalNotAdditionalUniqueControls": true,
+    "noFatalFirstFailure1Retained": true
+  },
+  "readOnlyAuditMetadata": {
+    "file": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\frozen-candidate-audit-first.json",
+      "bytes": 691809,
+      "sha256": "26f9b9eb29547069e6f51e807b8b0440ff5c9e233a7223bde4a1ecd3f76f966b"
+    },
+    "roots": 14,
+    "entries": 674,
+    "receipts": 122,
+    "exclusions": 0,
+    "blockers": 0,
+    "originalActualExit": 0,
+    "externalEntriesRehashedByThisPeer": false
+  },
+  "pendingOutsideThisSourcePeer": [
+    "Owner full new-tool package finalreport/seal still pending at time of this source peer.",
+    "Expanded17-root configuration includes separate historical copy authority questions; this source peer does not approve new copy/admission exceptions.",
+    "No future runtime receipt, application execution or CI pass is synthesized."
+  ],
+  "limits": {
+    "actualLinuxOrWorkerdExecutedByPeer": false,
+    "applicationOrNativeOrG7TestsRunByPeer": false,
+    "fullNativeCancelVerified": false,
+    "gracefulWorkerdExitProven": false,
+    "causeProven": false,
+    "fullG7Verified": false,
+    "fullG8Verified": false
+  }
+}

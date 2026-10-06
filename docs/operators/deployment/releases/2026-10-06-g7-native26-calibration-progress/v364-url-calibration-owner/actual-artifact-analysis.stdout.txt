@@ -1,0 +1,1273 @@
+{
+  "schema": "v364-direct-artifact-readonly-analysis-v1",
+  "closed": true,
+  "actualReadAnalysisOutcome": 0,
+  "actualRuntimeOutcome": 1,
+  "runId": 37412108171,
+  "sourceSHA": "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc",
+  "files": [
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\direct-artifact-current\\cinatoken\\cinatoken\\.github\\workflows\\v364-direct-socket.yml",
+      "bytes": 1575,
+      "sha256": "f4e2b9da3c9be4374e4945c7daab7dc3c166fb4c9e1d2d61ff804ca3dc3b04e9"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\direct-artifact-current\\cinatoken\\cinatoken\\scripts\\diagnostics\\v364-direct-socket\\execute-owned-linux.py",
+      "bytes": 15959,
+      "sha256": "c635a435873185363faf23e1cbaa6887b858a9f23e32882a6ce54ff5405e15e0"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\direct-artifact-current\\cinatoken\\cinatoken\\scripts\\diagnostics\\v364-direct-socket\\native-reader-calibration.mjs",
+      "bytes": 2531,
+      "sha256": "36f30b9dc7e8cfad8b68f6c9590f8cea50444173a05ccd3e775c9c32214408be"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\direct-artifact-current\\cinatoken\\cinatoken\\scripts\\diagnostics\\v364-direct-socket\\README.md",
+      "bytes": 5092,
+      "sha256": "d2da25041decf0e0d1d1dd99fcc4182f8ef8528e8671f72f48e53a158fd600ed"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\direct-artifact-current\\cinatoken\\cinatoken\\scripts\\diagnostics\\v364-direct-socket\\run-direct-socket.mjs",
+      "bytes": 34907,
+      "sha256": "621cb7384b32a25af7c37d411cd12c2d51bf47c241d9d1f24c1c3ee3989723f3"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\direct-artifact-current\\cinatoken\\cinatoken\\scripts\\diagnostics\\v364-direct-socket\\sealed-package.json",
+      "bytes": 1045,
+      "sha256": "29976feae54abf63c53e5056085150b0165d140152a91d766b9dcfac9d8615c0"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\direct-artifact-current\\cinatoken\\cinatoken\\scripts\\diagnostics\\v364-direct-socket\\source-inputs.json",
+      "bytes": 5028,
+      "sha256": "a4046af64da2e2f61b37ee9ea92658bc2d54236052c859477c57d9049f62e3e9"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\direct-artifact-current\\_temp\\v364-direct-socket-once-37412108171-1\\closed-result.json",
+      "bytes": 19053,
+      "sha256": "82889b05a1418a746fd1a2074d274149d7f681895f33179dbbc33065195e836e"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\direct-artifact-current\\_temp\\v364-direct-socket-once-37412108171-1\\events.json",
+      "bytes": 399456,
+      "sha256": "c718bfcb7abb130f7f9aca6bfc583c6eaa58759a3ccbe5eb9a7e418a63746969"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\direct-artifact-current\\_temp\\v364-direct-socket-once-37412108171-1\\events.ndjson",
+      "bytes": 307593,
+      "sha256": "56a2fcc1dfb5ddc9344ded6d4ca2eb4baeb321ef2611c078584b2532515e89af"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\direct-artifact-current\\_temp\\v364-direct-socket-once-37412108171-1\\executor-start.json",
+      "bytes": 693,
+      "sha256": "f56bae29593d00b5a7e4e06db73df16c5514f17223f37d34741d78a5d84a4241"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\direct-artifact-current\\_temp\\v364-direct-socket-once-37412108171-1\\executor.closed.json",
+      "bytes": 5904,
+      "sha256": "31953785aeec17228cf9d48ad09385eacf330edbe93d1111020a4f3aca52b897"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\direct-artifact-current\\_temp\\v364-direct-socket-once-37412108171-1\\executor.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\direct-artifact-current\\_temp\\v364-direct-socket-once-37412108171-1\\executor.stdout.txt",
+      "bytes": 170,
+      "sha256": "ae2f143ccb02769d5afedbff0c1538296a0b4c31f4577ffd45343afece8e479f"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\direct-artifact-current\\_temp\\v364-direct-socket-once-37412108171-1\\original-strict.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\direct-artifact-current\\_temp\\v364-direct-socket-once-37412108171-1\\original-strict.stdout.txt",
+      "bytes": 2871,
+      "sha256": "026599b80b9da29c2e7a39e2cb1eb8ade3ff8967530de19ebc094cc179d7f1b7"
+    }
+  ],
+  "artifactFileCount": 16,
+  "additionalClosedCiLog": {
+    "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\direct-terminal-log.stdout.log",
+    "bytes": 33183,
+    "sha256": "ee7b3d85131b89292c5d40e9b682008efd14146b947549e2092821745570ea3d"
+  },
+  "runtimeFileProof": [
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\direct-artifact-current\\_temp\\v364-direct-socket-once-37412108171-1\\closed-result.json",
+      "bytes": 19053,
+      "sha256": "82889b05a1418a746fd1a2074d274149d7f681895f33179dbbc33065195e836e"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\direct-artifact-current\\_temp\\v364-direct-socket-once-37412108171-1\\events.json",
+      "bytes": 399456,
+      "sha256": "c718bfcb7abb130f7f9aca6bfc583c6eaa58759a3ccbe5eb9a7e418a63746969"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\direct-artifact-current\\_temp\\v364-direct-socket-once-37412108171-1\\events.ndjson",
+      "bytes": 307593,
+      "sha256": "56a2fcc1dfb5ddc9344ded6d4ca2eb4baeb321ef2611c078584b2532515e89af"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\direct-artifact-current\\_temp\\v364-direct-socket-once-37412108171-1\\executor-start.json",
+      "bytes": 693,
+      "sha256": "f56bae29593d00b5a7e4e06db73df16c5514f17223f37d34741d78a5d84a4241"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\direct-artifact-current\\_temp\\v364-direct-socket-once-37412108171-1\\executor.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\direct-artifact-current\\_temp\\v364-direct-socket-once-37412108171-1\\executor.stdout.txt",
+      "bytes": 170,
+      "sha256": "ae2f143ccb02769d5afedbff0c1538296a0b4c31f4577ffd45343afece8e479f"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\direct-artifact-current\\_temp\\v364-direct-socket-once-37412108171-1\\original-strict.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\direct-artifact-current\\_temp\\v364-direct-socket-once-37412108171-1\\original-strict.stdout.txt",
+      "bytes": 2871,
+      "sha256": "026599b80b9da29c2e7a39e2cb1eb8ade3ff8967530de19ebc094cc179d7f1b7"
+    }
+  ],
+  "sourceProof": [
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\direct-artifact-current\\cinatoken\\cinatoken\\scripts\\diagnostics\\v364-direct-socket\\run-direct-socket.mjs",
+      "bytes": 34907,
+      "sha256": "621cb7384b32a25af7c37d411cd12c2d51bf47c241d9d1f24c1c3ee3989723f3",
+      "relative": "scripts/diagnostics/v364-direct-socket/run-direct-socket.mjs",
+      "current": {
+        "file": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-direct-socket\\run-direct-socket.mjs",
+        "bytes": 34907,
+        "sha256": "621cb7384b32a25af7c37d411cd12c2d51bf47c241d9d1f24c1c3ee3989723f3"
+      }
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\direct-artifact-current\\cinatoken\\cinatoken\\scripts\\diagnostics\\v364-direct-socket\\native-reader-calibration.mjs",
+      "bytes": 2531,
+      "sha256": "36f30b9dc7e8cfad8b68f6c9590f8cea50444173a05ccd3e775c9c32214408be",
+      "relative": "scripts/diagnostics/v364-direct-socket/native-reader-calibration.mjs",
+      "current": {
+        "file": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-direct-socket\\native-reader-calibration.mjs",
+        "bytes": 2531,
+        "sha256": "36f30b9dc7e8cfad8b68f6c9590f8cea50444173a05ccd3e775c9c32214408be"
+      }
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\direct-artifact-current\\cinatoken\\cinatoken\\scripts\\diagnostics\\v364-direct-socket\\execute-owned-linux.py",
+      "bytes": 15959,
+      "sha256": "c635a435873185363faf23e1cbaa6887b858a9f23e32882a6ce54ff5405e15e0",
+      "relative": "scripts/diagnostics/v364-direct-socket/execute-owned-linux.py",
+      "current": {
+        "file": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-direct-socket\\execute-owned-linux.py",
+        "bytes": 15959,
+        "sha256": "c635a435873185363faf23e1cbaa6887b858a9f23e32882a6ce54ff5405e15e0"
+      }
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\direct-artifact-current\\cinatoken\\cinatoken\\scripts\\diagnostics\\v364-direct-socket\\source-inputs.json",
+      "bytes": 5028,
+      "sha256": "a4046af64da2e2f61b37ee9ea92658bc2d54236052c859477c57d9049f62e3e9",
+      "relative": "scripts/diagnostics/v364-direct-socket/source-inputs.json",
+      "current": {
+        "file": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-direct-socket\\source-inputs.json",
+        "bytes": 5028,
+        "sha256": "a4046af64da2e2f61b37ee9ea92658bc2d54236052c859477c57d9049f62e3e9"
+      }
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\direct-artifact-current\\cinatoken\\cinatoken\\scripts\\diagnostics\\v364-direct-socket\\README.md",
+      "bytes": 5092,
+      "sha256": "d2da25041decf0e0d1d1dd99fcc4182f8ef8528e8671f72f48e53a158fd600ed",
+      "relative": "scripts/diagnostics/v364-direct-socket/README.md",
+      "current": {
+        "file": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-direct-socket\\README.md",
+        "bytes": 5092,
+        "sha256": "d2da25041decf0e0d1d1dd99fcc4182f8ef8528e8671f72f48e53a158fd600ed"
+      }
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\direct-artifact-current\\cinatoken\\cinatoken\\.github\\workflows\\v364-direct-socket.yml",
+      "bytes": 1575,
+      "sha256": "f4e2b9da3c9be4374e4945c7daab7dc3c166fb4c9e1d2d61ff804ca3dc3b04e9",
+      "relative": ".github/workflows/v364-direct-socket.yml",
+      "current": {
+        "file": "C:\\cinagroup\\cinatoken\\.github\\workflows\\v364-direct-socket.yml",
+        "bytes": 1575,
+        "sha256": "f4e2b9da3c9be4374e4945c7daab7dc3c166fb4c9e1d2d61ff804ca3dc3b04e9"
+      }
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\direct-artifact-current\\cinatoken\\cinatoken\\scripts\\diagnostics\\v364-direct-socket\\sealed-package.json",
+      "bytes": 1045,
+      "sha256": "29976feae54abf63c53e5056085150b0165d140152a91d766b9dcfac9d8615c0",
+      "relative": "scripts/diagnostics/v364-direct-socket/sealed-package.json"
+    }
+  ],
+  "eventFile": {
+    "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\direct-artifact-current\\_temp\\v364-direct-socket-once-37412108171-1\\events.json",
+    "bytes": 399456,
+    "sha256": "c718bfcb7abb130f7f9aca6bfc583c6eaa58759a3ccbe5eb9a7e418a63746969"
+  },
+  "eventCount": 1627,
+  "closure": {
+    "authority": "this executor",
+    "subreaperEnabled": true,
+    "directChildReaped": true,
+    "groupGone": true,
+    "leftoverGroupKilled": false,
+    "signalAttempts": [],
+    "reapedDescendants": [
+      {
+        "pid": 2433,
+        "startTimeTicks": "32242",
+        "waitStatus": 0,
+        "waitExitCode": 0,
+        "source": "individually identified adopted zombie"
+      },
+      {
+        "pid": 2471,
+        "startTimeTicks": "32266",
+        "waitStatus": 0,
+        "waitExitCode": 0,
+        "source": "individually identified adopted zombie"
+      },
+      {
+        "pid": 2472,
+        "startTimeTicks": "32266",
+        "waitStatus": 0,
+        "waitExitCode": 0,
+        "source": "individually identified adopted zombie"
+      },
+      {
+        "pid": 2484,
+        "startTimeTicks": "32319",
+        "waitStatus": 0,
+        "waitExitCode": 0,
+        "source": "individually identified adopted zombie"
+      }
+    ],
+    "processCensus": [
+      {
+        "label": "before-initial-adopted-reap",
+        "elapsedMs": 25775.552772000025,
+        "pgrp": 2403,
+        "session": 2403,
+        "members": [
+          {
+            "pid": 2433,
+            "comm": "esbuild",
+            "state": "Z",
+            "ppid": 2401,
+            "pgrp": 2403,
+            "session": 2403,
+            "startTimeTicks": "32242"
+          },
+          {
+            "pid": 2471,
+            "comm": "esbuild",
+            "state": "Z",
+            "ppid": 2401,
+            "pgrp": 2403,
+            "session": 2403,
+            "startTimeTicks": "32266"
+          },
+          {
+            "pid": 2472,
+            "comm": "esbuild",
+            "state": "Z",
+            "ppid": 2401,
+            "pgrp": 2403,
+            "session": 2403,
+            "startTimeTicks": "32266"
+          },
+          {
+            "pid": 2484,
+            "comm": "esbuild",
+            "state": "Z",
+            "ppid": 2401,
+            "pgrp": 2403,
+            "session": 2403,
+            "startTimeTicks": "32319"
+          }
+        ],
+        "live": 0,
+        "zombies": 4,
+        "unknown": [],
+        "complete": true,
+        "groupExists": true
+      },
+      {
+        "label": "after-initial-adopted-reap",
+        "elapsedMs": 25779.437571000017,
+        "pgrp": 2403,
+        "session": 2403,
+        "members": [],
+        "live": 0,
+        "zombies": 0,
+        "unknown": [],
+        "complete": true,
+        "groupExists": false
+      },
+      {
+        "label": "after-term-before-reap",
+        "elapsedMs": 25783.195819000015,
+        "pgrp": 2403,
+        "session": 2403,
+        "members": [],
+        "live": 0,
+        "zombies": 0,
+        "unknown": [],
+        "complete": true,
+        "groupExists": false
+      },
+      {
+        "label": "after-term-after-reap",
+        "elapsedMs": 25786.907426000027,
+        "pgrp": 2403,
+        "session": 2403,
+        "members": [],
+        "live": 0,
+        "zombies": 0,
+        "unknown": [],
+        "complete": true,
+        "groupExists": false
+      },
+      {
+        "label": "final-adopt-drain",
+        "elapsedMs": 25790.625363000003,
+        "pgrp": 2403,
+        "session": 2403,
+        "members": [],
+        "live": 0,
+        "zombies": 0,
+        "unknown": [],
+        "complete": true,
+        "groupExists": false
+      },
+      {
+        "label": "final-post-reap",
+        "elapsedMs": 25794.339154,
+        "pgrp": 2403,
+        "session": 2403,
+        "members": [],
+        "live": 0,
+        "zombies": 0,
+        "unknown": [],
+        "complete": true,
+        "groupExists": false
+      }
+    ],
+    "apiDisposalReported": true,
+    "outerUnforcedGroupClose": true,
+    "gracefulWorkerdExitProven": false,
+    "miniflareDisposeMaySendSIGKILL": true,
+    "errors": []
+  },
+  "nodeBaseline": {
+    "closed": true,
+    "startedAt": "2026-10-06T04:07:12.168Z",
+    "endedAt": "2026-10-06T04:07:15.240Z",
+    "program": "/opt/hostedtoolcache/node/22.23.3/x64/bin/node",
+    "args": [
+      "--import",
+      "/home/runner/work/cinatoken/cinatoken/node_modules/tsx/dist/loader.mjs",
+      "--test",
+      "scripts/staging/chat-holder-binding-v364.node.test.mjs",
+      "scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs"
+    ],
+    "cwd": "/home/runner/work/cinatoken/cinatoken/packages/proxy",
+    "actualExit": 1,
+    "code": 1,
+    "signal": null,
+    "timedOut": false,
+    "outputLimitExceeded": false,
+    "stdout": {
+      "file": "original-strict.stdout.txt",
+      "bytes": 2871,
+      "sha256": "026599b80b9da29c2e7a39e2cb1eb8ade3ff8967530de19ebc094cc179d7f1b7"
+    },
+    "stderr": {
+      "file": "original-strict.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "results": [
+    {
+      "result": {
+        "caseId": "native-worker-reader-cancel",
+        "calibrationOnly": true,
+        "baselineEligible": false,
+        "nativeWorkerExecuted": false,
+        "actualExit": 1,
+        "closed": true,
+        "error": {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Expected values to be strictly equal:\n\n500 !== 200\n"
+        }
+      },
+      "workerKinds": {
+        "signal-initial": 1
+      },
+      "signalAborts": [],
+      "nonDiagnosticWorkerLogs": [
+        {
+          "caseId": "native-worker-reader-cancel",
+          "kind": "workerd-log",
+          "hostMs": 3316.122053,
+          "wallMs": 1791259635484,
+          "phase": "native-reader-calibration",
+          "timestamp": 1791259635484,
+          "level": "error",
+          "message": "Uncaught exception: workerd/jsg/_virtual_includes/iterator/workerd/jsg/value.h:1477: failed: remote.jsg.Error: AssertionError: Values are not strictly equal:\n\n\n[Diff] Actual / Expected\n\n\n-   404\n+   200\n\nstack: /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@33a3bd0 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@33a486c /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@5998b48 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@31108fb /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@3111360 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@3111c8c /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@24368e8 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@57ffccf /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@58010da /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@5801d0f /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@57c27f0"
+        }
+      ],
+      "directSocketProof": [
+        {
+          "caseId": "native-worker-reader-cancel",
+          "kind": "direct-socket-ready",
+          "hostMs": 3306.748857,
+          "wallMs": 1791259635475,
+          "entryWorkerName": "v364-direct-native-reader",
+          "directURL": "http://127.0.0.1:33947",
+          "coreEntryURL": "http://127.0.0.1:37077",
+          "coreEntryBypassed": true
+        }
+      ],
+      "relevantCalibrationEvents": [
+        {
+          "caseId": "native-worker-reader-cancel",
+          "kind": "miniflare-log",
+          "hostMs": 3205.61204,
+          "wallMs": 1791259635374,
+          "phase": "fixture-ready",
+          "message": "[mf:info] Ready on http://127.0.0.1:37077"
+        },
+        {
+          "caseId": "native-worker-reader-cancel",
+          "kind": "workerd-log",
+          "hostMs": 3314.730006,
+          "wallMs": 1791259635483,
+          "phase": "native-reader-calibration",
+          "timestamp": 1791259635482,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"signal-initial\",\"wallMs\":1791259635482,\"aborted\":false}"
+        },
+        {
+          "caseId": "native-worker-reader-cancel",
+          "kind": "workerd-log",
+          "hostMs": 3316.122053,
+          "wallMs": 1791259635484,
+          "phase": "native-reader-calibration",
+          "timestamp": 1791259635484,
+          "level": "error",
+          "message": "Uncaught exception: workerd/jsg/_virtual_includes/iterator/workerd/jsg/value.h:1477: failed: remote.jsg.Error: AssertionError: Values are not strictly equal:\n\n\n[Diff] Actual / Expected\n\n\n-   404\n+   200\n\nstack: /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@33a3bd0 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@33a486c /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@5998b48 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@31108fb /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@3111360 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@3111c8c /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@24368e8 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@57ffccf /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@58010da /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@5801d0f /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@57c27f0"
+        },
+        {
+          "caseId": "native-worker-reader-cancel",
+          "kind": "case-closed",
+          "hostMs": 3328.430265,
+          "wallMs": 1791259635497,
+          "actualExit": 1,
+          "closed": true,
+          "calibrationOnly": true,
+          "baselineEligible": false
+        }
+      ]
+    },
+    {
+      "result": {
+        "caseId": "direct-socket-bare-destroy",
+        "kind": "bare",
+        "mode": "destroy",
+        "baselineEligible": false,
+        "diagnosticVariant": true,
+        "directSocket": true,
+        "coreEntryBypassed": true,
+        "originalWindow": {
+          "pollCount": 100,
+          "sleepMs": 10,
+          "elapsedMs": 1208.5413119999998,
+          "actual": null,
+          "expected": "observed",
+          "actualExit": 1
+        },
+        "tail": {
+          "elapsedMs": 4031.337975999999,
+          "reads": 77,
+          "actual": null,
+          "usedForPass": false
+        },
+        "finalPreDisposeSnapshot": {
+          "cancel": null,
+          "release": null,
+          "accepted": "one",
+          "usedForPass": false
+        },
+        "actualExit": 1,
+        "closed": true,
+        "strictFailure": {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Expected values to be strictly equal:\n\nnull !== 'observed'\n"
+        }
+      },
+      "workerKinds": {
+        "signal-initial": 1,
+        "kv-invoke": 5,
+        "kv-fulfilled": 5
+      },
+      "signalAborts": [],
+      "nonDiagnosticWorkerLogs": [
+        {
+          "caseId": "direct-socket-bare-destroy",
+          "kind": "workerd-log",
+          "hostMs": 6719.126105,
+          "wallMs": 1791259638887,
+          "phase": "diagnostic-tail",
+          "timestamp": 1791259638887,
+          "level": "error",
+          "message": "Uncaught exception: workerd/jsg/_virtual_includes/iterator/workerd/jsg/value.h:1477: failed: remote.jsg.Error: synthetic stream release timed out\nstack: /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@3713977 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@3713f75 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@33af030 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@33a3bd0 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@33a486c /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@5998b48 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@31108fb /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@3111360 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@3111c8c /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@24368e8 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@57ffccf /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@58010da /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@5801d0f /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@57c27f0"
+        }
+      ],
+      "directSocketProof": [
+        {
+          "caseId": "direct-socket-bare-destroy",
+          "kind": "direct-socket-ready",
+          "hostMs": 3503.5228779999998,
+          "wallMs": 1791259635672,
+          "entryWorkerName": "v364-direct-bare",
+          "directURL": "http://127.0.0.1:33199",
+          "coreEntryURL": "http://127.0.0.1:46515",
+          "coreEntryBypassed": true
+        }
+      ],
+      "relevantCalibrationEvents": [
+        {
+          "caseId": "direct-socket-bare-destroy",
+          "kind": "miniflare-log",
+          "hostMs": 3405.795064,
+          "wallMs": 1791259635574,
+          "phase": "fixture-ready",
+          "message": "[mf:info] Ready on http://127.0.0.1:46515"
+        },
+        {
+          "caseId": "direct-socket-bare-destroy",
+          "kind": "workerd-log",
+          "hostMs": 3510.6116859999997,
+          "wallMs": 1791259635679,
+          "phase": "streaming",
+          "timestamp": 1791259635679,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"signal-initial\",\"wallMs\":1791259635678,\"aborted\":false}"
+        },
+        {
+          "caseId": "direct-socket-bare-destroy",
+          "kind": "workerd-log",
+          "hostMs": 3511.072143,
+          "wallMs": 1791259635679,
+          "phase": "streaming",
+          "timestamp": 1791259635679,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-invoke\",\"wallMs\":1791259635679,\"operation\":1,\"method\":\"put\",\"category\":\"accepted\",\"releaseReads\":0}"
+        },
+        {
+          "caseId": "direct-socket-bare-destroy",
+          "kind": "workerd-log",
+          "hostMs": 3520.6978609999996,
+          "wallMs": 1791259635689,
+          "phase": "streaming",
+          "timestamp": 1791259635689,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-fulfilled\",\"wallMs\":1791259635689,\"operation\":1,\"method\":\"put\",\"category\":\"accepted\",\"releaseReads\":0}"
+        },
+        {
+          "caseId": "direct-socket-bare-destroy",
+          "kind": "workerd-log",
+          "hostMs": 3520.894379,
+          "wallMs": 1791259635689,
+          "phase": "streaming",
+          "timestamp": 1791259635689,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-invoke\",\"wallMs\":1791259635689,\"operation\":2,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":1}"
+        },
+        {
+          "caseId": "direct-socket-bare-destroy",
+          "kind": "workerd-log",
+          "hostMs": 3544.1071709999997,
+          "wallMs": 1791259635712,
+          "phase": "streaming",
+          "timestamp": 1791259635690,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-fulfilled\",\"wallMs\":1791259635690,\"operation\":2,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":1}"
+        },
+        {
+          "caseId": "direct-socket-bare-destroy",
+          "kind": "workerd-log",
+          "hostMs": 4601.268403,
+          "wallMs": 1791259636769,
+          "phase": "original-poll",
+          "timestamp": 1791259636769,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-invoke\",\"wallMs\":1791259636769,\"operation\":101,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":100}"
+        },
+        {
+          "caseId": "direct-socket-bare-destroy",
+          "kind": "workerd-log",
+          "hostMs": 4601.526033,
+          "wallMs": 1791259636770,
+          "phase": "original-poll",
+          "timestamp": 1791259636770,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-fulfilled\",\"wallMs\":1791259636770,\"operation\":101,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":100}"
+        },
+        {
+          "caseId": "direct-socket-bare-destroy",
+          "kind": "workerd-log",
+          "hostMs": 5656.680437,
+          "wallMs": 1791259637825,
+          "phase": "diagnostic-tail",
+          "timestamp": 1791259637825,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-invoke\",\"wallMs\":1791259637825,\"operation\":201,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":200}"
+        },
+        {
+          "caseId": "direct-socket-bare-destroy",
+          "kind": "workerd-log",
+          "hostMs": 5658.054296,
+          "wallMs": 1791259637826,
+          "phase": "diagnostic-tail",
+          "timestamp": 1791259637826,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-fulfilled\",\"wallMs\":1791259637826,\"operation\":201,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":200}"
+        },
+        {
+          "caseId": "direct-socket-bare-destroy",
+          "kind": "workerd-log",
+          "hostMs": 6708.132076,
+          "wallMs": 1791259638876,
+          "phase": "diagnostic-tail",
+          "timestamp": 1791259638876,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-invoke\",\"wallMs\":1791259638876,\"operation\":301,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":300}"
+        },
+        {
+          "caseId": "direct-socket-bare-destroy",
+          "kind": "workerd-log",
+          "hostMs": 6708.416126,
+          "wallMs": 1791259638877,
+          "phase": "diagnostic-tail",
+          "timestamp": 1791259638877,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-fulfilled\",\"wallMs\":1791259638877,\"operation\":301,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":300}"
+        },
+        {
+          "caseId": "direct-socket-bare-destroy",
+          "kind": "workerd-log",
+          "hostMs": 6719.126105,
+          "wallMs": 1791259638887,
+          "phase": "diagnostic-tail",
+          "timestamp": 1791259638887,
+          "level": "error",
+          "message": "Uncaught exception: workerd/jsg/_virtual_includes/iterator/workerd/jsg/value.h:1477: failed: remote.jsg.Error: synthetic stream release timed out\nstack: /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@3713977 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@3713f75 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@33af030 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@33a3bd0 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@33a486c /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@5998b48 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@31108fb /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@3111360 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@3111c8c /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@24368e8 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@57ffccf /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@58010da /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@5801d0f /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@57c27f0"
+        },
+        {
+          "caseId": "direct-socket-bare-destroy",
+          "kind": "case-closed",
+          "hostMs": 8811.961077,
+          "wallMs": 1791259640980,
+          "actualExit": 1,
+          "closed": true,
+          "baselineEligible": false
+        }
+      ]
+    },
+    {
+      "result": {
+        "caseId": "direct-socket-bare-rst",
+        "kind": "bare",
+        "mode": "rst",
+        "baselineEligible": false,
+        "diagnosticVariant": true,
+        "directSocket": true,
+        "coreEntryBypassed": true,
+        "originalWindow": {
+          "pollCount": 100,
+          "sleepMs": 10,
+          "elapsedMs": 1176.3349290000006,
+          "actual": null,
+          "expected": "observed",
+          "actualExit": 1
+        },
+        "tail": {
+          "elapsedMs": 4033.3159859999996,
+          "reads": 77,
+          "actual": null,
+          "usedForPass": false
+        },
+        "finalPreDisposeSnapshot": {
+          "cancel": null,
+          "release": null,
+          "accepted": "one",
+          "usedForPass": false
+        },
+        "actualExit": 1,
+        "closed": true,
+        "strictFailure": {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Expected values to be strictly equal:\n\nnull !== 'observed'\n"
+        }
+      },
+      "workerKinds": {
+        "signal-initial": 1,
+        "kv-invoke": 2,
+        "kv-fulfilled": 2,
+        "signal-abort": 1
+      },
+      "signalAborts": [
+        {
+          "caseId": "direct-socket-bare-rst",
+          "kind": "workerd-log",
+          "hostMs": 9019.166989,
+          "wallMs": 1791259641187,
+          "phase": "original-poll",
+          "timestamp": 1791259641186,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"signal-abort\",\"wallMs\":1791259641186,\"aborted\":true}",
+          "diagnostic": {
+            "boundary": "holder",
+            "event": "signal-abort",
+            "wallMs": 1791259641186,
+            "aborted": true
+          }
+        }
+      ],
+      "nonDiagnosticWorkerLogs": [],
+      "directSocketProof": [
+        {
+          "caseId": "direct-socket-bare-rst",
+          "kind": "direct-socket-ready",
+          "hostMs": 8995.330052,
+          "wallMs": 1791259641164,
+          "entryWorkerName": "v364-direct-bare",
+          "directURL": "http://127.0.0.1:35921",
+          "coreEntryURL": "http://127.0.0.1:33455",
+          "coreEntryBypassed": true
+        }
+      ],
+      "relevantCalibrationEvents": [
+        {
+          "caseId": "direct-socket-bare-rst",
+          "kind": "miniflare-log",
+          "hostMs": 8900.674283,
+          "wallMs": 1791259641069,
+          "phase": "fixture-ready",
+          "message": "[mf:info] Ready on http://127.0.0.1:33455"
+        },
+        {
+          "caseId": "direct-socket-bare-rst",
+          "kind": "workerd-log",
+          "hostMs": 8999.281984,
+          "wallMs": 1791259641167,
+          "phase": "streaming",
+          "timestamp": 1791259641167,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"signal-initial\",\"wallMs\":1791259641167,\"aborted\":false}"
+        },
+        {
+          "caseId": "direct-socket-bare-rst",
+          "kind": "workerd-log",
+          "hostMs": 8999.598833,
+          "wallMs": 1791259641168,
+          "phase": "streaming",
+          "timestamp": 1791259641168,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-invoke\",\"wallMs\":1791259641168,\"operation\":1,\"method\":\"put\",\"category\":\"accepted\",\"releaseReads\":0}"
+        },
+        {
+          "caseId": "direct-socket-bare-rst",
+          "kind": "workerd-log",
+          "hostMs": 9005.335996,
+          "wallMs": 1791259641174,
+          "phase": "streaming",
+          "timestamp": 1791259641173,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-fulfilled\",\"wallMs\":1791259641173,\"operation\":1,\"method\":\"put\",\"category\":\"accepted\",\"releaseReads\":0}"
+        },
+        {
+          "caseId": "direct-socket-bare-rst",
+          "kind": "workerd-log",
+          "hostMs": 9005.536179,
+          "wallMs": 1791259641174,
+          "phase": "streaming",
+          "timestamp": 1791259641174,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-invoke\",\"wallMs\":1791259641174,\"operation\":2,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":1}"
+        },
+        {
+          "caseId": "direct-socket-bare-rst",
+          "kind": "workerd-log",
+          "hostMs": 9014.807861,
+          "wallMs": 1791259641183,
+          "phase": "streaming",
+          "timestamp": 1791259641174,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-fulfilled\",\"wallMs\":1791259641174,\"operation\":2,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":1}"
+        },
+        {
+          "caseId": "direct-socket-bare-rst",
+          "kind": "workerd-log",
+          "hostMs": 9019.166989,
+          "wallMs": 1791259641187,
+          "phase": "original-poll",
+          "timestamp": 1791259641186,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"signal-abort\",\"wallMs\":1791259641186,\"aborted\":true}"
+        },
+        {
+          "caseId": "direct-socket-bare-rst",
+          "kind": "case-closed",
+          "hostMs": 14245.743562,
+          "wallMs": 1791259646414,
+          "actualExit": 1,
+          "closed": true,
+          "baselineEligible": false
+        }
+      ]
+    },
+    {
+      "result": {
+        "caseId": "direct-socket-binding-destroy",
+        "kind": "binding",
+        "mode": "destroy",
+        "baselineEligible": false,
+        "diagnosticVariant": true,
+        "directSocket": true,
+        "coreEntryBypassed": true,
+        "originalWindow": {
+          "pollCount": 100,
+          "sleepMs": 10,
+          "elapsedMs": 1176.3302449999992,
+          "actual": null,
+          "expected": "observed",
+          "actualExit": 1
+        },
+        "tail": {
+          "elapsedMs": 4022.8924719999977,
+          "reads": 77,
+          "actual": null,
+          "usedForPass": false
+        },
+        "finalPreDisposeSnapshot": {
+          "cancel": null,
+          "release": null,
+          "accepted": "one",
+          "usedForPass": false
+        },
+        "actualExit": 1,
+        "closed": true,
+        "strictFailure": {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Expected values to be strictly equal:\n\nnull !== 'observed'\n"
+        }
+      },
+      "workerKinds": {
+        "signal-initial": 3,
+        "binding-fetch": 1,
+        "kv-invoke": 5,
+        "kv-fulfilled": 5
+      },
+      "signalAborts": [],
+      "nonDiagnosticWorkerLogs": [
+        {
+          "caseId": "direct-socket-binding-destroy",
+          "kind": "workerd-log",
+          "hostMs": 17831.419974,
+          "wallMs": 1791259650000,
+          "phase": "diagnostic-tail",
+          "timestamp": 1791259649999,
+          "level": "error",
+          "message": "Uncaught exception: workerd/jsg/_virtual_includes/iterator/workerd/jsg/value.h:1477: failed: remote.jsg.Error: synthetic stream release timed out\nstack: /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@3713977 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@3713f75 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@33af030 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@33a3bd0 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@33a486c /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@5998b48 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@31108fb /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@3111360 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@3111c8c /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@23e03e0 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@57e86da /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@5998b48 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@57e77a0 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@311fb20 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@33a4040 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@33a43f6 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@5998b48 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@3110bb2 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@3111083 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@3111c8c /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@24368e8 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@57ffccf /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@58010da /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@5801d0f /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@57c27f0"
+        }
+      ],
+      "directSocketProof": [
+        {
+          "caseId": "direct-socket-binding-destroy",
+          "kind": "direct-socket-ready",
+          "hostMs": 14522.585923,
+          "wallMs": 1791259646691,
+          "entryWorkerName": "cinatoken-staging-chat-holder-gateway-fixture-v364",
+          "directURL": "http://127.0.0.1:39895",
+          "coreEntryURL": "http://127.0.0.1:33507",
+          "coreEntryBypassed": true
+        }
+      ],
+      "relevantCalibrationEvents": [
+        {
+          "caseId": "direct-socket-binding-destroy",
+          "kind": "miniflare-log",
+          "hostMs": 14425.760493,
+          "wallMs": 1791259646594,
+          "phase": "fixture-ready",
+          "message": "[mf:info] Ready on http://127.0.0.1:33507"
+        },
+        {
+          "caseId": "direct-socket-binding-destroy",
+          "kind": "workerd-log",
+          "hostMs": 14526.645848,
+          "wallMs": 1791259646695,
+          "phase": "streaming",
+          "timestamp": 1791259646695,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"gateway\",\"event\":\"signal-initial\",\"wallMs\":1791259646695,\"signalBoundary\":\"incoming\",\"aborted\":false}"
+        },
+        {
+          "caseId": "direct-socket-binding-destroy",
+          "kind": "workerd-log",
+          "hostMs": 14526.777918,
+          "wallMs": 1791259646695,
+          "phase": "streaming",
+          "timestamp": 1791259646695,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"gateway\",\"event\":\"signal-initial\",\"wallMs\":1791259646695,\"signalBoundary\":\"forwarded-request-object\",\"aborted\":false}"
+        },
+        {
+          "caseId": "direct-socket-binding-destroy",
+          "kind": "workerd-log",
+          "hostMs": 14526.819962,
+          "wallMs": 1791259646695,
+          "phase": "streaming",
+          "timestamp": 1791259646695,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"gateway\",\"event\":\"binding-fetch\",\"wallMs\":1791259646695}"
+        },
+        {
+          "caseId": "direct-socket-binding-destroy",
+          "kind": "workerd-log",
+          "hostMs": 14527.182781,
+          "wallMs": 1791259646695,
+          "phase": "streaming",
+          "timestamp": 1791259646695,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"signal-initial\",\"wallMs\":1791259646695,\"aborted\":false}"
+        },
+        {
+          "caseId": "direct-socket-binding-destroy",
+          "kind": "workerd-log",
+          "hostMs": 14527.765143,
+          "wallMs": 1791259646696,
+          "phase": "streaming",
+          "timestamp": 1791259646696,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-invoke\",\"wallMs\":1791259646696,\"operation\":1,\"method\":\"put\",\"category\":\"accepted\",\"releaseReads\":0}"
+        },
+        {
+          "caseId": "direct-socket-binding-destroy",
+          "kind": "workerd-log",
+          "hostMs": 14660.294461,
+          "wallMs": 1791259646828,
+          "phase": "streaming",
+          "timestamp": 1791259646828,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-fulfilled\",\"wallMs\":1791259646828,\"operation\":1,\"method\":\"put\",\"category\":\"accepted\",\"releaseReads\":0}"
+        },
+        {
+          "caseId": "direct-socket-binding-destroy",
+          "kind": "workerd-log",
+          "hostMs": 14660.418418,
+          "wallMs": 1791259646829,
+          "phase": "streaming",
+          "timestamp": 1791259646829,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-invoke\",\"wallMs\":1791259646829,\"operation\":2,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":1}"
+        },
+        {
+          "caseId": "direct-socket-binding-destroy",
+          "kind": "workerd-log",
+          "hostMs": 14672.841792,
+          "wallMs": 1791259646841,
+          "phase": "streaming",
+          "timestamp": 1791259646829,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-fulfilled\",\"wallMs\":1791259646829,\"operation\":2,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":1}"
+        },
+        {
+          "caseId": "direct-socket-binding-destroy",
+          "kind": "workerd-log",
+          "hostMs": 15724.218502,
+          "wallMs": 1791259647892,
+          "phase": "original-poll",
+          "timestamp": 1791259647892,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-invoke\",\"wallMs\":1791259647892,\"operation\":101,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":100}"
+        },
+        {
+          "caseId": "direct-socket-binding-destroy",
+          "kind": "workerd-log",
+          "hostMs": 15724.550114,
+          "wallMs": 1791259647893,
+          "phase": "original-poll",
+          "timestamp": 1791259647893,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-fulfilled\",\"wallMs\":1791259647893,\"operation\":101,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":100}"
+        },
+        {
+          "caseId": "direct-socket-binding-destroy",
+          "kind": "workerd-log",
+          "hostMs": 16774.313927000003,
+          "wallMs": 1791259648943,
+          "phase": "diagnostic-tail",
+          "timestamp": 1791259648942,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-invoke\",\"wallMs\":1791259648942,\"operation\":201,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":200}"
+        },
+        {
+          "caseId": "direct-socket-binding-destroy",
+          "kind": "workerd-log",
+          "hostMs": 16774.631318000003,
+          "wallMs": 1791259648943,
+          "phase": "diagnostic-tail",
+          "timestamp": 1791259648943,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-fulfilled\",\"wallMs\":1791259648943,\"operation\":201,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":200}"
+        },
+        {
+          "caseId": "direct-socket-binding-destroy",
+          "kind": "workerd-log",
+          "hostMs": 17820.285229,
+          "wallMs": 1791259649988,
+          "phase": "diagnostic-tail",
+          "timestamp": 1791259649988,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-invoke\",\"wallMs\":1791259649988,\"operation\":301,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":300}"
+        },
+        {
+          "caseId": "direct-socket-binding-destroy",
+          "kind": "workerd-log",
+          "hostMs": 17820.573466,
+          "wallMs": 1791259649989,
+          "phase": "diagnostic-tail",
+          "timestamp": 1791259649989,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-fulfilled\",\"wallMs\":1791259649989,\"operation\":301,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":300}"
+        },
+        {
+          "caseId": "direct-socket-binding-destroy",
+          "kind": "workerd-log",
+          "hostMs": 17831.419974,
+          "wallMs": 1791259650000,
+          "phase": "diagnostic-tail",
+          "timestamp": 1791259649999,
+          "level": "error",
+          "message": "Uncaught exception: workerd/jsg/_virtual_includes/iterator/workerd/jsg/value.h:1477: failed: remote.jsg.Error: synthetic stream release timed out\nstack: /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@3713977 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@3713f75 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@33af030 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@33a3bd0 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@33a486c /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@5998b48 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@31108fb /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@3111360 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@3111c8c /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@23e03e0 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@57e86da /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@5998b48 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@57e77a0 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@311fb20 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@33a4040 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@33a43f6 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@5998b48 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@3110bb2 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@3111083 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@3111c8c /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@24368e8 /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@57ffccf /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@58010da /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@5801d0f /home/runner/work/cinatoken/cinatoken/node_modules/@cloudflare/workerd-linux-64/bin/workerd@57c27f0"
+        },
+        {
+          "caseId": "direct-socket-binding-destroy",
+          "kind": "case-closed",
+          "hostMs": 19892.235729,
+          "wallMs": 1791259652060,
+          "actualExit": 1,
+          "closed": true,
+          "baselineEligible": false
+        }
+      ]
+    },
+    {
+      "result": {
+        "caseId": "direct-socket-binding-rst",
+        "kind": "binding",
+        "mode": "rst",
+        "baselineEligible": false,
+        "diagnosticVariant": true,
+        "directSocket": true,
+        "coreEntryBypassed": true,
+        "originalWindow": {
+          "pollCount": 100,
+          "sleepMs": 10,
+          "elapsedMs": 1164.7244260000007,
+          "actual": null,
+          "expected": "observed",
+          "actualExit": 1
+        },
+        "tail": {
+          "elapsedMs": 4035.3654320000023,
+          "reads": 77,
+          "actual": null,
+          "usedForPass": false
+        },
+        "finalPreDisposeSnapshot": {
+          "cancel": null,
+          "release": null,
+          "accepted": "one",
+          "usedForPass": false
+        },
+        "actualExit": 1,
+        "closed": true,
+        "strictFailure": {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Expected values to be strictly equal:\n\nnull !== 'observed'\n"
+        }
+      },
+      "workerKinds": {
+        "signal-initial": 3,
+        "binding-fetch": 1,
+        "kv-invoke": 2,
+        "kv-fulfilled": 2,
+        "signal-abort": 1
+      },
+      "signalAborts": [
+        {
+          "caseId": "direct-socket-binding-rst",
+          "kind": "workerd-log",
+          "hostMs": 20159.874871,
+          "wallMs": 1791259652328,
+          "phase": "original-poll",
+          "timestamp": 1791259652327,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"signal-abort\",\"wallMs\":1791259652327,\"aborted\":true}",
+          "diagnostic": {
+            "boundary": "holder",
+            "event": "signal-abort",
+            "wallMs": 1791259652327,
+            "aborted": true
+          }
+        }
+      ],
+      "nonDiagnosticWorkerLogs": [],
+      "directSocketProof": [
+        {
+          "caseId": "direct-socket-binding-rst",
+          "kind": "direct-socket-ready",
+          "hostMs": 20132.506271000002,
+          "wallMs": 1791259652301,
+          "entryWorkerName": "cinatoken-staging-chat-holder-gateway-fixture-v364",
+          "directURL": "http://127.0.0.1:39371",
+          "coreEntryURL": "http://127.0.0.1:39211",
+          "coreEntryBypassed": true
+        }
+      ],
+      "relevantCalibrationEvents": [
+        {
+          "caseId": "direct-socket-binding-rst",
+          "kind": "miniflare-log",
+          "hostMs": 20032.869668000003,
+          "wallMs": 1791259652201,
+          "phase": "fixture-ready",
+          "message": "[mf:info] Ready on http://127.0.0.1:39211"
+        },
+        {
+          "caseId": "direct-socket-binding-rst",
+          "kind": "workerd-log",
+          "hostMs": 20136.156545,
+          "wallMs": 1791259652304,
+          "phase": "streaming",
+          "timestamp": 1791259652304,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"gateway\",\"event\":\"signal-initial\",\"wallMs\":1791259652304,\"signalBoundary\":\"incoming\",\"aborted\":false}"
+        },
+        {
+          "caseId": "direct-socket-binding-rst",
+          "kind": "workerd-log",
+          "hostMs": 20136.307594,
+          "wallMs": 1791259652304,
+          "phase": "streaming",
+          "timestamp": 1791259652304,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"gateway\",\"event\":\"signal-initial\",\"wallMs\":1791259652304,\"signalBoundary\":\"forwarded-request-object\",\"aborted\":false}"
+        },
+        {
+          "caseId": "direct-socket-binding-rst",
+          "kind": "workerd-log",
+          "hostMs": 20136.346222,
+          "wallMs": 1791259652305,
+          "phase": "streaming",
+          "timestamp": 1791259652304,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"gateway\",\"event\":\"binding-fetch\",\"wallMs\":1791259652304}"
+        },
+        {
+          "caseId": "direct-socket-binding-rst",
+          "kind": "workerd-log",
+          "hostMs": 20136.68155,
+          "wallMs": 1791259652305,
+          "phase": "streaming",
+          "timestamp": 1791259652305,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"signal-initial\",\"wallMs\":1791259652305,\"aborted\":false}"
+        },
+        {
+          "caseId": "direct-socket-binding-rst",
+          "kind": "workerd-log",
+          "hostMs": 20137.275479,
+          "wallMs": 1791259652305,
+          "phase": "streaming",
+          "timestamp": 1791259652305,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-invoke\",\"wallMs\":1791259652305,\"operation\":1,\"method\":\"put\",\"category\":\"accepted\",\"releaseReads\":0}"
+        },
+        {
+          "caseId": "direct-socket-binding-rst",
+          "kind": "workerd-log",
+          "hostMs": 20145.494137,
+          "wallMs": 1791259652314,
+          "phase": "streaming",
+          "timestamp": 1791259652314,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-fulfilled\",\"wallMs\":1791259652314,\"operation\":1,\"method\":\"put\",\"category\":\"accepted\",\"releaseReads\":0}"
+        },
+        {
+          "caseId": "direct-socket-binding-rst",
+          "kind": "workerd-log",
+          "hostMs": 20145.670184000002,
+          "wallMs": 1791259652314,
+          "phase": "streaming",
+          "timestamp": 1791259652314,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-invoke\",\"wallMs\":1791259652314,\"operation\":2,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":1}"
+        },
+        {
+          "caseId": "direct-socket-binding-rst",
+          "kind": "workerd-log",
+          "hostMs": 20156.840389,
+          "wallMs": 1791259652325,
+          "phase": "streaming",
+          "timestamp": 1791259652315,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"kv-fulfilled\",\"wallMs\":1791259652315,\"operation\":2,\"method\":\"get\",\"category\":\"release\",\"releaseReads\":1}"
+        },
+        {
+          "caseId": "direct-socket-binding-rst",
+          "kind": "workerd-log",
+          "hostMs": 20159.874871,
+          "wallMs": 1791259652328,
+          "phase": "original-poll",
+          "timestamp": 1791259652327,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"signal-abort\",\"wallMs\":1791259652327,\"aborted\":true}"
+        },
+        {
+          "caseId": "direct-socket-binding-rst",
+          "kind": "case-closed",
+          "hostMs": 25378.840045,
+          "wallMs": 1791259657547,
+          "actualExit": 1,
+          "closed": true,
+          "baselineEligible": false
+        }
+      ]
+    }
+  ],
+  "runtimeReexecuted": false,
+  "originalRawModified": false,
+  "productionRequests": 0
+}

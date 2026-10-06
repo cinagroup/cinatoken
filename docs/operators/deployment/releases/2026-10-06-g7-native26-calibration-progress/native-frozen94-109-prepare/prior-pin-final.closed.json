@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-06T04:35:50.823Z",
+  "finishedAt": "2026-10-06T04:35:50.825Z",
+  "operation": "readFile",
+  "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287/FINAL-native-pin94-tail-readonly.json",
+  "actualExit": 0,
+  "signal": null,
+  "error": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\prior-pin-final.stdout.log",
+    "bytes": 212858,
+    "sha256": "41f05a0c311dad452ab8b8d2cc44cb5e1d7e68937fcb83b1baa98a5aeecade58"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\prior-pin-final.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "containers": [
+    {
+      "name": "g7-1e70578d1acd47478966124f581794d8-qa",
+      "verifiedAbsent": true
+    },
+    {
+      "name": "g7-1e70578d1acd47478966124f581794d8-ingress",
+      "verifiedAbsent": true
+    },
+    {
+      "name": "g7-1e70578d1acd47478966124f581794d8-web",
+      "verifiedAbsent": true
+    },
+    {
+      "name": "g7-1e70578d1acd47478966124f581794d8-ssr",
+      "verifiedAbsent": true
+    },
+    {
+      "name": "g7-1e70578d1acd47478966124f581794d8-admin",
+      "verifiedAbsent": true
+    },
+    {
+      "name": "g7-1e70578d1acd47478966124f581794d8-proxy",
+      "verifiedAbsent": true
+    },
+    {
+      "name": "g7-1e70578d1acd47478966124f581794d8-seed",
+      "verifiedAbsent": true
+    },
+    {
+      "name": "g7-1e70578d1acd47478966124f581794d8-migrate",
+      "verifiedAbsent": true
+    },
+    {
+      "name": "g7-1e70578d1acd47478966124f581794d8-pg",
+      "verifiedAbsent": true
+    }
+  ],
+  "networks": [
+    {
+      "name": "g7-1e70578d1acd47478966124f581794d8-db",
+      "verifiedAbsent": true
+    },
+    {
+      "name": "g7-1e70578d1acd47478966124f581794d8-app",
+      "verifiedAbsent": true
+    },
+    {
+      "name": "g7-1e70578d1acd47478966124f581794d8-client",
+      "verifiedAbsent": true
+    }
+  ],
+  "volumes": [
+    {
+      "name": "g7-1e70578d1acd47478966124f581794d8-pgdata",
+      "verifiedAbsent": true
+    }
+  ],
+  "errors": [],
+  "verifiedAbsent": true
+}

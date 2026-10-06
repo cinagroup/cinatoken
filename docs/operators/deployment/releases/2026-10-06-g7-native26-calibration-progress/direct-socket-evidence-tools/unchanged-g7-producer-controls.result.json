@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-06T04:14:39.936Z",
+  "finishedAt": "2026-10-06T04:14:40.320Z",
+  "executable": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610/collector-g7-producer-output-controls.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\unchanged-g7-producer-controls.stdout.log",
+    "bytes": 1826,
+    "sha256": "dd3f8e0c6a3f06b56f67a18fc26b65f40aa7fe7892a33e804e4b70cbe5cceabd"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\unchanged-g7-producer-controls.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "scope": "Original exact child return of Temp evidence tool only; no application/native/G7/runtime or production run"
+}

@@ -1,0 +1,29 @@
+--- frozen-old/evidence-lib.mjs
++++ new/evidence-lib.mjs
+@@ -6,6 +6,8 @@
+ import { gzipSync, gunzipSync } from 'node:zlib';
+ 
+ import { directSocketClosure, directSocketAggregate, validateDirectSocketFiles } from './direct-socket-dialect.mjs';
++
++import { native59BindingDialect, validateNative59InfoBinding } from './native59-info-binding.mjs';
+ 
+ export const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex');
+ const relativeSafe = (name) => typeof name === 'string' && name !== '' &&
+@@ -323,6 +325,17 @@
+   for (const binding of config.explicitCommandOutputBindings ?? []) {
+     const context = contexts.find(x => x.input.id === binding.rootId);
+     assert.ok(context && relativeSafe(binding.receiptFile), 'Explicit command-output binding must name an included root/receipt');
++    if (binding.dialect === native59BindingDialect) {
++      try {
++        const item = context.data.get(binding.receiptFile), value = context.json.get(binding.receiptFile);
++        const exact = validateNative59InfoBinding({ contextRoot: context.root, receiptName: binding.receiptFile, item, value, binding, data: context.data });
++        const receipt = { root: context.input.id, file: binding.receiptFile, sha256: item.sha256, ...exact.receipt };
++        assert.equal(context.receiptByName.has(binding.receiptFile), false, 'Original Info-only receipt must not duplicate command authority');
++        context.receiptByName.set(binding.receiptFile, receipt); receipts.push(receipt);
++        for (const output of exact.outputs) associate(context, output.file, { ...receipt, explicitCommandOutputBinding: true });
++      } catch (error) { problem(context, binding.receiptFile, `Native59 exact Info binding rejected: ${error.message}`); }
++      continue;
++    }
+     try {
+       assert.ok(/^[0-9a-f]{64}$/u.test(binding.expectedReceiptSha256));
+       const item = context.data.get(binding.receiptFile), value = context.json.get(binding.receiptFile), receipt = context.receiptByName.get(binding.receiptFile);

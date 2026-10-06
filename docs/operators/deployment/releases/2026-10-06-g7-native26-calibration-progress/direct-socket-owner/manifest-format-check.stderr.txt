@@ -1,0 +1,2 @@
+[warn] scripts\diagnostics\v364-direct-socket\sealed-package.json
+[warn] Code style issues found in the above file. Forgot to run Prettier?

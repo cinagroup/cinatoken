@@ -1,0 +1,24 @@
+{
+  "at": "2026-10-06T04:39:56.410Z",
+  "finishedAt": "2026-10-06T04:39:56.469Z",
+  "executable": "git",
+  "args": [
+    "cat-file",
+    "blob",
+    "dc7be6f8597333151c450bae3ae15e6585e3b2eb:packages/proxy/scripts/staging/wrangler.chat-holder-private-v364.jsonc"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-canonical-calibration-terminal-independent-peer-7c64bf0f365242ed9e43c275ac46721a\\source-protected-7.stdout.log",
+  "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-canonical-calibration-terminal-independent-peer-7c64bf0f365242ed9e43c275ac46721a\\source-protected-7.stderr.log",
+  "stdoutInfo": {
+    "bytes": 568,
+    "sha256": "6b897d8aa7b01087b75d4b74968d4004e2b6ddb87650bad1203c7693160b2047"
+  },
+  "stderrInfo": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

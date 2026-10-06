@@ -1,0 +1,409 @@
+{
+  "kinds": {
+    "exact-file-read-report-only-v1": {
+      "count": 52,
+      "first": {
+        "kind": "exact-file-read-report-only-v1",
+        "rootId": "native-pin94-readonly",
+        "sourceRoot": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287",
+        "reportFile": "actual-native-original-receipt.closed.json",
+        "reportBytes": 885,
+        "reportSha256": "6aece8b30b407b92a34a14a7171948cfdb7e93d2ee08e205c098fa228faddc62",
+        "report": {
+          "at": "2026-10-06T04:28:39.005Z",
+          "finishedAt": "2026-10-06T04:28:39.009Z",
+          "operation": "readFile",
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\native-terminal.closed.json",
+          "actualExit": 0,
+          "signal": null,
+          "error": null,
+          "stdout": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\actual-native-original-receipt.stdout.log",
+            "bytes": 1012,
+            "sha256": "3ffe4a65441d0b150f4ddd2092876e5da2f813c85cd23b0fe349084fd446bb73"
+          },
+          "stderr": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\actual-native-original-receipt.stderr.log",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        "producer": {
+          "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\capture.mjs",
+          "bytes": 2442,
+          "sha256": "826ea219068489ab39dcf15bce0a168854f3d91ed82788057f5141931f1a6597"
+        },
+        "outputs": [
+          {
+            "stream": "stdout",
+            "file": "actual-native-original-receipt.stdout.log",
+            "bytes": 1012,
+            "sha256": "3ffe4a65441d0b150f4ddd2092876e5da2f813c85cd23b0fe349084fd446bb73"
+          },
+          {
+            "stream": "stderr",
+            "file": "actual-native-original-receipt.stderr.log",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ]
+      }
+    },
+    "exact-native-workflow-utf16-slice-v1": {
+      "count": 40,
+      "first": {
+        "kind": "exact-native-workflow-utf16-slice-v1",
+        "rootId": "native26-terminal-peer",
+        "sourceRoot": "C:/Users/cina/AppData/Local/Temp/cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9",
+        "file": "group-step-55.raw.log",
+        "bytes": 5557,
+        "sha256": "e9c8daf6d3f6a36e1ec0ce7d7ae186223ca75ea74137d5588328c9b52b5b5082",
+        "startStringOffset": 293808,
+        "endStringOffset": 299363,
+        "workflowCommand": "node --import tsx --test scripts/db/cutover/postgres-complete-text-buyer-counter-cutover-v367.native.test.mjs",
+        "step": 55,
+        "sourceFile": "native-terminal.stdout.log",
+        "source": {
+          "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\native-terminal.stdout.log",
+          "bytes": 556674,
+          "sha256": "c78e11593edf9b694d5a490647fd37f4863aa44f22be14d367e592975dbb8d28"
+        },
+        "receiptFile": "native-terminal.closed.json",
+        "receipt": {
+          "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\native-terminal.closed.json",
+          "bytes": 1012,
+          "sha256": "3ffe4a65441d0b150f4ddd2092876e5da2f813c85cd23b0fe349084fd446bb73"
+        },
+        "report": {
+          "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\FINAL-native26-ci-independent-peer.json",
+          "bytes": 413706,
+          "sha256": "6635f04f77f6f6325a794756883a8bf697f752af239e33deb2b8c3b226a57e66"
+        },
+        "producer": {
+          "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\audit-terminal-v2.mjs",
+          "bytes": 7782,
+          "sha256": "d43d773f13607d4379c2ae6162abc0318ad874b36a5eedd5bcd870a4067922a7"
+        },
+        "sliceProducerReceipt": {
+          "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\audit-terminal-v2.closed.json",
+          "bytes": 1171,
+          "sha256": "884c578dd470d1912486ef391098521a5f9b3e54b5777156ed99c9320bcd997b"
+        },
+        "progressReceipt": {
+          "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\proxy-progress-11.closed.json",
+          "bytes": 1061,
+          "sha256": "8db6990f97f906e57a250c70c75619a65c721cb77aa955a3ccdfa9f3cc21e8d5"
+        },
+        "progressFile": {
+          "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\proxy-progress-11.stdout.log",
+          "bytes": 49493,
+          "sha256": "ef24ec36d29b0395b9fe524e96f7c3dcaefd7ac42399833488f2bb0389a07181"
+        }
+      }
+    },
+    "exact-closed-command-input-snapshot-v1": {
+      "count": 1,
+      "first": {
+        "kind": "exact-closed-command-input-snapshot-v1",
+        "rootId": "native-frozen94-109-peer",
+        "sourceRoot": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-frozen94-109-independent-peer-a824c8ed062348199c5027f7df556278",
+        "file": "git-inputs.stdin.log",
+        "input": {
+          "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-independent-peer-a824c8ed062348199c5027f7df556278\\git-inputs.stdin.log",
+          "bytes": 37944,
+          "sha256": "967ad1d4c1718464aebaaeaab9496f148494d0fc3fdc2918380dfa82d6707f8e"
+        },
+        "receiptFile": "git-inputs.closed.json",
+        "receipt": {
+          "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-independent-peer-a824c8ed062348199c5027f7df556278\\git-inputs.closed.json",
+          "bytes": 1075,
+          "sha256": "67caa25fa60a285e9a3f995ba701442b942f1c77b02487a430eb7e80209f365f"
+        },
+        "producer": {
+          "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-independent-peer-a824c8ed062348199c5027f7df556278\\audit-four.mjs",
+          "bytes": 14323,
+          "sha256": "87c5213afb186299ebc8b1745256eaee3271247e55a7fa88674fa330eb5fc56d"
+        },
+        "producerReceipt": {
+          "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-independent-peer-a824c8ed062348199c5027f7df556278\\audit-four.closed.json",
+          "bytes": 1129,
+          "sha256": "e4f08397e596d9999f1b6c99f3bfd34ecc8715703bf5d1acb085b80214fa437b"
+        },
+        "producerActualExit": 1
+      }
+    }
+  },
+  "dialects": {
+    "root-finishedAt-actualExit": 519,
+    "g7-owner-exact-terminal-spawnSync-status-v1": 8,
+    "web-platform-g7-child-command-closed-v1": 195,
+    "explicit-closed": 76,
+    "v364-direct-socket-no-child-preflight-rejection-v1": 1,
+    "v364-direct-socket-executor-closed-v1": 2,
+    "native59-exact-pinned-info-command-v1": 2
+  },
+  "exits": {
+    "0": 762,
+    "1": 36,
+    "2": 2,
+    "null": 3
+  },
+  "abnormal": [
+    {
+      "root": "v364-next-diagnosis",
+      "file": "frozen-holder-gateway-contract.result.json",
+      "sha256": "c51e8a51cd6eb454d15d3a6f262edfb47ea1baf5f67d243ffdb241805ef3a41f",
+      "dialect": "explicit-closed",
+      "actualExit": null,
+      "signal": null,
+      "spawnError": {
+        "code": "EPERM",
+        "name": "Error"
+      }
+    },
+    {
+      "root": "v364-next-diagnosis",
+      "file": "source-cancel-locations.result.json",
+      "sha256": "e346532e25c97f1ae57ac85aecdce41771d08db20e651ad40035c81d5db15a4a",
+      "dialect": "explicit-closed",
+      "actualExit": null,
+      "signal": null,
+      "spawnError": {
+        "code": "EPERM",
+        "name": "Error"
+      }
+    },
+    {
+      "root": "v364-next-diagnosis",
+      "file": "source-files.result.json",
+      "sha256": "3c1e24648cb4e60f4b88f4efc3094c130dd4ef4941936455d947db11ad550adc",
+      "dialect": "explicit-closed",
+      "actualExit": null,
+      "signal": null,
+      "spawnError": {
+        "code": "EPERM",
+        "name": "Error"
+      }
+    }
+  ],
+  "transportIsAlsoClosed": [
+    {
+      "transport": {
+        "root": "current-terminal-evidence",
+        "file": "canonical-calibration-artifact/_temp/v364-direct-socket-once-37414167261-1/executor.closed.json",
+        "sha256": "1f36a6a5c68356bdce2a30e57f0e212db88c0a02b0b01eb0d872d06565586e18",
+        "dialect": "exact-downloaded-direct-executor-manifest-v1",
+        "transportBindingVerified": true,
+        "originalMtimePreserved": false,
+        "downloadedMtimeIsNotProducerMtime": true,
+        "downloadActualExit": 0,
+        "originalExecutorActualExit": 1,
+        "originalActualProcessExit": 1,
+        "originalRunnerOutcomeCode": 1,
+        "sourceSHA": "dc7be6f8597333151c450bae3ae15e6585e3b2eb",
+        "runId": "37414167261",
+        "runAttempt": "1",
+        "artifactId": 11390876053,
+        "frozenIndexSha256": "cedbf58fb411c7a183c60d183f6d36da8c853236ec7711f0b3ad679da2c2f467",
+        "remoteZipDigestReportedOnly": "sha256:0209575a06755b96ff14c500eeec5431b67e562b662435d044212c48b89217af",
+        "localZipDigestVerified": false,
+        "newExecutionClaimed": false,
+        "gatePassDerived": false
+      },
+      "closed": {
+        "root": "current-terminal-evidence",
+        "file": "canonical-calibration-artifact/_temp/v364-direct-socket-once-37414167261-1/executor.closed.json",
+        "sha256": "1f36a6a5c68356bdce2a30e57f0e212db88c0a02b0b01eb0d872d06565586e18",
+        "dialect": "v364-direct-socket-executor-closed-v1",
+        "actualExit": 1,
+        "actualProcessExit": 1,
+        "runnerOutcomeCode": 1,
+        "signal": null,
+        "spawnError": null,
+        "timedOut": false,
+        "interrupted": false,
+        "groupGone": true,
+        "directChildReaped": true,
+        "leftoverGroupKilled": false,
+        "apiDisposalReported": true,
+        "outerUnforcedGroupCloseReported": true,
+        "actualChildExitProven": true,
+        "linuxRuntimeExecuted": true,
+        "fullCooperativeCleanupProven": false,
+        "gracefulWorkerdExitProven": false,
+        "gatePassDerived": false
+      }
+    },
+    {
+      "transport": {
+        "root": "current-terminal-evidence",
+        "file": "direct-artifact-current/_temp/v364-direct-socket-once-37412108171-1/executor.closed.json",
+        "sha256": "31953785aeec17228cf9d48ad09385eacf330edbe93d1111020a4f3aca52b897",
+        "dialect": "exact-downloaded-direct-executor-manifest-v1",
+        "transportBindingVerified": true,
+        "originalMtimePreserved": false,
+        "downloadedMtimeIsNotProducerMtime": true,
+        "downloadActualExit": 0,
+        "originalExecutorActualExit": 1,
+        "originalActualProcessExit": 1,
+        "originalRunnerOutcomeCode": 1,
+        "sourceSHA": "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc",
+        "runId": "37412108171",
+        "runAttempt": "1",
+        "artifactId": 11389298418,
+        "frozenIndexSha256": "cedbf58fb411c7a183c60d183f6d36da8c853236ec7711f0b3ad679da2c2f467",
+        "remoteZipDigestReportedOnly": "sha256:606533d4371ef5adf09efa6b4e308254815c92e63d8954ca37c1ee6a7530f647",
+        "localZipDigestVerified": false,
+        "newExecutionClaimed": false,
+        "gatePassDerived": false
+      },
+      "closed": {
+        "root": "current-terminal-evidence",
+        "file": "direct-artifact-current/_temp/v364-direct-socket-once-37412108171-1/executor.closed.json",
+        "sha256": "31953785aeec17228cf9d48ad09385eacf330edbe93d1111020a4f3aca52b897",
+        "dialect": "v364-direct-socket-executor-closed-v1",
+        "actualExit": 1,
+        "actualProcessExit": 1,
+        "runnerOutcomeCode": 1,
+        "signal": null,
+        "spawnError": null,
+        "timedOut": false,
+        "interrupted": false,
+        "groupGone": true,
+        "directChildReaped": true,
+        "leftoverGroupKilled": false,
+        "apiDisposalReported": true,
+        "outerUnforcedGroupCloseReported": true,
+        "actualChildExitProven": true,
+        "linuxRuntimeExecuted": true,
+        "fullCooperativeCleanupProven": false,
+        "gracefulWorkerdExitProven": false,
+        "gatePassDerived": false
+      }
+    }
+  ],
+  "sourceEntrySample": {
+    "sourceRootId": "all-frozen-first-admission-owner",
+    "sourceRoot": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native26-final-config-4851c19d4cc24ecdae397bcb12a8ad30",
+    "sourceRelative": "finalize-first-admission-owner.result.json",
+    "sourcePath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native26-final-config-4851c19d4cc24ecdae397bcb12a8ad30\\finalize-first-admission-owner.result.json",
+    "relative": "all-frozen-first-admission-owner/finalize-first-admission-owner.result.json",
+    "phase": "prepared-only",
+    "materialKind": "closed-command-receipt",
+    "closures": [
+      {
+        "root": "all-frozen-first-admission-owner",
+        "file": "finalize-first-admission-owner.result.json",
+        "sha256": "a18d508393d284ce3fb83d9caaca1fa41de2a95df8bc5812139702aea6be1502",
+        "dialect": "root-finishedAt-actualExit",
+        "actualExit": 0,
+        "signal": null,
+        "spawnError": null
+      }
+    ],
+    "originalBytes": 1076,
+    "originalSha256": "a18d508393d284ce3fb83d9caaca1fa41de2a95df8bc5812139702aea6be1502",
+    "storedRelative": "all-frozen-first-admission-owner/finalize-first-admission-owner.result.json",
+    "encoding": "identity",
+    "storedBytes": 1076,
+    "storedSha256": "a18d508393d284ce3fb83d9caaca1fa41de2a95df8bc5812139702aea6be1502",
+    "originalRoundtripExact": true,
+    "sourceBytesExact": true
+  }
+}
+frozen-data-binding.mjs
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+const originals=JSON.parse(fs.readFileSync(new URL('./frozen-data-original-pins-v3.json',import.meta.url),'utf8'));
+const safe=n=>typeof n==='string'&&n!==''&&!path.isAbsolute(n)&&!n.includes('\\')&&!n.split('/').some(p=>p===''||p==='.'||p==='..'||/[:\x00-\x1f]/u.test(p));
+const exact=(item,pin)=>{assert.ok(item,'Pinned original file missing');assert.equal(item.bytes.length,pin.bytes);assert.equal(item.sha256,pin.sha256);return item;};
+const times=v=>{assert.ok(Number.isFinite(Date.parse(v.at))&&Number.isFinite(Date.parse(v.finishedAt)));assert.ok(Date.parse(v.finishedAt)>=Date.parse(v.at));};
+const registration=(b,kind)=>{const r=originals.bindings.find(x=>x.kind===kind&&x.rootId===b.rootId&&(x.reportFile??x.file)===(b.reportFile??b.file));assert.ok(r,'Unknown data binding');assert.deepEqual(b,r,'Data binding differs from exact original pins');return r;};
+const sourceContext=(b,contexts)=>{const c=contexts.find(x=>x.input.id===b.rootId);assert.ok(c);assert.equal(path.resolve(c.root),path.resolve(b.sourceRoot));return c;};
+const producer=(b,c)=>exact(c.data.get(path.basename(b.producer.file)),b.producer);
+const pinnedCommand=(c,pin,expectedActualExit=0)=>{assert.ok([0,1].includes(expectedActualExit));const name=path.basename(pin.file),item=exact(c.data.get(name),pin),v=c.json.get(name),a=c.receiptByName.get(name);assert.deepEqual(v,JSON.parse(item.bytes));assert.ok(a&&a.actualExit===expectedActualExit&&a.signal===null&&a.spawnError===null);assert.equal(a.sha256,item.sha256);assert.equal(v.actualExit,expectedActualExit);assert.ok(typeof v.executable==='string'&&Array.isArray(v.args));times(v);for(const stream of ['stdout','stderr']){const full=typeof v[stream]==='string'?v[stream]:v[stream].path,descriptor=typeof v[stream]==='string'?v[stream+'Info']:v[stream],rel=path.relative(c.root,full).split(path.sep).join('/');assert.ok(safe(rel));const output=exact(c.data.get(rel),descriptor);assert.ok(output.mtimeMs<=item.mtimeMs);}return{value:v,item};};
+export function validateFrozenDataBinding(b,contexts){
+ if(b.kind==='exact-file-read-report-only-v1'){
+  registration(b,b.kind);const c=sourceContext(b,contexts),item=exact(c.data.get(b.reportFile),{bytes:b.reportBytes,sha256:b.reportSha256}),v=c.json.get(b.reportFile);
+  assert.deepEqual(v,b.report);producer(b,c);times(v);
+  assert.deepEqual(Object.keys(v).sort(),['at','finishedAt','operation','path','actualExit','signal','error','stdout','stderr'].sort());
+  assert.equal(v.operation,'readFile');assert.ok(path.isAbsolute(v.path));assert.equal(v.signal,null);assert.ok(v.actualExit===0||v.actualExit===null);
+  assert.equal(b.outputs.length,2);const names=[];
+  for(const [i,stream]of ['stdout','stderr'].entries()){const d=b.outputs[i];assert.equal(d.stream,stream);assert.ok(safe(d.file));assert.equal(path.resolve(v[stream].path),path.resolve(c.root,d.file));assert.deepEqual({bytes:v[stream].bytes,sha256:v[stream].sha256},{bytes:d.bytes,sha256:d.sha256});exact(c.data.get(d.file),d);names.push(d.file);}
+  if(v.actualExit===0){assert.equal(v.error,null);assert.equal(c.data.get(names[1]).bytes.length,0);}else{assert.deepEqual(Object.keys(v.error).sort(),['code','message']);assert.equal(v.error.code,'ENOENT');assert.equal(typeof v.error.message,'string');assert.equal(c.data.get(names[0]).bytes.length,0);assert.deepEqual(c.data.get(names[1]).bytes,Buffer.from(JSON.stringify(v.error)+'\n'));}
+  return{context:c,names:[b.reportFile,...names],report:{root:b.rootId,file:b.reportFile,sha256:item.sha256,dialect:b.kind,reportOnly:true,operation:'readFile',observedFileReadStatus:v.actualExit,observedFileReadErrorCode:v.error?.code??null,actualProcessExit:null,actualChildExitProven:false,newExecutionClaimed:false,gatePassDerived:false,sourcePathReported:v.path}};
+ }
+ if(b.kind==='exact-native-workflow-utf16-slice-v1'){
+  registration(b,b.kind);const c=sourceContext(b,contexts);producer(b,c);exact(c.data.get(path.basename(b.report.file)),b.report);
+  const source=exact(c.data.get(b.sourceFile),b.source),receiptItem=exact(c.data.get(b.receiptFile),b.receipt),receipt=c.json.get(b.receiptFile),authority=c.receiptByName.get(b.receiptFile);
+  assert.ok(authority&&authority.actualExit===0&&authority.signal===null&&authority.spawnError===null);assert.equal(authority.sha256,receiptItem.sha256);assert.deepEqual(receipt.args,['run','view','37412060008','--repo','cinagroup/cinatoken','--job','112102451588','--log']);times(receipt);
+  assert.equal(path.resolve(receipt.stdout),path.resolve(c.root,b.sourceFile));assert.deepEqual(receipt.stdoutInfo,{bytes:b.source.bytes,sha256:b.source.sha256});
+  assert.ok((c.logs.get(b.sourceFile)??[]).some(x=>x.file===b.receiptFile&&x.sha256===receiptItem.sha256));
+  const originalReport=c.json.get(path.basename(b.report.file)),row=originalReport.chain55to113.records.find(x=>x.step===b.step);assert.ok(row?.group);assert.equal(path.basename(row.group.file),b.file);assert.equal(row.workflowCommand,b.workflowCommand);assert.deepEqual({bytes:row.group.bytes,sha256:row.group.sha256,startStringOffset:row.group.startStringOffset,endStringOffset:row.group.endStringOffset},{bytes:b.bytes,sha256:b.sha256,startStringOffset:b.startStringOffset,endStringOffset:b.endStringOffset});
+  const sliceProducer=pinnedCommand(c,b.sliceProducerReceipt),progressCommand=pinnedCommand(c,b.progressReceipt);assert.equal(path.resolve(sliceProducer.value.args[0]),path.resolve(b.producer.file));assert.equal(path.resolve(sliceProducer.value.args[1]),path.resolve(c.root));assert.equal(sliceProducer.value.args[2],'proxy-progress-11');assert.equal(sliceProducer.value.args.length,3);assert.equal(progressCommand.value.args[0],'run');assert.equal(progressCommand.value.args[1],'view');assert.equal(progressCommand.value.args[2],'37412060008');assert.equal(progressCommand.value.args[3],'--repo');assert.equal(progressCommand.value.args[4],'cinagroup/cinatoken');const progressItem=exact(c.data.get(path.basename(b.progressFile.file)),b.progressFile),progress=JSON.parse(progressItem.bytes);assert.deepEqual(progress,originalReport.run);assert.equal(progress.databaseId,37412060008);assert.equal(progress.headSha,'dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc');assert.equal(progress.status,'completed');assert.equal(originalReport.nativeJob.databaseId,112102451588);assert.equal(originalReport.nativeJob.status,'completed');
+  const text=source.bytes.toString('utf8');assert.deepEqual(Buffer.from(text,'utf8'),source.bytes,'Original full log must be strict UTF8 roundtrip');assert.ok(Number.isSafeInteger(b.startStringOffset)&&Number.isSafeInteger(b.endStringOffset)&&b.startStringOffset>=0&&b.endStringOffset>b.startStringOffset&&b.endStringOffset<=text.length);
+  const at=text.indexOf(b.workflowCommand);assert.ok(at>=0);assert.equal(text.lastIndexOf('##[group]',at),b.startStringOffset);const next=text.indexOf('##[group]',at);assert.equal(next<0?text.length:next,b.endStringOffset);
+  const item=exact(c.data.get(b.file),b);assert.ok(source.mtimeMs<=receiptItem.mtimeMs);assert.ok(item.mtimeMs<=sliceProducer.item.mtimeMs,'Slice newer than actual producing Node receipt');assert.deepEqual(item.bytes,Buffer.from(text.slice(b.startStringOffset,b.endStringOffset),'utf8'),'Original UTF16-index slice bytes differ');
+  return{context:c,names:[b.file],report:{root:b.rootId,file:b.file,sha256:item.sha256,dialect:b.kind,reportOnly:true,actualProcessExit:null,actualChildExitProven:false,newExecutionClaimed:false,gatePassDerived:false,sourceOriginalLog:{file:b.sourceFile,bytes:b.source.bytes,sha256:b.source.sha256},sourceDownloadReceipt:{file:b.receiptFile,sha256:receiptItem.sha256,actualExit:authority.actualExit,applicationExitDerived:false},indexUnit:'JavaScript UTF16 code units; re-encoded UTF8 bytes exact',startStringOffset:b.startStringOffset,endStringOffset:b.endStringOffset,originalCiStepReported:row.authoritativeStep.conclusion}};
+ }
+ if(b.kind==='exact-closed-command-input-snapshot-v1'){
+  registration(b,b.kind);const c=sourceContext(b,contexts);producer(b,c);const command=pinnedCommand(c,b.receipt),parent=pinnedCommand(c,b.producerReceipt,b.producerActualExit);assert.equal(path.resolve(parent.value.args[0]),path.resolve(b.producer.file));assert.equal(command.value.executable,'git');assert.deepEqual(command.value.args,['cat-file','--batch']);assert.equal(b.receiptFile,path.basename(b.receipt.file));const d=command.value.stdin;assert.ok(d&&typeof d.path==='string'&&path.isAbsolute(d.path));assert.equal(path.resolve(d.path),path.resolve(c.root,b.file));assert.deepEqual({bytes:d.bytes,sha256:d.sha256},{bytes:b.input.bytes,sha256:b.input.sha256});const item=exact(c.data.get(b.file),b.input);assert.ok(item.mtimeMs<=command.item.mtimeMs);return{context:c,names:[b.file],report:{root:b.rootId,file:b.file,sha256:item.sha256,dialect:b.kind,reportOnly:true,actualProcessExit:null,actualChildExitProven:false,newExecutionClaimed:false,gatePassDerived:false,sourceOriginalCommand:{file:b.receiptFile,sha256:command.item.sha256,actualExit:command.value.actualExit},producerOriginalCommand:{file:path.basename(b.producerReceipt.file),sha256:parent.item.sha256,actualExit:parent.value.actualExit},stdinBytes:item.bytes.length,inputSnapshotNotCommandOutput:true}};
+ }
+ throw new Error('Unknown frozen input data-binding kind');
+}
+export function validateTransportedDirectBinding(b,contexts){
+ const registered=originals.transports.find(x=>x.rootId===b.rootId&&x.executorFile===b.executorFile);assert.ok(registered,'Unknown transported direct executor');assert.deepEqual(b,registered,'Transport binding differs from exact original pins');assert.equal(b.kind,'exact-downloaded-direct-executor-manifest-v1');
+ const c=sourceContext(b,contexts),executorItem=exact(c.data.get(b.executorFile),b.executor),v=c.json.get(b.executorFile),runtimeAuthority=c.receiptByName.get(b.executorFile);assert.deepEqual(v,JSON.parse(executorItem.bytes));assert.ok(runtimeAuthority&&runtimeAuthority.dialect==='v364-direct-socket-executor-closed-v1');assert.equal(runtimeAuthority.actualExit,1);assert.equal(v.actualProcessExit,1);assert.equal(v.runnerOutcomeCode,1);
+ const downloadItem=exact(c.data.get(b.downloadFile),b.download),d=c.json.get(b.downloadFile),da=c.receiptByName.get(b.downloadFile);assert.deepEqual(d,b.downloadBody);assert.ok(da&&da.actualExit===0&&da.signal===null&&da.spawnError===null);assert.equal(da.sha256,downloadItem.sha256);times(d);
+ assert.equal(d.executable,'C:/Program Files/GitHub CLI/gh.exe');assert.equal(d.args[0],'run');assert.equal(d.args[1],'download');assert.equal(d.args[2],b.runId);assert.equal(d.args[3],'--repo');assert.equal(d.args[4],'cinagroup/cinatoken');assert.equal(d.args[5],'--name');assert.equal(d.args[6],`v364-direct-socket-${b.sourceSHA}-${b.runId}-${b.runAttempt}`);assert.equal(d.args[7],'--dir');assert.equal(d.args.length,9);
+ const artifactRoot=b.executorFile.split('/')[0];assert.equal(path.resolve(d.args[8]),path.resolve(c.root,artifactRoot));
+ for(const stream of ['stdout','stderr']){const output=d[stream];assert.ok(output&&path.isAbsolute(output.path));const name=path.relative(c.root,output.path).split(path.sep).join('/');assert.ok(safe(name));const raw=exact(c.data.get(name),output);assert.ok(raw.mtimeMs<=downloadItem.mtimeMs);}
+ const metaItem=exact(c.data.get(b.metadataFile),b.metadata),metadata=JSON.parse(metaItem.bytes),metaCommand=pinnedCommand(c,b.metadataReceipt),mr=metaCommand.value;assert.equal(mr.executable,'C:/Program Files/GitHub CLI/gh.exe');assert.deepEqual(mr.args,['api',`repos/cinagroup/cinatoken/actions/runs/${b.runId}/artifacts`]);assert.equal(path.resolve(mr.stdout.path),path.resolve(c.root,b.metadataFile));assert.equal(mr.stdout.bytes,b.metadata.bytes);assert.equal(mr.stdout.sha256,b.metadata.sha256);
+ assert.equal(metadata.total_count,1);assert.equal(metadata.artifacts.length,1);const artifact=metadata.artifacts[0];assert.equal(artifact.id,b.artifactId);assert.equal(artifact.name,d.args[6]);assert.equal(String(artifact.workflow_run.id),b.runId);assert.equal(artifact.workflow_run.head_sha,b.sourceSHA);assert.equal(artifact.expired,false);
+ assert.equal(v.checkoutSHA,b.sourceSHA);assert.equal(v.run.GITHUB_SHA,b.sourceSHA);assert.equal(v.run.GITHUB_RUN_ID,b.runId);assert.equal(v.run.GITHUB_RUN_ATTEMPT,b.runAttempt);
+ const ic=contexts.find(x=>x.input.id===b.indexRootId);assert.ok(ic);assert.equal(path.resolve(ic.root),path.resolve(b.indexSourceRoot));const indexItem=exact(ic.data.get(b.indexFile),b.index);assert.equal(indexItem.sha256,'cedbf58fb411c7a183c60d183f6d36da8c853236ec7711f0b3ad679da2c2f467');const index=ic.json.get(b.indexFile);assert.equal(index.files,981);assert.equal(index.totalBytes,11305947);assert.equal(path.resolve(index.sourceRoot),path.resolve(c.root));
+ const entries=new Map(index.entries.map(e=>[e.file,e]));assert.equal(entries.size,981);const prefix=path.posix.dirname(b.executorFile)+'/';
+ for(const name of [b.executorFile,...v.files.map(f=>prefix+f.path),b.downloadFile,b.metadataFile,b.metadataReceiptFile]){const item=c.data.get(name),e=entries.get(name);assert.ok(e,'Transported artifact not in externally frozen index');exact(item,e);assert.equal(item.mtimeMs,e.mtimeMs);assert.equal(path.resolve(e.originalPath),path.resolve(c.root,name));}
+ return{root:b.rootId,file:b.executorFile,sha256:executorItem.sha256,dialect:b.kind,transportBindingVerified:true,originalMtimePreserved:false,downloadedMtimeIsNotProducerMtime:true,downloadActualExit:0,originalExecutorActualExit:1,originalActualProcessExit:1,originalRunnerOutcomeCode:1,sourceSHA:b.sourceSHA,runId:b.runId,runAttempt:b.runAttempt,artifactId:b.artifactId,frozenIndexSha256:indexItem.sha256,remoteZipDigestReportedOnly:artifact.digest,localZipDigestVerified:false,newExecutionClaimed:false,gatePassDerived:false};
+}
+
+STOPWRITE-all-frozen-data-reader-seal.json {
+  "keys": [
+    "schema",
+    "sealedAt",
+    "sourceRoot",
+    "filesBeforeSelf",
+    "totalBytesBeforeSelf",
+    "entries",
+    "selfExcludedOnly",
+    "sourceAndOutputsFrozen",
+    "noFurtherWrites",
+    "collectionOnly",
+    "gatePassDerived",
+    "fullG7Verified",
+    "fullG8Verified"
+  ],
+  "sample": {
+    "schema": "stopwrite-all-frozen-data-reader-seal-v1",
+    "sealedAt": "2026-10-06T05:03:29.910Z",
+    "sourceRoot": "C:/Users/cina/AppData/Local/Temp/cinatoken-all-frozen-data-tools-FoBS1O",
+    "filesBeforeSelf": 98,
+    "totalBytesBeforeSelf": 9689438,
+    "entries": {
+      "count": 98,
+      "first": {
+        "file": "FINAL-all-frozen-data-reader-preparation.json",
+        "bytes": 18204,
+        "sha256": "7e420fa4f27be551c0c1968403a81b6cdf1ee83cf210c72c6f6019f46db78f32"
+      }
+    },
+    "selfExcludedOnly": true,
+    "sourceAndOutputsFrozen": true,
+    "noFurtherWrites": true,
+    "collectionOnly": true,
+    "gatePassDerived": false,
+    "fullG7Verified": false,
+    "fullG8Verified": false
+  }
+}

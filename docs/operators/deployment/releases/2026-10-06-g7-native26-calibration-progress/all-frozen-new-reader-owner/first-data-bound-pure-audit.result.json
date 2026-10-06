@@ -1,0 +1,26 @@
+{
+  "at": "2026-10-06T04:54:33.662Z",
+  "finishedAt": "2026-10-06T04:54:36.879Z",
+  "executable": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-all-frozen-data-tools-FoBS1O/collect-evidence.mjs",
+    "audit",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-all-frozen-data-tools-FoBS1O/all-frozen-final-config.json",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-all-frozen-data-tools-FoBS1O/first-data-bound-pure-audit.json"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 1,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\first-data-bound-pure-audit.stdout.log",
+    "bytes": 232,
+    "sha256": "29d4e4543716a979797524244a575a18136f011ec2ff5bb9ee373eb2588ac3a2"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\first-data-bound-pure-audit.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "scope": "Original exact child return of Temp evidence tool only; no application/native/G7/runtime or production run"
+}

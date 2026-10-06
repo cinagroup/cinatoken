@@ -1,0 +1,28 @@
+{
+  "closed": true,
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "executable": "node",
+  "args": [
+    "node_modules/prettier/bin-prettier.js",
+    "--write",
+    "scripts/diagnostics/v364-direct-socket/sealed-package.json"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "startedAt": "2026-10-06T04:17:54.432Z",
+  "finishedAt": "2026-10-06T04:17:54.707Z",
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-actual-review-DjepMs\\manifest-cli-format.stdout.txt",
+    "bytes": 64,
+    "sha256": "689892e1e3fc9b93ba0de77397f35988e460a6d29b2a3a917f60b970dfea0775"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-actual-review-DjepMs\\manifest-cli-format.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "operation": "local-source-preparation",
+  "realServiceOrCiExecution": false,
+  "productionRequests": 0
+}

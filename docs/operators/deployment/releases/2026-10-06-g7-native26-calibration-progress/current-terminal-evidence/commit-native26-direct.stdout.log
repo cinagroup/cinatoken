@@ -1,0 +1,9 @@
+[main dcc6ab52] test: adapt PG73 fixtures and add direct socket diagnostics
+ 34 files changed, 2079 insertions(+), 80 deletions(-)
+ create mode 100644 .github/workflows/v364-direct-socket.yml
+ create mode 100644 scripts/diagnostics/v364-direct-socket/README.md
+ create mode 100644 scripts/diagnostics/v364-direct-socket/execute-owned-linux.py
+ create mode 100644 scripts/diagnostics/v364-direct-socket/native-reader-calibration.mjs
+ create mode 100644 scripts/diagnostics/v364-direct-socket/run-direct-socket.mjs
+ create mode 100644 scripts/diagnostics/v364-direct-socket/sealed-package.json
+ create mode 100644 scripts/diagnostics/v364-direct-socket/source-inputs.json

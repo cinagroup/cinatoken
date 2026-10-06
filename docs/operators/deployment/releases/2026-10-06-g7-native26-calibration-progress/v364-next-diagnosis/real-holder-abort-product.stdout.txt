@@ -1,0 +1,232 @@
+{"file":"packages/proxy/src/runtime/complete-text-holder-worker-v390.ts","bytes":15088,"sha256":"9211e86c8cc97af3a02456a372192b9977d6d171d7ae4926de2877559b144814"}
+32: 	createHolder(ports: ObservedPrivateTextHolderPortsV384, database: Readonly<{
+33: 		connectionString: string;
+34: 		createSql: ReturnType<typeof createHyperdriveDedicatedRoleTransportV390>['createSql'];
+35: 		own<T>(operation: () => Promise<T>): Promise<T>;
+36: 	}>): ReturnType<typeof createObservedPrivateCompleteTextHolderV384>;
+37: }>;
+38: 
+39: class HolderRequestStopped extends Error {
+40: 	constructor(readonly status: 499 | 504) { super('Private holder request stopped'); }
+41: }
+42: class HolderRequestRejected extends Error {
+43: 	constructor(readonly status: 400 | 413) { super('Private holder request rejected'); }
+44: }
+45: 
+46: function rejected(status: number): Response {
+47: 	return Response.json({ error: 'holder_request_unavailable' }, {
+48: 		status, headers: { 'Cache-Control': 'no-store' },
+49: 	});
+50: }
+51: 
+52: /** Own real outstanding operations through response end; never race SQL writes. */
+53: function lifetime(request: Request, milliseconds: number, ctx: WorkerContext) {
+54: 	const controller = new AbortController();
+55: 	const pending = new Set<Promise<unknown>>();
+56: 	let finished = false;
+57: 	let cleanupUnconfirmed = false;
+58: 	let end!: () => void;
+59: 	const ended = new Promise<void>(resolve => { end = resolve; });
+60: 	const stop = () => controller.abort(new HolderRequestStopped(499));
+61: 	const timer = setTimeout(() => controller.abort(new HolderRequestStopped(504)), milliseconds);
+62: 	request.signal.addEventListener('abort', stop, { once: true });
+63: 	if (request.signal.aborted) stop();
+64: 	function ensureLive(): void {
+65: 		controller.signal.throwIfAborted();
+66: 		if (finished) throw new HolderRequestStopped(499);
+67: 	}
+68: 	function own<T>(operation: () => Promise<T>, requireLive = true): Promise<T> {
+69: 		if (requireLive) ensureLive();
+70: 		// Start now: cleanup must begin before finish aborts the fetch signal.
+71: 		const task = (async () => {
+72: 			if (requireLive) ensureLive();
+73: 			return operation();
+74: 		})();
+75: 		pending.add(task);
+76: 		void task.then(() => pending.delete(task), error => {
+77: 			pending.delete(task);
+78: 			if (!requireLive || (error instanceof Error && error.name.includes('CleanupUnconfirmed')))
+79: 				cleanupUnconfirmed = true;
+80: 		});
+81: 		return task;
+82: 	}
+83: 	function finish(): void {
+84: 		if (finished) return;
+85: 		finished = true;
+86: 		clearTimeout(timer);
+87: 		request.signal.removeEventListener('abort', stop);
+88: 		// Also stops v365's private renewal timer after EOF/error/cancel.
+89: 		if (!controller.signal.aborted) controller.abort(new HolderRequestStopped(499));
+90: 		end();
+91: 	}
+92: 	ctx.waitUntil(ended.then(async () => {
+93: 		while (pending.size > 0) await Promise.allSettled([...pending]);
+94: 		if (cleanupUnconfirmed) console.warn(JSON.stringify({
+95: 			event: 'private_holder_cleanup_unconfirmed', version: 390,
+96: 		}));
+97: 	}));
+98: 	return { signal: controller.signal, ensureLive, own, finish };
+99: }
+100: type Lifetime = ReturnType<typeof lifetime>;
+101: 
+102: async function readEnvelope(request: Request, owner: Lifetime): Promise<ChatTextHolderRequestV363> {
+103: 	const declared = request.headers.get('Content-Length');
+104: 	if (declared !== null && (!/^\d+$/u.test(declared) || Number(declared) > MAX_ENVELOPE_BYTES))
+105: 		throw new HolderRequestRejected(413);
+106: 	if (!request.body) throw new HolderRequestRejected(400);
+107: 	const reader = request.body.getReader();
+108: 	let done = false;
+109: 	let cancellation: Promise<void> | undefined;
+110: 	const cancel = () => cancellation ??= owner.own(() => reader.cancel(), false);
+111: 	const onAbort = () => { void cancel().catch(() => undefined); };
+112: 	owner.signal.addEventListener('abort', onAbort, { once: true });
+113: 	const chunks: Uint8Array[] = [];
+114: 	let size = 0;
+115: 	try {
+116: 		for (;;) {
+117: 			owner.ensureLive();
+118: 			const part = await reader.read();
+119: 			owner.ensureLive();
+120: 			if (part.done) { done = true; break; }
+121: 			size += part.value.byteLength;
+122: 			if (size > MAX_ENVELOPE_BYTES) throw new HolderRequestRejected(413);
+123: 			chunks.push(part.value);
+124: 		}
+125: 	} finally {
+126: 		owner.signal.removeEventListener('abort', onAbort);
+127: 		if (done) reader.releaseLock();
+128: 		else void cancel().finally(() => reader.releaseLock()).catch(() => undefined);
+129: 	}
+130: 	const bytes = new Uint8Array(size);
+131: 	let offset = 0;
+132: 	for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength; }
+{"file":"packages/proxy/src/runtime/complete-text-holder-worker-v390.ts","bytes":15088,"sha256":"9211e86c8cc97af3a02456a372192b9977d6d171d7ae4926de2877559b144814"}
+155: 		env.COMPLETE_TEXT_HOLDER, env.COMPLETE_TEXT_RENEWER];
+156: 	if (bindings.some(binding => !binding?.connectionString)
+157: 		|| new Set(bindings.map(binding => binding.connectionString)).size !== 4
+158: 		|| typeof env.PROVIDER_KEY_ENCRYPTION_SECRET !== 'string'
+159: 		|| env.PROVIDER_KEY_ENCRYPTION_SECRET.length < 16) throw new Error('Private bindings invalid');
+160: 	return {
+161: 		reader: createHyperdriveDedicatedRoleTransportV390(env.COMPLETE_TEXT_READER,
+162: 			'cinatoken_gateway_complete_text_private_reader'),
+163: 		granter: createHyperdriveDedicatedRoleTransportV390(env.COMPLETE_TEXT_GRANTER,
+164: 			'cinatoken_gateway_complete_text_attempt_granter'),
+165: 		holder: createHyperdriveDedicatedRoleTransportV390(env.COMPLETE_TEXT_HOLDER,
+166: 			'cinatoken_gateway_complete_text_send_holder'),
+167: 		renewer: createHyperdriveDedicatedRoleTransportV390(env.COMPLETE_TEXT_RENEWER,
+168: 			'cinatoken_gateway_complete_text_hold_renewer'),
+169: 	};
+170: }
+171: 
+172: /** Stream only the raw accepted body; headers and errors stay private/sanitized. */
+173: function deliver(response: Response, owner: Lifetime): Response {
+174: 	if (!response.body) throw new Error('Private holder response body missing');
+175: 	const reader = response.body.getReader();
+176: 	let terminal = false;
+177: 	let target: ReadableStreamDefaultController<Uint8Array>;
+178: 	const cancelReader = (reason?: unknown) => owner.own(() => reader.cancel(reason), false)
+179: 		.finally(() => reader.releaseLock());
+180: 	const finish = () => {
+181: 		terminal = true;
+182: 		owner.signal.removeEventListener('abort', onAbort);
+183: 		owner.finish();
+184: 	};
+185: 	const onAbort = () => {
+186: 		if (terminal) return;
+187: 		terminal = true;
+188: 		target.error(new Error('Private holder stream stopped'));
+189: 		void cancelReader().catch(() => undefined);
+190: 		finish();
+191: 	};
+192: 	const body = new ReadableStream<Uint8Array>({
+193: 		start(controller) {
+194: 			target = controller;
+195: 			owner.signal.addEventListener('abort', onAbort, { once: true });
+196: 			if (owner.signal.aborted) onAbort();
+197: 		},
+198: 		async pull(controller) {
+199: 			if (terminal) return;
+200: 			try {
+201: 				owner.ensureLive();
+202: 				const part = await reader.read();
+203: 				if (terminal) return;
+204: 				owner.ensureLive();
+205: 				if (part.done) { reader.releaseLock(); finish(); controller.close(); }
+206: 				else controller.enqueue(part.value);
+207: 			} catch {
+208: 				if (!terminal) {
+209: 					controller.error(new Error('Private holder stream unavailable'));
+210: 					// A rejected read already confirms an errored source stream.
+211: 					reader.releaseLock();
+212: 					finish();
+213: 				}
+214: 			}
+215: 		},
+216: 		cancel(reason) {
+217: 			if (terminal) return;
+218: 			terminal = true;
+219: 			owner.signal.removeEventListener('abort', onAbort);
+220: 			const pending = cancelReader(reason);
+221: 			return pending.finally(finish);
+222: 		},
+223: 	}, { highWaterMark: 0 });
+224: 	return new Response(body, { status: 200, headers: {
+225: 		'Content-Type': response.headers.get('Content-Type')!.toLowerCase().split(';', 1)[0]!,
+{"file":"packages/proxy/src/services/credential-free-chat-ingress-v401.ts","bytes":20878,"sha256":"c9a3567e6c0ae98e2a1316795b7c5a0cb98804c53213f3d45e84b5afc19163d6"}
+124: function ownHolderResponse(c: Context<Env>, response: Response, signal: AbortSignal, detachClient: () => void): Response {
+125:   if (!response.body) { detachClient(); return response; }
+126:   const reader = response.body.getReader();
+127:   let resolve!: (outcome: ResourceCompletionOutcome) => void;
+128:   const completion = new Promise<ResourceCompletionOutcome>(done => { resolve = done; });
+129:   let stopped = false, finished = false, cancelling: Promise<void> | undefined;
+130:   let controller: ReadableStreamDefaultController<Uint8Array>;
+131:   const finish = (outcome: ResourceCompletionOutcome): void => {
+132:     if (finished) return;
+133:     finished = true;
+134:     signal.removeEventListener('abort', onAbort);
+135:     detachClient();
+136:     reader.releaseLock();
+137:     resolve(outcome);
+138:   };
+139:   const cancel = (): Promise<void> => {
+140:     if (finished) return Promise.resolve();
+141:     stopped = true;
+142:     cancelling ??= reader.cancel(new Error('Credential-free response delivery stopped'))
+143:       .then(() => finish('confirmed'), () => finish('unconfirmed'));
+144:     return cancelling;
+145:   };
+146:   function onAbort(): void {
+147:     if (stopped) return;
+148:     void cancel();
+149:     controller.error(new Error('Credential-free response delivery stopped'));
+150:   }
+151:   scheduleResourceCompletion(c, completion);
+152:   const body = new ReadableStream<Uint8Array>({
+153:     start(target) {
+154:       controller = target;
+155:       signal.addEventListener('abort', onAbort, { once: true });
+156:       if (signal.aborted) onAbort();
+157:     },
+158:     async pull(target) {
+159:       if (stopped) return;
+160:       try {
+161:         const result = await reader.read();
+162:         if (stopped) return;
+163:         if (result.done) { stopped = true; finish('confirmed'); target.close(); }
+164:         else target.enqueue(result.value);
+165:       } catch {
+166:         if (stopped) return;
+167:         void cancel();
+168:         target.error(new Error('Credential-free response delivery failed'));
+169:       }
+170:     },
+171:     cancel,
+172:   }, { highWaterMark: 0 });
+173:   return new Response(body, response);
+174: }
+175: 
+176: function preparationErrorCode(code: string, status: number): GatewayErrorCodeValue {
+177:   switch (code) {
+178:     case 'invalid_json': return GatewayErrorCode.invalidJson;
+179:     case 'missing_model': return GatewayErrorCode.missingModel;
+180:     case 'payload_too_large': return GatewayErrorCode.payloadTooLarge;

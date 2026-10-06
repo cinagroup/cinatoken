@@ -1,0 +1,996 @@
+{"file":"docs/operators/deployment/releases/2026-10-06-native-g7-boundary-progress/root-progress/boundary-terminal-analysis.json","bytes":8810,"sha256":"e2f8bc5db5e951e14a3744ebc4d94486af2f5d7da25bd8b44999b2ef8d78d4fc"}
+1: {
+2:   "schema": "root-v364-boundary-terminal-analysis-v1",
+3:   "at": "2026-10-06T02:07:48.478Z",
+4:   "closed": true,
+5:   "actualExit": 0,
+6:   "runId": "37402302570",
+7:   "sourceSHA": "67f8b3df2f2b6e8159806767ecce1efa1904d27a",
+8:   "strictBaseline": {
+9:     "code": 1,
+10:     "signal": null,
+11:     "timedOut": false,
+12:     "stdout": {
+13:       "bytes": 2870,
+14:       "sha256": "020adcc84ef0ef0da558fc37dd57f54154923435b1f9dac0110ffec6b1affe18"
+15:     },
+16:     "stderr": {
+17:       "bytes": 0,
+18:       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+19:     }
+20:   },
+21:   "tap": [
+22:     "# tests 8",
+23:     "# pass 7",
+24:     "# fail 1",
+25:     "# cancelled 0",
+26:     "# skipped 0"
+27:   ],
+28:   "rows": [
+29:     {
+30:       "caseId": "node-http-calibration-destroy",
+31:       "actualExit": 0,
+32:       "closed": true,
+33:       "originalWindow": null,
+34:       "tail": null,
+35:       "finalPreDisposeSnapshot": null,
+36:       "error": null
+37:     },
+38:     {
+39:       "caseId": "node-http-calibration-rst",
+40:       "actualExit": 0,
+41:       "closed": true,
+42:       "originalWindow": null,
+43:       "tail": null,
+44:       "finalPreDisposeSnapshot": null,
+45:       "error": null
+46:     },
+47:     {
+48:       "caseId": "locked-bare-destroy",
+49:       "actualExit": 1,
+50:       "closed": true,
+51:       "originalWindow": {
+52:         "pollCount": 100,
+53:         "sleepMs": 10,
+54:         "elapsedMs": 1274.1735669999998,
+55:         "actual": null,
+56:         "expected": "observed",
+57:         "actualExit": 1
+58:       },
+59:       "tail": {
+60:         "elapsedMs": 4038.6711730000006,
+61:         "reads": 76,
+62:         "actual": null,
+63:         "usedForPass": false
+64:       },
+65:       "finalPreDisposeSnapshot": {
+66:         "cancel": null,
+67:         "release": null,
+68:         "accepted": "one",
+69:         "usedForPass": false
+70:       },
+71:       "error": null
+72:     },
+73:     {
+74:       "caseId": "locked-bare-rst",
+75:       "actualExit": 1,
+76:       "closed": true,
+77:       "originalWindow": {
+78:         "pollCount": 100,
+79:         "sleepMs": 10,
+80:         "elapsedMs": 1227.3664480000007,
+81:         "actual": null,
+82:         "expected": "observed",
+83:         "actualExit": 1
+84:       },
+85:       "tail": {
+86:         "elapsedMs": 4033.7517499999994,
+87:         "reads": 76,
+88:         "actual": null,
+89:         "usedForPass": false
+90:       },
+91:       "finalPreDisposeSnapshot": {
+92:         "cancel": null,
+93:         "release": null,
+94:         "accepted": "one",
+95:         "usedForPass": false
+96:       },
+97:       "error": null
+98:     },
+99:     {
+100:       "caseId": "locked-direct-destroy",
+101:       "actualExit": 1,
+102:       "closed": true,
+103:       "originalWindow": {
+104:         "pollCount": 100,
+105:         "sleepMs": 10,
+106:         "elapsedMs": 1251.1428619999988,
+107:         "actual": null,
+108:         "expected": "observed",
+109:         "actualExit": 1
+110:       },
+111:       "tail": {
+112:         "elapsedMs": 4022.962382999998,
+113:         "reads": 76,
+114:         "actual": null,
+115:         "usedForPass": false
+116:       },
+117:       "finalPreDisposeSnapshot": {
+118:         "cancel": null,
+119:         "release": null,
+120:         "accepted": "one",
+121:         "usedForPass": false
+122:       },
+123:       "error": null
+124:     },
+125:     {
+126:       "caseId": "locked-direct-rst",
+127:       "actualExit": 1,
+128:       "closed": true,
+129:       "originalWindow": {
+130:         "pollCount": 100,
+131:         "sleepMs": 10,
+132:         "elapsedMs": 1217.0151100000003,
+133:         "actual": null,
+134:         "expected": "observed",
+135:         "actualExit": 1
+136:       },
+137:       "tail": {
+138:         "elapsedMs": 4029.9668280000005,
+139:         "reads": 76,
+140:         "actual": null,
+141:         "usedForPass": false
+142:       },
+143:       "finalPreDisposeSnapshot": {
+144:         "cancel": null,
+145:         "release": null,
+146:         "accepted": "one",
+147:         "usedForPass": false
+148:       },
+149:       "error": null
+150:     },
+151:     {
+152:       "caseId": "locked-binding-destroy",
+153:       "actualExit": 1,
+154:       "closed": true,
+155:       "originalWindow": {
+156:         "pollCount": 100,
+157:         "sleepMs": 10,
+158:         "elapsedMs": 1214.981746999998,
+159:         "actual": null,
+160:         "expected": "observed",
+161:         "actualExit": 1
+162:       },
+163:       "tail": {
+164:         "elapsedMs": 4011.387015999997,
+165:         "reads": 76,
+166:         "actual": null,
+167:         "usedForPass": false
+168:       },
+169:       "finalPreDisposeSnapshot": {
+170:         "cancel": null,
+171:         "release": null,
+172:         "accepted": "one",
+173:         "usedForPass": false
+174:       },
+175:       "error": null
+176:     },
+177:     {
+178:       "caseId": "locked-binding-rst",
+179:       "actualExit": 1,
+180:       "closed": true,
+181:       "originalWindow": {
+182:         "pollCount": 100,
+183:         "sleepMs": 10,
+184:         "elapsedMs": 1220.7450519999984,
+185:         "actual": null,
+186:         "expected": "observed",
+187:         "actualExit": 1
+188:       },
+189:       "tail": {
+190:         "elapsedMs": 4013.019505999997,
+191:         "reads": 76,
+192:         "actual": null,
+193:         "usedForPass": false
+194:       },
+195:       "finalPreDisposeSnapshot": {
+196:         "cancel": null,
+197:         "release": null,
+198:         "accepted": "one",
+199:         "usedForPass": false
+200:       },
+201:       "error": null
+202:     }
+203:   ],
+204:   "executorActualExit": 1,
+205:   "cleanup": {
+206:     "authority": "this executor",
+207:     "subreaperEnabled": true,
+208:     "directChildReaped": true,
+209:     "groupGone": true,
+210:     "leftoverGroupKilled": false,
+211:     "signalAttempts": [],
+212:     "reapedDescendants": [
+213:       {
+214:         "pid": 2633,
+215:         "startTimeTicks": "22301",
+216:         "waitStatus": 0,
+217:         "waitExitCode": 0,
+218:         "source": "individually identified adopted zombie"
+219:       },
+220:       {
+221:         "pid": 2670,
+222:         "startTimeTicks": "22334",
+223:         "waitStatus": 0,
+224:         "waitExitCode": 0,
+225:         "source": "individually identified adopted zombie"
+226:       },
+227:       {
+228:         "pid": 2678,
+229:         "startTimeTicks": "22337",
+230:         "waitStatus": 0,
+231:         "waitExitCode": 0,
+232:         "source": "individually identified adopted zombie"
+233:       },
+234:       {
+235:         "pid": 2685,
+236:         "startTimeTicks": "22405",
+237:         "waitStatus": 0,
+238:         "waitExitCode": 0,
+239:         "source": "individually identified adopted zombie"
+240:       }
+241:     ],
+242:     "processCensus": [
+243:       {
+244:         "label": "before-initial-adopted-reap",
+245:         "elapsedMs": 37331.42770999999,
+246:         "pgrp": 2597,
+247:         "session": 2597,
+248:         "members": [
+249:           {
+250:             "pid": 2633,
+251:             "comm": "esbuild",
+252:             "state": "Z",
+253:             "ppid": 2595,
+254:             "pgrp": 2597,
+255:             "session": 2597,
+256:             "startTimeTicks": "22301"
+257:           },
+258:           {
+259:             "pid": 2670,
+260:             "comm": "esbuild",
+261:             "state": "Z",
+262:             "ppid": 2595,
+263:             "pgrp": 2597,
+264:             "session": 2597,
+265:             "startTimeTicks": "22334"
+266:           },
+267:           {
+268:             "pid": 2678,
+269:             "comm": "esbuild",
+270:             "state": "Z",
+271:             "ppid": 2595,
+272:             "pgrp": 2597,
+273:             "session": 2597,
+274:             "startTimeTicks": "22337"
+275:           },
+276:           {
+277:             "pid": 2685,
+278:             "comm": "esbuild",
+279:             "state": "Z",
+280:             "ppid": 2595,
+281:             "pgrp": 2597,
+282:             "session": 2597,
+283:             "startTimeTicks": "22405"
+284:           }
+285:         ],
+286:         "live": 0,
+287:         "zombies": 4,
+288:         "unknown": [],
+289:         "complete": true,
+290:         "groupExists": true
+291:       },
+292:       {
+293:         "label": "after-initial-adopted-reap",
+294:         "elapsedMs": 37337.531465000015,
+295:         "pgrp": 2597,
+296:         "session": 2597,
+297:         "members": [],
+298:         "live": 0,
+299:         "zombies": 0,
+300:         "unknown": [],
+301:         "complete": true,
+302:         "groupExists": false
+303:       },
+304:       {
+305:         "label": "after-term-before-reap",
+306:         "elapsedMs": 37343.387799,
+307:         "pgrp": 2597,
+308:         "session": 2597,
+309:         "members": [],
+310:         "live": 0,
+311:         "zombies": 0,
+312:         "unknown": [],
+313:         "complete": true,
+314:         "groupExists": false
+315:       },
+316:       {
+317:         "label": "after-term-after-reap",
+318:         "elapsedMs": 37349.21350699997,
+319:         "pgrp": 2597,
+320:         "session": 2597,
+321:         "members": [],
+322:         "live": 0,
+323:         "zombies": 0,
+324:         "unknown": [],
+325:         "complete": true,
+326:         "groupExists": false
+327:       },
+328:       {
+329:         "label": "final-adopt-drain",
+330:         "elapsedMs": 37355.10705099998,
+331:         "pgrp": 2597,
+332:         "session": 2597,
+333:         "members": [],
+334:         "live": 0,
+335:         "zombies": 0,
+336:         "unknown": [],
+337:         "complete": true,
+338:         "groupExists": false
+339:       },
+340:       {
+341:         "label": "final-post-reap",
+342:         "elapsedMs": 37361.077136999964,
+343:         "pgrp": 2597,
+344:         "session": 2597,
+345:         "members": [],
+346:         "live": 0,
+347:         "zombies": 0,
+348:         "unknown": [],
+349:         "complete": true,
+350:         "groupExists": false
+351:       }
+352:     ],
+353:     "apiDisposalReported": true,
+354:     "outerUnforcedGroupClose": true,
+355:     "gracefulWorkerdExitProven": false,
+356:     "miniflareDisposeMaySendSIGKILL": true,
+357:     "errors": []
+358:   },
+359:   "timedOut": false,
+360:   "sourceUnchanged": true,
+361:   "allEightBaselineEligibleFalse": true,
+362:   "causeProven": false,
+363:   "remoteZIPHashOnlyReported": "sha256:b02bea900a32639c5e49952b9c711c31e2906bf20145794a89f724909dec2fe2"
+364: }
+365: 
+{"file":"docs/operators/deployment/releases/2026-10-06-native-g7-boundary-progress/root-progress/boundary-artifact/_temp/v364-boundary-once-37402302570-1/closed-result.json","bytes":22206,"sha256":"f76dc98765d470f26434bb611bfceb098806b8b8987a0ec8d2088a684ff61a8d"}
+1: {
+2:   "schema": "v364-owned-linux-boundary-closed-v1",
+3:   "startedAt": "2026-10-06T02:05:12.442Z",
+4:   "endedAt": "2026-10-06T02:05:49.255Z",
+5:   "elapsedMs": 36813.572890999996,
+6:   "actualExit": 1,
+7:   "outcome": "STRICT_FAILURE_PRESERVED",
+8:   "baseline": {
+9:     "code": 1,
+10:     "signal": null,
+11:     "timedOut": false,
+12:     "stdout": {
+13:       "bytes": 2870,
+14:       "sha256": "020adcc84ef0ef0da558fc37dd57f54154923435b1f9dac0110ffec6b1affe18"
+15:     },
+16:     "stderr": {
+17:       "bytes": 0,
+18:       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+19:     }
+20:   },
+21:   "results": [
+22:     {
+23:       "caseId": "node-http-calibration-destroy",
+24:       "mode": "destroy",
+25:       "baselineEligible": false,
+26:       "calibrationOnly": true,
+27:       "actualExit": 0,
+28:       "closed": true
+29:     },
+30:     {
+31:       "caseId": "node-http-calibration-rst",
+32:       "mode": "rst",
+33:       "baselineEligible": false,
+34:       "calibrationOnly": true,
+35:       "actualExit": 0,
+36:       "closed": true
+37:     },
+38:     {
+39:       "caseId": "locked-bare-destroy",
+40:       "kind": "bare",
+41:       "mode": "destroy",
+42:       "baselineEligible": false,
+43:       "diagnosticVariant": true,
+44:       "originalWindow": {
+45:         "pollCount": 100,
+46:         "sleepMs": 10,
+47:         "elapsedMs": 1274.1735669999998,
+48:         "actual": null,
+49:         "expected": "observed",
+50:         "actualExit": 1
+51:       },
+52:       "tail": {
+53:         "elapsedMs": 4038.6711730000006,
+54:         "reads": 76,
+55:         "actual": null,
+56:         "usedForPass": false
+57:       },
+58:       "finalPreDisposeSnapshot": {
+59:         "cancel": null,
+60:         "release": null,
+61:         "accepted": "one",
+62:         "usedForPass": false
+63:       },
+64:       "actualExit": 1,
+65:       "closed": true,
+66:       "strictFailure": {
+67:         "name": "AssertionError",
+68:         "code": "ERR_ASSERTION",
+69:         "message": "Expected values to be strictly equal:\n\nnull !== 'observed'\n"
+70:       }
+71:     },
+72:     {
+73:       "caseId": "locked-bare-rst",
+74:       "kind": "bare",
+75:       "mode": "rst",
+76:       "baselineEligible": false,
+77:       "diagnosticVariant": true,
+78:       "originalWindow": {
+79:         "pollCount": 100,
+80:         "sleepMs": 10,
+81:         "elapsedMs": 1227.3664480000007,
+82:         "actual": null,
+83:         "expected": "observed",
+84:         "actualExit": 1
+85:       },
+86:       "tail": {
+87:         "elapsedMs": 4033.7517499999994,
+88:         "reads": 76,
+89:         "actual": null,
+90:         "usedForPass": false
+91:       },
+92:       "finalPreDisposeSnapshot": {
+93:         "cancel": null,
+94:         "release": null,
+95:         "accepted": "one",
+96:         "usedForPass": false
+97:       },
+98:       "actualExit": 1,
+99:       "closed": true,
+100:       "strictFailure": {
+101:         "name": "AssertionError",
+102:         "code": "ERR_ASSERTION",
+103:         "message": "Expected values to be strictly equal:\n\nnull !== 'observed'\n"
+104:       }
+105:     },
+106:     {
+107:       "caseId": "locked-direct-destroy",
+108:       "kind": "direct",
+109:       "mode": "destroy",
+110:       "baselineEligible": false,
+111:       "diagnosticVariant": true,
+112:       "originalWindow": {
+113:         "pollCount": 100,
+114:         "sleepMs": 10,
+115:         "elapsedMs": 1251.1428619999988,
+116:         "actual": null,
+117:         "expected": "observed",
+118:         "actualExit": 1
+119:       },
+120:       "tail": {
+121:         "elapsedMs": 4022.962382999998,
+122:         "reads": 76,
+123:         "actual": null,
+124:         "usedForPass": false
+125:       },
+126:       "finalPreDisposeSnapshot": {
+127:         "cancel": null,
+128:         "release": null,
+129:         "accepted": "one",
+130:         "usedForPass": false
+131:       },
+132:       "actualExit": 1,
+133:       "closed": true,
+134:       "strictFailure": {
+135:         "name": "AssertionError",
+136:         "code": "ERR_ASSERTION",
+137:         "message": "Expected values to be strictly equal:\n\nnull !== 'observed'\n"
+138:       }
+139:     },
+140:     {
+141:       "caseId": "locked-direct-rst",
+142:       "kind": "direct",
+143:       "mode": "rst",
+144:       "baselineEligible": false,
+145:       "diagnosticVariant": true,
+146:       "originalWindow": {
+147:         "pollCount": 100,
+148:         "sleepMs": 10,
+149:         "elapsedMs": 1217.0151100000003,
+150:         "actual": null,
+151:         "expected": "observed",
+152:         "actualExit": 1
+153:       },
+154:       "tail": {
+155:         "elapsedMs": 4029.9668280000005,
+156:         "reads": 76,
+157:         "actual": null,
+158:         "usedForPass": false
+159:       },
+160:       "finalPreDisposeSnapshot": {
+161:         "cancel": null,
+162:         "release": null,
+163:         "accepted": "one",
+164:         "usedForPass": false
+165:       },
+166:       "actualExit": 1,
+167:       "closed": true,
+168:       "strictFailure": {
+169:         "name": "AssertionError",
+170:         "code": "ERR_ASSERTION",
+171:         "message": "Expected values to be strictly equal:\n\nnull !== 'observed'\n"
+172:       }
+173:     },
+174:     {
+175:       "caseId": "locked-binding-destroy",
+176:       "kind": "binding",
+177:       "mode": "destroy",
+178:       "baselineEligible": false,
+179:       "diagnosticVariant": true,
+180:       "originalWindow": {
+181:         "pollCount": 100,
+182:         "sleepMs": 10,
+183:         "elapsedMs": 1214.981746999998,
+184:         "actual": null,
+185:         "expected": "observed",
+186:         "actualExit": 1
+187:       },
+188:       "tail": {
+189:         "elapsedMs": 4011.387015999997,
+190:         "reads": 76,
+191:         "actual": null,
+192:         "usedForPass": false
+193:       },
+194:       "finalPreDisposeSnapshot": {
+195:         "cancel": null,
+196:         "release": null,
+197:         "accepted": "one",
+198:         "usedForPass": false
+199:       },
+200:       "actualExit": 1,
+201:       "closed": true,
+202:       "strictFailure": {
+203:         "name": "AssertionError",
+204:         "code": "ERR_ASSERTION",
+205:         "message": "Expected values to be strictly equal:\n\nnull !== 'observed'\n"
+206:       }
+207:     },
+208:     {
+209:       "caseId": "locked-binding-rst",
+210:       "kind": "binding",
+211:       "mode": "rst",
+212:       "baselineEligible": false,
+213:       "diagnosticVariant": true,
+214:       "originalWindow": {
+215:         "pollCount": 100,
+216:         "sleepMs": 10,
+217:         "elapsedMs": 1220.7450519999984,
+218:         "actual": null,
+219:         "expected": "observed",
+220:         "actualExit": 1
+221:       },
+222:       "tail": {
+223:         "elapsedMs": 4013.019505999997,
+224:         "reads": 76,
+225:         "actual": null,
+226:         "usedForPass": false
+227:       },
+228:       "finalPreDisposeSnapshot": {
+229:         "cancel": null,
+230:         "release": null,
+231:         "accepted": "one",
+232:         "usedForPass": false
+233:       },
+234:       "actualExit": 1,
+235:       "closed": true,
+236:       "strictFailure": {
+237:         "name": "AssertionError",
+238:         "code": "ERR_ASSERTION",
+239:         "message": "Expected values to be strictly equal:\n\nnull !== 'observed'\n"
+240:       }
+241:     }
+242:   ],
+243:   "versions": {
+244:     "workerd": "1.20260828.1",
+245:     "miniflare": "5.20260828.0-alpha",
+246:     "wrangler": "4.127.1"
+247:   },
+248:   "executorReceipt": {
+249:     "schema": "v364-owned-linux-boundary-executor-start-v1",
+250:     "repo": "/home/runner/work/cinatoken/cinatoken",
+251:     "output": "/home/runner/work/_temp/v364-boundary-once-37402302570-1",
+252:     "startedEpoch": 1791252311.9760587,
+253:     "freshOutputCreated": true,
+254:     "packageSHA256": "b99ede67c0e949fc6aee728f450d564d60c9eed14b60e542e3282e9a8d163af9",
+255:     "checkoutSHA": "67f8b3df2f2b6e8159806767ecce1efa1904d27a",
+256:     "run": {
+257:       "GITHUB_SHA": "67f8b3df2f2b6e8159806767ecce1efa1904d27a",
+258:       "GITHUB_RUN_ID": "37402302570",
+259:       "GITHUB_RUN_ATTEMPT": "1",
+260:       "GITHUB_WORKFLOW": "v364 owned Linux cancellation boundary",
+261:       "GITHUB_JOB": "cancellation-boundary"
+262:     },
+263:     "outerTimeoutSeconds": 360
+264:   },
+265:   "checkoutSHA": "67f8b3df2f2b6e8159806767ecce1efa1904d27a",
+266:   "reviewBaseHEAD": "6658ec978009afa5fe3f4beccf6bde358590b663",
+267:   "priorRun": {
+268:     "runId": "37396338452",
+269:     "checkoutSHA": "fc17551b3016d3533c17cc4ec9b0151a4eedae44",
+270:     "actualExit": 1,
+271:     "actualProcessExit": 1,
+272:     "runnerOutcomeCode": 1,
+273:     "leftoverGroupKilled": true,
+274:     "reapedDescendants": [
+275:       {
+276:         "pid": 2648,
+277:         "waitStatus": 0
+278:       },
+279:       {
+280:         "pid": 2661,
+281:         "waitStatus": 0
+282:       },
+283:       {
+284:         "pid": 2654,
+285:         "waitStatus": 0
+286:       },
+287:       {
+288:         "pid": 2609,
+289:         "waitStatus": 0
+290:       }
+291:     ],
+292:     "causeProven": false,
+293:     "unchangedHistoricalFailure": true
+294:   },
+295:   "allComparisonsBaselineEligible": false,
+296:   "closureAuthority": "executor.closed.json; bounded Promise does not cancel underlying task",
+297:   "runtimeCompatibilityDate": "2026-09-04",
+298:   "frozenConfigDate": "2026-09-25",
+299:   "sourceUnchanged": true,
+300:   "inputsBefore": [
+301:     {
+302:       "path": "packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs",
+303:       "bytes": 13354,
+304:       "sha256": "d23d1c710b539b6c64655fbb1fa4e4de85b228bab19c757bc0e4de48528972e5"
+305:     },
+306:     {
+307:       "path": "packages/proxy/scripts/staging/chat-holder-binding-v364.node.test.mjs",
+308:       "bytes": 5908,
+309:       "sha256": "bf02a63395f450b889a784dc58bc537b6cb2f4a3004de07e1833c3e747c27fcc"
+310:     },
+311:     {
+312:       "path": "packages/proxy/scripts/staging/chat-holder-gateway-v364.ts",
+313:       "bytes": 1534,
+314:       "sha256": "8c85b01ba54daa9b7302c726d20693d08ccb3395350ea6a333817eed46441eaf"
+315:     },
+316:     {
+317:       "path": "packages/proxy/scripts/staging/chat-holder-private-v364.ts",
+318:       "bytes": 5367,
+319:       "sha256": "44070fcbb7058b915329a150634eaa649c1b3601724495a1620e94ce2d54d1bf"
+320:     },
+321:     {
+322:       "path": "packages/proxy/scripts/staging/chat-holder-synthetic-v364.ts",
+323:       "bytes": 1019,
+324:       "sha256": "d89c6964454d9368a0257b6a585c8d5d707c91d09e55f5f2ea7c3545e5f0a16d"
+325:     },
+326:     {
+327:       "path": "packages/proxy/scripts/staging/wrangler.chat-holder-gateway-v364.jsonc",
+328:       "bytes": 598,
+329:       "sha256": "e1a0354ff5bf7915c6c125f3003683a56b708d8bdd6006cce6b33c4ff8a6bb77"
+330:     },
+331:     {
+332:       "path": "packages/proxy/scripts/staging/wrangler.chat-holder-private-v364.jsonc",
+333:       "bytes": 568,
+334:       "sha256": "6b897d8aa7b01087b75d4b74968d4004e2b6ddb87650bad1203c7693160b2047"
+335:     },
+336:     {
+337:       "path": "package-lock.json",
+338:       "bytes": 830546,
+339:       "sha256": "f9c65b6e373a231d52d6eda634bb5f947dda3174734cd70e2b811e09fff0b6f0"
+340:     },
+341:     {
+342:       "path": ".nvmrc",
+343:       "bytes": 3,
+344:       "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56"
+345:     },
+346:     {
+347:       "path": ".github/workflows/proxy-dispatch-safety.yml",
+348:       "bytes": 45895,
+349:       "sha256": "8e883e7f21f77f8367d361f6bd3d060e16c241c28641b3eac85af6835841f152"
+350:     },
+351:     {
+352:       "path": "scripts/diagnostics/v364-owned-linux/execute-owned-linux.py",
+353:       "bytes": 9535,
+354:       "sha256": "45c479a4602a3e79b42daa8dcca6e8b9ef876fa986136598b263a505d5320e31"
+355:     },
+356:     {
+357:       "path": "scripts/diagnostics/v364-owned-linux/gateway-observer.mjs",
+358:       "bytes": 1244,
+359:       "sha256": "3ec2e49a72697f61bd1867bcde369a7c508cdbf669cd86d7e0eebdfc41dcfe00"
+360:     },
+361:     {
+362:       "path": "scripts/diagnostics/v364-owned-linux/holder-observer.mjs",
+363:       "bytes": 2461,
+364:       "sha256": "740727cae646ae757fa50ef7bb6c02a9f9cb4b1b3aa64b0de539c88bbbe09a25"
+365:     },
+366:     {
+367:       "path": "scripts/diagnostics/v364-owned-linux/README.md",
+368:       "bytes": 6385,
+369:       "sha256": "75f8f7e5e678157349712128cc68dbb9323de2daa6686e9b4d47e6098f075263"
+370:     },
+371:     {
+372:       "path": "scripts/diagnostics/v364-owned-linux/run-v364-owned-diagnostic.mjs",
+373:       "bytes": 22852,
+374:       "sha256": "11850fbe29355f705e3bc4ec68c1b6416565b943dfb7a0f200d4090de5158666"
+375:     },
+376:     {
+377:       "path": "scripts/diagnostics/v364-owned-linux/sealed-package.json",
+378:       "bytes": 1067,
+379:       "sha256": "392f5a44294abf70c4bc3cbb7b727103f96d5ce8f5e87bfc3fe3dc8bd1fc6bd4"
+380:     },
+381:     {
+382:       "path": "scripts/diagnostics/v364-owned-linux/source-inputs.json",
+383:       "bytes": 1789,
+384:       "sha256": "d42cda26a0f175bace59626b666cfc6e84c29929767c5344cc6680d98b96a083"
+385:     },
+386:     {
+387:       "path": ".github/workflows/v364-owned-linux-diagnostic.yml",
+388:       "bytes": 1610,
+389:       "sha256": "5f6c5de1d989f1331bad5a0a861accb848c8b02f5e0a196637e5f35540df241b"
+390:     },
+391:     {
+392:       "path": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/native-agent/FINAL-v364-linux-artifact-analysis.json",
+393:       "bytes": 66439,
+394:       "sha256": "9bc548f9d070256bcbe9c22cb4ae05d39bb9936103eb91192069e23965f731d2"
+395:     },
+396:     {
+397:       "path": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/root-followup/diagnostic-linux-download/_temp/v364-owned-once-37396338452-1/executor.closed.json",
+398:       "bytes": 2372,
+399:       "sha256": "fd99e106e006730699d3e8e08cc75c76efe631f117e918c4d18b62d6a5b8850c"
+400:     },
+401:     {
+402:       "path": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/root-followup/diagnostic-linux-download/_temp/v364-owned-once-37396338452-1/closed-result.json",
+403:       "bytes": 10587,
+404:       "sha256": "ce4fc862e1424dfcb16c77e18346b2d5d16c35390f9dfcd0b8c7a404780d3c1f"
+405:     },
+406:     {
+407:       "path": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/root-followup/diagnostic-linux-download/_temp/v364-owned-once-37396338452-1/executor-start.json",
+408:       "bytes": 675,
+409:       "sha256": "861ac92d3a2e88ce12161d383cf879b4cd15961534142a301006006067363827"
+410:     },
+411:     {
+412:       "path": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/root-followup/diagnostic-linux-download/_temp/v364-owned-once-37396338452-1/executor.stdout.txt",
+413:       "bytes": 162,
+414:       "sha256": "e2f1da32c548d2ae6ed4bfeaabcc29ae1a66dd56152a9a423248ed2233def675"
+415:     },
+416:     {
+417:       "path": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/root-followup/diagnostic-linux-download/_temp/v364-owned-once-37396338452-1/executor.stderr.txt",
+418:       "bytes": 0,
+419:       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+420:     },
+421:     {
+422:       "path": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/root-followup/diagnostic-linux-download/_temp/v364-owned-once-37396338452-1/original-strict.stdout.txt",
+423:       "bytes": 2870,
+424:       "sha256": "e92e5054f09bd9d580f5d8e2edd7d8694a6c1e80f0aced769765b92a6e0095bd"
+425:     },
+426:     {
+427:       "path": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/root-followup/diagnostic-linux-download/_temp/v364-owned-once-37396338452-1/original-strict.stderr.txt",
+428:       "bytes": 0,
+429:       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+430:     },
+431:     {
+432:       "path": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/root-followup/diagnostic-linux-download/_temp/v364-owned-once-37396338452-1/events.json.gz",
+433:       "bytes": 31967,
+434:       "sha256": "09e36873ea521e8f24727634655cec81a5bc365a6b74fe96b7a57daa185a823c"
+435:     }
+436:   ],
+437:   "inputsAfter": [
+438:     {
+439:       "path": "packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs",
+440:       "bytes": 13354,
+441:       "sha256": "d23d1c710b539b6c64655fbb1fa4e4de85b228bab19c757bc0e4de48528972e5"
+442:     },
+443:     {
+444:       "path": "packages/proxy/scripts/staging/chat-holder-binding-v364.node.test.mjs",
+445:       "bytes": 5908,
+446:       "sha256": "bf02a63395f450b889a784dc58bc537b6cb2f4a3004de07e1833c3e747c27fcc"
+447:     },
+448:     {
+449:       "path": "packages/proxy/scripts/staging/chat-holder-gateway-v364.ts",
+450:       "bytes": 1534,
+451:       "sha256": "8c85b01ba54daa9b7302c726d20693d08ccb3395350ea6a333817eed46441eaf"
+452:     },
+453:     {
+454:       "path": "packages/proxy/scripts/staging/chat-holder-private-v364.ts",
+455:       "bytes": 5367,
+456:       "sha256": "44070fcbb7058b915329a150634eaa649c1b3601724495a1620e94ce2d54d1bf"
+457:     },
+458:     {
+459:       "path": "packages/proxy/scripts/staging/chat-holder-synthetic-v364.ts",
+460:       "bytes": 1019,
+461:       "sha256": "d89c6964454d9368a0257b6a585c8d5d707c91d09e55f5f2ea7c3545e5f0a16d"
+462:     },
+463:     {
+464:       "path": "packages/proxy/scripts/staging/wrangler.chat-holder-gateway-v364.jsonc",
+465:       "bytes": 598,
+466:       "sha256": "e1a0354ff5bf7915c6c125f3003683a56b708d8bdd6006cce6b33c4ff8a6bb77"
+467:     },
+468:     {
+469:       "path": "packages/proxy/scripts/staging/wrangler.chat-holder-private-v364.jsonc",
+470:       "bytes": 568,
+471:       "sha256": "6b897d8aa7b01087b75d4b74968d4004e2b6ddb87650bad1203c7693160b2047"
+472:     },
+473:     {
+474:       "path": "package-lock.json",
+475:       "bytes": 830546,
+476:       "sha256": "f9c65b6e373a231d52d6eda634bb5f947dda3174734cd70e2b811e09fff0b6f0"
+477:     },
+478:     {
+479:       "path": ".nvmrc",
+480:       "bytes": 3,
+481:       "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56"
+482:     },
+483:     {
+484:       "path": ".github/workflows/proxy-dispatch-safety.yml",
+485:       "bytes": 45895,
+486:       "sha256": "8e883e7f21f77f8367d361f6bd3d060e16c241c28641b3eac85af6835841f152"
+487:     },
+488:     {
+489:       "path": "scripts/diagnostics/v364-owned-linux/execute-owned-linux.py",
+490:       "bytes": 9535,
+491:       "sha256": "45c479a4602a3e79b42daa8dcca6e8b9ef876fa986136598b263a505d5320e31"
+492:     },
+493:     {
+494:       "path": "scripts/diagnostics/v364-owned-linux/gateway-observer.mjs",
+495:       "bytes": 1244,
+496:       "sha256": "3ec2e49a72697f61bd1867bcde369a7c508cdbf669cd86d7e0eebdfc41dcfe00"
+497:     },
+498:     {
+499:       "path": "scripts/diagnostics/v364-owned-linux/holder-observer.mjs",
+500:       "bytes": 2461,
+501:       "sha256": "740727cae646ae757fa50ef7bb6c02a9f9cb4b1b3aa64b0de539c88bbbe09a25"
+502:     },
+503:     {
+504:       "path": "scripts/diagnostics/v364-owned-linux/README.md",
+505:       "bytes": 6385,
+506:       "sha256": "75f8f7e5e678157349712128cc68dbb9323de2daa6686e9b4d47e6098f075263"
+507:     },
+508:     {
+509:       "path": "scripts/diagnostics/v364-owned-linux/run-v364-owned-diagnostic.mjs",
+510:       "bytes": 22852,
+511:       "sha256": "11850fbe29355f705e3bc4ec68c1b6416565b943dfb7a0f200d4090de5158666"
+512:     },
+513:     {
+514:       "path": "scripts/diagnostics/v364-owned-linux/sealed-package.json",
+515:       "bytes": 1067,
+516:       "sha256": "392f5a44294abf70c4bc3cbb7b727103f96d5ce8f5e87bfc3fe3dc8bd1fc6bd4"
+517:     },
+518:     {
+519:       "path": "scripts/diagnostics/v364-owned-linux/source-inputs.json",
+520:       "bytes": 1789,
+521:       "sha256": "d42cda26a0f175bace59626b666cfc6e84c29929767c5344cc6680d98b96a083"
+522:     },
+523:     {
+524:       "path": ".github/workflows/v364-owned-linux-diagnostic.yml",
+525:       "bytes": 1610,
+526:       "sha256": "5f6c5de1d989f1331bad5a0a861accb848c8b02f5e0a196637e5f35540df241b"
+527:     },
+528:     {
+529:       "path": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/native-agent/FINAL-v364-linux-artifact-analysis.json",
+530:       "bytes": 66439,
+531:       "sha256": "9bc548f9d070256bcbe9c22cb4ae05d39bb9936103eb91192069e23965f731d2"
+532:     },
+533:     {
+534:       "path": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/root-followup/diagnostic-linux-download/_temp/v364-owned-once-37396338452-1/executor.closed.json",
+535:       "bytes": 2372,
+536:       "sha256": "fd99e106e006730699d3e8e08cc75c76efe631f117e918c4d18b62d6a5b8850c"
+537:     },
+538:     {
+539:       "path": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/root-followup/diagnostic-linux-download/_temp/v364-owned-once-37396338452-1/closed-result.json",
+540:       "bytes": 10587,
+541:       "sha256": "ce4fc862e1424dfcb16c77e18346b2d5d16c35390f9dfcd0b8c7a404780d3c1f"
+542:     },
+543:     {
+544:       "path": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/root-followup/diagnostic-linux-download/_temp/v364-owned-once-37396338452-1/executor-start.json",
+545:       "bytes": 675,
+546:       "sha256": "861ac92d3a2e88ce12161d383cf879b4cd15961534142a301006006067363827"
+547:     },
+548:     {
+549:       "path": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/root-followup/diagnostic-linux-download/_temp/v364-owned-once-37396338452-1/executor.stdout.txt",
+550:       "bytes": 162,
+551:       "sha256": "e2f1da32c548d2ae6ed4bfeaabcc29ae1a66dd56152a9a423248ed2233def675"
+552:     },
+553:     {
+554:       "path": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/root-followup/diagnostic-linux-download/_temp/v364-owned-once-37396338452-1/executor.stderr.txt",
+555:       "bytes": 0,
+556:       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+557:     },
+558:     {
+559:       "path": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/root-followup/diagnostic-linux-download/_temp/v364-owned-once-37396338452-1/original-strict.stdout.txt",
+560:       "bytes": 2870,
+561:       "sha256": "e92e5054f09bd9d580f5d8e2edd7d8694a6c1e80f0aced769765b92a6e0095bd"
+562:     },
+563:     {
+564:       "path": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/root-followup/diagnostic-linux-download/_temp/v364-owned-once-37396338452-1/original-strict.stderr.txt",
+565:       "bytes": 0,
+566:       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+567:     },
+568:     {
+569:       "path": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/root-followup/diagnostic-linux-download/_temp/v364-owned-once-37396338452-1/events.json.gz",
+570:       "bytes": 31967,
+571:       "sha256": "09e36873ea521e8f24727634655cec81a5bc365a6b74fe96b7a57daa185a823c"
+572:     }
+573:   ],
+574:   "bundleHashes": [
+575:     {
+576:       "name": "gateway",
+577:       "bytes": 1474,
+578:       "sha256": "ee2b63670af2ed15320204f46ce1130b0b71b3bfbc5d901b160069c595388bd4"
+579:     },
+580:     {
+581:       "name": "holder",
+582:       "bytes": 5595,
+583:       "sha256": "05100170dca4896eb11b723e65df7cf437f886797c0e2d255bb238c16e55089c"
+584:     },
+585:     {
+586:       "name": "observedGateway",
+587:       "bytes": 2690,
+588:       "sha256": "edafc7ec0e604c51d58ffde272a83c04404d816effa734b1cff1d64b6f84b1f6"
+589:     },
+590:     {
+591:       "name": "observedHolder",
+592:       "bytes": 7979,
+593:       "sha256": "573d54572570e06fb83328191156fd2c6ec7fd3551369d802b3d1a3d2646eee1"
+594:     },
+595:     {
+596:       "name": "bare",
+597:       "bytes": 4254,
+598:       "sha256": "51a9c4fd45a91b2965f796d4c59223c781822c9d1df204391ba181de8c74f640"
+599:     },
+600:     {
+601:       "name": "direct",
+602:       "bytes": 11126,
+603:       "sha256": "6acf670cc4005d3bd47dbb0d6bb076516c0335c8e443f53f96934242b1d22be9"
+604:     }
+605:   ],
+606:   "activeMiniflare": 0,
+607:   "observationFailures": [],
+608:   "events": {
+609:     "bytes": 575797,
+610:     "sha256": "504c40a249279483807f82fec2221690e772bbbcf7e68ed85b59fe9005cb1c51",
+611:     "count": 2434
+612:   },
+613:   "productionRequests": 0,
+614:   "realIdentity": false,
+615:   "defaultOffHolderChanged": false,
+616:   "dependencyChanged": false,
+617:   "causeProven": false,
+618:   "lateObservationUpgradesPass": false,
+619:   "upstreamPatchApplied": false,
+620:   "flagsChanged": false,
+621:   "limitations": [
+622:     "Bare stream simplifies envelope validation and has no gateway/holder import; timing perturbation remains possible.",
+623:     "Direct arm changes request execution context topology by calling original holder locally and contains synthetic private literals; it cannot pass the original binding baseline.",
+624:     "Miniflare runtime dispose sends SIGKILL internally; API disposal fulfilled is not graceful workerd exit.",
+625:     "Host receipt phase is arrival-time attribution; preserve worker timestamps and do not assume all logs arrived before dispose.",
+626:     "Same runtime failure differences localize a boundary, not an upstream regression cause proof."
+627:   ]
+628: }
+629: 

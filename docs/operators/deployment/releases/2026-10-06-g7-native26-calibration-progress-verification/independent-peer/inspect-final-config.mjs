@@ -1,0 +1,5 @@
+import fs from 'node:fs';import path from 'node:path';import crypto from 'node:crypto';
+const temp='C:/Users/cina/AppData/Local/Temp',cfgPath=temp+'/cinatoken-final-capsule-collection-config-NWebV7/all-frozen-final-config.json';
+const b=fs.readFileSync(cfgPath),cfg=JSON.parse(b);const info=b=>({bytes:b.length,sha256:crypto.createHash('sha256').update(b).digest('hex')});
+const shallow=v=>Array.isArray(v)?{type:'array',length:v.length,first:v[0]}:v&&typeof v==='object'?{type:'object',keys:Object.keys(v),first:Object.entries(v)[0]}:v;
+console.log(JSON.stringify({cfgPath,pin:info(b),config:Object.fromEntries(Object.entries(cfg).map(([k,v])=>[k,shallow(v)])),targetRoots:fs.readdirSync(temp,{withFileTypes:true}).filter(d=>d.isDirectory()&&['S7NHM2','FoBS1O99','UkwrUh'].some(x=>d.name.includes(x))).map(d=>path.join(temp,d.name)),metadataEntries:fs.readdirSync(temp+'/cinatoken-final-capsule-admission-meta-UkwrUh')},null,2));

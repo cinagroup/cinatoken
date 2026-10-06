@@ -1,0 +1,407 @@
+{
+  "authority": {
+    "at": "2026-10-06T04:26:13.831Z",
+    "current": "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc",
+    "base": "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc",
+    "source": "scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs",
+    "wrapper": "scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs",
+    "workflow": ".github/workflows/proxy-dispatch-safety.yml",
+    "results": [
+      {
+        "label": "base-workflow",
+        "chars": 45895
+      },
+      {
+        "label": "base-source",
+        "chars": 50146
+      },
+      {
+        "label": "base-wrapper",
+        "chars": 52435
+      },
+      {
+        "label": "473-source",
+        "chars": 50146
+      },
+      {
+        "label": "source-log",
+        "chars": 271
+      },
+      {
+        "label": "wrapper-log",
+        "chars": 406
+      },
+      {
+        "label": "pin-history",
+        "chars": 135
+      },
+      {
+        "label": "exact-status",
+        "chars": 0
+      }
+    ],
+    "readResults": [
+      {
+        "at": "2026-10-06T04:26:13.822Z",
+        "finishedAt": "2026-10-06T04:26:13.826Z",
+        "operation": "readFile",
+        "path": "C:/AGENTS.md",
+        "actualExit": null,
+        "signal": null,
+        "error": {
+          "code": "ENOENT",
+          "message": "ENOENT: no such file or directory, open 'C:\\AGENTS.md'"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\instructions-0.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\instructions-0.stderr.log",
+          "bytes": 86,
+          "sha256": "5d278edcbb935d0b2c7558bc14dc82df294270fe3a304d97a13161a395679815"
+        }
+      },
+      {
+        "at": "2026-10-06T04:26:13.822Z",
+        "finishedAt": "2026-10-06T04:26:13.827Z",
+        "operation": "readFile",
+        "path": "C:/cinagroup/AGENTS.md",
+        "actualExit": null,
+        "signal": null,
+        "error": {
+          "code": "ENOENT",
+          "message": "ENOENT: no such file or directory, open 'C:\\cinagroup\\AGENTS.md'"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\instructions-1.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\instructions-1.stderr.log",
+          "bytes": 97,
+          "sha256": "71df25981e917974a8fa726b3be5dadc647aec6c826f9886ee62621c98e27a96"
+        }
+      },
+      {
+        "at": "2026-10-06T04:26:13.822Z",
+        "finishedAt": "2026-10-06T04:26:13.826Z",
+        "operation": "readFile",
+        "path": "C:/cinagroup/cinatoken/AGENTS.md",
+        "actualExit": null,
+        "signal": null,
+        "error": {
+          "code": "ENOENT",
+          "message": "ENOENT: no such file or directory, open 'C:\\cinagroup\\cinatoken\\AGENTS.md'"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\instructions-2.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\instructions-2.stderr.log",
+          "bytes": 108,
+          "sha256": "eca4570bec17a203a76a012a6ddfa0d87894ba69b91bfd528ce2150aa69b814a"
+        }
+      },
+      {
+        "at": "2026-10-06T04:26:13.822Z",
+        "finishedAt": "2026-10-06T04:26:13.828Z",
+        "operation": "readFile",
+        "path": "C:/cinagroup/cinatoken/scripts/AGENTS.md",
+        "actualExit": null,
+        "signal": null,
+        "error": {
+          "code": "ENOENT",
+          "message": "ENOENT: no such file or directory, open 'C:\\cinagroup\\cinatoken\\scripts\\AGENTS.md'"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\instructions-3.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\instructions-3.stderr.log",
+          "bytes": 117,
+          "sha256": "6c361dd56e9edf01f92850e038ebd776738b1cc9cae2303cda2d93e02e47838c"
+        }
+      },
+      {
+        "at": "2026-10-06T04:26:13.822Z",
+        "finishedAt": "2026-10-06T04:26:13.827Z",
+        "operation": "readFile",
+        "path": "C:/cinagroup/cinatoken/scripts/db/AGENTS.md",
+        "actualExit": null,
+        "signal": null,
+        "error": {
+          "code": "ENOENT",
+          "message": "ENOENT: no such file or directory, open 'C:\\cinagroup\\cinatoken\\scripts\\db\\AGENTS.md'"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\instructions-4.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\instructions-4.stderr.log",
+          "bytes": 121,
+          "sha256": "eaac7de347436bd48496fb35caaf6f38bee6fd66044d0e872cd9b853702202e6"
+        }
+      },
+      {
+        "at": "2026-10-06T04:26:13.822Z",
+        "finishedAt": "2026-10-06T04:26:13.828Z",
+        "operation": "readFile",
+        "path": "C:/cinagroup/cinatoken/scripts/db/cutover/AGENTS.md",
+        "actualExit": null,
+        "signal": null,
+        "error": {
+          "code": "ENOENT",
+          "message": "ENOENT: no such file or directory, open 'C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\AGENTS.md'"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\instructions-5.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\instructions-5.stderr.log",
+          "bytes": 130,
+          "sha256": "4b16f6463e4ccd19af14170d19a90806f6c018a5b12c438c8b72452a9bbedc80"
+        }
+      },
+      {
+        "at": "2026-10-06T04:26:13.822Z",
+        "finishedAt": "2026-10-06T04:26:13.830Z",
+        "operation": "readFile",
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9/FINAL-native26-ci-independent-peer.json",
+        "actualExit": 0,
+        "signal": null,
+        "error": null,
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\parent-terminal-final.stdout.log",
+          "bytes": 413706,
+          "sha256": "6635f04f77f6f6325a794756883a8bf697f752af239e33deb2b8c3b226a57e66"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\parent-terminal-final.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    ]
+  },
+  "records": [
+    {
+      "step": 95,
+      "file": "scripts/db/cutover/postgres-buyer-split-grant-rerun-v348.native.test.mjs"
+    },
+    {
+      "step": 96,
+      "file": "scripts/db/cutover/postgres-buyer-split-guardrail-v349.native.test.mjs"
+    },
+    {
+      "step": 97,
+      "file": "scripts/db/cutover/postgres-shared-key-stats-auth-boundary-v346.native.test.mjs"
+    },
+    {
+      "step": 98,
+      "file": "scripts/db/cutover/postgres-shared-key-stats-signed-claim-v348.native.test.mjs"
+    },
+    {
+      "step": 99,
+      "file": "scripts/db/cutover/postgres-shared-key-stats-claim-reader-v349-cjs-loader-successor.native.test.mjs"
+    },
+    {
+      "step": 100,
+      "file": "scripts/db/cutover/postgres-shared-key-snapshot-earning-consumer-v2.native.test.mjs"
+    },
+    {
+      "step": 101,
+      "file": "scripts/db/cutover/postgres-shared-key-economic-delivery.native.test.mjs"
+    },
+    {
+      "step": 102,
+      "file": "scripts/db/cutover/postgres-shared-earning-scanner-v350.native.test.mjs"
+    },
+    {
+      "step": 103,
+      "file": "scripts/db/cutover/postgres-shared-earning-backlog-v353.native.test.mjs"
+    },
+    {
+      "step": 104,
+      "file": "scripts/db/cutover/postgres-shared-key-credited-usage-gap.native.test.mjs"
+    },
+    {
+      "step": 105,
+      "file": "scripts/db/cutover/postgres-shared-key-credited-usage-store.native.test.mjs"
+    },
+    {
+      "step": 106,
+      "file": "scripts/db/cutover/postgres-shared-key-credited-usage-reader.native.test.mjs"
+    },
+    {
+      "step": 107,
+      "file": "scripts/db/cutover/postgres-recovery-old-database-upgrade.native.test.mjs"
+    },
+    {
+      "step": 108,
+      "file": "scripts/db/cutover/build-request-legacy-parent-census.native.test.mjs"
+    },
+    {
+      "step": 109,
+      "file": "scripts/db/cutover/postgres-replay-reservations-backend-lifecycle-successor.native.test.mjs"
+    },
+    {
+      "step": 110,
+      "file": "scripts/db/cutover/postgres-legacy-parent-activation.native.test.mjs"
+    },
+    {
+      "step": 111,
+      "file": "scripts/db/cutover/build-postgres-recovery-retention-review.native.test.mjs"
+    },
+    {
+      "step": 112,
+      "file": "packages/core/src/storage/management-workspaces.postgres-native.test.mjs"
+    },
+    {
+      "step": 113,
+      "file": "scripts/db/cutover/postgres-user-delete-audit.native.test.mjs"
+    }
+  ],
+  "gitReads": [
+    {
+      "label": "pin-introduction-source",
+      "bytes": 50164,
+      "sha256": "603646803c82d3209987260ad682a34169b4e53ca7b03b672d818e3a28d7cc13"
+    },
+    {
+      "label": "pin-introduction-wrapper",
+      "bytes": 52453,
+      "sha256": "1abd4fff8b9819b49904121503270c75ce490e3170904b0e7c8e70db2fd92455"
+    },
+    {
+      "label": "source-before-web",
+      "bytes": 50164,
+      "sha256": "603646803c82d3209987260ad682a34169b4e53ca7b03b672d818e3a28d7cc13"
+    },
+    {
+      "label": "source-at-web",
+      "bytes": 50146,
+      "sha256": "dfe004034784018eb9c70502e19a2192c45e1e8982a96c98b03626f72f7cce1d"
+    },
+    {
+      "label": "wrapper-at-web",
+      "bytes": 52435,
+      "sha256": "90115e4345b635f37378b0c3b5d26c15000275577e14c69f00e408845e0f9fe2"
+    },
+    {
+      "label": "source-web-diff",
+      "bytes": 3284,
+      "sha256": "a0724b17637df741402acd25d8dd52e372e91b19b5c3bc387f9024e8d338692f"
+    },
+    {
+      "label": "wrapper-web-diff",
+      "bytes": 3425,
+      "sha256": "11bd518caaaf4e3de5ad460ce5cc4a8dfdc01390b65804319c77c9a90020e891"
+    },
+    {
+      "label": "tail-step-95",
+      "bytes": 18946,
+      "sha256": "d83c9dcabfb24ddd90c6006ac8ac6078583fc6439b39436708f73ee8099b23b1"
+    },
+    {
+      "label": "tail-step-96",
+      "bytes": 23743,
+      "sha256": "c4adb632a2e237e0ed359f42686371bfad138f1ce4cc10c557d219e3ecb83d87"
+    },
+    {
+      "label": "tail-step-97",
+      "bytes": 8904,
+      "sha256": "46a13c44fec610692feb18ea0bf1d3bc10eb93a76e65d47edd326db13ea31e18"
+    },
+    {
+      "label": "tail-step-98",
+      "bytes": 12736,
+      "sha256": "7e0ae22d95b9cecc2fa154a2afd658868a31ece212aa60715021872e04557238"
+    },
+    {
+      "label": "tail-step-99",
+      "bytes": 29481,
+      "sha256": "997c7ec3b5d83bafd8c386493d66a8fd461d86576ea31c6afe32672e995f0088"
+    },
+    {
+      "label": "tail-step-100",
+      "bytes": 39818,
+      "sha256": "193ff83d3c1a6e316315c8fe5c4abc592018127121110f52ea10d304334d04dd"
+    },
+    {
+      "label": "tail-step-101",
+      "bytes": 32003,
+      "sha256": "8fd48757e9beafc308fb21b018fd35f105fd0bb89011dfa0f4a4e0e1bca4fd94"
+    },
+    {
+      "label": "tail-step-102",
+      "bytes": 17859,
+      "sha256": "1b08b2119ebb5ba8e38814ac77f25331f87fc2c6e93a12eedf8cf8d20e2d8e38"
+    },
+    {
+      "label": "tail-step-103",
+      "bytes": 22569,
+      "sha256": "3ca0cc66213fddf8c93edde5108ef4600a336e834efd513612db05805621474d"
+    },
+    {
+      "label": "tail-step-104",
+      "bytes": 18172,
+      "sha256": "3c1a6de9753be65c96acb67b64b9dac04868b5f9ed0718834ce4c02edaafa66e"
+    },
+    {
+      "label": "tail-step-105",
+      "bytes": 28551,
+      "sha256": "4c2acfc56302b7b6fb102979a6e6ad78611cccf0a0fb397a0a2b953eb8c29868"
+    },
+    {
+      "label": "tail-step-106",
+      "bytes": 18603,
+      "sha256": "fe62b22831e7b37e8c0377ed4e902ce0be499dd54ebea2d1e81b93c60c47d912"
+    },
+    {
+      "label": "tail-step-107",
+      "bytes": 23431,
+      "sha256": "860ea7bde91a1406f7133a5a2726bb549868d6677270d8302a84b79b1cc92a4a"
+    },
+    {
+      "label": "tail-step-108",
+      "bytes": 12134,
+      "sha256": "42b1ab50c6e5cbc46dd3ed018f1f09f48d5890339d012982f863373cf7f1a262"
+    },
+    {
+      "label": "tail-step-109",
+      "bytes": 42663,
+      "sha256": "40fcf5af8960e32f3ad9f1343c046a48aed32f72fd6c19efe14b14ce4c1b48c4"
+    },
+    {
+      "label": "tail-step-110",
+      "bytes": 30195,
+      "sha256": "8b6aae0e4250604a60446f3d02ae0c3683416c26a7d01de58cc26cd66bba7f18"
+    },
+    {
+      "label": "tail-step-111",
+      "bytes": 13540,
+      "sha256": "2245280b58b9893bf0069b9d7516b8b23ce73d48d4894b99446621eba75b930b"
+    },
+    {
+      "label": "tail-step-112",
+      "bytes": 7296,
+      "sha256": "ef3285f9a57445d9cb77d40bcc11a84094523024861cfdb87c430903d598fae7"
+    },
+    {
+      "label": "tail-step-113",
+      "bytes": 7006,
+      "sha256": "cda101d3a202ea4bd06284e1d1c209af2b3072c368195c38450b3e0e55c83bc4"
+    }
+  ]
+}

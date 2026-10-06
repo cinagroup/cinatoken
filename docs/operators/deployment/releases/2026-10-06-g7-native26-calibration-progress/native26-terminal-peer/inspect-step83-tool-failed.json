@@ -1,0 +1,13 @@
+{
+  "schema": "cinatoken.native26-ci-independent-peer.tool-reader-failure.v1",
+  "tool": "exec_command",
+  "chunk_id": "4fb31f",
+  "wall_time_seconds": 0.2889314,
+  "exit_code": 1,
+  "original_token_count": 0,
+  "output": "",
+  "purpose": "Read frozen step 83 metadata and test options with PowerShell. The command failed at shell quoting; the tool returned no separate stderr.",
+  "stdoutStderrSeparationAvailable": false,
+  "readerFailureOnly": true,
+  "businessConclusion": null
+}

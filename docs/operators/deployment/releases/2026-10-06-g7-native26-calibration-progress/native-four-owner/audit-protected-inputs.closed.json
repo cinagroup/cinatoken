@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-06T03:16:40.286Z",
+  "finishedAt": "2026-10-06T03:16:40.466Z",
+  "executable": "git",
+  "args": [
+    "cat-file",
+    "--batch"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-four-repair-38a94fb93d9842929dc7ae9cf6b378da\\audit-protected-inputs.stdout.log",
+  "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-four-repair-38a94fb93d9842929dc7ae9cf6b378da\\audit-protected-inputs.stderr.log",
+  "stdoutInfo": {
+    "bytes": 5359488,
+    "sha256": "f8773b91f6a93becc7ae1d8b8841e72aef94fb446e0dfafd5f0cc823a60f8cbc"
+  },
+  "stderrInfo": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "spawnError": null
+}

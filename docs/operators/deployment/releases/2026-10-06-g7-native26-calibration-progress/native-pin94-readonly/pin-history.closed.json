@@ -1,0 +1,28 @@
+{
+  "at": "2026-10-06T04:26:13.530Z",
+  "finishedAt": "2026-10-06T04:26:13.647Z",
+  "executable": "git",
+  "args": [
+    "log",
+    "--all",
+    "-G",
+    "603646|historicalFixture",
+    "--format=%H%x09%ai%x09%s",
+    "--",
+    "scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\pin-history.stdout.log",
+    "bytes": 135,
+    "sha256": "37154a98f7be6f0b4162d21b73d60daec2b71c7518c1332dfc1d900b490564df"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\pin-history.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

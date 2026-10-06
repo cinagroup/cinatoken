@@ -1,0 +1,15 @@
+import fs from 'node:fs';import path from 'node:path';import crypto from 'node:crypto';import assert from 'node:assert/strict';import {spawnSync} from 'node:child_process';
+const out=process.argv[2],file='scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs',heads=['ee122dd4273e2db892daa724bc6417a9b02b280c','dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc'];
+const info=b=>({bytes:b.length,sha256:crypto.createHash('sha256').update(b).digest('hex')});
+const input=Buffer.from(heads.map(h=>h+':'+file).join('\n')+'\n'),stdinPath=path.join(out,'git-step24-source.stdin.log');fs.writeFileSync(stdinPath,input,{flag:'wx'});
+const startedAt=new Date().toISOString(),r=spawnSync('C:/Program Files/Git/cmd/git.exe',['cat-file','--batch'],{cwd:'C:/cinagroup/cinatoken',input,encoding:null,windowsHide:true,maxBuffer:8*1024*1024,timeout:90000}),closedAt=new Date().toISOString();
+const raw=(name,b)=>{const p=path.join(out,name);fs.writeFileSync(p,b,{flag:'wx'});return {path:p,...info(b)};},stdout=r.stdout??Buffer.alloc(0),stderr=r.stderr??Buffer.alloc(0);
+const receipt={schema:'independent-ee122-proxy-readonly-child-receipt-v1',name:'git-step24-source',executable:'C:/Program Files/Git/cmd/git.exe',argv:['cat-file','--batch'],cwd:'C:/cinagroup/cinatoken',startedAt,closedAt,actualExit:r.status,signal:r.signal,spawnError:r.error?{name:r.error.name,message:r.error.message,code:r.error.code}:null,closed:r.status!==null||r.signal!==null,stdin:{path:stdinPath,...info(input)},stdout:raw('git-step24-source.stdout.log',stdout),stderr:raw('git-step24-source.stderr.log',stderr)};
+fs.writeFileSync(path.join(out,'git-step24-source.closed.json'),JSON.stringify(receipt,null,2)+'\n',{flag:'wx'});assert.equal(r.status,0);
+let at=0;const sources=[];
+for(let i=0;i<heads.length;i++){const e=stdout.indexOf(10,at),m=stdout.subarray(at,e).toString('utf8').match(/^([a-f0-9]{40}) blob (\d+)$/);assert(m);const n=Number(m[2]),b=stdout.subarray(e+1,e+1+n);assert.equal(b.length,n);assert.equal(stdout[e+1+n],10);const blob=crypto.createHash('sha1').update(Buffer.from('blob '+n+'\0')).update(b).digest('hex');assert.equal(blob,m[1]);const snapshot=path.join(out,'source-step24-'+(i===0?'ee122':'dcc6')+'.snapshot.txt');fs.writeFileSync(snapshot,b,{flag:'wx'});sources.push({headSha:heads[i],file,gitBlob:blob,snapshot,...info(b)});at=e+1+n+1;}
+assert.equal(at,stdout.length);
+const text=fs.readFileSync(sources[0].snapshot,'utf8'),lines=text.split('\n'),imports=lines.map((line,i)=>({line:i+1,text:line})).filter(x=>/import |from |fixture|schema|migration|superuser|role|PG_BIN|assert\./.test(x.text));
+const report={schema:'cinatoken.ee122-step24-source-comparison.v1',sources,byteEqual:fs.readFileSync(sources[0].snapshot).equals(fs.readFileSync(sources[1].snapshot)),selectedSourceLines:imports};
+fs.writeFileSync(path.join(out,'step24-source-comparison.json'),JSON.stringify(report,null,2)+'\n',{flag:'wx'});
+console.log(JSON.stringify(report,null,2));

@@ -1,0 +1,24 @@
+{
+  "at": "2026-10-06T04:12:50.999Z",
+  "finishedAt": "2026-10-06T04:12:51.053Z",
+  "executable": "git",
+  "args": [
+    "cat-file",
+    "blob",
+    "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc:scripts/db/cutover/postgres-guardrail-admission-adapter-v352.native.test.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\v3-source-step-88.stdout.log",
+  "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\v3-source-step-88.stderr.log",
+  "stdoutInfo": {
+    "bytes": 16668,
+    "sha256": "d183dd82c8b9e4162bb385dada778a2ca907873ca8174a41d4e7240397babfc8"
+  },
+  "stderrInfo": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

@@ -1,0 +1,128 @@
+{
+  "schema": "cinatoken-opaque-metadata-snapshot-stopwrite-index-v1",
+  "at": "2026-10-06T04:31:19.989Z",
+  "stopWrite": true,
+  "allPreexistingRegularFiles": 19,
+  "totalFinalRootFiles": 20,
+  "entries": [
+    {
+      "relative": "actual-producer-tool-receipts.json",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-old-meta-opaque-snapshot-eEXPR6/actual-producer-tool-receipts.json",
+      "bytes": 2043,
+      "sha256": "18df5cfe4d2d86ab27e6fe9b954381452b84a67c7342462bc95dca1b2e1275f2"
+    },
+    {
+      "relative": "FINAL-old-metadata-opaque-snapshot.json",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-old-meta-opaque-snapshot-eEXPR6/FINAL-old-metadata-opaque-snapshot.json",
+      "bytes": 8087,
+      "sha256": "f70e6e75c8f7c730f2ffe448a8d24f259e2eeb6832180a09f498399f5d2db636"
+    },
+    {
+      "relative": "frozen-old-metadata-index.json",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-old-meta-opaque-snapshot-eEXPR6/frozen-old-metadata-index.json",
+      "bytes": 2274178,
+      "sha256": "d5a70a3428895028878782d751b8754e2b8b157f7025bd7763db01b6c8dc4265"
+    },
+    {
+      "relative": "frozen-old-metadata-lossless.zip",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-old-meta-opaque-snapshot-eEXPR6/frozen-old-metadata-lossless.zip",
+      "bytes": 7175933,
+      "sha256": "abe62ed3262905377a11f430689c279fef8a23da0b6c3288984e6301b7d8643b"
+    },
+    {
+      "relative": "historical-late-702-and-git-pin-proof.json",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-old-meta-opaque-snapshot-eEXPR6/historical-late-702-and-git-pin-proof.json",
+      "bytes": 12732,
+      "sha256": "4bb8444c724bc7432a61d0dc0c97ac9733d7aae6b4742174ca8926f2e5ff34a1"
+    },
+    {
+      "relative": "historical-pin.result.json",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-old-meta-opaque-snapshot-eEXPR6/historical-pin.result.json",
+      "bytes": 1084,
+      "sha256": "26c78dd7cc6d3efdda2a2236e4ad56d925420b0dd8f4bc061feed33b1d84d399"
+    },
+    {
+      "relative": "historical-pin.stderr.log",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-old-meta-opaque-snapshot-eEXPR6/historical-pin.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relative": "historical-pin.stdout.log",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-old-meta-opaque-snapshot-eEXPR6/historical-pin.stdout.log",
+      "bytes": 431,
+      "sha256": "c63ba06271a60f2cea755425c6d607816e6d54787ae8effbad7164ac53519113"
+    },
+    {
+      "relative": "opaque-transport-verification.json",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-old-meta-opaque-snapshot-eEXPR6/opaque-transport-verification.json",
+      "bytes": 1365,
+      "sha256": "71fd23866094991233e319325ba0adbd09cfd7a895860ca475db24a7497c95e2"
+    },
+    {
+      "relative": "pin-historical-facts.mjs",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-old-meta-opaque-snapshot-eEXPR6/pin-historical-facts.mjs",
+      "bytes": 7923,
+      "sha256": "b74c457f525450a5aa4528e9ad14f88b8d930d4120b067cd84b617de5bc87b1e"
+    },
+    {
+      "relative": "run-command.mjs",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-old-meta-opaque-snapshot-eEXPR6/run-command.mjs",
+      "bytes": 2524,
+      "sha256": "6f704604b76b43f1bdf7548f7403d591a970e3e7eb52ee04673dc63aa11c6968"
+    },
+    {
+      "relative": "seal-final.mjs",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-old-meta-opaque-snapshot-eEXPR6/seal-final.mjs",
+      "bytes": 5044,
+      "sha256": "4e85876faa284a32b6a6671cfe8f4ae462af9cbc018ebb4c80290f9bcb8aa82e"
+    },
+    {
+      "relative": "seal-final.result.json",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-old-meta-opaque-snapshot-eEXPR6/seal-final.result.json",
+      "bytes": 1066,
+      "sha256": "9a36282eeecc3f9ee030a04232facb0326d7d7d1bbf01fb0e8fd72fea95bb87a"
+    },
+    {
+      "relative": "seal-final.stderr.log",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-old-meta-opaque-snapshot-eEXPR6/seal-final.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relative": "seal-final.stdout.log",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-old-meta-opaque-snapshot-eEXPR6/seal-final.stdout.log",
+      "bytes": 654,
+      "sha256": "d4226c2fd4f270ae3de9c5146ebd0aa805218d95740eb34b3389a2a027ff9172"
+    },
+    {
+      "relative": "snapshot-opaque-meta.py",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-old-meta-opaque-snapshot-eEXPR6/snapshot-opaque-meta.py",
+      "bytes": 8659,
+      "sha256": "c4c2e034f134853604da23f3d28a5f15137c78ae61d6e34868ce2f0cfd11b738"
+    },
+    {
+      "relative": "zip-roundtrip.result.json",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-old-meta-opaque-snapshot-eEXPR6/zip-roundtrip.result.json",
+      "bytes": 1138,
+      "sha256": "64c6ad6e37afa7f618e95a6ef718e20d8f4a1524b23b30d4315e95a31e1a098b"
+    },
+    {
+      "relative": "zip-roundtrip.stderr.log",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-old-meta-opaque-snapshot-eEXPR6/zip-roundtrip.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relative": "zip-roundtrip.stdout.log",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-old-meta-opaque-snapshot-eEXPR6/zip-roundtrip.stdout.log",
+      "bytes": 1630,
+      "sha256": "8bfee0a718e6797357d9ece08ec438784a246c57e4e5a98e4a1b5f19333621bc"
+    }
+  ],
+  "selfIndexOmittedForNonRecursiveSelfHashOnly": true,
+  "sourceScopeExclusions": [],
+  "collectionOnly": true,
+  "gatePassDerived": false,
+  "oldExecutionsRepeated": false
+}

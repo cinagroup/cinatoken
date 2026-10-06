@@ -1,0 +1,19 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: local-owned-grant-binding
+
+3 !== 2
+
+    at replace (file:///C:/Users/cina/AppData/Local/Temp/cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713/repair26.mjs:11:51)
+    at file:///C:/Users/cina/AppData/Local/Temp/cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713/repair26.mjs:15:513 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 3,
+  expected: 2,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.14.1

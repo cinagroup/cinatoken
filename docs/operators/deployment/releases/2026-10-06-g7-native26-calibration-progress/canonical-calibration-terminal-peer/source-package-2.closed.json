@@ -1,0 +1,24 @@
+{
+  "at": "2026-10-06T04:39:55.640Z",
+  "finishedAt": "2026-10-06T04:39:55.701Z",
+  "executable": "git",
+  "args": [
+    "cat-file",
+    "blob",
+    "dc7be6f8597333151c450bae3ae15e6585e3b2eb:scripts/diagnostics/v364-direct-socket/README.md"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-canonical-calibration-terminal-independent-peer-7c64bf0f365242ed9e43c275ac46721a\\source-package-2.stdout.log",
+  "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-canonical-calibration-terminal-independent-peer-7c64bf0f365242ed9e43c275ac46721a\\source-package-2.stderr.log",
+  "stdoutInfo": {
+    "bytes": 5092,
+    "sha256": "d2da25041decf0e0d1d1dd99fcc4182f8ef8528e8671f72f48e53a158fd600ed"
+  },
+  "stderrInfo": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

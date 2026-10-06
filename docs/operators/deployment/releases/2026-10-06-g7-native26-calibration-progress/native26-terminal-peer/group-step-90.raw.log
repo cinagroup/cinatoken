@@ -1,0 +1,23 @@
+##[group]Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:06.7244248Z ^[[36;1mgosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \^[[0m
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:06.7245074Z ^[[36;1m  node --import tsx --test scripts/db/cutover/postgres-shared-key-buyer-receipt-retention-v346.native.test.mjs^[[0m
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:06.7246172Z shell: sh -e {0}
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:06.7246393Z ##[endgroup]
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:06.8197874Z TAP version 13
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:10.7447022Z # buyer-receipt-retention-v346-report=/__w/cinatoken/cinatoken/.wrangler/staging/pg-native-dispatch-tests/report-buyer-receipt-retention-v346-91555d4e-26c6-4b25-910d-b828b1df0116.json
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:10.7470747Z # Subtest: native PG18 buyer receipt retention starts only after committed-row observation
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:10.7471940Z ok 1 - native PG18 buyer receipt retention starts only after committed-row observation
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:10.7472643Z   ---
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:10.7473161Z   duration_ms: 3721.404598
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:10.7473631Z   type: 'test'
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:10.7473999Z   ...
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:10.7622009Z 1..1
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:10.7622788Z # tests 1
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:10.7625420Z # suites 0
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:10.7626662Z # pass 1
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:10.7627868Z # fail 0
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:10.7628797Z # cancelled 0
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:10.7632214Z # skipped 0
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:10.7632640Z # todo 0
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:10.7633764Z # duration_ms 3954.317439
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	﻿2026-10-06T04:20:10.7769459Z 

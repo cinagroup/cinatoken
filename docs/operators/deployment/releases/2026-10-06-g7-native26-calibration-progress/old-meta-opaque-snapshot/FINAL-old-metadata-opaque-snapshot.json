@@ -1,0 +1,179 @@
+{
+  "schema": "cinatoken-frozen-old-metadata-opaque-snapshot-final-v1",
+  "at": "2026-10-06T04:29:59.731Z",
+  "closed": true,
+  "actualCollectionExit": 0,
+  "sourceRoot": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7",
+  "outputRoot": "C:/Users/cina/AppData/Local/Temp/cinatoken-old-meta-opaque-snapshot-eEXPR6",
+  "scope": "All regular files and directories under the exact frozen old metadata root, including the entire nested output old full archive copy; no source exclusions or writes.",
+  "zip": {
+    "relative": "frozen-old-metadata-lossless.zip",
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-old-meta-opaque-snapshot-eEXPR6/frozen-old-metadata-lossless.zip",
+    "bytes": 7175933,
+    "sha256": "abe62ed3262905377a11f430689c279fef8a23da0b6c3288984e6301b7d8643b"
+  },
+  "index": {
+    "relative": "frozen-old-metadata-index.json",
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-old-meta-opaque-snapshot-eEXPR6/frozen-old-metadata-index.json",
+    "bytes": 2274178,
+    "sha256": "d5a70a3428895028878782d751b8754e2b8b157f7025bd7763db01b6c8dc4265"
+  },
+  "transportVerification": {
+    "relative": "opaque-transport-verification.json",
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-old-meta-opaque-snapshot-eEXPR6/opaque-transport-verification.json",
+    "bytes": 1365,
+    "sha256": "71fd23866094991233e319325ba0adbd09cfd7a895860ca475db24a7497c95e2"
+  },
+  "historicalFactsProof": {
+    "relative": "historical-late-702-and-git-pin-proof.json",
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-old-meta-opaque-snapshot-eEXPR6/historical-late-702-and-git-pin-proof.json",
+    "bytes": 12732,
+    "sha256": "4bb8444c724bc7432a61d0dc0c97ac9733d7aae6b4742174ca8926f2e5ff34a1"
+  },
+  "originalRegularFiles": 2353,
+  "originalDirectories": 187,
+  "originalTotalBytes": 25703899,
+  "exclusions": [],
+  "allRegularFilesIncluded": true,
+  "allDirectoriesIncluded": true,
+  "sourceSetAndIdentityUnchanged": true,
+  "everyZIPEntryDecodedAndComparedWithOriginalBytesAndSHA256": true,
+  "zipEntryFullSetExact": true,
+  "symlinkFollowing": false,
+  "originalNumericOneNullRawJSONAndLiteralPathsPreservedAsBytes": true,
+  "late702CommitPushCFGuardAndOneCIListReceiptAndRawExactInZIP": true,
+  "late702Commit": "702c4d71379acb697024ef846725871582bff94f",
+  "originalA8beArchiveReportGitPinned": {
+    "original": {
+      "file": "output/2026-10-06-native-g7-boundary-progress.json",
+      "bytes": 3392478,
+      "sha256": "a8be774130b2071902c03fac4c74cb16f36dea3c9e7b60fc3890595d704b4f30"
+    },
+    "repositoryRelative": "docs/operators/deployment/releases/2026-10-06-native-g7-boundary-progress.json",
+    "readAtHead": "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc",
+    "gitReadCommands": [
+      {
+        "program": "C:/Program Files/Git/cmd/git.exe",
+        "args": [
+          "rev-parse",
+          "HEAD"
+        ],
+        "startedAt": "2026-10-06T04:29:14.298Z",
+        "endedAt": "2026-10-06T04:29:14.362Z",
+        "actualExit": 0,
+        "signal": null,
+        "stdoutBytes": 41,
+        "stdoutSha256": "b0768a9ad6fab2fa97b8b0d4ea9a91ee38ac8309cb7c201c5c478a77500c8e9d",
+        "stderrBytes": 0,
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "readOnly": true
+      },
+      {
+        "program": "C:/Program Files/Git/cmd/git.exe",
+        "args": [
+          "show",
+          "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc:docs/operators/deployment/releases/2026-10-06-native-g7-boundary-progress.json"
+        ],
+        "startedAt": "2026-10-06T04:29:14.362Z",
+        "endedAt": "2026-10-06T04:29:14.444Z",
+        "actualExit": 0,
+        "signal": null,
+        "stdoutBytes": 3392478,
+        "stdoutSha256": "a8be774130b2071902c03fac4c74cb16f36dea3c9e7b60fc3890595d704b4f30",
+        "stderrBytes": 0,
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "readOnly": true
+      }
+    ],
+    "currentWorkingFileExact": true,
+    "pinnedGitBlobExact": true,
+    "archiveCollectionReexecuted": false
+  },
+  "executedNewCollectionCommands": [
+    {
+      "receipt": {
+        "relative": "zip-roundtrip.result.json",
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-old-meta-opaque-snapshot-eEXPR6/zip-roundtrip.result.json",
+        "bytes": 1138,
+        "sha256": "64c6ad6e37afa7f618e95a6ef718e20d8f4a1524b23b30d4315e95a31e1a098b"
+      },
+      "stdout": {
+        "relative": "zip-roundtrip.stdout.log",
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-old-meta-opaque-snapshot-eEXPR6/zip-roundtrip.stdout.log",
+        "bytes": 1630,
+        "sha256": "8bfee0a718e6797357d9ece08ec438784a246c57e4e5a98e4a1b5f19333621bc"
+      },
+      "stderr": {
+        "relative": "zip-roundtrip.stderr.log",
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-old-meta-opaque-snapshot-eEXPR6/zip-roundtrip.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "actualExit": 0,
+      "signal": null,
+      "closed": true
+    },
+    {
+      "receipt": {
+        "relative": "historical-pin.result.json",
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-old-meta-opaque-snapshot-eEXPR6/historical-pin.result.json",
+        "bytes": 1084,
+        "sha256": "26c78dd7cc6d3efdda2a2236e4ad56d925420b0dd8f4bc061feed33b1d84d399"
+      },
+      "stdout": {
+        "relative": "historical-pin.stdout.log",
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-old-meta-opaque-snapshot-eEXPR6/historical-pin.stdout.log",
+        "bytes": 431,
+        "sha256": "c63ba06271a60f2cea755425c6d607816e6d54787ae8effbad7164ac53519113"
+      },
+      "stderr": {
+        "relative": "historical-pin.stderr.log",
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-old-meta-opaque-snapshot-eEXPR6/historical-pin.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "actualExit": 0,
+      "signal": null,
+      "closed": true
+    }
+  ],
+  "producerSources": [
+    {
+      "relative": "run-command.mjs",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-old-meta-opaque-snapshot-eEXPR6/run-command.mjs",
+      "bytes": 2524,
+      "sha256": "6f704604b76b43f1bdf7548f7403d591a970e3e7eb52ee04673dc63aa11c6968"
+    },
+    {
+      "relative": "snapshot-opaque-meta.py",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-old-meta-opaque-snapshot-eEXPR6/snapshot-opaque-meta.py",
+      "bytes": 8659,
+      "sha256": "c4c2e034f134853604da23f3d28a5f15137c78ae61d6e34868ce2f0cfd11b738"
+    },
+    {
+      "relative": "pin-historical-facts.mjs",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-old-meta-opaque-snapshot-eEXPR6/pin-historical-facts.mjs",
+      "bytes": 7923,
+      "sha256": "b74c457f525450a5aa4528e9ad14f88b8d930d4120b067cd84b617de5bc87b1e"
+    },
+    {
+      "relative": "seal-final.mjs",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-old-meta-opaque-snapshot-eEXPR6/seal-final.mjs",
+      "bytes": 5044,
+      "sha256": "4e85876faa284a32b6a6671cfe8f4ae462af9cbc018ebb4c80290f9bcb8aa82e"
+    }
+  ],
+  "collectorTreatment": "Treat the ZIP as opaque immutable historical evidence transport. The index records historical paths and bytes; it does not grant newly executed receipt authority to embedded old archive copies. Original negative and NULL results remain unchanged. This new writer/ZIP verification0 is collection0 only.",
+  "oldArchiveOrCollectorReexecuted": false,
+  "applicationRuns": 0,
+  "oldGatesReexecuted": 0,
+  "newWorkflowDispatches": 0,
+  "productionRequests": 0,
+  "repositoryWrites": 0,
+  "gitMutations": 0,
+  "embeddedOldCopyIsNewRun": false,
+  "fullGoalComplete": false,
+  "collectionOnly": true,
+  "gatePassDerived": false,
+  "sealingCommandReceipt": "seal-final.result.json is written only after this script exits; its actual stdout/stderr and outer tool receipt remain sibling closure evidence rather than a running self-snapshot."
+}

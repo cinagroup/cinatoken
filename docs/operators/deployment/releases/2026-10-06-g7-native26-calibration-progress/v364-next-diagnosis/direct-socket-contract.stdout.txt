@@ -1,0 +1,196 @@
+{"file":"node_modules/miniflare/dist/src/index.js","bytes":4843426,"sha256":"58ca83056cf67838add064edcbfd1d654ed204527b8eb01307ba208d7e59fa20"}
+94020:   if (config3.env === void 0) {
+94021:     const { env: _env, ...configWithoutEnv } = config3;
+94022:     return configWithoutEnv;
+94023:   }
+94024:   const env3 = Object.fromEntries(
+94025:     Object.entries(config3.env).map(([bindingName, binding]) => {
+94026:       const defaultIdentifier = getDefaultBindingIdentifier(
+94027:         bindingName,
+94028:         config3.name
+94029:       );
+94030:       switch (binding.type) {
+94031:         case "kv":
+94032:         case "d1":
+94033:         case "flagship":
+94034:           return [
+94035:             bindingName,
+94036:             { ...binding, id: binding.id ?? defaultIdentifier }
+94037:           ];
+94038:         case "r2":
+94039:         case "analytics-engine-dataset":
+94040:         case "queue":
+94041:           return [
+94042:             bindingName,
+94043:             { ...binding, name: binding.name ?? defaultIdentifier }
+94044:           ];
+94045:         default:
+94046:           return [bindingName, binding];
+94047:       }
+94048:     })
+94049:   );
+94050:   return { ...config3, env: env3 };
+94051: }
+94052: var MiniflareWorkerConfigSchema = MiniflareWorkerConfigBaseSchema.transform(
+94053:   defaultBindingIdentifiers
+94054: );
+94055: var UnsafeDirectSocketSchema = external_exports2.strictObject({
+94056:   host: external_exports2.string().optional(),
+94057:   port: external_exports2.number().optional(),
+94058:   serviceName: external_exports2.string().optional(),
+94059:   entrypoint: external_exports2.string().optional(),
+94060:   proxy: external_exports2.boolean().optional()
+94061: });
+94062: var OutboundServiceSchema = external_exports2.discriminatedUnion("type", [
+94063:   FetcherBindingSchema,
+94064:   NodeHandlerBindingSchema,
+94065:   WorkerBindingSchema
+94066: ]);
+94067: var DevConfigSchema = external_exports2.strictObject({
+94068:   /** Absolute base directory for path options. Defaults to cwd. */
+94069:   rootPath: AbsolutePathSchema.default(() => process.cwd()),
+94070:   // Enables the Cache API (NOT Workers cache).
+94071:   // not user-configurable (only Wrangler's internal ProxyWorker disables it).
+94072:   cacheAPI: external_exports2.boolean().default(true),
+94073:   outboundService: OutboundServiceSchema.optional(),
+94074:   remoteProxyConnectionString: external_exports2.custom().optional(),
+94075:   unsafeInspectorProxy: external_exports2.boolean().optional(),
+94076:   unsafeDirectSockets: external_exports2.array(UnsafeDirectSocketSchema).optional(),
+94077:   unsafeOverrideFetchWorker: external_exports2.string().optional(),
+94078:   unsafeEvalBinding: external_exports2.string().optional(),
+94079:   useModuleFallbackService: external_exports2.boolean().optional(),
+94080:   /** Whether this Worker is 'public' - whether should be advertised in the dev registry
+94081:    * and whether it should be included in local obs capture. Defaults to `true`. */
+94082:   unsafeRegisterWorker: external_exports2.boolean().default(true),
+{"file":"node_modules/miniflare/dist/src/index.js","bytes":4843426,"sha256":"58ca83056cf67838add064edcbfd1d654ed204527b8eb01307ba208d7e59fa20"}
+113148:             if (service.name !== void 0 && !services.has(service.name)) {
+113149:               services.set(service.name, service);
+113150:               if (key !== DURABLE_OBJECTS_PLUGIN_NAME) {
+113151:                 const maybeBindings = getInternalDurableObjectProxyBindings(
+113152:                   key,
+113153:                   service
+113154:                 );
+113155:                 if (maybeBindings !== void 0) {
+113156:                   proxyBindings.push(...maybeBindings);
+113157:                 }
+113158:               }
+113159:             }
+113160:           }
+113161:         }
+113162:       }
+113163:       const previousDirectSockets = previousWorkerOpts?.dev?.unsafeDirectSockets ?? [];
+113164:       const directSockets = workerOpts.dev?.unsafeDirectSockets ?? [];
+113165:       for (let i = 0; i < directSockets.length; i++) {
+113166:         const previousDirectSocket = previousDirectSockets[i];
+113167:         const directSocket = directSockets[i];
+113168:         const serviceName = directSocket.serviceName ?? workerName;
+113169:         const entrypoint = directSocket.entrypoint ?? "default";
+113170:         const name = getDirectSocketName(workerIndex, entrypoint);
+113171:         const address = this.#getSocketAddress(
+113172:           name,
+113173:           previousDirectSocket?.port,
+113174:           directSocket.host,
+113175:           directSocket.port,
+113176:           reusePorts
+113177:         );
+113178:         const service = workerOpts.config.assets && entrypoint === "default" ? {
+113179:           name: `${RPC_PROXY_SERVICE_NAME}:${workerOpts.config.name}`
+113180:         } : {
+113181:           name: getUserServiceName(serviceName),
+113182:           entrypoint: entrypoint === "default" ? void 0 : entrypoint
+113183:         };
+113184:         sockets.push({
+113185:           name,
+113186:           address,
+113187:           service,
+113188:           http: {
+113189:             style: directSocket.proxy ? HttpOptions_Style.PROXY : void 0,
+113190:             cfBlobHeader: CoreHeaders.CF_BLOB,
+113191:             capnpConnectHost: HOST_CAPNP_CONNECT
+113192:           }
+113193:         });
+113194:       }
+113195:       const connectHandlers = getTriggersOfType(workerOpts.config, "connect");
+113196:       for (let j = 0; j < connectHandlers.length; j++) {
+113197:         const connectHandler = connectHandlers[j];
+113198:         const name = getConnectSocketName(
+113199:           workerIndex,
+113200:           connectHandler.protocol,
+113201:           connectHandler.port
+113202:         );
+{"file":"node_modules/miniflare/dist/src/index.js","bytes":4843426,"sha256":"58ca83056cf67838add064edcbfd1d654ed204527b8eb01307ba208d7e59fa20"}
+113656:     if (this.#maybeInspectorProxyController !== void 0) {
+113657:       return this.#maybeInspectorProxyController.getInspectorURL();
+113658:     }
+113659:     (0, import_node_assert21.default)(this.#socketPorts !== void 0);
+113660:     const maybePort = this.#socketPorts.get(kInspectorSocket);
+113661:     if (maybePort === void 0) {
+113662:       throw new TypeError(
+113663:         "Inspector not enabled in Miniflare instance. Set the `inspectorPort` option to enable it."
+113664:       );
+113665:     }
+113666:     return new URL(`ws://127.0.0.1:${maybePort}`);
+113667:   }
+113668:   async unsafeGetDirectURL(workerName, entrypoint = "default") {
+113669:     this.#checkDisposed();
+113670:     await this.#waitForReady();
+113671:     const workerIndex = this.#findAndAssertWorkerIndex(workerName);
+113672:     const workerOpts = this.#workerOpts[workerIndex];
+113673:     const socketName = getDirectSocketName(workerIndex, entrypoint);
+113674:     (0, import_node_assert21.default)(this.#socketPorts !== void 0);
+113675:     const maybePort = this.#socketPorts.get(socketName);
+113676:     if (maybePort === void 0) {
+113677:       const friendlyWorkerName = workerName === void 0 ? "entrypoint" : JSON.stringify(workerName);
+113678:       const friendlyEntrypointName = entrypoint === "default" ? entrypoint : JSON.stringify(entrypoint);
+113679:       throw new TypeError(
+113680:         `Direct access disabled in ${friendlyWorkerName} worker for ${friendlyEntrypointName} entrypoint`
+113681:       );
+113682:     }
+113683:     const directSocket = workerOpts.dev?.unsafeDirectSockets?.find(
+113684:       (socket) => (socket.entrypoint ?? "default") === entrypoint
+113685:     );
+113686:     (0, import_node_assert21.default)(directSocket !== void 0);
+113687:     const host = directSocket.host ?? DEFAULT_HOST;
+113688:     const accessibleHost = maybeGetLocallyAccessibleHost(host) ?? getURLSafeHost(host);
+113689:     return new URL(`http://${accessibleHost}:${maybePort}`);
+113690:   }
+113691:   #checkDisposed() {
+113692:     if (this.#disposeController.signal.aborted) {
+113693:       throw new MiniflareCoreError(
+113694:         "ERR_DISPOSED",
+113695:         "Cannot use disposed instance"
+113696:       );
+113697:     }
+113698:   }
+113699:   async #setOptions(opts) {
+113700:     const [initialSharedOpts, workerOpts] = validateOptions(opts);
+113701:     let sharedOpts = initialSharedOpts;
+113702:     if (sharedOpts.unsafeEnableSharedStorage && sharedOpts.resourcePersistencePath !== void 0) {
+113703:       sharedOpts = {
+113704:         ...sharedOpts,
+113705:         resourcePersistencePath: await canonicalisePersistRoot(
+113706:           sharedOpts.resourcePersistencePath
+113707:         )
+113708:       };
+{"file":"node_modules/miniflare/dist/src/index.d.ts","bytes":485080,"sha256":"7e0c4b6c1cdf6b4207e4c8651e04a453b759a1cdc4a3cd5691da016050e9193a"}
+10000:     routes?: string[];
+10001:     bindings?: Record<string, Json>;
+10002:     wasmBindings?: Record<string, string | Uint8Array>;
+10003:     textBlobBindings?: Record<string, string>;
+10004:     dataBlobBindings?: Record<string, string | Uint8Array>;
+10005:     serviceBindings?: Record<string, V4ServiceDesignator>;
+10006:     outboundService?: V4ServiceDesignator;
+10007:     unsafeEphemeralDurableObjects?: boolean;
+10008:     unsafeDirectSockets?: Array<{
+10009:         host?: string;
+10010:         port?: number;
+10011:         serviceName?: string;
+10012:         entrypoint?: string;
+10013:         proxy?: boolean;
+10014:     }>;
+10015:     connectHandlers?: Array<{
+10016:         protocol: "tcp";
+10017:         port: number;
+10018:         address?: string;
+10019:     }>;
+10020:     unsafeOverrideFetchWorker?: string;

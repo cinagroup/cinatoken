@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-06T04:32:29.706Z",
+  "finishedAt": "2026-10-06T04:32:29.712Z",
+  "operation": "readFile",
+  "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native59-full-inventory-10b2722ab06d4cf6b6305e24571b4a8d/FINAL-native59-full-readonly-inventory.json",
+  "actualExit": 0,
+  "signal": null,
+  "error": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\final-frozen-inventory.stdout.log",
+    "bytes": 635773,
+    "sha256": "67bf17ba71aa1b9a1b3eba948cc0f2a7e221e80a9e8a1ed3ee33eef8e5ceb6cb"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\final-frozen-inventory.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "schema": "independent-final42-archive-readonly-child-receipt-v1",
+  "name": "inspect-capsule",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "argv": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4/inspect-capsule.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "startedAt": "2026-10-06T05:18:11.303Z",
+  "closedAt": "2026-10-06T05:18:11.393Z",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "closed": true,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-capsule.stdout.log",
+    "bytes": 9391,
+    "sha256": "1005228dcc8c0aca559c9c74e5cc85dc92ddd388e1558d978faac19900477cb4"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-capsule.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

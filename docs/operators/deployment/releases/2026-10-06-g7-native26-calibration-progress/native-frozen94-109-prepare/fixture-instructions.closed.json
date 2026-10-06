@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-06T04:39:25.544Z",
+  "finishedAt": "2026-10-06T04:39:25.546Z",
+  "operation": "readFile",
+  "path": "C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\fixtures\\AGENTS.md",
+  "actualExit": null,
+  "signal": null,
+  "error": {
+    "code": "ENOENT",
+    "message": "ENOENT: no such file or directory, open 'C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\fixtures\\AGENTS.md'"
+  },
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\fixture-instructions.stdout.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\fixture-instructions.stderr.log",
+    "bytes": 140,
+    "sha256": "559a29225b606096573c61d0660ff5169df2abf47cfc1deacba51dee662110a8"
+  }
+}

@@ -1,0 +1,2 @@
+scripts\diagnostics\v364-direct-socket\native-reader-calibration.mjs 246ms
+scripts\diagnostics\v364-direct-socket\sealed-package.json 4ms

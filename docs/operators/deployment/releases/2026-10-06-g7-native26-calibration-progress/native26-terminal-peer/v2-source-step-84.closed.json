@@ -1,0 +1,24 @@
+{
+  "at": "2026-10-06T04:12:02.301Z",
+  "finishedAt": "2026-10-06T04:12:02.354Z",
+  "executable": "git",
+  "args": [
+    "cat-file",
+    "blob",
+    "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc:scripts/db/cutover/postgres-exclusive-credential-free-chat-ingress-v401.native.test.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\v2-source-step-84.stdout.log",
+  "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\v2-source-step-84.stderr.log",
+  "stdoutInfo": {
+    "bytes": 134352,
+    "sha256": "ea672eafb4dc988313c18b40f9579dadc0fc1d9ad03e362574f3ef8b10246f77"
+  },
+  "stderrInfo": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

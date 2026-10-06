@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-06T04:35:50.819Z",
+  "finishedAt": "2026-10-06T04:35:50.822Z",
+  "operation": "readFile",
+  "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713/FINAL-native26-pg73-preparation.json",
+  "actualExit": 0,
+  "signal": null,
+  "error": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\prior-owner-final.stdout.log",
+    "bytes": 210963,
+    "sha256": "48f61432f183455a1c1557cda0ee8063d9f5419358933ed035504cd85913efda"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\prior-owner-final.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

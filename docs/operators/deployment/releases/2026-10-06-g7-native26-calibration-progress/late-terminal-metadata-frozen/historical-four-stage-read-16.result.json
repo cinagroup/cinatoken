@@ -1,0 +1,25 @@
+{
+  "at": "2026-10-06T04:56:01.463Z",
+  "finishedAt": "2026-10-06T04:56:01.516Z",
+  "executable": "C:/Program Files/Git/cmd/git.exe",
+  "args": [
+    "-c",
+    "core.longpaths=true",
+    "hash-object",
+    "--path=scripts/db/cutover/fixtures/historical-native/postgres-replay-reservations.native.test.mjs.txt",
+    "scripts/db/cutover/fixtures/historical-native/postgres-replay-reservations.native.test.mjs.txt"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-16.stdout.log",
+    "bytes": 41,
+    "sha256": "7eec49fcbd7058b2a6a9d53c1b452d22caf6b0fc85149a0b2ae85fb0190dc292"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-16.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-06T04:28:39.005Z",
+  "finishedAt": "2026-10-06T04:28:39.009Z",
+  "operation": "readFile",
+  "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\native-terminal.closed.json",
+  "actualExit": 0,
+  "signal": null,
+  "error": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\actual-native-original-receipt.stdout.log",
+    "bytes": 1012,
+    "sha256": "3ffe4a65441d0b150f4ddd2092876e5da2f813c85cd23b0fe349084fd446bb73"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\actual-native-original-receipt.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

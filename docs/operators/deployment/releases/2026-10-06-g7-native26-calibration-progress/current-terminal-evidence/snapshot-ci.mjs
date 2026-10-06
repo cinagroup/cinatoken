@@ -1,0 +1,17 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+const directory=path.dirname(fileURLToPath(import.meta.url));
+const [name,id]=process.argv.slice(2);
+assert.match(name??'',/^[a-z0-9-]+$/);assert.match(id??'',/^[0-9]+$/);
+const startedAt=new Date().toISOString();
+const args=['run','view',id,'--repo','cinagroup/cinatoken','--json','databaseId,name,headSha,status,conclusion,url,jobs,createdAt,updatedAt'];
+const r=spawnSync('C:/Program Files/GitHub CLI/gh.exe',args,{cwd:'C:/cinagroup/cinatoken',encoding:null,windowsHide:true,maxBuffer:16*1024*1024,timeout:60000});
+fs.writeFileSync(path.join(directory,name+'.raw.stdout.log'),r.stdout??Buffer.alloc(0),{flag:'wx'});
+fs.writeFileSync(path.join(directory,name+'.raw.stderr.log'),r.stderr??Buffer.alloc(0),{flag:'wx'});
+fs.writeFileSync(path.join(directory,name+'.raw.result.json'),JSON.stringify({at:startedAt,finishedAt:new Date().toISOString(),executable:'C:/Program Files/GitHub CLI/gh.exe',args,cwd:'C:/cinagroup/cinatoken',actualExit:r.status,signal:r.signal,stdout:path.join(directory,name+'.raw.stdout.log'),stderr:path.join(directory,name+'.raw.stderr.log'),...(r.error?{errorCode:r.error.code}: {})},null,2)+'\n',{flag:'wx'});
+assert.equal(r.status,0,(r.stderr??Buffer.alloc(0)).toString());
+const run=JSON.parse(r.stdout);assert.equal(run.databaseId,Number(id));assert.equal(run.headSha,'473de5fc520fc7d64db700db88a76c7a6b45c241');
+console.log(JSON.stringify({id:run.databaseId,name:run.name,status:run.status,conclusion:run.conclusion,headSha:run.headSha,url:run.url,jobs:run.jobs.map(j=>({id:j.databaseId,name:j.name,status:j.status,conclusion:j.conclusion,current:j.steps.filter(s=>s.status==='in_progress').map(s=>({n:s.number,name:s.name})),failed:j.steps.filter(s=>s.conclusion==='failure').map(s=>({n:s.number,name:s.name})),lastSuccess:j.steps.filter(s=>s.conclusion==='success').slice(-2).map(s=>({n:s.number,name:s.name}))}))}));

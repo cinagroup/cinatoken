@@ -1,0 +1,337 @@
+{
+  "schemaVersion": 1,
+  "releaseSlug": "2026-10-06-native59-info-prepared-subset",
+  "sourceCommit": "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc",
+  "outputDirectory": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\future-output-not-created",
+  "roots": [
+    {
+      "id": "native-four-owner",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-four-repair-38a94fb93d9842929dc7ae9cf6b378da",
+      "phase": "local-validation"
+    },
+    {
+      "id": "native-four-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-four-independent-peer-1f17397bef8049cb9cd030679e23dc70",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "g7-observe-owner",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-g7-observe-dependency-fix-02e2061ea37b4d18af99a3675ec1b7fc",
+      "phase": "local-validation"
+    },
+    {
+      "id": "g7-observe-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-g7-observer-connection-peer-readonly-13a3b38c25d74da1be0d64feed3c75d5",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "archive-subset-preparation",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd",
+      "phase": "prepared-only"
+    },
+    {
+      "id": "archive-subset-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-four-frozen-archive-peer-readonly-93dbd146546645cbb2495a763acf6c1e",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "archive-runner-dialect-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-archive-receipt-dialect-peer-readonly-e41d1f26433548dea9ff73e133e0dc4b",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "native26-owner",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713",
+      "phase": "local-validation"
+    },
+    {
+      "id": "native26-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native26-independent-peer-815d52a48c5d44fc9146dd59579e27f2",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "direct-socket-owner",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-direct-socket-prep-99dlWu",
+      "phase": "prepared-only"
+    },
+    {
+      "id": "direct-socket-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-direct-socket-peer-readonly-19dc03ece33840d28acfca66a68a3863",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "native-g7-terminal-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-terminal-independent-peer-9a6f592ed14641fe9af1029826dbd775",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "archive-frozen-inventory",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native26-direct-socket-archive-inventory-97f10624f7a344a89187435b65641546",
+      "phase": "prepared-only"
+    },
+    {
+      "id": "direct-socket-dialect-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-direct-socket-archive-dialect-peer-readonly-5acafdc971304ac180e80be74277ec8f",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "native59-inventory",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native59-full-inventory-10b2722ab06d4cf6b6305e24571b4a8d",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "v364-next-diagnosis",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "previous-durable-meta",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7",
+      "phase": "historical-and-current"
+    }
+  ],
+  "semantics": {
+    "collectionOnly": true,
+    "gatePassDerived": false,
+    "fullG7Verified": false,
+    "fullG8Verified": false,
+    "fullNativeCancelVerified": false,
+    "pendingNewCiAndDiagnostics": true,
+    "growingCurrentRootIncluded": false,
+    "productionRequests": 0,
+    "noExclusions": true,
+    "inventoryOnly": true,
+    "sourcePreparationBase": "473de5fc520fc7d64db700db88a76c7a6b45c241",
+    "reportedPushedCommit": "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc",
+    "currentLinuxResult": null,
+    "newToolRootIncluded": false,
+    "syntheticDialectControlsNotApplicationTests": true,
+    "originalAdmission1Preserved": true,
+    "rootReportedFrozenAdditionalRoots": 3,
+    "currentGrowingRootNotWalked": true,
+    "collectorMetadataRootNotIncluded": true
+  },
+  "explicitCommandOutputBindings": [
+    {
+      "rootId": "g7-observe-owner",
+      "receiptFile": "final-all-g7-controls.result.json",
+      "expectedReceiptSha256": "8c797d0a0321c2d4b7d62f4b28406612282200d83e7eb46562f07af5cd3ff83f",
+      "outputs": [
+        {
+          "file": "final-all-g7-controls.stdout.log",
+          "bytes": 21291,
+          "sha256": "6d4b8ae03cfd2f821d5aaa86ddef19ad6bca4b15a718e15cb3448dd062cf20ae"
+        },
+        {
+          "file": "final-all-g7-controls.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "rootId": "g7-observe-owner",
+      "receiptFile": "final-database-syntax.result.json",
+      "expectedReceiptSha256": "2d361c9dcd2f661be76eb8e7655d923c7b8568e9666b847b8f0f7db3961cf14d",
+      "outputs": [
+        {
+          "file": "final-database-syntax.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "final-database-syntax.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "rootId": "g7-observe-owner",
+      "receiptFile": "final-fixture-syntax.result.json",
+      "expectedReceiptSha256": "3077bb69e669d85abd1572ba85798cd88855e9d598ba8a015adf8e0e6856db84",
+      "outputs": [
+        {
+          "file": "final-fixture-syntax.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "final-fixture-syntax.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "rootId": "g7-observe-owner",
+      "receiptFile": "final-format-check.result.json",
+      "expectedReceiptSha256": "020e99366ff6f1399efaa830f3d49c868d928d1b390afc1dc520d4c6de2372a7",
+      "outputs": [
+        {
+          "file": "final-format-check.stdout.log",
+          "bytes": 66,
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "final-format-check.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "rootId": "g7-observe-owner",
+      "receiptFile": "final-format-write.result.json",
+      "expectedReceiptSha256": "5fc219c4bd7a7fdb0829ff0cd2a1b8c1bb6401f873d1b6e08d7a6e230aa0165d",
+      "outputs": [
+        {
+          "file": "final-format-write.stdout.log",
+          "bytes": 168,
+          "sha256": "4edfa744cf70ab780b6080113b0bbb19efa11c07968fb73a49b6e3070fd7e6bf"
+        },
+        {
+          "file": "final-format-write.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "rootId": "g7-observe-owner",
+      "receiptFile": "first-database-syntax.result.json",
+      "expectedReceiptSha256": "acc4f8fac8ebd1efee1bbbe46ceeb71de6a510433e4d6becc5c35812aa03a389",
+      "outputs": [
+        {
+          "file": "first-database-syntax.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "first-database-syntax.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "rootId": "g7-observe-owner",
+      "receiptFile": "first-fixture-contract.result.json",
+      "expectedReceiptSha256": "cb663179d8819903aad2a688db778417ceda41ad5b3c1ffa5f6d0be8e60cd0b4",
+      "outputs": [
+        {
+          "file": "first-fixture-contract.stdout.log",
+          "bytes": 851,
+          "sha256": "f54808b958f72c882ba75571be965ce4e0ed2d426c7593939392b0db6eede029"
+        },
+        {
+          "file": "first-fixture-contract.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "rootId": "g7-observe-owner",
+      "receiptFile": "first-fixture-syntax.result.json",
+      "expectedReceiptSha256": "79e2881d2646bc1c29ad850ec1802d3b0b5f92c72236e609dd82be829dd50390",
+      "outputs": [
+        {
+          "file": "first-fixture-syntax.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "first-fixture-syntax.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "dialect": "native59-exact-info-only-output-binding-v1",
+      "rootId": "native59-inventory",
+      "receiptFile": "head.closed.json",
+      "expectedReceiptSha256": "f5c5ad8e69032204d8880d0c6718789c61f80570db63214d1b4f3e9bed1199bc",
+      "outputs": [
+        {
+          "file": "head.stdout.log",
+          "bytes": 41,
+          "sha256": "c4ebee2df777e13bda0448797a4a3ff3d1b55b51d8c3b314e2b84bb4f12dd76f"
+        },
+        {
+          "file": "head.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "dialect": "native59-exact-info-only-output-binding-v1",
+      "rootId": "native59-inventory",
+      "receiptFile": "protected-git.closed.json",
+      "expectedReceiptSha256": "d7a5bae3aa95e67a9abff091689689664ffc3798d5c0352cfbb2ea6603553a25",
+      "outputs": [
+        {
+          "file": "protected-git.stdout.log",
+          "bytes": 9530706,
+          "sha256": "07d379e429a3c53153633fb10dce3a95d4ec8204e404e65bf908326d3079937a"
+        },
+        {
+          "file": "protected-git.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    }
+  ],
+  "immutableSchemaCopies": [
+    {
+      "rootId": "g7-observe-owner",
+      "file": "original-linux-082-docker.result.json",
+      "originalRootId": "archive-subset-preparation",
+      "originalFile": "historical-observer-original-reference/082-docker.result.json",
+      "sha256": "136a76bcadb8c915f43cf781c492703f83f2a9086ed318876df47fb5c15f9c88",
+      "partialLogCopy": true,
+      "includedLogCopies": [
+        {
+          "file": "original-linux-082-docker.stdout.log",
+          "originalFile": "historical-observer-original-reference/082-docker.stdout.log",
+          "bytes": 10508,
+          "sha256": "d1bcefc8ae88d58362d8fbd50064efc2e8786ad7bcb910cd1044a7486283b5c8"
+        },
+        {
+          "file": "original-linux-082-docker.stderr.log",
+          "originalFile": "historical-observer-original-reference/082-docker.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "scope": "Legacy API name partialLogCopy denotes selected historical artifact; both full observer streams are included byte exactly, no fresh execution"
+    },
+    {
+      "rootId": "g7-observe-owner",
+      "file": "original-linux-083-docker.result.json",
+      "originalRootId": "archive-subset-preparation",
+      "originalFile": "historical-observer-original-reference/083-docker.result.json",
+      "sha256": "92d7505748a0968c5537738abf271dec61b2efe2176d335cd79c658a9c9eaf20",
+      "partialLogCopy": true,
+      "includedLogCopies": [
+        {
+          "file": "original-linux-083-docker.stdout.log",
+          "originalFile": "historical-observer-original-reference/083-docker.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "original-linux-083-docker.stderr.log",
+          "originalFile": "historical-observer-original-reference/083-docker.stderr.log",
+          "bytes": 865,
+          "sha256": "c0e4fbbd7226d65caaba75f92fb53d5da62be6133eff3b820a09d9f4b8c71e14"
+        }
+      ],
+      "scope": "Legacy API name partialLogCopy denotes selected historical artifact; both full observer streams are included byte exactly, no fresh execution"
+    }
+  ],
+  "sourceCommitAdmission": "Exact Root-reported dcc6 commit; prepare/read only. Current Linux results and exact final artifact source binding remain Root responsibility after terminal closure."
+}

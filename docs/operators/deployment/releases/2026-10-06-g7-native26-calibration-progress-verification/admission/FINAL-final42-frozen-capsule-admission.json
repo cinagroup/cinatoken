@@ -1,0 +1,859 @@
+{
+  "schema": "final-frozen-capsule-admission-preparation-v1",
+  "completedAt": "2026-10-06T05:21:18.211Z",
+  "scope": "Pure evidence audit and frozen preparation only; no collect, application test, native/Miniflare run, CI request, Git mutation, database or production request.",
+  "sourceCommit": "dc7be6f8597333151c450bae3ae15e6585e3b2eb",
+  "releaseSlug": "2026-10-06-g7-native26-calibration-progress",
+  "config": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-final-capsule-collection-config-NWebV7/all-frozen-final-config.json",
+    "bytes": 257294,
+    "sha256": "d50f84f7c0cf4ec66d367dd7ed79edbad6719944f394d39ecd65fcfb7d8dd09e"
+  },
+  "toolRoot": "C:/Users/cina/AppData/Local/Temp/cinatoken-all-frozen-data-tools-FoBS1O",
+  "toolSourceUnchangedAfter99FileSeal": true,
+  "sourceRootCount": 42,
+  "entryCount": 3357,
+  "closedReceiptCount": 803,
+  "closedReceiptActualExitCounts": {
+    "numericZero": 762,
+    "numericOne": 36,
+    "numericTwo": 2,
+    "nullActualExit": 3,
+    "numericOther": 0
+  },
+  "numericNonzeroClosedReceipts": 38,
+  "unknownActualExitReceipts": 3,
+  "aggregateReportCount": 9,
+  "reportOnlyDataBindingCount": 93,
+  "closedExecutorTransportBindingCount": 2,
+  "blockerCount": 0,
+  "exclusionCount": 0,
+  "pureAudit": {
+    "actualExit": 0,
+    "signal": null,
+    "spawnError": null,
+    "startedAt": "2026-10-06T05:19:33.493Z",
+    "finishedAt": "2026-10-06T05:19:36.569Z",
+    "executable": "C:\\Program Files\\nodejs\\node.exe",
+    "args": [
+      "C:/Users/cina/AppData/Local/Temp/cinatoken-all-frozen-data-tools-FoBS1O/collect-evidence.mjs",
+      "audit",
+      "C:/Users/cina/AppData/Local/Temp/cinatoken-final-capsule-collection-config-NWebV7/all-frozen-final-config.json",
+      "C:/Users/cina/AppData/Local/Temp/cinatoken-final-capsule-admission-meta-UkwrUh/final-42-capsule-pure-audit.json"
+    ],
+    "stdout": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-capsule-admission-meta-UkwrUh\\final-42-capsule-pure-audit.stdout.log",
+      "bytes": 61,
+      "sha256": "5c169e78d28c2d47a6d4f976509ded895fcb90595dea32e5c653152914ecc14e"
+    },
+    "stderr": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-capsule-admission-meta-UkwrUh\\final-42-capsule-pure-audit.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "originalAdmissionFailuresPreserved": {
+    "firstOriginal31RootActualExit": 1,
+    "firstOriginal31RootBlockers": 154,
+    "original39RootActualExit": 1,
+    "original39RootBlockers": 39,
+    "original39FailureRoot": "C:/Users/cina/AppData/Local/Temp/cinatoken-final-all-frozen-admission-meta-27arGJ",
+    "rawAuthorityRetained": true,
+    "notReclassifiedAsPass": true
+  },
+  "ee122OpaquePreservation": {
+    "root": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-opaque-capsule-89cf1ba373634086a3926a636a292ec7",
+    "originalRegularFiles": 213,
+    "originalBytes": 12098565,
+    "zipMembers": 213,
+    "wholeSourceRetained": true,
+    "sourceAndZipBytesSha256CrcVerifiedByOriginalCapsuleProducer": true,
+    "independentWholeArchiveReviewPendingRoot": true,
+    "originalChildReceipts": 31,
+    "originalChildZero": 28,
+    "originalChildOne": 3,
+    "innerReceiptsHistoricalNotFreshTopLevelProcessAuthority": true,
+    "packagingAndReplayZeroNotBusinessSuccess": true
+  },
+  "independentReview": {
+    "frozenReaderSourcePeerRoot": "C:/Users/cina/AppData/Local/Temp/cinatoken-frozen-data-reader-peer-readonly-l04m66n6",
+    "frozenReaderSourcePeerScope": "Source, frozen package and existing preparation receipts; not a complete final42 root archive replay.",
+    "ee122DerivedRelationshipPeerRoot": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-39-binding-peer-readonly-2thrhzc5",
+    "rootWillReviewActualCollectedArchiveSeparately": true
+  },
+  "sourceLayers": {
+    "releaseSourceCommit": "dc7be6f8597333151c450bae3ae15e6585e3b2eb",
+    "g7ActualSourceCommit": "473de5fc520fc7d64db700db88a76c7a6b45c241",
+    "native26ActualSourceCommit": "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc",
+    "originalDirectDiagnosticActualSourceCommit": "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc",
+    "newCalibrationDiagnosticActualSourceCommit": "dc7be6f8597333151c450bae3ae15e6585e3b2eb",
+    "productionSourceCommitPrefix": "c13",
+    "productionWorkerVersionPrefix": "2a0",
+    "productionTrafficPercent": 100,
+    "productionReadPerformedHere": false,
+    "newStaticPreparedCommit": "ee122dd4273e2db892daa724bc6417a9b02b280c",
+    "newStaticPreparedNativeActualResult": {
+      "sourceCommit": "ee122dd4273e2db892daa724bc6417a9b02b280c",
+      "proxyRun": "failure",
+      "nativeJob": "failure",
+      "firstFailureStep": 24,
+      "batch55to113": "all skipped",
+      "newFourFileFixtures": "skipped",
+      "fullProxyPass": false
+    }
+  },
+  "businessSemantics": {
+    "collectionOnly": true,
+    "gatePassDerived": false,
+    "fullG7Verified": false,
+    "fullG8Verified": false,
+    "fullNativeCancelVerified": false,
+    "productionRequests": 0,
+    "noExclusions": true,
+    "syntheticDialectControlsNotApplicationTests": true,
+    "originalAdmission1Preserved": true,
+    "collectorMetadataRootNotIncluded": true,
+    "allListedSourceRootsFrozen": true,
+    "currentRootStopWrite": true,
+    "currentRootVerifiedAgainstExternalIndex": {
+      "files": 981,
+      "totalBytes": 11305947,
+      "indexSha256": "cedbf58fb411c7a183c60d183f6d36da8c853236ec7711f0b3ad679da2c2f467"
+    },
+    "sourceLayers": {
+      "releaseSourceCommit": "dc7be6f8597333151c450bae3ae15e6585e3b2eb",
+      "g7ActualSourceCommit": "473de5fc520fc7d64db700db88a76c7a6b45c241",
+      "native26ActualSourceCommit": "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc",
+      "originalDirectDiagnosticActualSourceCommit": "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc",
+      "newCalibrationDiagnosticActualSourceCommit": "dc7be6f8597333151c450bae3ae15e6585e3b2eb",
+      "productionSourceCommitPrefix": "c13",
+      "productionWorkerVersionPrefix": "2a0",
+      "productionTrafficPercent": 100,
+      "productionReadPerformedHere": false,
+      "newStaticPreparedCommit": "ee122dd4273e2db892daa724bc6417a9b02b280c",
+      "newStaticPreparedNativeActualResult": {
+        "sourceCommit": "ee122dd4273e2db892daa724bc6417a9b02b280c",
+        "proxyRun": "failure",
+        "nativeJob": "failure",
+        "firstFailureStep": 24,
+        "batch55to113": "all skipped",
+        "newFourFileFixtures": "skipped",
+        "fullProxyPass": false
+      }
+    },
+    "businessOutcomeScope": "Root-reported original frozen artifacts retained: calibration actual0/cancelKV observed; four direct runtime cases and original strict baseline actual1, overall process1. Pure evidence admission does not change those outcomes.",
+    "oldDurableMeta": {
+      "directOriginalRootIncluded": false,
+      "losslessOpaqueReplacementRootId": "old-meta-opaque-snapshot",
+      "originalFiles": 2353,
+      "allOriginalBytesRetainedInZip": true,
+      "copiedHistoricalReceiptsNotFreshExecution": true
+    },
+    "pendingFutureFrozenRoots": [],
+    "scope": "Complete bounded frozen historical evidence cohort. One unsupported derived-output root is preserved as a whole-root lossless opaque ZIP/index capsule; original failed admission and raw receipts remain explicit input metadata. No inner receipt is reinterpreted as a fresh process or passing business gate.",
+    "nonProcessReadAndSliceOutputsAreReportOnly": true,
+    "originalArchiveAdmission154BlockersPreserved": true,
+    "downloadedMtimeNeverClaimedOriginalProducerMtime": true,
+    "formerCollectorMetadataRootIncludedOnlyAfterRootStopWrite": true,
+    "activeCollectorMetadataRootNotIncluded": "C:/Users/cina/AppData/Local/Temp/cinatoken-final-durable-collection-meta-S7NHM2",
+    "lateRootFrozenIndex": {
+      "files": 100,
+      "totalBytes": 2231518,
+      "sha256": "2fc26c446fafbf5fc4110ef09eeed26bb4117180a42228166ea65dc6a4d7505d"
+    },
+    "finalPreparedToolAndFirstFailuresIncluded": true,
+    "independentReaderSourcePeerIncluded": true,
+    "activeOwnerAuditMetadataRootNotIncluded": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-capsule-admission-meta-UkwrUh",
+    "ee122HistoricalOpaqueCapsule": {
+      "originalRoot": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-native-tail-independent-peer-76364c609e694985bf7d74bf5b2c4ae9",
+      "capsuleRoot": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-opaque-capsule-89cf1ba373634086a3926a636a292ec7",
+      "capsuleFinal": {
+        "file": "FINAL-ee122-opaque-capsule.json",
+        "bytes": 6188,
+        "sha256": "5d471ca014ff1a301a5c55c538cf260a52e4f485a7d4817bf7408e8f4f4586eb"
+      },
+      "wholeOriginalRootRetainedLosslessly": true,
+      "originalReaderActualExit": 1,
+      "originalReaderBlockers": 39,
+      "originalReaderFailureMetadataRootId": "original-final39-failed-admission-metadata",
+      "originalRealChildReceipts": 31,
+      "originalRealChildNumericZero": 28,
+      "originalRealChildNumericOne": 3,
+      "innerOriginalReceiptsAreHistoricalDataNotNewExecution": true,
+      "packagingAndReplayExitZeroNotApplicationSuccess": true,
+      "originalNativeStep24": "failure",
+      "originalDispatchStrict": "8 tests / 7 pass / 1 fail / 0 skip",
+      "original55to113": "59 skipped",
+      "originalPrepared26": "26 skipped",
+      "originalWorkflowConclusions": {
+        "proxy": "failure",
+        "web": "success",
+        "compose": "success",
+        "release": "success",
+        "verify": "success"
+      },
+      "readerToolSourceUnchangedAfter99Seal": true,
+      "noOriginalRawExcludedOrOmitted": true
+    }
+  },
+  "nonzeroAndUnknownReceipts": [
+    {
+      "root": "archive-subset-preparation",
+      "file": "historical-observer-original-reference/083-docker.result.json",
+      "sha256": "92d7505748a0968c5537738abf271dec61b2efe2176d335cd79c658a9c9eaf20",
+      "dialect": "web-platform-g7-child-command-closed-v1",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null,
+      "timedOut": false,
+      "actualChildExitProven": true
+    },
+    {
+      "root": "archive-subset-preparation",
+      "file": "old-four-root-audit.result.json",
+      "sha256": "7391f8ddc3ff47a214a5e25c12c81893bff41ccfb80c444c452455ea42acf330",
+      "dialect": "root-finishedAt-actualExit",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null
+    },
+    {
+      "root": "native26-owner",
+      "file": "finalize26.closed.json",
+      "sha256": "6555471df96b12d4dd914757283aa1d6f7da2a3b4d074b02c53489d845b1f475",
+      "dialect": "root-finishedAt-actualExit",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null
+    },
+    {
+      "root": "native26-owner",
+      "file": "repair26.closed.json",
+      "sha256": "fc73d940d899933470218d4a8281642a9b3205a2a32c348f41b2ce05ad6eae71",
+      "dialect": "root-finishedAt-actualExit",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null
+    },
+    {
+      "root": "native26-peer",
+      "file": "inspect-native26.closed.json",
+      "sha256": "e4ec3cf1cddadce37815743fe8c73cf946946cbb96a48b241146c07ce65c80aa",
+      "dialect": "root-finishedAt-actualExit",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null
+    },
+    {
+      "root": "native26-peer",
+      "file": "review-native26-v2.closed.json",
+      "sha256": "31e3a633a064e23938da3163275ca47f6c9edcde676a92475bcff7148dacdf98",
+      "dialect": "root-finishedAt-actualExit",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null
+    },
+    {
+      "root": "native26-peer",
+      "file": "review-native26-v3.closed.json",
+      "sha256": "0d985d54540b9287696e94953a4612a9be8e0275392b40c9c4682f6b2158c0bd",
+      "dialect": "root-finishedAt-actualExit",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null
+    },
+    {
+      "root": "native26-peer",
+      "file": "review-native26-v4.closed.json",
+      "sha256": "7782bbe9515e1961a82c797754235b597ea9e2350e74383f12496082bcd010d4",
+      "dialect": "root-finishedAt-actualExit",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null
+    },
+    {
+      "root": "native26-peer",
+      "file": "review-native26.closed.json",
+      "sha256": "f26de57fecdd56d65df5d041379fba838559b3a0d0de52268c7aa16a5453fc13",
+      "dialect": "root-finishedAt-actualExit",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null
+    },
+    {
+      "root": "direct-socket-owner",
+      "file": "existing-output-negative.result.json",
+      "sha256": "4b5639d9afc89feb4dce03d4236d7ee42bff7bfbb42302209fee7e83c4a06eb9",
+      "dialect": "explicit-closed",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null
+    },
+    {
+      "root": "direct-socket-owner",
+      "file": "local-contracts.result.json",
+      "sha256": "bb4ec5d46cb6dad17b44d0912a55f53df2481d3f765b4e1fdf51482a4ca5b67e",
+      "dialect": "explicit-closed",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null
+    },
+    {
+      "root": "direct-socket-owner",
+      "file": "manifest-format-check.result.json",
+      "sha256": "d2bd7b8e438d01a1cc2bc7a1a5e7dcd99b010a3f5fc41cf6f725f7ba38b2082e",
+      "dialect": "explicit-closed",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null
+    },
+    {
+      "root": "direct-socket-owner",
+      "file": "windows-executor-admission.result.json",
+      "sha256": "fe7b1833b5a7affa50528cc5802e5311373eae25675c2ec3f8a15acf17dea155",
+      "dialect": "explicit-closed",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null
+    },
+    {
+      "root": "direct-socket-owner",
+      "file": "windows-negative/executor.closed.json",
+      "sha256": "edbe90af48c074cf3ddcd62b0a11d9529b2b1fb6c4f0cc7ca900b4cdaa0adb48",
+      "dialect": "v364-direct-socket-no-child-preflight-rejection-v1",
+      "actualExit": 1,
+      "actualProcessExit": null,
+      "runnerOutcomeCode": 1,
+      "actualChildExitProven": false,
+      "linuxRuntimeExecuted": false,
+      "signal": null,
+      "spawnError": null,
+      "groupGone": true,
+      "directChildReaped": false,
+      "fullCooperativeCleanupProven": false,
+      "gracefulWorkerdExitProven": false,
+      "gatePassDerived": false
+    },
+    {
+      "root": "native-g7-terminal-peer",
+      "file": "review-terminal.closed.json",
+      "sha256": "49d6c3981f6ce1ff1739f0db823cbe7be744ffa16da28774385dd1165079059b",
+      "dialect": "root-finishedAt-actualExit",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null
+    },
+    {
+      "root": "v364-next-diagnosis",
+      "file": "frozen-holder-gateway-contract.result.json",
+      "sha256": "c51e8a51cd6eb454d15d3a6f262edfb47ea1baf5f67d243ffdb241805ef3a41f",
+      "dialect": "explicit-closed",
+      "actualExit": null,
+      "signal": null,
+      "spawnError": {
+        "code": "EPERM",
+        "name": "Error"
+      }
+    },
+    {
+      "root": "v364-next-diagnosis",
+      "file": "source-cancel-locations.result.json",
+      "sha256": "e346532e25c97f1ae57ac85aecdce41771d08db20e651ad40035c81d5db15a4a",
+      "dialect": "explicit-closed",
+      "actualExit": null,
+      "signal": null,
+      "spawnError": {
+        "code": "EPERM",
+        "name": "Error"
+      }
+    },
+    {
+      "root": "v364-next-diagnosis",
+      "file": "source-files.result.json",
+      "sha256": "3c1e24648cb4e60f4b88f4efc3094c130dd4ef4941936455d947db11ad550adc",
+      "dialect": "explicit-closed",
+      "actualExit": null,
+      "signal": null,
+      "spawnError": {
+        "code": "EPERM",
+        "name": "Error"
+      }
+    },
+    {
+      "root": "current-terminal-evidence",
+      "file": "analyze-g7-terminal.result.json",
+      "sha256": "d23f1e18bc07e4f198fde59f8ad1a4b8b73a536ac9a7f480c2b9c4ca6e312aa8",
+      "dialect": "root-finishedAt-actualExit",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null
+    },
+    {
+      "root": "current-terminal-evidence",
+      "file": "canonical-calibration-artifact/_temp/v364-direct-socket-once-37414167261-1/executor.closed.json",
+      "sha256": "1f36a6a5c68356bdce2a30e57f0e212db88c0a02b0b01eb0d872d06565586e18",
+      "dialect": "v364-direct-socket-executor-closed-v1",
+      "actualExit": 1,
+      "actualProcessExit": 1,
+      "runnerOutcomeCode": 1,
+      "signal": null,
+      "spawnError": null,
+      "timedOut": false,
+      "interrupted": false,
+      "groupGone": true,
+      "directChildReaped": true,
+      "leftoverGroupKilled": false,
+      "apiDisposalReported": true,
+      "outerUnforcedGroupCloseReported": true,
+      "actualChildExitProven": true,
+      "linuxRuntimeExecuted": true,
+      "fullCooperativeCleanupProven": false,
+      "gracefulWorkerdExitProven": false,
+      "gatePassDerived": false
+    },
+    {
+      "root": "current-terminal-evidence",
+      "file": "direct-artifact-current/_temp/v364-direct-socket-once-37412108171-1/executor.closed.json",
+      "sha256": "31953785aeec17228cf9d48ad09385eacf330edbe93d1111020a4f3aca52b897",
+      "dialect": "v364-direct-socket-executor-closed-v1",
+      "actualExit": 1,
+      "actualProcessExit": 1,
+      "runnerOutcomeCode": 1,
+      "signal": null,
+      "spawnError": null,
+      "timedOut": false,
+      "interrupted": false,
+      "groupGone": true,
+      "directChildReaped": true,
+      "leftoverGroupKilled": false,
+      "apiDisposalReported": true,
+      "outerUnforcedGroupCloseReported": true,
+      "actualChildExitProven": true,
+      "linuxRuntimeExecuted": true,
+      "fullCooperativeCleanupProven": false,
+      "gracefulWorkerdExitProven": false,
+      "gatePassDerived": false
+    },
+    {
+      "root": "current-terminal-evidence",
+      "file": "dispatch-g7.result.json",
+      "sha256": "6e74b402684d2733f997cefc1bacc9d5f4baddb391e10140a844230b5ffe02ac",
+      "dialect": "root-finishedAt-actualExit",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null
+    },
+    {
+      "root": "current-terminal-evidence",
+      "file": "g7-artifact-current/025-docker.result.json",
+      "sha256": "80ea5a0045082af8240fcc0861e36f09f79febeb2c2c62cb7cc3585fa29b09a2",
+      "dialect": "web-platform-g7-child-command-closed-v1",
+      "actualExit": 2,
+      "signal": null,
+      "spawnError": null,
+      "timedOut": false,
+      "actualChildExitProven": true
+    },
+    {
+      "root": "current-terminal-evidence",
+      "file": "g7-artifact-current/026-docker.result.json",
+      "sha256": "43e86a34c835cf4fb1d7f55f853585ee5a94379c7cc1e32021909b69281db733",
+      "dialect": "web-platform-g7-child-command-closed-v1",
+      "actualExit": 2,
+      "signal": null,
+      "spawnError": null,
+      "timedOut": false,
+      "actualChildExitProven": true
+    },
+    {
+      "root": "native26-terminal-peer",
+      "file": "dispatch-failed-terminal.closed.json",
+      "sha256": "559f6c164c0e6410a4b17900b4e1dad16b8f6f6b444f0322ad89939bca322087",
+      "dialect": "root-finishedAt-actualExit",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null
+    },
+    {
+      "root": "native26-terminal-peer",
+      "file": "prepare-source-inputs-v2.closed.json",
+      "sha256": "64483fabb80e8ae69c76f587f36fdcf444fd36c41cbee7d947ddbea16115b70f",
+      "dialect": "root-finishedAt-actualExit",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null
+    },
+    {
+      "root": "native26-terminal-peer",
+      "file": "prepare-source-inputs.closed.json",
+      "sha256": "09c217ca7d77d08147b8a6b11b17a47277b7f8e0e806cd5bdd615a39340a3783",
+      "dialect": "root-finishedAt-actualExit",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null
+    },
+    {
+      "root": "native26-terminal-peer",
+      "file": "proxy-progress-1.closed.json",
+      "sha256": "2d1dbaa80b8f6c480925721416908d7413172b4c73b05d21a3a2c17f54b77af6",
+      "dialect": "root-finishedAt-actualExit",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null
+    },
+    {
+      "root": "v364-url-calibration-owner",
+      "file": "final-format-check.result.json",
+      "sha256": "c36d3169b09ed78adeb5296930d3c68594bac0e22af12c285772884164191654",
+      "dialect": "explicit-closed",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null
+    },
+    {
+      "root": "v364-url-calibration-owner",
+      "file": "repair-local-contracts.result.json",
+      "sha256": "0ffaed31df68448ecc93e442c6179737e6ef6cf2c8eb3c0c21beee8961a98158",
+      "dialect": "explicit-closed",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null
+    },
+    {
+      "root": "direct-socket-evidence-tools",
+      "file": "frozen-expanded-audit-first.result.json",
+      "sha256": "49bac84020f2df179842119300614a555b4e79269c0037915a14277ba810fc2f",
+      "dialect": "root-finishedAt-actualExit",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null
+    },
+    {
+      "root": "direct-socket-evidence-tools",
+      "file": "no-fatal-source-contract-first.result.json",
+      "sha256": "ee08c382ccf9b2993d1e06d6b1584c861025143ba2597b81b47006c60325c877",
+      "dialect": "root-finishedAt-actualExit",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null
+    },
+    {
+      "root": "canonical-calibration-terminal-peer",
+      "file": "audit-terminal.closed.json",
+      "sha256": "a306bdf387b20373ba9f3a7c9835bd91f71c7d78c5ed3eff3da63042e46b40f5",
+      "dialect": "root-finishedAt-actualExit",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null
+    },
+    {
+      "root": "native-frozen94-109-prepare",
+      "file": "audit-four-v2.closed.json",
+      "sha256": "173ca350b2835e6006b7ba1ea93ff4a3755d6ae60ec6876b2ffc01bd0c119cef",
+      "dialect": "root-finishedAt-actualExit",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null
+    },
+    {
+      "root": "native-frozen94-109-prepare",
+      "file": "prepare-audit-v2.closed.json",
+      "sha256": "3ced2703d9b1e242cf56011b400ba30f82e3c4ed55ae8268c632bc97e49667eb",
+      "dialect": "root-finishedAt-actualExit",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null
+    },
+    {
+      "root": "native-frozen94-109-peer",
+      "file": "audit-four.closed.json",
+      "sha256": "e4f08397e596d9999f1b6c99f3bfd34ecc8715703bf5d1acb085b80214fa437b",
+      "dialect": "root-finishedAt-actualExit",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null
+    },
+    {
+      "root": "all-frozen-first-admission-owner",
+      "file": "original-full-frozen-audit.result.json",
+      "sha256": "7113b29924a791dbc5690b243af694e43d268a7f0a2c44b8c06ca9864a36aeaf",
+      "dialect": "root-finishedAt-actualExit",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null
+    },
+    {
+      "root": "all-frozen-first-admission-owner",
+      "file": "prepare-data-reader.result.json",
+      "sha256": "926a828f4d260e8d53f362f41ef6ea867a5118b6c5c7e47f374e0374871b8fa5",
+      "dialect": "root-finishedAt-actualExit",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null
+    },
+    {
+      "root": "all-frozen-new-reader-owner",
+      "file": "first-data-bound-pure-audit.result.json",
+      "sha256": "d82845cc64081c08688adf0b7ffa3093be169d0b1c8e6d094bc554eab5e9aee1",
+      "dialect": "root-finishedAt-actualExit",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null
+    },
+    {
+      "root": "all-frozen-new-reader-owner",
+      "file": "prepare-data-reader-v2.result.json",
+      "sha256": "363d41ecaad9acbc6f9f71b9ff7dc004017132e1a38eede0fe5a6ae79dda822a",
+      "dialect": "root-finishedAt-actualExit",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null
+    },
+    {
+      "root": "original-final39-failed-admission-metadata",
+      "file": "final-combined-39-pure-audit.result.json",
+      "sha256": "917caac6990e9361c29a23f76f42d74a7792a5990390efb6a59646c80e88cca9",
+      "dialect": "root-finishedAt-actualExit",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null
+    }
+  ],
+  "aggregateReports": [
+    {
+      "root": "g7-observe-owner",
+      "file": "original-linux-result.json",
+      "sha256": "ec0beadfbc53bfa252f8e3a13eecc260a61be7cb5ca3d3b3338757d5eb904489",
+      "dialect": "web-platform-g7-owned-linux-tls-pg-closed-v1",
+      "actualExit": 1,
+      "sourceSHA": "07d19c1c941cc373019811be3dbf553c441a0ff3",
+      "aggregateOnly": true,
+      "childLogAuthority": false,
+      "gatePassDerived": false,
+      "owner": "g7-8a88cf68945741d1843b63f670b4d364",
+      "cleanupVerifiedAbsentReported": true
+    },
+    {
+      "root": "g7-observe-owner",
+      "file": "original-linux-wire-result.json",
+      "sha256": "b2e0da71df5a8fbe8c4f6ce781685c1f80936e6d80b81feae767a37675a62ae2",
+      "dialect": "web-platform-g7-tls-pg-wire-v1",
+      "actualExit": 0,
+      "sourceSHA": "07d19c1c941cc373019811be3dbf553c441a0ff3",
+      "aggregateOnly": true,
+      "childLogAuthority": false,
+      "gatePassDerived": false
+    },
+    {
+      "root": "archive-subset-preparation",
+      "file": "historical-observer-original-reference/result.json",
+      "sha256": "ec0beadfbc53bfa252f8e3a13eecc260a61be7cb5ca3d3b3338757d5eb904489",
+      "dialect": "web-platform-g7-owned-linux-tls-pg-closed-v1",
+      "actualExit": 1,
+      "sourceSHA": "07d19c1c941cc373019811be3dbf553c441a0ff3",
+      "aggregateOnly": true,
+      "childLogAuthority": false,
+      "gatePassDerived": false,
+      "owner": "g7-8a88cf68945741d1843b63f670b4d364",
+      "cleanupVerifiedAbsentReported": true
+    },
+    {
+      "root": "archive-subset-preparation",
+      "file": "historical-observer-original-reference/wire-result.json",
+      "sha256": "b2e0da71df5a8fbe8c4f6ce781685c1f80936e6d80b81feae767a37675a62ae2",
+      "dialect": "web-platform-g7-tls-pg-wire-v1",
+      "actualExit": 0,
+      "sourceSHA": "07d19c1c941cc373019811be3dbf553c441a0ff3",
+      "aggregateOnly": true,
+      "childLogAuthority": false,
+      "gatePassDerived": false
+    },
+    {
+      "root": "current-terminal-evidence",
+      "file": "canonical-calibration-artifact/_temp/v364-direct-socket-once-37414167261-1/closed-result.json",
+      "sha256": "07927a3f98a4b1ed85ddd03b37923db5b9b83d26ef55d172eab92c08a1316b94",
+      "dialect": "v364-direct-socket-closed-v1",
+      "actualExit": 1,
+      "sourceSHA": "dc7be6f8597333151c450bae3ae15e6585e3b2eb",
+      "aggregateOnly": true,
+      "childLogAuthority": false,
+      "gatePassDerived": false,
+      "allComparisonsBaselineEligible": false,
+      "completeComparisonShape": true,
+      "causeProven": false,
+      "fullNativeCancelVerified": false
+    },
+    {
+      "root": "current-terminal-evidence",
+      "file": "direct-artifact-current/_temp/v364-direct-socket-once-37412108171-1/closed-result.json",
+      "sha256": "82889b05a1418a746fd1a2074d274149d7f681895f33179dbbc33065195e836e",
+      "dialect": "v364-direct-socket-closed-v1",
+      "actualExit": 1,
+      "sourceSHA": "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc",
+      "aggregateOnly": true,
+      "childLogAuthority": false,
+      "gatePassDerived": false,
+      "allComparisonsBaselineEligible": false,
+      "completeComparisonShape": true,
+      "causeProven": false,
+      "fullNativeCancelVerified": false
+    },
+    {
+      "root": "current-terminal-evidence",
+      "file": "g7-artifact-current/fallback-cleanup-result.json",
+      "sha256": "27d4e477a58089e7245e9a7228559f4976fe8b734d68eecd47594e85514ba192",
+      "dialect": "web-platform-g7-independent-cleanup-closed-v1",
+      "actualExit": 0,
+      "sourceSHA": "473de5fc520fc7d64db700db88a76c7a6b45c241",
+      "aggregateOnly": true,
+      "childLogAuthority": false,
+      "gatePassDerived": false,
+      "owner": "g7-1e70578d1acd47478966124f581794d8",
+      "cleanupVerifiedAbsentReported": true
+    },
+    {
+      "root": "current-terminal-evidence",
+      "file": "g7-artifact-current/result.json",
+      "sha256": "cc10e45c78919649c6316f4408db75e8a16e84c47087248c2477db7d676b6d06",
+      "dialect": "web-platform-g7-owned-linux-tls-pg-closed-v1",
+      "actualExit": 0,
+      "sourceSHA": "473de5fc520fc7d64db700db88a76c7a6b45c241",
+      "aggregateOnly": true,
+      "childLogAuthority": false,
+      "gatePassDerived": false,
+      "owner": "g7-1e70578d1acd47478966124f581794d8",
+      "cleanupVerifiedAbsentReported": true
+    },
+    {
+      "root": "current-terminal-evidence",
+      "file": "g7-artifact-current/wire-result.json",
+      "sha256": "2d528d76758347e11654a0a68aadff3f956b14026129b581b2168b3d5471128c",
+      "dialect": "web-platform-g7-tls-pg-wire-v1",
+      "actualExit": 0,
+      "sourceSHA": "473de5fc520fc7d64db700db88a76c7a6b45c241",
+      "aggregateOnly": true,
+      "childLogAuthority": false,
+      "gatePassDerived": false
+    }
+  ],
+  "authorityPins": [
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-final-capsule-collection-config-NWebV7/all-frozen-final-config.json",
+      "bytes": 257294,
+      "sha256": "d50f84f7c0cf4ec66d367dd7ed79edbad6719944f394d39ecd65fcfb7d8dd09e"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-capsule-admission-meta-UkwrUh\\final-42-capsule-pure-audit.json",
+      "bytes": 4025864,
+      "sha256": "d9304f70f49383bdffe083187b4661054cf65688ef55b18fc5f21a76eeac1488"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-capsule-admission-meta-UkwrUh\\final-42-capsule-pure-audit.result.json",
+      "bytes": 1232,
+      "sha256": "c942a7b736c79a3bf2e09d378d70883300e38c45ff6628e51a92131c20472806"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-all-frozen-data-tools-FoBS1O/FINAL-all-frozen-data-reader-preparation.json",
+      "bytes": 18204,
+      "sha256": "7e420fa4f27be551c0c1968403a81b6cdf1ee83cf210c72c6f6019f46db78f32"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-all-frozen-data-tools-FoBS1O/STOPWRITE-all-frozen-data-reader-seal.json",
+      "bytes": 16606,
+      "sha256": "a02c1e9476037e5f5b68fbc8ce8dda5111fe493c2d2f8cffb6d51038947a3cbb"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-frozen-data-reader-peer-readonly-l04m66n6/FINAL-frozen-data-reader-independent-peer-review.json",
+      "bytes": 108686,
+      "sha256": "0c66c6b40e3b380aa42dfd466fc14d323c783c2bca9990d9c58436f105648b33"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-frozen-data-reader-peer-readonly-l04m66n6/STOPWRITE-independent-peer-seal.json",
+      "bytes": 3202,
+      "sha256": "d5ee1d00017fbbadfc791e1a5d489015042a608d619be505f075dd56d1ca38a3"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-opaque-capsule-89cf1ba373634086a3926a636a292ec7/FINAL-ee122-opaque-capsule.json",
+      "bytes": 6188,
+      "sha256": "5d471ca014ff1a301a5c55c538cf260a52e4f485a7d4817bf7408e8f4f4586eb"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-opaque-capsule-89cf1ba373634086a3926a636a292ec7/CAPSULE-SEAL.json",
+      "bytes": 4550,
+      "sha256": "54dea9189d5230559c465232491ff73ff0a8081f181bf5777f9c7507e88eae2c"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-opaque-capsule-89cf1ba373634086a3926a636a292ec7/ee122-frozen-root-lossless-opaque.zip",
+      "bytes": 1754533,
+      "sha256": "ad81f711b44102fde593087f8592dd4081c53058309df910586ee2a7af86f03a"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-final-all-frozen-admission-meta-27arGJ/final-combined-39-pure-audit.result.json",
+      "bytes": 1245,
+      "sha256": "917caac6990e9361c29a23f76f42d74a7792a5990390efb6a59646c80e88cca9"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-final-all-frozen-admission-meta-27arGJ/final-combined-39-pure-audit.json",
+      "bytes": 4181616,
+      "sha256": "bfbc0332b74faba84d4fa75c0d01f9ab5c97b334b372cff9dfb5fab584afc784"
+    }
+  ],
+  "rootIds": [
+    "native-four-owner",
+    "native-four-peer",
+    "g7-observe-owner",
+    "g7-observe-peer",
+    "archive-subset-preparation",
+    "archive-subset-peer",
+    "archive-runner-dialect-peer",
+    "native26-owner",
+    "native26-peer",
+    "direct-socket-owner",
+    "direct-socket-peer",
+    "native-g7-terminal-peer",
+    "archive-frozen-inventory",
+    "direct-socket-dialect-peer",
+    "native59-inventory",
+    "v364-next-diagnosis",
+    "current-terminal-evidence",
+    "native26-terminal-peer",
+    "native-pin94-readonly",
+    "v364-url-calibration-owner",
+    "v364-url-calibration-peer",
+    "v364-partial-existing-reads-peer",
+    "old-meta-opaque-snapshot",
+    "old-meta-opaque-peer",
+    "direct-socket-evidence-tools",
+    "direct-socket-tool-source-peer",
+    "native59-info-evidence-tools",
+    "native59-info-tool-source-peer",
+    "canonical-calibration-terminal-peer",
+    "native-frozen94-109-prepare",
+    "current-frozen-index-input",
+    "native26-slice-binding-peer",
+    "native-frozen94-109-peer",
+    "late-terminal-metadata-frozen",
+    "all-frozen-first-admission-owner",
+    "all-frozen-new-reader-owner",
+    "all-frozen-data-reader-source-peer",
+    "final-frozen-config-input",
+    "ee122-native-terminal-opaque-capsule",
+    "original-final39-failed-admission-metadata",
+    "ee122-derived-data-relation-peer",
+    "final-capsule-config-input"
+  ],
+  "ownerAuditMetadataRootNotIncludedIn42Inputs": "C:/Users/cina/AppData/Local/Temp/cinatoken-final-capsule-admission-meta-UkwrUh",
+  "activeRootMetadataNotIncluded": "C:/Users/cina/AppData/Local/Temp/cinatoken-final-durable-collection-meta-S7NHM2",
+  "collectionOnly": true,
+  "gatePassDerived": false,
+  "fullG7Verified": false,
+  "fullG8Verified": false,
+  "fullNativeCancelVerified": false,
+  "productionReadPerformedHere": false,
+  "limitations": [
+    "Final42 pure audit proves reader admission and file/raw authority binding, not application or runtime passing.",
+    "The opaque ZIP retains all unsupported ee122 original bytes; it does not reinterpret their children, derived slices or original failed admissions as fresh successful commands.",
+    "Three original EPERM spawn failures retain actualExit=null.",
+    "No collect or verify command was executed by this producer."
+  ]
+}

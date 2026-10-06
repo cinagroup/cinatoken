@@ -1,0 +1,13 @@
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+2026/10/06 03:39:21 [notice] 1#1: using the "epoll" event method
+2026/10/06 03:39:21 [notice] 1#1: nginx/1.30.5
+2026/10/06 03:39:21 [notice] 1#1: built by gcc 15.2.0 (Alpine 15.2.0) 
+2026/10/06 03:39:21 [notice] 1#1: OS: Linux 6.17.0-1022-azure
+2026/10/06 03:39:21 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 65536:65536
+2026/10/06 03:39:21 [notice] 1#1: start worker processes
+2026/10/06 03:39:21 [notice] 1#1: start worker process 25
+2026/10/06 03:39:21 [notice] 1#1: start worker process 26
+2026/10/06 03:39:21 [notice] 1#1: start worker process 27
+2026/10/06 03:39:21 [notice] 1#1: start worker process 28
+2026/10/06 03:39:37 [error] 25#25: *445 open() "/usr/share/nginx/html/assets/g7-missing.js" failed (2: No such file or directory), client: 172.19.0.6, server: _, request: "GET /web-assets/assets/g7-missing.js HTTP/1.1", host: "app.test"

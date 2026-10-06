@@ -1,0 +1,2041 @@
+{
+  "schema": "cinatoken.native-frozen94-109-four-file-preparation.final.v1",
+  "frozenAt": "2026-10-06T04:42:32.232Z",
+  "actualExit": 0,
+  "platform": "win32",
+  "baseCommit": "dc7be6f8597333151c450bae3ae15e6585e3b2eb",
+  "repositoryWritePaths": [
+    "scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs",
+    "scripts/db/cutover/fixtures/historical-native/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs.txt",
+    "scripts/db/cutover/postgres-replay-reservations-backend-lifecycle-successor.native.test.mjs",
+    "scripts/db/cutover/fixtures/historical-native/postgres-replay-reservations.native.test.mjs.txt"
+  ],
+  "finalFiles": [
+    {
+      "path": "scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs",
+      "kind": "existing-successor",
+      "bytes": 52497,
+      "sha256": "68206c5acf6b0bbfc93f27295615be13b26ef0beff7b73046202883c2b6ebe87"
+    },
+    {
+      "path": "scripts/db/cutover/fixtures/historical-native/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs.txt",
+      "kind": "new-historical-text-snapshot",
+      "bytes": 50164,
+      "sha256": "603646803c82d3209987260ad682a34169b4e53ca7b03b672d818e3a28d7cc13"
+    },
+    {
+      "path": "scripts/db/cutover/postgres-replay-reservations-backend-lifecycle-successor.native.test.mjs",
+      "kind": "existing-successor",
+      "bytes": 42822,
+      "sha256": "a8e7ccd8c918c128515415d47c40c2f9ce4c6a9e44646895035d10612359d295"
+    },
+    {
+      "path": "scripts/db/cutover/fixtures/historical-native/postgres-replay-reservations.native.test.mjs.txt",
+      "kind": "new-historical-text-snapshot",
+      "bytes": 37114,
+      "sha256": "d95055419a04465c7c172ff0b8426bd0b928bd538e4dad80f9442229abd5e269"
+    }
+  ],
+  "plannedOperations": [
+    {
+      "step": 94,
+      "wrapper": "scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs",
+      "legacy": "scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs",
+      "frozenPath": "scripts/db/cutover/fixtures/historical-native/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs.txt",
+      "originalCommit": "94c12c1e37e7346330486cf9a3a3246af00d95c5",
+      "pin": "603646803c82d3209987260ad682a34169b4e53ca7b03b672d818e3a28d7cc13",
+      "oldBytes": 50164,
+      "currentBytes": 50146,
+      "currentSha256": "dfe004034784018eb9c70502e19a2192c45e1e8982a96c98b03626f72f7cce1d",
+      "wrapperBefore": {
+        "bytes": 52435,
+        "sha256": "90115e4345b635f37378b0c3b5d26c15000275577e14c69f00e408845e0f9fe2"
+      },
+      "wrapperAfter": {
+        "bytes": 52497,
+        "sha256": "68206c5acf6b0bbfc93f27295615be13b26ef0beff7b73046202883c2b6ebe87"
+      },
+      "snapshot": {
+        "bytes": 50164,
+        "sha256": "603646803c82d3209987260ad682a34169b4e53ca7b03b672d818e3a28d7cc13"
+      },
+      "operations": [
+        {
+          "kind": "lineage-path",
+          "needle": "historicalFixture: 'scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs'",
+          "replacement": "historicalFixture: 'scripts/db/cutover/fixtures/historical-native/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs.txt'"
+        },
+        {
+          "kind": "historical-read-url",
+          "needle": "'./postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs', import.meta.url",
+          "replacement": "'./fixtures/historical-native/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs.txt', import.meta.url"
+        }
+      ]
+    },
+    {
+      "step": 109,
+      "wrapper": "scripts/db/cutover/postgres-replay-reservations-backend-lifecycle-successor.native.test.mjs",
+      "legacy": "scripts/db/cutover/postgres-replay-reservations.native.test.mjs",
+      "frozenPath": "scripts/db/cutover/fixtures/historical-native/postgres-replay-reservations.native.test.mjs.txt",
+      "originalCommit": "63e305a1bdf14c55fede74fb7ff9cbd9f732fc19",
+      "pin": "d95055419a04465c7c172ff0b8426bd0b928bd538e4dad80f9442229abd5e269",
+      "oldBytes": 37114,
+      "currentBytes": 37096,
+      "currentSha256": "9cb9a57a7a3edaff9f7a66a9c547a83d6f90ee8938d9a4ad8370194586b4ebe6",
+      "wrapperBefore": {
+        "bytes": 42663,
+        "sha256": "40fcf5af8960e32f3ad9f1343c046a48aed32f72fd6c19efe14b14ce4c1b48c4"
+      },
+      "wrapperAfter": {
+        "bytes": 42822,
+        "sha256": "a8e7ccd8c918c128515415d47c40c2f9ce4c6a9e44646895035d10612359d295"
+      },
+      "snapshot": {
+        "bytes": 37114,
+        "sha256": "d95055419a04465c7c172ff0b8426bd0b928bd538e4dad80f9442229abd5e269"
+      },
+      "operations": [
+        {
+          "kind": "historical-read-url",
+          "needle": "'./postgres-replay-reservations.native.test.mjs', import.meta.url",
+          "replacement": "'./fixtures/historical-native/postgres-replay-reservations.native.test.mjs.txt', import.meta.url"
+        },
+        {
+          "kind": "lineage-path-added",
+          "needle": "lineage: { historicalNativeTestSha256,",
+          "replacement": "lineage: { historicalNativeTest: 'scripts/db/cutover/fixtures/historical-native/postgres-replay-reservations.native.test.mjs.txt',\n        historicalNativeTestSha256,"
+        }
+      ]
+    }
+  ],
+  "authority": {
+    "historical": [
+      {
+        "step": 94,
+        "originalCommit": "94c12c1e37e7346330486cf9a3a3246af00d95c5",
+        "sourcePath": "scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs",
+        "originalBlob": "64b2c914251d74191f73bb25f723dd6010fbc366",
+        "oldFrozenBytes": 50164,
+        "oldFrozenSha256": "603646803c82d3209987260ad682a34169b4e53ca7b03b672d818e3a28d7cc13",
+        "currentBaseLegacyBlob": "359689d1534cbbee9ea7f7211909d02fe5b33b1f",
+        "currentBaseLegacyBytes": 50146,
+        "currentBaseLegacySha256": "dfe004034784018eb9c70502e19a2192c45e1e8982a96c98b03626f72f7cce1d"
+      },
+      {
+        "step": 109,
+        "originalCommit": "63e305a1bdf14c55fede74fb7ff9cbd9f732fc19",
+        "sourcePath": "scripts/db/cutover/postgres-replay-reservations.native.test.mjs",
+        "originalBlob": "dc042910c59037ddd850e361a38d8da745efae73",
+        "oldFrozenBytes": 37114,
+        "oldFrozenSha256": "d95055419a04465c7c172ff0b8426bd0b928bd538e4dad80f9442229abd5e269",
+        "currentBaseLegacyBlob": "67e4ed6f44885c99e3d1d23994efefc813a72aa7",
+        "currentBaseLegacyBytes": 37096,
+        "currentBaseLegacySha256": "9cb9a57a7a3edaff9f7a66a9c547a83d6f90ee8938d9a4ad8370194586b4ebe6"
+      }
+    ],
+    "actualStep94Failure": {
+      "runId": 37412060008,
+      "jobId": 112102451588,
+      "headSha": "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc",
+      "line": 187,
+      "column": 14,
+      "raw": {
+        "at": "2026-10-06T04:28:38.997Z",
+        "finishedAt": "2026-10-06T04:28:39.003Z",
+        "operation": "readFile",
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\native-terminal.stdout.log",
+        "actualExit": 0,
+        "signal": null,
+        "error": null,
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\actual-native-raw.stdout.log",
+          "bytes": 556674,
+          "sha256": "c78e11593edf9b694d5a490647fd37f4863aa44f22be14d367e592975dbb8d28"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\actual-native-raw.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "originalActualClosedDownload": {
+        "schema": "cinatoken.native26-ci-independent-peer.command.v1",
+        "at": "2026-10-06T04:21:36.386Z",
+        "finishedAt": "2026-10-06T04:21:45.527Z",
+        "executable": "C:/Program Files/GitHub CLI/gh.exe",
+        "args": [
+          "run",
+          "view",
+          "37412060008",
+          "--repo",
+          "cinagroup/cinatoken",
+          "--job",
+          "112102451588",
+          "--log"
+        ],
+        "cwd": "C:/cinagroup/cinatoken",
+        "actualExit": 0,
+        "signal": null,
+        "spawnError": null,
+        "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\native-terminal.stdout.log",
+        "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\native-terminal.stderr.log",
+        "stdoutInfo": {
+          "bytes": 556674,
+          "sha256": "c78e11593edf9b694d5a490647fd37f4863aa44f22be14d367e592975dbb8d28"
+        },
+        "stderrInfo": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "group": {
+        "at": "2026-10-06T04:30:04.986Z",
+        "finishedAt": "2026-10-06T04:30:04.988Z",
+        "operation": "readFile",
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\group-step-94.raw.log",
+        "actualExit": 0,
+        "signal": null,
+        "error": null,
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\actual-step94-group.stdout.log",
+          "bytes": 9949,
+          "sha256": "891ba26d3b0605270c2b65aa7f3d21b6b1d19728c25643f7e515ef80de3fbed1"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\actual-step94-group.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    "step109": "The old/current identity mismatch was observed statically; step109 was skipped after actual step94 failure. No actual109 pass/failure claim.",
+    "priorFrozenPinReport": {
+      "at": "2026-10-06T04:35:50.823Z",
+      "finishedAt": "2026-10-06T04:35:50.825Z",
+      "operation": "readFile",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287/FINAL-native-pin94-tail-readonly.json",
+      "actualExit": 0,
+      "signal": null,
+      "error": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\prior-pin-final.stdout.log",
+        "bytes": 212858,
+        "sha256": "41f05a0c311dad452ab8b8d2cc44cb5e1d7e68937fcb83b1baa98a5aeecade58"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\prior-pin-final.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "initialHead": "dc7be6f8597333151c450bae3ae15e6585e3b2eb"
+  },
+  "changes": {
+    "snapshots": "Write the raw stdout bytes from the original pin-introduction Git blobs into non-executable .native.test.mjs.txt files. No encoding or newline conversion.",
+    "step94": "Replace the existing historical read URL and lineage historicalFixture path with the historical text snapshot path.",
+    "step109": "Replace historicalNativeTest URL and add the corresponding path to its existing lineage object, which previously had only the SHA and contract fields.",
+    "originalPins": "603646803c82d3209987260ad682a34169b4e53ca7b03b672d818e3a28d7cc13 andd95055419a04465c7c172ff0b8426bd0b928bd538e4dad80f9442229abd5e269 unchanged.",
+    "originalFrozenComments": "Both top-of-file historical/frozen comments remain byte exact.",
+    "currentLegacy": "Both PG73-adapted executable legacy fixtures remain byte exact; only historical proof reads are redirected."
+  },
+  "independentAudit": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\four-independent-audit-v3.json",
+    "bytes": 141664,
+    "sha256": "55e7f7541edee33b6ee2e51cea5bc157449f52c5e3d0c2db940e75d7ef782eda",
+    "totals": {
+      "files": 4,
+      "wrappers": 2,
+      "snapshots": 2,
+      "originalAssertions": 148,
+      "originalGrants": 4,
+      "originalSqlTemplates": 149,
+      "originalSqlAndTransactions": 173,
+      "owner302ProtectedExceptAllowed2": 300,
+      "priorNative26Unchanged": 26,
+      "priorPin23ProtectedExceptAllowed2": 21,
+      "uniqueProtectedInputs": 330
+    },
+    "results": [
+      {
+        "step": 94,
+        "wrapper": "scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs",
+        "wrapperBefore": {
+          "bytes": 52435,
+          "sha256": "90115e4345b635f37378b0c3b5d26c15000275577e14c69f00e408845e0f9fe2"
+        },
+        "wrapperAfter": {
+          "bytes": 52497,
+          "sha256": "68206c5acf6b0bbfc93f27295615be13b26ef0beff7b73046202883c2b6ebe87"
+        },
+        "snapshotPath": "scripts/db/cutover/fixtures/historical-native/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs.txt",
+        "snapshot": {
+          "bytes": 50164,
+          "sha256": "603646803c82d3209987260ad682a34169b4e53ca7b03b672d818e3a28d7cc13"
+        },
+        "historicalCommit": "94c12c1e37e7346330486cf9a3a3246af00d95c5",
+        "historicalBlob": "64b2c914251d74191f73bb25f723dd6010fbc366",
+        "fullWrapperReverseBytesExact": true,
+        "allOriginalProtectedCallSourcesAndAstExact": true,
+        "originalPinsAndFrozenCommentsExact": true,
+        "staticNewUrlDigestMatchesOriginalPin": true,
+        "lineagePathMatchesNewUrl": true,
+        "originalCounts": {
+          "assertions": 61,
+          "grantCalls": 2,
+          "templates": 71,
+          "sqlAndTransactions": 70,
+          "cleanup": 2,
+          "conditions": 4,
+          "nativeOptions": 1,
+          "reporters": 2
+        },
+        "protectedAstAndSourceSha256": "11adbde28a4781289b32f9a3ce4df7c567b0e5d0714e49aa23bdb999bf53604c",
+        "currentLegacyUnchanged": {
+          "bytes": 50146,
+          "sha256": "dfe004034784018eb9c70502e19a2192c45e1e8982a96c98b03626f72f7cce1d"
+        },
+        "currentLegacyAdapterReverseBytesExact": true,
+        "legacyOriginalCounts": {
+          "assertions": 57,
+          "grantCalls": 0,
+          "templates": 71,
+          "sqlAndTransactions": 68,
+          "cleanup": 2,
+          "conditions": 4,
+          "nativeOptions": 1,
+          "reporters": 2
+        }
+      },
+      {
+        "step": 109,
+        "wrapper": "scripts/db/cutover/postgres-replay-reservations-backend-lifecycle-successor.native.test.mjs",
+        "wrapperBefore": {
+          "bytes": 42663,
+          "sha256": "40fcf5af8960e32f3ad9f1343c046a48aed32f72fd6c19efe14b14ce4c1b48c4"
+        },
+        "wrapperAfter": {
+          "bytes": 42822,
+          "sha256": "a8e7ccd8c918c128515415d47c40c2f9ce4c6a9e44646895035d10612359d295"
+        },
+        "snapshotPath": "scripts/db/cutover/fixtures/historical-native/postgres-replay-reservations.native.test.mjs.txt",
+        "snapshot": {
+          "bytes": 37114,
+          "sha256": "d95055419a04465c7c172ff0b8426bd0b928bd538e4dad80f9442229abd5e269"
+        },
+        "historicalCommit": "63e305a1bdf14c55fede74fb7ff9cbd9f732fc19",
+        "historicalBlob": "dc042910c59037ddd850e361a38d8da745efae73",
+        "fullWrapperReverseBytesExact": true,
+        "allOriginalProtectedCallSourcesAndAstExact": true,
+        "originalPinsAndFrozenCommentsExact": true,
+        "staticNewUrlDigestMatchesOriginalPin": true,
+        "lineagePathMatchesNewUrl": true,
+        "originalCounts": {
+          "assertions": 87,
+          "grantCalls": 2,
+          "templates": 78,
+          "sqlAndTransactions": 103,
+          "cleanup": 3,
+          "conditions": 8,
+          "nativeOptions": 1,
+          "reporters": 2
+        },
+        "protectedAstAndSourceSha256": "82dd450c1769e2aa947b6bbc4860be2787979a251ec7b8ef2adc82c9355ae3f6",
+        "currentLegacyUnchanged": {
+          "bytes": 37096,
+          "sha256": "9cb9a57a7a3edaff9f7a66a9c547a83d6f90ee8938d9a4ad8370194586b4ebe6"
+        },
+        "currentLegacyAdapterReverseBytesExact": true,
+        "legacyOriginalCounts": {
+          "assertions": 79,
+          "grantCalls": 0,
+          "templates": 78,
+          "sqlAndTransactions": 100,
+          "cleanup": 2,
+          "conditions": 3,
+          "nativeOptions": 1,
+          "reporters": 2
+        }
+      }
+    ],
+    "fullNormalizedAstChildTraversal": true,
+    "protectionBoundary": "300 inputs from prior owner302 excluding the two allowed wrappers, all prior26 targets,21 inputs from prior pin23 excluding those wrappers and.gitattributes;330 unique files after overlaps."
+  },
+  "validation": {
+    "staticContract": "New historical URLs were actually resolved/read as files and their SHA256 digests equal the original pinned Git bytes. No test callback or database executed.",
+    "rawSnapshotAttribute": "git check-attr text returned unset for both new snapshot paths; .gitattributes remains unchanged.",
+    "syntax": "Two node --check calls actual0.",
+    "boundedDiff": "git diff --check for the four allowlisted paths actual0; new untracked snapshots are separately checked byte-for-byte against original Git blobs.",
+    "protectionAtFreeze": "All330 protected working files rechecked against their independently audited immutable Git hashes at freeze time.",
+    "originalAssertionAndSqlSources": "148 assertions,4 grant calls,149 templates and173 SQL/transaction call sources and full normalized ASTs exact; timeout/skip/cleanup/conditional/reporter source/AST exact.",
+    "wholeWrapperReverse": "Independent permitted-path reverse yields each complete dc7 baseline wrapper byte-for-byte.",
+    "currentLegacyHistoricalReverse": "The previously existing helper/import/loader/two-grant adapter reversal yields each complete old original Git source byte-for-byte."
+  },
+  "preservedToolFailures": {
+    "failures": [
+      {
+        "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit-four-v2.closed.json",
+        "receiptInfo": {
+          "bytes": 910,
+          "sha256": "173ca350b2835e6006b7ba1ea93ff4a3755d6ae60ec6876b2ffc01bd0c119cef"
+        },
+        "at": "2026-10-06T04:40:15.392Z",
+        "finishedAt": "2026-10-06T04:40:15.476Z",
+        "executable": "C:/Program Files/nodejs/node.exe",
+        "args": [
+          "C:/Users/cina/AppData/Local/Temp/cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450/audit-four-v2.mjs"
+        ],
+        "cwd": "C:/cinagroup/cinatoken",
+        "actualExit": 1,
+        "signal": null,
+        "spawnError": null,
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit-four-v2.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit-four-v2.stderr.log",
+          "bytes": 771,
+          "sha256": "d3382b44f06a3ed2a67365d02a86365ce7e9f6f31463495f92ae1a5f4e2a1c3f"
+        }
+      },
+      {
+        "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\prepare-audit-v2.closed.json",
+        "receiptInfo": {
+          "bytes": 919,
+          "sha256": "3ced2703d9b1e242cf56011b400ba30f82e3c4ed55ae8268c632bc97e49667eb"
+        },
+        "at": "2026-10-06T04:40:13.270Z",
+        "finishedAt": "2026-10-06T04:40:13.363Z",
+        "executable": "C:/Program Files/nodejs/node.exe",
+        "args": [
+          "C:/Users/cina/AppData/Local/Temp/cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450/prepare-audit-v2.mjs"
+        ],
+        "cwd": "C:/cinagroup/cinatoken",
+        "actualExit": 1,
+        "signal": null,
+        "spawnError": null,
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\prepare-audit-v2.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\prepare-audit-v2.stderr.log",
+          "bytes": 444,
+          "sha256": "cb5cf761eef9509d307eade971c0caabdd104a16e97c98857de007b66d630e70"
+        }
+      }
+    ],
+    "repositoryWritesDuringFailures": 0,
+    "explanation": "The v2 audit generator expected a backtick snapshot filename suffix while the original script used quoted names and exited1 before writing v2. Its attempted missing v2 audit then exited1. Both raw errors and original scripts remain. A separate v3 generator and complete AST audit closed0.",
+    "firstAuditBoundary": "Initial audit already proved all original protected source strings and whole-file reverse bytes. Its AST shape callback returned an array length and could stop sibling traversal; v3 explicitly traverses all child nodes and repeats the independent source audit."
+  },
+  "evidenceFiles": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\capture.mjs",
+      "bytes": 2442,
+      "sha256": "826ea219068489ab39dcf15bce0a168854f3d91ed82788057f5141931f1a6597"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\run.mjs",
+      "bytes": 295,
+      "sha256": "947535c0840e81163e23aac295e120917be16ee51e3e0819fac46437c5f06d87"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\collect-base.mjs",
+      "bytes": 5272,
+      "sha256": "6f5ab9d48298bb8a153e4849871913245d03c49c3fbfaceffb93a18be5b5f4ca"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\prepare-four.mjs",
+      "bytes": 3481,
+      "sha256": "8b80d5133ed6625facc34dad21a3fdbcb5a9fd4e2b8dad971cdf486e2b2715fb"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit-four.mjs",
+      "bytes": 10495,
+      "sha256": "03146a341b432fc3813a9e1d1d3598c257fee507a6790c588c618569b4dc3890"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\verify-four.mjs",
+      "bytes": 1240,
+      "sha256": "e0765b17d0edfa2bef69356ae52cdc5e397ed5df1aeda112fdc219b9a9be67e5"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\prepare-audit-v2.mjs",
+      "bytes": 1253,
+      "sha256": "40d857c7d17ddd1e184b17fa41fb56aa6e75a8a2895f1660978f247a737a16fe"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\prepare-audit-v3.mjs",
+      "bytes": 1083,
+      "sha256": "07b470232a2457f02d40f13eab47bf836bdd069482f409864c4558cddbfa6dac"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit-four-v3.mjs",
+      "bytes": 10520,
+      "sha256": "a34b00f73403dc59dc7f87b5c887cdef7745b30ae2d0f028619f3fa3cfcffb6f"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\finalize-four.mjs",
+      "bytes": 10511,
+      "sha256": "123a0e1be435a7c91643e8e68963feb03146ac0fe0035909ade19437b770558c"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\base-inputs.json",
+      "bytes": 11673,
+      "sha256": "20fd441477d698cb53393383b5e336b1fc98aee98c7f37afa667a7fb626e4c25"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\four-planned-edits.json",
+      "bytes": 4237,
+      "sha256": "ebde3214cc0134ed5ffba98bab8040020a3ca7110531c38e22746681aefa4bca"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\four-applied.json",
+      "bytes": 1265,
+      "sha256": "a9f304d56b117dd253ccb9d717eb580d65c096272c2cbbaa0c5517ff7b63375a"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\four-independent-audit.json",
+      "bytes": 141652,
+      "sha256": "1b0b8e63c43ca6f920f892b3b30b82195e1a791160bfa6d2730d01e3376910a1"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\four-independent-audit-v3.json",
+      "bytes": 141664,
+      "sha256": "55e7f7541edee33b6ee2e51cea5bc157449f52c5e3d0c2db940e75d7ef782eda"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\four-static-command-checks.json",
+      "bytes": 6952,
+      "sha256": "8eb9a096e26d97c57b1326e498af71785947dd93b8b6e80eb01b646453d3ca88"
+    }
+  ],
+  "commandReceipts": [
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit-current-legacy-109.closed.json",
+      "receiptInfo": {
+        "bytes": 900,
+        "sha256": "c5f436003070f84bc33c3290fb6517e4cb3cf09bd6fd428c75ec8053921ee8fa"
+      },
+      "at": "2026-10-06T04:39:24.354Z",
+      "finishedAt": "2026-10-06T04:39:24.448Z",
+      "executable": "git",
+      "args": [
+        "show",
+        "dc7be6f8597333151c450bae3ae15e6585e3b2eb:scripts/db/cutover/postgres-replay-reservations.native.test.mjs"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit-current-legacy-109.stdout.log",
+        "bytes": 37096,
+        "sha256": "9cb9a57a7a3edaff9f7a66a9c547a83d6f90ee8938d9a4ad8370194586b4ebe6"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit-current-legacy-109.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit-current-legacy-94.closed.json",
+      "receiptInfo": {
+        "bytes": 928,
+        "sha256": "1dfca96cfc9d23935e781ca21fb44fe9e9ee49cbae467b499e2fbb7e9dced427"
+      },
+      "at": "2026-10-06T04:39:24.333Z",
+      "finishedAt": "2026-10-06T04:39:24.428Z",
+      "executable": "git",
+      "args": [
+        "show",
+        "dc7be6f8597333151c450bae3ae15e6585e3b2eb:scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit-current-legacy-94.stdout.log",
+        "bytes": 50146,
+        "sha256": "dfe004034784018eb9c70502e19a2192c45e1e8982a96c98b03626f72f7cce1d"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit-current-legacy-94.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit-four-v2.closed.json",
+      "receiptInfo": {
+        "bytes": 910,
+        "sha256": "173ca350b2835e6006b7ba1ea93ff4a3755d6ae60ec6876b2ffc01bd0c119cef"
+      },
+      "at": "2026-10-06T04:40:15.392Z",
+      "finishedAt": "2026-10-06T04:40:15.476Z",
+      "executable": "C:/Program Files/nodejs/node.exe",
+      "args": [
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450/audit-four-v2.mjs"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit-four-v2.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit-four-v2.stderr.log",
+        "bytes": 771,
+        "sha256": "d3382b44f06a3ed2a67365d02a86365ce7e9f6f31463495f92ae1a5f4e2a1c3f"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit-four-v3.closed.json",
+      "receiptInfo": {
+        "bytes": 910,
+        "sha256": "7264e39669f318608cb086b1b14c097316ca650a8295f624a2736e5b98b2a140"
+      },
+      "at": "2026-10-06T04:40:56.875Z",
+      "finishedAt": "2026-10-06T04:40:57.893Z",
+      "executable": "C:/Program Files/nodejs/node.exe",
+      "args": [
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450/audit-four-v3.mjs"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit-four-v3.stdout.log",
+        "bytes": 344,
+        "sha256": "afe30564065703aebf70a600921ab38d8969623f2d7fa11a1b5fb2609100126f"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit-four-v3.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit-four.closed.json",
+      "receiptInfo": {
+        "bytes": 901,
+        "sha256": "6deb737cfc06d0ce2b0e3b1f50af2c3c3af12fc38b4292d1e9960d1df8fbc179"
+      },
+      "at": "2026-10-06T04:39:24.228Z",
+      "finishedAt": "2026-10-06T04:39:25.568Z",
+      "executable": "C:/Program Files/nodejs/node.exe",
+      "args": [
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450/audit-four.mjs"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit-four.stdout.log",
+        "bytes": 344,
+        "sha256": "afe30564065703aebf70a600921ab38d8969623f2d7fa11a1b5fb2609100126f"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit-four.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit-historical-109.closed.json",
+      "receiptInfo": {
+        "bytes": 892,
+        "sha256": "1b7413cbdd68a72d37be2c8f03b55d470f2ab1c4c8117ec67039d8334d64ac6f"
+      },
+      "at": "2026-10-06T04:39:24.360Z",
+      "finishedAt": "2026-10-06T04:39:24.456Z",
+      "executable": "git",
+      "args": [
+        "show",
+        "63e305a1bdf14c55fede74fb7ff9cbd9f732fc19:scripts/db/cutover/postgres-replay-reservations.native.test.mjs"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit-historical-109.stdout.log",
+        "bytes": 37114,
+        "sha256": "d95055419a04465c7c172ff0b8426bd0b928bd538e4dad80f9442229abd5e269"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit-historical-109.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit-historical-94.closed.json",
+      "receiptInfo": {
+        "bytes": 920,
+        "sha256": "397aac7c5d04d6878fb6089cdd3696cad23da771766c0188bea631351d740d75"
+      },
+      "at": "2026-10-06T04:39:24.339Z",
+      "finishedAt": "2026-10-06T04:39:24.438Z",
+      "executable": "git",
+      "args": [
+        "show",
+        "94c12c1e37e7346330486cf9a3a3246af00d95c5:scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit-historical-94.stdout.log",
+        "bytes": 50164,
+        "sha256": "603646803c82d3209987260ad682a34169b4e53ca7b03b672d818e3a28d7cc13"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit-historical-94.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit-protected-git.closed.json",
+      "receiptInfo": {
+        "bytes": 799,
+        "sha256": "fff2a39fd105261bd7b4e36bf325ce1180d3ff69929adb79c2b1905e0dfcdf1c"
+      },
+      "at": "2026-10-06T04:39:24.457Z",
+      "finishedAt": "2026-10-06T04:39:24.717Z",
+      "executable": "git",
+      "args": [
+        "cat-file",
+        "--batch"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit-protected-git.stdout.log",
+        "bytes": 9815443,
+        "sha256": "3c0d21166ce89835fd0ea9fd22c3ccc2b9c76a14c1003020df10579377e21dc8"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit-protected-git.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit-wrapper-109.closed.json",
+      "receiptInfo": {
+        "bytes": 914,
+        "sha256": "0dd4dcdb8ab6212f7a456c22fce0608381f78cdd8415727ef908a7b73c72c7d4"
+      },
+      "at": "2026-10-06T04:39:24.347Z",
+      "finishedAt": "2026-10-06T04:39:24.445Z",
+      "executable": "git",
+      "args": [
+        "show",
+        "dc7be6f8597333151c450bae3ae15e6585e3b2eb:scripts/db/cutover/postgres-replay-reservations-backend-lifecycle-successor.native.test.mjs"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit-wrapper-109.stdout.log",
+        "bytes": 42663,
+        "sha256": "40fcf5af8960e32f3ad9f1343c046a48aed32f72fd6c19efe14b14ce4c1b48c4"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit-wrapper-109.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit-wrapper-94.closed.json",
+      "receiptInfo": {
+        "bytes": 945,
+        "sha256": "613e68a8445ec539d3e79f3b9e5e0f1042b251046d9e4780fc8f4af150e40e69"
+      },
+      "at": "2026-10-06T04:39:24.323Z",
+      "finishedAt": "2026-10-06T04:39:24.414Z",
+      "executable": "git",
+      "args": [
+        "show",
+        "dc7be6f8597333151c450bae3ae15e6585e3b2eb:scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit-wrapper-94.stdout.log",
+        "bytes": 52435,
+        "sha256": "90115e4345b635f37378b0c3b5d26c15000275577e14c69f00e408845e0f9fe2"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit-wrapper-94.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit3-current-legacy-109.closed.json",
+      "receiptInfo": {
+        "bytes": 902,
+        "sha256": "8832bb1ec974454ce7b66369752adfdfc86a8f57fee24adb81ccc6f3e8a76176"
+      },
+      "at": "2026-10-06T04:40:56.988Z",
+      "finishedAt": "2026-10-06T04:40:57.091Z",
+      "executable": "git",
+      "args": [
+        "show",
+        "dc7be6f8597333151c450bae3ae15e6585e3b2eb:scripts/db/cutover/postgres-replay-reservations.native.test.mjs"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit3-current-legacy-109.stdout.log",
+        "bytes": 37096,
+        "sha256": "9cb9a57a7a3edaff9f7a66a9c547a83d6f90ee8938d9a4ad8370194586b4ebe6"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit3-current-legacy-109.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit3-current-legacy-94.closed.json",
+      "receiptInfo": {
+        "bytes": 930,
+        "sha256": "3efd7ba5f5eaefcd78f6f3c48f990e5289e18e7041d7b78f17d3e9e92695eb6c"
+      },
+      "at": "2026-10-06T04:40:56.969Z",
+      "finishedAt": "2026-10-06T04:40:57.064Z",
+      "executable": "git",
+      "args": [
+        "show",
+        "dc7be6f8597333151c450bae3ae15e6585e3b2eb:scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit3-current-legacy-94.stdout.log",
+        "bytes": 50146,
+        "sha256": "dfe004034784018eb9c70502e19a2192c45e1e8982a96c98b03626f72f7cce1d"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit3-current-legacy-94.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit3-historical-109.closed.json",
+      "receiptInfo": {
+        "bytes": 894,
+        "sha256": "f230da7922115b73ba14eb263468533cab690f1f721d756e366f2cdeb50b0066"
+      },
+      "at": "2026-10-06T04:40:56.996Z",
+      "finishedAt": "2026-10-06T04:40:57.080Z",
+      "executable": "git",
+      "args": [
+        "show",
+        "63e305a1bdf14c55fede74fb7ff9cbd9f732fc19:scripts/db/cutover/postgres-replay-reservations.native.test.mjs"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit3-historical-109.stdout.log",
+        "bytes": 37114,
+        "sha256": "d95055419a04465c7c172ff0b8426bd0b928bd538e4dad80f9442229abd5e269"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit3-historical-109.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit3-historical-94.closed.json",
+      "receiptInfo": {
+        "bytes": 922,
+        "sha256": "edcd7053c9626fe697a5166ac93e2d225247fd387708c2fa6b8d68a71f274739"
+      },
+      "at": "2026-10-06T04:40:56.975Z",
+      "finishedAt": "2026-10-06T04:40:57.063Z",
+      "executable": "git",
+      "args": [
+        "show",
+        "94c12c1e37e7346330486cf9a3a3246af00d95c5:scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit3-historical-94.stdout.log",
+        "bytes": 50164,
+        "sha256": "603646803c82d3209987260ad682a34169b4e53ca7b03b672d818e3a28d7cc13"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit3-historical-94.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit3-protected-git.closed.json",
+      "receiptInfo": {
+        "bytes": 801,
+        "sha256": "ddde412c4c5395f533182c1aec0b896019a56eda72b6ac1c6dc2c4f298f2beff"
+      },
+      "at": "2026-10-06T04:40:57.092Z",
+      "finishedAt": "2026-10-06T04:40:57.293Z",
+      "executable": "git",
+      "args": [
+        "cat-file",
+        "--batch"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit3-protected-git.stdout.log",
+        "bytes": 9815443,
+        "sha256": "3c0d21166ce89835fd0ea9fd22c3ccc2b9c76a14c1003020df10579377e21dc8"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit3-protected-git.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit3-wrapper-109.closed.json",
+      "receiptInfo": {
+        "bytes": 916,
+        "sha256": "8f9b686ea5ebfc31a2a24869fff2bd7b6ae9a13d66b518496cca46ef45d6d6f1"
+      },
+      "at": "2026-10-06T04:40:56.981Z",
+      "finishedAt": "2026-10-06T04:40:57.071Z",
+      "executable": "git",
+      "args": [
+        "show",
+        "dc7be6f8597333151c450bae3ae15e6585e3b2eb:scripts/db/cutover/postgres-replay-reservations-backend-lifecycle-successor.native.test.mjs"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit3-wrapper-109.stdout.log",
+        "bytes": 42663,
+        "sha256": "40fcf5af8960e32f3ad9f1343c046a48aed32f72fd6c19efe14b14ce4c1b48c4"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit3-wrapper-109.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit3-wrapper-94.closed.json",
+      "receiptInfo": {
+        "bytes": 947,
+        "sha256": "cdf3749fa31352b695e3ac5c7f0eaf54fddb556df9bdaf8878fde842f60be718"
+      },
+      "at": "2026-10-06T04:40:56.959Z",
+      "finishedAt": "2026-10-06T04:40:57.054Z",
+      "executable": "git",
+      "args": [
+        "show",
+        "dc7be6f8597333151c450bae3ae15e6585e3b2eb:scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit3-wrapper-94.stdout.log",
+        "bytes": 52435,
+        "sha256": "90115e4345b635f37378b0c3b5d26c15000275577e14c69f00e408845e0f9fe2"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\audit3-wrapper-94.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\baseline-commit.closed.json",
+      "receiptInfo": {
+        "bytes": 866,
+        "sha256": "aa716924e7c65030a129ecd080c4fe33b54f1e987416fcd40038a3dae792bb80"
+      },
+      "at": "2026-10-06T04:35:50.574Z",
+      "finishedAt": "2026-10-06T04:35:50.669Z",
+      "executable": "git",
+      "args": [
+        "show",
+        "--no-patch",
+        "--format=%H%n%P%n%aI%n%s",
+        "dc7be6f8597333151c450bae3ae15e6585e3b2eb"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\baseline-commit.stdout.log",
+        "bytes": 172,
+        "sha256": "2466e6d4f09f03e0b352c16537a298b9f6f796d75cfcd1a1eff939be550533d4"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\baseline-commit.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\collect-base.closed.json",
+      "receiptInfo": {
+        "bytes": 908,
+        "sha256": "0465f26b753773f874e8b078f5b0e00bd48ab20d1c9e0042fad412b0681ef466"
+      },
+      "at": "2026-10-06T04:35:50.405Z",
+      "finishedAt": "2026-10-06T04:35:50.842Z",
+      "executable": "C:/Program Files/nodejs/node.exe",
+      "args": [
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450/collect-base.mjs"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\collect-base.stdout.log",
+        "bytes": 3676,
+        "sha256": "e5ec7a1318ae7d89f78e8f8c90d5f26ab5d1ea6039ad71ca9a366f48e681929c"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\collect-base.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\fixture-instructions-v3.closed.json",
+      "receiptInfo": {
+        "bytes": 954,
+        "sha256": "04a0afb7381800d46e571743ed2393cce14d31cb45b99cb06047efb340832647"
+      },
+      "at": "2026-10-06T04:40:57.867Z",
+      "finishedAt": "2026-10-06T04:40:57.869Z",
+      "operation": "readFile",
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\fixtures\\AGENTS.md",
+      "actualExit": null,
+      "signal": null,
+      "error": {
+        "code": "ENOENT",
+        "message": "ENOENT: no such file or directory, open 'C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\fixtures\\AGENTS.md'"
+      },
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\fixture-instructions-v3.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\fixture-instructions-v3.stderr.log",
+        "bytes": 140,
+        "sha256": "559a29225b606096573c61d0660ff5169df2abf47cfc1deacba51dee662110a8"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\fixture-instructions.closed.json",
+      "receiptInfo": {
+        "bytes": 948,
+        "sha256": "2f7f3c2fabcb34a0720d6ea586a0e2b31bcd9419ff79ad5956e4214f549eb36d"
+      },
+      "at": "2026-10-06T04:39:25.544Z",
+      "finishedAt": "2026-10-06T04:39:25.546Z",
+      "operation": "readFile",
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\fixtures\\AGENTS.md",
+      "actualExit": null,
+      "signal": null,
+      "error": {
+        "code": "ENOENT",
+        "message": "ENOENT: no such file or directory, open 'C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\fixtures\\AGENTS.md'"
+      },
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\fixture-instructions.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\fixture-instructions.stderr.log",
+        "bytes": 140,
+        "sha256": "559a29225b606096573c61d0660ff5169df2abf47cfc1deacba51dee662110a8"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\four-current-patch.closed.json",
+      "receiptInfo": {
+        "bytes": 1250,
+        "sha256": "32183509a12e487aaa8f8792e0eb5c0d6017001f328c1269c1d9c73746bef273"
+      },
+      "at": "2026-10-06T04:39:25.335Z",
+      "finishedAt": "2026-10-06T04:39:25.437Z",
+      "executable": "git",
+      "args": [
+        "diff",
+        "--",
+        "scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs",
+        "scripts/db/cutover/fixtures/historical-native/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs.txt",
+        "scripts/db/cutover/postgres-replay-reservations-backend-lifecycle-successor.native.test.mjs",
+        "scripts/db/cutover/fixtures/historical-native/postgres-replay-reservations.native.test.mjs.txt"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\four-current-patch.stdout.log",
+        "bytes": 4269,
+        "sha256": "5fff03ae8accd534a6976f11bb2491d2eb27c605570cd8178a124e403a1536ea"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\four-current-patch.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\four-current-status.closed.json",
+      "receiptInfo": {
+        "bytes": 1270,
+        "sha256": "f9cfb5c7cf608eaa5498f0161aa491ac676db19fbb0d4355187fa4655e722892"
+      },
+      "at": "2026-10-06T04:39:25.343Z",
+      "finishedAt": "2026-10-06T04:39:25.446Z",
+      "executable": "git",
+      "args": [
+        "status",
+        "--short",
+        "--",
+        "scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs",
+        "scripts/db/cutover/fixtures/historical-native/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs.txt",
+        "scripts/db/cutover/postgres-replay-reservations-backend-lifecycle-successor.native.test.mjs",
+        "scripts/db/cutover/fixtures/historical-native/postgres-replay-reservations.native.test.mjs.txt"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\four-current-status.stdout.log",
+        "bytes": 449,
+        "sha256": "3f10e56a9bec0969483c02abfde75bcb5f916fc5b937c9e710b5051d6053eb99"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\four-current-status.stderr.log",
+        "bytes": 160,
+        "sha256": "6e1eceb7157a6dd83e27b00cc96938a50132ed7fadf81d3f0954f8257e1ba406"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\four-diff-check.closed.json",
+      "receiptInfo": {
+        "bytes": 1256,
+        "sha256": "1bb74e734eef5c656e71efb1f13b3c7690b9fea880a0d36fc929a49d91de69b7"
+      },
+      "at": "2026-10-06T04:39:25.329Z",
+      "finishedAt": "2026-10-06T04:39:25.420Z",
+      "executable": "git",
+      "args": [
+        "diff",
+        "--check",
+        "--",
+        "scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs",
+        "scripts/db/cutover/fixtures/historical-native/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs.txt",
+        "scripts/db/cutover/postgres-replay-reservations-backend-lifecycle-successor.native.test.mjs",
+        "scripts/db/cutover/fixtures/historical-native/postgres-replay-reservations.native.test.mjs.txt"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\four-diff-check.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\four-diff-check.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\gitattributes-git.closed.json",
+      "receiptInfo": {
+        "bytes": 836,
+        "sha256": "0d5794f187f9e6e425a5a7c12b53c848a4413d7dcc44c9dd09a9aac0ddbbeb7a"
+      },
+      "at": "2026-10-06T04:35:50.582Z",
+      "finishedAt": "2026-10-06T04:35:50.691Z",
+      "executable": "git",
+      "args": [
+        "show",
+        "dc7be6f8597333151c450bae3ae15e6585e3b2eb:.gitattributes"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\gitattributes-git.stdout.log",
+        "bytes": 3159,
+        "sha256": "341ea9af019e1e435580574c47d5c670a19797755a5064dcdfa262220bcd51e2"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\gitattributes-git.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\historical-instructions-v3.closed.json",
+      "receiptInfo": {
+        "bytes": 998,
+        "sha256": "05d79fc49f376f07065745c1f8845c8134fd0fbbe2f9ee27279975e89f56a8a5"
+      },
+      "at": "2026-10-06T04:40:57.869Z",
+      "finishedAt": "2026-10-06T04:40:57.871Z",
+      "operation": "readFile",
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\fixtures\\historical-native\\AGENTS.md",
+      "actualExit": null,
+      "signal": null,
+      "error": {
+        "code": "ENOENT",
+        "message": "ENOENT: no such file or directory, open 'C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\fixtures\\historical-native\\AGENTS.md'"
+      },
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\historical-instructions-v3.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\historical-instructions-v3.stderr.log",
+        "bytes": 159,
+        "sha256": "eaf2d3bfc02079a229f2692f7c0b99007d765d685e5551f9fffdb1b532c63478"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\historical-instructions.closed.json",
+      "receiptInfo": {
+        "bytes": 992,
+        "sha256": "d9aafa1408f1120aba216865e5d37335bdf7b8b2743293157dcfe76d9178e27e"
+      },
+      "at": "2026-10-06T04:39:25.547Z",
+      "finishedAt": "2026-10-06T04:39:25.548Z",
+      "operation": "readFile",
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\fixtures\\historical-native\\AGENTS.md",
+      "actualExit": null,
+      "signal": null,
+      "error": {
+        "code": "ENOENT",
+        "message": "ENOENT: no such file or directory, open 'C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\fixtures\\historical-native\\AGENTS.md'"
+      },
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\historical-instructions.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\historical-instructions.stderr.log",
+        "bytes": 159,
+        "sha256": "eaf2d3bfc02079a229f2692f7c0b99007d765d685e5551f9fffdb1b532c63478"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\initial-head.closed.json",
+      "receiptInfo": {
+        "bytes": 778,
+        "sha256": "d5a6100b34b039ed2588428006e879c37f05b52b7ebc5e46be93c41b6bb0301a"
+      },
+      "at": "2026-10-06T04:35:50.505Z",
+      "finishedAt": "2026-10-06T04:35:50.572Z",
+      "executable": "git",
+      "args": [
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\initial-head.stdout.log",
+        "bytes": 41,
+        "sha256": "3f6929a280563e6b9dc338e3a07d8475a2e3f6d1d0743f5b6ff3a224ae6993a3"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\initial-head.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\input-blobs.closed.json",
+      "receiptInfo": {
+        "bytes": 1586,
+        "sha256": "fb9213cbb48eed95fb2edf54c00a5f4e469a891911315cdcfc0354b5f5fe017b"
+      },
+      "at": "2026-10-06T04:35:50.598Z",
+      "finishedAt": "2026-10-06T04:35:50.742Z",
+      "executable": "git",
+      "args": [
+        "rev-parse",
+        "dc7be6f8597333151c450bae3ae15e6585e3b2eb:scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs",
+        "dc7be6f8597333151c450bae3ae15e6585e3b2eb:scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs",
+        "94c12c1e37e7346330486cf9a3a3246af00d95c5:scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs",
+        "dc7be6f8597333151c450bae3ae15e6585e3b2eb:scripts/db/cutover/postgres-replay-reservations-backend-lifecycle-successor.native.test.mjs",
+        "dc7be6f8597333151c450bae3ae15e6585e3b2eb:scripts/db/cutover/postgres-replay-reservations.native.test.mjs",
+        "63e305a1bdf14c55fede74fb7ff9cbd9f732fc19:scripts/db/cutover/postgres-replay-reservations.native.test.mjs"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\input-blobs.stdout.log",
+        "bytes": 246,
+        "sha256": "221b7086f3cc86950c477e8d0dc8297e3a28354d498fdfe8e67573316f8ea088"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\input-blobs.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\instructions-0.closed.json",
+      "receiptInfo": {
+        "bytes": 826,
+        "sha256": "68bf796f232173753aff85c46aaecace6c4f197d3fbe0b90579742966356f900"
+      },
+      "at": "2026-10-06T04:35:50.811Z",
+      "finishedAt": "2026-10-06T04:35:50.816Z",
+      "operation": "readFile",
+      "path": "C:/AGENTS.md",
+      "actualExit": null,
+      "signal": null,
+      "error": {
+        "code": "ENOENT",
+        "message": "ENOENT: no such file or directory, open 'C:\\AGENTS.md'"
+      },
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\instructions-0.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\instructions-0.stderr.log",
+        "bytes": 86,
+        "sha256": "5d278edcbb935d0b2c7558bc14dc82df294270fe3a304d97a13161a395679815"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\instructions-1.closed.json",
+      "receiptInfo": {
+        "bytes": 847,
+        "sha256": "9164a1c6bde0078d54b0a37c9dd27ea251b60673e40c97046aa4061ce4796f28"
+      },
+      "at": "2026-10-06T04:35:50.811Z",
+      "finishedAt": "2026-10-06T04:35:50.815Z",
+      "operation": "readFile",
+      "path": "C:/cinagroup/AGENTS.md",
+      "actualExit": null,
+      "signal": null,
+      "error": {
+        "code": "ENOENT",
+        "message": "ENOENT: no such file or directory, open 'C:\\cinagroup\\AGENTS.md'"
+      },
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\instructions-1.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\instructions-1.stderr.log",
+        "bytes": 97,
+        "sha256": "71df25981e917974a8fa726b3be5dadc647aec6c826f9886ee62621c98e27a96"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\instructions-2.closed.json",
+      "receiptInfo": {
+        "bytes": 872,
+        "sha256": "3385565d9c8f09ee6d0779b5655e023dcb59957769bd1613ce16ec4dd781a22c"
+      },
+      "at": "2026-10-06T04:35:50.811Z",
+      "finishedAt": "2026-10-06T04:35:50.816Z",
+      "operation": "readFile",
+      "path": "C:\\cinagroup\\cinatoken\\AGENTS.md",
+      "actualExit": null,
+      "signal": null,
+      "error": {
+        "code": "ENOENT",
+        "message": "ENOENT: no such file or directory, open 'C:\\cinagroup\\cinatoken\\AGENTS.md'"
+      },
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\instructions-2.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\instructions-2.stderr.log",
+        "bytes": 108,
+        "sha256": "eca4570bec17a203a76a012a6ddfa0d87894ba69b91bfd528ce2150aa69b814a"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\instructions-3.closed.json",
+      "receiptInfo": {
+        "bytes": 890,
+        "sha256": "927671a258a055c05c177c23720b19d3e733110b24c08d7c5c4c814efa18c9f1"
+      },
+      "at": "2026-10-06T04:35:50.811Z",
+      "finishedAt": "2026-10-06T04:35:50.817Z",
+      "operation": "readFile",
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\AGENTS.md",
+      "actualExit": null,
+      "signal": null,
+      "error": {
+        "code": "ENOENT",
+        "message": "ENOENT: no such file or directory, open 'C:\\cinagroup\\cinatoken\\scripts\\AGENTS.md'"
+      },
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\instructions-3.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\instructions-3.stderr.log",
+        "bytes": 117,
+        "sha256": "6c361dd56e9edf01f92850e038ebd776738b1cc9cae2303cda2d93e02e47838c"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\instructions-4.closed.json",
+      "receiptInfo": {
+        "bytes": 898,
+        "sha256": "4104e5d1786ce2738f965fa67f9700e7dc248416ba63d8cd6963b6c2f88b6fec"
+      },
+      "at": "2026-10-06T04:35:50.811Z",
+      "finishedAt": "2026-10-06T04:35:50.817Z",
+      "operation": "readFile",
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\db\\AGENTS.md",
+      "actualExit": null,
+      "signal": null,
+      "error": {
+        "code": "ENOENT",
+        "message": "ENOENT: no such file or directory, open 'C:\\cinagroup\\cinatoken\\scripts\\db\\AGENTS.md'"
+      },
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\instructions-4.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\instructions-4.stderr.log",
+        "bytes": 121,
+        "sha256": "eaac7de347436bd48496fb35caaf6f38bee6fd66044d0e872cd9b853702202e6"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\instructions-5.closed.json",
+      "receiptInfo": {
+        "bytes": 916,
+        "sha256": "5b6da04f47530ff596425d17037cc12232f9629c85de80dee37ce1f0649e5118"
+      },
+      "at": "2026-10-06T04:35:50.811Z",
+      "finishedAt": "2026-10-06T04:35:50.817Z",
+      "operation": "readFile",
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\AGENTS.md",
+      "actualExit": null,
+      "signal": null,
+      "error": {
+        "code": "ENOENT",
+        "message": "ENOENT: no such file or directory, open 'C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\AGENTS.md'"
+      },
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\instructions-5.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\instructions-5.stderr.log",
+        "bytes": 130,
+        "sha256": "4b16f6463e4ccd19af14170d19a90806f6c018a5b12c438c8b72452a9bbedc80"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\legacy-109-current.closed.json",
+      "receiptInfo": {
+        "bytes": 888,
+        "sha256": "bd7c02bc83b59149f0a5408119da713ab34dcae06d7730d1c79af04664ab6bbd"
+      },
+      "at": "2026-10-06T04:35:50.636Z",
+      "finishedAt": "2026-10-06T04:35:50.732Z",
+      "executable": "git",
+      "args": [
+        "show",
+        "dc7be6f8597333151c450bae3ae15e6585e3b2eb:scripts/db/cutover/postgres-replay-reservations.native.test.mjs"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\legacy-109-current.stdout.log",
+        "bytes": 37096,
+        "sha256": "9cb9a57a7a3edaff9f7a66a9c547a83d6f90ee8938d9a4ad8370194586b4ebe6"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\legacy-109-current.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\legacy-109-historical.closed.json",
+      "receiptInfo": {
+        "bytes": 894,
+        "sha256": "56a5cffb9f039571f3af4216927447986a20c37aa8646b60874fc5fc965476b8"
+      },
+      "at": "2026-10-06T04:35:50.644Z",
+      "finishedAt": "2026-10-06T04:35:50.782Z",
+      "executable": "git",
+      "args": [
+        "show",
+        "63e305a1bdf14c55fede74fb7ff9cbd9f732fc19:scripts/db/cutover/postgres-replay-reservations.native.test.mjs"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\legacy-109-historical.stdout.log",
+        "bytes": 37114,
+        "sha256": "d95055419a04465c7c172ff0b8426bd0b928bd538e4dad80f9442229abd5e269"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\legacy-109-historical.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\legacy-94-current.closed.json",
+      "receiptInfo": {
+        "bytes": 916,
+        "sha256": "96b960fbf185c9770f5b519f3984fc0bd50b67eab0b6befd19bf5cb1f6e17d08"
+      },
+      "at": "2026-10-06T04:35:50.614Z",
+      "finishedAt": "2026-10-06T04:35:50.735Z",
+      "executable": "git",
+      "args": [
+        "show",
+        "dc7be6f8597333151c450bae3ae15e6585e3b2eb:scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\legacy-94-current.stdout.log",
+        "bytes": 50146,
+        "sha256": "dfe004034784018eb9c70502e19a2192c45e1e8982a96c98b03626f72f7cce1d"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\legacy-94-current.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\legacy-94-historical.closed.json",
+      "receiptInfo": {
+        "bytes": 922,
+        "sha256": "b0452edfc2a8fc44e4c8701dfb67ccc8e30e7c664a72ed35dcbac2b0b7a9f265"
+      },
+      "at": "2026-10-06T04:35:50.620Z",
+      "finishedAt": "2026-10-06T04:35:50.763Z",
+      "executable": "git",
+      "args": [
+        "show",
+        "94c12c1e37e7346330486cf9a3a3246af00d95c5:scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\legacy-94-historical.stdout.log",
+        "bytes": 50164,
+        "sha256": "603646803c82d3209987260ad682a34169b4e53ca7b03b672d818e3a28d7cc13"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\legacy-94-historical.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\prepare-audit-v2.closed.json",
+      "receiptInfo": {
+        "bytes": 919,
+        "sha256": "3ced2703d9b1e242cf56011b400ba30f82e3c4ed55ae8268c632bc97e49667eb"
+      },
+      "at": "2026-10-06T04:40:13.270Z",
+      "finishedAt": "2026-10-06T04:40:13.363Z",
+      "executable": "C:/Program Files/nodejs/node.exe",
+      "args": [
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450/prepare-audit-v2.mjs"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\prepare-audit-v2.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\prepare-audit-v2.stderr.log",
+        "bytes": 444,
+        "sha256": "cb5cf761eef9509d307eade971c0caabdd104a16e97c98857de007b66d630e70"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\prepare-audit-v3.closed.json",
+      "receiptInfo": {
+        "bytes": 919,
+        "sha256": "5a54df67bbd64dc2f4e8f5d480bff480ecb314b543d4b321dd494cacb6b7bcc8"
+      },
+      "at": "2026-10-06T04:40:54.931Z",
+      "finishedAt": "2026-10-06T04:40:55.017Z",
+      "executable": "C:/Program Files/nodejs/node.exe",
+      "args": [
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450/prepare-audit-v3.mjs"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\prepare-audit-v3.stdout.log",
+        "bytes": 106,
+        "sha256": "5df8d89c212d8ab12691ee5de3d35e511bfdf32925b050aa7ba1e17e78326478"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\prepare-audit-v3.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\prepare-four.closed.json",
+      "receiptInfo": {
+        "bytes": 907,
+        "sha256": "6d0ce6b693353927b202acd6e2e3bc1686e721c1edaeda10d5393e2df670f5ad"
+      },
+      "at": "2026-10-06T04:37:23.999Z",
+      "finishedAt": "2026-10-06T04:37:24.110Z",
+      "executable": "C:/Program Files/nodejs/node.exe",
+      "args": [
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450/prepare-four.mjs"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\prepare-four.stdout.log",
+        "bytes": 549,
+        "sha256": "17fa01db43141146fdab184a22312cb8d95f10e1109795cf376c76a17e99811a"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\prepare-four.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\prior-owner-final.closed.json",
+      "receiptInfo": {
+        "bytes": 858,
+        "sha256": "f544f9165dccd3d5d5d83bfa6540e914f24599fde0a5d55b6ee29ed694e251d1"
+      },
+      "at": "2026-10-06T04:35:50.819Z",
+      "finishedAt": "2026-10-06T04:35:50.822Z",
+      "operation": "readFile",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713/FINAL-native26-pg73-preparation.json",
+      "actualExit": 0,
+      "signal": null,
+      "error": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\prior-owner-final.stdout.log",
+        "bytes": 210963,
+        "sha256": "48f61432f183455a1c1557cda0ee8063d9f5419358933ed035504cd85913efda"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\prior-owner-final.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\prior-pin-final.closed.json",
+      "receiptInfo": {
+        "bytes": 856,
+        "sha256": "fbf9f3a5e52185f1e4ef29ba8f8821bfde13aee05d6dfda87e5540a88a2d59b3"
+      },
+      "at": "2026-10-06T04:35:50.823Z",
+      "finishedAt": "2026-10-06T04:35:50.825Z",
+      "operation": "readFile",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287/FINAL-native-pin94-tail-readonly.json",
+      "actualExit": 0,
+      "signal": null,
+      "error": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\prior-pin-final.stdout.log",
+        "bytes": 212858,
+        "sha256": "41f05a0c311dad452ab8b8d2cc44cb5e1d7e68937fcb83b1baa98a5aeecade58"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\prior-pin-final.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\snapshot-text-attributes.closed.json",
+      "receiptInfo": {
+        "bytes": 1048,
+        "sha256": "b41535f03711400e18827d502a75b1359ae53500ff85bcd7572cbae73ad25fde"
+      },
+      "at": "2026-10-06T04:35:50.590Z",
+      "finishedAt": "2026-10-06T04:35:50.711Z",
+      "executable": "git",
+      "args": [
+        "check-attr",
+        "text",
+        "--",
+        "scripts/db/cutover/fixtures/historical-native/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs.txt",
+        "scripts/db/cutover/fixtures/historical-native/postgres-replay-reservations.native.test.mjs.txt"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\snapshot-text-attributes.stdout.log",
+        "bytes": 246,
+        "sha256": "7f5e64aec8d96ce6dc90cc0380f4adac1a119b232e54a4a22f1564d4361244fc"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\snapshot-text-attributes.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\syntax-109.closed.json",
+      "receiptInfo": {
+        "bytes": 890,
+        "sha256": "c15bbbeb647b7d2d9f2ada27c620c3ed935243c2cef25b262d00321e73ffe4a9"
+      },
+      "at": "2026-10-06T04:39:25.321Z",
+      "finishedAt": "2026-10-06T04:39:25.415Z",
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "scripts/db/cutover/postgres-replay-reservations-backend-lifecycle-successor.native.test.mjs"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\syntax-109.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\syntax-109.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\syntax-94.closed.json",
+      "receiptInfo": {
+        "bytes": 921,
+        "sha256": "7663f62dbb04fb1bf639c6c1e842117a64102ecde3ab3eeaf54c7e57b499eb3e"
+      },
+      "at": "2026-10-06T04:39:25.310Z",
+      "finishedAt": "2026-10-06T04:39:25.408Z",
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\syntax-94.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\syntax-94.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\verify-four.closed.json",
+      "receiptInfo": {
+        "bytes": 903,
+        "sha256": "d2dace7ca5c8429fd8ffdee17ff72522c7083a06ec04f0fa0fc081ab54f78a0f"
+      },
+      "at": "2026-10-06T04:39:25.236Z",
+      "finishedAt": "2026-10-06T04:39:25.465Z",
+      "executable": "C:/Program Files/nodejs/node.exe",
+      "args": [
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450/verify-four.mjs"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\verify-four.stdout.log",
+        "bytes": 81,
+        "sha256": "041604e9485ecd59d41f39b61019a08c06d5aecf6a65b61c066a6339c5da2caa"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\verify-four.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\working-legacy-109.closed.json",
+      "receiptInfo": {
+        "bytes": 818,
+        "sha256": "b06fbf4ee8240481630bc0a02bb7ff570242503f477cb0988a94e1ce73b41ca6"
+      },
+      "at": "2026-10-06T04:35:50.802Z",
+      "finishedAt": "2026-10-06T04:35:50.805Z",
+      "operation": "readFile",
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\postgres-replay-reservations.native.test.mjs",
+      "actualExit": 0,
+      "signal": null,
+      "error": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\working-legacy-109.stdout.log",
+        "bytes": 37096,
+        "sha256": "9cb9a57a7a3edaff9f7a66a9c547a83d6f90ee8938d9a4ad8370194586b4ebe6"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\working-legacy-109.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\working-legacy-94.closed.json",
+      "receiptInfo": {
+        "bytes": 846,
+        "sha256": "ee7d736c4b5daf11c5a5f830986c1ec1292a7f9398d1cc75e8543b471e345342"
+      },
+      "at": "2026-10-06T04:35:50.791Z",
+      "finishedAt": "2026-10-06T04:35:50.794Z",
+      "operation": "readFile",
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs",
+      "actualExit": 0,
+      "signal": null,
+      "error": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\working-legacy-94.stdout.log",
+        "bytes": 50146,
+        "sha256": "dfe004034784018eb9c70502e19a2192c45e1e8982a96c98b03626f72f7cce1d"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\working-legacy-94.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\working-wrapper-109.closed.json",
+      "receiptInfo": {
+        "bytes": 848,
+        "sha256": "c5d3003dc1966fecdf66571f304a80f7860c6d676c925ddef4e8a6a5541f5f71"
+      },
+      "at": "2026-10-06T04:35:50.806Z",
+      "finishedAt": "2026-10-06T04:35:50.809Z",
+      "operation": "readFile",
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\postgres-replay-reservations-backend-lifecycle-successor.native.test.mjs",
+      "actualExit": 0,
+      "signal": null,
+      "error": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\working-wrapper-109.stdout.log",
+        "bytes": 42663,
+        "sha256": "40fcf5af8960e32f3ad9f1343c046a48aed32f72fd6c19efe14b14ce4c1b48c4"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\working-wrapper-109.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\working-wrapper-94.closed.json",
+      "receiptInfo": {
+        "bytes": 879,
+        "sha256": "ac04cfa79fc876c2efd44d78e64d2a83e8a3183648890f7461e1688c2f56c1e5"
+      },
+      "at": "2026-10-06T04:35:50.796Z",
+      "finishedAt": "2026-10-06T04:35:50.798Z",
+      "operation": "readFile",
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs",
+      "actualExit": 0,
+      "signal": null,
+      "error": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\working-wrapper-94.stdout.log",
+        "bytes": 52435,
+        "sha256": "90115e4345b635f37378b0c3b5d26c15000275577e14c69f00e408845e0f9fe2"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\working-wrapper-94.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\wrapper-109-original.closed.json",
+      "receiptInfo": {
+        "bytes": 920,
+        "sha256": "b4a78d4bc9e90919f77bfd9706815dc4e2620c47324231ae9f140f6328e57644"
+      },
+      "at": "2026-10-06T04:35:50.628Z",
+      "finishedAt": "2026-10-06T04:35:50.789Z",
+      "executable": "git",
+      "args": [
+        "show",
+        "dc7be6f8597333151c450bae3ae15e6585e3b2eb:scripts/db/cutover/postgres-replay-reservations-backend-lifecycle-successor.native.test.mjs"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\wrapper-109-original.stdout.log",
+        "bytes": 42663,
+        "sha256": "40fcf5af8960e32f3ad9f1343c046a48aed32f72fd6c19efe14b14ce4c1b48c4"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\wrapper-109-original.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\wrapper-94-original.closed.json",
+      "receiptInfo": {
+        "bytes": 951,
+        "sha256": "994126b6fe1022fa53bee81c4970236d0951a1df73dc53ce6b45046cab91e087"
+      },
+      "at": "2026-10-06T04:35:50.605Z",
+      "finishedAt": "2026-10-06T04:35:50.757Z",
+      "executable": "git",
+      "args": [
+        "show",
+        "dc7be6f8597333151c450bae3ae15e6585e3b2eb:scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\wrapper-94-original.stdout.log",
+        "bytes": 52435,
+        "sha256": "90115e4345b635f37378b0c3b5d26c15000275577e14c69f00e408845e0f9fe2"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\wrapper-94-original.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "receiptCounts": {
+    "alreadyClosed": 54,
+    "actualZero": 42,
+    "actualOne": 2,
+    "actualNull": 10,
+    "expectedAbsentInstructionReads": 10,
+    "signals": 0,
+    "spawnErrors": 0
+  },
+  "finalWriterClosedReceipt": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\finalize-four.closed.json",
+  "finalWriterReceiptBoundary": "The wrapper closes this finalizer and records its actual exit, stdout/stderr byte counts and hashes after writing this JSON.",
+  "truthBoundary": {
+    "preparedOnly": true,
+    "nativeExecuted": false,
+    "databaseExecuted": false,
+    "appRerun": false,
+    "linuxPassClaim": false,
+    "productionWrites": 0,
+    "helperWrites": 0,
+    "sqlWrites": 0,
+    "markdownWrites": 0,
+    "gitMutations": 0,
+    "ciActions": 0,
+    "networkCalls": 0,
+    "onlyRepositoryWrites": "Exactly the two allowlisted successor wrappers and two new historical text snapshots.",
+    "previousTempRootsNeverWritten": true,
+    "rootNextAction": "Independent peer review, commit/push and original Linux workflow validation are Root-owned.",
+    "ownerStopWrites": true
+  }
+}

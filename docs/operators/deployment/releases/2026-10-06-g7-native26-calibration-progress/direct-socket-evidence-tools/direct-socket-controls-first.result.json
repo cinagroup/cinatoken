@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-06T04:14:07.307Z",
+  "finishedAt": "2026-10-06T04:14:07.937Z",
+  "executable": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610/direct-socket-dialect-controls.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\direct-socket-controls-first.stdout.log",
+    "bytes": 2194,
+    "sha256": "19edb138f6ab33ee3055b9abe966ef1fb62cdd6d8b86367352566f77dc24eebd"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\direct-socket-controls-first.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "scope": "Original exact child return of Temp evidence tool only; no application/native/G7/runtime or production run"
+}

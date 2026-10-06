@@ -1,0 +1,17 @@
+{
+  "schema": "frozen-tool-byte-snapshot-verification-v1",
+  "checkedAt": "2026-10-06T05:22:07.956Z",
+  "toolRoot": "C:/Users/cina/AppData/Local/Temp/cinatoken-all-frozen-data-tools-FoBS1O",
+  "files": 99,
+  "toolSeal": {
+    "file": "STOPWRITE-all-frozen-data-reader-seal.json",
+    "bytes": 16606,
+    "sha256": "a02c1e9476037e5f5b68fbc8ce8dda5111fe493c2d2f8cffb6d51038947a3cbb"
+  },
+  "allPrevious98FilesByteIdentical": true,
+  "exactSet": true,
+  "readOperationOnly": true,
+  "actualChildExitProven": false,
+  "gatePassDerived": false,
+  "noToolWrites": true
+}

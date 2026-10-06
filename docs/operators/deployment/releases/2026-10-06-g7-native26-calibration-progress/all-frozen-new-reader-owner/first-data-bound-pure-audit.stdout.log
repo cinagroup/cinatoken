@@ -1,0 +1,1 @@
+{"entries":3086,"exclusions":0,"blockers":[{"root":"native-frozen94-109-peer","file":"git-inputs.stdin.log","reason":"Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active"}],"receipts":746}

@@ -1,0 +1,133 @@
+{
+  "schema": "cinatoken-native-four-g7-frozen-subset-archive-preparation-advisory-v1",
+  "closed": true,
+  "preparationOutcome": 0,
+  "sourceCommit": "473de5fc520fc7d64db700db88a76c7a6b45c241",
+  "scope": "Temp-only subset preparation; no current CI evidence or full G7/G8 collection/acceptance",
+  "completeFrozenProducerAndPeerRoots": 4,
+  "frozenFourRootFiles": 140,
+  "selectedHistoricalReferenceRoots": 1,
+  "selectedHistoricalReferenceFiles": 9,
+  "preparedFiles": 149,
+  "preparedOriginalCommandReceipts": 28,
+  "separateAggregateReportEntries": 4,
+  "exclusions": 0,
+  "originalV2FirstAudit": {
+    "actualExit": 1,
+    "blockers": 24,
+    "admittedFiles": 120,
+    "unadmittedOriginalRaw": 20,
+    "preserved": true
+  },
+  "enhancedSubsetAudit": {
+    "actualExit": 0,
+    "blockers": 0,
+    "admittedFiles": 149
+  },
+  "exactG7OwnerBinding": {
+    "originalCommandReceipts": 8,
+    "originalRawStreams": 16,
+    "originalStatusTimingAndDescriptorsPinned": true,
+    "aggregateReportStatusUsedAsCommandAuthority": false
+  },
+  "controlledChildren": {
+    "count": 6,
+    "actualChildExit": [
+      0,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "onlyNestedParentRaw": true,
+    "independentExternalStreamsOrToolReceiptsInvented": false,
+    "realSQLDatabase": false,
+    "nativeLinuxAcceptance": false
+  },
+  "preservedNegativeScopes": [
+    "Original V2 audit actual1 with all24 blockers and original raw",
+    "Original G7 owner reader glob mismatch actual1 metadata",
+    "Original G7 peer reader path failure actual1 metadata",
+    "Original historical Admin observer1, Proxy observer0, runtime aggregate1, wire aggregate0 kept separately",
+    "Two preparation read-only filename/path failures actual1 as original conversation tool returns, no reconstructed streams"
+  ],
+  "controls": {
+    "newSynthetic": 37,
+    "unchangedSyntheticSuites": [
+      12,
+      10,
+      28
+    ],
+    "eachParentProcessActualExit": 0,
+    "oldTestSourceBytesUnchanged": true,
+    "originalRealEvidenceDescriptorSuiteNotRerun": true,
+    "oldEvidenceFullAuditRepeated": false
+  },
+  "finalReadonlyProof": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\prepared-subset-final-proof.json",
+    "bytes": 27991,
+    "sha256": "ccc12f928111d6326c6619e07102112d022ed00ce23b30ca2630f44d2fb2e2c5"
+  },
+  "finalProofOriginalTerminal": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\final-prepared-subset-audit.result.json",
+    "bytes": 1068,
+    "sha256": "af2179b776ec9b7c29f4513429c6889ba13a63ebfd4959e9506150effcd78efd"
+  },
+  "config": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\four-frozen-roots-bound-config.json",
+    "bytes": 9151,
+    "sha256": "82760f9f7e338c5eafc117ea69a4e9f8f03ba8909d5f54214fbdf266eb6c138f"
+  },
+  "enhancedLib": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\enhanced-tools\\evidence-lib.mjs",
+    "bytes": 52139,
+    "sha256": "1a94e0682a2f9782a0bcc28c4736ff49c0bf4db0b9e0cfe0f34ecb6918b22cb7"
+  },
+  "originalToolPins": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\original-frozen-tools-index.json",
+    "bytes": 2375,
+    "sha256": "087d5b1c0b0916894cffd04961230d11e1ef757feb32f93e86ca5831242edf57"
+  },
+  "patchScope": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\new-tool-patch-scope.json",
+    "bytes": 925,
+    "sha256": "7105caa422e6e3578b09739e92239bac3214d9c2622c78b32622cc1605024a54"
+  },
+  "toolReturnProvenance": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\preparation-tool-return-provenance.json",
+    "bytes": 2949,
+    "sha256": "30ca2dd908c7c8442c54911f97e40fadc78fc021d35d8bde876f22db990ca481"
+  },
+  "usage": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\PREPARED-ONLY-USAGE.md",
+    "bytes": 3964,
+    "sha256": "9b1d57542edebb5a7d59df85021cc4369dabdb4cf5acf07ca684059a83d4fadd"
+  },
+  "independentPeer": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-four-frozen-archive-peer-readonly-93dbd146546645cbb2495a763acf6c1e/FINAL-four-frozen-archive-peer-review.json",
+    "bytes": 84268,
+    "sha256": "ec332cae646d1072fdf28f969cc8ab4a6b8ea54dc34d02157932857befbf9c7d"
+  },
+  "independentCurrentRootRunnerDialectPeer": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-archive-receipt-dialect-peer-readonly-e41d1f26433548dea9ff73e133e0dc4b/FINAL-current-run-closed-dialect-peer-review.json",
+    "bytes": 7884,
+    "sha256": "acdecdb41dec18038860b3761e7bedccc4f10300b9eed25e784159f3cda276ac"
+  },
+  "futureRootRequirement": "After CI terminal, create a fresh full config and output destination with complete concrete current Root/CI artifact/diagnostic/peer roots. If whole preparation root is included, point immutable schema-copy references to its historical-observer-original-reference paths and remove overlapping child root; no exclusions.",
+  "currentRootReadScope": "Single run-closed.mjs source snapshot only; not enumerated, audited, collected or mutated",
+  "currentRootRunnerHelperChangeRequired": false,
+  "currentRootActualProcessNullNotConvertedToWrapperExit": true,
+  "originalFrozenToolsModified": false,
+  "originalFrozenProducerOrPeerRootsModified": false,
+  "repositoryWrites": 0,
+  "gitCommands": 0,
+  "ciQueriesOrInvocations": 0,
+  "currentCiResultsCollected": false,
+  "productionRequests": 0,
+  "applicationRuntimeOrDatabaseTestsRunByPreparer": false,
+  "fullG7Verified": false,
+  "fullG8Verified": false,
+  "gatePassDerived": false,
+  "collectionIntoRepositoryPerformed": false
+}

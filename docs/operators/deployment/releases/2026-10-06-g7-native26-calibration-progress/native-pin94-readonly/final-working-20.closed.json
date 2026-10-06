@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-06T04:32:29.880Z",
+  "finishedAt": "2026-10-06T04:32:29.888Z",
+  "operation": "readFile",
+  "path": "C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs",
+  "actualExit": 0,
+  "signal": null,
+  "error": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\final-working-20.stdout.log",
+    "bytes": 50146,
+    "sha256": "dfe004034784018eb9c70502e19a2192c45e1e8982a96c98b03626f72f7cce1d"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\final-working-20.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

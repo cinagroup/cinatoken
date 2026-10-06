@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-06T03:40:45.560Z",
+  "finishedAt": "2026-10-06T03:40:45.803Z",
+  "executable": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd/enhanced-tools/collector-closure-boundary-tests.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\unchanged-closure-regression.stdout.log",
+    "bytes": 876,
+    "sha256": "b3876629d572beda067e58e092912b84a00d8565d2270244c751751c9e679e41"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\unchanged-closure-regression.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "scope": "Original exact synchronous child result for Temp evidence tool, no application tests or production"
+}

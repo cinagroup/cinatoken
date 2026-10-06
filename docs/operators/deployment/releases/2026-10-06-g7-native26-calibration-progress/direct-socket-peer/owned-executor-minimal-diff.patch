@@ -1,0 +1,80 @@
+--- frozen-boundary-executor
++++ new-direct-executor
+@@ -1,4 +1,4 @@
+-"""Owned Linux boundary executor. Real process exits and /proc live/Z closure only."""
++"""Owned Linux direct-socket executor. Real process exits and /proc live/Z closure only."""
+ import argparse
+ import ctypes
+ import hashlib
+@@ -215,7 +215,7 @@
+         manifest_bytes = (here / 'sealed-package.json').read_bytes()
+         manifest_hash = hashlib.sha256(manifest_bytes).hexdigest()
+         manifest = json.loads(manifest_bytes)
+-        if manifest['schema'] != 'v364-owned-linux-boundary-sealed-package-v1':
++        if manifest['schema'] != 'v364-direct-socket-sealed-package-v1':
+             raise RuntimeError('Unknown sealed boundary package schema')
+         for item in manifest['files']:
+             relative = Path(item['path'])
+@@ -228,7 +228,7 @@
+             if len(data) != item['bytes'] or hashlib.sha256(data).hexdigest() != item['sha256']:
+                 raise RuntimeError('Sealed boundary package changed: ' + item['path'])
+         workflow = manifest['workflow']
+-        if workflow['path'] != '.github/workflows/v364-owned-linux-boundary.yml':
++        if workflow['path'] != '.github/workflows/v364-direct-socket.yml':
+             raise RuntimeError('Unexpected workflow seal path')
+         workflow_path = repo / workflow['path']
+         if workflow_path.is_symlink() or not contained(workflow_path.resolve(), repo):
+@@ -249,12 +249,12 @@
+         checkout_sha = head
+         if run_metadata['GITHUB_SHA'] and head != run_metadata['GITHUB_SHA']:
+             raise RuntimeError('Checkout differs from workflow SHA')
+-        receipt = {'schema': 'v364-owned-linux-boundary-executor-start-v1', 'repo': str(repo), 'output': str(out),
++        receipt = {'schema': 'v364-direct-socket-executor-start-v1', 'repo': str(repo), 'output': str(out),
+                    'startedEpoch': started_wall, 'freshOutputCreated': True, 'packageSHA256': manifest_hash,
+                    'checkoutSHA': head, 'run': run_metadata, 'outerTimeoutSeconds': 360}
+         receipt_path = out / 'executor-start.json'
+         receipt_path.write_text(json.dumps(receipt, indent=2) + '\n')
+-        child = subprocess.Popen([node, str(here / 'run-boundary.mjs'), '--repo', str(repo), '--out', str(out),
++        child = subprocess.Popen([node, str(here / 'run-direct-socket.mjs'), '--repo', str(repo), '--out', str(out),
+                                   '--execute-linux', '--executor-receipt', str(receipt_path)],
+                                  cwd=repo, env=env, stdin=subprocess.DEVNULL, stdout=stdout, stderr=stderr, start_new_session=True)
+         try:
+@@ -289,30 +289,30 @@
+ try:
+     raw = json.loads(closed_path.read_text()) if closed_path.exists() else None
+     if raw is not None:
+-        expected_ids = {'node-http-calibration-' + mode for mode in ('destroy', 'rst')}
+-        expected_ids.update('locked-' + kind + '-' + mode for kind in ('bare', 'direct', 'binding') for mode in ('destroy', 'rst'))
+-        if (not isinstance(raw, dict) or raw.get('schema') != 'v364-owned-linux-boundary-closed-v1'
++        expected_ids = {'native-worker-reader-cancel'}
++        expected_ids.update('direct-socket-' + kind + '-' + mode for kind in ('bare', 'binding') for mode in ('destroy', 'rst'))
++        if (not isinstance(raw, dict) or raw.get('schema') != 'v364-direct-socket-closed-v1'
+                 or type(raw.get('actualExit')) is not int or raw['actualExit'] not in (0, 1)
+                 or type(raw.get('activeMiniflare')) is not int or raw['activeMiniflare'] < 0
+                 or not isinstance(raw.get('results'), list)
+                 or not all(isinstance(item, dict) and isinstance(item.get('caseId'), str) and type(item.get('closed')) is bool
+                            and item.get('baselineEligible') is False for item in raw['results'])
+-                or len(raw['results']) != 8 or {item.get('caseId') for item in raw['results']} != expected_ids):
+-            raise ValueError('Invalid/incomplete eight-case Node closure shape')
++                or len(raw['results']) != 5 or {item.get('caseId') for item in raw['results']} != expected_ids):
++            raise ValueError('Invalid/incomplete five-case Node closure shape')
+ except (OSError, ValueError) as error:
+     fatal = {'name': type(error).__name__, 'message': 'Invalid Node closed report: ' + str(error)}
+     raw = None
+-api_disposal_reported = bool(raw and raw.get('activeMiniflare') == 0 and len(raw.get('results', [])) == 8
++api_disposal_reported = bool(raw and raw.get('activeMiniflare') == 0 and len(raw.get('results', [])) == 5
+                             and all(item.get('closed') for item in raw['results']))
+ outer_unforced_close = (api_disposal_reported and group_gone and direct_child_reaped and not leftover_killed
+                         and not cleanup_errors and not timed_out and not interrupted)
+ success = (runner_code == 0 and not fatal and outer_unforced_close and raw.get('actualExit') == 0)
+ final_exit = 0 if success else 1
+-result = {'schema': 'v364-owned-linux-boundary-executor-closed-v1', 'startedEpoch': started_wall,
++result = {'schema': 'v364-direct-socket-executor-closed-v1', 'startedEpoch': started_wall,
+           'elapsedMs': (time.monotonic() - started) * 1000,
+           'actualProcessExit': child.returncode if child is not None else None,
+           'runnerOutcomeCode': runner_code, 'actualExit': final_exit,
+-          'outcome': 'STRICT_SYNTHETIC_BOUNDARY_COMPARISON_ONLY' if success else 'STRICT_FAILURE_OR_UNKNOWN_PRESERVED',
++          'outcome': 'STRICT_SYNTHETIC_DIRECT_SOCKET_COMPARISON_ONLY' if success else 'STRICT_FAILURE_OR_UNKNOWN_PRESERVED',
+           'timedOut': timed_out, 'interrupted': interrupted, 'fatal': fatal,
+           'packageSHA256': manifest_hash, 'checkoutSHA': checkout_sha, 'run': run_metadata, 'reportedActualExit': raw.get('actualExit') if raw else None,
+           'closedReportPresent': raw is not None,

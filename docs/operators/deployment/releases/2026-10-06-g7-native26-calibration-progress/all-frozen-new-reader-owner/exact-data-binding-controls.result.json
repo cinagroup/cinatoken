@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-06T04:57:12.357Z",
+  "finishedAt": "2026-10-06T04:57:19.345Z",
+  "executable": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-all-frozen-data-tools-FoBS1O/frozen-data-binding-controls.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\exact-data-binding-controls.stdout.log",
+    "bytes": 11928,
+    "sha256": "cab9acdd8712d7fb9308dc96b4c88d335351120ea64d7a2600da0e250d2e1297"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\exact-data-binding-controls.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "scope": "Original exact child return of Temp evidence tool only; no application/native/G7/runtime or production run"
+}

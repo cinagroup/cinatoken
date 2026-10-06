@@ -1,0 +1,24 @@
+{
+  "at": "2026-10-06T04:39:56.891Z",
+  "finishedAt": "2026-10-06T04:39:56.946Z",
+  "executable": "git",
+  "args": [
+    "cat-file",
+    "blob",
+    "dc7be6f8597333151c450bae3ae15e6585e3b2eb:scripts/diagnostics/v364-owned-linux-boundary/execute-owned-linux.py"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-canonical-calibration-terminal-independent-peer-7c64bf0f365242ed9e43c275ac46721a\\source-protected-15.stdout.log",
+  "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-canonical-calibration-terminal-independent-peer-7c64bf0f365242ed9e43c275ac46721a\\source-protected-15.stderr.log",
+  "stdoutInfo": {
+    "bytes": 16016,
+    "sha256": "18c13e59a48eb27bc840aa1f9bb21aa5da73b7f73ad927dbaf5da24d0b0bbca2"
+  },
+  "stderrInfo": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "schema": "cinatoken.native26-ci-independent-peer.command.v1",
+  "at": "2026-10-06T04:12:05.325Z",
+  "finishedAt": "2026-10-06T04:12:08.422Z",
+  "executable": "C:/Program Files/GitHub CLI/gh.exe",
+  "args": [
+    "run",
+    "view",
+    "37412060008",
+    "--repo",
+    "cinagroup/cinatoken",
+    "--job",
+    "112102451353",
+    "--log-failed"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 1,
+  "signal": null,
+  "spawnError": null,
+  "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\dispatch-failed-terminal.stdout.log",
+  "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\dispatch-failed-terminal.stderr.log",
+  "stdoutInfo": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stderrInfo": {
+    "bytes": 81,
+    "sha256": "9383af0e47d770d3b229138bdb8bec3c87ba713cbb61d30ceee89b12a13c0ee2"
+  }
+}

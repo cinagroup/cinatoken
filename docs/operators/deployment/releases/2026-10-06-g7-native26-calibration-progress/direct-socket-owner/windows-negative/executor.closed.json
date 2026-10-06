@@ -1,0 +1,56 @@
+{
+  "schema": "v364-direct-socket-executor-closed-v1",
+  "startedEpoch": 1791258079.9538934,
+  "elapsedMs": 0.0,
+  "actualProcessExit": null,
+  "runnerOutcomeCode": 1,
+  "actualExit": 1,
+  "outcome": "STRICT_FAILURE_OR_UNKNOWN_PRESERVED",
+  "timedOut": false,
+  "interrupted": false,
+  "fatal": {
+    "name": "RuntimeError",
+    "message": "Requires explicit --execute-linux on an owned Linux runner"
+  },
+  "packageSHA256": null,
+  "checkoutSHA": null,
+  "run": {
+    "GITHUB_SHA": null,
+    "GITHUB_RUN_ID": null,
+    "GITHUB_RUN_ATTEMPT": null,
+    "GITHUB_WORKFLOW": null,
+    "GITHUB_JOB": null
+  },
+  "reportedActualExit": null,
+  "closedReportPresent": false,
+  "closure": {
+    "authority": "this executor",
+    "subreaperEnabled": false,
+    "directChildReaped": false,
+    "groupGone": true,
+    "leftoverGroupKilled": false,
+    "signalAttempts": [],
+    "reapedDescendants": [],
+    "processCensus": [],
+    "apiDisposalReported": false,
+    "outerUnforcedGroupClose": false,
+    "gracefulWorkerdExitProven": false,
+    "miniflareDisposeMaySendSIGKILL": true,
+    "errors": []
+  },
+  "causeProven": false,
+  "productionRequests": 0,
+  "ciInvocations": 0,
+  "files": [
+    {
+      "path": "executor.stderr.txt",
+      "bytes": 310,
+      "sha256": "8135cf57153efda07cb18a0c22acc79cca88cad5ae71dcd52da348e408c47ec0"
+    },
+    {
+      "path": "executor.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

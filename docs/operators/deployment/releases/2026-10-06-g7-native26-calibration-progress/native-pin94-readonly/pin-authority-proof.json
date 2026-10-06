@@ -1,0 +1,243 @@
+{
+  "at": "2026-10-06T04:30:04.991Z",
+  "actualExit": 0,
+  "baseCommit": "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc",
+  "sourceProofs": [
+    {
+      "step": 94,
+      "pinCommit": "94c12c1e37e7346330486cf9a3a3246af00d95c5",
+      "target": "scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs",
+      "wrapper": "scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs",
+      "pin": "603646803c82d3209987260ad682a34169b4e53ca7b03b672d818e3a28d7cc13",
+      "currentLabel": "base-source",
+      "oldLabel": "pin-introduction-source",
+      "variable": "names",
+      "old": {
+        "bytes": 50164,
+        "sha256": "603646803c82d3209987260ad682a34169b4e53ca7b03b672d818e3a28d7cc13"
+      },
+      "current": {
+        "bytes": 50146,
+        "sha256": "dfe004034784018eb9c70502e19a2192c45e1e8982a96c98b03626f72f7cce1d"
+      },
+      "reverseBytesExact": true,
+      "onlyChanges": [
+        {
+          "current": "import { readFile, writeFile } from 'node:fs/promises';",
+          "original": "import { readFile, readdir, writeFile } from 'node:fs/promises';",
+          "occurrences": 1
+        },
+        {
+          "current": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';",
+          "original": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';",
+          "occurrences": 1
+        },
+        {
+          "current": "const names = await listPg73Migrations();",
+          "original": "const names = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();",
+          "occurrences": 1
+        },
+        {
+          "current": "await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });",
+          "original": "await grantPostgresRuntime({ DATABASE_URL: migratorUrl });",
+          "occurrences": 2
+        }
+      ],
+      "allOriginalSelectedSourceExact": true,
+      "counts": {
+        "assertions": 57,
+        "templates": 71,
+        "sqlAndTransactions": 68,
+        "cleanup": 2,
+        "conditions": 4,
+        "nativeOptions": 1
+      },
+      "preservedSelectedSourcesSha256": "0f723f5d65991ef0132a88c26d138e3c4bed567d95c9598206df935bb469e7b3"
+    },
+    {
+      "step": 109,
+      "pinCommit": "63e305a1bdf14c55fede74fb7ff9cbd9f732fc19",
+      "target": "scripts/db/cutover/postgres-replay-reservations.native.test.mjs",
+      "wrapper": "scripts/db/cutover/postgres-replay-reservations-backend-lifecycle-successor.native.test.mjs",
+      "pin": "d95055419a04465c7c172ff0b8426bd0b928bd538e4dad80f9442229abd5e269",
+      "currentLabel": "source-step-109",
+      "oldLabel": "pin-original-source-109",
+      "variable": "files",
+      "old": {
+        "bytes": 37114,
+        "sha256": "d95055419a04465c7c172ff0b8426bd0b928bd538e4dad80f9442229abd5e269"
+      },
+      "current": {
+        "bytes": 37096,
+        "sha256": "9cb9a57a7a3edaff9f7a66a9c547a83d6f90ee8938d9a4ad8370194586b4ebe6"
+      },
+      "reverseBytesExact": true,
+      "onlyChanges": [
+        {
+          "current": "import { readFile, writeFile } from 'node:fs/promises';",
+          "original": "import { readFile, readdir, writeFile } from 'node:fs/promises';",
+          "occurrences": 1
+        },
+        {
+          "current": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';",
+          "original": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';",
+          "occurrences": 1
+        },
+        {
+          "current": "const files = await listPg73Migrations();",
+          "original": "const files = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();",
+          "occurrences": 1
+        },
+        {
+          "current": "await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });",
+          "original": "await grantPostgresRuntime({ DATABASE_URL: migratorUrl });",
+          "occurrences": 2
+        }
+      ],
+      "allOriginalSelectedSourceExact": true,
+      "counts": {
+        "assertions": 79,
+        "templates": 78,
+        "sqlAndTransactions": 100,
+        "cleanup": 2,
+        "conditions": 3,
+        "nativeOptions": 1
+      },
+      "preservedSelectedSourcesSha256": "0d36405cab0b819caeac674f8c07a0909fee93f8028a5e513ce658636518bfa8"
+    }
+  ],
+  "step99CurrentAndOriginalPinBytesExact": true,
+  "actualStep94": {
+    "step": 94,
+    "yamlStep": 92,
+    "workflowLine": 552,
+    "fixture": "scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs",
+    "source": {
+      "headSha": "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc",
+      "bytes": 52435,
+      "sha256": "90115e4345b635f37378b0c3b5d26c15000275577e14c69f00e408845e0f9fe2",
+      "snapshot": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\v3-source-step-94.stdout.log"
+    },
+    "preparedTarget": false,
+    "originalAssertionCount": 61,
+    "workflowCommand": "node --import tsx --test scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs",
+    "authoritativeStep": {
+      "completedAt": "2026-10-06T04:20:20Z",
+      "conclusion": "failure",
+      "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+      "number": 94,
+      "startedAt": "2026-10-06T04:20:17Z",
+      "status": "completed"
+    },
+    "actualExecuted": true,
+    "tap": {
+      "tests": 1,
+      "pass": 0,
+      "fail": 1,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "rawExitCodes": [
+      1
+    ],
+    "group": {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\group-step-94.raw.log",
+      "bytes": 9949,
+      "sha256": "891ba26d3b0605270c2b65aa7f3d21b6b1d19728c25643f7e515ef80de3fbed1",
+      "startStringOffset": 546537,
+      "endStringOffset": 556480
+    },
+    "failureLocations": [
+      {
+        "file": "scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs",
+        "line": 111,
+        "column": 1
+      },
+      {
+        "file": "scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs",
+        "line": 187,
+        "column": 14
+      }
+    ]
+  },
+  "actualStep94Group": {
+    "at": "2026-10-06T04:30:04.986Z",
+    "finishedAt": "2026-10-06T04:30:04.988Z",
+    "operation": "readFile",
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\group-step-94.raw.log",
+    "actualExit": 0,
+    "signal": null,
+    "error": null,
+    "stdout": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\actual-step94-group.stdout.log",
+      "bytes": 9949,
+      "sha256": "891ba26d3b0605270c2b65aa7f3d21b6b1d19728c25643f7e515ef80de3fbed1"
+    },
+    "stderr": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\actual-step94-group.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "actualNativeRaw": {
+    "at": "2026-10-06T04:28:38.997Z",
+    "finishedAt": "2026-10-06T04:28:39.003Z",
+    "operation": "readFile",
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\native-terminal.stdout.log",
+    "actualExit": 0,
+    "signal": null,
+    "error": null,
+    "stdout": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\actual-native-raw.stdout.log",
+      "bytes": 556674,
+      "sha256": "c78e11593edf9b694d5a490647fd37f4863aa44f22be14d367e592975dbb8d28"
+    },
+    "stderr": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\actual-native-raw.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "originalNativeDownloadReceipt": {
+    "schema": "cinatoken.native26-ci-independent-peer.command.v1",
+    "at": "2026-10-06T04:21:36.386Z",
+    "finishedAt": "2026-10-06T04:21:45.527Z",
+    "executable": "C:/Program Files/GitHub CLI/gh.exe",
+    "args": [
+      "run",
+      "view",
+      "37412060008",
+      "--repo",
+      "cinagroup/cinatoken",
+      "--job",
+      "112102451588",
+      "--log"
+    ],
+    "cwd": "C:/cinagroup/cinatoken",
+    "actualExit": 0,
+    "signal": null,
+    "spawnError": null,
+    "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\native-terminal.stdout.log",
+    "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\native-terminal.stderr.log",
+    "stdoutInfo": {
+      "bytes": 556674,
+      "sha256": "c78e11593edf9b694d5a490647fd37f4863aa44f22be14d367e592975dbb8d28"
+    },
+    "stderrInfo": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "originalBlobs": [
+    "64b2c914251d74191f73bb25f723dd6010fbc366",
+    "359689d1534cbbee9ea7f7211909d02fe5b33b1f",
+    "55fc684de758fdc1ee99babeec4b5f35438e4347",
+    "dc042910c59037ddd850e361a38d8da745efae73",
+    "67e4ed6f44885c99e3d1d23994efefc813a72aa7",
+    "b1d8532fc78df2f0991b538276b3b4cc2d84483f"
+  ],
+  "currentBranch109PinHistory": "63e305a1bdf14c55fede74fb7ff9cbd9f732fc19\t2026-09-27 17:49:23 +0800\ttest: preserve replay backend crash lifecycle and runner proof\n",
+  "nativeExecuted": false,
+  "repositoryWrites": 0
+}

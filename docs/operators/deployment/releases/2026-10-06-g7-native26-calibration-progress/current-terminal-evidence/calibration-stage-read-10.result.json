@@ -1,0 +1,25 @@
+{
+  "at": "2026-10-06T04:30:23.408Z",
+  "finishedAt": "2026-10-06T04:30:23.459Z",
+  "executable": "C:/Program Files/Git/cmd/git.exe",
+  "args": [
+    "-c",
+    "core.longpaths=true",
+    "hash-object",
+    "--path=scripts/diagnostics/v364-direct-socket/sealed-package.json",
+    "scripts/diagnostics/v364-direct-socket/sealed-package.json"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\calibration-stage-read-10.stdout.log",
+    "bytes": 41,
+    "sha256": "72f29f9e66762d03138257075c711fb4f46f251a2a3eb60326c660fffb639184"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\calibration-stage-read-10.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

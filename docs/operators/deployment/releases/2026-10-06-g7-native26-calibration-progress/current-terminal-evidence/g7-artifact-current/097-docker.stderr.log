@@ -1,0 +1,4 @@
+{"event":"admin.auth.login_failed","at":"2026-10-06T03:39:23.165Z","client_ip":"172.18.0.3","user_agent":null,"path":"/api/auth/login"}
+{"event":"admin.auth.login_failed","at":"2026-10-06T03:39:23.176Z","client_ip":"172.18.0.3","user_agent":null,"path":"/api/auth/login"}
+{"event":"admin.auth.login_failed","at":"2026-10-06T03:39:23.187Z","client_ip":"172.18.0.3","user_agent":null,"path":"/api/auth/login"}
+{"event":"admin.auth.unauthorized","at":"2026-10-06T03:39:34.954Z","client_ip":"172.18.0.3","user_agent":null,"method":"GET","path":"/api/admin/__g7_missing"}

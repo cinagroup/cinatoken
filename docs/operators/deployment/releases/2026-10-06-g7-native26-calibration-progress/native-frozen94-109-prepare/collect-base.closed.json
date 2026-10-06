@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-06T04:35:50.405Z",
+  "finishedAt": "2026-10-06T04:35:50.842Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450/collect-base.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\collect-base.stdout.log",
+    "bytes": 3676,
+    "sha256": "e5ec7a1318ae7d89f78e8f8c90d5f26ab5d1ea6039ad71ca9a366f48e681929c"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\collect-base.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "at": "2026-10-06T05:35:59.613Z",
+  "finishedAt": "2026-10-06T05:35:59.742Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-final-durable-collection-meta-S7NHM2/update-final-archive-checklist.mjs",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-final-durable-collection-meta-S7NHM2/collected-archive-output/2026-10-06-g7-native26-calibration-progress.json",
+    "794d72cc5287970fb8e042241fe5213994b9899274f5020a77a946f93362fa5d",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4/FINAL-final42-archive-independent-peer.json",
+    "9bd6388882fe4922c1566da4787a58f49b6e7ccab3b300dbba1f265e4aff8a77"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\update-final-checklist.stdout.log",
+    "bytes": 536,
+    "sha256": "4a45b584e55a4b78ab43620ec82b466e83e0304b3cc6b77555f2d77861d11f22"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\update-final-checklist.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

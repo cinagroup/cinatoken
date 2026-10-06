@@ -1,0 +1,22 @@
+node_modules/miniflare/dist/src/index.d.ts:360:    unsafeDirectSockets: z.ZodOptional<z.ZodArray<z.ZodObject<{
+node_modules/miniflare/dist/src/index.d.ts:3080:            unsafeDirectSockets: z.ZodOptional<z.ZodArray<z.ZodObject<{
+node_modules/miniflare/dist/src/index.d.ts:3132:            unsafeDirectSockets?: {
+node_modules/miniflare/dist/src/index.d.ts:3224:            unsafeDirectSockets?: {
+node_modules/miniflare/dist/src/index.d.ts:8032:        unsafeDirectSockets: z.ZodOptional<z.ZodArray<z.ZodObject<{
+node_modules/miniflare/dist/src/index.d.ts:8723:    unsafeDirectSockets: z.ZodOptional<z.ZodArray<z.ZodObject<{
+node_modules/miniflare/dist/src/index.d.ts:9549:    unsafeDirectSockets: z.ZodOptional<z.ZodArray<z.ZodObject<{
+node_modules/miniflare/dist/src/index.d.ts:10008:    unsafeDirectSockets?: Array<{
+node_modules/miniflare/dist/src/index.d.ts:12337:        unsafeDirectSockets: z.ZodOptional<z.ZodArray<z.ZodObject<{
+scripts/diagnostics/v364-owned-linux\run-v364-owned-diagnostic.mjs:58:  assert.deepEqual(config.compatibility_flags, ['nodejs_compat', 'enable_request_signal']);
+scripts/diagnostics/v364-owned-linux\run-v364-owned-diagnostic.mjs:120:      compatibilityDate: '2026-09-04', compatibilityFlags: signalPassthrough ? [...gatewayConfig.compatibility_flags, 'request_signal_passthrough'] : gatewayConfig.compatibility_flags,
+scripts/diagnostics/v364-owned-linux\README.md:31:| Observed destroy with passthrough | Only this gateway instance adds `request_signal_passthrough` | `baselineEligible=false`; frozen and all original flags remain unchanged. |
+node_modules/miniflare/dist/src/index.js:94076:  unsafeDirectSockets: external_exports2.array(UnsafeDirectSocketSchema).optional(),
+node_modules/miniflare/dist/src/index.js:110762:  unsafeDirectSockets: external_exports2.array(V4UnsafeDirectSocketSchema).optional(),
+node_modules/miniflare/dist/src/index.js:111128:  dev.unsafeDirectSockets = worker.unsafeDirectSockets;
+node_modules/miniflare/dist/src/index.js:113163:      const previousDirectSockets = previousWorkerOpts?.dev?.unsafeDirectSockets ?? [];
+node_modules/miniflare/dist/src/index.js:113164:      const directSockets = workerOpts.dev?.unsafeDirectSockets ?? [];
+node_modules/miniflare/dist/src/index.js:113165:      for (let i = 0; i < directSockets.length; i++) {
+node_modules/miniflare/dist/src/index.js:113167:        const directSocket = directSockets[i];
+node_modules/miniflare/dist/src/index.js:113683:    const directSocket = workerOpts.dev?.unsafeDirectSockets?.find(
+scripts/diagnostics/v364-owned-linux-boundary\README.md:5:Use repository `.nvmrc` Node22 and `npm ci`: workerd `1.20260828.1`, Miniflare `5.20260828.0-alpha`, Wrangler `4.127.1`. The owned runtime uses supported compatibility date `2026-09-04` and the exact original flags `nodejs_compat`, `enable_request_signal`; frozen JSONC date `2026-09-25` stays unchanged. There is no signal-passthrough variant or runtime override. No credentials are needed or inherited.
+scripts/diagnostics/v364-owned-linux-boundary\run-boundary.mjs:73:  assert.deepEqual(config.compatibility_flags, ['nodejs_compat', 'enable_request_signal']);

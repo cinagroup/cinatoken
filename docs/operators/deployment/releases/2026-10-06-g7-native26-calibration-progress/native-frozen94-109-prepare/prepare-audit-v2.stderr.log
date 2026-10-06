@@ -1,0 +1,15 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected unique-version adaptation
+    at file:///C:/Users/cina/AppData/Local/Temp/cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450/prepare-audit-v2.mjs:10:11 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.14.1

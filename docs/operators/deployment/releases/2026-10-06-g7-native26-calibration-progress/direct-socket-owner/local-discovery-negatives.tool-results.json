@@ -1,0 +1,27 @@
+{
+  "kind": "actual-tool-result-metadata",
+  "notRuntimeAssertions": true,
+  "results": [
+    {
+      "chunk_id": "b5a103",
+      "exit_code": 1,
+      "command": "where.exe python",
+      "output": "INFO: Could not find files for the given pattern(s).\r\n"
+    },
+    {
+      "chunk_id": "164e52",
+      "exit_code": 1,
+      "command": "Get-Command python3, py -ErrorAction SilentlyContinue | Select-Object Name,Source",
+      "output": ""
+    }
+  ],
+  "resolution": "Used the exact Python executable returned by read-only load_workspace_dependencies.",
+  "originalReadError": {
+    "chunk_id": "3b5e55",
+    "exit_code": 0,
+    "errorRetained": true,
+    "requestedMissingFile": "scripts/diagnostics/v364-owned-linux-boundary/execute-once.py",
+    "actualCorrectFileReadLater": "execute-owned-linux.py",
+    "commandContainedOneSuccessfulWorkflowReadAndOneNonterminatingMissingFileRead": true
+  }
+}

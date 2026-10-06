@@ -1,0 +1,45 @@
+diff --git a/scripts/db/cutover/postgres-replay-reservations-backend-lifecycle-successor.native.test.mjs b/scripts/db/cutover/postgres-replay-reservations-backend-lifecycle-successor.native.test.mjs
+index b1d8532f..85ea0359 100644
+--- a/scripts/db/cutover/postgres-replay-reservations-backend-lifecycle-successor.native.test.mjs
++++ b/scripts/db/cutover/postgres-replay-reservations-backend-lifecycle-successor.native.test.mjs
+@@ -14,7 +14,7 @@ import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixtu
+ import { buildPostgresReplayReservationBackfill } from './build-postgres-replay-reservation-backfill.mjs';
+ import { buildPostgresReplayRetentionCandidates } from './build-postgres-replay-retention-candidates.mjs';
+ 
+-const historicalNativeTest = new URL('./postgres-replay-reservations.native.test.mjs', import.meta.url);
++const historicalNativeTest = new URL('./fixtures/historical-native/postgres-replay-reservations.native.test.mjs.txt', import.meta.url);
+ const historicalNativeTestSha256 = 'd95055419a04465c7c172ff0b8426bd0b928bd538e4dad80f9442229abd5e269';
+ 
+ const schema = 'cinatoken_gateway';
+@@ -87,7 +87,8 @@ test('native PG18 replay reservation, bounded backfill, parent gate and retentio
+     const reportFile = join(dirname(cluster.owned), `report-replay-reservations-backend-lifecycle-successor-${randomUUID()}.json`);
+     const report = { status: 'RUNNING', cleanup: 'PENDING', binaryVersion: cluster.binaryVersion,
+       nodeVersion: process.version,
+-      lineage: { historicalNativeTestSha256,
++      lineage: { historicalNativeTest: 'scripts/db/cutover/fixtures/historical-native/postgres-replay-reservations.native.test.mjs.txt',
++        historicalNativeTestSha256,
+         change: 'Fixture-owned explicit transaction and observed backend termination; no production SQL, ACL or vendor change.' },
+       scope: 'owned loopback PostgreSQL 18.6; 73 formal migrations; review-only reservation and gate proposals',
+       limitations: [
+diff --git a/scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs b/scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs
+index 55fc684d..9873524c 100644
+--- a/scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs
++++ b/scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs
+@@ -115,7 +115,7 @@ test('post-reservation Guardrail denial closes only a proven pre-send released b
+       `report-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor-${randomUUID()}.json`);
+     const report = { status: 'RUNNING', cleanup: 'PENDING',
+       binaryVersion: cluster.binaryVersion, sourceSha256: {}, stages: [],
+-      lineage: { historicalFixture: 'scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs',
++      lineage: { historicalFixture: 'scripts/db/cutover/fixtures/historical-native/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs.txt',
+         historicalFixtureSha256, contract: 'explicit runtime read and buyer financial clients; exact aggregate reviewed-v1' },
+       scope: 'owned loopback PostgreSQL 18.6; PG73 plus review-only C04 v348 denial proposal',
+       limitations: [
+@@ -183,7 +183,7 @@ test('post-reservation Guardrail denial closes only a proven pre-send released b
+         '../../../packages/core/src/db/postgres/critical-writes.impl.ts', import.meta.url)));
+       report.sourceSha256.fixture = digest(await readFile(new URL(import.meta.url)));
+       report.sourceSha256.historicalFixture = digest(await readFile(new URL(
+-        './postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs', import.meta.url)));
++        './fixtures/historical-native/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs.txt', import.meta.url)));
+       assert.equal(report.sourceSha256.historicalFixture, historicalFixtureSha256);
+       const migratorUrl = `postgres://cinatoken_gateway_migrator:${migratorPassword}`
+         + `@127.0.0.1:${cluster.port}/postgres`;

@@ -1,0 +1,29 @@
+{
+  "at": "2026-10-06T04:09:39.937Z",
+  "finishedAt": "2026-10-06T04:09:45.598Z",
+  "executable": "C:/Program Files/GitHub CLI/gh.exe",
+  "args": [
+    "run",
+    "download",
+    "37412108171",
+    "--repo",
+    "cinagroup/cinatoken",
+    "--name",
+    "v364-direct-socket-dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc-37412108171-1",
+    "--dir",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504/direct-artifact-current"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\download-direct-terminal-artifact.stdout.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\download-direct-terminal-artifact.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

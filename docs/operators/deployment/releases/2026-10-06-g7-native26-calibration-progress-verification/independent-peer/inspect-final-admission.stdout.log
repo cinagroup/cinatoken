@@ -1,0 +1,550 @@
+{
+  "modifiedConfig": {
+    "file": "C:/Users/cina/AppData/Local/Temp/cinatoken-final-durable-collection-meta-S7NHM2/collection-config.json",
+    "bytes": 257261,
+    "sha256": "e6d6ccf36a7ecb4dc1cfafd96123b08ff3f386e0eb3bb5e5268a7505a43babcb",
+    "onlyOutputDirectoryChanged": true,
+    "outputDirectory": "C:/Users/cina/AppData/Local/Temp/cinatoken-final-durable-collection-meta-S7NHM2/collected-archive-output"
+  },
+  "metadataFinal": {
+    "file": "C:/Users/cina/AppData/Local/Temp/cinatoken-final-capsule-admission-meta-UkwrUh/FINAL-final42-frozen-capsule-admission.json",
+    "bytes": 34074,
+    "sha256": "17bd25b696dee7d03f28dc5696d09df8330243a1ba2128d83da0292aa16a8b8b",
+    "shape": {
+      "schema": "final-frozen-capsule-admission-preparation-v1",
+      "completedAt": "2026-10-06T05:21:18.211Z",
+      "scope": "Pure evidence audit and frozen preparation only; no collect, application test, native/Miniflare run, CI request, Git mutation, database or production request.",
+      "sourceCommit": "dc7be6f8597333151c450bae3ae15e6585e3b2eb",
+      "releaseSlug": "2026-10-06-g7-native26-calibration-progress",
+      "config": {
+        "type": "object",
+        "keys": [
+          "path",
+          "bytes",
+          "sha256"
+        ],
+        "first": [
+          "path",
+          "C:/Users/cina/AppData/Local/Temp/cinatoken-final-capsule-collection-config-NWebV7/all-frozen-final-config.json"
+        ]
+      },
+      "toolRoot": "C:/Users/cina/AppData/Local/Temp/cinatoken-all-frozen-data-tools-FoBS1O",
+      "toolSourceUnchangedAfter99FileSeal": true,
+      "sourceRootCount": 42,
+      "entryCount": 3357,
+      "closedReceiptCount": 803,
+      "closedReceiptActualExitCounts": {
+        "type": "object",
+        "keys": [
+          "numericZero",
+          "numericOne",
+          "numericTwo",
+          "nullActualExit",
+          "numericOther"
+        ],
+        "first": [
+          "numericZero",
+          762
+        ]
+      },
+      "numericNonzeroClosedReceipts": 38,
+      "unknownActualExitReceipts": 3,
+      "aggregateReportCount": 9,
+      "reportOnlyDataBindingCount": 93,
+      "closedExecutorTransportBindingCount": 2,
+      "blockerCount": 0,
+      "exclusionCount": 0,
+      "pureAudit": {
+        "type": "object",
+        "keys": [
+          "actualExit",
+          "signal",
+          "spawnError",
+          "startedAt",
+          "finishedAt",
+          "executable",
+          "args",
+          "stdout",
+          "stderr"
+        ],
+        "first": [
+          "actualExit",
+          0
+        ]
+      },
+      "originalAdmissionFailuresPreserved": {
+        "type": "object",
+        "keys": [
+          "firstOriginal31RootActualExit",
+          "firstOriginal31RootBlockers",
+          "original39RootActualExit",
+          "original39RootBlockers",
+          "original39FailureRoot",
+          "rawAuthorityRetained",
+          "notReclassifiedAsPass"
+        ],
+        "first": [
+          "firstOriginal31RootActualExit",
+          1
+        ]
+      },
+      "ee122OpaquePreservation": {
+        "type": "object",
+        "keys": [
+          "root",
+          "originalRegularFiles",
+          "originalBytes",
+          "zipMembers",
+          "wholeSourceRetained",
+          "sourceAndZipBytesSha256CrcVerifiedByOriginalCapsuleProducer",
+          "independentWholeArchiveReviewPendingRoot",
+          "originalChildReceipts",
+          "originalChildZero",
+          "originalChildOne",
+          "innerReceiptsHistoricalNotFreshTopLevelProcessAuthority",
+          "packagingAndReplayZeroNotBusinessSuccess"
+        ],
+        "first": [
+          "root",
+          "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-opaque-capsule-89cf1ba373634086a3926a636a292ec7"
+        ]
+      },
+      "independentReview": {
+        "type": "object",
+        "keys": [
+          "frozenReaderSourcePeerRoot",
+          "frozenReaderSourcePeerScope",
+          "ee122DerivedRelationshipPeerRoot",
+          "rootWillReviewActualCollectedArchiveSeparately"
+        ],
+        "first": [
+          "frozenReaderSourcePeerRoot",
+          "C:/Users/cina/AppData/Local/Temp/cinatoken-frozen-data-reader-peer-readonly-l04m66n6"
+        ]
+      },
+      "sourceLayers": {
+        "type": "object",
+        "keys": [
+          "releaseSourceCommit",
+          "g7ActualSourceCommit",
+          "native26ActualSourceCommit",
+          "originalDirectDiagnosticActualSourceCommit",
+          "newCalibrationDiagnosticActualSourceCommit",
+          "productionSourceCommitPrefix",
+          "productionWorkerVersionPrefix",
+          "productionTrafficPercent",
+          "productionReadPerformedHere",
+          "newStaticPreparedCommit",
+          "newStaticPreparedNativeActualResult"
+        ],
+        "first": [
+          "releaseSourceCommit",
+          "dc7be6f8597333151c450bae3ae15e6585e3b2eb"
+        ]
+      },
+      "businessSemantics": {
+        "type": "object",
+        "keys": [
+          "collectionOnly",
+          "gatePassDerived",
+          "fullG7Verified",
+          "fullG8Verified",
+          "fullNativeCancelVerified",
+          "productionRequests",
+          "noExclusions",
+          "syntheticDialectControlsNotApplicationTests",
+          "originalAdmission1Preserved",
+          "collectorMetadataRootNotIncluded",
+          "allListedSourceRootsFrozen",
+          "currentRootStopWrite",
+          "currentRootVerifiedAgainstExternalIndex",
+          "sourceLayers",
+          "businessOutcomeScope",
+          "oldDurableMeta",
+          "pendingFutureFrozenRoots",
+          "scope",
+          "nonProcessReadAndSliceOutputsAreReportOnly",
+          "originalArchiveAdmission154BlockersPreserved",
+          "downloadedMtimeNeverClaimedOriginalProducerMtime",
+          "formerCollectorMetadataRootIncludedOnlyAfterRootStopWrite",
+          "activeCollectorMetadataRootNotIncluded",
+          "lateRootFrozenIndex",
+          "finalPreparedToolAndFirstFailuresIncluded",
+          "independentReaderSourcePeerIncluded",
+          "activeOwnerAuditMetadataRootNotIncluded",
+          "ee122HistoricalOpaqueCapsule"
+        ],
+        "first": [
+          "collectionOnly",
+          true
+        ]
+      },
+      "nonzeroAndUnknownReceipts": {
+        "type": "array",
+        "count": 41,
+        "first": {
+          "root": "archive-subset-preparation",
+          "file": "historical-observer-original-reference/083-docker.result.json",
+          "sha256": "92d7505748a0968c5537738abf271dec61b2efe2176d335cd79c658a9c9eaf20",
+          "dialect": "web-platform-g7-child-command-closed-v1",
+          "actualExit": 1,
+          "signal": null,
+          "spawnError": null,
+          "timedOut": false,
+          "actualChildExitProven": true
+        }
+      },
+      "aggregateReports": {
+        "type": "array",
+        "count": 9,
+        "first": {
+          "root": "g7-observe-owner",
+          "file": "original-linux-result.json",
+          "sha256": "ec0beadfbc53bfa252f8e3a13eecc260a61be7cb5ca3d3b3338757d5eb904489",
+          "dialect": "web-platform-g7-owned-linux-tls-pg-closed-v1",
+          "actualExit": 1,
+          "sourceSHA": "07d19c1c941cc373019811be3dbf553c441a0ff3",
+          "aggregateOnly": true,
+          "childLogAuthority": false,
+          "gatePassDerived": false,
+          "owner": "g7-8a88cf68945741d1843b63f670b4d364",
+          "cleanupVerifiedAbsentReported": true
+        }
+      },
+      "authorityPins": {
+        "type": "array",
+        "count": 12,
+        "first": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-final-capsule-collection-config-NWebV7/all-frozen-final-config.json",
+          "bytes": 257294,
+          "sha256": "d50f84f7c0cf4ec66d367dd7ed79edbad6719944f394d39ecd65fcfb7d8dd09e"
+        }
+      },
+      "rootIds": {
+        "type": "array",
+        "count": 42,
+        "first": "native-four-owner"
+      },
+      "ownerAuditMetadataRootNotIncludedIn42Inputs": "C:/Users/cina/AppData/Local/Temp/cinatoken-final-capsule-admission-meta-UkwrUh",
+      "activeRootMetadataNotIncluded": "C:/Users/cina/AppData/Local/Temp/cinatoken-final-durable-collection-meta-S7NHM2",
+      "collectionOnly": true,
+      "gatePassDerived": false,
+      "fullG7Verified": false,
+      "fullG8Verified": false,
+      "fullNativeCancelVerified": false,
+      "productionReadPerformedHere": false,
+      "limitations": {
+        "type": "array",
+        "count": 4,
+        "first": "Final42 pure audit proves reader admission and file/raw authority binding, not application or runtime passing."
+      }
+    }
+  },
+  "semantics": {
+    "collectionOnly": true,
+    "gatePassDerived": false,
+    "fullG7Verified": false,
+    "fullG8Verified": false,
+    "fullNativeCancelVerified": false,
+    "productionRequests": 0,
+    "noExclusions": true,
+    "syntheticDialectControlsNotApplicationTests": true,
+    "originalAdmission1Preserved": true,
+    "collectorMetadataRootNotIncluded": true,
+    "allListedSourceRootsFrozen": true,
+    "currentRootStopWrite": true,
+    "currentRootVerifiedAgainstExternalIndex": {
+      "files": 981,
+      "totalBytes": 11305947,
+      "indexSha256": "cedbf58fb411c7a183c60d183f6d36da8c853236ec7711f0b3ad679da2c2f467"
+    },
+    "sourceLayers": {
+      "releaseSourceCommit": "dc7be6f8597333151c450bae3ae15e6585e3b2eb",
+      "g7ActualSourceCommit": "473de5fc520fc7d64db700db88a76c7a6b45c241",
+      "native26ActualSourceCommit": "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc",
+      "originalDirectDiagnosticActualSourceCommit": "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc",
+      "newCalibrationDiagnosticActualSourceCommit": "dc7be6f8597333151c450bae3ae15e6585e3b2eb",
+      "productionSourceCommitPrefix": "c13",
+      "productionWorkerVersionPrefix": "2a0",
+      "productionTrafficPercent": 100,
+      "productionReadPerformedHere": false,
+      "newStaticPreparedCommit": "ee122dd4273e2db892daa724bc6417a9b02b280c",
+      "newStaticPreparedNativeActualResult": {
+        "sourceCommit": "ee122dd4273e2db892daa724bc6417a9b02b280c",
+        "proxyRun": "failure",
+        "nativeJob": "failure",
+        "firstFailureStep": 24,
+        "batch55to113": "all skipped",
+        "newFourFileFixtures": "skipped",
+        "fullProxyPass": false
+      }
+    },
+    "businessOutcomeScope": "Root-reported original frozen artifacts retained: calibration actual0/cancelKV observed; four direct runtime cases and original strict baseline actual1, overall process1. Pure evidence admission does not change those outcomes.",
+    "oldDurableMeta": {
+      "directOriginalRootIncluded": false,
+      "losslessOpaqueReplacementRootId": "old-meta-opaque-snapshot",
+      "originalFiles": 2353,
+      "allOriginalBytesRetainedInZip": true,
+      "copiedHistoricalReceiptsNotFreshExecution": true
+    },
+    "pendingFutureFrozenRoots": [],
+    "scope": "Complete bounded frozen historical evidence cohort. One unsupported derived-output root is preserved as a whole-root lossless opaque ZIP/index capsule; original failed admission and raw receipts remain explicit input metadata. No inner receipt is reinterpreted as a fresh process or passing business gate.",
+    "nonProcessReadAndSliceOutputsAreReportOnly": true,
+    "originalArchiveAdmission154BlockersPreserved": true,
+    "downloadedMtimeNeverClaimedOriginalProducerMtime": true,
+    "formerCollectorMetadataRootIncludedOnlyAfterRootStopWrite": true,
+    "activeCollectorMetadataRootNotIncluded": "C:/Users/cina/AppData/Local/Temp/cinatoken-final-durable-collection-meta-S7NHM2",
+    "lateRootFrozenIndex": {
+      "files": 100,
+      "totalBytes": 2231518,
+      "sha256": "2fc26c446fafbf5fc4110ef09eeed26bb4117180a42228166ea65dc6a4d7505d"
+    },
+    "finalPreparedToolAndFirstFailuresIncluded": true,
+    "independentReaderSourcePeerIncluded": true,
+    "activeOwnerAuditMetadataRootNotIncluded": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-capsule-admission-meta-UkwrUh",
+    "ee122HistoricalOpaqueCapsule": {
+      "originalRoot": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-native-tail-independent-peer-76364c609e694985bf7d74bf5b2c4ae9",
+      "capsuleRoot": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-opaque-capsule-89cf1ba373634086a3926a636a292ec7",
+      "capsuleFinal": {
+        "file": "FINAL-ee122-opaque-capsule.json",
+        "bytes": 6188,
+        "sha256": "5d471ca014ff1a301a5c55c538cf260a52e4f485a7d4817bf7408e8f4f4586eb"
+      },
+      "wholeOriginalRootRetainedLosslessly": true,
+      "originalReaderActualExit": 1,
+      "originalReaderBlockers": 39,
+      "originalReaderFailureMetadataRootId": "original-final39-failed-admission-metadata",
+      "originalRealChildReceipts": 31,
+      "originalRealChildNumericZero": 28,
+      "originalRealChildNumericOne": 3,
+      "innerOriginalReceiptsAreHistoricalDataNotNewExecution": true,
+      "packagingAndReplayExitZeroNotApplicationSuccess": true,
+      "originalNativeStep24": "failure",
+      "originalDispatchStrict": "8 tests / 7 pass / 1 fail / 0 skip",
+      "original55to113": "59 skipped",
+      "originalPrepared26": "26 skipped",
+      "originalWorkflowConclusions": {
+        "proxy": "failure",
+        "web": "success",
+        "compose": "success",
+        "release": "success",
+        "verify": "success"
+      },
+      "readerToolSourceUnchangedAfter99Seal": true,
+      "noOriginalRawExcludedOrOmitted": true
+    }
+  },
+  "roots": [
+    {
+      "id": "native-four-owner",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-four-repair-38a94fb93d9842929dc7ae9cf6b378da",
+      "phase": "local-validation"
+    },
+    {
+      "id": "native-four-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-four-independent-peer-1f17397bef8049cb9cd030679e23dc70",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "g7-observe-owner",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-g7-observe-dependency-fix-02e2061ea37b4d18af99a3675ec1b7fc",
+      "phase": "local-validation"
+    },
+    {
+      "id": "g7-observe-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-g7-observer-connection-peer-readonly-13a3b38c25d74da1be0d64feed3c75d5",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "archive-subset-preparation",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd",
+      "phase": "prepared-only"
+    },
+    {
+      "id": "archive-subset-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-four-frozen-archive-peer-readonly-93dbd146546645cbb2495a763acf6c1e",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "archive-runner-dialect-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-archive-receipt-dialect-peer-readonly-e41d1f26433548dea9ff73e133e0dc4b",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "native26-owner",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713",
+      "phase": "local-validation"
+    },
+    {
+      "id": "native26-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native26-independent-peer-815d52a48c5d44fc9146dd59579e27f2",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "direct-socket-owner",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-direct-socket-prep-99dlWu",
+      "phase": "prepared-only"
+    },
+    {
+      "id": "direct-socket-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-direct-socket-peer-readonly-19dc03ece33840d28acfca66a68a3863",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "native-g7-terminal-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-terminal-independent-peer-9a6f592ed14641fe9af1029826dbd775",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "archive-frozen-inventory",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native26-direct-socket-archive-inventory-97f10624f7a344a89187435b65641546",
+      "phase": "prepared-only"
+    },
+    {
+      "id": "direct-socket-dialect-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-direct-socket-archive-dialect-peer-readonly-5acafdc971304ac180e80be74277ec8f",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "native59-inventory",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native59-full-inventory-10b2722ab06d4cf6b6305e24571b4a8d",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "v364-next-diagnosis",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "current-terminal-evidence",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504",
+      "phase": "closed-ci-evidence"
+    },
+    {
+      "id": "native26-terminal-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "native-pin94-readonly",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "v364-url-calibration-owner",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-direct-actual-review-DjepMs",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "v364-url-calibration-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-address-repair-peer-readonly-ec894dc1d1004d33ae29d0a3c0d5857b",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "v364-partial-existing-reads-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-calibration-address-independent-peer-c08eb1896ea747ab8895d1ed6c01f5b8",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "old-meta-opaque-snapshot",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-old-meta-opaque-snapshot-eEXPR6",
+      "phase": "historical-and-current"
+    },
+    {
+      "id": "old-meta-opaque-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-old-meta-opaque-peer-readonly-ctkbvuoa",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "direct-socket-evidence-tools",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610",
+      "phase": "prepared-only"
+    },
+    {
+      "id": "direct-socket-tool-source-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-direct-socket-tool-source-peer-readonly-541b7711f55b4066b8c28eb33962c0a0",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "native59-info-evidence-tools",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59",
+      "phase": "prepared-only"
+    },
+    {
+      "id": "native59-info-tool-source-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native59-info-peer-readonly-eq34crj5",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "canonical-calibration-terminal-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-canonical-calibration-terminal-independent-peer-7c64bf0f365242ed9e43c275ac46721a",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "native-frozen94-109-prepare",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450",
+      "phase": "prepared-only"
+    },
+    {
+      "id": "current-frozen-index-input",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-current-frozen-index-input-VPltuE",
+      "phase": "prepared-only"
+    },
+    {
+      "id": "native26-slice-binding-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native26-slice-binding-peer-readonly-q5n6zrsb",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "native-frozen94-109-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-frozen94-109-independent-peer-a824c8ed062348199c5027f7df556278",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "late-terminal-metadata-frozen",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d",
+      "phase": "closed-ci-evidence"
+    },
+    {
+      "id": "all-frozen-first-admission-owner",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-g7-native26-final-config-4851c19d4cc24ecdae397bcb12a8ad30",
+      "phase": "prepared-only"
+    },
+    {
+      "id": "all-frozen-new-reader-owner",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-all-frozen-data-tools-FoBS1O",
+      "phase": "prepared-only"
+    },
+    {
+      "id": "all-frozen-data-reader-source-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-frozen-data-reader-peer-readonly-l04m66n6",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "final-frozen-config-input",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-frozen-collection-config-Ezqg1K",
+      "phase": "prepared-only"
+    },
+    {
+      "id": "ee122-native-terminal-opaque-capsule",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-opaque-capsule-89cf1ba373634086a3926a636a292ec7",
+      "phase": "historical-and-current"
+    },
+    {
+      "id": "original-final39-failed-admission-metadata",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-final-all-frozen-admission-meta-27arGJ",
+      "phase": "prepared-only"
+    },
+    {
+      "id": "ee122-derived-data-relation-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-39-binding-peer-readonly-2thrhzc5",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "final-capsule-config-input",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-capsule-collection-config-NWebV7",
+      "phase": "prepared-only"
+    }
+  ],
+  "admission": "Full exact Root-reported release source dc7be6f8597333151c450bae3ae15e6585e3b2eb. Root supplied actual source layers; this operation only prepares frozen-input evidence admission and does not run CI or business tests."
+}

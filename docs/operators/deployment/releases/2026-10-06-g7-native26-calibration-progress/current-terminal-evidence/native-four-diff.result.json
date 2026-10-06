@@ -1,0 +1,28 @@
+{
+  "at": "2026-10-06T03:17:37.837Z",
+  "finishedAt": "2026-10-06T03:17:37.896Z",
+  "executable": "C:/Program Files/Git/cmd/git.exe",
+  "args": [
+    "-c",
+    "core.longpaths=true",
+    "diff",
+    "--",
+    "scripts/db/cutover/postgres-complete-text-legacy-reaper-fence-v366.native.test.mjs",
+    "scripts/db/cutover/postgres-complete-text-all-hold-renewal-v367.native.test.mjs",
+    "scripts/db/cutover/postgres-complete-text-buyer-counter-cutover-v367.native.test.mjs",
+    "scripts/db/cutover/postgres-complete-text-legacy-buyer-held-v368.native.test.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\native-four-diff.stdout.log",
+    "bytes": 11661,
+    "sha256": "e78e66f8de8b57dc617577cb43e3ad440a254c85fe226fb4014a1c3d94851188"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\native-four-diff.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

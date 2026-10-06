@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-06T03:16:44.996Z",
+  "finishedAt": "2026-10-06T03:16:45.101Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "--check",
+    "scripts/db/cutover/postgres-complete-text-legacy-buyer-held-v368.native.test.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-four-repair-38a94fb93d9842929dc7ae9cf6b378da\\syntax-4.stdout.log",
+  "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-four-repair-38a94fb93d9842929dc7ae9cf6b378da\\syntax-4.stderr.log",
+  "stdoutInfo": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stderrInfo": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

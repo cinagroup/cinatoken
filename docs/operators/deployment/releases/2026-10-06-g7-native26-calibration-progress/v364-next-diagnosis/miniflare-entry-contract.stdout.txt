@@ -1,0 +1,32 @@
+137:  // Backs `fetch(url, { cf: { image } })` transforms — see cfImageLocalFetcher.
+3457:  return loopback.fetch("http://localhost/core/log", {
+3471:  return loopback.fetch(
+4627:    Request(val) {
+4642:    Request(value) {
+4645:      return assert2(typeof method == "string"), assert2(typeof url == "string"), assert2(headers instanceof impl.Headers), assert2(body === null || impl.isReadableStream(body)), new impl.Request(url, {
+4799:  async fetch(request) {
+4801:      return await this.#fetch(request);
+4810:  async #fetch(request) {
+4859:        return request = new Request(url, request), request.headers.delete(CoreHeaders.OP_SECRET), request.headers.delete(CoreHeaders.OP), request.headers.delete(CoreHeaders.OP_TARGET), request.headers.delete(CoreHeaders.OP_KEY), request.he [... omitted end of long line]
+4938:function getUserRequest(request, env, clientIp) {
+4957:  request = new Request(url, request), request.headers.set("Accept-Encoding", "br, gzip");
+4978:function isCdnCgiRequest(url) {
+4986:function validateCdnCgiRequest(request, routes, upstreamUrl) {
+4987:  if (!isCdnCgiRequest(request.url) && !isCdnCgiRequest(request.headers.get(CoreHeaders.ORIGINAL_URL)))
+5034:  return body === null ? response : env[CoreBindings.SERVICE_LOOPBACK].fetch(
+5086:function maybeLogRequest(req, res, env, ctx, startTime) {
+5100:    env[CoreBindings.SERVICE_LOOPBACK].fetch("http://localhost/core/log", {
+5109:  return ns.get(id).fetch(request);
+5112:  async fetch(request, env, ctx) {
+5119:    request = new Request(request, { cf }), request.headers.delete(CoreHeaders.ACCESS_BLOB);
+5122:      validateCdnCgiRequest(
+5136:      request = getUserRequest(request, env, clientIp);
+5147:        return await env[CoreBindings.SERVICE_LOCAL_EXPLORER].fetch(request);
+5150:        return await imagesDelivery.fetch(request);
+5166:        return await streamService.fetch(request);
+5169:        return await r2PublicService.fetch(request);
+5177:          s3Url.host = originalHostname, s3Request = new Request(s3Url, request), s3Request.headers.set("Host", originalHostname);
+5179:        return await r2S3Service.fetch(s3Request);
+5184:        headers.set(CoreHeaders.ACCESS_BLOB, JSON.stringify(accessBlob)), request = new Request(request, { headers });
+5186:      let response = await service.fetch(request);
+5187:      return disablePrettyErrorPage || (response = await maybePrettifyError(request, response, env)), response = ensureAcceptableEncoding(clientAcceptEncoding, response), env[CoreBindings.LOG_REQUESTS] && (response = maybeLogRequest(request [... omitted end of long line]

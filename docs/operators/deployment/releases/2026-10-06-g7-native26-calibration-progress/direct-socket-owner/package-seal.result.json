@@ -1,0 +1,26 @@
+{
+  "closed": true,
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "executable": "node",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-direct-socket-prep-99dlWu/write-package-seal.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "startedAt": "2026-10-06T03:40:46.679Z",
+  "finishedAt": "2026-10-06T03:40:46.753Z",
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\package-seal.stdout.txt",
+    "bytes": 210,
+    "sha256": "c48463de84f8d02a5c68a2e67c35ea071653b69558d3c9ccf6f7c191689a82fc"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\package-seal.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "operation": "local-source-preparation",
+  "realServiceOrCiExecution": false,
+  "productionRequests": 0
+}

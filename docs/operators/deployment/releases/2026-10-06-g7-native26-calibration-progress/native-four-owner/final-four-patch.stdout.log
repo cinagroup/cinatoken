@@ -1,0 +1,164 @@
+diff --git a/scripts/db/cutover/postgres-complete-text-all-hold-renewal-v367.native.test.mjs b/scripts/db/cutover/postgres-complete-text-all-hold-renewal-v367.native.test.mjs
+index b8eed046..2fe4d7f7 100644
+--- a/scripts/db/cutover/postgres-complete-text-all-hold-renewal-v367.native.test.mjs
++++ b/scripts/db/cutover/postgres-complete-text-all-hold-renewal-v367.native.test.mjs
+@@ -1,7 +1,7 @@
+ // Owned PostgreSQL 18.6 proof of review-only v367 all-hold renewal.
+ import assert from 'node:assert/strict';
+ import { createHash, randomBytes, randomUUID } from 'node:crypto';
+-import { readFile, readdir, writeFile } from 'node:fs/promises';
++import { readFile, writeFile } from 'node:fs/promises';
+ import test from 'node:test';
+ import postgres from 'postgres';
+ import { computeRouteDataPolicySubjectFingerprintFromRows } from '../../../packages/core/src/route-data-policy.ts';
+@@ -16,7 +16,7 @@ import { appendPostgresCompleteTextHolderFactV367,
+   appendPostgresCompleteTextProviderBillFactV367,
+ } from '../../../packages/proxy/src/services/postgres-complete-text-result-facts-v367.ts';
+ import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';
+-import { grantPostgresRuntime } from './grant-postgres-runtime.ts';
++import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
+ import { activatePostgresBuyerSplitV348 } from './activate-postgres-buyer-split-v348.ts';
+ import { grantPostgresBuyerSplitV348 } from './grant-postgres-buyer-split-v348.ts';
+ import { activatePostgresBuyerGuardrailSplitV349 } from './activate-postgres-buyer-guardrail-split-v349.ts';
+@@ -124,7 +124,7 @@ test('v367 renews exactly all dispatched text holds under isolated custody',
+         renewer,renewerPeer,cap,verifier,complete,recovery,buyer);
+       await migrator.unsafe(`CREATE TABLE ${g}.schema_migrations
+         (version text PRIMARY KEY,applied_at timestamptz NOT NULL DEFAULT now())`);
+-      const migrationNames=(await readdir(migrationDir)).filter(x=>x.endsWith('.sql')).sort();
++      const migrationNames=await listPg73Migrations();
+       assert.equal(migrationNames.length,73);
+       const corpus=[];
+       for(const name of migrationNames) {
+@@ -138,6 +138,9 @@ test('v367 renews exactly all dispatched text holds under isolated custody',
+       report.sourceSha256.formalMigrations=sha(corpus.join('\n'));
+       const migratorUrl=`postgres://${roles.migrator}:${passwords.migrator}`
+         +`@127.0.0.1:${cluster.port}/postgres`;
++      // Keep original grant calls and rejection checks on the owned PG73 ledger.
++      const grantPostgresRuntime = ({ DATABASE_URL }) =>
++        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });
+       await grantPostgresRuntime({DATABASE_URL:migratorUrl});
+       for(const [name,setting] of preliminary) {
+         const body=await readFile(proposal(name),'utf8');
+diff --git a/scripts/db/cutover/postgres-complete-text-buyer-counter-cutover-v367.native.test.mjs b/scripts/db/cutover/postgres-complete-text-buyer-counter-cutover-v367.native.test.mjs
+index 4cd00e7b..d96c0a4c 100644
+--- a/scripts/db/cutover/postgres-complete-text-buyer-counter-cutover-v367.native.test.mjs
++++ b/scripts/db/cutover/postgres-complete-text-buyer-counter-cutover-v367.native.test.mjs
+@@ -1,7 +1,7 @@
+ // Owned PostgreSQL 18.6 counterexample for a buyer-writer cutover after v366.
+ import assert from 'node:assert/strict';
+ import { createHash, randomBytes, randomUUID } from 'node:crypto';
+-import { readFile, readdir, writeFile } from 'node:fs/promises';
++import { readFile, writeFile } from 'node:fs/promises';
+ import test from 'node:test';
+ import postgres from 'postgres';
+ import { computeRouteDataPolicySubjectFingerprintFromRows } from '../../../packages/core/src/route-data-policy.ts';
+@@ -11,7 +11,7 @@ import { claimPostgresCompleteTextCustodyV365,
+   PostgresCompleteTextSendStartRejectedError,
+ } from '../../../packages/proxy/src/services/postgres-complete-text-send-start-v365.ts';
+ import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';
+-import { grantPostgresRuntime } from './grant-postgres-runtime.ts';
++import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
+ import { activatePostgresBuyerSplitV348 } from './activate-postgres-buyer-split-v348.ts';
+ import { grantPostgresBuyerSplitV348 } from './grant-postgres-buyer-split-v348.ts';
+ import { activatePostgresBuyerGuardrailSplitV349 } from './activate-postgres-buyer-guardrail-split-v349.ts';
+@@ -113,7 +113,7 @@ test('v367 buyer counter authority cannot be revoked without a legacy writer',
+         cap,verifier,complete,recovery,buyer);
+       await migrator.unsafe(`CREATE TABLE ${g}.schema_migrations
+         (version text PRIMARY KEY,applied_at timestamptz NOT NULL DEFAULT now())`);
+-      const migrationNames=(await readdir(migrationDir)).filter(x=>x.endsWith('.sql')).sort();
++      const migrationNames=await listPg73Migrations();
+       assert.equal(migrationNames.length,73);
+       const corpus=[];
+       for(const name of migrationNames) {
+@@ -127,6 +127,9 @@ test('v367 buyer counter authority cannot be revoked without a legacy writer',
+       report.sourceSha256.formalMigrations=sha(corpus.join('\n'));
+       const migratorUrl=`postgres://${roles.migrator}:${passwords.migrator}`
+         +`@127.0.0.1:${cluster.port}/postgres`;
++      // Keep original grant calls and rejection checks on the owned PG73 ledger.
++      const grantPostgresRuntime = ({ DATABASE_URL }) =>
++        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });
+       await grantPostgresRuntime({DATABASE_URL:migratorUrl});
+       for(const [name,setting] of preliminary) {
+         const body=await readFile(proposal(name),'utf8');
+diff --git a/scripts/db/cutover/postgres-complete-text-legacy-buyer-held-v368.native.test.mjs b/scripts/db/cutover/postgres-complete-text-legacy-buyer-held-v368.native.test.mjs
+index 97e90a87..8f6821a5 100644
+--- a/scripts/db/cutover/postgres-complete-text-legacy-buyer-held-v368.native.test.mjs
++++ b/scripts/db/cutover/postgres-complete-text-legacy-buyer-held-v368.native.test.mjs
+@@ -1,7 +1,7 @@
+ // Owned PostgreSQL 18.6 proof of a narrow non-grant buyer writer and ACL cutover.
+ import assert from 'node:assert/strict';
+ import { createHash, randomBytes, randomUUID } from 'node:crypto';
+-import { readFile, readdir, writeFile } from 'node:fs/promises';
++import { readFile, writeFile } from 'node:fs/promises';
+ import test from 'node:test';
+ import postgres from 'postgres';
+ import { drizzle } from 'drizzle-orm/postgres-js';
+@@ -18,7 +18,7 @@ import { claimPostgresCompleteTextCustodyV365,
+ import { settlePostgresLegacyBuyerHeldV368 } from
+   '../../../packages/proxy/src/services/postgres-legacy-buyer-held-v368.ts';
+ import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';
+-import { grantPostgresRuntime } from './grant-postgres-runtime.ts';
++import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
+ import { activatePostgresBuyerSplitV348 } from './activate-postgres-buyer-split-v348.ts';
+ import { grantPostgresBuyerSplitV348 } from './grant-postgres-buyer-split-v348.ts';
+ import { activatePostgresBuyerGuardrailSplitV349 } from './activate-postgres-buyer-guardrail-split-v349.ts';
+@@ -125,7 +125,7 @@ test('v368 request-scoped legacy buyer writer and successor counter ACL',
+         cap,verifier,complete,recovery,buyer,sharedProducer);
+       await migrator.unsafe(`CREATE TABLE ${g}.schema_migrations
+         (version text PRIMARY KEY,applied_at timestamptz NOT NULL DEFAULT now())`);
+-      const migrationNames=(await readdir(migrationDir)).filter(x=>x.endsWith('.sql')).sort();
++      const migrationNames=await listPg73Migrations();
+       assert.equal(migrationNames.length,73);
+       const corpus=[];
+       for(const name of migrationNames) {
+@@ -139,6 +139,9 @@ test('v368 request-scoped legacy buyer writer and successor counter ACL',
+       report.sourceSha256.formalMigrations=sha(corpus.join('\n'));
+       const migratorUrl=`postgres://${roles.migrator}:${passwords.migrator}`
+         +`@127.0.0.1:${cluster.port}/postgres`;
++      // Keep original grant calls and rejection checks on the owned PG73 ledger.
++      const grantPostgresRuntime = ({ DATABASE_URL }) =>
++        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });
+       await grantPostgresRuntime({DATABASE_URL:migratorUrl});
+       for(const [name,setting] of preliminary) {
+         const body=await readFile(proposal(name),'utf8');
+diff --git a/scripts/db/cutover/postgres-complete-text-legacy-reaper-fence-v366.native.test.mjs b/scripts/db/cutover/postgres-complete-text-legacy-reaper-fence-v366.native.test.mjs
+index 9720302b..9ec95426 100644
+--- a/scripts/db/cutover/postgres-complete-text-legacy-reaper-fence-v366.native.test.mjs
++++ b/scripts/db/cutover/postgres-complete-text-legacy-reaper-fence-v366.native.test.mjs
+@@ -1,7 +1,7 @@
+ // Owned PostgreSQL 18.6 proof of one-shot v365 text send-start custody.
+ import assert from 'node:assert/strict';
+ import { createHash, randomBytes, randomUUID } from 'node:crypto';
+-import { readFile, readdir, writeFile } from 'node:fs/promises';
++import { readFile, writeFile } from 'node:fs/promises';
+ import test from 'node:test';
+ import postgres from 'postgres';
+ import { computeRouteDataPolicySubjectFingerprintFromRows } from '../../../packages/core/src/route-data-policy.ts';
+@@ -11,7 +11,7 @@ import { claimPostgresCompleteTextCustodyV365,
+   PostgresCompleteTextSendStartRejectedError,
+ } from '../../../packages/proxy/src/services/postgres-complete-text-send-start-v365.ts';
+ import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';
+-import { grantPostgresRuntime } from './grant-postgres-runtime.ts';
++import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
+ import { activatePostgresBuyerSplitV348 } from './activate-postgres-buyer-split-v348.ts';
+ import { grantPostgresBuyerSplitV348 } from './grant-postgres-buyer-split-v348.ts';
+ import { activatePostgresBuyerGuardrailSplitV349 } from './activate-postgres-buyer-guardrail-split-v349.ts';
+@@ -113,7 +113,7 @@ test('v366 fences old explicit-forfeit and expiry on grant-linked holds',
+         cap,verifier,complete,recovery,buyer);
+       await migrator.unsafe(`CREATE TABLE ${g}.schema_migrations
+         (version text PRIMARY KEY,applied_at timestamptz NOT NULL DEFAULT now())`);
+-      const migrationNames=(await readdir(migrationDir)).filter(x=>x.endsWith('.sql')).sort();
++      const migrationNames=await listPg73Migrations();
+       assert.equal(migrationNames.length,73);
+       const corpus=[];
+       for(const name of migrationNames) {
+@@ -127,6 +127,9 @@ test('v366 fences old explicit-forfeit and expiry on grant-linked holds',
+       report.sourceSha256.formalMigrations=sha(corpus.join('\n'));
+       const migratorUrl=`postgres://${roles.migrator}:${passwords.migrator}`
+         +`@127.0.0.1:${cluster.port}/postgres`;
++      // Keep original grant calls and rejection checks on the owned PG73 ledger.
++      const grantPostgresRuntime = ({ DATABASE_URL }) =>
++        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });
+       await grantPostgresRuntime({DATABASE_URL:migratorUrl});
+       for(const [name,setting] of preliminary) {
+         const body=await readFile(proposal(name),'utf8');

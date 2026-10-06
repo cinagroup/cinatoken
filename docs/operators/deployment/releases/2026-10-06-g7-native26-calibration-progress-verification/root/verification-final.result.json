@@ -1,0 +1,24 @@
+{
+  "at": "2026-10-06T05:24:27.253Z",
+  "finishedAt": "2026-10-06T05:24:35.030Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-all-frozen-data-tools-FoBS1O/verify-evidence.mjs",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-final-durable-collection-meta-S7NHM2/collected-archive-output/2026-10-06-g7-native26-calibration-progress.json",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-final-durable-collection-meta-S7NHM2/verification-final.json",
+    "with-source"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\verification-final.stdout.log",
+    "bytes": 475,
+    "sha256": "cd48609f7043636dec2b674b4ecb4151189531da32998afc8f485954bb2f80ea"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\verification-final.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

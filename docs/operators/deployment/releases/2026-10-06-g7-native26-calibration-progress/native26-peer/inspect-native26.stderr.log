@@ -1,0 +1,11 @@
+file:///C:/Users/cina/AppData/Local/Temp/cinatoken-native26-independent-peer-815d52a48c5d44fc9146dd59579e27f2/inspect-native26.mjs:2
+const header={...p};for(const k of ['files','protection','closedReceipts','sourceOwnership'])delete header[k];console.log(JSON.stringify({producerKeys:Object.keys(p),header,files:p.files.map(f=>({step:f.step,file:f.file,keys:Object.keys(f),assertions:f.originalAssertions,grants:f.originalGrantCalls,fixedCorpusLoaderCalls:f.fixedCorpusLoaderCalls})),protectionCount:p.protection.length,protectionGroups:Object.fromEntries([...new Set(p.protection.map(i=>i.group))].map(g=>[g,p.protection.filter(i=>i.group===g).length])),closedReceiptsType:typeof p.closedReceipts,closedReceiptsCount:p.closedReceipts.length,closedReceiptFirst:p.closedReceipts[0],closedReceiptLast:p.closedReceipts.at(-1),inventoryKeys:Object.keys(inventory),candidateSteps:inventory.candidateSteps,inventoryRecords:inventory.records.length,protectionKeys:Object.keys(inventory.protection),protectionInputs:inventory.protection.inputs.length},null,2));
+                                                                                                                                                                                           ^
+
+TypeError: Cannot read properties of undefined (reading 'map')
+    at file:///C:/Users/cina/AppData/Local/Temp/cinatoken-native26-independent-peer-815d52a48c5d44fc9146dd59579e27f2/inspect-native26.mjs:2:188
+    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:661:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.14.1

@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-06T04:27:10.866Z",
+  "finishedAt": "2026-10-06T04:27:11.028Z",
+  "executable": "git",
+  "args": [
+    "show",
+    "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc:packages/core/src/storage/management-workspaces.postgres-native.test.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\tail-step-112.stdout.log",
+    "bytes": 7296,
+    "sha256": "ef3285f9a57445d9cb77d40bcc11a84094523024861cfdb87c430903d598fae7"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\tail-step-112.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

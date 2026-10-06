@@ -1,0 +1,658 @@
+{
+  "schema": "cinatoken-frozen-subset-archive-preparation-readonly-proof-v1",
+  "closed": true,
+  "auditOutcome": 0,
+  "sourceCommit": "473de5fc520fc7d64db700db88a76c7a6b45c241",
+  "scope": "Four complete frozen producer/peer roots plus nine explicitly selected immutable original reference files; preparation only, not full current G7 collection",
+  "checks": [
+    "subset-source-exact-full473-and-no-growing-current-root",
+    "old-actual1-and-24-blockers-remain-immutable-history",
+    "all120-previously-included-files-remain-exact",
+    "each-of-five-roots-is-complete-exact-current-file-set-no-exclusions",
+    "all-seven-frozen-tool-originals-and-unchanged-copies-still-byte-exact",
+    "eight-owner-commands-sixteen-original-streams-bound-to-each-original-status-and-timing",
+    "six-controlled-children-have-only-parent-raw-not-invented-external-streams",
+    "eight-selected-original-reference-files-are-byte-identical-no-new-execution",
+    "original-observer-negative-and-runtime1-separate-from-wire0-no-gate-pass",
+    "owner-first-glob-and-peer-first-read-error-originals-retained-as-metadata-not-fake-terminals",
+    "all-seven-own-recorded-tool-child-exits-and-raw-descriptors-are-exact",
+    "new37-and-old-synthetic12-10-28-controls-proven-by-their-own-parent-terminals",
+    "current-root-source-snapshot-only-exact-no-whole-root-audit"
+  ],
+  "completeOrdinaryFiles": 149,
+  "frozenFourRootFiles": 140,
+  "selectedReferenceFiles": 9,
+  "rootSummary": [
+    {
+      "id": "native-four-owner",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-four-repair-38a94fb93d9842929dc7ae9cf6b378da",
+      "completeOrdinaryFiles": 58
+    },
+    {
+      "id": "native-four-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-four-independent-peer-1f17397bef8049cb9cd030679e23dc70",
+      "completeOrdinaryFiles": 15
+    },
+    {
+      "id": "g7-observe-owner",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-g7-observe-dependency-fix-02e2061ea37b4d18af99a3675ec1b7fc",
+      "completeOrdinaryFiles": 55
+    },
+    {
+      "id": "g7-observe-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-g7-observer-connection-peer-readonly-13a3b38c25d74da1be0d64feed3c75d5",
+      "completeOrdinaryFiles": 12
+    },
+    {
+      "id": "original-observer-reference",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd/historical-observer-original-reference",
+      "completeOrdinaryFiles": 9
+    }
+  ],
+  "recognizedOriginalTerminalReceipts": 28,
+  "separateAggregateReports": [
+    {
+      "root": "g7-observe-owner",
+      "file": "original-linux-result.json",
+      "sha256": "ec0beadfbc53bfa252f8e3a13eecc260a61be7cb5ca3d3b3338757d5eb904489",
+      "dialect": "web-platform-g7-owned-linux-tls-pg-closed-v1",
+      "actualExit": 1,
+      "sourceSHA": "07d19c1c941cc373019811be3dbf553c441a0ff3",
+      "aggregateOnly": true,
+      "childLogAuthority": false,
+      "gatePassDerived": false,
+      "owner": "g7-8a88cf68945741d1843b63f670b4d364",
+      "cleanupVerifiedAbsentReported": true
+    },
+    {
+      "root": "g7-observe-owner",
+      "file": "original-linux-wire-result.json",
+      "sha256": "b2e0da71df5a8fbe8c4f6ce781685c1f80936e6d80b81feae767a37675a62ae2",
+      "dialect": "web-platform-g7-tls-pg-wire-v1",
+      "actualExit": 0,
+      "sourceSHA": "07d19c1c941cc373019811be3dbf553c441a0ff3",
+      "aggregateOnly": true,
+      "childLogAuthority": false,
+      "gatePassDerived": false
+    },
+    {
+      "root": "original-observer-reference",
+      "file": "result.json",
+      "sha256": "ec0beadfbc53bfa252f8e3a13eecc260a61be7cb5ca3d3b3338757d5eb904489",
+      "dialect": "web-platform-g7-owned-linux-tls-pg-closed-v1",
+      "actualExit": 1,
+      "sourceSHA": "07d19c1c941cc373019811be3dbf553c441a0ff3",
+      "aggregateOnly": true,
+      "childLogAuthority": false,
+      "gatePassDerived": false,
+      "owner": "g7-8a88cf68945741d1843b63f670b4d364",
+      "cleanupVerifiedAbsentReported": true
+    },
+    {
+      "root": "original-observer-reference",
+      "file": "wire-result.json",
+      "sha256": "b2e0da71df5a8fbe8c4f6ce781685c1f80936e6d80b81feae767a37675a62ae2",
+      "dialect": "web-platform-g7-tls-pg-wire-v1",
+      "actualExit": 0,
+      "sourceSHA": "07d19c1c941cc373019811be3dbf553c441a0ff3",
+      "aggregateOnly": true,
+      "childLogAuthority": false,
+      "gatePassDerived": false
+    }
+  ],
+  "exclusions": [],
+  "oldAudit": {
+    "actualExit": 1,
+    "includedFiles": 120,
+    "unadmittedRawFiles": 20,
+    "blockers": 24,
+    "preserved": true
+  },
+  "finalAudit": {
+    "actualExit": 0,
+    "includedFiles": 149,
+    "blockers": 0
+  },
+  "ownerBindingDetails": [
+    {
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-observe-dependency-fix-02e2061ea37b4d18af99a3675ec1b7fc\\final-all-g7-controls.result.json",
+        "bytes": 999,
+        "sha256": "8c797d0a0321c2d4b7d62f4b28406612282200d83e7eb46562f07af5cd3ff83f"
+      },
+      "startedAt": "2026-10-06T03:22:35.206Z",
+      "endedAt": "2026-10-06T03:22:37.882Z",
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--import",
+        "tsx",
+        "--test",
+        "scripts/verification/web-platform-g7/admission.test.mjs",
+        "scripts/verification/web-platform-g7/fixture.test.mjs"
+      ],
+      "cwd": "C:\\cinagroup\\cinatoken",
+      "actualExit": 0,
+      "timeoutMs": 60000,
+      "outputs": [
+        {
+          "file": "final-all-g7-controls.stdout.log",
+          "bytes": 21291,
+          "sha256": "6d4b8ae03cfd2f821d5aaa86ddef19ad6bca4b15a718e15cb3448dd062cf20ae"
+        },
+        {
+          "file": "final-all-g7-controls.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "originalProducerAuthorityOnly": true
+    },
+    {
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-observe-dependency-fix-02e2061ea37b4d18af99a3675ec1b7fc\\final-database-syntax.result.json",
+        "bytes": 902,
+        "sha256": "2d361c9dcd2f661be76eb8e7655d923c7b8568e9666b847b8f0f7db3961cf14d"
+      },
+      "startedAt": "2026-10-06T03:22:35.058Z",
+      "endedAt": "2026-10-06T03:22:35.131Z",
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "scripts/verification/web-platform-g7/database.mjs"
+      ],
+      "cwd": "C:\\cinagroup\\cinatoken",
+      "actualExit": 0,
+      "timeoutMs": 60000,
+      "outputs": [
+        {
+          "file": "final-database-syntax.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "final-database-syntax.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "originalProducerAuthorityOnly": true
+    },
+    {
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-observe-dependency-fix-02e2061ea37b4d18af99a3675ec1b7fc\\final-fixture-syntax.result.json",
+        "bytes": 903,
+        "sha256": "3077bb69e669d85abd1572ba85798cd88855e9d598ba8a015adf8e0e6856db84"
+      },
+      "startedAt": "2026-10-06T03:22:35.132Z",
+      "endedAt": "2026-10-06T03:22:35.205Z",
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "scripts/verification/web-platform-g7/fixture.test.mjs"
+      ],
+      "cwd": "C:\\cinagroup\\cinatoken",
+      "actualExit": 0,
+      "timeoutMs": 60000,
+      "outputs": [
+        {
+          "file": "final-fixture-syntax.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "final-fixture-syntax.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "originalProducerAuthorityOnly": true
+    },
+    {
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-observe-dependency-fix-02e2061ea37b4d18af99a3675ec1b7fc\\final-format-check.result.json",
+        "bytes": 1054,
+        "sha256": "020e99366ff6f1399efaa830f3d49c868d928d1b390afc1dc520d4c6de2372a7"
+      },
+      "startedAt": "2026-10-06T03:22:37.883Z",
+      "endedAt": "2026-10-06T03:22:38.527Z",
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "node_modules/prettier/bin-prettier.js",
+        "--check",
+        "scripts/verification/web-platform-g7/database.mjs",
+        "scripts/verification/web-platform-g7/fixture.test.mjs",
+        "scripts/verification/web-platform-g7/README.md"
+      ],
+      "cwd": "C:\\cinagroup\\cinatoken",
+      "actualExit": 0,
+      "timeoutMs": 60000,
+      "outputs": [
+        {
+          "file": "final-format-check.stdout.log",
+          "bytes": 66,
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "final-format-check.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "originalProducerAuthorityOnly": true
+    },
+    {
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-observe-dependency-fix-02e2061ea37b4d18af99a3675ec1b7fc\\final-format-write.result.json",
+        "bytes": 1055,
+        "sha256": "5fc219c4bd7a7fdb0829ff0cd2a1b8c1bb6401f873d1b6e08d7a6e230aa0165d"
+      },
+      "startedAt": "2026-10-06T03:22:33.677Z",
+      "endedAt": "2026-10-06T03:22:35.055Z",
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "node_modules/prettier/bin-prettier.js",
+        "--write",
+        "scripts/verification/web-platform-g7/database.mjs",
+        "scripts/verification/web-platform-g7/fixture.test.mjs",
+        "scripts/verification/web-platform-g7/README.md"
+      ],
+      "cwd": "C:\\cinagroup\\cinatoken",
+      "actualExit": 0,
+      "timeoutMs": 60000,
+      "outputs": [
+        {
+          "file": "final-format-write.stdout.log",
+          "bytes": 168,
+          "sha256": "4edfa744cf70ab780b6080113b0bbb19efa11c07968fb73a49b6e3070fd7e6bf"
+        },
+        {
+          "file": "final-format-write.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "originalProducerAuthorityOnly": true
+    },
+    {
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-observe-dependency-fix-02e2061ea37b4d18af99a3675ec1b7fc\\first-database-syntax.result.json",
+        "bytes": 902,
+        "sha256": "acc4f8fac8ebd1efee1bbbe46ceeb71de6a510433e4d6becc5c35812aa03a389"
+      },
+      "startedAt": "2026-10-06T03:21:15.357Z",
+      "endedAt": "2026-10-06T03:21:15.553Z",
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "scripts/verification/web-platform-g7/database.mjs"
+      ],
+      "cwd": "C:\\cinagroup\\cinatoken",
+      "actualExit": 0,
+      "timeoutMs": 60000,
+      "outputs": [
+        {
+          "file": "first-database-syntax.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "first-database-syntax.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "originalProducerAuthorityOnly": true
+    },
+    {
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-observe-dependency-fix-02e2061ea37b4d18af99a3675ec1b7fc\\first-fixture-contract.result.json",
+        "bytes": 937,
+        "sha256": "cb663179d8819903aad2a688db778417ceda41ad5b3c1ffa5f6d0be8e60cd0b4"
+      },
+      "startedAt": "2026-10-06T03:21:15.795Z",
+      "endedAt": "2026-10-06T03:21:20.866Z",
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--import",
+        "tsx",
+        "--test",
+        "scripts/verification/web-platform-g7/fixture.test.mjs"
+      ],
+      "cwd": "C:\\cinagroup\\cinatoken",
+      "actualExit": 0,
+      "timeoutMs": 60000,
+      "outputs": [
+        {
+          "file": "first-fixture-contract.stdout.log",
+          "bytes": 851,
+          "sha256": "f54808b958f72c882ba75571be965ce4e0ed2d426c7593939392b0db6eede029"
+        },
+        {
+          "file": "first-fixture-contract.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "originalProducerAuthorityOnly": true
+    },
+    {
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-observe-dependency-fix-02e2061ea37b4d18af99a3675ec1b7fc\\first-fixture-syntax.result.json",
+        "bytes": 903,
+        "sha256": "79e2881d2646bc1c29ad850ec1802d3b0b5f92c72236e609dd82be829dd50390"
+      },
+      "startedAt": "2026-10-06T03:21:15.556Z",
+      "endedAt": "2026-10-06T03:21:15.794Z",
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "scripts/verification/web-platform-g7/fixture.test.mjs"
+      ],
+      "cwd": "C:\\cinagroup\\cinatoken",
+      "actualExit": 0,
+      "timeoutMs": 60000,
+      "outputs": [
+        {
+          "file": "first-fixture-syntax.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "first-fixture-syntax.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "originalProducerAuthorityOnly": true
+    }
+  ],
+  "controlledChildDiagnostics": [
+    {
+      "scenario": "success",
+      "actualChildExit": 0,
+      "stdoutUtf8Bytes": 10447,
+      "stdoutSha256": "2c0f59a32788e095c1279b38c28b0deec7f05e1016f8bb86c6faba8baf80a5ce",
+      "stderrUtf8Bytes": 0,
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "authority": "Nested diagnostic strings in original final-all-g7-controls.stdout.log only",
+      "independentExternalStreams": false,
+      "independentToolReceiptClaimed": false,
+      "realSQLDatabase": false,
+      "nativeLinuxAcceptance": false
+    },
+    {
+      "scenario": "ledger-drift",
+      "actualChildExit": 1,
+      "stdoutUtf8Bytes": 0,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrUtf8Bytes": 227,
+      "stderrSha256": "1850fadb07b2182113a0d77c687bf4f962df1576226cbe054207d11b7b1151cf",
+      "authority": "Nested diagnostic strings in original final-all-g7-controls.stdout.log only",
+      "independentExternalStreams": false,
+      "independentToolReceiptClaimed": false,
+      "realSQLDatabase": false,
+      "nativeLinuxAcceptance": false
+    },
+    {
+      "scenario": "count-drift",
+      "actualChildExit": 1,
+      "stdoutUtf8Bytes": 0,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrUtf8Bytes": 291,
+      "stderrSha256": "791edcb76f9422dec84f32dabcb8c226db69888cafe0dfa9adbdd1579d5800f0",
+      "authority": "Nested diagnostic strings in original final-all-g7-controls.stdout.log only",
+      "independentExternalStreams": false,
+      "independentToolReceiptClaimed": false,
+      "realSQLDatabase": false,
+      "nativeLinuxAcceptance": false
+    },
+    {
+      "scenario": "schema-drift",
+      "actualChildExit": 1,
+      "stdoutUtf8Bytes": 0,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrUtf8Bytes": 224,
+      "stderrSha256": "b33e0c1d65931db2be6c43559b64d610859b786c2eefad7b79d939a0b6df7eda",
+      "authority": "Nested diagnostic strings in original final-all-g7-controls.stdout.log only",
+      "independentExternalStreams": false,
+      "independentToolReceiptClaimed": false,
+      "realSQLDatabase": false,
+      "nativeLinuxAcceptance": false
+    },
+    {
+      "scenario": "session-failure",
+      "actualChildExit": 1,
+      "stdoutUtf8Bytes": 0,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrUtf8Bytes": 213,
+      "stderrSha256": "84c21a589231a0d740c323d8d3ac572f3db80321263dae0c2f1d446213a4bd22",
+      "authority": "Nested diagnostic strings in original final-all-g7-controls.stdout.log only",
+      "independentExternalStreams": false,
+      "independentToolReceiptClaimed": false,
+      "realSQLDatabase": false,
+      "nativeLinuxAcceptance": false
+    },
+    {
+      "scenario": "seed-missing-core",
+      "actualChildExit": 1,
+      "stdoutUtf8Bytes": 0,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrUtf8Bytes": 205,
+      "stderrSha256": "4392c96198232ec06a4e387404e8e58c6c04a7af8756bc63cc344577cb119c3d",
+      "authority": "Nested diagnostic strings in original final-all-g7-controls.stdout.log only",
+      "independentExternalStreams": false,
+      "independentToolReceiptClaimed": false,
+      "realSQLDatabase": false,
+      "nativeLinuxAcceptance": false
+    }
+  ],
+  "toolRuns": [
+    {
+      "id": "old-four-root-audit",
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\old-four-root-audit.result.json",
+        "bytes": 1346,
+        "sha256": "7391f8ddc3ff47a214a5e25c12c81893bff41ccfb80c444c452455ea42acf330"
+      },
+      "actualExit": 1,
+      "at": "2026-10-06T03:36:43.336Z",
+      "finishedAt": "2026-10-06T03:36:43.529Z",
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\old-four-root-audit.stdout.log",
+        "bytes": 4212,
+        "sha256": "f739c9b586c37a342d13e462048ac082092feb3176145f82155420b94905c077"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\old-four-root-audit.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "new-producer-controls",
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\new-producer-controls.result.json",
+        "bytes": 1082,
+        "sha256": "06833eb994f52bd02929af262959262d4362565f5a0089d7538dd20f766b4418"
+      },
+      "actualExit": 0,
+      "at": "2026-10-06T03:40:31.610Z",
+      "finishedAt": "2026-10-06T03:40:31.891Z",
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\new-producer-controls.stdout.log",
+        "bytes": 1826,
+        "sha256": "48cbb2767532830a05c7b0c9449f749bd3f9b2087f8ed82855bce1bef0c0e2dc"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\new-producer-controls.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "enhanced-lib-syntax",
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\enhanced-lib-syntax.result.json",
+        "bytes": 1065,
+        "sha256": "c74ed8ca90b5a2399554ebe00182dc1fbeb89169c371c503c53a50108be2965d"
+      },
+      "actualExit": 0,
+      "at": "2026-10-06T03:40:45.523Z",
+      "finishedAt": "2026-10-06T03:40:45.600Z",
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\enhanced-lib-syntax.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\enhanced-lib-syntax.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "unchanged-controlled-regression",
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\unchanged-controlled-regression.result.json",
+        "bytes": 1091,
+        "sha256": "8e1179c1bcece53e7f5db5d6f790fbd6af0bff22539f4322d83124ec8cc4ae79"
+      },
+      "actualExit": 0,
+      "at": "2026-10-06T03:40:46.661Z",
+      "finishedAt": "2026-10-06T03:40:47.136Z",
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\unchanged-controlled-regression.stdout.log",
+        "bytes": 1103,
+        "sha256": "27359caf3b04c7e2b8101dbd5975c104f1ef4c04ab7e8048b3cf62b66f6fab81"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\unchanged-controlled-regression.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "unchanged-closure-regression",
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\unchanged-closure-regression.result.json",
+        "bytes": 1090,
+        "sha256": "4a14b8257c981e4cc29a8003496e5cb9cf29dce4e2636c330ef6dd7d19526163"
+      },
+      "actualExit": 0,
+      "at": "2026-10-06T03:40:45.560Z",
+      "finishedAt": "2026-10-06T03:40:45.803Z",
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\unchanged-closure-regression.stdout.log",
+        "bytes": 876,
+        "sha256": "b3876629d572beda067e58e092912b84a00d8565d2270244c751751c9e679e41"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\unchanged-closure-regression.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "unchanged-association-regression",
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\unchanged-association-regression.result.json",
+        "bytes": 1103,
+        "sha256": "fc44083f1d15b3b5fb9329e52c08d1598df307b08376c0fe6d088b0ef82c430d"
+      },
+      "actualExit": 0,
+      "at": "2026-10-06T03:40:47.882Z",
+      "finishedAt": "2026-10-06T03:40:48.169Z",
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\unchanged-association-regression.stdout.log",
+        "bytes": 1608,
+        "sha256": "a497df5448a576149f770d65ec57ff1a2071aaf750402f7cb9f63c9291cc8d92"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\unchanged-association-regression.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "enhanced-four-root-bound-audit",
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\enhanced-four-root-bound-audit.result.json",
+        "bytes": 1384,
+        "sha256": "865a5973da38ac2ebe6bab00f3b02d0aeb0dc65eca6acd4481c1e444a708bfa7"
+      },
+      "actualExit": 0,
+      "at": "2026-10-06T03:40:55.745Z",
+      "finishedAt": "2026-10-06T03:40:55.961Z",
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\enhanced-four-root-bound-audit.stdout.log",
+        "bytes": 59,
+        "sha256": "1ad58786dd3020efce2c5c7c90c0c1c505c4f557dc01a6677eac3fc01e4f4c23"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\enhanced-four-root-bound-audit.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "originalFrozenTools": [
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-evidence-g7-boundary-tools-v2-344bf6aba6864fafba8f6d1a5e9e7e7f/evidence-lib.mjs",
+      "file": "evidence-lib.mjs",
+      "bytes": 50356,
+      "sha256": "f6f86b8c7de1f49c4485cb6171b670d105b94efbb73a4cea5e0f1f5d80c6cbfa"
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-evidence-g7-boundary-tools-v2-344bf6aba6864fafba8f6d1a5e9e7e7f/collect-evidence.mjs",
+      "file": "collect-evidence.mjs",
+      "bytes": 1002,
+      "sha256": "95d1670211f5fdceb6bbdd2ce1db38036de4fb7c31e5d522eef10af3e479bdd5"
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-evidence-g7-boundary-tools-v2-344bf6aba6864fafba8f6d1a5e9e7e7f/verify-evidence.mjs",
+      "file": "verify-evidence.mjs",
+      "bytes": 617,
+      "sha256": "ac6c531cc665341fbf51dc3ceed6adbd3f629ab5c17aef51a214de1f1613422d"
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-evidence-g7-boundary-tools-v2-344bf6aba6864fafba8f6d1a5e9e7e7f/collector-controlled-tests.mjs",
+      "file": "collector-controlled-tests.mjs",
+      "bytes": 6887,
+      "sha256": "749953cc540f88e86822b33ade25daf4c59ef26864a7445bb413bb3c2f425614"
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-evidence-g7-boundary-tools-v2-344bf6aba6864fafba8f6d1a5e9e7e7f/collector-closure-boundary-tests.mjs",
+      "file": "collector-closure-boundary-tests.mjs",
+      "bytes": 8703,
+      "sha256": "967171ef8a84ae50abb69549d85d2ed58aa3c481c27bb3ae456cad0e66f60eb6"
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-evidence-g7-boundary-tools-v2-344bf6aba6864fafba8f6d1a5e9e7e7f/collector-g7-boundary-descriptor-tests.mjs",
+      "file": "collector-g7-boundary-descriptor-tests.mjs",
+      "bytes": 17869,
+      "sha256": "f983fe626f4d2b2d8af357cc36e8ff372f4bbee88ef316a1c9c274d945e9bf65"
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-evidence-g7-boundary-tools-v2-344bf6aba6864fafba8f6d1a5e9e7e7f/collector-explicit-association-tests.mjs",
+      "file": "collector-explicit-association-tests.mjs",
+      "bytes": 10741,
+      "sha256": "7580f6b13250d4a53ddd8b022dfaa48ef2fdc3382310fd60f010d035395b1f7c"
+    }
+  ],
+  "boundConfig": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\four-frozen-roots-bound-config.json",
+    "bytes": 9151,
+    "sha256": "82760f9f7e338c5eafc117ea69a4e9f8f03ba8909d5f54214fbdf266eb6c138f"
+  },
+  "oldToolCopiesAndOriginalsUnmodified": true,
+  "helperScope": "Exact G7 owner schema and explicit original outputs matching only; current Root runner and other original dialects unchanged",
+  "actualRuntimeOrCiExecutionByPreparer": false,
+  "currentCiResultsCollected": false,
+  "repositoryCollectionPerformed": false,
+  "growingCurrentRootWalked": false,
+  "prior2226ArchiveFullAuditRepeated": false,
+  "productionRequests": 0,
+  "fullG7Verified": false,
+  "fullG8Verified": false,
+  "gatePassDerived": false
+}

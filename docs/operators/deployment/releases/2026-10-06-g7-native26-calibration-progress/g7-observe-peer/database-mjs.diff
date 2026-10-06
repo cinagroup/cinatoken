@@ -1,0 +1,69 @@
+--- original-database.mjs
++++ database.mjs
+@@ -15,14 +15,9 @@
+ assert.equal(db.username, "postgres");
+ assert.match(db.password, /^[a-f0-9]{64}$/);
+ assert.equal(db.search, "");
+-const core = await import("/app/packages/core/dist/index.js");
+-const context = await core.createPostgresStorageContext(db.href, {
+-	max: 1,
+-	prepare: false,
+-	fetch_types: false,
+-	connect_timeout: 5,
+-});
+-const sql = context.client.raw;
++let core;
++let context;
++let sql;
+ let failure;
+ let report;
+ let stage = "migration-ledger";
+@@ -38,6 +33,30 @@
+ 	assertionObservation = undefined;
+ };
+ try {
++	stage = "database-connection";
++	const options = {
++		max: 1,
++		prepare: false,
++		fetch_types: false,
++		connect_timeout: 5,
++	};
++	if (mode === "--seed") {
++		core = await import("/app/packages/core/dist/index.js");
++		context = await core.createPostgresStorageContext(db.href, options);
++		sql = context.client.raw;
++	} else {
++		// /qa is a separate input mount, so resolve the driver from the application image.
++		const { default: postgres } = await import(
++			"/app/node_modules/postgres/src/index.js"
++		);
++		sql = postgres(db.href, {
++			...options,
++			connection: { search_path: "cinatoken_gateway, public" },
++		});
++		stage = "database-session";
++		await sql.unsafe("SET search_path TO cinatoken_gateway, public");
++	}
++	stage = "migration-ledger";
+ 	const migrations = readdirSync("/app/packages/core/migrations-postgres")
+ 		.filter((name) => name.endsWith(".sql"))
+ 		.sort();
+@@ -242,7 +261,16 @@
+ } catch (error) {
+ 	failure = error;
+ } finally {
+-	await sql.end({ timeout: 5 });
++	if (sql) {
++		try {
++			await sql.end({ timeout: 5 });
++		} catch (error) {
++			if (!failure) {
++				failure = error;
++				stage = "database-close";
++			}
++		}
++	}
+ }
+ if (failure) {
+ 	// The parent command receipt retains failure status; do not print credentials or query parameters.

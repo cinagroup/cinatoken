@@ -1,0 +1,41 @@
+{
+  "at": "2026-10-06T04:55:08.524Z",
+  "verificationOutcome": 0,
+  "bytes": 808063,
+  "sha256": "2c3fe90cf6347113718092cf504cd70177cda4a3eb9cba1098577b74f7545c8a",
+  "originalScopeAndStatesExact": true,
+  "mainTaskCount": 102,
+  "matrixRows": 54,
+  "actualTaskCheckboxes": 211,
+  "newNativeRuntimeExecuted": false,
+  "calibrationExplicitWorkerPassed": true,
+  "httpDisconnectPass": false,
+  "fullG7Verified": false,
+  "fullG8Verified": false,
+  "files": [
+    {
+      "path": "scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs",
+      "kind": "existing-successor",
+      "bytes": 52497,
+      "sha256": "68206c5acf6b0bbfc93f27295615be13b26ef0beff7b73046202883c2b6ebe87"
+    },
+    {
+      "path": "scripts/db/cutover/fixtures/historical-native/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs.txt",
+      "kind": "new-historical-text-snapshot",
+      "bytes": 50164,
+      "sha256": "603646803c82d3209987260ad682a34169b4e53ca7b03b672d818e3a28d7cc13"
+    },
+    {
+      "path": "scripts/db/cutover/postgres-replay-reservations-backend-lifecycle-successor.native.test.mjs",
+      "kind": "existing-successor",
+      "bytes": 42822,
+      "sha256": "a8e7ccd8c918c128515415d47c40c2f9ce4c6a9e44646895035d10612359d295"
+    },
+    {
+      "path": "scripts/db/cutover/fixtures/historical-native/postgres-replay-reservations.native.test.mjs.txt",
+      "kind": "new-historical-text-snapshot",
+      "bytes": 37114,
+      "sha256": "d95055419a04465c7c172ff0b8426bd0b928bd538e4dad80f9442229abd5e269"
+    }
+  ]
+}

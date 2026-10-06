@@ -1,0 +1,37 @@
+84612:// embed-worker:/Users/runner/work/workers-sdk/workers-sdk/packages/miniflare/src/workers/shared/object-entry.worker.ts
+84617:function object_entry_worker_default() {
+84619:  const filePath = import_path4.default.join(__dirname, "workers", "shared/object-entry.worker.js");
+86027:      { name: "object-entry.worker.js", esModule: object_entry_worker_default() }
+95483:// embed-worker:/Users/runner/work/workers-sdk/workers-sdk/packages/miniflare/src/workers/core/entry.worker.ts
+95488:function entry_worker_default() {
+95490:  const filePath = import_path8.default.join(__dirname, "workers", "core/entry.worker.js");
+95972:// embed-worker:/Users/runner/work/workers-sdk/workers-sdk/packages/miniflare/src/workers/cache/cache-entry.worker.ts
+95977:function cache_entry_worker_default() {
+95979:  const filePath = import_path11.default.join(__dirname, "workers", "cache/cache-entry.worker.js");
+96017:    let entryWorker;
+96019:      entryWorker = {
+96023:          { name: "cache-entry.worker.js", esModule: cache_entry_worker_default() }
+96033:      entryWorker = {
+96045:      { name: getCacheServiceName(workerIndex), worker: entryWorker }
+98268:  constructor(runtimeEntryURL, dispatchFetch) {
+98270:      new URL(CorePaths.PLATFORM_PROXY, runtimeEntryURL),
+98288:  setRuntimeEntryURL(runtimeEntryURL) {
+98289:    this.#bridge.url = new URL(CorePaths.PLATFORM_PROXY, runtimeEntryURL);
+99396:        modules: [{ name: "entry.worker.js", esModule: entry_worker_default() }],
+112118:  #runtimeEntryURL;
+112848:          this.publicUrl ?? this.#runtimeEntryURL?.toString() ?? null
+113385:    const initial = !this.#runtimeEntryURL;
+113486:    const previousEntryURL = this.#runtimeEntryURL;
+113493:      this.#runtimeEntryURL = new URL(`http://127.0.0.1:${localEntryPort}`);
+113495:      this.#runtimeEntryURL = new URL(
+113499:    if (previousEntryURL?.toString() !== this.#runtimeEntryURL.toString()) {
+113502:      this.#runtimeDispatcher = new import_undici8.Pool(this.#runtimeEntryURL, {
+113525:        this.#runtimeEntryURL,
+113529:      this.#proxyClient.setRuntimeEntryURL(this.#runtimeEntryURL);
+113582:    (0, import_node_assert21.default)(this.#runtimeEntryURL !== void 0);
+113583:    return new URL(this.#runtimeEntryURL.toString());
+113599:      this.#runtimeEntryURL !== void 0,
+113739:    (0, import_node_assert21.default)(this.#runtimeEntryURL !== void 0);
+113743:    const actualRuntimeOrigin = this.#runtimeEntryURL.origin;
+113745:    url47.protocol = this.#runtimeEntryURL.protocol;
+113746:    url47.host = this.#runtimeEntryURL.host;

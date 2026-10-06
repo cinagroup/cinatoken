@@ -1,0 +1,17 @@
+{
+  "schema": "v364-direct-socket-executor-start-v1",
+  "repo": "/home/runner/work/cinatoken/cinatoken",
+  "output": "/home/runner/work/_temp/v364-direct-socket-once-37412108171-1",
+  "startedEpoch": 1791259631.8195903,
+  "freshOutputCreated": true,
+  "packageSHA256": "29976feae54abf63c53e5056085150b0165d140152a91d766b9dcfac9d8615c0",
+  "checkoutSHA": "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc",
+  "run": {
+    "GITHUB_SHA": "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc",
+    "GITHUB_RUN_ID": "37412108171",
+    "GITHUB_RUN_ATTEMPT": "1",
+    "GITHUB_WORKFLOW": "v364 owned direct Workerd socket cancellation",
+    "GITHUB_JOB": "direct-socket-cancellation"
+  },
+  "outerTimeoutSeconds": 360
+}

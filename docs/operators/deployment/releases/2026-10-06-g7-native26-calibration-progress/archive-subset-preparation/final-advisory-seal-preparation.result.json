@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-06T03:47:26.042Z",
+  "finishedAt": "2026-10-06T03:47:26.144Z",
+  "executable": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd/finalize-prepared-subset-advisory.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\final-advisory-seal-preparation.stdout.log",
+    "bytes": 339,
+    "sha256": "3d5f229c93745514b16349c1660261e57fd71cd5b05f2251c9b4a4670a33df1e"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\final-advisory-seal-preparation.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "scope": "Original exact synchronous child result for Temp evidence tool, no application tests or production"
+}

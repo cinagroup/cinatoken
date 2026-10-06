@@ -1,0 +1,20 @@
+{
+  "originalLib": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd/tools/evidence-lib.mjs",
+    "sha256": "f6f86b8c7de1f49c4485cb6171b670d105b94efbb73a4cea5e0f1f5d80c6cbfa"
+  },
+  "enhancedLib": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd/enhanced-tools/evidence-lib.mjs",
+    "sha256": "1a94e0682a2f9782a0bcc28c4736ff49c0bf4db0b9e0cfe0f34ecb6918b22cb7"
+  },
+  "oldTestsUntouched": true,
+  "patches": [
+    "Strict completed numeric-only exact G7 owner terminal schema",
+    "Explicit pinned outputs binding accepts startedAt only for that validated schema and matches both original descriptors"
+  ],
+  "rootRunClosedDialectChanged": false,
+  "globalGenericClosureChanged": false,
+  "exclusionPolicyChanged": false,
+  "originalSourcesChanged": false,
+  "productionRequests": 0
+}

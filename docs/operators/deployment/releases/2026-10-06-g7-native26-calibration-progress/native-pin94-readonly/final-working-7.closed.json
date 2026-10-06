@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-06T04:32:29.778Z",
+  "finishedAt": "2026-10-06T04:32:29.784Z",
+  "operation": "readFile",
+  "path": "C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\postgres-shared-key-economic-delivery.native.test.mjs",
+  "actualExit": 0,
+  "signal": null,
+  "error": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\final-working-7.stdout.log",
+    "bytes": 32003,
+    "sha256": "8fd48757e9beafc308fb21b018fd35f105fd0bb89011dfa0f4a4e0e1bca4fd94"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\final-working-7.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

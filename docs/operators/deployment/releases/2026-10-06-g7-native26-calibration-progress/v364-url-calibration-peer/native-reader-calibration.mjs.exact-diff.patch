@@ -1,0 +1,20 @@
+--- frozen-dcc6-before
++++ address-repair
+@@ -26,9 +26,14 @@
+ 			attemptNonce ?? "",
+ 			/^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/u
+ 		);
+-		url.pathname = "/fixture/complete-text";
+-		url.search = "";
+-		const response = await holder.fetch(new Request(url, request), env, ctx);
++		const response = await holder.fetch(
++			new Request(
++				"https://holder.service.invalid/complete-text-attempt",
++				request
++			),
++			env,
++			ctx
++		);
+ 		assert.equal(response.status, 200);
+ 		assert.equal(response.headers.get("Content-Type"), "text/event-stream");
+ 		assert.ok(response.body);

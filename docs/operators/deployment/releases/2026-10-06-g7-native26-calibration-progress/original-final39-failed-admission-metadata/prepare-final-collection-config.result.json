@@ -1,0 +1,27 @@
+{
+  "at": "2026-10-06T05:08:09.029Z",
+  "finishedAt": "2026-10-06T05:08:09.232Z",
+  "executable": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-final-all-frozen-admission-meta-27arGJ/prepare-final-collection-config.mjs",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-frozen-data-reader-peer-readonly-l04m66n6",
+    "FINAL-frozen-data-reader-independent-peer-review.json",
+    "0c66c6b40e3b380aa42dfd466fc14d323c783c2bca9990d9c58436f105648b33",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-native-tail-independent-peer-76364c609e694985bf7d74bf5b2c4ae9"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-all-frozen-admission-meta-27arGJ\\prepare-final-collection-config.stdout.log",
+    "bytes": 1261,
+    "sha256": "a01e7bfa102dae81066d01e51a00a6712742f7a2e5343fa4755a1242b8e73fbe"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-all-frozen-admission-meta-27arGJ\\prepare-final-collection-config.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "scope": "Original exact child return of Temp evidence tool only; no application/native/G7/runtime or production run"
+}

@@ -1,0 +1,720 @@
+{
+  "schema": "cinatoken-current-root-frozen-input-index-v1",
+  "sealedAt": "2026-10-06T04:58:49.526Z",
+  "sourceRoot": "C:/Users/cina/AppData/Local/Temp/cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d",
+  "files": 100,
+  "totalBytes": 2231518,
+  "entries": [
+    {
+      "file": "after-historical-four.deployment-guard.json",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\after-historical-four.deployment-guard.json",
+      "bytes": 1030,
+      "sha256": "c13959a1b62e748c9e57a92296ce7c0004f5450b735c1aca84702a7c1b670f05",
+      "mtimeMs": 1791262694849.4946
+    },
+    {
+      "file": "audit-historical-four-stage.mjs",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\audit-historical-four-stage.mjs",
+      "bytes": 3779,
+      "sha256": "bcede3962eb748190753e69038a0973fb30b6810f7e93e6dc4f787a879e9c00c",
+      "mtimeMs": 1791262558254.0518
+    },
+    {
+      "file": "audit-historical-four-stage.result.json",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\audit-historical-four-stage.result.json",
+      "bytes": 949,
+      "sha256": "6d7afe6caec86865453dc760a3c5be10288e6b3c711e32fe7668b2ae2694be69",
+      "mtimeMs": 1791262561747.6265
+    },
+    {
+      "file": "audit-historical-four-stage.stderr.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\audit-historical-four-stage.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791262560406.952
+    },
+    {
+      "file": "audit-historical-four-stage.stdout.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\audit-historical-four-stage.stdout.log",
+      "bytes": 2157,
+      "sha256": "af112ed18efe43b07754e1f1dfc65fc3a7781a32e22a4db1798dfd7c1d526c8a",
+      "mtimeMs": 1791262561735.8118
+    },
+    {
+      "file": "checklist-before-historical-four.md",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\checklist-before-historical-four.md",
+      "bytes": 803950,
+      "sha256": "8b4568b815f635a75a078fce131d1c22e211efea159b1d01629a0da0f0b9b20c",
+      "mtimeMs": 1791262508521.7148
+    },
+    {
+      "file": "commit-historical-four.result.json",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\commit-historical-four.result.json",
+      "bytes": 918,
+      "sha256": "6fb2de80449b1b10ea2bcb90fe06840bdc6ade665f0e6adfc25525447062d475",
+      "mtimeMs": 1791262578828.0625
+    },
+    {
+      "file": "commit-historical-four.stderr.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\commit-historical-four.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791262578543.2854
+    },
+    {
+      "file": "commit-historical-four.stdout.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\commit-historical-four.stdout.log",
+      "bytes": 390,
+      "sha256": "116bd220d3abebe1a89028e1b8112fb083b0cebe7ccbc3fdadd1633d71905219",
+      "mtimeMs": 1791262578817.2666
+    },
+    {
+      "file": "freeze-current-root.mjs",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\freeze-current-root.mjs",
+      "bytes": 1915,
+      "sha256": "47556ab7785558584e6afc6c72d69957dee447cf8b9236e47ee8f53a0599f4ac",
+      "mtimeMs": 1791261540998.7034
+    },
+    {
+      "file": "freeze-current-root.result.json",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\freeze-current-root.result.json",
+      "bytes": 924,
+      "sha256": "1a402a7ea64990bea693abb9128acba98413c5178d252a44cfaf6ec91f46f4d5",
+      "mtimeMs": 1791261544092.4104
+    },
+    {
+      "file": "freeze-current-root.stderr.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\freeze-current-root.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791261542947.6616
+    },
+    {
+      "file": "freeze-current-root.stdout.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\freeze-current-root.stdout.log",
+      "bytes": 335,
+      "sha256": "2022c116753ad499486ce0d3bdb6d234123f525fa2c620ed161582fb20b9a33f",
+      "mtimeMs": 1791261544075.6104
+    },
+    {
+      "file": "frozen-current-root-index.json",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\frozen-current-root-index.json",
+      "bytes": 375872,
+      "sha256": "cedbf58fb411c7a183c60d183f6d36da8c853236ec7711f0b3ad679da2c2f467",
+      "mtimeMs": 1791261544075.6104
+    },
+    {
+      "file": "guard-live-cutover.mjs",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\guard-live-cutover.mjs",
+      "bytes": 2150,
+      "sha256": "b8c1e7f5e4784da907f11152369207a9fc408908e853539b053e7e38b0a6d2c3",
+      "mtimeMs": 1791249610373.8904
+    },
+    {
+      "file": "historical-four-checklist-proof.json",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-checklist-proof.json",
+      "bytes": 1603,
+      "sha256": "a4deb28ad4fd7bf748604d6d13a88f9028902da32ee95d9160b589f5ae99b296",
+      "mtimeMs": 1791262508530.6042
+    },
+    {
+      "file": "historical-four-ci-list.result.json",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-ci-list.result.json",
+      "bytes": 985,
+      "sha256": "c40d84e13ac10a50c84a5e2348a919fc1f5f1773034d999129715c57b2fde80d",
+      "mtimeMs": 1791262620691.2559
+    },
+    {
+      "file": "historical-four-ci-list.stderr.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-ci-list.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791262618113.0923
+    },
+    {
+      "file": "historical-four-ci-list.stdout.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-ci-list.stdout.log",
+      "bytes": 1862,
+      "sha256": "81a2430f26e1b2ec5d46d1e57f954c69911ca01a8dcf287716f359972e2345a6",
+      "mtimeMs": 1791262620683.2705
+    },
+    {
+      "file": "historical-four-cutover-guard.result.json",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-cutover-guard.result.json",
+      "bytes": 1064,
+      "sha256": "2e7e1d533e27458dd4c1107e93aacf41336bc239fd559780e0fe1c1befdc360a",
+      "mtimeMs": 1791262694865.4873
+    },
+    {
+      "file": "historical-four-cutover-guard.stderr.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-cutover-guard.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791262688570.238
+    },
+    {
+      "file": "historical-four-cutover-guard.stdout.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-cutover-guard.stdout.log",
+      "bytes": 793,
+      "sha256": "042b20d3f11859ba14c488bddfc2110c0b37b9ec53563df35c1c1fb567a65ef5",
+      "mtimeMs": 1791262694849.4946
+    },
+    {
+      "file": "historical-four-head.result.json",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-head.result.json",
+      "bytes": 850,
+      "sha256": "96ac87f04bef0383c6335c9b41aaf31c636ab67cbcbf2aa2bb28307f09a585c8",
+      "mtimeMs": 1791262614323.7856
+    },
+    {
+      "file": "historical-four-head.stderr.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-head.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791262614273.1118
+    },
+    {
+      "file": "historical-four-head.stdout.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-head.stdout.log",
+      "bytes": 41,
+      "sha256": "91e1d9a5c42943a16326cd67abe5367bd7c2c5c0e84e16563316aa704d545cef",
+      "mtimeMs": 1791262614311.1338
+    },
+    {
+      "file": "historical-four-remote.result.json",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-remote.result.json",
+      "bytes": 879,
+      "sha256": "2c1c97d64214bbb4fd78a699fca83a9ee7967596f9832cac47f4296211d5ac3d",
+      "mtimeMs": 1791262702949.0947
+    },
+    {
+      "file": "historical-four-remote.stderr.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-remote.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791262700877.1616
+    },
+    {
+      "file": "historical-four-remote.stdout.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-remote.stdout.log",
+      "bytes": 57,
+      "sha256": "dc1ee18abfe2ebe2b337f6c1ea87d010d55566bfa76814e88f634ad99586192a",
+      "mtimeMs": 1791262702941.0051
+    },
+    {
+      "file": "historical-four-stage-audit.json",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-audit.json",
+      "bytes": 2487,
+      "sha256": "1c637c2c3d0880c1649af7ea78d658e876ee424dbdb746ed1e61de69e6a150d5",
+      "mtimeMs": 1791262561733.197
+    },
+    {
+      "file": "historical-four-stage-read-1.result.json",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-1.result.json",
+      "bytes": 866,
+      "sha256": "89179ee0ced275201c81735e8c7cd279d98f18915c0ae86fd3a7bfb7d3c3048b",
+      "mtimeMs": 1791262560535.4365
+    },
+    {
+      "file": "historical-four-stage-read-1.stderr.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-1.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791262560535.4365
+    },
+    {
+      "file": "historical-four-stage-read-1.stdout.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-1.stdout.log",
+      "bytes": 41,
+      "sha256": "3f6929a280563e6b9dc338e3a07d8475a2e3f6d1d0743f5b6ff3a224ae6993a3",
+      "mtimeMs": 1791262560534.5298
+    },
+    {
+      "file": "historical-four-stage-read-10.result.json",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-10.result.json",
+      "bytes": 1129,
+      "sha256": "c236ca641f7b7b6ab50502fbc5a4727f29ac9216b5c5a232ad3694e8b463ced1",
+      "mtimeMs": 1791262561171.0078
+    },
+    {
+      "file": "historical-four-stage-read-10.stderr.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-10.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791262561171.0078
+    },
+    {
+      "file": "historical-four-stage-read-10.stdout.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-10.stdout.log",
+      "bytes": 41,
+      "sha256": "5d8c09ae80bbab53ebc363bf2c47fc0ac11868692f8ab3fc1af0b1206745ba69",
+      "mtimeMs": 1791262561171.0078
+    },
+    {
+      "file": "historical-four-stage-read-11.result.json",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-11.result.json",
+      "bytes": 954,
+      "sha256": "e7e64e204bfa547db3be6bde67259691c160218b32164769143817ccfe0f0fd5",
+      "mtimeMs": 1791262561239.8784
+    },
+    {
+      "file": "historical-four-stage-read-11.stderr.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-11.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791262561239.8784
+    },
+    {
+      "file": "historical-four-stage-read-11.stdout.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-11.stdout.log",
+      "bytes": 42822,
+      "sha256": "a8e7ccd8c918c128515415d47c40c2f9ce4c6a9e44646895035d10612359d295",
+      "mtimeMs": 1791262561239.8784
+    },
+    {
+      "file": "historical-four-stage-read-12.result.json",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-12.result.json",
+      "bytes": 956,
+      "sha256": "596c2ce0576442a8da680d7c9a44423402b2afc6fe7b742d1eff7a35470bb4e3",
+      "mtimeMs": 1791262561295.2842
+    },
+    {
+      "file": "historical-four-stage-read-12.stderr.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-12.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791262561295.2842
+    },
+    {
+      "file": "historical-four-stage-read-12.stdout.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-12.stdout.log",
+      "bytes": 41,
+      "sha256": "fa9aaf4d3cb9497fe81b606130d98b9d80a45caa54df9a8aa7baea00f7dc1180",
+      "mtimeMs": 1791262561293.2078
+    },
+    {
+      "file": "historical-four-stage-read-13.result.json",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-13.result.json",
+      "bytes": 1063,
+      "sha256": "558d7e7fea509d56c45fee4777a23acd5a660671ebf6a5ef02ad54d7009bf2af",
+      "mtimeMs": 1791262561346.1597
+    },
+    {
+      "file": "historical-four-stage-read-13.stderr.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-13.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791262561346.1597
+    },
+    {
+      "file": "historical-four-stage-read-13.stdout.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-13.stdout.log",
+      "bytes": 41,
+      "sha256": "fa9aaf4d3cb9497fe81b606130d98b9d80a45caa54df9a8aa7baea00f7dc1180",
+      "mtimeMs": 1791262561346.1597
+    },
+    {
+      "file": "historical-four-stage-read-14.result.json",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-14.result.json",
+      "bytes": 957,
+      "sha256": "7613af993ed002aa5a21375c56fe27c42bd0f497258ab965cf3d5863a8a4b331",
+      "mtimeMs": 1791262561410.333
+    },
+    {
+      "file": "historical-four-stage-read-14.stderr.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-14.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791262561408.118
+    },
+    {
+      "file": "historical-four-stage-read-14.stdout.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-14.stdout.log",
+      "bytes": 37114,
+      "sha256": "d95055419a04465c7c172ff0b8426bd0b928bd538e4dad80f9442229abd5e269",
+      "mtimeMs": 1791262561408.118
+    },
+    {
+      "file": "historical-four-stage-read-15.result.json",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-15.result.json",
+      "bytes": 959,
+      "sha256": "45b22463d6066f8da7dadf6876be1ea0a325dc1662d8bbf41595c72ba811e945",
+      "mtimeMs": 1791262561463.4177
+    },
+    {
+      "file": "historical-four-stage-read-15.stderr.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-15.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791262561461.882
+    },
+    {
+      "file": "historical-four-stage-read-15.stdout.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-15.stdout.log",
+      "bytes": 41,
+      "sha256": "7eec49fcbd7058b2a6a9d53c1b452d22caf6b0fc85149a0b2ae85fb0190dc292",
+      "mtimeMs": 1791262561461.882
+    },
+    {
+      "file": "historical-four-stage-read-16.result.json",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-16.result.json",
+      "bytes": 1069,
+      "sha256": "0255fabeb81da747c85266220628e4a09fd9d265d56988921082540b4f27cc55",
+      "mtimeMs": 1791262561517.2314
+    },
+    {
+      "file": "historical-four-stage-read-16.stderr.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-16.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791262561515.2544
+    },
+    {
+      "file": "historical-four-stage-read-16.stdout.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-16.stdout.log",
+      "bytes": 41,
+      "sha256": "7eec49fcbd7058b2a6a9d53c1b452d22caf6b0fc85149a0b2ae85fb0190dc292",
+      "mtimeMs": 1791262561515.2544
+    },
+    {
+      "file": "historical-four-stage-read-17.result.json",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-17.result.json",
+      "bytes": 918,
+      "sha256": "675860feb393cb118e3aea4ab519d2c5048969b34378feccf482a86cf7681124",
+      "mtimeMs": 1791262561581.2163
+    },
+    {
+      "file": "historical-four-stage-read-17.stderr.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-17.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791262561581.2163
+    },
+    {
+      "file": "historical-four-stage-read-17.stdout.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-17.stdout.log",
+      "bytes": 808063,
+      "sha256": "2c3fe90cf6347113718092cf504cd70177cda4a3eb9cba1098577b74f7545c8a",
+      "mtimeMs": 1791262561581.2163
+    },
+    {
+      "file": "historical-four-stage-read-18.result.json",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-18.result.json",
+      "bytes": 919,
+      "sha256": "d4201fc00a63dc3ea95be17921157ec56544ac0fc101647dd6617a541b774c80",
+      "mtimeMs": 1791262561639.8613
+    },
+    {
+      "file": "historical-four-stage-read-18.stderr.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-18.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791262561639.8613
+    },
+    {
+      "file": "historical-four-stage-read-18.stdout.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-18.stdout.log",
+      "bytes": 41,
+      "sha256": "0ea069792dac2b14f3e3cb42fd019ee4ac110de4cad848dcf72850f911b701ca",
+      "mtimeMs": 1791262561639.8613
+    },
+    {
+      "file": "historical-four-stage-read-19.result.json",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-19.result.json",
+      "bytes": 989,
+      "sha256": "1f2918307e62a7e4121a73c05637f63418bcf1357afc582c6ef1030560efb1cd",
+      "mtimeMs": 1791262561702.9988
+    },
+    {
+      "file": "historical-four-stage-read-19.stderr.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-19.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791262561700.4363
+    },
+    {
+      "file": "historical-four-stage-read-19.stdout.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-19.stdout.log",
+      "bytes": 41,
+      "sha256": "0ea069792dac2b14f3e3cb42fd019ee4ac110de4cad848dcf72850f911b701ca",
+      "mtimeMs": 1791262561700.4363
+    },
+    {
+      "file": "historical-four-stage-read-2.result.json",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-2.result.json",
+      "bytes": 886,
+      "sha256": "b03f7b3f959e32f85578f1ab84dac3fbf1e1478cc0a370af038657afdd342240",
+      "mtimeMs": 1791262560603.2683
+    },
+    {
+      "file": "historical-four-stage-read-2.stderr.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-2.stderr.log",
+      "bytes": 80,
+      "sha256": "4637b2478cea95e221ecbde1b46874fb0f18d282e08504cf0d1074595c4348d1",
+      "mtimeMs": 1791262560601.3352
+    },
+    {
+      "file": "historical-four-stage-read-2.stdout.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-2.stdout.log",
+      "bytes": 492,
+      "sha256": "dbabfa346122f72eb9756ca8f7c91c39ffc70d24aef594ea16a9fbef42a342e9",
+      "mtimeMs": 1791262560601.3352
+    },
+    {
+      "file": "historical-four-stage-read-3.result.json",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-3.result.json",
+      "bytes": 867,
+      "sha256": "1466385c46c94b8e7a8401eeea3bb7783faf59f5fb5315b1baae23d8ab2e836b",
+      "mtimeMs": 1791262560705.202
+    },
+    {
+      "file": "historical-four-stage-read-3.stderr.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-3.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791262560703.1965
+    },
+    {
+      "file": "historical-four-stage-read-3.stdout.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-3.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791262560703.1965
+    },
+    {
+      "file": "historical-four-stage-read-4.result.json",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-4.result.json",
+      "bytes": 880,
+      "sha256": "b7a38718278e1c0aa73b5f62920858ec1a61f95eefaa9afdf790c508ecb0d564",
+      "mtimeMs": 1791262560791.494
+    },
+    {
+      "file": "historical-four-stage-read-4.stderr.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-4.stderr.log",
+      "bytes": 80,
+      "sha256": "4637b2478cea95e221ecbde1b46874fb0f18d282e08504cf0d1074595c4348d1",
+      "mtimeMs": 1791262560791.494
+    },
+    {
+      "file": "historical-four-stage-read-4.stdout.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-4.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791262560789.714
+    },
+    {
+      "file": "historical-four-stage-read-5.result.json",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-5.result.json",
+      "bytes": 985,
+      "sha256": "74ef04a0dab67c0f21106660a9759f939f432cfba19d16ffb1e3d549640b7e1e",
+      "mtimeMs": 1791262560873.4216
+    },
+    {
+      "file": "historical-four-stage-read-5.stderr.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-5.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791262560871.247
+    },
+    {
+      "file": "historical-four-stage-read-5.stdout.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-5.stdout.log",
+      "bytes": 52497,
+      "sha256": "68206c5acf6b0bbfc93f27295615be13b26ef0beff7b73046202883c2b6ebe87",
+      "mtimeMs": 1791262560871.247
+    },
+    {
+      "file": "historical-four-stage-read-6.result.json",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-6.result.json",
+      "bytes": 987,
+      "sha256": "0c5d71e0cb82b4fbc2c57d820011a46c8c94ccf440a2d6c910386dbb7eeba773",
+      "mtimeMs": 1791262560946.7244
+    },
+    {
+      "file": "historical-four-stage-read-6.stderr.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-6.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791262560946.7244
+    },
+    {
+      "file": "historical-four-stage-read-6.stdout.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-6.stdout.log",
+      "bytes": 41,
+      "sha256": "9989e9da9922640eaa68cd9948c63c89dda33630474e563f3ee6190d0d955fd7",
+      "mtimeMs": 1791262560944.677
+    },
+    {
+      "file": "historical-four-stage-read-7.result.json",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-7.result.json",
+      "bytes": 1127,
+      "sha256": "b793189c488afcc4bfd8c777c0df6edc65bab0de72b09eeafb07593d3881d92c",
+      "mtimeMs": 1791262561005.6738
+    },
+    {
+      "file": "historical-four-stage-read-7.stderr.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-7.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791262561005.6738
+    },
+    {
+      "file": "historical-four-stage-read-7.stdout.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-7.stdout.log",
+      "bytes": 41,
+      "sha256": "9989e9da9922640eaa68cd9948c63c89dda33630474e563f3ee6190d0d955fd7",
+      "mtimeMs": 1791262561005.6738
+    },
+    {
+      "file": "historical-four-stage-read-8.result.json",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-8.result.json",
+      "bytes": 985,
+      "sha256": "7bc6fedf8774a32818104340451acad64f7032dd36a70fd458b9ebaabe8720b9",
+      "mtimeMs": 1791262561060.9167
+    },
+    {
+      "file": "historical-four-stage-read-8.stderr.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-8.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791262561060.9167
+    },
+    {
+      "file": "historical-four-stage-read-8.stdout.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-8.stdout.log",
+      "bytes": 50164,
+      "sha256": "603646803c82d3209987260ad682a34169b4e53ca7b03b672d818e3a28d7cc13",
+      "mtimeMs": 1791262561060.9167
+    },
+    {
+      "file": "historical-four-stage-read-9.result.json",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-9.result.json",
+      "bytes": 987,
+      "sha256": "59bacbadac9b58b3f6e9eac1a2218d36c8ad819f7f53ec4319d31e4db14e23d3",
+      "mtimeMs": 1791262561115.27
+    },
+    {
+      "file": "historical-four-stage-read-9.stderr.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-9.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791262561114.6414
+    },
+    {
+      "file": "historical-four-stage-read-9.stdout.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-stage-read-9.stdout.log",
+      "bytes": 41,
+      "sha256": "5d8c09ae80bbab53ebc363bf2c47fc0ac11868692f8ab3fc1af0b1206745ba69",
+      "mtimeMs": 1791262561114.3213
+    },
+    {
+      "file": "historical-four-status.result.json",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-status.result.json",
+      "bytes": 859,
+      "sha256": "33d3a0ba0f3305d7bd75efbdc26643680dc814981e2b492cdf371813de6ebecc",
+      "mtimeMs": 1791262614403.8374
+    },
+    {
+      "file": "historical-four-status.stderr.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-status.stderr.log",
+      "bytes": 160,
+      "sha256": "6e1eceb7157a6dd83e27b00cc96938a50132ed7fadf81d3f0954f8257e1ba406",
+      "mtimeMs": 1791262614380.7227
+    },
+    {
+      "file": "historical-four-status.stdout.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\historical-four-status.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791262614252.527
+    },
+    {
+      "file": "push-historical-four.result.json",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\push-historical-four.result.json",
+      "bytes": 859,
+      "sha256": "c76f38944a1ae75e55727818906ae46281594c62db83b9d862e3908da7acdf5d",
+      "mtimeMs": 1791262602669.9402
+    },
+    {
+      "file": "push-historical-four.stderr.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\push-historical-four.stderr.log",
+      "bytes": 78,
+      "sha256": "8e1092aa42045856a3fdcebac209690b467b6eb6173c1172328bd7ce3ac0416c",
+      "mtimeMs": 1791262602641.6577
+    },
+    {
+      "file": "push-historical-four.stdout.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\push-historical-four.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791262595728.12
+    },
+    {
+      "file": "run-closed.mjs",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\run-closed.mjs",
+      "bytes": 2329,
+      "sha256": "396a0c50f850ccd2e968bf8e0a320429698bdd825f4ec242f6fd95366bed8dec",
+      "mtimeMs": 1791256573295.4878
+    },
+    {
+      "file": "stage-historical-four.result.json",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\stage-historical-four.result.json",
+      "bytes": 1370,
+      "sha256": "07b8a1873ad8bf350f8e3d96331ad9a639f931a2f840194643eed64c01ce3fff",
+      "mtimeMs": 1791262531770.253
+    },
+    {
+      "file": "stage-historical-four.stderr.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\stage-historical-four.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791262531660.7961
+    },
+    {
+      "file": "stage-historical-four.stdout.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\stage-historical-four.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791262531660.7961
+    },
+    {
+      "file": "update-historical-four-checklist.mjs",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\update-historical-four-checklist.mjs",
+      "bytes": 8308,
+      "sha256": "d71b44327a1cccd6625daab04748bb7c9a6f1dd7127f8f31f282ef2172a32a7f",
+      "mtimeMs": 1791262506533.608
+    },
+    {
+      "file": "update-historical-four.result.json",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\update-historical-four.result.json",
+      "bytes": 944,
+      "sha256": "af8eb4bb950592b93c8d0ae6f161d74724530a870534db769ae14fc4314247b5",
+      "mtimeMs": 1791262508544.3152
+    },
+    {
+      "file": "update-historical-four.stderr.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\update-historical-four.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791262508427.5361
+    },
+    {
+      "file": "update-historical-four.stdout.log",
+      "originalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d\\update-historical-four.stdout.log",
+      "bytes": 1375,
+      "sha256": "8eb65f7f8ff84434029be61be22de007939bd23559aa61a76e4eff724f51bfb3",
+      "mtimeMs": 1791262508530.6042
+    }
+  ],
+  "stopWriteDeclared": true,
+  "collectionOnly": true,
+  "gatePassDerived": false,
+  "fullG7Verified": false,
+  "fullG8Verified": false,
+  "cohorts": {
+    "g7ActualSource": "473de5fc520fc7d64db700db88a76c7a6b45c241",
+    "native26ActualSource": "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc",
+    "calibrationActualSource": "dc7be6f8597333151c450bae3ae15e6585e3b2eb",
+    "productionSource": "c13a64b9c3b2c90adcf736910ea408868d7854f1"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "at": "2026-10-06T04:30:23.461Z",
+  "finishedAt": "2026-10-06T04:30:23.522Z",
+  "executable": "C:/Program Files/Git/cmd/git.exe",
+  "args": [
+    "-c",
+    "core.longpaths=true",
+    "show",
+    ":docs/developers/architecture/web-frontend-migration.md"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\calibration-stage-read-11.stdout.log",
+    "bytes": 803950,
+    "sha256": "8b4568b815f635a75a078fce131d1c22e211efea159b1d01629a0da0f0b9b20c"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\calibration-stage-read-11.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

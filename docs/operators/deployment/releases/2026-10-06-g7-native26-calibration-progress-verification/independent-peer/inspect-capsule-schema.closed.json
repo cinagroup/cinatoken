@@ -1,0 +1,25 @@
+{
+  "schema": "independent-final42-archive-readonly-child-receipt-v1",
+  "name": "inspect-capsule-schema",
+  "executable": "C:/Users/cina/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+  "argv": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4/inspect-capsule-schema.py"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "startedAt": "2026-10-06T05:18:35.308Z",
+  "closedAt": "2026-10-06T05:18:35.420Z",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "closed": true,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-capsule-schema.stdout.log",
+    "bytes": 189022,
+    "sha256": "d4f26edd45e47e7adee602ae1cd14fd4d2badce5a85b1aeedd610645a9d7d439"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-capsule-schema.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

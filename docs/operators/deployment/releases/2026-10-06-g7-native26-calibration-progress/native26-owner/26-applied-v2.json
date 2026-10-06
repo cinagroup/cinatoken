@@ -1,0 +1,194 @@
+{
+  "at": "2026-10-06T03:44:40.320Z",
+  "actualExit": 0,
+  "baseCommit": "473de5fc520fc7d64db700db88a76c7a6b45c241",
+  "repositoryWritePaths": [
+    "scripts/db/cutover/postgres-legacy-buyer-windowed-app-privileges-v374.native.test.mjs",
+    "scripts/db/cutover/postgres-legacy-buyer-windowed-app-privileges-renewal-v376.native.test.mjs",
+    "scripts/db/cutover/postgres-complete-text-admission-buyer-v379.native.test.mjs",
+    "scripts/db/cutover/postgres-complete-text-no-fetch-close-blocker-v382.native.test.mjs",
+    "scripts/db/cutover/postgres-complete-text-observed-holder-v384.native.test.mjs",
+    "scripts/db/cutover/postgres-complete-text-platform-close-fence-v386.native.test.mjs",
+    "scripts/db/cutover/postgres-complete-chat-holder-dispatch-v387.native.test.mjs",
+    "scripts/db/cutover/postgres-complete-text-no-fetch-platform-close-v388.native.test.mjs",
+    "scripts/db/cutover/postgres-complete-text-no-fetch-recovery-v389.native.test.mjs",
+    "scripts/db/cutover/postgres-complete-text-holder-worker-v390.native.test.mjs",
+    "scripts/db/cutover/postgres-complete-text-secretless-plan-v391.native.test.mjs",
+    "scripts/db/cutover/postgres-complete-text-response-observation-v392.native.test.mjs",
+    "scripts/db/cutover/postgres-personal-key-auth-period-v395.native.test.mjs",
+    "scripts/db/cutover/postgres-complete-text-routing-projection-v396.native.test.mjs",
+    "scripts/db/cutover/postgres-complete-text-response-no-fetch-coinstall-v397.native.test.mjs",
+    "scripts/db/cutover/postgres-complete-text-auth-routing-recovery-coinstall-v400.native.test.mjs",
+    "scripts/db/cutover/postgres-exclusive-credential-free-chat-ingress-v401.native.test.mjs",
+    "scripts/db/cutover/postgres-complete-text-platform-event-delivery-v402.native.test.mjs",
+    "scripts/db/cutover/postgres-complete-text-no-fetch-fence-v370.native.test.mjs",
+    "scripts/db/cutover/postgres-guardrail-admission-adapter-v352.native.test.mjs",
+    "scripts/db/cutover/postgres-buyer-split-grant-rerun-v348.native.test.mjs",
+    "scripts/db/cutover/postgres-buyer-split-guardrail-v349.native.test.mjs",
+    "scripts/db/cutover/postgres-shared-key-stats-auth-boundary-v346.native.test.mjs",
+    "scripts/db/cutover/postgres-shared-key-stats-signed-claim-v348.native.test.mjs",
+    "scripts/db/cutover/postgres-shared-key-stats-claim-reader-v349-cjs-loader-successor.native.test.mjs",
+    "scripts/db/cutover/postgres-shared-key-credited-usage-reader.native.test.mjs"
+  ],
+  "files": [
+    {
+      "step": 60,
+      "file": "scripts/db/cutover/postgres-legacy-buyer-windowed-app-privileges-v374.native.test.mjs",
+      "bytes": 59511,
+      "sha256": "8c2304a6dd54a0edab28361fde57d2aaae7bfe2ee799b1384bcf1817115c6fc2"
+    },
+    {
+      "step": 61,
+      "file": "scripts/db/cutover/postgres-legacy-buyer-windowed-app-privileges-renewal-v376.native.test.mjs",
+      "bytes": 69752,
+      "sha256": "dd1db4a5b1674139f0e70574ceb9658f4f8af928cd9d72fcdb87a01ce495ceba"
+    },
+    {
+      "step": 66,
+      "file": "scripts/db/cutover/postgres-complete-text-admission-buyer-v379.native.test.mjs",
+      "bytes": 69064,
+      "sha256": "63bd0f32f88cfd226db1d0dfa0ddafdb8701c84950747885fd52ecdf248ef116"
+    },
+    {
+      "step": 69,
+      "file": "scripts/db/cutover/postgres-complete-text-no-fetch-close-blocker-v382.native.test.mjs",
+      "bytes": 51124,
+      "sha256": "9881cf1ce90bcff2c71fe648e3c2cce589456ead69e6cc1ea5c66852274c2958"
+    },
+    {
+      "step": 71,
+      "file": "scripts/db/cutover/postgres-complete-text-observed-holder-v384.native.test.mjs",
+      "bytes": 53464,
+      "sha256": "c2cd38948a4c70335c750a77b2c29d7b8b667a57c255ede0098f4b339f621b68"
+    },
+    {
+      "step": 72,
+      "file": "scripts/db/cutover/postgres-complete-text-platform-close-fence-v386.native.test.mjs",
+      "bytes": 57825,
+      "sha256": "26adbc8e529ee9b4e435dbf8ce848065aa18892f726001336030547453c7ffd8"
+    },
+    {
+      "step": 73,
+      "file": "scripts/db/cutover/postgres-complete-chat-holder-dispatch-v387.native.test.mjs",
+      "bytes": 50649,
+      "sha256": "44c0fad756bb9a080ada7358d5d135b74a9a8c74e0b224c0ae40162251e9a759"
+    },
+    {
+      "step": 74,
+      "file": "scripts/db/cutover/postgres-complete-text-no-fetch-platform-close-v388.native.test.mjs",
+      "bytes": 64868,
+      "sha256": "25863388488d38beff66c2344f9ac30335c11f874134325ce0b835f73cc5676e"
+    },
+    {
+      "step": 75,
+      "file": "scripts/db/cutover/postgres-complete-text-no-fetch-recovery-v389.native.test.mjs",
+      "bytes": 64445,
+      "sha256": "577390203dbdaf37afd99965329dd32b4a31981bcfe2fcc69a77d1f3a1ef9d6d"
+    },
+    {
+      "step": 76,
+      "file": "scripts/db/cutover/postgres-complete-text-holder-worker-v390.native.test.mjs",
+      "bytes": 47848,
+      "sha256": "a16877174cb910f0d845bbd6ad86672319958b79292ffde938572d1fd17f0250"
+    },
+    {
+      "step": 77,
+      "file": "scripts/db/cutover/postgres-complete-text-secretless-plan-v391.native.test.mjs",
+      "bytes": 45949,
+      "sha256": "5090e3f047ec4272d172ac30af43dcfb73ed3e0c2c3335f82189c2638c04c1f8"
+    },
+    {
+      "step": 78,
+      "file": "scripts/db/cutover/postgres-complete-text-response-observation-v392.native.test.mjs",
+      "bytes": 53800,
+      "sha256": "85e0bfb4c472ad594f51bd6eb08e2bfbb755f8508dd4f892a9830b9fe20686e0"
+    },
+    {
+      "step": 80,
+      "file": "scripts/db/cutover/postgres-personal-key-auth-period-v395.native.test.mjs",
+      "bytes": 48434,
+      "sha256": "bc995f17324366fb2dc5835b0b145f37e0d64e3e93e23dbb1f105c8e3eaea37c"
+    },
+    {
+      "step": 81,
+      "file": "scripts/db/cutover/postgres-complete-text-routing-projection-v396.native.test.mjs",
+      "bytes": 78903,
+      "sha256": "10b8f69a54979b743db6be2fc5c23b525c616e910efd6b57d184371cffbadaf6"
+    },
+    {
+      "step": 82,
+      "file": "scripts/db/cutover/postgres-complete-text-response-no-fetch-coinstall-v397.native.test.mjs",
+      "bytes": 87669,
+      "sha256": "c8a2d1d51abc160dd3d51ba0c7b5f68ea71850a34e0a3f71da67022bd7971405"
+    },
+    {
+      "step": 83,
+      "file": "scripts/db/cutover/postgres-complete-text-auth-routing-recovery-coinstall-v400.native.test.mjs",
+      "bytes": 132164,
+      "sha256": "589b8d3584792147fb5ce2ed3da71d98257cc86fe1436f01c34a017fb13e7f2d"
+    },
+    {
+      "step": 84,
+      "file": "scripts/db/cutover/postgres-exclusive-credential-free-chat-ingress-v401.native.test.mjs",
+      "bytes": 134352,
+      "sha256": "ea672eafb4dc988313c18b40f9579dadc0fc1d9ad03e362574f3ef8b10246f77"
+    },
+    {
+      "step": 85,
+      "file": "scripts/db/cutover/postgres-complete-text-platform-event-delivery-v402.native.test.mjs",
+      "bytes": 142550,
+      "sha256": "f8f0f8189d7c9323b7ee347e23395b36142ee3696e9b840d7c62aa1b5fd7e6cb"
+    },
+    {
+      "step": 86,
+      "file": "scripts/db/cutover/postgres-complete-text-no-fetch-fence-v370.native.test.mjs",
+      "bytes": 50398,
+      "sha256": "7a54a0085abf5ab2095d7b49609acbdf4d9836915ed6942d017c7434c1c5d142"
+    },
+    {
+      "step": 88,
+      "file": "scripts/db/cutover/postgres-guardrail-admission-adapter-v352.native.test.mjs",
+      "bytes": 16668,
+      "sha256": "d183dd82c8b9e4162bb385dada778a2ca907873ca8174a41d4e7240397babfc8"
+    },
+    {
+      "step": 95,
+      "file": "scripts/db/cutover/postgres-buyer-split-grant-rerun-v348.native.test.mjs",
+      "bytes": 18946,
+      "sha256": "d83c9dcabfb24ddd90c6006ac8ac6078583fc6439b39436708f73ee8099b23b1"
+    },
+    {
+      "step": 96,
+      "file": "scripts/db/cutover/postgres-buyer-split-guardrail-v349.native.test.mjs",
+      "bytes": 23743,
+      "sha256": "c4adb632a2e237e0ed359f42686371bfad138f1ce4cc10c557d219e3ecb83d87"
+    },
+    {
+      "step": 97,
+      "file": "scripts/db/cutover/postgres-shared-key-stats-auth-boundary-v346.native.test.mjs",
+      "bytes": 8904,
+      "sha256": "46a13c44fec610692feb18ea0bf1d3bc10eb93a76e65d47edd326db13ea31e18"
+    },
+    {
+      "step": 98,
+      "file": "scripts/db/cutover/postgres-shared-key-stats-signed-claim-v348.native.test.mjs",
+      "bytes": 12736,
+      "sha256": "7e0ae22d95b9cecc2fa154a2afd658868a31ece212aa60715021872e04557238"
+    },
+    {
+      "step": 99,
+      "file": "scripts/db/cutover/postgres-shared-key-stats-claim-reader-v349-cjs-loader-successor.native.test.mjs",
+      "bytes": 29481,
+      "sha256": "997c7ec3b5d83bafd8c386493d66a8fd461d86576ea31c6afe32672e995f0088"
+    },
+    {
+      "step": 106,
+      "file": "scripts/db/cutover/postgres-shared-key-credited-usage-reader.native.test.mjs",
+      "bytes": 18603,
+      "sha256": "fe62b22831e7b37e8c0377ed4e902ce0be499dd54ebea2d1e81b93c60c47d912"
+    }
+  ],
+  "productionWrites": 0,
+  "gitMutations": 0,
+  "nativePgExecuted": false
+}

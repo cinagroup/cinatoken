@@ -1,0 +1,152 @@
+{
+  "schema": "cinatoken-native26-direct-socket-frozen-inventory-advisory-v1",
+  "inventoryReadHashOutcome": 0,
+  "originalEnhancedToolArchiveAdmissionOutcome": 1,
+  "closedReadonlyPreparation": true,
+  "scope": "Only frozen roots; current growing Root and CI artifact not read/collected; no application/native/G7 test execution",
+  "sourcePreparationBase": "473de5fc520fc7d64db700db88a76c7a6b45c241",
+  "rootReportedNewSourceCommit": "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc",
+  "newCommitClaimSource": "Root message only; not fresh Git/CI read",
+  "futureLinuxResult": null,
+  "inventory": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-direct-socket-archive-inventory-97f10624f7a344a89187435b65641546\\frozen-roots-inventory.json",
+    "bytes": 239600,
+    "sha256": "17ce035f545eb141527db9a3ce8c9a98a008842eab6e6e64d56a5de35f4cbad9"
+  },
+  "configAdvisory": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-direct-socket-archive-inventory-97f10624f7a344a89187435b65641546\\future-subset-config-advisory.json",
+    "bytes": 10294,
+    "sha256": "d9af8328d7b0913d85828cefb2999193a946faa8243fb5ef9932366674f47201"
+  },
+  "unsupportedOriginalHelperPlan": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-direct-socket-archive-inventory-97f10624f7a344a89187435b65641546\\unmodified-enhanced-tool-preparation-plan.json",
+    "bytes": 676624,
+    "sha256": "e35dbd72f3bf5c062a91ebaf51935dbfc38906543ff08978220bd7133d87dd80"
+  },
+  "originalTool": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd/enhanced-tools/evidence-lib.mjs",
+    "bytes": 52139,
+    "sha256": "1a94e0682a2f9782a0bcc28c4736ff49c0bf4db0b9e0cfe0f34ecb6918b22cb7"
+  },
+  "roots": [
+    {
+      "id": "native-four-owner",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-four-repair-38a94fb93d9842929dc7ae9cf6b378da",
+      "phase": "local-validation",
+      "ordinaryFiles": 58
+    },
+    {
+      "id": "native-four-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-four-independent-peer-1f17397bef8049cb9cd030679e23dc70",
+      "phase": "source-peer-review",
+      "ordinaryFiles": 15
+    },
+    {
+      "id": "g7-observe-owner",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-g7-observe-dependency-fix-02e2061ea37b4d18af99a3675ec1b7fc",
+      "phase": "local-validation",
+      "ordinaryFiles": 55
+    },
+    {
+      "id": "g7-observe-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-g7-observer-connection-peer-readonly-13a3b38c25d74da1be0d64feed3c75d5",
+      "phase": "source-peer-review",
+      "ordinaryFiles": 12
+    },
+    {
+      "id": "archive-subset-preparation",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd",
+      "phase": "prepared-only",
+      "ordinaryFiles": 70
+    },
+    {
+      "id": "archive-subset-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-four-frozen-archive-peer-readonly-93dbd146546645cbb2495a763acf6c1e",
+      "phase": "source-peer-review",
+      "ordinaryFiles": 8
+    },
+    {
+      "id": "archive-runner-dialect-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-archive-receipt-dialect-peer-readonly-e41d1f26433548dea9ff73e133e0dc4b",
+      "phase": "source-peer-review",
+      "ordinaryFiles": 3
+    },
+    {
+      "id": "native26-owner",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713",
+      "phase": "local-validation",
+      "ordinaryFiles": 260
+    },
+    {
+      "id": "native26-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native26-independent-peer-815d52a48c5d44fc9146dd59579e27f2",
+      "phase": "source-peer-review",
+      "ordinaryFiles": 62
+    },
+    {
+      "id": "direct-socket-owner",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-direct-socket-prep-99dlWu",
+      "phase": "prepared-only",
+      "ordinaryFiles": 83
+    },
+    {
+      "id": "direct-socket-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-direct-socket-peer-readonly-19dc03ece33840d28acfca66a68a3863",
+      "phase": "source-peer-review",
+      "ordinaryFiles": 9
+    },
+    {
+      "id": "native-g7-terminal-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-terminal-independent-peer-9a6f592ed14641fe9af1029826dbd775",
+      "phase": "source-peer-review",
+      "ordinaryFiles": 25
+    }
+  ],
+  "candidateRootCount": 12,
+  "candidateOrdinaryFiles": 660,
+  "admittedFiles": 658,
+  "originalCommandReceipts": 121,
+  "originalNumericNonzeroReceipts": 14,
+  "distinctAggregateEntries": 4,
+  "blockers": [
+    {
+      "root": "direct-socket-owner",
+      "file": "windows-negative/executor.stderr.txt",
+      "reason": "Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active"
+    },
+    {
+      "root": "direct-socket-owner",
+      "file": "windows-negative/executor.stdout.txt",
+      "reason": "Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active"
+    }
+  ],
+  "exclusions": [],
+  "strictNewSchemaNotYetSupported": true,
+  "negativeRawNotExcluded": true,
+  "smallestFutureAdapter": {
+    "executorSchema": "v364-direct-socket-executor-closed-v1",
+    "nodeSchema": "v364-direct-socket-closed-v1",
+    "noChildNegativeMustRemainNull": true,
+    "nodeIsAggregateNotRawAuthority": true,
+    "requirements": [
+      "Schema-restricted numeric actualProcessExit and runnerOutcomeCode, preserve negative signal wait statuses and final0/1 separately",
+      "Exact no-child Windows admission failure only, processnull no native/subreaper/directReap claim; bind just original two declared raw",
+      "Actual owned Linux closure requires executor authority, subreaper/directChildReaped/groupGone with closed census/errors and exact manifest descriptors",
+      "Executor manifest all original output bytes/SHA/set/time authority must bind original strict baseline stdout/stderr and Node diagnostics",
+      "Node report cannot authorize logs or turn original baseline1 intoPASS; five comparisons baselineEligiblefalse and cause/workerd grace stillfalse",
+      "Keep timeout/interruption/forced kill outcomes, unknown or inconsistent actuals and mutated/missing outputs blocked or strictly negative; never upgrade toPASS"
+    ]
+  },
+  "prospectiveConfig": "Needs exact final runtime source SHA and finished Root/CI/diagnostic roots; preserve prepared base473, no guessing current Linux result. Whole tools root uses nested historical reference paths, no overlapping reference child root.",
+  "helperSourceModified": false,
+  "repositoryWrites": 0,
+  "gitCommands": 0,
+  "ciQueries": 0,
+  "applicationRuntimeTests": 0,
+  "productionRequests": 0,
+  "fullG7Verified": false,
+  "fullG8Verified": false,
+  "fullNativeCancelVerified": false,
+  "gatePassDerived": false,
+  "oldFailuresPreserved": true
+}

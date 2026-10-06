@@ -1,0 +1,25 @@
+{
+  "schema": "independent-final42-archive-readonly-child-receipt-v1",
+  "name": "inspect-final-config",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "argv": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4/inspect-final-config.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "startedAt": "2026-10-06T05:24:16.862Z",
+  "closedAt": "2026-10-06T05:24:16.952Z",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "closed": true,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-final-config.stdout.log",
+    "bytes": 12087,
+    "sha256": "9691a624b9cac3635b0daebc1c60cd5042b76db35be12874a8e97d838b79fbbb"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-final-config.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

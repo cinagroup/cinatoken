@@ -1,0 +1,24 @@
+{
+  "at": "2026-10-06T04:28:47.830Z",
+  "finishedAt": "2026-10-06T04:28:47.887Z",
+  "executable": "C:/Program Files/Git/cmd/git.exe",
+  "args": [
+    "-c",
+    "core.longpaths=true",
+    "show",
+    "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc:scripts/diagnostics/v364-direct-socket/native-reader-calibration.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\calibration-base-helper.stdout.log",
+    "bytes": 2531,
+    "sha256": "36f30b9dc7e8cfad8b68f6c9590f8cea50444173a05ccd3e775c9c32214408be"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\calibration-base-helper.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

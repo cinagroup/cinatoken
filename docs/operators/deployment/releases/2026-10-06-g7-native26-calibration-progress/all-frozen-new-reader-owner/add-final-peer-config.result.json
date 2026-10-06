@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-06T04:54:02.793Z",
+  "finishedAt": "2026-10-06T04:54:02.874Z",
+  "executable": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-all-frozen-data-tools-FoBS1O/add-final-peer-config.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\add-final-peer-config.stdout.log",
+    "bytes": 79,
+    "sha256": "efd3341b2b4ea36c37abfa5f83d767af959a43701ab1b5d2b1f5fac82e3e674d"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\add-final-peer-config.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "scope": "Original exact child return of Temp evidence tool only; no application/native/G7/runtime or production run"
+}

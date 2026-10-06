@@ -1,0 +1,1058 @@
+{
+  "file": "frozen-manifest.json",
+  "value": {
+    "schemaVersion": 3,
+    "releaseId": "473de5fc520fc7d64db700db88a76c7a6b45c241",
+    "createdAt": "2026-10-06T03:30:39.000Z",
+    "retentionDays": 14,
+    "previousReleaseId": null,
+    "currentReleaseId": null,
+    "files": {
+      "count": 135,
+      "first": {
+        "path": "LICENSE",
+        "bytes": 34523,
+        "sha256": "0d96a4ff68ad6d4b6f1f30f713b18d5184912ba8dd389f86aa7710db079abcb0",
+        "source": "current",
+        "lastCurrentAt": "2026-10-06T03:30:39.000Z"
+      },
+      "last": {
+        "path": "waffo-logo-light.svg",
+        "bytes": 1176,
+        "sha256": "a8e7daba7d5441567b1474fbf549407eb7623fb01bd32699fdfed99faed2266a",
+        "source": "current",
+        "lastCurrentAt": "2026-10-06T03:30:39.000Z"
+      }
+    },
+    "serverFiles": {
+      "count": 35,
+      "first": {
+        "path": "node/2.mjs",
+        "bytes": 142842,
+        "sha256": "d612a529c6865b451cde3aa0a2a2de312b484ab7dcaa3cd1fc91d3c6b69af5ac"
+      },
+      "last": {
+        "path": "worker/waffo-logo-light.svg",
+        "bytes": 1176,
+        "sha256": "a8e7daba7d5441567b1474fbf549407eb7623fb01bd32699fdfed99faed2266a"
+      }
+    },
+    "buildContract": {
+      "version": 2,
+      "buildId": "232cd7c6-a90b-4be6-a39d-f5e3ba8f1d93",
+      "sourceSha256": "98aef4c2aeacd06cb9a0c6ee34806507d0f1a7b05bc46b6320286d5ea8e4ae64"
+    },
+    "sourceDelivery": {
+      "version": 1,
+      "currentArchive": "sources/web.047e3e54866d70e82ed41c6ba06b28c205b2e07ebe7db498d63bb3e0174ce376.tar.gz",
+      "archives": {
+        "count": 1,
+        "first": {
+          "path": "sources/web.047e3e54866d70e82ed41c6ba06b28c205b2e07ebe7db498d63bb3e0174ce376.tar.gz",
+          "bytes": 4246682,
+          "sha256": "047e3e54866d70e82ed41c6ba06b28c205b2e07ebe7db498d63bb3e0174ce376",
+          "buildContract": {
+            "version": 2,
+            "buildId": "232cd7c6-a90b-4be6-a39d-f5e3ba8f1d93",
+            "sourceSha256": "98aef4c2aeacd06cb9a0c6ee34806507d0f1a7b05bc46b6320286d5ea8e4ae64"
+          },
+          "inputPolicySha256": "c36a8b224da31f0e68326744e80f0a0ee0812722c0f2e50cbd90ece640e53f1f",
+          "fileCount": 2291,
+          "totalSourceBytes": 18217280,
+          "source": "current",
+          "lastCurrentAt": "2026-10-06T03:30:39.000Z"
+        },
+        "last": {
+          "path": "sources/web.047e3e54866d70e82ed41c6ba06b28c205b2e07ebe7db498d63bb3e0174ce376.tar.gz",
+          "bytes": 4246682,
+          "sha256": "047e3e54866d70e82ed41c6ba06b28c205b2e07ebe7db498d63bb3e0174ce376",
+          "buildContract": {
+            "version": 2,
+            "buildId": "232cd7c6-a90b-4be6-a39d-f5e3ba8f1d93",
+            "sourceSha256": "98aef4c2aeacd06cb9a0c6ee34806507d0f1a7b05bc46b6320286d5ea8e4ae64"
+          },
+          "inputPolicySha256": "c36a8b224da31f0e68326744e80f0a0ee0812722c0f2e50cbd90ece640e53f1f",
+          "fileCount": 2291,
+          "totalSourceBytes": 18217280,
+          "source": "current",
+          "lastCurrentAt": "2026-10-06T03:30:39.000Z"
+        }
+      },
+      "assetSources": {
+        "count": 121,
+        "first": {
+          "path": "static/css/index.46bbf8297a.css",
+          "archives": {
+            "count": 1,
+            "first": "sources/web.047e3e54866d70e82ed41c6ba06b28c205b2e07ebe7db498d63bb3e0174ce376.tar.gz",
+            "last": "sources/web.047e3e54866d70e82ed41c6ba06b28c205b2e07ebe7db498d63bb3e0174ce376.tar.gz"
+          },
+          "unresolved": false
+        },
+        "last": {
+          "path": "static/js/index.89887bd39e.js",
+          "archives": {
+            "count": 1,
+            "first": "sources/web.047e3e54866d70e82ed41c6ba06b28c205b2e07ebe7db498d63bb3e0174ce376.tar.gz",
+            "last": "sources/web.047e3e54866d70e82ed41c6ba06b28c205b2e07ebe7db498d63bb3e0174ce376.tar.gz"
+          },
+          "unresolved": false
+        }
+      },
+      "coverageComplete": true
+    }
+  }
+}
+{
+  "file": "image-inputs.json",
+  "value": {
+    "references": {
+      "pg": "postgres:16-alpine",
+      "ingress": "nginx:stable-alpine",
+      "admin": "cinatoken-g7-admin:473de5fc520fc7d64db700db88a76c7a6b45c241",
+      "proxy": "cinatoken-g7-proxy:473de5fc520fc7d64db700db88a76c7a6b45c241",
+      "migrate": "cinatoken-g7-migrate:473de5fc520fc7d64db700db88a76c7a6b45c241",
+      "web": "cinatoken-g7-web:473de5fc520fc7d64db700db88a76c7a6b45c241",
+      "ssr": "cinatoken-g7-ssr:473de5fc520fc7d64db700db88a76c7a6b45c241"
+    },
+    "imageIDs": {
+      "pg": "sha256:81bd698b4594e751a3269e4dcd3e03a4a0ec0daf7b72e7aa1abd43cce9887542",
+      "ingress": "sha256:43d9d8c1f8968f09df8c1aa6c136ecc617e62d64fe4c0b24c97de4eb210bd973",
+      "admin": "sha256:1d946a60b0713b7e21eb5eb5a49b31ee3d037a72bb128710da18a2c00a2eaa9c",
+      "proxy": "sha256:492e61758f23a774ecb672e37e910b1f5b40f449519122a2a7e948766486f76f",
+      "migrate": "sha256:b593161e5f23b6b5fa54e0db5ff06679146ff340a52c13ce18bd2df057a93acc",
+      "web": "sha256:64ec0ed99a8908f73a8d34450662111c36b578058d981c1509a1ab0e1ca20e15",
+      "ssr": "sha256:9239e3ac84cf6d1d20e6b702d779feac5401b5492118cf278dd6dbda32a2e6cd"
+    },
+    "platform": "{\"Platform\":{\"Name\":\"Docker Engine - Community\"},\"Components\":[{\"Name\":\"Engine\",\"Version\":\"28.0.4\",\"Details\":{\"ApiVersion\":\"1.48\",\"Arch\":\"amd64\",\"BuildTime\":\"Tue Mar 25 15:07:16 2025\",\"Experimental\":\"false\",\"GitCommit\":\"6430e49\",\"GoVersion\":\"go1.23.7\",\"KernelVersion\":\"6.17.0-1022-azure\",\"MinAPIVersion\":\"1.24\",\"Os\":\"linux\"}},{\"Name\":\"containerd\",\"Version\":\"v2.3.6\",\"Details\":{\"GitCommit\":\"ee2735368117d2eb259779949d5e75cdafec9761\"}},{\"Name\":\"runc\",\"Version\":\"1.5.1\",\"Details\":{\"GitCommit\":\"v1.5.1-0-g8f2685a4\"}},{\"Name\":\"docker-init\",\"Version\":\"0.19.0\",\"Details\":{\"GitCommit\":\"de40ad0\"}}],\"Version\":\"28.0.4\",\"ApiVersion\":\"1.48\",\"MinAPIVersion\":\"1.24\",\"GitCommit\":\"6430e49\",\"GoVersion\":\"go1.23.7\",\"Os\":\"linux\",\"Arch\":\"amd64\",\"KernelVersion\":\"6.17.0-1022-azure\",\"BuildTime\":\"2025-03-25T15:07:16.000000000+00:00\"}"
+  }
+}
+{
+  "file": "ownership.json",
+  "value": {
+    "schema": "web-platform-g7-owned-resources-v1",
+    "sourceSHA": "473de5fc520fc7d64db700db88a76c7a6b45c241",
+    "owner": "g7-1e70578d1acd47478966124f581794d8",
+    "names": {
+      "pg": "g7-1e70578d1acd47478966124f581794d8-pg",
+      "migrate": "g7-1e70578d1acd47478966124f581794d8-migrate",
+      "seed": "g7-1e70578d1acd47478966124f581794d8-seed",
+      "proxy": "g7-1e70578d1acd47478966124f581794d8-proxy",
+      "admin": "g7-1e70578d1acd47478966124f581794d8-admin",
+      "ssr": "g7-1e70578d1acd47478966124f581794d8-ssr",
+      "web": "g7-1e70578d1acd47478966124f581794d8-web",
+      "ingress": "g7-1e70578d1acd47478966124f581794d8-ingress",
+      "qa": "g7-1e70578d1acd47478966124f581794d8-qa"
+    },
+    "networks": {
+      "client": "g7-1e70578d1acd47478966124f581794d8-client",
+      "app": "g7-1e70578d1acd47478966124f581794d8-app",
+      "db": "g7-1e70578d1acd47478966124f581794d8-db"
+    },
+    "volume": "g7-1e70578d1acd47478966124f581794d8-pgdata"
+  }
+}
+{
+  "file": "private-service-endpoints.json",
+  "value": {
+    "count": 7,
+    "first": {
+      "role": "web",
+      "port": 8080,
+      "network": "g7-1e70578d1acd47478966124f581794d8-app",
+      "ip": "172.19.0.5"
+    },
+    "last": {
+      "role": "pg",
+      "port": 5432,
+      "network": "g7-1e70578d1acd47478966124f581794d8-db",
+      "ip": "172.20.0.2"
+    }
+  }
+}
+{
+  "file": "g7-1e70578d1acd47478966124f581794d8-seed-42.container-closed.json",
+  "value": {
+    "schema": "web-platform-g7-container-closed-v1",
+    "name": "g7-1e70578d1acd47478966124f581794d8-seed",
+    "actualExit": 0,
+    "running": false,
+    "finishedAt": "2026-10-06T03:39:20.479384514Z",
+    "OOMKilled": false,
+    "error": ""
+  }
+}
+{
+  "wireLabels": {
+    "startup probe": {
+      "count": 1,
+      "first": {
+        "id": 1,
+        "label": "startup probe",
+        "method": "GET",
+        "path": "/api/public/catalog/models",
+        "status": 200,
+        "bytes": 619,
+        "TLSAuthorized": true,
+        "peerCertificateSha256": "FA:58:A9:DB:3B:67:A9:DB:03:58:CF:74:15:4E:C7:3E:C7:07:F9:6C:7D:0E:38:54:A1:B2:66:6D:A2:53:DF:19",
+        "setCookieCount": 0
+      },
+      "last": {
+        "id": 1,
+        "label": "startup probe",
+        "method": "GET",
+        "path": "/api/public/catalog/models",
+        "status": 200,
+        "bytes": 619,
+        "TLSAuthorized": true,
+        "peerCertificateSha256": "FA:58:A9:DB:3B:67:A9:DB:03:58:CF:74:15:4E:C7:3E:C7:07:F9:6C:7D:0E:38:54:A1:B2:66:6D:A2:53:DF:19",
+        "setCookieCount": 0
+      }
+    },
+    "untrusted CA is rejected": {
+      "count": 1,
+      "first": {
+        "id": 2,
+        "label": "untrusted CA is rejected",
+        "outcome": "verified TLS rejection",
+        "errorCode": "UNABLE_TO_VERIFY_LEAF_SIGNATURE"
+      },
+      "last": {
+        "id": 2,
+        "label": "untrusted CA is rejected",
+        "outcome": "verified TLS rejection",
+        "errorCode": "UNABLE_TO_VERIFY_LEAF_SIGNATURE"
+      }
+    },
+    "wrong SNI fails certificate hostname validation": {
+      "count": 1,
+      "first": {
+        "id": 3,
+        "label": "wrong SNI fails certificate hostname validation",
+        "outcome": "verified TLS rejection",
+        "errorCode": "ERR_TLS_CERT_ALTNAME_INVALID"
+      },
+      "last": {
+        "id": 3,
+        "label": "wrong SNI fails certificate hostname validation",
+        "outcome": "verified TLS rejection",
+        "errorCode": "ERR_TLS_CERT_ALTNAME_INVALID"
+      }
+    },
+    "missing SNI rejected by default ingress": {
+      "count": 1,
+      "first": {
+        "id": 4,
+        "label": "missing SNI rejected by default ingress",
+        "method": "GET",
+        "path": "/en",
+        "status": 421,
+        "bytes": 173,
+        "TLSAuthorized": true,
+        "peerCertificateSha256": "FA:58:A9:DB:3B:67:A9:DB:03:58:CF:74:15:4E:C7:3E:C7:07:F9:6C:7D:0E:38:54:A1:B2:66:6D:A2:53:DF:19",
+        "setCookieCount": 0
+      },
+      "last": {
+        "id": 4,
+        "label": "missing SNI rejected by default ingress",
+        "method": "GET",
+        "path": "/en",
+        "status": 421,
+        "bytes": 173,
+        "TLSAuthorized": true,
+        "peerCertificateSha256": "FA:58:A9:DB:3B:67:A9:DB:03:58:CF:74:15:4E:C7:3E:C7:07:F9:6C:7D:0E:38:54:A1:B2:66:6D:A2:53:DF:19",
+        "setCookieCount": 0
+      }
+    },
+    "same HTTPS Origin": {
+      "count": 1,
+      "first": {
+        "id": 5,
+        "label": "same HTTPS Origin",
+        "method": "POST",
+        "path": "/api/auth/login",
+        "status": 410,
+        "bytes": 71,
+        "TLSAuthorized": true,
+        "setCookieCount": 0
+      },
+      "last": {
+        "id": 5,
+        "label": "same HTTPS Origin",
+        "method": "POST",
+        "path": "/api/auth/login",
+        "status": 410,
+        "bytes": 71,
+        "TLSAuthorized": true,
+        "setCookieCount": 0
+      }
+    },
+    "spoofed forwarding overwritten": {
+      "count": 1,
+      "first": {
+        "id": 6,
+        "label": "spoofed forwarding overwritten",
+        "method": "POST",
+        "path": "/api/auth/login",
+        "status": 410,
+        "bytes": 71,
+        "TLSAuthorized": true,
+        "setCookieCount": 0
+      },
+      "last": {
+        "id": 6,
+        "label": "spoofed forwarding overwritten",
+        "method": "POST",
+        "path": "/api/auth/login",
+        "status": 410,
+        "bytes": 71,
+        "TLSAuthorized": true,
+        "setCookieCount": 0
+      }
+    },
+    "ambiguous forwarding overwritten": {
+      "count": 1,
+      "first": {
+        "id": 7,
+        "label": "ambiguous forwarding overwritten",
+        "method": "POST",
+        "path": "/api/auth/login",
+        "status": 410,
+        "bytes": 71,
+        "TLSAuthorized": true,
+        "setCookieCount": 0
+      },
+      "last": {
+        "id": 7,
+        "label": "ambiguous forwarding overwritten",
+        "method": "POST",
+        "path": "/api/auth/login",
+        "status": 410,
+        "bytes": 71,
+        "TLSAuthorized": true,
+        "setCookieCount": 0
+      }
+    },
+    "missing Origin": {
+      "count": 1,
+      "first": {
+        "id": 8,
+        "label": "missing Origin",
+        "method": "POST",
+        "path": "/api/auth/login",
+        "status": 403,
+        "bytes": 63,
+        "TLSAuthorized": true,
+        "setCookieCount": 0
+      },
+      "last": {
+        "id": 8,
+        "label": "missing Origin",
+        "method": "POST",
+        "path": "/api/auth/login",
+        "status": 403,
+        "bytes": 63,
+        "TLSAuthorized": true,
+        "setCookieCount": 0
+      }
+    },
+    "cross Origin preserved": {
+      "count": 1,
+      "first": {
+        "id": 9,
+        "label": "cross Origin preserved",
+        "method": "POST",
+        "path": "/api/auth/login",
+        "status": 403,
+        "bytes": 63,
+        "TLSAuthorized": true,
+        "setCookieCount": 0
+      },
+      "last": {
+        "id": 9,
+        "label": "cross Origin preserved",
+        "method": "POST",
+        "path": "/api/auth/login",
+        "status": 403,
+        "bytes": 63,
+        "TLSAuthorized": true,
+        "setCookieCount": 0
+      }
+    },
+    "explicit cross-site": {
+      "count": 1,
+      "first": {
+        "id": 10,
+        "label": "explicit cross-site",
+        "method": "POST",
+        "path": "/api/auth/login",
+        "status": 403,
+        "bytes": 63,
+        "TLSAuthorized": true,
+        "setCookieCount": 0
+      },
+      "last": {
+        "id": 10,
+        "label": "explicit cross-site",
+        "method": "POST",
+        "path": "/api/auth/login",
+        "status": 403,
+        "bytes": 63,
+        "TLSAuthorized": true,
+        "setCookieCount": 0
+      }
+    },
+    "unknown Host": {
+      "count": 1,
+      "first": {
+        "id": 11,
+        "label": "unknown Host",
+        "method": "POST",
+        "path": "/api/auth/login",
+        "status": 421,
+        "bytes": 173,
+        "TLSAuthorized": true,
+        "setCookieCount": 0
+      },
+      "last": {
+        "id": 11,
+        "label": "unknown Host",
+        "method": "POST",
+        "path": "/api/auth/login",
+        "status": 421,
+        "bytes": 173,
+        "TLSAuthorized": true,
+        "setCookieCount": 0
+      }
+    },
+    "registration redirect": {
+      "count": 1,
+      "first": {
+        "id": 12,
+        "label": "registration redirect",
+        "method": "GET",
+        "path": "/api/auth/cinaauth/register?intent=portal&callbackURL=%2Faccount%2Fkeys",
+        "status": 302,
+        "bytes": 0,
+        "TLSAuthorized": true,
+        "setCookieCount": 0
+      },
+      "last": {
+        "id": 12,
+        "label": "registration redirect",
+        "method": "GET",
+        "path": "/api/auth/cinaauth/register?intent=portal&callbackURL=%2Faccount%2Fkeys",
+        "status": 302,
+        "bytes": 0,
+        "TLSAuthorized": true,
+        "setCookieCount": 0
+      }
+    },
+    "invalid callback restores HTTPS": {
+      "count": 1,
+      "first": {
+        "id": 13,
+        "label": "invalid callback restores HTTPS",
+        "method": "GET",
+        "path": "/api/auth/cinaauth/callback?state=invalid",
+        "status": 302,
+        "bytes": 0,
+        "TLSAuthorized": true,
+        "setCookieCount": 0
+      },
+      "last": {
+        "id": 13,
+        "label": "invalid callback restores HTTPS",
+        "method": "GET",
+        "path": "/api/auth/cinaauth/callback?state=invalid",
+        "status": 302,
+        "bytes": 0,
+        "TLSAuthorized": true,
+        "setCookieCount": 0
+      }
+    },
+    "QA cannot reach gateway-web:8080": {
+      "count": 1,
+      "first": {
+        "id": 14,
+        "label": "QA cannot reach gateway-web:8080",
+        "outcome": "raw port inaccessible",
+        "blockedAtDeadline": true
+      },
+      "last": {
+        "id": 14,
+        "label": "QA cannot reach gateway-web:8080",
+        "outcome": "raw port inaccessible",
+        "blockedAtDeadline": true
+      }
+    },
+    "QA cannot reach gateway-web-ssr:8791": {
+      "count": 1,
+      "first": {
+        "id": 15,
+        "label": "QA cannot reach gateway-web-ssr:8791",
+        "outcome": "raw port inaccessible",
+        "blockedAtDeadline": true
+      },
+      "last": {
+        "id": 15,
+        "label": "QA cannot reach gateway-web-ssr:8791",
+        "outcome": "raw port inaccessible",
+        "blockedAtDeadline": true
+      }
+    },
+    "QA cannot reach gateway-admin:8789": {
+      "count": 1,
+      "first": {
+        "id": 16,
+        "label": "QA cannot reach gateway-admin:8789",
+        "outcome": "raw port inaccessible",
+        "blockedAtDeadline": true
+      },
+      "last": {
+        "id": 16,
+        "label": "QA cannot reach gateway-admin:8789",
+        "outcome": "raw port inaccessible",
+        "blockedAtDeadline": true
+      }
+    },
+    "QA cannot reach gateway-proxy:8787": {
+      "count": 1,
+      "first": {
+        "id": 17,
+        "label": "QA cannot reach gateway-proxy:8787",
+        "outcome": "raw port inaccessible",
+        "blockedAtDeadline": true
+      },
+      "last": {
+        "id": 17,
+        "label": "QA cannot reach gateway-proxy:8787",
+        "outcome": "raw port inaccessible",
+        "blockedAtDeadline": true
+      }
+    },
+    "QA cannot reach pg:5432": {
+      "count": 1,
+      "first": {
+        "id": 18,
+        "label": "QA cannot reach pg:5432",
+        "outcome": "raw port inaccessible",
+        "blockedAtDeadline": true
+      },
+      "last": {
+        "id": 18,
+        "label": "QA cannot reach pg:5432",
+        "outcome": "raw port inaccessible",
+        "blockedAtDeadline": true
+      }
+    },
+    "QA cannot reach 172.19.0.5:8080": {
+      "count": 1,
+      "first": {
+        "id": 19,
+        "label": "QA cannot reach 172.19.0.5:8080",
+        "outcome": "raw port inaccessible",
+        "errorCode": "ENETUNREACH"
+      },
+      "last": {
+        "id": 19,
+        "label": "QA cannot reach 172.19.0.5:8080",
+        "outcome": "raw port inaccessible",
+        "errorCode": "ENETUNREACH"
+      }
+    },
+    "QA cannot reach 172.19.0.4:8791": {
+      "count": 1,
+      "first": {
+        "id": 20,
+        "label": "QA cannot reach 172.19.0.4:8791",
+        "outcome": "raw port inaccessible",
+        "errorCode": "ENETUNREACH"
+      },
+      "last": {
+        "id": 20,
+        "label": "QA cannot reach 172.19.0.4:8791",
+        "outcome": "raw port inaccessible",
+        "errorCode": "ENETUNREACH"
+      }
+    },
+    "QA cannot reach 172.19.0.3:8789": {
+      "count": 1,
+      "first": {
+        "id": 21,
+        "label": "QA cannot reach 172.19.0.3:8789",
+        "outcome": "raw port inaccessible",
+        "errorCode": "ENETUNREACH"
+      },
+      "last": {
+        "id": 21,
+        "label": "QA cannot reach 172.19.0.3:8789",
+        "outcome": "raw port inaccessible",
+        "errorCode": "ENETUNREACH"
+      }
+    },
+    "QA cannot reach 172.20.0.4:8789": {
+      "count": 1,
+      "first": {
+        "id": 22,
+        "label": "QA cannot reach 172.20.0.4:8789",
+        "outcome": "raw port inaccessible",
+        "errorCode": "ENETUNREACH"
+      },
+      "last": {
+        "id": 22,
+        "label": "QA cannot reach 172.20.0.4:8789",
+        "outcome": "raw port inaccessible",
+        "errorCode": "ENETUNREACH"
+      }
+    },
+    "QA cannot reach 172.19.0.2:8787": {
+      "count": 1,
+      "first": {
+        "id": 23,
+        "label": "QA cannot reach 172.19.0.2:8787",
+        "outcome": "raw port inaccessible",
+        "errorCode": "ENETUNREACH"
+      },
+      "last": {
+        "id": 23,
+        "label": "QA cannot reach 172.19.0.2:8787",
+        "outcome": "raw port inaccessible",
+        "errorCode": "ENETUNREACH"
+      }
+    },
+    "QA cannot reach 172.20.0.3:8787": {
+      "count": 1,
+      "first": {
+        "id": 24,
+        "label": "QA cannot reach 172.20.0.3:8787",
+        "outcome": "raw port inaccessible",
+        "errorCode": "ENETUNREACH"
+      },
+      "last": {
+        "id": 24,
+        "label": "QA cannot reach 172.20.0.3:8787",
+        "outcome": "raw port inaccessible",
+        "errorCode": "ENETUNREACH"
+      }
+    },
+    "QA cannot reach 172.20.0.2:5432": {
+      "count": 1,
+      "first": {
+        "id": 25,
+        "label": "QA cannot reach 172.20.0.2:5432",
+        "outcome": "raw port inaccessible",
+        "errorCode": "ENETUNREACH"
+      },
+      "last": {
+        "id": 25,
+        "label": "QA cannot reach 172.20.0.2:5432",
+        "outcome": "raw port inaccessible",
+        "errorCode": "ENETUNREACH"
+      }
+    },
+    "actual PG-backed models": {
+      "count": 1,
+      "first": {
+        "id": 26,
+        "label": "actual PG-backed models",
+        "method": "GET",
+        "path": "/api/public/catalog/models",
+        "status": 200,
+        "bytes": 619,
+        "TLSAuthorized": true,
+        "setCookieCount": 0
+      },
+      "last": {
+        "id": 26,
+        "label": "actual PG-backed models",
+        "method": "GET",
+        "path": "/api/public/catalog/models",
+        "status": 200,
+        "bytes": 619,
+        "TLSAuthorized": true,
+        "setCookieCount": 0
+      }
+    },
+    "actual PG-backed providers": {
+      "count": 1,
+      "first": {
+        "id": 27,
+        "label": "actual PG-backed providers",
+        "method": "GET",
+        "path": "/api/public/catalog/providers",
+        "status": 200,
+        "bytes": 274,
+        "TLSAuthorized": true,
+        "setCookieCount": 0
+      },
+      "last": {
+        "id": 27,
+        "label": "actual PG-backed providers",
+        "method": "GET",
+        "path": "/api/public/catalog/providers",
+        "status": 200,
+        "bytes": 274,
+        "TLSAuthorized": true,
+        "setCookieCount": 0
+      }
+    },
+    "actual PG-backed model": {
+      "count": 1,
+      "first": {
+        "id": 28,
+        "label": "actual PG-backed model",
+        "method": "GET",
+        "path": "/api/public/catalog/model/qa/~cWEvZzctbW9kZWw",
+        "status": 200,
+        "bytes": 618,
+        "TLSAuthorized": true,
+        "setCookieCount": 0
+      },
+      "last": {
+        "id": 28,
+        "label": "actual PG-backed model",
+        "method": "GET",
+        "path": "/api/public/catalog/model/qa/~cWEvZzctbW9kZWw",
+        "status": 200,
+        "bytes": 618,
+        "TLSAuthorized": true,
+        "setCookieCount": 0
+      }
+    },
+    "actual PG-backed proxy-models": {
+      "count": 1,
+      "first": {
+        "id": 29,
+        "label": "actual PG-backed proxy-models",
+        "method": "GET",
+        "path": "/api/v1/models",
+        "status": 200,
+        "bytes": 654,
+        "TLSAuthorized": true,
+        "setCookieCount": 0
+      },
+      "last": {
+        "id": 29,
+        "label": "actual PG-backed proxy-models",
+        "method": "GET",
+        "path": "/api/v1/models",
+        "status": 200,
+        "bytes": 654,
+        "TLSAuthorized": true,
+        "setCookieCount": 0
+      }
+    },
+    "actual PG-backed proxy-providers": {
+      "count": 1,
+      "first": {
+        "id": 30,
+        "label": "actual PG-backed proxy-providers",
+        "method": "GET",
+        "path": "/api/v1/providers",
+        "status": 200,
+        "bytes": 167,
+        "TLSAuthorized": true,
+        "setCookieCount": 0
+      },
+      "last": {
+        "id": 30,
+        "label": "actual PG-backed proxy-providers",
+        "method": "GET",
+        "path": "/api/v1/providers",
+        "status": 200,
+        "bytes": 167,
+        "TLSAuthorized": true,
+        "setCookieCount": 0
+      }
+    },
+    "Admin API remains API before SPA": {
+      "count": 1,
+      "first": {
+        "id": 31,
+        "label": "Admin API remains API before SPA",
+        "method": "GET",
+        "path": "/api/admin/__g7_missing",
+        "status": 401,
+        "bytes": 42,
+        "TLSAuthorized": true,
+        "setCookieCount": 0
+      },
+      "last": {
+        "id": 31,
+        "label": "Admin API remains API before SPA",
+        "method": "GET",
+        "path": "/api/admin/__g7_missing",
+        "status": 401,
+        "bytes": 42,
+        "TLSAuthorized": true,
+        "setCookieCount": 0
+      }
+    },
+    "unknown Proxy API remains JSON404": {
+      "count": 1,
+      "first": {
+        "id": 32,
+        "label": "unknown Proxy API remains JSON404",
+        "method": "GET",
+        "path": "/v1/__g7_missing",
+        "status": 404,
+        "bytes": 124,
+        "TLSAuthorized": true,
+        "setCookieCount": 0
+      },
+      "last": {
+        "id": 32,
+        "label": "unknown Proxy API remains JSON404",
+        "method": "GET",
+        "path": "/v1/__g7_missing",
+        "status": 404,
+        "bytes": 124,
+        "TLSAuthorized": true,
+        "setCookieCount": 0
+      }
+    },
+    "real PG-backed SSR": {
+      "count": 64,
+      "first": {
+        "id": 33,
+        "label": "real PG-backed SSR",
+        "method": "GET",
+        "path": "/en",
+        "status": 200,
+        "bytes": 23142,
+        "TLSAuthorized": true,
+        "setCookieCount": 0
+      },
+      "last": {
+        "id": 96,
+        "label": "real PG-backed SSR",
+        "method": "HEAD",
+        "path": "/ko/benchmarks?range=90d",
+        "status": 200,
+        "bytes": 0,
+        "TLSAuthorized": true,
+        "setCookieCount": 0
+      }
+    },
+    "SSR metadata/status": {
+      "count": 8,
+      "first": {
+        "id": 97,
+        "label": "SSR metadata/status",
+        "method": "GET",
+        "path": "/robots.txt",
+        "status": 200,
+        "bytes": 236,
+        "TLSAuthorized": true,
+        "setCookieCount": 0
+      },
+      "last": {
+        "id": 104,
+        "label": "SSR metadata/status",
+        "method": "HEAD",
+        "path": "/fr/models",
+        "status": 404,
+        "bytes": 0,
+        "TLSAuthorized": true,
+        "setCookieCount": 0
+      }
+    },
+    "frozen current resource": {
+      "count": 270,
+      "first": {
+        "id": 105,
+        "label": "frozen current resource",
+        "method": "GET",
+        "path": "/web-assets/LICENSE",
+        "status": 200,
+        "bytes": 34523,
+        "TLSAuthorized": true,
+        "setCookieCount": 0
+      },
+      "last": {
+        "id": 374,
+        "label": "frozen current resource",
+        "method": "HEAD",
+        "path": "/web-assets/waffo-logo-light.svg",
+        "status": 200,
+        "bytes": 0,
+        "TLSAuthorized": true,
+        "setCookieCount": 0
+      }
+    },
+    "missing resource never becomes SPA": {
+      "count": 1,
+      "first": {
+        "id": 375,
+        "label": "missing resource never becomes SPA",
+        "method": "GET",
+        "path": "/web-assets/assets/g7-missing.js",
+        "status": 404,
+        "bytes": 153,
+        "TLSAuthorized": true,
+        "setCookieCount": 0
+      },
+      "last": {
+        "id": 375,
+        "label": "missing resource never becomes SPA",
+        "method": "GET",
+        "path": "/web-assets/assets/g7-missing.js",
+        "status": 404,
+        "bytes": 153,
+        "TLSAuthorized": true,
+        "setCookieCount": 0
+      }
+    }
+  },
+  "originalRows": [
+    {
+      "id": 1,
+      "label": "startup probe",
+      "method": "GET",
+      "path": "/api/public/catalog/models",
+      "status": 200,
+      "bytes": 619,
+      "TLSAuthorized": true,
+      "peerCertificateSha256": "FA:58:A9:DB:3B:67:A9:DB:03:58:CF:74:15:4E:C7:3E:C7:07:F9:6C:7D:0E:38:54:A1:B2:66:6D:A2:53:DF:19",
+      "setCookieCount": 0
+    },
+    {
+      "id": 2,
+      "label": "untrusted CA is rejected",
+      "outcome": "verified TLS rejection",
+      "errorCode": "UNABLE_TO_VERIFY_LEAF_SIGNATURE"
+    },
+    {
+      "id": 3,
+      "label": "wrong SNI fails certificate hostname validation",
+      "outcome": "verified TLS rejection",
+      "errorCode": "ERR_TLS_CERT_ALTNAME_INVALID"
+    },
+    {
+      "id": 4,
+      "label": "missing SNI rejected by default ingress",
+      "method": "GET",
+      "path": "/en",
+      "status": 421,
+      "bytes": 173,
+      "TLSAuthorized": true,
+      "peerCertificateSha256": "FA:58:A9:DB:3B:67:A9:DB:03:58:CF:74:15:4E:C7:3E:C7:07:F9:6C:7D:0E:38:54:A1:B2:66:6D:A2:53:DF:19",
+      "setCookieCount": 0
+    },
+    {
+      "id": 5,
+      "label": "same HTTPS Origin",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 410,
+      "bytes": 71,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 6,
+      "label": "spoofed forwarding overwritten",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 410,
+      "bytes": 71,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 7,
+      "label": "ambiguous forwarding overwritten",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 410,
+      "bytes": 71,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 8,
+      "label": "missing Origin",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 403,
+      "bytes": 63,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 9,
+      "label": "cross Origin preserved",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 403,
+      "bytes": 63,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 10,
+      "label": "explicit cross-site",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 403,
+      "bytes": 63,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 11,
+      "label": "unknown Host",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 421,
+      "bytes": 173,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 12,
+      "label": "registration redirect",
+      "method": "GET",
+      "path": "/api/auth/cinaauth/register?intent=portal&callbackURL=%2Faccount%2Fkeys",
+      "status": 302,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 13,
+      "label": "invalid callback restores HTTPS",
+      "method": "GET",
+      "path": "/api/auth/cinaauth/callback?state=invalid",
+      "status": 302,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 14,
+      "label": "QA cannot reach gateway-web:8080",
+      "outcome": "raw port inaccessible",
+      "blockedAtDeadline": true
+    },
+    {
+      "id": 15,
+      "label": "QA cannot reach gateway-web-ssr:8791",
+      "outcome": "raw port inaccessible",
+      "blockedAtDeadline": true
+    },
+    {
+      "id": 16,
+      "label": "QA cannot reach gateway-admin:8789",
+      "outcome": "raw port inaccessible",
+      "blockedAtDeadline": true
+    },
+    {
+      "id": 17,
+      "label": "QA cannot reach gateway-proxy:8787",
+      "outcome": "raw port inaccessible",
+      "blockedAtDeadline": true
+    }
+  ]
+}

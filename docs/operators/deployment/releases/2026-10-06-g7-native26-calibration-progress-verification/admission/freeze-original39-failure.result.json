@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-06T05:12:39.638Z",
+  "finishedAt": "2026-10-06T05:12:39.821Z",
+  "executable": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-final-capsule-admission-meta-UkwrUh/freeze-original39-failure.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-capsule-admission-meta-UkwrUh\\freeze-original39-failure.stdout.log",
+    "bytes": 482,
+    "sha256": "ced4bf61580dab49c0eb0b87d6c15e204db600fec45416ff5ce88858c82aea59"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-capsule-admission-meta-UkwrUh\\freeze-original39-failure.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "scope": "Original exact child return of Temp evidence tool only; no application/native/G7/runtime or production run"
+}

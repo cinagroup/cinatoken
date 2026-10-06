@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-06T03:16:38.335Z",
+  "finishedAt": "2026-10-06T03:16:40.986Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "--import",
+    "tsx",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-native-four-repair-38a94fb93d9842929dc7ae9cf6b378da/audit-four.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-four-repair-38a94fb93d9842929dc7ae9cf6b378da\\audit-four.stdout.log",
+  "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-four-repair-38a94fb93d9842929dc7ae9cf6b378da\\audit-four.stderr.log",
+  "stdoutInfo": {
+    "bytes": 200,
+    "sha256": "2e43b9eafaf65636b1960f6f6671e40038bd40b518a856232ab638e1d6bc4586"
+  },
+  "stderrInfo": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import { createRequire } from 'node:module';
+import { createHash } from 'node:crypto';
+const repo='C:/cinagroup/cinatoken',dir=repo+'/scripts/diagnostics/v364-direct-socket',p=dir+'/sealed-package.json';
+const require=createRequire(repo+'/package.json'),prettier=require('prettier');
+const manifest=JSON.parse(fs.readFileSync(p,'utf8')),before=JSON.parse(fs.readFileSync('C:/Users/cina/AppData/Local/Temp/cinatoken-v364-direct-actual-review-DjepMs/source-before/scripts/diagnostics/v364-direct-socket/sealed-package.json','utf8'));
+const row=manifest.files.find(r=>r.path==='native-reader-calibration.mjs');assert.ok(row);
+const expected=structuredClone(manifest);expected.files.find(r=>r.path===row.path).bytes=before.files.find(r=>r.path===row.path).bytes;expected.files.find(r=>r.path===row.path).sha256=before.files.find(r=>r.path===row.path).sha256;assert.deepEqual(expected,before);
+const bytes=fs.readFileSync(dir+'/'+row.path);row.bytes=bytes.length;row.sha256=createHash('sha256').update(bytes).digest('hex');
+fs.writeFileSync(p,prettier.format(JSON.stringify(manifest,null,2)+'\n',{...prettier.resolveConfig.sync(p),filepath:p}));
+console.log(JSON.stringify({updatedFormattedHelperDescriptor:row,actualSealOutcome:0,preparationOnly:true}));

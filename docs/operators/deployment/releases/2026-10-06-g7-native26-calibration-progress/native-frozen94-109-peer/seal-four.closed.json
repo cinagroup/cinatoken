@@ -1,0 +1,24 @@
+{
+  "schema": "cinatoken.native26-ci-independent-peer.command.v1",
+  "at": "2026-10-06T04:48:51.767Z",
+  "finishedAt": "2026-10-06T04:48:52.284Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-independent-peer-a824c8ed062348199c5027f7df556278\\seal-four.mjs",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-native-frozen94-109-independent-peer-a824c8ed062348199c5027f7df556278"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-independent-peer-a824c8ed062348199c5027f7df556278\\seal-four.stdout.log",
+  "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-independent-peer-a824c8ed062348199c5027f7df556278\\seal-four.stderr.log",
+  "stdoutInfo": {
+    "bytes": 932,
+    "sha256": "22e245fc065189fc3739428844cbad51330eae1ced7bd44935d18513881de607"
+  },
+  "stderrInfo": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

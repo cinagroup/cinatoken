@@ -1,0 +1,112 @@
+{"file":"node_modules/miniflare/dist/src/workers/core/entry.worker.js","bytes":184933,"sha256":"e2434da3c39be4758dd323045dbc0b79bb2c0b2a5ba2ed02c6b271b1b676410d"}
+4938: function getUserRequest(request, env, clientIp) {
+4939:   let originalUrl = request.headers.get(CoreHeaders.ORIGINAL_URL), url = new URL(originalUrl ?? request.url), rewriteHeadersFromOriginalUrl = !1, proxySharedSecret = request.headers.get(
+4940:     CoreHeaders.PROXY_SHARED_SECRET
+4941:   );
+4942:   if (proxySharedSecret) {
+4943:     let secretFromHeader = encoder2.encode(proxySharedSecret), configuredSecret = env[CoreBindings.DATA_PROXY_SHARED_SECRET];
+4944:     if (secretFromHeader.byteLength === configuredSecret?.byteLength && crypto.subtle.timingSafeEqual(secretFromHeader, configuredSecret))
+4945:       rewriteHeadersFromOriginalUrl = !0;
+4946:     else
+4947:       throw new HttpError(
+4948:         400,
+4949:         `Disallowed header in request: ${CoreHeaders.PROXY_SHARED_SECRET}=${proxySharedSecret}`
+4950:       );
+4951:   }
+4952:   let upstreamUrl = env[CoreBindings.TEXT_UPSTREAM_URL], originalHostname = upstreamUrl !== void 0 ? url.host : void 0;
+4953:   if (upstreamUrl !== void 0) {
+4954:     let path = url.pathname + url.search;
+4955:     path.startsWith("/") && (path = `./${path.substring(1)}`), url = new URL(path, upstreamUrl), rewriteHeadersFromOriginalUrl = !0;
+4956:   }
+4957:   request = new Request(url, request), request.headers.set("Accept-Encoding", "br, gzip");
+4958:   let secFetchMode = request.headers.get(CoreHeaders.SEC_FETCH_MODE);
+4959:   if (secFetchMode && request.headers.set("Sec-Fetch-Mode", secFetchMode), request.headers.delete(CoreHeaders.SEC_FETCH_MODE), rewriteHeadersFromOriginalUrl && request.headers.set("Host", url.host), originalHostname !== void 0 && request.headers.set(CoreHeaders.ORIGINAL_HOSTNAME, originalHostname), clientIp && !request.headers.get("CF-Connecting-IP")) {
+4960:     let ipv4Regex = /(?<ip>.*?):\d+/, ipv6Regex = /\[(?<ip>.*?)\]:\d+/, ip = clientIp.match(ipv6Regex)?.groups?.ip ?? clientIp.match(ipv4Regex)?.groups?.ip;
+4961:     ip && request.headers.set("CF-Connecting-IP", ip);
+4962:   }
+4963:   return request.headers.delete(CoreHeaders.PROXY_SHARED_SECRET), request.headers.delete(CoreHeaders.ORIGINAL_URL), env[CoreBindings.STRIP_DISABLE_PRETTY_ERROR] && request.headers.delete(CoreHeaders.DISABLE_PRETTY_ERROR), request;
+4964: }
+4965: function getTargetService(request, url, env) {
+4966:   let override = request.headers.get(CoreHeaders.ROUTE_OVERRIDE);
+4967:   request.headers.delete(CoreHeaders.ROUTE_OVERRIDE);
+4968:   let route = override ?? matchRoutes(env[CoreBindings.JSON_ROUTES], url);
+4969:   return route !== null ? {
+{"file":"node_modules/miniflare/dist/src/workers/core/entry.worker.js","bytes":184933,"sha256":"e2434da3c39be4758dd323045dbc0b79bb2c0b2a5ba2ed02c6b271b1b676410d"}
+5112:   async fetch(request, env, ctx) {
+5113:     let startTime = Date.now(), clientIp = request.cf?.clientIp, clientCfBlobHeader = request.headers.get(CoreHeaders.CF_BLOB), cf = clientCfBlobHeader ? JSON.parse(clientCfBlobHeader) : {
+5114:       ...env[CoreBindings.JSON_CF_BLOB],
+5115:       // Defaulting to empty string to preserve undefined `Accept-Encoding`
+5116:       // through Wrangler's proxy worker.
+5117:       clientAcceptEncoding: request.headers.get("Accept-Encoding") ?? ""
+5118:     };
+5119:     request = new Request(request, { cf }), request.headers.delete(CoreHeaders.ACCESS_BLOB);
+5120:     let requestUrl = new URL(request.url);
+5121:     try {
+5122:       validateCdnCgiRequest(
+5123:         request,
+5124:         env[CoreBindings.JSON_ROUTES],
+5125:         env[CoreBindings.TEXT_UPSTREAM_URL]
+5126:       );
+5127:     } catch (e) {
+5128:       if (e instanceof HttpError)
+5129:         return e.toResponse();
+5130:       throw e;
+5131:     }
+5132:     if (requestUrl.pathname === CorePaths.PLATFORM_PROXY)
+5133:       return request.headers.get(CoreHeaders.OP) !== null ? handleProxy(request, env) : new Response("Invalid proxy request", { status: 400 });
+5134:     let disablePrettyErrorPage = request.headers.get(CoreHeaders.DISABLE_PRETTY_ERROR) !== null, clientAcceptEncoding = request.headers.get("Accept-Encoding");
+5135:     try {
+5136:       request = getUserRequest(request, env, clientIp);
+5137:     } catch (e) {
+5138:       if (e instanceof HttpError)
+5139:         return e.toResponse();
+5140:       throw e;
+5141:     }
+5142:     let url = new URL(request.url), { service, routeTarget } = getTargetService(request, url, env);
+5143:     if (service === void 0)
+5144:       return new Response("No entrypoint worker found", { status: 404 });
+5145:     try {
+5146:       if (env[CoreBindings.SERVICE_LOCAL_EXPLORER] && (url.pathname === CorePaths.EXPLORER || url.pathname.startsWith(`${CorePaths.EXPLORER}/`)))
+5147:         return await env[CoreBindings.SERVICE_LOCAL_EXPLORER].fetch(request);
+5148:       let imagesDelivery = env[CoreBindings.SERVICE_IMAGES_DELIVERY];
+5149:       if ((url.pathname === CorePaths.IMAGE_DELIVERY || url.pathname.startsWith(`${CorePaths.IMAGE_DELIVERY}/`) || url.pathname === CorePaths.IMAGE_UPLOAD || url.pathname.startsWith(`${CorePaths.IMAGE_UPLOAD}/`)) && imagesDelivery)
+5150:         return await imagesDelivery.fetch(request);
+5151:       if (env[CoreBindings.TRIGGER_HANDLERS]) {
+5152:         if (url.pathname === CorePaths.SCHEDULED)
+5153:           return await handleScheduled(url.searchParams, service);
+5154:         if (url.pathname === CorePaths.EMAIL)
+5155:           return await handleEmail(
+5156:             url.searchParams,
+5157:             request,
+5158:             service,
+5159:             routeTarget,
+5160:             env,
+5161:             ctx
+5162:           );
+5163:       }
+5164:       let streamService = env[CoreBindings.SERVICE_STREAM];
+5165:       if ((url.pathname === CorePaths.STREAM_VIDEO || url.pathname.startsWith(`${CorePaths.STREAM_VIDEO}/`)) && streamService)
+5166:         return await streamService.fetch(request);
+5167:       let r2PublicService = env[CoreBindings.SERVICE_R2_PUBLIC];
+5168:       if ((url.pathname === CorePaths.R2_PUBLIC || url.pathname.startsWith(`${CorePaths.R2_PUBLIC}/`)) && r2PublicService)
+5169:         return await r2PublicService.fetch(request);
+5170:       let r2S3Service = env[CoreBindings.SERVICE_R2_S3];
+5171:       if ((url.pathname === CorePaths.R2_S3 || url.pathname.startsWith(`${CorePaths.R2_S3}/`)) && r2S3Service) {
+5172:         let s3Request = request, originalHostname = request.headers.get(
+5173:           CoreHeaders.ORIGINAL_HOSTNAME
+5174:         );
+5175:         if (originalHostname !== null) {
+5176:           let s3Url = new URL(url);
+5177:           s3Url.host = originalHostname, s3Request = new Request(s3Url, request), s3Request.headers.set("Host", originalHostname);
+5178:         }
+5179:         return await r2S3Service.fetch(s3Request);
+5180:       }
+5181:       let accessBlob = env[`${CoreBindings.JSON_ACCESS_BLOB_PREFIX}${routeTarget}`];
+5182:       if (accessBlob) {
+5183:         let headers = new Headers(request.headers);
+5184:         headers.set(CoreHeaders.ACCESS_BLOB, JSON.stringify(accessBlob)), request = new Request(request, { headers });
+5185:       }
+5186:       let response = await service.fetch(request);
+5187:       return disablePrettyErrorPage || (response = await maybePrettifyError(request, response, env)), response = ensureAcceptableEncoding(clientAcceptEncoding, response), env[CoreBindings.LOG_REQUESTS] && (response = maybeLogRequest(request, response, env, ctx, startTime)), response;
+5188:     } catch (e) {
+5189:       return new Response(e?.stack ?? String(e), { status: 500 });

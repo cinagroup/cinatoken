@@ -1,0 +1,208 @@
+{
+  "schema": "cinatoken-direct-socket-archive-dialect-static-peer-v1",
+  "closed": true,
+  "actualReadReviewOutcome": 0,
+  "strictCurrentExecutionDialectSupported": false,
+  "strictArchiveAdapterRequired": true,
+  "noRuntimeOrHelperCreated": true,
+  "scope": {
+    "frozenEnhancedLibReadOnly": true,
+    "sourcePackageAndAlreadyFrozenPeerReadOnly": true,
+    "ownerPinsOnlyNoWholeOwnerRootWalk": true,
+    "old2226ArchiveOrGrowingCurrentRootWalked": false,
+    "repoWrites": 0,
+    "gitCalls": 0,
+    "appOrSqlOrDockerOrMiniflareWorkerdExecuted": false,
+    "testsOrCliOrCollectorExecuted": false,
+    "ciCalls": 0,
+    "productionRequests": 0,
+    "ownWritesOnlyNewExclusiveTemp": true
+  },
+  "inputs": {
+    "frozenEnhancedLib": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\enhanced-tools\\evidence-lib.mjs",
+      "bytes": 52139,
+      "sha256": "1a94e0682a2f9782a0bcc28c4736ff49c0bf4db0b9e0cfe0f34ecb6918b22cb7"
+    },
+    "alreadyFrozenDirectSourcePeer": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-peer-readonly-19dc03ece33840d28acfca66a68a3863\\FINAL-v364-direct-socket-peer-review.json",
+      "bytes": 44060,
+      "sha256": "0e98623711fb6e828931d6d2b758530ae91bc360f793ce94b273228ae1762eaf"
+    },
+    "directExecutorSource": {
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-direct-socket\\execute-owned-linux.py",
+      "bytes": 15959,
+      "sha256": "c635a435873185363faf23e1cbaa6887b858a9f23e32882a6ce54ff5405e15e0"
+    },
+    "directNodeSource": {
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-direct-socket\\run-direct-socket.mjs",
+      "bytes": 34907,
+      "sha256": "621cb7384b32a25af7c37d411cd12c2d51bf47c241d9d1f24c1c3ee3989723f3"
+    }
+  },
+  "sourceSnapshots": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-archive-dialect-peer-readonly-5acafdc971304ac180e80be74277ec8f\\frozen-inputs\\enhanced-evidence-lib.mjs",
+      "bytes": 52139,
+      "sha256": "1a94e0682a2f9782a0bcc28c4736ff49c0bf4db0b9e0cfe0f34ecb6918b22cb7"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-archive-dialect-peer-readonly-5acafdc971304ac180e80be74277ec8f\\frozen-inputs\\execute-owned-linux.py",
+      "bytes": 15959,
+      "sha256": "c635a435873185363faf23e1cbaa6887b858a9f23e32882a6ce54ff5405e15e0"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-archive-dialect-peer-readonly-5acafdc971304ac180e80be74277ec8f\\frozen-inputs\\run-direct-socket.mjs",
+      "bytes": 34907,
+      "sha256": "621cb7384b32a25af7c37d411cd12c2d51bf47c241d9d1f24c1c3ee3989723f3"
+    }
+  ],
+  "currentCompatibilityFacts": [
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\enhanced-tools\\evidence-lib.mjs",
+      "lines": "55,101-125,235,262-276",
+      "fact": "Executor schema recognition, claimed-receipt detection and manifest association include only the earlier owned/boundary schemas. New v364-direct-socket-executor-closed-v1 is absent. Its executor.closed.json has no closed boolean or finishedAt command fields, so generic closure does not recognize the unmodified emitted object."
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd\\enhanced-tools\\evidence-lib.mjs",
+      "lines": "152-170,229-245,470-473",
+      "fact": "New Node v364-direct-socket-closed-v1 is absent from the explicit aggregate set. Unmodified Node object has no closed:true/executable/args and no stdout/stderr file reference, so it is currently preserved as immutable source/report and has no own raw authority. This is not explicit strict aggregate dialect support."
+    },
+    {
+      "source": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-direct-socket\\execute-owned-linux.py",
+      "lines": "250-285,288-326",
+      "fact": "Executor preserves actualProcessExit from child.returncode or null when no child, runnerOutcomeCode from actual wait or explicit124 timeout/130 interruption/failure1, and actualExit only0/1. All three must be retained separately, including signed process/runner integers."
+    },
+    {
+      "source": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-direct-socket\\execute-owned-linux.py",
+      "lines": "113-143,166-206,319-324",
+      "fact": "Only Popen owns direct Node wait; adopted zombie waits are per identifiedPID. A complete final census plus absent process group and direct-child reap differs from fulfilled API disposal or unforced outer close. Internal Miniflare SIGKILL remains possible; graceful proof is alwaysfalse."
+    },
+    {
+      "source": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-direct-socket\\run-direct-socket.mjs",
+      "lines": "1171-1180,1181-1247",
+      "fact": "Node aggregate result requires unchanged strict baseline0, exactlyfive closed successful comparisons, sourceunchanged and active0. Its summaries/case rows are diagnostic aggregate data, never independent command streams. Actual executor manifest is final closure authority."
+    }
+  ],
+  "minimumAdaptationRequirements": [
+    {
+      "area": "Exact executor schema",
+      "required": "Use a new exclusive Temp copy of the frozen tools; add only the exact v364-direct-socket-executor-closed-v1 schema to a dedicated guarded closure branch, claimedReceipt detection and executor manifest association. Keep old schemas, Root numeric/null generic dialects and old frozen library unchanged. Adding only a schema to claimedReceipt or generic closed logic is insufficient."
+    },
+    {
+      "area": "Outcome and process fields",
+      "required": "Require actualExit exact integer0/1; preserve original signed safe-integer actualProcessExit and runnerOutcomeCode independently. A numeric child termination such as-9 must remain-9, and timeout124/interruption130 must not replace that process result. A real child closure requires numeric process result plus directChildReaped true; null cannot be guessed as0 or1."
+    },
+    {
+      "area": "Null no-child negative",
+      "required": "Support null only through an exact separate no-child admission-negative dialect if required: exact schema, actualExit1/runnerOutcome1, expected RuntimeError admission text, package/checkout/run metadata null, subreaper false/directChildReaped false, zero adopted descendants/signals/census, only two correctlyhashed executor raw files. Mark actualChildExitProven false/linuxRuntimeExecuted false. Unexpected null or incomplete cleanup must remainblocked/non-authoritative."
+    },
+    {
+      "area": "Owned cleanup evidence",
+      "required": "Validate this-executor authority, real subreaper/direct-child reap/groupGone, finite nonnegative timing, boolean timeout/interruption/forced flags, census/errors/descendant/signal lists and correctlybound files. Where groupGone/reap/completecensus is false or unknown, preserve the failed object but do not let it close raw. Do not infer graceful runtime exit from API disposal or outer-unforced report; retain original forced/errors even when other closure evidence is complete."
+    },
+    {
+      "area": "Manifest and original baseline",
+      "required": "Reuse unchanged strict relative-safe unique descriptor validation and same-included-root bytes/SHA checks for all actual files entries. If Node closed-result exists, require its original-strict stdout/stderr descriptors to equal the executor-authoritative original raw files; require those raw filenames in manifest. No copied receipt/outer preparation0 may substitute for original runtime authority."
+    },
+    {
+      "area": "Explicit Node aggregate",
+      "required": "Reserve exact v364-direct-socket-closed-v1 as aggregateOnly/childLogAuthority false/gatePassDerived false before generic closure fallback. Use a dedicated aggregate guard with actual source fields: ordered startedAt/endedAt, numeric actualExit0/1, checkoutSHA40, baseline/results/source flags and explicit executor closureAuthority. Do not require nonexistent sourceSHA or fullG7 fields copied from G7 schema. Failed incomplete Node aggregates remain failed parent-bound data, not independent child receipts."
+    },
+    {
+      "area": "Nested controls/cases",
+      "required": "Five direct diagnostic case rows and six controlled G7 child diagnostics remain data in the original parent report/raw. Never split diagnostic strings into fabricated standalone stdout/stderr files or new actual runtime receipts. Future runtime collection remainspending; fullG7/fullG8/graceful/cause proofs remainfalse."
+    }
+  ],
+  "meaningfulControlsProposedOnly": [
+    {
+      "name": "original-failure-staysfailure",
+      "shape": "numeric executor actualExit1/process1/runner1, strict baseline1 and successful diagnostic rows; retained as1, never aggregate0."
+    },
+    {
+      "name": "signed-wait-and-timeout-separated",
+      "shape": "actualExit1/process-9/runner124 with timedOuttrue and real closed group/reap; preserve-9 and124 distinctly, gracefulfalse/unforcedfalse."
+    },
+    {
+      "name": "signed-normal-wait-separated",
+      "shape": "actualExit1/process-15/runner-15 with timedOutfalse; signed values are not clamped or mapped to overall1."
+    },
+    {
+      "name": "exact-no-child-admission",
+      "shape": "The existing original Windows no-child admission object remains actualExit1/processnull/runner1 and never proves a Linux child exit or runtime closure."
+    },
+    {
+      "name": "unknown-null-and-invalid-overall",
+      "shape": "null process with claimed child reap, null runner, fractional or negative overallactualExit, unexpected no-childfatal, missingschema all remainblocked."
+    },
+    {
+      "name": "cleanup-uncertain-and-forced-not-graceful",
+      "shape": "groupGonefalse/directreapedfalse/incomplete finalcensus/unknownPID/tamperedwaitstatus cannot close raw merely because dispose fulfilled; forced flag and errors remainliteral failure observations."
+    },
+    {
+      "name": "actual-descriptor-negative-controls",
+      "shape": "wrongbytes/SHA/missingSHA/negativebytes/duplicatepath/escape/outside or excluded stream/Node baseline mismatch all remainblocked."
+    },
+    {
+      "name": "aggregate-cannot-be-promoted",
+      "shape": "Add closed:true or fabricated stdoutfields to an exact Node aggregate, or use summary0 with no runtime executor; it must remain aggregate-only and cannot bind child logs."
+    },
+    {
+      "name": "nested-diagnostics-remain-one-parent",
+      "shape": "Child-like diagnostic strings/case rows do not increase command receipt count or create independent external streams."
+    },
+    {
+      "name": "unchanged-prior-dialects-regression",
+      "shape": "Previous Root numeric0/1 and null+signal/spawnError dialects remainunchanged; nullwithoutabnormal remainsunknown. Original failures and rawfiles are preserved."
+    }
+  ],
+  "controlExecution": {
+    "performedByPeer": false,
+    "syntheticOrRuntimeReceiptWritten": false,
+    "adapterImplementedByPeer": false
+  },
+  "ownerFrozenPreparationPins": {
+    "root": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu",
+    "producerReport": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\FINAL-v364-direct-socket-preparation.json",
+      "bytes": 32670,
+      "sha256": "49b83e20a7324c3ef68cbccf621417293668469baefd9cacd4c203ac0d27d856"
+    },
+    "finalProducerClosedReceipt": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\final-preparation-seal.result.json",
+      "bytes": 952,
+      "sha256": "9225d2c4b9c216d417b9e6ea581c296002ad409eac47c37d9de964cea8319631"
+    },
+    "finalProducerActualExit": 0,
+    "finalProducerOriginalStreams": {
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\final-preparation-seal.stdout.txt",
+        "bytes": 1420,
+        "sha256": "8473595c6a8cd68d67b3cbe5f484fc0a0b0a8af5be3fad01923590147b419ac1"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\final-preparation-seal.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "packageManifest": {
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-direct-socket\\sealed-package.json",
+      "bytes": 1045,
+      "sha256": "29976feae54abf63c53e5056085150b0165d140152a91d766b9dcfac9d8615c0"
+    },
+    "manifestSnapshot": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\source-after\\scripts\\diagnostics\\v364-direct-socket\\sealed-package.json",
+      "bytes": 1045,
+      "sha256": "29976feae54abf63c53e5056085150b0165d140152a91d766b9dcfac9d8615c0"
+    },
+    "originalOuterToolChunkReportedByOwner": "7242ed",
+    "originalOuterToolActualExitReportedByOwner": 0,
+    "actualRuntimeExecuted": false
+  },
+  "limits": [
+    "No runtime receipt was created, no adapter was implemented and no control was executed by this peer.",
+    "The existing direct source peer supports preparation, not a future execution result.",
+    "Outcome/status interpretation comes from exact source paths and fields; no future CI result or root-wide archive counts are asserted."
+  ]
+}

@@ -1,0 +1,757 @@
+{
+  "schema": "v364-direct-socket-final-preparation-v1",
+  "closed": true,
+  "actualPreparationReviewOutcome": 0,
+  "sealedAt": "2026-10-06T03:42:44.751Z",
+  "preparedAtHead": "702c4d71379acb697024ef846725871582bff94f",
+  "observedFinalHead": "473de5fc520fc7d64db700db88a76c7a6b45c241",
+  "executionSHAIsSeparate": true,
+  "sources": [
+    {
+      "file": "C:\\cinagroup\\cinatoken\\.github\\workflows\\v364-direct-socket.yml",
+      "bytes": 1575,
+      "sha256": "f4e2b9da3c9be4374e4945c7daab7dc3c166fb4c9e1d2d61ff804ca3dc3b04e9",
+      "relative": ".github/workflows/v364-direct-socket.yml",
+      "sourceSnapshot": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\source-after\\.github\\workflows\\v364-direct-socket.yml",
+        "bytes": 1575,
+        "sha256": "f4e2b9da3c9be4374e4945c7daab7dc3c166fb4c9e1d2d61ff804ca3dc3b04e9"
+      }
+    },
+    {
+      "file": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-direct-socket\\README.md",
+      "bytes": 5092,
+      "sha256": "d2da25041decf0e0d1d1dd99fcc4182f8ef8528e8671f72f48e53a158fd600ed",
+      "relative": "scripts/diagnostics/v364-direct-socket/README.md",
+      "sourceSnapshot": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\source-after\\scripts\\diagnostics\\v364-direct-socket\\README.md",
+        "bytes": 5092,
+        "sha256": "d2da25041decf0e0d1d1dd99fcc4182f8ef8528e8671f72f48e53a158fd600ed"
+      }
+    },
+    {
+      "file": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-direct-socket\\execute-owned-linux.py",
+      "bytes": 15959,
+      "sha256": "c635a435873185363faf23e1cbaa6887b858a9f23e32882a6ce54ff5405e15e0",
+      "relative": "scripts/diagnostics/v364-direct-socket/execute-owned-linux.py",
+      "sourceSnapshot": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\source-after\\scripts\\diagnostics\\v364-direct-socket\\execute-owned-linux.py",
+        "bytes": 15959,
+        "sha256": "c635a435873185363faf23e1cbaa6887b858a9f23e32882a6ce54ff5405e15e0"
+      }
+    },
+    {
+      "file": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-direct-socket\\native-reader-calibration.mjs",
+      "bytes": 2531,
+      "sha256": "36f30b9dc7e8cfad8b68f6c9590f8cea50444173a05ccd3e775c9c32214408be",
+      "relative": "scripts/diagnostics/v364-direct-socket/native-reader-calibration.mjs",
+      "sourceSnapshot": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\source-after\\scripts\\diagnostics\\v364-direct-socket\\native-reader-calibration.mjs",
+        "bytes": 2531,
+        "sha256": "36f30b9dc7e8cfad8b68f6c9590f8cea50444173a05ccd3e775c9c32214408be"
+      }
+    },
+    {
+      "file": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-direct-socket\\run-direct-socket.mjs",
+      "bytes": 34907,
+      "sha256": "621cb7384b32a25af7c37d411cd12c2d51bf47c241d9d1f24c1c3ee3989723f3",
+      "relative": "scripts/diagnostics/v364-direct-socket/run-direct-socket.mjs",
+      "sourceSnapshot": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\source-after\\scripts\\diagnostics\\v364-direct-socket\\run-direct-socket.mjs",
+        "bytes": 34907,
+        "sha256": "621cb7384b32a25af7c37d411cd12c2d51bf47c241d9d1f24c1c3ee3989723f3"
+      }
+    },
+    {
+      "file": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-direct-socket\\sealed-package.json",
+      "bytes": 1045,
+      "sha256": "29976feae54abf63c53e5056085150b0165d140152a91d766b9dcfac9d8615c0",
+      "relative": "scripts/diagnostics/v364-direct-socket/sealed-package.json",
+      "sourceSnapshot": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\source-after\\scripts\\diagnostics\\v364-direct-socket\\sealed-package.json",
+        "bytes": 1045,
+        "sha256": "29976feae54abf63c53e5056085150b0165d140152a91d766b9dcfac9d8615c0"
+      }
+    },
+    {
+      "file": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-direct-socket\\source-inputs.json",
+      "bytes": 5028,
+      "sha256": "a4046af64da2e2f61b37ee9ea92658bc2d54236052c859477c57d9049f62e3e9",
+      "relative": "scripts/diagnostics/v364-direct-socket/source-inputs.json",
+      "sourceSnapshot": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\source-after\\scripts\\diagnostics\\v364-direct-socket\\source-inputs.json",
+        "bytes": 5028,
+        "sha256": "a4046af64da2e2f61b37ee9ea92658bc2d54236052c859477c57d9049f62e3e9"
+      }
+    }
+  ],
+  "protectedSourceInputs": [
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs",
+      "bytes": 13354,
+      "sha256": "d23d1c710b539b6c64655fbb1fa4e4de85b228bab19c757bc0e4de48528972e5"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-binding-v364.node.test.mjs",
+      "bytes": 5908,
+      "sha256": "bf02a63395f450b889a784dc58bc537b6cb2f4a3004de07e1833c3e747c27fcc"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-gateway-v364.ts",
+      "bytes": 1534,
+      "sha256": "8c85b01ba54daa9b7302c726d20693d08ccb3395350ea6a333817eed46441eaf"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-private-v364.ts",
+      "bytes": 5367,
+      "sha256": "44070fcbb7058b915329a150634eaa649c1b3601724495a1620e94ce2d54d1bf"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-synthetic-v364.ts",
+      "bytes": 1019,
+      "sha256": "d89c6964454d9368a0257b6a585c8d5d707c91d09e55f5f2ea7c3545e5f0a16d"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/wrangler.chat-holder-gateway-v364.jsonc",
+      "bytes": 598,
+      "sha256": "e1a0354ff5bf7915c6c125f3003683a56b708d8bdd6006cce6b33c4ff8a6bb77"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/wrangler.chat-holder-private-v364.jsonc",
+      "bytes": 568,
+      "sha256": "6b897d8aa7b01087b75d4b74968d4004e2b6ddb87650bad1203c7693160b2047"
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 830546,
+      "sha256": "f9c65b6e373a231d52d6eda634bb5f947dda3174734cd70e2b811e09fff0b6f0"
+    },
+    {
+      "path": ".nvmrc",
+      "bytes": 3,
+      "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56"
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux/gateway-observer.mjs",
+      "bytes": 1244,
+      "sha256": "3ec2e49a72697f61bd1867bcde369a7c508cdbf669cd86d7e0eebdfc41dcfe00"
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux/holder-observer.mjs",
+      "bytes": 2461,
+      "sha256": "740727cae646ae757fa50ef7bb6c02a9f9cb4b1b3aa64b0de539c88bbbe09a25"
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux-boundary/bare-async-source.mjs",
+      "bytes": 1864,
+      "sha256": "86b67412be0b8ef8434edfd0f44c8c6e5d306ce3f76ed3deed8305cca2771bfd"
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux-boundary/proc-census.mjs",
+      "bytes": 1443,
+      "sha256": "bd6d4ebe4fea6ac1c11b6a67b4f44fcb23595e79a2fdcf10360101888026b8a0"
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux-boundary/run-boundary.mjs",
+      "bytes": 28489,
+      "sha256": "9341885b2890b8270b2b9732cd46c169bb41c4a3a4f6d4eef5f662ee3cda7cda"
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux-boundary/execute-owned-linux.py",
+      "bytes": 16016,
+      "sha256": "18c13e59a48eb27bc840aa1f9bb21aa5da73b7f73ad927dbaf5da24d0b0bbca2"
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux-boundary/source-inputs.json",
+      "bytes": 6588,
+      "sha256": "7b7b322398fe389f2ae1426746c65f6fe9ee0bc9ea1f91dfc3febfb8aeadfa3d"
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux-boundary/sealed-package.json",
+      "bytes": 1396,
+      "sha256": "b99ede67c0e949fc6aee728f450d564d60c9eed14b60e542e3282e9a8d163af9"
+    },
+    {
+      "path": ".github/workflows/v364-owned-linux-boundary.yml",
+      "bytes": 1575,
+      "sha256": "08977f1966eb42e67aebdb9986b66cb9f05a618f6a12964a8a2daffc64ce4712"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-native-g7-boundary-progress/root-progress/boundary-artifact/_temp/v364-boundary-once-37402302570-1/closed-result.json",
+      "bytes": 22206,
+      "sha256": "f76dc98765d470f26434bb611bfceb098806b8b8987a0ec8d2088a684ff61a8d"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-native-g7-boundary-progress/root-progress/boundary-artifact/_temp/v364-boundary-once-37402302570-1/executor.closed.json",
+      "bytes": 5901,
+      "sha256": "9b505b71486eb69fa34203fd4e1c7d173a1aa12de2b0aa55d32552c5dba47113"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-native-g7-boundary-progress/root-progress/boundary-artifact/_temp/v364-boundary-once-37402302570-1/events.json.gz",
+      "bytes": 43245,
+      "sha256": "0d8d89c1a9e7b70bd09a2e0298f73631bbcfad4f8d273cf2f88548f7b050cbe7"
+    }
+  ],
+  "installedDirectSocketInputs": [
+    {
+      "path": "node_modules/miniflare/dist/src/index.js",
+      "bytes": 4843426,
+      "sha256": "58ca83056cf67838add064edcbfd1d654ed204527b8eb01307ba208d7e59fa20"
+    },
+    {
+      "path": "node_modules/miniflare/dist/src/index.d.ts",
+      "bytes": 485080,
+      "sha256": "7e0c4b6c1cdf6b4207e4c8651e04a453b759a1cdc4a3cd5691da016050e9193a"
+    },
+    {
+      "path": "node_modules/miniflare/dist/src/workers/core/entry.worker.js",
+      "bytes": 184933,
+      "sha256": "e2434da3c39be4758dd323045dbc0b79bb2c0b2a5ba2ed02c6b271b1b676410d"
+    }
+  ],
+  "manifest": {
+    "file": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-direct-socket\\sealed-package.json",
+    "bytes": 1045,
+    "sha256": "29976feae54abf63c53e5056085150b0165d140152a91d766b9dcfac9d8615c0"
+  },
+  "originalStrictBaselineUnchanged": true,
+  "allFourNativeCancellationFunctionAssertionsAndWindowASTPreserved": true,
+  "sourceProtectionAudit": {
+    "schema": "v364-direct-local-contract-audit-v1",
+    "closed": true,
+    "actualOutcome": 0,
+    "checks": [
+      {
+        "name": "original-httpClient-AST-preserved",
+        "actualOutcome": 0
+      },
+      {
+        "name": "original-observedGet-AST-preserved",
+        "actualOutcome": 0
+      },
+      {
+        "name": "original-disposeFixture-AST-preserved",
+        "actualOutcome": 0
+      },
+      {
+        "name": "original-bounded-AST-preserved",
+        "actualOutcome": 0
+      },
+      {
+        "name": "original-cancellation-assertions-and-window-AST-preserved",
+        "actualOutcome": 0
+      },
+      {
+        "name": "protected-source-Git-bytes-exact",
+        "actualOutcome": 0
+      },
+      {
+        "name": "installed-direct-socket-source-exact",
+        "actualOutcome": 0
+      },
+      {
+        "name": "only-original-runtime-flags",
+        "actualOutcome": 0
+      },
+      {
+        "name": "actual-V4-option-schema-direct-socket-bare-and-binding",
+        "actualOutcome": 0
+      },
+      {
+        "name": "native-calibration-adds-no-lifetime-task",
+        "actualOutcome": 0
+      },
+      {
+        "name": "workflow-is-manual-bounded-readonly-and-retains-failures",
+        "actualOutcome": 0
+      },
+      {
+        "name": "original-baseline-zero-required-for-aggregate-zero",
+        "actualOutcome": 0
+      },
+      {
+        "name": "preparation-executed-no-runtime",
+        "actualOutcome": 0
+      }
+    ],
+    "realRuntimeExecuted": false,
+    "fixtureRuntimeTestsExecuted": false,
+    "productionRequests": 0
+  },
+  "preparationResult": {
+    "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\prepared-only\\prepare-only.json",
+    "bytes": 6722,
+    "sha256": "835097198370d6a0cc087802e598ebfc16e1680b4cce008e909d09de4e707869"
+  },
+  "workerBundles": [
+    {
+      "name": "gateway",
+      "bytes": 1474,
+      "sha256": "ee2b63670af2ed15320204f46ce1130b0b71b3bfbc5d901b160069c595388bd4"
+    },
+    {
+      "name": "holder",
+      "bytes": 5595,
+      "sha256": "05100170dca4896eb11b723e65df7cf437f886797c0e2d255bb238c16e55089c"
+    },
+    {
+      "name": "observedGateway",
+      "bytes": 2690,
+      "sha256": "edafc7ec0e604c51d58ffde272a83c04404d816effa734b1cff1d64b6f84b1f6"
+    },
+    {
+      "name": "observedHolder",
+      "bytes": 7979,
+      "sha256": "573d54572570e06fb83328191156fd2c6ec7fd3551369d802b3d1a3d2646eee1"
+    },
+    {
+      "name": "bare",
+      "bytes": 4247,
+      "sha256": "6527152590a0f65287e06be83dd06b37bfef3f5af660b9ea41a0a584e0edc7c6"
+    },
+    {
+      "name": "nativeReader",
+      "bytes": 10620,
+      "sha256": "a3578ea26e81d7c4129ea0d9ca88719125af77cb9249b6d3244a543d5ffa827f"
+    }
+  ],
+  "expectedDiagnosticCases": [
+    "native-worker-reader-cancel",
+    "direct-socket-bare-destroy",
+    "direct-socket-bare-rst",
+    "direct-socket-binding-destroy",
+    "direct-socket-binding-rst"
+  ],
+  "originalBaselineSeparate": true,
+  "baselineFailureCannotUpgradeToAggregatePass": true,
+  "supervisor": {
+    "copiedFrom": "scripts/diagnostics/v364-owned-linux-boundary/execute-owned-linux.py",
+    "changes": "Exact schema/runner/workflow/5-case identifiers and counts only; cleanup/status logic retained",
+    "original": {
+      "path": "scripts/diagnostics/v364-owned-linux-boundary/execute-owned-linux.py",
+      "bytes": 16016,
+      "sha256": "18c13e59a48eb27bc840aa1f9bb21aa5da73b7f73ad927dbaf5da24d0b0bbca2"
+    },
+    "timeoutSeconds": 360,
+    "workflowStepMinutes": 7,
+    "workflowJobMinutes": 10,
+    "ownership": "new isolated Linux process group; subreaper; real direct-child wait and individually identified adopted zombies",
+    "gracefulWorkerdClaim": false
+  },
+  "receipts": [
+    {
+      "relative": "actual-prepare.result.json",
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\actual-prepare.result.json",
+        "bytes": 1069,
+        "sha256": "67f2ca8bc6fbea5011e4babde015418cbb41570212cb4f8c73bc027d36b5eb9c"
+      },
+      "actualExit": 0,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\actual-prepare.stdout.txt",
+        "bytes": 147,
+        "sha256": "7ede4f4b2b3b3c46e12b2d1c388aecc22bffae43b48db441481d6e69f4d28378"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\actual-prepare.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "operation": "local-source-preparation"
+    },
+    {
+      "relative": "all-final-format-check.result.json",
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\all-final-format-check.result.json",
+        "bytes": 1281,
+        "sha256": "771e32039c9a56c27851b4dd5632a8bd0d060fc84fdc5771331c483e48c0a5e0"
+      },
+      "actualExit": 0,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\all-final-format-check.stdout.txt",
+        "bytes": 66,
+        "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\all-final-format-check.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "operation": "local-source-preparation"
+    },
+    {
+      "relative": "calibration-syntax.result.json",
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\calibration-syntax.result.json",
+        "bytes": 924,
+        "sha256": "355c8b521f63c6b81ddcf632a91a7d850d7f6a1f49ee6424f0df211074ed4bec"
+      },
+      "actualExit": 0,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\calibration-syntax.stdout.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\calibration-syntax.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "operation": "local-source-preparation"
+    },
+    {
+      "relative": "existing-output-negative.result.json",
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\existing-output-negative.result.json",
+        "bytes": 1089,
+        "sha256": "4b5639d9afc89feb4dce03d4236d7ee42bff7bfbb42302209fee7e83c4a06eb9"
+      },
+      "actualExit": 1,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\existing-output-negative.stdout.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\existing-output-negative.stderr.txt",
+        "bytes": 667,
+        "sha256": "5069d71efcefa299a5ace3038f75c21a05666693978095da43acdfb806726362"
+      },
+      "operation": "local-source-preparation"
+    },
+    {
+      "relative": "final-formatter-check.result.json",
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\final-formatter-check.result.json",
+        "bytes": 1213,
+        "sha256": "71e57afccb8e067f032551e50a40650fe7029a6557645cf6ca2276911c032d40"
+      },
+      "actualExit": 0,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\final-formatter-check.stdout.txt",
+        "bytes": 66,
+        "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\final-formatter-check.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "operation": "local-source-preparation"
+    },
+    {
+      "relative": "formatter-write.result.json",
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\formatter-write.result.json",
+        "bytes": 1202,
+        "sha256": "1c957aaafbc49c7359d5a1b638e9fe686dc51e16c00fd723681373861b255319"
+      },
+      "actualExit": 0,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\formatter-write.stdout.txt",
+        "bytes": 303,
+        "sha256": "3db6554a2227988e6daa47a2f1b0eba6453b443bb9fbf2f295ad2a5360043ae7"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\formatter-write.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "operation": "local-source-preparation"
+    },
+    {
+      "relative": "generator-second.result.json",
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\generator-second.result.json",
+        "bytes": 931,
+        "sha256": "a29dec70f59d1ba6a3283ba99410e7573e37015b5e63daee32d9974731de8fe6"
+      },
+      "actualExit": 0,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\generator-second.stdout.txt",
+        "bytes": 90,
+        "sha256": "148b15f10547025c07328081c8e1fcdfd7e628ea2b3ed7974ce0ba257e568d64"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\generator-second.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "operation": "read-only-diagnosis"
+    },
+    {
+      "relative": "input-seal.result.json",
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\input-seal.result.json",
+        "bytes": 920,
+        "sha256": "28c42033e2f8547378c7a5443356813d724aa63bb757630fb162d5dc4c3889d5"
+      },
+      "actualExit": 0,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\input-seal.stdout.txt",
+        "bytes": 40,
+        "sha256": "edcd5e9f7a0fae98b90d6c0fce9fbafd270e9e0a611b0c9f043f4aa86a4b5702"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\input-seal.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "operation": "local-source-preparation"
+    },
+    {
+      "relative": "local-contracts-corrected.result.json",
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\local-contracts-corrected.result.json",
+        "bytes": 957,
+        "sha256": "f0f59c6ea4abc54ec9305902337f4087deebc3e0f84775f8f765877a485d3a60"
+      },
+      "actualExit": 0,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\local-contracts-corrected.stdout.txt",
+        "bytes": 1456,
+        "sha256": "7a059bd7100d0fc99c88b037192c95232947d2e320593ffd40f4e0bee18e4b6c"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\local-contracts-corrected.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "operation": "local-source-preparation"
+    },
+    {
+      "relative": "local-contracts.result.json",
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\local-contracts.result.json",
+        "bytes": 937,
+        "sha256": "bb4ec5d46cb6dad17b44d0912a55f53df2481d3f765b4e1fdf51482a4ca5b67e"
+      },
+      "actualExit": 1,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\local-contracts.stdout.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\local-contracts.stderr.txt",
+        "bytes": 1116,
+        "sha256": "d5cdc908c315238bc7539bc05b936b0a75b0c3ae7c9e258bcab51cb0dbf851db"
+      },
+      "operation": "local-source-preparation"
+    },
+    {
+      "relative": "main-syntax.result.json",
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\main-syntax.result.json",
+        "bytes": 902,
+        "sha256": "6a95dea57fb119cb4583e48f62ced5679739b243b32169518aefb88f6ecea84e"
+      },
+      "actualExit": 0,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\main-syntax.stdout.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\main-syntax.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "operation": "local-source-preparation"
+    },
+    {
+      "relative": "manifest-format-check.result.json",
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\manifest-format-check.result.json",
+        "bytes": 968,
+        "sha256": "d2bd7b8e438d01a1cc2bc7a1a5e7dcd99b010a3f5fc41cf6f725f7ba38b2082e"
+      },
+      "actualExit": 1,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\manifest-format-check.stdout.txt",
+        "bytes": 23,
+        "sha256": "ebe82dad128d5e5d8936334ceac09492f3c60bd9e0b4a16cc7fd7075513b33de"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\manifest-format-check.stderr.txt",
+        "bytes": 140,
+        "sha256": "3bed244ce80a921d50f24c0b96b009381bb7c790908131228e2353840a70d908"
+      },
+      "operation": "local-source-preparation"
+    },
+    {
+      "relative": "manifest-format-write.result.json",
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\manifest-format-write.result.json",
+        "bytes": 966,
+        "sha256": "75d31e80b0b3676e6faabee033b76b6bc77c054981a125e71506a105cbd01f79"
+      },
+      "actualExit": 0,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\manifest-format-write.stdout.txt",
+        "bytes": 64,
+        "sha256": "e6a8f21a40ee8dfec9646a556056a92a6fdfb3f9d1279ba6e7e7508e2f71bd7d"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\manifest-format-write.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "operation": "local-source-preparation"
+    },
+    {
+      "relative": "package-seal.result.json",
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\package-seal.result.json",
+        "bytes": 927,
+        "sha256": "618944db6df5f79ee741147024fcb4262027c3c958dfc1e795d93052d21e80de"
+      },
+      "actualExit": 0,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\package-seal.stdout.txt",
+        "bytes": 210,
+        "sha256": "c48463de84f8d02a5c68a2e67c35ea071653b69558d3c9ccf6f7c191689a82fc"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\package-seal.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "operation": "local-source-preparation"
+    },
+    {
+      "relative": "python-syntax.result.json",
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\python-syntax.result.json",
+        "bytes": 1105,
+        "sha256": "7e49b30722e8f889ab023091cd0d0508d38745d9ace8a13239df0a50e0bf9801"
+      },
+      "actualExit": 0,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\python-syntax.stdout.txt",
+        "bytes": 45,
+        "sha256": "bf9dd5fc59c917f3bcc4dc132dff6dec0aa9270e36d1806021e9fe8c7554a481"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\python-syntax.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "operation": "local-source-preparation"
+    },
+    {
+      "relative": "refine-runner.result.json",
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\refine-runner.result.json",
+        "bytes": 929,
+        "sha256": "d5c68c57e2772875d76c83e6695010890514d809bc47fb472f7093165835a171"
+      },
+      "actualExit": 0,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\refine-runner.stdout.txt",
+        "bytes": 75,
+        "sha256": "49d2f7c3466ad649b2df6e22399463d519eb2abbf0c88a9872eee1a544c84e17"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\refine-runner.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "operation": "local-source-preparation"
+    },
+    {
+      "relative": "runner-format.result.json",
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\runner-format.result.json",
+        "bytes": 952,
+        "sha256": "4975c9d4d178f9fa9f0f261067a2849eb7dfec5e7556fbcff253743de299b111"
+      },
+      "actualExit": 0,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\runner-format.stdout.txt",
+        "bytes": 67,
+        "sha256": "abdca58ebecc10beade902b61156f6da64419c082bae8b3f91d8ca6ba02b66c1"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\runner-format.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "operation": "local-source-preparation"
+    },
+    {
+      "relative": "windows-executor-admission.result.json",
+      "receipt": {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\windows-executor-admission.result.json",
+        "bytes": 1182,
+        "sha256": "fe7b1833b5a7affa50528cc5802e5311373eae25675c2ec3f8a15acf17dea155"
+      },
+      "actualExit": 1,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\windows-executor-admission.stdout.txt",
+        "bytes": 200,
+        "sha256": "1dec3d6dcd20f145de00105e88bcfd1085cdbbaac1736bc4a19a0f3a4019ec86"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\windows-executor-admission.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "operation": "local-source-preparation"
+    }
+  ],
+  "localChecks": {
+    "contracts": 13,
+    "nodeSyntax": 2,
+    "pythonSyntax": 1,
+    "finalFormatterCheckActualExit": 0,
+    "realPreparationBundleExit": 0,
+    "freshOutputNegativeActualExit": 1,
+    "windowsGuardActualExit": 1,
+    "windowsNativeChildCreated": false
+  },
+  "negativeEvidence": {
+    "initialGeneratorActualExit": 1,
+    "initialGeneratorEvidence": {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\initial-generator-failure.tool-result.json",
+      "bytes": 1374,
+      "sha256": "334794f7905bc849a000f995325ae5314a3e3f46ce141f6b953c73b911ba69d8"
+    },
+    "initialInertSchemaTestActualExit": 1,
+    "inertSchemaTestRepair": "Only Temp stub changed from plain class to actual Log subclass; product candidate unchanged",
+    "initialManifestFormatActualExit": 1,
+    "manifestFormatSemanticIdentity": true,
+    "windowsNegative": {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\windows-negative\\executor.closed.json",
+      "bytes": 1545,
+      "sha256": "edbe90af48c074cf3ddcd62b0a11d9529b2b1fb6c4f0cc7ca900b4cdaa0adb48"
+    },
+    "originalReadDiscoveryFailures": {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\local-discovery-negatives.tool-results.json",
+      "bytes": 902,
+      "sha256": "fe1ff98d8c9a2629eb1a3ccebc24319581320b1a324e2dc8eed53492577f18d4"
+    },
+    "firstGeneratorReceiptOperationWasCopiedReadOnlyLabelButActuallyLocalPreparation": true
+  },
+  "limits": {
+    "actualLinuxExecuted": false,
+    "MiniflareInstantiatedLocally": false,
+    "WorkerdStartedLocally": false,
+    "originalTestsExecutedLocally": false,
+    "fixtureRuntimeTestsExecutedLocally": false,
+    "productionRequests": 0,
+    "ciInvocations": 0,
+    "gitMutation": false,
+    "productionSourceModified": false,
+    "oldDiagnosticSourceModified": false,
+    "oldSealedEvidenceModified": false,
+    "mainMigrationDocumentModifiedByThisAgent": false,
+    "originalStrictGatePassed": false,
+    "fullG7Passed": false,
+    "fullG8Passed": false,
+    "nativeReaderPositiveControlProven": false,
+    "gracefulWorkerdProven": false
+  },
+  "preparationReportDoesNotAssertFutureRuntimeSuccess": true,
+  "ownCurrentSealCommandReceiptExcludedUntilClosed": true
+}

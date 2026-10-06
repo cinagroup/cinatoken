@@ -1,0 +1,212 @@
+{
+  "at": "2026-10-06T03:57:39.170Z",
+  "actualExit": 0,
+  "inputs": [
+    {
+      "path": "scripts/db/cutover/postgres-legacy-buyer-windowed-app-privileges-v374.native.test.mjs",
+      "bytes": 59511,
+      "sha256": "8c2304a6dd54a0edab28361fde57d2aaae7bfe2ee799b1384bcf1817115c6fc2",
+      "stagedBlob": "5151b0220b6b5e43773ccef5c5aabb631e90ac7e"
+    },
+    {
+      "path": "scripts/db/cutover/postgres-legacy-buyer-windowed-app-privileges-renewal-v376.native.test.mjs",
+      "bytes": 69752,
+      "sha256": "dd1db4a5b1674139f0e70574ceb9658f4f8af928cd9d72fcdb87a01ce495ceba",
+      "stagedBlob": "609405ab4d3be4746bbe05b999ebd3453e352064"
+    },
+    {
+      "path": "scripts/db/cutover/postgres-complete-text-admission-buyer-v379.native.test.mjs",
+      "bytes": 69064,
+      "sha256": "63bd0f32f88cfd226db1d0dfa0ddafdb8701c84950747885fd52ecdf248ef116",
+      "stagedBlob": "7c98c31eb033f0549b4b4414ebc2d54f4887e5ed"
+    },
+    {
+      "path": "scripts/db/cutover/postgres-complete-text-no-fetch-close-blocker-v382.native.test.mjs",
+      "bytes": 51124,
+      "sha256": "9881cf1ce90bcff2c71fe648e3c2cce589456ead69e6cc1ea5c66852274c2958",
+      "stagedBlob": "1e15e84d65b27edfd4bf7920a46ed31df8489090"
+    },
+    {
+      "path": "scripts/db/cutover/postgres-complete-text-observed-holder-v384.native.test.mjs",
+      "bytes": 53464,
+      "sha256": "c2cd38948a4c70335c750a77b2c29d7b8b667a57c255ede0098f4b339f621b68",
+      "stagedBlob": "3f472445fec100513151423e99aeefba1bd96fe6"
+    },
+    {
+      "path": "scripts/db/cutover/postgres-complete-text-platform-close-fence-v386.native.test.mjs",
+      "bytes": 57825,
+      "sha256": "26adbc8e529ee9b4e435dbf8ce848065aa18892f726001336030547453c7ffd8",
+      "stagedBlob": "e6e614012725b173cecb965343b9b00aa4f353e0"
+    },
+    {
+      "path": "scripts/db/cutover/postgres-complete-chat-holder-dispatch-v387.native.test.mjs",
+      "bytes": 50649,
+      "sha256": "44c0fad756bb9a080ada7358d5d135b74a9a8c74e0b224c0ae40162251e9a759",
+      "stagedBlob": "156ab08bd031f800e05f462a4e1130b8070c9f82"
+    },
+    {
+      "path": "scripts/db/cutover/postgres-complete-text-no-fetch-platform-close-v388.native.test.mjs",
+      "bytes": 64868,
+      "sha256": "25863388488d38beff66c2344f9ac30335c11f874134325ce0b835f73cc5676e",
+      "stagedBlob": "3c0a008a65af2d8b97f79e295c0172a1d4507ca8"
+    },
+    {
+      "path": "scripts/db/cutover/postgres-complete-text-no-fetch-recovery-v389.native.test.mjs",
+      "bytes": 64445,
+      "sha256": "577390203dbdaf37afd99965329dd32b4a31981bcfe2fcc69a77d1f3a1ef9d6d",
+      "stagedBlob": "ff10bfd2d3e81e657827cc9ceeeb0428fd0d518b"
+    },
+    {
+      "path": "scripts/db/cutover/postgres-complete-text-holder-worker-v390.native.test.mjs",
+      "bytes": 47848,
+      "sha256": "a16877174cb910f0d845bbd6ad86672319958b79292ffde938572d1fd17f0250",
+      "stagedBlob": "de33b091b3b748416595aa760895d04b0376c11c"
+    },
+    {
+      "path": "scripts/db/cutover/postgres-complete-text-secretless-plan-v391.native.test.mjs",
+      "bytes": 45949,
+      "sha256": "5090e3f047ec4272d172ac30af43dcfb73ed3e0c2c3335f82189c2638c04c1f8",
+      "stagedBlob": "c23ef9d3a7d658c22d42cdc1e15716fde8a6676c"
+    },
+    {
+      "path": "scripts/db/cutover/postgres-complete-text-response-observation-v392.native.test.mjs",
+      "bytes": 53800,
+      "sha256": "85e0bfb4c472ad594f51bd6eb08e2bfbb755f8508dd4f892a9830b9fe20686e0",
+      "stagedBlob": "cc411fe86c4664f0cd918c8dc20e4f8ab9417b15"
+    },
+    {
+      "path": "scripts/db/cutover/postgres-personal-key-auth-period-v395.native.test.mjs",
+      "bytes": 48434,
+      "sha256": "bc995f17324366fb2dc5835b0b145f37e0d64e3e93e23dbb1f105c8e3eaea37c",
+      "stagedBlob": "446e709c890028db9083d1ad8632d41a13d1b800"
+    },
+    {
+      "path": "scripts/db/cutover/postgres-complete-text-routing-projection-v396.native.test.mjs",
+      "bytes": 78903,
+      "sha256": "10b8f69a54979b743db6be2fc5c23b525c616e910efd6b57d184371cffbadaf6",
+      "stagedBlob": "082d89de0bba4a0d256770bf51223d2587ad6a09"
+    },
+    {
+      "path": "scripts/db/cutover/postgres-complete-text-response-no-fetch-coinstall-v397.native.test.mjs",
+      "bytes": 87669,
+      "sha256": "c8a2d1d51abc160dd3d51ba0c7b5f68ea71850a34e0a3f71da67022bd7971405",
+      "stagedBlob": "350d53c7948a01f2078ab2ad388ed7d990eb235d"
+    },
+    {
+      "path": "scripts/db/cutover/postgres-complete-text-auth-routing-recovery-coinstall-v400.native.test.mjs",
+      "bytes": 132164,
+      "sha256": "589b8d3584792147fb5ce2ed3da71d98257cc86fe1436f01c34a017fb13e7f2d",
+      "stagedBlob": "09e14f0839bc0e71abaaf89f3e90e9bf476a5de5"
+    },
+    {
+      "path": "scripts/db/cutover/postgres-exclusive-credential-free-chat-ingress-v401.native.test.mjs",
+      "bytes": 134352,
+      "sha256": "ea672eafb4dc988313c18b40f9579dadc0fc1d9ad03e362574f3ef8b10246f77",
+      "stagedBlob": "eba50ce91026b7206a3c206b912a096f238f7e89"
+    },
+    {
+      "path": "scripts/db/cutover/postgres-complete-text-platform-event-delivery-v402.native.test.mjs",
+      "bytes": 142550,
+      "sha256": "f8f0f8189d7c9323b7ee347e23395b36142ee3696e9b840d7c62aa1b5fd7e6cb",
+      "stagedBlob": "39148f03c3bb8422b727c8583d0e269b162c6234"
+    },
+    {
+      "path": "scripts/db/cutover/postgres-complete-text-no-fetch-fence-v370.native.test.mjs",
+      "bytes": 50398,
+      "sha256": "7a54a0085abf5ab2095d7b49609acbdf4d9836915ed6942d017c7434c1c5d142",
+      "stagedBlob": "02bf8a758edd16ed8f06dcf63dfad988b3d11cdc"
+    },
+    {
+      "path": "scripts/db/cutover/postgres-guardrail-admission-adapter-v352.native.test.mjs",
+      "bytes": 16668,
+      "sha256": "d183dd82c8b9e4162bb385dada778a2ca907873ca8174a41d4e7240397babfc8",
+      "stagedBlob": "58606461347099b140c859d413d1e9474b6b13ed"
+    },
+    {
+      "path": "scripts/db/cutover/postgres-buyer-split-grant-rerun-v348.native.test.mjs",
+      "bytes": 18946,
+      "sha256": "d83c9dcabfb24ddd90c6006ac8ac6078583fc6439b39436708f73ee8099b23b1",
+      "stagedBlob": "e7360711fd96126b58d892c411bb051ce7537e2a"
+    },
+    {
+      "path": "scripts/db/cutover/postgres-buyer-split-guardrail-v349.native.test.mjs",
+      "bytes": 23743,
+      "sha256": "c4adb632a2e237e0ed359f42686371bfad138f1ce4cc10c557d219e3ecb83d87",
+      "stagedBlob": "59b6120aeef543947b08df96f9bb152ab6b43ebb"
+    },
+    {
+      "path": "scripts/db/cutover/postgres-shared-key-stats-auth-boundary-v346.native.test.mjs",
+      "bytes": 8904,
+      "sha256": "46a13c44fec610692feb18ea0bf1d3bc10eb93a76e65d47edd326db13ea31e18",
+      "stagedBlob": "763c4c8ea1784c49f878ba35dab81e0ff7fedbfd"
+    },
+    {
+      "path": "scripts/db/cutover/postgres-shared-key-stats-signed-claim-v348.native.test.mjs",
+      "bytes": 12736,
+      "sha256": "7e0ae22d95b9cecc2fa154a2afd658868a31ece212aa60715021872e04557238",
+      "stagedBlob": "4b3efbda1adec72a45deeaa37565b42160f54d72"
+    },
+    {
+      "path": "scripts/db/cutover/postgres-shared-key-stats-claim-reader-v349-cjs-loader-successor.native.test.mjs",
+      "bytes": 29481,
+      "sha256": "997c7ec3b5d83bafd8c386493d66a8fd461d86576ea31c6afe32672e995f0088",
+      "stagedBlob": "af5788e7f791127b4d1915362620c9d57f756dcf"
+    },
+    {
+      "path": "scripts/db/cutover/postgres-shared-key-credited-usage-reader.native.test.mjs",
+      "bytes": 18603,
+      "sha256": "fe62b22831e7b37e8c0377ed4e902ce0be499dd54ebea2d1e81b93c60c47d912",
+      "stagedBlob": "c5d03e3be10d3441718add4d064a62980cea9cef"
+    },
+    {
+      "path": ".github/workflows/v364-direct-socket.yml",
+      "bytes": 1575,
+      "sha256": "f4e2b9da3c9be4374e4945c7daab7dc3c166fb4c9e1d2d61ff804ca3dc3b04e9",
+      "stagedBlob": "a7cd4c505e8817550b414372a1e0a2f7e6e86634"
+    },
+    {
+      "path": "scripts/diagnostics/v364-direct-socket/README.md",
+      "bytes": 5092,
+      "sha256": "d2da25041decf0e0d1d1dd99fcc4182f8ef8528e8671f72f48e53a158fd600ed",
+      "stagedBlob": "5a67689b9b74791f3a856c430513a539b05a38bc"
+    },
+    {
+      "path": "scripts/diagnostics/v364-direct-socket/execute-owned-linux.py",
+      "bytes": 15959,
+      "sha256": "c635a435873185363faf23e1cbaa6887b858a9f23e32882a6ce54ff5405e15e0",
+      "stagedBlob": "520159e3639eaba95626a2eee89038c9d09a3305"
+    },
+    {
+      "path": "scripts/diagnostics/v364-direct-socket/native-reader-calibration.mjs",
+      "bytes": 2531,
+      "sha256": "36f30b9dc7e8cfad8b68f6c9590f8cea50444173a05ccd3e775c9c32214408be",
+      "stagedBlob": "28ce111220c1238d5914e2e02041142686052d99"
+    },
+    {
+      "path": "scripts/diagnostics/v364-direct-socket/run-direct-socket.mjs",
+      "bytes": 34907,
+      "sha256": "621cb7384b32a25af7c37d411cd12c2d51bf47c241d9d1f24c1c3ee3989723f3",
+      "stagedBlob": "2ebeb93949ccfb98b09198b5a90676f9b0ac65b9"
+    },
+    {
+      "path": "scripts/diagnostics/v364-direct-socket/sealed-package.json",
+      "bytes": 1045,
+      "sha256": "29976feae54abf63c53e5056085150b0165d140152a91d766b9dcfac9d8615c0",
+      "stagedBlob": "d4199024f6d367093cbfaa85f0ae37ed87a74c47"
+    },
+    {
+      "path": "scripts/diagnostics/v364-direct-socket/source-inputs.json",
+      "bytes": 5028,
+      "sha256": "a4046af64da2e2f61b37ee9ea92658bc2d54236052c859477c57d9049f62e3e9",
+      "stagedBlob": "9d366f73103807a67272b1961570a320a6b65968"
+    },
+    {
+      "path": "docs/developers/architecture/web-frontend-migration.md",
+      "bytes": 799542,
+      "sha256": "6a734dcd78d0453a45962606c818d077d7c2da0f7f30b256a503d2ba0dceb993",
+      "stagedBlob": "85b4bb15d93a9d97f33cb839ad9e55fecb2f1275"
+    }
+  ],
+  "protectedInputs": 302,
+  "originalScopeAndStateLinesExact": true
+}

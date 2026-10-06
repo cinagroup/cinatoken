@@ -1,0 +1,808 @@
+{
+  "schema": "cinatoken.final42-archive-independent-peer.final.v1",
+  "finishedAt": "2026-10-06T05:34:30.843Z",
+  "root": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4",
+  "verdict": {
+    "complete": true,
+    "supportsArchiveAsCollectionOnly": true,
+    "sourceStoredDecodedBytesShaSetsExact": true,
+    "receiptAndDataSemanticsExact": true,
+    "blockingFindings": [],
+    "businessPassDerived": false,
+    "fullG7Verified": false,
+    "fullG8Verified": false,
+    "fullNativeCancelVerified": false
+  },
+  "primaryAudit": {
+    "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\full42-archive-independent-audit.json",
+    "bytes": 2597242,
+    "sha256": "fdf07f90a22dbcc656b5f53bdd37537a35dc1e6bb5592997c1db0936ccab47ce"
+  },
+  "opaqueEe122Audit": {
+    "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\ee122-capsule-independent-audit.json",
+    "bytes": 128155,
+    "sha256": "b59d15d77045cf358d3c6cd5c04c76d058426fed24b67a21326a51b82a6c73a8"
+  },
+  "archiveAuthority": {
+    "report": {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\collected-archive-output\\2026-10-06-g7-native26-calibration-progress.json",
+      "bytes": 5177117,
+      "sha256": "794d72cc5287970fb8e042241fe5213994b9899274f5020a77a946f93362fa5d"
+    },
+    "originalConfig": {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-capsule-collection-config-NWebV7\\all-frozen-final-config.json",
+      "bytes": 257294,
+      "sha256": "d50f84f7c0cf4ec66d367dd7ed79edbad6719944f394d39ecd65fcfb7d8dd09e"
+    },
+    "modifiedConfig": {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\collection-config.json",
+      "bytes": 257261,
+      "sha256": "e6d6ccf36a7ecb4dc1cfafd96123b08ff3f386e0eb3bb5e5268a7505a43babcb"
+    },
+    "outputDirectoryOnlyConfigChange": true,
+    "admission": {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-capsule-admission-meta-UkwrUh\\FINAL-final42-frozen-capsule-admission.json",
+      "bytes": 34074,
+      "sha256": "17bd25b696dee7d03f28dc5696d09df8330243a1ba2128d83da0292aa16a8b8b"
+    },
+    "rootCollectionAndVerificationReceipts": [
+      {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\collection-final.result.json",
+        "receipt": {
+          "at": "2026-10-06T05:23:12.875Z",
+          "finishedAt": "2026-10-06T05:23:28.764Z",
+          "executable": "C:/Program Files/nodejs/node.exe",
+          "args": [
+            "C:/Users/cina/AppData/Local/Temp/cinatoken-all-frozen-data-tools-FoBS1O/collect-evidence.mjs",
+            "collect",
+            "C:/Users/cina/AppData/Local/Temp/cinatoken-final-durable-collection-meta-S7NHM2/collection-config.json"
+          ],
+          "cwd": "C:/cinagroup/cinatoken",
+          "actualExit": 0,
+          "signal": null,
+          "stdout": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\collection-final.stdout.log",
+            "bytes": 423,
+            "sha256": "fddb429ec1c02d182e8e5faf6baefb765d690c3385680c7b6b51f4ad3f2aa84c"
+          },
+          "stderr": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\collection-final.stderr.log",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        "receiptPin": {
+          "bytes": 942,
+          "sha256": "7b04dcf386c4da333d7d119f53877bc70bdba255fce9cb955756eab38638b2f0"
+        }
+      },
+      {
+        "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\verification-final.result.json",
+        "receipt": {
+          "at": "2026-10-06T05:24:27.253Z",
+          "finishedAt": "2026-10-06T05:24:35.030Z",
+          "executable": "C:/Program Files/nodejs/node.exe",
+          "args": [
+            "C:/Users/cina/AppData/Local/Temp/cinatoken-all-frozen-data-tools-FoBS1O/verify-evidence.mjs",
+            "C:/Users/cina/AppData/Local/Temp/cinatoken-final-durable-collection-meta-S7NHM2/collected-archive-output/2026-10-06-g7-native26-calibration-progress.json",
+            "C:/Users/cina/AppData/Local/Temp/cinatoken-final-durable-collection-meta-S7NHM2/verification-final.json",
+            "with-source"
+          ],
+          "cwd": "C:/cinagroup/cinatoken",
+          "actualExit": 0,
+          "signal": null,
+          "stdout": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\verification-final.stdout.log",
+            "bytes": 475,
+            "sha256": "cd48609f7043636dec2b674b4ecb4151189531da32998afc8f485954bb2f80ea"
+          },
+          "stderr": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\verification-final.stderr.log",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        "receiptPin": {
+          "bytes": 1111,
+          "sha256": "0176200045fcbf4c146c36bf6188128fe8b183f4fa7aac50a777f55103c4f47d"
+        }
+      }
+    ],
+    "rootVerificationReport": {
+      "closed": true,
+      "actualExitCode": 0,
+      "report": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\collected-archive-output\\2026-10-06-g7-native26-calibration-progress.json",
+      "reportBytes": 5177117,
+      "reportSha256": "794d72cc5287970fb8e042241fe5213994b9899274f5020a77a946f93362fa5d",
+      "verifiedFiles": 3357,
+      "storedBytesAndShaExact": true,
+      "decodedOriginalBytesAndShaExact": true,
+      "sourceBytesExact": true,
+      "directorySetExact": true,
+      "gatePassDerived": false
+    }
+  },
+  "archiveTotals": {
+    "files": 3357,
+    "originalBytes": 188885685,
+    "storedBytes": 53430236,
+    "gzipFiles": 111,
+    "nonzeroOrAbnormalReceipts": 41
+  },
+  "originalClosedReceiptRecords": {
+    "count": 803,
+    "numericZero": 762,
+    "numericOne": 36,
+    "numericTwo": 2,
+    "nullActualExit": 3,
+    "nonzeroOrAbnormal": 41,
+    "explanation": "Exact admitted closed records; includes no-child preflight and null EPERM typed outcomes. Never interpreted as803 real children or762 application passes."
+  },
+  "originalAggregates": {
+    "count": 9,
+    "childLogAuthority": false
+  },
+  "nonProcessData": {
+    "fileReads": 52,
+    "utf16Slices": 40,
+    "stdinSnapshots": 1,
+    "total": 93,
+    "actualProcessExit": null,
+    "actualChildExitProven": false,
+    "fileReadStatusCounts": {
+      "0": 36,
+      "None": 16
+    }
+  },
+  "downloadedExecutors": {
+    "count": 2,
+    "records": [
+      {
+        "root": "current-terminal-evidence",
+        "file": "canonical-calibration-artifact/_temp/v364-direct-socket-once-37414167261-1/executor.closed.json",
+        "sha256": "1f36a6a5c68356bdce2a30e57f0e212db88c0a02b0b01eb0d872d06565586e18",
+        "dialect": "exact-downloaded-direct-executor-manifest-v1",
+        "transportBindingVerified": true,
+        "originalMtimePreserved": false,
+        "downloadedMtimeIsNotProducerMtime": true,
+        "downloadActualExit": 0,
+        "originalExecutorActualExit": 1,
+        "originalActualProcessExit": 1,
+        "originalRunnerOutcomeCode": 1,
+        "sourceSHA": "dc7be6f8597333151c450bae3ae15e6585e3b2eb",
+        "runId": "37414167261",
+        "runAttempt": "1",
+        "artifactId": 11390876053,
+        "frozenIndexSha256": "cedbf58fb411c7a183c60d183f6d36da8c853236ec7711f0b3ad679da2c2f467",
+        "remoteZipDigestReportedOnly": "sha256:0209575a06755b96ff14c500eeec5431b67e562b662435d044212c48b89217af",
+        "localZipDigestVerified": false,
+        "newExecutionClaimed": false,
+        "gatePassDerived": false
+      },
+      {
+        "root": "current-terminal-evidence",
+        "file": "direct-artifact-current/_temp/v364-direct-socket-once-37412108171-1/executor.closed.json",
+        "sha256": "31953785aeec17228cf9d48ad09385eacf330edbe93d1111020a4f3aca52b897",
+        "dialect": "exact-downloaded-direct-executor-manifest-v1",
+        "transportBindingVerified": true,
+        "originalMtimePreserved": false,
+        "downloadedMtimeIsNotProducerMtime": true,
+        "downloadActualExit": 0,
+        "originalExecutorActualExit": 1,
+        "originalActualProcessExit": 1,
+        "originalRunnerOutcomeCode": 1,
+        "sourceSHA": "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc",
+        "runId": "37412108171",
+        "runAttempt": "1",
+        "artifactId": 11389298418,
+        "frozenIndexSha256": "cedbf58fb411c7a183c60d183f6d36da8c853236ec7711f0b3ad679da2c2f467",
+        "remoteZipDigestReportedOnly": "sha256:606533d4371ef5adf09efa6b4e308254815c92e63d8954ca37c1ee6a7530f647",
+        "localZipDigestVerified": false,
+        "newExecutionClaimed": false,
+        "gatePassDerived": false
+      }
+    ],
+    "bothOriginalExecutorActualExit": 1,
+    "sidecarsAlsoDescribeRecordsAlreadyIn803": true,
+    "downloadZeroNeverReplacesExecutorOne": true,
+    "remoteZipDigestsReportedOnly": true,
+    "downloadedMtimeNeverClaimedProducerMtime": true
+  },
+  "opaqueEe122": {
+    "sourceFiles": 213,
+    "zipMembers": 213,
+    "originalBytes": 12098565,
+    "zip": {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-ee122-opaque-capsule-89cf1ba373634086a3926a636a292ec7\\ee122-frozen-root-lossless-opaque.zip",
+      "bytes": 1754533,
+      "sha256": "ad81f711b44102fde593087f8592dd4081c53058309df910586ee2a7af86f03a"
+    },
+    "completeOriginalBytesShaCrcIdentityMtimeExact": true,
+    "originalChildren": {
+      "count": 31,
+      "zero": 28,
+      "one": 3,
+      "notAddedToTopLevel803": true
+    },
+    "originalBusinessFacts": {
+      "sourceHead": "ee122dd4273e2db892daa724bc6417a9b02b280c",
+      "proxyConclusion": "failure",
+      "nativeStep24OriginalExit": 1,
+      "native55to113Skipped": 59,
+      "prepared26Skipped": 26,
+      "strictTap": {
+        "tests": 8,
+        "pass": 7,
+        "fail": 1,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "collectionOnly": true,
+      "fullG7G8Pass": false
+    },
+    "packagingZeroNotBusinessPass": true
+  },
+  "sourceCohorts": {
+    "releaseSourceCommit": "dc7be6f8597333151c450bae3ae15e6585e3b2eb",
+    "g7ActualSourceCommit": "473de5fc520fc7d64db700db88a76c7a6b45c241",
+    "native26ActualSourceCommit": "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc",
+    "originalDirectDiagnosticActualSourceCommit": "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc",
+    "newCalibrationDiagnosticActualSourceCommit": "dc7be6f8597333151c450bae3ae15e6585e3b2eb",
+    "productionSourceCommitPrefix": "c13",
+    "productionWorkerVersionPrefix": "2a0",
+    "productionTrafficPercent": 100,
+    "productionReadPerformedHere": false,
+    "newStaticPreparedCommit": "ee122dd4273e2db892daa724bc6417a9b02b280c",
+    "newStaticPreparedNativeActualResult": {
+      "sourceCommit": "ee122dd4273e2db892daa724bc6417a9b02b280c",
+      "proxyRun": "failure",
+      "nativeJob": "failure",
+      "firstFailureStep": 24,
+      "batch55to113": "all skipped",
+      "newFourFileFixtures": "skipped",
+      "fullProxyPass": false
+    }
+  },
+  "originalAdmissionFailures": {
+    "firstOriginal31RootActualExit": 1,
+    "firstOriginal31RootBlockers": 154,
+    "original39RootActualExit": 1,
+    "original39RootBlockers": 39,
+    "original39FailureRoot": "C:/Users/cina/AppData/Local/Temp/cinatoken-final-all-frozen-admission-meta-27arGJ",
+    "rawAuthorityRetained": true,
+    "notReclassifiedAsPass": true
+  },
+  "original39BlockerReports": [
+    {
+      "file": "FINAL-original39-unsupported-admission.json",
+      "bytes": 10437,
+      "sha256": "a6a6acd670deef38c4b5d1e0d9222813bac74f22258c8dd6a2a9f5ff9af1570e",
+      "blockerCount": 39,
+      "keys": [
+        "schema",
+        "finishedAt",
+        "originalReaderActualExit",
+        "roots",
+        "admittedFiles",
+        "closedReceipts",
+        "nonzeroOrAbnormal",
+        "aggregateReports",
+        "reportOnlyBindings",
+        "originalImportedRuntimeExits",
+        "blockers",
+        "exclusions",
+        "pureAuditReceipt",
+        "rawStreams",
+        "scope",
+        "losslessCapsuleStillPending",
+        "noOriginalFilesRemovedOrModified",
+        "noReaderCodeChangedAfter99Seal",
+        "gatePassDerived",
+        "fullG7Verified",
+        "fullG8Verified",
+        "newBusinessExecution",
+        "sourceCommit"
+      ],
+      "firstBlocker": {
+        "root": "ee122-native-terminal-independent-peer",
+        "file": "dispatch-group-v2-step-27.raw.log",
+        "reason": "Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active"
+      }
+    },
+    {
+      "file": "final-combined-39-pure-audit.json",
+      "bytes": 4181616,
+      "sha256": "bfbc0332b74faba84d4fa75c0d01f9ab5c97b334b372cff9dfb5fab584afc784",
+      "blockerCount": 39,
+      "keys": [
+        "entries",
+        "exclusions",
+        "blockers",
+        "receipts",
+        "aggregateReports",
+        "historicalNonterminal",
+        "reportOnlyDataBindings",
+        "closedExecutorTransportBindings",
+        "sourceRootIds"
+      ],
+      "firstBlocker": {
+        "root": "ee122-native-terminal-independent-peer",
+        "file": "dispatch-group-v2-step-27.raw.log",
+        "reason": "Log has no verified terminal command receipt; declare an explicit reasoned exclusion if active"
+      }
+    }
+  ],
+  "wholeTools99FrozenSetUnchanged": true,
+  "independentAuditStageProvenance": {
+    "firstWholeReader": {
+      "actualExit": 1,
+      "completedSourceStage": {
+        "actualWholeReaderExit": 1,
+        "readerScript": {
+          "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\audit-full42-archive.py",
+          "bytes": 18974,
+          "sha256": "e956a47476c1fa9ed4a9bb970851cd57165e1dc6a36cd79661a1e8f20e08b40d"
+        },
+        "closedReceipt": {
+          "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\audit-full42-archive.closed.json",
+          "bytes": 1256,
+          "sha256": "6b5819fe3032afbfcc3f8895c65e64f6fdeab136880e82167fc83f9abd78457b",
+          "value": {
+            "schema": "independent-final42-archive-readonly-child-receipt-v1",
+            "name": "audit-full42-archive",
+            "executable": "C:/Users/cina/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+            "argv": [
+              "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4/audit-full42-archive.py",
+              "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4"
+            ],
+            "cwd": "C:/cinagroup/cinatoken",
+            "startedAt": "2026-10-06T05:30:00.012Z",
+            "closedAt": "2026-10-06T05:30:34.161Z",
+            "actualExit": 1,
+            "signal": null,
+            "spawnError": null,
+            "closed": true,
+            "stdout": {
+              "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\audit-full42-archive.stdout.log",
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            "stderr": {
+              "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\audit-full42-archive.stderr.log",
+              "bytes": 1116,
+              "sha256": "2f39951abc97455b921ef5ba508836de25c83551df31f8f4111852342ee0e1bc"
+            }
+          }
+        },
+        "originalError": {
+          "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\audit-full42-archive.stderr.log",
+          "bytes": 1116,
+          "sha256": "2f39951abc97455b921ef5ba508836de25c83551df31f8f4111852342ee0e1bc"
+        },
+        "completedAssertionRangeBeforeTraceFailure": "Source/stored/config/set/gzip/total assertions in original script lines1-54 ran before original line83 failed resolving a relative historical stdout descriptor.",
+        "wholeReaderSuccessClaimed": false,
+        "sourceAndStorageWorkRepeated": false
+      },
+      "reason": "The complete source/stored/gzip/count/set assertions ran before relative historical stdout resolution failed. Original failure retained. Whole-reader0 is not claimed."
+    },
+    "continuationReceipt": {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\audit-full42-archive-v2.closed.json",
+      "bytes": 1267,
+      "sha256": "0bf5a69a015196fe01240d819b62e3a7b018266e1b6b18126385d1d72e2463e3",
+      "receipt": {
+        "schema": "independent-final42-archive-readonly-child-receipt-v1",
+        "name": "audit-full42-archive-v2",
+        "executable": "C:/Users/cina/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+        "argv": [
+          "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4/audit-full42-archive-v2.py",
+          "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4"
+        ],
+        "cwd": "C:/cinagroup/cinatoken",
+        "startedAt": "2026-10-06T05:33:03.879Z",
+        "closedAt": "2026-10-06T05:33:05.224Z",
+        "actualExit": 0,
+        "signal": null,
+        "spawnError": null,
+        "closed": true,
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\audit-full42-archive-v2.stdout.log",
+          "bytes": 625,
+          "sha256": "f646ef532e704c5f24dab2ca688bad126eebe06087e6870a4954e59af08b64d7"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\audit-full42-archive-v2.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    "continuationScope": "Continued only receipt/raw/data-binding semantics with exact declared copy/relative-output associations; complete3357 source/stored/gzip checks were not repeated.",
+    "originalFailedReaderUnmodified": true
+  },
+  "ownActualReceiptsBeforeFinalWriter": [
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\audit-ee122-capsule.closed.json",
+      "bytes": 1251,
+      "sha256": "7cc50501b179917eca0e2262f5e7d1debcab6ce54ac166ea3f0014867726eeed",
+      "receipt": {
+        "schema": "independent-final42-archive-readonly-child-receipt-v1",
+        "name": "audit-ee122-capsule",
+        "executable": "C:/Users/cina/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+        "argv": [
+          "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4/audit-ee122-capsule.py",
+          "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4"
+        ],
+        "cwd": "C:/cinagroup/cinatoken",
+        "startedAt": "2026-10-06T05:19:44.471Z",
+        "closedAt": "2026-10-06T05:19:44.860Z",
+        "actualExit": 0,
+        "signal": null,
+        "spawnError": null,
+        "closed": true,
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\audit-ee122-capsule.stdout.log",
+          "bytes": 415,
+          "sha256": "cc2f8c14267f52ee639e626dcceb1efb73849ec5b3c2a2f8c1925e51dcc5eb81"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\audit-ee122-capsule.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\audit-full42-archive-v2.closed.json",
+      "bytes": 1267,
+      "sha256": "0bf5a69a015196fe01240d819b62e3a7b018266e1b6b18126385d1d72e2463e3",
+      "receipt": {
+        "schema": "independent-final42-archive-readonly-child-receipt-v1",
+        "name": "audit-full42-archive-v2",
+        "executable": "C:/Users/cina/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+        "argv": [
+          "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4/audit-full42-archive-v2.py",
+          "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4"
+        ],
+        "cwd": "C:/cinagroup/cinatoken",
+        "startedAt": "2026-10-06T05:33:03.879Z",
+        "closedAt": "2026-10-06T05:33:05.224Z",
+        "actualExit": 0,
+        "signal": null,
+        "spawnError": null,
+        "closed": true,
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\audit-full42-archive-v2.stdout.log",
+          "bytes": 625,
+          "sha256": "f646ef532e704c5f24dab2ca688bad126eebe06087e6870a4954e59af08b64d7"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\audit-full42-archive-v2.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\audit-full42-archive.closed.json",
+      "bytes": 1256,
+      "sha256": "6b5819fe3032afbfcc3f8895c65e64f6fdeab136880e82167fc83f9abd78457b",
+      "receipt": {
+        "schema": "independent-final42-archive-readonly-child-receipt-v1",
+        "name": "audit-full42-archive",
+        "executable": "C:/Users/cina/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+        "argv": [
+          "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4/audit-full42-archive.py",
+          "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4"
+        ],
+        "cwd": "C:/cinagroup/cinatoken",
+        "startedAt": "2026-10-06T05:30:00.012Z",
+        "closedAt": "2026-10-06T05:30:34.161Z",
+        "actualExit": 1,
+        "signal": null,
+        "spawnError": null,
+        "closed": true,
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\audit-full42-archive.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\audit-full42-archive.stderr.log",
+          "bytes": 1116,
+          "sha256": "2f39951abc97455b921ef5ba508836de25c83551df31f8f4111852342ee0e1bc"
+        }
+      }
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-archive-report.closed.json",
+      "bytes": 1088,
+      "sha256": "739359f109488747a9a858fa9e69ca8e94cd583c0b87a6cbb67f856fe52157fd",
+      "receipt": {
+        "schema": "independent-final42-archive-readonly-child-receipt-v1",
+        "name": "inspect-archive-report",
+        "executable": "C:/Program Files/nodejs/node.exe",
+        "argv": [
+          "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4/inspect-archive-report.mjs"
+        ],
+        "cwd": "C:/cinagroup/cinatoken",
+        "startedAt": "2026-10-06T05:25:21.644Z",
+        "closedAt": "2026-10-06T05:25:21.755Z",
+        "actualExit": 0,
+        "signal": null,
+        "spawnError": null,
+        "closed": true,
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-archive-report.stdout.log",
+          "bytes": 21907,
+          "sha256": "3ec05ad6739e0adfdfec35d156b73c6dfaf08c57e3c86d15d3866b8814e04578"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-archive-report.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-binding-schema.closed.json",
+      "bytes": 1088,
+      "sha256": "6a69aec3b8ad01527bce2766fda9a1f1c1c818316c46faea8d21184588b3b998",
+      "receipt": {
+        "schema": "independent-final42-archive-readonly-child-receipt-v1",
+        "name": "inspect-binding-schema",
+        "executable": "C:/Program Files/nodejs/node.exe",
+        "argv": [
+          "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4/inspect-binding-schema.mjs"
+        ],
+        "cwd": "C:/cinagroup/cinatoken",
+        "startedAt": "2026-10-06T05:26:12.396Z",
+        "closedAt": "2026-10-06T05:26:12.590Z",
+        "actualExit": 0,
+        "signal": null,
+        "spawnError": null,
+        "closed": true,
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-binding-schema.stdout.log",
+          "bytes": 29031,
+          "sha256": "6bc0e8de62fb7d17cd8323c3cf207508773d4074b076902fabde8fdacb9c8693"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-binding-schema.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-capsule-process-provenance.closed.json",
+      "bytes": 1135,
+      "sha256": "89582ecf28e6c926b15ecfc3060e61f66c26bb07fc6c7574fa7371b17a819091",
+      "receipt": {
+        "schema": "independent-final42-archive-readonly-child-receipt-v1",
+        "name": "inspect-capsule-process-provenance",
+        "executable": "C:/Program Files/nodejs/node.exe",
+        "argv": [
+          "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4/inspect-capsule-process-provenance.mjs"
+        ],
+        "cwd": "C:/cinagroup/cinatoken",
+        "startedAt": "2026-10-06T05:21:19.982Z",
+        "closedAt": "2026-10-06T05:21:20.056Z",
+        "actualExit": 0,
+        "signal": null,
+        "spawnError": null,
+        "closed": true,
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-capsule-process-provenance.stdout.log",
+          "bytes": 7576,
+          "sha256": "61e9f2adb944917281176a9ddd312c89f107c29769af4eee867b9ec9aa8cfbf7"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-capsule-process-provenance.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-capsule-schema-small.closed.json",
+      "bytes": 1166,
+      "sha256": "3c284ea4f85048807880799d85232b2ae1f24d68ed86413cadb6e51a68971d07",
+      "receipt": {
+        "schema": "independent-final42-archive-readonly-child-receipt-v1",
+        "name": "inspect-capsule-schema-small",
+        "executable": "C:/Users/cina/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+        "argv": [
+          "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4/inspect-capsule-schema-small.py"
+        ],
+        "cwd": "C:/cinagroup/cinatoken",
+        "startedAt": "2026-10-06T05:18:49.820Z",
+        "closedAt": "2026-10-06T05:18:49.899Z",
+        "actualExit": 0,
+        "signal": null,
+        "spawnError": null,
+        "closed": true,
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-capsule-schema-small.stdout.log",
+          "bytes": 7753,
+          "sha256": "79d992782f2a5fc504b25ba662e3d08aba3f390b0dcc878f0f53267020af1b54"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-capsule-schema-small.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-capsule-schema.closed.json",
+      "bytes": 1144,
+      "sha256": "cb1f1db0dedcd7b8a091ba9f5a88a873f59181109d5ff18eb8fc0259d4b5dd7a",
+      "receipt": {
+        "schema": "independent-final42-archive-readonly-child-receipt-v1",
+        "name": "inspect-capsule-schema",
+        "executable": "C:/Users/cina/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+        "argv": [
+          "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4/inspect-capsule-schema.py"
+        ],
+        "cwd": "C:/cinagroup/cinatoken",
+        "startedAt": "2026-10-06T05:18:35.308Z",
+        "closedAt": "2026-10-06T05:18:35.420Z",
+        "actualExit": 0,
+        "signal": null,
+        "spawnError": null,
+        "closed": true,
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-capsule-schema.stdout.log",
+          "bytes": 189022,
+          "sha256": "d4f26edd45e47e7adee602ae1cd14fd4d2badce5a85b1aeedd610645a9d7d439"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-capsule-schema.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-capsule.closed.json",
+      "bytes": 1059,
+      "sha256": "ce908aaf4dcb0529e225e2081e9bfeb962efc2d58df362a9b8186fae90a9bceb",
+      "receipt": {
+        "schema": "independent-final42-archive-readonly-child-receipt-v1",
+        "name": "inspect-capsule",
+        "executable": "C:/Program Files/nodejs/node.exe",
+        "argv": [
+          "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4/inspect-capsule.mjs"
+        ],
+        "cwd": "C:/cinagroup/cinatoken",
+        "startedAt": "2026-10-06T05:18:11.303Z",
+        "closedAt": "2026-10-06T05:18:11.393Z",
+        "actualExit": 0,
+        "signal": null,
+        "spawnError": null,
+        "closed": true,
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-capsule.stdout.log",
+          "bytes": 9391,
+          "sha256": "1005228dcc8c0aca559c9c74e5cc85dc92ddd388e1558d978faac19900477cb4"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-capsule.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-final-admission.closed.json",
+      "bytes": 1092,
+      "sha256": "6e2c05ca05339e175260f7880e786016a9458a6069b22655d16b6b36fd2ab57d",
+      "receipt": {
+        "schema": "independent-final42-archive-readonly-child-receipt-v1",
+        "name": "inspect-final-admission",
+        "executable": "C:/Program Files/nodejs/node.exe",
+        "argv": [
+          "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4/inspect-final-admission.mjs"
+        ],
+        "cwd": "C:/cinagroup/cinatoken",
+        "startedAt": "2026-10-06T05:24:41.565Z",
+        "closedAt": "2026-10-06T05:24:41.673Z",
+        "actualExit": 0,
+        "signal": null,
+        "spawnError": null,
+        "closed": true,
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-final-admission.stdout.log",
+          "bytes": 22191,
+          "sha256": "263783fb12a8de7a370a56d56a864adcb54bb500aaf30aea36b6ab6b1c948f92"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-final-admission.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-final-config.closed.json",
+      "bytes": 1080,
+      "sha256": "06058f2d89beafdf648811f8a6b1b55e0f1bf0c403d5c86bc5211432e6b1289b",
+      "receipt": {
+        "schema": "independent-final42-archive-readonly-child-receipt-v1",
+        "name": "inspect-final-config",
+        "executable": "C:/Program Files/nodejs/node.exe",
+        "argv": [
+          "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4/inspect-final-config.mjs"
+        ],
+        "cwd": "C:/cinagroup/cinatoken",
+        "startedAt": "2026-10-06T05:24:16.862Z",
+        "closedAt": "2026-10-06T05:24:16.952Z",
+        "actualExit": 0,
+        "signal": null,
+        "spawnError": null,
+        "closed": true,
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-final-config.stdout.log",
+          "bytes": 12087,
+          "sha256": "9691a624b9cac3635b0daebc1c60cd5042b76db35be12874a8e97d838b79fbbb"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-final-config.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\prepare-archive-audit-continuation.closed.json",
+      "bytes": 1189,
+      "sha256": "b7ec1cd4c6853e95b947f2e8ff348df6595891ccc75d49229a83923904b2f6ce",
+      "receipt": {
+        "schema": "independent-final42-archive-readonly-child-receipt-v1",
+        "name": "prepare-archive-audit-continuation",
+        "executable": "C:/Users/cina/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+        "argv": [
+          "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4/prepare-archive-audit-continuation.py"
+        ],
+        "cwd": "C:/cinagroup/cinatoken",
+        "startedAt": "2026-10-06T05:33:03.732Z",
+        "closedAt": "2026-10-06T05:33:03.806Z",
+        "actualExit": 0,
+        "signal": null,
+        "spawnError": null,
+        "closed": true,
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\prepare-archive-audit-continuation.stdout.log",
+          "bytes": 137,
+          "sha256": "4346d5d0a98a0af70a97f04085d1d3da20be1632723741bca9da9d3c0459cc4e"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\prepare-archive-audit-continuation.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    }
+  ],
+  "scope": {
+    "sourceWrites": 0,
+    "repoWrites": 0,
+    "mdWrites": 0,
+    "gitWrites": 0,
+    "ciTriggered": 0,
+    "businessRuns": 0,
+    "dbRuns": 0,
+    "productionRequests": 0,
+    "readerControlsRepeated": 0,
+    "canonicalCollectorOrVerifierRepeated": 0,
+    "rootGrowingParentEnumerated": false,
+    "peerRootAddedRecursivelyAsMainInput": false
+  },
+  "limitations": [
+    "Collection, source-reader stages, capsule packaging, final writer and seal exits do not prove native, strict, wholeProxy or fullG7/G8 pass.",
+    "Capsule setup tool quote failure has only the preserved producer statement rather than a raw child receipt; that absence is explicit and is not converted into child authority.",
+    "Productionc13/2a0 traffic100 percent is preserved prior-source metadata; this independent read audit did not make new production requests.",
+    "The complete source/stored checks are supported by the first reader successful sequential assertions before its actual1 relative-path failure, followed by actual0 receipt continuation; no single first-reader overall0 is invented."
+  ]
+}

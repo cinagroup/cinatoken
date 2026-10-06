@@ -1,0 +1,28 @@
+{
+  "at": "2026-10-06T04:35:50.598Z",
+  "finishedAt": "2026-10-06T04:35:50.742Z",
+  "executable": "git",
+  "args": [
+    "rev-parse",
+    "dc7be6f8597333151c450bae3ae15e6585e3b2eb:scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs",
+    "dc7be6f8597333151c450bae3ae15e6585e3b2eb:scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs",
+    "94c12c1e37e7346330486cf9a3a3246af00d95c5:scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs",
+    "dc7be6f8597333151c450bae3ae15e6585e3b2eb:scripts/db/cutover/postgres-replay-reservations-backend-lifecycle-successor.native.test.mjs",
+    "dc7be6f8597333151c450bae3ae15e6585e3b2eb:scripts/db/cutover/postgres-replay-reservations.native.test.mjs",
+    "63e305a1bdf14c55fede74fb7ff9cbd9f732fc19:scripts/db/cutover/postgres-replay-reservations.native.test.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\input-blobs.stdout.log",
+    "bytes": 246,
+    "sha256": "221b7086f3cc86950c477e8d0dc8297e3a28354d498fdfe8e67573316f8ea088"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-prepare-1a3b08f2b97c427989de588e9e4cd450\\input-blobs.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

@@ -1,0 +1,255 @@
+source-index.before.json {
+  "schema": "cinatoken-ee122-source-index-v1",
+  "at": "2026-10-06T05:15:29.025583Z",
+  "sourceRoot": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-native-tail-independent-peer-76364c609e694985bf7d74bf5b2c4ae9",
+  "sourceRootIdentity": {
+    "type": "dict",
+    "keys": [
+      "device",
+      "inode",
+      "mode",
+      "bytes",
+      "mtimeNs",
+      "attributes"
+    ],
+    "first": [
+      "device",
+      13599748847671917058
+    ]
+  },
+  "files": {
+    "type": "dict",
+    "keys": [
+      "FINAL-ee122-native-tail-terminal-independent-peer-seal.json",
+      "FINAL-ee122-native-tail-terminal-independent-peer.json",
+      "audit-terminal-ee122-v2.closed.json",
+      "audit-terminal-ee122-v2.mjs",
+      "audit-terminal-ee122-v2.stderr.log",
+      "audit-terminal-ee122-v2.stdout.log",
+      "audit-terminal-ee122.closed.json",
+      "audit-terminal-ee122.mjs",
+      "audit-terminal-ee122.stderr.log",
+      "audit-terminal-ee122.stdout.log",
+      "capture-child.mjs",
+      "compose-view-1.closed.json",
+      "compose-view-1.stderr.log",
+      "compose-view-1.stdout.log",
+      "compose-view-2.closed.json",
+      "compose-view-2.stderr.log",
+      "compose-view-2.stdout.log",
+      "compose-view-3.closed.json",
+      "compose-view-3.stderr.log",
+      "compose-view-3.stdout.log"
+    ],
+    "first": [
+      "FINAL-ee122-native-tail-terminal-independent-peer-seal.json",
+      {
+        "identity": {
+          "device": 13599748847671917058,
+          "inode": 1125899912043775,
+          "mode": 33206,
+          "bytes": 159232,
+          "mtimeNs": 1791263218079061800,
+          "attributes": 32
+        },
+        "bytes": 159232,
+        "sha256": "cca4e7e35584c673444a27e4a619faf1589f57b9a13cbec9360287c940aa6d7c",
+        "crc32": "a4d5f664"
+      }
+    ]
+  },
+  "directories": {
+    "type": "dict",
+    "keys": [],
+    "first": null
+  },
+  "fileCount": 213,
+  "directoryCount": 0,
+  "totalBytes": 12098565,
+  "originalFinalAndSealPins": {
+    "type": "list",
+    "count": 2,
+    "first": {
+      "relative": "FINAL-ee122-native-tail-terminal-independent-peer.json",
+      "bytes": 526801,
+      "sha256": "1cb4680d0effb04b1784dd945738c5d3608c06c9c2423dd82784a9441aee2ebe"
+    }
+  },
+  "exclusions": {
+    "type": "list",
+    "count": 0,
+    "first": null
+  },
+  "symlinkFollowing": false
+}
+source-index.after.json {
+  "schema": "cinatoken-ee122-source-index-v1",
+  "at": "2026-10-06T05:15:29.749613Z",
+  "sourceRoot": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-native-tail-independent-peer-76364c609e694985bf7d74bf5b2c4ae9",
+  "sourceRootIdentity": {
+    "type": "dict",
+    "keys": [
+      "device",
+      "inode",
+      "mode",
+      "bytes",
+      "mtimeNs",
+      "attributes"
+    ],
+    "first": [
+      "device",
+      13599748847671917058
+    ]
+  },
+  "files": {
+    "type": "dict",
+    "keys": [
+      "FINAL-ee122-native-tail-terminal-independent-peer-seal.json",
+      "FINAL-ee122-native-tail-terminal-independent-peer.json",
+      "audit-terminal-ee122-v2.closed.json",
+      "audit-terminal-ee122-v2.mjs",
+      "audit-terminal-ee122-v2.stderr.log",
+      "audit-terminal-ee122-v2.stdout.log",
+      "audit-terminal-ee122.closed.json",
+      "audit-terminal-ee122.mjs",
+      "audit-terminal-ee122.stderr.log",
+      "audit-terminal-ee122.stdout.log",
+      "capture-child.mjs",
+      "compose-view-1.closed.json",
+      "compose-view-1.stderr.log",
+      "compose-view-1.stdout.log",
+      "compose-view-2.closed.json",
+      "compose-view-2.stderr.log",
+      "compose-view-2.stdout.log",
+      "compose-view-3.closed.json",
+      "compose-view-3.stderr.log",
+      "compose-view-3.stdout.log"
+    ],
+    "first": [
+      "FINAL-ee122-native-tail-terminal-independent-peer-seal.json",
+      {
+        "identity": {
+          "device": 13599748847671917058,
+          "inode": 1125899912043775,
+          "mode": 33206,
+          "bytes": 159232,
+          "mtimeNs": 1791263218079061800,
+          "attributes": 32
+        },
+        "bytes": 159232,
+        "sha256": "cca4e7e35584c673444a27e4a619faf1589f57b9a13cbec9360287c940aa6d7c",
+        "crc32": "a4d5f664"
+      }
+    ]
+  },
+  "directories": {
+    "type": "dict",
+    "keys": [],
+    "first": null
+  },
+  "fileCount": 213,
+  "directoryCount": 0,
+  "totalBytes": 12098565,
+  "originalFinalAndSealPins": {
+    "type": "list",
+    "count": 2,
+    "first": {
+      "relative": "FINAL-ee122-native-tail-terminal-independent-peer.json",
+      "bytes": 526801,
+      "sha256": "1cb4680d0effb04b1784dd945738c5d3608c06c9c2423dd82784a9441aee2ebe"
+    }
+  },
+  "exclusions": {
+    "type": "list",
+    "count": 0,
+    "first": null
+  },
+  "symlinkFollowing": false
+}
+zip-member-roundtrip-proof.json {
+  "schema": "cinatoken-ee122-opaque-lossless-roundtrip-v1",
+  "startedAt": "2026-10-06T05:15:27.585204Z",
+  "finishedAt": "2026-10-06T05:15:29.751169Z",
+  "sourceRoot": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-native-tail-independent-peer-76364c609e694985bf7d74bf5b2c4ae9",
+  "zip": {
+    "type": "dict",
+    "keys": [
+      "path",
+      "bytes",
+      "sha256",
+      "crc32"
+    ],
+    "first": [
+      "path",
+      "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-opaque-capsule-89cf1ba373634086a3926a636a292ec7/ee122-frozen-root-lossless-opaque.zip"
+    ]
+  },
+  "originalFinalAndSealPins": {
+    "type": "list",
+    "count": 2,
+    "first": {
+      "relative": "FINAL-ee122-native-tail-terminal-independent-peer.json",
+      "bytes": 526801,
+      "sha256": "1cb4680d0effb04b1784dd945738c5d3608c06c9c2423dd82784a9441aee2ebe"
+    }
+  },
+  "fileCount": 213,
+  "directoryCount": 0,
+  "memberCount": 213,
+  "sourceTotalBytes": 12098565,
+  "sourceRootAndAllDirectoryIdentitiesAndMtimesUnchanged": true,
+  "beforeAfterCompleteSetBytesShaCrcIdentityExact": true,
+  "zipCompleteMemberSetExact": true,
+  "allDecodedFileBytesComparedWithLiveOriginal": true,
+  "allDecodedBytesShaAndCrcExact": true,
+  "members": {
+    "type": "list",
+    "count": 213,
+    "first": {
+      "name": "FINAL-ee122-native-tail-terminal-independent-peer-seal.json",
+      "kind": "file",
+      "bytes": 159232,
+      "sha256": "cca4e7e35584c673444a27e4a619faf1589f57b9a13cbec9360287c940aa6d7c",
+      "crc32": "a4d5f664",
+      "compressedBytes": 22995,
+      "sourceMtimeNs": 1791263218079061800,
+      "exact": true
+    }
+  },
+  "exclusions": {
+    "type": "list",
+    "count": 0,
+    "first": null
+  },
+  "symlinkFollowing": false,
+  "collectionOnly": true,
+  "originalRawFailuresSlicesAndStdinPreservedOnlyInsideZip": true,
+  "internalReceiptsRewritten": false,
+  "nativeExitZeroDerived": false,
+  "fullG7G8Derived": false,
+  "applicationRuns": 0,
+  "ciRuns": 0,
+  "dbRuns": 0,
+  "archiveOutputIncludedAsNewSource": false
+}
+CAPSULE-SEAL.json {
+  "schema": "cinatoken-ee122-opaque-capsule-seal-v1",
+  "frozenAt": "2026-10-06T05:16:00.616Z",
+  "collectionOnly": true,
+  "sourceRootRecursiveInclusion": false,
+  "entries": {
+    "type": "list",
+    "count": 14,
+    "first": {
+      "relative": "FINAL-ee122-opaque-capsule.json",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-opaque-capsule-89cf1ba373634086a3926a636a292ec7/FINAL-ee122-opaque-capsule.json",
+      "bytes": 6188,
+      "sha256": "5d471ca014ff1a301a5c55c538cf260a52e4f485a7d4817bf7408e8f4f4586eb"
+    }
+  },
+  "sealedFileCount": 14,
+  "selfExcluded": "CAPSULE-SEAL.json",
+  "producerClosedReceipt": "package.result.json",
+  "finalizerClosedReceipt": "finalize.result.json",
+  "ownerStopWrites": true
+}

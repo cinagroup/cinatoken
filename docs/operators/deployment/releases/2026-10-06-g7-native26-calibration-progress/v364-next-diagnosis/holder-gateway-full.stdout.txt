@@ -1,0 +1,338 @@
+{"file":"packages/proxy/scripts/staging/chat-holder-private-v364.ts","bytes":5367,"sha256":"44070fcbb7058b915329a150634eaa649c1b3601724495a1620e94ce2d54d1bf"}
+1: /// <reference path="./chat-holder-private-v364-env.d.ts" />
+2: import {
+3: 	SYNTHETIC_CREDENTIAL_V364,
+4: 	SYNTHETIC_PROVIDER_URL_V364,
+5: 	SYNTHETIC_QUOTE_V364,
+6: 	SYNTHETIC_ROUTE_V364,
+7: } from './chat-holder-synthetic-v364';
+8: 
+9: const URL_ORIGIN = 'https://holder.service.invalid';
+10: const URL_PATH = '/complete-text-attempt';
+11: const MAX_FINAL_BODY_BYTES = 1_048_576;
+12: // JSON may escape each one-byte control character as six ASCII bytes.
+13: const MAX_ENVELOPE_BYTES = 6 * MAX_FINAL_BODY_BYTES + 8_192;
+14: const UUID = /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/u;
+15: const FIELDS = ['requestId', 'quoteId', 'attemptNonce', 'candidateIndex', 'routeTargetId', 'finalBodyUtf8'];
+16: const encoder = new TextEncoder();
+17: 
+18: function reject(status = 400): Response {
+19: 	return Response.json({ error: 'holder_request_rejected' }, { status, headers: { 'Cache-Control': 'no-store' } });
+20: }
+21: 
+22: async function readEnvelope(request: Request): Promise<Uint8Array | null> {
+23: 	const declared = request.headers.get('Content-Length');
+24: 	if (declared !== null && (!/^\d+$/u.test(declared) || Number(declared) > MAX_ENVELOPE_BYTES)) return null;
+25: 	if (!request.body) return null;
+26: 	const reader = request.body.getReader();
+27: 	const chunks: Uint8Array[] = [];
+28: 	let size = 0;
+29: 	for (;;) {
+30: 		const { done, value } = await reader.read();
+31: 		if (done) break;
+32: 		size += value.byteLength;
+33: 		if (size > MAX_ENVELOPE_BYTES) {
+34: 			await reader.cancel().catch(() => undefined);
+35: 			return null;
+36: 		}
+37: 		chunks.push(value);
+38: 	}
+39: 	const result = new Uint8Array(size);
+40: 	let offset = 0;
+41: 	for (const chunk of chunks) { result.set(chunk, offset); offset += chunk.byteLength; }
+42: 	return result;
+43: }
+44: 
+45: async function validEnvelope(input: unknown): Promise<boolean> {
+46: 	if (!input || typeof input !== 'object' || Array.isArray(input)) return false;
+47: 	const value = input as Record<string, unknown>;
+48: 	if (Object.keys(value).length !== FIELDS.length || FIELDS.some(field => !Object.hasOwn(value, field))) return false;
+49: 	if (value.requestId !== SYNTHETIC_QUOTE_V364.requestId
+50: 		|| value.quoteId !== SYNTHETIC_QUOTE_V364.quoteId
+51: 		|| typeof value.attemptNonce !== 'string' || !UUID.test(value.attemptNonce)
+52: 		|| value.candidateIndex !== SYNTHETIC_ROUTE_V364.candidateIndex
+53: 		|| value.routeTargetId !== SYNTHETIC_ROUTE_V364.targetId
+54: 		|| SYNTHETIC_ROUTE_V364.modelId !== SYNTHETIC_QUOTE_V364.modelIds[SYNTHETIC_ROUTE_V364.candidateIndex]
+55: 		|| SYNTHETIC_QUOTE_V364.credentialClass !== 'platform'
+56: 		|| Date.parse(SYNTHETIC_QUOTE_V364.expiresAt) <= Date.now()
+57: 		|| typeof value.finalBodyUtf8 !== 'string') return false;
+58: 	const body = encoder.encode(value.finalBodyUtf8);
+59: 	if (body.byteLength < 2 || body.byteLength > MAX_FINAL_BODY_BYTES) return false;
+60: 	const digest = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', body)))
+61: 		.map(byte => byte.toString(16).padStart(2, '0')).join('');
+62: 	return digest === SYNTHETIC_QUOTE_V364.finalBodySha256;
+63: }
+64: 
+65: function syntheticStream(env: ChatHolderPrivateV364Env, attemptNonce: string, ctx?: Pick<ExecutionContext, 'waitUntil'>): Response {
+66: 	let phase = 0;
+67: 	const stream = new ReadableStream<Uint8Array>({
+68: 		start(controller) {
+69: 			controller.enqueue(encoder.encode(': holder-ready\n\n'));
+70: 		},
+71: 		async pull(controller) {
+72: 			if (phase !== 0) return;
+73: 			phase = 1;
+74: 			for (let n = 0; n < 300; n++) {
+75: 				if (await env.OBSERVATIONS.get(`release:${attemptNonce}`) === 'yes') {
+76: 					controller.enqueue(encoder.encode('data: {"text":"synthetic streamed answer"}\n\ndata: [DONE]\n\n'));
+77: 					controller.close();
+78: 					return;
+79: 				}
+80: 				await new Promise<void>(resolve => setTimeout(resolve, 10));
+81: 			}
+82: 			controller.error(new Error('synthetic stream release timed out'));
+83: 		},
+84: 		async cancel() {
+85: 			const observation = env.OBSERVATIONS.put(`cancel:${attemptNonce}`, 'observed');
+86: 			// The client has disconnected; retain this asynchronous test observation
+87: 			// in the holder request lifetime instead of losing it with the response.
+88: 			ctx?.waitUntil(observation);
+89: 			await observation;
+90: 		},
+91: 	}, { highWaterMark: 0 });
+92: 	return new Response(stream, { status: 200, headers: { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-store' } });
+93: }
+94: 
+95: export default {
+96: 	async fetch(request: Request, env: ChatHolderPrivateV364Env, ctx?: ExecutionContext): Promise<Response> {
+97: 		const url = new URL(request.url);
+98: 		if (url.origin !== URL_ORIGIN || url.pathname !== URL_PATH || url.search || request.method !== 'POST') return reject(404);
+99: 		if (request.headers.get('Content-Type') !== 'application/json') return reject(415);
+100: 		const bytes = await readEnvelope(request);
+101: 		if (bytes === null) return reject(413);
+102: 		let value: unknown;
+103: 		try { value = JSON.parse(new TextDecoder('utf-8', { fatal: true, ignoreBOM: false }).decode(bytes)) as unknown; }
+104: 		catch { return reject(); }
+105: 		if (!await validEnvelope(value)) return reject();
+106: 		const envelope = value as Record<string, unknown>;
+107: 		// The test credential and URL exist only in this holder bundle. No provider
+108: 		// request is made; the two values are intentionally never serialized.
+109: 		if (!SYNTHETIC_CREDENTIAL_V364.startsWith('synthetic-private-')
+110: 			|| new URL(SYNTHETIC_PROVIDER_URL_V364).hostname !== 'synthetic-private-provider.invalid') return reject(503);
+111: 		await env.OBSERVATIONS.put(`accepted:${envelope.attemptNonce as string}`, 'one');
+112: 		return syntheticStream(env, envelope.attemptNonce as string, ctx);
+113: 	},
+114: } satisfies ExportedHandler<ChatHolderPrivateV364Env>;
+115: 
+{"file":"packages/proxy/scripts/staging/chat-holder-gateway-v364.ts","bytes":1534,"sha256":"8c85b01ba54daa9b7302c726d20693d08ccb3395350ea6a333817eed46441eaf"}
+1: /// <reference path="./chat-holder-gateway-v364-env.d.ts" />
+2: 
+3: /** Fixture gateway: only the six-field JSON envelope crosses this binding. */
+4: export default {
+5: 	async fetch(request: Request, env: ChatHolderGatewayV364Env): Promise<Response> {
+6: 		const url = new URL(request.url);
+7: 		if (url.pathname !== '/fixture/complete-text' || request.method !== 'POST') return new Response(null, { status: 404 });
+8: 		if (request.headers.get('Content-Type') !== 'application/json') return new Response(null, { status: 415 });
+9: 		const holderInit = {
+10: 			method: 'POST',
+11: 			headers: { 'Content-Type': 'application/json' },
+12: 			body: request.body,
+13: 			signal: request.signal,
+14: 			duplex: 'half',
+15: 		} as RequestInit;
+16: 		const holderRequest = new Request('https://holder.service.invalid/complete-text-attempt', holderInit);
+17: 		const response = await env.TEXT_HOLDER.fetch(holderRequest);
+18: 		if (response.status === 400 || response.status === 413 || response.status === 415 || response.status === 404) {
+19: 			await response.body?.cancel();
+20: 			return Response.json({ error: 'holder_request_rejected' }, { status: response.status });
+21: 		}
+22: 		if (response.status !== 200 || response.headers.get('Content-Type') !== 'text/event-stream' || !response.body) {
+23: 			await response.body?.cancel();
+24: 			return Response.json({ error: 'holder_unavailable' }, { status: 502 });
+25: 		}
+26: 		return new Response(response.body, {
+27: 			status: 200,
+28: 			headers: { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-store' },
+29: 		});
+30: 	},
+31: } satisfies ExportedHandler<ChatHolderGatewayV364Env>;
+32: 
+{"file":"packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs","bytes":13354,"sha256":"d23d1c710b539b6c64655fbb1fa4e4de85b228bab19c757bc0e4de48528972e5"}
+95:     request.end(body);
+96:   });
+97: }
+98: 
+99: async function fixture(t) {
+100:   if (process.platform === 'win32' && process.env.C04_RUN_NATIVE_WORKER !== '1') {
+101:     t.skip('Windows workerd 0xc0000005 startup reproduced; set C04_RUN_NATIVE_WORKER=1 to retry native execution');
+102:     return null;
+103:   }
+104:   if (windowsWorkerdStartupFailure) { t.skip(windowsWorkerdStartupFailure); return null; }
+105:   const gatewayScript = await workerScript(gatewayConfig.main);
+106:   const privateScript = await workerScript(privateConfig.main);
+107:   assert.equal(gatewayScript.includes(SYNTHETIC_CREDENTIAL_V364), false);
+108:   assert.equal(gatewayScript.includes(SYNTHETIC_PROVIDER_URL_V364), false);
+109:   assert.equal(privateScript.includes(SYNTHETIC_CREDENTIAL_V364), true);
+110:   assert.equal(privateScript.includes(SYNTHETIC_PROVIDER_URL_V364), true);
+111:   const mf = new Miniflare(convertV4MiniflareOptions({
+112:     cf: false,
+113:     host: '127.0.0.1',
+114:     port: 0,
+115:     workers: [
+116:       {
+117:         name: gatewayConfig.name,
+118:         modules: true,
+119:         script: gatewayScript,
+120:         compatibilityDate: fixtureRuntimeCompatibilityDate,
+121:         compatibilityFlags: gatewayConfig.compatibility_flags,
+122:         serviceBindings: { TEXT_HOLDER: privateConfig.name },
+123:       },
+124:       {
+125:         name: privateConfig.name,
+126:         modules: true,
+127:         script: privateScript,
+128:         compatibilityDate: fixtureRuntimeCompatibilityDate,
+129:         compatibilityFlags: privateConfig.compatibility_flags,
+130:         kvNamespaces: { OBSERVATIONS: privateConfig.kv_namespaces[0].id },
+131:       },
+132:     ],
+133:   }));
+134:   t.after(() => mf.dispose());
+135:   let gatewayBindings;
+136:   try { gatewayBindings = await mf.getBindings(gatewayConfig.name); }
+137:   catch (error) {
+138:     if (process.platform === 'win32' && error?.code === 'ERR_RUNTIME_FAILURE'
+139:       && /0xc0000005: access violation/u.test(String(error.message))) {
+140:       windowsWorkerdStartupFailure = 'native workerd startup exited with Windows 0xc0000005 before Worker code ran';
+141:       t.diagnostic(windowsWorkerdStartupFailure);
+142:       t.skip(windowsWorkerdStartupFailure);
+143:       return null;
+144:     }
+145:     throw error;
+146:   }
+147:   assert.deepEqual(Object.keys(gatewayBindings), ['TEXT_HOLDER']);
+148:   const { OBSERVATIONS } = await mf.getBindings(privateConfig.name);
+149:   assert.ok(OBSERVATIONS);
+150:   const gateway = await mf.getWorker(gatewayConfig.name);
+151:   async function post(body, contentType = 'application/json') {
+152:     return gateway.fetch('https://gateway.fixture.invalid/fixture/complete-text', {
+153:       method: 'POST', headers: { 'Content-Type': contentType }, body,
+154:     });
+155:   }
+156:   async function postHttp(body, contentType = 'application/json') {
+157:     const fixtureRuntimeUrl = await mf.ready;
+158:     assert.equal(fixtureRuntimeUrl.hostname, '127.0.0.1');
+159:     return postStreamingHttp(new URL('/fixture/complete-text', fixtureRuntimeUrl), body, contentType);
+160:   }
+161:   return { post, postHttp, observations: OBSERVATIONS };
+162: }
+163: 
+164: test('v364 configs keep the synthetic holder private and bind only the named holder', () => {
+165:   assert.equal(gatewayConfig.workers_dev, false);
+166:   assert.equal(privateConfig.workers_dev, false);
+167:   assert.equal(gatewayConfig.preview_urls, false);
+168:   assert.equal(privateConfig.preview_urls, false);
+169:   assert.deepEqual(gatewayConfig.routes, []);
+170:   assert.deepEqual(privateConfig.routes, []);
+171:   assert.deepEqual(gatewayConfig.services, [{ binding: 'TEXT_HOLDER', service: privateConfig.name, remote: false }]);
+172:   assert.equal(privateConfig.services, undefined);
+173:   assert.deepEqual(privateConfig.kv_namespaces.map(v => v.binding), ['OBSERVATIONS']);
+174:   assert.deepEqual(gatewayConfig.triggers, { crons: [] });
+175:   assert.deepEqual(privateConfig.triggers, { crons: [] });
+176:   assert.equal(createHash('sha256').update(SYNTHETIC_PUBLIC_BODY_V364).digest('hex'), SYNTHETIC_QUOTE_V364.finalBodySha256);
+177: });
+178: 
+179: test('HTTP fixture cancellation closes its dedicated TCP response before completion', { timeout: 10000 }, async t => {
+180:   let requestCount = 0;
+181:   let requestBody = '';
+182:   let peerClosed;
+183:   const closed = new Promise(resolve => { peerClosed = resolve; });
+184:   const server = createServer((request, response) => {
+185:     requestCount++;
+186:     request.setEncoding('utf8');
+187:     request.on('data', chunk => { requestBody += chunk; });
+188:     request.on('end', () => {
+189:       response.writeHead(200, { 'Content-Type': 'text/event-stream' });
+190:       response.write(': holder-ready\n\n');
+191:     });
+192:     response.once('close', peerClosed);
+193:   });
+194:   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+195:   t.after(() => new Promise(resolve => server.close(resolve)));
+196:   const body = JSON.stringify(envelope());
+197:   const response = await postStreamingHttp(new URL(`http://127.0.0.1:${server.address().port}/fixture/complete-text`), body);
+198:   t.after(() => response.cancel());
+199:   assert.equal(response.status, 200);
+200:   assert.equal(response.headers['content-type'], 'text/event-stream');
+201:   assert.equal(response.firstChunk.toString(), ': holder-ready\n\n');
+202:   assert.deepEqual(await response.cancel(), {
+203:     requestDestroyed: true, responseDestroyed: true, responseComplete: false,
+204:   });
+205:   await closed;
+206:   assert.equal(requestCount, 1);
+207:   assert.equal(requestBody, body);
+208: });
+209: 
+210: test('private Worker rejects oversized, foreign, and malformed six-field requests without disclosing holder data', { timeout: 30000 }, async t => {
+211:   const f = await fixture(t);
+212:   if (!f) return;
+213:   const valid = envelope();
+214:   const cases = [
+215:     ['unknown field', JSON.stringify({ ...valid, providerUrl: SYNTHETIC_PROVIDER_URL_V364 }), 400],
+216:     ['credential field', JSON.stringify({ ...valid, credential: SYNTHETIC_CREDENTIAL_V364 }), 400],
+217:     ['route target', JSON.stringify({ ...valid, routeTargetId: 'foreign' }), 400],
+218:     ['candidate index', JSON.stringify({ ...valid, candidateIndex: 0 }), 400],
+219:     ['quoted body', JSON.stringify({ ...valid, finalBodyUtf8: valid.finalBodyUtf8.replace('public request', 'changed request') }), 400],
+220:     ['attempt nonce', JSON.stringify({ ...valid, attemptNonce: 'invalid' }), 400],
+221:     ['invalid JSON', '{', 400],
+222:     ['wire byte cap', JSON.stringify({ ...valid, overflow: 'x'.repeat(6 * 1_048_576 + 8_192) }), 413],
+223:   ];
+224:   for (const [label, body, expected] of cases) {
+225:     const response = await f.post(body);
+226:     assert.equal(response.status, expected, label);
+227:     const text = await response.text();
+228:     assert.equal(text, '{"error":"holder_request_rejected"}', label);
+229:     assert.equal(text.includes(SYNTHETIC_CREDENTIAL_V364), false, label);
+230:     assert.equal(text.includes(SYNTHETIC_PROVIDER_URL_V364), false, label);
+231:   }
+232:   assert.equal(await f.observations.get(`accepted:${valid.attemptNonce}`), null);
+233: });
+234: 
+235: test('one holder Response streams through the Service Binding before its final chunk is released', { timeout: 30000 }, async t => {
+236:   const f = await fixture(t);
+237:   if (!f) return;
+238:   const e = envelope();
+239:   const response = await f.post(JSON.stringify(e));
+240:   assert.equal(response.status, 200);
+241:   assert.equal(response.headers.get('Content-Type'), 'text/event-stream');
+242:   assert.equal(response.headers.has('Location'), false);
+243:   assert.equal(await f.observations.get(`accepted:${e.attemptNonce}`), 'one');
+244:   const reader = response.body.getReader();
+245:   const first = await reader.read();
+246:   assert.equal(new TextDecoder().decode(first.value), ': holder-ready\n\n');
+247:   const secondPromise = reader.read();
+248:   const beforeRelease = await Promise.race([secondPromise.then(() => 'second'), new Promise(resolve => setTimeout(() => resolve('held'), 50))]);
+249:   assert.equal(beforeRelease, 'held');
+250:   await f.observations.put(`release:${e.attemptNonce}`, 'yes');
+251:   const second = await secondPromise;
+252:   const text = new TextDecoder().decode(second.value);
+253:   assert.equal(text, 'data: {"text":"synthetic streamed answer"}\n\ndata: [DONE]\n\n');
+254:   assert.deepEqual(await reader.read(), { done: true, value: undefined });
+255:   assert.equal(text.includes(SYNTHETIC_CREDENTIAL_V364), false);
+256:   assert.equal(text.includes(SYNTHETIC_PROVIDER_URL_V364), false);
+257:   assert.equal(await f.observations.get(`cancel:${e.attemptNonce}`), null);
+258: });
+259: 
+260: test('response-body cancellation is observed inside the private holder', { timeout: 30000 }, async t => {
+261:   const f = await fixture(t);
+262:   if (!f) return;
+263:   const e = envelope();
+264:   const response = await f.postHttp(JSON.stringify(e));
+265:   t.after(() => response.cancel());
+266:   assert.equal(response.status, 200);
+267:   assert.equal(response.headers['content-type'], 'text/event-stream');
+268:   assert.equal(await f.observations.get(`accepted:${e.attemptNonce}`), 'one');
+269:   assert.equal(response.firstChunk.toString(), ': holder-ready\n\n');
+270:   assert.deepEqual(await response.cancel(), {
+271:     requestDestroyed: true, responseDestroyed: true, responseComplete: false,
+272:   });
+273:   let observed = null;
+274:   for (let n = 0; n < 100 && observed === null; n++) {
+275:     observed = await f.observations.get(`cancel:${e.attemptNonce}`);
+276:     if (observed === null) await new Promise(resolve => setTimeout(resolve, 10));
+277:   }
+278:   assert.equal(observed, 'observed');
+279:   assert.equal(await f.observations.get(`release:${e.attemptNonce}`), null);
+280:   assert.equal(await f.observations.get(`accepted:${e.attemptNonce}`), 'one');
+281: });
+282: 

@@ -1,0 +1,68 @@
+{
+  "schema": "cinatoken-frozen-readonly-inventory-seal-v1",
+  "files": [
+    {
+      "file": "FINAL-readonly-inventory-advisory.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-direct-socket-archive-inventory-97f10624f7a344a89187435b65641546\\FINAL-readonly-inventory-advisory.json",
+      "bytes": 7021,
+      "sha256": "9d4bfaa08e2c0697372e98b65c2ee0d4cf687bca938d069d80788916947e0a1e"
+    },
+    {
+      "file": "finalize-readonly-inventory.mjs",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-direct-socket-archive-inventory-97f10624f7a344a89187435b65641546\\finalize-readonly-inventory.mjs",
+      "bytes": 6107,
+      "sha256": "a039575c180bce9120dc90ed62da052df72392fc695b82a10941b1791ceecf9e"
+    },
+    {
+      "file": "frozen-roots-inventory.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-direct-socket-archive-inventory-97f10624f7a344a89187435b65641546\\frozen-roots-inventory.json",
+      "bytes": 239600,
+      "sha256": "17ce035f545eb141527db9a3ce8c9a98a008842eab6e6e64d56a5de35f4cbad9"
+    },
+    {
+      "file": "future-subset-config-advisory.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-direct-socket-archive-inventory-97f10624f7a344a89187435b65641546\\future-subset-config-advisory.json",
+      "bytes": 10294,
+      "sha256": "d9af8328d7b0913d85828cefb2999193a946faa8243fb5ef9932366674f47201"
+    },
+    {
+      "file": "original-readonly-tool-observations.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-direct-socket-archive-inventory-97f10624f7a344a89187435b65641546\\original-readonly-tool-observations.json",
+      "bytes": 982,
+      "sha256": "51876e639a2bcdba69f219ff4fd28ddf940f6b0a1a2a47dd3bb23345eb2b0afb"
+    },
+    {
+      "file": "prepare-readonly-inventory-v2.mjs",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-direct-socket-archive-inventory-97f10624f7a344a89187435b65641546\\prepare-readonly-inventory-v2.mjs",
+      "bytes": 5049,
+      "sha256": "92ac5babe4bcef336ca64c4073058426108a930a3a750061267ef7ace7b4b630"
+    },
+    {
+      "file": "prepare-readonly-inventory.mjs",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-direct-socket-archive-inventory-97f10624f7a344a89187435b65641546\\prepare-readonly-inventory.mjs",
+      "bytes": 5041,
+      "sha256": "7e689243c258b1d9f114befa22a640205a875334e35021b172d659816602c7a2"
+    },
+    {
+      "file": "receipt-and-report-candidate-index.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-direct-socket-archive-inventory-97f10624f7a344a89187435b65641546\\receipt-and-report-candidate-index.json",
+      "bytes": 82722,
+      "sha256": "90164bcdbb3ed35a921d0a566fbf227e5bb0a43a8935932965ab4ceb252d43d5"
+    },
+    {
+      "file": "unmodified-enhanced-tool-preparation-plan.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-direct-socket-archive-inventory-97f10624f7a344a89187435b65641546\\unmodified-enhanced-tool-preparation-plan.json",
+      "bytes": 676624,
+      "sha256": "e35dbd72f3bf5c062a91ebaf51935dbfc38906543ff08978220bd7133d87dd80"
+    }
+  ],
+  "filesBeforeSelf": 9,
+  "filesIncludingSelf": 10,
+  "selfExcluded": "FINAL-readonly-inventory-seal.json",
+  "inventoryReadHashOutcome": 0,
+  "archiveAdmissionOutcome": 1,
+  "exclusions": 0,
+  "growingCurrentRootNotEnumerated": true,
+  "productionRequests": 0,
+  "writesStop": true
+}

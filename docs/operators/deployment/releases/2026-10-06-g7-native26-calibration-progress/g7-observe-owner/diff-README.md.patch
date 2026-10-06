@@ -1,0 +1,23 @@
+===================================================================
+--- scripts/verification/web-platform-g7/README.md (702 baseline)
++++ scripts/verification/web-platform-g7/README.md (candidate)
+@@ -25,9 +25,18 @@
+ 
+ Migrations run twice against the actual disposable database. The ledger is
+ compared with every SQL migration contained in the image. Admin and Proxy each
+ observe database identity, server version, schema fingerprint and session counts
+-through a read-only transaction after the HTTPS checks. All processes currently
++through a read-only transaction after the HTTPS checks. Seed mode loads Core for
++its actual encryption, repositories and fixture admission. Observe mode uses the
++application image's existing postgres driver, with the same connection options,
++startup search path and explicit session initialization; it requires no standalone
++Core or Drizzle dependency. The local dependency control copies only postgres into
++an isolated application tree and makes Core's Drizzle import unavailable. It runs
++the observation contracts and failure cases through the real driver against a
++bounded loopback protocol peer. That peer does not execute SQL; path, transport and
++Windows platform mapping remain test controls, not Linux or PostgreSQL acceptance.
++All processes currently
+ use the same `postgres` superuser in the owned database. This stage **does not
+ prove restricted runtime ACLs or native PostgreSQL 18**; those remain separate
+ requirements.
+ 

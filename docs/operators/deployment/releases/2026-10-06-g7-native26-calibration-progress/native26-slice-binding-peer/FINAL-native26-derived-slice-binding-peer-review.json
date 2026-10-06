@@ -1,0 +1,918 @@
+{
+  "schema": "cinatoken-native26-slice-binding-design-readonly-peer-v1",
+  "completedAt": "2026-10-06T04:51:17.959551+00:00",
+  "reviewOutcome": "All40 existing slices are exact contiguous original-byte ranges under the pinned peer download. Supports a narrowly scoped derived-slice binding; currentRoot other-run native-terminal-log must not be substituted.",
+  "actualReadHashChecksPassed": true,
+  "originalAllFrozenAudit": {
+    "report": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native26-final-config-4851c19d4cc24ecdae397bcb12a8ad30\\original-full-frozen-audit.json",
+      "bytes": 3358678,
+      "sha256": "1a5cadcdd963bb0725a48f82d86a939e65ab1e5577a24135b47744e6243d7803"
+    },
+    "receipt": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native26-final-config-4851c19d4cc24ecdae397bcb12a8ad30\\original-full-frozen-audit.result.json",
+      "bytes": 1344,
+      "sha256": "7113b29924a791dbc5690b243af694e43d268a7f0a2c44b8c06ca9864a36aeaf"
+    },
+    "originalActualExit": 1,
+    "blockers": 154,
+    "sliceBlockers": 40,
+    "originalRawDescriptors": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native26-final-config-4851c19d4cc24ecdae397bcb12a8ad30\\original-full-frozen-audit.stdout.log",
+      "bytes": 27909,
+      "sha256": "80016d766f40853f064e0fcba64021e171fdc24920b27c63412f6c0c0ee86fb3"
+    },
+    "originalFailurePreserved": true
+  },
+  "originalInputPins": [
+    {
+      "file": "audit-terminal-v2.mjs",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\audit-terminal-v2.mjs",
+      "bytes": 7782,
+      "sha256": "d43d773f13607d4379c2ae6162abc0318ad874b36a5eedd5bcd870a4067922a7"
+    },
+    {
+      "file": "audit-terminal-v2.closed.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\audit-terminal-v2.closed.json",
+      "bytes": 1171,
+      "sha256": "884c578dd470d1912486ef391098521a5f9b3e54b5777156ed99c9320bcd997b"
+    },
+    {
+      "file": "FINAL-native26-ci-independent-peer.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\FINAL-native26-ci-independent-peer.json",
+      "bytes": 413706,
+      "sha256": "6635f04f77f6f6325a794756883a8bf697f752af239e33deb2b8c3b226a57e66"
+    },
+    {
+      "file": "native-terminal.closed.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\native-terminal.closed.json",
+      "bytes": 1012,
+      "sha256": "3ffe4a65441d0b150f4ddd2092876e5da2f813c85cd23b0fe349084fd446bb73"
+    },
+    {
+      "file": "native-terminal.stdout.log",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\native-terminal.stdout.log",
+      "bytes": 556674,
+      "sha256": "c78e11593edf9b694d5a490647fd37f4863aa44f22be14d367e592975dbb8d28"
+    },
+    {
+      "file": "native-terminal.stderr.log",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\native-terminal.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "proxy-progress-11.closed.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\proxy-progress-11.closed.json",
+      "bytes": 1061,
+      "sha256": "8db6990f97f906e57a250c70c75619a65c721cb77aa955a3ccdfa9f3cc21e8d5"
+    },
+    {
+      "file": "proxy-progress-11.stdout.log",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\proxy-progress-11.stdout.log",
+      "bytes": 49493,
+      "sha256": "ef24ec36d29b0395b9fe524e96f7c3dcaefd7ac42399833488f2bb0389a07181"
+    },
+    {
+      "file": "proxy-progress-11.stderr.log",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\proxy-progress-11.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "source-inputs-v3.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\source-inputs-v3.json",
+      "bytes": 100217,
+      "sha256": "ceef407a488cab659b5bcecf7a53c0210fba0a3b958a59dbb9d440d1355eed86"
+    }
+  ],
+  "peerSeal": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\FINAL-native26-ci-independent-peer-seal.json",
+    "bytes": 265314,
+    "sha256": "4e17f7563cb7b893f882cf5a3981c85ee3380862e1cbaee0cf9b8366203726e2"
+  },
+  "originalDownloadReceipt": {
+    "schema": "cinatoken.native26-ci-independent-peer.command.v1",
+    "at": "2026-10-06T04:21:36.386Z",
+    "finishedAt": "2026-10-06T04:21:45.527Z",
+    "executable": "C:/Program Files/GitHub CLI/gh.exe",
+    "args": [
+      "run",
+      "view",
+      "37412060008",
+      "--repo",
+      "cinagroup/cinatoken",
+      "--job",
+      "112102451588",
+      "--log"
+    ],
+    "cwd": "C:/cinagroup/cinatoken",
+    "actualExit": 0,
+    "signal": null,
+    "spawnError": null,
+    "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\native-terminal.stdout.log",
+    "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\native-terminal.stderr.log",
+    "stdoutInfo": {
+      "bytes": 556674,
+      "sha256": "c78e11593edf9b694d5a490647fd37f4863aa44f22be14d367e592975dbb8d28"
+    },
+    "stderrInfo": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "originalProducerReceipt": {
+    "schema": "cinatoken.native26-ci-independent-peer.command.v1",
+    "at": "2026-10-06T04:22:09.096Z",
+    "finishedAt": "2026-10-06T04:22:09.431Z",
+    "executable": "C:/Program Files/nodejs/node.exe",
+    "args": [
+      "C:/Users/cina/AppData/Local/Temp/cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9/audit-terminal-v2.mjs",
+      "C:/Users/cina/AppData/Local/Temp/cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9",
+      "proxy-progress-11"
+    ],
+    "cwd": "C:/cinagroup/cinatoken",
+    "actualExit": 0,
+    "signal": null,
+    "spawnError": null,
+    "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\audit-terminal-v2.stdout.log",
+    "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\audit-terminal-v2.stderr.log",
+    "stdoutInfo": {
+      "bytes": 548,
+      "sha256": "31b1e9045d11b8acb22d6ab7b8aa96fc8190ed7d2d33c3d577e1d7b70b5abeb9"
+    },
+    "stderrInfo": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "originalProgressReceipt": {
+    "schema": "cinatoken.native26-ci-independent-peer.command.v1",
+    "at": "2026-10-06T04:21:11.182Z",
+    "finishedAt": "2026-10-06T04:21:14.385Z",
+    "executable": "C:/Program Files/GitHub CLI/gh.exe",
+    "args": [
+      "run",
+      "view",
+      "37412060008",
+      "--repo",
+      "cinagroup/cinatoken",
+      "--json",
+      "databaseId,name,headSha,status,conclusion,url,jobs,createdAt,updatedAt"
+    ],
+    "cwd": "C:/cinagroup/cinatoken",
+    "actualExit": 0,
+    "signal": null,
+    "spawnError": null,
+    "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\proxy-progress-11.stdout.log",
+    "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\proxy-progress-11.stderr.log",
+    "stdoutInfo": {
+      "bytes": 49493,
+      "sha256": "ef24ec36d29b0395b9fe524e96f7c3dcaefd7ac42399833488f2bb0389a07181"
+    },
+    "stderrInfo": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "currentRootDifferentRunRaw": {
+    "receipt": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\native-terminal-log.result.json",
+      "bytes": 891,
+      "sha256": "d494dec87070d31f5ce2ca602e0575c2abda45ddb3cab646b7dc2a35ee3726e5"
+    },
+    "originalValue": {
+      "at": "2026-10-06T03:39:41.116Z",
+      "finishedAt": "2026-10-06T03:39:48.989Z",
+      "executable": "C:/Program Files/GitHub CLI/gh.exe",
+      "args": [
+        "run",
+        "view",
+        "37409463636",
+        "--repo",
+        "cinagroup/cinatoken",
+        "--job",
+        "112094395119",
+        "--log"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\native-terminal-log.stdout.log",
+        "bytes": 327916,
+        "sha256": "4203c059c01c7097c650376d0148120244536cd2fe6931095ee0414b930f00a5"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\native-terminal-log.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "raw": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\native-terminal-log.stdout.log",
+      "bytes": 327916,
+      "sha256": "4203c059c01c7097c650376d0148120244536cd2fe6931095ee0414b930f00a5"
+    },
+    "fullExpectedRawSHAAbsentFromAdmittedCurrentRootMetadata": true,
+    "current981NotWalked": true
+  },
+  "slices": [
+    {
+      "step": 55,
+      "file": "group-step-55.raw.log",
+      "bytes": 5557,
+      "sha256": "e9c8daf6d3f6a36e1ec0ce7d7ae186223ca75ea74137d5588328c9b52b5b5082",
+      "startStringOffsetUTF16": 293808,
+      "endStringOffsetUTF16": 299363,
+      "startByte": 293918,
+      "endByte": 299475,
+      "workflowCommand": "node --import tsx --test scripts/db/cutover/postgres-complete-text-buyer-counter-cutover-v367.native.test.mjs",
+      "originalStepConclusion": "success",
+      "originalRawErrorExitCodes": [],
+      "independentSliceRuntimeExit": null,
+      "derivedSliceOnly": true
+    },
+    {
+      "step": 56,
+      "file": "group-step-56.raw.log",
+      "bytes": 5535,
+      "sha256": "c8fb55524f2ba561fbf6ef7a8983f863a331970594959c1d9e737228f2e09f48",
+      "startStringOffsetUTF16": 299363,
+      "endStringOffsetUTF16": 304896,
+      "startByte": 299475,
+      "endByte": 305010,
+      "workflowCommand": "node --import tsx --test scripts/db/cutover/postgres-complete-text-legacy-buyer-held-v368.native.test.mjs",
+      "originalStepConclusion": "success",
+      "originalRawErrorExitCodes": [],
+      "independentSliceRuntimeExit": null,
+      "derivedSliceOnly": true
+    },
+    {
+      "step": 57,
+      "file": "group-step-57.raw.log",
+      "bytes": 3922,
+      "sha256": "f39b44479e7bfec7cf694b48168d6b349dce5839db6f99f4b9189764b4f0c121",
+      "startStringOffsetUTF16": 304896,
+      "endStringOffsetUTF16": 308816,
+      "startByte": 305010,
+      "endByte": 308932,
+      "workflowCommand": "node --import tsx --test scripts/db/cutover/postgres-buyer-held-opt-in-gap-v370.native.test.mjs",
+      "originalStepConclusion": "success",
+      "originalRawErrorExitCodes": [],
+      "independentSliceRuntimeExit": null,
+      "derivedSliceOnly": true
+    },
+    {
+      "step": 58,
+      "file": "group-step-58.raw.log",
+      "bytes": 4244,
+      "sha256": "307bb79cc60463a17487978fb2c179fdd808afd113a7a7b871a4dbd1d180925c",
+      "startStringOffsetUTF16": 308816,
+      "endStringOffsetUTF16": 313058,
+      "startByte": 308932,
+      "endByte": 313176,
+      "workflowCommand": "node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-window-accountant-v371.native.test.mjs",
+      "originalStepConclusion": "success",
+      "originalRawErrorExitCodes": [],
+      "independentSliceRuntimeExit": null,
+      "derivedSliceOnly": true
+    },
+    {
+      "step": 59,
+      "file": "group-step-59.raw.log",
+      "bytes": 5553,
+      "sha256": "acccf7e0ddec658dd9653da1e3204d39c90cf088f769cbe1e4d91c7803fe9f2d",
+      "startStringOffsetUTF16": 313058,
+      "endStringOffsetUTF16": 318609,
+      "startByte": 313176,
+      "endByte": 318729,
+      "workflowCommand": "node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-windowed-app-v372.native.test.mjs",
+      "originalStepConclusion": "success",
+      "originalRawErrorExitCodes": [],
+      "independentSliceRuntimeExit": null,
+      "derivedSliceOnly": true
+    },
+    {
+      "step": 60,
+      "file": "group-step-60.raw.log",
+      "bytes": 5341,
+      "sha256": "25c68a9e83274837ef5b5c0c57a6f12e488b4ae494a2158fbf9efbca4c87a55e",
+      "startStringOffsetUTF16": 318609,
+      "endStringOffsetUTF16": 323948,
+      "startByte": 318729,
+      "endByte": 324070,
+      "workflowCommand": "node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-windowed-app-privileges-v374.native.test.mjs",
+      "originalStepConclusion": "success",
+      "originalRawErrorExitCodes": [],
+      "independentSliceRuntimeExit": null,
+      "derivedSliceOnly": true
+    },
+    {
+      "step": 61,
+      "file": "group-step-61.raw.log",
+      "bytes": 5358,
+      "sha256": "6ae18494f34b92634d8f10f1f5b0cd1a82e57be57e32391c3de803b5aaabc6b1",
+      "startStringOffsetUTF16": 323948,
+      "endStringOffsetUTF16": 329304,
+      "startByte": 324070,
+      "endByte": 329428,
+      "workflowCommand": "node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-windowed-app-privileges-renewal-v376.native.test.mjs",
+      "originalStepConclusion": "success",
+      "originalRawErrorExitCodes": [],
+      "independentSliceRuntimeExit": null,
+      "derivedSliceOnly": true
+    },
+    {
+      "step": 62,
+      "file": "group-step-62.raw.log",
+      "bytes": 5564,
+      "sha256": "e609776f12b65c3c04c93bca40a1c48c9272b2b7d3b22318e566daccb4b22f31",
+      "startStringOffsetUTF16": 329304,
+      "endStringOffsetUTF16": 334866,
+      "startByte": 329428,
+      "endByte": 334992,
+      "workflowCommand": "node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-terminal-reader-v375.native.test.mjs",
+      "originalStepConclusion": "success",
+      "originalRawErrorExitCodes": [],
+      "independentSliceRuntimeExit": null,
+      "derivedSliceOnly": true
+    },
+    {
+      "step": 63,
+      "file": "group-step-63.raw.log",
+      "bytes": 5543,
+      "sha256": "a8f36d835c82fe455f47d38151bb30008e60c7a63d10cee26f89643a7bb1388f",
+      "startStringOffsetUTF16": 334866,
+      "endStringOffsetUTF16": 340407,
+      "startByte": 334992,
+      "endByte": 340535,
+      "workflowCommand": "node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-commit-ack-v376.native.test.mjs",
+      "originalStepConclusion": "success",
+      "originalRawErrorExitCodes": [],
+      "independentSliceRuntimeExit": null,
+      "derivedSliceOnly": true
+    },
+    {
+      "step": 64,
+      "file": "group-step-64.raw.log",
+      "bytes": 5568,
+      "sha256": "a9d58e11c88a8739316aa57ab949729bc7ca96beb0a2b6b7c79cc9e0f49fa024",
+      "startStringOffsetUTF16": 340407,
+      "endStringOffsetUTF16": 345973,
+      "startByte": 340535,
+      "endByte": 346103,
+      "workflowCommand": "node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-delayed-commit-v377.native.test.mjs",
+      "originalStepConclusion": "success",
+      "originalRawErrorExitCodes": [],
+      "independentSliceRuntimeExit": null,
+      "derivedSliceOnly": true
+    },
+    {
+      "step": 65,
+      "file": "group-step-65.raw.log",
+      "bytes": 4231,
+      "sha256": "8cd790330cfe4693ba29374c8d71bedc0dae48e53d48917bc0fe2f5fd513806b",
+      "startStringOffsetUTF16": 345973,
+      "endStringOffsetUTF16": 350202,
+      "startByte": 346103,
+      "endByte": 350334,
+      "workflowCommand": "node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-commit-journal-v378.native.test.mjs",
+      "originalStepConclusion": "success",
+      "originalRawErrorExitCodes": [],
+      "independentSliceRuntimeExit": null,
+      "derivedSliceOnly": true
+    },
+    {
+      "step": 66,
+      "file": "group-step-66.raw.log",
+      "bytes": 5330,
+      "sha256": "4a52dab5bda028e39b8a830c7ebb8c0120aecaca40dd8ec3cbf9f267fd862e37",
+      "startStringOffsetUTF16": 350202,
+      "endStringOffsetUTF16": 355530,
+      "startByte": 350334,
+      "endByte": 355664,
+      "workflowCommand": "node --import tsx --test scripts/db/cutover/postgres-complete-text-admission-buyer-v379.native.test.mjs",
+      "originalStepConclusion": "success",
+      "originalRawErrorExitCodes": [],
+      "independentSliceRuntimeExit": null,
+      "derivedSliceOnly": true
+    },
+    {
+      "step": 67,
+      "file": "group-step-67.raw.log",
+      "bytes": 3907,
+      "sha256": "62cf5346b04a2170d991dc5d896274e0281b2591b7df420134bf4879e6c105c4",
+      "startStringOffsetUTF16": 355530,
+      "endStringOffsetUTF16": 359435,
+      "startByte": 355664,
+      "endByte": 359571,
+      "workflowCommand": "node --test packages/core/src/test-support/postgres-journal-commit-ack-proxy-v381.native.test.mjs",
+      "originalStepConclusion": "success",
+      "originalRawErrorExitCodes": [],
+      "independentSliceRuntimeExit": null,
+      "derivedSliceOnly": true
+    },
+    {
+      "step": 68,
+      "file": "group-step-68.raw.log",
+      "bytes": 5606,
+      "sha256": "baf6b8c21f287c80cdf56d963634c7841e338cc50fccfcd5d43110138bb94ffe",
+      "startStringOffsetUTF16": 359435,
+      "endStringOffsetUTF16": 365039,
+      "startByte": 359571,
+      "endByte": 365177,
+      "workflowCommand": "node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-journal-integration-v381.native.test.mjs",
+      "originalStepConclusion": "success",
+      "originalRawErrorExitCodes": [],
+      "independentSliceRuntimeExit": null,
+      "derivedSliceOnly": true
+    },
+    {
+      "step": 69,
+      "file": "group-step-69.raw.log",
+      "bytes": 5337,
+      "sha256": "c06b1563a51e90a7c14a93c38646d20d57fcf5f2216accd7d04066f3d66123d5",
+      "startStringOffsetUTF16": 365039,
+      "endStringOffsetUTF16": 370374,
+      "startByte": 365177,
+      "endByte": 370514,
+      "workflowCommand": "node --import tsx --test scripts/db/cutover/postgres-complete-text-no-fetch-close-blocker-v382.native.test.mjs",
+      "originalStepConclusion": "success",
+      "originalRawErrorExitCodes": [],
+      "independentSliceRuntimeExit": null,
+      "derivedSliceOnly": true
+    },
+    {
+      "step": 70,
+      "file": "group-step-70.raw.log",
+      "bytes": 5585,
+      "sha256": "815cc26383aec20fb9b7b2a9838304f1f55d497418930aaae7a1ad8ef5fa09ae",
+      "startStringOffsetUTF16": 370374,
+      "endStringOffsetUTF16": 375957,
+      "startByte": 370514,
+      "endByte": 376099,
+      "workflowCommand": "node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-request-projection-v383.native.test.mjs",
+      "originalStepConclusion": "success",
+      "originalRawErrorExitCodes": [],
+      "independentSliceRuntimeExit": null,
+      "derivedSliceOnly": true
+    },
+    {
+      "step": 71,
+      "file": "group-step-71.raw.log",
+      "bytes": 5321,
+      "sha256": "bace0d3f105afc168ec4d85a933665281fa3e470f9a66af543bdaf2ef04bf740",
+      "startStringOffsetUTF16": 375957,
+      "endStringOffsetUTF16": 381276,
+      "startByte": 376099,
+      "endByte": 381420,
+      "workflowCommand": "node --import tsx --test scripts/db/cutover/postgres-complete-text-observed-holder-v384.native.test.mjs",
+      "originalStepConclusion": "success",
+      "originalRawErrorExitCodes": [],
+      "independentSliceRuntimeExit": null,
+      "derivedSliceOnly": true
+    },
+    {
+      "step": 72,
+      "file": "group-step-72.raw.log",
+      "bytes": 5352,
+      "sha256": "b68513b60a6e37c9b407ba6f61adfd47aeee1b77999d361bab2067f90ea3d1ba",
+      "startStringOffsetUTF16": 381276,
+      "endStringOffsetUTF16": 386626,
+      "startByte": 381420,
+      "endByte": 386772,
+      "workflowCommand": "node --import tsx --test scripts/db/cutover/postgres-complete-text-platform-close-fence-v386.native.test.mjs",
+      "originalStepConclusion": "success",
+      "originalRawErrorExitCodes": [],
+      "independentSliceRuntimeExit": null,
+      "derivedSliceOnly": true
+    },
+    {
+      "step": 73,
+      "file": "group-step-73.raw.log",
+      "bytes": 5337,
+      "sha256": "b05276fe66985bba8d1df3ae58012b6893fb8da2cd047e25822eb6e707fe1513",
+      "startStringOffsetUTF16": 386626,
+      "endStringOffsetUTF16": 391961,
+      "startByte": 386772,
+      "endByte": 392109,
+      "workflowCommand": "node --import tsx --test scripts/db/cutover/postgres-complete-chat-holder-dispatch-v387.native.test.mjs",
+      "originalStepConclusion": "success",
+      "originalRawErrorExitCodes": [],
+      "independentSliceRuntimeExit": null,
+      "derivedSliceOnly": true
+    },
+    {
+      "step": 74,
+      "file": "group-step-74.raw.log",
+      "bytes": 5376,
+      "sha256": "bcc313ccbbbadd0331426b5d87becaf7de659a7bb960d865801410f42be9e9ae",
+      "startStringOffsetUTF16": 391961,
+      "endStringOffsetUTF16": 397335,
+      "startByte": 392109,
+      "endByte": 397485,
+      "workflowCommand": "node --import tsx --test scripts/db/cutover/postgres-complete-text-no-fetch-platform-close-v388.native.test.mjs",
+      "originalStepConclusion": "success",
+      "originalRawErrorExitCodes": [],
+      "independentSliceRuntimeExit": null,
+      "derivedSliceOnly": true
+    },
+    {
+      "step": 75,
+      "file": "group-step-75.raw.log",
+      "bytes": 5383,
+      "sha256": "a7024a2b07c0cac50c39d18d0d8b3ba3045d5b6efdd76ac066fce402a2e6cbe7",
+      "startStringOffsetUTF16": 397335,
+      "endStringOffsetUTF16": 402716,
+      "startByte": 397485,
+      "endByte": 402868,
+      "workflowCommand": "node --import tsx --test scripts/db/cutover/postgres-complete-text-no-fetch-recovery-v389.native.test.mjs",
+      "originalStepConclusion": "success",
+      "originalRawErrorExitCodes": [],
+      "independentSliceRuntimeExit": null,
+      "derivedSliceOnly": true
+    },
+    {
+      "step": 76,
+      "file": "group-step-76.raw.log",
+      "bytes": 5351,
+      "sha256": "c40f903cd1f992c0ae5227bb15c7150097785160b20381f62ea627ab0d562f97",
+      "startStringOffsetUTF16": 402716,
+      "endStringOffsetUTF16": 408065,
+      "startByte": 402868,
+      "endByte": 408219,
+      "workflowCommand": "node --import tsx --test scripts/db/cutover/postgres-complete-text-holder-worker-v390.native.test.mjs",
+      "originalStepConclusion": "success",
+      "originalRawErrorExitCodes": [],
+      "independentSliceRuntimeExit": null,
+      "derivedSliceOnly": true
+    },
+    {
+      "step": 77,
+      "file": "group-step-77.raw.log",
+      "bytes": 5341,
+      "sha256": "1d3b01e31a0849341d1e676315d0eabe25231a598c56974d9e4832031812c28b",
+      "startStringOffsetUTF16": 408065,
+      "endStringOffsetUTF16": 413404,
+      "startByte": 408219,
+      "endByte": 413560,
+      "workflowCommand": "node --import tsx --test scripts/db/cutover/postgres-complete-text-secretless-plan-v391.native.test.mjs",
+      "originalStepConclusion": "success",
+      "originalRawErrorExitCodes": [],
+      "independentSliceRuntimeExit": null,
+      "derivedSliceOnly": true
+    },
+    {
+      "step": 78,
+      "file": "group-step-78.raw.log",
+      "bytes": 5382,
+      "sha256": "ea2825b361237eafe4a6e6481883848acdd261700be51af1144706ca3723765e",
+      "startStringOffsetUTF16": 413404,
+      "endStringOffsetUTF16": 418784,
+      "startByte": 413560,
+      "endByte": 418942,
+      "workflowCommand": "node --import tsx --test scripts/db/cutover/postgres-complete-text-response-observation-v392.native.test.mjs",
+      "originalStepConclusion": "success",
+      "originalRawErrorExitCodes": [],
+      "independentSliceRuntimeExit": null,
+      "derivedSliceOnly": true
+    },
+    {
+      "step": 79,
+      "file": "group-step-79.raw.log",
+      "bytes": 4795,
+      "sha256": "67fc48456e1125c0d14190b85e15474f5341c825d61614127f8b500809690d98",
+      "startStringOffsetUTF16": 418784,
+      "endStringOffsetUTF16": 423577,
+      "startByte": 418942,
+      "endByte": 423737,
+      "workflowCommand": "node --import tsx --test scripts/db/cutover/postgres-complete-text-manifest-selection-v393.native.test.mjs",
+      "originalStepConclusion": "success",
+      "originalRawErrorExitCodes": [],
+      "independentSliceRuntimeExit": null,
+      "derivedSliceOnly": true
+    },
+    {
+      "step": 80,
+      "file": "group-step-80.raw.log",
+      "bytes": 5346,
+      "sha256": "b06fc90388c8e4d2c2d3b4ed2e20e029746810f0a06ab6485413a74afea76818",
+      "startStringOffsetUTF16": 423577,
+      "endStringOffsetUTF16": 428921,
+      "startByte": 423737,
+      "endByte": 429083,
+      "workflowCommand": "node --import tsx --test scripts/db/cutover/postgres-personal-key-auth-period-v395.native.test.mjs",
+      "originalStepConclusion": "success",
+      "originalRawErrorExitCodes": [],
+      "independentSliceRuntimeExit": null,
+      "derivedSliceOnly": true
+    },
+    {
+      "step": 81,
+      "file": "group-step-81.raw.log",
+      "bytes": 5632,
+      "sha256": "4cfc82fde5a92480aee0133ac3bb5fe3dd85525ff5e85c64c4c9e1f7c5487a21",
+      "startStringOffsetUTF16": 428921,
+      "endStringOffsetUTF16": 434551,
+      "startByte": 429083,
+      "endByte": 434715,
+      "workflowCommand": "node --import tsx --test scripts/db/cutover/postgres-complete-text-routing-projection-v396.native.test.mjs",
+      "originalStepConclusion": "success",
+      "originalRawErrorExitCodes": [],
+      "independentSliceRuntimeExit": null,
+      "derivedSliceOnly": true
+    },
+    {
+      "step": 82,
+      "file": "group-step-82.raw.log",
+      "bytes": 5407,
+      "sha256": "7e1918a2edfa7771d6479578bc96d0ab0882ebe1681ca1bafe1e15b303f99e78",
+      "startStringOffsetUTF16": 434551,
+      "endStringOffsetUTF16": 439956,
+      "startByte": 434715,
+      "endByte": 440122,
+      "workflowCommand": "node --import tsx --test scripts/db/cutover/postgres-complete-text-response-no-fetch-coinstall-v397.native.test.mjs",
+      "originalStepConclusion": "success",
+      "originalRawErrorExitCodes": [],
+      "independentSliceRuntimeExit": null,
+      "derivedSliceOnly": true
+    },
+    {
+      "step": 83,
+      "file": "group-step-83.raw.log",
+      "bytes": 15127,
+      "sha256": "c9fe506214d78201b9ff0b23088b2f46cbe9bf7198a40661295e15c1fc2ad485",
+      "startStringOffsetUTF16": 439956,
+      "endStringOffsetUTF16": 455081,
+      "startByte": 440122,
+      "endByte": 455249,
+      "workflowCommand": "node --import tsx --test scripts/db/cutover/postgres-complete-text-auth-routing-recovery-coinstall-v400.native.test.mjs",
+      "originalStepConclusion": "success",
+      "originalRawErrorExitCodes": [],
+      "independentSliceRuntimeExit": null,
+      "derivedSliceOnly": true
+    },
+    {
+      "step": 84,
+      "file": "group-step-84.raw.log",
+      "bytes": 24009,
+      "sha256": "849b40c7bf745754e6c77b3c0b1a61333d0802b2fc1c627a8a94dd35673fe928",
+      "startStringOffsetUTF16": 455081,
+      "endStringOffsetUTF16": 479088,
+      "startByte": 455249,
+      "endByte": 479258,
+      "workflowCommand": "node --import tsx --test scripts/db/cutover/postgres-exclusive-credential-free-chat-ingress-v401.native.test.mjs",
+      "originalStepConclusion": "success",
+      "originalRawErrorExitCodes": [],
+      "independentSliceRuntimeExit": null,
+      "derivedSliceOnly": true
+    },
+    {
+      "step": 85,
+      "file": "group-step-85.raw.log",
+      "bytes": 29669,
+      "sha256": "6a65105b1641c9d9fe3b7fb0246e4c55cab96252c47616b6227a538562e7790d",
+      "startStringOffsetUTF16": 479088,
+      "endStringOffsetUTF16": 508755,
+      "startByte": 479258,
+      "endByte": 508927,
+      "workflowCommand": "node --import tsx --test scripts/db/cutover/postgres-complete-text-platform-event-delivery-v402.native.test.mjs",
+      "originalStepConclusion": "success",
+      "originalRawErrorExitCodes": [],
+      "independentSliceRuntimeExit": null,
+      "derivedSliceOnly": true
+    },
+    {
+      "step": 86,
+      "file": "group-step-86.raw.log",
+      "bytes": 5328,
+      "sha256": "0230c571ac0ae0bcfd7318ae4801543f7efef28102722a3c1de09c9a0426a198",
+      "startStringOffsetUTF16": 508755,
+      "endStringOffsetUTF16": 514081,
+      "startByte": 508927,
+      "endByte": 514255,
+      "workflowCommand": "node --import tsx --test scripts/db/cutover/postgres-complete-text-no-fetch-fence-v370.native.test.mjs",
+      "originalStepConclusion": "success",
+      "originalRawErrorExitCodes": [],
+      "independentSliceRuntimeExit": null,
+      "derivedSliceOnly": true
+    },
+    {
+      "step": 87,
+      "file": "group-step-87.raw.log",
+      "bytes": 4251,
+      "sha256": "cb0701759d4161f70f2f520818ff31d704c7307b63ca3f9b888c32f5ac73718d",
+      "startStringOffsetUTF16": 514081,
+      "endStringOffsetUTF16": 518330,
+      "startByte": 514255,
+      "endByte": 518506,
+      "workflowCommand": "node --import tsx --test packages/core/src/storage/postgres-jsonb-batch-native.test.mjs",
+      "originalStepConclusion": "success",
+      "originalRawErrorExitCodes": [],
+      "independentSliceRuntimeExit": null,
+      "derivedSliceOnly": true
+    },
+    {
+      "step": 88,
+      "file": "group-step-88.raw.log",
+      "bytes": 5376,
+      "sha256": "5f53de21b4069df140aa81db9401ce2f598957c27d96052ee367cb3e83ebde9b",
+      "startStringOffsetUTF16": 518330,
+      "endStringOffsetUTF16": 523704,
+      "startByte": 518506,
+      "endByte": 523882,
+      "workflowCommand": "node --import tsx --test scripts/db/cutover/postgres-guardrail-admission-adapter-v352.native.test.mjs",
+      "originalStepConclusion": "success",
+      "originalRawErrorExitCodes": [],
+      "independentSliceRuntimeExit": null,
+      "derivedSliceOnly": true
+    },
+    {
+      "step": 89,
+      "file": "group-step-89.raw.log",
+      "bytes": 4260,
+      "sha256": "b084d4f571c7301d1acedb0ffd791eac82ffd9d6b53874d1cbb3aeae424b1e58",
+      "startStringOffsetUTF16": 523704,
+      "endStringOffsetUTF16": 527962,
+      "startByte": 523882,
+      "endByte": 528142,
+      "workflowCommand": "node --import tsx --test scripts/db/cutover/postgres-shared-key-buyer-budget-receipt-v2.native.test.mjs",
+      "originalStepConclusion": "success",
+      "originalRawErrorExitCodes": [],
+      "independentSliceRuntimeExit": null,
+      "derivedSliceOnly": true
+    },
+    {
+      "step": 90,
+      "file": "group-step-90.raw.log",
+      "bytes": 4273,
+      "sha256": "178aaed2856b263d8f736365239aa6be766851d63f63b05216fab721374691d9",
+      "startStringOffsetUTF16": 527962,
+      "endStringOffsetUTF16": 532233,
+      "startByte": 528142,
+      "endByte": 532415,
+      "workflowCommand": "node --import tsx --test scripts/db/cutover/postgres-shared-key-buyer-receipt-retention-v346.native.test.mjs",
+      "originalStepConclusion": "success",
+      "originalRawErrorExitCodes": [],
+      "independentSliceRuntimeExit": null,
+      "derivedSliceOnly": true
+    },
+    {
+      "step": 91,
+      "file": "group-step-91.raw.log",
+      "bytes": 4763,
+      "sha256": "c8e6c443b4664597c48a9c17d05ff0713288848b05778e377f804816f742f173",
+      "startStringOffsetUTF16": 532233,
+      "endStringOffsetUTF16": 536994,
+      "startByte": 532415,
+      "endByte": 537178,
+      "workflowCommand": "node --import tsx --test scripts/db/cutover/postgres-runtime-privilege-transition-v345.native.test.mjs",
+      "originalStepConclusion": "success",
+      "originalRawErrorExitCodes": [],
+      "independentSliceRuntimeExit": null,
+      "derivedSliceOnly": true
+    },
+    {
+      "step": 92,
+      "file": "group-step-92.raw.log",
+      "bytes": 4747,
+      "sha256": "fad0ae42f55a9654179f89687633605c36e3adca4abe4b3a3e20948ee0c1179b",
+      "startStringOffsetUTF16": 536994,
+      "endStringOffsetUTF16": 541739,
+      "startByte": 537178,
+      "endByte": 541925,
+      "workflowCommand": "node --import tsx --test scripts/db/cutover/postgres-buyer-critical-writer-split-v346.native.test.mjs",
+      "originalStepConclusion": "success",
+      "originalRawErrorExitCodes": [],
+      "independentSliceRuntimeExit": null,
+      "derivedSliceOnly": true
+    },
+    {
+      "step": 93,
+      "file": "group-step-93.raw.log",
+      "bytes": 4800,
+      "sha256": "2cf0ffc6082a2eb29a36cd3409b44c06739348efcc38ad8bcf9be688bfa0de19",
+      "startStringOffsetUTF16": 541739,
+      "endStringOffsetUTF16": 546537,
+      "startByte": 541925,
+      "endByte": 546725,
+      "workflowCommand": "node --import tsx --test scripts/db/cutover/postgres-shared-key-economic-buyer-login-v347.native.test.mjs",
+      "originalStepConclusion": "success",
+      "originalRawErrorExitCodes": [],
+      "independentSliceRuntimeExit": null,
+      "derivedSliceOnly": true
+    },
+    {
+      "step": 94,
+      "file": "group-step-94.raw.log",
+      "bytes": 9949,
+      "sha256": "891ba26d3b0605270c2b65aa7f3d21b6b1d19728c25643f7e515ef80de3fbed1",
+      "startStringOffsetUTF16": 546537,
+      "endStringOffsetUTF16": 556480,
+      "startByte": 546725,
+      "endByte": 556674,
+      "workflowCommand": "node --import tsx --test scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs",
+      "originalStepConclusion": "failure",
+      "originalRawErrorExitCodes": [
+        1
+      ],
+      "independentSliceRuntimeExit": null,
+      "derivedSliceOnly": true
+    }
+  ],
+  "UTF8UTF16Facts": {
+    "originalRawBytes": 556674,
+    "JSUtf16CodeUnits": 556480,
+    "losslessUtf8Roundtrip": true,
+    "firstByte": 293918,
+    "lastByte": 556674,
+    "totalDerivedBytes": 262756,
+    "all40Contiguous": true
+  },
+  "minimalMachineContract": {
+    "proposalOnlyNoImplementationWritten": true,
+    "candidateDialect": "exact-native26-derived-gh-group-slice-v1",
+    "admissionScope": "Exact native26-terminal-peer root cc270, original run37412060008/job112102451588 and exactly40 slices55..94. Do not change generic closure or admit arbitrary aggregates/copies.",
+    "sourcePins": {
+      "originalFullDownloadReceipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\native-terminal.closed.json",
+        "bytes": 1012,
+        "sha256": "3ffe4a65441d0b150f4ddd2092876e5da2f813c85cd23b0fe349084fd446bb73"
+      },
+      "originalFullRaw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\native-terminal.stdout.log",
+        "bytes": 556674,
+        "sha256": "c78e11593edf9b694d5a490647fd37f4863aa44f22be14d367e592975dbb8d28"
+      },
+      "originalProducerSource": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\audit-terminal-v2.mjs",
+        "bytes": 7782,
+        "sha256": "d43d773f13607d4379c2ae6162abc0318ad874b36a5eedd5bcd870a4067922a7"
+      },
+      "originalProducerReceipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\audit-terminal-v2.closed.json",
+        "bytes": 1171,
+        "sha256": "884c578dd470d1912486ef391098521a5f9b3e54b5777156ed99c9320bcd997b"
+      },
+      "reportGeometryPin": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\FINAL-native26-ci-independent-peer.json",
+        "bytes": 413706,
+        "sha256": "6635f04f77f6f6325a794756883a8bf697f752af239e33deb2b8c3b226a57e66"
+      },
+      "originalTerminalProgressReceipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\proxy-progress-11.closed.json",
+        "bytes": 1061,
+        "sha256": "8db6990f97f906e57a250c70c75619a65c721cb77aa955a3ccdfa9f3cc21e8d5"
+      },
+      "originalProgressRaw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\proxy-progress-11.stdout.log",
+        "bytes": 49493,
+        "sha256": "ef24ec36d29b0395b9fe524e96f7c3dcaefd7ac42399833488f2bb0389a07181"
+      }
+    },
+    "machineChecks": [
+      "Resolve included root and safe relative basenames; exact original receipt/source/report SHA pins, never use same-stem inference or an arbitrary other root/copy.",
+      "Original full-download receipt is its own numeric status+signal/error+ordered times+exact gh args. Bind original stdout/stderr from its original paths and Info bytes/SHA, and require original full raw already has recognized closed download authority.",
+      "Pinned peer report may provide geometry and metadata; its FINAL flags or audit0 do not authorize a slice runtime exit. Confirm report rawEvidence.nativeLog parsed body exactly matches original pinned receipt and stdout descriptor.",
+      "Original progress raw parses to the pinned run/head/job and completed failure metadata. Preserve39success/1failure/19skipped, step94 raw error1. Do not fabricate successful Node process status0.",
+      "Original full raw must be lossless UTF8 roundtrip. Indices are JS UTF16 code units; use JS string.slice or explicit safe UTF16-to-byte conversion, and reject split surrogate boundaries/invalid UTF8 normalization.",
+      "For each55..94, exact integer start/end and pinned descriptor; rederive first workflowCommand position and preceding/next ##[group] boundaries exactly as original producer. Compare every derived bytes/SHA to original byte subrange AND included slice bytes/SHA.",
+      "Exactly40 unique files and rows55..94; reject extra/duplicate/missing/overlapping/modified/range-drift files. Steps95..113 skipped carry group=null and must not gain slice authority.",
+      "Original fullraw mtime must not be newer than original download receipt. Derived slices are naturally written after that receipt: validate them against original producer closed receipt and frozen peer seal, not against download receipt time.",
+      "Attach original download receipt only as download/copy provenance; keep independentSliceRuntimeExit=null, independentNewExecutionClaimed=false, derivedHistoricalSlice=true, gatePassDerived=false. No additional child receipts/streams are created.",
+      "Original raw/receipt/progress/source/report/seal remain byte-for-byte entries in the archive. Source transport mtime corrections belong to an explicit original-artifact extraction binding, not a global mtime bypass."
+    ],
+    "meaningfulNegativeControlsSuggestedOnly": [
+      "Treat UTF16 indices as Buffer byte offsets; step55 must reject293808..299363 because actualbyte293918..299475.",
+      "Alter one slice byte/SHA/length or start/end/range even if FINAL0 remains; reject.",
+      "Omit original full raw or its receipt/stream pin; replace with currentRoot other-run native-terminal-log327916; reject.",
+      "Wrong context/root/copy/run/job/args/receiptSHA/program/status/timestamp; reject without inventing a process status.",
+      "Change original report geometry/pin, missing workflowCommand or marker, duplicate55, omit94, add95 skipped slice; reject.",
+      "Invalid UTF8 or a UTF16 boundary splitting surrogate; reject lossless byte-range claim.",
+      "Set independent slice exit0 or upgrade step94/whole-native failure on source generator0/download0; reject.",
+      "Source raw newer than original download receipt; reject. Slice newer than download receipt but inside producer/seal lifetime is valid derivation, not a reused source raw."
+    ],
+    "existingLibraryLimitation": "Current full-copy bindings require exact whole-byte equality; slices need an explicit derived-byte-range/UTF16 selector binding, not an exception to raw closure or fabricated independent receipt."
+  },
+  "scope": {
+    "onlyOriginalReadHashAndDesign": true,
+    "newExclusivePeerTempOnlyWrites": true,
+    "repositoryWrites": 0,
+    "originalEvidenceOrToolsWrites": 0,
+    "gitCliOrNetworkOrRuntimeOrCiExecutions": 0,
+    "businessTestsOrToolControlsExecuted": 0,
+    "allCurrent981SourcesWalked": false,
+    "all349PeerFilesWalked": false,
+    "fullGateProved": false,
+    "gatePassDerived": false
+  },
+  "sourceLines": {
+    "audit-terminal-v2.mjs": "7-15 original receipt/output hashes;26-27 marker selection and UTF16 slice;35 records;42 aggregate/verdict cannot become slice command authority"
+  },
+  "blockersToUnsafeShortcut": [
+    "currentRoot native-terminal-log is run37409463636/job112094395119, while slices are run37412060008/job112102451588",
+    "String offsets cannot be interpreted as byte offsets",
+    "Derived slice has no independent runtime receipt; download0 and source-audit0 are not slice exit0"
+  ]
+}

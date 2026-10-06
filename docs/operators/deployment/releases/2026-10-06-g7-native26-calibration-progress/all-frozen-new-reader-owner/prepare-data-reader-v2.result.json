@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-06T04:50:27.660Z",
+  "finishedAt": "2026-10-06T04:50:27.740Z",
+  "executable": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-all-frozen-data-tools-FoBS1O/prepare-data-reader-v2.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 1,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\prepare-data-reader-v2.stdout.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\prepare-data-reader-v2.stderr.log",
+    "bytes": 748,
+    "sha256": "8a7a069406e0e2ff98df993e34f1b33a2026ea27bd642d2a2df2fcd73285eb44"
+  },
+  "scope": "Original exact child return of Temp evidence tool only; no application/native/G7/runtime or production run"
+}

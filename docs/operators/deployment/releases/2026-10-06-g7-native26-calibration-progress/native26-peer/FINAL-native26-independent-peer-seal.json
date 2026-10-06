@@ -1,0 +1,387 @@
+{
+  "schema": "cinatoken.native26-independent-peer-seal.v1",
+  "at": "2026-10-06T04:02:59.886Z",
+  "actualExit": 0,
+  "report": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-independent-peer-815d52a48c5d44fc9146dd59579e27f2\\FINAL-native26-independent-peer.json",
+    "bytes": 266848,
+    "sha256": "f6e8a822f4aff057edd0195de46e4e1561f7bc5559c9b8764327e0b3cd1d93e4"
+  },
+  "producerRegularFileSetMatchesFrozenReport": true,
+  "producerRegularFileCount": 260,
+  "producerEveryRegularFileBytesSha256Exact": true,
+  "previousTerminalPeerReport": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-terminal-independent-peer-9a6f592ed14641fe9af1029826dbd775/FINAL-native-g7-terminal-independent-peer.json",
+    "bytes": 516312,
+    "sha256": "70b8cc42c2678c4ceb7c8902cb65fed3493f70e46dedab4485991e6ba81777fd",
+    "unchanged": true
+  },
+  "peerFileSnapshot": [
+    {
+      "file": "FINAL-native26-independent-peer.json",
+      "bytes": 266848,
+      "sha256": "f6e8a822f4aff057edd0195de46e4e1561f7bc5559c9b8764327e0b3cd1d93e4"
+    },
+    {
+      "file": "base-328-inputs-v3.closed.json",
+      "bytes": 1023,
+      "sha256": "1f9a0dba338b209b8daf97f1d37e2b6b134f40cf3c82eb593332c5d01360ca66"
+    },
+    {
+      "file": "base-328-inputs-v3.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "base-328-inputs-v3.stdout.log",
+      "bytes": 9787037,
+      "sha256": "39149ba5e26374ee0dd70b4a0187029d6d886aab4f8f02ef2eb21587710aa6d2"
+    },
+    {
+      "file": "base-328-inputs-v4.closed.json",
+      "bytes": 1023,
+      "sha256": "dc09d30a99842ff4d4809d22e7cc8b85bb198eb030ecf1f4975d609be870af8f"
+    },
+    {
+      "file": "base-328-inputs-v4.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "base-328-inputs-v4.stdout.log",
+      "bytes": 9787037,
+      "sha256": "39149ba5e26374ee0dd70b4a0187029d6d886aab4f8f02ef2eb21587710aa6d2"
+    },
+    {
+      "file": "base-328-inputs-v5.closed.json",
+      "bytes": 1023,
+      "sha256": "f1042a5ee7452346330fe4792dc35e1e4809262265b7cec0e0f95bcee8bfbb2d"
+    },
+    {
+      "file": "base-328-inputs-v5.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "base-328-inputs-v5.stdout.log",
+      "bytes": 9787037,
+      "sha256": "39149ba5e26374ee0dd70b4a0187029d6d886aab4f8f02ef2eb21587710aa6d2"
+    },
+    {
+      "file": "base-328-inputs.closed.json",
+      "bytes": 1017,
+      "sha256": "ca919ad70b018890ab1b800d2c171506c9f971ec4ed264af73eb353c91fb0077"
+    },
+    {
+      "file": "base-328-inputs.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "base-328-inputs.stdout.log",
+      "bytes": 9787037,
+      "sha256": "39149ba5e26374ee0dd70b4a0187029d6d886aab4f8f02ef2eb21587710aa6d2"
+    },
+    {
+      "file": "final-head-v5.closed.json",
+      "bytes": 904,
+      "sha256": "e1671697713a606e1cc4b865fb86c3a6eeef5b33ed68e7a8bf96921f892d0f6e"
+    },
+    {
+      "file": "final-head-v5.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "final-head-v5.stdout.log",
+      "bytes": 41,
+      "sha256": "c4ebee2df777e13bda0448797a4a3ff3d1b55b51d8c3b314e2b84bb4f12dd76f"
+    },
+    {
+      "file": "initial-head-v3.closed.json",
+      "bytes": 908,
+      "sha256": "326b199445d3a3087578d19ec2a3ea4bcd7e153e6c9934a7c2743a9f448cfc0b"
+    },
+    {
+      "file": "initial-head-v3.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "initial-head-v3.stdout.log",
+      "bytes": 41,
+      "sha256": "c4ebee2df777e13bda0448797a4a3ff3d1b55b51d8c3b314e2b84bb4f12dd76f"
+    },
+    {
+      "file": "initial-head-v4.closed.json",
+      "bytes": 908,
+      "sha256": "ae3eabada622d89d7006d99eabf22712786499090d0dbb36fe663b13a3eb6f0b"
+    },
+    {
+      "file": "initial-head-v4.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "initial-head-v4.stdout.log",
+      "bytes": 41,
+      "sha256": "c4ebee2df777e13bda0448797a4a3ff3d1b55b51d8c3b314e2b84bb4f12dd76f"
+    },
+    {
+      "file": "initial-head-v5.closed.json",
+      "bytes": 908,
+      "sha256": "0305e8be86d002d9e43ac909a68a265de524461b9c9f7fd1b21fd107030955c4"
+    },
+    {
+      "file": "initial-head-v5.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "initial-head-v5.stdout.log",
+      "bytes": 41,
+      "sha256": "c4ebee2df777e13bda0448797a4a3ff3d1b55b51d8c3b314e2b84bb4f12dd76f"
+    },
+    {
+      "file": "initial-head.closed.json",
+      "bytes": 902,
+      "sha256": "d1e8cc86cf45371f72443f7d0e2eede60dcf0bc86ef764affa16ddb4a65468e3"
+    },
+    {
+      "file": "initial-head.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "initial-head.stdout.log",
+      "bytes": 41,
+      "sha256": "c4ebee2df777e13bda0448797a4a3ff3d1b55b51d8c3b314e2b84bb4f12dd76f"
+    },
+    {
+      "file": "inspect-native26-v2.closed.json",
+      "bytes": 1113,
+      "sha256": "5249760220592fe30031f551666198ef5c32ba6cc3ed72d30001a3995f1223aa"
+    },
+    {
+      "file": "inspect-native26-v2.mjs",
+      "bytes": 1074,
+      "sha256": "a252c220fed23ea456ea91c254c5e8019de7702b72bab4cd5647436d1fc55eba"
+    },
+    {
+      "file": "inspect-native26-v2.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "inspect-native26-v2.stdout.log",
+      "bytes": 93964,
+      "sha256": "cc257c9c096c39a43e537e837a961f70b418b8cd9b96f5abca3a07049e66ed00"
+    },
+    {
+      "file": "inspect-native26.closed.json",
+      "bytes": 1103,
+      "sha256": "e4ec3cf1cddadce37815743fe8c73cf946946cbb96a48b241146c07ce65c80aa"
+    },
+    {
+      "file": "inspect-native26.mjs",
+      "bytes": 1481,
+      "sha256": "699ab3a247c54d92f38b363caabdb8e06eb973bb0ee618196f94e05194509f0e"
+    },
+    {
+      "file": "inspect-native26.stderr.log",
+      "bytes": 1718,
+      "sha256": "dde41dc6865913e47da84f97bbf7c428cb715bdd057d09c25fc74c7672d2a70b"
+    },
+    {
+      "file": "inspect-native26.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "review-native26-v2.closed.json",
+      "bytes": 1109,
+      "sha256": "31e3a633a064e23938da3163275ca47f6c9edcde676a92475bcff7148dacdf98"
+    },
+    {
+      "file": "review-native26-v2.mjs",
+      "bytes": 25876,
+      "sha256": "d2a58cc5f8b8ed1b3909e15d032f72ab8eb72856da17211cc4ff70a140da5aaf"
+    },
+    {
+      "file": "review-native26-v2.stderr.log",
+      "bytes": 1568,
+      "sha256": "5b4d086a4d0366fd48f09d2b9da1ecca157bdd5b3f8f71a89d883ef231618796"
+    },
+    {
+      "file": "review-native26-v2.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "review-native26-v3.closed.json",
+      "bytes": 1108,
+      "sha256": "0d985d54540b9287696e94953a4612a9be8e0275392b40c9c4682f6b2158c0bd"
+    },
+    {
+      "file": "review-native26-v3.mjs",
+      "bytes": 26330,
+      "sha256": "25092451fd19c48d9c3ea1c9888aff45482c49c688128f0af9b794935cb063f4"
+    },
+    {
+      "file": "review-native26-v3.stderr.log",
+      "bytes": 688,
+      "sha256": "5e5648dfd9f3ce6327c771463b84ccf542b9b765a433b3fad9d5d8624d7e2776"
+    },
+    {
+      "file": "review-native26-v3.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "review-native26-v4.closed.json",
+      "bytes": 1108,
+      "sha256": "7782bbe9515e1961a82c797754235b597ea9e2350e74383f12496082bcd010d4"
+    },
+    {
+      "file": "review-native26-v4.mjs",
+      "bytes": 27075,
+      "sha256": "3fad0eb83f9e3c9f40f140b0856b0622e3950baf5c06417ff02b159554facfbd"
+    },
+    {
+      "file": "review-native26-v4.stderr.log",
+      "bytes": 757,
+      "sha256": "fd337a3f67205bd98aeec4730ee9cb7e2ed7d2ac7eec7afc4f580d22eac2a891"
+    },
+    {
+      "file": "review-native26-v4.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "review-native26-v5.closed.json",
+      "bytes": 1108,
+      "sha256": "fb7f16b6e95240560f4a02986da7f52b9ed4ea40302dc2cdad8f4319671043bb"
+    },
+    {
+      "file": "review-native26-v5.mjs",
+      "bytes": 27394,
+      "sha256": "7a1c79f7ff3e2da8a843c050af04150033f7f765f08f40f71b76a505c16fd3c5"
+    },
+    {
+      "file": "review-native26-v5.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "review-native26-v5.stdout.log",
+      "bytes": 668,
+      "sha256": "224b982be64dbb18d8de793a7a7d10566e79502ff64e3268fefc3d5e3e03a1a3"
+    },
+    {
+      "file": "review-native26.closed.json",
+      "bytes": 1099,
+      "sha256": "f26de57fecdd56d65df5d041379fba838559b3a0d0de52268c7aa16a5453fc13"
+    },
+    {
+      "file": "review-native26.mjs",
+      "bytes": 25307,
+      "sha256": "56c25a0bb051e526318973f966f8a612ec935f0b3db51a1dbdedb3f729648473"
+    },
+    {
+      "file": "review-native26.stderr.log",
+      "bytes": 699,
+      "sha256": "bc6b27f1452cc039cfb20352dbc14b964055775e552d12e32e24cdbabf10b1bd"
+    },
+    {
+      "file": "review-native26.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "run-closed.mjs",
+      "bytes": 1300,
+      "sha256": "06f6007622a37bff7d11c135b4a658879b1e93e71d5f25b3508ba9e64f4e6939"
+    },
+    {
+      "file": "seal-native26-peer.mjs",
+      "bytes": 2509,
+      "sha256": "7d515eddb4c6704998a584c9b47e99dd90d49649cebbeb9989a2fff1c77531f8"
+    }
+  ],
+  "peerHistoricalReaderFailuresPreserved": [
+    {
+      "file": "inspect-native26.closed.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-independent-peer-815d52a48c5d44fc9146dd59579e27f2\\inspect-native26.closed.json",
+      "actualExit": 1,
+      "reason": "Initial inspector assumed the legacy producer files field instead of this schema finalFiles.",
+      "stdoutInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderrInfo": {
+        "bytes": 1718,
+        "sha256": "dde41dc6865913e47da84f97bbf7c428cb715bdd057d09c25fc74c7672d2a70b"
+      }
+    },
+    {
+      "file": "review-native26-v2.closed.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-independent-peer-815d52a48c5d44fc9146dd59579e27f2\\review-native26-v2.closed.json",
+      "actualExit": 1,
+      "reason": "Reviewer v2 contained an extra closing parenthesis and failed parsing before any Git reads or source audit.",
+      "stdoutInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderrInfo": {
+        "bytes": 1568,
+        "sha256": "5b4d086a4d0366fd48f09d2b9da1ecca157bdd5b3f8f71a89d883ef231618796"
+      }
+    },
+    {
+      "file": "review-native26-v3.closed.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-independent-peer-815d52a48c5d44fc9146dd59579e27f2\\review-native26-v3.closed.json",
+      "actualExit": 1,
+      "reason": "Reviewer v3 treated workflowLine as a fixture command line. It points to the multiline YAML run header; v4 verifies the bounded original run block and exact Linux command.",
+      "stdoutInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderrInfo": {
+        "bytes": 688,
+        "sha256": "5e5648dfd9f3ce6327c771463b84ccf542b9b765a433b3fad9d5d8624d7e2776"
+      }
+    },
+    {
+      "file": "review-native26-v4.closed.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-independent-peer-815d52a48c5d44fc9146dd59579e27f2\\review-native26-v4.closed.json",
+      "actualExit": 1,
+      "reason": "Reviewer v4 compared optional omitted non-error fields to producer embedded normalized null; v5 requires exact mandatory fields and verifies absent-or-null optional non-errors against the declared null.",
+      "stdoutInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderrInfo": {
+        "bytes": 757,
+        "sha256": "fd337a3f67205bd98aeec4730ee9cb7e2ed7d2ac7eec7afc4f580d22eac2a891"
+      }
+    },
+    {
+      "file": "review-native26.closed.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-independent-peer-815d52a48c5d44fc9146dd59579e27f2\\review-native26.closed.json",
+      "actualExit": 1,
+      "reason": "Initial reviewer assumed step95 and96 each had four original grants. Exact originals are three for95 and four for96.",
+      "stdoutInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderrInfo": {
+        "bytes": 699,
+        "sha256": "bc6b27f1452cc039cfb20352dbc14b964055775e552d12e32e24cdbabf10b1bd"
+      }
+    }
+  ],
+  "scope": "Snapshot includes every peer file present before this new seal writer. This seal JSON and its wrapping actual closed receipt/logs are written after the snapshot; no self-referential index is claimed.",
+  "repositoryWrites": 0,
+  "gitMutations": 0,
+  "ciOrNetworkOrDatabaseExecutions": 0
+}

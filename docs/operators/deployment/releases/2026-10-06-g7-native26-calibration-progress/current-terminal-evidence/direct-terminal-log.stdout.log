@@ -1,0 +1,237 @@
+direct-socket-cancellation	Set up job	﻿2026-10-06T04:06:20.6322569Z Current runner version: '2.337.0'
+direct-socket-cancellation	Set up job	2026-10-06T04:06:20.6343764Z ##[group]Runner Image Provisioner
+direct-socket-cancellation	Set up job	2026-10-06T04:06:20.6344748Z Hosted Compute Agent
+direct-socket-cancellation	Set up job	2026-10-06T04:06:20.6345293Z Version: 20260901.588
+direct-socket-cancellation	Set up job	2026-10-06T04:06:20.6345809Z Commit: f88ec8081b781fac6c440065ac7ff9e710ce3d0b
+direct-socket-cancellation	Set up job	2026-10-06T04:06:20.6346504Z Build Date: 2026-09-01T19:56:44Z
+direct-socket-cancellation	Set up job	2026-10-06T04:06:20.6347143Z Worker ID: {ed759c9d-c300-4a9b-941a-677398fc3d4b}
+direct-socket-cancellation	Set up job	2026-10-06T04:06:20.6347737Z Azure Region: westus3
+direct-socket-cancellation	Set up job	2026-10-06T04:06:20.6348229Z ##[endgroup]
+direct-socket-cancellation	Set up job	2026-10-06T04:06:20.6349441Z ##[group]Operating System
+direct-socket-cancellation	Set up job	2026-10-06T04:06:20.6349956Z Ubuntu
+direct-socket-cancellation	Set up job	2026-10-06T04:06:20.6350520Z 24.04.5
+direct-socket-cancellation	Set up job	2026-10-06T04:06:20.6350941Z LTS
+direct-socket-cancellation	Set up job	2026-10-06T04:06:20.6351384Z ##[endgroup]
+direct-socket-cancellation	Set up job	2026-10-06T04:06:20.6351851Z ##[group]Runner Image
+direct-socket-cancellation	Set up job	2026-10-06T04:06:20.6352344Z Image: ubuntu-24.04
+direct-socket-cancellation	Set up job	2026-10-06T04:06:20.6352874Z Version: 20260927.320.1
+direct-socket-cancellation	Set up job	2026-10-06T04:06:20.6353728Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260927.320/images/ubuntu/Ubuntu2404-Readme.md
+direct-socket-cancellation	Set up job	2026-10-06T04:06:20.6355150Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260927.320
+direct-socket-cancellation	Set up job	2026-10-06T04:06:20.6355935Z ##[endgroup]
+direct-socket-cancellation	Set up job	2026-10-06T04:06:20.6357408Z ##[group]GITHUB_TOKEN Permissions
+direct-socket-cancellation	Set up job	2026-10-06T04:06:20.6359087Z Contents: read
+direct-socket-cancellation	Set up job	2026-10-06T04:06:20.6359658Z Metadata: read
+direct-socket-cancellation	Set up job	2026-10-06T04:06:20.6360125Z ##[endgroup]
+direct-socket-cancellation	Set up job	2026-10-06T04:06:20.6361725Z Secret source: Actions
+direct-socket-cancellation	Set up job	2026-10-06T04:06:20.6362619Z Cache mode: write
+direct-socket-cancellation	Set up job	2026-10-06T04:06:20.6363169Z Prepare workflow directory
+direct-socket-cancellation	Set up job	2026-10-06T04:06:20.6630132Z Prepare all required actions
+direct-socket-cancellation	Set up job	2026-10-06T04:06:20.6683805Z Getting action download info
+direct-socket-cancellation	Set up job	2026-10-06T04:06:20.9787245Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+direct-socket-cancellation	Set up job	2026-10-06T04:06:21.0694325Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+direct-socket-cancellation	Set up job	2026-10-06T04:06:21.1790900Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+direct-socket-cancellation	Set up job	2026-10-06T04:06:21.4207610Z Complete job name: direct-socket-cancellation
+direct-socket-cancellation	Run actions/checkout@v4	﻿2026-10-06T04:06:21.4793193Z ##[group]Run actions/checkout@v4
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.4793995Z with:
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.4794356Z   persist-credentials: false
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.4794790Z   repository: cinagroup/cinatoken
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.4798211Z   token: ***
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.4798564Z   ssh-strict: true
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.4798929Z   ssh-user: git
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.4799296Z   clean: true
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.4799648Z   sparse-checkout-cone-mode: true
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.4800062Z   fetch-depth: 1
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.4800404Z   fetch-tags: false
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.4800756Z   show-progress: true
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.4801107Z   lfs: false
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.4801431Z   submodules: false
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.4801783Z   set-safe-directory: true
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.4802179Z   allow-unsafe-pr-checkout: false
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.4802794Z ##[endgroup]
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.5599839Z Syncing repository: cinagroup/cinatoken
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.5601297Z ##[group]Getting Git version info
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.5601902Z Working directory is '/home/runner/work/cinatoken/cinatoken'
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.5602754Z [command]/usr/bin/git version
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.5644486Z git version 2.55.0
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.5660297Z ##[endgroup]
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.5673511Z Temporarily overriding HOME='/home/runner/work/_temp/9bced707-16a1-41a8-b51e-524c7e6d5445' before making global git config changes
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.5675317Z Adding repository directory to the temporary git global config as a safe directory
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.5678372Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/cinatoken/cinatoken
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.5734830Z Deleting the contents of '/home/runner/work/cinatoken/cinatoken'
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.5736796Z ##[group]Initializing the repository
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.5737786Z [command]/usr/bin/git init /home/runner/work/cinatoken/cinatoken
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.5801118Z hint: Using 'master' as the name for the initial branch. This default branch name
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.5802437Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.5803367Z hint: to use in all of your new repositories, which will suppress this warning,
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.5804251Z hint: call:
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.5804893Z hint:
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.5805324Z hint: 	git config --global init.defaultBranch <name>
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.5805818Z hint:
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.5806610Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.5807425Z hint: 'development'. The just-created branch can be renamed via this command:
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.5808182Z hint:
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.5808679Z hint: 	git branch -m <name>
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.5809151Z hint:
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.5809650Z hint: Disable this message with "git config set advice.defaultBranchName false"
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.5810433Z Initialized empty Git repository in /home/runner/work/cinatoken/cinatoken/.git/
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.5811756Z [command]/usr/bin/git remote add origin https://github.com/cinagroup/cinatoken
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.5851546Z ##[endgroup]
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.5852224Z ##[group]Disabling automatic garbage collection
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.5854936Z [command]/usr/bin/git config --local gc.auto 0
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.5883369Z ##[endgroup]
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.5883965Z ##[group]Setting up auth
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.5889995Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.5917326Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.6213577Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.6243930Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.6442866Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.6473284Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.6660451Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.6695153Z ##[endgroup]
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.6696604Z ##[group]Fetching the repository
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:21.6703986Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc:refs/remotes/origin/main
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:26.2111776Z From https://github.com/cinagroup/cinatoken
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:26.2113335Z  * [new ref]         dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc -> origin/main
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:26.2115916Z ##[endgroup]
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:26.2117244Z ##[group]Determining the checkout info
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:26.2118676Z ##[endgroup]
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:26.2123799Z [command]/usr/bin/git sparse-checkout disable
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:26.2288899Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:26.2317636Z ##[group]Checking out the ref
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:26.2321201Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:27.2431344Z Updating files:  97% (9577/9782)
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:27.2481954Z Updating files:  98% (9587/9782)
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:27.2529682Z Updating files:  99% (9685/9782)
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:27.2530238Z Updating files: 100% (9782/9782)
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:27.2530696Z Updating files: 100% (9782/9782), done.
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:27.2620764Z Switched to a new branch 'main'
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:27.2625626Z branch 'main' set up to track 'origin/main'.
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:27.2682855Z ##[endgroup]
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:27.2721771Z [command]/usr/bin/git log -1 --format=%H
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:27.2744216Z dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:27.2751490Z ##[group]Removing auth
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:27.2754826Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:27.2787319Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:27.2986722Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:27.3011274Z http.https://github.com/.extraheader
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:27.3017691Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:27.3048178Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:27.3244025Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:27.3272071Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+direct-socket-cancellation	Run actions/checkout@v4	2026-10-06T04:06:27.3467011Z ##[endgroup]
+direct-socket-cancellation	Run actions/setup-node@v4	﻿2026-10-06T04:06:27.3673662Z ##[group]Run actions/setup-node@v4
+direct-socket-cancellation	Run actions/setup-node@v4	2026-10-06T04:06:27.3674018Z with:
+direct-socket-cancellation	Run actions/setup-node@v4	2026-10-06T04:06:27.3674264Z   node-version-file: .nvmrc
+direct-socket-cancellation	Run actions/setup-node@v4	2026-10-06T04:06:27.3674532Z   cache: npm
+direct-socket-cancellation	Run actions/setup-node@v4	2026-10-06T04:06:27.3674769Z   always-auth: false
+direct-socket-cancellation	Run actions/setup-node@v4	2026-10-06T04:06:27.3675021Z   check-latest: false
+direct-socket-cancellation	Run actions/setup-node@v4	2026-10-06T04:06:27.3677841Z   token: ***
+direct-socket-cancellation	Run actions/setup-node@v4	2026-10-06T04:06:27.3678079Z ##[endgroup]
+direct-socket-cancellation	Run actions/setup-node@v4	2026-10-06T04:06:27.4803888Z Resolved .nvmrc as 22
+direct-socket-cancellation	Run actions/setup-node@v4	2026-10-06T04:06:27.4845117Z Found in cache @ /opt/hostedtoolcache/node/22.23.3/x64
+direct-socket-cancellation	Run actions/setup-node@v4	2026-10-06T04:06:27.4848984Z (node:2174) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+direct-socket-cancellation	Run actions/setup-node@v4	2026-10-06T04:06:27.4850045Z (Use `node --trace-deprecation ...` to show where the warning was created)
+direct-socket-cancellation	Run actions/setup-node@v4	2026-10-06T04:06:27.4850978Z ##[group]Environment details
+direct-socket-cancellation	Run actions/setup-node@v4	2026-10-06T04:06:27.8912903Z node: v22.23.3
+direct-socket-cancellation	Run actions/setup-node@v4	2026-10-06T04:06:27.8913571Z npm: 10.9.9
+direct-socket-cancellation	Run actions/setup-node@v4	2026-10-06T04:06:27.8914115Z yarn: 1.22.22
+direct-socket-cancellation	Run actions/setup-node@v4	2026-10-06T04:06:27.8915134Z ##[endgroup]
+direct-socket-cancellation	Run actions/setup-node@v4	2026-10-06T04:06:27.8949029Z [command]/opt/hostedtoolcache/node/22.23.3/x64/bin/npm config get cache
+direct-socket-cancellation	Run actions/setup-node@v4	2026-10-06T04:06:27.9899067Z /home/runner/.npm
+direct-socket-cancellation	Run actions/setup-node@v4	2026-10-06T04:06:28.2235504Z Cache hit for: node-cache-Linux-x64-npm-75880b4bbd0ff5ec746d7c72b50f76a896a6c03c1ce6640cd295bc994cd01db2
+direct-socket-cancellation	Run actions/setup-node@v4	2026-10-06T04:06:28.2311625Z (node:2174) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+direct-socket-cancellation	Run actions/setup-node@v4	2026-10-06T04:06:29.4345159Z Received 41943040 of 460488608 (9.1%), 40.0 MBs/sec
+direct-socket-cancellation	Run actions/setup-node@v4	2026-10-06T04:06:30.4352032Z Received 218103808 of 460488608 (47.4%), 104.0 MBs/sec
+direct-socket-cancellation	Run actions/setup-node@v4	2026-10-06T04:06:31.4346947Z Received 402653184 of 460488608 (87.4%), 128.0 MBs/sec
+direct-socket-cancellation	Run actions/setup-node@v4	2026-10-06T04:06:32.3320329Z Received 460488608 of 460488608 (100.0%), 112.7 MBs/sec
+direct-socket-cancellation	Run actions/setup-node@v4	2026-10-06T04:06:32.3321050Z Cache Size: ~439 MB (460488608 B)
+direct-socket-cancellation	Run actions/setup-node@v4	2026-10-06T04:06:32.3373392Z [command]/usr/bin/tar -xf /home/runner/work/_temp/aeabeac3-15f7-48a8-a9c2-4cb7da36d18c/cache.tzst -P -C /home/runner/work/cinatoken/cinatoken --use-compress-program unzstd
+direct-socket-cancellation	Run actions/setup-node@v4	2026-10-06T04:06:33.1657678Z Cache restored successfully
+direct-socket-cancellation	Run actions/setup-node@v4	2026-10-06T04:06:33.1833668Z Cache restored from key: node-cache-Linux-x64-npm-75880b4bbd0ff5ec746d7c72b50f76a896a6c03c1ce6640cd295bc994cd01db2
+direct-socket-cancellation	Install the existing dependency lock	﻿2026-10-06T04:06:33.2026827Z ##[group]Run npm ci
+direct-socket-cancellation	Install the existing dependency lock	2026-10-06T04:06:33.2027086Z ^[[36;1mnpm ci^[[0m
+direct-socket-cancellation	Install the existing dependency lock	2026-10-06T04:06:33.2227172Z shell: /usr/bin/bash -e {0}
+direct-socket-cancellation	Install the existing dependency lock	2026-10-06T04:06:33.2227443Z ##[endgroup]
+direct-socket-cancellation	Install the existing dependency lock	2026-10-06T04:06:41.7293257Z npm warn deprecated geojson-linestring-dissolve@0.0.1: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+direct-socket-cancellation	Install the existing dependency lock	2026-10-06T04:06:42.8613398Z npm warn deprecated text-encoding@0.6.4: no longer maintained
+direct-socket-cancellation	Install the existing dependency lock	2026-10-06T04:06:44.1162537Z npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+direct-socket-cancellation	Install the existing dependency lock	2026-10-06T04:06:45.5401020Z npm warn deprecated glob@9.3.5: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+direct-socket-cancellation	Install the existing dependency lock	2026-10-06T04:07:11.0911495Z 
+direct-socket-cancellation	Install the existing dependency lock	2026-10-06T04:07:11.0912723Z > cinatoken@2.8.0 postinstall
+direct-socket-cancellation	Install the existing dependency lock	2026-10-06T04:07:11.0913248Z > npm run gen:wrangler
+direct-socket-cancellation	Install the existing dependency lock	2026-10-06T04:07:11.0923165Z 
+direct-socket-cancellation	Install the existing dependency lock	2026-10-06T04:07:11.2121743Z 
+direct-socket-cancellation	Install the existing dependency lock	2026-10-06T04:07:11.2122721Z > cinatoken@2.8.0 gen:wrangler
+direct-socket-cancellation	Install the existing dependency lock	2026-10-06T04:07:11.2123397Z > node scripts/deploy/gen-wrangler.mjs
+direct-socket-cancellation	Install the existing dependency lock	2026-10-06T04:07:11.2123701Z 
+direct-socket-cancellation	Install the existing dependency lock	2026-10-06T04:07:11.2423280Z gen-wrangler: wrote packages/proxy/wrangler.jsonc
+direct-socket-cancellation	Install the existing dependency lock	2026-10-06T04:07:11.2446764Z gen-wrangler: wrote packages/admin/wrangler.jsonc
+direct-socket-cancellation	Install the existing dependency lock	2026-10-06T04:07:11.2447671Z gen-wrangler: wrote packages/chain-worker/wrangler.jsonc
+direct-socket-cancellation	Install the existing dependency lock	2026-10-06T04:07:11.2460954Z gen-wrangler: wrote packages/core/wrangler.d1.jsonc
+direct-socket-cancellation	Install the existing dependency lock	2026-10-06T04:07:11.2462496Z gen-wrangler: proxy=cinatoken-proxy admin=cinatoken-admin chain=cinatoken-chain-worker queue=cinatoken-chain-jobs d1=cinatoken (local, no database_id) batch-infra=false
+direct-socket-cancellation	Install the existing dependency lock	2026-10-06T04:07:11.2706626Z 
+direct-socket-cancellation	Install the existing dependency lock	2026-10-06T04:07:11.2707224Z added 1480 packages, and audited 1487 packages in 38s
+direct-socket-cancellation	Install the existing dependency lock	2026-10-06T04:07:11.2707859Z 
+direct-socket-cancellation	Install the existing dependency lock	2026-10-06T04:07:11.2708179Z 450 packages are looking for funding
+direct-socket-cancellation	Install the existing dependency lock	2026-10-06T04:07:11.2708594Z   run `npm fund` for details
+direct-socket-cancellation	Install the existing dependency lock	2026-10-06T04:07:11.5660393Z 
+direct-socket-cancellation	Install the existing dependency lock	2026-10-06T04:07:11.5661311Z 50 vulnerabilities (1 low, 9 moderate, 31 high, 9 critical)
+direct-socket-cancellation	Install the existing dependency lock	2026-10-06T04:07:11.5661574Z 
+direct-socket-cancellation	Install the existing dependency lock	2026-10-06T04:07:11.5661748Z To address issues that do not require attention, run:
+direct-socket-cancellation	Install the existing dependency lock	2026-10-06T04:07:11.5662033Z   npm audit fix
+direct-socket-cancellation	Install the existing dependency lock	2026-10-06T04:07:11.5662143Z 
+direct-socket-cancellation	Install the existing dependency lock	2026-10-06T04:07:11.5662323Z To address all issues (including breaking changes), run:
+direct-socket-cancellation	Install the existing dependency lock	2026-10-06T04:07:11.5662601Z   npm audit fix --force
+direct-socket-cancellation	Install the existing dependency lock	2026-10-06T04:07:11.5662727Z 
+direct-socket-cancellation	Install the existing dependency lock	2026-10-06T04:07:11.5662831Z Run `npm audit` for details.
+direct-socket-cancellation	Diagnose direct sockets once while retaining the unchanged strict baseline	﻿2026-10-06T04:07:11.7552057Z ##[group]Run python3 scripts/diagnostics/v364-direct-socket/execute-owned-linux.py --repo "$GITHUB_WORKSPACE" --out "$DIAGNOSTIC_OUT" --execute-linux
+direct-socket-cancellation	Diagnose direct sockets once while retaining the unchanged strict baseline	2026-10-06T04:07:11.7552926Z ^[[36;1mpython3 scripts/diagnostics/v364-direct-socket/execute-owned-linux.py --repo "$GITHUB_WORKSPACE" --out "$DIAGNOSTIC_OUT" --execute-linux^[[0m
+direct-socket-cancellation	Diagnose direct sockets once while retaining the unchanged strict baseline	2026-10-06T04:07:11.7614313Z shell: /usr/bin/bash -e {0}
+direct-socket-cancellation	Diagnose direct sockets once while retaining the unchanged strict baseline	2026-10-06T04:07:11.7614541Z env:
+direct-socket-cancellation	Diagnose direct sockets once while retaining the unchanged strict baseline	2026-10-06T04:07:11.7614823Z   DIAGNOSTIC_OUT: /home/runner/work/_temp/v364-direct-socket-once-37412108171-1
+direct-socket-cancellation	Diagnose direct sockets once while retaining the unchanged strict baseline	2026-10-06T04:07:11.7615142Z ##[endgroup]
+direct-socket-cancellation	Diagnose direct sockets once while retaining the unchanged strict baseline	2026-10-06T04:07:37.6156970Z {"actualExit": 1, "actualProcessExit": 1, "runnerOutcomeCode": 1, "timedOut": false, "output": "/home/runner/work/_temp/v364-direct-socket-once-37412108171-1"}
+direct-socket-cancellation	Diagnose direct sockets once while retaining the unchanged strict baseline	2026-10-06T04:07:37.6227062Z ##[error]Process completed with exit code 1.
+direct-socket-cancellation	Retain SHA-bound raw receipts on success or failure	﻿2026-10-06T04:07:37.6293579Z ##[group]Run actions/upload-artifact@v4
+direct-socket-cancellation	Retain SHA-bound raw receipts on success or failure	2026-10-06T04:07:37.6293820Z with:
+direct-socket-cancellation	Retain SHA-bound raw receipts on success or failure	2026-10-06T04:07:37.6294119Z   name: v364-direct-socket-dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc-37412108171-1
+direct-socket-cancellation	Retain SHA-bound raw receipts on success or failure	2026-10-06T04:07:37.6294822Z   path: /home/runner/work/_temp/v364-direct-socket-once-37412108171-1/
+direct-socket-cancellation	Retain SHA-bound raw receipts on success or failure	scripts/diagnostics/v364-direct-socket/
+direct-socket-cancellation	Retain SHA-bound raw receipts on success or failure	.github/workflows/v364-direct-socket.yml
+direct-socket-cancellation	Retain SHA-bound raw receipts on success or failure	
+direct-socket-cancellation	Retain SHA-bound raw receipts on success or failure	2026-10-06T04:07:37.6295351Z   if-no-files-found: error
+direct-socket-cancellation	Retain SHA-bound raw receipts on success or failure	2026-10-06T04:07:37.6295559Z   include-hidden-files: true
+direct-socket-cancellation	Retain SHA-bound raw receipts on success or failure	2026-10-06T04:07:37.6295758Z   retention-days: 14
+direct-socket-cancellation	Retain SHA-bound raw receipts on success or failure	2026-10-06T04:07:37.6295941Z   compression-level: 6
+direct-socket-cancellation	Retain SHA-bound raw receipts on success or failure	2026-10-06T04:07:37.6296132Z   overwrite: false
+direct-socket-cancellation	Retain SHA-bound raw receipts on success or failure	2026-10-06T04:07:37.6296441Z ##[endgroup]
+direct-socket-cancellation	Retain SHA-bound raw receipts on success or failure	2026-10-06T04:07:37.7661840Z (node:2545) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+direct-socket-cancellation	Retain SHA-bound raw receipts on success or failure	2026-10-06T04:07:37.7663016Z (Use `node --trace-deprecation ...` to show where the warning was created)
+direct-socket-cancellation	Retain SHA-bound raw receipts on success or failure	2026-10-06T04:07:37.7741073Z Multiple search paths detected. Calculating the least common ancestor of all paths
+direct-socket-cancellation	Retain SHA-bound raw receipts on success or failure	2026-10-06T04:07:37.7743711Z The least common ancestor is /home/runner/work. This will be the root directory of the artifact
+direct-socket-cancellation	Retain SHA-bound raw receipts on success or failure	2026-10-06T04:07:37.7744810Z With the provided path, there will be 16 files uploaded
+direct-socket-cancellation	Retain SHA-bound raw receipts on success or failure	2026-10-06T04:07:37.7747619Z Artifact name is valid!
+direct-socket-cancellation	Retain SHA-bound raw receipts on success or failure	2026-10-06T04:07:37.7748427Z Root directory input is valid!
+direct-socket-cancellation	Retain SHA-bound raw receipts on success or failure	2026-10-06T04:07:38.1038532Z Beginning upload of artifact content to blob storage
+direct-socket-cancellation	Retain SHA-bound raw receipts on success or failure	2026-10-06T04:07:38.1422691Z (node:2545) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+direct-socket-cancellation	Retain SHA-bound raw receipts on success or failure	2026-10-06T04:07:38.4637995Z Uploaded bytes 93144
+direct-socket-cancellation	Retain SHA-bound raw receipts on success or failure	2026-10-06T04:07:38.5293683Z Finished uploading artifact content to blob storage!
+direct-socket-cancellation	Retain SHA-bound raw receipts on success or failure	2026-10-06T04:07:38.5294752Z SHA256 digest of uploaded artifact zip is 606533d4371ef5adf09efa6b4e308254815c92e63d8954ca37c1ee6a7530f647
+direct-socket-cancellation	Retain SHA-bound raw receipts on success or failure	2026-10-06T04:07:38.5295458Z Finalizing artifact upload
+direct-socket-cancellation	Retain SHA-bound raw receipts on success or failure	2026-10-06T04:07:38.7586133Z Artifact v364-direct-socket-dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc-37412108171-1.zip successfully finalized. Artifact ID 11389298418
+direct-socket-cancellation	Retain SHA-bound raw receipts on success or failure	2026-10-06T04:07:38.7587551Z Artifact v364-direct-socket-dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc-37412108171-1 has been successfully uploaded! Final size is 93144 bytes. Artifact ID is 11389298418
+direct-socket-cancellation	Retain SHA-bound raw receipts on success or failure	2026-10-06T04:07:38.7591276Z Artifact download URL: https://github.com/cinagroup/cinatoken/actions/runs/37412108171/artifacts/11389298418
+direct-socket-cancellation	Post Run actions/checkout@v4	﻿2026-10-06T04:07:38.7895945Z Post job cleanup.
+direct-socket-cancellation	Post Run actions/checkout@v4	2026-10-06T04:07:38.8620124Z [command]/usr/bin/git version
+direct-socket-cancellation	Post Run actions/checkout@v4	2026-10-06T04:07:38.8662618Z git version 2.55.0
+direct-socket-cancellation	Post Run actions/checkout@v4	2026-10-06T04:07:38.8691178Z Temporarily overriding HOME='/home/runner/work/_temp/ee6e37df-4b96-4440-85ae-043ec2ae497a' before making global git config changes
+direct-socket-cancellation	Post Run actions/checkout@v4	2026-10-06T04:07:38.8692347Z Adding repository directory to the temporary git global config as a safe directory
+direct-socket-cancellation	Post Run actions/checkout@v4	2026-10-06T04:07:38.8696955Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/cinatoken/cinatoken
+direct-socket-cancellation	Post Run actions/checkout@v4	2026-10-06T04:07:38.8730846Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+direct-socket-cancellation	Post Run actions/checkout@v4	2026-10-06T04:07:38.8783700Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+direct-socket-cancellation	Post Run actions/checkout@v4	2026-10-06T04:07:38.9037003Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+direct-socket-cancellation	Post Run actions/checkout@v4	2026-10-06T04:07:38.9069100Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+direct-socket-cancellation	Post Run actions/checkout@v4	2026-10-06T04:07:38.9388981Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+direct-socket-cancellation	Post Run actions/checkout@v4	2026-10-06T04:07:38.9391728Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+direct-socket-cancellation	Complete job	﻿2026-10-06T04:07:38.9777077Z Cleaning up orphan processes
+direct-socket-cancellation	Complete job	2026-10-06T04:07:39.0034820Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-node@v4, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

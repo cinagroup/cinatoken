@@ -1,0 +1,26 @@
+{
+  "at": "2026-10-06T04:28:41.132Z",
+  "finishedAt": "2026-10-06T04:28:42.757Z",
+  "executable": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59/collect-evidence.mjs",
+    "audit",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59/native59-supported-subset-config.json",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59/supported-subset-audit.json"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\supported-subset-audit.stdout.log",
+    "bytes": 60,
+    "sha256": "21d39dc452fbf8b91ef7a3dc6ecf5f646968f89bc7ed384317c2e5c57b3d789f"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\supported-subset-audit.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "scope": "Original exact child return of Temp evidence tool only; no application/native/G7/runtime or production run"
+}

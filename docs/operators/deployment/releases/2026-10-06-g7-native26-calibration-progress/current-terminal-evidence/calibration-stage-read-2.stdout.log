@@ -1,0 +1,3 @@
+docs/developers/architecture/web-frontend-migration.md
+scripts/diagnostics/v364-direct-socket/native-reader-calibration.mjs
+scripts/diagnostics/v364-direct-socket/sealed-package.json

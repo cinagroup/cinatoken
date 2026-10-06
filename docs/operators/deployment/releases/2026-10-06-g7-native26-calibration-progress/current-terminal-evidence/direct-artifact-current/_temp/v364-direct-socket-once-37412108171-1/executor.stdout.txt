@@ -1,0 +1,1 @@
+{"actualExit":1,"outcome":"STRICT_FAILURE_PRESERVED","output":"/home/runner/work/_temp/v364-direct-socket-once-37412108171-1","sourceUnchanged":true,"activeMiniflare":0}

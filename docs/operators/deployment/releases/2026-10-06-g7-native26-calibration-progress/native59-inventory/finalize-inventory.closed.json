@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-06T03:39:50.342Z",
+  "finishedAt": "2026-10-06T03:39:50.946Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-native59-full-inventory-10b2722ab06d4cf6b6305e24571b4a8d/finalize-inventory.mjs"
+  ],
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-full-inventory-10b2722ab06d4cf6b6305e24571b4a8d\\finalize-inventory.stdout.log",
+  "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-full-inventory-10b2722ab06d4cf6b6305e24571b4a8d\\finalize-inventory.stderr.log",
+  "stdoutInfo": {
+    "bytes": 1056,
+    "sha256": "4a7d21744296f9ceffe62828db89a6e8ca61a47b8a5cae29a8398f0b95c05b40"
+  },
+  "stderrInfo": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

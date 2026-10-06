@@ -1,0 +1,167 @@
+{
+  "schema": "cinatoken.current-run-closed-dialect-readonly-peer.v1",
+  "at": "2026-10-06T03:36:33.963027+00:00",
+  "staticReadOnlyReviewClosed": true,
+  "currentRunClosedSupportedByFrozenV2": true,
+  "helperNeededForThisDialect": false,
+  "sourceProducer": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\run-closed.mjs",
+    "bytes": 2329,
+    "sha256": "396a0c50f850ccd2e968bf8e0a320429698bdd825f4ec242f6fd95366bed8dec"
+  },
+  "sourceReferences": [
+    {
+      "line": 28,
+      "source": "let spawnError;"
+    },
+    {
+      "line": 29,
+      "source": "child.once('error', error => { spawnError = error.code ?? 'spawn_error'; });"
+    },
+    {
+      "line": 30,
+      "source": "const result = await new Promise(resolve => child.once('close', (code, signal) => resolve({ actualExit: code, signal })));"
+    },
+    {
+      "line": 31,
+      "source": "fs.closeSync(out); fs.closeSync(err);"
+    },
+    {
+      "line": 32,
+      "source": "const describe = filename => {"
+    },
+    {
+      "line": 36,
+      "source": "const record = { at, finishedAt: new Date().toISOString(), executable, args: [...prefix, ...args], cwd: 'C:/cinagroup/cinatoken', ...result, ...(spawnError ? { spawnError } : {}), stdout: describe(stdout), stderr: describe(stderr) };"
+    },
+    {
+      "line": 39,
+      "source": "process.exitCode = result.actualExit ?? 1;"
+    }
+  ],
+  "frozenLibrary": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-v2-344bf6aba6864fafba8f6d1a5e9e7e7f\\evidence-lib.mjs",
+    "bytes": 50356,
+    "sha256": "f6f86b8c7de1f49c4485cb6171b670d105b94efbb73a4cea5e0f1f5d80c6cbfa"
+  },
+  "libraryReferences": [
+    {
+      "line": 119,
+      "fact": "root-finishedAt-actualExit requires validfinishedAt/executable/args plus exact safe numeric actualExit or observed abnormal signal/spawnError; does not coerce null."
+    },
+    {
+      "line": 120,
+      "fact": "Preserves actualExit numeric0/1, or null with signal/spawnError; signal/error retained separately."
+    },
+    {
+      "line": 216,
+      "fact": "*.result.json explicitly claimed; unsupported missing-terminal condition emits blocker."
+    },
+    {
+      "line": 259,
+      "fact": "stdout/stderr loops accept nested path or file descriptors independently."
+    },
+    {
+      "line": 264,
+      "fact": "Nested descriptor must have exactly one file/path; relative file must pass relativeSafe."
+    },
+    {
+      "line": 273,
+      "fact": "Nested descriptor bytes must be safe nonnegative integer and SHA64 lowercasehex."
+    },
+    {
+      "line": 276,
+      "fact": "Absolutepath resolved and locate restricts to included unexcluded roots."
+    },
+    {
+      "line": 280,
+      "fact": "Crossroot receipt pointer requires included exact original receipt SHA in targetroot."
+    },
+    {
+      "line": 285,
+      "fact": "Targetraw exact descriptor bytesSHA checked before receipt association."
+    }
+  ],
+  "minimalConfigRequirements": [
+    "Include original *.result.json and original two raw streams in same explicitly owned Temp root with stable id and scope.",
+    "No extra explicitCommandOutputBindings or dialect adapter needed for current run-closed nested {path,bytes,sha256}.",
+    "A copied receipt pointing to another root cannot close copied logs solely from matching basenames; include authoritative original receipt and exactraw or declare pinned copy mapping supported by helper.",
+    "Do not exclude original failed/null-process receipts, unknown exits, or prior peer reader error1.",
+    "Growing currentRoot was not enumerated or audited by peer; this is source dialect compatibility, not closed currentRoot archive readiness."
+  ],
+  "terminalSemantics": {
+    "numeric0": "preserved actualExit0 only if actual original closecode0",
+    "numeric1": "preserved actualExit1 even if analysis/collector0",
+    "processNullWithSignal": "actualExitnull plus actual signal retained as abnormal; no numeric child exit inferred",
+    "processNullWithSpawnError": "actualExitnull plus actual spawnError retained as abnormal",
+    "processNullWithoutAbnormalEvidence": "blocked; wrapper process.exitCode = actualExit ??1 is a distinct wrapper behavior",
+    "recordWriteClosure": "producer waits child.close, closes rawfds, hashes rawbytes, then wx writesrecord; no wrapper value overwrites original code"
+  },
+  "meaningfulNegativeControlRecommendations": [
+    {
+      "input": "actualExit:null, signal:null, no spawnError",
+      "expect": "unsupported terminal blocker, never0/1 inferred"
+    },
+    {
+      "input": "actualExit:null, signal:SIGTERM or spawnError:ENOENT with closed raw descriptors",
+      "expect": "abnormal receipt retainedactualnull; no claimednumeric child exit"
+    },
+    {
+      "input": "actualExit:1, stdoutdescriptor matches, outerproducer0",
+      "expect": "childactual1 remains1"
+    },
+    {
+      "input": "wrongbytes/negativecount/missingSHA/wrongSHA for either stdout/stderr",
+      "expect": "block before archive output"
+    },
+    {
+      "input": "nested descriptor bothfile+path, relativeescape, absolute missing/excluded/unconfigured target",
+      "expect": "block path/association"
+    },
+    {
+      "input": "crossroot exactcopy no included original receipt or wrongpinned originalSHA",
+      "expect": "block; matchinglogbasename or parentreport0 insufficient"
+    },
+    {
+      "input": "wrapper actualExit1 but no numeric childcode and no actualabnormal evidence",
+      "expect": "cannot fabricateprocess terminal status from wrapperfallback"
+    },
+    {
+      "input": "reuse log modified after descriptorhash/receipt",
+      "expect": "exactbyte/SHA mismatchblock"
+    }
+  ],
+  "otherDialectSeparateNeeds": {
+    "g7OwnerExactTerminalSource": "g7-owner-exact-terminal-spawnSync-status-v1",
+    "currentV2Status": "closed:true numericactualExit is recognized as explicitclosed receipt, but outputs[{file,...}] is not automatically bound by generic stdout/stderr loop",
+    "minimalNewHelper": "copy frozenv2 to newTemp; add exactschema guarded orderedstartedAt/endedAt/program/args/cwd/timeoutMs/closed/actualterminal evidence and exactlytwo unique safe same-root {file,bytes,sha256} output descriptors; preserve every original receipt and reject missing/hash/unknown/aggregate evidence",
+    "renamedHistoricalLinuxCopies": "existing original-linux-* copies retain original receipt nested filenames082/083; future mapping must explicitly bind byteexact original receipt/stream provenance, not treat copyproducer/peeraggregate0 as original command proof",
+    "g7NestedControlledChildren": "six child stdout/stderr diagnostics remain within real parentraw; do not create standalone independent stream receipts"
+  },
+  "scope": {
+    "onlyNewExclusiveTempWritten": true,
+    "repoOrOldToolWrites": false,
+    "old2226ArchiveReviewOrWalk": false,
+    "currentGrowingRootWalk": false,
+    "GitOrCLIOrTestsOrApplicationExecuted": false,
+    "DBDockerCIOrProductionExecuted": false,
+    "networkRequests": 0
+  },
+  "limits": [
+    "No new helper was implemented or tested by this peer.",
+    "No process/CI/runtime success inferred from staticcompatibility.",
+    "All prior peer errors and original evidence remain untouched."
+  ],
+  "snapshots": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-archive-receipt-dialect-peer-readonly-e41d1f26433548dea9ff73e133e0dc4b\\source-snapshots\\evidence-lib.mjs",
+      "bytes": 50356,
+      "sha256": "f6f86b8c7de1f49c4485cb6171b670d105b94efbb73a4cea5e0f1f5d80c6cbfa"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-archive-receipt-dialect-peer-readonly-e41d1f26433548dea9ff73e133e0dc4b\\source-snapshots\\run-closed.mjs",
+      "bytes": 2329,
+      "sha256": "396a0c50f850ccd2e968bf8e0a320429698bdd825f4ec242f6fd95366bed8dec"
+    }
+  ]
+}

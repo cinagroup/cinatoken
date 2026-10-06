@@ -1,0 +1,29 @@
+{
+  "closed": true,
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "executable": "node",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b/read-selected.mjs",
+    "packages/proxy/scripts/staging/chat-holder-private-v364.ts",
+    "packages/proxy/scripts/staging/chat-holder-gateway-v364.ts",
+    "packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs::95::288"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "startedAt": "2026-10-06T03:18:01.599Z",
+  "finishedAt": "2026-10-06T03:18:01.783Z",
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\holder-gateway-full.stdout.txt",
+    "bytes": 18013,
+    "sha256": "e7a0bce6105152e4db2405548f85a9130d76a53724f8d6a5abf30f5601857585"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\holder-gateway-full.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "operation": "read-only-diagnosis",
+  "realServiceOrCiExecution": false,
+  "productionRequests": 0
+}

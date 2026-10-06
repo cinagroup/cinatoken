@@ -1,0 +1,945 @@
+{
+  "createdAt": "2026-10-06T05:35:57.738Z",
+  "report": {
+    "path": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress.json",
+    "bytes": 5177117,
+    "sha256": "794d72cc5287970fb8e042241fe5213994b9899274f5020a77a946f93362fa5d"
+  },
+  "evidenceFiles": 3357,
+  "verificationCopies": [
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\collect-evidence.mjs",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\tools\\collect-evidence.mjs",
+      "bytes": 1002,
+      "sha256": "95d1670211f5fdceb6bbdd2ce1db38036de4fb7c31e5d522eef10af3e479bdd5",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\verify-evidence.mjs",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\tools\\verify-evidence.mjs",
+      "bytes": 617,
+      "sha256": "ac6c531cc665341fbf51dc3ceed6adbd3f629ab5c17aef51a214de1f1613422d",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\evidence-lib.mjs",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\tools\\evidence-lib.mjs",
+      "bytes": 56334,
+      "sha256": "0ad4b4ef3467b684743bb9a2d29f6780b47aa7e076174a5613e7ebf4a60628a1",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\direct-socket-dialect.mjs",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\tools\\direct-socket-dialect.mjs",
+      "bytes": 12912,
+      "sha256": "6bda5d078b0c12ca7eab0bffd8e0cdae6fbaad86e381668bcca076ac8fadd934",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\native59-info-binding.mjs",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\tools\\native59-info-binding.mjs",
+      "bytes": 2683,
+      "sha256": "fa0b92502407f31525af2da454462aba1abf5e4fde1d13dcfb567fc324fe803a",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\native59-original-receipt-pins.json",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\tools\\native59-original-receipt-pins.json",
+      "bytes": 1491,
+      "sha256": "e57b5371f6c2dd755cc160c727c56338df01fcaa3cda765f70522f6a918d288d",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\frozen-data-binding.mjs",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\tools\\frozen-data-binding.mjs",
+      "bytes": 13826,
+      "sha256": "0e8e6f17a9c0b47f3c074ef35211f10ba42799076ceb364d80d4fe3faa085a18",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-all-frozen-data-tools-FoBS1O\\frozen-data-original-pins-v3.json",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\tools\\frozen-data-original-pins-v3.json",
+      "bytes": 233587,
+      "sha256": "dae1d173ef09c5e188f28328ff376a86dab083e679f686e186439975a26c22ae",
+      "exactCopy": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-final-durable-collection-meta-S7NHM2/collection-config.json",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\collection-config.json",
+      "bytes": 257261,
+      "sha256": "e6d6ccf36a7ecb4dc1cfafd96123b08ff3f386e0eb3bb5e5268a7505a43babcb",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\audit-ee122-capsule.closed.json",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\audit-ee122-capsule.closed.json",
+      "bytes": 1251,
+      "sha256": "7cc50501b179917eca0e2262f5e7d1debcab6ce54ac166ea3f0014867726eeed",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\audit-ee122-capsule.py",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\audit-ee122-capsule.py",
+      "bytes": 8082,
+      "sha256": "d533b19ece2bdb0684a8d9f272354118c6fde079c55ebefb043008c64dd54717",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\audit-ee122-capsule.stderr.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\audit-ee122-capsule.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\audit-ee122-capsule.stdout.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\audit-ee122-capsule.stdout.log",
+      "bytes": 415,
+      "sha256": "cc2f8c14267f52ee639e626dcceb1efb73849ec5b3c2a2f8c1925e51dcc5eb81",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\audit-full42-archive-v2.closed.json",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\audit-full42-archive-v2.closed.json",
+      "bytes": 1267,
+      "sha256": "0bf5a69a015196fe01240d819b62e3a7b018266e1b6b18126385d1d72e2463e3",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\audit-full42-archive-v2.py",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\audit-full42-archive-v2.py",
+      "bytes": 19480,
+      "sha256": "861d42bb57b3398423210c88711fa758eb710a67d99249e6d0454912afbd0841",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\audit-full42-archive-v2.stderr.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\audit-full42-archive-v2.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\audit-full42-archive-v2.stdout.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\audit-full42-archive-v2.stdout.log",
+      "bytes": 625,
+      "sha256": "f646ef532e704c5f24dab2ca688bad126eebe06087e6870a4954e59af08b64d7",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\audit-full42-archive.closed.json",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\audit-full42-archive.closed.json",
+      "bytes": 1256,
+      "sha256": "6b5819fe3032afbfcc3f8895c65e64f6fdeab136880e82167fc83f9abd78457b",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\audit-full42-archive.py",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\audit-full42-archive.py",
+      "bytes": 18974,
+      "sha256": "e956a47476c1fa9ed4a9bb970851cd57165e1dc6a36cd79661a1e8f20e08b40d",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\audit-full42-archive.stderr.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\audit-full42-archive.stderr.log",
+      "bytes": 1116,
+      "sha256": "2f39951abc97455b921ef5ba508836de25c83551df31f8f4111852342ee0e1bc",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\audit-full42-archive.stdout.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\audit-full42-archive.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\capture-child.mjs",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\capture-child.mjs",
+      "bytes": 1470,
+      "sha256": "be00ee32571d1b7cac12709bf827bfdd6f3c681184068d40cbe9598e0ad462be",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\ee122-capsule-independent-audit.json",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\ee122-capsule-independent-audit.json",
+      "bytes": 128155,
+      "sha256": "b59d15d77045cf358d3c6cd5c04c76d058426fed24b67a21326a51b82a6c73a8",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\FINAL-final42-archive-independent-peer-seal.json",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\FINAL-final42-archive-independent-peer-seal.json",
+      "bytes": 42554,
+      "sha256": "559a4e96899e0ca9a3df6bc5fbe87c80518a386da17b31afd889e974e6d590e3",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\FINAL-final42-archive-independent-peer.json",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\FINAL-final42-archive-independent-peer.json",
+      "bytes": 39251,
+      "sha256": "9bd6388882fe4922c1566da4787a58f49b6e7ccab3b300dbba1f265e4aff8a77",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\finalize-independent-archive.closed.json",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\finalize-independent-archive.closed.json",
+      "bytes": 1232,
+      "sha256": "379b779f6ff000d38e69321fa0ce7b05ea8b50667b58d04c8b224cef089169de",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\finalize-independent-archive.mjs",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\finalize-independent-archive.mjs",
+      "bytes": 6610,
+      "sha256": "e5ca3216f02d5cbbca955f1f29ede8053b664321a21fed9f46491e5970fa0efb",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\finalize-independent-archive.stderr.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\finalize-independent-archive.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\finalize-independent-archive.stdout.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\finalize-independent-archive.stdout.log",
+      "bytes": 555,
+      "sha256": "4bada531f345c03d0c7f8b8107b8a540e3ec9be829b7dcc721ee2cea394ad746",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\full42-archive-independent-audit.json",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\full42-archive-independent-audit.json",
+      "bytes": 2597242,
+      "sha256": "fdf07f90a22dbcc656b5f53bdd37537a35dc1e6bb5592997c1db0936ccab47ce",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-archive-report.closed.json",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\inspect-archive-report.closed.json",
+      "bytes": 1088,
+      "sha256": "739359f109488747a9a858fa9e69ca8e94cd583c0b87a6cbb67f856fe52157fd",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-archive-report.mjs",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\inspect-archive-report.mjs",
+      "bytes": 1130,
+      "sha256": "b4535bf3eae0d04c1ea74a3038b87f20c7178c5da516f646ad03760ef4fe98b1",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-archive-report.stderr.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\inspect-archive-report.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-archive-report.stdout.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\inspect-archive-report.stdout.log",
+      "bytes": 21907,
+      "sha256": "3ec05ad6739e0adfdfec35d156b73c6dfaf08c57e3c86d15d3866b8814e04578",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-binding-schema.closed.json",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\inspect-binding-schema.closed.json",
+      "bytes": 1088,
+      "sha256": "6a69aec3b8ad01527bce2766fda9a1f1c1c818316c46faea8d21184588b3b998",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-binding-schema.mjs",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\inspect-binding-schema.mjs",
+      "bytes": 1508,
+      "sha256": "5cfb06e68fe2e493cc705a62132bf321d2ac371745313e4f77eba9537f0bf177",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-binding-schema.stderr.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\inspect-binding-schema.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-binding-schema.stdout.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\inspect-binding-schema.stdout.log",
+      "bytes": 29031,
+      "sha256": "6bc0e8de62fb7d17cd8323c3cf207508773d4074b076902fabde8fdacb9c8693",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-capsule-process-provenance.closed.json",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\inspect-capsule-process-provenance.closed.json",
+      "bytes": 1135,
+      "sha256": "89582ecf28e6c926b15ecfc3060e61f66c26bb07fc6c7574fa7371b17a819091",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-capsule-process-provenance.mjs",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\inspect-capsule-process-provenance.mjs",
+      "bytes": 250,
+      "sha256": "04812e4a0619dc5571764566b0b85573accdbe08a5ae12b4c8c1a4a8e690f415",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-capsule-process-provenance.stderr.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\inspect-capsule-process-provenance.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-capsule-process-provenance.stdout.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\inspect-capsule-process-provenance.stdout.log",
+      "bytes": 7576,
+      "sha256": "61e9f2adb944917281176a9ddd312c89f107c29769af4eee867b9ec9aa8cfbf7",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-capsule-schema-small.closed.json",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\inspect-capsule-schema-small.closed.json",
+      "bytes": 1166,
+      "sha256": "3c284ea4f85048807880799d85232b2ae1f24d68ed86413cadb6e51a68971d07",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-capsule-schema-small.py",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\inspect-capsule-schema-small.py",
+      "bytes": 597,
+      "sha256": "d95227fd4489a9e2b7596ade3cfc247e8fb1e0e0a5965103f995bc313182bdd2",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-capsule-schema-small.stderr.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\inspect-capsule-schema-small.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-capsule-schema-small.stdout.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\inspect-capsule-schema-small.stdout.log",
+      "bytes": 7753,
+      "sha256": "79d992782f2a5fc504b25ba662e3d08aba3f390b0dcc878f0f53267020af1b54",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-capsule-schema.closed.json",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\inspect-capsule-schema.closed.json",
+      "bytes": 1144,
+      "sha256": "cb1f1db0dedcd7b8a091ba9f5a88a873f59181109d5ff18eb8fc0259d4b5dd7a",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-capsule-schema.py",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\inspect-capsule-schema.py",
+      "bytes": 527,
+      "sha256": "424c79f8e9f08af3995227032506e6446997d9153049fb284c4915b02a5581a8",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-capsule-schema.stderr.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\inspect-capsule-schema.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-capsule-schema.stdout.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\inspect-capsule-schema.stdout.log",
+      "bytes": 189022,
+      "sha256": "d4f26edd45e47e7adee602ae1cd14fd4d2badce5a85b1aeedd610645a9d7d439",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-capsule.closed.json",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\inspect-capsule.closed.json",
+      "bytes": 1059,
+      "sha256": "ce908aaf4dcb0529e225e2081e9bfeb962efc2d58df362a9b8186fae90a9bceb",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-capsule.mjs",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\inspect-capsule.mjs",
+      "bytes": 749,
+      "sha256": "f47d137993ca26b0b3d8b9a7435265102f0e596b44e3d59e6e205e8b811448fb",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-capsule.stderr.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\inspect-capsule.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-capsule.stdout.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\inspect-capsule.stdout.log",
+      "bytes": 9391,
+      "sha256": "1005228dcc8c0aca559c9c74e5cc85dc92ddd388e1558d978faac19900477cb4",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-final-admission.closed.json",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\inspect-final-admission.closed.json",
+      "bytes": 1092,
+      "sha256": "6e2c05ca05339e175260f7880e786016a9458a6069b22655d16b6b36fd2ab57d",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-final-admission.mjs",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\inspect-final-admission.mjs",
+      "bytes": 1586,
+      "sha256": "b1e364d8352d19a6611bc10d47b774b1c4f400df5d11a1e1e95b356f53710983",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-final-admission.stderr.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\inspect-final-admission.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-final-admission.stdout.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\inspect-final-admission.stdout.log",
+      "bytes": 22191,
+      "sha256": "263783fb12a8de7a370a56d56a864adcb54bb500aaf30aea36b6ab6b1c948f92",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-final-config.closed.json",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\inspect-final-config.closed.json",
+      "bytes": 1080,
+      "sha256": "06058f2d89beafdf648811f8a6b1b55e0f1bf0c403d5c86bc5211432e6b1289b",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-final-config.mjs",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\inspect-final-config.mjs",
+      "bytes": 930,
+      "sha256": "6727d62afc2375f29189c62e9f63cfbdf23df4112a9b7b18cc9f2eb1e3d525e9",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-final-config.stderr.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\inspect-final-config.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\inspect-final-config.stdout.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\inspect-final-config.stdout.log",
+      "bytes": 12087,
+      "sha256": "9691a624b9cac3635b0daebc1c60cd5042b76db35be12874a8e97d838b79fbbb",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\prepare-archive-audit-continuation.closed.json",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\prepare-archive-audit-continuation.closed.json",
+      "bytes": 1189,
+      "sha256": "b7ec1cd4c6853e95b947f2e8ff348df6595891ccc75d49229a83923904b2f6ce",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\prepare-archive-audit-continuation.py",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\prepare-archive-audit-continuation.py",
+      "bytes": 6237,
+      "sha256": "f81b2795dd0576aa68ad19d83a2914cf936062805495bf6003b314c62b12b141",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\prepare-archive-audit-continuation.stderr.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\prepare-archive-audit-continuation.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\prepare-archive-audit-continuation.stdout.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\prepare-archive-audit-continuation.stdout.log",
+      "bytes": 137,
+      "sha256": "4346d5d0a98a0af70a97f04085d1d3da20be1632723741bca9da9d3c0459cc4e",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\seal-independent-archive.closed.json",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\seal-independent-archive.closed.json",
+      "bytes": 1216,
+      "sha256": "fc934d9fe6dfde6eaec49e602ef10befc7dc7cdab626e77b1442901f5b402397",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\seal-independent-archive.mjs",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\seal-independent-archive.mjs",
+      "bytes": 3046,
+      "sha256": "8ceb4cf1b54d552a64cd16db6a6b9a3b2dd8421d5a59e4d6f0f1b09c541070ac",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\seal-independent-archive.stderr.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\seal-independent-archive.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\seal-independent-archive.stdout.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\independent-peer\\seal-independent-archive.stdout.log",
+      "bytes": 731,
+      "sha256": "740d906f395bf0edb9fe53a5e9224f2fd0930b1028dd6123df80c6deb44901ba",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-capsule-admission-meta-UkwrUh\\final-42-capsule-pure-audit.json",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\admission\\final-42-capsule-pure-audit.json",
+      "bytes": 4025864,
+      "sha256": "d9304f70f49383bdffe083187b4661054cf65688ef55b18fc5f21a76eeac1488",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-capsule-admission-meta-UkwrUh\\final-42-capsule-pure-audit.result.json",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\admission\\final-42-capsule-pure-audit.result.json",
+      "bytes": 1232,
+      "sha256": "c942a7b736c79a3bf2e09d378d70883300e38c45ff6628e51a92131c20472806",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-capsule-admission-meta-UkwrUh\\final-42-capsule-pure-audit.stderr.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\admission\\final-42-capsule-pure-audit.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-capsule-admission-meta-UkwrUh\\final-42-capsule-pure-audit.stdout.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\admission\\final-42-capsule-pure-audit.stdout.log",
+      "bytes": 61,
+      "sha256": "5c169e78d28c2d47a6d4f976509ded895fcb90595dea32e5c653152914ecc14e",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-capsule-admission-meta-UkwrUh\\final-capsule-admission-summary.result.json",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\admission\\final-capsule-admission-summary.result.json",
+      "bytes": 1008,
+      "sha256": "ea462a79b72f5af0294c8863d45a1261f72273bb3f8c09d67ceada5fa4136052",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-capsule-admission-meta-UkwrUh\\final-capsule-admission-summary.stderr.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\admission\\final-capsule-admission-summary.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-capsule-admission-meta-UkwrUh\\final-capsule-admission-summary.stdout.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\admission\\final-capsule-admission-summary.stdout.log",
+      "bytes": 720,
+      "sha256": "88c0048d11378a4629ba3d360fa241d3f99c6545aa3d51bb1768859059d63656",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-capsule-admission-meta-UkwrUh\\final-capsule-config-location.json",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\admission\\final-capsule-config-location.json",
+      "bytes": 1562,
+      "sha256": "04fb31ff9717c0a8a2e0209fc6713fff04cb85d4f7a3958896ba5d06c76a1144",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-capsule-admission-meta-UkwrUh\\FINAL-final42-frozen-capsule-admission.json",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\admission\\FINAL-final42-frozen-capsule-admission.json",
+      "bytes": 34074,
+      "sha256": "17bd25b696dee7d03f28dc5696d09df8330243a1ba2128d83da0292aa16a8b8b",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-capsule-admission-meta-UkwrUh\\finalize-capsule-admission.mjs",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\admission\\finalize-capsule-admission.mjs",
+      "bytes": 6954,
+      "sha256": "522f5623ac44cfbe0f5053ecccb0343069c492115f2ab06481f3ff2871356800",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-capsule-admission-meta-UkwrUh\\freeze-original39-failure.mjs",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\admission\\freeze-original39-failure.mjs",
+      "bytes": 2947,
+      "sha256": "100a01743d554046f322ec5727b33cba8b37b8b52205b09b72723d6ef2438d55",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-capsule-admission-meta-UkwrUh\\freeze-original39-failure.result.json",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\admission\\freeze-original39-failure.result.json",
+      "bytes": 995,
+      "sha256": "ee700537ff88a5726c11417a3a57d1175129074a5c38e137da62b4372403d94b",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-capsule-admission-meta-UkwrUh\\freeze-original39-failure.stderr.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\admission\\freeze-original39-failure.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-capsule-admission-meta-UkwrUh\\freeze-original39-failure.stdout.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\admission\\freeze-original39-failure.stdout.log",
+      "bytes": 482,
+      "sha256": "ced4bf61580dab49c0eb0b87d6c15e204db600fec45416ff5ce88858c82aea59",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-capsule-admission-meta-UkwrUh\\frozen-tool-byte-verification.json",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\admission\\frozen-tool-byte-verification.json",
+      "bytes": 565,
+      "sha256": "3e28327cb5a3e8b9187df09a09f3d2d207b8842b15f1c6c74b7722eb0a0c584b",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-capsule-admission-meta-UkwrUh\\prepare-capsule-final-config.mjs",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\admission\\prepare-capsule-final-config.mjs",
+      "bytes": 5025,
+      "sha256": "ccee087a3c6600ab39d8d8389e0666b0737903d81f7bb5040a4be3a26e8ab824",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-capsule-admission-meta-UkwrUh\\prepare-capsule-final-config.result.json",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\admission\\prepare-capsule-final-config.result.json",
+      "bytes": 1220,
+      "sha256": "452188473b9b3f0ab7c6531736802b79d5590f6293604d6337ffd57153581a68",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-capsule-admission-meta-UkwrUh\\prepare-capsule-final-config.stderr.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\admission\\prepare-capsule-final-config.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-capsule-admission-meta-UkwrUh\\prepare-capsule-final-config.stdout.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\admission\\prepare-capsule-final-config.stdout.log",
+      "bytes": 1413,
+      "sha256": "e275a184d2258cd2db9ff8600d9eaa498ec9370097bc81a91423c978d2bfcd60",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-capsule-admission-meta-UkwrUh\\run-tool-closed.mjs",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\admission\\run-tool-closed.mjs",
+      "bytes": 1319,
+      "sha256": "813818a71674568526bfbdc29e7c2bccd57ccfd6de9ce4bc6fc24b6dc2a76315",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-capsule-admission-meta-UkwrUh\\seal-final-capsule-admission.mjs",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\admission\\seal-final-capsule-admission.mjs",
+      "bytes": 2301,
+      "sha256": "f9097876f6cf8631312fa9346d196127d76254b16e466131a4fddfe60c089582",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-capsule-admission-meta-UkwrUh\\STOPWRITE-final42-capsule-admission-seal.json",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\admission\\STOPWRITE-final42-capsule-admission-seal.json",
+      "bytes": 4212,
+      "sha256": "224bdc283a92803c8cb04ccbf1f918fcec8a8aacf72c93692370280502b820f6",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\collection-final.result.json",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\root\\collection-final.result.json",
+      "bytes": 942,
+      "sha256": "7b04dcf386c4da333d7d119f53877bc70bdba255fce9cb955756eab38638b2f0",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\collection-final.stdout.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\root\\collection-final.stdout.log",
+      "bytes": 423,
+      "sha256": "fddb429ec1c02d182e8e5faf6baefb765d690c3385680c7b6b51f4ad3f2aa84c",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\collection-final.stderr.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\root\\collection-final.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\verification-final.result.json",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\root\\verification-final.result.json",
+      "bytes": 1111,
+      "sha256": "0176200045fcbf4c146c36bf6188128fe8b183f4fa7aac50a777f55103c4f47d",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\verification-final.stdout.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\root\\verification-final.stdout.log",
+      "bytes": 475,
+      "sha256": "cd48609f7043636dec2b674b4ecb4151189531da32998afc8f485954bb2f80ea",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\verification-final.stderr.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\root\\verification-final.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\verification-final.json",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\root\\verification-final.json",
+      "bytes": 520,
+      "sha256": "f06bf1d8a86523689997b4b3fe0e0060b4ddaa12ec2e0bf2d0f21a8d48336c1b",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\frozen-late-root-index.json",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\root\\frozen-late-root-index.json",
+      "bytes": 39443,
+      "sha256": "2fc26c446fafbf5fc4110ef09eeed26bb4117180a42228166ea65dc6a4d7505d",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\freeze-late-root.result.json",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\root\\freeze-late-root.result.json",
+      "bytes": 825,
+      "sha256": "20cd8d0eb391930ef3cd06f678b6960d73db0b49b8cd68d9e4fb02a4a82b2ea8",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\freeze-late-root.stdout.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\root\\freeze-late-root.stdout.log",
+      "bytes": 300,
+      "sha256": "a01f85ba643a2ced7e54b89abc4c6d74e22272fd333a1c4b8ae1ef1b665614a9",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\freeze-late-root.stderr.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\root\\freeze-late-root.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\configure-final-collection.mjs",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\root\\configure-final-collection.mjs",
+      "bytes": 806,
+      "sha256": "62794b1f3b7c0f37fa947e702083fefe9e9d34ace43bdca69f2b25192f27bfce",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\configure-final-collection.result.json",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\root\\configure-final-collection.result.json",
+      "bytes": 1195,
+      "sha256": "baa398ba8203eb1bf6fb318a70c4020acd7042f0cedaab11b468c3d594f621f4",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\configure-final-collection.stdout.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\root\\configure-final-collection.stdout.log",
+      "bytes": 260,
+      "sha256": "7576a8d860b1daa82725fd86cdb822b38df26e64e1f17f1f2140af0710d4bcf4",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\configure-final-collection.stderr.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\root\\configure-final-collection.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\install-frozen-archive.mjs",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\root\\install-frozen-archive.mjs",
+      "bytes": 6090,
+      "sha256": "3dac09618903a09b366b22e300a2fa085b7ced7a31da6e5dbc77fc4d0d1ff6c5",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\guard-live-cutover.mjs",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\root\\guard-live-cutover.mjs",
+      "bytes": 2150,
+      "sha256": "b8c1e7f5e4784da907f11152369207a9fc408908e853539b053e7e38b0a6d2c3",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\final-archive-cutover.deployment-guard.json",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\root\\final-archive-cutover.deployment-guard.json",
+      "bytes": 1030,
+      "sha256": "c9f6d62e089a843c7930b29328cd6b04d46c964fc79db17889133a2a1b633773",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\final-cutover-guard.result.json",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\root\\final-cutover-guard.result.json",
+      "bytes": 954,
+      "sha256": "8386492d69bfc9abc0f62baa035e5b4eff4f8587668ed9c69e4a2316de412fb1",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\final-cutover-guard.stdout.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\root\\final-cutover-guard.stdout.log",
+      "bytes": 793,
+      "sha256": "27e32032589b62213785f7f22ae5798301bb0c0987e35f6c9c4fb37e57c1fa2b",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\final-cutover-guard.stderr.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\root\\final-cutover-guard.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\portable-verification-final.json",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\root\\portable-verification-final.json",
+      "bytes": 473,
+      "sha256": "3e4e8e7784f4b5f992e85b832bb487b639f03f6f3730b37e060741ae333508e5",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\portable-verification-final.result.json",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\root\\portable-verification-final.result.json",
+      "bytes": 1140,
+      "sha256": "e55c038ef5b162404926871b8a689ac4dcc458fe11f485ff150ccecbaf69d464",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\portable-verification-final.stdout.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\root\\portable-verification-final.stdout.log",
+      "bytes": 428,
+      "sha256": "24089bfe53a0faa8aab28fc0de2f89062c93bd41d4cfc8ce1f81ea37fdc94b7c",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\portable-verification-final.stderr.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\root\\portable-verification-final.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\update-final-archive-checklist.mjs",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\root\\update-final-archive-checklist.mjs",
+      "bytes": 9689,
+      "sha256": "7ac3eef534cbe7ebf0ed4633abe96ac068032e7bae215c4f450f7b5a33a5bc89",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\final-archive-checklist-proof.json",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\root\\final-archive-checklist-proof.json",
+      "bytes": 626,
+      "sha256": "b702914677c3462aab1bee947a5bd0f404472e1610c1fc072c2d387e822c6c25",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\update-final-checklist.result.json",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\root\\update-final-checklist.result.json",
+      "bytes": 1316,
+      "sha256": "e04081fc0b9305d42c2988a0595d8b55c248dcb5f0b280962f805408ec8de853",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\update-final-checklist.stdout.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\root\\update-final-checklist.stdout.log",
+      "bytes": 536,
+      "sha256": "4a45b584e55a4b78ab43620ec82b466e83e0304b3cc6b77555f2d77861d11f22",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\update-final-checklist.stderr.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\root\\update-final-checklist.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\audit-final-archive-stage.mjs",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\root\\audit-final-archive-stage.mjs",
+      "bytes": 4591,
+      "sha256": "6d1caf4ecac20c11dc7fd18930ca12ed15d43c10804615bfbf6d2cbef9f4ec14",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\audit-final-archive-stage.mjs",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\root\\staging-first-failure\\audit-final-archive-stage.mjs",
+      "bytes": 4591,
+      "sha256": "6d1caf4ecac20c11dc7fd18930ca12ed15d43c10804615bfbf6d2cbef9f4ec14",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\final-archive-stage-audit.result.json",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\root\\staging-first-failure\\final-archive-stage-audit.result.json",
+      "bytes": 855,
+      "sha256": "4024e74124f4115d669bc971da70c622c7fafb1d6f59738632105888b3025498",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\final-archive-stage-audit.stdout.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\root\\staging-first-failure\\final-archive-stage-audit.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\final-archive-stage-audit.stderr.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\root\\staging-first-failure\\final-archive-stage-audit.stderr.log",
+      "bytes": 443474,
+      "sha256": "603c6ab935070f448ddf0dc9a21b93efe882fb22cca12fea253b2f415a303374",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\archive-stage-read-1.result.json",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\root\\staging-first-failure\\archive-stage-read-1.result.json",
+      "bytes": 790,
+      "sha256": "ea47b3770133273c2adea40d74ead56ad0345bbdf512975200126a81657443a4",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\archive-stage-read-1.stdout.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\root\\staging-first-failure\\archive-stage-read-1.stdout.log",
+      "bytes": 41,
+      "sha256": "91e1d9a5c42943a16326cd67abe5367bd7c2c5c0e84e16563316aa704d545cef",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\archive-stage-read-1.stderr.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\root\\staging-first-failure\\archive-stage-read-1.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\archive-stage-read-2.result.json",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\root\\staging-first-failure\\archive-stage-read-2.result.json",
+      "bytes": 823,
+      "sha256": "9c6d539eaf27258c928f3b8f5c5fdfe07b9a4a22a041c7d60ae195888292834e",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\archive-stage-read-2.stdout.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\root\\staging-first-failure\\archive-stage-read-2.stdout.log",
+      "bytes": 264788,
+      "sha256": "1160d23c818767946f141be94d52a571fe21a0d2d05e0c5ee2f10b7c655cbbf4",
+      "exactCopy": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\archive-stage-read-2.stderr.log",
+      "target": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-g7-native26-calibration-progress-verification\\root\\staging-first-failure\\archive-stage-read-2.stderr.log",
+      "bytes": 80,
+      "sha256": "4637b2478cea95e221ecbde1b46874fb0f18d282e08504cf0d1074595c4348d1",
+      "exactCopy": true
+    }
+  ],
+  "collectionOnly": true,
+  "gatePassDerived": false,
+  "updatedAt": "2026-10-06T05:39:25.660Z"
+}

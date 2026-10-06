@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-06T04:09:42.731Z",
+  "finishedAt": "2026-10-06T04:09:44.183Z",
+  "executable": "C:/Program Files/GitHub CLI/gh.exe",
+  "args": [
+    "api",
+    "repos/cinagroup/cinatoken/actions/runs/37412108171/artifacts"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\direct-terminal-artifact-metadata.stdout.log",
+    "bytes": 770,
+    "sha256": "bf1ee579ce0a1f0caa258b888d9e62c85874aad57cd627078ba50e673eed14f5"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\direct-terminal-artifact-metadata.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

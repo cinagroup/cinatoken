@@ -1,0 +1,4 @@
+[main ee122dd4] fix(test): preserve original historical native fixture bytes
+ 5 files changed, 1421 insertions(+), 6 deletions(-)
+ create mode 100644 scripts/db/cutover/fixtures/historical-native/postgres-replay-reservations.native.test.mjs.txt
+ create mode 100644 scripts/db/cutover/fixtures/historical-native/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs.txt

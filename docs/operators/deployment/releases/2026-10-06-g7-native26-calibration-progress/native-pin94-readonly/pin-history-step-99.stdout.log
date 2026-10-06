@@ -1,0 +1,1 @@
+f6586260e6e0274902cb7569135d3550c89fdabd	2026-09-27 17:03:15 +0800	fix: support Worker manual redirects and preserve 304 response bodies

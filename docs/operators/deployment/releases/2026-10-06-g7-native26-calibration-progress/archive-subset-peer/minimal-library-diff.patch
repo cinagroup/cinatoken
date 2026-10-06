@@ -1,0 +1,45 @@
+--- frozen-v2
++++ enhanced-g7-owner
+@@ -53,6 +53,25 @@
+   const timestamp = (key) => typeof value[key] === 'string' && Number.isFinite(Date.parse(value[key]));
+   const endedAbnormally = typeof value.signal === 'string' && value.signal !== '' || value.spawnError != null;
+   const executorSchema = ['v364-owned-linux-executor-closed-v1', 'v364-owned-linux-boundary-executor-closed-v1'].includes(value.schema);
++  if (value.schema === 'g7-owner-exact-terminal-spawnSync-status-v1') {
++    if (value.closed !== true || !numeric('actualExit') || value.actualExit < 0 ||
++        value.signal !== null || value.spawnError !== null || value.productionRequests !== 0 ||
++        typeof value.id !== 'string' || !/^[a-z0-9-]+$/u.test(value.id) ||
++        typeof value.program !== 'string' || !path.isAbsolute(value.program) ||
++        typeof value.cwd !== 'string' || !path.isAbsolute(value.cwd) ||
++        !Array.isArray(value.args) || !value.args.every(x => typeof x === 'string') ||
++        !timestamp('startedAt') || !timestamp('endedAt') || Date.parse(value.endedAt) < Date.parse(value.startedAt) ||
++        !Number.isSafeInteger(value.timeoutMs) || value.timeoutMs < 1 ||
++        value.source !== 'Exact spawnSync status; not inferred from wrapper success' ||
++        !Array.isArray(value.outputs) || value.outputs.length !== 2 ||
++        !value.outputs.every((x, i) => x && !Array.isArray(x) &&
++          x.file === value.id + (i === 0 ? '.stdout.log' : '.stderr.log') &&
++          relativeSafe(x.file) && !Object.hasOwn(x, 'path') &&
++          Number.isSafeInteger(x.bytes) && x.bytes >= 0 && /^[0-9a-f]{64}$/u.test(x.sha256))) return null;
++    return { dialect: value.schema, actualExit: value.actualExit, signal: null, spawnError: null,
++      startedAt: value.startedAt, endedAt: value.endedAt, timeoutMs: value.timeoutMs,
++      actualChildExitProven: true, separateOuterToolReceiptClaimed: false };
++  }
+   if (value.source === 'actual synchronous spawnSync return, not aggregate report') {
+     if (value.terminal !== true || !numeric('status') || typeof value.id !== 'string' || !value.id ||
+         typeof value.program !== 'string' || !value.program || typeof value.cwd !== 'string' || !value.cwd ||
+@@ -299,11 +318,14 @@
+       assert.ok(/^[0-9a-f]{64}$/u.test(binding.expectedReceiptSha256));
+       const item = context.data.get(binding.receiptFile), value = context.json.get(binding.receiptFile), receipt = context.receiptByName.get(binding.receiptFile);
+       assert.equal(item?.sha256, binding.expectedReceiptSha256);
++      const exactG7Owner = receipt?.dialect === 'g7-owner-exact-terminal-spawnSync-status-v1';
++      const begin = exactG7Owner ? value.startedAt : value?.begin;
+       assert.ok(receipt && value?.closed === true && typeof value.program === 'string' && value.program !== '' &&
+         Array.isArray(value.args) && value.args.every(x => typeof x === 'string') &&
+-        Number.isSafeInteger(value.actualExit) && typeof value.begin === 'string' && typeof value.endedAt === 'string' &&
+-        Number.isFinite(Date.parse(value.begin)) && Number.isFinite(Date.parse(value.endedAt)) && Date.parse(value.endedAt) >= Date.parse(value.begin),
++        Number.isSafeInteger(value.actualExit) && typeof begin === 'string' && typeof value.endedAt === 'string' &&
++        Number.isFinite(Date.parse(begin)) && Number.isFinite(Date.parse(value.endedAt)) && Date.parse(value.endedAt) >= Date.parse(begin),
+         'Explicit output binding requires its own numeric closed command with ordered timestamps');
++      if (exactG7Owner) assert.deepEqual(binding.outputs, value.outputs, 'G7 owner binding must exactly match both original stream descriptors');
+       assert.ok(Array.isArray(binding.outputs) && binding.outputs.length > 0);
+       const listed = new Set();
+       for (const descriptor of binding.outputs) {

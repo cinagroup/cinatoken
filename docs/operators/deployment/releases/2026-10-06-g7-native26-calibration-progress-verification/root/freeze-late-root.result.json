@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-06T04:58:49.343Z",
+  "finishedAt": "2026-10-06T04:58:49.541Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-final-durable-collection-meta-S7NHM2/freeze-late-root.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\freeze-late-root.stdout.log",
+    "bytes": 300,
+    "sha256": "a01f85ba643a2ced7e54b89abc4c6d74e22272fd333a1c4b8ae1ef1b665614a9"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\freeze-late-root.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

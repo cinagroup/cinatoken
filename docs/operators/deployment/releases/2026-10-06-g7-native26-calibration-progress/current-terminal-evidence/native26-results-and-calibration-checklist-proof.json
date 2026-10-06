@@ -1,0 +1,13 @@
+{
+  "at": "2026-10-06T04:27:12.070Z",
+  "actualExit": 0,
+  "bytes": 803950,
+  "sha256": "8b4568b815f635a75a078fce131d1c22e211efea159b1d01629a0da0f0b9b20c",
+  "originalScopeAndStateLinesExact": true,
+  "fullG7Verified": false,
+  "fullG8Verified": false,
+  "actualNativeTargetsPassed": 20,
+  "actualNativeTargetsNotExecuted": 6,
+  "actualNativeNextFailure": 94,
+  "calibrationRuntimePending": true
+}

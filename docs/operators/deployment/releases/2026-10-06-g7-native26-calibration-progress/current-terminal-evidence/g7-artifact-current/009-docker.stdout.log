@@ -1,0 +1,80 @@
+[
+    {
+        "Id": "sha256:9239e3ac84cf6d1d20e6b702d779feac5401b5492118cf278dd6dbda32a2e6cd",
+        "RepoTags": [
+            "cinatoken-g7-ssr:473de5fc520fc7d64db700db88a76c7a6b45c241"
+        ],
+        "RepoDigests": [],
+        "Parent": "",
+        "Comment": "buildkit.dockerfile.v0",
+        "Created": "2026-10-06T03:39:08.124845876Z",
+        "DockerVersion": "",
+        "Author": "",
+        "Config": {
+            "Hostname": "",
+            "Domainname": "",
+            "User": "node",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "ExposedPorts": {
+                "8791/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "NODE_VERSION=22.22.2",
+                "YARN_VERSION=1.22.22",
+                "CINATOKEN_WEB_PUBLIC_ENABLED=false",
+                "CINATOKEN_WEB_PUBLIC_ORIGIN=",
+                "CINATOKEN_ADMIN_UPSTREAM=http://gateway-admin:8789",
+                "CINATOKEN_WEB_SSR_PORT=8791"
+            ],
+            "Cmd": [
+                "node",
+                "docker/web/public-server.mjs"
+            ],
+            "ArgsEscaped": true,
+            "Image": "",
+            "Volumes": null,
+            "WorkingDir": "/app",
+            "Entrypoint": [
+                "docker-entrypoint.sh"
+            ],
+            "OnBuild": null,
+            "Labels": null
+        },
+        "Architecture": "amd64",
+        "Os": "linux",
+        "Size": 176340367,
+        "GraphDriver": {
+            "Data": {
+                "LowerDir": "/var/lib/docker/overlay2/lbu9qw1uppjxhol4l34xfv0zm/diff:/var/lib/docker/overlay2/fvqckvjj4pcps8wxiudaumqj6/diff:/var/lib/docker/overlay2/pi3gdusz7th6o0msb5l55ztxh/diff:/var/lib/docker/overlay2/pg1oqsjnce5y3h19t0re2nt2z/diff:/var/lib/docker/overlay2/eraoos78ys0eubhfkd3z55fx3/diff:/var/lib/docker/overlay2/d34502e3108cfe09011292f5a7c3ff7ee3e8315c8f998c7496b511841c044b56/diff:/var/lib/docker/overlay2/1daa5fbee80b89d0c75d31d850d281ad88b2befe00ed3da4d31d4357ac323c87/diff:/var/lib/docker/overlay2/389bf8e6a5f127194eec3b658707c7edbdcacc6d09e6a91c2097922302fe5943/diff:/var/lib/docker/overlay2/3e173f4f6af59a1eb8a6af648b192a06713c7eb7a980178265946426b52b6dc4/diff",
+                "MergedDir": "/var/lib/docker/overlay2/23i7lrxf9yr5v5rw56o4wbqy9/merged",
+                "UpperDir": "/var/lib/docker/overlay2/23i7lrxf9yr5v5rw56o4wbqy9/diff",
+                "WorkDir": "/var/lib/docker/overlay2/23i7lrxf9yr5v5rw56o4wbqy9/work"
+            },
+            "Name": "overlay2"
+        },
+        "RootFS": {
+            "Type": "layers",
+            "Layers": [
+                "sha256:0854555d70acaa318b38ee50bc667cb51ff6bf0757624624c7ff3b6fe17459a0",
+                "sha256:fbebc70d4d603718f2e3756832ff13d8b68c1fb0995ae9add5fc06748aada9c9",
+                "sha256:ba0964557d8871ad28733d08b70ac9cefedda87ddd769e439b9d4f6d100baa3e",
+                "sha256:04acce0ed98abf602c24e1b97ef716d3e2fda797c28a1e4394846e13e39730b4",
+                "sha256:4925dd6bc0632592f46a99f9769eb24b0dd42ea555920ab136931c3aabbdf52a",
+                "sha256:b4d460522be905b4fb6db1b45aa6be8207e95f97182309d4bc55e2ab2d184235",
+                "sha256:c53184b6eea772a71d7b96283c8f279f2a55502bed9e62a4ec67893e63856eab",
+                "sha256:a572aedc7a99fc512d3216c7ad7695a125e6e6ea774386782063016a29aabf9c",
+                "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+                "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef"
+            ]
+        },
+        "Metadata": {
+            "LastTagTime": "2026-10-06T03:39:09.014010539Z"
+        }
+    }
+]

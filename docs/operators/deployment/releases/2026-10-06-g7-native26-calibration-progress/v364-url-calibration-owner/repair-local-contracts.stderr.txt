@@ -1,0 +1,23 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ '?attemptNonce=control'
+- true
+
+    at file:///C:/Users/cina/AppData/Local/Temp/cinatoken-v364-direct-actual-review-DjepMs/check-address-repair.mjs:29:64
+    at check (file:///C:/Users/cina/AppData/Local/Temp/cinatoken-v364-direct-actual-review-DjepMs/check-address-repair.mjs:26:41)
+    at file:///C:/Users/cina/AppData/Local/Temp/cinatoken-v364-direct-actual-review-DjepMs/check-address-repair.mjs:29:1
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: '?attemptNonce=control',
+  expected: true,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.14.1

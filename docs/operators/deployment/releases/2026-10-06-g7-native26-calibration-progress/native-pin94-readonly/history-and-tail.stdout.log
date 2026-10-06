@@ -1,0 +1,105 @@
+record-example {"step":95,"yamlStep":93,"workflowLine":555,"fixture":"scripts/db/cutover/postgres-buyer-split-grant-rerun-v348.native.test.mjs","bytes":18758,"sha256":"e4eb49f7df9ad69769aec1e809979be7b03362579552cc42772a7f272fc6051d","originalAssertionCount":32,"ledgerAssertions":[{"line":113,"source":"assert.equal(names.length, 73)"},{"line":114,"source":"assert.equal(names.at(-1), '0073_recovery_api_key_workspace_lock.sql')"}],"negativeGrantAssertions":[{"line":228,"source":"assert.rejects(grantPostgresRuntime({ DATABASE_URL: migratorUrl }),\n        /Buyer settlement split is active/u)"}],"grantCalls":[{"line":141,"source":"grantPostgresRuntime({ DATABASE_URL: migratorUrl })","name":"grantPostgresRuntime"},{"line":142,"source":"grantPostgresRuntime({ DATABASE_URL: migratorUrl })","name":"grantPostgresRuntime"},{"line":228,"source":"grantPostgresRuntime({ DATABASE_URL: migratorUrl })","name":"grantPostgresRuntime"}],"grantAdapters":[],"loaders":[{"line":112,"source":"readdir(migrations)","name":"readdir"}],"testOptions":["{ timeout: 300_000, skip: !process.env.GATEWAY_NATIVE_PG_BIN }"],"imports":[{"line":3,"source":"node:assert/strict","names":[{"local":"assert"}],"text":"import assert from 'node:assert/strict';"},{"line":4,"source":"node:crypto","names":[{"imported":"createHash","local":"createHash"},{"imported":"randomBytes","local":"randomBytes"},{"imported":"randomUUID","local":"randomUUID"}],"text":"import { createHash, randomBytes, randomUUID } from 'node:crypto';"},{"line":5,"source":"node:fs/promises","names":[{"imported":"readFile","local":"readFile"},{"imported":"readdir","local":"readdir"},{"imported":"writeFile","local":"writeFile"}],"text":"import { readFile, readdir, writeFile } from 'node:fs/promises';"},{"line":6,"source":"node:path","names":[{"imported":"dirname","local":"dirname"},{"imported":"join","local":"join"}],"text":"import { dirname, join } from 'node:path';"},{"line":7,"source":"node:test","names":[{"local":"test"}],"text":"import test from 'node:test';"},{"line":8,"source":"postgres","names":[{"local":"postgres"}],"text":"import postgres from 'postgres';"},{"line":9,"source":"drizzle-orm/postgres-js","names":[{"imported":"drizzle","local":"drizzle"}],"text":"import { drizzle } from 'drizzle-orm/postgres-js';"},{"line":10,"source":"../../../packages/core/src/test-support/postgres-native-cluster.mjs","names":[{"imported":"startNativePostgres","local":"startNativePostgres"}],"text":"import { startNativePostgres } from '../../../packages/core/sr
+rawEvidence-summary {"authoritativeProgress":{"schema":"cinatoken.native26-ci-independent-peer.command.v1","at":"2026-10-06T04:21:11.182Z","finishedAt":"2026-10-06T04:21:14.385Z","executable":"C:/Program Files/GitHub CLI/gh.exe","args":["run","view","37412060008","--repo","cinagroup/cinatoken","--json","databaseId,name,headSha,status,conclusion,url,jobs,createdAt,updatedAt"],"cwd":"C:/cinagroup/cinatoken","actualExit":0,"signal":null,"spawnError":null,"stdout":"C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\proxy-progress-11.stdout.log","stderr":"C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\proxy-progress-11.stderr.log","stdoutInfo":{"bytes":49493,"sha256":"ef24ec36d29b0395b9fe524e96f7c3dcaefd7ac42399833488f2bb0389a07181"},"stderrInfo":{"bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},"receiptFile":"C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\proxy-progress-11.closed.json","receiptInfo":{"bytes":1061,"sha256":"8db6990f97f906e57a250c70c75619a65c721cb77aa955a3ccdfa9f3cc21e8d5"}},"nativeLog":{"schema":"cinatoken.native26-ci-independent-peer.command.v1","at":"2026-10-06T04:21:36.386Z","finishedAt":"2026-10-06T04:21:45.527Z","executable":"C:/Program Files/GitHub CLI/gh.exe","args":["run","view","37412060008","--repo","cinagroup/cinatoken","--job","112102451588","--log"],"cwd":"C:/cinagroup/cinatoken","actualExit":0,"signal":null,"spawnError":null,"stdout":"C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\native-terminal.stdout.log","stderr":"C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\native-terminal.stderr.log","stdoutInfo":{"bytes":556674,"sha256":"c78e11593edf9b694d5a490647fd37f4863aa44f22be14d367e592975dbb8d28"},"stderrInfo":{"bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},"receiptFile":"C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\native-terminal.closed.json","receiptInfo":{"bytes":1012,"sha256":"3ffe4a65441d0b150f4ddd2092876e5da2f813c85cd23b0fe349084fd446bb73"}},"dispatchFailedLog":{"schema":"cinatoken.native26-ci-independent-peer.command.v1","at":"2026-10-06T04:21:39.219Z","finishedAt":"2026-10-06T04:21:47.536Z","executable":"C:/Program Files/GitHub CLI/gh.exe","args":["run","view","37412060008","--repo","cinagroup/cinatoken","--job","112102451353","--log-failed"],"cwd":"C:/cinagroup/cinatoken","actualExit":0,"signal":null,"spawnError":null,"stdout":"C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\dispatch-failed-terminal-final.stdout.log","stderr":"C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\dispatch-failed-terminal-final.stderr.log","stdoutInfo":{"bytes":19169,"sha256":"32ef4430beb7bbb7cda50c51e4b57f1ffc4db78a593be73b53ef4c70bdf5626d"},"stderrInfo":{"bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},"receiptFile":"C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\dispatch-failed-terminal-final.closed.json","receiptInfo":{"bytes":1048,"sha256":"8edc6bafbf0e1c567332c024d87064f2635e2b75ceecef0058afc904658b08e6"}}}
+history-hashes [{"label":"pin-introduction-source","bytes":50164,"sha256":"603646803c82d3209987260ad682a34169b4e53ca7b03b672d818e3a28d7cc13"},{"label":"pin-introduction-wrapper","bytes":52453,"sha256":"1abd4fff8b9819b49904121503270c75ce490e3170904b0e7c8e70db2fd92455"},{"label":"source-before-web","bytes":50164,"sha256":"603646803c82d3209987260ad682a34169b4e53ca7b03b672d818e3a28d7cc13"},{"label":"source-at-web","bytes":50146,"sha256":"dfe004034784018eb9c70502e19a2192c45e1e8982a96c98b03626f72f7cce1d"},{"label":"wrapper-at-web","bytes":52435,"sha256":"90115e4345b635f37378b0c3b5d26c15000275577e14c69f00e408845e0f9fe2"}]
+source-web-diff
+diff --git a/scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs b/scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs
+index 64b2c914..359689d1 100644
+--- a/scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs
++++ b/scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs
+@@ -1,7 +1,7 @@
+ // Review-only native proof: v2 event producer moves to a distinct buyer LOGIN.
+ import assert from 'node:assert/strict';
+ import { createHash, randomBytes, randomUUID } from 'node:crypto';
+-import { readFile, readdir, writeFile } from 'node:fs/promises';
++import { readFile, writeFile } from 'node:fs/promises';
+ import { dirname, join } from 'node:path';
+ import test from 'node:test';
+ import postgres from 'postgres';
+@@ -17,7 +17,7 @@ import { EMPTY_USAGE } from '../../../packages/proxy/src/services/proxy.ts';
+ import { handleChatCompletion } from '../../../packages/proxy/src/routes/v1/chat.ts';
+ import { createPostgresSharedKeyEconomicProducer } from '../../../packages/proxy/src/services/shared-key-quote-attempt.ts';
+ import { drainNodeBackgroundWork } from '../../../packages/proxy/src/runtime/schedule-background-work.ts';
+-import { grantPostgresRuntime } from './grant-postgres-runtime.ts';
++import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
+ 
+ const gateway = 'cinatoken_gateway';
+ const quotes = 'cinatoken_economic_quotes';
+@@ -159,7 +159,7 @@ test('post-reservation Guardrail denial closes only a proven pre-send released b
+       clients.push(migrator, runtime, buyer, quoteProducer);
+       await migrator.unsafe(`CREATE TABLE ${gateway}.schema_migrations
+         (version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);
+-      const names = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();
++      const names = await listPg73Migrations();
+       assert.equal(names.length, 73);
+       const corpus = [];
+       for (const name of names) {
+@@ -179,7 +179,7 @@ test('post-reservation Guardrail denial closes only a proven pre-send released b
+       report.sourceSha256.fixture = digest(await readFile(new URL(import.meta.url)));
+       const migratorUrl = `postgres://cinatoken_gateway_migrator:${migratorPassword}`
+         + `@127.0.0.1:${cluster.port}/postgres`;
+-      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
++      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
+       stage('formal-pg73-and-current-runtime-grant-installed');
+ 
+       for (const [name, activation, value] of proposals) {
+@@ -807,7 +807,7 @@ test('post-reservation Guardrail denial closes only a proven pre-send released b
+         logs: 0, events: 0, attempts: 0, receipt_spent: null });
+       stage('runtime-forged-log-rolls-back-and-cannot-create-private-v2-event');
+ 
+-      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
++      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
+       const [rerun] = await migrator.unsafe(`SELECT
+         pg_catalog.has_column_privilege('cinatoken_gateway_runtime',
+           '${gateway}.users','budget_spent','UPDATE') AS runtime_spend_update,
+
+wrapper-web-diff
+diff --git a/scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs b/scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs
+index 054c51c1..55fc684d 100644
+--- a/scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs
++++ b/scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs
+@@ -2,7 +2,7 @@
+ // The historical v348 fixture, SQL proposals, test-only grants and denial assertions stay frozen.
+ import assert from 'node:assert/strict';
+ import { createHash, randomBytes, randomUUID } from 'node:crypto';
+-import { readFile, readdir, writeFile } from 'node:fs/promises';
++import { readFile, writeFile } from 'node:fs/promises';
+ import { dirname, join } from 'node:path';
+ import test from 'node:test';
+ import postgres from 'postgres';
+@@ -18,7 +18,7 @@ import { EMPTY_USAGE } from '../../../packages/proxy/src/services/proxy.ts';
+ import { handleChatCompletion } from '../../../packages/proxy/src/routes/v1/chat.ts';
+ import { createPostgresSharedKeyEconomicProducer } from '../../../packages/proxy/src/services/shared-key-quote-attempt.ts';
+ import { drainNodeBackgroundWork } from '../../../packages/proxy/src/runtime/schedule-background-work.ts';
+-import { grantPostgresRuntime } from './grant-postgres-runtime.ts';
++import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
+ 
+ const gateway = 'cinatoken_gateway';
+ const quotes = 'cinatoken_economic_quotes';
+@@ -164,7 +164,7 @@ test('post-reservation Guardrail denial closes only a proven pre-send released b
+       clients.push(migrator, runtime, buyer, quoteProducer);
+       await migrator.unsafe(`CREATE TABLE ${gateway}.schema_migrations
+         (version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);
+-      const names = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();
++      const names = await listPg73Migrations();
+       assert.equal(names.length, 73);
+       const corpus = [];
+       for (const name of names) {
+@@ -187,7 +187,7 @@ test('post-reservation Guardrail denial closes only a proven pre-send released b
+       assert.equal(report.sourceSha256.historicalFixture, historicalFixtureSha256);
+       const migratorUrl = `postgres://cinatoken_gateway_migrator:${migratorPassword}`
+         + `@127.0.0.1:${cluster.port}/postgres`;
+-      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
++      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
+       stage('formal-pg73-and-current-runtime-grant-installed');
+ 
+       for (const [name, activation, value] of proposals) {
+@@ -830,7 +830,7 @@ test('post-reservation Guardrail denial closes only a proven pre-send released b
+         logs: 0, events: 0, attempts: 0, receipt_spent: null });
+       stage('runtime-forged-log-rolls-back-and-cannot-create-private-v2-event');
+ 
+-      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
++      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
+       const [rerun] = await migrator.unsafe(`SELECT
+         pg_catalog.has_column_privilege('cinatoken_gateway_runtime',
+           '${gateway}.users','budget_spent','UPDATE') AS runtime_spend_update,
+

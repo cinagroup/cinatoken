@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-06T05:35:59.725Z",
+  "verificationOutcome": 0,
+  "bytes": 813244,
+  "sha256": "68a9123e943507a4e7d136a9e744937e50dabebceaae822ff12bfdd9e7b7d4a4",
+  "archiveSha256": "794d72cc5287970fb8e042241fe5213994b9899274f5020a77a946f93362fa5d",
+  "counts": {
+    "roots": 42,
+    "files": 3357,
+    "receipts": 803,
+    "aggregateReports": 9,
+    "reportOnlyBindings": 93,
+    "executorTransportBindings": 2,
+    "nonzeroOrAbnormalReceipts": 41
+  },
+  "originalScopeAndStatesExact": true,
+  "actualNewNativeFirstFailure": 24,
+  "allNew26TargetsNotExecuted": true,
+  "fullG7Verified": false,
+  "fullG8Verified": false
+}

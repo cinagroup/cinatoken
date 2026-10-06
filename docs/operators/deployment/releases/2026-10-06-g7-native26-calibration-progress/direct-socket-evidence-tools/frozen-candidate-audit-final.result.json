@@ -1,0 +1,26 @@
+{
+  "at": "2026-10-06T04:21:37.903Z",
+  "finishedAt": "2026-10-06T04:21:38.851Z",
+  "executable": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610/collect-evidence.mjs",
+    "audit",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610/prepared-frozen-roots-config.json",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610/frozen-candidate-audit-final.json"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\frozen-candidate-audit-final.stdout.log",
+    "bytes": 60,
+    "sha256": "1cb9b8e69177db4565d6ae12f7a746364363f850d41ba91de8a0b5ec28528bdb"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\frozen-candidate-audit-final.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "scope": "Original exact child return of Temp evidence tool only; no application/native/G7/runtime or production run"
+}

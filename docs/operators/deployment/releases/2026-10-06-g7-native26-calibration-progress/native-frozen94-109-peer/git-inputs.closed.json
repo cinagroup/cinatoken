@@ -1,0 +1,28 @@
+{
+  "at": "2026-10-06T04:47:27.902Z",
+  "finishedAt": "2026-10-06T04:47:28.221Z",
+  "executable": "git",
+  "args": [
+    "cat-file",
+    "--batch"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdin": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-independent-peer-a824c8ed062348199c5027f7df556278\\git-inputs.stdin.log",
+    "bytes": 37944,
+    "sha256": "967ad1d4c1718464aebaaeaab9496f148494d0fc3fdc2918380dfa82d6707f8e"
+  },
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-independent-peer-a824c8ed062348199c5027f7df556278\\git-inputs.stdout.log",
+    "bytes": 10085379,
+    "sha256": "7ce86762bed2cacdb413fedb1c069befc57814f1f7dbc147e2f191d6425edca6"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-frozen94-109-independent-peer-a824c8ed062348199c5027f7df556278\\git-inputs.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "closed": true,
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "executable": "node",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-direct-socket-prep-99dlWu/check-local-contracts.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "startedAt": "2026-10-06T03:39:37.170Z",
+  "finishedAt": "2026-10-06T03:39:38.606Z",
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\local-contracts-corrected.stdout.txt",
+    "bytes": 1456,
+    "sha256": "7a059bd7100d0fc99c88b037192c95232947d2e320593ffd40f4e0bee18e4b6c"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\local-contracts-corrected.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "operation": "local-source-preparation",
+  "realServiceOrCiExecution": false,
+  "productionRequests": 0
+}

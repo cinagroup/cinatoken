@@ -1,0 +1,24 @@
+{
+  "at": "2026-10-06T04:08:00.315Z",
+  "finishedAt": "2026-10-06T04:08:06.172Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504/guard-live-cutover.mjs",
+    "after-native26-push",
+    "2a0a2777-d3b1-47f0-a0a7-88e701b4d2d9",
+    "c13a64b9c3b2c90adcf736910ea408868d7854f1"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\next-push-cutover-guard.stdout.log",
+    "bytes": 793,
+    "sha256": "2b5750c84dbe37abfab77e2c5cd779019548a89fdf231a9a7dcca160eff3a112"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\next-push-cutover-guard.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

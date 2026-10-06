@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-06T04:27:10.773Z",
+  "finishedAt": "2026-10-06T04:27:10.943Z",
+  "executable": "git",
+  "args": [
+    "show",
+    "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc:scripts/db/cutover/postgres-shared-key-snapshot-earning-consumer-v2.native.test.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\tail-step-100.stdout.log",
+    "bytes": 39818,
+    "sha256": "193ff83d3c1a6e316315c8fe5c4abc592018127121110f52ea10d304334d04dd"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\tail-step-100.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

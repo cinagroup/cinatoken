@@ -1,0 +1,25 @@
+{
+  "at": "2026-10-06T03:22:40.985Z",
+  "actualExit": 0,
+  "baseline": {
+    "bytes": 791488,
+    "sha256": "624e543b560e9a9f473de77ee9712afa4a83e560e0d7cf219f16502c2abb883e"
+  },
+  "updated": {
+    "bytes": 793537,
+    "sha256": "790b2f9933688534998ea5d2fa4ea0b05ef81f6a2200f148c4dcafa5c5061811"
+  },
+  "counts": [
+    102,
+    54,
+    9,
+    9,
+    9,
+    213
+  ],
+  "originalScopeAndStateLinesExact": true,
+  "nativeLinuxPassClaimed": false,
+  "fullG7Verified": false,
+  "fullG8Verified": false,
+  "productionDeploymentAttempted": false
+}

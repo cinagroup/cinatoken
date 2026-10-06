@@ -1,0 +1,74 @@
+{
+  "schema": "stopwrite-original39-failed-metadata-v1",
+  "sealedAt": "2026-10-06T05:12:39.797Z",
+  "sourceRoot": "C:/Users/cina/AppData/Local/Temp/cinatoken-final-all-frozen-admission-meta-27arGJ",
+  "filesBeforeSelf": 12,
+  "totalBytesBeforeSelf": 4212113,
+  "entries": [
+    {
+      "file": "FINAL-original39-unsupported-admission.json",
+      "bytes": 10437,
+      "sha256": "a6a6acd670deef38c4b5d1e0d9222813bac74f22258c8dd6a2a9f5ff9af1570e"
+    },
+    {
+      "file": "final-combined-39-pure-audit.json",
+      "bytes": 4181616,
+      "sha256": "bfbc0332b74faba84d4fa75c0d01f9ab5c97b334b372cff9dfb5fab584afc784"
+    },
+    {
+      "file": "final-combined-39-pure-audit.result.json",
+      "bytes": 1245,
+      "sha256": "917caac6990e9361c29a23f76f42d74a7792a5990390efb6a59646c80e88cca9"
+    },
+    {
+      "file": "final-combined-39-pure-audit.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "final-combined-39-pure-audit.stdout.log",
+      "bytes": 7676,
+      "sha256": "a8fcb21f43e08143ea9669645f8303029738fa081411c4b1498c42e768f1b407"
+    },
+    {
+      "file": "final-config-location.json",
+      "bytes": 1391,
+      "sha256": "73f2918ee1b96c59b3d88c6acff95c64c0c8986364c9e2870e81d410cb54bdd4"
+    },
+    {
+      "file": "prepare-final-collection-config.mjs",
+      "bytes": 4623,
+      "sha256": "8c1985feb98cde2c71189ccdb633e8704a3a77e9f7add3f0373d111e055f167c"
+    },
+    {
+      "file": "prepare-final-collection-config.result.json",
+      "bytes": 1366,
+      "sha256": "3a37b2d9cff631cdd8178f06c76d7255c23d58fad00554a4a7317f492e18d55c"
+    },
+    {
+      "file": "prepare-final-collection-config.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "prepare-final-collection-config.stdout.log",
+      "bytes": 1261,
+      "sha256": "a01e7bfa102dae81066d01e51a00a6712742f7a2e5343fa4755a1242b8e73fbe"
+    },
+    {
+      "file": "run-tool-closed.mjs",
+      "bytes": 1319,
+      "sha256": "813818a71674568526bfbdc29e7c2bccd57ccfd6de9ce4bc6fc24b6dc2a76315"
+    },
+    {
+      "file": "seal-reader-package.mjs",
+      "bytes": 1179,
+      "sha256": "32f43994502b0cd11da04ae753801e643f893e32c4ab257cd4df0bf4c9348d78"
+    }
+  ],
+  "selfExcludedOnly": true,
+  "noFurtherWrites": true,
+  "originalReaderActualExit": 1,
+  "originalBlockers": 39,
+  "scope": "Frozen historical failed-admission metadata; future collector output is outside this root."
+}

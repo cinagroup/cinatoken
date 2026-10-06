@@ -1,0 +1,6 @@
+[Gateway] client error response {
+  method: 'GET',
+  path: '/v1/__g7_missing',
+  status: 404,
+  code: 'gateway.route_not_found'
+}

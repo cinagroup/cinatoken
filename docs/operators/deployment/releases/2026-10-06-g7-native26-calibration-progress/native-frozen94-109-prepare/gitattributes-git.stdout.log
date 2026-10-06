@@ -1,0 +1,40 @@
+* text=auto eol=lf
+*.{png,ico,icns} binary
+
+# Keep byte-based source pins and checklist evidence reproducible after checkout.
+packages/core/src/**/*.ts -text
+packages/proxy/src/**/*.ts -text
+packages/core/migrations-postgres/*.sql -text
+packages/core/migrations-proposals/postgres/*.sql -text
+scripts/db/cutover/** -text
+docs/developers/architecture/implementation-evidence/** -text
+docs/developers/architecture/evidence/** -text
+docs/operators/deployment/releases/2026-10-05-web-frontend/** -text
+docs/operators/deployment/releases/2026-10-05-independent-web/** -text
+docs/operators/deployment/releases/2026-09-27-text-workerd-manual-redirect-local-tests.txt -text
+docs/operators/deployment/releases/2026-09-27-request-dispatch-manual-fixture-first-local-failed.txt -text
+docs/operators/deployment/releases/2026-09-27-request-dispatch-manual-fixture-local-tests.txt -text
+docs/operators/deployment/releases/2026-09-27-replay-reservations-backend-lifecycle-first-local-cancelled.txt -text
+docs/operators/deployment/releases/2026-09-27-replay-reservations-backend-lifecycle-second-local-startup-failed.txt -text
+docs/operators/deployment/releases/2026-09-27-replay-reservations-backend-lifecycle-local-tests.txt -text
+docs/operators/deployment/releases/2026-09-27-v364-workerd-date-successor-first-linux-failed.txt -text
+docs/operators/deployment/releases/2026-09-27-v364-workerd-date-successor-selected-local-tests.txt -text
+docs/operators/deployment/releases/2026-09-27-v364-workerd-date-successor-node-only-bundle-report.json -text
+docs/operators/deployment/releases/2026-09-27-v364-miniflare-input-successor-first-linux-failed.txt -text
+docs/operators/deployment/releases/2026-09-27-v364-miniflare-input-successor-node-boundary-report.json -text
+docs/operators/deployment/releases/2026-09-27-v364-http-cancel-successor-first-linux-failed.txt -text
+docs/operators/deployment/releases/2026-09-27-v364-http-cancel-successor-config-only-local-tests.txt -text
+docs/operators/deployment/releases/2026-09-27-f4601a47-images-independent-ci-report.json -text
+docs/operators/deployment/releases/2026-09-27-f4601a47-linux-proxy-ci-report.json -text
+docs/operators/deployment/releases/2026-09-27-f4601a47-linux-worker-machine-report.json -text
+docs/operators/deployment/releases/2026-09-27-f4601a47-v364-cancellation-unproven.md -text
+docs/operators/deployment/releases/2026-09-27-f4601a47-v364-http-cancel-failed.txt -text
+docs/operators/deployment/releases/2026-09-27-f4601a47-remote-ci-report.json -text
+docs/operators/deployment/releases/2026-10-05-web-html-integrity/** -text
+docs/operators/deployment/releases/2026-10-05-web-resource-retention/** -text
+docs/operators/deployment/releases/2026-10-06-web-cutover-followup/** -text
+docs/operators/deployment/releases/2026-10-06-web-cutover-followup-verification/** -text
+docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/** -text
+docs/operators/deployment/releases/2026-10-06-pg73-docker-progress-verification/** -text
+docs/operators/deployment/releases/2026-10-06-native-g7-boundary-progress/** -text
+docs/operators/deployment/releases/2026-10-06-native-g7-boundary-progress-verification/** -text

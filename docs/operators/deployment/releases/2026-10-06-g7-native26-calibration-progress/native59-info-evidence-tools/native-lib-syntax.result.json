@@ -1,0 +1,24 @@
+{
+  "at": "2026-10-06T04:28:30.284Z",
+  "finishedAt": "2026-10-06T04:28:30.467Z",
+  "executable": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "--check",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59/evidence-lib.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\native-lib-syntax.stdout.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\native-lib-syntax.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "scope": "Original exact child return of Temp evidence tool only; no application/native/G7/runtime or production run"
+}

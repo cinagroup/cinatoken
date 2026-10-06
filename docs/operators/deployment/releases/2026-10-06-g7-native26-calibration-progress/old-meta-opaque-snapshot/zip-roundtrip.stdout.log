@@ -1,0 +1,22 @@
+{"phase": "inventory", "regularFiles": 2353, "directories": 187, "exclusions": 0}
+{"phase": "zip-written", "files": 250, "total": 2353}
+{"phase": "zip-written", "files": 500, "total": 2353}
+{"phase": "zip-written", "files": 750, "total": 2353}
+{"phase": "zip-written", "files": 1000, "total": 2353}
+{"phase": "zip-written", "files": 1250, "total": 2353}
+{"phase": "zip-written", "files": 1500, "total": 2353}
+{"phase": "zip-written", "files": 1750, "total": 2353}
+{"phase": "zip-written", "files": 2000, "total": 2353}
+{"phase": "zip-written", "files": 2250, "total": 2353}
+{"phase": "zip-written", "files": 2353, "total": 2353}
+{"phase": "zip-decoded-exact", "files": 250, "total": 2353}
+{"phase": "zip-decoded-exact", "files": 500, "total": 2353}
+{"phase": "zip-decoded-exact", "files": 750, "total": 2353}
+{"phase": "zip-decoded-exact", "files": 1000, "total": 2353}
+{"phase": "zip-decoded-exact", "files": 1250, "total": 2353}
+{"phase": "zip-decoded-exact", "files": 1500, "total": 2353}
+{"phase": "zip-decoded-exact", "files": 1750, "total": 2353}
+{"phase": "zip-decoded-exact", "files": 2000, "total": 2353}
+{"phase": "zip-decoded-exact", "files": 2250, "total": 2353}
+{"phase": "zip-decoded-exact", "files": 2353, "total": 2353}
+{"closed": true, "actualCollectionExit": 0, "regularFiles": 2353, "originalTotalBytes": 25703899, "zip": {"path": "C:/Users/cina/AppData/Local/Temp/cinatoken-old-meta-opaque-snapshot-eEXPR6/frozen-old-metadata-lossless.zip", "bytes": 7175933, "sha256": "abe62ed3262905377a11f430689c279fef8a23da0b6c3288984e6301b7d8643b"}, "collectionOnly": true, "gatePassDerived": false}

@@ -1,0 +1,1 @@
+failed to get run: Get "https://api.github.com/repos/cinagroup/cinatoken/actions/runs/37412060008?exclude_pull_requests=true": dial tcp 198.18.0.82:443: connectex: An attempt was made to access a socket in a way forbidden by its access permissions.

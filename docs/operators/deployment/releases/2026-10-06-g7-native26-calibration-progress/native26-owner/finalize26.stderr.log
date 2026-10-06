@@ -1,0 +1,15 @@
+node:internal/fs/promises:640
+  return new FileHandle(await PromisePrototypeThen(
+                        ^
+
+Error: ENOENT: no such file or directory, open 'C:\Users\cina\AppData\Local\Temp\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\step-60.final-after'
+    at async open (node:internal/fs/promises:640:25)
+    at async readFile (node:internal/fs/promises:1283:14)
+    at async file:///C:/Users/cina/AppData/Local/Temp/cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713/finalize26.mjs:50:38 {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\step-60.final-after'
+}
+
+Node.js v24.14.1

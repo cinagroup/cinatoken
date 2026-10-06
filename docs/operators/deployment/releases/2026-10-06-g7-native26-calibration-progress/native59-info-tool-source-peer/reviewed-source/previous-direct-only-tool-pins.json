@@ -1,0 +1,73 @@
+{
+  "directory": "C:/Users/cina/AppData/Local/Temp/cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610",
+  "pins": [
+    {
+      "file": "evidence-lib.mjs",
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\evidence-lib.mjs",
+      "bytes": 52976,
+      "sha256": "0718f79578a91774001621430f63beba7a7a84d61eab85bafe2bb6eae26cf76c"
+    },
+    {
+      "file": "direct-socket-dialect.mjs",
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\direct-socket-dialect.mjs",
+      "bytes": 12848,
+      "sha256": "093bdeb9417ab0ca39ee7e876b5d8542f84dce9870fa315d6086835b5887c438"
+    },
+    {
+      "file": "collect-evidence.mjs",
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\collect-evidence.mjs",
+      "bytes": 1002,
+      "sha256": "95d1670211f5fdceb6bbdd2ce1db38036de4fb7c31e5d522eef10af3e479bdd5"
+    },
+    {
+      "file": "verify-evidence.mjs",
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\verify-evidence.mjs",
+      "bytes": 617,
+      "sha256": "ac6c531cc665341fbf51dc3ceed6adbd3f629ab5c17aef51a214de1f1613422d"
+    },
+    {
+      "file": "collector-controlled-tests.mjs",
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\collector-controlled-tests.mjs",
+      "bytes": 6887,
+      "sha256": "749953cc540f88e86822b33ade25daf4c59ef26864a7445bb413bb3c2f425614"
+    },
+    {
+      "file": "collector-closure-boundary-tests.mjs",
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\collector-closure-boundary-tests.mjs",
+      "bytes": 8703,
+      "sha256": "967171ef8a84ae50abb69549d85d2ed58aa3c481c27bb3ae456cad0e66f60eb6"
+    },
+    {
+      "file": "collector-explicit-association-tests.mjs",
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\collector-explicit-association-tests.mjs",
+      "bytes": 10741,
+      "sha256": "7580f6b13250d4a53ddd8b022dfaa48ef2fdc3382310fd60f010d035395b1f7c"
+    },
+    {
+      "file": "collector-g7-producer-output-controls.mjs",
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\collector-g7-producer-output-controls.mjs",
+      "bytes": 7513,
+      "sha256": "0ad5dcdc4b5d001f85f0f8f498d0f6ba6d2e4dc0ecdc44c02d2de1a78f0e7cae"
+    },
+    {
+      "file": "collector-g7-boundary-descriptor-tests.mjs",
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\collector-g7-boundary-descriptor-tests.mjs",
+      "bytes": 17869,
+      "sha256": "f983fe626f4d2b2d8af357cc36e8ff372f4bbee88ef316a1c9c274d945e9bf65"
+    },
+    {
+      "file": "direct-socket-dialect-controls.mjs",
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\direct-socket-dialect-controls.mjs",
+      "bytes": 15434,
+      "sha256": "4590ea6e3248b7b1ee372268aa7a6c43f5c58a0f8bffad37e4fa1548ab5b5b92"
+    },
+    {
+      "file": "run-tool-closed.mjs",
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\run-tool-closed.mjs",
+      "bytes": 1319,
+      "sha256": "813818a71674568526bfbdc29e7c2bccd57ccfd6de9ce4bc6fc24b6dc2a76315"
+    }
+  ],
+  "oldPackageUnchanged": true,
+  "scope": "Only explicit native59 exact original two Info command binding added; all direct schema and old suites preserved"
+}

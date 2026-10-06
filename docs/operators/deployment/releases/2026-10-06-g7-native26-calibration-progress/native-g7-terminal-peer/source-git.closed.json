@@ -1,0 +1,30 @@
+{
+  "schema": "cinatoken.terminal-independent-peer.command.v1",
+  "at": "2026-10-06T03:50:59.251Z",
+  "finishedAt": "2026-10-06T03:50:59.326Z",
+  "executable": "git",
+  "args": [
+    "-c",
+    "core.longpaths=true",
+    "cat-file",
+    "--batch"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdinInfo": {
+    "bytes": 11726,
+    "sha256": "42f5701d0ea1407fdb81bb09ffcf4462c3dfb92f3387a97825f6f9f9b04e82b7"
+  },
+  "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-terminal-independent-peer-9a6f592ed14641fe9af1029826dbd775\\source-git.stdout.log",
+  "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-terminal-independent-peer-9a6f592ed14641fe9af1029826dbd775\\source-git.stderr.log",
+  "stdoutInfo": {
+    "bytes": 1657520,
+    "sha256": "794fb3e4775ca174c38ec284b3bd294f61ba2039322451f00301556c5aafe3b7"
+  },
+  "stderrInfo": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

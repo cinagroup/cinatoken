@@ -1,0 +1,26 @@
+{
+  "closed": true,
+  "actualExit": 1,
+  "signal": null,
+  "spawnError": null,
+  "executable": "node",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-direct-actual-review-DjepMs/check-address-repair.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "startedAt": "2026-10-06T04:15:51.538Z",
+  "finishedAt": "2026-10-06T04:15:52.101Z",
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-actual-review-DjepMs\\repair-local-contracts.stdout.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-actual-review-DjepMs\\repair-local-contracts.stderr.txt",
+    "bytes": 846,
+    "sha256": "dd6747f8514dc10c2041d29feb3d147af8cb2f92f2cabd7a17294cf7ac7d5b28"
+  },
+  "operation": "local-source-preparation",
+  "realServiceOrCiExecution": false,
+  "productionRequests": 0
+}

@@ -1,0 +1,26 @@
+C:\cinagroup\cinatoken\node_modules\miniflare\dist\src\index.js:68348
+    throw e;
+    ^
+
+ZodError: [
+  {
+    "code": "invalid_type",
+    "expected": "_Log",
+    "path": [
+      "log"
+    ],
+    "message": "Invalid input: expected _Log, received CaptureLog"
+  }
+]
+    at convertV4MiniflareOptions (C:\cinagroup\cinatoken\node_modules\miniflare\dist\src\index.js:111003:43)
+    at createFixture (evalmachine.<anonymous>:34:3)
+    at evalmachine.<anonymous>:1:1
+    at Script.runInContext (node:vm:149:12)
+    at Object.runInContext (node:vm:301:6)
+    at file:///C:/Users/cina/AppData/Local/Temp/cinatoken-v364-direct-socket-prep-99dlWu/check-local-contracts.mjs:41:135
+    at check (file:///C:/Users/cina/AppData/Local/Temp/cinatoken-v364-direct-socket-prep-99dlWu/check-local-contracts.mjs:18:43)
+    at file:///C:/Users/cina/AppData/Local/Temp/cinatoken-v364-direct-socket-prep-99dlWu/check-local-contracts.mjs:36:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:661:26)
+
+Node.js v24.14.1

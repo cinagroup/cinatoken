@@ -1,0 +1,13 @@
+[
+    {
+        "CreatedAt": "2026-10-06T03:39:16Z",
+        "Driver": "local",
+        "Labels": {
+            "cinatoken.g7.owner": "g7-1e70578d1acd47478966124f581794d8"
+        },
+        "Mountpoint": "/var/lib/docker/volumes/g7-1e70578d1acd47478966124f581794d8-pgdata/_data",
+        "Name": "g7-1e70578d1acd47478966124f581794d8-pgdata",
+        "Options": null,
+        "Scope": "local"
+    }
+]

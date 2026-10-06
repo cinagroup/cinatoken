@@ -1,0 +1,195 @@
+{
+  "at": "2026-10-06T04:26:13.831Z",
+  "current": "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc",
+  "base": "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc",
+  "source": "scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs",
+  "wrapper": "scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs",
+  "workflow": ".github/workflows/proxy-dispatch-safety.yml",
+  "results": [
+    {
+      "label": "base-workflow",
+      "chars": 45895
+    },
+    {
+      "label": "base-source",
+      "chars": 50146
+    },
+    {
+      "label": "base-wrapper",
+      "chars": 52435
+    },
+    {
+      "label": "473-source",
+      "chars": 50146
+    },
+    {
+      "label": "source-log",
+      "chars": 271
+    },
+    {
+      "label": "wrapper-log",
+      "chars": 406
+    },
+    {
+      "label": "pin-history",
+      "chars": 135
+    },
+    {
+      "label": "exact-status",
+      "chars": 0
+    }
+  ],
+  "readResults": [
+    {
+      "at": "2026-10-06T04:26:13.822Z",
+      "finishedAt": "2026-10-06T04:26:13.826Z",
+      "operation": "readFile",
+      "path": "C:/AGENTS.md",
+      "actualExit": null,
+      "signal": null,
+      "error": {
+        "code": "ENOENT",
+        "message": "ENOENT: no such file or directory, open 'C:\\AGENTS.md'"
+      },
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\instructions-0.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\instructions-0.stderr.log",
+        "bytes": 86,
+        "sha256": "5d278edcbb935d0b2c7558bc14dc82df294270fe3a304d97a13161a395679815"
+      }
+    },
+    {
+      "at": "2026-10-06T04:26:13.822Z",
+      "finishedAt": "2026-10-06T04:26:13.827Z",
+      "operation": "readFile",
+      "path": "C:/cinagroup/AGENTS.md",
+      "actualExit": null,
+      "signal": null,
+      "error": {
+        "code": "ENOENT",
+        "message": "ENOENT: no such file or directory, open 'C:\\cinagroup\\AGENTS.md'"
+      },
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\instructions-1.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\instructions-1.stderr.log",
+        "bytes": 97,
+        "sha256": "71df25981e917974a8fa726b3be5dadc647aec6c826f9886ee62621c98e27a96"
+      }
+    },
+    {
+      "at": "2026-10-06T04:26:13.822Z",
+      "finishedAt": "2026-10-06T04:26:13.826Z",
+      "operation": "readFile",
+      "path": "C:/cinagroup/cinatoken/AGENTS.md",
+      "actualExit": null,
+      "signal": null,
+      "error": {
+        "code": "ENOENT",
+        "message": "ENOENT: no such file or directory, open 'C:\\cinagroup\\cinatoken\\AGENTS.md'"
+      },
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\instructions-2.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\instructions-2.stderr.log",
+        "bytes": 108,
+        "sha256": "eca4570bec17a203a76a012a6ddfa0d87894ba69b91bfd528ce2150aa69b814a"
+      }
+    },
+    {
+      "at": "2026-10-06T04:26:13.822Z",
+      "finishedAt": "2026-10-06T04:26:13.828Z",
+      "operation": "readFile",
+      "path": "C:/cinagroup/cinatoken/scripts/AGENTS.md",
+      "actualExit": null,
+      "signal": null,
+      "error": {
+        "code": "ENOENT",
+        "message": "ENOENT: no such file or directory, open 'C:\\cinagroup\\cinatoken\\scripts\\AGENTS.md'"
+      },
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\instructions-3.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\instructions-3.stderr.log",
+        "bytes": 117,
+        "sha256": "6c361dd56e9edf01f92850e038ebd776738b1cc9cae2303cda2d93e02e47838c"
+      }
+    },
+    {
+      "at": "2026-10-06T04:26:13.822Z",
+      "finishedAt": "2026-10-06T04:26:13.827Z",
+      "operation": "readFile",
+      "path": "C:/cinagroup/cinatoken/scripts/db/AGENTS.md",
+      "actualExit": null,
+      "signal": null,
+      "error": {
+        "code": "ENOENT",
+        "message": "ENOENT: no such file or directory, open 'C:\\cinagroup\\cinatoken\\scripts\\db\\AGENTS.md'"
+      },
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\instructions-4.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\instructions-4.stderr.log",
+        "bytes": 121,
+        "sha256": "eaac7de347436bd48496fb35caaf6f38bee6fd66044d0e872cd9b853702202e6"
+      }
+    },
+    {
+      "at": "2026-10-06T04:26:13.822Z",
+      "finishedAt": "2026-10-06T04:26:13.828Z",
+      "operation": "readFile",
+      "path": "C:/cinagroup/cinatoken/scripts/db/cutover/AGENTS.md",
+      "actualExit": null,
+      "signal": null,
+      "error": {
+        "code": "ENOENT",
+        "message": "ENOENT: no such file or directory, open 'C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\AGENTS.md'"
+      },
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\instructions-5.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\instructions-5.stderr.log",
+        "bytes": 130,
+        "sha256": "4b16f6463e4ccd19af14170d19a90806f6c018a5b12c438c8b72452a9bbedc80"
+      }
+    },
+    {
+      "at": "2026-10-06T04:26:13.822Z",
+      "finishedAt": "2026-10-06T04:26:13.830Z",
+      "operation": "readFile",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9/FINAL-native26-ci-independent-peer.json",
+      "actualExit": 0,
+      "signal": null,
+      "error": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\parent-terminal-final.stdout.log",
+        "bytes": 413706,
+        "sha256": "6635f04f77f6f6325a794756883a8bf697f752af239e33deb2b8c3b226a57e66"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\parent-terminal-final.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ]
+}

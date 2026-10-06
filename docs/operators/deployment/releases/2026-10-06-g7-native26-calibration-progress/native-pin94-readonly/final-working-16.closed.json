@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-06T04:32:29.848Z",
+  "finishedAt": "2026-10-06T04:32:29.852Z",
+  "operation": "readFile",
+  "path": "C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\postgres-legacy-parent-activation.native.test.mjs",
+  "actualExit": 0,
+  "signal": null,
+  "error": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\final-working-16.stdout.log",
+    "bytes": 30195,
+    "sha256": "8b6aae0e4250604a60446f3d02ae0c3683416c26a7d01de58cc26cd66bba7f18"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\final-working-16.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

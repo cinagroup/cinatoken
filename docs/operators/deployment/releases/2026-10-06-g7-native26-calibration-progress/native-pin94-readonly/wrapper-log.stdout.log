@@ -1,0 +1,3 @@
+66ef5a698c0bb16aa1f2c490c79b6a06bdb5b33b	2026-10-05 16:12:22 +0800	feat: implement web frontend migration and Cloudflare release contracts
+94c12c1e37e7346330486cf9a3a3246af00d95c5	2026-09-27 16:32:32 +0800	test: preserve Worker and buyer client boundaries in Linux fixtures
+79b720c60238f17dde432066677480bc7ab60093	2026-09-27 13:55:27 +0800	feat: persist gateway safety and recovery checklist through v402

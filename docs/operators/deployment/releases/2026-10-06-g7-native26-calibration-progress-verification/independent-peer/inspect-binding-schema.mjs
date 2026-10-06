@@ -1,0 +1,8 @@
+import fs from 'node:fs';import path from 'node:path';
+const base='C:/Users/cina/AppData/Local/Temp/cinatoken-final-durable-collection-meta-S7NHM2',r=JSON.parse(fs.readFileSync(base+'/collected-archive-output/2026-10-06-g7-native26-calibration-progress.json'));
+const kinds={};for(const b of r.frozenInputDataBindings)(kinds[b.kind]??=[]).push(b);
+const dialects={};for(const c of r.closedReceipts)dialects[c.dialect]=(dialects[c.dialect]??0)+1;
+const exits={};for(const c of r.closedReceipts)exits[String(c.actualExit)]=(exits[String(c.actualExit)]??0)+1;
+console.log(JSON.stringify({kinds:Object.fromEntries(Object.entries(kinds).map(([k,v])=>[k,{count:v.length,first:v[0]}])),dialects,exits,abnormal:r.closedReceipts.filter(x=>x.actualExit===null||x.signal||x.spawnError),transportIsAlsoClosed:r.closedExecutorTransportBindings.map(t=>({transport:t,closed:r.closedReceipts.find(c=>c.root===t.root&&c.file===t.file)})),sourceEntrySample:r.entries.find(e=>e.closures.length)},null,2));
+console.log('frozen-data-binding.mjs\n'+fs.readFileSync('C:/Users/cina/AppData/Local/Temp/cinatoken-all-frozen-data-tools-FoBS1O/frozen-data-binding.mjs','utf8'));
+for(const name of ['STOPWRITE-all-frozen-data-reader-seal.json']){const f=JSON.parse(fs.readFileSync('C:/Users/cina/AppData/Local/Temp/cinatoken-all-frozen-data-tools-FoBS1O/'+name));console.log(name,JSON.stringify({keys:Object.keys(f),sample:Object.fromEntries(Object.entries(f).map(([k,v])=>[k,Array.isArray(v)?{count:v.length,first:v[0]}:v]))},null,2));}

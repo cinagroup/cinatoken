@@ -1,0 +1,24 @@
+{
+  "at": "2026-10-06T04:12:01.492Z",
+  "finishedAt": "2026-10-06T04:12:01.543Z",
+  "executable": "git",
+  "args": [
+    "cat-file",
+    "blob",
+    "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc:scripts/db/cutover/postgres-legacy-buyer-request-projection-v383.native.test.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\v2-source-step-70.stdout.log",
+  "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\v2-source-step-70.stderr.log",
+  "stdoutInfo": {
+    "bytes": 67478,
+    "sha256": "a10a1ead10832b3d4fb465334e8c455fb17f74f562de93c55979b29795c10b99"
+  },
+  "stderrInfo": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "closed": true,
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "executable": "node",
+  "args": [
+    "-e",
+    "const fs=require('node:fs');const x=JSON.parse(fs.readFileSync('C:/Users/cina/AppData/Local/Temp/cinatoken-v364-direct-actual-review-DjepMs/actual-artifact-analysis.stdout.txt','utf8'));const c=x.results.find(r=>r.result.caseId==='native-worker-reader-cancel'); console.log(JSON.stringify({calibration:c.result,logs:c.relevantCalibrationEvents,closure:{...x.closure,processCensus:undefined}, cases:x.results.map(r=>({id:r.result.caseId,exit:r.result.actualExit,counts:r.workerKinds,abort:r.signalAborts.map(x=>x.diagnostic),ready:r.directSocketProof}))},null,2));"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "startedAt": "2026-10-06T04:11:55.094Z",
+  "finishedAt": "2026-10-06T04:11:55.153Z",
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-actual-review-DjepMs\\calibration-cause-summary.stdout.txt",
+    "bytes": 7397,
+    "sha256": "7f26c8600bb5977012bbcc2ad3a20a2367b8ba0d58863737e9f4ee22184219ac"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-actual-review-DjepMs\\calibration-cause-summary.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "operation": "local-source-preparation",
+  "realServiceOrCiExecution": false,
+  "productionRequests": 0
+}

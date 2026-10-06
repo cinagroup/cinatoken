@@ -1,0 +1,6 @@
+import {readFileSync} from 'node:fs';
+const r=JSON.parse(readFileSync('C:/Users/cina/AppData/Local/Temp/cinatoken-v364-direct-actual-review-DjepMs/FINAL-v364-direct-address-repair.json'));
+const artifacts=r.originalArtifactFileHashes.map(f=>({f,b:readFileSync(f.file)}));
+const selected={};
+for(const {f,b} of artifacts){const name=f.file.replaceAll('\\','/').split('/').at(-1);if(['closed-result.json','executor.closed.json','events.json'].includes(name)){const value=JSON.parse(b);selected[name]={keys:Object.keys(value),array:Array.isArray(value),actualExit:value.actualExit,aggregateActualExit:value.aggregateActualExit,actualProcessExit:value.actualProcessExit,result:value.result,calibration:value.calibration,cases:value.cases,originalStrict:value.originalStrict,eventCount:value.events?.length};}}
+process.stdout.write(JSON.stringify({selected,ownerKeys:Object.keys(r.actualFailedRuntime),receiptCount:r.receipts.length,privateSource:readFileSync('C:/cinagroup/cinatoken/packages/proxy/scripts/staging/chat-holder-private-v364.ts','utf8').split('\n').slice(0,18),privateGuard:readFileSync('C:/cinagroup/cinatoken/packages/proxy/scripts/staging/chat-holder-private-v364.ts','utf8').split('\n').slice(88,102),gatewaySource:readFileSync('C:/cinagroup/cinatoken/packages/proxy/scripts/staging/chat-holder-gateway-v364.ts','utf8').split('\n').slice(0,25)}));

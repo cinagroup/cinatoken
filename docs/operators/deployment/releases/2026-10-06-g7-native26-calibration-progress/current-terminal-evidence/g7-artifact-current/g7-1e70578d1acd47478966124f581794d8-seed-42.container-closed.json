@@ -1,0 +1,9 @@
+{
+  "schema": "web-platform-g7-container-closed-v1",
+  "name": "g7-1e70578d1acd47478966124f581794d8-seed",
+  "actualExit": 0,
+  "running": false,
+  "finishedAt": "2026-10-06T03:39:20.479384514Z",
+  "OOMKilled": false,
+  "error": ""
+}

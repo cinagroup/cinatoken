@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-06T04:07:28.340Z",
+  "finishedAt": "2026-10-06T04:07:32.193Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504/snapshot-next-ci.mjs",
+    "direct-current-1",
+    "37412108171"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\direct-current-snapshot.stdout.log",
+    "bytes": 571,
+    "sha256": "d77e95d20ec3f87fad468dbcd452fc23e5979b0c5d661d23f1096e2afa622480"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\direct-current-snapshot.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

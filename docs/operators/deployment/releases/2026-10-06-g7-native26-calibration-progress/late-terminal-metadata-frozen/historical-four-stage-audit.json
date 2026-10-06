@@ -1,0 +1,52 @@
+{
+  "at": "2026-10-06T04:56:01.734Z",
+  "verificationOutcome": 0,
+  "expectedBase": "dc7be6f8597333151c450bae3ae15e6585e3b2eb",
+  "entries": [
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs",
+      "bytes": 52497,
+      "sha256": "68206c5acf6b0bbfc93f27295615be13b26ef0beff7b73046202883c2b6ebe87",
+      "stagedBytes": 52497,
+      "stagedSha256": "68206c5acf6b0bbfc93f27295615be13b26ef0beff7b73046202883c2b6ebe87",
+      "stagedBlob": "9873524c3f4363ccf188802699ca59775d0907f7"
+    },
+    {
+      "file": "scripts/db/cutover/fixtures/historical-native/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs.txt",
+      "bytes": 50164,
+      "sha256": "603646803c82d3209987260ad682a34169b4e53ca7b03b672d818e3a28d7cc13",
+      "stagedBytes": 50164,
+      "stagedSha256": "603646803c82d3209987260ad682a34169b4e53ca7b03b672d818e3a28d7cc13",
+      "stagedBlob": "64b2c914251d74191f73bb25f723dd6010fbc366"
+    },
+    {
+      "file": "scripts/db/cutover/postgres-replay-reservations-backend-lifecycle-successor.native.test.mjs",
+      "bytes": 42822,
+      "sha256": "a8e7ccd8c918c128515415d47c40c2f9ce4c6a9e44646895035d10612359d295",
+      "stagedBytes": 42822,
+      "stagedSha256": "a8e7ccd8c918c128515415d47c40c2f9ce4c6a9e44646895035d10612359d295",
+      "stagedBlob": "85ea0359cad22a72e9b67753f4697c4bc5fa9a07"
+    },
+    {
+      "file": "scripts/db/cutover/fixtures/historical-native/postgres-replay-reservations.native.test.mjs.txt",
+      "bytes": 37114,
+      "sha256": "d95055419a04465c7c172ff0b8426bd0b928bd538e4dad80f9442229abd5e269",
+      "stagedBytes": 37114,
+      "stagedSha256": "d95055419a04465c7c172ff0b8426bd0b928bd538e4dad80f9442229abd5e269",
+      "stagedBlob": "dc042910c59037ddd850e361a38d8da745efae73"
+    },
+    {
+      "file": "docs/developers/architecture/web-frontend-migration.md",
+      "bytes": 808063,
+      "sha256": "2c3fe90cf6347113718092cf504cd70177cda4a3eb9cba1098577b74f7545c8a",
+      "stagedBytes": 808063,
+      "stagedSha256": "2c3fe90cf6347113718092cf504cd70177cda4a3eb9cba1098577b74f7545c8a",
+      "stagedBlob": "3d931df9e2bc1fc4eaecbb6431f2fb2ca2c91f87"
+    }
+  ],
+  "onlyFiveAllowedFiles": true,
+  "originalChecklistScopeAndStatesExact": true,
+  "priorPrimaryArchivesExact": true,
+  "independentPreparationPeerSha256": "66c64ef9b12d1909656fc4a512aef140c70413f17385ad3df81f9a9546498396",
+  "newNativeRuntimeExecuted": false
+}

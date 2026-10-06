@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-06T03:17:32.105Z",
+  "finishedAt": "2026-10-06T03:17:32.265Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-native-four-repair-38a94fb93d9842929dc7ae9cf6b378da/finalize-four.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-four-repair-38a94fb93d9842929dc7ae9cf6b378da\\finalize-four.stdout.log",
+  "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-four-repair-38a94fb93d9842929dc7ae9cf6b378da\\finalize-four.stderr.log",
+  "stdoutInfo": {
+    "bytes": 461,
+    "sha256": "da20f77bcaecda5e75cb6ed2b0e1c6d831346e266c6729885693f1208e4962a2"
+  },
+  "stderrInfo": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

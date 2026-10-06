@@ -1,0 +1,24 @@
+{
+  "schema": "cinatoken.terminal-independent-peer.command.v1",
+  "at": "2026-10-06T03:50:58.991Z",
+  "finishedAt": "2026-10-06T03:50:59.439Z",
+  "executable": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-terminal-independent-peer-9a6f592ed14641fe9af1029826dbd775\\review-terminal-v2.mjs",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-terminal-independent-peer-9a6f592ed14641fe9af1029826dbd775"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-terminal-independent-peer-9a6f592ed14641fe9af1029826dbd775\\review-terminal-v2.stdout.log",
+  "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-terminal-independent-peer-9a6f592ed14641fe9af1029826dbd775\\review-terminal-v2.stderr.log",
+  "stdoutInfo": {
+    "bytes": 661,
+    "sha256": "cda0d2923e7f04e1465119273673aa8100edaf33a89bde748405c09e610f3217"
+  },
+  "stderrInfo": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

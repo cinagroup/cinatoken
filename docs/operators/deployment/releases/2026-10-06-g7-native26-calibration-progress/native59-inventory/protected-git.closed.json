@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-06T03:39:50.518Z",
+  "finishedAt": "2026-10-06T03:39:50.681Z",
+  "executable": "git",
+  "args": [
+    "cat-file",
+    "--batch"
+  ],
+  "baseCommit": "473de5fc520fc7d64db700db88a76c7a6b45c241",
+  "actualExit": 0,
+  "signal": null,
+  "stdoutInfo": {
+    "bytes": 9530706,
+    "sha256": "07d379e429a3c53153633fb10dce3a95d4ec8204e404e65bf908326d3079937a"
+  },
+  "stderrInfo": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "inputObjectCount": 324
+}

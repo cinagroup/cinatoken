@@ -1,0 +1,33 @@
+{
+  "schema": "historical-conversation-tool-observation-v1",
+  "nonTerminalClaim": true,
+  "noExternalStdoutStderrReceiptInvented": true,
+  "scope": "Exact enclosing exec tool statuses observed in conversation; not new child receipts or application/native results",
+  "items": [
+    {
+      "toolChunk": "a32f43",
+      "returnedActualExit": 1,
+      "command": "node OLD_FROZEN/run-tool-closed.mjs no-op-preflight-DO-NOT-RUN",
+      "observed": "Invalid fresh tool record id; threw before writing any file in frozen old package",
+      "oldPackageMutation": false
+    },
+    {
+      "toolChunk": "32798c",
+      "returnedActualExit": 1,
+      "observed": "PowerShell ParserError: Missing argument in parameter list; proposed write-prepare-v2 command did not run",
+      "newFileWritten": false
+    },
+    {
+      "toolChunk": "762b50",
+      "returnedActualExit": 0,
+      "observed": "Enclosing PowerShell returned0 but Get-Content of guessed FINAL-native-pin94-readonly-review.json reported file absent. This read error is not relabeled child command success.",
+      "subcommandExitProven": false
+    }
+  ],
+  "relatedRealChildNegativeReceipt": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native26-final-config-4851c19d4cc24ecdae397bcb12a8ad30\\prepare-data-reader.result.json",
+    "file": "prepare-data-reader.result.json",
+    "bytes": 1014,
+    "sha256": "926a828f4d260e8d53f362f41ef6ea867a5118b6c5c7e47f374e0374871b8fa5"
+  }
+}

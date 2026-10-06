@@ -1,0 +1,171 @@
+{"file":"node_modules/miniflare/dist/src/index.js","bytes":4843426,"sha256":"58ca83056cf67838add064edcbfd1d654ed204527b8eb01307ba208d7e59fa20"}
+99355:       name: CoreBindings.SERVICE_IMAGES_DELIVERY,
+99356:       service: { name: imagesServiceName }
+99357:     });
+99358:   }
+99359:   if (sharedOptions.upstream !== void 0) {
+99360:     serviceEntryBindings.push({
+99361:       name: CoreBindings.TEXT_UPSTREAM_URL,
+99362:       text: sharedOptions.upstream
+99363:     });
+99364:   }
+99365:   if (sharedOptions.unsafeProxySharedSecret !== void 0) {
+99366:     serviceEntryBindings.push({
+99367:       name: CoreBindings.DATA_PROXY_SHARED_SECRET,
+99368:       data: encoder2.encode(sharedOptions.unsafeProxySharedSecret)
+99369:     });
+99370:   }
+99371:   for (const workerOpt of allWorkerOpts ?? []) {
+99372:     const accessOpts = workerOpt.dev?.access;
+99373:     if (accessOpts) {
+99374:       const accessBlob = { app_aud: accessOpts.aud };
+99375:       if (accessOpts.identity) {
+99376:         accessBlob.jwt_claims = accessOpts.identity;
+99377:       }
+99378:       serviceEntryBindings.push({
+99379:         name: CoreBindings.JSON_ACCESS_BLOB_PREFIX + workerOpt.config.name,
+99380:         json: JSON.stringify(accessBlob)
+99381:       });
+99382:     }
+99383:   }
+99384:   serviceEntryBindings.push({
+99385:     name: CoreBindings.TEXT_FALLBACK_WORKER_NAME,
+99386:     text: workerNames[0] ?? ""
+99387:   });
+99388:   const services = [
+99389:     {
+99390:       name: SERVICE_LOOPBACK,
+99391:       external: { http: { cfBlobHeader: CoreHeaders.CF_BLOB } }
+99392:     },
+99393:     {
+99394:       name: SERVICE_ENTRY,
+99395:       worker: {
+99396:         modules: [{ name: "entry.worker.js", esModule: entry_worker_default() }],
+99397:         compatibilityDate: "2025-03-17",
+99398:         compatibilityFlags: ["nodejs_compat", "service_binding_extra_handlers"],
+99399:         bindings: serviceEntryBindings,
+99400:         durableObjectNamespaces: [
+99401:           {
+99402:             className: "ProxyServer",
+99403:             uniqueKey: `${SERVICE_ENTRY}-ProxyServer`,
+99404:             // `ProxyServer` relies on a singleton object containing of "heap"
+99405:             // mapping addresses to native references. If the singleton object
+99406:             // were evicted, addresses would be invalidated. Therefore, we
+99407:             // prevent eviction to ensure heap addresses stay valid for the
+99408:             // lifetime of the `workerd` process
+99409:             preventEviction: true
+99410:           }
+99411:         ],
+99412:         // `ProxyServer` doesn't make use of Durable Object storage
+99413:         durableObjectStorage: { inMemory: kVoid },
+99414:         // Always use the entrypoints cache implementation for proxying. This
+99415:         // means if the entrypoint disables caching, proxied cache operations
+99416:         // will be no-ops. Note we always require at least one worker to be set.
+99417:         cacheApiOutbound: { name: "cache:0" }
+99418:       }
+99419:     },
+99420:     {
+99421:       name: CoreBindings.SERVICE_DEV_CONTROL,
+99422:       worker: {
+99423:         modules: [
+99424:           { name: "dev-control.worker.js", esModule: dev_control_worker_default() }
+99425:         ],
+99426:         compatibilityDate: "2026-07-08",
+99427:         compatibilityFlags: ["unsafe_module"],
+99428:         bindings: getDevControlBindings(allWorkerOpts)
+99429:       }
+99430:     },
+99431:     {
+99432:       name: "internet",
+99433:       network: {
+99434:         // Allow access to private/public addresses:
+99435:         // https://github.com/cloudflare/miniflare/issues/412
+99436:         allow: ["public", "private", "240.0.0.0/4"],
+99437:         deny: [],
+99438:         tlsOptions: {
+99439:           trustBrowserCas: true,
+99440:           trustedCertificates
+99441:         }
+99442:       }
+99443:     }
+99444:   ];
+99445:   if (r2PublicService !== void 0) {
+99446:     services.push(r2PublicService);
+99447:   }
+99448:   if (r2S3Service !== void 0) {
+99449:     services.push(r2S3Service);
+99450:   }
+99451:   services.push(...getEmailStoreServices(tmpPath));
+99452:   if (sharedOptions.unsafeLocalExplorer) {
+99453:     const localExplorerUiPath = resolveLocalExplorerUi(tmpPath);
+99454:     const workflowOptions = /* @__PURE__ */ new Map();
+99455:     for (const workerOpts of allWorkerOpts ?? []) {
+99456:       for (const [, binding] of getEnvBindingsOfType(
+99457:         workerOpts.config,
+99458:         "workflow"
+99459:       )) {
+99460:         workflowOptions.set(binding.name, {
+{"file":"node_modules/miniflare/dist/src/index.js","bytes":4843426,"sha256":"58ca83056cf67838add064edcbfd1d654ed204527b8eb01307ba208d7e59fa20"}
+113474:         );
+113475:       } else {
+113476:         await this.#maybeInspectorProxyController.updateConnection(
+113477:           this.#sharedOpts.inspectorPort,
+113478:           this.#sharedOpts.inspectorHost ?? "127.0.0.1",
+113479:           maybePort,
+113480:           this.#workerNamesToProxy()
+113481:         );
+113482:       }
+113483:     }
+113484:     const entrySocket = config3.sockets?.[0];
+113485:     const secure = entrySocket !== void 0 && "https" in entrySocket;
+113486:     const previousEntryURL = this.#runtimeEntryURL;
+113487:     const entryPort = maybeSocketPorts.get(SOCKET_ENTRY);
+113488:     (0, import_node_assert21.default)(entryPort !== void 0);
+113489:     const maybeAccessibleHost = maybeGetLocallyAccessibleHost(configuredHost);
+113490:     if (maybeAccessibleHost === void 0) {
+113491:       const localEntryPort = maybeSocketPorts.get(SOCKET_ENTRY_LOCAL);
+113492:       (0, import_node_assert21.default)(localEntryPort !== void 0, "Expected local entry socket port");
+113493:       this.#runtimeEntryURL = new URL(`http://127.0.0.1:${localEntryPort}`);
+113494:     } else {
+113495:       this.#runtimeEntryURL = new URL(
+113496:         `${secure ? "https" : "http"}://${maybeAccessibleHost}:${entryPort}`
+113497:       );
+113498:     }
+113499:     if (previousEntryURL?.toString() !== this.#runtimeEntryURL.toString()) {
+113500:       void this.#runtimeDispatcher?.close().catch(() => {
+113501:       });
+113502:       this.#runtimeDispatcher = new import_undici8.Pool(this.#runtimeEntryURL, {
+113503:         connect: { rejectUnauthorized: false },
+113504:         // Disable timeouts for local dev — long-running responses (streaming,
+113505:         // slow uploads, long-polling) should not be killed by undici defaults.
+113506:         headersTimeout: 0,
+113507:         bodyTimeout: 0
+113508:       });
+113509:     }
+113510:     const devRegistryPort = maybeSocketPorts.get(SOCKET_DEV_REGISTRY);
+113511:     if (devRegistryPort !== this.#devRegistryPort) {
+113512:       void this.#devRegistryDispatcher?.close().catch(() => {
+113513:       });
+113514:       this.#devRegistryPort = devRegistryPort;
+{"file":"node_modules/miniflare/dist/src/index.js","bytes":4843426,"sha256":"58ca83056cf67838add064edcbfd1d654ed204527b8eb01307ba208d7e59fa20"}
+113572:   }
+113573:   async #waitForReady(disposing = false) {
+113574:     await this.#initPromise;
+113575:     await this.#runtimeMutex.drained();
+113576:     if (!disposing && this.#runtimeRestartError !== void 0) {
+113577:       throw this.#runtimeRestartError;
+113578:     }
+113579:     if (disposing) return new URL("http://[100::]/");
+113580:     await this.#maybeInspectorProxyController?.ready;
+113581:     this.#checkDisposed();
+113582:     (0, import_node_assert21.default)(this.#runtimeEntryURL !== void 0);
+113583:     return new URL(this.#runtimeEntryURL.toString());
+113584:   }
+113585:   async #registerWorkers() {
+113586:     if (!this.#devRegistry.isEnabled()) {
+113587:       return;
+113588:     }
+113589:     const debugPort = this.#socketPorts?.get(SOCKET_DEBUG_PORT);
+113590:     if (debugPort === void 0) {
+113591:       this.#log.warn(
+113592:         "Debug port not available \u2014 skipping dev registry registration"

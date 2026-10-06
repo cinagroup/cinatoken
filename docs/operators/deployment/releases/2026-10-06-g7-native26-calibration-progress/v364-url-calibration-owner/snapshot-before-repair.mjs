@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import { createHash } from 'node:crypto';
+import { fileURLToPath } from 'node:url';
+import { execFileSync } from 'node:child_process';
+const root=path.dirname(fileURLToPath(import.meta.url)),repo='C:/cinagroup/cinatoken',sha=b=>createHash('sha256').update(b).digest('hex');
+const base='scripts/diagnostics/v364-direct-socket',paths=fs.readdirSync(path.join(repo,base)).map(p=>base+'/'+p).concat('.github/workflows/v364-direct-socket.yml');
+assert.equal(paths.length,7);const items=paths.map(relative=>{const b=fs.readFileSync(path.join(repo,relative)),committed=execFileSync('git',['show','dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc:'+relative],{cwd:repo});assert.deepEqual(b,committed);
+ const file=path.join(root,'source-before',relative);fs.mkdirSync(path.dirname(file),{recursive:true});fs.writeFileSync(file,b,{flag:'wx'});return {relative,bytes:b.length,sha256:sha(b),snapshot:file};});
+fs.writeFileSync(path.join(root,'source-before.index.json'),JSON.stringify({schema:'direct-url-repair-before-v1',checkoutSourceSHA:'dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc',files:items},null,2)+'\n',{flag:'wx'});
+console.log(JSON.stringify({source7ByteExact:true,files:7,realRuntimeExecuted:false}));

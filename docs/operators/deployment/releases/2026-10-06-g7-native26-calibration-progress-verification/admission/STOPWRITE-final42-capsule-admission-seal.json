@@ -1,0 +1,123 @@
+{
+  "schema": "stopwrite-final42-capsule-admission-seal-v1",
+  "sealedAt": "2026-10-06T05:22:07.971Z",
+  "sourceRoot": "C:/Users/cina/AppData/Local/Temp/cinatoken-final-capsule-admission-meta-UkwrUh",
+  "filesBeforeSelf": 21,
+  "totalBytesBeforeSelf": 4087742,
+  "entries": [
+    {
+      "file": "FINAL-final42-frozen-capsule-admission.json",
+      "bytes": 34074,
+      "sha256": "17bd25b696dee7d03f28dc5696d09df8330243a1ba2128d83da0292aa16a8b8b"
+    },
+    {
+      "file": "final-42-capsule-pure-audit.json",
+      "bytes": 4025864,
+      "sha256": "d9304f70f49383bdffe083187b4661054cf65688ef55b18fc5f21a76eeac1488"
+    },
+    {
+      "file": "final-42-capsule-pure-audit.result.json",
+      "bytes": 1232,
+      "sha256": "c942a7b736c79a3bf2e09d378d70883300e38c45ff6628e51a92131c20472806"
+    },
+    {
+      "file": "final-42-capsule-pure-audit.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "final-42-capsule-pure-audit.stdout.log",
+      "bytes": 61,
+      "sha256": "5c169e78d28c2d47a6d4f976509ded895fcb90595dea32e5c653152914ecc14e"
+    },
+    {
+      "file": "final-capsule-admission-summary.result.json",
+      "bytes": 1008,
+      "sha256": "ea462a79b72f5af0294c8863d45a1261f72273bb3f8c09d67ceada5fa4136052"
+    },
+    {
+      "file": "final-capsule-admission-summary.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "final-capsule-admission-summary.stdout.log",
+      "bytes": 720,
+      "sha256": "88c0048d11378a4629ba3d360fa241d3f99c6545aa3d51bb1768859059d63656"
+    },
+    {
+      "file": "final-capsule-config-location.json",
+      "bytes": 1562,
+      "sha256": "04fb31ff9717c0a8a2e0209fc6713fff04cb85d4f7a3958896ba5d06c76a1144"
+    },
+    {
+      "file": "finalize-capsule-admission.mjs",
+      "bytes": 6954,
+      "sha256": "522f5623ac44cfbe0f5053ecccb0343069c492115f2ab06481f3ff2871356800"
+    },
+    {
+      "file": "freeze-original39-failure.mjs",
+      "bytes": 2947,
+      "sha256": "100a01743d554046f322ec5727b33cba8b37b8b52205b09b72723d6ef2438d55"
+    },
+    {
+      "file": "freeze-original39-failure.result.json",
+      "bytes": 995,
+      "sha256": "ee700537ff88a5726c11417a3a57d1175129074a5c38e137da62b4372403d94b"
+    },
+    {
+      "file": "freeze-original39-failure.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "freeze-original39-failure.stdout.log",
+      "bytes": 482,
+      "sha256": "ced4bf61580dab49c0eb0b87d6c15e204db600fec45416ff5ce88858c82aea59"
+    },
+    {
+      "file": "frozen-tool-byte-verification.json",
+      "bytes": 565,
+      "sha256": "3e28327cb5a3e8b9187df09a09f3d2d207b8842b15f1c6c74b7722eb0a0c584b"
+    },
+    {
+      "file": "prepare-capsule-final-config.mjs",
+      "bytes": 5025,
+      "sha256": "ccee087a3c6600ab39d8d8389e0666b0737903d81f7bb5040a4be3a26e8ab824"
+    },
+    {
+      "file": "prepare-capsule-final-config.result.json",
+      "bytes": 1220,
+      "sha256": "452188473b9b3f0ab7c6531736802b79d5590f6293604d6337ffd57153581a68"
+    },
+    {
+      "file": "prepare-capsule-final-config.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "prepare-capsule-final-config.stdout.log",
+      "bytes": 1413,
+      "sha256": "e275a184d2258cd2db9ff8600d9eaa498ec9370097bc81a91423c978d2bfcd60"
+    },
+    {
+      "file": "run-tool-closed.mjs",
+      "bytes": 1319,
+      "sha256": "813818a71674568526bfbdc29e7c2bccd57ccfd6de9ce4bc6fc24b6dc2a76315"
+    },
+    {
+      "file": "seal-final-capsule-admission.mjs",
+      "bytes": 2301,
+      "sha256": "f9097876f6cf8631312fa9346d196127d76254b16e466131a4fddfe60c089582"
+    }
+  ],
+  "selfExcludedOnly": true,
+  "sourceAndOutputsFrozen": true,
+  "noFurtherWrites": true,
+  "collectionOnly": true,
+  "gatePassDerived": false,
+  "fullG7Verified": false,
+  "fullG8Verified": false,
+  "configRootFrozen": "C:/Users/cina/AppData/Local/Temp/cinatoken-final-capsule-collection-config-NWebV7",
+  "sealWriteIsDataOperationNotAChildReceipt": true
+}

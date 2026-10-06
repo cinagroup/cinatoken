@@ -1,0 +1,21 @@
+{
+  "references": {
+    "pg": "postgres:16-alpine",
+    "ingress": "nginx:stable-alpine",
+    "admin": "cinatoken-g7-admin:473de5fc520fc7d64db700db88a76c7a6b45c241",
+    "proxy": "cinatoken-g7-proxy:473de5fc520fc7d64db700db88a76c7a6b45c241",
+    "migrate": "cinatoken-g7-migrate:473de5fc520fc7d64db700db88a76c7a6b45c241",
+    "web": "cinatoken-g7-web:473de5fc520fc7d64db700db88a76c7a6b45c241",
+    "ssr": "cinatoken-g7-ssr:473de5fc520fc7d64db700db88a76c7a6b45c241"
+  },
+  "imageIDs": {
+    "pg": "sha256:81bd698b4594e751a3269e4dcd3e03a4a0ec0daf7b72e7aa1abd43cce9887542",
+    "ingress": "sha256:43d9d8c1f8968f09df8c1aa6c136ecc617e62d64fe4c0b24c97de4eb210bd973",
+    "admin": "sha256:1d946a60b0713b7e21eb5eb5a49b31ee3d037a72bb128710da18a2c00a2eaa9c",
+    "proxy": "sha256:492e61758f23a774ecb672e37e910b1f5b40f449519122a2a7e948766486f76f",
+    "migrate": "sha256:b593161e5f23b6b5fa54e0db5ff06679146ff340a52c13ce18bd2df057a93acc",
+    "web": "sha256:64ec0ed99a8908f73a8d34450662111c36b578058d981c1509a1ab0e1ca20e15",
+    "ssr": "sha256:9239e3ac84cf6d1d20e6b702d779feac5401b5492118cf278dd6dbda32a2e6cd"
+  },
+  "platform": "{\"Platform\":{\"Name\":\"Docker Engine - Community\"},\"Components\":[{\"Name\":\"Engine\",\"Version\":\"28.0.4\",\"Details\":{\"ApiVersion\":\"1.48\",\"Arch\":\"amd64\",\"BuildTime\":\"Tue Mar 25 15:07:16 2025\",\"Experimental\":\"false\",\"GitCommit\":\"6430e49\",\"GoVersion\":\"go1.23.7\",\"KernelVersion\":\"6.17.0-1022-azure\",\"MinAPIVersion\":\"1.24\",\"Os\":\"linux\"}},{\"Name\":\"containerd\",\"Version\":\"v2.3.6\",\"Details\":{\"GitCommit\":\"ee2735368117d2eb259779949d5e75cdafec9761\"}},{\"Name\":\"runc\",\"Version\":\"1.5.1\",\"Details\":{\"GitCommit\":\"v1.5.1-0-g8f2685a4\"}},{\"Name\":\"docker-init\",\"Version\":\"0.19.0\",\"Details\":{\"GitCommit\":\"de40ad0\"}}],\"Version\":\"28.0.4\",\"ApiVersion\":\"1.48\",\"MinAPIVersion\":\"1.24\",\"GitCommit\":\"6430e49\",\"GoVersion\":\"go1.23.7\",\"Os\":\"linux\",\"Arch\":\"amd64\",\"KernelVersion\":\"6.17.0-1022-azure\",\"BuildTime\":\"2025-03-25T15:07:16.000000000+00:00\"}"
+}

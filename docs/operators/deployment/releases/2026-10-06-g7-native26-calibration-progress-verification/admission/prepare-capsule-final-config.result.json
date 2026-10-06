@@ -1,0 +1,26 @@
+{
+  "at": "2026-10-06T05:17:19.256Z",
+  "finishedAt": "2026-10-06T05:17:19.373Z",
+  "executable": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-final-capsule-admission-meta-UkwrUh/prepare-capsule-final-config.mjs",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-opaque-capsule-89cf1ba373634086a3926a636a292ec7",
+    "FINAL-ee122-opaque-capsule.json",
+    "5d471ca014ff1a301a5c55c538cf260a52e4f485a7d4817bf7408e8f4f4586eb"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-capsule-admission-meta-UkwrUh\\prepare-capsule-final-config.stdout.log",
+    "bytes": 1413,
+    "sha256": "e275a184d2258cd2db9ff8600d9eaa498ec9370097bc81a91423c978d2bfcd60"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-capsule-admission-meta-UkwrUh\\prepare-capsule-final-config.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "scope": "Original exact child return of Temp evidence tool only; no application/native/G7/runtime or production run"
+}

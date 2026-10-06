@@ -1,0 +1,24 @@
+{
+  "schema": "cinatoken.native26-ci-independent-peer.command.v1",
+  "at": "2026-10-06T04:29:32.044Z",
+  "finishedAt": "2026-10-06T04:29:32.265Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-calibration-address-independent-peer-c08eb1896ea747ab8895d1ed6c01f5b8\\close-existing-reads.mjs",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-calibration-address-independent-peer-c08eb1896ea747ab8895d1ed6c01f5b8"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-calibration-address-independent-peer-c08eb1896ea747ab8895d1ed6c01f5b8\\close-existing-reads.stdout.log",
+  "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-calibration-address-independent-peer-c08eb1896ea747ab8895d1ed6c01f5b8\\close-existing-reads.stderr.log",
+  "stdoutInfo": {
+    "bytes": 544,
+    "sha256": "ed6c84c217fcfd3e49bcc811a48c3e8e754332b5becca5b9a518f347d3d7c125"
+  },
+  "stderrInfo": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

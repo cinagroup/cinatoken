@@ -1,0 +1,34 @@
+{
+  "schema": "web-platform-g7-child-command-closed-v1",
+  "program": "docker",
+  "args": [
+    "--host",
+    "unix:///var/run/docker.sock",
+    "container",
+    "ls",
+    "-aq",
+    "--filter",
+    "name=^/g7-1e70578d1acd47478966124f581794d8-web$"
+  ],
+  "begin": "2026-10-06T03:39:38.910Z",
+  "endedAt": "2026-10-06T03:39:38.924Z",
+  "closed": true,
+  "actualExit": 0,
+  "signal": null,
+  "errorCode": null,
+  "timedOut": false,
+  "timeoutMs": 15000,
+  "expectedNumericReadinessNonzero": false,
+  "stdout": {
+    "file": "089-docker.stdout.log",
+    "bytes": 13,
+    "sha256": "26dbccee5384e3ce9dd5d2b93bd959dc162215796ab679022fa0248db0dcc73c",
+    "redacted": false
+  },
+  "stderr": {
+    "file": "089-docker.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redacted": false
+  }
+}

@@ -1,0 +1,65 @@
+packages/proxy/scripts/staging/chat-holder-private-v364.ts:18:function reject(status = 400): Response {
+packages/proxy/scripts/staging/chat-holder-private-v364.ts:19:	return Response.json({ error: 'holder_request_rejected' }, { status, headers: { 'Cache-Control': 'no-store' } });
+packages/proxy/scripts/staging/chat-holder-private-v364.ts:26:	const reader = request.body.getReader();
+packages/proxy/scripts/staging/chat-holder-private-v364.ts:30:		const { done, value } = await reader.read();
+packages/proxy/scripts/staging/chat-holder-private-v364.ts:34:			await reader.cancel().catch(() => undefined);
+packages/proxy/scripts/staging/chat-holder-private-v364.ts:65:function syntheticStream(env: ChatHolderPrivateV364Env, attemptNonce: string, ctx?: Pick<ExecutionContext, 'waitUntil'>): Response {
+packages/proxy/scripts/staging/chat-holder-private-v364.ts:84:		async cancel() {
+packages/proxy/scripts/staging/chat-holder-private-v364.ts:85:			const observation = env.OBSERVATIONS.put(`cancel:${attemptNonce}`, 'observed');
+packages/proxy/scripts/staging/chat-holder-private-v364.ts:92:	return new Response(stream, { status: 200, headers: { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-store' } });
+packages/proxy/scripts/staging/chat-holder-private-v364.ts:96:	async fetch(request: Request, env: ChatHolderPrivateV364Env, ctx?: ExecutionContext): Promise<Response> {
+packages/proxy/scripts/staging/chat-holder-gateway-v364.ts:5:	async fetch(request: Request, env: ChatHolderGatewayV364Env): Promise<Response> {
+packages/proxy/scripts/staging/chat-holder-gateway-v364.ts:7:		if (url.pathname !== '/fixture/complete-text' || request.method !== 'POST') return new Response(null, { status: 404 });
+packages/proxy/scripts/staging/chat-holder-gateway-v364.ts:8:		if (request.headers.get('Content-Type') !== 'application/json') return new Response(null, { status: 415 });
+packages/proxy/scripts/staging/chat-holder-gateway-v364.ts:13:			signal: request.signal,
+packages/proxy/scripts/staging/chat-holder-gateway-v364.ts:17:		const response = await env.TEXT_HOLDER.fetch(holderRequest);
+packages/proxy/scripts/staging/chat-holder-gateway-v364.ts:19:			await response.body?.cancel();
+packages/proxy/scripts/staging/chat-holder-gateway-v364.ts:20:			return Response.json({ error: 'holder_request_rejected' }, { status: response.status });
+packages/proxy/scripts/staging/chat-holder-gateway-v364.ts:23:			await response.body?.cancel();
+packages/proxy/scripts/staging/chat-holder-gateway-v364.ts:24:			return Response.json({ error: 'holder_unavailable' }, { status: 502 });
+packages/proxy/scripts/staging/chat-holder-gateway-v364.ts:26:		return new Response(response.body, {
+packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs:1:// Test-only HTTP cancellation comparison; getWorker.fetch already uses a special
+packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs:2:// HTTP proxy bridge. This does not assume RPC loses cancellation, or that the
+packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs:3:// direct HTTP entry fixes the unobserved asynchronous holder KV cancellation.
+packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs:6:// directly. No body, header, binding, cancellation or date contract changes.
+packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs:53:// A dedicated socket makes the transport cancellation explicit. In particular,
+packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs:54:// this does not depend on cancelling Miniflare's wrapped Undici response body.
+packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs:81:          async cancel() {
+packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs:152:    return gateway.fetch('https://gateway.fixture.invalid/fixture/complete-text', {
+packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs:179:test('HTTP fixture cancellation closes its dedicated TCP response before completion', { timeout: 10000 }, async t => {
+packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs:198:  t.after(() => response.cancel());
+packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs:202:  assert.deepEqual(await response.cancel(), {
+packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs:235:test('one holder Response streams through the Service Binding before its final chunk is released', { timeout: 30000 }, async t => {
+packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs:244:  const reader = response.body.getReader();
+packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs:245:  const first = await reader.read();
+packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs:247:  const secondPromise = reader.read();
+packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs:254:  assert.deepEqual(await reader.read(), { done: true, value: undefined });
+packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs:257:  assert.equal(await f.observations.get(`cancel:${e.attemptNonce}`), null);
+packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs:260:test('response-body cancellation is observed inside the private holder', { timeout: 30000 }, async t => {
+packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs:265:  t.after(() => response.cancel());
+packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs:270:  assert.deepEqual(await response.cancel(), {
+packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs:275:    observed = await f.observations.get(`cancel:${e.attemptNonce}`);
+packages/proxy/scripts/staging/chat-holder-binding-v364.node.test.mjs:19:  const cancellationObservationGate = new Promise(resolve => {
+packages/proxy/scripts/staging/chat-holder-binding-v364.node.test.mjs:25:      if (holdCancellationObservation && key.startsWith('cancel:')) {
+packages/proxy/scripts/staging/chat-holder-binding-v364.node.test.mjs:26:        await cancellationObservationGate;
+packages/proxy/scripts/staging/chat-holder-binding-v364.node.test.mjs:33:  const env = { TEXT_HOLDER: { async fetch(request) {
+packages/proxy/scripts/staging/chat-holder-binding-v364.node.test.mjs:36:    return privateWorker.fetch(request, { OBSERVATIONS: observations }, {
+packages/proxy/scripts/staging/chat-holder-binding-v364.node.test.mjs:51:    return gatewayWorker.fetch(new Request('https://gateway.fixture.invalid/fixture/complete-text', {
+packages/proxy/scripts/staging/chat-holder-binding-v364.node.test.mjs:82:test('v364 in-process contract: one Response yields a first chunk before holder release and cancellation reaches source', async () => {
+packages/proxy/scripts/staging/chat-holder-binding-v364.node.test.mjs:90:  const reader = response.body.getReader();
+packages/proxy/scripts/staging/chat-holder-binding-v364.node.test.mjs:91:  assert.equal(new TextDecoder().decode((await reader.read()).value), ': holder-ready\n\n');
+packages/proxy/scripts/staging/chat-holder-binding-v364.node.test.mjs:92:  const second = reader.read();
+packages/proxy/scripts/staging/chat-holder-binding-v364.node.test.mjs:99:  assert.deepEqual(await reader.read(), { done: true, value: undefined });
+packages/proxy/scripts/staging/chat-holder-binding-v364.node.test.mjs:100:  const cancelEnvelope = f.envelope();
+packages/proxy/scripts/staging/chat-holder-binding-v364.node.test.mjs:101:  const cancelledResponse = await f.post(JSON.stringify(cancelEnvelope));
+packages/proxy/scripts/staging/chat-holder-binding-v364.node.test.mjs:102:  const cancelReader = cancelledResponse.body.getReader();
+packages/proxy/scripts/staging/chat-holder-binding-v364.node.test.mjs:103:  assert.equal(new TextDecoder().decode((await cancelReader.read()).value), ': holder-ready\n\n');
+packages/proxy/scripts/staging/chat-holder-binding-v364.node.test.mjs:104:  await cancelReader.cancel('client cancelled');
+packages/proxy/scripts/staging/chat-holder-binding-v364.node.test.mjs:105:  assert.equal(await f.observations.get(`cancel:${cancelEnvelope.attemptNonce}`), 'observed');
+packages/proxy/scripts/staging/chat-holder-binding-v364.node.test.mjs:109:test('v364 in-process cancellation retains the asynchronous holder observation in its request lifetime', async t => {
+packages/proxy/scripts/staging/chat-holder-binding-v364.node.test.mjs:114:  const reader = response.body.getReader();
+packages/proxy/scripts/staging/chat-holder-binding-v364.node.test.mjs:115:  assert.equal(new TextDecoder().decode((await reader.read()).value), ': holder-ready\n\n');
+packages/proxy/scripts/staging/chat-holder-binding-v364.node.test.mjs:116:  const cancelling = reader.cancel('client cancelled');
+packages/proxy/scripts/staging/chat-holder-binding-v364.node.test.mjs:118:  assert.equal(await f.observations.get(`cancel:${e.attemptNonce}`), null);
+packages/proxy/scripts/staging/chat-holder-binding-v364.node.test.mjs:120:  await Promise.all([cancelling, ...f.lifetimePromises]);
+packages/proxy/scripts/staging/chat-holder-binding-v364.node.test.mjs:121:  assert.equal(await f.observations.get(`cancel:${e.attemptNonce}`), 'observed');

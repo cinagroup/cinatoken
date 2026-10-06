@@ -1,0 +1,40 @@
+{
+  "schema": "web-platform-g7-child-command-closed-v1",
+  "program": "openssl",
+  "args": [
+    "req",
+    "-new",
+    "-newkey",
+    "rsa:2048",
+    "-nodes",
+    "-subj",
+    "/CN=app.test",
+    "-addext",
+    "subjectAltName=DNS:app.test",
+    "-keyout",
+    "/tmp/cinatoken-g7-private-vXNSzV/tls/app.test.key",
+    "-out",
+    "/tmp/cinatoken-g7-private-vXNSzV/tls/app.test.csr"
+  ],
+  "begin": "2026-10-06T03:39:15.788Z",
+  "endedAt": "2026-10-06T03:39:16.120Z",
+  "closed": true,
+  "actualExit": 0,
+  "signal": null,
+  "errorCode": null,
+  "timedOut": false,
+  "timeoutMs": 90000,
+  "expectedNumericReadinessNonzero": false,
+  "stdout": {
+    "file": "012-openssl.stdout.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redacted": false
+  },
+  "stderr": {
+    "file": "012-openssl.stderr.log",
+    "bytes": 1959,
+    "sha256": "c1f2b03ad7f41d601398862d45a7207fe6c84f93df4b16ae2cc8a3bccb8acffc",
+    "redacted": false
+  }
+}

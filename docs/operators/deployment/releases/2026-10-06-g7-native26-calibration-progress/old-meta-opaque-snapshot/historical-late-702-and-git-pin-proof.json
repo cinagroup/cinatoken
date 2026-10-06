@@ -1,0 +1,310 @@
+{
+  "schema": "cinatoken-opaque-history-late-702-and-git-pin-readonly-v1",
+  "beganAt": "2026-10-06T04:29:14.279Z",
+  "endedAt": "2026-10-06T04:29:14.447Z",
+  "closed": true,
+  "actualCollectionExit": 0,
+  "oldMetadataSource": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7",
+  "oldCommit": "702c4d71379acb697024ef846725871582bff94f",
+  "lateHistoricalExecutionReceipts": {
+    "commit": {
+      "result": {
+        "at": "2026-10-06T03:08:31.937Z",
+        "finishedAt": "2026-10-06T03:08:35.066Z",
+        "executable": "C:/Program Files/Git/cmd/git.exe",
+        "args": [
+          "-c",
+          "core.longpaths=true",
+          "commit",
+          "-m",
+          "docs: record independent Web cutover and acceptance progress"
+        ],
+        "cwd": "C:/cinagroup/cinatoken",
+        "actualExit": 0,
+        "signal": null,
+        "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/commit-cutover-evidence.stdout.log",
+        "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/commit-cutover-evidence.stderr.log"
+      },
+      "preservedReceipt": {
+        "file": "commit-cutover-evidence.result.json",
+        "bytes": 650,
+        "sha256": "57037471998efbcdb4c9fb5958204e9c6bafc4b355ea8aa267a86b09df3b6fdb"
+      },
+      "preservedStreams": {
+        "stdout": {
+          "file": "commit-cutover-evidence.stdout.log",
+          "bytes": 398133,
+          "sha256": "45b6b6d623cdb3351d9786d6bd72da7cd4ef9be709483772b27a0c6bd3c8e6d1",
+          "indexedOriginalPath": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/commit-cutover-evidence.stdout.log"
+        },
+        "stderr": {
+          "file": "commit-cutover-evidence.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "indexedOriginalPath": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/commit-cutover-evidence.stderr.log"
+        }
+      },
+      "historicalExecutionOnly": true,
+      "originalExitRecorded": 0,
+      "rerun": false
+    },
+    "push": {
+      "result": {
+        "at": "2026-10-06T03:12:07.884Z",
+        "finishedAt": "2026-10-06T03:12:17.138Z",
+        "executable": "C:/Program Files/Git/cmd/git.exe",
+        "args": [
+          "-c",
+          "core.longpaths=true",
+          "push",
+          "origin",
+          "main"
+        ],
+        "cwd": "C:/cinagroup/cinatoken",
+        "actualExit": 0,
+        "signal": null,
+        "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/push-cutover-evidence.stdout.log",
+        "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/push-cutover-evidence.stderr.log"
+      },
+      "preservedReceipt": {
+        "file": "push-cutover-evidence.result.json",
+        "bytes": 592,
+        "sha256": "bbd9decd6843e6706fe883d880974894b199284718220bf5d4f85476677535ec"
+      },
+      "preservedStreams": {
+        "stdout": {
+          "file": "push-cutover-evidence.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "indexedOriginalPath": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/push-cutover-evidence.stdout.log"
+        },
+        "stderr": {
+          "file": "push-cutover-evidence.stderr.log",
+          "bytes": 78,
+          "sha256": "e986c1a6ddd0a4eb26b43a941ae7ca55e337472ee5c1cee78ac21f50149a51d8",
+          "indexedOriginalPath": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/push-cutover-evidence.stderr.log"
+        }
+      },
+      "historicalExecutionOnly": true,
+      "originalExitRecorded": 0,
+      "rerun": false
+    },
+    "guard": {
+      "result": {
+        "at": "2026-10-06T03:13:11.756Z",
+        "finishedAt": "2026-10-06T03:13:17.758Z",
+        "executable": "C:/Program Files/nodejs/node.exe",
+        "args": [
+          "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/guard-live-deployment.mjs",
+          "cutover-after-push",
+          "2a0a2777-d3b1-47f0-a0a7-88e701b4d2d9",
+          "c13a64b9c3b2c90adcf736910ea408868d7854f1"
+        ],
+        "cwd": "C:/cinagroup/cinatoken",
+        "actualExit": 0,
+        "signal": null,
+        "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/cutover-after-push-guard.stdout.log",
+        "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/cutover-after-push-guard.stderr.log"
+      },
+      "preservedReceipt": {
+        "file": "cutover-after-push-guard.result.json",
+        "bytes": 773,
+        "sha256": "39f3e9690f11c6251e39aa8c1904c1e69a0e4925a9c60cc7ee6271b567e2e16b"
+      },
+      "preservedStreams": {
+        "stdout": {
+          "file": "cutover-after-push-guard.stdout.log",
+          "bytes": 793,
+          "sha256": "7ccef5ed5af74c76d890ee7c6c0512d188cd0be363d714fcd4ffc7f9d0f62cc9",
+          "indexedOriginalPath": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/cutover-after-push-guard.stdout.log"
+        },
+        "stderr": {
+          "file": "cutover-after-push-guard.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "indexedOriginalPath": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/cutover-after-push-guard.stderr.log"
+        }
+      },
+      "historicalExecutionOnly": true,
+      "originalExitRecorded": 0,
+      "rerun": false
+    },
+    "oneCIListRead": {
+      "result": {
+        "at": "2026-10-06T03:15:41.579Z",
+        "finishedAt": "2026-10-06T03:15:43.962Z",
+        "executable": "C:/Program Files/GitHub CLI/gh.exe",
+        "args": [
+          "run",
+          "list",
+          "--repo",
+          "cinagroup/cinatoken",
+          "--commit",
+          "702c4d71379acb697024ef846725871582bff94f",
+          "--limit",
+          "10",
+          "--json",
+          "databaseId,name,status,conclusion,headSha,url,createdAt,updatedAt"
+        ],
+        "cwd": "C:/cinagroup/cinatoken",
+        "actualExit": 0,
+        "signal": null,
+        "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/current-release-ci-list.stdout.log",
+        "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/current-release-ci-list.stderr.log"
+      },
+      "preservedReceipt": {
+        "file": "current-release-ci-list.result.json",
+        "bytes": 763,
+        "sha256": "04b11fd7f2c7b42259c1192154969acd07124dd7e4bb797dbf6971b76bd08604"
+      },
+      "preservedStreams": {
+        "stdout": {
+          "file": "current-release-ci-list.stdout.log",
+          "bytes": 584,
+          "sha256": "97923fb3ca69f1f46d02109a59eb6c41e8f4673edaa4b5f9e6d84ee7ec7f9d71",
+          "indexedOriginalPath": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/current-release-ci-list.stdout.log"
+        },
+        "stderr": {
+          "file": "current-release-ci-list.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "indexedOriginalPath": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/current-release-ci-list.stderr.log"
+        }
+      },
+      "historicalExecutionOnly": true,
+      "originalExitRecorded": 0,
+      "rerun": false
+    }
+  },
+  "historicalGuard": {
+    "report": {
+      "file": "cutover-after-push.deployment-guard.json",
+      "bytes": 1030,
+      "sha256": "1eeb2e370463bf0bfc116d916d8e973de39118de8c2d8a6e9a13778185388860"
+    },
+    "facts": {
+      "at": "2026-10-06T03:13:11.810Z",
+      "actualExit": 0,
+      "readOnly": true,
+      "secretValuesRecorded": false,
+      "routes": [
+        {
+          "id": "5738534653ef46f48a44e3f3b22e5d8e",
+          "pattern": "cinatoken.com/*",
+          "script": "cinatoken-web",
+          "request_limit_fail_open": false
+        },
+        {
+          "id": "2712df1859d340ffb6d68a7e53eb1853",
+          "pattern": "cinatoken.com/web-assets/*",
+          "script": "cinatoken-web",
+          "request_limit_fail_open": false
+        },
+        {
+          "id": "242dce09c515462e833d69bd0738bdfc",
+          "pattern": "api.cinatoken.com/*",
+          "script": "cinatoken-proxy",
+          "request_limit_fail_open": false
+        }
+      ],
+      "deployment": {
+        "id": "fd24618f-121e-4640-9edf-f15d243a6d75",
+        "versions": [
+          {
+            "version_id": "2a0a2777-d3b1-47f0-a0a7-88e701b4d2d9",
+            "percentage": 100
+          }
+        ],
+        "commitTag": "c13a64b9c3b2c90adcf736910ea408868d7854f1"
+      },
+      "access": {
+        "enabled": false,
+        "previews_enabled": false
+      },
+      "finishedAt": "2026-10-06T03:13:17.742Z"
+    }
+  },
+  "historicalCIList": [
+    {
+      "conclusion": "success",
+      "createdAt": "2026-10-06T03:12:19Z",
+      "databaseId": 37407870479,
+      "headSha": "702c4d71379acb697024ef846725871582bff94f",
+      "name": "Verify package versions",
+      "status": "completed",
+      "updatedAt": "2026-10-06T03:12:34Z",
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/37407870479"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-10-06T03:12:19Z",
+      "databaseId": 37407870624,
+      "headSha": "702c4d71379acb697024ef846725871582bff94f",
+      "name": "Release",
+      "status": "completed",
+      "updatedAt": "2026-10-06T03:13:45Z",
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/37407870624"
+    }
+  ],
+  "wrapperSourceIndexedBeforeOldRead": {
+    "file": "run-command.mjs",
+    "bytes": 1818,
+    "sha256": "7320fe67e82f50269e657ccc0c4790cceb4be6ef5f1bc002351aeab561f6ad69",
+    "originalIndexMatched": true
+  },
+  "pinnedOldFullArchiveReport": {
+    "original": {
+      "file": "output/2026-10-06-native-g7-boundary-progress.json",
+      "bytes": 3392478,
+      "sha256": "a8be774130b2071902c03fac4c74cb16f36dea3c9e7b60fc3890595d704b4f30"
+    },
+    "repositoryRelative": "docs/operators/deployment/releases/2026-10-06-native-g7-boundary-progress.json",
+    "readAtHead": "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc",
+    "gitReadCommands": [
+      {
+        "program": "C:/Program Files/Git/cmd/git.exe",
+        "args": [
+          "rev-parse",
+          "HEAD"
+        ],
+        "startedAt": "2026-10-06T04:29:14.298Z",
+        "endedAt": "2026-10-06T04:29:14.362Z",
+        "actualExit": 0,
+        "signal": null,
+        "stdoutBytes": 41,
+        "stdoutSha256": "b0768a9ad6fab2fa97b8b0d4ea9a91ee38ac8309cb7c201c5c478a77500c8e9d",
+        "stderrBytes": 0,
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "readOnly": true
+      },
+      {
+        "program": "C:/Program Files/Git/cmd/git.exe",
+        "args": [
+          "show",
+          "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc:docs/operators/deployment/releases/2026-10-06-native-g7-boundary-progress.json"
+        ],
+        "startedAt": "2026-10-06T04:29:14.362Z",
+        "endedAt": "2026-10-06T04:29:14.444Z",
+        "actualExit": 0,
+        "signal": null,
+        "stdoutBytes": 3392478,
+        "stdoutSha256": "a8be774130b2071902c03fac4c74cb16f36dea3c9e7b60fc3890595d704b4f30",
+        "stderrBytes": 0,
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "readOnly": true
+      }
+    ],
+    "currentWorkingFileExact": true,
+    "pinnedGitBlobExact": true,
+    "archiveCollectionReexecuted": false
+  },
+  "interpretation": "The original702 commit/push/guard/list command receipts and original raw bytes exist exactly in the opaque ZIP. Only read-only local Git blob pinning was performed now. The a8be value is the original full archive report SHA256, not a new test result or a commit.",
+  "originalRuntimeAndCIFailuresRemainOpaqueUnmodified": true,
+  "embeddedCopiesAreNewExecutions": false,
+  "oldCollectorOrGateExecuted": false,
+  "applicationRuns": 0,
+  "ciRunsTriggered": 0,
+  "productionRequests": 0,
+  "collectionOnly": true,
+  "gatePassDerived": false
+}

@@ -1,0 +1,67 @@
+582:          subprocess.once("close", (exitCode) => {
+595:            subprocess.once("close", (exitCode) => {
+1160:        socket.once("close", () => reqsPerSocket.delete(socket));
+4011:    var hasAbortController = typeof AbortController === "function";
+4012:    var AC = hasAbortController ? AbortController : class AbortController {
+4027:    var AS = hasAbortSignal ? AbortSignal : hasACAbortSignal ? AC.AbortController : class AbortSignal {
+4678:          signal: ac.signal,
+4742:          ac.signal.addEventListener("abort", () => {
+4996:      static get AbortController() {
+11204:        this.socket.once("close", this.onClose);
+12223:          socket.on("close", (hadError) => {
+12387:        socket.once("close", (hadError) => {
+33469:        stream.on("close", onlegacyfinish);
+33475:      stream.on("close", onclose);
+33519:      stream.on("close", function() {
+34438:      self2.reader.once("close", function() {
+34947:          this.zipfile.on("close", () => {
+35716:          pipeTo.on("close", onclose);
+36000:            opts.signal.addEventListener("abort", abort.bind(this));
+36145:        this.on("close", onclose);
+36183:            stream.once("close", function() {
+36370:          dest.on("close", () => done(error101 || (fin ? null : PREMATURE_CLOSE)));
+36376:        s.on("close", onclose);
+36966:        this.on("close", onclose);
+37026:            extract.once("close", function() {
+37525:            ws.on("close", stat4);
+64947:        throw new Error("Listener not defined for signal: " + sig);
+65844:async function performApiFetchBase(complianceConfig, resource, init22 = {}, userAgent, logger, queryParams, abortSignal, credentials) {
+65877:      signal: abortSignal
+65882:async function fetchInternalBase(complianceConfig, resource, init22 = {}, userAgent, logger, queryParams, abortSignal, credentials) {
+65891:    abortSignal,
+65949:async function fetchResultBase(complianceConfig, resource, init22 = {}, userAgent, logger, queryParams, abortSignal, credentials) {
+65961:    abortSignal,
+66314:async function retryOnAPIFailure(action, logger, backoff = 0, attempts = MAX_ATTEMPTS, abortSignal) {
+66348:    await (0, import_promises2.setTimeout)(wait2, void 0, { signal: abortSignal });
+66354:      abortSignal
+81549:      signal: AbortSignal.timeout(3e3)
+94658:    return stream.pipeTo(identity.writable);
+94890:  ws.on("close", (code, reason) => {
+95049:   * 														(initial URL passed by user to `dispatchFetch()`)
+95707:  options?.signal?.addEventListener("abort", abortListener, { once: true });
+95839:  async updateConfig(configBuffer, options, workerNames, abortSignal) {
+95906:    if (ports === void 0 && !abortSignal.aborted) {
+95914:        if (abortSignal.aborted) {
+98268:  constructor(runtimeEntryURL, dispatchFetch) {
+98271:      dispatchFetch
+98296:  constructor(url47, dispatchFetch) {
+98298:    this.dispatchFetch = dispatchFetch;
+98302:  dispatchFetch;
+98321:  // of TCP connections to `workerd` in `dispatchFetch()` for all the concurrent
+98341:      await this.dispatchFetch(this.url, {
+98408:        const resPromise = this.bridge.dispatchFetch(this.bridge.url, {
+98695:      resPromise = this.bridge.dispatchFetch(this.bridge.url, {
+98711:      resPromise = this.bridge.dispatchFetch(this.bridge.url, {
+98734:    return this.bridge.dispatchFetch(request4);
+104346:      rl2.on("close", onClose);
+104475:        child.stdout.on("close", callback);
+104491:  child.once("close", () => {
+105263:        signal: AbortSignal.timeout(perRequestTimeoutMs)
+107157:    this.#devtoolsWs.once("close", () => {
+112069:    async cancel() {
+112247:    this.#disposeController = new AbortController();
+112302:        signal: AbortSignal.timeout(2e3)
+113440:      signal: this.#disposeController.signal,
+113526:        this.dispatchFetch
+113736:  dispatchFetch = async (input, init3) => {
+113778:        "`body` returned from `Miniflare#dispatchFetch()` not consumed immediately"

@@ -1,0 +1,97 @@
+{
+  "schema": "cinatoken-ee122-opaque-capsule-seal-v1",
+  "frozenAt": "2026-10-06T05:16:00.616Z",
+  "collectionOnly": true,
+  "sourceRootRecursiveInclusion": false,
+  "entries": [
+    {
+      "relative": "FINAL-ee122-opaque-capsule.json",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-opaque-capsule-89cf1ba373634086a3926a636a292ec7/FINAL-ee122-opaque-capsule.json",
+      "bytes": 6188,
+      "sha256": "5d471ca014ff1a301a5c55c538cf260a52e4f485a7d4817bf7408e8f4f4586eb"
+    },
+    {
+      "relative": "ee122-frozen-root-lossless-opaque.zip",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-opaque-capsule-89cf1ba373634086a3926a636a292ec7/ee122-frozen-root-lossless-opaque.zip",
+      "bytes": 1754533,
+      "sha256": "ad81f711b44102fde593087f8592dd4081c53058309df910586ee2a7af86f03a"
+    },
+    {
+      "relative": "finalize-capsule.mjs",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-opaque-capsule-89cf1ba373634086a3926a636a292ec7/finalize-capsule.mjs",
+      "bytes": 4356,
+      "sha256": "d31e9d9c1f6ae4ffabd550b4cb9cf16a589ce51d8e8b1534b2c737b38e4f7f64"
+    },
+    {
+      "relative": "finalize.result.json",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-opaque-capsule-89cf1ba373634086a3926a636a292ec7/finalize.result.json",
+      "bytes": 1151,
+      "sha256": "826284943b4ac65d73d41bb4481f2642bd61a9631a33ae0fc2f3bc6d3bfad366"
+    },
+    {
+      "relative": "finalize.stderr.log",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-opaque-capsule-89cf1ba373634086a3926a636a292ec7/finalize.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relative": "finalize.stdout.log",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-opaque-capsule-89cf1ba373634086a3926a636a292ec7/finalize.stdout.log",
+      "bytes": 601,
+      "sha256": "4f7166377be4f74f3d3b06a3d596c17712c14e8e801775e36c9c2ebe04d71a86"
+    },
+    {
+      "relative": "package-root.py",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-opaque-capsule-89cf1ba373634086a3926a636a292ec7/package-root.py",
+      "bytes": 9108,
+      "sha256": "b875ea918c71e529fc162b1619c444da175c65b58a282a12d91c4401d114e580"
+    },
+    {
+      "relative": "package.result.json",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-opaque-capsule-89cf1ba373634086a3926a636a292ec7/package.result.json",
+      "bytes": 1200,
+      "sha256": "19b5a53041eba5fd08daaa0ec13147029ae375074973d22275082fd37e7196c2"
+    },
+    {
+      "relative": "package.stderr.log",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-opaque-capsule-89cf1ba373634086a3926a636a292ec7/package.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relative": "package.stdout.log",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-opaque-capsule-89cf1ba373634086a3926a636a292ec7/package.stdout.log",
+      "bytes": 549,
+      "sha256": "09ef92e9ad8341e81069f76e31e85cfcc1b692aa6ee1b3639d6afc7bb4bcd9a4"
+    },
+    {
+      "relative": "run-command.mjs",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-opaque-capsule-89cf1ba373634086a3926a636a292ec7/run-command.mjs",
+      "bytes": 3181,
+      "sha256": "8412e0b2c71b6303fcdbf059394bb7ae43c7263e608a266e40435e92b9a70051"
+    },
+    {
+      "relative": "source-index.after.json",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-opaque-capsule-89cf1ba373634086a3926a636a292ec7/source-index.after.json",
+      "bytes": 84031,
+      "sha256": "4e8a51d90f679cfdbf557212673ca3c3da8a23782dd2c2b87a9de3dfeed5deae"
+    },
+    {
+      "relative": "source-index.before.json",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-opaque-capsule-89cf1ba373634086a3926a636a292ec7/source-index.before.json",
+      "bytes": 84031,
+      "sha256": "3ba3f771d76a9d749ed01c8b71be851b8b5973c52dea56e4a79f7a24309513ff"
+    },
+    {
+      "relative": "zip-member-roundtrip-proof.json",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-opaque-capsule-89cf1ba373634086a3926a636a292ec7/zip-member-roundtrip-proof.json",
+      "bytes": 67155,
+      "sha256": "aebbf373f51c2c7a16987e2ac47a45eba88392ba123ce4424e769bf3bd9d9896"
+    }
+  ],
+  "sealedFileCount": 14,
+  "selfExcluded": "CAPSULE-SEAL.json",
+  "producerClosedReceipt": "package.result.json",
+  "finalizerClosedReceipt": "finalize.result.json",
+  "ownerStopWrites": true
+}

@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-06T05:01:40.525Z",
+  "finishedAt": "2026-10-06T05:01:40.643Z",
+  "executable": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-g7-native26-final-config-4851c19d4cc24ecdae397bcb12a8ad30/finalize-first-admission-owner.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native26-final-config-4851c19d4cc24ecdae397bcb12a8ad30\\finalize-first-admission-owner.stdout.log",
+    "bytes": 220,
+    "sha256": "780c1387cd16c92ca3f7186001a92e54cf147c8c1c7aa9f8dbf5e3be75eb8799"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native26-final-config-4851c19d4cc24ecdae397bcb12a8ad30\\finalize-first-admission-owner.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "scope": "Original exact child return of Temp evidence tool only; no application/native/G7/runtime or production run"
+}

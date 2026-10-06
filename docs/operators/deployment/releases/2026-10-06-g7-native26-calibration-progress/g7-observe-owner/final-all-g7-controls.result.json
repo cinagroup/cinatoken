@@ -1,0 +1,34 @@
+{
+  "schema": "g7-owner-exact-terminal-spawnSync-status-v1",
+  "id": "final-all-g7-controls",
+  "startedAt": "2026-10-06T03:22:35.206Z",
+  "endedAt": "2026-10-06T03:22:37.882Z",
+  "closed": true,
+  "program": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "--import",
+    "tsx",
+    "--test",
+    "scripts/verification/web-platform-g7/admission.test.mjs",
+    "scripts/verification/web-platform-g7/fixture.test.mjs"
+  ],
+  "cwd": "C:\\cinagroup\\cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "timeoutMs": 60000,
+  "outputs": [
+    {
+      "file": "final-all-g7-controls.stdout.log",
+      "bytes": 21291,
+      "sha256": "6d4b8ae03cfd2f821d5aaa86ddef19ad6bca4b15a718e15cb3448dd062cf20ae"
+    },
+    {
+      "file": "final-all-g7-controls.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "source": "Exact spawnSync status; not inferred from wrapper success",
+  "productionRequests": 0
+}

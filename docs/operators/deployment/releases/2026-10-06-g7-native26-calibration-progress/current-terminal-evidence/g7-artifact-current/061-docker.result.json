@@ -1,0 +1,45 @@
+{
+  "schema": "web-platform-g7-child-command-closed-v1",
+  "program": "docker",
+  "args": [
+    "--host",
+    "unix:///var/run/docker.sock",
+    "create",
+    "--name",
+    "g7-1e70578d1acd47478966124f581794d8-ingress",
+    "--label",
+    "cinatoken.g7.owner=g7-1e70578d1acd47478966124f581794d8",
+    "--network",
+    "g7-1e70578d1acd47478966124f581794d8-client",
+    "--network-alias",
+    "app.test",
+    "--mount",
+    "type=bind,src=/home/runner/work/cinatoken/cinatoken/scripts/verification/web-platform-g7/ingress.conf,dst=/etc/nginx/conf.d/default.conf,readonly",
+    "--mount",
+    "type=bind,src=/tmp/cinatoken-g7-private-vXNSzV/tls/app.test.crt,dst=/tls/app.test.crt,readonly",
+    "--mount",
+    "type=bind,src=/tmp/cinatoken-g7-private-vXNSzV/tls/app.test.key,dst=/tls/app.test.key,readonly",
+    "sha256:43d9d8c1f8968f09df8c1aa6c136ecc617e62d64fe4c0b24c97de4eb210bd973"
+  ],
+  "begin": "2026-10-06T03:39:21.871Z",
+  "endedAt": "2026-10-06T03:39:21.941Z",
+  "closed": true,
+  "actualExit": 0,
+  "signal": null,
+  "errorCode": null,
+  "timedOut": false,
+  "timeoutMs": 90000,
+  "expectedNumericReadinessNonzero": false,
+  "stdout": {
+    "file": "061-docker.stdout.log",
+    "bytes": 65,
+    "sha256": "a41208d6e771b6c7e4077e7e06846cd9c93366440244bd6ad928fcf04caef13e",
+    "redacted": false
+  },
+  "stderr": {
+    "file": "061-docker.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redacted": false
+  }
+}

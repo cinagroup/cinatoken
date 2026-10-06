@@ -1,0 +1,5 @@
+import fs from 'node:fs';import path from 'node:path';import crypto from 'node:crypto';import assert from 'node:assert/strict';
+const base='C:/Users/cina/AppData/Local/Temp/cinatoken-final-durable-collection-meta-S7NHM2',file=base+'/collected-archive-output/2026-10-06-g7-native26-calibration-progress.json',bytes=fs.readFileSync(file),r=JSON.parse(bytes),info=b=>({bytes:b.length,sha256:crypto.createHash('sha256').update(b).digest('hex')});assert.deepEqual(info(bytes),{bytes:5177117,sha256:'794d72cc5287970fb8e042241fe5213994b9899274f5020a77a946f93362fa5d'});
+const brief=v=>Array.isArray(v)?{type:'array',count:v.length,first:v[0]}:v&&typeof v==='object'?{type:'object',keys:Object.keys(v),first:Object.entries(v)[0]}:v;
+console.log(JSON.stringify({report:{file,...info(bytes)},shape:Object.fromEntries(Object.entries(r).map(([k,v])=>[k,brief(v)])),toolFiles:fs.readdirSync('C:/Users/cina/AppData/Local/Temp/cinatoken-all-frozen-data-tools-FoBS1O')},null,2));
+for(const name of ['collection-final.result.json','verification-final.result.json','verification-final.json'])console.log(name,fs.readFileSync(base+'/'+name,'utf8'));

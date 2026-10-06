@@ -1,0 +1,37 @@
+{
+  "schema": "v364-direct-socket-sealed-package-v1",
+  "preparedAtHead": "702c4d71379acb697024ef846725871582bff94f",
+  "executionSHAIsSeparate": true,
+  "files": [
+    {
+      "path": "run-direct-socket.mjs",
+      "bytes": 34907,
+      "sha256": "621cb7384b32a25af7c37d411cd12c2d51bf47c241d9d1f24c1c3ee3989723f3"
+    },
+    {
+      "path": "native-reader-calibration.mjs",
+      "bytes": 2531,
+      "sha256": "36f30b9dc7e8cfad8b68f6c9590f8cea50444173a05ccd3e775c9c32214408be"
+    },
+    {
+      "path": "execute-owned-linux.py",
+      "bytes": 15959,
+      "sha256": "c635a435873185363faf23e1cbaa6887b858a9f23e32882a6ce54ff5405e15e0"
+    },
+    {
+      "path": "source-inputs.json",
+      "bytes": 5028,
+      "sha256": "a4046af64da2e2f61b37ee9ea92658bc2d54236052c859477c57d9049f62e3e9"
+    },
+    {
+      "path": "README.md",
+      "bytes": 5092,
+      "sha256": "d2da25041decf0e0d1d1dd99fcc4182f8ef8528e8671f72f48e53a158fd600ed"
+    }
+  ],
+  "workflow": {
+    "path": ".github/workflows/v364-direct-socket.yml",
+    "bytes": 1575,
+    "sha256": "f4e2b9da3c9be4374e4945c7daab7dc3c166fb4c9e1d2d61ff804ca3dc3b04e9"
+  }
+}

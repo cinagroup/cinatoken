@@ -1,0 +1,442 @@
+{
+  "schema": "cinatoken-native59-info-evidence-reader-final-preparation-v1",
+  "closed": true,
+  "actualPreparationReviewOutcome": 0,
+  "exactNative59Root": "C:/Users/cina/AppData/Local/Temp/cinatoken-native59-full-inventory-10b2722ab06d4cf6b6305e24571b4a8d",
+  "exactOriginalReceiptPins": [
+    {
+      "file": "head.closed.json",
+      "bytes": 429,
+      "sha256": "f5c5ad8e69032204d8880d0c6718789c61f80570db63214d1b4f3e9bed1199bc",
+      "args": [
+        "rev-parse",
+        "HEAD"
+      ],
+      "actualExit": 0,
+      "at": "2026-10-06T03:36:03.154Z",
+      "finishedAt": "2026-10-06T03:36:03.213Z",
+      "stdoutInfo": {
+        "bytes": 41,
+        "sha256": "c4ebee2df777e13bda0448797a4a3ff3d1b55b51d8c3b314e2b84bb4f12dd76f"
+      },
+      "stderrInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "file": "protected-git.closed.json",
+      "bytes": 523,
+      "sha256": "d7a5bae3aa95e67a9abff091689689664ffc3798d5c0352cfbb2ea6603553a25",
+      "args": [
+        "cat-file",
+        "--batch"
+      ],
+      "actualExit": 0,
+      "at": "2026-10-06T03:39:50.518Z",
+      "finishedAt": "2026-10-06T03:39:50.681Z",
+      "stdoutInfo": {
+        "bytes": 9530706,
+        "sha256": "07d379e429a3c53153633fb10dce3a95d4ec8204e404e65bf908326d3079937a"
+      },
+      "stderrInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "newBindingDialect": "native59-exact-info-only-output-binding-v1",
+  "sourcePreparationBase": "473de5fc520fc7d64db700db88a76c7a6b45c241",
+  "reportedPushedCommit": "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc",
+  "newRuntimeSHAAndResultsVerifiedByThisProducer": false,
+  "exactOriginalTwoCommandsAndFourRawUnmodified": true,
+  "originalNumericExitArgsTimingInfoDescriptorsPreserved": true,
+  "noOriginalReceiptOrSourceNormalization": true,
+  "bindingRequiresOriginalRootReceiptPinBodyRawSetBytesShaOrderTime": true,
+  "noFinalTotalUsedAsCommandAuthority": true,
+  "supportedSubset": {
+    "actualExit": 0,
+    "frozenRoots": 16,
+    "files": 843,
+    "originalCommandReceipts": 156,
+    "aggregateEntries": 4,
+    "blockers": 0,
+    "exclusions": 0,
+    "all843CurrentSourceBytesShaExact": true
+  },
+  "controls": [
+    {
+      "id": "native59-info-controls-first",
+      "pass": 20,
+      "originalTerminal": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\native59-info-controls-first.result.json",
+        "bytes": 1085,
+        "sha256": "4dfe3bfd21587ad079ac9878c4962c62c28054bcb52c925b12cedd160c368c74"
+      }
+    },
+    {
+      "id": "unchanged-direct64-controls",
+      "pass": 64,
+      "originalTerminal": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\unchanged-direct64-controls.result.json",
+        "bytes": 1083,
+        "sha256": "743dd5b256aa1b5bd46e40b9b35ddfbade5763e01a07c92ed9148c220dace8d5"
+      }
+    },
+    {
+      "id": "unchanged-g7-37-controls",
+      "pass": 37,
+      "originalTerminal": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\unchanged-g7-37-controls.result.json",
+        "bytes": 1084,
+        "sha256": "1ace9da932264cedc5e6262b9d9398d4a9f94b8c2b4d3f350e52a929cbdca966"
+      }
+    },
+    {
+      "id": "unchanged-generic12-controls",
+      "pass": 12,
+      "originalTerminal": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\unchanged-generic12-controls.result.json",
+        "bytes": 1081,
+        "sha256": "59524e4bf1b9635b599ace303676e0298a3ead86e9d29b4d2a4e669323df427a"
+      }
+    },
+    {
+      "id": "unchanged-closure10-controls",
+      "pass": 10,
+      "originalTerminal": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\unchanged-closure10-controls.result.json",
+        "bytes": 1086,
+        "sha256": "b6e061044f118d77c0b695531f803c13f096bfb506022db741649131b93ba84a"
+      }
+    },
+    {
+      "id": "unchanged-association28-controls",
+      "pass": 28,
+      "originalTerminal": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\unchanged-association28-controls.result.json",
+        "bytes": 1099,
+        "sha256": "1db74f3db25cff5c9da87c3bbc2b6aed31d6b673c1231f460914cac7054a3cba"
+      }
+    }
+  ],
+  "totalNewAndCopiedControls": 171,
+  "originalActualToolReceipts": [
+    {
+      "file": "native-info-syntax.result.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\native-info-syntax.result.json",
+      "bytes": 1068,
+      "sha256": "0715606abe08a7ff14851d7615ce1b5bfaad44af3a1768a065e1afa66b2ad028",
+      "actualExit": 0,
+      "at": "2026-10-06T04:28:31.863Z",
+      "finishedAt": "2026-10-06T04:28:31.970Z",
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\native-info-syntax.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\native-info-syntax.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "file": "native-lib-syntax.result.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\native-lib-syntax.result.json",
+      "bytes": 1057,
+      "sha256": "d68bacd68dc8a9e9742a21a1fa441a12affdb28af2f051172ac64bf0abf4bbc1",
+      "actualExit": 0,
+      "at": "2026-10-06T04:28:30.284Z",
+      "finishedAt": "2026-10-06T04:28:30.467Z",
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\native-lib-syntax.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\native-lib-syntax.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "file": "native59-info-controls-first.result.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\native59-info-controls-first.result.json",
+      "bytes": 1085,
+      "sha256": "4dfe3bfd21587ad079ac9878c4962c62c28054bcb52c925b12cedd160c368c74",
+      "actualExit": 0,
+      "at": "2026-10-06T04:27:44.774Z",
+      "finishedAt": "2026-10-06T04:27:46.315Z",
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\native59-info-controls-first.stdout.log",
+        "bytes": 1282,
+        "sha256": "22b8a1766b6873773f4ac3d93afd317bc3473f9c76ec4c8cd4ed63214bee1634"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\native59-info-controls-first.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "file": "supported-subset-audit.result.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\supported-subset-audit.result.json",
+      "bytes": 1360,
+      "sha256": "2d9e2e618ce47b9b147ebe4dd31158cd18a58603c5ab52b70399cc239bde401f",
+      "actualExit": 0,
+      "at": "2026-10-06T04:28:41.132Z",
+      "finishedAt": "2026-10-06T04:28:42.757Z",
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\supported-subset-audit.stdout.log",
+        "bytes": 60,
+        "sha256": "21d39dc452fbf8b91ef7a3dc6ecf5f646968f89bc7ed384317c2e5c57b3d789f"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\supported-subset-audit.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "file": "unchanged-association28-controls.result.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\unchanged-association28-controls.result.json",
+      "bytes": 1099,
+      "sha256": "1db74f3db25cff5c9da87c3bbc2b6aed31d6b673c1231f460914cac7054a3cba",
+      "actualExit": 0,
+      "at": "2026-10-06T04:28:39.977Z",
+      "finishedAt": "2026-10-06T04:28:40.379Z",
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\unchanged-association28-controls.stdout.log",
+        "bytes": 1608,
+        "sha256": "f64553623b108ed06ba7f1af67ad9ba0ce40e657448a4fd32c7b8b1cc8434e22"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\unchanged-association28-controls.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "file": "unchanged-closure10-controls.result.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\unchanged-closure10-controls.result.json",
+      "bytes": 1086,
+      "sha256": "b6e061044f118d77c0b695531f803c13f096bfb506022db741649131b93ba84a",
+      "actualExit": 0,
+      "at": "2026-10-06T04:28:38.565Z",
+      "finishedAt": "2026-10-06T04:28:39.097Z",
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\unchanged-closure10-controls.stdout.log",
+        "bytes": 876,
+        "sha256": "87b60cee19071d09a60db1d33dd9fffe5efc55ea8afbc26ddfbef5afb1bc92b1"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\unchanged-closure10-controls.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "file": "unchanged-direct64-controls.result.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\unchanged-direct64-controls.result.json",
+      "bytes": 1083,
+      "sha256": "743dd5b256aa1b5bd46e40b9b35ddfbade5763e01a07c92ed9148c220dace8d5",
+      "actualExit": 0,
+      "at": "2026-10-06T04:28:33.210Z",
+      "finishedAt": "2026-10-06T04:28:35.024Z",
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\unchanged-direct64-controls.stdout.log",
+        "bytes": 2902,
+        "sha256": "504c716ecb4a45ea1f1c651aab91e3745ddceb9d9e5dba0470f6376a0c49a85b"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\unchanged-direct64-controls.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "file": "unchanged-g7-37-controls.result.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\unchanged-g7-37-controls.result.json",
+      "bytes": 1084,
+      "sha256": "1ace9da932264cedc5e6262b9d9398d4a9f94b8c2b4d3f350e52a929cbdca966",
+      "actualExit": 0,
+      "at": "2026-10-06T04:28:35.042Z",
+      "finishedAt": "2026-10-06T04:28:35.790Z",
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\unchanged-g7-37-controls.stdout.log",
+        "bytes": 1826,
+        "sha256": "4132b0e26c7773a0264c6e35038fa5614e73f92d5d8a72e081dd3a8a7d68ed93"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\unchanged-g7-37-controls.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "file": "unchanged-generic12-controls.result.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\unchanged-generic12-controls.result.json",
+      "bytes": 1081,
+      "sha256": "59524e4bf1b9635b599ace303676e0298a3ead86e9d29b4d2a4e669323df427a",
+      "actualExit": 0,
+      "at": "2026-10-06T04:28:36.765Z",
+      "finishedAt": "2026-10-06T04:28:37.556Z",
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\unchanged-generic12-controls.stdout.log",
+        "bytes": 1103,
+        "sha256": "59cc1ddbcbb7dde7d634f1f2f3d7a4092e3e6372bd338988619276fc16a15d09"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\unchanged-generic12-controls.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "changes": "Only new native59 exact Info module and copied-lib import/explicit-binding branch; all original reader code/suites/direct schema untouched",
+  "previousFull81FileToolPackageSeal": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\FINAL-direct-only-reader-seal.json",
+    "bytes": 27095,
+    "sha256": "fd0041f111aa7aee63737d68f27f31e9424fb1809f99576ef6e8e6fcf4d849c4"
+  },
+  "previousFull81FilePackageUnchanged": true,
+  "previousCopied11SourcePins": [
+    {
+      "file": "evidence-lib.mjs",
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\evidence-lib.mjs",
+      "bytes": 52976,
+      "sha256": "0718f79578a91774001621430f63beba7a7a84d61eab85bafe2bb6eae26cf76c"
+    },
+    {
+      "file": "direct-socket-dialect.mjs",
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\direct-socket-dialect.mjs",
+      "bytes": 12848,
+      "sha256": "093bdeb9417ab0ca39ee7e876b5d8542f84dce9870fa315d6086835b5887c438"
+    },
+    {
+      "file": "collect-evidence.mjs",
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\collect-evidence.mjs",
+      "bytes": 1002,
+      "sha256": "95d1670211f5fdceb6bbdd2ce1db38036de4fb7c31e5d522eef10af3e479bdd5"
+    },
+    {
+      "file": "verify-evidence.mjs",
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\verify-evidence.mjs",
+      "bytes": 617,
+      "sha256": "ac6c531cc665341fbf51dc3ceed6adbd3f629ab5c17aef51a214de1f1613422d"
+    },
+    {
+      "file": "collector-controlled-tests.mjs",
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\collector-controlled-tests.mjs",
+      "bytes": 6887,
+      "sha256": "749953cc540f88e86822b33ade25daf4c59ef26864a7445bb413bb3c2f425614"
+    },
+    {
+      "file": "collector-closure-boundary-tests.mjs",
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\collector-closure-boundary-tests.mjs",
+      "bytes": 8703,
+      "sha256": "967171ef8a84ae50abb69549d85d2ed58aa3c481c27bb3ae456cad0e66f60eb6"
+    },
+    {
+      "file": "collector-explicit-association-tests.mjs",
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\collector-explicit-association-tests.mjs",
+      "bytes": 10741,
+      "sha256": "7580f6b13250d4a53ddd8b022dfaa48ef2fdc3382310fd60f010d035395b1f7c"
+    },
+    {
+      "file": "collector-g7-producer-output-controls.mjs",
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\collector-g7-producer-output-controls.mjs",
+      "bytes": 7513,
+      "sha256": "0ad5dcdc4b5d001f85f0f8f498d0f6ba6d2e4dc0ecdc44c02d2de1a78f0e7cae"
+    },
+    {
+      "file": "collector-g7-boundary-descriptor-tests.mjs",
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\collector-g7-boundary-descriptor-tests.mjs",
+      "bytes": 17869,
+      "sha256": "f983fe626f4d2b2d8af357cc36e8ff372f4bbee88ef316a1c9c274d945e9bf65"
+    },
+    {
+      "file": "direct-socket-dialect-controls.mjs",
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\direct-socket-dialect-controls.mjs",
+      "bytes": 15434,
+      "sha256": "4590ea6e3248b7b1ee372268aa7a6c43f5c58a0f8bffad37e4fa1548ab5b5b92"
+    },
+    {
+      "file": "run-tool-closed.mjs",
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-direct-socket-evidence-tools-327af4cf66284756b16383a24e304610\\run-tool-closed.mjs",
+      "bytes": 1319,
+      "sha256": "813818a71674568526bfbdc29e7c2bccd57ccfd6de9ce4bc6fc24b6dc2a76315"
+    }
+  ],
+  "originalPrevious17RootAuditActualExit1Preserved": true,
+  "oldDurableMetaOriginalTreeNotDiscarded": true,
+  "oldDurableMetaFutureRequirement": "Root lossless opaque ZIP with every original-file byte/hash/path plus extraction verification; original history preserved, no fresh runtime/gate/receipt0 from copied prior output",
+  "preparedSubsetMustNotBeCollectedAsCompleteRelease": true,
+  "growingRootWalked": false,
+  "collectorMetadataRootIncluded": false,
+  "realRuntimeReceiptsManufactured": false,
+  "applicationNativeG7MiniflareSqlTestsRun": false,
+  "productionRequests": 0,
+  "repositoryWrites": 0,
+  "gitCommands": 0,
+  "ciQueriesOrInvocations": 0,
+  "fullNativeCancelVerified": false,
+  "fullG7Verified": false,
+  "fullG8Verified": false,
+  "causeProven": false,
+  "gracefulWorkerdExitProven": false,
+  "sourcePins": [
+    {
+      "file": "evidence-lib.mjs",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\evidence-lib.mjs",
+      "bytes": 54032,
+      "sha256": "31e9825bfd4bbfa35e81310d8efd6bd453f6c5cac64d8c2ee896f375ee110bf1"
+    },
+    {
+      "file": "native59-info-binding.mjs",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\native59-info-binding.mjs",
+      "bytes": 2683,
+      "sha256": "fa0b92502407f31525af2da454462aba1abf5e4fde1d13dcfb567fc324fe803a"
+    },
+    {
+      "file": "native59-original-receipt-pins.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\native59-original-receipt-pins.json",
+      "bytes": 1491,
+      "sha256": "e57b5371f6c2dd755cc160c727c56338df01fcaa3cda765f70522f6a918d288d"
+    },
+    {
+      "file": "native59-info-binding-controls.mjs",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\native59-info-binding-controls.mjs",
+      "bytes": 4378,
+      "sha256": "96208ac2d1ea56b7466024c6d46c55f4ef51d501ec9bae31798ed0f9e6cc00ef"
+    },
+    {
+      "file": "direct-socket-dialect.mjs",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\direct-socket-dialect.mjs",
+      "bytes": 12848,
+      "sha256": "093bdeb9417ab0ca39ee7e876b5d8542f84dce9870fa315d6086835b5887c438"
+    }
+  ],
+  "supportedConfig": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\native59-supported-subset-config.json",
+    "bytes": 13176,
+    "sha256": "6f297917ab61b40612b530ddbe3891091afccc946d283a6db92d4f5fea3cb1af"
+  },
+  "unsupportedOldmetaConfigOnly": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\native59-expanded-config-with-oldmeta-blockers.json",
+    "bytes": 13138,
+    "sha256": "7264974416b6a74483d75f30deab3b03fead123cc3fcfe0f816cb291d7269d4e"
+  },
+  "supportedAudit": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-info-evidence-tools-6a81f21b197047159394b64addf8eb59\\supported-subset-audit.json",
+    "bytes": 873387,
+    "sha256": "70b32b1e4249cbf4099a75e85e52d6bde23a2b3df2dd74b23135874610cd17ea"
+  },
+  "originalPreparationToolObservation": {
+    "chunk_id": "e667d1",
+    "actualToolExit": 0,
+    "wall_time_seconds": 0.2309176,
+    "scope": "Read/copy exact previous tool and original receipt pins, no source commands or app/runtime"
+  }
+}

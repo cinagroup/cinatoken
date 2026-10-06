@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-06T04:27:10.857Z",
+  "finishedAt": "2026-10-06T04:27:11.040Z",
+  "executable": "git",
+  "args": [
+    "show",
+    "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc:scripts/db/cutover/build-postgres-recovery-retention-review.native.test.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\tail-step-111.stdout.log",
+    "bytes": 13540,
+    "sha256": "2245280b58b9893bf0069b9d7516b8b23ce73d48d4894b99446621eba75b930b"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\tail-step-111.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

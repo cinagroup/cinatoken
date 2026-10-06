@@ -1,0 +1,118 @@
+{
+  "schema": "stopwrite-first-frozen-admission-seal-v1",
+  "sealedAt": "2026-10-06T05:02:56.721Z",
+  "sourceRoot": "C:/Users/cina/AppData/Local/Temp/cinatoken-g7-native26-final-config-4851c19d4cc24ecdae397bcb12a8ad30",
+  "filesBeforeSelf": 21,
+  "entries": [
+    {
+      "file": "FINAL-first-frozen-admission.json",
+      "bytes": 1617,
+      "sha256": "d2e071e77fd392b88a1ed119bbfef0ca06ffb34b9e18632659f502cfb548b724"
+    },
+    {
+      "file": "PREPARED-all-frozen-config.json",
+      "bytes": 1364,
+      "sha256": "0dc21c4399d6808d495672efc60b221c60915309bc1e12b0b01e9fe6b9870f92"
+    },
+    {
+      "file": "all-frozen-config.json",
+      "bytes": 18365,
+      "sha256": "85b9a7347cf61f418a79f681d340c414f3df694977c9e83e676488b2f6f1e358"
+    },
+    {
+      "file": "all-frozen-input-inventory.json",
+      "bytes": 589285,
+      "sha256": "dff7e36373e082267e717fce29a01a53901db255ae6aed46e6cac6c928673d63"
+    },
+    {
+      "file": "conversation-tool-negative-observations.json",
+      "bytes": 1459,
+      "sha256": "2b6f67a6ff210eeba826828ab4e3860f3eca4f04304db99173371e75f32778c9"
+    },
+    {
+      "file": "finalize-first-admission-owner.mjs",
+      "bytes": 3302,
+      "sha256": "7d0bd00a62ef43e6d15048b351d2ba85b32089298c008e55cd796c86b285ffb8"
+    },
+    {
+      "file": "finalize-first-admission-owner.result.json",
+      "bytes": 1076,
+      "sha256": "a18d508393d284ce3fb83d9caaca1fa41de2a95df8bc5812139702aea6be1502"
+    },
+    {
+      "file": "finalize-first-admission-owner.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "finalize-first-admission-owner.stdout.log",
+      "bytes": 220,
+      "sha256": "780c1387cd16c92ca3f7186001a92e54cf147c8c1c7aa9f8dbf5e3be75eb8799"
+    },
+    {
+      "file": "original-full-frozen-audit.json",
+      "bytes": 3358678,
+      "sha256": "1a5cadcdd963bb0725a48f82d86a939e65ab1e5577a24135b47744e6243d7803"
+    },
+    {
+      "file": "original-full-frozen-audit.result.json",
+      "bytes": 1344,
+      "sha256": "7113b29924a791dbc5690b243af694e43d268a7f0a2c44b8c06ca9864a36aeaf"
+    },
+    {
+      "file": "original-full-frozen-audit.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "original-full-frozen-audit.stdout.log",
+      "bytes": 27909,
+      "sha256": "80016d766f40853f064e0fcba64021e171fdc24920b27c63412f6c0c0ee86fb3"
+    },
+    {
+      "file": "prepare-data-reader.result.json",
+      "bytes": 1014,
+      "sha256": "926a828f4d260e8d53f362f41ef6ea867a5118b6c5c7e47f374e0374871b8fa5"
+    },
+    {
+      "file": "prepare-data-reader.stderr.log",
+      "bytes": 666,
+      "sha256": "d29cd12e5152231eca25c2a4286530f4de0b48390fe51abc2cce9e22d4bbdf47"
+    },
+    {
+      "file": "prepare-data-reader.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "prepare-final-config.result.json",
+      "bytes": 1053,
+      "sha256": "85a851ede47e4633fcbd143cf8de38923aae6d342ca2afbe72d56a25dc45d45e"
+    },
+    {
+      "file": "prepare-final-config.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "prepare-final-config.stdout.log",
+      "bytes": 628,
+      "sha256": "b110d436768309f7fdce2823bf95e00e38f2f948c46ec749b84007e4090ea6ba"
+    },
+    {
+      "file": "prepare-final-frozen-config.mjs",
+      "bytes": 8745,
+      "sha256": "4f5ee0049d84f272583fefc0434ed01760bd554d6ef32a427a87c63729009471"
+    },
+    {
+      "file": "run-tool-closed.mjs",
+      "bytes": 1319,
+      "sha256": "813818a71674568526bfbdc29e7c2bccd57ccfd6de9ce4bc6fc24b6dc2a76315"
+    }
+  ],
+  "selfExcludedOnly": true,
+  "originalAuditExit": 1,
+  "originalBlockers": 154,
+  "allFailureRawPreserved": true,
+  "noFurtherWrites": true
+}

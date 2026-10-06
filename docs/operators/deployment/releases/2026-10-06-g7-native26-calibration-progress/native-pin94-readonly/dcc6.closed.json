@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-06T04:26:13.431Z",
+  "finishedAt": "2026-10-06T04:26:13.486Z",
+  "executable": "git",
+  "args": [
+    "rev-parse",
+    "dcc6^{commit}"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\dcc6.stdout.log",
+    "bytes": 41,
+    "sha256": "b0768a9ad6fab2fa97b8b0d4ea9a91ee38ac8309cb7c201c5c478a77500c8e9d"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\dcc6.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

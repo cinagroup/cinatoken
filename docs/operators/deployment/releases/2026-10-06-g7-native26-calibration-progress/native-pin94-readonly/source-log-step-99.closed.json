@@ -1,0 +1,27 @@
+{
+  "at": "2026-10-06T04:28:38.666Z",
+  "finishedAt": "2026-10-06T04:28:38.926Z",
+  "executable": "git",
+  "args": [
+    "log",
+    "--all",
+    "--follow",
+    "--format=%H%x09%ai%x09%s",
+    "--",
+    "scripts/db/cutover/postgres-shared-key-stats-claim-reader-v349.native.test.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\source-log-step-99.stdout.log",
+    "bytes": 132,
+    "sha256": "d9de7db4b58f344112c87c4e0dc9a57c0e71b41cf6f13d9a4c7082fc651fcdcb"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\source-log-step-99.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

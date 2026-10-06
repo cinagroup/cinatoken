@@ -1,0 +1,24 @@
+{
+  "at": "2026-10-06T05:36:27.415Z",
+  "finishedAt": "2026-10-06T05:36:29.529Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:/cinagroup/cinatoken/docs/operators/deployment/releases/2026-10-06-g7-native26-calibration-progress-verification/tools/verify-evidence.mjs",
+    "C:/cinagroup/cinatoken/docs/operators/deployment/releases/2026-10-06-g7-native26-calibration-progress.json",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-final-durable-collection-meta-S7NHM2/portable-verification-final.json",
+    "stored-only"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\portable-verification-final.stdout.log",
+    "bytes": 428,
+    "sha256": "24089bfe53a0faa8aab28fc0de2f89062c93bd41d4cfc8ce1f81ea37fdc94b7c"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2\\portable-verification-final.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

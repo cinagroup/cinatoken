@@ -1,0 +1,265 @@
+{
+  "cfgPath": "C:/Users/cina/AppData/Local/Temp/cinatoken-final-capsule-collection-config-NWebV7/all-frozen-final-config.json",
+  "pin": {
+    "bytes": 257294,
+    "sha256": "d50f84f7c0cf4ec66d367dd7ed79edbad6719944f394d39ecd65fcfb7d8dd09e"
+  },
+  "config": {
+    "schemaVersion": 1,
+    "releaseSlug": "2026-10-06-g7-native26-calibration-progress",
+    "sourceCommit": "dc7be6f8597333151c450bae3ae15e6585e3b2eb",
+    "outputDirectory": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native26-calibration-progress-capsule-collection-64099349-b298-4fe8-8288-ebd7835ebc52",
+    "roots": {
+      "type": "array",
+      "length": 42,
+      "first": {
+        "id": "native-four-owner",
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-four-repair-38a94fb93d9842929dc7ae9cf6b378da",
+        "phase": "local-validation"
+      }
+    },
+    "semantics": {
+      "type": "object",
+      "keys": [
+        "collectionOnly",
+        "gatePassDerived",
+        "fullG7Verified",
+        "fullG8Verified",
+        "fullNativeCancelVerified",
+        "productionRequests",
+        "noExclusions",
+        "syntheticDialectControlsNotApplicationTests",
+        "originalAdmission1Preserved",
+        "collectorMetadataRootNotIncluded",
+        "allListedSourceRootsFrozen",
+        "currentRootStopWrite",
+        "currentRootVerifiedAgainstExternalIndex",
+        "sourceLayers",
+        "businessOutcomeScope",
+        "oldDurableMeta",
+        "pendingFutureFrozenRoots",
+        "scope",
+        "nonProcessReadAndSliceOutputsAreReportOnly",
+        "originalArchiveAdmission154BlockersPreserved",
+        "downloadedMtimeNeverClaimedOriginalProducerMtime",
+        "formerCollectorMetadataRootIncludedOnlyAfterRootStopWrite",
+        "activeCollectorMetadataRootNotIncluded",
+        "lateRootFrozenIndex",
+        "finalPreparedToolAndFirstFailuresIncluded",
+        "independentReaderSourcePeerIncluded",
+        "activeOwnerAuditMetadataRootNotIncluded",
+        "ee122HistoricalOpaqueCapsule"
+      ],
+      "first": [
+        "collectionOnly",
+        true
+      ]
+    },
+    "explicitCommandOutputBindings": {
+      "type": "array",
+      "length": 10,
+      "first": {
+        "rootId": "g7-observe-owner",
+        "receiptFile": "final-all-g7-controls.result.json",
+        "expectedReceiptSha256": "8c797d0a0321c2d4b7d62f4b28406612282200d83e7eb46562f07af5cd3ff83f",
+        "outputs": [
+          {
+            "file": "final-all-g7-controls.stdout.log",
+            "bytes": 21291,
+            "sha256": "6d4b8ae03cfd2f821d5aaa86ddef19ad6bca4b15a718e15cb3448dd062cf20ae"
+          },
+          {
+            "file": "final-all-g7-controls.stderr.log",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ]
+      }
+    },
+    "immutableSchemaCopies": {
+      "type": "array",
+      "length": 2,
+      "first": {
+        "rootId": "g7-observe-owner",
+        "file": "original-linux-082-docker.result.json",
+        "originalRootId": "archive-subset-preparation",
+        "originalFile": "historical-observer-original-reference/082-docker.result.json",
+        "sha256": "136a76bcadb8c915f43cf781c492703f83f2a9086ed318876df47fb5c15f9c88",
+        "partialLogCopy": true,
+        "includedLogCopies": [
+          {
+            "file": "original-linux-082-docker.stdout.log",
+            "originalFile": "historical-observer-original-reference/082-docker.stdout.log",
+            "bytes": 10508,
+            "sha256": "d1bcefc8ae88d58362d8fbd50064efc2e8786ad7bcb910cd1044a7486283b5c8"
+          },
+          {
+            "file": "original-linux-082-docker.stderr.log",
+            "originalFile": "historical-observer-original-reference/082-docker.stderr.log",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "scope": "Legacy API name partialLogCopy denotes selected historical artifact; both full observer streams are included byte exactly, no fresh execution"
+      }
+    },
+    "sourceCommitAdmission": "Full exact Root-reported release source dc7be6f8597333151c450bae3ae15e6585e3b2eb. Root supplied actual source layers; this operation only prepares frozen-input evidence admission and does not run CI or business tests.",
+    "requiredRootIds": {
+      "type": "array",
+      "length": 42,
+      "first": "native-four-owner"
+    },
+    "frozenInputDataBindings": {
+      "type": "array",
+      "length": 93,
+      "first": {
+        "kind": "exact-file-read-report-only-v1",
+        "rootId": "native-pin94-readonly",
+        "sourceRoot": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287",
+        "reportFile": "actual-native-original-receipt.closed.json",
+        "reportBytes": 885,
+        "reportSha256": "6aece8b30b407b92a34a14a7171948cfdb7e93d2ee08e205c098fa228faddc62",
+        "report": {
+          "at": "2026-10-06T04:28:39.005Z",
+          "finishedAt": "2026-10-06T04:28:39.009Z",
+          "operation": "readFile",
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9\\native-terminal.closed.json",
+          "actualExit": 0,
+          "signal": null,
+          "error": null,
+          "stdout": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\actual-native-original-receipt.stdout.log",
+            "bytes": 1012,
+            "sha256": "3ffe4a65441d0b150f4ddd2092876e5da2f813c85cd23b0fe349084fd446bb73"
+          },
+          "stderr": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\actual-native-original-receipt.stderr.log",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        "producer": {
+          "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\capture.mjs",
+          "bytes": 2442,
+          "sha256": "826ea219068489ab39dcf15bce0a168854f3d91ed82788057f5141931f1a6597"
+        },
+        "outputs": [
+          {
+            "stream": "stdout",
+            "file": "actual-native-original-receipt.stdout.log",
+            "bytes": 1012,
+            "sha256": "3ffe4a65441d0b150f4ddd2092876e5da2f813c85cd23b0fe349084fd446bb73"
+          },
+          {
+            "stream": "stderr",
+            "file": "actual-native-original-receipt.stderr.log",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ]
+      }
+    },
+    "transportedDirectExecutorBindings": {
+      "type": "array",
+      "length": 2,
+      "first": {
+        "kind": "exact-downloaded-direct-executor-manifest-v1",
+        "rootId": "current-terminal-evidence",
+        "sourceRoot": "C:/Users/cina/AppData/Local/Temp/cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504",
+        "executorFile": "canonical-calibration-artifact/_temp/v364-direct-socket-once-37414167261-1/executor.closed.json",
+        "executor": {
+          "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\canonical-calibration-artifact\\_temp\\v364-direct-socket-once-37414167261-1\\executor.closed.json",
+          "bytes": 5896,
+          "sha256": "1f36a6a5c68356bdce2a30e57f0e212db88c0a02b0b01eb0d872d06565586e18"
+        },
+        "downloadFile": "download-canonical-calibration-artifact.result.json",
+        "download": {
+          "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\download-canonical-calibration-artifact.result.json",
+          "bytes": 1127,
+          "sha256": "2f6f82bda77fbfb7bc98303aa66c22566067fdb894b48d31f24f06656ad771fb"
+        },
+        "downloadBody": {
+          "at": "2026-10-06T04:35:51.273Z",
+          "finishedAt": "2026-10-06T04:35:56.659Z",
+          "executable": "C:/Program Files/GitHub CLI/gh.exe",
+          "args": [
+            "run",
+            "download",
+            "37414167261",
+            "--repo",
+            "cinagroup/cinatoken",
+            "--name",
+            "v364-direct-socket-dc7be6f8597333151c450bae3ae15e6585e3b2eb-37414167261-1",
+            "--dir",
+            "C:/Users/cina/AppData/Local/Temp/cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504/canonical-calibration-artifact"
+          ],
+          "cwd": "C:/cinagroup/cinatoken",
+          "actualExit": 0,
+          "signal": null,
+          "stdout": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\download-canonical-calibration-artifact.stdout.log",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "stderr": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\download-canonical-calibration-artifact.stderr.log",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        "metadataFile": "canonical-calibration-artifact-metadata.stdout.log",
+        "metadata": {
+          "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\canonical-calibration-artifact-metadata.stdout.log",
+          "bytes": 770,
+          "sha256": "21e5795602194ffb81eca6f832c56d2815025acafa92545be6babed0c41b4fcc"
+        },
+        "metadataReceiptFile": "canonical-calibration-artifact-metadata.result.json",
+        "metadataReceipt": {
+          "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\canonical-calibration-artifact-metadata.result.json",
+          "bytes": 878,
+          "sha256": "6a150a1cec6ed42ed419019547a548b7768e5e41546f6c98feea2ffd68486fbb"
+        },
+        "artifactId": 11390876053,
+        "runId": "37414167261",
+        "runAttempt": "1",
+        "sourceSHA": "dc7be6f8597333151c450bae3ae15e6585e3b2eb",
+        "indexRootId": "current-frozen-index-input",
+        "indexSourceRoot": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-current-frozen-index-input-VPltuE",
+        "indexFile": "frozen-current-root-index.json",
+        "index": {
+          "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-current-frozen-index-input-VPltuE\\frozen-current-root-index.json",
+          "bytes": 375872,
+          "sha256": "cedbf58fb411c7a183c60d183f6d36da8c853236ec7711f0b3ad679da2c2f467"
+        }
+      }
+    }
+  },
+  "targetRoots": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-capsule-admission-meta-UkwrUh",
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-durable-collection-meta-S7NHM2"
+  ],
+  "metadataEntries": [
+    "final-42-capsule-pure-audit.json",
+    "final-42-capsule-pure-audit.result.json",
+    "final-42-capsule-pure-audit.stderr.log",
+    "final-42-capsule-pure-audit.stdout.log",
+    "final-capsule-admission-summary.result.json",
+    "final-capsule-admission-summary.stderr.log",
+    "final-capsule-admission-summary.stdout.log",
+    "final-capsule-config-location.json",
+    "FINAL-final42-frozen-capsule-admission.json",
+    "finalize-capsule-admission.mjs",
+    "freeze-original39-failure.mjs",
+    "freeze-original39-failure.result.json",
+    "freeze-original39-failure.stderr.log",
+    "freeze-original39-failure.stdout.log",
+    "frozen-tool-byte-verification.json",
+    "prepare-capsule-final-config.mjs",
+    "prepare-capsule-final-config.result.json",
+    "prepare-capsule-final-config.stderr.log",
+    "prepare-capsule-final-config.stdout.log",
+    "run-tool-closed.mjs",
+    "seal-final-capsule-admission.mjs",
+    "STOPWRITE-final42-capsule-admission-seal.json"
+  ]
+}

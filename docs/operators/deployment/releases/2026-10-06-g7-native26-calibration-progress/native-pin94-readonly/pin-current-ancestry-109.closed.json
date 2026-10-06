@@ -1,0 +1,28 @@
+{
+  "at": "2026-10-06T04:30:04.588Z",
+  "finishedAt": "2026-10-06T04:30:04.683Z",
+  "executable": "git",
+  "args": [
+    "log",
+    "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc",
+    "-G",
+    "d95055419a04465c7c172ff0b8426bd0b928bd538e4dad80f9442229abd5e269",
+    "--format=%H%x09%ai%x09%s",
+    "--",
+    "scripts/db/cutover/postgres-replay-reservations-backend-lifecycle-successor.native.test.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\pin-current-ancestry-109.stdout.log",
+    "bytes": 130,
+    "sha256": "bb9a52c68569ae7982caacd4d54bb4ea33947ce7d2ff41123935509fdd39ccc0"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\pin-current-ancestry-109.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

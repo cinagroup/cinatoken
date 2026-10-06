@@ -1,0 +1,51 @@
+##[group]Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:17.3250775Z ^[[36;1mgosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \^[[0m
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:17.3251917Z ^[[36;1m  node --import tsx --test scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs^[[0m
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:17.3252841Z shell: sh -e {0}
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:17.3253073Z ##[endgroup]
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:17.4272038Z TAP version 13
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:20.5006779Z # guardrail-post-reservation-denial-v348-runtime-buyer-client-successor-report=/__w/cinatoken/cinatoken/.wrangler/staging/pg-native-dispatch-tests/report-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor-30ec57ad-a116-44e9-9bed-6ce908930097.json
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:20.5033492Z # Subtest: post-reservation Guardrail denial closes only a proven pre-send released buyer lease (runtime/buyer client successor)
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:20.5043118Z not ok 1 - post-reservation Guardrail denial closes only a proven pre-send released buyer lease (runtime/buyer client successor)
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:20.5044851Z   ---
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:20.5045400Z   duration_ms: 1323.884164
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:20.5046270Z   type: 'test'
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:20.5048077Z   location: '/__w/cinatoken/cinatoken/scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs:111:1'
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:20.5050102Z   failureType: 'testCodeFailure'
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:20.5050702Z   error: |-
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:20.5050986Z     Expected values to be strictly equal:
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:20.5051402Z     + actual - expected
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:20.5051648Z     
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:20.5051991Z     + 'dfe004034784018eb9c70502e19a2192c45e1e8982a96c98b03626f72f7cce1d'
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:20.5052574Z     - '603646803c82d3209987260ad682a34169b4e53ca7b03b672d818e3a28d7cc13'
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:20.5052956Z     
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:20.5053400Z   code: 'ERR_ASSERTION'
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:20.5053836Z   name: 'AssertionError'
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:20.5054503Z   expected: '603646803c82d3209987260ad682a34169b4e53ca7b03b672d818e3a28d7cc13'
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:20.5055091Z   actual: 'dfe004034784018eb9c70502e19a2192c45e1e8982a96c98b03626f72f7cce1d'
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:20.5055533Z   operator: 'strictEqual'
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:20.5056129Z   stack: |-
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:20.5057528Z     TestContext.<anonymous> (file:///__w/cinatoken/cinatoken/scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs:187:14)
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:20.5058888Z     async Test.run (node:internal/test_runner/test:1054:7)
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:20.5059447Z     async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:20.5059855Z   ...
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:20.5682446Z 1..1
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:20.5682956Z # tests 1
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:20.5683400Z # suites 0
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:20.5684021Z # pass 0
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:20.5684481Z # fail 1
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:20.5686347Z # cancelled 0
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:20.5689601Z # skipped 0
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:20.5690215Z # todo 0
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:20.5690793Z # duration_ms 3153.284843
+native-financial-consumer	Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \	2026-10-06T04:20:20.5780775Z ##[error]Process completed with exit code 1.
+native-financial-consumer	Post Run actions/checkout@v4	﻿2026-10-06T04:20:20.5962296Z Post job cleanup.
+native-financial-consumer	Post Run actions/checkout@v4	2026-10-06T04:20:20.5969971Z ##[command]/usr/bin/docker exec  7bf49fe0bf4b58eceaabd7e873ce0acf69fe80dc6c1e81bc6e0871fa1697c6d9 sh -c "cat /etc/*release | grep ^ID"
+native-financial-consumer	Stop containers	﻿2026-10-06T04:20:20.8010213Z Stop and remove container: d337d4440742473c8c31cc71d9d4d093_postgres186bookworm_38955e
+native-financial-consumer	Stop containers	2026-10-06T04:20:20.8016976Z ##[command]/usr/bin/docker rm --force 7bf49fe0bf4b58eceaabd7e873ce0acf69fe80dc6c1e81bc6e0871fa1697c6d9
+native-financial-consumer	Stop containers	2026-10-06T04:20:20.9956683Z 7bf49fe0bf4b58eceaabd7e873ce0acf69fe80dc6c1e81bc6e0871fa1697c6d9
+native-financial-consumer	Stop containers	2026-10-06T04:20:20.9989198Z Remove container network: github_network_49554af75707444185fe0b8c3c15fa22
+native-financial-consumer	Stop containers	2026-10-06T04:20:20.9993620Z ##[command]/usr/bin/docker network rm github_network_49554af75707444185fe0b8c3c15fa22
+native-financial-consumer	Stop containers	2026-10-06T04:20:21.1083692Z github_network_49554af75707444185fe0b8c3c15fa22
+native-financial-consumer	Complete job	﻿2026-10-06T04:20:21.1169286Z Cleaning up orphan processes
+native-financial-consumer	Complete job	2026-10-06T04:20:21.1530978Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-node@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

@@ -1,0 +1,37 @@
+diff --git a/scripts/diagnostics/v364-direct-socket/native-reader-calibration.mjs b/scripts/diagnostics/v364-direct-socket/native-reader-calibration.mjs
+index 28ce1112..6569d747 100644
+--- a/scripts/diagnostics/v364-direct-socket/native-reader-calibration.mjs
++++ b/scripts/diagnostics/v364-direct-socket/native-reader-calibration.mjs
+@@ -26,9 +26,14 @@ export default {
+ 			attemptNonce ?? "",
+ 			/^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/u
+ 		);
+-		url.pathname = "/fixture/complete-text";
+-		url.search = "";
+-		const response = await holder.fetch(new Request(url, request), env, ctx);
++		const response = await holder.fetch(
++			new Request(
++				"https://holder.service.invalid/complete-text-attempt",
++				request
++			),
++			env,
++			ctx
++		);
+ 		assert.equal(response.status, 200);
+ 		assert.equal(response.headers.get("Content-Type"), "text/event-stream");
+ 		assert.ok(response.body);
+diff --git a/scripts/diagnostics/v364-direct-socket/sealed-package.json b/scripts/diagnostics/v364-direct-socket/sealed-package.json
+index d4199024..0a541427 100644
+--- a/scripts/diagnostics/v364-direct-socket/sealed-package.json
++++ b/scripts/diagnostics/v364-direct-socket/sealed-package.json
+@@ -10,8 +10,8 @@
+ 		},
+ 		{
+ 			"path": "native-reader-calibration.mjs",
+-			"bytes": 2531,
+-			"sha256": "36f30b9dc7e8cfad8b68f6c9590f8cea50444173a05ccd3e775c9c32214408be"
++			"bytes": 2546,
++			"sha256": "e838769c950b49056ffc4e6580e41d8ec15a245db6efff6829c170642fb8ee8f"
+ 		},
+ 		{
+ 			"path": "execute-owned-linux.py",

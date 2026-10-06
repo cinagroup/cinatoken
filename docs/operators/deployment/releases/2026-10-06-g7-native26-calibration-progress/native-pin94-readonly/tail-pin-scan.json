@@ -1,0 +1,1518 @@
+{
+  "at": "2026-10-06T04:28:14.073Z",
+  "baseCommit": "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc",
+  "steps": [
+    95,
+    113
+  ],
+  "records": [
+    {
+      "step": 95,
+      "file": "scripts/db/cutover/postgres-buyer-split-grant-rerun-v348.native.test.mjs",
+      "bytes": 18946,
+      "sha256": "d83c9dcabfb24ddd90c6006ac8ac6078583fc6439b39436708f73ee8099b23b1",
+      "assertionCount": 32,
+      "hashes": [],
+      "urls": [
+        {
+          "line": 20,
+          "source": "new URL('../../../packages/core/migrations-postgres/', import.meta.url)",
+          "literal": "../../../packages/core/migrations-postgres/"
+        },
+        {
+          "line": 21,
+          "source": "new URL('../../../packages/core/migrations-proposals/postgres/', import.meta.url)",
+          "literal": "../../../packages/core/migrations-proposals/postgres/"
+        },
+        {
+          "line": 117,
+          "source": "new URL(name, migrations)",
+          "literal": null
+        },
+        {
+          "line": 128,
+          "source": "new URL(name, proposals)",
+          "literal": null
+        },
+        {
+          "line": 131,
+          "source": "new URL('./grant-postgres-runtime.ts', import.meta.url)",
+          "literal": "./grant-postgres-runtime.ts"
+        },
+        {
+          "line": 133,
+          "source": "new URL('./grant-postgres-buyer-split-v348.ts', import.meta.url)",
+          "literal": "./grant-postgres-buyer-split-v348.ts"
+        },
+        {
+          "line": 135,
+          "source": "new URL('./activate-postgres-buyer-split-v348.ts', import.meta.url)",
+          "literal": "./activate-postgres-buyer-split-v348.ts"
+        },
+        {
+          "line": 136,
+          "source": "new URL(\n        '../../../packages/core/src/db/postgres/critical-writes.impl.ts', import.meta.url)",
+          "literal": "../../../packages/core/src/db/postgres/critical-writes.impl.ts"
+        },
+        {
+          "line": 138,
+          "source": "new URL(import.meta.url)",
+          "literal": null
+        },
+        {
+          "line": 186,
+          "source": "new URL(name, proposals)",
+          "literal": null
+        },
+        {
+          "line": 191,
+          "source": "new URL(splitNames[0], proposals)",
+          "literal": null
+        },
+        {
+          "line": 192,
+          "source": "new URL(splitNames[2], proposals)",
+          "literal": null
+        },
+        {
+          "line": 193,
+          "source": "new URL(reconcileName, proposals)",
+          "literal": null
+        }
+      ],
+      "fixedAssertions": [],
+      "interestingLines": [
+        {
+          "line": 71,
+          "source": "      binaryVersion: cluster.binaryVersion, sourceSha256: {}, stages: [],"
+        },
+        {
+          "line": 125,
+          "source": "      report.sourceSha256.formalMigrations = hash(corpus.join('\\n'));"
+        },
+        {
+          "line": 128,
+          "source": "        report.sourceSha256[name] = hash(await readFile(new URL(name, proposals)));"
+        },
+        {
+          "line": 130,
+          "source": "      report.sourceSha256.runtimeGrant = hash(await readFile("
+        },
+        {
+          "line": 132,
+          "source": "      report.sourceSha256.splitGrantRunner = hash(await readFile("
+        },
+        {
+          "line": 134,
+          "source": "      report.sourceSha256.splitActivationRunner = hash(await readFile("
+        },
+        {
+          "line": 136,
+          "source": "      report.sourceSha256.criticalWriter = hash(await readFile(new URL("
+        },
+        {
+          "line": 138,
+          "source": "      report.sourceSha256.fixture = hash(await readFile(new URL(import.meta.url)));"
+        }
+      ]
+    },
+    {
+      "step": 96,
+      "file": "scripts/db/cutover/postgres-buyer-split-guardrail-v349.native.test.mjs",
+      "bytes": 23743,
+      "sha256": "c4adb632a2e237e0ed359f42686371bfad138f1ce4cc10c557d219e3ecb83d87",
+      "assertionCount": 44,
+      "hashes": [],
+      "urls": [
+        {
+          "line": 21,
+          "source": "new URL('../../../packages/core/migrations-postgres/', import.meta.url)",
+          "literal": "../../../packages/core/migrations-postgres/"
+        },
+        {
+          "line": 22,
+          "source": "new URL('../../../packages/core/migrations-proposals/postgres/', import.meta.url)",
+          "literal": "../../../packages/core/migrations-proposals/postgres/"
+        },
+        {
+          "line": 121,
+          "source": "new URL(name, migrations)",
+          "literal": null
+        },
+        {
+          "line": 133,
+          "source": "new URL(name, proposals)",
+          "literal": null
+        },
+        {
+          "line": 136,
+          "source": "new URL('./grant-postgres-runtime.ts', import.meta.url)",
+          "literal": "./grant-postgres-runtime.ts"
+        },
+        {
+          "line": 138,
+          "source": "new URL('./grant-postgres-buyer-split-v348.ts', import.meta.url)",
+          "literal": "./grant-postgres-buyer-split-v348.ts"
+        },
+        {
+          "line": 140,
+          "source": "new URL('./activate-postgres-buyer-split-v348.ts', import.meta.url)",
+          "literal": "./activate-postgres-buyer-split-v348.ts"
+        },
+        {
+          "line": 142,
+          "source": "new URL('./activate-postgres-buyer-guardrail-split-v349.ts', import.meta.url)",
+          "literal": "./activate-postgres-buyer-guardrail-split-v349.ts"
+        },
+        {
+          "line": 144,
+          "source": "new URL('./grant-postgres-buyer-guardrail-split-v349.ts', import.meta.url)",
+          "literal": "./grant-postgres-buyer-guardrail-split-v349.ts"
+        },
+        {
+          "line": 145,
+          "source": "new URL(\n        '../../../packages/core/src/db/postgres/critical-writes.impl.ts', import.meta.url)",
+          "literal": "../../../packages/core/src/db/postgres/critical-writes.impl.ts"
+        },
+        {
+          "line": 147,
+          "source": "new URL(import.meta.url)",
+          "literal": null
+        },
+        {
+          "line": 187,
+          "source": "new URL(name, proposals)",
+          "literal": null
+        },
+        {
+          "line": 192,
+          "source": "new URL(splitNames[0], proposals)",
+          "literal": null
+        },
+        {
+          "line": 193,
+          "source": "new URL(splitNames[2], proposals)",
+          "literal": null
+        },
+        {
+          "line": 194,
+          "source": "new URL(reconcileName, proposals)",
+          "literal": null
+        },
+        {
+          "line": 307,
+          "source": "new URL(guardrailName, proposals)",
+          "literal": null
+        },
+        {
+          "line": 308,
+          "source": "new URL(successorMarkerName, proposals)",
+          "literal": null
+        },
+        {
+          "line": 309,
+          "source": "new URL(successorGrantName, proposals)",
+          "literal": null
+        }
+      ],
+      "fixedAssertions": [],
+      "interestingLines": [
+        {
+          "line": 75,
+          "source": "      binaryVersion: cluster.binaryVersion, sourceSha256: {}, stages: [],"
+        },
+        {
+          "line": 129,
+          "source": "      report.sourceSha256.formalMigrations = hash(corpus.join('\\n'));"
+        },
+        {
+          "line": 133,
+          "source": "        report.sourceSha256[name] = hash(await readFile(new URL(name, proposals)));"
+        },
+        {
+          "line": 135,
+          "source": "      report.sourceSha256.runtimeGrant = hash(await readFile("
+        },
+        {
+          "line": 137,
+          "source": "      report.sourceSha256.splitGrantRunner = hash(await readFile("
+        },
+        {
+          "line": 139,
+          "source": "      report.sourceSha256.splitActivationRunner = hash(await readFile("
+        },
+        {
+          "line": 141,
+          "source": "      report.sourceSha256.successorActivationRunner = hash(await readFile("
+        },
+        {
+          "line": 143,
+          "source": "      report.sourceSha256.successorGrantRunner = hash(await readFile("
+        },
+        {
+          "line": 145,
+          "source": "      report.sourceSha256.criticalWriter = hash(await readFile(new URL("
+        },
+        {
+          "line": 147,
+          "source": "      report.sourceSha256.fixture = hash(await readFile(new URL(import.meta.url)));"
+        }
+      ]
+    },
+    {
+      "step": 97,
+      "file": "scripts/db/cutover/postgres-shared-key-stats-auth-boundary-v346.native.test.mjs",
+      "bytes": 8904,
+      "sha256": "46a13c44fec610692feb18ea0bf1d3bc10eb93a76e65d47edd326db13ea31e18",
+      "assertionCount": 12,
+      "hashes": [],
+      "urls": [
+        {
+          "line": 11,
+          "source": "new URL('../../../', import.meta.url)",
+          "literal": "../../../"
+        },
+        {
+          "line": 12,
+          "source": "new URL('packages/core/migrations-postgres/', root)",
+          "literal": "packages/core/migrations-postgres/"
+        },
+        {
+          "line": 13,
+          "source": "new URL(\n  'docs/developers/architecture/implementation-evidence/C04-postgres-stats-auth-boundary-v346-results.json',\n  root,\n)",
+          "literal": "docs/developers/architecture/implementation-evidence/C04-postgres-stats-auth-boundary-v346-results.json"
+        },
+        {
+          "line": 61,
+          "source": "new URL(name, migrationDir)",
+          "literal": null
+        },
+        {
+          "line": 69,
+          "source": "new URL(import.meta.url)",
+          "literal": null
+        },
+        {
+          "line": 70,
+          "source": "new URL('scripts/db/cutover/grant-postgres-runtime.ts', root)",
+          "literal": "scripts/db/cutover/grant-postgres-runtime.ts"
+        },
+        {
+          "line": 71,
+          "source": "new URL('packages/admin/lib/user-auth.ts', root)",
+          "literal": "packages/admin/lib/user-auth.ts"
+        },
+        {
+          "line": 72,
+          "source": "new URL('packages/admin/lib/auth.ts', root)",
+          "literal": "packages/admin/lib/auth.ts"
+        },
+        {
+          "line": 73,
+          "source": "new URL('packages/core/migrations-proposals/postgres/shared-key-credited-usage-reader.sql', root)",
+          "literal": "packages/core/migrations-proposals/postgres/shared-key-credited-usage-reader.sql"
+        }
+      ],
+      "fixedAssertions": [],
+      "interestingLines": [
+        {
+          "line": 34,
+          "source": "      sourceSha256: {}, stages: [], limitations: ["
+        },
+        {
+          "line": 75,
+          "source": "      report.sourceSha256 = { formalMigrationCorpus: sha256(corpus.join('\\n')),"
+        }
+      ]
+    },
+    {
+      "step": 98,
+      "file": "scripts/db/cutover/postgres-shared-key-stats-signed-claim-v348.native.test.mjs",
+      "bytes": 12736,
+      "sha256": "7e0ae22d95b9cecc2fa154a2afd658868a31ece212aa60715021872e04557238",
+      "assertionCount": 24,
+      "hashes": [],
+      "urls": [
+        {
+          "line": 10,
+          "source": "new URL('../../../', import.meta.url)",
+          "literal": "../../../"
+        },
+        {
+          "line": 11,
+          "source": "new URL('packages/core/migrations-postgres/', root)",
+          "literal": "packages/core/migrations-postgres/"
+        },
+        {
+          "line": 12,
+          "source": "new URL('packages/core/migrations-proposals/postgres/shared-key-stats-signed-claim-v348.sql', root)",
+          "literal": "packages/core/migrations-proposals/postgres/shared-key-stats-signed-claim-v348.sql"
+        },
+        {
+          "line": 13,
+          "source": "new URL('docs/developers/architecture/implementation-evidence/C04-stats-signed-claim-v348-results.json', root)",
+          "literal": "docs/developers/architecture/implementation-evidence/C04-stats-signed-claim-v348-results.json"
+        },
+        {
+          "line": 66,
+          "source": "new URL(name, migrationDir)",
+          "literal": null
+        },
+        {
+          "line": 76,
+          "source": "new URL(import.meta.url)",
+          "literal": null
+        },
+        {
+          "line": 77,
+          "source": "new URL('scripts/db/cutover/grant-postgres-runtime.ts', root)",
+          "literal": "scripts/db/cutover/grant-postgres-runtime.ts"
+        }
+      ],
+      "fixedAssertions": [],
+      "interestingLines": [
+        {
+          "line": 32,
+          "source": "      sourceSha256: {}, stages: [], limitations: ["
+        },
+        {
+          "line": 74,
+          "source": "      report.sourceSha256 = { formalMigrationCorpus: sha256(corpus.join('\\n')),"
+        }
+      ]
+    },
+    {
+      "step": 99,
+      "file": "scripts/db/cutover/postgres-shared-key-stats-claim-reader-v349-cjs-loader-successor.native.test.mjs",
+      "bytes": 29481,
+      "sha256": "997c7ec3b5d83bafd8c386493d66a8fd461d86576ea31c6afe32672e995f0088",
+      "assertionCount": 74,
+      "hashes": [
+        {
+          "line": 27,
+          "hash": "095f8ec4748cd92e35f37b86891ef8762bc8b8b5ca65ab49abc55b067c1d9be9",
+          "parent": "historicalFixtureSha256 = '095f8ec4748cd92e35f37b86891ef8762bc8b8b5ca65ab49abc55b067c1d9be9'",
+          "sourceLine": "const historicalFixtureSha256 = '095f8ec4748cd92e35f37b86891ef8762bc8b8b5ca65ab49abc55b067c1d9be9';"
+        }
+      ],
+      "urls": [
+        {
+          "line": 14,
+          "source": "new URL('../../../', import.meta.url)",
+          "literal": "../../../"
+        },
+        {
+          "line": 15,
+          "source": "new URL('packages/core/migrations-postgres/', root)",
+          "literal": "packages/core/migrations-postgres/"
+        },
+        {
+          "line": 136,
+          "source": "new URL(name,migrationDir)",
+          "literal": null
+        },
+        {
+          "line": 146,
+          "source": "new URL(`packages/core/migrations-proposals/postgres/${file}`,root)",
+          "literal": null
+        },
+        {
+          "line": 150,
+          "source": "new URL(import.meta.url)",
+          "literal": null
+        },
+        {
+          "line": 151,
+          "source": "new URL('packages/admin/lib/shared-key-signed-stats-reader.ts',root)",
+          "literal": "packages/admin/lib/shared-key-signed-stats-reader.ts"
+        },
+        {
+          "line": 152,
+          "source": "new URL('packages/admin/lib/routes/user/shared-keys.ts',root)",
+          "literal": "packages/admin/lib/routes/user/shared-keys.ts"
+        },
+        {
+          "line": 153,
+          "source": "new URL('scripts/db/cutover/grant-postgres-runtime.ts',root)",
+          "literal": "scripts/db/cutover/grant-postgres-runtime.ts"
+        },
+        {
+          "line": 154,
+          "source": "new URL(\n          'scripts/db/cutover/postgres-shared-key-stats-claim-reader-v349.native.test.mjs',root)",
+          "literal": "scripts/db/cutover/postgres-shared-key-stats-claim-reader-v349.native.test.mjs"
+        }
+      ],
+      "fixedAssertions": [
+        {
+          "line": 156,
+          "source": "assert.equal(report.sourceSha256.historicalFixture,historicalFixtureSha256)"
+        }
+      ],
+      "interestingLines": [
+        {
+          "line": 27,
+          "source": "const historicalFixtureSha256 = '095f8ec4748cd92e35f37b86891ef8762bc8b8b5ca65ab49abc55b067c1d9be9';"
+        },
+        {
+          "line": 93,
+          "source": "      sourceSha256:{},stages:[],"
+        },
+        {
+          "line": 94,
+          "source": "      lineage:{historicalFixture:'scripts/db/cutover/postgres-shared-key-stats-claim-reader-v349.native.test.mjs',"
+        },
+        {
+          "line": 95,
+          "source": "        historicalFixtureSha256,contract:'real Admin CommonJS default module export; unchanged signed-reader SQL and role authority'},"
+        },
+        {
+          "line": 148,
+          "source": "      report.sourceSha256={formalMigrationCorpus:digest(corpus.join('\\n')),"
+        },
+        {
+          "line": 154,
+          "source": "        historicalFixture:digest(await readFile(new URL("
+        },
+        {
+          "line": 155,
+          "source": "          'scripts/db/cutover/postgres-shared-key-stats-claim-reader-v349.native.test.mjs',root)))};"
+        },
+        {
+          "line": 156,
+          "source": "      assert.equal(report.sourceSha256.historicalFixture,historicalFixtureSha256);"
+        }
+      ]
+    },
+    {
+      "step": 100,
+      "file": "scripts/db/cutover/postgres-shared-key-snapshot-earning-consumer-v2.native.test.mjs",
+      "bytes": 39818,
+      "sha256": "193ff83d3c1a6e316315c8fe5c4abc592018127121110f52ea10d304334d04dd",
+      "assertionCount": 61,
+      "hashes": [],
+      "urls": [
+        {
+          "line": 16,
+          "source": "new URL('../../../packages/core/migrations-postgres/', import.meta.url)",
+          "literal": "../../../packages/core/migrations-postgres/"
+        },
+        {
+          "line": 146,
+          "source": "new URL(name, migrations)",
+          "literal": null
+        },
+        {
+          "line": 158,
+          "source": "new URL(`../../../packages/core/migrations-proposals/postgres/${name}`,\n          import.meta.url)",
+          "literal": null
+        },
+        {
+          "line": 163,
+          "source": "new URL(import.meta.url)",
+          "literal": null
+        },
+        {
+          "line": 473,
+          "source": "new URL(\n        '../../../packages/core/migrations-proposals/postgres/shared-key-snapshot-earning-consumer-v2.sql',\n        import.meta.url)",
+          "literal": "../../../packages/core/migrations-proposals/postgres/shared-key-snapshot-earning-consumer-v2.sql"
+        },
+        {
+          "line": 478,
+          "source": "new URL(import.meta.url)",
+          "literal": null
+        }
+      ],
+      "fixedAssertions": [],
+      "interestingLines": [
+        {
+          "line": 102,
+          "source": "      binaryVersion: cluster.binaryVersion, sourceSha256: {}, stages: [],"
+        },
+        {
+          "line": 154,
+          "source": "      report.sourceSha256.formalMigrationCorpus = sha(corpus.join('\\n'));"
+        },
+        {
+          "line": 160,
+          "source": "        report.sourceSha256[name] = sha(body);"
+        },
+        {
+          "line": 163,
+          "source": "      report.sourceSha256.nativeTest = sha(await readFile(new URL(import.meta.url)));"
+        },
+        {
+          "line": 476,
+          "source": "      report.sourceSha256['shared-key-snapshot-earning-consumer-v2.sql'] ="
+        },
+        {
+          "line": 478,
+          "source": "      report.sourceSha256.nativeTest = sha(await readFile(new URL(import.meta.url)));"
+        }
+      ]
+    },
+    {
+      "step": 101,
+      "file": "scripts/db/cutover/postgres-shared-key-economic-delivery.native.test.mjs",
+      "bytes": 32003,
+      "sha256": "8fd48757e9beafc308fb21b018fd35f105fd0bb89011dfa0f4a4e0e1bca4fd94",
+      "assertionCount": 73,
+      "hashes": [],
+      "urls": [
+        {
+          "line": 19,
+          "source": "new URL('../../../packages/core/migrations-postgres/',import.meta.url)",
+          "literal": "../../../packages/core/migrations-postgres/"
+        },
+        {
+          "line": 21,
+          "source": "new URL('../../../packages/core/migrations-proposals/postgres/shared-key-quote-versions.sql',import.meta.url)",
+          "literal": "../../../packages/core/migrations-proposals/postgres/shared-key-quote-versions.sql"
+        },
+        {
+          "line": 22,
+          "source": "new URL('../../../packages/core/migrations-proposals/postgres/shared-key-dispatch-quote-attempts.sql',import.meta.url)",
+          "literal": "../../../packages/core/migrations-proposals/postgres/shared-key-dispatch-quote-attempts.sql"
+        },
+        {
+          "line": 23,
+          "source": "new URL('../../../packages/core/migrations-proposals/postgres/shared-key-economic-outbox.sql',import.meta.url)",
+          "literal": "../../../packages/core/migrations-proposals/postgres/shared-key-economic-outbox.sql"
+        },
+        {
+          "line": 24,
+          "source": "new URL('../../../packages/core/migrations-proposals/postgres/shared-key-snapshot-earning-consumer.sql',import.meta.url)",
+          "literal": "../../../packages/core/migrations-proposals/postgres/shared-key-snapshot-earning-consumer.sql"
+        },
+        {
+          "line": 25,
+          "source": "new URL('../../../packages/core/migrations-proposals/postgres/shared-key-economic-delivery.sql',import.meta.url)",
+          "literal": "../../../packages/core/migrations-proposals/postgres/shared-key-economic-delivery.sql"
+        },
+        {
+          "line": 149,
+          "source": "new URL(name,migrations)",
+          "literal": null
+        },
+        {
+          "line": 164,
+          "source": "new URL(\n          '../../../packages/proxy/src/runtime/postgres-shared-earning-delivery.ts',import.meta.url)",
+          "literal": "../../../packages/proxy/src/runtime/postgres-shared-earning-delivery.ts"
+        },
+        {
+          "line": 166,
+          "source": "new URL(import.meta.url)",
+          "literal": null
+        }
+      ],
+      "fixedAssertions": [],
+      "interestingLines": [
+        {
+          "line": 90,
+          "source": "      stages:[],sourceSha256:{},limitations:["
+        },
+        {
+          "line": 160,
+          "source": "      report.sourceSha256={formalMigrationCorpus:sha(corpus.join('\\n')),"
+        }
+      ]
+    },
+    {
+      "step": 102,
+      "file": "scripts/db/cutover/postgres-shared-earning-scanner-v350.native.test.mjs",
+      "bytes": 17859,
+      "sha256": "1b08b2119ebb5ba8e38814ac77f25331f87fc2c6e93a12eedf8cf8d20e2d8e38",
+      "assertionCount": 29,
+      "hashes": [],
+      "urls": [
+        {
+          "line": 12,
+          "source": "new URL('../../../packages/core/migrations-postgres/', import.meta.url)",
+          "literal": "../../../packages/core/migrations-postgres/"
+        },
+        {
+          "line": 14,
+          "source": "new URL('../../../packages/core/migrations-proposals/postgres/shared-key-quote-versions.sql', import.meta.url)",
+          "literal": "../../../packages/core/migrations-proposals/postgres/shared-key-quote-versions.sql"
+        },
+        {
+          "line": 15,
+          "source": "new URL('../../../packages/core/migrations-proposals/postgres/shared-key-dispatch-quote-attempts.sql', import.meta.url)",
+          "literal": "../../../packages/core/migrations-proposals/postgres/shared-key-dispatch-quote-attempts.sql"
+        },
+        {
+          "line": 16,
+          "source": "new URL('../../../packages/core/migrations-proposals/postgres/shared-key-economic-outbox.sql', import.meta.url)",
+          "literal": "../../../packages/core/migrations-proposals/postgres/shared-key-economic-outbox.sql"
+        },
+        {
+          "line": 17,
+          "source": "new URL('../../../packages/core/migrations-proposals/postgres/shared-key-snapshot-earning-consumer.sql', import.meta.url)",
+          "literal": "../../../packages/core/migrations-proposals/postgres/shared-key-snapshot-earning-consumer.sql"
+        },
+        {
+          "line": 18,
+          "source": "new URL('../../../packages/core/migrations-proposals/postgres/shared-key-economic-delivery.sql', import.meta.url)",
+          "literal": "../../../packages/core/migrations-proposals/postgres/shared-key-economic-delivery.sql"
+        },
+        {
+          "line": 39,
+          "source": "new URL('../../../docs/developers/architecture/implementation-evidence/C04-postgres-shared-earning-scanner-v350-results.json', import.meta.url)",
+          "literal": "../../../docs/developers/architecture/implementation-evidence/C04-postgres-shared-earning-scanner-v350-results.json"
+        },
+        {
+          "line": 95,
+          "source": "new URL(name, migrations)",
+          "literal": null
+        },
+        {
+          "line": 108,
+          "source": "new URL('../../../packages/proxy/src/runtime/postgres-shared-earning-scanner.ts', import.meta.url)",
+          "literal": "../../../packages/proxy/src/runtime/postgres-shared-earning-scanner.ts"
+        },
+        {
+          "line": 109,
+          "source": "new URL(import.meta.url)",
+          "literal": null
+        }
+      ],
+      "fixedAssertions": [],
+      "interestingLines": [
+        {
+          "line": 42,
+          "source": "      sourceSha256: {}, stages: [], limitations: ["
+        },
+        {
+          "line": 105,
+          "source": "      report.sourceSha256 = {"
+        }
+      ]
+    },
+    {
+      "step": 103,
+      "file": "scripts/db/cutover/postgres-shared-earning-backlog-v353.native.test.mjs",
+      "bytes": 22569,
+      "sha256": "3ca0cc66213fddf8c93edde5108ef4600a336e834efd513612db05805621474d",
+      "assertionCount": 21,
+      "hashes": [],
+      "urls": [
+        {
+          "line": 11,
+          "source": "new URL('../../../packages/core/migrations-postgres/', import.meta.url)",
+          "literal": "../../../packages/core/migrations-postgres/"
+        },
+        {
+          "line": 13,
+          "source": "new URL('../../../packages/core/migrations-proposals/postgres/shared-key-quote-versions.sql', import.meta.url)",
+          "literal": "../../../packages/core/migrations-proposals/postgres/shared-key-quote-versions.sql"
+        },
+        {
+          "line": 14,
+          "source": "new URL('../../../packages/core/migrations-proposals/postgres/shared-key-dispatch-quote-attempts.sql', import.meta.url)",
+          "literal": "../../../packages/core/migrations-proposals/postgres/shared-key-dispatch-quote-attempts.sql"
+        },
+        {
+          "line": 15,
+          "source": "new URL('../../../packages/core/migrations-proposals/postgres/shared-key-economic-outbox.sql', import.meta.url)",
+          "literal": "../../../packages/core/migrations-proposals/postgres/shared-key-economic-outbox.sql"
+        },
+        {
+          "line": 16,
+          "source": "new URL('../../../packages/core/migrations-proposals/postgres/shared-key-snapshot-earning-consumer.sql', import.meta.url)",
+          "literal": "../../../packages/core/migrations-proposals/postgres/shared-key-snapshot-earning-consumer.sql"
+        },
+        {
+          "line": 17,
+          "source": "new URL('../../../packages/core/migrations-proposals/postgres/shared-key-economic-delivery.sql', import.meta.url)",
+          "literal": "../../../packages/core/migrations-proposals/postgres/shared-key-economic-delivery.sql"
+        },
+        {
+          "line": 18,
+          "source": "new URL('../../../packages/core/migrations-proposals/postgres/shared-key-delivery-backlog-observation.sql', import.meta.url)",
+          "literal": "../../../packages/core/migrations-proposals/postgres/shared-key-delivery-backlog-observation.sql"
+        },
+        {
+          "line": 20,
+          "source": "new URL('../../../packages/proxy/src/runtime/postgres-shared-earning-backlog-observer.ts', import.meta.url)",
+          "literal": "../../../packages/proxy/src/runtime/postgres-shared-earning-backlog-observer.ts"
+        },
+        {
+          "line": 47,
+          "source": "new URL('../../../docs/developers/architecture/implementation-evidence/C04-shared-earning-backlog-observation-v353-results.json', import.meta.url)",
+          "literal": "../../../docs/developers/architecture/implementation-evidence/C04-shared-earning-backlog-observation-v353-results.json"
+        },
+        {
+          "line": 92,
+          "source": "new URL(name, migrations)",
+          "literal": null
+        },
+        {
+          "line": 106,
+          "source": "new URL(import.meta.url)",
+          "literal": null
+        }
+      ],
+      "fixedAssertions": [],
+      "interestingLines": [
+        {
+          "line": 50,
+          "source": "      sourceSha256: {}, stages: [], limitations: ["
+        },
+        {
+          "line": 102,
+          "source": "      report.sourceSha256 = {"
+        }
+      ]
+    },
+    {
+      "step": 104,
+      "file": "scripts/db/cutover/postgres-shared-key-credited-usage-gap.native.test.mjs",
+      "bytes": 18172,
+      "sha256": "3c1a6de9753be65c96acb67b64b9dac04868b5f9ed0718834ce4c02edaafa66e",
+      "assertionCount": 29,
+      "hashes": [],
+      "urls": [
+        {
+          "line": 11,
+          "source": "new URL('../../../', import.meta.url)",
+          "literal": "../../../"
+        },
+        {
+          "line": 12,
+          "source": "new URL('packages/core/migrations-postgres/', root)",
+          "literal": "packages/core/migrations-postgres/"
+        },
+        {
+          "line": 14,
+          "source": "new URL('packages/core/migrations-proposals/postgres/shared-key-quote-versions.sql', root)",
+          "literal": "packages/core/migrations-proposals/postgres/shared-key-quote-versions.sql"
+        },
+        {
+          "line": 15,
+          "source": "new URL('packages/core/migrations-proposals/postgres/shared-key-dispatch-quote-attempts.sql', root)",
+          "literal": "packages/core/migrations-proposals/postgres/shared-key-dispatch-quote-attempts.sql"
+        },
+        {
+          "line": 16,
+          "source": "new URL('packages/core/migrations-proposals/postgres/shared-key-economic-outbox.sql', root)",
+          "literal": "packages/core/migrations-proposals/postgres/shared-key-economic-outbox.sql"
+        },
+        {
+          "line": 17,
+          "source": "new URL('packages/core/migrations-proposals/postgres/shared-key-snapshot-earning-consumer.sql', root)",
+          "literal": "packages/core/migrations-proposals/postgres/shared-key-snapshot-earning-consumer.sql"
+        },
+        {
+          "line": 18,
+          "source": "new URL('packages/core/migrations-proposals/postgres/shared-key-credited-usage-gap-audit.sql', root)",
+          "literal": "packages/core/migrations-proposals/postgres/shared-key-credited-usage-gap-audit.sql"
+        },
+        {
+          "line": 19,
+          "source": "new URL('packages/core/src/db/postgres/portal-marketplace.impl.ts', root)",
+          "literal": "packages/core/src/db/postgres/portal-marketplace.impl.ts"
+        },
+        {
+          "line": 20,
+          "source": "new URL(import.meta.url)",
+          "literal": null
+        },
+        {
+          "line": 22,
+          "source": "new URL('docs/developers/architecture/implementation-evidence/C04-postgres-credited-usage-gap-v342-results.json', root)",
+          "literal": "docs/developers/architecture/implementation-evidence/C04-postgres-credited-usage-gap-v342-results.json"
+        },
+        {
+          "line": 108,
+          "source": "new URL(name,migrations)",
+          "literal": null
+        }
+      ],
+      "fixedAssertions": [],
+      "interestingLines": [
+        {
+          "line": 72,
+          "source": "      sourceSha256:{},stages:[],limitations:["
+        },
+        {
+          "line": 119,
+          "source": "      report.sourceSha256={formalMigrationCorpus:sha(corpus.join('\\n')),"
+        }
+      ]
+    },
+    {
+      "step": 105,
+      "file": "scripts/db/cutover/postgres-shared-key-credited-usage-store.native.test.mjs",
+      "bytes": 28551,
+      "sha256": "4c2acfc56302b7b6fb102979a6e6ad78611cccf0a0fb397a0a2b953eb8c29868",
+      "assertionCount": 68,
+      "hashes": [],
+      "urls": [
+        {
+          "line": 11,
+          "source": "new URL('../../../', import.meta.url)",
+          "literal": "../../../"
+        },
+        {
+          "line": 12,
+          "source": "new URL('packages/core/migrations-postgres/', root)",
+          "literal": "packages/core/migrations-postgres/"
+        },
+        {
+          "line": 14,
+          "source": "new URL('packages/core/migrations-proposals/postgres/shared-key-quote-versions.sql', root)",
+          "literal": "packages/core/migrations-proposals/postgres/shared-key-quote-versions.sql"
+        },
+        {
+          "line": 15,
+          "source": "new URL('packages/core/migrations-proposals/postgres/shared-key-dispatch-quote-attempts.sql', root)",
+          "literal": "packages/core/migrations-proposals/postgres/shared-key-dispatch-quote-attempts.sql"
+        },
+        {
+          "line": 16,
+          "source": "new URL('packages/core/migrations-proposals/postgres/shared-key-economic-outbox.sql', root)",
+          "literal": "packages/core/migrations-proposals/postgres/shared-key-economic-outbox.sql"
+        },
+        {
+          "line": 17,
+          "source": "new URL('packages/core/migrations-proposals/postgres/shared-key-snapshot-earning-consumer.sql', root)",
+          "literal": "packages/core/migrations-proposals/postgres/shared-key-snapshot-earning-consumer.sql"
+        },
+        {
+          "line": 18,
+          "source": "new URL('packages/core/migrations-proposals/postgres/shared-key-earnings-history-guard.sql', root)",
+          "literal": "packages/core/migrations-proposals/postgres/shared-key-earnings-history-guard.sql"
+        },
+        {
+          "line": 19,
+          "source": "new URL('packages/core/migrations-proposals/postgres/shared-key-credited-usage-store.sql', root)",
+          "literal": "packages/core/migrations-proposals/postgres/shared-key-credited-usage-store.sql"
+        },
+        {
+          "line": 20,
+          "source": "new URL('packages/core/migrations-proposals/postgres/shared-key-credited-usage-gap-audit.sql', root)",
+          "literal": "packages/core/migrations-proposals/postgres/shared-key-credited-usage-gap-audit.sql"
+        },
+        {
+          "line": 21,
+          "source": "new URL('packages/core/src/db/postgres/portal-marketplace.impl.ts', root)",
+          "literal": "packages/core/src/db/postgres/portal-marketplace.impl.ts"
+        },
+        {
+          "line": 22,
+          "source": "new URL(import.meta.url)",
+          "literal": null
+        },
+        {
+          "line": 24,
+          "source": "new URL('docs/developers/architecture/implementation-evidence/C04-postgres-credited-usage-store-v343-results.json', root)",
+          "literal": "docs/developers/architecture/implementation-evidence/C04-postgres-credited-usage-store-v343-results.json"
+        },
+        {
+          "line": 111,
+          "source": "new URL(name,migrations)",
+          "literal": null
+        }
+      ],
+      "fixedAssertions": [],
+      "interestingLines": [
+        {
+          "line": 74,
+          "source": "      sourceSha256:{},stages:[],limitations:["
+        },
+        {
+          "line": 122,
+          "source": "      report.sourceSha256={formalMigrationCorpus:sha(corpus.join('\\n')),"
+        }
+      ]
+    },
+    {
+      "step": 106,
+      "file": "scripts/db/cutover/postgres-shared-key-credited-usage-reader.native.test.mjs",
+      "bytes": 18603,
+      "sha256": "fe62b22831e7b37e8c0377ed4e902ce0be499dd54ebea2d1e81b93c60c47d912",
+      "assertionCount": 34,
+      "hashes": [],
+      "urls": [
+        {
+          "line": 10,
+          "source": "new URL('../../../', import.meta.url)",
+          "literal": "../../../"
+        },
+        {
+          "line": 11,
+          "source": "new URL('packages/core/migrations-postgres/', root)",
+          "literal": "packages/core/migrations-postgres/"
+        },
+        {
+          "line": 21,
+          "source": "new URL('docs/developers/architecture/implementation-evidence/C04-postgres-credited-usage-reader-v344-results.json',root)",
+          "literal": "docs/developers/architecture/implementation-evidence/C04-postgres-credited-usage-reader-v344-results.json"
+        },
+        {
+          "line": 119,
+          "source": "new URL(name,migrationDir)",
+          "literal": null
+        },
+        {
+          "line": 129,
+          "source": "new URL(`packages/core/migrations-proposals/postgres/${file}`,root)",
+          "literal": null
+        },
+        {
+          "line": 133,
+          "source": "new URL(import.meta.url)",
+          "literal": null
+        }
+      ],
+      "fixedAssertions": [],
+      "interestingLines": [
+        {
+          "line": 85,
+          "source": "      sourceSha256:{},stages:[],limitations:["
+        },
+        {
+          "line": 131,
+          "source": "      report.sourceSha256={formalMigrationCorpus:digest(corpus.join('\\n')),"
+        }
+      ]
+    },
+    {
+      "step": 107,
+      "file": "scripts/db/cutover/postgres-recovery-old-database-upgrade.native.test.mjs",
+      "bytes": 23431,
+      "sha256": "860ea7bde91a1406f7133a5a2726bb549868d6677270d8302a84b79b1cc92a4a",
+      "assertionCount": 43,
+      "hashes": [],
+      "urls": [
+        {
+          "line": 18,
+          "source": "new URL('../../../packages/core/migrations-postgres/', import.meta.url)",
+          "literal": "../../../packages/core/migrations-postgres/"
+        },
+        {
+          "line": 19,
+          "source": "new URL('./postgres-recovery-legacy-log-guard.activate.sql', import.meta.url)",
+          "literal": "./postgres-recovery-legacy-log-guard.activate.sql"
+        },
+        {
+          "line": 20,
+          "source": "new URL('../../../packages/core/migrations-proposals/postgres/dispatch-intent-producer-definer.sql', import.meta.url)",
+          "literal": "../../../packages/core/migrations-proposals/postgres/dispatch-intent-producer-definer.sql"
+        },
+        {
+          "line": 21,
+          "source": "new URL('../../../packages/core/migrations-proposals/postgres/settlement-outbox-producer-definer.sql', import.meta.url)",
+          "literal": "../../../packages/core/migrations-proposals/postgres/settlement-outbox-producer-definer.sql"
+        },
+        {
+          "line": 120,
+          "source": "new URL(name, migrationDir)",
+          "literal": null
+        },
+        {
+          "line": 123,
+          "source": "new URL(import.meta.url)",
+          "literal": null
+        },
+        {
+          "line": 123,
+          "source": "new URL('../../../packages/core/src/test-support/postgres-native-cluster.mjs', import.meta.url)",
+          "literal": "../../../packages/core/src/test-support/postgres-native-cluster.mjs"
+        },
+        {
+          "line": 124,
+          "source": "new URL('./grant-postgres-runtime.ts', import.meta.url)",
+          "literal": "./grant-postgres-runtime.ts"
+        },
+        {
+          "line": 125,
+          "source": "new URL('../../../packages/core/src/db/postgres/api-keys.impl.ts', import.meta.url)",
+          "literal": "../../../packages/core/src/db/postgres/api-keys.impl.ts"
+        },
+        {
+          "line": 126,
+          "source": "new URL('../../../packages/core/src/db/postgres/request-logs.impl.ts', import.meta.url)",
+          "literal": "../../../packages/core/src/db/postgres/request-logs.impl.ts"
+        }
+      ],
+      "fixedAssertions": [
+        {
+          "line": 315,
+          "source": "assert.equal(await apiKeys.deleteByHashForManagement({ ...managementScope,\n        keyHash: `sha256:${'c'.repeat(64)}` }), true)"
+        },
+        {
+          "line": 324,
+          "source": "assert.rejects(migrator.unsafe(`INSERT INTO ${g}.request_dispatch_intents\n        (request_id,attempt_index,user_id,api_key_id,workspace_id,operation,context_sha256,expires_at_ms)\n        VALUES ('bad id',1,'user','clean-intent','personal:user','images.generations',$1,$2)`,\n      ['a'.repeat(64), expiresAtMs]), error => error.code === '23514')"
+        },
+        {
+          "line": 341,
+          "source": "assert.equal(await apiKeys.deleteByHashForManagement({ ...managementScope,\n        keyHash: `sha256:${'d'.repeat(64)}` }), false)"
+        }
+      ],
+      "interestingLines": [
+        {
+          "line": 87,
+          "source": "      ], stages: [], sourceSha256: {} };"
+        },
+        {
+          "line": 121,
+          "source": "      report.sourceSha256.formalMigrationCorpus = sha256(files.map(name => `${name}\\n${bodies.get(name)}`).join('\\n'));"
+        },
+        {
+          "line": 128,
+          "source": "      ]) report.sourceSha256[key] = sha256(await readFile(url));"
+        }
+      ]
+    },
+    {
+      "step": 108,
+      "file": "scripts/db/cutover/build-request-legacy-parent-census.native.test.mjs",
+      "bytes": 12134,
+      "sha256": "42b1ab50c6e5cbc46dd3ed018f1f09f48d5890339d012982f863373cf7f1a262",
+      "assertionCount": 31,
+      "hashes": [],
+      "urls": [
+        {
+          "line": 14,
+          "source": "new URL('../../../packages/core/migrations-postgres/', import.meta.url)",
+          "literal": "../../../packages/core/migrations-postgres/"
+        },
+        {
+          "line": 16,
+          "source": "new URL('../../../packages/core/migrations-proposals/postgres/dispatch-intent-producer-definer.sql', import.meta.url)",
+          "literal": "../../../packages/core/migrations-proposals/postgres/dispatch-intent-producer-definer.sql"
+        },
+        {
+          "line": 17,
+          "source": "new URL('../../../packages/core/migrations-proposals/postgres/request-dispatch-single-claim.sql', import.meta.url)",
+          "literal": "../../../packages/core/migrations-proposals/postgres/request-dispatch-single-claim.sql"
+        },
+        {
+          "line": 19,
+          "source": "new URL('../../../packages/core/migrations-proposals/postgres/request-dispatch-parent-deadline-budget.sql', import.meta.url)",
+          "literal": "../../../packages/core/migrations-proposals/postgres/request-dispatch-parent-deadline-budget.sql"
+        },
+        {
+          "line": 61,
+          "source": "new URL('./build-request-legacy-parent-census.mjs', import.meta.url)",
+          "literal": "./build-request-legacy-parent-census.mjs"
+        },
+        {
+          "line": 62,
+          "source": "new URL(import.meta.url)",
+          "literal": null
+        },
+        {
+          "line": 79,
+          "source": "new URL(name, migrationDir)",
+          "literal": null
+        }
+      ],
+      "fixedAssertions": [
+        {
+          "line": 163,
+          "source": "assert.equal(first[0].original_request_sha256, null)"
+        }
+      ],
+      "interestingLines": [
+        {
+          "line": 50,
+          "source": "      ], stages: [], sourceSha256: {} };"
+        },
+        {
+          "line": 63,
+          "source": "      ]) report.sourceSha256[name] = digest(await readFile(url));"
+        },
+        {
+          "line": 86,
+          "source": "      report.sourceSha256.formalMigrationCorpus = digest(corpus.join('\\n'));"
+        },
+        {
+          "line": 135,
+          "source": "        report.sourceSha256[activation] = digest(await readFile(url));"
+        }
+      ]
+    },
+    {
+      "step": 109,
+      "file": "scripts/db/cutover/postgres-replay-reservations-backend-lifecycle-successor.native.test.mjs",
+      "bytes": 42663,
+      "sha256": "40fcf5af8960e32f3ad9f1343c046a48aed32f72fd6c19efe14b14ce4c1b48c4",
+      "assertionCount": 87,
+      "hashes": [
+        {
+          "line": 18,
+          "hash": "d95055419a04465c7c172ff0b8426bd0b928bd538e4dad80f9442229abd5e269",
+          "parent": "historicalNativeTestSha256 = 'd95055419a04465c7c172ff0b8426bd0b928bd538e4dad80f9442229abd5e269'",
+          "sourceLine": "const historicalNativeTestSha256 = 'd95055419a04465c7c172ff0b8426bd0b928bd538e4dad80f9442229abd5e269';"
+        }
+      ],
+      "urls": [
+        {
+          "line": 17,
+          "source": "new URL('./postgres-replay-reservations.native.test.mjs', import.meta.url)",
+          "literal": "./postgres-replay-reservations.native.test.mjs"
+        },
+        {
+          "line": 21,
+          "source": "new URL('../../../packages/core/migrations-postgres/', import.meta.url)",
+          "literal": "../../../packages/core/migrations-postgres/"
+        },
+        {
+          "line": 23,
+          "source": "new URL('../../../packages/core/migrations-proposals/postgres/dispatch-intent-producer-definer.sql', import.meta.url)",
+          "literal": "../../../packages/core/migrations-proposals/postgres/dispatch-intent-producer-definer.sql"
+        },
+        {
+          "line": 24,
+          "source": "new URL('../../../packages/core/migrations-proposals/postgres/request-dispatch-single-claim.sql', import.meta.url)",
+          "literal": "../../../packages/core/migrations-proposals/postgres/request-dispatch-single-claim.sql"
+        },
+        {
+          "line": 25,
+          "source": "new URL('../../../packages/core/migrations-proposals/postgres/request-dispatch-parent-deadline-budget.sql', import.meta.url)",
+          "literal": "../../../packages/core/migrations-proposals/postgres/request-dispatch-parent-deadline-budget.sql"
+        },
+        {
+          "line": 27,
+          "source": "new URL('../../../packages/core/migrations-proposals/postgres/request-dispatch-replay-reservations.sql', import.meta.url)",
+          "literal": "../../../packages/core/migrations-proposals/postgres/request-dispatch-replay-reservations.sql"
+        },
+        {
+          "line": 28,
+          "source": "new URL('../../../packages/core/migrations-proposals/postgres/request-dispatch-replay-parent-gate.sql', import.meta.url)",
+          "literal": "../../../packages/core/migrations-proposals/postgres/request-dispatch-replay-parent-gate.sql"
+        },
+        {
+          "line": 124,
+          "source": "new URL(name, migrations)",
+          "literal": null
+        },
+        {
+          "line": 132,
+          "source": "new URL(import.meta.url)",
+          "literal": null
+        },
+        {
+          "line": 134,
+          "source": "new URL('../../../packages/core/src/test-support/postgres-native-cluster.mjs', import.meta.url)",
+          "literal": "../../../packages/core/src/test-support/postgres-native-cluster.mjs"
+        },
+        {
+          "line": 135,
+          "source": "new URL('../../../node_modules/postgres/src/index.js', import.meta.url)",
+          "literal": "../../../node_modules/postgres/src/index.js"
+        },
+        {
+          "line": 136,
+          "source": "new URL('../../../node_modules/postgres/src/connection.js', import.meta.url)",
+          "literal": "../../../node_modules/postgres/src/connection.js"
+        },
+        {
+          "line": 138,
+          "source": "new URL('./grant-postgres-runtime.ts', import.meta.url)",
+          "literal": "./grant-postgres-runtime.ts"
+        },
+        {
+          "line": 139,
+          "source": "new URL('./build-postgres-replay-reservation-backfill.mjs', import.meta.url)",
+          "literal": "./build-postgres-replay-reservation-backfill.mjs"
+        },
+        {
+          "line": 140,
+          "source": "new URL('./build-postgres-replay-retention-candidates.mjs', import.meta.url)",
+          "literal": "./build-postgres-replay-retention-candidates.mjs"
+        },
+        {
+          "line": 144,
+          "source": "new URL('../../../node_modules/postgres/package.json', import.meta.url)",
+          "literal": "../../../node_modules/postgres/package.json"
+        }
+      ],
+      "fixedAssertions": [
+        {
+          "line": 143,
+          "source": "assert.equal(report.sourceSha256.historicalNativeTest, historicalNativeTestSha256)"
+        },
+        {
+          "line": 165,
+          "source": "assert.rejects(producer.unsafe(`INSERT INTO ${schema}.request_dispatch_intents\n        (request_id,attempt_index,user_id,api_key_id,workspace_id,operation,context_sha256,expires_at_ms)\n        VALUES ('replay-producer-direct',1,'replay-user','replay-key','replay-space',\n          'images.generations',$1,$2)`, [context, await nowMs(migrator, 60_000)]),\n      error => error?.code === '42501')"
+        },
+        {
+          "line": 175,
+          "source": "assert.equal(await prepare(migrator, historical, oldExpiry), true)"
+        },
+        {
+          "line": 176,
+          "source": "assert.equal(await claim(migrator, historical, oldClaim), true)"
+        },
+        {
+          "line": 235,
+          "source": "assert.rejects(legacyDirect.begin(async tx => {\n        await tx.unsafe(`INSERT INTO ${schema}.request_dispatch_intents\n          (request_id,attempt_index,user_id,api_key_id,workspace_id,operation,context_sha256,expires_at_ms)\n          VALUES ($1,1,'replay-user','replay-key','replay-space','images.generations',$2,$3)`,\n        [transient, context, await nowMs(migrator, 60_000)]);\n        const [inside] = await tx.unsafe(`SELECT count(*)::int AS n FROM ${schema}.request_dispatch_replay_tombstones\n          WHERE request_id=$1`, [transient]);\n        assert.equal(inside.n, 1);\n        throw new Error('fixture rollback after observing same-transaction reservation');\n      }), /fixture rollback/)"
+        },
+        {
+          "line": 501,
+          "source": "assert.rejects(migrator.unsafe(`DELETE FROM ${schema}.request_dispatch_intents WHERE request_id=$1`, [historical]),\n        /cannot be deleted or rewritten/)"
+        },
+        {
+          "line": 503,
+          "source": "assert.rejects(migrator.unsafe(`DELETE FROM ${schema}.request_dispatch_requests WHERE request_id=$1`, [historical]),\n        /cannot be deleted or rewritten/)"
+        },
+        {
+          "line": 505,
+          "source": "assert.rejects(migrator.unsafe(`DELETE FROM ${schema}.request_dispatch_replay_tombstones WHERE request_id=$1`, [historical]),\n        /cannot be deleted or rewritten/)"
+        },
+        {
+          "line": 509,
+          "source": "assert.rejects(migrator.unsafe(`UPDATE ${schema}.request_usage_settlements SET payload_json='{}'\n        WHERE request_id=$1`, [historical]), /immutable/)"
+        },
+        {
+          "line": 556,
+          "source": "assert.rejects(migrator.begin(async tx => {\n          await tx.unsafe(`INSERT INTO ${schema}.request_usage_commit_receipts\n            (request_id,payload_sha256,user_id,workspace_id,recorded_at,lease_token,lease_revision)\n            VALUES ($1,$2,'replay-user','replay-space',$3,$4,1)`,\n          [financeId, financeHash, financeRecordedAt, leaseToken]);\n          await tx.unsafe(`INSERT INTO ${schema}.api_key_request_logs\n            (id,user_id,api_key_id,workspace_id,request_operation)\n            VALUES ($1,$2,'replay-key','replay-space',$3)`,\n          [financeId, logUserId, logOperation]);\n        }), /financial scope differs/)"
+        },
+        {
+          "line": 620,
+          "source": "assert.equal(byId[historical].review_bucket, 'claimed_history_hold')"
+        }
+      ],
+      "interestingLines": [
+        {
+          "line": 17,
+          "source": "const historicalNativeTest = new URL('./postgres-replay-reservations.native.test.mjs', import.meta.url);"
+        },
+        {
+          "line": 100,
+          "source": "      ], sourceSha256: {}, stages: [] };"
+        },
+        {
+          "line": 131,
+          "source": "      report.sourceSha256.formalMigrationCorpus = digest(corpus.join('\\n'));"
+        },
+        {
+          "line": 141,
+          "source": "        report.sourceSha256[name] = digest(await readFile(url));"
+        },
+        {
+          "line": 143,
+          "source": "      assert.equal(report.sourceSha256.historicalNativeTest, historicalNativeTestSha256);"
+        }
+      ]
+    },
+    {
+      "step": 110,
+      "file": "scripts/db/cutover/postgres-legacy-parent-activation.native.test.mjs",
+      "bytes": 30195,
+      "sha256": "8b6aae0e4250604a60446f3d02ae0c3683416c26a7d01de58cc26cd66bba7f18",
+      "assertionCount": 60,
+      "hashes": [],
+      "urls": [
+        {
+          "line": 17,
+          "source": "new URL('../../../packages/core/migrations-postgres/', import.meta.url)",
+          "literal": "../../../packages/core/migrations-postgres/"
+        },
+        {
+          "line": 18,
+          "source": "new URL('../../../packages/core/migrations-proposals/postgres/dispatch-intent-producer-definer.sql', import.meta.url)",
+          "literal": "../../../packages/core/migrations-proposals/postgres/dispatch-intent-producer-definer.sql"
+        },
+        {
+          "line": 19,
+          "source": "new URL('../../../packages/core/migrations-proposals/postgres/request-dispatch-single-claim.sql', import.meta.url)",
+          "literal": "../../../packages/core/migrations-proposals/postgres/request-dispatch-single-claim.sql"
+        },
+        {
+          "line": 20,
+          "source": "new URL('../../../packages/core/migrations-proposals/postgres/request-dispatch-replay-reservations.sql', import.meta.url)",
+          "literal": "../../../packages/core/migrations-proposals/postgres/request-dispatch-replay-reservations.sql"
+        },
+        {
+          "line": 21,
+          "source": "new URL('../../../packages/core/migrations-proposals/postgres/request-dispatch-legacy-parent-backfill.sql', import.meta.url)",
+          "literal": "../../../packages/core/migrations-proposals/postgres/request-dispatch-legacy-parent-backfill.sql"
+        },
+        {
+          "line": 22,
+          "source": "new URL('../../../packages/core/migrations-proposals/postgres/request-dispatch-replay-parent-gate.sql', import.meta.url)",
+          "literal": "../../../packages/core/migrations-proposals/postgres/request-dispatch-replay-parent-gate.sql"
+        },
+        {
+          "line": 91,
+          "source": "new URL(name, migrationDir)",
+          "literal": null
+        },
+        {
+          "line": 105,
+          "source": "new URL(import.meta.url)",
+          "literal": null
+        },
+        {
+          "line": 106,
+          "source": "new URL('./build-request-legacy-parent-activation.mjs', import.meta.url)",
+          "literal": "./build-request-legacy-parent-activation.mjs"
+        },
+        {
+          "line": 107,
+          "source": "new URL('./build-request-legacy-parent-default-acl-activation.mjs', import.meta.url)",
+          "literal": "./build-request-legacy-parent-default-acl-activation.mjs"
+        },
+        {
+          "line": 108,
+          "source": "new URL('./build-postgres-replay-reservation-backfill.mjs', import.meta.url)",
+          "literal": "./build-postgres-replay-reservation-backfill.mjs"
+        },
+        {
+          "line": 109,
+          "source": "new URL('./grant-postgres-runtime.ts', import.meta.url)",
+          "literal": "./grant-postgres-runtime.ts"
+        }
+      ],
+      "fixedAssertions": [
+        {
+          "line": 154,
+          "source": "assert.equal(bundle.formalCorpusSha256, report.sourceSha256.formalMigrationCorpus)"
+        },
+        {
+          "line": 155,
+          "source": "assert.equal(bundle.reservationSourceSha256, report.sourceSha256.reservation)"
+        },
+        {
+          "line": 406,
+          "source": "assert.rejects(sql.unsafe(`INSERT INTO ${schema}.request_dispatch_intents\n        (request_id,attempt_index,user_id,api_key_id,workspace_id,operation,context_sha256,expires_at_ms)\n        VALUES ('legacy-intent',2,'legacy-parent-user','legacy-parent-key','legacy-parent-space',\n          'images.generations',$1,$2)`, ['d'.repeat(64), Date.now() + 60_000]),\n      /Dispatch intent requires a live request parent/)"
+        }
+      ],
+      "interestingLines": [
+        {
+          "line": 58,
+          "source": "      ], sourceSha256: {}, stages: [] };"
+        },
+        {
+          "line": 98,
+          "source": "      report.sourceSha256.formalMigrationCorpus = digest(corpus.join('\\n'));"
+        },
+        {
+          "line": 110,
+          "source": "      ]) { namedSql[name] = await readFile(url, 'utf8'); report.sourceSha256[name] = digest(namedSql[name]); }"
+        },
+        {
+          "line": 153,
+          "source": "      report.sourceSha256.generatedActivationBundle = digest(bundle.sql);"
+        },
+        {
+          "line": 154,
+          "source": "      assert.equal(bundle.formalCorpusSha256, report.sourceSha256.formalMigrationCorpus);"
+        },
+        {
+          "line": 155,
+          "source": "      assert.equal(bundle.reservationSourceSha256, report.sourceSha256.reservation);"
+        }
+      ]
+    },
+    {
+      "step": 111,
+      "file": "scripts/db/cutover/build-postgres-recovery-retention-review.native.test.mjs",
+      "bytes": 13540,
+      "sha256": "2245280b58b9893bf0069b9d7516b8b23ce73d48d4894b99446621eba75b930b",
+      "assertionCount": 22,
+      "hashes": [],
+      "urls": [
+        {
+          "line": 14,
+          "source": "new URL('../../../packages/core/migrations-postgres/', import.meta.url)",
+          "literal": "../../../packages/core/migrations-postgres/"
+        },
+        {
+          "line": 16,
+          "source": "new URL('../../../packages/core/migrations-proposals/postgres/dispatch-intent-producer-definer.sql', import.meta.url)",
+          "literal": "../../../packages/core/migrations-proposals/postgres/dispatch-intent-producer-definer.sql"
+        },
+        {
+          "line": 17,
+          "source": "new URL('../../../packages/core/migrations-proposals/postgres/request-dispatch-single-claim.sql', import.meta.url)",
+          "literal": "../../../packages/core/migrations-proposals/postgres/request-dispatch-single-claim.sql"
+        },
+        {
+          "line": 18,
+          "source": "new URL('../../../packages/core/migrations-proposals/postgres/request-dispatch-parent-deadline-budget.sql', import.meta.url)",
+          "literal": "../../../packages/core/migrations-proposals/postgres/request-dispatch-parent-deadline-budget.sql"
+        },
+        {
+          "line": 63,
+          "source": "new URL('./build-postgres-recovery-retention-review.mjs', import.meta.url)",
+          "literal": "./build-postgres-recovery-retention-review.mjs"
+        },
+        {
+          "line": 64,
+          "source": "new URL(import.meta.url)",
+          "literal": null
+        },
+        {
+          "line": 82,
+          "source": "new URL(name, migrations)",
+          "literal": null
+        }
+      ],
+      "fixedAssertions": [],
+      "interestingLines": [
+        {
+          "line": 53,
+          "source": "      ], stages: [], sourceSha256: {} };"
+        },
+        {
+          "line": 66,
+          "source": "        report.sourceSha256[name] = digest(await readFile(url));"
+        },
+        {
+          "line": 89,
+          "source": "      report.sourceSha256.formalMigrationCorpus = digest(corpus.join('\\n'));"
+        }
+      ]
+    },
+    {
+      "step": 112,
+      "file": "packages/core/src/storage/management-workspaces.postgres-native.test.mjs",
+      "bytes": 7296,
+      "sha256": "ef3285f9a57445d9cb77d40bcc11a84094523024861cfdb87c430903d598fae7",
+      "assertionCount": 14,
+      "hashes": [],
+      "urls": [
+        {
+          "line": 10,
+          "source": "new URL('../../migrations-postgres/', import.meta.url)",
+          "literal": "../../migrations-postgres/"
+        },
+        {
+          "line": 31,
+          "source": "new URL(file, migrations)",
+          "literal": null
+        }
+      ],
+      "fixedAssertions": [],
+      "interestingLines": []
+    },
+    {
+      "step": 113,
+      "file": "scripts/db/cutover/postgres-user-delete-audit.native.test.mjs",
+      "bytes": 7006,
+      "sha256": "cda101d3a202ea4bd06284e1d1c209af2b3072c368195c38450b3e0e55c83bc4",
+      "assertionCount": 22,
+      "hashes": [],
+      "urls": [
+        {
+          "line": 13,
+          "source": "new URL('../../../packages/core/migrations-postgres/', import.meta.url)",
+          "literal": "../../../packages/core/migrations-postgres/"
+        },
+        {
+          "line": 36,
+          "source": "new URL(name, migrationDir)",
+          "literal": null
+        }
+      ],
+      "fixedAssertions": [],
+      "interestingLines": []
+    }
+  ],
+  "nativeExecuted": false,
+  "repositoryWrites": 0
+}

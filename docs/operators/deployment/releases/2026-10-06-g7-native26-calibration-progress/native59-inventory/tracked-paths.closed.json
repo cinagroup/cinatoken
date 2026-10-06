@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-06T03:37:50.390Z",
+  "finishedAt": "2026-10-06T03:37:50.438Z",
+  "executable": "git",
+  "args": [
+    "ls-files",
+    "-z"
+  ],
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-full-inventory-10b2722ab06d4cf6b6305e24571b4a8d\\tracked-paths.stdout.log",
+  "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native59-full-inventory-10b2722ab06d4cf6b6305e24571b4a8d\\tracked-paths.stderr.log",
+  "stdoutInfo": {
+    "bytes": 920436,
+    "sha256": "e0e612fc1a613599d8bf2b664154c9572c0090fc9a10b3725173041a3ad5379b"
+  },
+  "stderrInfo": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

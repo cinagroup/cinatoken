@@ -1,0 +1,136 @@
+packages/proxy/src\app-credential-free-chat-ingress-v401.test.ts:56:		beforeAdmissionCommit: undefined as undefined | (() => void), holderObservedSignal: null as AbortSignal | null,
+packages/proxy/src\app-credential-free-chat-ingress-v401.test.ts:170:		holderBinding: { async fetch(request) { events.push('holder'); handed.push(await request.json()); state.holderObservedSignal = request.signal;
+packages/proxy/src\app-credential-free-chat-ingress-v401.test.ts:173:				if (state.holderUnavailable || state.holderAbort) return new Response(new ReadableStream({ cancel() { state.cancelledBodies++; } }),
+packages/proxy/src\app-credential-free-chat-ingress-v401.test.ts:458:		f.events.push('holder'); f.handed.push(await request.json()); f.state.holderObservedSignal = request.signal;
+packages/proxy/src\app-credential-free-chat-ingress-v401.test.ts:460:		request.signal.throwIfAborted();
+packages/proxy/src\app-credential-free-chat-ingress-v401.test.ts:481:		f.events.push('holder'); f.handed.push(await request.json()); f.state.holderObservedSignal = request.signal;
+packages/proxy/src\app-credential-free-chat-ingress-v401.test.ts:482:		return new Response(new ReadableStream<Uint8Array>({ cancel() { cancelCalls++; return pendingCancel; } }, { highWaterMark: 0 }),
+packages/core/src\lib\public-chat.ts:23:			await request.body?.cancel('public_chat_body_too_large').catch(() => undefined);
+packages/core/src\lib\public-chat.ts:38:				await reader.cancel('public_chat_body_too_large').catch(() => undefined);
+packages/proxy/src\routes\v1\request-dispatch-limit.test.ts:115:				} else if (mode === 'cancel') await init.body.cancel();
+packages/proxy/src\routes\v1\request-dispatch-limit.test.ts:150:				const source = new ReadableStream<Uint8Array>({ cancel() { cancels++; return cleanup.promise; } }, { highWaterMark: 0 });
+packages/proxy/src\routes\v1\request-dispatch-limit.test.ts:214:			const source = new ReadableStream<Uint8Array>({ pull() { entered.resolve(); }, cancel() { cancels++; return cleanup.promise; } }, { highWaterMark: 0 });
+packages/proxy/src\routes\v1\request-dispatch-limit.test.ts:252:				cancel() { cancels++; return cleanup.promise; },
+packages/proxy/src\routes\v1\request-dispatch-limit.test.ts:266:			else await response.body!.cancel();
+packages/proxy/src\routes\v1\request-dispatch-limit.test.ts:305:		const source = new ReadableStream<Uint8Array>({ cancel() { cancels++; return cleanup.promise; } });
+packages/proxy/src\routes\v1\request-dispatch-limit.test.ts:323:		else await response.body!.cancel();
+packages/proxy/src\routes\v1\request-dispatch-limit.test.ts:810:						cancel() { cancelled++; return new Promise<void>(() => {}); },
+packages/proxy/src\routes\v1\request-dispatch-limit.test.ts:842:					late.resolve(new Response(new ReadableStream({ cancel() { cancelled++; return new Promise<void>(() => {}); } })));
+packages/proxy/src\routes\v1\request-dispatch-limit.test.ts:861:				cancel() { cancelled++; return new Promise<void>(() => {}); },
+packages/proxy/src\routes\v1\request-dispatch-limit.test.ts:876:			if (outcome !== 'completed') await response.body?.cancel();
+packages/proxy/src\routes\v1\request-dispatch-limit.test.ts:894:				let authCalls = 0; let inferenceCalls = 0; let authSignal: AbortSignal | null | undefined;
+packages/proxy/src\routes\v1\request-dispatch-limit.test.ts:935:					late.resolve(new Response(new ReadableStream({ cancel() { cancelled++; return new Promise<void>(() => {}); } })));
+packages/proxy/src\routes\v1\request-dispatch-limit.test.ts:978:					cancel() { cancels++; return new Promise<void>(() => {}); },
+packages/proxy/src\routes\v1\request-dispatch-limit.test.ts:1018:			if (stop && !outcome.startsWith('accepted-')) { late.resolve(new Response(new ReadableStream({ cancel() { cancels++; return new Promise<void>(() => {}); } }))); await new Promise<void>(resolve => setImmediate(resolve)); }
+packages/proxy/src\routes\v1\request-dispatch-limit.test.ts:1080:				late.resolve(new Response(new ReadableStream({ cancel() { cancels++; return new Promise<void>(() => {}); } })));
+packages/proxy/src\routes\v1\request-dispatch-limit.test.ts:1093:				cancel() { cancels++; return new Promise<void>(() => {}); },
+packages/proxy/src\routes\v1\request-dispatch-limit.test.ts:1108:			else await response.body?.cancel();
+packages/proxy/src\routes\v1\request-dispatch-limit.test.ts:1253:					cancel() { cancelled++; return new Promise<void>(() => {}); },
+packages/proxy/src\routes\v1\request-dispatch-limit.test.ts:1273:				cancel() { cancelled++; return new Promise<void>(() => {}); },
+packages/proxy/src\routes\v1\request-dispatch-limit.test.ts:1354:		cancel() { cancels++; return new Promise<void>(() => {}); },
+packages/proxy/src\routes\v1\request-dispatch-limit.test.ts:1378:	let upstreamSignal: AbortSignal | undefined;
+packages/proxy/src\routes\v1\request-dispatch-limit.test.ts:1384:			cancel() { cancelled++; return new Promise<void>(() => {}); },
+packages/proxy/src\routes\v1\request-dispatch-limit.test.ts:1414:				cancel() { cancels++; return cleanup.promise; },
+packages/proxy/src\routes\v1\request-dispatch-limit.test.ts:1423:				await response?.body?.cancel().catch(() => {});
+packages/proxy/src\routes\v1\request-dispatch-limit.test.ts:1432:			if (stop === 'client') parent.abort('PRIVATE_CANCEL_DETAIL'); else await response.body?.cancel('PRIVATE_CANCEL_DETAIL');
+packages/proxy/src\routes\v1\request-dispatch-limit.test.ts:1449:			if (stop === 'client') await assert.rejects(response.body!.cancel(), /cancelled/);
+packages/proxy/src\routes\v1\request-dispatch-limit.test.ts:1450:			else await response.body?.cancel();
+packages/proxy/src\routes\v1\request-dispatch-limit.test.ts:1500:			const source = new ReadableStream<Uint8Array>({ start(c) { controller = c; }, pull() { entered.resolve(); return new Promise<void>(() => {}); }, cancel() { cancels++; } });
+packages/proxy/src\routes\v1\request-dispatch-limit.test.ts:1521:		let upstreamSignal: AbortSignal | undefined;
+packages/proxy/src\routes\v1\request-dispatch-limit.test.ts:1525:		}, cancel() { cancels++; } });
+packages/proxy/src\routes\v1\request-dispatch-limit.test.ts:1534:		t.after(async () => { parent.abort(); headerGate.resolve(Response.json({})); const response = await pending; await response.body?.cancel().catch(() => {}); await drainNodeBackgroundWork(); });
+packages/proxy/src\routes\v1\request-dispatch-limit.test.ts:1615:	const body = new ReadableStream<Uint8Array>({ cancel() { cancels++; } }, { highWaterMark: 0 });
+packages/proxy/src\routes\v1\request-dispatch-limit.test.ts:1628:	const body = new ReadableStream<Uint8Array>({ cancel() { cancels++; } }, { highWaterMark: 0 });
+packages/proxy/src\routes\v1\request-dispatch-limit.test.ts:1643:		cancel() { cancels++; return new Promise<void>(() => {}); },
+packages/proxy/src\routes\v1\request-dispatch-limit.test.ts:1677:					init.signal.addEventListener('abort', () => reject(init.signal?.reason), { once: true });
+packages/proxy/src\services\chat-text-grant-egress-contract-v361.ts:172:	signal?: AbortSignal;
+packages/proxy/src\services\complete-chat-credential-free-dispatch-v400.test.ts:142:	f.input.holderBinding.fetch = async () => { count++; return new Response(new ReadableStream({ cancel() { cancelled = true; } }), { status: 502 }); };
+packages/proxy/src\services\complete-chat-credential-free-dispatch-v400.test.ts:151:		return new Response(new ReadableStream({ cancel() { cancelled = true; } }), { status: 200, headers: { 'Content-Type': 'application/json' } }); };
+packages/proxy/src\services\complete-chat-credential-free-dispatch-v400.ts:22:	signal: AbortSignal;
+packages/proxy/src\services\complete-chat-credential-free-dispatch-v400.ts:125:		if (signal.aborted) { void response.body?.cancel().catch(() => undefined); signal.throwIfAborted(); }
+packages/proxy/src\services\complete-chat-credential-free-dispatch-v400.ts:130:			void response.body?.cancel().catch(() => undefined); reject();
+packages/proxy/src\services\complete-chat-holder-dispatch-v385.test.ts:168:			return holder.run(payload, request.signal);
+packages/proxy/src\services\complete-chat-holder-dispatch-v385.test.ts:336:				const response = await firstHolder.run(await request.json(), request.signal);
+packages/proxy/src\services\complete-chat-holder-dispatch-v385.test.ts:337:				await response.body?.cancel();
+packages/proxy/src\services\complete-chat-holder-dispatch-v385.test.ts:348:				return secondHolder.run(await request.json(), request.signal);
+packages/proxy/src\services\complete-chat-holder-dispatch-v385.ts:46:	signal: AbortSignal;
+packages/proxy/src\services\complete-chat-holder-dispatch-v385.ts:213:				void response.body?.cancel().catch(() => undefined);
+packages/proxy/src\services\credential-free-chat-ingress-v401.ts:110:      try { await reader.cancel(); } finally { reader.releaseLock(); }
+packages/proxy/src\services\credential-free-chat-ingress-v401.ts:124:function ownHolderResponse(c: Context<Env>, response: Response, signal: AbortSignal, detachClient: () => void): Response {
+packages/proxy/src\services\credential-free-chat-ingress-v401.ts:142:    cancelling ??= reader.cancel(new Error('Credential-free response delivery stopped'))
+packages/proxy/src\services\credential-free-chat-ingress-v401.ts:148:    void cancel();
+packages/proxy/src\services\credential-free-chat-ingress-v401.ts:155:      signal.addEventListener('abort', onAbort, { once: true });
+packages/proxy/src\services\credential-free-chat-ingress-v401.ts:167:        void cancel();
+packages/proxy/src\services\credential-free-chat-ingress-v401.ts:295:          deadline.signal.addEventListener('abort', onPreparationStop, { once: true });
+packages/proxy/src\services\credential-free-chat-ingress-v401.ts:356:      if (holderResponse?.body) scheduleResourceCompletion(c, observeResourceCleanup(() => holderResponse!.body!.cancel()));
+packages/proxy/src\services\credential-free-chat-preparation-v401.ts:23:	headers: Headers; signal: AbortSignal; deadline: PreparationControl; now?: Date;
+packages/proxy/src\services\credential-free-chat-preparation-v401.ts:153:	// registered writes even if the request signal changes while SQL is in flight.
+packages/proxy/src\services\failover-dispatch.test.ts:1513:			_signal?: AbortSignal,
+packages/proxy/src\services\failover-dispatch.ts:270:	requestSignal?: AbortSignal,
+packages/proxy/src\services\failover-dispatch.ts:341:	requestSignal?: AbortSignal,
+packages/proxy/src\services\failover-dispatch.ts:378:	requestSignal?: AbortSignal,
+packages/proxy/src\services\failover-dispatch.ts:451:		void execution.response?.body?.cancel('request_execution_stopped').catch(() => undefined);
+packages/proxy/src\services\failover-dispatch.ts:522:	requestSignal?: AbortSignal,
+packages/proxy/src\services\failover-dispatch.ts:790:			void lastResponse?.body?.cancel('dispatch_limit_exceeded').catch(() => undefined);
+packages/proxy/src\services\failover-dispatch.ts:803:			void execution.response?.body?.cancel('provider_endpoint_failed').catch(() => undefined);
+packages/proxy/src\services\failover-dispatch.ts:951:				? await deadline.wait(run, (late) => { void late.response.body?.cancel('request_execution_stopped').catch(() => undefined); })
+packages/proxy/src\services\failover-dispatch.ts:1235:					void response.body?.cancel('model_candidate_rejected').catch(() => undefined);
+packages/proxy/src\services\failover-dispatch.ts:1311:			void response.body?.cancel('provider_endpoint_failed').catch(() => undefined);
+packages/proxy/src\runtime\complete-text-holder-worker-v390.test.mjs:39:  const body=new ReadableStream({cancel(){cancelled++;}});
+packages/proxy/src\runtime\complete-text-holder-worker-v390.test.mjs:74:  const body=new ReadableStream({pull(controller){controller.enqueue(new Uint8Array(1_048_576));},cancel(){cancelled++;}});
+packages/proxy/src\runtime\complete-text-holder-worker-v390.test.mjs:83:  const body=new ReadableStream({cancel(){cancelled++;}});
+packages/proxy/src\runtime\complete-text-holder-worker-v390.test.mjs:92:  const body=new ReadableStream({cancel(){cancelled++;}});
+packages/proxy/src\services\egress\audio-speech-stream-lifecycle.ts:12:	const cleanup = observeResourceCleanup(() => reader.cancel(reason));
+packages/proxy/src\services\egress\audio-speech-stream-lifecycle.ts:37:		request.signal.removeEventListener('abort', onAbort);
+packages/proxy/src\services\egress\audio-speech-stream-lifecycle.ts:56:			request.signal.addEventListener('abort', onAbort, { once: true });
+packages/proxy/src\services\egress\audio-speech-stream-lifecycle.ts:57:			if (request.signal.aborted) onAbort();
+packages/proxy/src\services\egress\audio-speech-stream-lifecycle.ts:67:		cancel() { finish(true); },
+packages/proxy/src\services\model-fallback-global-dispatch.ts:17:	requestSignal?: AbortSignal,
+packages/proxy/src\services\model-fallback-global-dispatch.ts:87:	requestSignal?: AbortSignal;
+packages/proxy/src\runtime\complete-text-holder-worker-v390.ts:62:	request.signal.addEventListener('abort', stop, { once: true });
+packages/proxy/src\runtime\complete-text-holder-worker-v390.ts:63:	if (request.signal.aborted) stop();
+packages/proxy/src\runtime\complete-text-holder-worker-v390.ts:87:		request.signal.removeEventListener('abort', stop);
+packages/proxy/src\runtime\complete-text-holder-worker-v390.ts:110:	const cancel = () => cancellation ??= owner.own(() => reader.cancel(), false);
+packages/proxy/src\runtime\complete-text-holder-worker-v390.ts:111:	const onAbort = () => { void cancel().catch(() => undefined); };
+packages/proxy/src\runtime\complete-text-holder-worker-v390.ts:112:	owner.signal.addEventListener('abort', onAbort, { once: true });
+packages/proxy/src\runtime\complete-text-holder-worker-v390.ts:128:		else void cancel().finally(() => reader.releaseLock()).catch(() => undefined);
+packages/proxy/src\runtime\complete-text-holder-worker-v390.ts:178:	const cancelReader = (reason?: unknown) => owner.own(() => reader.cancel(reason), false)
+packages/proxy/src\runtime\complete-text-holder-worker-v390.ts:195:			owner.signal.addEventListener('abort', onAbort, { once: true });
+packages/proxy/src\runtime\complete-text-holder-worker-v390.ts:216:		cancel(reason) {
+packages/proxy/src\runtime\complete-text-holder-worker-v390.ts:298:				if (response) void owner.own(() => response!.body?.cancel() ?? Promise.resolve(), false)
+packages/proxy/src\runtime\complete-text-holder-worker-v390.ts:301:					void owner.own(() => request.body!.cancel(), false).catch(() => undefined);
+packages/proxy/src\services\egress\fixtures\oauth-workerd-fixture.ts:16:		let observedSignal: AbortSignal | null | undefined;
+packages/proxy/src\services\egress\fixtures\oauth-workerd-fixture.ts:35:							cancel() { cancelled++; },
+packages/proxy/src\services\egress\stream-json-body.test.ts:90:		if (stop === 'cancel') await reader.cancel('PRIVATE_DETAIL');
+packages/proxy/src\services\request-deadline-dispatch.test.ts:135:		response: new Response(new ReadableStream({ cancel() { cancelled = true; } })),
+packages/proxy/src\services\request-deadline-dispatch.test.ts:283:			response: new Response(new ReadableStream({ cancel() { cancelled = true; } }), { status: 503 }),
+packages/proxy/src\services\request-deadline-dispatch.test.ts:358:			return new Response(new ReadableStream({ cancel() { cancelled = true; } }), { headers: { 'Content-Type': 'text/event-stream' } });
+packages/proxy/src\services\request-deadline-dispatch.test.ts:377:			cancel() { cancelled = true; return new Promise<void>(() => {}); },
+packages/proxy/src\services\request-deadline-dispatch.test.ts:397:		let signal: AbortSignal | null | undefined;
+packages/proxy/src\services\request-deadline-dispatch.test.ts:400:			return new Response(new ReadableStream({ cancel() { cancelled = true; } }), { headers: { 'Content-Type': 'text/event-stream' } });
+packages/proxy/src\services\request-deadline-dispatch.test.ts:403:		await result.response.body?.cancel('private client text');
+packages/proxy/src\services\request-deadline-dispatch.test.ts:422:			cancel() { cancelled = true; return new Promise<void>(() => {}); },
+packages/proxy/src\services\egress\stream-abort-lifecycle.test.ts:72:	dispatch: (signal: AbortSignal) => Promise<StreamDispatchResult>,
+packages/proxy/src\services\egress\stream-abort-lifecycle.test.ts:87:			await result.response.body?.cancel();
+packages/proxy/src\services\egress\stream-abort-lifecycle.test.ts:99:			cancel() { cancelled = true; },
+packages/proxy/src\services\egress\stream-abort-lifecycle.test.ts:120:			dispatch: (signal: AbortSignal) => Promise<StreamDispatchResult>;
+packages/proxy/src\services\egress\stream-abort-lifecycle.test.ts:135:			let fetchSignal: AbortSignal | null = null;
+packages/proxy/src\services\egress\stream-abort-lifecycle.test.ts:137:				cancel() {
+packages/proxy/src\services\egress\stream-abort-lifecycle.test.ts:154:					await result.response.body?.cancel();
+packages/proxy/src\services\streaming-multipart-body.test.ts:83:	const first = file.stream().getReader(); const page = await first.read(); assert.ok(page.value); page.value.fill(0); await first.cancel(); first.releaseLock();
+packages/proxy/src\services\streaming-multipart-body.test.ts:115:		}, cancel() { cancels++; return new Promise<void>(() => {}); } }, { highWaterMark: 0 });
+packages/proxy/src\services\streaming-multipart-body.test.ts:164:		if (end === 'cancel') await reader.cancel();
+packages/proxy/src\services\egress\owned-upstream-response.ts:7:export function ownUpstreamResponse(response: Response, signal?: AbortSignal): {
+packages/proxy/src\services\egress\owned-upstream-response.ts:28:		finish(observeResourceCleanup(() => source.cancel('upstream_response_stopped')));
+packages/proxy/src\services\egress\owned-upstream-response.ts:32:		cancel();
+packages/proxy/src\services\egress\owned-upstream-response.ts:46:				cancel();
+packages/proxy/src\services\streaming-multipart-body.ts:67:	const owner = deadline ?? createRequestDeadline(Date.now() + TEXT_REQUEST_DEADLINE_MS, request.signal);
+packages/proxy/src\services\egress\text-dispatch-boundary.test.ts:243:				(signal: AbortSignal, beforeFetch: () => Promise<void>) => dispatchOpenAiRoute(
+packages/proxy/src\services\egress\text-dispatch-boundary.test.ts:247:				(signal: AbortSignal, beforeFetch: () => Promise<void>) => dispatchOpenAiResponsesRoute(
+packages/proxy/src\services\egress\text-dispatch-boundary.test.ts:251:				(signal: AbortSignal, beforeFetch: () => Promise<void>) => dispatchAnthropicRoute(
+packages/proxy/src\services\egress\stream-json-body.ts:13:	signal?: AbortSignal;
+packages/proxy/src\services\egress\stream-json-body.ts:239:		cancel() { finish(); },
+packages/proxy/src\services\egress\stream-json-body.ts:247:	catch (error) { void body.cancel().catch(() => undefined); throw error; }
+packages/proxy/src\services\egress\text-stream-openrouter-contract.test.ts:452:				cancel() {
+packages/proxy/src\services\egress\workerd-length-aware-source.ts:6:	cancel(): void | Promise<void>;
+packages/proxy/src\runtime\complete-text-response-holder-worker-v394.test.mjs:31:  const body = new ReadableStream({ cancel() { cancelled++; } });

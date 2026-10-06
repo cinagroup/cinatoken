@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-06T04:26:13.822Z",
+  "finishedAt": "2026-10-06T04:26:13.828Z",
+  "operation": "readFile",
+  "path": "C:/cinagroup/cinatoken/scripts/AGENTS.md",
+  "actualExit": null,
+  "signal": null,
+  "error": {
+    "code": "ENOENT",
+    "message": "ENOENT: no such file or directory, open 'C:\\cinagroup\\cinatoken\\scripts\\AGENTS.md'"
+  },
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\instructions-3.stdout.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\instructions-3.stderr.log",
+    "bytes": 117,
+    "sha256": "6c361dd56e9edf01f92850e038ebd776738b1cc9cae2303cda2d93e02e47838c"
+  }
+}

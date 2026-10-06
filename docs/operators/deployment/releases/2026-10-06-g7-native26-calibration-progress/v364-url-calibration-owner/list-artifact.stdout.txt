@@ -1,0 +1,16 @@
+{"path":"cinatoken\\cinatoken\\.github\\workflows\\v364-direct-socket.yml","bytes":1575}
+{"path":"cinatoken\\cinatoken\\scripts\\diagnostics\\v364-direct-socket\\execute-owned-linux.py","bytes":15959}
+{"path":"cinatoken\\cinatoken\\scripts\\diagnostics\\v364-direct-socket\\native-reader-calibration.mjs","bytes":2531}
+{"path":"cinatoken\\cinatoken\\scripts\\diagnostics\\v364-direct-socket\\README.md","bytes":5092}
+{"path":"cinatoken\\cinatoken\\scripts\\diagnostics\\v364-direct-socket\\run-direct-socket.mjs","bytes":34907}
+{"path":"cinatoken\\cinatoken\\scripts\\diagnostics\\v364-direct-socket\\sealed-package.json","bytes":1045}
+{"path":"cinatoken\\cinatoken\\scripts\\diagnostics\\v364-direct-socket\\source-inputs.json","bytes":5028}
+{"path":"_temp\\v364-direct-socket-once-37412108171-1\\closed-result.json","bytes":19053}
+{"path":"_temp\\v364-direct-socket-once-37412108171-1\\events.json","bytes":399456}
+{"path":"_temp\\v364-direct-socket-once-37412108171-1\\events.ndjson","bytes":307593}
+{"path":"_temp\\v364-direct-socket-once-37412108171-1\\executor-start.json","bytes":693}
+{"path":"_temp\\v364-direct-socket-once-37412108171-1\\executor.closed.json","bytes":5904}
+{"path":"_temp\\v364-direct-socket-once-37412108171-1\\executor.stderr.txt","bytes":0}
+{"path":"_temp\\v364-direct-socket-once-37412108171-1\\executor.stdout.txt","bytes":170}
+{"path":"_temp\\v364-direct-socket-once-37412108171-1\\original-strict.stderr.txt","bytes":0}
+{"path":"_temp\\v364-direct-socket-once-37412108171-1\\original-strict.stdout.txt","bytes":2871}

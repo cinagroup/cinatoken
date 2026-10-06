@@ -1,0 +1,24 @@
+{
+  "schema": "cinatoken-archive-subset-preparation-original-tool-return-provenance-v1",
+  "scope": "Exact original tool terminal observations available in this preparation turn; these are producer-observed tool returns, not invented independent raw streams",
+  "productionRequests": 0,
+  "repositoryWrites": 0,
+  "applicationTestsRun": false,
+  "executions": [
+    { "chunk_id": "465e01", "exit_code": 1, "scope": "Initial read-only old-tool final-report filename mismatch; missing file, no inputs modified", "rawSource": "Original conversation tool return only; no separate stdout/stderr files claimed", "fullOriginalOutputNotReconstructed": true },
+    { "chunk_id": "4ed009", "exit_code": 1, "wall_time_seconds": 0.456673, "receipt": "old-four-root-audit.result.json", "scope": "Original V2 four-root audit; all 24 blockers and raw retained" },
+    { "chunk_id": "cf8ec5", "exit_code": 0, "wall_time_seconds": 0.5614218, "receipt": "new-producer-controls.result.json", "scope": "37 exact producer-output synthetic controls" },
+    { "chunk_id": "1b6260", "exit_code": 0, "wall_time_seconds": 0.0000192, "receipt": "enhanced-lib-syntax.result.json", "scope": "Node syntax only" },
+    { "chunk_id": "9b7205", "exit_code": 0, "wall_time_seconds": 0.3576072, "receipt": "unchanged-controlled-regression.result.json", "scope": "12 unchanged synthetic collector controls" },
+    { "chunk_id": "6e04d9", "exit_code": 0, "wall_time_seconds": 0.0000054, "receipt": "unchanged-closure-regression.result.json", "scope": "10 unchanged synthetic closure controls" },
+    { "chunk_id": "e4cbe8", "exit_code": 0, "wall_time_seconds": 0.5786348, "receipt": "unchanged-association-regression.result.json", "scope": "28 unchanged synthetic association controls; no realConfig/previous full archive audit" },
+    { "chunk_id": "08d56d", "exit_code": 0, "wall_time_seconds": 0.4520228, "receipt": "enhanced-four-root-bound-audit.result.json", "scope": "Prepared subset audit only" },
+    { "chunk_id": "84a116", "exit_code": 1, "wall_time_seconds": 0.3640898, "scope": "Read-only plan summary completed, then erroneous final Get-Content of unused nonexistent g7-observe-owner-not-existent path; no inputs changed, not a helper test or runtime outcome", "rawSource": "Original conversation tool return only; no separate stdout/stderr files claimed", "fullOriginalOutputNotReconstructed": true },
+    { "chunk_id": "3b2655", "exit_code": 0, "wall_time_seconds": 0.5065332, "receipt": "final-prepared-subset-audit.result.json", "scope": "Final exact set, raw hash, frozen-source and semantics verification" }
+  ],
+  "closedCommandAuthority": "Use each original result receipt for the actual synchronous child status/timing/output descriptors; this provenance does not derive a child status from aggregate/wrapper totals",
+  "allRecordedPreparationNegativesPreserved": true,
+  "currentCiResultsCollected": false,
+  "fullG7Verified": false,
+  "fullG8Verified": false
+}

@@ -1,0 +1,16 @@
+✔ the real SQL text fixture satisfies production endpoint and operation admission (9.4181ms)
+✔ provider encryption and real route fingerprint bind the seeded plaintext credential (265.4604ms)
+✔ the rotated owned Admin key uses the production lookup hash and rejects the migration's development key (12.2395ms)
+✔ observe executes all contracts with only real postgres installed and Core missing drizzle (856.2658ms)
+✔ isolated real driver ledger-drift remains failed and closed (849.9097ms)
+✔ isolated real driver count-drift remains failed and closed (737.6079ms)
+✔ isolated real driver session-failure remains failed and closed (454.5406ms)
+✔ isolated real driver seed-missing-core remains failed and closed (273.785ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4914.2041

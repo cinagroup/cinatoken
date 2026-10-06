@@ -1,0 +1,62 @@
+{
+  "schema": "v364-direct-local-contract-audit-v1",
+  "closed": true,
+  "actualOutcome": 0,
+  "checks": [
+    {
+      "name": "original-httpClient-AST-preserved",
+      "actualOutcome": 0
+    },
+    {
+      "name": "original-observedGet-AST-preserved",
+      "actualOutcome": 0
+    },
+    {
+      "name": "original-disposeFixture-AST-preserved",
+      "actualOutcome": 0
+    },
+    {
+      "name": "original-bounded-AST-preserved",
+      "actualOutcome": 0
+    },
+    {
+      "name": "original-cancellation-assertions-and-window-AST-preserved",
+      "actualOutcome": 0
+    },
+    {
+      "name": "protected-source-Git-bytes-exact",
+      "actualOutcome": 0
+    },
+    {
+      "name": "installed-direct-socket-source-exact",
+      "actualOutcome": 0
+    },
+    {
+      "name": "only-original-runtime-flags",
+      "actualOutcome": 0
+    },
+    {
+      "name": "actual-V4-option-schema-direct-socket-bare-and-binding",
+      "actualOutcome": 0
+    },
+    {
+      "name": "native-calibration-adds-no-lifetime-task",
+      "actualOutcome": 0
+    },
+    {
+      "name": "workflow-is-manual-bounded-readonly-and-retains-failures",
+      "actualOutcome": 0
+    },
+    {
+      "name": "original-baseline-zero-required-for-aggregate-zero",
+      "actualOutcome": 0
+    },
+    {
+      "name": "preparation-executed-no-runtime",
+      "actualOutcome": 0
+    }
+  ],
+  "realRuntimeExecuted": false,
+  "fixtureRuntimeTestsExecuted": false,
+  "productionRequests": 0
+}

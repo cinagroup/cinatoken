@@ -1,0 +1,240 @@
+{
+  "schema": "cinatoken.v364-calibration-address-independent-peer.partial-closure.v1",
+  "closedAt": "2026-10-06T04:29:32.198Z",
+  "taskSteering": "Root received the complete sibling boundary_peer review and requested closure of existing independent reads without repeating controls or large raw-log review.",
+  "scopeComplete": true,
+  "fullIndependentApprovalClaimed": false,
+  "ownerFinal": {
+    "file": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-direct-actual-review-DjepMs/FINAL-v364-direct-address-repair.json",
+    "bytes": 51934,
+    "sha256": "7e2af168f4caa7c7568c9c8ffc5003281e36f39b53620bc2b422ec050ac2229f"
+  },
+  "currentFileObservations": [
+    {
+      "relative": "scripts/diagnostics/v364-direct-socket/native-reader-calibration.mjs",
+      "file": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-direct-socket\\native-reader-calibration.mjs",
+      "bytes": 2546,
+      "sha256": "e838769c950b49056ffc4e6580e41d8ec15a245db6efff6829c170642fb8ee8f",
+      "matchesOwnerFrozenAfter": true
+    },
+    {
+      "relative": "scripts/diagnostics/v364-direct-socket/sealed-package.json",
+      "file": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-direct-socket\\sealed-package.json",
+      "bytes": 1045,
+      "sha256": "0a02c1af6ee0aca1fc7c84b14fe292939640a6df371995b2fbe540281f93a7e7",
+      "matchesOwnerFrozenAfter": true
+    },
+    {
+      "relative": "scripts/diagnostics/v364-direct-socket/source-inputs.json",
+      "file": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-direct-socket\\source-inputs.json",
+      "bytes": 5028,
+      "sha256": "a4046af64da2e2f61b37ee9ea92658bc2d54236052c859477c57d9049f62e3e9",
+      "matchesOwnerFrozenAfter": true
+    }
+  ],
+  "preparationHead": "dcc6ab52f21a18c5d1c02d8a4a4a390f039e61fc",
+  "historicalSourceInputsBase": "702c4d71379acb697024ef846725871582bff94f",
+  "parsedOriginalRuntimeFacts": {
+    "sourceAuthority": "Existing original artifacts parsed by inspect-raw-schema; artifact/log hash verification not performed by this abbreviated peer.",
+    "originalClosedResultActualExit": 1,
+    "originalExecutorActualProcessExit": 1,
+    "ownerDeclaredOriginalStrict": {
+      "tests": 8,
+      "pass": 7,
+      "fail": 1,
+      "actualExit": 1
+    },
+    "ownerDeclaredCalibration": {
+      "caseId": "native-worker-reader-cancel",
+      "calibrationOnly": true,
+      "baselineEligible": false,
+      "nativeWorkerExecuted": false,
+      "actualExit": 1,
+      "closed": true,
+      "error": {
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "message": "Expected values to be strictly equal:\n\n500 !== 200\n"
+      }
+    },
+    "ownerDeclaredFourDirectActualExits": [
+      {
+        "caseId": "direct-socket-bare-destroy",
+        "actualExit": 1,
+        "actual": null
+      },
+      {
+        "caseId": "direct-socket-bare-rst",
+        "actualExit": 1,
+        "actual": null
+      },
+      {
+        "caseId": "direct-socket-binding-destroy",
+        "actualExit": 1,
+        "actual": null
+      },
+      {
+        "caseId": "direct-socket-binding-rst",
+        "actualExit": 1,
+        "actual": null
+      }
+    ],
+    "oldFailureNeverUpgraded": true
+  },
+  "sourceGuardObservations": {
+    "privateOriginAndPath": [
+      "/// <reference path=\"./chat-holder-private-v364-env.d.ts\" />",
+      "import {",
+      "\tSYNTHETIC_CREDENTIAL_V364,",
+      "\tSYNTHETIC_PROVIDER_URL_V364,",
+      "\tSYNTHETIC_QUOTE_V364,",
+      "\tSYNTHETIC_ROUTE_V364,",
+      "} from './chat-holder-synthetic-v364';",
+      "",
+      "const URL_ORIGIN = 'https://holder.service.invalid';",
+      "const URL_PATH = '/complete-text-attempt';",
+      "const MAX_FINAL_BODY_BYTES = 1_048_576;",
+      "// JSON may escape each one-byte control character as six ASCII bytes.",
+      "const MAX_ENVELOPE_BYTES = 6 * MAX_FINAL_BODY_BYTES + 8_192;",
+      "const UUID = /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/u;",
+      "const FIELDS = ['requestId', 'quoteId', 'attemptNonce', 'candidateIndex', 'routeTargetId', 'finalBodyUtf8'];",
+      "const encoder = new TextEncoder();",
+      "",
+      "function reject(status = 400): Response {"
+    ],
+    "privateGuard": [
+      "\t\t\tawait observation;",
+      "\t\t},",
+      "\t}, { highWaterMark: 0 });",
+      "\treturn new Response(stream, { status: 200, headers: { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-store' } });",
+      "}",
+      "",
+      "export default {",
+      "\tasync fetch(request: Request, env: ChatHolderPrivateV364Env, ctx?: ExecutionContext): Promise<Response> {",
+      "\t\tconst url = new URL(request.url);",
+      "\t\tif (url.origin !== URL_ORIGIN || url.pathname !== URL_PATH || url.search || request.method !== 'POST') return reject(404);",
+      "\t\tif (request.headers.get('Content-Type') !== 'application/json') return reject(415);",
+      "\t\tconst bytes = await readEnvelope(request);",
+      "\t\tif (bytes === null) return reject(413);",
+      "\t\tlet value: unknown;"
+    ],
+    "gatewayCanonicalRequest": [
+      "/// <reference path=\"./chat-holder-gateway-v364-env.d.ts\" />",
+      "",
+      "/** Fixture gateway: only the six-field JSON envelope crosses this binding. */",
+      "export default {",
+      "\tasync fetch(request: Request, env: ChatHolderGatewayV364Env): Promise<Response> {",
+      "\t\tconst url = new URL(request.url);",
+      "\t\tif (url.pathname !== '/fixture/complete-text' || request.method !== 'POST') return new Response(null, { status: 404 });",
+      "\t\tif (request.headers.get('Content-Type') !== 'application/json') return new Response(null, { status: 415 });",
+      "\t\tconst holderInit = {",
+      "\t\t\tmethod: 'POST',",
+      "\t\t\theaders: { 'Content-Type': 'application/json' },",
+      "\t\t\tbody: request.body,",
+      "\t\t\tsignal: request.signal,",
+      "\t\t\tduplex: 'half',",
+      "\t\t} as RequestInit;",
+      "\t\tconst holderRequest = new Request('https://holder.service.invalid/complete-text-attempt', holderInit);",
+      "\t\tconst response = await env.TEXT_HOLDER.fetch(holderRequest);",
+      "\t\tif (response.status === 400 || response.status === 413 || response.status === 415 || response.status === 404) {",
+      "\t\t\tawait response.body?.cancel();",
+      "\t\t\treturn Response.json({ error: 'holder_request_rejected' }, { status: response.status });",
+      "\t\t}",
+      "\t\tif (response.status !== 200 || response.headers.get('Content-Type') !== 'text/event-stream' || !response.body) {",
+      "\t\t\tawait response.body?.cancel();",
+      "\t\t\treturn Response.json({ error: 'holder_unavailable' }, { status: 502 });",
+      "\t\t}"
+    ],
+    "sourceTextOnly": true,
+    "noControlOrApplicationExecution": true
+  },
+  "twoActualClosedInspectionReceipts": [
+    {
+      "schema": "cinatoken.native26-ci-independent-peer.command.v1",
+      "at": "2026-10-06T04:26:02.918Z",
+      "finishedAt": "2026-10-06T04:26:03.007Z",
+      "executable": "C:/Program Files/nodejs/node.exe",
+      "args": [
+        "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-calibration-address-independent-peer-c08eb1896ea747ab8895d1ed6c01f5b8\\inspect-owner.mjs",
+        "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-calibration-address-independent-peer-c08eb1896ea747ab8895d1ed6c01f5b8"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-calibration-address-independent-peer-c08eb1896ea747ab8895d1ed6c01f5b8\\inspect-owner.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-calibration-address-independent-peer-c08eb1896ea747ab8895d1ed6c01f5b8\\inspect-owner.stderr.log",
+      "stdoutInfo": {
+        "bytes": 41239,
+        "sha256": "9a33ff85dcad2715f6e17a87f3463100965a129e388d67aa1f5385b110c8dddf"
+      },
+      "stderrInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "receiptFile": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-calibration-address-independent-peer-c08eb1896ea747ab8895d1ed6c01f5b8\\inspect-owner.closed.json",
+      "receiptInfo": {
+        "bytes": 1165,
+        "sha256": "e3a1f484ede6855bfc0b99fb4273065fd3c7be5462e8afbe2d01c03c596dc42b"
+      }
+    },
+    {
+      "schema": "cinatoken.native26-ci-independent-peer.command.v1",
+      "at": "2026-10-06T04:27:57.127Z",
+      "finishedAt": "2026-10-06T04:27:57.219Z",
+      "executable": "C:/Program Files/nodejs/node.exe",
+      "args": [
+        "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-calibration-address-independent-peer-c08eb1896ea747ab8895d1ed6c01f5b8\\inspect-raw-schema.mjs",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-calibration-address-independent-peer-c08eb1896ea747ab8895d1ed6c01f5b8"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-calibration-address-independent-peer-c08eb1896ea747ab8895d1ed6c01f5b8\\inspect-raw-schema.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-calibration-address-independent-peer-c08eb1896ea747ab8895d1ed6c01f5b8\\inspect-raw-schema.stderr.log",
+      "stdoutInfo": {
+        "bytes": 14530,
+        "sha256": "ab47a22b1ec8d5c6fbf115691e92999dac421066f43f3d6c2253793356c2a5f8"
+      },
+      "stderrInfo": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "receiptFile": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-calibration-address-independent-peer-c08eb1896ea747ab8895d1ed6c01f5b8\\inspect-raw-schema.closed.json",
+      "receiptInfo": {
+        "bytes": 1174,
+        "sha256": "dc4ff86ee6aef59a587abf382f0752884c52af4437972d9505c377288ee7b224"
+      }
+    }
+  ],
+  "ownReaderFailures": [],
+  "siblingCompleteApprovalReference": {
+    "source": "Trusted parent message; not re-audited here",
+    "file": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-address-repair-peer-readonly-ec894dc1d1004d33ae29d0a3c0d5857b/FINAL-v364-address-repair-peer-review.json",
+    "bytes": 52237,
+    "sha256": "585e959176c9811bae0b6973b9e39a189bc21bd0beac47d57cef9546aff876a3",
+    "declaredStaticRawExactChecks": 19
+  },
+  "priorNativeFrozenReport": {
+    "file": "C:/Users/cina/AppData/Local/Temp/cinatoken-native26-ci-terminal-independent-peer-cc2708922c0e4f64a9cca948194a20d9/FINAL-native26-ci-independent-peer.json",
+    "bytes": 413706,
+    "sha256": "6635f04f77f6f6325a794756883a8bf697f752af239e33deb2b8c3b226a57e66",
+    "unchanged": true
+  },
+  "limitations": {
+    "wholeFileReverseOrAstAuditPerformed": false,
+    "allOwner22ReceiptsVerified": false,
+    "original16ArtifactAnd1LogHashesIndependentlyVerified": false,
+    "controlsReexecuted": false,
+    "bundlesRebuilt": false,
+    "appTestsExecuted": false,
+    "nativeRuntimeExecuted": false,
+    "ciInvoked": false,
+    "repoWrites": 0,
+    "mdWrites": 0,
+    "gitWrites": 0,
+    "originalEvidenceWrites": 0
+  },
+  "freezeBoundary": "This report and its run-closed receipt/stdout/stderr are the final new writes; directory freezes after wrapper closure."
+}

@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-06T03:45:56.203Z",
+  "finishedAt": "2026-10-06T03:45:56.420Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504/analyze-g7-terminal.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 1,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\analyze-g7-terminal.stdout.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\analyze-g7-terminal.stderr.log",
+    "bytes": 745,
+    "sha256": "1090703b73fddfff29742028963fb1c97ef8b3533f1e309c71db08ef02997569"
+  }
+}

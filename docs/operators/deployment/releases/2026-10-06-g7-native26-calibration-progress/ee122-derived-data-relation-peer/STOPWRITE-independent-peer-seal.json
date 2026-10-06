@@ -1,0 +1,47 @@
+{
+  "schema": "stopwrite-independent-ee12239-peer-v1",
+  "root": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-ee122-39-binding-peer-readonly-2thrhzc5",
+  "entriesBeforeSelf": [
+    {
+      "name": "audit-terminal-ee122-v2.mjs",
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-ee122-39-binding-peer-readonly-2thrhzc5\\audit-terminal-ee122-v2.mjs",
+      "bytes": 14014,
+      "sha256": "c69b0dbaa143bab146eefc78541d5fc75b923391d4976754bf294a777131de21"
+    },
+    {
+      "name": "audit-terminal-ee122.mjs",
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-ee122-39-binding-peer-readonly-2thrhzc5\\audit-terminal-ee122.mjs",
+      "bytes": 14008,
+      "sha256": "8055b983b15c16fcc2e5730d32179eca4c7e5206c82efed4ae07c215ad6094b1"
+    },
+    {
+      "name": "capture-child.mjs",
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-ee122-39-binding-peer-readonly-2thrhzc5\\capture-child.mjs",
+      "bytes": 1466,
+      "sha256": "e36084efbd5da236fe75ec14eff440a14cb28ca9a8aa4958b675caf8fc96f9d1"
+    },
+    {
+      "name": "FINAL-ee12239-derived-material-independent-peer-review.json",
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-ee122-39-binding-peer-readonly-2thrhzc5\\FINAL-ee12239-derived-material-independent-peer-review.json",
+      "bytes": 146561,
+      "sha256": "d06ed7dd1a9aa9028a489f035d4d01b514848c379e09e97eeb27f8919777cd33"
+    },
+    {
+      "name": "freeze-early-source.mjs",
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-ee122-39-binding-peer-readonly-2thrhzc5\\freeze-early-source.mjs",
+      "bytes": 2951,
+      "sha256": "777b117ccf9f48424218c1ffd0a682316c007c3e3eae892554a5a81b266af933"
+    },
+    {
+      "name": "freeze-source-inputs.mjs",
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-ee122-39-binding-peer-readonly-2thrhzc5\\freeze-source-inputs.mjs",
+      "bytes": 5420,
+      "sha256": "02179afb7b8dd8c9175805793643b33270097003d9ca32d77c308e9dee4e0601"
+    }
+  ],
+  "filesBeforeSelf": 6,
+  "selfExcludedOnly": true,
+  "noFurtherWrites": true,
+  "collectionOnly": true,
+  "gatePassDerived": false
+}

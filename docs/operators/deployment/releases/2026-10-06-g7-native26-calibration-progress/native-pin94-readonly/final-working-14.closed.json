@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-06T04:32:29.836Z",
+  "finishedAt": "2026-10-06T04:32:29.840Z",
+  "operation": "readFile",
+  "path": "C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\build-request-legacy-parent-census.native.test.mjs",
+  "actualExit": 0,
+  "signal": null,
+  "error": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\final-working-14.stdout.log",
+    "bytes": 12134,
+    "sha256": "42b1ab50c6e5cbc46dd3ed018f1f09f48d5890339d012982f863373cf7f1a262"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\final-working-14.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

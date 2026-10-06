@@ -1,0 +1,26 @@
+{
+  "schema": "independent-final42-archive-readonly-child-receipt-v1",
+  "name": "audit-full42-archive",
+  "executable": "C:/Users/cina/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+  "argv": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4/audit-full42-archive.py",
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "startedAt": "2026-10-06T05:30:00.012Z",
+  "closedAt": "2026-10-06T05:30:34.161Z",
+  "actualExit": 1,
+  "signal": null,
+  "spawnError": null,
+  "closed": true,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\audit-full42-archive.stdout.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final42-archive-independent-peer-da67e04e43144446a163867b927351c4\\audit-full42-archive.stderr.log",
+    "bytes": 1116,
+    "sha256": "2f39951abc97455b921ef5ba508836de25c83551df31f8f4111852342ee0e1bc"
+  }
+}

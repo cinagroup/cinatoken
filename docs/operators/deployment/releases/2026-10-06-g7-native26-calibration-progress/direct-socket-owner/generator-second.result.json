@@ -1,0 +1,26 @@
+{
+  "closed": true,
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "executable": "node",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-direct-socket-prep-99dlWu/build-direct-package.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "startedAt": "2026-10-06T03:31:46.195Z",
+  "finishedAt": "2026-10-06T03:31:46.276Z",
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\generator-second.stdout.txt",
+    "bytes": 90,
+    "sha256": "148b15f10547025c07328081c8e1fcdfd7e628ea2b3ed7974ce0ba257e568d64"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\generator-second.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "operation": "read-only-diagnosis",
+  "realServiceOrCiExecution": false,
+  "productionRequests": 0
+}

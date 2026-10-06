@@ -1,0 +1,29 @@
+{
+  "schema": "cinatoken-owned-opaque-capsule-real-close-v1",
+  "closed": true,
+  "beganAt": "2026-10-06T05:15:27.479Z",
+  "endedAt": "2026-10-06T05:15:29.770Z",
+  "program": "C:/Users/cina/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-opaque-capsule-89cf1ba373634086a3926a636a292ec7/package-root.py"
+  ],
+  "cwd": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-opaque-capsule-89cf1ba373634086a3926a636a292ec7",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "timedOut": false,
+  "stdout": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-opaque-capsule-89cf1ba373634086a3926a636a292ec7/package.stdout.log",
+    "bytes": 549,
+    "sha256": "09ef92e9ad8341e81069f76e31e85cfcc1b692aa6ee1b3639d6afc7bb4bcd9a4"
+  },
+  "stderr": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-opaque-capsule-89cf1ba373634086a3926a636a292ec7/package.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "collectionOnly": true,
+  "applicationExecution": false,
+  "ciExecution": false,
+  "gatePassDerived": false
+}

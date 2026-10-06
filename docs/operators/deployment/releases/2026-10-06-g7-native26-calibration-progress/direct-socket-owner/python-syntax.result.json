@@ -1,0 +1,27 @@
+{
+  "closed": true,
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "executable": "C:/Users/cina/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+  "args": [
+    "-c",
+    "import ast,pathlib; p=pathlib.Path('scripts/diagnostics/v364-direct-socket/execute-owned-linux.py'); ast.parse(p.read_text()); print('Python AST syntax OK; executor not executed')"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "startedAt": "2026-10-06T03:40:43.200Z",
+  "finishedAt": "2026-10-06T03:40:43.273Z",
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\python-syntax.stdout.txt",
+    "bytes": 45,
+    "sha256": "bf9dd5fc59c917f3bcc4dc132dff6dec0aa9270e36d1806021e9fe8c7554a481"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-direct-socket-prep-99dlWu\\python-syntax.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "operation": "local-source-preparation",
+  "realServiceOrCiExecution": false,
+  "productionRequests": 0
+}

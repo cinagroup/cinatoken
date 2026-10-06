@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-06T04:30:04.482Z",
+  "finishedAt": "2026-10-06T04:30:05.008Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287/pin-authority-proof.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\pin-authority-proof.stdout.log",
+    "bytes": 3394,
+    "sha256": "3ef65cf5b6328a0e6372b28a95dcfe2d4dd3d04f6d42a2c8b31aa9b188d0cb02"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-pin94-readonly-385d45490c944bcb892427d92c3de287\\pin-authority-proof.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

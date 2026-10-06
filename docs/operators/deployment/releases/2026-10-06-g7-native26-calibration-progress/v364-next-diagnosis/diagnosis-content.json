@@ -1,0 +1,165 @@
+{
+  "schema": "v364-next-cancel-readonly-diagnosis-v1",
+  "operation": "local-read-only-source-and-closed-artifact-analysis",
+  "authority": {
+    "repo": "C:/cinagroup/cinatoken",
+    "preparedAtHead": "702c4d71379acb697024ef846725871582bff94f",
+    "priorRun": 37402302570,
+    "priorActualExit": 1,
+    "originalStrictActualExit": 1
+  },
+  "conclusion": "Original strict v364 remains failed. Next owned Linux diagnosis should use Miniflare's already-installed direct Workerd HTTP sockets, retain the unchanged original strict baseline, and add a real-Worker explicit reader.cancel calibration. No new runtime has run.",
+  "facts": [
+    {
+      "claim": "All existing bare/direct/binding native HTTP arms still reach Miniflare's core entry worker via mf.ready.",
+      "refs": [
+        "scripts/diagnostics/v364-owned-linux-boundary/run-boundary.mjs:165-185",
+        "node_modules/miniflare/dist/src/index.js:113484-113498",
+        "node_modules/miniflare/dist/src/index.js:113573-113583"
+      ],
+      "classification": "verified-installed-source"
+    },
+    {
+      "claim": "The core entry worker has compatibility date 2025-03-17 and flags nodejs_compat/service_binding_extra_handlers. It creates a Request twice and forwards to the selected worker with service.fetch; it lacks enable_request_signal.",
+      "refs": [
+        "node_modules/miniflare/dist/src/index.js:99394-99399",
+        "node_modules/miniflare/dist/src/workers/core/entry.worker.js:4938-4963",
+        "node_modules/miniflare/dist/src/workers/core/entry.worker.js:5112-5187"
+      ],
+      "classification": "verified-installed-source"
+    },
+    {
+      "claim": "The pinned Workerd compatibility schema requires explicit enable_request_signal; no default enable date appears for this flag.",
+      "url": "https://raw.githubusercontent.com/cloudflare/workerd/v1.20260828.1/src/workerd/io/compatibility-date.capnp",
+      "refs": [
+        "enableRequestSignal @90, lines 706-710"
+      ],
+      "classification": "verified-primary-source"
+    },
+    {
+      "claim": "Installed unsafeDirectSockets directly binds a native HTTP socket to the user worker service. unsafeGetDirectURL returns that actual socket URL, bypassing core ENTRY_WORKER for that request.",
+      "refs": [
+        "node_modules/miniflare/dist/src/index.js:94055-94061",
+        "node_modules/miniflare/dist/src/index.js:113163-113193",
+        "node_modules/miniflare/dist/src/index.js:113668-113689",
+        "node_modules/miniflare/dist/src/index.d.ts:10008-10014"
+      ],
+      "classification": "verified-installed-source"
+    },
+    {
+      "claim": "Archived RST cases recorded request abort inside original-poll: bare holder one; direct gateway incoming/forwarded and holder three; binding holder one. All six native arms still had null cancel KV through the original window and separate diagnostic tail.",
+      "refs": [
+        "actual-archived-boundary-analysis.stdout.txt",
+        "committed closed-result.json/executor.closed.json/events.json.gz"
+      ],
+      "classification": "verified-existing-linux-artifact"
+    },
+    {
+      "claim": "Destroy arms recorded no signal-abort and sampled successful release reads 1,100,200,300 after client close. RST arms stopped at sampled release read 1. These are observations within the recorded phase, not proof that a callback can never run.",
+      "classification": "verified-existing-linux-artifact"
+    },
+    {
+      "claim": "The original private-holder stream records cancellation only from its underlying stream cancel callback. It does not attach a request.signal listener; async pull itself does not stop on cancellation.",
+      "refs": [
+        "packages/proxy/scripts/staging/chat-holder-private-v364.ts:65-92",
+        "packages/proxy/scripts/staging/chat-holder-private-v364.ts:109-112"
+      ],
+      "classification": "verified-source"
+    },
+    {
+      "claim": "Active v390 holder and v401 ingress already contain explicit abort->reader.cancel paths with cleanup ownership registered before disconnect; adding that same logic blindly would duplicate existing behavior.",
+      "refs": [
+        "packages/proxy/src/runtime/complete-text-holder-worker-v390.ts:53-98",
+        "packages/proxy/src/runtime/complete-text-holder-worker-v390.ts:173-223",
+        "packages/proxy/src/services/credential-free-chat-ingress-v401.ts:124-173"
+      ],
+      "classification": "verified-source"
+    }
+  ],
+  "causalChain": [
+    "Node raw HTTP request reads first chunk and pauses response; destroy/RST closes client request/response/socket.",
+    "Current transport then enters Miniflare core ENTRY_WORKER; downstream gateway/holder request signals are created through native service requests. Signal observation and response-source cancellation are separate mechanisms.",
+    "Original holder async pull is awaiting KV/timers. Underlying source cancel must enter, call the original KV put, register the original same promise with ctx.waitUntil, and await fulfillment for the existing strict cancellation observation.",
+    "RST signal observation without cancel KV proves a request abort happened in those runs, but does not identify whether source cancellation was never entered, was dropped before logging/put, or lost during native request-context teardown.",
+    "Destroy with continued release reads is consistent with delayed/unobserved transport disconnect. This is an inference to test on the physical direct socket.",
+    "mf.dispose occurs only after the original window and diagnostic tail. Its promise fulfillment and outer process-group absence do not prove graceful Workerd shutdown."
+  ],
+  "nextExecutablePlan": [
+    {
+      "id": "unchanged-original-baseline",
+      "steps": [
+        "Execute the original v364 strict test source unchanged under the same pinned Linux runtime. Preserve all stdout/stderr, exit1/0, source SHA, all assertions and original 100x10ms cancel window.",
+        "Its result stays separate; no diagnostic variant can upgrade an original failure."
+      ]
+    },
+    {
+      "id": "physical-direct-socket",
+      "steps": [
+        "Use existing convertV4MiniflareOptions with unsafeDirectSockets:[{host:'127.0.0.1',port:0}] on the bare worker or binding gateway worker only.",
+        "Set the request URL from await mf.unsafeGetDirectURL(entryWorkerName), assert host/protocol, and assert it differs from mf.ready; prove actual runtime socket service targets the user worker from pinned source.",
+        "Use original frozen async source/holder/gateway and same compatibility date/flags. Execute bare destroy/RST and binding gateway destroy/RST, with fresh owned Miniflare contexts and original client teardown, exact first-frame/accepted/release/cancel assertions and window.",
+        "Retain incoming/forwarded/holder signal observations and original KV proxy observations; do not add waitUntil or an abort handler to the original source."
+      ]
+    },
+    {
+      "id": "native-explicit-reader-cancel-calibration",
+      "steps": [
+        "Within a real Workerd worker, call the same original holder/source, read its first frame, arrange a pending second read, then await its real reader.cancel. Observe the original cancel KV, original waitUntil registration and fulfillment.",
+        "Do not replace ctx.waitUntil or add lifetime protection. This calibrates native JS stream cancellation/KV observation independently of transport.",
+        "Its success would not prove pending original pull is quiescent, direct HTTP cancellation passed, or the old strict baseline passed."
+      ]
+    },
+    {
+      "id": "bounded-result-separation",
+      "steps": [
+        "Preserve source seals, real status or null/timeout, per-child raw SHA, process-group ownership and absence checks. Keep unknown exits failing and cleanup failures separate.",
+        "Record mf.dispose fulfillment as API completion only; retain forced-cleanup flags and do not call it graceful. Linux execution is future-only."
+      ]
+    }
+  ],
+  "decisionRules": [
+    "If direct sockets restore incoming abort but cancel KV stays null while native explicit reader.cancel succeeds, native response-pump teardown/context lifetime becomes the leading remaining hypothesis.",
+    "If direct sockets restore both cancellation observations, investigate the Miniflare core entry forwarding and compatibility flags in an isolated adapter qualification; do not change installed packages or claim production repair.",
+    "If native explicit reader.cancel fails, first diagnose async source cancellation/KV promise lifetime independently of HTTP; do not blame the HTTP ingress from absent observations alone.",
+    "A Workerd patch or package upgrade requires a pinned candidate, independent reproducible runtime source/build provenance and the unchanged original strict suite passing; open upstream PRs are not proof."
+  ],
+  "primarySources": [
+    {
+      "url": "https://github.com/cloudflare/workerd/issues/6832",
+      "kind": "upstream-issue",
+      "scope": "Reporter describes async stream cancel regression; supporting similarity only, not reproduced at our exact pin.",
+      "notCurrentFixProof": true
+    },
+    {
+      "url": "https://github.com/cloudflare/workerd/pull/6833",
+      "kind": "upstream-open-proposed-fix",
+      "scope": "Proposal schedules source cancellation on pump teardown and retains its asynchronous promise through drain. Page read as Open; no binary used here.",
+      "notCurrentFixProof": true
+    },
+    {
+      "url": "https://github.com/cloudflare/workerd/pull/6896",
+      "kind": "upstream-open-proposed-fix",
+      "scope": "Independent proposed pump cancellation fix. Comments raise cleanup-task versus waitUntil drain lifetime. Page read as Open; no binary used here.",
+      "notCurrentFixProof": true
+    },
+    {
+      "url": "https://developers.cloudflare.com/workers/configuration/compatibility-flags/",
+      "kind": "official-docs",
+      "scope": "Request signal flags behavior; exact pin schema checked separately."
+    }
+  ],
+  "limits": {
+    "realRuntimeExecuted": false,
+    "realCiExecuted": false,
+    "productionRequests": 0,
+    "repositoryModified": false,
+    "gitModified": false,
+    "originalStrictAssertionsModified": false,
+    "oldEvidenceModified": false,
+    "scopeOrGateChanged": false,
+    "workerdCppAtExactPinRetrieved": false,
+    "upstreamRootCauseAtOurPinProven": false,
+    "fullG7Passed": false,
+    "gracefulWorkerdProven": false
+  }
+}

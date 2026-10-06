@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import { createHash } from 'node:crypto';
+const repo='C:/cinagroup/cinatoken', dir=path.join(repo,'scripts/diagnostics/v364-direct-socket');
+const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
+const describe=(base,relative)=>{const bytes=fs.readFileSync(path.join(base,relative));return {path:relative,bytes:bytes.length,sha256:sha(bytes)};};
+const files=['run-direct-socket.mjs','native-reader-calibration.mjs','execute-owned-linux.py','source-inputs.json','README.md'];
+assert.deepEqual(fs.readdirSync(dir).sort(),files.slice().sort());
+const manifest={schema:'v364-direct-socket-sealed-package-v1',preparedAtHead:'702c4d71379acb697024ef846725871582bff94f',executionSHAIsSeparate:true,files:files.map(p=>describe(dir,p)),workflow:describe(repo,'.github/workflows/v364-direct-socket.yml')};
+fs.writeFileSync(path.join(dir,'sealed-package.json'),JSON.stringify(manifest,null,2)+'\n',{flag:'wx'});
+console.log(JSON.stringify({files:manifest.files.length,workflow:manifest.workflow,actualSealOutcome:0,runtimeExecuted:false}));

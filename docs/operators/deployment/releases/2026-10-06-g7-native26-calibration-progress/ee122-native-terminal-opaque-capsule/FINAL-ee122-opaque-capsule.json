@@ -1,0 +1,142 @@
+{
+  "schema": "cinatoken-ee122-opaque-capsule.final.v1",
+  "frozenAt": "2026-10-06T05:16:00.585Z",
+  "sourceRoot": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-native-tail-independent-peer-76364c609e694985bf7d74bf5b2c4ae9",
+  "originalFinalAndSealPins": [
+    {
+      "relative": "FINAL-ee122-native-tail-terminal-independent-peer.json",
+      "bytes": 526801,
+      "sha256": "1cb4680d0effb04b1784dd945738c5d3608c06c9c2423dd82784a9441aee2ebe"
+    },
+    {
+      "relative": "FINAL-ee122-native-tail-terminal-independent-peer-seal.json",
+      "bytes": 159232,
+      "sha256": "cca4e7e35584c673444a27e4a619faf1589f57b9a13cbec9360287c940aa6d7c"
+    }
+  ],
+  "ZIP": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-opaque-capsule-89cf1ba373634086a3926a636a292ec7/ee122-frozen-root-lossless-opaque.zip",
+    "bytes": 1754533,
+    "sha256": "ad81f711b44102fde593087f8592dd4081c53058309df910586ee2a7af86f03a"
+  },
+  "sourceFileCount": 213,
+  "sourceDirectoryCount": 0,
+  "zipMemberCount": 213,
+  "originalTotalBytes": 12098565,
+  "originalSourceRootIdentity": {
+    "device": 13599748847671917000,
+    "inode": 1407374888753315,
+    "mode": 16895,
+    "bytes": 98304,
+    "mtimeNs": 1791263218094974700,
+    "attributes": 16
+  },
+  "sourceIndexBefore": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-opaque-capsule-89cf1ba373634086a3926a636a292ec7/source-index.before.json",
+    "bytes": 84031,
+    "sha256": "3ba3f771d76a9d749ed01c8b71be851b8b5973c52dea56e4a79f7a24309513ff"
+  },
+  "sourceIndexAfter": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-opaque-capsule-89cf1ba373634086a3926a636a292ec7/source-index.after.json",
+    "bytes": 84031,
+    "sha256": "4e8a51d90f679cfdbf557212673ca3c3da8a23782dd2c2b87a9de3dfeed5deae"
+  },
+  "zipMemberProof": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-opaque-capsule-89cf1ba373634086a3926a636a292ec7/zip-member-roundtrip-proof.json",
+    "bytes": 67155,
+    "sha256": "aebbf373f51c2c7a16987e2ac47a45eba88392ba123ce4424e769bf3bd9d9896"
+  },
+  "completeSourceBeforeAfterSetBytesShaMtimeIdentity": true,
+  "completeZipMembersDecodedBytesShaCrc": true,
+  "exclusions": [],
+  "symlinkFollowing": false,
+  "originalDataPlacement": "Every ordinary source file and directory is included in the opaque ZIP. Original raw/failures/slices/stdin stay inside ZIP and are not copied as top-level logs.",
+  "sourceRootNeverWritten": true,
+  "archivalOutputRecursivelyAddedAsSource": false,
+  "collectionOnly": true,
+  "internalReceiptsRewritten": false,
+  "originalExecutionsRepeated": false,
+  "originalFactsFromRoot": {
+    "originalTrueChildren": 31,
+    "exitZeroChildren": 28,
+    "exitOneChildren": 3,
+    "nativeStep24OriginalExit": 1,
+    "nativeSteps55to113Skipped": 59,
+    "prepared26AllSkipped": true,
+    "strict": {
+      "tests": 8,
+      "pass": 7,
+      "fail": 1
+    },
+    "other4RunsSuccess": true,
+    "sourceCommit": "ee122dd4"
+  },
+  "originalFactBoundary": "The opaque capsule preserves original bytes and receipts; packaging does not reclassify original executor1 or derive native0/strict pass/fullG7G8 pass.",
+  "packagingTrueClosedReceipt": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-opaque-capsule-89cf1ba373634086a3926a636a292ec7/package.result.json",
+    "bytes": 1200,
+    "sha256": "19b5a53041eba5fd08daaa0ec13147029ae375074973d22275082fd37e7196c2"
+  },
+  "packagingReceipt": {
+    "schema": "cinatoken-owned-opaque-capsule-real-close-v1",
+    "closed": true,
+    "beganAt": "2026-10-06T05:15:27.479Z",
+    "endedAt": "2026-10-06T05:15:29.770Z",
+    "program": "C:/Users/cina/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+    "args": [
+      "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-opaque-capsule-89cf1ba373634086a3926a636a292ec7/package-root.py"
+    ],
+    "cwd": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-opaque-capsule-89cf1ba373634086a3926a636a292ec7",
+    "actualExit": 0,
+    "signal": null,
+    "spawnError": null,
+    "timedOut": false,
+    "stdout": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-opaque-capsule-89cf1ba373634086a3926a636a292ec7/package.stdout.log",
+      "bytes": 549,
+      "sha256": "09ef92e9ad8341e81069f76e31e85cfcc1b692aa6ee1b3639d6afc7bb4bcd9a4"
+    },
+    "stderr": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-opaque-capsule-89cf1ba373634086a3926a636a292ec7/package.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "collectionOnly": true,
+    "applicationExecution": false,
+    "ciExecution": false,
+    "gatePassDerived": false
+  },
+  "finalizerExpectedClosedReceipt": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-ee122-opaque-capsule-89cf1ba373634086a3926a636a292ec7\\finalize.result.json",
+  "packagingTools": [
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-opaque-capsule-89cf1ba373634086a3926a636a292ec7/package-root.py",
+      "bytes": 9108,
+      "sha256": "b875ea918c71e529fc162b1619c444da175c65b58a282a12d91c4401d114e580"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-opaque-capsule-89cf1ba373634086a3926a636a292ec7/run-command.mjs",
+      "bytes": 3181,
+      "sha256": "8412e0b2c71b6303fcdbf059394bb7ae43c7263e608a266e40435e92b9a70051"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-opaque-capsule-89cf1ba373634086a3926a636a292ec7/finalize-capsule.mjs",
+      "bytes": 4356,
+      "sha256": "d31e9d9c1f6ae4ffabd550b4cb9cf16a589ce51d8e8b1534b2c737b38e4f7f64"
+    }
+  ],
+  "setupToolReaderFailure": {
+    "actualExit": 1,
+    "rawClosedReceiptAvailable": false,
+    "reason": "An initial shell-inline Node source had broken quote escaping and failed before capsule root setup. Tool output recorded the failure; no source evidence or wrapping result derives from it."
+  },
+  "applicationRuns": 0,
+  "ciRunsTriggered": 0,
+  "dbRuns": 0,
+  "gitOperations": 0,
+  "repoWrites": 0,
+  "productionRequests": 0,
+  "nativeExitZeroDerived": false,
+  "fullG7G8Pass": false,
+  "gatePassDerived": false,
+  "ownerStopWritesAfterFinalizerClosedSeal": true
+}

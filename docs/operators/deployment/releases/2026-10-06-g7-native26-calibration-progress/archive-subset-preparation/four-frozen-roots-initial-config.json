@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "releaseSlug": "2026-10-06-native-four-g7-observe-preparation",
+  "sourceCommit": "473de5fc",
+  "outputDirectory": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native-four-archive-prep-45cfb0f397164d5a8451d8d3c3a5b5fd/future-output-not-created",
+  "roots": [
+    {
+      "id": "native-four-owner",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-four-repair-38a94fb93d9842929dc7ae9cf6b378da",
+      "phase": "local-validation"
+    },
+    {
+      "id": "native-four-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-four-independent-peer-1f17397bef8049cb9cd030679e23dc70",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "g7-observe-owner",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-g7-observe-dependency-fix-02e2061ea37b4d18af99a3675ec1b7fc",
+      "phase": "local-validation"
+    },
+    {
+      "id": "g7-observe-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-g7-observer-connection-peer-readonly-13a3b38c25d74da1be0d64feed3c75d5",
+      "phase": "source-peer-review"
+    }
+  ],
+  "semantics": {
+    "collectionOnly": true,
+    "gatePassDerived": false,
+    "fullG7Verified": false,
+    "fullG8Verified": false,
+    "actualCIResultPending": true,
+    "configuredRootsFrozen": true,
+    "growingCurrentRootIncluded": false,
+    "controlledChildStreamsOnlyInsideParentRaw": true,
+    "noExclusions": true,
+    "productionRequests": 0
+  }
+}

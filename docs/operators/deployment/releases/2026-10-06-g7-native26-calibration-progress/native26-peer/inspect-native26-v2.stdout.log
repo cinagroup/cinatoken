@@ -1,0 +1,2636 @@
+{
+  "producerKeys": [
+    "schema",
+    "frozenAt",
+    "platform",
+    "actualExit",
+    "baseCommit",
+    "allowedSteps",
+    "repositoryWritePaths",
+    "finalFiles",
+    "preservedCounts",
+    "protectionGroups",
+    "protection",
+    "unchangedHelperCorpus",
+    "frozenReadonlyInventory",
+    "authority",
+    "implementation",
+    "checks",
+    "historicalPlanningFailure",
+    "historicalFinalizerFailure",
+    "evidenceFiles",
+    "commandReceipts",
+    "receiptCounts",
+    "finalWriterClosedReceipt",
+    "finalWriterReceiptBoundary",
+    "truthBoundary",
+    "ownerStoppedWritingAfterFinalizer"
+  ],
+  "producer": {
+    "schema": "cinatoken.pg73.native26-owner-preparation.final.v1",
+    "frozenAt": "2026-10-06T03:50:56.164Z",
+    "platform": "win32",
+    "actualExit": 0,
+    "baseCommit": "473de5fc520fc7d64db700db88a76c7a6b45c241",
+    "allowedSteps": {
+      "count": 26,
+      "first": 60,
+      "last": 106
+    },
+    "repositoryWritePaths": {
+      "count": 26,
+      "first": "scripts/db/cutover/postgres-legacy-buyer-windowed-app-privileges-v374.native.test.mjs",
+      "last": "scripts/db/cutover/postgres-shared-key-credited-usage-reader.native.test.mjs"
+    },
+    "finalFiles": {
+      "count": 26,
+      "first": {
+        "step": 60,
+        "file": "scripts/db/cutover/postgres-legacy-buyer-windowed-app-privileges-v374.native.test.mjs",
+        "baseGitBlob": "3c3da3b9fb1a853b34dae60bea5164ec9d02defb",
+        "before": {
+          "bytes": 59317,
+          "sha256": "15518430b8939e223da7a64c885fe0afd2e4b9accfd818b2db153d8440ca5567"
+        },
+        "after": {
+          "bytes": 59511,
+          "sha256": "8c2304a6dd54a0edab28361fde57d2aaae7bfe2ee799b1384bcf1817115c6fc2"
+        },
+        "originalAssertions": 69,
+        "originalGrantCalls": 2,
+        "originalSqlTemplates": 97,
+        "originalSqlAndTransactionCalls": 107,
+        "originalCleanupCalls": 2,
+        "originalReporterCalls": 2,
+        "originalConditionalTests": 5,
+        "allOriginalAssertionsAndGrantCallsAstAndSourceExact": true,
+        "allOriginalSqlAndTransactionCallsAstAndSourceExact": true,
+        "allOriginalTemplatesConditionsReportersCleanupOptionsAstAndSourceExact": true,
+        "wholeFileReverseBytesExact": true,
+        "originalAstProofSha256": "1077322402dc9f7d02cbae93469f45e3215e623b49b7b29b6fe2e74e93a78c73",
+        "originalTestOptions": {
+          "count": 1,
+          "first": "{ timeout: 240_000, skip: !process.env.GATEWAY_NATIVE_PG_BIN }",
+          "last": "{ timeout: 240_000, skip: !process.env.GATEWAY_NATIVE_PG_BIN }"
+        },
+        "fixedCorpusLoaderCalls": 1,
+        "oneOwnedLocalBinding": true,
+        "originalInitialIdempotentOrNegativeOrLateCallSourceExact": true,
+        "originalFinalCorpusFailureConditionExact": null,
+        "recursiveSourceReaddirExact": null
+      },
+      "last": {
+        "step": 106,
+        "file": "scripts/db/cutover/postgres-shared-key-credited-usage-reader.native.test.mjs",
+        "baseGitBlob": "97e58c0ebe8c232ad8f4cad9296106ea260e8db5",
+        "before": {
+          "bytes": 18415,
+          "sha256": "9cfe59b65acfe2ffe934d28f0db93c82421977925de7c0e551eb16c1fabad98b"
+        },
+        "after": {
+          "bytes": 18603,
+          "sha256": "fe62b22831e7b37e8c0377ed4e902ce0be499dd54ebea2d1e81b93c60c47d912"
+        },
+        "originalAssertions": 34,
+        "originalGrantCalls": 1,
+        "originalSqlTemplates": 34,
+        "originalSqlAndTransactionCalls": 41,
+        "originalCleanupCalls": 2,
+        "originalReporterCalls": 1,
+        "originalConditionalTests": 2,
+        "allOriginalAssertionsAndGrantCallsAstAndSourceExact": true,
+        "allOriginalSqlAndTransactionCallsAstAndSourceExact": true,
+        "allOriginalTemplatesConditionsReportersCleanupOptionsAstAndSourceExact": true,
+        "wholeFileReverseBytesExact": true,
+        "originalAstProofSha256": "bb780affcddb309b4a2f8dce3e5e9497b2439418bfc8599bf9bebfc877c2ff35",
+        "originalTestOptions": {
+          "count": 1,
+          "first": "{timeout:300_000,skip:!process.env.GATEWAY_NATIVE_PG_BIN}",
+          "last": "{timeout:300_000,skip:!process.env.GATEWAY_NATIVE_PG_BIN}"
+        },
+        "fixedCorpusLoaderCalls": 1,
+        "oneOwnedLocalBinding": true,
+        "originalInitialIdempotentOrNegativeOrLateCallSourceExact": true,
+        "originalFinalCorpusFailureConditionExact": null,
+        "recursiveSourceReaddirExact": null
+      }
+    },
+    "preservedCounts": {
+      "files": 26,
+      "originalAssertions": 2233,
+      "originalGrantCalls": 35,
+      "originalSqlTemplates": 2556,
+      "originalSqlAndTransactionCalls": 3236,
+      "unchangedInventoryProtection": 298,
+      "extraPriorFourProtection": 4,
+      "totalUnchangedProtection": 302,
+      "totalInventoryPlusExtraFour": 328
+    },
+    "protectionGroups": {
+      "workflow-or-toolchain-contract": 6,
+      "direct-production-or-native-support": 69,
+      "formal-sql": 81,
+      "proposal-sql": 85,
+      "excluded-fixture": 29,
+      "original-fixture-helper-or-runner": 28,
+      "prior-four-fixture-extra-protection": 4
+    },
+    "protection": {
+      "count": 302,
+      "first": {
+        "file": ".github/workflows/proxy-dispatch-safety.yml",
+        "blob": "6bde583d25f82a751b59d560e402a890e092bc03",
+        "bytes": 45895,
+        "sha256": "8e883e7f21f77f8367d361f6bd3d060e16c241c28641b3eac85af6835841f152",
+        "currentBaseGitBytesExact": true,
+        "group": "workflow-or-toolchain-contract"
+      },
+      "last": {
+        "file": "tsconfig.json",
+        "blob": "0c2df7f2622abfa9bc14bf4f7f2cde2a2ad4e37a",
+        "bytes": 211,
+        "sha256": "28ea67d0f61b71823926af218947ae4031aa1f1b093c7c74945403cc257ff8b0",
+        "currentBaseGitBytesExact": true,
+        "group": "workflow-or-toolchain-contract"
+      }
+    },
+    "unchangedHelperCorpus": {
+      "actualUnchangedHelperReadValidated": true,
+      "count": 73,
+      "last": "0073_recovery_api_key_workspace_lock.sql",
+      "sha256": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc",
+      "ledgerMd5": "ca1ea96a1b4bcd0675642f30dcf48042"
+    },
+    "frozenReadonlyInventory": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native59-full-inventory-10b2722ab06d4cf6b6305e24571b4a8d/FINAL-native59-full-readonly-inventory.json",
+      "bytes": 635773,
+      "sha256": "67bf17ba71aa1b9a1b3eba948cc0f2a7e221e80a9e8a1ed3ee33eef8e5ceb6cb"
+    },
+    "authority": {
+      "originalActualCi": {
+        "runId": 37409463636,
+        "step": 60,
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504/native-terminal-log.stdout.log",
+        "bytes": 327916,
+        "sha256": "4203c059c01c7097c650376d0148120244536cd2fe6931095ee0414b930f00a5",
+        "downloadReceipt": {
+          "at": "2026-10-06T03:39:41.116Z",
+          "finishedAt": "2026-10-06T03:39:48.989Z",
+          "executable": "C:/Program Files/GitHub CLI/gh.exe",
+          "args": {
+            "count": 8,
+            "first": "run",
+            "last": "--log"
+          },
+          "cwd": "C:/cinagroup/cinatoken",
+          "actualExit": 0,
+          "signal": null,
+          "stdout": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\native-terminal-log.stdout.log",
+            "bytes": 327916,
+            "sha256": "4203c059c01c7097c650376d0148120244536cd2fe6931095ee0414b930f00a5"
+          },
+          "stderr": {
+            "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504\\native-terminal-log.stderr.log",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        "actualFailure": "81 !== 73 at v374:125:14"
+      },
+      "observedFailureScope": "Only step60 v374:125:14 has the supplied actual 81 !== 73 failure; other 25 adaptations are based on original workflow/source inventory.",
+      "priorSuccessfulNativeSteps": "Parent reported original Linux steps53-59 SUCCESS in run37409463636. This local task did not rerun them.",
+      "originalStrictStatus": "Parent reported original strict 7/1 unchanged; this task did not change or execute strict checks."
+    },
+    "implementation": {
+      "helperImport": "Use existing listPg73Migrations and grantPg73RuntimeFixture.",
+      "initialCorpus": "Keep original variables, 73 assertions, SQL/hash loops; replace initial all-formal loader with existing PG73 loader.",
+      "grantCalls": "Insert one local grantPostgresRuntime binding before the first original grant; all 35 original calls remain exact in source and normalized AST.",
+      "finalCorpusSteps": {
+        "count": 4,
+        "first": 82,
+        "last": 85
+      },
+      "finalCorpusFailureCondition": "All four original if/sha/failure contracts are exact; only final loader RHS is wired to existing PG73 helper.",
+      "preservedRecursiveReaddirSteps": {
+        "count": 4,
+        "first": 81,
+        "last": 85
+      },
+      "preservedIdempotentAndMarkerRejectionSteps": {
+        "count": 2,
+        "first": 95,
+        "last": 96
+      },
+      "preservedLatePositiveGrantSteps": {
+        "count": 2,
+        "first": 99,
+        "last": 106
+      },
+      "originalProduction0074ContractAndHelperSourceUnchanged": true,
+      "omittedOrBlockedFiles": {
+        "count": 0
+      }
+    },
+    "checks": {
+      "independentFreshGitAstSqlSourceAndWholeFileReverseAudit": "audit26.closed.json actual 0",
+      "finalCurrentHashVerification": "All 26 current fixtures and 302 protected inputs match independently audited hashes at freeze time.",
+      "syntax": "26 node --check calls actual 0, syntax only.",
+      "boundedDiffCheck": "26-diff-check.closed.json actual 0.",
+      "staticCorpus": "Existing unchanged helper read validates 73 entries through 0073 and fixed corpus SHA/ledger MD5; no database.",
+      "originalAssertionCount": 2233,
+      "originalGrantCallCount": 35,
+      "originalTemplateCount": 2556,
+      "originalSqlAndTransactionCallCount": 3236
+    },
+    "historicalPlanningFailure": {
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\repair26.closed.json",
+        "bytes": 825,
+        "sha256": "fc73d940d899933470218d4a8281642a9b3205a2a32c348f41b2ce05ad6eae71",
+        "at": "2026-10-06T03:43:40.983Z",
+        "finishedAt": "2026-10-06T03:43:41.241Z",
+        "executable": "C:/Program Files/nodejs/node.exe",
+        "args": {
+          "count": 1,
+          "first": "C:/Users/cina/AppData/Local/Temp/cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713/repair26.mjs",
+          "last": "C:/Users/cina/AppData/Local/Temp/cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713/repair26.mjs"
+        },
+        "actualExit": 1,
+        "signal": null,
+        "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\repair26.stdout.log",
+        "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\repair26.stderr.log",
+        "stdoutInfo": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderrInfo": {
+          "bytes": 578,
+          "sha256": "3e95f3291eb319f77e79ea546ab273c99afb9fd427c6d2e8ccdbfa742fc57b09"
+        },
+        "spawnError": null,
+        "exception": null
+      },
+      "reason": "The original planning script assumed a unique initial grant anchor; step95 has two identical original initial grant lines (observed 3 split parts versus expected 2).",
+      "repositoryWritesAtFailure": 0,
+      "guarantee": "Both scripts prepare every candidate before any repository write. The first planner failed before reaching its write loop. Original failed script, partial temporary snapshots, raw stdout/stderr and actual exit 1 receipt are retained.",
+      "resolution": "v2 inserts a single local binding at the first occurrence, retaining both original calls and every later rejection; v2 actual exit 0."
+    },
+    "historicalFinalizerFailure": {
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\finalize26.closed.json",
+        "bytes": 831,
+        "sha256": "6555471df96b12d4dd914757283aa1d6f7da2a3b4d074b02c53489d845b1f475",
+        "at": "2026-10-06T03:49:56.672Z",
+        "finishedAt": "2026-10-06T03:49:56.756Z",
+        "executable": "C:/Program Files/nodejs/node.exe",
+        "args": {
+          "count": 1,
+          "first": "C:/Users/cina/AppData/Local/Temp/cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713/finalize26.mjs",
+          "last": "C:/Users/cina/AppData/Local/Temp/cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713/finalize26.mjs"
+        },
+        "actualExit": 1,
+        "signal": null,
+        "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\finalize26.stdout.log",
+        "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\finalize26.stderr.log",
+        "stdoutInfo": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderrInfo": {
+          "bytes": 749,
+          "sha256": "3842e474388429a080933f8a719948da291d7cf5d3cadc07add417abec8cc6fc"
+        },
+        "spawnError": null,
+        "exception": null
+      },
+      "reason": "The first read-only finalizer expected step-60.final-after; actual snapshot names use the original fixture basename. ENOENT was retained with actual exit 1.",
+      "repositoryWritesAtFailure": 0,
+      "finalReportWrittenAtFailure": false,
+      "resolution": "A separate v2 finalizer uses actual basename snapshots and records both preserved preparation failures."
+    },
+    "evidenceFiles": {
+      "count": 15,
+      "first": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\evidence-lib.mjs",
+        "bytes": 2159,
+        "sha256": "f8c76b748e05d4f2a7f76cca2671bd702dca304000b7d19cc32a9503bd90076f"
+      },
+      "last": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\26-final-patch.stdout.log",
+        "bytes": 76997,
+        "sha256": "0bbd224d0cba8a28360c9ff138371485d91890074d48abd8f68f5a462b366e27"
+      }
+    },
+    "commandReceipts": {
+      "count": 41,
+      "first": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\26-diff-check.closed.json",
+        "bytes": 3053,
+        "sha256": "378648130f312fd27755488f100a2e6b04ba4301fdccce0937e6fbee42cddb5f",
+        "at": "2026-10-06T03:46:17.290Z",
+        "finishedAt": "2026-10-06T03:46:17.365Z",
+        "executable": "git",
+        "args": {
+          "count": 29,
+          "first": "diff",
+          "last": "scripts/db/cutover/postgres-shared-key-credited-usage-reader.native.test.mjs"
+        },
+        "actualExit": 0,
+        "signal": null,
+        "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\26-diff-check.stdout.log",
+        "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\26-diff-check.stderr.log",
+        "stdoutInfo": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderrInfo": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "spawnError": null,
+        "exception": null
+      },
+      "last": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\verify-static26.closed.json",
+        "bytes": 846,
+        "sha256": "05e59e2bf9f9313de943239f2d2e5c3a9f972858bb098b5f9b091e46b31dab02",
+        "at": "2026-10-06T03:46:16.663Z",
+        "finishedAt": "2026-10-06T03:46:17.470Z",
+        "executable": "C:/Program Files/nodejs/node.exe",
+        "args": {
+          "count": 1,
+          "first": "C:/Users/cina/AppData/Local/Temp/cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713/verify-static26.mjs",
+          "last": "C:/Users/cina/AppData/Local/Temp/cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713/verify-static26.mjs"
+        },
+        "actualExit": 0,
+        "signal": null,
+        "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\verify-static26.stdout.log",
+        "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\verify-static26.stderr.log",
+        "stdoutInfo": {
+          "bytes": 102,
+          "sha256": "a81f33ef2b46817dd48fb5c509ae5d2ad2938a178c13659727569762242c86d2"
+        },
+        "stderrInfo": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "spawnError": null,
+        "exception": null
+      }
+    },
+    "receiptCounts": {
+      "alreadyClosed": 41,
+      "actualZero": 39,
+      "actualOne": 2,
+      "actualNull": 0,
+      "signaled": 0,
+      "spawnErrors": 0
+    },
+    "finalWriterClosedReceipt": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\finalize26-v2.closed.json",
+    "finalWriterReceiptBoundary": "This JSON is written before the wrapper closes the finalizer; its actual exit and raw output hashes are recorded separately in the referenced closed receipt.",
+    "truthBoundary": {
+      "realPgExecuted": false,
+      "nativeFixtureExecuted": false,
+      "actualLinuxPassClaim": false,
+      "productionWrites": 0,
+      "sqlWrites": 0,
+      "helperWrites": 0,
+      "markdownWrites": 0,
+      "gitMutations": 0,
+      "ciActions": 0,
+      "cliNetworkCalls": 0,
+      "onlyRepositoryWrites": "Exactly the 26 allowlisted native fixture files.",
+      "productionReadClosure": "The recorded 302 protected inputs, direct source/helper and migration inventory; no claim of all npm transitive sources.",
+      "nextAction": "Root independently reviews, commits and runs the original Linux workflow. Local checks establish source preservation and preparation only."
+    },
+    "ownerStoppedWritingAfterFinalizer": true
+  },
+  "inventoryKeys": [
+    "schema",
+    "at",
+    "actualExit",
+    "baseCommit",
+    "workflow",
+    "sourceDiscovery",
+    "totals",
+    "candidateSteps",
+    "excludedSteps",
+    "records",
+    "protection",
+    "suggestedFutureBatches",
+    "boundary"
+  ],
+  "candidateSteps": [
+    60,
+    61,
+    66,
+    69,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    80,
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    88,
+    95,
+    96,
+    97,
+    98,
+    99,
+    106
+  ],
+  "inventoryRecords": 55,
+  "protectionKeys": [
+    "scope",
+    "groups",
+    "inputs",
+    "unresolvedDirectRelativeImports"
+  ],
+  "protectionInputs": 324
+}
+{
+  "step": 82,
+  "record": {
+    "step": 82,
+    "yamlStep": 80,
+    "workflowLine": 513,
+    "fixture": "scripts/db/cutover/postgres-complete-text-response-no-fetch-coinstall-v397.native.test.mjs",
+    "bytes": 87519,
+    "sha256": "1bec73e1b1ba5590506f3747f58b125bc3b7780a369ebc9d58745027b4bde47a",
+    "originalAssertionCount": 121,
+    "ledgerAssertions": [
+      {
+        "line": 179,
+        "source": "assert.equal(migrationNames.length,73)"
+      }
+    ],
+    "negativeGrantAssertions": [],
+    "grantCalls": [
+      {
+        "line": 192,
+        "source": "grantPostgresRuntime({DATABASE_URL:migratorUrl})",
+        "name": "grantPostgresRuntime"
+      }
+    ],
+    "grantAdapters": [],
+    "loaders": [
+      {
+        "line": 178,
+        "source": "readdir(migrationDir)",
+        "name": "readdir"
+      },
+      {
+        "line": 970,
+        "source": "readdir(migrationDir)",
+        "name": "readdir"
+      }
+    ],
+    "testOptions": [
+      "{timeout:300_000,skip:!process.env.GATEWAY_NATIVE_PG_BIN}"
+    ],
+    "imports": [
+      {
+        "line": 2,
+        "source": "node:assert/strict",
+        "names": [
+          {
+            "local": "assert"
+          }
+        ],
+        "text": "import assert from 'node:assert/strict';"
+      },
+      {
+        "line": 3,
+        "source": "../../../packages/proxy/src/services/postgres-complete-text-no-fetch-recovery-v389.ts",
+        "names": [
+          {
+            "imported": "runPostgresCompleteTextNoFetchRecoveryV389",
+            "local": "runPostgresCompleteTextNoFetchRecoveryV389"
+          }
+        ],
+        "text": "import { runPostgresCompleteTextNoFetchRecoveryV389 } from '../../../packages/proxy/src/services/postgres-complete-text-no-fetch-recovery-v389.ts';"
+      },
+      {
+        "line": 4,
+        "source": "../../../packages/proxy/src/services/postgres-complete-text-no-fetch-v372.ts",
+        "names": [
+          {
+            "imported": "confirmPostgresCompleteTextNoFetchV370",
+            "local": "confirmPostgresCompleteTextNoFetchV370"
+          }
+        ],
+        "text": "import { confirmPostgresCompleteTextNoFetchV370 } from '../../../packages/proxy/src/services/postgres-complete-text-no-fetch-v372.ts';"
+      },
+      {
+        "line": 5,
+        "source": "../../../packages/proxy/src/services/postgres-complete-text-attempt-grant-v362.ts",
+        "names": [
+          {
+            "imported": "grantPostgresCompleteTextAttemptV362",
+            "local": "grantPostgresCompleteTextAttemptV362"
+          }
+        ],
+        "text": "import { grantPostgresCompleteTextAttemptV362 } from '../../../packages/proxy/src/services/postgres-complete-text-attempt-grant-v362.ts';"
+      },
+      {
+        "line": 6,
+        "source": "../../../packages/proxy/src/services/postgres-complete-text-hold-renewal-v369.ts",
+        "names": [
+          {
+            "imported": "renewPostgresCompleteTextHoldsV367",
+            "local": "renewPostgresCompleteTextHoldsV367"
+          }
+        ],
+        "text": "import { renewPostgresCompleteTextHoldsV367 } from '../../../packages/proxy/src/services/postgres-complete-text-hold-renewal-v369.ts';"
+      },
+      {
+        "line": 7,
+        "source": "../../../packages/proxy/src/services/postgres-complete-chat-quote-v360.ts",
+        "names": [
+          {
+            "imported": "issuePostgresCompleteChatQuoteV360",
+            "local": "issuePostgresCompleteChatQuoteV360"
+          }
+        ],
+        "text": "import { issuePostgresCompleteChatQuoteV360 } from '../../../packages/proxy/src/services/postgres-complete-chat-quote-v360.ts';"
+      },
+      {
+        "line": 8,
+        "source": "../../../packages/proxy/src/services/postgres-complete-chat-admission-v361.ts",
+        "names": [
+          {
+            "imported": "admitPostgresCompleteChatQuoteV361",
+            "local": "admitPostgresCompleteChatQuoteV361"
+          }
+        ],
+        "text": "import { admitPostgresCompleteChatQuoteV361 } from '../../../packages/proxy/src/services/postgres-complete-chat-admission-v361.ts';"
+      },
+      {
+        "line": 9,
+        "source": "../../../packages/proxy/src/services/postgres-complete-text-no-fetch-close-v388.ts",
+        "names": [
+          {
+            "imported": "closePostgresCompleteTextNoFetchV388",
+            "local": "closePostgresCompleteTextNoFetchV388"
+          }
+        ],
+        "text": "import { closePostgresCompleteTextNoFetchV388 } from '../../../packages/proxy/src/services/postgres-complete-text-no-fetch-close-v388.ts';"
+      },
+      {
+        "line": 10,
+        "source": "node:crypto",
+        "names": [
+          {
+            "imported": "createHash",
+            "local": "createHash"
+          },
+          {
+            "imported": "randomBytes",
+            "local": "randomBytes"
+          },
+          {
+            "imported": "randomUUID",
+            "local": "randomUUID"
+          }
+        ],
+        "text": "import { createHash, randomBytes, randomUUID } from 'node:crypto';"
+      },
+      {
+        "line": 11,
+        "source": "node:events",
+        "names": [
+          {
+            "imported": "once",
+            "local": "once"
+          }
+        ],
+        "text": "import { once } from 'node:events';"
+      },
+      {
+        "line": 12,
+        "source": "node:fs/promises",
+        "names": [
+          {
+            "imported": "readFile",
+            "local": "readFile"
+          },
+          {
+            "imported": "readdir",
+            "local": "readdir"
+          },
+          {
+            "imported": "writeFile",
+            "local": "writeFile"
+          }
+        ],
+        "text": "import { readFile, readdir, writeFile } from 'node:fs/promises';"
+      },
+      {
+        "line": 13,
+        "source": "node:http",
+        "names": [
+          {
+            "imported": "createServer",
+            "local": "createServer"
+          }
+        ],
+        "text": "import { createServer } from 'node:http';"
+      },
+      {
+        "line": 14,
+        "source": "node:test",
+        "names": [
+          {
+            "local": "test"
+          }
+        ],
+        "text": "import test from 'node:test';"
+      },
+      {
+        "line": 15,
+        "source": "postgres",
+        "names": [
+          {
+            "local": "postgres"
+          }
+        ],
+        "text": "import postgres from 'postgres';"
+      },
+      {
+        "line": 16,
+        "source": "@octafuse/core",
+        "names": [
+          {
+            "imported": "encryptSharedKeySecret",
+            "local": "encryptSharedKeySecret"
+          }
+        ],
+        "text": "import { encryptSharedKeySecret } from '@octafuse/core';"
+      },
+      {
+        "line": 17,
+        "source": "../../../packages/core/src/route-data-policy.ts",
+        "names": [
+          {
+            "imported": "computeRouteDataPolicySubjectFingerprintFromRows",
+            "local": "computeRouteDataPolicySubjectFingerprintFromRows"
+          }
+        ],
+        "text": "import { computeRouteDataPolicySubjectFingerprintFromRows } from '../../../packages/core/src/route-data-policy.ts';"
+      },
+      {
+        "line": 18,
+        "source": "../../../packages/proxy/src/services/chat-final-quote-input.ts",
+        "names": [
+          {
+            "imported": "createFinalChatQuoteInput",
+            "local": "createFinalChatQuoteInput"
+          },
+          {
+            "imported": "originalChatBodySha256",
+            "local": "originalChatBodySha256"
+          }
+        ],
+        "text": "import { createFinalChatQuoteInput, originalChatBodySha256 } from '../../../packages/proxy/src/services/chat-final-quote-input.ts';"
+      },
+      {
+        "line": 19,
+        "source": "../../../packages/proxy/src/services/model-fallbacks.ts",
+        "names": [
+          {
+            "imported": "parseOpenAiModelFallbacks",
+            "local": "parseOpenAiModelFallbacks"
+          }
+        ],
+        "text": "import { parseOpenAiModelFallbacks } from '../../../packages/proxy/src/services/model-fallbacks.ts';"
+      },
+      {
+        "line": 20,
+        "source": "../../../packages/proxy/src/services/complete-chat-holder-dispatch-v385.ts",
+        "names": [
+          {
+            "imported": "createCompleteChatHolderDispatchV385",
+            "local": "createCompleteChatHolderDispatchV385"
+          }
+        ],
+        "text": "import { createCompleteChatHolderDispatchV385 } from '../../../packages/proxy/src/services/complete-chat-holder-dispatch-v385.ts';"
+      },
+      {
+        "line": 21,
+        "source": "../../../packages/proxy/src/runtime/complete-text-response-holder-worker-v394.ts",
+        "names": [
+          {
+            "imported": "createCompleteTextResponseHolderWorkerV394",
+            "local": "createCompleteTextResponseHolderWorkerV394"
+          }
+        ],
+        "text": "import { createCompleteTextResponseHolderWorkerV394 } from '../../../packages/proxy/src/runtime/complete-text-response-holder-worker-v394.ts';"
+      },
+      {
+        "line": 22,
+        "source": "../../../packages/proxy/src/services/postgres-complete-text-response-observation-v392.ts",
+        "names": [
+          {
+            "imported": "appendPostgresCompleteTextResponseObservationV392",
+            "local": "appendPostgresCompleteTextResponseObservationV392"
+          }
+        ],
+        "text": "import { appendPostgresCompleteTextResponseObservationV392 } from '../../../packages/proxy/src/services/postgres-complete-text-response-observation-v392.ts';"
+      },
+      {
+        "line": 23,
+        "source": "node:net",
+        "names": [
+          {
+            "imported": "createConnection",
+            "local": "createConnection"
+          },
+          {
+            "imported": "createServer",
+            "local": "createTcpServer"
+          }
+        ],
+        "text": "import { createConnection, createServer as createTcpServer } from 'node:net';"
+      },
+      {
+        "line": 24,
+        "source": "../../../packages/core/src/test-support/postgres-native-cluster.mjs",
+        "names": [
+          {
+            "imported": "startNativePostgres",
+            "local": "startNativePostgres"
+          }
+        ],
+        "text": "import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';"
+      },
+      {
+        "line": 25,
+        "source": "../../../packages/core/src/test-support/postgres-journal-commit-ack-proxy-v381.mjs",
+        "names": [
+          {
+            "imported": "startJournalCommitAckDropProxyV381",
+            "local": "startJournalCommitAckDropProxyV381"
+          }
+        ],
+        "text": "import { startJournalCommitAckDropProxyV381 } from '../../../packages/core/src/test-support/postgres-journal-commit-ack-proxy-v381.mjs';"
+      },
+      {
+        "line": 26,
+        "source": "./grant-postgres-runtime.ts",
+        "names": [
+          {
+            "imported": "grantPostgresRuntime",
+            "local": "grantPostgresRuntime"
+          }
+        ],
+        "text": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';"
+      },
+      {
+        "line": 27,
+        "source": "./activate-postgres-buyer-split-v348.ts",
+        "names": [
+          {
+            "imported": "activatePostgresBuyerSplitV348",
+            "local": "activatePostgresBuyerSplitV348"
+          }
+        ],
+        "text": "import { activatePostgresBuyerSplitV348 } from './activate-postgres-buyer-split-v348.ts';"
+      },
+      {
+        "line": 28,
+        "source": "./grant-postgres-buyer-split-v348.ts",
+        "names": [
+          {
+            "imported": "grantPostgresBuyerSplitV348",
+            "local": "grantPostgresBuyerSplitV348"
+          }
+        ],
+        "text": "import { grantPostgresBuyerSplitV348 } from './grant-postgres-buyer-split-v348.ts';"
+      },
+      {
+        "line": 29,
+        "source": "./activate-postgres-buyer-guardrail-split-v349.ts",
+        "names": [
+          {
+            "imported": "activatePostgresBuyerGuardrailSplitV349",
+            "local": "activatePostgresBuyerGuardrailSplitV349"
+          }
+        ],
+        "text": "import { activatePostgresBuyerGuardrailSplitV349 } from './activate-postgres-buyer-guardrail-split-v349.ts';"
+      },
+      {
+        "line": 30,
+        "source": "./grant-postgres-buyer-guardrail-split-v349.ts",
+        "names": [
+          {
+            "imported": "grantPostgresBuyerGuardrailSplitV349",
+            "local": "grantPostgresBuyerGuardrailSplitV349"
+          }
+        ],
+        "text": "import { grantPostgresBuyerGuardrailSplitV349 } from './grant-postgres-buyer-guardrail-split-v349.ts';"
+      }
+    ],
+    "migrationHints": [
+      {
+        "line": 12,
+        "text": "import { readFile, readdir, writeFile } from 'node:fs/promises';"
+      },
+      {
+        "line": 26,
+        "text": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';"
+      },
+      {
+        "line": 33,
+        "text": "const migrationDir=new URL('../../../packages/core/migrations-postgres/',import.meta.url);"
+      },
+      {
+        "line": 178,
+        "text": "      const migrationNames=(await readdir(migrationDir)).filter(x=>x.endsWith('.sql')).sort();"
+      },
+      {
+        "line": 179,
+        "text": "      assert.equal(migrationNames.length,73);"
+      },
+      {
+        "line": 192,
+        "text": "      await grantPostgresRuntime({DATABASE_URL:migratorUrl});"
+      },
+      {
+        "line": 970,
+        "text": "      const finalMigrationNames=(await readdir(migrationDir)).filter(x=>x.endsWith('.sql')).sort();"
+      },
+      {
+        "line": 972,
+        "text": "      if(finalMigrationNames.length!==73 || sha(finalCorpus.join('\\n'))!==report.sourceSha256.formalMigrations){failure??=new Error('Formal PG73 source changed during run');report.status='FAIL';}"
+      }
+    ],
+    "actualRuntimeEvidence": false,
+    "category": "static-pg73-fixture-adaptation-candidate",
+    "reason": "Unbounded enumeration of the current 81 formal SQL files is followed by the original historical73 assertion. No new CI failure is asserted by this inventory.",
+    "initialFormalLoader": {
+      "line": 178,
+      "source": "      const migrationNames=(await readdir(migrationDir)).filter(x=>x.endsWith('.sql')).sort();"
+    },
+    "original73Assertion": {
+      "line": 179,
+      "source": "assert.equal(migrationNames.length,73)"
+    },
+    "initialOrPostGrant": [
+      {
+        "line": 192,
+        "source": "grantPostgresRuntime({DATABASE_URL:migratorUrl})",
+        "name": "grantPostgresRuntime",
+        "semanticRole": "initial legacy runtime setup / repeated pre-marker grant"
+      }
+    ],
+    "futureMinimalAdaptation": {
+      "selectFixedHistoricalCorpusWith": "listPg73Migrations()",
+      "keepOriginal73Assertion": true,
+      "preserveOriginalLoopAndCorpusHash": true,
+      "adaptOnlyOwnedPg73GrantInvocationVia": "grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL })",
+      "preserveOriginalGrantCallAstAndSource": true,
+      "preserveOriginalNegativeGrantRegexAndAclPostconditions": true,
+      "preserveProductionReconciler0074AdmissionAndSource": true,
+      "preserveSqlLocksWaitsTimeoutAndCleanup": true,
+      "doNotMigrateTo81": true
+    },
+    "finalCorpusCheck": {
+      "loaderLine": 970,
+      "loaderSource": "      const finalMigrationNames=(await readdir(migrationDir)).filter(x=>x.endsWith('.sql')).sort();",
+      "contractLine": 972,
+      "contractSource": "      if(finalMigrationNames.length!==73 || sha(finalCorpus.join('\\n'))!==report.sourceSha256.formalMigrations){failure??=new Error('Formal PG73 source changed during run');report.status='FAIL';}",
+      "futureAdaptation": "Use the same fixed PG73 loader for finalMigrationNames; preserve the original finalCorpus SHA comparison, exact !==73 condition, failure message and finally/cleanup."
+    },
+    "originalNativeAssertionCount": 121,
+    "sourceSnapshot": "postgres-complete-text-response-no-fetch-coinstall-v397.native.test.mjs.source",
+    "gitBlob": "688ad6cb0157c9114e80a5c1cfe17159549f1f43"
+  }
+}
+{
+  "step": 83,
+  "record": {
+    "step": 83,
+    "yamlStep": 81,
+    "workflowLine": 516,
+    "fixture": "scripts/db/cutover/postgres-complete-text-auth-routing-recovery-coinstall-v400.native.test.mjs",
+    "bytes": 132004,
+    "sha256": "26c35a4f62fdc5c73f0f1a29814308f99fccea19c2823c1a97e983bbd9add607",
+    "originalAssertionCount": 214,
+    "ledgerAssertions": [
+      {
+        "line": 241,
+        "source": "assert.equal(migrationNames.length,73)"
+      },
+      {
+        "line": 663,
+        "source": "assert.deepEqual(report.catalogs.inheritedFunctionChanges,[{signature:'cinatoken_gateway.grant_complete_flat_text_attempt_v362(uuid,jsonb)',\r\n       beforeBodyMD5:'0339e4f95fff26784032d2d73ec09a7a',afterBodyMD5:'d12fadd87e87c9a74c9060b9ba9f4c6b'}])"
+      }
+    ],
+    "negativeGrantAssertions": [],
+    "grantCalls": [
+      {
+        "line": 254,
+        "source": "grantPostgresRuntime({DATABASE_URL:migratorUrl})",
+        "name": "grantPostgresRuntime"
+      }
+    ],
+    "grantAdapters": [],
+    "loaders": [
+      {
+        "line": 182,
+        "source": "readdir(new URL('../../../'+relative+'/',import.meta.url),{withFileTypes:true})",
+        "name": "readdir"
+      },
+      {
+        "line": 240,
+        "source": "readdir(migrationDir)",
+        "name": "readdir"
+      },
+      {
+        "line": 1333,
+        "source": "readdir(migrationDir)",
+        "name": "readdir"
+      }
+    ],
+    "testOptions": [
+      "{timeout:360_000,skip:!process.env.GATEWAY_NATIVE_PG_BIN}"
+    ],
+    "imports": [
+      {
+        "line": 2,
+        "source": "node:assert/strict",
+        "names": [
+          {
+            "local": "assert"
+          }
+        ],
+        "text": "import assert from 'node:assert/strict';"
+      },
+      {
+        "line": 3,
+        "source": "../../../packages/proxy/src/services/postgres-complete-text-no-fetch-recovery-v389.ts",
+        "names": [
+          {
+            "imported": "runPostgresCompleteTextNoFetchRecoveryV389",
+            "local": "runPostgresCompleteTextNoFetchRecoveryV389"
+          }
+        ],
+        "text": "import { runPostgresCompleteTextNoFetchRecoveryV389 } from '../../../packages/proxy/src/services/postgres-complete-text-no-fetch-recovery-v389.ts';"
+      },
+      {
+        "line": 4,
+        "source": "../../../packages/proxy/src/services/postgres-complete-text-no-fetch-v372.ts",
+        "names": [
+          {
+            "imported": "confirmPostgresCompleteTextNoFetchV370",
+            "local": "confirmPostgresCompleteTextNoFetchV370"
+          }
+        ],
+        "text": "import { confirmPostgresCompleteTextNoFetchV370 } from '../../../packages/proxy/src/services/postgres-complete-text-no-fetch-v372.ts';"
+      },
+      {
+        "line": 5,
+        "source": "../../../packages/proxy/src/services/postgres-complete-text-attempt-grant-v362.ts",
+        "names": [
+          {
+            "imported": "grantPostgresCompleteTextAttemptV362",
+            "local": "grantPostgresCompleteTextAttemptV362"
+          }
+        ],
+        "text": "import { grantPostgresCompleteTextAttemptV362 } from '../../../packages/proxy/src/services/postgres-complete-text-attempt-grant-v362.ts';"
+      },
+      {
+        "line": 6,
+        "source": "../../../packages/proxy/src/services/postgres-complete-text-hold-renewal-v369.ts",
+        "names": [
+          {
+            "imported": "renewPostgresCompleteTextHoldsV367",
+            "local": "renewPostgresCompleteTextHoldsV367"
+          }
+        ],
+        "text": "import { renewPostgresCompleteTextHoldsV367 } from '../../../packages/proxy/src/services/postgres-complete-text-hold-renewal-v369.ts';"
+      },
+      {
+        "line": 7,
+        "source": "../../../packages/proxy/src/services/postgres-complete-chat-quote-v360.ts",
+        "names": [
+          {
+            "imported": "issuePostgresCompleteChatQuoteV360",
+            "local": "issuePostgresCompleteChatQuoteV360"
+          }
+        ],
+        "text": "import { issuePostgresCompleteChatQuoteV360 } from '../../../packages/proxy/src/services/postgres-complete-chat-quote-v360.ts';"
+      },
+      {
+        "line": 8,
+        "source": "../../../packages/proxy/src/services/postgres-complete-chat-admission-v361.ts",
+        "names": [
+          {
+            "imported": "admitPostgresCompleteChatQuoteV361",
+            "local": "admitPostgresCompleteChatQuoteV361"
+          }
+        ],
+        "text": "import { admitPostgresCompleteChatQuoteV361 } from '../../../packages/proxy/src/services/postgres-complete-chat-admission-v361.ts';"
+      },
+      {
+        "line": 9,
+        "source": "../../../packages/proxy/src/services/postgres-complete-text-no-fetch-close-v388.ts",
+        "names": [
+          {
+            "imported": "closePostgresCompleteTextNoFetchV388",
+            "local": "closePostgresCompleteTextNoFetchV388"
+          }
+        ],
+        "text": "import { closePostgresCompleteTextNoFetchV388 } from '../../../packages/proxy/src/services/postgres-complete-text-no-fetch-close-v388.ts';"
+      },
+      {
+        "line": 10,
+        "source": "node:crypto",
+        "names": [
+          {
+            "imported": "createHash",
+            "local": "createHash"
+          },
+          {
+            "imported": "randomBytes",
+            "local": "randomBytes"
+          },
+          {
+            "imported": "randomUUID",
+            "local": "randomUUID"
+          }
+        ],
+        "text": "import { createHash, randomBytes, randomUUID } from 'node:crypto';"
+      },
+      {
+        "line": 11,
+        "source": "node:events",
+        "names": [
+          {
+            "imported": "once",
+            "local": "once"
+          }
+        ],
+        "text": "import { once } from 'node:events';"
+      },
+      {
+        "line": 12,
+        "source": "node:fs/promises",
+        "names": [
+          {
+            "imported": "readFile",
+            "local": "readFile"
+          },
+          {
+            "imported": "readdir",
+            "local": "readdir"
+          },
+          {
+            "imported": "writeFile",
+            "local": "writeFile"
+          }
+        ],
+        "text": "import { readFile, readdir, writeFile } from 'node:fs/promises';"
+      },
+      {
+        "line": 13,
+        "source": "node:http",
+        "names": [
+          {
+            "imported": "createServer",
+            "local": "createServer"
+          }
+        ],
+        "text": "import { createServer } from 'node:http';"
+      },
+      {
+        "line": 14,
+        "source": "node:test",
+        "names": [
+          {
+            "local": "test"
+          }
+        ],
+        "text": "import test from 'node:test';"
+      },
+      {
+        "line": 15,
+        "source": "postgres",
+        "names": [
+          {
+            "local": "postgres"
+          }
+        ],
+        "text": "import postgres from 'postgres';"
+      },
+      {
+        "line": 16,
+        "source": "@octafuse/core",
+        "names": [
+          {
+            "imported": "encryptSharedKeySecret",
+            "local": "encryptSharedKeySecret"
+          }
+        ],
+        "text": "import { encryptSharedKeySecret } from '@octafuse/core';"
+      },
+      {
+        "line": 17,
+        "source": "../../../packages/core/src/route-data-policy.ts",
+        "names": [
+          {
+            "imported": "computeRouteDataPolicySubjectFingerprintFromRows",
+            "local": "computeRouteDataPolicySubjectFingerprintFromRows"
+          }
+        ],
+        "text": "import { computeRouteDataPolicySubjectFingerprintFromRows } from '../../../packages/core/src/route-data-policy.ts';"
+      },
+      {
+        "line": 18,
+        "source": "../../../packages/proxy/src/services/chat-final-quote-input.ts",
+        "names": [
+          {
+            "imported": "createFinalChatQuoteSnapshot",
+            "local": "createFinalChatQuoteSnapshot"
+          },
+          {
+            "imported": "originalChatBodySha256",
+            "local": "originalChatBodySha256"
+          }
+        ],
+        "text": "import { createFinalChatQuoteSnapshot, originalChatBodySha256 } from '../../../packages/proxy/src/services/chat-final-quote-input.ts';"
+      },
+      {
+        "line": 19,
+        "source": "../../../packages/proxy/src/services/model-fallbacks.ts",
+        "names": [
+          {
+            "imported": "parseOpenAiModelFallbacks",
+            "local": "parseOpenAiModelFallbacks"
+          }
+        ],
+        "text": "import { parseOpenAiModelFallbacks } from '../../../packages/proxy/src/services/model-fallbacks.ts';"
+      },
+      {
+        "line": 20,
+        "source": "../../../packages/proxy/src/services/complete-chat-credential-free-dispatch-v400.ts",
+        "names": [
+          {
+            "imported": "createCredentialFreeCompleteChatDispatchV400",
+            "local": "createCredentialFreeCompleteChatDispatchV400"
+          }
+        ],
+        "text": "import { createCredentialFreeCompleteChatDispatchV400 } from '../../../packages/proxy/src/services/complete-chat-credential-free-dispatch-v400.ts';"
+      },
+      {
+        "line": 21,
+        "source": "../../../packages/proxy/src/services/postgres-personal-key-auth-v395.ts",
+        "names": [
+          {
+            "imported": "authenticatePostgresPersonalKeyV395",
+            "local": "authenticatePostgresPersonalKeyV395"
+          }
+        ],
+        "text": "import { authenticatePostgresPersonalKeyV395 } from '../../../packages/proxy/src/services/postgres-personal-key-auth-v395.ts';"
+      },
+      {
+        "line": 22,
+        "source": "./attest-complete-text-routing-v396.ts",
+        "names": [
+          {
+            "imported": "attestCompleteTextRoutingV396",
+            "local": "attestCompleteTextRoutingV396"
+          }
+        ],
+        "text": "import { attestCompleteTextRoutingV396 } from './attest-complete-text-routing-v396.ts';"
+      },
+      {
+        "line": 23,
+        "source": "../../../packages/proxy/src/services/postgres-complete-text-routing-projection-v396.ts",
+        "names": [
+          {
+            "imported": "readPostgresCompleteTextRoutingProjectionV396",
+            "local": "readPostgresCompleteTextRoutingProjectionV396"
+          }
+        ],
+        "text": "import { readPostgresCompleteTextRoutingProjectionV396 } from '../../../packages/proxy/src/services/postgres-complete-text-routing-projection-v396.ts';"
+      },
+      {
+        "line": 24,
+        "source": "../../../packages/proxy/src/services/postgres-complete-text-sticky-routing-v398.ts",
+        "names": [
+          {
+            "imported": "createPostgresCompleteTextStickyRoutingV398",
+            "local": "createPostgresCompleteTextStickyRoutingV398"
+          }
+        ],
+        "text": "import { createPostgresCompleteTextStickyRoutingV398 } from '../../../packages/proxy/src/services/postgres-complete-text-sticky-routing-v398.ts';"
+      },
+      {
+        "line": 25,
+        "source": "../../../packages/proxy/src/services/provider-circuit-breaker.ts",
+        "names": [
+          {
+            "imported": "markProviderFailure",
+            "local": "markProviderFailure"
+          },
+          {
+            "imported": "resetProviderCircuitStateForTests",
+            "local": "resetProviderCircuitStateForTests"
+          }
+        ],
+        "text": "import { markProviderFailure,resetProviderCircuitStateForTests } from '../../../packages/proxy/src/services/provider-circuit-breaker.ts';"
+      },
+      {
+        "line": 26,
+        "source": "../../../packages/proxy/src/services/credential-free-route-attempts-v398.ts",
+        "names": [
+          {
+            "imported": "prepareCredentialFreeRouteAttemptsV398",
+            "local": "prepareCredentialFreeRouteAttemptsV398"
+          }
+        ],
+        "text": "import { prepareCredentialFreeRouteAttemptsV398 } from '../../../packages/proxy/src/services/credential-free-route-attempts-v398.ts';"
+      },
+      {
+        "line": 27,
+        "source": "./exercise-complete-text-sticky-routing-v398.ts",
+        "names": [
+          {
+            "imported": "exerciseCompleteTextStickyBeforeSendV398",
+            "local": "exerciseCompleteTextStickyBeforeSendV398"
+          },
+          {
+            "imported": "exerciseCompleteTextStickyAfterObservationV398",
+            "local": "exerciseCompleteTextStickyAfterObservationV398"
+          }
+        ],
+        "text": "import { exerciseCompleteTextStickyBeforeSendV398,exerciseCompleteTextStickyAfterObservationV398 } from './exercise-complete-text-sticky-routing-v398.ts';"
+      },
+      {
+        "line": 28,
+        "source": "./exercise-complete-text-route-preparation-v398.ts",
+        "names": [
+          {
+            "imported": "exerciseCompleteTextRoutePreparationV398",
+            "local": "exerciseCompleteTextRoutePreparationV398"
+          }
+        ],
+        "text": "import { exerciseCompleteTextRoutePreparationV398 } from './exercise-complete-text-route-preparation-v398.ts';"
+      },
+      {
+        "line": 29,
+        "source": "./exercise-complete-text-routing-v396.mjs",
+        "names": [
+          {
+            "imported": "exerciseCompleteTextRoutingV396",
+            "local": "exerciseCompleteTextRoutingV396"
+          }
+        ],
+        "text": "import { exerciseCompleteTextRoutingV396 } from './exercise-complete-text-routing-v396.mjs';"
+      },
+      {
+        "line": 30,
+        "source": "./exercise-complete-text-coinstall-invariants-v400.ts",
+        "names": [
+          {
+            "imported": "exerciseCompleteTextCoInstallInvariantsV400",
+            "local": "exerciseCompleteTextCoInstallInvariantsV400"
+          }
+        ],
+        "text": "import { exerciseCompleteTextCoInstallInvariantsV400 } from './exercise-complete-text-coinstall-invariants-v400.ts';"
+      },
+      {
+        "line": 31,
+        "source": "../../../packages/proxy/src/runtime/complete-text-holder-worker-v390.ts",
+        "names": [
+          {
+            "imported": "createCompleteTextHolderWorkerV390",
+            "local": "createCompleteTextHolderWorkerV390"
+          }
+        ],
+        "text": "import { createCompleteTextHolderWorkerV390 } from '../../../packages/proxy/src/runtime/complete-text-holder-worker-v390.ts';"
+      },
+      {
+        "line": 32,
+        "source": "../../../packages/proxy/src/services/private-complete-text-observed-holder-v384.ts",
+        "names": [
+          {
+            "imported": "createObservedPrivateCompleteTextHolderV384",
+            "local": "createObservedPrivateCompleteTextHolderV384"
+          }
+        ],
+        "text": "import { createObservedPrivateCompleteTextHolderV384 } from '../../../packages/proxy/src/services/private-complete-text-observed-holder-v384.ts';"
+      },
+      {
+        "line": 33,
+        "source": "../../../packages/proxy/src/runtime/complete-text-response-holder-worker-v394.ts",
+        "names": [
+          {
+            "imported": "createCompleteTextResponseHolderWorkerV394",
+            "local": "createCompleteTextResponseHolderWorkerV394"
+          }
+        ],
+        "text": "import { createCompleteTextResponseHolderWorkerV394 } from '../../../packages/proxy/src/runtime/complete-text-response-holder-worker-v394.ts';"
+      },
+      {
+        "line": 34,
+        "source": "../../../packages/proxy/src/services/postgres-complete-text-response-observation-v392.ts",
+        "names": [
+          {
+            "imported": "appendPostgresCompleteTextResponseObservationV392",
+            "local": "appendPostgresCompleteTextResponseObservationV392"
+          }
+        ],
+        "text": "import { appendPostgresCompleteTextResponseObservationV392 } from '../../../packages/proxy/src/services/postgres-complete-text-response-observation-v392.ts';"
+      },
+      {
+        "line": 35,
+        "source": "node:net",
+        "names": [
+          {
+            "imported": "createConnection",
+            "local": "createConnection"
+          },
+          {
+            "imported": "createServer",
+            "local": "createTcpServer"
+          }
+        ],
+        "text": "import { createConnection, createServer as createTcpServer } from 'node:net';"
+      },
+      {
+        "line": 36,
+        "source": "../../../packages/core/src/test-support/postgres-native-cluster.mjs",
+        "names": [
+          {
+            "imported": "startNativePostgres",
+            "local": "startNativePostgres"
+          }
+        ],
+        "text": "import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';"
+      },
+      {
+        "line": 37,
+        "source": "../../../packages/core/src/test-support/postgres-journal-commit-ack-proxy-v381.mjs",
+        "names": [
+          {
+            "imported": "startJournalCommitAckDropProxyV381",
+            "local": "startJournalCommitAckDropProxyV381"
+          }
+        ],
+        "text": "import { startJournalCommitAckDropProxyV381 } from '../../../packages/core/src/test-support/postgres-journal-commit-ack-proxy-v381.mjs';"
+      },
+      {
+        "line": 38,
+        "source": "./grant-postgres-runtime.ts",
+        "names": [
+          {
+            "imported": "grantPostgresRuntime",
+            "local": "grantPostgresRuntime"
+          }
+        ],
+        "text": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';"
+      },
+      {
+        "line": 39,
+        "source": "./activate-postgres-buyer-split-v348.ts",
+        "names": [
+          {
+            "imported": "activatePostgresBuyerSplitV348",
+            "local": "activatePostgresBuyerSplitV348"
+          }
+        ],
+        "text": "import { activatePostgresBuyerSplitV348 } from './activate-postgres-buyer-split-v348.ts';"
+      },
+      {
+        "line": 40,
+        "source": "./grant-postgres-buyer-split-v348.ts",
+        "names": [
+          {
+            "imported": "grantPostgresBuyerSplitV348",
+            "local": "grantPostgresBuyerSplitV348"
+          }
+        ],
+        "text": "import { grantPostgresBuyerSplitV348 } from './grant-postgres-buyer-split-v348.ts';"
+      },
+      {
+        "line": 41,
+        "source": "./activate-postgres-buyer-guardrail-split-v349.ts",
+        "names": [
+          {
+            "imported": "activatePostgresBuyerGuardrailSplitV349",
+            "local": "activatePostgresBuyerGuardrailSplitV349"
+          }
+        ],
+        "text": "import { activatePostgresBuyerGuardrailSplitV349 } from './activate-postgres-buyer-guardrail-split-v349.ts';"
+      },
+      {
+        "line": 42,
+        "source": "./grant-postgres-buyer-guardrail-split-v349.ts",
+        "names": [
+          {
+            "imported": "grantPostgresBuyerGuardrailSplitV349",
+            "local": "grantPostgresBuyerGuardrailSplitV349"
+          }
+        ],
+        "text": "import { grantPostgresBuyerGuardrailSplitV349 } from './grant-postgres-buyer-guardrail-split-v349.ts';"
+      },
+      {
+        "line": 44,
+        "source": "./export-complete-text-coinstall-catalog-v400.mjs",
+        "names": [
+          {
+            "imported": "exportCompleteTextCoinstallCatalogV400",
+            "local": "exportCompleteTextCoinstallCatalogV400"
+          }
+        ],
+        "text": "import { exportCompleteTextCoinstallCatalogV400 } from './export-complete-text-coinstall-catalog-v400.mjs';"
+      },
+      {
+        "line": 45,
+        "source": "./build-complete-text-auth-routing-recovery-coinstall-v400.mjs",
+        "names": [
+          {
+            "imported": "captureCatalogV400",
+            "local": "captureCatalogV400"
+          }
+        ],
+        "text": "import { captureCatalogV400 } from './build-complete-text-auth-routing-recovery-coinstall-v400.mjs';"
+      }
+    ],
+    "migrationHints": [
+      {
+        "line": 12,
+        "text": "import { readFile, readdir, writeFile } from 'node:fs/promises';"
+      },
+      {
+        "line": 38,
+        "text": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';"
+      },
+      {
+        "line": 48,
+        "text": "const migrationDir=new URL('../../../packages/core/migrations-postgres/',import.meta.url);"
+      },
+      {
+        "line": 182,
+        "text": " const paths=[];async function walk(relative){for(const entry of await readdir(new URL('../../../'+relative+'/',import.meta.url),{withFileTypes:true})){"
+      },
+      {
+        "line": 240,
+        "text": "      const migrationNames=(await readdir(migrationDir)).filter(x=>x.endsWith('.sql')).sort();"
+      },
+      {
+        "line": 241,
+        "text": "      assert.equal(migrationNames.length,73);"
+      },
+      {
+        "line": 254,
+        "text": "      await grantPostgresRuntime({DATABASE_URL:migratorUrl});"
+      },
+      {
+        "line": 1333,
+        "text": "      const finalMigrationNames=(await readdir(migrationDir)).filter(x=>x.endsWith('.sql')).sort();"
+      },
+      {
+        "line": 1335,
+        "text": "      if(finalMigrationNames.length!==73 || sha(finalCorpus.join('\\n'))!==report.sourceSha256.formalMigrations){failure??=new Error('Formal PG73 source changed during run');report.status='FAIL';}"
+      }
+    ],
+    "actualRuntimeEvidence": false,
+    "category": "static-pg73-fixture-adaptation-candidate",
+    "reason": "Unbounded enumeration of the current 81 formal SQL files is followed by the original historical73 assertion. No new CI failure is asserted by this inventory.",
+    "initialFormalLoader": {
+      "line": 240,
+      "source": "      const migrationNames=(await readdir(migrationDir)).filter(x=>x.endsWith('.sql')).sort();"
+    },
+    "original73Assertion": {
+      "line": 241,
+      "source": "assert.equal(migrationNames.length,73)"
+    },
+    "initialOrPostGrant": [
+      {
+        "line": 254,
+        "source": "grantPostgresRuntime({DATABASE_URL:migratorUrl})",
+        "name": "grantPostgresRuntime",
+        "semanticRole": "initial legacy runtime setup / repeated pre-marker grant"
+      }
+    ],
+    "futureMinimalAdaptation": {
+      "selectFixedHistoricalCorpusWith": "listPg73Migrations()",
+      "keepOriginal73Assertion": true,
+      "preserveOriginalLoopAndCorpusHash": true,
+      "adaptOnlyOwnedPg73GrantInvocationVia": "grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL })",
+      "preserveOriginalGrantCallAstAndSource": true,
+      "preserveOriginalNegativeGrantRegexAndAclPostconditions": true,
+      "preserveProductionReconciler0074AdmissionAndSource": true,
+      "preserveSqlLocksWaitsTimeoutAndCleanup": true,
+      "doNotMigrateTo81": true
+    },
+    "finalCorpusCheck": {
+      "loaderLine": 1333,
+      "loaderSource": "      const finalMigrationNames=(await readdir(migrationDir)).filter(x=>x.endsWith('.sql')).sort();",
+      "contractLine": 1335,
+      "contractSource": "      if(finalMigrationNames.length!==73 || sha(finalCorpus.join('\\n'))!==report.sourceSha256.formalMigrations){failure??=new Error('Formal PG73 source changed during run');report.status='FAIL';}",
+      "futureAdaptation": "Use the same fixed PG73 loader for finalMigrationNames; preserve the original finalCorpus SHA comparison, exact !==73 condition, failure message and finally/cleanup."
+    },
+    "nonFormalReaddir": [
+      {
+        "line": 182,
+        "source": "readdir(new URL('../../../'+relative+'/',import.meta.url),{withFileTypes:true})",
+        "context": "\nasync function coreCorpus(){\n const paths=[];async function walk(relative){for(const entry of await readdir(new URL('../../../'+relative+'/',import.meta.url),{withFileTypes:true})){\n  const next=relative+'/'+entry.name;if(entry.isDirectory())await walk(next);else if(entry.isFile()&&/\\.tsx?$/u.test(entry.name))paths.push(next);}}\n await walk('packages/core/src');paths.sort();const bodies=await Promise.all(paths.map(async path=>`${path}\\n${await readFile(new URL('../../../'+path,import.meta.url),'utf8')}`));\n return {files:paths.length,sha256:sha(bodies.join('\\n'))};\n}\n"
+      }
+    ],
+    "keepReaddirImportForRecursiveSourceFingerprint": true,
+    "originalNativeAssertionCount": 214,
+    "sourceSnapshot": "postgres-complete-text-auth-routing-recovery-coinstall-v400.native.test.mjs.source",
+    "gitBlob": "165173f57604fbe4817c8b50cf9d6671345dd678"
+  }
+}
+{
+  "step": 95,
+  "record": {
+    "step": 95,
+    "yamlStep": 93,
+    "workflowLine": 555,
+    "fixture": "scripts/db/cutover/postgres-buyer-split-grant-rerun-v348.native.test.mjs",
+    "bytes": 18758,
+    "sha256": "e4eb49f7df9ad69769aec1e809979be7b03362579552cc42772a7f272fc6051d",
+    "originalAssertionCount": 32,
+    "ledgerAssertions": [
+      {
+        "line": 113,
+        "source": "assert.equal(names.length, 73)"
+      },
+      {
+        "line": 114,
+        "source": "assert.equal(names.at(-1), '0073_recovery_api_key_workspace_lock.sql')"
+      }
+    ],
+    "negativeGrantAssertions": [
+      {
+        "line": 228,
+        "source": "assert.rejects(grantPostgresRuntime({ DATABASE_URL: migratorUrl }),\n        /Buyer settlement split is active/u)"
+      }
+    ],
+    "grantCalls": [
+      {
+        "line": 141,
+        "source": "grantPostgresRuntime({ DATABASE_URL: migratorUrl })",
+        "name": "grantPostgresRuntime"
+      },
+      {
+        "line": 142,
+        "source": "grantPostgresRuntime({ DATABASE_URL: migratorUrl })",
+        "name": "grantPostgresRuntime"
+      },
+      {
+        "line": 228,
+        "source": "grantPostgresRuntime({ DATABASE_URL: migratorUrl })",
+        "name": "grantPostgresRuntime"
+      }
+    ],
+    "grantAdapters": [],
+    "loaders": [
+      {
+        "line": 112,
+        "source": "readdir(migrations)",
+        "name": "readdir"
+      }
+    ],
+    "testOptions": [
+      "{ timeout: 300_000, skip: !process.env.GATEWAY_NATIVE_PG_BIN }"
+    ],
+    "imports": [
+      {
+        "line": 3,
+        "source": "node:assert/strict",
+        "names": [
+          {
+            "local": "assert"
+          }
+        ],
+        "text": "import assert from 'node:assert/strict';"
+      },
+      {
+        "line": 4,
+        "source": "node:crypto",
+        "names": [
+          {
+            "imported": "createHash",
+            "local": "createHash"
+          },
+          {
+            "imported": "randomBytes",
+            "local": "randomBytes"
+          },
+          {
+            "imported": "randomUUID",
+            "local": "randomUUID"
+          }
+        ],
+        "text": "import { createHash, randomBytes, randomUUID } from 'node:crypto';"
+      },
+      {
+        "line": 5,
+        "source": "node:fs/promises",
+        "names": [
+          {
+            "imported": "readFile",
+            "local": "readFile"
+          },
+          {
+            "imported": "readdir",
+            "local": "readdir"
+          },
+          {
+            "imported": "writeFile",
+            "local": "writeFile"
+          }
+        ],
+        "text": "import { readFile, readdir, writeFile } from 'node:fs/promises';"
+      },
+      {
+        "line": 6,
+        "source": "node:path",
+        "names": [
+          {
+            "imported": "dirname",
+            "local": "dirname"
+          },
+          {
+            "imported": "join",
+            "local": "join"
+          }
+        ],
+        "text": "import { dirname, join } from 'node:path';"
+      },
+      {
+        "line": 7,
+        "source": "node:test",
+        "names": [
+          {
+            "local": "test"
+          }
+        ],
+        "text": "import test from 'node:test';"
+      },
+      {
+        "line": 8,
+        "source": "postgres",
+        "names": [
+          {
+            "local": "postgres"
+          }
+        ],
+        "text": "import postgres from 'postgres';"
+      },
+      {
+        "line": 9,
+        "source": "drizzle-orm/postgres-js",
+        "names": [
+          {
+            "imported": "drizzle",
+            "local": "drizzle"
+          }
+        ],
+        "text": "import { drizzle } from 'drizzle-orm/postgres-js';"
+      },
+      {
+        "line": 10,
+        "source": "../../../packages/core/src/test-support/postgres-native-cluster.mjs",
+        "names": [
+          {
+            "imported": "startNativePostgres",
+            "local": "startNativePostgres"
+          }
+        ],
+        "text": "import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';"
+      },
+      {
+        "line": 11,
+        "source": "../../../packages/core/src/storage/drizzle/schema.pg.ts",
+        "names": [
+          {
+            "imported": "pgCoreSchema",
+            "local": "pgCoreSchema"
+          }
+        ],
+        "text": "import { pgCoreSchema } from '../../../packages/core/src/storage/drizzle/schema.pg.ts';"
+      },
+      {
+        "line": 12,
+        "source": "../../../packages/core/src/db/postgres/critical-writes.impl.ts",
+        "names": [
+          {
+            "imported": "insertRequestUsageAndChargeTxPg",
+            "local": "insertRequestUsageAndChargeTxPg"
+          }
+        ],
+        "text": "import { insertRequestUsageAndChargeTxPg } from '../../../packages/core/src/db/postgres/critical-writes.impl.ts';"
+      },
+      {
+        "line": 13,
+        "source": "../../../packages/core/src/db/postgres/portal-marketplace.impl.ts",
+        "names": [
+          {
+            "imported": "createPostgresSharedKeysRepository",
+            "local": "createPostgresSharedKeysRepository"
+          }
+        ],
+        "text": "import { createPostgresSharedKeysRepository } from '../../../packages/core/src/db/postgres/portal-marketplace.impl.ts';"
+      },
+      {
+        "line": 14,
+        "source": "../../../packages/core/src/test-support/postgres-financial-engine.mjs",
+        "names": [
+          {
+            "imported": "chargeParams",
+            "local": "chargeParams"
+          }
+        ],
+        "text": "import { chargeParams } from '../../../packages/core/src/test-support/postgres-financial-engine.mjs';"
+      },
+      {
+        "line": 15,
+        "source": "./grant-postgres-runtime.ts",
+        "names": [
+          {
+            "imported": "grantPostgresRuntime",
+            "local": "grantPostgresRuntime"
+          }
+        ],
+        "text": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';"
+      },
+      {
+        "line": 16,
+        "source": "./grant-postgres-buyer-split-v348.ts",
+        "names": [
+          {
+            "imported": "grantPostgresBuyerSplitV348",
+            "local": "grantPostgresBuyerSplitV348"
+          }
+        ],
+        "text": "import { grantPostgresBuyerSplitV348 } from './grant-postgres-buyer-split-v348.ts';"
+      },
+      {
+        "line": 17,
+        "source": "./activate-postgres-buyer-split-v348.ts",
+        "names": [
+          {
+            "imported": "activatePostgresBuyerSplitV348",
+            "local": "activatePostgresBuyerSplitV348"
+          }
+        ],
+        "text": "import { activatePostgresBuyerSplitV348 } from './activate-postgres-buyer-split-v348.ts';"
+      }
+    ],
+    "migrationHints": [
+      {
+        "line": 5,
+        "text": "import { readFile, readdir, writeFile } from 'node:fs/promises';"
+      },
+      {
+        "line": 15,
+        "text": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';"
+      },
+      {
+        "line": 20,
+        "text": "const migrations = new URL('../../../packages/core/migrations-postgres/', import.meta.url);"
+      },
+      {
+        "line": 112,
+        "text": "      const names = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();"
+      },
+      {
+        "line": 113,
+        "text": "      assert.equal(names.length, 73);"
+      },
+      {
+        "line": 141,
+        "text": "      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });"
+      },
+      {
+        "line": 142,
+        "text": "      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });"
+      },
+      {
+        "line": 228,
+        "text": "      await assert.rejects(grantPostgresRuntime({ DATABASE_URL: migratorUrl }),"
+      }
+    ],
+    "actualRuntimeEvidence": false,
+    "category": "static-pg73-fixture-adaptation-candidate",
+    "reason": "Unbounded enumeration of the current 81 formal SQL files is followed by the original historical73 assertion. No new CI failure is asserted by this inventory.",
+    "initialFormalLoader": {
+      "line": 112,
+      "source": "      const names = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();"
+    },
+    "original73Assertion": {
+      "line": 113,
+      "source": "assert.equal(names.length, 73)"
+    },
+    "initialOrPostGrant": [
+      {
+        "line": 141,
+        "source": "grantPostgresRuntime({ DATABASE_URL: migratorUrl })",
+        "name": "grantPostgresRuntime",
+        "semanticRole": "initial legacy runtime setup / repeated pre-marker grant"
+      },
+      {
+        "line": 142,
+        "source": "grantPostgresRuntime({ DATABASE_URL: migratorUrl })",
+        "name": "grantPostgresRuntime",
+        "semanticRole": "initial legacy runtime setup / repeated pre-marker grant"
+      },
+      {
+        "line": 228,
+        "source": "grantPostgresRuntime({ DATABASE_URL: migratorUrl })",
+        "name": "grantPostgresRuntime",
+        "semanticRole": "original post-split marker rejection must remain exact"
+      }
+    ],
+    "futureMinimalAdaptation": {
+      "selectFixedHistoricalCorpusWith": "listPg73Migrations()",
+      "keepOriginal73Assertion": true,
+      "preserveOriginalLoopAndCorpusHash": true,
+      "adaptOnlyOwnedPg73GrantInvocationVia": "grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL })",
+      "preserveOriginalGrantCallAstAndSource": true,
+      "preserveOriginalNegativeGrantRegexAndAclPostconditions": true,
+      "preserveProductionReconciler0074AdmissionAndSource": true,
+      "preserveSqlLocksWaitsTimeoutAndCleanup": true,
+      "doNotMigrateTo81": true
+    },
+    "specialContract": "Do not weaken any Buyer settlement split rejection, remove idempotent initial grant calls, or substitute missing0074 failure for the intended marker guard. Bridge calls must still execute the unchanged production reconciler.",
+    "originalNativeAssertionCount": 32,
+    "sourceSnapshot": "postgres-buyer-split-grant-rerun-v348.native.test.mjs.source",
+    "gitBlob": "69469e820e1cf304210d4d51a51b0c536b676c30"
+  }
+}
+{
+  "step": 96,
+  "record": {
+    "step": 96,
+    "yamlStep": 94,
+    "workflowLine": 558,
+    "fixture": "scripts/db/cutover/postgres-buyer-split-guardrail-v349.native.test.mjs",
+    "bytes": 23555,
+    "sha256": "63ea5d614be86a25724103ceedfa4a7b10f96a0ff5305ea6c265b4c93ce17026",
+    "originalAssertionCount": 44,
+    "ledgerAssertions": [
+      {
+        "line": 117,
+        "source": "assert.equal(names.length, 73)"
+      },
+      {
+        "line": 118,
+        "source": "assert.equal(names.at(-1), '0073_recovery_api_key_workspace_lock.sql')"
+      }
+    ],
+    "negativeGrantAssertions": [
+      {
+        "line": 228,
+        "source": "assert.rejects(grantPostgresRuntime({ DATABASE_URL: migratorUrl }),\n        /Buyer settlement split is active/u)"
+      },
+      {
+        "line": 325,
+        "source": "assert.rejects(grantPostgresRuntime({ DATABASE_URL: migratorUrl }),\n        /Buyer settlement split is active/u)"
+      }
+    ],
+    "grantCalls": [
+      {
+        "line": 150,
+        "source": "grantPostgresRuntime({ DATABASE_URL: migratorUrl })",
+        "name": "grantPostgresRuntime"
+      },
+      {
+        "line": 151,
+        "source": "grantPostgresRuntime({ DATABASE_URL: migratorUrl })",
+        "name": "grantPostgresRuntime"
+      },
+      {
+        "line": 228,
+        "source": "grantPostgresRuntime({ DATABASE_URL: migratorUrl })",
+        "name": "grantPostgresRuntime"
+      },
+      {
+        "line": 325,
+        "source": "grantPostgresRuntime({ DATABASE_URL: migratorUrl })",
+        "name": "grantPostgresRuntime"
+      }
+    ],
+    "grantAdapters": [],
+    "loaders": [
+      {
+        "line": 116,
+        "source": "readdir(migrations)",
+        "name": "readdir"
+      }
+    ],
+    "testOptions": [
+      "{ timeout: 300_000, skip: !process.env.GATEWAY_NATIVE_PG_BIN }"
+    ],
+    "imports": [
+      {
+        "line": 3,
+        "source": "node:assert/strict",
+        "names": [
+          {
+            "local": "assert"
+          }
+        ],
+        "text": "import assert from 'node:assert/strict';"
+      },
+      {
+        "line": 4,
+        "source": "node:crypto",
+        "names": [
+          {
+            "imported": "createHash",
+            "local": "createHash"
+          },
+          {
+            "imported": "randomBytes",
+            "local": "randomBytes"
+          },
+          {
+            "imported": "randomUUID",
+            "local": "randomUUID"
+          }
+        ],
+        "text": "import { createHash, randomBytes, randomUUID } from 'node:crypto';"
+      },
+      {
+        "line": 5,
+        "source": "node:fs/promises",
+        "names": [
+          {
+            "imported": "readFile",
+            "local": "readFile"
+          },
+          {
+            "imported": "readdir",
+            "local": "readdir"
+          },
+          {
+            "imported": "writeFile",
+            "local": "writeFile"
+          }
+        ],
+        "text": "import { readFile, readdir, writeFile } from 'node:fs/promises';"
+      },
+      {
+        "line": 6,
+        "source": "node:path",
+        "names": [
+          {
+            "imported": "dirname",
+            "local": "dirname"
+          },
+          {
+            "imported": "join",
+            "local": "join"
+          }
+        ],
+        "text": "import { dirname, join } from 'node:path';"
+      },
+      {
+        "line": 7,
+        "source": "node:test",
+        "names": [
+          {
+            "local": "test"
+          }
+        ],
+        "text": "import test from 'node:test';"
+      },
+      {
+        "line": 8,
+        "source": "postgres",
+        "names": [
+          {
+            "local": "postgres"
+          }
+        ],
+        "text": "import postgres from 'postgres';"
+      },
+      {
+        "line": 9,
+        "source": "drizzle-orm/postgres-js",
+        "names": [
+          {
+            "imported": "drizzle",
+            "local": "drizzle"
+          }
+        ],
+        "text": "import { drizzle } from 'drizzle-orm/postgres-js';"
+      },
+      {
+        "line": 10,
+        "source": "../../../packages/core/src/test-support/postgres-native-cluster.mjs",
+        "names": [
+          {
+            "imported": "startNativePostgres",
+            "local": "startNativePostgres"
+          }
+        ],
+        "text": "import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';"
+      },
+      {
+        "line": 11,
+        "source": "../../../packages/core/src/storage/drizzle/schema.pg.ts",
+        "names": [
+          {
+            "imported": "pgCoreSchema",
+            "local": "pgCoreSchema"
+          }
+        ],
+        "text": "import { pgCoreSchema } from '../../../packages/core/src/storage/drizzle/schema.pg.ts';"
+      },
+      {
+        "line": 12,
+        "source": "../../../packages/core/src/db/postgres/critical-writes.impl.ts",
+        "names": [
+          {
+            "imported": "insertRequestUsageAndChargeTxPg",
+            "local": "insertRequestUsageAndChargeTxPg"
+          }
+        ],
+        "text": "import { insertRequestUsageAndChargeTxPg } from '../../../packages/core/src/db/postgres/critical-writes.impl.ts';"
+      },
+      {
+        "line": 13,
+        "source": "../../../packages/core/src/test-support/postgres-financial-engine.mjs",
+        "names": [
+          {
+            "imported": "chargeParams",
+            "local": "chargeParams"
+          }
+        ],
+        "text": "import { chargeParams } from '../../../packages/core/src/test-support/postgres-financial-engine.mjs';"
+      },
+      {
+        "line": 14,
+        "source": "./grant-postgres-runtime.ts",
+        "names": [
+          {
+            "imported": "grantPostgresRuntime",
+            "local": "grantPostgresRuntime"
+          }
+        ],
+        "text": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';"
+      },
+      {
+        "line": 15,
+        "source": "./grant-postgres-buyer-split-v348.ts",
+        "names": [
+          {
+            "imported": "grantPostgresBuyerSplitV348",
+            "local": "grantPostgresBuyerSplitV348"
+          }
+        ],
+        "text": "import { grantPostgresBuyerSplitV348 } from './grant-postgres-buyer-split-v348.ts';"
+      },
+      {
+        "line": 16,
+        "source": "./activate-postgres-buyer-split-v348.ts",
+        "names": [
+          {
+            "imported": "activatePostgresBuyerSplitV348",
+            "local": "activatePostgresBuyerSplitV348"
+          }
+        ],
+        "text": "import { activatePostgresBuyerSplitV348 } from './activate-postgres-buyer-split-v348.ts';"
+      },
+      {
+        "line": 17,
+        "source": "./activate-postgres-buyer-guardrail-split-v349.ts",
+        "names": [
+          {
+            "imported": "activatePostgresBuyerGuardrailSplitV349",
+            "local": "activatePostgresBuyerGuardrailSplitV349"
+          }
+        ],
+        "text": "import { activatePostgresBuyerGuardrailSplitV349 } from './activate-postgres-buyer-guardrail-split-v349.ts';"
+      },
+      {
+        "line": 18,
+        "source": "./grant-postgres-buyer-guardrail-split-v349.ts",
+        "names": [
+          {
+            "imported": "grantPostgresBuyerGuardrailSplitV349",
+            "local": "grantPostgresBuyerGuardrailSplitV349"
+          }
+        ],
+        "text": "import { grantPostgresBuyerGuardrailSplitV349 } from './grant-postgres-buyer-guardrail-split-v349.ts';"
+      }
+    ],
+    "migrationHints": [
+      {
+        "line": 5,
+        "text": "import { readFile, readdir, writeFile } from 'node:fs/promises';"
+      },
+      {
+        "line": 14,
+        "text": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';"
+      },
+      {
+        "line": 21,
+        "text": "const migrations = new URL('../../../packages/core/migrations-postgres/', import.meta.url);"
+      },
+      {
+        "line": 116,
+        "text": "      const names = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();"
+      },
+      {
+        "line": 117,
+        "text": "      assert.equal(names.length, 73);"
+      },
+      {
+        "line": 150,
+        "text": "      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });"
+      },
+      {
+        "line": 151,
+        "text": "      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });"
+      },
+      {
+        "line": 228,
+        "text": "      await assert.rejects(grantPostgresRuntime({ DATABASE_URL: migratorUrl }),"
+      },
+      {
+        "line": 325,
+        "text": "      await assert.rejects(grantPostgresRuntime({ DATABASE_URL: migratorUrl }),"
+      }
+    ],
+    "actualRuntimeEvidence": false,
+    "category": "static-pg73-fixture-adaptation-candidate",
+    "reason": "Unbounded enumeration of the current 81 formal SQL files is followed by the original historical73 assertion. No new CI failure is asserted by this inventory.",
+    "initialFormalLoader": {
+      "line": 116,
+      "source": "      const names = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();"
+    },
+    "original73Assertion": {
+      "line": 117,
+      "source": "assert.equal(names.length, 73)"
+    },
+    "initialOrPostGrant": [
+      {
+        "line": 150,
+        "source": "grantPostgresRuntime({ DATABASE_URL: migratorUrl })",
+        "name": "grantPostgresRuntime",
+        "semanticRole": "initial legacy runtime setup / repeated pre-marker grant"
+      },
+      {
+        "line": 151,
+        "source": "grantPostgresRuntime({ DATABASE_URL: migratorUrl })",
+        "name": "grantPostgresRuntime",
+        "semanticRole": "initial legacy runtime setup / repeated pre-marker grant"
+      },
+      {
+        "line": 228,
+        "source": "grantPostgresRuntime({ DATABASE_URL: migratorUrl })",
+        "name": "grantPostgresRuntime",
+        "semanticRole": "original post-split marker rejection must remain exact"
+      },
+      {
+        "line": 325,
+        "source": "grantPostgresRuntime({ DATABASE_URL: migratorUrl })",
+        "name": "grantPostgresRuntime",
+        "semanticRole": "original post-split marker rejection must remain exact"
+      }
+    ],
+    "futureMinimalAdaptation": {
+      "selectFixedHistoricalCorpusWith": "listPg73Migrations()",
+      "keepOriginal73Assertion": true,
+      "preserveOriginalLoopAndCorpusHash": true,
+      "adaptOnlyOwnedPg73GrantInvocationVia": "grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL })",
+      "preserveOriginalGrantCallAstAndSource": true,
+      "preserveOriginalNegativeGrantRegexAndAclPostconditions": true,
+      "preserveProductionReconciler0074AdmissionAndSource": true,
+      "preserveSqlLocksWaitsTimeoutAndCleanup": true,
+      "doNotMigrateTo81": true
+    },
+    "specialContract": "Do not weaken any Buyer settlement split rejection, remove idempotent initial grant calls, or substitute missing0074 failure for the intended marker guard. Bridge calls must still execute the unchanged production reconciler.",
+    "originalNativeAssertionCount": 44,
+    "sourceSnapshot": "postgres-buyer-split-guardrail-v349.native.test.mjs.source",
+    "gitBlob": "2f5ee6b5f6067ca9110e802e279d5a096ca1d942"
+  }
+}
+{
+  "step": 99,
+  "record": {
+    "step": 99,
+    "yamlStep": 97,
+    "workflowLine": 567,
+    "fixture": "scripts/db/cutover/postgres-shared-key-stats-claim-reader-v349-cjs-loader-successor.native.test.mjs",
+    "bytes": 29293,
+    "sha256": "82cbba9203902cdfdd2cebe686f5a2f9ce12502b952f4d299d5a415fb5fefab7",
+    "originalAssertionCount": 74,
+    "ledgerAssertions": [
+      {
+        "line": 133,
+        "source": "assert.equal(files.length,73)"
+      }
+    ],
+    "negativeGrantAssertions": [],
+    "grantCalls": [
+      {
+        "line": 419,
+        "source": "grantPostgresRuntime({DATABASE_URL:\n        `postgres://cinatoken_gateway_migrator:${passwords.migrator}@127.0.0.1:${cluster.port}/postgres`})",
+        "name": "grantPostgresRuntime"
+      }
+    ],
+    "grantAdapters": [],
+    "loaders": [
+      {
+        "line": 132,
+        "source": "readdir(migrationDir)",
+        "name": "readdir"
+      }
+    ],
+    "testOptions": [
+      "{timeout:300_000,skip:!process.env.GATEWAY_NATIVE_PG_BIN}"
+    ],
+    "imports": [
+      {
+        "line": 2,
+        "source": "node:assert/strict",
+        "names": [
+          {
+            "local": "assert"
+          }
+        ],
+        "text": "import assert from 'node:assert/strict';"
+      },
+      {
+        "line": 3,
+        "source": "node:crypto",
+        "names": [
+          {
+            "imported": "createHash",
+            "local": "createHash"
+          },
+          {
+            "imported": "createHmac",
+            "local": "createHmac"
+          },
+          {
+            "imported": "randomBytes",
+            "local": "randomBytes"
+          },
+          {
+            "imported": "randomUUID",
+            "local": "randomUUID"
+          }
+        ],
+        "text": "import { createHash, createHmac, randomBytes, randomUUID } from 'node:crypto';"
+      },
+      {
+        "line": 4,
+        "source": "node:fs/promises",
+        "names": [
+          {
+            "imported": "readFile",
+            "local": "readFile"
+          },
+          {
+            "imported": "readdir",
+            "local": "readdir"
+          },
+          {
+            "imported": "writeFile",
+            "local": "writeFile"
+          }
+        ],
+        "text": "import { readFile, readdir, writeFile } from 'node:fs/promises';"
+      },
+      {
+        "line": 5,
+        "source": "node:test",
+        "names": [
+          {
+            "local": "test"
+          }
+        ],
+        "text": "import test from 'node:test';"
+      },
+      {
+        "line": 6,
+        "source": "postgres",
+        "names": [
+          {
+            "local": "postgres"
+          }
+        ],
+        "text": "import postgres from 'postgres';"
+      },
+      {
+        "line": 7,
+        "source": "../../../packages/core/src/test-support/postgres-native-cluster.mjs",
+        "names": [
+          {
+            "imported": "startNativePostgres",
+            "local": "startNativePostgres"
+          }
+        ],
+        "text": "import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';"
+      },
+      {
+        "line": 8,
+        "source": "../../../packages/admin/lib/shared-key-signed-stats-reader.ts",
+        "names": [
+          {
+            "local": "signedStatsReaderModule"
+          }
+        ],
+        "text": "import signedStatsReaderModule from '../../../packages/admin/lib/shared-key-signed-stats-reader.ts';"
+      },
+      {
+        "line": 9,
+        "source": "node:path",
+        "names": [
+          {
+            "imported": "dirname",
+            "local": "dirname"
+          },
+          {
+            "imported": "join",
+            "local": "join"
+          }
+        ],
+        "text": "import { dirname, join } from 'node:path';"
+      },
+      {
+        "line": 12,
+        "source": "./grant-postgres-runtime.ts",
+        "names": [
+          {
+            "imported": "grantPostgresRuntime",
+            "local": "grantPostgresRuntime"
+          }
+        ],
+        "text": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';"
+      }
+    ],
+    "migrationHints": [
+      {
+        "line": 4,
+        "text": "import { readFile, readdir, writeFile } from 'node:fs/promises';"
+      },
+      {
+        "line": 12,
+        "text": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';"
+      },
+      {
+        "line": 15,
+        "text": "const migrationDir = new URL('packages/core/migrations-postgres/', root);"
+      },
+      {
+        "line": 132,
+        "text": "      const files=(await readdir(migrationDir)).filter(name=>name.endsWith('.sql')).sort();"
+      },
+      {
+        "line": 133,
+        "text": "      assert.equal(files.length,73);"
+      },
+      {
+        "line": 419,
+        "text": "      await grantPostgresRuntime({DATABASE_URL:"
+      }
+    ],
+    "actualRuntimeEvidence": false,
+    "category": "static-pg73-fixture-adaptation-candidate",
+    "reason": "Unbounded enumeration of the current 81 formal SQL files is followed by the original historical73 assertion. No new CI failure is asserted by this inventory.",
+    "initialFormalLoader": {
+      "line": 132,
+      "source": "      const files=(await readdir(migrationDir)).filter(name=>name.endsWith('.sql')).sort();"
+    },
+    "original73Assertion": {
+      "line": 133,
+      "source": "assert.equal(files.length,73)"
+    },
+    "initialOrPostGrant": [
+      {
+        "line": 419,
+        "source": "grantPostgresRuntime({DATABASE_URL:\n        `postgres://cinatoken_gateway_migrator:${passwords.migrator}@127.0.0.1:${cluster.port}/postgres`})",
+        "name": "grantPostgresRuntime",
+        "semanticRole": "post-proposal broad-grant success/ACL-rerun contract"
+      }
+    ],
+    "futureMinimalAdaptation": {
+      "selectFixedHistoricalCorpusWith": "listPg73Migrations()",
+      "keepOriginal73Assertion": true,
+      "preserveOriginalLoopAndCorpusHash": true,
+      "adaptOnlyOwnedPg73GrantInvocationVia": "grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL })",
+      "preserveOriginalGrantCallAstAndSource": true,
+      "preserveOriginalNegativeGrantRegexAndAclPostconditions": true,
+      "preserveProductionReconciler0074AdmissionAndSource": true,
+      "preserveSqlLocksWaitsTimeoutAndCleanup": true,
+      "doNotMigrateTo81": true
+    },
+    "specialContract": "No initial broad grant exists in this fixture. Its only direct production call occurs after reviewed private-reader proposals; preserve this late successful rerun and the original no-private-read/no-identity-forgery assertions. Bind an owned bridge near the migrator setup without changing the original inline URL call.",
+    "originalNativeAssertionCount": 74,
+    "sourceSnapshot": "postgres-shared-key-stats-claim-reader-v349-cjs-loader-successor.native.test.mjs.source",
+    "gitBlob": "72de1257f322ac587dc5c05dfa4525976ec293a4"
+  }
+}
+{
+  "step": 106,
+  "record": {
+    "step": 106,
+    "yamlStep": 104,
+    "workflowLine": 588,
+    "fixture": "scripts/db/cutover/postgres-shared-key-credited-usage-reader.native.test.mjs",
+    "bytes": 18415,
+    "sha256": "9cfe59b65acfe2ffe934d28f0db93c82421977925de7c0e551eb16c1fabad98b",
+    "originalAssertionCount": 34,
+    "ledgerAssertions": [
+      {
+        "line": 116,
+        "source": "assert.equal(files.length,73)"
+      }
+    ],
+    "negativeGrantAssertions": [],
+    "grantCalls": [
+      {
+        "line": 274,
+        "source": "grantPostgresRuntime({DATABASE_URL:\n        `postgres://cinatoken_gateway_migrator:${passwords.migrator}@127.0.0.1:${cluster.port}/postgres`})",
+        "name": "grantPostgresRuntime"
+      }
+    ],
+    "grantAdapters": [],
+    "loaders": [
+      {
+        "line": 115,
+        "source": "readdir(migrationDir)",
+        "name": "readdir"
+      }
+    ],
+    "testOptions": [
+      "{timeout:300_000,skip:!process.env.GATEWAY_NATIVE_PG_BIN}"
+    ],
+    "imports": [
+      {
+        "line": 2,
+        "source": "node:assert/strict",
+        "names": [
+          {
+            "local": "assert"
+          }
+        ],
+        "text": "import assert from 'node:assert/strict';"
+      },
+      {
+        "line": 3,
+        "source": "node:crypto",
+        "names": [
+          {
+            "imported": "createHash",
+            "local": "createHash"
+          },
+          {
+            "imported": "randomBytes",
+            "local": "randomBytes"
+          },
+          {
+            "imported": "randomUUID",
+            "local": "randomUUID"
+          }
+        ],
+        "text": "import { createHash, randomBytes, randomUUID } from 'node:crypto';"
+      },
+      {
+        "line": 4,
+        "source": "node:fs/promises",
+        "names": [
+          {
+            "imported": "readFile",
+            "local": "readFile"
+          },
+          {
+            "imported": "readdir",
+            "local": "readdir"
+          },
+          {
+            "imported": "writeFile",
+            "local": "writeFile"
+          }
+        ],
+        "text": "import { readFile, readdir, writeFile } from 'node:fs/promises';"
+      },
+      {
+        "line": 5,
+        "source": "node:test",
+        "names": [
+          {
+            "local": "test"
+          }
+        ],
+        "text": "import test from 'node:test';"
+      },
+      {
+        "line": 6,
+        "source": "postgres",
+        "names": [
+          {
+            "local": "postgres"
+          }
+        ],
+        "text": "import postgres from 'postgres';"
+      },
+      {
+        "line": 7,
+        "source": "../../../packages/core/src/test-support/postgres-native-cluster.mjs",
+        "names": [
+          {
+            "imported": "startNativePostgres",
+            "local": "startNativePostgres"
+          }
+        ],
+        "text": "import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';"
+      },
+      {
+        "line": 8,
+        "source": "./grant-postgres-runtime.ts",
+        "names": [
+          {
+            "imported": "grantPostgresRuntime",
+            "local": "grantPostgresRuntime"
+          }
+        ],
+        "text": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';"
+      }
+    ],
+    "migrationHints": [
+      {
+        "line": 4,
+        "text": "import { readFile, readdir, writeFile } from 'node:fs/promises';"
+      },
+      {
+        "line": 8,
+        "text": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';"
+      },
+      {
+        "line": 11,
+        "text": "const migrationDir = new URL('packages/core/migrations-postgres/', root);"
+      },
+      {
+        "line": 115,
+        "text": "      const files=(await readdir(migrationDir)).filter(name=>name.endsWith('.sql')).sort();"
+      },
+      {
+        "line": 116,
+        "text": "      assert.equal(files.length,73);"
+      },
+      {
+        "line": 274,
+        "text": "      await grantPostgresRuntime({DATABASE_URL:"
+      }
+    ],
+    "actualRuntimeEvidence": false,
+    "category": "static-pg73-fixture-adaptation-candidate",
+    "reason": "Unbounded enumeration of the current 81 formal SQL files is followed by the original historical73 assertion. No new CI failure is asserted by this inventory.",
+    "initialFormalLoader": {
+      "line": 115,
+      "source": "      const files=(await readdir(migrationDir)).filter(name=>name.endsWith('.sql')).sort();"
+    },
+    "original73Assertion": {
+      "line": 116,
+      "source": "assert.equal(files.length,73)"
+    },
+    "initialOrPostGrant": [
+      {
+        "line": 274,
+        "source": "grantPostgresRuntime({DATABASE_URL:\n        `postgres://cinatoken_gateway_migrator:${passwords.migrator}@127.0.0.1:${cluster.port}/postgres`})",
+        "name": "grantPostgresRuntime",
+        "semanticRole": "post-proposal broad-grant success/ACL-rerun contract"
+      }
+    ],
+    "futureMinimalAdaptation": {
+      "selectFixedHistoricalCorpusWith": "listPg73Migrations()",
+      "keepOriginal73Assertion": true,
+      "preserveOriginalLoopAndCorpusHash": true,
+      "adaptOnlyOwnedPg73GrantInvocationVia": "grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL })",
+      "preserveOriginalGrantCallAstAndSource": true,
+      "preserveOriginalNegativeGrantRegexAndAclPostconditions": true,
+      "preserveProductionReconciler0074AdmissionAndSource": true,
+      "preserveSqlLocksWaitsTimeoutAndCleanup": true,
+      "doNotMigrateTo81": true
+    },
+    "specialContract": "No initial broad grant exists in this fixture. Its only direct production call occurs after reviewed private-reader proposals; preserve this late successful rerun and the original no-private-read/no-identity-forgery assertions. Bind an owned bridge near the migrator setup without changing the original inline URL call.",
+    "originalNativeAssertionCount": 34,
+    "sourceSnapshot": "postgres-shared-key-credited-usage-reader.native.test.mjs.source",
+    "gitBlob": "97e58c0ebe8c232ad8f4cad9296106ea260e8db5"
+  }
+}

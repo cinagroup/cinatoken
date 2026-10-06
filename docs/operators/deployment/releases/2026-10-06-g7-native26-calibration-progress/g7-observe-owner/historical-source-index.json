@@ -1,0 +1,60 @@
+{
+  "historicalRun": "37403868149",
+  "sourceCommit": "07d19c1c941cc373019811be3dbf553c441a0ff3",
+  "historicalActualExit": 1,
+  "historicalAdminObserverActualExit": 1,
+  "historicalProxyObserverActualExit": 0,
+  "historicalWireActualExit": 0,
+  "fullG7Verified": false,
+  "fullG8Verified": false,
+  "records": [
+    {
+      "source": "C:\\cinagroup\\cinatoken/docs/operators/deployment/releases/2026-10-06-native-g7-boundary-progress/root-progress/g7-artifact-after-seed/web-platform-g7-07d19c1c941cc373019811be3dbf553c441a0ff3-37403868149-1/083-docker.result.json",
+      "copied": "original-linux-083-docker.result.json",
+      "bytes": 857,
+      "sha256": "92d7505748a0968c5537738abf271dec61b2efe2176d335cd79c658a9c9eaf20"
+    },
+    {
+      "source": "C:\\cinagroup\\cinatoken/docs/operators/deployment/releases/2026-10-06-native-g7-boundary-progress/root-progress/g7-artifact-after-seed/web-platform-g7-07d19c1c941cc373019811be3dbf553c441a0ff3-37403868149-1/083-docker.stdout.log",
+      "copied": "original-linux-083-docker.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "C:\\cinagroup\\cinatoken/docs/operators/deployment/releases/2026-10-06-native-g7-boundary-progress/root-progress/g7-artifact-after-seed/web-platform-g7-07d19c1c941cc373019811be3dbf553c441a0ff3-37403868149-1/083-docker.stderr.log",
+      "copied": "original-linux-083-docker.stderr.log",
+      "bytes": 865,
+      "sha256": "c0e4fbbd7226d65caaba75f92fb53d5da62be6133eff3b820a09d9f4b8c71e14"
+    },
+    {
+      "source": "C:\\cinagroup\\cinatoken/docs/operators/deployment/releases/2026-10-06-native-g7-boundary-progress/root-progress/g7-artifact-after-seed/web-platform-g7-07d19c1c941cc373019811be3dbf553c441a0ff3-37403868149-1/082-docker.result.json",
+      "copied": "original-linux-082-docker.result.json",
+      "bytes": 859,
+      "sha256": "136a76bcadb8c915f43cf781c492703f83f2a9086ed318876df47fb5c15f9c88"
+    },
+    {
+      "source": "C:\\cinagroup\\cinatoken/docs/operators/deployment/releases/2026-10-06-native-g7-boundary-progress/root-progress/g7-artifact-after-seed/web-platform-g7-07d19c1c941cc373019811be3dbf553c441a0ff3-37403868149-1/082-docker.stdout.log",
+      "copied": "original-linux-082-docker.stdout.log",
+      "bytes": 10508,
+      "sha256": "d1bcefc8ae88d58362d8fbd50064efc2e8786ad7bcb910cd1044a7486283b5c8"
+    },
+    {
+      "source": "C:\\cinagroup\\cinatoken/docs/operators/deployment/releases/2026-10-06-native-g7-boundary-progress/root-progress/g7-artifact-after-seed/web-platform-g7-07d19c1c941cc373019811be3dbf553c441a0ff3-37403868149-1/082-docker.stderr.log",
+      "copied": "original-linux-082-docker.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "C:\\cinagroup\\cinatoken/docs/operators/deployment/releases/2026-10-06-native-g7-boundary-progress/root-progress/g7-artifact-after-seed/web-platform-g7-07d19c1c941cc373019811be3dbf553c441a0ff3-37403868149-1/result.json",
+      "copied": "original-linux-result.json",
+      "bytes": 17123,
+      "sha256": "ec0beadfbc53bfa252f8e3a13eecc260a61be7cb5ca3d3b3338757d5eb904489"
+    },
+    {
+      "source": "C:\\cinagroup\\cinatoken/docs/operators/deployment/releases/2026-10-06-native-g7-boundary-progress/root-progress/g7-artifact-after-seed/web-platform-g7-07d19c1c941cc373019811be3dbf553c441a0ff3-37403868149-1/wire-result.json",
+      "copied": "original-linux-wire-result.json",
+      "bytes": 92758,
+      "sha256": "b2e0da71df5a8fbe8c4f6ce781685c1f80936e6d80b81feae767a37675a62ae2"
+    }
+  ]
+}

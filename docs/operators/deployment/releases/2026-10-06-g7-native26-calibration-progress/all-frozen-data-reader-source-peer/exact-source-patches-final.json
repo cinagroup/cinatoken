@@ -1,0 +1,78 @@
+{
+  "schema": "exact-frozen-data-reader-source-patches-v1",
+  "patches": [
+    {
+      "file": "frozen-data-binding.mjs",
+      "from": "'./frozen-data-original-pins.json'",
+      "to": "'./frozen-data-original-pins-v2.json'"
+    },
+    {
+      "file": "direct-socket-dialect.mjs",
+      "from": "export function validateDirectSocketFiles({receiptName,value,data,json,receiptMtime}){",
+      "to": "export function validateDirectSocketFiles({receiptName,value,data,json,receiptMtime,transportBindingVerified=false}){"
+    },
+    {
+      "file": "direct-socket-dialect.mjs",
+      "from": "assert.ok(item.mtimeMs<=receiptMtime,'Output newer than original executor receipt');",
+      "to": "assert.ok(item.mtimeMs<=receiptMtime||transportBindingVerified===true,'Output newer than original executor receipt');"
+    },
+    {
+      "file": "evidence-lib.mjs",
+      "from": "import { native59BindingDialect, validateNative59InfoBinding } from './native59-info-binding.mjs';",
+      "to": "import { native59BindingDialect, validateNative59InfoBinding } from './native59-info-binding.mjs';\r\nimport { validateFrozenDataBinding, validateTransportedDirectBinding } from './frozen-data-binding.mjs';"
+    },
+    {
+      "file": "evidence-lib.mjs",
+      "from": "historicalNonterminal = [], aggregateReports = [];",
+      "to": "historicalNonterminal = [], aggregateReports = [], reportOnlyDataBindings = [], closedExecutorTransportBindings = [];"
+    },
+    {
+      "file": "evidence-lib.mjs",
+      "from": "logs: new Map(), nonterminal: new Set()",
+      "to": "logs: new Map(), dataBindings: new Map(), nonterminal: new Set()"
+    },
+    {
+      "file": "evidence-lib.mjs",
+      "from": "try { for (const rel of validateDirectSocketFiles({ receiptName: name, value, data: context.data, json: context.json, receiptMtime: item.mtimeMs })) associate(context, rel, receipt); }",
+      "to": "try { const binding=(config.transportedDirectExecutorBindings??[]).find(b=>b.rootId===context.input.id&&b.executorFile===name); const transport=binding?validateTransportedDirectBinding(binding,contexts):null; for (const rel of validateDirectSocketFiles({ receiptName: name, value, data: context.data, json: context.json, receiptMtime: item.mtimeMs, transportBindingVerified:transport?.transportBindingVerified===true })) associate(context, rel, transport?{...receipt,transportBinding:transport}:receipt); if(transport)closedExecutorTransportBindings.push(transport); }"
+    },
+    {
+      "file": "evidence-lib.mjs",
+      "from": "  for (const context of contexts) for (const name of context.names) {",
+      "to": "  const seenDataBindings=new Set();\n  for(const binding of config.frozenInputDataBindings??[]){\n    const key=binding.rootId+'/'+(binding.reportFile??binding.file),context=contexts.find(c=>c.input.id===binding.rootId);assert.ok(context,'Data-binding source root not configured');\n    try{assert.equal(seenDataBindings.has(key),false,'Duplicate frozen input data binding');seenDataBindings.add(key);const result=validateFrozenDataBinding(binding,contexts);reportOnlyDataBindings.push(result.report);for(const name of result.names){if(!result.context.dataBindings.has(name))result.context.dataBindings.set(name,[]);result.context.dataBindings.get(name).push(result.report);}}\n    catch(error){problem(context,binding.reportFile??binding.file,'Frozen input report-only data binding rejected: '+error.message);}\n  }\n  for(const binding of config.transportedDirectExecutorBindings??[]){const context=contexts.find(c=>c.input.id===binding.rootId);assert.ok(context,'Transport binding source root not configured');if(!closedExecutorTransportBindings.some(t=>t.root===binding.rootId&&t.file===binding.executorFile))problem(context,binding.executorFile,'Declared transported executor binding was not validated');}\n  for (const context of contexts) for (const name of context.names) {"
+    },
+    {
+      "file": "evidence-lib.mjs",
+      "from": "const item = data.get(name), logClosures = logs.get(name) ?? [], closure",
+      "to": "const item = data.get(name), dataBindings = context.dataBindings.get(name) ?? [], logClosures = logs.get(name) ?? [], closure"
+    },
+    {
+      "file": "evidence-lib.mjs",
+      "from": "if (logLike(name) && logClosures.length === 0)",
+      "to": "if (logLike(name) && logClosures.length === 0 && dataBindings.length === 0)"
+    },
+    {
+      "file": "evidence-lib.mjs",
+      "from": "logClosures.length ? 'closed-command-output' : context.nonterminal.has(name)",
+      "to": "logClosures.length ? 'closed-command-output' : dataBindings.length ? 'report-only-data-bound-material' : context.nonterminal.has(name)"
+    },
+    {
+      "file": "evidence-lib.mjs",
+      "from": "closures: closure ? [closure] : logClosures, ...(aggregate",
+      "to": "closures: closure ? [closure] : logClosures, ...(dataBindings.length ? {dataBindings} : {}), ...(aggregate"
+    },
+    {
+      "file": "evidence-lib.mjs",
+      "from": "return { entries, exclusions, blockers, receipts, aggregateReports, historicalNonterminal, sourceRootIds:",
+      "to": "return { entries, exclusions, blockers, receipts, aggregateReports, historicalNonterminal, reportOnlyDataBindings, closedExecutorTransportBindings, sourceRootIds:"
+    },
+    {
+      "file": "evidence-lib.mjs",
+      "from": "closedAggregateReports: plan.aggregateReports, historicalNonterminalReports:",
+      "to": "closedAggregateReports: plan.aggregateReports, reportOnlyDataBindings: plan.reportOnlyDataBindings, closedExecutorTransportBindings: plan.closedExecutorTransportBindings, frozenInputDataBindings: config.frozenInputDataBindings ?? [], transportedDirectExecutorBindings: config.transportedDirectExecutorBindings ?? [], historicalNonterminalReports:"
+    }
+  ],
+  "previousSourceRecoveredByteExactly": true,
+  "oldSourceUnchanged": true,
+  "allFinalLibraryChangesExplicitAndReversible": true
+}

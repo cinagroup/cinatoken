@@ -1,0 +1,77 @@
+packages/proxy/scripts/staging/chat-holder-private-v364.ts
+94: 
+95: export default {
+96: 	async fetch(request: Request, env: ChatHolderPrivateV364Env, ctx?: ExecutionContext): Promise<Response> {
+97: 		const url = new URL(request.url);
+98: 		if (url.origin !== URL_ORIGIN || url.pathname !== URL_PATH || url.search || request.method !== 'POST') return reject(404);
+99: 		if (request.headers.get('Content-Type') !== 'application/json') return reject(415);
+100: 		const bytes = await readEnvelope(request);
+101: 		if (bytes === null) return reject(413);
+102: 		let value: unknown;
+103: 		try { value = JSON.parse(new TextDecoder('utf-8', { fatal: true, ignoreBOM: false }).decode(bytes)) as unknown; }
+104: 		catch { return reject(); }
+105: 		if (!await validEnvelope(value)) return reject();
+106: 		const envelope = value as Record<string, unknown>;
+107: 		// The test credential and URL exist only in this holder bundle. No provider
+108: 		// request is made; the two values are intentionally never serialized.
+109: 		if (!SYNTHETIC_CREDENTIAL_V364.startsWith('synthetic-private-')
+110: 			|| new URL(SYNTHETIC_PROVIDER_URL_V364).hostname !== 'synthetic-private-provider.invalid') return reject(503);
+111: 		await env.OBSERVATIONS.put(`accepted:${envelope.attemptNonce as string}`, 'one');
+112: 		return syntheticStream(env, envelope.attemptNonce as string, ctx);
+113: 	},
+114: } satisfies ExportedHandler<ChatHolderPrivateV364Env>;
+115: 
+packages/proxy/scripts/staging/chat-holder-gateway-v364.ts
+1: /// <reference path="./chat-holder-gateway-v364-env.d.ts" />
+2: 
+3: /** Fixture gateway: only the six-field JSON envelope crosses this binding. */
+4: export default {
+5: 	async fetch(request: Request, env: ChatHolderGatewayV364Env): Promise<Response> {
+6: 		const url = new URL(request.url);
+7: 		if (url.pathname !== '/fixture/complete-text' || request.method !== 'POST') return new Response(null, { status: 404 });
+8: 		if (request.headers.get('Content-Type') !== 'application/json') return new Response(null, { status: 415 });
+9: 		const holderInit = {
+10: 			method: 'POST',
+11: 			headers: { 'Content-Type': 'application/json' },
+12: 			body: request.body,
+13: 			signal: request.signal,
+14: 			duplex: 'half',
+15: 		} as RequestInit;
+16: 		const holderRequest = new Request('https://holder.service.invalid/complete-text-attempt', holderInit);
+17: 		const response = await env.TEXT_HOLDER.fetch(holderRequest);
+18: 		if (response.status === 400 || response.status === 413 || response.status === 415 || response.status === 404) {
+19: 			await response.body?.cancel();
+20: 			return Response.json({ error: 'holder_request_rejected' }, { status: response.status });
+scripts/diagnostics/v364-direct-socket/native-reader-calibration.mjs
+1: // Owned native calibration: original holder/observer and original ctx.waitUntil only.
+2: import assert from "node:assert/strict";
+3: import holder from "__HOLDER_OBSERVER__";
+4: 
+5: const log = (event, fields = {}) =>
+6: 	console.log(
+7: 		"V364_DIAG " +
+8: 			JSON.stringify({
+9: 				boundary: "native-reader-calibration",
+10: 				event,
+11: 				wallMs: Date.now(),
+12: 				...fields,
+13: 			})
+14: 	);
+15: 
+16: export default {
+17: 	async fetch(request, env, ctx) {
+18: 		const url = new URL(request.url);
+19: 		if (
+20: 			url.pathname !== "/fixture/native-reader-cancel" ||
+21: 			request.method !== "POST"
+22: 		)
+23: 			return new Response(null, { status: 404 });
+24: 		const attemptNonce = url.searchParams.get("attemptNonce");
+25: 		assert.match(
+26: 			attemptNonce ?? "",
+27: 			/^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/u
+28: 		);
+29: 		url.pathname = "/fixture/complete-text";
+30: 		url.search = "";
+31: 		const response = await holder.fetch(new Request(url, request), env, ctx);
+32: 		assert.equal(response.status, 200);

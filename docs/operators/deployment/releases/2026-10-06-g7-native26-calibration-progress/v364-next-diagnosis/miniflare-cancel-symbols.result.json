@@ -1,0 +1,28 @@
+{
+  "closed": true,
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "executable": "C:/Users/cina/AppData/Local/OpenAI/Codex/bin/f1e5e36960c35938/rg.exe",
+  "args": [
+    "-n",
+    "AbortController|abortSignal|addEventListener\\(\"abort\"|signal:|\\.on\\(\"close\"|\\.once\\(\"close\"|dispatchFetch|pipeTo\\(|cancel\\(",
+    "node_modules/miniflare/dist/src/index.js"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "startedAt": "2026-10-06T03:17:45.448Z",
+  "finishedAt": "2026-10-06T03:17:45.542Z",
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\miniflare-cancel-symbols.stdout.txt",
+    "bytes": 3925,
+    "sha256": "e05a300a2715886318f2ccb9bee98a9e7e91bbd26fb0c669d9924d8e74ab57ce"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-next-readonly-20261006-d951a0fe223e4a3aacb8d9e13ea5946b\\miniflare-cancel-symbols.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "operation": "read-only-diagnosis",
+  "realServiceOrCiExecution": false,
+  "productionRequests": 0
+}

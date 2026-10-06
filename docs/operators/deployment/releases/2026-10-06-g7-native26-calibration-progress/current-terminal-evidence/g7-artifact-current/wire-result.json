@@ -1,0 +1,3722 @@
+{
+  "schema": "web-platform-g7-tls-pg-wire-v1",
+  "startedAt": "2026-10-06T03:39:22.800Z",
+  "endedAt": "2026-10-06T03:39:37.485Z",
+  "actualExit": 0,
+  "caFingerprint": "2E:A1:8D:71:CE:DF:D3:09:F3:DE:55:58:5D:44:4A:21:A7:0B:3A:08:42:E8:EF:30:FB:08:3B:35:48:81:4A:8E",
+  "sourceSHA": "473de5fc520fc7d64db700db88a76c7a6b45c241",
+  "manifestSha256": "ef848dc5d66bd591c9fa2b61219efc6e583dba8496f0ed2cd046b266a4c7725e",
+  "rows": [
+    {
+      "id": 1,
+      "label": "startup probe",
+      "method": "GET",
+      "path": "/api/public/catalog/models",
+      "status": 200,
+      "bytes": 619,
+      "TLSAuthorized": true,
+      "peerCertificateSha256": "FA:58:A9:DB:3B:67:A9:DB:03:58:CF:74:15:4E:C7:3E:C7:07:F9:6C:7D:0E:38:54:A1:B2:66:6D:A2:53:DF:19",
+      "setCookieCount": 0
+    },
+    {
+      "id": 2,
+      "label": "untrusted CA is rejected",
+      "outcome": "verified TLS rejection",
+      "errorCode": "UNABLE_TO_VERIFY_LEAF_SIGNATURE"
+    },
+    {
+      "id": 3,
+      "label": "wrong SNI fails certificate hostname validation",
+      "outcome": "verified TLS rejection",
+      "errorCode": "ERR_TLS_CERT_ALTNAME_INVALID"
+    },
+    {
+      "id": 4,
+      "label": "missing SNI rejected by default ingress",
+      "method": "GET",
+      "path": "/en",
+      "status": 421,
+      "bytes": 173,
+      "TLSAuthorized": true,
+      "peerCertificateSha256": "FA:58:A9:DB:3B:67:A9:DB:03:58:CF:74:15:4E:C7:3E:C7:07:F9:6C:7D:0E:38:54:A1:B2:66:6D:A2:53:DF:19",
+      "setCookieCount": 0
+    },
+    {
+      "id": 5,
+      "label": "same HTTPS Origin",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 410,
+      "bytes": 71,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 6,
+      "label": "spoofed forwarding overwritten",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 410,
+      "bytes": 71,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 7,
+      "label": "ambiguous forwarding overwritten",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 410,
+      "bytes": 71,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 8,
+      "label": "missing Origin",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 403,
+      "bytes": 63,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 9,
+      "label": "cross Origin preserved",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 403,
+      "bytes": 63,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 10,
+      "label": "explicit cross-site",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 403,
+      "bytes": 63,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 11,
+      "label": "unknown Host",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 421,
+      "bytes": 173,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 12,
+      "label": "registration redirect",
+      "method": "GET",
+      "path": "/api/auth/cinaauth/register?intent=portal&callbackURL=%2Faccount%2Fkeys",
+      "status": 302,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 13,
+      "label": "invalid callback restores HTTPS",
+      "method": "GET",
+      "path": "/api/auth/cinaauth/callback?state=invalid",
+      "status": 302,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 14,
+      "label": "QA cannot reach gateway-web:8080",
+      "outcome": "raw port inaccessible",
+      "blockedAtDeadline": true
+    },
+    {
+      "id": 15,
+      "label": "QA cannot reach gateway-web-ssr:8791",
+      "outcome": "raw port inaccessible",
+      "blockedAtDeadline": true
+    },
+    {
+      "id": 16,
+      "label": "QA cannot reach gateway-admin:8789",
+      "outcome": "raw port inaccessible",
+      "blockedAtDeadline": true
+    },
+    {
+      "id": 17,
+      "label": "QA cannot reach gateway-proxy:8787",
+      "outcome": "raw port inaccessible",
+      "blockedAtDeadline": true
+    },
+    {
+      "id": 18,
+      "label": "QA cannot reach pg:5432",
+      "outcome": "raw port inaccessible",
+      "blockedAtDeadline": true
+    },
+    {
+      "id": 19,
+      "label": "QA cannot reach 172.19.0.5:8080",
+      "outcome": "raw port inaccessible",
+      "errorCode": "ENETUNREACH"
+    },
+    {
+      "id": 20,
+      "label": "QA cannot reach 172.19.0.4:8791",
+      "outcome": "raw port inaccessible",
+      "errorCode": "ENETUNREACH"
+    },
+    {
+      "id": 21,
+      "label": "QA cannot reach 172.19.0.3:8789",
+      "outcome": "raw port inaccessible",
+      "errorCode": "ENETUNREACH"
+    },
+    {
+      "id": 22,
+      "label": "QA cannot reach 172.20.0.4:8789",
+      "outcome": "raw port inaccessible",
+      "errorCode": "ENETUNREACH"
+    },
+    {
+      "id": 23,
+      "label": "QA cannot reach 172.19.0.2:8787",
+      "outcome": "raw port inaccessible",
+      "errorCode": "ENETUNREACH"
+    },
+    {
+      "id": 24,
+      "label": "QA cannot reach 172.20.0.3:8787",
+      "outcome": "raw port inaccessible",
+      "errorCode": "ENETUNREACH"
+    },
+    {
+      "id": 25,
+      "label": "QA cannot reach 172.20.0.2:5432",
+      "outcome": "raw port inaccessible",
+      "errorCode": "ENETUNREACH"
+    },
+    {
+      "id": 26,
+      "label": "actual PG-backed models",
+      "method": "GET",
+      "path": "/api/public/catalog/models",
+      "status": 200,
+      "bytes": 619,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 27,
+      "label": "actual PG-backed providers",
+      "method": "GET",
+      "path": "/api/public/catalog/providers",
+      "status": 200,
+      "bytes": 274,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 28,
+      "label": "actual PG-backed model",
+      "method": "GET",
+      "path": "/api/public/catalog/model/qa/~cWEvZzctbW9kZWw",
+      "status": 200,
+      "bytes": 618,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 29,
+      "label": "actual PG-backed proxy-models",
+      "method": "GET",
+      "path": "/api/v1/models",
+      "status": 200,
+      "bytes": 654,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 30,
+      "label": "actual PG-backed proxy-providers",
+      "method": "GET",
+      "path": "/api/v1/providers",
+      "status": 200,
+      "bytes": 167,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 31,
+      "label": "Admin API remains API before SPA",
+      "method": "GET",
+      "path": "/api/admin/__g7_missing",
+      "status": 401,
+      "bytes": 42,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 32,
+      "label": "unknown Proxy API remains JSON404",
+      "method": "GET",
+      "path": "/v1/__g7_missing",
+      "status": 404,
+      "bytes": 124,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 33,
+      "label": "real PG-backed SSR",
+      "method": "GET",
+      "path": "/en",
+      "status": 200,
+      "bytes": 23142,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 34,
+      "label": "real PG-backed SSR",
+      "method": "HEAD",
+      "path": "/en",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 35,
+      "label": "real PG-backed SSR",
+      "method": "GET",
+      "path": "/en/models?q=G7",
+      "status": 200,
+      "bytes": 17579,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 36,
+      "label": "real PG-backed SSR",
+      "method": "HEAD",
+      "path": "/en/models?q=G7",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 37,
+      "label": "real PG-backed SSR",
+      "method": "GET",
+      "path": "/en/models/qa/~cWEvZzctbW9kZWw",
+      "status": 200,
+      "bytes": 14253,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 38,
+      "label": "real PG-backed SSR",
+      "method": "HEAD",
+      "path": "/en/models/qa/~cWEvZzctbW9kZWw",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 39,
+      "label": "real PG-backed SSR",
+      "method": "GET",
+      "path": "/en/providers",
+      "status": 200,
+      "bytes": 15179,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 40,
+      "label": "real PG-backed SSR",
+      "method": "HEAD",
+      "path": "/en/providers",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 41,
+      "label": "real PG-backed SSR",
+      "method": "GET",
+      "path": "/en/compare?models=qa%2Fg7-model",
+      "status": 200,
+      "bytes": 11940,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 42,
+      "label": "real PG-backed SSR",
+      "method": "HEAD",
+      "path": "/en/compare?models=qa%2Fg7-model",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 43,
+      "label": "real PG-backed SSR",
+      "method": "GET",
+      "path": "/en/chat?model=qa%2Fg7-model",
+      "status": 200,
+      "bytes": 12431,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 44,
+      "label": "real PG-backed SSR",
+      "method": "HEAD",
+      "path": "/en/chat?model=qa%2Fg7-model",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 45,
+      "label": "real PG-backed SSR",
+      "method": "GET",
+      "path": "/en/rankings?range=30d",
+      "status": 200,
+      "bytes": 13377,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 46,
+      "label": "real PG-backed SSR",
+      "method": "HEAD",
+      "path": "/en/rankings?range=30d",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 47,
+      "label": "real PG-backed SSR",
+      "method": "GET",
+      "path": "/en/benchmarks?range=90d",
+      "status": 200,
+      "bytes": 13473,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 48,
+      "label": "real PG-backed SSR",
+      "method": "HEAD",
+      "path": "/en/benchmarks?range=90d",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 49,
+      "label": "real PG-backed SSR",
+      "method": "GET",
+      "path": "/zh",
+      "status": 200,
+      "bytes": 23018,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 50,
+      "label": "real PG-backed SSR",
+      "method": "HEAD",
+      "path": "/zh",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 51,
+      "label": "real PG-backed SSR",
+      "method": "GET",
+      "path": "/zh/models?q=G7",
+      "status": 200,
+      "bytes": 17584,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 52,
+      "label": "real PG-backed SSR",
+      "method": "HEAD",
+      "path": "/zh/models?q=G7",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 53,
+      "label": "real PG-backed SSR",
+      "method": "GET",
+      "path": "/zh/models/qa/~cWEvZzctbW9kZWw",
+      "status": 200,
+      "bytes": 14197,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 54,
+      "label": "real PG-backed SSR",
+      "method": "HEAD",
+      "path": "/zh/models/qa/~cWEvZzctbW9kZWw",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 55,
+      "label": "real PG-backed SSR",
+      "method": "GET",
+      "path": "/zh/providers",
+      "status": 200,
+      "bytes": 15208,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 56,
+      "label": "real PG-backed SSR",
+      "method": "HEAD",
+      "path": "/zh/providers",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 57,
+      "label": "real PG-backed SSR",
+      "method": "GET",
+      "path": "/zh/compare?models=qa%2Fg7-model",
+      "status": 200,
+      "bytes": 11958,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 58,
+      "label": "real PG-backed SSR",
+      "method": "HEAD",
+      "path": "/zh/compare?models=qa%2Fg7-model",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 59,
+      "label": "real PG-backed SSR",
+      "method": "GET",
+      "path": "/zh/chat?model=qa%2Fg7-model",
+      "status": 200,
+      "bytes": 12441,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 60,
+      "label": "real PG-backed SSR",
+      "method": "HEAD",
+      "path": "/zh/chat?model=qa%2Fg7-model",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 61,
+      "label": "real PG-backed SSR",
+      "method": "GET",
+      "path": "/zh/rankings?range=30d",
+      "status": 200,
+      "bytes": 13442,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 62,
+      "label": "real PG-backed SSR",
+      "method": "HEAD",
+      "path": "/zh/rankings?range=30d",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 63,
+      "label": "real PG-backed SSR",
+      "method": "GET",
+      "path": "/zh/benchmarks?range=90d",
+      "status": 200,
+      "bytes": 13474,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 64,
+      "label": "real PG-backed SSR",
+      "method": "HEAD",
+      "path": "/zh/benchmarks?range=90d",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 65,
+      "label": "real PG-backed SSR",
+      "method": "GET",
+      "path": "/ja",
+      "status": 200,
+      "bytes": 24347,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 66,
+      "label": "real PG-backed SSR",
+      "method": "HEAD",
+      "path": "/ja",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 67,
+      "label": "real PG-backed SSR",
+      "method": "GET",
+      "path": "/ja/models?q=G7",
+      "status": 200,
+      "bytes": 18279,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 68,
+      "label": "real PG-backed SSR",
+      "method": "HEAD",
+      "path": "/ja/models?q=G7",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 69,
+      "label": "real PG-backed SSR",
+      "method": "GET",
+      "path": "/ja/models/qa/~cWEvZzctbW9kZWw",
+      "status": 200,
+      "bytes": 14853,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 70,
+      "label": "real PG-backed SSR",
+      "method": "HEAD",
+      "path": "/ja/models/qa/~cWEvZzctbW9kZWw",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 71,
+      "label": "real PG-backed SSR",
+      "method": "GET",
+      "path": "/ja/providers",
+      "status": 200,
+      "bytes": 15661,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 72,
+      "label": "real PG-backed SSR",
+      "method": "HEAD",
+      "path": "/ja/providers",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 73,
+      "label": "real PG-backed SSR",
+      "method": "GET",
+      "path": "/ja/compare?models=qa%2Fg7-model",
+      "status": 200,
+      "bytes": 12413,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 74,
+      "label": "real PG-backed SSR",
+      "method": "HEAD",
+      "path": "/ja/compare?models=qa%2Fg7-model",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 75,
+      "label": "real PG-backed SSR",
+      "method": "GET",
+      "path": "/ja/chat?model=qa%2Fg7-model",
+      "status": 200,
+      "bytes": 12872,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 76,
+      "label": "real PG-backed SSR",
+      "method": "HEAD",
+      "path": "/ja/chat?model=qa%2Fg7-model",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 77,
+      "label": "real PG-backed SSR",
+      "method": "GET",
+      "path": "/ja/rankings?range=30d",
+      "status": 200,
+      "bytes": 13912,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 78,
+      "label": "real PG-backed SSR",
+      "method": "HEAD",
+      "path": "/ja/rankings?range=30d",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 79,
+      "label": "real PG-backed SSR",
+      "method": "GET",
+      "path": "/ja/benchmarks?range=90d",
+      "status": 200,
+      "bytes": 14004,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 80,
+      "label": "real PG-backed SSR",
+      "method": "HEAD",
+      "path": "/ja/benchmarks?range=90d",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 81,
+      "label": "real PG-backed SSR",
+      "method": "GET",
+      "path": "/ko",
+      "status": 200,
+      "bytes": 23643,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 82,
+      "label": "real PG-backed SSR",
+      "method": "HEAD",
+      "path": "/ko",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 83,
+      "label": "real PG-backed SSR",
+      "method": "GET",
+      "path": "/ko/models?q=G7",
+      "status": 200,
+      "bytes": 18027,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 84,
+      "label": "real PG-backed SSR",
+      "method": "HEAD",
+      "path": "/ko/models?q=G7",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 85,
+      "label": "real PG-backed SSR",
+      "method": "GET",
+      "path": "/ko/models/qa/~cWEvZzctbW9kZWw",
+      "status": 200,
+      "bytes": 14627,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 86,
+      "label": "real PG-backed SSR",
+      "method": "HEAD",
+      "path": "/ko/models/qa/~cWEvZzctbW9kZWw",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 87,
+      "label": "real PG-backed SSR",
+      "method": "GET",
+      "path": "/ko/providers",
+      "status": 200,
+      "bytes": 15567,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 88,
+      "label": "real PG-backed SSR",
+      "method": "HEAD",
+      "path": "/ko/providers",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 89,
+      "label": "real PG-backed SSR",
+      "method": "GET",
+      "path": "/ko/compare?models=qa%2Fg7-model",
+      "status": 200,
+      "bytes": 12267,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 90,
+      "label": "real PG-backed SSR",
+      "method": "HEAD",
+      "path": "/ko/compare?models=qa%2Fg7-model",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 91,
+      "label": "real PG-backed SSR",
+      "method": "GET",
+      "path": "/ko/chat?model=qa%2Fg7-model",
+      "status": 200,
+      "bytes": 12749,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 92,
+      "label": "real PG-backed SSR",
+      "method": "HEAD",
+      "path": "/ko/chat?model=qa%2Fg7-model",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 93,
+      "label": "real PG-backed SSR",
+      "method": "GET",
+      "path": "/ko/rankings?range=30d",
+      "status": 200,
+      "bytes": 13708,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 94,
+      "label": "real PG-backed SSR",
+      "method": "HEAD",
+      "path": "/ko/rankings?range=30d",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 95,
+      "label": "real PG-backed SSR",
+      "method": "GET",
+      "path": "/ko/benchmarks?range=90d",
+      "status": 200,
+      "bytes": 13816,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 96,
+      "label": "real PG-backed SSR",
+      "method": "HEAD",
+      "path": "/ko/benchmarks?range=90d",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 97,
+      "label": "SSR metadata/status",
+      "method": "GET",
+      "path": "/robots.txt",
+      "status": 200,
+      "bytes": 236,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 98,
+      "label": "SSR metadata/status",
+      "method": "GET",
+      "path": "/sitemap.xml",
+      "status": 200,
+      "bytes": 13022,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 99,
+      "label": "SSR metadata/status",
+      "method": "GET",
+      "path": "/en/not-a-page",
+      "status": 404,
+      "bytes": 4393,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 100,
+      "label": "SSR metadata/status",
+      "method": "GET",
+      "path": "/fr/models",
+      "status": 404,
+      "bytes": 4389,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 101,
+      "label": "SSR metadata/status",
+      "method": "HEAD",
+      "path": "/robots.txt",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 102,
+      "label": "SSR metadata/status",
+      "method": "HEAD",
+      "path": "/sitemap.xml",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 103,
+      "label": "SSR metadata/status",
+      "method": "HEAD",
+      "path": "/en/not-a-page",
+      "status": 404,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 104,
+      "label": "SSR metadata/status",
+      "method": "HEAD",
+      "path": "/fr/models",
+      "status": 404,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 105,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/LICENSE",
+      "status": 200,
+      "bytes": 34523,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 106,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/LICENSE",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 107,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/NOTICE.frontend",
+      "status": 200,
+      "bytes": 1290,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 108,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/NOTICE.frontend",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 109,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/build-contract.json",
+      "status": 200,
+      "bytes": 158,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 110,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/build-contract.json",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 111,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/favicon.ico",
+      "status": 200,
+      "bytes": 16958,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 112,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/favicon.ico",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 113,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/index.html",
+      "status": 200,
+      "bytes": 742,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 114,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/index.html",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 115,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/logo.png",
+      "status": 200,
+      "bytes": 65161,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 116,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/logo.png",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 117,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/pay-apple.png",
+      "status": 200,
+      "bytes": 1597,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 118,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/pay-apple.png",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 119,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/pay-card.png",
+      "status": 200,
+      "bytes": 3685,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 120,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/pay-card.png",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 121,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/pay-google.png",
+      "status": 200,
+      "bytes": 4644,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 122,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/pay-google.png",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 123,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/sources/index.html",
+      "status": 200,
+      "bytes": 3401,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 124,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/sources/index.html",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 125,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/sources/index.json",
+      "status": 200,
+      "bytes": 26942,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 126,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/sources/index.json",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 127,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/sources/web.047e3e54866d70e82ed41c6ba06b28c205b2e07ebe7db498d63bb3e0174ce376.tar.gz",
+      "status": 200,
+      "bytes": 4246682,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 128,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/sources/web.047e3e54866d70e82ed41c6ba06b28c205b2e07ebe7db498d63bb3e0174ce376.tar.gz",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 129,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/css/index.46bbf8297a.css",
+      "status": 200,
+      "bytes": 238033,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 130,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/css/index.46bbf8297a.css",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 131,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/font/lora-cyrillic-ext-wght-normal.a558ae9346.woff2",
+      "status": 200,
+      "bytes": 23636,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 132,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/font/lora-cyrillic-ext-wght-normal.a558ae9346.woff2",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 133,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/font/lora-cyrillic-wght-normal.e27a865958.woff2",
+      "status": 200,
+      "bytes": 21232,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 134,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/font/lora-cyrillic-wght-normal.e27a865958.woff2",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 135,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/font/lora-latin-ext-wght-normal.ffcbee2da9.woff2",
+      "status": 200,
+      "bytes": 20088,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 136,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/font/lora-latin-ext-wght-normal.ffcbee2da9.woff2",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 137,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/font/lora-latin-wght-normal.f60a385cfb.woff2",
+      "status": 200,
+      "bytes": 37788,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 138,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/font/lora-latin-wght-normal.f60a385cfb.woff2",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 139,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/font/lora-math-wght-normal.b7769d42e6.woff2",
+      "status": 200,
+      "bytes": 29240,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 140,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/font/lora-math-wght-normal.b7769d42e6.woff2",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 141,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/font/lora-symbols-wght-normal.0f558387a7.woff2",
+      "status": 200,
+      "bytes": 17248,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 142,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/font/lora-symbols-wght-normal.0f558387a7.woff2",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 143,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/font/lora-vietnamese-wght-normal.19149cdf69.woff2",
+      "status": 200,
+      "bytes": 8992,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 144,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/font/lora-vietnamese-wght-normal.19149cdf69.woff2",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 145,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/font/public-sans-latin-ext-wght-normal.0afa0ba4c0.woff2",
+      "status": 200,
+      "bytes": 18472,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 146,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/font/public-sans-latin-ext-wght-normal.0afa0ba4c0.woff2",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 147,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/font/public-sans-latin-wght-normal.035c7fe496.woff2",
+      "status": 200,
+      "bytes": 26832,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 148,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/font/public-sans-latin-wght-normal.035c7fe496.woff2",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 149,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/font/public-sans-vietnamese-wght-normal.7b0fa8550c.woff2",
+      "status": 200,
+      "bytes": 7716,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 150,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/font/public-sans-vietnamese-wght-normal.7b0fa8550c.woff2",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 151,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/0.06dde32190.js",
+      "status": 200,
+      "bytes": 677,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 152,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/0.06dde32190.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 153,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/1.c62089dce7.js",
+      "status": 200,
+      "bytes": 13366,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 154,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/1.c62089dce7.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 155,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/1.c62089dce7.js.LICENSE.txt",
+      "status": 200,
+      "bytes": 171,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 156,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/1.c62089dce7.js.LICENSE.txt",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 157,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/14.b59e7ccab4.js",
+      "status": 200,
+      "bytes": 11853,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 158,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/14.b59e7ccab4.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 159,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/14.b59e7ccab4.js.LICENSE.txt",
+      "status": 200,
+      "bytes": 171,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 160,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/14.b59e7ccab4.js.LICENSE.txt",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 161,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/1j.9d4e22251c.js",
+      "status": 200,
+      "bytes": 11442,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 162,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/1j.9d4e22251c.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 163,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/2.282bd73d4f.js",
+      "status": 200,
+      "bytes": 29816,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 164,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/2.282bd73d4f.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 165,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/26.1fdca7b54f.js",
+      "status": 200,
+      "bytes": 14035,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 166,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/26.1fdca7b54f.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 167,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/26.1fdca7b54f.js.LICENSE.txt",
+      "status": 200,
+      "bytes": 171,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 168,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/26.1fdca7b54f.js.LICENSE.txt",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 169,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/3.744dd7185a.js",
+      "status": 200,
+      "bytes": 11488,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 170,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/3.744dd7185a.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 171,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/3.744dd7185a.js.LICENSE.txt",
+      "status": 200,
+      "bytes": 171,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 172,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/3.744dd7185a.js.LICENSE.txt",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 173,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/30.5583d3d88f.js",
+      "status": 200,
+      "bytes": 27685,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 174,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/30.5583d3d88f.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 175,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/3t.f39e1e3229.js",
+      "status": 200,
+      "bytes": 23802,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 176,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/3t.f39e1e3229.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 177,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/3t.f39e1e3229.js.LICENSE.txt",
+      "status": 200,
+      "bytes": 171,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 178,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/3t.f39e1e3229.js.LICENSE.txt",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 179,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/4.5452e5a6e4.js",
+      "status": 200,
+      "bytes": 6128,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 180,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/4.5452e5a6e4.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 181,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/4b.f4f7b8a967.js",
+      "status": 200,
+      "bytes": 22256,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 182,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/4b.f4f7b8a967.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 183,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/4e.2ed6a1eefa.js",
+      "status": 200,
+      "bytes": 50616,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 184,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/4e.2ed6a1eefa.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 185,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/4z.d4288c9748.js",
+      "status": 200,
+      "bytes": 6131,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 186,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/4z.d4288c9748.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 187,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/5.17c9f87c01.js",
+      "status": 200,
+      "bytes": 46146,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 188,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/5.17c9f87c01.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 189,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/5.17c9f87c01.js.LICENSE.txt",
+      "status": 200,
+      "bytes": 171,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 190,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/5.17c9f87c01.js.LICENSE.txt",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 191,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/54.41b6543429.js",
+      "status": 200,
+      "bytes": 7870,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 192,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/54.41b6543429.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 193,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/5p.18ac17c181.js",
+      "status": 200,
+      "bytes": 9053,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 194,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/5p.18ac17c181.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 195,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/5v.7f553b592b.js",
+      "status": 200,
+      "bytes": 850170,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 196,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/5v.7f553b592b.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 197,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/6.8c55d96048.js",
+      "status": 200,
+      "bytes": 437,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 198,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/6.8c55d96048.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 199,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/61.5ea3409f4c.js",
+      "status": 200,
+      "bytes": 32474,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 200,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/61.5ea3409f4c.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 201,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/67.7dffc47743.js",
+      "status": 200,
+      "bytes": 2895,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 202,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/67.7dffc47743.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 203,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/6u.79a8483cd5.js",
+      "status": 200,
+      "bytes": 238399,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 204,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/6u.79a8483cd5.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 205,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/6u.79a8483cd5.js.LICENSE.txt",
+      "status": 200,
+      "bytes": 530,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 206,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/6u.79a8483cd5.js.LICENSE.txt",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 207,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/8.c881539ada.js",
+      "status": 200,
+      "bytes": 13437,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 208,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/8.c881539ada.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 209,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/89.d47ebac4b9.js",
+      "status": 200,
+      "bytes": 9492,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 210,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/89.d47ebac4b9.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 211,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/89.d47ebac4b9.js.LICENSE.txt",
+      "status": 200,
+      "bytes": 171,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 212,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/89.d47ebac4b9.js.LICENSE.txt",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 213,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/9.c52e089d75.js",
+      "status": 200,
+      "bytes": 9659,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 214,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/9.c52e089d75.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 215,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/a.5180dd3ac4.js",
+      "status": 200,
+      "bytes": 6374,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 216,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/a.5180dd3ac4.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 217,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/a6.4e5eed0fc0.js",
+      "status": 200,
+      "bytes": 24265,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 218,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/a6.4e5eed0fc0.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 219,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/am.002b408f04.js",
+      "status": 200,
+      "bytes": 24292,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 220,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/am.002b408f04.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 221,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/aw.27832b5152.js",
+      "status": 200,
+      "bytes": 530,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 222,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/aw.27832b5152.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 223,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/b.2a003a189b.js",
+      "status": 200,
+      "bytes": 35015,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 224,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/b.2a003a189b.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 225,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/b8.524fe2dd8f.js",
+      "status": 200,
+      "bytes": 31764,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 226,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/b8.524fe2dd8f.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 227,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/ba.5eb70cced0.js",
+      "status": 200,
+      "bytes": 62466,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 228,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/ba.5eb70cced0.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 229,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/bj.2c7236e237.js",
+      "status": 200,
+      "bytes": 668,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 230,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/bj.2c7236e237.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 231,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/bl.ef3e82126a.js",
+      "status": 200,
+      "bytes": 61821,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 232,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/bl.ef3e82126a.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 233,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/bl.ef3e82126a.js.LICENSE.txt",
+      "status": 200,
+      "bytes": 171,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 234,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/bl.ef3e82126a.js.LICENSE.txt",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 235,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/bs.97d2e91653.js",
+      "status": 200,
+      "bytes": 5665,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 236,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/bs.97d2e91653.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 237,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/bs.97d2e91653.js.LICENSE.txt",
+      "status": 200,
+      "bytes": 171,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 238,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/bs.97d2e91653.js.LICENSE.txt",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 239,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/bsl.2fb1f3ab1c.js",
+      "status": 200,
+      "bytes": 5667,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 240,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/bsl.2fb1f3ab1c.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 241,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/bsl.2fb1f3ab1c.js.LICENSE.txt",
+      "status": 200,
+      "bytes": 171,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 242,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/bsl.2fb1f3ab1c.js.LICENSE.txt",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 243,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/c.d64200f930.js",
+      "status": 200,
+      "bytes": 25679,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 244,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/c.d64200f930.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 245,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/cn.e7cc2f2c5b.js",
+      "status": 200,
+      "bytes": 10516,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 246,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/cn.e7cc2f2c5b.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 247,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/co.de074c5aa2.js",
+      "status": 200,
+      "bytes": 671,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 248,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/co.de074c5aa2.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 249,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/d.d6ddc83a25.js",
+      "status": 200,
+      "bytes": 20824,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 250,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/d.d6ddc83a25.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 251,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/e.7112d105fb.js",
+      "status": 200,
+      "bytes": 139014,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 252,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/e.7112d105fb.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 253,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/f.963b5743eb.js",
+      "status": 200,
+      "bytes": 5917,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 254,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/f.963b5743eb.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 255,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/f6.2860ba4ed0.js",
+      "status": 200,
+      "bytes": 8365,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 256,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/f6.2860ba4ed0.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 257,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/fd.7dd19fd28b.js",
+      "status": 200,
+      "bytes": 1743,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 258,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/fd.7dd19fd28b.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 259,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/g.c087faaabc.js",
+      "status": 200,
+      "bytes": 39164,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 260,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/g.c087faaabc.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 261,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/g.c087faaabc.js.LICENSE.txt",
+      "status": 200,
+      "bytes": 171,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 262,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/g.c087faaabc.js.LICENSE.txt",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 263,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/gt.534a770bcd.js",
+      "status": 200,
+      "bytes": 10801,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 264,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/gt.534a770bcd.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 265,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/h.25c3c9f743.js",
+      "status": 200,
+      "bytes": 30213,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 266,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/h.25c3c9f743.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 267,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/h8.8146f657b7.js",
+      "status": 200,
+      "bytes": 9361,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 268,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/h8.8146f657b7.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 269,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/hl.dca42aa9ae.js",
+      "status": 200,
+      "bytes": 432,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 270,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/hl.dca42aa9ae.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 271,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/hm.5f69221ce8.js",
+      "status": 200,
+      "bytes": 10794,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 272,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/hm.5f69221ce8.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 273,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/ht.6a9fbbf40c.js",
+      "status": 200,
+      "bytes": 1241,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 274,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/ht.6a9fbbf40c.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 275,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/hw.419e09a2b0.js",
+      "status": 200,
+      "bytes": 12739,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 276,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/hw.419e09a2b0.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 277,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/i.a020e5679a.js",
+      "status": 200,
+      "bytes": 22124,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 278,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/i.a020e5679a.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 279,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/im.89f48440bc.js",
+      "status": 200,
+      "bytes": 10088,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 280,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/im.89f48440bc.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 281,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/im.89f48440bc.js.LICENSE.txt",
+      "status": 200,
+      "bytes": 171,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 282,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/im.89f48440bc.js.LICENSE.txt",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 283,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/iq.a388765ce0.js",
+      "status": 200,
+      "bytes": 419,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 284,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/iq.a388765ce0.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 285,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/iqr.6670b05de2.js",
+      "status": 200,
+      "bytes": 420,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 286,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/iqr.6670b05de2.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 287,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/j.21097c1f58.js",
+      "status": 200,
+      "bytes": 551,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 288,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/j.21097c1f58.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 289,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/ja.60d8f63317.js",
+      "status": 200,
+      "bytes": 19193,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 290,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/ja.60d8f63317.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 291,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/ja.60d8f63317.js.LICENSE.txt",
+      "status": 200,
+      "bytes": 171,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 292,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/ja.60d8f63317.js.LICENSE.txt",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 293,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/jf.87902902eb.js",
+      "status": 200,
+      "bytes": 19811,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 294,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/jf.87902902eb.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 295,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/jq.063f921b65.js",
+      "status": 200,
+      "bytes": 52185,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 296,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/jq.063f921b65.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 297,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/jr.e9cc6b542c.js",
+      "status": 200,
+      "bytes": 12659,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 298,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/jr.e9cc6b542c.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 299,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/k.1d7e437b49.js",
+      "status": 200,
+      "bytes": 348074,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 300,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/k.1d7e437b49.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 301,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/k.1d7e437b49.js.LICENSE.txt",
+      "status": 200,
+      "bytes": 770,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 302,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/k.1d7e437b49.js.LICENSE.txt",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 303,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/k5.36a7e38a29.js",
+      "status": 200,
+      "bytes": 28384,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 304,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/k5.36a7e38a29.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 305,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/kh.e649984aff.js",
+      "status": 200,
+      "bytes": 13954,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 306,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/kh.e649984aff.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 307,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/ky.76b4a4e4dd.js",
+      "status": 200,
+      "bytes": 7397,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 308,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/ky.76b4a4e4dd.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 309,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/ky2.c385a53600.js",
+      "status": 200,
+      "bytes": 7398,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 310,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/ky2.c385a53600.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 311,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/lib-react.6356ddf42c.js",
+      "status": 200,
+      "bytes": 218895,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 312,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/lib-react.6356ddf42c.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 313,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/lib-react.6356ddf42c.js.LICENSE.txt",
+      "status": 200,
+      "bytes": 1209,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 314,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/lib-react.6356ddf42c.js.LICENSE.txt",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 315,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/m.a725b1a755.js",
+      "status": 200,
+      "bytes": 66518,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 316,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/m.a725b1a755.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 317,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/n.b19cd183fe.js",
+      "status": 200,
+      "bytes": 144423,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 318,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/n.b19cd183fe.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 319,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/o.2011758f19.js",
+      "status": 200,
+      "bytes": 14820,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 320,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/o.2011758f19.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 321,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/o7.2998e7336b.js",
+      "status": 200,
+      "bytes": 16486,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 322,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/o7.2998e7336b.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 323,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/oz.7dfe82acee.js",
+      "status": 200,
+      "bytes": 17178,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 324,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/oz.7dfe82acee.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 325,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/p.a4236303c6.js",
+      "status": 200,
+      "bytes": 8429,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 326,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/p.a4236303c6.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 327,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/q.cba7daf190.js",
+      "status": 200,
+      "bytes": 23285,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 328,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/q.cba7daf190.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 329,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/qi.3c0df390c8.js",
+      "status": 200,
+      "bytes": 73275,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 330,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/qi.3c0df390c8.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 331,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/ql.db40cd4976.js",
+      "status": 200,
+      "bytes": 3717,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 332,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/ql.db40cd4976.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 333,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/r.deb2462237.js",
+      "status": 200,
+      "bytes": 50069,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 334,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/r.deb2462237.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 335,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/r4.4d0fa2a207.js",
+      "status": 200,
+      "bytes": 5119,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 336,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/r4.4d0fa2a207.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 337,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/r4.4d0fa2a207.js.LICENSE.txt",
+      "status": 200,
+      "bytes": 171,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 338,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/r4.4d0fa2a207.js.LICENSE.txt",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 339,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/rg.b466c11fe6.js",
+      "status": 200,
+      "bytes": 34681,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 340,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/rg.b466c11fe6.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 341,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/t.549b6ff41e.js",
+      "status": 200,
+      "bytes": 449,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 342,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/t.549b6ff41e.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 343,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/ta.350a9de34e.js",
+      "status": 200,
+      "bytes": 11558,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 344,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/ta.350a9de34e.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 345,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/tg.eb25241370.js",
+      "status": 200,
+      "bytes": 17758,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 346,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/tg.eb25241370.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 347,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/tv.2d7d784697.js",
+      "status": 200,
+      "bytes": 450,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 348,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/tv.2d7d784697.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 349,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/u.63f697a901.js",
+      "status": 200,
+      "bytes": 13627,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 350,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/u.63f697a901.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 351,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/ub.7f359298ae.js",
+      "status": 200,
+      "bytes": 39562,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 352,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/ub.7f359298ae.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 353,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/v.075a7b0bf5.js",
+      "status": 200,
+      "bytes": 20222,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 354,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/v.075a7b0bf5.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 355,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/v2.c43427c606.js",
+      "status": 200,
+      "bytes": 197021,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 356,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/v2.c43427c606.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 357,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/vs.7dc3e3aadd.js",
+      "status": 200,
+      "bytes": 59444,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 358,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/vs.7dc3e3aadd.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 359,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/w.676c10b1ee.js",
+      "status": 200,
+      "bytes": 10709,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 360,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/w.676c10b1ee.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 361,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/w.676c10b1ee.js.LICENSE.txt",
+      "status": 200,
+      "bytes": 171,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 362,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/w.676c10b1ee.js.LICENSE.txt",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 363,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/x.5ccfdc8952.js",
+      "status": 200,
+      "bytes": 12009,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 364,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/x.5ccfdc8952.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 365,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/y.1ea567ab9f.js",
+      "status": 200,
+      "bytes": 439,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 366,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/y.1ea567ab9f.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 367,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/async/z.bb776bab11.js",
+      "status": 200,
+      "bytes": 59728,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 368,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/async/z.bb776bab11.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 369,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/static/js/index.89887bd39e.js",
+      "status": 200,
+      "bytes": 4827,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 370,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/static/js/index.89887bd39e.js",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 371,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/waffo-logo-dark.svg",
+      "status": 200,
+      "bytes": 1169,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 372,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/waffo-logo-dark.svg",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 373,
+      "label": "frozen current resource",
+      "method": "GET",
+      "path": "/web-assets/waffo-logo-light.svg",
+      "status": 200,
+      "bytes": 1176,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 374,
+      "label": "frozen current resource",
+      "method": "HEAD",
+      "path": "/web-assets/waffo-logo-light.svg",
+      "status": 200,
+      "bytes": 0,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    },
+    {
+      "id": 375,
+      "label": "missing resource never becomes SPA",
+      "method": "GET",
+      "path": "/web-assets/assets/g7-missing.js",
+      "status": 404,
+      "bytes": 153,
+      "TLSAuthorized": true,
+      "setCookieCount": 0
+    }
+  ],
+  "expectedOriginalNineWireCases": 9,
+  "expectedPublicSSRRequests": 64,
+  "expectedResourceFiles": 135,
+  "completedPublicSSRRequests": 64,
+  "completedResourceRequests": 270,
+  "laterStages": {
+    "signedOIDC": "pending",
+    "authenticatedWrites": "pending",
+    "subjectWorkspaceIsolation": "pending",
+    "proxySSEAbortWS": "pending",
+    "retainedGrayRollback": "pending",
+    "realCinaAuthIdentity": "pending"
+  },
+  "fullG7Verified": false,
+  "productionRequests": 0
+}

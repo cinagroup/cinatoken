@@ -1,0 +1,107 @@
+[
+    {
+        "Id": "sha256:1d946a60b0713b7e21eb5eb5a49b31ee3d037a72bb128710da18a2c00a2eaa9c",
+        "RepoTags": [
+            "cinatoken-g7-admin:473de5fc520fc7d64db700db88a76c7a6b45c241"
+        ],
+        "RepoDigests": [],
+        "Parent": "",
+        "Comment": "buildkit.dockerfile.v0",
+        "Created": "2026-10-06T03:38:42.874750586Z",
+        "DockerVersion": "",
+        "Author": "",
+        "Config": {
+            "Hostname": "",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "ExposedPorts": {
+                "8789/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "NODE_VERSION=22.22.2",
+                "YARN_VERSION=1.22.22",
+                "NODE_ENV=production",
+                "NEXT_TELEMETRY_DISABLED=1",
+                "PORT=8789",
+                "HOSTNAME=0.0.0.0"
+            ],
+            "Cmd": [
+                "node",
+                "packages/admin/server.js"
+            ],
+            "Healthcheck": {
+                "Test": [
+                    "CMD-SHELL",
+                    "node -e \"fetch('http://127.0.0.1:'+(process.env.PORT||8789)+'/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\""
+                ],
+                "Interval": 30000000000,
+                "Timeout": 5000000000,
+                "StartPeriod": 40000000000,
+                "Retries": 3
+            },
+            "ArgsEscaped": true,
+            "Image": "",
+            "Volumes": null,
+            "WorkingDir": "/app",
+            "Entrypoint": [
+                "/app/docker/entrypoint.app.sh"
+            ],
+            "OnBuild": null,
+            "Labels": null
+        },
+        "Architecture": "amd64",
+        "Os": "linux",
+        "Size": 253214652,
+        "GraphDriver": {
+            "Data": {
+                "LowerDir": "/var/lib/docker/overlay2/vofhyvfwow55hx1frbdw11m72/diff:/var/lib/docker/overlay2/w0xyv28768l4rd5rc0qidwbx7/diff:/var/lib/docker/overlay2/hfgyrjyf59nzfpjtt6r08zw6i/diff:/var/lib/docker/overlay2/t117q82pa74znz9qd8s7t459l/diff:/var/lib/docker/overlay2/bbm3g9iic3lj91mmf8pt8gzyj/diff:/var/lib/docker/overlay2/9xp5ctaeu0q7u73v3dveckewl/diff:/var/lib/docker/overlay2/u3xchmb3vbkpdx0zxtamdf031/diff:/var/lib/docker/overlay2/ecc2zjwfib0btpsgy5hh6gnpj/diff:/var/lib/docker/overlay2/nxii655b6pqau3eghkbr9slrl/diff:/var/lib/docker/overlay2/o8l1d2owypribrwtzt3rddd07/diff:/var/lib/docker/overlay2/fm7nh6yvoyw6ti5v0wglig99f/diff:/var/lib/docker/overlay2/8kgn8om5qma6gfrgr8b5bl4n7/diff:/var/lib/docker/overlay2/v8h6v925g7zou0maughtdfr0e/diff:/var/lib/docker/overlay2/bsffmu0zzyjv53n5j47l4td8y/diff:/var/lib/docker/overlay2/d0c4wmc3liqgb0dneowc2802b/diff:/var/lib/docker/overlay2/v3upvi28dq25bfnoca4tnm6zh/diff:/var/lib/docker/overlay2/s1iqkcczec8339i1nl4zzp0fb/diff:/var/lib/docker/overlay2/ol2glvqz3hx8goua5ldik2o3t/diff:/var/lib/docker/overlay2/jx82izc28o2kvvuvgqszb8ovj/diff:/var/lib/docker/overlay2/sk3bn80jjt4ztnlfa3cgpmhzp/diff:/var/lib/docker/overlay2/tz54mwzhxj3vo50rgxm5hy320/diff:/var/lib/docker/overlay2/eraoos78ys0eubhfkd3z55fx3/diff:/var/lib/docker/overlay2/d34502e3108cfe09011292f5a7c3ff7ee3e8315c8f998c7496b511841c044b56/diff:/var/lib/docker/overlay2/1daa5fbee80b89d0c75d31d850d281ad88b2befe00ed3da4d31d4357ac323c87/diff:/var/lib/docker/overlay2/389bf8e6a5f127194eec3b658707c7edbdcacc6d09e6a91c2097922302fe5943/diff:/var/lib/docker/overlay2/3e173f4f6af59a1eb8a6af648b192a06713c7eb7a980178265946426b52b6dc4/diff",
+                "MergedDir": "/var/lib/docker/overlay2/kfw7sp516nq6ms492pz4witiq/merged",
+                "UpperDir": "/var/lib/docker/overlay2/kfw7sp516nq6ms492pz4witiq/diff",
+                "WorkDir": "/var/lib/docker/overlay2/kfw7sp516nq6ms492pz4witiq/work"
+            },
+            "Name": "overlay2"
+        },
+        "RootFS": {
+            "Type": "layers",
+            "Layers": [
+                "sha256:0854555d70acaa318b38ee50bc667cb51ff6bf0757624624c7ff3b6fe17459a0",
+                "sha256:fbebc70d4d603718f2e3756832ff13d8b68c1fb0995ae9add5fc06748aada9c9",
+                "sha256:ba0964557d8871ad28733d08b70ac9cefedda87ddd769e439b9d4f6d100baa3e",
+                "sha256:04acce0ed98abf602c24e1b97ef716d3e2fda797c28a1e4394846e13e39730b4",
+                "sha256:4925dd6bc0632592f46a99f9769eb24b0dd42ea555920ab136931c3aabbdf52a",
+                "sha256:48e70c6f74582923982eca4566bc5ed17ff9da776fe0c5466f21840f429d7cd3",
+                "sha256:796c1c163362c18f8b8d4b1f02444e4eb6fbce1d1640a7db722b24bdf33e70a3",
+                "sha256:afe348e172064dd07434c504f617dbab60fb3f34a294abf5f138b49d9ff63de5",
+                "sha256:d94be3be78c1ffc6956f4a04079efefb1b59eeed5b0e3c810d406ea02cebe04f",
+                "sha256:5cff0d3824fcdcfafaa69e3c872a03593ebfaa3b6afcbee3f18b65defb017a61",
+                "sha256:0b0c08568adada0e412e7b69f84eacd6c001b54eaf2e7bd7051f9f394dac8f28",
+                "sha256:82ebd8e9fff9c6ccafd5e01d461e796747a231c7509f9fc80b2c7845631e21e5",
+                "sha256:3097db9a82249253231c0599994e1a4eee43db6aea30f1a84f9bc73dfde04b7d",
+                "sha256:70294d0536ac1489a6066ef895dcaf615dcd1a27b553324d743ce33c7ba52871",
+                "sha256:5a207dd7340676c9105f54c1d8f8950ac32f8673c5bf1b5b4bec1d75e2ca4ada",
+                "sha256:704ec57f8d3845e6b027682f772ecaf67eb34abfc96bb2297af652052a003343",
+                "sha256:950851f4c77d7dd42c26114c736816cf7bd3b75181b6aa4d46f1e4c6b80313a0",
+                "sha256:afbc7a2370fc790688f53d70ad04a069209d1a681a55996f03d26de482ebe480",
+                "sha256:96644c89120173a3a8240abc411b7cc1c7f96cc2af577c04b9e55e8c943f8960",
+                "sha256:c1d3f75208c480b3734a6cc6615783c0fa0dd62fc3f39ad04fc6c9dda191d65e",
+                "sha256:35d881854e7d1db95797880c6316a7c5a27adef0cf354526e144f8bb601e5198",
+                "sha256:c5042ee43d01aae9d8adc1123fda0f6f6e83f9c8b338bcc0b18870ef6a975b2f",
+                "sha256:ad85dd4262494ca35a13b6e84ec35c59d572ef615ec3ccd3f6a6bb1f4c7fa99c",
+                "sha256:edc4a26ee38a626ae66f1b213f617e5802489e98bf5bf119851f75cc0aaccd5a",
+                "sha256:751075757eba618513af39b4a476d92120fd2978b6dda5cfa28010c2fc11807c",
+                "sha256:29fa3d94caab22aa1ee8b05451976d4ae5b1628bbac77e138b54169eee7d9bb7",
+                "sha256:acecd74414612faa280cfc63f0eb22d8097599515b9340d9470177b373395603"
+            ]
+        },
+        "Metadata": {
+            "LastTagTime": "2026-10-06T03:38:45.565117667Z"
+        }
+    }
+]

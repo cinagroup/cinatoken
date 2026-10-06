@@ -1,0 +1,27 @@
+{
+  "schema": "cinatoken.native-four-independent-peer.command.v1",
+  "at": "2026-10-06T03:20:56.886Z",
+  "finishedAt": "2026-10-06T03:20:56.999Z",
+  "executable": "git",
+  "args": [
+    "-c",
+    "core.longpaths=true",
+    "rev-parse",
+    "HEAD"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "input": null,
+  "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-four-independent-peer-1f17397bef8049cb9cd030679e23dc70\\current-head.stdout.log",
+  "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-four-independent-peer-1f17397bef8049cb9cd030679e23dc70\\current-head.stderr.log",
+  "stdoutInfo": {
+    "bytes": 41,
+    "sha256": "fff32ef2ef0512963718811a86fee69f969a818bab9eb447ceb7ca4514d3ada4"
+  },
+  "stderrInfo": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

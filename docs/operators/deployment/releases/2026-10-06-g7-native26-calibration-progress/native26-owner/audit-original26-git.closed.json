@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-06T03:46:16.509Z",
+  "finishedAt": "2026-10-06T03:46:16.578Z",
+  "executable": "git",
+  "args": [
+    "cat-file",
+    "--batch"
+  ],
+  "baseCommit": "473de5fc520fc7d64db700db88a76c7a6b45c241",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\audit-original26-git.stdout.log",
+  "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native26-pg73-repair-908e0528cf5e44508d04e761c4540713\\audit-original26-git.stderr.log",
+  "stdoutInfo": {
+    "bytes": 1488399,
+    "sha256": "458757307e4feb5d61f54e786bbf418fb02b021dd37d94010b4fe8cb262879e2"
+  },
+  "stderrInfo": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "spawnError": null
+}

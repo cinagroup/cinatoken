@@ -1,0 +1,477 @@
+--- original-fixture.test.mjs
++++ fixture.test.mjs
+@@ -1,7 +1,23 @@
+ import assert from "node:assert/strict";
+ import { createHash, randomBytes } from "node:crypto";
+-import { readFileSync } from "node:fs";
++import { execFile } from "node:child_process";
++import { once } from "node:events";
++import {
++	cpSync,
++	mkdirSync,
++	mkdtempSync,
++	readdirSync,
++	readFileSync,
++	rmSync,
++	writeFileSync,
++} from "node:fs";
++import { createServer } from "node:net";
++import { createRequire } from "node:module";
++import { tmpdir } from "node:os";
++import { dirname, join, resolve } from "node:path";
+ import { test } from "node:test";
++import { fileURLToPath, pathToFileURL } from "node:url";
++import { promisify } from "node:util";
+ import {
+ 	modelEndpointSupportsOperation,
+ 	parseVerifiedModelEndpointSnapshot,
+@@ -195,3 +211,449 @@
+ 		false
+ 	);
+ });
++
++// This uses the locked real postgres.js client against a bounded protocol peer.
++// The peer does not execute SQL or prove Linux, Docker, TLS, PostgreSQL or G7 acceptance.
++async function minimalObserverContract(scenario) {
++	const directory = mkdtempSync(
++		join(tmpdir(), "cinatoken-g7-observe-contract-")
++	);
++	const app = join(directory, "app");
++	const core = join(app, "packages/core/dist/index.js");
++	const input = join(directory, "qa/database.mjs");
++	const preload = join(directory, "transport.mjs");
++	const counts = {
++		models: 1,
++		providers: 1,
++		verified_endpoints: 1,
++		legacy_master_api_keys: 1,
++		legacy_development_keys: 0,
++		obsolete_master_config: 0,
++		admin_sessions: 0,
++		portal_sessions: 0,
++	};
++	const trace = { connections: 0, closes: 0, queries: [], startup: null };
++	const failures = [];
++	const sockets = new Set();
++	const frame = (type, data) => {
++		const body = Buffer.isBuffer(data) ? data : Buffer.from(data);
++		const result = Buffer.alloc(5 + body.length);
++		result[0] = type.charCodeAt(0);
++		result.writeUInt32BE(4 + body.length, 1);
++		body.copy(result, 5);
++		return result;
++	};
++	const description = (fields) => {
++		const head = Buffer.alloc(2);
++		head.writeUInt16BE(fields.length);
++		return frame(
++			"T",
++			Buffer.concat([
++				head,
++				...fields.map(([name, type]) => {
++					const metadata = Buffer.alloc(18);
++					metadata.writeUInt32BE(type, 6);
++					metadata.writeInt16BE(-1, 10);
++					metadata.writeInt32BE(-1, 12);
++					return Buffer.concat([Buffer.from(name + "\0"), metadata]);
++				}),
++			])
++		);
++	};
++	const dataRow = (fields, row) => {
++		const head = Buffer.alloc(2);
++		head.writeUInt16BE(fields.length);
++		return frame(
++			"D",
++			Buffer.concat([
++				head,
++				...fields.map(([name]) => {
++					const value = row[name];
++					const length = Buffer.alloc(4);
++					if (value === null) {
++						length.writeInt32BE(-1);
++						return length;
++					}
++					const bytes = Buffer.from(
++						typeof value === "boolean" ? (value ? "t" : "f") : String(value)
++					);
++					length.writeUInt32BE(bytes.length);
++					return Buffer.concat([length, bytes]);
++				}),
++			])
++		);
++	};
++	const migrations = readdirSync(
++		new URL("../../../packages/core/migrations-postgres/", import.meta.url)
++	)
++		.filter((name) => name.endsWith(".sql"))
++		.sort();
++	const queryRows = (query) => {
++		if (/^SET search_path TO cinatoken_gateway, public$/.test(query))
++			return { command: "SET", fields: [], rows: [] };
++		if (/^begin read only$/i.test(query))
++			return { command: "BEGIN", fields: [], rows: [] };
++		if (/^(commit|rollback)$/i.test(query))
++			return { command: query.toUpperCase(), fields: [], rows: [] };
++		if (
++			query ===
++			"SELECT version FROM cinatoken_gateway.schema_migrations ORDER BY version"
++		)
++			return {
++				fields: [["version", 25]],
++				rows: (scenario === "ledger-drift"
++					? migrations.slice(1)
++					: migrations
++				).map((version) => ({ version })),
++			};
++		if (query.includes("SELECT version() AS server_version"))
++			return {
++				fields: [
++					["server_version", 25],
++					["server_version_num", 25],
++					["role", 25],
++					["database", 25],
++					["schema", 25],
++					["superuser", 16],
++				],
++				rows: [
++					{
++						server_version: "controlled PostgreSQL 16 peer",
++						server_version_num: "160015",
++						role: "postgres",
++						database: "g7",
++						schema:
++							scenario === "schema-drift" ? "public" : "cinatoken_gateway",
++						superuser: true,
++					},
++				],
++			};
++		if (query.includes("FROM information_schema.columns"))
++			return {
++				fields: [
++					["table_name", 25],
++					["column_name", 25],
++					["ordinal_position", 23],
++					["data_type", 25],
++					["is_nullable", 25],
++					["column_default", 25],
++				],
++				rows: [
++					{
++						table_name: "models",
++						column_name: "id",
++						ordinal_position: 1,
++						data_type: "text",
++						is_nullable: "NO",
++						column_default: null,
++					},
++				],
++			};
++		if (query.includes("FROM pg_constraint con JOIN pg_class c"))
++			return {
++				fields: [
++					["table_name", 25],
++					["name", 25],
++					["definition", 25],
++				],
++				rows: [
++					{
++						table_name: "models",
++						name: "models_pkey",
++						definition: "PRIMARY KEY (id)",
++					},
++				],
++			};
++		if (query.includes("AS models,") && query.includes("AS portal_sessions"))
++			return {
++				fields: Object.keys(counts).map((name) => [name, 23]),
++				rows: [{ ...counts, models: scenario === "count-drift" ? 2 : 1 }],
++			};
++		assert.fail("Unexpected observer SQL in controlled peer");
++	};
++	const server = createServer((socket) => {
++		trace.connections++;
++		sockets.add(socket);
++		socket.on("error", () => {});
++		socket.on("close", () => {
++			trace.closes++;
++			sockets.delete(socket);
++		});
++		let buffer = Buffer.alloc(0),
++			startup = true,
++			query,
++			response,
++			transaction = "I";
++		const execute = () => {
++			trace.queries.push(query);
++			if (scenario === "session-failure" && response.command === "SET") {
++				socket.write(
++					frame("E", "SERROR\0CXX000\0MCONTROLLED_SESSION_FAILURE\0\0")
++				);
++				return;
++			}
++			if (response.command === "BEGIN") transaction = "T";
++			if (["COMMIT", "ROLLBACK"].includes(response.command)) transaction = "I";
++			for (const row of response.rows)
++				socket.write(dataRow(response.fields, row));
++			socket.write(
++				frame("C", `${response.command ?? "SELECT " + response.rows.length}\0`)
++			);
++		};
++		socket.on("data", (bytes) => {
++			try {
++				buffer = Buffer.concat([buffer, bytes]);
++				assert.ok(buffer.length < 65536);
++				while (buffer.length >= (startup ? 4 : 5)) {
++					const size = buffer.readUInt32BE(startup ? 0 : 1) + (startup ? 0 : 1);
++					assert.ok(size >= 4 && size < 65536);
++					if (buffer.length < size) return;
++					const packet = buffer.subarray(0, size);
++					buffer = buffer.subarray(size);
++					if (startup) {
++						startup = false;
++						assert.equal(packet.readUInt32BE(4), 196608);
++						const values = packet.subarray(8, -1).toString().split("\0");
++						trace.startup = Object.fromEntries(
++							Array.from({ length: (values.length - 1) / 2 }, (_, i) => [
++								values[i * 2],
++								values[i * 2 + 1],
++							])
++						);
++						socket.write(
++							Buffer.concat([frame("R", Buffer.alloc(4)), frame("Z", "I")])
++						);
++						continue;
++					}
++					const type = String.fromCharCode(packet[0]);
++					if (type === "Q") {
++						query = packet.subarray(5, -1).toString();
++						response = queryRows(query);
++						if (response.fields.length)
++							socket.write(description(response.fields));
++						execute();
++						socket.write(frame("Z", transaction));
++					} else if (type === "P") {
++						const zero = packet.indexOf(0, 5);
++						assert.equal(zero, 5, "prepare:false uses unnamed statements");
++						const end = packet.indexOf(0, zero + 1);
++						query = packet.subarray(zero + 1, end).toString();
++						assert.equal(packet.readUInt16BE(end + 1), 0);
++						response = queryRows(query);
++						socket.write(frame("1", ""));
++					} else if (type === "D") {
++						socket.write(
++							response.fields.length
++								? description(response.fields)
++								: frame("n", "")
++						);
++					} else if (type === "B") socket.write(frame("2", ""));
++					else if (type === "E") execute();
++					else if (type === "S") socket.write(frame("Z", transaction));
++					else if (type === "X") socket.end();
++					else assert.fail("Unexpected controlled wire message " + type);
++				}
++			} catch (error) {
++				failures.push(error);
++				socket.destroy();
++			}
++		});
++	});
++	try {
++		server.listen(0, "127.0.0.1");
++		await once(server, "listening");
++		mkdirSync(dirname(core), { recursive: true });
++		mkdirSync(dirname(input), { recursive: true });
++		mkdirSync(join(app, "node_modules"), { recursive: true });
++		const postgresRoot = fileURLToPath(
++			new URL("../../../node_modules/postgres/", import.meta.url)
++		);
++		cpSync(postgresRoot, join(app, "node_modules/postgres"), {
++			recursive: true,
++		});
++		writeFileSync(join(app, "package.json"), '{"type":"module"}\n');
++		writeFileSync(core, 'import "drizzle-orm";\n');
++		assert.deepEqual(readdirSync(join(app, "node_modules")), ["postgres"]);
++		assert.throws(() => createRequire(core).resolve("drizzle-orm"), {
++			code: "MODULE_NOT_FOUND",
++		});
++		cpSync(
++			new URL("../../../packages/core/migrations-postgres/", import.meta.url),
++			join(app, "packages/core/migrations-postgres"),
++			{ recursive: true }
++		);
++		let source = readFileSync(
++			new URL("./database.mjs", import.meta.url),
++			"utf8"
++		);
++		// Only filesystem locations are mapped in this isolated executable copy.
++		source = source.replace(
++			'"/app/packages/core/dist/index.js"',
++			JSON.stringify(pathToFileURL(core).href)
++		);
++		source = source.replace(
++			'"/app/node_modules/postgres/src/index.js"',
++			JSON.stringify(
++				pathToFileURL(join(app, "node_modules/postgres/src/index.js")).href
++			)
++		);
++		source = source.replaceAll(
++			"/app/packages/core/migrations-postgres",
++			join(app, "packages/core/migrations-postgres").replaceAll("\\", "/")
++		);
++		writeFileSync(input, source);
++		// Windows platform and pg:5432 transport are simulated only in this child.
++		writeFileSync(
++			preload,
++			`import net from "node:net";
++if (process.platform !== "linux") Object.defineProperty(process, "platform", {value:"linux"});
++const connect = net.Socket.prototype.connect;
++net.Socket.prototype.connect = function(port, host, ...args) {
++  if (host !== "pg" || Number(port) !== 5432) throw new Error("Unexpected controlled connection");
++  return connect.call(this, ${server.address().port}, "127.0.0.1", ...args);
++};\n`
++		);
++		const env = {
++			...(process.env.SystemRoot ? { SystemRoot: process.env.SystemRoot } : {}),
++			DATABASE_DRIVER: "postgres",
++			DATABASE_URL: `postgres://postgres:${"a".repeat(64)}@pg:5432/g7`,
++		};
++		let execution;
++		try {
++			execution = {
++				...(await promisify(execFile)(
++					process.execPath,
++					[
++						"--import",
++						pathToFileURL(preload).href,
++						input,
++						scenario === "seed-missing-core" ? "--seed" : "--observe",
++					],
++					{ env, timeout: 5000, maxBuffer: 1024 * 1024, killSignal: "SIGKILL" }
++				)),
++				code: 0,
++			};
++		} catch (error) {
++			assert.equal(
++				error.killed,
++				false,
++				"bounded child must finish without timeout kill"
++			);
++			assert.equal(error.signal, null);
++			assert.equal(error.code, 1);
++			execution = {
++				stdout: error.stdout,
++				stderr: error.stderr,
++				code: error.code,
++			};
++		}
++		assert.deepEqual(failures, []);
++		for (let i = 0; i < 20 && trace.closes < trace.connections; i++)
++			await new Promise((done) => setTimeout(done, 5));
++		assert.equal(trace.closes, trace.connections);
++		assert.equal(trace.connections, scenario === "seed-missing-core" ? 0 : 1);
++		if (scenario !== "seed-missing-core") {
++			assert.equal(trace.startup.search_path, "cinatoken_gateway, public");
++			assert.equal(trace.startup.user, "postgres");
++			assert.equal(trace.startup.database, "g7");
++			assert.equal(
++				trace.queries[0],
++				"SET search_path TO cinatoken_gateway, public"
++			);
++		}
++		return { ...execution, trace, counts, migrations };
++	} finally {
++		for (const socket of sockets) socket.destroy();
++		await new Promise((done) => server.close(done));
++		assert.ok(
++			resolve(directory).startsWith(resolve(tmpdir()) + "/") ||
++				resolve(directory).startsWith(resolve(tmpdir()) + "\\")
++		);
++		rmSync(directory, { recursive: true, force: false });
++	}
++}
++
++test(
++	"observe executes all contracts with only real postgres installed and Core missing drizzle",
++	{ timeout: 10000 },
++	async (t) => {
++		const value = await minimalObserverContract("success");
++		t.diagnostic(
++			JSON.stringify({
++				scenario: "success",
++				actualChildExit: value.code,
++				stdout: value.stdout,
++				stderr: value.stderr,
++				trace: value.trace,
++				realPostgresDriver: true,
++				realSQLDatabase: false,
++				nativeLinuxAcceptance: false,
++			})
++		);
++		assert.equal(value.code, 0);
++		assert.equal(value.stderr, "");
++		const report = JSON.parse(value.stdout);
++		assert.equal(report.mode, "--observe");
++		assert.equal(report.actualExit, 0);
++		assert.deepEqual(report.observation.counts, value.counts);
++		assert.deepEqual(
++			report.migrations.map((entry) => entry.name),
++			value.migrations
++		);
++		assert.equal(report.observation.schema, "cinatoken_gateway");
++		assert.match(report.observation.schemaSha256, /^[a-f0-9]{64}$/);
++		assert.equal(report.restrictedRuntimeACLVerified, false);
++		assert.equal(report.nativePG18Verified, false);
++		assert.equal(value.trace.queries.length, 8);
++		assert.equal(value.trace.queries[2].toLowerCase(), "begin read only");
++		assert.equal(value.trace.queries.at(-1).toLowerCase(), "commit");
++		assert.ok(
++			value.trace.queries.every(
++				(query) => !/\b(insert|update|delete|truncate)\b/i.test(query)
++			)
++		);
++	}
++);
++
++for (const [scenario, stage, queries] of [
++	["ledger-drift", "migration-ledger", 2],
++	["count-drift", "database-counts", 8],
++	["schema-drift", "database-identity", 8],
++	["session-failure", "database-session", 1],
++	["seed-missing-core", "database-connection", 0],
++])
++	test(
++		`isolated real driver ${scenario} remains failed and closed`,
++		{ timeout: 10000 },
++		async (t) => {
++			const value = await minimalObserverContract(scenario);
++			t.diagnostic(
++				JSON.stringify({
++					scenario,
++					actualChildExit: value.code,
++					stdout: value.stdout,
++					stderr: value.stderr,
++					trace: value.trace,
++					realPostgresDriver: true,
++					realSQLDatabase: false,
++					nativeLinuxAcceptance: false,
++				})
++			);
++			assert.equal(value.code, 1);
++			assert.equal(value.stdout, "");
++			const failure = JSON.parse(value.stderr);
++			assert.equal(failure.actualExit, 1);
++			assert.equal(failure.stage, stage);
++			assert.equal(value.trace.queries.length, queries);
++			if (scenario === "count-drift") {
++				assert.deepEqual(failure.assertionObservation, {
++					selector: "models",
++					actual: 2,
++					expected: 1,
++				});
++				assert.equal(value.trace.queries.at(-1).toLowerCase(), "rollback");
++			}
++			assert.ok(!value.stderr.includes("a".repeat(64)));
++			assert.ok(!value.stderr.includes("CONTROLLED_SESSION_FAILURE"));
++		}
++	);

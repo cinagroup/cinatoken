@@ -1,0 +1,22 @@
+{
+  "schema": "frozen-current-root-index-byte-copy-v1",
+  "copiedAt": "2026-10-06T04:46:07.156Z",
+  "source": {
+    "file": "C:/Users/cina/AppData/Local/Temp/cinatoken-native26-g7-terminal-archive-meta-a4e5aa1b47564ae5b5bb81281df27d1d/frozen-current-root-index.json",
+    "bytes": 375872,
+    "sha256": "cedbf58fb411c7a183c60d183f6d36da8c853236ec7711f0b3ad679da2c2f467"
+  },
+  "copy": {
+    "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-current-frozen-index-input-VPltuE\\frozen-current-root-index.json",
+    "bytes": 375872,
+    "sha256": "cedbf58fb411c7a183c60d183f6d36da8c853236ec7711f0b3ad679da2c2f467"
+  },
+  "sourceRoot": "C:/Users/cina/AppData/Local/Temp/cinatoken-g7-native53-20261006-b5c5ae279d804d44b08535e386e82504",
+  "files": 981,
+  "totalBytes": 11305947,
+  "byteExact": true,
+  "sourceUnchanged": true,
+  "newBusinessExecutionClaimed": false,
+  "collectorMetadataRootIncluded": false,
+  "stopWrite": true
+}

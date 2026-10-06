@@ -1,0 +1,3 @@
+{"phase": "source-full-index", "files": 213, "directories": 0, "exclusions": 0}
+{"phase": "complete-zip-written"}
+{"phase": "roundtrip-complete", "zip": {"path": "C:/Users/cina/AppData/Local/Temp/cinatoken-ee122-opaque-capsule-89cf1ba373634086a3926a636a292ec7/ee122-frozen-root-lossless-opaque.zip", "bytes": 1754533, "sha256": "ad81f711b44102fde593087f8592dd4081c53058309df910586ee2a7af86f03a", "crc32": "fb668887"}, "files": 213, "directories": 0, "members": 213, "sourceTotalBytes": 12098565, "collectionOnly": true, "gatePassDerived": false}

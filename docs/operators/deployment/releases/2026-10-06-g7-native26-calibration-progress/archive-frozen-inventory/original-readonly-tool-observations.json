@@ -1,0 +1,25 @@
+{
+  "schema": "cinatoken-original-readonly-inventory-tool-observations-v1",
+  "scope": "Exact available conversation tool terminal observations; no invented stdout/stderr files or application process receipts",
+  "executions": [
+    {
+      "chunk_id": "1ceece",
+      "actualToolExit": 1,
+      "reason": "Read-only requested nonexistent v364-owned-linux-direct-socket path; proper source path subsequently read; no runtime or source mutation"
+    },
+    {
+      "chunk_id": "9d90aa",
+      "actualToolExit": 1,
+      "reason": "Initial new inventory reader used unsupported Windows C: ESM import; first script preserved unchanged"
+    },
+    {
+      "chunk_id": "3d77d1",
+      "actualToolExit": 0,
+      "wall_time_seconds": 4.0089195,
+      "reason": "New v2 reader uses file URL; read/hash inventory completes, original helper admission remains1 with2blockers"
+    }
+  ],
+  "independentRawStreamsClaimed": false,
+  "applicationOrCiTestsRun": false,
+  "productionRequests": 0
+}

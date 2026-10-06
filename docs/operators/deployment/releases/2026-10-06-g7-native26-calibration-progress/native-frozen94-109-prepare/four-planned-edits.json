@@ -1,0 +1,84 @@
+{
+  "at": "2026-10-06T04:37:24.084Z",
+  "actualExit": 0,
+  "baseCommit": "dc7be6f8597333151c450bae3ae15e6585e3b2eb",
+  "allowedPaths": [
+    "scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs",
+    "scripts/db/cutover/fixtures/historical-native/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs.txt",
+    "scripts/db/cutover/postgres-replay-reservations-backend-lifecycle-successor.native.test.mjs",
+    "scripts/db/cutover/fixtures/historical-native/postgres-replay-reservations.native.test.mjs.txt"
+  ],
+  "plans": [
+    {
+      "step": 94,
+      "wrapper": "scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs",
+      "legacy": "scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs",
+      "frozenPath": "scripts/db/cutover/fixtures/historical-native/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs.txt",
+      "originalCommit": "94c12c1e37e7346330486cf9a3a3246af00d95c5",
+      "pin": "603646803c82d3209987260ad682a34169b4e53ca7b03b672d818e3a28d7cc13",
+      "oldBytes": 50164,
+      "currentBytes": 50146,
+      "currentSha256": "dfe004034784018eb9c70502e19a2192c45e1e8982a96c98b03626f72f7cce1d",
+      "wrapperBefore": {
+        "bytes": 52435,
+        "sha256": "90115e4345b635f37378b0c3b5d26c15000275577e14c69f00e408845e0f9fe2"
+      },
+      "wrapperAfter": {
+        "bytes": 52497,
+        "sha256": "68206c5acf6b0bbfc93f27295615be13b26ef0beff7b73046202883c2b6ebe87"
+      },
+      "snapshot": {
+        "bytes": 50164,
+        "sha256": "603646803c82d3209987260ad682a34169b4e53ca7b03b672d818e3a28d7cc13"
+      },
+      "operations": [
+        {
+          "kind": "lineage-path",
+          "needle": "historicalFixture: 'scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs'",
+          "replacement": "historicalFixture: 'scripts/db/cutover/fixtures/historical-native/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs.txt'"
+        },
+        {
+          "kind": "historical-read-url",
+          "needle": "'./postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs', import.meta.url",
+          "replacement": "'./fixtures/historical-native/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs.txt', import.meta.url"
+        }
+      ]
+    },
+    {
+      "step": 109,
+      "wrapper": "scripts/db/cutover/postgres-replay-reservations-backend-lifecycle-successor.native.test.mjs",
+      "legacy": "scripts/db/cutover/postgres-replay-reservations.native.test.mjs",
+      "frozenPath": "scripts/db/cutover/fixtures/historical-native/postgres-replay-reservations.native.test.mjs.txt",
+      "originalCommit": "63e305a1bdf14c55fede74fb7ff9cbd9f732fc19",
+      "pin": "d95055419a04465c7c172ff0b8426bd0b928bd538e4dad80f9442229abd5e269",
+      "oldBytes": 37114,
+      "currentBytes": 37096,
+      "currentSha256": "9cb9a57a7a3edaff9f7a66a9c547a83d6f90ee8938d9a4ad8370194586b4ebe6",
+      "wrapperBefore": {
+        "bytes": 42663,
+        "sha256": "40fcf5af8960e32f3ad9f1343c046a48aed32f72fd6c19efe14b14ce4c1b48c4"
+      },
+      "wrapperAfter": {
+        "bytes": 42822,
+        "sha256": "a8e7ccd8c918c128515415d47c40c2f9ce4c6a9e44646895035d10612359d295"
+      },
+      "snapshot": {
+        "bytes": 37114,
+        "sha256": "d95055419a04465c7c172ff0b8426bd0b928bd538e4dad80f9442229abd5e269"
+      },
+      "operations": [
+        {
+          "kind": "historical-read-url",
+          "needle": "'./postgres-replay-reservations.native.test.mjs', import.meta.url",
+          "replacement": "'./fixtures/historical-native/postgres-replay-reservations.native.test.mjs.txt', import.meta.url"
+        },
+        {
+          "kind": "lineage-path-added",
+          "needle": "lineage: { historicalNativeTestSha256,",
+          "replacement": "lineage: { historicalNativeTest: 'scripts/db/cutover/fixtures/historical-native/postgres-replay-reservations.native.test.mjs.txt',\n        historicalNativeTestSha256,"
+        }
+      ]
+    }
+  ],
+  "allPreparedBeforeRepositoryWrites": true
+}
