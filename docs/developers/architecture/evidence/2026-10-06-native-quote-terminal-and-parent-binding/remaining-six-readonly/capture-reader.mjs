@@ -1,0 +1,17 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import {spawnSync} from 'node:child_process';
+const [out,name,exe,...args]=process.argv.slice(2);
+const begin=new Date().toISOString();
+const result=spawnSync(exe,args,{cwd:'C:/cinagroup/cinatoken',encoding:null,maxBuffer:256*1024*1024,timeout:90000,windowsHide:true});
+const end=new Date().toISOString();
+const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
+const stdout=result.stdout??Buffer.alloc(0),stderr=result.stderr??Buffer.alloc(0);
+const info=(ext,b)=>{const p=path.join(out,name+ext);fs.writeFileSync(p,b,{flag:'wx'});return {path:p,bytes:b.length,sha256:sha(b)};};
+const receipt={schema:'independent-native-quote-timecast-readonly-child-receipt-v1',name,executable:exe,argv:args,cwd:'C:/cinagroup/cinatoken',startedAt:begin,closedAt:end,actualExit:result.status,signal:result.signal,spawnError:result.error?{name:result.error.name,message:result.error.message,code:result.error.code}:null,closed:result.status!==null||result.signal!==null,stdout:info('.stdout.log',stdout),stderr:info('.stderr.log',stderr)};
+const file=path.join(out,name+'.closed.json');fs.writeFileSync(file,JSON.stringify(receipt,null,2)+'\n',{flag:'wx'});
+process.stdout.write(JSON.stringify({receiptPath:file,...receipt})+'\n');
+if(stdout.length<30000)process.stdout.write(stdout);
+if(stderr.length<30000)process.stderr.write(stderr);
+process.exitCode=result.status===null?1:result.status;

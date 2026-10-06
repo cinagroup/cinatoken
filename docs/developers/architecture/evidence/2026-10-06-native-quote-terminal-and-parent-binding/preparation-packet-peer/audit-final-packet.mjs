@@ -1,0 +1,46 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+const root='C:/Users/cina/AppData/Local/Temp/cinatoken-quote-packet-readonly-peer-XW05FR';
+const rootOwner='C:/Users/cina/AppData/Local/Temp/cinatoken-quote-precision-root-1fsOZX';
+const repo='C:/cinagroup/cinatoken';
+const packet=repo+'/docs/developers/architecture/evidence/2026-10-06-quote-version-text-parameters-preparation';
+const sha=b=>createHash('sha256').update(b).digest('hex');
+const pin=p=>{const s=fs.lstatSync(p);assert(s.isFile()&&!s.isSymbolicLink());const b=fs.readFileSync(p);return {bytes:b.length,sha256:sha(b)}};
+const read=p=>JSON.parse(fs.readFileSync(p,'utf8'));
+const patterns=[/^- \[[ x]\] (?:P[0-8]-|SRC-).*$/gm,/^\| (?:PUB|AUTH|ACC|ADM)-[0-9]{2} \|.*$/gm,/^验收门槛 G[0-8]：.*$/gm,/^\| P[0-8] .*$/gm,/^\| E0[0-8] \|.*$/gm,/^.*\[[ x]\].*$/gm];
+const scope=s=>patterns.map(re=>s.match(re)??[]);
+const tasks=s=>{let fenced=false;const out=[];for(const line of s.split('\n')){if(/^\s*```/u.test(line)){fenced=!fenced;continue;}if(!fenced&&/^\s*- \[[ x]\]/u.test(line))out.push(line);}return out};
+const beforePath=rootOwner+'/checklist-before.md',mdPath=repo+'/docs/developers/architecture/web-frontend-migration.md';
+const before=fs.readFileSync(beforePath,'utf8'),after=fs.readFileSync(mdPath,'utf8');
+assert.equal(sha(Buffer.from(before)),'68a9123e943507a4e7d136a9e744937e50dabebceaae822ff12bfdd9e7b7d4a4');
+assert.deepEqual(scope(after),scope(before));assert.deepEqual(scope(before).map(x=>x.length),[102,54,9,9,9,213]);
+assert.deepEqual(tasks(after),tasks(before));assert.equal(tasks(after).length,211);assert.equal((after.match(/\[[ x]\]/gu)??[]).length,214);
+assert.equal((after.match(/^### 5\.83 /gmu)??[]).length,1);
+const section=after.split('### 5.83 ')[1].split('## 6. 更新记录')[0];
+assert(section.includes('实际1'));assert(section.includes('续验'));assert(section.includes('新SHA Linux尚待'));
+assert(section.includes('不证明')&&section.includes('根因'));assert(section.includes('文件读取')&&section.includes('不是'));
+const indexPath=packet+'/collection.json',collection=read(indexPath);
+assert.equal(collection.collectionOnly,true);assert.equal(collection.gatePassDerived,false);assert.equal(collection.rootCauseConfirmed,false);assert.equal(collection.fullG7,false);assert.equal(collection.fullG8,false);
+assert.deepEqual(collection.scopeCounts,[102,54,9,9,9,213]);assert.equal(collection.literalCheckboxCount,214);assert.equal(collection.originalScopeExact,true);
+assert.deepEqual(collection.checklist.before,pin(beforePath));assert.deepEqual(collection.checklist.after,pin(mdPath));
+const targetPath=repo+'/scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs';
+assert.deepEqual(pin(targetPath),{bytes:34873,sha256:'c72cc41a679c64a1fb7edd733fe450e3cea8a9bdc9408b8cb152fb0a9135187f'});
+assert.deepEqual(collection.target,{path:'scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs',...pin(targetPath)});
+const walk=d=>fs.readdirSync(d,{withFileTypes:true}).flatMap(e=>{assert(!e.isSymbolicLink());const p=path.join(d,e.name);return e.isDirectory()?walk(p):e.isFile()?[p]:(assert.fail('Nonregular '+p),[])}).sort();
+const actualStored=walk(packet).map(p=>path.relative(packet,p).replaceAll('\\','/')).sort();
+const expectedStored=[...collection.entries.map(x=>x.storedRelative),'collection.json','README.md'].sort();
+assert.equal(new Set(expectedStored).size,expectedStored.length);assert.deepEqual(actualStored,expectedStored);
+const checked=[];
+for(const e of collection.entries){assert(['owner','diagnosis','peer','root'].includes(e.label));assert(!e.storedRelative.includes('..'));assert(e.storedRelative.startsWith(e.label+'/'));const source=pin(e.source),stored=pin(path.join(packet,e.storedRelative));assert.deepEqual(source,{bytes:e.bytes,sha256:e.sha256});assert.deepEqual(stored,source);checked.push({...e,sourceStoredExact:true});}
+for(const label of ['owner','diagnosis','peer']){const selected=collection.entries.filter(e=>e.label===label);assert(selected.length>0);const dirs=new Set(selected.map(e=>e.source.slice(0,-(e.storedRelative.slice(label.length+1).length+1))));assert.equal(dirs.size,1);const dir=[...dirs][0];assert.deepEqual(selected.map(e=>path.resolve(e.source)).sort(),walk(dir).map(p=>path.resolve(p)).sort());}
+const rootEntries=collection.entries.filter(e=>e.label==='root');
+const rootNames=['run-closed.mjs','guard-live-cutover.mjs','prepare-iteration.mjs','initial-head.result.json','initial-head.stdout.log','initial-head.stderr.log','initial-remote.result.json','initial-remote.stdout.log','initial-remote.stderr.log','initial-ci-list.result.json','initial-ci-list.stdout.log','initial-ci-list.stderr.log','production-web-readonly.result.json','production-web-readonly.stdout.log','production-web-readonly.stderr.log','production-web-readonly.deployment-guard.json'];
+assert.deepEqual(rootEntries.map(e=>path.resolve(e.source)).sort(),rootNames.map(n=>path.resolve(rootOwner+'/'+n)).sort());
+const peerFailures=[];
+for(const e of collection.entries.filter(e=>e.label==='peer'&&/(?:\.closed|\.result)\.json$/u.test(e.source))){const j=read(e.source);const code=j.actualExit??j.status??j.actualProcessExit;if(code===1)peerFailures.push({file:e.storedRelative,...pin(e.source),actualExit:1,classification:'Original producer authority; never inferred from aggregate FINAL'});}
+assert(peerFailures.length>0,'Original independent reader failure must be present');
+const report={schema:'quote-packet-readonly-independent-peer-v1',checkedAt:new Date().toISOString(),scope:'Bounded actual MD and compact evidence packet byte/hash/set audit only; no helper execution, no old3357 root walk, native/application/PG/CI/production tests or mutation.',issues:[],originalScopeExact:true,scopeCounts:scope(after).map(x=>x.length),literalCheckboxTokens:214,checkboxContainingLines:213,actualTaskCheckboxLines:211,taskLinesExact:true,before:pin(beforePath),after:pin(mdPath),target:pin(targetPath),collectionIndex:pin(indexPath),packetFileCount:actualStored.length,copiedEntries:checked.length,copiedBytes:checked.reduce((n,e)=>n+e.bytes,0),allSourceStoredBytesAndSha256Exact:true,allOwnerDiagnosisPeerRegularFilesPreserved:true,rootSubsetExplicit:true,sourcePeerOriginalFailedReceipts:peerFailures,helperInitiallyObserved:read(root+'/read-scope.json'),helperActuallyCollected:pin(rootOwner+'/prepare-iteration.mjs'),copiedInputs:checked,collectionOnly:true,gatePassDerived:false,rootCauseConfirmed:false,fullG7:false,fullG8:false,oldHistoricalInputsNotChangedOrExecuted:true,nativeExecutedHere:false,productionReadPerformedHere:false,limitations:['Filesystem byte reads are evidence data operations, not separate child processes.','This peer checks document scope and collection preservation; source AST/assert semantics are reviewed independently by native_four_peer.','No static check or collection success establishes native runtime passing or a confirmed root cause.']};
+const final=root+'/FINAL-quote-packet-readonly-independent-peer.json';fs.writeFileSync(final,JSON.stringify(report,null,2)+'\n',{flag:'wx'});
+console.log(JSON.stringify({file:final,...pin(final),packetFiles:actualStored.length,copiedEntries:checked.length,scopeCounts:report.scopeCounts,taskLines:211,originalFailedPeerReceipts:peerFailures.length,gatePassDerived:false,rootCauseConfirmed:false,nativeExecutedHere:false}));

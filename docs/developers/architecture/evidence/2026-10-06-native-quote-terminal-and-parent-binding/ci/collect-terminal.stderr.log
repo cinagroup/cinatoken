@@ -1,0 +1,11 @@
+file:///C:/Users/cina/AppData/Local/Temp/cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8/capture.mjs:29
+export function success(result){if(result.receipt.actualExit!==0||result.receipt.signal||result.receipt.spawnError)throw Error('Read command failed: '+JSON.stringify(result.receipt));return result.stdout;}
+                                                                                                                         ^
+
+Error: Read command failed: {"at":"2026-10-06T06:19:00.874Z","finishedAt":"2026-10-06T06:19:08.910Z","executable":"C:/Program Files/GitHub CLI/gh.exe","args":["run","view","37421461373","--repo","cinagroup/cinatoken","--job","112131520499","--log"],"cwd":"C:/cinagroup/cinatoken","actualExit":1,"signal":null,"spawnError":null,"stdout":{"path":"C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\dispatch-terminal.stdout.log","bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},"stderr":{"path":"C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\dispatch-terminal.stderr.log","bytes":70,"sha256":"976759653facdb9c9b607a797f11cb6283ee60203abaae2a40247248cf301d4c"}}
+    at success (file:///C:/Users/cina/AppData/Local/Temp/cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8/capture.mjs:29:122)
+    at file:///C:/Users/cina/AppData/Local/Temp/cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8/collect-terminal.mjs:21:39
+    at async Promise.allSettled (index 3)
+    at async file:///C:/Users/cina/AppData/Local/Temp/cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8/collect-terminal.mjs:20:15
+
+Node.js v24.14.1

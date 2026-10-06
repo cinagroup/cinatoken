@@ -1,0 +1,26 @@
+{
+  "schema": "independent-native-quote-timecast-readonly-child-receipt-v1",
+  "name": "bind-original-gh-six-metadata",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "argv": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-remaining-six-native-minimal-inventory-354b4a0c896f91a10fd126f8/bind-original-gh-six-metadata.mjs",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-remaining-six-native-minimal-inventory-354b4a0c896f91a10fd126f8"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "startedAt": "2026-10-06T06:09:32.720Z",
+  "closedAt": "2026-10-06T06:09:32.805Z",
+  "actualExit": 1,
+  "signal": null,
+  "spawnError": null,
+  "closed": true,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-remaining-six-native-minimal-inventory-354b4a0c896f91a10fd126f8\\bind-original-gh-six-metadata.stdout.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-remaining-six-native-minimal-inventory-354b4a0c896f91a10fd126f8\\bind-original-gh-six-metadata.stderr.log",
+    "bytes": 1138,
+    "sha256": "602271c70ef446c387b43296cce6f3793ea10fc605cc0c13bd536313c27d7a4e"
+  }
+}

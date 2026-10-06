@@ -1,0 +1,31 @@
+{
+  "at": "2026-10-06T06:32:28.027Z",
+  "originalScopeExact": true,
+  "scopeCounts": [
+    102,
+    54,
+    9,
+    9,
+    9,
+    213
+  ],
+  "literalCheckboxCount": 214,
+  "collection": {
+    "bytes": 172700,
+    "sha256": "6b5f0021925eef6a76de2f3963d4ea3b2b26fb064ac2c2d3cbd6347d9fbb4618"
+  },
+  "checklist": {
+    "bytes": 821293,
+    "sha256": "cddfaa752a4386863b87d4868e29dbec220571f03ba1d1528eec0caefea326b8"
+  },
+  "parent": {
+    "bytes": 30210,
+    "sha256": "7acb429e3c22ce959daa9e925f7d460ea30902eb077f09f39caa949cc8220f7a"
+  },
+  "ciSource": "d537f83b6389a4e5bbd7f92325f74d77e6bdfc9a",
+  "nextNativePending": true,
+  "quoteTimingRootCauseConfirmed": false,
+  "httpCancelRootCauseConfirmed": false,
+  "fullG7": false,
+  "fullG8": false
+}

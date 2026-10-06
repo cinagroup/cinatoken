@@ -1,0 +1,18 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+58 !== 59
+
+    at file:///C:/Users/cina/AppData/Local/Temp/cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8/prepare-workflow-map.mjs:13:64 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 58,
+  expected: 59,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.14.1

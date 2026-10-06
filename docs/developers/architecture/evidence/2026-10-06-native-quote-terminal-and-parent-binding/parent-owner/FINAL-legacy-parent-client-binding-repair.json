@@ -1,0 +1,157 @@
+{
+  "schema": "cinatoken-legacy-parent-three-client-bindings-minimal-repair-final-v1",
+  "at": "2026-10-06T06:25:31.452Z",
+  "actualLocalSealVerification": 0,
+  "result": "SOURCE_REPAIR_PREPARED_REAL_POSTGRES_CI_PENDING",
+  "originalFailure": {
+    "suppliedByRoot": true,
+    "sourceContext": "d537 original native step110",
+    "actualExit": 1,
+    "kind": "ReferenceError: migrator is not defined",
+    "assertionFailure": false,
+    "originalEvidenceChanged": false,
+    "oldStrictV364Still8Tests7Pass1Fail": true
+  },
+  "scope": {
+    "ownedRepoFiles": [
+      "C:/cinagroup/cinatoken/scripts/db/cutover/postgres-legacy-parent-activation.native.test.mjs"
+    ],
+    "changedProperties": 3,
+    "changedLines": [
+      100,
+      149,
+      391
+    ],
+    "priorValue": "free migrator shorthand",
+    "currentValue": "migrator: sql",
+    "existingClientDeclarationLine": 79,
+    "existingRole": "cinatoken_gateway_migrator",
+    "existingClientsAndCleanupRemainExact": true
+  },
+  "sources": {
+    "before": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/source-before-v2.mjs",
+      "bytes": 30195,
+      "sha256": "8b6aae0e4250604a60446f3d02ae0c3683416c26a7d01de58cc26cd66bba7f18"
+    },
+    "after": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/source-after.mjs",
+      "bytes": 30210,
+      "sha256": "7acb429e3c22ce959daa9e925f7d460ea30902eb077f09f39caa949cc8220f7a"
+    },
+    "currentTarget": {
+      "path": "C:/cinagroup/cinatoken/scripts/db/cutover/postgres-legacy-parent-activation.native.test.mjs",
+      "bytes": 30210,
+      "sha256": "7acb429e3c22ce959daa9e925f7d460ea30902eb077f09f39caa949cc8220f7a"
+    },
+    "unchangedHelper": {
+      "path": "C:/cinagroup/cinatoken/scripts/db/cutover/pg73-native-fixture.mjs",
+      "bytes": 6849,
+      "sha256": "124ddd43c2594d0daaac66a4e7158e5df90b00a6d73f03cbcac9e8f853a7346f"
+    },
+    "helperCopy": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/pg73-native-fixture-source-v2.mjs",
+      "bytes": 6849,
+      "sha256": "124ddd43c2594d0daaac66a4e7158e5df90b00a6d73f03cbcac9e8f853a7346f"
+    },
+    "proof": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/source-repair-proof.json",
+      "bytes": 4702,
+      "sha256": "c70efa195d240c4076c32a8fc8870f6ee4a003c6f2c2821d2467e5136a70e30f"
+    }
+  },
+  "verification": {
+    "entireSourceReverseByteExact": true,
+    "entireASTExceptThreeBindingsExact": true,
+    "allOriginalAssertionsASTExact": true,
+    "originalAssertionsCount": 60,
+    "existingClientVisibleAtEachCallASTVerified": true,
+    "exactDiff": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/exact-minimal-diff.json",
+      "bytes": 898,
+      "sha256": "d8445656738050444ad97b294579bec0aac924d80636d40ef706fa0ecba11029"
+    },
+    "changedLineWhitespaceCheckActualExit": 0,
+    "whitespaceCheckRanInsideOwnedClosedSourceCommand": "repair-source-v2.result.json",
+    "gitDiffCheckNotInvoked": true,
+    "nodeSyntaxCheckActualExit": 0,
+    "nodeSyntaxDoesNotEvaluateModule": true,
+    "receipts": [
+      {
+        "file": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/repair-source.result.json",
+          "bytes": 1113,
+          "sha256": "0e0b22e2a6d846231ce3fad8f64d87b5e7a48a7aa967656864ea61bb7e320212"
+        },
+        "actualExit": 1,
+        "stdout": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/repair-source.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/repair-source.stderr.log",
+          "bytes": 1779,
+          "sha256": "c40cddbf64d0caafa5dca7295e3ff6f2e26b0135795d1e6cbefde6dd931644b7"
+        }
+      },
+      {
+        "file": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/repair-source-v2.result.json",
+          "bytes": 1121,
+          "sha256": "4066370bfa4d1619251bf5d791abafb6844efc53c879af640f7d1f9215fd9b85"
+        },
+        "actualExit": 0,
+        "stdout": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/repair-source-v2.stdout.log",
+          "bytes": 643,
+          "sha256": "177f229d6bc7624f1c2fed1fb245f22296768265e208b13e4b7bcd1d2c3ac101"
+        },
+        "stderr": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/repair-source-v2.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "file": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/node-check.result.json",
+          "bytes": 1034,
+          "sha256": "283ed9568df14360c4433714a8fc7aa08c1e74fae4d4a6287e1c16dfb8592977"
+        },
+        "actualExit": 0,
+        "stdout": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/node-check.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/node-check.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    ]
+  },
+  "retainedLocalFailure": {
+    "file": "repair-source.result.json",
+    "actualExit": 1,
+    "reason": "Local checker used a removed loc field on canonical AST; failure occurred before target write. Original checker/source snapshots/raw remain exact, corrected checker is a separate file."
+  },
+  "limits": {
+    "newPostgresExecution": false,
+    "appExecution": false,
+    "nativeExecution": false,
+    "ciExecution": false,
+    "gitExecution": false,
+    "productionRequest": false,
+    "mdChanged": false,
+    "helperChanged": false,
+    "sqlOrRoleOrClientOrGrantContractChanged": false,
+    "originalAssertionsWaitsLocksAndCleanupChanged": false,
+    "originalSealedRootsChanged": false,
+    "realPostgresRepairValidated": false,
+    "gatePassDerived": false,
+    "fullGoalComplete": false
+  }
+}

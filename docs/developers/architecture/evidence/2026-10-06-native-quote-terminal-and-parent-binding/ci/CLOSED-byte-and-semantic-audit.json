@@ -1,0 +1,131 @@
+{
+  "at": "2026-10-06T06:21:44.225Z",
+  "collectionOnly": true,
+  "rootCauseConfirmed": false,
+  "receiptBytesAllExact": true,
+  "closes": 24,
+  "zero": 19,
+  "nonzero": [
+    {
+      "file": "collect-terminal.closed.json",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null,
+      "error": null
+    },
+    {
+      "file": "commit-runs.closed.json",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null,
+      "error": null
+    },
+    {
+      "file": "dispatch-terminal.closed.json",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null,
+      "error": null
+    },
+    {
+      "file": "prepare-workflow-map.closed.json",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null,
+      "error": null
+    },
+    {
+      "file": "proxy-watch-1.closed.json",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null,
+      "error": null
+    }
+  ],
+  "null": [],
+  "failureObservations": [
+    {
+      "kind": "native",
+      "actualStep": 110,
+      "range": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 659416,
+        "endByte": 667343,
+        "bytes": 7927
+      },
+      "fields": {
+        "failureType": {
+          "value": "'testCodeFailure'",
+          "byteOffset": 661974
+        },
+        "error": {
+          "value": "'migrator is not defined'",
+          "byteOffset": 662160
+        },
+        "code": {
+          "value": "'ERR_TEST_FAILURE'",
+          "byteOffset": 662348
+        },
+        "name": {
+          "value": "'ReferenceError'",
+          "byteOffset": 662528
+        },
+        "expected": null,
+        "actual": null
+      },
+      "assertionExpectedActualAbsent": true,
+      "rawSHA": {
+        "bytes": 667343,
+        "sha256": "29f68229763fc5c214ff07c380e91905ad1c70cfe4c00e674e3621fed338ba49"
+      }
+    },
+    {
+      "kind": "dispatch",
+      "actualStep": 27,
+      "range": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\dispatch-terminal-retry.stdout.log",
+        "startByte": 5137637,
+        "endByte": 5159606,
+        "bytes": 21969
+      },
+      "fields": {
+        "failureType": {
+          "value": "'testCodeFailure'",
+          "byteOffset": 5146395
+        },
+        "error": {
+          "value": "|-",
+          "byteOffset": 5146629
+        },
+        "code": {
+          "value": "'ERR_ASSERTION'",
+          "byteOffset": 5147722
+        },
+        "name": {
+          "value": "'AssertionError'",
+          "byteOffset": 5147947
+        },
+        "expected": {
+          "value": "'observed'",
+          "byteOffset": 5148173
+        },
+        "actual": {
+          "value": "~",
+          "byteOffset": 5148397
+        }
+      },
+      "assertionExpectedActualAbsent": false,
+      "rawSHA": {
+        "bytes": 5159606,
+        "sha256": "d1a431e6f7bafbddce2045e949a771cc5d4783f4cccad8dac690c95e0ef627f7"
+      }
+    }
+  ],
+  "final": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\FINAL-ci-terminal-observer.json",
+    "bytes": 288169,
+    "sha256": "9d273f6d48c0d45bd4bca062896c7310fdc94f363e6d8dafdec85bd1e626ed53"
+  },
+  "noDerivedCiLogFiles": true,
+  "originalFailureAndTransportRecordsRetained": true
+}

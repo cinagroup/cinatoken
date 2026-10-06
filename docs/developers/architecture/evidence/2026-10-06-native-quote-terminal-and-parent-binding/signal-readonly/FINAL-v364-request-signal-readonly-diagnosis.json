@@ -1,0 +1,622 @@
+{
+  "schema": "cinatoken-v364-request-signal-next-readonly-diagnosis-v1",
+  "beganAt": "2026-10-06T06:00:16.040Z",
+  "endedAt": "2026-10-06T06:00:16.080Z",
+  "actualReadAndSealExit": 0,
+  "preparedAtObservedHEAD": "4a9b4fb984035bb62ec5930cce01f8da605f476f",
+  "actualRuntimeSHA": "dc7be6f8597333151c450bae3ae15e6585e3b2eb",
+  "actualRuntimeRun": "37414167261",
+  "result": "STATIC_DIAGNOSIS_ONLY_STRICT_V364_STILL_FAILED",
+  "summary": "enable_request_signal is supported, opt-in and already configured on every original direct worker. Two real holder RST requests aborted their incoming signal during the original poll while all four transport source-cancel assertions remained NULL/1. Missing flag is therefore contradicted for those two RST requests; suspended response-pump cancellation remains a source-supported but unproven candidate.",
+  "executionBoundary": {
+    "repoWrite": false,
+    "gitWrite": false,
+    "sourceChange": false,
+    "productionRequests": 0,
+    "appExecution": 0,
+    "nativeExecution": 0,
+    "ciInvocation": 0,
+    "oldArchiveGateRerun": 0,
+    "publicPrimarySourceReads": 4,
+    "localReadAndCollectionOnly": true,
+    "gatePassDerived": false,
+    "originalFullScopeUnchanged": true,
+    "newComparisonArmImplemented": false,
+    "newComparisonArmExecuted": false
+  },
+  "exactEvidence": {
+    "audit": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/static-source-event-audit-v2.json",
+      "bytes": 67505,
+      "sha256": "973c3f59b0ea048caddd79f9e57df51a4c77630df479a12873c4cd826b931889"
+    },
+    "archivedArtifactRoot": "C:/cinagroup/cinatoken/docs/operators/deployment/releases/2026-10-06-g7-native26-calibration-progress/current-terminal-evidence/canonical-calibration-artifact",
+    "eventDecodedDescriptors": [
+      {
+        "originalName": "events.json",
+        "stored": {
+          "path": "C:/cinagroup/cinatoken/docs/operators/deployment/releases/2026-10-06-g7-native26-calibration-progress/current-terminal-evidence/canonical-calibration-artifact/_temp/v364-direct-socket-once-37414167261-1/events.json.gz",
+          "bytes": 29396,
+          "sha256": "4bfc28aaee8effae6e9acad98c14c012b1c704d2c7753428a0fcb7f9e9b2ab8b"
+        },
+        "decoded": {
+          "bytes": 401897,
+          "sha256": "c53efde211994087440cf32e16cff132ce831b0b2f1e7c7c75af24c4d41fb7f9"
+        },
+        "gzip": true
+      },
+      {
+        "originalName": "events.ndjson",
+        "stored": {
+          "path": "C:/cinagroup/cinatoken/docs/operators/deployment/releases/2026-10-06-g7-native26-calibration-progress/current-terminal-evidence/canonical-calibration-artifact/_temp/v364-direct-socket-once-37414167261-1/events.ndjson.gz",
+          "bytes": 28654,
+          "sha256": "8bb018d64e56e0106fcce6622555ce1596af29771215f9e713983525ce34d2da"
+        },
+        "decoded": {
+          "bytes": 309188,
+          "sha256": "f88aafc158b7d9351ba02ee371d534e1bb2873e9d1b3c6cb22ac1fc0dac4ba62"
+        },
+        "gzip": true
+      }
+    ],
+    "eventSequenceCount": 1643,
+    "jsonNDJSONSequenceExact": true,
+    "holderRSTSignalAborts": [
+      {
+        "zeroBasedIndex": 460,
+        "ndjsonOneBasedLine": 461,
+        "ndjsonLine": "{\"caseId\":\"direct-socket-bare-rst\",\"kind\":\"workerd-log\",\"hostMs\":9560.637786,\"wallMs\":1791261211538,\"phase\":\"original-poll\",\"timestamp\":1791261211537,\"level\":\"log\",\"message\":\"V364_DIAG {\\\"boundary\\\":\\\"holder\\\",\\\"event\\\":\\\"signal-abort\\\",\\\"wallMs\\\":1791261211537,\\\"aborted\\\":true}\"}",
+        "ndjsonLineUtf8Bytes": 281,
+        "ndjsonLineSha256": "51a73e19a56adcd28d43e4f0c744d0cf76b9fd1ca9dd4bec2235e8d1cc45e3b4",
+        "event": {
+          "caseId": "direct-socket-bare-rst",
+          "kind": "workerd-log",
+          "hostMs": 9560.637786,
+          "wallMs": 1791261211538,
+          "phase": "original-poll",
+          "timestamp": 1791261211537,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"signal-abort\",\"wallMs\":1791261211537,\"aborted\":true}"
+        },
+        "parsedMessage": {
+          "boundary": "holder",
+          "event": "signal-abort",
+          "wallMs": 1791261211537,
+          "aborted": true
+        }
+      },
+      {
+        "zeroBasedIndex": 1269,
+        "ndjsonOneBasedLine": 1270,
+        "ndjsonLine": "{\"caseId\":\"direct-socket-binding-rst\",\"kind\":\"workerd-log\",\"hostMs\":20691.554087,\"wallMs\":1791261222669,\"phase\":\"original-poll\",\"timestamp\":1791261222669,\"level\":\"log\",\"message\":\"V364_DIAG {\\\"boundary\\\":\\\"holder\\\",\\\"event\\\":\\\"signal-abort\\\",\\\"wallMs\\\":1791261222669,\\\"aborted\\\":true}\"}",
+        "ndjsonLineUtf8Bytes": 285,
+        "ndjsonLineSha256": "302a6ebe9d6dddf3dbc377cf027983de51bc545cb4b3bf9795818255c5bbf72c",
+        "event": {
+          "caseId": "direct-socket-binding-rst",
+          "kind": "workerd-log",
+          "hostMs": 20691.554087,
+          "wallMs": 1791261222669,
+          "phase": "original-poll",
+          "timestamp": 1791261222669,
+          "level": "log",
+          "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"signal-abort\",\"wallMs\":1791261222669,\"aborted\":true}"
+        },
+        "parsedMessage": {
+          "boundary": "holder",
+          "event": "signal-abort",
+          "wallMs": 1791261222669,
+          "aborted": true
+        }
+      }
+    ],
+    "selectedRelevantFrozenInputs": 10,
+    "exactSourceSnapshots": 18,
+    "installedSourceMatchesActualRecordedLinuxSHA": [
+      {
+        "path": "C:/cinagroup/cinatoken/node_modules/miniflare/dist/src/index.js",
+        "bytes": 4843426,
+        "sha256": "58ca83056cf67838add064edcbfd1d654ed204527b8eb01307ba208d7e59fa20"
+      },
+      {
+        "path": "C:/cinagroup/cinatoken/node_modules/miniflare/dist/src/index.d.ts",
+        "bytes": 485080,
+        "sha256": "7e0c4b6c1cdf6b4207e4c8651e04a453b759a1cdc4a3cd5691da016050e9193a"
+      },
+      {
+        "path": "C:/cinagroup/cinatoken/node_modules/miniflare/dist/src/workers/core/entry.worker.js",
+        "bytes": 184933,
+        "sha256": "e2434da3c39be4758dd323045dbc0b79bb2c0b2a5ba2ed02c6b271b1b676410d"
+      }
+    ],
+    "primaryTagRawFetch": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/official-locked-source-public-read.json",
+      "bytes": 3930,
+      "sha256": "680cf38537d55909838acda41971b195e017087a6ff7286e8fb0d4de100aa142"
+    },
+    "primaryTagFiles": [
+      {
+        "url": "https://raw.githubusercontent.com/cloudflare/workerd/v1.20260828.1/src/workerd/io/compatibility-date.capnp",
+        "httpStatus": 200,
+        "file": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/official-locked-source-public/compatibility-date.capnp",
+          "bytes": 88675,
+          "sha256": "dde45e2337fe1c8991f165b452968c86008852e086ccdc5e0470a25bd6dafb95"
+        }
+      },
+      {
+        "url": "https://raw.githubusercontent.com/cloudflare/workerd/v1.20260828.1/src/workerd/io/worker-entrypoint.c++",
+        "httpStatus": 200,
+        "file": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/official-locked-source-public/worker-entrypoint.c++",
+          "bytes": 50916,
+          "sha256": "5a26985f9d80021e9af91b0569c54b7d9c987bf5b6ca6d63d37da5c1fab28bf9"
+        }
+      },
+      {
+        "url": "https://raw.githubusercontent.com/cloudflare/workerd/v1.20260828.1/src/workerd/api/streams/standard.c++",
+        "httpStatus": 200,
+        "file": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/official-locked-source-public/standard.c++",
+          "bytes": 193298,
+          "sha256": "f64a9fe8ab0c2f3bc397ac18d35d59e5c1be8ead1182c7ccd668bfbd993bc698"
+        }
+      },
+      {
+        "url": "https://raw.githubusercontent.com/cloudflare/workerd/v1.20260828.1/src/workerd/api/streams/readable.c++",
+        "httpStatus": 200,
+        "file": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/official-locked-source-public/readable.c++",
+          "bytes": 31774,
+          "sha256": "ca762b8e7ea908b29eb2c99db4bcad7e50b5f206cd1a75312f4b2b658bfe7f08"
+        }
+      }
+    ],
+    "childReceipts": [
+      {
+        "label": "official-source-read",
+        "receipt": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/official-source-read.result.json",
+          "bytes": 1119,
+          "sha256": "ec43f61edc1f5a78afe024aa51c4528c08624a0c84a25fbb01288ad437f760e3"
+        },
+        "actualExit": 1,
+        "closed": true,
+        "stdout": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/official-source-read.stdout.log",
+          "bytes": 642,
+          "sha256": "1fd618cf11087b8c93398655cd483022d29a4fbe2ff81655a7f5d05d34078b88"
+        },
+        "stderr": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/official-source-read.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "label": "official-source-public-read",
+        "receipt": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/official-source-public-read.result.json",
+          "bytes": 1140,
+          "sha256": "af4142fcea861cea47b86050b0cd9874cc18b0c3c7529b833fa428ba9fb23f82"
+        },
+        "actualExit": 1,
+        "closed": true,
+        "stdout": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/official-source-public-read.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/official-source-public-read.stderr.log",
+          "bytes": 767,
+          "sha256": "cbeeacee3de2867ce735afbcf31e995610c2cb1d12a83f5d071c55e9f476a933"
+        }
+      },
+      {
+        "label": "official-source-authorized-read",
+        "receipt": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/official-source-authorized-read.result.json",
+          "bytes": 1149,
+          "sha256": "424b33e3f82e5c9e5c62105527a0220197208546438c14eb486b9b5a25bbfa94"
+        },
+        "actualExit": 0,
+        "closed": true,
+        "stdout": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/official-source-authorized-read.stdout.log",
+          "bytes": 1404,
+          "sha256": "8294ce9478366c11e89947ee2a862aaefb0006134edb0d38cd696d047f69c688"
+        },
+        "stderr": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/official-source-authorized-read.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "label": "static-source-event-read",
+        "receipt": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/static-source-event-read.result.json",
+          "bytes": 1122,
+          "sha256": "e06a096d6687e0288d529f8e5efc40e78f9b4253c461ab219e01bc0ccfe0ebfd"
+        },
+        "actualExit": 1,
+        "closed": true,
+        "stdout": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/static-source-event-read.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/static-source-event-read.stderr.log",
+          "bytes": 1003,
+          "sha256": "10c00ab0f1723bdbfe1dcc233d5b83dc357abade04cb88a74f7d94a9f9ee7810"
+        }
+      },
+      {
+        "label": "static-source-event-read-v2",
+        "receipt": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/static-source-event-read-v2.result.json",
+          "bytes": 1130,
+          "sha256": "10209ac664b9a706c92c0e0d0e9bb8615c9da112d1ef795a46f6eded6d28b564"
+        },
+        "actualExit": 0,
+        "closed": true,
+        "stdout": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/static-source-event-read-v2.stdout.log",
+          "bytes": 228,
+          "sha256": "1053de7867b72618296c4ac442c8612bc5c35ae538c56ac33389f42921bede48"
+        },
+        "stderr": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/static-source-event-read-v2.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "label": "seal-request-signal",
+        "receipt": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/seal-request-signal.result.json",
+          "bytes": 1116,
+          "sha256": "dbb95518575f501ccc952a28e1d0ed19d032df2d94c652700c86e97fba425e7b"
+        },
+        "actualExit": 1,
+        "closed": true,
+        "stdout": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/seal-request-signal.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/seal-request-signal.stderr.log",
+          "bytes": 702,
+          "sha256": "b7785264bf14be44eaf900c56321cce617f5f142921f08698cb5b94b84cb80b5"
+        }
+      }
+    ]
+  },
+  "knownFacts": [
+    {
+      "fact": "Locked compatibility schema has explicit enable_request_signal and disable_request_signal and no default enable date. Compatibility date alone is insufficient to enable this locked feature.",
+      "evidence": [
+        "https://github.com/cloudflare/workerd/blob/v1.20260828.1/src/workerd/io/compatibility-date.capnp#L794-L798"
+      ],
+      "physicalLines": [
+        794,
+        798
+      ],
+      "classification": "LOCKED_SOURCE_FACT"
+    },
+    {
+      "fact": "Official docs describe the flag as exposing incoming cancellation through Request.signal. This is an incoming request signal contract, separate from invocation of a JavaScript response-source cancel algorithm.",
+      "evidence": [
+        "https://developers.cloudflare.com/workers/configuration/compatibility-flags/#enable-requestsignal-for-incoming-requests",
+        "https://developers.cloudflare.com/changelog/post/2025-05-22-handle-request-cancellation/"
+      ],
+      "classification": "PRIMARY_DOCUMENTATION_FACT"
+    },
+    {
+      "fact": "Actual diagnostic uses Workerd1.20260828.1, Miniflare5.20260828.0-alpha, Wrangler4.127.1. Both frozen JSONCs contain nodejs_compat and enable_request_signal. Runtime creates bare, gateway and holder at 2026-09-04 with those same flags; frozen JSONC date is separately2026-09-25.",
+      "evidence": [
+        "C:/cinagroup/cinatoken/scripts/diagnostics/v364-direct-socket/run-direct-socket.mjs:173",
+        "C:/cinagroup/cinatoken/scripts/diagnostics/v364-direct-socket/run-direct-socket.mjs:435"
+      ],
+      "classification": "SOURCE_AND_ACTUAL_METADATA_FACT"
+    },
+    {
+      "fact": "unsafeDirectSockets maps the actual entry user worker listener; unsafeGetDirectURL selects that listener. The four direct arms bypass the Miniflare Core ENTRY worker. The binding variant still retains the user gateway → service binding → holder hop.",
+      "evidence": [
+        "C:/cinagroup/cinatoken/node_modules/miniflare/dist/src/index.js:113163",
+        "C:/cinagroup/cinatoken/node_modules/miniflare/dist/src/index.js:113668"
+      ],
+      "classification": "LOCKED_INSTALLED_SOURCE_AND_ACTUAL_METADATA_FACT"
+    },
+    {
+      "fact": "Core ENTRY delegates service.fetch and applies response transforms; bypassing it does not remove Workerd own HTTP response pump or the gateway service-binding leg.",
+      "evidence": [
+        "C:/cinagroup/cinatoken/node_modules/miniflare/dist/src/workers/core/entry.worker.js:5186"
+      ],
+      "classification": "LOCKED_INSTALLED_SOURCE_FACT"
+    },
+    {
+      "fact": "BareRST and bindingRST each emitted one holder signal-abort with abortedtrue during original-poll. Exact event indices460/1269 and NDJSON lines461/1270 are preserved with line hashes. This proves incoming signal delivery for these two concrete requests, not for destroy or gateway, and not source cancellation.",
+      "evidence": [
+        "exactEvidence.holderRSTSignalAborts"
+      ],
+      "classification": "ACTUAL_EVENT_FACT"
+    },
+    {
+      "fact": "All original four transport arms retain100polls×10ms, NULL/1. Their4s tails retain NULL and usedForPassfalse. Baseline actual1 remains8tests/7pass/1fail. Workerd explicit reader.cancel calibration is0 and has no added lifetime task; it proves local source cancel is reachable, not that disconnect automatically invokes it.",
+      "evidence": [
+        "C:/cinagroup/cinatoken/docs/operators/deployment/releases/2026-10-06-g7-native26-calibration-progress/current-terminal-evidence/canonical-calibration-artifact/_temp/v364-direct-socket-once-37414167261-1/closed-result.json"
+      ],
+      "classification": "ACTUAL_RUNTIME_FACT"
+    },
+    {
+      "fact": "Original holder async pull waits for KV release with original timer; original source cancel writes cancel observation and retains the same promise in original ctx.waitUntil. It does not install request.signal → reader.cancel glue. Gateway constructs holder Request with request.signal and returns upstream response.body.",
+      "evidence": [
+        "C:/cinagroup/cinatoken/packages/proxy/scripts/staging/chat-holder-private-v364.ts:65",
+        "C:/cinagroup/cinatoken/packages/proxy/scripts/staging/chat-holder-gateway-v364.ts:9"
+      ],
+      "classification": "PROTECTED_SOURCE_FACT"
+    },
+    {
+      "fact": "Executor actualProcessExit/runnerOutcome/actualExit all1, no timeout or interruption; owned group absent and direct child reaped, no signal attempts or leftover kill. Four adopted esbuild zombies were individually reaped. Outer unforced close is not graceful Workerd exit proof; Miniflare disposal may kill Workerd.",
+      "evidence": [
+        "C:/cinagroup/cinatoken/docs/operators/deployment/releases/2026-10-06-g7-native26-calibration-progress/current-terminal-evidence/canonical-calibration-artifact/_temp/v364-direct-socket-once-37414167261-1/executor.closed.json"
+      ],
+      "classification": "ACTUAL_EXECUTOR_FACT"
+    }
+  ],
+  "causalAssessment": {
+    "contradictedForRealRST": "The two RST failures cannot be explained by enable_request_signal being absent or wholly nonfunctional: the exact holder listeners fired before disposal in the original-poll phase.",
+    "stillUnknown": [
+      "Exact response-body pump state and cancellation path at those two transport disconnects were not instrumented in the locked C++ binary.",
+      "Missing signal logs on destroy or gateway are not proof a callback can never fire; absence is bounded to this recorded event set/window.",
+      "The archived source and public locked-tag source support static reasoning; no binary build attestation or C++ trace establishes the exact branch taken.",
+      "Node TCP destroy and abortive RST are distinct transport teardown cases; RST signal delivery does not establish destroy semantics."
+    ],
+    "candidate": {
+      "status": "SUPPORTED_STATIC_CANDIDATE_NOT_CONFIRMED_CAUSE",
+      "mechanism": "The locked JS response pump owns a DrainingReader in a KJ coroutine. Its comment states dropping the returned promise destroys the frame/reader/sink while isolate read tasks can outlive it. The explicit reader.cancel call is in the KJ exception path. DrainingReader destruction calls releaseReader with no JS lock, which clears reader references without calling the JS underlying-source cancel in the shown routine. This is compatible with dropping a pump suspended on an asynchronous read yielding request-signal abort but no JS source-cancel observation.",
+      "evidence": [
+        "https://github.com/cloudflare/workerd/blob/v1.20260828.1/src/workerd/api/streams/standard.c++#L3515-L3607",
+        "https://github.com/cloudflare/workerd/blob/v1.20260828.1/src/workerd/api/streams/standard.c++#L291-L324",
+        "https://github.com/cloudflare/workerd/blob/v1.20260828.1/src/workerd/api/streams/readable.c++#L284-L288"
+      ],
+      "limitation": "Compatible static control flow is not proof that the failed project response ran this teardown branch."
+    },
+    "issueContext": {
+      "url": "https://github.com/cloudflare/workerd/issues/6832",
+      "classification": "AUTHOR_REPORTED_REPRODUCTION_CONTEXT_ONLY",
+      "note": "The report describes asynchronous response-source cancel missing while explicitly enabled Request.signal still aborts in direct and proxied topologies. Its versions, payload and timing differ from this locked project run; it does not prove our cause."
+    },
+    "proposedUpstreamPatchContext": {
+      "url": "https://github.com/cloudflare/workerd/pull/6833",
+      "observedState": "Open in read-only browser observation on2026-10-06",
+      "adopted": false,
+      "note": "A proposed dropped-pump source-cancel fix is relevant context only. No package, runtime, product flag, upstream patch or assertion was changed."
+    }
+  },
+  "minimalFutureComparison": {
+    "recommendationNow": "No new run is required to establish signal-enabled-vs-source-cancel separation on the two real RST arms. Their actual observations already establish it. Keep the locked pump teardown candidate for the next explicitly authorized diagnostic rather than treating a flag addition as a fix.",
+    "optionalSingleNegativeControl": {
+      "name": "bare-rst-disable-request-signal",
+      "status": "NOT_IMPLEMENTED_NOT_EXECUTED",
+      "baselineEligible": false,
+      "diagnosticVariant": true,
+      "pair": "original enabled bareRST reference, unchanged",
+      "onlyChange": "On one additional fresh bare fixture only, replace enable_request_signal with disable_request_signal, retaining nodejs_compat, runtime date2026-09-04, locked dependencies, exact bare source/holder observer and direct socket.",
+      "unchanged": [
+        "original four arms and strict fixtures/assertions",
+        "same Node abortive RST after exact holder-ready frame and same request method/headers/body/envelope",
+        "100polls×10ms and separate4s usedForPassfalse tail",
+        "original production holder/gateway and ctx.waitUntil behavior",
+        "source snapshots and no version/date upgrade",
+        "original baseline8/7/1 stays authoritative1"
+      ],
+      "requiredEvidence": [
+        "seal the one-arm config/source and pair identities",
+        "require actual user direct socket, first frame, acceptedone and original-pull observation before RST",
+        "record holder incoming-signal initial/abort and source cancel observation separately with phase/timestamps",
+        "preserve actual client socket close/error and code; any timeout/null process exit stays failed/unknown",
+        "record pre-dispose KV snapshot independently; do not use disposal logs as transport success",
+        "same bounded owned-process executor with stdout/stderr SHA and verified absence"
+      ],
+      "interpretation": [
+        "Enabled aborttrue/cancelNULL is already observed and rules out missing flag for that pair.",
+        "Disabled missing abort and cancelNULL would confirm a flag negative control only; it would not identify or fix the stream pump.",
+        "Disabled aborttrue requires investigating config/log association before any conclusion.",
+        "An unexpected source cancel in either comparison is evidence to retain, not permission to replace original transport failures or merge it into strict pass counts."
+      ],
+      "prohibitedSubstitutions": [
+        "No abort listener manually calls reader.cancel to make a transport test pass.",
+        "No request_signal_passthrough addition or imitation API.",
+        "No added waitUntil task, longer strict poll, skipped timeout, removed expectation, production flag edit or dependency upgrade."
+      ]
+    },
+    "nextCauseEvidenceNeeded": "A future controlled comparison must actually distinguish pump-drop from exception-driven cancellation on this locked binary/topology. Existing Node calibration and explicit Workerd reader.cancel are distinct control paths; they cannot replace the transport assertion. No such additional runtime evidence was obtained in this read-only task."
+  },
+  "sourceReferences": [
+    {
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/official-locked-source-public/compatibility-date.capnp",
+        "bytes": 88675,
+        "sha256": "dde45e2337fe1c8991f165b452968c86008852e086ccdc5e0470a25bd6dafb95"
+      },
+      "beginOneBased": 794,
+      "endOneBased": 799,
+      "reason": "explicit request-signal enable/disable flag; no enable-date annotation"
+    },
+    {
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/official-locked-source-public/worker-entrypoint.c++",
+        "bytes": 50916,
+        "sha256": "5a26985f9d80021e9af91b0569c54b7d9c987bf5b6ca6d63d37da5c1fab28bf9"
+      },
+      "beginOneBased": 414,
+      "endOneBased": 474,
+      "reason": "request signal controller and cancellation hook; internal runtime waitUntil"
+    },
+    {
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/official-locked-source-public/standard.c++",
+        "bytes": 193298,
+        "sha256": "f64a9fe8ab0c2f3bc397ac18d35d59e5c1be8ead1182c7ccd668bfbd993bc698"
+      },
+      "beginOneBased": 3515,
+      "endOneBased": 3607,
+      "reason": "locked JavaScript draining-reader pump and catch-path cancellation"
+    },
+    {
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/official-locked-source-public/standard.c++",
+        "bytes": 193298,
+        "sha256": "f64a9fe8ab0c2f3bc397ac18d35d59e5c1be8ead1182c7ccd668bfbd993bc698"
+      },
+      "beginOneBased": 291,
+      "endOneBased": 324,
+      "reason": "reader release handles pending reads and references"
+    },
+    {
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/official-locked-source-public/standard.c++",
+        "bytes": 193298,
+        "sha256": "f64a9fe8ab0c2f3bc397ac18d35d59e5c1be8ead1182c7ccd668bfbd993bc698"
+      },
+      "beginOneBased": 3743,
+      "endOneBased": 3778,
+      "reason": "JavaScript controller delegates response pump to draining reader"
+    },
+    {
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/official-locked-source-public/readable.c++",
+        "bytes": 31774,
+        "sha256": "ca762b8e7ea908b29eb2c99db4bcad7e50b5f206cd1a75312f4b2b658bfe7f08"
+      },
+      "beginOneBased": 284,
+      "endOneBased": 288,
+      "reason": "draining reader destructor calls releaseReader without JavaScript lock"
+    },
+    {
+      "source": {
+        "path": "C:/cinagroup/cinatoken/node_modules/miniflare/dist/src/index.js",
+        "bytes": 4843426,
+        "sha256": "58ca83056cf67838add064edcbfd1d654ed204527b8eb01307ba208d7e59fa20"
+      },
+      "beginOneBased": 111120,
+      "endOneBased": 111134,
+      "reason": "direct socket config normalized into worker dev config"
+    },
+    {
+      "source": {
+        "path": "C:/cinagroup/cinatoken/node_modules/miniflare/dist/src/index.js",
+        "bytes": 4843426,
+        "sha256": "58ca83056cf67838add064edcbfd1d654ed204527b8eb01307ba208d7e59fa20"
+      },
+      "beginOneBased": 113163,
+      "endOneBased": 113193,
+      "reason": "direct sockets use user worker service"
+    },
+    {
+      "source": {
+        "path": "C:/cinagroup/cinatoken/node_modules/miniflare/dist/src/index.js",
+        "bytes": 4843426,
+        "sha256": "58ca83056cf67838add064edcbfd1d654ed204527b8eb01307ba208d7e59fa20"
+      },
+      "beginOneBased": 113668,
+      "endOneBased": 113689,
+      "reason": "direct URL selects actual worker socket port"
+    },
+    {
+      "source": {
+        "path": "C:/cinagroup/cinatoken/node_modules/miniflare/dist/src/workers/core/entry.worker.js",
+        "bytes": 184933,
+        "sha256": "e2434da3c39be4758dd323045dbc0b79bb2c0b2a5ba2ed02c6b271b1b676410d"
+      },
+      "beginOneBased": 5112,
+      "endOneBased": 5120,
+      "reason": "Core ENTRY fetch boundary"
+    },
+    {
+      "source": {
+        "path": "C:/cinagroup/cinatoken/node_modules/miniflare/dist/src/workers/core/entry.worker.js",
+        "bytes": 184933,
+        "sha256": "e2434da3c39be4758dd323045dbc0b79bb2c0b2a5ba2ed02c6b271b1b676410d"
+      },
+      "beginOneBased": 5180,
+      "endOneBased": 5191,
+      "reason": "Core ENTRY service fetch and response transforms"
+    },
+    {
+      "source": {
+        "path": "C:/cinagroup/cinatoken/docs/operators/deployment/releases/2026-10-06-g7-native26-calibration-progress/current-terminal-evidence/canonical-calibration-artifact/cinatoken/cinatoken/scripts/diagnostics/v364-direct-socket/run-direct-socket.mjs",
+        "bytes": 34907,
+        "sha256": "621cb7384b32a25af7c37d411cd12c2d51bf47c241d9d1f24c1c3ee3989723f3"
+      },
+      "beginOneBased": 173,
+      "endOneBased": 184,
+      "reason": "frozen configs and exact nodejs_compat plus enable_request_signal flags"
+    },
+    {
+      "source": {
+        "path": "C:/cinagroup/cinatoken/docs/operators/deployment/releases/2026-10-06-g7-native26-calibration-progress/current-terminal-evidence/canonical-calibration-artifact/cinatoken/cinatoken/scripts/diagnostics/v364-direct-socket/run-direct-socket.mjs",
+        "bytes": 34907,
+        "sha256": "621cb7384b32a25af7c37d411cd12c2d51bf47c241d9d1f24c1c3ee3989723f3"
+      },
+      "beginOneBased": 435,
+      "endOneBased": 468,
+      "reason": "same date and flag configuration applied to bare/gateway/holder workers"
+    },
+    {
+      "source": {
+        "path": "C:/cinagroup/cinatoken/packages/proxy/scripts/staging/chat-holder-private-v364.ts",
+        "bytes": 5367,
+        "sha256": "44070fcbb7058b915329a150634eaa649c1b3601724495a1620e94ce2d54d1bf"
+      },
+      "beginOneBased": 65,
+      "endOneBased": 91,
+      "reason": "original async source pull and cancel implementation"
+    },
+    {
+      "source": {
+        "path": "C:/cinagroup/cinatoken/packages/proxy/scripts/staging/chat-holder-gateway-v364.ts",
+        "bytes": 1534,
+        "sha256": "8c85b01ba54daa9b7302c726d20693d08ccb3395350ea6a333817eed46441eaf"
+      },
+      "beginOneBased": 1,
+      "endOneBased": 30,
+      "reason": "original request signal passed through binding and response body returned"
+    }
+  ],
+  "preservedNewReaderFailures": [
+    {
+      "label": "official-source-read",
+      "actualExit": 1,
+      "reason": "sandbox EACCES fetch failures; no primary source bytes obtained in that attempt"
+    },
+    {
+      "label": "official-source-public-read",
+      "actualExit": 1,
+      "reason": "prepared copied reader file absent after separate shell quoting error; no application/runtime execution"
+    },
+    {
+      "label": "static-source-event-read",
+      "actualExit": 1,
+      "reason": "local reader selected wrong calibration JSON field; original runtime data unchanged; original reader source/log/receipt retained and corrected reader saved separately"
+    },
+    {
+      "label": "seal-request-signal",
+      "actualExit": 1,
+      "reason": "local sealer selected wrong official-read metadata field; no FINAL was written and original metadata unchanged; first sealer source and raw receipt retained"
+    }
+  ],
+  "scopeAndDeployment": {
+    "fullGoalComplete": false,
+    "strictV364Passed": false,
+    "fullG7Passed": false,
+    "G8Passed": false,
+    "productionVersionUnchanged": "c13 / 2a0 / 100% /29true is inherited task context, not newly fetched here",
+    "noProductionRequestOrDeployment": true,
+    "original102And54And211AndG0G8ScopeNotChanged": true
+  }
+}

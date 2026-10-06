@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-06T06:32:25.370Z",
+  "finishedAt": "2026-10-06T06:32:26.221Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-precision-root-1fsOZX\\collect-direct-packets.mjs",
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-precision-root-1fsOZX\\terminal-collection-config.json"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-precision-root-1fsOZX\\collect-terminal.stdout.log",
+    "bytes": 345,
+    "sha256": "b1109072f670e64ab7312867072d957b9ed606ccd05fd3d8ae5265575f1b05c5"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-precision-root-1fsOZX\\collect-terminal.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

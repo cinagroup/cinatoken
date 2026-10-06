@@ -1,0 +1,24 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
+import { gzipSync, gunzipSync } from 'node:zlib';
+import { fileURLToPath } from 'node:url';
+const root=path.dirname(fileURLToPath(import.meta.url));
+const [peerRoot,peerFinalName,peerFinalBytes,peerFinalSha]=process.argv.slice(2);
+const out='C:/cinagroup/cinatoken/docs/developers/architecture/evidence/2026-10-06-native-quote-terminal-and-parent-binding';
+const hash=b=>createHash('sha256').update(b).digest('hex');
+const describe=p=>{const b=fs.readFileSync(p);return {bytes:b.length,sha256:hash(b)};};
+assert.deepEqual(describe(path.join(out,'collection.json')),{bytes:172700,sha256:'6b5f0021925eef6a76de2f3963d4ea3b2b26fb064ac2c2d3cbd6347d9fbb4618'});
+assert.deepEqual(describe(path.join(peerRoot,peerFinalName)),{bytes:Number(peerFinalBytes),sha256:peerFinalSha});
+const destination=path.join(out,'post-collection');assert(!fs.existsSync(destination));
+const walk=d=>fs.readdirSync(d,{withFileTypes:true}).flatMap(e=>{assert(!e.isSymbolicLink());const p=path.join(d,e.name);return e.isDirectory()?walk(p):[p];}).sort();
+const plan=walk(peerRoot).map(p=>({source:p,relative:'independent-peer/'+path.relative(peerRoot,p).replaceAll('\\','/')}));
+for(const name of ['make-terminal-config.result.json','collect-terminal.result.json','collect-terminal.stdout.log','collect-terminal.stderr.log','terminal-collection-summary.json','update-terminal-checklist.result.json','update-terminal-checklist.stdout.log','update-terminal-checklist.stderr.log','terminal-checklist-proof.json','parent-md-working-diff-check.result.json','parent-md-working-diff-check.stdout.log','parent-md-working-diff-check.stderr.log','save-postcollection-proof.mjs'])plan.push({source:path.join(root,name),relative:'root/'+name});
+const entries=[];
+for(const e of plan){const raw=fs.readFileSync(e.source),gzip=raw.length>131072;const stored=gzip?gzipSync(raw,{level:9}):raw;const relative=e.relative+(gzip?'.gz':'');const p=path.join(destination,relative);fs.mkdirSync(path.dirname(p),{recursive:true});fs.writeFileSync(p,stored,{flag:'wx'});const bytes=fs.readFileSync(p);assert.deepEqual(gzip?gunzipSync(bytes):bytes,raw);assert.deepEqual(fs.readFileSync(e.source),raw);entries.push({...e,storedRelative:'post-collection/'+relative,gzip,raw:{bytes:raw.length,sha256:hash(raw)},stored:{bytes:bytes.length,sha256:hash(bytes)}});}
+const finalEntry=entries.find(e=>e.source===path.join(peerRoot,peerFinalName));assert(finalEntry);
+const report={schema:'cinatoken-d537-terminal-postcollection-proof-v1',at:new Date().toISOString(),collectionOnly:true,gatePassDerived:false,baseCollection:{bytes:172700,sha256:'6b5f0021925eef6a76de2f3963d4ea3b2b26fb064ac2c2d3cbd6347d9fbb4618'},baseCollectionFilesUnchanged:true,independentFinal:{path:finalEntry.storedRelative,gzip:finalEntry.gzip,raw:finalEntry.raw,stored:finalEntry.stored},sourceFileCount:entries.length,entries};
+fs.writeFileSync(path.join(destination,'collection.json'),JSON.stringify(report,null,2)+'\n',{flag:'wx'});
+fs.writeFileSync(path.join(destination,'README.md'),'# 最后复核与Root真实收据\n\n[子集合索引](collection.json)保存原295文件包的独立来源/存储/gzip及MDscope复核、原CI完整raw核对，以及Root的collect/MD/diff真实关闭收据。基本collection.json和原295文件均未改；子集合只补真实关闭后的证据，不冒充业务、原生或新提交已通过。\n',{flag:'wx'});
+console.log(JSON.stringify({sourceFileCount:entries.length,storedFiles:entries.length+2,rawBytes:entries.reduce((n,e)=>n+e.raw.bytes,0),storedBytes:entries.reduce((n,e)=>n+e.stored.bytes,0),baseCollectionFilesUnchanged:true}));

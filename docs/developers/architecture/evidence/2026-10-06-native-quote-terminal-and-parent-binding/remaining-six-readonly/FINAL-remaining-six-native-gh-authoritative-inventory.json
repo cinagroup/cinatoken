@@ -1,0 +1,890 @@
+{
+  "schema": "cinatoken-remaining-six-native-gh-authoritative-minimal-inventory.v4",
+  "finishedAt": "2026-10-06T06:10:14.970Z",
+  "sourceHead": "d537f83b6389a4e5bbd7f92325f74d77e6bdfc9a",
+  "nativeJobID": 112131520308,
+  "jobStatusAtFrozenInitialMetadata": "in_progress",
+  "jobConclusionAtFrozenInitialMetadata": "",
+  "authoritativeMapping": "Read actual original GH job.steps numbers95–99/106 and exact default run names; bind each to the original same-head workflow command sequence. Default run names are generic and not unique source-file identifiers. No runtime outcome is inferred from the original YAML-number offset.",
+  "originalMetadataProvenance": [
+    {
+      "closedReceipt": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8/proxy-initial.closed.json",
+        "bytes": 956,
+        "sha256": "55d8aadd6041454138218ff3e19e6b4725906b3c8d006e987e16758902b4ab07"
+      },
+      "startedAt": "2026-10-06T06:03:59.624Z",
+      "closedAt": "2026-10-06T06:04:03.219Z",
+      "actualExit": 0,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\proxy-initial.stdout.log",
+        "bytes": 47992,
+        "sha256": "158939a6c16f27187a1686dda98ecb13e7ffa4941a1d461ba38bfcd139833d49"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\proxy-initial.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "closedReceipt": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8/original-proxy-workflow.closed.json",
+        "bytes": 874,
+        "sha256": "7b9fc0c3a3cd37169d599b7da1236b8f6e8e1944e3586b0ad36f2fb627c6efe9"
+      },
+      "startedAt": "2026-10-06T06:04:03.220Z",
+      "closedAt": "2026-10-06T06:04:03.273Z",
+      "actualExit": 0,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\original-proxy-workflow.stdout.log",
+        "bytes": 45895,
+        "sha256": "8e883e7f21f77f8367d361f6bd3d060e16c241c28641b3eac85af6835841f152"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\original-proxy-workflow.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "originalWorkflowPin": {
+    "bytes": 45895,
+    "sha256": "8e883e7f21f77f8367d361f6bd3d060e16c241c28641b3eac85af6835841f152"
+  },
+  "selectedSourceInventory": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-remaining-six-native-minimal-inventory-354b4a0c896f91a10fd126f8/FINAL-remaining-six-native-minimal-inventory-v3.json",
+    "bytes": 160217,
+    "sha256": "ca591ac14c3448429af46eada60fa3a7289b03fc5bf1bf574bb5468491f54b58"
+  },
+  "selectedSix": [
+    {
+      "originalGHStepNumber": 95,
+      "actualGHStepName": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+      "actualGHInitialStatus": "pending",
+      "actualGHInitialConclusion": "",
+      "workflowFile": ".github/workflows/proxy-dispatch-safety.yml",
+      "workflowLine": 555,
+      "workflowRunCommand": "node --import tsx --test scripts/db/cutover/postgres-buyer-split-grant-rerun-v348.native.test.mjs",
+      "workflowNameExact": true,
+      "workflowHasExplicitName": false,
+      "defaultGHRunNameIsGeneric": true,
+      "fileBindingAuthority": "Original committed workflow run command and step order at this exact head, with actual GH number and default run-name checked; default GH names alone do not distinguish fixture files.",
+      "source": {
+        "path": "scripts/db/cutover/postgres-buyer-split-grant-rerun-v348.native.test.mjs",
+        "bytes": 18946,
+        "sha256": "d83c9dcabfb24ddd90c6006ac8ac6078583fc6439b39436708f73ee8099b23b1"
+      },
+      "assertions": 32,
+      "originalAssertionSourcePinsPreservedInInventory": true,
+      "PG73LoaderCalls": [
+        {
+          "line": 112,
+          "source": "listPg73Migrations()"
+        }
+      ],
+      "grantCalls": [
+        {
+          "line": 143,
+          "source": "grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL })",
+          "bytes": 73,
+          "sha256": "2224e633ff1e91c3a8c2aa9e0d5478ed7e929f3e45dc2ce31c63589e7cf6f807"
+        },
+        {
+          "line": 144,
+          "source": "grantPostgresRuntime({ DATABASE_URL: migratorUrl })",
+          "bytes": 51,
+          "sha256": "2414194790a12c5c4ab73fb216d56bcd88da796953609366871ed5f64b0ab652"
+        },
+        {
+          "line": 145,
+          "source": "grantPostgresRuntime({ DATABASE_URL: migratorUrl })",
+          "bytes": 51,
+          "sha256": "2414194790a12c5c4ab73fb216d56bcd88da796953609366871ed5f64b0ab652"
+        },
+        {
+          "line": 231,
+          "source": "grantPostgresRuntime({ DATABASE_URL: migratorUrl })",
+          "bytes": 51,
+          "sha256": "2414194790a12c5c4ab73fb216d56bcd88da796953609366871ed5f64b0ab652"
+        }
+      ],
+      "pinLiterals": [],
+      "requiredContracts": [
+        {
+          "line": 2,
+          "text": "// v346/v347 split and durable v348 marker commit in one locked transaction."
+        },
+        {
+          "line": 15,
+          "text": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';"
+        },
+        {
+          "line": 16,
+          "text": "import { grantPostgresBuyerSplitV348 } from './grant-postgres-buyer-split-v348.ts';"
+        },
+        {
+          "line": 17,
+          "text": "import { activatePostgresBuyerSplitV348 } from './activate-postgres-buyer-split-v348.ts';"
+        },
+        {
+          "line": 32,
+          "text": "const splitNames = ["
+        },
+        {
+          "line": 33,
+          "text": "'buyer-critical-writer-privilege-split-v346.sql',"
+        },
+        {
+          "line": 35,
+          "text": "'buyer-split-grant-marker-v348.sql',"
+        },
+        {
+          "line": 37,
+          "text": "const reconcileName = 'buyer-split-runtime-grant-v348.sql';"
+        },
+        {
+          "line": 43,
+          "text": "connect_timeout: 3, idle_timeout: 0, max_lifetime: 0, backoff: false,"
+        },
+        {
+          "line": 59,
+          "text": "await assert.rejects(work, error => {"
+        },
+        {
+          "line": 65,
+          "text": "test('split marker makes old grants fail closed and v348 reconciler reruns safely',"
+        },
+        {
+          "line": 66,
+          "text": "{ timeout: 300_000, skip: !process.env.GATEWAY_NATIVE_PG_BIN }, async () => {"
+        },
+        {
+          "line": 69,
+          "text": "`report-buyer-split-grant-v348-${randomUUID()}.json`);"
+        },
+        {
+          "line": 75,
+          "text": "'The old grant runner guard must ship before any split; v346/v347 and the marker must then commit in one locked transaction.',"
+        },
+        {
+          "line": 76,
+          "text": "'The split reconciler grants no new ordinary-runtime table writes; management, admission, payout and recovery writers still need separate identities and grants.',"
+        },
+        {
+          "line": 113,
+          "text": "assert.equal(names.length, 73);"
+        },
+        {
+          "line": 127,
+          "text": "...splitNames, reconcileName]) {"
+        },
+        {
+          "line": 132,
+          "text": "report.sourceSha256.splitGrantRunner = hash(await readFile("
+        }
+      ]
+    },
+    {
+      "originalGHStepNumber": 96,
+      "actualGHStepName": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+      "actualGHInitialStatus": "pending",
+      "actualGHInitialConclusion": "",
+      "workflowFile": ".github/workflows/proxy-dispatch-safety.yml",
+      "workflowLine": 558,
+      "workflowRunCommand": "node --import tsx --test scripts/db/cutover/postgres-buyer-split-guardrail-v349.native.test.mjs",
+      "workflowNameExact": true,
+      "workflowHasExplicitName": false,
+      "defaultGHRunNameIsGeneric": true,
+      "fileBindingAuthority": "Original committed workflow run command and step order at this exact head, with actual GH number and default run-name checked; default GH names alone do not distinguish fixture files.",
+      "source": {
+        "path": "scripts/db/cutover/postgres-buyer-split-guardrail-v349.native.test.mjs",
+        "bytes": 23743,
+        "sha256": "c4adb632a2e237e0ed359f42686371bfad138f1ce4cc10c557d219e3ecb83d87"
+      },
+      "assertions": 44,
+      "originalAssertionSourcePinsPreservedInInventory": true,
+      "PG73LoaderCalls": [
+        {
+          "line": 116,
+          "source": "listPg73Migrations()"
+        }
+      ],
+      "grantCalls": [
+        {
+          "line": 152,
+          "source": "grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL })",
+          "bytes": 73,
+          "sha256": "2224e633ff1e91c3a8c2aa9e0d5478ed7e929f3e45dc2ce31c63589e7cf6f807"
+        },
+        {
+          "line": 153,
+          "source": "grantPostgresRuntime({ DATABASE_URL: migratorUrl })",
+          "bytes": 51,
+          "sha256": "2414194790a12c5c4ab73fb216d56bcd88da796953609366871ed5f64b0ab652"
+        },
+        {
+          "line": 154,
+          "source": "grantPostgresRuntime({ DATABASE_URL: migratorUrl })",
+          "bytes": 51,
+          "sha256": "2414194790a12c5c4ab73fb216d56bcd88da796953609366871ed5f64b0ab652"
+        },
+        {
+          "line": 231,
+          "source": "grantPostgresRuntime({ DATABASE_URL: migratorUrl })",
+          "bytes": 51,
+          "sha256": "2414194790a12c5c4ab73fb216d56bcd88da796953609366871ed5f64b0ab652"
+        },
+        {
+          "line": 328,
+          "source": "grantPostgresRuntime({ DATABASE_URL: migratorUrl })",
+          "bytes": 51,
+          "sha256": "2414194790a12c5c4ab73fb216d56bcd88da796953609366871ed5f64b0ab652"
+        }
+      ],
+      "pinLiterals": [],
+      "requiredContracts": [
+        {
+          "line": 2,
+          "text": "// atomically after the v348 buyer split, then only the v349 reconciler can run."
+        },
+        {
+          "line": 14,
+          "text": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';"
+        },
+        {
+          "line": 15,
+          "text": "import { grantPostgresBuyerSplitV348 } from './grant-postgres-buyer-split-v348.ts';"
+        },
+        {
+          "line": 16,
+          "text": "import { activatePostgresBuyerSplitV348 } from './activate-postgres-buyer-split-v348.ts';"
+        },
+        {
+          "line": 17,
+          "text": "import { activatePostgresBuyerGuardrailSplitV349 } from './activate-postgres-buyer-guardrail-split-v349.ts';"
+        },
+        {
+          "line": 18,
+          "text": "import { grantPostgresBuyerGuardrailSplitV349 } from './grant-postgres-buyer-guardrail-split-v349.ts';"
+        },
+        {
+          "line": 33,
+          "text": "const splitNames = ["
+        },
+        {
+          "line": 34,
+          "text": "'buyer-critical-writer-privilege-split-v346.sql',"
+        },
+        {
+          "line": 36,
+          "text": "'buyer-split-grant-marker-v348.sql',"
+        },
+        {
+          "line": 38,
+          "text": "const reconcileName = 'buyer-split-runtime-grant-v348.sql';"
+        },
+        {
+          "line": 40,
+          "text": "const successorMarkerName = 'buyer-split-guardrail-grant-marker-v349.sql';"
+        },
+        {
+          "line": 41,
+          "text": "const successorGrantName = 'buyer-split-guardrail-runtime-grant-v349.sql';"
+        },
+        {
+          "line": 47,
+          "text": "connect_timeout: 3, idle_timeout: 0, max_lifetime: 0, backoff: false,"
+        },
+        {
+          "line": 63,
+          "text": "await assert.rejects(work, error => {"
+        },
+        {
+          "line": 69,
+          "text": "test('Guardrail successor keeps broad grant closed and v349 reconciler reruns safely',"
+        },
+        {
+          "line": 70,
+          "text": "{ timeout: 300_000, skip: !process.env.GATEWAY_NATIVE_PG_BIN }, async () => {"
+        },
+        {
+          "line": 73,
+          "text": "`report-buyer-split-guardrail-v349-${randomUUID()}.json`);"
+        },
+        {
+          "line": 79,
+          "text": "'The old grant runner guard must ship before any split; v346/v347 and the marker must then commit in one locked transaction.',"
+        }
+      ]
+    },
+    {
+      "originalGHStepNumber": 97,
+      "actualGHStepName": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+      "actualGHInitialStatus": "pending",
+      "actualGHInitialConclusion": "",
+      "workflowFile": ".github/workflows/proxy-dispatch-safety.yml",
+      "workflowLine": 561,
+      "workflowRunCommand": "node --import tsx --test scripts/db/cutover/postgres-shared-key-stats-auth-boundary-v346.native.test.mjs",
+      "workflowNameExact": true,
+      "workflowHasExplicitName": false,
+      "defaultGHRunNameIsGeneric": true,
+      "fileBindingAuthority": "Original committed workflow run command and step order at this exact head, with actual GH number and default run-name checked; default GH names alone do not distinguish fixture files.",
+      "source": {
+        "path": "scripts/db/cutover/postgres-shared-key-stats-auth-boundary-v346.native.test.mjs",
+        "bytes": 8904,
+        "sha256": "46a13c44fec610692feb18ea0bf1d3bc10eb93a76e65d47edd326db13ea31e18"
+      },
+      "assertions": 12,
+      "originalAssertionSourcePinsPreservedInInventory": true,
+      "PG73LoaderCalls": [
+        {
+          "line": 57,
+          "source": "listPg73Migrations()"
+        }
+      ],
+      "grantCalls": [
+        {
+          "line": 82,
+          "source": "grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL })",
+          "bytes": 73,
+          "sha256": "2224e633ff1e91c3a8c2aa9e0d5478ed7e929f3e45dc2ce31c63589e7cf6f807"
+        },
+        {
+          "line": 83,
+          "source": "grantPostgresRuntime({ DATABASE_URL:\n        `postgres://cinatoken_gateway_migrator:${migratorPassword}@127.0.0.1:${cluster.port}/postgres` })",
+          "bytes": 142,
+          "sha256": "b9fad68f4fe17e3a6f3364e7f03e5edfb82093baeb3f8e7ceb1574da1636e32f"
+        }
+      ],
+      "pinLiterals": [],
+      "requiredContracts": [
+        {
+          "line": 9,
+          "text": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';"
+        },
+        {
+          "line": 24,
+          "text": "connect_timeout: 3, idle_timeout: 0, max_lifetime: 0, backoff: false,"
+        },
+        {
+          "line": 29,
+          "text": "{ timeout: 300_000, skip: !process.env.GATEWAY_NATIVE_PG_BIN }, async () => {"
+        },
+        {
+          "line": 73,
+          "text": "statsReader: new URL('packages/core/migrations-proposals/postgres/shared-key-credited-usage-reader.sql', root),"
+        },
+        {
+          "line": 82,
+          "text": "grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });"
+        },
+        {
+          "line": 133,
+          "text": "// grant rerun. We only verify the absent proposal never arrived via PG73."
+        },
+        {
+          "line": 138,
+          "text": "assert.equal(reader.absent, true);"
+        },
+        {
+          "line": 145,
+          "text": "} finally {"
+        },
+        {
+          "line": 146,
+          "text": "await Promise.allSettled(clients.map(sql => sql.end({ timeout: 1 })));"
+        }
+      ]
+    },
+    {
+      "originalGHStepNumber": 98,
+      "actualGHStepName": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+      "actualGHInitialStatus": "pending",
+      "actualGHInitialConclusion": "",
+      "workflowFile": ".github/workflows/proxy-dispatch-safety.yml",
+      "workflowLine": 564,
+      "workflowRunCommand": "node --import tsx --test scripts/db/cutover/postgres-shared-key-stats-signed-claim-v348.native.test.mjs",
+      "workflowNameExact": true,
+      "workflowHasExplicitName": false,
+      "defaultGHRunNameIsGeneric": true,
+      "fileBindingAuthority": "Original committed workflow run command and step order at this exact head, with actual GH number and default run-name checked; default GH names alone do not distinguish fixture files.",
+      "source": {
+        "path": "scripts/db/cutover/postgres-shared-key-stats-signed-claim-v348.native.test.mjs",
+        "bytes": 12736,
+        "sha256": "7e0ae22d95b9cecc2fa154a2afd658868a31ece212aa60715021872e04557238"
+      },
+      "assertions": 24,
+      "originalAssertionSourcePinsPreservedInInventory": true,
+      "PG73LoaderCalls": [
+        {
+          "line": 62,
+          "source": "listPg73Migrations()"
+        }
+      ],
+      "grantCalls": [
+        {
+          "line": 81,
+          "source": "grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL })",
+          "bytes": 73,
+          "sha256": "2224e633ff1e91c3a8c2aa9e0d5478ed7e929f3e45dc2ce31c63589e7cf6f807"
+        },
+        {
+          "line": 82,
+          "source": "grantPostgresRuntime({ DATABASE_URL:\n        `postgres://cinatoken_gateway_migrator:${migratorPassword}@127.0.0.1:${cluster.port}/postgres` })",
+          "bytes": 142,
+          "sha256": "b9fad68f4fe17e3a6f3364e7f03e5edfb82093baeb3f8e7ceb1574da1636e32f"
+        },
+        {
+          "line": 186,
+          "source": "grantPostgresRuntime({ DATABASE_URL:\n        `postgres://cinatoken_gateway_migrator:${migratorPassword}@127.0.0.1:${cluster.port}/postgres` })",
+          "bytes": 142,
+          "sha256": "b9fad68f4fe17e3a6f3364e7f03e5edfb82093baeb3f8e7ceb1574da1636e32f"
+        }
+      ],
+      "pinLiterals": [],
+      "requiredContracts": [
+        {
+          "line": 8,
+          "text": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';"
+        },
+        {
+          "line": 22,
+          "text": "connect_timeout: 3, idle_timeout: 0, max_lifetime: 0, backoff: false,"
+        },
+        {
+          "line": 26,
+          "text": "test('PG18 signed seller claim rejects runtime/session/GUC forgery and replay',"
+        },
+        {
+          "line": 27,
+          "text": "{ timeout: 300_000, skip: !process.env.GATEWAY_NATIVE_PG_BIN }, async () => {"
+        },
+        {
+          "line": 81,
+          "text": "grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });"
+        },
+        {
+          "line": 85,
+          "text": "await assert.rejects(migrator.begin(async tx => tx.unsafe(proposal).simple()),"
+        },
+        {
+          "line": 89,
+          "text": "await assert.rejects(migrator.begin(async tx => {"
+        },
+        {
+          "line": 123,
+          "text": "assert.equal((await verify(reader, first))[0].seller_id, 'seller-a');"
+        },
+        {
+          "line": 124,
+          "text": "await assert.rejects(verify(reader, first),"
+        },
+        {
+          "line": 133,
+          "text": "assert.equal(competingResults.filter(result => result.status === 'rejected'"
+        },
+        {
+          "line": 138,
+          "text": "await assert.rejects(reader.begin(async tx => {"
+        },
+        {
+          "line": 142,
+          "text": "assert.equal((await verify(reader, rolledBack))[0].seller_id, 'seller-a');"
+        },
+        {
+          "line": 146,
+          "text": "await assert.rejects(verify(reader, { ...sellerTamper, sellerId: 'seller-b' },"
+        },
+        {
+          "line": 150,
+          "text": "await assert.rejects(verify(reader, { ...scopeTamper, keyIds: ['key-a', 'key-c'] },"
+        },
+        {
+          "line": 154,
+          "text": "await assert.rejects(verify(reader, wrongAudience, signature(wrongAudience, 'stats.admin')),"
+        },
+        {
+          "line": 157,
+          "text": "await assert.rejects(verify(reader, unordered),"
+        },
+        {
+          "line": 162,
+          "text": "await assert.rejects(verify(reader, expired),"
+        },
+        {
+          "line": 165,
+          "text": "await assert.rejects(verify(reader, tooLong),"
+        }
+      ]
+    },
+    {
+      "originalGHStepNumber": 99,
+      "actualGHStepName": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+      "actualGHInitialStatus": "pending",
+      "actualGHInitialConclusion": "",
+      "workflowFile": ".github/workflows/proxy-dispatch-safety.yml",
+      "workflowLine": 567,
+      "workflowRunCommand": "node --import tsx --test scripts/db/cutover/postgres-shared-key-stats-claim-reader-v349-cjs-loader-successor.native.test.mjs",
+      "workflowNameExact": true,
+      "workflowHasExplicitName": false,
+      "defaultGHRunNameIsGeneric": true,
+      "fileBindingAuthority": "Original committed workflow run command and step order at this exact head, with actual GH number and default run-name checked; default GH names alone do not distinguish fixture files.",
+      "source": {
+        "path": "scripts/db/cutover/postgres-shared-key-stats-claim-reader-v349-cjs-loader-successor.native.test.mjs",
+        "bytes": 29481,
+        "sha256": "997c7ec3b5d83bafd8c386493d66a8fd461d86576ea31c6afe32672e995f0088"
+      },
+      "assertions": 74,
+      "originalAssertionSourcePinsPreservedInInventory": true,
+      "PG73LoaderCalls": [
+        {
+          "line": 132,
+          "source": "listPg73Migrations()"
+        }
+      ],
+      "grantCalls": [
+        {
+          "line": 421,
+          "source": "grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL })",
+          "bytes": 73,
+          "sha256": "2224e633ff1e91c3a8c2aa9e0d5478ed7e929f3e45dc2ce31c63589e7cf6f807"
+        },
+        {
+          "line": 422,
+          "source": "grantPostgresRuntime({DATABASE_URL:\n        `postgres://cinatoken_gateway_migrator:${passwords.migrator}@127.0.0.1:${cluster.port}/postgres`})",
+          "bytes": 142,
+          "sha256": "1a41af9834415508c224547396c9a12e62deced920a53dceae2f6d4203121bca"
+        }
+      ],
+      "pinLiterals": [
+        {
+          "line": 27,
+          "value": "095f8ec4748cd92e35f37b86891ef8762bc8b8b5ca65ab49abc55b067c1d9be9"
+        }
+      ],
+      "requiredContracts": [
+        {
+          "line": 12,
+          "text": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';"
+        },
+        {
+          "line": 23,
+          "text": "reader: 'shared-key-credited-usage-reader.sql',"
+        },
+        {
+          "line": 25,
+          "text": "bound: 'shared-key-stats-claim-reader-v349.sql',"
+        },
+        {
+          "line": 27,
+          "text": "const historicalFixtureSha256 = '095f8ec4748cd92e35f37b86891ef8762bc8b8b5ca65ab49abc55b067c1d9be9';"
+        },
+        {
+          "line": 33,
+          "text": "ssl:false,max:1,prepare:false,fetch_types:false,connect_timeout:3,"
+        },
+        {
+          "line": 34,
+          "text": "idle_timeout:0,max_lifetime:0,backoff:false,onnotice(){},"
+        },
+        {
+          "line": 87,
+          "text": "{timeout:300_000,skip:!process.env.GATEWAY_NATIVE_PG_BIN},async()=>{"
+        },
+        {
+          "line": 94,
+          "text": "lineage:{historicalFixture:'scripts/db/cutover/postgres-shared-key-stats-claim-reader-v349.native.test.mjs',"
+        },
+        {
+          "line": 95,
+          "text": "historicalFixtureSha256,contract:'real Admin CommonJS default module export; unchanged signed-reader SQL and role authority'},"
+        },
+        {
+          "line": 154,
+          "text": "historicalFixture:digest(await readFile(new URL("
+        },
+        {
+          "line": 156,
+          "text": "assert.equal(report.sourceSha256.historicalFixture,historicalFixtureSha256);"
+        },
+        {
+          "line": 204,
+          "text": "await assert.rejects(migrator.begin(async tx=>tx.unsafe(bodies.reader).simple()),"
+        },
+        {
+          "line": 208,
+          "text": "await assert.rejects(migrator.begin(async tx=>tx.unsafe(bodies.claim).simple()),"
+        },
+        {
+          "line": 211,
+          "text": "await assert.rejects(migrator.begin(async tx=>tx.unsafe(bodies.bound).simple()),"
+        },
+        {
+          "line": 237,
+          "text": "await assert.rejects(read(),error=>error?.constraint_name==='shared_key_stats_reader_not_active');"
+        },
+        {
+          "line": 238,
+          "text": "await assert.rejects(signedRead(statsReader,claim()),"
+        },
+        {
+          "line": 245,
+          "text": "await assert.rejects(activate(),error=>error?.constraint_name==='shared_key_stats_reader_not_ready');"
+        },
+        {
+          "line": 262,
+          "text": "assert.equal(rows[0].seller_user_id,'reader-seller');"
+        }
+      ]
+    },
+    {
+      "originalGHStepNumber": 106,
+      "actualGHStepName": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+      "actualGHInitialStatus": "pending",
+      "actualGHInitialConclusion": "",
+      "workflowFile": ".github/workflows/proxy-dispatch-safety.yml",
+      "workflowLine": 588,
+      "workflowRunCommand": "node --import tsx --test scripts/db/cutover/postgres-shared-key-credited-usage-reader.native.test.mjs",
+      "workflowNameExact": true,
+      "workflowHasExplicitName": false,
+      "defaultGHRunNameIsGeneric": true,
+      "fileBindingAuthority": "Original committed workflow run command and step order at this exact head, with actual GH number and default run-name checked; default GH names alone do not distinguish fixture files.",
+      "source": {
+        "path": "scripts/db/cutover/postgres-shared-key-credited-usage-reader.native.test.mjs",
+        "bytes": 18603,
+        "sha256": "fe62b22831e7b37e8c0377ed4e902ce0be499dd54ebea2d1e81b93c60c47d912"
+      },
+      "assertions": 34,
+      "originalAssertionSourcePinsPreservedInInventory": true,
+      "PG73LoaderCalls": [
+        {
+          "line": 115,
+          "source": "listPg73Migrations()"
+        }
+      ],
+      "grantCalls": [
+        {
+          "line": 276,
+          "source": "grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL })",
+          "bytes": 73,
+          "sha256": "2224e633ff1e91c3a8c2aa9e0d5478ed7e929f3e45dc2ce31c63589e7cf6f807"
+        },
+        {
+          "line": 277,
+          "source": "grantPostgresRuntime({DATABASE_URL:\n        `postgres://cinatoken_gateway_migrator:${passwords.migrator}@127.0.0.1:${cluster.port}/postgres`})",
+          "bytes": 142,
+          "sha256": "1a41af9834415508c224547396c9a12e62deced920a53dceae2f6d4203121bca"
+        }
+      ],
+      "pinLiterals": [],
+      "requiredContracts": [
+        {
+          "line": 8,
+          "text": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';"
+        },
+        {
+          "line": 19,
+          "text": "reader: 'shared-key-credited-usage-reader.sql',"
+        },
+        {
+          "line": 27,
+          "text": "ssl:false,max:1,prepare:false,fetch_types:false,connect_timeout:3,"
+        },
+        {
+          "line": 28,
+          "text": "idle_timeout:0,max_lifetime:0,backoff:false,onnotice(){},"
+        },
+        {
+          "line": 81,
+          "text": "{timeout:300_000,skip:!process.env.GATEWAY_NATIVE_PG_BIN},async()=>{"
+        },
+        {
+          "line": 181,
+          "text": "await assert.rejects(migrator.begin(async tx=>tx.unsafe(bodies.reader).simple()),"
+        },
+        {
+          "line": 188,
+          "text": "await assert.rejects(read(),error=>error?.constraint_name==='shared_key_stats_reader_not_active');"
+        },
+        {
+          "line": 194,
+          "text": "await assert.rejects(activate(),error=>error?.constraint_name==='shared_key_stats_reader_not_ready');"
+        },
+        {
+          "line": 211,
+          "text": "assert.equal(rows[0].seller_user_id,'reader-seller');"
+        },
+        {
+          "line": 219,
+          "text": "await assert.rejects(runtime.unsafe(`SELECT * FROM cinatoken_shared_stats.summaries`),"
+        },
+        {
+          "line": 221,
+          "text": "await assert.rejects(runtime.unsafe(`SELECT * FROM"
+        },
+        {
+          "line": 224,
+          "text": "await assert.rejects(runtime.unsafe(`SELECT * FROM"
+        },
+        {
+          "line": 227,
+          "text": "await assert.rejects(consumer.unsafe(`SELECT * FROM"
+        },
+        {
+          "line": 250,
+          "text": "assert.equal(rows[0].seller_user_id,'reader-new-seller');"
+        },
+        {
+          "line": 254,
+          "text": "assert.equal((await read('reader-seller')).length,0);"
+        },
+        {
+          "line": 261,
+          "text": "assert.equal((await read('reader-new-seller'))[0].net_micros,'5625000');"
+        },
+        {
+          "line": 268,
+          "text": "await assert.rejects(read('reader-new-seller'),"
+        },
+        {
+          "line": 272,
+          "text": "assert.equal((await read('reader-new-seller'))[0].net_micros,'5625000');"
+        }
+      ]
+    }
+  ],
+  "assertionCount": 220,
+  "necessaryDirectHelpers": [
+    {
+      "path": "packages/admin/lib/shared-key-signed-stats-reader.ts",
+      "bytes": 6160,
+      "sha256": "27adc0b3d77b57a29ba7a13cb3dab9683b435540f2f2de8d814fcc94804f0132"
+    },
+    {
+      "path": "packages/core/src/db/postgres/critical-writes.impl.ts",
+      "bytes": 47330,
+      "sha256": "69a7c8e621aeb87a687411b9687c2e53e052829c819ccfd6e0bd757073c38408"
+    },
+    {
+      "path": "packages/core/src/db/postgres/portal-marketplace.impl.ts",
+      "bytes": 25739,
+      "sha256": "e466909ad4b818b01238fbea77f004864e209fdf0d57812fa59f6d202cc54ec9"
+    },
+    {
+      "path": "packages/core/src/storage/drizzle/schema.pg.ts",
+      "bytes": 68988,
+      "sha256": "0689ba489c335dcc65267f78c08b5abe749301d1b964d62b364f919e68db5483"
+    },
+    {
+      "path": "packages/core/src/test-support/postgres-financial-engine.mjs",
+      "bytes": 8872,
+      "sha256": "6925ac7069253805b41d121548d2c8db06a594453b982669f1e49fc66543900b"
+    },
+    {
+      "path": "packages/core/src/test-support/postgres-native-cluster.mjs",
+      "bytes": 6300,
+      "sha256": "6b5923be8d3bdcd061033eed1af2f67f3b87fa2fca1f2cf0a0b2eb0eb2cb8d2a"
+    },
+    {
+      "path": "scripts/db/cutover/activate-postgres-buyer-guardrail-split-v349.ts",
+      "bytes": 1920,
+      "sha256": "640ce0a6fbf3c684b2ccccd7884b395b592d7321cd613cb16b8bfeafab3aec55"
+    },
+    {
+      "path": "scripts/db/cutover/activate-postgres-buyer-split-v348.ts",
+      "bytes": 2011,
+      "sha256": "135a3c67fd9e20e9c098717219c4f0aae749fc4f1f765bfc29729af23e6e0507"
+    },
+    {
+      "path": "scripts/db/cutover/grant-postgres-buyer-guardrail-split-v349.ts",
+      "bytes": 1498,
+      "sha256": "29160246eb2faca261a1c46a8aacdf8dd71a6b70a06443476443cff3b3c67ade"
+    },
+    {
+      "path": "scripts/db/cutover/grant-postgres-buyer-split-v348.ts",
+      "bytes": 1456,
+      "sha256": "6bd5ad47d44639e12d9c0ee54c12d2cee9ce8160ce213037d538d5369bec29b8"
+    },
+    {
+      "path": "scripts/db/cutover/grant-postgres-runtime.ts",
+      "bytes": 25946,
+      "sha256": "3f95f18f557696d8a36b93f7fe0d0d35a391e8ac9cf953376a234a6b629ea242"
+    },
+    {
+      "path": "scripts/db/cutover/pg73-native-fixture.mjs",
+      "bytes": 6849,
+      "sha256": "124ddd43c2594d0daaac66a4e7158e5df90b00a6d73f03cbcac9e8f853a7346f"
+    }
+  ],
+  "currentMigrations": {
+    "directory": "packages/core/migrations-postgres",
+    "SQLFiles": 81,
+    "listingAuthority": "Earlier closed static inventory, no migration SQL or PG executed.",
+    "loader": "scripts/db/cutover/pg73-native-fixture.mjs",
+    "loaderUsedByAllSix": true,
+    "loaderQuotedFiles": [
+      "0073_recovery_api_key_workspace_lock.sql",
+      "0074_config_change_audit.sql",
+      "0074_config_change_audit.sql"
+    ]
+  },
+  "constraints": {
+    "preserve220AssertionCallsAndOriginalExpectedValues": true,
+    "preserve95And96TwoPositiveIdempotentGrantInvocationsBeforeSplitAndAllPostSplitDenials": true,
+    "preserve99And106LateGrantRerunPositiveContracts": true,
+    "preserveRolesLocksSQLOrderSkipTimeoutCleanupAndSourcePins": true,
+    "step99HistoricalSourcePin": "095f8ec4748cd92e35f37b86891ef8762bc8b8b5ca65ab49abc55b067c1d9be9",
+    "step99HistoricalReadIsSeparateFromExecutingFixture": true,
+    "unlike94And109": "94/109 repair froze historical non-executing input snapshots; these six remain current executing PG73 fixtures. Any historical-source repair at99 needs its own original Git-byte evidence and actual failing CI authority.",
+    "currentCIActualTerminalForTheseSixStillUnknown": true,
+    "originalDcc6AndEE122SixWereSkipped": true,
+    "rootCauseNotConfirmed": true,
+    "nativePassNotClaimed": true
+  },
+  "minimalSuggestion": "Wait for the original d537 terminal native job. Fix only a genuinely executed first failure, retaining the PG73 loader corpus and all grant/idempotency/denial/late-rerun contracts. For99, independently establish original historical bytes before considering a frozen historical snapshot; do not infer runtime pin failure or reduce the hash assertion from inventory alone.",
+  "inventoryReaderErrorsRetained": {
+    "GHBindingFirstAttemptActualExit": 1,
+    "GHBindingFirstAttemptReceipt": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-remaining-six-native-minimal-inventory-354b4a0c896f91a10fd126f8/bind-original-gh-six-metadata.closed.json",
+      "bytes": 1223,
+      "sha256": "e567d0166527869efe4be96ff3f181f07362c21743d502af9174a956db5e68f6"
+    },
+    "GHBindingFirstAttemptReason": "Inventory expected an explicit workflow name, but the original steps have generic default Run gosu names. No native failure.",
+    "firstReadActualExit": 1,
+    "firstReadReason": "Reader misresolved a repo-relative grant URL and got ENOENT.",
+    "firstReadClosedReceipt": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-remaining-six-native-minimal-inventory-354b4a0c896f91a10fd126f8/read-minimal-six-inventory.closed.json",
+      "bytes": 1211,
+      "sha256": "5c88351e879938f6c79c65d2d4b6ad8a498c00796de85c5a6bd26afb7d4147fc"
+    },
+    "secondReadActualExit": 0,
+    "secondMappingInvalid": "Original GH step number was initially used as YAML index; preliminary inventory preserved and superseded.",
+    "thirdReadActualExit": 0,
+    "thirdMappingWasOnlyTentativeBeforeGHBinding": true,
+    "finalMappingUsesActualGHNumbersNames": true,
+    "unnecessarySourceReadsFromInitialIncorrectMapping": [
+      "scripts/db/cutover/postgres-shared-key-snapshot-earning-consumer-v2.native.test.mjs",
+      "scripts/db/cutover/postgres-shared-key-economic-delivery.native.test.mjs",
+      "scripts/db/cutover/build-request-legacy-parent-census.native.test.mjs"
+    ],
+    "uniqueFixtureSourceReadCount": 9,
+    "noRuntimeFailureInferredFromReaderErrors": true
+  },
+  "actions": {
+    "repositoryWrites": 0,
+    "gitWrites": 0,
+    "markdownWrites": 0,
+    "nativeRuns": 0,
+    "databaseRuns": 0,
+    "controlRuns": 0,
+    "ciQueries": 0,
+    "ciReruns": 0,
+    "networkRequests": 0,
+    "fixtureImportedOrExecuted": false,
+    "oldFrozenRootsWritten": false,
+    "oldArchivesWalked": false,
+    "additionalSourceOrHelperReadsInFinalBinding": 0
+  },
+  "ownerStopWriteAfterSeal": true
+}

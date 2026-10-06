@@ -1,0 +1,17 @@
+file:///C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/repair-and-verify-source.mjs:47
+    records.push({ node, property, line: node.loc.start.line, sql });
+                                                  ^
+
+TypeError: Cannot read properties of undefined (reading 'start')
+    at file:///C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/repair-and-verify-source.mjs:47:51
+    at walk (file:///C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/repair-and-verify-source.mjs:29:40)
+    at walk (file:///C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/repair-and-verify-source.mjs:30:167)
+    at walk (file:///C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/repair-and-verify-source.mjs:30:167)
+    at file:///C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/repair-and-verify-source.mjs:30:93
+    at Array.forEach (<anonymous>)
+    at walk (file:///C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/repair-and-verify-source.mjs:30:76)
+    at walk (file:///C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/repair-and-verify-source.mjs:30:167)
+    at file:///C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/repair-and-verify-source.mjs:30:93
+    at Array.forEach (<anonymous>)
+
+Node.js v24.14.1

@@ -1,0 +1,26 @@
+{
+  "schema": "independent-native-quote-timecast-readonly-child-receipt-v1",
+  "name": "read-minimal-six-inventory-v3",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "argv": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-remaining-six-native-minimal-inventory-354b4a0c896f91a10fd126f8/read-minimal-six-inventory-v3.mjs",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-remaining-six-native-minimal-inventory-354b4a0c896f91a10fd126f8"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "startedAt": "2026-10-06T06:07:04.540Z",
+  "closedAt": "2026-10-06T06:07:04.723Z",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "closed": true,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-remaining-six-native-minimal-inventory-354b4a0c896f91a10fd126f8\\read-minimal-six-inventory-v3.stdout.log",
+    "bytes": 2835,
+    "sha256": "885d58561972c08447c5ef71ac7bd59661cf1f9715f441651df0511fd82d14a3"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-remaining-six-native-minimal-inventory-354b4a0c896f91a10fd126f8\\read-minimal-six-inventory-v3.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

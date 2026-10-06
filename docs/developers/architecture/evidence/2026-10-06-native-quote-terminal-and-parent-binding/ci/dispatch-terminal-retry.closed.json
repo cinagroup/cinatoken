@@ -1,0 +1,29 @@
+{
+  "at": "2026-10-06T06:20:02.743Z",
+  "finishedAt": "2026-10-06T06:20:06.044Z",
+  "executable": "C:/Program Files/GitHub CLI/gh.exe",
+  "args": [
+    "run",
+    "view",
+    "37421461373",
+    "--repo",
+    "cinagroup/cinatoken",
+    "--job",
+    "112131520499",
+    "--log"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\dispatch-terminal-retry.stdout.log",
+    "bytes": 5159606,
+    "sha256": "d1a431e6f7bafbddce2045e949a771cc5d4783f4cccad8dac690c95e0ef627f7"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\dispatch-terminal-retry.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

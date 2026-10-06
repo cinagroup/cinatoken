@@ -1,0 +1,25 @@
+{
+  "schema": "cinatoken-request-signal-readonly-outer-tool-observations-v1",
+  "authority": "Fields transcribed from actual exec_command tool results already returned; child byte authority remains each owned closed result.json and raw files. These observations are not re-executions.",
+  "gatePassDerived": false,
+  "applicationExecution": false,
+  "records": [
+    {"label":"official-source-read","chunk_id":"c4ebbd","exit_code":1,"wall_time_seconds":0.3821135,"ownedChildReceipt":"official-source-read.result.json","closed":true},
+    {"label":"official-source-public-read","chunk_id":"9d0846","exit_code":1,"wall_time_seconds":0.3007657,"ownedChildReceipt":"official-source-public-read.result.json","closed":true},
+    {"label":"official-source-authorized-read","chunk_id":"4382b4","exit_code":0,"wall_time_seconds":2.3530371,"ownedChildReceipt":"official-source-authorized-read.result.json","closed":true,"approvedPublicReadOnlySource":"Exact unauthenticated public raw.githubusercontent.com locked-tag four URLs; no production or CI request"},
+    {"label":"static-source-event-read","chunk_id":"6d6513","exit_code":1,"wall_time_seconds":0.4574359,"ownedChildReceipt":"static-source-event-read.result.json","closed":true},
+    {"label":"static-source-event-read-v2","chunk_id":"638fe2","exit_code":0,"wall_time_seconds":0.5996416,"ownedChildReceipt":"static-source-event-read-v2.result.json","closed":true},
+    {"label":"seal-request-signal","chunk_id":"6cf30d","exit_code":1,"wall_time_seconds":0.2954039,"ownedChildReceipt":"seal-request-signal.result.json","closed":true},
+    {"label":"seal-request-signal-v2","chunk_id":"9b360c","exit_code":0,"wall_time_seconds":0.3113733,"ownedChildReceipt":"seal-request-signal-v2.result.json","closed":true}
+  ],
+  "additionalPreparationFailuresObserved": [
+    {"chunk_id":"4c189e","exit_code":1,"classification":"read-only exploratory rg referenced a nonexistent gateway filename; correct actual filename subsequently read","exactRawFileAvailable":false,"terminalFieldsObserved":true,"applicationFailureDerived":false},
+    {"chunk_id":"c6fc1c","exit_code":1,"wall_time_seconds":0.2566982,"classification":"owned reader-copy shell quoting SyntaxError; tool display was truncated, no exact complete stream claimed","exactRawFileAvailable":false,"terminalFieldsObserved":true,"applicationFailureDerived":false}
+  ],
+  "webPrimaryReferences": [
+    {"url":"https://developers.cloudflare.com/workers/configuration/compatibility-flags/#enable-requestsignal-for-incoming-requests","observedClaim":"enable_request_signal and disable_request_signal listed; incoming cancellation listener contract","byteExactPageSnapshotClaim":false},
+    {"url":"https://developers.cloudflare.com/changelog/post/2025-05-22-handle-request-cancellation/","observedClaim":"feature introduced with explicit enable_request_signal requirement","byteExactPageSnapshotClaim":false},
+    {"url":"https://github.com/cloudflare/workerd/issues/6832","observedClaim":"author reports async-source cancellation missing while enabled Request.signal still aborts","causeProof":false,"byteExactPageSnapshotClaim":false},
+    {"url":"https://github.com/cloudflare/workerd/pull/6833","observedClaim":"Open on read-only observation2026-10-06; proposed dropped-pump source-cancel change","adopted":false,"causeProof":false,"byteExactPageSnapshotClaim":false}
+  ]
+}

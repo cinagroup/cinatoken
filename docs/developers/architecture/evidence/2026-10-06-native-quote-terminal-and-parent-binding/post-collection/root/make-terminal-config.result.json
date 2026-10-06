@@ -1,0 +1,25 @@
+{
+  "at": "2026-10-06T06:32:23.543Z",
+  "finishedAt": "2026-10-06T06:32:23.612Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-precision-root-1fsOZX\\make-terminal-config.mjs",
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-legacy-parent-binding-independent-peer-1a10fe74c562dfcfe66a6415",
+    "FINAL-legacy-parent-client-binding-independent-peer.json",
+    "2aed5d2e255e814b30e625764279ad7457a137bf17564812b3767ad7652220b1",
+    "11808"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-precision-root-1fsOZX\\make-terminal-config.stdout.log",
+    "bytes": 162,
+    "sha256": "06b88efb228212356040859f0afe20c7bffddda3af96eda1cdcd36e171687e2a"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-precision-root-1fsOZX\\make-terminal-config.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

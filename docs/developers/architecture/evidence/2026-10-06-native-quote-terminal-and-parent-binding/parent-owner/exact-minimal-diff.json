@@ -1,0 +1,26 @@
+{
+  "changed": [
+    {
+      "line": 100,
+      "before": "      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });",
+      "after": "      await grantPg73RuntimeFixture({ cluster, migrator: sql, migratorUrl });"
+    },
+    {
+      "line": 149,
+      "before": "      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });",
+      "after": "      await grantPg73RuntimeFixture({ cluster, migrator: sql, migratorUrl });"
+    },
+    {
+      "line": 391,
+      "before": "      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });",
+      "after": "      await grantPg73RuntimeFixture({ cluster, migrator: sql, migratorUrl });"
+    }
+  ],
+  "reverseFullBytesExact": true,
+  "entireASTExceptBindingsExact": true,
+  "assertionsCount": 60,
+  "allAssertionsASTExact": true,
+  "addedBytes": 15,
+  "changedLineWhitespaceCheckActualExit": 0,
+  "gitInvoked": false
+}

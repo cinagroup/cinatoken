@@ -1,0 +1,93 @@
+{
+  "schema": "cinatoken-official-workerd-locked-source-read-v1",
+  "at": "2026-10-06T05:51:55.575Z",
+  "closed": true,
+  "actualSourceReadExit": 0,
+  "results": [
+    {
+      "url": "https://raw.githubusercontent.com/cloudflare/workerd/v1.20260828.1/src/workerd/io/compatibility-date.capnp",
+      "lockedTag": "v1.20260828.1",
+      "source": "src/workerd/io/compatibility-date.capnp",
+      "beganAt": "2026-10-06T05:51:53.509Z",
+      "endedAt": "2026-10-06T05:51:55.291Z",
+      "httpStatus": 200,
+      "acceptedOfficialLockedSource": true,
+      "output": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/official-locked-source-public/compatibility-date.capnp",
+        "bytes": 88675,
+        "sha256": "dde45e2337fe1c8991f165b452968c86008852e086ccdc5e0470a25bd6dafb95"
+      },
+      "headers": {
+        "contentType": "text/plain; charset=utf-8",
+        "etag": "W/\"951a495dcf1259092c1ebd857c1dfcfc7d06787c895ef5c0c61b32aac0ba26ca\""
+      },
+      "authenticationUsed": false,
+      "productOrCIRequest": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/cloudflare/workerd/v1.20260828.1/src/workerd/io/worker-entrypoint.c++",
+      "lockedTag": "v1.20260828.1",
+      "source": "src/workerd/io/worker-entrypoint.c++",
+      "beganAt": "2026-10-06T05:51:53.550Z",
+      "endedAt": "2026-10-06T05:51:55.009Z",
+      "httpStatus": 200,
+      "acceptedOfficialLockedSource": true,
+      "output": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/official-locked-source-public/worker-entrypoint.c++",
+        "bytes": 50916,
+        "sha256": "5a26985f9d80021e9af91b0569c54b7d9c987bf5b6ca6d63d37da5c1fab28bf9"
+      },
+      "headers": {
+        "contentType": "text/plain; charset=utf-8",
+        "etag": "W/\"c46afe1015780149c6e8d90d97c1b65f5121ce2429e82386cfc447d79554192b\""
+      },
+      "authenticationUsed": false,
+      "productOrCIRequest": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/cloudflare/workerd/v1.20260828.1/src/workerd/api/streams/standard.c++",
+      "lockedTag": "v1.20260828.1",
+      "source": "src/workerd/api/streams/standard.c++",
+      "beganAt": "2026-10-06T05:51:53.551Z",
+      "endedAt": "2026-10-06T05:51:55.574Z",
+      "httpStatus": 200,
+      "acceptedOfficialLockedSource": true,
+      "output": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/official-locked-source-public/standard.c++",
+        "bytes": 193298,
+        "sha256": "f64a9fe8ab0c2f3bc397ac18d35d59e5c1be8ead1182c7ccd668bfbd993bc698"
+      },
+      "headers": {
+        "contentType": "text/plain; charset=utf-8",
+        "etag": "W/\"85f963605b8f4ff1b76954a5ef1830347c564828b14f61db6c009abbcf19ec0f\""
+      },
+      "authenticationUsed": false,
+      "productOrCIRequest": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/cloudflare/workerd/v1.20260828.1/src/workerd/api/streams/readable.c++",
+      "lockedTag": "v1.20260828.1",
+      "source": "src/workerd/api/streams/readable.c++",
+      "beganAt": "2026-10-06T05:51:53.552Z",
+      "endedAt": "2026-10-06T05:51:54.975Z",
+      "httpStatus": 200,
+      "acceptedOfficialLockedSource": true,
+      "output": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/official-locked-source-public/readable.c++",
+        "bytes": 31774,
+        "sha256": "ca762b8e7ea908b29eb2c99db4bcad7e50b5f206cd1a75312f4b2b658bfe7f08"
+      },
+      "headers": {
+        "contentType": "text/plain; charset=utf-8",
+        "etag": "W/\"a4e47588a0690f69da5e51c88543de6453bcc92e9b36a2b0cbc868e636dcdf6d\""
+      },
+      "authenticationUsed": false,
+      "productOrCIRequest": false
+    }
+  ],
+  "testOrAppExecution": false,
+  "packageUpgrades": 0,
+  "sourceWritesToRepo": 0,
+  "productionRequests": 0,
+  "gatePassDerived": false
+}

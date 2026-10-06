@@ -1,0 +1,4583 @@
+{
+  "preservedPriorReaderFailure": {
+    "actualExit": 1,
+    "receiptPath": "C:/Users/cina/AppData/Local/Temp/cinatoken-remaining-six-native-minimal-inventory-354b4a0c896f91a10fd126f8/read-minimal-six-inventory.closed.json",
+    "stdout": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-remaining-six-native-minimal-inventory-354b4a0c896f91a10fd126f8\\read-minimal-six-inventory.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stderr": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-remaining-six-native-minimal-inventory-354b4a0c896f91a10fd126f8\\read-minimal-six-inventory.stderr.log",
+      "bytes": 1228,
+      "sha256": "9b64d8c608686e476806ed1d48aaf49d63bb222cba23eb07da8e8cda33ea407e"
+    },
+    "reason": "Inventory reader incorrectly joined a repo-relative grant URL under the fixture directory; no application/native failure."
+  },
+  "schema": "cinatoken-remaining-six-native-minimal-readonly-inventory.v1",
+  "finishedAt": "2026-10-06T06:06:01.332Z",
+  "head": "d537f83b6389a4e5bbd7f92325f74d77e6bdfc9a",
+  "headRef": "refs/heads/main",
+  "sourceAuthority": "Current HEAD metadata read through .git HEAD/ref and current files. No Git writes, no Git command spawned.",
+  "workflow": {
+    "path": ".github/workflows/proxy-dispatch-safety.yml",
+    "bytes": 45895,
+    "sha256": "8e883e7f21f77f8367d361f6bd3d060e16c241c28641b3eac85af6835841f152",
+    "job": "native-financial-consumer",
+    "workflowSteps": 111
+  },
+  "nativeSelectedSteps": [
+    95,
+    96,
+    97,
+    98,
+    99,
+    106
+  ],
+  "inventory": [
+    {
+      "workflowOriginalStep": 95,
+      "workflowLine": 561,
+      "workflowStepText": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-stats-auth-boundary-v346.native.test.mjs",
+      "name": null,
+      "command": "node --import tsx --test scripts/db/cutover/postgres-shared-key-stats-auth-boundary-v346.native.test.mjs",
+      "source": {
+        "path": "scripts/db/cutover/postgres-shared-key-stats-auth-boundary-v346.native.test.mjs",
+        "bytes": 8904,
+        "sha256": "46a13c44fec610692feb18ea0bf1d3bc10eb93a76e65d47edd326db13ea31e18"
+      },
+      "assertions": {
+        "count": 12,
+        "methods": {
+          "match": 1,
+          "equal": 11
+        },
+        "sourcePins": [
+          {
+            "line": 43,
+            "method": "match",
+            "bytes": 57,
+            "sha256": "0d8ff706ddc4a2dcddb74cac1b9aedd36267baee8c811b2519171b8fcd8b7a55"
+          },
+          {
+            "line": 58,
+            "method": "equal",
+            "bytes": 30,
+            "sha256": "03920999be2a48f6bb0e0b4666074b3984332b7f530b7e4e50a06dea7d94b7e5"
+          },
+          {
+            "line": 94,
+            "method": "equal",
+            "bytes": 62,
+            "sha256": "727a259793bb6358074675bc67d33d44ee443210f92792c9639d950280ac7870"
+          },
+          {
+            "line": 95,
+            "method": "equal",
+            "bytes": 62,
+            "sha256": "c642604c35d9bd8696678d9610c703aa76a712acabee5c8e4eb69a7d7a577561"
+          },
+          {
+            "line": 96,
+            "method": "equal",
+            "bytes": 41,
+            "sha256": "5ab380ba4418d447c6769f4bc5579b8752f8265ec0ac134f6a340df7da9a9597"
+          },
+          {
+            "line": 97,
+            "method": "equal",
+            "bytes": 41,
+            "sha256": "a84eaf037b9e8f1ee529854172215272b07aee1f3856f7ffd5be09fb4714d858"
+          },
+          {
+            "line": 98,
+            "method": "equal",
+            "bytes": 41,
+            "sha256": "38445ade193ee4dda5ffc38e6aacb397ce1ad4b501076b2b9782c87407b29de2"
+          },
+          {
+            "line": 99,
+            "method": "equal",
+            "bytes": 39,
+            "sha256": "8c4fbc02cb63b8b5f98eb92254aa39da5081c6436829ecf0323f285f0e19d135"
+          },
+          {
+            "line": 120,
+            "method": "equal",
+            "bytes": 53,
+            "sha256": "7fceab8ec1263c8e7bde7abf4a2c806f0eab8d27a4b03b7d29edc121a7d8338c"
+          },
+          {
+            "line": 125,
+            "method": "equal",
+            "bytes": 53,
+            "sha256": "3de8106de3a864a4442ec9a4f33a868f0cc8638a8557e964185e74cb14505e25"
+          },
+          {
+            "line": 128,
+            "method": "equal",
+            "bytes": 54,
+            "sha256": "17272849eba4f78a11d16430671e16a422be3746fda08e23173024169f4923ca"
+          },
+          {
+            "line": 138,
+            "method": "equal",
+            "bytes": 33,
+            "sha256": "968e6f17281331a1bc8d64ce3d4aabf07e55f47c0a759ce56d3e1a681a9c793c"
+          }
+        ]
+      },
+      "SQLTemplateCount": 12,
+      "pinLiterals": [],
+      "imports": [
+        {
+          "module": "node:assert/strict",
+          "line": 3
+        },
+        {
+          "module": "node:crypto",
+          "line": 4
+        },
+        {
+          "module": "node:fs/promises",
+          "line": 5
+        },
+        {
+          "module": "node:test",
+          "line": 6
+        },
+        {
+          "module": "postgres",
+          "line": 7
+        },
+        {
+          "module": "../../../packages/core/src/test-support/postgres-native-cluster.mjs",
+          "line": 8
+        },
+        {
+          "module": "./pg73-native-fixture.mjs",
+          "line": 9
+        }
+      ],
+      "PG73LoaderCalls": [
+        {
+          "line": 57,
+          "source": "listPg73Migrations()"
+        }
+      ],
+      "grantCalls": [
+        {
+          "line": 82,
+          "source": "grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL })",
+          "bytes": 73,
+          "sha256": "2224e633ff1e91c3a8c2aa9e0d5478ed7e929f3e45dc2ce31c63589e7cf6f807"
+        },
+        {
+          "line": 83,
+          "source": "grantPostgresRuntime({ DATABASE_URL:\n        `postgres://cinatoken_gateway_migrator:${migratorPassword}@127.0.0.1:${cluster.port}/postgres` })",
+          "bytes": 142,
+          "sha256": "b9fad68f4fe17e3a6f3364e7f03e5edfb82093baeb3f8e7ceb1574da1636e32f"
+        }
+      ],
+      "selectedContractLines": [
+        {
+          "line": 9,
+          "text": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';"
+        },
+        {
+          "line": 12,
+          "text": "const migrationDir = new URL('packages/core/migrations-postgres/', root);"
+        },
+        {
+          "line": 17,
+          "text": "const sha256 = body => createHash('sha256').update(body).digest('hex');"
+        },
+        {
+          "line": 24,
+          "text": "connect_timeout: 3, idle_timeout: 0, max_lifetime: 0, backoff: false,"
+        },
+        {
+          "line": 29,
+          "text": "{ timeout: 300_000, skip: !process.env.GATEWAY_NATIVE_PG_BIN }, async () => {"
+        },
+        {
+          "line": 33,
+          "text": "scope: 'owned loopback PG18.6; formal PG73 and actual grant-postgres-runtime.ts',"
+        },
+        {
+          "line": 43,
+          "text": "assert.match(cluster.binaryVersion, /PostgreSQL\\) 18\\.6/);"
+        },
+        {
+          "line": 56,
+          "text": "(version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);"
+        },
+        {
+          "line": 57,
+          "text": "const files = await listPg73Migrations();"
+        },
+        {
+          "line": 58,
+          "text": "assert.equal(files.length, 73);"
+        },
+        {
+          "line": 70,
+          "text": "runtimeGrant: new URL('scripts/db/cutover/grant-postgres-runtime.ts', root),"
+        },
+        {
+          "line": 73,
+          "text": "statsReader: new URL('packages/core/migrations-proposals/postgres/shared-key-credited-usage-reader.sql', root),"
+        },
+        {
+          "line": 75,
+          "text": "report.sourceSha256 = { formalMigrationCorpus: sha256(corpus.join('\\n')),"
+        },
+        {
+          "line": 77,
+          "text": "[key, sha256(await readFile(url, 'utf8'))]))) };"
+        },
+        {
+          "line": 82,
+          "text": "grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });"
+        },
+        {
+          "line": 94,
+          "text": "assert.equal(rights.session_user, 'cinatoken_gateway_runtime');"
+        },
+        {
+          "line": 95,
+          "text": "assert.equal(rights.current_user, 'cinatoken_gateway_runtime');"
+        },
+        {
+          "line": 96,
+          "text": "assert.equal(rights.session_select, true);"
+        },
+        {
+          "line": 97,
+          "text": "assert.equal(rights.session_insert, true);"
+        },
+        {
+          "line": 98,
+          "text": "assert.equal(rights.session_update, true);"
+        },
+        {
+          "line": 99,
+          "text": "assert.equal(rights.users_insert, true);"
+        },
+        {
+          "line": 109,
+          "text": "const fakeHash = sha256(fakeToken);"
+        },
+        {
+          "line": 119,
+          "text": "AND u.status <> 'disabled'`, [sha256(fakeToken)]);"
+        },
+        {
+          "line": 120,
+          "text": "assert.equal(derived.seller_user_id, 'victim-seller');"
+        },
+        {
+          "line": 125,
+          "text": "assert.equal(setting.claimed_seller, 'victim-seller');"
+        },
+        {
+          "line": 128,
+          "text": "assert.equal(readBack.claimed_seller, 'victim-seller');"
+        },
+        {
+          "line": 133,
+          "text": "// grant rerun. We only verify the absent proposal never arrived via PG73."
+        },
+        {
+          "line": 138,
+          "text": "assert.equal(reader.absent, true);"
+        },
+        {
+          "line": 145,
+          "text": "} finally {"
+        },
+        {
+          "line": 146,
+          "text": "await Promise.allSettled(clients.map(sql => sql.end({ timeout: 1 })));"
+        }
+      ]
+    },
+    {
+      "workflowOriginalStep": 96,
+      "workflowLine": 564,
+      "workflowStepText": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-stats-signed-claim-v348.native.test.mjs",
+      "name": null,
+      "command": "node --import tsx --test scripts/db/cutover/postgres-shared-key-stats-signed-claim-v348.native.test.mjs",
+      "source": {
+        "path": "scripts/db/cutover/postgres-shared-key-stats-signed-claim-v348.native.test.mjs",
+        "bytes": 12736,
+        "sha256": "7e0ae22d95b9cecc2fa154a2afd658868a31ece212aa60715021872e04557238"
+      },
+      "assertions": {
+        "count": 24,
+        "methods": {
+          "match": 1,
+          "equal": 7,
+          "rejects": 16
+        },
+        "sourcePins": [
+          {
+            "line": 43,
+            "method": "match",
+            "bytes": 57,
+            "sha256": "0d8ff706ddc4a2dcddb74cac1b9aedd36267baee8c811b2519171b8fcd8b7a55"
+          },
+          {
+            "line": 63,
+            "method": "equal",
+            "bytes": 30,
+            "sha256": "03920999be2a48f6bb0e0b4666074b3984332b7f530b7e4e50a06dea7d94b7e5"
+          },
+          {
+            "line": 85,
+            "method": "rejects",
+            "bytes": 150,
+            "sha256": "ae9b530a07b712c83eb9aad7e35076cd9a6f158b2d429c5362f21b14931191a8"
+          },
+          {
+            "line": 89,
+            "method": "rejects",
+            "bytes": 260,
+            "sha256": "ee9d7b94fae119935b9b4b1531a3d27f42e4c11f6b3aa5f015212ac75983065a"
+          },
+          {
+            "line": 123,
+            "method": "equal",
+            "bytes": 68,
+            "sha256": "782eb22ee352ebf8d37181b9c248e47045f5aef8d3a4e9978c84fd1cb520e707"
+          },
+          {
+            "line": 124,
+            "method": "rejects",
+            "bytes": 114,
+            "sha256": "1687e8e9f04b44f8321d1e0ae3be09bd6216f836c36867340bf0d289ed6c19a2"
+          },
+          {
+            "line": 132,
+            "method": "equal",
+            "bytes": 88,
+            "sha256": "6551939f429af0f7932516f1c846625abf3aba9c95865e35eed1dd4558e8aaaf"
+          },
+          {
+            "line": 133,
+            "method": "equal",
+            "bytes": 165,
+            "sha256": "b05c9ef3751dc3b3bd96bacf29de710fe78996fde156bf87c62123e93426aff5"
+          },
+          {
+            "line": 138,
+            "method": "rejects",
+            "bytes": 237,
+            "sha256": "314b26f922fb7e81c761544b1c9fcb663afc2232aeb68d9901ce688497397f61"
+          },
+          {
+            "line": 139,
+            "method": "equal",
+            "bytes": 69,
+            "sha256": "6a2477cc58c74ee0a00a3285037c43e07d7bbf781022441839df132755da99e1"
+          },
+          {
+            "line": 142,
+            "method": "equal",
+            "bytes": 73,
+            "sha256": "d11a2980ddd189f7d72c0ae78191ce0476ae367b3ab603c4195c9bed4e597fca"
+          },
+          {
+            "line": 146,
+            "method": "rejects",
+            "bytes": 184,
+            "sha256": "1a7d70d10c0c4b0cbe400f1f1c95f13ebd32d60ba812c88bf7932203239d13ca"
+          },
+          {
+            "line": 150,
+            "method": "rejects",
+            "bytes": 188,
+            "sha256": "cb25f0c15c89e3faa538a4a7f016f9722f91a287f22612713c689066dda2f3ce"
+          },
+          {
+            "line": 154,
+            "method": "rejects",
+            "bytes": 166,
+            "sha256": "afe8f2a0c62ec16d534480333d514dc2fca3f725951b57e4a5ce7eb8da66edb3"
+          },
+          {
+            "line": 157,
+            "method": "rejects",
+            "bytes": 117,
+            "sha256": "a4c1f7db9e76e9c9f6bda7abc59a6cf2cd0dc428cb46171f61284e7e4d45cb0c"
+          },
+          {
+            "line": 162,
+            "method": "rejects",
+            "bytes": 116,
+            "sha256": "936fddd6bcb633304062e33b8632c99a1f20588e7adbd4746fb1d96808554b5d"
+          },
+          {
+            "line": 165,
+            "method": "rejects",
+            "bytes": 116,
+            "sha256": "5a4ec59eaf1936d01a1d4758c24a3e0668781631c08f0dbf416929f059efc329"
+          },
+          {
+            "line": 169,
+            "method": "rejects",
+            "bytes": 116,
+            "sha256": "2015fe5cb15ec6ea8b19dbaa6c6a54eca0eaa199b1405fff6c82f169ab0d1525"
+          },
+          {
+            "line": 171,
+            "method": "rejects",
+            "bytes": 115,
+            "sha256": "40bf3195634516035ccab8e40bf5ee7e4f485a842d9de5d120c4d77b6448d09c"
+          },
+          {
+            "line": 173,
+            "method": "rejects",
+            "bytes": 122,
+            "sha256": "47965425db75415fb1bcec6a5ddbd7c09268932540726282511be42921fc2c59"
+          },
+          {
+            "line": 175,
+            "method": "rejects",
+            "bytes": 74,
+            "sha256": "32bf3a2d0ee08e3398ad83c1a6c1d08750f581383b72f7a854f0827e53998f95"
+          },
+          {
+            "line": 176,
+            "method": "rejects",
+            "bytes": 115,
+            "sha256": "44a7c47304d8dd03c52a1c68c4b484e76417fc3be98d48bd40ab394307e69009"
+          },
+          {
+            "line": 182,
+            "method": "rejects",
+            "bytes": 113,
+            "sha256": "8379bc6656aff7e6ea0cdd0174a4402dd956a80d13d7ca0b437e4abab66c242d"
+          },
+          {
+            "line": 188,
+            "method": "equal",
+            "bytes": 399,
+            "sha256": "5023a16cd9139603fceb931dea7f4df7cbe54aa847a1f7ca50e30997590d3af9"
+          }
+        ]
+      },
+      "SQLTemplateCount": 19,
+      "pinLiterals": [],
+      "imports": [
+        {
+          "module": "node:assert/strict",
+          "line": 2
+        },
+        {
+          "module": "node:crypto",
+          "line": 3
+        },
+        {
+          "module": "node:fs/promises",
+          "line": 4
+        },
+        {
+          "module": "node:test",
+          "line": 5
+        },
+        {
+          "module": "postgres",
+          "line": 6
+        },
+        {
+          "module": "../../../packages/core/src/test-support/postgres-native-cluster.mjs",
+          "line": 7
+        },
+        {
+          "module": "./pg73-native-fixture.mjs",
+          "line": 8
+        }
+      ],
+      "PG73LoaderCalls": [
+        {
+          "line": 62,
+          "source": "listPg73Migrations()"
+        }
+      ],
+      "grantCalls": [
+        {
+          "line": 81,
+          "source": "grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL })",
+          "bytes": 73,
+          "sha256": "2224e633ff1e91c3a8c2aa9e0d5478ed7e929f3e45dc2ce31c63589e7cf6f807"
+        },
+        {
+          "line": 82,
+          "source": "grantPostgresRuntime({ DATABASE_URL:\n        `postgres://cinatoken_gateway_migrator:${migratorPassword}@127.0.0.1:${cluster.port}/postgres` })",
+          "bytes": 142,
+          "sha256": "b9fad68f4fe17e3a6f3364e7f03e5edfb82093baeb3f8e7ceb1574da1636e32f"
+        },
+        {
+          "line": 186,
+          "source": "grantPostgresRuntime({ DATABASE_URL:\n        `postgres://cinatoken_gateway_migrator:${migratorPassword}@127.0.0.1:${cluster.port}/postgres` })",
+          "bytes": 142,
+          "sha256": "b9fad68f4fe17e3a6f3364e7f03e5edfb82093baeb3f8e7ceb1574da1636e32f"
+        }
+      ],
+      "selectedContractLines": [
+        {
+          "line": 8,
+          "text": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';"
+        },
+        {
+          "line": 11,
+          "text": "const migrationDir = new URL('packages/core/migrations-postgres/', root);"
+        },
+        {
+          "line": 12,
+          "text": "const proposalPath = new URL('packages/core/migrations-proposals/postgres/shared-key-stats-signed-claim-v348.sql', root);"
+        },
+        {
+          "line": 14,
+          "text": "const sha256 = body => createHash('sha256').update(body).digest('hex');"
+        },
+        {
+          "line": 22,
+          "text": "connect_timeout: 3, idle_timeout: 0, max_lifetime: 0, backoff: false,"
+        },
+        {
+          "line": 26,
+          "text": "test('PG18 signed seller claim rejects runtime/session/GUC forgery and replay',"
+        },
+        {
+          "line": 27,
+          "text": "{ timeout: 300_000, skip: !process.env.GATEWAY_NATIVE_PG_BIN }, async () => {"
+        },
+        {
+          "line": 43,
+          "text": "assert.match(cluster.binaryVersion, /PostgreSQL\\) 18\\.6/);"
+        },
+        {
+          "line": 61,
+          "text": "(version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);"
+        },
+        {
+          "line": 62,
+          "text": "const files = await listPg73Migrations();"
+        },
+        {
+          "line": 63,
+          "text": "assert.equal(files.length, 73);"
+        },
+        {
+          "line": 74,
+          "text": "report.sourceSha256 = { formalMigrationCorpus: sha256(corpus.join('\\n')),"
+        },
+        {
+          "line": 75,
+          "text": "proposal: sha256(proposal),"
+        },
+        {
+          "line": 76,
+          "text": "nativeFixture: sha256(await readFile(new URL(import.meta.url), 'utf8')),"
+        },
+        {
+          "line": 77,
+          "text": "runtimeGrant: sha256(await readFile(new URL('scripts/db/cutover/grant-postgres-runtime.ts', root), 'utf8')) };"
+        },
+        {
+          "line": 81,
+          "text": "grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });"
+        },
+        {
+          "line": 85,
+          "text": "await assert.rejects(migrator.begin(async tx => tx.unsafe(proposal).simple()),"
+        },
+        {
+          "line": 89,
+          "text": "await assert.rejects(migrator.begin(async tx => {"
+        },
+        {
+          "line": 115,
+          "text": "const signature = (c, audience) => createHmac('sha256', secret)"
+        },
+        {
+          "line": 123,
+          "text": "assert.equal((await verify(reader, first))[0].seller_id, 'seller-a');"
+        },
+        {
+          "line": 124,
+          "text": "await assert.rejects(verify(reader, first),"
+        },
+        {
+          "line": 132,
+          "text": "assert.equal(competingResults.filter(result => result.status === 'fulfilled').length, 1);"
+        },
+        {
+          "line": 133,
+          "text": "assert.equal(competingResults.filter(result => result.status === 'rejected'"
+        },
+        {
+          "line": 138,
+          "text": "await assert.rejects(reader.begin(async tx => {"
+        },
+        {
+          "line": 139,
+          "text": "assert.equal((await verify(tx, rolledBack))[0].seller_id, 'seller-a');"
+        },
+        {
+          "line": 142,
+          "text": "assert.equal((await verify(reader, rolledBack))[0].seller_id, 'seller-a');"
+        },
+        {
+          "line": 146,
+          "text": "await assert.rejects(verify(reader, { ...sellerTamper, sellerId: 'seller-b' },"
+        },
+        {
+          "line": 150,
+          "text": "await assert.rejects(verify(reader, { ...scopeTamper, keyIds: ['key-a', 'key-c'] },"
+        },
+        {
+          "line": 154,
+          "text": "await assert.rejects(verify(reader, wrongAudience, signature(wrongAudience, 'stats.admin')),"
+        },
+        {
+          "line": 157,
+          "text": "await assert.rejects(verify(reader, unordered),"
+        },
+        {
+          "line": 162,
+          "text": "await assert.rejects(verify(reader, expired),"
+        },
+        {
+          "line": 165,
+          "text": "await assert.rejects(verify(reader, tooLong),"
+        },
+        {
+          "line": 169,
+          "text": "await assert.rejects(runtime.unsafe(`SELECT * FROM cinatoken_stats_claim.keys`),"
+        },
+        {
+          "line": 171,
+          "text": "await assert.rejects(reader.unsafe(`SELECT * FROM cinatoken_stats_claim.keys`),"
+        },
+        {
+          "line": 173,
+          "text": "await assert.rejects(reader.unsafe(`SELECT * FROM cinatoken_stats_claim.used_nonces`),"
+        },
+        {
+          "line": 175,
+          "text": "await assert.rejects(verify(runtime, claim()), error => error?.code === '42501');"
+        },
+        {
+          "line": 176,
+          "text": "await assert.rejects(runtime.unsafe(`SET ROLE cinatoken_gateway_stats_reader`),"
+        },
+        {
+          "line": 182,
+          "text": "await assert.rejects(verify(reader, claim()),"
+        },
+        {
+          "line": 188,
+          "text": "assert.equal((await migrator.unsafe(`SELECT pg_catalog.has_schema_privilege("
+        },
+        {
+          "line": 193,
+          "text": "stage('current-runtime-grant-rerun-does-not-open-private-claim-schema');"
+        },
+        {
+          "line": 199,
+          "text": "} finally {"
+        },
+        {
+          "line": 200,
+          "text": "await Promise.allSettled(clients.map(sql => sql.end({ timeout: 1 })));"
+        }
+      ]
+    },
+    {
+      "workflowOriginalStep": 97,
+      "workflowLine": 567,
+      "workflowStepText": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-stats-claim-reader-v349-cjs-loader-successor.native.test.mjs",
+      "name": null,
+      "command": "node --import tsx --test scripts/db/cutover/postgres-shared-key-stats-claim-reader-v349-cjs-loader-successor.native.test.mjs",
+      "source": {
+        "path": "scripts/db/cutover/postgres-shared-key-stats-claim-reader-v349-cjs-loader-successor.native.test.mjs",
+        "bytes": 29481,
+        "sha256": "997c7ec3b5d83bafd8c386493d66a8fd461d86576ea31c6afe32672e995f0088"
+      },
+      "assertions": {
+        "count": 74,
+        "methods": {
+          "equal": 43,
+          "match": 1,
+          "rejects": 29,
+          "ok": 1
+        },
+        "sourcePins": [
+          {
+            "line": 54,
+            "method": "equal",
+            "bytes": 44,
+            "sha256": "24b737b3be7ae5c92fb54e660ef0d6bf385db17a3b4e9e7d5f625e4271b2c276"
+          },
+          {
+            "line": 55,
+            "method": "equal",
+            "bytes": 42,
+            "sha256": "dfa0f0ec5db1aed43cbdb3184ea86978485093f0c801a44f1f44c8807e4a9f6b"
+          },
+          {
+            "line": 107,
+            "method": "match",
+            "bytes": 56,
+            "sha256": "325105fb7eba6d745a0f7b7446f91e49536eff609a7ce7818c1ce68a14ae1bae"
+          },
+          {
+            "line": 108,
+            "method": "equal",
+            "bytes": 57,
+            "sha256": "18ce5516b8de507c2e8dad509e638e03500fc5bec4450a64f8c3ae99f1c2fec0"
+          },
+          {
+            "line": 133,
+            "method": "equal",
+            "bytes": 29,
+            "sha256": "1da5b28008288bed1e29a64dae0cefbc4d765c20d1d9a7b4f08e2241840885d5"
+          },
+          {
+            "line": 156,
+            "method": "equal",
+            "bytes": 75,
+            "sha256": "6593f3314047ad9a494135d61c69fec042a545209f24f7afec5eb976170f0426"
+          },
+          {
+            "line": 197,
+            "method": "equal",
+            "bytes": 139,
+            "sha256": "d315b4d1f0f60584d4f0d3ffba1d6ad97c80e4fa52e47dd40ede5dd86357d4ca"
+          },
+          {
+            "line": 199,
+            "method": "equal",
+            "bytes": 148,
+            "sha256": "448b1337581e6b65bfc67db6d20d3c37559a740926639529afde76de0656034f"
+          },
+          {
+            "line": 204,
+            "method": "rejects",
+            "bytes": 150,
+            "sha256": "18ae41860496e20c35be04bf43af247b67f9cbb6fe623df79f57b0a9862cae9b"
+          },
+          {
+            "line": 208,
+            "method": "rejects",
+            "bytes": 148,
+            "sha256": "eb2d885dc4be1972e156216fe00902282677c618c5bdcf6144b5c0ca5b9c1195"
+          },
+          {
+            "line": 211,
+            "method": "rejects",
+            "bytes": 155,
+            "sha256": "590e8d16a46fcf781483b913a3a7c16d67dc513f0acdc8bb9610d8a6abb6c578"
+          },
+          {
+            "line": 237,
+            "method": "rejects",
+            "bytes": 91,
+            "sha256": "7cd88adbf6c723d0c303aed28151410adebed737c1f4d27cd6c432a6da916dd2"
+          },
+          {
+            "line": 238,
+            "method": "rejects",
+            "bytes": 131,
+            "sha256": "397cba218fa47f2b09a72cfbdca9817eef8180ceda8e8b0f35a11727bf8d9ed2"
+          },
+          {
+            "line": 245,
+            "method": "rejects",
+            "bytes": 94,
+            "sha256": "9a9c7ab30a76e3f78f024bfcd82f8fcf5bf3508094aa04c440a960db8c567bd9"
+          },
+          {
+            "line": 255,
+            "method": "ok",
+            "bytes": 50,
+            "sha256": "ce5312db1add34a48af38bb2ada1473f20744ade96888505d121b36042a7a4b8"
+          },
+          {
+            "line": 261,
+            "method": "equal",
+            "bytes": 27,
+            "sha256": "2163fe6f8f04ba38725ac74fdc19d7a8dedb4dc256532ad653bf92c75f2d5600"
+          },
+          {
+            "line": 262,
+            "method": "equal",
+            "bytes": 52,
+            "sha256": "71340eb2d6210244c2853d7e7a3e07cc5d0e91a254425e4cc259a95d2219c72c"
+          },
+          {
+            "line": 263,
+            "method": "equal",
+            "bytes": 44,
+            "sha256": "8b3c6f2fe88f3da18b82ea0f041f7e11759631ecc1f72053b9709406af71ffb1"
+          },
+          {
+            "line": 264,
+            "method": "equal",
+            "bytes": 45,
+            "sha256": "10c8f4e61dab5ba09b8fd4bcecdde01404be85ec07d7c56f43b7436b3e57ff98"
+          },
+          {
+            "line": 265,
+            "method": "equal",
+            "bytes": 42,
+            "sha256": "7bd55234fcd54c064b94f7274341495a80aa02f5b57f9ad7a022e86d8b126777"
+          },
+          {
+            "line": 266,
+            "method": "equal",
+            "bytes": 52,
+            "sha256": "b5182c08072aa1f38cc7f42d033d41e055f8379c49269e07ac1234f45a030414"
+          },
+          {
+            "line": 267,
+            "method": "equal",
+            "bytes": 123,
+            "sha256": "6fddddd08551d7411f0d16397d65e630d59088d266e52a711008a30a07e2d976"
+          },
+          {
+            "line": 272,
+            "method": "equal",
+            "bytes": 27,
+            "sha256": "2163fe6f8f04ba38725ac74fdc19d7a8dedb4dc256532ad653bf92c75f2d5600"
+          },
+          {
+            "line": 273,
+            "method": "equal",
+            "bytes": 52,
+            "sha256": "71340eb2d6210244c2853d7e7a3e07cc5d0e91a254425e4cc259a95d2219c72c"
+          },
+          {
+            "line": 274,
+            "method": "equal",
+            "bytes": 44,
+            "sha256": "8b3c6f2fe88f3da18b82ea0f041f7e11759631ecc1f72053b9709406af71ffb1"
+          },
+          {
+            "line": 275,
+            "method": "equal",
+            "bytes": 45,
+            "sha256": "10c8f4e61dab5ba09b8fd4bcecdde01404be85ec07d7c56f43b7436b3e57ff98"
+          },
+          {
+            "line": 276,
+            "method": "equal",
+            "bytes": 42,
+            "sha256": "7bd55234fcd54c064b94f7274341495a80aa02f5b57f9ad7a022e86d8b126777"
+          },
+          {
+            "line": 277,
+            "method": "rejects",
+            "bytes": 123,
+            "sha256": "5cb6db19f52d248bced35e65e624eac867bf732728701e89d39457a5aabe6aea"
+          },
+          {
+            "line": 286,
+            "method": "equal",
+            "bytes": 30,
+            "sha256": "e4d7f1a96e82f8c0c50f6e4bcd767fcc39265326791797fec683d763837708f1"
+          },
+          {
+            "line": 287,
+            "method": "equal",
+            "bytes": 45,
+            "sha256": "a9b05f84175a98b324b846c17aaf2884c73bb4c94804b64b51936c60214b124f"
+          },
+          {
+            "line": 288,
+            "method": "rejects",
+            "bytes": 407,
+            "sha256": "eed1443a27e4c8e353ea342788e54b13a8ed9b190e88fadab7b59af99f9febac"
+          },
+          {
+            "line": 296,
+            "method": "rejects",
+            "bytes": 224,
+            "sha256": "5fee9dbaa2618edd073520598c5fb179bf2e6a67d485c4c99fe47e8a1c333b33"
+          },
+          {
+            "line": 297,
+            "method": "equal",
+            "bytes": 74,
+            "sha256": "5984e5d1df31db25e8560320a27e73c393c0e8de4182a8ed75b1596cfb61a0c5"
+          },
+          {
+            "line": 300,
+            "method": "equal",
+            "bytes": 83,
+            "sha256": "1591e28f2b71d70f77676007c2ad212f5b3b599cf92a388384e3e3ff85a469b3"
+          },
+          {
+            "line": 303,
+            "method": "rejects",
+            "bytes": 191,
+            "sha256": "4f8f7ab94fba6343014cac444b3ff2266f5b93a36b746b1d8b7c32eac3f2aa9d"
+          },
+          {
+            "line": 306,
+            "method": "rejects",
+            "bytes": 183,
+            "sha256": "8fcf717dc8c95af21837c7d6a0a7e39f8b9facdab671c5b43f106851b9b0efc8"
+          },
+          {
+            "line": 309,
+            "method": "rejects",
+            "bytes": 171,
+            "sha256": "96c12472db638306dc0b0945464d7c99cbd6266f6749c12468f9aa4de6122fd5"
+          },
+          {
+            "line": 313,
+            "method": "equal",
+            "bytes": 96,
+            "sha256": "dec8003b05936bb257aa12fcfa88e7a4baed624b906a292c2ce9eb0a7fed4488"
+          },
+          {
+            "line": 315,
+            "method": "equal",
+            "bytes": 100,
+            "sha256": "1e2c32723b3e4524666f70cebde39e62c7f5e8f298716c0779b5151deb9c6cc4"
+          },
+          {
+            "line": 318,
+            "method": "rejects",
+            "bytes": 118,
+            "sha256": "e430d7bf5ddeb067f6eb90505dc5c1c14f2fe09aa6836eb2caa102ec6205bd31"
+          },
+          {
+            "line": 320,
+            "method": "rejects",
+            "bytes": 121,
+            "sha256": "1db51ac4e973fd599f88eaf1130a736e32d62753ef934e4e6c5d09fcc7d28136"
+          },
+          {
+            "line": 322,
+            "method": "rejects",
+            "bytes": 124,
+            "sha256": "d1185c5d0abb42eeb51496f74e3324df4dafcba7c1452cfc417c795ba4e563a9"
+          },
+          {
+            "line": 324,
+            "method": "rejects",
+            "bytes": 198,
+            "sha256": "4c492b469a99d26913f6aa6554c64a7c9b029863eb931bcc0a244a3faaef0353"
+          },
+          {
+            "line": 328,
+            "method": "rejects",
+            "bytes": 404,
+            "sha256": "a03d36ec092d37c2a21763d7d1a9973c80374689397c4c863e64766ea7a717a1"
+          },
+          {
+            "line": 335,
+            "method": "rejects",
+            "bytes": 81,
+            "sha256": "b7a3ef559ace34fcd6792eb5ced1de6fb96fffbdf324f566c3ee003d010ce330"
+          },
+          {
+            "line": 337,
+            "method": "rejects",
+            "bytes": 128,
+            "sha256": "fc2dc11a8cff8e1b8fb35093d66d382afcae655f3e099d015c662f67b4f977a0"
+          },
+          {
+            "line": 339,
+            "method": "rejects",
+            "bytes": 194,
+            "sha256": "1a12c7facd81367d8958e77283ec91c9bf03f4cbbac6f1a7e5b9184a61f3ee69"
+          },
+          {
+            "line": 342,
+            "method": "rejects",
+            "bytes": 193,
+            "sha256": "7524b460146eaea5a288e48670b496c57534a2528bb88b1234672c2da3917cf1"
+          },
+          {
+            "line": 345,
+            "method": "rejects",
+            "bytes": 204,
+            "sha256": "b55aebd8c05f9bfe5e08b3bde8b5f3957a105da953818dfeffd79a41ee5439b4"
+          },
+          {
+            "line": 353,
+            "method": "rejects",
+            "bytes": 131,
+            "sha256": "397cba218fa47f2b09a72cfbdca9817eef8180ceda8e8b0f35a11727bf8d9ed2"
+          },
+          {
+            "line": 361,
+            "method": "rejects",
+            "bytes": 131,
+            "sha256": "397cba218fa47f2b09a72cfbdca9817eef8180ceda8e8b0f35a11727bf8d9ed2"
+          },
+          {
+            "line": 385,
+            "method": "equal",
+            "bytes": 56,
+            "sha256": "d718bb8694bc0d3bf8c62d0fe1e22bf7077345937414cea033731fca1cc30a3a"
+          },
+          {
+            "line": 386,
+            "method": "equal",
+            "bytes": 36,
+            "sha256": "d1a083bc0e0dff4874693569f0302a652bfdb64e85d5111d3da7ee0e400f6d1a"
+          },
+          {
+            "line": 387,
+            "method": "equal",
+            "bytes": 38,
+            "sha256": "c620d0f8af24a2ce0f0d9f0a41a81d2e46ab522ab7944e14c80ea20cef6676d6"
+          },
+          {
+            "line": 388,
+            "method": "equal",
+            "bytes": 43,
+            "sha256": "c0b6fbdd099baab2b0909f7ce4ce3084b7265747e5d49b8d53047310cf88a4f9"
+          },
+          {
+            "line": 389,
+            "method": "equal",
+            "bytes": 52,
+            "sha256": "5e79a785cd8041f2fdc2a0f43c5d1c71109fe02c98cbe49606fd301300e6a181"
+          },
+          {
+            "line": 390,
+            "method": "equal",
+            "bytes": 210,
+            "sha256": "a46f8f8e59c5c5faf9ff6f4732046efa72197801f0bb2a5f7df96f678afaab01"
+          },
+          {
+            "line": 393,
+            "method": "equal",
+            "bytes": 68,
+            "sha256": "896e2f2699c6ef73c1dc81333f6d55b74186d6430f01ea4913239b8b210ae907"
+          },
+          {
+            "line": 395,
+            "method": "equal",
+            "bytes": 27,
+            "sha256": "2163fe6f8f04ba38725ac74fdc19d7a8dedb4dc256532ad653bf92c75f2d5600"
+          },
+          {
+            "line": 396,
+            "method": "equal",
+            "bytes": 56,
+            "sha256": "d718bb8694bc0d3bf8c62d0fe1e22bf7077345937414cea033731fca1cc30a3a"
+          },
+          {
+            "line": 397,
+            "method": "equal",
+            "bytes": 36,
+            "sha256": "d1a083bc0e0dff4874693569f0302a652bfdb64e85d5111d3da7ee0e400f6d1a"
+          },
+          {
+            "line": 399,
+            "method": "equal",
+            "bytes": 141,
+            "sha256": "13818f29e1dac7d1f278aee47d97f514632ed5ba89fe4ff039f48fb7302a3524"
+          },
+          {
+            "line": 401,
+            "method": "equal",
+            "bytes": 71,
+            "sha256": "0062f04e8b6ac6bfd36eb54de6f2d31c605a7f9ccafe2c90079cc5a8e694733a"
+          },
+          {
+            "line": 402,
+            "method": "equal",
+            "bytes": 116,
+            "sha256": "7942b09730c31ed6758e3f274cd2bbc6f6c9d26dd03139b276ec9bb0a2a1e90f"
+          },
+          {
+            "line": 404,
+            "method": "equal",
+            "bytes": 210,
+            "sha256": "a46f8f8e59c5c5faf9ff6f4732046efa72197801f0bb2a5f7df96f678afaab01"
+          },
+          {
+            "line": 410,
+            "method": "rejects",
+            "bytes": 119,
+            "sha256": "12fb0aeac4eebf7869e69e43c96d27c8ad66d76de8d309d8a42b2294f223a154"
+          },
+          {
+            "line": 412,
+            "method": "rejects",
+            "bytes": 168,
+            "sha256": "dc9593f65aa8b848cc294dab6d3b9f7135795a372bf811a142a197d970f2a852"
+          },
+          {
+            "line": 417,
+            "method": "equal",
+            "bytes": 71,
+            "sha256": "0062f04e8b6ac6bfd36eb54de6f2d31c605a7f9ccafe2c90079cc5a8e694733a"
+          },
+          {
+            "line": 424,
+            "method": "rejects",
+            "bytes": 783,
+            "sha256": "db4a2cbaa0c937e20b0525a55f191f7567502c3fa9653eaefe7ec11e4f435c79"
+          },
+          {
+            "line": 432,
+            "method": "equal",
+            "bytes": 166,
+            "sha256": "100c1ff65d5bc190591c312ec0d4558768ae8c41fa35e2ab9fe371a5e9805d50"
+          },
+          {
+            "line": 438,
+            "method": "rejects",
+            "bytes": 198,
+            "sha256": "eefda3ae58bafc7ec345dc9afdf62e6931f9d86d11bbc1654f67068bc7b9a770"
+          },
+          {
+            "line": 441,
+            "method": "rejects",
+            "bytes": 111,
+            "sha256": "53e523dc718b68adee2ece1d9cd835dc062bb162917cb52c6d7315bd72a13176"
+          },
+          {
+            "line": 443,
+            "method": "equal",
+            "bytes": 116,
+            "sha256": "7942b09730c31ed6758e3f274cd2bbc6f6c9d26dd03139b276ec9bb0a2a1e90f"
+          },
+          {
+            "line": 445,
+            "method": "equal",
+            "bytes": 71,
+            "sha256": "0062f04e8b6ac6bfd36eb54de6f2d31c605a7f9ccafe2c90079cc5a8e694733a"
+          }
+        ]
+      },
+      "SQLTemplateCount": 53,
+      "pinLiterals": [
+        {
+          "line": 27,
+          "value": "095f8ec4748cd92e35f37b86891ef8762bc8b8b5ca65ab49abc55b067c1d9be9"
+        }
+      ],
+      "imports": [
+        {
+          "module": "node:assert/strict",
+          "line": 2
+        },
+        {
+          "module": "node:crypto",
+          "line": 3
+        },
+        {
+          "module": "node:fs/promises",
+          "line": 4
+        },
+        {
+          "module": "node:test",
+          "line": 5
+        },
+        {
+          "module": "postgres",
+          "line": 6
+        },
+        {
+          "module": "../../../packages/core/src/test-support/postgres-native-cluster.mjs",
+          "line": 7
+        },
+        {
+          "module": "../../../packages/admin/lib/shared-key-signed-stats-reader.ts",
+          "line": 8
+        },
+        {
+          "module": "node:path",
+          "line": 9
+        },
+        {
+          "module": "./pg73-native-fixture.mjs",
+          "line": 12
+        }
+      ],
+      "PG73LoaderCalls": [
+        {
+          "line": 132,
+          "source": "listPg73Migrations()"
+        }
+      ],
+      "grantCalls": [
+        {
+          "line": 421,
+          "source": "grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL })",
+          "bytes": 73,
+          "sha256": "2224e633ff1e91c3a8c2aa9e0d5478ed7e929f3e45dc2ce31c63589e7cf6f807"
+        },
+        {
+          "line": 422,
+          "source": "grantPostgresRuntime({DATABASE_URL:\n        `postgres://cinatoken_gateway_migrator:${passwords.migrator}@127.0.0.1:${cluster.port}/postgres`})",
+          "bytes": 142,
+          "sha256": "1a41af9834415508c224547396c9a12e62deced920a53dceae2f6d4203121bca"
+        }
+      ],
+      "selectedContractLines": [
+        {
+          "line": 12,
+          "text": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';"
+        },
+        {
+          "line": 15,
+          "text": "const migrationDir = new URL('packages/core/migrations-postgres/', root);"
+        },
+        {
+          "line": 17,
+          "text": "quote: 'shared-key-quote-versions.sql',"
+        },
+        {
+          "line": 18,
+          "text": "dispatch: 'shared-key-dispatch-quote-attempts.sql',"
+        },
+        {
+          "line": 19,
+          "text": "outbox: 'shared-key-economic-outbox.sql',"
+        },
+        {
+          "line": 20,
+          "text": "consumer: 'shared-key-snapshot-earning-consumer.sql',"
+        },
+        {
+          "line": 21,
+          "text": "guard: 'shared-key-earnings-history-guard.sql',"
+        },
+        {
+          "line": 22,
+          "text": "store: 'shared-key-credited-usage-store.sql',"
+        },
+        {
+          "line": 23,
+          "text": "reader: 'shared-key-credited-usage-reader.sql',"
+        },
+        {
+          "line": 24,
+          "text": "claim: 'shared-key-stats-signed-claim-v348.sql',"
+        },
+        {
+          "line": 25,
+          "text": "bound: 'shared-key-stats-claim-reader-v349.sql',"
+        },
+        {
+          "line": 27,
+          "text": "const historicalFixtureSha256 = '095f8ec4748cd92e35f37b86891ef8762bc8b8b5ca65ab49abc55b067c1d9be9';"
+        },
+        {
+          "line": 28,
+          "text": "const digest = body => createHash('sha256').update(body).digest('hex');"
+        },
+        {
+          "line": 33,
+          "text": "ssl:false,max:1,prepare:false,fetch_types:false,connect_timeout:3,"
+        },
+        {
+          "line": 34,
+          "text": "idle_timeout:0,max_lifetime:0,backoff:false,onnotice(){},"
+        },
+        {
+          "line": 54,
+          "text": "assert.equal(claim.transition_id,transition);"
+        },
+        {
+          "line": 55,
+          "text": "assert.equal(claim.quote_version_id,quote);"
+        },
+        {
+          "line": 72,
+          "text": "evidence_sha256,observed_at)"
+        },
+        {
+          "line": 87,
+          "text": "{timeout:300_000,skip:!process.env.GATEWAY_NATIVE_PG_BIN},async()=>{"
+        },
+        {
+          "line": 94,
+          "text": "lineage:{historicalFixture:'scripts/db/cutover/postgres-shared-key-stats-claim-reader-v349.native.test.mjs',"
+        },
+        {
+          "line": 95,
+          "text": "historicalFixtureSha256,contract:'real Admin CommonJS default module export; unchanged signed-reader SQL and role authority'},"
+        },
+        {
+          "line": 107,
+          "text": "assert.match(cluster.binaryVersion,/PostgreSQL\\) 18\\.6/);"
+        },
+        {
+          "line": 108,
+          "text": "assert.equal(typeof readSignedSellerStatsPage,'function');"
+        },
+        {
+          "line": 131,
+          "text": "(version text PRIMARY KEY,applied_at timestamptz NOT NULL DEFAULT now())`);"
+        },
+        {
+          "line": 132,
+          "text": "const files=await listPg73Migrations();"
+        },
+        {
+          "line": 133,
+          "text": "assert.equal(files.length,73);"
+        },
+        {
+          "line": 153,
+          "text": "runtimeGrant:digest(await readFile(new URL('scripts/db/cutover/grant-postgres-runtime.ts',root),'utf8')),"
+        },
+        {
+          "line": 154,
+          "text": "historicalFixture:digest(await readFile(new URL("
+        },
+        {
+          "line": 156,
+          "text": "assert.equal(report.sourceSha256.historicalFixture,historicalFixtureSha256);"
+        },
+        {
+          "line": 197,
+          "text": "assert.equal((await economicEvent(migrator,producer,consumer,"
+        },
+        {
+          "line": 199,
+          "text": "assert.equal((await economicEvent(migrator,producer,consumer,"
+        },
+        {
+          "line": 201,
+          "text": "stage('legacy-economic-and-pending-historical-sources-seeded');"
+        },
+        {
+          "line": 204,
+          "text": "await assert.rejects(migrator.begin(async tx=>tx.unsafe(bodies.reader).simple()),"
+        },
+        {
+          "line": 208,
+          "text": "await assert.rejects(migrator.begin(async tx=>tx.unsafe(bodies.claim).simple()),"
+        },
+        {
+          "line": 211,
+          "text": "await assert.rejects(migrator.begin(async tx=>tx.unsafe(bodies.bound).simple()),"
+        },
+        {
+          "line": 226,
+          "text": "const signature=(c,audience='stats.read')=>createHmac('sha256',secret)"
+        },
+        {
+          "line": 237,
+          "text": "await assert.rejects(read(),error=>error?.constraint_name==='shared_key_stats_reader_not_active');"
+        },
+        {
+          "line": 238,
+          "text": "await assert.rejects(signedRead(statsReader,claim()),"
+        },
+        {
+          "line": 245,
+          "text": "await assert.rejects(activate(),error=>error?.constraint_name==='shared_key_stats_reader_not_ready');"
+        },
+        {
+          "line": 255,
+          "text": "assert.ok(page<4,'bounded backfill must complete');"
+        },
+        {
+          "line": 261,
+          "text": "assert.equal(rows.length,1);"
+        },
+        {
+          "line": 262,
+          "text": "assert.equal(rows[0].seller_user_id,'reader-seller');"
+        },
+        {
+          "line": 263,
+          "text": "assert.equal(rows[0].input_tokens,'1000010');"
+        },
+        {
+          "line": 264,
+          "text": "assert.equal(rows[0].output_tokens,'2000020');"
+        },
+        {
+          "line": 265,
+          "text": "assert.equal(rows[0].net_micros,'7625000');"
+        },
+        {
+          "line": 266,
+          "text": "assert.equal((await read())[0].net_micros,'7625000');"
+        },
+        {
+          "line": 267,
+          "text": "assert.equal((await migrator.unsafe(`SELECT count(*)::int AS n FROM"
+        },
+        {
+          "line": 272,
+          "text": "assert.equal(rows.length,1);"
+        },
+        {
+          "line": 273,
+          "text": "assert.equal(rows[0].seller_user_id,'reader-seller');"
+        },
+        {
+          "line": 274,
+          "text": "assert.equal(rows[0].input_tokens,'1000010');"
+        },
+        {
+          "line": 275,
+          "text": "assert.equal(rows[0].output_tokens,'2000020');"
+        },
+        {
+          "line": 276,
+          "text": "assert.equal(rows[0].net_micros,'7625000');"
+        },
+        {
+          "line": 277,
+          "text": "await assert.rejects(signedRead(statsReader,firstClaim),"
+        },
+        {
+          "line": 286,
+          "text": "assert.equal(appRows.length,1);"
+        },
+        {
+          "line": 287,
+          "text": "assert.equal(appRows[0].net_micros,'7625000');"
+        },
+        {
+          "line": 288,
+          "text": "await assert.rejects(readSignedSellerStatsPage("
+        },
+        {
+          "line": 296,
+          "text": "await assert.rejects(statsReader.begin(async tx=>{"
+        },
+        {
+          "line": 297,
+          "text": "assert.equal((await signedRead(tx,rollbackClaim))[0].net_micros,'7625000');"
+        },
+        {
+          "line": 300,
+          "text": "assert.equal((await signedRead(statsReader,rollbackClaim))[0].net_micros,'7625000');"
+        },
+        {
+          "line": 303,
+          "text": "await assert.rejects(signedRead(statsReader,"
+        },
+        {
+          "line": 306,
+          "text": "await assert.rejects(signedRead(statsReader,"
+        },
+        {
+          "line": 309,
+          "text": "await assert.rejects(signedRead(statsReader,victimClaim,"
+        },
+        {
+          "line": 313,
+          "text": "assert.equal((await signedRead(statsReader,"
+        },
+        {
+          "line": 315,
+          "text": "assert.equal((await signedRead(statsReader,"
+        },
+        {
+          "line": 318,
+          "text": "await assert.rejects(runtime.unsafe(`SELECT * FROM cinatoken_shared_stats.summaries`),"
+        },
+        {
+          "line": 320,
+          "text": "await assert.rejects(statsReader.unsafe(`SELECT * FROM"
+        },
+        {
+          "line": 322,
+          "text": "await assert.rejects(statsReader.unsafe(`SELECT * FROM"
+        },
+        {
+          "line": 324,
+          "text": "await assert.rejects(statsReader.unsafe(`SELECT * FROM"
+        },
+        {
+          "line": 328,
+          "text": "await assert.rejects(statsReader.unsafe(`SELECT"
+        },
+        {
+          "line": 335,
+          "text": "await assert.rejects(signedRead(runtime,claim()),"
+        },
+        {
+          "line": 337,
+          "text": "await assert.rejects(signedRead(migrator,claim()),"
+        },
+        {
+          "line": 339,
+          "text": "await assert.rejects(runtime.unsafe(`SELECT * FROM"
+        },
+        {
+          "line": 342,
+          "text": "await assert.rejects(runtime.unsafe(`SELECT * FROM"
+        },
+        {
+          "line": 345,
+          "text": "await assert.rejects(consumer.unsafe(`SELECT * FROM"
+        },
+        {
+          "line": 353,
+          "text": "await assert.rejects(signedRead(statsReader,claim()),"
+        },
+        {
+          "line": 361,
+          "text": "await assert.rejects(signedRead(statsReader,claim()),"
+        },
+        {
+          "line": 385,
+          "text": "assert.equal(rows[0].seller_user_id,'reader-new-seller');"
+        },
+        {
+          "line": 386,
+          "text": "assert.equal(rows[0].net_micros,'0');"
+        },
+        {
+          "line": 387,
+          "text": "assert.equal(rows[0].input_tokens,'0');"
+        },
+        {
+          "line": 388,
+          "text": "assert.equal(rows[0].last_credited_at,null);"
+        },
+        {
+          "line": 389,
+          "text": "assert.equal((await read('reader-seller')).length,0);"
+        },
+        {
+          "line": 390,
+          "text": "assert.equal((await migrator.unsafe(`SELECT net_micros::text AS net FROM"
+        },
+        {
+          "line": 393,
+          "text": "assert.equal((await signedRead(statsReader,oldOwnerClaim)).length,0);"
+        },
+        {
+          "line": 395,
+          "text": "assert.equal(rows.length,1);"
+        },
+        {
+          "line": 396,
+          "text": "assert.equal(rows[0].seller_user_id,'reader-new-seller');"
+        },
+        {
+          "line": 397,
+          "text": "assert.equal(rows[0].net_micros,'0');"
+        },
+        {
+          "line": 398,
+          "text": "stage('owner-transfer-excludes-historical-seller-credit-from-current-owner-view');"
+        },
+        {
+          "line": 399,
+          "text": "assert.equal((await economicEvent(migrator,producer,consumer,"
+        },
+        {
+          "line": 401,
+          "text": "assert.equal((await read('reader-new-seller'))[0].net_micros,'5625000');"
+        },
+        {
+          "line": 402,
+          "text": "assert.equal((await signedRead(statsReader,"
+        },
+        {
+          "line": 404,
+          "text": "assert.equal((await migrator.unsafe(`SELECT net_micros::text AS net FROM"
+        },
+        {
+          "line": 410,
+          "text": "await assert.rejects(read('reader-new-seller'),"
+        },
+        {
+          "line": 412,
+          "text": "await assert.rejects(signedRead(statsReader,"
+        },
+        {
+          "line": 417,
+          "text": "assert.equal((await read('reader-new-seller'))[0].net_micros,'5625000');"
+        },
+        {
+          "line": 421,
+          "text": "grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });"
+        },
+        {
+          "line": 424,
+          "text": "await assert.rejects(runtime.begin(async tx=>{"
+        },
+        {
+          "line": 432,
+          "text": "assert.equal((await tx.unsafe(`SELECT count(*)::int AS n FROM"
+        },
+        {
+          "line": 438,
+          "text": "await assert.rejects(runtime.unsafe(`SELECT * FROM"
+        },
+        {
+          "line": 441,
+          "text": "await assert.rejects(signedRead(runtime,"
+        },
+        {
+          "line": 443,
+          "text": "assert.equal((await signedRead(statsReader,"
+        },
+        {
+          "line": 445,
+          "text": "assert.equal((await read('reader-new-seller'))[0].net_micros,'5625000');"
+        },
+        {
+          "line": 446,
+          "text": "stage('broad-gateway-runtime-grant-rerun-does-not-expose-private-reader');"
+        },
+        {
+          "line": 450,
+          "text": "} finally {"
+        },
+        {
+          "line": 451,
+          "text": "await Promise.allSettled(clients.map(sql=>sql.end({timeout:1})));"
+        }
+      ]
+    },
+    {
+      "workflowOriginalStep": 98,
+      "workflowLine": 570,
+      "workflowStepText": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-snapshot-earning-consumer-v2.native.test.mjs",
+      "name": null,
+      "command": "node --import tsx --test scripts/db/cutover/postgres-shared-key-snapshot-earning-consumer-v2.native.test.mjs",
+      "source": {
+        "path": "scripts/db/cutover/postgres-shared-key-snapshot-earning-consumer-v2.native.test.mjs",
+        "bytes": 39818,
+        "sha256": "193ff83d3c1a6e316315c8fe5c4abc592018127121110f52ea10d304334d04dd"
+      },
+      "assertions": {
+        "count": 61,
+        "methods": {
+          "rejects": 9,
+          "equal": 34,
+          "match": 1,
+          "deepEqual": 17
+        },
+        "sourcePins": [
+          {
+            "line": 49,
+            "method": "rejects",
+            "bytes": 190,
+            "sha256": "806eed7ba5be08f49e4bcb6160fbfb3e93ad0c82a55817b7e600b030b97157c2"
+          },
+          {
+            "line": 50,
+            "method": "equal",
+            "bytes": 46,
+            "sha256": "7d480e71a4bc7b5adc03f81f4d21dbfe504c8dbfee1efc30bcba0b486ee7ba0c"
+          },
+          {
+            "line": 51,
+            "method": "equal",
+            "bytes": 63,
+            "sha256": "dbb9ef9413d8fe573b3013d1f4af3f4a0e1f6a655eed0384a0530286f970f4bd"
+          },
+          {
+            "line": 113,
+            "method": "match",
+            "bytes": 58,
+            "sha256": "67cf60d3a3318d7ca981ee1cc5cf7e2308c719f09a0f7eb04a2d0bca6f4e62ef"
+          },
+          {
+            "line": 143,
+            "method": "equal",
+            "bytes": 31,
+            "sha256": "d405ab114c12dacc92ad46e64a2e613db10552c6e784f291d097af4d57d366f0"
+          },
+          {
+            "line": 180,
+            "method": "rejects",
+            "bytes": 127,
+            "sha256": "2da02804e1d17c6e6d8ac9beae8279a9d6a904ae67cee159f15f99380d25024c"
+          },
+          {
+            "line": 182,
+            "method": "rejects",
+            "bytes": 375,
+            "sha256": "1bf8aa27a75801c1d91331f2be3b934cc3005ccac13292d7d86527a20c097f81"
+          },
+          {
+            "line": 189,
+            "method": "equal",
+            "bytes": 257,
+            "sha256": "09b53af72dece8abc37aa55806934e1bce9fadddf2cad5b1ebbbeeda83b5a0f8"
+          },
+          {
+            "line": 194,
+            "method": "rejects",
+            "bytes": 335,
+            "sha256": "2e615e3adb114ff8c84b6b5f41f1ec421b9259f0b22d00320bded28bda56adf7"
+          },
+          {
+            "line": 205,
+            "method": "rejects",
+            "bytes": 85,
+            "sha256": "1bcf4bbf44f80c2d0dba2a512452e01349d974ef7187a8c4ac4ead6ada52d36d"
+          },
+          {
+            "line": 207,
+            "method": "equal",
+            "bytes": 257,
+            "sha256": "09b53af72dece8abc37aa55806934e1bce9fadddf2cad5b1ebbbeeda83b5a0f8"
+          },
+          {
+            "line": 218,
+            "method": "rejects",
+            "bytes": 85,
+            "sha256": "1bcf4bbf44f80c2d0dba2a512452e01349d974ef7187a8c4ac4ead6ada52d36d"
+          },
+          {
+            "line": 220,
+            "method": "equal",
+            "bytes": 163,
+            "sha256": "e2b8bba8d506902d3ee01870e9c6013121c025cc5e09ffa93740d6a1a9f4c996"
+          },
+          {
+            "line": 308,
+            "method": "equal",
+            "bytes": 183,
+            "sha256": "1d658279389e71bdb0955934703574ffc4f83e8246d849289573a1d0ddc6b23d"
+          },
+          {
+            "line": 312,
+            "method": "equal",
+            "bytes": 47,
+            "sha256": "7eb85ce84293857687a44f89dfb14f45ca3979cdbc4d53fb9a4f1720750966bc"
+          },
+          {
+            "line": 313,
+            "method": "deepEqual",
+            "bytes": 94,
+            "sha256": "413260ae3c83ea41a19317d298235295578d0a35a80df8425c7126a9da907454"
+          },
+          {
+            "line": 328,
+            "method": "deepEqual",
+            "bytes": 134,
+            "sha256": "91965f58ca941b3b11f9aaa33fd53351c607ff5e9d79083c89b2cb83376fbc05"
+          },
+          {
+            "line": 332,
+            "method": "deepEqual",
+            "bytes": 92,
+            "sha256": "4605c7bcdb158a18ba716291871865bc4a640cdecabb87a26c765efee19e89b2"
+          },
+          {
+            "line": 356,
+            "method": "equal",
+            "bytes": 159,
+            "sha256": "efd0238577efb2a48bd1f79354229bd80c6ab99c0357354f2f0fd04795a55a3d"
+          },
+          {
+            "line": 401,
+            "method": "equal",
+            "bytes": 197,
+            "sha256": "9b4bd70c29598f27f12ddc9296be0c9557120b7fa76474ba110984b5810a4ce1"
+          },
+          {
+            "line": 411,
+            "method": "deepEqual",
+            "bytes": 90,
+            "sha256": "dbd6355a1be5a3ac906c3fed25a15c2ebbf2786f33fb40320dc387a5ded6398c"
+          },
+          {
+            "line": 430,
+            "method": "equal",
+            "bytes": 145,
+            "sha256": "8588139f0574e39ab08dc84c18dea80df9becfc97a8d15f7205f193befa1f8af"
+          },
+          {
+            "line": 432,
+            "method": "equal",
+            "bytes": 165,
+            "sha256": "234815dd6c2650cf401f81dade5c1ef409e15ac9b42bd0d8f28193bcfb0e8056"
+          },
+          {
+            "line": 435,
+            "method": "equal",
+            "bytes": 139,
+            "sha256": "0ebb88e697dc00d63742a78c39b2f152ae38b92ad0ef259bc9b1b4a71402475b"
+          },
+          {
+            "line": 483,
+            "method": "rejects",
+            "bytes": 147,
+            "sha256": "cb605a6d711c996fe9e5125b37e19113776c21dd52ae47728efed63f57ed1cdb"
+          },
+          {
+            "line": 485,
+            "method": "rejects",
+            "bytes": 397,
+            "sha256": "4c5083ecb28ba356ac89f202b0003eb71507b21e34e4feea8a0f6d15ced3b219"
+          },
+          {
+            "line": 491,
+            "method": "equal",
+            "bytes": 183,
+            "sha256": "04bf8078894082fb3acaf6897757de81ad9c6d8812b84fbb0b04b5298122badc"
+          },
+          {
+            "line": 498,
+            "method": "rejects",
+            "bytes": 98,
+            "sha256": "5c88c2ddc571378deb7befbc2c9ae69af10d2802ed97d9d883bdf620fc20639d"
+          },
+          {
+            "line": 516,
+            "method": "equal",
+            "bytes": 51,
+            "sha256": "e401e3c41f2b6352fcad479475c35682b329d4444e034b1e6680c6bacbbcf44c"
+          },
+          {
+            "line": 517,
+            "method": "equal",
+            "bytes": 52,
+            "sha256": "ced3da961a2b6c3f33786c5fa1af723f18aab54733634334a854fde27a43e1c0"
+          },
+          {
+            "line": 523,
+            "method": "deepEqual",
+            "bytes": 138,
+            "sha256": "1824e0f19280ad97a7b8d6329f395bc17fb22ae52fd773e2c5c2f9ccead63d51"
+          },
+          {
+            "line": 525,
+            "method": "deepEqual",
+            "bytes": 90,
+            "sha256": "3f942e81cf7e9858174b5ecacfd17f4299dac358b50cd4176a7cae27f7cde232"
+          },
+          {
+            "line": 529,
+            "method": "equal",
+            "bytes": 64,
+            "sha256": "86e290bbe57c58ad931a37cb716eea7ca8902d7beaaf39b5d6b0e8347a0b8216"
+          },
+          {
+            "line": 534,
+            "method": "equal",
+            "bytes": 47,
+            "sha256": "3f75534bd2d8d0e3d527e27c8e3abbbe19e59e90e35a717f078e1a82c9b5d972"
+          },
+          {
+            "line": 535,
+            "method": "deepEqual",
+            "bytes": 94,
+            "sha256": "413260ae3c83ea41a19317d298235295578d0a35a80df8425c7126a9da907454"
+          },
+          {
+            "line": 537,
+            "method": "equal",
+            "bytes": 164,
+            "sha256": "becb99a8184c267c39ca769bdc701f0557d173f72b0c75e16c119db83e4f7d71"
+          },
+          {
+            "line": 541,
+            "method": "deepEqual",
+            "bytes": 44,
+            "sha256": "b07385914aef5f8d0b085fa6829186801136925c95a0a81829c96de885875873"
+          },
+          {
+            "line": 542,
+            "method": "deepEqual",
+            "bytes": 90,
+            "sha256": "3f942e81cf7e9858174b5ecacfd17f4299dac358b50cd4176a7cae27f7cde232"
+          },
+          {
+            "line": 552,
+            "method": "equal",
+            "bytes": 52,
+            "sha256": "b14b57a20c918839b3fc5b674cc6c5e150e4d4de9ee1aa11d30e09e05e545cf7"
+          },
+          {
+            "line": 553,
+            "method": "equal",
+            "bytes": 53,
+            "sha256": "038e9dcddbb66bb397241e2f81476fb9ea2249bcbb15436d428ad2dad40ee27d"
+          },
+          {
+            "line": 554,
+            "method": "deepEqual",
+            "bytes": 88,
+            "sha256": "e9f697001ce8e0b4ab4109e21e3fd4c112f6c6e9ab70db09dca6375f74d07268"
+          },
+          {
+            "line": 561,
+            "method": "equal",
+            "bytes": 59,
+            "sha256": "9fd828168a2f2555e1638af56f91452ebc863de537afcbfe7af262535f5b62a3"
+          },
+          {
+            "line": 562,
+            "method": "equal",
+            "bytes": 48,
+            "sha256": "74baf62243cce927ff8487fc373ad22d10a5236c26d6c56b0915be72178c03bf"
+          },
+          {
+            "line": 563,
+            "method": "deepEqual",
+            "bytes": 92,
+            "sha256": "1bc283132938ce679d0ce10ff6e865f2188948859acbeec70fbc12231651de73"
+          },
+          {
+            "line": 565,
+            "method": "equal",
+            "bytes": 164,
+            "sha256": "3a285d1aea31d2401cfe769d299cc24553b361da06dba56d3ef83e0024406d67"
+          },
+          {
+            "line": 596,
+            "method": "equal",
+            "bytes": 56,
+            "sha256": "1c48c91f6c36be00fc04846603e48b4574175121f5e5172a49956d5e003656bb"
+          },
+          {
+            "line": 597,
+            "method": "equal",
+            "bytes": 50,
+            "sha256": "5368026e586196e9a48e5f6225f16341d44ce7f9fbc4e76fe4e056a6db9afb23"
+          },
+          {
+            "line": 598,
+            "method": "equal",
+            "bytes": 49,
+            "sha256": "3d20821212d9ac6a512f7eca4c18f2b0a406b04793a9cb8754d734e9ecda65e6"
+          },
+          {
+            "line": 599,
+            "method": "equal",
+            "bytes": 45,
+            "sha256": "a5f45cff640b6b3ffa6454ecf4911345fc2c826ea4c3eecc59dfe1b342883444"
+          },
+          {
+            "line": 600,
+            "method": "deepEqual",
+            "bytes": 86,
+            "sha256": "99fc79d15abea1c407c204ccb43a37ce29710312d8be95de69ebabc5cb28a061"
+          },
+          {
+            "line": 602,
+            "method": "deepEqual",
+            "bytes": 511,
+            "sha256": "c6207f09eb1ca11b17d128626be65e170dc1a33bb1a3508fd4bc7b4d4ce92e21"
+          },
+          {
+            "line": 609,
+            "method": "equal",
+            "bytes": 161,
+            "sha256": "a76a0d0e378460d934f116041f1902472aff8cc8f1a5846a9347b75745ff76b6"
+          },
+          {
+            "line": 622,
+            "method": "equal",
+            "bytes": 75,
+            "sha256": "3367a42459db6be5be11ab8d5519d2cfd9935f0b3dfd90114bcd85fa21e075ce"
+          },
+          {
+            "line": 623,
+            "method": "deepEqual",
+            "bytes": 89,
+            "sha256": "ff5777f717956d2aeea0cbf738a6d684129c157db71853daa1712317653ad542"
+          },
+          {
+            "line": 625,
+            "method": "equal",
+            "bytes": 164,
+            "sha256": "755a19402033a2119802e6cd8a4fe818777981db6685a6b5e82a408d49c1407d"
+          },
+          {
+            "line": 644,
+            "method": "deepEqual",
+            "bytes": 89,
+            "sha256": "f4d160e519f54f979b074584c0cb7599d4e607d352714c3fac6c6b11de36d708"
+          },
+          {
+            "line": 646,
+            "method": "equal",
+            "bytes": 164,
+            "sha256": "505834267ae2118793f366426e6d794f0725626a3edcd2139949c206bdba68c3"
+          },
+          {
+            "line": 676,
+            "method": "equal",
+            "bytes": 33,
+            "sha256": "5787b2d8bfd65d1235f7dcf7c22facd2547cfe065e07fd4f9298070292982128"
+          },
+          {
+            "line": 677,
+            "method": "deepEqual",
+            "bytes": 37,
+            "sha256": "bd5f4d2644a5604fcc436efc458a89e3ba43fdf98e9d137c79bc51976e3a4b03"
+          },
+          {
+            "line": 678,
+            "method": "deepEqual",
+            "bytes": 91,
+            "sha256": "faeab4aa9f5f10dcfcfb818b329789353bc2d43be770940b4157d47547486e08"
+          },
+          {
+            "line": 682,
+            "method": "equal",
+            "bytes": 72,
+            "sha256": "ca51908e586c4e0e4532ceb3705b61702e7998439dbd61bbc595b67f9f8ac37b"
+          }
+        ]
+      },
+      "SQLTemplateCount": 92,
+      "pinLiterals": [],
+      "imports": [
+        {
+          "module": "node:assert/strict",
+          "line": 2
+        },
+        {
+          "module": "node:crypto",
+          "line": 3
+        },
+        {
+          "module": "node:fs/promises",
+          "line": 4
+        },
+        {
+          "module": "node:path",
+          "line": 5
+        },
+        {
+          "module": "node:timers/promises",
+          "line": 6
+        },
+        {
+          "module": "node:test",
+          "line": 7
+        },
+        {
+          "module": "postgres",
+          "line": 8
+        },
+        {
+          "module": "../../../packages/core/src/test-support/postgres-native-cluster.mjs",
+          "line": 9
+        },
+        {
+          "module": "./pg73-native-fixture.mjs",
+          "line": 10
+        }
+      ],
+      "PG73LoaderCalls": [
+        {
+          "line": 142,
+          "source": "listPg73Migrations()"
+        }
+      ],
+      "grantCalls": [],
+      "selectedContractLines": [
+        {
+          "line": 10,
+          "text": "import { listPg73Migrations } from './pg73-native-fixture.mjs';"
+        },
+        {
+          "line": 16,
+          "text": "const migrations = new URL('../../../packages/core/migrations-postgres/', import.meta.url);"
+        },
+        {
+          "line": 18,
+          "text": "'shared-key-quote-versions.sql',"
+        },
+        {
+          "line": 19,
+          "text": "'shared-key-dispatch-quote-attempts.sql',"
+        },
+        {
+          "line": 20,
+          "text": "'shared-key-economic-outbox.sql',"
+        },
+        {
+          "line": 21,
+          "text": "'shared-key-economic-outbox-producer.sql',"
+        },
+        {
+          "line": 22,
+          "text": "'shared-key-snapshot-earning-consumer.sql',"
+        },
+        {
+          "line": 23,
+          "text": "'shared-key-buyer-debit-v2.sql',"
+        },
+        {
+          "line": 33,
+          "text": "const sha = value => createHash('sha256').update(value).digest('hex');"
+        },
+        {
+          "line": 40,
+          "text": "connect_timeout: 3, idle_timeout: 0, max_lifetime: 0, backoff: false,"
+        },
+        {
+          "line": 49,
+          "text": "await assert.rejects(work, error => {"
+        },
+        {
+          "line": 50,
+          "text": "assert.equal(error?.code, code, String(error));"
+        },
+        {
+          "line": 51,
+          "text": "if (constraint) assert.equal(error?.constraint_name, constraint, String(error));"
+        },
+        {
+          "line": 86,
+          "text": "evidence_sha256: unknown ? null : 'c'.repeat(64),"
+        },
+        {
+          "line": 97,
+          "text": "{ timeout: 300_000, skip: !process.env.GATEWAY_NATIVE_PG_BIN }, async () => {"
+        },
+        {
+          "line": 113,
+          "text": "assert.match(cluster.binaryVersion, /PostgreSQL\\) 18\\.6/u);"
+        },
+        {
+          "line": 141,
+          "text": "(version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);"
+        },
+        {
+          "line": 142,
+          "text": "const formal = await listPg73Migrations();"
+        },
+        {
+          "line": 143,
+          "text": "assert.equal(formal.length, 73);"
+        },
+        {
+          "line": 180,
+          "text": "await assert.rejects(migrator.begin(tx => tx.unsafe(bodies[5]).simple()),"
+        },
+        {
+          "line": 182,
+          "text": "await assert.rejects(migrator.begin(async tx => {"
+        },
+        {
+          "line": 184,
+          "text": "SET version='0042_forged_middle.sql'"
+        },
+        {
+          "line": 185,
+          "text": "WHERE version='0042_gateway_keys_workspace.sql'`);"
+        },
+        {
+          "line": 189,
+          "text": "assert.equal((await migrator.unsafe(`SELECT count(*)::int AS n FROM"
+        },
+        {
+          "line": 194,
+          "text": "await assert.rejects(migrator.begin(async tx => {"
+        },
+        {
+          "line": 205,
+          "text": "await assert.rejects(activateV2(),"
+        },
+        {
+          "line": 207,
+          "text": "assert.equal((await migrator.unsafe(`SELECT count(*)::int AS n FROM"
+        },
+        {
+          "line": 218,
+          "text": "await assert.rejects(activateV2(),"
+        },
+        {
+          "line": 220,
+          "text": "assert.equal((await migrator.unsafe(`SELECT to_regclass("
+        },
+        {
+          "line": 308,
+          "text": "assert.equal((await migrator.unsafe(`SELECT buyer_debit_micros"
+        },
+        {
+          "line": 312,
+          "text": "assert.equal(v1Result.out_decision, 'credited');"
+        },
+        {
+          "line": 313,
+          "text": "assert.deepEqual(await counts('v1-compatible'),"
+        },
+        {
+          "line": 328,
+          "text": "assert.deepEqual(reservedFact, { event_version: 2,"
+        },
+        {
+          "line": 332,
+          "text": "assert.deepEqual(await counts('v2-reserved'),"
+        },
+        {
+          "line": 356,
+          "text": "assert.equal((await migrator.unsafe(`SELECT count(*)::int AS n"
+        },
+        {
+          "line": 401,
+          "text": "assert.equal((await migrator.unsafe(`SELECT reserved_micros::text AS amount"
+        },
+        {
+          "line": 411,
+          "text": "assert.deepEqual(await counts('v2-actual'),"
+        },
+        {
+          "line": 430,
+          "text": "assert.equal((await migrator.unsafe(`SELECT count(*)::int AS n"
+        },
+        {
+          "line": 432,
+          "text": "assert.equal((await migrator.unsafe(`SELECT count(*)::int AS n"
+        },
+        {
+          "line": 435,
+          "text": "assert.equal((await migrator.unsafe(`SELECT budget_spent::text AS n"
+        },
+        {
+          "line": 463,
+          "text": "stage('versioned-debit-shape-rejects-null-v2-and-nonnull-v1');"
+        },
+        {
+          "line": 471,
+          "text": "stage('immutable-v2-fact-and-old-producer-still-rejects-reserved');"
+        },
+        {
+          "line": 474,
+          "text": "'../../../packages/core/migrations-proposals/postgres/shared-key-snapshot-earning-consumer-v2.sql',"
+        },
+        {
+          "line": 476,
+          "text": "report.sourceSha256['shared-key-snapshot-earning-consumer-v2.sql'] ="
+        },
+        {
+          "line": 483,
+          "text": "await assert.rejects(migrator.begin(tx => tx.unsafe(consumerV2Body).simple()),"
+        },
+        {
+          "line": 485,
+          "text": "await assert.rejects(migrator.begin(async tx => {"
+        },
+        {
+          "line": 491,
+          "text": "assert.equal((await migrator.unsafe(`SELECT to_regprocedure("
+        },
+        {
+          "line": 498,
+          "text": "await assert.rejects(activateConsumerV2(),"
+        },
+        {
+          "line": 516,
+          "text": "assert.equal(actualResult.out_decision, 'credited');"
+        },
+        {
+          "line": 517,
+          "text": "assert.equal(actualResult.out_net_micros, '5625000');"
+        },
+        {
+          "line": 523,
+          "text": "assert.deepEqual(actualDetail, { decision: 'credited',"
+        },
+        {
+          "line": 525,
+          "text": "assert.deepEqual(await counts('v2-actual'),"
+        },
+        {
+          "line": 529,
+          "text": "assert.equal(BigInt(afterActual)-BigInt(beforeActual), 5625000n);"
+        },
+        {
+          "line": 534,
+          "text": "assert.equal(v1Replay.out_decision, 'credited');"
+        },
+        {
+          "line": 535,
+          "text": "assert.deepEqual(await counts('v1-compatible'),"
+        },
+        {
+          "line": 537,
+          "text": "assert.equal((await migrator.unsafe(`SELECT balance_micros::text AS n"
+        },
+        {
+          "line": 541,
+          "text": "assert.deepEqual(actualReplay, actualResult);"
+        },
+        {
+          "line": 542,
+          "text": "assert.deepEqual(await counts('v2-actual'),"
+        },
+        {
+          "line": 552,
+          "text": "assert.equal(freshV1Result.out_decision, 'credited');"
+        },
+        {
+          "line": 553,
+          "text": "assert.equal(freshV1Result.out_net_micros, '5625000');"
+        },
+        {
+          "line": 554,
+          "text": "assert.deepEqual(await counts(freshV1Id),"
+        },
+        {
+          "line": 561,
+          "text": "assert.equal(reservedResult.out_decision, 'pending_manual');"
+        },
+        {
+          "line": 562,
+          "text": "assert.equal(reservedResult.out_net_micros, '0');"
+        },
+        {
+          "line": 563,
+          "text": "assert.deepEqual(await counts('v2-reserved'),"
+        },
+        {
+          "line": 565,
+          "text": "assert.equal((await migrator.unsafe(`SELECT balance_micros::text AS n"
+        },
+        {
+          "line": 596,
+          "text": "assert.equal(multiResult.out_decision, 'pending_manual');"
+        },
+        {
+          "line": 597,
+          "text": "assert.equal(multiResult.out_credited_attempts, 0);"
+        },
+        {
+          "line": 598,
+          "text": "assert.equal(multiResult.out_pending_attempts, 2);"
+        },
+        {
+          "line": 599,
+          "text": "assert.equal(multiResult.out_net_micros, '0');"
+        },
+        {
+          "line": 600,
+          "text": "assert.deepEqual(await counts(multiId),"
+        },
+        {
+          "line": 602,
+          "text": "assert.deepEqual((await migrator.unsafe(`SELECT decision,pending_reason,"
+        },
+        {
+          "line": 609,
+          "text": "assert.equal((await migrator.unsafe(`SELECT balance_micros::text AS n"
+        },
+        {
+          "line": 622,
+          "text": "assert.equal((await consume(noChargeId))[0].out_decision, 'pending_manual');"
+        },
+        {
+          "line": 623,
+          "text": "assert.deepEqual(await counts(noChargeId),"
+        },
+        {
+          "line": 625,
+          "text": "assert.equal((await migrator.unsafe(`SELECT balance_micros::text AS n"
+        },
+        {
+          "line": 644,
+          "text": "assert.deepEqual(await counts(rollbackId),"
+        },
+        {
+          "line": 646,
+          "text": "assert.equal((await migrator.unsafe(`SELECT balance_micros::text AS n"
+        },
+        {
+          "line": 676,
+          "text": "assert.equal(observed, 'blocked');"
+        },
+        {
+          "line": 677,
+          "text": "assert.deepEqual(first[0], second[0]);"
+        },
+        {
+          "line": 678,
+          "text": "assert.deepEqual(await counts(concurrentId),"
+        },
+        {
+          "line": 682,
+          "text": "assert.equal(BigInt(concurrentAfter)-BigInt(concurrentBefore), 5625000n);"
+        },
+        {
+          "line": 687,
+          "text": "} finally {"
+        },
+        {
+          "line": 688,
+          "text": "await Promise.allSettled(clients.map(sql => sql.end({ timeout: 1 })));"
+        }
+      ]
+    },
+    {
+      "workflowOriginalStep": 99,
+      "workflowLine": 573,
+      "workflowStepText": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-economic-delivery.native.test.mjs",
+      "name": null,
+      "command": "node --import tsx --test scripts/db/cutover/postgres-shared-key-economic-delivery.native.test.mjs",
+      "source": {
+        "path": "scripts/db/cutover/postgres-shared-key-economic-delivery.native.test.mjs",
+        "bytes": 32003,
+        "sha256": "8fd48757e9beafc308fb21b018fd35f105fd0bb89011dfa0f4a4e0e1bca4fd94"
+      },
+      "assertions": {
+        "count": 73,
+        "methods": {
+          "rejects": 6,
+          "equal": 57,
+          "match": 1,
+          "deepEqual": 4,
+          "ok": 2,
+          "notEqual": 3
+        },
+        "sourcePins": [
+          {
+            "line": 42,
+            "method": "rejects",
+            "bytes": 182,
+            "sha256": "68d5c1f9f4700c30909d7b6f6a1373b3f98f8cdd5c5b311734c3f7376ed36301"
+          },
+          {
+            "line": 43,
+            "method": "equal",
+            "bytes": 44,
+            "sha256": "726be75bd851d7bdff86d5d63d1303e0f895651f2299dce94e902724f2800872"
+          },
+          {
+            "line": 44,
+            "method": "equal",
+            "bytes": 61,
+            "sha256": "3c01244f060bdb0fa2845370c93c9b58620fed987594384878e08b089074a770"
+          },
+          {
+            "line": 100,
+            "method": "match",
+            "bytes": 56,
+            "sha256": "325105fb7eba6d745a0f7b7446f91e49536eff609a7ce7818c1ce68a14ae1bae"
+          },
+          {
+            "line": 146,
+            "method": "equal",
+            "bytes": 29,
+            "sha256": "1da5b28008288bed1e29a64dae0cefbc4d765c20d1d9a7b4f08e2241840885d5"
+          },
+          {
+            "line": 235,
+            "method": "rejects",
+            "bytes": 145,
+            "sha256": "e8f712e755bec57e7985bc119c1e403957784e56c72adc983cf17216a6d8f9c2"
+          },
+          {
+            "line": 237,
+            "method": "rejects",
+            "bytes": 448,
+            "sha256": "a49e9d5c9a8584adcd10c0be772e4a71994dc983f0f30e36f489e1e3a3d97426"
+          },
+          {
+            "line": 244,
+            "method": "rejects",
+            "bytes": 421,
+            "sha256": "4db00129aa5d5b890899ff27f82e367bbf1577132b72403143bc11d585e5acde"
+          },
+          {
+            "line": 250,
+            "method": "equal",
+            "bytes": 136,
+            "sha256": "18c4446ca0de7f0da4ec30b40e1da2b8f154b8f566df22f94e9e55e364315fb2"
+          },
+          {
+            "line": 256,
+            "method": "rejects",
+            "bytes": 267,
+            "sha256": "258bdb6f5ead2ebaa1e9d7d8b758f9b3ef3f6e3f5dacba637f40b95985148132"
+          },
+          {
+            "line": 277,
+            "method": "deepEqual",
+            "bytes": 318,
+            "sha256": "5578e8b3a7f05c8e18c0d616a43f9592d74b29622fe3c7adc59d5f279a90a5f2"
+          },
+          {
+            "line": 297,
+            "method": "rejects",
+            "bytes": 364,
+            "sha256": "3d7b56421965bfcb087bbbb9bbc111ceaa6977c947c3f365425641ca4079dd5c"
+          },
+          {
+            "line": 299,
+            "method": "equal",
+            "bytes": 164,
+            "sha256": "abd320cb3c765dcd3471c30a04f01285eb201e107d0c5eb93501e52e50076b73"
+          },
+          {
+            "line": 303,
+            "method": "equal",
+            "bytes": 51,
+            "sha256": "2329541be76086601315312f0370751ebb75446d0528dacb684d98a6cac4bde6"
+          },
+          {
+            "line": 304,
+            "method": "equal",
+            "bytes": 156,
+            "sha256": "4240dbaca07bd797a06b8fa00b3cbe98bc86facf83a996dedc34c0ba6ce4e4c1"
+          },
+          {
+            "line": 307,
+            "method": "equal",
+            "bytes": 58,
+            "sha256": "ae9e3d6a7371aa4db0a0a789ca68314ff87e859f3278ea4b171355bd4bf946c7"
+          },
+          {
+            "line": 311,
+            "method": "deepEqual",
+            "bytes": 202,
+            "sha256": "00ee68b3a63c88b1581928ee688b43f42857417f03ffa837bf1a578c3ad595e9"
+          },
+          {
+            "line": 318,
+            "method": "equal",
+            "bytes": 68,
+            "sha256": "399199219a5f61045edece89579cf486eb882b889e3c4dc40841e9a85693db52"
+          },
+          {
+            "line": 319,
+            "method": "equal",
+            "bytes": 78,
+            "sha256": "c9e13f274261a60f7a7a31bbf7d83bf08ec691d06c3e200be871f518b7f0e7a6"
+          },
+          {
+            "line": 320,
+            "method": "equal",
+            "bytes": 76,
+            "sha256": "331d711b1774c3bf21a329637f531b710019b3e83568d2047337cdc2733f0172"
+          },
+          {
+            "line": 321,
+            "method": "equal",
+            "bytes": 89,
+            "sha256": "fce27418841958fadb05c17a7273bb2c5e093030967fdae04c0ba4ec0f0e54a5"
+          },
+          {
+            "line": 325,
+            "method": "equal",
+            "bytes": 57,
+            "sha256": "fdd284c3979131c45926a09a2fcf7699f8b66435250d073ca3943610aee9bb09"
+          },
+          {
+            "line": 334,
+            "method": "equal",
+            "bytes": 52,
+            "sha256": "7729bbc8b4dfb31cf2879138e5020e5e991f36eadf7d99cb911799985b27bed7"
+          },
+          {
+            "line": 335,
+            "method": "equal",
+            "bytes": 60,
+            "sha256": "beca69bd11d32ebe25ae8fc0ec5e06106c1f4f8432a66a941a50cbdde2a4b31b"
+          },
+          {
+            "line": 336,
+            "method": "equal",
+            "bytes": 53,
+            "sha256": "5fd984c354cc7d57ed24f240a8b25fdbd14afb33d12e1c6ad232a9b5563693d8"
+          },
+          {
+            "line": 340,
+            "method": "equal",
+            "bytes": 54,
+            "sha256": "800a605c387494868f34bf60401c87fab3b2f3e18360285b5f4ede26414699f1"
+          },
+          {
+            "line": 342,
+            "method": "equal",
+            "bytes": 55,
+            "sha256": "97d42f10b00d80d667ce301b042a6c2ceb881b70612158af6e5177e933dd1afd"
+          },
+          {
+            "line": 360,
+            "method": "ok",
+            "bytes": 16,
+            "sha256": "19e9d2634518ff32b1f60b0cd38f0dd45d4a76ce8c6844b73de6397ceb51b510"
+          },
+          {
+            "line": 361,
+            "method": "notEqual",
+            "bytes": 50,
+            "sha256": "81be15c258fed7978ec9e68bc6991f87514bcd291ee121b4f3c409a7df7602e3"
+          },
+          {
+            "line": 364,
+            "method": "equal",
+            "bytes": 49,
+            "sha256": "366c8c95daec5a205c2deff4e5d27a54fc610772f7390fdb45521674d77fce93"
+          },
+          {
+            "line": 365,
+            "method": "notEqual",
+            "bytes": 62,
+            "sha256": "9ecc072442291276f5fe8d961a062ecab79b64bc950be8c4cab4350fc9a6b172"
+          },
+          {
+            "line": 366,
+            "method": "equal",
+            "bytes": 47,
+            "sha256": "2f4c194bd0d7a490390c2d5277d29c3e04c388b96ec8bbe347eb4d46ccd83784"
+          },
+          {
+            "line": 376,
+            "method": "equal",
+            "bytes": 53,
+            "sha256": "ff280b73896cbf0d6193a6b0f5eecb26c1b1c7786cafb21485d38bf17b2a8759"
+          },
+          {
+            "line": 377,
+            "method": "notEqual",
+            "bytes": 68,
+            "sha256": "cbda936f04babdf05c059bbb913605c7d246cec0b68911d79c7dbe381bca5ebf"
+          },
+          {
+            "line": 380,
+            "method": "equal",
+            "bytes": 58,
+            "sha256": "ef2033860238716a5cad29a976518a84d124d549d3da1e9235d73a79f0d437a2"
+          },
+          {
+            "line": 382,
+            "method": "equal",
+            "bytes": 57,
+            "sha256": "1f7463a6f94d67b4b4f95bd2ab9d9ae24395a03ef192af993c00c6f896a1df6c"
+          },
+          {
+            "line": 393,
+            "method": "equal",
+            "bytes": 47,
+            "sha256": "288c99b8c880860ccab659915fc94762c8fa7d7c8975eb50cf1f2d165cbe1711"
+          },
+          {
+            "line": 394,
+            "method": "equal",
+            "bytes": 64,
+            "sha256": "08c8933fe44df739ba1253d5eb1efbf194cbaadb8224326710e23da218454d36"
+          },
+          {
+            "line": 395,
+            "method": "equal",
+            "bytes": 51,
+            "sha256": "032e1a036fa79bdd2073442c666b2a86dc38479a52a9eb945079c2a775afc252"
+          },
+          {
+            "line": 400,
+            "method": "equal",
+            "bytes": 53,
+            "sha256": "abe8c5309043fe0bfd4b3379b3bf58950d4ca0e2ad4c67d277d719f565ba4a81"
+          },
+          {
+            "line": 401,
+            "method": "equal",
+            "bytes": 56,
+            "sha256": "46ce9a911e37008a71a4f68e46867b5a62383f9362a07c7aa1ae59fcb4196912"
+          },
+          {
+            "line": 403,
+            "method": "equal",
+            "bytes": 59,
+            "sha256": "b5438fa31cf2ec25bd1332ead3d12ac230364a31a26e0b86939e8c1a4a836fd2"
+          },
+          {
+            "line": 405,
+            "method": "ok",
+            "bytes": 66,
+            "sha256": "2869ce04149a36b57ee751d1cc9f2e8d21b6d9c71a0866f4330ecc71adab846d"
+          },
+          {
+            "line": 406,
+            "method": "equal",
+            "bytes": 47,
+            "sha256": "2f4c194bd0d7a490390c2d5277d29c3e04c388b96ec8bbe347eb4d46ccd83784"
+          },
+          {
+            "line": 411,
+            "method": "equal",
+            "bytes": 45,
+            "sha256": "a38a883f9f14d523d6dd7707ace4b473b34d9cceec45a41b6702a9993ab6e930"
+          },
+          {
+            "line": 413,
+            "method": "equal",
+            "bytes": 59,
+            "sha256": "6e40d32414088d9a6ffa9771a70bd34b5c8bcd6ec813bcded19d77ca41a53f48"
+          },
+          {
+            "line": 419,
+            "method": "equal",
+            "bytes": 49,
+            "sha256": "f018d4fc6156e5dec0f4abb4bd30df370c67182b35e19d3992e7368e3d64759c"
+          },
+          {
+            "line": 422,
+            "method": "equal",
+            "bytes": 34,
+            "sha256": "4a6b93671e636756c9b0333b02835d385119cdb2ec30ec85e848bafc1743e173"
+          },
+          {
+            "line": 424,
+            "method": "equal",
+            "bytes": 30,
+            "sha256": "124ada51933096e2ece8024f2052c98b2f98007922b21352ae98f24539d127c7"
+          },
+          {
+            "line": 431,
+            "method": "equal",
+            "bytes": 61,
+            "sha256": "518460b2bc85a50d7c9ad16e0485a66d7bd3cf3469e6fa8cbe1efb69247af3d5"
+          },
+          {
+            "line": 432,
+            "method": "equal",
+            "bytes": 79,
+            "sha256": "1599d167a66da0d3abd6cd09c4c115b1910ed9b9422a9eded92f94e613b57898"
+          },
+          {
+            "line": 433,
+            "method": "equal",
+            "bytes": 47,
+            "sha256": "288c99b8c880860ccab659915fc94762c8fa7d7c8975eb50cf1f2d165cbe1711"
+          },
+          {
+            "line": 437,
+            "method": "equal",
+            "bytes": 141,
+            "sha256": "7b81391b13048903f682d9571425eafd916df2d4f576773efe9c41a64d91ab9e"
+          },
+          {
+            "line": 442,
+            "method": "deepEqual",
+            "bytes": 141,
+            "sha256": "8c4ffbd747b37cdd4e5f537d652591473050022a9792ff0f632c38837897c7df"
+          },
+          {
+            "line": 448,
+            "method": "equal",
+            "bytes": 50,
+            "sha256": "9af75111d6894bc6199d79ca8ebf14f8f6c2b915187f00784a9c7550de9a84ee"
+          },
+          {
+            "line": 449,
+            "method": "equal",
+            "bytes": 43,
+            "sha256": "07a92c030be82d3be2407d19f04ead9d6e2aa53dcab090c686da2fed6c7f6a76"
+          },
+          {
+            "line": 451,
+            "method": "equal",
+            "bytes": 56,
+            "sha256": "441a58126be6404107a3eb2546793cc36734127ce2cc9ed0f93c8e186b1ebc2a"
+          },
+          {
+            "line": 466,
+            "method": "equal",
+            "bytes": 47,
+            "sha256": "288c99b8c880860ccab659915fc94762c8fa7d7c8975eb50cf1f2d165cbe1711"
+          },
+          {
+            "line": 467,
+            "method": "equal",
+            "bytes": 66,
+            "sha256": "2f0dd69073dd2555783517ec9c87ac38ee482e20aaec68ef16af132c47ff4d85"
+          },
+          {
+            "line": 468,
+            "method": "equal",
+            "bytes": 74,
+            "sha256": "72b403f26fa5fc5254dd61918e806d748fa30ad9fc8857692d932e0cce4e47df"
+          },
+          {
+            "line": 469,
+            "method": "equal",
+            "bytes": 48,
+            "sha256": "1bce80863868fd05358fe3fb25c8001bb6af07f558b4dcb42ea98a6be5ec582f"
+          },
+          {
+            "line": 473,
+            "method": "equal",
+            "bytes": 53,
+            "sha256": "e3a0217d53a17815447068bbfb5d946b8d1a0cf5e8b1d4adf477a51e207391cb"
+          },
+          {
+            "line": 475,
+            "method": "equal",
+            "bytes": 59,
+            "sha256": "484123b9183de06fa1c627eb838f18b86f1d4cb91e56cf157c0cc3670c84fab7"
+          },
+          {
+            "line": 485,
+            "method": "equal",
+            "bytes": 47,
+            "sha256": "288c99b8c880860ccab659915fc94762c8fa7d7c8975eb50cf1f2d165cbe1711"
+          },
+          {
+            "line": 486,
+            "method": "equal",
+            "bytes": 66,
+            "sha256": "a74b2fe20b2ad5b5a8925c494b74261145776dee13635a22cf4796b535ba23e3"
+          },
+          {
+            "line": 491,
+            "method": "equal",
+            "bytes": 152,
+            "sha256": "26222ef89982425006a6fc0e074a612c059b51f80728f7f748dae2a9e6d1c9c7"
+          },
+          {
+            "line": 500,
+            "method": "equal",
+            "bytes": 33,
+            "sha256": "77c46f47f81a799305e7c5d7174c670003843bcdc75499a3c2c82b36a5d2b43c"
+          },
+          {
+            "line": 502,
+            "method": "equal",
+            "bytes": 32,
+            "sha256": "236b1512fa08002e9d3674cb069a2132e677b4f404b8285849de452e446fdb15"
+          },
+          {
+            "line": 505,
+            "method": "deepEqual",
+            "bytes": 280,
+            "sha256": "e7167d0b8d54aa41df51d8725d0467bc291c718827ea956f3398449b18e0e8d7"
+          },
+          {
+            "line": 510,
+            "method": "equal",
+            "bytes": 65,
+            "sha256": "05f35e7a1b9629120e204d0fa83b75f4039bda9207bd9c8535f155abc674c9f0"
+          },
+          {
+            "line": 511,
+            "method": "equal",
+            "bytes": 59,
+            "sha256": "4e01e47dc33b6aea3b2636a745dc33cb61b8884d0b8838938a8685e3f194d961"
+          },
+          {
+            "line": 514,
+            "method": "equal",
+            "bytes": 248,
+            "sha256": "a00a8a6d430c85147162c80234323de71257bd32abf27143f31717960de2ba6c"
+          },
+          {
+            "line": 518,
+            "method": "equal",
+            "bytes": 303,
+            "sha256": "089b2a387c0e48187f1cae3b739bf1dce9c4c74fabab487ab29b855084517b97"
+          }
+        ]
+      },
+      "SQLTemplateCount": 56,
+      "pinLiterals": [],
+      "imports": [
+        {
+          "module": "node:assert/strict",
+          "line": 2
+        },
+        {
+          "module": "node:crypto",
+          "line": 3
+        },
+        {
+          "module": "node:fs/promises",
+          "line": 4
+        },
+        {
+          "module": "node:path",
+          "line": 5
+        },
+        {
+          "module": "node:timers/promises",
+          "line": 6
+        },
+        {
+          "module": "node:test",
+          "line": 7
+        },
+        {
+          "module": "postgres",
+          "line": 8
+        },
+        {
+          "module": "../../../packages/core/src/test-support/postgres-native-cluster.mjs",
+          "line": 9
+        },
+        {
+          "module": "./pg73-native-fixture.mjs",
+          "line": 10
+        },
+        {
+          "module": "../../../packages/proxy/src/runtime/postgres-shared-earning-delivery.ts",
+          "line": 11
+        }
+      ],
+      "PG73LoaderCalls": [
+        {
+          "line": 145,
+          "source": "listPg73Migrations()"
+        }
+      ],
+      "grantCalls": [],
+      "selectedContractLines": [
+        {
+          "line": 10,
+          "text": "import { listPg73Migrations } from './pg73-native-fixture.mjs';"
+        },
+        {
+          "line": 19,
+          "text": "const migrations=new URL('../../../packages/core/migrations-postgres/',import.meta.url);"
+        },
+        {
+          "line": 21,
+          "text": "quote:new URL('../../../packages/core/migrations-proposals/postgres/shared-key-quote-versions.sql',import.meta.url),"
+        },
+        {
+          "line": 22,
+          "text": "dispatch:new URL('../../../packages/core/migrations-proposals/postgres/shared-key-dispatch-quote-attempts.sql',import.meta.url),"
+        },
+        {
+          "line": 23,
+          "text": "outbox:new URL('../../../packages/core/migrations-proposals/postgres/shared-key-economic-outbox.sql',import.meta.url),"
+        },
+        {
+          "line": 24,
+          "text": "consumer:new URL('../../../packages/core/migrations-proposals/postgres/shared-key-snapshot-earning-consumer.sql',import.meta.url),"
+        },
+        {
+          "line": 25,
+          "text": "delivery:new URL('../../../packages/core/migrations-proposals/postgres/shared-key-economic-delivery.sql',import.meta.url),"
+        },
+        {
+          "line": 27,
+          "text": "const sha=value=>createHash('sha256').update(value).digest('hex');"
+        },
+        {
+          "line": 33,
+          "text": "connect_timeout:3,idle_timeout:0,max_lifetime:0,backoff:false,onnotice(){},"
+        },
+        {
+          "line": 42,
+          "text": "await assert.rejects(work,error=>{"
+        },
+        {
+          "line": 43,
+          "text": "assert.equal(error?.code,code,String(error));"
+        },
+        {
+          "line": 44,
+          "text": "if(constraint) assert.equal(error?.constraint_name,constraint,String(error));"
+        },
+        {
+          "line": 73,
+          "text": "evidence_sha256:'c'.repeat(64),observed_at:new Date().toISOString()};"
+        },
+        {
+          "line": 84,
+          "text": "{timeout:300_000,skip:!process.env.GATEWAY_NATIVE_PG_BIN},async()=>{"
+        },
+        {
+          "line": 100,
+          "text": "assert.match(cluster.binaryVersion,/PostgreSQL\\) 18\\.6/);"
+        },
+        {
+          "line": 144,
+          "text": "(version text PRIMARY KEY,applied_at timestamptz NOT NULL DEFAULT now())`);"
+        },
+        {
+          "line": 145,
+          "text": "const files = await listPg73Migrations();"
+        },
+        {
+          "line": 146,
+          "text": "assert.equal(files.length,73);"
+        },
+        {
+          "line": 235,
+          "text": "await assert.rejects(migrator.begin(tx=>tx.unsafe(bodies.delivery).simple()),"
+        },
+        {
+          "line": 237,
+          "text": "await assert.rejects(migrator.begin(async tx=>{"
+        },
+        {
+          "line": 239,
+          "text": "SET version='0042_forged_middle_version.sql'"
+        },
+        {
+          "line": 240,
+          "text": "WHERE version='0042_gateway_keys_workspace.sql'`);"
+        },
+        {
+          "line": 244,
+          "text": "await assert.rejects(migrator.begin(async tx=>{"
+        },
+        {
+          "line": 250,
+          "text": "assert.equal((await migrator.unsafe(`SELECT"
+        },
+        {
+          "line": 256,
+          "text": "await assert.rejects(migrator.begin(async tx=>{"
+        },
+        {
+          "line": 277,
+          "text": "assert.deepEqual((await migrator.unsafe(`SELECT event_id,status"
+        },
+        {
+          "line": 297,
+          "text": "await assert.rejects(migrator.begin(async tx=>{"
+        },
+        {
+          "line": 299,
+          "text": "assert.equal((await tx.unsafe(`SELECT count(*)::int AS n FROM ${deliverySchema}."
+        },
+        {
+          "line": 303,
+          "text": "assert.equal(await job('rollback-event'),undefined);"
+        },
+        {
+          "line": 304,
+          "text": "assert.equal((await migrator.unsafe(`SELECT count(*)::int AS n FROM ${outbox}."
+        },
+        {
+          "line": 307,
+          "text": "assert.equal((await job('atomic-event')).status,'pending');"
+        },
+        {
+          "line": 311,
+          "text": "assert.deepEqual(columns,['event_id','status','next_attempt_at','attempt_count',"
+        },
+        {
+          "line": 318,
+          "text": "assert.equal((await claimExact(deliveryA,'no-such-event')).length,0);"
+        },
+        {
+          "line": 319,
+          "text": "assert.equal((await claimExact(deliveryA,'before-install-consumed')).length,0);"
+        },
+        {
+          "line": 320,
+          "text": "assert.equal((await inspect(deliveryA,'no-such-event')).out_status,'absent');"
+        },
+        {
+          "line": 321,
+          "text": "assert.equal((await inspect(deliveryA,'before-install-consumed')).out_status,'completed');"
+        },
+        {
+          "line": 325,
+          "text": "assert.equal(first.out_event_id,'before-install-pending');"
+        },
+        {
+          "line": 334,
+          "text": "assert.equal(await ack(deliveryA,first),'completed');"
+        },
+        {
+          "line": 335,
+          "text": "assert.equal(await ack(deliveryA,first),'already_completed');"
+        },
+        {
+          "line": 336,
+          "text": "assert.equal(await balance(),initialBalance+5625000n);"
+        },
+        {
+          "line": 340,
+          "text": "assert.equal(inflight.out_event_id,'install-inflight');"
+        },
+        {
+          "line": 342,
+          "text": "assert.equal(await ack(deliveryA,inflight),'completed');"
+        },
+        {
+          "line": 360,
+          "text": "assert.ok(other);"
+        },
+        {
+          "line": 361,
+          "text": "assert.notEqual(other.out_event_id,'atomic-event');"
+        },
+        {
+          "line": 362,
+          "text": "} finally {release();}"
+        },
+        {
+          "line": 364,
+          "text": "assert.equal(heldRow.out_event_id,'atomic-event');"
+        },
+        {
+          "line": 365,
+          "text": "assert.notEqual(other.out_claim_token,heldRow.out_claim_token);"
+        },
+        {
+          "line": 366,
+          "text": "assert.equal((await claim(deliveryB)).length,0);"
+        },
+        {
+          "line": 376,
+          "text": "assert.equal(replacement.out_event_id,'atomic-event');"
+        },
+        {
+          "line": 377,
+          "text": "assert.notEqual(replacement.out_claim_token,heldRow.out_claim_token);"
+        },
+        {
+          "line": 380,
+          "text": "assert.equal(await ack(deliveryB,replacement),'completed');"
+        },
+        {
+          "line": 382,
+          "text": "assert.equal((await job('atomic-event')).attempt_count,2);"
+        },
+        {
+          "line": 393,
+          "text": "assert.equal((await claim(deliveryA)).length,0);"
+        },
+        {
+          "line": 394,
+          "text": "assert.equal((await job(other.out_event_id)).status,'completed');"
+        },
+        {
+          "line": 395,
+          "text": "assert.equal(await balance(),beforeReplay+5625000n);"
+        },
+        {
+          "line": 400,
+          "text": "assert.equal(retryFirst.out_event_id,'retry-backoff');"
+        },
+        {
+          "line": 401,
+          "text": "assert.equal(await fail(deliveryA,retryFirst),'pending');"
+        },
+        {
+          "line": 403,
+          "text": "assert.equal(backoff.last_failure_code,'synthetic_failure');"
+        },
+        {
+          "line": 405,
+          "text": "assert.ok(seconds>3 && seconds<=6,`first retry delay ${seconds}s`);"
+        },
+        {
+          "line": 406,
+          "text": "assert.equal((await claim(deliveryB)).length,0);"
+        },
+        {
+          "line": 411,
+          "text": "assert.equal(retrySecond.out_attempt_count,2);"
+        },
+        {
+          "line": 413,
+          "text": "assert.equal(await fail(deliveryB,retrySecond),'completed');"
+        },
+        {
+          "line": 419,
+          "text": "assert.equal(exhausted.out_attempt_count,attempt);"
+        },
+        {
+          "line": 422,
+          "text": "assert.equal(result,'dead_letter');"
+        },
+        {
+          "line": 424,
+          "text": "assert.equal(result,'pending');"
+        },
+        {
+          "line": 431,
+          "text": "assert.equal((await job('dead-letter')).status,'dead_letter');"
+        },
+        {
+          "line": 432,
+          "text": "assert.equal((await inspect(deliveryA,'dead-letter')).out_status,'dead_letter');"
+        },
+        {
+          "line": 433,
+          "text": "assert.equal((await claim(deliveryA)).length,0);"
+        },
+        {
+          "line": 437,
+          "text": "assert.equal((await recovery.unsafe(`SELECT ${deliverySchema}."
+        },
+        {
+          "line": 442,
+          "text": "assert.deepEqual(audit,{recovery_number:1,reason_code:'operator_reviewed',"
+        },
+        {
+          "line": 448,
+          "text": "assert.equal(recovered.out_event_id,'dead-letter');"
+        },
+        {
+          "line": 449,
+          "text": "assert.equal(recovered.out_attempt_count,1);"
+        },
+        {
+          "line": 451,
+          "text": "assert.equal(await ack(deliveryB,recovered),'completed');"
+        },
+        {
+          "line": 466,
+          "text": "assert.equal((await claim(deliveryA)).length,0);"
+        },
+        {
+          "line": 467,
+          "text": "assert.equal((await claimExact(deliveryA,'late-commit')).length,0);"
+        },
+        {
+          "line": 468,
+          "text": "assert.equal((await inspect(deliveryA,'late-commit')).out_status,'absent');"
+        },
+        {
+          "line": 469,
+          "text": "assert.equal(await job('late-commit'),undefined);"
+        },
+        {
+          "line": 473,
+          "text": "assert.equal(lateDelivery.out_event_id,'late-commit');"
+        },
+        {
+          "line": 475,
+          "text": "assert.equal(await ack(deliveryA,lateDelivery),'completed');"
+        },
+        {
+          "line": 485,
+          "text": "assert.equal((await claim(deliveryA)).length,0);"
+        },
+        {
+          "line": 486,
+          "text": "assert.equal((await job('dead-marker-race')).status,'dead_letter');"
+        },
+        {
+          "line": 491,
+          "text": "assert.equal((await deliveryA.unsafe(`SELECT ${deliverySchema}."
+        },
+        {
+          "line": 500,
+          "text": "async retireConfirmedDeliveryClient(value){assert.equal(value.raw,deliveryA);},"
+        },
+        {
+          "line": 502,
+          "text": "async retireConfirmedEarningClient(value){assert.equal(value.raw,consumer);},"
+        },
+        {
+          "line": 505,
+          "text": "assert.deepEqual(runtimeOutcome,{status:'completed',queueAckSafe:false,"
+        },
+        {
+          "line": 510,
+          "text": "assert.equal((await job('runtime-candidate')).status,'completed');"
+        },
+        {
+          "line": 511,
+          "text": "assert.equal(await balance(),beforeRuntimeBalance+5625000n);"
+        },
+        {
+          "line": 514,
+          "text": "assert.equal((await migrator.unsafe(`SELECT count(*)::int AS n"
+        },
+        {
+          "line": 518,
+          "text": "assert.equal((await migrator.unsafe(`SELECT count(*)::int AS n"
+        },
+        {
+          "line": 527,
+          "text": "} finally {"
+        },
+        {
+          "line": 528,
+          "text": "await Promise.allSettled(clients.map(sql=>sql.end({timeout:1})));"
+        }
+      ]
+    },
+    {
+      "workflowOriginalStep": 106,
+      "workflowLine": 594,
+      "workflowStepText": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/build-request-legacy-parent-census.native.test.mjs",
+      "name": null,
+      "command": "node --import tsx --test scripts/db/cutover/build-request-legacy-parent-census.native.test.mjs",
+      "source": {
+        "path": "scripts/db/cutover/build-request-legacy-parent-census.native.test.mjs",
+        "bytes": 12134,
+        "sha256": "42b1ab50c6e5cbc46dd3ed018f1f09f48d5890339d012982f863373cf7f1a262"
+      },
+      "assertions": {
+        "count": 31,
+        "methods": {
+          "match": 1,
+          "ok": 1,
+          "equal": 22,
+          "deepEqual": 5,
+          "rejects": 2
+        },
+        "sourcePins": [
+          {
+            "line": 54,
+            "method": "match",
+            "bytes": 57,
+            "sha256": "0d8ff706ddc4a2dcddb74cac1b9aedd36267baee8c811b2519171b8fcd8b7a55"
+          },
+          {
+            "line": 57,
+            "method": "ok",
+            "bytes": 62,
+            "sha256": "2c722c503b41cf134cfb23c4264ea5b3658ef0a57e531bae2612fe0b79e3d0c8"
+          },
+          {
+            "line": 58,
+            "method": "equal",
+            "bytes": 41,
+            "sha256": "68d1f5ae8accc9b56118353d9529ec0d138c03a4d8ce4b937442d7afeaa02ec4"
+          },
+          {
+            "line": 75,
+            "method": "equal",
+            "bytes": 30,
+            "sha256": "03920999be2a48f6bb0e0b4666074b3984332b7f530b7e4e50a06dea7d94b7e5"
+          },
+          {
+            "line": 76,
+            "method": "equal",
+            "bytes": 70,
+            "sha256": "f305911e442262a53c7209c705fa7c7e616231a34078fc49f6f398c8c455ba76"
+          },
+          {
+            "line": 92,
+            "method": "deepEqual",
+            "bytes": 111,
+            "sha256": "8a1f8788028f5b1febc677620803155f7b356f5ee75473c27cacfa6b959ba5b7"
+          },
+          {
+            "line": 110,
+            "method": "equal",
+            "bytes": 47,
+            "sha256": "7aa09b5fb0de672a36c4cea6adc583e62c9d34547294528f93c62ec5eca3b54d"
+          },
+          {
+            "line": 115,
+            "method": "equal",
+            "bytes": 46,
+            "sha256": "2cb34e75775237c8c0c617ebbbebc74879e41898e6a1b458b1f582f7797d0857"
+          },
+          {
+            "line": 125,
+            "method": "deepEqual",
+            "bytes": 59,
+            "sha256": "12fb952d90ff70f988703dfd61b86605248253cb7496f816d120d180f0d0b80f"
+          },
+          {
+            "line": 139,
+            "method": "equal",
+            "bytes": 40,
+            "sha256": "0d688243569f72f9aaec163b17772c02257a3508eb9844d8d97bc96ac8b49dfc"
+          },
+          {
+            "line": 140,
+            "method": "rejects",
+            "bytes": 292,
+            "sha256": "ed467f7cc5dae1c312eeea0c4f878b4a29f47b8730083da7363b9a26c8b2c72b"
+          },
+          {
+            "line": 147,
+            "method": "deepEqual",
+            "bytes": 69,
+            "sha256": "86eda3eda1822acafbd636de1dd65a83edf09f694166d1ebe763b933c10a3fd2"
+          },
+          {
+            "line": 150,
+            "method": "rejects",
+            "bytes": 147,
+            "sha256": "f9a105bb673437ef3167fc590e1becd3c0953509783aa4d0bb5f3914afaf86ba"
+          },
+          {
+            "line": 154,
+            "method": "equal",
+            "bytes": 29,
+            "sha256": "7774533e3011f721c3ee764a793ae34525d46d5ae11aa157a2fd2f0eb70e23e8"
+          },
+          {
+            "line": 155,
+            "method": "equal",
+            "bytes": 30,
+            "sha256": "c7dd7b423627ca7cbe4357701a074117431f5a49edef5c5269646ba04b71b95a"
+          },
+          {
+            "line": 156,
+            "method": "equal",
+            "bytes": 74,
+            "sha256": "49d27839a6915a908aed8191ec905d12864e708b2cd2e71b172dec51440cf255"
+          },
+          {
+            "line": 157,
+            "method": "equal",
+            "bytes": 45,
+            "sha256": "2cc120e0dc22dedb3fd1f823802a622f65097e3d3f666c1302160b99613e45e3"
+          },
+          {
+            "line": 158,
+            "method": "equal",
+            "bytes": 38,
+            "sha256": "c450b58581401e26db81624090f948a35db70fd1ab493efe8b400c72f91ffbc5"
+          },
+          {
+            "line": 159,
+            "method": "equal",
+            "bytes": 43,
+            "sha256": "eff711064e16c8b6a23a4b39334ead5e83e3ac229edc359c1d9683b1084a68a0"
+          },
+          {
+            "line": 160,
+            "method": "equal",
+            "bytes": 40,
+            "sha256": "ed8d43f4293c26f72766ef311fea35e937b89935dc5c08b5cf6f0f9797d8e340"
+          },
+          {
+            "line": 161,
+            "method": "equal",
+            "bytes": 38,
+            "sha256": "c3b168ce21af1bdf7b7f1a7b644433c7ee142c85377e3f871ede5c27e3da3572"
+          },
+          {
+            "line": 162,
+            "method": "equal",
+            "bytes": 39,
+            "sha256": "df53ca06e9265d8e87406ae5f1ede83dbc4fa5c96e083f9b0106410f7878cb88"
+          },
+          {
+            "line": 163,
+            "method": "equal",
+            "bytes": 52,
+            "sha256": "ea1c7654fd33efc1ff458aa386dfa03cc941a28bd67dd4f2d885db4c330f1fec"
+          },
+          {
+            "line": 164,
+            "method": "equal",
+            "bytes": 65,
+            "sha256": "c51fd1de8b05352cf271f8fa6692a588f29af571caf166a83f0f1ba04a345342"
+          },
+          {
+            "line": 165,
+            "method": "equal",
+            "bytes": 71,
+            "sha256": "a33aefee657d431de2ae7d6d93ce428b7a69553017a7ebd5e90b5d2418598bf6"
+          },
+          {
+            "line": 166,
+            "method": "equal",
+            "bytes": 67,
+            "sha256": "79581197230396f2d308759f6e9a6e25da468b7343fcd32c67339e38aadf7a38"
+          },
+          {
+            "line": 167,
+            "method": "equal",
+            "bytes": 65,
+            "sha256": "6688427eca20eb9c1a5e07b134d0f511bbbd0a00b67bba8815937d8fca27d94d"
+          },
+          {
+            "line": 168,
+            "method": "deepEqual",
+            "bytes": 225,
+            "sha256": "d7819a197a1171260d05f336896b13fd7532e3dbf3748014701e33727fb1bf88"
+          },
+          {
+            "line": 172,
+            "method": "equal",
+            "bytes": 46,
+            "sha256": "e1a82828abc545a2954383b8a0b0e3ceb00cfbaf5d35123888db8ed647a69d9d"
+          },
+          {
+            "line": 176,
+            "method": "deepEqual",
+            "bytes": 43,
+            "sha256": "953114ad42191abc4e968c85c34e5f553928acb43201df17e29ac432da6ce31c"
+          },
+          {
+            "line": 188,
+            "method": "equal",
+            "bytes": 90,
+            "sha256": "368f65d58c82482039e048cc21856af6b60e5f565c200814e1af64e00185e875"
+          }
+        ]
+      },
+      "SQLTemplateCount": 18,
+      "pinLiterals": [],
+      "imports": [
+        {
+          "module": "node:assert/strict",
+          "line": 3
+        },
+        {
+          "module": "node:crypto",
+          "line": 4
+        },
+        {
+          "module": "node:fs/promises",
+          "line": 5
+        },
+        {
+          "module": "node:path",
+          "line": 6
+        },
+        {
+          "module": "node:test",
+          "line": 7
+        },
+        {
+          "module": "postgres",
+          "line": 8
+        },
+        {
+          "module": "../../../packages/core/src/test-support/postgres-native-cluster.mjs",
+          "line": 9
+        },
+        {
+          "module": "./build-request-legacy-parent-census.mjs",
+          "line": 10
+        },
+        {
+          "module": "./pg73-native-fixture.mjs",
+          "line": 11
+        }
+      ],
+      "PG73LoaderCalls": [
+        {
+          "line": 74,
+          "source": "listPg73Migrations()"
+        }
+      ],
+      "grantCalls": [],
+      "selectedContractLines": [
+        {
+          "line": 11,
+          "text": "import { listPg73Migrations } from './pg73-native-fixture.mjs';"
+        },
+        {
+          "line": 14,
+          "text": "const migrationDir = new URL('../../../packages/core/migrations-postgres/', import.meta.url);"
+        },
+        {
+          "line": 16,
+          "text": "['cinatoken.dispatch_intent_definer_activation', new URL('../../../packages/core/migrations-proposals/postgres/dispatch-intent-producer-definer.sql', import.meta.url)],"
+        },
+        {
+          "line": 17,
+          "text": "['cinatoken.request_dispatch_single_claim_activation', new URL('../../../packages/core/migrations-proposals/postgres/request-dispatch-single-claim.sql', import.meta.url)],"
+        },
+        {
+          "line": 19,
+          "text": "const parentProposal = new URL('../../../packages/core/migrations-proposals/postgres/request-dispatch-parent-deadline-budget.sql', import.meta.url);"
+        },
+        {
+          "line": 20,
+          "text": "const digest = input => createHash('sha256').update(input).digest('hex');"
+        },
+        {
+          "line": 27,
+          "text": "prepare: false, fetch_types: false, connect_timeout: 3, idle_timeout: 0,"
+        },
+        {
+          "line": 41,
+          "text": "{ timeout: 240_000, skip: !process.env.GATEWAY_NATIVE_PG_BIN }, async () => {"
+        },
+        {
+          "line": 54,
+          "text": "assert.match(cluster.binaryVersion, /PostgreSQL\\) 18\\.6/);"
+        },
+        {
+          "line": 57,
+          "text": "assert.ok(server.version >= 180000 && server.version < 190000);"
+        },
+        {
+          "line": 58,
+          "text": "assert.equal(server.address, '127.0.0.1');"
+        },
+        {
+          "line": 73,
+          "text": "version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);"
+        },
+        {
+          "line": 74,
+          "text": "const files = await listPg73Migrations();"
+        },
+        {
+          "line": 75,
+          "text": "assert.equal(files.length, 73);"
+        },
+        {
+          "line": 76,
+          "text": "assert.equal(files.at(-1), '0073_recovery_api_key_workspace_lock.sql');"
+        },
+        {
+          "line": 88,
+          "text": "count(*) FILTER (WHERE column_name='request_sha256')::integer AS request_hash_columns,"
+        },
+        {
+          "line": 92,
+          "text": "assert.deepEqual(intentShape, { request_hash_columns: 0, request_budget_columns: 0, original_time_columns: 0 });"
+        },
+        {
+          "line": 103,
+          "text": "(request_id,attempt_index,user_id,api_key_id,workspace_id,operation,context_sha256,expires_at_ms)"
+        },
+        {
+          "line": 110,
+          "text": "assert.equal(claimed.state, 'dispatch_claimed');"
+        },
+        {
+          "line": 115,
+          "text": "assert.equal(unknown.state, 'outcome_unknown');"
+        },
+        {
+          "line": 117,
+          "text": "(request_id,attempt_index,user_id,api_key_id,workspace_id,operation,context_sha256,expires_at_ms)"
+        },
+        {
+          "line": 125,
+          "text": "assert.deepEqual(countsBefore, { intents: 3, unknowns: 1 });"
+        },
+        {
+          "line": 139,
+          "text": "assert.equal(claimIndex.installed, true);"
+        },
+        {
+          "line": 140,
+          "text": "await assert.rejects(sql.begin(async tx => {"
+        },
+        {
+          "line": 147,
+          "text": "assert.deepEqual(postReject, { parent_absent: true, old_intents: 3 });"
+        },
+        {
+          "line": 150,
+          "text": "await assert.rejects(sql.unsafe(buildRequestLegacyParentCensus().preflightSql).simple(),"
+        },
+        {
+          "line": 154,
+          "text": "assert.equal(first.length, 1);"
+        },
+        {
+          "line": 155,
+          "text": "assert.equal(second.length, 1);"
+        },
+        {
+          "line": 156,
+          "text": "assert.equal((await readPage(sql, second.at(-1).request_id, 1)).length, 0);"
+        },
+        {
+          "line": 157,
+          "text": "assert.equal(first[0].request_id, 'legacy-a');"
+        },
+        {
+          "line": 158,
+          "text": "assert.equal(first[0].attempt_rows, 2);"
+        },
+        {
+          "line": 159,
+          "text": "assert.equal(first[0].max_attempt_index, 4);"
+        },
+        {
+          "line": 160,
+          "text": "assert.equal(first[0].scope_variants, 2);"
+        },
+        {
+          "line": 161,
+          "text": "assert.equal(first[0].unknown_rows, 1);"
+        },
+        {
+          "line": 162,
+          "text": "assert.equal(first[0].prepared_rows, 1);"
+        },
+        {
+          "line": 163,
+          "text": "assert.equal(first[0].original_request_sha256, null);"
+        },
+        {
+          "line": 164,
+          "text": "assert.equal(first[0].original_request_digest_recoverable, false);"
+        },
+        {
+          "line": 165,
+          "text": "assert.equal(first[0].original_total_attempt_budget_recoverable, false);"
+        },
+        {
+          "line": 166,
+          "text": "assert.equal(first[0].original_request_deadline_recoverable, false);"
+        },
+        {
+          "line": 167,
+          "text": "assert.equal(first[0].require_permanent_replay_reservation, true);"
+        },
+        {
+          "line": 168,
+          "text": "assert.deepEqual(first[0].observed_barriers.split('|').sort(), ["
+        },
+        {
+          "line": 172,
+          "text": "assert.equal(second[0].request_id, 'legacy-b');"
+        },
+        {
+          "line": 176,
+          "text": "assert.deepEqual(countsAfter, countsBefore);"
+        },
+        {
+          "line": 183,
+          "text": "} finally {"
+        },
+        {
+          "line": 184,
+          "text": "await Promise.allSettled(clients.map(sql => sql.end({ timeout: 1 })));"
+        },
+        {
+          "line": 188,
+          "text": "assert.equal(report.cleanup, 'PASS', `owned fixture cleanup failed; report=${reportFile}`);"
+        }
+      ]
+    }
+  ],
+  "helpers": [
+    {
+      "path": "packages/admin/lib/shared-key-signed-stats-reader.ts",
+      "bytes": 6160,
+      "sha256": "27adc0b3d77b57a29ba7a13cb3dab9683b435540f2f2de8d814fcc94804f0132",
+      "directNecessaryHelperOnly": true,
+      "selectedLines": [
+        {
+          "line": 32,
+          "text": "function statsCookie(request: Request): string {"
+        },
+        {
+          "line": 36,
+          "text": ".filter((part) => part.startsWith(`${STATS_COOKIE}=`));"
+        },
+        {
+          "line": 43,
+          "text": "return `${STATS_COOKIE}=${value}`;"
+        },
+        {
+          "line": 46,
+          "text": "function canonicalIds(ids: readonly string[]): string[] {"
+        },
+        {
+          "line": 54,
+          "text": "return sorted;"
+        },
+        {
+          "line": 59,
+          "text": "export async function requestSignedSellerStatsClaim("
+        },
+        {
+          "line": 105,
+          "text": "return body as SignedStatsClaim;"
+        },
+        {
+          "line": 110,
+          "text": "export async function readSignedSellerStatsPage("
+        },
+        {
+          "line": 126,
+          "text": "return await sql.unsafe<CreditedUsageRow[]>("
+        },
+        {
+          "line": 146,
+          "text": "export async function projectSellerCreditedUsageWithSignedClaims("
+        },
+        {
+          "line": 171,
+          "text": "return projectCurrentSellerCreditedUsageWithReader("
+        },
+        {
+          "line": 181,
+          "text": "return readSignedSellerStatsPage(connectionString, claim);"
+        }
+      ]
+    },
+    {
+      "path": "packages/core/src/test-support/postgres-native-cluster.mjs",
+      "bytes": 6300,
+      "sha256": "6b5923be8d3bdcd061033eed1af2f67f3b87fa2fca1f2cf0a0b2eb0eb2cb8d2a",
+      "directNecessaryHelperOnly": true,
+      "selectedLines": [
+        {
+          "line": 16,
+          "text": "export async function startNativePostgres() {"
+        },
+        {
+          "line": 25,
+          "text": "const env = Object.fromEntries(Object.entries(process.env).filter(([key]) => !/^PG|^DATABASE_URL$/i.test(key)));"
+        },
+        {
+          "line": 26,
+          "text": "async function command(name, args, timeout = 30_000) {"
+        },
+        {
+          "line": 27,
+          "text": "return runFile(executable(name), args, { env, windowsHide: true, timeout, maxBuffer: 256 * 1024 });"
+        },
+        {
+          "line": 43,
+          "text": "function client(label, { throughPort = port, prepare = true, settings = {} } = {}) {"
+        },
+        {
+          "line": 48,
+          "text": "connect_timeout: 3, idle_timeout: 0, max_lifetime: 0, backoff: 0, keep_alive: 0,"
+        },
+        {
+          "line": 51,
+          "text": "clients.add(sql); return sql;"
+        },
+        {
+          "line": 53,
+          "text": "async function status() {"
+        },
+        {
+          "line": 54,
+          "text": "try { await command('pg_ctl', ['-D', data, 'status'], 5_000); return 'running'; }"
+        },
+        {
+          "line": 55,
+          "text": "catch (error) { if (error.code === 3) return 'stopped'; throw error; }"
+        },
+        {
+          "line": 57,
+          "text": "async function stop() {"
+        },
+        {
+          "line": 58,
+          "text": "if (closed) return;"
+        },
+        {
+          "line": 59,
+          "text": "await Promise.allSettled([...clients].map(sql => sql.end({ timeout: 1 })));"
+        },
+        {
+          "line": 67,
+          "text": "return { stopped: true, cluster: basename(owned) };"
+        },
+        {
+          "line": 69,
+          "text": "async function cleanup() {"
+        },
+        {
+          "line": 70,
+          "text": "await stop();"
+        },
+        {
+          "line": 81,
+          "text": "`-h 127.0.0.1 -p ${port} -c ssl=off -c max_connections=24 -c shared_buffers=16MB -c fsync=on -c synchronous_commit=on -c full_page_writes=on -c statement_timeout=15s -c idle_in_transaction_session_timeout=15s`, 'start']);"
+        },
+        {
+          "line": 90,
+          "text": "return { admin, client, port, binaryVersion, identity, owned, data, log, stop, cleanup,"
+        },
+        {
+          "line": 93,
+          "text": "// initdb/pg_ctl can leave a child after Windows timeout/token failure. A missing"
+        },
+        {
+          "line": 97,
+          "text": "if (startAttempted) { try { await stop(); } catch (stopError) { failures.push(stopError); } }"
+        },
+        {
+          "line": 98,
+          "text": "throw new AggregateError(failures, 'Native startup unconfirmed; inspect owned child processes before cleanup: ' + owned);"
+        }
+      ]
+    },
+    {
+      "path": "packages/proxy/src/runtime/postgres-shared-earning-delivery.ts",
+      "bytes": 10520,
+      "sha256": "f82660bba3e74da5f21366089abe5f79319bd76ac364a5c03589ab038f68268a",
+      "directNecessaryHelperOnly": true,
+      "selectedLines": [
+        {
+          "line": 45,
+          "text": "function boundedMs(value: unknown, maximum: number): boolean {"
+        },
+        {
+          "line": 46,
+          "text": "return typeof value === 'string' && /^(?:[1-9][0-9]{0,8})$/u.test(value) && Number(value) <= maximum;"
+        },
+        {
+          "line": 49,
+          "text": "export async function requireDeliveryAuthority(tx: Query): Promise<void> {"
+        },
+        {
+          "line": 52,
+          "text": "transaction_timeout_ms: unknown; statement_timeout_ms: unknown;"
+        },
+        {
+          "line": 53,
+          "text": "lock_timeout_ms: unknown; idle_transaction_timeout_ms: unknown;"
+        },
+        {
+          "line": 55,
+          "text": "(SELECT setting FROM pg_catalog.pg_settings WHERE name='transaction_timeout'"
+        },
+        {
+          "line": 56,
+          "text": "AND unit='ms' AND source='database user') AS transaction_timeout_ms,"
+        },
+        {
+          "line": 57,
+          "text": "(SELECT setting FROM pg_catalog.pg_settings WHERE name='statement_timeout'"
+        },
+        {
+          "line": 58,
+          "text": "AND unit='ms' AND source='database user') AS statement_timeout_ms,"
+        },
+        {
+          "line": 59,
+          "text": "(SELECT setting FROM pg_catalog.pg_settings WHERE name='lock_timeout'"
+        },
+        {
+          "line": 60,
+          "text": "AND unit='ms' AND source='database user') AS lock_timeout_ms,"
+        },
+        {
+          "line": 61,
+          "text": "(SELECT setting FROM pg_catalog.pg_settings WHERE name='idle_in_transaction_session_timeout'"
+        },
+        {
+          "line": 62,
+          "text": "AND unit='ms' AND source='database user') AS idle_transaction_timeout_ms`);"
+        },
+        {
+          "line": 66,
+          "text": "!boundedMs(row.transaction_timeout_ms, 30_000) ||"
+        },
+        {
+          "line": 67,
+          "text": "!boundedMs(row.statement_timeout_ms, 15_000) ||"
+        },
+        {
+          "line": 68,
+          "text": "!boundedMs(row.lock_timeout_ms, 5_000) ||"
+        },
+        {
+          "line": 69,
+          "text": "!boundedMs(row.idle_transaction_timeout_ms, 10_000)) throw new DeliveryAuthorityError();"
+        },
+        {
+          "line": 72,
+          "text": "function parseClaim(eventId: string, rows: Record<string, unknown>[]): Claim | null {"
+        },
+        {
+          "line": 73,
+          "text": "if (rows.length === 0) return null;"
+        },
+        {
+          "line": 82,
+          "text": "return Object.freeze({ eventId, token: row.out_claim_token, attemptCount: Number(row.out_attempt_count) });"
+        },
+        {
+          "line": 85,
+          "text": "function parseStatus(rows: Record<string, unknown>[]): JobStatus {"
+        },
+        {
+          "line": 89,
+          "text": "return row.out_status as JobStatus;"
+        },
+        {
+          "line": 92,
+          "text": "function parseDisposition(rows: Record<string, unknown>[]): 'completed' | 'already_completed' {"
+        },
+        {
+          "line": 96,
+          "text": "return row.disposition;"
+        },
+        {
+          "line": 105,
+          "text": "export function createPostgresSharedEarningDelivery(input: SharedEarningDeliveryDependencies) {"
+        },
+        {
+          "line": 122,
+          "text": "return Object.freeze({"
+        },
+        {
+          "line": 125,
+          "text": "if (!enabled) return Object.freeze({ status: 'disabled', queueAckSafe: false });"
+        },
+        {
+          "line": 126,
+          "text": "if (used) return Object.freeze({ status: 'already_used', queueAckSafe: false });"
+        },
+        {
+          "line": 132,
+          "text": "catch { return Object.freeze({ status: 'open_failed', queueAckSafe: false, resourceState: 'unknown' }); }"
+        },
+        {
+          "line": 134,
+          "text": "return Object.freeze({ status: 'shared_authority', queueAckSafe: false });"
+        },
+        {
+          "line": 138,
+          "text": "return Object.freeze({ status: 'invalid_client', queueAckSafe: false,"
+        },
+        {
+          "line": 156,
+          "text": "return { claimed: claim, inspected: status };"
+        },
+        {
+          "line": 159,
+          "text": "return Object.freeze({ status: error instanceof DeliveryAuthorityError ? 'authority_rejected' : 'outcome_unknown',"
+        },
+        {
+          "line": 164,
+          "text": "catch { return Object.freeze({ status: 'outcome_unknown', queueAckSafe: false, locallyRetainedClient: true }); }"
+        },
+        {
+          "line": 165,
+          "text": "return Object.freeze({ status: 'unclaimed', queueAckSafe: false,"
+        },
+        {
+          "line": 175,
+          "text": "return Object.freeze({ status: 'outcome_unknown', queueAckSafe: false, locallyRetainedClient: true });"
+        },
+        {
+          "line": 180,
+          "text": "return parseDisposition(await tx.unsafe<Record<string, unknown>[]>("
+        },
+        {
+          "line": 186,
+          "text": "return Object.freeze({ status: error instanceof DeliveryAuthorityError ? 'authority_rejected' : 'outcome_unknown',"
+        },
+        {
+          "line": 190,
+          "text": "catch { return Object.freeze({ status: 'outcome_unknown', queueAckSafe: false, locallyRetainedClient: true }); }"
+        },
+        {
+          "line": 191,
+          "text": "return Object.freeze({ status: 'completed', queueAckSafe: false, physicalClose: 'not_observed',"
+        }
+      ]
+    },
+    {
+      "path": "scripts/db/cutover/build-request-legacy-parent-census.mjs",
+      "bytes": 5335,
+      "sha256": "3fdfe075d06b240aac655b091180d7268c9507555b02e3716a47347896124d8c",
+      "directNecessaryHelperOnly": true,
+      "selectedLines": [
+        {
+          "line": 8,
+          "text": "export function buildRequestLegacyParentCensus({ cursor = '', limit = 100 } = {}) {"
+        },
+        {
+          "line": 20,
+          "text": "IF NOT EXISTS (SELECT 1 FROM cinatoken_gateway.schema_migrations"
+        },
+        {
+          "line": 21,
+          "text": "WHERE version = '0073_recovery_api_key_workspace_lock.sql')"
+        },
+        {
+          "line": 26,
+          "text": "RAISE EXCEPTION 'Expected pre-parent formal 0069-0073 intent schema is absent';"
+        },
+        {
+          "line": 84,
+          "text": "return Object.freeze({ preflightSql, pageSql,"
+        },
+        {
+          "line": 87,
+          "text": "+ `SET LOCAL lock_timeout = '2s';\\nSET LOCAL statement_timeout = '15s';\\n`"
+        },
+        {
+          "line": 96,
+          "text": "process.stdout.write(buildRequestLegacyParentCensus({ cursor: args[1], limit: Number(args[3]) }).sql);"
+        }
+      ]
+    },
+    {
+      "path": "scripts/db/cutover/grant-postgres-runtime.ts",
+      "bytes": 25946,
+      "sha256": "3f95f18f557696d8a36b93f7fe0d0d35a391e8ac9cf953376a234a6b629ea242",
+      "directNecessaryHelperOnly": true,
+      "selectedLines": [
+        {
+          "line": 8,
+          "text": "const GRANT_LOCK_KEY = 746923553;"
+        },
+        {
+          "line": 10,
+          "text": "export async function grantPostgresRuntime("
+        },
+        {
+          "line": 29,
+          "text": "`Runtime grants must run as ${GATEWAY_MIGRATOR_ROLE}, which must own ${GATEWAY_SCHEMA}.`,"
+        },
+        {
+          "line": 35,
+          "text": "SELECT 1 FROM cinatoken_gateway.schema_migrations"
+        },
+        {
+          "line": 36,
+          "text": "WHERE version = '0074_config_change_audit.sql'"
+        },
+        {
+          "line": 40,
+          "text": "throw new Error('PostgreSQL migrations are incomplete; 0074_config_change_audit.sql is required (migration=0074).');"
+        },
+        {
+          "line": 44,
+          "text": "await tx`SELECT pg_advisory_xact_lock(${GRANT_LOCK_KEY})`;"
+        },
+        {
+          "line": 46,
+          "text": "// proof. This legacy reconciler broadly grants gateway table DML and"
+        },
+        {
+          "line": 47,
+          "text": "// function EXECUTE, so reject a rerun before any ACL mutation."
+        },
+        {
+          "line": 62,
+          "text": "throw new Error('Request capability v356 is installed; legacy broad runtime grants would reopen its privileges.');"
+        },
+        {
+          "line": 66,
+          "text": "// the legacy broad grant after that cutover, even on an ordinary rerun."
+        },
+        {
+          "line": 69,
+          "text": "'cinatoken_gateway.buyer_split_grant_policy_v348()'"
+        },
+        {
+          "line": 73,
+          "text": "throw new Error('Buyer settlement split is active; use the v348 split grant reconciler.');"
+        },
+        {
+          "line": 78,
+          "text": "-- Reject role drift before any grant mutation; never revoke operator"
+        },
+        {
+          "line": 94,
+          "text": "GRANT USAGE ON SCHEMA ${GATEWAY_SCHEMA} TO ${GATEWAY_RUNTIME_ROLE};"
+        },
+        {
+          "line": 95,
+          "text": "GRANT SELECT, INSERT, UPDATE, DELETE"
+        },
+        {
+          "line": 97,
+          "text": "REVOKE ALL ON TABLE ${GATEWAY_SCHEMA}.schema_migrations FROM ${GATEWAY_RUNTIME_ROLE};"
+        },
+        {
+          "line": 102,
+          "text": "-- reconciler compatible with historical 0074 fixtures, while giving"
+        },
+        {
+          "line": 109,
+          "text": "EXECUTE 'GRANT SELECT, INSERT ON TABLE ${GATEWAY_SCHEMA}.admin_access_key_audit TO ${GATEWAY_RUNTIME_ROLE}';"
+        },
+        {
+          "line": 120,
+          "text": "EXECUTE 'GRANT SELECT, INSERT ON TABLE ${GATEWAY_SCHEMA}.admin_shared_key_audit TO ${GATEWAY_RUNTIME_ROLE}';"
+        },
+        {
+          "line": 137,
+          "text": "EXECUTE 'GRANT SELECT, INSERT ON TABLE ${GATEWAY_SCHEMA}.config_group_audit TO ${GATEWAY_RUNTIME_ROLE}';"
+        },
+        {
+          "line": 140,
+          "text": "EXECUTE 'GRANT SELECT, UPDATE (id) ON TABLE ${GATEWAY_SCHEMA}.system_config_write_mutex TO ${GATEWAY_RUNTIME_ROLE}';"
+        },
+        {
+          "line": 147,
+          "text": "-- This must follow the broad legacy grant on every rerun."
+        },
+        {
+          "line": 187,
+          "text": "GRANT USAGE, SELECT, UPDATE"
+        },
+        {
+          "line": 190,
+          "text": "GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA ${GATEWAY_SCHEMA} TO ${GATEWAY_RUNTIME_ROLE};"
+        },
+        {
+          "line": 196,
+          "text": "-- LOGIN. A broad grant rerun must not reopen runtime EXECUTE."
+        },
+        {
+          "line": 205,
+          "text": "-- A rerun of this broad grant must not expose its definer entry point."
+        },
+        {
+          "line": 227,
+          "text": "-- A rerun of the broad grants must not turn the ordinary runtime into"
+        },
+        {
+          "line": 265,
+          "text": "-- broad legacy grant above must never give the ordinary runtime direct"
+        },
+        {
+          "line": 266,
+          "text": "-- DML or even read access to that table on a grant rerun. Its trigger"
+        },
+        {
+          "line": 304,
+          "text": "RAISE EXCEPTION 'Replay registry function % is absent', function_name;"
+        },
+        {
+          "line": 310,
+          "text": "RAISE EXCEPTION 'Ordinary runtime retains replay function % privilege', function_name;"
+        },
+        {
+          "line": 320,
+          "text": "-- Review-only shared-key repair is migrator-owned. Broad grants above"
+        },
+        {
+          "line": 322,
+          "text": "-- callable by the ordinary runtime on a later grant rerun."
+        },
+        {
+          "line": 416,
+          "text": "WHERE c.oid = job_oid AND acl.grantee <> migrator_oid)"
+        },
+        {
+          "line": 420,
+          "text": "WHERE (p.oid IN (enqueue_oid,requeue_oid) AND acl.grantee <> migrator_oid)"
+        },
+        {
+          "line": 422,
+          "text": "AND acl.grantee <> migrator_oid"
+        },
+        {
+          "line": 424,
+          "text": "OR acl.grantee <> repair_consumer_oid"
+        },
+        {
+          "line": 427,
+          "text": "AND acl.grantee <> migrator_oid"
+        },
+        {
+          "line": 429,
+          "text": "OR acl.grantee <> repair_consumer_oid"
+        },
+        {
+          "line": 432,
+          "text": "AND acl.grantee <> migrator_oid"
+        },
+        {
+          "line": 433,
+          "text": "AND (repair_consumer_oid IS NULL OR acl.grantee <> repair_consumer_oid"
+        },
+        {
+          "line": 441,
+          "text": "-- by rerunning this grant step, which explicitly grants existing business"
+        },
+        {
+          "line": 446,
+          "text": "GRANT SELECT ON TABLES TO ${GATEWAY_RUNTIME_ROLE};"
+        },
+        {
+          "line": 448,
+          "text": "GRANT USAGE, SELECT, UPDATE ON SEQUENCES TO ${GATEWAY_RUNTIME_ROLE};"
+        },
+        {
+          "line": 452,
+          "text": "GRANT EXECUTE ON FUNCTIONS TO ${GATEWAY_RUNTIME_ROLE};"
+        },
+        {
+          "line": 457,
+          "text": "`Runtime grants applied: schema=${GATEWAY_SCHEMA} role=${GATEWAY_RUNTIME_ROLE} migration=0074`,"
+        },
+        {
+          "line": 460,
+          "text": "await sql.end({ timeout: 5 });"
+        },
+        {
+          "line": 465,
+          "text": "grantPostgresRuntime().catch((error) => {"
+        }
+      ]
+    },
+    {
+      "path": "scripts/db/cutover/pg73-native-fixture.mjs",
+      "bytes": 6849,
+      "sha256": "124ddd43c2594d0daaac66a4e7158e5df90b00a6d73f03cbcac9e8f853a7346f",
+      "directNecessaryHelperOnly": true,
+      "selectedLines": [
+        {
+          "line": 1,
+          "text": "// Test-only bridge for review proposals pinned to the historical PG73 ledger."
+        },
+        {
+          "line": 5,
+          "text": "import { readFile, readdir } from 'node:fs/promises';"
+        },
+        {
+          "line": 6,
+          "text": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';"
+        },
+        {
+          "line": 8,
+          "text": "const migrations = new URL('../../../packages/core/migrations-postgres/', import.meta.url);"
+        },
+        {
+          "line": 9,
+          "text": "const lastPg73 = '0073_recovery_api_key_workspace_lock.sql';"
+        },
+        {
+          "line": 10,
+          "text": "const auditMigration = '0074_config_change_audit.sql';"
+        },
+        {
+          "line": 14,
+          "text": "export async function listPg73Migrations() {"
+        },
+        {
+          "line": 15,
+          "text": "const files = (await readdir(migrations))"
+        },
+        {
+          "line": 16,
+          "text": ".filter(name => /^\\d{4}_[a-z0-9_]+\\.sql$/.test(name) && name <= lastPg73)"
+        },
+        {
+          "line": 18,
+          "text": "assert.equal(files.length, 73, 'Historical PG73 migration count differs');"
+        },
+        {
+          "line": 21,
+          "text": "`${name}\\n${await readFile(new URL(name, migrations), 'utf8')}`));"
+        },
+        {
+          "line": 23,
+          "text": "'Historical PG73 migration corpus differs');"
+        },
+        {
+          "line": 25,
+          "text": "'Historical PG73 migration ledger differs');"
+        },
+        {
+          "line": 26,
+          "text": "return files;"
+        },
+        {
+          "line": 29,
+          "text": "async function pg73State(migrator) {"
+        },
+        {
+          "line": 34,
+          "text": "(SELECT count(*)::int FROM cinatoken_gateway.schema_migrations) AS migration_count,"
+        },
+        {
+          "line": 36,
+          "text": "ORDER BY version COLLATE \"C\")) FROM cinatoken_gateway.schema_migrations) AS migration_md5,"
+        },
+        {
+          "line": 38,
+          "text": "EXISTS (SELECT 1 FROM cinatoken_gateway.schema_migrations"
+        },
+        {
+          "line": 39,
+          "text": "WHERE version='0074_config_change_audit.sql') AS audit_ledger`);"
+        },
+        {
+          "line": 42,
+          "text": "assert.equal(state.migration_count, 73, 'PG73 fixture requires exactly 73 applied migrations');"
+        },
+        {
+          "line": 43,
+          "text": "assert.equal(state.migration_md5, ledgerMd5, 'PG73 fixture ledger differs');"
+        },
+        {
+          "line": 44,
+          "text": "assert.equal(state.audit_table, false, 'PG73 fixture requires 0074 table to be absent');"
+        },
+        {
+          "line": 45,
+          "text": "assert.equal(state.audit_ledger, false, 'PG73 fixture requires 0074 ledger to be absent');"
+        },
+        {
+          "line": 48,
+          "text": "export async function grantPg73RuntimeFixture({ cluster, migrator, migratorUrl }) {"
+        },
+        {
+          "line": 52,
+          "text": "catch { throw new Error('PG73 grant fixture requires an owned loopback migrator URL'); }"
+        },
+        {
+          "line": 59,
+          "text": "'PG73 grant fixture requires an owned loopback migrator URL');"
+        },
+        {
+          "line": 60,
+          "text": "await pg73State(migrator);"
+        },
+        {
+          "line": 62,
+          "text": "'PG73 grant fixture requires its owned cluster administrator');"
+        },
+        {
+          "line": 72,
+          "text": "return role;"
+        },
+        {
+          "line": 79,
+          "text": "'PG73 fixture runtime must be restricted and have no role memberships');"
+        },
+        {
+          "line": 80,
+          "text": "const body = await readFile(new URL(auditMigration, migrations), 'utf8');"
+        },
+        {
+          "line": 93,
+          "text": "await tx.unsafe(`INSERT INTO cinatoken_gateway.schema_migrations(version)"
+        },
+        {
+          "line": 97,
+          "text": "// The production reconciler still enforces 0074. The temporary object and"
+        },
+        {
+          "line": 99,
+          "text": "await grantPostgresRuntime({ DATABASE_URL: migratorUrl });"
+        },
+        {
+          "line": 111,
+          "text": "'Temporary 0074 audit ACL differs');"
+        },
+        {
+          "line": 117,
+          "text": "await tx.unsafe(`DELETE FROM cinatoken_gateway.schema_migrations"
+        },
+        {
+          "line": 120,
+          "text": "await pg73State(migrator);"
+        },
+        {
+          "line": 127,
+          "text": "'PG73 fixture must restore the original runtime role attributes');"
+        }
+      ]
+    }
+  ],
+  "migrationDirectory": {
+    "path": "packages/core/migrations-postgres",
+    "sqlFiles": 81,
+    "fileNames": [
+      "0001_baseline.sql",
+      "0002_seed.sql",
+      "0003_model_modalities_released.sql",
+      "0004_provider_api_keys.sql",
+      "0005_drop_providers_api_key.sql",
+      "0006_upstream_trace_ids.sql",
+      "0007_key_limits_and_sticky_config.sql",
+      "0008_request_timing_metrics.sql",
+      "0009_first_reasoning_token_ms.sql",
+      "0010_models_max_tokens_nullable.sql",
+      "0011_provider_endpoints.sql",
+      "0012_drop_provider_base_url_columns.sql",
+      "0013_request_log_image_billing.sql",
+      "0014_request_log_audio_billing.sql",
+      "0015_single_provider_key.sql",
+      "0016_route_surfaces_pools.sql",
+      "0017_gemini_models_generate.sql",
+      "0018_route_pool_tier_strategies.sql",
+      "0019_route_strategy_canonical_ids.sql",
+      "0020_route_pool_sticky_routing.sql",
+      "0021_route_strategy_display_ids.sql",
+      "0022_request_log_audio_characters.sql",
+      "0023_admin_access_identity.sql",
+      "0024_drop_legacy_master_key_config.sql",
+      "0025_user_audit_actor_index.sql",
+      "0026_user_charged_cost_factors.sql",
+      "0027_user_portal_shared_keys.sql",
+      "0028_portal_marketplace_config.sql",
+      "0029_portal_integer_ledger.sql",
+      "0030_chain_job_transactions.sql",
+      "0031_ledger_integrity_guards.sql",
+      "0032_key_hash_lookup.sql",
+      "0033_gateway_key_secret_removal.sql",
+      "0034_public_model_daily_stats.sql",
+      "0035_request_presets.sql",
+      "0036_guardrails.sql",
+      "0037_route_data_policies.sql",
+      "0038_organization_identity_projection.sql",
+      "0039_guardrail_budget_reservations.sql",
+      "0040_user_budget_reservations.sql",
+      "0041_workspaces.sql",
+      "0042_gateway_keys_workspace.sql",
+      "0043_workspace_presets_guardrails.sql",
+      "0044_route_routing_metadata.sql",
+      "0045_route_data_policy_subject_fingerprint.sql",
+      "0046_model_endpoints.sql",
+      "0047_model_endpoint_route_subject_fingerprint.sql",
+      "0048_model_endpoint_audio_capabilities.sql",
+      "0049_model_endpoint_evidence_ledger.sql",
+      "0050_management_api_keys.sql",
+      "0051_gateway_key_expiry.sql",
+      "0052_gateway_key_limits.sql",
+      "0053_workspace_budgets.sql",
+      "0054_generation_metadata_snapshots.sql",
+      "0055_request_session_id.sql",
+      "0056_generation_feedback.sql",
+      "0057_guardrail_assignment_management_source.sql",
+      "0058_workspace_default_guardrails.sql",
+      "0059_account_default_guardrails.sql",
+      "0060_provider_attempt_availability.sql",
+      "0061_public_model_total_tokens.sql",
+      "0062_generation_service_tier.sql",
+      "0063_private_byok.sql",
+      "0064_byok_always_use_for_provider.sql",
+      "0065_guardrail_budget_settlement_basis.sql",
+      "0066_workspace_budget_usage_index.sql",
+      "0067_batch_jobs.sql",
+      "0068_function_schema_resolution.sql",
+      "0069_recovery_dispatch_intents.sql",
+      "0070_recovery_settlement_facts.sql",
+      "0071_recovery_jobs.sql",
+      "0072_recovery_commit_receipts.sql",
+      "0073_recovery_api_key_workspace_lock.sql",
+      "0074_config_change_audit.sql",
+      "0075_system_config_revision.sql",
+      "0076_user_audit_export_order_index.sql",
+      "0077_admin_access_key_audit.sql",
+      "0078_shared_key_earnings_history_guard.sql",
+      "0079_admin_shared_key_audit.sql",
+      "0080_admin_shared_key_actor_bounds.sql",
+      "0081_tools_config_group_audit.sql"
+    ],
+    "currentCorpusOnly": true,
+    "PG73LoaderQuotedSQLFileNames": [
+      "0073_recovery_api_key_workspace_lock.sql",
+      "0074_config_change_audit.sql",
+      "0074_config_change_audit.sql"
+    ],
+    "loaderNotExecuted": true
+  },
+  "constraints": {
+    "allSixAreExecutedNativeFixtures": true,
+    "notHistoricalNonExecutableSnapshots": true,
+    "unlike94And109HistoricalPinSnapshots": "94/109 historical source reads were redirected to immutable original Git snapshots, while these six remain current executing fixture contracts. Do not replace their executing SQL/grants/assertions with legacy snapshot bodies.",
+    "priorDcc6SixSkipped": true,
+    "priorEE122SixSkipped": true,
+    "currentD537ActualExecutionUnknown": true,
+    "fixtureDatabaseOutcomeUnknown": true,
+    "rootCauseNotConfirmed": true,
+    "preserveAllAssertionCallsExpectedValuesAndPins": true,
+    "preserveRoleSqlOrderSkipTimeoutLocksCleanup": true,
+    "preserve95And96TwoIdempotentGrantCallsAndPostSplitDenialContracts": true,
+    "preserve99And106LateGrantRerunPositiveContracts": true,
+    "implementationSuggestion": "Wait for the original d537 CI terminal native job. If one of these executes and fails, scope a repair to that actual first failing loader/grant/expected-source boundary; keep the current PG73 executable corpus and original idempotency, post-split denial, and late rerun assertions. Do not lower expected protections or infer runtime failure from inventory."
+  },
+  "actions": {
+    "repositoryWrites": 0,
+    "gitWrites": 0,
+    "markdownWrites": 0,
+    "nativeRuns": 0,
+    "databaseRuns": 0,
+    "controlRuns": 0,
+    "ciRuns": 0,
+    "networkRequests": 0,
+    "oldFrozenRootsWritten": false,
+    "oldArchivesWalked": false,
+    "onlySixFixturesAndNecessaryDirectHelpersRead": true
+  }
+}

@@ -1,0 +1,418 @@
+{
+  "schema": "cinatoken-d537-terminal-postcollection-proof-v1",
+  "at": "2026-10-06T06:37:28.644Z",
+  "collectionOnly": true,
+  "gatePassDerived": false,
+  "baseCollection": {
+    "bytes": 172700,
+    "sha256": "6b5f0021925eef6a76de2f3963d4ea3b2b26fb064ac2c2d3cbd6347d9fbb4618"
+  },
+  "baseCollectionFilesUnchanged": true,
+  "independentFinal": {
+    "path": "post-collection/independent-peer/FINAL-native-quote-terminal-packet-readonly-peer.json.gz",
+    "gzip": true,
+    "raw": {
+      "bytes": 188304,
+      "sha256": "cb09f2ada365026b5837ca0cb7f7aa87c658bd9d06465dd3af316037a9548a82"
+    },
+    "stored": {
+      "bytes": 19766,
+      "sha256": "838ef18fdebe45c2d58c881708563ab3be685a04ae61f689cf4c5b832e5f8560"
+    }
+  },
+  "sourceFileCount": 28,
+  "entries": [
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-terminal-packet-peer-Fvm9uF\\FINAL-native-quote-terminal-packet-readonly-peer.json",
+      "relative": "independent-peer/FINAL-native-quote-terminal-packet-readonly-peer.json",
+      "storedRelative": "post-collection/independent-peer/FINAL-native-quote-terminal-packet-readonly-peer.json.gz",
+      "gzip": true,
+      "raw": {
+        "bytes": 188304,
+        "sha256": "cb09f2ada365026b5837ca0cb7f7aa87c658bd9d06465dd3af316037a9548a82"
+      },
+      "stored": {
+        "bytes": 19766,
+        "sha256": "838ef18fdebe45c2d58c881708563ab3be685a04ae61f689cf4c5b832e5f8560"
+      }
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-terminal-packet-peer-Fvm9uF\\PRECHECK-original-d537-terminal.json",
+      "relative": "independent-peer/PRECHECK-original-d537-terminal.json",
+      "storedRelative": "post-collection/independent-peer/PRECHECK-original-d537-terminal.json",
+      "gzip": false,
+      "raw": {
+        "bytes": 59493,
+        "sha256": "c6718f96e011229f8159eacf6c0989a47ff46da2373d194c73e6fadcc1caf8bc"
+      },
+      "stored": {
+        "bytes": 59493,
+        "sha256": "c6718f96e011229f8159eacf6c0989a47ff46da2373d194c73e6fadcc1caf8bc"
+      }
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-terminal-packet-peer-Fvm9uF\\STOPWRITE-peer-seal.json",
+      "relative": "independent-peer/STOPWRITE-peer-seal.json",
+      "storedRelative": "post-collection/independent-peer/STOPWRITE-peer-seal.json",
+      "gzip": false,
+      "raw": {
+        "bytes": 2866,
+        "sha256": "b2aa3799398e638385bc7585f7caa167bc9bcb0b3abfe8b86a0a248d7e951486"
+      },
+      "stored": {
+        "bytes": 2866,
+        "sha256": "b2aa3799398e638385bc7585f7caa167bc9bcb0b3abfe8b86a0a248d7e951486"
+      }
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-terminal-packet-peer-Fvm9uF\\audit-final-packet.mjs",
+      "relative": "independent-peer/audit-final-packet.mjs",
+      "storedRelative": "post-collection/independent-peer/audit-final-packet.mjs",
+      "gzip": false,
+      "raw": {
+        "bytes": 9822,
+        "sha256": "851b53760ac034c8ae98748e149ae32e5757e64a8381de203ca3761c0cb8ca3e"
+      },
+      "stored": {
+        "bytes": 9822,
+        "sha256": "851b53760ac034c8ae98748e149ae32e5757e64a8381de203ca3761c0cb8ca3e"
+      }
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-terminal-packet-peer-Fvm9uF\\audit-original-terminal.mjs",
+      "relative": "independent-peer/audit-original-terminal.mjs",
+      "storedRelative": "post-collection/independent-peer/audit-original-terminal.mjs",
+      "gzip": false,
+      "raw": {
+        "bytes": 8244,
+        "sha256": "7ce9be6805e9c725ec4bfe9fa5f4c0d94a2a0689a6e172bccefa6d27e34775d6"
+      },
+      "stored": {
+        "bytes": 8244,
+        "sha256": "7ce9be6805e9c725ec4bfe9fa5f4c0d94a2a0689a6e172bccefa6d27e34775d6"
+      }
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-terminal-packet-peer-Fvm9uF\\capture-readonly.mjs",
+      "relative": "independent-peer/capture-readonly.mjs",
+      "storedRelative": "post-collection/independent-peer/capture-readonly.mjs",
+      "gzip": false,
+      "raw": {
+        "bytes": 1405,
+        "sha256": "73f8ec0159b113f5339119649fe0ccfd402740897076ddf439d9f91009bb4b67"
+      },
+      "stored": {
+        "bytes": 1405,
+        "sha256": "73f8ec0159b113f5339119649fe0ccfd402740897076ddf439d9f91009bb4b67"
+      }
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-terminal-packet-peer-Fvm9uF\\checklist-before.md",
+      "relative": "independent-peer/checklist-before.md",
+      "storedRelative": "post-collection/independent-peer/checklist-before.md.gz",
+      "gzip": true,
+      "raw": {
+        "bytes": 816360,
+        "sha256": "3a2766f735f13c8c024f09a54397c2ed8dda809b589c7a96857e25099f5ac6b3"
+      },
+      "stored": {
+        "bytes": 337236,
+        "sha256": "b325615e5ec33c7f630a2940bc1030aa72f5fcc40e1183123e0f226c0f36a2d9"
+      }
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-terminal-packet-peer-Fvm9uF\\final-packet-audit.closed.json",
+      "relative": "independent-peer/final-packet-audit.closed.json",
+      "storedRelative": "post-collection/independent-peer/final-packet-audit.closed.json",
+      "gzip": false,
+      "raw": {
+        "bytes": 894,
+        "sha256": "423957a4c2f503711d0c01ed5c230cb876f7e5f0fd5e5ae811d6f9163622ce02"
+      },
+      "stored": {
+        "bytes": 894,
+        "sha256": "423957a4c2f503711d0c01ed5c230cb876f7e5f0fd5e5ae811d6f9163622ce02"
+      }
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-terminal-packet-peer-Fvm9uF\\final-packet-audit.stderr.log",
+      "relative": "independent-peer/final-packet-audit.stderr.log",
+      "storedRelative": "post-collection/independent-peer/final-packet-audit.stderr.log",
+      "gzip": false,
+      "raw": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stored": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-terminal-packet-peer-Fvm9uF\\final-packet-audit.stdout.log",
+      "relative": "independent-peer/final-packet-audit.stdout.log",
+      "storedRelative": "post-collection/independent-peer/final-packet-audit.stdout.log",
+      "gzip": false,
+      "raw": {
+        "bytes": 462,
+        "sha256": "3d84c5ee099407618fbecbc256f9bfbb0e7f88c715745f2d7a49367a7a031e0b"
+      },
+      "stored": {
+        "bytes": 462,
+        "sha256": "3d84c5ee099407618fbecbc256f9bfbb0e7f88c715745f2d7a49367a7a031e0b"
+      }
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-terminal-packet-peer-Fvm9uF\\original-terminal-audit.closed.json",
+      "relative": "independent-peer/original-terminal-audit.closed.json",
+      "storedRelative": "post-collection/independent-peer/original-terminal-audit.closed.json",
+      "gzip": false,
+      "raw": {
+        "bytes": 909,
+        "sha256": "0ec964472f135599123a984ae0a2068cf21b0c1e4444cb419f633b177407b26b"
+      },
+      "stored": {
+        "bytes": 909,
+        "sha256": "0ec964472f135599123a984ae0a2068cf21b0c1e4444cb419f633b177407b26b"
+      }
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-terminal-packet-peer-Fvm9uF\\original-terminal-audit.stderr.log",
+      "relative": "independent-peer/original-terminal-audit.stderr.log",
+      "storedRelative": "post-collection/independent-peer/original-terminal-audit.stderr.log",
+      "gzip": false,
+      "raw": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stored": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-terminal-packet-peer-Fvm9uF\\original-terminal-audit.stdout.log",
+      "relative": "independent-peer/original-terminal-audit.stdout.log",
+      "storedRelative": "post-collection/independent-peer/original-terminal-audit.stdout.log",
+      "gzip": false,
+      "raw": {
+        "bytes": 508,
+        "sha256": "905ea3023743fd5c841d627d3b79503dd8119bbeb2231523544c5a3b5d641101"
+      },
+      "stored": {
+        "bytes": 508,
+        "sha256": "905ea3023743fd5c841d627d3b79503dd8119bbeb2231523544c5a3b5d641101"
+      }
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-terminal-packet-peer-Fvm9uF\\seal-peer.mjs",
+      "relative": "independent-peer/seal-peer.mjs",
+      "storedRelative": "post-collection/independent-peer/seal-peer.mjs",
+      "gzip": false,
+      "raw": {
+        "bytes": 1615,
+        "sha256": "fcfa43c6a33edcdf42efa0ed7df45ce20076a7492e70dda06f8835be4017e080"
+      },
+      "stored": {
+        "bytes": 1615,
+        "sha256": "fcfa43c6a33edcdf42efa0ed7df45ce20076a7492e70dda06f8835be4017e080"
+      }
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-terminal-packet-peer-Fvm9uF\\source-final-metadata-pin.json",
+      "relative": "independent-peer/source-final-metadata-pin.json",
+      "storedRelative": "post-collection/independent-peer/source-final-metadata-pin.json",
+      "gzip": false,
+      "raw": {
+        "bytes": 321,
+        "sha256": "4ad89d81ad16893ae74b0ce5839ef8dcabb8afc9aebfd06f0adfff753862b375"
+      },
+      "stored": {
+        "bytes": 321,
+        "sha256": "4ad89d81ad16893ae74b0ce5839ef8dcabb8afc9aebfd06f0adfff753862b375"
+      }
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-precision-root-1fsOZX\\make-terminal-config.result.json",
+      "relative": "root/make-terminal-config.result.json",
+      "storedRelative": "post-collection/root/make-terminal-config.result.json",
+      "gzip": false,
+      "raw": {
+        "bytes": 1086,
+        "sha256": "337109478d499ad4c0d7de55299d099c7a5a747d56f064450acecd16ab29a19e"
+      },
+      "stored": {
+        "bytes": 1086,
+        "sha256": "337109478d499ad4c0d7de55299d099c7a5a747d56f064450acecd16ab29a19e"
+      }
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-precision-root-1fsOZX\\collect-terminal.result.json",
+      "relative": "root/collect-terminal.result.json",
+      "storedRelative": "post-collection/root/collect-terminal.result.json",
+      "gzip": false,
+      "raw": {
+        "bytes": 928,
+        "sha256": "df61d566c393f1f902d98234367e7ccf8b363107ba10fe3918ea31e2e43d0653"
+      },
+      "stored": {
+        "bytes": 928,
+        "sha256": "df61d566c393f1f902d98234367e7ccf8b363107ba10fe3918ea31e2e43d0653"
+      }
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-precision-root-1fsOZX\\collect-terminal.stdout.log",
+      "relative": "root/collect-terminal.stdout.log",
+      "storedRelative": "post-collection/root/collect-terminal.stdout.log",
+      "gzip": false,
+      "raw": {
+        "bytes": 345,
+        "sha256": "b1109072f670e64ab7312867072d957b9ed606ccd05fd3d8ae5265575f1b05c5"
+      },
+      "stored": {
+        "bytes": 345,
+        "sha256": "b1109072f670e64ab7312867072d957b9ed606ccd05fd3d8ae5265575f1b05c5"
+      }
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-precision-root-1fsOZX\\collect-terminal.stderr.log",
+      "relative": "root/collect-terminal.stderr.log",
+      "storedRelative": "post-collection/root/collect-terminal.stderr.log",
+      "gzip": false,
+      "raw": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stored": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-precision-root-1fsOZX\\terminal-collection-summary.json",
+      "relative": "root/terminal-collection-summary.json",
+      "storedRelative": "post-collection/root/terminal-collection-summary.json",
+      "gzip": false,
+      "raw": {
+        "bytes": 389,
+        "sha256": "55644f36e7b1b297811073379667292acdda294773301d9a3fa2ca229e613c2b"
+      },
+      "stored": {
+        "bytes": 389,
+        "sha256": "55644f36e7b1b297811073379667292acdda294773301d9a3fa2ca229e613c2b"
+      }
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-precision-root-1fsOZX\\update-terminal-checklist.result.json",
+      "relative": "root/update-terminal-checklist.result.json",
+      "storedRelative": "post-collection/root/update-terminal-checklist.result.json",
+      "gzip": false,
+      "raw": {
+        "bytes": 832,
+        "sha256": "a38cd081adfb9602d09e96ff8c443221cea1f406346312bcae4d3324a3269e1a"
+      },
+      "stored": {
+        "bytes": 832,
+        "sha256": "a38cd081adfb9602d09e96ff8c443221cea1f406346312bcae4d3324a3269e1a"
+      }
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-precision-root-1fsOZX\\update-terminal-checklist.stdout.log",
+      "relative": "root/update-terminal-checklist.stdout.log",
+      "storedRelative": "post-collection/root/update-terminal-checklist.stdout.log",
+      "gzip": false,
+      "raw": {
+        "bytes": 616,
+        "sha256": "6cb5860134c22ba397d71e30d43b1a73fb1bb18a5a8bafdc2a0e689cc0bac6ea"
+      },
+      "stored": {
+        "bytes": 616,
+        "sha256": "6cb5860134c22ba397d71e30d43b1a73fb1bb18a5a8bafdc2a0e689cc0bac6ea"
+      }
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-precision-root-1fsOZX\\update-terminal-checklist.stderr.log",
+      "relative": "root/update-terminal-checklist.stderr.log",
+      "storedRelative": "post-collection/root/update-terminal-checklist.stderr.log",
+      "gzip": false,
+      "raw": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stored": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-precision-root-1fsOZX\\terminal-checklist-proof.json",
+      "relative": "root/terminal-checklist-proof.json",
+      "storedRelative": "post-collection/root/terminal-checklist-proof.json",
+      "gzip": false,
+      "raw": {
+        "bytes": 747,
+        "sha256": "2b16a1a7585cad4d73ff5c0c6568ed2f80f3888becdaac1463e8bffea665fdfd"
+      },
+      "stored": {
+        "bytes": 747,
+        "sha256": "2b16a1a7585cad4d73ff5c0c6568ed2f80f3888becdaac1463e8bffea665fdfd"
+      }
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-precision-root-1fsOZX\\parent-md-working-diff-check.result.json",
+      "relative": "root/parent-md-working-diff-check.result.json",
+      "storedRelative": "post-collection/root/parent-md-working-diff-check.result.json",
+      "gzip": false,
+      "raw": {
+        "bytes": 976,
+        "sha256": "5d0ed009d204ca56d76bf8d8ee7058844f1907c53384bbd6c65075f60a06a314"
+      },
+      "stored": {
+        "bytes": 976,
+        "sha256": "5d0ed009d204ca56d76bf8d8ee7058844f1907c53384bbd6c65075f60a06a314"
+      }
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-precision-root-1fsOZX\\parent-md-working-diff-check.stdout.log",
+      "relative": "root/parent-md-working-diff-check.stdout.log",
+      "storedRelative": "post-collection/root/parent-md-working-diff-check.stdout.log",
+      "gzip": false,
+      "raw": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stored": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-precision-root-1fsOZX\\parent-md-working-diff-check.stderr.log",
+      "relative": "root/parent-md-working-diff-check.stderr.log",
+      "storedRelative": "post-collection/root/parent-md-working-diff-check.stderr.log",
+      "gzip": false,
+      "raw": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stored": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-precision-root-1fsOZX\\save-postcollection-proof.mjs",
+      "relative": "root/save-postcollection-proof.mjs",
+      "storedRelative": "post-collection/root/save-postcollection-proof.mjs",
+      "gzip": false,
+      "raw": {
+        "bytes": 3730,
+        "sha256": "8cd24dc0696512f2255d706e93b236f04c1c5688129c876c3acf680c5ccea34b"
+      },
+      "stored": {
+        "bytes": 3730,
+        "sha256": "8cd24dc0696512f2255d706e93b236f04c1c5688129c876c3acf680c5ccea34b"
+      }
+    }
+  ]
+}

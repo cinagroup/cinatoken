@@ -1,0 +1,1297 @@
+{
+  "schema": "cinatoken-v364-request-signal-static-source-and-event-audit-v1",
+  "beganAt": "2026-10-06T05:57:33.322Z",
+  "endedAt": "2026-10-06T05:57:33.597Z",
+  "actualReadAuditExit": 0,
+  "observationOnly": true,
+  "applicationExecution": false,
+  "nativeExecution": false,
+  "ciInvocation": false,
+  "gatePassDerived": false,
+  "repoWrite": false,
+  "archivedRunActualExit": 1,
+  "artifactRoot": "C:/cinagroup/cinatoken/docs/operators/deployment/releases/2026-10-06-g7-native26-calibration-progress/current-terminal-evidence/canonical-calibration-artifact",
+  "archivedRun": {
+    "checkoutSHA": "dc7be6f8597333151c450bae3ae15e6585e3b2eb",
+    "versions": {
+      "workerd": "1.20260828.1",
+      "miniflare": "5.20260828.0-alpha",
+      "wrangler": "4.127.1"
+    },
+    "runtimeCompatibilityDate": "2026-09-04",
+    "frozenConfigDate": "2026-09-25"
+  },
+  "checks": [
+    {
+      "name": "precise run, commit and failure remain authoritative",
+      "verified": true
+    },
+    {
+      "name": "executor manifest exact: closed-result.json",
+      "verified": true
+    },
+    {
+      "name": "executor manifest exact: events.json",
+      "verified": true
+    },
+    {
+      "name": "executor manifest exact: events.ndjson",
+      "verified": true
+    },
+    {
+      "name": "executor manifest exact: executor-start.json",
+      "verified": true
+    },
+    {
+      "name": "executor manifest exact: executor.stderr.txt",
+      "verified": true
+    },
+    {
+      "name": "executor manifest exact: executor.stdout.txt",
+      "verified": true
+    },
+    {
+      "name": "executor manifest exact: original-strict.stderr.txt",
+      "verified": true
+    },
+    {
+      "name": "executor manifest exact: original-strict.stdout.txt",
+      "verified": true
+    },
+    {
+      "name": "JSON and NDJSON event sequence exact",
+      "verified": true
+    },
+    {
+      "name": "two real holder RST abort logs are inside original poll",
+      "verified": true
+    },
+    {
+      "name": "all original transport arms still fail and explicit reader calibration remains separate",
+      "verified": true
+    },
+    {
+      "name": "cleanup is unforced outer close, not graceful Workerd proof",
+      "verified": true
+    },
+    {
+      "name": "archived sealed diagnostic input exact: run-direct-socket.mjs",
+      "verified": true
+    },
+    {
+      "name": "archived sealed diagnostic input exact: native-reader-calibration.mjs",
+      "verified": true
+    },
+    {
+      "name": "archived sealed diagnostic input exact: execute-owned-linux.py",
+      "verified": true
+    },
+    {
+      "name": "archived sealed diagnostic input exact: source-inputs.json",
+      "verified": true
+    },
+    {
+      "name": "archived sealed diagnostic input exact: README.md",
+      "verified": true
+    },
+    {
+      "name": "frozen relevant holder and observer input exact: packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs",
+      "verified": true
+    },
+    {
+      "name": "frozen relevant holder and observer input exact: packages/proxy/scripts/staging/chat-holder-binding-v364.node.test.mjs",
+      "verified": true
+    },
+    {
+      "name": "frozen relevant holder and observer input exact: packages/proxy/scripts/staging/chat-holder-gateway-v364.ts",
+      "verified": true
+    },
+    {
+      "name": "frozen relevant holder and observer input exact: packages/proxy/scripts/staging/chat-holder-private-v364.ts",
+      "verified": true
+    },
+    {
+      "name": "frozen relevant holder and observer input exact: packages/proxy/scripts/staging/chat-holder-synthetic-v364.ts",
+      "verified": true
+    },
+    {
+      "name": "frozen relevant holder and observer input exact: packages/proxy/scripts/staging/wrangler.chat-holder-gateway-v364.jsonc",
+      "verified": true
+    },
+    {
+      "name": "frozen relevant holder and observer input exact: packages/proxy/scripts/staging/wrangler.chat-holder-private-v364.jsonc",
+      "verified": true
+    },
+    {
+      "name": "frozen relevant holder and observer input exact: scripts/diagnostics/v364-owned-linux/gateway-observer.mjs",
+      "verified": true
+    },
+    {
+      "name": "frozen relevant holder and observer input exact: scripts/diagnostics/v364-owned-linux/holder-observer.mjs",
+      "verified": true
+    },
+    {
+      "name": "frozen relevant holder and observer input exact: scripts/diagnostics/v364-owned-linux-boundary/bare-async-source.mjs",
+      "verified": true
+    },
+    {
+      "name": "installed source matches actual Linux recorded hash: node_modules/miniflare/dist/src/index.js",
+      "verified": true
+    },
+    {
+      "name": "installed source matches actual Linux recorded hash: node_modules/miniflare/dist/src/index.d.ts",
+      "verified": true
+    },
+    {
+      "name": "installed source matches actual Linux recorded hash: node_modules/miniflare/dist/src/workers/core/entry.worker.js",
+      "verified": true
+    }
+  ],
+  "decoded": [
+    {
+      "originalName": "closed-result.json",
+      "stored": {
+        "path": "C:/cinagroup/cinatoken/docs/operators/deployment/releases/2026-10-06-g7-native26-calibration-progress/current-terminal-evidence/canonical-calibration-artifact/_temp/v364-direct-socket-once-37414167261-1/closed-result.json",
+        "bytes": 19494,
+        "sha256": "07927a3f98a4b1ed85ddd03b37923db5b9b83d26ef55d172eab92c08a1316b94"
+      },
+      "decoded": {
+        "bytes": 19494,
+        "sha256": "07927a3f98a4b1ed85ddd03b37923db5b9b83d26ef55d172eab92c08a1316b94"
+      },
+      "gzip": false
+    },
+    {
+      "originalName": "events.json",
+      "stored": {
+        "path": "C:/cinagroup/cinatoken/docs/operators/deployment/releases/2026-10-06-g7-native26-calibration-progress/current-terminal-evidence/canonical-calibration-artifact/_temp/v364-direct-socket-once-37414167261-1/events.json.gz",
+        "bytes": 29396,
+        "sha256": "4bfc28aaee8effae6e9acad98c14c012b1c704d2c7753428a0fcb7f9e9b2ab8b"
+      },
+      "decoded": {
+        "bytes": 401897,
+        "sha256": "c53efde211994087440cf32e16cff132ce831b0b2f1e7c7c75af24c4d41fb7f9"
+      },
+      "gzip": true
+    },
+    {
+      "originalName": "events.ndjson",
+      "stored": {
+        "path": "C:/cinagroup/cinatoken/docs/operators/deployment/releases/2026-10-06-g7-native26-calibration-progress/current-terminal-evidence/canonical-calibration-artifact/_temp/v364-direct-socket-once-37414167261-1/events.ndjson.gz",
+        "bytes": 28654,
+        "sha256": "8bb018d64e56e0106fcce6622555ce1596af29771215f9e713983525ce34d2da"
+      },
+      "decoded": {
+        "bytes": 309188,
+        "sha256": "f88aafc158b7d9351ba02ee371d534e1bb2873e9d1b3c6cb22ac1fc0dac4ba62"
+      },
+      "gzip": true
+    },
+    {
+      "originalName": "executor-start.json",
+      "stored": {
+        "path": "C:/cinagroup/cinatoken/docs/operators/deployment/releases/2026-10-06-g7-native26-calibration-progress/current-terminal-evidence/canonical-calibration-artifact/_temp/v364-direct-socket-once-37414167261-1/executor-start.json",
+        "bytes": 693,
+        "sha256": "da8268c03eee7b20b76274524d200424fae40dddc1444a07d8be386d0f494b5a"
+      },
+      "decoded": {
+        "bytes": 693,
+        "sha256": "da8268c03eee7b20b76274524d200424fae40dddc1444a07d8be386d0f494b5a"
+      },
+      "gzip": false
+    },
+    {
+      "originalName": "executor.stderr.txt",
+      "stored": {
+        "path": "C:/cinagroup/cinatoken/docs/operators/deployment/releases/2026-10-06-g7-native26-calibration-progress/current-terminal-evidence/canonical-calibration-artifact/_temp/v364-direct-socket-once-37414167261-1/executor.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "decoded": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "gzip": false
+    },
+    {
+      "originalName": "executor.stdout.txt",
+      "stored": {
+        "path": "C:/cinagroup/cinatoken/docs/operators/deployment/releases/2026-10-06-g7-native26-calibration-progress/current-terminal-evidence/canonical-calibration-artifact/_temp/v364-direct-socket-once-37414167261-1/executor.stdout.txt",
+        "bytes": 170,
+        "sha256": "0a985cfe6b45270c9a97cd7b8ca32c9e4654225fad043b2daa8b4b0f678f6512"
+      },
+      "decoded": {
+        "bytes": 170,
+        "sha256": "0a985cfe6b45270c9a97cd7b8ca32c9e4654225fad043b2daa8b4b0f678f6512"
+      },
+      "gzip": false
+    },
+    {
+      "originalName": "original-strict.stderr.txt",
+      "stored": {
+        "path": "C:/cinagroup/cinatoken/docs/operators/deployment/releases/2026-10-06-g7-native26-calibration-progress/current-terminal-evidence/canonical-calibration-artifact/_temp/v364-direct-socket-once-37414167261-1/original-strict.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "decoded": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "gzip": false
+    },
+    {
+      "originalName": "original-strict.stdout.txt",
+      "stored": {
+        "path": "C:/cinagroup/cinatoken/docs/operators/deployment/releases/2026-10-06-g7-native26-calibration-progress/current-terminal-evidence/canonical-calibration-artifact/_temp/v364-direct-socket-once-37414167261-1/original-strict.stdout.txt",
+        "bytes": 2871,
+        "sha256": "0b072bd73434b8773f4fa78990cd8de0dfc63279972688f428cd96ad186ba969"
+      },
+      "decoded": {
+        "bytes": 2871,
+        "sha256": "0b072bd73434b8773f4fa78990cd8de0dfc63279972688f428cd96ad186ba969"
+      },
+      "gzip": false
+    }
+  ],
+  "signalAbortLogs": [
+    {
+      "zeroBasedIndex": 460,
+      "ndjsonOneBasedLine": 461,
+      "ndjsonLine": "{\"caseId\":\"direct-socket-bare-rst\",\"kind\":\"workerd-log\",\"hostMs\":9560.637786,\"wallMs\":1791261211538,\"phase\":\"original-poll\",\"timestamp\":1791261211537,\"level\":\"log\",\"message\":\"V364_DIAG {\\\"boundary\\\":\\\"holder\\\",\\\"event\\\":\\\"signal-abort\\\",\\\"wallMs\\\":1791261211537,\\\"aborted\\\":true}\"}",
+      "ndjsonLineUtf8Bytes": 281,
+      "ndjsonLineSha256": "51a73e19a56adcd28d43e4f0c744d0cf76b9fd1ca9dd4bec2235e8d1cc45e3b4",
+      "event": {
+        "caseId": "direct-socket-bare-rst",
+        "kind": "workerd-log",
+        "hostMs": 9560.637786,
+        "wallMs": 1791261211538,
+        "phase": "original-poll",
+        "timestamp": 1791261211537,
+        "level": "log",
+        "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"signal-abort\",\"wallMs\":1791261211537,\"aborted\":true}"
+      },
+      "parsedMessage": {
+        "boundary": "holder",
+        "event": "signal-abort",
+        "wallMs": 1791261211537,
+        "aborted": true
+      }
+    },
+    {
+      "zeroBasedIndex": 1269,
+      "ndjsonOneBasedLine": 1270,
+      "ndjsonLine": "{\"caseId\":\"direct-socket-binding-rst\",\"kind\":\"workerd-log\",\"hostMs\":20691.554087,\"wallMs\":1791261222669,\"phase\":\"original-poll\",\"timestamp\":1791261222669,\"level\":\"log\",\"message\":\"V364_DIAG {\\\"boundary\\\":\\\"holder\\\",\\\"event\\\":\\\"signal-abort\\\",\\\"wallMs\\\":1791261222669,\\\"aborted\\\":true}\"}",
+      "ndjsonLineUtf8Bytes": 285,
+      "ndjsonLineSha256": "302a6ebe9d6dddf3dbc377cf027983de51bc545cb4b3bf9795818255c5bbf72c",
+      "event": {
+        "caseId": "direct-socket-binding-rst",
+        "kind": "workerd-log",
+        "hostMs": 20691.554087,
+        "wallMs": 1791261222669,
+        "phase": "original-poll",
+        "timestamp": 1791261222669,
+        "level": "log",
+        "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"signal-abort\",\"wallMs\":1791261222669,\"aborted\":true}"
+      },
+      "parsedMessage": {
+        "boundary": "holder",
+        "event": "signal-abort",
+        "wallMs": 1791261222669,
+        "aborted": true
+      }
+    }
+  ],
+  "allSignalDiagnosticLogs": [
+    {
+      "zeroBasedIndex": 6,
+      "event": {
+        "caseId": "native-worker-reader-cancel",
+        "kind": "workerd-log",
+        "hostMs": 3636.527604,
+        "wallMs": 1791261205614,
+        "phase": "native-reader-calibration",
+        "timestamp": 1791261205614,
+        "level": "log",
+        "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"signal-initial\",\"wallMs\":1791261205613,\"aborted\":false}"
+      },
+      "parsedMessage": {
+        "boundary": "holder",
+        "event": "signal-initial",
+        "wallMs": 1791261205613,
+        "aborted": false
+      }
+    },
+    {
+      "zeroBasedIndex": 38,
+      "event": {
+        "caseId": "direct-socket-bare-destroy",
+        "kind": "workerd-log",
+        "hostMs": 3960.599518,
+        "wallMs": 1791261205938,
+        "phase": "streaming",
+        "timestamp": 1791261205938,
+        "level": "log",
+        "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"signal-initial\",\"wallMs\":1791261205938,\"aborted\":false}"
+      },
+      "parsedMessage": {
+        "boundary": "holder",
+        "event": "signal-initial",
+        "wallMs": 1791261205938,
+        "aborted": false
+      }
+    },
+    {
+      "zeroBasedIndex": 442,
+      "event": {
+        "caseId": "direct-socket-bare-rst",
+        "kind": "workerd-log",
+        "hostMs": 9526.676456,
+        "wallMs": 1791261211504,
+        "phase": "streaming",
+        "timestamp": 1791261211503,
+        "level": "log",
+        "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"signal-initial\",\"wallMs\":1791261211503,\"aborted\":false}"
+      },
+      "parsedMessage": {
+        "boundary": "holder",
+        "event": "signal-initial",
+        "wallMs": 1791261211503,
+        "aborted": false
+      }
+    },
+    {
+      "zeroBasedIndex": 460,
+      "event": {
+        "caseId": "direct-socket-bare-rst",
+        "kind": "workerd-log",
+        "hostMs": 9560.637786,
+        "wallMs": 1791261211538,
+        "phase": "original-poll",
+        "timestamp": 1791261211537,
+        "level": "log",
+        "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"signal-abort\",\"wallMs\":1791261211537,\"aborted\":true}"
+      },
+      "parsedMessage": {
+        "boundary": "holder",
+        "event": "signal-abort",
+        "wallMs": 1791261211537,
+        "aborted": true
+      }
+    },
+    {
+      "zeroBasedIndex": 841,
+      "event": {
+        "caseId": "direct-socket-binding-destroy",
+        "kind": "workerd-log",
+        "hostMs": 15099.381544,
+        "wallMs": 1791261217077,
+        "phase": "streaming",
+        "timestamp": 1791261217077,
+        "level": "log",
+        "message": "V364_DIAG {\"boundary\":\"gateway\",\"event\":\"signal-initial\",\"wallMs\":1791261217076,\"signalBoundary\":\"incoming\",\"aborted\":false}"
+      },
+      "parsedMessage": {
+        "boundary": "gateway",
+        "event": "signal-initial",
+        "wallMs": 1791261217076,
+        "signalBoundary": "incoming",
+        "aborted": false
+      }
+    },
+    {
+      "zeroBasedIndex": 842,
+      "event": {
+        "caseId": "direct-socket-binding-destroy",
+        "kind": "workerd-log",
+        "hostMs": 15099.82494,
+        "wallMs": 1791261217077,
+        "phase": "streaming",
+        "timestamp": 1791261217077,
+        "level": "log",
+        "message": "V364_DIAG {\"boundary\":\"gateway\",\"event\":\"signal-initial\",\"wallMs\":1791261217077,\"signalBoundary\":\"forwarded-request-object\",\"aborted\":false}"
+      },
+      "parsedMessage": {
+        "boundary": "gateway",
+        "event": "signal-initial",
+        "wallMs": 1791261217077,
+        "signalBoundary": "forwarded-request-object",
+        "aborted": false
+      }
+    },
+    {
+      "zeroBasedIndex": 844,
+      "event": {
+        "caseId": "direct-socket-binding-destroy",
+        "kind": "workerd-log",
+        "hostMs": 15101.867718,
+        "wallMs": 1791261217079,
+        "phase": "streaming",
+        "timestamp": 1791261217078,
+        "level": "log",
+        "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"signal-initial\",\"wallMs\":1791261217078,\"aborted\":false}"
+      },
+      "parsedMessage": {
+        "boundary": "holder",
+        "event": "signal-initial",
+        "wallMs": 1791261217078,
+        "aborted": false
+      }
+    },
+    {
+      "zeroBasedIndex": 1248,
+      "event": {
+        "caseId": "direct-socket-binding-rst",
+        "kind": "workerd-log",
+        "hostMs": 20645.969589,
+        "wallMs": 1791261222624,
+        "phase": "streaming",
+        "timestamp": 1791261222622,
+        "level": "log",
+        "message": "V364_DIAG {\"boundary\":\"gateway\",\"event\":\"signal-initial\",\"wallMs\":1791261222622,\"signalBoundary\":\"incoming\",\"aborted\":false}"
+      },
+      "parsedMessage": {
+        "boundary": "gateway",
+        "event": "signal-initial",
+        "wallMs": 1791261222622,
+        "signalBoundary": "incoming",
+        "aborted": false
+      }
+    },
+    {
+      "zeroBasedIndex": 1249,
+      "event": {
+        "caseId": "direct-socket-binding-rst",
+        "kind": "workerd-log",
+        "hostMs": 20646.026876,
+        "wallMs": 1791261222624,
+        "phase": "streaming",
+        "timestamp": 1791261222622,
+        "level": "log",
+        "message": "V364_DIAG {\"boundary\":\"gateway\",\"event\":\"signal-initial\",\"wallMs\":1791261222622,\"signalBoundary\":\"forwarded-request-object\",\"aborted\":false}"
+      },
+      "parsedMessage": {
+        "boundary": "gateway",
+        "event": "signal-initial",
+        "wallMs": 1791261222622,
+        "signalBoundary": "forwarded-request-object",
+        "aborted": false
+      }
+    },
+    {
+      "zeroBasedIndex": 1251,
+      "event": {
+        "caseId": "direct-socket-binding-rst",
+        "kind": "workerd-log",
+        "hostMs": 20646.092117,
+        "wallMs": 1791261222624,
+        "phase": "streaming",
+        "timestamp": 1791261222623,
+        "level": "log",
+        "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"signal-initial\",\"wallMs\":1791261222623,\"aborted\":false}"
+      },
+      "parsedMessage": {
+        "boundary": "holder",
+        "event": "signal-initial",
+        "wallMs": 1791261222623,
+        "aborted": false
+      }
+    },
+    {
+      "zeroBasedIndex": 1269,
+      "event": {
+        "caseId": "direct-socket-binding-rst",
+        "kind": "workerd-log",
+        "hostMs": 20691.554087,
+        "wallMs": 1791261222669,
+        "phase": "original-poll",
+        "timestamp": 1791261222669,
+        "level": "log",
+        "message": "V364_DIAG {\"boundary\":\"holder\",\"event\":\"signal-abort\",\"wallMs\":1791261222669,\"aborted\":true}"
+      },
+      "parsedMessage": {
+        "boundary": "holder",
+        "event": "signal-abort",
+        "wallMs": 1791261222669,
+        "aborted": true
+      }
+    }
+  ],
+  "originalResults": [
+    {
+      "caseId": "native-worker-reader-cancel",
+      "calibrationOnly": true,
+      "baselineEligible": false,
+      "nativeWorkerExecuted": true,
+      "actualExit": 0,
+      "closed": true,
+      "received": {
+        "nativeReaderCancel": true,
+        "firstFrame": ": holder-ready\n\n",
+        "pendingReadSettledBeforeCancel": false,
+        "pendingReadAfterCancelDone": true,
+        "cancel": "observed",
+        "release": null,
+        "accepted": "one"
+      },
+      "nativeObserverEvidence": {
+        "cancelPutInvoke": 1,
+        "cancelPutFulfilled": 1,
+        "waitUntilRegister": 1,
+        "waitUntilFulfilled": 1,
+        "waitUntilRejected": 0,
+        "readerCancelInvoke": 1,
+        "readerCancelFulfilled": 1,
+        "originalPullObservedBeforeCancel": true,
+        "addsLifetimeTask": false
+      }
+    },
+    {
+      "caseId": "direct-socket-bare-destroy",
+      "kind": "bare",
+      "mode": "destroy",
+      "baselineEligible": false,
+      "diagnosticVariant": true,
+      "directSocket": true,
+      "coreEntryBypassed": true,
+      "originalWindow": {
+        "pollCount": 100,
+        "sleepMs": 10,
+        "elapsedMs": 1250.965534,
+        "actual": null,
+        "expected": "observed",
+        "actualExit": 1
+      },
+      "tail": {
+        "elapsedMs": 4046.630314,
+        "reads": 77,
+        "actual": null,
+        "usedForPass": false
+      },
+      "finalPreDisposeSnapshot": {
+        "cancel": null,
+        "release": null,
+        "accepted": "one",
+        "usedForPass": false
+      },
+      "actualExit": 1,
+      "closed": true,
+      "strictFailure": {
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "message": "Expected values to be strictly equal:\n\nnull !== 'observed'\n"
+      }
+    },
+    {
+      "caseId": "direct-socket-bare-rst",
+      "kind": "bare",
+      "mode": "rst",
+      "baselineEligible": false,
+      "diagnosticVariant": true,
+      "directSocket": true,
+      "coreEntryBypassed": true,
+      "originalWindow": {
+        "pollCount": 100,
+        "sleepMs": 10,
+        "elapsedMs": 1211.724841000001,
+        "actual": null,
+        "expected": "observed",
+        "actualExit": 1
+      },
+      "tail": {
+        "elapsedMs": 4031.3372130000007,
+        "reads": 77,
+        "actual": null,
+        "usedForPass": false
+      },
+      "finalPreDisposeSnapshot": {
+        "cancel": null,
+        "release": null,
+        "accepted": "one",
+        "usedForPass": false
+      },
+      "actualExit": 1,
+      "closed": true,
+      "strictFailure": {
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "message": "Expected values to be strictly equal:\n\nnull !== 'observed'\n"
+      }
+    },
+    {
+      "caseId": "direct-socket-binding-destroy",
+      "kind": "binding",
+      "mode": "destroy",
+      "baselineEligible": false,
+      "diagnosticVariant": true,
+      "directSocket": true,
+      "coreEntryBypassed": true,
+      "originalWindow": {
+        "pollCount": 100,
+        "sleepMs": 10,
+        "elapsedMs": 1210.4886609999994,
+        "actual": null,
+        "expected": "observed",
+        "actualExit": 1
+      },
+      "tail": {
+        "elapsedMs": 4024.9941940000026,
+        "reads": 77,
+        "actual": null,
+        "usedForPass": false
+      },
+      "finalPreDisposeSnapshot": {
+        "cancel": null,
+        "release": null,
+        "accepted": "one",
+        "usedForPass": false
+      },
+      "actualExit": 1,
+      "closed": true,
+      "strictFailure": {
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "message": "Expected values to be strictly equal:\n\nnull !== 'observed'\n"
+      }
+    },
+    {
+      "caseId": "direct-socket-binding-rst",
+      "kind": "binding",
+      "mode": "rst",
+      "baselineEligible": false,
+      "diagnosticVariant": true,
+      "directSocket": true,
+      "coreEntryBypassed": true,
+      "originalWindow": {
+        "pollCount": 100,
+        "sleepMs": 10,
+        "elapsedMs": 1251.023491,
+        "actual": null,
+        "expected": "observed",
+        "actualExit": 1
+      },
+      "tail": {
+        "elapsedMs": 4036.575516000001,
+        "reads": 77,
+        "actual": null,
+        "usedForPass": false
+      },
+      "finalPreDisposeSnapshot": {
+        "cancel": null,
+        "release": null,
+        "accepted": "one",
+        "usedForPass": false
+      },
+      "actualExit": 1,
+      "closed": true,
+      "strictFailure": {
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "message": "Expected values to be strictly equal:\n\nnull !== 'observed'\n"
+      }
+    }
+  ],
+  "originalBaseline": {
+    "closed": true,
+    "startedAt": "2026-10-06T04:33:21.978Z",
+    "endedAt": "2026-10-06T04:33:25.349Z",
+    "program": "/opt/hostedtoolcache/node/22.23.3/x64/bin/node",
+    "args": [
+      "--import",
+      "/home/runner/work/cinatoken/cinatoken/node_modules/tsx/dist/loader.mjs",
+      "--test",
+      "scripts/staging/chat-holder-binding-v364.node.test.mjs",
+      "scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs"
+    ],
+    "cwd": "/home/runner/work/cinatoken/cinatoken/packages/proxy",
+    "actualExit": 1,
+    "code": 1,
+    "signal": null,
+    "timedOut": false,
+    "outputLimitExceeded": false,
+    "stdout": {
+      "file": "original-strict.stdout.txt",
+      "bytes": 2871,
+      "sha256": "0b072bd73434b8773f4fa78990cd8de0dfc63279972688f428cd96ad186ba969"
+    },
+    "stderr": {
+      "file": "original-strict.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "originalClosure": {
+    "authority": "this executor",
+    "subreaperEnabled": true,
+    "directChildReaped": true,
+    "groupGone": true,
+    "leftoverGroupKilled": false,
+    "signalAttempts": [],
+    "reapedDescendants": [
+      {
+        "pid": 2647,
+        "startTimeTicks": "9703",
+        "waitStatus": 0,
+        "waitExitCode": 0,
+        "source": "individually identified adopted zombie"
+      },
+      {
+        "pid": 2684,
+        "startTimeTicks": "9734",
+        "waitStatus": 0,
+        "waitExitCode": 0,
+        "source": "individually identified adopted zombie"
+      },
+      {
+        "pid": 2692,
+        "startTimeTicks": "9738",
+        "waitStatus": 0,
+        "waitExitCode": 0,
+        "source": "individually identified adopted zombie"
+      },
+      {
+        "pid": 2700,
+        "startTimeTicks": "9809",
+        "waitStatus": 0,
+        "waitExitCode": 0,
+        "source": "individually identified adopted zombie"
+      }
+    ],
+    "processCensus": [
+      {
+        "label": "before-initial-adopted-reap",
+        "elapsedMs": 26535.925253,
+        "pgrp": 2615,
+        "session": 2615,
+        "members": [
+          {
+            "pid": 2647,
+            "comm": "esbuild",
+            "state": "Z",
+            "ppid": 2613,
+            "pgrp": 2615,
+            "session": 2615,
+            "startTimeTicks": "9703"
+          },
+          {
+            "pid": 2684,
+            "comm": "esbuild",
+            "state": "Z",
+            "ppid": 2613,
+            "pgrp": 2615,
+            "session": 2615,
+            "startTimeTicks": "9734"
+          },
+          {
+            "pid": 2692,
+            "comm": "esbuild",
+            "state": "Z",
+            "ppid": 2613,
+            "pgrp": 2615,
+            "session": 2615,
+            "startTimeTicks": "9738"
+          },
+          {
+            "pid": 2700,
+            "comm": "esbuild",
+            "state": "Z",
+            "ppid": 2613,
+            "pgrp": 2615,
+            "session": 2615,
+            "startTimeTicks": "9809"
+          }
+        ],
+        "live": 0,
+        "zombies": 4,
+        "unknown": [],
+        "complete": true,
+        "groupExists": true
+      },
+      {
+        "label": "after-initial-adopted-reap",
+        "elapsedMs": 26542.381915999995,
+        "pgrp": 2615,
+        "session": 2615,
+        "members": [],
+        "live": 0,
+        "zombies": 0,
+        "unknown": [],
+        "complete": true,
+        "groupExists": false
+      },
+      {
+        "label": "after-term-before-reap",
+        "elapsedMs": 26548.536387,
+        "pgrp": 2615,
+        "session": 2615,
+        "members": [],
+        "live": 0,
+        "zombies": 0,
+        "unknown": [],
+        "complete": true,
+        "groupExists": false
+      },
+      {
+        "label": "after-term-after-reap",
+        "elapsedMs": 26554.594488000006,
+        "pgrp": 2615,
+        "session": 2615,
+        "members": [],
+        "live": 0,
+        "zombies": 0,
+        "unknown": [],
+        "complete": true,
+        "groupExists": false
+      },
+      {
+        "label": "final-adopt-drain",
+        "elapsedMs": 26560.659192000003,
+        "pgrp": 2615,
+        "session": 2615,
+        "members": [],
+        "live": 0,
+        "zombies": 0,
+        "unknown": [],
+        "complete": true,
+        "groupExists": false
+      },
+      {
+        "label": "final-post-reap",
+        "elapsedMs": 26566.813061000004,
+        "pgrp": 2615,
+        "session": 2615,
+        "members": [],
+        "live": 0,
+        "zombies": 0,
+        "unknown": [],
+        "complete": true,
+        "groupExists": false
+      }
+    ],
+    "apiDisposalReported": true,
+    "outerUnforcedGroupClose": true,
+    "gracefulWorkerdExitProven": false,
+    "miniflareDisposeMaySendSIGKILL": true,
+    "errors": []
+  },
+  "selectedInputCount": 10,
+  "snapshots": [
+    {
+      "original": {
+        "path": "C:/cinagroup/cinatoken/docs/operators/deployment/releases/2026-10-06-g7-native26-calibration-progress/current-terminal-evidence/canonical-calibration-artifact/_temp/v364-direct-socket-once-37414167261-1/closed-result.json",
+        "bytes": 19494,
+        "sha256": "07927a3f98a4b1ed85ddd03b37923db5b9b83d26ef55d172eab92c08a1316b94"
+      },
+      "copy": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/source-snapshots-v2/runtime/closed-result.json",
+        "bytes": 19494,
+        "sha256": "07927a3f98a4b1ed85ddd03b37923db5b9b83d26ef55d172eab92c08a1316b94"
+      },
+      "exact": true
+    },
+    {
+      "original": {
+        "path": "C:/cinagroup/cinatoken/docs/operators/deployment/releases/2026-10-06-g7-native26-calibration-progress/current-terminal-evidence/canonical-calibration-artifact/_temp/v364-direct-socket-once-37414167261-1/executor.closed.json",
+        "bytes": 5896,
+        "sha256": "1f36a6a5c68356bdce2a30e57f0e212db88c0a02b0b01eb0d872d06565586e18"
+      },
+      "copy": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/source-snapshots-v2/runtime/executor.closed.json",
+        "bytes": 5896,
+        "sha256": "1f36a6a5c68356bdce2a30e57f0e212db88c0a02b0b01eb0d872d06565586e18"
+      },
+      "exact": true
+    },
+    {
+      "original": {
+        "path": "C:/cinagroup/cinatoken/docs/operators/deployment/releases/2026-10-06-g7-native26-calibration-progress/current-terminal-evidence/canonical-calibration-artifact/cinatoken/cinatoken/scripts/diagnostics/v364-direct-socket/run-direct-socket.mjs",
+        "bytes": 34907,
+        "sha256": "621cb7384b32a25af7c37d411cd12c2d51bf47c241d9d1f24c1c3ee3989723f3"
+      },
+      "copy": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/source-snapshots-v2/direct/run-direct-socket.mjs",
+        "bytes": 34907,
+        "sha256": "621cb7384b32a25af7c37d411cd12c2d51bf47c241d9d1f24c1c3ee3989723f3"
+      },
+      "exact": true
+    },
+    {
+      "original": {
+        "path": "C:/cinagroup/cinatoken/docs/operators/deployment/releases/2026-10-06-g7-native26-calibration-progress/current-terminal-evidence/canonical-calibration-artifact/cinatoken/cinatoken/scripts/diagnostics/v364-direct-socket/native-reader-calibration.mjs",
+        "bytes": 2546,
+        "sha256": "e838769c950b49056ffc4e6580e41d8ec15a245db6efff6829c170642fb8ee8f"
+      },
+      "copy": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/source-snapshots-v2/direct/native-reader-calibration.mjs",
+        "bytes": 2546,
+        "sha256": "e838769c950b49056ffc4e6580e41d8ec15a245db6efff6829c170642fb8ee8f"
+      },
+      "exact": true
+    },
+    {
+      "original": {
+        "path": "C:/cinagroup/cinatoken/docs/operators/deployment/releases/2026-10-06-g7-native26-calibration-progress/current-terminal-evidence/canonical-calibration-artifact/cinatoken/cinatoken/scripts/diagnostics/v364-direct-socket/execute-owned-linux.py",
+        "bytes": 15959,
+        "sha256": "c635a435873185363faf23e1cbaa6887b858a9f23e32882a6ce54ff5405e15e0"
+      },
+      "copy": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/source-snapshots-v2/direct/execute-owned-linux.py",
+        "bytes": 15959,
+        "sha256": "c635a435873185363faf23e1cbaa6887b858a9f23e32882a6ce54ff5405e15e0"
+      },
+      "exact": true
+    },
+    {
+      "original": {
+        "path": "C:/cinagroup/cinatoken/docs/operators/deployment/releases/2026-10-06-g7-native26-calibration-progress/current-terminal-evidence/canonical-calibration-artifact/cinatoken/cinatoken/scripts/diagnostics/v364-direct-socket/source-inputs.json",
+        "bytes": 5028,
+        "sha256": "a4046af64da2e2f61b37ee9ea92658bc2d54236052c859477c57d9049f62e3e9"
+      },
+      "copy": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/source-snapshots-v2/direct/source-inputs.json",
+        "bytes": 5028,
+        "sha256": "a4046af64da2e2f61b37ee9ea92658bc2d54236052c859477c57d9049f62e3e9"
+      },
+      "exact": true
+    },
+    {
+      "original": {
+        "path": "C:/cinagroup/cinatoken/docs/operators/deployment/releases/2026-10-06-g7-native26-calibration-progress/current-terminal-evidence/canonical-calibration-artifact/cinatoken/cinatoken/scripts/diagnostics/v364-direct-socket/README.md",
+        "bytes": 5092,
+        "sha256": "d2da25041decf0e0d1d1dd99fcc4182f8ef8528e8671f72f48e53a158fd600ed"
+      },
+      "copy": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/source-snapshots-v2/direct/README.md",
+        "bytes": 5092,
+        "sha256": "d2da25041decf0e0d1d1dd99fcc4182f8ef8528e8671f72f48e53a158fd600ed"
+      },
+      "exact": true
+    },
+    {
+      "original": {
+        "path": "C:/cinagroup/cinatoken/docs/operators/deployment/releases/2026-10-06-g7-native26-calibration-progress/current-terminal-evidence/canonical-calibration-artifact/cinatoken/cinatoken/scripts/diagnostics/v364-direct-socket/sealed-package.json",
+        "bytes": 1045,
+        "sha256": "0a02c1af6ee0aca1fc7c84b14fe292939640a6df371995b2fbe540281f93a7e7"
+      },
+      "copy": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/source-snapshots-v2/direct/sealed-package.json",
+        "bytes": 1045,
+        "sha256": "0a02c1af6ee0aca1fc7c84b14fe292939640a6df371995b2fbe540281f93a7e7"
+      },
+      "exact": true
+    },
+    {
+      "original": {
+        "path": "C:/cinagroup/cinatoken/packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs",
+        "bytes": 13354,
+        "sha256": "d23d1c710b539b6c64655fbb1fa4e4de85b228bab19c757bc0e4de48528972e5"
+      },
+      "copy": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/source-snapshots-v2/repository/packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs",
+        "bytes": 13354,
+        "sha256": "d23d1c710b539b6c64655fbb1fa4e4de85b228bab19c757bc0e4de48528972e5"
+      },
+      "exact": true
+    },
+    {
+      "original": {
+        "path": "C:/cinagroup/cinatoken/packages/proxy/scripts/staging/chat-holder-binding-v364.node.test.mjs",
+        "bytes": 5908,
+        "sha256": "bf02a63395f450b889a784dc58bc537b6cb2f4a3004de07e1833c3e747c27fcc"
+      },
+      "copy": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/source-snapshots-v2/repository/packages/proxy/scripts/staging/chat-holder-binding-v364.node.test.mjs",
+        "bytes": 5908,
+        "sha256": "bf02a63395f450b889a784dc58bc537b6cb2f4a3004de07e1833c3e747c27fcc"
+      },
+      "exact": true
+    },
+    {
+      "original": {
+        "path": "C:/cinagroup/cinatoken/packages/proxy/scripts/staging/chat-holder-gateway-v364.ts",
+        "bytes": 1534,
+        "sha256": "8c85b01ba54daa9b7302c726d20693d08ccb3395350ea6a333817eed46441eaf"
+      },
+      "copy": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/source-snapshots-v2/repository/packages/proxy/scripts/staging/chat-holder-gateway-v364.ts",
+        "bytes": 1534,
+        "sha256": "8c85b01ba54daa9b7302c726d20693d08ccb3395350ea6a333817eed46441eaf"
+      },
+      "exact": true
+    },
+    {
+      "original": {
+        "path": "C:/cinagroup/cinatoken/packages/proxy/scripts/staging/chat-holder-private-v364.ts",
+        "bytes": 5367,
+        "sha256": "44070fcbb7058b915329a150634eaa649c1b3601724495a1620e94ce2d54d1bf"
+      },
+      "copy": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/source-snapshots-v2/repository/packages/proxy/scripts/staging/chat-holder-private-v364.ts",
+        "bytes": 5367,
+        "sha256": "44070fcbb7058b915329a150634eaa649c1b3601724495a1620e94ce2d54d1bf"
+      },
+      "exact": true
+    },
+    {
+      "original": {
+        "path": "C:/cinagroup/cinatoken/packages/proxy/scripts/staging/chat-holder-synthetic-v364.ts",
+        "bytes": 1019,
+        "sha256": "d89c6964454d9368a0257b6a585c8d5d707c91d09e55f5f2ea7c3545e5f0a16d"
+      },
+      "copy": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/source-snapshots-v2/repository/packages/proxy/scripts/staging/chat-holder-synthetic-v364.ts",
+        "bytes": 1019,
+        "sha256": "d89c6964454d9368a0257b6a585c8d5d707c91d09e55f5f2ea7c3545e5f0a16d"
+      },
+      "exact": true
+    },
+    {
+      "original": {
+        "path": "C:/cinagroup/cinatoken/packages/proxy/scripts/staging/wrangler.chat-holder-gateway-v364.jsonc",
+        "bytes": 598,
+        "sha256": "e1a0354ff5bf7915c6c125f3003683a56b708d8bdd6006cce6b33c4ff8a6bb77"
+      },
+      "copy": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/source-snapshots-v2/repository/packages/proxy/scripts/staging/wrangler.chat-holder-gateway-v364.jsonc",
+        "bytes": 598,
+        "sha256": "e1a0354ff5bf7915c6c125f3003683a56b708d8bdd6006cce6b33c4ff8a6bb77"
+      },
+      "exact": true
+    },
+    {
+      "original": {
+        "path": "C:/cinagroup/cinatoken/packages/proxy/scripts/staging/wrangler.chat-holder-private-v364.jsonc",
+        "bytes": 568,
+        "sha256": "6b897d8aa7b01087b75d4b74968d4004e2b6ddb87650bad1203c7693160b2047"
+      },
+      "copy": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/source-snapshots-v2/repository/packages/proxy/scripts/staging/wrangler.chat-holder-private-v364.jsonc",
+        "bytes": 568,
+        "sha256": "6b897d8aa7b01087b75d4b74968d4004e2b6ddb87650bad1203c7693160b2047"
+      },
+      "exact": true
+    },
+    {
+      "original": {
+        "path": "C:/cinagroup/cinatoken/scripts/diagnostics/v364-owned-linux/gateway-observer.mjs",
+        "bytes": 1244,
+        "sha256": "3ec2e49a72697f61bd1867bcde369a7c508cdbf669cd86d7e0eebdfc41dcfe00"
+      },
+      "copy": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/source-snapshots-v2/repository/scripts/diagnostics/v364-owned-linux/gateway-observer.mjs",
+        "bytes": 1244,
+        "sha256": "3ec2e49a72697f61bd1867bcde369a7c508cdbf669cd86d7e0eebdfc41dcfe00"
+      },
+      "exact": true
+    },
+    {
+      "original": {
+        "path": "C:/cinagroup/cinatoken/scripts/diagnostics/v364-owned-linux/holder-observer.mjs",
+        "bytes": 2461,
+        "sha256": "740727cae646ae757fa50ef7bb6c02a9f9cb4b1b3aa64b0de539c88bbbe09a25"
+      },
+      "copy": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/source-snapshots-v2/repository/scripts/diagnostics/v364-owned-linux/holder-observer.mjs",
+        "bytes": 2461,
+        "sha256": "740727cae646ae757fa50ef7bb6c02a9f9cb4b1b3aa64b0de539c88bbbe09a25"
+      },
+      "exact": true
+    },
+    {
+      "original": {
+        "path": "C:/cinagroup/cinatoken/scripts/diagnostics/v364-owned-linux-boundary/bare-async-source.mjs",
+        "bytes": 1864,
+        "sha256": "86b67412be0b8ef8434edfd0f44c8c6e5d306ce3f76ed3deed8305cca2771bfd"
+      },
+      "copy": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/source-snapshots-v2/repository/scripts/diagnostics/v364-owned-linux-boundary/bare-async-source.mjs",
+        "bytes": 1864,
+        "sha256": "86b67412be0b8ef8434edfd0f44c8c6e5d306ce3f76ed3deed8305cca2771bfd"
+      },
+      "exact": true
+    }
+  ],
+  "installed": [
+    {
+      "path": "C:/cinagroup/cinatoken/node_modules/miniflare/dist/src/index.js",
+      "bytes": 4843426,
+      "sha256": "58ca83056cf67838add064edcbfd1d654ed204527b8eb01307ba208d7e59fa20"
+    },
+    {
+      "path": "C:/cinagroup/cinatoken/node_modules/miniflare/dist/src/index.d.ts",
+      "bytes": 485080,
+      "sha256": "7e0c4b6c1cdf6b4207e4c8651e04a453b759a1cdc4a3cd5691da016050e9193a"
+    },
+    {
+      "path": "C:/cinagroup/cinatoken/node_modules/miniflare/dist/src/workers/core/entry.worker.js",
+      "bytes": 184933,
+      "sha256": "e2434da3c39be4758dd323045dbc0b79bb2c0b2a5ba2ed02c6b271b1b676410d"
+    }
+  ],
+  "physicalSourceRanges": [
+    {
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/official-locked-source-public/compatibility-date.capnp",
+        "bytes": 88675,
+        "sha256": "dde45e2337fe1c8991f165b452968c86008852e086ccdc5e0470a25bd6dafb95"
+      },
+      "beginOneBased": 794,
+      "endOneBased": 799,
+      "reason": "explicit request-signal enable/disable flag; no enable-date annotation",
+      "text": "  enableRequestSignal @90 :Bool\n    $compatEnableFlag(\"enable_request_signal\")\n    $compatDisableFlag(\"disable_request_signal\");\n  # Enables Request.signal for incoming requests.\n  # This feature is still experimental and the compat flag has no default enable date.\n"
+    },
+    {
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/official-locked-source-public/worker-entrypoint.c++",
+        "bytes": 50916,
+        "sha256": "5a26985f9d80021e9af91b0569c54b7d9c987bf5b6ca6d63d37da5c1fab28bf9"
+      },
+      "beginOneBased": 414,
+      "endOneBased": 474,
+      "reason": "request signal controller and cancellation hook; internal runtime waitUntil",
+      "text": "      // Drain the incoming request and trigger the client-disconnect abort signal on scope exit\n      // (success, failure, or cancellation). This must run regardless of outcome so that the\n      // incoming request is always drained and the AbortController is released; it must also run\n      // before final error handling so that `failOpenService` is populated when needed.\n      KJ_DEFER({\n        // The request has been canceled, but allow it to continue executing in the background.\n        if (context.isFailOpen()) {\n          // Fail-open behavior has been chosen, we'd better save an interface that we can use for\n          // that purpose later.\n          failOpenService = context.getSubrequestChannelNoChecks(\n              IoContext::NEXT_CLIENT_CHANNEL, false, kj::mv(cfBlobJson));\n        }\n\n        // When the client disconnects, trigger an abort on request.signal, unless the request has\n        // already completed normally, or failed with an exception.\n        // TODO(perf): Don't add a task to trigger the abort unless we know it has at least one\n        // listener.\n        if (proxyTask == kj::none && !loggedExceptionEarlier && abortController != kj::none) {\n          auto ctrl = KJ_ASSERT_NONNULL(abortController).addRef();\n          context.addWaitUntil(context.run([ctrl = kj::mv(ctrl)](Worker::Lock& lock) mutable {\n            ctrl->getSignal()->triggerAbort(\n                lock, JSG_KJ_EXCEPTION(DISCONNECTED, DOMAbortError, \"The client has disconnected\"));\n          }));\n        }\n\n        // Release reference to the AbortController.\n        // Either the waitUntilTask holds a reference to it, or it will never be triggered at all.\n        abortController = kj::none;\n\n        incomingRequest->drain(waitUntilTasks, kj::mv(incomingRequest));\n      });\n\n      KJ_TRY {\n        api::DeferredProxy<void> deferredProxy = co_await context.run(\n            [this, method, url, &headers, &requestBody, &wrappedResponse = *wrappedResponse,\n                entrypointName = entrypointName.clone()](\n                Worker::Lock& lock, IoContext& context) mutable {\n          TRACE_EVENT_END(\"workerd\", PERFETTO_TRACK_FROM_POINTER(&context));\n          TRACE_EVENT(\n              \"workerd\", \"WorkerEntrypoint::request() run\", PERFETTO_FLOW_FROM_POINTER(this));\n          jsg::AsyncContextFrame::StorageScope traceScope = context.makeAsyncTraceScope(lock);\n          jsg::AsyncContextFrame::StorageScope userTraceScope =\n              context.makeUserAsyncTraceScope(lock);\n\n          kj::Maybe<jsg::Ref<api::AbortSignal>> signal;\n          auto featureFlags = FeatureFlags::get(lock);\n          if (featureFlags.getEnableRequestSignal()) {\n            auto abortSignalFlag = featureFlags.getRequestSignalPassthrough()\n                ? api::AbortSignal::Flag::NONE\n                : api::AbortSignal::Flag::IGNORE_FOR_SUBREQUESTS;\n            jsg::Lock& js = lock;\n            signal.emplace(\n                abortController.emplace(js.alloc<api::AbortController>(js, abortSignalFlag))\n                    ->getSignal());\n          }\n\n          return lock.getGlobalScope().request(method, url, headers, requestBody, wrappedResponse,\n              cfBlobJson, lock,\n              lock.getExportedHandler(asPtr(entrypointName), kj::mv(versionInfo), kj::mv(props),\n                  context.getActor(), isDynamicDispatch),\n              kj::mv(signal));"
+    },
+    {
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/official-locked-source-public/standard.c++",
+        "bytes": 193298,
+        "sha256": "f64a9fe8ab0c2f3bc397ac18d35d59e5c1be8ead1182c7ccd668bfbd993bc698"
+      },
+      "beginOneBased": 3515,
+      "endOneBased": 3607,
+      "reason": "locked JavaScript draining-reader pump and catch-path cancellation",
+      "text": "// pumpToImpl uses a DrainingReader to efficiently pull all synchronously available\n// data from the stream in each iteration, then writes it to the sink using vectored\n// I/O. This minimizes isolate lock acquisitions by batching: each time the lock is\n// held, the stream's internal queue is fully drained and the JS pull callback is\n// pumped synchronously as many times as possible.\n//\n// The pump loop is a kj coroutine. Dropping the returned kj::Promise drops the\n// coroutine frame, which destroys the DrainingReader (releasing the stream lock)\n// and the sink.\n// The coroutine that implements the pump loop takes ownership of the DrainingReader\n// and sink. The jsg::Ref<ReadableStream> is not passed into the coroutine because\n// jsg::Ref is disallowed in coroutine parameters; instead, the DrainingReader holds\n// a reference to the stream internally.\n//\n// Neither isolate-lock round trip below is awaited directly. A draining read runs\n// the stream's pull() callback, and pull() can abort the request, which drops the\n// pump promise from inside the very event that is delivering the read's result.\n// Destroying an event while it is firing trips \"Promise callback destroyed itself\".\n// Each run() is therefore handed to the IoContext's task set, and the pump awaits an\n// unrelated fulfiller. Dropping the pump then destroys only that await; the firing\n// event stays owned by the task set, which unwinds it once it is safe to.\n//\n// The consequence is that those tasks outlive the coroutine frame, so they must not\n// name anything the frame owns. The DrainingReader is reached through a kj::Weak,\n// which reports the frame's destruction rather than dangling into it.\nkj::Promise<void> pumpToImpl(IoContext& ioContext,\n    kj::Own<DrainingReader> reader,\n    kj::Own<WritableStreamSink> sink,\n    bool end) {\n\n  bool writeFailed = false;\n\n  KJ_TRY {\n    while (true) {\n      // Perform a draining read to get all synchronously available data if possible\n      // or fall back to a regular read if not.\n      auto prp = kj::newPromiseAndFulfiller<DrainingReadResult>();\n      auto promise = ioContext.run([weakReader = reader->getWeak()](\n                                       jsg::Lock& js) mutable -> kj::Promise<DrainingReadResult> {\n        auto& ioContext = IoContext::current();\n        KJ_IF_SOME(reader, weakReader.tryGet()) {\n          // Use a 256KB limit to allow periodic yielding to the event loop,\n          // preventing a fast producer from monopolizing the thread.\n          constexpr size_t kMaxReadPerCycle = 256 * 1024;\n          return ioContext.awaitJs(js, reader.read(js, kMaxReadPerCycle));\n        } else {\n          return KJ_EXCEPTION(DISCONNECTED, \"The pump was canceled.\");\n        }\n      });\n      ioContext.addTask(forwardToFulfiller(kj::mv(promise), kj::mv(prp.fulfiller)));\n\n      DrainingReadResult result = co_await prp.promise;\n\n      // Write all the chunks we received using vectored write for efficiency.\n      if (result.chunks.size() > 0) {\n        KJ_ON_SCOPE_FAILURE(writeFailed = true);\n        auto pieces =\n            KJ_MAP(chunk, result.chunks) -> kj::ArrayPtr<const kj::byte> { return chunk.asPtr(); };\n        co_await sink->write(pieces);\n      }\n\n      // If the stream is done, end the output if needed and exit.\n      if (result.done) {\n        KJ_ON_SCOPE_FAILURE(writeFailed = true);\n        if (end) {\n          co_await sink->end();\n        }\n        co_return;\n      }\n    }\n  }\n  KJ_CATCH(exception) {\n    if (!writeFailed) {\n      sink->abort(exception.clone());\n    }\n\n    auto prp = kj::newPromiseAndFulfiller<void>();\n    auto promise = ioContext.run([weakReader = reader->getWeak(), ex = exception.clone()](\n                                     jsg::Lock& js) mutable -> kj::Promise<void> {\n      auto& ioContext = IoContext::current();\n      KJ_IF_SOME(reader, weakReader.tryGet()) {\n        auto error = js.exceptionToJsValue(kj::mv(ex));\n        return ioContext.awaitJs(js, reader.cancel(js, error.getHandle(js)));\n      } else {\n        return KJ_EXCEPTION(DISCONNECTED, \"The pump was canceled.\");\n      }\n    });\n    ioContext.addTask(forwardToFulfiller(kj::mv(promise), kj::mv(prp.fulfiller)));\n\n    co_await prp.promise;\n    kj::throwFatalException(kj::mv(exception));\n  }\n}"
+    },
+    {
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/official-locked-source-public/standard.c++",
+        "bytes": 193298,
+        "sha256": "f64a9fe8ab0c2f3bc397ac18d35d59e5c1be8ead1182c7ccd668bfbd993bc698"
+      },
+      "beginOneBased": 291,
+      "endOneBased": 324,
+      "reason": "reader release handles pending reads and references",
+      "text": "void ReadableLockImpl<Controller>::releaseReader(\n    Controller& self, kj::Ptr<Reader> reader, kj::Maybe<jsg::Lock&> maybeJs) {\n  KJ_IF_SOME(locked, state.template tryGetUnsafe<ReaderLocked>()) {\n    KJ_IF_SOME(js, maybeJs) {\n      auto reason = js.typeError(\"This ReadableStream reader has been released.\"_kj);\n      KJ_SWITCH_ONEOF(self.state) {\n        KJ_CASE_ONEOF(initial, typename Controller::Initial) {}\n        KJ_CASE_ONEOF(closed, StreamStates::Closed) {}\n        KJ_CASE_ONEOF(errored, StreamStates::Errored) {}\n        KJ_CASE_ONEOF(consumer, kj::Own<ValueReadable>) {\n          consumer->cancelPendingReads(js, reason);\n        }\n        KJ_CASE_ONEOF(consumer, kj::Own<ByteReadable>) {\n          consumer->cancelPendingReads(js, reason);\n        }\n      }\n      maybeRejectPromise<void>(js, locked.getClosedFulfiller(), reason);\n    }\n\n    // Keep the locked.clear() after the isolate and hasPendingReadRequests check above.\n    // Clearing will release the references and we don't want to do that if the\n    // hasPendingReadRequests check fails.\n    locked.clear();\n\n    // When maybeJs is nullptr, that means releaseReader was called when the reader is\n    // being deconstructed and not as the result of explicitly calling releaseLock and\n    // we do not have an isolate lock. In that case, we don't want to change the lock\n    // state itself. Moving the lock above will free the lock state while keeping the\n    // ReadableStream marked as locked.\n    if (maybeJs != kj::none) {\n      state.template transitionTo<Unlocked>();\n    }\n  }\n}"
+    },
+    {
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/official-locked-source-public/standard.c++",
+        "bytes": 193298,
+        "sha256": "f64a9fe8ab0c2f3bc397ac18d35d59e5c1be8ead1182c7ccd668bfbd993bc698"
+      },
+      "beginOneBased": 3743,
+      "endOneBased": 3778,
+      "reason": "JavaScript controller delegates response pump to draining reader",
+      "text": "kj::Promise<DeferredProxy<void>> ReadableStreamJsController::pumpTo(\n    jsg::Lock& js, kj::Own<WritableStreamSink> sink, bool end) {\n  KJ_ASSERT(IoContext::hasCurrent(), \"Unable to consume this ReadableStream outside of a request\");\n  KJ_REQUIRE(!isLockedToReader(), \"This ReadableStream is currently locked to a reader.\");\n  disturbed = true;\n\n  // This operation will leave the ReadableStream locked and disturbed. It will consume\n  // the stream until it either closed or errors.\n  //\n  const auto handlePump = [&] {\n    auto reader = KJ_ASSERT_NONNULL(DrainingReader::create(js, *this->addRef()),\n        \"Failed to create DrainingReader — stream should not be locked\");\n    auto& ioContext = IoContext::current();\n    return addNoopDeferredProxy(pumpToImpl(ioContext, kj::mv(reader), kj::mv(sink), end));\n  };\n\n  KJ_SWITCH_ONEOF(state) {\n    KJ_CASE_ONEOF(initial, Initial) {\n      // Stream not yet set up, treat as closed.\n      return addNoopDeferredProxy(sink->end().attach(kj::mv(sink)));\n    }\n    KJ_CASE_ONEOF(closed, StreamStates::Closed) {\n      return addNoopDeferredProxy(sink->end().attach(kj::mv(sink)));\n    }\n    KJ_CASE_ONEOF(errored, StreamStates::Errored) {\n      return js.exceptionToKj(errored.addRef(js));\n    }\n    KJ_CASE_ONEOF(readable, kj::Own<ValueReadable>) {\n      return handlePump();\n    }\n    KJ_CASE_ONEOF(readable, kj::Own<ByteReadable>) {\n      return handlePump();\n    }\n  }\n\n  KJ_UNREACHABLE;"
+    },
+    {
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/official-locked-source-public/readable.c++",
+        "bytes": 31774,
+        "sha256": "ca762b8e7ea908b29eb2c99db4bcad7e50b5f206cd1a75312f4b2b658bfe7f08"
+      },
+      "beginOneBased": 284,
+      "endOneBased": 288,
+      "reason": "draining reader destructor calls releaseReader without JavaScript lock",
+      "text": "DrainingReader::~DrainingReader() noexcept(false) {\n  KJ_IF_SOME(stream, state.tryGet<Attached>()) {\n    stream->getController().releaseReader(addPtrToThis(), kj::none);\n  }\n}"
+    },
+    {
+      "source": {
+        "path": "C:/cinagroup/cinatoken/node_modules/miniflare/dist/src/index.js",
+        "bytes": 4843426,
+        "sha256": "58ca83056cf67838add064edcbfd1d654ed204527b8eb01307ba208d7e59fa20"
+      },
+      "beginOneBased": 111120,
+      "endOneBased": 111134,
+      "reason": "direct socket config normalized into worker dev config",
+      "text": "  dev.rootPath = optionsRootPath;\n  dev.cacheAPI = worker.cacheAPI;\n  dev.outboundService = convertOutboundService(\n    worker.outboundService,\n    isRemote\n  );\n  dev.remoteProxyConnectionString = remoteProxyConnectionString;\n  dev.unsafeInspectorProxy = worker.unsafeInspectorProxy;\n  dev.unsafeDirectSockets = worker.unsafeDirectSockets;\n  dev.unsafeOverrideFetchWorker = worker.unsafeOverrideFetchWorker;\n  dev.unsafeEvalBinding = worker.unsafeEvalBinding;\n  dev.useModuleFallbackService = worker.unsafeUseModuleFallbackService;\n  dev.unsafeRegisterWorker = worker.unsafeRegisterWorker ?? true;\n  dev.unsafeEphemeralDurableObjects = worker.unsafeEphemeralDurableObjects;\n  dev.stripCfConnectingIp = worker.stripCfConnectingIp;"
+    },
+    {
+      "source": {
+        "path": "C:/cinagroup/cinatoken/node_modules/miniflare/dist/src/index.js",
+        "bytes": 4843426,
+        "sha256": "58ca83056cf67838add064edcbfd1d654ed204527b8eb01307ba208d7e59fa20"
+      },
+      "beginOneBased": 113163,
+      "endOneBased": 113193,
+      "reason": "direct sockets use user worker service",
+      "text": "      const previousDirectSockets = previousWorkerOpts?.dev?.unsafeDirectSockets ?? [];\n      const directSockets = workerOpts.dev?.unsafeDirectSockets ?? [];\n      for (let i = 0; i < directSockets.length; i++) {\n        const previousDirectSocket = previousDirectSockets[i];\n        const directSocket = directSockets[i];\n        const serviceName = directSocket.serviceName ?? workerName;\n        const entrypoint = directSocket.entrypoint ?? \"default\";\n        const name = getDirectSocketName(workerIndex, entrypoint);\n        const address = this.#getSocketAddress(\n          name,\n          previousDirectSocket?.port,\n          directSocket.host,\n          directSocket.port,\n          reusePorts\n        );\n        const service = workerOpts.config.assets && entrypoint === \"default\" ? {\n          name: `${RPC_PROXY_SERVICE_NAME}:${workerOpts.config.name}`\n        } : {\n          name: getUserServiceName(serviceName),\n          entrypoint: entrypoint === \"default\" ? void 0 : entrypoint\n        };\n        sockets.push({\n          name,\n          address,\n          service,\n          http: {\n            style: directSocket.proxy ? HttpOptions_Style.PROXY : void 0,\n            cfBlobHeader: CoreHeaders.CF_BLOB,\n            capnpConnectHost: HOST_CAPNP_CONNECT\n          }\n        });"
+    },
+    {
+      "source": {
+        "path": "C:/cinagroup/cinatoken/node_modules/miniflare/dist/src/index.js",
+        "bytes": 4843426,
+        "sha256": "58ca83056cf67838add064edcbfd1d654ed204527b8eb01307ba208d7e59fa20"
+      },
+      "beginOneBased": 113668,
+      "endOneBased": 113689,
+      "reason": "direct URL selects actual worker socket port",
+      "text": "  async unsafeGetDirectURL(workerName, entrypoint = \"default\") {\n    this.#checkDisposed();\n    await this.#waitForReady();\n    const workerIndex = this.#findAndAssertWorkerIndex(workerName);\n    const workerOpts = this.#workerOpts[workerIndex];\n    const socketName = getDirectSocketName(workerIndex, entrypoint);\n    (0, import_node_assert21.default)(this.#socketPorts !== void 0);\n    const maybePort = this.#socketPorts.get(socketName);\n    if (maybePort === void 0) {\n      const friendlyWorkerName = workerName === void 0 ? \"entrypoint\" : JSON.stringify(workerName);\n      const friendlyEntrypointName = entrypoint === \"default\" ? entrypoint : JSON.stringify(entrypoint);\n      throw new TypeError(\n        `Direct access disabled in ${friendlyWorkerName} worker for ${friendlyEntrypointName} entrypoint`\n      );\n    }\n    const directSocket = workerOpts.dev?.unsafeDirectSockets?.find(\n      (socket) => (socket.entrypoint ?? \"default\") === entrypoint\n    );\n    (0, import_node_assert21.default)(directSocket !== void 0);\n    const host = directSocket.host ?? DEFAULT_HOST;\n    const accessibleHost = maybeGetLocallyAccessibleHost(host) ?? getURLSafeHost(host);\n    return new URL(`http://${accessibleHost}:${maybePort}`);"
+    },
+    {
+      "source": {
+        "path": "C:/cinagroup/cinatoken/node_modules/miniflare/dist/src/workers/core/entry.worker.js",
+        "bytes": 184933,
+        "sha256": "e2434da3c39be4758dd323045dbc0b79bb2c0b2a5ba2ed02c6b271b1b676410d"
+      },
+      "beginOneBased": 5112,
+      "endOneBased": 5120,
+      "reason": "Core ENTRY fetch boundary",
+      "text": "  async fetch(request, env, ctx) {\n    let startTime = Date.now(), clientIp = request.cf?.clientIp, clientCfBlobHeader = request.headers.get(CoreHeaders.CF_BLOB), cf = clientCfBlobHeader ? JSON.parse(clientCfBlobHeader) : {\n      ...env[CoreBindings.JSON_CF_BLOB],\n      // Defaulting to empty string to preserve undefined `Accept-Encoding`\n      // through Wrangler's proxy worker.\n      clientAcceptEncoding: request.headers.get(\"Accept-Encoding\") ?? \"\"\n    };\n    request = new Request(request, { cf }), request.headers.delete(CoreHeaders.ACCESS_BLOB);\n    let requestUrl = new URL(request.url);"
+    },
+    {
+      "source": {
+        "path": "C:/cinagroup/cinatoken/node_modules/miniflare/dist/src/workers/core/entry.worker.js",
+        "bytes": 184933,
+        "sha256": "e2434da3c39be4758dd323045dbc0b79bb2c0b2a5ba2ed02c6b271b1b676410d"
+      },
+      "beginOneBased": 5180,
+      "endOneBased": 5191,
+      "reason": "Core ENTRY service fetch and response transforms",
+      "text": "      }\n      let accessBlob = env[`${CoreBindings.JSON_ACCESS_BLOB_PREFIX}${routeTarget}`];\n      if (accessBlob) {\n        let headers = new Headers(request.headers);\n        headers.set(CoreHeaders.ACCESS_BLOB, JSON.stringify(accessBlob)), request = new Request(request, { headers });\n      }\n      let response = await service.fetch(request);\n      return disablePrettyErrorPage || (response = await maybePrettifyError(request, response, env)), response = ensureAcceptableEncoding(clientAcceptEncoding, response), env[CoreBindings.LOG_REQUESTS] && (response = maybeLogRequest(request, response, env, ctx, startTime)), response;\n    } catch (e) {\n      return new Response(e?.stack ?? String(e), { status: 500 });\n    }\n  }"
+    },
+    {
+      "source": {
+        "path": "C:/cinagroup/cinatoken/docs/operators/deployment/releases/2026-10-06-g7-native26-calibration-progress/current-terminal-evidence/canonical-calibration-artifact/cinatoken/cinatoken/scripts/diagnostics/v364-direct-socket/run-direct-socket.mjs",
+        "bytes": 34907,
+        "sha256": "621cb7384b32a25af7c37d411cd12c2d51bf47c241d9d1f24c1c3ee3989723f3"
+      },
+      "beginOneBased": 173,
+      "endOneBased": 184,
+      "reason": "frozen configs and exact nodejs_compat plus enable_request_signal flags",
+      "text": "const gatewayConfig = JSON.parse(\n\treadFileSync(join(source, \"wrangler.chat-holder-gateway-v364.jsonc\"), \"utf8\")\n);\nconst holderConfig = JSON.parse(\n\treadFileSync(join(source, \"wrangler.chat-holder-private-v364.jsonc\"), \"utf8\")\n);\nfor (const config of [gatewayConfig, holderConfig]) {\n\tassert.deepEqual(config.compatibility_flags, [\n\t\t\"nodejs_compat\",\n\t\t\"enable_request_signal\",\n\t]);\n\tassert.equal(config.compatibility_date, \"2026-09-25\");"
+    },
+    {
+      "source": {
+        "path": "C:/cinagroup/cinatoken/docs/operators/deployment/releases/2026-10-06-g7-native26-calibration-progress/current-terminal-evidence/canonical-calibration-artifact/cinatoken/cinatoken/scripts/diagnostics/v364-direct-socket/run-direct-socket.mjs",
+        "bytes": 34907,
+        "sha256": "621cb7384b32a25af7c37d411cd12c2d51bf47c241d9d1f24c1c3ee3989723f3"
+      },
+      "beginOneBased": 435,
+      "endOneBased": 468,
+      "reason": "same date and flag configuration applied to bare/gateway/holder workers",
+      "text": "function createFixture(caseId, kind) {\n\tphase(caseId, \"fixture-create\");\n\tconst kv = { OBSERVATIONS: holderConfig.kv_namespaces[0].id };\n\tconst common = {\n\t\tmodules: true,\n\t\tcompatibilityDate: \"2026-09-04\",\n\t\tcompatibilityFlags: holderConfig.compatibility_flags,\n\t};\n\tconst single = {\n\t\t...common,\n\t\tname: \"v364-direct-\" + kind,\n\t\tscript: kind === \"bare\" ? bundles.bare : bundles.nativeReader,\n\t\tkvNamespaces: kv,\n\t};\n\tconst workers =\n\t\tkind === \"binding\"\n\t\t\t? [\n\t\t\t\t\t{\n\t\t\t\t\t\t...common,\n\t\t\t\t\t\tname: gatewayConfig.name,\n\t\t\t\t\t\tscript: bundles.observedGateway,\n\t\t\t\t\t\tserviceBindings: { TEXT_HOLDER: holderConfig.name },\n\t\t\t\t\t},\n\t\t\t\t\t{\n\t\t\t\t\t\t...common,\n\t\t\t\t\t\tname: holderConfig.name,\n\t\t\t\t\t\tscript: bundles.observedHolder,\n\t\t\t\t\t\tkvNamespaces: kv,\n\t\t\t\t\t},\n\t\t\t  ]\n\t\t\t: [single];\n\tworkers[0].unsafeDirectSockets = [{ host: \"127.0.0.1\", port: 0 }];\n\tconst mf = new Miniflare(\n\t\tconvertV4MiniflareOptions({"
+    },
+    {
+      "source": {
+        "path": "C:/cinagroup/cinatoken/packages/proxy/scripts/staging/chat-holder-private-v364.ts",
+        "bytes": 5367,
+        "sha256": "44070fcbb7058b915329a150634eaa649c1b3601724495a1620e94ce2d54d1bf"
+      },
+      "beginOneBased": 65,
+      "endOneBased": 91,
+      "reason": "original async source pull and cancel implementation",
+      "text": "function syntheticStream(env: ChatHolderPrivateV364Env, attemptNonce: string, ctx?: Pick<ExecutionContext, 'waitUntil'>): Response {\n\tlet phase = 0;\n\tconst stream = new ReadableStream<Uint8Array>({\n\t\tstart(controller) {\n\t\t\tcontroller.enqueue(encoder.encode(': holder-ready\\n\\n'));\n\t\t},\n\t\tasync pull(controller) {\n\t\t\tif (phase !== 0) return;\n\t\t\tphase = 1;\n\t\t\tfor (let n = 0; n < 300; n++) {\n\t\t\t\tif (await env.OBSERVATIONS.get(`release:${attemptNonce}`) === 'yes') {\n\t\t\t\t\tcontroller.enqueue(encoder.encode('data: {\"text\":\"synthetic streamed answer\"}\\n\\ndata: [DONE]\\n\\n'));\n\t\t\t\t\tcontroller.close();\n\t\t\t\t\treturn;\n\t\t\t\t}\n\t\t\t\tawait new Promise<void>(resolve => setTimeout(resolve, 10));\n\t\t\t}\n\t\t\tcontroller.error(new Error('synthetic stream release timed out'));\n\t\t},\n\t\tasync cancel() {\n\t\t\tconst observation = env.OBSERVATIONS.put(`cancel:${attemptNonce}`, 'observed');\n\t\t\t// The client has disconnected; retain this asynchronous test observation\n\t\t\t// in the holder request lifetime instead of losing it with the response.\n\t\t\tctx?.waitUntil(observation);\n\t\t\tawait observation;\n\t\t},\n\t}, { highWaterMark: 0 });"
+    },
+    {
+      "source": {
+        "path": "C:/cinagroup/cinatoken/packages/proxy/scripts/staging/chat-holder-gateway-v364.ts",
+        "bytes": 1534,
+        "sha256": "8c85b01ba54daa9b7302c726d20693d08ccb3395350ea6a333817eed46441eaf"
+      },
+      "beginOneBased": 1,
+      "endOneBased": 30,
+      "reason": "original request signal passed through binding and response body returned",
+      "text": "/// <reference path=\"./chat-holder-gateway-v364-env.d.ts\" />\n\n/** Fixture gateway: only the six-field JSON envelope crosses this binding. */\nexport default {\n\tasync fetch(request: Request, env: ChatHolderGatewayV364Env): Promise<Response> {\n\t\tconst url = new URL(request.url);\n\t\tif (url.pathname !== '/fixture/complete-text' || request.method !== 'POST') return new Response(null, { status: 404 });\n\t\tif (request.headers.get('Content-Type') !== 'application/json') return new Response(null, { status: 415 });\n\t\tconst holderInit = {\n\t\t\tmethod: 'POST',\n\t\t\theaders: { 'Content-Type': 'application/json' },\n\t\t\tbody: request.body,\n\t\t\tsignal: request.signal,\n\t\t\tduplex: 'half',\n\t\t} as RequestInit;\n\t\tconst holderRequest = new Request('https://holder.service.invalid/complete-text-attempt', holderInit);\n\t\tconst response = await env.TEXT_HOLDER.fetch(holderRequest);\n\t\tif (response.status === 400 || response.status === 413 || response.status === 415 || response.status === 404) {\n\t\t\tawait response.body?.cancel();\n\t\t\treturn Response.json({ error: 'holder_request_rejected' }, { status: response.status });\n\t\t}\n\t\tif (response.status !== 200 || response.headers.get('Content-Type') !== 'text/event-stream' || !response.body) {\n\t\t\tawait response.body?.cancel();\n\t\t\treturn Response.json({ error: 'holder_unavailable' }, { status: 502 });\n\t\t}\n\t\treturn new Response(response.body, {\n\t\t\tstatus: 200,\n\t\t\theaders: { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-store' },\n\t\t});\n\t},"
+    }
+  ]
+}

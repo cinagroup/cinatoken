@@ -1,0 +1,29 @@
+{
+  "schema": "cinatoken-owned-opaque-snapshot-command-closed-v1",
+  "closed": true,
+  "beganAt": "2026-10-06T05:51:53.452Z",
+  "endedAt": "2026-10-06T05:51:55.586Z",
+  "program": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/read-official-locked-source-public.mjs"
+  ],
+  "cwd": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "timedOut": false,
+  "stdout": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/official-source-authorized-read.stdout.log",
+    "bytes": 1404,
+    "sha256": "8294ce9478366c11e89947ee2a862aaefb0006134edb0d38cd696d047f69c688"
+  },
+  "stderr": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-request-signal-readonly-yCKd6V/official-source-authorized-read.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "collectionOnly": true,
+  "applicationExecution": false,
+  "ciExecution": false,
+  "gatePassDerived": false
+}

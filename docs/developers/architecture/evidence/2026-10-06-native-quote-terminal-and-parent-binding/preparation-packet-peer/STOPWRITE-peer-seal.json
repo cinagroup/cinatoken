@@ -1,0 +1,63 @@
+{
+  "schema": "quote-packet-peer-stopwrite-seal-v1",
+  "sealedAt": "2026-10-06T06:00:01.279Z",
+  "sourceRoot": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-packet-readonly-peer-XW05FR",
+  "filesBeforeSelf": 9,
+  "totalBytesBeforeSelf": 105901,
+  "entries": [
+    {
+      "file": "FINAL-quote-packet-readonly-independent-peer.json",
+      "bytes": 84120,
+      "sha256": "07607a26183e2d9be186b6843a19fb4ab7c47bc6ff923083785ccbd86ad00c3b"
+    },
+    {
+      "file": "audit-final-packet.mjs",
+      "bytes": 7457,
+      "sha256": "3e1041cb216bb5c30f6a51e3f0b54b5f41a0903a1d856a326f17848fa7594110"
+    },
+    {
+      "file": "capture-readonly.mjs",
+      "bytes": 1405,
+      "sha256": "73f8ec0159b113f5339119649fe0ccfd402740897076ddf439d9f91009bb4b67"
+    },
+    {
+      "file": "final-packet-audit.closed.json",
+      "bytes": 895,
+      "sha256": "5463f2f4fcbdbcd88fd22ae37b88a8f7a21e7cce1120c44f39ae5c7f34005b9c"
+    },
+    {
+      "file": "final-packet-audit.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "final-packet-audit.stdout.log",
+      "bytes": 424,
+      "sha256": "330602413b917f78c32c241c044bd2217099c4a6846335c869afa9c8ca4f3492"
+    },
+    {
+      "file": "original-helper.snapshot.mjs",
+      "bytes": 9512,
+      "sha256": "05385cf01e0fc949a832b117664396acbbcb559116d148beccce11e3d7986d51"
+    },
+    {
+      "file": "read-scope.json",
+      "bytes": 476,
+      "sha256": "a770ce15de7bea645652cf88e77678d763e71389f82c9ef4d3880cbc286b4820"
+    },
+    {
+      "file": "seal-peer.mjs",
+      "bytes": 1612,
+      "sha256": "985498d4be2dba8b0cc798a2796b062a2bc1f2f91fcf3938681c889a573f4b4c"
+    }
+  ],
+  "selfExcludedOnly": true,
+  "STOPWRITE": true,
+  "noFurtherWrites": true,
+  "collectionOnly": true,
+  "gatePassDerived": false,
+  "rootCauseConfirmed": false,
+  "nativeExecutedHere": false,
+  "productionReadPerformedHere": false,
+  "sealIsDataOperationNotAChildReceipt": true
+}

@@ -1,0 +1,27 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import { spawn } from 'node:child_process';
+const root = 'C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0';
+const [label, script] = process.argv.slice(2);
+if (!/^[a-z0-9-]+$/.test(label ?? '') || path.dirname(path.resolve(script ?? '')) !== path.resolve(root)) throw new Error('Only an owned source-only script may execute');
+const stdoutPath = `${root}/${label}.stdout.log`;
+const stderrPath = `${root}/${label}.stderr.log`;
+const resultPath = `${root}/${label}.result.json`;
+for (const file of [stdoutPath, stderrPath, resultPath]) if (fs.existsSync(file)) throw new Error('Refusing overwrite');
+const stdout = fs.openSync(stdoutPath, 'wx');
+const stderr = fs.openSync(stderrPath, 'wx');
+const beganAt = new Date().toISOString();
+let timedOut = false;
+let spawnError = null;
+const child = spawn(process.execPath, [script], { cwd: root, windowsHide: true, stdio: ['ignore', stdout, stderr] });
+const timeout = setTimeout(() => { timedOut = true; child.kill('SIGKILL'); }, 60000);
+child.once('error', error => { spawnError = { name: error.name, code: error.code ?? null }; });
+child.once('close', (actualExit, signal) => {
+  clearTimeout(timeout);
+  fs.closeSync(stdout); fs.closeSync(stderr);
+  const descriptor = file => { const b = fs.readFileSync(file); return { path: file, bytes: b.length, sha256: crypto.createHash('sha256').update(b).digest('hex') }; };
+  fs.writeFileSync(resultPath, `${JSON.stringify({ schema: 'cinatoken-owned-source-repair-command-closed-v1', closed: true, beganAt, endedAt: new Date().toISOString(), program: process.execPath, args: [script], actualExit, signal, spawnError, timedOut, stdout: descriptor(stdoutPath), stderr: descriptor(stderrPath), appOrPostgresExecution: false, ciExecution: false, gitExecution: false, gatePassDerived: false }, null, 2)}\n`, { flag: 'wx' });
+  console.log(JSON.stringify({ receipt: resultPath, actualExit, signal, timedOut, closed: true }));
+  process.exitCode = Number.isInteger(actualExit) && !signal && !spawnError && !timedOut ? actualExit : 1;
+});

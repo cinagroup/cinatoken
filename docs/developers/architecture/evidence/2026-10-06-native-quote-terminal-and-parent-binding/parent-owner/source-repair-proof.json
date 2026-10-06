@@ -1,0 +1,119 @@
+{
+  "schema": "cinatoken-legacy-parent-migrator-binding-minimal-source-repair-v1",
+  "beganAt": "2026-10-06T06:24:51.368Z",
+  "endedAt": "2026-10-06T06:24:51.535Z",
+  "actualSourcePreparationExit": 0,
+  "sourceTaskContext": "Root-provided d537 push: actual step110 ReferenceError before SQL assertion; no Git was executed to resolve currentHEAD here",
+  "ownedRepositoryFiles": [
+    "C:/cinagroup/cinatoken/scripts/db/cutover/postgres-legacy-parent-activation.native.test.mjs"
+  ],
+  "before": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/source-before-v2.mjs",
+    "bytes": 30195,
+    "sha256": "8b6aae0e4250604a60446f3d02ae0c3683416c26a7d01de58cc26cd66bba7f18"
+  },
+  "after": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/source-after.mjs",
+    "bytes": 30210,
+    "sha256": "7acb429e3c22ce959daa9e925f7d460ea30902eb077f09f39caa949cc8220f7a"
+  },
+  "currentTarget": {
+    "path": "C:/cinagroup/cinatoken/scripts/db/cutover/postgres-legacy-parent-activation.native.test.mjs",
+    "bytes": 30210,
+    "sha256": "7acb429e3c22ce959daa9e925f7d460ea30902eb077f09f39caa949cc8220f7a"
+  },
+  "unchangedHelper": {
+    "path": "C:/cinagroup/cinatoken/scripts/db/cutover/pg73-native-fixture.mjs",
+    "bytes": 6849,
+    "sha256": "124ddd43c2594d0daaac66a4e7158e5df90b00a6d73f03cbcac9e8f853a7346f"
+  },
+  "helperCopy": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/pg73-native-fixture-source-v2.mjs",
+    "bytes": 6849,
+    "sha256": "124ddd43c2594d0daaac66a4e7158e5df90b00a6d73f03cbcac9e8f853a7346f"
+  },
+  "bindings": [
+    {
+      "line": 100,
+      "property": "migrator",
+      "previousValue": "migrator shorthand (undeclared)",
+      "currentValue": "sql",
+      "sqlDeclarationLine": 79,
+      "existingRoleLiteral": "cinatoken_gateway_migrator"
+    },
+    {
+      "line": 149,
+      "property": "migrator",
+      "previousValue": "migrator shorthand (undeclared)",
+      "currentValue": "sql",
+      "sqlDeclarationLine": 79,
+      "existingRoleLiteral": "cinatoken_gateway_migrator"
+    },
+    {
+      "line": 391,
+      "property": "migrator",
+      "previousValue": "migrator shorthand (undeclared)",
+      "currentValue": "sql",
+      "sqlDeclarationLine": 79,
+      "existingRoleLiteral": "cinatoken_gateway_migrator"
+    }
+  ],
+  "safeguards": {
+    "reverseEntireSourceBytesExact": true,
+    "entireASTExceptThreeBindingsExact": true,
+    "allAssertionsASTExact": true,
+    "originalAssertionsCount": 60,
+    "originalSQLRolesClientsLocksDelaysAndCleanupByteExact": true,
+    "newClientCreated": false,
+    "helperChanged": false,
+    "changedLineWhitespaceCheckActualExit": 0
+  },
+  "nodeCheck": {
+    "schema": "cinatoken-legacy-parent-node-syntax-command-closed-v1",
+    "closed": true,
+    "beganAt": "2026-10-06T06:24:51.465Z",
+    "endedAt": "2026-10-06T06:24:51.533Z",
+    "program": "C:\\Program Files\\nodejs\\node.exe",
+    "args": [
+      "--check",
+      "C:/cinagroup/cinatoken/scripts/db/cutover/postgres-legacy-parent-activation.native.test.mjs"
+    ],
+    "actualExit": 0,
+    "signal": null,
+    "spawnError": null,
+    "stdout": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/node-check.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stderr": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/node-check.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evaluatesModule": false,
+    "postgresOrAppExecution": false,
+    "gatePassDerived": false
+  },
+  "minimalDiff": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/exact-minimal-diff.json",
+    "bytes": 898,
+    "sha256": "d8445656738050444ad97b294579bec0aac924d80636d40ef706fa0ecba11029"
+  },
+  "executionBoundary": {
+    "gitExecution": false,
+    "postgresExecution": false,
+    "appExecution": false,
+    "nativeRuntimeExecution": false,
+    "ciInvocation": false,
+    "productionRequest": false,
+    "mdChange": false,
+    "originalSealedRootsChanged": false
+  },
+  "originalObservedNativeStep110ActualExit": 1,
+  "originalReferenceErrorPreserved": true,
+  "realPostgresRepairValidated": false,
+  "fullGoalComplete": false,
+  "strictV364Passed": false,
+  "gatePassDerived": false
+}

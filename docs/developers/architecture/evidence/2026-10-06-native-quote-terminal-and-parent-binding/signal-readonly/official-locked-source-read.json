@@ -1,0 +1,65 @@
+{
+  "schema": "cinatoken-official-workerd-locked-source-read-v1",
+  "at": "2026-10-06T05:50:24.442Z",
+  "closed": true,
+  "actualSourceReadExit": 1,
+  "results": [
+    {
+      "url": "https://raw.githubusercontent.com/cloudflare/workerd/v1.20260828.1/src/workerd/io/compatibility-date.capnp",
+      "lockedTag": "v1.20260828.1",
+      "source": "src/workerd/io/compatibility-date.capnp",
+      "beganAt": "2026-10-06T05:50:24.382Z",
+      "endedAt": "2026-10-06T05:50:24.441Z",
+      "httpStatus": null,
+      "acceptedOfficialLockedSource": false,
+      "errorName": "TypeError",
+      "errorCode": "EACCES",
+      "authenticationUsed": false,
+      "productOrCIRequest": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/cloudflare/workerd/v1.20260828.1/src/workerd/io/worker-entrypoint.c++",
+      "lockedTag": "v1.20260828.1",
+      "source": "src/workerd/io/worker-entrypoint.c++",
+      "beganAt": "2026-10-06T05:50:24.431Z",
+      "endedAt": "2026-10-06T05:50:24.441Z",
+      "httpStatus": null,
+      "acceptedOfficialLockedSource": false,
+      "errorName": "TypeError",
+      "errorCode": "EACCES",
+      "authenticationUsed": false,
+      "productOrCIRequest": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/cloudflare/workerd/v1.20260828.1/src/workerd/api/streams/standard.c++",
+      "lockedTag": "v1.20260828.1",
+      "source": "src/workerd/api/streams/standard.c++",
+      "beganAt": "2026-10-06T05:50:24.432Z",
+      "endedAt": "2026-10-06T05:50:24.442Z",
+      "httpStatus": null,
+      "acceptedOfficialLockedSource": false,
+      "errorName": "TypeError",
+      "errorCode": "EACCES",
+      "authenticationUsed": false,
+      "productOrCIRequest": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/cloudflare/workerd/v1.20260828.1/src/workerd/api/streams/readable.c++",
+      "lockedTag": "v1.20260828.1",
+      "source": "src/workerd/api/streams/readable.c++",
+      "beganAt": "2026-10-06T05:50:24.434Z",
+      "endedAt": "2026-10-06T05:50:24.442Z",
+      "httpStatus": null,
+      "acceptedOfficialLockedSource": false,
+      "errorName": "TypeError",
+      "errorCode": "EACCES",
+      "authenticationUsed": false,
+      "productOrCIRequest": false
+    }
+  ],
+  "testOrAppExecution": false,
+  "packageUpgrades": 0,
+  "sourceWritesToRepo": 0,
+  "productionRequests": 0,
+  "gatePassDerived": false
+}

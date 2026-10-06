@@ -1,0 +1,21 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
+import { fileURLToPath } from 'node:url';
+const root=path.dirname(fileURLToPath(import.meta.url));
+const repo='C:/cinagroup/cinatoken';
+const dir='docs/developers/architecture/evidence/2026-10-06-quote-version-text-parameters-preparation';
+const walk=d=>fs.readdirSync(d,{withFileTypes:true}).flatMap(e=>{const p=path.join(d,e.name);assert(!e.isSymbolicLink());return e.isDirectory()?walk(p):[p];});
+const expected=[...walk(path.join(repo,dir)).map(p=>path.relative(repo,p).replaceAll('\\','/')),'docs/developers/architecture/web-frontend-migration.md','scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs'].sort();
+for(const name of ['stage-quote-precision','staged-names-quote-precision','staged-index-quote-precision','staged-source-md-check'])assert.equal(JSON.parse(fs.readFileSync(path.join(root,name+'.result.json'),'utf8')).actualExit,0);
+const names=fs.readFileSync(path.join(root,'staged-names-quote-precision.stdout.log'),'utf8').split('\0').filter(Boolean).sort();
+assert.deepEqual(names,expected);
+const rows=fs.readFileSync(path.join(root,'staged-index-quote-precision.stdout.log'),'utf8').split('\0').filter(Boolean);
+assert.equal(rows.length,expected.length);
+const proof=[];
+for(const row of rows){const m=/^100644 ([a-f0-9]{40}) 0\t(.+)$/.exec(row);assert(m);const b=fs.readFileSync(path.join(repo,m[2]));const h=createHash('sha1').update('blob '+b.length+'\0').update(b).digest('hex');assert.equal(h,m[1],m[2]);proof.push({path:m[2],bytes:b.length,sha256:createHash('sha256').update(b).digest('hex'),stagedBlob:m[1]});}
+assert.deepEqual(proof.map(p=>p.path).sort(),expected);
+const report={at:new Date().toISOString(),fileCount:expected.length,byteExact:true,sourceChanges:1,evidenceFiles:expected.length-2,markdownFiles:1,proof};
+fs.writeFileSync(path.join(root,'staged-byte-audit.json'),JSON.stringify(report,null,2)+'\n',{flag:'wx'});
+console.log(JSON.stringify({fileCount:report.fileCount,byteExact:true,evidenceFiles:report.evidenceFiles,sourceChanges:1,markdownFiles:1}));

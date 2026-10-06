@@ -1,0 +1,1239 @@
+{
+  "at": "2026-10-06T06:10:44.538Z",
+  "sourceSha": "d537f83b6389a4e5bbd7f92325f74d77e6bdfc9a",
+  "workflowBytes": {
+    "bytes": 45895,
+    "sha256": "8e883e7f21f77f8367d361f6bd3d060e16c241c28641b3eac85af6835841f152"
+  },
+  "nativeJobId": 112131520308,
+  "yamlActualStepOffset": 2,
+  "offsetAuthority": {
+    "yamlCheckoutStep": 1,
+    "actualCheckoutStep": {
+      "completedAt": "2026-10-06T06:01:31Z",
+      "conclusion": "success",
+      "name": "Run actions/checkout@v4",
+      "number": 3,
+      "startedAt": "2026-10-06T06:01:16Z",
+      "status": "completed"
+    }
+  },
+  "nativeFixtureSteps": [
+    {
+      "yamlStep": 5,
+      "workflowLine": 224,
+      "text": "      - run: |\n          install -d -o postgres -g postgres -m 0755 .wrangler/staging .wrangler/staging/pg-native-dispatch-tests\n          # Fixed machine reports are overwritten by fixtures; source directories stay checkout-owned.\n          for artifact in \\\n            docs/developers/architecture/implementation-evidence/C03-postgres-native-replay-scale-lock-v333-report.json \\\n            docs/developers/architecture/implementation-evidence/C04-authenticated-complete-text-quote-v360-report.json \\\n            docs/developers/architecture/implementation-evidence/C04-authenticated-request-capability-v356-report.json \\\n            docs/developers/architecture/implementation-evidence/C04-authenticated-text-route-ceiling-v357-report.json \\\n            docs/developers/architecture/implementation-evidence/C04-authenticated-text-route-source-fence-v359-report.json \\\n            docs/developers/architecture/implementation-evidence/C04-complete-chat-holder-dispatch-v387-report.json \\\n            docs/developers/architecture/implementation-evidence/C04-complete-text-admission-buyer-v379-report.json \\\n            docs/developers/architecture/implementation-evidence/C04-complete-text-all-hold-renewal-v367-report.json \\\n            docs/developers/architecture/implementation-evidence/C04-complete-text-attempt-grant-v362-report.json \\\n            docs/developers/architecture/implementation-evidence/C04-complete-text-auth-routing-recovery-coinstall-v400-report.json \\\n            docs/developers/architecture/implementation-evidence/C04-complete-text-buyer-counter-cutover-v367-report.json \\\n            docs/developers/architecture/implementation-evidence/C04-complete-text-holder-worker-v390-report.json \\\n            docs/developers/architecture/implementation-evidence/C04-complete-text-legacy-buyer-held-v368-report.json \\\n            docs/developers/architecture/implementation-evidence/C04-complete-text-legacy-reaper-fence-v366-report.json \\\n            docs/developers/architecture/implementation-evidence/C04-complete-text-manifest-selection-v393-report.json \\\n            docs/developers/architecture/implementation-evidence/C04-complete-text-no-fetch-close-blocker-v382-report.json \\\n            docs/developers/architecture/implementation-evidence/C04-complete-text-no-fetch-fence-v370-report.json \\\n            docs/developers/architecture/implementation-evidence/C04-complete-text-no-fetch-platform-close-v388-report.json \\\n            docs/developers/architecture/implementation-evidence/C04-complete-text-no-fetch-recovery-v389-report.json \\\n            docs/developers/architecture/implementation-evidence/C04-complete-text-observed-holder-v384-report.json \\\n            docs/developers/architecture/implementation-evidence/C04-complete-text-platform-close-fence-v386-report.json \\\n            docs/developers/architecture/implementation-evidence/C04-complete-text-private-route-reader-v366-report.json \\\n            docs/developers/architecture/implementation-evidence/C04-complete-text-quote-budget-admission-v361-report.json \\\n            docs/developers/architecture/implementation-evidence/C04-complete-text-read-grant-bridge-v367-report.json \\\n            docs/developers/architecture/implementation-evidence/C04-complete-text-response-no-fetch-coinstall-v397-report.json \\\n            docs/developers/architecture/implementation-evidence/C04-complete-text-response-observation-v392-report.json \\\n            docs/developers/architecture/implementation-evidence/C04-complete-text-result-client-digest-v367-report.json \\\n            docs/developers/architecture/implementation-evidence/C04-complete-text-result-facts-v366-report.json \\\n            docs/developers/architecture/implementation-evidence/C04-complete-text-routing-projection-v396-report.json \\\n            docs/developers/architecture/implementation-evidence/C04-complete-text-secretless-plan-v365-report.json \\\n            docs/developers/architecture/implementation-evidence/C04-complete-text-secretless-plan-v391-report.json \\\n            docs/developers/architecture/implementation-evidence/C04-complete-text-send-start-v365-report.json \\\n            docs/developers/architecture/implementation-evidence/C04-legacy-buyer-commit-ack-v376-report.json \\\n            docs/developers/architecture/implementation-evidence/C04-legacy-buyer-commit-journal-v378-report.json \\\n            docs/developers/architecture/implementation-evidence/C04-legacy-buyer-delayed-commit-v377-report.json \\\n            docs/developers/architecture/implementation-evidence/C04-legacy-buyer-journal-integration-v381-report.json \\\n            docs/developers/architecture/implementation-evidence/C04-legacy-buyer-request-projection-v383-report.json \\\n            docs/developers/architecture/implementation-evidence/C04-legacy-buyer-terminal-reader-v375-report.json \\\n            docs/developers/architecture/implementation-evidence/C04-legacy-buyer-window-accountant-v371-report.json \\\n            docs/developers/architecture/implementation-evidence/C04-legacy-buyer-windowed-app-privileges-renewal-v376-report.json \\\n            docs/developers/architecture/implementation-evidence/C04-legacy-buyer-windowed-app-privileges-v374-report.json \\\n            docs/developers/architecture/implementation-evidence/C04-legacy-buyer-windowed-app-v372-report.json \\\n            docs/developers/architecture/implementation-evidence/C04-personal-key-auth-period-v395-report.json \\\n            docs/developers/architecture/implementation-evidence/C04-postgres-credited-usage-gap-v342-results.json \\\n            docs/developers/architecture/implementation-evidence/C04-postgres-credited-usage-reader-v344-results.json \\\n            docs/developers/architecture/implementation-evidence/C04-postgres-credited-usage-store-v343-results.json \\\n            docs/developers/architecture/implementation-evidence/C04-postgres-exclusive-credential-free-chat-ingress-v401-report.json \\\n            docs/developers/architecture/implementation-evidence/C04-postgres-complete-text-platform-event-delivery-v402-report.json \\\n            docs/developers/architecture/implementation-evidence/C04-postgres-shared-earning-scanner-v350-results.json \\\n            docs/developers/architecture/implementation-evidence/C04-postgres-stats-auth-boundary-v346-results.json \\\n            docs/developers/architecture/implementation-evidence/C04-shared-earning-backlog-observation-v353-results.json \\\n            docs/developers/architecture/implementation-evidence/C04-stats-claim-reader-v349-results.json \\\n            docs/developers/architecture/implementation-evidence/C04-stats-signed-claim-v348-results.json; do\n            if [ ! -e \"$artifact\" ]; then\n              install -m 0644 /dev/null \"$artifact\"\n            fi\n            chown postgres:postgres \"$artifact\"\n            chmod u+rw \"$artifact\"\n          done\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-financial-consumer-login.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-financial-consumer-login.native.test.mjs",
+      "step": 7
+    },
+    {
+      "yamlStep": 6,
+      "workflowLine": 289,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/build-financial-consumer-direct-login-grant-lifecycle.native.test.mjs",
+      "fixture": "scripts/db/cutover/build-financial-consumer-direct-login-grant-lifecycle.native.test.mjs",
+      "step": 8
+    },
+    {
+      "yamlStep": 7,
+      "workflowLine": 292,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/build-image-fact-job-producer-grant.native.test.mjs",
+      "fixture": "scripts/db/cutover/build-image-fact-job-producer-grant.native.test.mjs",
+      "step": 9
+    },
+    {
+      "yamlStep": 8,
+      "workflowLine": 295,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-image-http-financial-jsonb-boundary.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-image-http-financial-jsonb-boundary.native.test.mjs",
+      "step": 10
+    },
+    {
+      "yamlStep": 9,
+      "workflowLine": 298,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-image-edits-http-financial.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-image-edits-http-financial.native.test.mjs",
+      "step": 11
+    },
+    {
+      "yamlStep": 10,
+      "workflowLine": 301,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-recovery-server-deadline.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-recovery-server-deadline.native.test.mjs",
+      "step": 12
+    },
+    {
+      "yamlStep": 11,
+      "workflowLine": 304,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-legacy-handler-compat.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-legacy-handler-compat.native.test.mjs",
+      "step": 13
+    },
+    {
+      "yamlStep": 12,
+      "workflowLine": 307,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-replay-scale-lock.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-replay-scale-lock.native.test.mjs",
+      "step": 14
+    },
+    {
+      "yamlStep": 13,
+      "workflowLine": 310,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-earnings-history.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-key-earnings-history.native.test.mjs",
+      "step": 15
+    },
+    {
+      "yamlStep": 14,
+      "workflowLine": 313,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-earnings-projection-index.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-key-earnings-projection-index.native.test.mjs",
+      "step": 16
+    },
+    {
+      "yamlStep": 15,
+      "workflowLine": 316,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-usage-repair-jobs.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-key-usage-repair-jobs.native.test.mjs",
+      "step": 17
+    },
+    {
+      "yamlStep": 16,
+      "workflowLine": 319,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-usage-repair-backfill.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-usage-repair-backfill.native.test.mjs",
+      "step": 18
+    },
+    {
+      "yamlStep": 17,
+      "workflowLine": 322,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-usage-repair-durable-cursor.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-usage-repair-durable-cursor.native.test.mjs",
+      "step": 19
+    },
+    {
+      "yamlStep": 18,
+      "workflowLine": 325,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-usage-repair-runtime-grant.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-key-usage-repair-runtime-grant.native.test.mjs",
+      "step": 20
+    },
+    {
+      "yamlStep": 19,
+      "workflowLine": 328,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/build-shared-key-usage-repair-direct-login-grant.native.test.mjs",
+      "fixture": "scripts/db/cutover/build-shared-key-usage-repair-direct-login-grant.native.test.mjs",
+      "step": 21
+    },
+    {
+      "yamlStep": 20,
+      "workflowLine": 331,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-usage-repair-failure-isolation.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-key-usage-repair-failure-isolation.native.test.mjs",
+      "step": 22
+    },
+    {
+      "yamlStep": 21,
+      "workflowLine": 334,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-usage-repair-durable-claim.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-key-usage-repair-durable-claim.native.test.mjs",
+      "step": 23
+    },
+    {
+      "yamlStep": 22,
+      "workflowLine": 337,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs",
+      "step": 24
+    },
+    {
+      "yamlStep": 23,
+      "workflowLine": 340,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-dispatch-quote-attempts.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-key-dispatch-quote-attempts.native.test.mjs",
+      "step": 25
+    },
+    {
+      "yamlStep": 24,
+      "workflowLine": 343,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-orphan-claim-v347.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-key-orphan-claim-v347.native.test.mjs",
+      "step": 26
+    },
+    {
+      "yamlStep": 25,
+      "workflowLine": 346,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-orphan-review-v348.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-key-orphan-review-v348.native.test.mjs",
+      "step": 27
+    },
+    {
+      "yamlStep": 26,
+      "workflowLine": 349,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-economic-outbox.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-key-economic-outbox.native.test.mjs",
+      "step": 28
+    },
+    {
+      "yamlStep": 27,
+      "workflowLine": 352,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-selected-event-gate-v351.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-key-selected-event-gate-v351.native.test.mjs",
+      "step": 29
+    },
+    {
+      "yamlStep": 28,
+      "workflowLine": 355,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-selected-event-buyer-v351.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-key-selected-event-buyer-v351.native.test.mjs",
+      "step": 30
+    },
+    {
+      "yamlStep": 29,
+      "workflowLine": 358,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-economic-outbox-producer.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-key-economic-outbox-producer.native.test.mjs",
+      "step": 31
+    },
+    {
+      "yamlStep": 30,
+      "workflowLine": 361,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-snapshot-earning-consumer.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-key-snapshot-earning-consumer.native.test.mjs",
+      "step": 32
+    },
+    {
+      "yamlStep": 31,
+      "workflowLine": 364,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-earning-consumer-runner.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-earning-consumer-runner.native.test.mjs",
+      "step": 33
+    },
+    {
+      "yamlStep": 32,
+      "workflowLine": 367,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-buyer-debit-v2.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-key-buyer-debit-v2.native.test.mjs",
+      "step": 34
+    },
+    {
+      "yamlStep": 33,
+      "workflowLine": 370,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-economic-producer-v2-aggregate-proof.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-key-economic-producer-v2-aggregate-proof.native.test.mjs",
+      "step": 35
+    },
+    {
+      "yamlStep": 34,
+      "workflowLine": 373,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-budget-admission-login-v350.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-budget-admission-login-v350.native.test.mjs",
+      "step": 36
+    },
+    {
+      "yamlStep": 35,
+      "workflowLine": 376,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-ordinary-budget-recovery-v354.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-ordinary-budget-recovery-v354.native.test.mjs",
+      "step": 37
+    },
+    {
+      "yamlStep": 36,
+      "workflowLine": 379,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-guardrail-budget-admission-login-v351.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-guardrail-budget-admission-login-v351.native.test.mjs",
+      "step": 38
+    },
+    {
+      "yamlStep": 37,
+      "workflowLine": 382,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-guardrail-budget-lifecycle-v353.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-guardrail-budget-lifecycle-v353.native.test.mjs",
+      "step": 39
+    },
+    {
+      "yamlStep": 38,
+      "workflowLine": 385,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-guardrail-budget-dispatched-extension-v355.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-guardrail-budget-dispatched-extension-v355.native.test.mjs",
+      "step": 40
+    },
+    {
+      "yamlStep": 39,
+      "workflowLine": 388,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-authenticated-request-capability-login-v356.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-authenticated-request-capability-login-v356.native.test.mjs",
+      "step": 41
+    },
+    {
+      "yamlStep": 40,
+      "workflowLine": 391,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-authenticated-text-route-ceiling-v357.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-authenticated-text-route-ceiling-v357.native.test.mjs",
+      "step": 42
+    },
+    {
+      "yamlStep": 41,
+      "workflowLine": 394,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-authenticated-text-route-source-fence-v359.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-authenticated-text-route-source-fence-v359.native.test.mjs",
+      "step": 43
+    },
+    {
+      "yamlStep": 42,
+      "workflowLine": 397,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-authenticated-complete-text-quote-v360.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-authenticated-complete-text-quote-v360.native.test.mjs",
+      "step": 44
+    },
+    {
+      "yamlStep": 43,
+      "workflowLine": 400,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-text-quote-budget-admission-v361.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-text-quote-budget-admission-v361.native.test.mjs",
+      "step": 45
+    },
+    {
+      "yamlStep": 44,
+      "workflowLine": 403,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-text-attempt-grant-v362.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-text-attempt-grant-v362.native.test.mjs",
+      "step": 46
+    },
+    {
+      "yamlStep": 45,
+      "workflowLine": 406,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-text-secretless-plan-v365.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-text-secretless-plan-v365.native.test.mjs",
+      "step": 47
+    },
+    {
+      "yamlStep": 46,
+      "workflowLine": 409,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-text-send-start-v365.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-text-send-start-v365.native.test.mjs",
+      "step": 48
+    },
+    {
+      "yamlStep": 47,
+      "workflowLine": 412,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-text-private-route-reader-v366.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-text-private-route-reader-v366.native.test.mjs",
+      "step": 49
+    },
+    {
+      "yamlStep": 48,
+      "workflowLine": 415,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-text-read-grant-bridge-v367.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-text-read-grant-bridge-v367.native.test.mjs",
+      "step": 50
+    },
+    {
+      "yamlStep": 49,
+      "workflowLine": 418,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-text-result-facts-v366.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-text-result-facts-v366.native.test.mjs",
+      "step": 51
+    },
+    {
+      "yamlStep": 50,
+      "workflowLine": 421,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-text-result-client-digest-v367.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-text-result-client-digest-v367.native.test.mjs",
+      "step": 52
+    },
+    {
+      "yamlStep": 51,
+      "workflowLine": 424,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-text-legacy-reaper-fence-v366.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-text-legacy-reaper-fence-v366.native.test.mjs",
+      "step": 53
+    },
+    {
+      "yamlStep": 52,
+      "workflowLine": 427,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-text-all-hold-renewal-v367.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-text-all-hold-renewal-v367.native.test.mjs",
+      "step": 54
+    },
+    {
+      "yamlStep": 53,
+      "workflowLine": 430,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-text-buyer-counter-cutover-v367.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-text-buyer-counter-cutover-v367.native.test.mjs",
+      "step": 55
+    },
+    {
+      "yamlStep": 54,
+      "workflowLine": 433,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-text-legacy-buyer-held-v368.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-text-legacy-buyer-held-v368.native.test.mjs",
+      "step": 56
+    },
+    {
+      "yamlStep": 55,
+      "workflowLine": 436,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-buyer-held-opt-in-gap-v370.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-buyer-held-opt-in-gap-v370.native.test.mjs",
+      "step": 57
+    },
+    {
+      "yamlStep": 56,
+      "workflowLine": 439,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-window-accountant-v371.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-legacy-buyer-window-accountant-v371.native.test.mjs",
+      "step": 58
+    },
+    {
+      "yamlStep": 57,
+      "workflowLine": 442,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-windowed-app-v372.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-legacy-buyer-windowed-app-v372.native.test.mjs",
+      "step": 59
+    },
+    {
+      "yamlStep": 58,
+      "workflowLine": 445,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-windowed-app-privileges-v374.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-legacy-buyer-windowed-app-privileges-v374.native.test.mjs",
+      "step": 60
+    },
+    {
+      "yamlStep": 59,
+      "workflowLine": 448,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-windowed-app-privileges-renewal-v376.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-legacy-buyer-windowed-app-privileges-renewal-v376.native.test.mjs",
+      "step": 61
+    },
+    {
+      "yamlStep": 60,
+      "workflowLine": 451,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-terminal-reader-v375.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-legacy-buyer-terminal-reader-v375.native.test.mjs",
+      "step": 62
+    },
+    {
+      "yamlStep": 61,
+      "workflowLine": 454,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-commit-ack-v376.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-legacy-buyer-commit-ack-v376.native.test.mjs",
+      "step": 63
+    },
+    {
+      "yamlStep": 62,
+      "workflowLine": 457,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-delayed-commit-v377.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-legacy-buyer-delayed-commit-v377.native.test.mjs",
+      "step": 64
+    },
+    {
+      "yamlStep": 63,
+      "workflowLine": 460,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-commit-journal-v378.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-legacy-buyer-commit-journal-v378.native.test.mjs",
+      "step": 65
+    },
+    {
+      "yamlStep": 64,
+      "workflowLine": 463,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-text-admission-buyer-v379.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-text-admission-buyer-v379.native.test.mjs",
+      "step": 66
+    },
+    {
+      "yamlStep": 65,
+      "workflowLine": 466,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --test packages/core/src/test-support/postgres-journal-commit-ack-proxy-v381.native.test.mjs",
+      "fixture": "packages/core/src/test-support/postgres-journal-commit-ack-proxy-v381.native.test.mjs",
+      "step": 67
+    },
+    {
+      "yamlStep": 66,
+      "workflowLine": 469,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-journal-integration-v381.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-legacy-buyer-journal-integration-v381.native.test.mjs",
+      "step": 68
+    },
+    {
+      "yamlStep": 67,
+      "workflowLine": 472,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-text-no-fetch-close-blocker-v382.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-text-no-fetch-close-blocker-v382.native.test.mjs",
+      "step": 69
+    },
+    {
+      "yamlStep": 68,
+      "workflowLine": 475,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-request-projection-v383.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-legacy-buyer-request-projection-v383.native.test.mjs",
+      "step": 70
+    },
+    {
+      "yamlStep": 69,
+      "workflowLine": 478,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-text-observed-holder-v384.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-text-observed-holder-v384.native.test.mjs",
+      "step": 71
+    },
+    {
+      "yamlStep": 70,
+      "workflowLine": 481,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-text-platform-close-fence-v386.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-text-platform-close-fence-v386.native.test.mjs",
+      "step": 72
+    },
+    {
+      "yamlStep": 71,
+      "workflowLine": 484,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-chat-holder-dispatch-v387.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-chat-holder-dispatch-v387.native.test.mjs",
+      "step": 73
+    },
+    {
+      "yamlStep": 72,
+      "workflowLine": 487,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-text-no-fetch-platform-close-v388.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-text-no-fetch-platform-close-v388.native.test.mjs",
+      "step": 74
+    },
+    {
+      "yamlStep": 73,
+      "workflowLine": 490,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-text-no-fetch-recovery-v389.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-text-no-fetch-recovery-v389.native.test.mjs",
+      "step": 75
+    },
+    {
+      "yamlStep": 74,
+      "workflowLine": 493,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-text-holder-worker-v390.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-text-holder-worker-v390.native.test.mjs",
+      "step": 76
+    },
+    {
+      "yamlStep": 75,
+      "workflowLine": 496,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-text-secretless-plan-v391.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-text-secretless-plan-v391.native.test.mjs",
+      "step": 77
+    },
+    {
+      "yamlStep": 76,
+      "workflowLine": 499,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-text-response-observation-v392.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-text-response-observation-v392.native.test.mjs",
+      "step": 78
+    },
+    {
+      "yamlStep": 77,
+      "workflowLine": 502,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            TSX_TSCONFIG_PATH=scripts/db/cutover/postgres-complete-text-manifest-selection-v393.tsconfig.json \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-text-manifest-selection-v393.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-text-manifest-selection-v393.native.test.mjs",
+      "step": 79
+    },
+    {
+      "yamlStep": 78,
+      "workflowLine": 506,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-personal-key-auth-period-v395.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-personal-key-auth-period-v395.native.test.mjs",
+      "step": 80
+    },
+    {
+      "yamlStep": 79,
+      "workflowLine": 509,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            TSX_TSCONFIG_PATH=scripts/db/cutover/postgres-complete-text-routing-projection-v396.tsconfig.json \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-text-routing-projection-v396.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-text-routing-projection-v396.native.test.mjs",
+      "step": 81
+    },
+    {
+      "yamlStep": 80,
+      "workflowLine": 513,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-text-response-no-fetch-coinstall-v397.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-text-response-no-fetch-coinstall-v397.native.test.mjs",
+      "step": 82
+    },
+    {
+      "yamlStep": 81,
+      "workflowLine": 516,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            TSX_TSCONFIG_PATH=scripts/db/cutover/postgres-complete-text-auth-routing-recovery-coinstall-v400.tsconfig.json \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-text-auth-routing-recovery-coinstall-v400.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-text-auth-routing-recovery-coinstall-v400.native.test.mjs",
+      "step": 83
+    },
+    {
+      "yamlStep": 82,
+      "workflowLine": 520,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            TSX_TSCONFIG_PATH=scripts/db/cutover/postgres-exclusive-credential-free-chat-ingress-v401.tsconfig.json \\\n            node --import tsx --test scripts/db/cutover/postgres-exclusive-credential-free-chat-ingress-v401.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-exclusive-credential-free-chat-ingress-v401.native.test.mjs",
+      "step": 84
+    },
+    {
+      "yamlStep": 83,
+      "workflowLine": 524,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            TSX_TSCONFIG_PATH=scripts/db/cutover/postgres-complete-text-platform-event-delivery-v402.tsconfig.json \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-text-platform-event-delivery-v402.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-text-platform-event-delivery-v402.native.test.mjs",
+      "step": 85
+    },
+    {
+      "yamlStep": 84,
+      "workflowLine": 528,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-text-no-fetch-fence-v370.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-text-no-fetch-fence-v370.native.test.mjs",
+      "step": 86
+    },
+    {
+      "yamlStep": 85,
+      "workflowLine": 531,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test packages/core/src/storage/postgres-jsonb-batch-native.test.mjs",
+      "fixture": "packages/core/src/storage/postgres-jsonb-batch-native.test.mjs",
+      "step": 87
+    },
+    {
+      "yamlStep": 86,
+      "workflowLine": 534,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-guardrail-admission-adapter-v352.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-guardrail-admission-adapter-v352.native.test.mjs",
+      "step": 88
+    },
+    {
+      "yamlStep": 87,
+      "workflowLine": 537,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-buyer-budget-receipt-v2.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-key-buyer-budget-receipt-v2.native.test.mjs",
+      "step": 89
+    },
+    {
+      "yamlStep": 88,
+      "workflowLine": 540,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-buyer-receipt-retention-v346.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-key-buyer-receipt-retention-v346.native.test.mjs",
+      "step": 90
+    },
+    {
+      "yamlStep": 89,
+      "workflowLine": 543,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-runtime-privilege-transition-v345.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-runtime-privilege-transition-v345.native.test.mjs",
+      "step": 91
+    },
+    {
+      "yamlStep": 90,
+      "workflowLine": 546,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-buyer-critical-writer-split-v346.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-buyer-critical-writer-split-v346.native.test.mjs",
+      "step": 92
+    },
+    {
+      "yamlStep": 91,
+      "workflowLine": 549,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-economic-buyer-login-v347.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-key-economic-buyer-login-v347.native.test.mjs",
+      "step": 93
+    },
+    {
+      "yamlStep": 92,
+      "workflowLine": 552,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs",
+      "step": 94
+    },
+    {
+      "yamlStep": 93,
+      "workflowLine": 555,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-buyer-split-grant-rerun-v348.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-buyer-split-grant-rerun-v348.native.test.mjs",
+      "step": 95
+    },
+    {
+      "yamlStep": 94,
+      "workflowLine": 558,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-buyer-split-guardrail-v349.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-buyer-split-guardrail-v349.native.test.mjs",
+      "step": 96
+    },
+    {
+      "yamlStep": 95,
+      "workflowLine": 561,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-stats-auth-boundary-v346.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-key-stats-auth-boundary-v346.native.test.mjs",
+      "step": 97
+    },
+    {
+      "yamlStep": 96,
+      "workflowLine": 564,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-stats-signed-claim-v348.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-key-stats-signed-claim-v348.native.test.mjs",
+      "step": 98
+    },
+    {
+      "yamlStep": 97,
+      "workflowLine": 567,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-stats-claim-reader-v349-cjs-loader-successor.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-key-stats-claim-reader-v349-cjs-loader-successor.native.test.mjs",
+      "step": 99
+    },
+    {
+      "yamlStep": 98,
+      "workflowLine": 570,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-snapshot-earning-consumer-v2.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-key-snapshot-earning-consumer-v2.native.test.mjs",
+      "step": 100
+    },
+    {
+      "yamlStep": 99,
+      "workflowLine": 573,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-economic-delivery.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-key-economic-delivery.native.test.mjs",
+      "step": 101
+    },
+    {
+      "yamlStep": 100,
+      "workflowLine": 576,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-earning-scanner-v350.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-earning-scanner-v350.native.test.mjs",
+      "step": 102
+    },
+    {
+      "yamlStep": 101,
+      "workflowLine": 579,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-earning-backlog-v353.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-earning-backlog-v353.native.test.mjs",
+      "step": 103
+    },
+    {
+      "yamlStep": 102,
+      "workflowLine": 582,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-credited-usage-gap.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-key-credited-usage-gap.native.test.mjs",
+      "step": 104
+    },
+    {
+      "yamlStep": 103,
+      "workflowLine": 585,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-credited-usage-store.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-key-credited-usage-store.native.test.mjs",
+      "step": 105
+    },
+    {
+      "yamlStep": 104,
+      "workflowLine": 588,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-credited-usage-reader.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-key-credited-usage-reader.native.test.mjs",
+      "step": 106
+    },
+    {
+      "yamlStep": 105,
+      "workflowLine": 591,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-recovery-old-database-upgrade.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-recovery-old-database-upgrade.native.test.mjs",
+      "step": 107
+    },
+    {
+      "yamlStep": 106,
+      "workflowLine": 594,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/build-request-legacy-parent-census.native.test.mjs",
+      "fixture": "scripts/db/cutover/build-request-legacy-parent-census.native.test.mjs",
+      "step": 108
+    },
+    {
+      "yamlStep": 107,
+      "workflowLine": 597,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-replay-reservations-backend-lifecycle-successor.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-replay-reservations-backend-lifecycle-successor.native.test.mjs",
+      "step": 109
+    },
+    {
+      "yamlStep": 108,
+      "workflowLine": 600,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-legacy-parent-activation.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-legacy-parent-activation.native.test.mjs",
+      "step": 110
+    },
+    {
+      "yamlStep": 109,
+      "workflowLine": 603,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/build-postgres-recovery-retention-review.native.test.mjs",
+      "fixture": "scripts/db/cutover/build-postgres-recovery-retention-review.native.test.mjs",
+      "step": 111
+    },
+    {
+      "yamlStep": 110,
+      "workflowLine": 606,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test packages/core/src/storage/management-workspaces.postgres-native.test.mjs",
+      "fixture": "packages/core/src/storage/management-workspaces.postgres-native.test.mjs",
+      "step": 112
+    },
+    {
+      "yamlStep": 111,
+      "workflowLine": 609,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-user-delete-audit.native.test.mjs\n",
+      "fixture": "scripts/db/cutover/postgres-user-delete-audit.native.test.mjs",
+      "step": 113
+    }
+  ],
+  "chain55to113": [
+    {
+      "yamlStep": 53,
+      "workflowLine": 430,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-text-buyer-counter-cutover-v367.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-text-buyer-counter-cutover-v367.native.test.mjs",
+      "step": 55
+    },
+    {
+      "yamlStep": 54,
+      "workflowLine": 433,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-text-legacy-buyer-held-v368.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-text-legacy-buyer-held-v368.native.test.mjs",
+      "step": 56
+    },
+    {
+      "yamlStep": 55,
+      "workflowLine": 436,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-buyer-held-opt-in-gap-v370.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-buyer-held-opt-in-gap-v370.native.test.mjs",
+      "step": 57
+    },
+    {
+      "yamlStep": 56,
+      "workflowLine": 439,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-window-accountant-v371.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-legacy-buyer-window-accountant-v371.native.test.mjs",
+      "step": 58
+    },
+    {
+      "yamlStep": 57,
+      "workflowLine": 442,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-windowed-app-v372.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-legacy-buyer-windowed-app-v372.native.test.mjs",
+      "step": 59
+    },
+    {
+      "yamlStep": 58,
+      "workflowLine": 445,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-windowed-app-privileges-v374.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-legacy-buyer-windowed-app-privileges-v374.native.test.mjs",
+      "step": 60
+    },
+    {
+      "yamlStep": 59,
+      "workflowLine": 448,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-windowed-app-privileges-renewal-v376.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-legacy-buyer-windowed-app-privileges-renewal-v376.native.test.mjs",
+      "step": 61
+    },
+    {
+      "yamlStep": 60,
+      "workflowLine": 451,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-terminal-reader-v375.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-legacy-buyer-terminal-reader-v375.native.test.mjs",
+      "step": 62
+    },
+    {
+      "yamlStep": 61,
+      "workflowLine": 454,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-commit-ack-v376.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-legacy-buyer-commit-ack-v376.native.test.mjs",
+      "step": 63
+    },
+    {
+      "yamlStep": 62,
+      "workflowLine": 457,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-delayed-commit-v377.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-legacy-buyer-delayed-commit-v377.native.test.mjs",
+      "step": 64
+    },
+    {
+      "yamlStep": 63,
+      "workflowLine": 460,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-commit-journal-v378.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-legacy-buyer-commit-journal-v378.native.test.mjs",
+      "step": 65
+    },
+    {
+      "yamlStep": 64,
+      "workflowLine": 463,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-text-admission-buyer-v379.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-text-admission-buyer-v379.native.test.mjs",
+      "step": 66
+    },
+    {
+      "yamlStep": 65,
+      "workflowLine": 466,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --test packages/core/src/test-support/postgres-journal-commit-ack-proxy-v381.native.test.mjs",
+      "fixture": "packages/core/src/test-support/postgres-journal-commit-ack-proxy-v381.native.test.mjs",
+      "step": 67
+    },
+    {
+      "yamlStep": 66,
+      "workflowLine": 469,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-journal-integration-v381.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-legacy-buyer-journal-integration-v381.native.test.mjs",
+      "step": 68
+    },
+    {
+      "yamlStep": 67,
+      "workflowLine": 472,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-text-no-fetch-close-blocker-v382.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-text-no-fetch-close-blocker-v382.native.test.mjs",
+      "step": 69
+    },
+    {
+      "yamlStep": 68,
+      "workflowLine": 475,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-legacy-buyer-request-projection-v383.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-legacy-buyer-request-projection-v383.native.test.mjs",
+      "step": 70
+    },
+    {
+      "yamlStep": 69,
+      "workflowLine": 478,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-text-observed-holder-v384.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-text-observed-holder-v384.native.test.mjs",
+      "step": 71
+    },
+    {
+      "yamlStep": 70,
+      "workflowLine": 481,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-text-platform-close-fence-v386.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-text-platform-close-fence-v386.native.test.mjs",
+      "step": 72
+    },
+    {
+      "yamlStep": 71,
+      "workflowLine": 484,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-chat-holder-dispatch-v387.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-chat-holder-dispatch-v387.native.test.mjs",
+      "step": 73
+    },
+    {
+      "yamlStep": 72,
+      "workflowLine": 487,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-text-no-fetch-platform-close-v388.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-text-no-fetch-platform-close-v388.native.test.mjs",
+      "step": 74
+    },
+    {
+      "yamlStep": 73,
+      "workflowLine": 490,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-text-no-fetch-recovery-v389.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-text-no-fetch-recovery-v389.native.test.mjs",
+      "step": 75
+    },
+    {
+      "yamlStep": 74,
+      "workflowLine": 493,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-text-holder-worker-v390.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-text-holder-worker-v390.native.test.mjs",
+      "step": 76
+    },
+    {
+      "yamlStep": 75,
+      "workflowLine": 496,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-text-secretless-plan-v391.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-text-secretless-plan-v391.native.test.mjs",
+      "step": 77
+    },
+    {
+      "yamlStep": 76,
+      "workflowLine": 499,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-text-response-observation-v392.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-text-response-observation-v392.native.test.mjs",
+      "step": 78
+    },
+    {
+      "yamlStep": 77,
+      "workflowLine": 502,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            TSX_TSCONFIG_PATH=scripts/db/cutover/postgres-complete-text-manifest-selection-v393.tsconfig.json \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-text-manifest-selection-v393.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-text-manifest-selection-v393.native.test.mjs",
+      "step": 79
+    },
+    {
+      "yamlStep": 78,
+      "workflowLine": 506,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-personal-key-auth-period-v395.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-personal-key-auth-period-v395.native.test.mjs",
+      "step": 80
+    },
+    {
+      "yamlStep": 79,
+      "workflowLine": 509,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            TSX_TSCONFIG_PATH=scripts/db/cutover/postgres-complete-text-routing-projection-v396.tsconfig.json \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-text-routing-projection-v396.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-text-routing-projection-v396.native.test.mjs",
+      "step": 81
+    },
+    {
+      "yamlStep": 80,
+      "workflowLine": 513,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-text-response-no-fetch-coinstall-v397.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-text-response-no-fetch-coinstall-v397.native.test.mjs",
+      "step": 82
+    },
+    {
+      "yamlStep": 81,
+      "workflowLine": 516,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            TSX_TSCONFIG_PATH=scripts/db/cutover/postgres-complete-text-auth-routing-recovery-coinstall-v400.tsconfig.json \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-text-auth-routing-recovery-coinstall-v400.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-text-auth-routing-recovery-coinstall-v400.native.test.mjs",
+      "step": 83
+    },
+    {
+      "yamlStep": 82,
+      "workflowLine": 520,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            TSX_TSCONFIG_PATH=scripts/db/cutover/postgres-exclusive-credential-free-chat-ingress-v401.tsconfig.json \\\n            node --import tsx --test scripts/db/cutover/postgres-exclusive-credential-free-chat-ingress-v401.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-exclusive-credential-free-chat-ingress-v401.native.test.mjs",
+      "step": 84
+    },
+    {
+      "yamlStep": 83,
+      "workflowLine": 524,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            TSX_TSCONFIG_PATH=scripts/db/cutover/postgres-complete-text-platform-event-delivery-v402.tsconfig.json \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-text-platform-event-delivery-v402.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-text-platform-event-delivery-v402.native.test.mjs",
+      "step": 85
+    },
+    {
+      "yamlStep": 84,
+      "workflowLine": 528,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-complete-text-no-fetch-fence-v370.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-complete-text-no-fetch-fence-v370.native.test.mjs",
+      "step": 86
+    },
+    {
+      "yamlStep": 85,
+      "workflowLine": 531,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test packages/core/src/storage/postgres-jsonb-batch-native.test.mjs",
+      "fixture": "packages/core/src/storage/postgres-jsonb-batch-native.test.mjs",
+      "step": 87
+    },
+    {
+      "yamlStep": 86,
+      "workflowLine": 534,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-guardrail-admission-adapter-v352.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-guardrail-admission-adapter-v352.native.test.mjs",
+      "step": 88
+    },
+    {
+      "yamlStep": 87,
+      "workflowLine": 537,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-buyer-budget-receipt-v2.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-key-buyer-budget-receipt-v2.native.test.mjs",
+      "step": 89
+    },
+    {
+      "yamlStep": 88,
+      "workflowLine": 540,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-buyer-receipt-retention-v346.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-key-buyer-receipt-retention-v346.native.test.mjs",
+      "step": 90
+    },
+    {
+      "yamlStep": 89,
+      "workflowLine": 543,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-runtime-privilege-transition-v345.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-runtime-privilege-transition-v345.native.test.mjs",
+      "step": 91
+    },
+    {
+      "yamlStep": 90,
+      "workflowLine": 546,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-buyer-critical-writer-split-v346.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-buyer-critical-writer-split-v346.native.test.mjs",
+      "step": 92
+    },
+    {
+      "yamlStep": 91,
+      "workflowLine": 549,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-economic-buyer-login-v347.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-key-economic-buyer-login-v347.native.test.mjs",
+      "step": 93
+    },
+    {
+      "yamlStep": 92,
+      "workflowLine": 552,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs",
+      "step": 94
+    },
+    {
+      "yamlStep": 93,
+      "workflowLine": 555,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-buyer-split-grant-rerun-v348.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-buyer-split-grant-rerun-v348.native.test.mjs",
+      "step": 95
+    },
+    {
+      "yamlStep": 94,
+      "workflowLine": 558,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-buyer-split-guardrail-v349.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-buyer-split-guardrail-v349.native.test.mjs",
+      "step": 96
+    },
+    {
+      "yamlStep": 95,
+      "workflowLine": 561,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-stats-auth-boundary-v346.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-key-stats-auth-boundary-v346.native.test.mjs",
+      "step": 97
+    },
+    {
+      "yamlStep": 96,
+      "workflowLine": 564,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-stats-signed-claim-v348.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-key-stats-signed-claim-v348.native.test.mjs",
+      "step": 98
+    },
+    {
+      "yamlStep": 97,
+      "workflowLine": 567,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-stats-claim-reader-v349-cjs-loader-successor.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-key-stats-claim-reader-v349-cjs-loader-successor.native.test.mjs",
+      "step": 99
+    },
+    {
+      "yamlStep": 98,
+      "workflowLine": 570,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-snapshot-earning-consumer-v2.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-key-snapshot-earning-consumer-v2.native.test.mjs",
+      "step": 100
+    },
+    {
+      "yamlStep": 99,
+      "workflowLine": 573,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-economic-delivery.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-key-economic-delivery.native.test.mjs",
+      "step": 101
+    },
+    {
+      "yamlStep": 100,
+      "workflowLine": 576,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-earning-scanner-v350.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-earning-scanner-v350.native.test.mjs",
+      "step": 102
+    },
+    {
+      "yamlStep": 101,
+      "workflowLine": 579,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-earning-backlog-v353.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-earning-backlog-v353.native.test.mjs",
+      "step": 103
+    },
+    {
+      "yamlStep": 102,
+      "workflowLine": 582,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-credited-usage-gap.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-key-credited-usage-gap.native.test.mjs",
+      "step": 104
+    },
+    {
+      "yamlStep": 103,
+      "workflowLine": 585,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-credited-usage-store.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-key-credited-usage-store.native.test.mjs",
+      "step": 105
+    },
+    {
+      "yamlStep": 104,
+      "workflowLine": 588,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-credited-usage-reader.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-shared-key-credited-usage-reader.native.test.mjs",
+      "step": 106
+    },
+    {
+      "yamlStep": 105,
+      "workflowLine": 591,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-recovery-old-database-upgrade.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-recovery-old-database-upgrade.native.test.mjs",
+      "step": 107
+    },
+    {
+      "yamlStep": 106,
+      "workflowLine": 594,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/build-request-legacy-parent-census.native.test.mjs",
+      "fixture": "scripts/db/cutover/build-request-legacy-parent-census.native.test.mjs",
+      "step": 108
+    },
+    {
+      "yamlStep": 107,
+      "workflowLine": 597,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-replay-reservations-backend-lifecycle-successor.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-replay-reservations-backend-lifecycle-successor.native.test.mjs",
+      "step": 109
+    },
+    {
+      "yamlStep": 108,
+      "workflowLine": 600,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-legacy-parent-activation.native.test.mjs",
+      "fixture": "scripts/db/cutover/postgres-legacy-parent-activation.native.test.mjs",
+      "step": 110
+    },
+    {
+      "yamlStep": 109,
+      "workflowLine": 603,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/build-postgres-recovery-retention-review.native.test.mjs",
+      "fixture": "scripts/db/cutover/build-postgres-recovery-retention-review.native.test.mjs",
+      "step": 111
+    },
+    {
+      "yamlStep": 110,
+      "workflowLine": 606,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test packages/core/src/storage/management-workspaces.postgres-native.test.mjs",
+      "fixture": "packages/core/src/storage/management-workspaces.postgres-native.test.mjs",
+      "step": 112
+    },
+    {
+      "yamlStep": 111,
+      "workflowLine": 609,
+      "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-user-delete-audit.native.test.mjs\n",
+      "fixture": "scripts/db/cutover/postgres-user-delete-audit.native.test.mjs",
+      "step": 113
+    }
+  ],
+  "target26Steps": [
+    60,
+    61,
+    66,
+    69,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    80,
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    88,
+    95,
+    96,
+    97,
+    98,
+    99,
+    106
+  ],
+  "remaining6Steps": [
+    95,
+    96,
+    97,
+    98,
+    99,
+    106
+  ],
+  "quote24": {
+    "yamlStep": 22,
+    "workflowLine": 337,
+    "text": "      - run: |\n          gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\n            node --import tsx --test scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs",
+    "fixture": "scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs",
+    "step": 24
+  },
+  "initialQuote24ActualStatus": {
+    "completedAt": "2026-10-06T06:03:55Z",
+    "conclusion": "success",
+    "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+    "number": 24,
+    "startedAt": "2026-10-06T06:03:51Z",
+    "status": "completed"
+  },
+  "collectionOnly": true
+}

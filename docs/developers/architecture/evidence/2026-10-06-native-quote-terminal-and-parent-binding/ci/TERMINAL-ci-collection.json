@@ -1,0 +1,2703 @@
+{
+  "schema": "cinatoken-d537-original-ci-terminal-collection-v1",
+  "at": "2026-10-06T06:20:06.054Z",
+  "sourceSha": "d537f83b6389a4e5bbd7f92325f74d77e6bdfc9a",
+  "watchReceipt": {
+    "at": "2026-10-06T06:05:43.201Z",
+    "finishedAt": "2026-10-06T06:17:14.634Z",
+    "program": "C:/Program Files/GitHub CLI/gh.exe",
+    "args": [
+      "run",
+      "watch",
+      "37421461373",
+      "--repo",
+      "cinagroup/cinatoken",
+      "--interval",
+      "45",
+      "--exit-status"
+    ],
+    "cwd": "C:/cinagroup/cinatoken",
+    "actualExit": 1,
+    "signal": null,
+    "spawnError": null,
+    "stdout": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\proxy-watch-1.stdout.log",
+      "bytes": 321916,
+      "sha256": "3e8e51025f1739170ffcc9e52775748d172a0ec309b506704fc0d9f724be8506"
+    },
+    "stderr": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\proxy-watch-1.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "collectionOnly": true,
+    "ciActions": 0,
+    "gatePassDerived": false,
+    "watchExitIsNotTerminalMetadata": true
+  },
+  "proxy": {
+    "view": {
+      "conclusion": "failure",
+      "createdAt": "2026-10-06T06:01:03Z",
+      "databaseId": 37421461373,
+      "headSha": "d537f83b6389a4e5bbd7f92325f74d77e6bdfc9a",
+      "jobs": [
+        {
+          "completedAt": "2026-10-06T06:16:37Z",
+          "conclusion": "failure",
+          "databaseId": 112131520308,
+          "name": "native-financial-consumer",
+          "startedAt": "2026-10-06T06:01:06Z",
+          "status": "completed",
+          "steps": [
+            {
+              "completedAt": "2026-10-06T06:01:07Z",
+              "conclusion": "success",
+              "name": "Set up job",
+              "number": 1,
+              "startedAt": "2026-10-06T06:01:07Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:01:16Z",
+              "conclusion": "success",
+              "name": "Initialize containers",
+              "number": 2,
+              "startedAt": "2026-10-06T06:01:07Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:01:31Z",
+              "conclusion": "success",
+              "name": "Run actions/checkout@v4",
+              "number": 3,
+              "startedAt": "2026-10-06T06:01:16Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:01:32Z",
+              "conclusion": "success",
+              "name": "Run actions/setup-node@v4",
+              "number": 4,
+              "startedAt": "2026-10-06T06:01:31Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:02:35Z",
+              "conclusion": "success",
+              "name": "Run npm ci",
+              "number": 5,
+              "startedAt": "2026-10-06T06:01:32Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:02:36Z",
+              "conclusion": "success",
+              "name": "Run npm run build:node-index -w @octafuse/core",
+              "number": 6,
+              "startedAt": "2026-10-06T06:02:35Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:02:38Z",
+              "conclusion": "success",
+              "name": "Run install -d -o postgres -g postgres -m 0755 .wrangler/staging .wrangler/staging/pg-native-dispatch-tests",
+              "number": 7,
+              "startedAt": "2026-10-06T06:02:36Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:02:43Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 8,
+              "startedAt": "2026-10-06T06:02:38Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:02:46Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 9,
+              "startedAt": "2026-10-06T06:02:43Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:02:51Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 10,
+              "startedAt": "2026-10-06T06:02:46Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:02:55Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 11,
+              "startedAt": "2026-10-06T06:02:51Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:02:58Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 12,
+              "startedAt": "2026-10-06T06:02:55Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:03:01Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 13,
+              "startedAt": "2026-10-06T06:02:58Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:03:08Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 14,
+              "startedAt": "2026-10-06T06:03:01Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:03:12Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 15,
+              "startedAt": "2026-10-06T06:03:08Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:03:17Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 16,
+              "startedAt": "2026-10-06T06:03:12Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:03:19Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 17,
+              "startedAt": "2026-10-06T06:03:17Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:03:21Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 18,
+              "startedAt": "2026-10-06T06:03:19Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:03:25Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 19,
+              "startedAt": "2026-10-06T06:03:21Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:03:27Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 20,
+              "startedAt": "2026-10-06T06:03:25Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:03:44Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 21,
+              "startedAt": "2026-10-06T06:03:27Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:03:47Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 22,
+              "startedAt": "2026-10-06T06:03:44Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:03:51Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 23,
+              "startedAt": "2026-10-06T06:03:47Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:03:55Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 24,
+              "startedAt": "2026-10-06T06:03:51Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:03:58Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 25,
+              "startedAt": "2026-10-06T06:03:55Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:01Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 26,
+              "startedAt": "2026-10-06T06:03:58Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:03Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 27,
+              "startedAt": "2026-10-06T06:04:01Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:04Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 28,
+              "startedAt": "2026-10-06T06:04:03Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:06Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 29,
+              "startedAt": "2026-10-06T06:04:04Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:10Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 30,
+              "startedAt": "2026-10-06T06:04:06Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:13Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 31,
+              "startedAt": "2026-10-06T06:04:10Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:15Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 32,
+              "startedAt": "2026-10-06T06:04:13Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:17Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 33,
+              "startedAt": "2026-10-06T06:04:15Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:18Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 34,
+              "startedAt": "2026-10-06T06:04:17Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:22Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 35,
+              "startedAt": "2026-10-06T06:04:18Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:25Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 36,
+              "startedAt": "2026-10-06T06:04:22Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:26Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 37,
+              "startedAt": "2026-10-06T06:04:25Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:32Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 38,
+              "startedAt": "2026-10-06T06:04:26Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:34Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 39,
+              "startedAt": "2026-10-06T06:04:32Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:39Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 40,
+              "startedAt": "2026-10-06T06:04:34Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:44Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 41,
+              "startedAt": "2026-10-06T06:04:39Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:46Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 42,
+              "startedAt": "2026-10-06T06:04:44Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:47Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 43,
+              "startedAt": "2026-10-06T06:04:46Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:49Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 44,
+              "startedAt": "2026-10-06T06:04:47Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:51Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 45,
+              "startedAt": "2026-10-06T06:04:49Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:54Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 46,
+              "startedAt": "2026-10-06T06:04:51Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:56Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 47,
+              "startedAt": "2026-10-06T06:04:54Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:05:28Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 48,
+              "startedAt": "2026-10-06T06:04:56Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:05:31Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 49,
+              "startedAt": "2026-10-06T06:05:28Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:05:35Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 50,
+              "startedAt": "2026-10-06T06:05:31Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:05:37Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 51,
+              "startedAt": "2026-10-06T06:05:35Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:05:39Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 52,
+              "startedAt": "2026-10-06T06:05:37Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:05:41Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 53,
+              "startedAt": "2026-10-06T06:05:39Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:05:45Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 54,
+              "startedAt": "2026-10-06T06:05:41Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:05:48Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 55,
+              "startedAt": "2026-10-06T06:05:45Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:05:51Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 56,
+              "startedAt": "2026-10-06T06:05:48Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:05:52Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 57,
+              "startedAt": "2026-10-06T06:05:51Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:05:56Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 58,
+              "startedAt": "2026-10-06T06:05:52Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:06:01Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 59,
+              "startedAt": "2026-10-06T06:05:56Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:06:06Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 60,
+              "startedAt": "2026-10-06T06:06:01Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:06:11Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 61,
+              "startedAt": "2026-10-06T06:06:06Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:06:16Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 62,
+              "startedAt": "2026-10-06T06:06:11Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:06:21Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 63,
+              "startedAt": "2026-10-06T06:06:16Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:06:26Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 64,
+              "startedAt": "2026-10-06T06:06:21Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:06:28Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 65,
+              "startedAt": "2026-10-06T06:06:26Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:06:31Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 66,
+              "startedAt": "2026-10-06T06:06:28Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:06:33Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 67,
+              "startedAt": "2026-10-06T06:06:31Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:06:41Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 68,
+              "startedAt": "2026-10-06T06:06:33Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:06:50Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 69,
+              "startedAt": "2026-10-06T06:06:41Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:06:59Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 70,
+              "startedAt": "2026-10-06T06:06:50Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:07:05Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 71,
+              "startedAt": "2026-10-06T06:06:59Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:07:20Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 72,
+              "startedAt": "2026-10-06T06:07:05Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:07:26Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 73,
+              "startedAt": "2026-10-06T06:07:20Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:07:39Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 74,
+              "startedAt": "2026-10-06T06:07:26Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:08:07Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 75,
+              "startedAt": "2026-10-06T06:07:39Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:08:18Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 76,
+              "startedAt": "2026-10-06T06:08:07Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:08:24Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 77,
+              "startedAt": "2026-10-06T06:08:18Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:08:33Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 78,
+              "startedAt": "2026-10-06T06:08:24Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:08:36Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 79,
+              "startedAt": "2026-10-06T06:08:33Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:08:41Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 80,
+              "startedAt": "2026-10-06T06:08:36Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:09:55Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 81,
+              "startedAt": "2026-10-06T06:08:41Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:10:09Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 82,
+              "startedAt": "2026-10-06T06:09:55Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:11:33Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 83,
+              "startedAt": "2026-10-06T06:10:09Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:12:59Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 84,
+              "startedAt": "2026-10-06T06:11:33Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:15:05Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 85,
+              "startedAt": "2026-10-06T06:12:59Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:15:25Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 86,
+              "startedAt": "2026-10-06T06:15:05Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:15:27Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 87,
+              "startedAt": "2026-10-06T06:15:25Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:15:29Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 88,
+              "startedAt": "2026-10-06T06:15:27Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:15:32Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 89,
+              "startedAt": "2026-10-06T06:15:29Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:15:36Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 90,
+              "startedAt": "2026-10-06T06:15:32Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:15:37Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 91,
+              "startedAt": "2026-10-06T06:15:36Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:15:40Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 92,
+              "startedAt": "2026-10-06T06:15:37Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:15:42Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 93,
+              "startedAt": "2026-10-06T06:15:40Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:15:46Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 94,
+              "startedAt": "2026-10-06T06:15:42Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:15:48Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 95,
+              "startedAt": "2026-10-06T06:15:46Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:15:51Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 96,
+              "startedAt": "2026-10-06T06:15:48Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:15:53Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 97,
+              "startedAt": "2026-10-06T06:15:51Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:15:54Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 98,
+              "startedAt": "2026-10-06T06:15:53Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:15:56Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 99,
+              "startedAt": "2026-10-06T06:15:54Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:15:58Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 100,
+              "startedAt": "2026-10-06T06:15:56Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:16:00Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 101,
+              "startedAt": "2026-10-06T06:15:58Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:16:02Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 102,
+              "startedAt": "2026-10-06T06:16:00Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:16:04Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 103,
+              "startedAt": "2026-10-06T06:16:02Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:16:06Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 104,
+              "startedAt": "2026-10-06T06:16:04Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:16:08Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 105,
+              "startedAt": "2026-10-06T06:16:06Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:16:10Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 106,
+              "startedAt": "2026-10-06T06:16:08Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:16:14Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 107,
+              "startedAt": "2026-10-06T06:16:10Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:16:17Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 108,
+              "startedAt": "2026-10-06T06:16:14Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:16:34Z",
+              "conclusion": "success",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 109,
+              "startedAt": "2026-10-06T06:16:17Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:16:35Z",
+              "conclusion": "failure",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 110,
+              "startedAt": "2026-10-06T06:16:34Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:16:35Z",
+              "conclusion": "skipped",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 111,
+              "startedAt": "2026-10-06T06:16:35Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:16:35Z",
+              "conclusion": "skipped",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 112,
+              "startedAt": "2026-10-06T06:16:35Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:16:35Z",
+              "conclusion": "skipped",
+              "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+              "number": 113,
+              "startedAt": "2026-10-06T06:16:35Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:16:35Z",
+              "conclusion": "skipped",
+              "name": "Post Run actions/setup-node@v4",
+              "number": 224,
+              "startedAt": "2026-10-06T06:16:35Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:16:35Z",
+              "conclusion": "success",
+              "name": "Post Run actions/checkout@v4",
+              "number": 225,
+              "startedAt": "2026-10-06T06:16:35Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:16:36Z",
+              "conclusion": "success",
+              "name": "Stop containers",
+              "number": 226,
+              "startedAt": "2026-10-06T06:16:35Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:16:36Z",
+              "conclusion": "success",
+              "name": "Complete job",
+              "number": 227,
+              "startedAt": "2026-10-06T06:16:36Z",
+              "status": "completed"
+            }
+          ],
+          "url": "https://github.com/cinagroup/cinatoken/actions/runs/37421461373/job/112131520308"
+        },
+        {
+          "completedAt": "2026-10-06T06:04:07Z",
+          "conclusion": "failure",
+          "databaseId": 112131520499,
+          "name": "dispatch-safety",
+          "startedAt": "2026-10-06T06:01:06Z",
+          "status": "completed",
+          "steps": [
+            {
+              "completedAt": "2026-10-06T06:01:07Z",
+              "conclusion": "success",
+              "name": "Set up job",
+              "number": 1,
+              "startedAt": "2026-10-06T06:01:06Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:01:13Z",
+              "conclusion": "success",
+              "name": "Run actions/checkout@v4",
+              "number": 2,
+              "startedAt": "2026-10-06T06:01:07Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:01:17Z",
+              "conclusion": "success",
+              "name": "Run actions/setup-node@v4",
+              "number": 3,
+              "startedAt": "2026-10-06T06:01:13Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:01:46Z",
+              "conclusion": "success",
+              "name": "Run npm ci",
+              "number": 4,
+              "startedAt": "2026-10-06T06:01:17Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:01:57Z",
+              "conclusion": "success",
+              "name": "Run npm run typecheck -w @octafuse/proxy",
+              "number": 5,
+              "startedAt": "2026-10-06T06:01:46Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:02:03Z",
+              "conclusion": "success",
+              "name": "Run npm run typecheck -w @octafuse/tool-engines",
+              "number": 6,
+              "startedAt": "2026-10-06T06:01:57Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:02:07Z",
+              "conclusion": "success",
+              "name": "Run npm run typecheck:shared-key-summary -w @octafuse/core",
+              "number": 7,
+              "startedAt": "2026-10-06T06:02:03Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:02:18Z",
+              "conclusion": "success",
+              "name": "Run npm run typecheck:dispatch-safety -w @octafuse/proxy",
+              "number": 8,
+              "startedAt": "2026-10-06T06:02:07Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:03:30Z",
+              "conclusion": "success",
+              "name": "Run npm run test:dispatch-safety -w @octafuse/proxy",
+              "number": 9,
+              "startedAt": "2026-10-06T06:02:18Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:03:32Z",
+              "conclusion": "success",
+              "name": "Run node --import tsx --test packages/proxy/scripts/staging/text-dispatch-workerd-wire-worker-conditions-successor.test.mjs",
+              "number": 10,
+              "startedAt": "2026-10-06T06:03:30Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:03:33Z",
+              "conclusion": "success",
+              "name": "Preserve native Worker transport evidence",
+              "number": 11,
+              "startedAt": "2026-10-06T06:03:32Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:03:34Z",
+              "conclusion": "success",
+              "name": "Run node --import tsx --test packages/proxy/scripts/staging/text-dispatch-relay-reset-v376.test.mjs",
+              "number": 12,
+              "startedAt": "2026-10-06T06:03:33Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:03:35Z",
+              "conclusion": "success",
+              "name": "Run node --import tsx --test packages/proxy/scripts/staging/text-dispatch-response-reset-v377.test.mjs",
+              "number": 13,
+              "startedAt": "2026-10-06T06:03:34Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:03:36Z",
+              "conclusion": "success",
+              "name": "Run node --import tsx --test packages/proxy/scripts/staging/text-dispatch-post-headers-v385.test.mjs",
+              "number": 14,
+              "startedAt": "2026-10-06T06:03:35Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:03:37Z",
+              "conclusion": "success",
+              "name": "Run node --import tsx --test packages/core/src/storage/shared-key-economic-unsupported-backends.test.mjs",
+              "number": 15,
+              "startedAt": "2026-10-06T06:03:36Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:03:38Z",
+              "conclusion": "success",
+              "name": "Run npm run test:unit -w @octafuse/tool-engines",
+              "number": 16,
+              "startedAt": "2026-10-06T06:03:37Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:03:39Z",
+              "conclusion": "success",
+              "name": "Run node --import tsx --test src/services/egress/openai-embeddings-driver.test.ts src/services/egress/openai-rerank-driver.test.ts",
+              "number": 17,
+              "startedAt": "2026-10-06T06:03:38Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:03:41Z",
+              "conclusion": "success",
+              "name": "Run node --import tsx --test src/services/shared-key-earnings.test.ts",
+              "number": 18,
+              "startedAt": "2026-10-06T06:03:39Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:03:42Z",
+              "conclusion": "success",
+              "name": "Run node --import tsx --test src/services/shared-key-quote-attempt.test.ts",
+              "number": 19,
+              "startedAt": "2026-10-06T06:03:41Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:03:43Z",
+              "conclusion": "success",
+              "name": "Run node --import tsx --test src/services/shared-key-economic-usage-handoff.test.ts",
+              "number": 20,
+              "startedAt": "2026-10-06T06:03:42Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:03:44Z",
+              "conclusion": "success",
+              "name": "Run node --import tsx --test src/services/postgres-ordinary-budget-admission.test.ts src/services/request-budget-admission.test.ts",
+              "number": 21,
+              "startedAt": "2026-10-06T06:03:43Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:03:45Z",
+              "conclusion": "success",
+              "name": "Run node --import tsx --test src/services/postgres-ordinary-budget-recovery.test.ts",
+              "number": 22,
+              "startedAt": "2026-10-06T06:03:44Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:03:45Z",
+              "conclusion": "success",
+              "name": "Run node --import tsx --test src/services/postgres-ordinary-budget-request-owner.test.ts",
+              "number": 23,
+              "startedAt": "2026-10-06T06:03:45Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:03:46Z",
+              "conclusion": "success",
+              "name": "Run node --import tsx --test src/services/authenticated-chat-budget-proof.test.ts",
+              "number": 24,
+              "startedAt": "2026-10-06T06:03:45Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:03:47Z",
+              "conclusion": "success",
+              "name": "Run node --import tsx --test src/services/chat-budget-owner-lifecycle.test.ts src/services/postgres-chat-budget-request-owner.test.ts",
+              "number": 25,
+              "startedAt": "2026-10-06T06:03:46Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:02Z",
+              "conclusion": "success",
+              "name": "Run npm run test:complete-chat-quote -w @octafuse/proxy",
+              "number": 26,
+              "startedAt": "2026-10-06T06:03:47Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:05Z",
+              "conclusion": "failure",
+              "name": "Run node --import tsx --test scripts/staging/chat-holder-binding-v364.node.test.mjs scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs",
+              "number": 27,
+              "startedAt": "2026-10-06T06:04:02Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:05Z",
+              "conclusion": "skipped",
+              "name": "Run node --import tsx --test src/services/complete-chat-holder-dispatch-v385.test.ts",
+              "number": 28,
+              "startedAt": "2026-10-06T06:04:05Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:05Z",
+              "conclusion": "skipped",
+              "name": "Run node --import tsx --test src/services/postgres-complete-text-no-fetch-close-v388.test.ts",
+              "number": 29,
+              "startedAt": "2026-10-06T06:04:05Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:05Z",
+              "conclusion": "skipped",
+              "name": "Run node --import tsx --test src/services/postgres-complete-text-no-fetch-recovery-v389.test.ts src/services/hyperdrive-dedicated-role-transport-v390.test.ts src/runtime/complete-text-no-fetch-recovery-worker-v389.test.ts src/runtime/complete-text-holder-worker-v390.test.mjs",
+              "number": 30,
+              "startedAt": "2026-10-06T06:04:05Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:05Z",
+              "conclusion": "skipped",
+              "name": "Run node --import tsx --test src/services/postgres-complete-text-secretless-plan-v391.test.mjs src/services/complete-text-response-observation-v392.test.ts src/services/postgres-complete-text-response-observation-v392.test.ts src/runtime/complete-text-response-holder-worker-v394.test.mjs",
+              "number": 31,
+              "startedAt": "2026-10-06T06:04:05Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:05Z",
+              "conclusion": "skipped",
+              "name": "Run node --import tsx --test src/services/postgres-personal-key-auth-v395.test.mjs src/services/postgres-complete-text-routing-projection-v396.test.ts src/services/credential-free-route-attempts-v398.test.ts src/services/postgres-complete-text-sticky-routing-v398.test.mjs src/services/route-strategies/route-strategies.test.ts src/services/provider-sticky-routing.test.ts src/services/provider-routing-preferences.test.ts",
+              "number": 32,
+              "startedAt": "2026-10-06T06:04:05Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:05Z",
+              "conclusion": "skipped",
+              "name": "Run node --import tsx --test src/services/complete-chat-credential-free-dispatch-v400.test.ts",
+              "number": 33,
+              "startedAt": "2026-10-06T06:04:05Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:05Z",
+              "conclusion": "skipped",
+              "name": "Run node --import tsx --test src/services/credential-free-chat-preparation-v401.test.ts src/app-credential-free-chat-ingress-v401.test.ts",
+              "number": 34,
+              "startedAt": "2026-10-06T06:04:05Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:05Z",
+              "conclusion": "skipped",
+              "name": "Run node --test scripts/db/cutover/build-complete-text-auth-routing-recovery-coinstall-v400.test.mjs",
+              "number": 35,
+              "startedAt": "2026-10-06T06:04:05Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:05Z",
+              "conclusion": "skipped",
+              "name": "Run npm install --prefix .wrangler/v402-pglite-unit --no-save --no-package-lock @electric-sql/pglite@0.5.8",
+              "number": 36,
+              "startedAt": "2026-10-06T06:04:05Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:05Z",
+              "conclusion": "skipped",
+              "name": "Run node --test scripts/db/cutover/build-complete-text-platform-event-delivery-v402.test.mjs scripts/db/cutover/postgres-complete-text-platform-event-delivery-v402.test.mjs scripts/db/cutover/complete-text-platform-event-delivery-runner-v402.test.mjs",
+              "number": 37,
+              "startedAt": "2026-10-06T06:04:05Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:05Z",
+              "conclusion": "skipped",
+              "name": "Run node --import tsx --test src/storage/model-endpoints.sql-repositories.test.ts",
+              "number": 38,
+              "startedAt": "2026-10-06T06:04:05Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:05Z",
+              "conclusion": "skipped",
+              "name": "Run node --import tsx --test --test-name-pattern=\"opt-in authenticated Chat budget proof\" src/routes/v1/request-dispatch-limit.test.ts",
+              "number": 39,
+              "startedAt": "2026-10-06T06:04:05Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:05Z",
+              "conclusion": "skipped",
+              "name": "Run node --import tsx --test --test-name-pattern=\"PostgreSQL Chat owner|stopped Chat request|dispatcher sends once after a PostgreSQL owner grant\" src/routes/v1/request-dispatch-limit.test.ts",
+              "number": 40,
+              "startedAt": "2026-10-06T06:04:05Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:05Z",
+              "conclusion": "skipped",
+              "name": "Run node --import tsx --test src/services/postgres-guardrail-budget-admission.test.ts",
+              "number": 41,
+              "startedAt": "2026-10-06T06:04:05Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:05Z",
+              "conclusion": "skipped",
+              "name": "Run node --import tsx --test src/services/postgres-guardrail-budget-lifecycle-v353.test.ts",
+              "number": 42,
+              "startedAt": "2026-10-06T06:04:05Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:05Z",
+              "conclusion": "skipped",
+              "name": "Run node --import tsx --test src/services/postgres-guardrail-budget-extension-v355.test.ts",
+              "number": 43,
+              "startedAt": "2026-10-06T06:04:05Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:05Z",
+              "conclusion": "skipped",
+              "name": "Run node --import tsx --test src/services/postgres-guardrail-budget-request-port-v356.test.ts",
+              "number": 44,
+              "startedAt": "2026-10-06T06:04:05Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:05Z",
+              "conclusion": "skipped",
+              "name": "Run node --import tsx --test src/runtime/postgres-shared-earning-consumer.test.mjs",
+              "number": 45,
+              "startedAt": "2026-10-06T06:04:05Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:05Z",
+              "conclusion": "skipped",
+              "name": "Run node --import tsx --test src/runtime/postgres-shared-earning-delivery.test.mjs",
+              "number": 46,
+              "startedAt": "2026-10-06T06:04:05Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:05Z",
+              "conclusion": "skipped",
+              "name": "Run node --import tsx --test src/runtime/postgres-shared-earning-scanner.test.mjs",
+              "number": 47,
+              "startedAt": "2026-10-06T06:04:05Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:05Z",
+              "conclusion": "skipped",
+              "name": "Run npm run test:postgres-recovery-composition -w @octafuse/proxy",
+              "number": 48,
+              "startedAt": "2026-10-06T06:04:05Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:05Z",
+              "conclusion": "skipped",
+              "name": "Run npm run test:postgres-recovery-queue-owner -w @octafuse/proxy",
+              "number": 49,
+              "startedAt": "2026-10-06T06:04:05Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:05Z",
+              "conclusion": "skipped",
+              "name": "Run node --test scripts/deploy/gen-wrangler.test.mjs",
+              "number": 50,
+              "startedAt": "2026-10-06T06:04:05Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:05Z",
+              "conclusion": "skipped",
+              "name": "Run node --test scripts/deploy/gen-shared-earning-scanner-wrangler.test.mjs",
+              "number": 51,
+              "startedAt": "2026-10-06T06:04:05Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:05Z",
+              "conclusion": "skipped",
+              "name": "Run node --import tsx --test scripts/db/cutover/build-financial-consumer-direct-login-grant.test.ts",
+              "number": 52,
+              "startedAt": "2026-10-06T06:04:05Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:05Z",
+              "conclusion": "skipped",
+              "name": "Run node --import tsx --test scripts/db/cutover/build-shared-key-usage-repair-direct-login-grant.test.ts",
+              "number": 53,
+              "startedAt": "2026-10-06T06:04:05Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:05Z",
+              "conclusion": "skipped",
+              "name": "Run node --test scripts/db/cutover/openrouter-generation-cost-candidate-v372.test.mjs",
+              "number": 54,
+              "startedAt": "2026-10-06T06:04:05Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:05Z",
+              "conclusion": "skipped",
+              "name": "Run node --test scripts/db/cutover/build-postgres-shared-usage-repair-backfill.test.mjs",
+              "number": 55,
+              "startedAt": "2026-10-06T06:04:05Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:05Z",
+              "conclusion": "skipped",
+              "name": "Run node --test scripts/db/cutover/build-postgres-shared-usage-repair-durable-cursor.test.mjs",
+              "number": 56,
+              "startedAt": "2026-10-06T06:04:05Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:05Z",
+              "conclusion": "skipped",
+              "name": "Run node --test scripts/db/cutover/build-postgres-recovery-retention-review.test.mjs",
+              "number": 57,
+              "startedAt": "2026-10-06T06:04:05Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:05Z",
+              "conclusion": "skipped",
+              "name": "Run node --import tsx --test scripts/db/cutover/d1-shared-key-earnings-history.test.mjs",
+              "number": 58,
+              "startedAt": "2026-10-06T06:04:05Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:05Z",
+              "conclusion": "skipped",
+              "name": "Run node --import tsx --test scripts/db/cutover/d1-shared-key-earnings-projection-index.test.mjs",
+              "number": 59,
+              "startedAt": "2026-10-06T06:04:05Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:05Z",
+              "conclusion": "skipped",
+              "name": "Run node --import tsx --test packages/core/src/db/d1/portal-marketplace-rebuild.test.ts",
+              "number": 60,
+              "startedAt": "2026-10-06T06:04:05Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:05Z",
+              "conclusion": "skipped",
+              "name": "Run node --test scripts/db/cutover/build-request-legacy-parent-census.test.mjs scripts/db/cutover/build-request-legacy-parent-activation.test.mjs scripts/db/cutover/build-request-legacy-parent-default-acl-activation.test.mjs",
+              "number": 61,
+              "startedAt": "2026-10-06T06:04:05Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:05Z",
+              "conclusion": "skipped",
+              "name": "Run node --test packages/proxy/scripts/test-postgres-image-owner-workerd.test.mjs",
+              "number": 62,
+              "startedAt": "2026-10-06T06:04:05Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:05Z",
+              "conclusion": "skipped",
+              "name": "Run npm run typecheck:images:staging -w @octafuse/proxy",
+              "number": 63,
+              "startedAt": "2026-10-06T06:04:05Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:05Z",
+              "conclusion": "skipped",
+              "name": "Run npm run test:images:staging -w @octafuse/proxy",
+              "number": 64,
+              "startedAt": "2026-10-06T06:04:05Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:05Z",
+              "conclusion": "skipped",
+              "name": "Run npm run test:oauth:workerd -w @octafuse/proxy",
+              "number": 65,
+              "startedAt": "2026-10-06T06:04:05Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:05Z",
+              "conclusion": "skipped",
+              "name": "Post Run actions/setup-node@v4",
+              "number": 129,
+              "startedAt": "2026-10-06T06:04:05Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:05Z",
+              "conclusion": "success",
+              "name": "Post Run actions/checkout@v4",
+              "number": 130,
+              "startedAt": "2026-10-06T06:04:05Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:04:05Z",
+              "conclusion": "success",
+              "name": "Complete job",
+              "number": 131,
+              "startedAt": "2026-10-06T06:04:05Z",
+              "status": "completed"
+            }
+          ],
+          "url": "https://github.com/cinagroup/cinatoken/actions/runs/37421461373/job/112131520499"
+        },
+        {
+          "completedAt": "2026-10-06T06:02:45Z",
+          "conclusion": "success",
+          "databaseId": 112131520515,
+          "name": "admin-playground-safety",
+          "startedAt": "2026-10-06T06:01:08Z",
+          "status": "completed",
+          "steps": [
+            {
+              "completedAt": "2026-10-06T06:01:09Z",
+              "conclusion": "success",
+              "name": "Set up job",
+              "number": 1,
+              "startedAt": "2026-10-06T06:01:09Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:01:15Z",
+              "conclusion": "success",
+              "name": "Run actions/checkout@v4",
+              "number": 2,
+              "startedAt": "2026-10-06T06:01:09Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:01:20Z",
+              "conclusion": "success",
+              "name": "Run actions/setup-node@v4",
+              "number": 3,
+              "startedAt": "2026-10-06T06:01:15Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:02:02Z",
+              "conclusion": "success",
+              "name": "Run npm ci",
+              "number": 4,
+              "startedAt": "2026-10-06T06:01:20Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:02:02Z",
+              "conclusion": "success",
+              "name": "Run npm run build:node-index -w @octafuse/core",
+              "number": 5,
+              "startedAt": "2026-10-06T06:02:02Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:02:34Z",
+              "conclusion": "success",
+              "name": "Run npm run typecheck -w @octafuse/admin",
+              "number": 6,
+              "startedAt": "2026-10-06T06:02:02Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:02:35Z",
+              "conclusion": "success",
+              "name": "Run node --import tsx --test lib/services/admin/users-service.test.ts",
+              "number": 7,
+              "startedAt": "2026-10-06T06:02:34Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:02:35Z",
+              "conclusion": "success",
+              "name": "Run node --import tsx --test lib/routes/admin/earnings.test.ts",
+              "number": 8,
+              "startedAt": "2026-10-06T06:02:35Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:02:36Z",
+              "conclusion": "success",
+              "name": "Run node --import tsx --test lib/routes/shared-key-history-error.test.ts",
+              "number": 9,
+              "startedAt": "2026-10-06T06:02:35Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:02:37Z",
+              "conclusion": "success",
+              "name": "Run node --import tsx --test lib/shared-key-credited-usage-reader.test.ts",
+              "number": 10,
+              "startedAt": "2026-10-06T06:02:36Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:02:38Z",
+              "conclusion": "success",
+              "name": "Run node --import tsx --test lib/shared-key-signed-stats-reader.test.ts",
+              "number": 11,
+              "startedAt": "2026-10-06T06:02:37Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:02:43Z",
+              "conclusion": "success",
+              "name": "Run npm run test:playground -w @octafuse/admin",
+              "number": 12,
+              "startedAt": "2026-10-06T06:02:38Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:02:43Z",
+              "conclusion": "success",
+              "name": "Post Run actions/setup-node@v4",
+              "number": 23,
+              "startedAt": "2026-10-06T06:02:43Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:02:43Z",
+              "conclusion": "success",
+              "name": "Post Run actions/checkout@v4",
+              "number": 24,
+              "startedAt": "2026-10-06T06:02:43Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:02:43Z",
+              "conclusion": "success",
+              "name": "Complete job",
+              "number": 25,
+              "startedAt": "2026-10-06T06:02:43Z",
+              "status": "completed"
+            }
+          ],
+          "url": "https://github.com/cinagroup/cinatoken/actions/runs/37421461373/job/112131520515"
+        },
+        {
+          "completedAt": "2026-10-06T06:02:28Z",
+          "conclusion": "success",
+          "databaseId": 112131520567,
+          "name": "config-cutover-contracts",
+          "startedAt": "2026-10-06T06:01:06Z",
+          "status": "completed",
+          "steps": [
+            {
+              "completedAt": "2026-10-06T06:01:08Z",
+              "conclusion": "success",
+              "name": "Set up job",
+              "number": 1,
+              "startedAt": "2026-10-06T06:01:07Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:01:13Z",
+              "conclusion": "success",
+              "name": "Run actions/checkout@v4",
+              "number": 2,
+              "startedAt": "2026-10-06T06:01:08Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:01:17Z",
+              "conclusion": "success",
+              "name": "Run actions/setup-node@v4",
+              "number": 3,
+              "startedAt": "2026-10-06T06:01:13Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:02:08Z",
+              "conclusion": "success",
+              "name": "Run npm ci --ignore-scripts",
+              "number": 4,
+              "startedAt": "2026-10-06T06:01:17Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:02:08Z",
+              "conclusion": "success",
+              "name": "Run npm run build:node-index -w @octafuse/core",
+              "number": 5,
+              "startedAt": "2026-10-06T06:02:08Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:02:25Z",
+              "conclusion": "success",
+              "name": "Run npx tsc -p tsconfig.json --noEmit --pretty false",
+              "number": 6,
+              "startedAt": "2026-10-06T06:02:08Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:02:26Z",
+              "conclusion": "success",
+              "name": "Run npx tsx --test scripts/db/lib/config-cutover-reconcile.test.ts scripts/db/cutover/preflight-d1-source.test.ts",
+              "number": 7,
+              "startedAt": "2026-10-06T06:02:25Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:02:26Z",
+              "conclusion": "success",
+              "name": "Run npm run test:d1-portal-ledger",
+              "number": 8,
+              "startedAt": "2026-10-06T06:02:26Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:02:26Z",
+              "conclusion": "success",
+              "name": "Run npm run test:mysql-migration",
+              "number": 9,
+              "startedAt": "2026-10-06T06:02:26Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:02:26Z",
+              "conclusion": "success",
+              "name": "Run npm run test:postgres-migration",
+              "number": 10,
+              "startedAt": "2026-10-06T06:02:26Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:02:27Z",
+              "conclusion": "success",
+              "name": "Post Run actions/setup-node@v4",
+              "number": 19,
+              "startedAt": "2026-10-06T06:02:26Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:02:27Z",
+              "conclusion": "success",
+              "name": "Post Run actions/checkout@v4",
+              "number": 20,
+              "startedAt": "2026-10-06T06:02:27Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-06T06:02:27Z",
+              "conclusion": "success",
+              "name": "Complete job",
+              "number": 21,
+              "startedAt": "2026-10-06T06:02:27Z",
+              "status": "completed"
+            }
+          ],
+          "url": "https://github.com/cinagroup/cinatoken/actions/runs/37421461373/job/112131520567"
+        }
+      ],
+      "name": "Proxy dispatch safety",
+      "status": "completed",
+      "updatedAt": "2026-10-06T06:16:38Z",
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/37421461373"
+    },
+    "receipt": {
+      "at": "2026-10-06T06:18:57.739Z",
+      "finishedAt": "2026-10-06T06:19:00.855Z",
+      "executable": "C:/Program Files/GitHub CLI/gh.exe",
+      "args": [
+        "run",
+        "view",
+        "37421461373",
+        "--repo",
+        "cinagroup/cinatoken",
+        "--json",
+        "databaseId,name,headSha,status,conclusion,url,jobs,createdAt,updatedAt"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\proxy-terminal.stdout.log",
+        "bytes": 49493,
+        "sha256": "b0a818cd2df624275eb96daeee83b98ef34f2588f68236d93d38be08b342a9d5"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\proxy-terminal.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  },
+  "reads": [
+    {
+      "label": "web-terminal",
+      "receipt": {
+        "at": "2026-10-06T06:19:00.856Z",
+        "finishedAt": "2026-10-06T06:19:04.045Z",
+        "executable": "C:/Program Files/GitHub CLI/gh.exe",
+        "args": [
+          "run",
+          "view",
+          "37421461394",
+          "--repo",
+          "cinagroup/cinatoken",
+          "--json",
+          "databaseId,name,headSha,status,conclusion,url,jobs,createdAt,updatedAt"
+        ],
+        "cwd": "C:/cinagroup/cinatoken",
+        "actualExit": 0,
+        "signal": null,
+        "spawnError": null,
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\web-terminal.stdout.log",
+          "bytes": 7397,
+          "sha256": "c1955def340d710467ae0fba0077c6f6dbcd26247b84c3c555c4dac57110db06"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\web-terminal.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "view": {
+        "conclusion": "success",
+        "createdAt": "2026-10-06T06:01:03Z",
+        "databaseId": 37421461394,
+        "headSha": "d537f83b6389a4e5bbd7f92325f74d77e6bdfc9a",
+        "jobs": [
+          {
+            "completedAt": "2026-10-06T06:06:53Z",
+            "conclusion": "success",
+            "databaseId": 112131520368,
+            "name": "Admin contracts and public SSR build",
+            "startedAt": "2026-10-06T06:01:42Z",
+            "status": "completed",
+            "steps": [
+              {
+                "completedAt": "2026-10-06T06:01:44Z",
+                "conclusion": "success",
+                "name": "Set up job",
+                "number": 1,
+                "startedAt": "2026-10-06T06:01:43Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:01:49Z",
+                "conclusion": "success",
+                "name": "Run actions/checkout@v4",
+                "number": 2,
+                "startedAt": "2026-10-06T06:01:44Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:01:56Z",
+                "conclusion": "success",
+                "name": "Run actions/setup-node@v4",
+                "number": 3,
+                "startedAt": "2026-10-06T06:01:49Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:02:50Z",
+                "conclusion": "success",
+                "name": "Run npm ci --ignore-scripts",
+                "number": 4,
+                "startedAt": "2026-10-06T06:01:56Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:03:04Z",
+                "conclusion": "success",
+                "name": "Run npm run typecheck -w @octafuse/core",
+                "number": 5,
+                "startedAt": "2026-10-06T06:02:50Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:03:05Z",
+                "conclusion": "success",
+                "name": "Run npm run build:node-index -w @octafuse/core",
+                "number": 6,
+                "startedAt": "2026-10-06T06:03:04Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:03:12Z",
+                "conclusion": "success",
+                "name": "Validate account repository types and database contracts",
+                "number": 7,
+                "startedAt": "2026-10-06T06:03:05Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:03:14Z",
+                "conclusion": "success",
+                "name": "Validate integration-key atomic audits and migration contracts",
+                "number": 8,
+                "startedAt": "2026-10-06T06:03:12Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:03:19Z",
+                "conclusion": "success",
+                "name": "Validate Tools atomic configuration, single snapshots and private clients",
+                "number": 9,
+                "startedAt": "2026-10-06T06:03:14Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:03:21Z",
+                "conclusion": "success",
+                "name": "Validate global Gateway Key paging and atomic profile conditions",
+                "number": 10,
+                "startedAt": "2026-10-06T06:03:19Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:03:23Z",
+                "conclusion": "success",
+                "name": "Validate Shared Keys state guards and formal earning history protection",
+                "number": 11,
+                "startedAt": "2026-10-06T06:03:21Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:03:23Z",
+                "conclusion": "success",
+                "name": "Validate Shared Keys atomic governance and exact request log detail",
+                "number": 12,
+                "startedAt": "2026-10-06T06:03:23Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:03:47Z",
+                "conclusion": "success",
+                "name": "Validate authority currency failures and anonymous catalog boundary",
+                "number": 13,
+                "startedAt": "2026-10-06T06:03:23Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:04:28Z",
+                "conclusion": "success",
+                "name": "Run npm run typecheck -w @octafuse/admin",
+                "number": 14,
+                "startedAt": "2026-10-06T06:03:47Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:04:59Z",
+                "conclusion": "success",
+                "name": "Validate auth, workspace, keys, account and public BFF contracts",
+                "number": 15,
+                "startedAt": "2026-10-06T06:04:28Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:06:49Z",
+                "conclusion": "success",
+                "name": "Build Admin public SSR and standalone output",
+                "number": 16,
+                "startedAt": "2026-10-06T06:04:59Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:06:49Z",
+                "conclusion": "success",
+                "name": "Post Run actions/setup-node@v4",
+                "number": 31,
+                "startedAt": "2026-10-06T06:06:49Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:06:50Z",
+                "conclusion": "success",
+                "name": "Post Run actions/checkout@v4",
+                "number": 32,
+                "startedAt": "2026-10-06T06:06:49Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:06:50Z",
+                "conclusion": "success",
+                "name": "Complete job",
+                "number": 33,
+                "startedAt": "2026-10-06T06:06:50Z",
+                "status": "completed"
+              }
+            ],
+            "url": "https://github.com/cinagroup/cinatoken/actions/runs/37421461394/job/112131520368"
+          },
+          {
+            "completedAt": "2026-10-06T06:04:33Z",
+            "conclusion": "success",
+            "databaseId": 112131520580,
+            "name": "web",
+            "startedAt": "2026-10-06T06:01:07Z",
+            "status": "completed",
+            "steps": [
+              {
+                "completedAt": "2026-10-06T06:01:08Z",
+                "conclusion": "success",
+                "name": "Set up job",
+                "number": 1,
+                "startedAt": "2026-10-06T06:01:08Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:01:15Z",
+                "conclusion": "success",
+                "name": "Run actions/checkout@v4",
+                "number": 2,
+                "startedAt": "2026-10-06T06:01:08Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:01:20Z",
+                "conclusion": "success",
+                "name": "Run actions/setup-node@v4",
+                "number": 3,
+                "startedAt": "2026-10-06T06:01:15Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:02:03Z",
+                "conclusion": "success",
+                "name": "Run npm ci --ignore-scripts",
+                "number": 4,
+                "startedAt": "2026-10-06T06:01:20Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:02:03Z",
+                "conclusion": "success",
+                "name": "Run npm run verify:package-versions",
+                "number": 5,
+                "startedAt": "2026-10-06T06:02:03Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:02:22Z",
+                "conclusion": "success",
+                "name": "Run npm run format:check -w @cinatoken/web",
+                "number": 6,
+                "startedAt": "2026-10-06T06:02:03Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:03:07Z",
+                "conclusion": "success",
+                "name": "Run npm run test:web",
+                "number": 7,
+                "startedAt": "2026-10-06T06:02:22Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:03:39Z",
+                "conclusion": "success",
+                "name": "Run npm run lint -w @cinatoken/web",
+                "number": 8,
+                "startedAt": "2026-10-06T06:03:07Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:03:39Z",
+                "conclusion": "success",
+                "name": "Run bash -n docker/web/entrypoint.sh",
+                "number": 9,
+                "startedAt": "2026-10-06T06:03:39Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:04:13Z",
+                "conclusion": "success",
+                "name": "Run npm run build:web",
+                "number": 10,
+                "startedAt": "2026-10-06T06:03:39Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:04:17Z",
+                "conclusion": "success",
+                "name": "Freeze and verify release artifact",
+                "number": 11,
+                "startedAt": "2026-10-06T06:04:13Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:04:18Z",
+                "conclusion": "success",
+                "name": "Generate verified production Worker configuration",
+                "number": 12,
+                "startedAt": "2026-10-06T06:04:17Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:04:25Z",
+                "conclusion": "success",
+                "name": "Validate release image and Nginx configuration",
+                "number": 13,
+                "startedAt": "2026-10-06T06:04:18Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:04:29Z",
+                "conclusion": "success",
+                "name": "Validate isolated Docker public SSR runtime",
+                "number": 14,
+                "startedAt": "2026-10-06T06:04:25Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:04:31Z",
+                "conclusion": "success",
+                "name": "Run actions/upload-artifact@v4",
+                "number": 15,
+                "startedAt": "2026-10-06T06:04:29Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:04:31Z",
+                "conclusion": "success",
+                "name": "Post Run actions/setup-node@v4",
+                "number": 29,
+                "startedAt": "2026-10-06T06:04:31Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:04:31Z",
+                "conclusion": "success",
+                "name": "Post Run actions/checkout@v4",
+                "number": 30,
+                "startedAt": "2026-10-06T06:04:31Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:04:31Z",
+                "conclusion": "success",
+                "name": "Complete job",
+                "number": 31,
+                "startedAt": "2026-10-06T06:04:31Z",
+                "status": "completed"
+              }
+            ],
+            "url": "https://github.com/cinagroup/cinatoken/actions/runs/37421461394/job/112131520580"
+          }
+        ],
+        "name": "Web frontend",
+        "status": "completed",
+        "updatedAt": "2026-10-06T06:06:54Z",
+        "url": "https://github.com/cinagroup/cinatoken/actions/runs/37421461394"
+      }
+    },
+    {
+      "label": "compose-terminal",
+      "receipt": {
+        "at": "2026-10-06T06:19:00.862Z",
+        "finishedAt": "2026-10-06T06:19:04.685Z",
+        "executable": "C:/Program Files/GitHub CLI/gh.exe",
+        "args": [
+          "run",
+          "view",
+          "37421461379",
+          "--repo",
+          "cinagroup/cinatoken",
+          "--json",
+          "databaseId,name,headSha,status,conclusion,url,jobs,createdAt,updatedAt"
+        ],
+        "cwd": "C:/cinagroup/cinatoken",
+        "actualExit": 0,
+        "signal": null,
+        "spawnError": null,
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\compose-terminal.stdout.log",
+          "bytes": 2645,
+          "sha256": "c9d62b08151ff5ef14701f6d5afd0b17c8520e80be105acd2fcd49204853f103"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\compose-terminal.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "view": {
+        "conclusion": "success",
+        "createdAt": "2026-10-06T06:01:03Z",
+        "databaseId": 37421461379,
+        "headSha": "d537f83b6389a4e5bbd7f92325f74d77e6bdfc9a",
+        "jobs": [
+          {
+            "completedAt": "2026-10-06T06:06:08Z",
+            "conclusion": "success",
+            "databaseId": 112131520297,
+            "name": "smoke-node-pg",
+            "startedAt": "2026-10-06T06:01:06Z",
+            "status": "completed",
+            "steps": [
+              {
+                "completedAt": "2026-10-06T06:01:07Z",
+                "conclusion": "success",
+                "name": "Set up job",
+                "number": 1,
+                "startedAt": "2026-10-06T06:01:07Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:01:14Z",
+                "conclusion": "success",
+                "name": "Checkout",
+                "number": 2,
+                "startedAt": "2026-10-06T06:01:07Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:01:30Z",
+                "conclusion": "success",
+                "name": "Set up Docker Buildx",
+                "number": 3,
+                "startedAt": "2026-10-06T06:01:14Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:01:42Z",
+                "conclusion": "success",
+                "name": "Start postgres",
+                "number": 4,
+                "startedAt": "2026-10-06T06:01:30Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:02:10Z",
+                "conclusion": "success",
+                "name": "Verify legacy schema rename and migration idempotency",
+                "number": 5,
+                "startedAt": "2026-10-06T06:01:42Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:05:17Z",
+                "conclusion": "success",
+                "name": "Build and start proxy + admin",
+                "number": 6,
+                "startedAt": "2026-10-06T06:02:10Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:05:19Z",
+                "conclusion": "success",
+                "name": "Wait for proxy health",
+                "number": 7,
+                "startedAt": "2026-10-06T06:05:17Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:05:19Z",
+                "conclusion": "success",
+                "name": "Wait for admin health",
+                "number": 8,
+                "startedAt": "2026-10-06T06:05:19Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:05:19Z",
+                "conclusion": "success",
+                "name": "Smoke GET endpoints",
+                "number": 9,
+                "startedAt": "2026-10-06T06:05:19Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:05:30Z",
+                "conclusion": "success",
+                "name": "Teardown",
+                "number": 10,
+                "startedAt": "2026-10-06T06:05:19Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:06:06Z",
+                "conclusion": "success",
+                "name": "Post Set up Docker Buildx",
+                "number": 19,
+                "startedAt": "2026-10-06T06:05:30Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:06:07Z",
+                "conclusion": "success",
+                "name": "Post Checkout",
+                "number": 20,
+                "startedAt": "2026-10-06T06:06:06Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:06:07Z",
+                "conclusion": "success",
+                "name": "Complete job",
+                "number": 21,
+                "startedAt": "2026-10-06T06:06:07Z",
+                "status": "completed"
+              }
+            ],
+            "url": "https://github.com/cinagroup/cinatoken/actions/runs/37421461379/job/112131520297"
+          }
+        ],
+        "name": "Docker Compose Smoke (node-pg)",
+        "status": "completed",
+        "updatedAt": "2026-10-06T06:06:09Z",
+        "url": "https://github.com/cinagroup/cinatoken/actions/runs/37421461379"
+      }
+    },
+    {
+      "label": "native-terminal",
+      "receipt": {
+        "at": "2026-10-06T06:19:00.868Z",
+        "finishedAt": "2026-10-06T06:19:08.939Z",
+        "executable": "C:/Program Files/GitHub CLI/gh.exe",
+        "args": [
+          "run",
+          "view",
+          "37421461373",
+          "--repo",
+          "cinagroup/cinatoken",
+          "--job",
+          "112131520308",
+          "--log"
+        ],
+        "cwd": "C:/cinagroup/cinatoken",
+        "actualExit": 0,
+        "signal": null,
+        "spawnError": null,
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+          "bytes": 667343,
+          "sha256": "29f68229763fc5c214ff07c380e91905ad1c70cfe4c00e674e3621fed338ba49"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "label": "dispatch-terminal",
+      "receipt": {
+        "at": "2026-10-06T06:20:02.743Z",
+        "finishedAt": "2026-10-06T06:20:06.044Z",
+        "executable": "C:/Program Files/GitHub CLI/gh.exe",
+        "args": [
+          "run",
+          "view",
+          "37421461373",
+          "--repo",
+          "cinagroup/cinatoken",
+          "--job",
+          "112131520499",
+          "--log"
+        ],
+        "cwd": "C:/cinagroup/cinatoken",
+        "actualExit": 0,
+        "signal": null,
+        "spawnError": null,
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\dispatch-terminal-retry.stdout.log",
+          "bytes": 5159606,
+          "sha256": "d1a431e6f7bafbddce2045e949a771cc5d4783f4cccad8dac690c95e0ef627f7"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\dispatch-terminal-retry.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    }
+  ],
+  "reusedAlreadyTerminal": [
+    {
+      "slug": "verify",
+      "view": {
+        "conclusion": "success",
+        "createdAt": "2026-10-06T06:01:03Z",
+        "databaseId": 37421461365,
+        "headSha": "d537f83b6389a4e5bbd7f92325f74d77e6bdfc9a",
+        "jobs": [
+          {
+            "completedAt": "2026-10-06T06:01:17Z",
+            "conclusion": "success",
+            "databaseId": 112131519923,
+            "name": "verify",
+            "startedAt": "2026-10-06T06:01:06Z",
+            "status": "completed",
+            "steps": [
+              {
+                "completedAt": "2026-10-06T06:01:08Z",
+                "conclusion": "success",
+                "name": "Set up job",
+                "number": 1,
+                "startedAt": "2026-10-06T06:01:07Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:01:14Z",
+                "conclusion": "success",
+                "name": "Run actions/checkout@v4",
+                "number": 2,
+                "startedAt": "2026-10-06T06:01:08Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:01:14Z",
+                "conclusion": "success",
+                "name": "Run actions/setup-node@v4",
+                "number": 3,
+                "startedAt": "2026-10-06T06:01:14Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:01:15Z",
+                "conclusion": "success",
+                "name": "Assert fixed monorepo versions",
+                "number": 4,
+                "startedAt": "2026-10-06T06:01:14Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:01:15Z",
+                "conclusion": "success",
+                "name": "Post Run actions/setup-node@v4",
+                "number": 7,
+                "startedAt": "2026-10-06T06:01:15Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:01:15Z",
+                "conclusion": "success",
+                "name": "Post Run actions/checkout@v4",
+                "number": 8,
+                "startedAt": "2026-10-06T06:01:15Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:01:15Z",
+                "conclusion": "success",
+                "name": "Complete job",
+                "number": 9,
+                "startedAt": "2026-10-06T06:01:15Z",
+                "status": "completed"
+              }
+            ],
+            "url": "https://github.com/cinagroup/cinatoken/actions/runs/37421461365/job/112131519923"
+          }
+        ],
+        "name": "Verify package versions",
+        "status": "completed",
+        "updatedAt": "2026-10-06T06:01:18Z",
+        "url": "https://github.com/cinagroup/cinatoken/actions/runs/37421461365"
+      },
+      "receipt": {
+        "at": "2026-10-06T06:03:59.630Z",
+        "finishedAt": "2026-10-06T06:04:02.786Z",
+        "executable": "C:/Program Files/GitHub CLI/gh.exe",
+        "args": [
+          "run",
+          "view",
+          "37421461365",
+          "--repo",
+          "cinagroup/cinatoken",
+          "--json",
+          "databaseId,name,headSha,status,conclusion,url,jobs,createdAt,updatedAt"
+        ],
+        "cwd": "C:/cinagroup/cinatoken",
+        "actualExit": 0,
+        "signal": null,
+        "spawnError": null,
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\verify-initial.stdout.log",
+          "bytes": 1698,
+          "sha256": "da2141dc8eb527de105d8427a99b36c5a5fecd5e3b1d99c70badb91cdf339c9f"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\verify-initial.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "slug": "release",
+      "view": {
+        "conclusion": "success",
+        "createdAt": "2026-10-06T06:01:03Z",
+        "databaseId": 37421461383,
+        "headSha": "d537f83b6389a4e5bbd7f92325f74d77e6bdfc9a",
+        "jobs": [
+          {
+            "completedAt": "2026-10-06T06:02:06Z",
+            "conclusion": "success",
+            "databaseId": 112131520141,
+            "name": "Changesets",
+            "startedAt": "2026-10-06T06:01:06Z",
+            "status": "completed",
+            "steps": [
+              {
+                "completedAt": "2026-10-06T06:01:08Z",
+                "conclusion": "success",
+                "name": "Set up job",
+                "number": 1,
+                "startedAt": "2026-10-06T06:01:07Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:01:15Z",
+                "conclusion": "success",
+                "name": "Checkout",
+                "number": 2,
+                "startedAt": "2026-10-06T06:01:08Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:01:21Z",
+                "conclusion": "success",
+                "name": "Setup Node.js",
+                "number": 3,
+                "startedAt": "2026-10-06T06:01:15Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:01:59Z",
+                "conclusion": "success",
+                "name": "Install dependencies",
+                "number": 4,
+                "startedAt": "2026-10-06T06:01:21Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:01:59Z",
+                "conclusion": "success",
+                "name": "Verify package versions (no drift)",
+                "number": 5,
+                "startedAt": "2026-10-06T06:01:59Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:02:03Z",
+                "conclusion": "success",
+                "name": "Create Version PR or push tags",
+                "number": 6,
+                "startedAt": "2026-10-06T06:01:59Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:02:04Z",
+                "conclusion": "success",
+                "name": "Dispatch Docker images workflow when tag did not chain-trigger",
+                "number": 7,
+                "startedAt": "2026-10-06T06:02:03Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:02:04Z",
+                "conclusion": "success",
+                "name": "Post Setup Node.js",
+                "number": 13,
+                "startedAt": "2026-10-06T06:02:04Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:02:04Z",
+                "conclusion": "success",
+                "name": "Post Checkout",
+                "number": 14,
+                "startedAt": "2026-10-06T06:02:04Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-06T06:02:04Z",
+                "conclusion": "success",
+                "name": "Complete job",
+                "number": 15,
+                "startedAt": "2026-10-06T06:02:04Z",
+                "status": "completed"
+              }
+            ],
+            "url": "https://github.com/cinagroup/cinatoken/actions/runs/37421461383/job/112131520141"
+          }
+        ],
+        "name": "Release",
+        "status": "completed",
+        "updatedAt": "2026-10-06T06:02:07Z",
+        "url": "https://github.com/cinagroup/cinatoken/actions/runs/37421461383"
+      },
+      "receipt": {
+        "at": "2026-10-06T06:03:59.641Z",
+        "finishedAt": "2026-10-06T06:04:02.613Z",
+        "executable": "C:/Program Files/GitHub CLI/gh.exe",
+        "args": [
+          "run",
+          "view",
+          "37421461383",
+          "--repo",
+          "cinagroup/cinatoken",
+          "--json",
+          "databaseId,name,headSha,status,conclusion,url,jobs,createdAt,updatedAt"
+        ],
+        "cwd": "C:/cinagroup/cinatoken",
+        "actualExit": 0,
+        "signal": null,
+        "spawnError": null,
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\release-initial.stdout.log",
+          "bytes": 2168,
+          "sha256": "c25ff040719a9ae88590efe64f04e9b527d73642899acfce0446d1bcf0f172a3"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\release-initial.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    }
+  ],
+  "collectionOnly": true,
+  "rootCauseConfirmed": false,
+  "nativeExecutedLocally": false,
+  "ciActions": 0,
+  "repositoryWrites": 0,
+  "derivedCiLogFiles": 0,
+  "completeLogDownloadAttempts": {
+    "native": 1,
+    "dispatch": 2
+  },
+  "completeLogCopies": {
+    "native": 1,
+    "dispatch": 1
+  },
+  "failedDispatchDownloadRetained": {
+    "at": "2026-10-06T06:19:00.874Z",
+    "finishedAt": "2026-10-06T06:19:08.910Z",
+    "executable": "C:/Program Files/GitHub CLI/gh.exe",
+    "args": [
+      "run",
+      "view",
+      "37421461373",
+      "--repo",
+      "cinagroup/cinatoken",
+      "--job",
+      "112131520499",
+      "--log"
+    ],
+    "cwd": "C:/cinagroup/cinatoken",
+    "actualExit": 1,
+    "signal": null,
+    "spawnError": null,
+    "stdout": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\dispatch-terminal.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stderr": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\dispatch-terminal.stderr.log",
+      "bytes": 70,
+      "sha256": "976759653facdb9c9b607a797f11cb6283ee60203abaae2a40247248cf301d4c"
+    }
+  },
+  "recovery": "Only failed empty dispatch download retried sequentially; existing metadata and successful native log reused without another query."
+}

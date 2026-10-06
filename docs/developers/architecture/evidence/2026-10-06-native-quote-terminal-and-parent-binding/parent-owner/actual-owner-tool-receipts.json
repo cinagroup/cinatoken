@@ -1,0 +1,13 @@
+{
+  "schema": "cinatoken-legacy-parent-source-owner-tool-observations-v1",
+  "authority": "Exact terminal fields transcribed from tool results; each owned child receipt is the authority for stdout/stderr bytes. No command was rerun to create this file.",
+  "records": [
+    {"label":"repair-source","chunk_id":"cbc26d","exit_code":1,"wall_time_seconds":0.6887219,"receipt":"repair-source.result.json","closed":true},
+    {"label":"repair-source-v2","chunk_id":"c5083e","exit_code":0,"wall_time_seconds":0.4724294,"receipt":"repair-source-v2.result.json","closed":true},
+    {"label":"seal-minimal-repair","chunk_id":"de1eae","exit_code":0,"wall_time_seconds":0.2859232,"receipt":"seal-minimal-repair.result.json","closed":true}
+  ],
+  "nodeCheckAuthority":"node-check.result.json contains actual synchronous spawnSync return0; module was not evaluated",
+  "gitInvoked": false,
+  "postgresOrAppOrCIExecuted": false,
+  "originalRuntimeFailuresUpgraded": false
+}

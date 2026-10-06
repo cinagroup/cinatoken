@@ -1,0 +1,26 @@
+{
+  "at": "2026-10-06T05:59:34.519Z",
+  "finishedAt": "2026-10-06T05:59:34.569Z",
+  "executable": "C:/Program Files/Git/cmd/git.exe",
+  "args": [
+    "-c",
+    "core.longpaths=true",
+    "diff",
+    "--cached",
+    "--name-only",
+    "-z"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-precision-root-1fsOZX\\staged-names-quote-precision.stdout.log",
+    "bytes": 26526,
+    "sha256": "89e97a41585ba38c38f4934e23f97beb9a829da48433b77ed7a23d2ff86e2437"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-precision-root-1fsOZX\\staged-names-quote-precision.stderr.log",
+    "bytes": 80,
+    "sha256": "4637b2478cea95e221ecbde1b46874fb0f18d282e08504cf0d1074595c4348d1"
+  }
+}

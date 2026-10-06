@@ -1,0 +1,23 @@
+{
+  "schema": "cinatoken-independent-static-audit-child-close.v1",
+  "startedAt": "2026-10-06T06:30:57.584Z",
+  "closedAt": "2026-10-06T06:30:57.689Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "argv": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-legacy-parent-binding-independent-peer-1a10fe74c562dfcfe66a6415\\finalize-from-completed-source-audit.mjs",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-binding-independent-peer-1a10fe74c562dfcfe66a6415"
+  ],
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-legacy-parent-binding-independent-peer-1a10fe74c562dfcfe66a6415\\finalize.stdout.log",
+    "bytes": 574,
+    "sha256": "80d42348796e25d4b113757a28dc022ac1c2cd62fde0a5481680b4e9f98be43a"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-legacy-parent-binding-independent-peer-1a10fe74c562dfcfe66a6415\\finalize.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

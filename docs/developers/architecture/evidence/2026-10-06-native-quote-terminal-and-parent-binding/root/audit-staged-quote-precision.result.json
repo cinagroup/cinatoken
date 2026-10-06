@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-06T06:00:09.763Z",
+  "finishedAt": "2026-10-06T06:00:09.945Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-precision-root-1fsOZX\\audit-staged.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-precision-root-1fsOZX\\audit-staged-quote-precision.stdout.log",
+    "bytes": 91,
+    "sha256": "3fd00dc2aef38a84b8552d5083f187f30cbdf1933badd42af4f993e307047f01"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-precision-root-1fsOZX\\audit-staged-quote-precision.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

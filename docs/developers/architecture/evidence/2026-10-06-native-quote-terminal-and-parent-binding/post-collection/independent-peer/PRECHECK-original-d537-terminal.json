@@ -1,0 +1,2218 @@
+{
+  "schema": "d537-original-terminal-readonly-peer-precheck-v1",
+  "at": "2026-10-06T06:27:03.642Z",
+  "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8",
+  "sourceSha": "d537f83b6389a4e5bbd7f92325f74d77e6bdfc9a",
+  "originalSourceFiles": 93,
+  "sourceSealAllBytesShaExact": true,
+  "sourceFinal": {
+    "bytes": 288169,
+    "sha256": "9d273f6d48c0d45bd4bca062896c7310fdc94f363e6d8dafdec85bd1e626ed53"
+  },
+  "sourceSeal": {
+    "bytes": 35325,
+    "sha256": "6727d6330b27d5319676cb06461ab23f9860b6260bf694278ed26cc52ba0465a"
+  },
+  "runs": [
+    {
+      "runId": 37421461373,
+      "slug": "proxy",
+      "headSha": "d537f83b6389a4e5bbd7f92325f74d77e6bdfc9a",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "runId": 37421461394,
+      "slug": "web",
+      "headSha": "d537f83b6389a4e5bbd7f92325f74d77e6bdfc9a",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "runId": 37421461379,
+      "slug": "compose",
+      "headSha": "d537f83b6389a4e5bbd7f92325f74d77e6bdfc9a",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "runId": 37421461365,
+      "slug": "verify",
+      "headSha": "d537f83b6389a4e5bbd7f92325f74d77e6bdfc9a",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "runId": 37421461383,
+      "slug": "release",
+      "headSha": "d537f83b6389a4e5bbd7f92325f74d77e6bdfc9a",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "financialSteps": {
+    "count": 106,
+    "success": 102,
+    "failure": 1,
+    "skipped": 3
+  },
+  "chain55to113": {
+    "count": 59,
+    "success": 55,
+    "failure": 1,
+    "skipped": 3
+  },
+  "target26AllPass": true,
+  "remaining6AllPass": true,
+  "bootstrap7Quote24Frozen94Frozen109TapOnePass": true,
+  "step110": {
+    "tests": 1,
+    "pass": 0,
+    "fail": 1,
+    "error": "migrator is not defined",
+    "name": "ReferenceError",
+    "sourceLocation": "postgres-legacy-parent-activation.native.test.mjs:100:48"
+  },
+  "skipSteps": [
+    111,
+    112,
+    113
+  ],
+  "strictDispatch": {
+    "tests": 8,
+    "pass": 7,
+    "fail": 1,
+    "skipped": 0
+  },
+  "nativeRaw": {
+    "bytes": 667343,
+    "sha256": "29f68229763fc5c214ff07c380e91905ad1c70cfe4c00e674e3621fed338ba49"
+  },
+  "dispatchRaw": {
+    "bytes": 5159606,
+    "sha256": "d1a431e6f7bafbddce2045e949a771cc5d4783f4cccad8dac690c95e0ef627f7"
+  },
+  "realClosedAll25": {
+    "count": 25,
+    "zero": 20,
+    "one": 5,
+    "receipts": [
+      {
+        "file": "analyze-terminal.closed.json",
+        "actualExit": 0,
+        "bytes": 886,
+        "sha256": "e80c0d49101d51f48323d11389898cd3acbbf21849bf4af3a094f7c702c5c2df"
+      },
+      {
+        "file": "close-audit.closed.json",
+        "actualExit": 0,
+        "bytes": 909,
+        "sha256": "e7ce57b6fcf28e4fd88bc2fa917a24e2d60c186923a028362a86550c7fcb47c5"
+      },
+      {
+        "file": "collect-terminal.closed.json",
+        "actualExit": 1,
+        "bytes": 886,
+        "sha256": "5e652a7a2ab105e6ea1fe4281281edada36843a06c629725ee8536cd7a6e42b5"
+      },
+      {
+        "file": "commit-runs-authorized.closed.json",
+        "actualExit": 0,
+        "bytes": 1057,
+        "sha256": "d88aa02b459cd063667405caff5b3672fd37daf5a4908c71ab7825596dd4b704"
+      },
+      {
+        "file": "commit-runs.closed.json",
+        "actualExit": 1,
+        "bytes": 1034,
+        "sha256": "f8a2b52ea8c890b6ae5df832b4ce085df5067ce114657081e8df827c9b4e85ef"
+      },
+      {
+        "file": "compose-initial.closed.json",
+        "actualExit": 0,
+        "bytes": 959,
+        "sha256": "44f86664d84088610cd2f9771afa0b3123905fa5a0f1671993f628adcf35b897"
+      },
+      {
+        "file": "compose-terminal.closed.json",
+        "actualExit": 0,
+        "bytes": 961,
+        "sha256": "4c50c8c24cdcb614d43de449802f21084bedac4998178532873cb09eda06f883"
+      },
+      {
+        "file": "dispatch-terminal-retry.closed.json",
+        "actualExit": 0,
+        "bytes": 932,
+        "sha256": "5d7a9b8876cfebeffbd033c205d72441dba1700401cd5011c537856c1664187f"
+      },
+      {
+        "file": "dispatch-terminal.closed.json",
+        "actualExit": 1,
+        "bytes": 915,
+        "sha256": "72c79b8a08b7ba63f5a95c2ed2fc05fbc665fb12ed267b80275d0e6cbab96f62"
+      },
+      {
+        "file": "native-terminal.closed.json",
+        "actualExit": 0,
+        "bytes": 915,
+        "sha256": "7a40cc7bad0e068f21043b6e59a4eab6c75b5e0f349417bde78e84dd983396f3"
+      },
+      {
+        "file": "observe-initial.closed.json",
+        "actualExit": 0,
+        "bytes": 911,
+        "sha256": "a247afb70dae3a4c684d89abef4412e0f46e06b7fb0e8b085261c0cdb0194469"
+      },
+      {
+        "file": "original-proxy-workflow.closed.json",
+        "actualExit": 0,
+        "bytes": 874,
+        "sha256": "7b9fc0c3a3cd37169d599b7da1236b8f6e8e1944e3586b0ad36f2fb627c6efe9"
+      },
+      {
+        "file": "prepare-map-v2.closed.json",
+        "actualExit": 0,
+        "bytes": 907,
+        "sha256": "0221f0d2c13b264cca20f7ad73f33d6b4a053c0125e7a8cdc296bd446bfc59b9"
+      },
+      {
+        "file": "prepare-workflow-map-v2.closed.json",
+        "actualExit": 0,
+        "bytes": 934,
+        "sha256": "07dc9341cc0122a4075c38b52f5d80d391a28e0fa985ec39563e356da8ffd6bd"
+      },
+      {
+        "file": "prepare-workflow-map.closed.json",
+        "actualExit": 1,
+        "bytes": 925,
+        "sha256": "5dc780bce1291e939af0dd7502bb0ab693392a3608abb484a515d078585d39d1"
+      },
+      {
+        "file": "proxy-initial.closed.json",
+        "actualExit": 0,
+        "bytes": 956,
+        "sha256": "55d8aadd6041454138218ff3e19e6b4725906b3c8d006e987e16758902b4ab07"
+      },
+      {
+        "file": "proxy-progress-1.closed.json",
+        "actualExit": 0,
+        "bytes": 962,
+        "sha256": "b248abce7d0d8fcb90509384be825103b8d8f6bbf5d937973fd1b35aa1b2a2f7"
+      },
+      {
+        "file": "proxy-terminal.closed.json",
+        "actualExit": 0,
+        "bytes": 958,
+        "sha256": "98593a4363da84254c2b13c56bda6e111697019f1c431927b8e18672964279a9"
+      },
+      {
+        "file": "proxy-watch-1.closed.json",
+        "actualExit": 1,
+        "bytes": 1026,
+        "sha256": "ebc20eac7249731330fdc7cc6d44dc0ebccc9a53f204bf74490307bdf37db798"
+      },
+      {
+        "file": "recover-dispatch-collection.closed.json",
+        "actualExit": 0,
+        "bytes": 919,
+        "sha256": "90bd1c70f0c3849ac7e650179ff578a6340998ee6833a5c12ecaf05336e54ca0"
+      },
+      {
+        "file": "release-initial.closed.json",
+        "actualExit": 0,
+        "bytes": 959,
+        "sha256": "6142163cb8fef2d4b63d7553707676750e0e019e1fed8156d0c4ed53656167f1"
+      },
+      {
+        "file": "terminal-tools-syntax.closed.json",
+        "actualExit": 0,
+        "bytes": 908,
+        "sha256": "b47c520ae4169e134881fd26ae6068b15400509d1d28df4c5ba360c5f89d1e76"
+      },
+      {
+        "file": "verify-initial.closed.json",
+        "actualExit": 0,
+        "bytes": 957,
+        "sha256": "f74ab8efa4ad3580b0e61421dbcb7b6381c3aeebd11621236bfc04d230e22463"
+      },
+      {
+        "file": "web-initial.closed.json",
+        "actualExit": 0,
+        "bytes": 951,
+        "sha256": "e60477d21c5a528da6f46adf09f9de420ba392333459759fcabaac97537560c4"
+      },
+      {
+        "file": "web-terminal.closed.json",
+        "actualExit": 0,
+        "bytes": 953,
+        "sha256": "1dec6a8a61f6a1444919a290dab16fc846a0944b8b8580df1b1871f8c0da1e2f"
+      }
+    ]
+  },
+  "originalFinal23InputsBeforeLastTwoChecks": {
+    "count": 23,
+    "zero": 18,
+    "one": 5
+  },
+  "validatedTaps": [
+    {
+      "label": "native-step-8",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 48493,
+        "endByte": 53794,
+        "bytes": 5301
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-9",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 53794,
+        "endByte": 62123,
+        "bytes": 8329
+      },
+      "counters": {
+        "tests": 3,
+        "suites": 0,
+        "pass": 3,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-10",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 62123,
+        "endByte": 69174,
+        "bytes": 7051
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-11",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 69174,
+        "endByte": 76150,
+        "bytes": 6976
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-12",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 76150,
+        "endByte": 86072,
+        "bytes": 9922
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-13",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 86072,
+        "endByte": 90458,
+        "bytes": 4386
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-14",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 90458,
+        "endByte": 94592,
+        "bytes": 4134
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-15",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 94592,
+        "endByte": 98854,
+        "bytes": 4262
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-16",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 98854,
+        "endByte": 103139,
+        "bytes": 4285
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-17",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 103139,
+        "endByte": 107622,
+        "bytes": 4483
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-18",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 107622,
+        "endByte": 111904,
+        "bytes": 4282
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-19",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 111904,
+        "endByte": 116197,
+        "bytes": 4293
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-20",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 116197,
+        "endByte": 121387,
+        "bytes": 5190
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-21",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 121387,
+        "endByte": 126673,
+        "bytes": 5286
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-22",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 126673,
+        "endByte": 130973,
+        "bytes": 4300
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-23",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 130973,
+        "endByte": 135261,
+        "bytes": 4288
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-24",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 135261,
+        "endByte": 140039,
+        "bytes": 4778
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-25",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 140039,
+        "endByte": 144339,
+        "bytes": 4300
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-26",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 144339,
+        "endByte": 149796,
+        "bytes": 5457
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-27",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 149796,
+        "endByte": 154052,
+        "bytes": 4256
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-28",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 154052,
+        "endByte": 158324,
+        "bytes": 4272
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-29",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 158324,
+        "endByte": 162551,
+        "bytes": 4227
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-30",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 162551,
+        "endByte": 174251,
+        "bytes": 11700
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-31",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 174251,
+        "endByte": 178498,
+        "bytes": 4247
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-32",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 178498,
+        "endByte": 182816,
+        "bytes": 4318
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-33",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 182816,
+        "endByte": 187108,
+        "bytes": 4292
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-34",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 187108,
+        "endByte": 191350,
+        "bytes": 4242
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-35",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 191350,
+        "endByte": 199951,
+        "bytes": 8601
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-36",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 199951,
+        "endByte": 204646,
+        "bytes": 4695
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-37",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 204646,
+        "endByte": 209348,
+        "bytes": 4702
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-38",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 209348,
+        "endByte": 214693,
+        "bytes": 5345
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-39",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 214693,
+        "endByte": 220062,
+        "bytes": 5369
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-40",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 220062,
+        "endByte": 225452,
+        "bytes": 5390
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-41",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 225452,
+        "endByte": 230000,
+        "bytes": 4548
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-42",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 230000,
+        "endByte": 234539,
+        "bytes": 4539
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-43",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 234539,
+        "endByte": 239059,
+        "bytes": 4520
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-44",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 239059,
+        "endByte": 243572,
+        "bytes": 4513
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-45",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 243572,
+        "endByte": 248897,
+        "bytes": 5325
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-46",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 248897,
+        "endByte": 254200,
+        "bytes": 5303
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-47",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 254200,
+        "endByte": 258667,
+        "bytes": 4467
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-48",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 258667,
+        "endByte": 263971,
+        "bytes": 5304
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-49",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 263971,
+        "endByte": 268487,
+        "bytes": 4516
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-50",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 268487,
+        "endByte": 273818,
+        "bytes": 5331
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-51",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 273818,
+        "endByte": 279113,
+        "bytes": 5295
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-52",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 279113,
+        "endByte": 283026,
+        "bytes": 3913
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-53",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 283026,
+        "endByte": 288351,
+        "bytes": 5325
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-54",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 288351,
+        "endByte": 293673,
+        "bytes": 5322
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-55",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 293673,
+        "endByte": 299230,
+        "bytes": 5557
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-56",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 299230,
+        "endByte": 304765,
+        "bytes": 5535
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-57",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 304765,
+        "endByte": 308687,
+        "bytes": 3922
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-58",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 308687,
+        "endByte": 312931,
+        "bytes": 4244
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-59",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 312931,
+        "endByte": 318484,
+        "bytes": 5553
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-60",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 318484,
+        "endByte": 323826,
+        "bytes": 5342
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-61",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 323826,
+        "endByte": 329184,
+        "bytes": 5358
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-62",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 329184,
+        "endByte": 334747,
+        "bytes": 5563
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-63",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 334747,
+        "endByte": 340290,
+        "bytes": 5543
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-64",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 340290,
+        "endByte": 345859,
+        "bytes": 5569
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-65",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 345859,
+        "endByte": 350090,
+        "bytes": 4231
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-66",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 350090,
+        "endByte": 355421,
+        "bytes": 5331
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-67",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 355421,
+        "endByte": 359328,
+        "bytes": 3907
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-68",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 359328,
+        "endByte": 364934,
+        "bytes": 5606
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-69",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 364934,
+        "endByte": 370272,
+        "bytes": 5338
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-70",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 370272,
+        "endByte": 375857,
+        "bytes": 5585
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-71",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 375857,
+        "endByte": 381178,
+        "bytes": 5321
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-72",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 381178,
+        "endByte": 386530,
+        "bytes": 5352
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-73",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 386530,
+        "endByte": 391866,
+        "bytes": 5336
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-74",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 391866,
+        "endByte": 397243,
+        "bytes": 5377
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-75",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 397243,
+        "endByte": 402626,
+        "bytes": 5383
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-76",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 402626,
+        "endByte": 407978,
+        "bytes": 5352
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-77",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 407978,
+        "endByte": 413319,
+        "bytes": 5341
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-78",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 413319,
+        "endByte": 418701,
+        "bytes": 5382
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-79",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 418701,
+        "endByte": 423496,
+        "bytes": 4795
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-80",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 423496,
+        "endByte": 428841,
+        "bytes": 5345
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-81",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 428841,
+        "endByte": 434473,
+        "bytes": 5632
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-82",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 434473,
+        "endByte": 439880,
+        "bytes": 5407
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-83",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 439880,
+        "endByte": 455005,
+        "bytes": 15125
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-84",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 455005,
+        "endByte": 479016,
+        "bytes": 24011
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-85",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 479016,
+        "endByte": 508686,
+        "bytes": 29670
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-86",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 508686,
+        "endByte": 514014,
+        "bytes": 5328
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-87",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 514014,
+        "endByte": 518262,
+        "bytes": 4248
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-88",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 518262,
+        "endByte": 523638,
+        "bytes": 5376
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-89",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 523638,
+        "endByte": 527898,
+        "bytes": 4260
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-90",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 527898,
+        "endByte": 532171,
+        "bytes": 4273
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-91",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 532171,
+        "endByte": 536936,
+        "bytes": 4765
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-92",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 536936,
+        "endByte": 541683,
+        "bytes": 4747
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-93",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 541683,
+        "endByte": 546483,
+        "bytes": 4800
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-94",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 546483,
+        "endByte": 560226,
+        "bytes": 13743
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-95",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 560226,
+        "endByte": 565787,
+        "bytes": 5561
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-96",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 565787,
+        "endByte": 572425,
+        "bytes": 6638
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-97",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 572425,
+        "endByte": 576572,
+        "bytes": 4147
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-98",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 576572,
+        "endByte": 580985,
+        "bytes": 4413
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-99",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 580985,
+        "endByte": 585582,
+        "bytes": 4597
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-100",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 585582,
+        "endByte": 589838,
+        "bytes": 4256
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-101",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 589838,
+        "endByte": 594106,
+        "bytes": 4268
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-102",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 594106,
+        "endByte": 598355,
+        "bytes": 4249
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-103",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 598355,
+        "endByte": 602602,
+        "bytes": 4247
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-104",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 602602,
+        "endByte": 606547,
+        "bytes": 3945
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-105",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 606547,
+        "endByte": 610455,
+        "bytes": 3908
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-106",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 610455,
+        "endByte": 614622,
+        "bytes": 4167
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-107",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 614622,
+        "endByte": 619086,
+        "bytes": 4464
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-108",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 619086,
+        "endByte": 622986,
+        "bytes": 3900
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-109",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 622986,
+        "endByte": 659416,
+        "bytes": 36430
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "native-step-110",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 659416,
+        "endByte": 667343,
+        "bytes": 7927
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 0,
+        "fail": 1,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "verified-key-step-7",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 25866,
+        "endByte": 48493,
+        "bytes": 22627
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "verified-key-step-24",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 135261,
+        "endByte": 140039,
+        "bytes": 4778
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "verified-key-step-94",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 546483,
+        "endByte": 560226,
+        "bytes": 13743
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "verified-key-step-109",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+        "startByte": 622986,
+        "endByte": 659416,
+        "bytes": 36430
+      },
+      "counters": {
+        "tests": 1,
+        "suites": 0,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "label": "original-dispatch-step27",
+      "raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\dispatch-terminal-retry.stdout.log",
+        "startByte": 5137637,
+        "endByte": 5159606,
+        "bytes": 21969
+      },
+      "counters": {
+        "tests": 8,
+        "suites": 0,
+        "pass": 7,
+        "fail": 1,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    }
+  ],
+  "collectionOnly": true,
+  "rootCauseConfirmed": false,
+  "nativeExecutedLocally": false,
+  "ciRequestsPerformedHere": 0,
+  "productionRequestsPerformedHere": 0,
+  "repositoryWrites": 0,
+  "gatePassDerived": false,
+  "fullG7": false,
+  "fullG8": false,
+  "limitations": [
+    "This only verifies the observed exact d537 original terminal metadata/full raw; no runtime was repeated.",
+    "A quote fixture passing does not prove the historical failure cause.",
+    "Step110 repair source and future SHA CI are separate preparation/runtime cohorts.",
+    "Collector/download status0 is not the failing Proxy or strict cancellation status0."
+  ]
+}

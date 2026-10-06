@@ -1,0 +1,25 @@
+{
+  "at": "2026-10-06T06:00:41.032Z",
+  "finishedAt": "2026-10-06T06:00:42.140Z",
+  "executable": "C:/Program Files/Git/cmd/git.exe",
+  "args": [
+    "-c",
+    "core.longpaths=true",
+    "commit",
+    "-m",
+    "fix(test): preserve native quote timestamp precision"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-precision-root-1fsOZX\\commit-quote-precision.stdout.log",
+    "bytes": 30686,
+    "sha256": "f8ac8b9583ab11d7961ff537fc89254a313df216b894226b090be1c7ae12593e"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-precision-root-1fsOZX\\commit-quote-precision.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

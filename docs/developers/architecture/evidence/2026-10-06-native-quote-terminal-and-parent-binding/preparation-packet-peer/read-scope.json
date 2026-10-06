@@ -1,0 +1,10 @@
+{
+  "schema": "quote-packet-readonly-peer-preparation-v1",
+  "at": "2026-10-06T05:55:02.857Z",
+  "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-quote-precision-root-1fsOZX/prepare-iteration.mjs",
+  "bytes": 9512,
+  "sha256": "05385cf01e0fc949a832b117664396acbbcb559116d148beccce11e3d7986d51",
+  "scope": "Read-only source and later bounded packet audit; no repository/Git/CI/production/runtime mutation",
+  "actualChildExitProven": false,
+  "helperNotExecuted": true
+}

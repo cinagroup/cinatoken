@@ -1,0 +1,735 @@
+{
+  "schema": "cinatoken-d537-ci-terminal-stopwrite-seal-v1",
+  "at": "2026-10-06T06:21:44.368Z",
+  "root": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8",
+  "sourceSha": "d537f83b6389a4e5bbd7f92325f74d77e6bdfc9a",
+  "collectionOnly": true,
+  "rootCauseConfirmed": false,
+  "repositoryWrites": 0,
+  "ciActions": 0,
+  "sourceCollectionAndSecondReadAllExact": true,
+  "files": 92,
+  "totalBytes": 7027898,
+  "entries": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\CLOSED-byte-and-semantic-audit.json",
+      "name": "CLOSED-byte-and-semantic-audit.json",
+      "bytes": 3445,
+      "sha256": "e825ec84977e740c72fe0f5ee38953c867b717e8f7dbbb15a5fc4aad668f5b83",
+      "mtimeMs": 1791267704228.0046
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\FINAL-ci-terminal-observer.json",
+      "name": "FINAL-ci-terminal-observer.json",
+      "bytes": 288169,
+      "sha256": "9d273f6d48c0d45bd4bca062896c7310fdc94f363e6d8dafdec85bd1e626ed53",
+      "mtimeMs": 1791267613296.2402
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\INITIAL-ci-state.json",
+      "name": "INITIAL-ci-state.json",
+      "bytes": 107233,
+      "sha256": "58946b2ac81068db99acdfa2337b12e6d9d63a3b6989d1228187bbed97549ad2",
+      "mtimeMs": 1791266643274.684
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\TERMINAL-ci-collection.json",
+      "name": "TERMINAL-ci-collection.json",
+      "bytes": 111353,
+      "sha256": "3cc8967c1fb4456497ace27ffe6729af53ad868ab9a746f8e85aa080b9a7e4cd",
+      "mtimeMs": 1791267606056.4756
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\analyze-terminal.closed.json",
+      "name": "analyze-terminal.closed.json",
+      "bytes": 886,
+      "sha256": "e80c0d49101d51f48323d11389898cd3acbbf21849bf4af3a094f7c702c5c2df",
+      "mtimeMs": 1791267613312.6
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\analyze-terminal.mjs",
+      "name": "analyze-terminal.mjs",
+      "bytes": 8884,
+      "sha256": "5154f67ee657011a42d89d68da4f45a7506dc5f679a32d1d72d87cd6a89f3211",
+      "mtimeMs": 1791267502304.8892
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\analyze-terminal.stderr.log",
+      "name": "analyze-terminal.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791267613311.5803
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\analyze-terminal.stdout.log",
+      "name": "analyze-terminal.stdout.log",
+      "bytes": 1229,
+      "sha256": "71a2c959fbbe4732b43f09806fb87904a0e4c075669898cde69ab6257989a2dc",
+      "mtimeMs": 1791267613311.5803
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\capture.mjs",
+      "name": "capture.mjs",
+      "bytes": 2442,
+      "sha256": "826ea219068489ab39dcf15bce0a168854f3d91ed82788057f5141931f1a6597",
+      "mtimeMs": 1791260759644.6995
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\close-audit.closed.json",
+      "name": "close-audit.closed.json",
+      "bytes": 909,
+      "sha256": "e7ce57b6fcf28e4fd88bc2fa917a24e2d60c186923a028362a86550c7fcb47c5",
+      "mtimeMs": 1791267704244.4243
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\close-audit.mjs",
+      "name": "close-audit.mjs",
+      "bytes": 3502,
+      "sha256": "90c52bcbcd76cfd29eb50bfe2f3ab0b5de5ef03448269bb303ae36a74ad52d53",
+      "mtimeMs": 1791267701176.1548
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\close-audit.stderr.log",
+      "name": "close-audit.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791267704241.338
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\close-audit.stdout.log",
+      "name": "close-audit.stdout.log",
+      "bytes": 2391,
+      "sha256": "2d906670f71cbbe1637bd3f5bfcc793255c1fe8ab111ca7dd86f4e483a728b64",
+      "mtimeMs": 1791267704241.338
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\collect-terminal.closed.json",
+      "name": "collect-terminal.closed.json",
+      "bytes": 886,
+      "sha256": "5e652a7a2ab105e6ea1fe4281281edada36843a06c629725ee8536cd7a6e42b5",
+      "mtimeMs": 1791267548954.5198
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\collect-terminal.mjs",
+      "name": "collect-terminal.mjs",
+      "bytes": 3001,
+      "sha256": "59d28bfbd55770023550dd24c050971973746073c2008f3b6d69ccdba6f4ec29",
+      "mtimeMs": 1791267339069.6223
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\collect-terminal.stderr.log",
+      "name": "collect-terminal.stderr.log",
+      "bytes": 1783,
+      "sha256": "cded2030ccc9e0ab34a18333ca42290200e66f9d094a93d33b01e62c07c2edc5",
+      "mtimeMs": 1791267548951.4348
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\collect-terminal.stdout.log",
+      "name": "collect-terminal.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791267548951.4348
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\commit-runs-authorized.closed.json",
+      "name": "commit-runs-authorized.closed.json",
+      "bytes": 1057,
+      "sha256": "d88aa02b459cd063667405caff5b3672fd37daf5a4908c71ab7825596dd4b704",
+      "mtimeMs": 1791266560053.656
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\commit-runs-authorized.stderr.log",
+      "name": "commit-runs-authorized.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791266560051.952
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\commit-runs-authorized.stdout.log",
+      "name": "commit-runs-authorized.stdout.log",
+      "bytes": 1718,
+      "sha256": "5ff4bea625c0efe60149288b33def7077aa299f61c6310a642dff249adb485d1",
+      "mtimeMs": 1791266560051.952
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\commit-runs.closed.json",
+      "name": "commit-runs.closed.json",
+      "bytes": 1034,
+      "sha256": "f8a2b52ea8c890b6ae5df832b4ce085df5067ce114657081e8df827c9b4e85ef",
+      "mtimeMs": 1791266530945.7222
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\commit-runs.stderr.log",
+      "name": "commit-runs.stderr.log",
+      "bytes": 300,
+      "sha256": "7dd0fb90baeb4746438a56f2a1958295256c5484498fda221e4f864ed950ddf6",
+      "mtimeMs": 1791266530945.7222
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\commit-runs.stdout.log",
+      "name": "commit-runs.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791266530944.1887
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\compose-initial.closed.json",
+      "name": "compose-initial.closed.json",
+      "bytes": 959,
+      "sha256": "44f86664d84088610cd2f9771afa0b3123905fa5a0f1671993f628adcf35b897",
+      "mtimeMs": 1791266642640.7512
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\compose-initial.stderr.log",
+      "name": "compose-initial.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791266642640.7512
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\compose-initial.stdout.log",
+      "name": "compose-initial.stdout.log",
+      "bytes": 2424,
+      "sha256": "9729934978ddd713c64aabf55fadc33cec262ef0656e44dad836116759034b82",
+      "mtimeMs": 1791266642640.7512
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\compose-terminal.closed.json",
+      "name": "compose-terminal.closed.json",
+      "bytes": 961,
+      "sha256": "4c50c8c24cdcb614d43de449802f21084bedac4998178532873cb09eda06f883",
+      "mtimeMs": 1791267544686.1694
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\compose-terminal.stderr.log",
+      "name": "compose-terminal.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791267544684.5618
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\compose-terminal.stdout.log",
+      "name": "compose-terminal.stdout.log",
+      "bytes": 2645,
+      "sha256": "c9d62b08151ff5ef14701f6d5afd0b17c8520e80be105acd2fcd49204853f103",
+      "mtimeMs": 1791267544684.5618
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\dispatch-terminal-retry.closed.json",
+      "name": "dispatch-terminal-retry.closed.json",
+      "bytes": 932,
+      "sha256": "5d7a9b8876cfebeffbd033c205d72441dba1700401cd5011c537856c1664187f",
+      "mtimeMs": 1791267606049.2827
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\dispatch-terminal-retry.stderr.log",
+      "name": "dispatch-terminal-retry.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791267606044.5576
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\dispatch-terminal-retry.stdout.log",
+      "name": "dispatch-terminal-retry.stdout.log",
+      "bytes": 5159606,
+      "sha256": "d1a431e6f7bafbddce2045e949a771cc5d4783f4cccad8dac690c95e0ef627f7",
+      "mtimeMs": 1791267606044.5576
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\dispatch-terminal.closed.json",
+      "name": "dispatch-terminal.closed.json",
+      "bytes": 915,
+      "sha256": "72c79b8a08b7ba63f5a95c2ed2fc05fbc665fb12ed267b80275d0e6cbab96f62",
+      "mtimeMs": 1791267548911.8699
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\dispatch-terminal.stderr.log",
+      "name": "dispatch-terminal.stderr.log",
+      "bytes": 70,
+      "sha256": "976759653facdb9c9b607a797f11cb6283ee60203abaae2a40247248cf301d4c",
+      "mtimeMs": 1791267548910.3794
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\dispatch-terminal.stdout.log",
+      "name": "dispatch-terminal.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791267548909.54
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.closed.json",
+      "name": "native-terminal.closed.json",
+      "bytes": 915,
+      "sha256": "7a40cc7bad0e068f21043b6e59a4eab6c75b5e0f349417bde78e84dd983396f3",
+      "mtimeMs": 1791267548939.554
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stderr.log",
+      "name": "native-terminal.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791267548939.554
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\native-terminal.stdout.log",
+      "name": "native-terminal.stdout.log",
+      "bytes": 667343,
+      "sha256": "29f68229763fc5c214ff07c380e91905ad1c70cfe4c00e674e3621fed338ba49",
+      "mtimeMs": 1791267548938.589
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\observe-initial.closed.json",
+      "name": "observe-initial.closed.json",
+      "bytes": 911,
+      "sha256": "a247afb70dae3a4c684d89abef4412e0f46e06b7fb0e8b085261c0cdb0194469",
+      "mtimeMs": 1791266643290.2983
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\observe-initial.mjs",
+      "name": "observe-initial.mjs",
+      "bytes": 1902,
+      "sha256": "da6fe2802ff7d6f20d5901a47246c6873909eb22804d0c7085e1e6f64f6e1842",
+      "mtimeMs": 1791266630328.6692
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\observe-initial.stderr.log",
+      "name": "observe-initial.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791266643288.6396
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\observe-initial.stdout.log",
+      "name": "observe-initial.stdout.log",
+      "bytes": 4159,
+      "sha256": "3bb1e2298c1613e6bff3416c6640154bc11a07fdfc2c71c55b9be6eec165bee2",
+      "mtimeMs": 1791266643288.6396
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\original-proxy-workflow.closed.json",
+      "name": "original-proxy-workflow.closed.json",
+      "bytes": 874,
+      "sha256": "7b9fc0c3a3cd37169d599b7da1236b8f6e8e1944e3586b0ad36f2fb627c6efe9",
+      "mtimeMs": 1791266643274.684
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\original-proxy-workflow.stderr.log",
+      "name": "original-proxy-workflow.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791266643272.52
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\original-proxy-workflow.stdout.log",
+      "name": "original-proxy-workflow.stdout.log",
+      "bytes": 45895,
+      "sha256": "8e883e7f21f77f8367d361f6bd3d060e16c241c28641b3eac85af6835841f152",
+      "mtimeMs": 1791266643272.52
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\original-workflow-map-v2.json",
+      "name": "original-workflow-map-v2.json",
+      "bytes": 81936,
+      "sha256": "b40e56bfabc0bef4a426ca1978d2c1f69b52aad5ca827500530b4fb09803fc1a",
+      "mtimeMs": 1791267044541.7556
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\prepare-map-v2.closed.json",
+      "name": "prepare-map-v2.closed.json",
+      "bytes": 907,
+      "sha256": "0221f0d2c13b264cca20f7ad73f33d6b4a053c0125e7a8cdc296bd446bfc59b9",
+      "mtimeMs": 1791267042639.5896
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\prepare-map-v2.mjs",
+      "name": "prepare-map-v2.mjs",
+      "bytes": 803,
+      "sha256": "ed79d05ce72d43f0f4467419d90a63620efe9eaf72719dc167ac5e4716cdaae9",
+      "mtimeMs": 1791267040785.8198
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\prepare-map-v2.stderr.log",
+      "name": "prepare-map-v2.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791267042637.0151
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\prepare-map-v2.stdout.log",
+      "name": "prepare-map-v2.stdout.log",
+      "bytes": 170,
+      "sha256": "8ba0faed73f72715043f638d957637e5bee87b77adedde0ea00c7b78c0f4df27",
+      "mtimeMs": 1791267042637.0151
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\prepare-workflow-map-v2.closed.json",
+      "name": "prepare-workflow-map-v2.closed.json",
+      "bytes": 934,
+      "sha256": "07dc9341cc0122a4075c38b52f5d80d391a28e0fa985ec39563e356da8ffd6bd",
+      "mtimeMs": 1791267044556.9001
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\prepare-workflow-map-v2.mjs",
+      "name": "prepare-workflow-map-v2.mjs",
+      "bytes": 2739,
+      "sha256": "f6b3e6a808cc2dab59afc46328962b9eb6a0ce69015e37cea884f92e8ea1b250",
+      "mtimeMs": 1791267042624.709
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\prepare-workflow-map-v2.stderr.log",
+      "name": "prepare-workflow-map-v2.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791267044555.1904
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\prepare-workflow-map-v2.stdout.log",
+      "name": "prepare-workflow-map-v2.stdout.log",
+      "bytes": 398,
+      "sha256": "a4dd04d504122ff64ca50090f6ad2f7f516e2dfd0c1628486f93c773021d1fe3",
+      "mtimeMs": 1791267044555.1904
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\prepare-workflow-map.closed.json",
+      "name": "prepare-workflow-map.closed.json",
+      "bytes": 925,
+      "sha256": "5dc780bce1291e939af0dd7502bb0ab693392a3608abb484a515d078585d39d1",
+      "mtimeMs": 1791266829367.7803
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\prepare-workflow-map.mjs",
+      "name": "prepare-workflow-map.mjs",
+      "bytes": 2731,
+      "sha256": "11c3a9cf7f7a18bcc7402854e62ae90732881e1d4c3d4b219b096dc0a4dc11ce",
+      "mtimeMs": 1791266827219.452
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\prepare-workflow-map.stderr.log",
+      "name": "prepare-workflow-map.stderr.log",
+      "bytes": 467,
+      "sha256": "780ba9c683bd32164cf9a89567abd5c8497ea17848ea3bee99aa3c5ad53287bb",
+      "mtimeMs": 1791266829366.2085
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\prepare-workflow-map.stdout.log",
+      "name": "prepare-workflow-map.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791266829366.2085
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\proxy-initial.closed.json",
+      "name": "proxy-initial.closed.json",
+      "bytes": 956,
+      "sha256": "55d8aadd6041454138218ff3e19e6b4725906b3c8d006e987e16758902b4ab07",
+      "mtimeMs": 1791266643220.4097
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\proxy-initial.stderr.log",
+      "name": "proxy-initial.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791266643218.7993
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\proxy-initial.stdout.log",
+      "name": "proxy-initial.stdout.log",
+      "bytes": 47992,
+      "sha256": "158939a6c16f27187a1686dda98ecb13e7ffa4941a1d461ba38bfcd139833d49",
+      "mtimeMs": 1791266643218.7993
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\proxy-progress-1.closed.json",
+      "name": "proxy-progress-1.closed.json",
+      "bytes": 962,
+      "sha256": "b248abce7d0d8fcb90509384be825103b8d8f6bbf5d937973fd1b35aa1b2a2f7",
+      "mtimeMs": 1791267101674.406
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\proxy-progress-1.stderr.log",
+      "name": "proxy-progress-1.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791267101672.678
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\proxy-progress-1.stdout.log",
+      "name": "proxy-progress-1.stdout.log",
+      "bytes": 49037,
+      "sha256": "8d340faf982b9fa1b5110b5d67429a5552825d40b8a0cdb5d3e78946dd7bc585",
+      "mtimeMs": 1791267101671.83
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\proxy-terminal.closed.json",
+      "name": "proxy-terminal.closed.json",
+      "bytes": 958,
+      "sha256": "98593a4363da84254c2b13c56bda6e111697019f1c431927b8e18672964279a9",
+      "mtimeMs": 1791267540854.445
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\proxy-terminal.stderr.log",
+      "name": "proxy-terminal.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791267540854.445
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\proxy-terminal.stdout.log",
+      "name": "proxy-terminal.stdout.log",
+      "bytes": 49493,
+      "sha256": "b0a818cd2df624275eb96daeee83b98ef34f2588f68236d93d38be08b342a9d5",
+      "mtimeMs": 1791267540854.445
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\proxy-watch-1.closed.json",
+      "name": "proxy-watch-1.closed.json",
+      "bytes": 1026,
+      "sha256": "ebc20eac7249731330fdc7cc6d44dc0ebccc9a53f204bf74490307bdf37db798",
+      "mtimeMs": 1791267434647.0413
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\proxy-watch-1.stderr.log",
+      "name": "proxy-watch-1.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791266743201.6677
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\proxy-watch-1.stdout.log",
+      "name": "proxy-watch-1.stdout.log",
+      "bytes": 321916,
+      "sha256": "3e8e51025f1739170ffcc9e52775748d172a0ec309b506704fc0d9f724be8506",
+      "mtimeMs": 1791267434625.2422
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\recover-dispatch-collection.closed.json",
+      "name": "recover-dispatch-collection.closed.json",
+      "bytes": 919,
+      "sha256": "90bd1c70f0c3849ac7e650179ff578a6340998ee6833a5c12ecaf05336e54ca0",
+      "mtimeMs": 1791267606075.329
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\recover-dispatch-collection.mjs",
+      "name": "recover-dispatch-collection.mjs",
+      "bytes": 2433,
+      "sha256": "ddc8f12f2a1824a2cf0b2a60248d2979ba5ea7c713ef0d8220ec51fa47424b5a",
+      "mtimeMs": 1791267595418.0674
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\recover-dispatch-collection.stderr.log",
+      "name": "recover-dispatch-collection.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791267606073.3926
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\recover-dispatch-collection.stdout.log",
+      "name": "recover-dispatch-collection.stdout.log",
+      "bytes": 1935,
+      "sha256": "5a00cbf09ba7d331f0b7811d0ea3de3972f7e7ff7c741f52c307024f1060d082",
+      "mtimeMs": 1791267606071.8274
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\release-initial.closed.json",
+      "name": "release-initial.closed.json",
+      "bytes": 959,
+      "sha256": "6142163cb8fef2d4b63d7553707676750e0e019e1fed8156d0c4ed53656167f1",
+      "mtimeMs": 1791266642614.8418
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\release-initial.stderr.log",
+      "name": "release-initial.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791266642613.1658
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\release-initial.stdout.log",
+      "name": "release-initial.stdout.log",
+      "bytes": 2168,
+      "sha256": "c25ff040719a9ae88590efe64f04e9b527d73642899acfce0446d1bcf0f172a3",
+      "mtimeMs": 1791266642613.1658
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\run.mjs",
+      "name": "run.mjs",
+      "bytes": 295,
+      "sha256": "947535c0840e81163e23aac295e120917be16ee51e3e0819fac46437c5f06d87",
+      "mtimeMs": 1791260771467.7192
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\seal-terminal.mjs",
+      "name": "seal-terminal.mjs",
+      "bytes": 2413,
+      "sha256": "276832206df2afcd745b9498c524cf3e51699161f0ffad52994a604b9acaac06",
+      "mtimeMs": 1791267702394.7175
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\terminal-tools-syntax.closed.json",
+      "name": "terminal-tools-syntax.closed.json",
+      "bytes": 908,
+      "sha256": "b47c520ae4169e134881fd26ae6068b15400509d1d28df4c5ba360c5f89d1e76",
+      "mtimeMs": 1791267504081.3123
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\terminal-tools-syntax.stderr.log",
+      "name": "terminal-tools-syntax.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791267504081.3123
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\terminal-tools-syntax.stdout.log",
+      "name": "terminal-tools-syntax.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791267504081.3123
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\verify-initial.closed.json",
+      "name": "verify-initial.closed.json",
+      "bytes": 957,
+      "sha256": "f74ab8efa4ad3580b0e61421dbcb7b6381c3aeebd11621236bfc04d230e22463",
+      "mtimeMs": 1791266642787.7852
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\verify-initial.stderr.log",
+      "name": "verify-initial.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791266642787.2432
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\verify-initial.stdout.log",
+      "name": "verify-initial.stdout.log",
+      "bytes": 1698,
+      "sha256": "da2141dc8eb527de105d8427a99b36c5a5fecd5e3b1d99c70badb91cdf339c9f",
+      "mtimeMs": 1791266642786.5806
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\watch-proxy.mjs",
+      "name": "watch-proxy.mjs",
+      "bytes": 1860,
+      "sha256": "d229c59437e89ecdb6294c8bc8f4bb5ef23e0667a9a493fc26879946388af52e",
+      "mtimeMs": 1791266735043.09
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\web-initial.closed.json",
+      "name": "web-initial.closed.json",
+      "bytes": 951,
+      "sha256": "e60477d21c5a528da6f46adf09f9de420ba392333459759fcabaac97537560c4",
+      "mtimeMs": 1791266642759.3262
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\web-initial.stderr.log",
+      "name": "web-initial.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791266642757.7002
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\web-initial.stdout.log",
+      "name": "web-initial.stdout.log",
+      "bytes": 6969,
+      "sha256": "449bf8fb13b19e482ac7a539995ce333ab2d4175876872530613dfd7cfc2f3a0",
+      "mtimeMs": 1791266642757.7002
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\web-terminal.closed.json",
+      "name": "web-terminal.closed.json",
+      "bytes": 953,
+      "sha256": "1dec6a8a61f6a1444919a290dab16fc846a0944b8b8580df1b1871f8c0da1e2f",
+      "mtimeMs": 1791267544046.61
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\web-terminal.stderr.log",
+      "name": "web-terminal.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeMs": 1791267544045.3455
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\web-terminal.stdout.log",
+      "name": "web-terminal.stdout.log",
+      "bytes": 7397,
+      "sha256": "c1955def340d710467ae0fba0077c6f6dbcd26247b84c3c555c4dac57110db06",
+      "mtimeMs": 1791267544045.3455
+    }
+  ],
+  "actualClosedAudit": {
+    "at": "2026-10-06T06:21:44.102Z",
+    "finishedAt": "2026-10-06T06:21:44.240Z",
+    "executable": "C:\\Program Files\\nodejs\\node.exe",
+    "args": [
+      "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\close-audit.mjs"
+    ],
+    "cwd": "C:/cinagroup/cinatoken",
+    "actualExit": 0,
+    "signal": null,
+    "spawnError": null,
+    "stdout": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\close-audit.stdout.log",
+      "bytes": 2391,
+      "sha256": "2d906670f71cbbe1637bd3f5bfcc793255c1fe8ab111ca7dd86f4e483a728b64"
+    },
+    "stderr": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\close-audit.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "actualCloses": 25,
+  "zero": 20,
+  "nonzero": [
+    {
+      "name": "collect-terminal.closed.json",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null
+    },
+    {
+      "name": "commit-runs.closed.json",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null
+    },
+    {
+      "name": "dispatch-terminal.closed.json",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null
+    },
+    {
+      "name": "prepare-workflow-map.closed.json",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null
+    },
+    {
+      "name": "proxy-watch-1.closed.json",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null
+    }
+  ],
+  "null": [],
+  "originalFullLogs": {
+    "native": {
+      "bytes": 667343,
+      "sha256": "29f68229763fc5c214ff07c380e91905ad1c70cfe4c00e674e3621fed338ba49"
+    },
+    "dispatch": {
+      "bytes": 5159606,
+      "sha256": "d1a431e6f7bafbddce2045e949a771cc5d4783f4cccad8dac690c95e0ef627f7"
+    }
+  },
+  "final": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-d537-ci-terminal-observer-14da29e39da54262917a3e2d0d5ed3c8\\FINAL-ci-terminal-observer.json",
+    "bytes": 288169,
+    "sha256": "9d273f6d48c0d45bd4bca062896c7310fdc94f363e6d8dafdec85bd1e626ed53"
+  },
+  "afterClose": true,
+  "selfExcluded": "TERMINAL-STOPWRITE-SEAL.json",
+  "stopWrite": true,
+  "truthBoundary": "This seal verifies captured file bytes and read-only collection. Original native and dispatch failures remain failures. No source/CI/application/database operation was rerun."
+}

@@ -97,7 +97,7 @@ test('legacy-aware parent activation reserves old IDs and admits only trusted ne
       }
       report.sourceSha256.formalMigrationCorpus = digest(corpus.join('\n'));
       const migratorUrl = `postgres://cinatoken_gateway_migrator:${password}@127.0.0.1:${cluster.port}/postgres`;
-      await grantPg73RuntimeFixture({ cluster, migrator: sql, migratorUrl });
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
       const namedSql = {};
       for (const [name, url] of [
         ['definer', definer], ['singleClaim', singleClaim], ['reservation', reservation],
@@ -146,7 +146,7 @@ test('legacy-aware parent activation reserves old IDs and admits only trusted ne
         await tx.unsafe(`SET LOCAL ${setting} = 'reviewed-v1'`);
         await tx.unsafe(body).simple();
       });
-      await grantPg73RuntimeFixture({ cluster, migrator: sql, migratorUrl });
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
       builderFixture = await createPg73LegacyParentBuilderFixture();
       report.pg73BuilderManifest = builderFixture.manifest;
       const bundle = await builderFixture.build({ activation: 'reviewed-v1' });
@@ -388,7 +388,7 @@ test('legacy-aware parent activation reserves old IDs and admits only trusted ne
         committedMissingVersion: 'rejected before parent DDL',
       });
       await activate();
-      await grantPg73RuntimeFixture({ cluster, migrator: sql, migratorUrl });
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
       const [postSwitch] = await sql.unsafe(`SELECT
         (SELECT count(*)::integer FROM ${schema}.request_dispatch_intents) AS old_intents,
         (SELECT count(*)::integer FROM ${schema}.request_dispatch_requests) AS parents,

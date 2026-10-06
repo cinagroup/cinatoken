@@ -1,0 +1,262 @@
+{
+  "schema": "cinatoken-legacy-parent-three-bindings-independent-peer-final.v1",
+  "at": "2026-10-06T06:30:57.674Z",
+  "supportedForCommit": true,
+  "blockingFindings": [],
+  "staticSourceRepairOnly": true,
+  "target": "C:/cinagroup/cinatoken/scripts/db/cutover/postgres-legacy-parent-activation.native.test.mjs",
+  "baselineAuthority": "Exact Root supplied original d537 source SHA and producer frozen before snapshot; no new Git invocation.",
+  "before": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/source-before-v2.mjs",
+    "bytes": 30195,
+    "sha256": "8b6aae0e4250604a60446f3d02ae0c3683416c26a7d01de58cc26cd66bba7f18"
+  },
+  "after": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/source-after.mjs",
+    "bytes": 30210,
+    "sha256": "7acb429e3c22ce959daa9e925f7d460ea30902eb077f09f39caa949cc8220f7a"
+  },
+  "ownerFINAL": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/FINAL-legacy-parent-client-binding-repair.json",
+    "bytes": 7013,
+    "sha256": "b80fa3540b6cd4f25e75facedff761bcb56ea83519a0cddfe5a3209c5d97043a"
+  },
+  "ownerSTOPWRITE": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/STOPWRITE.json",
+    "bytes": 9618,
+    "sha256": "190413ce95c40289fbf0708d5da90f974e65b4a18a534607db37e27a16d977bf"
+  },
+  "ownerComplete27FileSetAnd26PinsExactBeforeReaderError": true,
+  "authorizedChanges": [
+    {
+      "line": 100,
+      "oldProperty": "migrator",
+      "newProperty": "migrator: sql"
+    },
+    {
+      "line": 149,
+      "oldProperty": "migrator",
+      "newProperty": "migrator: sql"
+    },
+    {
+      "line": 391,
+      "oldProperty": "migrator",
+      "newProperty": "migrator: sql"
+    }
+  ],
+  "independentCompletedSourceAudit": {
+    "source": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-binding-independent-peer-1a10fe74c562dfcfe66a6415/audit-three-bindings.mjs",
+      "bytes": 9284,
+      "sha256": "6d19a9269068acd2ad9b01fdf5b49c7e94fc7236d7d7fafce06234b8768980a6"
+    },
+    "trueClose": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-binding-independent-peer-1a10fe74c562dfcfe66a6415/audit.closed.json",
+      "bytes": 1066,
+      "sha256": "33118aeb7b93ddc219d736a8c56bc824783db345b741bc7d2131047e90802bb4"
+    },
+    "actualExit": 1,
+    "sourceAssertionsCompletedBeforeError": true,
+    "sourceWholeReaderNotUpgradedToZero": true,
+    "failureAt": {
+      "line": 7,
+      "column": 211,
+      "operation": "Owner fourth receipt timedOut optional schema field",
+      "reason": "Fourth genuine closed owner receipt omitted timedOut; incorrect independent reader assertion required false. No source audit failed."
+    },
+    "completedBeforeReceiptError": {
+      "only3PropertiesChanged": true,
+      "sourceBytesIncrease15": true,
+      "reverseEntireSourceBytesExact": true,
+      "reversedEntireASTExact": true,
+      "all60OriginalAssertionsDirectSourceAndASTExact": true,
+      "allSQLTemplatesDirectSourceExact": true,
+      "allOtherSourceSQLWaitsTimeoutRolesImportsGrantsClientsCleanupExact": true,
+      "sqlClientDeclarationAt79ClientRoleCinATokenMigratorPassword": true,
+      "migratorURLRolePasswordClusterPortMatchStatic": true,
+      "existingSqlVisibleAtEachCallLexically": true,
+      "clientsPushIncludesSql": true,
+      "clientsMapSqlEndTimeout1CleanupExact": true,
+      "helperOriginal6849BytesExact": true,
+      "helperAcceptsMigratorObjectPropertyAndUsesClient": true
+    },
+    "notRepeated": true
+  },
+  "existingBinding": {
+    "sqlDeclarationLine": 79,
+    "role": "cinatoken_gateway_migrator",
+    "sqlCreatedBy": "client(cluster, cinatoken_gateway_migrator, password)",
+    "samePasswordPortRoleAsMigratorURL": true,
+    "all3CallsWithinSameExistingSqlLexicalScope": true,
+    "clientRegisteredInExistingClientsArray": true,
+    "existingClientsSqlEndTimeout1AndClusterCleanupPreserved": true
+  },
+  "helper": {
+    "descriptor": {
+      "path": "C:/cinagroup/cinatoken/scripts/db/cutover/pg73-native-fixture.mjs",
+      "bytes": 6849,
+      "sha256": "124ddd43c2594d0daaac66a4e7158e5df90b00a6d73f03cbcac9e8f853a7346f"
+    },
+    "producerCopyExact": true,
+    "migratorPropertyInterfaceCompatible": true,
+    "usesPassedMigratorClient": true,
+    "notImportedOrExecuted": true
+  },
+  "producerProvenance": {
+    "trueChildClosed": 4,
+    "actual0": 3,
+    "actual1": 1,
+    "allRawBytesSHAsExact": true,
+    "producerInitialCanonicalASTMissingLocFailureRetained": true,
+    "missingTimedOutFieldIsNotChildFailure": true,
+    "receipts": [
+      {
+        "file": "node-check.result.json",
+        "receiptPin": {
+          "relative": "node-check.result.json",
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/node-check.result.json",
+          "bytes": 1034,
+          "sha256": "283ed9568df14360c4433714a8fc7aa08c1e74fae4d4a6287e1c16dfb8592977"
+        },
+        "actualExit": 0,
+        "startedAt": "2026-10-06T06:24:51.465Z",
+        "closedAt": "2026-10-06T06:24:51.533Z",
+        "timedOutFieldPresent": false,
+        "timedOutField": null,
+        "stdout": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/node-check.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/node-check.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "file": "repair-source-v2.result.json",
+        "receiptPin": {
+          "relative": "repair-source-v2.result.json",
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/repair-source-v2.result.json",
+          "bytes": 1121,
+          "sha256": "4066370bfa4d1619251bf5d791abafb6844efc53c879af640f7d1f9215fd9b85"
+        },
+        "actualExit": 0,
+        "startedAt": "2026-10-06T06:24:51.306Z",
+        "closedAt": "2026-10-06T06:24:51.558Z",
+        "timedOutFieldPresent": true,
+        "timedOutField": false,
+        "stdout": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/repair-source-v2.stdout.log",
+          "bytes": 643,
+          "sha256": "177f229d6bc7624f1c2fed1fb245f22296768265e208b13e4b7bcd1d2c3ac101"
+        },
+        "stderr": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/repair-source-v2.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "file": "repair-source.result.json",
+        "receiptPin": {
+          "relative": "repair-source.result.json",
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/repair-source.result.json",
+          "bytes": 1113,
+          "sha256": "0e0b22e2a6d846231ce3fad8f64d87b5e7a48a7aa967656864ea61bb7e320212"
+        },
+        "actualExit": 1,
+        "startedAt": "2026-10-06T06:24:20.132Z",
+        "closedAt": "2026-10-06T06:24:20.619Z",
+        "timedOutFieldPresent": true,
+        "timedOutField": false,
+        "stdout": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/repair-source.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/repair-source.stderr.log",
+          "bytes": 1779,
+          "sha256": "c40cddbf64d0caafa5dca7295e3ff6f2e26b0135795d1e6cbefde6dd931644b7"
+        }
+      },
+      {
+        "file": "seal-minimal-repair.result.json",
+        "receiptPin": {
+          "relative": "seal-minimal-repair.result.json",
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/seal-minimal-repair.result.json",
+          "bytes": 1119,
+          "sha256": "84de6a29ee6d4e9f2b68f2199ccf781f275ad75664d1bb318474bee2d13bef5f"
+        },
+        "actualExit": 0,
+        "startedAt": "2026-10-06T06:25:31.387Z",
+        "closedAt": "2026-10-06T06:25:31.466Z",
+        "timedOutFieldPresent": true,
+        "timedOutField": false,
+        "stdout": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/seal-minimal-repair.stdout.log",
+          "bytes": 361,
+          "sha256": "9c579c8689e3ca64dc68f6ef4e0358defde572229d856481356062fd68d16666"
+        },
+        "stderr": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/seal-minimal-repair.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    ]
+  },
+  "independentProvenance": {
+    "originalSourceReaderActual1": {
+      "schema": "cinatoken-independent-static-audit-child-close.v1",
+      "startedAt": "2026-10-06T06:29:41.388Z",
+      "closedAt": "2026-10-06T06:29:41.618Z",
+      "executable": "C:/Program Files/nodejs/node.exe",
+      "argv": [
+        "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-legacy-parent-binding-independent-peer-1a10fe74c562dfcfe66a6415\\audit-three-bindings.mjs",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-binding-independent-peer-1a10fe74c562dfcfe66a6415"
+      ],
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-legacy-parent-binding-independent-peer-1a10fe74c562dfcfe66a6415\\audit.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-legacy-parent-binding-independent-peer-1a10fe74c562dfcfe66a6415\\audit.stderr.log",
+        "bytes": 940,
+        "sha256": "e0144907c790404739234c441adfc1c28f051720c032b15e9836709a2089f914"
+      }
+    },
+    "continuationOnlyReceiptSchemaAndFinalization": true,
+    "fullSourceAuditNotRerun": true,
+    "expectedClosedReceipt": "C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-binding-independent-peer-1a10fe74c562dfcfe66a6415/finalize.closed.json"
+  },
+  "truthBoundary": {
+    "originalD537Step110ReferenceErrorActual1Preserved": true,
+    "originalD537111to113SkipNotPromoted": true,
+    "originalStrict8Tests7Pass1FailPreserved": true,
+    "newPGNativeLinuxNotExecuted": true,
+    "newNativePass": false,
+    "newCINotExecutedOrQueried": true,
+    "gitRuns": 0,
+    "gitWrites": 0,
+    "sourceWrites": 0,
+    "MDWrites": 0,
+    "DBRuns": 0,
+    "appRuns": 0,
+    "controlRuns": 0,
+    "networkRequests": 0,
+    "oldFrozenRootsWritten": false,
+    "helperChanged": false,
+    "productionChanged": false,
+    "fullG7": false,
+    "G8": false,
+    "fullGoalComplete": false
+  },
+  "STOPWRITEAfterFinalCloseAndSeal": true
+}

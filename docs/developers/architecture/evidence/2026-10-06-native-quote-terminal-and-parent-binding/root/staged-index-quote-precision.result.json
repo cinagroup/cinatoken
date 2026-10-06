@@ -1,0 +1,29 @@
+{
+  "at": "2026-10-06T05:59:35.456Z",
+  "finishedAt": "2026-10-06T05:59:35.501Z",
+  "executable": "C:/Program Files/Git/cmd/git.exe",
+  "args": [
+    "-c",
+    "core.longpaths=true",
+    "ls-files",
+    "-s",
+    "-z",
+    "--",
+    "scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs",
+    "docs/developers/architecture/web-frontend-migration.md",
+    "docs/developers/architecture/evidence/2026-10-06-quote-version-text-parameters-preparation"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-precision-root-1fsOZX\\staged-index-quote-precision.stdout.log",
+    "bytes": 37026,
+    "sha256": "e00a9f79e3a30e4dcd1feccfcea2d27b6bd120d3b619bcc299ffe71d58bab4c2"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-quote-precision-root-1fsOZX\\staged-index-quote-precision.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

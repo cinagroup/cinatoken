@@ -1,0 +1,89 @@
+{
+  "schema": "native-quote-terminal-packet-peer-stopwrite-v1",
+  "sealedAt": "2026-10-06T06:36:23.940Z",
+  "sourceRoot": "C:/Users/cina/AppData/Local/Temp/cinatoken-d537-terminal-packet-peer-Fvm9uF",
+  "filesBeforeSelf": 14,
+  "totalBytesBeforeSelf": 1088337,
+  "entries": [
+    {
+      "file": "FINAL-native-quote-terminal-packet-readonly-peer.json",
+      "bytes": 188304,
+      "sha256": "cb09f2ada365026b5837ca0cb7f7aa87c658bd9d06465dd3af316037a9548a82"
+    },
+    {
+      "file": "PRECHECK-original-d537-terminal.json",
+      "bytes": 59493,
+      "sha256": "c6718f96e011229f8159eacf6c0989a47ff46da2373d194c73e6fadcc1caf8bc"
+    },
+    {
+      "file": "audit-final-packet.mjs",
+      "bytes": 9822,
+      "sha256": "851b53760ac034c8ae98748e149ae32e5757e64a8381de203ca3761c0cb8ca3e"
+    },
+    {
+      "file": "audit-original-terminal.mjs",
+      "bytes": 8244,
+      "sha256": "7ce9be6805e9c725ec4bfe9fa5f4c0d94a2a0689a6e172bccefa6d27e34775d6"
+    },
+    {
+      "file": "capture-readonly.mjs",
+      "bytes": 1405,
+      "sha256": "73f8ec0159b113f5339119649fe0ccfd402740897076ddf439d9f91009bb4b67"
+    },
+    {
+      "file": "checklist-before.md",
+      "bytes": 816360,
+      "sha256": "3a2766f735f13c8c024f09a54397c2ed8dda809b589c7a96857e25099f5ac6b3"
+    },
+    {
+      "file": "final-packet-audit.closed.json",
+      "bytes": 894,
+      "sha256": "423957a4c2f503711d0c01ed5c230cb876f7e5f0fd5e5ae811d6f9163622ce02"
+    },
+    {
+      "file": "final-packet-audit.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "final-packet-audit.stdout.log",
+      "bytes": 462,
+      "sha256": "3d84c5ee099407618fbecbc256f9bfbb0e7f88c715745f2d7a49367a7a031e0b"
+    },
+    {
+      "file": "original-terminal-audit.closed.json",
+      "bytes": 909,
+      "sha256": "0ec964472f135599123a984ae0a2068cf21b0c1e4444cb419f633b177407b26b"
+    },
+    {
+      "file": "original-terminal-audit.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "original-terminal-audit.stdout.log",
+      "bytes": 508,
+      "sha256": "905ea3023743fd5c841d627d3b79503dd8119bbeb2231523544c5a3b5d641101"
+    },
+    {
+      "file": "seal-peer.mjs",
+      "bytes": 1615,
+      "sha256": "fcfa43c6a33edcdf42efa0ed7df45ce20076a7492e70dda06f8835be4017e080"
+    },
+    {
+      "file": "source-final-metadata-pin.json",
+      "bytes": 321,
+      "sha256": "4ad89d81ad16893ae74b0ce5839ef8dcabb8afc9aebfd06f0adfff753862b375"
+    }
+  ],
+  "selfExcludedOnly": true,
+  "STOPWRITE": true,
+  "noFurtherWrites": true,
+  "collectionOnly": true,
+  "gatePassDerived": false,
+  "rootCauseConfirmed": false,
+  "nativeExecutedHere": false,
+  "ciRequestsHere": 0,
+  "productionRequestsHere": 0,
+  "sealDataOperationNotChildReceipt": true
+}

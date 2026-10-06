@@ -1,0 +1,28 @@
+{
+  "schema": "cinatoken-owned-source-repair-command-closed-v1",
+  "closed": true,
+  "beganAt": "2026-10-06T06:25:31.387Z",
+  "endedAt": "2026-10-06T06:25:31.466Z",
+  "program": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/seal-minimal-repair.mjs"
+  ],
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "timedOut": false,
+  "stdout": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/seal-minimal-repair.stdout.log",
+    "bytes": 361,
+    "sha256": "9c579c8689e3ca64dc68f6ef4e0358defde572229d856481356062fd68d16666"
+  },
+  "stderr": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-legacy-parent-client-binding-repair-c3e097398c054113961be652993e62b0/seal-minimal-repair.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "appOrPostgresExecution": false,
+  "ciExecution": false,
+  "gitExecution": false,
+  "gatePassDerived": false
+}
