@@ -1,0 +1,10 @@
+{
+  "beforeBytes": 873253,
+  "beforeSha256": "6d61666ce193d825396488e291c23899baff695bc8982bf67c8bb5a24058e6af",
+  "afterBytes": 873423,
+  "afterSha256": "63ce789bc24f546c873440d2b6fa68eea109b3cabe6a6457b1429efa79fe99a0",
+  "changes": [
+    "SSR and asset byte proof distinction",
+    "dynamic versus fixed progress metadata distinction"
+  ]
+}

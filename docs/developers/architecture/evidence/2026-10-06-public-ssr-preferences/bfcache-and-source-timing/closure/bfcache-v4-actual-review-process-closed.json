@@ -1,0 +1,26 @@
+{
+  "startedAt": "2026-10-06T14:17:21.214Z",
+  "closedAt": "2026-10-06T14:17:23.192Z",
+  "executable": "C:/Users/cina/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+  "args": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-fixture-c60a7fdf3ecc40f49e04ef65e7956771\\review-bfcache-v4-actual.py"
+  ],
+  "pid": 4000,
+  "actualExitCode": 0,
+  "signal": null,
+  "spawnError": null,
+  "networkRequestsMade": 0,
+  "browserOperationsMade": 0,
+  "files": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-fixture-c60a7fdf3ecc40f49e04ef65e7956771\\bfcache-v4-actual-review.stdout.log",
+      "bytes": 383,
+      "sha256": "149417678ccda5e15f779cdb8b33dc0c38dd6d09f0d0bf393d4c90fc5f413e51"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-fixture-c60a7fdf3ecc40f49e04ef65e7956771\\bfcache-v4-actual-review.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "startedAt": "2026-10-06T14:27:58.113Z",
+  "closedAt": "2026-10-06T14:27:58.209Z",
+  "executable": "C:/Users/cina/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-bfcache-continuation-64228ac856184788ac472e5bbe6acb64/update-md-595.py"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExitCode": 1,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-bfcache-continuation-64228ac856184788ac472e5bbe6acb64\\update-md-595.stdout.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-bfcache-continuation-64228ac856184788ac472e5bbe6acb64\\update-md-595.stderr.log",
+    "bytes": 336,
+    "sha256": "f6f56918f137e4b29e655845343a391d45cb3c4c4f8a39cc02be55a4416167b2"
+  }
+}

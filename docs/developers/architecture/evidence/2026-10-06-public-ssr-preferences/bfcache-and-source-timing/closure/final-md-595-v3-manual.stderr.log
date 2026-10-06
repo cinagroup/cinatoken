@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "C:\Users\cina\AppData\Local\Temp\cinatoken-public-preferences-md-595-scope-01385f0503ef418ba5e5bfe8771c5f6a\review-final-md-595-v3.py", line 40, in <module>
+    assert c6['current']==document
+           ^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

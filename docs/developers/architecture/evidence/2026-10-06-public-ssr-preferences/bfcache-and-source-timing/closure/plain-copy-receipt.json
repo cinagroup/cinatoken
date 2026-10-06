@@ -1,0 +1,110 @@
+[
+  {
+    "path": "browser-report.json",
+    "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-bfcache-continuation-64228ac856184788ac472e5bbe6acb64\\normal-production-f9-v4\\report.json",
+    "bytes": 633200,
+    "sha256": "fcd9dd6c224bfcef17e6f0187f5bc8b3d9fecbc790c70d116c456173806b6a6e"
+  },
+  {
+    "path": "offline-diagnostic-report.json",
+    "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\offline-diagnostic-report.json",
+    "bytes": 81448,
+    "sha256": "1337b7d045420609f8a73398be01d54d9d95cbede625d3d5dd4adf3845d2d94e"
+  },
+  {
+    "path": "independent-browser-review.json",
+    "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-fixture-c60a7fdf3ecc40f49e04ef65e7956771\\BFCache-v4-production-normal-reviewed.json",
+    "bytes": 122810,
+    "sha256": "838f23ed25783361630a24018dfffaa35d4d16bf5e8f94db1ef8e276badc2e78"
+  },
+  {
+    "path": "independent-offline-review.json",
+    "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-fixture-c60a7fdf3ecc40f49e04ef65e7956771\\offline-download-timing-reviewed.json",
+    "bytes": 51206,
+    "sha256": "f1766883c136cc481cf2dab0fd260b995a9d3adcc5aee5c2f80852bec26eb945"
+  },
+  {
+    "path": "second-independent-offline-review.json",
+    "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\independent-offline-review.json",
+    "bytes": 3011,
+    "sha256": "f09557955d0c75cfb5605e0e4e04a8fbfc43047cfc2cabe42256268d94f9ad29"
+  },
+  {
+    "path": "deployment-guard.json",
+    "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\post-bfcache-production-guard.deployment-guard.json",
+    "bytes": 3925,
+    "sha256": "6e0c27b63251d7688e744f4eb04d987d575a7dfc6a5d7c77f45d812146532d52"
+  },
+  {
+    "path": "reference-notes.md",
+    "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-bfcache-continuation-64228ac856184788ac472e5bbe6acb64\\reference-notes.md",
+    "bytes": 2369,
+    "sha256": "0c52cda64e7ce4d56635f1104d671707f687bf594628d7a2405cb55994aa08a2"
+  },
+  {
+    "path": "back.png",
+    "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-bfcache-continuation-64228ac856184788ac472e5bbe6acb64\\normal-production-f9-v4\\back.png",
+    "bytes": 50245,
+    "sha256": "4c1a94cfbaf6432c66791b3581a5d94165f3fbee4e34a75c0eb6ea45a6fd8307"
+  },
+  {
+    "path": "forward.png",
+    "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-bfcache-continuation-64228ac856184788ac472e5bbe6acb64\\normal-production-f9-v4\\forward.png",
+    "bytes": 41778,
+    "sha256": "5163719013d5ac2534056dcdb8c31ee3dfdb8499bda47c359c6804d91a4f7003"
+  },
+  {
+    "path": "closure/archive-continuation.result.json",
+    "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-bfcache-continuation-64228ac856184788ac472e5bbe6acb64\\archive-continuation.result.json",
+    "bytes": 12929,
+    "sha256": "f1583c3ed00ebeb3920dc11c405efd118d00c88ca9fc7b050d52149bbdd7990e"
+  },
+  {
+    "path": "closure/archive-continuation.stdout.log",
+    "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-bfcache-continuation-64228ac856184788ac472e5bbe6acb64\\archive-continuation.stdout.log",
+    "bytes": 460,
+    "sha256": "76306a53d4ca91ef1e8913e0da22bc509f75ca190c657a028c183fa788354588"
+  },
+  {
+    "path": "closure/archive-continuation.stderr.log",
+    "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-bfcache-continuation-64228ac856184788ac472e5bbe6acb64\\archive-continuation.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "closure/archive-verification.json",
+    "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-bfcache-continuation-64228ac856184788ac472e5bbe6acb64\\archive-verification.json",
+    "bytes": 497,
+    "sha256": "85ed38a76cd7742361b6ac458fbba66a5a6921c78f337f0a8e3360f921c49dbb"
+  },
+  {
+    "path": "closure/archive-continuation.py",
+    "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-bfcache-continuation-64228ac856184788ac472e5bbe6acb64\\archive-continuation.py",
+    "bytes": 3950,
+    "sha256": "ba7ac14d761efaa41a66f02e0565c73aa563a72c43c28680126ce4c4efe0048e"
+  },
+  {
+    "path": "closure/bfcache-normal-production-f9-v4.result.json",
+    "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-bfcache-continuation-64228ac856184788ac472e5bbe6acb64\\bfcache-normal-production-f9-v4.result.json",
+    "bytes": 1118,
+    "sha256": "a1eced723048aed2592afb4c69f21acff99767a64f4bcf5135f0e59903993fec"
+  },
+  {
+    "path": "closure/post-bfcache-production-guard.result.json",
+    "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-bfcache-continuation-64228ac856184788ac472e5bbe6acb64\\post-bfcache-production-guard.result.json",
+    "bytes": 1063,
+    "sha256": "e10f556089066002f6c363c897f8bc91f1123ae25109d00fd0edf04c8d5c1b71"
+  },
+  {
+    "path": "closure/bfcache-v4-actual-review-process-closed.json",
+    "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-fixture-c60a7fdf3ecc40f49e04ef65e7956771\\bfcache-v4-actual-review-process-closed.json",
+    "bytes": 1066,
+    "sha256": "1d91a68d207e6cf0cf730d7d853cfd25ae18555d6ce2d92b80a104ba21767da7"
+  },
+  {
+    "path": "closure/offline-timing-review-v2-process-closed.json",
+    "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-fixture-c60a7fdf3ecc40f49e04ef65e7956771\\offline-timing-review-v2-process-closed.json",
+    "bytes": 1133,
+    "sha256": "a2ec5ece08675c4931a749f147c64f8ac105bd4b04900c25ef4f6158c2b0c863"
+  }
+]

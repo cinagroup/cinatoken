@@ -1,0 +1,22 @@
+{
+  "startedAt": "2026-10-06T14:25:34.466Z",
+  "closedAt": "2026-10-06T14:25:34.694Z",
+  "executable": "C:/Users/cina/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-bfcache-continuation-64228ac856184788ac472e5bbe6acb64/copy-archive-plain.py"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExitCode": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-bfcache-continuation-64228ac856184788ac472e5bbe6acb64\\copy-archive-plain.stdout.log",
+    "bytes": 163,
+    "sha256": "1d22e416b0260d36f6c91ea4073f482e1a31ebe9ea02749206971c93634bdc5e"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-bfcache-continuation-64228ac856184788ac472e5bbe6acb64\\copy-archive-plain.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

@@ -1,0 +1,273 @@
+{
+  "at": "2026-10-06T14:41:31.611Z",
+  "purpose": "Append-only closure file list for completed5.95 scope/manual review. No main MD or original evidence edits.",
+  "document": {
+    "path": "C:/cinagroup/cinatoken/docs/developers/architecture/web-frontend-migration.md",
+    "bytes": 873423,
+    "sha256": "63ce789bc24f546c873440d2b6fa68eea109b3cabe6a6457b1429efa79fe99a0"
+  },
+  "finalReceipts": [
+    {
+      "file": "final-md-595-v3.process-closed.json",
+      "actualExitCode": 0
+    },
+    {
+      "file": "original-scope-final-md-595-v3.audit.result.json",
+      "actualExitCode": 0
+    },
+    {
+      "file": "final-md-595-v3-manual-v3.process-closed.json",
+      "actualExitCode": 0
+    }
+  ],
+  "reviewerFailuresPreserved": [
+    {
+      "file": "final-md-595-v3-manual.process-closed.json",
+      "actualExitCode": 1,
+      "reason": "Equivalent path separator strings were compared as full dictionaries"
+    },
+    {
+      "file": "final-md-595-v3-manual-v2.process-closed.json",
+      "actualExitCode": 1,
+      "reason": "Exact wording assertion omittedChineseclassifier; prior fact checks passed and document hash unchanged"
+    }
+  ],
+  "earlierActualZeroScopesPreserved": [
+    "final-md-595.process-closed.json",
+    "original-scope-final-md-595-01385f05.audit.result.json"
+  ],
+  "canCommitDocumentAndEvidence": true,
+  "networkRequestsMade": 0,
+  "browserOperationsMade": 0,
+  "benchmarkRerunsMade": 0,
+  "files": [
+    {
+      "name": "compare-c6.mjs",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-595-scope-01385f0503ef418ba5e5bfe8771c5f6a\\compare-c6.mjs",
+      "bytes": 7069,
+      "sha256": "a33dfc6723d7aae10d01a19bc1446071bdb1ccc77475059def9cac3ebb1a162a"
+    },
+    {
+      "name": "final-md-595-v3-manual-v2.process-closed.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-595-scope-01385f0503ef418ba5e5bfe8771c5f6a\\final-md-595-v3-manual-v2.process-closed.json",
+      "bytes": 842,
+      "sha256": "14a7a41ccc3e4c50ff3af3ea37d137cc6fda9e17a10854a9db412e9438dd2d12"
+    },
+    {
+      "name": "final-md-595-v3-manual-v2.stderr.log",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-595-scope-01385f0503ef418ba5e5bfe8771c5f6a\\final-md-595-v3-manual-v2.stderr.log",
+      "bytes": 311,
+      "sha256": "bd068e2ffa905e31e7b0b278fc1dd00d26a5d5e6c8cc9e313acf9acf4178e315"
+    },
+    {
+      "name": "final-md-595-v3-manual-v2.stdout.log",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-595-scope-01385f0503ef418ba5e5bfe8771c5f6a\\final-md-595-v3-manual-v2.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "final-md-595-v3-manual-v3-review.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-595-scope-01385f0503ef418ba5e5bfe8771c5f6a\\final-md-595-v3-manual-v3-review.json",
+      "bytes": 32954,
+      "sha256": "c80742b6ee02de2b6065da419d68f39d9be0a4feb578b5c7e9ccc70b06d87b31"
+    },
+    {
+      "name": "final-md-595-v3-manual-v3.process-closed.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-595-scope-01385f0503ef418ba5e5bfe8771c5f6a\\final-md-595-v3-manual-v3.process-closed.json",
+      "bytes": 842,
+      "sha256": "6e4d3f53b62f83d45c1033a8d03dbe474b6c5a6b92ff33e56de2f12cf60501c3"
+    },
+    {
+      "name": "final-md-595-v3-manual-v3.stderr.log",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-595-scope-01385f0503ef418ba5e5bfe8771c5f6a\\final-md-595-v3-manual-v3.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "final-md-595-v3-manual-v3.stdout.log",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-595-scope-01385f0503ef418ba5e5bfe8771c5f6a\\final-md-595-v3-manual-v3.stdout.log",
+      "bytes": 613,
+      "sha256": "aedabc0fb5e14f6d3a970768819078700c91d885b2853ad56c6e514e9e0359fc"
+    },
+    {
+      "name": "final-md-595-v3-manual.process-closed.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-595-scope-01385f0503ef418ba5e5bfe8771c5f6a\\final-md-595-v3-manual.process-closed.json",
+      "bytes": 836,
+      "sha256": "42de7a5869afb05e454b98750866f32dadafa10068bbc3ecf17bf49035624eca"
+    },
+    {
+      "name": "final-md-595-v3-manual.stderr.log",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-595-scope-01385f0503ef418ba5e5bfe8771c5f6a\\final-md-595-v3-manual.stderr.log",
+      "bytes": 290,
+      "sha256": "38e309e14ef95697672046460e726612fac0d2d3928b88695313934dd4c1efe3"
+    },
+    {
+      "name": "final-md-595-v3-manual.stdout.log",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-595-scope-01385f0503ef418ba5e5bfe8771c5f6a\\final-md-595-v3-manual.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "final-md-595-v3.c6-scope.report.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-595-scope-01385f0503ef418ba5e5bfe8771c5f6a\\final-md-595-v3.c6-scope.report.json",
+      "bytes": 33193,
+      "sha256": "3bfa82f30842a97462244f84a27e5fec853ed28eda456bdae393f6dc6ca486a7"
+    },
+    {
+      "name": "final-md-595-v3.process-closed.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-595-scope-01385f0503ef418ba5e5bfe8771c5f6a\\final-md-595-v3.process-closed.json",
+      "bytes": 812,
+      "sha256": "ead97622b22ce3db75a6da4fc7714b34a31cb2eca5e1c45c8b4e8e957baa7a00"
+    },
+    {
+      "name": "final-md-595-v3.stderr.log",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-595-scope-01385f0503ef418ba5e5bfe8771c5f6a\\final-md-595-v3.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "final-md-595-v3.stdout.log",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-595-scope-01385f0503ef418ba5e5bfe8771c5f6a\\final-md-595-v3.stdout.log",
+      "bytes": 1057,
+      "sha256": "8916d7a86e1440b88734f884c7f42929b53d0c281d9542671162bca76802f1e4"
+    },
+    {
+      "name": "final-md-595-v3.working.md",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-595-scope-01385f0503ef418ba5e5bfe8771c5f6a\\final-md-595-v3.working.md",
+      "bytes": 873423,
+      "sha256": "63ce789bc24f546c873440d2b6fa68eea109b3cabe6a6457b1429efa79fe99a0"
+    },
+    {
+      "name": "final-md-595.c6-scope.report.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-595-scope-01385f0503ef418ba5e5bfe8771c5f6a\\final-md-595.c6-scope.report.json",
+      "bytes": 33187,
+      "sha256": "e41e0bf702e8ededefb03c7fb0ed276f2603f0f3b49be5ac7f18ea4e7a323b34"
+    },
+    {
+      "name": "final-md-595.process-closed.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-595-scope-01385f0503ef418ba5e5bfe8771c5f6a\\final-md-595.process-closed.json",
+      "bytes": 803,
+      "sha256": "6a7d2bff631ef021b65b191b1533d938df2975e4f90cd0a07f679abf404f77e1"
+    },
+    {
+      "name": "final-md-595.stderr.log",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-595-scope-01385f0503ef418ba5e5bfe8771c5f6a\\final-md-595.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "final-md-595.stdout.log",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-595-scope-01385f0503ef418ba5e5bfe8771c5f6a\\final-md-595.stdout.log",
+      "bytes": 1051,
+      "sha256": "6eeef380f052efb4c29f02cad15326ff7f16d4d2db22425ea5c0aafeb9b2c4e0"
+    },
+    {
+      "name": "final-md-595.working.md",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-595-scope-01385f0503ef418ba5e5bfe8771c5f6a\\final-md-595.working.md",
+      "bytes": 873253,
+      "sha256": "6d61666ce193d825396488e291c23899baff695bc8982bf67c8bb5a24058e6af"
+    },
+    {
+      "name": "original-scope-final-md-595-01385f05.audit.result.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-595-scope-01385f0503ef418ba5e5bfe8771c5f6a\\original-scope-final-md-595-01385f05.audit.result.json",
+      "bytes": 1059,
+      "sha256": "8cf6b16f7ddedb262f44a1da41edc79786eb3b8e47ea494f4df996658a31095a"
+    },
+    {
+      "name": "original-scope-final-md-595-01385f05.audit.stderr.log",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-595-scope-01385f0503ef418ba5e5bfe8771c5f6a\\original-scope-final-md-595-01385f05.audit.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "original-scope-final-md-595-01385f05.audit.stdout.log",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-595-scope-01385f0503ef418ba5e5bfe8771c5f6a\\original-scope-final-md-595-01385f05.audit.stdout.log",
+      "bytes": 730,
+      "sha256": "698bd440197d3ff93f90270949108d5a30fd8eca62a1804acb0877b282f04513"
+    },
+    {
+      "name": "original-scope-final-md-595-01385f05.report.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-595-scope-01385f0503ef418ba5e5bfe8771c5f6a\\original-scope-final-md-595-01385f05.report.json",
+      "bytes": 257677,
+      "sha256": "9606ecc9e0b60e6f6d1ebfe7aaa47c3488554d830ac9e9628c925bbb756c2d5b"
+    },
+    {
+      "name": "original-scope-final-md-595-v3.audit.result.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-595-scope-01385f0503ef418ba5e5bfe8771c5f6a\\original-scope-final-md-595-v3.audit.result.json",
+      "bytes": 1041,
+      "sha256": "48b5033693bae624f83c84edc2634c4fbdb1d789155978ca03d3206f96e0ab1e"
+    },
+    {
+      "name": "original-scope-final-md-595-v3.audit.stderr.log",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-595-scope-01385f0503ef418ba5e5bfe8771c5f6a\\original-scope-final-md-595-v3.audit.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "original-scope-final-md-595-v3.audit.stdout.log",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-595-scope-01385f0503ef418ba5e5bfe8771c5f6a\\original-scope-final-md-595-v3.audit.stdout.log",
+      "bytes": 724,
+      "sha256": "812de5bc527bf544931a80f7afe152cb636cb84fdecf3ad448f1234f99ee4e85"
+    },
+    {
+      "name": "original-scope-final-md-595-v3.f77.git-show.result.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-595-scope-01385f0503ef418ba5e5bfe8771c5f6a\\original-scope-final-md-595-v3.f77.git-show.result.json",
+      "bytes": 608,
+      "sha256": "0beacc35fdaeb36aea59abed7ff482c23cc354a9864da973ee5085ae18d4364f"
+    },
+    {
+      "name": "original-scope-final-md-595-v3.f9.git-show.result.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-595-scope-01385f0503ef418ba5e5bfe8771c5f6a\\original-scope-final-md-595-v3.f9.git-show.result.json",
+      "bytes": 608,
+      "sha256": "8df50d6cc0826f8e36081b330747b4b9f5b6958128a697207d765b38064a293e"
+    },
+    {
+      "name": "original-scope-final-md-595-v3.report.json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-595-scope-01385f0503ef418ba5e5bfe8771c5f6a\\original-scope-final-md-595-v3.report.json",
+      "bytes": 257671,
+      "sha256": "8ea0351d20a092fc0e40301a5f123a5057decb5c9b9b2aca6a83447e1ea034e2"
+    },
+    {
+      "name": "review-final-md-595-v3-v2.py",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-595-scope-01385f0503ef418ba5e5bfe8771c5f6a\\review-final-md-595-v3-v2.py",
+      "bytes": 17842,
+      "sha256": "2fb335c5eed826c31507211ae0eae099c506524814a62cc1075dd6ad42de36bd"
+    },
+    {
+      "name": "review-final-md-595-v3-v3.py",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-595-scope-01385f0503ef418ba5e5bfe8771c5f6a\\review-final-md-595-v3-v3.py",
+      "bytes": 18472,
+      "sha256": "d90a08b20cbeae567d68ff458737d59cb596510a2955844eb30750c70566ffed"
+    },
+    {
+      "name": "review-final-md-595-v3.py",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-595-scope-01385f0503ef418ba5e5bfe8771c5f6a\\review-final-md-595-v3.py",
+      "bytes": 17406,
+      "sha256": "262db07b77e2579b997f89d41d4ac671d636ab52fcb017a640b34bef4c6a8745"
+    },
+    {
+      "name": "run-c6-scope.mjs",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-595-scope-01385f0503ef418ba5e5bfe8771c5f6a\\run-c6-scope.mjs",
+      "bytes": 1653,
+      "sha256": "9cf3aa3dfaa0220939f12487ac06de894acf4c54d1e46a4e93956596002c679a"
+    },
+    {
+      "name": "run-final-manual-v3-v2.mjs",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-595-scope-01385f0503ef418ba5e5bfe8771c5f6a\\run-final-manual-v3-v2.mjs",
+      "bytes": 1532,
+      "sha256": "1b1f6bbd331fc90a5ff59bbfe09a81cf7951e0d2068e7bb589804114c70563d1"
+    },
+    {
+      "name": "run-final-manual-v3-v3.mjs",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-595-scope-01385f0503ef418ba5e5bfe8771c5f6a\\run-final-manual-v3-v3.mjs",
+      "bytes": 1532,
+      "sha256": "ba03b4d311ce59b2203bc09ba9c3f1a2c6318cd225b583950335929bf8da3ddd"
+    },
+    {
+      "name": "run-final-manual-v3.mjs",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-595-scope-01385f0503ef418ba5e5bfe8771c5f6a\\run-final-manual-v3.mjs",
+      "bytes": 1523,
+      "sha256": "370cd9737ba0187229fff06600019893f91c4222ffadad90c64eaee4444d9aa9"
+    }
+  ]
+}

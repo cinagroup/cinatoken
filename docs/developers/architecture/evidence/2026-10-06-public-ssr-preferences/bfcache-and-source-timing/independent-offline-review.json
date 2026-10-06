@@ -1,0 +1,1032 @@
+{
+  "status": "PASS_OFFLINE_DIAGNOSTIC_INTEGRITY_ONLY_PERFORMANCE_GATE_PENDING",
+  "startedAt": "2026-10-06T13:45:15.367193+00:00",
+  "finishedAt": "2026-10-06T13:45:15.929012+00:00",
+  "reviewer": "/root/public_preferences_fixture",
+  "readOnlyOriginals": true,
+  "networkRequestsMade": 0,
+  "benchmarkRerunsMade": 0,
+  "originalInputsByteExactUnchanged": 26,
+  "diagnosticActualExitCode": 0,
+  "priorIndependentReviewActualExitCode": 0,
+  "actualReceipts": [
+    {
+      "name": "offline-process-closed.json",
+      "actualExitCode": 0,
+      "signal": null,
+      "spawnError": null,
+      "closedAt": "2026-10-06T13:36:45.647Z",
+      "sha256": "373d94a0597cba7c70861f119c27702918bac812df36e1b768c921c9cab3e3f0"
+    },
+    {
+      "name": "independent-review-process-closed.json",
+      "actualExitCode": 0,
+      "signal": null,
+      "spawnError": null,
+      "closedAt": "2026-10-06T13:41:15.374Z",
+      "sha256": "e2e5aafd70e05cded6c8163eda85e93ae1003cbbb765e41e3fd86c003eef8e7b"
+    }
+  ],
+  "scriptReview": {
+    "collectorFsyncPerChunk": false,
+    "collectorFsyncFinallyOnly": true,
+    "originalLikeMeasures": "Buffer already loaded; digest constructed before start; file open/copy/raw write/hash/counter/clock+new progress JSONL/fsync/close; postclose validation recorded separately; no reader wait/network/timer replay.",
+    "fixedMetadataMeasures": "Same preloaded body/chunk boundaries, per-operation clock probes, exact original progress metadata bytes; added instrumentation and fixed metadata differ from original-like, so direct subtraction is not historical production optimization proof."
+  },
+  "originalBodies": [
+    {
+      "id": "source-0",
+      "outcome": "PASS",
+      "bytes": 4240549,
+      "sha256": "0cf38aa7a814fb6c5333187afe977a3236a82fceaa3f68126552e6627a0963fb",
+      "chunks": 331,
+      "missingExpectedBytes": 0,
+      "elapsedMs": 52561,
+      "savedBodyKind": "complete response bytes"
+    },
+    {
+      "id": "source-1",
+      "outcome": "FAIL",
+      "bytes": 2788736,
+      "sha256": "9371df550151766a8ff150a8b636c34359f06dc0f15d165969b88f07dacf916a",
+      "chunks": 238,
+      "missingExpectedBytes": 1466246,
+      "elapsedMs": 60018,
+      "savedBodyKind": "partial response bytes"
+    },
+    {
+      "id": "source-2",
+      "outcome": "PASS",
+      "bytes": 4239144,
+      "sha256": "5cad53dd30324d851e481e583a31b23c59c35ad0327769bbc2549fcfdfa480cd",
+      "chunks": 333,
+      "missingExpectedBytes": 0,
+      "elapsedMs": 37799,
+      "savedBodyKind": "complete response bytes"
+    },
+    {
+      "id": "source-3",
+      "outcome": "FAIL",
+      "bytes": 2940608,
+      "sha256": "b59742585327d194863bb2e7ec8d1f3bc91bd97c4ec5282e14e76b48e16d6948",
+      "chunks": 254,
+      "missingExpectedBytes": 1309220,
+      "elapsedMs": 60018,
+      "savedBodyKind": "partial response bytes"
+    },
+    {
+      "id": "source-4",
+      "outcome": "PASS",
+      "bytes": 4237024,
+      "sha256": "a4fb45ab08bf639f695134f2c693d5292f3126944d67db96e08596640930e910",
+      "chunks": 330,
+      "missingExpectedBytes": 0,
+      "elapsedMs": 43501,
+      "savedBodyKind": "complete response bytes"
+    }
+  ],
+  "replayProofs": [
+    {
+      "result": "source-0-original-like-trial-1.result.json",
+      "sourceId": "source-0",
+      "mode": "original-like",
+      "trial": 1,
+      "bytes": 4240549,
+      "sha256": "0cf38aa7a814fb6c5333187afe977a3236a82fceaa3f68126552e6627a0963fb",
+      "exactOriginalRawBytes": true,
+      "chunkBoundariesExact": true,
+      "fixedJSONLBytesExact": null,
+      "synchronousCollectionMs": 25.0012
+    },
+    {
+      "result": "source-0-original-like-trial-2.result.json",
+      "sourceId": "source-0",
+      "mode": "original-like",
+      "trial": 2,
+      "bytes": 4240549,
+      "sha256": "0cf38aa7a814fb6c5333187afe977a3236a82fceaa3f68126552e6627a0963fb",
+      "exactOriginalRawBytes": true,
+      "chunkBoundariesExact": true,
+      "fixedJSONLBytesExact": null,
+      "synchronousCollectionMs": 19.9284
+    },
+    {
+      "result": "source-0-original-like-trial-3.result.json",
+      "sourceId": "source-0",
+      "mode": "original-like",
+      "trial": 3,
+      "bytes": 4240549,
+      "sha256": "0cf38aa7a814fb6c5333187afe977a3236a82fceaa3f68126552e6627a0963fb",
+      "exactOriginalRawBytes": true,
+      "chunkBoundariesExact": true,
+      "fixedJSONLBytesExact": null,
+      "synchronousCollectionMs": 22.4838
+    },
+    {
+      "result": "source-0-fixed-metadata-instrumented-trial-1.result.json",
+      "sourceId": "source-0",
+      "mode": "fixed-metadata-instrumented",
+      "trial": 1,
+      "bytes": 4240549,
+      "sha256": "0cf38aa7a814fb6c5333187afe977a3236a82fceaa3f68126552e6627a0963fb",
+      "exactOriginalRawBytes": true,
+      "chunkBoundariesExact": true,
+      "fixedJSONLBytesExact": true,
+      "synchronousCollectionMs": 25.4161
+    },
+    {
+      "result": "source-1-original-like-trial-1.result.json",
+      "sourceId": "source-1",
+      "mode": "original-like",
+      "trial": 1,
+      "bytes": 2788736,
+      "sha256": "9371df550151766a8ff150a8b636c34359f06dc0f15d165969b88f07dacf916a",
+      "exactOriginalRawBytes": true,
+      "chunkBoundariesExact": true,
+      "fixedJSONLBytesExact": null,
+      "synchronousCollectionMs": 18.7447
+    },
+    {
+      "result": "source-1-original-like-trial-2.result.json",
+      "sourceId": "source-1",
+      "mode": "original-like",
+      "trial": 2,
+      "bytes": 2788736,
+      "sha256": "9371df550151766a8ff150a8b636c34359f06dc0f15d165969b88f07dacf916a",
+      "exactOriginalRawBytes": true,
+      "chunkBoundariesExact": true,
+      "fixedJSONLBytesExact": null,
+      "synchronousCollectionMs": 14.8901
+    },
+    {
+      "result": "source-1-original-like-trial-3.result.json",
+      "sourceId": "source-1",
+      "mode": "original-like",
+      "trial": 3,
+      "bytes": 2788736,
+      "sha256": "9371df550151766a8ff150a8b636c34359f06dc0f15d165969b88f07dacf916a",
+      "exactOriginalRawBytes": true,
+      "chunkBoundariesExact": true,
+      "fixedJSONLBytesExact": null,
+      "synchronousCollectionMs": 15.8308
+    },
+    {
+      "result": "source-1-fixed-metadata-instrumented-trial-1.result.json",
+      "sourceId": "source-1",
+      "mode": "fixed-metadata-instrumented",
+      "trial": 1,
+      "bytes": 2788736,
+      "sha256": "9371df550151766a8ff150a8b636c34359f06dc0f15d165969b88f07dacf916a",
+      "exactOriginalRawBytes": true,
+      "chunkBoundariesExact": true,
+      "fixedJSONLBytesExact": true,
+      "synchronousCollectionMs": 18.8576
+    },
+    {
+      "result": "source-2-original-like-trial-1.result.json",
+      "sourceId": "source-2",
+      "mode": "original-like",
+      "trial": 1,
+      "bytes": 4239144,
+      "sha256": "5cad53dd30324d851e481e583a31b23c59c35ad0327769bbc2549fcfdfa480cd",
+      "exactOriginalRawBytes": true,
+      "chunkBoundariesExact": true,
+      "fixedJSONLBytesExact": null,
+      "synchronousCollectionMs": 22.4794
+    },
+    {
+      "result": "source-2-original-like-trial-2.result.json",
+      "sourceId": "source-2",
+      "mode": "original-like",
+      "trial": 2,
+      "bytes": 4239144,
+      "sha256": "5cad53dd30324d851e481e583a31b23c59c35ad0327769bbc2549fcfdfa480cd",
+      "exactOriginalRawBytes": true,
+      "chunkBoundariesExact": true,
+      "fixedJSONLBytesExact": null,
+      "synchronousCollectionMs": 23.3477
+    },
+    {
+      "result": "source-2-original-like-trial-3.result.json",
+      "sourceId": "source-2",
+      "mode": "original-like",
+      "trial": 3,
+      "bytes": 4239144,
+      "sha256": "5cad53dd30324d851e481e583a31b23c59c35ad0327769bbc2549fcfdfa480cd",
+      "exactOriginalRawBytes": true,
+      "chunkBoundariesExact": true,
+      "fixedJSONLBytesExact": null,
+      "synchronousCollectionMs": 19.8449
+    },
+    {
+      "result": "source-2-fixed-metadata-instrumented-trial-1.result.json",
+      "sourceId": "source-2",
+      "mode": "fixed-metadata-instrumented",
+      "trial": 1,
+      "bytes": 4239144,
+      "sha256": "5cad53dd30324d851e481e583a31b23c59c35ad0327769bbc2549fcfdfa480cd",
+      "exactOriginalRawBytes": true,
+      "chunkBoundariesExact": true,
+      "fixedJSONLBytesExact": true,
+      "synchronousCollectionMs": 27.3498
+    },
+    {
+      "result": "source-3-original-like-trial-1.result.json",
+      "sourceId": "source-3",
+      "mode": "original-like",
+      "trial": 1,
+      "bytes": 2940608,
+      "sha256": "b59742585327d194863bb2e7ec8d1f3bc91bd97c4ec5282e14e76b48e16d6948",
+      "exactOriginalRawBytes": true,
+      "chunkBoundariesExact": true,
+      "fixedJSONLBytesExact": null,
+      "synchronousCollectionMs": 18.1966
+    },
+    {
+      "result": "source-3-original-like-trial-2.result.json",
+      "sourceId": "source-3",
+      "mode": "original-like",
+      "trial": 2,
+      "bytes": 2940608,
+      "sha256": "b59742585327d194863bb2e7ec8d1f3bc91bd97c4ec5282e14e76b48e16d6948",
+      "exactOriginalRawBytes": true,
+      "chunkBoundariesExact": true,
+      "fixedJSONLBytesExact": null,
+      "synchronousCollectionMs": 17.4576
+    },
+    {
+      "result": "source-3-original-like-trial-3.result.json",
+      "sourceId": "source-3",
+      "mode": "original-like",
+      "trial": 3,
+      "bytes": 2940608,
+      "sha256": "b59742585327d194863bb2e7ec8d1f3bc91bd97c4ec5282e14e76b48e16d6948",
+      "exactOriginalRawBytes": true,
+      "chunkBoundariesExact": true,
+      "fixedJSONLBytesExact": null,
+      "synchronousCollectionMs": 14.3443
+    },
+    {
+      "result": "source-3-fixed-metadata-instrumented-trial-1.result.json",
+      "sourceId": "source-3",
+      "mode": "fixed-metadata-instrumented",
+      "trial": 1,
+      "bytes": 2940608,
+      "sha256": "b59742585327d194863bb2e7ec8d1f3bc91bd97c4ec5282e14e76b48e16d6948",
+      "exactOriginalRawBytes": true,
+      "chunkBoundariesExact": true,
+      "fixedJSONLBytesExact": true,
+      "synchronousCollectionMs": 25.9997
+    },
+    {
+      "result": "source-4-original-like-trial-1.result.json",
+      "sourceId": "source-4",
+      "mode": "original-like",
+      "trial": 1,
+      "bytes": 4237024,
+      "sha256": "a4fb45ab08bf639f695134f2c693d5292f3126944d67db96e08596640930e910",
+      "exactOriginalRawBytes": true,
+      "chunkBoundariesExact": true,
+      "fixedJSONLBytesExact": null,
+      "synchronousCollectionMs": 22.5648
+    },
+    {
+      "result": "source-4-original-like-trial-2.result.json",
+      "sourceId": "source-4",
+      "mode": "original-like",
+      "trial": 2,
+      "bytes": 4237024,
+      "sha256": "a4fb45ab08bf639f695134f2c693d5292f3126944d67db96e08596640930e910",
+      "exactOriginalRawBytes": true,
+      "chunkBoundariesExact": true,
+      "fixedJSONLBytesExact": null,
+      "synchronousCollectionMs": 19.8811
+    },
+    {
+      "result": "source-4-original-like-trial-3.result.json",
+      "sourceId": "source-4",
+      "mode": "original-like",
+      "trial": 3,
+      "bytes": 4237024,
+      "sha256": "a4fb45ab08bf639f695134f2c693d5292f3126944d67db96e08596640930e910",
+      "exactOriginalRawBytes": true,
+      "chunkBoundariesExact": true,
+      "fixedJSONLBytesExact": null,
+      "synchronousCollectionMs": 18.4965
+    },
+    {
+      "result": "source-4-fixed-metadata-instrumented-trial-1.result.json",
+      "sourceId": "source-4",
+      "mode": "fixed-metadata-instrumented",
+      "trial": 1,
+      "bytes": 4237024,
+      "sha256": "a4fb45ab08bf639f695134f2c693d5292f3126944d67db96e08596640930e910",
+      "exactOriginalRawBytes": true,
+      "chunkBoundariesExact": true,
+      "fixedJSONLBytesExact": true,
+      "synchronousCollectionMs": 28.8973
+    }
+  ],
+  "recomputedStatistics": {
+    "originalChunks": 1486,
+    "originalPersistedBytes": 18446061,
+    "originalLikeCount": 15,
+    "fixedMetadataCount": 5,
+    "originalLikeMs": {
+      "count": 15,
+      "min": 14.3443,
+      "p50": 19.8449,
+      "p90": 23.3477,
+      "p95": 25.0012,
+      "p99": 25.0012,
+      "max": 25.0012,
+      "sum": 293.4919
+    },
+    "fixedMetadataMs": {
+      "count": 5,
+      "min": 18.8576,
+      "p50": 25.9997,
+      "p90": 28.8973,
+      "p95": 28.8973,
+      "p99": 28.8973,
+      "max": 28.8973,
+      "sum": 126.5205
+    },
+    "everyGapChunkDistributionBinAndThresholdRecomputed": true,
+    "everyFixedPerOperationTotalAndMaximumRecomputed": true
+  },
+  "priorFailures": {
+    "originalHTTPV1ActualExit": 1,
+    "originalHTTPV1Passed": 167,
+    "originalHTTPV2ActualExit": 1,
+    "originalHTTPV2Passed": 175,
+    "originalSourceActualExit": 1,
+    "originalSourcePassed": 3,
+    "originalSourceFailed": 2,
+    "sourcePartialsRemainPartial": true,
+    "threeSixtySecondPassesStillExceedThirtySeconds": true
+  },
+  "oldImmutableArchiveReuse": {
+    "indexSha256": "b8649463f6bb12e1083d3cb80ac8bac83a5bc2de2208bae04a5145d25f920988",
+    "zipSha256": "9262b469b0f1160a27d00f3e352f2a023b5804e0a29a39aba0d60cdf06b16e6f",
+    "fiveOriginalMembersVerifiedAgainstActualZipBytesCrcAndOriginals": true,
+    "allTwentyRawBodiesCanReferenceTheseFiveExistingMembers": true,
+    "rawTwentyBytes": 73784244,
+    "newCompressedByteSavingsNotEstimated": true,
+    "memberProofs": [
+      {
+        "sourceId": "source-0",
+        "originalLogicalPath": "root/source-download-production-f9/source-0.raw-body.bin",
+        "existingArchive": "C:\\cinagroup\\cinatoken\\docs\\developers\\architecture\\evidence\\2026-10-06-public-ssr-preferences\\production-f9\\raw-evidence.zip",
+        "existingZipSha256": "9262b469b0f1160a27d00f3e352f2a023b5804e0a29a39aba0d60cdf06b16e6f",
+        "existingMember": "sha256/0cf38aa7a814fb6c5333187afe977a3236a82fceaa3f68126552e6627a0963fb",
+        "bytes": 4240549,
+        "sha256": "0cf38aa7a814fb6c5333187afe977a3236a82fceaa3f68126552e6627a0963fb",
+        "crc32": "846cad2f",
+        "allFourReplayBodiesByteEqualToExistingMember": true,
+        "replayPaths": [
+          "source-0-original-like-trial-1.raw-body.bin",
+          "source-0-original-like-trial-2.raw-body.bin",
+          "source-0-original-like-trial-3.raw-body.bin",
+          "source-0-fixed-metadata-instrumented-trial-1.raw-body.bin"
+        ],
+        "scope": "These are captured original full/partial bodies; archive reuse does not promote partial to a complete source package."
+      },
+      {
+        "sourceId": "source-1",
+        "originalLogicalPath": "root/source-download-production-f9/source-1.raw-body.bin",
+        "existingArchive": "C:\\cinagroup\\cinatoken\\docs\\developers\\architecture\\evidence\\2026-10-06-public-ssr-preferences\\production-f9\\raw-evidence.zip",
+        "existingZipSha256": "9262b469b0f1160a27d00f3e352f2a023b5804e0a29a39aba0d60cdf06b16e6f",
+        "existingMember": "sha256/9371df550151766a8ff150a8b636c34359f06dc0f15d165969b88f07dacf916a",
+        "bytes": 2788736,
+        "sha256": "9371df550151766a8ff150a8b636c34359f06dc0f15d165969b88f07dacf916a",
+        "crc32": "9b476a33",
+        "allFourReplayBodiesByteEqualToExistingMember": true,
+        "replayPaths": [
+          "source-1-original-like-trial-1.raw-body.bin",
+          "source-1-original-like-trial-2.raw-body.bin",
+          "source-1-original-like-trial-3.raw-body.bin",
+          "source-1-fixed-metadata-instrumented-trial-1.raw-body.bin"
+        ],
+        "scope": "These are captured original full/partial bodies; archive reuse does not promote partial to a complete source package."
+      },
+      {
+        "sourceId": "source-2",
+        "originalLogicalPath": "root/source-download-production-f9/source-2.raw-body.bin",
+        "existingArchive": "C:\\cinagroup\\cinatoken\\docs\\developers\\architecture\\evidence\\2026-10-06-public-ssr-preferences\\production-f9\\raw-evidence.zip",
+        "existingZipSha256": "9262b469b0f1160a27d00f3e352f2a023b5804e0a29a39aba0d60cdf06b16e6f",
+        "existingMember": "sha256/5cad53dd30324d851e481e583a31b23c59c35ad0327769bbc2549fcfdfa480cd",
+        "bytes": 4239144,
+        "sha256": "5cad53dd30324d851e481e583a31b23c59c35ad0327769bbc2549fcfdfa480cd",
+        "crc32": "e48fa7e6",
+        "allFourReplayBodiesByteEqualToExistingMember": true,
+        "replayPaths": [
+          "source-2-original-like-trial-1.raw-body.bin",
+          "source-2-original-like-trial-2.raw-body.bin",
+          "source-2-original-like-trial-3.raw-body.bin",
+          "source-2-fixed-metadata-instrumented-trial-1.raw-body.bin"
+        ],
+        "scope": "These are captured original full/partial bodies; archive reuse does not promote partial to a complete source package."
+      },
+      {
+        "sourceId": "source-3",
+        "originalLogicalPath": "root/source-download-production-f9/source-3.raw-body.bin",
+        "existingArchive": "C:\\cinagroup\\cinatoken\\docs\\developers\\architecture\\evidence\\2026-10-06-public-ssr-preferences\\production-f9\\raw-evidence.zip",
+        "existingZipSha256": "9262b469b0f1160a27d00f3e352f2a023b5804e0a29a39aba0d60cdf06b16e6f",
+        "existingMember": "sha256/b59742585327d194863bb2e7ec8d1f3bc91bd97c4ec5282e14e76b48e16d6948",
+        "bytes": 2940608,
+        "sha256": "b59742585327d194863bb2e7ec8d1f3bc91bd97c4ec5282e14e76b48e16d6948",
+        "crc32": "9ea27a2c",
+        "allFourReplayBodiesByteEqualToExistingMember": true,
+        "replayPaths": [
+          "source-3-original-like-trial-1.raw-body.bin",
+          "source-3-original-like-trial-2.raw-body.bin",
+          "source-3-original-like-trial-3.raw-body.bin",
+          "source-3-fixed-metadata-instrumented-trial-1.raw-body.bin"
+        ],
+        "scope": "These are captured original full/partial bodies; archive reuse does not promote partial to a complete source package."
+      },
+      {
+        "sourceId": "source-4",
+        "originalLogicalPath": "root/source-download-production-f9/source-4.raw-body.bin",
+        "existingArchive": "C:\\cinagroup\\cinatoken\\docs\\developers\\architecture\\evidence\\2026-10-06-public-ssr-preferences\\production-f9\\raw-evidence.zip",
+        "existingZipSha256": "9262b469b0f1160a27d00f3e352f2a023b5804e0a29a39aba0d60cdf06b16e6f",
+        "existingMember": "sha256/a4fb45ab08bf639f695134f2c693d5292f3126944d67db96e08596640930e910",
+        "bytes": 4237024,
+        "sha256": "a4fb45ab08bf639f695134f2c693d5292f3126944d67db96e08596640930e910",
+        "crc32": "0dbd3c29",
+        "allFourReplayBodiesByteEqualToExistingMember": true,
+        "replayPaths": [
+          "source-4-original-like-trial-1.raw-body.bin",
+          "source-4-original-like-trial-2.raw-body.bin",
+          "source-4-original-like-trial-3.raw-body.bin",
+          "source-4-fixed-metadata-instrumented-trial-1.raw-body.bin"
+        ],
+        "scope": "These are captured original full/partial bodies; archive reuse does not promote partial to a complete source package."
+      }
+    ]
+  },
+  "performanceGatePending": true,
+  "historicalCollectorShareProven": false,
+  "networkOrCloudflareRootCauseProven": false,
+  "productFixSelected": false,
+  "allReviewedInputsUnchangedAfterReview": true,
+  "findings": [],
+  "p1": 0,
+  "p2": 0,
+  "priorReviewerAttempt": {
+    "actualExitCode": 1,
+    "receipt": "offline-timing-review-process-closed.json",
+    "script": "offline-timing-review-attempt1-script.py",
+    "cause": "Auditor guessed unrecorded extra timing decimals; replaced comparison with stated four-decimal precision after exact raw/statistics checks. Original data and benchmark were not modified/rerun."
+  },
+  "limitations": [
+    "Timing is current local preloaded fixed-byte replay only. It cannot rule out historical temporary disk/CPU/antivirus/scheduling stalls or assign remaining time to network/Cloudflare.",
+    "Original chunk timestamps are post rawwrite/hash and pre current JSONLwrite; interchunk gaps mix reader wait, preceding progress persist, copy/write/hash and scheduling, rather than pure network arrival.",
+    "Original complete and partial bodies, actual failures and unchanged 30/60-second deadlines are preserved. Diagnostic exit0 is not production performance PASS.",
+    "Fine instrumentation changed observation overhead and fixed progress metadata; no subtraction of two modes establishes historical share or optimization benefit.",
+    "No benchmark, original collector, production request, browser operation, source/Git/main-checklist edit or full migration/auth/BFCache acceptance was performed."
+  ],
+  "reviewedFiles": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\live-http-production-f9-network\\http\\report.json",
+      "bytes": 431271,
+      "sha256": "9d8a9a21f01517d98a9b04a1538c07c22a71d3fc395f23619b2a9b394f1287de"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\live-http-production-f9-network\\process-closed.json",
+      "bytes": 944,
+      "sha256": "6ce92096800492ce0390c44a9fbdeca4e21ecdd82013dda68f3e6b1ef6574234"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\live-http-production-f9-v2\\http\\report.json",
+      "bytes": 426973,
+      "sha256": "6cc7cc5090ad42eb9025778dbaea0fad86407cf2cff8d2fef81b8e4e96313ed3"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\live-http-production-f9-v2\\process-closed.json",
+      "bytes": 930,
+      "sha256": "32669ce67d3f4d81eeb40d631201838122d51355825b109963bc61e5affba0b3"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\source-download-production-f9\\composite-asset-coverage.json",
+      "bytes": 143376,
+      "sha256": "5b6744a845559dad9d79caf8456f4affbf54dc354e333169e7fbc34ca797d832"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\source-download-production-f9\\process-closed.json",
+      "bytes": 1116,
+      "sha256": "e9208ce29336c0ff9c14a74fa74eed731c088aded02a0c0c2d2a55758665a6bf"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\source-download-production-f9\\release-manifest-before.json",
+      "bytes": 80913,
+      "sha256": "15a9e110c1f90ebecee90c1a9fe0b3c87f55c8d8ae88fcfd14114349f7661f73"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\source-download-production-f9\\report.json",
+      "bytes": 420897,
+      "sha256": "510a718868df820411fd4a0be4f8429613100f53523bfcd72f546ba449c88be7"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\source-download-production-f9\\source-0.json",
+      "bytes": 49124,
+      "sha256": "84233e7a56a65f1f5239d629d0a19ac4988af9fb80a3a487d586087c377113c6"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\source-download-production-f9\\source-0.progress.jsonl",
+      "bytes": 32043,
+      "sha256": "66f424213f994801a4b8d9977cf735b1520ffee93c587d36b57801a3ce68d048"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\source-download-production-f9\\source-0.raw-body.bin",
+      "bytes": 4240549,
+      "sha256": "0cf38aa7a814fb6c5333187afe977a3236a82fceaa3f68126552e6627a0963fb"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\source-download-production-f9\\source-1.json",
+      "bytes": 38383,
+      "sha256": "0b8999b667e70ac066d15999d0530508dc5b0d37a4ceb689b96fba8dcfff2a2f"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\source-download-production-f9\\source-1.progress.jsonl",
+      "bytes": 22973,
+      "sha256": "475e8d0075a5a47e1b05941a275306daf373c72d6fd5bddd766654206e7bba53"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\source-download-production-f9\\source-1.raw-body.bin",
+      "bytes": 2788736,
+      "sha256": "9371df550151766a8ff150a8b636c34359f06dc0f15d165969b88f07dacf916a"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\source-download-production-f9\\source-2.json",
+      "bytes": 49412,
+      "sha256": "4683116c2c792454cd3bfcc94cdac8dee5a0065942a4351aaab4b6cf21c7954a"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\source-download-production-f9\\source-2.progress.jsonl",
+      "bytes": 32241,
+      "sha256": "eca7add64826be0fbb066ca9f2c2c60f7b401167627a4c5880e3f4c8395259b6"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\source-download-production-f9\\source-2.raw-body.bin",
+      "bytes": 4239144,
+      "sha256": "5cad53dd30324d851e481e583a31b23c59c35ad0327769bbc2549fcfdfa480cd"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\source-download-production-f9\\source-3.json",
+      "bytes": 40526,
+      "sha256": "e25f4b2467886b4c85808aee91d363f89acd5a43599d28c3cebd86c67f257bd0"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\source-download-production-f9\\source-3.progress.jsonl",
+      "bytes": 24447,
+      "sha256": "ad8c21e937fffd76293b72715ce1c2912c7d61c10d9a91488227e629615ffb2d"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\source-download-production-f9\\source-3.raw-body.bin",
+      "bytes": 2940608,
+      "sha256": "b59742585327d194863bb2e7ec8d1f3bc91bd97c4ec5282e14e76b48e16d6948"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\source-download-production-f9\\source-4.json",
+      "bytes": 48954,
+      "sha256": "e1df8f0360fb544022fd3261e1cf39982867020a97dd690f06058a4c20b323c4"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\source-download-production-f9\\source-4.progress.jsonl",
+      "bytes": 31914,
+      "sha256": "a63816fae72a278bf7b5c3aa4a9b359c03fd8e5ce68275f2cb750c5c212abd85"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\source-download-production-f9\\source-4.raw-body.bin",
+      "bytes": 4237024,
+      "sha256": "a4fb45ab08bf639f695134f2c693d5292f3126944d67db96e08596640930e910"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\source-download-production-f9\\source.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\source-download-production-f9\\source.stdout.log",
+      "bytes": 1585,
+      "sha256": "8e3c483a8e02764c761481c9b6ace788a1e7ec3a5d0ea4ded69a2a7779ce2fa8"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\analyze-offline.mjs",
+      "bytes": 22851,
+      "sha256": "aec65a8ca96d1fa9e0b305d95fe7c0fc58c277bea1d1b0524ff190163f2b9655"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\independent-review-process-closed.json",
+      "bytes": 985,
+      "sha256": "e2e5aafd70e05cded6c8163eda85e93ae1003cbbb765e41e3fd86c003eef8e7b"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\independent-review.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\independent-review.stdout.log",
+      "bytes": 2742,
+      "sha256": "4897dfdccd9a3e86c81cbb89548ff47d3048aea6e142f63896cba3db2d8f5d79"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\offline-diagnostic-report.json",
+      "bytes": 81448,
+      "sha256": "1337b7d045420609f8a73398be01d54d9d95cbede625d3d5dd4adf3845d2d94e"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\offline-process-closed.json",
+      "bytes": 947,
+      "sha256": "373d94a0597cba7c70861f119c27702918bac812df36e1b768c921c9cab3e3f0"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\offline.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\offline.stdout.log",
+      "bytes": 3863,
+      "sha256": "4b67bd70e31c97e867bcaf2753a2165833ae509d6076d75c2fddf6196a15e546"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\original-inputs-after.json",
+      "bytes": 7219,
+      "sha256": "006311cab61d217da32426c0fa77a3f98cfa98cf0f68f599a8ca2c0f8f8fc7c3"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\original-inputs-before.json",
+      "bytes": 7219,
+      "sha256": "006311cab61d217da32426c0fa77a3f98cfa98cf0f68f599a8ca2c0f8f8fc7c3"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-0-fixed-metadata-instrumented-trial-1.progress.jsonl",
+      "bytes": 32043,
+      "sha256": "66f424213f994801a4b8d9977cf735b1520ffee93c587d36b57801a3ce68d048"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-0-fixed-metadata-instrumented-trial-1.raw-body.bin",
+      "bytes": 4240549,
+      "sha256": "0cf38aa7a814fb6c5333187afe977a3236a82fceaa3f68126552e6627a0963fb"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-0-fixed-metadata-instrumented-trial-1.result.json",
+      "bytes": 1774,
+      "sha256": "6cf9dc39cde19988870ea2051d3286f9a62493ee80518359f02c160e95723278"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-0-fixed-metadata-instrumented-trial-1.timings.json",
+      "bytes": 56414,
+      "sha256": "a16eba239c02b7bae207f8a056f90db07582bea54efc6e62cc2d080e5254221d"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-0-original-like-trial-1.progress.jsonl",
+      "bytes": 30995,
+      "sha256": "81530b90b47375ac5ab7d74c9bcd0cc9ed72f1dec69ca7ed23aa0b4d2da7bf35"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-0-original-like-trial-1.raw-body.bin",
+      "bytes": 4240549,
+      "sha256": "0cf38aa7a814fb6c5333187afe977a3236a82fceaa3f68126552e6627a0963fb"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-0-original-like-trial-1.result.json",
+      "bytes": 1353,
+      "sha256": "b06720c5cac6852b65d44e18c53a0468888b808f1ba6fce0ed66116675b0996f"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-0-original-like-trial-2.progress.jsonl",
+      "bytes": 30916,
+      "sha256": "8d02a54cfa1d41da19507eae7dc8db5cca29c4395d674ee9d512098c6c895969"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-0-original-like-trial-2.raw-body.bin",
+      "bytes": 4240549,
+      "sha256": "0cf38aa7a814fb6c5333187afe977a3236a82fceaa3f68126552e6627a0963fb"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-0-original-like-trial-2.result.json",
+      "bytes": 1353,
+      "sha256": "778cac859cbec286157efded39c40e10c579f8f084613db433430f24d097746e"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-0-original-like-trial-3.progress.jsonl",
+      "bytes": 30961,
+      "sha256": "4d9fe8024c38a57b566d90531179db8f9e935ade1de5bb00c47a2e19a70f9640"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-0-original-like-trial-3.raw-body.bin",
+      "bytes": 4240549,
+      "sha256": "0cf38aa7a814fb6c5333187afe977a3236a82fceaa3f68126552e6627a0963fb"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-0-original-like-trial-3.result.json",
+      "bytes": 1353,
+      "sha256": "5b54b6b547973725fc3642c767809d82d07902c8f27993483331751f5ca511d8"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-0.offline-analysis.json",
+      "bytes": 6122,
+      "sha256": "9bc864cc2648bd42eecf5c4db7510e24989698e298bcf55e402379d1850e13a7"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-1-fixed-metadata-instrumented-trial-1.progress.jsonl",
+      "bytes": 22973,
+      "sha256": "475e8d0075a5a47e1b05941a275306daf373c72d6fd5bddd766654206e7bba53"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-1-fixed-metadata-instrumented-trial-1.raw-body.bin",
+      "bytes": 2788736,
+      "sha256": "9371df550151766a8ff150a8b636c34359f06dc0f15d165969b88f07dacf916a"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-1-fixed-metadata-instrumented-trial-1.result.json",
+      "bytes": 1773,
+      "sha256": "2d56b1ec31cd27fcc5e86567d7c41e095646e2fb825e4e07022bd981ddfce0e4"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-1-fixed-metadata-instrumented-trial-1.timings.json",
+      "bytes": 40574,
+      "sha256": "e5fcf601bd2be09df5ccbb544d2af58801e9a2b4da2a7abcef074e4260d41968"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-1-original-like-trial-1.progress.jsonl",
+      "bytes": 22154,
+      "sha256": "b4cc1b3716e94b9f9e057c925f882f76ed8a76835861821a1f56c630a32393b2"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-1-original-like-trial-1.raw-body.bin",
+      "bytes": 2788736,
+      "sha256": "9371df550151766a8ff150a8b636c34359f06dc0f15d165969b88f07dacf916a"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-1-original-like-trial-1.result.json",
+      "bytes": 1352,
+      "sha256": "fc8149aed3ef5a8f39fa309e9575e33bb185916f48322a277926f61c813b7b49"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-1-original-like-trial-2.progress.jsonl",
+      "bytes": 22104,
+      "sha256": "0aeeae01ff22da158d70a198d74ee16065ae3eb2c51e8d4d11045fdbc809da0e"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-1-original-like-trial-2.raw-body.bin",
+      "bytes": 2788736,
+      "sha256": "9371df550151766a8ff150a8b636c34359f06dc0f15d165969b88f07dacf916a"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-1-original-like-trial-2.result.json",
+      "bytes": 1351,
+      "sha256": "270545690c692fdf9ad4ad49064eccbb9cec402d1c6ee0c888cb7a699b03ec56"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-1-original-like-trial-3.progress.jsonl",
+      "bytes": 22130,
+      "sha256": "da3d4989c588832be7c7b9b710adcdff333c401068a4b57390cc64cab5caacc4"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-1-original-like-trial-3.raw-body.bin",
+      "bytes": 2788736,
+      "sha256": "9371df550151766a8ff150a8b636c34359f06dc0f15d165969b88f07dacf916a"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-1-original-like-trial-3.result.json",
+      "bytes": 1352,
+      "sha256": "15a1943ef8aeb1042dcabff4642e251b171f200dbb4e5d37609aff4f36309041"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-1.offline-analysis.json",
+      "bytes": 6676,
+      "sha256": "1fbb9263aba5ab269df798b9dfcdeae345100438879d5d24dadd7eadce0ab1cc"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-2-fixed-metadata-instrumented-trial-1.progress.jsonl",
+      "bytes": 32241,
+      "sha256": "eca7add64826be0fbb066ca9f2c2c60f7b401167627a4c5880e3f4c8395259b6"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-2-fixed-metadata-instrumented-trial-1.raw-body.bin",
+      "bytes": 4239144,
+      "sha256": "5cad53dd30324d851e481e583a31b23c59c35ad0327769bbc2549fcfdfa480cd"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-2-fixed-metadata-instrumented-trial-1.result.json",
+      "bytes": 1776,
+      "sha256": "1cb2617ceaa4fdfa5a45ce4a4ba740343d6e03f987c53047d9ca365a21f541c8"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-2-fixed-metadata-instrumented-trial-1.timings.json",
+      "bytes": 56796,
+      "sha256": "bd6b3850c19e04df06eb265bd02a9b219c92b9a836e7bbb75b788abe9fcbf991"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-2-original-like-trial-1.progress.jsonl",
+      "bytes": 31174,
+      "sha256": "f07e0519f5088c77667fdba57de7f89d2b90ccbf473d805b47783012fa38fd85"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-2-original-like-trial-1.raw-body.bin",
+      "bytes": 4239144,
+      "sha256": "5cad53dd30324d851e481e583a31b23c59c35ad0327769bbc2549fcfdfa480cd"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-2-original-like-trial-1.result.json",
+      "bytes": 1353,
+      "sha256": "24af7d4c4f9b5601474480145791cb5fc387c5f28767ba4d37ac9302857df51d"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-2-original-like-trial-2.progress.jsonl",
+      "bytes": 31171,
+      "sha256": "1f313601dcb74c4dd962d6b162dca9ef16facfcf2c5d763b2fd36a06a9bb3df3"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-2-original-like-trial-2.raw-body.bin",
+      "bytes": 4239144,
+      "sha256": "5cad53dd30324d851e481e583a31b23c59c35ad0327769bbc2549fcfdfa480cd"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-2-original-like-trial-2.result.json",
+      "bytes": 1352,
+      "sha256": "4c50fb2dc745ef2ae928bb46cf1d4610ffe2cb36ed78f36a11061d66f47fbfe1"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-2-original-like-trial-3.progress.jsonl",
+      "bytes": 31112,
+      "sha256": "cb44a5d07b5120d5c7b84fd503ef49c2e9e02c6dd973e789e37e906f2a13f373"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-2-original-like-trial-3.raw-body.bin",
+      "bytes": 4239144,
+      "sha256": "5cad53dd30324d851e481e583a31b23c59c35ad0327769bbc2549fcfdfa480cd"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-2-original-like-trial-3.result.json",
+      "bytes": 1353,
+      "sha256": "6213bcaba570a32411bf81df0cd33b59ff89ac0ef1a390e6248d2398ba6dac46"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-2.offline-analysis.json",
+      "bytes": 6109,
+      "sha256": "b58da1224a31debfbc7599892709c92f4b8fb5cc2c1169c469cd07f01d333512"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-3-fixed-metadata-instrumented-trial-1.progress.jsonl",
+      "bytes": 24447,
+      "sha256": "ad8c21e937fffd76293b72715ce1c2912c7d61c10d9a91488227e629615ffb2d"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-3-fixed-metadata-instrumented-trial-1.raw-body.bin",
+      "bytes": 2940608,
+      "sha256": "b59742585327d194863bb2e7ec8d1f3bc91bd97c4ec5282e14e76b48e16d6948"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-3-fixed-metadata-instrumented-trial-1.result.json",
+      "bytes": 1773,
+      "sha256": "fc43ba7a714221e184c1f82b1f0e7a66739cbb5700ec0dfff18a0774e04ff2fe"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-3-fixed-metadata-instrumented-trial-1.timings.json",
+      "bytes": 43351,
+      "sha256": "183597a10fd753eed313177d07af55c3d5bdf4e70dfbf8d3ac98952a7c30854c"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-3-original-like-trial-1.progress.jsonl",
+      "bytes": 23664,
+      "sha256": "7b7016e08a950ddb58db6162cfdac5d25b09677a82b6aec3aca673887b8c79a7"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-3-original-like-trial-1.raw-body.bin",
+      "bytes": 2940608,
+      "sha256": "b59742585327d194863bb2e7ec8d1f3bc91bd97c4ec5282e14e76b48e16d6948"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-3-original-like-trial-1.result.json",
+      "bytes": 1353,
+      "sha256": "b2223f31cc0e6ba72c3d8f192aa1af2c24898c699687c38a638408593ac3b829"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-3-original-like-trial-2.progress.jsonl",
+      "bytes": 23637,
+      "sha256": "cc2527f518803ff2a2e37d7f35ae96d576b5ca03621ddc8005bac674b0e240b0"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-3-original-like-trial-2.raw-body.bin",
+      "bytes": 2940608,
+      "sha256": "b59742585327d194863bb2e7ec8d1f3bc91bd97c4ec5282e14e76b48e16d6948"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-3-original-like-trial-2.result.json",
+      "bytes": 1353,
+      "sha256": "041eea01a481169ce7c6e45711b818b95a689e154dc028d277bbdea654efe821"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-3-original-like-trial-3.progress.jsonl",
+      "bytes": 23610,
+      "sha256": "42ff720483c075868f237669b9601ba98125c5a491da2935b08c87a2668d4c42"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-3-original-like-trial-3.raw-body.bin",
+      "bytes": 2940608,
+      "sha256": "b59742585327d194863bb2e7ec8d1f3bc91bd97c4ec5282e14e76b48e16d6948"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-3-original-like-trial-3.result.json",
+      "bytes": 1351,
+      "sha256": "b5cf63cb96b3ddb5f3c8bb0633d4975c4622ece925630356bf21ee80ac59c536"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-3.offline-analysis.json",
+      "bytes": 6680,
+      "sha256": "a3f83c1fab82a0d00085d15f0dbf138653896465ecd9125247fcdcfe166c961c"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-4-fixed-metadata-instrumented-trial-1.progress.jsonl",
+      "bytes": 31914,
+      "sha256": "a63816fae72a278bf7b5c3aa4a9b359c03fd8e5ce68275f2cb750c5c212abd85"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-4-fixed-metadata-instrumented-trial-1.raw-body.bin",
+      "bytes": 4237024,
+      "sha256": "a4fb45ab08bf639f695134f2c693d5292f3126944d67db96e08596640930e910"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-4-fixed-metadata-instrumented-trial-1.result.json",
+      "bytes": 1773,
+      "sha256": "fd04721ddcece406d51f776ed1c18ded1a7ca15bbac969a7e0b12670af3f7c83"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-4-fixed-metadata-instrumented-trial-1.timings.json",
+      "bytes": 56297,
+      "sha256": "c5e8975240f22ae5e4b8760ae7029a155873da729ebe39fe70111c925571fd7e"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-4-original-like-trial-1.progress.jsonl",
+      "bytes": 30854,
+      "sha256": "b0dcf1ffd7429db49e94d2ef09a27bb7de987577b49549bd2855b39839034873"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-4-original-like-trial-1.raw-body.bin",
+      "bytes": 4237024,
+      "sha256": "a4fb45ab08bf639f695134f2c693d5292f3126944d67db96e08596640930e910"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-4-original-like-trial-1.result.json",
+      "bytes": 1352,
+      "sha256": "b19807a88816652298511e0966517e1764845c27098509e10be307c53281e682"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-4-original-like-trial-2.progress.jsonl",
+      "bytes": 30851,
+      "sha256": "e4b58bf4605ff829b303a824695e26f91d84e1583c5a22fb21a033bbd94900ae"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-4-original-like-trial-2.raw-body.bin",
+      "bytes": 4237024,
+      "sha256": "a4fb45ab08bf639f695134f2c693d5292f3126944d67db96e08596640930e910"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-4-original-like-trial-2.result.json",
+      "bytes": 1351,
+      "sha256": "b4019906c0c3341792156f01a8222bdd932771199655d4959b8c79de616697c2"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-4-original-like-trial-3.progress.jsonl",
+      "bytes": 30803,
+      "sha256": "030f3c453e13cd24cc266114ef5383701b97c287e03784f628cfddfdde8d0571"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-4-original-like-trial-3.raw-body.bin",
+      "bytes": 4237024,
+      "sha256": "a4fb45ab08bf639f695134f2c693d5292f3126944d67db96e08596640930e910"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-4-original-like-trial-3.result.json",
+      "bytes": 1353,
+      "sha256": "492f5c90b1c2f4e206be09a5ca0c14bcfa3f79da4e57b2485a43936b31a9bfc6"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-4.offline-analysis.json",
+      "bytes": 6134,
+      "sha256": "dc54fc1fb3ba19c6634bb2d0c39549e9a24dde7f2a4ec71b0dd6ba6693564fa0"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-verifier-70afb49c4efd44c78319d56f5344c2d3\\verify-source-downloads.mjs",
+      "bytes": 15665,
+      "sha256": "c4e5ead5aacd624414c3e99a155700180f7bdb6522f36c263b84bd9876e117cf"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\docs\\developers\\architecture\\evidence\\2026-10-06-public-ssr-preferences\\production-f9\\index.json",
+      "bytes": 805993,
+      "sha256": "b8649463f6bb12e1083d3cb80ac8bac83a5bc2de2208bae04a5145d25f920988"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\docs\\developers\\architecture\\evidence\\2026-10-06-public-ssr-preferences\\production-f9\\raw-evidence.zip",
+      "bytes": 35638466,
+      "sha256": "9262b469b0f1160a27d00f3e352f2a023b5804e0a29a39aba0d60cdf06b16e6f"
+    }
+  ]
+}

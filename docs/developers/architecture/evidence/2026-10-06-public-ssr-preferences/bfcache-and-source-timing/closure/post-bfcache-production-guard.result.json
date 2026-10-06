@@ -1,0 +1,25 @@
+{
+  "startedAt": "2026-10-06T14:14:19.035Z",
+  "closedAt": "2026-10-06T14:14:27.905Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4/guard-live-cutover.mjs",
+    "post-bfcache-production-guard",
+    "218e2b8c-6153-4163-8b9f-cffc34445e27",
+    "f9b9140f7fdc35b4bddcd27e13df14cb2e444a34"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExitCode": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-bfcache-continuation-64228ac856184788ac472e5bbe6acb64\\post-bfcache-production-guard.stdout.log",
+    "bytes": 2864,
+    "sha256": "0d06d9ad52dd653dc3ef8c8479d2a34ac57db7d52b54a17b9a7d07c2c89d8798"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-bfcache-continuation-64228ac856184788ac472e5bbe6acb64\\post-bfcache-production-guard.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

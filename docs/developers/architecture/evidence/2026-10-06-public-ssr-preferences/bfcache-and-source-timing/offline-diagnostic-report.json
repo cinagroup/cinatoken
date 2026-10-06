@@ -1,0 +1,2446 @@
+{
+  "startedAt": "2026-10-06T13:36:44.737Z",
+  "contract": "Offline original chunk analysis and local fixed-byte replay only; no production request, no repository edits, no original result promotion.",
+  "runner": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\analyze-offline.mjs",
+    "bytes": 22851,
+    "sha256": "aec65a8ca96d1fa9e0b305d95fe7c0fc58c277bea1d1b0524ff190163f2b9655"
+  },
+  "collector": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-verifier-70afb49c4efd44c78319d56f5344c2d3\\verify-source-downloads.mjs",
+    "bytes": 15665,
+    "sha256": "c4e5ead5aacd624414c3e99a155700180f7bdb6522f36c263b84bd9876e117cf"
+  },
+  "networkRequestsStarted": 0,
+  "filesystemWriteScope": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7",
+  "originalSourceDownloadDeadlineMs": 60000,
+  "originalThirtySecondDeadlineMs": 30000,
+  "originalEvidence": {
+    "report": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\source-download-production-f9\\report.json",
+      "bytes": 420897,
+      "sha256": "510a718868df820411fd4a0be4f8429613100f53523bfcd72f546ba449c88be7"
+    },
+    "sourceProcessClosed": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\source-download-production-f9\\process-closed.json",
+      "bytes": 1116,
+      "sha256": "e9208ce29336c0ff9c14a74fa74eed731c088aded02a0c0c2d2a55758665a6bf"
+    },
+    "sourceProcessActualExitCode": 1,
+    "sourceProcessSignal": null,
+    "originalSourceSummary": {
+      "plannedSourceDownloads": 5,
+      "attemptedSourceDownloads": 5,
+      "networkRequestsStarted": 5,
+      "passedSourceDownloads": 3,
+      "failedSourceDownloads": 2,
+      "compositeUniqueAssets": 158,
+      "compositeOutcome": "FAIL",
+      "prior177ActualExitCode": 1,
+      "prior177Passed": 175,
+      "prior177Failed": 2,
+      "fatal": 0
+    },
+    "collectorReadOnlyReview": {
+      "fixedDeadlineIncludesFetchAndBodyMs": 60000,
+      "perChunkOrder": [
+        "reader.read awaited",
+        "Buffer.from copy",
+        "raw persist writeSync",
+        "digest.update",
+        "bytes increment/bound assertion",
+        "Date.now + progress record",
+        "JSON.stringify + Buffer.from + progress persist writeSync"
+      ],
+      "fsyncCallsPerFile": 1,
+      "fsyncFilesPerRequest": 2,
+      "fsyncLocation": "finally only, after EOF or error; not inside the chunk loop",
+      "progressElapsedMeaning": "Observation immediately after raw write/hash, before this chunk progress JSONL persist. Interchunk intervals include waiting, prior progress persistence and scheduling.",
+      "originalPerOperationTimingExists": false
+    },
+    "priorThirtySecond": [
+      {
+        "name": "live-http-production-f9-network",
+        "attempted": 177,
+        "passed": 167,
+        "failed": 10,
+        "actualExitCode": 1,
+        "report": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\live-http-production-f9-network\\http\\report.json",
+          "bytes": 431271,
+          "sha256": "9d8a9a21f01517d98a9b04a1538c07c22a71d3fc395f23619b2a9b394f1287de"
+        },
+        "processClosed": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\live-http-production-f9-network\\process-closed.json",
+          "bytes": 944,
+          "sha256": "6ce92096800492ce0390c44a9fbdeca4e21ecdd82013dda68f3e6b1ef6574234"
+        }
+      },
+      {
+        "name": "live-http-production-f9-v2",
+        "attempted": 177,
+        "passed": 175,
+        "failed": 2,
+        "actualExitCode": 1,
+        "report": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\live-http-production-f9-v2\\http\\report.json",
+          "bytes": 426973,
+          "sha256": "6cc7cc5090ad42eb9025778dbaea0fad86407cf2cff8d2fef81b8e4e96313ed3"
+        },
+        "processClosed": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\live-http-production-f9-v2\\process-closed.json",
+          "bytes": 930,
+          "sha256": "32669ce67d3f4d81eeb40d631201838122d51355825b109963bc61e5affba0b3"
+        }
+      }
+    ]
+  },
+  "rows": [
+    {
+      "id": "source-0",
+      "path": "sources/web.0cf38aa7a814fb6c5333187afe977a3236a82fceaa3f68126552e6627a0963fb.tar.gz",
+      "expected": {
+        "bytes": 4240549,
+        "sha256": "0cf38aa7a814fb6c5333187afe977a3236a82fceaa3f68126552e6627a0963fb"
+      },
+      "persistedBody": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\source-download-production-f9\\source-0.raw-body.bin",
+        "bytes": 4240549,
+        "sha256": "0cf38aa7a814fb6c5333187afe977a3236a82fceaa3f68126552e6627a0963fb"
+      },
+      "progressFile": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\source-download-production-f9\\source-0.progress.jsonl",
+        "bytes": 32043,
+        "sha256": "66f424213f994801a4b8d9977cf735b1520ffee93c587d36b57801a3ce68d048"
+      },
+      "status": 200,
+      "cfCacheStatusObserved": "HIT",
+      "cfRayObserved": "a464b29f5b58a06f-SIN",
+      "startedAt": "2026-10-06T12:33:59.233Z",
+      "deadlineMs": 60000,
+      "headersElapsedMs": 1525,
+      "firstChunkElapsedMs": 1526,
+      "headerToFirstChunkMs": 1,
+      "lastChunkElapsedMs": 52551,
+      "bodyElapsedMs": 52551,
+      "finalElapsedMs": 52561,
+      "bodyEOF": true,
+      "observedBytes": 4240549,
+      "missingExpectedBytes": 0,
+      "completionPercent": 100,
+      "chunks": 331,
+      "chunkBytes": {
+        "count": 331,
+        "min": 615,
+        "p50": 16384,
+        "p90": 16384,
+        "p95": 16384,
+        "p99": 16384,
+        "max": 16384,
+        "sum": 4240549
+      },
+      "full16KiBChunks": 240,
+      "sameMillisecondInterchunkIntervals": 137,
+      "intervalMilliseconds": {
+        "count": 330,
+        "min": 0,
+        "p50": 1,
+        "p90": 431,
+        "p95": 582,
+        "p99": 839,
+        "max": 955,
+        "sum": 51025
+      },
+      "intervalsAtLeast": [
+        {
+          "thresholdMs": 100,
+          "count": 118,
+          "sumGapMs": 49889
+        },
+        {
+          "thresholdMs": 250,
+          "count": 101,
+          "sumGapMs": 46643
+        },
+        {
+          "thresholdMs": 500,
+          "count": 21,
+          "sumGapMs": 15078
+        },
+        {
+          "thresholdMs": 1000,
+          "count": 0,
+          "sumGapMs": 0
+        },
+        {
+          "thresholdMs": 2000,
+          "count": 0,
+          "sumGapMs": 0
+        }
+      ],
+      "topTenInterchunkIntervals": [
+        {
+          "previousIndex": 86,
+          "index": 87,
+          "fromElapsedMs": 3701,
+          "toElapsedMs": 4656,
+          "gapMs": 955,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 335872
+        },
+        {
+          "previousIndex": 328,
+          "index": 329,
+          "fromElapsedMs": 51681,
+          "toElapsedMs": 52550,
+          "gapMs": 869,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 4237120
+        },
+        {
+          "previousIndex": 149,
+          "index": 150,
+          "fromElapsedMs": 16869,
+          "toElapsedMs": 17716,
+          "gapMs": 847,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 1349760
+        },
+        {
+          "previousIndex": 199,
+          "index": 200,
+          "fromElapsedMs": 25498,
+          "toElapsedMs": 26337,
+          "gapMs": 839,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 2129920
+        },
+        {
+          "previousIndex": 92,
+          "index": 93,
+          "fromElapsedMs": 4657,
+          "toElapsedMs": 5479,
+          "gapMs": 822,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 434176
+        },
+        {
+          "previousIndex": 40,
+          "index": 41,
+          "fromElapsedMs": 2871,
+          "toElapsedMs": 3672,
+          "gapMs": 801,
+          "incomingChunkBytes": 4229,
+          "accumulatedBytes": 58923
+        },
+        {
+          "previousIndex": 265,
+          "index": 266,
+          "fromElapsedMs": 42326,
+          "toElapsedMs": 43118,
+          "gapMs": 792,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 3211264
+        },
+        {
+          "previousIndex": 105,
+          "index": 106,
+          "fromElapsedMs": 7190,
+          "toElapsedMs": 7977,
+          "gapMs": 787,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 647168
+        },
+        {
+          "previousIndex": 252,
+          "index": 253,
+          "fromElapsedMs": 38503,
+          "toElapsedMs": 39267,
+          "gapMs": 764,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 2998272
+        },
+        {
+          "previousIndex": 257,
+          "index": 258,
+          "fromElapsedMs": 39851,
+          "toElapsedMs": 40610,
+          "gapMs": 759,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 3080192
+        }
+      ],
+      "tenSecondObservationBins": [
+        {
+          "startElapsedMs": 0,
+          "endExclusiveElapsedMs": 10000,
+          "observedBytes": 816640,
+          "observedChunks": 118
+        },
+        {
+          "startElapsedMs": 10000,
+          "endExclusiveElapsedMs": 20000,
+          "observedBytes": 809088,
+          "observedChunks": 51
+        },
+        {
+          "startElapsedMs": 20000,
+          "endExclusiveElapsedMs": 30000,
+          "observedBytes": 733568,
+          "observedChunks": 46
+        },
+        {
+          "startElapsedMs": 30000,
+          "endExclusiveElapsedMs": 40000,
+          "observedBytes": 704512,
+          "observedChunks": 43
+        },
+        {
+          "startElapsedMs": 40000,
+          "endExclusiveElapsedMs": 50000,
+          "observedBytes": 665408,
+          "observedChunks": 41
+        },
+        {
+          "startElapsedMs": 50000,
+          "endExclusiveElapsedMs": 60000,
+          "observedBytes": 511333,
+          "observedChunks": 32
+        }
+      ],
+      "observedPersistedKiBPerSecondFromStartToLastChunk": 78.802708,
+      "observedPersistedKiBPerSecondFromHeadersToLastChunk": 81.157863,
+      "wholeRequestAfterLastChunkMs": 10,
+      "EOFToFinishedMs": 10,
+      "lastChunkToScheduledDeadlineMs": 7449,
+      "deadlineOverrunAtFinishedMs": null,
+      "originalOutcome": "PASS",
+      "byteContractPassed": true,
+      "aborted": false,
+      "abortReason": null,
+      "failures": [],
+      "cleanup": {
+        "readerTerminal": "closed",
+        "readerLockReleased": true,
+        "rawBodyFileFlushed": true,
+        "rawBodyFileClosed": true,
+        "progressFileFlushed": true,
+        "progressFileClosed": true,
+        "readerCancel": null
+      },
+      "consistencyChecks": {
+        "reportEqualsIndividualRow": true,
+        "JSONLEqualsReportProgress": true,
+        "JSONLSerializationByteExact": true,
+        "persistedBodyHashAndBytesVerified": true,
+        "chunkSumEqualsSavedBody": true,
+        "accumulatedMonotonic": true,
+        "timestampOriginConstant": true,
+        "timestampOriginMatchesRowWithin2ms": true,
+        "originalFileDescriptorsClosed": true
+      }
+    },
+    {
+      "id": "source-1",
+      "path": "sources/web.5127f23899c8edca297e0f015faaf707e19d4d5945505ca910c6dbc22ff1ad7f.tar.gz",
+      "expected": {
+        "bytes": 4254982,
+        "sha256": "5127f23899c8edca297e0f015faaf707e19d4d5945505ca910c6dbc22ff1ad7f"
+      },
+      "persistedBody": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\source-download-production-f9\\source-1.raw-body.bin",
+        "bytes": 2788736,
+        "sha256": "9371df550151766a8ff150a8b636c34359f06dc0f15d165969b88f07dacf916a"
+      },
+      "progressFile": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\source-download-production-f9\\source-1.progress.jsonl",
+        "bytes": 22973,
+        "sha256": "475e8d0075a5a47e1b05941a275306daf373c72d6fd5bddd766654206e7bba53"
+      },
+      "status": 200,
+      "cfCacheStatusObserved": "MISS",
+      "cfRayObserved": "a464b3eaabf75eb7-KIX",
+      "startedAt": "2026-10-06T12:34:51.796Z",
+      "deadlineMs": 60000,
+      "headersElapsedMs": 2353,
+      "firstChunkElapsedMs": 2407,
+      "headerToFirstChunkMs": 54,
+      "lastChunkElapsedMs": 59707,
+      "bodyElapsedMs": null,
+      "finalElapsedMs": 60018,
+      "bodyEOF": false,
+      "observedBytes": 2788736,
+      "missingExpectedBytes": 1466246,
+      "completionPercent": 65.540489,
+      "chunks": 238,
+      "chunkBytes": {
+        "count": 238,
+        "min": 1303,
+        "p50": 16384,
+        "p90": 16384,
+        "p95": 16384,
+        "p99": 16384,
+        "max": 16384,
+        "sum": 2788736
+      },
+      "full16KiBChunks": 155,
+      "sameMillisecondInterchunkIntervals": 95,
+      "intervalMilliseconds": {
+        "count": 237,
+        "min": 0,
+        "p50": 37,
+        "p90": 825,
+        "p95": 872,
+        "p99": 1219,
+        "max": 1330,
+        "sum": 57300
+      },
+      "intervalsAtLeast": [
+        {
+          "thresholdMs": 100,
+          "count": 111,
+          "sumGapMs": 56717
+        },
+        {
+          "thresholdMs": 250,
+          "count": 90,
+          "sumGapMs": 53912
+        },
+        {
+          "thresholdMs": 500,
+          "count": 48,
+          "sumGapMs": 37995
+        },
+        {
+          "thresholdMs": 1000,
+          "count": 5,
+          "sumGapMs": 6228
+        },
+        {
+          "thresholdMs": 2000,
+          "count": 0,
+          "sumGapMs": 0
+        }
+      ],
+      "topTenInterchunkIntervals": [
+        {
+          "previousIndex": 223,
+          "index": 224,
+          "fromElapsedMs": 54913,
+          "toElapsedMs": 56243,
+          "gapMs": 1330,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 2579584
+        },
+        {
+          "previousIndex": 176,
+          "index": 177,
+          "fromElapsedMs": 41688,
+          "toElapsedMs": 42957,
+          "gapMs": 1269,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 1818624
+        },
+        {
+          "previousIndex": 168,
+          "index": 169,
+          "fromElapsedMs": 36662,
+          "toElapsedMs": 37881,
+          "gapMs": 1219,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 1687552
+        },
+        {
+          "previousIndex": 171,
+          "index": 172,
+          "fromElapsedMs": 39197,
+          "toElapsedMs": 40406,
+          "gapMs": 1209,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 1736704
+        },
+        {
+          "previousIndex": 165,
+          "index": 166,
+          "fromElapsedMs": 33701,
+          "toElapsedMs": 34902,
+          "gapMs": 1201,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 1638400
+        },
+        {
+          "previousIndex": 179,
+          "index": 180,
+          "fromElapsedMs": 43674,
+          "toElapsedMs": 44670,
+          "gapMs": 996,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 1867776
+        },
+        {
+          "previousIndex": 162,
+          "index": 163,
+          "fromElapsedMs": 31415,
+          "toElapsedMs": 32360,
+          "gapMs": 945,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 1589248
+        },
+        {
+          "previousIndex": 198,
+          "index": 199,
+          "fromElapsedMs": 51269,
+          "toElapsedMs": 52160,
+          "gapMs": 891,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 2179072
+        },
+        {
+          "previousIndex": 166,
+          "index": 167,
+          "fromElapsedMs": 34902,
+          "toElapsedMs": 35790,
+          "gapMs": 888,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 1654784
+        },
+        {
+          "previousIndex": 159,
+          "index": 160,
+          "fromElapsedMs": 29715,
+          "toElapsedMs": 30592,
+          "gapMs": 877,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 1540096
+        }
+      ],
+      "tenSecondObservationBins": [
+        {
+          "startElapsedMs": 0,
+          "endExclusiveElapsedMs": 10000,
+          "observedBytes": 262144,
+          "observedChunks": 83
+        },
+        {
+          "startElapsedMs": 10000,
+          "endExclusiveElapsedMs": 20000,
+          "observedBytes": 704512,
+          "observedChunks": 43
+        },
+        {
+          "startElapsedMs": 20000,
+          "endExclusiveElapsedMs": 30000,
+          "observedBytes": 557056,
+          "observedChunks": 34
+        },
+        {
+          "startElapsedMs": 30000,
+          "endExclusiveElapsedMs": 40000,
+          "observedBytes": 196608,
+          "observedChunks": 12
+        },
+        {
+          "startElapsedMs": 40000,
+          "endExclusiveElapsedMs": 50000,
+          "observedBytes": 311296,
+          "observedChunks": 19
+        },
+        {
+          "startElapsedMs": 50000,
+          "endExclusiveElapsedMs": 60000,
+          "observedBytes": 757120,
+          "observedChunks": 47
+        }
+      ],
+      "observedPersistedKiBPerSecondFromStartToLastChunk": 45.612324,
+      "observedPersistedKiBPerSecondFromHeadersToLastChunk": 47.483611,
+      "wholeRequestAfterLastChunkMs": 311,
+      "EOFToFinishedMs": null,
+      "lastChunkToScheduledDeadlineMs": 293,
+      "deadlineOverrunAtFinishedMs": 18,
+      "originalOutcome": "FAIL",
+      "byteContractPassed": false,
+      "aborted": true,
+      "abortReason": {
+        "name": "TimeoutError",
+        "message": "Fixed source-download deadline 60000 ms"
+      },
+      "failures": [
+        {
+          "phase": "source download or original-byte validation",
+          "name": "TimeoutError",
+          "message": "Fixed source-download deadline 60000 ms"
+        }
+      ],
+      "cleanup": {
+        "readerCancel": {
+          "state": "rejected after source stream abort",
+          "name": "TimeoutError",
+          "message": "Fixed source-download deadline 60000 ms"
+        },
+        "readerTerminal": {
+          "state": "errored",
+          "name": "TimeoutError",
+          "message": "Fixed source-download deadline 60000 ms"
+        },
+        "readerLockReleased": true,
+        "rawBodyFileFlushed": true,
+        "rawBodyFileClosed": true,
+        "progressFileFlushed": true,
+        "progressFileClosed": true
+      },
+      "consistencyChecks": {
+        "reportEqualsIndividualRow": true,
+        "JSONLEqualsReportProgress": true,
+        "JSONLSerializationByteExact": true,
+        "persistedBodyHashAndBytesVerified": true,
+        "chunkSumEqualsSavedBody": true,
+        "accumulatedMonotonic": true,
+        "timestampOriginConstant": true,
+        "timestampOriginMatchesRowWithin2ms": true,
+        "originalFileDescriptorsClosed": true
+      }
+    },
+    {
+      "id": "source-2",
+      "path": "sources/web.5cad53dd30324d851e481e583a31b23c59c35ad0327769bbc2549fcfdfa480cd.tar.gz",
+      "expected": {
+        "bytes": 4239144,
+        "sha256": "5cad53dd30324d851e481e583a31b23c59c35ad0327769bbc2549fcfdfa480cd"
+      },
+      "persistedBody": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\source-download-production-f9\\source-2.raw-body.bin",
+        "bytes": 4239144,
+        "sha256": "5cad53dd30324d851e481e583a31b23c59c35ad0327769bbc2549fcfdfa480cd"
+      },
+      "progressFile": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\source-download-production-f9\\source-2.progress.jsonl",
+        "bytes": 32241,
+        "sha256": "eca7add64826be0fbb066ca9f2c2c60f7b401167627a4c5880e3f4c8395259b6"
+      },
+      "status": 200,
+      "cfCacheStatusObserved": "HIT",
+      "cfRayObserved": "a464b5660e2a9c41-SIN",
+      "startedAt": "2026-10-06T12:35:51.815Z",
+      "deadlineMs": 60000,
+      "headersElapsedMs": 2619,
+      "firstChunkElapsedMs": 2620,
+      "headerToFirstChunkMs": 1,
+      "lastChunkElapsedMs": 37791,
+      "bodyElapsedMs": 37792,
+      "finalElapsedMs": 37799,
+      "bodyEOF": true,
+      "observedBytes": 4239144,
+      "missingExpectedBytes": 0,
+      "completionPercent": 100,
+      "chunks": 333,
+      "chunkBytes": {
+        "count": 333,
+        "min": 621,
+        "p50": 16384,
+        "p90": 16384,
+        "p95": 16384,
+        "p99": 16384,
+        "max": 16384,
+        "sum": 4239144
+      },
+      "full16KiBChunks": 238,
+      "sameMillisecondInterchunkIntervals": 165,
+      "intervalMilliseconds": {
+        "count": 332,
+        "min": 0,
+        "p50": 1,
+        "p90": 426,
+        "p95": 448,
+        "p99": 680,
+        "max": 905,
+        "sum": 35171
+      },
+      "intervalsAtLeast": [
+        {
+          "thresholdMs": 100,
+          "count": 95,
+          "sumGapMs": 34631
+        },
+        {
+          "thresholdMs": 250,
+          "count": 75,
+          "sumGapMs": 31218
+        },
+        {
+          "thresholdMs": 500,
+          "count": 6,
+          "sumGapMs": 4476
+        },
+        {
+          "thresholdMs": 1000,
+          "count": 0,
+          "sumGapMs": 0
+        },
+        {
+          "thresholdMs": 2000,
+          "count": 0,
+          "sumGapMs": 0
+        }
+      ],
+      "topTenInterchunkIntervals": [
+        {
+          "previousIndex": 25,
+          "index": 26,
+          "fromElapsedMs": 3073,
+          "toElapsedMs": 3978,
+          "gapMs": 905,
+          "incomingChunkBytes": 1369,
+          "accumulatedBytes": 35528
+        },
+        {
+          "previousIndex": 89,
+          "index": 90,
+          "fromElapsedMs": 6144,
+          "toElapsedMs": 7018,
+          "gapMs": 874,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 380608
+        },
+        {
+          "previousIndex": 224,
+          "index": 225,
+          "fromElapsedMs": 25710,
+          "toElapsedMs": 26520,
+          "gapMs": 810,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 2545792
+        },
+        {
+          "previousIndex": 126,
+          "index": 127,
+          "fromElapsedMs": 11374,
+          "toElapsedMs": 12054,
+          "gapMs": 680,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 983040
+        },
+        {
+          "previousIndex": 174,
+          "index": 175,
+          "fromElapsedMs": 19423,
+          "toElapsedMs": 20041,
+          "gapMs": 618,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 1758080
+        },
+        {
+          "previousIndex": 132,
+          "index": 133,
+          "fromElapsedMs": 12513,
+          "toElapsedMs": 13102,
+          "gapMs": 589,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 1081344
+        },
+        {
+          "previousIndex": 231,
+          "index": 232,
+          "fromElapsedMs": 27388,
+          "toElapsedMs": 27852,
+          "gapMs": 464,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 2660480
+        },
+        {
+          "previousIndex": 66,
+          "index": 67,
+          "fromElapsedMs": 4437,
+          "toElapsedMs": 4897,
+          "gapMs": 460,
+          "incomingChunkBytes": 4229,
+          "accumulatedBytes": 168335
+        },
+        {
+          "previousIndex": 129,
+          "index": 130,
+          "fromElapsedMs": 12054,
+          "toElapsedMs": 12513,
+          "gapMs": 459,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 1032192
+        },
+        {
+          "previousIndex": 278,
+          "index": 279,
+          "fromElapsedMs": 35202,
+          "toElapsedMs": 35660,
+          "gapMs": 458,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 3395136
+        }
+      ],
+      "tenSecondObservationBins": [
+        {
+          "startElapsedMs": 0,
+          "endExclusiveElapsedMs": 10000,
+          "observedBytes": 757440,
+          "observedChunks": 114
+        },
+        {
+          "startElapsedMs": 10000,
+          "endExclusiveElapsedMs": 20000,
+          "observedBytes": 984256,
+          "observedChunks": 61
+        },
+        {
+          "startElapsedMs": 20000,
+          "endExclusiveElapsedMs": 30000,
+          "observedBytes": 1056128,
+          "observedChunks": 67
+        },
+        {
+          "startElapsedMs": 30000,
+          "endExclusiveElapsedMs": 40000,
+          "observedBytes": 1441320,
+          "observedChunks": 91
+        },
+        {
+          "startElapsedMs": 40000,
+          "endExclusiveElapsedMs": 50000,
+          "observedBytes": 0,
+          "observedChunks": 0
+        },
+        {
+          "startElapsedMs": 50000,
+          "endExclusiveElapsedMs": 60000,
+          "observedBytes": 0,
+          "observedChunks": 0
+        }
+      ],
+      "observedPersistedKiBPerSecondFromStartToLastChunk": 109.544311,
+      "observedPersistedKiBPerSecondFromHeadersToLastChunk": 117.70127,
+      "wholeRequestAfterLastChunkMs": 8,
+      "EOFToFinishedMs": 7,
+      "lastChunkToScheduledDeadlineMs": 22209,
+      "deadlineOverrunAtFinishedMs": null,
+      "originalOutcome": "PASS",
+      "byteContractPassed": true,
+      "aborted": false,
+      "abortReason": null,
+      "failures": [],
+      "cleanup": {
+        "readerTerminal": "closed",
+        "readerLockReleased": true,
+        "rawBodyFileFlushed": true,
+        "rawBodyFileClosed": true,
+        "progressFileFlushed": true,
+        "progressFileClosed": true,
+        "readerCancel": null
+      },
+      "consistencyChecks": {
+        "reportEqualsIndividualRow": true,
+        "JSONLEqualsReportProgress": true,
+        "JSONLSerializationByteExact": true,
+        "persistedBodyHashAndBytesVerified": true,
+        "chunkSumEqualsSavedBody": true,
+        "accumulatedMonotonic": true,
+        "timestampOriginConstant": true,
+        "timestampOriginMatchesRowWithin2ms": true,
+        "originalFileDescriptorsClosed": true
+      }
+    },
+    {
+      "id": "source-3",
+      "path": "sources/web.8ef7f4b53718e7a13166d024c7976a4079426f66f76edccccd21134fad318d62.tar.gz",
+      "expected": {
+        "bytes": 4249828,
+        "sha256": "8ef7f4b53718e7a13166d024c7976a4079426f66f76edccccd21134fad318d62"
+      },
+      "persistedBody": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\source-download-production-f9\\source-3.raw-body.bin",
+        "bytes": 2940608,
+        "sha256": "b59742585327d194863bb2e7ec8d1f3bc91bd97c4ec5282e14e76b48e16d6948"
+      },
+      "progressFile": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\source-download-production-f9\\source-3.progress.jsonl",
+        "bytes": 24447,
+        "sha256": "ad8c21e937fffd76293b72715ce1c2912c7d61c10d9a91488227e629615ffb2d"
+      },
+      "status": 200,
+      "cfCacheStatusObserved": "HIT",
+      "cfRayObserved": "a464b64b3acf5888-SIN",
+      "startedAt": "2026-10-06T12:36:29.616Z",
+      "deadlineMs": 60000,
+      "headersElapsedMs": 1466,
+      "firstChunkElapsedMs": 1466,
+      "headerToFirstChunkMs": 0,
+      "lastChunkElapsedMs": 59233,
+      "bodyElapsedMs": null,
+      "finalElapsedMs": 60018,
+      "bodyEOF": false,
+      "observedBytes": 2940608,
+      "missingExpectedBytes": 1309220,
+      "completionPercent": 69.193577,
+      "chunks": 254,
+      "chunkBytes": {
+        "count": 254,
+        "min": 688,
+        "p50": 16384,
+        "p90": 16384,
+        "p95": 16384,
+        "p99": 16384,
+        "max": 16384,
+        "sum": 2940608
+      },
+      "full16KiBChunks": 162,
+      "sameMillisecondInterchunkIntervals": 137,
+      "intervalMilliseconds": {
+        "count": 253,
+        "min": 0,
+        "p50": 0,
+        "p90": 825,
+        "p95": 949,
+        "p99": 1324,
+        "max": 1683,
+        "sum": 57767
+      },
+      "intervalsAtLeast": [
+        {
+          "thresholdMs": 100,
+          "count": 86,
+          "sumGapMs": 57368
+        },
+        {
+          "thresholdMs": 250,
+          "count": 81,
+          "sumGapMs": 56742
+        },
+        {
+          "thresholdMs": 500,
+          "count": 55,
+          "sumGapMs": 46996
+        },
+        {
+          "thresholdMs": 1000,
+          "count": 10,
+          "sumGapMs": 12499
+        },
+        {
+          "thresholdMs": 2000,
+          "count": 0,
+          "sumGapMs": 0
+        }
+      ],
+      "topTenInterchunkIntervals": [
+        {
+          "previousIndex": 187,
+          "index": 188,
+          "fromElapsedMs": 21791,
+          "toElapsedMs": 23474,
+          "gapMs": 1683,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 1921152
+        },
+        {
+          "previousIndex": 205,
+          "index": 206,
+          "fromElapsedMs": 33878,
+          "toElapsedMs": 35543,
+          "gapMs": 1665,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 2205952
+        },
+        {
+          "previousIndex": 203,
+          "index": 204,
+          "fromElapsedMs": 31724,
+          "toElapsedMs": 33048,
+          "gapMs": 1324,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 2173184
+        },
+        {
+          "previousIndex": 171,
+          "index": 172,
+          "fromElapsedMs": 13103,
+          "toElapsedMs": 14330,
+          "gapMs": 1227,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 1683008
+        },
+        {
+          "previousIndex": 246,
+          "index": 247,
+          "fromElapsedMs": 53791,
+          "toElapsedMs": 54958,
+          "gapMs": 1167,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 2842304
+        },
+        {
+          "previousIndex": 202,
+          "index": 203,
+          "fromElapsedMs": 30570,
+          "toElapsedMs": 31724,
+          "gapMs": 1154,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 2156800
+        },
+        {
+          "previousIndex": 251,
+          "index": 252,
+          "fromElapsedMs": 57659,
+          "toElapsedMs": 58810,
+          "gapMs": 1151,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 2924224
+        },
+        {
+          "previousIndex": 211,
+          "index": 212,
+          "fromElapsedMs": 39325,
+          "toElapsedMs": 40380,
+          "gapMs": 1055,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 2294144
+        },
+        {
+          "previousIndex": 174,
+          "index": 175,
+          "fromElapsedMs": 15004,
+          "toElapsedMs": 16054,
+          "gapMs": 1050,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 1716992
+        },
+        {
+          "previousIndex": 209,
+          "index": 210,
+          "fromElapsedMs": 37633,
+          "toElapsedMs": 38656,
+          "gapMs": 1023,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 2261376
+        }
+      ],
+      "tenSecondObservationBins": [
+        {
+          "startElapsedMs": 0,
+          "endExclusiveElapsedMs": 10000,
+          "observedBytes": 1535552,
+          "observedChunks": 164
+        },
+        {
+          "startElapsedMs": 10000,
+          "endExclusiveElapsedMs": 20000,
+          "observedBytes": 287296,
+          "observedChunks": 19
+        },
+        {
+          "startElapsedMs": 20000,
+          "endExclusiveElapsedMs": 30000,
+          "observedBytes": 301184,
+          "observedChunks": 19
+        },
+        {
+          "startElapsedMs": 30000,
+          "endExclusiveElapsedMs": 40000,
+          "observedBytes": 153728,
+          "observedChunks": 10
+        },
+        {
+          "startElapsedMs": 40000,
+          "endExclusiveElapsedMs": 50000,
+          "observedBytes": 345280,
+          "observedChunks": 22
+        },
+        {
+          "startElapsedMs": 50000,
+          "endExclusiveElapsedMs": 60000,
+          "observedBytes": 317568,
+          "observedChunks": 20
+        }
+      ],
+      "observedPersistedKiBPerSecondFromStartToLastChunk": 48.48121,
+      "observedPersistedKiBPerSecondFromHeadersToLastChunk": 49.711557,
+      "wholeRequestAfterLastChunkMs": 785,
+      "EOFToFinishedMs": null,
+      "lastChunkToScheduledDeadlineMs": 767,
+      "deadlineOverrunAtFinishedMs": 18,
+      "originalOutcome": "FAIL",
+      "byteContractPassed": false,
+      "aborted": true,
+      "abortReason": {
+        "name": "TimeoutError",
+        "message": "Fixed source-download deadline 60000 ms"
+      },
+      "failures": [
+        {
+          "phase": "source download or original-byte validation",
+          "name": "TimeoutError",
+          "message": "Fixed source-download deadline 60000 ms"
+        }
+      ],
+      "cleanup": {
+        "readerCancel": {
+          "state": "rejected after source stream abort",
+          "name": "TimeoutError",
+          "message": "Fixed source-download deadline 60000 ms"
+        },
+        "readerTerminal": {
+          "state": "errored",
+          "name": "TimeoutError",
+          "message": "Fixed source-download deadline 60000 ms"
+        },
+        "readerLockReleased": true,
+        "rawBodyFileFlushed": true,
+        "rawBodyFileClosed": true,
+        "progressFileFlushed": true,
+        "progressFileClosed": true
+      },
+      "consistencyChecks": {
+        "reportEqualsIndividualRow": true,
+        "JSONLEqualsReportProgress": true,
+        "JSONLSerializationByteExact": true,
+        "persistedBodyHashAndBytesVerified": true,
+        "chunkSumEqualsSavedBody": true,
+        "accumulatedMonotonic": true,
+        "timestampOriginConstant": true,
+        "timestampOriginMatchesRowWithin2ms": true,
+        "originalFileDescriptorsClosed": true
+      }
+    },
+    {
+      "id": "source-4",
+      "path": "sources/web.a4fb45ab08bf639f695134f2c693d5292f3126944d67db96e08596640930e910.tar.gz",
+      "expected": {
+        "bytes": 4237024,
+        "sha256": "a4fb45ab08bf639f695134f2c693d5292f3126944d67db96e08596640930e910"
+      },
+      "persistedBody": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\source-download-production-f9\\source-4.raw-body.bin",
+        "bytes": 4237024,
+        "sha256": "a4fb45ab08bf639f695134f2c693d5292f3126944d67db96e08596640930e910"
+      },
+      "progressFile": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\source-download-production-f9\\source-4.progress.jsonl",
+        "bytes": 31914,
+        "sha256": "a63816fae72a278bf7b5c3aa4a9b359c03fd8e5ce68275f2cb750c5c212abd85"
+      },
+      "status": 200,
+      "cfCacheStatusObserved": "MISS",
+      "cfRayObserved": "a464b7c36be719fe-KIX",
+      "startedAt": "2026-10-06T12:37:29.635Z",
+      "deadlineMs": 60000,
+      "headersElapsedMs": 1939,
+      "firstChunkElapsedMs": 1939,
+      "headerToFirstChunkMs": 0,
+      "lastChunkElapsedMs": 43494,
+      "bodyElapsedMs": 43494,
+      "finalElapsedMs": 43501,
+      "bodyEOF": true,
+      "observedBytes": 4237024,
+      "missingExpectedBytes": 0,
+      "completionPercent": 100,
+      "chunks": 330,
+      "chunkBytes": {
+        "count": 330,
+        "min": 616,
+        "p50": 16384,
+        "p90": 16384,
+        "p95": 16384,
+        "p99": 16384,
+        "max": 16384,
+        "sum": 4237024
+      },
+      "full16KiBChunks": 239,
+      "sameMillisecondInterchunkIntervals": 163,
+      "intervalMilliseconds": {
+        "count": 329,
+        "min": 0,
+        "p50": 1,
+        "p90": 421,
+        "p95": 488,
+        "p99": 819,
+        "max": 1017,
+        "sum": 41555
+      },
+      "intervalsAtLeast": [
+        {
+          "thresholdMs": 100,
+          "count": 112,
+          "sumGapMs": 40831
+        },
+        {
+          "thresholdMs": 250,
+          "count": 76,
+          "sumGapMs": 34495
+        },
+        {
+          "thresholdMs": 500,
+          "count": 16,
+          "sumGapMs": 11322
+        },
+        {
+          "thresholdMs": 1000,
+          "count": 1,
+          "sumGapMs": 1017
+        },
+        {
+          "thresholdMs": 2000,
+          "count": 0,
+          "sumGapMs": 0
+        }
+      ],
+      "topTenInterchunkIntervals": [
+        {
+          "previousIndex": 169,
+          "index": 170,
+          "fromElapsedMs": 12522,
+          "toElapsedMs": 13539,
+          "gapMs": 1017,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 1662272
+        },
+        {
+          "previousIndex": 162,
+          "index": 163,
+          "fromElapsedMs": 11621,
+          "toElapsedMs": 12522,
+          "gapMs": 901,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 1547584
+        },
+        {
+          "previousIndex": 132,
+          "index": 133,
+          "fromElapsedMs": 8061,
+          "toElapsedMs": 8908,
+          "gapMs": 847,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 1056064
+        },
+        {
+          "previousIndex": 294,
+          "index": 295,
+          "fromElapsedMs": 34359,
+          "toElapsedMs": 35178,
+          "gapMs": 819,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 3680960
+        },
+        {
+          "previousIndex": 83,
+          "index": 84,
+          "fromElapsedMs": 3581,
+          "toElapsedMs": 4364,
+          "gapMs": 783,
+          "incomingChunkBytes": 14256,
+          "accumulatedBytes": 286720
+        },
+        {
+          "previousIndex": 203,
+          "index": 204,
+          "fromElapsedMs": 18550,
+          "toElapsedMs": 19331,
+          "gapMs": 781,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 2206592
+        },
+        {
+          "previousIndex": 249,
+          "index": 250,
+          "fromElapsedMs": 29154,
+          "toElapsedMs": 29932,
+          "gapMs": 778,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 2948800
+        },
+        {
+          "previousIndex": 319,
+          "index": 320,
+          "fromElapsedMs": 40640,
+          "toElapsedMs": 41388,
+          "gapMs": 748,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 4090560
+        },
+        {
+          "previousIndex": 290,
+          "index": 291,
+          "fromElapsedMs": 33622,
+          "toElapsedMs": 34337,
+          "gapMs": 715,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 3615424
+        },
+        {
+          "previousIndex": 284,
+          "index": 285,
+          "fromElapsedMs": 32989,
+          "toElapsedMs": 33621,
+          "gapMs": 632,
+          "incomingChunkBytes": 16384,
+          "accumulatedBytes": 3517120
+        }
+      ],
+      "tenSecondObservationBins": [
+        {
+          "startElapsedMs": 0,
+          "endExclusiveElapsedMs": 10000,
+          "observedBytes": 1285440,
+          "observedChunks": 148
+        },
+        {
+          "startElapsedMs": 10000,
+          "endExclusiveElapsedMs": 20000,
+          "observedBytes": 986688,
+          "observedChunks": 61
+        },
+        {
+          "startElapsedMs": 20000,
+          "endExclusiveElapsedMs": 30000,
+          "observedBytes": 791360,
+          "observedChunks": 49
+        },
+        {
+          "startElapsedMs": 30000,
+          "endExclusiveElapsedMs": 40000,
+          "observedBytes": 945152,
+          "observedChunks": 58
+        },
+        {
+          "startElapsedMs": 40000,
+          "endExclusiveElapsedMs": 50000,
+          "observedBytes": 228384,
+          "observedChunks": 14
+        },
+        {
+          "startElapsedMs": 50000,
+          "endExclusiveElapsedMs": 60000,
+          "observedBytes": 0,
+          "observedChunks": 0
+        }
+      ],
+      "observedPersistedKiBPerSecondFromStartToLastChunk": 95.133093,
+      "observedPersistedKiBPerSecondFromHeadersToLastChunk": 99.572103,
+      "wholeRequestAfterLastChunkMs": 7,
+      "EOFToFinishedMs": 7,
+      "lastChunkToScheduledDeadlineMs": 16506,
+      "deadlineOverrunAtFinishedMs": null,
+      "originalOutcome": "PASS",
+      "byteContractPassed": true,
+      "aborted": false,
+      "abortReason": null,
+      "failures": [],
+      "cleanup": {
+        "readerTerminal": "closed",
+        "readerLockReleased": true,
+        "rawBodyFileFlushed": true,
+        "rawBodyFileClosed": true,
+        "progressFileFlushed": true,
+        "progressFileClosed": true,
+        "readerCancel": null
+      },
+      "consistencyChecks": {
+        "reportEqualsIndividualRow": true,
+        "JSONLEqualsReportProgress": true,
+        "JSONLSerializationByteExact": true,
+        "persistedBodyHashAndBytesVerified": true,
+        "chunkSumEqualsSavedBody": true,
+        "accumulatedMonotonic": true,
+        "timestampOriginConstant": true,
+        "timestampOriginMatchesRowWithin2ms": true,
+        "originalFileDescriptorsClosed": true
+      }
+    }
+  ],
+  "replays": [
+    {
+      "id": "source-0",
+      "mode": "original-like",
+      "trial": 1,
+      "originalOutcomeUnchanged": "PASS",
+      "bytes": 4240549,
+      "chunks": 331,
+      "rawBytesDeepEqualOriginal": true,
+      "progressBytesDeepEqualOriginal": null,
+      "progressChunkBoundariesDeepEqualOriginal": true,
+      "offlineOnly": true,
+      "noOriginalReaderOrNetworkReplay": true,
+      "timingsMs": {
+        "fileOpen": 0.4776,
+        "loop": 17.8168,
+        "fsync": {
+          "rawBody": 5.5279,
+          "progress": 0.9064
+        },
+        "close": {
+          "rawBody": 0.1363,
+          "progress": 0.0629
+        },
+        "synchronousCollection": 25.0012,
+        "postCloseByteAndJsonValidation": 7.9691,
+        "totalIncludingValidation": 33.2525
+      },
+      "perOperationTotalMs": null,
+      "perOperationMaximumChunkMs": null,
+      "perChunkTimingFile": null,
+      "rawBody": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-0-original-like-trial-1.raw-body.bin",
+        "bytes": 4240549,
+        "sha256": "0cf38aa7a814fb6c5333187afe977a3236a82fceaa3f68126552e6627a0963fb"
+      },
+      "progressFile": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-0-original-like-trial-1.progress.jsonl",
+        "bytes": 30995,
+        "sha256": "81530b90b47375ac5ab7d74c9bcd0cc9ed72f1dec69ca7ed23aa0b4d2da7bf35"
+      }
+    },
+    {
+      "id": "source-1",
+      "mode": "original-like",
+      "trial": 1,
+      "originalOutcomeUnchanged": "FAIL",
+      "bytes": 2788736,
+      "chunks": 238,
+      "rawBytesDeepEqualOriginal": true,
+      "progressBytesDeepEqualOriginal": null,
+      "progressChunkBoundariesDeepEqualOriginal": true,
+      "offlineOnly": true,
+      "noOriginalReaderOrNetworkReplay": true,
+      "timingsMs": {
+        "fileOpen": 0.5458,
+        "loop": 11.426,
+        "fsync": {
+          "rawBody": 4.7589,
+          "progress": 1.6363
+        },
+        "close": {
+          "rawBody": 0.2118,
+          "progress": 0.1413
+        },
+        "synchronousCollection": 18.7447,
+        "postCloseByteAndJsonValidation": 5.2812,
+        "totalIncludingValidation": 24.1285
+      },
+      "perOperationTotalMs": null,
+      "perOperationMaximumChunkMs": null,
+      "perChunkTimingFile": null,
+      "rawBody": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-1-original-like-trial-1.raw-body.bin",
+        "bytes": 2788736,
+        "sha256": "9371df550151766a8ff150a8b636c34359f06dc0f15d165969b88f07dacf916a"
+      },
+      "progressFile": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-1-original-like-trial-1.progress.jsonl",
+        "bytes": 22154,
+        "sha256": "b4cc1b3716e94b9f9e057c925f882f76ed8a76835861821a1f56c630a32393b2"
+      }
+    },
+    {
+      "id": "source-2",
+      "mode": "original-like",
+      "trial": 1,
+      "originalOutcomeUnchanged": "PASS",
+      "bytes": 4239144,
+      "chunks": 333,
+      "rawBytesDeepEqualOriginal": true,
+      "progressBytesDeepEqualOriginal": null,
+      "progressChunkBoundariesDeepEqualOriginal": true,
+      "offlineOnly": true,
+      "noOriginalReaderOrNetworkReplay": true,
+      "timingsMs": {
+        "fileOpen": 1.4489,
+        "loop": 15.4119,
+        "fsync": {
+          "rawBody": 4.6388,
+          "progress": 0.7485
+        },
+        "close": {
+          "rawBody": 0.1516,
+          "progress": 0.0611
+        },
+        "synchronousCollection": 22.4794,
+        "postCloseByteAndJsonValidation": 6.7091,
+        "totalIncludingValidation": 29.2218
+      },
+      "perOperationTotalMs": null,
+      "perOperationMaximumChunkMs": null,
+      "perChunkTimingFile": null,
+      "rawBody": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-2-original-like-trial-1.raw-body.bin",
+        "bytes": 4239144,
+        "sha256": "5cad53dd30324d851e481e583a31b23c59c35ad0327769bbc2549fcfdfa480cd"
+      },
+      "progressFile": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-2-original-like-trial-1.progress.jsonl",
+        "bytes": 31174,
+        "sha256": "f07e0519f5088c77667fdba57de7f89d2b90ccbf473d805b47783012fa38fd85"
+      }
+    },
+    {
+      "id": "source-3",
+      "mode": "original-like",
+      "trial": 1,
+      "originalOutcomeUnchanged": "FAIL",
+      "bytes": 2940608,
+      "chunks": 254,
+      "rawBytesDeepEqualOriginal": true,
+      "progressBytesDeepEqualOriginal": null,
+      "progressChunkBoundariesDeepEqualOriginal": true,
+      "offlineOnly": true,
+      "noOriginalReaderOrNetworkReplay": true,
+      "timingsMs": {
+        "fileOpen": 0.9186,
+        "loop": 12.0959,
+        "fsync": {
+          "rawBody": 4.1035,
+          "progress": 0.8534
+        },
+        "close": {
+          "rawBody": 0.1457,
+          "progress": 0.0593
+        },
+        "synchronousCollection": 18.1966,
+        "postCloseByteAndJsonValidation": 5.1497,
+        "totalIncludingValidation": 23.3769
+      },
+      "perOperationTotalMs": null,
+      "perOperationMaximumChunkMs": null,
+      "perChunkTimingFile": null,
+      "rawBody": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-3-original-like-trial-1.raw-body.bin",
+        "bytes": 2940608,
+        "sha256": "b59742585327d194863bb2e7ec8d1f3bc91bd97c4ec5282e14e76b48e16d6948"
+      },
+      "progressFile": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-3-original-like-trial-1.progress.jsonl",
+        "bytes": 23664,
+        "sha256": "7b7016e08a950ddb58db6162cfdac5d25b09677a82b6aec3aca673887b8c79a7"
+      }
+    },
+    {
+      "id": "source-4",
+      "mode": "original-like",
+      "trial": 1,
+      "originalOutcomeUnchanged": "PASS",
+      "bytes": 4237024,
+      "chunks": 330,
+      "rawBytesDeepEqualOriginal": true,
+      "progressBytesDeepEqualOriginal": null,
+      "progressChunkBoundariesDeepEqualOriginal": true,
+      "offlineOnly": true,
+      "noOriginalReaderOrNetworkReplay": true,
+      "timingsMs": {
+        "fileOpen": 0.5304,
+        "loop": 13.8102,
+        "fsync": {
+          "rawBody": 6.2887,
+          "progress": 1.5837
+        },
+        "close": {
+          "rawBody": 0.1731,
+          "progress": 0.1582
+        },
+        "synchronousCollection": 22.5648,
+        "postCloseByteAndJsonValidation": 7.1952,
+        "totalIncludingValidation": 29.843
+      },
+      "perOperationTotalMs": null,
+      "perOperationMaximumChunkMs": null,
+      "perChunkTimingFile": null,
+      "rawBody": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-4-original-like-trial-1.raw-body.bin",
+        "bytes": 4237024,
+        "sha256": "a4fb45ab08bf639f695134f2c693d5292f3126944d67db96e08596640930e910"
+      },
+      "progressFile": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-4-original-like-trial-1.progress.jsonl",
+        "bytes": 30854,
+        "sha256": "b0dcf1ffd7429db49e94d2ef09a27bb7de987577b49549bd2855b39839034873"
+      }
+    },
+    {
+      "id": "source-0",
+      "mode": "original-like",
+      "trial": 2,
+      "originalOutcomeUnchanged": "PASS",
+      "bytes": 4240549,
+      "chunks": 331,
+      "rawBytesDeepEqualOriginal": true,
+      "progressBytesDeepEqualOriginal": null,
+      "progressChunkBoundariesDeepEqualOriginal": true,
+      "offlineOnly": true,
+      "noOriginalReaderOrNetworkReplay": true,
+      "timingsMs": {
+        "fileOpen": 0.4585,
+        "loop": 13.2668,
+        "fsync": {
+          "rawBody": 5.3164,
+          "progress": 0.6895
+        },
+        "close": {
+          "rawBody": 0.1236,
+          "progress": 0.0573
+        },
+        "synchronousCollection": 19.9284,
+        "postCloseByteAndJsonValidation": 7.6052,
+        "totalIncludingValidation": 27.5621
+      },
+      "perOperationTotalMs": null,
+      "perOperationMaximumChunkMs": null,
+      "perChunkTimingFile": null,
+      "rawBody": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-0-original-like-trial-2.raw-body.bin",
+        "bytes": 4240549,
+        "sha256": "0cf38aa7a814fb6c5333187afe977a3236a82fceaa3f68126552e6627a0963fb"
+      },
+      "progressFile": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-0-original-like-trial-2.progress.jsonl",
+        "bytes": 30916,
+        "sha256": "8d02a54cfa1d41da19507eae7dc8db5cca29c4395d674ee9d512098c6c895969"
+      }
+    },
+    {
+      "id": "source-1",
+      "mode": "original-like",
+      "trial": 2,
+      "originalOutcomeUnchanged": "FAIL",
+      "bytes": 2788736,
+      "chunks": 238,
+      "rawBytesDeepEqualOriginal": true,
+      "progressBytesDeepEqualOriginal": null,
+      "progressChunkBoundariesDeepEqualOriginal": true,
+      "offlineOnly": true,
+      "noOriginalReaderOrNetworkReplay": true,
+      "timingsMs": {
+        "fileOpen": 0.7942,
+        "loop": 8.5244,
+        "fsync": {
+          "rawBody": 3.9791,
+          "progress": 1.3427
+        },
+        "close": {
+          "rawBody": 0.1322,
+          "progress": 0.0988
+        },
+        "synchronousCollection": 14.8901,
+        "postCloseByteAndJsonValidation": 4.7901,
+        "totalIncludingValidation": 19.705
+      },
+      "perOperationTotalMs": null,
+      "perOperationMaximumChunkMs": null,
+      "perChunkTimingFile": null,
+      "rawBody": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-1-original-like-trial-2.raw-body.bin",
+        "bytes": 2788736,
+        "sha256": "9371df550151766a8ff150a8b636c34359f06dc0f15d165969b88f07dacf916a"
+      },
+      "progressFile": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-1-original-like-trial-2.progress.jsonl",
+        "bytes": 22104,
+        "sha256": "0aeeae01ff22da158d70a198d74ee16065ae3eb2c51e8d4d11045fdbc809da0e"
+      }
+    },
+    {
+      "id": "source-2",
+      "mode": "original-like",
+      "trial": 2,
+      "originalOutcomeUnchanged": "PASS",
+      "bytes": 4239144,
+      "chunks": 333,
+      "rawBytesDeepEqualOriginal": true,
+      "progressBytesDeepEqualOriginal": null,
+      "progressChunkBoundariesDeepEqualOriginal": true,
+      "offlineOnly": true,
+      "noOriginalReaderOrNetworkReplay": true,
+      "timingsMs": {
+        "fileOpen": 2.645,
+        "loop": 14.0455,
+        "fsync": {
+          "rawBody": 5.3713,
+          "progress": 0.9945
+        },
+        "close": {
+          "rawBody": 0.1177,
+          "progress": 0.1509
+        },
+        "synchronousCollection": 23.3477,
+        "postCloseByteAndJsonValidation": 6.7537,
+        "totalIncludingValidation": 30.1311
+      },
+      "perOperationTotalMs": null,
+      "perOperationMaximumChunkMs": null,
+      "perChunkTimingFile": null,
+      "rawBody": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-2-original-like-trial-2.raw-body.bin",
+        "bytes": 4239144,
+        "sha256": "5cad53dd30324d851e481e583a31b23c59c35ad0327769bbc2549fcfdfa480cd"
+      },
+      "progressFile": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-2-original-like-trial-2.progress.jsonl",
+        "bytes": 31171,
+        "sha256": "1f313601dcb74c4dd962d6b162dca9ef16facfcf2c5d763b2fd36a06a9bb3df3"
+      }
+    },
+    {
+      "id": "source-3",
+      "mode": "original-like",
+      "trial": 2,
+      "originalOutcomeUnchanged": "FAIL",
+      "bytes": 2940608,
+      "chunks": 254,
+      "rawBytesDeepEqualOriginal": true,
+      "progressBytesDeepEqualOriginal": null,
+      "progressChunkBoundariesDeepEqualOriginal": true,
+      "offlineOnly": true,
+      "noOriginalReaderOrNetworkReplay": true,
+      "timingsMs": {
+        "fileOpen": 1.0991,
+        "loop": 10.6738,
+        "fsync": {
+          "rawBody": 4.2838,
+          "progress": 1.1598
+        },
+        "close": {
+          "rawBody": 0.1463,
+          "progress": 0.0778
+        },
+        "synchronousCollection": 17.4576,
+        "postCloseByteAndJsonValidation": 4.9001,
+        "totalIncludingValidation": 22.3835
+      },
+      "perOperationTotalMs": null,
+      "perOperationMaximumChunkMs": null,
+      "perChunkTimingFile": null,
+      "rawBody": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-3-original-like-trial-2.raw-body.bin",
+        "bytes": 2940608,
+        "sha256": "b59742585327d194863bb2e7ec8d1f3bc91bd97c4ec5282e14e76b48e16d6948"
+      },
+      "progressFile": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-3-original-like-trial-2.progress.jsonl",
+        "bytes": 23637,
+        "sha256": "cc2527f518803ff2a2e37d7f35ae96d576b5ca03621ddc8005bac674b0e240b0"
+      }
+    },
+    {
+      "id": "source-4",
+      "mode": "original-like",
+      "trial": 2,
+      "originalOutcomeUnchanged": "PASS",
+      "bytes": 4237024,
+      "chunks": 330,
+      "rawBytesDeepEqualOriginal": true,
+      "progressBytesDeepEqualOriginal": null,
+      "progressChunkBoundariesDeepEqualOriginal": true,
+      "offlineOnly": true,
+      "noOriginalReaderOrNetworkReplay": true,
+      "timingsMs": {
+        "fileOpen": 0.901,
+        "loop": 12.6643,
+        "fsync": {
+          "rawBody": 5.1481,
+          "progress": 0.9541
+        },
+        "close": {
+          "rawBody": 0.1345,
+          "progress": 0.0603
+        },
+        "synchronousCollection": 19.8811,
+        "postCloseByteAndJsonValidation": 6.8225,
+        "totalIncludingValidation": 26.731
+      },
+      "perOperationTotalMs": null,
+      "perOperationMaximumChunkMs": null,
+      "perChunkTimingFile": null,
+      "rawBody": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-4-original-like-trial-2.raw-body.bin",
+        "bytes": 4237024,
+        "sha256": "a4fb45ab08bf639f695134f2c693d5292f3126944d67db96e08596640930e910"
+      },
+      "progressFile": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-4-original-like-trial-2.progress.jsonl",
+        "bytes": 30851,
+        "sha256": "e4b58bf4605ff829b303a824695e26f91d84e1583c5a22fb21a033bbd94900ae"
+      }
+    },
+    {
+      "id": "source-0",
+      "mode": "original-like",
+      "trial": 3,
+      "originalOutcomeUnchanged": "PASS",
+      "bytes": 4240549,
+      "chunks": 331,
+      "rawBytesDeepEqualOriginal": true,
+      "progressBytesDeepEqualOriginal": null,
+      "progressChunkBoundariesDeepEqualOriginal": true,
+      "offlineOnly": true,
+      "noOriginalReaderOrNetworkReplay": true,
+      "timingsMs": {
+        "fileOpen": 0.9368,
+        "loop": 14.3506,
+        "fsync": {
+          "rawBody": 6.0436,
+          "progress": 0.9267
+        },
+        "close": {
+          "rawBody": 0.1382,
+          "progress": 0.0675
+        },
+        "synchronousCollection": 22.4838,
+        "postCloseByteAndJsonValidation": 8.3927,
+        "totalIncludingValidation": 30.9334
+      },
+      "perOperationTotalMs": null,
+      "perOperationMaximumChunkMs": null,
+      "perChunkTimingFile": null,
+      "rawBody": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-0-original-like-trial-3.raw-body.bin",
+        "bytes": 4240549,
+        "sha256": "0cf38aa7a814fb6c5333187afe977a3236a82fceaa3f68126552e6627a0963fb"
+      },
+      "progressFile": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-0-original-like-trial-3.progress.jsonl",
+        "bytes": 30961,
+        "sha256": "4d9fe8024c38a57b566d90531179db8f9e935ade1de5bb00c47a2e19a70f9640"
+      }
+    },
+    {
+      "id": "source-1",
+      "mode": "original-like",
+      "trial": 3,
+      "originalOutcomeUnchanged": "FAIL",
+      "bytes": 2788736,
+      "chunks": 238,
+      "rawBytesDeepEqualOriginal": true,
+      "progressBytesDeepEqualOriginal": null,
+      "progressChunkBoundariesDeepEqualOriginal": true,
+      "offlineOnly": true,
+      "noOriginalReaderOrNetworkReplay": true,
+      "timingsMs": {
+        "fileOpen": 0.5037,
+        "loop": 10.3999,
+        "fsync": {
+          "rawBody": 3.7157,
+          "progress": 0.9399
+        },
+        "close": {
+          "rawBody": 0.127,
+          "progress": 0.1226
+        },
+        "synchronousCollection": 15.8308,
+        "postCloseByteAndJsonValidation": 5.4128,
+        "totalIncludingValidation": 21.2687
+      },
+      "perOperationTotalMs": null,
+      "perOperationMaximumChunkMs": null,
+      "perChunkTimingFile": null,
+      "rawBody": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-1-original-like-trial-3.raw-body.bin",
+        "bytes": 2788736,
+        "sha256": "9371df550151766a8ff150a8b636c34359f06dc0f15d165969b88f07dacf916a"
+      },
+      "progressFile": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-1-original-like-trial-3.progress.jsonl",
+        "bytes": 22130,
+        "sha256": "da3d4989c588832be7c7b9b710adcdff333c401068a4b57390cc64cab5caacc4"
+      }
+    },
+    {
+      "id": "source-2",
+      "mode": "original-like",
+      "trial": 3,
+      "originalOutcomeUnchanged": "PASS",
+      "bytes": 4239144,
+      "chunks": 333,
+      "rawBytesDeepEqualOriginal": true,
+      "progressBytesDeepEqualOriginal": null,
+      "progressChunkBoundariesDeepEqualOriginal": true,
+      "offlineOnly": true,
+      "noOriginalReaderOrNetworkReplay": true,
+      "timingsMs": {
+        "fileOpen": 0.8894,
+        "loop": 12.7997,
+        "fsync": {
+          "rawBody": 5.0112,
+          "progress": 0.9011
+        },
+        "close": {
+          "rawBody": 0.1075,
+          "progress": 0.1184
+        },
+        "synchronousCollection": 19.8449,
+        "postCloseByteAndJsonValidation": 6.9883,
+        "totalIncludingValidation": 26.8543
+      },
+      "perOperationTotalMs": null,
+      "perOperationMaximumChunkMs": null,
+      "perChunkTimingFile": null,
+      "rawBody": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-2-original-like-trial-3.raw-body.bin",
+        "bytes": 4239144,
+        "sha256": "5cad53dd30324d851e481e583a31b23c59c35ad0327769bbc2549fcfdfa480cd"
+      },
+      "progressFile": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-2-original-like-trial-3.progress.jsonl",
+        "bytes": 31112,
+        "sha256": "cb44a5d07b5120d5c7b84fd503ef49c2e9e02c6dd973e789e37e906f2a13f373"
+      }
+    },
+    {
+      "id": "source-3",
+      "mode": "original-like",
+      "trial": 3,
+      "originalOutcomeUnchanged": "FAIL",
+      "bytes": 2940608,
+      "chunks": 254,
+      "rawBytesDeepEqualOriginal": true,
+      "progressBytesDeepEqualOriginal": null,
+      "progressChunkBoundariesDeepEqualOriginal": true,
+      "offlineOnly": true,
+      "noOriginalReaderOrNetworkReplay": true,
+      "timingsMs": {
+        "fileOpen": 0.546,
+        "loop": 9.0139,
+        "fsync": {
+          "rawBody": 3.8193,
+          "progress": 0.7743
+        },
+        "close": {
+          "rawBody": 0.1028,
+          "progress": 0.0778
+        },
+        "synchronousCollection": 14.3443,
+        "postCloseByteAndJsonValidation": 5.2751,
+        "totalIncludingValidation": 19.6392
+      },
+      "perOperationTotalMs": null,
+      "perOperationMaximumChunkMs": null,
+      "perChunkTimingFile": null,
+      "rawBody": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-3-original-like-trial-3.raw-body.bin",
+        "bytes": 2940608,
+        "sha256": "b59742585327d194863bb2e7ec8d1f3bc91bd97c4ec5282e14e76b48e16d6948"
+      },
+      "progressFile": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-3-original-like-trial-3.progress.jsonl",
+        "bytes": 23610,
+        "sha256": "42ff720483c075868f237669b9601ba98125c5a491da2935b08c87a2668d4c42"
+      }
+    },
+    {
+      "id": "source-4",
+      "mode": "original-like",
+      "trial": 3,
+      "originalOutcomeUnchanged": "PASS",
+      "bytes": 4237024,
+      "chunks": 330,
+      "rawBytesDeepEqualOriginal": true,
+      "progressBytesDeepEqualOriginal": null,
+      "progressChunkBoundariesDeepEqualOriginal": true,
+      "offlineOnly": true,
+      "noOriginalReaderOrNetworkReplay": true,
+      "timingsMs": {
+        "fileOpen": 0.8076,
+        "loop": 11.6579,
+        "fsync": {
+          "rawBody": 4.9315,
+          "progress": 0.8282
+        },
+        "close": {
+          "rawBody": 0.1584,
+          "progress": 0.0976
+        },
+        "synchronousCollection": 18.4965,
+        "postCloseByteAndJsonValidation": 6.5413,
+        "totalIncludingValidation": 25.0592
+      },
+      "perOperationTotalMs": null,
+      "perOperationMaximumChunkMs": null,
+      "perChunkTimingFile": null,
+      "rawBody": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-4-original-like-trial-3.raw-body.bin",
+        "bytes": 4237024,
+        "sha256": "a4fb45ab08bf639f695134f2c693d5292f3126944d67db96e08596640930e910"
+      },
+      "progressFile": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-4-original-like-trial-3.progress.jsonl",
+        "bytes": 30803,
+        "sha256": "030f3c453e13cd24cc266114ef5383701b97c287e03784f628cfddfdde8d0571"
+      }
+    },
+    {
+      "id": "source-0",
+      "mode": "fixed-metadata-instrumented",
+      "trial": 1,
+      "originalOutcomeUnchanged": "PASS",
+      "bytes": 4240549,
+      "chunks": 331,
+      "rawBytesDeepEqualOriginal": true,
+      "progressBytesDeepEqualOriginal": true,
+      "progressChunkBoundariesDeepEqualOriginal": true,
+      "offlineOnly": true,
+      "noOriginalReaderOrNetworkReplay": true,
+      "timingsMs": {
+        "fileOpen": 1.3382,
+        "loop": 17.1818,
+        "fsync": {
+          "rawBody": 4.739,
+          "progress": 1.9164
+        },
+        "close": {
+          "rawBody": 0.1166,
+          "progress": 0.1029
+        },
+        "synchronousCollection": 25.4161,
+        "postCloseByteAndJsonValidation": 6.616,
+        "totalIncludingValidation": 32.0536
+      },
+      "perOperationTotalMs": {
+        "copy": 2.9381,
+        "rawWrite": 4.9353,
+        "hash": 2.4773,
+        "counterAssertion": 0.2313,
+        "clockProgress": 1.1199,
+        "progressSerializeWrite": 2.9215
+      },
+      "perOperationMaximumChunkMs": {
+        "copy": 0.2057,
+        "rawWrite": 0.1867,
+        "hash": 0.0317,
+        "counterAssertion": 0.0251,
+        "clockProgress": 0.0471,
+        "progressSerializeWrite": 0.1772
+      },
+      "perChunkTimingFile": "source-0-fixed-metadata-instrumented-trial-1.timings.json",
+      "rawBody": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-0-fixed-metadata-instrumented-trial-1.raw-body.bin",
+        "bytes": 4240549,
+        "sha256": "0cf38aa7a814fb6c5333187afe977a3236a82fceaa3f68126552e6627a0963fb"
+      },
+      "progressFile": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-0-fixed-metadata-instrumented-trial-1.progress.jsonl",
+        "bytes": 32043,
+        "sha256": "66f424213f994801a4b8d9977cf735b1520ffee93c587d36b57801a3ce68d048"
+      }
+    },
+    {
+      "id": "source-1",
+      "mode": "fixed-metadata-instrumented",
+      "trial": 1,
+      "originalOutcomeUnchanged": "FAIL",
+      "bytes": 2788736,
+      "chunks": 238,
+      "rawBytesDeepEqualOriginal": true,
+      "progressBytesDeepEqualOriginal": true,
+      "progressChunkBoundariesDeepEqualOriginal": true,
+      "offlineOnly": true,
+      "noOriginalReaderOrNetworkReplay": true,
+      "timingsMs": {
+        "fileOpen": 1.2611,
+        "loop": 11.513,
+        "fsync": {
+          "rawBody": 4.138,
+          "progress": 1.6372
+        },
+        "close": {
+          "rawBody": 0.1519,
+          "progress": 0.1329
+        },
+        "synchronousCollection": 18.8576,
+        "postCloseByteAndJsonValidation": 4.9442,
+        "totalIncludingValidation": 23.8227
+      },
+      "perOperationTotalMs": {
+        "copy": 1.7965,
+        "rawWrite": 3.5401,
+        "hash": 1.7443,
+        "counterAssertion": 0.121,
+        "clockProgress": 1.1165,
+        "progressSerializeWrite": 1.9827
+      },
+      "perOperationMaximumChunkMs": {
+        "copy": 0.0636,
+        "rawWrite": 0.1838,
+        "hash": 0.0864,
+        "counterAssertion": 0.0165,
+        "clockProgress": 0.3774,
+        "progressSerializeWrite": 0.1835
+      },
+      "perChunkTimingFile": "source-1-fixed-metadata-instrumented-trial-1.timings.json",
+      "rawBody": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-1-fixed-metadata-instrumented-trial-1.raw-body.bin",
+        "bytes": 2788736,
+        "sha256": "9371df550151766a8ff150a8b636c34359f06dc0f15d165969b88f07dacf916a"
+      },
+      "progressFile": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-1-fixed-metadata-instrumented-trial-1.progress.jsonl",
+        "bytes": 22973,
+        "sha256": "475e8d0075a5a47e1b05941a275306daf373c72d6fd5bddd766654206e7bba53"
+      }
+    },
+    {
+      "id": "source-2",
+      "mode": "fixed-metadata-instrumented",
+      "trial": 1,
+      "originalOutcomeUnchanged": "PASS",
+      "bytes": 4239144,
+      "chunks": 333,
+      "rawBytesDeepEqualOriginal": true,
+      "progressBytesDeepEqualOriginal": true,
+      "progressChunkBoundariesDeepEqualOriginal": true,
+      "offlineOnly": true,
+      "noOriginalReaderOrNetworkReplay": true,
+      "timingsMs": {
+        "fileOpen": 0.8458,
+        "loop": 15.6592,
+        "fsync": {
+          "rawBody": 9.2258,
+          "progress": 1.3695
+        },
+        "close": {
+          "rawBody": 0.1481,
+          "progress": 0.0793
+        },
+        "synchronousCollection": 27.3498,
+        "postCloseByteAndJsonValidation": 6.9585,
+        "totalIncludingValidation": 34.3331
+      },
+      "perOperationTotalMs": {
+        "copy": 2.2935,
+        "rawWrite": 5.0336,
+        "hash": 2.3401,
+        "counterAssertion": 0.1851,
+        "clockProgress": 0.8171,
+        "progressSerializeWrite": 3.0262
+      },
+      "perOperationMaximumChunkMs": {
+        "copy": 0.0528,
+        "rawWrite": 0.2172,
+        "hash": 0.0311,
+        "counterAssertion": 0.0545,
+        "clockProgress": 0.0542,
+        "progressSerializeWrite": 0.5061
+      },
+      "perChunkTimingFile": "source-2-fixed-metadata-instrumented-trial-1.timings.json",
+      "rawBody": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-2-fixed-metadata-instrumented-trial-1.raw-body.bin",
+        "bytes": 4239144,
+        "sha256": "5cad53dd30324d851e481e583a31b23c59c35ad0327769bbc2549fcfdfa480cd"
+      },
+      "progressFile": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-2-fixed-metadata-instrumented-trial-1.progress.jsonl",
+        "bytes": 32241,
+        "sha256": "eca7add64826be0fbb066ca9f2c2c60f7b401167627a4c5880e3f4c8395259b6"
+      }
+    },
+    {
+      "id": "source-3",
+      "mode": "fixed-metadata-instrumented",
+      "trial": 1,
+      "originalOutcomeUnchanged": "FAIL",
+      "bytes": 2940608,
+      "chunks": 254,
+      "rawBytesDeepEqualOriginal": true,
+      "progressBytesDeepEqualOriginal": true,
+      "progressChunkBoundariesDeepEqualOriginal": true,
+      "offlineOnly": true,
+      "noOriginalReaderOrNetworkReplay": true,
+      "timingsMs": {
+        "fileOpen": 1.0961,
+        "loop": 13.1994,
+        "fsync": {
+          "rawBody": 8.4466,
+          "progress": 2.8927
+        },
+        "close": {
+          "rawBody": 0.1773,
+          "progress": 0.1598
+        },
+        "synchronousCollection": 25.9997,
+        "postCloseByteAndJsonValidation": 5.92,
+        "totalIncludingValidation": 31.9411
+      },
+      "perOperationTotalMs": {
+        "copy": 1.9774,
+        "rawWrite": 4.1553,
+        "hash": 1.6163,
+        "counterAssertion": 0.0511,
+        "clockProgress": 0.6329,
+        "progressSerializeWrite": 3.3933
+      },
+      "perOperationMaximumChunkMs": {
+        "copy": 0.076,
+        "rawWrite": 0.3675,
+        "hash": 0.0239,
+        "counterAssertion": 0.0009,
+        "clockProgress": 0.0349,
+        "progressSerializeWrite": 1.2157
+      },
+      "perChunkTimingFile": "source-3-fixed-metadata-instrumented-trial-1.timings.json",
+      "rawBody": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-3-fixed-metadata-instrumented-trial-1.raw-body.bin",
+        "bytes": 2940608,
+        "sha256": "b59742585327d194863bb2e7ec8d1f3bc91bd97c4ec5282e14e76b48e16d6948"
+      },
+      "progressFile": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-3-fixed-metadata-instrumented-trial-1.progress.jsonl",
+        "bytes": 24447,
+        "sha256": "ad8c21e937fffd76293b72715ce1c2912c7d61c10d9a91488227e629615ffb2d"
+      }
+    },
+    {
+      "id": "source-4",
+      "mode": "fixed-metadata-instrumented",
+      "trial": 1,
+      "originalOutcomeUnchanged": "PASS",
+      "bytes": 4237024,
+      "chunks": 330,
+      "rawBytesDeepEqualOriginal": true,
+      "progressBytesDeepEqualOriginal": true,
+      "progressChunkBoundariesDeepEqualOriginal": true,
+      "offlineOnly": true,
+      "noOriginalReaderOrNetworkReplay": true,
+      "timingsMs": {
+        "fileOpen": 1.2495,
+        "loop": 15.713,
+        "fsync": {
+          "rawBody": 10.2578,
+          "progress": 1.4545
+        },
+        "close": {
+          "rawBody": 0.1288,
+          "progress": 0.0748
+        },
+        "synchronousCollection": 28.8973,
+        "postCloseByteAndJsonValidation": 7.4573,
+        "totalIncludingValidation": 36.3769
+      },
+      "perOperationTotalMs": {
+        "copy": 2.642,
+        "rawWrite": 5.4334,
+        "hash": 2.3584,
+        "counterAssertion": 0.0635,
+        "clockProgress": 0.7831,
+        "progressSerializeWrite": 2.559
+      },
+      "perOperationMaximumChunkMs": {
+        "copy": 0.0701,
+        "rawWrite": 0.3339,
+        "hash": 0.0401,
+        "counterAssertion": 0.0008,
+        "clockProgress": 0.0244,
+        "progressSerializeWrite": 0.162
+      },
+      "perChunkTimingFile": "source-4-fixed-metadata-instrumented-trial-1.timings.json",
+      "rawBody": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-4-fixed-metadata-instrumented-trial-1.raw-body.bin",
+        "bytes": 4237024,
+        "sha256": "a4fb45ab08bf639f695134f2c693d5292f3126944d67db96e08596640930e910"
+      },
+      "progressFile": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\source-4-fixed-metadata-instrumented-trial-1.progress.jsonl",
+        "bytes": 31914,
+        "sha256": "a63816fae72a278bf7b5c3aa4a9b359c03fd8e5ce68275f2cb750c5c212abd85"
+      }
+    }
+  ],
+  "limitations": [
+    "All measurements here use already saved bytes on the current Windows host. No network, fetch, HTTP server, Cloudflare cache, reader wait, TLS, routing, or abort-timer behavior is replayed.",
+    "Original chunk timestamps are after raw write/hash and before progress JSONL persist; interchunk observations mix reader wait, earlier progress writes, scheduling, and collection. They are not exact network arrival times.",
+    "Original per-operation instrumentation does not exist. Current local replay cannot attribute historical time to collector, network, Worker, origin, cache, antivirus, disk, or scheduling.",
+    "Bodies and chunks are fixed original captured data, including the two partial bodies. Preloading buffers and executing a tight loop differs from an actual asynchronously paced reader.",
+    "The minimally instrumented original-like mode reproduces copy/write/hash/counter/clock/JSONL operations with new offline timestamps; fixed-metadata mode reproduces exact original JSONL bytes and adds per-operation instrumentation overhead.",
+    "No per-chunk fsync exists in the original. Two fsync calls are only in finally. Finishing-tail observations do not isolate those calls from reader cleanup, file read/hash, or other work.",
+    "Three successful original 60-second downloads exceed the original 30-second budget. Two original 60-second downloads remain FAIL with partial persisted response bodies and true process exit 1.",
+    "Local replay success is a byte-integrity and collector-operation diagnostic. It neither changes original outcomes nor satisfies any 30/60-second production performance acceptance.",
+    "Existing original evidence justifies continuing performance diagnosis; it is insufficient to select a product change or establish a Cloudflare/network root cause. Production causal attribution needs authorized simultaneous operation/reader/server instrumentation or controlled repeat measurements under unchanged budgets.",
+    "The 102 main tasks, 54 routes, G0-G8/E00-E08, true CinaAuth/workspace/key acceptance and pending production authorization remain outside this diagnostic and unfinished as previously recorded."
+  ],
+  "failures": [],
+  "replaySummary": [
+    {
+      "id": "source-0",
+      "trialCount": 3,
+      "currentHostOriginalLikeSynchronousCollectionMs": {
+        "count": 3,
+        "min": 19.9284,
+        "p50": 22.4838,
+        "p90": 25.0012,
+        "p95": 25.0012,
+        "p99": 25.0012,
+        "max": 25.0012,
+        "sum": 67.4134
+      },
+      "currentHostOriginalLikeLoopsMs": {
+        "count": 3,
+        "min": 13.2668,
+        "p50": 14.3506,
+        "p90": 17.8168,
+        "p95": 17.8168,
+        "p99": 17.8168,
+        "max": 17.8168,
+        "sum": 45.434200000000004
+      },
+      "currentHostInstrumentedCollectionMs": 25.4161,
+      "currentHostInstrumentedOperationsMs": {
+        "copy": 2.9381,
+        "rawWrite": 4.9353,
+        "hash": 2.4773,
+        "counterAssertion": 0.2313,
+        "clockProgress": 1.1199,
+        "progressSerializeWrite": 2.9215
+      },
+      "originalObservedLastChunkElapsedMs": 52551,
+      "historicalOverheadRatioInferred": false,
+      "originalNetworkRootCauseInferred": false
+    },
+    {
+      "id": "source-1",
+      "trialCount": 3,
+      "currentHostOriginalLikeSynchronousCollectionMs": {
+        "count": 3,
+        "min": 14.8901,
+        "p50": 15.8308,
+        "p90": 18.7447,
+        "p95": 18.7447,
+        "p99": 18.7447,
+        "max": 18.7447,
+        "sum": 49.465599999999995
+      },
+      "currentHostOriginalLikeLoopsMs": {
+        "count": 3,
+        "min": 8.5244,
+        "p50": 10.3999,
+        "p90": 11.426,
+        "p95": 11.426,
+        "p99": 11.426,
+        "max": 11.426,
+        "sum": 30.350300000000004
+      },
+      "currentHostInstrumentedCollectionMs": 18.8576,
+      "currentHostInstrumentedOperationsMs": {
+        "copy": 1.7965,
+        "rawWrite": 3.5401,
+        "hash": 1.7443,
+        "counterAssertion": 0.121,
+        "clockProgress": 1.1165,
+        "progressSerializeWrite": 1.9827
+      },
+      "originalObservedLastChunkElapsedMs": 59707,
+      "historicalOverheadRatioInferred": false,
+      "originalNetworkRootCauseInferred": false
+    },
+    {
+      "id": "source-2",
+      "trialCount": 3,
+      "currentHostOriginalLikeSynchronousCollectionMs": {
+        "count": 3,
+        "min": 19.8449,
+        "p50": 22.4794,
+        "p90": 23.3477,
+        "p95": 23.3477,
+        "p99": 23.3477,
+        "max": 23.3477,
+        "sum": 65.672
+      },
+      "currentHostOriginalLikeLoopsMs": {
+        "count": 3,
+        "min": 12.7997,
+        "p50": 14.0455,
+        "p90": 15.4119,
+        "p95": 15.4119,
+        "p99": 15.4119,
+        "max": 15.4119,
+        "sum": 42.2571
+      },
+      "currentHostInstrumentedCollectionMs": 27.3498,
+      "currentHostInstrumentedOperationsMs": {
+        "copy": 2.2935,
+        "rawWrite": 5.0336,
+        "hash": 2.3401,
+        "counterAssertion": 0.1851,
+        "clockProgress": 0.8171,
+        "progressSerializeWrite": 3.0262
+      },
+      "originalObservedLastChunkElapsedMs": 37791,
+      "historicalOverheadRatioInferred": false,
+      "originalNetworkRootCauseInferred": false
+    },
+    {
+      "id": "source-3",
+      "trialCount": 3,
+      "currentHostOriginalLikeSynchronousCollectionMs": {
+        "count": 3,
+        "min": 14.3443,
+        "p50": 17.4576,
+        "p90": 18.1966,
+        "p95": 18.1966,
+        "p99": 18.1966,
+        "max": 18.1966,
+        "sum": 49.99850000000001
+      },
+      "currentHostOriginalLikeLoopsMs": {
+        "count": 3,
+        "min": 9.0139,
+        "p50": 10.6738,
+        "p90": 12.0959,
+        "p95": 12.0959,
+        "p99": 12.0959,
+        "max": 12.0959,
+        "sum": 31.7836
+      },
+      "currentHostInstrumentedCollectionMs": 25.9997,
+      "currentHostInstrumentedOperationsMs": {
+        "copy": 1.9774,
+        "rawWrite": 4.1553,
+        "hash": 1.6163,
+        "counterAssertion": 0.0511,
+        "clockProgress": 0.6329,
+        "progressSerializeWrite": 3.3933
+      },
+      "originalObservedLastChunkElapsedMs": 59233,
+      "historicalOverheadRatioInferred": false,
+      "originalNetworkRootCauseInferred": false
+    },
+    {
+      "id": "source-4",
+      "trialCount": 3,
+      "currentHostOriginalLikeSynchronousCollectionMs": {
+        "count": 3,
+        "min": 18.4965,
+        "p50": 19.8811,
+        "p90": 22.5648,
+        "p95": 22.5648,
+        "p99": 22.5648,
+        "max": 22.5648,
+        "sum": 60.942400000000006
+      },
+      "currentHostOriginalLikeLoopsMs": {
+        "count": 3,
+        "min": 11.6579,
+        "p50": 12.6643,
+        "p90": 13.8102,
+        "p95": 13.8102,
+        "p99": 13.8102,
+        "max": 13.8102,
+        "sum": 38.1324
+      },
+      "currentHostInstrumentedCollectionMs": 28.8973,
+      "currentHostInstrumentedOperationsMs": {
+        "copy": 2.642,
+        "rawWrite": 5.4334,
+        "hash": 2.3584,
+        "counterAssertion": 0.0635,
+        "clockProgress": 0.7831,
+        "progressSerializeWrite": 2.559
+      },
+      "originalObservedLastChunkElapsedMs": 43494,
+      "historicalOverheadRatioInferred": false,
+      "originalNetworkRootCauseInferred": false
+    }
+  ],
+  "protectedOriginalFileCount": 26,
+  "originalInputsByteExactUnchanged": true,
+  "finishedAt": "2026-10-06T13:36:45.621Z",
+  "outcome": "PASS",
+  "intendedExitCode": 0
+}

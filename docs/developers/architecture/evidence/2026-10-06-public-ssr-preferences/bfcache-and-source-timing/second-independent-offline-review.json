@@ -1,0 +1,67 @@
+{
+  "reviewedAt": "2026-10-06T13:41:15.223068+00:00",
+  "reviewer": "/root/public_early_controls_review",
+  "scope": "Independent Python read-only verification of offline data, receipts, original immutability and all 20 replay files. No repeated benchmark.",
+  "host": {
+    "system": "Windows",
+    "release": "11",
+    "architecture": "AMD64",
+    "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]"
+  },
+  "outcome": "PASS",
+  "intendedExitCode": 0,
+  "networkRequestsStarted": 0,
+  "originalFilesByteExactUnchanged": 26,
+  "originalActualExitCode": 1,
+  "offlineCollectorChildActualExitCode": 0,
+  "replays": 20,
+  "originalLike": 15,
+  "fixedMetadataInstrumented": 5,
+  "allReplayRawBodiesByteExactToOriginal": true,
+  "allReplayChunkBoundariesEqualOriginal": true,
+  "allFiveFixedMetadataLogsByteExactToOriginal": true,
+  "originalChunks": 1486,
+  "originalPersistedBytes": 18446061,
+  "originalPartialBodiesRemainPartial": true,
+  "productPerformanceAcceptanceStillOpen": true,
+  "productChangeSelected": false,
+  "networkOrCloudflareRootCauseProven": false,
+  "checklistOrSourceEdited": false,
+  "files": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\offline-download-review.md",
+      "bytes": 8014,
+      "sha256": "40710f09095c2f4de556b4639c215d763430d23a7a3ec2b7ff056948ceb4d220"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\offline-diagnostic-report.json",
+      "bytes": 81448,
+      "sha256": "1337b7d045420609f8a73398be01d54d9d95cbede625d3d5dd4adf3845d2d94e"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\offline-process-closed.json",
+      "bytes": 947,
+      "sha256": "373d94a0597cba7c70861f119c27702918bac812df36e1b768c921c9cab3e3f0"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\original-inputs-before.json",
+      "bytes": 7219,
+      "sha256": "006311cab61d217da32426c0fa77a3f98cfa98cf0f68f599a8ca2c0f8f8fc7c3"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\original-inputs-after.json",
+      "bytes": 7219,
+      "sha256": "006311cab61d217da32426c0fa77a3f98cfa98cf0f68f599a8ca2c0f8f8fc7c3"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\analyze-offline.mjs",
+      "bytes": 22851,
+      "sha256": "aec65a8ca96d1fa9e0b305d95fe7c0fc58c277bea1d1b0524ff190163f2b9655"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-download-offline-4ea34b9e21574457a996e4cb1802a1b7\\run-offline.mjs",
+      "bytes": 1575,
+      "sha256": "a06f7d03f7fd131c742a833d72c07975ea36ac7dab5e433774bf52f2fba7b77f"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "mode": "final",
+  "label": "final-md-595-v3",
+  "startedAt": "2026-10-06T14:33:41.023Z",
+  "closedAt": "2026-10-06T14:33:41.167Z",
+  "actualExitCode": 0,
+  "signal": null,
+  "error": null,
+  "readOnly": true,
+  "noProductionActions": true,
+  "files": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-595-scope-01385f0503ef418ba5e5bfe8771c5f6a\\final-md-595-v3.stdout.log",
+      "bytes": 1057,
+      "sha256": "8916d7a86e1440b88734f884c7f42929b53d0c281d9542671162bca76802f1e4"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-595-scope-01385f0503ef418ba5e5bfe8771c5f6a\\final-md-595-v3.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

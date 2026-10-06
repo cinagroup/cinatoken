@@ -1,0 +1,23 @@
+{
+  "startedAt": "2026-10-06T14:39:37.991Z",
+  "closedAt": "2026-10-06T14:39:38.207Z",
+  "actualExitCode": 0,
+  "signal": null,
+  "spawnError": null,
+  "readOnly": true,
+  "networkRequestsMade": 0,
+  "browserOperationsMade": 0,
+  "benchmarkRerunsMade": 0,
+  "files": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-595-scope-01385f0503ef418ba5e5bfe8771c5f6a\\final-md-595-v3-manual-v3.stdout.log",
+      "bytes": 613,
+      "sha256": "aedabc0fb5e14f6d3a970768819078700c91d885b2853ad56c6e514e9e0359fc"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-595-scope-01385f0503ef418ba5e5bfe8771c5f6a\\final-md-595-v3-manual-v3.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

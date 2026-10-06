@@ -1,0 +1,26 @@
+{
+  "executable": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-scope-79204d34279045ad83a65f36ab1e0bab\\audit-migration-scope.mjs",
+    "final-md-595-v3",
+    "--require-final-evidence"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "startedAt": "2026-10-06T14:33:42.026Z",
+  "endedAt": "2026-10-06T14:33:42.415Z",
+  "actualExitCode": 0,
+  "signal": null,
+  "error": null,
+  "streams": {
+    "stdout": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-scope-79204d34279045ad83a65f36ab1e0bab\\final-md-595-v3.audit.stdout.log",
+      "bytes": 724,
+      "sha256": "812de5bc527bf544931a80f7afe152cb636cb84fdecf3ad448f1234f99ee4e85"
+    },
+    "stderr": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-md-scope-79204d34279045ad83a65f36ab1e0bab\\final-md-595-v3.audit.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  }
+}

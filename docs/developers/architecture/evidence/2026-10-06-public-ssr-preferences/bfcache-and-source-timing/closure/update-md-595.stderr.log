@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "C:\Users\cina\AppData\Local\Temp\cinatoken-bfcache-continuation-64228ac856184788ac472e5bbe6acb64\update-md-595.py", line 35, in <module>
+    assert len(checkbox(old))==213 and checkbox(raw)==checkbox(old)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
