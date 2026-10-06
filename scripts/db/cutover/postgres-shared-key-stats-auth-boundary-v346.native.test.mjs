@@ -2,11 +2,11 @@
 // Starts a fresh owned loopback PostgreSQL cluster. No remote connection.
 import assert from 'node:assert/strict';
 import { createHash, randomBytes } from 'node:crypto';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import test from 'node:test';
 import postgres from 'postgres';
 import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';
-import { grantPostgresRuntime } from './grant-postgres-runtime.ts';
+import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
 
 const root = new URL('../../../', import.meta.url);
 const migrationDir = new URL('packages/core/migrations-postgres/', root);
@@ -54,7 +54,7 @@ test('PG18 shared runtime can forge a portal-session seller identity',
       clients.push(migrator, runtime);
       await migrator.unsafe(`CREATE TABLE cinatoken_gateway.schema_migrations
         (version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);
-      const files = (await readdir(migrationDir)).filter(name => name.endsWith('.sql')).sort();
+      const files = await listPg73Migrations();
       assert.equal(files.length, 73);
       const corpus = [];
       for (const name of files) {
@@ -77,6 +77,9 @@ test('PG18 shared runtime can forge a portal-session seller identity',
           [key, sha256(await readFile(url, 'utf8'))]))) };
       stage('exact-formal-pg73-installed');
 
+      // Keep original grant calls and rejection checks on the owned PG73 ledger.
+      const grantPostgresRuntime = ({ DATABASE_URL }) =>
+        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });
       await grantPostgresRuntime({ DATABASE_URL:
         `postgres://cinatoken_gateway_migrator:${migratorPassword}@127.0.0.1:${cluster.port}/postgres` });
       const [rights] = await runtime.unsafe(`SELECT session_user, current_user,

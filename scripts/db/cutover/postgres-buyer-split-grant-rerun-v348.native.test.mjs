@@ -2,7 +2,7 @@
 // v346/v347 split and durable v348 marker commit in one locked transaction.
 import assert from 'node:assert/strict';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import test from 'node:test';
 import postgres from 'postgres';
@@ -12,7 +12,7 @@ import { pgCoreSchema } from '../../../packages/core/src/storage/drizzle/schema.
 import { insertRequestUsageAndChargeTxPg } from '../../../packages/core/src/db/postgres/critical-writes.impl.ts';
 import { createPostgresSharedKeysRepository } from '../../../packages/core/src/db/postgres/portal-marketplace.impl.ts';
 import { chargeParams } from '../../../packages/core/src/test-support/postgres-financial-engine.mjs';
-import { grantPostgresRuntime } from './grant-postgres-runtime.ts';
+import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
 import { grantPostgresBuyerSplitV348 } from './grant-postgres-buyer-split-v348.ts';
 import { activatePostgresBuyerSplitV348 } from './activate-postgres-buyer-split-v348.ts';
 
@@ -109,7 +109,7 @@ test('split marker makes old grants fail closed and v348 reconciler reruns safel
       clients.push(migrator, runtime, buyer);
       await migrator.unsafe(`CREATE TABLE ${gateway}.schema_migrations
         (version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);
-      const names = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();
+      const names = await listPg73Migrations();
       assert.equal(names.length, 73);
       assert.equal(names.at(-1), '0073_recovery_api_key_workspace_lock.sql');
       const corpus = [];
@@ -138,6 +138,9 @@ test('split marker makes old grants fail closed and v348 reconciler reruns safel
       report.sourceSha256.fixture = hash(await readFile(new URL(import.meta.url)));
       const migratorUrl = `postgres://cinatoken_gateway_migrator:${migratorPassword}`
         + `@127.0.0.1:${cluster.port}/postgres`;
+      // Keep original grant calls and rejection checks on the owned PG73 ledger.
+      const grantPostgresRuntime = ({ DATABASE_URL }) =>
+        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });
       await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
       await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
       assert.equal((await migrator.unsafe(`SELECT pg_catalog.has_column_privilege(

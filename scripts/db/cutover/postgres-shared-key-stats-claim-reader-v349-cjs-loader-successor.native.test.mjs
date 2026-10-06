@@ -1,7 +1,7 @@
 // Review-only v349 loader successor. Uses the real Admin CommonJS export and an owned loopback PG cluster.
 import assert from 'node:assert/strict';
 import { createHash, createHmac, randomBytes, randomUUID } from 'node:crypto';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import test from 'node:test';
 import postgres from 'postgres';
 import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';
@@ -9,7 +9,7 @@ import signedStatsReaderModule from '../../../packages/admin/lib/shared-key-sign
 import { dirname, join } from 'node:path';
 
 const { readSignedSellerStatsPage } = signedStatsReaderModule;
-import { grantPostgresRuntime } from './grant-postgres-runtime.ts';
+import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
 
 const root = new URL('../../../', import.meta.url);
 const migrationDir = new URL('packages/core/migrations-postgres/', root);
@@ -129,7 +129,7 @@ test('native PG18 C04.7 signed claim to credited-usage reader binding (Admin CJS
       clients.push(migrator,runtime,producer,consumer,statsReader);
       await migrator.unsafe(`CREATE TABLE cinatoken_gateway.schema_migrations
         (version text PRIMARY KEY,applied_at timestamptz NOT NULL DEFAULT now())`);
-      const files=(await readdir(migrationDir)).filter(name=>name.endsWith('.sql')).sort();
+      const files=await listPg73Migrations();
       assert.equal(files.length,73);
       const corpus=[];
       for(const name of files) {
@@ -416,6 +416,9 @@ test('native PG18 C04.7 signed claim to credited-usage reader binding (Admin CJS
         ENABLE TRIGGER shared_key_earnings_capture_credited_usage`);
       assert.equal((await read('reader-new-seller'))[0].net_micros,'5625000');
       stage('disabled-source-trigger-closes-reader');
+      // Keep original grant calls and rejection checks on the owned PG73 ledger.
+      const grantPostgresRuntime = ({ DATABASE_URL }) =>
+        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });
       await grantPostgresRuntime({DATABASE_URL:
         `postgres://cinatoken_gateway_migrator:${passwords.migrator}@127.0.0.1:${cluster.port}/postgres`});
       await assert.rejects(runtime.begin(async tx=>{
