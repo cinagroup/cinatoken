@@ -1,0 +1,28 @@
+{
+  "schema": "cinatoken-observation-tool-syntax-command-closed-v1",
+  "closed": true,
+  "program": "C:/Users/cina/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+  "args": [
+    "-c",
+    "import ast,pathlib,sys; ast.parse(pathlib.Path(sys.argv[1]).read_text(encoding=\"utf-8\")); print(\"AST syntax only; no executable imported\")",
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-queued-linux-observation-tools-87b2c4dae3a8480c87b50e9d4c2b8e8b\\extract-artifact.py"
+  ],
+  "startedAt": "2026-10-06T07:27:05.110Z",
+  "endedAt": "2026-10-06T07:27:05.297Z",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-observation-tools-87b2c4dae3a8480c87b50e9d4c2b8e8b/syntax-python.stdout.raw",
+    "bytes": 41,
+    "sha256": "1c9f08d0ba19217980cbe0fd294481f1bf044561632d39404595ba9c59124dd5"
+  },
+  "stderr": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-observation-tools-87b2c4dae3a8480c87b50e9d4c2b8e8b/syntax-python.stderr.raw",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "syntaxOnly": true,
+  "runtimeExecuted": false,
+  "ciQueried": false
+}

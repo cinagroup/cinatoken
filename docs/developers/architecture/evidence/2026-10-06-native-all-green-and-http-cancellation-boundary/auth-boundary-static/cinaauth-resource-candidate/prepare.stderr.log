@@ -1,0 +1,11 @@
+file:///C:/Users/cina/AppData/Local/Temp/cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d/prepare-resource-candidate.mjs:43
+if(status.r.status!==0)throw Error('Git readonly status failed');
+                             ^
+
+Error: Git readonly status failed
+    at file:///C:/Users/cina/AppData/Local/Temp/cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d/prepare-resource-candidate.mjs:43:30
+    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:661:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.14.1

@@ -1,0 +1,441 @@
+{
+  "schema": "final-md-and-live-registration-independent-readonly-review-v1",
+  "at": "2026-10-06T09:10:13.034Z",
+  "reviewOnly": true,
+  "currentMD": {
+    "path": "C:/cinagroup/cinatoken/docs/developers/architecture/web-frontend-migration.md",
+    "bytes": 835928,
+    "sha256": "bd2cf6ed4421f37fd7afc698e279863bedfc60526d647d72f0add13365a9fbe1"
+  },
+  "baselineMD": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\checklist-before-5.86.md",
+    "bytes": 824691,
+    "sha256": "d7bac9842393e8cd699922dedfa2eeb338834e2e811cc46e403873983496bca3"
+  },
+  "inputPins": [
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/FINAL-independent-candidate-review.json",
+      "bytes": 20218,
+      "sha256": "9954216baf9a49c248548f1c91ca566c6dd9a7a133aa2a5d4959a315c9422597"
+    },
+    {
+      "path": "C:/cinagroup/cinatoken/docs/developers/architecture/web-frontend-migration.md",
+      "bytes": 835928,
+      "sha256": "bd2cf6ed4421f37fd7afc698e279863bedfc60526d647d72f0add13365a9fbe1"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/checklist-before-5.86.md",
+      "bytes": 824691,
+      "sha256": "d7bac9842393e8cd699922dedfa2eeb338834e2e811cc46e403873983496bca3"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/registration-live-readonly.json",
+      "bytes": 2401,
+      "sha256": "989bb034ac0ed4faf8336b1d341f3a4b4ab56c2df1dac364bb505a2bd361d0f7"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/registration-live-readonly.result.json",
+      "bytes": 865,
+      "sha256": "a762615988a2ea9bb5abeb57e1a475ba5b3768649328a7d261cea0e045b8ad6f"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/checklist-live-registration-update.json",
+      "bytes": 517,
+      "sha256": "76b2a6cf7090bf84131cd3ce77bf580ace5891235cda68f1ac20bdc18d28c311"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/update-checklist-live-registration.result.json",
+      "bytes": 885,
+      "sha256": "2303faffac53eb966e5ad71d927c56a2bdbad547978358e9c480b3fc7394a257"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/root-browser-and-approval-observations.json",
+      "bytes": 2423,
+      "sha256": "47b40ba8a63f38049151f8aefa8ebda2c4834cc0ec3fac1b176e0410e794cda4"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/registration-live-readonly.stdout.log",
+      "bytes": 1734,
+      "sha256": "ea27981a2ae2299d48441f4ff16e5934fe105e231bbc7ba84d1056c4f3fbaa51"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/registration-live-readonly.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/update-checklist-live-registration.stdout.log",
+      "bytes": 437,
+      "sha256": "00d1420ab85df35c7cf58156467e3b59a52865d3e507f910c60b6117d1645b19"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/update-checklist-live-registration.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/cinagroup/cinatoken/docs/developers/architecture/evidence/2026-10-06-native-all-green-and-http-cancellation-boundary/auth-boundary-static-index.json",
+      "bytes": 178097,
+      "sha256": "d60b3589b39325d6e8d2a2a4bbb8b4ceabc947355f633c496e80b59e5342e8bd"
+    }
+  ],
+  "scopes": [
+    {
+      "name": "tasks",
+      "before": 102,
+      "after": 102,
+      "exact": true
+    },
+    {
+      "name": "matrix",
+      "before": 54,
+      "after": 54,
+      "exact": true
+    },
+    {
+      "name": "gates",
+      "before": 9,
+      "after": 9,
+      "exact": true
+    },
+    {
+      "name": "phases",
+      "before": 9,
+      "after": 9,
+      "exact": true
+    },
+    {
+      "name": "acceptance",
+      "before": 9,
+      "after": 9,
+      "exact": true
+    },
+    {
+      "name": "checkboxLines",
+      "before": 213,
+      "after": 213,
+      "exact": true
+    }
+  ],
+  "actualTaskCheckboxes": 211,
+  "literalTokens": 214,
+  "taskStateArraysExact": true,
+  "mdDiff": [
+    {
+      "baselineStart": 31,
+      "currentStart": 31,
+      "removedLines": 1,
+      "addedLines": 1,
+      "removed": [
+        "当前推进：独立Web生产c13/2a0仍100%，06:52只读Route/version核验0。最新6e2原Linux报价24通过，但native90收据保留断言235:14为true/false失败；financial106为82success/1fail/23skip，55–113为35success/1fail/23skip。26目标20success/6skip、剩6及94/109/110–113跳过，三处migrator:sql修复尚未运行到；d537的全部目标通过仅属于历史SHA。Web/Compose/Release/Verify同6e2成功，dispatch strict仍8/7/1。收据七处时间输入保留微秒及有限8MiB积压/RST独立诊断已实现并静态复核、准备bundle通过，待下一SHA原CI及单次Linux诊断；根因未证、旧取消失败保留。完整G7/G8、原102/54/211及真实身份/权限写、资金链/SSE/回滚/旧UI退役继续。"
+      ]
+    },
+    {
+      "baselineStart": 127,
+      "currentStart": 127,
+      "removedLines": 1,
+      "addedLines": 1,
+      "removed": [
+        "| NEXT-18 | P1、P8-01 | 继续原native剩余门槛与真实取消 | 6e2原Linux最早失败90/235收据时间比较true/false，106步82success/1fail/23skip，94/109/110–113未执行（5.85）；d537的26目标/剩6通过仅为历史。收据七处微秒保留及有限8MiB积压/RST独立诊断已实现并独立复核，下一SHA原CI/单次Linux待验。原strict8/7/1仍失败；两历史RST signal-abort真而cancelNULL。真实身份/ACL/资金/取消/G7/G8继续。 |"
+      ]
+    },
+    {
+      "baselineStart": 2438,
+      "currentStart": 2438,
+      "removedLines": 0,
+      "addedLines": 27,
+      "removed": []
+    },
+    {
+      "baselineStart": 2676,
+      "currentStart": 2703,
+      "removedLines": 0,
+      "addedLines": 1,
+      "removed": []
+    }
+  ],
+  "registration": {
+    "originalReadReceipt": {
+      "at": "2026-10-06T08:53:52.632Z",
+      "finishedAt": "2026-10-06T08:54:11.771Z",
+      "executable": "C:/Program Files/nodejs/node.exe",
+      "args": [
+        "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\read-registration-via-owned-worker.mjs"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\registration-live-readonly.stdout.log",
+        "bytes": 1734,
+        "sha256": "ea27981a2ae2299d48441f4ff16e5934fe105e231bbc7ba84d1056c4f3fbaa51"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\registration-live-readonly.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "oneFiveBooleanObservation": {
+      "status": 200,
+      "observedAt": "2026-10-06T08:54:08.279Z",
+      "values": {
+        "clientExists": true,
+        "clientDisabled": false,
+        "resourceExists": true,
+        "resourceDisabled": false,
+        "linkExists": false
+      }
+    },
+    "metadataRequests": 1,
+    "cleanup": {
+      "deleteStatus": 200,
+      "deleteSuccess": true,
+      "verifyStatus": 404,
+      "absent": true
+    },
+    "originalHealthTransportFailures": 4,
+    "existingProductionWorkersChanged": false,
+    "databaseDmlOrDdl": false
+  },
+  "approval": {
+    "asOf": "2026-10-06T09:04:00Z",
+    "originalDeclaredRejection": {
+      "action": "One fixed OAuth association INSERT for existing enabled cinatoken-admin / https://cinatoken.com after row locks and before/after checks",
+      "toolOperation": "exec_command require_escalated",
+      "result": "CreateProcess rejected before child creation",
+      "reviewerReason": "该操作会在生产认证数据库中持久新增 OAuth 客户端与资源的授权关联，改变安全边界；虽范围狭窄且有事务保护，但用户未明确批准这一具体生产权限变更。",
+      "childCreated": false,
+      "actualChildExit": null,
+      "repairWorkerCreated": false,
+      "databaseRepairExecuted": false,
+      "followup": "Asked user explicitly to approve only this fixed missing association; pending at snapshot time. No workaround, indirect execution or rejected-action retry."
+    },
+    "childCreated": false,
+    "actualChildExit": null,
+    "databaseRepairExecuted": false,
+    "userApprovalPendingAtSnapshot": true
+  },
+  "browserBoundary": {
+    "credentialsRead": false,
+    "sessionExported": false,
+    "loginCompleted": false,
+    "workspaceChosen": false,
+    "testKeyCreatedOrRevoked": false,
+    "v4OnlyPublicPageNoPostRepairAttempt": true,
+    "atomicChildExitInferred": false
+  },
+  "sqliteAuthority": {
+    "agent": "/root/native_four_peer",
+    "FINALPath": "C:/Users/cina/AppData/Local/Temp/cinaauth-firstparty-data-repair-plan-41c3699de26d498096ecf6cc9e498880/FINAL-firstparty-link-data-repair-plan.json",
+    "FINALBytes": 10534,
+    "FINALSha256": "941768352a41832c0dbad482c08ce12954cf309e929b443a9152f104216ea224",
+    "ninePass": true,
+    "skip0": true,
+    "postgresLocksAndProductionVerified": false,
+    "originalRootReadByThisReview": false
+  },
+  "priorCIReviewAuthority": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/FINAL-independent-candidate-review.json",
+    "bytes": 20218,
+    "sha256": "9954216baf9a49c248548f1c91ca566c6dd9a7a133aa2a5d4959a315c9422597",
+    "sourceSHA": "757490181564aa822f960f5d8704857b98b230d0",
+    "financialSteps": 106,
+    "tests": 109,
+    "strict8_7_1Preserved": true,
+    "oldCIRootsOrLogsNotReread": true
+  },
+  "staticIndex": {
+    "path": "C:/cinagroup/cinatoken/docs/developers/architecture/evidence/2026-10-06-native-all-green-and-http-cancellation-boundary/auth-boundary-static-index.json",
+    "payload142": true,
+    "preparation20": true,
+    "totalIncludingIndex163": true,
+    "indexOnlyRead": true,
+    "payloadStoredFilesNotRewalked": true
+  },
+  "runtimeIndex": {
+    "path": "C:/cinagroup/cinatoken/docs/developers/architecture/evidence/2026-10-06-native-all-green-and-http-cancellation-boundary/auth-runtime-index.json",
+    "presentAtReview": false,
+    "storedVerificationDone": false,
+    "pinsAwaited": true
+  },
+  "checkCount": 34,
+  "checks": [
+    {
+      "name": "prior-peer-authority-pin",
+      "ok": true
+    },
+    {
+      "name": "current-md-authoritative-pin",
+      "ok": false
+    },
+    {
+      "name": "original-md-baseline-pin",
+      "ok": true
+    },
+    {
+      "name": "original-array-exact:tasks",
+      "ok": true
+    },
+    {
+      "name": "original-array-exact:matrix",
+      "ok": true
+    },
+    {
+      "name": "original-array-exact:gates",
+      "ok": true
+    },
+    {
+      "name": "original-array-exact:phases",
+      "ok": true
+    },
+    {
+      "name": "original-array-exact:acceptance",
+      "ok": true
+    },
+    {
+      "name": "original-array-exact:checkboxLines",
+      "ok": true
+    },
+    {
+      "name": "scope-counts-exact",
+      "ok": true
+    },
+    {
+      "name": "all211-task-states-exact",
+      "ok": true
+    },
+    {
+      "name": "214-literal-tokens-preserved",
+      "ok": true
+    },
+    {
+      "name": "only-current-next18-old-lines-replaced",
+      "ok": true,
+      "details": {
+        "unauthorizedRemoved": []
+      }
+    },
+    {
+      "name": "reviewed-current-next18-and-both-sections",
+      "ok": true
+    },
+    {
+      "name": "757-native-prior-verified-boundary-preserved",
+      "ok": true
+    },
+    {
+      "name": "prior-timestamp-clarifications-applied",
+      "ok": true
+    },
+    {
+      "name": "actual-original-child0:sole-live-read",
+      "ok": true
+    },
+    {
+      "name": "original-stream-bytes-sha:sole-live-read:stdout",
+      "ok": true
+    },
+    {
+      "name": "original-stream-bytes-sha:sole-live-read:stderr",
+      "ok": true
+    },
+    {
+      "name": "actual-original-child0:md-update",
+      "ok": true
+    },
+    {
+      "name": "original-stream-bytes-sha:md-update:stdout",
+      "ok": true
+    },
+    {
+      "name": "original-stream-bytes-sha:md-update:stderr",
+      "ok": true
+    },
+    {
+      "name": "sole-live-read-time-and-sha",
+      "ok": true
+    },
+    {
+      "name": "sole-five-boolean-live-observation",
+      "ok": true
+    },
+    {
+      "name": "readonly-live-not-production-repair",
+      "ok": true
+    },
+    {
+      "name": "temporary-worker-delete200-and-absent404",
+      "ok": true
+    },
+    {
+      "name": "four-health-transport-failures-retained",
+      "ok": true
+    },
+    {
+      "name": "md-update-proven-current-pins",
+      "ok": false
+    },
+    {
+      "name": "approval-rejection-not-exit1-not-write",
+      "ok": true
+    },
+    {
+      "name": "browser-credentials-and-login-boundary",
+      "ok": true
+    },
+    {
+      "name": "md-production-fix-and-login-remain-unexecuted",
+      "ok": true
+    },
+    {
+      "name": "md-sqlite9-only-candidate-boundary",
+      "ok": true
+    },
+    {
+      "name": "existing-static-index-declared-counts",
+      "ok": true
+    },
+    {
+      "name": "static-index-does-not-claim-production-or-gates",
+      "ok": true
+    }
+  ],
+  "failures": [
+    {
+      "name": "current-md-authoritative-pin",
+      "ok": false
+    },
+    {
+      "name": "md-update-proven-current-pins",
+      "ok": false
+    }
+  ],
+  "notes": [
+    {
+      "severity": "boundary",
+      "text": "Registration exact enabled client/resource pair lacks link in one readonly observation; repair cause/login verification remain pending. Metadata200 and SQLite9pass do not complete login or G2/G7/G8."
+    },
+    {
+      "severity": "boundary",
+      "text": "Read-only temporary Worker upload and DELETE were real ephemeral resources; no existing production Worker/Route, Hyperdrive settings or database DML/DDL changed."
+    },
+    {
+      "severity": "pending-index-only",
+      "text": "Runtime archive index was not yet supplied/pinned for this review. Its final stored-byte verification will be a separate bounded read after Root provides pins. No claim that runtime index is installed/verified is made here.",
+      "presentAtReview": false
+    },
+    {
+      "severity": "authority",
+      "text": "SQLite9/9 skip0 and initializer red3-to-green7 use native_four_peer frozen authority, not newly rerun tests or original six source roots."
+    }
+  ],
+  "networkOrCIOrDBOrTestsExecuted": false,
+  "repositoryWrites": false,
+  "oldSourceRootsRewalked": false,
+  "newCredentialOrScreenshotReview": false,
+  "collection0NotBusinessGatePass": true,
+  "fullG2Verified": false,
+  "fullG7Verified": false,
+  "fullG8Verified": false
+}

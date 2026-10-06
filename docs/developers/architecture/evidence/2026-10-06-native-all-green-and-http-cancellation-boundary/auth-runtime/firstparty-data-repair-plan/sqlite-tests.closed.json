@@ -1,0 +1,40 @@
+{
+  "schema": "actual-child-closed-v1",
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "--test",
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-firstparty-data-repair-plan-41c3699de26d498096ecf6cc9e498880\\repair-cinatoken-client-link.test.mjs"
+  ],
+  "cwd": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-firstparty-data-repair-plan-41c3699de26d498096ecf6cc9e498880",
+  "startedAt": "2026-10-06T08:58:21.500Z",
+  "endedAt": "2026-10-06T08:58:21.681Z",
+  "actualExit": 0,
+  "signal": null,
+  "error": null,
+  "timeoutConfiguredMs": 15000,
+  "timedOutObserved": false,
+  "sourceProgram": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-firstparty-data-repair-plan-41c3699de26d498096ecf6cc9e498880\\repair-cinatoken-client-link.test.mjs",
+    "bytes": 8947,
+    "sha256": "3385cbab88d9039a3d3be0c9edf9bdfcf85cce8d573b9c2073dfb66c53ab490a"
+  },
+  "candidate": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-firstparty-data-repair-plan-41c3699de26d498096ecf6cc9e498880\\repair-cinatoken-client-link.mjs",
+    "bytes": 2410,
+    "sha256": "0f0651066fdd0da2fdb301f1fbbab7ac37dcdf86d57f482863e5189ea2161102"
+  },
+  "stdout": {
+    "path": "sqlite-tests.stdout.log",
+    "bytes": 1007,
+    "sha256": "de866baa16c0b25d0684e205545da52e7baa807fd6edbd677058dedd1573e939"
+  },
+  "stderr": {
+    "path": "sqlite-tests.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "method": "Actual candidate function against in-memory SQLite transaction adapter; FOR UPDATE and SET LOCAL deliberately not accepted as PG proof.",
+  "productionRequests": 0,
+  "actualPGConnections": 0,
+  "noLiveRepairPassDerived": true
+}

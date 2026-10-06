@@ -1,0 +1,92 @@
+
+
+/** @see https://www.rfc-editor.org/rfc/rfc8707.html#section-3 */
+describe("cinatoken reserved resource initialization", () => {
+	const createDatabase = () => {
+		const database = new DatabaseSync(":memory:");
+		database.exec([
+			'PRAGMA foreign_keys = ON;',
+			'CREATE TABLE "oauthClient" ("id" TEXT PRIMARY KEY, "clientId" TEXT UNIQUE, "clientSecret" TEXT, "disabled" INTEGER, "skipConsent" INTEGER, "enableEndSession" INTEGER, "subjectType" TEXT, "scopes" TEXT, "userId" TEXT, "referenceId" TEXT, "createdAt" TEXT, "updatedAt" TEXT, "name" TEXT, "uri" TEXT, "icon" TEXT, "redirectUris" TEXT, "postLogoutRedirectUris" TEXT, "tokenEndpointAuthMethod" TEXT, "grantTypes" TEXT, "responseTypes" TEXT, "public" INTEGER, "type" TEXT, "requirePKCE" INTEGER, "softwareId" TEXT, "softwareVersion" TEXT);',
+			'CREATE TABLE "oauthResource" ("id" TEXT PRIMARY KEY, "identifier" TEXT UNIQUE NOT NULL, "name" TEXT, "disabled" INTEGER DEFAULT 0, "accessTokenTtl" INTEGER, "allowedScopes" TEXT, "createdAt" TEXT, "updatedAt" TEXT);',
+			'CREATE TABLE "oauthClientResource" ("id" TEXT PRIMARY KEY, "clientId" TEXT NOT NULL, "resourceId" TEXT NOT NULL, "metadata" TEXT, "createdAt" TEXT, UNIQUE ("clientId", "resourceId"), FOREIGN KEY ("clientId") REFERENCES "oauthClient" ("clientId"), FOREIGN KEY ("resourceId") REFERENCES "oauthResource" ("identifier"));',
+		].join("\n"));
+		const query = async (sql: string, values: unknown[]) =>
+			database.prepare(sql).run(
+				Object.fromEntries(
+					values.map((value, index) => [
+						"$" + (index + 1),
+						value instanceof Date
+							? value.toISOString()
+							: typeof value === "boolean"
+								? Number(value)
+								: (value as SQLInputValue),
+					]),
+				),
+			);
+		return { database, query };
+	};
+
+	it("initializes the missing exact resource and client association", async () => {
+		const { database, query } = createDatabase();
+		try {
+			await ensureCinatokenOidcClient({ query }, CLIENT_SECRET, APPLICATION_ORIGIN);
+			expect(database.prepare('SELECT "identifier", "disabled" FROM "oauthResource"').all()).toEqual([{ identifier: APPLICATION_ORIGIN, disabled: 0 }]);
+			expect(database.prepare('SELECT "clientId", "resourceId" FROM "oauthClientResource"').all()).toEqual([{ clientId: CINATOKEN_OIDC_CLIENT_ID, resourceId: APPLICATION_ORIGIN }]);
+			expect(database.prepare('SELECT "scopes", "requirePKCE", "tokenEndpointAuthMethod" FROM "oauthClient" WHERE "clientId" = ?').get(CINATOKEN_OIDC_CLIENT_ID)).toEqual({
+				scopes: JSON.stringify(["openid", "profile", "email"]),
+				requirePKCE: 1,
+				tokenEndpointAuthMethod: "client_secret_basic",
+			});
+		} finally {
+			database.close();
+		}
+	});
+
+	it("is idempotent without replacing the original resource or link", async () => {
+		const { database, query } = createDatabase();
+		try {
+			await ensureCinatokenOidcClient({ query }, CLIENT_SECRET, APPLICATION_ORIGIN);
+			const resource = database.prepare('SELECT * FROM "oauthResource"').get();
+			const link = database.prepare('SELECT * FROM "oauthClientResource"').get();
+			await ensureCinatokenOidcClient({ query }, CLIENT_SECRET, APPLICATION_ORIGIN);
+			expect(database.prepare('SELECT * FROM "oauthResource"').all()).toEqual([resource]);
+			expect(database.prepare('SELECT * FROM "oauthClientResource"').all()).toEqual([link]);
+			expect(database.prepare('SELECT count(*) AS count FROM "oauthClient"').get()).toEqual({ count: 1 });
+		} finally {
+			database.close();
+		}
+	});
+
+	it("preserves disabled resource policy and operator-managed link metadata", async () => {
+		const { database, query } = createDatabase();
+		try {
+			database.prepare('INSERT INTO "oauthClient" ("id", "clientId") VALUES (?, ?)').run("existing-client", CINATOKEN_OIDC_CLIENT_ID);
+			database.prepare('INSERT INTO "oauthResource" ("id", "identifier", "name", "disabled", "accessTokenTtl", "allowedScopes", "createdAt", "updatedAt") VALUES (?, ?, ?, ?, ?, ?, ?, ?)').run("operator-resource", APPLICATION_ORIGIN, "operator label", 1, 120, '["profile"]', "2000-01-01", "2000-01-02");
+			database.prepare('INSERT INTO "oauthClientResource" ("id", "clientId", "resourceId", "metadata", "createdAt") VALUES (?, ?, ?, ?, ?)').run("operator-link", CINATOKEN_OIDC_CLIENT_ID, APPLICATION_ORIGIN, '{"owner":"operator"}', "2000-01-01");
+			const resource = database.prepare('SELECT * FROM "oauthResource"').get();
+			const link = database.prepare('SELECT * FROM "oauthClientResource"').get();
+			await ensureCinatokenOidcClient({ query }, CLIENT_SECRET, APPLICATION_ORIGIN);
+			expect(database.prepare('SELECT * FROM "oauthResource"').get()).toEqual(resource);
+			expect(database.prepare('SELECT * FROM "oauthClientResource"').get()).toEqual(link);
+			expect(database.prepare('SELECT "disabled" FROM "oauthResource"').get()).toEqual({ disabled: 1 });
+		} finally {
+			database.close();
+		}
+	});
+
+	it("never links another client or enables an unrelated resource", async () => {
+		const { database, query } = createDatabase();
+		try {
+			database.prepare('INSERT INTO "oauthClient" ("id", "clientId") VALUES (?, ?)').run("other-client-row", "other-client");
+			database.prepare('INSERT INTO "oauthResource" ("id", "identifier", "name", "disabled", "accessTokenTtl") VALUES (?, ?, ?, ?, ?)').run("unrelated-resource", "https://unregistered.example.invalid", "unrelated", 1, 60);
+			const unrelated = database.prepare('SELECT * FROM "oauthResource"').get();
+			await ensureCinatokenOidcClient({ query }, CLIENT_SECRET, APPLICATION_ORIGIN);
+			expect(database.prepare('SELECT * FROM "oauthResource" WHERE "identifier" = ?').get("https://unregistered.example.invalid")).toEqual(unrelated);
+			expect(database.prepare('SELECT * FROM "oauthClientResource" WHERE "clientId" = ?').all("other-client")).toEqual([]);
+			expect(database.prepare('SELECT "resourceId" FROM "oauthClientResource" WHERE "clientId" = ?').all(CINATOKEN_OIDC_CLIENT_ID)).toEqual([{ resourceId: APPLICATION_ORIGIN }]);
+		} finally {
+			database.close();
+		}
+	});
+});
+

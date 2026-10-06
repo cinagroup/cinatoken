@@ -1,0 +1,154 @@
+{
+  "schema": "cinaauth-firstparty-link-v2-static-approval-status-FINAL-v1",
+  "at": "2026-10-06T09:05:26.794Z",
+  "sourceInputs": {
+    "oldWorker": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-firstparty-data-repair-plan-41c3699de26d498096ecf6cc9e498880\\root-worker-audited.snapshot.mjs",
+      "bytes": 5393,
+      "sha256": "9be840dd466f58734de2050f9441206641fcd9e69ad327078a2f4adf90a5d421"
+    },
+    "oldController": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-firstparty-data-repair-plan-41c3699de26d498096ecf6cc9e498880\\root-controller-audited.snapshot.mjs",
+      "bytes": 7567,
+      "sha256": "f3bc3660f311f99ead7108208dac1aeccd3d3e63e3d639445ad6ec468163372b"
+    },
+    "workerV2": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\registration-link-repair-v2\\registration-link-repair.worker.mjs",
+      "bytes": 5441,
+      "sha256": "07103d4c4a646e5a0ad97b220c7c36db882e0be3e9b2266f9c1e2269e5594944"
+    },
+    "controllerV2": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\repair-registration-via-owned-worker-v2.mjs",
+      "bytes": 7570,
+      "sha256": "0c60b41444f8b876cfc928689722ce7ac3fe369d4eb054d067a1feb1ddd71d7f"
+    }
+  },
+  "sourceAudit": {
+    "workerFullReverseExact": true,
+    "workerOnlyDeltaTwoFinalExistsGuards": true,
+    "workerChangedLines": [
+      {
+        "line": 81,
+        "before": "        if (!after.linkExists || after.clientDisabled || after.resourceDisabled) throw new Error('registration_link_not_created');",
+        "after": "        if (!after.clientExists || !after.resourceExists || !after.linkExists || after.clientDisabled || after.resourceDisabled) throw new Error('registration_link_not_created');"
+      }
+    ],
+    "controllerFullReverseExact": true,
+    "controllerOnlyDeltaBundleDirectoryAndExpectedHash": true,
+    "rootFinalGuardNowRequiresAllFiveStatuses": true,
+    "soleMutationLiteral": "INSERT INTO \"oauthClientResource\" (\"id\", \"clientId\", \"resourceId\", \"createdAt\") VALUES ($1, $2, $3, now()) ON CONFLICT DO NOTHING RETURNING TRUE AS \"inserted\"",
+    "noClientOrResourceMutation": true,
+    "gateFixedPathPOSTAndMemoryBeforeDBUnchanged": true,
+    "noRequestBodyOrQuerySQLUnchanged": true,
+    "fixedClientResourceAndLockOrderUnchanged": true,
+    "finallySqlEndAndOnePOSTOwnedCleanupUnchanged": true,
+    "SQLiteModuleAlias": "peer insertedLink <=> Root insertedClientLink",
+    "PGTimeAlias": "peer CURRENT_TIMESTAMP <=> Root now()",
+    "dataTransactionStaticSupport": true
+  },
+  "bundlePin": {
+    "bytes": 82428,
+    "sha256": "20ea7d7a16b19c9c65fd84fa28d2de24a4ab9a6be4d1d924e92707d2f9d80577",
+    "authority": "Root reported prepared bundle and new controller embedded expected pin; bundle bytes not re-read/verified by this audit."
+  },
+  "priorLocalTests": {
+    "root": "C:/Users/cina/AppData/Local/Temp/cinaauth-firstparty-data-repair-plan-41c3699de26d498096ecf6cc9e498880",
+    "receiptPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-firstparty-data-repair-plan-41c3699de26d498096ecf6cc9e498880\\sqlite-tests.closed.json",
+    "actualStartedAt": "2026-10-06T08:58:21.500Z",
+    "actualEndedAt": "2026-10-06T08:58:21.681Z",
+    "actualExit": 0,
+    "tests": 9,
+    "pass": 9,
+    "fail": 0,
+    "skip": 0,
+    "candidateScope": "Actual peer module transaction exercised using real in-memory SQLite with explicit PG lock/SETLOCAL adaptation; Root Worker HTTP/PG not executed here.",
+    "rerunPerformed": false,
+    "receipt": {
+      "schema": "actual-child-closed-v1",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "--test",
+        "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-firstparty-data-repair-plan-41c3699de26d498096ecf6cc9e498880\\repair-cinatoken-client-link.test.mjs"
+      ],
+      "cwd": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-firstparty-data-repair-plan-41c3699de26d498096ecf6cc9e498880",
+      "startedAt": "2026-10-06T08:58:21.500Z",
+      "endedAt": "2026-10-06T08:58:21.681Z",
+      "actualExit": 0,
+      "signal": null,
+      "error": null,
+      "timeoutConfiguredMs": 15000,
+      "timedOutObserved": false,
+      "sourceProgram": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-firstparty-data-repair-plan-41c3699de26d498096ecf6cc9e498880\\repair-cinatoken-client-link.test.mjs",
+        "bytes": 8947,
+        "sha256": "3385cbab88d9039a3d3be0c9edf9bdfcf85cce8d573b9c2073dfb66c53ab490a"
+      },
+      "candidate": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-firstparty-data-repair-plan-41c3699de26d498096ecf6cc9e498880\\repair-cinatoken-client-link.mjs",
+        "bytes": 2410,
+        "sha256": "0f0651066fdd0da2fdb301f1fbbab7ac37dcdf86d57f482863e5189ea2161102"
+      },
+      "stdout": {
+        "path": "sqlite-tests.stdout.log",
+        "bytes": 1007,
+        "sha256": "de866baa16c0b25d0684e205545da52e7baa807fd6edbd677058dedd1573e939"
+      },
+      "stderr": {
+        "path": "sqlite-tests.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "method": "Actual candidate function against in-memory SQLite transaction adapter; FOR UPDATE and SET LOCAL deliberately not accepted as PG proof.",
+      "productionRequests": 0,
+      "actualPGConnections": 0,
+      "noLiveRepairPassDerived": true
+    },
+    "priorFINAL": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-firstparty-data-repair-plan-41c3699de26d498096ecf6cc9e498880\\FINAL-firstparty-link-data-repair-plan.json",
+      "bytes": 10534,
+      "sha256": "941768352a41832c0dbad482c08ce12954cf309e929b443a9152f104216ea224"
+    },
+    "priorSeal": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-firstparty-data-repair-plan-41c3699de26d498096ecf6cc9e498880\\STOPWRITE.json",
+      "bytes": 3037,
+      "sha256": "f3d81d4e64e4404be94bd036877b6988af53e043d1c6aec5d9826c247bff64d2"
+    }
+  },
+  "liveMetadataAuthority": {
+    "source": "Root prior direct message, no new request by this agent",
+    "fiveBooleans": {
+      "clientExists": true,
+      "clientDisabled": false,
+      "resourceExists": true,
+      "resourceDisabled": false,
+      "linkExists": false
+    },
+    "rootCauseConfirmed": false,
+    "deployedSourceTag": null,
+    "localDirtyTreeNotWholeDeployedSourceProof": true
+  },
+  "approvalStatus": {
+    "authority": "Root direct message; rejection tool not called or replayed by this agent",
+    "status": "prepared_not_executed_blocked_by_specific_production_write_approval",
+    "intendedAction": "One fixed cinatoken-admin / https://cinatoken.com oauthClientResource association INSERT via temporary owned Worker",
+    "rejectionReason": "Persistent production OAuth association changes security boundary; no specific authorization for that change.",
+    "CreateProcessCreatedChild": false,
+    "actualProcessExit": null,
+    "actualProcessSignal": null,
+    "repairWorkerCreated": false,
+    "productionDBWritePerformed": false,
+    "repeatedAttemptByThisAgent": false,
+    "APIOrNetworkRequestsByThisAgent": 0,
+    "specificUserApprovalPendingAsReportedByRoot": true
+  },
+  "conclusion": "V2 is the reviewed minimal link-only transaction with the two missing post-existence guards added exactly. Local nine-case result remains valid for its guarded protocol and does not prove PG/live execution. Static candidate supports review; actual production repair is prepared and not executed because automatic approval rejected process creation.",
+  "scope": {
+    "newSQLiteRuns": 0,
+    "newAppOrPGOrCIOrBrowserRuns": 0,
+    "sourceOrGitOrRepoWrites": 0,
+    "oldFrozenRootsModified": false,
+    "newOwnedRootOnly": true,
+    "noCredentialCookiesTokensReadOrPrinted": true
+  },
+  "STOPWRITEAfterOwnStaticAuditClosure": true
+}

@@ -1,0 +1,17 @@
+{
+  "schema": "cinatoken-v364-queued-linux-observation-binding-v1",
+  "rootAuthorisedObservation": true,
+  "sourceSHA": "757490181564aa822f960f5d8704857b98b230d0",
+  "repository": "cinagroup/cinatoken",
+  "runId": "37429341568",
+  "runAttempt": 1,
+  "observationRoot": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c",
+  "rootAuthorisation": "Root direct message: single already-dispatched run watch45, terminal reads/log/artifact once; no rerun/dispatch/cancel",
+  "toolSeal": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-observation-tools-87b2c4dae3a8480c87b50e9d4c2b8e8b/STOPWRITE-tools.json",
+    "bytes": 5753,
+    "sha256": "4634a684e450faf481072af63b90aaabcf7510c693e94bf1f7588aaecc547a9b"
+  },
+  "previousUnsuccessfulObservationRoot": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-469dbd7159f148e2a48ec73ae718ab77",
+  "networkRetryReason": "First local GH watch closed1 before any CI observation: sandbox EACCES. Original closed receipt/raw preserved; same authorised run, no workflow rerun."
+}

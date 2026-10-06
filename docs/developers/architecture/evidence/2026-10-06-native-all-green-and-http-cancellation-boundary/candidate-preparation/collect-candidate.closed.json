@@ -1,0 +1,28 @@
+{
+  "schema": "new-evidence-local-collection-command-closed-v1",
+  "closed": true,
+  "program": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4\\collect-candidate.mjs"
+  ],
+  "startedAt": "2026-10-06T07:51:15.793Z",
+  "endedAt": "2026-10-06T07:51:16.510Z",
+  "actualExit": 0,
+  "signal": null,
+  "timedOut": false,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/collect-candidate.stdout.log",
+    "bytes": 398,
+    "sha256": "4e601de282bffa76d3d2883f8ef3be7e75084cc536d8d5003de7e0e5dfc343bf"
+  },
+  "stderr": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/collect-candidate.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "collectionOnly": true,
+  "runtimeExecuted": false,
+  "networkRequest": false,
+  "gatePassDerived": false
+}

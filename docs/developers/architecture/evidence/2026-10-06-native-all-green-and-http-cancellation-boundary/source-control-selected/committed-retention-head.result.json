@@ -1,0 +1,24 @@
+{
+  "at": "2026-10-06T07:21:25.221Z",
+  "finishedAt": "2026-10-06T07:21:25.260Z",
+  "executable": "C:/Program Files/Git/cmd/git.exe",
+  "args": [
+    "-c",
+    "core.longpaths=true",
+    "rev-parse",
+    "HEAD"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-followup-da56f69292e44387886a9cc8ffa36638\\committed-retention-head.stdout.log",
+    "bytes": 41,
+    "sha256": "3e75a4050cf72ff060f11148578d545cf416079c20a807d1fbd8710c702452dd"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-followup-da56f69292e44387886a9cc8ffa36638\\committed-retention-head.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

@@ -1,0 +1,19 @@
+(node:6892) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ repairs exactly the Root-observed missing link and returns only booleans (4.1202ms)
+✔ replay is idempotent and leaves createdAt and all metadata intact (1.2348ms)
+✔ missing resource refuses without creating a resource (0.9445ms)
+✔ missing client refuses without creating a client (0.7077ms)
+✔ disabled client refuses and preserves every row (0.7007ms)
+✔ disabled resource refuses even when its exact link already exists (0.7496ms)
+✔ other clients and unrelated disabled resources never gain a link or policy changes (1.0072ms)
+✔ a reserved link ID collision never rewrites another pair and rolls back (1.7026ms)
+✔ nullable disabled fields use the provider default without changing stored policy (0.8629ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 102.8364

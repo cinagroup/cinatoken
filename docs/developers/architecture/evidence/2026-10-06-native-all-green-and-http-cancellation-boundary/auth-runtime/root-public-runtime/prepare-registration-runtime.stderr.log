@@ -1,0 +1,19 @@
+node:internal/modules/esm/resolve:314
+  return new ERR_PACKAGE_PATH_NOT_EXPORTED(
+         ^
+
+Error [ERR_PACKAGE_PATH_NOT_EXPORTED]: Package subpath './package.json' is not defined by "exports" in C:\cinagroup\cinatoken\node_modules\postgres\package.json
+    at exportsNotFound (node:internal/modules/esm/resolve:314:10)
+    at packageExportsResolve (node:internal/modules/esm/resolve:662:9)
+    at resolveExports (node:internal/modules/cjs/loader:685:36)
+    at Module._findPath (node:internal/modules/cjs/loader:752:31)
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1441:27)
+    at require.resolve (node:internal/modules/helpers:163:19)
+    at file:///C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/prepare-registration-runtime.mjs:22:129
+    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:661:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  code: 'ERR_PACKAGE_PATH_NOT_EXPORTED'
+}
+
+Node.js v24.14.1

@@ -1,0 +1,63 @@
+{
+  "schema": "owned-root-STOPWRITE-seal-v1",
+  "frozenAt": "2026-10-06T07:33:41.512Z",
+  "root": "C:/Users/cina/AppData/Local/Temp/cinatoken-next-real-g2-readonly-9020e3b1287d48ec9a0bd1c67b698924",
+  "coverage": "All owned ordinary files except this self-describing seal",
+  "completeFileCountExcludingSeal": 9,
+  "files": [
+    {
+      "path": "FINAL-next-real-acceptance-readonly.json",
+      "bytes": 39663,
+      "sha256": "9a3d9e3801afbd4111cb3be31223e370c75cab7b44f63fc76747896bb1d5c437"
+    },
+    {
+      "path": "capture-readonly-child.mjs",
+      "bytes": 1781,
+      "sha256": "fb9f53e13d52040bb04952e2c205c1b2df4a9ba1cf55883d2104e45a87d56971"
+    },
+    {
+      "path": "finalize-and-seal.mjs",
+      "bytes": 3388,
+      "sha256": "39e076b0efaed3eae18c24a7ea93ed5f5967f5b2da7d32905dfcd3e3fa600d9b"
+    },
+    {
+      "path": "next-real-acceptance-analysis.json",
+      "bytes": 36731,
+      "sha256": "7d91bf955179b2cd0303f0ac6c2d6a8ed7bd1033a428953cf597032b83615ea7"
+    },
+    {
+      "path": "read-next-real-acceptance.mjs",
+      "bytes": 12735,
+      "sha256": "4a58a5263e2c124ce4fdc2a2b8774a1e663d02535a63d19d31411b604860aead"
+    },
+    {
+      "path": "reader-failed-tool-observation.json",
+      "bytes": 669,
+      "sha256": "1ffa198b005d7dab0bb3e0c7674a42c2f760b61830455a05607063333a3210a2"
+    },
+    {
+      "path": "readonly-source.closed.json",
+      "bytes": 1298,
+      "sha256": "520355e120b0d2abd20071b8165f371439b4ac3ddead4106816270ec0c512763"
+    },
+    {
+      "path": "readonly-source.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "readonly-source.stdout.log",
+      "bytes": 1763,
+      "sha256": "f07a12654adc9847b44699307032dee5492f5aaf3fef2984d6c39129cbd51a3e"
+    }
+  ],
+  "readOnlySourceReviewActualExit": 0,
+  "preliminaryToolReportedFailurePreserved": true,
+  "newNativeOrBusinessRun": false,
+  "productionRequests": 0,
+  "secretsDisclosed": false,
+  "repositoryModified": false,
+  "fullG7Verified": false,
+  "fullG8Verified": false,
+  "STOPWRITE": true
+}

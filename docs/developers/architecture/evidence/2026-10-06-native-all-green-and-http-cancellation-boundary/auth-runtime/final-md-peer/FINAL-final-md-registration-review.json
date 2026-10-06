@@ -1,0 +1,653 @@
+{
+  "schema": "final-md-registration-independent-review-final-v1",
+  "at": "2026-10-06T09:12:27.714Z",
+  "reviewCollectionOnly": true,
+  "finalMD": {
+    "path": "C:/cinagroup/cinatoken/docs/developers/architecture/web-frontend-migration.md",
+    "bytes": 835928,
+    "sha256": "bd2cf6ed4421f37fd7afc698e279863bedfc60526d647d72f0add13365a9fbe1"
+  },
+  "baselineMD": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\checklist-before-5.86.md",
+    "bytes": 824691,
+    "sha256": "d7bac9842393e8cd699922dedfa2eeb338834e2e811cc46e403873983496bca3"
+  },
+  "semanticReviewActualExit1Preserved": 1,
+  "initialObsoletePinFailures": [
+    {
+      "name": "current-md-authoritative-pin",
+      "ok": false
+    },
+    {
+      "name": "md-update-proven-current-pins",
+      "ok": false
+    }
+  ],
+  "initialFailureReason": "Root removed exactly one blank LF before this review began; obsolete supplied pin and pre-normalization writer proof mismatched, all other semantic and scope checks succeeded on final835928 bytes.",
+  "byteDeltaOnlyFollowup": true,
+  "noRepeatedWholeMdScopeScan": true,
+  "reverseOneLFExact": true,
+  "scopes": [
+    {
+      "name": "tasks",
+      "before": 102,
+      "after": 102,
+      "exact": true
+    },
+    {
+      "name": "matrix",
+      "before": 54,
+      "after": 54,
+      "exact": true
+    },
+    {
+      "name": "gates",
+      "before": 9,
+      "after": 9,
+      "exact": true
+    },
+    {
+      "name": "phases",
+      "before": 9,
+      "after": 9,
+      "exact": true
+    },
+    {
+      "name": "acceptance",
+      "before": 9,
+      "after": 9,
+      "exact": true
+    },
+    {
+      "name": "checkboxLines",
+      "before": 213,
+      "after": 213,
+      "exact": true
+    }
+  ],
+  "all211TaskStatesExact": true,
+  "actualTaskCheckboxes": 211,
+  "literalCheckboxTokens": 214,
+  "reviewedSections": [
+    "current",
+    "NEXT-18",
+    "5.86",
+    "5.87"
+  ],
+  "originalSemanticChecks": [
+    {
+      "name": "prior-peer-authority-pin",
+      "ok": true
+    },
+    {
+      "name": "original-md-baseline-pin",
+      "ok": true
+    },
+    {
+      "name": "original-array-exact:tasks",
+      "ok": true
+    },
+    {
+      "name": "original-array-exact:matrix",
+      "ok": true
+    },
+    {
+      "name": "original-array-exact:gates",
+      "ok": true
+    },
+    {
+      "name": "original-array-exact:phases",
+      "ok": true
+    },
+    {
+      "name": "original-array-exact:acceptance",
+      "ok": true
+    },
+    {
+      "name": "original-array-exact:checkboxLines",
+      "ok": true
+    },
+    {
+      "name": "scope-counts-exact",
+      "ok": true
+    },
+    {
+      "name": "all211-task-states-exact",
+      "ok": true
+    },
+    {
+      "name": "214-literal-tokens-preserved",
+      "ok": true
+    },
+    {
+      "name": "only-current-next18-old-lines-replaced",
+      "ok": true,
+      "details": {
+        "unauthorizedRemoved": []
+      }
+    },
+    {
+      "name": "reviewed-current-next18-and-both-sections",
+      "ok": true
+    },
+    {
+      "name": "757-native-prior-verified-boundary-preserved",
+      "ok": true
+    },
+    {
+      "name": "prior-timestamp-clarifications-applied",
+      "ok": true
+    },
+    {
+      "name": "actual-original-child0:sole-live-read",
+      "ok": true
+    },
+    {
+      "name": "original-stream-bytes-sha:sole-live-read:stdout",
+      "ok": true
+    },
+    {
+      "name": "original-stream-bytes-sha:sole-live-read:stderr",
+      "ok": true
+    },
+    {
+      "name": "actual-original-child0:md-update",
+      "ok": true
+    },
+    {
+      "name": "original-stream-bytes-sha:md-update:stdout",
+      "ok": true
+    },
+    {
+      "name": "original-stream-bytes-sha:md-update:stderr",
+      "ok": true
+    },
+    {
+      "name": "sole-live-read-time-and-sha",
+      "ok": true
+    },
+    {
+      "name": "sole-five-boolean-live-observation",
+      "ok": true
+    },
+    {
+      "name": "readonly-live-not-production-repair",
+      "ok": true
+    },
+    {
+      "name": "temporary-worker-delete200-and-absent404",
+      "ok": true
+    },
+    {
+      "name": "four-health-transport-failures-retained",
+      "ok": true
+    },
+    {
+      "name": "approval-rejection-not-exit1-not-write",
+      "ok": true
+    },
+    {
+      "name": "browser-credentials-and-login-boundary",
+      "ok": true
+    },
+    {
+      "name": "md-production-fix-and-login-remain-unexecuted",
+      "ok": true
+    },
+    {
+      "name": "md-sqlite9-only-candidate-boundary",
+      "ok": true
+    },
+    {
+      "name": "existing-static-index-declared-counts",
+      "ok": true
+    },
+    {
+      "name": "static-index-does-not-claim-production-or-gates",
+      "ok": true
+    }
+  ],
+  "deltaChecks": [
+    {
+      "name": "final835928-pin",
+      "ok": true
+    },
+    {
+      "name": "reverse-one-LF-exact-old835929-pin",
+      "ok": true
+    },
+    {
+      "name": "delta-original-fields-exact",
+      "ok": true
+    },
+    {
+      "name": "scope-audit-read-same-final-bytes",
+      "ok": true
+    },
+    {
+      "name": "only-obsolete-pin-checks-failed",
+      "ok": true
+    },
+    {
+      "name": "all-original-six-scope-arrays-true",
+      "ok": true
+    },
+    {
+      "name": "original-actual-exit:normalize-checklist-terminal-newline",
+      "ok": true
+    },
+    {
+      "name": "original-stream-bytes-sha:normalize-checklist-terminal-newline:stdout",
+      "ok": true
+    },
+    {
+      "name": "original-stream-bytes-sha:normalize-checklist-terminal-newline:stderr",
+      "ok": true
+    },
+    {
+      "name": "original-actual-exit:prepublish-md-whitespace",
+      "ok": true
+    },
+    {
+      "name": "original-stream-bytes-sha:prepublish-md-whitespace:stdout",
+      "ok": true
+    },
+    {
+      "name": "original-stream-bytes-sha:prepublish-md-whitespace:stderr",
+      "ok": true
+    },
+    {
+      "name": "original-actual-exit:prepublish-md-whitespace-v2",
+      "ok": true
+    },
+    {
+      "name": "original-stream-bytes-sha:prepublish-md-whitespace-v2:stdout",
+      "ok": true
+    },
+    {
+      "name": "original-stream-bytes-sha:prepublish-md-whitespace-v2:stderr",
+      "ok": true
+    },
+    {
+      "name": "original-actual-exit:guard-web-after-auth-read",
+      "ok": true
+    },
+    {
+      "name": "original-stream-bytes-sha:guard-web-after-auth-read:stdout",
+      "ok": true
+    },
+    {
+      "name": "original-stream-bytes-sha:guard-web-after-auth-read:stderr",
+      "ok": true
+    },
+    {
+      "name": "final-production-guard-readonly0",
+      "ok": true
+    },
+    {
+      "name": "production-c13-2a0-100-still",
+      "ok": true
+    },
+    {
+      "name": "web-main-asset-and-api-proxy-routes",
+      "ok": true
+    }
+  ],
+  "failures": [],
+  "allFinalChecksPassed": true,
+  "registration": {
+    "originalReadReceipt": {
+      "at": "2026-10-06T08:53:52.632Z",
+      "finishedAt": "2026-10-06T08:54:11.771Z",
+      "executable": "C:/Program Files/nodejs/node.exe",
+      "args": [
+        "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\read-registration-via-owned-worker.mjs"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\registration-live-readonly.stdout.log",
+        "bytes": 1734,
+        "sha256": "ea27981a2ae2299d48441f4ff16e5934fe105e231bbc7ba84d1056c4f3fbaa51"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\registration-live-readonly.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "oneFiveBooleanObservation": {
+      "status": 200,
+      "observedAt": "2026-10-06T08:54:08.279Z",
+      "values": {
+        "clientExists": true,
+        "clientDisabled": false,
+        "resourceExists": true,
+        "resourceDisabled": false,
+        "linkExists": false
+      }
+    },
+    "metadataRequests": 1,
+    "cleanup": {
+      "deleteStatus": 200,
+      "deleteSuccess": true,
+      "verifyStatus": 404,
+      "absent": true
+    },
+    "originalHealthTransportFailures": 4,
+    "existingProductionWorkersChanged": false,
+    "databaseDmlOrDdl": false
+  },
+  "approval": {
+    "asOf": "2026-10-06T09:04:00Z",
+    "originalDeclaredRejection": {
+      "action": "One fixed OAuth association INSERT for existing enabled cinatoken-admin / https://cinatoken.com after row locks and before/after checks",
+      "toolOperation": "exec_command require_escalated",
+      "result": "CreateProcess rejected before child creation",
+      "reviewerReason": "该操作会在生产认证数据库中持久新增 OAuth 客户端与资源的授权关联，改变安全边界；虽范围狭窄且有事务保护，但用户未明确批准这一具体生产权限变更。",
+      "childCreated": false,
+      "actualChildExit": null,
+      "repairWorkerCreated": false,
+      "databaseRepairExecuted": false,
+      "followup": "Asked user explicitly to approve only this fixed missing association; pending at snapshot time. No workaround, indirect execution or rejected-action retry."
+    },
+    "childCreated": false,
+    "actualChildExit": null,
+    "databaseRepairExecuted": false,
+    "userApprovalPendingAtSnapshot": true
+  },
+  "browserBoundary": {
+    "credentialsRead": false,
+    "sessionExported": false,
+    "loginCompleted": false,
+    "workspaceChosen": false,
+    "testKeyCreatedOrRevoked": false,
+    "v4OnlyPublicPageNoPostRepairAttempt": true,
+    "atomicChildExitInferred": false
+  },
+  "sqliteAuthority": {
+    "agent": "/root/native_four_peer",
+    "FINALPath": "C:/Users/cina/AppData/Local/Temp/cinaauth-firstparty-data-repair-plan-41c3699de26d498096ecf6cc9e498880/FINAL-firstparty-link-data-repair-plan.json",
+    "FINALBytes": 10534,
+    "FINALSha256": "941768352a41832c0dbad482c08ce12954cf309e929b443a9152f104216ea224",
+    "ninePass": true,
+    "skip0": true,
+    "postgresLocksAndProductionVerified": false,
+    "originalRootReadByThisReview": false
+  },
+  "priorCIReviewAuthority": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/FINAL-independent-candidate-review.json",
+    "bytes": 20218,
+    "sha256": "9954216baf9a49c248548f1c91ca566c6dd9a7a133aa2a5d4959a315c9422597",
+    "sourceSHA": "757490181564aa822f960f5d8704857b98b230d0",
+    "financialSteps": 106,
+    "tests": 109,
+    "strict8_7_1Preserved": true,
+    "oldCIRootsOrLogsNotReread": true
+  },
+  "staticIndex": {
+    "path": "C:/cinagroup/cinatoken/docs/developers/architecture/evidence/2026-10-06-native-all-green-and-http-cancellation-boundary/auth-boundary-static-index.json",
+    "payload142": true,
+    "preparation20": true,
+    "totalIncludingIndex163": true,
+    "indexOnlyRead": true,
+    "payloadStoredFilesNotRewalked": true
+  },
+  "runtimeIndex": {
+    "path": "C:/cinagroup/cinatoken/docs/developers/architecture/evidence/2026-10-06-native-all-green-and-http-cancellation-boundary/auth-runtime-index.json",
+    "presentAtReview": false,
+    "storedVerificationDone": false,
+    "pinsAwaited": true
+  },
+  "productionGuard": {
+    "report": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/guard-web-after-auth-read.deployment-guard.json",
+      "bytes": 1030,
+      "sha256": "5223865c4d6746d5046d31d52732ffe7cf8df89a8dbc46ca2094ff48f6bd5b5f"
+    },
+    "actualExit": 0,
+    "productionRemains": {
+      "id": "fd24618f-121e-4640-9edf-f15d243a6d75",
+      "versions": [
+        {
+          "version_id": "2a0a2777-d3b1-47f0-a0a7-88e701b4d2d9",
+          "percentage": 100
+        }
+      ],
+      "commitTag": "c13a64b9c3b2c90adcf736910ea408868d7854f1"
+    },
+    "routes": [
+      {
+        "id": "5738534653ef46f48a44e3f3b22e5d8e",
+        "pattern": "cinatoken.com/*",
+        "script": "cinatoken-web",
+        "request_limit_fail_open": false
+      },
+      {
+        "id": "2712df1859d340ffb6d68a7e53eb1853",
+        "pattern": "cinatoken.com/web-assets/*",
+        "script": "cinatoken-web",
+        "request_limit_fail_open": false
+      },
+      {
+        "id": "242dce09c515462e833d69bd0738bdfc",
+        "pattern": "api.cinatoken.com/*",
+        "script": "cinatoken-proxy",
+        "request_limit_fail_open": false
+      }
+    ]
+  },
+  "sourceReceipts": [
+    {
+      "name": "normalize-checklist-terminal-newline",
+      "receipt": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/normalize-checklist-terminal-newline.result.json",
+        "bytes": 886,
+        "sha256": "c8a005c7f60f0245f9a38e210a3f214eaa6cd18d28f04c5ab614ca0d9110a4c6"
+      },
+      "actualExit": 0,
+      "at": "2026-10-06T09:09:48.769Z",
+      "finishedAt": "2026-10-06T09:09:48.843Z",
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\normalize-checklist-terminal-newline.stdout.log",
+        "bytes": 358,
+        "sha256": "ceeba5664cb56f5621ab082b0ed1b8e86f26cc82919d846c797663f2932b532a"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\normalize-checklist-terminal-newline.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "prepublish-md-whitespace",
+      "receipt": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/prepublish-md-whitespace.result.json",
+        "bytes": 907,
+        "sha256": "2e7dbee9bbd041e4241da8a036b1cce0c47baad22020bca60401836b0985a987"
+      },
+      "actualExit": 2,
+      "at": "2026-10-06T09:09:01.138Z",
+      "finishedAt": "2026-10-06T09:09:01.200Z",
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\prepublish-md-whitespace.stdout.log",
+        "bytes": 84,
+        "sha256": "c8a195f9e6e4df91115098bd6d795f4b7c4e9e1063c18a05b807f0b09965ae67"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\prepublish-md-whitespace.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "prepublish-md-whitespace-v2",
+      "receipt": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/prepublish-md-whitespace-v2.result.json",
+        "bytes": 912,
+        "sha256": "cea025c24ff1a750bbe344eb77453f48c24dc107ce5bfb7044440f983197a35c"
+      },
+      "actualExit": 0,
+      "at": "2026-10-06T09:09:51.124Z",
+      "finishedAt": "2026-10-06T09:09:51.196Z",
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\prepublish-md-whitespace-v2.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\prepublish-md-whitespace-v2.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "guard-web-after-auth-read",
+      "receipt": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/guard-web-after-auth-read.result.json",
+        "bytes": 971,
+        "sha256": "277e46ae944e6b342f3778119695c0d8dbe09fd485fd44bb262ea3aaf0e1cfca"
+      },
+      "actualExit": 0,
+      "at": "2026-10-06T09:10:02.036Z",
+      "finishedAt": "2026-10-06T09:10:08.925Z",
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\guard-web-after-auth-read.stdout.log",
+        "bytes": 793,
+        "sha256": "e0780e6711deba0fd7c503a65c18f9ec16c1fd5e37fa3a87cc2f3ded512cde24"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\guard-web-after-auth-read.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "inputPins": [
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-final-md-registration-independent-review-7cc2de05976a48f3ad1ca5c1e3dc739c/AUDIT-final-md-registration.json",
+      "bytes": 15303,
+      "sha256": "9f84449d2ce8e352dbe5198fced45211dff5b593911ac53d8c838e5048272b0e"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-final-md-registration-independent-review-7cc2de05976a48f3ad1ca5c1e3dc739c/final-md-review.closed.json",
+      "bytes": 1246,
+      "sha256": "7f867e71f8bf2bd11ef5753a4dba28c99523c20916a5b470888a2158abceaa0c"
+    },
+    {
+      "path": "C:/cinagroup/cinatoken/docs/developers/architecture/web-frontend-migration.md",
+      "bytes": 835928,
+      "sha256": "bd2cf6ed4421f37fd7afc698e279863bedfc60526d647d72f0add13365a9fbe1"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/checklist-terminal-newline.json",
+      "bytes": 387,
+      "sha256": "c0704dc6083ada9231cb93d865f89419084cdf8b141aaa118a988948c01a414d"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/guard-web-after-auth-read.deployment-guard.json",
+      "bytes": 1030,
+      "sha256": "5223865c4d6746d5046d31d52732ffe7cf8df89a8dbc46ca2094ff48f6bd5b5f"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/normalize-checklist-terminal-newline.result.json",
+      "bytes": 886,
+      "sha256": "c8a005c7f60f0245f9a38e210a3f214eaa6cd18d28f04c5ab614ca0d9110a4c6"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/normalize-checklist-terminal-newline.stdout.log",
+      "bytes": 358,
+      "sha256": "ceeba5664cb56f5621ab082b0ed1b8e86f26cc82919d846c797663f2932b532a"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/normalize-checklist-terminal-newline.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/prepublish-md-whitespace.result.json",
+      "bytes": 907,
+      "sha256": "2e7dbee9bbd041e4241da8a036b1cce0c47baad22020bca60401836b0985a987"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/prepublish-md-whitespace.stdout.log",
+      "bytes": 84,
+      "sha256": "c8a195f9e6e4df91115098bd6d795f4b7c4e9e1063c18a05b807f0b09965ae67"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/prepublish-md-whitespace.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/prepublish-md-whitespace-v2.result.json",
+      "bytes": 912,
+      "sha256": "cea025c24ff1a750bbe344eb77453f48c24dc107ce5bfb7044440f983197a35c"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/prepublish-md-whitespace-v2.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/prepublish-md-whitespace-v2.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/guard-web-after-auth-read.result.json",
+      "bytes": 971,
+      "sha256": "277e46ae944e6b342f3778119695c0d8dbe09fd485fd44bb262ea3aaf0e1cfca"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/guard-web-after-auth-read.stdout.log",
+      "bytes": 793,
+      "sha256": "e0780e6711deba0fd7c503a65c18f9ec16c1fd5e37fa3a87cc2f3ded512cde24"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/guard-web-after-auth-read.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "initialReviewReceipt": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-final-md-registration-independent-review-7cc2de05976a48f3ad1ca5c1e3dc739c/final-md-review.closed.json",
+    "bytes": 1246,
+    "sha256": "7f867e71f8bf2bd11ef5753a4dba28c99523c20916a5b470888a2158abceaa0c"
+  },
+  "auditReport": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-final-md-registration-independent-review-7cc2de05976a48f3ad1ca5c1e3dc739c/AUDIT-final-md-registration.json",
+    "bytes": 15303,
+    "sha256": "9f84449d2ce8e352dbe5198fced45211dff5b593911ac53d8c838e5048272b0e"
+  },
+  "notes": [
+    {
+      "severity": "boundary",
+      "text": "Registration exact enabled client/resource pair lacks link in one readonly observation; repair cause/login verification remain pending. Metadata200 and SQLite9pass do not complete login or G2/G7/G8."
+    },
+    {
+      "severity": "boundary",
+      "text": "Read-only temporary Worker upload and DELETE were real ephemeral resources; no existing production Worker/Route, Hyperdrive settings or database DML/DDL changed."
+    },
+    {
+      "severity": "pending-index-only",
+      "text": "Runtime archive index was not yet supplied/pinned for this review. Its final stored-byte verification will be a separate bounded read after Root provides pins. No claim that runtime index is installed/verified is made here.",
+      "presentAtReview": false
+    },
+    {
+      "severity": "authority",
+      "text": "SQLite9/9 skip0 and initializer red3-to-green7 use native_four_peer frozen authority, not newly rerun tests or original six source roots."
+    }
+  ],
+  "collection0DoesNotCloseLoginOrGates": true,
+  "productionRepairExecuted": false,
+  "loginCompleted": false,
+  "fullG2Verified": false,
+  "fullG7Verified": false,
+  "fullG8Verified": false,
+  "networkOrCIOrDBOrTestsExecutedByReview": false,
+  "repositoryWrites": false,
+  "oldSourceRootsRewalked": false,
+  "STOPWRITEAfterSeal": true
+}

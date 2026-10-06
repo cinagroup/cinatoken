@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-06T08:03:39.861Z",
+  "finishedAt": "2026-10-06T08:03:39.947Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/update-checklist-native-green-auth.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\update-checklist-native-green-auth.stdout.log",
+    "bytes": 452,
+    "sha256": "9f16b2b346303baa19e32ce850a63f2253dc9576d43739612895e02f6fb68fdc"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\update-checklist-native-green-auth.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

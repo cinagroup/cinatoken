@@ -1,0 +1,1 @@
+{"checks":34,"failures":2,"failedNames":["current-md-authoritative-pin","md-update-proven-current-pins"],"currentMD":{"path":"C:/cinagroup/cinatoken/docs/developers/architecture/web-frontend-migration.md","bytes":835928,"sha256":"bd2cf6ed4421f37fd7afc698e279863bedfc60526d647d72f0add13365a9fbe1"},"runtimeIndexStoredVerificationDone":false}

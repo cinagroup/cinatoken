@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-06T09:01:14.126Z",
+  "finishedAt": "2026-10-06T09:01:14.183Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "--check",
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\repair-registration-via-owned-worker-v2.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\repair-controller-syntax-v2.stdout.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\repair-controller-syntax-v2.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

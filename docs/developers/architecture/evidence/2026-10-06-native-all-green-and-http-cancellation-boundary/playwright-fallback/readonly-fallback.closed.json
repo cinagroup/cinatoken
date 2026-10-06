@@ -1,0 +1,35 @@
+{
+  "schema": "actual-spawnSync-child-closed-v1",
+  "startedAt": "2026-10-06T07:45:43.350Z",
+  "endedAt": "2026-10-06T07:45:43.460Z",
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-playwright-fallback-readonly-92e5efc975ee40f8b704394d3e9f188c\\readonly-fallback-source.mjs",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-playwright-fallback-readonly-92e5efc975ee40f8b704394d3e9f188c"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "timeoutConfiguredMs": 15000,
+  "timedOutObserved": false,
+  "sourceProgram": {
+    "path": "readonly-fallback-source.mjs",
+    "bytes": 6166,
+    "sha256": "48052b379ea4496b0382cbc99db613baf0eac462936f6e6946e523041bf51897"
+  },
+  "stdout": {
+    "path": "readonly-fallback.stdout.log",
+    "bytes": 402,
+    "sha256": "cba12db43a54ab1dacad6c66f979714cd6a2d95a483a4c460610089d7e3ef138"
+  },
+  "stderr": {
+    "path": "readonly-fallback.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "collectionOnly": true,
+  "browserLaunched": false,
+  "profileRead": false,
+  "noBusinessPassDerived": true
+}

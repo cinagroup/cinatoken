@@ -1,0 +1,379 @@
+{
+  "schema": "v364-primary-source-cancellation-boundary-research-v1",
+  "at": "2026-10-06T07:44:13.437Z",
+  "readOnly": true,
+  "repositoryWrites": 0,
+  "mdWrites": 0,
+  "gitWrites": 0,
+  "dependencyOrFlagOrBinaryChanges": 0,
+  "workerdExecuted": false,
+  "ciExecuted": false,
+  "productionRequests": 0,
+  "newControlsExecuted": false,
+  "collectionOnly": true,
+  "rootCauseConfirmed": false,
+  "fullG7": false,
+  "fullG8": false,
+  "inputFromParent": {
+    "sourceCommit": "757490181564aa822f960f5d8704857b98b230d0",
+    "manualRun": 37429341568,
+    "source": "Parent-authorized terminal observation; this source research does not reread or rerun that artifact",
+    "extraFiniteBytes": 8388608,
+    "observedOwnedKernelTx": "approximately 2.6 MB then 2.5 MB immediately before same bare RST",
+    "signalAbort": 1,
+    "syntheticSignalCleanup": 1,
+    "sourceCancel": 0,
+    "cancelKV": null,
+    "originalStrictTap": {
+      "tests": 8,
+      "pass": 7,
+      "fail": 1
+    },
+    "fourOriginalHttpArms": "still failed",
+    "explicitReaderCalibration": "passed",
+    "runtimeGateClaim": false
+  },
+  "primaryAcquisition": {
+    "closed": {
+      "file": "primary-sources-get.closed.json",
+      "bytes": 902,
+      "sha256": "d06ce49b9eb7ca0da8383da5bf4cad2655495bd2562420a1e0ee65819f3d79fe",
+      "actualExit": 0,
+      "at": "2026-10-06T07:38:51.845Z",
+      "finishedAt": "2026-10-06T07:38:55.058Z",
+      "outputs": [
+        {
+          "file": "primary-sources-get.stdout.log",
+          "bytes": 625,
+          "sha256": "da6e3cd2116215fa642e46ed91e9465189a64d7919bba289f1418d6a1313e18a"
+        },
+        {
+          "file": "primary-sources-get.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    "snapshot": {
+      "file": "primary-source-records.json",
+      "bytes": 458173,
+      "sha256": "3bdf82b120dc763944f530a1af4a2cb42b177b62e81c0f3ef14b1bdd21495f81",
+      "records": 8,
+      "allHttp200": true
+    },
+    "sourcePins": [
+      {
+        "label": "locked-tag-ref",
+        "url": "https://api.github.com/repos/cloudflare/workerd/git/ref/tags/v1.20260828.1",
+        "status": 200,
+        "startedAt": "2026-10-06T07:38:51.916Z",
+        "finishedAt": "2026-10-06T07:38:53.251Z",
+        "bytes": 361,
+        "sha256": "af47a8a34c782efe3a4490f3314c5ec7ba488cce5d5a0486f361622b0dec2343"
+      },
+      {
+        "label": "locked-release",
+        "url": "https://api.github.com/repos/cloudflare/workerd/releases/tags/v1.20260828.1",
+        "status": 200,
+        "startedAt": "2026-10-06T07:38:53.251Z",
+        "finishedAt": "2026-10-06T07:38:53.875Z",
+        "bytes": 11077,
+        "sha256": "6f55095c57a89aca8cf731b7ef037e45fe024585cebfcd1289bee2671cb62b1f"
+      },
+      {
+        "label": "locked-source-api/streams/readable.c++",
+        "url": "https://raw.githubusercontent.com/cloudflare/workerd/8ea63498c7aa107995f9b2ffee7789631707e09f/src/workerd/api/streams/readable.c++",
+        "status": 200,
+        "startedAt": "2026-10-06T07:38:53.257Z",
+        "finishedAt": "2026-10-06T07:38:54.557Z",
+        "bytes": 31774,
+        "sha256": "ca762b8e7ea908b29eb2c99db4bcad7e50b5f206cd1a75312f4b2b658bfe7f08"
+      },
+      {
+        "label": "locked-source-io/worker-entrypoint.c++",
+        "url": "https://raw.githubusercontent.com/cloudflare/workerd/8ea63498c7aa107995f9b2ffee7789631707e09f/src/workerd/io/worker-entrypoint.c++",
+        "status": 200,
+        "startedAt": "2026-10-06T07:38:53.258Z",
+        "finishedAt": "2026-10-06T07:38:54.606Z",
+        "bytes": 50916,
+        "sha256": "5a26985f9d80021e9af91b0569c54b7d9c987bf5b6ca6d63d37da5c1fab28bf9"
+      },
+      {
+        "label": "issue-6832-current",
+        "url": "https://api.github.com/repos/cloudflare/workerd/issues/6832",
+        "status": 200,
+        "startedAt": "2026-10-06T07:38:53.252Z",
+        "finishedAt": "2026-10-06T07:38:54.641Z",
+        "bytes": 8540,
+        "sha256": "b72bd2e14bdd05ad09cc4106126c7124da744a4f8ba009a33305535432030fdd"
+      },
+      {
+        "label": "locked-source-api/http.c++",
+        "url": "https://raw.githubusercontent.com/cloudflare/workerd/8ea63498c7aa107995f9b2ffee7789631707e09f/src/workerd/api/http.c++",
+        "status": 200,
+        "startedAt": "2026-10-06T07:38:53.258Z",
+        "finishedAt": "2026-10-06T07:38:54.922Z",
+        "bytes": 121746,
+        "sha256": "023d4a055f453c0fb111b374df6dadb8df2d84f643183836561074e1ad7c4911"
+      },
+      {
+        "label": "locked-source-api/streams/standard.c++",
+        "url": "https://raw.githubusercontent.com/cloudflare/workerd/8ea63498c7aa107995f9b2ffee7789631707e09f/src/workerd/api/streams/standard.c++",
+        "status": 200,
+        "startedAt": "2026-10-06T07:38:53.256Z",
+        "finishedAt": "2026-10-06T07:38:54.966Z",
+        "bytes": 193298,
+        "sha256": "f64a9fe8ab0c2f3bc397ac18d35d59e5c1be8ead1182c7ccd668bfbd993bc698"
+      },
+      {
+        "label": "pr-6833-current",
+        "url": "https://api.github.com/repos/cloudflare/workerd/pulls/6833",
+        "status": 200,
+        "startedAt": "2026-10-06T07:38:53.254Z",
+        "finishedAt": "2026-10-06T07:38:55.038Z",
+        "bytes": 22819,
+        "sha256": "bf0345d6569abfa04667fe25c26e92ed2c2d41d55c0b414ed8778bfdd46542c0"
+      }
+    ],
+    "authority": "Original bounded Node GET child exit 0 and exact retained stdout/stderr. This is source collection, not a runtime/application test."
+  },
+  "lockedRelease": {
+    "tag": "v1.20260828.1",
+    "commit": "8ea63498c7aa107995f9b2ffee7789631707e09f",
+    "publishedAt": "2026-08-28T03:29:22Z",
+    "url": "https://github.com/cloudflare/workerd/releases/tag/v1.20260828.1"
+  },
+  "facts": [
+    {
+      "id": "F1",
+      "text": "The official tag resolves to exact commit 8ea63498c7aa107995f9b2ffee7789631707e09f; release publication is 2026-08-28T03:29:22Z. Source reasoning below is pinned to that commit, not to mutable main or a version-name assumption.",
+      "links": [
+        "https://github.com/cloudflare/workerd/releases/tag/v1.20260828.1",
+        "https://api.github.com/repos/cloudflare/workerd/git/ref/tags/v1.20260828.1"
+      ]
+    },
+    {
+      "id": "F2",
+      "text": "Response::send wraps the outgoing HTTP response as a system stream and returns jsBody.pumpTo. Its ownership comment explicitly requires the returned cancellable promise to own all response writes. This proves the intended code/ownership path, not that our RST dropped this exact promise.",
+      "sources": [
+        {
+          "file": "api/http.c++",
+          "startLine": 1228,
+          "endLine": 1241,
+          "url": "https://github.com/cloudflare/workerd/blob/8ea63498c7aa107995f9b2ffee7789631707e09f/src/workerd/api/http.c++#L1228"
+        },
+        {
+          "file": "api/http.c++",
+          "startLine": 1298,
+          "endLine": 1306,
+          "url": "https://github.com/cloudflare/workerd/blob/8ea63498c7aa107995f9b2ffee7789631707e09f/src/workerd/api/http.c++#L1298"
+        }
+      ]
+    },
+    {
+      "id": "F3",
+      "text": "The pinned JS-controller pump always constructs a DrainingReader. pumpToImpl awaits a read at line3566 and a sink write at line3573. Its shown source cancel call is inside KJ_CATCH at line3597; no separate mid-drop cleanup defer or pumpSettled handling appears in this function.",
+      "sources": [
+        {
+          "file": "api/streams/standard.c++",
+          "startLine": 3540,
+          "endLine": 3607,
+          "url": "https://github.com/cloudflare/workerd/blob/8ea63498c7aa107995f9b2ffee7789631707e09f/src/workerd/api/streams/standard.c++#L3540"
+        },
+        {
+          "file": "api/streams/standard.c++",
+          "startLine": 3743,
+          "endLine": 3757,
+          "url": "https://github.com/cloudflare/workerd/blob/8ea63498c7aa107995f9b2ffee7789631707e09f/src/workerd/api/streams/standard.c++#L3743"
+        }
+      ]
+    },
+    {
+      "id": "F4",
+      "text": "DrainingReader destruction invokes releaseReader with no JS lock. In that branch the controller clears reader-lock references and retains the locked state; it does not invoke the underlying source cancel algorithm. This is a static local path fact, not an observation of which branch the owned HTTP run executed.",
+      "sources": [
+        {
+          "file": "api/streams/readable.c++",
+          "startLine": 284,
+          "endLine": 288,
+          "url": "https://github.com/cloudflare/workerd/blob/8ea63498c7aa107995f9b2ffee7789631707e09f/src/workerd/api/streams/readable.c++#L284"
+        },
+        {
+          "file": "api/streams/standard.c++",
+          "startLine": 291,
+          "endLine": 324,
+          "url": "https://github.com/cloudflare/workerd/blob/8ea63498c7aa107995f9b2ffee7789631707e09f/src/workerd/api/streams/standard.c++#L291"
+        }
+      ]
+    },
+    {
+      "id": "F5",
+      "text": "WorkerEntrypoint separately schedules incoming request signal abort as a waitUntil task and drains the request. enable_request_signal creates the controller; request_signal_passthrough determines whether it is ignored by subrequests. Thus signal abort and JS source cancel have distinct wiring.",
+      "sources": [
+        {
+          "file": "io/worker-entrypoint.c++",
+          "startLine": 418,
+          "endLine": 467,
+          "url": "https://github.com/cloudflare/workerd/blob/8ea63498c7aa107995f9b2ffee7789631707e09f/src/workerd/io/worker-entrypoint.c++#L418"
+        }
+      ],
+      "links": [
+        "https://developers.cloudflare.com/workers/runtime-apis/request/#properties",
+        "https://developers.cloudflare.com/workers/configuration/compatibility-flags/#enable-requestsignal-for-incoming-requests",
+        "https://developers.cloudflare.com/workers/configuration/compatibility-flags/#passthrough-abortsignal-of-incoming-request-to-subrequests"
+      ]
+    },
+    {
+      "id": "F6",
+      "text": "Official ReadableStream.cancel describes explicit consumer cancellation and the source cancel callback. Incoming request signal docs describe client-cancellation notification/cleanup. The latter does not independently guarantee a particular HTTP/RST path invokes an async source cancel callback within our test deadline.",
+      "links": [
+        "https://developers.cloudflare.com/workers/runtime-apis/streams/readablestream/#methods",
+        "https://developers.cloudflare.com/changelog/post/2025-05-22-handle-request-cancellation/"
+      ]
+    },
+    {
+      "id": "F7",
+      "text": "The pinned existing C++ pending-write regression test gates on its own TestSink write promise and asserts event order: a write is reached, its promise is dropped, then the sink is destroyed. It has no JS source cancel assertion. Its synthetic pending promise establishes a C++ branch condition that an OS send queue alone cannot establish.",
+      "sources": [
+        {
+          "file": "api/streams-test.c++",
+          "startLine": 127,
+          "endLine": 199,
+          "url": "https://github.com/cloudflare/workerd/blob/8ea63498c7aa107995f9b2ffee7789631707e09f/src/workerd/api/streams-test.c++#L127"
+        }
+      ],
+      "sourcePin": {
+        "bytes": 7541,
+        "sha256": "2d06ef08d4577822d097a0b29cd784db73e7fe3b4e3df52c1cc40bbd32ba2681"
+      },
+      "authority": "Read-only official source GET observed via original exec_command tool chunk e51dde, returned exit0. Complete source appeared in that tool output; no new standalone archived external stream or separate child closed receipt is invented."
+    },
+    {
+      "id": "F8",
+      "text": "Issue6832 and PR6833 remain open; PR6833 merged=false, merged_at=null and merge_commit_sha=null at the retained API observation. PR6833 proposes deferred source cancel on an unsettled pump drop, guarded by IoContext weak lifetime and scheduled as waitUntil; its author tests are proposed-branch evidence, not a merged release or our cause proof.",
+      "links": [
+        "https://github.com/cloudflare/workerd/issues/6832",
+        "https://github.com/cloudflare/workerd/pull/6833",
+        "https://github.com/cloudflare/workerd/pull/6833/files"
+      ]
+    }
+  ],
+  "currentUpstreamStatus": {
+    "observedAtRange": "2026-10-06T07:38:51Z through 2026-10-06T07:41:08Z",
+    "issue6832": {
+      "state": "open",
+      "url": "https://github.com/cloudflare/workerd/issues/6832",
+      "updatedAt": "2026-07-17T11:39:03Z"
+    },
+    "pr6833": {
+      "state": "open",
+      "merged": false,
+      "mergedAt": null,
+      "mergeCommitSha": null,
+      "headSha": "8fe8fa68f0b93cf8ae90f20c4ac4b975158b5a8c",
+      "url": "https://github.com/cloudflare/workerd/pull/6833"
+    },
+    "pr6896": {
+      "state": "open",
+      "merged": false,
+      "mergedAt": null,
+      "mergeCommitSha": null,
+      "headSha": "752d9e6d4ef97b7a8b1b90999554ef1991aa1710",
+      "url": "https://github.com/cloudflare/workerd/pull/6896",
+      "apiObservation": {
+        "at": "2026-10-06T07:41:04.813Z",
+        "finishedAt": "2026-10-06T07:41:06.653Z",
+        "status": 200,
+        "bytes": 17203,
+        "sha256": "234c60ce4e373f40fb373c60340d1ac86818b81e51c8d66d7b2483f892d6e3c1"
+      }
+    },
+    "pr7600": {
+      "title": "Fixup streams cancelation regression",
+      "state": "open",
+      "merged": false,
+      "mergedAt": null,
+      "mergeCommitShaField": "8e29412474260ab09a5b1f217347dcf4b4b6f5be",
+      "headSha": "955f31cf92df5461463e48fae6c870f86a07b537",
+      "url": "https://github.com/cloudflare/workerd/pull/7600",
+      "apiObservation": {
+        "at": "2026-10-06T07:41:03.058Z",
+        "finishedAt": "2026-10-06T07:41:04.812Z",
+        "status": 200,
+        "bytes": 18882,
+        "sha256": "5dda32a90832036fe9370bf95e7174cbf04338c752b1e58d7ec4c3479590f274"
+      },
+      "caveat": "A populated merge_commit_sha field does not override explicit merged=false/merged_at=null and is not merge/release proof. This research did not review the PR7600 patch."
+    },
+    "additionalGetToolObservation": {
+      "toolChunkId": "e51dde",
+      "toolReturnedExitCode": 0,
+      "requests": 3,
+      "standaloneChildClosedReceiptArchived": false,
+      "externalStreamsReconstructed": false
+    },
+    "provedReleasedFix": false,
+    "scopeLimit": "No merge/release proof was found for these three candidate PRs. This is not an exhaustive proof that no other upstream repair exists; no version upgrade is claimed to fix the owned run."
+  },
+  "inferences": [
+    {
+      "id": "I1",
+      "label": "candidate only",
+      "text": "The observed signal-only/no-source-cancel result is compatible with pump teardown releasing its reader without entering KJ_CATCH. It is not a proof that the current owned run took that path."
+    },
+    {
+      "id": "I2",
+      "label": "unconfirmed",
+      "text": "The pending-read-only hypothesis remains unconfirmed. A real kernel send backlog invalidates treating the run as no-pressure, but does not prove the coroutine was suspended in sink->write, which promise was dropped, whether catch was entered, or whether queued cancellation lost its context."
+    },
+    {
+      "id": "I3",
+      "label": "not a gate workaround",
+      "text": "Application cleanup explicitly initiated by request.signal may satisfy a separately specified resource cleanup contract. It cannot be relabeled a natural source cancel or set the original cancel KV to observed, and cannot turn the frozen strict test green."
+    }
+  ],
+  "nextMinimumOptions": [
+    {
+      "id": "A",
+      "recommended": true,
+      "boundary": "Separate owned Linux C++ diagnostic fixture pinned to commit8ea63498; stock/frozen Node and HTTP baseline remains untouched and failing.",
+      "minimalTest": "Start from the existing TestSink fixture. Keep the JS source readable. Use an explicit C++ gate to hold the next read in one arm and the sink write promise in another, then drop the actual owning pump promise after the corresponding gate is observed. Record ordered read-entry/read-settle, write-entry/write-settle, KJ_CATCH entry, pump-frame destructor, reader release, sink destructor, real source cancel and request-drain completion. Compare error-returning sink and normal completion separately to detect double or missing cleanup.",
+      "measurement": "The pending arm must be established by the actual controlled C++ promise, not bytes enqueued or kernel queue size. Bounded waits, original raw event order and real child/process cleanup must close; timeout/unknown stays failure. No source cancel can be manufactured by a signal hook.",
+      "passMeaning": "Only branch-level diagnostic evidence. A stock bug reproduction or repaired isolated binary result is baselineEligible=false and cannot retrospectively pass the original strict HTTP gate.",
+      "notExecuted": true
+    },
+    {
+      "id": "B",
+      "recommended": false,
+      "boundary": "Future explicit application resource-cleanup design, separate from automatic ReadableStream source cancellation.",
+      "minimalTest": "Use an idempotent cleanup routine with separate reason/counters for natural source cancel and request-signal abort. Signal cleanup may abort the owned upstream operation and stop timers; use bounded waitUntil for allowed asynchronous cleanup. Verify the cleanup operation itself and cross-request isolation under synthetic ownership. Do not call reader.cancel from the diagnostic signal hook or write a natural-cancel observation from that path.",
+      "passMeaning": "A distinct product cleanup requirement only; the source cancel guarantee and original strict gate remain outstanding.",
+      "notExecuted": true
+    },
+    {
+      "id": "C",
+      "recommended": false,
+      "boundary": "Future upstream patch/version comparison only after exact merge/release provenance and separately authorized isolated build.",
+      "minimalTest": "Require actual merged state/merge commit and a released tag containing that change, then pin actual source/binary and rerun unchanged strict tests on the candidate in isolation. Currently6833/6896/7600 are not proved merged or released; do not change locked versions based on labels or version dates.",
+      "passMeaning": "No upgrade fix is established by this report.",
+      "notExecuted": true
+    }
+  ],
+  "webVerification": {
+    "primaryOnly": true,
+    "requestDocsCheckedByIndependentPeer": "/root/cloudflare_review/boundary_peer",
+    "peerObservedAt": "2026-10-06T07:37:21Z",
+    "browserSourceCacheMissesPreservedAsLimit": [
+      "tag stream standard/readable/common page reads",
+      "commit-pinned streams-test web page",
+      "PR7600 web/API open via web tool"
+    ],
+    "resolution": "Exact official GitHub API/commit source GETs supplied the locked code/status evidence; web documentation and proposal/commit pages were read directly. Cached mutable/tag pages are not used to establish pinned code line numbers."
+  },
+  "limitations": [
+    "All runtime causes remain unknown until actual branch/lifetime proof.",
+    "No automatic source cancel guarantee is inferred from signal.abort or successful explicit reader calibration.",
+    "Owned kernel backlog does not identify a C++ pending write promise.",
+    "Future tests and repair boundaries are proposals only, with no repository, dependency, binary or flag mutation."
+  ]
+}

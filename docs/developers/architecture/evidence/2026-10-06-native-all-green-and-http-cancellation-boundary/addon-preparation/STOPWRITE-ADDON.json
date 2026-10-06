@@ -1,0 +1,816 @@
+{
+  "schema": "auth-addon-complete-candidate-stopwrite-v1",
+  "at": "2026-10-06T08:54:25.889Z",
+  "STOPWRITE": true,
+  "filesBeforeSelf": 161,
+  "files": [
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-config.json",
+      "bytes": 2852,
+      "sha256": "86c6e1dc6c629baefea8fde00233193e7759fbc423205713c60239fbd379dd17"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/before/node_modules/.vite/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709/results.json",
+      "bytes": 134,
+      "sha256": "3d137551d54536c4e3b5518501601d755ecc6b8e4d3efae8cbd7abf509effac1"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/before/workers/auth-api/src/admin-oidc-client.ts",
+      "bytes": 4768,
+      "sha256": "79798d945817580521c926ef9d4089cff9a433910dabea023402d5b2bce87876"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/before/workers/auth-api/src/cinatoken-oidc-client.ts",
+      "bytes": 3760,
+      "sha256": "5f4bb55cd16253668a6e6de55e810cc892a24731d8fbae05ac89fa4896103f1d"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/before/workers/auth-api/test/cinatoken-oidc-client.test.ts",
+      "bytes": 8298,
+      "sha256": "a0dee5aaf13fdfafa4ed45a2c5450feb5d00f55fbf1ae25685320da7189d4085"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/before-vitest.closed.json",
+      "bytes": 1635,
+      "sha256": "6457de9cf9c0dc00450b964fb87d61ccc2a23c26663f21f4130c08d2d99e098e"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/before-vitest.json",
+      "bytes": 4201,
+      "sha256": "7eef2f3a5cb789ff3dbb6e8c45880802f7fadee720ca1b192a6820975e39d7ba"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/before-vitest.stderr.log",
+      "bytes": 2998,
+      "sha256": "b752ca4e4b258054a2e80d3289ca63f8bf9c8b20e290ffa186880046a6724f0e"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/before-vitest.stdout.log",
+      "bytes": 1041,
+      "sha256": "ddb55de9cd1c178ac3870f1acc4a017c99db591a57ed43595e338e6cee5c026f"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/candidate/node_modules/.vite/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709/results.json",
+      "bytes": 135,
+      "sha256": "c3dafef21f8350b9a35ffcbfbffd747bc48021524c8a37b991ca5944d7240fdd"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/candidate/workers/auth-api/src/admin-oidc-client.ts",
+      "bytes": 4768,
+      "sha256": "79798d945817580521c926ef9d4089cff9a433910dabea023402d5b2bce87876"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/candidate/workers/auth-api/src/cinatoken-oidc-client.ts",
+      "bytes": 4473,
+      "sha256": "b12d86c4c08a5ea3c7f5cb636bb02845558b57f01a44a4b1c9168c4cfe7af2e5"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/candidate/workers/auth-api/test/cinatoken-oidc-client.test.ts",
+      "bytes": 8298,
+      "sha256": "a0dee5aaf13fdfafa4ed45a2c5450feb5d00f55fbf1ae25685320da7189d4085"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/candidate-vitest.closed.json",
+      "bytes": 1648,
+      "sha256": "7dab5d8ada617cc90ece34704d14bd731ebe35188f64ee72ef7b8861f10caf75"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/candidate-vitest.json",
+      "bytes": 3080,
+      "sha256": "6dca0a08d6a5afd953fee5bc4158ea8d3cf4fa497a32c1bb0480d73a90663d4c"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/candidate-vitest.stderr.log",
+      "bytes": 169,
+      "sha256": "dc31091cff3f6041e452aaa49c263b7be742e1de7a1f8997e8653177504443de"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/candidate-vitest.stdout.log",
+      "bytes": 517,
+      "sha256": "d90b07d2ae096ad4fe3c000114754fa8849b8fdf43391dd96605788fb9fedee4"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/capture-owned-child.mjs",
+      "bytes": 1534,
+      "sha256": "450e758c3e2e58fbf73761ddd4bc3a8cb3030f28099d3d0ad0d733b5ba62ee69"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/close-final-audit-and-seal.mjs",
+      "bytes": 2488,
+      "sha256": "798b53dab0653a774042c3d23c80778928637240940adeb2fb11b4ef8ed7aeb3"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/diff-helper.closed.json",
+      "bytes": 1197,
+      "sha256": "2cb6adf765b6af1a839fa853e96558c99b8de4f0cc4caf04a733edf2f10ba063"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/diff-helper.stderr.log",
+      "bytes": 501,
+      "sha256": "c93f7add57ddaab1881935b37eeeef013a75d715ab96ad75b7d57ccc183b48ca"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/diff-helper.stdout.log",
+      "bytes": 1610,
+      "sha256": "89d10d24a6f17d13ac4d8f5bc1dd96e012cf76e56f158f7dd66cf38d3bf6bf40"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/diff-test.closed.json",
+      "bytes": 1170,
+      "sha256": "05b79f04c0dd4441e3e02b2a48cd74eb911a1d0e982e789f7bbef1fc74aad2f6"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/diff-test.stderr.log",
+      "bytes": 484,
+      "sha256": "8aba6fead6cb6d2097fe600ed0d58be7c7b99cb7cd49272dd3345bf89fb76602"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/diff-test.stdout.log",
+      "bytes": 7115,
+      "sha256": "6c1b581710186e480f2800677cadc3ee67cd2ace9fce26adb2e3ebaf3eb6e5c2"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/final-audit-and-report.mjs",
+      "bytes": 10519,
+      "sha256": "47915366784a3a2c459877efaf2ce61416c108e78bf1adcd920b313af80d6401"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/final-audit.closed.json",
+      "bytes": 1216,
+      "sha256": "13155a0d639fcf280f5dc59c1a634cca88e419bcf8f97e9a7ee353da68601856"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/final-audit.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/final-audit.stdout.log",
+      "bytes": 970,
+      "sha256": "cf5aafefd8d719575ad6ba63efe9d00c3cd9bf11902210632fee5c1ef82fcee8"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/FINAL-cinatoken-resource-candidate.json",
+      "bytes": 27029,
+      "sha256": "8a45706c40a6e899f9376135b223da06c99c12d03fa8723bdd74c3730eae01ab"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/git-head.closed.json",
+      "bytes": 943,
+      "sha256": "56d6d571226a87baedb8abc3861eae6e26f36981fd6470b1a3ff75f6f4548bf1"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/git-head.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/git-head.stdout.log",
+      "bytes": 41,
+      "sha256": "30b4e4ec31fea0db6dd43905552676ff8e5cd0e906d4523372faf301fdcf1730"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/git-helper-baseline.closed.json",
+      "bytes": 1019,
+      "sha256": "b13e752aac784da95ec50d7d57417d8d8cac332d66916ca877ab2c1ed8b81684"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/git-helper-baseline.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/git-helper-baseline.stdout.log",
+      "bytes": 3760,
+      "sha256": "5f4bb55cd16253668a6e6de55e810cc892a24731d8fbae05ac89fa4896103f1d"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/git-target-status.closed.json",
+      "bytes": 1098,
+      "sha256": "f6577b6f99f100e621918564b06381de849f5b4cec00f2928a89d33cb0eb7a26"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/git-target-status.stderr.log",
+      "bytes": 41,
+      "sha256": "640e2f8ea11186170f4950f20c7f98392a149bf840ca66e0b8d9e4d3c12b968a"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/git-target-status.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/git-test-baseline.closed.json",
+      "bytes": 1019,
+      "sha256": "a5933c7543fa2648ca197ea3b330ee1f741c9432667255d18164a2cf62078cd5"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/git-test-baseline.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/git-test-baseline.stdout.log",
+      "bytes": 2251,
+      "sha256": "6fc83143de193f0ee6279c7c6858b35c029af54cc70fde4ed81270d4a6547886"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/helper-Git-baseline.ts",
+      "bytes": 3760,
+      "sha256": "5f4bb55cd16253668a6e6de55e810cc892a24731d8fbae05ac89fa4896103f1d"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/initial-git-tool-failure.json",
+      "bytes": 426,
+      "sha256": "919b5a98e893cba9df74149ff48fa2390c7bdb081bf89480d99449096449f5d9"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/patch-reviewable.diff",
+      "bytes": 7803,
+      "sha256": "36d21d5787ba123aadb3d30635738ce54b723f305517ea4943922c6aeb267801"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/patch.diff",
+      "bytes": 8725,
+      "sha256": "f241f0ccf9783eddbad289409ed06a1a0a371759b2a08a025a426035a93dd5f5"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/preparation.json",
+      "bytes": 13767,
+      "sha256": "4af7eeff4e702073b3f103a7a4fa75a7ad4d14bec93243c9e410deb1e1a21e32"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/prepare-resource-candidate-v2.mjs",
+      "bytes": 9590,
+      "sha256": "20a364eb48fec563fbbe3cc653c7c8c65dc769466f674b483fd0a1bb2cee35d5"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/prepare-resource-candidate.mjs",
+      "bytes": 9241,
+      "sha256": "8f0fea520c04159f39a7aae2ffcfc6bef71601ee360a280d1c76fc54a10282d2"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/prepare-v2.closed.json",
+      "bytes": 1296,
+      "sha256": "35150c1ba4a52c9b128053a00cd60163641e1168856c4952ff330f2478c3e5d9"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/prepare-v2.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/prepare-v2.stdout.log",
+      "bytes": 1958,
+      "sha256": "b328993ca367bf5146960ac3ecf414ca7417e882ee2a6414a5ff832b77975daa"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/prepare.closed.json",
+      "bytes": 1280,
+      "sha256": "9eb9929fb3c8397d8db4a85e87da3dd6c51e80bb5bce260a9702090ebc4e4d40"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/prepare.stderr.log",
+      "bytes": 701,
+      "sha256": "fc679a2bde13cb0679d063667d82fff4016041e091c0e240616a1cdcdefeb54e"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/prepare.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/resource-tests-to-append.ts.txt",
+      "bytes": 5953,
+      "sha256": "db121d2b9e01ad55286f8bd38910eb8188b561a163cb15c5a628c5e253443b33"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/root-AGENTS.snapshot.md",
+      "bytes": 5325,
+      "sha256": "1185385d0217b4f3a0876f5426e2f4052038de2b422897bb62c0bc64317f7d09"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/STOPWRITE.json",
+      "bytes": 10364,
+      "sha256": "1be9ed381c4b5f2b5306e9f9fb1fe7635db5c2a10280ae1a22e3d32fd8e480d2"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/test-Git-baseline.ts",
+      "bytes": 2251,
+      "sha256": "6fc83143de193f0ee6279c7c6858b35c029af54cc70fde4ed81270d4a6547886"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/test-user-working-baseline.ts",
+      "bytes": 2251,
+      "sha256": "4f93ac08cbab78edc964fb798647ef2db96d0d0f4a14503a8b95d634c2155929"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/tool-script-parse-error.json",
+      "bytes": 227,
+      "sha256": "1034491369a20297e8e9b6ec97fe576b1388442d355c702ea4d7ab572a20ccdc"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/cinaauth-resource-candidate/vitest.config.mjs",
+      "bytes": 439,
+      "sha256": "c4ee8f9691c120311cc1bf5c9a1b60ca4596e6a0ce9ee2e4e04c626112b061ec"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/invalid-target-provider/capture-readonly.mjs",
+      "bytes": 1405,
+      "sha256": "73f8ec0159b113f5339119649fe0ccfd402740897076ddf439d9f91009bb4b67"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/invalid-target-provider/FINAL-invalid-target-provider-source-review.json",
+      "bytes": 49316,
+      "sha256": "dbc2ca5e43779012e0e318cf781a22e5dcd3a48b6dc782105454b43fd6c3567f"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/invalid-target-provider/invalid-target-source.closed.json",
+      "bytes": 915,
+      "sha256": "3b4377483da24e9248d6a37488818945d06965daea58808dedd05bab5285ad2b"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/invalid-target-provider/invalid-target-source.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/invalid-target-provider/invalid-target-source.stdout.log",
+      "bytes": 220,
+      "sha256": "a24d395aab1f4729b924ffc52990f8a0d356df9c13772fe2698f9bf155179297"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/invalid-target-provider/read-invalid-target-source.mjs",
+      "bytes": 11267,
+      "sha256": "20a5b31b062b69b9a6012bba8cde5677c71cb3858fbcd976c1f7d1cfac657dbb"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/invalid-target-provider/STOPWRITE-peer-seal.json",
+      "bytes": 1489,
+      "sha256": "af30a73bd030a36673c0a0244740f51ce3324b87ed2a74245f56e55b13823c6b"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/invalid-target-storage/capture-readonly.mjs",
+      "bytes": 1405,
+      "sha256": "73f8ec0159b113f5339119649fe0ccfd402740897076ddf439d9f91009bb4b67"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/invalid-target-storage/FINAL-invalid-target-storage-api-callsite.json",
+      "bytes": 47574,
+      "sha256": "f725bf58a3d93e3e8ff8969757f698120acf6390b45c98512c127e1cafa39d14"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/invalid-target-storage/read-storage-api-callsite.mjs",
+      "bytes": 12184,
+      "sha256": "85bda5846a4589106cee228e2a363ac74fda0c2966bbd3f876542c4f1058c46d"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/invalid-target-storage/STOPWRITE-peer-seal.json",
+      "bytes": 1458,
+      "sha256": "22abcff865db214b4d8507e984c057f7f12520f452e932b43375824ae5ca8968"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/invalid-target-storage/storage-api-callsite.closed.json",
+      "bytes": 911,
+      "sha256": "f488a2daf3f0aab7220949953185f4db888b599337233e72d0e058f2a76af11c"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/invalid-target-storage/storage-api-callsite.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/invalid-target-storage/storage-api-callsite.stdout.log",
+      "bytes": 160,
+      "sha256": "0814da0e55212108357bed48a05f89ebf7f93967a894a94b92a575a0dc299440"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/native-green-independent-review/AUDIT-stored-candidate.json",
+      "bytes": 40568,
+      "sha256": "c959ffebc47fd7852586e811459c5866b937bbd47876e383293df8e352279df1"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/native-green-independent-review/audit-stored-candidate.mjs",
+      "bytes": 23720,
+      "sha256": "9e8197248a1adb440fb96b051a515c70025170deccb555f3ebc686f7be6173a5"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/native-green-independent-review/audit-stored-candidate.v1.mjs",
+      "bytes": 16118,
+      "sha256": "6e92fbeaea61f37addae88e71e402262e896476d53b9a84f072879b89697b30b"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/native-green-independent-review/AUDIT-stored-candidate.v2.json",
+      "bytes": 40165,
+      "sha256": "c1263852065cabe161eaa27785484559159776fdc1b4cfb084b9fe181abc0bb3"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/native-green-independent-review/audit-stored-candidate.v2.mjs",
+      "bytes": 19110,
+      "sha256": "e6387564b5316b1f571d98d4e9f35f055817c579f9ffe43fb98fac7e3f14e09a"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/native-green-independent-review/audit-stored-candidate.v3.mjs",
+      "bytes": 23333,
+      "sha256": "5c0ae8b2310b2450daafc609ca817a1015040877c65e5cabd89e45ffbe577a0a"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/native-green-independent-review/AUDIT-stored-candidate.v4.json",
+      "bytes": 40642,
+      "sha256": "dd3504c7ba9db2fa8f489165957d3de5d9e8195a79f23d49b2788682e1df221c"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/native-green-independent-review/audit-stored-candidate.v4.mjs",
+      "bytes": 23332,
+      "sha256": "353f316e4013dc401bb73fb4571484c97ca629ee01c36a2f62ae1cc7e00efa13"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/native-green-independent-review/AUDIT-stored-candidate.v5.json",
+      "bytes": 40642,
+      "sha256": "1f373a04957f6f4ffe299618d0d1e88661ee96e3be07d2b070739b97e98b15b0"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/native-green-independent-review/audit-stored-candidate.v5.mjs",
+      "bytes": 23466,
+      "sha256": "51f664f080e87bb09a2fded3dc97ddbfa299b5185b346b8f9c7e263fc0e35388"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/native-green-independent-review/AUDIT-stored-candidate.v6.json",
+      "bytes": 40642,
+      "sha256": "e9655e9d51263c29272dca8a7a0d0feefe33f2e988eb26ee01fb8a4a0dfbe1e0"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/native-green-independent-review/audit-stored-candidate.v6.mjs",
+      "bytes": 23702,
+      "sha256": "83aaa0f5ee08dafb7df0ff8b060b59cca2af6262724e473a1af02ebbff61ea84"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/native-green-independent-review/FINAL-independent-candidate-review.json",
+      "bytes": 20218,
+      "sha256": "9954216baf9a49c248548f1c91ca566c6dd9a7a133aa2a5d4959a315c9422597"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/native-green-independent-review/finalize-independent-review.mjs",
+      "bytes": 3481,
+      "sha256": "7a8fcbb3d9fa30f3d5392d01ba107afbac4fb802e8e3b45382c651a427c5ae2e"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/native-green-independent-review/finalize-review.closed.json",
+      "bytes": 1249,
+      "sha256": "e8b4c1d02cd28c2b07d34bd7d53c570462309da635ba610c3ab0b54b44d909e6"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/native-green-independent-review/finalize-review.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/native-green-independent-review/finalize-review.stdout.log",
+      "bytes": 361,
+      "sha256": "0e3f83f78411028b8f50512860317bf623e2aee4e0974416beefb6bd632a1975"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/native-green-independent-review/PRELIMINARY-tool-observation-failures.json",
+      "bytes": 1151,
+      "sha256": "d01625a3e942a650393ca2ce579b247c613a6b10ca23323aeb2260519bf0c29c"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/native-green-independent-review/run-review-command.mjs",
+      "bytes": 1444,
+      "sha256": "4690c19396724b011d3f6b15ce242da9a25ce9a6ea835e5b7c49caa9a7e8b6a2"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/native-green-independent-review/seal-independent-review.mjs",
+      "bytes": 1117,
+      "sha256": "5db30215813380713649c346ee1ba5e865bfd4ddf9e1d3b2d9e2e257c2bbc5bd"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/native-green-independent-review/STOPWRITE.json",
+      "bytes": 11799,
+      "sha256": "c37ca964bac9087176591b4596046baa46cbe6facbdd14bda481b5e73b4ba538"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/native-green-independent-review/stored-review-1.closed.json",
+      "bytes": 1245,
+      "sha256": "c5423650ed3fbc6830f03e2b9404cc4eca28e5f23e365e93b730da480e826ff5"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/native-green-independent-review/stored-review-1.stderr.log",
+      "bytes": 1156,
+      "sha256": "4668c703f4179efc65fa9e542a7df6b8de352d66a28f59cab0d689e4597dde59"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/native-green-independent-review/stored-review-1.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/native-green-independent-review/stored-review-2.closed.json",
+      "bytes": 1244,
+      "sha256": "cc5e08076b9d1fb5b7a7c5bcf95aebc14560ab25cb63d5066f6004aa29ca117e"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/native-green-independent-review/stored-review-2.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/native-green-independent-review/stored-review-2.stdout.log",
+      "bytes": 216,
+      "sha256": "831d4f33238490644091386df065478bcb480dd7e538712e0dca1df4cb7b3dbe"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/native-green-independent-review/stored-review-3.closed.json",
+      "bytes": 1245,
+      "sha256": "1bf60d240b8d6d9ba1eb1681964015ca6d6009e8d5350edaedba7b368975e7d4"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/native-green-independent-review/stored-review-3.stderr.log",
+      "bytes": 2705,
+      "sha256": "9b63349e29d318e468ecb61d4344c9bd45eab98e752b380fc85aeb4b3b3a7def"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/native-green-independent-review/stored-review-3.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/native-green-independent-review/stored-review-4.closed.json",
+      "bytes": 1244,
+      "sha256": "18032a7a35fad7eff608b571293aabdd91bcfba232858e11550293148024e898"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/native-green-independent-review/stored-review-4.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/native-green-independent-review/stored-review-4.stdout.log",
+      "bytes": 144,
+      "sha256": "fa0c5278a06a213219b88cb2ad1fa3a278ec39b47ca108f52e0ed1f2ce600da9"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/native-green-independent-review/stored-review-5.closed.json",
+      "bytes": 1244,
+      "sha256": "4649b05847500d39b817a7d1eda6ee2f1812e4d11074f73aa2a9418e27a7efc7"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/native-green-independent-review/stored-review-5.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/native-green-independent-review/stored-review-5.stdout.log",
+      "bytes": 144,
+      "sha256": "fa0c5278a06a213219b88cb2ad1fa3a278ec39b47ca108f52e0ed1f2ce600da9"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/native-green-independent-review/stored-review-6.closed.json",
+      "bytes": 1244,
+      "sha256": "63161997e4d2a1e8ef2c7e21dbc9272aa8a6bd980762a5d12610489d8c5634ae"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/native-green-independent-review/stored-review-6.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/native-green-independent-review/stored-review-6.stdout.log",
+      "bytes": 144,
+      "sha256": "fa0c5278a06a213219b88cb2ad1fa3a278ec39b47ca108f52e0ed1f2ce600da9"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/native-green-independent-review/stored-review-7.closed.json",
+      "bytes": 1244,
+      "sha256": "45e3a056547595de9fc2efc7c384b69d6745b0d2ce32a35bf8efd105c21e2153"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/native-green-independent-review/stored-review-7.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/native-green-independent-review/stored-review-7.stdout.log",
+      "bytes": 120,
+      "sha256": "8ae679e91361cdd099f06231420066a862a7b208fd9d9ff41a9e6be6542911a1"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/public-auth-source/capture-readonly.mjs",
+      "bytes": 1405,
+      "sha256": "73f8ec0159b113f5339119649fe0ccfd402740897076ddf439d9f91009bb4b67"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/public-auth-source/FINAL-public-home-cinaauth-source-review.json",
+      "bytes": 26520,
+      "sha256": "ecf9d80e83a272036cf3a018a45da746c4ad5b236703ee76d197f946a64875b5"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/public-auth-source/read-auth-source.mjs",
+      "bytes": 13077,
+      "sha256": "7ef61531b89abb0d4de10025addec3bac5c8d4e704c059b4234a10fb6d7ab6ab"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/public-auth-source/readonly-auth-source.closed.json",
+      "bytes": 897,
+      "sha256": "193a2db5a9039f0c78a99fdfbc634e7b7152d94cbd0c8cdbbbee73ab67b1ccac"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/public-auth-source/readonly-auth-source.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/public-auth-source/readonly-auth-source.stdout.log",
+      "bytes": 285,
+      "sha256": "465a29db3d3e09a36396fcbf51e804ad647c8f8a963e75ba4088765088c995df"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/public-auth-source/STOPWRITE-peer-seal.json",
+      "bytes": 1865,
+      "sha256": "50f4498bb8bb622804e9b64dbb09fee941cb2441ea6a7db3777610a964d18bcf"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/registration-preview-prepared/capture-readonly.mjs",
+      "bytes": 1405,
+      "sha256": "73f8ec0159b113f5339119649fe0ccfd402740897076ddf439d9f91009bb4b67"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/registration-preview-prepared/FINAL-registration-preview-probe-prepared.json",
+      "bytes": 13688,
+      "sha256": "ec817f4ce044022cd2e3a288b1bb7b749632f81292ccd6dd15f7a321d14ab5d5"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/registration-preview-prepared/prepare-only-v2.mjs",
+      "bytes": 14449,
+      "sha256": "57c9df4ba702838429d9b1e9f578836c78c6566232fedb1484213148fbe6f75a"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/registration-preview-prepared/prepare-only-v3.mjs",
+      "bytes": 15209,
+      "sha256": "1d0b95eec44d71786ec01658594a71e4cbf881911e304902554d6433fb321805"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/registration-preview-prepared/prepare-only.mjs",
+      "bytes": 14086,
+      "sha256": "5cf2a7ceb820325b398cdb4fe341178f45ffb91726d8369681938a442ebb784e"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/registration-preview-prepared/prepare-probe-v2.closed.json",
+      "bytes": 923,
+      "sha256": "0153cab59242a5ec4779ceae207a375ca97d5cc618ffc67619dc1373f77e1aa3"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/registration-preview-prepared/prepare-probe-v2.stderr.log",
+      "bytes": 1255,
+      "sha256": "dd27c902244c60e7c93dc85a9011b0251c1fc72dd1fd1400c1c27587081ac94a"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/registration-preview-prepared/prepare-probe-v2.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/registration-preview-prepared/prepare-probe-v3.closed.json",
+      "bytes": 922,
+      "sha256": "27628ee6faa04fbab1a222efad4f8e4a2e8ca89bbfd2f09417bfb2eaa80ba175"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/registration-preview-prepared/prepare-probe-v3.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/registration-preview-prepared/prepare-probe-v3.stdout.log",
+      "bytes": 169,
+      "sha256": "a94a8e41ff684c60c4dd505975ca685e53e2d4e12379a6636f4882849a3c8e37"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/registration-preview-prepared/prepare-probe.closed.json",
+      "bytes": 914,
+      "sha256": "a08067be1f3bbbb3325c156521bede1a1166b1ce217948b856047310882a7db8"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/registration-preview-prepared/prepare-probe.stderr.log",
+      "bytes": 1236,
+      "sha256": "01b0b6aafebd207943ae3a72ab75b12f8bf3bfe1f3e65a6470c5e2485849da31"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/registration-preview-prepared/prepare-probe.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/registration-preview-prepared/registration-metadata.bundle.mjs",
+      "bytes": 81031,
+      "sha256": "e7bf74113b91e7731e26b8a75e420b3c64e710dad13ed9c03ed7b3b440233070"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/registration-preview-prepared/registration-metadata.worker.mjs",
+      "bytes": 4052,
+      "sha256": "38880c12a7c7107fc7906358f48d546294aa7fa21b939197810582ffc72b6b6b"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/registration-preview-prepared/STOPWRITE-peer-seal.json",
+      "bytes": 3821,
+      "sha256": "e923723d33b3ed7c623e84c45f627e04e49b9f0d0f7bb4142836b39580545899"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/addon-evidence/registration-preview-prepared/wrangler.json",
+      "bytes": 662,
+      "sha256": "4863f9b290721b42e4eb6ba1bbbf850de7aa91c65752418c6e4f7a64ea08d554"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/ADDON-REPORT.json",
+      "bytes": 171106,
+      "sha256": "f6e5e7cebe4808cc650624f6592a928aa91b35427e7259a8a603e3cadbe103f1"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/ADDON-VERIFICATION.json",
+      "bytes": 744,
+      "sha256": "0f340df53cd6461a8d5ffb88556d1e0c8906ebe48a63964ff3554d9905dc129d"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/collect-addon.closed.json",
+      "bytes": 1090,
+      "sha256": "3c751465472004f0cfc95020d0aa19ed249dd504a04c7048450e668fedcd1922"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/collect-addon.mjs",
+      "bytes": 8572,
+      "sha256": "68e02a1e8c9d2fa56b9735ebad2917d653c4d2a9a4c1a8c4cffb5e67c6f0deb5"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/collect-addon.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/collect-addon.stdout.log",
+      "bytes": 417,
+      "sha256": "7e0219f1f80ea4785a4426ac0a84f3db8b2cbdfb77b179a07b6e8a24cfdf5343"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/FINAL-addon-collection.json",
+      "bytes": 14569,
+      "sha256": "19dd14a2a7033887e954194ebec56f5791f51f30cf15a9e91513361819aeb5ac"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/finalize-addon.closed.json",
+      "bytes": 1093,
+      "sha256": "421f6cbebf731affc4c14a11b077ac552fcf587856b3b54f7ef0705c8096f98a"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/finalize-addon.mjs",
+      "bytes": 5583,
+      "sha256": "e69632c806e3b93c1848f7329276608486b8b63e84ab2c8db68c15f145c0021b"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/finalize-addon.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/finalize-addon.stdout.log",
+      "bytes": 911,
+      "sha256": "0ad430010e191a60b356edda60fbeeaa7f60f914474338e30aa7b49385155365"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/inspect-addon-shapes.mjs",
+      "bytes": 847,
+      "sha256": "7b890ff1353b8a0f859a2e0b8ebc0adb1d94db9cb0b754c0da6a8eedda55e807"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/run-addon-commands.mjs",
+      "bytes": 1709,
+      "sha256": "d25679807f7820e22d840e4022024a401a49cec120d885e0bc6b4ff1386365f0"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/run-addon-final-seal.mjs",
+      "bytes": 2341,
+      "sha256": "baa544308a1736c4882ca964a7138676bf62323ea5a8aff06aca7b25bb7d9a02"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/verify-addon.closed.json",
+      "bytes": 1087,
+      "sha256": "f5142ed126ee0968cfbdd060b433d42f5f5d9b802ef1f7194e310a1454114593"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/verify-addon.mjs",
+      "bytes": 2727,
+      "sha256": "9adac76b3cffc3da406ad19945d49c8b600ac0b3224ec0d0bb6c76ffffc45299"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/verify-addon.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/verify-addon.stdout.log",
+      "bytes": 365,
+      "sha256": "3377d57e4a6bcf08e0e0b096ebfb852791a31eb17b18a0f573c636725adf7da1"
+    }
+  ],
+  "selfExcluded": "STOPWRITE-ADDON.json",
+  "collection0NotAcceptancePass": true,
+  "repositoryModified": false
+}

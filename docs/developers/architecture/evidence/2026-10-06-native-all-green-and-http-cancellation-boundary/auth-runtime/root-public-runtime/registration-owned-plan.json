@@ -1,0 +1,18 @@
+{
+  "at": "2026-10-06T08:53:52.687Z",
+  "worker": "cinatoken-regmeta-87f21f6fc05ecc223b9b87bc",
+  "account": "7ea8e46d8210bad342fa7595f7935fea",
+  "scriptSha256": "a2d547c6de353ada6eb908a4068df2f597d75a7f85ca96c76d00724f008d2e67",
+  "plan": "Temporary separate gated Worker; one BEGIN READ ONLY / SET LOCAL timeouts / fixed SELECT; then DELETE and verify404",
+  "productionWorkersChanged": false,
+  "routesChanged": false,
+  "hyperdriveSettingsChanged": false,
+  "databaseDmlOrDdl": false,
+  "metadataRequests": 0,
+  "gatePersisted": false,
+  "steps": [],
+  "metadata": null,
+  "cleanup": null,
+  "created": false,
+  "preflight": "pending"
+}

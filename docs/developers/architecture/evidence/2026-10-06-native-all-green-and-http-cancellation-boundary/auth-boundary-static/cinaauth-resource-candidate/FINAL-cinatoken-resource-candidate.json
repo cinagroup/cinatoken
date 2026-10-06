@@ -1,0 +1,605 @@
+{
+  "schema": "cinaauth-cinatoken-exact-resource-candidate-FINAL-v1",
+  "finalizedAt": "2026-10-06T08:25:53.218Z",
+  "authority": {
+    "sourceHead": "bfa56df798ede6a40e9d5cea0ef1a1e9a3568f3f",
+    "localHeadNotProofOfDeployedVersion": true,
+    "observedProductionVersion": "1afab5f9-f614-4d83-bb99-22489561e88b",
+    "observedProductionTag": null,
+    "hyperdriveId": "374f6da17aff4c968cadd8d6aa454c22",
+    "actualLiveRowsRead": false,
+    "rootCauseConfirmed": false,
+    "productionRequests": 0
+  },
+  "scope": {
+    "repoWrites": 0,
+    "gitWrites": 0,
+    "dependenciesInstalled": 0,
+    "newCI": 0,
+    "actualPGOrHyperdriveQueries": 0,
+    "productionDeploys": 0,
+    "expectedSourceInputs": 8,
+    "rootAGENTSReadFull": true,
+    "rootAGENTSInstructionsApplied": "pnpm test/npm/yarn/bun/install not used. Existing direct Vitest selected single file and pattern. No Repo commit/typecheck performed during Temp-only preparation."
+  },
+  "sourceInputs": [
+    {
+      "relativePath": "workers/auth-api/src/cinatoken-oidc-client.ts",
+      "path": "C:\\cinagroup\\cinaauth\\workers\\auth-api\\src\\cinatoken-oidc-client.ts",
+      "bytes": 3760,
+      "sha256": "5f4bb55cd16253668a6e6de55e810cc892a24731d8fbae05ac89fa4896103f1d",
+      "afterExact": true
+    },
+    {
+      "relativePath": "workers/auth-api/test/cinatoken-oidc-client.test.ts",
+      "path": "C:\\cinagroup\\cinaauth\\workers\\auth-api\\test\\cinatoken-oidc-client.test.ts",
+      "bytes": 2251,
+      "sha256": "4f93ac08cbab78edc964fb798647ef2db96d0d0f4a14503a8b95d634c2155929",
+      "afterExact": true
+    },
+    {
+      "relativePath": "workers/auth-api/src/admin-oidc-client.ts",
+      "path": "C:\\cinagroup\\cinaauth\\workers\\auth-api\\src\\admin-oidc-client.ts",
+      "bytes": 4768,
+      "sha256": "79798d945817580521c926ef9d4089cff9a433910dabea023402d5b2bce87876",
+      "afterExact": true
+    },
+    {
+      "relativePath": "workers/auth-api/test/admin-oidc-resource.integration.test.ts",
+      "path": "C:\\cinagroup\\cinaauth\\workers\\auth-api\\test\\admin-oidc-resource.integration.test.ts",
+      "bytes": 6016,
+      "sha256": "1c6249d8d2153041af551ecce86f327fe1f3fd0f4059c65282a105e564b08a5b",
+      "afterExact": true
+    },
+    {
+      "relativePath": "packages/oauth-provider/src/resources.ts",
+      "path": "C:\\cinagroup\\cinaauth\\packages\\oauth-provider\\src\\resources.ts",
+      "bytes": 36932,
+      "sha256": "bd6c05f27fedb4645f2380ecd65a8711acb3c52a17356133ba60429c6031775e",
+      "afterExact": true
+    },
+    {
+      "relativePath": "packages/oauth-provider/src/schema.ts",
+      "path": "C:\\cinagroup\\cinaauth\\packages\\oauth-provider\\src\\schema.ts",
+      "bytes": 12024,
+      "sha256": "aa239e686e6cf2962c7726b8ecf0e43a64e648dc589b7fb61353792aa1d2248d",
+      "afterExact": true
+    },
+    {
+      "relativePath": "workers/auth-api/vitest.config.ts",
+      "path": "C:\\cinagroup\\cinaauth\\workers\\auth-api\\vitest.config.ts",
+      "bytes": 361,
+      "sha256": "059d4fbb012d434f817f6f2c7c91f8be6846ab159b3f328a03edbe4be6ed4101",
+      "afterExact": true
+    },
+    {
+      "relativePath": "workers/auth-api/package.json",
+      "path": "C:\\cinagroup\\cinaauth\\workers\\auth-api\\package.json",
+      "bytes": 3824,
+      "sha256": "12ba18a2837762d1ff506a1790c66978e5970d2a8fa0d9151a296bff6d51ac34",
+      "afterExact": true
+    }
+  ],
+  "targetBefore": {
+    "helper": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d\\helper-Git-baseline.ts",
+      "bytes": 3760,
+      "sha256": "5f4bb55cd16253668a6e6de55e810cc892a24731d8fbae05ac89fa4896103f1d",
+      "gitBlob": "e721f7368813a6b19e628798f46588135ec8aab8",
+      "workingExactGit": true
+    },
+    "testGit": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d\\test-Git-baseline.ts",
+      "bytes": 2251,
+      "sha256": "6fc83143de193f0ee6279c7c6858b35c029af54cc70fde4ed81270d4a6547886",
+      "gitBlob": "019088f7d8cf82028c96c50f075c2f7f62bedbe4"
+    },
+    "testUserWorking": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d\\test-user-working-baseline.ts",
+      "bytes": 2251,
+      "sha256": "4f93ac08cbab78edc964fb798647ef2db96d0d0f4a14503a8b95d634c2155929",
+      "gitBlobOfWorkingBytes": "de9563f45dfbad93fa2dcf5c298c61d34342e2b6",
+      "alreadyUserModified": true,
+      "userOriginalBytesUnchanged": true
+    }
+  },
+  "candidate": {
+    "helper": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d\\candidate\\workers\\auth-api\\src\\cinatoken-oidc-client.ts",
+      "bytes": 4473,
+      "sha256": "b12d86c4c08a5ea3c7f5cb636bb02845558b57f01a44a4b1c9168c4cfe7af2e5"
+    },
+    "test": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d\\candidate\\workers\\auth-api\\test\\cinatoken-oidc-client.test.ts",
+      "bytes": 8298,
+      "sha256": "a0dee5aaf13fdfafa4ed45a2c5450feb5d00f55fbf1ae25685320da7189d4085"
+    },
+    "patch": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d\\patch-reviewable.diff",
+      "bytes": 7803,
+      "sha256": "36d21d5787ba123aadb3d30635738ce54b723f305517ea4943922c6aeb267801"
+    },
+    "originalNoIndexPatch": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d\\patch.diff",
+      "bytes": 8725,
+      "sha256": "f241f0ccf9783eddbad289409ed06a1a0a371759b2a08a025a426035a93dd5f5"
+    },
+    "originalGitDiffRawUnmodified": true,
+    "reviewableHeadersOnlyCorrected": true
+  },
+  "sourceProtection": {
+    "reverseFullHelperBytesExact": true,
+    "originalFunctionStatements": 5,
+    "appendedQueryStatements": 2,
+    "originalAllStatementTextsExact": true,
+    "reverseASTInputExact": true,
+    "importsConstantsGuardsAndOriginalClientSQLExact": true,
+    "originalTestExpectCalls": 12,
+    "originalThreeTestsAndAllAssertionsWholeBytesExact": true,
+    "originalUserTestFullReverseExact": true,
+    "beforeAndCandidateTestsEntireBytesEqual": true,
+    "helperAndAll8WorkingInputsPostHashExact": true
+  },
+  "change": "Append existing Admin insertOnly oauthResource(identifier=applicationOrigin) and oauthClientResource(fixed cinatoken-admin, resourceId=identifier) protocol. No wildcard/client family, no unknown resource enablement or policy overwrite.",
+  "guardBoundary": {
+    "resourceAndLinkDisabledPolicy": "Existing oauthResource.disabled/TTL/allowedScopes/label/timestamps and oauthClientResource metadata/createdAt are unchanged by conflicts.",
+    "originalClientDisabled": "Original oauthClient upsert still assigns disabled=false from original values; Root explicitly authorized preserving entire original upsert. This patch does not introduce or expand that behavior.",
+    "scopesPKCEAndClientAuth": "openid/profile/email, requirePKCE and client_secret_basic original exact.",
+    "secretHandling": "Original strong-prefix/payload validation and SHA256 storage unchanged; existing weak/unprefixed tests demonstrate zero query before validation. Only fixture test secret strings in local tests; no real credentials read or logged."
+  },
+  "verification": {
+    "runtime": "Existing Vitest4.1.10 + Node24.14.1, direct specific test path/pattern; Temp cwd/root/cache only.",
+    "red": {
+      "actualProcessExit": 1,
+      "totalTests": 7,
+      "passed": 4,
+      "failed": 3,
+      "skipped": 0,
+      "report": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d\\before-vitest.json",
+        "bytes": 4201,
+        "sha256": "7eef2f3a5cb789ff3dbb6e8c45880802f7fadee720ca1b192a6820975e39d7ba"
+      },
+      "cases": [
+        {
+          "fullName": "cinatoken OIDC client bootstrap recognizes only fixed-client GET authorization requests",
+          "status": "passed"
+        },
+        {
+          "fullName": "cinatoken OIDC client bootstrap stores only the secret hash and exact cinatoken redirect",
+          "status": "passed"
+        },
+        {
+          "fullName": "cinatoken OIDC client bootstrap rejects weak or unprefixed secrets before querying",
+          "status": "passed"
+        },
+        {
+          "fullName": "cinatoken reserved resource initialization initializes the missing exact resource and client association",
+          "status": "failed"
+        },
+        {
+          "fullName": "cinatoken reserved resource initialization is idempotent without replacing the original resource or link",
+          "status": "failed"
+        },
+        {
+          "fullName": "cinatoken reserved resource initialization preserves disabled resource policy and operator-managed link metadata",
+          "status": "passed"
+        },
+        {
+          "fullName": "cinatoken reserved resource initialization never links another client or enables an unrelated resource",
+          "status": "failed"
+        }
+      ]
+    },
+    "green": {
+      "actualProcessExit": 0,
+      "totalTests": 7,
+      "passed": 7,
+      "failed": 0,
+      "skipped": 0,
+      "report": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d\\candidate-vitest.json",
+        "bytes": 3080,
+        "sha256": "6dca0a08d6a5afd953fee5bc4158ea8d3cf4fa497a32c1bb0480d73a90663d4c"
+      },
+      "cases": [
+        {
+          "fullName": "cinatoken OIDC client bootstrap recognizes only fixed-client GET authorization requests",
+          "status": "passed"
+        },
+        {
+          "fullName": "cinatoken OIDC client bootstrap stores only the secret hash and exact cinatoken redirect",
+          "status": "passed"
+        },
+        {
+          "fullName": "cinatoken OIDC client bootstrap rejects weak or unprefixed secrets before querying",
+          "status": "passed"
+        },
+        {
+          "fullName": "cinatoken reserved resource initialization initializes the missing exact resource and client association",
+          "status": "passed"
+        },
+        {
+          "fullName": "cinatoken reserved resource initialization is idempotent without replacing the original resource or link",
+          "status": "passed"
+        },
+        {
+          "fullName": "cinatoken reserved resource initialization preserves disabled resource policy and operator-managed link metadata",
+          "status": "passed"
+        },
+        {
+          "fullName": "cinatoken reserved resource initialization never links another client or enables an unrelated resource",
+          "status": "passed"
+        }
+      ]
+    },
+    "method": "Four new tests call the actual copied source ensureCinatokenOidcClient against real isolated Node SQLite query execution with UNIQUE/FK constraints; original three tests remain exactly. Disabled resource/link preservation, idempotence and fixed-client-only linkage are data-state observations, not literal matching.",
+    "limitations": [
+      "SQLite fixtures exercise SQL/query protocol, not native PostgreSQL/Hyperdrive defaults, concurrent operators or deployed provider state.",
+      "Production invalid_target actual root cause still unconfirmed; missing/disabled resource/link live metadata has not been read.",
+      "Repository-wide pnpm typecheck and actual provider authorize/token integration not run in this Temp-only task.",
+      "Candidate not copied into either repository, committed, pushed, or deployed."
+    ],
+    "redOutputRetained": true
+  },
+  "originalClosedReceipts": [
+    {
+      "label": "git-head",
+      "command": [
+        "C:/Program Files/Git/cmd/git.exe",
+        "-c",
+        "safe.directory=C:/cinagroup/cinaauth",
+        "-c",
+        "core.excludesFile=NUL",
+        "-C",
+        "C:/cinagroup/cinaauth",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "C:/cinagroup/cinaauth",
+      "startedAt": "2026-10-06T08:20:11.552Z",
+      "endedAt": "2026-10-06T08:20:11.609Z",
+      "actualExit": 0,
+      "signal": null,
+      "error": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d\\git-head.stdout.log",
+        "bytes": 41,
+        "sha256": "30b4e4ec31fea0db6dd43905552676ff8e5cd0e906d4523372faf301fdcf1730"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d\\git-head.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "label": "git-helper-baseline",
+      "command": [
+        "C:/Program Files/Git/cmd/git.exe",
+        "-c",
+        "safe.directory=C:/cinagroup/cinaauth",
+        "-c",
+        "core.excludesFile=NUL",
+        "-C",
+        "C:/cinagroup/cinaauth",
+        "show",
+        "HEAD:workers/auth-api/src/cinatoken-oidc-client.ts"
+      ],
+      "cwd": "C:/cinagroup/cinaauth",
+      "startedAt": "2026-10-06T08:20:11.613Z",
+      "endedAt": "2026-10-06T08:20:11.666Z",
+      "actualExit": 0,
+      "signal": null,
+      "error": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d\\git-helper-baseline.stdout.log",
+        "bytes": 3760,
+        "sha256": "5f4bb55cd16253668a6e6de55e810cc892a24731d8fbae05ac89fa4896103f1d"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d\\git-helper-baseline.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "label": "git-test-baseline",
+      "command": [
+        "C:/Program Files/Git/cmd/git.exe",
+        "-c",
+        "safe.directory=C:/cinagroup/cinaauth",
+        "-c",
+        "core.excludesFile=NUL",
+        "-C",
+        "C:/cinagroup/cinaauth",
+        "show",
+        "HEAD:workers/auth-api/test/cinatoken-oidc-client.test.ts"
+      ],
+      "cwd": "C:/cinagroup/cinaauth",
+      "startedAt": "2026-10-06T08:20:11.667Z",
+      "endedAt": "2026-10-06T08:20:11.720Z",
+      "actualExit": 0,
+      "signal": null,
+      "error": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d\\git-test-baseline.stdout.log",
+        "bytes": 2251,
+        "sha256": "6fc83143de193f0ee6279c7c6858b35c029af54cc70fde4ed81270d4a6547886"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d\\git-test-baseline.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "label": "git-target-status",
+      "command": [
+        "C:/Program Files/Git/cmd/git.exe",
+        "-c",
+        "safe.directory=C:/cinagroup/cinaauth",
+        "-c",
+        "core.excludesFile=NUL",
+        "-C",
+        "C:/cinagroup/cinaauth",
+        "status",
+        "--porcelain",
+        "--",
+        "workers/auth-api/src/cinatoken-oidc-client.ts",
+        "workers/auth-api/test/cinatoken-oidc-client.test.ts"
+      ],
+      "cwd": "C:/cinagroup/cinaauth",
+      "startedAt": "2026-10-06T08:20:11.722Z",
+      "endedAt": "2026-10-06T08:20:11.777Z",
+      "actualExit": 128,
+      "signal": null,
+      "error": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d\\git-target-status.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d\\git-target-status.stderr.log",
+        "bytes": 41,
+        "sha256": "640e2f8ea11186170f4950f20c7f98392a149bf840ca66e0b8d9e4d3c12b968a"
+      }
+    },
+    {
+      "label": "prepare",
+      "command": [
+        "C:/Program Files/nodejs/node.exe",
+        "C:/Users/cina/AppData/Local/Temp/cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d/prepare-resource-candidate.mjs",
+        "C:/Users/cina/AppData/Local/Temp/cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d"
+      ],
+      "cwd": "C:/Users/cina/AppData/Local/Temp/cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d",
+      "startedAt": "2026-10-06T08:20:11.500Z",
+      "endedAt": "2026-10-06T08:20:11.811Z",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null,
+      "timeoutConfiguredMs": 120000,
+      "timedOutObserved": false,
+      "stdout": {
+        "path": "prepare.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "prepare.stderr.log",
+        "bytes": 701,
+        "sha256": "fc679a2bde13cb0679d063667d82fff4016041e091c0e240616a1cdcdefeb54e"
+      },
+      "sourceProgram": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d/prepare-resource-candidate.mjs",
+        "bytes": 9241,
+        "sha256": "8f0fea520c04159f39a7aae2ffcfc6bef71601ee360a280d1c76fc54a10282d2"
+      },
+      "businessOrProductionPassDerived": false
+    },
+    {
+      "label": "prepare-v2",
+      "command": [
+        "C:/Program Files/nodejs/node.exe",
+        "C:/Users/cina/AppData/Local/Temp/cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d/prepare-resource-candidate-v2.mjs",
+        "C:/Users/cina/AppData/Local/Temp/cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d"
+      ],
+      "cwd": "C:/Users/cina/AppData/Local/Temp/cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d",
+      "startedAt": "2026-10-06T08:21:01.233Z",
+      "endedAt": "2026-10-06T08:21:02.044Z",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "timeoutConfiguredMs": 120000,
+      "timedOutObserved": false,
+      "stdout": {
+        "path": "prepare-v2.stdout.log",
+        "bytes": 1958,
+        "sha256": "b328993ca367bf5146960ac3ecf414ca7417e882ee2a6414a5ff832b77975daa"
+      },
+      "stderr": {
+        "path": "prepare-v2.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "sourceProgram": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d/prepare-resource-candidate-v2.mjs",
+        "bytes": 9590,
+        "sha256": "20a364eb48fec563fbbe3cc653c7c8c65dc769466f674b483fd0a1bb2cee35d5"
+      },
+      "businessOrProductionPassDerived": false
+    },
+    {
+      "label": "diff-helper",
+      "command": [
+        "C:/Program Files/Git/cmd/git.exe",
+        "diff",
+        "--no-index",
+        "--no-prefix",
+        "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d\\before\\workers\\auth-api\\src\\cinatoken-oidc-client.ts",
+        "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d\\candidate\\workers\\auth-api\\src\\cinatoken-oidc-client.ts"
+      ],
+      "cwd": "C:/cinagroup/cinaauth",
+      "startedAt": "2026-10-06T08:21:02.027Z",
+      "endedAt": "2026-10-06T08:21:02.079Z",
+      "actualExit": 1,
+      "signal": null,
+      "error": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d\\diff-helper.stdout.log",
+        "bytes": 1610,
+        "sha256": "89d10d24a6f17d13ac4d8f5bc1dd96e012cf76e56f158f7dd66cf38d3bf6bf40"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d\\diff-helper.stderr.log",
+        "bytes": 501,
+        "sha256": "c93f7add57ddaab1881935b37eeeef013a75d715ab96ad75b7d57ccc183b48ca"
+      }
+    },
+    {
+      "label": "diff-test",
+      "command": [
+        "C:/Program Files/Git/cmd/git.exe",
+        "diff",
+        "--no-index",
+        "--no-prefix",
+        "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d\\test-user-working-baseline.ts",
+        "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d\\candidate\\workers\\auth-api\\test\\cinatoken-oidc-client.test.ts"
+      ],
+      "cwd": "C:/cinagroup/cinaauth",
+      "startedAt": "2026-10-06T08:21:02.081Z",
+      "endedAt": "2026-10-06T08:21:02.133Z",
+      "actualExit": 1,
+      "signal": null,
+      "error": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d\\diff-test.stdout.log",
+        "bytes": 7115,
+        "sha256": "6c1b581710186e480f2800677cadc3ee67cd2ace9fce26adb2e3ebaf3eb6e5c2"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d\\diff-test.stderr.log",
+        "bytes": 484,
+        "sha256": "8aba6fead6cb6d2097fe600ed0d58be7c7b99cb7cd49272dd3345bf89fb76602"
+      }
+    },
+    {
+      "label": "before-vitest",
+      "command": [
+        "C:/Program Files/nodejs/node.exe",
+        "C:/cinagroup/cinaauth/node_modules/vitest/vitest.mjs",
+        "run",
+        "workers/auth-api/test/cinatoken-oidc-client.test.ts",
+        "--root",
+        "C:/Users/cina/AppData/Local/Temp/cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d/before",
+        "--config",
+        "C:/Users/cina/AppData/Local/Temp/cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d/vitest.config.mjs",
+        "--pool=threads",
+        "--maxWorkers=1",
+        "-t",
+        "cinatoken",
+        "--reporter=default",
+        "--reporter=json",
+        "--outputFile=C:/Users/cina/AppData/Local/Temp/cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d/before-vitest.json"
+      ],
+      "cwd": "C:/Users/cina/AppData/Local/Temp/cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d",
+      "startedAt": "2026-10-06T08:22:09.229Z",
+      "endedAt": "2026-10-06T08:22:12.937Z",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null,
+      "timeoutConfiguredMs": 120000,
+      "timedOutObserved": false,
+      "stdout": {
+        "path": "before-vitest.stdout.log",
+        "bytes": 1041,
+        "sha256": "ddb55de9cd1c178ac3870f1acc4a017c99db591a57ed43595e338e6cee5c026f"
+      },
+      "stderr": {
+        "path": "before-vitest.stderr.log",
+        "bytes": 2998,
+        "sha256": "b752ca4e4b258054a2e80d3289ca63f8bf9c8b20e290ffa186880046a6724f0e"
+      },
+      "sourceProgram": {
+        "path": "C:/cinagroup/cinaauth/node_modules/vitest/vitest.mjs",
+        "bytes": 43,
+        "sha256": "39db22f579acf5639bbb17a261408debbde03f4692c0c439e77e7f13aeba74d6"
+      },
+      "businessOrProductionPassDerived": false
+    },
+    {
+      "label": "candidate-vitest",
+      "command": [
+        "C:/Program Files/nodejs/node.exe",
+        "C:/cinagroup/cinaauth/node_modules/vitest/vitest.mjs",
+        "run",
+        "workers/auth-api/test/cinatoken-oidc-client.test.ts",
+        "--root",
+        "C:/Users/cina/AppData/Local/Temp/cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d/candidate",
+        "--config",
+        "C:/Users/cina/AppData/Local/Temp/cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d/vitest.config.mjs",
+        "--pool=threads",
+        "--maxWorkers=1",
+        "-t",
+        "cinatoken",
+        "--reporter=default",
+        "--reporter=json",
+        "--outputFile=C:/Users/cina/AppData/Local/Temp/cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d/candidate-vitest.json"
+      ],
+      "cwd": "C:/Users/cina/AppData/Local/Temp/cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d",
+      "startedAt": "2026-10-06T08:22:51.391Z",
+      "endedAt": "2026-10-06T08:22:52.218Z",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "timeoutConfiguredMs": 120000,
+      "timedOutObserved": false,
+      "stdout": {
+        "path": "candidate-vitest.stdout.log",
+        "bytes": 517,
+        "sha256": "d90b07d2ae096ad4fe3c000114754fa8849b8fdf43391dd96605788fb9fedee4"
+      },
+      "stderr": {
+        "path": "candidate-vitest.stderr.log",
+        "bytes": 169,
+        "sha256": "dc31091cff3f6041e452aaa49c263b7be742e1de7a1f8997e8653177504443de"
+      },
+      "sourceProgram": {
+        "path": "C:/cinagroup/cinaauth/node_modules/vitest/vitest.mjs",
+        "bytes": 43,
+        "sha256": "39db22f579acf5639bbb17a261408debbde03f4692c0c439e77e7f13aeba74d6"
+      },
+      "businessOrProductionPassDerived": false
+    }
+  ],
+  "receiptSummaryBeforeFinalAuditClosure": {
+    "closedChildren": 10,
+    "actualZero": 5,
+    "actualOne": 4,
+    "actual128": 1,
+    "onesMeaning": [
+      "prepare failed because readonly git status128 rejected NUL exclude file; no candidate written before that failure",
+      "diff-helper/diff-test actual1 are normal no-index differences",
+      "before-vitest actual1 is intentional baseline red"
+    ],
+    "noCollectionExitDerivedAsBusinessPass": true
+  },
+  "otherFailureObservations": {
+    "initialGitDubiousOwnershipTool": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d\\initial-git-tool-failure.json",
+      "bytes": 426,
+      "sha256": "919b5a98e893cba9df74149ff48fa2390c7bdb081bf89480d99449096449f5d9"
+    },
+    "toolJavaScriptParseBeforeExecution": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d\\tool-script-parse-error.json",
+      "bytes": 227,
+      "sha256": "1034491369a20297e8e9b6ec97fe576b1388442d355c702ea4d7ab572a20ccdc"
+    },
+    "noGlobalGitConfigChanged": true,
+    "perInvocationSafeDirectoryOnly": true,
+    "v2Resume": "Reused prior true closed HEAD/helper/test Git bytes with raw hash binding; did not rerun their commands. Original status128/prepare1 retained."
+  },
+  "reviewableNextStep": "Root can independently review the exact two-file candidate/patch and private live metadata before any external-repo write/deployment. No permission request is generated by this Temp-only task.",
+  "STOPWRITEAfterFinalAuditClosure": true
+}

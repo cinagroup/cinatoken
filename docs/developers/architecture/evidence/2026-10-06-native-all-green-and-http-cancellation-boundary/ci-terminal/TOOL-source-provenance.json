@@ -1,0 +1,91 @@
+{
+  "sourceSha": "757490181564aa822f960f5d8704857b98b230d0",
+  "toolFiles": 7,
+  "oldReportsOrMetadataCopied": 0,
+  "pins": [
+    {
+      "name": "observe-initial.mjs",
+      "reusedToolSourceOnly": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\observe-initial.mjs",
+        "bytes": 2012,
+        "sha256": "60371e3809d9a6c634038e6e14b8c1d7c9c43469f487d83cf02f0eb72790d5be"
+      },
+      "newTool": {
+        "bytes": 2043,
+        "sha256": "633839b5205f84067a2c2c32291e1d0054b3ebec9065ec55f41aec5ac4d25b08"
+      }
+    },
+    {
+      "name": "watch-proxy.mjs",
+      "reusedToolSourceOnly": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\watch-proxy.mjs",
+        "bytes": 1596,
+        "sha256": "8e2fe11156a7a3a30ac140c8356ee7d354a94a44901ddbff26790c5531afeeea"
+      },
+      "newTool": {
+        "bytes": 1596,
+        "sha256": "2a7c3b4ac451d14a7f69dcfd55d6cb92029cdc350beffc35ca574dd2d83a7d6a"
+      }
+    },
+    {
+      "name": "prepare-map.mjs",
+      "reusedToolSourceOnly": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\prepare-map.mjs",
+        "bytes": 2397,
+        "sha256": "707874d73cf27739948d6dc6c25700e31b931bb2c3ace7de57c999fa288a9204"
+      },
+      "newTool": {
+        "bytes": 2397,
+        "sha256": "b26dc7221608bae628a0ddb83ac76096ffe2a3579b3a2e43b4f20796c8f53eff"
+      }
+    },
+    {
+      "name": "collect-terminal.mjs",
+      "reusedToolSourceOnly": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\collect-terminal.mjs",
+        "bytes": 3440,
+        "sha256": "9a45a1f405ef82da6717dbdbc150897b2e8bd58765d570403632b340d3e28f72"
+      },
+      "newTool": {
+        "bytes": 3400,
+        "sha256": "e0e1fe76627ee863a8454993190bdbdf1e3abb71bd75f67ff25764fc879fac7f"
+      }
+    },
+    {
+      "name": "analyze-terminal.mjs",
+      "reusedToolSourceOnly": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\analyze-terminal.mjs",
+        "bytes": 9761,
+        "sha256": "53a5de01a04e67ad333408ff280d627ddccee5aeba7dd64d4e40dce789a731ad"
+      },
+      "newTool": {
+        "bytes": 9908,
+        "sha256": "8d904b32006714d327c70d504de88f93c6afca95f3fb760f4f8d329c5929650a"
+      }
+    },
+    {
+      "name": "close-audit.mjs",
+      "reusedToolSourceOnly": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\close-audit.mjs",
+        "bytes": 4624,
+        "sha256": "d42b37f6fe83b6604145eb1e7781d57ac707ce1304f481455215dc0cf9f97209"
+      },
+      "newTool": {
+        "bytes": 4649,
+        "sha256": "bd38e2bedb283fa3b4bc13b481e1b5c9e0cebb5b422208f7bd45c01270c99ddb"
+      }
+    },
+    {
+      "name": "seal-terminal.mjs",
+      "reusedToolSourceOnly": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-6e2-ci-terminal-observer-dbbc0b1231e543eb99e18eb9bbe45370\\seal-terminal.mjs",
+        "bytes": 2298,
+        "sha256": "d68855023c6d3292c1d3146066f26ae60a601b4efb9a8e217365e2005bfeaada"
+      },
+      "newTool": {
+        "bytes": 2298,
+        "sha256": "10afb87b6fdedafbf83bdde58764b2253b9815db847d0580769c86cae61514a8"
+      }
+    }
+  ]
+}

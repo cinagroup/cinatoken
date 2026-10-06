@@ -1,0 +1,173 @@
+{
+  "schema": "cinatoken-v364-full-artifact-zip-decode-index-v1",
+  "actualDecodeVerification": 0,
+  "archive": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/download-artifact-once.stdout.raw",
+    "bytes": 115610,
+    "sha256": "86e78aec5cf52ebdf9d2e538dbfe1d82a5852a1099102801eef78fec3f30c0f4"
+  },
+  "fileCount": 17,
+  "directoryCount": 0,
+  "decodedBytes": 1022761,
+  "files": [
+    {
+      "relative": "_temp/v364-direct-socket-once-37429341568-1/closed-result.json",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/full-artifact/_temp/v364-direct-socket-once-37429341568-1/closed-result.json",
+      "bytes": 27936,
+      "sha256": "c80314f6f8ad98cd48d028ed84ead64de4d98667e547dcb9202e327bde5357d3",
+      "zipCRC32": "bb46ae8f",
+      "compressedBytes": 5885,
+      "decodedExact": true
+    },
+    {
+      "relative": "_temp/v364-direct-socket-once-37429341568-1/events.json",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/full-artifact/_temp/v364-direct-socket-once-37429341568-1/events.json",
+      "bytes": 505693,
+      "sha256": "911585f8780744580221de6c26c901ade67a01b0c20ddcd6b7cac73803b919e4",
+      "zipCRC32": "da31e495",
+      "compressedBytes": 39317,
+      "decodedExact": true
+    },
+    {
+      "relative": "_temp/v364-direct-socket-once-37429341568-1/events.ndjson",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/full-artifact/_temp/v364-direct-socket-once-37429341568-1/events.ndjson",
+      "bytes": 390847,
+      "sha256": "c8145e82e21101bcf3242419eec06cbb031e715d82fa64df97daaaef95239712",
+      "zipCRC32": "e2805e73",
+      "compressedBytes": 37425,
+      "decodedExact": true
+    },
+    {
+      "relative": "_temp/v364-direct-socket-once-37429341568-1/executor-start.json",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/full-artifact/_temp/v364-direct-socket-once-37429341568-1/executor-start.json",
+      "bytes": 693,
+      "sha256": "e52302d7170f9c606248c5ddd76a09de384951476942b5b60e143e27f7bf0342",
+      "zipCRC32": "e435c2b6",
+      "compressedBytes": 387,
+      "decodedExact": true
+    },
+    {
+      "relative": "_temp/v364-direct-socket-once-37429341568-1/executor.closed.json",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/full-artifact/_temp/v364-direct-socket-once-37429341568-1/executor.closed.json",
+      "bytes": 5914,
+      "sha256": "7d7f66a258298739f1d8e0616796fa288743e781415585407ab7951324100139",
+      "zipCRC32": "71da6237",
+      "compressedBytes": 1525,
+      "decodedExact": true
+    },
+    {
+      "relative": "_temp/v364-direct-socket-once-37429341568-1/executor.stderr.txt",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/full-artifact/_temp/v364-direct-socket-once-37429341568-1/executor.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "zipCRC32": "00000000",
+      "compressedBytes": 2,
+      "decodedExact": true
+    },
+    {
+      "relative": "_temp/v364-direct-socket-once-37429341568-1/executor.stdout.txt",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/full-artifact/_temp/v364-direct-socket-once-37429341568-1/executor.stdout.txt",
+      "bytes": 170,
+      "sha256": "4c73f735d5e89068119c4c408827539e91447c49b841ecd9cbb4e6e971552c9c",
+      "zipCRC32": "f90665df",
+      "compressedBytes": 152,
+      "decodedExact": true
+    },
+    {
+      "relative": "_temp/v364-direct-socket-once-37429341568-1/original-strict.stderr.txt",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/full-artifact/_temp/v364-direct-socket-once-37429341568-1/original-strict.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "zipCRC32": "00000000",
+      "compressedBytes": 2,
+      "decodedExact": true
+    },
+    {
+      "relative": "_temp/v364-direct-socket-once-37429341568-1/original-strict.stdout.txt",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/full-artifact/_temp/v364-direct-socket-once-37429341568-1/original-strict.stdout.txt",
+      "bytes": 2870,
+      "sha256": "74f220d412dc232b65b51b0ec798951373a014d72df1128c657ae0dd503dbb57",
+      "zipCRC32": "9ee9398e",
+      "compressedBytes": 954,
+      "decodedExact": true
+    },
+    {
+      "relative": "cinatoken/cinatoken/scripts/diagnostics/v364-direct-socket/README.md",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/full-artifact/cinatoken/cinatoken/scripts/diagnostics/v364-direct-socket/README.md",
+      "bytes": 6774,
+      "sha256": "97bbd1c8bf42a1aa761fe526fc50a4057c65e790c8fbe659fcc3cd97d938c357",
+      "zipCRC32": "3f9f551f",
+      "compressedBytes": 2766,
+      "decodedExact": true
+    },
+    {
+      "relative": "cinatoken/cinatoken/scripts/diagnostics/v364-direct-socket/execute-owned-linux.py",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/full-artifact/cinatoken/cinatoken/scripts/diagnostics/v364-direct-socket/execute-owned-linux.py",
+      "bytes": 15959,
+      "sha256": "c635a435873185363faf23e1cbaa6887b858a9f23e32882a6ce54ff5405e15e0",
+      "zipCRC32": "3575b6a7",
+      "compressedBytes": 4949,
+      "decodedExact": true
+    },
+    {
+      "relative": "cinatoken/cinatoken/scripts/diagnostics/v364-direct-socket/native-reader-calibration.mjs",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/full-artifact/cinatoken/cinatoken/scripts/diagnostics/v364-direct-socket/native-reader-calibration.mjs",
+      "bytes": 2546,
+      "sha256": "e838769c950b49056ffc4e6580e41d8ec15a245db6efff6829c170642fb8ee8f",
+      "zipCRC32": "802efe5f",
+      "compressedBytes": 1130,
+      "decodedExact": true
+    },
+    {
+      "relative": "cinatoken/cinatoken/scripts/diagnostics/v364-direct-socket/queued-write-source.mjs",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/full-artifact/cinatoken/cinatoken/scripts/diagnostics/v364-direct-socket/queued-write-source.mjs",
+      "bytes": 3557,
+      "sha256": "93417db1e3b0edbb3dd06b504bddee18ba6fbb1bbf31141cd20ce119dea7fb5d",
+      "zipCRC32": "c8a04c57",
+      "compressedBytes": 1483,
+      "decodedExact": true
+    },
+    {
+      "relative": "cinatoken/cinatoken/scripts/diagnostics/v364-direct-socket/run-direct-socket.mjs",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/full-artifact/cinatoken/cinatoken/scripts/diagnostics/v364-direct-socket/run-direct-socket.mjs",
+      "bytes": 52009,
+      "sha256": "8fbaaed9523ecb227bd0e47ce8092d7432c08f8b67fd8650569d69d711ef48a8",
+      "zipCRC32": "ae93a3ff",
+      "compressedBytes": 12684,
+      "decodedExact": true
+    },
+    {
+      "relative": "cinatoken/cinatoken/scripts/diagnostics/v364-direct-socket/sealed-package.json",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/full-artifact/cinatoken/cinatoken/scripts/diagnostics/v364-direct-socket/sealed-package.json",
+      "bytes": 1190,
+      "sha256": "69cfacc9b02d66531a0624cdf980fb39a4f998745949970c2962b4691bfc17a5",
+      "zipCRC32": "14d1a033",
+      "compressedBytes": 622,
+      "decodedExact": true
+    },
+    {
+      "relative": "cinatoken/cinatoken/scripts/diagnostics/v364-direct-socket/source-inputs.json",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/full-artifact/cinatoken/cinatoken/scripts/diagnostics/v364-direct-socket/source-inputs.json",
+      "bytes": 5028,
+      "sha256": "a4046af64da2e2f61b37ee9ea92658bc2d54236052c859477c57d9049f62e3e9",
+      "zipCRC32": "69b4b59c",
+      "compressedBytes": 1727,
+      "decodedExact": true
+    },
+    {
+      "relative": "cinatoken/cinatoken/.github/workflows/v364-direct-socket.yml",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/full-artifact/cinatoken/cinatoken/.github/workflows/v364-direct-socket.yml",
+      "bytes": 1575,
+      "sha256": "f4e2b9da3c9be4374e4945c7daab7dc3c166fb4c9e1d2d61ff804ca3dc3b04e9",
+      "zipCRC32": "db971cb9",
+      "compressedBytes": 652,
+      "decodedExact": true
+    }
+  ],
+  "directories": [],
+  "completeZipMemberSetRetained": true,
+  "sourceSHA": "757490181564aa822f960f5d8704857b98b230d0",
+  "runId": "37429341568",
+  "ciOrProductPassDerived": false,
+  "runtimeExecuted": false
+}

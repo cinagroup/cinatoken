@@ -1,0 +1,18 @@
+{
+ "schema":"cinatoken-six-new-frozen-root-addon-config-v1",
+ "baseSourceCommit":"757490181564aa822f960f5d8704857b98b230d0",
+ "proposedExistingEvidencePrefix":"C:/cinagroup/cinatoken/docs/developers/architecture/evidence/2026-10-06-native-all-green-and-http-cancellation-boundary",
+ "existingEvidenceModified":false,
+ "externalPinAuthority":"Root supplied six producer-completed seal pins in direct collaboration message, 2026-10-06",
+ "roots":[
+  {"id":"public-auth-source","path":"C:/Users/cina/AppData/Local/Temp/cinatoken-public-auth-start-readonly-3sVv88","count":7,"seal":"STOPWRITE-peer-seal.json","bytes":1865,"sha256":"50f4498bb8bb622804e9b64dbb09fee941cb2441ea6a7db3777610a964d18bcf"},
+  {"id":"invalid-target-provider","path":"C:/Users/cina/AppData/Local/Temp/cinatoken-invalid-target-provider-readonly-4eUECF","count":7,"seal":"STOPWRITE-peer-seal.json","bytes":1489,"sha256":"af30a73bd030a36673c0a0244740f51ce3324b87ed2a74245f56e55b13823c6b"},
+  {"id":"invalid-target-storage","path":"C:/Users/cina/AppData/Local/Temp/cinatoken-invalid-target-storage-boundary-akLyky","count":7,"seal":"STOPWRITE-peer-seal.json","bytes":1458,"sha256":"22abcff865db214b4d8507e984c057f7f12520f452e932b43375824ae5ca8968"},
+  {"id":"cinaauth-resource-candidate","path":"C:/Users/cina/AppData/Local/Temp/cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d","count":61,"seal":"STOPWRITE.json","bytes":10364,"sha256":"1be9ed381c4b5f2b5306e9f9fb1fe7635db5c2a10280ae1a22e3d32fd8e480d2"},
+  {"id":"native-green-independent-review","path":"C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10","count":42,"seal":"STOPWRITE.json","bytes":11799,"sha256":"c37ca964bac9087176591b4596046baa46cbe6facbdd14bda481b5e73b4ba538"},
+  {"id":"registration-preview-prepared","path":"C:/Users/cina/AppData/Local/Temp/cinatoken-registration-preview-readonly-prepared-mqVPEM","count":18,"seal":"STOPWRITE-peer-seal.json","bytes":3821,"sha256":"e923723d33b3ed7c623e84c45f627e04e49b9f0d0f7bb4142836b39580545899"}
+ ],
+ "compression":{"minimumExclusiveBytes":131072,"eligibleExtensions":[".raw",".log"],"level":9,"allOtherBytesPreserved":true},
+ "truthBoundary":{"staticCandidateTests":7,"staticCandidatePassed":7,"testBackend":"SQLite controlled local fixture only","liveDBVerified":false,"productionDeployVerified":false,"identityLoginVerified":false,"registrationPreviewExecuted":false,"browserLaunchedByCollector":false,"SQLiteTestsRerunByCollector":false,"runtimeRerunByCollector":false,"networkRequestsByCollector":false,"fullG2Verified":false,"fullG7Verified":false,"fullG8Verified":false,"collection0NotAcceptancePass":true},
+ "scope":{"onlySixExplicitFrozenRoots":true,"older3357And42RootArchivesNotRead":true,"mutableRootOrBRRootsNotCopied":true,"repositoryWrites":false,"gitCommands":false}
+}

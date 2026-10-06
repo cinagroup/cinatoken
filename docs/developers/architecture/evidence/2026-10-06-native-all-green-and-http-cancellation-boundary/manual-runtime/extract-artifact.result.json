@@ -1,0 +1,31 @@
+{
+  "schema": "cinatoken-v364-artifact-readonly-audit-command-closed-v1",
+  "closed": true,
+  "mode": "extract-artifact",
+  "startedAt": "2026-10-06T07:30:19.366Z",
+  "endedAt": "2026-10-06T07:30:19.814Z",
+  "program": "C:/Users/cina/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+  "args": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-queued-linux-observation-tools-87b2c4dae3a8480c87b50e9d4c2b8e8b\\extract-artifact.py",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/binding.json"
+  ],
+  "actualExit": 0,
+  "signal": null,
+  "timedOut": false,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c\\extract-artifact.stdout.raw",
+    "bytes": 108,
+    "sha256": "7c75edc75681e1ee8c58d9a082c4b6900e653699d4319b1854db0005a8f417b4"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c\\extract-artifact.stderr.raw",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "sourceSHA": "757490181564aa822f960f5d8704857b98b230d0",
+  "runId": "37429341568",
+  "localArtifactOnly": true,
+  "gatePassDerived": false,
+  "runtimeExecuted": false
+}

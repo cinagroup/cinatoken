@@ -1,0 +1,10 @@
+{
+  "schema": "tool-returned-observation-not-new-child-receipt",
+  "tool": "exec_command",
+  "chunk_id": "7833f1",
+  "reportedExitCode": 1,
+  "reportedWallTimeSeconds": 0.2723391,
+  "output": "ParserError: \r\nLine |\r\n   2 |  . lOrWhiteSpace([Environment]::GetEnvironmentVariable($n))} } | Convert .\r\n     |                                                                ~\r\n     | An empty pipe element is not allowed.\r\n",
+  "scope": "Preliminary PowerShell reader parse failure before any body execution; no native/app/DB failure and no successful process claim.",
+  "originalStdoutStderrSeparation": "Tool returns combined output; separation not provided."
+}

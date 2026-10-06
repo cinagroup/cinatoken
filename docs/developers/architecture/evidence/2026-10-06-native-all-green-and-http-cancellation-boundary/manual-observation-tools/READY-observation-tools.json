@@ -1,0 +1,81 @@
+{
+  "schema": "cinatoken-v364-queued-linux-observation-tools-ready-v1",
+  "preparedAt": "2026-10-06T07:27:05.437Z",
+  "actualSyntaxPreparationExit": 0,
+  "toolInputs": [
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-observation-tools-87b2c4dae3a8480c87b50e9d4c2b8e8b/observe-ci-command.mjs",
+      "bytes": 6876,
+      "sha256": "9d2e2b454f36536cfc3dcefc1a61a6ed8e20ddafe99b576c28c3caf365855c75"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-observation-tools-87b2c4dae3a8480c87b50e9d4c2b8e8b/extract-artifact.py",
+      "bytes": 4052,
+      "sha256": "0efa348bb60f690383046cc68fce7a6b317b9c8e7ad2af071742ff6ea11989d7"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-observation-tools-87b2c4dae3a8480c87b50e9d4c2b8e8b/run-artifact-audit-command.mjs",
+      "bytes": 2729,
+      "sha256": "352f91bcf983484d927c39a1ebd69cfc6f3c7a0433b6cdf63a50efed18c2e4d0"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-observation-tools-87b2c4dae3a8480c87b50e9d4c2b8e8b/review-artifact.mjs",
+      "bytes": 13469,
+      "sha256": "f7300e40bfed3db9c7eaf216a381e10a16b65b4efdb4a8025cf875007e64663d"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-observation-tools-87b2c4dae3a8480c87b50e9d4c2b8e8b/prepare-toolset.mjs",
+      "bytes": 3177,
+      "sha256": "63292ae487c8c285537888d75fd70018a2d01b465e674650c272e38a1ea35013"
+    }
+  ],
+  "syntaxResults": [
+    {
+      "receipt": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-observation-tools-87b2c4dae3a8480c87b50e9d4c2b8e8b/syntax-observe-ci-command.result.json",
+        "bytes": 1095,
+        "sha256": "3078bed15f9ca72067434f2539c5fdb72f3e7ee2bf6eb02763701864d3936d2c"
+      },
+      "actualExit": 0
+    },
+    {
+      "receipt": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-observation-tools-87b2c4dae3a8480c87b50e9d4c2b8e8b/syntax-python.result.json",
+        "bytes": 1267,
+        "sha256": "67c6fa7619e5f6a8ebd3f36ed4c21c9eb38f0b7930592b3c83ad01553a371aee"
+      },
+      "actualExit": 0
+    },
+    {
+      "receipt": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-observation-tools-87b2c4dae3a8480c87b50e9d4c2b8e8b/syntax-run-artifact-audit-command.result.json",
+        "bytes": 1119,
+        "sha256": "dfda6bce8bc9acbeb9110b8c88c738ab2cf15faa7bc284f1c4a9634a43920ba2"
+      },
+      "actualExit": 0
+    },
+    {
+      "receipt": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-observation-tools-87b2c4dae3a8480c87b50e9d4c2b8e8b/syntax-review-artifact.result.json",
+        "bytes": 1086,
+        "sha256": "4bcda2c01b981c6929dac729202a519f9efd2b5e21d8df0ce4d86766b2d62d83"
+      },
+      "actualExit": 0
+    }
+  ],
+  "networkOrCIQueried": false,
+  "productOrNativeExecuted": false,
+  "allowedOperations": [
+    "one-gh-watch-45s",
+    "terminal-metadata",
+    "one-full-job-log",
+    "one-full-artifact-zip",
+    "local-full-zip-decode",
+    "local-byte-and-fact-audit"
+  ],
+  "requiresExplicitRootBinding": true,
+  "watchExit1Preserved": true,
+  "extraArmSeparateFromOriginalFive": true,
+  "collection0NotGatePass": true,
+  "oldEvidenceTouched": false
+}

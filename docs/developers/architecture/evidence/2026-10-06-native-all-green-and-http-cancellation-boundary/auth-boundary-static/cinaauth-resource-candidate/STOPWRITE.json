@@ -1,0 +1,318 @@
+{
+  "schema": "owned-whole-candidate-root-STOPWRITE-seal-v1",
+  "root": "C:/Users/cina/AppData/Local/Temp/cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d",
+  "frozenAt": "2026-10-06T08:25:53.279Z",
+  "completeFileCountExcludingSeal": 60,
+  "files": [
+    {
+      "path": "FINAL-cinatoken-resource-candidate.json",
+      "bytes": 27029,
+      "sha256": "8a45706c40a6e899f9376135b223da06c99c12d03fa8723bdd74c3730eae01ab"
+    },
+    {
+      "path": "before/node_modules/.vite/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709/results.json",
+      "bytes": 134,
+      "sha256": "3d137551d54536c4e3b5518501601d755ecc6b8e4d3efae8cbd7abf509effac1"
+    },
+    {
+      "path": "before/workers/auth-api/src/admin-oidc-client.ts",
+      "bytes": 4768,
+      "sha256": "79798d945817580521c926ef9d4089cff9a433910dabea023402d5b2bce87876"
+    },
+    {
+      "path": "before/workers/auth-api/src/cinatoken-oidc-client.ts",
+      "bytes": 3760,
+      "sha256": "5f4bb55cd16253668a6e6de55e810cc892a24731d8fbae05ac89fa4896103f1d"
+    },
+    {
+      "path": "before/workers/auth-api/test/cinatoken-oidc-client.test.ts",
+      "bytes": 8298,
+      "sha256": "a0dee5aaf13fdfafa4ed45a2c5450feb5d00f55fbf1ae25685320da7189d4085"
+    },
+    {
+      "path": "before-vitest.closed.json",
+      "bytes": 1635,
+      "sha256": "6457de9cf9c0dc00450b964fb87d61ccc2a23c26663f21f4130c08d2d99e098e"
+    },
+    {
+      "path": "before-vitest.json",
+      "bytes": 4201,
+      "sha256": "7eef2f3a5cb789ff3dbb6e8c45880802f7fadee720ca1b192a6820975e39d7ba"
+    },
+    {
+      "path": "before-vitest.stderr.log",
+      "bytes": 2998,
+      "sha256": "b752ca4e4b258054a2e80d3289ca63f8bf9c8b20e290ffa186880046a6724f0e"
+    },
+    {
+      "path": "before-vitest.stdout.log",
+      "bytes": 1041,
+      "sha256": "ddb55de9cd1c178ac3870f1acc4a017c99db591a57ed43595e338e6cee5c026f"
+    },
+    {
+      "path": "candidate/node_modules/.vite/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709/results.json",
+      "bytes": 135,
+      "sha256": "c3dafef21f8350b9a35ffcbfbffd747bc48021524c8a37b991ca5944d7240fdd"
+    },
+    {
+      "path": "candidate/workers/auth-api/src/admin-oidc-client.ts",
+      "bytes": 4768,
+      "sha256": "79798d945817580521c926ef9d4089cff9a433910dabea023402d5b2bce87876"
+    },
+    {
+      "path": "candidate/workers/auth-api/src/cinatoken-oidc-client.ts",
+      "bytes": 4473,
+      "sha256": "b12d86c4c08a5ea3c7f5cb636bb02845558b57f01a44a4b1c9168c4cfe7af2e5"
+    },
+    {
+      "path": "candidate/workers/auth-api/test/cinatoken-oidc-client.test.ts",
+      "bytes": 8298,
+      "sha256": "a0dee5aaf13fdfafa4ed45a2c5450feb5d00f55fbf1ae25685320da7189d4085"
+    },
+    {
+      "path": "candidate-vitest.closed.json",
+      "bytes": 1648,
+      "sha256": "7dab5d8ada617cc90ece34704d14bd731ebe35188f64ee72ef7b8861f10caf75"
+    },
+    {
+      "path": "candidate-vitest.json",
+      "bytes": 3080,
+      "sha256": "6dca0a08d6a5afd953fee5bc4158ea8d3cf4fa497a32c1bb0480d73a90663d4c"
+    },
+    {
+      "path": "candidate-vitest.stderr.log",
+      "bytes": 169,
+      "sha256": "dc31091cff3f6041e452aaa49c263b7be742e1de7a1f8997e8653177504443de"
+    },
+    {
+      "path": "candidate-vitest.stdout.log",
+      "bytes": 517,
+      "sha256": "d90b07d2ae096ad4fe3c000114754fa8849b8fdf43391dd96605788fb9fedee4"
+    },
+    {
+      "path": "capture-owned-child.mjs",
+      "bytes": 1534,
+      "sha256": "450e758c3e2e58fbf73761ddd4bc3a8cb3030f28099d3d0ad0d733b5ba62ee69"
+    },
+    {
+      "path": "close-final-audit-and-seal.mjs",
+      "bytes": 2488,
+      "sha256": "798b53dab0653a774042c3d23c80778928637240940adeb2fb11b4ef8ed7aeb3"
+    },
+    {
+      "path": "diff-helper.closed.json",
+      "bytes": 1197,
+      "sha256": "2cb6adf765b6af1a839fa853e96558c99b8de4f0cc4caf04a733edf2f10ba063"
+    },
+    {
+      "path": "diff-helper.stderr.log",
+      "bytes": 501,
+      "sha256": "c93f7add57ddaab1881935b37eeeef013a75d715ab96ad75b7d57ccc183b48ca"
+    },
+    {
+      "path": "diff-helper.stdout.log",
+      "bytes": 1610,
+      "sha256": "89d10d24a6f17d13ac4d8f5bc1dd96e012cf76e56f158f7dd66cf38d3bf6bf40"
+    },
+    {
+      "path": "diff-test.closed.json",
+      "bytes": 1170,
+      "sha256": "05b79f04c0dd4441e3e02b2a48cd74eb911a1d0e982e789f7bbef1fc74aad2f6"
+    },
+    {
+      "path": "diff-test.stderr.log",
+      "bytes": 484,
+      "sha256": "8aba6fead6cb6d2097fe600ed0d58be7c7b99cb7cd49272dd3345bf89fb76602"
+    },
+    {
+      "path": "diff-test.stdout.log",
+      "bytes": 7115,
+      "sha256": "6c1b581710186e480f2800677cadc3ee67cd2ace9fce26adb2e3ebaf3eb6e5c2"
+    },
+    {
+      "path": "final-audit-and-report.mjs",
+      "bytes": 10519,
+      "sha256": "47915366784a3a2c459877efaf2ce61416c108e78bf1adcd920b313af80d6401"
+    },
+    {
+      "path": "final-audit.closed.json",
+      "bytes": 1216,
+      "sha256": "13155a0d639fcf280f5dc59c1a634cca88e419bcf8f97e9a7ee353da68601856"
+    },
+    {
+      "path": "final-audit.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "final-audit.stdout.log",
+      "bytes": 970,
+      "sha256": "cf5aafefd8d719575ad6ba63efe9d00c3cd9bf11902210632fee5c1ef82fcee8"
+    },
+    {
+      "path": "git-head.closed.json",
+      "bytes": 943,
+      "sha256": "56d6d571226a87baedb8abc3861eae6e26f36981fd6470b1a3ff75f6f4548bf1"
+    },
+    {
+      "path": "git-head.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "git-head.stdout.log",
+      "bytes": 41,
+      "sha256": "30b4e4ec31fea0db6dd43905552676ff8e5cd0e906d4523372faf301fdcf1730"
+    },
+    {
+      "path": "git-helper-baseline.closed.json",
+      "bytes": 1019,
+      "sha256": "b13e752aac784da95ec50d7d57417d8d8cac332d66916ca877ab2c1ed8b81684"
+    },
+    {
+      "path": "git-helper-baseline.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "git-helper-baseline.stdout.log",
+      "bytes": 3760,
+      "sha256": "5f4bb55cd16253668a6e6de55e810cc892a24731d8fbae05ac89fa4896103f1d"
+    },
+    {
+      "path": "git-target-status.closed.json",
+      "bytes": 1098,
+      "sha256": "f6577b6f99f100e621918564b06381de849f5b4cec00f2928a89d33cb0eb7a26"
+    },
+    {
+      "path": "git-target-status.stderr.log",
+      "bytes": 41,
+      "sha256": "640e2f8ea11186170f4950f20c7f98392a149bf840ca66e0b8d9e4d3c12b968a"
+    },
+    {
+      "path": "git-target-status.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "git-test-baseline.closed.json",
+      "bytes": 1019,
+      "sha256": "a5933c7543fa2648ca197ea3b330ee1f741c9432667255d18164a2cf62078cd5"
+    },
+    {
+      "path": "git-test-baseline.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "git-test-baseline.stdout.log",
+      "bytes": 2251,
+      "sha256": "6fc83143de193f0ee6279c7c6858b35c029af54cc70fde4ed81270d4a6547886"
+    },
+    {
+      "path": "helper-Git-baseline.ts",
+      "bytes": 3760,
+      "sha256": "5f4bb55cd16253668a6e6de55e810cc892a24731d8fbae05ac89fa4896103f1d"
+    },
+    {
+      "path": "initial-git-tool-failure.json",
+      "bytes": 426,
+      "sha256": "919b5a98e893cba9df74149ff48fa2390c7bdb081bf89480d99449096449f5d9"
+    },
+    {
+      "path": "patch-reviewable.diff",
+      "bytes": 7803,
+      "sha256": "36d21d5787ba123aadb3d30635738ce54b723f305517ea4943922c6aeb267801"
+    },
+    {
+      "path": "patch.diff",
+      "bytes": 8725,
+      "sha256": "f241f0ccf9783eddbad289409ed06a1a0a371759b2a08a025a426035a93dd5f5"
+    },
+    {
+      "path": "preparation.json",
+      "bytes": 13767,
+      "sha256": "4af7eeff4e702073b3f103a7a4fa75a7ad4d14bec93243c9e410deb1e1a21e32"
+    },
+    {
+      "path": "prepare-resource-candidate-v2.mjs",
+      "bytes": 9590,
+      "sha256": "20a364eb48fec563fbbe3cc653c7c8c65dc769466f674b483fd0a1bb2cee35d5"
+    },
+    {
+      "path": "prepare-resource-candidate.mjs",
+      "bytes": 9241,
+      "sha256": "8f0fea520c04159f39a7aae2ffcfc6bef71601ee360a280d1c76fc54a10282d2"
+    },
+    {
+      "path": "prepare-v2.closed.json",
+      "bytes": 1296,
+      "sha256": "35150c1ba4a52c9b128053a00cd60163641e1168856c4952ff330f2478c3e5d9"
+    },
+    {
+      "path": "prepare-v2.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "prepare-v2.stdout.log",
+      "bytes": 1958,
+      "sha256": "b328993ca367bf5146960ac3ecf414ca7417e882ee2a6414a5ff832b77975daa"
+    },
+    {
+      "path": "prepare.closed.json",
+      "bytes": 1280,
+      "sha256": "9eb9929fb3c8397d8db4a85e87da3dd6c51e80bb5bce260a9702090ebc4e4d40"
+    },
+    {
+      "path": "prepare.stderr.log",
+      "bytes": 701,
+      "sha256": "fc679a2bde13cb0679d063667d82fff4016041e091c0e240616a1cdcdefeb54e"
+    },
+    {
+      "path": "prepare.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "resource-tests-to-append.ts.txt",
+      "bytes": 5953,
+      "sha256": "db121d2b9e01ad55286f8bd38910eb8188b561a163cb15c5a628c5e253443b33"
+    },
+    {
+      "path": "root-AGENTS.snapshot.md",
+      "bytes": 5325,
+      "sha256": "1185385d0217b4f3a0876f5426e2f4052038de2b422897bb62c0bc64317f7d09"
+    },
+    {
+      "path": "test-Git-baseline.ts",
+      "bytes": 2251,
+      "sha256": "6fc83143de193f0ee6279c7c6858b35c029af54cc70fde4ed81270d4a6547886"
+    },
+    {
+      "path": "test-user-working-baseline.ts",
+      "bytes": 2251,
+      "sha256": "4f93ac08cbab78edc964fb798647ef2db96d0d0f4a14503a8b95d634c2155929"
+    },
+    {
+      "path": "tool-script-parse-error.json",
+      "bytes": 227,
+      "sha256": "1034491369a20297e8e9b6ec97fe576b1388442d355c702ea4d7ab572a20ccdc"
+    },
+    {
+      "path": "vitest.config.mjs",
+      "bytes": 439,
+      "sha256": "c4ee8f9691c120311cc1bf5c9a1b60ca4596e6a0ce9ee2e4e04c626112b061ec"
+    }
+  ],
+  "finalAuditActualExit": 0,
+  "closedChildren": 11,
+  "actualZero": 6,
+  "actualOne": 4,
+  "actual128": 1,
+  "originalBaselineRedAndGitFailuresRetained": true,
+  "repoModified": false,
+  "productionRequests": 0,
+  "rootCauseConfirmed": false,
+  "STOPWRITE": true
+}

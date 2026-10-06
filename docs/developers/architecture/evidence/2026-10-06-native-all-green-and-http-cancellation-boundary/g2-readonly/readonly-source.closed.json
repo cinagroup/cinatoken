@@ -1,0 +1,34 @@
+{
+  "schema": "actual-spawnSync-child-closed-v1",
+  "startedAt": "2026-10-06T07:32:49.299Z",
+  "endedAt": "2026-10-06T07:32:49.410Z",
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next-real-g2-readonly-9020e3b1287d48ec9a0bd1c67b698924\\read-next-real-acceptance.mjs",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-next-real-g2-readonly-9020e3b1287d48ec9a0bd1c67b698924"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "timeoutConfiguredMs": 15000,
+  "timedOutObserved": false,
+  "sourceProgram": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next-real-g2-readonly-9020e3b1287d48ec9a0bd1c67b698924\\read-next-real-acceptance.mjs",
+    "bytes": 12735,
+    "sha256": "4a58a5263e2c124ce4fdc2a2b8774a1e663d02535a63d19d31411b604860aead"
+  },
+  "stdout": {
+    "path": "readonly-source.stdout.log",
+    "bytes": 1763,
+    "sha256": "f07a12654adc9847b44699307032dee5492f5aaf3fef2984d6c39129cbd51a3e"
+  },
+  "stderr": {
+    "path": "readonly-source.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "collectionOnly": true,
+  "readOnlySourceAndPresence": true,
+  "businessOrNativePassDerived": false
+}

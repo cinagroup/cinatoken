@@ -1,0 +1,55 @@
+{
+  "schema": "complete-v2-approval-static-review-STOPWRITE-v1",
+  "root": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-firstparty-v2-approval-readonly-d1773460e5534b5fb174cd493de58d61",
+  "frozenAt": "2026-10-06T09:05:26.815Z",
+  "files": [
+    {
+      "path": "FINAL-firstparty-link-v2-approval-review.json",
+      "bytes": 7883,
+      "sha256": "02c32e5f780cd8f765d1ac233acdac1ef6ea190871c860b629f6d26a8f5b7ea9"
+    },
+    {
+      "path": "close-and-seal-v2-review.mjs",
+      "bytes": 2291,
+      "sha256": "39ad3d22e7fdb6e2b6194cafec9db195e2570e0bdfca11eee508018895aa2626"
+    },
+    {
+      "path": "controller-v2-reviewed.snapshot.mjs",
+      "bytes": 7570,
+      "sha256": "0c60b41444f8b876cfc928689722ce7ac3fe369d4eb054d067a1feb1ddd71d7f"
+    },
+    {
+      "path": "review-v2-and-approval-status.mjs",
+      "bytes": 7398,
+      "sha256": "282c665a52d6db3fec6535bec22b3721449c4e49356eab47a6d3a0721eee754d"
+    },
+    {
+      "path": "static-review.closed.json",
+      "bytes": 1206,
+      "sha256": "184d2194b6e275a3d96952ce8dd58dbda2c5fa7895f922f8082ad69ad6da2c25"
+    },
+    {
+      "path": "static-review.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "static-review.stdout.log",
+      "bytes": 687,
+      "sha256": "1ce66d0c5d27d6759a08cf12b4a4ac68b69505fa481e2358270798c2b48a42fd"
+    },
+    {
+      "path": "worker-v2-reviewed.snapshot.mjs",
+      "bytes": 5441,
+      "sha256": "07103d4c4a646e5a0ad97b220c7c36db882e0be3e9b2266f9c1e2269e5594944"
+    }
+  ],
+  "completeFileCountExcludingSeal": 8,
+  "ownedActualClosedChildren": 1,
+  "actualZero": 1,
+  "previousNineCaseSQLChildReferencedNotRerun": true,
+  "productionRejectedCreateProcessHasNoChild": true,
+  "productionRepairExecuted": false,
+  "oldFrozenRootsModified": false,
+  "STOPWRITE": true
+}

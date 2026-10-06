@@ -1,0 +1,302 @@
+{
+  "schema": "cinatoken-757-original-ci-terminal-collection-v1",
+  "at": "2026-10-06T07:41:44.611Z",
+  "sourceSha": "757490181564aa822f960f5d8704857b98b230d0",
+  "watchReceipt": {
+    "at": "2026-10-06T07:24:23.866Z",
+    "finishedAt": "2026-10-06T07:37:37.541Z",
+    "program": "C:/Program Files/GitHub CLI/gh.exe",
+    "args": [
+      "run",
+      "watch",
+      "37429192670",
+      "--repo",
+      "cinagroup/cinatoken",
+      "--interval",
+      "45",
+      "--exit-status"
+    ],
+    "cwd": "C:/cinagroup/cinatoken",
+    "actualExit": 1,
+    "signal": null,
+    "spawnError": null,
+    "stdout": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-757-ci-terminal-observer-6fcdbd7046af4bc89f5c9935f0db1dcc\\proxy-watch-1.stdout.log",
+      "bytes": 362698,
+      "sha256": "a156459d896424218901d28552747b928461d84c79b2684c321983628c88014b"
+    },
+    "stderr": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-757-ci-terminal-observer-6fcdbd7046af4bc89f5c9935f0db1dcc\\proxy-watch-1.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "collectionOnly": true,
+    "ciActions": 0,
+    "watchExitIsNotTerminalMetadata": true
+  },
+  "watchHistory": [
+    {
+      "at": "2026-10-06T07:24:23.866Z",
+      "finishedAt": "2026-10-06T07:37:37.541Z",
+      "program": "C:/Program Files/GitHub CLI/gh.exe",
+      "args": [
+        "run",
+        "watch",
+        "37429192670",
+        "--repo",
+        "cinagroup/cinatoken",
+        "--interval",
+        "45",
+        "--exit-status"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 1,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-757-ci-terminal-observer-6fcdbd7046af4bc89f5c9935f0db1dcc\\proxy-watch-1.stdout.log",
+        "bytes": 362698,
+        "sha256": "a156459d896424218901d28552747b928461d84c79b2684c321983628c88014b"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-757-ci-terminal-observer-6fcdbd7046af4bc89f5c9935f0db1dcc\\proxy-watch-1.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "collectionOnly": true,
+      "ciActions": 0,
+      "watchExitIsNotTerminalMetadata": true
+    }
+  ],
+  "proxy": {
+    "at": "2026-10-06T07:41:25.778Z",
+    "finishedAt": "2026-10-06T07:41:28.923Z",
+    "executable": "C:/Program Files/GitHub CLI/gh.exe",
+    "args": [
+      "run",
+      "view",
+      "37429192670",
+      "--repo",
+      "cinagroup/cinatoken",
+      "--json",
+      "databaseId,name,headSha,status,conclusion,url,jobs,createdAt,updatedAt"
+    ],
+    "cwd": "C:/cinagroup/cinatoken",
+    "actualExit": 0,
+    "signal": null,
+    "spawnError": null,
+    "stdout": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-757-ci-terminal-observer-6fcdbd7046af4bc89f5c9935f0db1dcc\\proxy-terminal.stdout.log",
+      "bytes": 49493,
+      "sha256": "1be6381b0c54f7621427f7063d64c9f0015edbd8edc24af2bce5f270dff4c3e7"
+    },
+    "stderr": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-757-ci-terminal-observer-6fcdbd7046af4bc89f5c9935f0db1dcc\\proxy-terminal.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "stateReads": [
+    {
+      "slug": "compose",
+      "receipt": {
+        "at": "2026-10-06T07:41:28.925Z",
+        "finishedAt": "2026-10-06T07:41:32.022Z",
+        "executable": "C:/Program Files/GitHub CLI/gh.exe",
+        "args": [
+          "run",
+          "view",
+          "37429192577",
+          "--repo",
+          "cinagroup/cinatoken",
+          "--json",
+          "databaseId,name,headSha,status,conclusion,url,jobs,createdAt,updatedAt"
+        ],
+        "cwd": "C:/cinagroup/cinatoken",
+        "actualExit": 0,
+        "signal": null,
+        "spawnError": null,
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-757-ci-terminal-observer-6fcdbd7046af4bc89f5c9935f0db1dcc\\compose-terminal.stdout.log",
+          "bytes": 2645,
+          "sha256": "780510b66985fada730fffb3758645982ea98ece774669cb5db61d7e5e921496"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-757-ci-terminal-observer-6fcdbd7046af4bc89f5c9935f0db1dcc\\compose-terminal.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "slug": "web",
+      "receipt": {
+        "at": "2026-10-06T07:41:28.930Z",
+        "finishedAt": "2026-10-06T07:41:32.501Z",
+        "executable": "C:/Program Files/GitHub CLI/gh.exe",
+        "args": [
+          "run",
+          "view",
+          "37429192615",
+          "--repo",
+          "cinagroup/cinatoken",
+          "--json",
+          "databaseId,name,headSha,status,conclusion,url,jobs,createdAt,updatedAt"
+        ],
+        "cwd": "C:/cinagroup/cinatoken",
+        "actualExit": 0,
+        "signal": null,
+        "spawnError": null,
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-757-ci-terminal-observer-6fcdbd7046af4bc89f5c9935f0db1dcc\\web-terminal.stdout.log",
+          "bytes": 7397,
+          "sha256": "551dd3067641d18df46da8519f255c2f3c7a99cdd831dfdfae2002e011ac06c9"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-757-ci-terminal-observer-6fcdbd7046af4bc89f5c9935f0db1dcc\\web-terminal.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "alreadyTerminal": [
+    {
+      "slug": "verify",
+      "receipt": {
+        "at": "2026-10-06T07:23:42.534Z",
+        "finishedAt": "2026-10-06T07:23:46.134Z",
+        "executable": "C:/Program Files/GitHub CLI/gh.exe",
+        "args": [
+          "run",
+          "view",
+          "37429192638",
+          "--repo",
+          "cinagroup/cinatoken",
+          "--json",
+          "databaseId,name,headSha,status,conclusion,url,jobs,createdAt,updatedAt"
+        ],
+        "cwd": "C:/cinagroup/cinatoken",
+        "actualExit": 0,
+        "signal": null,
+        "spawnError": null,
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-757-ci-terminal-observer-6fcdbd7046af4bc89f5c9935f0db1dcc\\verify-initial.stdout.log",
+          "bytes": 1698,
+          "sha256": "54727a0ccb27dd07f377e8acc28b2bb3c95ead01ae29d4fc0a71d8939ade1ade"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-757-ci-terminal-observer-6fcdbd7046af4bc89f5c9935f0db1dcc\\verify-initial.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "slug": "release",
+      "receipt": {
+        "at": "2026-10-06T07:23:42.543Z",
+        "finishedAt": "2026-10-06T07:23:45.679Z",
+        "executable": "C:/Program Files/GitHub CLI/gh.exe",
+        "args": [
+          "run",
+          "view",
+          "37429192608",
+          "--repo",
+          "cinagroup/cinatoken",
+          "--json",
+          "databaseId,name,headSha,status,conclusion,url,jobs,createdAt,updatedAt"
+        ],
+        "cwd": "C:/cinagroup/cinatoken",
+        "actualExit": 0,
+        "signal": null,
+        "spawnError": null,
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-757-ci-terminal-observer-6fcdbd7046af4bc89f5c9935f0db1dcc\\release-initial.stdout.log",
+          "bytes": 2168,
+          "sha256": "79b7697d192195f557f07357823a5d8d979f07e60d71f39c5b174e57eaafdeab"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-757-ci-terminal-observer-6fcdbd7046af4bc89f5c9935f0db1dcc\\release-initial.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    }
+  ],
+  "logs": {
+    "native": {
+      "at": "2026-10-06T07:41:32.502Z",
+      "finishedAt": "2026-10-06T07:41:41.399Z",
+      "executable": "C:/Program Files/GitHub CLI/gh.exe",
+      "args": [
+        "run",
+        "view",
+        "37429192670",
+        "--repo",
+        "cinagroup/cinatoken",
+        "--job",
+        "112155793299",
+        "--log"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-757-ci-terminal-observer-6fcdbd7046af4bc89f5c9935f0db1dcc\\native-terminal.stdout.log",
+        "bytes": 686769,
+        "sha256": "2cb75abc0fccb5bbfe9970f01cb94c9189b33cf9e507ef0bd425af65c6b57a63"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-757-ci-terminal-observer-6fcdbd7046af4bc89f5c9935f0db1dcc\\native-terminal.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "dispatch": {
+      "at": "2026-10-06T07:41:41.400Z",
+      "finishedAt": "2026-10-06T07:41:44.608Z",
+      "executable": "C:/Program Files/GitHub CLI/gh.exe",
+      "args": [
+        "run",
+        "view",
+        "37429192670",
+        "--repo",
+        "cinagroup/cinatoken",
+        "--job",
+        "112155793601",
+        "--log"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-757-ci-terminal-observer-6fcdbd7046af4bc89f5c9935f0db1dcc\\dispatch-terminal.stdout.log",
+        "bytes": 5163974,
+        "sha256": "cb5b522d4a5fbd95c0aef93626287383e0fb084fe605da81bc4691043a346d04"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-757-ci-terminal-observer-6fcdbd7046af4bc89f5c9935f0db1dcc\\dispatch-terminal.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  },
+  "fullLogOrder": [
+    "native",
+    "dispatch"
+  ],
+  "completeLogAttemptsPerJob": 1,
+  "collectionOnly": true,
+  "rootCauseConfirmed": false,
+  "ciActions": 0,
+  "repositoryWrites": 0,
+  "nativeExecutedLocally": false,
+  "derivedCiLogFiles": 0
+}

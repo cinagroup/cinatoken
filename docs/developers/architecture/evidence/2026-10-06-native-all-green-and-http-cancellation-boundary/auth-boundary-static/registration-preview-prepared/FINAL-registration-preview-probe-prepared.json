@@ -1,0 +1,281 @@
+{
+  "schema": "cinatoken-registration-metadata-remote-preview-preparation-v1",
+  "at": "2026-10-06T08:28:05.791Z",
+  "preparedOnly": true,
+  "collectionOnly": true,
+  "executionEligible": false,
+  "rootReviewRequiredBeforeExecution": true,
+  "remotePreviewStarted": false,
+  "workerdStarted": false,
+  "pgConnected": false,
+  "cloudflareApiCalled": false,
+  "repositoryChanged": false,
+  "credentialOrGateValueCreated": false,
+  "productionCauseProven": false,
+  "source": {
+    "file": "registration-metadata.worker.mjs",
+    "bytes": 4052,
+    "sha256": "38880c12a7c7107fc7906358f48d546294aa7fa21b939197810582ffc72b6b6b"
+  },
+  "configuration": {
+    "file": "wrangler.json",
+    "bytes": 662,
+    "sha256": "4863f9b290721b42e4eb6ba1bbbf850de7aa91c65752418c6e4f7a64ea08d554",
+    "workerName": "cinatoken-regmeta-20261006-351f55fa6a54",
+    "binding": {
+      "name": "HYPERDRIVE",
+      "id": "374f6da17aff4c968cadd8d6aa454c22"
+    },
+    "noProductionRoutes": true,
+    "noSiteOrAssets": true,
+    "noVarsOrTokenValue": true
+  },
+  "bundle": {
+    "file": "registration-metadata.bundle.mjs",
+    "bytes": 81031,
+    "sha256": "e7bf74113b91e7731e26b8a75e420b3c64e710dad13ed9c03ed7b3b440233070",
+    "postgresCloudflareConditionalExport": true,
+    "modules": 12,
+    "externalImports": [
+      "node:*",
+      "cloudflare:sockets"
+    ],
+    "notExecuted": true
+  },
+  "compiler": {
+    "tool": "esbuild",
+    "version": "0.27.3",
+    "syntaxChildren": [
+      {
+        "program": "C:\\Program Files\\nodejs\\node.exe",
+        "args": [
+          "--check",
+          "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-registration-preview-readonly-prepared-mqVPEM\\registration-metadata.worker.mjs"
+        ],
+        "actualExit": 0,
+        "signal": null,
+        "spawnError": null,
+        "stdoutBytes": 0,
+        "stderrBytes": 0
+      },
+      {
+        "program": "C:\\Program Files\\nodejs\\node.exe",
+        "args": [
+          "--check",
+          "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-registration-preview-readonly-prepared-mqVPEM\\registration-metadata.bundle.mjs"
+        ],
+        "actualExit": 0,
+        "signal": null,
+        "spawnError": null,
+        "stdoutBytes": 0,
+        "stderrBytes": 0
+      }
+    ],
+    "dryBundleOnly": true,
+    "wranglerNotImportedOrExecuted": true
+  },
+  "dependencies": [
+    {
+      "name": "wrangler",
+      "version": "4.127.1",
+      "packagePath": "C:\\cinagroup\\cinatoken\\node_modules\\wrangler\\package.json",
+      "bytes": 6711,
+      "sha256": "5d6bc5d81260d127d676dd67432927291084172bf2f17d16145fe0796f9fc65a"
+    },
+    {
+      "name": "postgres",
+      "version": "3.4.9",
+      "packagePath": "C:\\cinagroup\\cinatoken\\node_modules\\postgres\\package.json",
+      "bytes": 1814,
+      "sha256": "944d492614959389a5739ef2893bc1830fb773ff042159d9b331d43b2f6792e9"
+    },
+    {
+      "name": "esbuild",
+      "version": "0.27.3",
+      "packagePath": "C:\\cinagroup\\cinatoken\\node_modules\\esbuild\\package.json",
+      "bytes": 1463,
+      "sha256": "24655ca1d9c91fe7517a99ec27bf1125b46efae71b54a55125d2a930b6ad61f9"
+    }
+  ],
+  "wranglerSchema": {
+    "file": "C:/cinagroup/cinatoken/node_modules/wrangler/config-schema.json",
+    "bytes": 353691,
+    "sha256": "e42dc556dcb039aa1103d4811b1f58497e2676aceee20488d9ceb1d8ab712018",
+    "checkScope": "Pinned 4.127.1 recognized top-level keys plus explicit config shape assertions; not remote runtime acceptance"
+  },
+  "localDriverInputs": [
+    {
+      "file": "C:/cinagroup/cinatoken/node_modules/postgres/src/index.js",
+      "bytes": 15428,
+      "sha256": "4e21f5733e70d79cffc10d10d4ef01031de4a9ac862210e43f8870029fd103ed"
+    },
+    {
+      "file": "C:/cinagroup/cinatoken/node_modules/postgres/types/index.d.ts",
+      "bytes": 24766,
+      "sha256": "3e9763c4afdadcdca1a4f469ffed3dcbbf5eddfc2aa04b5e588b514e4f57f9f1"
+    }
+  ],
+  "queryContract": {
+    "method": "GET",
+    "path": "/registration-metadata",
+    "queryAndBodyIgnored": true,
+    "constants": {
+      "clientId": "cinatoken-admin",
+      "resource": "https://cinatoken.com"
+    },
+    "requestInfluencedSql": false,
+    "resultFields": [
+      "clientExists",
+      "clientDisabled",
+      "resourceExists",
+      "resourceDisabled",
+      "linkExists"
+    ],
+    "missingDisabledCoalescedFalse": true,
+    "missingIsDistinguishedByExistsBoolean": true,
+    "sqlPlan": "BEGIN READ ONLY → one parameterized SELECT → COMMIT; library ROLLBACK on error; finally parent sql.end({timeout:2}). No type-discovery query, no business writes.",
+    "sqlBindingCount": 2,
+    "debug": false,
+    "onnoticeIgnored": true,
+    "errorOutput": "Only fixed classification and /^[A-Z0-9]{5}$/ PostgreSQL SQLSTATE or null; no error message/stack/connection string/query/headers/token.",
+    "startupTimeouts": {
+      "connectSeconds": 5,
+      "statementMilliseconds": 5000,
+      "lockMilliseconds": 2000,
+      "idleInTransactionMilliseconds": 7000,
+      "clientEndSeconds": 2
+    },
+    "timeoutAcceptance": "Startup settings and readonly transaction must be honored in actual remote execution; any error is a failed read without fallback or reattempt."
+  },
+  "officialSources": [
+    {
+      "url": "https://developers.cloudflare.com/hyperdrive/configuration/local-development/#use-wrangler-dev---remote",
+      "facts": "Whole Worker remote development uses the configured deployed Hyperdrive; localConnectionString is ignored; remote resources can have real side effects."
+    },
+    {
+      "url": "https://developers.cloudflare.com/workers/local-development/bindings-per-env/",
+      "facts": "Hyperdrive does not support per-binding remote connections from a local Worker; fully remote development is supported."
+    },
+    {
+      "url": "https://developers.cloudflare.com/workers/local-development/#wrangler-dev-remote-legacy",
+      "facts": "Legacy remote dev uploads the Worker to a temporary preview environment. It does not isolate the bound production database."
+    },
+    {
+      "url": "https://developers.cloudflare.com/workers/wrangler/commands/workers/#dev",
+      "facts": "--ip controls the local listening interface. It is not proof of cloud endpoint network isolation."
+    },
+    {
+      "url": "https://developers.cloudflare.com/hyperdrive/concepts/query-caching/",
+      "facts": "Eligible read queries can be cached; fresh auth/permission metadata needs caching disabled. Transaction syntax alone is not cited as a freshness guarantee."
+    }
+  ],
+  "observedDate": "2026-10-06",
+  "rootReportedCacheGate": {
+    "authority": "Parent message; this producer did not issue CF request or read credentials",
+    "observedAt": "2026-10-06T08:20:44Z–08:20:46Z",
+    "rootActualChildExitReported": 0,
+    "hyperdriveId": "374f6da17aff4c968cadd8d6aa454c22",
+    "cachingDisabled": true,
+    "sourceReference": "Root real-auth-browser-6459… / cinaauth-hyperdrive-cache.result/json, partial path supplied, not independently pinned here"
+  },
+  "platformAccessBoundary": {
+    "networkPrivateGuaranteedByLocalIp": false,
+    "legacyPreviewTokenObservedInPinnedSdk": true,
+    "applicationGateRequired": true,
+    "tokenRequirements": "Future runtime-only random 32 bytes encoded as 64 lower-case hexadecimal. Secret must be confined to fresh private .dev.vars with secret_text binding, excluded from evidence and never printed. No secret created in this preparation.",
+    "bindingAccessBeforeGate": false,
+    "publicVersionPreviewWorkflowUsed": false,
+    "wranglerPreviewNewProductNotApplicable": "Official new Preview workflow requires 4.135+ and may be public by default; do not substitute that workflow for pinned 4.127.1 legacy dev.",
+    "peerSdkObservation": {
+      "authority": "Read-only boundary_peer message",
+      "wranglerVersion": "4.127.1",
+      "packageBytes": 6711,
+      "packageSha256": "5d6bc5d81260d127d676dd67432927291084172bf2f17d16145fe0796f9fc65a",
+      "cliFile": "C:/cinagroup/cinatoken/node_modules/wrangler/wrangler-dist/cli.js",
+      "cliBytes": 20557611,
+      "cliSha256": "ba531de00d3c21615f3d523df4e83a94d487de68d77225aa703463b6a2979406",
+      "lineRefs": [
+        "326858-326886 session/host",
+        "326898-326951 edge-preview POST",
+        "481210-481219 preview token proxy",
+        "324764-324775 local dev hostname"
+      ],
+      "scope": "Inspected upload chain does not call normal script PUT/versions/deployments/routes, but remote metadata lifecycle/deletion was not experimentally verified."
+    }
+  },
+  "conditionalRootExecutionPlan": {
+    "recommendation": "Do not execute until Root reviews this exact bundle/config and accepts the application gate as access control. Do not represent the cloud preview as loopback-private. Remote execution is not authorized by this preparer.",
+    "steps": [
+      "Copy only sealed source/bundle/config into a new unique runtime Temp. Preserve hashes; keep this prepared root STOPWRITE.",
+      "Root creates random32-byte private gate and private .dev.vars in runtime Temp, never echoing it and excluding the entire secret file from evidence. There are no database credentials or provider source env files.",
+      "Confirm active account and fixed binding/cache metadata already reviewed. Do not use localConnectionString or --remote:true on a local binding.",
+      "Start exactly one pinned Wrangler 4.127.1 legacy dev child using the argv below in runtime Temp, stdin pipes/no browser/no tunnel/no source watcher edits. Existing authorized CF credentials are supplied solely by the Root controller, not read here.",
+      "Await local listener ready via controlled child output/lifecycle and verify explicit 127.0.0.1/port. Do not health-GET the metadata path or retry it while waiting.",
+      "Send exactly one GET http://127.0.0.1:18767/registration-metadata with x-registration-probe-token header held in memory. Controller deadline30s; collect only status and strict5-boolean JSON or fixed failure+SQLSTATE. No redirects, query, body, Cookie/Authorization, preview URL/token, or raw Wrangler debug/error dump.",
+      "In finally shut the Wrangler child down once, wait/reap it, and verify the listener has closed; separately record real return/signal/forced cleanup. Do not report unknown cleanup as successful. Delete only this runtime Temp secret file after confirming child termination.",
+      "Record temporary preview lifetime/cleanup limits honestly. No additional authorize/client registration/resource/link APIs, no normal deploy, no domain/routes, no updates to binding or DB, no automatic retries."
+    ],
+    "program": "C:/Program Files/nodejs/node.exe",
+    "argv": [
+      "C:/cinagroup/cinatoken/node_modules/wrangler/wrangler-dist/cli.js",
+      "dev",
+      "--remote",
+      "--config",
+      "<NEW_RUNTIME_TEMP>/wrangler.json",
+      "--cwd",
+      "<NEW_RUNTIME_TEMP>",
+      "--no-bundle",
+      "--ip",
+      "127.0.0.1",
+      "--port",
+      "18767",
+      "--inspector-port",
+      "18768",
+      "--local-protocol",
+      "http",
+      "--log-level",
+      "none",
+      "--show-interactive-dev-session=false",
+      "--tunnel=false"
+    ],
+    "outerDeadlineSeconds": 120,
+    "oneGetDeadlineSeconds": 30,
+    "shutdownDeadlineSeconds": 10,
+    "actualReadExecuted": false,
+    "actualCloudPreviewClosed": false
+  },
+  "knownLimits": [
+    "Source/compile proof does not prove runtime socket/binding support, database role ACL, schema/table existence, or source deployment identity.",
+    "The temporary worker must bind real production Hyperdrive to answer metadata. Data isolation relies on explicit transaction and fixed SQL, not preview naming.",
+    "Public incoming preview network confinement is not guaranteed here; required application token gate is independent of platform preview token.",
+    "When default read-only startup settings are unsupported, execution must fail; no permission or connection fallback.",
+    "The future Root controller must avoid retaining CLI/debug output that might contain preview or authentication tokens.",
+    "No claim that generic CF metadata lifecycle leaves zero trace after dev shutdown."
+  ],
+  "preparationNegativeHistory": [
+    {
+      "file": "prepare-probe-v2.closed.json",
+      "actualReadonlyChildExit": 1,
+      "at": "2026-10-06T08:27:22.533Z",
+      "finishedAt": "2026-10-06T08:27:22.874Z",
+      "failure": "Esbuild ancestor directory resolution from the Temp entry reached C:/Users/cina and was denied; no profile contents read. Original V2 compiler/raw/closed preserved. V3 bundles only the existing in-memory source with explicit repository resolveDir, disabled inherited tsconfig and exact installed postgres workerd-export alias; no access escalation or source/config change."
+    },
+    {
+      "file": "prepare-probe.closed.json",
+      "actualReadonlyChildExit": 1,
+      "at": "2026-10-06T08:26:25.194Z",
+      "finishedAt": "2026-10-06T08:26:25.271Z",
+      "failure": "Original prepare-only.mjs had one extra closing parenthesis; SyntaxError before compiler/library code. Original script/raw/closed remain immutable. prepare-only-v2.mjs fixes only this syntax typo and appends this provenance."
+    },
+    {
+      "toolChunk": "4ae7d8",
+      "scope": "package.json subpath postgres is not exported; no dependency installation, later exact local package JSON read confirmed 3.4.9."
+    },
+    {
+      "toolChunk": "6f9efa",
+      "scope": "Preliminary local schema reader assumed schema.properties and printed a TypeError; the combined PowerShell tool ended0 after a later rg. No separate Node exit was captured and none is fabricated. The precise definitions.RawConfig path is used in this preparation."
+    }
+  ],
+  "fullG7": false,
+  "G8": false
+}

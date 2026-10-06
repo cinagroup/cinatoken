@@ -1,0 +1,28 @@
+{
+  "schema": "auth-addon-local-final-seal-command-closed-v1",
+  "closed": true,
+  "program": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2\\finalize-addon.mjs"
+  ],
+  "startedAt": "2026-10-06T08:54:25.714Z",
+  "endedAt": "2026-10-06T08:54:25.800Z",
+  "actualExit": 0,
+  "signal": null,
+  "timedOut": false,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/finalize-addon.stdout.log",
+    "bytes": 911,
+    "sha256": "0ad430010e191a60b356edda60fbeeaa7f60f914474338e30aa7b49385155365"
+  },
+  "stderr": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/finalize-addon.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "collectionOnly": true,
+  "networkRequest": false,
+  "runtimeExecuted": false,
+  "gatePassDerived": false
+}

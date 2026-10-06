@@ -1,0 +1,10 @@
+{
+  "schema": "exact-actual-exec-command-tool-receipt-v1",
+  "source": "Actual functions exec_command tool result; no reconstructed child stream claimed",
+  "chunk_id": "fc5efd",
+  "wall_time_seconds": 0.6052555,
+  "exit_code": 0,
+  "command": "& 'C:/Program Files/nodejs/node.exe' 'C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-observation-tools-87b2c4dae3a8480c87b50e9d4c2b8e8b/prepare-toolset.mjs'",
+  "syntaxOnly": true,
+  "ciQueried": false
+}

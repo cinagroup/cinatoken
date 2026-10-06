@@ -1,0 +1,32 @@
+{
+  "schema": "cinatoken-root-tool-observations-v1",
+  "asOf": "2026-10-06T09:04:00Z",
+  "atomicChildExitInferred": false,
+  "browser": {
+    "cuaInitialization": "getState failed twice with os error3, one reset; no binding established",
+    "openInCodex": "queued, not treated as opened",
+    "fallback": "Installed Playwright1.62.1, visible Chrome isolated newContext; no personal profile/cookie/storageState access or dependencies installed",
+    "v1NonTty": "stdin closed before click; owned Node PID20472 verified via exact command then stopped; initial Cim access-denied preserved in conversation",
+    "v1Tty": {"toolSession":11486,"browserClosedAt":"2026-10-06T07:50:24.990Z","laterControlCObservedToolExit":1,"atomicChildExit":null,"rawSeparatelyCaptured":false},
+    "v2Tty": {"toolSession":89351,"browserClosedAt":"2026-10-06T07:55:04.860Z","laterControlCObservedToolExit":1,"atomicChildExit":null,"rawSeparatelyCaptured":false},
+    "v3FileBridge": {"toolSession":77410,"browserClosedAt":"2026-10-06T08:19:00.481Z","observedToolExit":0,"atomicChildExit":null,"rawSeparatelyCaptured":false,"fullSanitizedEventJournal":"browser-v3-observations.ndjson"},
+    "v4FileBridge": {"toolSession":65637,"browserClosedAt":"2026-10-06T09:03:18.537Z","observedToolExit":0,"atomicChildExit":null,"rawSeparatelyCaptured":false,"fullSanitizedEventJournal":"browser-v4-observations.ndjson","authAttemptAfterReady":false},
+    "credentialsRead":false,
+    "sessionExported":false,
+    "loginCompleted":false,
+    "workspaceChosen":false,
+    "testKeyCreatedOrRevoked":false
+  },
+  "approval": {
+    "action": "One fixed OAuth association INSERT for existing enabled cinatoken-admin / https://cinatoken.com after row locks and before/after checks",
+    "toolOperation": "exec_command require_escalated",
+    "result": "CreateProcess rejected before child creation",
+    "reviewerReason": "该操作会在生产认证数据库中持久新增 OAuth 客户端与资源的授权关联，改变安全边界；虽范围狭窄且有事务保护，但用户未明确批准这一具体生产权限变更。",
+    "childCreated":false,
+    "actualChildExit":null,
+    "repairWorkerCreated":false,
+    "databaseRepairExecuted":false,
+    "followup": "Asked user explicitly to approve only this fixed missing association; pending at snapshot time. No workaround, indirect execution or rejected-action retry."
+  },
+  "gatePassDerived":false
+}

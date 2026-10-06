@@ -1,0 +1,1166 @@
+{
+  "schema": "new-evidence-candidate-complete-owned-root-stopwrite-v1",
+  "at": "2026-10-06T07:54:38.898Z",
+  "STOPWRITE": true,
+  "filesBeforeSelf": 231,
+  "files": [
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/analyze-terminal.closed.json",
+      "bytes": 883,
+      "sha256": "7edd189b864a36a79b874e22ea796fac74fd1e36c939a9c7232766b7e262ea02"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/analyze-terminal.mjs",
+      "bytes": 9908,
+      "sha256": "8d904b32006714d327c70d504de88f93c6afca95f3fb760f4f8d329c5929650a"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/analyze-terminal.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/analyze-terminal.stdout.log",
+      "bytes": 1857,
+      "sha256": "9b9e22bd2da4fdd1c492c54ad95a0c62ecc23dcc643bb83af5ce096f707e1ee6"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/capture.mjs",
+      "bytes": 2442,
+      "sha256": "826ea219068489ab39dcf15bce0a168854f3d91ed82788057f5141931f1a6597"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/close-audit.closed.json",
+      "bytes": 906,
+      "sha256": "05bd4d76284333272da84c3b71335557f6814f47b6d92bb013c7a0a2b041f423"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/close-audit.mjs",
+      "bytes": 4649,
+      "sha256": "bd38e2bedb283fa3b4bc13b481e1b5c9e0cebb5b422208f7bd45c01270c99ddb"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/close-audit.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/close-audit.stdout.log",
+      "bytes": 1294,
+      "sha256": "f9db42b0532b4231fe39cf472ed6b76a43dd45076e05baa6017798abb6f74032"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/CLOSED-byte-and-semantic-audit.json",
+      "bytes": 1514,
+      "sha256": "65365a1767cd1bbd30d659c72e20ba0776869b51f41d98ddd3ec3f246676a8f6"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/collect-terminal.closed.json",
+      "bytes": 883,
+      "sha256": "84a72e7da6216bf4893308482fed75c30301626b07ca5cc956a389730a422be7"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/collect-terminal.mjs",
+      "bytes": 3400,
+      "sha256": "e0e1fe76627ee863a8454993190bdbdf1e3abb71bd75f67ff25764fc879fac7f"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/collect-terminal.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/collect-terminal.stdout.log",
+      "bytes": 4013,
+      "sha256": "538734e7336f15dc55526b4e4599089ec64d8acccfcb8d48506a74a397bd8c3f"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/commit-runs.closed.json",
+      "bytes": 1055,
+      "sha256": "0e54ee1aba9da3f144181f77900342148f7556cdfc2d6f66a8e03516ce4808db"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/commit-runs.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/commit-runs.stdout.log",
+      "bytes": 1575,
+      "sha256": "0bb747cc58739598dcd0ec966bbddb2688e483f3614928813f1b7f55d27f38ac"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/compose-initial.closed.json",
+      "bytes": 957,
+      "sha256": "c375ca2b05d33c1074d4a17cceb33255cb38bf32dee7e08e5f09c57a9717e1bd"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/compose-initial.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/compose-initial.stdout.log",
+      "bytes": 2424,
+      "sha256": "4af328444a4039c9b771e930f3f90abd86e2a7a8f9b4cd1ac789bb97dcaecb85"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/compose-terminal.closed.json",
+      "bytes": 959,
+      "sha256": "f271ba123f1ca48742a98c3530143e13952af01ea4ecbec94771b0a2c03215ed"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/compose-terminal.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/compose-terminal.stdout.log",
+      "bytes": 2645,
+      "sha256": "780510b66985fada730fffb3758645982ea98ece774669cb5db61d7e5e921496"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/dispatch-terminal.closed.json",
+      "bytes": 918,
+      "sha256": "a98f06beb0e48f1ae3e2ff1bc902e7beec3f6ab5e4d50930983451da04ea71a0"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/dispatch-terminal.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/dispatch-terminal.stdout.log.gz",
+      "bytes": 336830,
+      "sha256": "11981ce9855ce50d6481beed62ce543d18859a688e892d970e6d486828febee0"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/FINAL-ci-terminal-observer.json",
+      "bytes": 147528,
+      "sha256": "69bc2182a57f4b85718024a782ce26b5c58463d57f9af7f9d87a17837b8cd83b"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/INITIAL-ci-state.json",
+      "bytes": 13634,
+      "sha256": "c6d2a116c840d7ff378d9a4d3c6ef0da442173813b073487e7168f492efe5740"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/native-terminal.closed.json",
+      "bytes": 913,
+      "sha256": "cd58042328587468be2a684d08f141ad2f4b580ad0af41152e1bf9fbd96dcd4b"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/native-terminal.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/native-terminal.stdout.log.gz",
+      "bytes": 48647,
+      "sha256": "ba9e35579fb102628c520f8d759fba6acf0102be57df1995b701788256e1fb27"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/observe-initial.closed.json",
+      "bytes": 880,
+      "sha256": "2b84269ddc043666f1db41aeea8c9e6cb01d32a606786b7e4a89e56836c1b80a"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/observe-initial.mjs",
+      "bytes": 2043,
+      "sha256": "633839b5205f84067a2c2c32291e1d0054b3ebec9065ec55f41aec5ac4d25b08"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/observe-initial.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/observe-initial.stdout.log",
+      "bytes": 4377,
+      "sha256": "418209f39b6fb3ac4193b1863bcc928a1d52d1642977b15843e3119f4edff62d"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/original-proxy-workflow.closed.json",
+      "bytes": 872,
+      "sha256": "4272cc956180964a28075825ab89c62bad1e699efa7b3caacb4f385afa38f975"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/original-proxy-workflow.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/original-proxy-workflow.stdout.log",
+      "bytes": 45895,
+      "sha256": "8e883e7f21f77f8367d361f6bd3d060e16c241c28641b3eac85af6835841f152"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/original-workflow-map.json",
+      "bytes": 19963,
+      "sha256": "849f1634313605c8047aabf1d78a24a441fbf646680f0a6d6b851a2e792bb879"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/prepare-map.closed.json",
+      "bytes": 867,
+      "sha256": "d4179e3f553da13c37c61f85448b28017101faf8317cd1803e1a484e8839c106"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/prepare-map.mjs",
+      "bytes": 2397,
+      "sha256": "b26dc7221608bae628a0ddb83ac76096ffe2a3579b3a2e43b4f20796c8f53eff"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/prepare-map.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/prepare-map.stdout.log",
+      "bytes": 163,
+      "sha256": "334d232d5a883ffbef94622b07530c3929be23b9f6b7e18c0666e2984766d113"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/prepare-tools.closed.json",
+      "bytes": 873,
+      "sha256": "a9510bf84e5acf4a9fd4fe8e3d84dede6a0850a90c2c27c9950f333c557ad4bc"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/prepare-tools.mjs",
+      "bytes": 2527,
+      "sha256": "7d962ad82de03eb75f79cfdceebec6bcc630adc8dcf885920adacb3363d1e512"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/prepare-tools.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/prepare-tools.stdout.log",
+      "bytes": 195,
+      "sha256": "6649bf92f4ba90224aa7384648ca00b44d3a8d04cb2d163d4ac46a3a03f3b4b1"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/proxy-initial.closed.json",
+      "bytes": 954,
+      "sha256": "97f5c19b0613b9a35463f0018d502ba0cbacff240c6d4ce52b552257f4a85f77"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/proxy-initial.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/proxy-initial.stdout.log",
+      "bytes": 47524,
+      "sha256": "03c15f0631f34ad5544bdefa88db90a591566b9004d9c507c2fd6775575c3834"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/proxy-terminal.closed.json",
+      "bytes": 956,
+      "sha256": "07bc5896bf77bd1ba0fb850a01bd782fe9daee624c45f59929a0012d2e8bf98f"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/proxy-terminal.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/proxy-terminal.stdout.log",
+      "bytes": 49493,
+      "sha256": "1be6381b0c54f7621427f7063d64c9f0015edbd8edc24af2bce5f270dff4c3e7"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/proxy-watch-1.closed.json",
+      "bytes": 996,
+      "sha256": "07855020003ac88af6d59e1a0d8b89bc38284ac61e88c54ea6091d7590936cfd"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/proxy-watch-1.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/proxy-watch-1.stdout.log.gz",
+      "bytes": 4976,
+      "sha256": "4d5d1c807aa740f2ad3ae20fb2f0e67682345a395c1297a87d633dc1e05f672a"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/release-initial.closed.json",
+      "bytes": 957,
+      "sha256": "82afcd246d4a39fc066b1b85162c063fa4f89c8b633021b79ffe7ccfc5bfe17d"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/release-initial.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/release-initial.stdout.log",
+      "bytes": 2168,
+      "sha256": "79b7697d192195f557f07357823a5d8d979f07e60d71f39c5b174e57eaafdeab"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/run.mjs",
+      "bytes": 295,
+      "sha256": "947535c0840e81163e23aac295e120917be16ee51e3e0819fac46437c5f06d87"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/seal-terminal.mjs",
+      "bytes": 2298,
+      "sha256": "10afb87b6fdedafbf83bdde58764b2253b9815db847d0580769c86cae61514a8"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/TERMINAL-ci-collection.json",
+      "bytes": 10615,
+      "sha256": "8831850276dbd9415757c37a09eb779077e6592f68bf57d60746a3db6acfce87"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/TERMINAL-STOPWRITE-SEAL.json",
+      "bytes": 29790,
+      "sha256": "dcd8d14258360d77a2ab8ce0f38adcad51bb6195f2b55b3427796b35dec34d7e"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/TOOL-source-provenance.json",
+      "bytes": 3474,
+      "sha256": "46652849e92a7bfb803a69d75670dbb3320ccd28fa7e3752af4f26eec959d514"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/verify-initial.closed.json",
+      "bytes": 955,
+      "sha256": "5b09995c54e132c54224c1cca67830fddcbf87fbac7e2990aed358a45add1f4c"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/verify-initial.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/verify-initial.stdout.log",
+      "bytes": 1698,
+      "sha256": "54727a0ccb27dd07f377e8acc28b2bb3c95ead01ae29d4fc0a71d8939ade1ade"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/watch-live-read-tool-observation.json",
+      "bytes": 1579,
+      "sha256": "990317e26e722f534e708273d71a2b3c9f6acad297c57e3ac67a3111a8cb019e"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/watch-progress.closed.json",
+      "bytes": 877,
+      "sha256": "9a7efbb886438d38809e035a06d740d01dd009802d23d2312b097ef9a7367dd7"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/watch-progress.mjs",
+      "bytes": 2346,
+      "sha256": "0fbd6867159492fd91c655df4f2006896a49a555b19559731712132b2a7ec102"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/watch-progress.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/watch-progress.stdout.log",
+      "bytes": 1284,
+      "sha256": "25b26814618c9cff4fdc82cf80cd23933203c9686409e87895e6e1134f80c708"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/watch-proxy.mjs",
+      "bytes": 1596,
+      "sha256": "2a7c3b4ac451d14a7f69dcfd55d6cb92029cdc350beffc35ca574dd2d83a7d6a"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/web-initial.closed.json",
+      "bytes": 949,
+      "sha256": "3524e2cb9c3ecd355192aa3139ef83c5154fc5295ab416535df84126ab34829c"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/web-initial.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/web-initial.stdout.log",
+      "bytes": 6861,
+      "sha256": "9851371d66b89a4244f28dd17536ac95362204b0a4598c6d4acf7ae27006061a"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/web-terminal.closed.json",
+      "bytes": 951,
+      "sha256": "46a1b47d2f73545a8ab9e2188de6910870340ec3d2b7e8826350750a00ac9308"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/web-terminal.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/ci-terminal/web-terminal.stdout.log",
+      "bytes": 7397,
+      "sha256": "551dd3067641d18df46da8519f255c2f3c7a99cdd831dfdfae2002e011ac06c9"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/g2-readonly/capture-readonly-child.mjs",
+      "bytes": 1781,
+      "sha256": "fb9f53e13d52040bb04952e2c205c1b2df4a9ba1cf55883d2104e45a87d56971"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/g2-readonly/FINAL-next-real-acceptance-readonly.json",
+      "bytes": 39663,
+      "sha256": "9a3d9e3801afbd4111cb3be31223e370c75cab7b44f63fc76747896bb1d5c437"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/g2-readonly/finalize-and-seal.mjs",
+      "bytes": 3388,
+      "sha256": "39e076b0efaed3eae18c24a7ea93ed5f5967f5b2da7d32905dfcd3e3fa600d9b"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/g2-readonly/next-real-acceptance-analysis.json",
+      "bytes": 36731,
+      "sha256": "7d91bf955179b2cd0303f0ac6c2d6a8ed7bd1033a428953cf597032b83615ea7"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/g2-readonly/read-next-real-acceptance.mjs",
+      "bytes": 12735,
+      "sha256": "4a58a5263e2c124ce4fdc2a2b8774a1e663d02535a63d19d31411b604860aead"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/g2-readonly/reader-failed-tool-observation.json",
+      "bytes": 669,
+      "sha256": "1ffa198b005d7dab0bb3e0c7674a42c2f760b61830455a05607063333a3210a2"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/g2-readonly/readonly-source.closed.json",
+      "bytes": 1298,
+      "sha256": "520355e120b0d2abd20071b8165f371439b4ac3ddead4106816270ec0c512763"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/g2-readonly/readonly-source.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/g2-readonly/readonly-source.stdout.log",
+      "bytes": 1763,
+      "sha256": "f07a12654adc9847b44699307032dee5492f5aaf3fef2984d6c39129cbd51a3e"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/g2-readonly/STOPWRITE.json",
+      "bytes": 2096,
+      "sha256": "d58b69aab4a9944ef4216e91f82eb1bc65e24a20c48508d58008d7954cdb46d6"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-network-failure/binding.json",
+      "bytes": 785,
+      "sha256": "af4175d833c5d8c31251e949fa1238ab7c13e2a5c87eae8719919739977bcb43"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-network-failure/create-network-watch-binding.mjs",
+      "bytes": 854,
+      "sha256": "f4115e1bcfafcf12c92d3934f9d289728433dd7556a84548b40d20ec7986b3a7"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-network-failure/STOPWRITE.json",
+      "bytes": 1453,
+      "sha256": "41c86330ee35c689b69e3d4833d6edcc342b4e06c1c828588a4a89f4d8c6e3f8"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-network-failure/watch.result.json",
+      "bytes": 1348,
+      "sha256": "908eb94cac33c96184be1e59f5ed7977fec5ebc43aeb460f6db1906c65e0b9e9"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-network-failure/watch.stderr.raw",
+      "bytes": 249,
+      "sha256": "29fde823bf5bdb54d35c9135f5f9919e0a344b648ec0a9f6c69bf8fbd550576b"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-network-failure/watch.stdout.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-observation-tools/extract-artifact.py",
+      "bytes": 4052,
+      "sha256": "0efa348bb60f690383046cc68fce7a6b317b9c8e7ad2af071742ff6ea11989d7"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-observation-tools/freeze-prepared-tools.mjs",
+      "bytes": 2173,
+      "sha256": "88b48730e70e1a8157ffc6ec518568bb37143b9632c9d1e0459279327d3c9ae9"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-observation-tools/observe-ci-command.mjs",
+      "bytes": 6876,
+      "sha256": "9d2e2b454f36536cfc3dcefc1a61a6ed8e20ddafe99b576c28c3caf365855c75"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-observation-tools/prepare-toolset.actual-outer-tool-receipt.json",
+      "bytes": 463,
+      "sha256": "e5e936be1b66e5326c98d8652203649a940ef370f4e4b708c683fe3e859f4439"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-observation-tools/prepare-toolset.mjs",
+      "bytes": 3177,
+      "sha256": "63292ae487c8c285537888d75fd70018a2d01b465e674650c272e38a1ea35013"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-observation-tools/READY-observation-tools.json",
+      "bytes": 3337,
+      "sha256": "cf5c18158cce05c8b38c92aff2e1231740155f01264c5325313be9915ed98db4"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-observation-tools/review-artifact.mjs",
+      "bytes": 13469,
+      "sha256": "f7300e40bfed3db9c7eaf216a381e10a16b65b4efdb4a8025cf875007e64663d"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-observation-tools/run-artifact-audit-command.mjs",
+      "bytes": 2729,
+      "sha256": "352f91bcf983484d927c39a1ebd69cfc6f3c7a0433b6cdf63a50efed18c2e4d0"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-observation-tools/STOPWRITE-tools.json",
+      "bytes": 5753,
+      "sha256": "4634a684e450faf481072af63b90aaabcf7510c693e94bf1f7588aaecc547a9b"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-observation-tools/syntax-observe-ci-command.result.json",
+      "bytes": 1095,
+      "sha256": "3078bed15f9ca72067434f2539c5fdb72f3e7ee2bf6eb02763701864d3936d2c"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-observation-tools/syntax-observe-ci-command.stderr.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-observation-tools/syntax-observe-ci-command.stdout.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-observation-tools/syntax-python.result.json",
+      "bytes": 1267,
+      "sha256": "67c6fa7619e5f6a8ebd3f36ed4c21c9eb38f0b7930592b3c83ad01553a371aee"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-observation-tools/syntax-python.stderr.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-observation-tools/syntax-python.stdout.raw",
+      "bytes": 41,
+      "sha256": "1c9f08d0ba19217980cbe0fd294481f1bf044561632d39404595ba9c59124dd5"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-observation-tools/syntax-review-artifact.result.json",
+      "bytes": 1086,
+      "sha256": "4bcda2c01b981c6929dac729202a519f9efd2b5e21d8df0ce4d86766b2d62d83"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-observation-tools/syntax-review-artifact.stderr.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-observation-tools/syntax-review-artifact.stdout.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-observation-tools/syntax-run-artifact-audit-command.result.json",
+      "bytes": 1119,
+      "sha256": "dfda6bce8bc9acbeb9110b8c88c738ab2cf15faa7bc284f1c4a9634a43920ba2"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-observation-tools/syntax-run-artifact-audit-command.stderr.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-observation-tools/syntax-run-artifact-audit-command.stdout.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/artifacts-terminal.result.json",
+      "bytes": 1379,
+      "sha256": "c59cd0ea8069f771a826bd2ddcdc66c68ee05fc61c19d16f384e90e68b96f113"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/artifacts-terminal.stderr.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/artifacts-terminal.stdout.raw",
+      "bytes": 771,
+      "sha256": "e90a29d0871c352cdc7274f6506b917d95609167bfee77fc4b36a71c969913b4"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/binding.json",
+      "bytes": 1105,
+      "sha256": "3dc299ba80984c51f4be793fff09c4697424149cd6b632f2a26ea6db595e5b0b"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/download-artifact-once.result.json",
+      "bytes": 1380,
+      "sha256": "58f5bc4c1206c08cfec95fbc1bb18c241826fd59294865cc06ca3d807b2f9156"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/download-artifact-once.stderr.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/download-artifact-once.stdout.raw",
+      "bytes": 115610,
+      "sha256": "86e78aec5cf52ebdf9d2e538dbfe1d82a5852a1099102801eef78fec3f30c0f4"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/extract-artifact.result.json",
+      "bytes": 1372,
+      "sha256": "72805d24cd03c26a94112364e122c7fc7f55e2a80af98e937c791146a686a170"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/extract-artifact.stderr.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/extract-artifact.stdout.raw",
+      "bytes": 108,
+      "sha256": "7c75edc75681e1ee8c58d9a082c4b6900e653699d4319b1854db0005a8f417b4"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/FINAL-linux-artifact-independent-review.json",
+      "bytes": 54492,
+      "sha256": "d968ef3aefcc1e85ce8efe93d0363edcb4fdf6daa6de4a67cef20871b7e52de8"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/FINAL-observation-seal-summary.json",
+      "bytes": 30025,
+      "sha256": "76b96252b57b08b90705fa6042d9d31261a49efaf40903774c386f7176944a49"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/final-seal.result.json",
+      "bytes": 1037,
+      "sha256": "17a0a50f572b7b233b6908fe82aad476ef7052f65d89fbdfd01fce162303f5f0"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/final-seal.stderr.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/final-seal.stdout.raw",
+      "bytes": 611,
+      "sha256": "f558d5fb3c44a0fcc99f683689539327ef0d6c6640351d42c6ac90b79c3376fd"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/finalize-observation.mjs",
+      "bytes": 6360,
+      "sha256": "83b3d8edff69f99a86a0e032c48a5c5309777a2fba8c3a7797be440d668deee3"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/full-artifact/cinatoken/cinatoken/.github/workflows/v364-direct-socket.yml",
+      "bytes": 1575,
+      "sha256": "f4e2b9da3c9be4374e4945c7daab7dc3c166fb4c9e1d2d61ff804ca3dc3b04e9"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/full-artifact/cinatoken/cinatoken/scripts/diagnostics/v364-direct-socket/execute-owned-linux.py",
+      "bytes": 15959,
+      "sha256": "c635a435873185363faf23e1cbaa6887b858a9f23e32882a6ce54ff5405e15e0"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/full-artifact/cinatoken/cinatoken/scripts/diagnostics/v364-direct-socket/native-reader-calibration.mjs",
+      "bytes": 2546,
+      "sha256": "e838769c950b49056ffc4e6580e41d8ec15a245db6efff6829c170642fb8ee8f"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/full-artifact/cinatoken/cinatoken/scripts/diagnostics/v364-direct-socket/queued-write-source.mjs",
+      "bytes": 3557,
+      "sha256": "93417db1e3b0edbb3dd06b504bddee18ba6fbb1bbf31141cd20ce119dea7fb5d"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/full-artifact/cinatoken/cinatoken/scripts/diagnostics/v364-direct-socket/README.md",
+      "bytes": 6774,
+      "sha256": "97bbd1c8bf42a1aa761fe526fc50a4057c65e790c8fbe659fcc3cd97d938c357"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/full-artifact/cinatoken/cinatoken/scripts/diagnostics/v364-direct-socket/run-direct-socket.mjs",
+      "bytes": 52009,
+      "sha256": "8fbaaed9523ecb227bd0e47ce8092d7432c08f8b67fd8650569d69d711ef48a8"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/full-artifact/cinatoken/cinatoken/scripts/diagnostics/v364-direct-socket/sealed-package.json",
+      "bytes": 1190,
+      "sha256": "69cfacc9b02d66531a0624cdf980fb39a4f998745949970c2962b4691bfc17a5"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/full-artifact/cinatoken/cinatoken/scripts/diagnostics/v364-direct-socket/source-inputs.json",
+      "bytes": 5028,
+      "sha256": "a4046af64da2e2f61b37ee9ea92658bc2d54236052c859477c57d9049f62e3e9"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/full-artifact/_temp/v364-direct-socket-once-37429341568-1/closed-result.json",
+      "bytes": 27936,
+      "sha256": "c80314f6f8ad98cd48d028ed84ead64de4d98667e547dcb9202e327bde5357d3"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/full-artifact/_temp/v364-direct-socket-once-37429341568-1/events.json",
+      "bytes": 505693,
+      "sha256": "911585f8780744580221de6c26c901ade67a01b0c20ddcd6b7cac73803b919e4"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/full-artifact/_temp/v364-direct-socket-once-37429341568-1/events.ndjson",
+      "bytes": 390847,
+      "sha256": "c8145e82e21101bcf3242419eec06cbb031e715d82fa64df97daaaef95239712"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/full-artifact/_temp/v364-direct-socket-once-37429341568-1/executor-start.json",
+      "bytes": 693,
+      "sha256": "e52302d7170f9c606248c5ddd76a09de384951476942b5b60e143e27f7bf0342"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/full-artifact/_temp/v364-direct-socket-once-37429341568-1/executor.closed.json",
+      "bytes": 5914,
+      "sha256": "7d7f66a258298739f1d8e0616796fa288743e781415585407ab7951324100139"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/full-artifact/_temp/v364-direct-socket-once-37429341568-1/executor.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/full-artifact/_temp/v364-direct-socket-once-37429341568-1/executor.stdout.txt",
+      "bytes": 170,
+      "sha256": "4c73f735d5e89068119c4c408827539e91447c49b841ecd9cbb4e6e971552c9c"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/full-artifact/_temp/v364-direct-socket-once-37429341568-1/original-strict.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/full-artifact/_temp/v364-direct-socket-once-37429341568-1/original-strict.stdout.txt",
+      "bytes": 2870,
+      "sha256": "74f220d412dc232b65b51b0ec798951373a014d72df1128c657ae0dd503dbb57"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/full-artifact-index.json",
+      "bytes": 9103,
+      "sha256": "acb354edb6cba43cd4aa510bffda18cb90f5c1acffdc571e1723f7fab48f1efa"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/job-log-once.result.json",
+      "bytes": 1346,
+      "sha256": "b090a8cb5f6c5d7f62379ec3e8991b3e295b226f5bf9b6d889e9850007366978"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/job-log-once.stderr.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/job-log-once.stdout.raw",
+      "bytes": 23777,
+      "sha256": "aa8035c0b7b01ca6aff10752b355a06ea5bbf35d10b96a4c9dfc32daae899d38"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/jobs-terminal.result.json",
+      "bytes": 1374,
+      "sha256": "70c1fbc8e6a53e94e05b58b13863df3aa1bb79dfabdfa302f1a95bd04ed9ab33"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/jobs-terminal.stderr.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/jobs-terminal.stdout.raw",
+      "bytes": 2524,
+      "sha256": "7b4861f53b7862f5efa5c3a85d2052bca3552699a26b04ee470707d0d2657859"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/prepare-local-review-v2.mjs",
+      "bytes": 1632,
+      "sha256": "5658366be4ce647126445d3e6a9bc1a287cb0c547a6e3a704f0466bafd90d484"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/review-artifact-v2.mjs",
+      "bytes": 13686,
+      "sha256": "f98f570ece34be81c79702b9a26f01acdabe784c2113ca5f22e48e80ab45643b"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/review-artifact-v2.result.json",
+      "bytes": 1314,
+      "sha256": "10de34da1e853d0d23edebc9da63ecc49f442069476ed8073ba653fe2b130387"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/review-artifact-v2.stderr.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/review-artifact-v2.stdout.raw",
+      "bytes": 578,
+      "sha256": "372f3b948b02bcdbb65a890923903089daf6f7e6b28ff04c99272e5bd9b1acab"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/review-artifact.result.json",
+      "bytes": 1317,
+      "sha256": "fbc34e6a511c9f8f74f4dc1451c3524674b37b9b5f575356c92558e566cd303b"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/review-artifact.stderr.raw",
+      "bytes": 1647,
+      "sha256": "c480b783755588ab7fc5915f5c028395fda16214d133f186abc6a4647bab0eb1"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/review-artifact.stdout.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/run-final-seal-command.mjs",
+      "bytes": 2563,
+      "sha256": "a736e1fc25bd3175ff8eae8ff0e5383a22bfc6d355ad60b255793b6d9a785726"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/run-local-review-v2.mjs",
+      "bytes": 2735,
+      "sha256": "dc8661554f21b77d0f491e77a4ba13b0cc1d6c7dc5f892ed439de723286989df"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/run-terminal.result.json",
+      "bytes": 1340,
+      "sha256": "030a5273682062e6264a864ad0d4ab7cf4e96052dfd1865f52ca73ba80d33c62"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/run-terminal.stderr.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/run-terminal.stdout.raw",
+      "bytes": 12430,
+      "sha256": "3d103f6af3f75903576513671f492a9a4f132a0da94690e38afd7b07f1fd7327"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/STOPWRITE.json",
+      "bytes": 15640,
+      "sha256": "a3bf35f9a74a8910d5b45dbecc9b43df9f82aa0b194a708c9dcf96698b28403f"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/watch.result.json",
+      "bytes": 1348,
+      "sha256": "e6486f6faf77fcb0855a325e6778f986569b06125cb9a31afabc34300e97ca58"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/watch.stderr.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/manual-runtime/watch.stdout.raw",
+      "bytes": 101,
+      "sha256": "cf45c4deab1f14cd2e1421cc3265519022297d8eb3b32a8f67e244d4625d2476"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/official-source-research/capture-readonly.mjs",
+      "bytes": 1405,
+      "sha256": "73f8ec0159b113f5339119649fe0ccfd402740897076ddf439d9f91009bb4b67"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/official-source-research/FINAL-v364-official-cancellation-boundary-research.json",
+      "bytes": 19281,
+      "sha256": "85af667d82a199e3d5043c0ec98f02902aa244380c716cfc4fbbe88a69667948"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/official-source-research/primary-source-records.json",
+      "bytes": 458173,
+      "sha256": "3bdf82b120dc763944f530a1af4a2cb42b177b62e81c0f3ef14b1bdd21495f81"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/official-source-research/primary-sources-get.closed.json",
+      "bytes": 902,
+      "sha256": "d06ce49b9eb7ca0da8383da5bf4cad2655495bd2562420a1e0ee65819f3d79fe"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/official-source-research/primary-sources-get.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/official-source-research/primary-sources-get.stdout.log",
+      "bytes": 625,
+      "sha256": "da6e3cd2116215fa642e46ed91e9465189a64d7919bba289f1418d6a1313e18a"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/official-source-research/read-primary-sources.mjs",
+      "bytes": 2986,
+      "sha256": "9821d0af37e7f62011288c9b5664e986b9529a58a993de8a0548116a371c518c"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/official-source-research/STOPWRITE-peer-seal.json",
+      "bytes": 2076,
+      "sha256": "5361be0b55c122bd79a2aa07356329d472e52a3ed21c9c9f593708246cd96e47"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/playwright-fallback/capture-and-seal.mjs",
+      "bytes": 2456,
+      "sha256": "9c410cfb7beeb36c6a2175779a90d05089859dfd900eadf4f446a301b1e7c7b5"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/playwright-fallback/FINAL-playwright-fallback-readonly.json",
+      "bytes": 7866,
+      "sha256": "e175196215a281fb045bb787f79da15ddf1e31d64ea708ec967a60f49af5318e"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/playwright-fallback/prior-directory-read-tool-observation.json",
+      "bytes": 605,
+      "sha256": "8675443c1432cb0fb1fe1cfc8416c73296077fc732bb0cf4990ef53d9b03dcde"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/playwright-fallback/readonly-fallback-source.mjs",
+      "bytes": 6166,
+      "sha256": "48052b379ea4496b0382cbc99db613baf0eac462936f6e6946e523041bf51897"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/playwright-fallback/readonly-fallback.closed.json",
+      "bytes": 1215,
+      "sha256": "5389718b19639bfc8aed3617931cc20823a33dfea459782919d0c5d88b77f70b"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/playwright-fallback/readonly-fallback.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/playwright-fallback/readonly-fallback.stdout.log",
+      "bytes": 402,
+      "sha256": "cba12db43a54ab1dacad6c66f979714cd6a2d95a483a4c460610089d7e3ef138"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/playwright-fallback/STOPWRITE.json",
+      "bytes": 1663,
+      "sha256": "500a6ce4b867943689ef314e2fe504c737c8d8b8c8b669b8e439c49237d66efe"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/source-control-selected/clean-after-retention.result.json",
+      "bytes": 811,
+      "sha256": "a53aa3ae4115039222841a235db51eb951a9ae3926991e9523092c051b650da8"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/source-control-selected/clean-after-retention.stderr.log",
+      "bytes": 160,
+      "sha256": "6e1eceb7157a6dd83e27b00cc96938a50132ed7fadf81d3f0954f8257e1ba406"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/source-control-selected/clean-after-retention.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/source-control-selected/commit-retention-backlog.result.json",
+      "bytes": 899,
+      "sha256": "4cf3ba20947991df445999354f93ea41d5d444079a2f5576e8b88d9b3708202e"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/source-control-selected/commit-retention-backlog.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/source-control-selected/commit-retention-backlog.stdout.log",
+      "bytes": 47704,
+      "sha256": "a72f94e95cc24614991e2c5fb8139e12c03e77f74f1628c3d5646e2dd40d0ea6"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/source-control-selected/committed-retention-head.result.json",
+      "bytes": 816,
+      "sha256": "05a50cdca3586c3ce2870395f0d11a531b3ad477165b27f3e26fe6c31d1fe214"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/source-control-selected/committed-retention-head.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/source-control-selected/committed-retention-head.stdout.log",
+      "bytes": 41,
+      "sha256": "3e75a4050cf72ff060f11148578d545cf416079c20a807d1fbd8710c702452dd"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/source-control-selected/dispatch-queued-diagnostic.result.json",
+      "bytes": 879,
+      "sha256": "e032a4d6c017c7ed40d85b37b6b29fa41812cf859fe00f8528049d463e114cf7"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/source-control-selected/dispatch-queued-diagnostic.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/source-control-selected/dispatch-queued-diagnostic.stdout.log",
+      "bytes": 64,
+      "sha256": "0bf894dee942be148984c1bee921328bf3d7526f3631f9a38c307fcf9be8b948"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/source-control-selected/push-retention-backlog.result.json",
+      "bytes": 821,
+      "sha256": "4bdab1498bfb1b4b73f15f804fc4734babe42c666392ed924f48236a1c8fa789"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/source-control-selected/push-retention-backlog.stderr.log",
+      "bytes": 78,
+      "sha256": "87b56b78d6af5d32c0a3931daf7e46ab4d6e8bfaa8cba38d9540d88605653bad"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/source-control-selected/push-retention-backlog.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/source-control-selected/queued-diagnostic-initial.result.json",
+      "bytes": 937,
+      "sha256": "8bc5a34e1d73d910de087cfbee4b45251b686fc1f9fade5a7abf2c0f3fe95405"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/source-control-selected/queued-diagnostic-initial.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/source-control-selected/queued-diagnostic-initial.stdout.log",
+      "bytes": 1977,
+      "sha256": "8c70a59ac5eec20cf2b108c2d90c81b78ab321ace90b92063ed668b4cca50e55"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/source-control-selected/remote-retention-head.result.json",
+      "bytes": 854,
+      "sha256": "ba2bfbdff5c825c6e0b9444c56c0ae8219d81a1966b9858245b138a45a3aacc7"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/source-control-selected/remote-retention-head.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/source-control-selected/remote-retention-head.stdout.log",
+      "bytes": 57,
+      "sha256": "b71a5e828b9ee786bd9b4e379255947f14d4454034cdbe31996863699113097b"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/candidate-evidence/source-control-selected/run-closed-compact.mjs",
+      "bytes": 2130,
+      "sha256": "fac21f316bea714dbe068d95bff48281adee88a3c0b84ae0a360099389b81de8"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/collect-candidate.closed.json",
+      "bytes": 1119,
+      "sha256": "955c5813c83a7008d05bdfffef4df6d256f0fb76771027119470ef531ec42b71"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/collect-candidate.mjs",
+      "bytes": 8724,
+      "sha256": "746ff4e9357977b67fa5e562221dbd36f73df19b3f94225f750f56b4198d7096"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/collect-candidate.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/collect-candidate.stdout.log",
+      "bytes": 398,
+      "sha256": "4e601de282bffa76d3d2883f8ef3be7e75084cc536d8d5003de7e0e5dfc343bf"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/collection-config.json",
+      "bytes": 3248,
+      "sha256": "8b56ecbfac15f992d3af4161b9662fbafdee243330cdf43ec40d85ad592b5f79"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/FINAL-candidate-collection.json",
+      "bytes": 34834,
+      "sha256": "469a0a76f6e81bc8ded3eeea797c05b0b0ea0fcaa06844911b58a06bab4edf5b"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/finalize-candidate.closed.json",
+      "bytes": 1132,
+      "sha256": "fe5fa23cd74b5010fcf524d22d403e80d1bc176628c4e0046781ce0bf654ebd9"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/finalize-candidate.mjs",
+      "bytes": 6468,
+      "sha256": "cb8fff06952de282530f2a7133a5b0cd780c947c74f601739d7743877b1ac42a"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/finalize-candidate.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/finalize-candidate.stdout.log",
+      "bytes": 889,
+      "sha256": "b6696555b5b39d0ad4c1e43dd2a7fe8a357bf5767233c4f78c01032b83b78dca"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/inspect-seal-shapes.mjs",
+      "bytes": 909,
+      "sha256": "2cf61758e974afd562cdf6dffc84d2e1a29c366bff265fae8fa98a828eb9257f"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/PRELIMINARY-tool-observations.json",
+      "bytes": 813,
+      "sha256": "e26c0bdd43ab461c4fdd54cb5cba58f9697ac5adb237323540218bc727312d1e"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/REPORT.json",
+      "bytes": 234190,
+      "sha256": "51786faca8b523e354dae2ea89c6a63dae6c5613a7b1ff7dda8b243cd8180d6b"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/run-collection-command.mjs",
+      "bytes": 1721,
+      "sha256": "67a2fc51f8f53ee046acc0e226b955d2495ae943ec700f1d2221047afecb562b"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/run-final-candidate-command.mjs",
+      "bytes": 2401,
+      "sha256": "e51fe974072145540be7c31b3956f4e5b1ae316c39773f2cd07644d5669acdce"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/VERIFICATION.json",
+      "bytes": 799,
+      "sha256": "8a368cb1e579e3277f8d65a9af9a6a11cc09a59093f769e2913e359635978ef6"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/verify-candidate.closed.json",
+      "bytes": 1116,
+      "sha256": "1d178a4fb18e633461a707e4dfaaf0ff25368abafb8a40ef1782e82c21386e7b"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/verify-candidate.mjs",
+      "bytes": 2717,
+      "sha256": "aba3b227a65eb379df0fdf86a49354897faf3fd91cf0ebbe463ab67440b49048"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/verify-candidate.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/verify-candidate.stdout.log",
+      "bytes": 366,
+      "sha256": "e900af6cd73a9bbf32175ae70eaacf595ed322aa773b03b48820872ce4322319"
+    }
+  ],
+  "selfExcluded": "STOPWRITE-CANDIDATE.json",
+  "collection0NotAcceptancePass": true,
+  "repositoryModified": false
+}

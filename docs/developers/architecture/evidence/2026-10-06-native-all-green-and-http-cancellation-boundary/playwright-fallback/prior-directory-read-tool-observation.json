@@ -1,0 +1,15 @@
+{
+  "schema": "tool-returned-combined-directory-read-observation",
+  "toolChunk": "7b5b06",
+  "toolReportedExitCode": 0,
+  "reportedWallTimeSeconds": 3.0796397,
+  "error": "Get-ChildItem: Access to the path 'C:\\Users\\cina\\AppData\\Local\\ms-playwright' is denied.",
+  "affectedOperation": "Directory name listing only; no personal profile/cookies/password files attempted",
+  "otherClosedObservations": {
+    "bundledPlaywright": "1.62.1",
+    "bundledCore": "1.62.1",
+    "nextOptionalPeer": "@playwright/test ^1.51.1"
+  },
+  "rawSeparationNotProvided": true,
+  "overallCacheInventoryPassed": false
+}

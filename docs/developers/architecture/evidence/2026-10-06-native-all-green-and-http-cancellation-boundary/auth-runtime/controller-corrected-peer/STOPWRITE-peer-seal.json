@@ -1,0 +1,43 @@
+{
+  "schema": "cinatoken-registration-corrected-peer-stopwrite-seal-v1",
+  "createdAt": "2026-10-06T09:01:59.349Z",
+  "root": "C:/Users/cina/AppData/Local/Temp/cinatoken-registration-controller-corrected-peer-rgamZa",
+  "stopWrite": true,
+  "selfExcluded": "STOPWRITE-peer-seal.json",
+  "entries": [
+    {
+      "file": "FINAL-registration-runtime-controller-corrected-peer.json",
+      "bytes": 15031,
+      "sha256": "058bd9f09249fcf651875b3b3075a2c992d254aee2a3112dde4ba6b21c81cd80"
+    },
+    {
+      "file": "audit-runtime-and-controller.closed.json",
+      "bytes": 937,
+      "sha256": "1c041517ec7c037fee35c807c0e842a15d732438966eb0a4520c903a0b41e9fa"
+    },
+    {
+      "file": "audit-runtime-and-controller.mjs",
+      "bytes": 15123,
+      "sha256": "746d2524b9cd5d1a3ceae00cf62ab53bf7e009e840ab0b03fcf4aa5cfa9c7b68"
+    },
+    {
+      "file": "audit-runtime-and-controller.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "audit-runtime-and-controller.stdout.log",
+      "bytes": 346,
+      "sha256": "2dabdf32f846f954291abf939893be79850f76db6ceec88c7d67ee8f355dfd4c"
+    },
+    {
+      "file": "capture-readonly.mjs",
+      "bytes": 1405,
+      "sha256": "73f8ec0159b113f5339119649fe0ccfd402740897076ddf439d9f91009bb4b67"
+    }
+  ],
+  "originalRootRuntime": "Independent byte verification of existing public original child0 receipt/report/raw; no new remote execution",
+  "peerAudit": "Actual captured Node read/hash/AST audit0 with raw hashes verified; no SQL/CF/Worker/browser/Git/repo operations",
+  "falseAlertPreservedAndCorrected": true,
+  "preparedRepairIsNotLiveWrite": true
+}

@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-06T08:20:44.615Z",
+  "finishedAt": "2026-10-06T08:20:46.849Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-real-auth-browser-6459c6e3517098/read-hyperdrive-cache.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-real-auth-browser-6459c6e3517098\\cinaauth-hyperdrive-cache.stdout.log",
+    "bytes": 195,
+    "sha256": "8fe910934ccf17d413b7b7758fce7b6027f4c5ee4593c6b407eedb23f72a7a31"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-real-auth-browser-6459c6e3517098\\cinaauth-hyperdrive-cache.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "schema": "independent-read-only-review-command-closed-v1",
+  "closed": true,
+  "program": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10\\audit-stored-candidate.mjs",
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10"
+  ],
+  "at": "2026-10-06T08:16:12.373Z",
+  "finishedAt": "2026-10-06T08:16:12.779Z",
+  "actualExit": 1,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/stored-review-2.stdout.log",
+    "bytes": 216,
+    "sha256": "831d4f33238490644091386df065478bcb480dd7e538712e0dca1df4cb7b3dbe"
+  },
+  "stderr": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/stored-review-2.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "collectionOnly": true,
+  "runtimeExecuted": false,
+  "networkRequest": false,
+  "repositoryWrites": false
+}

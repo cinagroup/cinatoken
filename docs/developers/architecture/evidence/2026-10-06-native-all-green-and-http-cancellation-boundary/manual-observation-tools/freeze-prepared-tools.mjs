@@ -1,0 +1,13 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import {fileURLToPath} from 'node:url';
+const root=path.dirname(fileURLToPath(import.meta.url));
+const desc=file=>{const b=fs.readFileSync(file);return{path:file.replaceAll('\\','/'),bytes:b.length,sha256:crypto.createHash('sha256').update(b).digest('hex')}};
+fs.writeFileSync(path.join(root,'prepare-toolset.actual-outer-tool-receipt.json'),JSON.stringify({schema:'exact-actual-exec-command-tool-receipt-v1',source:'Actual functions exec_command tool result; no reconstructed child stream claimed',chunk_id:'fc5efd',wall_time_seconds:0.6052555,exit_code:0,command:"& 'C:/Program Files/nodejs/node.exe' 'C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-observation-tools-87b2c4dae3a8480c87b50e9d4c2b8e8b/prepare-toolset.mjs'",syntaxOnly:true,ciQueried:false},null,2)+'\n',{flag:'wx'});
+const files=fs.readdirSync(root).map(name=>desc(path.join(root,name)));
+fs.writeFileSync(path.join(root,'STOPWRITE-tools.json'),JSON.stringify({schema:'frozen-observation-tool-source-set-v1',at:new Date().toISOString(),stopWrite:true,files,fileCount:files.length,preparationOnly:true,collection0NotRuntimePass:true},null,2)+'\n',{flag:'wx'});
+const observationRoot=path.join(path.dirname(root),'cinatoken-v364-queued-linux-run-'+crypto.randomUUID().replaceAll('-',''));fs.mkdirSync(observationRoot);
+const binding={schema:'cinatoken-v364-queued-linux-observation-binding-v1',rootAuthorisedObservation:true,sourceSHA:'757490181564aa822f960f5d8704857b98b230d0',repository:'cinagroup/cinatoken',runId:'37429341568',runAttempt:1,observationRoot:observationRoot.replaceAll('\\','/'),rootAuthorisation:'Root direct message: single already-dispatched run watch45, terminal reads/log/artifact once; no rerun/dispatch/cancel',toolSeal:desc(path.join(root,'STOPWRITE-tools.json'))};
+const bindingPath=path.join(observationRoot,'binding.json');fs.writeFileSync(bindingPath,JSON.stringify(binding,null,2)+'\n',{flag:'wx'});
+console.log(JSON.stringify({toolsStopWrite:desc(path.join(root,'STOPWRITE-tools.json')),binding:desc(bindingPath),observationRoot:binding.observationRoot,ciQueriesYet:0}));

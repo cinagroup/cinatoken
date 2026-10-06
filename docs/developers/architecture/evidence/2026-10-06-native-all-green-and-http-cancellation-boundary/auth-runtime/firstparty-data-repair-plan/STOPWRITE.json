@@ -1,0 +1,92 @@
+{
+  "schema": "whole-owned-data-repair-plan-STOPWRITE-v1",
+  "root": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-firstparty-data-repair-plan-41c3699de26d498096ecf6cc9e498880",
+  "frozenAt": "2026-10-06T09:02:37.343Z",
+  "files": [
+    {
+      "path": "FINAL-firstparty-link-data-repair-plan.json",
+      "bytes": 10534,
+      "sha256": "941768352a41832c0dbad482c08ce12954cf309e929b443a9152f104216ea224"
+    },
+    {
+      "path": "capture-sqlite-tests.mjs",
+      "bytes": 1901,
+      "sha256": "7946c2f23f9537897278c43badb725903056b3b306ec9e43ef0db4cedfc48c1d"
+    },
+    {
+      "path": "close-final-data-plan-and-seal.mjs",
+      "bytes": 2435,
+      "sha256": "0dada7974858e9e47634324518c39c92fdb6af1df9d4d00c84b1219f19e637ed"
+    },
+    {
+      "path": "final-audit.closed.json",
+      "bytes": 1229,
+      "sha256": "3df27c9af1218ac028ec6a2b1ffe7cc68e6657a60c6de87f506eb50b57951cd2"
+    },
+    {
+      "path": "final-audit.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "final-audit.stdout.log",
+      "bytes": 1113,
+      "sha256": "eb9cee73c0c91ff3f186dded02e3f77c6fb09eb566f40bb21330e4cee2d61dcb"
+    },
+    {
+      "path": "final-static-data-repair-audit.mjs",
+      "bytes": 10737,
+      "sha256": "31c00d0345462ff25a72b674c94335f41de6c317181e8f73137cd26d18a7fa6f"
+    },
+    {
+      "path": "repair-cinatoken-client-link.mjs",
+      "bytes": 2410,
+      "sha256": "0f0651066fdd0da2fdb301f1fbbab7ac37dcdf86d57f482863e5189ea2161102"
+    },
+    {
+      "path": "repair-cinatoken-client-link.test.mjs",
+      "bytes": 8947,
+      "sha256": "3385cbab88d9039a3d3be0c9edf9bdfcf85cce8d573b9c2073dfb66c53ab490a"
+    },
+    {
+      "path": "repair-cinatoken-registration.mjs",
+      "bytes": 3432,
+      "sha256": "7799d74c7820920ca0ad7f188befff8ab93e85a661f64e8065ad15c4dfad2c1f"
+    },
+    {
+      "path": "root-controller-audited.snapshot.mjs",
+      "bytes": 7567,
+      "sha256": "f3bc3660f311f99ead7108208dac1aeccd3d3e63e3d639445ad6ec468163372b"
+    },
+    {
+      "path": "root-worker-audited.snapshot.mjs",
+      "bytes": 5393,
+      "sha256": "9be840dd466f58734de2050f9441206641fcd9e69ad327078a2f4adf90a5d421"
+    },
+    {
+      "path": "sqlite-tests.closed.json",
+      "bytes": 1715,
+      "sha256": "4bd6372f41d0769b6fbfdbff063060f5acaf18fede340295a2fb7a7255e772d2"
+    },
+    {
+      "path": "sqlite-tests.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "sqlite-tests.stdout.log",
+      "bytes": 1007,
+      "sha256": "de866baa16c0b25d0684e205545da52e7baa807fd6edbd677058dedd1573e939"
+    }
+  ],
+  "completeFileCountExcludingSeal": 15,
+  "actualClosedChildren": 2,
+  "actualZero": 2,
+  "actualFailure": 0,
+  "SQLiteNineCasesPassed": true,
+  "PGOrProductionRepairVerified": false,
+  "originalLiveMetadataAuthority": "Root message, not new request/claim",
+  "repoModified": false,
+  "oldRootsModified": false,
+  "STOPWRITE": true
+}

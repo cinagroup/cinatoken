@@ -1,0 +1,1 @@
+{"tool":"functions.exec","error":"SyntaxError: Unexpected identifier 'foreign_keys'","phase":"Tool JavaScript parsing before any nested tools/body execution","actualChildProcess":null,"noBusinessOrPreparationPassDerived":true}

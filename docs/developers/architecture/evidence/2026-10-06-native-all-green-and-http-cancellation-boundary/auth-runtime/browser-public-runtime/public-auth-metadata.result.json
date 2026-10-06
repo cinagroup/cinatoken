@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-06T08:01:19.449Z",
+  "finishedAt": "2026-10-06T08:01:23.245Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-real-auth-browser-6459c6e3517098/read-public-auth-metadata.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-real-auth-browser-6459c6e3517098\\public-auth-metadata.stdout.log",
+    "bytes": 1354,
+    "sha256": "d19e5aa75013fb7818e0924745d846c4e5ed91047ccad776f02add2b0b798032"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-real-auth-browser-6459c6e3517098\\public-auth-metadata.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

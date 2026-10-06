@@ -1,0 +1,175 @@
+{
+  "schema": "playwright-fallback-readonly-FINAL-v1",
+  "startedAt": "2026-10-06T07:45:43.422Z",
+  "endedAt": "2026-10-06T07:45:43.444Z",
+  "inputs": [
+    {
+      "path": "C:\\cinagroup\\cinatoken\\package.json",
+      "bytes": 5550,
+      "sha256": "6454126bb47e39c135d3178ce3500b0901581b5b4f9b4b0067ace88e894da3aa"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\web\\package.json",
+      "bytes": 4490,
+      "sha256": "dd231d8595d364fd70999f3e84414cc60bb50d41c700572607d5ec717b84c4bd"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\package-lock.json",
+      "bytes": 830546,
+      "sha256": "f9c65b6e373a231d52d6eda634bb5f947dda3174734cd70e2b811e09fff0b6f0"
+    },
+    {
+      "path": "C:\\Users\\cina\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\node_modules\\playwright\\package.json",
+      "bytes": 1416,
+      "sha256": "ca170ec143a88ed3043ac953eb3b2377b2b97304104f4e1e23316684ce2c35af"
+    },
+    {
+      "path": "C:\\Users\\cina\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\node_modules\\playwright-core\\package.json",
+      "bytes": 876,
+      "sha256": "07c47543631fef9508760365dee9fbe958c562093ec8d122543949ed231f233f"
+    },
+    {
+      "path": "C:\\Users\\cina\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\node_modules\\playwright\\index.mjs",
+      "bytes": 704,
+      "sha256": "a0f5715ea22354f922791a9c53dc012d5d5c067ff9cc4cd35ffb7cd272071a9f"
+    },
+    {
+      "path": "C:\\Users\\cina\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\node_modules\\playwright-core\\browsers.json",
+      "bytes": 1780,
+      "sha256": "f306eed529599b1eaf2f8a85db9de2b23e1a3fe36c2b66434b7c9434fb627a99"
+    },
+    {
+      "path": "C:\\Users\\cina\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\node_modules\\playwright-core\\types\\types.d.ts",
+      "bytes": 1110840,
+      "sha256": "6c688250f2b7061cec3a17ab8797671137b653f8c4e81a6df3190cb112a7579a"
+    }
+  ],
+  "runtime": {
+    "source": "load_workspace_dependencies read-only tool supplied bundle26.930.11008",
+    "node": "C:\\Users\\cina\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe",
+    "nodeExists": true,
+    "playwright": {
+      "version": "1.62.1",
+      "path": "C:\\Users\\cina\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\node_modules\\playwright",
+      "esmEntry": "C:\\Users\\cina\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\node_modules\\playwright\\index.mjs",
+      "importSpecifier": "file:///C:/Users/cina/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs"
+    },
+    "core": {
+      "version": "1.62.1",
+      "path": "C:\\Users\\cina\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\node_modules\\playwright-core"
+    },
+    "repositoryPlaywrightPackagesInstalled": [
+      {
+        "name": "playwright",
+        "exists": false
+      },
+      {
+        "name": "playwright-core",
+        "exists": false
+      },
+      {
+        "name": "@playwright/test",
+        "exists": false
+      }
+    ],
+    "lockMeaning": "Next has @playwright/test ^1.51.1 only as optional peer; not an installed root/web browser test dependency.",
+    "entryObservation": "playwright/index.mjs exports from playwright-core and default import; checked source bytes only, no module import or browser runtime execution.",
+    "typesObservation": [
+      {
+        "line": 11032,
+        "contract": "Browser.newContext(options?: BrowserContextOptions)"
+      },
+      {
+        "line": 16981,
+        "contract": "BrowserType.launch(options?: LaunchOptions)"
+      },
+      {
+        "line": 17007,
+        "contract": "launchPersistentContext(userDataDir:string,...) present but do not use any personal browser directory"
+      },
+      {
+        "line": 17592,
+        "contract": "LaunchOptions executablePath?:string"
+      },
+      {
+        "line": 11216,
+        "contract": "ignoreHTTPSErrors?:boolean"
+      },
+      {
+        "line": 11420,
+        "contract": "storageState exists but this fallback must omit it"
+      }
+    ]
+  },
+  "browserExecutables": [
+    {
+      "path": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+      "exists": true,
+      "bytes": 4512408,
+      "launched": false
+    },
+    {
+      "path": "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe",
+      "exists": true,
+      "bytes": 5403976,
+      "launched": false
+    }
+  ],
+  "browserCache": {
+    "path": "C:/Users/cina/AppData/Local/ms-playwright",
+    "existencePreviouslyObserved": true,
+    "directoryListing": "Access denied",
+    "contentsNotRead": true,
+    "retryOrEscalation": false,
+    "download": false,
+    "defaultBundledChromiumExecutableUnknown": true
+  },
+  "existingRepositoryScriptSearch": {
+    "scope": [
+      "scripts",
+      "packages/web/scripts"
+    ],
+    "extensions": [
+      ".mjs",
+      ".js",
+      ".ts",
+      ".cjs"
+    ],
+    "term": "playwright|chromium|puppeteer",
+    "matchesReturned": 0,
+    "excluded": [
+      "evidence",
+      "releases"
+    ],
+    "meaning": "Only searched scope; does not prove absence of historical untracked Temp QA scripts. No old evidence directories read."
+  },
+  "proposedLaunch": {
+    "runHere": false,
+    "command": "& 'C:/Users/cina/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe' '<new independent Temp>/browser-session.mjs'",
+    "nodeSourceExample": "import { chromium } from 'file:///C:/Users/cina/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs';\nconst browser = await chromium.launch({ executablePath: 'C:/Program Files/Google/Chrome/Application/chrome.exe', headless: false });\nconst context = await browser.newContext({ acceptDownloads: false, ignoreHTTPSErrors: false });\nconst page = await context.newPage();\n// Root controls the authorized actual login next; keep context alive for password/MFA input.\n// Close the owned context/browser when the authorized acceptance session is complete.\n",
+    "sessionIsolation": "launch creates its own ephemeral browser profile and newContext is a new isolated context; do not load persistent personal profile or storageState. Use a fresh independent private Temp task directory for the script and any explicitly allowed screenshots; never archive login state/private profile.",
+    "rootSteering": "Root selected headless:false visible browser. Password/MFA are user input; no credential read by this agent.",
+    "logging": "No HAR, trace, storageState export, cookies/password/header/body capture, page.textContent dumps, token/query-bearing URLs, or personal-profile/CDP connection.",
+    "cleanup": "Root owns normal context.close()/browser.close(); keep live session open only while user input and authorized acceptance are pending."
+  },
+  "negativeObservation": {
+    "path": "prior-directory-read-tool-observation.json",
+    "toolChunk": "7b5b06",
+    "toolReportedExit": 0,
+    "nonterminatingReaderError": "Get-ChildItem ms-playwright Access to path is denied",
+    "meaning": "The combined shell process reported0 while a specific directory read failed. This is not a complete successful cache inventory or executable admission."
+  },
+  "scope": {
+    "inputFiles": 8,
+    "browserLaunches": 0,
+    "browserOperations": 0,
+    "networkRequests": 0,
+    "profileCookieOrPasswordReads": 0,
+    "repoWrites": 0,
+    "dependencyInstalls": 0,
+    "newCI": 0,
+    "oldFrozenRootsWritten": 0
+  },
+  "conclusion": "Use existing bundled Playwright1.62.1 and explicit installed Chrome executablePath, fresh browser/newContext; no dependency installation or browser-cache enumeration is needed. Launch/API/browser compatibility remains untested by this read-only task.",
+  "STOPWRITEAfterSeal": true
+}

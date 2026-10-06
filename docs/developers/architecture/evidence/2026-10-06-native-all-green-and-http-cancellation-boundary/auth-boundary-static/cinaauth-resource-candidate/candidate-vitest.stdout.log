@@ -1,0 +1,11 @@
+
+ RUN  v4.1.10 C:/Users/cina/AppData/Local/Temp/cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d/candidate
+
+ ✓ workers/auth-api/test/cinatoken-oidc-client.test.ts (7 tests) 32ms
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  16:22:51
+   Duration  331ms (transform 94ms, setup 0ms, import 123ms, tests 32ms, environment 0ms)
+
+JSON report written to C:/Users/cina/AppData/Local/Temp/cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d/candidate-vitest.json

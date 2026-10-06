@@ -1,0 +1,28 @@
+{
+  "at": "2026-10-06T08:10:39.426Z",
+  "readOnly": true,
+  "secretValuesRecorded": false,
+  "hyperdriveBindings": [
+    {
+      "name": "HYPERDRIVE",
+      "id": "374f6da17aff4c968cadd8d6aa454c22"
+    }
+  ],
+  "deployment": {
+    "id": "ffd147f1-2c1b-4944-a4f0-efb2cb34791e",
+    "versions": [
+      {
+        "version_id": "1afab5f9-f614-4d83-bb99-22489561e88b",
+        "percentage": 100
+      }
+    ]
+  },
+  "versions": [
+    {
+      "id": "1afab5f9-f614-4d83-bb99-22489561e88b",
+      "percentage": 100,
+      "tag": null
+    }
+  ],
+  "finishedAt": "2026-10-06T08:10:43.965Z"
+}

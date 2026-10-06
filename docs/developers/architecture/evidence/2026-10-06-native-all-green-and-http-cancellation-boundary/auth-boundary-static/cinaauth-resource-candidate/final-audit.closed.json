@@ -1,0 +1,33 @@
+{
+  "label": "final-audit",
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d\\final-audit-and-report.mjs",
+    "C:/Users/cina/AppData/Local/Temp/cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d"
+  ],
+  "cwd": "C:/Users/cina/AppData/Local/Temp/cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d",
+  "startedAt": "2026-10-06T08:25:52.932Z",
+  "endedAt": "2026-10-06T08:25:53.240Z",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "timeoutConfiguredMs": 30000,
+  "timedOutObserved": false,
+  "sourceProgram": {
+    "path": "final-audit-and-report.mjs",
+    "bytes": 10519,
+    "sha256": "47915366784a3a2c459877efaf2ce61416c108e78bf1adcd920b313af80d6401"
+  },
+  "stdout": {
+    "path": "final-audit.stdout.log",
+    "bytes": 970,
+    "sha256": "cf5aafefd8d719575ad6ba63efe9d00c3cd9bf11902210632fee5c1ef82fcee8"
+  },
+  "stderr": {
+    "path": "final-audit.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "collectionOnly": true,
+  "businessOrProductionPassDerived": false
+}

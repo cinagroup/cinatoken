@@ -1,0 +1,89 @@
+{
+  "at": "2026-10-06T08:01:19.501Z",
+  "readOnly": true,
+  "secretValuesRecorded": false,
+  "workers": [
+    {
+      "worker": "cinatoken-web",
+      "publicBindings": [],
+      "secretBindings": [
+        {
+          "name": "CINATOKEN_OIDC_CLIENT_SECRET",
+          "present": false
+        },
+        {
+          "name": "CINATOKEN_OIDC_BRIDGE_SECRET",
+          "present": false
+        },
+        {
+          "name": "CINATOKEN_OIDC_TRANSACTION_SECRET",
+          "present": false
+        },
+        {
+          "name": "CINATOKEN_IDENTITY_EVENTS_SECRET",
+          "present": false
+        }
+      ],
+      "authService": [],
+      "secretStrengthUnknown": true
+    },
+    {
+      "worker": "cinatoken-admin",
+      "publicBindings": [
+        {
+          "name": "CINAAUTH_ACCOUNT_ORIGIN",
+          "type": "plain_text",
+          "value": "https://accounts.cinaseek.si"
+        },
+        {
+          "name": "CINAAUTH_ISSUER",
+          "type": "plain_text",
+          "value": "https://auth.cinaseek.si"
+        },
+        {
+          "name": "CINATOKEN_APP_ORIGIN",
+          "type": "plain_text",
+          "value": "https://cinatoken.com"
+        },
+        {
+          "name": "CINATOKEN_OIDC_CLIENT_ID",
+          "type": "plain_text",
+          "value": "cinatoken-admin"
+        },
+        {
+          "name": "CINATOKEN_REQUIRED_ROLES",
+          "type": "plain_text",
+          "value": "super_admin,security_admin"
+        }
+      ],
+      "secretBindings": [
+        {
+          "name": "CINATOKEN_OIDC_CLIENT_SECRET",
+          "present": true
+        },
+        {
+          "name": "CINATOKEN_OIDC_BRIDGE_SECRET",
+          "present": true
+        },
+        {
+          "name": "CINATOKEN_OIDC_TRANSACTION_SECRET",
+          "present": true
+        },
+        {
+          "name": "CINATOKEN_IDENTITY_EVENTS_SECRET",
+          "present": true
+        }
+      ],
+      "authService": [
+        {
+          "name": "CINAAUTH_AUTH_SERVICE",
+          "type": "service",
+          "service": "cinaauth-api",
+          "environment": "production"
+        }
+      ],
+      "secretStrengthUnknown": true
+    }
+  ],
+  "finishedAt": "2026-10-06T08:01:23.229Z"
+}

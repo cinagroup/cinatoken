@@ -1,0 +1,28 @@
+{
+  "schema": "independent-read-only-review-command-closed-v1",
+  "closed": true,
+  "program": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-md-registration-independent-review-7cc2de05976a48f3ad1ca5c1e3dc739c\\finalize-md-newline-delta.mjs",
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-final-md-registration-independent-review-7cc2de05976a48f3ad1ca5c1e3dc739c"
+  ],
+  "at": "2026-10-06T09:12:27.588Z",
+  "finishedAt": "2026-10-06T09:12:27.741Z",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-final-md-registration-independent-review-7cc2de05976a48f3ad1ca5c1e3dc739c/final-md-delta.stdout.log",
+    "bytes": 310,
+    "sha256": "41274bda80ec1b9c89fc2b3399149b5d3a21c601c140a0793fc3a32d226e7a47"
+  },
+  "stderr": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-final-md-registration-independent-review-7cc2de05976a48f3ad1ca5c1e3dc739c/final-md-delta.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "collectionOnly": true,
+  "runtimeExecuted": false,
+  "networkRequest": false,
+  "repositoryWrites": false
+}

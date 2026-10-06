@@ -1,0 +1,8 @@
+import fs from 'node:fs';import path from 'node:path';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';import {fileURLToPath} from 'node:url';const root=path.dirname(fileURLToPath(import.meta.url)),file='C:/cinagroup/cinatoken/docs/developers/architecture/web-frontend-migration.md',b=fs.readFileSync(file),sha=x=>createHash('sha256').update(x).digest('hex');assert.equal(sha(b),'c1ffb50776678b0d5219aec2b195e6b7f954058691c374000a7638e219584669');let s=b.toString('utf8');const replacements=[
+['dispatch随后.400开始、.608闭于44秒','dispatch随后07:41:41.400开始、07:41:44.608关闭'],
+['采样结束27102.091927≤resetInvoke27113.660148，11.568221ms。','压力末样本结束27102.091927≤resetInvoke27113.660148，间隔11.568221ms；另immediate pre-RST样本结束27113.599996≤resetInvoke，间隔0.060152ms。'],
+['独立Web生产c13/2a0仍100%。','独立Web生产c13/2a0仍100%（08:16只读路由/版本核验0）。'],
+['resource/audience的真实issuer配置待核，先修登录','08:04两侧公开profile域名/client ID已核一致；08:10只读确认CinaAuth HYPERDRIVE绑定及生产version1afab5f9-f614-4d83-bb99-22489561e88b/100%，tag缺失，不能以本机HEAD推定线上源码；08:20 Hyperdrive公开cache metadata disabled=true，未读取origin凭据/连接串。已定位本机CinaAuth reserved client初始化漏资源/link的静态候选，真实resource存在/禁用/link元数据尚未读，线上live根因未证。先修登录']
+];for(const [a,c]of replacements){assert.equal(s.split(a).length,2);s=s.replace(a,c);}
+const rx=[/^- \[[ x]\] (?:P[0-8]-|SRC-).*$/gm,/^\| (?:PUB|AUTH|ACC|ADM)-[0-9]{2} \|.*$/gm,/^验收门槛 G[0-8]：.*$/gm,/^\| P[0-8] .*$/gm,/^\| E0[0-8] \|.*$/gm,/^.*\[[ x]\].*$/gm];for(const r of rx)assert.deepEqual(s.match(r),b.toString('utf8').match(r));fs.writeFileSync(file,s);console.log(JSON.stringify({updated:true,before:{bytes:b.length,sha256:sha(b)},after:{bytes:Buffer.byteLength(s),sha256:sha(Buffer.from(s))},changes:4,checkboxStatesChanged:false}));
+

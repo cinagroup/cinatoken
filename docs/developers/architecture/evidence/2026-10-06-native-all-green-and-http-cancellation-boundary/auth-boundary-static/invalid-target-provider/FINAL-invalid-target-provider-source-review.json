@@ -1,0 +1,1765 @@
+{
+  "schema": "cinatoken-invalid-target-provider-local-source-review-v1",
+  "observedAt": "2026-10-06T08:06:38.293Z",
+  "collectionOnly": true,
+  "readOnly": true,
+  "causeProven": false,
+  "providerRuntimeVersionMatched": false,
+  "productionDataRead": false,
+  "productionRequest": false,
+  "issuerDatabaseMutation": false,
+  "clientRegistrationMutation": false,
+  "runtimeExecuted": false,
+  "sourceInputs": [
+    {
+      "file": "workers/auth-api/src/origin-config.ts",
+      "absolutePath": "C:/cinagroup/cinaauth/workers/auth-api/src/origin-config.ts",
+      "bytes": 7888,
+      "sha256": "9ddc59ebb196410725cb8a0c1fb1acb78ed14b86077ea8a03beea477fc7c2dfd"
+    },
+    {
+      "file": "workers/auth-api/src/cinatoken-oidc-client.ts",
+      "absolutePath": "C:/cinagroup/cinaauth/workers/auth-api/src/cinatoken-oidc-client.ts",
+      "bytes": 3760,
+      "sha256": "5f4bb55cd16253668a6e6de55e810cc892a24731d8fbae05ac89fa4896103f1d"
+    },
+    {
+      "file": "packages/oauth-provider/src/resources.ts",
+      "absolutePath": "C:/cinagroup/cinaauth/packages/oauth-provider/src/resources.ts",
+      "bytes": 36932,
+      "sha256": "bd6c05f27fedb4645f2380ecd65a8711acb3c52a17356133ba60429c6031775e"
+    },
+    {
+      "file": "packages/oauth-provider/src/authorize.ts",
+      "absolutePath": "C:/cinagroup/cinaauth/packages/oauth-provider/src/authorize.ts",
+      "bytes": 30690,
+      "sha256": "3512ca9be34b7f0d6d72d7f9615d91cc7a4e7489c0f0baba634675c69d879f9d"
+    },
+    {
+      "file": "workers/auth-api/src/plugins.ts",
+      "absolutePath": "C:/cinagroup/cinaauth/workers/auth-api/src/plugins.ts",
+      "bytes": 23582,
+      "sha256": "c4c88002c5fd4d6cbaef6b57dcd8ad7722140dbd65ff999ff25be9310e32c592"
+    },
+    {
+      "file": "workers/auth-api/test/admin-oidc-resource.integration.test.ts",
+      "absolutePath": "C:/cinagroup/cinaauth/workers/auth-api/test/admin-oidc-resource.integration.test.ts",
+      "bytes": 6016,
+      "sha256": "1c6249d8d2153041af551ecce86f327fe1f3fd0f4059c65282a105e564b08a5b"
+    },
+    {
+      "file": "workers/auth-api/src/admin-oidc-client.ts",
+      "absolutePath": "C:/cinagroup/cinaauth/workers/auth-api/src/admin-oidc-client.ts",
+      "bytes": 4768,
+      "sha256": "79798d945817580521c926ef9d4089cff9a433910dabea023402d5b2bce87876"
+    },
+    {
+      "file": "workers/auth-api/wrangler.json",
+      "absolutePath": "C:/cinagroup/cinaauth/workers/auth-api/wrangler.json",
+      "bytes": 4856,
+      "sha256": "09d468861986d1a53a09f49330a26f8fb12dde8c1c60c4bdd7a4f6f8b6f43d84"
+    }
+  ],
+  "priorReadOnlyAuthSourceReport": {
+    "file": "C:/Users/cina/AppData/Local/Temp/cinatoken-public-auth-start-readonly-3sVv88/FINAL-public-home-cinaauth-source-review.json",
+    "bytes": 26520,
+    "sha256": "ecf9d80e83a272036cf3a018a45da746c4ad5b236703ee76d197f946a64875b5",
+    "immutable": true
+  },
+  "localPublicConfig": {
+    "workerName": "cinaauth-api",
+    "main": "src/index.ts",
+    "CINAAUTH_CINATOKEN_ORIGIN": "https://cinatoken.com",
+    "CINAAUTH_CINATOKEN_CLIENT_ID": "cinatoken-admin"
+  },
+  "rootReportedFacts": {
+    "authority": "Parent messages; no new production request by this producer",
+    "ui": {
+      "authorizeStatus": 302,
+      "callbackStatus": 200,
+      "error": "invalid_target",
+      "hasError": true,
+      "hasCode": false,
+      "hasState": true,
+      "loginFormVisible": false,
+      "sensitiveValuesCollected": false
+    },
+    "clientPublicMetadata": {
+      "observedAt": "2026-10-06T08:01Z",
+      "appOrigin": "https://cinatoken.com",
+      "clientId": "cinatoken-admin",
+      "issuer": "https://auth.cinaseek.si",
+      "service": "cinaauth-api",
+      "serviceEnvironment": "production",
+      "fourSecretBindingsPresence": true,
+      "valuesRead": false
+    },
+    "providerProfile": {
+      "observedAt": "2026-10-06T08:04Z",
+      "worker": "cinaauth-api",
+      "CINAAUTH_CINATOKEN_ORIGIN": "https://cinatoken.com",
+      "CINAAUTH_CINATOKEN_CLIENT_ID": "cinatoken-admin",
+      "actualChildExitReported": 0,
+      "databaseBindingAuthority": "Only D1-filtered LEGACY_D1 was observed; no live Auth database assertion"
+    }
+  },
+  "findings": [
+    {
+      "id": "F1",
+      "kind": "direct-local-source-fact",
+      "fact": "CinaToken authorization and token requests use resource=config.appOrigin. The prior immutable source review pins oidc-client.ts:69 and :109; sign-in does not set prompt=none, registration mode alone sets prompt=create. Provider resource audiences are constructed from requested identifiers and an implicit userinfo audience when openid is requested.",
+      "sourceRefs": [
+        "prior oidc-client.ts:54-74,93-114",
+        "resources.ts:507-513"
+      ]
+    },
+    {
+      "id": "F2",
+      "kind": "direct-local-source-fact",
+      "fact": "Provider resource checks return invalid_target for a missing or disabled resource row, and for a missing exact client-to-resource link when default enforcePerClientResources=true. resources config is a seed source, not the authoritative current DB row. insertOnly preserves existing disabled policy.",
+      "sourceRefs": [
+        "resources.ts:368-403,530-553,631-646,849-885,918-970",
+        "authorize.ts:657-684"
+      ]
+    },
+    {
+      "id": "F3",
+      "kind": "direct-local-source-initialization-omission",
+      "fact": "ensureCinatokenOidcClient only upserts oauthClient; it never inserts oauthResource or oauthClientResource. ensureAdminOidcClient separately inserts the exact resource and its link with conflict no-op semantics preserving operator resource policy. With this code and a fresh unlinked client, resource seeding alone cannot satisfy the default per-client check.",
+      "sourceRefs": [
+        "cinatoken-oidc-client.ts:75-112",
+        "admin-oidc-client.ts:128-146",
+        "resources.ts:399-402,530-553"
+      ]
+    },
+    {
+      "id": "F4",
+      "kind": "inference-not-online-branch-proof",
+      "fact": "The UI sequence is consistent with authorize fail-fast resource validation. Public origin/client metadata now matches on both sides according to Root. It does not distinguish missing row, intentional disabled row, unlinked client, or an older/different deployed provider implementation; no DB or live code version was read here."
+    }
+  ],
+  "repairCandidate": {
+    "boundary": "CinaAuth fixed first-party client registration/bootstrap resource relationship",
+    "condition": "Verify the deployed provider branch matches these source pins and current pure resource/client/link metadata identifies missing exact relationship.",
+    "change": "Add idempotent creation of the exact configured application resource if absent and the exact cinatoken-admin→https://cinatoken.com link in ensureCinatokenOidcClient, following Admin insertOnly/conflict no-op behavior; preserve disabled and all operator policy fields, existing client confidentiality/PKCE/scopes/token authentication.",
+    "notAuthorizedHere": true,
+    "doNotChange": [
+      "CinaToken resource parameter",
+      "scope",
+      "PKCE S256",
+      "nonce/state/callback guards",
+      "provider default enforcement",
+      "operator disabled resource state"
+    ],
+    "clientParameterCorrectionNeededByAvailableEvidence": false,
+    "onlineCauseConfirmed": false
+  },
+  "minimumNextMetadata": {
+    "providerPublicFields": [
+      "active version/source commit or deployment bundle identity",
+      "CINAAUTH_CINATOKEN_ORIGIN",
+      "CINAAUTH_CINATOKEN_CLIENT_ID",
+      "live database driver/binding selection names, not connection values"
+    ],
+    "pureDataFields": [
+      "resourceExists",
+      "resourceDisabled",
+      "clientExists",
+      "clientDisabled",
+      "exactClientResourceLinkExists"
+    ],
+    "publicIdentifiers": {
+      "clientId": "cinatoken-admin",
+      "resourceIdentifier": "https://cinatoken.com"
+    },
+    "prohibitedValues": [
+      "clientSecret",
+      "connectionString",
+      "token",
+      "user/session/member records",
+      "state",
+      "code",
+      "nonce",
+      "error_description"
+    ],
+    "safeReadOnlySqlCandidate": "SELECT EXISTS (SELECT 1 FROM \"oauthResource\" WHERE \"identifier\" = $1) AS \"resourceExists\", (SELECT \"disabled\" FROM \"oauthResource\" WHERE \"identifier\" = $1) AS \"resourceDisabled\", EXISTS (SELECT 1 FROM \"oauthClient\" WHERE \"clientId\" = $2) AS \"clientExists\", (SELECT \"disabled\" FROM \"oauthClient\" WHERE \"clientId\" = $2) AS \"clientDisabled\", EXISTS (SELECT 1 FROM \"oauthClientResource\" WHERE \"clientId\" = $2 AND \"resourceId\" = $1) AS \"exactClientResourceLinkExists\";",
+    "sqlExecuted": false
+  },
+  "staticExistingTestBoundary": {
+    "file": "workers/auth-api/test/admin-oidc-resource.integration.test.ts",
+    "coverage": "Admin-only isolated SQLite case declares success access-token audience, unknown-resource rejection, removed-link rejection, disabled-resource preservation/rejection. Source read only; none executed; this is not proof of live CinaToken client initialization.",
+    "lines": [
+      20,
+      133,
+      148,
+      157,
+      176
+    ]
+  },
+  "sourceEvidence": [
+    {
+      "file": "C:/cinagroup/cinaauth/workers/auth-api/src/origin-config.ts",
+      "from": 134,
+      "to": 154,
+      "lines": [
+        {
+          "line": 134,
+          "text": "\tconst cinatokenOrigin = parseCanonicalHttpsOrigin("
+        },
+        {
+          "line": 135,
+          "text": "\t\tenv.CINAAUTH_CINATOKEN_ORIGIN,"
+        },
+        {
+          "line": 136,
+          "text": "\t);"
+        },
+        {
+          "line": 137,
+          "text": "\tconst cinatokenValues = ["
+        },
+        {
+          "line": 138,
+          "text": "\t\tenv.CINAAUTH_CINATOKEN_ORIGIN,"
+        },
+        {
+          "line": 139,
+          "text": "\t\tenv.CINAAUTH_CINATOKEN_CLIENT_ID,"
+        },
+        {
+          "line": 140,
+          "text": "\t];"
+        },
+        {
+          "line": 141,
+          "text": "\tconst hasCinatokenProfile = cinatokenValues.some("
+        },
+        {
+          "line": 142,
+          "text": "\t\t(value) => value !== undefined,"
+        },
+        {
+          "line": 143,
+          "text": "\t);"
+        },
+        {
+          "line": 144,
+          "text": "\tconst cinatokenProfile ="
+        },
+        {
+          "line": 145,
+          "text": "\t\thasCinatokenProfile &&"
+        },
+        {
+          "line": 146,
+          "text": "\t\tcinatokenValues.every((value) => value !== undefined) &&"
+        },
+        {
+          "line": 147,
+          "text": "\t\tcinatokenOrigin &&"
+        },
+        {
+          "line": 148,
+          "text": "\t\tenv.CINAAUTH_CINATOKEN_CLIENT_ID === \"cinatoken-admin\" &&"
+        },
+        {
+          "line": 149,
+          "text": "\t\t/^[a-z0-9][a-z0-9._-]{2,127}$/u.test(env.CINAAUTH_CINATOKEN_CLIENT_ID ?? \"\")"
+        },
+        {
+          "line": 150,
+          "text": "\t\t\t? {"
+        },
+        {
+          "line": 151,
+          "text": "\t\t\t\t\tapplicationOrigin: cinatokenOrigin.origin,"
+        },
+        {
+          "line": 152,
+          "text": "\t\t\t\t\tclientId: env.CINAAUTH_CINATOKEN_CLIENT_ID!,"
+        },
+        {
+          "line": 153,
+          "text": "\t\t\t\t}"
+        },
+        {
+          "line": 154,
+          "text": "\t\t\t: null;"
+        }
+      ]
+    },
+    {
+      "file": "C:/cinagroup/cinaauth/workers/auth-api/src/plugins.ts",
+      "from": 511,
+      "to": 525,
+      "lines": [
+        {
+          "line": 511,
+          "text": "\t\t\tresources: ["
+        },
+        {
+          "line": 512,
+          "text": "\t\t\t\tbaseURL,"
+        },
+        {
+          "line": 513,
+          "text": "\t\t\t\torigins.adminOrigin,"
+        },
+        {
+          "line": 514,
+          "text": "\t\t\t\t...(origins.cinatokenProfile"
+        },
+        {
+          "line": 515,
+          "text": "\t\t\t\t\t? [origins.cinatokenProfile.applicationOrigin]"
+        },
+        {
+          "line": 516,
+          "text": "\t\t\t\t\t: []),"
+        },
+        {
+          "line": 517,
+          "text": "\t\t\t\t`${origins.accountOrigin}/api/mcp`,"
+        },
+        {
+          "line": 518,
+          "text": "\t\t\t],"
+        },
+        {
+          "line": 519,
+          "text": "\t\t\tallowDynamicClientRegistration: true,"
+        },
+        {
+          "line": 520,
+          "text": "\t\t\tallowUnauthenticatedClientRegistration: false,"
+        },
+        {
+          "line": 521,
+          "text": "\t\t\tcachedTrustedClients: new Set(["
+        },
+        {
+          "line": 522,
+          "text": "\t\t\t\tADMIN_OIDC_CLIENT_ID,"
+        },
+        {
+          "line": 523,
+          "text": "\t\t\t\t...(origins.cinatokenProfile ? [CINATOKEN_OIDC_CLIENT_ID] : []),"
+        },
+        {
+          "line": 524,
+          "text": "\t\t\t\t...(origins.oidcDemoProfile ? [origins.oidcDemoProfile.clientId] : []),"
+        },
+        {
+          "line": 525,
+          "text": "\t\t\t]),"
+        }
+      ]
+    },
+    {
+      "file": "C:/cinagroup/cinaauth/workers/auth-api/src/cinatoken-oidc-client.ts",
+      "from": 61,
+      "to": 112,
+      "lines": [
+        {
+          "line": 61,
+          "text": "\t\tapplicationOrigin,"
+        },
+        {
+          "line": 62,
+          "text": "\t\t`${applicationOrigin}/favicon.ico`,"
+        },
+        {
+          "line": 63,
+          "text": "\t\tJSON.stringify([`${applicationOrigin}/api/auth/cinaauth/callback`]),"
+        },
+        {
+          "line": 64,
+          "text": "\t\tJSON.stringify([`${applicationOrigin}/`]),"
+        },
+        {
+          "line": 65,
+          "text": "\t\t\"client_secret_basic\","
+        },
+        {
+          "line": 66,
+          "text": "\t\tJSON.stringify([\"authorization_code\"]),"
+        },
+        {
+          "line": 67,
+          "text": "\t\tJSON.stringify([\"code\"]),"
+        },
+        {
+          "line": 68,
+          "text": "\t\tfalse,"
+        },
+        {
+          "line": 69,
+          "text": "\t\t\"web\","
+        },
+        {
+          "line": 70,
+          "text": "\t\ttrue,"
+        },
+        {
+          "line": 71,
+          "text": "\t\t\"cinatoken-gateway\","
+        },
+        {
+          "line": 72,
+          "text": "\t\t\"1.0.0\","
+        },
+        {
+          "line": 73,
+          "text": "\t];"
+        },
+        {
+          "line": 74,
+          "text": ""
+        },
+        {
+          "line": 75,
+          "text": "\tawait database.query("
+        },
+        {
+          "line": 76,
+          "text": "\t\t`INSERT INTO \"oauthClient\" ("
+        },
+        {
+          "line": 77,
+          "text": "\t\t\t\"id\", \"clientId\", \"clientSecret\", \"disabled\", \"skipConsent\","
+        },
+        {
+          "line": 78,
+          "text": "\t\t\t\"enableEndSession\", \"subjectType\", \"scopes\", \"userId\", \"referenceId\","
+        },
+        {
+          "line": 79,
+          "text": "\t\t\t\"createdAt\", \"updatedAt\", \"name\", \"uri\", \"icon\", \"redirectUris\","
+        },
+        {
+          "line": 80,
+          "text": "\t\t\t\"postLogoutRedirectUris\", \"tokenEndpointAuthMethod\", \"grantTypes\","
+        },
+        {
+          "line": 81,
+          "text": "\t\t\t\"responseTypes\", \"public\", \"type\", \"requirePKCE\", \"softwareId\","
+        },
+        {
+          "line": 82,
+          "text": "\t\t\t\"softwareVersion\""
+        },
+        {
+          "line": 83,
+          "text": "\t\t) VALUES ("
+        },
+        {
+          "line": 84,
+          "text": "\t\t\t$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13,"
+        },
+        {
+          "line": 85,
+          "text": "\t\t\t$14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25"
+        },
+        {
+          "line": 86,
+          "text": "\t\t)"
+        },
+        {
+          "line": 87,
+          "text": "\t\tON CONFLICT (\"clientId\") DO UPDATE SET"
+        },
+        {
+          "line": 88,
+          "text": "\t\t\t\"clientSecret\" = EXCLUDED.\"clientSecret\","
+        },
+        {
+          "line": 89,
+          "text": "\t\t\t\"disabled\" = EXCLUDED.\"disabled\","
+        },
+        {
+          "line": 90,
+          "text": "\t\t\t\"skipConsent\" = EXCLUDED.\"skipConsent\","
+        },
+        {
+          "line": 91,
+          "text": "\t\t\t\"enableEndSession\" = EXCLUDED.\"enableEndSession\","
+        },
+        {
+          "line": 92,
+          "text": "\t\t\t\"subjectType\" = EXCLUDED.\"subjectType\","
+        },
+        {
+          "line": 93,
+          "text": "\t\t\t\"scopes\" = EXCLUDED.\"scopes\","
+        },
+        {
+          "line": 94,
+          "text": "\t\t\t\"userId\" = NULL,"
+        },
+        {
+          "line": 95,
+          "text": "\t\t\t\"referenceId\" = NULL,"
+        },
+        {
+          "line": 96,
+          "text": "\t\t\t\"updatedAt\" = EXCLUDED.\"updatedAt\","
+        },
+        {
+          "line": 97,
+          "text": "\t\t\t\"name\" = EXCLUDED.\"name\","
+        },
+        {
+          "line": 98,
+          "text": "\t\t\t\"uri\" = EXCLUDED.\"uri\","
+        },
+        {
+          "line": 99,
+          "text": "\t\t\t\"icon\" = EXCLUDED.\"icon\","
+        },
+        {
+          "line": 100,
+          "text": "\t\t\t\"redirectUris\" = EXCLUDED.\"redirectUris\","
+        },
+        {
+          "line": 101,
+          "text": "\t\t\t\"postLogoutRedirectUris\" = EXCLUDED.\"postLogoutRedirectUris\","
+        },
+        {
+          "line": 102,
+          "text": "\t\t\t\"tokenEndpointAuthMethod\" = EXCLUDED.\"tokenEndpointAuthMethod\","
+        },
+        {
+          "line": 103,
+          "text": "\t\t\t\"grantTypes\" = EXCLUDED.\"grantTypes\","
+        },
+        {
+          "line": 104,
+          "text": "\t\t\t\"responseTypes\" = EXCLUDED.\"responseTypes\","
+        },
+        {
+          "line": 105,
+          "text": "\t\t\t\"public\" = EXCLUDED.\"public\","
+        },
+        {
+          "line": 106,
+          "text": "\t\t\t\"type\" = EXCLUDED.\"type\","
+        },
+        {
+          "line": 107,
+          "text": "\t\t\t\"requirePKCE\" = EXCLUDED.\"requirePKCE\","
+        },
+        {
+          "line": 108,
+          "text": "\t\t\t\"softwareId\" = EXCLUDED.\"softwareId\","
+        },
+        {
+          "line": 109,
+          "text": "\t\t\t\"softwareVersion\" = EXCLUDED.\"softwareVersion\"`,"
+        },
+        {
+          "line": 110,
+          "text": "\t\tvalues,"
+        },
+        {
+          "line": 111,
+          "text": "\t);"
+        },
+        {
+          "line": 112,
+          "text": "};"
+        }
+      ]
+    },
+    {
+      "file": "C:/cinagroup/cinaauth/workers/auth-api/src/admin-oidc-client.ts",
+      "from": 128,
+      "to": 146,
+      "lines": [
+        {
+          "line": 128,
+          "text": "\t// First-party resource bindings are required by the 1.7 provider. Preserve"
+        },
+        {
+          "line": 129,
+          "text": "\t// operator-managed resource policy, including an intentional disablement."
+        },
+        {
+          "line": 130,
+          "text": "\tawait database.query("
+        },
+        {
+          "line": 131,
+          "text": "\t\t`INSERT INTO \"oauthResource\" (\"id\", \"identifier\", \"name\", \"createdAt\", \"updatedAt\")"
+        },
+        {
+          "line": 132,
+          "text": "\t\t VALUES ($1, $2, $3, $4, $4)"
+        },
+        {
+          "line": 133,
+          "text": "\t\t ON CONFLICT (\"identifier\") DO NOTHING`,"
+        },
+        {
+          "line": 134,
+          "text": "\t\t[`first-party:${adminOrigin}`, adminOrigin, \"CinaSeek Admin Console\", now],"
+        },
+        {
+          "line": 135,
+          "text": "\t);"
+        },
+        {
+          "line": 136,
+          "text": "\tawait database.query("
+        },
+        {
+          "line": 137,
+          "text": "\t\t`INSERT INTO \"oauthClientResource\" (\"id\", \"clientId\", \"resourceId\", \"createdAt\")"
+        },
+        {
+          "line": 138,
+          "text": "\t\t VALUES ($1, $2, $3, $4)"
+        },
+        {
+          "line": 139,
+          "text": "\t\t ON CONFLICT DO NOTHING`,"
+        },
+        {
+          "line": 140,
+          "text": "\t\t["
+        },
+        {
+          "line": 141,
+          "text": "\t\t\t`${ADMIN_OIDC_CLIENT_ID}:${adminOrigin}`,"
+        },
+        {
+          "line": 142,
+          "text": "\t\t\tADMIN_OIDC_CLIENT_ID,"
+        },
+        {
+          "line": 143,
+          "text": "\t\t\tadminOrigin,"
+        },
+        {
+          "line": 144,
+          "text": "\t\t\tnow,"
+        },
+        {
+          "line": 145,
+          "text": "\t\t],"
+        },
+        {
+          "line": 146,
+          "text": "\t);"
+        }
+      ]
+    },
+    {
+      "file": "C:/cinagroup/cinaauth/packages/oauth-provider/src/resources.ts",
+      "from": 368,
+      "to": 403,
+      "lines": [
+        {
+          "line": 368,
+          "text": "\tconst uniqueRequestedResources = [...new Set(requestedResources)];"
+        },
+        {
+          "line": 369,
+          "text": ""
+        },
+        {
+          "line": 370,
+          "text": "\t// For each requested resource:"
+        },
+        {
+          "line": 371,
+          "text": "\t//   1. Always attempt `getResource(identifier)` first — DB rows are the"
+        },
+        {
+          "line": 372,
+          "text": "\t//      authoritative source. Admins can create rows via the CRUD API without"
+        },
+        {
+          "line": 373,
+          "text": "\t//      any config."
+        },
+        {
+          "line": 374,
+          "text": "\t//   2. Row exists & enabled → apply per-resource policy."
+        },
+        {
+          "line": 375,
+          "text": "\t//   3. Row exists & disabled → `invalid_target`."
+        },
+        {
+          "line": 376,
+          "text": "\t//   4. No row → `invalid_target`."
+        },
+        {
+          "line": 377,
+          "text": "\tconst resolved: OAuthResource[] = [];"
+        },
+        {
+          "line": 378,
+          "text": "\tfor (const identifier of uniqueRequestedResources) {"
+        },
+        {
+          "line": 379,
+          "text": "\t\t// `/oauth2/userinfo` is an implicit audience for OIDC userinfo lookups"
+        },
+        {
+          "line": 380,
+          "text": "\t\t// (not a configured resource server). Skip the entity check for it."
+        },
+        {
+          "line": 381,
+          "text": "\t\tif (identifier === userInfoResourceIdentifier) continue;"
+        },
+        {
+          "line": 382,
+          "text": "\t\tconst row = await getResource(ctx, opts, identifier);"
+        },
+        {
+          "line": 383,
+          "text": "\t\tif (row) {"
+        },
+        {
+          "line": 384,
+          "text": "\t\t\tif (row.disabled) {"
+        },
+        {
+          "line": 385,
+          "text": "\t\t\t\tthrow new APIError(\"BAD_REQUEST\", {"
+        },
+        {
+          "line": 386,
+          "text": "\t\t\t\t\terror: \"invalid_target\","
+        },
+        {
+          "line": 387,
+          "text": "\t\t\t\t\terror_description: `requested resource ${identifier} is disabled`,"
+        },
+        {
+          "line": 388,
+          "text": "\t\t\t\t});"
+        },
+        {
+          "line": 389,
+          "text": "\t\t\t}"
+        },
+        {
+          "line": 390,
+          "text": "\t\t\tresolved.push(row);"
+        },
+        {
+          "line": 391,
+          "text": "\t\t\tcontinue;"
+        },
+        {
+          "line": 392,
+          "text": "\t\t}"
+        },
+        {
+          "line": 393,
+          "text": "\t\tthrow new APIError(\"BAD_REQUEST\", {"
+        },
+        {
+          "line": 394,
+          "text": "\t\t\terror: \"invalid_target\","
+        },
+        {
+          "line": 395,
+          "text": "\t\t\terror_description: `requested resource ${identifier} is not configured`,"
+        },
+        {
+          "line": 396,
+          "text": "\t\t});"
+        },
+        {
+          "line": 397,
+          "text": "\t}"
+        },
+        {
+          "line": 398,
+          "text": ""
+        },
+        {
+          "line": 399,
+          "text": "\t// Per-client resource linkage check."
+        },
+        {
+          "line": 400,
+          "text": "\tconst { value: enforcePerClient } = resolveEnforcePerClientResources(opts);"
+        },
+        {
+          "line": 401,
+          "text": "\tif (enforcePerClient && resolved.length > 0) {"
+        },
+        {
+          "line": 402,
+          "text": "\t\tawait assertClientLinkedToResources(ctx, opts, params.clientId, resolved);"
+        },
+        {
+          "line": 403,
+          "text": "\t}"
+        }
+      ]
+    },
+    {
+      "file": "C:/cinagroup/cinaauth/packages/oauth-provider/src/resources.ts",
+      "from": 524,
+      "to": 554,
+      "lines": [
+        {
+          "line": 524,
+          "text": "/**"
+        },
+        {
+          "line": 525,
+          "text": " * Throws `invalid_target` if the client isn't linked to every resource via"
+        },
+        {
+          "line": 526,
+          "text": " * the `oauthClientResource` join table. Issues one `findMany` per call."
+        },
+        {
+          "line": 527,
+          "text": " *"
+        },
+        {
+          "line": 528,
+          "text": " * @internal"
+        },
+        {
+          "line": 529,
+          "text": " */"
+        },
+        {
+          "line": 530,
+          "text": "async function assertClientLinkedToResources("
+        },
+        {
+          "line": 531,
+          "text": "\tctx: GenericEndpointContext,"
+        },
+        {
+          "line": 532,
+          "text": "\topts: OAuthOptions<Scope[]>,"
+        },
+        {
+          "line": 533,
+          "text": "\tclientId: string,"
+        },
+        {
+          "line": 534,
+          "text": "\tresources: OAuthResource[],"
+        },
+        {
+          "line": 535,
+          "text": "): Promise<void> {"
+        },
+        {
+          "line": 536,
+          "text": "\tif (resources.length === 0) return;"
+        },
+        {
+          "line": 537,
+          "text": "\tconst modelName ="
+        },
+        {
+          "line": 538,
+          "text": "\t\topts.schema?.oauthClientResource?.modelName ?? \"oauthClientResource\";"
+        },
+        {
+          "line": 539,
+          "text": "\tconst links = await ctx.context.adapter.findMany<OAuthClientResource>({"
+        },
+        {
+          "line": 540,
+          "text": "\t\tmodel: modelName,"
+        },
+        {
+          "line": 541,
+          "text": "\t\twhere: [{ field: \"clientId\", value: clientId }],"
+        },
+        {
+          "line": 542,
+          "text": "\t});"
+        },
+        {
+          "line": 543,
+          "text": "\tconst linkedSet = new Set(links?.map((l) => l.resourceId) ?? []);"
+        },
+        {
+          "line": 544,
+          "text": "\tconst unlinked = resources.filter("
+        },
+        {
+          "line": 545,
+          "text": "\t\t(resource) => !linkedSet.has(resource.identifier),"
+        },
+        {
+          "line": 546,
+          "text": "\t);"
+        },
+        {
+          "line": 547,
+          "text": "\tif (unlinked.length > 0) {"
+        },
+        {
+          "line": 548,
+          "text": "\t\tthrow new APIError(\"BAD_REQUEST\", {"
+        },
+        {
+          "line": 549,
+          "text": "\t\t\terror: \"invalid_target\","
+        },
+        {
+          "line": 550,
+          "text": "\t\t\terror_description: `client ${clientId} is not linked to resource(s) ${unlinked"
+        },
+        {
+          "line": 551,
+          "text": "\t\t\t\t.map((resource) => resource.identifier)"
+        },
+        {
+          "line": 552,
+          "text": "\t\t\t\t.join(\", \")}`,"
+        },
+        {
+          "line": 553,
+          "text": "\t\t});"
+        },
+        {
+          "line": 554,
+          "text": "\t}"
+        }
+      ]
+    },
+    {
+      "file": "C:/cinagroup/cinaauth/packages/oauth-provider/src/resources.ts",
+      "from": 631,
+      "to": 647,
+      "lines": [
+        {
+          "line": 631,
+          "text": "/**"
+        },
+        {
+          "line": 632,
+          "text": " * Resolves the effective {@link OAuthOptions.enforcePerClientResources} value."
+        },
+        {
+          "line": 633,
+          "text": " *"
+        },
+        {
+          "line": 634,
+          "text": " * - Explicit `true | false` always wins (`source: \"explicit\"`)."
+        },
+        {
+          "line": 635,
+          "text": " * - Otherwise resolve to `true` (`source: \"default\"`). RFC 8707 §3 per-client"
+        },
+        {
+          "line": 636,
+          "text": " *   validation is the secure default."
+        },
+        {
+          "line": 637,
+          "text": " *"
+        },
+        {
+          "line": 638,
+          "text": " * Deterministic and pure — safe to call on every validation pass."
+        },
+        {
+          "line": 639,
+          "text": " */"
+        },
+        {
+          "line": 640,
+          "text": "function resolveEnforcePerClientResources("
+        },
+        {
+          "line": 641,
+          "text": "\topts: Pick<OAuthOptions<Scope[]>, \"enforcePerClientResources\">,"
+        },
+        {
+          "line": 642,
+          "text": "): ResolvedEnforcePerClientResources {"
+        },
+        {
+          "line": 643,
+          "text": "\tif (opts.enforcePerClientResources !== undefined) {"
+        },
+        {
+          "line": 644,
+          "text": "\t\treturn { value: opts.enforcePerClientResources, source: \"explicit\" };"
+        },
+        {
+          "line": 645,
+          "text": "\t}"
+        },
+        {
+          "line": 646,
+          "text": "\treturn { value: true, source: \"default\" };"
+        },
+        {
+          "line": 647,
+          "text": "}"
+        }
+      ]
+    },
+    {
+      "file": "C:/cinagroup/cinaauth/packages/oauth-provider/src/resources.ts",
+      "from": 849,
+      "to": 885,
+      "lines": [
+        {
+          "line": 849,
+          "text": "/**"
+        },
+        {
+          "line": 850,
+          "text": " * Seeds `oauthResource` rows from plugin config."
+        },
+        {
+          "line": 851,
+          "text": " *"
+        },
+        {
+          "line": 852,
+          "text": " * Behavior is controlled by {@link OAuthOptions.resourceSeedMode}:"
+        },
+        {
+          "line": 853,
+          "text": " *"
+        },
+        {
+          "line": 854,
+          "text": " * - `\"insertOnly\"` (default, safe): inserts rows whose `identifier` is not"
+        },
+        {
+          "line": 855,
+          "text": " *   already present. Existing rows are untouched — admin edits via CRUD"
+        },
+        {
+          "line": 856,
+          "text": " *   are never reverted on restart."
+        },
+        {
+          "line": 857,
+          "text": " * - `\"merge\"`: inserts missing rows; updates only specified fields for"
+        },
+        {
+          "line": 858,
+          "text": " *   existing rows. Useful when config holds the \"preferred defaults\" but"
+        },
+        {
+          "line": 859,
+          "text": " *   admins customize per-row."
+        },
+        {
+          "line": 860,
+          "text": " * - `\"overwrite\"`: inserts missing rows; replaces every policy column on"
+        },
+        {
+          "line": 861,
+          "text": " *   existing rows with the config value (omitted fields → null). Use only"
+        },
+        {
+          "line": 862,
+          "text": " *   when config is the single source of truth."
+        },
+        {
+          "line": 863,
+          "text": " *"
+        },
+        {
+          "line": 864,
+          "text": " * Race-safety: the `identifier` column carries a UNIQUE constraint, so two"
+        },
+        {
+          "line": 865,
+          "text": " * processes booting simultaneously can each attempt the insert — one wins,"
+        },
+        {
+          "line": 866,
+          "text": " * the other catches the constraint error and treats it as a no-op."
+        },
+        {
+          "line": 867,
+          "text": " *"
+        },
+        {
+          "line": 868,
+          "text": " * Migration ordering: at plugin `init` time, tables may not exist yet"
+        },
+        {
+          "line": 869,
+          "text": " * (CinaAuth's test harness, and many deployment setups, run migrations"
+        },
+        {
+          "line": 870,
+          "text": " * after auth construction). Seeding tolerates \"no such table\" errors and"
+        },
+        {
+          "line": 871,
+          "text": " * defers — the lazy {@link seedResourcesOnce} path picks up the work on"
+        },
+        {
+          "line": 872,
+          "text": " * the first resource access."
+        },
+        {
+          "line": 873,
+          "text": " *"
+        },
+        {
+          "line": 874,
+          "text": " * Idempotent: safe to call multiple times."
+        },
+        {
+          "line": 875,
+          "text": " *"
+        },
+        {
+          "line": 876,
+          "text": " * @internal"
+        },
+        {
+          "line": 877,
+          "text": " */"
+        },
+        {
+          "line": 878,
+          "text": "export async function seedResources("
+        },
+        {
+          "line": 879,
+          "text": "\tctx: AuthContext,"
+        },
+        {
+          "line": 880,
+          "text": "\topts: OAuthOptions<Scope[]>,"
+        },
+        {
+          "line": 881,
+          "text": "): Promise<void> {"
+        },
+        {
+          "line": 882,
+          "text": "\tconst inputs = collectResourceInputs(opts);"
+        },
+        {
+          "line": 883,
+          "text": "\tif (inputs.length === 0) return;"
+        },
+        {
+          "line": 884,
+          "text": ""
+        },
+        {
+          "line": 885,
+          "text": "\tconst mode = opts.resourceSeedMode ?? \"insertOnly\";"
+        }
+      ]
+    },
+    {
+      "file": "C:/cinagroup/cinaauth/packages/oauth-provider/src/resources.ts",
+      "from": 918,
+      "to": 970,
+      "lines": [
+        {
+          "line": 918,
+          "text": "\t\tlet existing: OAuthResource | null;"
+        },
+        {
+          "line": 919,
+          "text": "\t\ttry {"
+        },
+        {
+          "line": 920,
+          "text": "\t\t\texisting = await ctx.adapter.findOne<OAuthResource>({"
+        },
+        {
+          "line": 921,
+          "text": "\t\t\t\tmodel: modelName,"
+        },
+        {
+          "line": 922,
+          "text": "\t\t\t\twhere: [{ field: \"identifier\", value: input.identifier }],"
+        },
+        {
+          "line": 923,
+          "text": "\t\t\t});"
+        },
+        {
+          "line": 924,
+          "text": "\t\t} catch (err) {"
+        },
+        {
+          "line": 925,
+          "text": "\t\t\tconst message = err instanceof Error ? err.message : String(err);"
+        },
+        {
+          "line": 926,
+          "text": "\t\t\tif (MISSING_TABLE_PATTERN.test(message)) {"
+        },
+        {
+          "line": 927,
+          "text": "\t\t\t\tlogger.debug("
+        },
+        {
+          "line": 928,
+          "text": "\t\t\t\t\t\"oauth-provider: oauthResource table not yet created; deferring resource seed to first access.\","
+        },
+        {
+          "line": 929,
+          "text": "\t\t\t\t);"
+        },
+        {
+          "line": 930,
+          "text": "\t\t\t\treturn;"
+        },
+        {
+          "line": 931,
+          "text": "\t\t\t}"
+        },
+        {
+          "line": 932,
+          "text": "\t\t\tthrow err;"
+        },
+        {
+          "line": 933,
+          "text": "\t\t}"
+        },
+        {
+          "line": 934,
+          "text": "\t\tconst now = new Date();"
+        },
+        {
+          "line": 935,
+          "text": ""
+        },
+        {
+          "line": 936,
+          "text": "\t\tif (!existing) {"
+        },
+        {
+          "line": 937,
+          "text": "\t\t\ttry {"
+        },
+        {
+          "line": 938,
+          "text": "\t\t\t\tawait ctx.adapter.create({"
+        },
+        {
+          "line": 939,
+          "text": "\t\t\t\t\tmodel: modelName,"
+        },
+        {
+          "line": 940,
+          "text": "\t\t\t\t\tdata: buildSeedRow(input, now),"
+        },
+        {
+          "line": 941,
+          "text": "\t\t\t\t});"
+        },
+        {
+          "line": 942,
+          "text": "\t\t\t} catch (err) {"
+        },
+        {
+          "line": 943,
+          "text": "\t\t\t\tconst message = err instanceof Error ? err.message : String(err);"
+        },
+        {
+          "line": 944,
+          "text": "\t\t\t\t// Race with a concurrent boot — another process inserted between"
+        },
+        {
+          "line": 945,
+          "text": "\t\t\t\t// our findOne and create. The UNIQUE constraint protects us; treat"
+        },
+        {
+          "line": 946,
+          "text": "\t\t\t\t// the conflict as a no-op so init doesn't fail."
+        },
+        {
+          "line": 947,
+          "text": "\t\t\t\tif (/unique|duplicate|UNIQUE/i.test(message)) {"
+        },
+        {
+          "line": 948,
+          "text": "\t\t\t\t\tlogger.debug("
+        },
+        {
+          "line": 949,
+          "text": "\t\t\t\t\t\t`oauth-provider: resource ${input.identifier} already inserted by a concurrent process — skipping.`,"
+        },
+        {
+          "line": 950,
+          "text": "\t\t\t\t\t);"
+        },
+        {
+          "line": 951,
+          "text": "\t\t\t\t\tcontinue;"
+        },
+        {
+          "line": 952,
+          "text": "\t\t\t\t}"
+        },
+        {
+          "line": 953,
+          "text": "\t\t\t\tif (MISSING_TABLE_PATTERN.test(message)) {"
+        },
+        {
+          "line": 954,
+          "text": "\t\t\t\t\tlogger.debug("
+        },
+        {
+          "line": 955,
+          "text": "\t\t\t\t\t\t\"oauth-provider: oauthResource table not yet created; deferring resource seed to first access.\","
+        },
+        {
+          "line": 956,
+          "text": "\t\t\t\t\t);"
+        },
+        {
+          "line": 957,
+          "text": "\t\t\t\t\treturn;"
+        },
+        {
+          "line": 958,
+          "text": "\t\t\t\t}"
+        },
+        {
+          "line": 959,
+          "text": "\t\t\t\tthrow err;"
+        },
+        {
+          "line": 960,
+          "text": "\t\t\t}"
+        },
+        {
+          "line": 961,
+          "text": "\t\t\tcontinue;"
+        },
+        {
+          "line": 962,
+          "text": "\t\t}"
+        },
+        {
+          "line": 963,
+          "text": ""
+        },
+        {
+          "line": 964,
+          "text": "\t\tif (mode === \"insertOnly\") continue;"
+        },
+        {
+          "line": 965,
+          "text": ""
+        },
+        {
+          "line": 966,
+          "text": "\t\tawait ctx.adapter.update({"
+        },
+        {
+          "line": 967,
+          "text": "\t\t\tmodel: modelName,"
+        },
+        {
+          "line": 968,
+          "text": "\t\t\twhere: [{ field: \"identifier\", value: input.identifier }],"
+        },
+        {
+          "line": 969,
+          "text": "\t\t\tupdate: buildSeedUpdate(input, mode, now),"
+        },
+        {
+          "line": 970,
+          "text": "\t\t});"
+        }
+      ]
+    },
+    {
+      "file": "C:/cinagroup/cinaauth/packages/oauth-provider/src/resources.ts",
+      "from": 507,
+      "to": 513,
+      "lines": [
+        {
+          "line": 507,
+          "text": "\tconst audienceIdentifiers = includesOpenid"
+        },
+        {
+          "line": 508,
+          "text": "\t\t? [...uniqueRequestedResources, userInfoResourceIdentifier]"
+        },
+        {
+          "line": 509,
+          "text": "\t\t: uniqueRequestedResources;"
+        },
+        {
+          "line": 510,
+          "text": "\tconst audClaim = [...new Set(audienceIdentifiers)];"
+        },
+        {
+          "line": 511,
+          "text": ""
+        },
+        {
+          "line": 512,
+          "text": "\treturn {"
+        },
+        {
+          "line": 513,
+          "text": "\t\taudienceClaim: audClaim.length === 1 ? audClaim[0] : audClaim,"
+        }
+      ]
+    },
+    {
+      "file": "C:/cinagroup/cinaauth/packages/oauth-provider/src/authorize.ts",
+      "from": 657,
+      "to": 688,
+      "lines": [
+        {
+          "line": 657,
+          "text": "\t// Validate `resource` (RFC 8707 §2) against the configured resource"
+        },
+        {
+          "line": 658,
+          "text": "\t// entities — fail-fast at /authorize so clients see misconfigured"
+        },
+        {
+          "line": 659,
+          "text": "\t// resources before consent UI. Re-validated at /oauth2/token because"
+        },
+        {
+          "line": 660,
+          "text": "\t// clients typically re-supply the parameter there."
+        },
+        {
+          "line": 661,
+          "text": "\tif (query.resource !== undefined) {"
+        },
+        {
+          "line": 662,
+          "text": "\t\ttry {"
+        },
+        {
+          "line": 663,
+          "text": "\t\t\tawait resolveResourcePolicy(ctx, opts, {"
+        },
+        {
+          "line": 664,
+          "text": "\t\t\t\tresource: query.resource,"
+        },
+        {
+          "line": 665,
+          "text": "\t\t\t\tclientId: client.clientId,"
+        },
+        {
+          "line": 666,
+          "text": "\t\t\t\trequestedScopes,"
+        },
+        {
+          "line": 667,
+          "text": "\t\t\t});"
+        },
+        {
+          "line": 668,
+          "text": "\t\t} catch (err) {"
+        },
+        {
+          "line": 669,
+          "text": "\t\t\tif (err instanceof APIError) {"
+        },
+        {
+          "line": 670,
+          "text": "\t\t\t\tconst error ="
+        },
+        {
+          "line": 671,
+          "text": "\t\t\t\t\t(err.body as { error?: string })?.error ?? \"invalid_target\";"
+        },
+        {
+          "line": 672,
+          "text": "\t\t\t\tconst description ="
+        },
+        {
+          "line": 673,
+          "text": "\t\t\t\t\t(err.body as { error_description?: string })?.error_description ??"
+        },
+        {
+          "line": 674,
+          "text": "\t\t\t\t\t\"requested resource invalid\";"
+        },
+        {
+          "line": 675,
+          "text": "\t\t\t\treturn handleRedirect("
+        },
+        {
+          "line": 676,
+          "text": "\t\t\t\t\tctx,"
+        },
+        {
+          "line": 677,
+          "text": "\t\t\t\t\tformatErrorURL("
+        },
+        {
+          "line": 678,
+          "text": "\t\t\t\t\t\tquery.redirect_uri,"
+        },
+        {
+          "line": 679,
+          "text": "\t\t\t\t\t\terror,"
+        },
+        {
+          "line": 680,
+          "text": "\t\t\t\t\t\tdescription,"
+        },
+        {
+          "line": 681,
+          "text": "\t\t\t\t\t\tquery.state,"
+        },
+        {
+          "line": 682,
+          "text": "\t\t\t\t\t\tgetIssuer(ctx, opts),"
+        },
+        {
+          "line": 683,
+          "text": "\t\t\t\t\t),"
+        },
+        {
+          "line": 684,
+          "text": "\t\t\t\t);"
+        },
+        {
+          "line": 685,
+          "text": "\t\t\t}"
+        },
+        {
+          "line": 686,
+          "text": "\t\t\tthrow err;"
+        },
+        {
+          "line": 687,
+          "text": "\t\t}"
+        },
+        {
+          "line": 688,
+          "text": "\t}"
+        }
+      ]
+    },
+    {
+      "file": "C:/cinagroup/cinaauth/workers/auth-api/test/admin-oidc-resource.integration.test.ts",
+      "from": 144,
+      "to": 176,
+      "lines": [
+        {
+          "line": 144,
+          "text": "\t\tquery.set(\"resource\", \"https://unregistered.example.com\");"
+        },
+        {
+          "line": 145,
+          "text": "\t\tconst rejected = await authorize();"
+        },
+        {
+          "line": 146,
+          "text": "\t\texpect("
+        },
+        {
+          "line": 147,
+          "text": "\t\t\tnew URL(rejected.headers.get(\"location\")!).searchParams.get(\"error\"),"
+        },
+        {
+          "line": 148,
+          "text": "\t\t).toBe(\"invalid_target\");"
+        },
+        {
+          "line": 149,
+          "text": "\t\tquery.set(\"resource\", ADMIN_OIDC_RESOURCE);"
+        },
+        {
+          "line": 150,
+          "text": "\t\tawait context.adapter.deleteMany({"
+        },
+        {
+          "line": 151,
+          "text": "\t\t\tmodel: \"oauthClientResource\","
+        },
+        {
+          "line": 152,
+          "text": "\t\t\twhere: [{ field: \"clientId\", value: ADMIN_OIDC_CLIENT_ID }],"
+        },
+        {
+          "line": 153,
+          "text": "\t\t});"
+        },
+        {
+          "line": 154,
+          "text": "\t\tconst unlinked = await authorize();"
+        },
+        {
+          "line": 155,
+          "text": "\t\texpect("
+        },
+        {
+          "line": 156,
+          "text": "\t\t\tnew URL(unlinked.headers.get(\"location\")!).searchParams.get(\"error\"),"
+        },
+        {
+          "line": 157,
+          "text": "\t\t).toBe(\"invalid_target\");"
+        },
+        {
+          "line": 158,
+          "text": "\t\tawait context.adapter.update({"
+        },
+        {
+          "line": 159,
+          "text": "\t\t\tmodel: \"oauthResource\","
+        },
+        {
+          "line": 160,
+          "text": "\t\t\twhere: [{ field: \"identifier\", value: ADMIN_OIDC_RESOURCE }],"
+        },
+        {
+          "line": 161,
+          "text": "\t\t\tupdate: { disabled: true, accessTokenTtl: 120 },"
+        },
+        {
+          "line": 162,
+          "text": "\t\t});"
+        },
+        {
+          "line": 163,
+          "text": "\t\tawait ensureAdminOidcClient("
+        },
+        {
+          "line": 164,
+          "text": "\t\t\t{ query: execute },"
+        },
+        {
+          "line": 165,
+          "text": "\t\t\tclientSecret,"
+        },
+        {
+          "line": 166,
+          "text": "\t\t\tADMIN_OIDC_RESOURCE,"
+        },
+        {
+          "line": 167,
+          "text": "\t\t);"
+        },
+        {
+          "line": 168,
+          "text": "\t\tconst resource = await context.adapter.findOne({"
+        },
+        {
+          "line": 169,
+          "text": "\t\t\tmodel: \"oauthResource\","
+        },
+        {
+          "line": 170,
+          "text": "\t\t\twhere: [{ field: \"identifier\", value: ADMIN_OIDC_RESOURCE }],"
+        },
+        {
+          "line": 171,
+          "text": "\t\t});"
+        },
+        {
+          "line": 172,
+          "text": "\t\texpect(resource).toMatchObject({ disabled: true, accessTokenTtl: 120 });"
+        },
+        {
+          "line": 173,
+          "text": "\t\tconst disabled = await authorize();"
+        },
+        {
+          "line": 174,
+          "text": "\t\texpect("
+        },
+        {
+          "line": 175,
+          "text": "\t\t\tnew URL(disabled.headers.get(\"location\")!).searchParams.get(\"error\"),"
+        },
+        {
+          "line": 176,
+          "text": "\t\t).toBe(\"invalid_target\");"
+        }
+      ]
+    }
+  ],
+  "sourceBudgetDisclosure": {
+    "thisProducerNewNecessaryRepoInputs": 8,
+    "additionalInstructionFile": "C:/cinagroup/cinaauth/AGENTS.md read for repository rules, not a product source input",
+    "peerAuxiliaryDocsRead": 1,
+    "peerDoc": {
+      "path": "C:/cinagroup/cinatoken/docs/operators/deployment/unified-console-production.md",
+      "bytes": 12190,
+      "sha256": "3ed8affcb8fbf2ad16a80c8afefdda4f66233653674301250fe339b032a226ea",
+      "authority": "Peer message, not independently re-read",
+      "finding": "No client_id/issuer/audience/resource registration metadata; do not count this as registration proof"
+    },
+    "note": "Concurrent peer had already read one auxiliary public runbook before remaining source quota notice; no further full source reads permitted in this review."
+  },
+  "toolObservations": [
+    {
+      "chunk": "a86be0",
+      "actualExit": 0,
+      "scope": "Read-only cinagroup directory listing confirmed cinaauth exists"
+    },
+    {
+      "chunk": "05d76f",
+      "actualExit": 0,
+      "scope": "Initial overly broad rg returned truncated archive/checklist matches; no causal evidence claimed"
+    },
+    {
+      "chunk": "900a49",
+      "actualExit": 0,
+      "scope": "Read-only cinaauth top-level names"
+    },
+    {
+      "chunk": "bcdb16",
+      "actualExit": 0,
+      "scope": "Repository AGENTS instructions"
+    },
+    {
+      "chunk": "e4f81a",
+      "actualExit": 0,
+      "scope": "Source search only"
+    },
+    {
+      "chunk": "85d1c9",
+      "actualExit": 0,
+      "scope": "Narrow source search"
+    },
+    {
+      "chunk": "74fabb",
+      "actualExit": 0,
+      "scope": "Selected line display truncated; later exact sources re-read with hashes for this report"
+    },
+    {
+      "chunk": "6cf212",
+      "actualExit": 0,
+      "scope": "Resource branch and reference search"
+    },
+    {
+      "chunk": "81375b",
+      "actualExit": 1,
+      "scope": "Read display and public-config JSON succeeded; final rg found no enforcement override, so combined tool exit is 1. This is preserved, not changed to 0 or a child receipt."
+    },
+    {
+      "chunk": "f5d2e7",
+      "actualExit": 0,
+      "scope": "Already-read resource audience construction and public-profile config lines"
+    }
+  ],
+  "fullG7": false,
+  "G8": false,
+  "conclusion": "Local source establishes a specific registration/bootstrap omission candidate. Production invalid_target cause remains unproven pending actual provider branch and pure entity/link metadata."
+}

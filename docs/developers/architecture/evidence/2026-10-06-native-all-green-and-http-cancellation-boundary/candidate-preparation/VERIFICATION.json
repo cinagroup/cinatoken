@@ -1,0 +1,21 @@
+{
+  "schema": "new-evidence-candidate-independent-storage-roundtrip-verification-v1",
+  "at": "2026-10-06T07:51:16.780Z",
+  "actualStorageVerificationExit": 0,
+  "report": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4/REPORT.json",
+    "bytes": 234190,
+    "sha256": "51786faca8b523e354dae2ea89c6a63dae6c5613a7b1ff7dda8b243cd8180d6b"
+  },
+  "fileCount": 211,
+  "originalBytes": 8721828,
+  "storedBytes": 2898840,
+  "storedCompleteSetExact": true,
+  "allDecodedOriginalHashesExact": true,
+  "allCurrentSourceBytesExact": true,
+  "allFrozenSourceSetsExact": true,
+  "sourceCommit": "757490181564aa822f960f5d8704857b98b230d0",
+  "gatePassDerived": false,
+  "runtimeExecutedByVerifier": false,
+  "networkRequest": false
+}

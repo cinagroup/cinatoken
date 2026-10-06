@@ -1,0 +1,86 @@
+{
+  "schema": "auth-addon-reviewed-new-repository-paths-final-v1",
+  "at": "2026-10-06T09:00:42.320Z",
+  "actualCopyAndIndependentVerificationExit": 0,
+  "repositoryEvidenceIndex": {
+    "path": "C:/cinagroup/cinatoken/docs/developers/architecture/evidence/2026-10-06-native-all-green-and-http-cancellation-boundary/auth-boundary-static-index.json",
+    "bytes": 178097,
+    "sha256": "d60b3589b39325d6e8d2a2a4bbb8b4ceabc947355f633c496e80b59e5342e8bd"
+  },
+  "newPayloadFiles": 142,
+  "newPreparationFiles": 20,
+  "newIndexFiles": 1,
+  "totalNewRepositoryFiles": 163,
+  "allStoredAndDecodedOriginalByteHashesVerified": true,
+  "completeNewTwoDirectoryFileSetExact": true,
+  "allNewPathsWrittenWithWx": true,
+  "sourceFrozenAddonUnchanged": true,
+  "sourceSixExternalSealsUnchanged": true,
+  "existingBaseCollectionUnchanged": true,
+  "existingBaseEvidenceWriteAttempted": false,
+  "sourceReportPin": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/ADDON-REPORT.json",
+    "bytes": 171106,
+    "sha256": "f6e5e7cebe4808cc650624f6592a928aa91b35427e7259a8a603e3cadbe103f1"
+  },
+  "actualClosedCommands": [
+    {
+      "receipt": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1/copy-reviewed-addon.closed.json",
+        "bytes": 1105,
+        "sha256": "8abe8622d41ed8e644c94b4c35332f525add0d523d42c0f34c5d1a2dc3cfe27b"
+      },
+      "actualExit": 0,
+      "stdout": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1/copy-reviewed-addon.stdout.log",
+        "bytes": 832,
+        "sha256": "8d8f6c86eb4e62ad5ce03f973ba6867b28e0a7e4262a14d4f1c442c6b19825c9"
+      },
+      "stderr": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1/copy-reviewed-addon.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1/verify-reviewed-addon-copy.closed.json",
+        "bytes": 1126,
+        "sha256": "f715bfe4668a8558e1f9e19e4dfa79a654a02c26c1877323c3a6c43f0c92c3c3"
+      },
+      "actualExit": 0,
+      "stdout": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1/verify-reviewed-addon-copy.stdout.log",
+        "bytes": 640,
+        "sha256": "452a04ff538c75e4cafba5514eeb2682bb0ab83c64e11291eba0dc1ffe1efd86"
+      },
+      "stderr": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1/verify-reviewed-addon-copy.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "copyProof": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1/repository-copy-proof.json",
+    "bytes": 919,
+    "sha256": "503b6b4b80e01667f1887d6f49a3722f3cb3742ac5c27393a4d9e2a0b64a0922"
+  },
+  "independentVerification": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1/repository-independent-verification.json",
+    "bytes": 702,
+    "sha256": "826f317601ed6125cb4e9fba73260185c0f691e764196966d428228890737285"
+  },
+  "repositoryEditsStopped": true,
+  "GitCalled": false,
+  "MDChanged": false,
+  "networkCalled": false,
+  "productionCalled": false,
+  "productTestsOrRuntimeExecuted": false,
+  "archiveCopied": true,
+  "staticEvidenceOnly": true,
+  "SQLite7NotLiveDatabase": true,
+  "deployOrIdentityLoginVerified": false,
+  "fullG2OrG7OrG8PassDerived": false,
+  "collection0NotAcceptancePass": true
+}

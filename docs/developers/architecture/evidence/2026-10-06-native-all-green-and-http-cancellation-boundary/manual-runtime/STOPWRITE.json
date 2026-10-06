@@ -1,0 +1,289 @@
+{
+  "schema": "v364-observation-frozen-full-regular-file-set-v1",
+  "at": "2026-10-06T07:33:24.153Z",
+  "stopWrite": true,
+  "regularFileCount": 56,
+  "files": [
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/artifacts-terminal.result.json",
+      "bytes": 1379,
+      "sha256": "c59cd0ea8069f771a826bd2ddcdc66c68ee05fc61c19d16f384e90e68b96f113"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/artifacts-terminal.stderr.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/artifacts-terminal.stdout.raw",
+      "bytes": 771,
+      "sha256": "e90a29d0871c352cdc7274f6506b917d95609167bfee77fc4b36a71c969913b4"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/binding.json",
+      "bytes": 1105,
+      "sha256": "3dc299ba80984c51f4be793fff09c4697424149cd6b632f2a26ea6db595e5b0b"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/download-artifact-once.result.json",
+      "bytes": 1380,
+      "sha256": "58f5bc4c1206c08cfec95fbc1bb18c241826fd59294865cc06ca3d807b2f9156"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/download-artifact-once.stderr.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/download-artifact-once.stdout.raw",
+      "bytes": 115610,
+      "sha256": "86e78aec5cf52ebdf9d2e538dbfe1d82a5852a1099102801eef78fec3f30c0f4"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/extract-artifact.result.json",
+      "bytes": 1372,
+      "sha256": "72805d24cd03c26a94112364e122c7fc7f55e2a80af98e937c791146a686a170"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/extract-artifact.stderr.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/extract-artifact.stdout.raw",
+      "bytes": 108,
+      "sha256": "7c75edc75681e1ee8c58d9a082c4b6900e653699d4319b1854db0005a8f417b4"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/FINAL-linux-artifact-independent-review.json",
+      "bytes": 54492,
+      "sha256": "d968ef3aefcc1e85ce8efe93d0363edcb4fdf6daa6de4a67cef20871b7e52de8"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/FINAL-observation-seal-summary.json",
+      "bytes": 30025,
+      "sha256": "76b96252b57b08b90705fa6042d9d31261a49efaf40903774c386f7176944a49"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/final-seal.result.json",
+      "bytes": 1037,
+      "sha256": "17a0a50f572b7b233b6908fe82aad476ef7052f65d89fbdfd01fce162303f5f0"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/final-seal.stderr.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/final-seal.stdout.raw",
+      "bytes": 611,
+      "sha256": "f558d5fb3c44a0fcc99f683689539327ef0d6c6640351d42c6ac90b79c3376fd"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/finalize-observation.mjs",
+      "bytes": 6360,
+      "sha256": "83b3d8edff69f99a86a0e032c48a5c5309777a2fba8c3a7797be440d668deee3"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/full-artifact/cinatoken/cinatoken/.github/workflows/v364-direct-socket.yml",
+      "bytes": 1575,
+      "sha256": "f4e2b9da3c9be4374e4945c7daab7dc3c166fb4c9e1d2d61ff804ca3dc3b04e9"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/full-artifact/cinatoken/cinatoken/scripts/diagnostics/v364-direct-socket/execute-owned-linux.py",
+      "bytes": 15959,
+      "sha256": "c635a435873185363faf23e1cbaa6887b858a9f23e32882a6ce54ff5405e15e0"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/full-artifact/cinatoken/cinatoken/scripts/diagnostics/v364-direct-socket/native-reader-calibration.mjs",
+      "bytes": 2546,
+      "sha256": "e838769c950b49056ffc4e6580e41d8ec15a245db6efff6829c170642fb8ee8f"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/full-artifact/cinatoken/cinatoken/scripts/diagnostics/v364-direct-socket/queued-write-source.mjs",
+      "bytes": 3557,
+      "sha256": "93417db1e3b0edbb3dd06b504bddee18ba6fbb1bbf31141cd20ce119dea7fb5d"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/full-artifact/cinatoken/cinatoken/scripts/diagnostics/v364-direct-socket/README.md",
+      "bytes": 6774,
+      "sha256": "97bbd1c8bf42a1aa761fe526fc50a4057c65e790c8fbe659fcc3cd97d938c357"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/full-artifact/cinatoken/cinatoken/scripts/diagnostics/v364-direct-socket/run-direct-socket.mjs",
+      "bytes": 52009,
+      "sha256": "8fbaaed9523ecb227bd0e47ce8092d7432c08f8b67fd8650569d69d711ef48a8"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/full-artifact/cinatoken/cinatoken/scripts/diagnostics/v364-direct-socket/sealed-package.json",
+      "bytes": 1190,
+      "sha256": "69cfacc9b02d66531a0624cdf980fb39a4f998745949970c2962b4691bfc17a5"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/full-artifact/cinatoken/cinatoken/scripts/diagnostics/v364-direct-socket/source-inputs.json",
+      "bytes": 5028,
+      "sha256": "a4046af64da2e2f61b37ee9ea92658bc2d54236052c859477c57d9049f62e3e9"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/full-artifact/_temp/v364-direct-socket-once-37429341568-1/closed-result.json",
+      "bytes": 27936,
+      "sha256": "c80314f6f8ad98cd48d028ed84ead64de4d98667e547dcb9202e327bde5357d3"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/full-artifact/_temp/v364-direct-socket-once-37429341568-1/events.json",
+      "bytes": 505693,
+      "sha256": "911585f8780744580221de6c26c901ade67a01b0c20ddcd6b7cac73803b919e4"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/full-artifact/_temp/v364-direct-socket-once-37429341568-1/events.ndjson",
+      "bytes": 390847,
+      "sha256": "c8145e82e21101bcf3242419eec06cbb031e715d82fa64df97daaaef95239712"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/full-artifact/_temp/v364-direct-socket-once-37429341568-1/executor-start.json",
+      "bytes": 693,
+      "sha256": "e52302d7170f9c606248c5ddd76a09de384951476942b5b60e143e27f7bf0342"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/full-artifact/_temp/v364-direct-socket-once-37429341568-1/executor.closed.json",
+      "bytes": 5914,
+      "sha256": "7d7f66a258298739f1d8e0616796fa288743e781415585407ab7951324100139"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/full-artifact/_temp/v364-direct-socket-once-37429341568-1/executor.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/full-artifact/_temp/v364-direct-socket-once-37429341568-1/executor.stdout.txt",
+      "bytes": 170,
+      "sha256": "4c73f735d5e89068119c4c408827539e91447c49b841ecd9cbb4e6e971552c9c"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/full-artifact/_temp/v364-direct-socket-once-37429341568-1/original-strict.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/full-artifact/_temp/v364-direct-socket-once-37429341568-1/original-strict.stdout.txt",
+      "bytes": 2870,
+      "sha256": "74f220d412dc232b65b51b0ec798951373a014d72df1128c657ae0dd503dbb57"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/full-artifact-index.json",
+      "bytes": 9103,
+      "sha256": "acb354edb6cba43cd4aa510bffda18cb90f5c1acffdc571e1723f7fab48f1efa"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/job-log-once.result.json",
+      "bytes": 1346,
+      "sha256": "b090a8cb5f6c5d7f62379ec3e8991b3e295b226f5bf9b6d889e9850007366978"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/job-log-once.stderr.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/job-log-once.stdout.raw",
+      "bytes": 23777,
+      "sha256": "aa8035c0b7b01ca6aff10752b355a06ea5bbf35d10b96a4c9dfc32daae899d38"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/jobs-terminal.result.json",
+      "bytes": 1374,
+      "sha256": "70c1fbc8e6a53e94e05b58b13863df3aa1bb79dfabdfa302f1a95bd04ed9ab33"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/jobs-terminal.stderr.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/jobs-terminal.stdout.raw",
+      "bytes": 2524,
+      "sha256": "7b4861f53b7862f5efa5c3a85d2052bca3552699a26b04ee470707d0d2657859"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/prepare-local-review-v2.mjs",
+      "bytes": 1632,
+      "sha256": "5658366be4ce647126445d3e6a9bc1a287cb0c547a6e3a704f0466bafd90d484"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/review-artifact-v2.mjs",
+      "bytes": 13686,
+      "sha256": "f98f570ece34be81c79702b9a26f01acdabe784c2113ca5f22e48e80ab45643b"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/review-artifact-v2.result.json",
+      "bytes": 1314,
+      "sha256": "10de34da1e853d0d23edebc9da63ecc49f442069476ed8073ba653fe2b130387"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/review-artifact-v2.stderr.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/review-artifact-v2.stdout.raw",
+      "bytes": 578,
+      "sha256": "372f3b948b02bcdbb65a890923903089daf6f7e6b28ff04c99272e5bd9b1acab"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/review-artifact.result.json",
+      "bytes": 1317,
+      "sha256": "fbc34e6a511c9f8f74f4dc1451c3524674b37b9b5f575356c92558e566cd303b"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/review-artifact.stderr.raw",
+      "bytes": 1647,
+      "sha256": "c480b783755588ab7fc5915f5c028395fda16214d133f186abc6a4647bab0eb1"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/review-artifact.stdout.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/run-final-seal-command.mjs",
+      "bytes": 2563,
+      "sha256": "a736e1fc25bd3175ff8eae8ff0e5383a22bfc6d355ad60b255793b6d9a785726"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/run-local-review-v2.mjs",
+      "bytes": 2735,
+      "sha256": "dc8661554f21b77d0f491e77a4ba13b0cc1d6c7dc5f892ed439de723286989df"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/run-terminal.result.json",
+      "bytes": 1340,
+      "sha256": "030a5273682062e6264a864ad0d4ab7cf4e96052dfd1865f52ca73ba80d33c62"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/run-terminal.stderr.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/run-terminal.stdout.raw",
+      "bytes": 12430,
+      "sha256": "3d103f6af3f75903576513671f492a9a4f132a0da94690e38afd7b07f1fd7327"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/watch.result.json",
+      "bytes": 1348,
+      "sha256": "e6486f6faf77fcb0855a325e6778f986569b06125cb9a31afabc34300e97ca58"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/watch.stderr.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/watch.stdout.raw",
+      "bytes": 101,
+      "sha256": "cf45c4deab1f14cd2e1421cc3265519022297d8eb3b32a8f67e244d4625d2476"
+    }
+  ],
+  "CIOrProductPassDerived": false
+}

@@ -1,0 +1,31 @@
+{
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-firstparty-v2-approval-readonly-d1773460e5534b5fb174cd493de58d61\\review-v2-and-approval-status.mjs",
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-firstparty-v2-approval-readonly-d1773460e5534b5fb174cd493de58d61"
+  ],
+  "cwd": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-firstparty-v2-approval-readonly-d1773460e5534b5fb174cd493de58d61",
+  "startedAt": "2026-10-06T09:05:26.692Z",
+  "endedAt": "2026-10-06T09:05:26.807Z",
+  "actualExit": 0,
+  "signal": null,
+  "error": null,
+  "sourceProgram": {
+    "path": "review-v2-and-approval-status.mjs",
+    "bytes": 7398,
+    "sha256": "282c665a52d6db3fec6535bec22b3721449c4e49356eab47a6d3a0721eee754d"
+  },
+  "stdout": {
+    "path": "static-review.stdout.log",
+    "bytes": 687,
+    "sha256": "1ce66d0c5d27d6759a08cf12b4a4ac68b69505fa481e2358270798c2b48a42fd"
+  },
+  "stderr": {
+    "path": "static-review.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "collectionOnly": true,
+  "productionWriteApprovalRejectedHasNoChild": true,
+  "noLiveRepairPassDerived": true
+}

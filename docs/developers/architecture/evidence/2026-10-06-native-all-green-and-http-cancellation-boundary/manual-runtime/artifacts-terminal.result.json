@@ -1,0 +1,37 @@
+{
+  "schema": "cinatoken-v364-queued-linux-readonly-gh-command-closed-v1",
+  "closed": true,
+  "mode": "artifacts-terminal",
+  "program": "C:/Program Files/GitHub CLI/gh.exe",
+  "args": [
+    "api",
+    "--allow-escape-sequences",
+    "/repos/cinagroup/cinatoken/actions/runs/37429341568/artifacts?per_page=100"
+  ],
+  "startedAt": "2026-10-06T07:29:38.338Z",
+  "endedAt": "2026-10-06T07:29:39.946Z",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "timedOut": false,
+  "timeoutMs": 120000,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c\\artifacts-terminal.stdout.raw",
+    "bytes": 771,
+    "sha256": "e90a29d0871c352cdc7274f6506b917d95609167bfee77fc4b36a71c969913b4"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c\\artifacts-terminal.stderr.raw",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "sourceSHA": "757490181564aa822f960f5d8704857b98b230d0",
+  "runId": "37429341568",
+  "runAttempt": 1,
+  "expectedArtifactName": "v364-direct-socket-757490181564aa822f960f5d8704857b98b230d0-37429341568-1",
+  "ciDispatched": false,
+  "workflowRerun": false,
+  "productionRequest": false,
+  "appExecuted": false,
+  "gatePassDerived": false
+}

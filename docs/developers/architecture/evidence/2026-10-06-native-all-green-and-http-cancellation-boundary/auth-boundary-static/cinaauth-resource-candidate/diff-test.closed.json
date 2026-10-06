@@ -1,0 +1,27 @@
+{
+  "label": "diff-test",
+  "command": [
+    "C:/Program Files/Git/cmd/git.exe",
+    "diff",
+    "--no-index",
+    "--no-prefix",
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d\\test-user-working-baseline.ts",
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d\\candidate\\workers\\auth-api\\test\\cinatoken-oidc-client.test.ts"
+  ],
+  "cwd": "C:/cinagroup/cinaauth",
+  "startedAt": "2026-10-06T08:21:02.081Z",
+  "endedAt": "2026-10-06T08:21:02.133Z",
+  "actualExit": 1,
+  "signal": null,
+  "error": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d\\diff-test.stdout.log",
+    "bytes": 7115,
+    "sha256": "6c1b581710186e480f2800677cadc3ee67cd2ace9fce26adb2e3ebaf3eb6e5c2"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d\\diff-test.stderr.log",
+    "bytes": 484,
+    "sha256": "8aba6fead6cb6d2097fe600ed0d58be7c7b99cb7cd49272dd3345bf89fb76602"
+  }
+}

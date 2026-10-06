@@ -1,0 +1,20 @@
+{
+  "schema": "cinatoken-six-root-auth-addon-independent-byte-roundtrip-v1",
+  "at": "2026-10-06T08:52:16.709Z",
+  "actualStorageVerificationExit": 0,
+  "report": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/ADDON-REPORT.json",
+    "bytes": 171106,
+    "sha256": "f6e5e7cebe4808cc650624f6592a928aa91b35427e7259a8a603e3cadbe103f1"
+  },
+  "fileCount": 142,
+  "originalBytes": 937059,
+  "storedBytes": 937059,
+  "storedWholeSetExact": true,
+  "sourceWholeSetsExact": true,
+  "allSourceAndStoredDecodedHashesExact": true,
+  "externalSourcePinsUnchanged": true,
+  "existingEvidenceModified": false,
+  "networkOrRuntimeOrTestsExecuted": false,
+  "gatePassDerived": false
+}

@@ -1,0 +1,34 @@
+{
+  "schema": "v364-observation-frozen-full-regular-file-set-v1",
+  "at": "2026-10-06T07:33:24.133Z",
+  "stopWrite": true,
+  "regularFileCount": 5,
+  "files": [
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-469dbd7159f148e2a48ec73ae718ab77/binding.json",
+      "bytes": 785,
+      "sha256": "af4175d833c5d8c31251e949fa1238ab7c13e2a5c87eae8719919739977bcb43"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-469dbd7159f148e2a48ec73ae718ab77/create-network-watch-binding.mjs",
+      "bytes": 854,
+      "sha256": "f4115e1bcfafcf12c92d3934f9d289728433dd7556a84548b40d20ec7986b3a7"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-469dbd7159f148e2a48ec73ae718ab77/watch.result.json",
+      "bytes": 1348,
+      "sha256": "908eb94cac33c96184be1e59f5ed7977fec5ebc43aeb460f6db1906c65e0b9e9"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-469dbd7159f148e2a48ec73ae718ab77/watch.stderr.raw",
+      "bytes": 249,
+      "sha256": "29fde823bf5bdb54d35c9135f5f9919e0a344b648ec0a9f6c69bf8fbd550576b"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-469dbd7159f148e2a48ec73ae718ab77/watch.stdout.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "CIOrProductPassDerived": false
+}

@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-06T08:53:52.632Z",
+  "finishedAt": "2026-10-06T08:54:11.771Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\read-registration-via-owned-worker.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\registration-live-readonly.stdout.log",
+    "bytes": 1734,
+    "sha256": "ea27981a2ae2299d48441f4ff16e5934fe105e231bbc7ba84d1056c4f3fbaa51"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\registration-live-readonly.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

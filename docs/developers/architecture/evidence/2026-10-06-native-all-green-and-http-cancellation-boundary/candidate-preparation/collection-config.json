@@ -1,0 +1,22 @@
+{
+  "schema": "cinatoken-new-only-native-http-boundary-collection-config-v1",
+  "sourceCommit": "757490181564aa822f960f5d8704857b98b230d0",
+  "proposedRepositoryDestination": "docs/developers/architecture/evidence/2026-10-06-native-all-green-and-http-cancellation-boundary/",
+  "roots": [
+    {"id":"ci-terminal","path":"C:/Users/cina/AppData/Local/Temp/cinatoken-757-ci-terminal-observer-6fcdbd7046af4bc89f5c9935f0db1dcc","seal":"TERMINAL-STOPWRITE-SEAL.json","bytes":29790,"sha256":"dcd8d14258360d77a2ab8ce0f38adcad51bb6195f2b55b3427796b35dec34d7e"},
+    {"id":"manual-runtime","path":"C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c","seal":"STOPWRITE.json","bytes":15640,"sha256":"a3bf35f9a74a8910d5b45dbecc9b43df9f82aa0b194a708c9dcf96698b28403f"},
+    {"id":"manual-network-failure","path":"C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-469dbd7159f148e2a48ec73ae718ab77","seal":"STOPWRITE.json","bytes":1453,"sha256":"41c86330ee35c689b69e3d4833d6edcc342b4e06c1c828588a4a89f4d8c6e3f8"},
+    {"id":"manual-observation-tools","path":"C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-observation-tools-87b2c4dae3a8480c87b50e9d4c2b8e8b","seal":"STOPWRITE-tools.json","bytes":5753,"sha256":"4634a684e450faf481072af63b90aaabcf7510c693e94bf1f7588aaecc547a9b"},
+    {"id":"official-source-research","path":"C:/Users/cina/AppData/Local/Temp/cinatoken-v364-official-source-research-7Kzvom","seal":"STOPWRITE-peer-seal.json","bytes":2076,"sha256":"5361be0b55c122bd79a2aa07356329d472e52a3ed21c9c9f593708246cd96e47"},
+    {"id":"g2-readonly","path":"C:/Users/cina/AppData/Local/Temp/cinatoken-next-real-g2-readonly-9020e3b1287d48ec9a0bd1c67b698924","seal":"STOPWRITE.json","bytes":2096,"sha256":"d58b69aab4a9944ef4216e91f82eb1bc65e24a20c48508d58008d7954cdb46d6"},
+    {"id":"playwright-fallback","path":"C:/Users/cina/AppData/Local/Temp/cinatoken-playwright-fallback-readonly-92e5efc975ee40f8b704394d3e9f188c","seal":"STOPWRITE.json","bytes":1663,"sha256":"500a6ce4b867943689ef314e2fe504c737c8d8b8c8b669b8e439c49237d66efe"}
+  ],
+  "selectedRoot": "C:/Users/cina/AppData/Local/Temp/cinatoken-web-followup-da56f69292e44387886a9cc8ffa36638",
+  "selectedId": "source-control-selected",
+  "selectedPrefixes": ["commit-retention-backlog","committed-retention-head","push-retention-backlog","remote-retention-head","clean-after-retention","dispatch-queued-diagnostic","queued-diagnostic-initial"],
+  "selectedExtensions": [".result.json",".stdout.log",".stderr.log"],
+  "selectedSourceFile": "run-closed-compact.mjs",
+  "compression": {"minimumExclusiveBytes":131072,"eligibleExtensions":[".log",".raw",".md"],"gzipLevel":9,"allOtherFilesExact":true,"zipNeverRecompressed":true},
+  "semanticBoundary": {"runtimeExecuted":true,"runtimeExecutedByCollector":false,"kernelBacklogObserved":true,"cppPendingWriteProven":false,"sourceCancelObserved":false,"naturalStrictPassed":false,"rootCauseConfirmed":false,"fullG7Passed":false,"fullG8Passed":false,"collection0NotGatePass":true,"g2LocalEnvironmentMissingMeansProductionUnknown":true},
+  "scope": {"newEvidenceOnly":true,"olderRoots208_325_3357NotRead":true,"repositoryWrite":false,"networkRequest":false,"runtimeOrTestsRerun":false}
+}

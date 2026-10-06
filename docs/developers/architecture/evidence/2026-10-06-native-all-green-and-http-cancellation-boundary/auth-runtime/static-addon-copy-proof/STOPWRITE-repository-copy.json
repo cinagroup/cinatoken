@@ -1,0 +1,96 @@
+{
+  "schema": "auth-addon-repository-copy-successor-stopwrite-v1",
+  "at": "2026-10-06T09:00:42.346Z",
+  "STOPWRITE": true,
+  "filesBeforeSelf": 17,
+  "files": [
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1/copy-reviewed-addon.closed.json",
+      "bytes": 1105,
+      "sha256": "8abe8622d41ed8e644c94b4c35332f525add0d523d42c0f34c5d1a2dc3cfe27b"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1/copy-reviewed-addon.mjs",
+      "bytes": 6281,
+      "sha256": "1e9396093a211ca79cfb4266ad9f2d64103ef95b64df14ca92687a379041446f"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1/copy-reviewed-addon.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1/copy-reviewed-addon.stdout.log",
+      "bytes": 832,
+      "sha256": "8d8f6c86eb4e62ad5ce03f973ba6867b28e0a7e4262a14d4f1c442c6b19825c9"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1/FINAL-repository-addon-copy.json",
+      "bytes": 3965,
+      "sha256": "1400566640b34ad560801073757b85906d4d5d1e125ae0c175c11dbac6924200"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1/repository-copy-proof.json",
+      "bytes": 919,
+      "sha256": "503b6b4b80e01667f1887d6f49a3722f3cb3742ac5c27393a4d9e2a0b64a0922"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1/repository-independent-verification.json",
+      "bytes": 702,
+      "sha256": "826f317601ed6125cb4e9fba73260185c0f691e764196966d428228890737285"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1/run-copy-final-seal.mjs",
+      "bytes": 2373,
+      "sha256": "98a83f4183a4a491b96df0e613cab7b88388d25a3f94e6edbf4c569e5c8dc5dd"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1/run-repository-copy-commands.mjs",
+      "bytes": 1734,
+      "sha256": "8826156491e5b26085099d0f636a324046f7b633872e1e457238654a67d2050f"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1/seal-repository-copy.closed.json",
+      "bytes": 1113,
+      "sha256": "04acd544ea045a1ef54ef2784ce14d3d6597a76b50c7e08000e228cdddf06beb"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1/seal-repository-copy.mjs",
+      "bytes": 2603,
+      "sha256": "299d1db5a200da2b34a8d74218740708f73c2f2eb7dd296421f6d43cc9bad94d"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1/seal-repository-copy.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1/seal-repository-copy.stdout.log",
+      "bytes": 614,
+      "sha256": "fc672d0d624a3f591f12f6405a968358032c2ff6761e41970ec4be53f74ed8ae"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1/verify-reviewed-addon-copy.closed.json",
+      "bytes": 1126,
+      "sha256": "f715bfe4668a8558e1f9e19e4dfa79a654a02c26c1877323c3a6c43f0c92c3c3"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1/verify-reviewed-addon-copy.mjs",
+      "bytes": 2565,
+      "sha256": "157bdac46f050df269d35374748b93d3f30472e2b41601c2b2a453be11571145"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1/verify-reviewed-addon-copy.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1/verify-reviewed-addon-copy.stdout.log",
+      "bytes": 640,
+      "sha256": "452a04ff538c75e4cafba5514eeb2682bb0ab83c64e11291eba0dc1ffe1efd86"
+    }
+  ],
+  "selfExcluded": "STOPWRITE-repository-copy.json",
+  "repositoryEditsStopped": true,
+  "collection0NotAcceptancePass": true
+}

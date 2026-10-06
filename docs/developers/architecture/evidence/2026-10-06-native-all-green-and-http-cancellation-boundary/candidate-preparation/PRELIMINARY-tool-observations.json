@@ -1,0 +1,21 @@
+{
+  "schema": "preliminary-readonly-tool-observation-preserved-v1",
+  "source": "Actual exec_command tool outputs; not independent spawn child stream receipts",
+  "observations": [
+    {
+      "chunk_id": "a2fdb5",
+      "exit_code": 0,
+      "wall_time_seconds": 0.7238645,
+      "nonterminatingErrors": 6,
+      "error": "Cannot index into a null array while probing optional seal.entries for six schemas; no source writes or collection pass derived."
+    },
+    {
+      "chunk_id": "f23f36",
+      "exit_code": 0,
+      "wall_time_seconds": 0.3633088,
+      "nonterminatingErrors": 1,
+      "error": "Cannot index into a null array probing top-level financial8to113; actual field is native.financial8to113. Complete CI source copied unchanged."
+    }
+  ],
+  "observationsDoNotProveRuntimeOrSourcePass": true
+}

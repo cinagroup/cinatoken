@@ -1,0 +1,361 @@
+{
+  "schema": "cinatoken-registration-runtime-and-controller-corrected-peer-v1",
+  "createdAt": "2026-10-06T09:01:35.894Z",
+  "sourceRoot": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68",
+  "inputs": [
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-registration-preview-readonly-prepared-mqVPEM\\registration-metadata.worker.mjs",
+      "bytes": 4052,
+      "sha256": "38880c12a7c7107fc7906358f48d546294aa7fa21b939197810582ffc72b6b6b"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\registration-runtime-v2\\registration-metadata.worker.mjs",
+      "bytes": 4044,
+      "sha256": "44d83eefffd275c0b4122294e8cc57af6590df2078c7f9f79a5cd1a8460e5885"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\registration-runtime-v2\\registration-metadata.bundle.mjs",
+      "bytes": 81026,
+      "sha256": "a2d547c6de353ada6eb908a4068df2f597d75a7f85ca96c76d00724f008d2e67"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\read-registration-via-owned-worker.mjs",
+      "bytes": 6990,
+      "sha256": "9c957baffb6f6b128a64900416359c420a7109b510b882f4628eafdae6106a43"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\repair-registration-via-owned-worker.mjs",
+      "bytes": 7567,
+      "sha256": "f3bc3660f311f99ead7108208dac1aeccd3d3e63e3d639445ad6ec468163372b"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\registration-link-repair\\registration-link-repair.bundle.mjs",
+      "bytes": 82380,
+      "sha256": "2e8feaf50cad98f1cb775b58ec6d2e7e2b6da527f8560aca015fd7cdaa0d0474"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\registration-live-readonly.json",
+      "bytes": 2401,
+      "sha256": "989bb034ac0ed4faf8336b1d341f3a4b4ab56c2df1dac364bb505a2bd361d0f7"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\registration-live-readonly.result.json",
+      "bytes": 865,
+      "sha256": "a762615988a2ea9bb5abeb57e1a475ba5b3768649328a7d261cea0e045b8ad6f"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\registration-live-readonly.stdout.log",
+      "bytes": 1734,
+      "sha256": "ea27981a2ae2299d48441f4ff16e5934fe105e231bbc7ba84d1056c4f3fbaa51"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\registration-live-readonly.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\registration-owned-plan.json",
+      "bytes": 642,
+      "sha256": "827959838c80471c19f430d4e486c13f74d70286aa3e180f52cde0dcafcf8265"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\registration-owned-preflight.json",
+      "bytes": 149,
+      "sha256": "113e6cf033acfa86895af73aba98b754d2a3976a76445cb8cb169cb592a52a45"
+    }
+  ],
+  "reviewOnly": true,
+  "networkRequestsPerformedByPeer": 0,
+  "remoteOperationsPerformedByPeer": 0,
+  "postgresLoaded": false,
+  "workerModuleExecuted": false,
+  "repositoryChanged": false,
+  "independentReadOnlyAudit": "Pure filesystem reads, byte hashing and Babel AST parse; this new audit process exit does not replace the original producer runtime closure",
+  "sourceDelta": {
+    "originalWorker": {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-registration-preview-readonly-prepared-mqVPEM\\registration-metadata.worker.mjs",
+      "bytes": 4052,
+      "sha256": "38880c12a7c7107fc7906358f48d546294aa7fa21b939197810582ffc72b6b6b"
+    },
+    "derivedWorker": {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\registration-runtime-v2\\registration-metadata.worker.mjs",
+      "bytes": 4044,
+      "sha256": "44d83eefffd275c0b4122294e8cc57af6590df2078c7f9f79a5cd1a8460e5885"
+    },
+    "derivedBundle": {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\registration-runtime-v2\\registration-metadata.bundle.mjs",
+      "bytes": 81026,
+      "sha256": "a2d547c6de353ada6eb908a4068df2f597d75a7f85ca96c76d00724f008d2e67"
+    },
+    "onlySemanticChanges": "Remove startup connection GUC object; replace transaction callback by three SET LOCAL timeout statements then same single fixed parameterized SELECT",
+    "allOtherProgramAstExact": true,
+    "allRemainingConnectionOptionsExact": true,
+    "readOnlyBeginRetained": true,
+    "fixedSelectExact": true,
+    "transactionTimeouts": [
+      "SET LOCAL statement_timeout = 5000",
+      "SET LOCAL lock_timeout = 2000",
+      "SET LOCAL idle_in_transaction_session_timeout = 7000"
+    ],
+    "timeoutScope": "SET LOCAL cleared by transaction completion; driver client end does not prove physical upstream pool shutdown",
+    "readonlyDatabaseRoleNotProven": true,
+    "firstControlTimeoutDoesNotCoverConnectionOrBegin": true
+  },
+  "separatorCorrection": {
+    "originalFalseAlert": "Peer incorrectly reported literal backslash-n separators and asked Root to pause",
+    "falseAlertPreserved": true,
+    "withdrawn": true,
+    "causeOfFalseAlert": "JSON tool display escaped the one source backslash; display escaping was incorrectly treated as actual source bytes",
+    "actualJoinSourceLine": 14,
+    "actualJoinSourceBytes": [
+      93,
+      46,
+      106,
+      111,
+      105,
+      110,
+      40,
+      39,
+      92,
+      110,
+      39,
+      41,
+      59
+    ],
+    "parsedSeparatorCodePoints": [
+      10
+    ],
+    "separatorIsRealNewline": true,
+    "priorIndependentAstTool": {
+      "chunkId": "41cce7",
+      "actualExit": 0,
+      "scope": "Pure Babel AST parse/hash; no probe or SQL execution"
+    },
+    "noV3Needed": true,
+    "noRepeatedProbeRequested": true
+  },
+  "originalRuntime": {
+    "receipt": {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\registration-live-readonly.result.json",
+      "bytes": 865,
+      "sha256": "a762615988a2ea9bb5abeb57e1a475ba5b3768649328a7d261cea0e045b8ad6f"
+    },
+    "report": {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\registration-live-readonly.json",
+      "bytes": 2401,
+      "sha256": "989bb034ac0ed4faf8336b1d341f3a4b4ab56c2df1dac364bb505a2bd361d0f7"
+    },
+    "stdout": {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\registration-live-readonly.stdout.log",
+      "bytes": 1734,
+      "sha256": "ea27981a2ae2299d48441f4ff16e5934fe105e231bbc7ba84d1056c4f3fbaa51"
+    },
+    "stderr": {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\registration-live-readonly.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "executable": "C:/Program Files/nodejs/node.exe",
+    "args": [
+      "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\read-registration-via-owned-worker.mjs"
+    ],
+    "cwd": "C:/cinagroup/cinatoken",
+    "actualExit": 0,
+    "signal": null,
+    "at": "2026-10-06T08:53:52.632Z",
+    "finishedAt": "2026-10-06T08:54:11.771Z",
+    "worker": "cinatoken-regmeta-87f21f6fc05ecc223b9b87bc",
+    "metadata": {
+      "status": 200,
+      "observedAt": "2026-10-06T08:54:08.279Z",
+      "values": {
+        "clientExists": true,
+        "clientDisabled": false,
+        "resourceExists": true,
+        "resourceDisabled": false,
+        "linkExists": false
+      }
+    },
+    "metadataRequests": 1,
+    "cleanup": {
+      "deleteStatus": 200,
+      "deleteSuccess": true,
+      "verifyStatus": 404,
+      "absent": true
+    },
+    "healthTransportFailuresPreserved": [
+      {
+        "label": "health_no_database",
+        "attempt": 1,
+        "transport": "failed"
+      },
+      {
+        "label": "health_no_database",
+        "attempt": 2,
+        "transport": "failed"
+      },
+      {
+        "label": "health_no_database",
+        "attempt": 3,
+        "transport": "failed"
+      },
+      {
+        "label": "health_no_database",
+        "attempt": 4,
+        "transport": "failed"
+      }
+    ],
+    "healthFifthExpected404": true,
+    "steps": [
+      {
+        "label": "unique_name_preflight",
+        "method": "GET",
+        "status": 404,
+        "success": false,
+        "errorCodes": [
+          10007
+        ]
+      },
+      {
+        "label": "account_workers_domain",
+        "method": "GET",
+        "status": 200,
+        "success": true,
+        "errorCodes": []
+      },
+      {
+        "label": "upload_temporary_only",
+        "method": "PUT",
+        "status": 200,
+        "success": true,
+        "errorCodes": []
+      },
+      {
+        "label": "enable_temporary_workers_dev",
+        "method": "POST",
+        "status": 200,
+        "success": true,
+        "errorCodes": []
+      },
+      {
+        "label": "health_no_database",
+        "attempt": 1,
+        "transport": "failed"
+      },
+      {
+        "label": "health_no_database",
+        "attempt": 2,
+        "transport": "failed"
+      },
+      {
+        "label": "health_no_database",
+        "attempt": 3,
+        "transport": "failed"
+      },
+      {
+        "label": "health_no_database",
+        "attempt": 4,
+        "transport": "failed"
+      },
+      {
+        "label": "health_no_database",
+        "attempt": 5,
+        "status": 404,
+        "expected": true
+      },
+      {
+        "label": "delete_owned_temporary",
+        "method": "DELETE",
+        "status": 200,
+        "success": true,
+        "errorCodes": []
+      },
+      {
+        "label": "verify_owned_script_absent",
+        "method": "GET",
+        "status": 404,
+        "success": false,
+        "errorCodes": [
+          10007
+        ]
+      }
+    ],
+    "scope": "Root original remote temporary Worker producer receipt and public sanitized report checked against its raw streams; not a fresh peer remote execution"
+  },
+  "originalReadController": {
+    "file": {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\read-registration-via-owned-worker.mjs",
+      "bytes": 6990,
+      "sha256": "9c957baffb6f6b128a64900416359c420a7109b510b882f4628eafdae6106a43"
+    },
+    "boundary": "Temporary ordinary REST-uploaded public workers.dev endpoint with private random application gate, not legacy remote preview or network-private transport",
+    "noExistingWorkersOrRoutesBound": true,
+    "onlyFixedHyperdriveAndGateBinding": true,
+    "unknownPutCleanupAttempted": true,
+    "deleteAndVerificationIndependentlyTried": true,
+    "metadataSoleFixedGet": true,
+    "gateNoPersistenceOrOutput": true,
+    "healthWrongPathBeforeDatabase": true,
+    "eachRequestAbortSignalAlsoCoversBody": true,
+    "outerLifecycle": "Root reported no total hard deadline; same owned child session polled until true process close; unknown cleanup uses public owned-plan name",
+    "hyperdriveCachingDisabled": "Reported earlier Root configuration GET caching.disabled=true; no new CF query performed by peer and no independent cache proof added here"
+  },
+  "preparedRepairController": {
+    "file": {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\repair-registration-via-owned-worker.mjs",
+      "bytes": 7567,
+      "sha256": "f3bc3660f311f99ead7108208dac1aeccd3d3e63e3d639445ad6ec468163372b"
+    },
+    "bundle": {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\registration-link-repair\\registration-link-repair.bundle.mjs",
+      "bytes": 82380,
+      "sha256": "2e8feaf50cad98f1cb775b58ec6d2e7e2b6da527f8560aca015fd7cdaa0d0474"
+    },
+    "reviewedLines": {
+      "namespaceAndGate": "8-16",
+      "preflightAndUnknownPut": "30-41",
+      "fixedBindingsNoLogs": "36",
+      "solePost": "58-60",
+      "exactResponseAndSafeErrors": "63-73",
+      "independentDeleteVerify": "74-88"
+    },
+    "controllerBlockerFound": false,
+    "preparedOnly": true,
+    "executedByPeer": false,
+    "liveWriteResultReviewed": false,
+    "plannedDatabaseDml": "Fixed client-resource association INSERT only; this is not the original read-only probe",
+    "responseSuccessShape": "Exactly3 root keys; before/after exactly5 booleans; enabled existing client/resource and final exact link true; insertedClientLink boolean",
+    "noBodyOrQueryOrAutomaticPostReplay": true,
+    "solePostFailureBoundary": "Timeout, transport failure or malformed response may follow committed SQL; never infer rollback or automatically replay",
+    "cleanupProofRequired": "Original true child close plus exact owned Worker DELETE and settings404; forced outer termination must not be treated as cleanup",
+    "sqlReviewBoundary": "Worker locks/guards/INSERT/SQLite cases are separately reviewed by native_four_peer; this review only controls multipart binding, fixed bundle pin, request and cleanup/no-output behavior"
+  },
+  "finding": {
+    "observedDatabaseState": "Enabled fixed client and enabled exact origin resource exist; their exact client-resource association is absent at08:54:08.279Z",
+    "inference": "This supplies the missing-link branch metadata that matches previously reviewed provider invalid_target checks; do not treat this static+metadata correspondence as a repaired or authenticated end-to-end login",
+    "repairAppliedByThisRead": false,
+    "realIdentityAuthenticationVerified": false,
+    "fullG7": false,
+    "G8": false
+  },
+  "priorNegativeObservations": [
+    {
+      "kind": "originalRootPurePreparationFailure",
+      "actualExit": 1,
+      "description": "First prepare used unexported postgres/package.json resolution; no remote operation; old root source/raw/receipt retained by producer",
+      "authority": "Earlier Root message/source review; not derived from later successful preparation"
+    },
+    {
+      "kind": "peerReportGeneratorSetupFailure",
+      "toolChunkId": "bd4e0c",
+      "toolObservedActualExit": 1,
+      "error": "SyntaxError: unexpected identifier rollback in nested outer template literal regex",
+      "phase": "Parsing failed before generator execution; no Temp files created and no child/probe/SQL run",
+      "terminalAuthority": "Original exec tool observation only; no fabricated child or raw-stream receipt"
+    },
+    {
+      "kind": "peerFalseSeparatorAlert",
+      "observation": "Incorrect alert was sent to Root and in commentary; explicitly withdrawn with byte/AST proof above, not deleted or rewritten"
+    }
+  ]
+}

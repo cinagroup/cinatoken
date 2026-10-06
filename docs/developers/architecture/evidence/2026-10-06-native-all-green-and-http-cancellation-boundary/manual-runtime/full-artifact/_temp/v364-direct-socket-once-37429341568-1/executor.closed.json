@@ -1,0 +1,222 @@
+{
+  "schema": "v364-direct-socket-executor-closed-v1",
+  "startedEpoch": 1791271480.2442932,
+  "elapsedMs": 32539.745527999996,
+  "actualProcessExit": 1,
+  "runnerOutcomeCode": 1,
+  "actualExit": 1,
+  "outcome": "STRICT_FAILURE_OR_UNKNOWN_PRESERVED",
+  "timedOut": false,
+  "interrupted": false,
+  "fatal": null,
+  "packageSHA256": "69cfacc9b02d66531a0624cdf980fb39a4f998745949970c2962b4691bfc17a5",
+  "checkoutSHA": "757490181564aa822f960f5d8704857b98b230d0",
+  "run": {
+    "GITHUB_SHA": "757490181564aa822f960f5d8704857b98b230d0",
+    "GITHUB_RUN_ID": "37429341568",
+    "GITHUB_RUN_ATTEMPT": "1",
+    "GITHUB_WORKFLOW": "v364 owned direct Workerd socket cancellation",
+    "GITHUB_JOB": "direct-socket-cancellation"
+  },
+  "reportedActualExit": 1,
+  "closedReportPresent": true,
+  "closure": {
+    "authority": "this executor",
+    "subreaperEnabled": true,
+    "directChildReaped": true,
+    "groupGone": true,
+    "leftoverGroupKilled": false,
+    "signalAttempts": [],
+    "reapedDescendants": [
+      {
+        "pid": 2657,
+        "startTimeTicks": "10665",
+        "waitStatus": 0,
+        "waitExitCode": 0,
+        "source": "individually identified adopted zombie"
+      },
+      {
+        "pid": 2690,
+        "startTimeTicks": "10697",
+        "waitStatus": 0,
+        "waitExitCode": 0,
+        "source": "individually identified adopted zombie"
+      },
+      {
+        "pid": 2704,
+        "startTimeTicks": "10706",
+        "waitStatus": 0,
+        "waitExitCode": 0,
+        "source": "individually identified adopted zombie"
+      },
+      {
+        "pid": 2710,
+        "startTimeTicks": "10773",
+        "waitStatus": 0,
+        "waitExitCode": 0,
+        "source": "individually identified adopted zombie"
+      }
+    ],
+    "processCensus": [
+      {
+        "label": "before-initial-adopted-reap",
+        "elapsedMs": 32508.008829999995,
+        "pgrp": 2626,
+        "session": 2626,
+        "members": [
+          {
+            "pid": 2657,
+            "comm": "esbuild",
+            "state": "Z",
+            "ppid": 2624,
+            "pgrp": 2626,
+            "session": 2626,
+            "startTimeTicks": "10665"
+          },
+          {
+            "pid": 2690,
+            "comm": "esbuild",
+            "state": "Z",
+            "ppid": 2624,
+            "pgrp": 2626,
+            "session": 2626,
+            "startTimeTicks": "10697"
+          },
+          {
+            "pid": 2704,
+            "comm": "esbuild",
+            "state": "Z",
+            "ppid": 2624,
+            "pgrp": 2626,
+            "session": 2626,
+            "startTimeTicks": "10706"
+          },
+          {
+            "pid": 2710,
+            "comm": "esbuild",
+            "state": "Z",
+            "ppid": 2624,
+            "pgrp": 2626,
+            "session": 2626,
+            "startTimeTicks": "10773"
+          }
+        ],
+        "live": 0,
+        "zombies": 4,
+        "unknown": [],
+        "complete": true,
+        "groupExists": true
+      },
+      {
+        "label": "after-initial-adopted-reap",
+        "elapsedMs": 32514.56090299999,
+        "pgrp": 2626,
+        "session": 2626,
+        "members": [],
+        "live": 0,
+        "zombies": 0,
+        "unknown": [],
+        "complete": true,
+        "groupExists": false
+      },
+      {
+        "label": "after-term-before-reap",
+        "elapsedMs": 32520.828316000006,
+        "pgrp": 2626,
+        "session": 2626,
+        "members": [],
+        "live": 0,
+        "zombies": 0,
+        "unknown": [],
+        "complete": true,
+        "groupExists": false
+      },
+      {
+        "label": "after-term-after-reap",
+        "elapsedMs": 32526.99717499999,
+        "pgrp": 2626,
+        "session": 2626,
+        "members": [],
+        "live": 0,
+        "zombies": 0,
+        "unknown": [],
+        "complete": true,
+        "groupExists": false
+      },
+      {
+        "label": "final-adopt-drain",
+        "elapsedMs": 32533.175811999998,
+        "pgrp": 2626,
+        "session": 2626,
+        "members": [],
+        "live": 0,
+        "zombies": 0,
+        "unknown": [],
+        "complete": true,
+        "groupExists": false
+      },
+      {
+        "label": "final-post-reap",
+        "elapsedMs": 32539.384805999987,
+        "pgrp": 2626,
+        "session": 2626,
+        "members": [],
+        "live": 0,
+        "zombies": 0,
+        "unknown": [],
+        "complete": true,
+        "groupExists": false
+      }
+    ],
+    "apiDisposalReported": true,
+    "outerUnforcedGroupClose": true,
+    "gracefulWorkerdExitProven": false,
+    "miniflareDisposeMaySendSIGKILL": true,
+    "errors": []
+  },
+  "causeProven": false,
+  "productionRequests": 0,
+  "ciInvocations": 0,
+  "files": [
+    {
+      "path": "closed-result.json",
+      "bytes": 27936,
+      "sha256": "c80314f6f8ad98cd48d028ed84ead64de4d98667e547dcb9202e327bde5357d3"
+    },
+    {
+      "path": "events.json",
+      "bytes": 505693,
+      "sha256": "911585f8780744580221de6c26c901ade67a01b0c20ddcd6b7cac73803b919e4"
+    },
+    {
+      "path": "events.ndjson",
+      "bytes": 390847,
+      "sha256": "c8145e82e21101bcf3242419eec06cbb031e715d82fa64df97daaaef95239712"
+    },
+    {
+      "path": "executor-start.json",
+      "bytes": 693,
+      "sha256": "e52302d7170f9c606248c5ddd76a09de384951476942b5b60e143e27f7bf0342"
+    },
+    {
+      "path": "executor.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "executor.stdout.txt",
+      "bytes": 170,
+      "sha256": "4c73f735d5e89068119c4c408827539e91447c49b841ecd9cbb4e6e971552c9c"
+    },
+    {
+      "path": "original-strict.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "original-strict.stdout.txt",
+      "bytes": 2870,
+      "sha256": "74f220d412dc232b65b51b0ec798951373a014d72df1128c657ae0dd503dbb57"
+    }
+  ]
+}

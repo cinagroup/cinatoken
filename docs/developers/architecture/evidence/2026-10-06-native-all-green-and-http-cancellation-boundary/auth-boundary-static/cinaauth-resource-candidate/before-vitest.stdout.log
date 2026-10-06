@@ -1,0 +1,18 @@
+
+ RUN  v4.1.10 C:/Users/cina/AppData/Local/Temp/cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d/before
+
+ ❯ workers/auth-api/test/cinatoken-oidc-client.test.ts (7 tests | 3 failed) 39ms
+     ✓ recognizes only fixed-client GET authorization requests 20ms
+     ✓ stores only the secret hash and exact cinatoken redirect 3ms
+     ✓ rejects weak or unprefixed secrets before querying 2ms
+     × initializes the missing exact resource and client association 8ms
+     × is idempotent without replacing the original resource or link 2ms
+     ✓ preserves disabled resource policy and operator-managed link metadata 1ms
+     × never links another client or enables an unrelated resource 1ms
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 4 passed (7)
+   Start at  16:22:11
+   Duration  926ms (transform 104ms, setup 0ms, import 144ms, tests 39ms, environment 0ms)
+
+JSON report written to C:/Users/cina/AppData/Local/Temp/cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d/before-vitest.json

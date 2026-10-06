@@ -1,0 +1,18 @@
+{
+ "schema":"cinatoken-auth-runtime-public-evidence-selection-v1",
+ "evidencePrefix":"C:/cinagroup/cinatoken/docs/developers/architecture/evidence/2026-10-06-native-all-green-and-http-cancellation-boundary",
+ "selectedTopRoots":[
+  {"id":"root-public-runtime","path":"C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68","excludeNames":["checklist-before-5.86.md"],"noRecursion":true},
+  {"id":"browser-public-runtime","path":"C:/Users/cina/AppData/Local/Temp/cinatoken-real-auth-browser-6459c6e3517098","excludeExtensions":[".png"],"noRecursion":true}
+ ],
+ "selectedSubdirectories":{"rootId":"root-public-runtime","allow":[{"directory":"registration-runtime","files":["worker.mjs"]},{"directory":"registration-runtime-v2","fileTypes":["worker","bundle","prepared"],"expectedCount":3},{"directory":"registration-link-repair","fileTypes":["worker","bundle","prepared"],"expectedCount":3},{"directory":"registration-link-repair-v2","fileTypes":["worker","bundle","prepared"],"expectedCount":3}],"expectedTotal":10},
+ "frozenRoots":[
+  {"id":"controller-corrected-peer","path":"C:/Users/cina/AppData/Local/Temp/cinatoken-registration-controller-corrected-peer-rgamZa","count":7,"seal":"STOPWRITE-peer-seal.json","sealBytes":1690,"sealSHA":"13b917dd6599467226987ced10b80bbd74ab407f12a2c4c828c57b3297673071","final":"FINAL-registration-runtime-controller-corrected-peer.json","finalBytes":15031,"finalSHA":"058bd9f09249fcf651875b3b3075a2c992d254aee2a3112dde4ba6b21c81cd80"},
+  {"id":"static-addon-copy-proof","path":"C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1","count":18,"seal":"STOPWRITE-repository-copy.json","sealBytes":4903,"sealSHA":"32c31d8ea90e37b90f4ad6dc1ffb8a324f96d8e9ea4bfac00b321f653db51c77","final":"FINAL-repository-addon-copy.json","finalBytes":3965,"finalSHA":"1400566640b34ad560801073757b85906d4d5d1e125ae0c175c11dbac6924200"},
+  {"id":"firstparty-data-repair-plan","path":"C:/Users/cina/AppData/Local/Temp/cinaauth-firstparty-data-repair-plan-41c3699de26d498096ecf6cc9e498880","count":16,"seal":"STOPWRITE.json","sealBytes":3037,"sealSHA":"f3d81d4e64e4404be94bd036877b6988af53e043d1c6aec5d9826c247bff64d2","finalBytes":10534,"finalSHA":"941768352a41832c0dbad482c08ce12954cf309e929b443a9152f104216ea224"},
+  {"id":"firstparty-v2-approval-peer","path":"C:/Users/cina/AppData/Local/Temp/cinaauth-firstparty-v2-approval-readonly-d1773460e5534b5fb174cd493de58d61","count":9,"seal":"STOPWRITE.json","sealBytes":1864,"sealSHA":"d6d4aa7d24a7d4b4ec8792b224134bc3c9699135e2d8d735ff9c10b573cba0fa","final":"FINAL-firstparty-link-v2-approval-review.json","finalBytes":7883,"finalSHA":"02c32e5f780cd8f765d1ac233acdac1ef6ea190871c860b629f6d26a8f5b7ea9"}
+ ],
+ "sourceAuthority":"Root explicitly selected R/B existing public proofs and promised existing files stable. Selection is frozen once; later new Root files are excluded.",
+ "excludedMaterial":{"oldChecklist":true,"browserPNGScreenshots":true,"envValues":true,"APIKeys":true,"requestAuthenticationHeaderValues":true,"connectionStrings":true,"memoryGateValues":true,"secretFiles":true},
+ "scope":{"newPublicEvidenceOnly":true,"old3357OrSixStaticSourceRootsNotTraversed":true,"MDGitAPICalled":false,"runtimeOrDatabaseExecutedByCollector":false,"actualRepairApprovalRequired":true,"noProductionWriteOrLoginPassDerived":true}
+}

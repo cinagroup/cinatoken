@@ -1,0 +1,30 @@
+{
+  "label": "git-head",
+  "command": [
+    "C:/Program Files/Git/cmd/git.exe",
+    "-c",
+    "safe.directory=C:/cinagroup/cinaauth",
+    "-c",
+    "core.excludesFile=NUL",
+    "-C",
+    "C:/cinagroup/cinaauth",
+    "rev-parse",
+    "HEAD"
+  ],
+  "cwd": "C:/cinagroup/cinaauth",
+  "startedAt": "2026-10-06T08:20:11.552Z",
+  "endedAt": "2026-10-06T08:20:11.609Z",
+  "actualExit": 0,
+  "signal": null,
+  "error": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d\\git-head.stdout.log",
+    "bytes": 41,
+    "sha256": "30b4e4ec31fea0db6dd43905552676ff8e5cd0e906d4523372faf301fdcf1730"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d\\git-head.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

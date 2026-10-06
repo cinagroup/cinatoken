@@ -1,0 +1,20 @@
+{
+  "schema": "observed-tool-filesystem-read-failure-v1",
+  "tool": "exec_command",
+  "chunkId": "37ac1d",
+  "actualToolExit": 1,
+  "wallTimeSeconds": 0.3379388,
+  "operation": "PowerShell System.IO.File.ReadAllLines of the still-open original watch stdout",
+  "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-757-ci-terminal-observer-6fcdbd7046af4bc89f5c9935f0db1dcc/proxy-watch-1.stdout.log",
+  "exception": "The process cannot access the file because it is being used by another process.",
+  "atomicFilesystemExitCode": null,
+  "filesystemNativeErrorCode": null,
+  "originalSeparatedStdout": null,
+  "originalSeparatedStderr": null,
+  "originalCombinedToolOutputRetainedInConversation": true,
+  "combinedToolOutput": "MethodInvocationException: \r\nLine |\r\n   2 |  … 5f0db1dcc'; $watchLines=[IO.File]::ReadAllLines((Join-Path $observerR …\r\n     |                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n     | Exception calling \"ReadAllLines\" with \"1\" argument(s): \"The process cannot access the file 'C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-757-ci-terminal-observer-6fcdbd7046af4bc89f5c9935f0db1dcc\\proxy-watch-1.stdout.log' because it is being used by another process.\"\r\nException: \r\nLine |\r\n   2 |  … ndices.Count -eq 0){ throw 'No original native watch section' }; $las …\r\n     |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n     | No original native watch section\r\n",
+  "transcriptionOfToolResult": true,
+  "notFabricatedChildReceipt": true,
+  "notCIStatus": true,
+  "noGHQuery": true
+}

@@ -1,0 +1,27 @@
+{
+  "schema": "cinatoken-v364-final-local-seal-command-closed-v1",
+  "closed": true,
+  "program": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c\\finalize-observation.mjs"
+  ],
+  "startedAt": "2026-10-06T07:33:24.004Z",
+  "endedAt": "2026-10-06T07:33:24.127Z",
+  "actualExit": 0,
+  "signal": null,
+  "timedOut": false,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/final-seal.stdout.raw",
+    "bytes": 611,
+    "sha256": "f558d5fb3c44a0fcc99f683689539327ef0d6c6640351d42c6ac90b79c3376fd"
+  },
+  "stderr": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/final-seal.stderr.raw",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "runtimeExecuted": false,
+  "CIRequest": false,
+  "gatePassDerived": false
+}

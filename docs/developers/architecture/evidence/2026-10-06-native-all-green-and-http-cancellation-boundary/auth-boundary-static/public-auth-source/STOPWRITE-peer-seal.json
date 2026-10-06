@@ -1,0 +1,59 @@
+{
+  "schema": "public-home-cinaauth-source-review-stopwrite-v1",
+  "at": "2026-10-06T07:56:07.193Z",
+  "root": "C:/Users/cina/AppData/Local/Temp/cinatoken-public-auth-start-readonly-3sVv88",
+  "filesBeforeSelf": 6,
+  "entries": [
+    {
+      "file": "FINAL-public-home-cinaauth-source-review.json",
+      "bytes": 26520,
+      "sha256": "ecf9d80e83a272036cf3a018a45da746c4ad5b236703ee76d197f946a64875b5"
+    },
+    {
+      "file": "capture-readonly.mjs",
+      "bytes": 1405,
+      "sha256": "73f8ec0159b113f5339119649fe0ccfd402740897076ddf439d9f91009bb4b67"
+    },
+    {
+      "file": "read-auth-source.mjs",
+      "bytes": 13077,
+      "sha256": "7ef61531b89abb0d4de10025addec3bac5c8d4e704c059b4234a10fb6d7ab6ab"
+    },
+    {
+      "file": "readonly-auth-source.closed.json",
+      "bytes": 897,
+      "sha256": "193a2db5a9039f0c78a99fdfbc634e7b7152d94cbd0c8cdbbbee73ab67b1ccac"
+    },
+    {
+      "file": "readonly-auth-source.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "readonly-auth-source.stdout.log",
+      "bytes": 285,
+      "sha256": "465a29db3d3e09a36396fcbf51e804ad647c8f8a963e75ba4088765088c995df"
+    }
+  ],
+  "final": {
+    "file": "FINAL-public-home-cinaauth-source-review.json",
+    "bytes": 26520,
+    "sha256": "ecf9d80e83a272036cf3a018a45da746c4ad5b236703ee76d197f946a64875b5"
+  },
+  "actualReadonlyChild": {
+    "file": "readonly-auth-source.closed.json",
+    "actualExit": 0,
+    "at": "2026-10-06T07:55:47.814Z",
+    "finishedAt": "2026-10-06T07:55:47.898Z"
+  },
+  "STOPWRITE": true,
+  "readOnly": true,
+  "repositoryWrites": 0,
+  "envOrSecretFilesRead": false,
+  "credentialsRead": false,
+  "productionOrIssuerRequests": 0,
+  "browserStarted": false,
+  "causeProven": false,
+  "applicationTestPassDerived": false,
+  "selfExcludedOnly": true
+}

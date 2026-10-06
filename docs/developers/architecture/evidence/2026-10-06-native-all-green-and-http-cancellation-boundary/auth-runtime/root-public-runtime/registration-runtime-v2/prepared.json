@@ -1,0 +1,31 @@
+{
+  "at": "2026-10-06T08:48:38.408Z",
+  "sourceBytes": 4044,
+  "sourceSha256": "44d83eefffd275c0b4122294e8cc57af6590df2078c7f9f79a5cd1a8460e5885",
+  "bundleBytes": 81026,
+  "bundleSha256": "a2d547c6de353ada6eb908a4068df2f597d75a7f85ca96c76d00724f008d2e67",
+  "syntax": [
+    {
+      "name": "registration-metadata.worker.mjs",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdoutBytes": 0,
+      "stderrBytes": 0
+    },
+    {
+      "name": "registration-metadata.bundle.mjs",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdoutBytes": 0,
+      "stderrBytes": 0
+    }
+  ],
+  "runtimeExecuted": false,
+  "rowOrSchemaWrites": false,
+  "rootDelta": "Replace connection startup GUCs with transaction-local timeouts; BEGIN READ ONLY and fixed parameterized SELECT remain",
+  "originalFrozenSourceSha256": "38880c12a7c7107fc7906358f48d546294aa7fa21b939197810582ffc72b6b6b",
+  "previousPreparationActualExit": 1,
+  "previousFailure": "ERR_PACKAGE_PATH_NOT_EXPORTED before esbuild/remote/SQL; original files retained"
+}

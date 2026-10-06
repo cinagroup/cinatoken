@@ -1,0 +1,30 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+import {createRequire} from 'node:module';
+import {fileURLToPath} from 'node:url';
+import {spawnSync} from 'node:child_process';
+const here=path.dirname(fileURLToPath(import.meta.url)),runtime=path.join(here,'registration-runtime-v2');
+const sha=b=>createHash('sha256').update(b).digest('hex');
+const sourceBytes=fs.readFileSync(path.join(here,'registration-runtime/registration-metadata.worker.mjs'));
+const source=sourceBytes.toString('utf8');
+assert.equal((source.match(/sql\.begin\('read only'/g)||[]).length,1);
+assert.equal((source.match(/transaction\.unsafe\(/g)||[]).length,4);
+assert.doesNotMatch(source,/\b(?:INSERT|UPDATE|DELETE|CREATE|ALTER|DROP|GRANT|REVOKE|TRUNCATE)\b/);
+assert.doesNotMatch(source,/connection:|default_transaction_read_only|console\./);
+fs.mkdirSync(runtime);
+fs.writeFileSync(path.join(runtime,'registration-metadata.worker.mjs'),sourceBytes,{flag:'wx'});
+const require=createRequire('C:/cinagroup/cinatoken/package.json'),esbuild=require('esbuild');
+const result=await esbuild.build({stdin:{contents:source,sourcefile:'registration-metadata.worker.mjs',resolveDir:'C:/cinagroup/cinatoken',loader:'js'},absWorkingDir:'C:/cinagroup/cinatoken',tsconfigRaw:{compilerOptions:{}},outfile:path.join(runtime,'registration-metadata.bundle.mjs'),bundle:true,format:'esm',platform:'neutral',conditions:['workerd'],external:['node:*','cloudflare:sockets'],alias:{postgres:'C:/cinagroup/cinatoken/node_modules/postgres/cf/src/index.js'},nodePaths:['C:/cinagroup/cinatoken/node_modules'],target:'es2022',logLevel:'silent',metafile:true,legalComments:'none'});
+assert(Object.keys(result.metafile.inputs).some(p=>p.replaceAll('\\','/').includes('postgres/cf/src/index.js')));
+const syntax=[];
+for(const name of ['registration-metadata.worker.mjs','registration-metadata.bundle.mjs']){
+ const child=spawnSync(process.execPath,['--check',path.join(runtime,name)],{windowsHide:true,timeout:10000,encoding:'utf8'});
+ syntax.push({name,actualExit:child.status,signal:child.signal,spawnError:child.error?.code??null,stdoutBytes:Buffer.byteLength(child.stdout??''),stderrBytes:Buffer.byteLength(child.stderr??'')});
+ assert.equal(child.status,0);assert.equal(child.signal,null);assert.equal(child.error,undefined);assert.equal(child.stdout,'');assert.equal(child.stderr,'');
+}
+const bundle=fs.readFileSync(path.join(runtime,'registration-metadata.bundle.mjs'));
+const report={at:new Date().toISOString(),sourceBytes:sourceBytes.length,sourceSha256:sha(sourceBytes),bundleBytes:bundle.length,bundleSha256:sha(bundle),syntax,runtimeExecuted:false,rowOrSchemaWrites:false,rootDelta:'Replace connection startup GUCs with transaction-local timeouts; BEGIN READ ONLY and fixed parameterized SELECT remain',originalFrozenSourceSha256:'38880c12a7c7107fc7906358f48d546294aa7fa21b939197810582ffc72b6b6b',previousPreparationActualExit:1,previousFailure:'ERR_PACKAGE_PATH_NOT_EXPORTED before esbuild/remote/SQL; original files retained'};
+fs.writeFileSync(path.join(runtime,'prepared.json'),JSON.stringify(report,null,2)+'\n',{flag:'wx'});
+console.log(JSON.stringify(report));

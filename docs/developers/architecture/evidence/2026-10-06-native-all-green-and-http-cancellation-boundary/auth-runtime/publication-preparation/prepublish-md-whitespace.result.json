@@ -1,0 +1,28 @@
+{
+  "at": "2026-10-06T09:09:01.138Z",
+  "finishedAt": "2026-10-06T09:09:01.200Z",
+  "executable": "C:/Program Files/Git/cmd/git.exe",
+  "args": [
+    "-c",
+    "core.longpaths=true",
+    "-c",
+    "core.whitespace=cr-at-eol",
+    "diff",
+    "--check",
+    "--",
+    "docs/developers/architecture/web-frontend-migration.md"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 2,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\prepublish-md-whitespace.stdout.log",
+    "bytes": 84,
+    "sha256": "c8a195f9e6e4df91115098bd6d795f4b7c4e9e1063c18a05b807f0b09965ae67"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\prepublish-md-whitespace.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

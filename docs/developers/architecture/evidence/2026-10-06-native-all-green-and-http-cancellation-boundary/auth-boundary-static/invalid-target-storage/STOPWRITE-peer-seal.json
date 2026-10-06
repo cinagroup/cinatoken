@@ -1,0 +1,46 @@
+{
+  "schema": "cinatoken-readonly-provider-storage-stopwrite-v1",
+  "closedAt": "2026-10-06T08:11:30.754Z",
+  "STOPWRITE": true,
+  "collectionOnly": true,
+  "causeProven": false,
+  "sourceInputs": 8,
+  "actualReadonlyChildExit": 0,
+  "actualReadonlyChildAt": "2026-10-06T08:11:12.943Z",
+  "actualReadonlyChildFinishedAt": "2026-10-06T08:11:13.033Z",
+  "repositoryWrites": false,
+  "networkRequests": false,
+  "entries": [
+    {
+      "file": "FINAL-invalid-target-storage-api-callsite.json",
+      "bytes": 47574,
+      "sha256": "f725bf58a3d93e3e8ff8969757f698120acf6390b45c98512c127e1cafa39d14"
+    },
+    {
+      "file": "capture-readonly.mjs",
+      "bytes": 1405,
+      "sha256": "73f8ec0159b113f5339119649fe0ccfd402740897076ddf439d9f91009bb4b67"
+    },
+    {
+      "file": "read-storage-api-callsite.mjs",
+      "bytes": 12184,
+      "sha256": "85bda5846a4589106cee228e2a363ac74fda0c2966bbd3f876542c4f1058c46d"
+    },
+    {
+      "file": "storage-api-callsite.closed.json",
+      "bytes": 911,
+      "sha256": "f488a2daf3f0aab7220949953185f4db888b599337233e72d0e058f2a76af11c"
+    },
+    {
+      "file": "storage-api-callsite.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "storage-api-callsite.stdout.log",
+      "bytes": 160,
+      "sha256": "0814da0e55212108357bed48a05f89ebf7f93967a894a94b92a575a0dc299440"
+    }
+  ],
+  "selfExcludedFromEntries": true
+}

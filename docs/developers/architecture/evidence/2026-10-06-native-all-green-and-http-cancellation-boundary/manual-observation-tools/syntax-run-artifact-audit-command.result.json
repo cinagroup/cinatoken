@@ -1,0 +1,27 @@
+{
+  "schema": "cinatoken-observation-tool-syntax-command-closed-v1",
+  "closed": true,
+  "program": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "--check",
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-queued-linux-observation-tools-87b2c4dae3a8480c87b50e9d4c2b8e8b\\run-artifact-audit-command.mjs"
+  ],
+  "startedAt": "2026-10-06T07:27:05.300Z",
+  "endedAt": "2026-10-06T07:27:05.367Z",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-observation-tools-87b2c4dae3a8480c87b50e9d4c2b8e8b/syntax-run-artifact-audit-command.stdout.raw",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stderr": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-observation-tools-87b2c4dae3a8480c87b50e9d4c2b8e8b/syntax-run-artifact-audit-command.stderr.raw",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "syntaxOnly": true,
+  "runtimeExecuted": false,
+  "ciQueried": false
+}

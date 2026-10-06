@@ -1,0 +1,354 @@
+{
+  "schema": "cinatoken-six-frozen-auth-addon-final-candidate-v1",
+  "at": "2026-10-06T08:54:25.782Z",
+  "actualCollectionAndStorageVerificationExit": 0,
+  "candidateOnly": true,
+  "payloadDirectory": "addon-evidence",
+  "relativeStoredPathsResolveWithin": "addon-evidence",
+  "report": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/ADDON-REPORT.json",
+    "bytes": 171106,
+    "sha256": "f6e5e7cebe4808cc650624f6592a928aa91b35427e7259a8a603e3cadbe103f1"
+  },
+  "verification": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/ADDON-VERIFICATION.json",
+    "bytes": 744,
+    "sha256": "0f340df53cd6461a8d5ffb88556d1e0c8906ebe48a63964ff3554d9905dc129d"
+  },
+  "sourceRoots": [
+    {
+      "id": "public-auth-source",
+      "fileCount": 7,
+      "seal": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-public-auth-start-readonly-3sVv88/STOPWRITE-peer-seal.json",
+        "bytes": 1865,
+        "sha256": "50f4498bb8bb622804e9b64dbb09fee941cb2441ea6a7db3777610a964d18bcf"
+      },
+      "externalPinExact": true
+    },
+    {
+      "id": "invalid-target-provider",
+      "fileCount": 7,
+      "seal": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-invalid-target-provider-readonly-4eUECF/STOPWRITE-peer-seal.json",
+        "bytes": 1489,
+        "sha256": "af30a73bd030a36673c0a0244740f51ce3324b87ed2a74245f56e55b13823c6b"
+      },
+      "externalPinExact": true
+    },
+    {
+      "id": "invalid-target-storage",
+      "fileCount": 7,
+      "seal": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-invalid-target-storage-boundary-akLyky/STOPWRITE-peer-seal.json",
+        "bytes": 1458,
+        "sha256": "22abcff865db214b4d8507e984c057f7f12520f452e932b43375824ae5ca8968"
+      },
+      "externalPinExact": true
+    },
+    {
+      "id": "cinaauth-resource-candidate",
+      "fileCount": 61,
+      "seal": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d/STOPWRITE.json",
+        "bytes": 10364,
+        "sha256": "1be9ed381c4b5f2b5306e9f9fb1fe7635db5c2a10280ae1a22e3d32fd8e480d2"
+      },
+      "externalPinExact": true
+    },
+    {
+      "id": "native-green-independent-review",
+      "fileCount": 42,
+      "seal": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/STOPWRITE.json",
+        "bytes": 11799,
+        "sha256": "c37ca964bac9087176591b4596046baa46cbe6facbdd14bda481b5e73b4ba538"
+      },
+      "externalPinExact": true
+    },
+    {
+      "id": "registration-preview-prepared",
+      "fileCount": 18,
+      "seal": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-registration-preview-readonly-prepared-mqVPEM/STOPWRITE-peer-seal.json",
+        "bytes": 3821,
+        "sha256": "e923723d33b3ed7c623e84c45f627e04e49b9f0d0f7bb4142836b39580545899"
+      },
+      "externalPinExact": true
+    }
+  ],
+  "sourceFileCount": 142,
+  "rawLogFileCount": 50,
+  "originalBytes": 937059,
+  "storedBytes": 937059,
+  "gzipFiles": 0,
+  "allWholeSetsAndByteHashesExact": true,
+  "originalFailuresAndUnknownObservationsRetained": true,
+  "sourceCommitBoundary": {
+    "existingCinaTokenBatchBase": "757490181564aa822f960f5d8704857b98b230d0",
+    "CinaAuthCandidateLocalCheckout": {
+      "head": "bfa56df798ede6a40e9d5cea0ef1a1e9a3568f3f",
+      "originalReadLog": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d/git-head.stdout.log",
+        "bytes": 41,
+        "sha256": "30b4e4ec31fea0db6dd43905552676ff8e5cd0e906d4523372faf301fdcf1730"
+      },
+      "productionCheckoutConfirmed": false
+    },
+    "unifiedSourceCommitClaimed": false,
+    "individualReportsRetainOwnSourcePins": true
+  },
+  "staticCandidate": {
+    "backend": "controlled local SQLite fixture only",
+    "before": {
+      "tests": 7,
+      "pass": 4,
+      "fail": 3,
+      "actualExit": 1
+    },
+    "candidate": {
+      "tests": 7,
+      "pass": 7,
+      "fail": 0,
+      "actualExit": 0
+    },
+    "resourceFinal": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d/FINAL-cinatoken-resource-candidate.json",
+      "bytes": 27029,
+      "sha256": "8a45706c40a6e899f9376135b223da06c99c12d03fa8723bdd74c3730eae01ab"
+    },
+    "verification": {
+      "runtime": "Existing Vitest4.1.10 + Node24.14.1, direct specific test path/pattern; Temp cwd/root/cache only.",
+      "red": {
+        "actualProcessExit": 1,
+        "totalTests": 7,
+        "passed": 4,
+        "failed": 3,
+        "skipped": 0,
+        "report": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d\\before-vitest.json",
+          "bytes": 4201,
+          "sha256": "7eef2f3a5cb789ff3dbb6e8c45880802f7fadee720ca1b192a6820975e39d7ba"
+        },
+        "cases": [
+          {
+            "fullName": "cinatoken OIDC client bootstrap recognizes only fixed-client GET authorization requests",
+            "status": "passed"
+          },
+          {
+            "fullName": "cinatoken OIDC client bootstrap stores only the secret hash and exact cinatoken redirect",
+            "status": "passed"
+          },
+          {
+            "fullName": "cinatoken OIDC client bootstrap rejects weak or unprefixed secrets before querying",
+            "status": "passed"
+          },
+          {
+            "fullName": "cinatoken reserved resource initialization initializes the missing exact resource and client association",
+            "status": "failed"
+          },
+          {
+            "fullName": "cinatoken reserved resource initialization is idempotent without replacing the original resource or link",
+            "status": "failed"
+          },
+          {
+            "fullName": "cinatoken reserved resource initialization preserves disabled resource policy and operator-managed link metadata",
+            "status": "passed"
+          },
+          {
+            "fullName": "cinatoken reserved resource initialization never links another client or enables an unrelated resource",
+            "status": "failed"
+          }
+        ]
+      },
+      "green": {
+        "actualProcessExit": 0,
+        "totalTests": 7,
+        "passed": 7,
+        "failed": 0,
+        "skipped": 0,
+        "report": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d\\candidate-vitest.json",
+          "bytes": 3080,
+          "sha256": "6dca0a08d6a5afd953fee5bc4158ea8d3cf4fa497a32c1bb0480d73a90663d4c"
+        },
+        "cases": [
+          {
+            "fullName": "cinatoken OIDC client bootstrap recognizes only fixed-client GET authorization requests",
+            "status": "passed"
+          },
+          {
+            "fullName": "cinatoken OIDC client bootstrap stores only the secret hash and exact cinatoken redirect",
+            "status": "passed"
+          },
+          {
+            "fullName": "cinatoken OIDC client bootstrap rejects weak or unprefixed secrets before querying",
+            "status": "passed"
+          },
+          {
+            "fullName": "cinatoken reserved resource initialization initializes the missing exact resource and client association",
+            "status": "passed"
+          },
+          {
+            "fullName": "cinatoken reserved resource initialization is idempotent without replacing the original resource or link",
+            "status": "passed"
+          },
+          {
+            "fullName": "cinatoken reserved resource initialization preserves disabled resource policy and operator-managed link metadata",
+            "status": "passed"
+          },
+          {
+            "fullName": "cinatoken reserved resource initialization never links another client or enables an unrelated resource",
+            "status": "passed"
+          }
+        ]
+      },
+      "method": "Four new tests call the actual copied source ensureCinatokenOidcClient against real isolated Node SQLite query execution with UNIQUE/FK constraints; original three tests remain exactly. Disabled resource/link preservation, idempotence and fixed-client-only linkage are data-state observations, not literal matching.",
+      "limitations": [
+        "SQLite fixtures exercise SQL/query protocol, not native PostgreSQL/Hyperdrive defaults, concurrent operators or deployed provider state.",
+        "Production invalid_target actual root cause still unconfirmed; missing/disabled resource/link live metadata has not been read.",
+        "Repository-wide pnpm typecheck and actual provider authorize/token integration not run in this Temp-only task.",
+        "Candidate not copied into either repository, committed, pushed, or deployed."
+      ],
+      "redOutputRetained": true
+    },
+    "liveDBVerified": false,
+    "deployVerified": false,
+    "loginVerified": false,
+    "testRerunByCollector": false
+  },
+  "registrationPreview": {
+    "preparedOnly": true,
+    "originalPreparationExits": [
+      {
+        "receipt": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-registration-preview-readonly-prepared-mqVPEM/prepare-probe.closed.json",
+          "bytes": 914,
+          "sha256": "a08067be1f3bbbb3325c156521bede1a1166b1ce217948b856047310882a7db8"
+        },
+        "actualExit": 1
+      },
+      {
+        "receipt": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-registration-preview-readonly-prepared-mqVPEM/prepare-probe-v2.closed.json",
+          "bytes": 923,
+          "sha256": "0153cab59242a5ec4779ceae207a375ca97d5cc618ffc67619dc1373f77e1aa3"
+        },
+        "actualExit": 1
+      },
+      {
+        "receipt": {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-registration-preview-readonly-prepared-mqVPEM/prepare-probe-v3.closed.json",
+          "bytes": 922,
+          "sha256": "27628ee6faa04fbab1a222efad4f8e4a2e8ca89bbfd2f09417bfb2eaa80ba175"
+        },
+        "actualExit": 0
+      }
+    ],
+    "remotePreviewStarted": false,
+    "workerdStarted": false,
+    "pgConnected": false,
+    "cloudflareApiCalledByPreparedProducer": false,
+    "executionEligible": false,
+    "deployOrLoginVerified": false,
+    "parentReportedCachingStateNotIndependentlyCloudflareVerified": true
+  },
+  "invalidTargetBoundary": {
+    "missingOrDisabledExactResourceOrMissingExactClientResourceLinkAreCompatibleSourceBranches": true,
+    "liveBranchConfirmed": false,
+    "liveProviderRowsRead": false,
+    "productionRuntimeVersionMatched": false,
+    "authorizeGetMayMutateClientProjection": true,
+    "noAdditionalAuthorizeOrTokenProbeExecuted": true
+  },
+  "candidatePolicyBoundary": {
+    "existingResourceAndLinkConflictDoNothingPoliciesPreserved": true,
+    "originalClientUpsertDisabledFalseBehaviorUnchanged": true,
+    "existingClientDisabledPreservationClaimed": false,
+    "SQLiteOnlyNotHyperdriveOrPG": true
+  },
+  "independentReviewBoundary": {
+    "original2078StoredChecksAreCollectionReviewOnly": true,
+    "originalPrototypeReviewFailuresRetained": true,
+    "noNewRuntimePassDerived": true
+  },
+  "peerReview": {
+    "agent": "/root/remaining_gate_inventory/collection_source_peer",
+    "source": "Read-only collaboration observations, not an executed child test",
+    "externalSixPinsExact": true,
+    "sourceFilenameSetsExact": true,
+    "sourceFinalReportsPinnedExact": true,
+    "noCausalOrLiveGatePassFound": true,
+    "actualChildExitClaimed": null
+  },
+  "actualClosedCollectionChildren": [
+    {
+      "receipt": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/collect-addon.closed.json",
+        "bytes": 1090,
+        "sha256": "3c751465472004f0cfc95020d0aa19ed249dd504a04c7048450e668fedcd1922"
+      },
+      "actualExit": 0,
+      "stdout": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/collect-addon.stdout.log",
+        "bytes": 417,
+        "sha256": "7e0219f1f80ea4785a4426ac0a84f3db8b2cbdfb77b179a07b6e8a24cfdf5343"
+      },
+      "stderr": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/collect-addon.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/verify-addon.closed.json",
+        "bytes": 1087,
+        "sha256": "f5142ed126ee0968cfbdd060b433d42f5f5d9b802ef1f7194e310a1454114593"
+      },
+      "actualExit": 0,
+      "stdout": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/verify-addon.stdout.log",
+        "bytes": 365,
+        "sha256": "3377d57e4a6bcf08e0e0b096ebfb852791a31eb17b18a0f573c636725adf7da1"
+      },
+      "stderr": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/verify-addon.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "truthBoundary": {
+    "staticCandidateTests": 7,
+    "staticCandidatePassed": 7,
+    "testBackend": "SQLite controlled local fixture only",
+    "liveDBVerified": false,
+    "productionDeployVerified": false,
+    "identityLoginVerified": false,
+    "registrationPreviewExecuted": false,
+    "browserLaunchedByCollector": false,
+    "SQLiteTestsRerunByCollector": false,
+    "runtimeRerunByCollector": false,
+    "networkRequestsByCollector": false,
+    "fullG2Verified": false,
+    "fullG7Verified": false,
+    "fullG8Verified": false,
+    "collection0NotAcceptancePass": true
+  },
+  "scope": {
+    "onlySixExplicitFrozenRoots": true,
+    "older3357And42RootArchivesNotRead": true,
+    "mutableRootOrBRRootsNotCopied": true,
+    "repositoryWrites": false,
+    "gitCommands": false
+  },
+  "existing234EvidenceFilesOrCollectionJSONModified": false,
+  "repositoryModified": false,
+  "noNetworkGitDBAppOrTestExecutedByCollector": true,
+  "rootCauseConfirmed": false,
+  "fullG2Verified": false,
+  "fullG7Verified": false,
+  "fullG8Verified": false,
+  "collection0NotAcceptancePass": true
+}

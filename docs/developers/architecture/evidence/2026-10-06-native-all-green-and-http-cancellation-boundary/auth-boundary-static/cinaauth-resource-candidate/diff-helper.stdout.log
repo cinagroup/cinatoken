@@ -1,0 +1,28 @@
+diff --git "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d\\before\\workers\\auth-api\\src\\cinatoken-oidc-client.ts" "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d\\candidate\\workers\\auth-api\\src\\cinatoken-oidc-client.ts"
+index e721f73..f751247 100644
+--- "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d\\before\\workers\\auth-api\\src\\cinatoken-oidc-client.ts"
++++ "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d\\candidate\\workers\\auth-api\\src\\cinatoken-oidc-client.ts"
+@@ -109,4 +109,23 @@ export const ensureCinatokenOidcClient = async (
+ 			"softwareVersion" = EXCLUDED."softwareVersion"`,
+ 		values,
+ 	);
++	// First-party resource bindings are required by the 1.7 provider. Preserve
++	// operator-managed resource policy, including an intentional disablement.
++	await database.query(
++		`INSERT INTO "oauthResource" ("id", "identifier", "name", "createdAt", "updatedAt")
++		 VALUES ($1, $2, $3, $4, $4)
++		 ON CONFLICT ("identifier") DO NOTHING`,
++		[`first-party:${applicationOrigin}`, applicationOrigin, "cinatoken Gateway", now],
++	);
++	await database.query(
++		`INSERT INTO "oauthClientResource" ("id", "clientId", "resourceId", "createdAt")
++		 VALUES ($1, $2, $3, $4)
++		 ON CONFLICT DO NOTHING`,
++		[
++			`${CINATOKEN_OIDC_CLIENT_ID}:${applicationOrigin}`,
++			CINATOKEN_OIDC_CLIENT_ID,
++			applicationOrigin,
++			now,
++		],
++	);
+ };

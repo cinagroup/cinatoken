@@ -1,0 +1,27 @@
+{
+  "at": "2026-10-06T07:23:16.758Z",
+  "finishedAt": "2026-10-06T07:23:20.097Z",
+  "executable": "C:/Program Files/GitHub CLI/gh.exe",
+  "args": [
+    "workflow",
+    "run",
+    "v364-direct-socket.yml",
+    "--repo",
+    "cinagroup/cinatoken",
+    "--ref",
+    "main"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-followup-da56f69292e44387886a9cc8ffa36638\\dispatch-queued-diagnostic.stdout.log",
+    "bytes": 64,
+    "sha256": "0bf894dee942be148984c1bee921328bf3d7526f3631f9a38c307fcf9be8b948"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-followup-da56f69292e44387886a9cc8ffa36638\\dispatch-queued-diagnostic.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

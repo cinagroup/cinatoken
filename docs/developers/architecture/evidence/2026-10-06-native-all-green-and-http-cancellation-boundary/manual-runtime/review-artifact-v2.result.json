@@ -1,0 +1,31 @@
+{
+  "schema": "cinatoken-v364-artifact-readonly-audit-command-closed-v1",
+  "closed": true,
+  "mode": "review-artifact-v2",
+  "startedAt": "2026-10-06T07:31:03.940Z",
+  "endedAt": "2026-10-06T07:31:04.072Z",
+  "program": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c\\review-artifact-v2.mjs",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/binding.json"
+  ],
+  "actualExit": 0,
+  "signal": null,
+  "timedOut": false,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c\\review-artifact-v2.stdout.raw",
+    "bytes": 578,
+    "sha256": "372f3b948b02bcdbb65a890923903089daf6f7e6b28ff04c99272e5bd9b1acab"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c\\review-artifact-v2.stderr.raw",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "sourceSHA": "757490181564aa822f960f5d8704857b98b230d0",
+  "runId": "37429341568",
+  "localArtifactOnly": true,
+  "gatePassDerived": false,
+  "runtimeExecuted": false
+}

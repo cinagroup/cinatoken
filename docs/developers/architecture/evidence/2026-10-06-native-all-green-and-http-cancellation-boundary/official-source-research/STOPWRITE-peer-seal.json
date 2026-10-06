@@ -1,0 +1,64 @@
+{
+  "schema": "v364-official-cancellation-research-stopwrite-v1",
+  "at": "2026-10-06T07:44:13.444Z",
+  "root": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-official-source-research-7Kzvom",
+  "filesBeforeSelf": 7,
+  "entries": [
+    {
+      "file": "FINAL-v364-official-cancellation-boundary-research.json",
+      "bytes": 19281,
+      "sha256": "85af667d82a199e3d5043c0ec98f02902aa244380c716cfc4fbbe88a69667948"
+    },
+    {
+      "file": "capture-readonly.mjs",
+      "bytes": 1405,
+      "sha256": "73f8ec0159b113f5339119649fe0ccfd402740897076ddf439d9f91009bb4b67"
+    },
+    {
+      "file": "primary-source-records.json",
+      "bytes": 458173,
+      "sha256": "3bdf82b120dc763944f530a1af4a2cb42b177b62e81c0f3ef14b1bdd21495f81"
+    },
+    {
+      "file": "primary-sources-get.closed.json",
+      "bytes": 902,
+      "sha256": "d06ce49b9eb7ca0da8383da5bf4cad2655495bd2562420a1e0ee65819f3d79fe"
+    },
+    {
+      "file": "primary-sources-get.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "primary-sources-get.stdout.log",
+      "bytes": 625,
+      "sha256": "da6e3cd2116215fa642e46ed91e9465189a64d7919bba289f1418d6a1313e18a"
+    },
+    {
+      "file": "read-primary-sources.mjs",
+      "bytes": 2986,
+      "sha256": "9821d0af37e7f62011288c9b5664e986b9529a58a993de8a0548116a371c518c"
+    }
+  ],
+  "final": {
+    "file": "FINAL-v364-official-cancellation-boundary-research.json",
+    "bytes": 19281,
+    "sha256": "85af667d82a199e3d5043c0ec98f02902aa244380c716cfc4fbbe88a69667948"
+  },
+  "actualReadonlyGetChild": {
+    "file": "primary-sources-get.closed.json",
+    "actualExit": 0,
+    "at": "2026-10-06T07:38:51.845Z",
+    "finishedAt": "2026-10-06T07:38:55.058Z",
+    "bytes": 902,
+    "sha256": "d06ce49b9eb7ca0da8383da5bf4cad2655495bd2562420a1e0ee65819f3d79fe"
+  },
+  "STOPWRITE": true,
+  "readOnly": true,
+  "repositoryWrites": 0,
+  "workerdExecuted": false,
+  "productionRequests": 0,
+  "gatePassDerived": false,
+  "causeProven": false,
+  "selfExcludedOnly": true
+}

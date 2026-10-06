@@ -1,0 +1,857 @@
+{
+  "schema": "cinatoken-v364-queued-linux-final-facts-and-seal-v1",
+  "at": "2026-10-06T07:33:24.109Z",
+  "actualCollectionVerificationExit": 0,
+  "run": {
+    "id": 37429341568,
+    "sourceSHA": "757490181564aa822f960f5d8704857b98b230d0",
+    "attempt": 1,
+    "status": "completed",
+    "conclusion": "failure",
+    "url": "https://github.com/cinagroup/cinatoken/actions/runs/37429341568",
+    "event": "workflow_dispatch",
+    "createdAt": "2026-10-06T07:23:19Z",
+    "updatedAt": "2026-10-06T07:25:17Z"
+  },
+  "sourceSHA": "757490181564aa822f960f5d8704857b98b230d0",
+  "artifact": {
+    "id": 11395769394,
+    "name": "v364-direct-socket-757490181564aa822f960f5d8704857b98b230d0-37429341568-1",
+    "sizeBytes": 115610,
+    "GitHubReportedDigest": "sha256:86e78aec5cf52ebdf9d2e538dbfe1d82a5852a1099102801eef78fec3f30c0f4",
+    "expiresAt": "2026-10-20T07:25:12Z",
+    "createdAt": "2026-10-06T07:25:14Z",
+    "updatedAt": "2026-10-06T07:25:14Z",
+    "workflowRun": {
+      "id": 37429341568,
+      "repository_id": 1340150354,
+      "head_repository_id": 1340150354,
+      "head_branch": "main",
+      "head_sha": "757490181564aa822f960f5d8704857b98b230d0"
+    }
+  },
+  "downloadedZIP": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/download-artifact-once.stdout.raw",
+    "bytes": 115610,
+    "sha256": "86e78aec5cf52ebdf9d2e538dbfe1d82a5852a1099102801eef78fec3f30c0f4"
+  },
+  "completeArtifactFileCount": 17,
+  "decodedBytes": 1022761,
+  "eventCount": 2036,
+  "eventJSON": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c\\full-artifact\\_temp\\v364-direct-socket-once-37429341568-1\\events.json",
+    "bytes": 505693,
+    "sha256": "911585f8780744580221de6c26c901ade67a01b0c20ddcd6b7cac73803b919e4"
+  },
+  "eventNDJSON": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c\\full-artifact\\_temp\\v364-direct-socket-once-37429341568-1\\events.ndjson",
+    "bytes": 390847,
+    "sha256": "c8145e82e21101bcf3242419eec06cbb031e715d82fa64df97daaaef95239712"
+  },
+  "fullReview": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/FINAL-linux-artifact-independent-review.json",
+    "bytes": 54492,
+    "sha256": "d968ef3aefcc1e85ce8efe93d0363edcb4fdf6daa6de4a67cef20871b7e52de8"
+  },
+  "allCommandReceipts": [
+    {
+      "receipt": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/artifacts-terminal.result.json",
+        "bytes": 1379,
+        "sha256": "c59cd0ea8069f771a826bd2ddcdc66c68ee05fc61c19d16f384e90e68b96f113"
+      },
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c\\artifacts-terminal.stdout.raw",
+        "bytes": 771,
+        "sha256": "e90a29d0871c352cdc7274f6506b917d95609167bfee77fc4b36a71c969913b4"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c\\artifacts-terminal.stderr.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/download-artifact-once.result.json",
+        "bytes": 1380,
+        "sha256": "58f5bc4c1206c08cfec95fbc1bb18c241826fd59294865cc06ca3d807b2f9156"
+      },
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c\\download-artifact-once.stdout.raw",
+        "bytes": 115610,
+        "sha256": "86e78aec5cf52ebdf9d2e538dbfe1d82a5852a1099102801eef78fec3f30c0f4"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c\\download-artifact-once.stderr.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/extract-artifact.result.json",
+        "bytes": 1372,
+        "sha256": "72805d24cd03c26a94112364e122c7fc7f55e2a80af98e937c791146a686a170"
+      },
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c\\extract-artifact.stdout.raw",
+        "bytes": 108,
+        "sha256": "7c75edc75681e1ee8c58d9a082c4b6900e653699d4319b1854db0005a8f417b4"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c\\extract-artifact.stderr.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/job-log-once.result.json",
+        "bytes": 1346,
+        "sha256": "b090a8cb5f6c5d7f62379ec3e8991b3e295b226f5bf9b6d889e9850007366978"
+      },
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c\\job-log-once.stdout.raw",
+        "bytes": 23777,
+        "sha256": "aa8035c0b7b01ca6aff10752b355a06ea5bbf35d10b96a4c9dfc32daae899d38"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c\\job-log-once.stderr.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/jobs-terminal.result.json",
+        "bytes": 1374,
+        "sha256": "70c1fbc8e6a53e94e05b58b13863df3aa1bb79dfabdfa302f1a95bd04ed9ab33"
+      },
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c\\jobs-terminal.stdout.raw",
+        "bytes": 2524,
+        "sha256": "7b4861f53b7862f5efa5c3a85d2052bca3552699a26b04ee470707d0d2657859"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c\\jobs-terminal.stderr.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/review-artifact-v2.result.json",
+        "bytes": 1314,
+        "sha256": "10de34da1e853d0d23edebc9da63ecc49f442069476ed8073ba653fe2b130387"
+      },
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c\\review-artifact-v2.stdout.raw",
+        "bytes": 578,
+        "sha256": "372f3b948b02bcdbb65a890923903089daf6f7e6b28ff04c99272e5bd9b1acab"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c\\review-artifact-v2.stderr.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/review-artifact.result.json",
+        "bytes": 1317,
+        "sha256": "fbc34e6a511c9f8f74f4dc1451c3524674b37b9b5f575356c92558e566cd303b"
+      },
+      "actualExit": 1,
+      "signal": null,
+      "timedOut": false,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c\\review-artifact.stdout.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c\\review-artifact.stderr.raw",
+        "bytes": 1647,
+        "sha256": "c480b783755588ab7fc5915f5c028395fda16214d133f186abc6a4647bab0eb1"
+      }
+    },
+    {
+      "receipt": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/run-terminal.result.json",
+        "bytes": 1340,
+        "sha256": "030a5273682062e6264a864ad0d4ab7cf4e96052dfd1865f52ca73ba80d33c62"
+      },
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c\\run-terminal.stdout.raw",
+        "bytes": 12430,
+        "sha256": "3d103f6af3f75903576513671f492a9a4f132a0da94690e38afd7b07f1fd7327"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c\\run-terminal.stderr.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "receipt": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/watch.result.json",
+        "bytes": 1348,
+        "sha256": "e6486f6faf77fcb0855a325e6778f986569b06125cb9a31afabc34300e97ca58"
+      },
+      "actualExit": 1,
+      "signal": null,
+      "timedOut": false,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c\\watch.stdout.raw",
+        "bytes": 101,
+        "sha256": "cf45c4deab1f14cd2e1421cc3265519022297d8eb3b32a8f67e244d4625d2476"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c\\watch.stderr.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "originalStrictBaseline": {
+    "receipt": {
+      "closed": true,
+      "startedAt": "2026-10-06T07:24:40.703Z",
+      "endedAt": "2026-10-06T07:24:44.164Z",
+      "program": "/opt/hostedtoolcache/node/22.23.3/x64/bin/node",
+      "args": [
+        "--import",
+        "/home/runner/work/cinatoken/cinatoken/node_modules/tsx/dist/loader.mjs",
+        "--test",
+        "scripts/staging/chat-holder-binding-v364.node.test.mjs",
+        "scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs"
+      ],
+      "cwd": "/home/runner/work/cinatoken/cinatoken/packages/proxy",
+      "actualExit": 1,
+      "code": 1,
+      "signal": null,
+      "timedOut": false,
+      "outputLimitExceeded": false,
+      "stdout": {
+        "file": "original-strict.stdout.txt",
+        "bytes": 2870,
+        "sha256": "74f220d412dc232b65b51b0ec798951373a014d72df1128c657ae0dd503dbb57"
+      },
+      "stderr": {
+        "file": "original-strict.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "observedTAP": {
+      "tests": 8,
+      "pass": 7,
+      "fail": 1,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "expectedHistoricalTAP": {
+      "tests": 8,
+      "pass": 7,
+      "fail": 1
+    },
+    "matchesHistorical8_7_1": true
+  },
+  "originalFiveExit": [
+    {
+      "caseId": "native-worker-reader-cancel",
+      "actualExit": 0,
+      "closed": true,
+      "nativeWorkerExecuted": true
+    },
+    {
+      "caseId": "direct-socket-bare-destroy",
+      "actualExit": 1,
+      "closed": true,
+      "coreEntryBypassed": true,
+      "originalWindow": {
+        "pollCount": 100,
+        "sleepMs": 10,
+        "elapsedMs": 1296.6952529999999,
+        "actual": null,
+        "expected": "observed",
+        "actualExit": 1
+      },
+      "tail": {
+        "elapsedMs": 4014.4386529999992,
+        "reads": 75,
+        "actual": null,
+        "usedForPass": false
+      }
+    },
+    {
+      "caseId": "direct-socket-bare-rst",
+      "actualExit": 1,
+      "closed": true,
+      "coreEntryBypassed": true,
+      "originalWindow": {
+        "pollCount": 100,
+        "sleepMs": 10,
+        "elapsedMs": 1256.3416390000002,
+        "actual": null,
+        "expected": "observed",
+        "actualExit": 1
+      },
+      "tail": {
+        "elapsedMs": 4008.9643340000002,
+        "reads": 75,
+        "actual": null,
+        "usedForPass": false
+      }
+    },
+    {
+      "caseId": "direct-socket-binding-destroy",
+      "actualExit": 1,
+      "closed": true,
+      "coreEntryBypassed": true,
+      "originalWindow": {
+        "pollCount": 100,
+        "sleepMs": 10,
+        "elapsedMs": 1254.3553510000002,
+        "actual": null,
+        "expected": "observed",
+        "actualExit": 1
+      },
+      "tail": {
+        "elapsedMs": 4006.432733999998,
+        "reads": 75,
+        "actual": null,
+        "usedForPass": false
+      }
+    },
+    {
+      "caseId": "direct-socket-binding-rst",
+      "actualExit": 1,
+      "closed": true,
+      "coreEntryBypassed": true,
+      "originalWindow": {
+        "pollCount": 100,
+        "sleepMs": 10,
+        "elapsedMs": 1240.7430509999976,
+        "actual": null,
+        "expected": "observed",
+        "actualExit": 1
+      },
+      "tail": {
+        "elapsedMs": 4012.2121389999993,
+        "reads": 75,
+        "actual": null,
+        "usedForPass": false
+      }
+    }
+  ],
+  "extra": {
+    "caseId": "direct-socket-bare-rst-queued-write",
+    "baselineEligible": false,
+    "actualExit": 1,
+    "closed": true,
+    "pressureStatus": "owned-kernel-tx-backlog-observed-before-rst",
+    "kernelBacklogIndependentlyRecomputed": true,
+    "pressureSamples": [
+      {
+        "at": 27064.436175,
+        "sampleEndedAt": 27080.231884,
+        "known": true,
+        "pid": 2771,
+        "startTimeTicks": "13304",
+        "pgrp": 2626,
+        "session": 2626,
+        "inode": "18298",
+        "fd": "27",
+        "tuple": {
+          "localAddress": "127.0.0.1",
+          "localPort": 49418,
+          "remoteAddress": "127.0.0.1",
+          "remotePort": 37061,
+          "socketPaused": true
+        },
+        "state": "01",
+        "queueRaw": "0027D600:00000000",
+        "txBytes": 2610688,
+        "rxBytes": 0,
+        "rawTCPRow": "754: 0100007F:90C5 0100007F:C10A 01 0027D600:00000000 01:00000013 00000000 1001 0 18298 2 0000000000000000 20 4 31 10 -1",
+        "cppPendingWriteProven": false
+      },
+      {
+        "at": 27090.721595,
+        "sampleEndedAt": 27102.091927,
+        "known": true,
+        "pid": 2771,
+        "startTimeTicks": "13304",
+        "pgrp": 2626,
+        "session": 2626,
+        "inode": "18298",
+        "fd": "27",
+        "tuple": {
+          "localAddress": "127.0.0.1",
+          "localPort": 49418,
+          "remoteAddress": "127.0.0.1",
+          "remotePort": 37061,
+          "socketPaused": true
+        },
+        "state": "01",
+        "queueRaw": "0027D600:00000000",
+        "txBytes": 2610688,
+        "rxBytes": 0,
+        "rawTCPRow": "754: 0100007F:90C5 0100007F:C10A 01 0027D600:00000000 01:00000010 00000000 1001 0 18298 2 0000000000000000 20 4 31 10 -1",
+        "cppPendingWriteProven": false
+      }
+    ],
+    "immediatePreRST": {
+      "at": 27102.785182,
+      "sampleEndedAt": 27113.599996,
+      "known": true,
+      "pid": 2771,
+      "startTimeTicks": "13304",
+      "pgrp": 2626,
+      "session": 2626,
+      "inode": "18298",
+      "fd": "27",
+      "tuple": {
+        "localAddress": "127.0.0.1",
+        "localPort": 49418,
+        "remoteAddress": "127.0.0.1",
+        "remotePort": 37061,
+        "socketPaused": true
+      },
+      "state": "01",
+      "queueRaw": "00266200:00000000",
+      "txBytes": 2515456,
+      "rxBytes": 0,
+      "rawTCPRow": "754: 0100007F:90C5 0100007F:C10A 01 00266200:00000000 04:00000013 00000000 1001 0 18298 2 0000000000000000 20 4 31 10 -1",
+      "cppPendingWriteProven": false
+    },
+    "resetInvokeAt": 27113.660148,
+    "previousSampleEndedToResetMs": 11.56822099999772,
+    "immediateSampleEndedToResetMs": 0.060151999998197425,
+    "originalWindow": {
+      "pollCount": 100,
+      "sleepMs": 10,
+      "elapsedMs": 1248.5591810000005,
+      "actual": null,
+      "expected": "observed",
+      "actualExit": 1
+    },
+    "tail": {
+      "elapsedMs": 4015.652883999999,
+      "reads": 75,
+      "actual": null,
+      "usedForPass": false
+    },
+    "finalPreDisposeSnapshot": {
+      "cancel": null,
+      "release": null,
+      "accepted": "one",
+      "usedForPass": false
+    },
+    "callbacks": {
+      "incomingSignalAbort": 1,
+      "syntheticCleanupHookInvoke": 1,
+      "syntheticCleanupHookReturn": 1,
+      "realSourceCancelHookInvoke": 0,
+      "realSourceCancelHookFulfilled": 0
+    },
+    "eventLocators": [
+      {
+        "index": 1637,
+        "ndjsonLine": 1638,
+        "event": {
+          "caseId": "direct-socket-bare-rst-queued-write",
+          "kind": "workerd-log",
+          "hostMs": 26576.771391,
+          "wallMs": 1791271507280,
+          "phase": "streaming",
+          "timestamp": 1791271507280,
+          "level": "log",
+          "message": "V364_QWRITE {\"boundary\":\"queued-source\",\"event\":\"signal-initial\",\"wallMs\":1791271507280,\"aborted\":false}"
+        }
+      },
+      {
+        "index": 1648,
+        "ndjsonLine": 1649,
+        "event": {
+          "caseId": "direct-socket-bare-rst-queued-write",
+          "kind": "workerd-log",
+          "hostMs": 26604.815217,
+          "wallMs": 1791271507308,
+          "phase": "queued-write-admission",
+          "timestamp": 1791271507308,
+          "level": "log",
+          "message": "V364_QWRITE {\"boundary\":\"queued-source\",\"event\":\"queued-enqueue-end\",\"wallMs\":1791271507308,\"payloadBytes\":8388608,\"chunkBytes\":65536,\"chunkCount\":128,\"desiredSize\":-127,\"streamClosedBySource\":false}"
+        }
+      },
+      {
+        "index": 1653,
+        "ndjsonLine": 1654,
+        "event": {
+          "caseId": "direct-socket-bare-rst-queued-write",
+          "kind": "client-rst-api-invoke",
+          "hostMs": 26649.023681,
+          "wallMs": 1791271507352
+        }
+      },
+      {
+        "index": 1654,
+        "ndjsonLine": 1655,
+        "event": {
+          "caseId": "direct-socket-bare-rst-queued-write",
+          "kind": "queued-immediate-pre-rst-backlog",
+          "hostMs": 26659.883728999997,
+          "wallMs": 1791271507363,
+          "at": 27102.785182,
+          "sampleEndedAt": 27113.599996,
+          "known": true,
+          "pid": 2771,
+          "startTimeTicks": "13304",
+          "pgrp": 2626,
+          "session": 2626,
+          "inode": "18298",
+          "fd": "27",
+          "tuple": {
+            "localAddress": "127.0.0.1",
+            "localPort": 49418,
+            "remoteAddress": "127.0.0.1",
+            "remotePort": 37061,
+            "socketPaused": true
+          },
+          "state": "01",
+          "queueRaw": "00266200:00000000",
+          "txBytes": 2515456,
+          "rxBytes": 0,
+          "rawTCPRow": "754: 0100007F:90C5 0100007F:C10A 01 00266200:00000000 04:00000013 00000000 1001 0 18298 2 0000000000000000 20 4 31 10 -1",
+          "cppPendingWriteProven": false
+        }
+      },
+      {
+        "index": 1655,
+        "ndjsonLine": 1656,
+        "event": {
+          "caseId": "direct-socket-bare-rst-queued-write",
+          "kind": "queued-rst-api-return",
+          "hostMs": 26660.16279,
+          "wallMs": 1791271507363,
+          "resetInvokeAt": 27113.660148,
+          "resetReturnedAt": 27113.890879
+        }
+      },
+      {
+        "index": 1660,
+        "ndjsonLine": 1661,
+        "event": {
+          "caseId": "direct-socket-bare-rst-queued-write",
+          "kind": "client-cancel-settled",
+          "hostMs": 26660.977952999998,
+          "wallMs": 1791271507364,
+          "requestDestroyed": true,
+          "responseDestroyed": true,
+          "responseComplete": false,
+          "socketDestroyed": true
+        }
+      },
+      {
+        "index": 1664,
+        "ndjsonLine": 1665,
+        "event": {
+          "caseId": "direct-socket-bare-rst-queued-write",
+          "kind": "workerd-log",
+          "hostMs": 26662.370725,
+          "wallMs": 1791271507366,
+          "phase": "original-poll",
+          "timestamp": 1791271507364,
+          "level": "log",
+          "message": "V364_QWRITE {\"boundary\":\"queued-source\",\"event\":\"signal-abort\",\"wallMs\":1791271507364,\"aborted\":true}"
+        }
+      },
+      {
+        "index": 1665,
+        "ndjsonLine": 1666,
+        "event": {
+          "caseId": "direct-socket-bare-rst-queued-write",
+          "kind": "workerd-log",
+          "hostMs": 26662.392816,
+          "wallMs": 1791271507366,
+          "phase": "original-poll",
+          "timestamp": 1791271507364,
+          "level": "log",
+          "message": "V364_QWRITE {\"boundary\":\"queued-source\",\"event\":\"cleanup-hook-invoke\",\"wallMs\":1791271507364,\"syntheticOnly\":true,\"businessCleanupProof\":false}"
+        }
+      },
+      {
+        "index": 1666,
+        "ndjsonLine": 1667,
+        "event": {
+          "caseId": "direct-socket-bare-rst-queued-write",
+          "kind": "workerd-log",
+          "hostMs": 26662.416821,
+          "wallMs": 1791271507366,
+          "phase": "original-poll",
+          "timestamp": 1791271507364,
+          "level": "log",
+          "message": "V364_QWRITE {\"boundary\":\"queued-source\",\"event\":\"cleanup-hook-return\",\"wallMs\":1791271507364,\"cleanupCalls\":1,\"synchronousOnly\":true,\"payloadFreedProven\":false}"
+        }
+      }
+    ],
+    "eventClockNote": "event.hostMs is elapsed since script start; sample at/sampleEndedAt/resetInvokeAt are absolute performance.now() readings. Do not directly subtract these clocks. Callback sequence locations after RST API return are verified independently.",
+    "cppPendingWriteProven": false,
+    "pumpBranchProven": false,
+    "businessCleanupProven": false,
+    "signalListenerWritesCancelKV": false,
+    "signalListenerCallsReaderCancel": false
+  },
+  "closure": {
+    "actualProcessExit": 1,
+    "runnerOutcomeCode": 1,
+    "actualExecutorExit": 1,
+    "nodeActualExit": 1,
+    "reportedActualExit": 1,
+    "timedOut": false,
+    "interrupted": false,
+    "directChildReaped": true,
+    "groupGone": true,
+    "leftoverGroupKilled": false,
+    "actualSignalAttempts": [],
+    "reapedDescendants": [
+      {
+        "pid": 2657,
+        "startTimeTicks": "10665",
+        "waitStatus": 0,
+        "waitExitCode": 0,
+        "source": "individually identified adopted zombie"
+      },
+      {
+        "pid": 2690,
+        "startTimeTicks": "10697",
+        "waitStatus": 0,
+        "waitExitCode": 0,
+        "source": "individually identified adopted zombie"
+      },
+      {
+        "pid": 2704,
+        "startTimeTicks": "10706",
+        "waitStatus": 0,
+        "waitExitCode": 0,
+        "source": "individually identified adopted zombie"
+      },
+      {
+        "pid": 2710,
+        "startTimeTicks": "10773",
+        "waitStatus": 0,
+        "waitExitCode": 0,
+        "source": "individually identified adopted zombie"
+      }
+    ],
+    "reapedCount": 4,
+    "processCensus": [
+      {
+        "label": "before-initial-adopted-reap",
+        "elapsedMs": 32508.008829999995,
+        "pgrp": 2626,
+        "session": 2626,
+        "members": [
+          {
+            "pid": 2657,
+            "comm": "esbuild",
+            "state": "Z",
+            "ppid": 2624,
+            "pgrp": 2626,
+            "session": 2626,
+            "startTimeTicks": "10665"
+          },
+          {
+            "pid": 2690,
+            "comm": "esbuild",
+            "state": "Z",
+            "ppid": 2624,
+            "pgrp": 2626,
+            "session": 2626,
+            "startTimeTicks": "10697"
+          },
+          {
+            "pid": 2704,
+            "comm": "esbuild",
+            "state": "Z",
+            "ppid": 2624,
+            "pgrp": 2626,
+            "session": 2626,
+            "startTimeTicks": "10706"
+          },
+          {
+            "pid": 2710,
+            "comm": "esbuild",
+            "state": "Z",
+            "ppid": 2624,
+            "pgrp": 2626,
+            "session": 2626,
+            "startTimeTicks": "10773"
+          }
+        ],
+        "live": 0,
+        "zombies": 4,
+        "unknown": [],
+        "complete": true,
+        "groupExists": true
+      },
+      {
+        "label": "after-initial-adopted-reap",
+        "elapsedMs": 32514.56090299999,
+        "pgrp": 2626,
+        "session": 2626,
+        "members": [],
+        "live": 0,
+        "zombies": 0,
+        "unknown": [],
+        "complete": true,
+        "groupExists": false
+      },
+      {
+        "label": "after-term-before-reap",
+        "elapsedMs": 32520.828316000006,
+        "pgrp": 2626,
+        "session": 2626,
+        "members": [],
+        "live": 0,
+        "zombies": 0,
+        "unknown": [],
+        "complete": true,
+        "groupExists": false
+      },
+      {
+        "label": "after-term-after-reap",
+        "elapsedMs": 32526.99717499999,
+        "pgrp": 2626,
+        "session": 2626,
+        "members": [],
+        "live": 0,
+        "zombies": 0,
+        "unknown": [],
+        "complete": true,
+        "groupExists": false
+      },
+      {
+        "label": "final-adopt-drain",
+        "elapsedMs": 32533.175811999998,
+        "pgrp": 2626,
+        "session": 2626,
+        "members": [],
+        "live": 0,
+        "zombies": 0,
+        "unknown": [],
+        "complete": true,
+        "groupExists": false
+      },
+      {
+        "label": "final-post-reap",
+        "elapsedMs": 32539.384805999987,
+        "pgrp": 2626,
+        "session": 2626,
+        "members": [],
+        "live": 0,
+        "zombies": 0,
+        "unknown": [],
+        "complete": true,
+        "groupExists": false
+      }
+    ],
+    "outerUnforcedGroupClose": true,
+    "apiDisposalReported": true,
+    "gracefulWorkerdExitProven": false,
+    "disposalMayKillWorkerd": true,
+    "errors": []
+  },
+  "processOwnership": {
+    "executorStart": {
+      "schema": "v364-direct-socket-executor-start-v1",
+      "repo": "/home/runner/work/cinatoken/cinatoken",
+      "output": "/home/runner/work/_temp/v364-direct-socket-once-37429341568-1",
+      "startedEpoch": 1791271480.2442932,
+      "freshOutputCreated": true,
+      "packageSHA256": "69cfacc9b02d66531a0624cdf980fb39a4f998745949970c2962b4691bfc17a5",
+      "checkoutSHA": "757490181564aa822f960f5d8704857b98b230d0",
+      "run": {
+        "GITHUB_SHA": "757490181564aa822f960f5d8704857b98b230d0",
+        "GITHUB_RUN_ID": "37429341568",
+        "GITHUB_RUN_ATTEMPT": "1",
+        "GITHUB_WORKFLOW": "v364 owned direct Workerd socket cancellation",
+        "GITHUB_JOB": "direct-socket-cancellation"
+      },
+      "outerTimeoutSeconds": 360
+    },
+    "closureAuthority": "executor.closed.json; bounded Promise does not cancel underlying task",
+    "activeMiniflare": 0,
+    "fatal": {
+      "name": "Error",
+      "message": "queued write comparison failed or pressure/callback observation unknown"
+    },
+    "observationFailures": []
+  },
+  "toolSourceSeal": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-observation-tools-87b2c4dae3a8480c87b50e9d4c2b8e8b/STOPWRITE-tools.json",
+    "bytes": 5753,
+    "sha256": "4634a684e450faf481072af63b90aaabcf7510c693e94bf1f7588aaecc547a9b"
+  },
+  "frozenToolsByteExact": true,
+  "priorLocalNetworkFailure": {
+    "root": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-469dbd7159f148e2a48ec73ae718ab77",
+    "receipt": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-469dbd7159f148e2a48ec73ae718ab77/watch.result.json",
+      "bytes": 1348,
+      "sha256": "908eb94cac33c96184be1e59f5ed7977fec5ebc43aeb460f6db1906c65e0b9e9"
+    },
+    "actualExit": 1,
+    "CIObserved": false,
+    "stdout": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-queued-linux-run-469dbd7159f148e2a48ec73ae718ab77\\watch.stdout.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stderr": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-queued-linux-run-469dbd7159f148e2a48ec73ae718ab77\\watch.stderr.raw",
+      "bytes": 249,
+      "sha256": "29fde823bf5bdb54d35c9135f5f9919e0a344b648ec0a9f6c69bf8fbd550576b"
+    }
+  },
+  "localReviewerFirstFailure": {
+    "receipt": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-run-eea26a4d9f3c446da612ce779a75888c/review-artifact.result.json",
+      "bytes": 1317,
+      "sha256": "fbc34e6a511c9f8f74f4dc1451c3524674b37b9b5f575356c92558e566cd303b"
+    },
+    "actualExit": 1,
+    "reason": "Windows slash spelling only; original stderr retained. V2 verifies identical resolved path AND bytes/SHA, with immutable original tools unchanged."
+  },
+  "allDownloadedRawRetained": true,
+  "workflowDispatchOrRerunByObserver": false,
+  "strictPassDerived": false,
+  "fullG7OrG8PassDerived": false,
+  "disposeFulfilledNotGracefulExit": true,
+  "productionRequest": false,
+  "newRuntimeOrTestExecutedByObserver": false
+}

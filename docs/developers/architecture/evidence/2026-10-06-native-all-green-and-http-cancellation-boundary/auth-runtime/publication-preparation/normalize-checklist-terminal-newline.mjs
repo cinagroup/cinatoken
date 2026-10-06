@@ -1,0 +1,5 @@
+import fs from 'node:fs';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';import path from 'node:path';import {fileURLToPath} from 'node:url';
+const root=path.dirname(fileURLToPath(import.meta.url)),file='C:/cinagroup/cinatoken/docs/developers/architecture/web-frontend-migration.md',hash=b=>createHash('sha256').update(b).digest('hex');
+const before=fs.readFileSync(file);assert.equal(hash(before),'227ee430ed6b102340ae46d60c51761dd18e35fa17a3e0c9525d5e4e4c04d568');assert(before.toString('utf8').endsWith('\n\n'));
+const after=Buffer.from(before.toString('utf8').replace(/\n+$/,'\n'));assert.equal(after.length,before.length-1);fs.writeFileSync(file,after);
+const report={at:new Date().toISOString(),beforeBytes:before.length,beforeSha256:hash(before),afterBytes:after.length,afterSha256:hash(after),delta:'Remove one blank LF at EOF only; original failed diff --check actual2 retained',sourceAndScopeUnchanged:true};fs.writeFileSync(path.join(root,'checklist-terminal-newline.json'),JSON.stringify(report,null,2)+'\n',{flag:'wx'});console.log(JSON.stringify(report));

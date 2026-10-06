@@ -1,0 +1,3 @@
+import fs from 'node:fs';import assert from 'node:assert/strict';
+const r=await fetch('https://api.cloudflare.com/client/v4/accounts/7ea8e46d8210bad342fa7595f7935fea/hyperdrive/configs/374f6da17aff4c968cadd8d6aa454c22',{headers:{Authorization:'Bearer '+process.env.CLOUDFLARE_API_TOKEN},signal:AbortSignal.timeout(30000)});const j=await r.json();assert.equal(r.status,200);assert.equal(j.success,true);const result={at:new Date().toISOString(),readOnly:true,id:j.result.id,caching:j.result.caching??null,connectionStringOrOriginCredentialsRead:false,secretValuesRecorded:false};fs.writeFileSync(new URL('cinaauth-hyperdrive-cache-metadata.json',import.meta.url),JSON.stringify(result,null,2)+'\n',{flag:'wx'});console.log(JSON.stringify(result));
+

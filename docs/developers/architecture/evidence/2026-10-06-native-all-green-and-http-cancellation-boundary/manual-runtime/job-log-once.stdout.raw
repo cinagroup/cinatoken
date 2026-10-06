@@ -1,0 +1,300 @@
+﻿2026-10-06T07:23:25.2928714Z Current runner version: '2.337.0'
+2026-10-06T07:23:25.2954037Z ##[group]Runner Image Provisioner
+2026-10-06T07:23:25.2955233Z Hosted Compute Agent
+2026-10-06T07:23:25.2955968Z Version: 20260901.588
+2026-10-06T07:23:25.2956705Z Commit: f88ec8081b781fac6c440065ac7ff9e710ce3d0b
+2026-10-06T07:23:25.2957496Z Build Date: 2026-09-01T19:56:44Z
+2026-10-06T07:23:25.2958546Z Worker ID: {c66128ca-f38a-49e0-b755-368dfe3fe6b7}
+2026-10-06T07:23:25.2959348Z Azure Region: westus
+2026-10-06T07:23:25.2960006Z ##[endgroup]
+2026-10-06T07:23:25.2961762Z ##[group]Operating System
+2026-10-06T07:23:25.2962462Z Ubuntu
+2026-10-06T07:23:25.2963146Z 24.04.5
+2026-10-06T07:23:25.2963694Z LTS
+2026-10-06T07:23:25.2964276Z ##[endgroup]
+2026-10-06T07:23:25.2964918Z ##[group]Runner Image
+2026-10-06T07:23:25.2965562Z Image: ubuntu-24.04
+2026-10-06T07:23:25.2966222Z Version: 20260927.320.1
+2026-10-06T07:23:25.2967604Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260927.320/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-06T07:23:25.2969852Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260927.320
+2026-10-06T07:23:25.2970912Z ##[endgroup]
+2026-10-06T07:23:25.2972551Z ##[group]GITHUB_TOKEN Permissions
+2026-10-06T07:23:25.2974740Z Contents: read
+2026-10-06T07:23:25.2975503Z Metadata: read
+2026-10-06T07:23:25.2976089Z ##[endgroup]
+2026-10-06T07:23:25.2978475Z Secret source: Actions
+2026-10-06T07:23:25.2979602Z Cache mode: write
+2026-10-06T07:23:25.2980357Z Prepare workflow directory
+2026-10-06T07:23:25.3324138Z Prepare all required actions
+2026-10-06T07:23:25.3377416Z Getting action download info
+2026-10-06T07:23:25.7327695Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-10-06T07:23:25.8593671Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+2026-10-06T07:23:25.9482510Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-10-06T07:23:26.1720115Z Complete job name: direct-socket-cancellation
+2026-10-06T07:23:26.2510848Z ##[group]Run actions/checkout@v4
+2026-10-06T07:23:26.2512194Z with:
+2026-10-06T07:23:26.2512649Z   persist-credentials: false
+2026-10-06T07:23:26.2513195Z   repository: cinagroup/cinatoken
+2026-10-06T07:23:26.2517660Z   token: ***
+2026-10-06T07:23:26.2518642Z   ssh-strict: true
+2026-10-06T07:23:26.2519124Z   ssh-user: git
+2026-10-06T07:23:26.2519569Z   clean: true
+2026-10-06T07:23:26.2520076Z   sparse-checkout-cone-mode: true
+2026-10-06T07:23:26.2520633Z   fetch-depth: 1
+2026-10-06T07:23:26.2521092Z   fetch-tags: false
+2026-10-06T07:23:26.2521565Z   show-progress: true
+2026-10-06T07:23:26.2522060Z   lfs: false
+2026-10-06T07:23:26.2522640Z   submodules: false
+2026-10-06T07:23:26.2523129Z   set-safe-directory: true
+2026-10-06T07:23:26.2523681Z   allow-unsafe-pr-checkout: false
+2026-10-06T07:23:26.2524717Z ##[endgroup]
+2026-10-06T07:23:26.3673578Z Syncing repository: cinagroup/cinatoken
+2026-10-06T07:23:26.3676385Z ##[group]Getting Git version info
+2026-10-06T07:23:26.3677377Z Working directory is '/home/runner/work/cinatoken/cinatoken'
+2026-10-06T07:23:26.3678730Z [command]/usr/bin/git version
+2026-10-06T07:23:26.3771848Z git version 2.55.0
+2026-10-06T07:23:26.3799058Z ##[endgroup]
+2026-10-06T07:23:26.3816836Z Temporarily overriding HOME='/home/runner/work/_temp/0249e4cc-5f16-4749-ae6b-13d387073977' before making global git config changes
+2026-10-06T07:23:26.3820336Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-06T07:23:26.3824270Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/cinatoken/cinatoken
+2026-10-06T07:23:26.3899417Z Deleting the contents of '/home/runner/work/cinatoken/cinatoken'
+2026-10-06T07:23:26.3906433Z ##[group]Initializing the repository
+2026-10-06T07:23:26.3917011Z [command]/usr/bin/git init /home/runner/work/cinatoken/cinatoken
+2026-10-06T07:23:26.4072227Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-06T07:23:26.4075387Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-06T07:23:26.4077132Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-06T07:23:26.4078817Z hint: call:
+2026-10-06T07:23:26.4079433Z hint:
+2026-10-06T07:23:26.4080280Z hint: 	git config --global init.defaultBranch <name>
+2026-10-06T07:23:26.4081754Z hint:
+2026-10-06T07:23:26.4082793Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-06T07:23:26.4085050Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-06T07:23:26.4087092Z hint:
+2026-10-06T07:23:26.4088360Z hint: 	git branch -m <name>
+2026-10-06T07:23:26.4089629Z hint:
+2026-10-06T07:23:26.4091014Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-06T07:23:26.4093076Z Initialized empty Git repository in /home/runner/work/cinatoken/cinatoken/.git/
+2026-10-06T07:23:26.4099881Z [command]/usr/bin/git remote add origin https://github.com/cinagroup/cinatoken
+2026-10-06T07:23:26.4156276Z ##[endgroup]
+2026-10-06T07:23:26.4157806Z ##[group]Disabling automatic garbage collection
+2026-10-06T07:23:26.4160466Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-06T07:23:26.4197493Z ##[endgroup]
+2026-10-06T07:23:26.4199409Z ##[group]Setting up auth
+2026-10-06T07:23:26.4205829Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-06T07:23:26.4246754Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-06T07:23:26.4659285Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-06T07:23:26.4702863Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-06T07:23:26.4967264Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-06T07:23:26.5012255Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-06T07:23:26.5243844Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-06T07:23:26.5287158Z ##[endgroup]
+2026-10-06T07:23:26.5288918Z ##[group]Fetching the repository
+2026-10-06T07:23:26.5299101Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +757490181564aa822f960f5d8704857b98b230d0:refs/remotes/origin/main
+2026-10-06T07:23:33.0305190Z From https://github.com/cinagroup/cinatoken
+2026-10-06T07:23:33.0308406Z  * [new ref]         757490181564aa822f960f5d8704857b98b230d0 -> origin/main
+2026-10-06T07:23:33.0315249Z ##[endgroup]
+2026-10-06T07:23:33.0318310Z ##[group]Determining the checkout info
+2026-10-06T07:23:33.0321388Z ##[endgroup]
+2026-10-06T07:23:33.0323494Z [command]/usr/bin/git sparse-checkout disable
+2026-10-06T07:23:33.0384569Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-06T07:23:33.0422295Z ##[group]Checking out the ref
+2026-10-06T07:23:33.0426949Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2026-10-06T07:23:34.0654888Z Updating files:  37% (5264/14111)
+2026-10-06T07:23:34.0729798Z Updating files:  38% (5363/14111)
+2026-10-06T07:23:34.0808229Z Updating files:  39% (5504/14111)
+2026-10-06T07:23:34.1003288Z Updating files:  40% (5645/14111)
+2026-10-06T07:23:34.1084525Z Updating files:  41% (5786/14111)
+2026-10-06T07:23:34.1160675Z Updating files:  42% (5927/14111)
+2026-10-06T07:23:34.1262805Z Updating files:  43% (6068/14111)
+2026-10-06T07:23:34.1325233Z Updating files:  44% (6209/14111)
+2026-10-06T07:23:34.1395120Z Updating files:  45% (6350/14111)
+2026-10-06T07:23:34.1477840Z Updating files:  46% (6492/14111)
+2026-10-06T07:23:34.1554986Z Updating files:  47% (6633/14111)
+2026-10-06T07:23:34.1656575Z Updating files:  48% (6774/14111)
+2026-10-06T07:23:34.1714022Z Updating files:  49% (6915/14111)
+2026-10-06T07:23:34.1772587Z Updating files:  50% (7056/14111)
+2026-10-06T07:23:34.1828426Z Updating files:  51% (7197/14111)
+2026-10-06T07:23:34.1881312Z Updating files:  52% (7338/14111)
+2026-10-06T07:23:34.1935222Z Updating files:  53% (7479/14111)
+2026-10-06T07:23:34.1988426Z Updating files:  54% (7620/14111)
+2026-10-06T07:23:34.2039065Z Updating files:  55% (7762/14111)
+2026-10-06T07:23:34.2099068Z Updating files:  56% (7903/14111)
+2026-10-06T07:23:34.2163286Z Updating files:  57% (8044/14111)
+2026-10-06T07:23:34.2267454Z Updating files:  58% (8185/14111)
+2026-10-06T07:23:34.2360857Z Updating files:  59% (8326/14111)
+2026-10-06T07:23:34.2424098Z Updating files:  60% (8467/14111)
+2026-10-06T07:23:34.2518703Z Updating files:  61% (8608/14111)
+2026-10-06T07:23:34.2593999Z Updating files:  62% (8749/14111)
+2026-10-06T07:23:34.2682941Z Updating files:  63% (8890/14111)
+2026-10-06T07:23:34.2777557Z Updating files:  64% (9032/14111)
+2026-10-06T07:23:34.2868477Z Updating files:  65% (9173/14111)
+2026-10-06T07:23:34.2938318Z Updating files:  66% (9314/14111)
+2026-10-06T07:23:34.3072162Z Updating files:  67% (9455/14111)
+2026-10-06T07:23:34.3181855Z Updating files:  68% (9596/14111)
+2026-10-06T07:23:34.3262641Z Updating files:  69% (9737/14111)
+2026-10-06T07:23:34.3341367Z Updating files:  70% (9878/14111)
+2026-10-06T07:23:34.3444512Z Updating files:  71% (10019/14111)
+2026-10-06T07:23:34.3662032Z Updating files:  72% (10160/14111)
+2026-10-06T07:23:34.3712878Z Updating files:  73% (10302/14111)
+2026-10-06T07:23:34.3883916Z Updating files:  74% (10443/14111)
+2026-10-06T07:23:34.3979161Z Updating files:  75% (10584/14111)
+2026-10-06T07:23:34.4082715Z Updating files:  76% (10725/14111)
+2026-10-06T07:23:34.4178051Z Updating files:  77% (10866/14111)
+2026-10-06T07:23:34.4267005Z Updating files:  78% (11007/14111)
+2026-10-06T07:23:34.4357896Z Updating files:  79% (11148/14111)
+2026-10-06T07:23:34.4497400Z Updating files:  80% (11289/14111)
+2026-10-06T07:23:34.4651129Z Updating files:  81% (11430/14111)
+2026-10-06T07:23:34.4793423Z Updating files:  82% (11572/14111)
+2026-10-06T07:23:34.4891843Z Updating files:  83% (11713/14111)
+2026-10-06T07:23:34.4997831Z Updating files:  84% (11854/14111)
+2026-10-06T07:23:34.5102788Z Updating files:  85% (11995/14111)
+2026-10-06T07:23:34.5210843Z Updating files:  86% (12136/14111)
+2026-10-06T07:23:34.5307710Z Updating files:  87% (12277/14111)
+2026-10-06T07:23:34.5398792Z Updating files:  88% (12418/14111)
+2026-10-06T07:23:34.5483373Z Updating files:  89% (12559/14111)
+2026-10-06T07:23:34.5572996Z Updating files:  90% (12700/14111)
+2026-10-06T07:23:34.5666629Z Updating files:  91% (12842/14111)
+2026-10-06T07:23:34.5758956Z Updating files:  92% (12983/14111)
+2026-10-06T07:23:34.5846151Z Updating files:  93% (13124/14111)
+2026-10-06T07:23:34.5947861Z Updating files:  94% (13265/14111)
+2026-10-06T07:23:34.6106432Z Updating files:  95% (13406/14111)
+2026-10-06T07:23:34.6240162Z Updating files:  96% (13547/14111)
+2026-10-06T07:23:34.6368389Z Updating files:  97% (13688/14111)
+2026-10-06T07:23:34.6476111Z Updating files:  98% (13829/14111)
+2026-10-06T07:23:34.6581982Z Updating files:  99% (13970/14111)
+2026-10-06T07:23:34.6582675Z Updating files: 100% (14111/14111)
+2026-10-06T07:23:34.6583271Z Updating files: 100% (14111/14111), done.
+2026-10-06T07:23:34.7006853Z Switched to a new branch 'main'
+2026-10-06T07:23:34.7013166Z branch 'main' set up to track 'origin/main'.
+2026-10-06T07:23:34.7097161Z ##[endgroup]
+2026-10-06T07:23:34.7163764Z [command]/usr/bin/git log -1 --format=%H
+2026-10-06T07:23:34.7195752Z 757490181564aa822f960f5d8704857b98b230d0
+2026-10-06T07:23:34.7210237Z ##[group]Removing auth
+2026-10-06T07:23:34.7215690Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-06T07:23:34.7260210Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-06T07:23:34.7522277Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-06T07:23:34.7558264Z http.https://github.com/.extraheader
+2026-10-06T07:23:34.7567465Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-10-06T07:23:34.7606958Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-06T07:23:34.7853347Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-06T07:23:34.7888602Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-06T07:23:34.8129129Z ##[endgroup]
+2026-10-06T07:23:34.8471825Z ##[group]Run actions/setup-node@v4
+2026-10-06T07:23:34.8472141Z with:
+2026-10-06T07:23:34.8472355Z   node-version-file: .nvmrc
+2026-10-06T07:23:34.8472598Z   cache: npm
+2026-10-06T07:23:34.8472796Z   always-auth: false
+2026-10-06T07:23:34.8473014Z   check-latest: false
+2026-10-06T07:23:34.8475455Z   token: ***
+2026-10-06T07:23:34.8475668Z ##[endgroup]
+2026-10-06T07:23:34.9902357Z Resolved .nvmrc as 22
+2026-10-06T07:23:34.9960174Z Found in cache @ /opt/hostedtoolcache/node/22.23.3/x64
+2026-10-06T07:23:34.9965124Z (node:2371) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-06T07:23:34.9966492Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-06T07:23:34.9969177Z ##[group]Environment details
+2026-10-06T07:23:35.4734637Z node: v22.23.3
+2026-10-06T07:23:35.4735406Z npm: 10.9.9
+2026-10-06T07:23:35.4736010Z yarn: 1.22.22
+2026-10-06T07:23:35.4739346Z ##[endgroup]
+2026-10-06T07:23:35.4793192Z [command]/opt/hostedtoolcache/node/22.23.3/x64/bin/npm config get cache
+2026-10-06T07:23:35.8569852Z /home/runner/.npm
+2026-10-06T07:23:36.1364825Z Cache hit for: node-cache-Linux-x64-npm-75880b4bbd0ff5ec746d7c72b50f76a896a6c03c1ce6640cd295bc994cd01db2
+2026-10-06T07:23:36.1469902Z (node:2371) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-06T07:23:37.4054622Z Received 4194304 of 460488608 (0.9%), 4.0 MBs/sec
+2026-10-06T07:23:38.4059644Z Received 121634816 of 460488608 (26.4%), 58.0 MBs/sec
+2026-10-06T07:23:39.4062126Z Received 260046848 of 460488608 (56.5%), 82.6 MBs/sec
+2026-10-06T07:23:40.4079752Z Received 394264576 of 460488608 (85.6%), 94.0 MBs/sec
+2026-10-06T07:23:41.4070274Z Received 452100000 of 460488608 (98.2%), 86.2 MBs/sec
+2026-10-06T07:23:42.4072012Z Received 452100000 of 460488608 (98.2%), 71.8 MBs/sec
+2026-10-06T07:23:43.1334669Z Received 460488608 of 460488608 (100.0%), 65.3 MBs/sec
+2026-10-06T07:23:43.1336014Z Cache Size: ~439 MB (460488608 B)
+2026-10-06T07:23:43.1372519Z [command]/usr/bin/tar -xf /home/runner/work/_temp/89074706-c80d-4818-9743-73914e08f6cc/cache.tzst -P -C /home/runner/work/cinatoken/cinatoken --use-compress-program unzstd
+2026-10-06T07:23:44.0369094Z Cache restored successfully
+2026-10-06T07:23:44.0573981Z Cache restored from key: node-cache-Linux-x64-npm-75880b4bbd0ff5ec746d7c72b50f76a896a6c03c1ce6640cd295bc994cd01db2
+2026-10-06T07:23:44.0800622Z ##[group]Run npm ci
+2026-10-06T07:23:44.0800955Z [36;1mnpm ci[0m
+2026-10-06T07:23:44.1083117Z shell: /usr/bin/bash -e {0}
+2026-10-06T07:23:44.1083567Z ##[endgroup]
+2026-10-06T07:23:57.1062656Z npm warn deprecated geojson-linestring-dissolve@0.0.1: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+2026-10-06T07:23:58.8839866Z npm warn deprecated text-encoding@0.6.4: no longer maintained
+2026-10-06T07:23:59.9908887Z npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+2026-10-06T07:24:02.1260678Z npm warn deprecated glob@9.3.5: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+2026-10-06T07:24:39.3468779Z 
+2026-10-06T07:24:39.3469456Z > cinatoken@2.8.0 postinstall
+2026-10-06T07:24:39.3470235Z > npm run gen:wrangler
+2026-10-06T07:24:39.3470567Z 
+2026-10-06T07:24:39.5017669Z 
+2026-10-06T07:24:39.5018623Z > cinatoken@2.8.0 gen:wrangler
+2026-10-06T07:24:39.5019599Z > node scripts/deploy/gen-wrangler.mjs
+2026-10-06T07:24:39.5020189Z 
+2026-10-06T07:24:39.5354368Z gen-wrangler: wrote packages/proxy/wrangler.jsonc
+2026-10-06T07:24:39.5364270Z gen-wrangler: wrote packages/admin/wrangler.jsonc
+2026-10-06T07:24:39.5371074Z gen-wrangler: wrote packages/chain-worker/wrangler.jsonc
+2026-10-06T07:24:39.5381567Z gen-wrangler: wrote packages/core/wrangler.d1.jsonc
+2026-10-06T07:24:39.5382790Z gen-wrangler: proxy=cinatoken-proxy admin=cinatoken-admin chain=cinatoken-chain-worker queue=cinatoken-chain-jobs d1=cinatoken (local, no database_id) batch-infra=false
+2026-10-06T07:24:39.5686976Z 
+2026-10-06T07:24:39.5687801Z added 1480 packages, and audited 1487 packages in 55s
+2026-10-06T07:24:39.5688890Z 
+2026-10-06T07:24:39.5689554Z 450 packages are looking for funding
+2026-10-06T07:24:39.5690201Z   run `npm fund` for details
+2026-10-06T07:24:39.9479540Z 
+2026-10-06T07:24:39.9480731Z 50 vulnerabilities (1 low, 9 moderate, 31 high, 9 critical)
+2026-10-06T07:24:39.9481370Z 
+2026-10-06T07:24:39.9481859Z To address issues that do not require attention, run:
+2026-10-06T07:24:39.9482609Z   npm audit fix
+2026-10-06T07:24:39.9482902Z 
+2026-10-06T07:24:39.9483329Z To address all issues (including breaking changes), run:
+2026-10-06T07:24:39.9483973Z   npm audit fix --force
+2026-10-06T07:24:39.9484229Z 
+2026-10-06T07:24:39.9484447Z Run `npm audit` for details.
+2026-10-06T07:24:40.1856209Z ##[group]Run python3 scripts/diagnostics/v364-direct-socket/execute-owned-linux.py --repo "$GITHUB_WORKSPACE" --out "$DIAGNOSTIC_OUT" --execute-linux
+2026-10-06T07:24:40.1857652Z [36;1mpython3 scripts/diagnostics/v364-direct-socket/execute-owned-linux.py --repo "$GITHUB_WORKSPACE" --out "$DIAGNOSTIC_OUT" --execute-linux[0m
+2026-10-06T07:24:40.1924971Z shell: /usr/bin/bash -e {0}
+2026-10-06T07:24:40.1925330Z env:
+2026-10-06T07:24:40.1925800Z   DIAGNOSTIC_OUT: /home/runner/work/_temp/v364-direct-socket-once-37429341568-1
+2026-10-06T07:24:40.1926389Z ##[endgroup]
+2026-10-06T07:25:12.7862549Z {"actualExit": 1, "actualProcessExit": 1, "runnerOutcomeCode": 1, "timedOut": false, "output": "/home/runner/work/_temp/v364-direct-socket-once-37429341568-1"}
+2026-10-06T07:25:12.7963175Z ##[error]Process completed with exit code 1.
+2026-10-06T07:25:12.8050915Z ##[group]Run actions/upload-artifact@v4
+2026-10-06T07:25:12.8051272Z with:
+2026-10-06T07:25:12.8051684Z   name: v364-direct-socket-757490181564aa822f960f5d8704857b98b230d0-37429341568-1
+2026-10-06T07:25:12.8052703Z   path: /home/runner/work/_temp/v364-direct-socket-once-37429341568-1/
+scripts/diagnostics/v364-direct-socket/
+.github/workflows/v364-direct-socket.yml
+
+2026-10-06T07:25:12.8053521Z   if-no-files-found: error
+2026-10-06T07:25:12.8053816Z   include-hidden-files: true
+2026-10-06T07:25:12.8054105Z   retention-days: 14
+2026-10-06T07:25:12.8054371Z   compression-level: 6
+2026-10-06T07:25:12.8054634Z   overwrite: false
+2026-10-06T07:25:12.8054883Z ##[endgroup]
+2026-10-06T07:25:12.9781693Z (node:2779) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-06T07:25:12.9783171Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-06T07:25:12.9888542Z Multiple search paths detected. Calculating the least common ancestor of all paths
+2026-10-06T07:25:12.9891826Z The least common ancestor is /home/runner/work. This will be the root directory of the artifact
+2026-10-06T07:25:12.9893291Z With the provided path, there will be 17 files uploaded
+2026-10-06T07:25:12.9902165Z Artifact name is valid!
+2026-10-06T07:25:12.9903412Z Root directory input is valid!
+2026-10-06T07:25:13.3840368Z Beginning upload of artifact content to blob storage
+2026-10-06T07:25:13.4391368Z (node:2779) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-06T07:25:13.9135224Z Uploaded bytes 115610
+2026-10-06T07:25:13.9929869Z Finished uploading artifact content to blob storage!
+2026-10-06T07:25:13.9932635Z SHA256 digest of uploaded artifact zip is 86e78aec5cf52ebdf9d2e538dbfe1d82a5852a1099102801eef78fec3f30c0f4
+2026-10-06T07:25:13.9934225Z Finalizing artifact upload
+2026-10-06T07:25:14.2630161Z Artifact v364-direct-socket-757490181564aa822f960f5d8704857b98b230d0-37429341568-1.zip successfully finalized. Artifact ID 11395769394
+2026-10-06T07:25:14.2634996Z Artifact v364-direct-socket-757490181564aa822f960f5d8704857b98b230d0-37429341568-1 has been successfully uploaded! Final size is 115610 bytes. Artifact ID is 11395769394
+2026-10-06T07:25:14.2639909Z Artifact download URL: https://github.com/cinagroup/cinatoken/actions/runs/37429341568/artifacts/11395769394
+2026-10-06T07:25:14.2889356Z Post job cleanup.
+2026-10-06T07:25:14.3823818Z [command]/usr/bin/git version
+2026-10-06T07:25:14.3867852Z git version 2.55.0
+2026-10-06T07:25:14.3909080Z Temporarily overriding HOME='/home/runner/work/_temp/c5902a2f-7a8a-4ac9-9593-7ac36e1d304b' before making global git config changes
+2026-10-06T07:25:14.3910626Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-06T07:25:14.3915354Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/cinatoken/cinatoken
+2026-10-06T07:25:14.3956576Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-06T07:25:14.3995074Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-06T07:25:14.4275347Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-06T07:25:14.4320453Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-06T07:25:14.4613466Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-06T07:25:14.4644395Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-06T07:25:14.5098728Z Cleaning up orphan processes
+2026-10-06T07:25:14.5516401Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-node@v4, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

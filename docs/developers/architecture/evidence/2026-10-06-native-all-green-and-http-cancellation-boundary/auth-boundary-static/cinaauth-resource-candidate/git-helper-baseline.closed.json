@@ -1,0 +1,30 @@
+{
+  "label": "git-helper-baseline",
+  "command": [
+    "C:/Program Files/Git/cmd/git.exe",
+    "-c",
+    "safe.directory=C:/cinagroup/cinaauth",
+    "-c",
+    "core.excludesFile=NUL",
+    "-C",
+    "C:/cinagroup/cinaauth",
+    "show",
+    "HEAD:workers/auth-api/src/cinatoken-oidc-client.ts"
+  ],
+  "cwd": "C:/cinagroup/cinaauth",
+  "startedAt": "2026-10-06T08:20:11.613Z",
+  "endedAt": "2026-10-06T08:20:11.666Z",
+  "actualExit": 0,
+  "signal": null,
+  "error": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d\\git-helper-baseline.stdout.log",
+    "bytes": 3760,
+    "sha256": "5f4bb55cd16253668a6e6de55e810cc892a24731d8fbae05ac89fa4896103f1d"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d\\git-helper-baseline.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

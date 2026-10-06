@@ -1,0 +1,27 @@
+{
+  "schema": "quote-packet-peer-exact-node-closed-v1",
+  "at": "2026-10-06T08:27:22.533Z",
+  "finishedAt": "2026-10-06T08:27:22.874Z",
+  "executable": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-registration-preview-readonly-prepared-mqVPEM/prepare-only-v2.mjs",
+    "--prepare-only"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 1,
+  "signal": null,
+  "spawnError": null,
+  "outputs": [
+    {
+      "file": "prepare-probe-v2.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "prepare-probe-v2.stderr.log",
+      "bytes": 1255,
+      "sha256": "dd27c902244c60e7c93dc85a9011b0251c1fc72dd1fd1400c1c27587081ac94a"
+    }
+  ],
+  "scope": "Original exact Node child return for bounded read-only evidence audit only; not native/application/PG/CI or production execution"
+}

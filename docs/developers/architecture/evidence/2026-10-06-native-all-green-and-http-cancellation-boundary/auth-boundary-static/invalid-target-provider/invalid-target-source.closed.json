@@ -1,0 +1,26 @@
+{
+  "schema": "quote-packet-peer-exact-node-closed-v1",
+  "at": "2026-10-06T08:06:38.199Z",
+  "finishedAt": "2026-10-06T08:06:38.308Z",
+  "executable": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-invalid-target-provider-readonly-4eUECF/read-invalid-target-source.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "outputs": [
+    {
+      "file": "invalid-target-source.stdout.log",
+      "bytes": 220,
+      "sha256": "a24d395aab1f4729b924ffc52990f8a0d356df9c13772fe2698f9bf155179297"
+    },
+    {
+      "file": "invalid-target-source.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "scope": "Original exact Node child return for bounded read-only evidence audit only; not native/application/PG/CI or production execution"
+}

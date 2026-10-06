@@ -1,0 +1,23 @@
+{
+  "schema": "preliminary-tool-observation-without-inferred-atomic-receipt-v1",
+  "separateStdout": null,
+  "separateStderr": null,
+  "atomicChildExit": null,
+  "transcribedToolFields": true,
+  "observations": [
+    {
+      "chunk_id": "8c58b3",
+      "toolExitCode": 1,
+      "purpose": "schema inventory attempted absent financial.steps array",
+      "wall_time_seconds": 0.3943859,
+      "combinedOutput": "InvalidOperation: \r\nLine |\r\n   2 |  … tFrom-Json; [pscustomobject]@{ciProperties=@($ci.PSObject.Properties. …\r\n     |                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n     | Cannot index into a null array.\r\n"
+    },
+    {
+      "chunk_id": "ea982b",
+      "toolExitCode": 1,
+      "purpose": "schema inventory attempted absent native.financialSteps array",
+      "wall_time_seconds": 0.3678492,
+      "combinedOutput": "InvalidOperation: \r\nLine |\r\n   2 |  … tFrom-Json; [pscustomobject]@{ciProperties=@($ci.PSObject.Properties. …\r\n     |                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n     | Cannot index into a null array.\r\n"
+    }
+  ]
+}

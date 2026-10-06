@@ -1,0 +1,789 @@
+{
+  "schema": "public-home-cinaauth-production-symptom-readonly-source-review-v1",
+  "at": "2026-10-06T07:55:47.885Z",
+  "readOnly": true,
+  "repositoryWrites": 0,
+  "mdWrites": 0,
+  "productionOrIssuerRequests": 0,
+  "browserStarted": false,
+  "envOrSecretFilesRead": false,
+  "credentialsOrBrowserProfileRead": false,
+  "applicationModulesEvaluated": false,
+  "coreSourcePins": [
+    {
+      "relative": "packages/web/src/cinatoken/public/auth/public-auth-controller.ts",
+      "absolute": "C:/cinagroup/cinatoken/packages/web/src/cinatoken/public/auth/public-auth-controller.ts",
+      "bytes": 5990,
+      "sha256": "2b86db826a51c6836bf379e33271d6b2088c8890bdf6753ba68d6addef755f35",
+      "anchors": [
+        {
+          "anchor": "const reservation = this.dependencies.reserve(options)",
+          "matches": [
+            {
+              "line": 101,
+              "text": "const reservation = this.dependencies.reserve(options)"
+            }
+          ]
+        },
+        {
+          "anchor": "private async load(attempt",
+          "matches": [
+            {
+              "line": 122,
+              "text": "private async load(attempt: ActiveLogin): Promise<void> {"
+            }
+          ]
+        },
+        {
+          "anchor": "private finish(",
+          "matches": [
+            {
+              "line": 71,
+              "text": "private finish("
+            }
+          ]
+        },
+        {
+          "anchor": "runtime_unavailable",
+          "matches": [
+            {
+              "line": 144,
+              "text": "this.finish(attempt, 'runtime_unavailable', true)"
+            }
+          ]
+        },
+        {
+          "anchor": "loadRuntime: () => import",
+          "matches": [
+            {
+              "line": 177,
+              "text": "loadRuntime: () => import('./public-auth-runtime'),"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "relative": "packages/web/src/cinatoken/auth-popup-contract.ts",
+      "absolute": "C:/cinagroup/cinatoken/packages/web/src/cinatoken/auth-popup-contract.ts",
+      "bytes": 5549,
+      "sha256": "fe62cff6301218156292ce0d3b531daad45cce444ccabe162ee9c94f8d204e8d",
+      "anchors": [
+        {
+          "anchor": "export function buildAuthStartPath",
+          "matches": [
+            {
+              "line": 79,
+              "text": "export function buildAuthStartPath("
+            }
+          ]
+        },
+        {
+          "anchor": "return `/api/auth/cinaauth/login?",
+          "matches": [
+            {
+              "line": 96,
+              "text": "return `/api/auth/cinaauth/login?${params.toString()}`"
+            }
+          ]
+        },
+        {
+          "anchor": "export function reserveAuthPopup",
+          "matches": [
+            {
+              "line": 100,
+              "text": "export function reserveAuthPopup("
+            }
+          ]
+        },
+        {
+          "anchor": "const popup = window.open",
+          "matches": [
+            {
+              "line": 121,
+              "text": "const popup = window.open("
+            }
+          ]
+        },
+        {
+          "anchor": "popup?.close()",
+          "matches": [
+            {
+              "line": 169,
+              "text": "popup?.close()"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "relative": "packages/web/src/cinatoken/auth-popup.ts",
+      "absolute": "C:/cinagroup/cinatoken/packages/web/src/cinatoken/auth-popup.ts",
+      "bytes": 6767,
+      "sha256": "b84e748fb48088195b5c4043b2bf0670794538eb25ec4dbcc0101555a0e2c911",
+      "anchors": [
+        {
+          "anchor": "private fail(",
+          "matches": [
+            {
+              "line": 84,
+              "text": "private fail(attempt: Attempt, code: string): void {"
+            }
+          ]
+        },
+        {
+          "anchor": "if (!result.ok)",
+          "matches": [
+            {
+              "line": 99,
+              "text": "if (!result.ok) {"
+            }
+          ]
+        },
+        {
+          "anchor": "reservation.popup.location.replace(",
+          "matches": [
+            {
+              "line": 185,
+              "text": "reservation.popup.location.replace("
+            }
+          ]
+        },
+        {
+          "anchor": "event.origin === window.location.origin",
+          "matches": [
+            {
+              "line": 198,
+              "text": "event.origin === window.location.origin &&"
+            }
+          ]
+        },
+        {
+          "anchor": "Do not inspect popup.closed",
+          "matches": [
+            {
+              "line": 172,
+              "text": "// Do not inspect popup.closed: COOP can report it while CinaAuth remains open."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "relative": "packages/admin/app/api/auth/cinaauth/login/route.ts",
+      "absolute": "C:/cinagroup/cinatoken/packages/admin/app/api/auth/cinaauth/login/route.ts",
+      "bytes": 4811,
+      "sha256": "accd72fec2cdbdc4ab670cae3b28ffe67c79d667a49230ae70be0ab290ac2095",
+      "anchors": [
+        {
+          "anchor": "const unavailable =",
+          "matches": [
+            {
+              "line": 23,
+              "text": "const unavailable = (request: NextRequest): NextResponse => {"
+            }
+          ]
+        },
+        {
+          "anchor": "error: \"oidc_unavailable\"",
+          "matches": [
+            {
+              "line": 41,
+              "text": "error: \"oidc_unavailable\","
+            }
+          ]
+        },
+        {
+          "anchor": "export async function GET",
+          "matches": [
+            {
+              "line": 50,
+              "text": "export async function GET(request: NextRequest): Promise<NextResponse> {"
+            }
+          ]
+        },
+        {
+          "anchor": "const { transactionSecret } = getCinaAuthSecrets(request)",
+          "matches": [
+            {
+              "line": 97,
+              "text": "const { transactionSecret } = getCinaAuthSecrets(request);"
+            }
+          ]
+        },
+        {
+          "anchor": "discoverCinaAuthAuthorizationServer(config, request)",
+          "matches": [
+            {
+              "line": 108,
+              "text": "discoverCinaAuthAuthorizationServer(config, request),"
+            }
+          ]
+        },
+        {
+          "anchor": "authorizationUrl.searchParams.set(\"prompt\", \"create\")",
+          "matches": [
+            {
+              "line": 117,
+              "text": "authorizationUrl.searchParams.set(\"prompt\", \"create\");"
+            }
+          ]
+        },
+        {
+          "anchor": "NextResponse.redirect(authorizationUrl",
+          "matches": [
+            {
+              "line": 119,
+              "text": "const response = NextResponse.redirect(authorizationUrl, 302);"
+            }
+          ]
+        },
+        {
+          "anchor": "message: \"cinatoken.oidc_start_failed\"",
+          "matches": [
+            {
+              "line": 136,
+              "text": "message: \"cinatoken.oidc_start_failed\","
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "relative": "packages/admin/lib/cinaauth/config.ts",
+      "absolute": "C:/cinagroup/cinatoken/packages/admin/lib/cinaauth/config.ts",
+      "bytes": 4225,
+      "sha256": "20c2791fe164af4eddf019a79384fd780e32edc2954ba31953c9330b52670bd9",
+      "anchors": [
+        {
+          "anchor": "const DEFAULT_ISSUER",
+          "matches": [
+            {
+              "line": 3,
+              "text": "const DEFAULT_ISSUER = \"https://auth.cinaseek.si\";"
+            }
+          ]
+        },
+        {
+          "anchor": "const DEFAULT_ACCOUNT_ORIGIN",
+          "matches": [
+            {
+              "line": 4,
+              "text": "const DEFAULT_ACCOUNT_ORIGIN = \"https://accounts.cinaseek.si\";"
+            }
+          ]
+        },
+        {
+          "anchor": "const DEFAULT_APP_ORIGIN",
+          "matches": [
+            {
+              "line": 5,
+              "text": "const DEFAULT_APP_ORIGIN = \"https://cinatoken.com\";"
+            }
+          ]
+        },
+        {
+          "anchor": "const DEFAULT_CLIENT_ID",
+          "matches": [
+            {
+              "line": 6,
+              "text": "const DEFAULT_CLIENT_ID = \"cinatoken-admin\";"
+            }
+          ]
+        },
+        {
+          "anchor": "const parseCanonicalHttpsOrigin",
+          "matches": [
+            {
+              "line": 37,
+              "text": "const parseCanonicalHttpsOrigin = (value: string, name: string): string => {"
+            }
+          ]
+        },
+        {
+          "anchor": "export const getCinaAuthConfig",
+          "matches": [
+            {
+              "line": 64,
+              "text": "export const getCinaAuthConfig = (request?: Request): CinaAuthConfig => {"
+            }
+          ]
+        },
+        {
+          "anchor": "redirectUri:",
+          "matches": [
+            {
+              "line": 15,
+              "text": "redirectUri: string;"
+            },
+            {
+              "line": 97,
+              "text": "redirectUri: `${appOrigin}/api/auth/cinaauth/callback`,"
+            }
+          ]
+        },
+        {
+          "anchor": "export const getCinaAuthSecrets",
+          "matches": [
+            {
+              "line": 103,
+              "text": "export const getCinaAuthSecrets = (request?: Request): CinaAuthSecrets => ({"
+            }
+          ]
+        },
+        {
+          "anchor": "export const fetchCinaAuth",
+          "matches": [
+            {
+              "line": 139,
+              "text": "export const fetchCinaAuth = async ("
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "relative": "packages/admin/lib/cinaauth/oidc-client.ts",
+      "absolute": "C:/cinagroup/cinatoken/packages/admin/lib/cinaauth/oidc-client.ts",
+      "bytes": 3916,
+      "sha256": "95af3f4e15d230249348e87a9d489b2063f620a528c3ffb1b0eb60ab255de2a9",
+      "anchors": [
+        {
+          "anchor": "export const getCinaAuthOidcFailureDetails",
+          "matches": [
+            {
+              "line": 27,
+              "text": "export const getCinaAuthOidcFailureDetails = (error: unknown) => {"
+            }
+          ]
+        },
+        {
+          "anchor": "export const discoverCinaAuthAuthorizationServer",
+          "matches": [
+            {
+              "line": 42,
+              "text": "export const discoverCinaAuthAuthorizationServer = async ("
+            }
+          ]
+        },
+        {
+          "anchor": "export const createCinaAuthAuthorizationUrl",
+          "matches": [
+            {
+              "line": 54,
+              "text": "export const createCinaAuthAuthorizationUrl = async ("
+            }
+          ]
+        },
+        {
+          "anchor": "url.searchParams.set(\"client_id\"",
+          "matches": [
+            {
+              "line": 65,
+              "text": "url.searchParams.set(\"client_id\", config.clientId);"
+            }
+          ]
+        },
+        {
+          "anchor": "url.searchParams.set(\"redirect_uri\"",
+          "matches": [
+            {
+              "line": 66,
+              "text": "url.searchParams.set(\"redirect_uri\", config.redirectUri);"
+            }
+          ]
+        },
+        {
+          "anchor": "url.searchParams.set(\"code_challenge_method\"",
+          "matches": [
+            {
+              "line": 73,
+              "text": "url.searchParams.set(\"code_challenge_method\", \"S256\");"
+            }
+          ]
+        },
+        {
+          "anchor": "oauth.validateAuthResponse(",
+          "matches": [
+            {
+              "line": 93,
+              "text": "const parameters = oauth.validateAuthResponse("
+            }
+          ]
+        },
+        {
+          "anchor": "oauth.ClientSecretBasic(clientSecret)",
+          "matches": [
+            {
+              "line": 102,
+              "text": "oauth.ClientSecretBasic(clientSecret),"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "relative": "packages/admin/lib/cinaauth/popup-response.ts",
+      "absolute": "C:/cinagroup/cinatoken/packages/admin/lib/cinaauth/popup-response.ts",
+      "bytes": 2086,
+      "sha256": "3a89152389ea4945fabf2f6460247c32662c654e2560a5b7a028e5d106cec4a0",
+      "anchors": [
+        {
+          "anchor": "export function createCinaAuthPopupCompletionResponse",
+          "matches": [
+            {
+              "line": 15,
+              "text": "export function createCinaAuthPopupCompletionResponse(options: {"
+            }
+          ]
+        },
+        {
+          "anchor": "window.opener?.postMessage",
+          "matches": [
+            {
+              "line": 35,
+              "text": "try { window.opener?.postMessage(result, ${scriptJson("
+            }
+          ]
+        },
+        {
+          "anchor": "window.setTimeout(() => window.close(), 75)",
+          "matches": [
+            {
+              "line": 45,
+              "text": "window.setTimeout(() => window.close(), 75);"
+            }
+          ]
+        },
+        {
+          "anchor": "status: 200",
+          "matches": [
+            {
+              "line": 54,
+              "text": "status: 200,"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "relative": "packages/admin/app/api/auth/cinaauth/callback/route.ts",
+      "absolute": "C:/cinagroup/cinatoken/packages/admin/app/api/auth/cinaauth/callback/route.ts",
+      "bytes": 9198,
+      "sha256": "cc6ed92c6a519a31742ed6e7de591791dec2745d8b8ac4f751caf7fff9b49e43",
+      "anchors": [
+        {
+          "anchor": "const fail =",
+          "matches": [
+            {
+              "line": 67,
+              "text": "const fail = ("
+            }
+          ]
+        },
+        {
+          "anchor": "if (transaction?.popupRequestId)",
+          "matches": [
+            {
+              "line": 73,
+              "text": "if (transaction?.popupRequestId) {"
+            }
+          ]
+        },
+        {
+          "anchor": "const complete =",
+          "matches": [
+            {
+              "line": 92,
+              "text": "const complete = ("
+            }
+          ]
+        },
+        {
+          "anchor": "async function completePortalLogin",
+          "matches": [
+            {
+              "line": 109,
+              "text": "async function completePortalLogin("
+            }
+          ]
+        },
+        {
+          "anchor": "export async function GET",
+          "matches": [
+            {
+              "line": 170,
+              "text": "export async function GET(request: NextRequest): Promise<NextResponse> {"
+            }
+          ]
+        },
+        {
+          "anchor": "transaction = await readCinaAuthCallbackTransaction",
+          "matches": [
+            {
+              "line": 175,
+              "text": "transaction = await readCinaAuthCallbackTransaction("
+            }
+          ]
+        },
+        {
+          "anchor": "if (!transaction) return fail",
+          "matches": [
+            {
+              "line": 180,
+              "text": "if (!transaction) return fail(request, \"invalid_transaction\");"
+            }
+          ]
+        },
+        {
+          "anchor": "const tokens = await exchangeCinaAuthAuthorizationCode",
+          "matches": [
+            {
+              "line": 186,
+              "text": "const tokens = await exchangeCinaAuthAuthorizationCode({"
+            }
+          ]
+        },
+        {
+          "anchor": "message: \"cinatoken.oidc_callback_failed\"",
+          "matches": [
+            {
+              "line": 294,
+              "text": "message: \"cinatoken.oidc_callback_failed\","
+            }
+          ]
+        },
+        {
+          "anchor": "\"oidc_failed\",",
+          "matches": [
+            {
+              "line": 300,
+              "text": "\"oidc_failed\","
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "coreSourceCount": 8,
+  "priorAuxiliarySourceRead": "packages/web/src/cinatoken/public/auth/public-auth-runtime.ts was initially read to understand the completion verification callback. It is not copied, executed, or part of these eight final diagnostic core inputs.",
+  "inputObservationsFromParent": {
+    "firstSymptom": "Fresh isolated Chrome/Playwright context: homepage loads without console error; clicked Sign in with CinaAuth, popup starts about:blank, closes before identity input, homepage shows sign-in failure/retry.",
+    "secondActualNetwork": {
+      "at": "2026-10-06T07:52Z",
+      "observedFieldsOnly": [
+        "method",
+        "origin",
+        "path",
+        "status"
+      ],
+      "chain": [
+        {
+          "method": "GET",
+          "origin": "https://cinatoken.com",
+          "path": "/api/auth/cinaauth/login",
+          "status": 302
+        },
+        {
+          "method": "GET",
+          "origin": "https://auth.cinaseek.si",
+          "path": "/api/auth/oauth2/authorize",
+          "status": 302
+        },
+        {
+          "method": "GET",
+          "origin": "https://cinatoken.com",
+          "path": "/api/auth/cinaauth/callback",
+          "status": 200
+        }
+      ],
+      "popupClosedAfterCallbackApproxMs": 108,
+      "signInFailureVisible": true,
+      "consoleHealth": []
+    },
+    "authority": "Parent production browser observation, not a new request or independent runtime reproduction by this peer."
+  },
+  "facts": [
+    {
+      "id": "F1",
+      "text": "about:blank is the deliberate synchronous popup reservation. The public coordinator then lazy-loads its runtime, which adopts the handle and replaces its location with the same-origin auth start URL. Blank initial state alone is not a failure."
+    },
+    {
+      "id": "F2",
+      "text": "Auth start path is /api/auth/cinaauth/login. Default intent is portal and callback is /account. Popup mode adds a correlation UUID. Account registration mode adds mode=register; this is an account prompt, not dynamic OIDC client registration."
+    },
+    {
+      "id": "F3",
+      "text": "The authorization builder sets client_id, redirect_uri, response_type=code, scope=openid profile email, resource=appOrigin, state, nonce, code_challenge and code_challenge_method=S256. It sets no prompt=none. Only login mode=register adds prompt=create."
+    },
+    {
+      "id": "F4",
+      "text": "Issuer/account/app origins require exact canonical HTTPS origins, no credentials, port, path suffix, query or fragment. Client ID and nonempty required-role list are checked. The defaults below are source defaults only and are not proven deployed values."
+    },
+    {
+      "id": "F5",
+      "text": "The login route requires all three OIDC client/bridge/transaction secrets at minimum32 characters before discovery and authorize redirect. It uses optional CINAAUTH_AUTH_SERVICE binding for server-side discovery, otherwise server fetch. Discovery/issuer metadata is not visible in browser network events."
+    },
+    {
+      "id": "F6",
+      "text": "A login exception returns same-origin popup completion HTML with oidc_unavailable and HTTP200, or a nonpopup302 error redirect. The newly observed login302 plus actual issuer navigation rules out this direct-unavailable shape for that observation; it does not prove every runtime configuration value or server-side step."
+    },
+    {
+      "id": "F7",
+      "text": "The callback reads config/secrets and the state-matched sealed transaction, rediscovers issuer metadata, then calls authorization-code exchange including oauth.validateAuthResponse. An invalid transaction has no recovered popup handle and uses a302 fallback. A caught callback failure is collapsed to oidc_failed; with a recovered popup transaction it returns200 completion. Success also returns200 popup completion. HTTP200 alone cannot distinguish those two results."
+    },
+    {
+      "id": "F8",
+      "text": "Completion HTML writes same-origin storage, posts a message to the app origin and broadcasts the result, then schedules window.close after75ms and a local callback fallback after750ms. This is compatible with closure approximately108ms after callback; it does not establish which callback failure occurred."
+    },
+    {
+      "id": "F9",
+      "text": "The client handles explicit failed completion, verification failures, timeout or navigation failure by releasing and closing the reserved popup. The message transport verifies same-origin and the expected popup handle; it does not use popup.closed to infer success because of COOP. No browser console error is required for these handled failures."
+    }
+  ],
+  "expectedEndpointsAndRegistration": {
+    "sourceDefaultOnly": {
+      "issuer": "https://auth.cinaseek.si",
+      "accountOrigin": "https://accounts.cinaseek.si",
+      "appOrigin": "https://cinatoken.com",
+      "clientId": "cinatoken-admin"
+    },
+    "knownAppPaths": {
+      "start": "/api/auth/cinaauth/login",
+      "redirect": "${appOrigin}/api/auth/cinaauth/callback",
+      "postLogout": "${appOrigin}/"
+    },
+    "discovery": "OIDC discovery for configured issuer via oauth4webapi. The authorization/token/JWKS URLs come from metadata; no hard-coded authorization path is claimed by this source.",
+    "observedAuthorizePathFromParent": "/api/auth/oauth2/authorize",
+    "tokenAuthMethod": "client_secret_basic",
+    "pkceMethod": "S256",
+    "clientRegistrationStatus": "Unknown; no registration data or secrets inspected.",
+    "publicUrlTrust": "getPublicRequestUrl is imported by these routes but its implementation is outside this narrow core source set. No arbitrary X-Forwarded-Proto trust is assumed.",
+    "configuredAppOriginVsBrowserOrigin": "Unknown at runtime; source expects exact configured callback/resource and same-origin completion transport."
+  },
+  "callbackClassification": {
+    "safeQueryObservationOnly": {
+      "fields": [
+        "error classified against a fixed OIDC allowlist; unknown values map to other",
+        "hasError boolean",
+        "hasCode boolean",
+        "hasState boolean"
+      ],
+      "suggestedKnownErrors": [
+        "invalid_request",
+        "unauthorized_client",
+        "access_denied",
+        "unsupported_response_type",
+        "invalid_scope",
+        "server_error",
+        "temporarily_unavailable",
+        "interaction_required",
+        "login_required",
+        "account_selection_required",
+        "consent_required",
+        "invalid_client",
+        "invalid_redirect_uri"
+      ],
+      "neverRecord": [
+        "error_description",
+        "error_uri",
+        "raw unknown error value",
+        "authorization code",
+        "state",
+        "nonce",
+        "request correlation ID",
+        "tokens",
+        "request/response bodies",
+        "headers or cookies"
+      ]
+    },
+    "localCompletionCodesInReadSources": [
+      "oidc_unavailable",
+      "invalid_transaction",
+      "oidc_failed",
+      "portal_userinfo_failed",
+      "admin_forbidden",
+      "popup_expired",
+      "runtime_unavailable",
+      "session_unavailable"
+    ],
+    "meaning": "An issuer error enum on the actual redirect narrows rejection to the issuer authorization response. The local oidc_failed is generic and must not be equated with invalid_client or a specific registration cause. Enum names are observation categories, not assumptions about which will occur."
+  },
+  "nextMinimumReadOnlyFields": [
+    {
+      "phase": "Current browser reproduction",
+      "fields": [
+        "sequence or monotonic time",
+        "main/popup page role",
+        "method",
+        "origin",
+        "pathname",
+        "status",
+        "popup created/closed",
+        "callback fixed error category and hasError/hasCode/hasState booleans"
+      ],
+      "purpose": "Separate issuer authorization rejection from success-like callback followed by local token/session verification failure without capturing sensitive URL fields."
+    },
+    {
+      "phase": "If explicitly authorized registration metadata review is needed",
+      "fields": [
+        "public client_id",
+        "clientExists/clientEnabled booleans",
+        "authorization_code allowed",
+        "S256 supported",
+        "registered redirect URI exact match to configured callback URI",
+        "allowed resource/audience app origin",
+        "allowed/trusted app origin matches browser origin",
+        "published authorization/token/JWKS endpoint origins and paths",
+        "client_secret_basic supported",
+        "required runtime secret present and minimum-length-pass booleans only"
+      ],
+      "purpose": "Check registration/configuration contract. Do not read, print or compare secret values, token/cookie payloads or production user records."
+    },
+    {
+      "phase": "If an additional sanitized server event becomes authorized",
+      "fields": [
+        "cinatoken.oidc_start_failed or cinatoken.oidc_callback_failed event name",
+        "allowlisted error class/category/code",
+        "HTTPstatus number/null",
+        "same time window"
+      ],
+      "purpose": "The callback source may log error_description; do not collect the whole raw event or unrestricted description."
+    }
+  ],
+  "runtimeParameterNamesOnly": [
+    "CINAAUTH_ISSUER",
+    "CINAAUTH_ACCOUNT_ORIGIN",
+    "CINATOKEN_APP_ORIGIN",
+    "CINATOKEN_OIDC_CLIENT_ID",
+    "CINATOKEN_REQUIRED_ROLES",
+    "CINATOKEN_OIDC_CLIENT_SECRET",
+    "CINATOKEN_OIDC_BRIDGE_SECRET",
+    "CINATOKEN_OIDC_TRANSACTION_SECRET",
+    "CINAAUTH_AUTH_SERVICE"
+  ],
+  "causeConfirmed": false,
+  "remainingUnknown": [
+    "The actual callback error enum and local completion ok/error are not yet observed by this peer.",
+    "Actual deployed configuration, client registration and provider metadata were not read.",
+    "Current repository source is not independently proven byte-identical to the deployed app by this narrow audit.",
+    "No credential or authenticated business session was submitted or verified; G7/G8 and real identity gates remain outstanding."
+  ],
+  "historicalSourceDiscoveryToolFailures": [
+    {
+      "toolChunkId": "21ac9d",
+      "toolReturnedExitCode": 1,
+      "reason": "Search included nonexistent packages/admin/src; exact source path resolved to packages/admin/app and lib.",
+      "originalChildExternalStreamsArchived": false,
+      "applicationTest": false
+    },
+    {
+      "toolChunkId": "ef3a29",
+      "toolReturnedExitCode": 1,
+      "reason": "Search included nonexistent apps directory; exact needed eight core sources subsequently read.",
+      "originalChildExternalStreamsArchived": false,
+      "applicationTest": false
+    }
+  ],
+  "noSyntheticFailureOrSuccessReceipt": true
+}

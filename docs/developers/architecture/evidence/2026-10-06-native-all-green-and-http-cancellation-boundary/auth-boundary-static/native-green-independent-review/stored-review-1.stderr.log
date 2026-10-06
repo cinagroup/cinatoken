@@ -1,0 +1,11 @@
+file:///C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/audit-stored-candidate.mjs:51
+for(const [name,count] of [['chain55to113',59],['target26',26],['remaining6',6]]){const group=ci.native[name];check('native-cohort:'+name,group.count===count&&group.entries.length===count&&group.entries.every(e=>e.status==='completed'&&e.conclusion==='success'&&financial.some(f=>f.step===e.step&&f.fixture===e.fixture)));}
+                                                                                                                                                                             ^
+
+TypeError: Cannot read properties of undefined (reading 'length')
+    at file:///C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/audit-stored-candidate.mjs:51:174
+    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:661:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.14.1

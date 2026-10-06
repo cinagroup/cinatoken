@@ -1,0 +1,25 @@
+{
+  "at": "2026-10-06T07:21:23.217Z",
+  "finishedAt": "2026-10-06T07:21:23.498Z",
+  "executable": "C:/Program Files/Git/cmd/git.exe",
+  "args": [
+    "-c",
+    "core.longpaths=true",
+    "commit",
+    "-m",
+    "fix(test): preserve receipt cutoff precision and diagnose queued cancellation"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-followup-da56f69292e44387886a9cc8ffa36638\\commit-retention-backlog.stdout.log",
+    "bytes": 47704,
+    "sha256": "a72f94e95cc24614991e2c5fb8139e12c03e77f74f1628c3d5646e2dd40d0ea6"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-followup-da56f69292e44387886a9cc8ffa36638\\commit-retention-backlog.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

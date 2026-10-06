@@ -1,0 +1,44 @@
+{
+  "label": "before-vitest",
+  "command": [
+    "C:/Program Files/nodejs/node.exe",
+    "C:/cinagroup/cinaauth/node_modules/vitest/vitest.mjs",
+    "run",
+    "workers/auth-api/test/cinatoken-oidc-client.test.ts",
+    "--root",
+    "C:/Users/cina/AppData/Local/Temp/cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d/before",
+    "--config",
+    "C:/Users/cina/AppData/Local/Temp/cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d/vitest.config.mjs",
+    "--pool=threads",
+    "--maxWorkers=1",
+    "-t",
+    "cinatoken",
+    "--reporter=default",
+    "--reporter=json",
+    "--outputFile=C:/Users/cina/AppData/Local/Temp/cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d/before-vitest.json"
+  ],
+  "cwd": "C:/Users/cina/AppData/Local/Temp/cinaauth-cinatoken-resource-candidate-ca21d01f56be4c68bcd690819eef5c2d",
+  "startedAt": "2026-10-06T08:22:09.229Z",
+  "endedAt": "2026-10-06T08:22:12.937Z",
+  "actualExit": 1,
+  "signal": null,
+  "spawnError": null,
+  "timeoutConfiguredMs": 120000,
+  "timedOutObserved": false,
+  "stdout": {
+    "path": "before-vitest.stdout.log",
+    "bytes": 1041,
+    "sha256": "ddb55de9cd1c178ac3870f1acc4a017c99db591a57ed43595e338e6cee5c026f"
+  },
+  "stderr": {
+    "path": "before-vitest.stderr.log",
+    "bytes": 2998,
+    "sha256": "b752ca4e4b258054a2e80d3289ca63f8bf9c8b20e290ffa186880046a6724f0e"
+  },
+  "sourceProgram": {
+    "path": "C:/cinagroup/cinaauth/node_modules/vitest/vitest.mjs",
+    "bytes": 43,
+    "sha256": "39db22f579acf5639bbb17a261408debbde03f4692c0c439e77e7f13aeba74d6"
+  },
+  "businessOrProductionPassDerived": false
+}

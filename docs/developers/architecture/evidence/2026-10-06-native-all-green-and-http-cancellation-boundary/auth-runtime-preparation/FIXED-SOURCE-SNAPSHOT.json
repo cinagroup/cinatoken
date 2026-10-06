@@ -1,0 +1,1784 @@
+{
+  "schema": "auth-runtime-fixed-public-source-snapshot-v1",
+  "at": "2026-10-06T09:14:07.306Z",
+  "selectionFrozen": true,
+  "firstSelectionOnly": true,
+  "laterRootFilesNotIncluded": true,
+  "sourceSelectionAuthority": "Root explicitly selected R/B existing public proofs and promised existing files stable. Selection is frozen once; later new Root files are excluded.",
+  "inputs": [
+    {
+      "id": "root-public-runtime",
+      "relative": "checklist-live-registration-update.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/checklist-live-registration-update.json",
+        "bytes": 517,
+        "sha256": "76b2a6cf7090bf84131cd3ce77bf580ace5891235cda68f1ac20bdc18d28c311"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "controller-syntax-v2.result.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/controller-syntax-v2.result.json",
+        "bytes": 865,
+        "sha256": "d38d4c467f9ff475eddfa06c0994bf2ee9c3e930344bab215e04e30c5477e4b6"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "controller-syntax-v2.stderr.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/controller-syntax-v2.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "controller-syntax-v2.stdout.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/controller-syntax-v2.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "controller-syntax.result.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/controller-syntax.result.json",
+        "bytes": 859,
+        "sha256": "084d405a0591456d2893d88c3c2a16908a2febc936869b1bed2c90585291cc2a"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "controller-syntax.stderr.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/controller-syntax.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "controller-syntax.stdout.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/controller-syntax.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "copy-native-green-candidate.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/copy-native-green-candidate.mjs",
+        "bytes": 4531,
+        "sha256": "aade2dd50c7d7160f70ad5f71cdbc9dc5e0882529c826a9d97954143900aee2e"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "copy-native-green-candidate.result.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/copy-native-green-candidate.result.json",
+        "bytes": 852,
+        "sha256": "67350d8a8e6a99c23353dfce3cad99ab0ad3fdfbb072756bc218383b18db4573"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "copy-native-green-candidate.stderr.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/copy-native-green-candidate.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "copy-native-green-candidate.stdout.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/copy-native-green-candidate.stdout.log",
+        "bytes": 270,
+        "sha256": "824cbfcf1880045a4c73c41be7abf720ff474f20b318e9762eedce457734a2cf"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "guard-independent-web-current.deployment-guard.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/guard-independent-web-current.deployment-guard.json",
+        "bytes": 1030,
+        "sha256": "08dcf9d33299eb81ee0efbd2c83bc20ecd725eabda3a8e8d628426c6edb23cac"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "guard-independent-web-current.result.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/guard-independent-web-current.result.json",
+        "bytes": 976,
+        "sha256": "406fbd7961cd6e5565df3e137aaa606aca5253fee6ba22ea905ebba39537ea2b"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "guard-independent-web-current.stderr.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/guard-independent-web-current.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "guard-independent-web-current.stdout.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/guard-independent-web-current.stdout.log",
+        "bytes": 793,
+        "sha256": "a27981bd78ed62ccd5ee07cb93a625688c149e6a55f89cc8e7b77ed0042ea537"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "guard-live-cutover.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/guard-live-cutover.mjs",
+        "bytes": 2150,
+        "sha256": "b8c1e7f5e4784da907f11152369207a9fc408908e853539b053e7e38b0a6d2c3"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "prepare-link-repair-controller.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/prepare-link-repair-controller.mjs",
+        "bytes": 3434,
+        "sha256": "7e52a921d9d353fe1af8809ff3ede8b779564bb16dad7628d92ac59603e9b944"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "prepare-link-repair-controller.result.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/prepare-link-repair-controller.result.json",
+        "bytes": 868,
+        "sha256": "330d3692936bb532cf25afdb75c6e34747b5cb93981da5c08698d4752d58f8b8"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "prepare-link-repair-controller.stderr.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/prepare-link-repair-controller.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "prepare-link-repair-controller.stdout.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/prepare-link-repair-controller.stdout.log",
+        "bytes": 130,
+        "sha256": "556e8c2d249f97e14fd20514208897a5d46b78c6e5397767b648c37a780b031b"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "prepare-link-repair-v2.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/prepare-link-repair-v2.mjs",
+        "bytes": 3713,
+        "sha256": "4c08135749b75915af878a849274b45c2a41cafe51158667a802e69f0b33596e"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "prepare-link-repair-v2.result.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/prepare-link-repair-v2.result.json",
+        "bytes": 844,
+        "sha256": "d889d296ce6937d1259f10962be5dbd0f4fe307470279bd343053d4280d194fd"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "prepare-link-repair-v2.stderr.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/prepare-link-repair-v2.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "prepare-link-repair-v2.stdout.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/prepare-link-repair-v2.stdout.log",
+        "bytes": 863,
+        "sha256": "0c27210f42a61a1f1b36126a6482c57a28a069b5ddf427a21eaf1021d3b102e2"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "prepare-minimal-registration-link-repair.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/prepare-minimal-registration-link-repair.mjs",
+        "bytes": 5894,
+        "sha256": "cf69e717e24f7e96d435ec8a78e0fee4a204993b372fc160e87f549abe19f851"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "prepare-registration-link-repair.result.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/prepare-registration-link-repair.result.json",
+        "bytes": 882,
+        "sha256": "67058f9d243d5ab4c53e3fdf6d87b959ef4cb9410ebad9b453115c0226721d0f"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "prepare-registration-link-repair.stderr.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/prepare-registration-link-repair.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "prepare-registration-link-repair.stdout.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/prepare-registration-link-repair.stdout.log",
+        "bytes": 933,
+        "sha256": "f9e4280e347166f46b1f6089cbc46245118735a44249e4ec888b3a2203fb0dbc"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "prepare-registration-runtime-v2.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/prepare-registration-runtime-v2.mjs",
+        "bytes": 3213,
+        "sha256": "e9cd7b85a529b4b1768624059af950b534987bd76a394ddac5b4cf6d685e562f"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "prepare-registration-runtime-v2.result.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/prepare-registration-runtime-v2.result.json",
+        "bytes": 871,
+        "sha256": "e43a18f193299cecb3ba2c311b18e8d7db06610c932c650ab94c0deb7025027d"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "prepare-registration-runtime-v2.stderr.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/prepare-registration-runtime-v2.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "prepare-registration-runtime-v2.stdout.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/prepare-registration-runtime-v2.stdout.log",
+        "bytes": 908,
+        "sha256": "979ef9af69fda2dcd71d616d62a70ece0d6a9bdb20fa6092d5764f00ddf4a6cf"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "prepare-registration-runtime.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/prepare-registration-runtime.mjs",
+        "bytes": 3031,
+        "sha256": "3ecf7d865d9434e799bffa1f7c4a808c2b4ab26e31ba6f2b21230640ddd793be"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "prepare-registration-runtime.result.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/prepare-registration-runtime.result.json",
+        "bytes": 856,
+        "sha256": "3eb6888805dee1b64787ae86a82150d61788ad4226f4f6d623b3ac7b44ee620e"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "prepare-registration-runtime.stderr.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/prepare-registration-runtime.stderr.log",
+        "bytes": 1110,
+        "sha256": "0c348cad098b9835c4773d7dca93d86a73c8b1b4519653b2d68825a688e3bca1"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "prepare-registration-runtime.stdout.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/prepare-registration-runtime.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "read-registration-via-owned-worker.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/read-registration-via-owned-worker.mjs",
+        "bytes": 6990,
+        "sha256": "9c957baffb6f6b128a64900416359c420a7109b510b882f4628eafdae6106a43"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "refine-checklist-auth-observation.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/refine-checklist-auth-observation.mjs",
+        "bytes": 2062,
+        "sha256": "5572d07cc03947a5bfe2ee5b76eae016ea0bdbdfae709285555104475face566"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "refine-checklist-auth-observation.result.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/refine-checklist-auth-observation.result.json",
+        "bytes": 870,
+        "sha256": "879532741f2bd4e3b70e2fc7dfd1e422850d78d135066f6ab097debe09d48ee9"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "refine-checklist-auth-observation.stderr.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/refine-checklist-auth-observation.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "refine-checklist-auth-observation.stdout.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/refine-checklist-auth-observation.stdout.log",
+        "bytes": 262,
+        "sha256": "cee25dd59aeaed32be1c6b2fe5bf19eb1069b494f9aa27e3a22bf3709296dd57"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "registration-live-readonly.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/registration-live-readonly.json",
+        "bytes": 2401,
+        "sha256": "989bb034ac0ed4faf8336b1d341f3a4b4ab56c2df1dac364bb505a2bd361d0f7"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "registration-live-readonly.result.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/registration-live-readonly.result.json",
+        "bytes": 865,
+        "sha256": "a762615988a2ea9bb5abeb57e1a475ba5b3768649328a7d261cea0e045b8ad6f"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "registration-live-readonly.stderr.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/registration-live-readonly.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "registration-live-readonly.stdout.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/registration-live-readonly.stdout.log",
+        "bytes": 1734,
+        "sha256": "ea27981a2ae2299d48441f4ff16e5934fe105e231bbc7ba84d1056c4f3fbaa51"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "registration-owned-plan.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/registration-owned-plan.json",
+        "bytes": 642,
+        "sha256": "827959838c80471c19f430d4e486c13f74d70286aa3e180f52cde0dcafcf8265"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "registration-owned-preflight.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/registration-owned-preflight.json",
+        "bytes": 149,
+        "sha256": "113e6cf033acfa86895af73aba98b754d2a3976a76445cb8cb169cb592a52a45"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "repair-controller-syntax-v2.result.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/repair-controller-syntax-v2.result.json",
+        "bytes": 884,
+        "sha256": "923f43383324f8f8cb01511487b9216abc38aaedb8579a0757caed7e4f31cc61"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "repair-controller-syntax-v2.stderr.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/repair-controller-syntax-v2.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "repair-controller-syntax-v2.stdout.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/repair-controller-syntax-v2.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "repair-controller-syntax.result.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/repair-controller-syntax.result.json",
+        "bytes": 875,
+        "sha256": "a9bbe43670fbda826f6d54bd8f6299a03637f3d49e1e509eae8ab8e0bab8494e"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "repair-controller-syntax.stderr.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/repair-controller-syntax.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "repair-controller-syntax.stdout.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/repair-controller-syntax.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "repair-registration-via-owned-worker-v2.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/repair-registration-via-owned-worker-v2.mjs",
+        "bytes": 7570,
+        "sha256": "0c60b41444f8b876cfc928689722ce7ac3fe369d4eb054d067a1feb1ddd71d7f"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "repair-registration-via-owned-worker.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/repair-registration-via-owned-worker.mjs",
+        "bytes": 7567,
+        "sha256": "f3bc3660f311f99ead7108208dac1aeccd3d3e63e3d639445ad6ec468163372b"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "root-browser-and-approval-observations.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/root-browser-and-approval-observations.json",
+        "bytes": 2423,
+        "sha256": "47b40ba8a63f38049151f8aefa8ebda2c4834cc0ec3fac1b176e0410e794cda4"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "run-closed-compact.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/run-closed-compact.mjs",
+        "bytes": 2130,
+        "sha256": "fac21f316bea714dbe068d95bff48281adee88a3c0b84ae0a360099389b81de8"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "update-checklist-live-registration-gate.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/update-checklist-live-registration-gate.mjs",
+        "bytes": 7593,
+        "sha256": "2f4c856a4118fc73fd71fa59d69fb8759d8f535273f3845d888a024d4f835a5f"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "update-checklist-live-registration.result.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/update-checklist-live-registration.result.json",
+        "bytes": 885,
+        "sha256": "2303faffac53eb966e5ad71d927c56a2bdbad547978358e9c480b3fc7394a257"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "update-checklist-live-registration.stderr.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/update-checklist-live-registration.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "update-checklist-live-registration.stdout.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/update-checklist-live-registration.stdout.log",
+        "bytes": 437,
+        "sha256": "00d1420ab85df35c7cf58156467e3b59a52865d3e507f910c60b6117d1645b19"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "update-checklist-native-green-auth.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/update-checklist-native-green-auth.mjs",
+        "bytes": 8581,
+        "sha256": "417f9107500da0afef3348aa0b6271e24e25a4ef39fa22524e39d0432068e2b5"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "update-checklist-native-green-auth.result.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/update-checklist-native-green-auth.result.json",
+        "bytes": 873,
+        "sha256": "f2cc188f4eef7642045f89fa6613087d2522f67649f0465c51682737e66d3f98"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "update-checklist-native-green-auth.stderr.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/update-checklist-native-green-auth.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "update-checklist-native-green-auth.stdout.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/update-checklist-native-green-auth.stdout.log",
+        "bytes": 452,
+        "sha256": "9f16b2b346303baa19e32ce850a63f2253dc9576d43739612895e02f6fb68fdc"
+      }
+    },
+    {
+      "id": "browser-public-runtime",
+      "relative": "browser-session-v2.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-real-auth-browser-6459c6e3517098/browser-session-v2.mjs",
+        "bytes": 4158,
+        "sha256": "7148f380f9c0772fba55f15ffb6389cab01114a2cea159a89e2a9b39c8637c9f"
+      }
+    },
+    {
+      "id": "browser-public-runtime",
+      "relative": "browser-session-v3.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-real-auth-browser-6459c6e3517098/browser-session-v3.mjs",
+        "bytes": 5050,
+        "sha256": "e361a88efcca0b60ed77064085df2117dc6d9d27b2bfd72d9faa3778481bfdaa"
+      }
+    },
+    {
+      "id": "browser-public-runtime",
+      "relative": "browser-session-v4.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-real-auth-browser-6459c6e3517098/browser-session-v4.mjs",
+        "bytes": 5050,
+        "sha256": "c14012a522e520fa74dbaddea6a8ef870f9ff86a23ad347dd3a313ccdeabcefd"
+      }
+    },
+    {
+      "id": "browser-public-runtime",
+      "relative": "browser-session.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-real-auth-browser-6459c6e3517098/browser-session.mjs",
+        "bytes": 3498,
+        "sha256": "0c298fff3bb029df26f2397afed35938205500058f3a8d740671a6ea84bd958d"
+      }
+    },
+    {
+      "id": "browser-public-runtime",
+      "relative": "browser-v2-observations.ndjson",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-real-auth-browser-6459c6e3517098/browser-v2-observations.ndjson",
+        "bytes": 8392,
+        "sha256": "d2077816e209409a16ebb14f57ea05a5ac64c54c5fd372892a2791628486af4b"
+      }
+    },
+    {
+      "id": "browser-public-runtime",
+      "relative": "browser-v3-observations.ndjson",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-real-auth-browser-6459c6e3517098/browser-v3-observations.ndjson",
+        "bytes": 8891,
+        "sha256": "a121bbc2cae1789f301ea4d7ba446b7927993a1c5cc3c4513a83824c0a6f37e5"
+      }
+    },
+    {
+      "id": "browser-public-runtime",
+      "relative": "browser-v3-requests.ndjson",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-real-auth-browser-6459c6e3517098/browser-v3-requests.ndjson",
+        "bytes": 136,
+        "sha256": "94ab44cba9d00ddd0c36db58037e77204ec206fb8f5ae5bfd4f8ff96f3d03c42"
+      }
+    },
+    {
+      "id": "browser-public-runtime",
+      "relative": "browser-v4-observations.ndjson",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-real-auth-browser-6459c6e3517098/browser-v4-observations.ndjson",
+        "bytes": 2104,
+        "sha256": "4d98d7584aaecab8f98c5c69ff2bcc240aadb66f90fc7b7e46a89b62cf6d867d"
+      }
+    },
+    {
+      "id": "browser-public-runtime",
+      "relative": "browser-v4-requests.ndjson",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-real-auth-browser-6459c6e3517098/browser-v4-requests.ndjson",
+        "bytes": 16,
+        "sha256": "71c75f09eb02d730e65a36575487579cb110119ee9af4e212f671f70f77aa7ad"
+      }
+    },
+    {
+      "id": "browser-public-runtime",
+      "relative": "cinaauth-active-version-metadata.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-real-auth-browser-6459c6e3517098/cinaauth-active-version-metadata.json",
+        "bytes": 583,
+        "sha256": "a7d8644e5ac57065ad278f5a0a5999477f71b3e49f52a2ade84648090da87d6f"
+      }
+    },
+    {
+      "id": "browser-public-runtime",
+      "relative": "cinaauth-active-version.result.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-real-auth-browser-6459c6e3517098/cinaauth-active-version.result.json",
+        "bytes": 839,
+        "sha256": "0c26bc70fc3396b0efd73619ad9a567d9128621a9383935d5d5e33de7c9718d4"
+      }
+    },
+    {
+      "id": "browser-public-runtime",
+      "relative": "cinaauth-active-version.stderr.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-real-auth-browser-6459c6e3517098/cinaauth-active-version.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "browser-public-runtime",
+      "relative": "cinaauth-active-version.stdout.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-real-auth-browser-6459c6e3517098/cinaauth-active-version.stdout.log",
+        "bytes": 434,
+        "sha256": "170ecc8f3e2edcbdf417d1f7b5de9afefde7c531e21ebd8bb1ea11ae86cce370"
+      }
+    },
+    {
+      "id": "browser-public-runtime",
+      "relative": "cinaauth-hyperdrive-cache-metadata.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-real-auth-browser-6459c6e3517098/cinaauth-hyperdrive-cache-metadata.json",
+        "bytes": 229,
+        "sha256": "0563cfeec5a7c689d992de8577d7f526b889fd92ac4476e1b460a214de232ad9"
+      }
+    },
+    {
+      "id": "browser-public-runtime",
+      "relative": "cinaauth-hyperdrive-cache.result.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-real-auth-browser-6459c6e3517098/cinaauth-hyperdrive-cache.result.json",
+        "bytes": 836,
+        "sha256": "7b0891ea389982679e578432a962b22397df0a0463c02aeb4cb3f87478d33a9b"
+      }
+    },
+    {
+      "id": "browser-public-runtime",
+      "relative": "cinaauth-hyperdrive-cache.stderr.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-real-auth-browser-6459c6e3517098/cinaauth-hyperdrive-cache.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "browser-public-runtime",
+      "relative": "cinaauth-hyperdrive-cache.stdout.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-real-auth-browser-6459c6e3517098/cinaauth-hyperdrive-cache.stdout.log",
+        "bytes": 195,
+        "sha256": "8fe910934ccf17d413b7b7758fce7b6027f4c5ee4593c6b407eedb23f72a7a31"
+      }
+    },
+    {
+      "id": "browser-public-runtime",
+      "relative": "cinaauth-public-profile-metadata.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-real-auth-browser-6459c6e3517098/cinaauth-public-profile-metadata.json",
+        "bytes": 591,
+        "sha256": "c104e066913dcdd043cbbbfc6afcfb86c65ed91b24006fee1ccc5edc6ebd64a5"
+      }
+    },
+    {
+      "id": "browser-public-runtime",
+      "relative": "cinaauth-public-profile.result.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-real-auth-browser-6459c6e3517098/cinaauth-public-profile.result.json",
+        "bytes": 839,
+        "sha256": "5774ab095fa11a721e5db02decae3ad702ec2a554f6171244c5ee1950a749cba"
+      }
+    },
+    {
+      "id": "browser-public-runtime",
+      "relative": "cinaauth-public-profile.stderr.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-real-auth-browser-6459c6e3517098/cinaauth-public-profile.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "browser-public-runtime",
+      "relative": "cinaauth-public-profile.stdout.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-real-auth-browser-6459c6e3517098/cinaauth-public-profile.stdout.log",
+        "bytes": 438,
+        "sha256": "6749f9485450c7b6f72a1cfd6ecd87c84e973c54310ec738c2deb7ac11bcabb9"
+      }
+    },
+    {
+      "id": "browser-public-runtime",
+      "relative": "cloudflare-public-auth-metadata.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-real-auth-browser-6459c6e3517098/cloudflare-public-auth-metadata.json",
+        "bytes": 2178,
+        "sha256": "3007afeb751c947849b7a9e1c98b79de5e3fbad75709cb527c00040158a05098"
+      }
+    },
+    {
+      "id": "browser-public-runtime",
+      "relative": "prepare-browser-v3.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-real-auth-browser-6459c6e3517098/prepare-browser-v3.mjs",
+        "bytes": 2794,
+        "sha256": "5d23ec5feed149ed0c5a71ddd6db169b1a0ad01c25305ec5a014e98f0e80d44b"
+      }
+    },
+    {
+      "id": "browser-public-runtime",
+      "relative": "public-auth-metadata.result.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-real-auth-browser-6459c6e3517098/public-auth-metadata.result.json",
+        "bytes": 831,
+        "sha256": "d165199d8d9dfeba047bf4c9b61bb48d4ea7c9106bce41e267afbff0b043aea2"
+      }
+    },
+    {
+      "id": "browser-public-runtime",
+      "relative": "public-auth-metadata.stderr.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-real-auth-browser-6459c6e3517098/public-auth-metadata.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "browser-public-runtime",
+      "relative": "public-auth-metadata.stdout.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-real-auth-browser-6459c6e3517098/public-auth-metadata.stdout.log",
+        "bytes": 1354,
+        "sha256": "d19e5aa75013fb7818e0924745d846c4e5ed91047ccad776f02add2b0b798032"
+      }
+    },
+    {
+      "id": "browser-public-runtime",
+      "relative": "read-cinaauth-active-version.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-real-auth-browser-6459c6e3517098/read-cinaauth-active-version.mjs",
+        "bytes": 1263,
+        "sha256": "6b5eba6ebf83253b128535adba95595827534200dc3d5adcddc632e2ea54f108"
+      }
+    },
+    {
+      "id": "browser-public-runtime",
+      "relative": "read-cinaauth-public-profile.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-real-auth-browser-6459c6e3517098/read-cinaauth-public-profile.mjs",
+        "bytes": 1170,
+        "sha256": "626f8a61261224e99464bd197bbdb2324a19b85881bf516170cc426ad7b235ba"
+      }
+    },
+    {
+      "id": "browser-public-runtime",
+      "relative": "read-hyperdrive-cache.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-real-auth-browser-6459c6e3517098/read-hyperdrive-cache.mjs",
+        "bytes": 749,
+        "sha256": "d0eda86adf2ebe35c6ea3c09f1ed7b6eb88b9ba17995e58c259cd6ed992a2c30"
+      }
+    },
+    {
+      "id": "browser-public-runtime",
+      "relative": "read-public-auth-metadata.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-real-auth-browser-6459c6e3517098/read-public-auth-metadata.mjs",
+        "bytes": 1553,
+        "sha256": "ab0ea78468a55f7e27fa99240cd47b15cc9025e8ae1342925955d01fca8d1131"
+      }
+    },
+    {
+      "id": "browser-public-runtime",
+      "relative": "run-closed-compact.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-real-auth-browser-6459c6e3517098/run-closed-compact.mjs",
+        "bytes": 2130,
+        "sha256": "fac21f316bea714dbe068d95bff48281adee88a3c0b84ae0a360099389b81de8"
+      }
+    },
+    {
+      "id": "publication-preparation",
+      "relative": "prepublish-md-whitespace.result.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/prepublish-md-whitespace.result.json",
+        "bytes": 907,
+        "sha256": "2e7dbee9bbd041e4241da8a036b1cce0c47baad22020bca60401836b0985a987"
+      }
+    },
+    {
+      "id": "publication-preparation",
+      "relative": "prepublish-md-whitespace.stdout.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/prepublish-md-whitespace.stdout.log",
+        "bytes": 84,
+        "sha256": "c8a195f9e6e4df91115098bd6d795f4b7c4e9e1063c18a05b807f0b09965ae67"
+      }
+    },
+    {
+      "id": "publication-preparation",
+      "relative": "prepublish-md-whitespace.stderr.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/prepublish-md-whitespace.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "publication-preparation",
+      "relative": "normalize-checklist-terminal-newline.result.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/normalize-checklist-terminal-newline.result.json",
+        "bytes": 886,
+        "sha256": "c8a005c7f60f0245f9a38e210a3f214eaa6cd18d28f04c5ab614ca0d9110a4c6"
+      }
+    },
+    {
+      "id": "publication-preparation",
+      "relative": "normalize-checklist-terminal-newline.stdout.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/normalize-checklist-terminal-newline.stdout.log",
+        "bytes": 358,
+        "sha256": "ceeba5664cb56f5621ab082b0ed1b8e86f26cc82919d846c797663f2932b532a"
+      }
+    },
+    {
+      "id": "publication-preparation",
+      "relative": "normalize-checklist-terminal-newline.stderr.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/normalize-checklist-terminal-newline.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "publication-preparation",
+      "relative": "prepublish-md-whitespace-v2.result.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/prepublish-md-whitespace-v2.result.json",
+        "bytes": 912,
+        "sha256": "cea025c24ff1a750bbe344eb77453f48c24dc107ce5bfb7044440f983197a35c"
+      }
+    },
+    {
+      "id": "publication-preparation",
+      "relative": "prepublish-md-whitespace-v2.stdout.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/prepublish-md-whitespace-v2.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "publication-preparation",
+      "relative": "prepublish-md-whitespace-v2.stderr.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/prepublish-md-whitespace-v2.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "publication-preparation",
+      "relative": "guard-web-after-auth-read.result.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/guard-web-after-auth-read.result.json",
+        "bytes": 971,
+        "sha256": "277e46ae944e6b342f3778119695c0d8dbe09fd485fd44bb262ea3aaf0e1cfca"
+      }
+    },
+    {
+      "id": "publication-preparation",
+      "relative": "guard-web-after-auth-read.stdout.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/guard-web-after-auth-read.stdout.log",
+        "bytes": 793,
+        "sha256": "e0780e6711deba0fd7c503a65c18f9ec16c1fd5e37fa3a87cc2f3ded512cde24"
+      }
+    },
+    {
+      "id": "publication-preparation",
+      "relative": "guard-web-after-auth-read.stderr.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/guard-web-after-auth-read.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "publication-preparation",
+      "relative": "normalize-checklist-terminal-newline.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/normalize-checklist-terminal-newline.mjs",
+        "bytes": 1101,
+        "sha256": "6f7227bdb01d4a2c102b130881969a4baa0e80d72c974df13d9ff4920172ea31"
+      }
+    },
+    {
+      "id": "publication-preparation",
+      "relative": "checklist-terminal-newline.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/checklist-terminal-newline.json",
+        "bytes": 387,
+        "sha256": "c0704dc6083ada9231cb93d865f89419084cdf8b141aaa118a988948c01a414d"
+      }
+    },
+    {
+      "id": "publication-preparation",
+      "relative": "guard-web-after-auth-read.deployment-guard.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/guard-web-after-auth-read.deployment-guard.json",
+        "bytes": 1030,
+        "sha256": "5223865c4d6746d5046d31d52732ffe7cf8df89a8dbc46ca2094ff48f6bd5b5f"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "registration-runtime/registration-metadata.worker.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/registration-runtime/registration-metadata.worker.mjs",
+        "bytes": 4044,
+        "sha256": "44d83eefffd275c0b4122294e8cc57af6590df2078c7f9f79a5cd1a8460e5885"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "registration-runtime-v2/prepared.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/registration-runtime-v2/prepared.json",
+        "bytes": 1076,
+        "sha256": "a9499eb7971cf50355601d4e7570bdf65f2515d47d45717fb63ccee080052e34"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "registration-runtime-v2/registration-metadata.bundle.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/registration-runtime-v2/registration-metadata.bundle.mjs",
+        "bytes": 81026,
+        "sha256": "a2d547c6de353ada6eb908a4068df2f597d75a7f85ca96c76d00724f008d2e67"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "registration-runtime-v2/registration-metadata.worker.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/registration-runtime-v2/registration-metadata.worker.mjs",
+        "bytes": 4044,
+        "sha256": "44d83eefffd275c0b4122294e8cc57af6590df2078c7f9f79a5cd1a8460e5885"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "registration-link-repair/prepared.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/registration-link-repair/prepared.json",
+        "bytes": 1097,
+        "sha256": "c911e96c7eafa1bac8daeab9492e2d4515e705521df866be326dc7b20c723bc0"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "registration-link-repair/registration-link-repair.bundle.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/registration-link-repair/registration-link-repair.bundle.mjs",
+        "bytes": 82380,
+        "sha256": "2e8feaf50cad98f1cb775b58ec6d2e7e2b6da527f8560aca015fd7cdaa0d0474"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "registration-link-repair/registration-link-repair.worker.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/registration-link-repair/registration-link-repair.worker.mjs",
+        "bytes": 5393,
+        "sha256": "9be840dd466f58734de2050f9441206641fcd9e69ad327078a2f4adf90a5d421"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "registration-link-repair-v2/prepared.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/registration-link-repair-v2/prepared.json",
+        "bytes": 910,
+        "sha256": "485709a18aa46e9522a56181d27eb9e3c011fa47a6dd2a3354133c52e9f0328b"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "registration-link-repair-v2/registration-link-repair.bundle.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/registration-link-repair-v2/registration-link-repair.bundle.mjs",
+        "bytes": 82428,
+        "sha256": "20ea7d7a16b19c9c65fd84fa28d2de24a4ab9a6be4d1d924e92707d2f9d80577"
+      }
+    },
+    {
+      "id": "root-public-runtime",
+      "relative": "registration-link-repair-v2/registration-link-repair.worker.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/registration-link-repair-v2/registration-link-repair.worker.mjs",
+        "bytes": 5441,
+        "sha256": "07103d4c4a646e5a0ad97b220c7c36db882e0be3e9b2266f9c1e2269e5594944"
+      }
+    },
+    {
+      "id": "controller-corrected-peer",
+      "relative": "audit-runtime-and-controller.closed.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-registration-controller-corrected-peer-rgamZa/audit-runtime-and-controller.closed.json",
+        "bytes": 937,
+        "sha256": "1c041517ec7c037fee35c807c0e842a15d732438966eb0a4520c903a0b41e9fa"
+      }
+    },
+    {
+      "id": "controller-corrected-peer",
+      "relative": "audit-runtime-and-controller.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-registration-controller-corrected-peer-rgamZa/audit-runtime-and-controller.mjs",
+        "bytes": 15123,
+        "sha256": "746d2524b9cd5d1a3ceae00cf62ab53bf7e009e840ab0b03fcf4aa5cfa9c7b68"
+      }
+    },
+    {
+      "id": "controller-corrected-peer",
+      "relative": "audit-runtime-and-controller.stderr.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-registration-controller-corrected-peer-rgamZa/audit-runtime-and-controller.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "controller-corrected-peer",
+      "relative": "audit-runtime-and-controller.stdout.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-registration-controller-corrected-peer-rgamZa/audit-runtime-and-controller.stdout.log",
+        "bytes": 346,
+        "sha256": "2dabdf32f846f954291abf939893be79850f76db6ceec88c7d67ee8f355dfd4c"
+      }
+    },
+    {
+      "id": "controller-corrected-peer",
+      "relative": "capture-readonly.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-registration-controller-corrected-peer-rgamZa/capture-readonly.mjs",
+        "bytes": 1405,
+        "sha256": "73f8ec0159b113f5339119649fe0ccfd402740897076ddf439d9f91009bb4b67"
+      }
+    },
+    {
+      "id": "controller-corrected-peer",
+      "relative": "FINAL-registration-runtime-controller-corrected-peer.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-registration-controller-corrected-peer-rgamZa/FINAL-registration-runtime-controller-corrected-peer.json",
+        "bytes": 15031,
+        "sha256": "058bd9f09249fcf651875b3b3075a2c992d254aee2a3112dde4ba6b21c81cd80"
+      }
+    },
+    {
+      "id": "controller-corrected-peer",
+      "relative": "STOPWRITE-peer-seal.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-registration-controller-corrected-peer-rgamZa/STOPWRITE-peer-seal.json",
+        "bytes": 1690,
+        "sha256": "13b917dd6599467226987ced10b80bbd74ab407f12a2c4c828c57b3297673071"
+      }
+    },
+    {
+      "id": "static-addon-copy-proof",
+      "relative": "copy-reviewed-addon.closed.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1/copy-reviewed-addon.closed.json",
+        "bytes": 1105,
+        "sha256": "8abe8622d41ed8e644c94b4c35332f525add0d523d42c0f34c5d1a2dc3cfe27b"
+      }
+    },
+    {
+      "id": "static-addon-copy-proof",
+      "relative": "copy-reviewed-addon.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1/copy-reviewed-addon.mjs",
+        "bytes": 6281,
+        "sha256": "1e9396093a211ca79cfb4266ad9f2d64103ef95b64df14ca92687a379041446f"
+      }
+    },
+    {
+      "id": "static-addon-copy-proof",
+      "relative": "copy-reviewed-addon.stderr.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1/copy-reviewed-addon.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "static-addon-copy-proof",
+      "relative": "copy-reviewed-addon.stdout.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1/copy-reviewed-addon.stdout.log",
+        "bytes": 832,
+        "sha256": "8d8f6c86eb4e62ad5ce03f973ba6867b28e0a7e4262a14d4f1c442c6b19825c9"
+      }
+    },
+    {
+      "id": "static-addon-copy-proof",
+      "relative": "FINAL-repository-addon-copy.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1/FINAL-repository-addon-copy.json",
+        "bytes": 3965,
+        "sha256": "1400566640b34ad560801073757b85906d4d5d1e125ae0c175c11dbac6924200"
+      }
+    },
+    {
+      "id": "static-addon-copy-proof",
+      "relative": "repository-copy-proof.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1/repository-copy-proof.json",
+        "bytes": 919,
+        "sha256": "503b6b4b80e01667f1887d6f49a3722f3cb3742ac5c27393a4d9e2a0b64a0922"
+      }
+    },
+    {
+      "id": "static-addon-copy-proof",
+      "relative": "repository-independent-verification.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1/repository-independent-verification.json",
+        "bytes": 702,
+        "sha256": "826f317601ed6125cb4e9fba73260185c0f691e764196966d428228890737285"
+      }
+    },
+    {
+      "id": "static-addon-copy-proof",
+      "relative": "run-copy-final-seal.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1/run-copy-final-seal.mjs",
+        "bytes": 2373,
+        "sha256": "98a83f4183a4a491b96df0e613cab7b88388d25a3f94e6edbf4c569e5c8dc5dd"
+      }
+    },
+    {
+      "id": "static-addon-copy-proof",
+      "relative": "run-repository-copy-commands.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1/run-repository-copy-commands.mjs",
+        "bytes": 1734,
+        "sha256": "8826156491e5b26085099d0f636a324046f7b633872e1e457238654a67d2050f"
+      }
+    },
+    {
+      "id": "static-addon-copy-proof",
+      "relative": "seal-repository-copy.closed.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1/seal-repository-copy.closed.json",
+        "bytes": 1113,
+        "sha256": "04acd544ea045a1ef54ef2784ce14d3d6597a76b50c7e08000e228cdddf06beb"
+      }
+    },
+    {
+      "id": "static-addon-copy-proof",
+      "relative": "seal-repository-copy.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1/seal-repository-copy.mjs",
+        "bytes": 2603,
+        "sha256": "299d1db5a200da2b34a8d74218740708f73c2f2eb7dd296421f6d43cc9bad94d"
+      }
+    },
+    {
+      "id": "static-addon-copy-proof",
+      "relative": "seal-repository-copy.stderr.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1/seal-repository-copy.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "static-addon-copy-proof",
+      "relative": "seal-repository-copy.stdout.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1/seal-repository-copy.stdout.log",
+        "bytes": 614,
+        "sha256": "fc672d0d624a3f591f12f6405a968358032c2ff6761e41970ec4be53f74ed8ae"
+      }
+    },
+    {
+      "id": "static-addon-copy-proof",
+      "relative": "STOPWRITE-repository-copy.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1/STOPWRITE-repository-copy.json",
+        "bytes": 4903,
+        "sha256": "32c31d8ea90e37b90f4ad6dc1ffb8a324f96d8e9ea4bfac00b321f653db51c77"
+      }
+    },
+    {
+      "id": "static-addon-copy-proof",
+      "relative": "verify-reviewed-addon-copy.closed.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1/verify-reviewed-addon-copy.closed.json",
+        "bytes": 1126,
+        "sha256": "f715bfe4668a8558e1f9e19e4dfa79a654a02c26c1877323c3a6c43f0c92c3c3"
+      }
+    },
+    {
+      "id": "static-addon-copy-proof",
+      "relative": "verify-reviewed-addon-copy.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1/verify-reviewed-addon-copy.mjs",
+        "bytes": 2565,
+        "sha256": "157bdac46f050df269d35374748b93d3f30472e2b41601c2b2a453be11571145"
+      }
+    },
+    {
+      "id": "static-addon-copy-proof",
+      "relative": "verify-reviewed-addon-copy.stderr.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1/verify-reviewed-addon-copy.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "static-addon-copy-proof",
+      "relative": "verify-reviewed-addon-copy.stdout.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1/verify-reviewed-addon-copy.stdout.log",
+        "bytes": 640,
+        "sha256": "452a04ff538c75e4cafba5514eeb2682bb0ab83c64e11291eba0dc1ffe1efd86"
+      }
+    },
+    {
+      "id": "firstparty-data-repair-plan",
+      "relative": "capture-sqlite-tests.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinaauth-firstparty-data-repair-plan-41c3699de26d498096ecf6cc9e498880/capture-sqlite-tests.mjs",
+        "bytes": 1901,
+        "sha256": "7946c2f23f9537897278c43badb725903056b3b306ec9e43ef0db4cedfc48c1d"
+      }
+    },
+    {
+      "id": "firstparty-data-repair-plan",
+      "relative": "close-final-data-plan-and-seal.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinaauth-firstparty-data-repair-plan-41c3699de26d498096ecf6cc9e498880/close-final-data-plan-and-seal.mjs",
+        "bytes": 2435,
+        "sha256": "0dada7974858e9e47634324518c39c92fdb6af1df9d4d00c84b1219f19e637ed"
+      }
+    },
+    {
+      "id": "firstparty-data-repair-plan",
+      "relative": "final-audit.closed.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinaauth-firstparty-data-repair-plan-41c3699de26d498096ecf6cc9e498880/final-audit.closed.json",
+        "bytes": 1229,
+        "sha256": "3df27c9af1218ac028ec6a2b1ffe7cc68e6657a60c6de87f506eb50b57951cd2"
+      }
+    },
+    {
+      "id": "firstparty-data-repair-plan",
+      "relative": "final-audit.stderr.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinaauth-firstparty-data-repair-plan-41c3699de26d498096ecf6cc9e498880/final-audit.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "firstparty-data-repair-plan",
+      "relative": "final-audit.stdout.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinaauth-firstparty-data-repair-plan-41c3699de26d498096ecf6cc9e498880/final-audit.stdout.log",
+        "bytes": 1113,
+        "sha256": "eb9cee73c0c91ff3f186dded02e3f77c6fb09eb566f40bb21330e4cee2d61dcb"
+      }
+    },
+    {
+      "id": "firstparty-data-repair-plan",
+      "relative": "FINAL-firstparty-link-data-repair-plan.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinaauth-firstparty-data-repair-plan-41c3699de26d498096ecf6cc9e498880/FINAL-firstparty-link-data-repair-plan.json",
+        "bytes": 10534,
+        "sha256": "941768352a41832c0dbad482c08ce12954cf309e929b443a9152f104216ea224"
+      }
+    },
+    {
+      "id": "firstparty-data-repair-plan",
+      "relative": "final-static-data-repair-audit.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinaauth-firstparty-data-repair-plan-41c3699de26d498096ecf6cc9e498880/final-static-data-repair-audit.mjs",
+        "bytes": 10737,
+        "sha256": "31c00d0345462ff25a72b674c94335f41de6c317181e8f73137cd26d18a7fa6f"
+      }
+    },
+    {
+      "id": "firstparty-data-repair-plan",
+      "relative": "repair-cinatoken-client-link.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinaauth-firstparty-data-repair-plan-41c3699de26d498096ecf6cc9e498880/repair-cinatoken-client-link.mjs",
+        "bytes": 2410,
+        "sha256": "0f0651066fdd0da2fdb301f1fbbab7ac37dcdf86d57f482863e5189ea2161102"
+      }
+    },
+    {
+      "id": "firstparty-data-repair-plan",
+      "relative": "repair-cinatoken-client-link.test.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinaauth-firstparty-data-repair-plan-41c3699de26d498096ecf6cc9e498880/repair-cinatoken-client-link.test.mjs",
+        "bytes": 8947,
+        "sha256": "3385cbab88d9039a3d3be0c9edf9bdfcf85cce8d573b9c2073dfb66c53ab490a"
+      }
+    },
+    {
+      "id": "firstparty-data-repair-plan",
+      "relative": "repair-cinatoken-registration.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinaauth-firstparty-data-repair-plan-41c3699de26d498096ecf6cc9e498880/repair-cinatoken-registration.mjs",
+        "bytes": 3432,
+        "sha256": "7799d74c7820920ca0ad7f188befff8ab93e85a661f64e8065ad15c4dfad2c1f"
+      }
+    },
+    {
+      "id": "firstparty-data-repair-plan",
+      "relative": "root-controller-audited.snapshot.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinaauth-firstparty-data-repair-plan-41c3699de26d498096ecf6cc9e498880/root-controller-audited.snapshot.mjs",
+        "bytes": 7567,
+        "sha256": "f3bc3660f311f99ead7108208dac1aeccd3d3e63e3d639445ad6ec468163372b"
+      }
+    },
+    {
+      "id": "firstparty-data-repair-plan",
+      "relative": "root-worker-audited.snapshot.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinaauth-firstparty-data-repair-plan-41c3699de26d498096ecf6cc9e498880/root-worker-audited.snapshot.mjs",
+        "bytes": 5393,
+        "sha256": "9be840dd466f58734de2050f9441206641fcd9e69ad327078a2f4adf90a5d421"
+      }
+    },
+    {
+      "id": "firstparty-data-repair-plan",
+      "relative": "sqlite-tests.closed.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinaauth-firstparty-data-repair-plan-41c3699de26d498096ecf6cc9e498880/sqlite-tests.closed.json",
+        "bytes": 1715,
+        "sha256": "4bd6372f41d0769b6fbfdbff063060f5acaf18fede340295a2fb7a7255e772d2"
+      }
+    },
+    {
+      "id": "firstparty-data-repair-plan",
+      "relative": "sqlite-tests.stderr.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinaauth-firstparty-data-repair-plan-41c3699de26d498096ecf6cc9e498880/sqlite-tests.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "firstparty-data-repair-plan",
+      "relative": "sqlite-tests.stdout.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinaauth-firstparty-data-repair-plan-41c3699de26d498096ecf6cc9e498880/sqlite-tests.stdout.log",
+        "bytes": 1007,
+        "sha256": "de866baa16c0b25d0684e205545da52e7baa807fd6edbd677058dedd1573e939"
+      }
+    },
+    {
+      "id": "firstparty-data-repair-plan",
+      "relative": "STOPWRITE.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinaauth-firstparty-data-repair-plan-41c3699de26d498096ecf6cc9e498880/STOPWRITE.json",
+        "bytes": 3037,
+        "sha256": "f3d81d4e64e4404be94bd036877b6988af53e043d1c6aec5d9826c247bff64d2"
+      }
+    },
+    {
+      "id": "firstparty-v2-approval-peer",
+      "relative": "close-and-seal-v2-review.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinaauth-firstparty-v2-approval-readonly-d1773460e5534b5fb174cd493de58d61/close-and-seal-v2-review.mjs",
+        "bytes": 2291,
+        "sha256": "39ad3d22e7fdb6e2b6194cafec9db195e2570e0bdfca11eee508018895aa2626"
+      }
+    },
+    {
+      "id": "firstparty-v2-approval-peer",
+      "relative": "controller-v2-reviewed.snapshot.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinaauth-firstparty-v2-approval-readonly-d1773460e5534b5fb174cd493de58d61/controller-v2-reviewed.snapshot.mjs",
+        "bytes": 7570,
+        "sha256": "0c60b41444f8b876cfc928689722ce7ac3fe369d4eb054d067a1feb1ddd71d7f"
+      }
+    },
+    {
+      "id": "firstparty-v2-approval-peer",
+      "relative": "FINAL-firstparty-link-v2-approval-review.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinaauth-firstparty-v2-approval-readonly-d1773460e5534b5fb174cd493de58d61/FINAL-firstparty-link-v2-approval-review.json",
+        "bytes": 7883,
+        "sha256": "02c32e5f780cd8f765d1ac233acdac1ef6ea190871c860b629f6d26a8f5b7ea9"
+      }
+    },
+    {
+      "id": "firstparty-v2-approval-peer",
+      "relative": "review-v2-and-approval-status.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinaauth-firstparty-v2-approval-readonly-d1773460e5534b5fb174cd493de58d61/review-v2-and-approval-status.mjs",
+        "bytes": 7398,
+        "sha256": "282c665a52d6db3fec6535bec22b3721449c4e49356eab47a6d3a0721eee754d"
+      }
+    },
+    {
+      "id": "firstparty-v2-approval-peer",
+      "relative": "static-review.closed.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinaauth-firstparty-v2-approval-readonly-d1773460e5534b5fb174cd493de58d61/static-review.closed.json",
+        "bytes": 1206,
+        "sha256": "184d2194b6e275a3d96952ce8dd58dbda2c5fa7895f922f8082ad69ad6da2c25"
+      }
+    },
+    {
+      "id": "firstparty-v2-approval-peer",
+      "relative": "static-review.stderr.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinaauth-firstparty-v2-approval-readonly-d1773460e5534b5fb174cd493de58d61/static-review.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "firstparty-v2-approval-peer",
+      "relative": "static-review.stdout.log",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinaauth-firstparty-v2-approval-readonly-d1773460e5534b5fb174cd493de58d61/static-review.stdout.log",
+        "bytes": 687,
+        "sha256": "1ce66d0c5d27d6759a08cf12b4a4ac68b69505fa481e2358270798c2b48a42fd"
+      }
+    },
+    {
+      "id": "firstparty-v2-approval-peer",
+      "relative": "STOPWRITE.json",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinaauth-firstparty-v2-approval-readonly-d1773460e5534b5fb174cd493de58d61/STOPWRITE.json",
+        "bytes": 1864,
+        "sha256": "d6d4aa7d24a7d4b4ec8792b224134bc3c9699135e2d8d735ff9c10b573cba0fa"
+      }
+    },
+    {
+      "id": "firstparty-v2-approval-peer",
+      "relative": "worker-v2-reviewed.snapshot.mjs",
+      "source": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinaauth-firstparty-v2-approval-readonly-d1773460e5534b5fb174cd493de58d61/worker-v2-reviewed.snapshot.mjs",
+        "bytes": 5441,
+        "sha256": "07103d4c4a646e5a0ad97b220c7c36db882e0be3e9b2266f9c1e2269e5594944"
+      }
+    }
+  ],
+  "roots": [
+    {
+      "id": "root-public-runtime",
+      "root": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68",
+      "selection": "top-level regular files at one bounded snapshot; no subsequent additions",
+      "selectedNames": [
+        "checklist-live-registration-update.json",
+        "controller-syntax-v2.result.json",
+        "controller-syntax-v2.stderr.log",
+        "controller-syntax-v2.stdout.log",
+        "controller-syntax.result.json",
+        "controller-syntax.stderr.log",
+        "controller-syntax.stdout.log",
+        "copy-native-green-candidate.mjs",
+        "copy-native-green-candidate.result.json",
+        "copy-native-green-candidate.stderr.log",
+        "copy-native-green-candidate.stdout.log",
+        "guard-independent-web-current.deployment-guard.json",
+        "guard-independent-web-current.result.json",
+        "guard-independent-web-current.stderr.log",
+        "guard-independent-web-current.stdout.log",
+        "guard-live-cutover.mjs",
+        "prepare-link-repair-controller.mjs",
+        "prepare-link-repair-controller.result.json",
+        "prepare-link-repair-controller.stderr.log",
+        "prepare-link-repair-controller.stdout.log",
+        "prepare-link-repair-v2.mjs",
+        "prepare-link-repair-v2.result.json",
+        "prepare-link-repair-v2.stderr.log",
+        "prepare-link-repair-v2.stdout.log",
+        "prepare-minimal-registration-link-repair.mjs",
+        "prepare-registration-link-repair.result.json",
+        "prepare-registration-link-repair.stderr.log",
+        "prepare-registration-link-repair.stdout.log",
+        "prepare-registration-runtime-v2.mjs",
+        "prepare-registration-runtime-v2.result.json",
+        "prepare-registration-runtime-v2.stderr.log",
+        "prepare-registration-runtime-v2.stdout.log",
+        "prepare-registration-runtime.mjs",
+        "prepare-registration-runtime.result.json",
+        "prepare-registration-runtime.stderr.log",
+        "prepare-registration-runtime.stdout.log",
+        "read-registration-via-owned-worker.mjs",
+        "refine-checklist-auth-observation.mjs",
+        "refine-checklist-auth-observation.result.json",
+        "refine-checklist-auth-observation.stderr.log",
+        "refine-checklist-auth-observation.stdout.log",
+        "registration-live-readonly.json",
+        "registration-live-readonly.result.json",
+        "registration-live-readonly.stderr.log",
+        "registration-live-readonly.stdout.log",
+        "registration-owned-plan.json",
+        "registration-owned-preflight.json",
+        "repair-controller-syntax-v2.result.json",
+        "repair-controller-syntax-v2.stderr.log",
+        "repair-controller-syntax-v2.stdout.log",
+        "repair-controller-syntax.result.json",
+        "repair-controller-syntax.stderr.log",
+        "repair-controller-syntax.stdout.log",
+        "repair-registration-via-owned-worker-v2.mjs",
+        "repair-registration-via-owned-worker.mjs",
+        "root-browser-and-approval-observations.json",
+        "run-closed-compact.mjs",
+        "update-checklist-live-registration-gate.mjs",
+        "update-checklist-live-registration.result.json",
+        "update-checklist-live-registration.stderr.log",
+        "update-checklist-live-registration.stdout.log",
+        "update-checklist-native-green-auth.mjs",
+        "update-checklist-native-green-auth.result.json",
+        "update-checklist-native-green-auth.stderr.log",
+        "update-checklist-native-green-auth.stdout.log"
+      ],
+      "fileCount": 65
+    },
+    {
+      "id": "browser-public-runtime",
+      "root": "C:/Users/cina/AppData/Local/Temp/cinatoken-real-auth-browser-6459c6e3517098",
+      "selection": "top-level regular files at one bounded snapshot; no subsequent additions",
+      "selectedNames": [
+        "browser-session-v2.mjs",
+        "browser-session-v3.mjs",
+        "browser-session-v4.mjs",
+        "browser-session.mjs",
+        "browser-v2-observations.ndjson",
+        "browser-v3-observations.ndjson",
+        "browser-v3-requests.ndjson",
+        "browser-v4-observations.ndjson",
+        "browser-v4-requests.ndjson",
+        "cinaauth-active-version-metadata.json",
+        "cinaauth-active-version.result.json",
+        "cinaauth-active-version.stderr.log",
+        "cinaauth-active-version.stdout.log",
+        "cinaauth-hyperdrive-cache-metadata.json",
+        "cinaauth-hyperdrive-cache.result.json",
+        "cinaauth-hyperdrive-cache.stderr.log",
+        "cinaauth-hyperdrive-cache.stdout.log",
+        "cinaauth-public-profile-metadata.json",
+        "cinaauth-public-profile.result.json",
+        "cinaauth-public-profile.stderr.log",
+        "cinaauth-public-profile.stdout.log",
+        "cloudflare-public-auth-metadata.json",
+        "prepare-browser-v3.mjs",
+        "public-auth-metadata.result.json",
+        "public-auth-metadata.stderr.log",
+        "public-auth-metadata.stdout.log",
+        "read-cinaauth-active-version.mjs",
+        "read-cinaauth-public-profile.mjs",
+        "read-hyperdrive-cache.mjs",
+        "read-public-auth-metadata.mjs",
+        "run-closed-compact.mjs"
+      ],
+      "fileCount": 31
+    },
+    {
+      "id": "publication-preparation",
+      "root": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68",
+      "selection": "separate explicit publication supplement; no refresh of initial set",
+      "selectedNames": [
+        "checklist-terminal-newline.json",
+        "guard-web-after-auth-read.deployment-guard.json",
+        "guard-web-after-auth-read.result.json",
+        "guard-web-after-auth-read.stderr.log",
+        "guard-web-after-auth-read.stdout.log",
+        "normalize-checklist-terminal-newline.mjs",
+        "normalize-checklist-terminal-newline.result.json",
+        "normalize-checklist-terminal-newline.stderr.log",
+        "normalize-checklist-terminal-newline.stdout.log",
+        "prepublish-md-whitespace-v2.result.json",
+        "prepublish-md-whitespace-v2.stderr.log",
+        "prepublish-md-whitespace-v2.stdout.log",
+        "prepublish-md-whitespace.result.json",
+        "prepublish-md-whitespace.stderr.log",
+        "prepublish-md-whitespace.stdout.log"
+      ],
+      "fileCount": 15
+    },
+    {
+      "id": "controller-corrected-peer",
+      "root": "C:/Users/cina/AppData/Local/Temp/cinatoken-registration-controller-corrected-peer-rgamZa",
+      "selection": "whole frozen root",
+      "fileCount": 7,
+      "seal": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-registration-controller-corrected-peer-rgamZa/STOPWRITE-peer-seal.json",
+        "bytes": 1690,
+        "sha256": "13b917dd6599467226987ced10b80bbd74ab407f12a2c4c828c57b3297673071"
+      },
+      "final": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-registration-controller-corrected-peer-rgamZa/FINAL-registration-runtime-controller-corrected-peer.json",
+        "bytes": 15031,
+        "sha256": "058bd9f09249fcf651875b3b3075a2c992d254aee2a3112dde4ba6b21c81cd80"
+      },
+      "wholeSetExact": true
+    },
+    {
+      "id": "static-addon-copy-proof",
+      "root": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1",
+      "selection": "whole frozen root",
+      "fileCount": 18,
+      "seal": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1/STOPWRITE-repository-copy.json",
+        "bytes": 4903,
+        "sha256": "32c31d8ea90e37b90f4ad6dc1ffb8a324f96d8e9ea4bfac00b321f653db51c77"
+      },
+      "final": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1/FINAL-repository-addon-copy.json",
+        "bytes": 3965,
+        "sha256": "1400566640b34ad560801073757b85906d4d5d1e125ae0c175c11dbac6924200"
+      },
+      "wholeSetExact": true
+    },
+    {
+      "id": "firstparty-data-repair-plan",
+      "root": "C:/Users/cina/AppData/Local/Temp/cinaauth-firstparty-data-repair-plan-41c3699de26d498096ecf6cc9e498880",
+      "selection": "whole frozen root",
+      "fileCount": 16,
+      "seal": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinaauth-firstparty-data-repair-plan-41c3699de26d498096ecf6cc9e498880/STOPWRITE.json",
+        "bytes": 3037,
+        "sha256": "f3d81d4e64e4404be94bd036877b6988af53e043d1c6aec5d9826c247bff64d2"
+      },
+      "final": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinaauth-firstparty-data-repair-plan-41c3699de26d498096ecf6cc9e498880/FINAL-firstparty-link-data-repair-plan.json",
+        "bytes": 10534,
+        "sha256": "941768352a41832c0dbad482c08ce12954cf309e929b443a9152f104216ea224"
+      },
+      "wholeSetExact": true
+    },
+    {
+      "id": "firstparty-v2-approval-peer",
+      "root": "C:/Users/cina/AppData/Local/Temp/cinaauth-firstparty-v2-approval-readonly-d1773460e5534b5fb174cd493de58d61",
+      "selection": "whole frozen root",
+      "fileCount": 9,
+      "seal": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinaauth-firstparty-v2-approval-readonly-d1773460e5534b5fb174cd493de58d61/STOPWRITE.json",
+        "bytes": 1864,
+        "sha256": "d6d4aa7d24a7d4b4ec8792b224134bc3c9699135e2d8d735ff9c10b573cba0fa"
+      },
+      "final": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinaauth-firstparty-v2-approval-readonly-d1773460e5534b5fb174cd493de58d61/FINAL-firstparty-link-v2-approval-review.json",
+        "bytes": 7883,
+        "sha256": "02c32e5f780cd8f765d1ac233acdac1ef6ea190871c860b629f6d26a8f5b7ea9"
+      },
+      "wholeSetExact": true
+    }
+  ],
+  "subdirectoryFileCount": 10,
+  "excluded": [
+    {
+      "rootId": "root-public-runtime",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/checklist-before-5.86.md",
+      "name": "checklist-before-5.86.md",
+      "bytes": 824691,
+      "reason": "Explicit old checklist exclusion; bytes not read"
+    },
+    {
+      "rootId": "browser-public-runtime",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-real-auth-browser-6459c6e3517098/public-auth-1.png",
+      "name": "public-auth-1.png",
+      "bytes": 54689,
+      "reason": "Explicit screenshot exclusion; bytes not read"
+    },
+    {
+      "rootId": "browser-public-runtime",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-real-auth-browser-6459c6e3517098/public-auth-v3-1.png",
+      "name": "public-auth-v3-1.png",
+      "bytes": 54689,
+      "reason": "Explicit screenshot exclusion; bytes not read"
+    }
+  ],
+  "excludedBytesNeverRead": true,
+  "sourceFileCount": 171,
+  "sourceBytes": 590011,
+  "externalFrozenPinsAllExact": true,
+  "noEnvAPIHeaderSecretOrConnectionStringExtracted": true,
+  "runtimeOrTestsOrNetworkExecuted": false
+}

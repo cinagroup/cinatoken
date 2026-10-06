@@ -1,0 +1,187 @@
+{
+  "schema": "cinaauth-fixed-firstparty-association-data-repair-FINAL-v1",
+  "finalizedAt": "2026-10-06T09:02:37.319Z",
+  "currentPlan": "Only repair the confirmed missing existing first-party client-resource link; no resource initialization or policy update.",
+  "inputAuthority": {
+    "liveMetadata": {
+      "authority": "Root direct message; this agent made no live/API/database request",
+      "observedHTTPStatus": 200,
+      "clientExists": true,
+      "clientDisabled": false,
+      "resourceExists": true,
+      "resourceDisabled": false,
+      "linkExists": false,
+      "requestAt": "2026-10-06T08:54:08.279Z",
+      "readonlyExecutorStartedAt": "2026-10-06T08:53:52.632Z",
+      "readonlyExecutorEndedAt": "2026-10-06T08:54:11.771Z",
+      "executorActualExit": 0,
+      "rootReportedCleanup": "Owned metadata Worker DELETE200 + verify404",
+      "rawAuthority": "Held by Root; raw receipts not copied/read in this task"
+    },
+    "productionSource": "CinaAuth deployed tagNULL; localHEAD/dirty working tree not whole deployed-source provenance, no whole-source redeploy plan.",
+    "liveRepairAlreadyExecutedByThisAgent": false,
+    "deployedAuthorizationRootCauseConfirmed": false
+  },
+  "candidate": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-firstparty-data-repair-plan-41c3699de26d498096ecf6cc9e498880\\repair-cinatoken-client-link.mjs",
+    "bytes": 2410,
+    "sha256": "0f0651066fdd0da2fdb301f1fbbab7ac37dcdf86d57f482863e5189ea2161102"
+  },
+  "genericEarlierDraft": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-firstparty-data-repair-plan-41c3699de26d498096ecf6cc9e498880\\repair-cinatoken-registration.mjs",
+    "bytes": 3432,
+    "sha256": "7799d74c7820920ca0ad7f188befff8ab93e85a661f64e8065ad15c4dfad2c1f",
+    "status": "Superseded for current production branch; never executed. Generic resource initialization draft must not be used for Root current live shape."
+  },
+  "proposedProtocol": [
+    "Use one reviewed postgres.js sql.begin connection, fixed client cinatoken-admin and fixed resource https://cinatoken.com; no caller body/query SQL or identifiers.",
+    "Bound transaction-local lock/statement timeouts; SELECT client FOR UPDATE, then resource FOR UPDATE; read only five boolean statuses.",
+    "Require clientExists && !clientDisabled && resourceExists && !resourceDisabled. Missing or disabled rolls back without any insert.",
+    "Only INSERT oauthClientResource(id=cinatoken-admin:https://cinatoken.com, clientId=cinatoken-admin, resourceId=https://cinatoken.com, createdAt=transaction time), ON CONFLICT DO NOTHING.",
+    "Re-read all five booleans in the same transaction; require enabled existing client/resource and exact linkExists. A conflicting reserved ID belonging to another pair refuses and rolls back.",
+    "Return {before,after,insertedLink} from peer module; Root Worker equivalent uses {before,after,insertedClientLink}. Both before/after exactly five bools: clientExists/clientDisabled/resourceExists/resourceDisabled/linkExists."
+  ],
+  "postconditionExpectedOnly": {
+    "before": {
+      "clientExists": true,
+      "clientDisabled": false,
+      "resourceExists": true,
+      "resourceDisabled": false,
+      "linkExists": false
+    },
+    "after": {
+      "clientExists": true,
+      "clientDisabled": false,
+      "resourceExists": true,
+      "resourceDisabled": false,
+      "linkExists": true
+    },
+    "insertedClientLink": true,
+    "authority": "Expected acceptance pattern; not a new production result."
+  },
+  "invariants": {
+    "oauthClientWrites": 0,
+    "oauthResourceWrites": 0,
+    "existingMetadataOrTimestampUpdates": 0,
+    "targetLinkIdentifierOnly": true,
+    "otherClientAssociationWrites": 0,
+    "disabledPolicyOverride": false,
+    "resourceIdIsBusinessIdentifierNotRowId": true,
+    "secretOrMetadataReturn": false
+  },
+  "SQLiteVerification": {
+    "actualClosedReceipt": {
+      "schema": "actual-child-closed-v1",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "--test",
+        "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-firstparty-data-repair-plan-41c3699de26d498096ecf6cc9e498880\\repair-cinatoken-client-link.test.mjs"
+      ],
+      "cwd": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-firstparty-data-repair-plan-41c3699de26d498096ecf6cc9e498880",
+      "startedAt": "2026-10-06T08:58:21.500Z",
+      "endedAt": "2026-10-06T08:58:21.681Z",
+      "actualExit": 0,
+      "signal": null,
+      "error": null,
+      "timeoutConfiguredMs": 15000,
+      "timedOutObserved": false,
+      "sourceProgram": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-firstparty-data-repair-plan-41c3699de26d498096ecf6cc9e498880\\repair-cinatoken-client-link.test.mjs",
+        "bytes": 8947,
+        "sha256": "3385cbab88d9039a3d3be0c9edf9bdfcf85cce8d573b9c2073dfb66c53ab490a"
+      },
+      "candidate": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinaauth-firstparty-data-repair-plan-41c3699de26d498096ecf6cc9e498880\\repair-cinatoken-client-link.mjs",
+        "bytes": 2410,
+        "sha256": "0f0651066fdd0da2fdb301f1fbbab7ac37dcdf86d57f482863e5189ea2161102"
+      },
+      "stdout": {
+        "path": "sqlite-tests.stdout.log",
+        "bytes": 1007,
+        "sha256": "de866baa16c0b25d0684e205545da52e7baa807fd6edbd677058dedd1573e939"
+      },
+      "stderr": {
+        "path": "sqlite-tests.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "method": "Actual candidate function against in-memory SQLite transaction adapter; FOR UPDATE and SET LOCAL deliberately not accepted as PG proof.",
+      "productionRequests": 0,
+      "actualPGConnections": 0,
+      "noLiveRepairPassDerived": true
+    },
+    "totalTests": 9,
+    "passed": 9,
+    "failed": 0,
+    "skipped": 0,
+    "actualCandidateFunctionExecuted": true,
+    "actualInMemorySQLiteStatementsExecuted": true,
+    "method": "Same exported candidate invoked with real BEGIN IMMEDIATE/COMMIT/ROLLBACK, SQL UNIQUE/FK constraints. Adapter strips PG FOR UPDATE and ignores SET LOCAL explicitly; result integer bool columns mapped to driver boolean contract.",
+    "testedCases": [
+      "Root observed missing link shape inserts exactly one fixed link, returns only five-bool states plus inserted flag; complete client/resource row snapshots unchanged.",
+      "Replay changes no rows/link timestamp/metadata and inserted flag is false.",
+      "Missing resource refuses and creates no resource.",
+      "Missing client refuses and creates no client.",
+      "Disabled client refuses with full snapshot unchanged.",
+      "Disabled resource refuses even with an existing exact link, full snapshot unchanged.",
+      "Other client links and unrelated disabled resources/policies remain exact.",
+      "Reserved link ID occupied by another pair refuses after ON CONFLICT without overwriting and rolls back.",
+      "Nullable disabled fields use COALESCE default without changing stored null policy."
+    ],
+    "limits": "Not PG/Hyperdrive row-lock, isolation, SQL type, grant, concurrent-writer, live-provider or real-login proof."
+  },
+  "rootWorkerStaticReview": {
+    "worker": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/registration-link-repair/registration-link-repair.worker.mjs",
+      "bytes": 5393,
+      "sha256": "9be840dd466f58734de2050f9441206641fcd9e69ad327078a2f4adf90a5d421"
+    },
+    "controller": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/repair-registration-via-owned-worker.mjs",
+      "bytes": 7567,
+      "sha256": "f3bc3660f311f99ead7108208dac1aeccd3d3e63e3d639445ad6ec468163372b"
+    },
+    "previouslyReportedWorkerExact": true,
+    "previouslyReportedControllerExact": true,
+    "snapshotAuthority": "Only these two explicitly frozen paths; no parent/root enumeration. Whole bytes copied for audit reproducibility; no module import/fetch/controller executed.",
+    "rootReportedBundle": {
+      "bytes": 82380,
+      "sha256": "2e8feaf50cad98f1cb775b58ec6d2e7e2b6da527f8560aca015fd7cdaa0d0474",
+      "independentBundleReadOrExecution": false
+    },
+    "sourceOnlyConclusions": [
+      "Fixed path POST and 64hex timingSafeEqual memory gate precede Hyperdrive client; query parameters/body never read.",
+      "Bound postgres max1, prepare false/fetch_types false/debug false/onnotice ignored; Root localtimeouts lock2s/statement5s/idle-txn7s.",
+      "sql.begin holds client then resource FOR UPDATE; before shape is exactly five booleans and both row count1/disabled=false required.",
+      "Exactly one mutation SQL literal: fixed oauthClientResource INSERT ON CONFLICT DO NOTHING now(); no client/resource/metadata UPDATE, no DELETE.",
+      "Root now() and peer CURRENT_TIMESTAMP are transaction-time equivalents in PG; Root pre-acquired locks remain held while after boolean metadata is read, peer re-issues locked reads.",
+      "Root Worker returns insertedClientLink (peer alias insertedLink), same strict booleans.",
+      "finally closes sql with2s; controller prepares owned absence404, memory gate/no stored secret, one business POST, owned DELETE + verify404, and records failures without retrying the transaction."
+    ],
+    "preciseGuardDifference": {
+      "workerAfterRequiresClientResourceExists": false,
+      "originalReportedSourceLine": 81,
+      "originalReportedGuard": "!after.linkExists || after.clientDisabled || after.resourceDisabled",
+      "peerAfterGuardRequiresBothExists": true,
+      "recommendation": "Add !after.clientExists || !after.resourceExists in the transaction final guard for full post-state validation. Controller checks these after commit; any post-commit transport/cleanup error must not trigger blind retry.",
+      "status": "Source difference notified to Root; Root sole owner chooses/amends before actual execution. This review does not rewrite Root file or prove live commit."
+    }
+  },
+  "operationalLimits": {
+    "repoOrGitWrites": 0,
+    "oldFrozenRootWrites": 0,
+    "networkOrAPIRequests": 0,
+    "livePGConnections": 0,
+    "remoteRepairExecutions": 0,
+    "sourceWholeRedeploys": 0,
+    "otherCIOrBrowserRunsTouched": false,
+    "noProductionRootCauseClaim": true
+  },
+  "originalLocalReceipts": {
+    "capturedSQLiteChildActualExit": 0,
+    "sourceAndRawHashesBound": true,
+    "noLocalFailureObserved": true,
+    "finalAuditClosureWillBeInOwnReceipt": true
+  },
+  "STOPWRITEAfterFinalAuditClosure": true
+}

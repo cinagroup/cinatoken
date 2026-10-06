@@ -1,0 +1,15 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import {fileURLToPath} from 'node:url';
+const root=path.dirname(fileURLToPath(import.meta.url));const tools='C:/Users/cina/AppData/Local/Temp/cinatoken-v364-queued-linux-observation-tools-87b2c4dae3a8480c87b50e9d4c2b8e8b';
+let review=fs.readFileSync(path.join(tools,'review-artifact.mjs'),'utf8');
+const old="assert.deepEqual(index.archive, read(path.join(root, 'download-artifact-once.result.json')).stdout);";
+assert.equal(review.split(old).length,2);
+review=review.replace(old,"const zipOriginalDescriptor = read(path.join(root, 'download-artifact-once.result.json')).stdout;\nassert.equal(path.resolve(index.archive.path), path.resolve(zipOriginalDescriptor.path));\nassert.equal(index.archive.bytes, zipOriginalDescriptor.bytes); assert.equal(index.archive.sha256, zipOriginalDescriptor.sha256);");
+fs.writeFileSync(path.join(root,'review-artifact-v2.mjs'),review,{flag:'wx'});
+let runner=fs.readFileSync(path.join(tools,'run-artifact-audit-command.mjs'),'utf8');
+assert.equal(runner.split("mode === 'review-artifact'").length,2);assert.equal(runner.split("'review-artifact.mjs'").length,2);
+runner=runner.replace("mode === 'review-artifact'","mode === 'review-artifact-v2'").replace("'review-artifact.mjs'","'review-artifact-v2.mjs'");
+fs.writeFileSync(path.join(root,'run-local-review-v2.mjs'),runner,{flag:'wx'});
+console.log(JSON.stringify({localReviewerRepairOnly:true,reason:'slash spelling differs, real resolved path/bytes/SHA must all remain exact',firstAudit1Preserved:true,frozenToolsUnchanged:true,CIRequest:false}));

@@ -1,0 +1,48 @@
+{
+  "schema": "cinatoken-readonly-provider-source-stopwrite-v1",
+  "closedAt": "2026-10-06T08:06:52.657Z",
+  "STOPWRITE": true,
+  "collectionOnly": true,
+  "causeProven": false,
+  "sourceInputs": 8,
+  "auxiliaryPeerDocRead": 1,
+  "originalToolNonzeroPreserved": [
+    "81375b"
+  ],
+  "actualReadonlyChildExit": 0,
+  "actualReadonlyChildAt": "2026-10-06T08:06:38.199Z",
+  "actualReadonlyChildFinishedAt": "2026-10-06T08:06:38.308Z",
+  "entries": [
+    {
+      "file": "FINAL-invalid-target-provider-source-review.json",
+      "bytes": 49316,
+      "sha256": "dbc2ca5e43779012e0e318cf781a22e5dcd3a48b6dc782105454b43fd6c3567f"
+    },
+    {
+      "file": "capture-readonly.mjs",
+      "bytes": 1405,
+      "sha256": "73f8ec0159b113f5339119649fe0ccfd402740897076ddf439d9f91009bb4b67"
+    },
+    {
+      "file": "invalid-target-source.closed.json",
+      "bytes": 915,
+      "sha256": "3b4377483da24e9248d6a37488818945d06965daea58808dedd05bab5285ad2b"
+    },
+    {
+      "file": "invalid-target-source.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "invalid-target-source.stdout.log",
+      "bytes": 220,
+      "sha256": "a24d395aab1f4729b924ffc52990f8a0d356df9c13772fe2698f9bf155179297"
+    },
+    {
+      "file": "read-invalid-target-source.mjs",
+      "bytes": 11267,
+      "sha256": "20a5b31b062b69b9a6012bba8cde5677c71cb3858fbcd976c1f7d1cfac657dbb"
+    }
+  ],
+  "selfExcludedFromEntries": true
+}

@@ -1,0 +1,249 @@
+{
+  "schema": "cinatoken-auth-runtime-public-evidence-selection-v1",
+  "evidencePrefix": "C:/cinagroup/cinatoken/docs/developers/architecture/evidence/2026-10-06-native-all-green-and-http-cancellation-boundary",
+  "selectedTopRoots": [
+    {
+      "id": "root-public-runtime",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68",
+      "excludeNames": [
+        "checklist-before-5.86.md"
+      ],
+      "noRecursion": true,
+      "initialNames": [
+        "controller-syntax-v2.result.json",
+        "controller-syntax-v2.stdout.log",
+        "controller-syntax-v2.stderr.log",
+        "controller-syntax.result.json",
+        "controller-syntax.stdout.log",
+        "controller-syntax.stderr.log",
+        "copy-native-green-candidate.result.json",
+        "copy-native-green-candidate.stdout.log",
+        "copy-native-green-candidate.stderr.log",
+        "guard-independent-web-current.result.json",
+        "guard-independent-web-current.stdout.log",
+        "guard-independent-web-current.stderr.log",
+        "prepare-link-repair-controller.result.json",
+        "prepare-link-repair-controller.stdout.log",
+        "prepare-link-repair-controller.stderr.log",
+        "prepare-link-repair-v2.result.json",
+        "prepare-link-repair-v2.stdout.log",
+        "prepare-link-repair-v2.stderr.log",
+        "prepare-registration-link-repair.result.json",
+        "prepare-registration-link-repair.stdout.log",
+        "prepare-registration-link-repair.stderr.log",
+        "prepare-registration-runtime-v2.result.json",
+        "prepare-registration-runtime-v2.stdout.log",
+        "prepare-registration-runtime-v2.stderr.log",
+        "prepare-registration-runtime.result.json",
+        "prepare-registration-runtime.stdout.log",
+        "prepare-registration-runtime.stderr.log",
+        "refine-checklist-auth-observation.result.json",
+        "refine-checklist-auth-observation.stdout.log",
+        "refine-checklist-auth-observation.stderr.log",
+        "registration-live-readonly.result.json",
+        "registration-live-readonly.stdout.log",
+        "registration-live-readonly.stderr.log",
+        "repair-controller-syntax-v2.result.json",
+        "repair-controller-syntax-v2.stdout.log",
+        "repair-controller-syntax-v2.stderr.log",
+        "repair-controller-syntax.result.json",
+        "repair-controller-syntax.stdout.log",
+        "repair-controller-syntax.stderr.log",
+        "update-checklist-live-registration.result.json",
+        "update-checklist-live-registration.stdout.log",
+        "update-checklist-live-registration.stderr.log",
+        "update-checklist-native-green-auth.result.json",
+        "update-checklist-native-green-auth.stdout.log",
+        "update-checklist-native-green-auth.stderr.log",
+        "checklist-live-registration-update.json",
+        "copy-native-green-candidate.mjs",
+        "guard-independent-web-current.deployment-guard.json",
+        "guard-live-cutover.mjs",
+        "prepare-link-repair-controller.mjs",
+        "prepare-link-repair-v2.mjs",
+        "prepare-minimal-registration-link-repair.mjs",
+        "prepare-registration-runtime-v2.mjs",
+        "prepare-registration-runtime.mjs",
+        "read-registration-via-owned-worker.mjs",
+        "refine-checklist-auth-observation.mjs",
+        "registration-live-readonly.json",
+        "registration-owned-plan.json",
+        "registration-owned-preflight.json",
+        "repair-registration-via-owned-worker-v2.mjs",
+        "repair-registration-via-owned-worker.mjs",
+        "root-browser-and-approval-observations.json",
+        "run-closed-compact.mjs",
+        "update-checklist-live-registration-gate.mjs",
+        "update-checklist-native-green-auth.mjs"
+      ]
+    },
+    {
+      "id": "browser-public-runtime",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-real-auth-browser-6459c6e3517098",
+      "excludeExtensions": [
+        ".png"
+      ],
+      "noRecursion": true,
+      "initialNames": [
+        "cinaauth-active-version.result.json",
+        "cinaauth-active-version.stdout.log",
+        "cinaauth-active-version.stderr.log",
+        "cinaauth-hyperdrive-cache.result.json",
+        "cinaauth-hyperdrive-cache.stdout.log",
+        "cinaauth-hyperdrive-cache.stderr.log",
+        "cinaauth-public-profile.result.json",
+        "cinaauth-public-profile.stdout.log",
+        "cinaauth-public-profile.stderr.log",
+        "public-auth-metadata.result.json",
+        "public-auth-metadata.stdout.log",
+        "public-auth-metadata.stderr.log",
+        "browser-session-v2.mjs",
+        "browser-session-v3.mjs",
+        "browser-session-v4.mjs",
+        "browser-session.mjs",
+        "browser-v2-observations.ndjson",
+        "browser-v3-observations.ndjson",
+        "browser-v3-requests.ndjson",
+        "browser-v4-observations.ndjson",
+        "browser-v4-requests.ndjson",
+        "cinaauth-active-version-metadata.json",
+        "cinaauth-hyperdrive-cache-metadata.json",
+        "cinaauth-public-profile-metadata.json",
+        "cloudflare-public-auth-metadata.json",
+        "prepare-browser-v3.mjs",
+        "read-cinaauth-active-version.mjs",
+        "read-cinaauth-public-profile.mjs",
+        "read-hyperdrive-cache.mjs",
+        "read-public-auth-metadata.mjs",
+        "run-closed-compact.mjs"
+      ]
+    }
+  ],
+  "selectedSubdirectories": {
+    "rootId": "root-public-runtime",
+    "allow": [
+      {
+        "directory": "registration-runtime",
+        "files": [
+          "registration-metadata.worker.mjs"
+        ]
+      },
+      {
+        "directory": "registration-runtime-v2",
+        "fileTypes": [
+          "worker",
+          "bundle",
+          "prepared"
+        ],
+        "expectedCount": 3
+      },
+      {
+        "directory": "registration-link-repair",
+        "fileTypes": [
+          "worker",
+          "bundle",
+          "prepared"
+        ],
+        "expectedCount": 3
+      },
+      {
+        "directory": "registration-link-repair-v2",
+        "fileTypes": [
+          "worker",
+          "bundle",
+          "prepared"
+        ],
+        "expectedCount": 3
+      }
+    ],
+    "expectedTotal": 10
+  },
+  "frozenRoots": [
+    {
+      "id": "controller-corrected-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-registration-controller-corrected-peer-rgamZa",
+      "count": 7,
+      "seal": "STOPWRITE-peer-seal.json",
+      "sealBytes": 1690,
+      "sealSHA": "13b917dd6599467226987ced10b80bbd74ab407f12a2c4c828c57b3297673071",
+      "final": "FINAL-registration-runtime-controller-corrected-peer.json",
+      "finalBytes": 15031,
+      "finalSHA": "058bd9f09249fcf651875b3b3075a2c992d254aee2a3112dde4ba6b21c81cd80"
+    },
+    {
+      "id": "static-addon-copy-proof",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-repo-copy-5f0aebc44c8e46e7921549a93242cac1",
+      "count": 18,
+      "seal": "STOPWRITE-repository-copy.json",
+      "sealBytes": 4903,
+      "sealSHA": "32c31d8ea90e37b90f4ad6dc1ffb8a324f96d8e9ea4bfac00b321f653db51c77",
+      "final": "FINAL-repository-addon-copy.json",
+      "finalBytes": 3965,
+      "finalSHA": "1400566640b34ad560801073757b85906d4d5d1e125ae0c175c11dbac6924200"
+    },
+    {
+      "id": "firstparty-data-repair-plan",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinaauth-firstparty-data-repair-plan-41c3699de26d498096ecf6cc9e498880",
+      "count": 16,
+      "seal": "STOPWRITE.json",
+      "sealBytes": 3037,
+      "sealSHA": "f3d81d4e64e4404be94bd036877b6988af53e043d1c6aec5d9826c247bff64d2",
+      "finalBytes": 10534,
+      "finalSHA": "941768352a41832c0dbad482c08ce12954cf309e929b443a9152f104216ea224"
+    },
+    {
+      "id": "firstparty-v2-approval-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinaauth-firstparty-v2-approval-readonly-d1773460e5534b5fb174cd493de58d61",
+      "count": 9,
+      "seal": "STOPWRITE.json",
+      "sealBytes": 1864,
+      "sealSHA": "d6d4aa7d24a7d4b4ec8792b224134bc3c9699135e2d8d735ff9c10b573cba0fa",
+      "final": "FINAL-firstparty-link-v2-approval-review.json",
+      "finalBytes": 7883,
+      "finalSHA": "02c32e5f780cd8f765d1ac233acdac1ef6ea190871c860b629f6d26a8f5b7ea9"
+    }
+  ],
+  "sourceAuthority": "Root explicitly selected R/B existing public proofs and promised existing files stable. Selection is frozen once; later new Root files are excluded.",
+  "excludedMaterial": {
+    "oldChecklist": true,
+    "browserPNGScreenshots": true,
+    "envValues": true,
+    "APIKeys": true,
+    "requestAuthenticationHeaderValues": true,
+    "connectionStrings": true,
+    "memoryGateValues": true,
+    "secretFiles": true
+  },
+  "scope": {
+    "newPublicEvidenceOnly": true,
+    "old3357OrSixStaticSourceRootsNotTraversed": true,
+    "MDGitAPICalled": false,
+    "runtimeOrDatabaseExecutedByCollector": false,
+    "actualRepairApprovalRequired": true,
+    "noProductionWriteOrLoginPassDerived": true
+  },
+  "publicationSelection": {
+    "id": "publication-preparation",
+    "sourceRootId": "root-public-runtime",
+    "originalOralCount": 16,
+    "correctedCount": 15,
+    "files": [
+      "prepublish-md-whitespace.result.json",
+      "prepublish-md-whitespace.stdout.log",
+      "prepublish-md-whitespace.stderr.log",
+      "normalize-checklist-terminal-newline.result.json",
+      "normalize-checklist-terminal-newline.stdout.log",
+      "normalize-checklist-terminal-newline.stderr.log",
+      "prepublish-md-whitespace-v2.result.json",
+      "prepublish-md-whitespace-v2.stdout.log",
+      "prepublish-md-whitespace-v2.stderr.log",
+      "guard-web-after-auth-read.result.json",
+      "guard-web-after-auth-read.stdout.log",
+      "guard-web-after-auth-read.stderr.log",
+      "normalize-checklist-terminal-newline.mjs",
+      "checklist-terminal-newline.json",
+      "guard-web-after-auth-read.deployment-guard.json"
+    ],
+    "sourceAuthority": "Root explicitly appended stable publication-preparation files; independent selection, no refresh of initial R/B sets"
+  }
+}

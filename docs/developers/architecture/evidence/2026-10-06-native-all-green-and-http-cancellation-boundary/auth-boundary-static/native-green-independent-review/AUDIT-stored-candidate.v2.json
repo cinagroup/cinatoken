@@ -1,0 +1,1115 @@
+{
+  "mdReview": {
+    "current": {
+      "path": "C:/cinagroup/cinatoken/docs/developers/architecture/web-frontend-migration.md",
+      "bytes": 830291,
+      "sha256": "c1ffb50776678b0d5219aec2b195e6b7f954058691c374000a7638e219584669"
+    },
+    "baseline": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-followup-auth-gates-80c5f57d2e0a68/checklist-before-5.86.md",
+      "bytes": 824691,
+      "sha256": "d7bac9842393e8cd699922dedfa2eeb338834e2e811cc46e403873983496bca3"
+    },
+    "scopes": [
+      {
+        "name": "tasks",
+        "before": 102,
+        "after": 102,
+        "exact": true
+      },
+      {
+        "name": "matrix",
+        "before": 54,
+        "after": 54,
+        "exact": true
+      },
+      {
+        "name": "gates",
+        "before": 9,
+        "after": 9,
+        "exact": true
+      },
+      {
+        "name": "phases",
+        "before": 9,
+        "after": 9,
+        "exact": true
+      },
+      {
+        "name": "acceptance",
+        "before": 9,
+        "after": 9,
+        "exact": true
+      },
+      {
+        "name": "checkboxLines",
+        "before": 213,
+        "after": 213,
+        "exact": true
+      }
+    ],
+    "actualTaskCheckboxes": 211,
+    "literalCheckboxTokens": 214,
+    "hunks": [
+      {
+        "baselineStart": 31,
+        "currentStart": 31,
+        "removed": [
+          "当前推进：独立Web生产c13/2a0仍100%，06:52只读Route/version核验0。最新6e2原Linux报价24通过，但native90收据保留断言235:14为true/false失败；financial106为82success/1fail/23skip，55–113为35success/1fail/23skip。26目标20success/6skip、剩6及94/109/110–113跳过，三处migrator:sql修复尚未运行到；d537的全部目标通过仅属于历史SHA。Web/Compose/Release/Verify同6e2成功，dispatch strict仍8/7/1。收据七处时间输入保留微秒及有限8MiB积压/RST独立诊断已实现并静态复核、准备bundle通过，待下一SHA原CI及单次Linux诊断；根因未证、旧取消失败保留。完整G7/G8、原102/54/211及真实身份/权限写、资金链/SSE/回滚/旧UI退役继续。"
+        ],
+        "added": [
+          "当前推进：独立Web生产c13/2a0仍100%。757原Linux native全部106financial步骤/109TAP tests成功、0失败/0跳过，26目标/剩6/94/109及110–113本SHA全通过，报价24/收据90/父级110各TAP1/1/0。其余四push workflow成功，Proxy仍因dispatch原strict8/7/1失败。单次同757手动HTTP诊断真实1：原五退出[0,1,1,1,1]，额外有限8MiB实验真实内核积压2.6→2.5MB，Signal及合成清理各1、自然source cancel仍0/KV NULL；C++分支与根因未证。真实浏览器登录已实际推进至CinaAuth，但授权端点302回调invalid_target（hasCode=false/hasState=true），尚未登录、切工作区或写密钥。原102/54/211、完整G7/G8、真实身份/ACL、资金链/SSE取消/回滚/旧UI退役继续。"
+        ]
+      },
+      {
+        "baselineStart": 127,
+        "currentStart": 127,
+        "removed": [
+          "| NEXT-18 | P1、P8-01 | 继续原native剩余门槛与真实取消 | 6e2原Linux最早失败90/235收据时间比较true/false，106步82success/1fail/23skip，94/109/110–113未执行（5.85）；d537的26目标/剩6通过仅为历史。收据七处微秒保留及有限8MiB积压/RST独立诊断已实现并独立复核，下一SHA原CI/单次Linux待验。原strict8/7/1仍失败；两历史RST signal-abort真而cancelNULL。真实身份/ACL/资金/取消/G7/G8继续。 |"
+        ],
+        "added": [
+          "| NEXT-18 | P1、P8-01 | 继续真实身份与自然HTTP取消门槛 | 757原Linux106步骤/109TAP全成功，26目标/剩6/94/109/110–113全本SHA通过（5.86），保留历史6e2/d537失败。原strict8/7/1与单次手动1保持失败；有限8MiB已见内核积压、signal/合成清理各1但自然cancel0/KV NULL，C++分支和根因未证。真实浏览器authorize→callback invalid_target，待核对公开resource/audience接线后继续已有专用工作区、密钥和隔离写验收。完整G7/G8继续。 |"
+        ]
+      },
+      {
+        "baselineStart": 2438,
+        "currentStart": 2438,
+        "removed": [],
+        "added": [
+          "### 5.86 原 native 全步骤成功与真实登录、自然 HTTP 取消边界（2026-10-06）",
+          "",
+          "`757490181564aa822f960f5d8704857b98b230d0` 本次原push Proxy `37429192670` overall failure，native `112155793299` success。financial 8–113恰106步骤，逐原TAP为109/109成功、0失败/0跳过；55–113恰59步骤全成功，26目标/剩6/94/109及110–113全部本SHA实际成功。bootstrap7、报价24、收据保留90、父级激活110各原TAP1/1/0，111为1/1/0、112为2/2/0、113为1/1/0。收据七处微秒文本入口与三处migrator:sql客户端绑定本次均已实际运行到；通过证明本次代码行为，不追溯确认旧失败live根因。d537和6e2的全部失败/跳过仍以其SHA完整保留。",
+          "",
+          "同757的Web `37429192615`、Compose `37429192577`、Verify `37429192638`、Release `37429192608` 全success，Proxy其余admin/config也success。dispatch `112155793601` 第27步原strict仍8/7/1；overall失败不能归为native失败。原watch闭于07:37:37.541 UTC actual1/stderr0，20 owned真实关闭为19×0/1×1，另Windows共享锁读取失败只有tool观察、不制造子进程数字。完整native raw686769B/SHA `2cb75abc0fccb5bbfe9970f01cb94c9189b33cf9e507ef0bd425af65c6b57a63` 实际下载0闭于07:41:41.399；dispatch随后.400开始、.608闭于44秒，完整5163974B/SHA `cb5b522d4a5fbd95c0aef93626287383e0fb084fe605da81bc4691043a346d04` 实际下载0。各仅串行一次，没有rerun/cancel或部分日志替代。",
+          "",
+          "唯一同757手动run `37429341568`、job `112156274395` 实际failure，artifact `11395769394` ZIP115610B/SHA `86e78aec5cf52ebdf9d2e538dbfe1d82a5852a1099102801eef78fec3f30c0f4`，17 decoded原件1,022,761B及2036事件完整顺序保存。原baseline8/7/1、原五actualExit=[0,1,1,1,1]：显式reader校准成功，四自然HTTP臂cancel/preDispose均NULL。追加queuedWriteComparison非baseline eligible，实际1；有限8MiB实验中owned Workerd PID2771/startTicks13304/socket inode18298，连续初始TCPtx2,610,688B、RST前2,515,456B；采样结束27102.091927≤resetInvoke27113.660148，11.568221ms。实际Signal abort1、合成cleanup invoke/return1、自然source cancel invoke/fulfilled0、cancelKV NULL。内核发送积压已证，C++ pending-write/drop分支未证；不同performance/hostMs时钟不能相减。",
+          "",
+          "该手动诊断Node runner/executor均真实1，无timeout/signal attempts，groupGone/unforced=true、activeMF0，4 esbuild僵尸逐个wait实际0，但Workerd graceful=false。首sandbox watch EACCES1、首本地artifact路径审计1及修正版0均原样保留，收集0不洗应用1。原strict、断言/轮询/尾部等待/日期/flags/锁定版本/关闭authority均保留。本轮没有通过Signal hook主动调用reader.cancel或伪造cancel KV。",
+          "",
+          "官方primary只读核验锁定workerd v1.20260828.1=`8ea63498c7aa107995f9b2ffee7789631707e09f`。静态pump catch取消源、reader析构仅释放锁，而HTTP真实drop/read/write路径本次未观测；该tag pending-write回归仅断言writePromise drop先于sink销毁，不断言JS source cancel。Request.signal清理通知是独立契约。6833/6896/7600本次官方状态均open/未合并；7600的test merge SHA不构成已发布修复。下一最小隔离诊断为exact-tag可控C++ read/write promise/drop分支fixture；产品Signal业务清理单独验收，不能用来改变原自然取消结果或把压力当C++分支证明。",
+          "",
+          "用户授权由本任务实际浏览器登录，并使用已有专用测试工作区。CUA getState两次（中间reset）均初始化失败os error3；in-app open返回queued，未当作已打开。Browser plugin/skill未列出，使用已安装Playwright1.62.1/Chrome独立newContext（不读取个人profile/cookies/storageState、不安装依赖）。生产首页https://cinatoken.com/en、1365×900正常、非空/无框架覆盖，console无相关错误。实际点击Sign in with CinaAuth：同源login302→https://auth.cinaseek.si/api/auth/oauth2/authorize302→同源callback200并关闭弹窗；最小固定enum观察为error=invalid_target、hasError=true/hasCode=false/hasState=true，首页出现登录失败。没有读取error_description、code/state/token/凭据值；尚未登录或进入工作区，更没有创建/撤销测试密钥。公开Cloudflare元数据08:01只读actual0确认Admin appOrigin=https://cinatoken.com、clientId=cinatoken-admin、issuer=https://auth.cinaseek.si、CINAAUTH_AUTH_SERVICE=cinaauth-api/production，四secret binding仅present=true（不读取值，不能由绑定元数据推导强度）。本机15env/5配置路径缺失只说明本机验收inputs不足，不等于生产缺配置；Web委托边界没有这些secret不认定缺失。resource/audience的真实issuer配置待核，先修登录，再继续工作区/密钥/第二身份跨工作区拒绝与PG/audit核验。",
+          "",
+          "直接证据：[本批collection](evidence/2026-10-06-native-all-green-and-http-cancellation-boundary/collection.json)。仅211必要新source原件（7封口root+22明确source-control/dispatch记录），8,721,828B→2,898,840storedB，3gzip完整bytes/SHA roundtrip；已封候选REPORT234190B/SHA `51786faca8b523e354dae2ea89c6a63dae6c5613a7b1ff7dda8b243cd8180d6b`。浏览器/公开配置/必要新source审另附，旧208/325/3357不再拷贝。独立Web生产仍c13/version2a0/100%，本轮代码仅测试/诊断修复、没有新生产部署。原102主任务、54矩阵、G0–G8/E00–E08、211实际task checkbox及全部状态完整保留；native局部门槛通过不代表全部G7/G8完成。"
+        ]
+      }
+    ],
+    "scopeArraysExact": true,
+    "browserAndCFNewSourceEvidenceOutOfScope": true
+  },
+  "schema": "independent-read-only-candidate-stored-review-v1",
+  "at": "2026-10-06T08:16:12.684Z",
+  "collectionOnly": true,
+  "candidateRoot": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-http-cancel-collection-8470e11ddec54d66a2caed9342d8c3c4",
+  "inputPins": [
+    {
+      "file": "STOPWRITE-CANDIDATE.json",
+      "bytes": 71790,
+      "sha256": "da5fe26d4abf4311bcf8f58d15d9c5cb3c69a5bbb5a651ac13021823070eeae3"
+    },
+    {
+      "file": "REPORT.json",
+      "bytes": 234190,
+      "sha256": "51786faca8b523e354dae2ea89c6a63dae6c5613a7b1ff7dda8b243cd8180d6b"
+    },
+    {
+      "file": "VERIFICATION.json",
+      "bytes": 799,
+      "sha256": "8a368cb1e579e3277f8d65a9af9a6a11cc09a59093f769e2913e359635978ef6"
+    },
+    {
+      "file": "FINAL-candidate-collection.json",
+      "bytes": 34834,
+      "sha256": "469a0a76f6e81bc8ded3eeea797c05b0b0ea0fcaa06844911b58a06bab4edf5b"
+    }
+  ],
+  "independentStoredWalk": {
+    "files": 232,
+    "dirs": 19,
+    "symlinksOrSpecial": 0
+  },
+  "payload": {
+    "files": 211,
+    "originalBytes": 8721828,
+    "storedBytes": 2898840,
+    "gzipCount": 3,
+    "identityCount": 208,
+    "compressed": [
+      {
+        "relativeStored": "ci-terminal/dispatch-terminal.stdout.log.gz",
+        "storedBytes": 336830,
+        "storedSha256": "11981ce9855ce50d6481beed62ce543d18859a688e892d970e6d486828febee0",
+        "decodedBytes": 5163974,
+        "decodedSha256": "cb5b522d4a5fbd95c0aef93626287383e0fb084fe605da81bc4691043a346d04",
+        "gzipDecoderValidatedCRCAndLength": true
+      },
+      {
+        "relativeStored": "ci-terminal/native-terminal.stdout.log.gz",
+        "storedBytes": 48647,
+        "storedSha256": "ba9e35579fb102628c520f8d759fba6acf0102be57df1995b701788256e1fb27",
+        "decodedBytes": 686769,
+        "decodedSha256": "2cb75abc0fccb5bbfe9970f01cb94c9189b33cf9e507ef0bd425af65c6b57a63",
+        "gzipDecoderValidatedCRCAndLength": true
+      },
+      {
+        "relativeStored": "ci-terminal/proxy-watch-1.stdout.log.gz",
+        "storedBytes": 4976,
+        "storedSha256": "4d5d1c807aa740f2ad3ae20fb2f0e67682345a395c1297a87d633dc1e05f672a",
+        "decodedBytes": 362698,
+        "decodedSha256": "a156459d896424218901d28552747b928461d84c79b2684c321983628c88014b",
+        "gzipDecoderValidatedCRCAndLength": true
+      }
+    ],
+    "sourceSets": [
+      {
+        "id": "ci-terminal",
+        "files": 79,
+        "declared": 79,
+        "selectedOnly": false
+      },
+      {
+        "id": "manual-runtime",
+        "files": 57,
+        "declared": 57,
+        "selectedOnly": false
+      },
+      {
+        "id": "manual-network-failure",
+        "files": 6,
+        "declared": 6,
+        "selectedOnly": false
+      },
+      {
+        "id": "manual-observation-tools",
+        "files": 21,
+        "declared": 21,
+        "selectedOnly": false
+      },
+      {
+        "id": "official-source-research",
+        "files": 8,
+        "declared": 8,
+        "selectedOnly": false
+      },
+      {
+        "id": "g2-readonly",
+        "files": 10,
+        "declared": 10,
+        "selectedOnly": false
+      },
+      {
+        "id": "playwright-fallback",
+        "files": 8,
+        "declared": 8,
+        "selectedOnly": false
+      },
+      {
+        "id": "source-control-selected",
+        "files": 22,
+        "declared": 22,
+        "selectedOnly": true
+      }
+    ],
+    "originalSourceRootsRead": false
+  },
+  "closureObservations": {
+    "count": 50,
+    "originalFieldsCopiedExact": true,
+    "zeros": 41,
+    "numericNonzero": 6,
+    "withoutNumericActualExit": 3
+  },
+  "collectionChildren": [
+    {
+      "name": "collect-candidate",
+      "actualExit": 0,
+      "startedAt": "2026-10-06T07:51:15.793Z",
+      "endedAt": "2026-10-06T07:51:16.510Z",
+      "stdoutBytes": 398,
+      "stderrBytes": 0
+    },
+    {
+      "name": "verify-candidate",
+      "actualExit": 0,
+      "startedAt": "2026-10-06T07:51:16.516Z",
+      "endedAt": "2026-10-06T07:51:16.796Z",
+      "stdoutBytes": 366,
+      "stderrBytes": 0
+    },
+    {
+      "name": "finalize-candidate",
+      "actualExit": 0,
+      "startedAt": "2026-10-06T07:54:38.697Z",
+      "endedAt": "2026-10-06T07:54:38.779Z",
+      "stdoutBytes": 889,
+      "stderrBytes": 0
+    }
+  ],
+  "ci": {
+    "sourceSHA": "757490181564aa822f960f5d8704857b98b230d0",
+    "financialSteps": 106,
+    "financialTAP": {
+      "tests": 109,
+      "pass": 109,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "bootstrap7": {
+      "tests": 1,
+      "pass": 1,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "chosen": {
+      "24": {
+        "fixture": "scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs",
+        "status": "completed",
+        "conclusion": "success",
+        "tests": 1,
+        "pass": 1,
+        "fail": 0
+      },
+      "90": {
+        "fixture": "scripts/db/cutover/postgres-shared-key-buyer-receipt-retention-v346.native.test.mjs",
+        "status": "completed",
+        "conclusion": "success",
+        "tests": 1,
+        "pass": 1,
+        "fail": 0
+      },
+      "94": {
+        "fixture": "scripts/db/cutover/postgres-shared-key-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor.native.test.mjs",
+        "status": "completed",
+        "conclusion": "success",
+        "tests": 1,
+        "pass": 1,
+        "fail": 0
+      },
+      "109": {
+        "fixture": "scripts/db/cutover/postgres-replay-reservations-backend-lifecycle-successor.native.test.mjs",
+        "status": "completed",
+        "conclusion": "success",
+        "tests": 1,
+        "pass": 1,
+        "fail": 0
+      },
+      "110": {
+        "fixture": "scripts/db/cutover/postgres-legacy-parent-activation.native.test.mjs",
+        "status": "completed",
+        "conclusion": "success",
+        "tests": 1,
+        "pass": 1,
+        "fail": 0
+      },
+      "111": {
+        "fixture": "scripts/db/cutover/build-postgres-recovery-retention-review.native.test.mjs",
+        "status": "completed",
+        "conclusion": "success",
+        "tests": 1,
+        "pass": 1,
+        "fail": 0
+      },
+      "112": {
+        "fixture": "packages/core/src/storage/management-workspaces.postgres-native.test.mjs",
+        "status": "completed",
+        "conclusion": "success",
+        "tests": 2,
+        "pass": 2,
+        "fail": 0
+      },
+      "113": {
+        "fixture": "scripts/db/cutover/postgres-user-delete-audit.native.test.mjs",
+        "status": "completed",
+        "conclusion": "success",
+        "tests": 1,
+        "pass": 1,
+        "fail": 0
+      }
+    },
+    "tailSteps59": 59,
+    "targets26": 26,
+    "remaining6": 6,
+    "pushRuns": [
+      {
+        "slug": "proxy",
+        "runId": 37429192670,
+        "sourceSHA": "757490181564aa822f960f5d8704857b98b230d0",
+        "status": "completed",
+        "conclusion": "failure"
+      },
+      {
+        "slug": "compose",
+        "runId": 37429192577,
+        "sourceSHA": "757490181564aa822f960f5d8704857b98b230d0",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "slug": "web",
+        "runId": 37429192615,
+        "sourceSHA": "757490181564aa822f960f5d8704857b98b230d0",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "slug": "verify",
+        "runId": 37429192638,
+        "sourceSHA": "757490181564aa822f960f5d8704857b98b230d0",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "slug": "release",
+        "runId": 37429192608,
+        "sourceSHA": "757490181564aa822f960f5d8704857b98b230d0",
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ],
+    "strict27": {
+      "tests": 8,
+      "pass": 7,
+      "fail": 1,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "serialDownloads": {
+      "nativeStartedAt": "2026-10-06T07:41:32.502Z",
+      "nativeClosedAt": "2026-10-06T07:41:41.399Z",
+      "dispatchStartedAt": "2026-10-06T07:41:41.400Z",
+      "dispatchClosedAt": "2026-10-06T07:41:44.608Z",
+      "nativeActualExit": 0,
+      "dispatchActualExit": 0
+    },
+    "ciClosedCounts": {
+      "total": 18,
+      "zero": 17,
+      "one": 1
+    }
+  },
+  "manual": {
+    "run": {
+      "id": 37429341568,
+      "sourceSHA": "757490181564aa822f960f5d8704857b98b230d0",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "failure",
+      "url": "https://github.com/cinagroup/cinatoken/actions/runs/37429341568",
+      "event": "workflow_dispatch",
+      "createdAt": "2026-10-06T07:23:19Z",
+      "updatedAt": "2026-10-06T07:25:17Z"
+    },
+    "baseline": {
+      "receipt": {
+        "closed": true,
+        "startedAt": "2026-10-06T07:24:40.703Z",
+        "endedAt": "2026-10-06T07:24:44.164Z",
+        "program": "/opt/hostedtoolcache/node/22.23.3/x64/bin/node",
+        "args": [
+          "--import",
+          "/home/runner/work/cinatoken/cinatoken/node_modules/tsx/dist/loader.mjs",
+          "--test",
+          "scripts/staging/chat-holder-binding-v364.node.test.mjs",
+          "scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs"
+        ],
+        "cwd": "/home/runner/work/cinatoken/cinatoken/packages/proxy",
+        "actualExit": 1,
+        "code": 1,
+        "signal": null,
+        "timedOut": false,
+        "outputLimitExceeded": false,
+        "stdout": {
+          "file": "original-strict.stdout.txt",
+          "bytes": 2870,
+          "sha256": "74f220d412dc232b65b51b0ec798951373a014d72df1128c657ae0dd503dbb57"
+        },
+        "stderr": {
+          "file": "original-strict.stderr.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "observedTAP": {
+        "tests": 8,
+        "pass": 7,
+        "fail": 1,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "expectedHistoricalTAP": {
+        "tests": 8,
+        "pass": 7,
+        "fail": 1
+      },
+      "matchesHistorical8_7_1": true
+    },
+    "originalFiveResults": [
+      {
+        "caseId": "native-worker-reader-cancel",
+        "calibrationOnly": true,
+        "baselineEligible": false,
+        "nativeWorkerExecuted": true,
+        "actualExit": 0,
+        "closed": true,
+        "received": {
+          "nativeReaderCancel": true,
+          "firstFrame": ": holder-ready\n\n",
+          "pendingReadSettledBeforeCancel": false,
+          "pendingReadAfterCancelDone": true,
+          "cancel": "observed",
+          "release": null,
+          "accepted": "one"
+        },
+        "nativeObserverEvidence": {
+          "cancelPutInvoke": 1,
+          "cancelPutFulfilled": 1,
+          "waitUntilRegister": 1,
+          "waitUntilFulfilled": 1,
+          "waitUntilRejected": 0,
+          "readerCancelInvoke": 1,
+          "readerCancelFulfilled": 1,
+          "originalPullObservedBeforeCancel": true,
+          "addsLifetimeTask": false
+        }
+      },
+      {
+        "caseId": "direct-socket-bare-destroy",
+        "kind": "bare",
+        "mode": "destroy",
+        "baselineEligible": false,
+        "diagnosticVariant": true,
+        "directSocket": true,
+        "coreEntryBypassed": true,
+        "originalWindow": {
+          "pollCount": 100,
+          "sleepMs": 10,
+          "elapsedMs": 1296.6952529999999,
+          "actual": null,
+          "expected": "observed",
+          "actualExit": 1
+        },
+        "tail": {
+          "elapsedMs": 4014.4386529999992,
+          "reads": 75,
+          "actual": null,
+          "usedForPass": false
+        },
+        "finalPreDisposeSnapshot": {
+          "cancel": null,
+          "release": null,
+          "accepted": "one",
+          "usedForPass": false
+        },
+        "actualExit": 1,
+        "closed": true,
+        "strictFailure": {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Expected values to be strictly equal:\n\nnull !== 'observed'\n"
+        }
+      },
+      {
+        "caseId": "direct-socket-bare-rst",
+        "kind": "bare",
+        "mode": "rst",
+        "baselineEligible": false,
+        "diagnosticVariant": true,
+        "directSocket": true,
+        "coreEntryBypassed": true,
+        "originalWindow": {
+          "pollCount": 100,
+          "sleepMs": 10,
+          "elapsedMs": 1256.3416390000002,
+          "actual": null,
+          "expected": "observed",
+          "actualExit": 1
+        },
+        "tail": {
+          "elapsedMs": 4008.9643340000002,
+          "reads": 75,
+          "actual": null,
+          "usedForPass": false
+        },
+        "finalPreDisposeSnapshot": {
+          "cancel": null,
+          "release": null,
+          "accepted": "one",
+          "usedForPass": false
+        },
+        "actualExit": 1,
+        "closed": true,
+        "strictFailure": {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Expected values to be strictly equal:\n\nnull !== 'observed'\n"
+        }
+      },
+      {
+        "caseId": "direct-socket-binding-destroy",
+        "kind": "binding",
+        "mode": "destroy",
+        "baselineEligible": false,
+        "diagnosticVariant": true,
+        "directSocket": true,
+        "coreEntryBypassed": true,
+        "originalWindow": {
+          "pollCount": 100,
+          "sleepMs": 10,
+          "elapsedMs": 1254.3553510000002,
+          "actual": null,
+          "expected": "observed",
+          "actualExit": 1
+        },
+        "tail": {
+          "elapsedMs": 4006.432733999998,
+          "reads": 75,
+          "actual": null,
+          "usedForPass": false
+        },
+        "finalPreDisposeSnapshot": {
+          "cancel": null,
+          "release": null,
+          "accepted": "one",
+          "usedForPass": false
+        },
+        "actualExit": 1,
+        "closed": true,
+        "strictFailure": {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Expected values to be strictly equal:\n\nnull !== 'observed'\n"
+        }
+      },
+      {
+        "caseId": "direct-socket-binding-rst",
+        "kind": "binding",
+        "mode": "rst",
+        "baselineEligible": false,
+        "diagnosticVariant": true,
+        "directSocket": true,
+        "coreEntryBypassed": true,
+        "originalWindow": {
+          "pollCount": 100,
+          "sleepMs": 10,
+          "elapsedMs": 1240.7430509999976,
+          "actual": null,
+          "expected": "observed",
+          "actualExit": 1
+        },
+        "tail": {
+          "elapsedMs": 4012.2121389999993,
+          "reads": 75,
+          "actual": null,
+          "usedForPass": false
+        },
+        "finalPreDisposeSnapshot": {
+          "cancel": null,
+          "release": null,
+          "accepted": "one",
+          "usedForPass": false
+        },
+        "actualExit": 1,
+        "closed": true,
+        "strictFailure": {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Expected values to be strictly equal:\n\nnull !== 'observed'\n"
+        }
+      }
+    ],
+    "queuedFacts": {
+      "recomputedKernelBacklog": true,
+      "pressureSamples": [
+        {
+          "at": 27064.436175,
+          "sampleEndedAt": 27080.231884,
+          "known": true,
+          "pid": 2771,
+          "startTimeTicks": "13304",
+          "pgrp": 2626,
+          "session": 2626,
+          "inode": "18298",
+          "fd": "27",
+          "tuple": {
+            "localAddress": "127.0.0.1",
+            "localPort": 49418,
+            "remoteAddress": "127.0.0.1",
+            "remotePort": 37061,
+            "socketPaused": true
+          },
+          "state": "01",
+          "queueRaw": "0027D600:00000000",
+          "txBytes": 2610688,
+          "rxBytes": 0,
+          "rawTCPRow": "754: 0100007F:90C5 0100007F:C10A 01 0027D600:00000000 01:00000013 00000000 1001 0 18298 2 0000000000000000 20 4 31 10 -1",
+          "cppPendingWriteProven": false
+        },
+        {
+          "at": 27090.721595,
+          "sampleEndedAt": 27102.091927,
+          "known": true,
+          "pid": 2771,
+          "startTimeTicks": "13304",
+          "pgrp": 2626,
+          "session": 2626,
+          "inode": "18298",
+          "fd": "27",
+          "tuple": {
+            "localAddress": "127.0.0.1",
+            "localPort": 49418,
+            "remoteAddress": "127.0.0.1",
+            "remotePort": 37061,
+            "socketPaused": true
+          },
+          "state": "01",
+          "queueRaw": "0027D600:00000000",
+          "txBytes": 2610688,
+          "rxBytes": 0,
+          "rawTCPRow": "754: 0100007F:90C5 0100007F:C10A 01 0027D600:00000000 01:00000010 00000000 1001 0 18298 2 0000000000000000 20 4 31 10 -1",
+          "cppPendingWriteProven": false
+        }
+      ],
+      "immediatePreRST": {
+        "at": 27102.785182,
+        "sampleEndedAt": 27113.599996,
+        "known": true,
+        "pid": 2771,
+        "startTimeTicks": "13304",
+        "pgrp": 2626,
+        "session": 2626,
+        "inode": "18298",
+        "fd": "27",
+        "tuple": {
+          "localAddress": "127.0.0.1",
+          "localPort": 49418,
+          "remoteAddress": "127.0.0.1",
+          "remotePort": 37061,
+          "socketPaused": true
+        },
+        "state": "01",
+        "queueRaw": "00266200:00000000",
+        "txBytes": 2515456,
+        "rxBytes": 0,
+        "rawTCPRow": "754: 0100007F:90C5 0100007F:C10A 01 00266200:00000000 04:00000013 00000000 1001 0 18298 2 0000000000000000 20 4 31 10 -1",
+        "cppPendingWriteProven": false
+      },
+      "resetInvokeAt": 27113.660148,
+      "rstInvokeReturnEvents": [
+        {
+          "caseId": "direct-socket-bare-rst-queued-write",
+          "kind": "client-rst-api-invoke",
+          "hostMs": 26649.023681,
+          "wallMs": 1791271507352
+        },
+        {
+          "caseId": "direct-socket-bare-rst-queued-write",
+          "kind": "queued-immediate-pre-rst-backlog",
+          "hostMs": 26659.883728999997,
+          "wallMs": 1791271507363,
+          "at": 27102.785182,
+          "sampleEndedAt": 27113.599996,
+          "known": true,
+          "pid": 2771,
+          "startTimeTicks": "13304",
+          "pgrp": 2626,
+          "session": 2626,
+          "inode": "18298",
+          "fd": "27",
+          "tuple": {
+            "localAddress": "127.0.0.1",
+            "localPort": 49418,
+            "remoteAddress": "127.0.0.1",
+            "remotePort": 37061,
+            "socketPaused": true
+          },
+          "state": "01",
+          "queueRaw": "00266200:00000000",
+          "txBytes": 2515456,
+          "rxBytes": 0,
+          "rawTCPRow": "754: 0100007F:90C5 0100007F:C10A 01 00266200:00000000 04:00000013 00000000 1001 0 18298 2 0000000000000000 20 4 31 10 -1",
+          "cppPendingWriteProven": false
+        },
+        {
+          "caseId": "direct-socket-bare-rst-queued-write",
+          "kind": "queued-rst-api-return",
+          "hostMs": 26660.16279,
+          "wallMs": 1791271507363,
+          "resetInvokeAt": 27113.660148,
+          "resetReturnedAt": 27113.890879
+        },
+        {
+          "caseId": "direct-socket-bare-rst-queued-write",
+          "kind": "client-cancel-settled",
+          "hostMs": 26660.977952999998,
+          "wallMs": 1791271507364,
+          "requestDestroyed": true,
+          "responseDestroyed": true,
+          "responseComplete": false,
+          "socketDestroyed": true
+        }
+      ],
+      "separatelyRecomputedCallbackCounts": {
+        "incomingSignalAbort": 1,
+        "syntheticCleanupHookInvoke": 1,
+        "syntheticCleanupHookReturn": 1,
+        "realSourceCancelHookInvoke": 0,
+        "realSourceCancelHookFulfilled": 0
+      },
+      "allOwnCallbackLogs": [
+        {
+          "caseId": "direct-socket-bare-rst-queued-write",
+          "kind": "workerd-log",
+          "hostMs": 26576.771391,
+          "wallMs": 1791271507280,
+          "phase": "streaming",
+          "timestamp": 1791271507280,
+          "level": "log",
+          "message": "V364_QWRITE {\"boundary\":\"queued-source\",\"event\":\"signal-initial\",\"wallMs\":1791271507280,\"aborted\":false}"
+        },
+        {
+          "caseId": "direct-socket-bare-rst-queued-write",
+          "kind": "workerd-log",
+          "hostMs": 26604.815217,
+          "wallMs": 1791271507308,
+          "phase": "queued-write-admission",
+          "timestamp": 1791271507308,
+          "level": "log",
+          "message": "V364_QWRITE {\"boundary\":\"queued-source\",\"event\":\"queued-enqueue-end\",\"wallMs\":1791271507308,\"payloadBytes\":8388608,\"chunkBytes\":65536,\"chunkCount\":128,\"desiredSize\":-127,\"streamClosedBySource\":false}"
+        },
+        {
+          "caseId": "direct-socket-bare-rst-queued-write",
+          "kind": "workerd-log",
+          "hostMs": 26662.370725,
+          "wallMs": 1791271507366,
+          "phase": "original-poll",
+          "timestamp": 1791271507364,
+          "level": "log",
+          "message": "V364_QWRITE {\"boundary\":\"queued-source\",\"event\":\"signal-abort\",\"wallMs\":1791271507364,\"aborted\":true}"
+        },
+        {
+          "caseId": "direct-socket-bare-rst-queued-write",
+          "kind": "workerd-log",
+          "hostMs": 26662.392816,
+          "wallMs": 1791271507366,
+          "phase": "original-poll",
+          "timestamp": 1791271507364,
+          "level": "log",
+          "message": "V364_QWRITE {\"boundary\":\"queued-source\",\"event\":\"cleanup-hook-invoke\",\"wallMs\":1791271507364,\"syntheticOnly\":true,\"businessCleanupProof\":false}"
+        },
+        {
+          "caseId": "direct-socket-bare-rst-queued-write",
+          "kind": "workerd-log",
+          "hostMs": 26662.416821,
+          "wallMs": 1791271507366,
+          "phase": "original-poll",
+          "timestamp": 1791271507364,
+          "level": "log",
+          "message": "V364_QWRITE {\"boundary\":\"queued-source\",\"event\":\"cleanup-hook-return\",\"wallMs\":1791271507364,\"cleanupCalls\":1,\"synchronousOnly\":true,\"payloadFreedProven\":false}"
+        }
+      ],
+      "cppPendingWriteProven": false,
+      "pumpBranchProven": false,
+      "businessCleanupProven": false,
+      "signalAbortNotStreamCancelPass": true
+    },
+    "closure": {
+      "actualProcessExit": 1,
+      "runnerOutcomeCode": 1,
+      "actualExecutorExit": 1,
+      "nodeActualExit": 1,
+      "reportedActualExit": 1,
+      "timedOut": false,
+      "interrupted": false,
+      "directChildReaped": true,
+      "groupGone": true,
+      "leftoverGroupKilled": false,
+      "actualSignalAttempts": [],
+      "reapedDescendants": [
+        {
+          "pid": 2657,
+          "startTimeTicks": "10665",
+          "waitStatus": 0,
+          "waitExitCode": 0,
+          "source": "individually identified adopted zombie"
+        },
+        {
+          "pid": 2690,
+          "startTimeTicks": "10697",
+          "waitStatus": 0,
+          "waitExitCode": 0,
+          "source": "individually identified adopted zombie"
+        },
+        {
+          "pid": 2704,
+          "startTimeTicks": "10706",
+          "waitStatus": 0,
+          "waitExitCode": 0,
+          "source": "individually identified adopted zombie"
+        },
+        {
+          "pid": 2710,
+          "startTimeTicks": "10773",
+          "waitStatus": 0,
+          "waitExitCode": 0,
+          "source": "individually identified adopted zombie"
+        }
+      ],
+      "reapedCount": 4,
+      "processCensus": [
+        {
+          "label": "before-initial-adopted-reap",
+          "elapsedMs": 32508.008829999995,
+          "pgrp": 2626,
+          "session": 2626,
+          "members": [
+            {
+              "pid": 2657,
+              "comm": "esbuild",
+              "state": "Z",
+              "ppid": 2624,
+              "pgrp": 2626,
+              "session": 2626,
+              "startTimeTicks": "10665"
+            },
+            {
+              "pid": 2690,
+              "comm": "esbuild",
+              "state": "Z",
+              "ppid": 2624,
+              "pgrp": 2626,
+              "session": 2626,
+              "startTimeTicks": "10697"
+            },
+            {
+              "pid": 2704,
+              "comm": "esbuild",
+              "state": "Z",
+              "ppid": 2624,
+              "pgrp": 2626,
+              "session": 2626,
+              "startTimeTicks": "10706"
+            },
+            {
+              "pid": 2710,
+              "comm": "esbuild",
+              "state": "Z",
+              "ppid": 2624,
+              "pgrp": 2626,
+              "session": 2626,
+              "startTimeTicks": "10773"
+            }
+          ],
+          "live": 0,
+          "zombies": 4,
+          "unknown": [],
+          "complete": true,
+          "groupExists": true
+        },
+        {
+          "label": "after-initial-adopted-reap",
+          "elapsedMs": 32514.56090299999,
+          "pgrp": 2626,
+          "session": 2626,
+          "members": [],
+          "live": 0,
+          "zombies": 0,
+          "unknown": [],
+          "complete": true,
+          "groupExists": false
+        },
+        {
+          "label": "after-term-before-reap",
+          "elapsedMs": 32520.828316000006,
+          "pgrp": 2626,
+          "session": 2626,
+          "members": [],
+          "live": 0,
+          "zombies": 0,
+          "unknown": [],
+          "complete": true,
+          "groupExists": false
+        },
+        {
+          "label": "after-term-after-reap",
+          "elapsedMs": 32526.99717499999,
+          "pgrp": 2626,
+          "session": 2626,
+          "members": [],
+          "live": 0,
+          "zombies": 0,
+          "unknown": [],
+          "complete": true,
+          "groupExists": false
+        },
+        {
+          "label": "final-adopt-drain",
+          "elapsedMs": 32533.175811999998,
+          "pgrp": 2626,
+          "session": 2626,
+          "members": [],
+          "live": 0,
+          "zombies": 0,
+          "unknown": [],
+          "complete": true,
+          "groupExists": false
+        },
+        {
+          "label": "final-post-reap",
+          "elapsedMs": 32539.384805999987,
+          "pgrp": 2626,
+          "session": 2626,
+          "members": [],
+          "live": 0,
+          "zombies": 0,
+          "unknown": [],
+          "complete": true,
+          "groupExists": false
+        }
+      ],
+      "outerUnforcedGroupClose": true,
+      "apiDisposalReported": true,
+      "gracefulWorkerdExitProven": false,
+      "disposalMayKillWorkerd": true,
+      "errors": []
+    },
+    "runtimeClosedFields": {
+      "actualExit": 1,
+      "keys": [
+        "schema",
+        "startedAt",
+        "endedAt",
+        "elapsedMs",
+        "actualExit",
+        "outcome",
+        "baseline",
+        "results",
+        "queuedWriteComparison",
+        "fatal",
+        "versions",
+        "executorReceipt",
+        "checkoutSHA",
+        "reviewBaseHEAD",
+        "priorRun",
+        "allComparisonsBaselineEligible",
+        "closureAuthority",
+        "runtimeCompatibilityDate",
+        "frozenConfigDate",
+        "sourceUnchanged",
+        "inputsBefore",
+        "inputsAfter",
+        "installedBefore",
+        "installedAfter",
+        "bundleHashes",
+        "activeMiniflare",
+        "observationFailures",
+        "events",
+        "productionRequests",
+        "realIdentity",
+        "defaultOffHolderChanged",
+        "dependencyChanged",
+        "causeProven",
+        "lateObservationUpgradesPass",
+        "upstreamPatchApplied",
+        "flagsChanged",
+        "limitations"
+      ]
+    },
+    "executorFields": {
+      "actualExit": 1,
+      "keys": [
+        "schema",
+        "startedEpoch",
+        "elapsedMs",
+        "actualProcessExit",
+        "runnerOutcomeCode",
+        "actualExit",
+        "outcome",
+        "timedOut",
+        "interrupted",
+        "fatal",
+        "packageSHA256",
+        "checkoutSHA",
+        "run",
+        "reportedActualExit",
+        "closedReportPresent",
+        "closure",
+        "causeProven",
+        "productionRequests",
+        "ciInvocations",
+        "files"
+      ]
+    },
+    "candidateSummary": {
+      "run": {
+        "id": 37429341568,
+        "sourceSHA": "757490181564aa822f960f5d8704857b98b230d0",
+        "attempt": 1,
+        "status": "completed",
+        "conclusion": "failure",
+        "url": "https://github.com/cinagroup/cinatoken/actions/runs/37429341568",
+        "event": "workflow_dispatch",
+        "createdAt": "2026-10-06T07:23:19Z",
+        "updatedAt": "2026-10-06T07:25:17Z"
+      },
+      "nodeAndProcessExit": 1,
+      "originalFiveExit": [
+        0,
+        1,
+        1,
+        1,
+        1
+      ],
+      "extraActualExit": 1,
+      "kernelBacklogObserved": true,
+      "sourceCancelObserved": false,
+      "distinctCallbacks": {
+        "incomingSignalAbort": 1,
+        "syntheticCleanupHookInvoke": 1,
+        "syntheticCleanupHookReturn": 1,
+        "realSourceCancelHookInvoke": 0,
+        "realSourceCancelHookFulfilled": 0
+      },
+      "cppPendingWriteProven": false,
+      "rootCauseConfirmed": false,
+      "gracefulWorkerdExitProven": false
+    }
+  },
+  "notes": [
+    {
+      "kind": "wording-clarification",
+      "severity": "nonblocking",
+      "text": "MD dispatch timestamp shorthand .400 start and .608 close at 44 seconds is factually consistent, but full UTC timestamps 07:41:41.400Z -> 07:41:44.608Z are clearer."
+    },
+    {
+      "kind": "authority-boundary",
+      "severity": "required-boundary",
+      "text": "Browser invalid_target, public Cloudflare metadata, and new CinaAuth source reports are explicitly separate later evidence; this review does not verify those MD facts."
+    }
+  ],
+  "checkCount": 2009,
+  "allChecksPassed": false,
+  "failures": [
+    {
+      "name": "original-job-steps-map",
+      "ok": false
+    },
+    {
+      "name": "ci-20-actual-19zero-1one",
+      "ok": false
+    },
+    {
+      "name": "md-5.86-current-sha-and-financial-boundary",
+      "ok": false
+    }
+  ],
+  "runtimeOrCIOrNetworkExecuted": false,
+  "repositoryOrSourceWrites": false,
+  "noDerivedCiLogFiles": true,
+  "collectorZeroNotRuntimeAcceptance": true
+}

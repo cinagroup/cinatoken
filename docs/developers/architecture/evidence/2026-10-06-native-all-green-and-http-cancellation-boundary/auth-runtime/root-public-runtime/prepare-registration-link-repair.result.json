@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-06T08:56:39.551Z",
+  "finishedAt": "2026-10-06T08:56:39.799Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\prepare-minimal-registration-link-repair.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\prepare-registration-link-repair.stdout.log",
+    "bytes": 933,
+    "sha256": "f9e4280e347166f46b1f6089cbc46245118735a44249e4ec888b3a2203fb0dbc"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\prepare-registration-link-repair.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

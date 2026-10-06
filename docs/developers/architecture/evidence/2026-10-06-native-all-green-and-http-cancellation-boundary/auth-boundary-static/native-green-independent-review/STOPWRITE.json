@@ -1,0 +1,218 @@
+{
+  "schema": "independent-review-stopwrite-v1",
+  "at": "2026-10-06T08:22:36.347Z",
+  "STOPWRITE": true,
+  "filesBeforeSelf": 41,
+  "files": [
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/AUDIT-stored-candidate.json",
+      "bytes": 40568,
+      "sha256": "c959ffebc47fd7852586e811459c5866b937bbd47876e383293df8e352279df1"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/audit-stored-candidate.mjs",
+      "bytes": 23720,
+      "sha256": "9e8197248a1adb440fb96b051a515c70025170deccb555f3ebc686f7be6173a5"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/audit-stored-candidate.v1.mjs",
+      "bytes": 16118,
+      "sha256": "6e92fbeaea61f37addae88e71e402262e896476d53b9a84f072879b89697b30b"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/AUDIT-stored-candidate.v2.json",
+      "bytes": 40165,
+      "sha256": "c1263852065cabe161eaa27785484559159776fdc1b4cfb084b9fe181abc0bb3"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/audit-stored-candidate.v2.mjs",
+      "bytes": 19110,
+      "sha256": "e6387564b5316b1f571d98d4e9f35f055817c579f9ffe43fb98fac7e3f14e09a"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/audit-stored-candidate.v3.mjs",
+      "bytes": 23333,
+      "sha256": "5c0ae8b2310b2450daafc609ca817a1015040877c65e5cabd89e45ffbe577a0a"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/AUDIT-stored-candidate.v4.json",
+      "bytes": 40642,
+      "sha256": "dd3504c7ba9db2fa8f489165957d3de5d9e8195a79f23d49b2788682e1df221c"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/audit-stored-candidate.v4.mjs",
+      "bytes": 23332,
+      "sha256": "353f316e4013dc401bb73fb4571484c97ca629ee01c36a2f62ae1cc7e00efa13"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/AUDIT-stored-candidate.v5.json",
+      "bytes": 40642,
+      "sha256": "1f373a04957f6f4ffe299618d0d1e88661ee96e3be07d2b070739b97e98b15b0"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/audit-stored-candidate.v5.mjs",
+      "bytes": 23466,
+      "sha256": "51f664f080e87bb09a2fded3dc97ddbfa299b5185b346b8f9c7e263fc0e35388"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/AUDIT-stored-candidate.v6.json",
+      "bytes": 40642,
+      "sha256": "e9655e9d51263c29272dca8a7a0d0feefe33f2e988eb26ee01fb8a4a0dfbe1e0"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/audit-stored-candidate.v6.mjs",
+      "bytes": 23702,
+      "sha256": "83aaa0f5ee08dafb7df0ff8b060b59cca2af6262724e473a1af02ebbff61ea84"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/FINAL-independent-candidate-review.json",
+      "bytes": 20218,
+      "sha256": "9954216baf9a49c248548f1c91ca566c6dd9a7a133aa2a5d4959a315c9422597"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/finalize-independent-review.mjs",
+      "bytes": 3481,
+      "sha256": "7a8fcbb3d9fa30f3d5392d01ba107afbac4fb802e8e3b45382c651a427c5ae2e"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/finalize-review.closed.json",
+      "bytes": 1249,
+      "sha256": "e8b4c1d02cd28c2b07d34bd7d53c570462309da635ba610c3ab0b54b44d909e6"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/finalize-review.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/finalize-review.stdout.log",
+      "bytes": 361,
+      "sha256": "0e3f83f78411028b8f50512860317bf623e2aee4e0974416beefb6bd632a1975"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/PRELIMINARY-tool-observation-failures.json",
+      "bytes": 1151,
+      "sha256": "d01625a3e942a650393ca2ce579b247c613a6b10ca23323aeb2260519bf0c29c"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/run-review-command.mjs",
+      "bytes": 1444,
+      "sha256": "4690c19396724b011d3f6b15ce242da9a25ce9a6ea835e5b7c49caa9a7e8b6a2"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/seal-independent-review.mjs",
+      "bytes": 1117,
+      "sha256": "5db30215813380713649c346ee1ba5e865bfd4ddf9e1d3b2d9e2e257c2bbc5bd"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/stored-review-1.closed.json",
+      "bytes": 1245,
+      "sha256": "c5423650ed3fbc6830f03e2b9404cc4eca28e5f23e365e93b730da480e826ff5"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/stored-review-1.stderr.log",
+      "bytes": 1156,
+      "sha256": "4668c703f4179efc65fa9e542a7df6b8de352d66a28f59cab0d689e4597dde59"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/stored-review-1.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/stored-review-2.closed.json",
+      "bytes": 1244,
+      "sha256": "cc5e08076b9d1fb5b7a7c5bcf95aebc14560ab25cb63d5066f6004aa29ca117e"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/stored-review-2.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/stored-review-2.stdout.log",
+      "bytes": 216,
+      "sha256": "831d4f33238490644091386df065478bcb480dd7e538712e0dca1df4cb7b3dbe"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/stored-review-3.closed.json",
+      "bytes": 1245,
+      "sha256": "1bf60d240b8d6d9ba1eb1681964015ca6d6009e8d5350edaedba7b368975e7d4"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/stored-review-3.stderr.log",
+      "bytes": 2705,
+      "sha256": "9b63349e29d318e468ecb61d4344c9bd45eab98e752b380fc85aeb4b3b3a7def"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/stored-review-3.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/stored-review-4.closed.json",
+      "bytes": 1244,
+      "sha256": "18032a7a35fad7eff608b571293aabdd91bcfba232858e11550293148024e898"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/stored-review-4.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/stored-review-4.stdout.log",
+      "bytes": 144,
+      "sha256": "fa0c5278a06a213219b88cb2ad1fa3a278ec39b47ca108f52e0ed1f2ce600da9"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/stored-review-5.closed.json",
+      "bytes": 1244,
+      "sha256": "4649b05847500d39b817a7d1eda6ee2f1812e4d11074f73aa2a9418e27a7efc7"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/stored-review-5.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/stored-review-5.stdout.log",
+      "bytes": 144,
+      "sha256": "fa0c5278a06a213219b88cb2ad1fa3a278ec39b47ca108f52e0ed1f2ce600da9"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/stored-review-6.closed.json",
+      "bytes": 1244,
+      "sha256": "63161997e4d2a1e8ef2c7e21dbc9272aa8a6bd980762a5d12610489d8c5634ae"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/stored-review-6.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/stored-review-6.stdout.log",
+      "bytes": 144,
+      "sha256": "fa0c5278a06a213219b88cb2ad1fa3a278ec39b47ca108f52e0ed1f2ce600da9"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/stored-review-7.closed.json",
+      "bytes": 1244,
+      "sha256": "45e3a056547595de9fc2efc7c384b69d6745b0d2ce32a35bf8efd105c21e2153"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/stored-review-7.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-green-candidate-independent-review-effcf6ac1c714442b124515149114f10/stored-review-7.stdout.log",
+      "bytes": 120,
+      "sha256": "8ae679e91361cdd099f06231420066a862a7b208fd9d9ff41a9e6be6542911a1"
+    }
+  ],
+  "selfExcluded": "STOPWRITE.json",
+  "repositoryModified": false,
+  "oldRootsModified": false,
+  "network": false,
+  "collection0NotBusinessPass": true
+}

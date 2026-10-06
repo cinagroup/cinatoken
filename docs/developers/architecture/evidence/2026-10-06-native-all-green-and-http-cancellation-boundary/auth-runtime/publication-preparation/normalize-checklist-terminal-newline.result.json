@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-06T09:09:48.769Z",
+  "finishedAt": "2026-10-06T09:09:48.843Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\normalize-checklist-terminal-newline.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\normalize-checklist-terminal-newline.stdout.log",
+    "bytes": 358,
+    "sha256": "ceeba5664cb56f5621ab082b0ed1b8e86f26cc82919d846c797663f2932b532a"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-auth-gates-80c5f57d2e0a68\\normalize-checklist-terminal-newline.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

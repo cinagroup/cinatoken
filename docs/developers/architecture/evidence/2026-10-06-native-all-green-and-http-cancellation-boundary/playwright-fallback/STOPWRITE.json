@@ -1,0 +1,50 @@
+{
+  "schema": "owned-complete-root-STOPWRITE-seal-v1",
+  "frozenAt": "2026-10-06T07:45:43.468Z",
+  "root": "C:/Users/cina/AppData/Local/Temp/cinatoken-playwright-fallback-readonly-92e5efc975ee40f8b704394d3e9f188c",
+  "files": [
+    {
+      "path": "FINAL-playwright-fallback-readonly.json",
+      "bytes": 7866,
+      "sha256": "e175196215a281fb045bb787f79da15ddf1e31d64ea708ec967a60f49af5318e"
+    },
+    {
+      "path": "capture-and-seal.mjs",
+      "bytes": 2456,
+      "sha256": "9c410cfb7beeb36c6a2175779a90d05089859dfd900eadf4f446a301b1e7c7b5"
+    },
+    {
+      "path": "prior-directory-read-tool-observation.json",
+      "bytes": 605,
+      "sha256": "8675443c1432cb0fb1fe1cfc8416c73296077fc732bb0cf4990ef53d9b03dcde"
+    },
+    {
+      "path": "readonly-fallback-source.mjs",
+      "bytes": 6166,
+      "sha256": "48052b379ea4496b0382cbc99db613baf0eac462936f6e6946e523041bf51897"
+    },
+    {
+      "path": "readonly-fallback.closed.json",
+      "bytes": 1215,
+      "sha256": "5389718b19639bfc8aed3617931cc20823a33dfea459782919d0c5d88b77f70b"
+    },
+    {
+      "path": "readonly-fallback.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "readonly-fallback.stdout.log",
+      "bytes": 402,
+      "sha256": "cba12db43a54ab1dacad6c66f979714cd6a2d95a483a4c460610089d7e3ef138"
+    }
+  ],
+  "completeFileCountExcludingSeal": 7,
+  "actualReadonlyChildExit": 0,
+  "priorNonterminatingCacheReaderErrorPreserved": true,
+  "browserLaunches": 0,
+  "networkRequests": 0,
+  "userChromeEdgeProfilesCookiesPasswordsRead": false,
+  "repoModified": false,
+  "STOPWRITE": true
+}

@@ -1,0 +1,1047 @@
+{
+  "schema": "cinatoken-next-real-acceptance-readonly-FINAL-v1",
+  "startedAt": "2026-10-06T07:32:49.376Z",
+  "endedAt": "2026-10-06T07:32:49.396Z",
+  "sourceContext": {
+    "requestedHead": "757490181564aa822f960f5d8704857b98b230d0",
+    "headAuthority": "Root supplied commit/push; no new Git/network/CI query made",
+    "inputAuthority": "8 current local file byte hashes at this read; no claim that whole live tree is immutable",
+    "originalNativeCIObservedBy": "native_next_batch; no inspection or intervention by this reader",
+    "manualLinuxRunObservedBy": "remaining_gate_inventory, run37429341568; no inspection or intervention by this reader",
+    "productionSource": "c13a64b9c3b2c90adcf736910ea408868d7854f1",
+    "productionAuthority": "Root and existing checklist; no fresh Cloudflare/API access",
+    "productionAlreadyCutover": true
+  },
+  "scope": {
+    "inputFiles": 8,
+    "configContentFiles": 0,
+    "businessRequests": 0,
+    "databaseConnections": 0,
+    "appRuns": 0,
+    "controlTests": 0,
+    "newCI": 0,
+    "repositoryWrites": 0,
+    "secretsOrCookiesOrTokenValuesOutput": 0,
+    "sourceCheckOnly": true,
+    "executionGatePassed": false,
+    "fullG7Verified": false,
+    "fullG8Verified": false
+  },
+  "inputs": [
+    {
+      "path": "docs/developers/architecture/web-frontend-migration.md",
+      "bytes": 824691,
+      "sha256": "d7bac9842393e8cd699922dedfa2eeb338834e2e811cc46e403873983496bca3"
+    },
+    {
+      "path": ".github/workflows/web-platform-g7.yml",
+      "bytes": 3065,
+      "sha256": "bb9a2e0be66e3ba74bf15e0769bc85bf740ebf282a91eadcdf73f9f9e4bd8e54"
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/README.md",
+      "bytes": 4597,
+      "sha256": "6bded78ed8e28a800fa25a5986cfe5c1ecff234c3ff8bf3234a653c6c8f4f961"
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/run-owned-linux.mjs",
+      "bytes": 26853,
+      "sha256": "e95dc592e533c4b15593b4649f168390aa19ef3c2126ebf0de4f071c521e18a7"
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/wire.mjs",
+      "bytes": 15504,
+      "sha256": "ac31a92534d0cb5f47fcb66126d86f13602ff68cf8ab218b9f06fae6997cd3cd"
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/database.mjs",
+      "bytes": 11782,
+      "sha256": "767c96438045d96891435a0b26e040261974f32173c316db8b116c92e55b942e"
+    },
+    {
+      "path": "scripts/db/cutover/provision-postgres-roles.ts",
+      "bytes": 7028,
+      "sha256": "afeac8b67002c610a193c9a3ee1b3d583c5e2097082ad88824e9157a71a61d64"
+    },
+    {
+      "path": "docs/operators/deployment/docker.md",
+      "bytes": 25944,
+      "sha256": "69d94275c20277c6993dd5a70e4f00bf4744f8ea2f4da1915a5e7fe86d5871b3"
+    }
+  ],
+  "facts": [
+    {
+      "id": "existing-g7-is-stage0",
+      "source": "scripts/verification/web-platform-g7/run-owned-linux.mjs",
+      "line": 948,
+      "finding": "Only realLinuxDockerTLSPGCatalog may pass; signedOIDC/authenticatedWrites/subjectWorkspaceIsolation/proxySSEAbortWS/retainedGrayRollback/realCinaAuthIdentity remain literal pending, restrictedRuntimeACL/nativePG18/fullG7/fullG8 literal false."
+    },
+    {
+      "id": "stage0-db-hard-restriction",
+      "source": "scripts/verification/web-platform-g7/database.mjs",
+      "line": 15,
+      "finding": "Both seed and observe admit only pg:5432/g7 username postgres and later require identity.role=postgres, superuser=true, PG16. Changing env alone cannot turn this runner into a restricted-role/PG18 acceptance."
+    },
+    {
+      "id": "stage0-no-real-login",
+      "source": "scripts/verification/web-platform-g7/wire.mjs",
+      "line": 245,
+      "finding": "Existing wire only password endpoint 410 / Origin guards, registration redirect and invalid state callback; no completed real issuer authentication/session/authorized Key write."
+    },
+    {
+      "id": "oidc-generated-input",
+      "source": "scripts/verification/web-platform-g7/run-owned-linux.mjs",
+      "line": 539,
+      "finding": "Hard-coded auth.test/accounts.test/client g7-controlled-local plus generated secrets; no real CinaAuth client registration supplied to this runner."
+    },
+    {
+      "id": "smallest-real-business-gate",
+      "source": "docs/developers/architecture/web-frontend-migration.md",
+      "line": 385,
+      "finding": "P2-12 G2: real authorized login, refresh/session restore, workspace switch, Key list/create/one-time secret handling/revoke/logout, and other user/workspace cannot read or revoke. This is the next smallest real acceptance slice; full G7 adds the same real deployment evidence on both platforms."
+    },
+    {
+      "id": "roles-only-provisioning",
+      "source": "scripts/db/cutover/provision-postgres-roles.ts",
+      "line": 113,
+      "finding": "Provision helper checks administrator CREATEROLE/Create, creates restricted LOGIN roles, grants CONNECT/schema USAGE and transfers schema ownership. It does not supply completed application migration/runtime table and function grants or prove an authenticated write. Dry-run rolls back and is only a prerequisite probe."
+    },
+    {
+      "id": "linux-direct-cli-guard",
+      "source": "scripts/db/cutover/provision-postgres-roles.ts",
+      "line": 175,
+      "finding": "Source direct-execution guard concatenates file:/// + argv[1]; for Linux absolute /path this is file:////path, whereas import.meta.url is file:///path. Static string mismatch means a direct node script invocation can skip provisionPostgresRoles entirely. No runtime experiment performed. Use explicit imported function invocation below."
+    }
+  ],
+  "sourceExcerpts": {
+    "G2": [
+      {
+        "line": 375,
+        "text": "- [ ] P2-02：接入 CinaAuth 登录/注册/回调，复用弹窗事务、重复点击聚焦、被阻止后的整页回退。"
+      },
+      {
+        "line": 376,
+        "text": "- [ ] P2-03：覆盖并行事务、COOP、取消、十分钟超时、独立 state/PKCE/nonce 及服务端回调复验。"
+      },
+      {
+        "line": 377,
+        "text": "- [ ] P2-04：刷新通过服务端恢复会话；不以 localStorage 用户对象视为登录凭据。"
+      },
+      {
+        "line": 378,
+        "text": "- [ ] P2-05：区分 401、403、网络、5xx、无效成功响应和身份服务降级；临时故障不误退出。"
+      },
+      {
+        "line": 379,
+        "text": "- [ ] P2-06：按请求类型处理授权失败；公开 Chat 的推理 Key 401 不得清除浏览器会话。"
+      },
+      {
+        "line": 380,
+        "text": "- [ ] P2-07：统一 `/api/auth/logout`；服务端撤销成功后更新 UI，失败可重试，旧 Cookie/授权事务清理行为保留。"
+      },
+      {
+        "line": 381,
+        "text": "- [ ] P2-08：登录/退出通过 BroadcastChannel 与 storage 同步，事件不含身份或令牌，登录消息后重新请求服务器。"
+      },
+      {
+        "line": 382,
+        "text": "- [ ] P2-09：接入服务器工作区列表与当前切换；成功后取消旧请求、隔离缓存、使迟到响应失效。工作区相关读写携带预期工作区前置条件；共享 Cookie 被其他标签页改变时，旧页面请求不能静默写入新工作区。 NEXT-42同时绑定canonical预期用户；同一组织工作区共享Cookie跨用户的旧页面请求在领域操作前409。会话恢复先确认user再取其workspaces，本地受控验收通过，真实CinaAuth与平台仍待（5.62）。"
+      },
+      {
+        "line": 383,
+        "text": "- [ ] P2-10：完成网关 Key 列表、创建、预算周期/有效期、一次性全文复制、关闭后清除与撤销。"
+      },
+      {
+        "line": 384,
+        "text": "- [ ] P2-11：浏览器管理操作使用 HttpOnly 会话，不能把集成管理 Key 内置为前端授权凭据。"
+      },
+      {
+        "line": 385,
+        "text": "- [ ] P2-12：跑通“登录 → 刷新恢复 → 切换工作区 → 查看 Key → 创建且展示一次 → 撤销 → 退出”，并验证另一工作区/用户无法读取或撤销。"
+      },
+      {
+        "line": 386,
+        "text": "- [ ] P2-13：先发布服务端verified Console subject契约，再开放Web严格同主体入口；复验中阻写，身份变化/401/403清除旧管理数据和秘密。P48本地验证治理header600/actor617及人工恢复；MySQL0072与标准OIDC255会话callback/wire合同通过（5.36–5.37），不等于真实发行方/原生DDL已验。NEXT-34其他域actor容量、角色撤销及发布验收仍待完成。 NEXT-42账户独立user主体头及敏感清理已本地通过；不同于Console subject合同，真实身份/数据库、先服务端后Web的发布顺序继续待验（5.62）。"
+      },
+      {
+        "line": 387,
+        "text": ""
+      },
+      {
+        "line": 388,
+        "text": "验收门槛 G2：上述完整闭环在可渲染浏览器与真实同源接口上通过；fixture 用例另列，不冒充真实 CinaAuth/部署验收。当前切片状态：**进行中，尚未获得完整运行证据**。证据 E02。"
+      },
+      {
+        "line": 389,
+        "text": ""
+      },
+      {
+        "line": 390,
+        "text": "### P3：请求、数据和缓存层"
+      },
+      {
+        "line": 391,
+        "text": ""
+      }
+    ],
+    "G7G8": [
+      {
+        "line": 467,
+        "text": "- [ ] P7-11：路由级切换开关与兼容跳转有测试；灰度时旧/新页面共享会话与后端契约。"
+      },
+      {
+        "line": 468,
+        "text": "- [ ] P7-12：发布包、版本、静态文件和回滚指针可复现；演练回滚不要求同步倒退数据库或撤销用户数据。打包显式指定 previous artifact；保留窗口默认可配置 14 天、覆盖运维回滚窗口，传递旧资源不能刷新期限；相同哈希路径不同内容必须拒绝。产物回滚须携带当前在线版本，记录 manifest/镜像 digest 或 Worker 版本，不能把旧 HTML 用作缺失资源回退。"
+      },
+      {
+        "line": 469,
+        "text": ""
+      },
+      {
+        "line": 470,
+        "text": "验收门槛 G7：Cloudflare 与 Docker 均完成真实同源冒烟、认证、写请求、资源、SSE、灰度和回滚演练。未实际部署验证时不得标记通过。证据 E07。"
+      },
+      {
+        "line": 471,
+        "text": ""
+      },
+      {
+        "line": 472,
+        "text": "### P8：验证、发布与旧页面退役"
+      },
+      {
+        "line": 473,
+        "text": ""
+      },
+      {
+        "line": 474,
+        "text": "- [ ] P8-01：CI 覆盖 Web 类型/lint/格式/单测/生产构建，既有包相关检查通过；命令与干净安装可复现。"
+      },
+      {
+        "line": 475,
+        "text": "- [ ] P8-02：接口适配、金额/日期、权限、缓存隔离与关键错误分支有业务意义测试；不以实现镜像测试代替验收。"
+      },
+      {
+        "line": 476,
+        "text": "- [ ] P8-03：登录/注册/退出、弹窗/整页、刷新、跨标签页、工作区和 Key 生命周期 E2E 通过。"
+      },
+      {
+        "line": 477,
+        "text": "- [ ] P8-04：跨用户/工作区越权、组织角色变化、管理权限撤销、身份服务降级、迟到响应通过。多标签页验收包含：B 切换共享 Cookie 后 A 的旧工作区读取/创建/撤销得到上下文冲突，服务端不得产生跨工作区变更；空列表保持明确工作区归属，登录/退出广播与迟到响应不恢复旧身份。"
+      },
+      {
+        "line": 478,
+        "text": "- [ ] P8-05：断网、401、403、429、5xx、空数据、无效成功响应、提交冲突与恢复通过。"
+      },
+      {
+        "line": 479,
+        "text": "- [ ] P8-06：秘密、请求正文、内部成本/路由信息及用户数据不进入公开目录、浏览器持久存储或前端观测日志。"
+      },
+      {
+        "line": 480,
+        "text": "- [ ] P8-07：收益、提现、预算、定价与服务端账本/计算核对；上线范围不改变财务真源。5.45修复D1真实SQL守卫、三库Admin拒绝原子合同/MySQL正金额守卫，83/83＋Hono故障6/6及PG WASM10/10通过；原生锁/ACL/DDL/账本/链与MySQL现无journal模型仍待验证，不勾金融门槛。"
+      },
+      {
+        "line": 481,
+        "text": "- [ ] P8-08：桌面/移动、键盘/焦点、屏幕阅读器基本命名、主题和四语言渲染检查通过。NEXT-36实际两入口四语/390px/亮暗/确认/人工核对已本地验证；P53详情Cancel初始聚焦标题滚出首屏已在NEXT-37改源，新P54四入口48/48首屏/Tab/ShiftTab/Esc/回焦/滚动/上下文清理通过（5.46），完整矩阵/屏幕阅读器及真实门槛仍待验；P53历史证据见5.45。"
+      },
+      {
+        "line": 482,
+        "text": "- [ ] P8-09：测量首屏、路由切换、长列表、图表和 SSE；按实测分包、懒加载及虚拟滚动，记录预算与结果。"
+      },
+      {
+        "line": 483,
+        "text": "- [ ] P8-10：支持的 Cloudflare/Docker 与数据库组合冒烟通过，明确 fixture、真实本地与部署验证的区别。"
+      },
+      {
+        "line": 484,
+        "text": "- [ ] P8-11：前端异常、资源失败、API 错误、版本信息可观测，敏感数据不记录；有路由切换的恢复依据。"
+      },
+      {
+        "line": 485,
+        "text": "- [ ] P8-12：更新开发、架构、API、部署、操作、兼容路径与版本文档，完成审查和变更范围核对。"
+      },
+      {
+        "line": 486,
+        "text": "- [ ] P8-13：G0–G7 与全矩阵证据齐全后退役旧 UI；保留仍承载认证/API/BFF/SSR 的 Admin 服务。"
+      },
+      {
+        "line": 487,
+        "text": "- [ ] P8-14：完成最终审计：每个页面/能力/命令/平台/发布门槛有当前权威证据，无未解释缺口才宣布全量完成。"
+      },
+      {
+        "line": 488,
+        "text": ""
+      },
+      {
+        "line": 489,
+        "text": "验收门槛 G8：全量要求逐项得到直接证据证明，灰度/回滚与旧页面退役均通过。不能把首个切片、一个包构建或 fixture 绿灯作为全量完成结论。证据 E08。"
+      },
+      {
+        "line": 490,
+        "text": ""
+      },
+      {
+        "line": 491,
+        "text": "## 5. 证据与状态记录"
+      }
+    ],
+    "existingWorkflow": [
+      {
+        "line": 33,
+        "text": "        run: |"
+      },
+      {
+        "line": 34,
+        "text": "          npm run build:web"
+      },
+      {
+        "line": 35,
+        "text": "          node packages/web/scripts/package-release.mjs --id \"$GITHUB_SHA\" --at \"$(git show -s --format=%cI \"$GITHUB_SHA\")\""
+      },
+      {
+        "line": 36,
+        "text": "          node packages/web/scripts/package-release.mjs --verify \"$GITHUB_SHA\""
+      },
+      {
+        "line": 37,
+        "text": "      - name: Build actual application images and preload runtime dependencies"
+      },
+      {
+        "line": 38,
+        "text": "        timeout-minutes: 40"
+      },
+      {
+        "line": 39,
+        "text": "        run: |"
+      },
+      {
+        "line": 40,
+        "text": "          docker build --file Dockerfile.admin --tag \"cinatoken-g7-admin:$GITHUB_SHA\" ."
+      },
+      {
+        "line": 41,
+        "text": "          docker build --file Dockerfile.proxy --tag \"cinatoken-g7-proxy:$GITHUB_SHA\" ."
+      },
+      {
+        "line": 42,
+        "text": "          docker build --file Dockerfile.migrate --tag \"cinatoken-g7-migrate:$GITHUB_SHA\" ."
+      },
+      {
+        "line": 43,
+        "text": "          docker build --file Dockerfile.web --build-arg \"WEB_RELEASE_PATH=.release/web/$GITHUB_SHA\" --tag \"cinatoken-g7-web:$GITHUB_SHA\" ."
+      },
+      {
+        "line": 44,
+        "text": "          docker build --file Dockerfile.web-ssr --build-arg \"WEB_RELEASE_PATH=.release/web/$GITHUB_SHA\" --tag \"cinatoken-g7-ssr:$GITHUB_SHA\" ."
+      },
+      {
+        "line": 45,
+        "text": "          docker pull postgres:16-alpine"
+      },
+      {
+        "line": 46,
+        "text": "          docker pull nginx:stable-alpine"
+      },
+      {
+        "line": 47,
+        "text": "          openssl version"
+      },
+      {
+        "line": 48,
+        "text": "      - name: Execute real isolated TLS, Origin, Host, PG catalog and resource checks"
+      },
+      {
+        "line": 49,
+        "text": "        timeout-minutes: 18"
+      },
+      {
+        "line": 50,
+        "text": "        run: timeout --signal=TERM --kill-after=60s 17m node scripts/verification/web-platform-g7/run-owned-linux.mjs --execute-owned-linux --sha \"$GITHUB_SHA\" --out \"$G7_RECEIPTS\""
+      },
+      {
+        "line": 51,
+        "text": "      - name: Independently verify or recover owned resource cleanup"
+      },
+      {
+        "line": 52,
+        "text": "        if: always()"
+      },
+      {
+        "line": 53,
+        "text": "        timeout-minutes: 4"
+      },
+      {
+        "line": 54,
+        "text": "        run: node scripts/verification/web-platform-g7/cleanup-owned-linux.mjs --execute-owned-linux --sha \"$GITHUB_SHA\" --out \"$G7_RECEIPTS\""
+      }
+    ],
+    "stage0Stages": [
+      {
+        "line": 948,
+        "text": "\t\tstages: {"
+      },
+      {
+        "line": 949,
+        "text": "\t\t\trealLinuxDockerTLSPGCatalog:"
+      },
+      {
+        "line": 950,
+        "text": "\t\t\t\tfailure || cleanup.errors.length || interruptedSignal"
+      },
+      {
+        "line": 951,
+        "text": "\t\t\t\t\t? \"failed\""
+      },
+      {
+        "line": 952,
+        "text": "\t\t\t\t\t: \"passed\","
+      },
+      {
+        "line": 953,
+        "text": "\t\t\tsignedOIDC: \"pending\","
+      },
+      {
+        "line": 954,
+        "text": "\t\t\tauthenticatedWrites: \"pending\","
+      },
+      {
+        "line": 955,
+        "text": "\t\t\tsubjectWorkspaceIsolation: \"pending\","
+      },
+      {
+        "line": 956,
+        "text": "\t\t\tproxySSEAbortWS: \"pending\","
+      },
+      {
+        "line": 957,
+        "text": "\t\t\tretainedGrayRollback: \"pending\","
+      },
+      {
+        "line": 958,
+        "text": "\t\t\trealCinaAuthIdentity: \"pending\","
+      },
+      {
+        "line": 959,
+        "text": "\t\t},"
+      },
+      {
+        "line": 960,
+        "text": "\t\trestrictedRuntimeACLVerified: false,"
+      },
+      {
+        "line": 961,
+        "text": "\t\tnativePG18Verified: false,"
+      },
+      {
+        "line": 962,
+        "text": "\t\tfullG7Verified: false,"
+      },
+      {
+        "line": 963,
+        "text": "\t\tfullG8Verified: false,"
+      },
+      {
+        "line": 964,
+        "text": "\t\tproductionRequests: 0,"
+      },
+      {
+        "line": 965,
+        "text": "\t\tprivateMaterial:"
+      },
+      {
+        "line": 966,
+        "text": "\t\t\t\"Ephemeral credentials and private keys were kept outside the uploaded receipt tree; logs may be explicitly redacted.\","
+      },
+      {
+        "line": 967,
+        "text": "\t});"
+      },
+      {
+        "line": 968,
+        "text": "}"
+      },
+      {
+        "line": 969,
+        "text": "process.exitCode ="
+      }
+    ],
+    "stage0DBAdmission": [
+      {
+        "line": 6,
+        "text": "const mode = process.argv[2];"
+      },
+      {
+        "line": 7,
+        "text": "assert.equal(process.platform, \"linux\");"
+      },
+      {
+        "line": 8,
+        "text": "assert.ok([\"--seed\", \"--observe\"].includes(mode) && process.argv.length === 3);"
+      },
+      {
+        "line": 9,
+        "text": "assert.equal(process.env.DATABASE_DRIVER, \"postgres\");"
+      },
+      {
+        "line": 10,
+        "text": "const db = new URL(process.env.DATABASE_URL);"
+      },
+      {
+        "line": 11,
+        "text": "assert.equal(db.protocol, \"postgres:\");"
+      },
+      {
+        "line": 12,
+        "text": "assert.equal(db.hostname, \"pg\");"
+      },
+      {
+        "line": 13,
+        "text": "assert.equal(db.port, \"5432\");"
+      },
+      {
+        "line": 14,
+        "text": "assert.equal(db.pathname, \"/g7\");"
+      },
+      {
+        "line": 15,
+        "text": "assert.equal(db.username, \"postgres\");"
+      },
+      {
+        "line": 16,
+        "text": "assert.match(db.password, /^[a-f0-9]{64}$/);"
+      },
+      {
+        "line": 17,
+        "text": "assert.equal(db.search, \"\");"
+      }
+    ],
+    "roleEnvAndRequirements": [
+      {
+        "line": 21,
+        "text": "type ProvisionPostgresRolesEnv = {"
+      },
+      {
+        "line": 22,
+        "text": "\tDATABASE_URL?: string;"
+      },
+      {
+        "line": 23,
+        "text": "\tCINATOKEN_GATEWAY_MIGRATOR_PASSWORD?: string;"
+      },
+      {
+        "line": 24,
+        "text": "\tCINATOKEN_GATEWAY_RUNTIME_PASSWORD?: string;"
+      },
+      {
+        "line": 25,
+        "text": "\tCINATOKEN_GATEWAY_ROTATE_PASSWORDS?: string;"
+      },
+      {
+        "line": 26,
+        "text": "\tCINATOKEN_GATEWAY_DRY_RUN?: string;"
+      },
+      {
+        "line": 27,
+        "text": "};"
+      },
+      {
+        "line": 28,
+        "text": ""
+      },
+      {
+        "line": 29,
+        "text": "export async function provisionPostgresRoles(env: ProvisionPostgresRolesEnv = {"
+      },
+      {
+        "line": 30,
+        "text": "\tDATABASE_URL: process.env.DATABASE_URL,"
+      },
+      {
+        "line": 31,
+        "text": "\tCINATOKEN_GATEWAY_MIGRATOR_PASSWORD: process.env.CINATOKEN_GATEWAY_MIGRATOR_PASSWORD,"
+      },
+      {
+        "line": 32,
+        "text": "\tCINATOKEN_GATEWAY_RUNTIME_PASSWORD: process.env.CINATOKEN_GATEWAY_RUNTIME_PASSWORD,"
+      },
+      {
+        "line": 33,
+        "text": "\tCINATOKEN_GATEWAY_ROTATE_PASSWORDS: process.env.CINATOKEN_GATEWAY_ROTATE_PASSWORDS,"
+      },
+      {
+        "line": 34,
+        "text": "\tCINATOKEN_GATEWAY_DRY_RUN: process.env.CINATOKEN_GATEWAY_DRY_RUN,"
+      },
+      {
+        "line": 35,
+        "text": "}): Promise<void> {"
+      },
+      {
+        "line": 36,
+        "text": "\tconst connectionString = env.DATABASE_URL?.trim();"
+      },
+      {
+        "line": 37,
+        "text": "\tif (!connectionString) {"
+      },
+      {
+        "line": 38,
+        "text": "\t\tthrow new Error('DATABASE_URL is required for the PostgreSQL administrator connection.');"
+      },
+      {
+        "line": 39,
+        "text": "\t}"
+      },
+      {
+        "line": 40,
+        "text": "\tconst migratorPassword = assertProvisioningPassword("
+      },
+      {
+        "line": 41,
+        "text": "\t\t'CINATOKEN_GATEWAY_MIGRATOR_PASSWORD',"
+      },
+      {
+        "line": 42,
+        "text": "\t\tenv.CINATOKEN_GATEWAY_MIGRATOR_PASSWORD,"
+      },
+      {
+        "line": 43,
+        "text": "\t);"
+      },
+      {
+        "line": 44,
+        "text": "\tconst runtimePassword = assertProvisioningPassword("
+      },
+      {
+        "line": 45,
+        "text": "\t\t'CINATOKEN_GATEWAY_RUNTIME_PASSWORD',"
+      },
+      {
+        "line": 46,
+        "text": "\t\tenv.CINATOKEN_GATEWAY_RUNTIME_PASSWORD,"
+      },
+      {
+        "line": 47,
+        "text": "\t);"
+      },
+      {
+        "line": 48,
+        "text": "\tconst rotatePasswords = readBooleanEnv(env.CINATOKEN_GATEWAY_ROTATE_PASSWORDS);"
+      },
+      {
+        "line": 49,
+        "text": "\tconst dryRun = readBooleanEnv(env.CINATOKEN_GATEWAY_DRY_RUN);"
+      }
+    ],
+    "roleDirectEntry": [
+      {
+        "line": 175,
+        "text": "if (import.meta.url === `file:///${process.argv[1]?.replaceAll('\\\\', '/')}`) {"
+      },
+      {
+        "line": 176,
+        "text": "\tprovisionPostgresRoles().catch((error) => {"
+      },
+      {
+        "line": 177,
+        "text": "\t\tconsole.error(error instanceof Error ? error.message : String(error));"
+      },
+      {
+        "line": 178,
+        "text": "\t\tprocess.exitCode = 1;"
+      },
+      {
+        "line": 179,
+        "text": "\t});"
+      },
+      {
+        "line": 180,
+        "text": "}"
+      },
+      {
+        "line": 181,
+        "text": ""
+      }
+    ],
+    "composeCommand": [
+      {
+        "line": 167,
+        "text": "### 4.3 独立 Web 入口与公开 SSR"
+      },
+      {
+        "line": 168,
+        "text": ""
+      },
+      {
+        "line": 169,
+        "text": "[`docker/examples/web-frontend.compose.yml`](../../../docker/examples/web-frontend.compose.yml) 与 `gateway.compose.yml` 合并使用。`GATEWAY_WEB_IMAGE` 和 `GATEWAY_WEB_SSR_IMAGE` 须由同一个已验证的 `WEB_RELEASE_PATH` 构建并固定版本或 digest；入口向 SSR 传递 manifest 摘要，错配会返回 503。发布包须包含保留窗口内的旧资源；Web 和 SSR 镜像的相同来源不能替代回滚与旧标签页资源验收。"
+      },
+      {
+        "line": 170,
+        "text": ""
+      },
+      {
+        "line": 171,
+        "text": "Admin 的 `CINATOKEN_PUBLIC_API_ORIGIN` 默认指向本组合内的 `http://gateway-proxy:8787`，因此公开 SSR 经 Admin BFF 读取当前 Proxy；若 Proxy 部署在自己的其他服务 origin，可在 env 文件中覆盖为有效的 HTTP(S) origin。此默认只由 Compose 注入，应用本身的 Cloudflare 绑定及默认 origin 不变。"
+      },
+      {
+        "line": 172,
+        "text": ""
+      },
+      {
+        "line": 173,
+        "text": "Web 入口接收 `CINATOKEN_WEB_PUBLIC_ENABLED`、`CINATOKEN_WEB_ACCOUNT_ENABLED` 及组合文件列出的全部 27 个 `CINATOKEN_WEB_ADMIN_*_ENABLED` 路由开关，默认均为 `false`。只按已验收的路由逐项启用；账户和管理开关仅注入 Nginx 入口，公开 SSR 不读取它们。启用公开页面时还须配置 SSR 的 `CINATOKEN_WEB_PUBLIC_ORIGIN` 为实际 HTTPS 公共 origin；`CINATOKEN_WEB_PROXY_ORIGINS` 控制浏览器 CSP 中允许的 Proxy 连接 origin，与服务端的 `CINATOKEN_PUBLIC_API_ORIGIN` 分别配置。"
+      },
+      {
+        "line": 174,
+        "text": ""
+      },
+      {
+        "line": 175,
+        "text": "以下命令仅说明组合方式，须先完成数据库迁移、加密密钥、CinaAuth 与 TLS 部署配置，并准备两个经过验证的 Web 镜像："
+      },
+      {
+        "line": 176,
+        "text": ""
+      },
+      {
+        "line": 177,
+        "text": "```bash"
+      },
+      {
+        "line": 178,
+        "text": "# 在自己的 env 文件中设置 GATEWAY_WEB_IMAGE、GATEWAY_WEB_SSR_IMAGE 和所需 origin。"
+      },
+      {
+        "line": 179,
+        "text": "# 各 Web 路由开关未设置时保持 false。"
+      },
+      {
+        "line": 180,
+        "text": "docker compose --env-file docker/deploy/.env.local \\"
+      },
+      {
+        "line": 181,
+        "text": "  -f docker/examples/gateway.compose.yml \\"
+      },
+      {
+        "line": 182,
+        "text": "  -f docker/examples/web-frontend.compose.yml up -d"
+      },
+      {
+        "line": 183,
+        "text": "```"
+      },
+      {
+        "line": 184,
+        "text": ""
+      },
+      {
+        "line": 185,
+        "text": "对外入口须由可信 TLS 反代规范化公共 Host 与 HTTP/HTTPS 协议，并将原始 Web、SSR 和 Admin 端口限制在可信网络。配置透传不代表同源 Cookie/Origin、真实认证写操作、SSE/WebSocket、灰度或回滚已经通过；这些仍须在实际 Docker 拓扑逐项验证。"
+      }
+    ]
+  },
+  "environmentPresence": [
+    {
+      "name": "DATABASE_DRIVER",
+      "processPresent": false
+    },
+    {
+      "name": "DATABASE_URL",
+      "processPresent": false
+    },
+    {
+      "name": "CINATOKEN_GATEWAY_MIGRATOR_PASSWORD",
+      "processPresent": false
+    },
+    {
+      "name": "CINATOKEN_GATEWAY_RUNTIME_PASSWORD",
+      "processPresent": false
+    },
+    {
+      "name": "CINATOKEN_GATEWAY_DRY_RUN",
+      "processPresent": false
+    },
+    {
+      "name": "CINATOKEN_GATEWAY_ROTATE_PASSWORDS",
+      "processPresent": false
+    },
+    {
+      "name": "SHARED_KEY_ENCRYPTION_SECRET",
+      "processPresent": false
+    },
+    {
+      "name": "CINAAUTH_ISSUER",
+      "processPresent": false
+    },
+    {
+      "name": "CINAAUTH_ACCOUNT_ORIGIN",
+      "processPresent": false
+    },
+    {
+      "name": "CINATOKEN_APP_ORIGIN",
+      "processPresent": false
+    },
+    {
+      "name": "CINATOKEN_PUBLIC_API_ORIGIN",
+      "processPresent": false
+    },
+    {
+      "name": "CINATOKEN_OIDC_CLIENT_ID",
+      "processPresent": false
+    },
+    {
+      "name": "CINATOKEN_OIDC_CLIENT_SECRET",
+      "processPresent": false
+    },
+    {
+      "name": "CINATOKEN_OIDC_BRIDGE_SECRET",
+      "processPresent": false
+    },
+    {
+      "name": "CINATOKEN_OIDC_TRANSACTION_SECRET",
+      "processPresent": false
+    }
+  ],
+  "environmentPresenceMeaning": "Only current child/shell process environment. False does not mean absent Cloudflare secret, absent external secret manager, invalid deployed registration, or absent private operator environment.",
+  "configurationPathPresence": [
+    {
+      "path": "docker/deploy/.env.local",
+      "exists": false,
+      "isFile": null,
+      "contentRead": false
+    },
+    {
+      "path": "docker/examples/.env.gateway",
+      "exists": false,
+      "isFile": null,
+      "contentRead": false
+    },
+    {
+      "path": "packages/admin/.env.local",
+      "exists": false,
+      "isFile": null,
+      "contentRead": false
+    },
+    {
+      "path": ".env",
+      "exists": false,
+      "isFile": null,
+      "contentRead": false
+    },
+    {
+      "path": ".env.gateway",
+      "exists": false,
+      "isFile": null,
+      "contentRead": false
+    },
+    {
+      "path": "docker/examples/gateway.compose.yml",
+      "exists": true,
+      "isFile": true,
+      "contentRead": false
+    },
+    {
+      "path": "docker/examples/web-frontend.compose.yml",
+      "exists": true,
+      "isFile": true,
+      "contentRead": false
+    }
+  ],
+  "missingExecutionInputs": [
+    "Authorized non-production Linux/Docker host and owned isolated PostgreSQL18 target; Docker engine and actual PG connection availability were not queried.",
+    "Private reviewed env file, same-SHA frozen Web/SSR image digests, actual trusted HTTPS staging origin/CA and registered callback.",
+    "Actual CinaAuth issuer/account endpoints/client registration and private OIDC client/bridge/transaction secrets; current stage0 auth.test does not provide them.",
+    "At least two authorized real human subjects and two accessible workspaces with explicit expected capabilities/roles; no credentials/account identities were opened or requested here.",
+    "Separate administrator/bootstrap, migrator and restricted-runtime DB connection assignment plus exact current formal schema migration and production runtime grants; do not reuse PG73 historical helper as deploy grant.",
+    "Minimal G2 browser/DB observation runner for actual login and Key create/revoke/cleanup; no existing real-identity G2 runner was found in this limited 8-file scope. Existing stage0 runner cannot execute it."
+  ],
+  "proposedCommands": [
+    {
+      "order": 1,
+      "kind": "owned-DB prerequisite only, not G2 pass",
+      "run": false,
+      "platform": "reviewed isolated Linux repo root",
+      "command": "CINATOKEN_GATEWAY_DRY_RUN=true node --import tsx --input-type=module -e \"import { provisionPostgresRoles } from './scripts/db/cutover/provision-postgres-roles.ts'; await provisionPostgresRoles();\"",
+      "privatePrerequisites": [
+        "DATABASE_URL points only to owned administrator connection",
+        "CINATOKEN_GATEWAY_MIGRATOR_PASSWORD",
+        "CINATOKEN_GATEWAY_RUNTIME_PASSWORD",
+        "existing owned role policy reviewed; no password rotation"
+      ],
+      "evidence": "Original stdout/stderr/actual process exit, DB role attributes and rollback observation; dry-run success alone is not effective runtime ACL or any identity/business gate.",
+      "authority": "Existing exported function signature and transaction rollback source; explicit Linux entry avoids line175 string mismatch."
+    },
+    {
+      "order": 2,
+      "kind": "existing same-origin Docker topology startup, only after private configuration/migrations/grants",
+      "run": false,
+      "platform": "reviewed isolated Linux repo root",
+      "command": "docker compose --env-file docker/deploy/.env.local -f docker/examples/gateway.compose.yml -f docker/examples/web-frontend.compose.yml up -d",
+      "authority": "docs/operators/deployment/docker.md:180; only operator command verified, compose contents not read in this 8-file task.",
+      "privatePrerequisites": [
+        "Verified Web and paired SSR images same release manifest",
+        "Current formal migrations, migrator ownership/runtime grants complete on owned PG18",
+        "Runtime service DATABASE_URL restricted; secret shared Admin/Proxy",
+        "Genuine CinaAuth registration and trusted ingress/actual app origin",
+        "Only required account/Web flags enabled and private ports isolated"
+      ],
+      "evidence": "Image/release source, ingress TLS/SNI/Host/Origin and live role/session/schema proof; startup success is not G2."
+    },
+    {
+      "order": 3,
+      "kind": "actual minimal G2 acceptance",
+      "run": false,
+      "browserEntry": "<registered HTTPS staging origin>/api/auth/cinaauth/login?intent=portal&callbackURL=%2Faccount%2Fkeys",
+      "actions": [
+        "Real authorized CinaAuth human completes login (no mock issuer)",
+        "Refresh restores server session; switch to known allowed workspace",
+        "List Keys, create one expendable Key, display secret once and clear it from UI; do not log secret",
+        "Revoke Key; verify restricted-role DB row/status/audit changes and reject other subject/workspace reads/revokes",
+        "Logout then verify server revocation and stale-request rejection; remove all owned QA entities"
+      ],
+      "authority": "Existing wire login redirect path and checklist P2-12; route uses original registration/login flow. Exact real auth registration and credentials not examined.",
+      "evidence": "Sanitized HTTP metadata and UI checks, original failures, DB session role/permission probes and before/after row/audit counts, owned cleanup. Do not count enrollment redirect/invalid-state control as login.",
+      "implementationBoundary": "Needs a small real-identity driver/readback harness on the configured staging deployment; this task does not fabricate a nonexistent ready-made G2 CLI."
+    }
+  ],
+  "mapping": [
+    {
+      "slice": "Role prerequisite + real Key identity/permission/write closure",
+      "ids": [
+        "G2",
+        "E02",
+        "P2-02",
+        "P2-04",
+        "P2-07",
+        "P2-09",
+        "P2-10",
+        "P2-12",
+        "P8-03",
+        "P8-04"
+      ],
+      "limit": "Does not by itself close G3/G4/G5/all role matrix/three DBs."
+    },
+    {
+      "slice": "Same-origin real Docker auth/write slice",
+      "ids": [
+        "P7-04",
+        "P7-05",
+        "G7",
+        "E07"
+      ],
+      "limit": "Only Docker slice; Cloudflare needs corresponding actual auth/write evidence."
+    },
+    {
+      "slice": "Real funds/chain and ledger",
+      "ids": [
+        "P8-07",
+        "E04",
+        "E05"
+      ],
+      "status": "Separate subsequent acceptance; no funds/chain action required to establish the first identity/Key slice."
+    },
+    {
+      "slice": "Real provider SSE/abort/WS",
+      "ids": [
+        "P7-07",
+        "E07"
+      ],
+      "status": "Separate next acceptance after authenticated capability; original strict cancellation failure preserved."
+    },
+    {
+      "slice": "retained gray switching and rollback with writes",
+      "ids": [
+        "P7-11",
+        "P7-12",
+        "G7",
+        "E07"
+      ],
+      "status": "Pending; current 100% cutover/packaging is not a rollback exercise."
+    },
+    {
+      "slice": "retirement and full completion",
+      "ids": [
+        "P8-13",
+        "P8-14",
+        "G8",
+        "E08"
+      ],
+      "status": "Only after original G0-G7/full matrix; do not retire legacy routes now."
+    }
+  ],
+  "negativeObservation": {
+    "preliminaryPowerShellReader": {
+      "reportedExitCode": 1,
+      "reason": "ParserError: An empty pipe element is not allowed in foreach pipeline; body did not execute.",
+      "preservedAs": "reader-failed-tool-observation.json",
+      "nativeOrSourceFailure": false
+    }
+  },
+  "conclusion": "Next genuine acceptance is the real CinaAuth + restricted-role Key lifecycle G2 slice on actual same-origin staging topology. Existing G7 command is only stage0 and cannot satisfy it. Concrete prerequisite/function and compose commands exist, but private input/authorized subjects/ACL binding and real-identity driver are not supplied in current process/limited scope. Do not claim missing production config or current native pass.",
+  "finalizedAt": "2026-10-06T07:33:41.506Z",
+  "reportLocationCorrection": {
+    "originalAnalysisLine": 387,
+    "correctP2_12Line": 385,
+    "originalAnalysisPreserved": true,
+    "scope": "Location annotation only; same checklist text and conclusion."
+  },
+  "actualReadAuthority": {
+    "schema": "actual-spawnSync-child-closed-v1",
+    "startedAt": "2026-10-06T07:32:49.299Z",
+    "endedAt": "2026-10-06T07:32:49.410Z",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next-real-g2-readonly-9020e3b1287d48ec9a0bd1c67b698924\\read-next-real-acceptance.mjs",
+      "C:/Users/cina/AppData/Local/Temp/cinatoken-next-real-g2-readonly-9020e3b1287d48ec9a0bd1c67b698924"
+    ],
+    "cwd": "C:/cinagroup/cinatoken",
+    "actualExit": 0,
+    "signal": null,
+    "spawnError": null,
+    "timeoutConfiguredMs": 15000,
+    "timedOutObserved": false,
+    "sourceProgram": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-next-real-g2-readonly-9020e3b1287d48ec9a0bd1c67b698924\\read-next-real-acceptance.mjs",
+      "bytes": 12735,
+      "sha256": "4a58a5263e2c124ce4fdc2a2b8774a1e663d02535a63d19d31411b604860aead"
+    },
+    "stdout": {
+      "path": "readonly-source.stdout.log",
+      "bytes": 1763,
+      "sha256": "f07a12654adc9847b44699307032dee5492f5aaf3fef2984d6c39129cbd51a3e"
+    },
+    "stderr": {
+      "path": "readonly-source.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "collectionOnly": true,
+    "readOnlySourceAndPresence": true,
+    "businessOrNativePassDerived": false
+  },
+  "originalAnalysis": {
+    "path": "next-real-acceptance-analysis.json",
+    "bytes": 36731,
+    "sha256": "7d91bf955179b2cd0303f0ac6c2d6a8ed7bd1033a428953cf597032b83615ea7"
+  },
+  "receiptSummary": {
+    "trueCapturedSourceReaderChildren": 1,
+    "actualZero": 1,
+    "actualNonzero": 0,
+    "priorCombinedToolObservations": [
+      {
+        "path": "reader-failed-tool-observation.json",
+        "reportedExitCode": 1,
+        "reason": "PowerShell ParserError before body execution"
+      }
+    ],
+    "noBootstrapOrFSReadCountedAsPGOrBusinessPass": true
+  },
+  "readyToExecuteNow": false,
+  "readyMeaning": "Commands are identified and can be prepared on an authorized configured staging host. Current local process has none of the 15 required input variables; 5 operator-private env paths checked are absent. No source or deployment secret inventories were read, so production/external configuration remains unknown.",
+  "recommendedImmediateAction": "After the original native result is known, resolve the private staging configuration/actual CinaAuth client and real subject/workspace inputs, connect runtime under its intended ACL, and implement/run the first genuine P2-12 G2 Key lifecycle slice. Existing stage0 workflow is insufficient.",
+  "STOPWRITE": true
+}

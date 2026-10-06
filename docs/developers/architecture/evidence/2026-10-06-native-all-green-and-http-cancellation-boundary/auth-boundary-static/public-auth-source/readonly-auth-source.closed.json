@@ -1,0 +1,26 @@
+{
+  "schema": "quote-packet-peer-exact-node-closed-v1",
+  "at": "2026-10-06T07:55:47.814Z",
+  "finishedAt": "2026-10-06T07:55:47.898Z",
+  "executable": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-public-auth-start-readonly-3sVv88/read-auth-source.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "outputs": [
+    {
+      "file": "readonly-auth-source.stdout.log",
+      "bytes": 285,
+      "sha256": "465a29db3d3e09a36396fcbf51e804ad647c8f8a963e75ba4088765088c995df"
+    },
+    {
+      "file": "readonly-auth-source.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "scope": "Original exact Node child return for bounded read-only evidence audit only; not native/application/PG/CI or production execution"
+}

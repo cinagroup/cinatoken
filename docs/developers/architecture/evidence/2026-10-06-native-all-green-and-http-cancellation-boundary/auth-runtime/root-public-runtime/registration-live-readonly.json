@@ -1,0 +1,105 @@
+{
+  "at": "2026-10-06T08:53:52.687Z",
+  "worker": "cinatoken-regmeta-87f21f6fc05ecc223b9b87bc",
+  "account": "7ea8e46d8210bad342fa7595f7935fea",
+  "scriptSha256": "a2d547c6de353ada6eb908a4068df2f597d75a7f85ca96c76d00724f008d2e67",
+  "plan": "Temporary separate gated Worker; one BEGIN READ ONLY / SET LOCAL timeouts / fixed SELECT; then DELETE and verify404",
+  "productionWorkersChanged": false,
+  "routesChanged": false,
+  "hyperdriveSettingsChanged": false,
+  "databaseDmlOrDdl": false,
+  "metadataRequests": 1,
+  "gatePersisted": false,
+  "steps": [
+    {
+      "label": "unique_name_preflight",
+      "method": "GET",
+      "status": 404,
+      "success": false,
+      "errorCodes": [
+        10007
+      ]
+    },
+    {
+      "label": "account_workers_domain",
+      "method": "GET",
+      "status": 200,
+      "success": true,
+      "errorCodes": []
+    },
+    {
+      "label": "upload_temporary_only",
+      "method": "PUT",
+      "status": 200,
+      "success": true,
+      "errorCodes": []
+    },
+    {
+      "label": "enable_temporary_workers_dev",
+      "method": "POST",
+      "status": 200,
+      "success": true,
+      "errorCodes": []
+    },
+    {
+      "label": "health_no_database",
+      "attempt": 1,
+      "transport": "failed"
+    },
+    {
+      "label": "health_no_database",
+      "attempt": 2,
+      "transport": "failed"
+    },
+    {
+      "label": "health_no_database",
+      "attempt": 3,
+      "transport": "failed"
+    },
+    {
+      "label": "health_no_database",
+      "attempt": 4,
+      "transport": "failed"
+    },
+    {
+      "label": "health_no_database",
+      "attempt": 5,
+      "status": 404,
+      "expected": true
+    },
+    {
+      "label": "delete_owned_temporary",
+      "method": "DELETE",
+      "status": 200,
+      "success": true,
+      "errorCodes": []
+    },
+    {
+      "label": "verify_owned_script_absent",
+      "method": "GET",
+      "status": 404,
+      "success": false,
+      "errorCodes": [
+        10007
+      ]
+    }
+  ],
+  "metadata": {
+    "status": 200,
+    "observedAt": "2026-10-06T08:54:08.279Z",
+    "values": {
+      "clientExists": true,
+      "clientDisabled": false,
+      "resourceExists": true,
+      "resourceDisabled": false,
+      "linkExists": false
+    }
+  },
+  "cleanup": {
+    "deleteStatus": 200,
+    "deleteSuccess": true,
+    "verifyStatus": 404,
+    "absent": true
+  },
+  "finishedAt": "2026-10-06T08:54:11.757Z"
+}

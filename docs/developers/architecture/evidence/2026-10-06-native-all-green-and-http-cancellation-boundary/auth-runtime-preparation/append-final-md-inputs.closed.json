@@ -1,0 +1,27 @@
+{
+  "schema": "auth-runtime-public-evidence-local-command-closed-v1",
+  "closed": true,
+  "program": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-auth-runtime-evidence-233b44e9a6ef45e3b78ed72453c5d2f4\\append-final-md-inputs.mjs"
+  ],
+  "startedAt": "2026-10-06T09:17:47.479Z",
+  "endedAt": "2026-10-06T09:17:47.559Z",
+  "actualExit": 0,
+  "signal": null,
+  "timedOut": false,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-runtime-evidence-233b44e9a6ef45e3b78ed72453c5d2f4/append-final-md-inputs.stdout.log",
+    "bytes": 380,
+    "sha256": "6c028f3be3cffd58a784dfac1ded7ccbde684195a5bce70c554f712f26daa2c9"
+  },
+  "stderr": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-runtime-evidence-233b44e9a6ef45e3b78ed72453c5d2f4/append-final-md-inputs.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "collectionOnly": true,
+  "GitMDAPIRuntimeOrDBCalled": false,
+  "gatePassDerived": false
+}

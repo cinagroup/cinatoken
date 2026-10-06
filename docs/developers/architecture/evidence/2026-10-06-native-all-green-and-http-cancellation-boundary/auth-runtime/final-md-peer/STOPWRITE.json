@@ -1,0 +1,73 @@
+{
+  "schema": "independent-review-stopwrite-v1",
+  "at": "2026-10-06T09:12:44.433Z",
+  "STOPWRITE": true,
+  "filesBeforeSelf": 12,
+  "files": [
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-final-md-registration-independent-review-7cc2de05976a48f3ad1ca5c1e3dc739c/AUDIT-final-md-registration.json",
+      "bytes": 15303,
+      "sha256": "9f84449d2ce8e352dbe5198fced45211dff5b593911ac53d8c838e5048272b0e"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-final-md-registration-independent-review-7cc2de05976a48f3ad1ca5c1e3dc739c/FINAL-final-md-registration-review.json",
+      "bytes": 22644,
+      "sha256": "fbca4e1317c3b249f0fde5c5a9c852f491927a68e1b65d473343c8d8cf5d69c3"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-final-md-registration-independent-review-7cc2de05976a48f3ad1ca5c1e3dc739c/final-md-delta.closed.json",
+      "bytes": 1241,
+      "sha256": "17e96e9190d4647e10e10ed512c425d7f69a605186e14a997da76472a5febca6"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-final-md-registration-independent-review-7cc2de05976a48f3ad1ca5c1e3dc739c/final-md-delta.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-final-md-registration-independent-review-7cc2de05976a48f3ad1ca5c1e3dc739c/final-md-delta.stdout.log",
+      "bytes": 310,
+      "sha256": "41274bda80ec1b9c89fc2b3399149b5d3a21c601c140a0793fc3a32d226e7a47"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-final-md-registration-independent-review-7cc2de05976a48f3ad1ca5c1e3dc739c/final-md-review.closed.json",
+      "bytes": 1246,
+      "sha256": "7f867e71f8bf2bd11ef5753a4dba28c99523c20916a5b470888a2158abceaa0c"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-final-md-registration-independent-review-7cc2de05976a48f3ad1ca5c1e3dc739c/final-md-review.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-final-md-registration-independent-review-7cc2de05976a48f3ad1ca5c1e3dc739c/final-md-review.stdout.log",
+      "bytes": 341,
+      "sha256": "97561851bf616812a3716f48ecb00cab76b3e2a78ee98659428c302d0605f64b"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-final-md-registration-independent-review-7cc2de05976a48f3ad1ca5c1e3dc739c/finalize-md-newline-delta.mjs",
+      "bytes": 5658,
+      "sha256": "2cf4d12a9af88a78c167721208a175b5f12b30b5b0f3494ac1467def81d117e1"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-final-md-registration-independent-review-7cc2de05976a48f3ad1ca5c1e3dc739c/review-final-md-registration.mjs",
+      "bytes": 13119,
+      "sha256": "fbd2123c5f75b007ad9d657377d16e94210edfda99abdb612b18def6b54417a0"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-final-md-registration-independent-review-7cc2de05976a48f3ad1ca5c1e3dc739c/run-review-command.mjs",
+      "bytes": 1444,
+      "sha256": "4690c19396724b011d3f6b15ce242da9a25ce9a6ea835e5b7c49caa9a7e8b6a2"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-final-md-registration-independent-review-7cc2de05976a48f3ad1ca5c1e3dc739c/seal-independent-review.mjs",
+      "bytes": 1117,
+      "sha256": "5db30215813380713649c346ee1ba5e865bfd4ddf9e1d3b2d9e2e257c2bbc5bd"
+    }
+  ],
+  "selfExcluded": "STOPWRITE.json",
+  "repositoryModified": false,
+  "oldRootsModified": false,
+  "network": false,
+  "collection0NotBusinessPass": true
+}

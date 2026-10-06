@@ -1,0 +1,28 @@
+{
+  "schema": "auth-addon-local-collection-command-closed-v1",
+  "closed": true,
+  "program": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2\\collect-addon.mjs"
+  ],
+  "startedAt": "2026-10-06T08:52:16.097Z",
+  "endedAt": "2026-10-06T08:52:16.540Z",
+  "actualExit": 0,
+  "signal": null,
+  "timedOut": false,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/collect-addon.stdout.log",
+    "bytes": 417,
+    "sha256": "7e0219f1f80ea4785a4426ac0a84f3db8b2cbdfb77b179a07b6e8a24cfdf5343"
+  },
+  "stderr": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-auth-boundary-addon-collection-550e73c574304936ba945e0892106fb2/collect-addon.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "collectionOnly": true,
+  "networkRequest": false,
+  "runtimeExecuted": false,
+  "gatePassDerived": false
+}

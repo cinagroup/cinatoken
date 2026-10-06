@@ -1,0 +1,22 @@
+C:\cinagroup\cinatoken\node_modules\esbuild\lib\main.js:1467
+  let error = new Error(text);
+              ^
+
+Error: Build failed with 2 errors:
+error: Cannot read directory "../../Users/cina": Access is denied.
+../../Users/cina/AppData/Local/Temp/cinatoken-registration-preview-readonly-prepared-mqVPEM/registration-metadata.worker.mjs:1:21: ERROR: Could not resolve "postgres"
+    at failureErrorWithLog (C:\cinagroup\cinatoken\node_modules\esbuild\lib\main.js:1467:15)
+    at C:\cinagroup\cinatoken\node_modules\esbuild\lib\main.js:926:25
+    at C:\cinagroup\cinatoken\node_modules\esbuild\lib\main.js:878:52
+    at buildResponseToResult (C:\cinagroup\cinatoken\node_modules\esbuild\lib\main.js:924:7)
+    at C:\cinagroup\cinatoken\node_modules\esbuild\lib\main.js:951:16
+    at responseCallbacks.<computed> (C:\cinagroup\cinatoken\node_modules\esbuild\lib\main.js:603:9)
+    at handleIncomingPacket (C:\cinagroup\cinatoken\node_modules\esbuild\lib\main.js:658:12)
+    at Socket.readFromStdout (C:\cinagroup\cinatoken\node_modules\esbuild\lib\main.js:581:7)
+    at Socket.emit (node:events:508:28)
+    at addChunk (node:internal/streams/readable:563:12) {
+  errors: [Getter/Setter],
+  warnings: [Getter/Setter]
+}
+
+Node.js v24.14.1
