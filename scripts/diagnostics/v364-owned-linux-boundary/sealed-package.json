@@ -1,0 +1,47 @@
+{
+  "schema": "v364-owned-linux-boundary-sealed-package-v1",
+  "lineEndings": "LF",
+  "frozenInputsVerifiedAgainstGitHEAD": true,
+  "files": [
+    {
+      "path": "bare-async-source.mjs",
+      "bytes": 1864,
+      "sha256": "86b67412be0b8ef8434edfd0f44c8c6e5d306ce3f76ed3deed8305cca2771bfd"
+    },
+    {
+      "path": "direct-holder.mjs",
+      "bytes": 785,
+      "sha256": "4019fbebd9575bcad6dd3a987d320cd7eb96d646ab344bea5918f7305faaee84"
+    },
+    {
+      "path": "proc-census.mjs",
+      "bytes": 1443,
+      "sha256": "bd6d4ebe4fea6ac1c11b6a67b4f44fcb23595e79a2fdcf10360101888026b8a0"
+    },
+    {
+      "path": "run-boundary.mjs",
+      "bytes": 28489,
+      "sha256": "9341885b2890b8270b2b9732cd46c169bb41c4a3a4f6d4eef5f662ee3cda7cda"
+    },
+    {
+      "path": "execute-owned-linux.py",
+      "bytes": 16016,
+      "sha256": "18c13e59a48eb27bc840aa1f9bb21aa5da73b7f73ad927dbaf5da24d0b0bbca2"
+    },
+    {
+      "path": "README.md",
+      "bytes": 6071,
+      "sha256": "c4f87c06031bbe6bb9e8179272ce0636e4723ab8892d74f21345e0d376f421ba"
+    },
+    {
+      "path": "source-inputs.json",
+      "bytes": 6588,
+      "sha256": "7b7b322398fe389f2ae1426746c65f6fe9ee0bc9ea1f91dfc3febfb8aeadfa3d"
+    }
+  ],
+  "workflow": {
+    "path": ".github/workflows/v364-owned-linux-boundary.yml",
+    "bytes": 1575,
+    "sha256": "08977f1966eb42e67aebdb9986b66cb9f05a618f6a12964a8a2daffc64ce4712"
+  }
+}
