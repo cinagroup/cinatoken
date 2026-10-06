@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { randomBytes } from "node:crypto";
+import { createHash, randomBytes } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { test } from "node:test";
 import {
@@ -10,6 +10,10 @@ import { computeRouteDataPolicySubjectFingerprintFromRows } from "../../../packa
 import { parseProviderEndpoints } from "../../../packages/core/src/provider-endpoints.ts";
 import { encryptSharedKeySecret } from "../../../packages/core/src/lib/shared-key-encryption.ts";
 import { decryptProviderApiKeyReadOnly } from "../../../packages/core/src/lib/provider-key-encryption.ts";
+import {
+	hashLookupKey,
+	matchesLookupKeyHash,
+} from "../../../packages/core/src/lib/key-hash.ts";
 
 // Read the SQL that the owned Linux seeder really executes, rather than a second fixture definition.
 function fixtureRows() {
@@ -168,5 +172,26 @@ test("provider encryption and real route fingerprint bind the seeded plaintext c
 	);
 	await assert.rejects(
 		decryptProviderApiKeyReadOnly("different-owned-provider", encrypted, secret)
+	);
+});
+
+test("the rotated owned Admin key uses the production lookup hash and rejects the migration's development key", async () => {
+	const masterKey = randomBytes(32).toString("hex");
+	const expected = `sha256:${createHash("sha256")
+		.update(masterKey)
+		.digest("hex")}`;
+	const lookupHash = await hashLookupKey(masterKey);
+	assert.equal(lookupHash, expected);
+	assert.equal(await matchesLookupKeyHash(masterKey, lookupHash), true);
+	assert.equal(
+		await matchesLookupKeyHash("sk-dev-admin-key", lookupHash),
+		false
+	);
+	assert.equal(
+		await matchesLookupKeyHash(
+			masterKey,
+			await hashLookupKey("sk-dev-admin-key")
+		),
+		false
 	);
 });

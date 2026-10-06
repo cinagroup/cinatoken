@@ -25,6 +25,18 @@ const context = await core.createPostgresStorageContext(db.href, {
 const sql = context.client.raw;
 let failure;
 let report;
+let stage = "migration-ledger";
+let assertionObservation;
+const checkScalar = (selector, actual, expected) => {
+	assert.ok(
+		[actual, expected].every(
+			(value) => typeof value === "boolean" || Number.isSafeInteger(value)
+		)
+	);
+	assertionObservation = { selector, actual, expected };
+	assert.equal(actual, expected);
+	assertionObservation = undefined;
+};
 try {
 	const migrations = readdirSync("/app/packages/core/migrations-postgres")
 		.filter((name) => name.endsWith(".sql"))
@@ -44,6 +56,7 @@ try {
 	);
 	let fixture;
 	if (mode === "--seed") {
+		stage = "fixture-secret-format";
 		const secret = process.env.SHARED_KEY_ENCRYPTION_SECRET;
 		const providerKey = process.env.G7_PROVIDER_KEY;
 		const masterKey = process.env.G7_MASTER_KEY;
@@ -55,13 +68,32 @@ try {
 			"cinatoken:provider-key:g7-provider"
 		);
 		await sql.begin(async (tx) => {
-			const updated =
-				await tx`UPDATE cinatoken_gateway.system_config SET value=${masterKey} WHERE key='MASTER_KEY' RETURNING key`;
-			assert.equal(
-				updated.length,
-				1,
-				"Replace the migration's development master key in the owned database"
+			stage = "legacy-admin-key-rotation";
+			// 0023 migrates the development key to admin_api_keys; 0024 removes its old config row.
+			const rotated = await tx.unsafe(
+				`UPDATE cinatoken_gateway.admin_api_keys
+         SET secret_key=$1, secret_key_hash=$2, key_prefix=$3, updated_at=CURRENT_TIMESTAMP
+         WHERE id='legacy-master' AND name='legacy-master' AND status='active'
+           AND permissions_json='["*"]' AND secret_key='sk-dev-admin-key'
+         RETURNING id,name,permissions_json,status`,
+				[masterKey, await core.hashLookupKey(masterKey), masterKey.slice(0, 12)]
 			);
+			checkScalar("legacy_master_rotated_row_count", rotated.length, 1);
+			assert.deepEqual(
+				[...rotated],
+				[
+					{
+						id: "legacy-master",
+						name: "legacy-master",
+						permissions_json: '["*"]',
+						status: "active",
+					},
+				]
+			);
+			const obsoleteConfig =
+				await tx`SELECT key FROM cinatoken_gateway.system_config WHERE key='MASTER_KEY'`;
+			checkScalar("obsolete_master_config_row_count", obsoleteConfig.length, 0);
+			stage = "catalog-fixture-write";
 			await tx
 				.unsafe(
 					`
@@ -85,6 +117,22 @@ try {
 				.simple();
 			await tx`UPDATE cinatoken_gateway.providers SET api_key=${encrypted} WHERE id='g7-provider'`;
 		});
+		stage = "legacy-admin-key-admission";
+		const adminKey =
+			await context.repositories.adminAccess.getActiveApiKeyBySecret(masterKey);
+		assert.ok(adminKey);
+		assert.equal(adminKey.id, "legacy-master");
+		assert.equal(adminKey.name, "legacy-master");
+		assert.equal(adminKey.status, "active");
+		assert.equal(adminKey.permissionsJson, '["*"]');
+		assert.equal(adminKey.keyPrefix, masterKey.slice(0, 12));
+		assert.equal(
+			await context.repositories.adminAccess.getActiveApiKeyBySecret(
+				"sk-dev-admin-key"
+			),
+			null
+		);
+		stage = "provider-admission";
 		const route = (
 			await context.repositories.modelRouting.getModelRoutesByModelId(
 				"qa/g7-model"
@@ -110,6 +158,7 @@ try {
 			});
 		await sql`INSERT INTO cinatoken_gateway.model_endpoint_routes(endpoint_id,route_target_id,subject_fingerprint)
       VALUES ('g7-endpoint','g7-route',${fingerprint})`;
+		stage = "endpoint-admission";
 		const bindings =
 			await context.repositories.modelEndpoints.listRuntimeBindingsByRouteTargetIds(
 				["g7-route"]
@@ -125,9 +174,11 @@ try {
 			endpointId: "g7-endpoint",
 			fingerprint,
 			storedProviderKeyEncrypted: true,
+			legacyMasterKeyRotated: true,
 			controlledCatalogEvidenceOnly: true,
 		};
 	}
+	stage = "database-observation";
 	const observation = await sql.begin("read only", async (tx) => {
 		const [identity] = await tx`SELECT version() AS server_version,
       current_setting('server_version_num') AS server_version_num,
@@ -144,8 +195,12 @@ try {
       (SELECT count(*)::int FROM cinatoken_gateway.models) AS models,
       (SELECT count(*)::int FROM cinatoken_gateway.providers) AS providers,
       (SELECT count(*)::int FROM cinatoken_gateway.model_endpoints WHERE status='verified') AS verified_endpoints,
+      (SELECT count(*)::int FROM cinatoken_gateway.admin_api_keys WHERE id='legacy-master' AND name='legacy-master' AND status='active' AND permissions_json='["*"]') AS legacy_master_api_keys,
+      (SELECT count(*)::int FROM cinatoken_gateway.admin_api_keys WHERE secret_key='sk-dev-admin-key') AS legacy_development_keys,
+      (SELECT count(*)::int FROM cinatoken_gateway.system_config WHERE key='MASTER_KEY') AS obsolete_master_config,
       (SELECT count(*)::int FROM cinatoken_gateway.admin_sessions) AS admin_sessions,
       (SELECT count(*)::int FROM cinatoken_gateway.portal_sessions) AS portal_sessions`;
+		stage = "database-identity";
 		assert.ok(
 			Number(identity.server_version_num) >= 160000 &&
 				Number(identity.server_version_num) < 170000
@@ -154,11 +209,18 @@ try {
 		assert.equal(identity.superuser, true);
 		assert.equal(identity.database, "g7");
 		assert.equal(identity.schema, "cinatoken_gateway");
-		assert.equal(counts.models, 1);
-		assert.equal(counts.providers, 1);
-		assert.equal(counts.verified_endpoints, 1);
-		assert.equal(counts.admin_sessions, 0);
-		assert.equal(counts.portal_sessions, 0);
+		stage = "database-counts";
+		for (const [selector, expectedCount] of Object.entries({
+			models: 1,
+			providers: 1,
+			verified_endpoints: 1,
+			legacy_master_api_keys: 1,
+			legacy_development_keys: 0,
+			obsolete_master_config: 0,
+			admin_sessions: 0,
+			portal_sessions: 0,
+		}))
+			checkScalar(selector, counts[selector], expectedCount);
 		return {
 			...identity,
 			schemaSha256: sha256(JSON.stringify({ columns, constraints })),
@@ -189,7 +251,16 @@ if (failure) {
 			schema: "web-platform-g7-database-v1",
 			actualExit: 1,
 			mode,
+			stage,
 			errorName: failure.name,
+			assertionOperator:
+				failure.name === "AssertionError" &&
+				["strictEqual", "deepStrictEqual", "match", "=="].includes(
+					failure.operator
+				)
+					? failure.operator
+					: null,
+			assertionObservation,
 			message: "Database contract or fixture admission failed",
 		})
 	);
