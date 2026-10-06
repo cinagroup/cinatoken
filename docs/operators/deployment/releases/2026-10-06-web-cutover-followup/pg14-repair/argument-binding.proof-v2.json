@@ -1,0 +1,34 @@
+{
+  "schema": "pg73-reference-repair-lexical-audit",
+  "at": "2026-10-05T23:31:06.088Z",
+  "actualExit": 0,
+  "before": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-reference-repair-ee01603721fe44e391a089409cd94959\\before.native.test.mjs",
+    "bytes": 17687,
+    "sha256": "34a4eeb6ef021e0c71bd733e4ea2ff06b7b0ba38a7e98ffd02c52a818a0419ba"
+  },
+  "after": {
+    "path": "C:/cinagroup/cinatoken/scripts/db/cutover/postgres-replay-scale-lock.native.test.mjs",
+    "bytes": 17692,
+    "sha256": "5356a63ec6e73cf63910d9f9fc8956731319a7d8f485d9c34dd318fcc6c1a340"
+  },
+  "beforeFailure": {
+    "name": "ReferenceError",
+    "message": "migrator is not defined"
+  },
+  "afterBinding": {
+    "helperCalls": 1,
+    "migratorIsExistingSql": true,
+    "migratorIsHolder": false,
+    "clusterAndUrlPreserved": true
+  },
+  "onlyExpressionChanged": true,
+  "allOtherBytesAndAssertionsPreserved": true,
+  "dbConnections": 0,
+  "dbWrites": 0,
+  "nativeFixtureExecuted": false,
+  "limits": [
+    "This inert argument identity audit executes only the extracted JavaScript call with a capture stub. It does not certify PostgreSQL locks, role grants, backfill, timeout behavior or native fixture cleanup.",
+    "Full database assertions remain for the existing Linux PostgreSQL 18.6 CI job."
+  ]
+}

@@ -1,0 +1,40 @@
+diff --git "a/C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\execute-web-browser-observe-v3.mjs" "b/C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-functional-browser-v4-final-20261006-qfXa5E\\execute-web-browser-observe-v4.mjs"
+index a6bfd05f..db4bbe68 100644
+--- "a/C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\execute-web-browser-observe-v3.mjs"
++++ "b/C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-functional-browser-v4-final-20261006-qfXa5E\\execute-web-browser-observe-v4.mjs"
+@@ -7,7 +7,7 @@ import assert from 'node:assert/strict';
+ const temp = path.dirname(fileURLToPath(import.meta.url));
+ const [label, configPath] = process.argv.slice(2);
+ assert.match(label ?? '', /^[a-z0-9-]+$/);
+-const script = path.join(temp, 'production-web-browser-observe-v3.mjs');
++const script = path.join(temp, 'production-web-browser-observe-v4.mjs');
+ const resultPath = path.join(temp, label + '.json');
+ const closedPath = path.join(temp, label + '-execution-closed.json');
+ const logPath = path.join(temp, label + '-stdout.log');
+@@ -17,12 +17,12 @@ const raw = file => { const b = fs.readFileSync(file); return { path: file, byte
+ const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+ const stdout = fs.openSync(logPath, 'wx');
+ const stderr = fs.openSync(errorPath, 'wx');
+-const receipt = { schema: 'cinatoken-independent-web-browser-execution-v3', label,
++const receipt = { schema: 'cinatoken-functional-anonymous-browser-execution-v4', label,
+   startedAt: new Date().toISOString(), processExecutable: process.execPath,
+-  inputScripts: [raw(fileURLToPath(import.meta.url)), raw(script), raw(path.join(temp, 'web-route-matrix.mjs'))],
++  inputScripts: [raw(fileURLToPath(import.meta.url)), raw(script), raw(path.join(temp, 'web-route-matrix.mjs')), raw(path.join(temp, 'readiness-v4.mjs')), raw(path.join(temp, 'v4-sealed-plan.json'))],
+   configRaw: raw(configPath), expectedGitSHA: config.gitSHA, expectedWorkerVersionId: config.workerVersionId,
+   phase: config.phase, targetOrigin: config.targetOrigin, commandArguments: [script, label, configPath],
+-  sourceWrites: 0, deployments: 0, databaseWrites: 0, timedOut: false, scheduling: 'Four anonymous contexts in parallel; HTTP route cache remains disabled; separate v3 result', deadlineMs: 420000 };
++  sourceWrites: 0, deployments: 0, databaseWrites: 0, timedOut: false, scheduling: 'Original four anonymous contexts and 390/420s budgets; functional DOMContentLoaded/UI readiness; separate v4 result; no networkidle/identity/performance/fullG8 claim', deadlineMs: 420000 };
+ let timer;
+ try {
+   const child = spawn(process.execPath, [script, label, configPath], { stdio: ['ignore', stdout, stderr], windowsHide: true, shell: false });
+@@ -38,8 +38,9 @@ finally {
+     const browser = JSON.parse(fs.readFileSync(resultPath, 'utf8'));
+     receipt.browserActualExit = browser.actualExit; receipt.outcome = browser.outcome;
+     receipt.browserClosed = browser.browserClosed; receipt.contextClosed = browser.contextClosed;
+-    receipt.screenshots = browser.screenshots; receipt.shards = browser.shards.map(shard => ({ name: shard.name, status: shard.status, pages: shard.pages.length, contextClosed: shard.contextClosed })); receipt.pages = browser.pages.length; receipt.consoleClassificationExecuted = browser.consoleClassificationExecuted;
++    receipt.screenshots = browser.screenshots; receipt.shards = browser.shards.map(shard => ({ name: shard.name, status: shard.status, pages: shard.pages.length, contextClosed: shard.contextClosed })); receipt.pages = browser.pages.length; receipt.consoleClassificationExecuted = browser.consoleClassificationExecuted; receipt.readinessMethod = browser.readinessMethod; receipt.v4SealedBefore = browser.v4SealedBefore; receipt.v4SealedAfter = browser.v4SealedAfter;
+     if (browser.actualExit !== 0 || browser.browserClosed !== true || browser.contextClosed !== true || browser.liveProofRawStillSame !== true || browser.sourceAndConfigRawStillSame !== true || browser.pages.length !== 45 || browser.shards.length !== 4 || browser.shards.some(shard => shard.contextClosed !== true) || browser.consoleClassificationExecuted !== true) receipt.actualExit = 1;
++    if (!browser.v4SealedBefore?.originalInputsStillSame || !browser.v4SealedAfter?.originalInputsStillSame || browser.readinessMethod?.networkidleMeasuredOrPassed !== false || browser.outcome !== 'PASS_FUNCTIONAL_ANONYMOUS_WEB_BROWSER_V4_ONLY') receipt.actualExit = 1;
+   } else { receipt.browserResultMissing = true; receipt.actualExit = 1; }
+   if (receipt.timedOut) receipt.actualExit = 1;
+   try {

@@ -1,0 +1,1981 @@
+{
+  "at": "2026-10-06T00:08:36.467Z",
+  "actualExit": 0,
+  "stagedFileCount": 394,
+  "allStagedEvidenceExact": true,
+  "allOriginalRoundTripsExact": true,
+  "scopeStatesStillExact": true,
+  "productionChanged": false,
+  "hashes": [
+    {
+      "path": ".gitattributes",
+      "stagedBytes": 2726,
+      "stagedSHA256": "a0f0e6d1b87f812ebcbf1aa1d89f23af08cb5c367acf32e1818dcd3861845283"
+    },
+    {
+      "path": "docs/developers/architecture/web-frontend-migration.md",
+      "stagedBytes": 763020,
+      "stagedSHA256": "d7058e87442a430c8ef28fcc4a97efff7dd5fda6eb7f159fee461851afac50e4"
+    },
+    {
+      "path": "docs/operators/deployment/cloudflare-web.md",
+      "stagedBytes": 12254,
+      "stagedSHA256": "f7b35808f12a0cd02afa433288344841e8bc4fb56ab13ecc7f1c1fd7e3d64495"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup.json",
+      "stagedBytes": 288112,
+      "stagedSHA256": "3d9c9d5826630966239cd9a982bf9d5ef2472a0f7b5658862cdc85721ff80f89"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/admin-job-112034744172-closed.result.json",
+      "stagedBytes": 322,
+      "stagedSHA256": "a2f8d40b9d68bb1d5ab39557616ffc6e666959738d82a987177b7d8607bc84ce"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/admin-job-112034744172-closed.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/admin-job-112034744172-closed.stdout.raw.log.gz",
+      "stagedBytes": 84718,
+      "stagedSHA256": "bd5b9906bf56f172490ae5fc0967ada7c7d83d5b4f038c1c993dc805ef5cd138"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/compose-job-112034742256-closed.result.json",
+      "stagedBytes": 322,
+      "stagedSHA256": "061d6e196d3a1d3f15341033e877ced58fe1e0beaceca5af925c585b3f998282"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/compose-job-112034742256-closed.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/compose-job-112034742256-closed.stdout.raw.log.gz",
+      "stagedBytes": 29366,
+      "stagedSHA256": "e49d129e2aa71ee45fee3681e77785625ef61b3e0e6c632a709e066f081018d9"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/final-ci-verification.json",
+      "stagedBytes": 35781,
+      "stagedSHA256": "86e43ea1b10cc359b89523770f70ef1327f3429303b50cd8926f89701b0028b8"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/final-seal.result.json",
+      "stagedBytes": 174,
+      "stagedSHA256": "51cb86e820c882a80f8aad3819948d93cbb33da18083e73ed28ace990a6c8733"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/final-seal.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/final-seal.stdout.log.gz",
+      "stagedBytes": 314,
+      "stagedSHA256": "7db7f4a055073e4a4449d1cfb2141832f93ebce58188da1b506d89862d825b7e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/snapshot-01-compose-jobs.result.json",
+      "stagedBytes": 300,
+      "stagedSHA256": "70c788dcd3f8db9b4b0241c338324cd3947993f3dcf14dad29671c8f119d327a"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/snapshot-01-compose-jobs.stderr.log.gz",
+      "stagedBytes": 195,
+      "stagedSHA256": "debe409abb22bad489393cac839ddacdad64e2bed1036230ff6b4bc6d12783f2"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/snapshot-01-compose-jobs.stdout.json",
+      "stagedBytes": 0,
+      "stagedSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/snapshot-01-compose-run.result.json",
+      "stagedBytes": 282,
+      "stagedSHA256": "401389be9103f5a76d655b685545cbf907d2de7bed794ee27a1fc5546210e90e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/snapshot-01-compose-run.stderr.log.gz",
+      "stagedBytes": 180,
+      "stagedSHA256": "35c42f1baf928efb9cd479aeba76dd16e13a7b61a9db53a369fa37cfbd600741"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/snapshot-01-compose-run.stdout.json",
+      "stagedBytes": 0,
+      "stagedSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/snapshot-01-web-jobs.result.json",
+      "stagedBytes": 300,
+      "stagedSHA256": "53ed833130b51213bf413e26cd3660cded34098c381ce57cde15b9ad79f4cf2a"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/snapshot-01-web-jobs.stderr.log.gz",
+      "stagedBytes": 195,
+      "stagedSHA256": "e7ae9b5fee2323434137a572c59137921eefd0a9dfacc78f753658279d154303"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/snapshot-01-web-jobs.stdout.json",
+      "stagedBytes": 0,
+      "stagedSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/snapshot-01-web-run.result.json",
+      "stagedBytes": 282,
+      "stagedSHA256": "98f203e06ffdc13cb5997ea9a49de859a08ab1e1181cc8634035f7b611faae9a"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/snapshot-01-web-run.stderr.log.gz",
+      "stagedBytes": 180,
+      "stagedSHA256": "3815b3e26d92e41dbfb9c326ee12bcfd5bd3959b2872780aa1a10c2142d69e09"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/snapshot-01-web-run.stdout.json",
+      "stagedBytes": 0,
+      "stagedSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/snapshot-02-compose-jobs.result.json",
+      "stagedBytes": 300,
+      "stagedSHA256": "44cbb924e2cacab46286b1970f24fa18844d7ad3d296e032d1a2433abbe1e05c"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/snapshot-02-compose-jobs.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/snapshot-02-compose-jobs.stdout.json",
+      "stagedBytes": 3025,
+      "stagedSHA256": "c2da6b824a0f1ba02d0a1b940e97779e1cfc54bb2deebc1f66e43e687ef7c6ed"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/snapshot-02-compose-run.result.json",
+      "stagedBytes": 282,
+      "stagedSHA256": "0b3cb177a18fab0a28de9307852b87e0067d6f19bb1a426841af38d3969515e5"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/snapshot-02-compose-run.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/snapshot-02-compose-run.stdout.json",
+      "stagedBytes": 12401,
+      "stagedSHA256": "f005a9e0811b6947aa257bb691b093d860a38f9e86ad8c71e97d785940903f4f"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/snapshot-02-web-jobs.result.json",
+      "stagedBytes": 300,
+      "stagedSHA256": "cb7107edf503bc4899a72211390dff42493e84ce3880aedfde046947a2b0548a"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/snapshot-02-web-jobs.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/snapshot-02-web-jobs.stdout.json",
+      "stagedBytes": 8168,
+      "stagedSHA256": "91460b6570090f82c0909798a2ba5195e681737539dabedd25e043ad1d7cebb1"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/snapshot-02-web-run.result.json",
+      "stagedBytes": 282,
+      "stagedSHA256": "4f998007f2e67ab2d42806fd4b8701983a8bb97a4abba5ced29e08bc265a95b9"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/snapshot-02-web-run.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/snapshot-02-web-run.stdout.json",
+      "stagedBytes": 12372,
+      "stagedSHA256": "477f6cdb50404dd7a24c59c177de2fd36675d23d6abc835de80895ac66bd7e83"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/snapshot-03-web-artifacts.result.json",
+      "stagedBytes": 305,
+      "stagedSHA256": "cd768196b7b5232036a2f0a8f43e3ef8fc41bd4f8fa75544724cb7e72b13f267"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/snapshot-03-web-artifacts.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/snapshot-03-web-artifacts.stdout.json",
+      "stagedBytes": 712,
+      "stagedSHA256": "d5d7625c327c750d0897c29f2e82c1f653782a897b51a7fa218c47025023fa95"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/snapshot-03-web-jobs.result.json",
+      "stagedBytes": 300,
+      "stagedSHA256": "ee5c8cb31b55b13171cf75079aa158a8891538eb2313064332927de23f8b0b28"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/snapshot-03-web-jobs.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/snapshot-03-web-jobs.stdout.json",
+      "stagedBytes": 8450,
+      "stagedSHA256": "d6bb5b571e12632c3c1831d8363007630814d7349e197260b94fbac2eb45101b"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/snapshot-03-web-run.result.json",
+      "stagedBytes": 282,
+      "stagedSHA256": "e395be207f774920ceb4a73cff40cc0b5bcb037b3614104bf41d1dd4122b2645"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/snapshot-03-web-run.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/snapshot-03-web-run.stdout.json",
+      "stagedBytes": 12375,
+      "stagedSHA256": "0626c46d0947b714fc2e2575198b2080dcc7f863d5182e54b63729ac2ad9fad7"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/web-job-112034744317-closed.result.json",
+      "stagedBytes": 322,
+      "stagedSHA256": "78646f7c0a229f34165816e1701572143e7cb9112c3f7df3f1e07108cc4ade4c"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/web-job-112034744317-closed.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/web-job-112034744317-closed.stdout.raw.log.gz",
+      "stagedBytes": 130712,
+      "stagedSHA256": "b301ec356eecee39b4cdc40f1082c4bbf7ca20b4a33ed04e6cbb8380cc3fed56"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-linux-ci/web-ssr-actual-runtime.proof.json",
+      "stagedBytes": 28430,
+      "stagedSHA256": "32944ee22d57b43af34d98e14421df0c198d28b4c6e893c26c64447cb2b872d5"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/fixture-contract.result.json",
+      "stagedBytes": 173,
+      "stagedSHA256": "d839f81dcdde7c238817dfb14fe6782d9a018b508e6c8758f42458bfda29918e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/fixture-contract.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/fixture-contract.stdout.log.gz",
+      "stagedBytes": 309,
+      "stagedSHA256": "b5db6b15c7bdd2cbea047944d2e64883e7eca467e35752ac545342cfbbb80f55"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/fixture-contract.test.mjs",
+      "stagedBytes": 3452,
+      "stagedSHA256": "db3e703ddf8ef735ebc504a4d51874c74ff72a1a4f9eb534da3df90d089f0fb4"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/formatter-v2/before.receipt.json",
+      "stagedBytes": 226,
+      "stagedSHA256": "40582e3d7405875a65569a48039daa8e8c0cb4b3dcd07cab1fc47fbf094b8c9e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/formatter-v2/complete-ast.result.json",
+      "stagedBytes": 412,
+      "stagedSHA256": "b4e6df55005b67bdaff41daae0c01c453bb10ca6333445ef1b04c34010db7765"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/formatter-v2/complete-ast.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/formatter-v2/complete-ast.stdout.log.gz",
+      "stagedBytes": 255,
+      "stagedSHA256": "8bf0d4c194dc4db29ec63fff4bb008323a5bf6d3def74fd1c19e1d4391d945c2"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/formatter-v2/explicit-fixture-format.result.json",
+      "stagedBytes": 36,
+      "stagedSHA256": "0cdb1866ffb65785805d2038800eb8978a2f2449b40c057b25d6794a5cfc28c1"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/formatter-v2/explicit-fixture-format.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/formatter-v2/explicit-fixture-format.stdout.log.gz",
+      "stagedBytes": 84,
+      "stagedSHA256": "421a8d4460169cd09ed6db832aa2b9eb2e81d08f52511f23cd2888cc8462882b"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/formatter-v2/full-web-format.result.json",
+      "stagedBytes": 202,
+      "stagedSHA256": "20c779ee5a280631a876715c4fd1d2c7165fd070a58f7f8f28e5bb88d0583562"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/formatter-v2/full-web-format.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/formatter-v2/full-web-format.stdout.log.gz",
+      "stagedBytes": 310,
+      "stagedSHA256": "5070990a0c2d562f5b099783d2cf9e502f4ae1639bcaa9a0917fefde3ac5cc77"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/formatter-v2/local-validation-v2.json",
+      "stagedBytes": 4537,
+      "stagedSHA256": "411177c38a9d979a989b7350b1cf508747005943e0bbe69f027aa02278fe5c0d"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/formatter-v2/scope-diff-check.result.json",
+      "stagedBytes": 36,
+      "stagedSHA256": "0cdb1866ffb65785805d2038800eb8978a2f2449b40c057b25d6794a5cfc28c1"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/formatter-v2/scope-diff-check.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/formatter-v2/scope-diff-check.stdout.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/formatter-v2/seal-v2.result.json",
+      "stagedBytes": 36,
+      "stagedSHA256": "0cdb1866ffb65785805d2038800eb8978a2f2449b40c057b25d6794a5cfc28c1"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/formatter-v2/seal-v2.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/formatter-v2/seal-v2.stdout.log.gz",
+      "stagedBytes": 412,
+      "stagedSHA256": "439820dd8035a3a377c4bbd408e40b4ddc09fa73311289360c35ef94bc550cc7"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/formatter-v2/ssr-smoke.before.mjs",
+      "stagedBytes": 15944,
+      "stagedSHA256": "bee250e5bf0a43700971b8d7e03b27f6b73c21b93e564673af2eb1fa6474e8ab"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/formatter-v2/syntax-fixture.result.json",
+      "stagedBytes": 36,
+      "stagedSHA256": "0cdb1866ffb65785805d2038800eb8978a2f2449b40c057b25d6794a5cfc28c1"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/formatter-v2/syntax-fixture.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/formatter-v2/syntax-fixture.stdout.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/formatter-v2/syntax-ssr.result.json",
+      "stagedBytes": 36,
+      "stagedSHA256": "0cdb1866ffb65785805d2038800eb8978a2f2449b40c057b25d6794a5cfc28c1"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/formatter-v2/syntax-ssr.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/formatter-v2/syntax-ssr.stdout.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/formatter-v2/workspace-format-write.result.json",
+      "stagedBytes": 36,
+      "stagedSHA256": "0cdb1866ffb65785805d2038800eb8978a2f2449b40c057b25d6794a5cfc28c1"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/formatter-v2/workspace-format-write.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/formatter-v2/workspace-format-write.stdout.log.gz",
+      "stagedBytes": 51,
+      "stagedSHA256": "04fdcc237fdea7cde1b801af5618e652023672707c60c5bdb2412d686dde11a6"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/local-validation.json",
+      "stagedBytes": 3532,
+      "stagedSHA256": "796fd26e16a6b8744be7d99e29fb1ab9441cad893f7bfa094f463e33584e3399"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/scope-diff-check.result.json",
+      "stagedBytes": 36,
+      "stagedSHA256": "0cdb1866ffb65785805d2038800eb8978a2f2449b40c057b25d6794a5cfc28c1"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/scope-diff-check.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/scope-diff-check.stdout.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/scoped-format.result.json",
+      "stagedBytes": 348,
+      "stagedSHA256": "1a37a0a7362ebca14acc5b77326fcaafa0ce697539705f279e4db4dd891be59f"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/scoped-format.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/scoped-format.stdout.log.gz",
+      "stagedBytes": 84,
+      "stagedSHA256": "421a8d4460169cd09ed6db832aa2b9eb2e81d08f52511f23cd2888cc8462882b"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/seal.result.json",
+      "stagedBytes": 36,
+      "stagedSHA256": "0cdb1866ffb65785805d2038800eb8978a2f2449b40c057b25d6794a5cfc28c1"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/seal.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/seal.stdout.log.gz",
+      "stagedBytes": 399,
+      "stagedSHA256": "189e4ea99c678c67e0630daaaa8e8130eb035b57b3805a17b3e0869a2a20bf06"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/syntax-fixture.result.json",
+      "stagedBytes": 250,
+      "stagedSHA256": "097c916a8a4461253dfe460544a12d3c422824769ae4128780b828beac7e3f77"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/syntax-fixture.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/syntax-fixture.stdout.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/syntax-ssr.result.json",
+      "stagedBytes": 236,
+      "stagedSHA256": "09b97cbae0b51814b9c91e9c5635b060f4c8e07cc922a818877a61607728be1c"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/syntax-ssr.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/syntax-ssr.stdout.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/workflow-before.yml",
+      "stagedBytes": 8548,
+      "stagedSHA256": "cbdfe041d7209b3544451edc91e72b7528dd2275992d16ed623538b8a3161ae4"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/docker-local/workspace.txt",
+      "stagedBytes": 22,
+      "stagedSHA256": "1f54c60b971bb56bc55f463c576f23ed28869550e7543c2af9353f22618f0e0f"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/functional-v4-draft/execute-web-browser-observe-v4.mjs",
+      "stagedBytes": 5020,
+      "stagedSHA256": "3304210e93266dbad6635e8ad160c2ed9e531f21abc7addf832cc04125c7495c"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/functional-v4-draft/executor-v3-to-v4.diff",
+      "stagedBytes": 4690,
+      "stagedSHA256": "26da41e16f520982f0de463af3f569a647108ae7707fed70a06817a81f7643e3"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/functional-v4-draft/original-v3-to-functional-v4.diff",
+      "stagedBytes": 12090,
+      "stagedSHA256": "182c51b4e629daf5dd72daf683e84449b81bee390d1daf992b16543ae04a3b20"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/functional-v4-draft/prepare-functional-v4.mjs",
+      "stagedBytes": 18304,
+      "stagedSHA256": "a6bb790eac1b86c0f246ad4af02fbb530dcb83fa7a4f5173c3c38626f4666b76"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/functional-v4-draft/production-web-browser-observe-v4.mjs",
+      "stagedBytes": 27422,
+      "stagedSHA256": "dc342488667fd9785c83f556a55d3c2a8e06ac24f0edaabff4147fafcaf410b2"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/functional-v4-draft/readiness-v4.mjs",
+      "stagedBytes": 15232,
+      "stagedSHA256": "1a9c4bab756e6343b29f418838357e7e04bc164062f690b1dd25b27932369c9c"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/functional-v4-draft/v4-assertion-equivalence.json",
+      "stagedBytes": 33221,
+      "stagedSHA256": "459491802d0e962ef547ce7ffc506a3417028993271c3f3a195e41d0d7aa719b"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/functional-v4-draft/v4-sealed-plan.json",
+      "stagedBytes": 10606,
+      "stagedSHA256": "15d8aade4444297982442c65d56001d20b78b19862ed959e37d0f20d73c2e5fd"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/functional-v4-draft/web-route-matrix.mjs",
+      "stagedBytes": 1770,
+      "stagedSHA256": "c8a3211d07979c037022f689aa442bd95de9b7c11843fb52b9ae9fa93ac01e61"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/functional-v4/before-functional-v4-final-once-account-1.png",
+      "stagedBytes": 23753,
+      "stagedSHA256": "a99bb9d22fd16eaebd41e31ccceef6363f27760a9d6c0d6e3e6be1c6f5c4b8fb"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/functional-v4/before-functional-v4-final-once-admin-a-1.png",
+      "stagedBytes": 25449,
+      "stagedSHA256": "3903b8a1ace00a01f66aa85758c1fdd71fd081e2d3b8b76c1967475ed3cf94f2"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/functional-v4/before-functional-v4-final-once-admin-b-1.png",
+      "stagedBytes": 25449,
+      "stagedSHA256": "3903b8a1ace00a01f66aa85758c1fdd71fd081e2d3b8b76c1967475ed3cf94f2"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/functional-v4/before-functional-v4-final-once-desktop-dark.png",
+      "stagedBytes": 55028,
+      "stagedSHA256": "0ec81d2dfcfcd8b5b473ce3dc99cdc4691e4221032efe8d179803149719665f3"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/functional-v4/before-functional-v4-final-once-execution-closed.json",
+      "stagedBytes": 8806,
+      "stagedSHA256": "96252aed2927327920c28d01d86896315394d8989ab383b4a11489a2bedb9a53"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/functional-v4/before-functional-v4-final-once-mobile-zh-dark.png",
+      "stagedBytes": 32357,
+      "stagedSHA256": "99d1b467918686bc194528cedcaea3af125bba176eda06fd803b050ab12c7ea6"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/functional-v4/before-functional-v4-final-once-public-1.png",
+      "stagedBytes": 54114,
+      "stagedSHA256": "3c3002c14200c075db9cb4077fc6926e1543c1dbc907150ee4981237dd71fbe6"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/functional-v4/before-functional-v4-final-once-public-2.png",
+      "stagedBytes": 43262,
+      "stagedSHA256": "081e960004ddba212581417ec6052182a315a8cbffabf4f6b1704a8c4591bd08"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/functional-v4/before-functional-v4-final-once-stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/functional-v4/before-functional-v4-final-once-stdout.log.gz",
+      "stagedBytes": 1524,
+      "stagedSHA256": "2f17ea13f08bbea5602f9d38d4ba2fee5ae5523267a92a6a76dd90c34010f868"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/functional-v4/before-functional-v4-final-once.json.gz",
+      "stagedBytes": 280793,
+      "stagedSHA256": "4770f43f6bba06eaf46881451e84ad917378282bc32dda893ea03b17357c0d95"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/functional-v4/execute-web-browser-observe-v4.mjs",
+      "stagedBytes": 5020,
+      "stagedSHA256": "3304210e93266dbad6635e8ad160c2ed9e531f21abc7addf832cc04125c7495c"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/functional-v4/executor-v3-to-v4.diff",
+      "stagedBytes": 4702,
+      "stagedSHA256": "40cf85f2b59f89a4ec77668ac2fb06410a0d9fb944a922858f08944b52416027"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/functional-v4/final-functional-v4-review.json",
+      "stagedBytes": 134057,
+      "stagedSHA256": "29fcbd93b354d0c3ce25aa5b3893de5982f2d2b2c497c6e1bc422d1ab1cdd4f5"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/functional-v4/local-seal-check.json",
+      "stagedBytes": 1266,
+      "stagedSHA256": "65d5d88448af443ee7511164eaf5d62faab80d8d3893f7e86ebe671c5b764200"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/functional-v4/original-v3-to-functional-v4.diff",
+      "stagedBytes": 12123,
+      "stagedSHA256": "11f1a2b569705b98912fa77b9b2c443c6fa5d7c54ba1de47b02a293d2d6f73cc"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/functional-v4/peer-reviewed-v4.json",
+      "stagedBytes": 4829,
+      "stagedSHA256": "ee991f44f6f1fd1c32e418dd486781f64d74fa8cbeff6774cc4ae80b157be60e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/functional-v4/prepare-functional-v4.mjs",
+      "stagedBytes": 18687,
+      "stagedSHA256": "92f732fb14beb80c9c964ccf3f65fb3d7fcd886a09eb28610b0caef9cac908df"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/functional-v4/production-web-browser-observe-v4.mjs",
+      "stagedBytes": 27443,
+      "stagedSHA256": "387a33fa5278dc0bc5b713c5a5ddafcd6f143e310bf64c2fc878635ddce115c6"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/functional-v4/readiness-v4.mjs",
+      "stagedBytes": 15634,
+      "stagedSHA256": "51c02f099f6bee1e47cb7161f8196e4a442c65bc1d3632db550e5197f165b6fd"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/functional-v4/v4-assertion-equivalence.json",
+      "stagedBytes": 33248,
+      "stagedSHA256": "c4baa18bf9e4a52682a10572e1ab45900a953f2663da049616a702f1b00222c4"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/functional-v4/v4-sealed-plan.json",
+      "stagedBytes": 11163,
+      "stagedSHA256": "ae4999f480a9bad068e38e3dcb70d73cfd897b3664df44bd127b283178d670ba"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/functional-v4/web-route-matrix.mjs",
+      "stagedBytes": 1770,
+      "stagedSHA256": "c8a3211d07979c037022f689aa442bd95de9b7c11843fb52b9ae9fa93ac01e61"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/network-diagnostic-draft/execute-network-diagnostic-v1.mjs",
+      "stagedBytes": 4832,
+      "stagedSHA256": "1e5b99ee37919d32917283e6e1ebd033dd3e00a8a1e303a7122093c2b32173a3"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/network-diagnostic-draft/pre-spawn-execution-failure.json",
+      "stagedBytes": 1047,
+      "stagedSHA256": "e6f4fb1cb327ce0274c40d39ba715d37d6ffa486990f9e87f219fd74f2cb2f94"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/network-diagnostic-draft/preparation.receipt.json",
+      "stagedBytes": 5787,
+      "stagedSHA256": "04e3a852792cd40ada2e553d3b25aa71f483ee4a16c5d31f60e8c22d2d5e6d4d"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/network-diagnostic-draft/production-network-diagnostic-v1.mjs",
+      "stagedBytes": 23423,
+      "stagedSHA256": "2d6110816e4d2bcdb6c73780c02f3ec157258e9bbfb80bd7003166230c77f3ec"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/network-diagnostic/execute-network-diagnostic-v1.mjs",
+      "stagedBytes": 4832,
+      "stagedSHA256": "1e5b99ee37919d32917283e6e1ebd033dd3e00a8a1e303a7122093c2b32173a3"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/network-diagnostic/fresh-three-route-diag-account.png",
+      "stagedBytes": 23753,
+      "stagedSHA256": "a99bb9d22fd16eaebd41e31ccceef6363f27760a9d6c0d6e3e6be1c6f5c4b8fb"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/network-diagnostic/fresh-three-route-diag-admin.png",
+      "stagedBytes": 25449,
+      "stagedSHA256": "3903b8a1ace00a01f66aa85758c1fdd71fd081e2d3b8b76c1967475ed3cf94f2"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/network-diagnostic/fresh-three-route-diag-events.jsonl.gz",
+      "stagedBytes": 27481,
+      "stagedSHA256": "bf05b9140eb5026e1caae22d22adf549b33c8462d475a87cc44ee6c1a3f9bc14"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/network-diagnostic/fresh-three-route-diag-execution-closed.json",
+      "stagedBytes": 4640,
+      "stagedSHA256": "9c2ffcc82b457727b91c62f8c8ecc04b3c477eadf0801a00446fefba2657cb6c"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/network-diagnostic/fresh-three-route-diag-public.png",
+      "stagedBytes": 54114,
+      "stagedSHA256": "3c3002c14200c075db9cb4077fc6926e1543c1dbc907150ee4981237dd71fbe6"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/network-diagnostic/fresh-three-route-diag-stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/network-diagnostic/fresh-three-route-diag-stdout.log.gz",
+      "stagedBytes": 572,
+      "stagedSHA256": "94bcbbe62af65796beb9f28ef296278e250dc64e73fc1ada044fbf518077e6ef"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/network-diagnostic/fresh-three-route-diag.json.gz",
+      "stagedBytes": 24913,
+      "stagedSHA256": "73e33a5fff142bb353d762776c127ea13ba719b8b400dd1cd8076c4a5bd371a6"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/network-diagnostic/preparation.receipt.json",
+      "stagedBytes": 6379,
+      "stagedSHA256": "d3f97e53c0af674edf115e501aca25271b3d97ba2d2dc6be1442eea249b92292"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/network-diagnostic/production-network-diagnostic-v1.mjs",
+      "stagedBytes": 23423,
+      "stagedSHA256": "2d6110816e4d2bcdb6c73780c02f3ec157258e9bbfb80bd7003166230c77f3ec"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/network-diagnostic/three-route-network-review.json",
+      "stagedBytes": 15713,
+      "stagedSHA256": "ed962d591a2bc20b9079837f982437aaea6e60ab3707450eebb26d159ae8842d"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg14-repair/FINAL-pg73-reference-repair.json",
+      "stagedBytes": 13207,
+      "stagedSHA256": "5bde20780387175f3fcf88b319f3614c981f8a44b28e7bf0e9542cb034a46b18"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg14-repair/argument-binding-check.result.json",
+      "stagedBytes": 695,
+      "stagedSHA256": "7057fbc9316c82b68f92ebce30337764e1e79705a53602489a4b1b9ee4162305"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg14-repair/argument-binding-check.stderr.txt",
+      "stagedBytes": 0,
+      "stagedSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg14-repair/argument-binding-check.stdout.txt",
+      "stagedBytes": 1583,
+      "stagedSHA256": "9f33584ea4d81680db62a520bd86ee2258ff8a8ddea2db211d19958f437964b4"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg14-repair/argument-binding-corrected-check.result.json",
+      "stagedBytes": 715,
+      "stagedSHA256": "dc11c6e09e399650612a436a33b062213b4bb1a1357a1a4d2b9c9001b464d9ad"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg14-repair/argument-binding-corrected-check.stderr.txt",
+      "stagedBytes": 0,
+      "stagedSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg14-repair/argument-binding-corrected-check.stdout.txt",
+      "stagedBytes": 1575,
+      "stagedSHA256": "426045c211d966613c100884f6507b3d7c7299a95c1052f77297e5669cfb7584"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg14-repair/argument-binding.proof-v2.json",
+      "stagedBytes": 1305,
+      "stagedSHA256": "d1e4abacbe8958f48415107a6b431c1a84a1887624646833d63e876157d5f2da"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg14-repair/argument-binding.proof.json",
+      "stagedBytes": 1316,
+      "stagedSHA256": "908c86c4819950d627e5f15671d77d90f6715d97256dfe481e0cdc8613e20dec"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg14-repair/before.native.test.mjs",
+      "stagedBytes": 17687,
+      "stagedSHA256": "34a4eeb6ef021e0c71bd733e4ea2ff06b7b0ba38a7e98ffd02c52a818a0419ba"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg14-repair/final-repair-report-seal-v2.result.json",
+      "stagedBytes": 693,
+      "stagedSHA256": "ff388271e9965f757ac1591bdfc00aaec7f1ae901a6eab13549c894f2f7f0dcc"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg14-repair/final-repair-report-seal-v2.stderr.txt",
+      "stagedBytes": 0,
+      "stagedSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg14-repair/final-repair-report-seal-v2.stdout.txt",
+      "stagedBytes": 1256,
+      "stagedSHA256": "397f63a4fe7e387a0a28260eb422f022f3b4b23b6ce3aa274fe4f1cf70cf0bc2"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg14-repair/final-repair-report-seal.result.json",
+      "stagedBytes": 694,
+      "stagedSHA256": "7cc087a6ab639b6b176ee2765877098646300697fc2e4fdc6e024db886c3f9f1"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg14-repair/final-repair-report-seal.stderr.txt",
+      "stagedBytes": 1443,
+      "stagedSHA256": "52a43e4633731c67c2bfb8bc1dd625559a141ad9d0d89a9de7dbbbdb4b7dcee3"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg14-repair/final-repair-report-seal.stdout.txt",
+      "stagedBytes": 0,
+      "stagedSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg14-repair/pure-backfill-generator-check.result.json",
+      "stagedBytes": 660,
+      "stagedSHA256": "4f95da818fd391553b9dcd155ac11b2ef33344b1dcdae7e8e37e16777d26c399"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg14-repair/pure-backfill-generator-check.stderr.txt",
+      "stagedBytes": 0,
+      "stagedSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg14-repair/pure-backfill-generator-check.stdout.txt",
+      "stagedBytes": 279,
+      "stagedSHA256": "a59e5fad64aa4cda3b98c2dcb4cf9d50d3b6da30c4f9507086129f193c95cc16"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg14-repair/run-readonly.mjs",
+      "stagedBytes": 1733,
+      "stagedSHA256": "b8d7236bc2c97a1ad6a2dbabdd5f81beb74268e072a4dfef0afc4d1e826a924b"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg14-repair/seal-repair-report.mjs",
+      "stagedBytes": 7636,
+      "stagedSHA256": "7c6476b0e3dfb783e7d97bd94794dd4226d7589a457dd8717176cbe23121374f"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg14-repair/syntax-check.result.json",
+      "stagedBytes": 616,
+      "stagedSHA256": "d59ed4cfabfd4e82cded76e30e7683bbbdf77624a6b064fb0260c40d593956cc"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg14-repair/syntax-check.stderr.txt",
+      "stagedBytes": 0,
+      "stagedSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg14-repair/syntax-check.stdout.txt",
+      "stagedBytes": 0,
+      "stagedSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg14-repair/target-diff-check.result.json",
+      "stagedBytes": 647,
+      "stagedSHA256": "da06eb967a12b3d5eb7cd006a7345a50de14f8028fb366ad5131318be7ade5af"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg14-repair/target-diff-check.stderr.txt",
+      "stagedBytes": 0,
+      "stagedSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg14-repair/target-diff-check.stdout.txt",
+      "stagedBytes": 0,
+      "stagedSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg14-repair/target-patch.result.json",
+      "stagedBytes": 624,
+      "stagedSHA256": "3ce8d860ce3a7bbd748215fa8d76eaf6f543a4ed9f4617b41d9d0624676340bb"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg14-repair/target-patch.stderr.txt",
+      "stagedBytes": 0,
+      "stagedSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg14-repair/target-patch.stdout.txt",
+      "stagedBytes": 877,
+      "stagedSHA256": "4b6f96aeb701792860f559a6e125fa1ecefce45aaeb9f5dbcc7b30eab2fafda3"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg14-repair/verify-argument-binding-v1.mjs",
+      "stagedBytes": 3335,
+      "stagedSHA256": "fae93ef9a101c6a10cd6156bfa74ee562e42e326e2d829f91ad524a1d1965f39"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg14-repair/verify-argument-binding.mjs",
+      "stagedBytes": 3327,
+      "stagedSHA256": "056ae37cc30a61c05a3627467759a623952eae766ad6e695efba3eb3bdd2a750"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg17-repair/FINAL-pg73-usage-jobs-repair.json",
+      "stagedBytes": 20033,
+      "stagedSHA256": "fbadb5ccc08ed6b8c86af2102f36febf83de62fc6e70d6ff04118138587dcf57"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg17-repair/after-step17-inventory-v2.result.json",
+      "stagedBytes": 698,
+      "stagedSHA256": "ed2a778bd5c93aed00d730f6e90363876ce24c9fac6ec62da08685c092d92392"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg17-repair/after-step17-inventory-v2.stderr.txt",
+      "stagedBytes": 709,
+      "stagedSHA256": "744263937824211c72848bb883227030dcfe5d683a2caedfbf35f16a3ea2bb3b"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg17-repair/after-step17-inventory-v2.stdout.txt",
+      "stagedBytes": 0,
+      "stagedSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg17-repair/after-step17-inventory-v3.result.json",
+      "stagedBytes": 699,
+      "stagedSHA256": "77a5fd6bb7c2d7752b5c44e3a29db8703679c0120d36dd67f34325a540ef9b03"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg17-repair/after-step17-inventory-v3.stderr.txt",
+      "stagedBytes": 0,
+      "stagedSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg17-repair/after-step17-inventory-v3.stdout.txt",
+      "stagedBytes": 8168,
+      "stagedSHA256": "e7622a712876b74456636b442933848307a1abec8177b6fa8d99fde31d265431"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg17-repair/after-step17-inventory.json.gz",
+      "stagedBytes": 19272,
+      "stagedSHA256": "abc80cbd0ff92f6e6fb5b93046dd40e6bf91985c5da23579c3890bb2a1b5972e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg17-repair/after-step17-inventory.result.json",
+      "stagedBytes": 692,
+      "stagedSHA256": "dba5127c57f7bedbffe6ff260a2b342e343927d792093b162b88e868f1f101f7"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg17-repair/after-step17-inventory.stderr.txt",
+      "stagedBytes": 709,
+      "stagedSHA256": "744263937824211c72848bb883227030dcfe5d683a2caedfbf35f16a3ea2bb3b"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg17-repair/after-step17-inventory.stdout.txt",
+      "stagedBytes": 0,
+      "stagedSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg17-repair/audit-usage-jobs.mjs",
+      "stagedBytes": 3943,
+      "stagedSHA256": "ad0288e18491ccbffd61e7d7b082eb19623ec2d022d2d2a076694f4d85d0085b"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg17-repair/before.native.test.mjs",
+      "stagedBytes": 17845,
+      "stagedSHA256": "944c61a4cff0f8b5f3b71e1a2fa48b7ae1c242f0d25fe900aef8b1c67ed87d49"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg17-repair/inventory-native-workflow.mjs",
+      "stagedBytes": 6624,
+      "stagedSHA256": "6f0d8e86f288137d6bf3b4b4bce182f4f82b69bc3ffe9cdaa8c288a383dae5d2"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg17-repair/local-audit.proof.json",
+      "stagedBytes": 1913,
+      "stagedSHA256": "29ab686f4cf16fb8e01dec0a92e9667013f6d955895f0d189f222f5f9a3b3f04"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg17-repair/local-readonly-audit.result.json",
+      "stagedBytes": 707,
+      "stagedSHA256": "67b32994045bf1b47cbab03ba695396caa0e42ebc882debc10be8a017b5ea439"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg17-repair/local-readonly-audit.stderr.txt",
+      "stagedBytes": 0,
+      "stagedSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg17-repair/local-readonly-audit.stdout.txt",
+      "stagedBytes": 2175,
+      "stagedSHA256": "ee1f318b160d3de00151dfedb7c9acf0ae2b8107de0dce83a3b7efe4a814f87f"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg17-repair/pure-repair-builders.result.json",
+      "stagedBytes": 730,
+      "stagedSHA256": "c4a67d281ab0a8d82cffe8c2233690189e485876dc71f4176ffc02f101250cc5"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg17-repair/pure-repair-builders.stderr.txt",
+      "stagedBytes": 0,
+      "stagedSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg17-repair/pure-repair-builders.stdout.txt",
+      "stagedBytes": 449,
+      "stagedSHA256": "18f8f824b5b70797fca5d6f0e76b238e3c8b25b5d6ca946f866c5ef23092dc1d"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg17-repair/repair-seal.result.json",
+      "stagedBytes": 657,
+      "stagedSHA256": "24486f444370377652c8c7e1ee905fe7f147532d75b55a98ad320146a3d70637"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg17-repair/repair-seal.stderr.txt",
+      "stagedBytes": 0,
+      "stagedSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg17-repair/repair-seal.stdout.txt",
+      "stagedBytes": 1455,
+      "stagedSHA256": "5511fa2454abc784ef5ba74ed61d1478497f9eec4fa116eb71b3e4a7123969b1"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg17-repair/run-readonly.mjs",
+      "stagedBytes": 1733,
+      "stagedSHA256": "b8d7236bc2c97a1ad6a2dbabdd5f81beb74268e072a4dfef0afc4d1e826a924b"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg17-repair/seal-repair.mjs",
+      "stagedBytes": 7535,
+      "stagedSHA256": "75428628e466c2b12096618ec45b5788f60068c84634e2438d35348e80795eb8"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg17-repair/syntax-check.result.json",
+      "stagedBytes": 629,
+      "stagedSHA256": "e989d246db03ae7d301eebe5d20a85d72cd382283c657c63985ff7de2d1fb447"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg17-repair/syntax-check.stderr.txt",
+      "stagedBytes": 0,
+      "stagedSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg17-repair/syntax-check.stdout.txt",
+      "stagedBytes": 0,
+      "stagedSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg17-repair/target-diff-check.result.json",
+      "stagedBytes": 660,
+      "stagedSHA256": "299c3ca818e15277342062f8680269d02f4d6cc81f55ed595be551e1bdec954b"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg17-repair/target-diff-check.stderr.txt",
+      "stagedBytes": 0,
+      "stagedSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg17-repair/target-diff-check.stdout.txt",
+      "stagedBytes": 0,
+      "stagedSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg17-repair/target-patch.result.json",
+      "stagedBytes": 638,
+      "stagedSHA256": "5774cce3f353a58e4da3e9f1573ca4c28e1fb4a23337788815931e6fc1dfe5e6"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg17-repair/target-patch.stderr.txt",
+      "stagedBytes": 0,
+      "stagedSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg17-repair/target-patch.stdout.txt",
+      "stagedBytes": 2296,
+      "stagedSHA256": "01494eba01814c80acd67a29cf3b8a97385448ea02e21dcd52612997547d705c"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg20-plan/FINAL-step20-runtime-grant-plan.json",
+      "stagedBytes": 10735,
+      "stagedSHA256": "47238d21f95b50dfb549bc7b3af0620f69379961bb541cbc4aac7693ccf475a1"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg20-plan/readonly-plan-seal.result.json",
+      "stagedBytes": 672,
+      "stagedSHA256": "bed06a55d926962571e796d03259eb620f9abf3c38293e91b073abafac8edf38"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg20-plan/readonly-plan-seal.stderr.txt",
+      "stagedBytes": 0,
+      "stagedSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg20-plan/readonly-plan-seal.stdout.txt",
+      "stagedBytes": 1026,
+      "stagedSHA256": "fe5840896d765b347b768bb1da503ef1452cd47534eab61cccf04efb50256d18"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg20-plan/run-readonly.mjs",
+      "stagedBytes": 1733,
+      "stagedSHA256": "b8d7236bc2c97a1ad6a2dbabdd5f81beb74268e072a4dfef0afc4d1e826a924b"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg20-plan/runtime-grant.before.native.test.mjs",
+      "stagedBytes": 7311,
+      "stagedSHA256": "84e383a4a6b5f07f40bea8ae74d0258a2a542543862662486e9543842721a066"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/pg20-plan/seal-plan.mjs",
+      "stagedBytes": 9573,
+      "stagedSHA256": "ffad85e34a826d249f433bbe954b332020b29815b598be223f1e0a69f1951ef0"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/after-functional-v4-guard.deployment-guard.json",
+      "stagedBytes": 1030,
+      "stagedSHA256": "1ffe7d8b633e4c4983457bac11f3498087e7deeccc8078ab1c1d9df9be6022a6"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/after-functional-v4-guard.result.json",
+      "stagedBytes": 797,
+      "stagedSHA256": "3c181859cdbdc57e6cc2569f7560cd8bcc44eba6f90b33b61037eeb95524e0c7"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/after-functional-v4-guard.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/after-functional-v4-guard.stdout.log.gz",
+      "stagedBytes": 439,
+      "stagedSHA256": "8d5a7db1cbda9fbd6d99170b05603e2724a83d1e871827b3621faafb17d4868a"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/after-functional-v4.live-proof.json",
+      "stagedBytes": 6014,
+      "stagedSHA256": "84f6d19005a7f3138b6ffdd97364030506134f0f0554a0c2c4d9ee1d296669b3"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/after-functional-v4.result.json",
+      "stagedBytes": 750,
+      "stagedSHA256": "0aa8b2db5ff8f7ac6f4cbbed5912bf786b8c4e0d53bae90dd77b42123fee28c3"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/after-functional-v4.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/after-functional-v4.stdout.log.gz",
+      "stagedBytes": 1141,
+      "stagedSHA256": "8d40f89406cb5a1d8aa8674c381e8926d3ae90fcde3d3a4b83aafb71559b9536"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/before-functional-v4-guard.deployment-guard.json",
+      "stagedBytes": 1030,
+      "stagedSHA256": "350b460c542e528cea5879d187a236e024be5e220070991ac0bcdd90dee275ac"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/before-functional-v4-guard.result.json",
+      "stagedBytes": 800,
+      "stagedSHA256": "883a281eddf778f2b561b9872e833c2a72bc70821f7eaf9a9489bc0efdea9002"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/before-functional-v4-guard.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/before-functional-v4-guard.stdout.log.gz",
+      "stagedBytes": 439,
+      "stagedSHA256": "0e880e3a15032fc8557623be85a59ce63b918817b5fe496530daac9b0bbbf9ef"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/before-functional-v4.browser-config.json",
+      "stagedBytes": 583,
+      "stagedSHA256": "e74431c3be2a725fd83bde270af54aac90113da8c5d5e0746f8ce2b27b129799"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/before-functional-v4.live-proof.json",
+      "stagedBytes": 6014,
+      "stagedSHA256": "933a74a1c7c1da4bc0008695c521841bccab858cbe95926fe8176a3e80f6c338"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/before-functional-v4.result.json",
+      "stagedBytes": 753,
+      "stagedSHA256": "1179d1300a5fb3ead864c080437811d07b65f3c1a011aedf39cf0f811997b47a"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/before-functional-v4.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/before-functional-v4.stdout.log.gz",
+      "stagedBytes": 1140,
+      "stagedSHA256": "0587e109851bb959747ffff1c77c2a8af40940ac4314362448c8e46ccd35a44c"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/checklist-before-controls.json",
+      "stagedBytes": 54122,
+      "stagedSHA256": "7416796e91196875bfe5c3970ea601b76aa8de9d61f75f8de2dd6a182fe9de5a"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/checklist-before-scope-v2.json",
+      "stagedBytes": 91195,
+      "stagedSHA256": "d6b251933907999be4d9f8525b4e0e291da305b46fdd8ab676c733ffb7566afa"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/checklist-before.md.gz",
+      "stagedBytes": 310669,
+      "stagedSHA256": "23a4ae293f6b3c932dd9cd09782e5c9806da9dbdf5d1d01276ff47ff78eb0650"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/checklist-final-scope.json",
+      "stagedBytes": 325,
+      "stagedSHA256": "62a5a8386a47f09d0cdfc0d2644592c71c48fcbe4400eb8265e12cf76c135227"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/checklist-final-scope.result.json",
+      "stagedBytes": 694,
+      "stagedSHA256": "add5b715c222b48592b494ec0bcc6b260094f2cf3cd9df999f76f7c32052f169"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/checklist-final-scope.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/checklist-final-scope.stdout.log.gz",
+      "stagedBytes": 226,
+      "stagedSHA256": "b76ab11d0b77fef508b6c5eb6f1ba41a99e8e70d21b333a51e0c34b4fec01a37"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/checklist-final-update.json",
+      "stagedBytes": 420,
+      "stagedSHA256": "04f726c6adcab7de48a37d7fb86e8e994e4be8618d07cb9321012f1b52c91fd7"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/checklist-final-update.result.json",
+      "stagedBytes": 663,
+      "stagedSHA256": "16fbf3429896e4dc8f47976975c347162e0fe186a678cb24e5aca6b9cd1c52f2"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/checklist-final-update.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/checklist-final-update.stdout.log.gz",
+      "stagedBytes": 278,
+      "stagedSHA256": "0e0ff694f0ad3d584084b90eaba60cee4adf2baf15c817006d7ebafd5c51a861"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/checklist-progress-scope.json",
+      "stagedBytes": 325,
+      "stagedSHA256": "ba4cc8eb3364454befe647e56036f1acb67be2ad28549cb373daee643a8e31cd"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/ci-followup-push.result.json",
+      "stagedBytes": 555,
+      "stagedSHA256": "cd121d8043ce71a5b528b0ea33932aeb66539680a826adf94915f19d727a9dc2"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/ci-followup-push.stderr.log.gz",
+      "stagedBytes": 91,
+      "stagedSHA256": "85bcf62c5c210f0fb0e8d8b1f3dbe1ec25f0a741ae313e376cfa56e068a87e61"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/ci-followup-push.stdout.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/docker-ssr-commit.result.json",
+      "stagedBytes": 610,
+      "stagedSHA256": "f915ce745ade2012d28d298addde20526bc2f6beaeb40ebd5e313e704a66d590"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/docker-ssr-commit.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/docker-ssr-commit.stdout.log.gz",
+      "stagedBytes": 172,
+      "stagedSHA256": "e5f3d980ec35bd9fcda1dee6e385cbe6558be37cc7b3b04b29ca1d15d32054f9"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/docker-ssr-stage.result.json",
+      "stagedBytes": 658,
+      "stagedSHA256": "404b5088f55b78a5e1c988612e8794feef5f48673c308045267d3ab4937b8a1c"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/docker-ssr-stage.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/docker-ssr-stage.stdout.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/finalize-checklist.mjs",
+      "stagedBytes": 14126,
+      "stagedSHA256": "2a75547e6b2d614c856cadb90462dc1c8ef66b23b1bcd2147effe6aea17da643"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/fresh-guard.deployment-guard.json",
+      "stagedBytes": 1030,
+      "stagedSHA256": "19c6d56cf6c71ccb419090abceb408258b3df74988b339e7d036ceb1e3333c8a"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/fresh-guard.result.json",
+      "stagedBytes": 755,
+      "stagedSHA256": "5ac022e52fb2e3e7f7930c0770fede86d143b82770af41443c96d9af3466673c"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/fresh-guard.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/fresh-guard.stdout.log.gz",
+      "stagedBytes": 439,
+      "stagedSHA256": "ec0ec743dc6611e686548c81f11c32b6422bcc2fcbf55d5ac35fedd7fac39851"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/fresh.browser-config.json",
+      "stagedBytes": 578,
+      "stagedSHA256": "2a3f7a900a2b32c03db115ebff1e02d821f986e42dee034dc7d469ddfbd072fd"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/guard-live-deployment.mjs",
+      "stagedBytes": 2150,
+      "stagedSHA256": "b8c1e7f5e4784da907f11152369207a9fc408908e853539b053e7e38b0a6d2c3"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/helper-preparation.json",
+      "stagedBytes": 928,
+      "stagedSHA256": "0ed04525b00e2e54def40bb4026685599f592d18db63a3eb33bb88f7576bffd3"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/inventory-before.json",
+      "stagedBytes": 1036,
+      "stagedSHA256": "015e29dfb240e8e9ca61f65e13a375c2a2a5d9d4663230b484bef4805069c8a2"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/local-replay-builder.result.json",
+      "stagedBytes": 644,
+      "stagedSHA256": "8b96748ab3f334f4e780867203a4aa73d8c797b5c38f354bbc50bc3fece58be1"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/local-replay-builder.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/local-replay-builder.stdout.log.gz",
+      "stagedBytes": 219,
+      "stagedSHA256": "fc34da1c58fe56ec67bf6010aae58ba961ad149be4f6173657ab776bbff86f61"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/pg-ci-initial.result.json",
+      "stagedBytes": 747,
+      "stagedSHA256": "6661665bc492cc9b0ed2f62e98f619efa4f6e60b7ea458006b34e5dcb62437b9"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/pg-ci-initial.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/pg-ci-initial.stdout.log.gz",
+      "stagedBytes": 199,
+      "stagedSHA256": "75fe9d5c42da84d972540c5c535ded8c2ed94a486e4b52f83b0dec69aa586145"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/pg-ci-progress-1.result.json",
+      "stagedBytes": 617,
+      "stagedSHA256": "7ecef73aee274b6304666336da685e2383435717b3e265748cdec9fb50ad5097"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/pg-ci-progress-1.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/pg-ci-progress-1.stdout.log.gz",
+      "stagedBytes": 3194,
+      "stagedSHA256": "0891be588e46cee2bf8528e71503a058082ab58e3613e683cea958a66c8ad035"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/pg-ci-progress-2.result.json",
+      "stagedBytes": 617,
+      "stagedSHA256": "f229bbf4f7a99cb152d4866a51ce9ea8296807de14de6ddc2fa585c79ba81352"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/pg-ci-progress-2.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/pg-ci-progress-2.stdout.log.gz",
+      "stagedBytes": 3291,
+      "stagedSHA256": "137639348a19ff1e15b920dfcfa197fc3e076e557514111a35c8af15e4bbec1a"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/pg-ci-progress-3.result.json",
+      "stagedBytes": 617,
+      "stagedSHA256": "f0c928b74784b7ee5386a6c2d04eaaa540c931d9c10b61c1fd3c3d131fb851e8"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/pg-ci-progress-3.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/pg-ci-progress-3.stdout.log.gz",
+      "stagedBytes": 3330,
+      "stagedSHA256": "2af00ef316eb52bb7bc6bf32696d994994ffb7dd1dc645bb2541cd92b92f760e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/pg-dispatch-job-log.result.json",
+      "stagedBytes": 632,
+      "stagedSHA256": "6cc8ad627c77fd4a70bb2b531bc698e3bb5feb686c3365b7616101c378c47b49"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/pg-dispatch-job-log.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/pg-dispatch-job-log.stdout.log.gz",
+      "stagedBytes": 320429,
+      "stagedSHA256": "8ac64506ba8524d86d9cbf127cbf5456b7d1e0a0c4e1c33f3e8546e52495dd62"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/pg-fix-commit.result.json",
+      "stagedBytes": 597,
+      "stagedSHA256": "aab20936a709911273b46ee17e4a92918ff7cda9bbce63c59ba1486c7442387c"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/pg-fix-commit.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/pg-fix-commit.stdout.log.gz",
+      "stagedBytes": 119,
+      "stagedSHA256": "e152e249296694fddf38c3a2b4b0ce96118450b02a3b50d0914aba80b1a5507b"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/pg-fix-push.result.json",
+      "stagedBytes": 545,
+      "stagedSHA256": "a66522af444a0b41d5c3901a59853319392fc2e1c9cf157492b420ab4ab72a31"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/pg-fix-push.stderr.log.gz",
+      "stagedBytes": 91,
+      "stagedSHA256": "69a7c28e5c68ae781fa4c70ed4281204d7ca0109b4c8e3efc78c848c0bba35e0"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/pg-fix-push.stdout.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/pg-fix-stage.result.json",
+      "stagedBytes": 599,
+      "stagedSHA256": "0e62f529afa03e44421339817ff229326195a220228cc73e8cfcd6536911334b"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/pg-fix-stage.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/pg-fix-stage.stdout.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/pg-fix-syntax.result.json",
+      "stagedBytes": 595,
+      "stagedSHA256": "59abce2e78df1adbff043abbd1507121680d10db90e991137e2dec9705708f6d"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/pg-fix-syntax.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/pg-fix-syntax.stdout.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/pg-native-job-log-retry.result.json",
+      "stagedBytes": 640,
+      "stagedSHA256": "14af3833cfcdf2939ef0ce02edace857893375fa3f5cf08b60f36c964a3f9f90"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/pg-native-job-log-retry.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/pg-native-job-log-retry.stdout.log.gz",
+      "stagedBytes": 11172,
+      "stagedSHA256": "0dd5037efe2dbb7cd94f18b23f12cf921b3ed54864aabeab6f417fd58f072465"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/pg-native-job-log.result.json",
+      "stagedBytes": 596,
+      "stagedSHA256": "3e18adf43743176c32e78e2fdc1317f40535a168300666a615d47f6ef2e12393"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/pg-native-job-log.stderr.log.gz",
+      "stagedBytes": 95,
+      "stagedSHA256": "e614c38bada94cb745fdb7400ac28a5e9ce3d9856e2c1331808cc931e9364457"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/pg-native-job-log.stdout.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/pg-usage-commit.result.json",
+      "stagedBytes": 606,
+      "stagedSHA256": "95bf618204d490f877b8f54fb8629d525fcdba355e8c45d7498898d7c01b04c4"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/pg-usage-commit.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/pg-usage-commit.stdout.log.gz",
+      "stagedBytes": 127,
+      "stagedSHA256": "f5195f9dd397b9e99dc3f36a3a4897bd731c4a10fedd420b368a3871deeedb9d"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/pg-usage-stage.result.json",
+      "stagedBytes": 614,
+      "stagedSHA256": "c0e54cbe405df9df5128dab4515b235d8fa09a18b439ee4c8fdb48977903cf82"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/pg-usage-stage.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/pg-usage-stage.stdout.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/prepare-before-v4-config.mjs",
+      "stagedBytes": 1318,
+      "stagedSHA256": "f86ee87106badeddc9426654ee7e1735bb873acde06fa469e95bbb31b373bdb1"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/prepare-fresh-config.mjs",
+      "stagedBytes": 1283,
+      "stagedSHA256": "e254c433b66308c57bd8a7b5d50a73f7f8518f25679ce4dedc0919269c40c4f6"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/prepare-helpers.mjs",
+      "stagedBytes": 1015,
+      "stagedSHA256": "b341e9d1bd81f52d8ebeda004fa20d9907e3994509d6d79144ddcb466d058d0a"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/prepare-v4-config-copy.mjs",
+      "stagedBytes": 738,
+      "stagedSHA256": "e071ccdd14b29ab0ea791cb40dc19c3918f39601abcd2546fbf13f81b7685ed7"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/production-live.live-proof.json",
+      "stagedBytes": 6014,
+      "stagedSHA256": "e13f0a32321f945130f215cb2659ff4f1003eb7aa8d7b509a1e3a71f8ac3bef4"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/production-live.result.json",
+      "stagedBytes": 738,
+      "stagedSHA256": "a01ff5ea1816676567b7ea74fe4090354c0e7d73e727cf72196a836d89102576"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/production-live.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/production-live.stdout.log.gz",
+      "stagedBytes": 1135,
+      "stagedSHA256": "711ecd193f0021cfc047dba65484ef715caf0e0d451817cff9001e07493be21b"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/review-v4-ast.mjs",
+      "stagedBytes": 2274,
+      "stagedSHA256": "cf03640c1b8950991e9bf7321890c6c8973d5a805cfdb5d03409cb18cdfb4f0a"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/root-functional-v4-summary.json",
+      "stagedBytes": 5563,
+      "stagedSHA256": "54acb417179713aa91bca77da4ecba2529479382f77ec3b52e2c590193b46fbe"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/root-v4-method-review.json",
+      "stagedBytes": 382,
+      "stagedSHA256": "a7d02b81235d3823c8e90380b34d0b41bb0d59d43e0d72bddc31df23489a2204"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/root-v4-review.result.json",
+      "stagedBytes": 642,
+      "stagedSHA256": "98834f6ee2c2dc610123dd05e6ee4ea47de86bd3f6fd9e013f7969aaf9bf395d"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/root-v4-review.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/root-v4-review.stdout.log.gz",
+      "stagedBytes": 255,
+      "stagedSHA256": "7660537c53d10acc57dcd47d28a6fae3e5702d0b63aa42cd0a3ccd37343e9425"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/root-v4-summary.result.json",
+      "stagedBytes": 643,
+      "stagedSHA256": "6595be9e9678c6239e345764055098024018c51f32d84d926dbf10eb0f682a86"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/root-v4-summary.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/root-v4-summary.stdout.log.gz",
+      "stagedBytes": 1451,
+      "stagedSHA256": "0e96fd256fcd45cdf41381bcb3ed15313aa0c4f47268e34be7ce40a0688066a7"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/run-command.mjs",
+      "stagedBytes": 1823,
+      "stagedSHA256": "63459e8bb31ae742fae6a60c3dda59cf058e4420cfe1d4ec55962bb6ff9416b4"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/second-ci-initial-fullsha.result.json",
+      "stagedBytes": 716,
+      "stagedSHA256": "566e4753b3cf460623707dc3b67fd4ce38f22a7be853c7f892736fd2864cdf85"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/second-ci-initial-fullsha.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/second-ci-initial-fullsha.stdout.log.gz",
+      "stagedBytes": 319,
+      "stagedSHA256": "dd450817447e3b95c38a4ba99f74514c6e286c37dbfecb8ed8ecab38b76f6582"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/second-ci-initial.result.json",
+      "stagedBytes": 668,
+      "stagedSHA256": "7257979c7da7ee9252028eab5fd6c91c10b17c065a274b87f358822476314cc6"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/second-ci-initial.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/second-ci-initial.stdout.log.gz",
+      "stagedBytes": 23,
+      "stagedSHA256": "858ce9c035384bc4f31d7895b470bc72809b733274d960eabeca130df6c3bb1a"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/second-dispatch-job-log.result.json",
+      "stagedBytes": 640,
+      "stagedSHA256": "cc72ed4dc590c2fba343c0b19db4464d795a86453a55d71864902cff583dea9e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/second-dispatch-job-log.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/second-dispatch-job-log.stdout.log.gz",
+      "stagedBytes": 319753,
+      "stagedSHA256": "cd6f38c1bff940d611915743d0642d64d041e455e043c8ab674df8aee2a75593"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/second-native-job-log.result.json",
+      "stagedBytes": 636,
+      "stagedSHA256": "5c69c0b0e16f08a1d363da557e6dceab65b3cf29931765e1ef0ab9813d16892d"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/second-native-job-log.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/second-native-job-log.stdout.log.gz",
+      "stagedBytes": 11861,
+      "stagedSHA256": "c3b982f10d0009a8a65151b02f25f785a73ad17f52c7a40dae1fae59b03df805"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/second-proxy-ci-final.result.json",
+      "stagedBytes": 679,
+      "stagedSHA256": "e2ee42f199ed5cec0bcd639205f48ae180a79ceb198ef74fa8e3f7efec12c847"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/second-proxy-ci-final.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/second-proxy-ci-final.stdout.log.gz",
+      "stagedBytes": 3449,
+      "stagedSHA256": "4910631f7cc48ce8b7ef30ab651e26558b2b23478b1f90eaa84b5741f7c520c6"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/second-proxy-ci-progress-1.result.json",
+      "stagedBytes": 637,
+      "stagedSHA256": "12647785a27baad356994ca7c3218b917d2428f7b316b62502d81b1355ae1244"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/second-proxy-ci-progress-1.stderr.log.gz",
+      "stagedBytes": 20,
+      "stagedSHA256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/second-proxy-ci-progress-1.stdout.log.gz",
+      "stagedBytes": 3450,
+      "stagedSHA256": "9d4464e5b9483d86856136f7252b056be9eccb46af92ecd2040f1e960e029140"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/snapshot-checklist.mjs",
+      "stagedBytes": 1074,
+      "stagedSHA256": "2c106dcb64a5dcfb76aba89f3bf7e35fbecedda0bf4329a0623b3f53c72b5770"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/snapshot-scope-v2.mjs",
+      "stagedBytes": 1454,
+      "stagedSHA256": "7433f075752d106908f39e866b0d74a04ab0c66f78e40d86155b505f09b91117"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/summarize-ci.mjs",
+      "stagedBytes": 540,
+      "stagedSHA256": "cf366eb089c365841a780ff031bde3ac9517d1bbc78767a8ddba2a33e7120155"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/summarize-v4.mjs",
+      "stagedBytes": 1886,
+      "stagedSHA256": "c8526972c73aff1a57927ba7106a738703c40c1d0be8b4bf9ea733c764288aba"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/update-checklist-progress.mjs",
+      "stagedBytes": 5553,
+      "stagedSHA256": "bebf911716dd19c233127f7e10471d50635a209ac9560c2137207a247cf1092b"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/verify-checklist-scope.mjs",
+      "stagedBytes": 1399,
+      "stagedSHA256": "9ed2f764f3ac7a7c1a60fb37d2c7e4d1a0ba5463275a84cc18152221db49caf2"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/verify-live-web.mjs",
+      "stagedBytes": 3895,
+      "stagedSHA256": "5844876209af73a43a55076ffc7aa9c72dae28f86366c0ed5f7e3be383aa88d7"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/web-format-before-ssr-ci.result.json",
+      "stagedBytes": 659,
+      "stagedSHA256": "a32d54e2edef9f38e71d908222e7c0b182c44713db7c4c2286ff01495314813e"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/web-format-before-ssr-ci.stderr.log.gz",
+      "stagedBytes": 450,
+      "stagedSHA256": "69fbfa8071e859ee6ab0d0f2b5020b1e0d0f5b9adc708998d14382ddc14b3b64"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/root-progress/web-format-before-ssr-ci.stdout.log.gz",
+      "stagedBytes": 285,
+      "stagedSHA256": "d4140e5e83f808a03d81b9919d86530ebfae2584a5880df8014ab64752e4cd3b"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/workerd-diagnosis/FINAL-workerd-v364-cancel-diagnosis.json",
+      "stagedBytes": 27533,
+      "stagedSHA256": "dbb091ed9409f268caebc7d2ab44e841f1d38b2d888f1ac04e3ab5cf9bfc07fd"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/workerd-diagnosis/diagnosis-seal.result.json",
+      "stagedBytes": 672,
+      "stagedSHA256": "9cb44480380a055424cd514ecdff993cedb6534967534a9d7af6ffad8bfd6763"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/workerd-diagnosis/diagnosis-seal.stderr.txt",
+      "stagedBytes": 0,
+      "stagedSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/workerd-diagnosis/diagnosis-seal.stdout.txt",
+      "stagedBytes": 2712,
+      "stagedSHA256": "5f8c9914f31b8a587ee59ad8d60253392f910a782232d786d508999dfcb851b4"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/workerd-diagnosis/issue6832.result.json",
+      "stagedBytes": 588,
+      "stagedSHA256": "655023391df6695cd8bc68eee8495a43d2931a971f010608bad1af335a6609e5"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/workerd-diagnosis/issue6832.stderr.txt",
+      "stagedBytes": 0,
+      "stagedSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/workerd-diagnosis/issue6832.stdout.txt",
+      "stagedBytes": 8540,
+      "stagedSHA256": "b72bd2e14bdd05ad09cc4106126c7124da744a4f8ba009a33305535432030fdd"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/workerd-diagnosis/locked-compatibility.result.json",
+      "stagedBytes": 694,
+      "stagedSHA256": "8cf4f13a6991d38f4e4c5aeaca263ff451eb223b6e6b8b67dca5142a543f7d5b"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/workerd-diagnosis/locked-compatibility.source.txt",
+      "stagedBytes": 88675,
+      "stagedSHA256": "dde45e2337fe1c8991f165b452968c86008852e086ccdc5e0470a25bd6dafb95"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/workerd-diagnosis/locked-compatibility.stderr.txt",
+      "stagedBytes": 0,
+      "stagedSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/workerd-diagnosis/locked-compatibility.stdout.txt",
+      "stagedBytes": 123322,
+      "stagedSHA256": "205add3273bcf806c42f20e60ea4d5a5c50ec4471def1e08f893b096bb600701"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/workerd-diagnosis/locked-readable.result.json",
+      "stagedBytes": 680,
+      "stagedSHA256": "d81915d5ec649538b2409fa013af183a8b0bc69d6319659206d27b1d50a0ad80"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/workerd-diagnosis/locked-readable.source.txt",
+      "stagedBytes": 31774,
+      "stagedSHA256": "ca762b8e7ea908b29eb2c99db4bcad7e50b5f206cd1a75312f4b2b658bfe7f08"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/workerd-diagnosis/locked-readable.stderr.txt",
+      "stagedBytes": 0,
+      "stagedSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/workerd-diagnosis/locked-readable.stdout.txt",
+      "stagedBytes": 44912,
+      "stagedSHA256": "28be723698c973bb690793e82b1a2ad6205216d2e4917f49f30642ab75c3ac85"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/workerd-diagnosis/locked-release-ref.result.json",
+      "stagedBytes": 620,
+      "stagedSHA256": "ea722d98313a8379c36c8d7eb2e17fb152314883b4b9e3d50d97d11133fb8a71"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/workerd-diagnosis/locked-release-ref.stderr.txt",
+      "stagedBytes": 0,
+      "stagedSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/workerd-diagnosis/locked-release-ref.stdout.txt",
+      "stagedBytes": 361,
+      "stagedSHA256": "af47a8a34c782efe3a4490f3314c5ec7ba488cce5d5a0486f361622b0dec2343"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/workerd-diagnosis/locked-standard.result.json",
+      "stagedBytes": 681,
+      "stagedSHA256": "56218160f5d0ea31780e5bb90c0dfc6aaa3500d5a628cd0d6ab5499e10cadf44"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/workerd-diagnosis/locked-standard.source.txt",
+      "stagedBytes": 193298,
+      "stagedSHA256": "f64a9fe8ab0c2f3bc397ac18d35d59e5c1be8ead1182c7ccd668bfbd993bc698"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/workerd-diagnosis/locked-standard.stderr.txt",
+      "stagedBytes": 0,
+      "stagedSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/workerd-diagnosis/locked-standard.stdout.txt.gz",
+      "stagedBytes": 76376,
+      "stagedSHA256": "d83adbf111dbbce83fcdaadb9f9c46bbf5ec4906efdeabe8b22c23638e7bcd28"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/workerd-diagnosis/locked-worker-entrypoint.result.json",
+      "stagedBytes": 698,
+      "stagedSHA256": "53eaf4b9f60ce06a0885d9619ca832048bf2d8868b67d79867655ea9b087b2b1"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/workerd-diagnosis/locked-worker-entrypoint.source.txt",
+      "stagedBytes": 50916,
+      "stagedSHA256": "5a26985f9d80021e9af91b0569c54b7d9c987bf5b6ca6d63d37da5c1fab28bf9"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/workerd-diagnosis/locked-worker-entrypoint.stderr.txt",
+      "stagedBytes": 0,
+      "stagedSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/workerd-diagnosis/locked-worker-entrypoint.stdout.txt",
+      "stagedBytes": 71291,
+      "stagedSHA256": "2be4b4e582be2871b0f889938fe170fffa0dc3f2f3021f0bc5f50ad0e1a21d84"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/workerd-diagnosis/pr6833.result.json",
+      "stagedBytes": 582,
+      "stagedSHA256": "f02c2af4e0ca7b1453e602151fb99cdc7a2a954549f4faaa4edb5e88121f5bdb"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/workerd-diagnosis/pr6833.stderr.txt",
+      "stagedBytes": 0,
+      "stagedSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/workerd-diagnosis/pr6833.stdout.txt",
+      "stagedBytes": 22819,
+      "stagedSHA256": "300fbc16c0a7be3ca448d18a1bd46bfa8cbf02e2383b1b8d1cab07a847a3c45b"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/workerd-diagnosis/pr7600-files.result.json",
+      "stagedBytes": 613,
+      "stagedSHA256": "356924a646fa5c57e6f18d450507f73fe8cd4f564c2610af66365f90d449f2e3"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/workerd-diagnosis/pr7600-files.stderr.txt",
+      "stagedBytes": 0,
+      "stagedSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/workerd-diagnosis/pr7600-files.stdout.txt",
+      "stagedBytes": 15133,
+      "stagedSHA256": "7ed0a3a92f9279543e2889755a8b3a1b7ce47caf36b98413e408e67e56ca8b58"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/workerd-diagnosis/pr7600.result.json",
+      "stagedBytes": 582,
+      "stagedSHA256": "604bb6e0cfafa92a49f7e5be826e53f6fa2279fde11ac11dfec632cd651f8548"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/workerd-diagnosis/pr7600.stderr.txt",
+      "stagedBytes": 0,
+      "stagedSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/workerd-diagnosis/pr7600.stdout.txt",
+      "stagedBytes": 18882,
+      "stagedSHA256": "571d37136970021a603e8b490688d3e8d40d52633dc2e3dcf05f437cb12d728d"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/workerd-diagnosis/run-readonly.mjs",
+      "stagedBytes": 1733,
+      "stagedSHA256": "b8d7236bc2c97a1ad6a2dbabdd5f81beb74268e072a4dfef0afc4d1e826a924b"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-web-cutover-followup/workerd-diagnosis/seal-diagnosis.mjs",
+      "stagedBytes": 11626,
+      "stagedSHA256": "5f03a926fd399070772ffb11e61797a806d7048c8b09e80c5a98153dc127a641"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "at": "2026-10-05T23:51:05.269Z",
+  "actualExit": 0,
+  "originalMainAssertions": 85,
+  "originalExecutorAssertions": 4,
+  "orderedAstEqual": true,
+  "sealedInputsMatch": true,
+  "readOnly": true,
+  "productionRequests": 0,
+  "rootReviewedReadinessAndAllDifferences": true,
+  "scope": "method/code approval only; actual functional45 and originalnetworkidle QA remain unproven"
+}

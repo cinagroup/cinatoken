@@ -1,0 +1,8 @@
+{
+  "startedAt": "2026-10-05T23:41:30.8430264Z",
+  "completedAt": "2026-10-05T23:41:30.9978562Z",
+  "dockerRuntimeExecuted": false,
+  "command": "node --check docker/web/ssr-smoke.mjs",
+  "terminal": true,
+  "actualExitCode": 0
+}

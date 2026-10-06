@@ -1,0 +1,68 @@
+{
+  "report": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-workerd-cancel-diagnosis-393aa84d3e474d2184c6c0b189c803a9\\FINAL-workerd-v364-cancel-diagnosis.json",
+    "bytes": 27533,
+    "sha256": "dbb091ed9409f268caebc7d2ab44e841f1d38b2d888f1ac04e3ab5cf9bfc07fd"
+  },
+  "scope": {
+    "repositoryChanges": 0,
+    "dependencyUpgrades": 0,
+    "fixtureAssertionChanges": 0,
+    "CIInvocations": 0,
+    "CIPolls": 0,
+    "localWorkerdExecutions": 0,
+    "productionRequests": 0,
+    "DBConnections": 0,
+    "DBWrites": 0,
+    "productionBindingsOrFlagsChanged": false
+  },
+  "upstreamStates": [
+    {
+      "number": 6832,
+      "title": "🐛 Bug Report — Runtime APIs: client disconnect no longer cancels async ReadableStream response body (regressed in 1.20260619.1, persists in 1.20260717.1)",
+      "state": "open",
+      "updatedAt": "2026-07-17T11:39:03Z",
+      "merged": null,
+      "mergedAt": null,
+      "headSHA": null,
+      "url": "https://github.com/cloudflare/workerd/issues/6832"
+    },
+    {
+      "number": 6833,
+      "title": "Cancel the JS source when a ReadableStream pump is dropped mid-stream",
+      "state": "open",
+      "updatedAt": "2026-07-25T08:25:30Z",
+      "merged": false,
+      "mergedAt": null,
+      "headSHA": "8fe8fa68f0b93cf8ae90f20c4ac4b975158b5a8c",
+      "url": "https://github.com/cloudflare/workerd/pull/6833"
+    },
+    {
+      "number": 7600,
+      "title": "Fixup streams cancelation regression",
+      "state": "open",
+      "updatedAt": "2026-10-05T17:26:49Z",
+      "merged": false,
+      "mergedAt": null,
+      "headSHA": "955f31cf92df5461463e48fae6c870f86a07b537",
+      "url": "https://github.com/cloudflare/workerd/pull/7600"
+    }
+  ],
+  "lockedRuntime": {
+    "workerd": "1.20260828.1",
+    "miniflare": "5.20260828.0-alpha",
+    "wrangler": "4.127.1",
+    "releaseRef": "refs/tags/v1.20260828.1",
+    "releaseCommit": "8ea63498c7aa107995f9b2ffee7789631707e09f"
+  },
+  "confidence": {
+    "proven": "The locked runtime contains the exact missing drop-cancel mechanism described by upstream issue6832, and the project failure reaches the matching async SSE/socket-close boundary.",
+    "inference": "An upstream runtime regression is a strong candidate for the project null cancellation observation.",
+    "notYetProven": [
+      "No isolated differential execution with a fixed runtime was run; the exact project failure causal chain remains unconfirmed.",
+      "The one-second observation poll and KV request lifetime are not independently ruled out as contributing factors.",
+      "No production Web SSE defect or general Service Binding/RPC cancellation failure is established."
+    ],
+    "strictFailedTestRetained": true
+  }
+}

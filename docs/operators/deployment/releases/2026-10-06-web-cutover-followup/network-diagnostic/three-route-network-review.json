@@ -1,0 +1,402 @@
+{
+  "schema": "cinatoken-production-three-route-network-review-v1",
+  "at": "2026-10-05T23:36:18.635Z",
+  "actualExit": 0,
+  "networkidleScope": "Only three direct routes; original failed45-route v3 remains31/45 and failed; no new full matrix run",
+  "startedAt": "2026-10-05T23:33:52.672Z",
+  "finishedAt": "2026-10-05T23:34:06.197Z",
+  "elapsedMs": 13524.662,
+  "gitSHA": "c13a64b9c3b2c90adcf736910ea408868d7854f1",
+  "workerVersionId": "2a0a2777-d3b1-47f0-a0a7-88e701b4d2d9",
+  "freshRootLiveProof": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-migration-progress-20261006-541315903c5243bc9a08bbc8a3515df4/production-live.live-proof.json",
+    "bytes": 6014,
+    "sha256": "e13f0a32321f945130f215cb2659ff4f1003eb7aa8d7b509a1e3a71f8ac3bef4"
+  },
+  "environment": {
+    "origin": "https://cinatoken.com",
+    "chrome": "147.0.7727.15",
+    "playwright": "1.62.1",
+    "browserPlugin": "absent",
+    "fallbackReason": "Browser plugin not available",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "locale": "en-US",
+    "colorScheme": "light",
+    "contextCount": 1,
+    "anonymousInitialCookieCount": 0,
+    "routeGuard": "Original GET/HEAD only; context.route disables HTTP cache; all observed CDP requests GET"
+  },
+  "pages": [
+    {
+      "route": "/account/withdraw",
+      "networkidlePassed": true,
+      "timeoutMs": 45000,
+      "navigationStatus": 200,
+      "gotoDurationMs": 6365.3,
+      "original45sTimeout": false,
+      "pendingAtSettlement": {
+        "atMs": 7319.211,
+        "playwright": [],
+        "cdp": []
+      },
+      "pendingAfterEvidence": {
+        "atMs": 7368.269,
+        "playwright": [],
+        "cdp": []
+      },
+      "renderChecks": {
+        "identity": true,
+        "nonblank": true,
+        "noFrameworkOverlay": true,
+        "noHydrationFailure": true,
+        "expectedGate": true
+      },
+      "title": "CinaToken",
+      "requestCount": 22,
+      "resourceTimingCount": 22,
+      "documentTTFBms": 416.8040000000001,
+      "documentDurationMs": 1639.985,
+      "documentCacheControl": "no-store, no-transform",
+      "documentCFCacheStatus": "HIT",
+      "documentServerTiming": "cfCacheStatus;desc=\"HIT\"\ncfEdge;dur=59,cfOrigin;dur=0,cfWorker;dur=11",
+      "maxRequestTTFBms": 1124.6370000000002,
+      "maxRequestDurationMs": 1901.843,
+      "lastRequest": {
+        "url": "https://cinatoken.com/api/user/me",
+        "finishMs": 6817.791
+      },
+      "measuredIdleGapMs": 501.41499999999996,
+      "cacheHITs": 21,
+      "exactAnonymous401": 1,
+      "screenshot": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-production-network-diag-20261006-native-Tidwqh\\fresh-three-route-diag-account.png",
+        "bytes": 23753,
+        "sha256": "a99bb9d22fd16eaebd41e31ccceef6363f27760a9d6c0d6e3e6be1c6f5c4b8fb"
+      }
+    },
+    {
+      "route": "/admin/config/timezone",
+      "networkidlePassed": true,
+      "timeoutMs": 45000,
+      "navigationStatus": 200,
+      "gotoDurationMs": 2966.9179999999997,
+      "original45sTimeout": false,
+      "pendingAtSettlement": {
+        "atMs": 10336.867,
+        "playwright": [],
+        "cdp": []
+      },
+      "pendingAfterEvidence": {
+        "atMs": 10395.514,
+        "playwright": [],
+        "cdp": []
+      },
+      "renderChecks": {
+        "identity": true,
+        "nonblank": true,
+        "noFrameworkOverlay": true,
+        "noHydrationFailure": true,
+        "expectedGate": true
+      },
+      "title": "CinaToken",
+      "requestCount": 21,
+      "resourceTimingCount": 21,
+      "documentTTFBms": 337.42,
+      "documentDurationMs": 341.331,
+      "documentCacheControl": "no-store, no-transform",
+      "documentCFCacheStatus": "HIT",
+      "documentServerTiming": "cfCacheStatus;desc=\"HIT\"\ncfEdge;dur=3,cfOrigin;dur=0,cfWorker;dur=6\ncfExtPri",
+      "maxRequestTTFBms": 500.313,
+      "maxRequestDurationMs": 797.055,
+      "lastRequest": {
+        "url": "https://cinatoken.com/web-assets/logo.png",
+        "finishMs": 9829.272
+      },
+      "measuredIdleGapMs": 507.59099999999853,
+      "cacheHITs": 19,
+      "exactAnonymous401": 1,
+      "screenshot": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-production-network-diag-20261006-native-Tidwqh\\fresh-three-route-diag-admin.png",
+        "bytes": 25449,
+        "sha256": "3903b8a1ace00a01f66aa85758c1fdd71fd081e2d3b8b76c1967475ed3cf94f2"
+      }
+    },
+    {
+      "route": "/en",
+      "networkidlePassed": true,
+      "timeoutMs": 45000,
+      "navigationStatus": 200,
+      "gotoDurationMs": 2921.751,
+      "original45sTimeout": false,
+      "pendingAtSettlement": {
+        "atMs": 13319.307,
+        "playwright": [],
+        "cdp": []
+      },
+      "pendingAfterEvidence": {
+        "atMs": 13366.298,
+        "playwright": [],
+        "cdp": []
+      },
+      "renderChecks": {
+        "identity": true,
+        "nonblank": true,
+        "noFrameworkOverlay": true,
+        "noHydrationFailure": true,
+        "expectedGate": true
+      },
+      "title": "CinaToken — Unified AI gateway",
+      "requestCount": 14,
+      "resourceTimingCount": 13,
+      "documentTTFBms": 429.064,
+      "documentDurationMs": 440.986,
+      "documentCacheControl": "no-store, no-transform",
+      "documentCFCacheStatus": null,
+      "documentServerTiming": "cfEdge;dur=6,cfOrigin;dur=0,cfWorker;dur=94\ncfExtPri",
+      "maxRequestTTFBms": 429.064,
+      "maxRequestDurationMs": 451.726,
+      "lastRequest": {
+        "url": "https://cinatoken.com/web-assets/logo.png",
+        "finishMs": 12807.484
+      },
+      "measuredIdleGapMs": 511.8179999999993,
+      "cacheHITs": 13,
+      "exactAnonymous401": 0,
+      "screenshot": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-production-network-diag-20261006-native-Tidwqh\\fresh-three-route-diag-public.png",
+        "bytes": 54114,
+        "sha256": "3c3002c14200c075db9cb4077fc6926e1543c1dbc907150ee4981237dd71fbe6"
+      }
+    }
+  ],
+  "summary": {
+    "navigationCount": 3,
+    "networkidlePasses": 3,
+    "original45sTimeouts": 0,
+    "requestCount": 57,
+    "cdpRequestCount": 59,
+    "requestFailureCount": 0,
+    "pageErrorCount": 0,
+    "consoleErrors": 2,
+    "unexplainedConsole": 0,
+    "refusedMutations": 0,
+    "cdpFailureCount": 2,
+    "cdpFaviconCancels": [
+      {
+        "navigation": "/account/withdraw",
+        "url": "https://cinatoken.com/web-assets/favicon.ico",
+        "method": "GET",
+        "type": "Other",
+        "initiatorType": "other",
+        "startMs": 6119.868,
+        "failedMs": 6121.323,
+        "failure": "net::ERR_ABORTED",
+        "canceled": true,
+        "duringClosing": false
+      },
+      {
+        "navigation": "/admin/config/timezone",
+        "url": "https://cinatoken.com/web-assets/favicon.ico",
+        "method": "GET",
+        "type": "Other",
+        "initiatorType": "other",
+        "startMs": 9449.455,
+        "failedMs": 9450.444,
+        "failure": "net::ERR_ABORTED",
+        "canceled": true,
+        "duringClosing": false
+      }
+    ],
+    "cdpDataEvents": 1000,
+    "cdpDecodedDataBytes": 4940889,
+    "cdpEncodedDataBytes": 1528344,
+    "cdpLoadingFinishedBytes": 1591273,
+    "diskCacheResponses": 0,
+    "serviceWorkerResponses": 0
+  },
+  "visualInspection": {
+    "performed": true,
+    "method": "view_image loaded all three actual screenshots",
+    "account": "Correct Your account, one secure sign-in card; no workspace picker; content visible without clipping.",
+    "admin": "Correct Sign in to the console card; no privileged console navigation.",
+    "public": "CinaToken unified AI gateway hero, links and code sample visible; no blank shell or framework overlay."
+  },
+  "qaChecks": [
+    {
+      "check": "Page identity",
+      "status": "PASS",
+      "evidence": "Exact routeURL/title for three pages"
+    },
+    {
+      "check": "Nonblank",
+      "status": "PASS",
+      "evidence": "Body lengths 361/account, 359/admin, 2984/public; actual screenshot review"
+    },
+    {
+      "check": "Framework overlay/hydration",
+      "status": "PASS",
+      "evidence": "0 overlay elements, hydrationFailurefalse, visual screenshot review"
+    },
+    {
+      "check": "Console health",
+      "status": "PASS",
+      "evidence": "2 exact GET user/me401 Unauthorized; 0 unexplained app console or page errors"
+    },
+    {
+      "check": "Screenshot evidence",
+      "status": "PASS",
+      "evidence": "All3 screenshots retained and visually inspected"
+    },
+    {
+      "check": "Interaction/state",
+      "status": "PASS",
+      "evidence": "Three actual direct page.goto navigations; private anonymous gate DOM; no privileged controls"
+    }
+  ],
+  "limitations": [
+    "Original v2 timedout at25/45 and23/45, v3 failed31/45; all raw historical inputs remain unchanged.",
+    "This single-context smaller sample did not reproduce the historical four-context networkidle failures; causal claim or fixed full45-route claim unsupported.",
+    "No timeout occurred in this run; pending arrays at networkidle settlement are empty, not a captured timeout state.",
+    "2 CDP-only browser favicon GET requests were canceled with net::ERR_ABORTED before an HTTP status; logo.png200; no inference about the original timeout cause.",
+    "No authenticated/CinaAuth/OIDC/CSRF, business/financial writes, mobile/theme/locale interactions, deployment/flag/DB mutation in this diagnostic."
+  ],
+  "writes": {
+    "source": 0,
+    "deployments": 0,
+    "database": 0,
+    "api": 0
+  },
+  "closure": {
+    "executorExit": {
+      "code": 0,
+      "signal": null
+    },
+    "executorTimedOut": false,
+    "contextClosed": true,
+    "browserClosed": true,
+    "inputRawStillSame": true,
+    "bindingsUnchanged": true
+  },
+  "raw": [
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-production-network-diag-20261006-native-Tidwqh/fresh-three-route-diag-execution-closed.json",
+      "bytes": 4640,
+      "sha256": "9c2ffcc82b457727b91c62f8c8ecc04b3c477eadf0801a00446fefba2657cb6c"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-production-network-diag-20261006-native-Tidwqh/fresh-three-route-diag.json",
+      "bytes": 264529,
+      "sha256": "8102c94937f0ef5040945107509de46ada4c8c17f2afbda66daa5ac42b6c74a7"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-production-network-diag-20261006-native-Tidwqh/fresh-three-route-diag-events.jsonl",
+      "bytes": 293937,
+      "sha256": "02644424f3a1fe90c1548089317623dc851aa62450755f045dcfa56eb5863687"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-production-network-diag-20261006-native-Tidwqh/fresh-three-route-diag-stdout.log",
+      "bytes": 1311,
+      "sha256": "3c9feae6591b19b3fc13ec0f59ac88532357f6907c102793131c406439a77e9d"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-production-network-diag-20261006-native-Tidwqh/fresh-three-route-diag-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-production-network-diag-20261006-native-Tidwqh/preparation.receipt.json",
+      "bytes": 6379,
+      "sha256": "d3f97e53c0af674edf115e501aca25271b3d97ba2d2dc6be1442eea249b92292"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-production-network-diag-20261006-biqh68/pre-spawn-execution-failure.json",
+      "bytes": 1047,
+      "sha256": "e6f4fb1cb327ce0274c40d39ba715d37d6ffa486990f9e87f219fd74f2cb2f94"
+    }
+  ],
+  "sealedHistoricalInputs": [
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197/production-web-browser-observe-v2.mjs",
+      "bytes": 15695,
+      "sha256": "415d123bbc71cfdb5d8ed02bf91f01d9021031358667cd7aaf2f0fd6edcd55be"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197/execute-web-browser-observe-v2.mjs",
+      "bytes": 3432,
+      "sha256": "ffd074ec8b52d5ce7c9dbd8a9dace29ec29130b661e0290e72f1f2d2d0424ed8"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197/web-route-matrix.mjs",
+      "bytes": 1770,
+      "sha256": "c8a3211d07979c037022f689aa442bd95de9b7c11843fb52b9ae9fa93ac01e61"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197/retention-c13a64b9-v2.json",
+      "bytes": 81183,
+      "sha256": "8b07f5439bb92498498b47a89a1a92e5703779e32e40c03b26e977d51afb8de2"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197/retention-c13a64b9-v2-retry.json",
+      "bytes": 81011,
+      "sha256": "e61e4c6c574167722d611b496031bfe5edac8b9c74343469e2a37974d7996e9a"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2/production-web-browser-observe-v3.mjs",
+      "bytes": 25585,
+      "sha256": "5fe013bb9c8cd533aa144b4c3820b11008359370dfef44b1b4a4f922781ffa34"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2/execute-web-browser-observe-v3.mjs",
+      "bytes": 4436,
+      "sha256": "f43341b099a5c8bcba8e3dfd625b3e1a24de7467ad03370b25a14a08a5d736e4"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2/web-route-matrix.mjs",
+      "bytes": 1770,
+      "sha256": "c8a3211d07979c037022f689aa442bd95de9b7c11843fb52b9ae9fa93ac01e61"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2/retention-c13a64b9-v3.json",
+      "bytes": 258217,
+      "sha256": "3c0e86227908a771ae8463bd7de714664f444e8f6a474c98ad7eb77c93febb2f"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2/retention-c13a64b9-v3-execution-closed.json",
+      "bytes": 6519,
+      "sha256": "6ca17e2bf34611013514bea53428cf698397ce9bc73869c0ad0b10eb8a96f382"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2/final-browser-v3-review.json",
+      "bytes": 17521,
+      "sha256": "0c2069c47d06e418da92c2d86bf42f9d2c80dd2f945634acdc753d08a2fa0048"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-migration-progress-20261006-541315903c5243bc9a08bbc8a3515df4/fresh-guard.deployment-guard.json",
+      "bytes": 1030,
+      "sha256": "19c6d56cf6c71ccb419090abceb408258b3df74988b339e7d036ceb1e3333c8a"
+    }
+  ],
+  "screenshots": [
+    {
+      "route": "/account/withdraw",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-production-network-diag-20261006-native-Tidwqh\\fresh-three-route-diag-account.png",
+      "bytes": 23753,
+      "sha256": "a99bb9d22fd16eaebd41e31ccceef6363f27760a9d6c0d6e3e6be1c6f5c4b8fb"
+    },
+    {
+      "route": "/admin/config/timezone",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-production-network-diag-20261006-native-Tidwqh\\fresh-three-route-diag-admin.png",
+      "bytes": 25449,
+      "sha256": "3903b8a1ace00a01f66aa85758c1fdd71fd081e2d3b8b76c1967475ed3cf94f2"
+    },
+    {
+      "route": "/en",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-production-network-diag-20261006-native-Tidwqh\\fresh-three-route-diag-public.png",
+      "bytes": 54114,
+      "sha256": "3c3002c14200c075db9cb4077fc6926e1543c1dbc907150ee4981237dd71fbe6"
+    }
+  ]
+}

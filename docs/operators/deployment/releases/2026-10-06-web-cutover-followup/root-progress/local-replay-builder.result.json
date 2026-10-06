@@ -1,0 +1,16 @@
+{
+  "at": "2026-10-05T23:32:33.275Z",
+  "finishedAt": "2026-10-05T23:32:34.213Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "--import",
+    "tsx",
+    "--test",
+    "scripts/db/cutover/build-postgres-replay-reservation-backfill.test.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-migration-progress-20261006-541315903c5243bc9a08bbc8a3515df4/local-replay-builder.stdout.log",
+  "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-migration-progress-20261006-541315903c5243bc9a08bbc8a3515df4/local-replay-builder.stderr.log"
+}

@@ -1,0 +1,1 @@
+{"ref":"refs/tags/v1.20260828.1","node_id":"REF_kwDOIANE6bdyZWZzL3RhZ3MvdjEuMjAyNjA4MjguMQ","url":"https://api.github.com/repos/cloudflare/workerd/git/refs/tags/v1.20260828.1","object":{"sha":"8ea63498c7aa107995f9b2ffee7789631707e09f","type":"commit","url":"https://api.github.com/repos/cloudflare/workerd/git/commits/8ea63498c7aa107995f9b2ffee7789631707e09f"}}

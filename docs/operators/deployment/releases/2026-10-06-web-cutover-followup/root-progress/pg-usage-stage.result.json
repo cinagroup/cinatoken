@@ -1,0 +1,15 @@
+{
+  "at": "2026-10-05T23:47:36.864Z",
+  "finishedAt": "2026-10-05T23:47:36.917Z",
+  "executable": "C:/Program Files/Git/cmd/git.exe",
+  "args": [
+    "add",
+    "--",
+    "scripts/db/cutover/postgres-shared-key-usage-repair-jobs.native.test.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-migration-progress-20261006-541315903c5243bc9a08bbc8a3515df4/pg-usage-stage.stdout.log",
+  "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-migration-progress-20261006-541315903c5243bc9a08bbc8a3515df4/pg-usage-stage.stderr.log"
+}

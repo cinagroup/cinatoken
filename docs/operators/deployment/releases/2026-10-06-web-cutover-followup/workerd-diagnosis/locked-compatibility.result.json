@@ -1,0 +1,16 @@
+{
+  "startedAt": "2026-10-05T23:37:22.271Z",
+  "completedAt": "2026-10-05T23:37:24.712Z",
+  "program": "gh",
+  "arguments": [
+    "api",
+    "repos/cloudflare/workerd/contents/src/workerd/io/compatibility-date.capnp?ref=8ea63498c7aa107995f9b2ffee7789631707e09f"
+  ],
+  "actualExitCode": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdoutPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-workerd-cancel-diagnosis-393aa84d3e474d2184c6c0b189c803a9\\locked-compatibility.stdout.txt",
+  "stderrPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-workerd-cancel-diagnosis-393aa84d3e474d2184c6c0b189c803a9\\locked-compatibility.stderr.txt",
+  "stdoutBytes": 123322,
+  "stderrBytes": 0
+}

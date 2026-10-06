@@ -1,0 +1,17 @@
+{
+  "at": "2026-10-05T23:44:01.879Z",
+  "finishedAt": "2026-10-05T23:44:31.081Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:/Program Files/nodejs/node_modules/npm/bin/npm-cli.js",
+    "run",
+    "format:check",
+    "-w",
+    "@cinatoken/web"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 1,
+  "signal": null,
+  "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-migration-progress-20261006-541315903c5243bc9a08bbc8a3515df4/web-format-before-ssr-ci.stdout.log",
+  "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-migration-progress-20261006-541315903c5243bc9a08bbc8a3515df4/web-format-before-ssr-ci.stderr.log"
+}

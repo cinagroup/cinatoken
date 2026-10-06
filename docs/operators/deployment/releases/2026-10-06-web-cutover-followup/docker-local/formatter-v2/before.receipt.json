@@ -1,0 +1,8 @@
+{
+  "source": "docker/web/ssr-smoke.mjs",
+  "bytes": 15944,
+  "sha256": "bee250e5bf0a43700971b8d7e03b27f6b73c21b93e564673af2eb1fa6474e8ab",
+  "preservedBeforeWrite": true,
+  "webPrettier": "3.9.9",
+  "rootPrettier": "2.8.8"
+}

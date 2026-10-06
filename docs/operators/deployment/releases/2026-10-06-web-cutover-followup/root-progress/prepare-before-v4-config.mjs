@@ -1,0 +1,6 @@
+import fs from 'node:fs';import path from 'node:path';import crypto from 'node:crypto';import assert from 'node:assert/strict';import {fileURLToPath} from 'node:url';
+const temp=path.dirname(fileURLToPath(import.meta.url)),proofPath=temp+'/before-functional-v4.live-proof.json';
+const bytes=fs.readFileSync(proofPath),proof=JSON.parse(bytes);assert.equal(proof.actualExit,0);assert.equal(proof.sourceCommit,'c13a64b9c3b2c90adcf736910ea408868d7854f1');assert.equal(proof.route.script,'cinatoken-web');const web=proof.workers.find(w=>w.name==='cinatoken-web');assert.equal(web.flags.enabled,29);assert.equal(web.percentage,100);
+const guard=JSON.parse(fs.readFileSync(temp+'/before-functional-v4-guard.deployment-guard.json'));assert.equal(guard.actualExit,0);assert.equal(guard.deployment.versions[0].version_id,proof.webVersionId);
+const config={gitSHA:proof.sourceCommit,workerVersionId:proof.webVersionId,phase:'cutover',targetOrigin:'https://cinatoken.com',canonicalOrigin:'https://cinatoken.com',operatorVerifiedLiveVersion:true,all29FlagsEnabled:true,liveProof:{path:proofPath,bytes:bytes.length,sha256:crypto.createHash('sha256').update(bytes).digest('hex')}};
+fs.writeFileSync(temp+'/before-functional-v4.browser-config.json',JSON.stringify(config,null,2)+'\n',{flag:'wx'});console.log(JSON.stringify(config));

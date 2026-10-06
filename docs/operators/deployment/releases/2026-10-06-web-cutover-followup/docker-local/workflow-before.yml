@@ -1,0 +1,194 @@
+name: Web frontend
+
+on:
+  pull_request:
+    paths:
+      - "packages/web/**"
+      - "packages/admin/**"
+      - "packages/admin/lib/model-vendors.json"
+      - "packages/core/**"
+      - "packages/tool-engines/**"
+      - "packages/proxy/src/**"
+      - "packages/*/package.json"
+      - "docker/web/**"
+      - "Dockerfile.web"
+      - "Dockerfile.web-ssr"
+      - "docker/examples/web-frontend.compose.yml"
+      - "package.json"
+      - "package-lock.json"
+      - "LICENSE"
+      - "NOTICE.frontend"
+      - "tsconfig*.json"
+      - ".editorconfig"
+      - ".browserslistrc"
+      - ".dockerignore"
+      - ".nvmrc"
+      - ".npmrc"
+      - "scripts/web/**"
+      - "scripts/ci/verify-package-versions.mjs"
+      - "scripts/ci/verify-*-migration-contract.mjs"
+      - "scripts/ci/verify-d1-portal-ledger.mjs"
+      - "scripts/db/lib/**"
+      - "scripts/db/cutover/**"
+      - "scripts/deploy/verify-recovery-schema-artifact.mjs"
+      - ".github/workflows/web-frontend.yml"
+  push:
+    branches: [main, develop]
+    paths:
+      - "packages/web/**"
+      - "packages/admin/**"
+      - "packages/admin/lib/model-vendors.json"
+      - "packages/core/**"
+      - "packages/tool-engines/**"
+      - "packages/proxy/src/**"
+      - "packages/*/package.json"
+      - "docker/web/**"
+      - "Dockerfile.web"
+      - "Dockerfile.web-ssr"
+      - "docker/examples/web-frontend.compose.yml"
+      - "package.json"
+      - "package-lock.json"
+      - "LICENSE"
+      - "NOTICE.frontend"
+      - "tsconfig*.json"
+      - ".editorconfig"
+      - ".browserslistrc"
+      - ".dockerignore"
+      - ".nvmrc"
+      - ".npmrc"
+      - "scripts/web/**"
+      - "scripts/ci/verify-package-versions.mjs"
+      - "scripts/ci/verify-*-migration-contract.mjs"
+      - "scripts/ci/verify-d1-portal-ledger.mjs"
+      - "scripts/db/lib/**"
+      - "scripts/db/cutover/**"
+      - "scripts/deploy/verify-recovery-schema-artifact.mjs"
+      - ".github/workflows/web-frontend.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: web-frontend-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run verify:package-versions
+      - run: npm run format:check -w @cinatoken/web
+      - run: npm run test:web
+      - run: npm run lint -w @cinatoken/web
+      - run: bash -n docker/web/entrypoint.sh
+      - run: npm run build:web
+      - name: Freeze and verify release artifact
+        shell: bash
+        run: |
+          node packages/web/scripts/package-release.mjs --id "$GITHUB_SHA" --at "$(git show -s --format=%cI "$GITHUB_SHA")"
+          node packages/web/scripts/package-release.mjs --verify "$GITHUB_SHA"
+      - name: Generate verified production Worker configuration
+        shell: bash
+        run: node packages/web/scripts/gen-web-wrangler.mjs --release "$GITHUB_SHA"
+      - name: Validate release image and Nginx configuration
+        run: |
+          docker build --file Dockerfile.web --build-arg WEB_RELEASE_PATH=.release/web/${{ github.sha }} --tag cinatoken-web:check .
+          docker run --rm cinatoken-web:check --check
+          docker build --file Dockerfile.web-ssr --build-arg WEB_RELEASE_PATH=.release/web/${{ github.sha }} --tag cinatoken-web-ssr:check .
+          node docker/web/smoke.mjs "${{ github.sha }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cinatoken-web
+          path: .release/web/${{ github.sha }}
+          include-hidden-files: true
+          if-no-files-found: error
+
+  admin-contracts:
+    name: Admin contracts and public SSR build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run typecheck -w @octafuse/core
+      - run: npm run build:node-index -w @octafuse/core
+      - name: Validate account repository types and database contracts
+        run: |
+          npm exec -- tsc -p packages/core/tsconfig.web-account.json --noEmit
+          node --import tsx --test packages/core/src/db/guardrail-assignment-policy.test.ts packages/core/src/db/d1/portal-marketplace-rebuild.test.ts packages/core/src/storage/preset-guardrail-workspaces.d1.test.ts
+      - name: Validate integration-key atomic audits and migration contracts
+        run: |
+          node --import tsx --test packages/core/src/db/admin-access-key-mutation.test.ts scripts/db/lib/config-cutover-reconcile.test.ts scripts/db/cutover/hyperdrive-bootstrap-worker.test.ts
+          npm run test:d1-portal-ledger
+          npm run test:mysql-migration
+          npm run test:postgres-migration
+          node --import tsx scripts/deploy/verify-recovery-schema-artifact.mjs
+      - name: Validate Tools atomic configuration, single snapshots and private clients
+        run: |
+          node --import tsx --test packages/core/src/db/system-config-group.contract.test.ts packages/core/src/db/system-config-audit.test.ts packages/proxy/src/routes/v1/tools/pricing.test.ts
+          npm run build:tools-css -w @octafuse/admin
+          node --import tsx --test packages/admin/app/gateway/tools/tools-console.test.ts
+      - name: Validate global Gateway Key paging and atomic profile conditions
+        run: node --import tsx --test packages/core/src/db/gateway-key-admin-contract.test.ts packages/core/src/db/admin-key-mutation.test.ts packages/core/src/db/admin-key-sql-transaction.contract.test.ts packages/core/src/db/d1/api-keys-admin-atomic.test.ts
+      - name: Validate Shared Keys state guards and formal earning history protection
+        run: |
+          node --import tsx --test packages/core/src/db/shared-key-state.contract.test.ts
+          npm run test:shared-key-earnings-history-migration -w @octafuse/core
+      - name: Validate Shared Keys atomic governance and exact request log detail
+        run: node --import tsx --test packages/core/src/db/admin-shared-key-governance.contract.test.ts packages/core/src/db/admin-request-log-detail.contract.test.ts
+      - name: Validate authority currency failures and anonymous catalog boundary
+        run: |
+          npm run typecheck -w @octafuse/proxy
+          node --import tsx --test packages/proxy/src/routes/catalog.test.ts
+          npm run test:public-catalog-boundary
+      - run: npm run typecheck -w @octafuse/admin
+      - name: Validate auth, workspace, keys, account and public BFF contracts
+        working-directory: packages/admin
+        run: >-
+          node --import tsx --test
+          lib/browser-mutation.test.ts
+          lib/public-request-url.test.ts
+          lib/unified-session.test.ts
+          lib/portal-contract.test.ts
+          lib/workspace-cookie.test.ts
+          lib/user-workspace-precondition.test.ts
+          lib/routes/user/guardrails-effective.test.ts
+          lib/routes/admin/model-routes-context.test.ts
+          lib/routes/admin/earnings.test.ts
+          lib/routes/shared-key-history-error.test.ts
+          lib/services/admin/shared-key-earnings-cache-route.test.ts
+          lib/services/admin/shared-key-admin-contract.test.ts
+          lib/services/admin/shared-keys-route.test.ts
+          lib/services/admin/expected-console-subject.test.ts
+          lib/services/admin/legacy-shared-key-browser.test.ts
+          lib/services/admin/request-log-detail-route.test.ts
+          lib/services/admin/request-logs-cache-route.test.ts
+          lib/services/admin/tool-config-contract.test.ts
+          lib/services/admin/tool-config-route.test.ts
+          lib/services/admin/tool-config-runtime.test.ts
+          lib/services/admin/users-service.test.ts
+          lib/services/admin/access-keys-cache-route.test.ts
+          lib/services/admin/access-keys-audit-route.test.ts
+          lib/services/admin/gateway-keys-route.test.ts
+          lib/services/admin/audit-atomicity-probe.test.ts
+          lib/cinaauth/*.test.ts
+          lib/services/user/*.test.ts
+          lib/public-catalog.test.ts
+          components/catalog/PublicCatalogPricing.test.tsx
+          lib/public-catalog-bff.test.ts
+          lib/public-gateway.test.ts
+          lib/public-chat.test.ts
+          lib/public-routes.test.ts
+      - name: Build Admin public SSR and standalone output
+        run: npm run build:docker -w @octafuse/admin
+        env:
+          NODE_OPTIONS: --max-old-space-size=4096

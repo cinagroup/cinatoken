@@ -1,0 +1,12 @@
+✔ historical usage repair page is bounded, pinned and keyset resumable (7.2713ms)
+✔ page runner exposes the cursor only after COMMIT resolves (3.2005ms)
+✔ reviewed cursor activation keeps progress in a private migrator-owned schema (5.9599ms)
+✔ durable page reads locked database cursor and returns only after COMMIT (4.1679ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 105.8218

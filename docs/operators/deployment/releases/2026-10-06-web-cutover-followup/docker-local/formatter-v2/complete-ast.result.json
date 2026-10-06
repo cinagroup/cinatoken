@@ -1,0 +1,16 @@
+{
+  "completeAcornAstEqual": true,
+  "literalValuesAndTemplateRawPreserved": true,
+  "commentsEqual": true,
+  "commentCount": 2,
+  "before": {
+    "bytes": 15944,
+    "sha256": "bee250e5bf0a43700971b8d7e03b27f6b73c21b93e564673af2eb1fa6474e8ab"
+  },
+  "after": {
+    "bytes": 15970,
+    "sha256": "23e132dc548c85394f58ec37f50621ae9c4f06d4b183c826a7172717e6ea7b90"
+  },
+  "actualExitCode": 0,
+  "terminal": true
+}

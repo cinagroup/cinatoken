@@ -1,0 +1,109 @@
+{
+  "schema": "cinatoken-production-network-diagnostic-execution-v1",
+  "label": "fresh-three-route-diag",
+  "startedAt": "2026-10-05T23:33:51.455Z",
+  "processExecutable": "C:\\Program Files\\nodejs\\node.exe",
+  "commandArguments": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-production-network-diag-20261006-native-Tidwqh\\production-network-diagnostic-v1.mjs",
+    "fresh-three-route-diag",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-migration-progress-20261006-541315903c5243bc9a08bbc8a3515df4/fresh.browser-config.json"
+  ],
+  "inputScripts": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-production-network-diag-20261006-native-Tidwqh\\production-network-diagnostic-v1.mjs",
+      "bytes": 23423,
+      "sha256": "2d6110816e4d2bcdb6c73780c02f3ec157258e9bbfb80bd7003166230c77f3ec"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-production-network-diag-20261006-native-Tidwqh\\execute-network-diagnostic-v1.mjs",
+      "bytes": 4832,
+      "sha256": "1e5b99ee37919d32917283e6e1ebd033dd3e00a8a1e303a7122093c2b32173a3"
+    }
+  ],
+  "preparationRaw": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-production-network-diag-20261006-native-Tidwqh\\preparation.receipt.json",
+    "bytes": 6379,
+    "sha256": "d3f97e53c0af674edf115e501aca25271b3d97ba2d2dc6be1442eea249b92292"
+  },
+  "configRaw": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-migration-progress-20261006-541315903c5243bc9a08bbc8a3515df4/fresh.browser-config.json",
+    "bytes": 578,
+    "sha256": "2a3f7a900a2b32c03db115ebff1e02d821f986e42dee034dc7d469ddfbd072fd"
+  },
+  "liveProof": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-migration-progress-20261006-541315903c5243bc9a08bbc8a3515df4/production-live.live-proof.json",
+    "bytes": 6014,
+    "sha256": "e13f0a32321f945130f215cb2659ff4f1003eb7aa8d7b509a1e3a71f8ac3bef4"
+  },
+  "sourceWrites": 0,
+  "deployments": 0,
+  "databaseWrites": 0,
+  "apiWrites": 0,
+  "deadlineMs": 180000,
+  "timedOut": false,
+  "actualExit": 0,
+  "childPID": 16208,
+  "exit": {
+    "code": 0,
+    "signal": null
+  },
+  "finishedAt": "2026-10-05T23:34:06.231Z",
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-production-network-diag-20261006-native-Tidwqh\\fresh-three-route-diag-stdout.log",
+    "bytes": 1311,
+    "sha256": "3c9feae6591b19b3fc13ec0f59ac88532357f6907c102793131c406439a77e9d"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-production-network-diag-20261006-native-Tidwqh\\fresh-three-route-diag-stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "browserResult": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-production-network-diag-20261006-native-Tidwqh\\fresh-three-route-diag.json",
+    "bytes": 264529,
+    "sha256": "8102c94937f0ef5040945107509de46ada4c8c17f2afbda66daa5ac42b6c74a7"
+  },
+  "browserActualExit": 0,
+  "outcome": "PASS_THREE_ROUTE_DIAGNOSTIC_ONLY",
+  "summary": {
+    "navigationCount": 3,
+    "networkidlePasses": 3,
+    "original45sTimeouts": 0,
+    "requestCount": 57,
+    "cdpRequestCount": 59,
+    "requestFailureCount": 0,
+    "pageErrorCount": 0,
+    "consoleErrors": 2,
+    "unexplainedConsole": 0,
+    "refusedMutations": 0
+  },
+  "contextClosed": true,
+  "browserClosed": true,
+  "bindingsUnchanged": true,
+  "screenshots": [
+    {
+      "route": "/account/withdraw",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-production-network-diag-20261006-native-Tidwqh\\fresh-three-route-diag-account.png",
+      "bytes": 23753,
+      "sha256": "a99bb9d22fd16eaebd41e31ccceef6363f27760a9d6c0d6e3e6be1c6f5c4b8fb"
+    },
+    {
+      "route": "/admin/config/timezone",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-production-network-diag-20261006-native-Tidwqh\\fresh-three-route-diag-admin.png",
+      "bytes": 25449,
+      "sha256": "3903b8a1ace00a01f66aa85758c1fdd71fd081e2d3b8b76c1967475ed3cf94f2"
+    },
+    {
+      "route": "/en",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-production-network-diag-20261006-native-Tidwqh\\fresh-three-route-diag-public.png",
+      "bytes": 54114,
+      "sha256": "3c3002c14200c075db9cb4077fc6926e1543c1dbc907150ee4981237dd71fbe6"
+    }
+  ],
+  "inputRawStillSame": true,
+  "eventJournal": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-production-network-diag-20261006-native-Tidwqh\\fresh-three-route-diag-events.jsonl",
+    "bytes": 293937,
+    "sha256": "02644424f3a1fe90c1548089317623dc851aa62450755f045dcfa56eb5863687"
+  }
+}

@@ -1,0 +1,144 @@
+{
+  "schema": "independent-followup-final-semantic-and-byte-review-v1",
+  "at": "2026-10-06T00:10:56.286Z",
+  "actualExitCode": 0,
+  "terminal": true,
+  "sourceReport": {
+    "path": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-web-cutover-followup.json",
+    "bytes": 288112,
+    "sha256": "3d9c9d5826630966239cd9a982bf9d5ef2472a0f7b5658862cdc85721ff80f89"
+  },
+  "byteVerification": {
+    "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-independent-review-5ffc9ab946374a229eb59945e4bbd780\\byte-verification.json",
+    "bytes": 71860,
+    "sha256": "5115e2f740526fc242a17303862fe8d1bdd67d5ada2452c3d316c46c21df3d60",
+    "entries": 390,
+    "gzip": 125,
+    "identity": 265,
+    "storedOriginalAndCurrentTempExact": true,
+    "directoryExact": true,
+    "originalBytes": 16051045,
+    "storedBytes": 3838035
+  },
+  "semantic": {
+    "productionSHA": "c13a64b9c3b2c90adcf736910ea408868d7854f1",
+    "testSHA": "5471899c8fd43daf9df1f15261d75171a6dbb8b8",
+    "keptDistinct": true,
+    "productionWritesThisBatch": false,
+    "cfGuardActual0": true,
+    "webVersion": "2a0a2777-d3b1-47f0-a0a7-88e701b4d2d9",
+    "webPercent": 100,
+    "enabledFlags": 29,
+    "threeRoutes": true,
+    "workersDevAndPreviewsDisabled": true,
+    "backendSHA": "34c742d161edbf2c16c7578221578d0b805d35c0",
+    "functionalOnly": {
+      "actual0": true,
+      "pages": 45,
+      "HTTP200": 44,
+      "expected404": 1,
+      "privateExact401": 37,
+      "contextsClosed": 4,
+      "originalInteractions": 3,
+      "knownAssetsFinished": 870,
+      "allGETFinished": 1003,
+      "all48ReadinessCheckpoints": true,
+      "reactiveHeaderResponses": 11,
+      "readyWithPendingLogo": 37,
+      "finalPending": 0,
+      "screenshotsReportedActuallyInspected": 7
+    },
+    "originalNetworkidleFailuresRemain": true,
+    "originalFailureCauseNotProven": true,
+    "formalP809RealIdentityFullG8NotPassed": true,
+    "webCI": {
+      "sameTestSHA": true,
+      "successSteps": 37,
+      "actualSSRCases": 87,
+      "actualAnonymousReads": 64,
+      "ownedContainersAndNetworkRemoved": true
+    },
+    "composeCI": {
+      "sameTestSHA": true,
+      "successSteps": 13,
+      "scope": "PG16/migrate/Admin/Proxy baseline only, no full Web/TLS"
+    },
+    "proxyCI": {
+      "sameTestSHA": true,
+      "overallFailureRetained": true,
+      "failedJobs": 2,
+      "PG20Observed81Not73": true,
+      "v364ExpectedObservedActualNullRetained": true
+    },
+    "completeChecklist": {
+      "tasks": 102,
+      "matrix": 54,
+      "taskBoxes": 211,
+      "gates": 9,
+      "currentMdHashExact": true,
+      "goalActive": true
+    }
+  },
+  "closureAudit": {
+    "dotNamedStdoutStderrAllHaveResultOrReceiptOrClosedSibling": true,
+    "hyphenNamedBrowserDiagnosticLogsHaveFinalExecutionClosure": true,
+    "nestedTerminalFalseRecords": 0,
+    "nonzeroActualRecords": [
+      {
+        "path": "root-progress/pg-native-job-log.result.json",
+        "key": "actualExit",
+        "value": 1
+      },
+      {
+        "path": "root-progress/web-format-before-ssr-ci.result.json",
+        "key": "actualExit",
+        "value": 1
+      },
+      {
+        "path": "network-diagnostic-draft/pre-spawn-execution-failure.json",
+        "key": "actualExit",
+        "value": 1
+      },
+      {
+        "path": "pg14-repair/final-repair-report-seal.result.json",
+        "key": "actualExitCode",
+        "value": 1
+      },
+      {
+        "path": "pg17-repair/after-step17-inventory-v2.result.json",
+        "key": "actualExitCode",
+        "value": 1
+      },
+      {
+        "path": "pg17-repair/after-step17-inventory.result.json",
+        "key": "actualExitCode",
+        "value": 1
+      },
+      {
+        "path": "docker-linux-ci/snapshot-01-compose-jobs.result.json",
+        "key": "actualExitCode",
+        "value": 1
+      },
+      {
+        "path": "docker-linux-ci/snapshot-01-compose-run.result.json",
+        "key": "actualExitCode",
+        "value": 1
+      },
+      {
+        "path": "docker-linux-ci/snapshot-01-web-jobs.result.json",
+        "key": "actualExitCode",
+        "value": 1
+      },
+      {
+        "path": "docker-linux-ci/snapshot-01-web-run.result.json",
+        "key": "actualExitCode",
+        "value": 1
+      }
+    ],
+    "nonzeroNotConvertedToPassed": true
+  },
+  "findings": [],
+  "decision": "NO_STATE_CONFLICT_OR_FALSE_PASS_FOUND_IN_THE_IMMUTABLE_390_ENTRY_RELEASE_RECORD",
+  "noNetworkRequests": true,
+  "noRepoWrites": true
+}

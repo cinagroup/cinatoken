@@ -1,0 +1,15 @@
+{
+  "startedAt": "2026-10-05T23:54:16.015Z",
+  "completedAt": "2026-10-05T23:54:16.364Z",
+  "program": "node",
+  "arguments": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-runtime-grant-plan-f0bc0cabd77f47cd9ff14a137cf1d6ce/seal-plan.mjs"
+  ],
+  "actualExitCode": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdoutPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-runtime-grant-plan-f0bc0cabd77f47cd9ff14a137cf1d6ce\\readonly-plan-seal.stdout.txt",
+  "stderrPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-runtime-grant-plan-f0bc0cabd77f47cd9ff14a137cf1d6ce\\readonly-plan-seal.stderr.txt",
+  "stdoutBytes": 1026,
+  "stderrBytes": 0
+}

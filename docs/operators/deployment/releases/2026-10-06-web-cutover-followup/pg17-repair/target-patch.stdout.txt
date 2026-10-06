@@ -1,0 +1,36 @@
+diff --git a/scripts/db/cutover/postgres-shared-key-usage-repair-jobs.native.test.mjs b/scripts/db/cutover/postgres-shared-key-usage-repair-jobs.native.test.mjs
+index 0ba84582..de03f287 100644
+--- a/scripts/db/cutover/postgres-shared-key-usage-repair-jobs.native.test.mjs
++++ b/scripts/db/cutover/postgres-shared-key-usage-repair-jobs.native.test.mjs
+@@ -2,11 +2,11 @@
+ // no ambient database URL, cloud binding, real account or deployment is used.
+ import assert from 'node:assert/strict';
+ import { createHash, randomBytes, randomUUID } from 'node:crypto';
+-import { readFile, readdir, writeFile } from 'node:fs/promises';
++import { readFile, writeFile } from 'node:fs/promises';
+ import { dirname, join } from 'node:path';
+ import test from 'node:test';
+ import postgres from 'postgres';
+-import { grantPostgresRuntime } from './grant-postgres-runtime.ts';
++import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
+ import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';
+ 
+ const schema = 'cinatoken_gateway';
+@@ -79,7 +79,7 @@ test('native PG18 credited earning enqueues a durable, atomic summary repair',
+       clients.push(migrator, holder);
+       await migrator.unsafe(`CREATE TABLE ${schema}.schema_migrations (
+         version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);
+-      const files = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();
++      const files = await listPg73Migrations();
+       assert.equal(files.length, 73);
+       for (const name of files) {
+         const body = await readFile(new URL(name, migrations), 'utf8');
+@@ -132,7 +132,7 @@ test('native PG18 credited earning enqueues a durable, atomic summary repair',
+       await activate(migrator, jobsBody, 'cinatoken.shared_key_usage_repair_activation');
+       stage('activation-trigger-body-and-default-acl-drift-rollback');
+ 
+-      await grantPostgresRuntime({ DATABASE_URL:
++      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl:
+         `postgresql://cinatoken_gateway_migrator:${password}@127.0.0.1:${cluster.port}/postgres` });
+       const [runtimeAcl] = await migrator.unsafe(`SELECT
+         pg_catalog.has_table_privilege('cinatoken_gateway_runtime',

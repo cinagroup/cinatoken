@@ -1,0 +1,17 @@
+{
+  "startedAt": "2026-10-05T23:42:55.182Z",
+  "completedAt": "2026-10-05T23:42:55.364Z",
+  "program": "node",
+  "arguments": [
+    "--test",
+    "scripts/db/cutover/build-postgres-shared-usage-repair-backfill.test.mjs",
+    "scripts/db/cutover/build-postgres-shared-usage-repair-durable-cursor.test.mjs"
+  ],
+  "actualExitCode": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdoutPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-usage-jobs-repair-921bf93575a54e5db7b0afca01508b06\\pure-repair-builders.stdout.txt",
+  "stderrPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-usage-jobs-repair-921bf93575a54e5db7b0afca01508b06\\pure-repair-builders.stderr.txt",
+  "stdoutBytes": 449,
+  "stderrBytes": 0
+}

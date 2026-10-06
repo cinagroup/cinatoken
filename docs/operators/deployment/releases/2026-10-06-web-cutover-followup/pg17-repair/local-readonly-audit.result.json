@@ -1,0 +1,17 @@
+{
+  "startedAt": "2026-10-05T23:42:51.454Z",
+  "completedAt": "2026-10-05T23:42:52.058Z",
+  "program": "node",
+  "arguments": [
+    "--import",
+    "tsx",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-usage-jobs-repair-921bf93575a54e5db7b0afca01508b06/audit-usage-jobs.mjs"
+  ],
+  "actualExitCode": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdoutPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-usage-jobs-repair-921bf93575a54e5db7b0afca01508b06\\local-readonly-audit.stdout.txt",
+  "stderrPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-usage-jobs-repair-921bf93575a54e5db7b0afca01508b06\\local-readonly-audit.stderr.txt",
+  "stdoutBytes": 2175,
+  "stderrBytes": 0
+}

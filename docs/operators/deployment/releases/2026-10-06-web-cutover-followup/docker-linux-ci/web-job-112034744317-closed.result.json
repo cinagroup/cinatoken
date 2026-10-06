@@ -1,0 +1,13 @@
+{
+  "terminal": true,
+  "actualExitCode": 0,
+  "completedAt": "2026-10-05T23:54:22.7410535Z",
+  "command": [
+    "gh",
+    "api",
+    "--allow-escape-sequences",
+    "repos/cinagroup/cinatoken/actions/jobs/112034744317/logs"
+  ],
+  "startedAt": "2026-10-05T23:54:16.4116439Z",
+  "closedJobLogFetchAttempt": 1
+}

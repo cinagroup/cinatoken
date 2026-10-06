@@ -1,0 +1,53 @@
+{
+  "proof": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-usage-jobs-repair-921bf93575a54e5db7b0afca01508b06\\local-audit.proof.json",
+    "bytes": 1913,
+    "sha256": "29ab686f4cf16fb8e01dec0a92e9667013f6d955895f0d189f222f5f9a3b3f04"
+  },
+  "schema": "pg73-usage-jobs-local-readonly-audit",
+  "at": "2026-10-05T23:42:52.027Z",
+  "actualExit": 0,
+  "before": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-usage-jobs-repair-921bf93575a54e5db7b0afca01508b06\\before.native.test.mjs",
+    "bytes": 17845,
+    "sha256": "944c61a4cff0f8b5f3b71e1a2fa48b7ae1c242f0d25fe900aef8b1c67ed87d49"
+  },
+  "after": {
+    "path": "C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\postgres-shared-key-usage-repair-jobs.native.test.mjs",
+    "bytes": 17832,
+    "sha256": "a47e5786cef95def84c75e72aa968381b097b7bf6aaec45294e100eb71e80516"
+  },
+  "exactReviewedSubstitutions": 4,
+  "allOtherBytesAndOriginalAssertionsPreserved": true,
+  "beforeFailure": {
+    "name": "AssertionError",
+    "code": "ERR_ASSERTION",
+    "actual": 81,
+    "expected": 73
+  },
+  "actualHistoricalLoader": {
+    "count": 73,
+    "last": "0073_recovery_api_key_workspace_lock.sql",
+    "corpusSha256": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc",
+    "ledgerMd5": "ca1ea96a1b4bcd0675642f30dcf48042",
+    "excludedCurrentMigrations": [
+      "0074_config_change_audit.sql",
+      "0075_system_config_revision.sql",
+      "0076_user_audit_export_order_index.sql",
+      "0077_admin_access_key_audit.sql",
+      "0078_shared_key_earnings_history_guard.sql",
+      "0079_admin_shared_key_audit.sql",
+      "0080_admin_shared_key_actor_bounds.sql",
+      "0081_tools_config_group_audit.sql"
+    ]
+  },
+  "runtimeLoginCreationUnchanged": true,
+  "bridgeExecuted": false,
+  "nativeFixtureExecuted": false,
+  "dbConnections": 0,
+  "dbWrites": 0,
+  "limitations": [
+    "Only the historical migration list function was executed; the runtime bridge, role restoration, locks, earning/ledger and queue assertions await true Linux PostgreSQL CI.",
+    "The all-81 mismatch was reproduced from filesystem enumeration, not by executing a database fixture."
+  ]
+}

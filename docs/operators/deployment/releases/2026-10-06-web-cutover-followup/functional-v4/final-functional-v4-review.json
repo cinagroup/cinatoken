@@ -1,0 +1,3976 @@
+{
+  "schema": "cinatoken-functional-anonymous-browser-v4-final-review-v1",
+  "at": "2026-10-05T23:55:09.784Z",
+  "actualExit": 0,
+  "browserActualExit": 0,
+  "outcome": "PASS_FUNCTIONAL_ANONYMOUS_WEB_BROWSER_V4_ONLY",
+  "flow": "45 direct routes across4fresh anonymous contexts -> public SSR+real reactive header readiness or private exact401 Gates; then original desktop dark -> languagezh ->390x844 dark reload",
+  "scope": "Functional anonymous browser only; original failed networkidle matrix, performanceP8-09, real identity and fullG8 remain unproved",
+  "startedAt": "2026-10-05T23:51:56.478Z",
+  "finishedAt": "2026-10-05T23:52:31.751Z",
+  "elapsedMs": 35273,
+  "gitSHA": "c13a64b9c3b2c90adcf736910ea408868d7854f1",
+  "workerVersionId": "2a0a2777-d3b1-47f0-a0a7-88e701b4d2d9",
+  "phase": "cutover",
+  "targetOrigin": "https://cinatoken.com",
+  "freshRootLiveProof": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-migration-progress-20261006-541315903c5243bc9a08bbc8a3515df4/before-functional-v4.live-proof.json",
+    "bytes": 6014,
+    "sha256": "933a74a1c7c1da4bc0008695c521841bccab858cbe95926fe8176a3e80f6c338"
+  },
+  "configRaw": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-migration-progress-20261006-541315903c5243bc9a08bbc8a3515df4/before-functional-v4.browser-config.json",
+    "bytes": 583,
+    "sha256": "e74431c3be2a725fd83bde270af54aac90113da8c5d5e0746f8ce2b27b129799"
+  },
+  "environment": {
+    "browserVersion": "147.0.7727.15",
+    "playwrightVersion": "1.62.1",
+    "browserPlugin": "absent",
+    "fallbackReason": "Browser plugin not available; existing bundled Playwright and cached Chromium",
+    "desktopViewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "mobileViewport": {
+      "width": 390,
+      "height": 844
+    },
+    "locale": "en-US",
+    "colorScheme": "light",
+    "freshAnonymousContexts": 4,
+    "GETHEADGuardPreserved": true,
+    "HTTPRoutingCacheDisabled": true,
+    "ServiceWorkerOverride": false,
+    "CDPCacheFix": false,
+    "newDependencies": 0
+  },
+  "originalAssertionEquivalence": {
+    "sourceAssertCalls": 85,
+    "exactOriginalAssertionTextAndOrderedAST": true,
+    "executorOriginalAssertCalls": 4,
+    "proof": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-functional-browser-v4-final-20261006-qfXa5E/v4-assertion-equivalence.json",
+      "bytes": 33248,
+      "sha256": "c4baa18bf9e4a52682a10572e1ab45900a953f2663da049616a702f1b00222c4"
+    },
+    "independentAcornPeerReview": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-functional-browser-v4-final-20261006-qfXa5E/peer-reviewed-v4.json",
+      "bytes": 4829,
+      "sha256": "ee991f44f6f1fd1c32e418dd486781f64d74fa8cbeff6774cc4ae80b157be60e"
+    }
+  },
+  "readinessMethod": {
+    "navigationWaitUntil": "domcontentloaded",
+    "navigationTimeoutMs": 45000,
+    "originalLocatorTimeoutMs": 20000,
+    "originalLocatorAndAddedReadinessSharedBudgetMs": 20000,
+    "browserDeadlineMs": 390000,
+    "executorDeadlineMs": 420000,
+    "networkidleMeasuredOrPassed": false,
+    "performanceP809Complete": false,
+    "realIdentityTested": false,
+    "fullG8Complete": false
+  },
+  "counts": {
+    "pages": 45,
+    "uniqueRoutes": 45,
+    "public": 8,
+    "account": 10,
+    "admin": 27,
+    "HTTP200": 44,
+    "reservedMissing404": 1,
+    "pageErrors": 0,
+    "consoleErrors": 38,
+    "explainedConsoleErrors": 38,
+    "unexplainedConsoleErrors": 0,
+    "warnings": 0,
+    "expectedAnonymous401": 37,
+    "privatePerPage401Proofs": 37,
+    "unknownHTTPErrors": 0,
+    "requestFailures": 0,
+    "refusedMutations": 0,
+    "screenshots": 7,
+    "originalInteractions": 3
+  },
+  "shards": [
+    {
+      "name": "public",
+      "pages": 8,
+      "status": "fulfilled",
+      "initialCookieCount": 0,
+      "initialServiceWorkers": 0,
+      "finalServiceWorkers": 0,
+      "serviceWorkerEvents": 0,
+      "observerFailures": 0,
+      "contextClosed": true,
+      "pendingBeforeClose": {
+        "atMs": 35990.899,
+        "navigationId": "public-nav-11",
+        "requestCount": 181,
+        "pending": [],
+        "pendingRequiredAssets": []
+      }
+    },
+    {
+      "name": "account",
+      "pages": 10,
+      "status": "fulfilled",
+      "initialCookieCount": 0,
+      "initialServiceWorkers": 0,
+      "finalServiceWorkers": 0,
+      "serviceWorkerEvents": 0,
+      "observerFailures": 0,
+      "contextClosed": true,
+      "pendingBeforeClose": {
+        "atMs": 35991.064,
+        "navigationId": "account-nav-10",
+        "requestCount": 208,
+        "pending": [],
+        "pendingRequiredAssets": []
+      }
+    },
+    {
+      "name": "admin-a",
+      "pages": 14,
+      "status": "fulfilled",
+      "initialCookieCount": 0,
+      "initialServiceWorkers": 0,
+      "finalServiceWorkers": 0,
+      "serviceWorkerEvents": 0,
+      "observerFailures": 0,
+      "contextClosed": true,
+      "pendingBeforeClose": {
+        "atMs": 35991.098,
+        "navigationId": "admin-a-nav-14",
+        "requestCount": 333,
+        "pending": [],
+        "pendingRequiredAssets": []
+      }
+    },
+    {
+      "name": "admin-b",
+      "pages": 13,
+      "status": "fulfilled",
+      "initialCookieCount": 0,
+      "initialServiceWorkers": 0,
+      "finalServiceWorkers": 0,
+      "serviceWorkerEvents": 0,
+      "observerFailures": 0,
+      "contextClosed": true,
+      "pendingBeforeClose": {
+        "atMs": 35991.156,
+        "navigationId": "admin-b-nav-13",
+        "requestCount": 281,
+        "pending": [],
+        "pendingRequiredAssets": []
+      }
+    }
+  ],
+  "routes": [
+    {
+      "shard": "public",
+      "route": "/en",
+      "kind": "public",
+      "status": 200,
+      "title": "CinaToken — Unified AI gateway",
+      "finalURL": "https://cinatoken.com/en",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "hydrationFailure": false,
+      "bootstrap": {
+        "version": 1,
+        "status": 200,
+        "pathname": "/en",
+        "search": "",
+        "locale": "en"
+      },
+      "metadata": {
+        "canonical": [
+          "https://cinatoken.com/en"
+        ],
+        "ogURL": "https://cinatoken.com/en",
+        "robots": "index, follow"
+      },
+      "functionalReadiness": {
+        "navigationId": "public-nav-1",
+        "ready": true,
+        "readyAtMs": 6407.817,
+        "functionalPageDurationMs": 4153.57,
+        "domContentLoadedDurationMs": 2079.488,
+        "readinessDurationMs": 2042.6279999999997,
+        "locatorPlusReadinessDurationMs": 2074.0820000000003,
+        "requiredAssetCount": 12,
+        "publicReactiveProof": {
+          "originalMode": "system",
+          "initialDark": false,
+          "probeMode": "dark",
+          "attempts": 4,
+          "changedAtMs": 6384.531,
+          "restoredAtMs": 6400.185,
+          "restoredMode": "system",
+          "realThemeClassAndCookieChange": true,
+          "originalControlModeRestored": true,
+          "cookieLimit": "Only cinatoken-theme control preference is inspected; restoring a previously unset system mode intentionally writes a local system preference cookie. No Cookie/Auth/state token values are collected."
+        },
+        "exactAnonymous401Observed": null,
+        "pendingAtReady": {
+          "atMs": 6407.831,
+          "navigationId": "public-nav-1",
+          "requestCount": 14,
+          "pending": [
+            {
+              "id": "public-14",
+              "navigationId": "public-nav-1",
+              "url": "https://cinatoken.com/web-assets/logo.png",
+              "method": "GET",
+              "resourceType": "other",
+              "startMs": 6216.609,
+              "ageMs": 191.22499999999945,
+              "responseAtMs": null,
+              "http": null
+            }
+          ],
+          "pendingRequiredAssets": []
+        }
+      },
+      "exactAnonymous401Count": null
+    },
+    {
+      "shard": "admin-b",
+      "route": "/admin/request-logs",
+      "kind": "admin",
+      "status": 200,
+      "title": "CinaToken",
+      "finalURL": "https://cinatoken.com/admin/request-logs?page=1&status=&model_id=&provider_id=&protocol=&route_group=&user_id=&user_email=&api_key_id=",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "hydrationFailure": false,
+      "bootstrap": null,
+      "metadata": null,
+      "functionalReadiness": {
+        "navigationId": "admin-b-nav-1",
+        "ready": true,
+        "readyAtMs": 7802.67,
+        "functionalPageDurationMs": 5547.868,
+        "domContentLoadedDurationMs": 2183.1,
+        "readinessDurationMs": 5.84900000000016,
+        "locatorPlusReadinessDurationMs": 3364.768,
+        "requiredAssetCount": 19,
+        "publicReactiveProof": null,
+        "exactAnonymous401Observed": {
+          "responseURL": "https://cinatoken.com/api/user/me",
+          "method": "GET",
+          "status": 401,
+          "successFalse": true,
+          "messageUnauthorized": true
+        },
+        "pendingAtReady": {
+          "atMs": 7802.721,
+          "navigationId": "admin-b-nav-1",
+          "requestCount": 22,
+          "pending": [],
+          "pendingRequiredAssets": []
+        }
+      },
+      "exactAnonymous401Count": 1
+    },
+    {
+      "shard": "account",
+      "route": "/account",
+      "kind": "account",
+      "status": 200,
+      "title": "CinaToken",
+      "finalURL": "https://cinatoken.com/account",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "hydrationFailure": false,
+      "bootstrap": null,
+      "metadata": null,
+      "functionalReadiness": {
+        "navigationId": "account-nav-1",
+        "ready": true,
+        "readyAtMs": 8101.263,
+        "functionalPageDurationMs": 5846.655,
+        "domContentLoadedDurationMs": 2454.4139999999998,
+        "readinessDurationMs": 5.916000000000167,
+        "locatorPlusReadinessDurationMs": 3392.241,
+        "requiredAssetCount": 15,
+        "publicReactiveProof": null,
+        "exactAnonymous401Observed": {
+          "responseURL": "https://cinatoken.com/api/user/me",
+          "method": "GET",
+          "status": 401,
+          "successFalse": true,
+          "messageUnauthorized": true
+        },
+        "pendingAtReady": {
+          "atMs": 8101.271,
+          "navigationId": "account-nav-1",
+          "requestCount": 18,
+          "pending": [],
+          "pendingRequiredAssets": []
+        }
+      },
+      "exactAnonymous401Count": 1
+    },
+    {
+      "shard": "admin-a",
+      "route": "/admin",
+      "kind": "admin",
+      "status": 200,
+      "title": "CinaToken",
+      "finalURL": "https://cinatoken.com/admin",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "hydrationFailure": false,
+      "bootstrap": null,
+      "metadata": null,
+      "functionalReadiness": {
+        "navigationId": "admin-a-nav-1",
+        "ready": true,
+        "readyAtMs": 8612.664,
+        "functionalPageDurationMs": 6357.953000000001,
+        "domContentLoadedDurationMs": 2441.488,
+        "readinessDurationMs": 10.829999999999927,
+        "locatorPlusReadinessDurationMs": 3916.465000000001,
+        "requiredAssetCount": 18,
+        "publicReactiveProof": null,
+        "exactAnonymous401Observed": {
+          "responseURL": "https://cinatoken.com/api/user/me",
+          "method": "GET",
+          "status": 401,
+          "successFalse": true,
+          "messageUnauthorized": true
+        },
+        "pendingAtReady": {
+          "atMs": 8612.681,
+          "navigationId": "admin-a-nav-1",
+          "requestCount": 21,
+          "pending": [],
+          "pendingRequiredAssets": []
+        }
+      },
+      "exactAnonymous401Count": 1
+    },
+    {
+      "shard": "admin-b",
+      "route": "/admin/audit-logs",
+      "kind": "admin",
+      "status": 200,
+      "title": "CinaToken",
+      "finalURL": "https://cinatoken.com/admin/audit-logs?page=1&user_id=&api_key_id=&user_email=&event_type=%5B%5D&actor_type=%5B%5D&actor_kind=%5B%5D&actor_id=&reason_code=%5B%5D&source=%5B%5D&correlation_id=",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "hydrationFailure": false,
+      "bootstrap": null,
+      "metadata": null,
+      "functionalReadiness": {
+        "navigationId": "admin-b-nav-2",
+        "ready": true,
+        "readyAtMs": 9983.518,
+        "functionalPageDurationMs": 2122.455,
+        "domContentLoadedDurationMs": 772.2530000000006,
+        "readinessDurationMs": 4.006999999999607,
+        "locatorPlusReadinessDurationMs": 1350.2019999999993,
+        "requiredAssetCount": 17,
+        "publicReactiveProof": null,
+        "exactAnonymous401Observed": {
+          "responseURL": "https://cinatoken.com/api/user/me",
+          "method": "GET",
+          "status": 401,
+          "successFalse": true,
+          "messageUnauthorized": true
+        },
+        "pendingAtReady": {
+          "atMs": 9983.527,
+          "navigationId": "admin-b-nav-2",
+          "requestCount": 42,
+          "pending": [
+            {
+              "id": "admin-b-42",
+              "navigationId": "admin-b-nav-2",
+              "url": "https://cinatoken.com/web-assets/logo.png",
+              "method": "GET",
+              "resourceType": "other",
+              "startMs": 9881.003,
+              "ageMs": 102.52599999999984,
+              "responseAtMs": null,
+              "http": null
+            }
+          ],
+          "pendingRequiredAssets": []
+        }
+      },
+      "exactAnonymous401Count": 1
+    },
+    {
+      "shard": "account",
+      "route": "/account/keys",
+      "kind": "account",
+      "status": 200,
+      "title": "CinaToken",
+      "finalURL": "https://cinatoken.com/account/keys",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "hydrationFailure": false,
+      "bootstrap": null,
+      "metadata": null,
+      "functionalReadiness": {
+        "navigationId": "account-nav-2",
+        "ready": true,
+        "readyAtMs": 10268.758,
+        "functionalPageDurationMs": 2105.376,
+        "domContentLoadedDurationMs": 781.7630000000008,
+        "readinessDurationMs": 4.54700000000048,
+        "locatorPlusReadinessDurationMs": 1323.6129999999994,
+        "requiredAssetCount": 19,
+        "publicReactiveProof": null,
+        "exactAnonymous401Observed": {
+          "responseURL": "https://cinatoken.com/api/user/me",
+          "method": "GET",
+          "status": 401,
+          "successFalse": true,
+          "messageUnauthorized": true
+        },
+        "pendingAtReady": {
+          "atMs": 10268.77,
+          "navigationId": "account-nav-2",
+          "requestCount": 40,
+          "pending": [
+            {
+              "id": "account-40",
+              "navigationId": "account-nav-2",
+              "url": "https://cinatoken.com/web-assets/logo.png",
+              "method": "GET",
+              "resourceType": "other",
+              "startMs": 10195.387,
+              "ageMs": 73.38500000000022,
+              "responseAtMs": null,
+              "http": null
+            }
+          ],
+          "pendingRequiredAssets": []
+        }
+      },
+      "exactAnonymous401Count": 1
+    },
+    {
+      "shard": "public",
+      "route": "/en/models",
+      "kind": "public",
+      "status": 200,
+      "title": "Model catalog — CinaToken",
+      "finalURL": "https://cinatoken.com/en/models",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "hydrationFailure": false,
+      "bootstrap": {
+        "version": 1,
+        "status": 200,
+        "pathname": "/en/models",
+        "search": "",
+        "locale": "en"
+      },
+      "metadata": {
+        "canonical": [
+          "https://cinatoken.com/en/models"
+        ],
+        "ogURL": "https://cinatoken.com/en/models",
+        "robots": "index, follow"
+      },
+      "functionalReadiness": {
+        "navigationId": "public-nav-2",
+        "ready": true,
+        "readyAtMs": 10529.38,
+        "functionalPageDurationMs": 4022.3719999999994,
+        "domContentLoadedDurationMs": 1925.4719999999998,
+        "readinessDurationMs": 2071.075999999999,
+        "locatorPlusReadinessDurationMs": 2096.8999999999996,
+        "requiredAssetCount": 16,
+        "publicReactiveProof": {
+          "originalMode": "system",
+          "initialDark": false,
+          "probeMode": "dark",
+          "attempts": 3,
+          "changedAtMs": 10510.676,
+          "restoredAtMs": 10523.692,
+          "restoredMode": "system",
+          "realThemeClassAndCookieChange": true,
+          "originalControlModeRestored": true,
+          "cookieLimit": "Only cinatoken-theme control preference is inspected; restoring a previously unset system mode intentionally writes a local system preference cookie. No Cookie/Auth/state token values are collected."
+        },
+        "exactAnonymous401Observed": null,
+        "pendingAtReady": {
+          "atMs": 10529.403,
+          "navigationId": "public-nav-2",
+          "requestCount": 32,
+          "pending": [
+            {
+              "id": "public-32",
+              "navigationId": "public-nav-2",
+              "url": "https://cinatoken.com/web-assets/logo.png",
+              "method": "GET",
+              "resourceType": "other",
+              "startMs": 10197.852,
+              "ageMs": 331.5549999999985,
+              "responseAtMs": null,
+              "http": null
+            }
+          ],
+          "pendingRequiredAssets": []
+        }
+      },
+      "exactAnonymous401Count": null
+    },
+    {
+      "shard": "admin-a",
+      "route": "/admin/users",
+      "kind": "admin",
+      "status": 200,
+      "title": "CinaToken",
+      "finalURL": "https://cinatoken.com/admin/users?page=1&email=&external_system=&external_user_id=&status=all&max_budget=all&sort=created_at&order=desc",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "hydrationFailure": false,
+      "bootstrap": null,
+      "metadata": null,
+      "functionalReadiness": {
+        "navigationId": "admin-a-nav-2",
+        "ready": true,
+        "readyAtMs": 10799.43,
+        "functionalPageDurationMs": 2109.358,
+        "domContentLoadedDurationMs": 752.5669999999991,
+        "readinessDurationMs": 4.861000000000786,
+        "locatorPlusReadinessDurationMs": 1356.791000000001,
+        "requiredAssetCount": 21,
+        "publicReactiveProof": null,
+        "exactAnonymous401Observed": {
+          "responseURL": "https://cinatoken.com/api/user/me",
+          "method": "GET",
+          "status": 401,
+          "successFalse": true,
+          "messageUnauthorized": true
+        },
+        "pendingAtReady": {
+          "atMs": 10799.438,
+          "navigationId": "admin-a-nav-2",
+          "requestCount": 45,
+          "pending": [
+            {
+              "id": "admin-a-45",
+              "navigationId": "admin-a-nav-2",
+              "url": "https://cinatoken.com/web-assets/logo.png",
+              "method": "GET",
+              "resourceType": "other",
+              "startMs": 10736.98,
+              "ageMs": 62.460000000000946,
+              "responseAtMs": null,
+              "http": null
+            }
+          ],
+          "pendingRequiredAssets": []
+        }
+      },
+      "exactAnonymous401Count": 1
+    },
+    {
+      "shard": "admin-b",
+      "route": "/admin/tools/invocations",
+      "kind": "admin",
+      "status": 200,
+      "title": "CinaToken",
+      "finalURL": "https://cinatoken.com/admin/tools/invocations?page=1&tool=&status=",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "hydrationFailure": false,
+      "bootstrap": null,
+      "metadata": null,
+      "functionalReadiness": {
+        "navigationId": "admin-b-nav-3",
+        "ready": true,
+        "readyAtMs": 12096.467,
+        "functionalPageDurationMs": 2102.5250000000015,
+        "domContentLoadedDurationMs": 753.5130000000008,
+        "readinessDurationMs": 7.778000000000247,
+        "locatorPlusReadinessDurationMs": 1349.0120000000006,
+        "requiredAssetCount": 17,
+        "publicReactiveProof": null,
+        "exactAnonymous401Observed": {
+          "responseURL": "https://cinatoken.com/api/user/me",
+          "method": "GET",
+          "status": 401,
+          "successFalse": true,
+          "messageUnauthorized": true
+        },
+        "pendingAtReady": {
+          "atMs": 12096.486,
+          "navigationId": "admin-b-nav-3",
+          "requestCount": 62,
+          "pending": [
+            {
+              "id": "admin-b-62",
+              "navigationId": "admin-b-nav-3",
+              "url": "https://cinatoken.com/web-assets/logo.png",
+              "method": "GET",
+              "resourceType": "other",
+              "startMs": 11810.996,
+              "ageMs": 285.4930000000004,
+              "responseAtMs": null,
+              "http": null
+            }
+          ],
+          "pendingRequiredAssets": []
+        }
+      },
+      "exactAnonymous401Count": 1
+    },
+    {
+      "shard": "account",
+      "route": "/account/byok",
+      "kind": "account",
+      "status": 200,
+      "title": "CinaToken",
+      "finalURL": "https://cinatoken.com/account/byok",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "hydrationFailure": false,
+      "bootstrap": null,
+      "metadata": null,
+      "functionalReadiness": {
+        "navigationId": "account-nav-3",
+        "ready": true,
+        "readyAtMs": 12404.198,
+        "functionalPageDurationMs": 2122.121000000001,
+        "domContentLoadedDurationMs": 775.5400000000009,
+        "readinessDurationMs": 5.1159999999999854,
+        "locatorPlusReadinessDurationMs": 1346.5810000000001,
+        "requiredAssetCount": 19,
+        "publicReactiveProof": null,
+        "exactAnonymous401Observed": {
+          "responseURL": "https://cinatoken.com/api/user/me",
+          "method": "GET",
+          "status": 401,
+          "successFalse": true,
+          "messageUnauthorized": true
+        },
+        "pendingAtReady": {
+          "atMs": 12404.208,
+          "navigationId": "account-nav-3",
+          "requestCount": 62,
+          "pending": [
+            {
+              "id": "account-62",
+              "navigationId": "account-nav-3",
+              "url": "https://cinatoken.com/web-assets/logo.png",
+              "method": "GET",
+              "resourceType": "other",
+              "startMs": 12140.484,
+              "ageMs": 263.72500000000036,
+              "responseAtMs": null,
+              "http": null
+            }
+          ],
+          "pendingRequiredAssets": []
+        }
+      },
+      "exactAnonymous401Count": 1
+    },
+    {
+      "shard": "admin-a",
+      "route": "/admin/users/00000000-0000-4000-8000-000000000000",
+      "kind": "admin",
+      "status": 200,
+      "title": "CinaToken",
+      "finalURL": "https://cinatoken.com/admin/users/00000000-0000-4000-8000-000000000000",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "hydrationFailure": false,
+      "bootstrap": null,
+      "metadata": null,
+      "functionalReadiness": {
+        "navigationId": "admin-a-nav-3",
+        "ready": true,
+        "readyAtMs": 12904.731,
+        "functionalPageDurationMs": 2096.3690000000006,
+        "domContentLoadedDurationMs": 758.5410000000011,
+        "readinessDurationMs": 4.405000000000655,
+        "locatorPlusReadinessDurationMs": 1337.8279999999995,
+        "requiredAssetCount": 20,
+        "publicReactiveProof": null,
+        "exactAnonymous401Observed": {
+          "responseURL": "https://cinatoken.com/api/user/me",
+          "method": "GET",
+          "status": 401,
+          "successFalse": true,
+          "messageUnauthorized": true
+        },
+        "pendingAtReady": {
+          "atMs": 12904.739,
+          "navigationId": "admin-a-nav-3",
+          "requestCount": 68,
+          "pending": [
+            {
+              "id": "admin-a-68",
+              "navigationId": "admin-a-nav-3",
+              "url": "https://cinatoken.com/web-assets/logo.png",
+              "method": "GET",
+              "resourceType": "other",
+              "startMs": 12647.642,
+              "ageMs": 257.09799999999996,
+              "responseAtMs": null,
+              "http": null
+            }
+          ],
+          "pendingRequiredAssets": []
+        }
+      },
+      "exactAnonymous401Count": 1
+    },
+    {
+      "shard": "public",
+      "route": "/en/providers",
+      "kind": "public",
+      "status": 200,
+      "title": "Model providers — CinaToken",
+      "finalURL": "https://cinatoken.com/en/providers",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "hydrationFailure": false,
+      "bootstrap": {
+        "version": 1,
+        "status": 200,
+        "pathname": "/en/providers",
+        "search": "",
+        "locale": "en"
+      },
+      "metadata": {
+        "canonical": [
+          "https://cinatoken.com/en/providers"
+        ],
+        "ogURL": "https://cinatoken.com/en/providers",
+        "robots": "index, follow"
+      },
+      "functionalReadiness": {
+        "navigationId": "public-nav-3",
+        "ready": true,
+        "readyAtMs": 12967.758,
+        "functionalPageDurationMs": 2359.0599999999995,
+        "domContentLoadedDurationMs": 862.7759999999998,
+        "readinessDurationMs": 1474.5300000000007,
+        "locatorPlusReadinessDurationMs": 1496.2839999999997,
+        "requiredAssetCount": 15,
+        "publicReactiveProof": {
+          "originalMode": "system",
+          "initialDark": false,
+          "probeMode": "dark",
+          "attempts": 1,
+          "changedAtMs": 12951.613,
+          "restoredAtMs": 12965.03,
+          "restoredMode": "system",
+          "realThemeClassAndCookieChange": true,
+          "originalControlModeRestored": true,
+          "cookieLimit": "Only cinatoken-theme control preference is inspected; restoring a previously unset system mode intentionally writes a local system preference cookie. No Cookie/Auth/state token values are collected."
+        },
+        "exactAnonymous401Observed": null,
+        "pendingAtReady": {
+          "atMs": 12967.766,
+          "navigationId": "public-nav-3",
+          "requestCount": 49,
+          "pending": [
+            {
+              "id": "public-49",
+              "navigationId": "public-nav-3",
+              "url": "https://cinatoken.com/web-assets/logo.png",
+              "method": "GET",
+              "resourceType": "other",
+              "startMs": 12905.492,
+              "ageMs": 62.27599999999984,
+              "responseAtMs": null,
+              "http": null
+            }
+          ],
+          "pendingRequiredAssets": []
+        }
+      },
+      "exactAnonymous401Count": null
+    },
+    {
+      "shard": "admin-b",
+      "route": "/admin/config/timezone",
+      "kind": "admin",
+      "status": 200,
+      "title": "CinaToken",
+      "finalURL": "https://cinatoken.com/admin/config/timezone",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "hydrationFailure": false,
+      "bootstrap": null,
+      "metadata": null,
+      "functionalReadiness": {
+        "navigationId": "admin-b-nav-4",
+        "ready": true,
+        "readyAtMs": 14189.873,
+        "functionalPageDurationMs": 2078.645999999999,
+        "domContentLoadedDurationMs": 761.1679999999997,
+        "readinessDurationMs": 5.971999999999753,
+        "locatorPlusReadinessDurationMs": 1317.4779999999992,
+        "requiredAssetCount": 18,
+        "publicReactiveProof": null,
+        "exactAnonymous401Observed": {
+          "responseURL": "https://cinatoken.com/api/user/me",
+          "method": "GET",
+          "status": 401,
+          "successFalse": true,
+          "messageUnauthorized": true
+        },
+        "pendingAtReady": {
+          "atMs": 14189.899,
+          "navigationId": "admin-b-nav-4",
+          "requestCount": 83,
+          "pending": [
+            {
+              "id": "admin-b-83",
+              "navigationId": "admin-b-nav-4",
+              "url": "https://cinatoken.com/web-assets/logo.png",
+              "method": "GET",
+              "resourceType": "other",
+              "startMs": 13895.082,
+              "ageMs": 294.8199999999997,
+              "responseAtMs": null,
+              "http": null
+            }
+          ],
+          "pendingRequiredAssets": []
+        }
+      },
+      "exactAnonymous401Count": 1
+    },
+    {
+      "shard": "account",
+      "route": "/account/activity",
+      "kind": "account",
+      "status": 200,
+      "title": "CinaToken",
+      "finalURL": "https://cinatoken.com/account/activity",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "hydrationFailure": false,
+      "bootstrap": null,
+      "metadata": null,
+      "functionalReadiness": {
+        "navigationId": "account-nav-4",
+        "ready": true,
+        "readyAtMs": 14516.273,
+        "functionalPageDurationMs": 2103.7919999999995,
+        "domContentLoadedDurationMs": 747.4529999999995,
+        "readinessDurationMs": 5.796999999998661,
+        "locatorPlusReadinessDurationMs": 1356.339,
+        "requiredAssetCount": 19,
+        "publicReactiveProof": null,
+        "exactAnonymous401Observed": {
+          "responseURL": "https://cinatoken.com/api/user/me",
+          "method": "GET",
+          "status": 401,
+          "successFalse": true,
+          "messageUnauthorized": true
+        },
+        "pendingAtReady": {
+          "atMs": 14516.294,
+          "navigationId": "account-nav-4",
+          "requestCount": 84,
+          "pending": [
+            {
+              "id": "account-84",
+              "navigationId": "account-nav-4",
+              "url": "https://cinatoken.com/web-assets/logo.png",
+              "method": "GET",
+              "resourceType": "other",
+              "startMs": 14235.646,
+              "ageMs": 280.64999999999964,
+              "responseAtMs": null,
+              "http": null
+            }
+          ],
+          "pendingRequiredAssets": []
+        }
+      },
+      "exactAnonymous401Count": 1
+    },
+    {
+      "shard": "admin-a",
+      "route": "/admin/providers",
+      "kind": "admin",
+      "status": 200,
+      "title": "CinaToken",
+      "finalURL": "https://cinatoken.com/admin/providers?q=&filter=all",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "hydrationFailure": false,
+      "bootstrap": null,
+      "metadata": null,
+      "functionalReadiness": {
+        "navigationId": "admin-a-nav-4",
+        "ready": true,
+        "readyAtMs": 15016.768,
+        "functionalPageDurationMs": 2101.8999999999996,
+        "domContentLoadedDurationMs": 759.0829999999987,
+        "readinessDurationMs": 4.105999999999767,
+        "locatorPlusReadinessDurationMs": 1342.817000000001,
+        "requiredAssetCount": 23,
+        "publicReactiveProof": null,
+        "exactAnonymous401Observed": {
+          "responseURL": "https://cinatoken.com/api/user/me",
+          "method": "GET",
+          "status": 401,
+          "successFalse": true,
+          "messageUnauthorized": true
+        },
+        "pendingAtReady": {
+          "atMs": 15016.78,
+          "navigationId": "admin-a-nav-4",
+          "requestCount": 94,
+          "pending": [
+            {
+              "id": "admin-a-94",
+              "navigationId": "admin-a-nav-4",
+              "url": "https://cinatoken.com/web-assets/logo.png",
+              "method": "GET",
+              "resourceType": "other",
+              "startMs": 14739.456,
+              "ageMs": 277.3250000000007,
+              "responseAtMs": null,
+              "http": null
+            }
+          ],
+          "pendingRequiredAssets": []
+        }
+      },
+      "exactAnonymous401Count": 1
+    },
+    {
+      "shard": "public",
+      "route": "/en/compare",
+      "kind": "public",
+      "status": 200,
+      "title": "Compare models — CinaToken",
+      "finalURL": "https://cinatoken.com/en/compare",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "hydrationFailure": false,
+      "bootstrap": {
+        "version": 1,
+        "status": 200,
+        "pathname": "/en/compare",
+        "search": "",
+        "locale": "en"
+      },
+      "metadata": {
+        "canonical": [
+          "https://cinatoken.com/en/compare"
+        ],
+        "ogURL": "https://cinatoken.com/en/compare",
+        "robots": "index, follow"
+      },
+      "functionalReadiness": {
+        "navigationId": "public-nav-4",
+        "ready": true,
+        "readyAtMs": 15176.979,
+        "functionalPageDurationMs": 2194.8419999999987,
+        "domContentLoadedDurationMs": 846.6759999999995,
+        "readinessDurationMs": 1329.5990000000002,
+        "locatorPlusReadinessDurationMs": 1348.1659999999993,
+        "requiredAssetCount": 16,
+        "publicReactiveProof": {
+          "originalMode": "system",
+          "initialDark": false,
+          "probeMode": "dark",
+          "attempts": 1,
+          "changedAtMs": 15162.283,
+          "restoredAtMs": 15172.372,
+          "restoredMode": "system",
+          "realThemeClassAndCookieChange": true,
+          "originalControlModeRestored": true,
+          "cookieLimit": "Only cinatoken-theme control preference is inspected; restoring a previously unset system mode intentionally writes a local system preference cookie. No Cookie/Auth/state token values are collected."
+        },
+        "exactAnonymous401Observed": null,
+        "pendingAtReady": {
+          "atMs": 15176.999,
+          "navigationId": "public-nav-4",
+          "requestCount": 67,
+          "pending": [
+            {
+              "id": "public-67",
+              "navigationId": "public-nav-4",
+              "url": "https://cinatoken.com/web-assets/logo.png",
+              "method": "GET",
+              "resourceType": "other",
+              "startMs": 15112.304,
+              "ageMs": 64.69700000000012,
+              "responseAtMs": null,
+              "http": null
+            }
+          ],
+          "pendingRequiredAssets": []
+        }
+      },
+      "exactAnonymous401Count": null
+    },
+    {
+      "shard": "admin-b",
+      "route": "/admin/config",
+      "kind": "admin",
+      "status": 200,
+      "title": "CinaToken",
+      "finalURL": "https://cinatoken.com/admin/config",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "hydrationFailure": false,
+      "bootstrap": null,
+      "metadata": null,
+      "functionalReadiness": {
+        "navigationId": "admin-b-nav-5",
+        "ready": true,
+        "readyAtMs": 16292.341,
+        "functionalPageDurationMs": 2089.759,
+        "domContentLoadedDurationMs": 758.8209999999999,
+        "readinessDurationMs": 4.043999999999869,
+        "locatorPlusReadinessDurationMs": 1330.938,
+        "requiredAssetCount": 18,
+        "publicReactiveProof": null,
+        "exactAnonymous401Observed": {
+          "responseURL": "https://cinatoken.com/api/user/me",
+          "method": "GET",
+          "status": 401,
+          "successFalse": true,
+          "messageUnauthorized": true
+        },
+        "pendingAtReady": {
+          "atMs": 16292.358,
+          "navigationId": "admin-b-nav-5",
+          "requestCount": 104,
+          "pending": [
+            {
+              "id": "admin-b-104",
+              "navigationId": "admin-b-nav-5",
+              "url": "https://cinatoken.com/web-assets/logo.png",
+              "method": "GET",
+              "resourceType": "other",
+              "startMs": 15953.476,
+              "ageMs": 338.884,
+              "responseAtMs": null,
+              "http": null
+            }
+          ],
+          "pendingRequiredAssets": []
+        }
+      },
+      "exactAnonymous401Count": 1
+    },
+    {
+      "shard": "account",
+      "route": "/account/earnings",
+      "kind": "account",
+      "status": 200,
+      "title": "CinaToken",
+      "finalURL": "https://cinatoken.com/account/earnings",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "hydrationFailure": false,
+      "bootstrap": null,
+      "metadata": null,
+      "functionalReadiness": {
+        "navigationId": "account-nav-5",
+        "ready": true,
+        "readyAtMs": 16617.097,
+        "functionalPageDurationMs": 2088.4400000000023,
+        "domContentLoadedDurationMs": 753.5860000000011,
+        "readinessDurationMs": 3.9030000000020664,
+        "locatorPlusReadinessDurationMs": 1334.8540000000012,
+        "requiredAssetCount": 15,
+        "publicReactiveProof": null,
+        "exactAnonymous401Observed": {
+          "responseURL": "https://cinatoken.com/api/user/me",
+          "method": "GET",
+          "status": 401,
+          "successFalse": true,
+          "messageUnauthorized": true
+        },
+        "pendingAtReady": {
+          "atMs": 16617.11,
+          "navigationId": "account-nav-5",
+          "requestCount": 102,
+          "pending": [],
+          "pendingRequiredAssets": []
+        }
+      },
+      "exactAnonymous401Count": 1
+    },
+    {
+      "shard": "admin-a",
+      "route": "/admin/models",
+      "kind": "admin",
+      "status": 200,
+      "title": "CinaToken",
+      "finalURL": "https://cinatoken.com/admin/models?q=&vendor=all&kind=all&availability=all",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "hydrationFailure": false,
+      "bootstrap": null,
+      "metadata": null,
+      "functionalReadiness": {
+        "navigationId": "admin-a-nav-5",
+        "ready": true,
+        "readyAtMs": 17110.142,
+        "functionalPageDurationMs": 2084.6280000000006,
+        "domContentLoadedDurationMs": 759.9930000000004,
+        "readinessDurationMs": 4.474999999998545,
+        "locatorPlusReadinessDurationMs": 1324.6350000000002,
+        "requiredAssetCount": 23,
+        "publicReactiveProof": null,
+        "exactAnonymous401Observed": {
+          "responseURL": "https://cinatoken.com/api/user/me",
+          "method": "GET",
+          "status": 401,
+          "successFalse": true,
+          "messageUnauthorized": true
+        },
+        "pendingAtReady": {
+          "atMs": 17110.157,
+          "navigationId": "admin-a-nav-5",
+          "requestCount": 120,
+          "pending": [
+            {
+              "id": "admin-a-120",
+              "navigationId": "admin-a-nav-5",
+              "url": "https://cinatoken.com/web-assets/logo.png",
+              "method": "GET",
+              "resourceType": "other",
+              "startMs": 16801.088,
+              "ageMs": 309.0699999999997,
+              "responseAtMs": null,
+              "http": null
+            }
+          ],
+          "pendingRequiredAssets": []
+        }
+      },
+      "exactAnonymous401Count": 1
+    },
+    {
+      "shard": "public",
+      "route": "/en/chat",
+      "kind": "public",
+      "status": 200,
+      "title": "Chat — CinaToken",
+      "finalURL": "https://cinatoken.com/en/chat",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "hydrationFailure": false,
+      "bootstrap": {
+        "version": 1,
+        "status": 200,
+        "pathname": "/en/chat",
+        "search": "",
+        "locale": "en"
+      },
+      "metadata": {
+        "canonical": [
+          "https://cinatoken.com/en/chat"
+        ],
+        "ogURL": "https://cinatoken.com/en/chat",
+        "robots": "noindex, nofollow"
+      },
+      "functionalReadiness": {
+        "navigationId": "public-nav-5",
+        "ready": true,
+        "readyAtMs": 17799.765,
+        "functionalPageDurationMs": 2610.376,
+        "domContentLoadedDurationMs": 857.5970000000016,
+        "readinessDurationMs": 1729.440999999999,
+        "locatorPlusReadinessDurationMs": 1752.7789999999986,
+        "requiredAssetCount": 16,
+        "publicReactiveProof": {
+          "originalMode": "system",
+          "initialDark": false,
+          "probeMode": "dark",
+          "attempts": 3,
+          "changedAtMs": 17777.873,
+          "restoredAtMs": 17795.968,
+          "restoredMode": "system",
+          "realThemeClassAndCookieChange": true,
+          "originalControlModeRestored": true,
+          "cookieLimit": "Only cinatoken-theme control preference is inspected; restoring a previously unset system mode intentionally writes a local system preference cookie. No Cookie/Auth/state token values are collected."
+        },
+        "exactAnonymous401Observed": null,
+        "pendingAtReady": {
+          "atMs": 17799.781,
+          "navigationId": "public-nav-5",
+          "requestCount": 85,
+          "pending": [],
+          "pendingRequiredAssets": []
+        }
+      },
+      "exactAnonymous401Count": null
+    },
+    {
+      "shard": "admin-b",
+      "route": "/admin/admin-api-keys",
+      "kind": "admin",
+      "status": 200,
+      "title": "CinaToken",
+      "finalURL": "https://cinatoken.com/admin/admin-api-keys",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "hydrationFailure": false,
+      "bootstrap": null,
+      "metadata": null,
+      "functionalReadiness": {
+        "navigationId": "admin-b-nav-6",
+        "ready": true,
+        "readyAtMs": 18382.797,
+        "functionalPageDurationMs": 2082.4379999999983,
+        "domContentLoadedDurationMs": 756.6549999999988,
+        "readinessDurationMs": 4.416999999997643,
+        "locatorPlusReadinessDurationMs": 1325.7829999999994,
+        "requiredAssetCount": 18,
+        "publicReactiveProof": null,
+        "exactAnonymous401Observed": {
+          "responseURL": "https://cinatoken.com/api/user/me",
+          "method": "GET",
+          "status": 401,
+          "successFalse": true,
+          "messageUnauthorized": true
+        },
+        "pendingAtReady": {
+          "atMs": 18382.818,
+          "navigationId": "admin-b-nav-6",
+          "requestCount": 125,
+          "pending": [
+            {
+              "id": "admin-b-125",
+              "navigationId": "admin-b-nav-6",
+              "url": "https://cinatoken.com/web-assets/logo.png",
+              "method": "GET",
+              "resourceType": "other",
+              "startMs": 18037.306,
+              "ageMs": 345.5139999999992,
+              "responseAtMs": null,
+              "http": null
+            }
+          ],
+          "pendingRequiredAssets": []
+        }
+      },
+      "exactAnonymous401Count": 1
+    },
+    {
+      "shard": "account",
+      "route": "/account/nft",
+      "kind": "account",
+      "status": 200,
+      "title": "CinaToken",
+      "finalURL": "https://cinatoken.com/account/nft",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "hydrationFailure": false,
+      "bootstrap": null,
+      "metadata": null,
+      "functionalReadiness": {
+        "navigationId": "account-nav-6",
+        "ready": true,
+        "readyAtMs": 18699.661,
+        "functionalPageDurationMs": 2071.0149999999994,
+        "domContentLoadedDurationMs": 746.1699999999983,
+        "readinessDurationMs": 3.2449999999989814,
+        "locatorPlusReadinessDurationMs": 1324.8450000000012,
+        "requiredAssetCount": 15,
+        "publicReactiveProof": null,
+        "exactAnonymous401Observed": {
+          "responseURL": "https://cinatoken.com/api/user/me",
+          "method": "GET",
+          "status": 401,
+          "successFalse": true,
+          "messageUnauthorized": true
+        },
+        "pendingAtReady": {
+          "atMs": 18699.673,
+          "navigationId": "account-nav-6",
+          "requestCount": 120,
+          "pending": [
+            {
+              "id": "account-120",
+              "navigationId": "account-nav-6",
+              "url": "https://cinatoken.com/web-assets/logo.png",
+              "method": "GET",
+              "resourceType": "other",
+              "startMs": 18499.604,
+              "ageMs": 200.0699999999997,
+              "responseAtMs": null,
+              "http": null
+            }
+          ],
+          "pendingRequiredAssets": []
+        }
+      },
+      "exactAnonymous401Count": 1
+    },
+    {
+      "shard": "admin-a",
+      "route": "/admin/endpoints",
+      "kind": "admin",
+      "status": 200,
+      "title": "CinaToken",
+      "finalURL": "https://cinatoken.com/admin/endpoints?q=&model=&provider=&status=all",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "hydrationFailure": false,
+      "bootstrap": null,
+      "metadata": null,
+      "functionalReadiness": {
+        "navigationId": "admin-a-nav-6",
+        "ready": true,
+        "readyAtMs": 19202.48,
+        "functionalPageDurationMs": 2084.4079999999994,
+        "domContentLoadedDurationMs": 754.3960000000006,
+        "readinessDurationMs": 6.332999999998719,
+        "locatorPlusReadinessDurationMs": 1330.0119999999988,
+        "requiredAssetCount": 23,
+        "publicReactiveProof": null,
+        "exactAnonymous401Observed": {
+          "responseURL": "https://cinatoken.com/api/user/me",
+          "method": "GET",
+          "status": 401,
+          "successFalse": true,
+          "messageUnauthorized": true
+        },
+        "pendingAtReady": {
+          "atMs": 19202.504,
+          "navigationId": "admin-a-nav-6",
+          "requestCount": 146,
+          "pending": [
+            {
+              "id": "admin-a-146",
+              "navigationId": "admin-a-nav-6",
+              "url": "https://cinatoken.com/web-assets/logo.png",
+              "method": "GET",
+              "resourceType": "other",
+              "startMs": 18878.932,
+              "ageMs": 323.5740000000005,
+              "responseAtMs": null,
+              "http": null
+            }
+          ],
+          "pendingRequiredAssets": []
+        }
+      },
+      "exactAnonymous401Count": 1
+    },
+    {
+      "shard": "public",
+      "route": "/en/rankings",
+      "kind": "public",
+      "status": 200,
+      "title": "Model rankings — CinaToken",
+      "finalURL": "https://cinatoken.com/en/rankings",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "hydrationFailure": false,
+      "bootstrap": {
+        "version": 1,
+        "status": 200,
+        "pathname": "/en/rankings",
+        "search": "",
+        "locale": "en"
+      },
+      "metadata": {
+        "canonical": [
+          "https://cinatoken.com/en/rankings"
+        ],
+        "ogURL": "https://cinatoken.com/en/rankings",
+        "robots": "index, follow"
+      },
+      "functionalReadiness": {
+        "navigationId": "public-nav-6",
+        "ready": true,
+        "readyAtMs": 20094.519,
+        "functionalPageDurationMs": 2274.045000000002,
+        "domContentLoadedDurationMs": 853.8180000000029,
+        "readinessDurationMs": 1398.4670000000006,
+        "locatorPlusReadinessDurationMs": 1420.226999999999,
+        "requiredAssetCount": 16,
+        "publicReactiveProof": {
+          "originalMode": "system",
+          "initialDark": false,
+          "probeMode": "dark",
+          "attempts": 3,
+          "changedAtMs": 20075.796,
+          "restoredAtMs": 20090.096,
+          "restoredMode": "system",
+          "realThemeClassAndCookieChange": true,
+          "originalControlModeRestored": true,
+          "cookieLimit": "Only cinatoken-theme control preference is inspected; restoring a previously unset system mode intentionally writes a local system preference cookie. No Cookie/Auth/state token values are collected."
+        },
+        "exactAnonymous401Observed": null,
+        "pendingAtReady": {
+          "atMs": 20094.538,
+          "navigationId": "public-nav-6",
+          "requestCount": 103,
+          "pending": [
+            {
+              "id": "public-103",
+              "navigationId": "public-nav-6",
+              "url": "https://cinatoken.com/web-assets/logo.png",
+              "method": "GET",
+              "resourceType": "other",
+              "startMs": 20014.586,
+              "ageMs": 79.95300000000134,
+              "responseAtMs": null,
+              "http": null
+            }
+          ],
+          "pendingRequiredAssets": []
+        }
+      },
+      "exactAnonymous401Count": null
+    },
+    {
+      "shard": "admin-b",
+      "route": "/admin/keys",
+      "kind": "admin",
+      "status": 200,
+      "title": "CinaToken",
+      "finalURL": "https://cinatoken.com/admin/keys?page=1&email=&user_id=&sort=created_at&order=desc",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "hydrationFailure": false,
+      "bootstrap": null,
+      "metadata": null,
+      "functionalReadiness": {
+        "navigationId": "admin-b-nav-7",
+        "ready": true,
+        "readyAtMs": 20507.41,
+        "functionalPageDurationMs": 2113.8129999999983,
+        "domContentLoadedDurationMs": 765.6909999999989,
+        "readinessDurationMs": 8.170999999998457,
+        "locatorPlusReadinessDurationMs": 1348.1219999999994,
+        "requiredAssetCount": 22,
+        "publicReactiveProof": null,
+        "exactAnonymous401Observed": {
+          "responseURL": "https://cinatoken.com/api/user/me",
+          "method": "GET",
+          "status": 401,
+          "successFalse": true,
+          "messageUnauthorized": true
+        },
+        "pendingAtReady": {
+          "atMs": 20507.449,
+          "navigationId": "admin-b-nav-7",
+          "requestCount": 150,
+          "pending": [
+            {
+              "id": "admin-b-150",
+              "navigationId": "admin-b-nav-7",
+              "url": "https://cinatoken.com/web-assets/logo.png",
+              "method": "GET",
+              "resourceType": "other",
+              "startMs": 20172.423,
+              "ageMs": 335.0300000000025,
+              "responseAtMs": null,
+              "http": null
+            }
+          ],
+          "pendingRequiredAssets": []
+        }
+      },
+      "exactAnonymous401Count": 1
+    },
+    {
+      "shard": "account",
+      "route": "/account/withdraw",
+      "kind": "account",
+      "status": 200,
+      "title": "CinaToken",
+      "finalURL": "https://cinatoken.com/account/withdraw",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "hydrationFailure": false,
+      "bootstrap": null,
+      "metadata": null,
+      "functionalReadiness": {
+        "navigationId": "account-nav-7",
+        "ready": true,
+        "readyAtMs": 20801.821,
+        "functionalPageDurationMs": 2096.2400000000016,
+        "domContentLoadedDurationMs": 764.9580000000024,
+        "readinessDurationMs": 4.900000000001455,
+        "locatorPlusReadinessDurationMs": 1331.2819999999992,
+        "requiredAssetCount": 19,
+        "publicReactiveProof": null,
+        "exactAnonymous401Observed": {
+          "responseURL": "https://cinatoken.com/api/user/me",
+          "method": "GET",
+          "status": 401,
+          "successFalse": true,
+          "messageUnauthorized": true
+        },
+        "pendingAtReady": {
+          "atMs": 20801.845,
+          "navigationId": "account-nav-7",
+          "requestCount": 142,
+          "pending": [
+            {
+              "id": "account-142",
+              "navigationId": "account-nav-7",
+              "url": "https://cinatoken.com/web-assets/logo.png",
+              "method": "GET",
+              "resourceType": "other",
+              "startMs": 20446.323,
+              "ageMs": 355.52400000000125,
+              "responseAtMs": 20794.617,
+              "http": 200
+            }
+          ],
+          "pendingRequiredAssets": []
+        }
+      },
+      "exactAnonymous401Count": 1
+    },
+    {
+      "shard": "admin-a",
+      "route": "/admin/routes",
+      "kind": "admin",
+      "status": 200,
+      "title": "CinaToken",
+      "finalURL": "https://cinatoken.com/admin/routes?q=&model=&provider_id=&status=all&route_group=&kind=all&vendor=&workspace=byModel&view=topology",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "hydrationFailure": false,
+      "bootstrap": null,
+      "metadata": null,
+      "functionalReadiness": {
+        "navigationId": "admin-a-nav-7",
+        "ready": true,
+        "readyAtMs": 21312.351,
+        "functionalPageDurationMs": 2096.4389999999985,
+        "domContentLoadedDurationMs": 754.8899999999994,
+        "readinessDurationMs": 7.287000000000262,
+        "locatorPlusReadinessDurationMs": 1341.548999999999,
+        "requiredAssetCount": 23,
+        "publicReactiveProof": null,
+        "exactAnonymous401Observed": {
+          "responseURL": "https://cinatoken.com/api/user/me",
+          "method": "GET",
+          "status": 401,
+          "successFalse": true,
+          "messageUnauthorized": true
+        },
+        "pendingAtReady": {
+          "atMs": 21312.379,
+          "navigationId": "admin-a-nav-7",
+          "requestCount": 172,
+          "pending": [
+            {
+              "id": "admin-a-172",
+              "navigationId": "admin-a-nav-7",
+              "url": "https://cinatoken.com/web-assets/logo.png",
+              "method": "GET",
+              "resourceType": "other",
+              "startMs": 21309.786,
+              "ageMs": 2.596000000001368,
+              "responseAtMs": null,
+              "http": null
+            }
+          ],
+          "pendingRequiredAssets": []
+        }
+      },
+      "exactAnonymous401Count": 1
+    },
+    {
+      "shard": "public",
+      "route": "/en/benchmarks",
+      "kind": "public",
+      "status": 200,
+      "title": "Gateway benchmarks — CinaToken",
+      "finalURL": "https://cinatoken.com/en/benchmarks",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "hydrationFailure": false,
+      "bootstrap": {
+        "version": 1,
+        "status": 200,
+        "pathname": "/en/benchmarks",
+        "search": "",
+        "locale": "en"
+      },
+      "metadata": {
+        "canonical": [
+          "https://cinatoken.com/en/benchmarks"
+        ],
+        "ogURL": "https://cinatoken.com/en/benchmarks",
+        "robots": "index, follow"
+      },
+      "functionalReadiness": {
+        "navigationId": "public-nav-7",
+        "ready": true,
+        "readyAtMs": 22359.173,
+        "functionalPageDurationMs": 2242.9399999999987,
+        "domContentLoadedDurationMs": 863.9279999999999,
+        "readinessDurationMs": 1357.1139999999978,
+        "locatorPlusReadinessDurationMs": 1379.0119999999988,
+        "requiredAssetCount": 16,
+        "publicReactiveProof": {
+          "originalMode": "system",
+          "initialDark": false,
+          "probeMode": "dark",
+          "attempts": 1,
+          "changedAtMs": 22344.173,
+          "restoredAtMs": 22355.139,
+          "restoredMode": "system",
+          "realThemeClassAndCookieChange": true,
+          "originalControlModeRestored": true,
+          "cookieLimit": "Only cinatoken-theme control preference is inspected; restoring a previously unset system mode intentionally writes a local system preference cookie. No Cookie/Auth/state token values are collected."
+        },
+        "exactAnonymous401Observed": null,
+        "pendingAtReady": {
+          "atMs": 22359.215,
+          "navigationId": "public-nav-7",
+          "requestCount": 121,
+          "pending": [
+            {
+              "id": "public-121",
+              "navigationId": "public-nav-7",
+              "url": "https://cinatoken.com/web-assets/logo.png",
+              "method": "GET",
+              "resourceType": "other",
+              "startMs": 22276.607,
+              "ageMs": 82.61000000000058,
+              "responseAtMs": null,
+              "http": null
+            }
+          ],
+          "pendingRequiredAssets": []
+        }
+      },
+      "exactAnonymous401Count": null
+    },
+    {
+      "shard": "admin-b",
+      "route": "/admin/shared-keys",
+      "kind": "admin",
+      "status": 200,
+      "title": "CinaToken",
+      "finalURL": "https://cinatoken.com/admin/shared-keys?page=1&status=&channelType=&seller_user_id=&search=",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "hydrationFailure": false,
+      "bootstrap": null,
+      "metadata": null,
+      "functionalReadiness": {
+        "navigationId": "admin-b-nav-8",
+        "ready": true,
+        "readyAtMs": 22619.466,
+        "functionalPageDurationMs": 2096.0780000000013,
+        "domContentLoadedDurationMs": 761.7960000000021,
+        "readinessDurationMs": 5.543000000001484,
+        "locatorPlusReadinessDurationMs": 1334.2819999999992,
+        "requiredAssetCount": 20,
+        "publicReactiveProof": null,
+        "exactAnonymous401Observed": {
+          "responseURL": "https://cinatoken.com/api/user/me",
+          "method": "GET",
+          "status": 401,
+          "successFalse": true,
+          "messageUnauthorized": true
+        },
+        "pendingAtReady": {
+          "atMs": 22619.499,
+          "navigationId": "admin-b-nav-8",
+          "requestCount": 173,
+          "pending": [
+            {
+              "id": "admin-b-173",
+              "navigationId": "admin-b-nav-8",
+              "url": "https://cinatoken.com/web-assets/logo.png",
+              "method": "GET",
+              "resourceType": "other",
+              "startMs": 22322.92,
+              "ageMs": 296.58000000000175,
+              "responseAtMs": null,
+              "http": null
+            }
+          ],
+          "pendingRequiredAssets": []
+        }
+      },
+      "exactAnonymous401Count": 1
+    },
+    {
+      "shard": "account",
+      "route": "/account/presets",
+      "kind": "account",
+      "status": 200,
+      "title": "CinaToken",
+      "finalURL": "https://cinatoken.com/account/presets",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "hydrationFailure": false,
+      "bootstrap": null,
+      "metadata": null,
+      "functionalReadiness": {
+        "navigationId": "account-nav-8",
+        "ready": true,
+        "readyAtMs": 22895.897,
+        "functionalPageDurationMs": 2081.9449999999997,
+        "domContentLoadedDurationMs": 754.107,
+        "readinessDurationMs": 13.476000000002387,
+        "locatorPlusReadinessDurationMs": 1327.8379999999997,
+        "requiredAssetCount": 19,
+        "publicReactiveProof": null,
+        "exactAnonymous401Observed": {
+          "responseURL": "https://cinatoken.com/api/user/me",
+          "method": "GET",
+          "status": 401,
+          "successFalse": true,
+          "messageUnauthorized": true
+        },
+        "pendingAtReady": {
+          "atMs": 22895.942,
+          "navigationId": "account-nav-8",
+          "requestCount": 164,
+          "pending": [
+            {
+              "id": "account-164",
+              "navigationId": "account-nav-8",
+              "url": "https://cinatoken.com/web-assets/logo.png",
+              "method": "GET",
+              "resourceType": "other",
+              "startMs": 22532.494,
+              "ageMs": 363.45100000000093,
+              "responseAtMs": 22884.67,
+              "http": 200
+            }
+          ],
+          "pendingRequiredAssets": []
+        }
+      },
+      "exactAnonymous401Count": 1
+    },
+    {
+      "shard": "admin-a",
+      "route": "/admin/data-policies",
+      "kind": "admin",
+      "status": 200,
+      "title": "CinaToken",
+      "finalURL": "https://cinatoken.com/admin/data-policies?q=&status=all",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "hydrationFailure": false,
+      "bootstrap": null,
+      "metadata": null,
+      "functionalReadiness": {
+        "navigationId": "admin-a-nav-8",
+        "ready": true,
+        "readyAtMs": 23437.087,
+        "functionalPageDurationMs": 2112.4919999999984,
+        "domContentLoadedDurationMs": 760.9130000000005,
+        "readinessDurationMs": 5.662000000000262,
+        "locatorPlusReadinessDurationMs": 1351.578999999998,
+        "requiredAssetCount": 21,
+        "publicReactiveProof": null,
+        "exactAnonymous401Observed": {
+          "responseURL": "https://cinatoken.com/api/user/me",
+          "method": "GET",
+          "status": 401,
+          "successFalse": true,
+          "messageUnauthorized": true
+        },
+        "pendingAtReady": {
+          "atMs": 23437.118,
+          "navigationId": "admin-a-nav-8",
+          "requestCount": 196,
+          "pending": [
+            {
+              "id": "admin-a-196",
+              "navigationId": "admin-a-nav-8",
+              "url": "https://cinatoken.com/web-assets/logo.png",
+              "method": "GET",
+              "resourceType": "other",
+              "startMs": 23093.404,
+              "ageMs": 343.71600000000035,
+              "responseAtMs": null,
+              "http": null
+            }
+          ],
+          "pendingRequiredAssets": []
+        }
+      },
+      "exactAnonymous401Count": 1
+    },
+    {
+      "shard": "public",
+      "route": "/en/models/cinatoken-smoke-missing/no-such-model",
+      "kind": "missing-model",
+      "status": 404,
+      "title": "This model is not currently published.",
+      "finalURL": "https://cinatoken.com/en/models/cinatoken-smoke-missing/no-such-model",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "hydrationFailure": false,
+      "bootstrap": {
+        "version": 1,
+        "status": 404,
+        "pathname": "/en/models/cinatoken-smoke-missing/no-such-model",
+        "search": "",
+        "locale": "en"
+      },
+      "metadata": {
+        "canonical": [],
+        "ogURL": null,
+        "robots": "noindex, nofollow"
+      },
+      "functionalReadiness": {
+        "navigationId": "public-nav-8",
+        "ready": true,
+        "readyAtMs": 24573.503,
+        "functionalPageDurationMs": 2197.0730000000003,
+        "domContentLoadedDurationMs": 835.9779999999992,
+        "readinessDurationMs": 1343.3650000000016,
+        "locatorPlusReadinessDurationMs": 1361.0950000000012,
+        "requiredAssetCount": 16,
+        "publicReactiveProof": {
+          "originalMode": "system",
+          "initialDark": false,
+          "probeMode": "dark",
+          "attempts": 1,
+          "changedAtMs": 24558.761,
+          "restoredAtMs": 24570.146,
+          "restoredMode": "system",
+          "realThemeClassAndCookieChange": true,
+          "originalControlModeRestored": true,
+          "cookieLimit": "Only cinatoken-theme control preference is inspected; restoring a previously unset system mode intentionally writes a local system preference cookie. No Cookie/Auth/state token values are collected."
+        },
+        "exactAnonymous401Observed": null,
+        "pendingAtReady": {
+          "atMs": 24573.527,
+          "navigationId": "public-nav-8",
+          "requestCount": 139,
+          "pending": [
+            {
+              "id": "public-139",
+              "navigationId": "public-nav-8",
+              "url": "https://cinatoken.com/web-assets/logo.png",
+              "method": "GET",
+              "resourceType": "other",
+              "startMs": 24505.441,
+              "ageMs": 68.08799999999974,
+              "responseAtMs": null,
+              "http": null
+            }
+          ],
+          "pendingRequiredAssets": []
+        }
+      },
+      "exactAnonymous401Count": null
+    },
+    {
+      "shard": "admin-b",
+      "route": "/admin/tools",
+      "kind": "admin",
+      "status": 200,
+      "title": "CinaToken",
+      "finalURL": "https://cinatoken.com/admin/tools",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "hydrationFailure": false,
+      "bootstrap": null,
+      "metadata": null,
+      "functionalReadiness": {
+        "navigationId": "admin-b-nav-9",
+        "ready": true,
+        "readyAtMs": 24735.494,
+        "functionalPageDurationMs": 2102.1899999999987,
+        "domContentLoadedDurationMs": 761.5620000000017,
+        "readinessDurationMs": 5.065999999998894,
+        "locatorPlusReadinessDurationMs": 1340.627999999997,
+        "requiredAssetCount": 21,
+        "publicReactiveProof": null,
+        "exactAnonymous401Observed": {
+          "responseURL": "https://cinatoken.com/api/user/me",
+          "method": "GET",
+          "status": 401,
+          "successFalse": true,
+          "messageUnauthorized": true
+        },
+        "pendingAtReady": {
+          "atMs": 24735.53,
+          "navigationId": "admin-b-nav-9",
+          "requestCount": 197,
+          "pending": [
+            {
+              "id": "admin-b-197",
+              "navigationId": "admin-b-nav-9",
+              "url": "https://cinatoken.com/web-assets/logo.png",
+              "method": "GET",
+              "resourceType": "other",
+              "startMs": 24375.54,
+              "ageMs": 359.9939999999988,
+              "responseAtMs": 24723.12,
+              "http": 200
+            }
+          ],
+          "pendingRequiredAssets": []
+        }
+      },
+      "exactAnonymous401Count": 1
+    },
+    {
+      "shard": "account",
+      "route": "/account/guardrails",
+      "kind": "account",
+      "status": 200,
+      "title": "CinaToken",
+      "finalURL": "https://cinatoken.com/account/guardrails",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "hydrationFailure": false,
+      "bootstrap": null,
+      "metadata": null,
+      "functionalReadiness": {
+        "navigationId": "account-nav-9",
+        "ready": true,
+        "readyAtMs": 25003.474,
+        "functionalPageDurationMs": 2094.026999999998,
+        "domContentLoadedDurationMs": 750.7210000000014,
+        "readinessDurationMs": 4.529999999998836,
+        "locatorPlusReadinessDurationMs": 1343.3059999999969,
+        "requiredAssetCount": 18,
+        "publicReactiveProof": null,
+        "exactAnonymous401Observed": {
+          "responseURL": "https://cinatoken.com/api/user/me",
+          "method": "GET",
+          "status": 401,
+          "successFalse": true,
+          "messageUnauthorized": true
+        },
+        "pendingAtReady": {
+          "atMs": 25003.501,
+          "navigationId": "account-nav-9",
+          "requestCount": 185,
+          "pending": [],
+          "pendingRequiredAssets": []
+        }
+      },
+      "exactAnonymous401Count": 1
+    },
+    {
+      "shard": "admin-a",
+      "route": "/admin/presets",
+      "kind": "admin",
+      "status": 200,
+      "title": "CinaToken",
+      "finalURL": "https://cinatoken.com/admin/presets",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "hydrationFailure": false,
+      "bootstrap": null,
+      "metadata": null,
+      "functionalReadiness": {
+        "navigationId": "admin-a-nav-9",
+        "ready": true,
+        "readyAtMs": 25507.793,
+        "functionalPageDurationMs": 2058.5020000000004,
+        "domContentLoadedDurationMs": 744.3199999999997,
+        "readinessDurationMs": 5.246000000002823,
+        "locatorPlusReadinessDurationMs": 1314.1820000000007,
+        "requiredAssetCount": 23,
+        "publicReactiveProof": null,
+        "exactAnonymous401Observed": {
+          "responseURL": "https://cinatoken.com/api/user/me",
+          "method": "GET",
+          "status": 401,
+          "successFalse": true,
+          "messageUnauthorized": true
+        },
+        "pendingAtReady": {
+          "atMs": 25507.827,
+          "navigationId": "admin-a-nav-9",
+          "requestCount": 222,
+          "pending": [
+            {
+              "id": "admin-a-222",
+              "navigationId": "admin-a-nav-9",
+              "url": "https://cinatoken.com/web-assets/logo.png",
+              "method": "GET",
+              "resourceType": "other",
+              "startMs": 25319.636,
+              "ageMs": 188.19400000000314,
+              "responseAtMs": null,
+              "http": null
+            }
+          ],
+          "pendingRequiredAssets": []
+        }
+      },
+      "exactAnonymous401Count": 1
+    },
+    {
+      "shard": "admin-b",
+      "route": "/admin/playground",
+      "kind": "admin",
+      "status": 200,
+      "title": "CinaToken",
+      "finalURL": "https://cinatoken.com/admin/playground?mode=routes&routeId=&tool=ai-detection&provider=",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "hydrationFailure": false,
+      "bootstrap": null,
+      "metadata": null,
+      "functionalReadiness": {
+        "navigationId": "admin-b-nav-10",
+        "ready": true,
+        "readyAtMs": 26866.276,
+        "functionalPageDurationMs": 2118.350000000002,
+        "domContentLoadedDurationMs": 764.3889999999992,
+        "readinessDurationMs": 14.097000000001572,
+        "locatorPlusReadinessDurationMs": 1353.961000000003,
+        "requiredAssetCount": 17,
+        "publicReactiveProof": null,
+        "exactAnonymous401Observed": {
+          "responseURL": "https://cinatoken.com/api/user/me",
+          "method": "GET",
+          "status": 401,
+          "successFalse": true,
+          "messageUnauthorized": true
+        },
+        "pendingAtReady": {
+          "atMs": 26866.341,
+          "navigationId": "admin-b-nav-10",
+          "requestCount": 217,
+          "pending": [],
+          "pendingRequiredAssets": []
+        }
+      },
+      "exactAnonymous401Count": 1
+    },
+    {
+      "shard": "account",
+      "route": "/account/settings",
+      "kind": "account",
+      "status": 200,
+      "title": "CinaToken",
+      "finalURL": "https://cinatoken.com/account/settings",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "hydrationFailure": false,
+      "bootstrap": null,
+      "metadata": null,
+      "functionalReadiness": {
+        "navigationId": "account-nav-10",
+        "ready": true,
+        "readyAtMs": 27116.767,
+        "functionalPageDurationMs": 2104.504000000001,
+        "domContentLoadedDurationMs": 746.6680000000015,
+        "readinessDurationMs": 9.313999999998487,
+        "locatorPlusReadinessDurationMs": 1357.8359999999993,
+        "requiredAssetCount": 20,
+        "publicReactiveProof": null,
+        "exactAnonymous401Observed": {
+          "responseURL": "https://cinatoken.com/api/user/me",
+          "method": "GET",
+          "status": 401,
+          "successFalse": true,
+          "messageUnauthorized": true
+        },
+        "pendingAtReady": {
+          "atMs": 27116.789,
+          "navigationId": "account-nav-10",
+          "requestCount": 208,
+          "pending": [],
+          "pendingRequiredAssets": []
+        }
+      },
+      "exactAnonymous401Count": 1
+    },
+    {
+      "shard": "admin-a",
+      "route": "/admin/guardrails",
+      "kind": "admin",
+      "status": 200,
+      "title": "CinaToken",
+      "finalURL": "https://cinatoken.com/admin/guardrails",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "hydrationFailure": false,
+      "bootstrap": null,
+      "metadata": null,
+      "functionalReadiness": {
+        "navigationId": "admin-a-nav-10",
+        "ready": true,
+        "readyAtMs": 27593.013,
+        "functionalPageDurationMs": 2065.608,
+        "domContentLoadedDurationMs": 746.8520000000026,
+        "readinessDurationMs": 4.566999999999098,
+        "locatorPlusReadinessDurationMs": 1318.7559999999976,
+        "requiredAssetCount": 22,
+        "publicReactiveProof": null,
+        "exactAnonymous401Observed": {
+          "responseURL": "https://cinatoken.com/api/user/me",
+          "method": "GET",
+          "status": 401,
+          "successFalse": true,
+          "messageUnauthorized": true
+        },
+        "pendingAtReady": {
+          "atMs": 27593.04,
+          "navigationId": "admin-a-nav-10",
+          "requestCount": 247,
+          "pending": [
+            {
+              "id": "admin-a-247",
+              "navigationId": "admin-a-nav-10",
+              "url": "https://cinatoken.com/web-assets/logo.png",
+              "method": "GET",
+              "resourceType": "other",
+              "startMs": 27408.052,
+              "ageMs": 184.9900000000016,
+              "responseAtMs": null,
+              "http": null
+            }
+          ],
+          "pendingRequiredAssets": []
+        }
+      },
+      "exactAnonymous401Count": 1
+    },
+    {
+      "shard": "admin-b",
+      "route": "/admin/simulator",
+      "kind": "admin",
+      "status": 200,
+      "title": "CinaToken",
+      "finalURL": "https://cinatoken.com/admin/simulator",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "hydrationFailure": false,
+      "bootstrap": null,
+      "metadata": null,
+      "functionalReadiness": {
+        "navigationId": "admin-b-nav-11",
+        "ready": true,
+        "readyAtMs": 28975.231,
+        "functionalPageDurationMs": 2093.6949999999997,
+        "domContentLoadedDurationMs": 749.0679999999993,
+        "readinessDurationMs": 4.8729999999995925,
+        "locatorPlusReadinessDurationMs": 1344.6270000000004,
+        "requiredAssetCount": 17,
+        "publicReactiveProof": null,
+        "exactAnonymous401Observed": {
+          "responseURL": "https://cinatoken.com/api/user/me",
+          "method": "GET",
+          "status": 401,
+          "successFalse": true,
+          "messageUnauthorized": true
+        },
+        "pendingAtReady": {
+          "atMs": 28975.259,
+          "navigationId": "admin-b-nav-11",
+          "requestCount": 237,
+          "pending": [],
+          "pendingRequiredAssets": []
+        }
+      },
+      "exactAnonymous401Count": 1
+    },
+    {
+      "shard": "admin-a",
+      "route": "/admin/analytics/reliability",
+      "kind": "admin",
+      "status": 200,
+      "title": "CinaToken",
+      "finalURL": "https://cinatoken.com/admin/analytics/reliability",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "hydrationFailure": false,
+      "bootstrap": null,
+      "metadata": null,
+      "functionalReadiness": {
+        "navigationId": "admin-a-nav-11",
+        "ready": true,
+        "readyAtMs": 29681.587,
+        "functionalPageDurationMs": 2079.874,
+        "domContentLoadedDurationMs": 749.9730000000018,
+        "readinessDurationMs": 3.7769999999982247,
+        "locatorPlusReadinessDurationMs": 1329.900999999998,
+        "requiredAssetCount": 18,
+        "publicReactiveProof": null,
+        "exactAnonymous401Observed": {
+          "responseURL": "https://cinatoken.com/api/user/me",
+          "method": "GET",
+          "status": 401,
+          "successFalse": true,
+          "messageUnauthorized": true
+        },
+        "pendingAtReady": {
+          "atMs": 29681.607,
+          "navigationId": "admin-a-nav-11",
+          "requestCount": 268,
+          "pending": [],
+          "pendingRequiredAssets": []
+        }
+      },
+      "exactAnonymous401Count": 1
+    },
+    {
+      "shard": "admin-b",
+      "route": "/admin/withdrawals",
+      "kind": "admin",
+      "status": 200,
+      "title": "CinaToken",
+      "finalURL": "https://cinatoken.com/admin/withdrawals?status=all&page=1&limit=5&invalid=false",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "hydrationFailure": false,
+      "bootstrap": null,
+      "metadata": null,
+      "functionalReadiness": {
+        "navigationId": "admin-b-nav-12",
+        "ready": true,
+        "readyAtMs": 31090.3,
+        "functionalPageDurationMs": 2099.915000000001,
+        "domContentLoadedDurationMs": 756.6260000000002,
+        "readinessDurationMs": 11.640999999999622,
+        "locatorPlusReadinessDurationMs": 1343.2890000000007,
+        "requiredAssetCount": 19,
+        "publicReactiveProof": null,
+        "exactAnonymous401Observed": {
+          "responseURL": "https://cinatoken.com/api/user/me",
+          "method": "GET",
+          "status": 401,
+          "successFalse": true,
+          "messageUnauthorized": true
+        },
+        "pendingAtReady": {
+          "atMs": 31090.327,
+          "navigationId": "admin-b-nav-12",
+          "requestCount": 259,
+          "pending": [
+            {
+              "id": "admin-b-259",
+              "navigationId": "admin-b-nav-12",
+              "url": "https://cinatoken.com/web-assets/logo.png",
+              "method": "GET",
+              "resourceType": "other",
+              "startMs": 30722.39,
+              "ageMs": 367.9390000000021,
+              "responseAtMs": 31069.291,
+              "http": 200
+            }
+          ],
+          "pendingRequiredAssets": []
+        }
+      },
+      "exactAnonymous401Count": 1
+    },
+    {
+      "shard": "admin-a",
+      "route": "/admin/analytics/models",
+      "kind": "admin",
+      "status": 200,
+      "title": "CinaToken",
+      "finalURL": "https://cinatoken.com/admin/analytics/models",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "hydrationFailure": false,
+      "bootstrap": null,
+      "metadata": null,
+      "functionalReadiness": {
+        "navigationId": "admin-a-nav-12",
+        "ready": true,
+        "readyAtMs": 31766.078,
+        "functionalPageDurationMs": 2076.759000000002,
+        "domContentLoadedDurationMs": 732.4040000000023,
+        "readinessDurationMs": 4.600000000002183,
+        "locatorPlusReadinessDurationMs": 1344.3549999999996,
+        "requiredAssetCount": 19,
+        "publicReactiveProof": null,
+        "exactAnonymous401Observed": {
+          "responseURL": "https://cinatoken.com/api/user/me",
+          "method": "GET",
+          "status": 401,
+          "successFalse": true,
+          "messageUnauthorized": true
+        },
+        "pendingAtReady": {
+          "atMs": 31766.107,
+          "navigationId": "admin-a-nav-12",
+          "requestCount": 290,
+          "pending": [
+            {
+              "id": "admin-a-290",
+              "navigationId": "admin-a-nav-12",
+              "url": "https://cinatoken.com/web-assets/logo.png",
+              "method": "GET",
+              "resourceType": "other",
+              "startMs": 31397.918,
+              "ageMs": 368.1909999999989,
+              "responseAtMs": 31750.824,
+              "http": 200
+            }
+          ],
+          "pendingRequiredAssets": []
+        }
+      },
+      "exactAnonymous401Count": 1
+    },
+    {
+      "shard": "admin-b",
+      "route": "/admin/nft-mints",
+      "kind": "admin",
+      "status": 200,
+      "title": "CinaToken",
+      "finalURL": "https://cinatoken.com/admin/nft-mints?status=all&page=1&limit=5&invalid=false",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "hydrationFailure": false,
+      "bootstrap": null,
+      "metadata": null,
+      "functionalReadiness": {
+        "navigationId": "admin-b-nav-13",
+        "ready": true,
+        "readyAtMs": 33207.979,
+        "functionalPageDurationMs": 2109.508999999998,
+        "domContentLoadedDurationMs": 740.9629999999997,
+        "readinessDurationMs": 4.301999999996042,
+        "locatorPlusReadinessDurationMs": 1368.5459999999985,
+        "requiredAssetCount": 19,
+        "publicReactiveProof": null,
+        "exactAnonymous401Observed": {
+          "responseURL": "https://cinatoken.com/api/user/me",
+          "method": "GET",
+          "status": 401,
+          "successFalse": true,
+          "messageUnauthorized": true
+        },
+        "pendingAtReady": {
+          "atMs": 33208.004,
+          "navigationId": "admin-b-nav-13",
+          "requestCount": 281,
+          "pending": [
+            {
+              "id": "admin-b-281",
+              "navigationId": "admin-b-nav-13",
+              "url": "https://cinatoken.com/web-assets/logo.png",
+              "method": "GET",
+              "resourceType": "other",
+              "startMs": 33119.538,
+              "ageMs": 88.46800000000076,
+              "responseAtMs": null,
+              "http": null
+            }
+          ],
+          "pendingRequiredAssets": []
+        }
+      },
+      "exactAnonymous401Count": 1
+    },
+    {
+      "shard": "admin-a",
+      "route": "/admin/analytics/providers",
+      "kind": "admin",
+      "status": 200,
+      "title": "CinaToken",
+      "finalURL": "https://cinatoken.com/admin/analytics/providers",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "hydrationFailure": false,
+      "bootstrap": null,
+      "metadata": null,
+      "functionalReadiness": {
+        "navigationId": "admin-a-nav-13",
+        "ready": true,
+        "readyAtMs": 33869.392,
+        "functionalPageDurationMs": 2087.7959999999985,
+        "domContentLoadedDurationMs": 742.9089999999997,
+        "readinessDurationMs": 5.652000000001863,
+        "locatorPlusReadinessDurationMs": 1344.8869999999988,
+        "requiredAssetCount": 19,
+        "publicReactiveProof": null,
+        "exactAnonymous401Observed": {
+          "responseURL": "https://cinatoken.com/api/user/me",
+          "method": "GET",
+          "status": 401,
+          "successFalse": true,
+          "messageUnauthorized": true
+        },
+        "pendingAtReady": {
+          "atMs": 33869.438,
+          "navigationId": "admin-a-nav-13",
+          "requestCount": 312,
+          "pending": [
+            {
+              "id": "admin-a-312",
+              "navigationId": "admin-a-nav-13",
+              "url": "https://cinatoken.com/web-assets/logo.png",
+              "method": "GET",
+              "resourceType": "other",
+              "startMs": 33505.234,
+              "ageMs": 364.208000000006,
+              "responseAtMs": 33850.864,
+              "http": 200
+            }
+          ],
+          "pendingRequiredAssets": []
+        }
+      },
+      "exactAnonymous401Count": 1
+    },
+    {
+      "shard": "admin-a",
+      "route": "/admin/analytics/users",
+      "kind": "admin",
+      "status": 200,
+      "title": "CinaToken",
+      "finalURL": "https://cinatoken.com/admin/analytics/users",
+      "nonblank": true,
+      "frameworkOverlay": false,
+      "hydrationFailure": false,
+      "bootstrap": null,
+      "metadata": null,
+      "functionalReadiness": {
+        "navigationId": "admin-a-nav-14",
+        "ready": true,
+        "readyAtMs": 35982.231,
+        "functionalPageDurationMs": 2101.589,
+        "domContentLoadedDurationMs": 741.7169999999969,
+        "readinessDurationMs": 4.336999999999534,
+        "locatorPlusReadinessDurationMs": 1359.872000000003,
+        "requiredAssetCount": 18,
+        "publicReactiveProof": null,
+        "exactAnonymous401Observed": {
+          "responseURL": "https://cinatoken.com/api/user/me",
+          "method": "GET",
+          "status": 401,
+          "successFalse": true,
+          "messageUnauthorized": true
+        },
+        "pendingAtReady": {
+          "atMs": 35982.264,
+          "navigationId": "admin-a-nav-14",
+          "requestCount": 333,
+          "pending": [],
+          "pendingRequiredAssets": []
+        }
+      },
+      "exactAnonymous401Count": 1
+    }
+  ],
+  "anonymous401PerPage": [
+    {
+      "shard": "admin-b",
+      "route": "/admin/request-logs",
+      "expected401Count": 1,
+      "responseURL": "https://cinatoken.com/api/user/me",
+      "originatingPageURL": "https://cinatoken.com/admin/request-logs?page=1&status=&model_id=&provider_id=&protocol=&route_group=&user_id=&user_email=&api_key_id="
+    },
+    {
+      "shard": "account",
+      "route": "/account",
+      "expected401Count": 1,
+      "responseURL": "https://cinatoken.com/api/user/me",
+      "originatingPageURL": "https://cinatoken.com/account"
+    },
+    {
+      "shard": "admin-a",
+      "route": "/admin",
+      "expected401Count": 1,
+      "responseURL": "https://cinatoken.com/api/user/me",
+      "originatingPageURL": "https://cinatoken.com/admin"
+    },
+    {
+      "shard": "admin-b",
+      "route": "/admin/audit-logs",
+      "expected401Count": 1,
+      "responseURL": "https://cinatoken.com/api/user/me",
+      "originatingPageURL": "https://cinatoken.com/admin/audit-logs?page=1&user_id=&api_key_id=&user_email=&event_type=%5B%5D&actor_type=%5B%5D&actor_kind=%5B%5D&actor_id=&reason_code=%5B%5D&source=%5B%5D&correlation_id="
+    },
+    {
+      "shard": "account",
+      "route": "/account/keys",
+      "expected401Count": 1,
+      "responseURL": "https://cinatoken.com/api/user/me",
+      "originatingPageURL": "https://cinatoken.com/account/keys"
+    },
+    {
+      "shard": "admin-a",
+      "route": "/admin/users",
+      "expected401Count": 1,
+      "responseURL": "https://cinatoken.com/api/user/me",
+      "originatingPageURL": "https://cinatoken.com/admin/users?page=1&email=&external_system=&external_user_id=&status=all&max_budget=all&sort=created_at&order=desc"
+    },
+    {
+      "shard": "admin-b",
+      "route": "/admin/tools/invocations",
+      "expected401Count": 1,
+      "responseURL": "https://cinatoken.com/api/user/me",
+      "originatingPageURL": "https://cinatoken.com/admin/tools/invocations?page=1&tool=&status="
+    },
+    {
+      "shard": "account",
+      "route": "/account/byok",
+      "expected401Count": 1,
+      "responseURL": "https://cinatoken.com/api/user/me",
+      "originatingPageURL": "https://cinatoken.com/account/byok"
+    },
+    {
+      "shard": "admin-a",
+      "route": "/admin/users/00000000-0000-4000-8000-000000000000",
+      "expected401Count": 1,
+      "responseURL": "https://cinatoken.com/api/user/me",
+      "originatingPageURL": "https://cinatoken.com/admin/users/00000000-0000-4000-8000-000000000000"
+    },
+    {
+      "shard": "admin-b",
+      "route": "/admin/config/timezone",
+      "expected401Count": 1,
+      "responseURL": "https://cinatoken.com/api/user/me",
+      "originatingPageURL": "https://cinatoken.com/admin/config/timezone"
+    },
+    {
+      "shard": "account",
+      "route": "/account/activity",
+      "expected401Count": 1,
+      "responseURL": "https://cinatoken.com/api/user/me",
+      "originatingPageURL": "https://cinatoken.com/account/activity"
+    },
+    {
+      "shard": "admin-a",
+      "route": "/admin/providers",
+      "expected401Count": 1,
+      "responseURL": "https://cinatoken.com/api/user/me",
+      "originatingPageURL": "https://cinatoken.com/admin/providers?q=&filter=all"
+    },
+    {
+      "shard": "admin-b",
+      "route": "/admin/config",
+      "expected401Count": 1,
+      "responseURL": "https://cinatoken.com/api/user/me",
+      "originatingPageURL": "https://cinatoken.com/admin/config"
+    },
+    {
+      "shard": "account",
+      "route": "/account/earnings",
+      "expected401Count": 1,
+      "responseURL": "https://cinatoken.com/api/user/me",
+      "originatingPageURL": "https://cinatoken.com/account/earnings"
+    },
+    {
+      "shard": "admin-a",
+      "route": "/admin/models",
+      "expected401Count": 1,
+      "responseURL": "https://cinatoken.com/api/user/me",
+      "originatingPageURL": "https://cinatoken.com/admin/models?q=&vendor=all&kind=all&availability=all"
+    },
+    {
+      "shard": "admin-b",
+      "route": "/admin/admin-api-keys",
+      "expected401Count": 1,
+      "responseURL": "https://cinatoken.com/api/user/me",
+      "originatingPageURL": "https://cinatoken.com/admin/admin-api-keys"
+    },
+    {
+      "shard": "account",
+      "route": "/account/nft",
+      "expected401Count": 1,
+      "responseURL": "https://cinatoken.com/api/user/me",
+      "originatingPageURL": "https://cinatoken.com/account/nft"
+    },
+    {
+      "shard": "admin-a",
+      "route": "/admin/endpoints",
+      "expected401Count": 1,
+      "responseURL": "https://cinatoken.com/api/user/me",
+      "originatingPageURL": "https://cinatoken.com/admin/endpoints?q=&model=&provider=&status=all"
+    },
+    {
+      "shard": "admin-b",
+      "route": "/admin/keys",
+      "expected401Count": 1,
+      "responseURL": "https://cinatoken.com/api/user/me",
+      "originatingPageURL": "https://cinatoken.com/admin/keys?page=1&email=&user_id=&sort=created_at&order=desc"
+    },
+    {
+      "shard": "account",
+      "route": "/account/withdraw",
+      "expected401Count": 1,
+      "responseURL": "https://cinatoken.com/api/user/me",
+      "originatingPageURL": "https://cinatoken.com/account/withdraw"
+    },
+    {
+      "shard": "admin-a",
+      "route": "/admin/routes",
+      "expected401Count": 1,
+      "responseURL": "https://cinatoken.com/api/user/me",
+      "originatingPageURL": "https://cinatoken.com/admin/routes?q=&model=&provider_id=&status=all&route_group=&kind=all&vendor=&workspace=byModel&view=topology"
+    },
+    {
+      "shard": "admin-b",
+      "route": "/admin/shared-keys",
+      "expected401Count": 1,
+      "responseURL": "https://cinatoken.com/api/user/me",
+      "originatingPageURL": "https://cinatoken.com/admin/shared-keys?page=1&status=&channelType=&seller_user_id=&search="
+    },
+    {
+      "shard": "account",
+      "route": "/account/presets",
+      "expected401Count": 1,
+      "responseURL": "https://cinatoken.com/api/user/me",
+      "originatingPageURL": "https://cinatoken.com/account/presets"
+    },
+    {
+      "shard": "admin-a",
+      "route": "/admin/data-policies",
+      "expected401Count": 1,
+      "responseURL": "https://cinatoken.com/api/user/me",
+      "originatingPageURL": "https://cinatoken.com/admin/data-policies?q=&status=all"
+    },
+    {
+      "shard": "admin-b",
+      "route": "/admin/tools",
+      "expected401Count": 1,
+      "responseURL": "https://cinatoken.com/api/user/me",
+      "originatingPageURL": "https://cinatoken.com/admin/tools"
+    },
+    {
+      "shard": "account",
+      "route": "/account/guardrails",
+      "expected401Count": 1,
+      "responseURL": "https://cinatoken.com/api/user/me",
+      "originatingPageURL": "https://cinatoken.com/account/guardrails"
+    },
+    {
+      "shard": "admin-a",
+      "route": "/admin/presets",
+      "expected401Count": 1,
+      "responseURL": "https://cinatoken.com/api/user/me",
+      "originatingPageURL": "https://cinatoken.com/admin/presets"
+    },
+    {
+      "shard": "admin-b",
+      "route": "/admin/playground",
+      "expected401Count": 1,
+      "responseURL": "https://cinatoken.com/api/user/me",
+      "originatingPageURL": "https://cinatoken.com/admin/playground?mode=routes&routeId=&tool=ai-detection&provider="
+    },
+    {
+      "shard": "account",
+      "route": "/account/settings",
+      "expected401Count": 1,
+      "responseURL": "https://cinatoken.com/api/user/me",
+      "originatingPageURL": "https://cinatoken.com/account/settings"
+    },
+    {
+      "shard": "admin-a",
+      "route": "/admin/guardrails",
+      "expected401Count": 1,
+      "responseURL": "https://cinatoken.com/api/user/me",
+      "originatingPageURL": "https://cinatoken.com/admin/guardrails"
+    },
+    {
+      "shard": "admin-b",
+      "route": "/admin/simulator",
+      "expected401Count": 1,
+      "responseURL": "https://cinatoken.com/api/user/me",
+      "originatingPageURL": "https://cinatoken.com/admin/simulator"
+    },
+    {
+      "shard": "admin-a",
+      "route": "/admin/analytics/reliability",
+      "expected401Count": 1,
+      "responseURL": "https://cinatoken.com/api/user/me",
+      "originatingPageURL": "https://cinatoken.com/admin/analytics/reliability"
+    },
+    {
+      "shard": "admin-b",
+      "route": "/admin/withdrawals",
+      "expected401Count": 1,
+      "responseURL": "https://cinatoken.com/api/user/me",
+      "originatingPageURL": "https://cinatoken.com/admin/withdrawals?status=all&page=1&limit=5&invalid=false"
+    },
+    {
+      "shard": "admin-a",
+      "route": "/admin/analytics/models",
+      "expected401Count": 1,
+      "responseURL": "https://cinatoken.com/api/user/me",
+      "originatingPageURL": "https://cinatoken.com/admin/analytics/models"
+    },
+    {
+      "shard": "admin-b",
+      "route": "/admin/nft-mints",
+      "expected401Count": 1,
+      "responseURL": "https://cinatoken.com/api/user/me",
+      "originatingPageURL": "https://cinatoken.com/admin/nft-mints?status=all&page=1&limit=5&invalid=false"
+    },
+    {
+      "shard": "admin-a",
+      "route": "/admin/analytics/providers",
+      "expected401Count": 1,
+      "responseURL": "https://cinatoken.com/api/user/me",
+      "originatingPageURL": "https://cinatoken.com/admin/analytics/providers"
+    },
+    {
+      "shard": "admin-a",
+      "route": "/admin/analytics/users",
+      "expected401Count": 1,
+      "responseURL": "https://cinatoken.com/api/user/me",
+      "originatingPageURL": "https://cinatoken.com/admin/analytics/users"
+    }
+  ],
+  "originalInteractions": [
+    {
+      "step": "desktop-dark-selected",
+      "url": "https://cinatoken.com/en",
+      "lang": "en",
+      "className": "dark",
+      "dark": true,
+      "hydrationFailure": false,
+      "themeCookie": "cinatoken-theme=dark",
+      "localeCookie": null,
+      "width": 1440,
+      "documentWidth": 1440
+    },
+    {
+      "step": "language-zh-navigated",
+      "url": "https://cinatoken.com/zh",
+      "lang": "zh",
+      "className": "dark",
+      "dark": true,
+      "hydrationFailure": false,
+      "themeCookie": "cinatoken-theme=dark",
+      "localeCookie": "NEXT_LOCALE=zh",
+      "width": 1440,
+      "documentWidth": 1440
+    },
+    {
+      "step": "mobile-zh-dark-reload",
+      "url": "https://cinatoken.com/zh",
+      "lang": "zh",
+      "className": "dark",
+      "dark": true,
+      "hydrationFailure": false,
+      "themeCookie": "cinatoken-theme=dark",
+      "localeCookie": "NEXT_LOCALE=zh",
+      "width": 390,
+      "documentWidth": 390
+    }
+  ],
+  "readinessTelemetry": {
+    "navigationCount": 48,
+    "allReady": true,
+    "publicReactiveProofs": 11,
+    "privateExact401Proofs": 37,
+    "maxDOMContentLoadedMs": 2454.4139999999998,
+    "maxLocatorPlusReadinessMs": 3916.465000000001,
+    "maxFunctionalPageMs": 6357.953000000001,
+    "functionalBudgets": {
+      "navigation45000": true,
+      "sharedLocatorAndReadiness20000": true,
+      "browser390000": true,
+      "executor420000": true
+    },
+    "performanceP809Claim": false,
+    "pendingAtReadyCount": 37,
+    "pendingAtReady": [
+      {
+        "navigationId": "public-nav-1",
+        "route": "/en",
+        "phase": "matrix",
+        "pendingAtReady": [
+          {
+            "id": "public-14",
+            "navigationId": "public-nav-1",
+            "url": "https://cinatoken.com/web-assets/logo.png",
+            "method": "GET",
+            "resourceType": "other",
+            "startMs": 6216.609,
+            "ageMs": 191.22499999999945,
+            "responseAtMs": null,
+            "http": null,
+            "finalStatus": "finished",
+            "finalHTTP": 200,
+            "finalFinishMs": 6899.053
+          }
+        ]
+      },
+      {
+        "navigationId": "public-nav-2",
+        "route": "/en/models",
+        "phase": "matrix",
+        "pendingAtReady": [
+          {
+            "id": "public-32",
+            "navigationId": "public-nav-2",
+            "url": "https://cinatoken.com/web-assets/logo.png",
+            "method": "GET",
+            "resourceType": "other",
+            "startMs": 10197.852,
+            "ageMs": 331.5549999999985,
+            "responseAtMs": null,
+            "http": null,
+            "finalStatus": "finished",
+            "finalHTTP": 200,
+            "finalFinishMs": 10607.03
+          }
+        ]
+      },
+      {
+        "navigationId": "public-nav-3",
+        "route": "/en/providers",
+        "phase": "matrix",
+        "pendingAtReady": [
+          {
+            "id": "public-49",
+            "navigationId": "public-nav-3",
+            "url": "https://cinatoken.com/web-assets/logo.png",
+            "method": "GET",
+            "resourceType": "other",
+            "startMs": 12905.492,
+            "ageMs": 62.27599999999984,
+            "responseAtMs": null,
+            "http": null,
+            "finalStatus": "finished",
+            "finalHTTP": 200,
+            "finalFinishMs": 13307.585
+          }
+        ]
+      },
+      {
+        "navigationId": "public-nav-4",
+        "route": "/en/compare",
+        "phase": "matrix",
+        "pendingAtReady": [
+          {
+            "id": "public-67",
+            "navigationId": "public-nav-4",
+            "url": "https://cinatoken.com/web-assets/logo.png",
+            "method": "GET",
+            "resourceType": "other",
+            "startMs": 15112.304,
+            "ageMs": 64.69700000000012,
+            "responseAtMs": null,
+            "http": null,
+            "finalStatus": "finished",
+            "finalHTTP": 200,
+            "finalFinishMs": 15512.355
+          }
+        ]
+      },
+      {
+        "navigationId": "public-nav-6",
+        "route": "/en/rankings",
+        "phase": "matrix",
+        "pendingAtReady": [
+          {
+            "id": "public-103",
+            "navigationId": "public-nav-6",
+            "url": "https://cinatoken.com/web-assets/logo.png",
+            "method": "GET",
+            "resourceType": "other",
+            "startMs": 20014.586,
+            "ageMs": 79.95300000000134,
+            "responseAtMs": null,
+            "http": null,
+            "finalStatus": "finished",
+            "finalHTTP": 200,
+            "finalFinishMs": 20417.935
+          }
+        ]
+      },
+      {
+        "navigationId": "public-nav-7",
+        "route": "/en/benchmarks",
+        "phase": "matrix",
+        "pendingAtReady": [
+          {
+            "id": "public-121",
+            "navigationId": "public-nav-7",
+            "url": "https://cinatoken.com/web-assets/logo.png",
+            "method": "GET",
+            "resourceType": "other",
+            "startMs": 22276.607,
+            "ageMs": 82.61000000000058,
+            "responseAtMs": null,
+            "http": null,
+            "finalStatus": "finished",
+            "finalHTTP": 200,
+            "finalFinishMs": 22678.934
+          }
+        ]
+      },
+      {
+        "navigationId": "public-nav-8",
+        "route": "/en/models/cinatoken-smoke-missing/no-such-model",
+        "phase": "matrix",
+        "pendingAtReady": [
+          {
+            "id": "public-139",
+            "navigationId": "public-nav-8",
+            "url": "https://cinatoken.com/web-assets/logo.png",
+            "method": "GET",
+            "resourceType": "other",
+            "startMs": 24505.441,
+            "ageMs": 68.08799999999974,
+            "responseAtMs": null,
+            "http": null,
+            "finalStatus": "finished",
+            "finalHTTP": 200,
+            "finalFinishMs": 24904.341
+          }
+        ]
+      },
+      {
+        "navigationId": "public-nav-9",
+        "route": "/en",
+        "phase": "original-desktop-dark-reset",
+        "pendingAtReady": [
+          {
+            "id": "public-153",
+            "navigationId": "public-nav-9",
+            "url": "https://cinatoken.com/web-assets/logo.png",
+            "method": "GET",
+            "resourceType": "other",
+            "startMs": 26670.776,
+            "ageMs": 51.33299999999872,
+            "responseAtMs": null,
+            "http": null,
+            "finalStatus": "finished",
+            "finalHTTP": 200,
+            "finalFinishMs": 27069.989
+          }
+        ]
+      },
+      {
+        "navigationId": "public-nav-10",
+        "route": "/zh",
+        "phase": "original-locale-navigation",
+        "pendingAtReady": [
+          {
+            "id": "public-167",
+            "navigationId": "public-nav-10",
+            "url": "https://cinatoken.com/web-assets/logo.png",
+            "method": "GET",
+            "resourceType": "other",
+            "startMs": 28986.348,
+            "ageMs": 69.92499999999927,
+            "responseAtMs": null,
+            "http": null,
+            "finalStatus": "finished",
+            "finalHTTP": 200,
+            "finalFinishMs": 29384.924
+          }
+        ]
+      },
+      {
+        "navigationId": "public-nav-11",
+        "route": "/zh",
+        "phase": "original-mobile-reload",
+        "pendingAtReady": [
+          {
+            "id": "public-181",
+            "navigationId": "public-nav-11",
+            "url": "https://cinatoken.com/web-assets/logo.png",
+            "method": "GET",
+            "resourceType": "other",
+            "startMs": 31157.048,
+            "ageMs": 78.28299999999945,
+            "responseAtMs": null,
+            "http": null,
+            "finalStatus": "finished",
+            "finalHTTP": 200,
+            "finalFinishMs": 31554.31
+          }
+        ]
+      },
+      {
+        "navigationId": "account-nav-2",
+        "route": "/account/keys",
+        "phase": "matrix",
+        "pendingAtReady": [
+          {
+            "id": "account-40",
+            "navigationId": "account-nav-2",
+            "url": "https://cinatoken.com/web-assets/logo.png",
+            "method": "GET",
+            "resourceType": "other",
+            "startMs": 10195.387,
+            "ageMs": 73.38500000000022,
+            "responseAtMs": null,
+            "http": null,
+            "finalStatus": "finished",
+            "finalHTTP": 200,
+            "finalFinishMs": 10606.951
+          }
+        ]
+      },
+      {
+        "navigationId": "account-nav-3",
+        "route": "/account/byok",
+        "phase": "matrix",
+        "pendingAtReady": [
+          {
+            "id": "account-62",
+            "navigationId": "account-nav-3",
+            "url": "https://cinatoken.com/web-assets/logo.png",
+            "method": "GET",
+            "resourceType": "other",
+            "startMs": 12140.484,
+            "ageMs": 263.72500000000036,
+            "responseAtMs": null,
+            "http": null,
+            "finalStatus": "finished",
+            "finalHTTP": 200,
+            "finalFinishMs": 12516.465
+          }
+        ]
+      },
+      {
+        "navigationId": "account-nav-4",
+        "route": "/account/activity",
+        "phase": "matrix",
+        "pendingAtReady": [
+          {
+            "id": "account-84",
+            "navigationId": "account-nav-4",
+            "url": "https://cinatoken.com/web-assets/logo.png",
+            "method": "GET",
+            "resourceType": "other",
+            "startMs": 14235.646,
+            "ageMs": 280.64999999999964,
+            "responseAtMs": null,
+            "http": null,
+            "finalStatus": "finished",
+            "finalHTTP": 200,
+            "finalFinishMs": 14608.038
+          }
+        ]
+      },
+      {
+        "navigationId": "account-nav-6",
+        "route": "/account/nft",
+        "phase": "matrix",
+        "pendingAtReady": [
+          {
+            "id": "account-120",
+            "navigationId": "account-nav-6",
+            "url": "https://cinatoken.com/web-assets/logo.png",
+            "method": "GET",
+            "resourceType": "other",
+            "startMs": 18499.604,
+            "ageMs": 200.0699999999997,
+            "responseAtMs": null,
+            "http": null,
+            "finalStatus": "finished",
+            "finalHTTP": 200,
+            "finalFinishMs": 18867.317
+          }
+        ]
+      },
+      {
+        "navigationId": "account-nav-7",
+        "route": "/account/withdraw",
+        "phase": "matrix",
+        "pendingAtReady": [
+          {
+            "id": "account-142",
+            "navigationId": "account-nav-7",
+            "url": "https://cinatoken.com/web-assets/logo.png",
+            "method": "GET",
+            "resourceType": "other",
+            "startMs": 20446.323,
+            "ageMs": 355.52400000000125,
+            "responseAtMs": 20794.617,
+            "http": 200,
+            "finalStatus": "finished",
+            "finalHTTP": 200,
+            "finalFinishMs": 20819.83
+          }
+        ]
+      },
+      {
+        "navigationId": "account-nav-8",
+        "route": "/account/presets",
+        "phase": "matrix",
+        "pendingAtReady": [
+          {
+            "id": "account-164",
+            "navigationId": "account-nav-8",
+            "url": "https://cinatoken.com/web-assets/logo.png",
+            "method": "GET",
+            "resourceType": "other",
+            "startMs": 22532.494,
+            "ageMs": 363.45100000000093,
+            "responseAtMs": 22884.67,
+            "http": 200,
+            "finalStatus": "finished",
+            "finalHTTP": 200,
+            "finalFinishMs": 22904.175
+          }
+        ]
+      },
+      {
+        "navigationId": "admin-a-nav-2",
+        "route": "/admin/users",
+        "phase": "matrix",
+        "pendingAtReady": [
+          {
+            "id": "admin-a-45",
+            "navigationId": "admin-a-nav-2",
+            "url": "https://cinatoken.com/web-assets/logo.png",
+            "method": "GET",
+            "resourceType": "other",
+            "startMs": 10736.98,
+            "ageMs": 62.460000000000946,
+            "responseAtMs": null,
+            "http": null,
+            "finalStatus": "finished",
+            "finalHTTP": 200,
+            "finalFinishMs": 11110.652
+          }
+        ]
+      },
+      {
+        "navigationId": "admin-a-nav-3",
+        "route": "/admin/users/00000000-0000-4000-8000-000000000000",
+        "phase": "matrix",
+        "pendingAtReady": [
+          {
+            "id": "admin-a-68",
+            "navigationId": "admin-a-nav-3",
+            "url": "https://cinatoken.com/web-assets/logo.png",
+            "method": "GET",
+            "resourceType": "other",
+            "startMs": 12647.642,
+            "ageMs": 257.09799999999996,
+            "responseAtMs": null,
+            "http": null,
+            "finalStatus": "finished",
+            "finalHTTP": 200,
+            "finalFinishMs": 13016.339
+          }
+        ]
+      },
+      {
+        "navigationId": "admin-a-nav-4",
+        "route": "/admin/providers",
+        "phase": "matrix",
+        "pendingAtReady": [
+          {
+            "id": "admin-a-94",
+            "navigationId": "admin-a-nav-4",
+            "url": "https://cinatoken.com/web-assets/logo.png",
+            "method": "GET",
+            "resourceType": "other",
+            "startMs": 14739.456,
+            "ageMs": 277.3250000000007,
+            "responseAtMs": null,
+            "http": null,
+            "finalStatus": "finished",
+            "finalHTTP": 200,
+            "finalFinishMs": 15104.362
+          }
+        ]
+      },
+      {
+        "navigationId": "admin-a-nav-5",
+        "route": "/admin/models",
+        "phase": "matrix",
+        "pendingAtReady": [
+          {
+            "id": "admin-a-120",
+            "navigationId": "admin-a-nav-5",
+            "url": "https://cinatoken.com/web-assets/logo.png",
+            "method": "GET",
+            "resourceType": "other",
+            "startMs": 16801.088,
+            "ageMs": 309.0699999999997,
+            "responseAtMs": null,
+            "http": null,
+            "finalStatus": "finished",
+            "finalHTTP": 200,
+            "finalFinishMs": 17167.225
+          }
+        ]
+      },
+      {
+        "navigationId": "admin-a-nav-6",
+        "route": "/admin/endpoints",
+        "phase": "matrix",
+        "pendingAtReady": [
+          {
+            "id": "admin-a-146",
+            "navigationId": "admin-a-nav-6",
+            "url": "https://cinatoken.com/web-assets/logo.png",
+            "method": "GET",
+            "resourceType": "other",
+            "startMs": 18878.932,
+            "ageMs": 323.5740000000005,
+            "responseAtMs": null,
+            "http": null,
+            "finalStatus": "finished",
+            "finalHTTP": 200,
+            "finalFinishMs": 19256.979
+          }
+        ]
+      },
+      {
+        "navigationId": "admin-a-nav-7",
+        "route": "/admin/routes",
+        "phase": "matrix",
+        "pendingAtReady": [
+          {
+            "id": "admin-a-172",
+            "navigationId": "admin-a-nav-7",
+            "url": "https://cinatoken.com/web-assets/logo.png",
+            "method": "GET",
+            "resourceType": "other",
+            "startMs": 21309.786,
+            "ageMs": 2.596000000001368,
+            "responseAtMs": null,
+            "http": null,
+            "finalStatus": "finished",
+            "finalHTTP": 200,
+            "finalFinishMs": 21675.989
+          }
+        ]
+      },
+      {
+        "navigationId": "admin-a-nav-8",
+        "route": "/admin/data-policies",
+        "phase": "matrix",
+        "pendingAtReady": [
+          {
+            "id": "admin-a-196",
+            "navigationId": "admin-a-nav-8",
+            "url": "https://cinatoken.com/web-assets/logo.png",
+            "method": "GET",
+            "resourceType": "other",
+            "startMs": 23093.404,
+            "ageMs": 343.71600000000035,
+            "responseAtMs": null,
+            "http": null,
+            "finalStatus": "finished",
+            "finalHTTP": 200,
+            "finalFinishMs": 23463.277
+          }
+        ]
+      },
+      {
+        "navigationId": "admin-a-nav-9",
+        "route": "/admin/presets",
+        "phase": "matrix",
+        "pendingAtReady": [
+          {
+            "id": "admin-a-222",
+            "navigationId": "admin-a-nav-9",
+            "url": "https://cinatoken.com/web-assets/logo.png",
+            "method": "GET",
+            "resourceType": "other",
+            "startMs": 25319.636,
+            "ageMs": 188.19400000000314,
+            "responseAtMs": null,
+            "http": null,
+            "finalStatus": "finished",
+            "finalHTTP": 200,
+            "finalFinishMs": 25683.262
+          }
+        ]
+      },
+      {
+        "navigationId": "admin-a-nav-10",
+        "route": "/admin/guardrails",
+        "phase": "matrix",
+        "pendingAtReady": [
+          {
+            "id": "admin-a-247",
+            "navigationId": "admin-a-nav-10",
+            "url": "https://cinatoken.com/web-assets/logo.png",
+            "method": "GET",
+            "resourceType": "other",
+            "startMs": 27408.052,
+            "ageMs": 184.9900000000016,
+            "responseAtMs": null,
+            "http": null,
+            "finalStatus": "finished",
+            "finalHTTP": 200,
+            "finalFinishMs": 27774.773
+          }
+        ]
+      },
+      {
+        "navigationId": "admin-a-nav-12",
+        "route": "/admin/analytics/models",
+        "phase": "matrix",
+        "pendingAtReady": [
+          {
+            "id": "admin-a-290",
+            "navigationId": "admin-a-nav-12",
+            "url": "https://cinatoken.com/web-assets/logo.png",
+            "method": "GET",
+            "resourceType": "other",
+            "startMs": 31397.918,
+            "ageMs": 368.1909999999989,
+            "responseAtMs": 31750.824,
+            "http": 200,
+            "finalStatus": "finished",
+            "finalHTTP": 200,
+            "finalFinishMs": 31772.922
+          }
+        ]
+      },
+      {
+        "navigationId": "admin-a-nav-13",
+        "route": "/admin/analytics/providers",
+        "phase": "matrix",
+        "pendingAtReady": [
+          {
+            "id": "admin-a-312",
+            "navigationId": "admin-a-nav-13",
+            "url": "https://cinatoken.com/web-assets/logo.png",
+            "method": "GET",
+            "resourceType": "other",
+            "startMs": 33505.234,
+            "ageMs": 364.208000000006,
+            "responseAtMs": 33850.864,
+            "http": 200,
+            "finalStatus": "finished",
+            "finalHTTP": 200,
+            "finalFinishMs": 33871.599
+          }
+        ]
+      },
+      {
+        "navigationId": "admin-b-nav-2",
+        "route": "/admin/audit-logs",
+        "phase": "matrix",
+        "pendingAtReady": [
+          {
+            "id": "admin-b-42",
+            "navigationId": "admin-b-nav-2",
+            "url": "https://cinatoken.com/web-assets/logo.png",
+            "method": "GET",
+            "resourceType": "other",
+            "startMs": 9881.003,
+            "ageMs": 102.52599999999984,
+            "responseAtMs": null,
+            "http": null,
+            "finalStatus": "finished",
+            "finalHTTP": 200,
+            "finalFinishMs": 10261.174
+          }
+        ]
+      },
+      {
+        "navigationId": "admin-b-nav-3",
+        "route": "/admin/tools/invocations",
+        "phase": "matrix",
+        "pendingAtReady": [
+          {
+            "id": "admin-b-62",
+            "navigationId": "admin-b-nav-3",
+            "url": "https://cinatoken.com/web-assets/logo.png",
+            "method": "GET",
+            "resourceType": "other",
+            "startMs": 11810.996,
+            "ageMs": 285.4930000000004,
+            "responseAtMs": null,
+            "http": null,
+            "finalStatus": "finished",
+            "finalHTTP": 200,
+            "finalFinishMs": 12189.542
+          }
+        ]
+      },
+      {
+        "navigationId": "admin-b-nav-4",
+        "route": "/admin/config/timezone",
+        "phase": "matrix",
+        "pendingAtReady": [
+          {
+            "id": "admin-b-83",
+            "navigationId": "admin-b-nav-4",
+            "url": "https://cinatoken.com/web-assets/logo.png",
+            "method": "GET",
+            "resourceType": "other",
+            "startMs": 13895.082,
+            "ageMs": 294.8199999999997,
+            "responseAtMs": null,
+            "http": null,
+            "finalStatus": "finished",
+            "finalHTTP": 200,
+            "finalFinishMs": 14265.174
+          }
+        ]
+      },
+      {
+        "navigationId": "admin-b-nav-5",
+        "route": "/admin/config",
+        "phase": "matrix",
+        "pendingAtReady": [
+          {
+            "id": "admin-b-104",
+            "navigationId": "admin-b-nav-5",
+            "url": "https://cinatoken.com/web-assets/logo.png",
+            "method": "GET",
+            "resourceType": "other",
+            "startMs": 15953.476,
+            "ageMs": 338.884,
+            "responseAtMs": null,
+            "http": null,
+            "finalStatus": "finished",
+            "finalHTTP": 200,
+            "finalFinishMs": 16322.258
+          }
+        ]
+      },
+      {
+        "navigationId": "admin-b-nav-6",
+        "route": "/admin/admin-api-keys",
+        "phase": "matrix",
+        "pendingAtReady": [
+          {
+            "id": "admin-b-125",
+            "navigationId": "admin-b-nav-6",
+            "url": "https://cinatoken.com/web-assets/logo.png",
+            "method": "GET",
+            "resourceType": "other",
+            "startMs": 18037.306,
+            "ageMs": 345.5139999999992,
+            "responseAtMs": null,
+            "http": null,
+            "finalStatus": "finished",
+            "finalHTTP": 200,
+            "finalFinishMs": 18405.749
+          }
+        ]
+      },
+      {
+        "navigationId": "admin-b-nav-7",
+        "route": "/admin/keys",
+        "phase": "matrix",
+        "pendingAtReady": [
+          {
+            "id": "admin-b-150",
+            "navigationId": "admin-b-nav-7",
+            "url": "https://cinatoken.com/web-assets/logo.png",
+            "method": "GET",
+            "resourceType": "other",
+            "startMs": 20172.423,
+            "ageMs": 335.0300000000025,
+            "responseAtMs": null,
+            "http": null,
+            "finalStatus": "finished",
+            "finalHTTP": 200,
+            "finalFinishMs": 20542.188
+          }
+        ]
+      },
+      {
+        "navigationId": "admin-b-nav-8",
+        "route": "/admin/shared-keys",
+        "phase": "matrix",
+        "pendingAtReady": [
+          {
+            "id": "admin-b-173",
+            "navigationId": "admin-b-nav-8",
+            "url": "https://cinatoken.com/web-assets/logo.png",
+            "method": "GET",
+            "resourceType": "other",
+            "startMs": 22322.92,
+            "ageMs": 296.58000000000175,
+            "responseAtMs": null,
+            "http": null,
+            "finalStatus": "finished",
+            "finalHTTP": 200,
+            "finalFinishMs": 22699.767
+          }
+        ]
+      },
+      {
+        "navigationId": "admin-b-nav-9",
+        "route": "/admin/tools",
+        "phase": "matrix",
+        "pendingAtReady": [
+          {
+            "id": "admin-b-197",
+            "navigationId": "admin-b-nav-9",
+            "url": "https://cinatoken.com/web-assets/logo.png",
+            "method": "GET",
+            "resourceType": "other",
+            "startMs": 24375.54,
+            "ageMs": 359.9939999999988,
+            "responseAtMs": 24723.12,
+            "http": 200,
+            "finalStatus": "finished",
+            "finalHTTP": 200,
+            "finalFinishMs": 24744.265
+          }
+        ]
+      },
+      {
+        "navigationId": "admin-b-nav-12",
+        "route": "/admin/withdrawals",
+        "phase": "matrix",
+        "pendingAtReady": [
+          {
+            "id": "admin-b-259",
+            "navigationId": "admin-b-nav-12",
+            "url": "https://cinatoken.com/web-assets/logo.png",
+            "method": "GET",
+            "resourceType": "other",
+            "startMs": 30722.39,
+            "ageMs": 367.9390000000021,
+            "responseAtMs": 31069.291,
+            "http": 200,
+            "finalStatus": "finished",
+            "finalHTTP": 200,
+            "finalFinishMs": 31090.963
+          }
+        ]
+      },
+      {
+        "navigationId": "admin-b-nav-13",
+        "route": "/admin/nft-mints",
+        "phase": "matrix",
+        "pendingAtReady": [
+          {
+            "id": "admin-b-281",
+            "navigationId": "admin-b-nav-13",
+            "url": "https://cinatoken.com/web-assets/logo.png",
+            "method": "GET",
+            "resourceType": "other",
+            "startMs": 33119.538,
+            "ageMs": 88.46800000000076,
+            "responseAtMs": null,
+            "http": null,
+            "finalStatus": "finished",
+            "finalHTTP": 200,
+            "finalFinishMs": 33497.381
+          }
+        ]
+      }
+    ],
+    "publicHydrationProofs": [
+      {
+        "navigationId": "public-nav-1",
+        "route": "/en",
+        "phase": "matrix",
+        "originalMode": "system",
+        "initialDark": false,
+        "probeMode": "dark",
+        "attempts": 4,
+        "changedAtMs": 6384.531,
+        "restoredAtMs": 6400.185,
+        "restoredMode": "system",
+        "realThemeClassAndCookieChange": true,
+        "originalControlModeRestored": true,
+        "cookieLimit": "Only cinatoken-theme control preference is inspected; restoring a previously unset system mode intentionally writes a local system preference cookie. No Cookie/Auth/state token values are collected."
+      },
+      {
+        "navigationId": "public-nav-2",
+        "route": "/en/models",
+        "phase": "matrix",
+        "originalMode": "system",
+        "initialDark": false,
+        "probeMode": "dark",
+        "attempts": 3,
+        "changedAtMs": 10510.676,
+        "restoredAtMs": 10523.692,
+        "restoredMode": "system",
+        "realThemeClassAndCookieChange": true,
+        "originalControlModeRestored": true,
+        "cookieLimit": "Only cinatoken-theme control preference is inspected; restoring a previously unset system mode intentionally writes a local system preference cookie. No Cookie/Auth/state token values are collected."
+      },
+      {
+        "navigationId": "public-nav-3",
+        "route": "/en/providers",
+        "phase": "matrix",
+        "originalMode": "system",
+        "initialDark": false,
+        "probeMode": "dark",
+        "attempts": 1,
+        "changedAtMs": 12951.613,
+        "restoredAtMs": 12965.03,
+        "restoredMode": "system",
+        "realThemeClassAndCookieChange": true,
+        "originalControlModeRestored": true,
+        "cookieLimit": "Only cinatoken-theme control preference is inspected; restoring a previously unset system mode intentionally writes a local system preference cookie. No Cookie/Auth/state token values are collected."
+      },
+      {
+        "navigationId": "public-nav-4",
+        "route": "/en/compare",
+        "phase": "matrix",
+        "originalMode": "system",
+        "initialDark": false,
+        "probeMode": "dark",
+        "attempts": 1,
+        "changedAtMs": 15162.283,
+        "restoredAtMs": 15172.372,
+        "restoredMode": "system",
+        "realThemeClassAndCookieChange": true,
+        "originalControlModeRestored": true,
+        "cookieLimit": "Only cinatoken-theme control preference is inspected; restoring a previously unset system mode intentionally writes a local system preference cookie. No Cookie/Auth/state token values are collected."
+      },
+      {
+        "navigationId": "public-nav-5",
+        "route": "/en/chat",
+        "phase": "matrix",
+        "originalMode": "system",
+        "initialDark": false,
+        "probeMode": "dark",
+        "attempts": 3,
+        "changedAtMs": 17777.873,
+        "restoredAtMs": 17795.968,
+        "restoredMode": "system",
+        "realThemeClassAndCookieChange": true,
+        "originalControlModeRestored": true,
+        "cookieLimit": "Only cinatoken-theme control preference is inspected; restoring a previously unset system mode intentionally writes a local system preference cookie. No Cookie/Auth/state token values are collected."
+      },
+      {
+        "navigationId": "public-nav-6",
+        "route": "/en/rankings",
+        "phase": "matrix",
+        "originalMode": "system",
+        "initialDark": false,
+        "probeMode": "dark",
+        "attempts": 3,
+        "changedAtMs": 20075.796,
+        "restoredAtMs": 20090.096,
+        "restoredMode": "system",
+        "realThemeClassAndCookieChange": true,
+        "originalControlModeRestored": true,
+        "cookieLimit": "Only cinatoken-theme control preference is inspected; restoring a previously unset system mode intentionally writes a local system preference cookie. No Cookie/Auth/state token values are collected."
+      },
+      {
+        "navigationId": "public-nav-7",
+        "route": "/en/benchmarks",
+        "phase": "matrix",
+        "originalMode": "system",
+        "initialDark": false,
+        "probeMode": "dark",
+        "attempts": 1,
+        "changedAtMs": 22344.173,
+        "restoredAtMs": 22355.139,
+        "restoredMode": "system",
+        "realThemeClassAndCookieChange": true,
+        "originalControlModeRestored": true,
+        "cookieLimit": "Only cinatoken-theme control preference is inspected; restoring a previously unset system mode intentionally writes a local system preference cookie. No Cookie/Auth/state token values are collected."
+      },
+      {
+        "navigationId": "public-nav-8",
+        "route": "/en/models/cinatoken-smoke-missing/no-such-model",
+        "phase": "matrix",
+        "originalMode": "system",
+        "initialDark": false,
+        "probeMode": "dark",
+        "attempts": 1,
+        "changedAtMs": 24558.761,
+        "restoredAtMs": 24570.146,
+        "restoredMode": "system",
+        "realThemeClassAndCookieChange": true,
+        "originalControlModeRestored": true,
+        "cookieLimit": "Only cinatoken-theme control preference is inspected; restoring a previously unset system mode intentionally writes a local system preference cookie. No Cookie/Auth/state token values are collected."
+      },
+      {
+        "navigationId": "public-nav-9",
+        "route": "/en",
+        "phase": "original-desktop-dark-reset",
+        "originalMode": "system",
+        "initialDark": false,
+        "probeMode": "dark",
+        "attempts": 4,
+        "changedAtMs": 26692.799,
+        "restoredAtMs": 26717.332,
+        "restoredMode": "system",
+        "realThemeClassAndCookieChange": true,
+        "originalControlModeRestored": true,
+        "cookieLimit": "Only cinatoken-theme control preference is inspected; restoring a previously unset system mode intentionally writes a local system preference cookie. No Cookie/Auth/state token values are collected."
+      },
+      {
+        "navigationId": "public-nav-10",
+        "route": "/zh",
+        "phase": "original-locale-navigation",
+        "originalMode": "dark",
+        "initialDark": true,
+        "probeMode": "light",
+        "attempts": 1,
+        "changedAtMs": 29039.285,
+        "restoredAtMs": 29053.562,
+        "restoredMode": "dark",
+        "realThemeClassAndCookieChange": true,
+        "originalControlModeRestored": true,
+        "cookieLimit": "Only cinatoken-theme control preference is inspected; restoring a previously unset system mode intentionally writes a local system preference cookie. No Cookie/Auth/state token values are collected."
+      },
+      {
+        "navigationId": "public-nav-11",
+        "route": "/zh",
+        "phase": "original-mobile-reload",
+        "originalMode": "dark",
+        "initialDark": true,
+        "probeMode": "light",
+        "attempts": 1,
+        "changedAtMs": 31221.551,
+        "restoredAtMs": 31233.023,
+        "restoredMode": "dark",
+        "realThemeClassAndCookieChange": true,
+        "originalControlModeRestored": true,
+        "cookieLimit": "Only cinatoken-theme control preference is inspected; restoring a previously unset system mode intentionally writes a local system preference cookie. No Cookie/Auth/state token values are collected."
+      }
+    ],
+    "requests": {
+      "count": 1003,
+      "GET": 1003,
+      "HEAD": 0,
+      "finished": 1003,
+      "failed": 0,
+      "pending": 0,
+      "requiredJSAndCSS": 870,
+      "allRequiredJSAndCSSSuccess": true,
+      "maxTTFBms": 1429.3729999999998,
+      "cacheHIT": 949
+    },
+    "failurePendingRetained": true,
+    "networkIdleNotAcceptanceCriterion": true
+  },
+  "visualInspection": {
+    "performed": true,
+    "method": "view_image actual7 PNG",
+    "actualScreenshotCount": 7,
+    "expectedOriginalSuccessPathCount": 7,
+    "whyNot9": "Original v3 had two extra failure PNGs; successful v4 retains original screenshot code and produces seven; no failure PNG is invented.",
+    "screens": [
+      {
+        "name": "public-1",
+        "observation": "Visible unified gateway hero, links and code sample; no blank shell or overlay."
+      },
+      {
+        "name": "public-2",
+        "observation": "Visible Model catalog controls and actual0results/No published models are available; no nonempty production catalog claim."
+      },
+      {
+        "name": "account-1",
+        "observation": "Anonymous Your account, one secure sign-in card; no workspace picker."
+      },
+      {
+        "name": "admin-a-1",
+        "observation": "Anonymous Sign in to the console card; no privileged console navigation."
+      },
+      {
+        "name": "admin-b-1",
+        "observation": "Same correct console sign-in gate."
+      },
+      {
+        "name": "desktop-dark",
+        "observation": "Actual dark control selected and page styling changes; visible readable hero."
+      },
+      {
+        "name": "mobile-zh-dark",
+        "observation": "390x844 Chinese dark page, wrapped header and hero controls; documentWidth390 matches viewport and no horizontaloverflow."
+      }
+    ]
+  },
+  "qaChecks": [
+    {
+      "check": "Page identity",
+      "status": "PASS",
+      "evidence": "45exactroute/status/kindtuple matrix, realURL/title assertions"
+    },
+    {
+      "check": "Nonblank",
+      "status": "PASS",
+      "evidence": "All45 meaningful DOMscreens;7actual PNGreviewed"
+    },
+    {
+      "check": "Framework overlay/hydration",
+      "status": "PASS",
+      "evidence": "All45 overlayfalse/hydrationFailurefalse;11publicactual reactive class/preference/restoration proofs"
+    },
+    {
+      "check": "Console health",
+      "status": "PASS",
+      "evidence": "37exactanonymous401+1reservedmissing404 explain38console;0unknown/error/warning"
+    },
+    {
+      "check": "Screenshots",
+      "status": "PASS",
+      "evidence": "7actual originalsuccesspath captures all inspected; old9screenshot attempt preserved separately"
+    },
+    {
+      "check": "Interaction/state",
+      "status": "PASS",
+      "evidence": "Originaldesktopdark/zh navigation/mobile reload3loops;37perpage401; no privileged anonymousUI"
+    }
+  ],
+  "closure": {
+    "executorExit": {
+      "code": 0,
+      "signal": null
+    },
+    "executorTimedOut": false,
+    "browserTimedOut": false,
+    "browserClosed": true,
+    "allContextsClosed": true,
+    "consoleClassificationExecuted": true,
+    "sourceAndConfigRawStillSame": true,
+    "liveProofRawStillSame": true,
+    "executorInputRawStillSame": true,
+    "v4SealedBefore": {
+      "planRaw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-functional-browser-v4-final-20261006-qfXa5E\\v4-sealed-plan.json",
+        "bytes": 11163,
+        "sha256": "ae4999f480a9bad068e38e3dcb70d73cfd897b3664df44bd127b283178d670ba"
+      },
+      "originalV3Raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\production-web-browser-observe-v3.mjs",
+        "bytes": 25585,
+        "sha256": "5fe013bb9c8cd533aa144b4c3820b11008359370dfef44b1b4a4f922781ffa34"
+      },
+      "assertionEquivalenceRaw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-functional-browser-v4-final-20261006-qfXa5E\\v4-assertion-equivalence.json",
+        "bytes": 33248,
+        "sha256": "c4baa18bf9e4a52682a10572e1ab45900a953f2663da049616a702f1b00222c4"
+      },
+      "original85AssertCallsRetained": true,
+      "originalInputsStillSame": true,
+      "newInputsStillSame": true
+    },
+    "v4SealedAfter": {
+      "planRaw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-functional-browser-v4-final-20261006-qfXa5E\\v4-sealed-plan.json",
+        "bytes": 11163,
+        "sha256": "ae4999f480a9bad068e38e3dcb70d73cfd897b3664df44bd127b283178d670ba"
+      },
+      "originalV3Raw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\production-web-browser-observe-v3.mjs",
+        "bytes": 25585,
+        "sha256": "5fe013bb9c8cd533aa144b4c3820b11008359370dfef44b1b4a4f922781ffa34"
+      },
+      "assertionEquivalenceRaw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-functional-browser-v4-final-20261006-qfXa5E\\v4-assertion-equivalence.json",
+        "bytes": 33248,
+        "sha256": "c4baa18bf9e4a52682a10572e1ab45900a953f2663da049616a702f1b00222c4"
+      },
+      "original85AssertCallsRetained": true,
+      "originalInputsStillSame": true,
+      "newInputsStillSame": true
+    }
+  },
+  "writes": {
+    "source": 0,
+    "Git": 0,
+    "deployments": 0,
+    "database": 0,
+    "api": 0,
+    "realLogin": false,
+    "localThemePreferenceLoops": "Disclosed mode-change/restoration preference cookie only"
+  },
+  "limitations": [
+    "Only the reviewedDOMcontentloaded/UI-readiness functional anonymous matrix passed. Oldv2failed25/45and23/45andv3failed31/45withtwo45snetworkidle timeouts remain unchanged and cannot be rewritten asPASS.",
+    "The prior3-route diagnostic retained2CDP favicon canceled/netERRABORTED; oldtimeout cause remains unproved. V4adds no CDPcachefix or ServiceWorker override.",
+    "Some readiness checkpoints contain pending logo.pngGET before completion; all are retained and ultimately finishedHTTP200 before context closure; readiness did not wait for globalnetworkidle.",
+    "Modelcatalog screenshot is a real empty catalog, not nonempty model/business proof.",
+    "No real CinaAuth/OIDC/CSRF/role/business/financial/chain/SSE/WebSocket/longlist/chart validation, formalP8-09performance acceptance, actualrollback or fullG8completion.",
+    "This is a single reviewed v4run; no automatic rerun, patched result or relabeling of previous failure."
+  ],
+  "raw": [
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-functional-browser-v4-final-20261006-qfXa5E/before-functional-v4-final-once-execution-closed.json",
+      "bytes": 8806,
+      "sha256": "96252aed2927327920c28d01d86896315394d8989ab383b4a11489a2bedb9a53"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-functional-browser-v4-final-20261006-qfXa5E/before-functional-v4-final-once.json",
+      "bytes": 4917392,
+      "sha256": "bbeb36d178fb245f178ee2f8b47ed70f2db92b712c7dcb4ddea31d6a1980087a"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-functional-browser-v4-final-20261006-qfXa5E/before-functional-v4-final-once-stdout.log",
+      "bytes": 8971,
+      "sha256": "1bfc5eeac1b760f6787de415d131547a6082674dfcfc5ef66a00432c4305385c"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-functional-browser-v4-final-20261006-qfXa5E/before-functional-v4-final-once-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-functional-browser-v4-final-20261006-qfXa5E/v4-sealed-plan.json",
+      "bytes": 11163,
+      "sha256": "ae4999f480a9bad068e38e3dcb70d73cfd897b3664df44bd127b283178d670ba"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-functional-browser-v4-final-20261006-qfXa5E/v4-assertion-equivalence.json",
+      "bytes": 33248,
+      "sha256": "c4baa18bf9e4a52682a10572e1ab45900a953f2663da049616a702f1b00222c4"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-functional-browser-v4-final-20261006-qfXa5E/original-v3-to-functional-v4.diff",
+      "bytes": 12123,
+      "sha256": "11f1a2b569705b98912fa77b9b2c443c6fa5d7c54ba1de47b02a293d2d6f73cc"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-functional-browser-v4-final-20261006-qfXa5E/executor-v3-to-v4.diff",
+      "bytes": 4702,
+      "sha256": "40cf85f2b59f89a4ec77668ac2fb06410a0d9fb944a922858f08944b52416027"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-functional-browser-v4-final-20261006-qfXa5E/peer-reviewed-v4.json",
+      "bytes": 4829,
+      "sha256": "ee991f44f6f1fd1c32e418dd486781f64d74fa8cbeff6774cc4ae80b157be60e"
+    }
+  ],
+  "screenshots": [
+    {
+      "name": "public-1",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-functional-browser-v4-final-20261006-qfXa5E\\before-functional-v4-final-once-public-1.png",
+      "bytes": 54114,
+      "sha256": "3c3002c14200c075db9cb4077fc6926e1543c1dbc907150ee4981237dd71fbe6"
+    },
+    {
+      "name": "admin-b-1",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-functional-browser-v4-final-20261006-qfXa5E\\before-functional-v4-final-once-admin-b-1.png",
+      "bytes": 25449,
+      "sha256": "3903b8a1ace00a01f66aa85758c1fdd71fd081e2d3b8b76c1967475ed3cf94f2"
+    },
+    {
+      "name": "account-1",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-functional-browser-v4-final-20261006-qfXa5E\\before-functional-v4-final-once-account-1.png",
+      "bytes": 23753,
+      "sha256": "a99bb9d22fd16eaebd41e31ccceef6363f27760a9d6c0d6e3e6be1c6f5c4b8fb"
+    },
+    {
+      "name": "admin-a-1",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-functional-browser-v4-final-20261006-qfXa5E\\before-functional-v4-final-once-admin-a-1.png",
+      "bytes": 25449,
+      "sha256": "3903b8a1ace00a01f66aa85758c1fdd71fd081e2d3b8b76c1967475ed3cf94f2"
+    },
+    {
+      "name": "public-2",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-functional-browser-v4-final-20261006-qfXa5E\\before-functional-v4-final-once-public-2.png",
+      "bytes": 43262,
+      "sha256": "081e960004ddba212581417ec6052182a315a8cbffabf4f6b1704a8c4591bd08"
+    },
+    {
+      "name": "desktop-dark",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-functional-browser-v4-final-20261006-qfXa5E\\before-functional-v4-final-once-desktop-dark.png",
+      "bytes": 55028,
+      "sha256": "0ec81d2dfcfcd8b5b473ce3dc99cdc4691e4221032efe8d179803149719665f3"
+    },
+    {
+      "name": "mobile-zh-dark",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-functional-browser-v4-final-20261006-qfXa5E\\before-functional-v4-final-once-mobile-zh-dark.png",
+      "bytes": 32357,
+      "sha256": "99d1b467918686bc194528cedcaea3af125bba176eda06fd803b050ab12c7ea6"
+    }
+  ]
+}

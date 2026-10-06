@@ -1,0 +1,15 @@
+{
+  "startedAt": "2026-10-05T23:45:17.759Z",
+  "completedAt": "2026-10-05T23:45:17.916Z",
+  "program": "node",
+  "arguments": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-usage-jobs-repair-921bf93575a54e5db7b0afca01508b06/inventory-native-workflow.mjs"
+  ],
+  "actualExitCode": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdoutPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-usage-jobs-repair-921bf93575a54e5db7b0afca01508b06\\after-step17-inventory-v3.stdout.txt",
+  "stderrPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-usage-jobs-repair-921bf93575a54e5db7b0afca01508b06\\after-step17-inventory-v3.stderr.txt",
+  "stdoutBytes": 8168,
+  "stderrBytes": 0
+}

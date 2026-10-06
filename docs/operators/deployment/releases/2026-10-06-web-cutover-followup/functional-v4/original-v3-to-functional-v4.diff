@@ -1,0 +1,140 @@
+diff --git "a/C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\production-web-browser-observe-v3.mjs" "b/C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-functional-browser-v4-final-20261006-qfXa5E\\production-web-browser-observe-v4.mjs"
+index f24beecc..e45b039a 100644
+--- "a/C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\production-web-browser-observe-v3.mjs"
++++ "b/C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-functional-browser-v4-final-20261006-qfXa5E\\production-web-browser-observe-v4.mjs"
+@@ -3,6 +3,7 @@ import path from 'node:path';
+ import crypto from 'node:crypto';
+ import assert from 'node:assert/strict';
+ import { fileURLToPath } from 'node:url';
++import { verifyV4Seals, attachReadinessObserver, beginNavigation, documentReady, functionalReady, inspectFailure, observeNetworkCheckpoint, collectReadinessNetwork, requireReadinessMetadata } from './readiness-v4.mjs';
+ import { chromium } from 'file:///C:/Users/cina/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs';
+ import { PUBLIC_PAGES, MISSING_MODEL_PATH, ACCOUNT_PAGES, ADMIN_FLAGS_AND_PAGES, ALL_FLAGS } from './web-route-matrix.mjs';
+ 
+@@ -32,11 +33,11 @@ assert.ok(config.liveProof?.path && config.liveProof?.bytes > 0);
+ assert.match(config.liveProof.sha256 ?? '', /^[a-f0-9]{64}$/);
+ assert.deepEqual(raw(config.liveProof.path), config.liveProof, 'Root live API proof raw binding');
+ const result = {
+-  schema: 'cinatoken-independent-web-real-browser-v3', startedAt: new Date().toISOString(),
++  schema: 'cinatoken-functional-anonymous-web-browser-v4', startedAt: new Date().toISOString(),
+   label, config: { ...config }, configRaw: raw(configPath),
+-  inputScripts: [raw(fileURLToPath(import.meta.url)), raw(path.join(temp, 'web-route-matrix.mjs'))],
+-  scope: 'Real independent Web public SSR/hydration and 37 anonymous private route gates; desktop/theme/locale/mobile',
+-  scheduling: 'Four anonymous contexts run public8/account10/admin14/admin13 concurrently; HTTP routing cache remains disabled. This is a distinct v3 attempt and does not relabel v2 failures.',
++  inputScripts: [raw(fileURLToPath(import.meta.url)), raw(path.join(temp, 'web-route-matrix.mjs')), raw(path.join(temp, 'readiness-v4.mjs'))],
++  scope: 'Functional anonymous Web browser only: all original 45 route/UI/metadata/security assertions plus real public reactive readiness and 37 exact anonymous401; not the original networkidle matrix, real identity, performance P8-09 or full G8',
++  scheduling: 'Original four fresh anonymous contexts public8/account10/admin14/admin13; HTTP routing cache remains disabled. DOMContentLoaded followed by exact UI readiness, required current-page JS/CSS completion and public reactive controls. Original v2/v3 failures remain unchanged.',
+   browserDeadlineMs: 390000, executorDeadlineMs: 420000, shards: [], groupSettled: [],
+   browserPlugin: 'absent', fallbackReason: 'Browser plugin not available; existing bundled Playwright and cached Chromium',
+   realLogin: false, financialWrites: false, businessWrites: false,
+@@ -50,6 +51,8 @@ let browser, deadline;
+ let closing = false;
+ const output = path.join(temp, label + '.json');
+ assert.equal(fs.existsSync(output), false, 'fresh label only');
++result.v4SealedBefore = verifyV4Seals();
++result.readinessMethod = { navigationWaitUntil: 'domcontentloaded', navigationTimeoutMs: 45000, originalLocatorTimeoutMs: 20000, originalLocatorAndAddedReadinessSharedBudgetMs: 20000, browserDeadlineMs: 390000, executorDeadlineMs: 420000, networkidleMeasuredOrPassed: false, performanceP809Complete: false, realIdentityTested: false, fullG8Complete: false };
+ const configAtStart = raw(configPath);
+ const selfAtStart = raw(fileURLToPath(import.meta.url));
+ const originalV2 = [{"path":"C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\production-web-browser-observe-v2.mjs","bytes":15695,"sha256":"415d123bbc71cfdb5d8ed02bf91f01d9021031358667cd7aaf2f0fd6edcd55be"},{"path":"C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\execute-web-browser-observe-v2.mjs","bytes":3432,"sha256":"ffd074ec8b52d5ce7c9dbd8a9dace29ec29130b661e0290e72f1f2d2d0424ed8"},{"path":"C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\web-route-matrix.mjs","bytes":1770,"sha256":"c8a3211d07979c037022f689aa442bd95de9b7c11843fb52b9ae9fa93ac01e61"}];
+@@ -99,7 +102,9 @@ async function snapshot(group) {
+ async function settled(group) { await Promise.allSettled([...group.pending]); }
+ async function checkPage(group, route, kind, expectedStatus = 200, takeScreenshot = false) {
+   const page = group.page;
+-  const response = await page.goto(target.origin + route, { waitUntil: 'networkidle', timeout: 45000 });
++  beginNavigation(group, route, kind);
++  const response = await page.goto(target.origin + route, { waitUntil: 'domcontentloaded', timeout: 45000 });
++  documentReady(group);
+   assert.equal(response?.status(), expectedStatus, route + ' document status');
+   if (kind === 'account') {
+     await page.getByText('Your account, one secure sign-in', { exact: true }).waitFor({ timeout: 20000 });
+@@ -109,6 +114,7 @@ async function checkPage(group, route, kind, expectedStatus = 200, takeScreensho
+     await page.locator('main#main-content').waitFor({ timeout: 20000 });
+     assert.equal(await page.locator('#cinatoken-public-bootstrap').count(), 1, route + ' actual SSR bootstrap');
+   }
++  const functionalReadinessProof = await functionalReady(group, route, kind);
+   const state = await snapshot(group);
+   const bootstrap = kind === 'public' || kind === 'missing-model' ? await page.locator('#cinatoken-public-bootstrap').evaluate(node => {
+     const value = JSON.parse(node.textContent ?? '');
+@@ -120,6 +126,7 @@ async function checkPage(group, route, kind, expectedStatus = 200, takeScreensho
+   const entry = { shard: group.state.name, route, kind, http: response?.status(), finalURL: page.url(), title: await page.title(),
+     state, bootstrap, metadata, nonblank: body.trim().length > 100, mainText: (await page.locator('main#main-content').innerText()).slice(0, 1800),
+     body: body.slice(0, 7500), frameworkOverlay: overlays > 0 };
++  entry.functionalReadiness = functionalReadinessProof;
+   result.pages.push(entry); group.state.pages.push(entry);
+   assert.equal(new URL(entry.finalURL).pathname, route);
+   assert.ok(entry.title.trim().length > 0, route + ' title');
+@@ -144,20 +151,29 @@ async function checkPage(group, route, kind, expectedStatus = 200, takeScreensho
+ }
+ async function runThemeLocaleMobile(group) {
+   const page = group.page;
+-  await page.goto(target.origin + '/en', { waitUntil: 'networkidle', timeout: 45000 });
++  beginNavigation(group, '/en', 'public', 'original-desktop-dark-reset');
++  await page.goto(target.origin + '/en', { waitUntil: 'domcontentloaded', timeout: 45000 });
++  documentReady(group);
++  await functionalReady(group, '/en', 'public');
+   await page.locator('header select:has(option[value="dark"])').selectOption('dark');
+   await page.waitForFunction(() => document.documentElement.classList.contains('dark') && document.cookie.split(';').some(v => v.trim() === 'cinatoken-theme=dark'));
+   result.interactions.push({ step: 'desktop-dark-selected', ...await snapshot(group) });
+   await screenshot(group, 'desktop-dark');
++  beginNavigation(group, '/zh', 'public', 'original-locale-navigation');
+   await Promise.all([
+-    page.waitForURL(target.origin + '/zh', { waitUntil: 'networkidle', timeout: 45000 }),
++    page.waitForURL(target.origin + '/zh', { waitUntil: 'domcontentloaded', timeout: 45000 }),
+     page.locator('header select:has(option[value="zh"])').selectOption('zh'),
+   ]);
++  documentReady(group);
++  await functionalReady(group, '/zh', 'public');
+   await page.waitForFunction(() => document.documentElement.lang === 'zh' && document.documentElement.classList.contains('dark'));
+   result.interactions.push({ step: 'language-zh-navigated', ...await snapshot(group) });
+   assert.equal(await page.locator('header select:has(option[value="zh"])').inputValue(), 'zh');
+   await page.setViewportSize({ width: 390, height: 844 });
+-  await page.reload({ waitUntil: 'networkidle', timeout: 45000 });
++  beginNavigation(group, '/zh', 'public', 'original-mobile-reload');
++  await page.reload({ waitUntil: 'domcontentloaded', timeout: 45000 });
++  documentReady(group);
++  await functionalReady(group, '/zh', 'public');
+   await page.waitForFunction(() => document.documentElement.lang === 'zh' && document.documentElement.classList.contains('dark'));
+   const mobile = await snapshot(group); result.interactions.push({ step: 'mobile-zh-dark-reload', ...mobile });
+   assert.equal(mobile.themeCookie, 'cinatoken-theme=dark');
+@@ -190,6 +206,7 @@ async function prepareGroup(spec) {
+   });
+   group.page = await group.context.newPage();
+   const page = group.page;
++  attachReadinessObserver(group, target.origin, () => closing);
+   page.on('pageerror', error => state.pageErrors.push({ shard: spec.name, message: error.message, url: page.url() }));
+   page.on('console', message => {
+     const item = { shard: spec.name, text: message.text(), location: message.location(), pageURL: page.url() };
+@@ -227,6 +244,7 @@ async function runGroup(group) {
+     await settled(group);
+     state.status = 'fulfilled';
+   } catch (error) {
++    state.networkFailurePending = inspectFailure(group, error);
+     state.status = 'rejected'; state.failure = { name: error.name, message: error.message, stack: error.stack };
+     if (group.page && !group.page.isClosed()) {
+       try { state.failureScreenshot = await screenshot(group, state.name + '-failure'); state.failureState = await snapshot(group); state.failureBody = (await group.page.locator('body').innerText()).slice(0, 10000); } catch {}
+@@ -260,6 +278,7 @@ try {
+   clearTimeout(deadline); closing = true;
+   await Promise.allSettled(groups.map(async group => {
+     try {
++      group.state.networkBeforeClose = observeNetworkCheckpoint(group);
+       group.state.finalServiceWorkers = group.context?.serviceWorkers().map(worker => worker.url()) ?? null;
+       await group.context?.close();
+       group.state.contextClosed = group.context?.isClosed() === true;
+@@ -269,6 +288,7 @@ try {
+   try { await browser?.close(); result.browserClosed = browser?.isConnected() === false; } catch (error) { result.browserClosed = false; result.browserCloseError = error.message; }
+   await Promise.allSettled(groups.map(group => settled(group)));
+   classifyConsoleAndAggregate();
++  result.readinessNetwork = collectReadinessNetwork(groups);
+   result.finishedAt = new Date().toISOString();
+   try { assert.deepEqual(raw(config.liveProof.path), config.liveProof); result.liveProofRawStillSame = true; } catch (error) { result.liveProofRawStillSame = false; result.bindingFailure = error.message; }
+   try {
+@@ -313,7 +333,9 @@ try {
+     assert.deepEqual(result.interactions.map(entry => entry.step), ['desktop-dark-selected', 'language-zh-navigated', 'mobile-zh-dark-reload'], 'all three original interactions');
+     assert.equal(result.contextClosed, true, 'all four contexts closed'); assert.equal(result.browserClosed, true, 'browser closed');
+     assert.equal(result.liveProofRawStillSame, true); assert.equal(result.sourceAndConfigRawStillSame, true);
+-    result.actualExit = 0; result.outcome = 'PASS_REAL_WEB_ENTRY_ANONYMOUS_GATES_AND_THEME_LOCALE_MOBILE_PARALLEL_V3';
++    requireReadinessMetadata(groups);
++    result.v4SealedAfter = verifyV4Seals();
++    result.actualExit = 0; result.outcome = 'PASS_FUNCTIONAL_ANONYMOUS_WEB_BROWSER_V4_ONLY';
+   } catch (error) {
+     result.actualExit = 1; result.outcome = 'FAILED'; result.validationFailure = { name: error.name, message: error.message, stack: error.stack };
+     result.failure ??= groups.find(group => group.state.failure)?.state.failure ?? result.validationFailure;

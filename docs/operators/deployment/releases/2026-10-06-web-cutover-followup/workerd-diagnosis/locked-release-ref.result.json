@@ -1,0 +1,16 @@
+{
+  "startedAt": "2026-10-05T23:36:36.687Z",
+  "completedAt": "2026-10-05T23:36:38.200Z",
+  "program": "gh",
+  "arguments": [
+    "api",
+    "repos/cloudflare/workerd/git/ref/tags/v1.20260828.1"
+  ],
+  "actualExitCode": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdoutPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-workerd-cancel-diagnosis-393aa84d3e474d2184c6c0b189c803a9\\locked-release-ref.stdout.txt",
+  "stderrPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-workerd-cancel-diagnosis-393aa84d3e474d2184c6c0b189c803a9\\locked-release-ref.stderr.txt",
+  "stdoutBytes": 361,
+  "stderrBytes": 0
+}

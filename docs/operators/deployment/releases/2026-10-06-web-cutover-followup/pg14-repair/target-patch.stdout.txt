@@ -1,0 +1,13 @@
+diff --git a/scripts/db/cutover/postgres-replay-scale-lock.native.test.mjs b/scripts/db/cutover/postgres-replay-scale-lock.native.test.mjs
+index 36168c0b..b308aee1 100644
+--- a/scripts/db/cutover/postgres-replay-scale-lock.native.test.mjs
++++ b/scripts/db/cutover/postgres-replay-scale-lock.native.test.mjs
+@@ -160,7 +160,7 @@ test('native PostgreSQL replay backfill scale, bounded lock and resume',
+ 
+       for (const [setting, url] of proposals) await activate(sql, setting, url);
+       const migratorUrl = `postgres://cinatoken_gateway_migrator:${password}@127.0.0.1:${cluster.port}/postgres?sslmode=disable`;
+-      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
++      await grantPg73RuntimeFixture({ cluster, migrator: sql, migratorUrl });
+       stage('review-only-parent-and-runtime-default-acl-installed');
+ 
+       await holder.unsafe('BEGIN');

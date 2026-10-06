@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-05T23:33:39.901Z",
+  "actualExit": 1,
+  "reason": "Windows native path vs slash path raw binding assertion; bytes and SHA identical; failed before child/browser start",
+  "childStarted": false,
+  "browserStarted": false,
+  "productionRequests": 0,
+  "diagnosticScript": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-production-network-diag-20261006-biqh68/production-network-diagnostic-v1.mjs",
+    "bytes": 23423,
+    "sha256": "2d6110816e4d2bcdb6c73780c02f3ec157258e9bbfb80bd7003166230c77f3ec"
+  },
+  "executorScript": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-production-network-diag-20261006-biqh68/execute-network-diagnostic-v1.mjs",
+    "bytes": 4832,
+    "sha256": "1e5b99ee37919d32917283e6e1ebd033dd3e00a8a1e303a7122093c2b32173a3"
+  },
+  "originalPreparation": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-production-network-diag-20261006-biqh68/preparation.receipt.json",
+    "bytes": 5787,
+    "sha256": "04e3a852792cd40ada2e553d3b25aa71f483ee4a16c5d31f60e8c22d2d5e6d4d"
+  }
+}

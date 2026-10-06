@@ -1,0 +1,7 @@
+{
+  "startedAt": "2026-10-05T23:46:42.0116922Z",
+  "command": "npm run format:check -w @cinatoken/web",
+  "completedAt": "2026-10-05T23:47:02.8261866Z",
+  "terminal": true,
+  "actualExitCode": 0
+}

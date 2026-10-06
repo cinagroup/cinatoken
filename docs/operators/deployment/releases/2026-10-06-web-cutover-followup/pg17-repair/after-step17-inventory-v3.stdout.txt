@@ -1,0 +1,379 @@
+{
+  "report": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-usage-jobs-repair-921bf93575a54e5db7b0afca01508b06\\after-step17-inventory.json",
+    "bytes": 210623,
+    "sha256": "ea0e9436b98ec8481cc66d8d901d1c9e3b4be5fe4e6f33f4c6f607c77105e680"
+  },
+  "totals": {
+    "nativeFiles": 105,
+    "afterTarget": 94,
+    "staticAllCurrentWith73": 23,
+    "alreadyPinnedPG73": 38,
+    "otherSetup": 33,
+    "laterDirectGrantFixtures": 46
+  },
+  "candidates": [
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-usage-repair-runtime-grant.native.test.mjs",
+      "step": 20,
+      "loader": [
+        53
+      ],
+      "count": [
+        54
+      ],
+      "directGrantCalls": [
+        63,
+        68,
+        86,
+        87,
+        98,
+        101,
+        108,
+        112,
+        117
+      ]
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs",
+      "step": 24,
+      "loader": [
+        122
+      ],
+      "count": [
+        123
+      ],
+      "directGrantCalls": [
+        566,
+        567
+      ]
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-orphan-review-v348.native.test.mjs",
+      "step": 27,
+      "loader": [
+        105
+      ],
+      "count": [
+        106
+      ],
+      "directGrantCalls": []
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-selected-event-gate-v351.native.test.mjs",
+      "step": 29,
+      "loader": [
+        119
+      ],
+      "count": [
+        120
+      ],
+      "directGrantCalls": []
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-snapshot-earning-consumer.native.test.mjs",
+      "step": 32,
+      "loader": [
+        123
+      ],
+      "count": [
+        124
+      ],
+      "directGrantCalls": []
+    },
+    {
+      "file": "scripts/db/cutover/postgres-budget-admission-login-v350.native.test.mjs",
+      "step": 36,
+      "loader": [
+        103
+      ],
+      "count": [
+        105
+      ],
+      "directGrantCalls": [
+        131,
+        407
+      ]
+    },
+    {
+      "file": "scripts/db/cutover/postgres-ordinary-budget-recovery-v354.native.test.mjs",
+      "step": 37,
+      "loader": [
+        87
+      ],
+      "count": [
+        88
+      ],
+      "directGrantCalls": [
+        105
+      ]
+    },
+    {
+      "file": "scripts/db/cutover/postgres-guardrail-budget-admission-login-v351.native.test.mjs",
+      "step": 38,
+      "loader": [
+        95
+      ],
+      "count": [
+        97
+      ],
+      "directGrantCalls": [
+        111
+      ]
+    },
+    {
+      "file": "scripts/db/cutover/postgres-authenticated-request-capability-login-v356.native.test.mjs",
+      "step": 41,
+      "loader": [
+        74
+      ],
+      "count": [
+        75
+      ],
+      "directGrantCalls": [
+        91,
+        135
+      ]
+    },
+    {
+      "file": "scripts/db/cutover/postgres-authenticated-text-route-ceiling-v357.native.test.mjs",
+      "step": 42,
+      "loader": [
+        78
+      ],
+      "count": [
+        79
+      ],
+      "directGrantCalls": [
+        95,
+        309
+      ]
+    },
+    {
+      "file": "scripts/db/cutover/postgres-authenticated-text-route-source-fence-v359.native.test.mjs",
+      "step": 43,
+      "loader": [
+        86
+      ],
+      "count": [
+        87
+      ],
+      "directGrantCalls": [
+        103,
+        326
+      ]
+    },
+    {
+      "file": "scripts/db/cutover/postgres-authenticated-complete-text-quote-v360.native.test.mjs",
+      "step": 44,
+      "loader": [
+        77
+      ],
+      "count": [
+        78
+      ],
+      "directGrantCalls": [
+        93
+      ]
+    },
+    {
+      "file": "scripts/db/cutover/postgres-complete-text-secretless-plan-v365.native.test.mjs",
+      "step": 47,
+      "loader": [
+        77
+      ],
+      "count": [
+        78
+      ],
+      "directGrantCalls": [
+        93,
+        309
+      ]
+    },
+    {
+      "file": "scripts/db/cutover/postgres-complete-text-private-route-reader-v366.native.test.mjs",
+      "step": 49,
+      "loader": [
+        81
+      ],
+      "count": [
+        82
+      ],
+      "directGrantCalls": [
+        95,
+        308
+      ]
+    },
+    {
+      "file": "scripts/db/cutover/postgres-legacy-buyer-windowed-app-privileges-v374.native.test.mjs",
+      "step": 60,
+      "loader": [
+        124
+      ],
+      "count": [
+        125
+      ],
+      "directGrantCalls": [
+        143,
+        446
+      ]
+    },
+    {
+      "file": "scripts/db/cutover/postgres-legacy-buyer-windowed-app-privileges-renewal-v376.native.test.mjs",
+      "step": 61,
+      "loader": [
+        142
+      ],
+      "count": [
+        143
+      ],
+      "directGrantCalls": [
+        161,
+        610
+      ]
+    },
+    {
+      "file": "scripts/db/cutover/postgres-complete-text-admission-buyer-v379.native.test.mjs",
+      "step": 66,
+      "loader": [
+        139
+      ],
+      "count": [
+        140
+      ],
+      "directGrantCalls": [
+        158,
+        613
+      ]
+    },
+    {
+      "file": "scripts/db/cutover/postgres-guardrail-admission-adapter-v352.native.test.mjs",
+      "step": 88,
+      "loader": [
+        80
+      ],
+      "count": [
+        81
+      ],
+      "directGrantCalls": [
+        98
+      ]
+    },
+    {
+      "file": "scripts/db/cutover/postgres-buyer-split-grant-rerun-v348.native.test.mjs",
+      "step": 95,
+      "loader": [
+        112
+      ],
+      "count": [
+        113
+      ],
+      "directGrantCalls": [
+        141,
+        142,
+        228
+      ]
+    },
+    {
+      "file": "scripts/db/cutover/postgres-buyer-split-guardrail-v349.native.test.mjs",
+      "step": 96,
+      "loader": [
+        116
+      ],
+      "count": [
+        117
+      ],
+      "directGrantCalls": [
+        150,
+        151,
+        228,
+        325
+      ]
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-economic-delivery.native.test.mjs",
+      "step": 101,
+      "loader": [
+        144
+      ],
+      "count": [
+        145
+      ],
+      "directGrantCalls": []
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-credited-usage-gap.native.test.mjs",
+      "step": 104,
+      "loader": [
+        103
+      ],
+      "count": [
+        104
+      ],
+      "directGrantCalls": []
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-credited-usage-store.native.test.mjs",
+      "step": 105,
+      "loader": [
+        106
+      ],
+      "count": [
+        107
+      ],
+      "directGrantCalls": []
+    }
+  ],
+  "nextTen": [
+    {
+      "file": "scripts/db/cutover/postgres-shared-usage-repair-backfill.native.test.mjs",
+      "step": 18,
+      "status": "ALREADY_PINNED_PG73"
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-usage-repair-durable-cursor.native.test.mjs",
+      "step": 19,
+      "status": "ALREADY_PINNED_PG73"
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-usage-repair-runtime-grant.native.test.mjs",
+      "step": 20,
+      "status": "STATIC_PG73_ALL_CURRENT_MISMATCH_CANDIDATE"
+    },
+    {
+      "file": "scripts/db/cutover/build-shared-key-usage-repair-direct-login-grant.native.test.mjs",
+      "step": 21,
+      "status": "ALREADY_PINNED_PG73"
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-usage-repair-failure-isolation.native.test.mjs",
+      "step": 22,
+      "status": "ALREADY_PINNED_PG73"
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-usage-repair-durable-claim.native.test.mjs",
+      "step": 23,
+      "status": "ALREADY_PINNED_PG73"
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-quote-versions.native.test.mjs",
+      "step": 24,
+      "status": "STATIC_PG73_ALL_CURRENT_MISMATCH_CANDIDATE"
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-dispatch-quote-attempts.native.test.mjs",
+      "step": 25,
+      "status": "ALREADY_PINNED_PG73"
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-orphan-claim-v347.native.test.mjs",
+      "step": 26,
+      "status": "ALREADY_PINNED_PG73"
+    },
+    {
+      "file": "scripts/db/cutover/postgres-shared-key-orphan-review-v348.native.test.mjs",
+      "step": 27,
+      "status": "STATIC_PG73_ALL_CURRENT_MISMATCH_CANDIDATE"
+    }
+  ]
+}

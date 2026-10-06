@@ -1,0 +1,32 @@
+{
+  "report": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-usage-jobs-repair-921bf93575a54e5db7b0afca01508b06\\FINAL-pg73-usage-jobs-repair.json",
+    "bytes": 20033,
+    "sha256": "fbadb5ccc08ed6b8c86af2102f36febf83de62fc6e70d6ff04118138587dcf57"
+  },
+  "before": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-usage-jobs-repair-921bf93575a54e5db7b0afca01508b06\\before.native.test.mjs",
+    "bytes": 17845,
+    "sha256": "944c61a4cff0f8b5f3b71e1a2fa48b7ae1c242f0d25fe900aef8b1c67ed87d49"
+  },
+  "after": {
+    "path": "C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\postgres-shared-key-usage-repair-jobs.native.test.mjs",
+    "bytes": 17832,
+    "sha256": "a47e5786cef95def84c75e72aa968381b097b7bf6aaec45294e100eb71e80516"
+  },
+  "beforeGitBlob": "0ba84582ae5dc0ab52543b2b09366adac7dd8f3d",
+  "afterWorktreeGitBlob": "de03f287e3ad3554daceb8cbfc863ac61f1e2242",
+  "localAuditActualExit": 0,
+  "pureBuilders": {
+    "tests": 4,
+    "passed": 4,
+    "failed": 0,
+    "skipped": 0
+  },
+  "pendingValidation": {
+    "result": "NOT EXECUTED LOCALLY; actual Linux PostgreSQL assertions required",
+    "workflow": ".github/workflows/proxy-dispatch-safety.yml",
+    "job": "native-financial-consumer",
+    "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin node --import tsx --test scripts/db/cutover/postgres-shared-key-usage-repair-jobs.native.test.mjs"
+  }
+}

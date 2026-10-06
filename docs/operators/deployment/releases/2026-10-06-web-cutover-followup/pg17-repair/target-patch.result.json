@@ -1,0 +1,17 @@
+{
+  "startedAt": "2026-10-05T23:42:54.131Z",
+  "completedAt": "2026-10-05T23:42:54.200Z",
+  "program": "git",
+  "arguments": [
+    "diff",
+    "--",
+    "scripts/db/cutover/postgres-shared-key-usage-repair-jobs.native.test.mjs"
+  ],
+  "actualExitCode": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdoutPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-usage-jobs-repair-921bf93575a54e5db7b0afca01508b06\\target-patch.stdout.txt",
+  "stderrPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-usage-jobs-repair-921bf93575a54e5db7b0afca01508b06\\target-patch.stderr.txt",
+  "stdoutBytes": 2296,
+  "stderrBytes": 0
+}

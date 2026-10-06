@@ -1,0 +1,119 @@
+{
+  "schema": "independent-web-cutover-followup-sealing-verification-v1",
+  "at": "2026-10-06T00:11:38.125Z",
+  "actualExit": 0,
+  "parent": {
+    "path": "2026-10-06-web-cutover-followup.json",
+    "bytes": 288112,
+    "sha256": "3d9c9d5826630966239cd9a982bf9d5ef2472a0f7b5658862cdc85721ff80f89",
+    "immutableEntries": 390,
+    "originalBytes": 16051045,
+    "storedBytes": 3838035
+  },
+  "independent": {
+    "path": "2026-10-06-web-cutover-followup-verification/independent/final-semantic-review.json",
+    "sha256": "152488a8d33d31a5b07a604a8ef440eef7547298598ef858c9dca1f476d80c03"
+  },
+  "rootGitIndexProof": {
+    "path": "2026-10-06-web-cutover-followup-verification/root/followup-staged-verification.json",
+    "actualExit": 0,
+    "verifiedStagedFileCount": 394,
+    "allStagedEvidenceExact": true,
+    "allOriginalRoundTripsExact": true,
+    "scopeStatesStillExact": true
+  },
+  "productionChanged": false,
+  "wholeMigrationCompleted": false,
+  "files": [
+    {
+      "sourcePath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-migration-progress-20261006-541315903c5243bc9a08bbc8a3515df4\\seal-followup-verification.mjs",
+      "storedPath": "root/seal-followup-verification.mjs",
+      "bytes": 3323,
+      "sha256": "de3f2ab739a97e226e0f8bc288fd353b9b9ef91a320e723636772482a54ca07e"
+    },
+    {
+      "sourcePath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-migration-progress-20261006-541315903c5243bc9a08bbc8a3515df4\\seal-followup-evidence.mjs",
+      "storedPath": "root/seal-followup-evidence.mjs",
+      "bytes": 9802,
+      "sha256": "9b03c29c2febd053f1dfad77756603ebcbf4c8247d8b36d30ce9bef05a89db44"
+    },
+    {
+      "sourcePath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-migration-progress-20261006-541315903c5243bc9a08bbc8a3515df4\\followup-collector.stdout.log",
+      "storedPath": "root/followup-collector.stdout.log",
+      "bytes": 358,
+      "sha256": "a074a049d32dd9836690697b12af58ac44b72b9b3e5cfe44029e32f148a83937"
+    },
+    {
+      "sourcePath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-migration-progress-20261006-541315903c5243bc9a08bbc8a3515df4\\followup-collector.stderr.log",
+      "storedPath": "root/followup-collector.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "sourcePath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-migration-progress-20261006-541315903c5243bc9a08bbc8a3515df4\\followup-collector.result.json",
+      "storedPath": "root/followup-collector.result.json",
+      "bytes": 659,
+      "sha256": "bd6ba7955c1a9d87cf08b845ba801c6541361e14ca1615ce7891ba3b2fc198cd"
+    },
+    {
+      "sourcePath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-migration-progress-20261006-541315903c5243bc9a08bbc8a3515df4\\verify-followup-staging.mjs",
+      "storedPath": "root/verify-followup-staging.mjs",
+      "bytes": 2528,
+      "sha256": "352f66d4c6bb11d2cbd6cc9f33578db73324ba6bf43e89d29ce2997cb5628783"
+    },
+    {
+      "sourcePath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-migration-progress-20261006-541315903c5243bc9a08bbc8a3515df4\\followup-staged-verification.json",
+      "storedPath": "root/followup-staged-verification.json",
+      "bytes": 101853,
+      "sha256": "a3bee32859e36d8f75a38029a26695d997fa45c5f0bf8838cea87ccca82b5d22"
+    },
+    {
+      "sourcePath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-migration-progress-20261006-541315903c5243bc9a08bbc8a3515df4\\verify-followup-staged.stdout.log",
+      "storedPath": "root/verify-followup-staged.stdout.log",
+      "bytes": 190,
+      "sha256": "91cd712033cbf03df595ad09457e84569f7ccefe5997528c8d981599ccb3bba4"
+    },
+    {
+      "sourcePath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-migration-progress-20261006-541315903c5243bc9a08bbc8a3515df4\\verify-followup-staged.stderr.log",
+      "storedPath": "root/verify-followup-staged.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "sourcePath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-migration-progress-20261006-541315903c5243bc9a08bbc8a3515df4\\verify-followup-staged.result.json",
+      "storedPath": "root/verify-followup-staged.result.json",
+      "bytes": 668,
+      "sha256": "50d2f5bbd6acb4dbe6832e2577c301aac89fd801fbce598c4d1490ad40a4ccac"
+    },
+    {
+      "sourcePath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-independent-review-5ffc9ab946374a229eb59945e4bbd780\\byte-verification.json",
+      "storedPath": "independent/byte-verification.json",
+      "bytes": 71860,
+      "sha256": "5115e2f740526fc242a17303862fe8d1bdd67d5ada2452c3d316c46c21df3d60"
+    },
+    {
+      "sourcePath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-independent-review-5ffc9ab946374a229eb59945e4bbd780\\final-semantic-review.json",
+      "storedPath": "independent/final-semantic-review.json",
+      "bytes": 4465,
+      "sha256": "152488a8d33d31a5b07a604a8ef440eef7547298598ef858c9dca1f476d80c03"
+    },
+    {
+      "sourcePath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-independent-review-5ffc9ab946374a229eb59945e4bbd780\\final-semantic-seal.result.json",
+      "storedPath": "independent/final-semantic-seal.result.json",
+      "bytes": 192,
+      "sha256": "a42b5f6c5a00e47f9f46acef5455318f2ab66b833a63c1fc70ae907e379ab9d0"
+    },
+    {
+      "sourcePath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-independent-review-5ffc9ab946374a229eb59945e4bbd780\\final-semantic-seal.stderr.log",
+      "storedPath": "independent/final-semantic-seal.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "sourcePath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-followup-independent-review-5ffc9ab946374a229eb59945e4bbd780\\final-semantic-seal.stdout.log",
+      "storedPath": "independent/final-semantic-seal.stdout.log",
+      "bytes": 317,
+      "sha256": "5ffc9a2305b364959de080fc9bea9096675b00a2f260e3534433bed2682366cb"
+    }
+  ]
+}

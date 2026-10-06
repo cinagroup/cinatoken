@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-05T23:50:10.388Z",
+  "finishedAt": "2026-10-05T23:50:11.909Z",
+  "executable": "C:/Program Files/GitHub CLI/gh.exe",
+  "args": [
+    "run",
+    "list",
+    "--commit",
+    "5471899c",
+    "--json",
+    "databaseId,headSha,name,status,conclusion,url",
+    "--limit",
+    "12"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-migration-progress-20261006-541315903c5243bc9a08bbc8a3515df4/second-ci-initial.stdout.log",
+  "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-migration-progress-20261006-541315903c5243bc9a08bbc8a3515df4/second-ci-initial.stderr.log"
+}

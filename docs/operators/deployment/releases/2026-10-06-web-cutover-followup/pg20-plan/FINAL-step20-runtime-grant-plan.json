@@ -1,0 +1,192 @@
+{
+  "schema": "pg73-step20-runtime-grant-readonly-adaptation-plan",
+  "at": "2026-10-05T23:54:16.192Z",
+  "localPlanSealActualExit": 0,
+  "head": "5471899c8fd43daf9df1f15261d75171a6dbb8b8",
+  "target": "scripts/db/cutover/postgres-shared-key-usage-repair-runtime-grant.native.test.mjs",
+  "before": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-runtime-grant-plan-f0bc0cabd77f47cd9ff14a137cf1d6ce\\runtime-grant.before.native.test.mjs",
+    "bytes": 7311,
+    "sha256": "84e383a4a6b5f07f40bea8ae74d0258a2a542543862662486e9543842721a066"
+  },
+  "current": {
+    "path": "C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\postgres-shared-key-usage-repair-runtime-grant.native.test.mjs",
+    "bytes": 7311,
+    "sha256": "84e383a4a6b5f07f40bea8ae74d0258a2a542543862662486e9543842721a066"
+  },
+  "currentGitBlob": "3db085d76eaa0b8a19759225a412627ed6fcfc28",
+  "noTargetDiff": true,
+  "executionScope": {
+    "repositoryEdits": 0,
+    "CIInvocations": 0,
+    "CIPolls": 0,
+    "productionRequests": 0,
+    "DBConnections": 0,
+    "DBWrites": 0,
+    "localNativeTests": 0,
+    "productionFlagsOrBindingsChanged": false
+  },
+  "actualCIStatus": "The new same-head CI37390678189 is owned by Root. Step20 failure or success has not been independently queried or observed by this plan.",
+  "evidence": {
+    "historicalAllCurrentLoader": {
+      "line": 53,
+      "expectedCountLine": 54,
+      "last0073Line": 55
+    },
+    "runtimeNOLOGINLine": 44,
+    "grantCalls": [
+      {
+        "line": 63,
+        "negative": false,
+        "call": "await grantPostgresRuntime({ DATABASE_URL: databaseUrl });",
+        "expected": null
+      },
+      {
+        "line": 68,
+        "negative": true,
+        "call": "await assert.rejects(grantPostgresRuntime({ DATABASE_URL: databaseUrl }),",
+        "expected": "/Shared-key usage repair installation is incomplete/);"
+      },
+      {
+        "line": 86,
+        "negative": false,
+        "call": "await grantPostgresRuntime({ DATABASE_URL: databaseUrl });",
+        "expected": null
+      },
+      {
+        "line": 87,
+        "negative": false,
+        "call": "await grantPostgresRuntime({ DATABASE_URL: databaseUrl });",
+        "expected": null
+      },
+      {
+        "line": 98,
+        "negative": true,
+        "call": "await assert.rejects(grantPostgresRuntime({ DATABASE_URL: databaseUrl }),",
+        "expected": "/Shared-key usage repair catalog differs/);"
+      },
+      {
+        "line": 101,
+        "negative": false,
+        "call": "await grantPostgresRuntime({ DATABASE_URL: databaseUrl });",
+        "expected": null
+      },
+      {
+        "line": 108,
+        "negative": true,
+        "call": "await assert.rejects(grantPostgresRuntime({ DATABASE_URL: databaseUrl }),",
+        "expected": "/Shared-key usage repair ACL differs/);"
+      },
+      {
+        "line": 112,
+        "negative": true,
+        "call": "await assert.rejects(grantPostgresRuntime({ DATABASE_URL: databaseUrl }),",
+        "expected": "/Ordinary runtime retains shared-key usage repair privilege/);"
+      },
+      {
+        "line": 117,
+        "negative": false,
+        "call": "await grantPostgresRuntime({ DATABASE_URL: databaseUrl });",
+        "expected": null
+      }
+    ],
+    "permissionDenied42501Lines": [
+      93,
+      95
+    ],
+    "sources": [
+      {
+        "path": "C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\grant-postgres-runtime.ts",
+        "bytes": 25946,
+        "sha256": "3f95f18f557696d8a36b93f7fe0d0d35a391e8ac9cf953376a234a6b629ea242"
+      },
+      {
+        "path": "C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\pg73-native-fixture.mjs",
+        "bytes": 6849,
+        "sha256": "124ddd43c2594d0daaac66a4e7158e5df90b00a6d73f03cbcac9e8f853a7346f"
+      },
+      {
+        "path": "C:\\cinagroup\\cinatoken\\packages\\core\\migrations-postgres\\0074_config_change_audit.sql",
+        "bytes": 844,
+        "sha256": "8c5f89f12b2de81f60265d140e4d221845ed914a4ff02fb4aeb3f8947e4f2675"
+      }
+    ],
+    "priorFrozenCorpusProof": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-usage-jobs-repair-921bf93575a54e5db7b0afca01508b06/local-audit.proof.json",
+      "bytes": 1913,
+      "sha256": "29ab686f4cf16fb8e01dec0a92e9667013f6d955895f0d189f222f5f9a3b3f04"
+    },
+    "broaderReadOnlyInventory": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-usage-jobs-repair-921bf93575a54e5db7b0afca01508b06/after-step17-inventory.json",
+      "bytes": 210623,
+      "sha256": "ea0e9436b98ec8481cc66d8d901d1c9e3b4be5fe4e6f33f4c6f607c77105e680"
+    }
+  },
+  "currentContracts": [
+    "Production grant first verifies migrator current_user/schema owner, then requires0074 ledger. A raw call on the unchanged PG73 schema fails the0074 prerequisite before testing any optional repair ACL.",
+    "Inside the real grant transaction, runtime directLOGIN/no-superuser/no-createdb/no-createrole/no-replication/no-bypassRLS/no-membership validation runs before broad ACL changes and the later optional repair table/definer checks.",
+    "The existing PG73 bridge permits an initially restricted NOLOGIN runtime, temporarily makes it LOGIN for the real grant, then restores its original role attributes and exactPG73 ledger. It rejects an existing membership itself, before production grant executes.",
+    "There are9 real grant calls:5 intended success and4 expected rejection, plus2 independent runtimeSQLSTATE42501 operations. This is not9 grant-negative cases."
+  ],
+  "recommendation": {
+    "status": "PLAN ONLY, no code written",
+    "loader": "Replace all-directory migration enumeration with listPg73Migrations; preserve assert count73 and last0073. Keep frozen corpus SHA23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc and ledger MD5ca1ea96a1b4bcd0675642f30dcf48042.",
+    "ordinaryCalls": {
+      "lines": [
+        63,
+        68,
+        86,
+        87,
+        98,
+        101,
+        108,
+        117
+      ],
+      "operation": "Call the existing grantPg73RuntimeFixture with this owned cluster, migrator and databaseUrl. The real unmodified production grant executes inside it. Successful setup/reruns still narrow repair ACLs; failed partial/catalog/third-party ACL grants throw their original production messages.",
+      "unchangedExpectedErrors": [
+        {
+          "line": 68,
+          "message": "Shared-key usage repair installation is incomplete"
+        },
+        {
+          "line": 98,
+          "message": "Shared-key usage repair catalog differs"
+        },
+        {
+          "line": 108,
+          "message": "Shared-key usage repair ACL differs"
+        }
+      ],
+      "roleProof": "Before/after bridge calls verify runtime stays original restrictedNOLOGIN with no memberships; keep original adminSETROLE runtime permission tests and42501 assertions. No real runtime LOGIN credential is introduced."
+    },
+    "exceptionalMembershipCall": {
+      "line": 112,
+      "originalExpected": "Ordinary runtime retains shared-key usage repair privilege",
+      "justifiedCurrentExpected": "Runtime must be a restricted direct LOGIN without role memberships",
+      "reason": "Membership is rejected by the current actual production policy before any ACL mutation. The old later repair-privilege branch is unreachable for this input. Do not broaden the expected regex or accept the bridge assertion as this case.",
+      "isolatedFixtureOnlyScope": [
+        "Keep original GRANT shadow membership and inherited repair_table===true assertion. Snapshot existing role attributes, exact member/role IDs and membership options, plus optional job/function and ordinary users privileges.",
+        "Verify owned loopback URL/migrator identity, exactPG73 ledger/corpus and0074 absent. Require only the deliberately created shadow membership and otherwise restrictedNOLOGIN attributes, so the negative setup cannot drift silently.",
+        "In one migrator transaction install the unchanged0074 audit migration plus its one ledger row. Temporarily ALTER only this owned runtime role LOGIN. Do not remove or normalize the deliberate membership or ACL corruption.",
+        "Invoke the actual unmodified grantPostgresRuntime directly and assert precisely the current directLOGIN/no-memberships error. Independently verify membership and business ACL snapshots remain unchanged after the failed grant; inherited repair access must still be true.",
+        "In nested finally remove only the temporary0074 table+ledger and restore originalNOLOGIN attributes even after assertion failure; verify count73, exact ledgerMD5,0074 table/ledger absent, and original role/membership state. Do not use CASCADE or suppress cleanup failures.",
+        "Continue the original REVOKE membership/third-party ACL cleanup, final successful bridge rerun, and owner-only repair ACL assertion."
+      ],
+      "noAdmissionWeakening": "This special negative scope does not relax pg73-native-fixture admission or change grant production logic. It exists only to present an intentionally invalid member role to the current real reconciler and prove rejection before mutation."
+    },
+    "invariants": [
+      "All original partial-catalog rollback, owner-only job/definer ACLs, ordinary_users_select=true, two42501 failures, catalog drift, third-party shadow ACL rejection and restore checks remain.",
+      "Keep240000ms bound, nativePG18.6 owned loopback fixture and real cleanup. No73-to81 assertion update, formal/proposal SQL edit, production grant edit or deployed role/flag/binding change.",
+      "Only the obsolete membership error expectation is updated, with explicit current-policy rationale and stronger no-mutation/restoration evidence. Native execution must remain the existing LinuxCI command."
+    ]
+  },
+  "alternative": {
+    "name": "One temporary0074/directLOGIN envelope around all9 grants",
+    "assessment": "Technically the current production reconciler would be reached, but this duplicates the existing bridge and leaves0074/LOGIN present across historical proposal activation. Prefer the8existing-bridge calls plus one explicit negative scope to preserve the historical proposal baseline between stages."
+  },
+  "remainingUnknowns": [
+    "No native case has been run in this read-only task. Current-policy error ordering is source-proven; cleanup and ACL semantics require realLinuxPG execution.",
+    "Any new helper or inline negative scope must be peer-reviewed for throw-safe restoration and exact owned-cluster boundaries before execution."
+  ],
+  "intendedValidation": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin node --import tsx --test scripts/db/cutover/postgres-shared-key-usage-repair-runtime-grant.native.test.mjs"
+}

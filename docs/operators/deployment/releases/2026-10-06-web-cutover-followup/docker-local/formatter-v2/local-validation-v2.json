@@ -1,0 +1,149 @@
+{
+  "schemaVersion": 2,
+  "completedAt": "2026-10-05T23:47:56.924Z",
+  "scope": [
+    "docker/web/ssr-smoke.mjs",
+    "docker/web/fixtures/catalog-server.mjs",
+    ".github/workflows/web-frontend.yml"
+  ],
+  "inputs": [
+    {
+      "path": "docker/web/ssr-smoke.mjs",
+      "bytes": 15970,
+      "sha256": "23e132dc548c85394f58ec37f50621ae9c4f06d4b183c826a7172717e6ea7b90"
+    },
+    {
+      "path": "docker/web/fixtures/catalog-server.mjs",
+      "bytes": 5494,
+      "sha256": "dd71c788f3428adab20e410eabb8e726a3e29a3f7d5505e4914a17e85ad947f8"
+    },
+    {
+      "path": ".github/workflows/web-frontend.yml",
+      "bytes": 8779,
+      "sha256": "56f518a0a597743e25c069e26326deb7c2316672a21e8793bc670a189e84b142"
+    }
+  ],
+  "formatOnlyCorrection": {
+    "path": "docker/web/ssr-smoke.mjs",
+    "before": {
+      "source": "docker/web/ssr-smoke.mjs",
+      "bytes": 15944,
+      "sha256": "bee250e5bf0a43700971b8d7e03b27f6b73c21b93e564673af2eb1fa6474e8ab",
+      "preservedBeforeWrite": true,
+      "webPrettier": "3.9.9",
+      "rootPrettier": "2.8.8"
+    },
+    "after": {
+      "path": "docker/web/ssr-smoke.mjs",
+      "bytes": 15970,
+      "sha256": "23e132dc548c85394f58ec37f50621ae9c4f06d4b183c826a7172717e6ea7b90"
+    },
+    "completeAcornAstAndCommentsEqual": true,
+    "correction": "Web workspace Prettier 3 replaces earlier root Prettier 2 formatting; no logic changes"
+  },
+  "checks": [
+    {
+      "name": "workspace-format-write",
+      "actualExitCode": 0,
+      "terminal": true
+    },
+    {
+      "name": "complete-ast",
+      "completeAcornAstEqual": true,
+      "literalValuesAndTemplateRawPreserved": true,
+      "commentsEqual": true,
+      "commentCount": 2,
+      "before": {
+        "bytes": 15944,
+        "sha256": "bee250e5bf0a43700971b8d7e03b27f6b73c21b93e564673af2eb1fa6474e8ab"
+      },
+      "after": {
+        "bytes": 15970,
+        "sha256": "23e132dc548c85394f58ec37f50621ae9c4f06d4b183c826a7172717e6ea7b90"
+      },
+      "actualExitCode": 0,
+      "terminal": true
+    },
+    {
+      "name": "full-web-format",
+      "startedAt": "2026-10-05T23:46:42.0116922Z",
+      "command": "npm run format:check -w @cinatoken/web",
+      "completedAt": "2026-10-05T23:47:02.8261866Z",
+      "terminal": true,
+      "actualExitCode": 0
+    },
+    {
+      "name": "syntax-ssr",
+      "actualExitCode": 0,
+      "terminal": true
+    },
+    {
+      "name": "syntax-fixture",
+      "actualExitCode": 0,
+      "terminal": true
+    },
+    {
+      "name": "explicit-fixture-format",
+      "actualExitCode": 0,
+      "terminal": true
+    },
+    {
+      "name": "scope-diff-check",
+      "actualExitCode": 0,
+      "terminal": true
+    }
+  ],
+  "fixtureContract": {
+    "receipt": "../fixture-contract.result.json",
+    "actualExitCode": 0,
+    "tests": 3,
+    "sourceBytesUnchanged": true,
+    "rerunRequired": false
+  },
+  "originalStaticSmoke": {
+    "path": "docker/web/smoke.mjs",
+    "rawSha256": "0e31fd63609b1b2b21b5f244e8804a8da94463a1d10d4ccbae175051c794cea6",
+    "gitBlob": "56daf5aad0c280ffc48312758221b2eaaad42594",
+    "workingRawGitHashMatchesHead": true,
+    "changed": false
+  },
+  "workflowSemanticComparison": {
+    "onlyNewStep": true,
+    "priorJobsAndStepsExact": true,
+    "explicitFixtureFormatCheck": true
+  },
+  "priorReport": {
+    "path": "../local-validation.json",
+    "status": "historical; superseded for formatter readiness",
+    "sha256": "796fd26e16a6b8744be7d99e29fb1ab9441cad893f7bfa094f463e33584e3399",
+    "unchanged": true
+  },
+  "priorFullWorkspaceFailure": {
+    "reportedBy": "Root",
+    "command": "npm run format:check -w @cinatoken/web",
+    "actualExitCode": 1,
+    "onlyFlaggedFile": "../../docker/web/ssr-smoke.mjs",
+    "timeReported": "23:44:31",
+    "evidence": "Root-owned web-format-before-ssr-ci raw result/stdout/stderr preserved; not rewritten by this agent"
+  },
+  "actualDockerRuntime": {
+    "executed": false,
+    "reason": "Docker and Podman commands unavailable in this Windows environment",
+    "status": "awaiting Linux CI"
+  },
+  "runtimePlan": {
+    "fourActualOwnedContainers": true,
+    "uniqueInternalNetwork": true,
+    "hostPorts": false,
+    "readonlyScriptMounts": true,
+    "exactManifestBinding": true,
+    "plannedHttpCases": 87,
+    "plannedAuthoritativeAnonymousHttpReads": 64,
+    "runtimeBudgetMs": 180000,
+    "cleanupBudgetMs": 90000
+  },
+  "remaining": [
+    "Real Docker SSR runtime must pass on same-SHA Linux CI",
+    "Complete G7 Admin/Proxy/TLS, real identity/writes, SSE/WebSocket, rollout and rollback remain pending"
+  ]
+}

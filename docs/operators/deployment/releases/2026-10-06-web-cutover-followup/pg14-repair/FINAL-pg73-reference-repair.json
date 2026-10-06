@@ -1,0 +1,270 @@
+{
+  "schema": "pg73-reference-repair-ready-for-linux-ci",
+  "at": "2026-10-05T23:35:10.678Z",
+  "localAuditActualExit": 0,
+  "parentHead": "abe8eb89e8cdbac005bc085d61acf5d2213a2f23",
+  "branch": "main",
+  "target": "scripts/db/cutover/postgres-replay-scale-lock.native.test.mjs",
+  "before": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-reference-repair-ee01603721fe44e391a089409cd94959\\before.native.test.mjs",
+    "bytes": 17687,
+    "sha256": "34a4eeb6ef021e0c71bd733e4ea2ff06b7b0ba38a7e98ffd02c52a818a0419ba"
+  },
+  "after": {
+    "path": "C:/cinagroup/cinatoken/scripts/db/cutover/postgres-replay-scale-lock.native.test.mjs",
+    "bytes": 17692,
+    "sha256": "5356a63ec6e73cf63910d9f9fc8956731319a7d8f485d9c34dd318fcc6c1a340"
+  },
+  "beforeGitBlob": "36168c0b44180e55e7119873522c4807c76c9fc8",
+  "afterWorktreeGitBlob": "b308aee16e57becc3deec5d8de44af82b4a36029",
+  "historicalKnownFailure": {
+    "runId": 37297885860,
+    "headSHA": "bdc1bfcf15d93a9b2769d3f52352bfa39eab8928",
+    "url": "https://github.com/cinagroup/cinatoken/actions/runs/37297885860",
+    "inventoryReadAt": "2026-10-05T12:37:36.450Z",
+    "historicalInventory": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e/FINAL-native-ci-inventory-v2.json",
+      "bytes": 94215,
+      "sha256": "f438a29e21e9aa9943b04159fd7811062960f0fe3ea629d874e0c61bb4e69f64"
+    },
+    "jobId": 111723360577,
+    "jobName": "native-financial-consumer",
+    "failedSteps": [
+      {
+        "completedAt": "2026-10-05T10:40:37Z",
+        "conclusion": "failure",
+        "name": "Run gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\",
+        "number": 14,
+        "startedAt": "2026-10-05T10:40:34Z",
+        "status": "completed"
+      }
+    ],
+    "targetAndHelperGitBlobsIdenticalToCurrentBaseline": true,
+    "helperGitBlob": "1f687e72d4ce844abe70cf1141d5df0b1050e2f6",
+    "latestCIRunNotRequeried": true
+  },
+  "rootCause": {
+    "sourceLine": 163,
+    "original": "await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });",
+    "corrected": "await grantPg73RuntimeFixture({ cluster, migrator: sql, migratorUrl });",
+    "reproducedBeforeError": {
+      "name": "ReferenceError",
+      "message": "migrator is not defined"
+    },
+    "helperNotCalledBeforeFailure": true,
+    "roleEvidence": [
+      "client() hard-codes the loopback host, owned cluster port and cinatoken_gateway_migrator username.",
+      "const sql = client(cluster, password, migrator-label) is the existing schema migration and proposal owner connection.",
+      "The PG73 helper requires migrator.begin, current role/schema owner cinatoken_gateway_migrator, exact pinned PG73 ledger, and the owned loopback migrator URL.",
+      "The same helper temporarily installs 0074 for the production grant reconciler and restores the PG73 ledger/runtime role; no helper or grants are changed."
+    ],
+    "locks": [
+      "sql and holder remain separate max:1 clients; the helper receives sql, not holder or the administrator.",
+      "Both original holder ROW EXCLUSIVE lock scopes, SQLSTATE 55P03 rejection checks, rollback/retry assertions and SHARE ROW EXCLUSIVE gate lock requirements remain byte-identical.",
+      "Original 2s lock and 15s statement limits, 300s test timeout, 25,000+1 seed, bounded 500-row backfill, empty cursor, full coverage, rollback/resume and cleanup assertions remain unchanged."
+    ]
+  },
+  "localValidation": {
+    "commands": [
+      {
+        "label": "syntax-check",
+        "command": [
+          "node",
+          "--check",
+          "scripts/db/cutover/postgres-replay-scale-lock.native.test.mjs"
+        ],
+        "actualExitCode": 0,
+        "signal": null,
+        "result": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-reference-repair-ee01603721fe44e391a089409cd94959\\syntax-check.result.json",
+          "bytes": 616,
+          "sha256": "d59ed4cfabfd4e82cded76e30e7683bbbdf77624a6b064fb0260c40d593956cc"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-reference-repair-ee01603721fe44e391a089409cd94959\\syntax-check.stdout.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-reference-repair-ee01603721fe44e391a089409cd94959\\syntax-check.stderr.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "label": "argument-binding-corrected-check",
+        "command": [
+          "node",
+          "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-reference-repair-ee01603721fe44e391a089409cd94959\\verify-argument-binding.mjs"
+        ],
+        "actualExitCode": 0,
+        "signal": null,
+        "result": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-reference-repair-ee01603721fe44e391a089409cd94959\\argument-binding-corrected-check.result.json",
+          "bytes": 715,
+          "sha256": "dc11c6e09e399650612a436a33b062213b4bb1a1357a1a4d2b9c9001b464d9ad"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-reference-repair-ee01603721fe44e391a089409cd94959\\argument-binding-corrected-check.stdout.txt",
+          "bytes": 1575,
+          "sha256": "426045c211d966613c100884f6507b3d7c7299a95c1052f77297e5669cfb7584"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-reference-repair-ee01603721fe44e391a089409cd94959\\argument-binding-corrected-check.stderr.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "label": "pure-backfill-generator-check",
+        "command": [
+          "node",
+          "--test",
+          "scripts/db/cutover/build-postgres-replay-reservation-backfill.test.mjs"
+        ],
+        "actualExitCode": 0,
+        "signal": null,
+        "result": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-reference-repair-ee01603721fe44e391a089409cd94959\\pure-backfill-generator-check.result.json",
+          "bytes": 660,
+          "sha256": "4f95da818fd391553b9dcd155ac11b2ef33344b1dcdae7e8e37e16777d26c399"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-reference-repair-ee01603721fe44e391a089409cd94959\\pure-backfill-generator-check.stdout.txt",
+          "bytes": 279,
+          "sha256": "a59e5fad64aa4cda3b98c2dcb4cf9d50d3b6da30c4f9507086129f193c95cc16"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-reference-repair-ee01603721fe44e391a089409cd94959\\pure-backfill-generator-check.stderr.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "label": "target-diff-check",
+        "command": [
+          "git",
+          "diff",
+          "--check",
+          "--",
+          "scripts/db/cutover/postgres-replay-scale-lock.native.test.mjs"
+        ],
+        "actualExitCode": 0,
+        "signal": null,
+        "result": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-reference-repair-ee01603721fe44e391a089409cd94959\\target-diff-check.result.json",
+          "bytes": 647,
+          "sha256": "da06eb967a12b3d5eb7cd006a7345a50de14f8028fb366ad5131318be7ade5af"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-reference-repair-ee01603721fe44e391a089409cd94959\\target-diff-check.stdout.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-reference-repair-ee01603721fe44e391a089409cd94959\\target-diff-check.stderr.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "label": "target-patch",
+        "command": [
+          "git",
+          "diff",
+          "--",
+          "scripts/db/cutover/postgres-replay-scale-lock.native.test.mjs"
+        ],
+        "actualExitCode": 0,
+        "signal": null,
+        "result": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-reference-repair-ee01603721fe44e391a089409cd94959\\target-patch.result.json",
+          "bytes": 624,
+          "sha256": "3ce8d860ce3a7bbd748215fa8d76eaf6f543a4ed9f4617b41d9d0624676340bb"
+        },
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-reference-repair-ee01603721fe44e391a089409cd94959\\target-patch.stdout.txt",
+          "bytes": 877,
+          "sha256": "4b6f96aeb701792860f559a6e125fa1ecefce45aaeb9f5dbcc7b30eab2fafda3"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-reference-repair-ee01603721fe44e391a089409cd94959\\target-patch.stderr.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    ],
+    "argumentBindingProof": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-reference-repair-ee01603721fe44e391a089409cd94959\\argument-binding.proof-v2.json",
+      "bytes": 1305,
+      "sha256": "d1e4abacbe8958f48415107a6b431c1a84a1887624646833d63e876157d5f2da"
+    },
+    "argumentAuditIsInertCaptureStub": true,
+    "pureBackfillBuilderTests": {
+      "tests": 2,
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0
+    },
+    "noOtherTargetBytesChanged": true,
+    "nodeVersion": "v24.14.1"
+  },
+  "changedRepositoryFilesByThisAgent": [
+    "scripts/db/cutover/postgres-replay-scale-lock.native.test.mjs"
+  ],
+  "nativeFixtureExecuted": false,
+  "nativePGPassed": false,
+  "dbConnections": 0,
+  "dbWrites": 0,
+  "productionReads": 0,
+  "productionFlagsOrBindingsChanged": false,
+  "gitMutations": 0,
+  "deploymentOperations": 0,
+  "pendingValidation": {
+    "workflow": ".github/workflows/proxy-dispatch-safety.yml",
+    "job": "native-financial-consumer",
+    "platform": "ubuntu-latest in postgres:18.6-bookworm container",
+    "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin node --import tsx --test scripts/db/cutover/postgres-replay-scale-lock.native.test.mjs",
+    "result": "NOT RUN; Root commit/push required for actual Linux PostgreSQL CI result"
+  },
+  "permissionsAndConcurrency": [
+    "Local checks only parse code, execute the extracted argument call with an inert capture stub, or generate SQL text; no PG binary/DB or ambient database URL is used.",
+    "Existing CI runs as the postgres OS user; workflow already precreates/chowns this fixed report path before the native commands.",
+    "Native fixture creates a separate owned random loopback cluster and retains role/lock assertions; no production role/flag/DB operation is authorized.",
+    "The test writes one fixed v333 report path; avoid running this same fixture twice in one checkout concurrently. Different CI jobs have separate filesystems.",
+    "Workflow concurrency group is proxy-dispatch-safety-${github.ref} with cancel-in-progress; another qualifying push may cancel an in-flight validation."
+  ],
+  "sources": [
+    {
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\pg73-native-fixture.mjs",
+      "bytes": 6849,
+      "sha256": "124ddd43c2594d0daaac66a4e7158e5df90b00a6d73f03cbcac9e8f853a7346f"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\grant-postgres-runtime.ts",
+      "bytes": 25946,
+      "sha256": "3f95f18f557696d8a36b93f7fe0d0d35a391e8ac9cf953376a234a6b629ea242"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\core\\src\\test-support\\postgres-native-cluster.mjs",
+      "bytes": 6300,
+      "sha256": "6b5923be8d3bdcd061033eed1af2f67f3b87fa2fca1f2cf0a0b2eb0eb2cb8d2a"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\core\\migrations-proposals\\postgres\\request-dispatch-replay-reservations.sql",
+      "bytes": 12380,
+      "sha256": "c288bbc43fad3bbb8b3b1a88fa1b1d01b9e5f2f9f520753873e0cdf21643c3d8"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\core\\migrations-proposals\\postgres\\request-dispatch-replay-parent-gate.sql",
+      "bytes": 8732,
+      "sha256": "1079eb858811c70dd850b95be68f64e5c7b8361926e8c3f0a9e80621f6125b10"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\.github\\workflows\\proxy-dispatch-safety.yml",
+      "bytes": 45882,
+      "sha256": "ed33fec56d1260e651b733d4b61c002c9f8ebea762e440e700c8c564797374ef"
+    }
+  ],
+  "auditWordingCorrection": "The first inert proof accidentally used the phrase mock-free while describing its capture stub. The original raw remains preserved; proof-v2 and this report explicitly identify the stub and do not claim a native DB test."
+}

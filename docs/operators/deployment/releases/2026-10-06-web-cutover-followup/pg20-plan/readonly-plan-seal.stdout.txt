@@ -1,0 +1,27 @@
+{
+  "plan": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-runtime-grant-plan-f0bc0cabd77f47cd9ff14a137cf1d6ce\\FINAL-step20-runtime-grant-plan.json",
+    "bytes": 10735,
+    "sha256": "47238d21f95b50dfb549bc7b3af0620f69379961bb541cbc4aac7693ccf475a1"
+  },
+  "head": "5471899c8fd43daf9df1f15261d75171a6dbb8b8",
+  "target": "scripts/db/cutover/postgres-shared-key-usage-repair-runtime-grant.native.test.mjs",
+  "source": {
+    "path": "C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\postgres-shared-key-usage-repair-runtime-grant.native.test.mjs",
+    "bytes": 7311,
+    "sha256": "84e383a4a6b5f07f40bea8ae74d0258a2a542543862662486e9543842721a066"
+  },
+  "currentGitBlob": "3db085d76eaa0b8a19759225a412627ed6fcfc28",
+  "grantCalls": 9,
+  "negativeGrantCalls": 4,
+  "executionScope": {
+    "repositoryEdits": 0,
+    "CIInvocations": 0,
+    "CIPolls": 0,
+    "productionRequests": 0,
+    "DBConnections": 0,
+    "DBWrites": 0,
+    "localNativeTests": 0,
+    "productionFlagsOrBindingsChanged": false
+  }
+}

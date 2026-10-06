@@ -1,0 +1,138 @@
+{
+  "schema": "cinatoken-production-network-diagnostic-preparation-v1",
+  "at": "2026-10-05T23:33:39.903Z",
+  "diagnosticScript": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-production-network-diag-20261006-native-Tidwqh\\production-network-diagnostic-v1.mjs",
+    "bytes": 23423,
+    "sha256": "2d6110816e4d2bcdb6c73780c02f3ec157258e9bbfb80bd7003166230c77f3ec"
+  },
+  "executorScript": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-production-network-diag-20261006-native-Tidwqh\\execute-network-diagnostic-v1.mjs",
+    "bytes": 4832,
+    "sha256": "1e5b99ee37919d32917283e6e1ebd033dd3e00a8a1e303a7122093c2b32173a3"
+  },
+  "sealedInputs": [
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197/production-web-browser-observe-v2.mjs",
+      "bytes": 15695,
+      "sha256": "415d123bbc71cfdb5d8ed02bf91f01d9021031358667cd7aaf2f0fd6edcd55be"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197/execute-web-browser-observe-v2.mjs",
+      "bytes": 3432,
+      "sha256": "ffd074ec8b52d5ce7c9dbd8a9dace29ec29130b661e0290e72f1f2d2d0424ed8"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197/web-route-matrix.mjs",
+      "bytes": 1770,
+      "sha256": "c8a3211d07979c037022f689aa442bd95de9b7c11843fb52b9ae9fa93ac01e61"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197/retention-c13a64b9-v2.json",
+      "bytes": 81183,
+      "sha256": "8b07f5439bb92498498b47a89a1a92e5703779e32e40c03b26e977d51afb8de2"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197/retention-c13a64b9-v2-retry.json",
+      "bytes": 81011,
+      "sha256": "e61e4c6c574167722d611b496031bfe5edac8b9c74343469e2a37974d7996e9a"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2/production-web-browser-observe-v3.mjs",
+      "bytes": 25585,
+      "sha256": "5fe013bb9c8cd533aa144b4c3820b11008359370dfef44b1b4a4f922781ffa34"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2/execute-web-browser-observe-v3.mjs",
+      "bytes": 4436,
+      "sha256": "f43341b099a5c8bcba8e3dfd625b3e1a24de7467ad03370b25a14a08a5d736e4"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2/web-route-matrix.mjs",
+      "bytes": 1770,
+      "sha256": "c8a3211d07979c037022f689aa442bd95de9b7c11843fb52b9ae9fa93ac01e61"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2/retention-c13a64b9-v3.json",
+      "bytes": 258217,
+      "sha256": "3c0e86227908a771ae8463bd7de714664f444e8f6a474c98ad7eb77c93febb2f"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2/retention-c13a64b9-v3-execution-closed.json",
+      "bytes": 6519,
+      "sha256": "6ca17e2bf34611013514bea53428cf698397ce9bc73869c0ad0b10eb8a96f382"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2/final-browser-v3-review.json",
+      "bytes": 17521,
+      "sha256": "0c2069c47d06e418da92c2d86bf42f9d2c80dd2f945634acdc753d08a2fa0048"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-migration-progress-20261006-541315903c5243bc9a08bbc8a3515df4/fresh-guard.deployment-guard.json",
+      "bytes": 1030,
+      "sha256": "19c6d56cf6c71ccb419090abceb408258b3df74988b339e7d036ceb1e3333c8a"
+    }
+  ],
+  "freshConfig": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-migration-progress-20261006-541315903c5243bc9a08bbc8a3515df4/fresh.browser-config.json",
+    "bytes": 578,
+    "sha256": "2a3f7a900a2b32c03db115ebff1e02d821f986e42dee034dc7d469ddfbd072fd"
+  },
+  "freshProof": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-migration-progress-20261006-541315903c5243bc9a08bbc8a3515df4/production-live.live-proof.json",
+    "bytes": 6014,
+    "sha256": "e13f0a32321f945130f215cb2659ff4f1003eb7aa8d7b509a1e3a71f8ac3bef4"
+  },
+  "oldV3": {
+    "actualExit": 1,
+    "pages": 31,
+    "totalPages": 45,
+    "failures": [
+      {
+        "shard": "account",
+        "reason": {
+          "name": "TimeoutError",
+          "message": "page.goto: Timeout 45000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://cinatoken.com/account/withdraw\", waiting until \"networkidle\"\u001b[22m\n"
+        }
+      },
+      {
+        "shard": "admin-b",
+        "reason": {
+          "name": "TimeoutError",
+          "message": "page.goto: Timeout 45000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://cinatoken.com/admin/config/timezone\", waiting until \"networkidle\"\u001b[22m\n"
+        }
+      }
+    ],
+    "browserVersion": "147.0.7727.15"
+  },
+  "flow": "Fresh anonymous context: /account/withdraw -> /admin/config/timezone -> /en",
+  "perNavigation": {
+    "waitUntil": "networkidle",
+    "timeout": 45000
+  },
+  "independentExecutorLimitMs": 180000,
+  "sourceWrites": 0,
+  "deployments": 0,
+  "databaseWrites": 0,
+  "apiWrites": 0,
+  "browserPlugin": "absent",
+  "fallbackReason": "Browser plugin not available",
+  "playwright": "1.62.1",
+  "chrome": "147.0.7727.15",
+  "queryValuesCookieAuthAndTokens": "not persisted; all URL query values are redacted; response header allowlist only",
+  "localSyntaxChecks": "both node --check actual0",
+  "executeAfterRootFreshProof": true,
+  "previousPreparation": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-production-network-diag-20261006-biqh68/preparation.receipt.json",
+    "bytes": 5787,
+    "sha256": "04e3a852792cd40ada2e553d3b25aa71f483ee4a16c5d31f60e8c22d2d5e6d4d"
+  },
+  "localPreSpawnFailure": {
+    "at": "2026-10-05T23:33:39.901Z",
+    "actualExit": 1,
+    "reason": "Windows native path vs slash path raw binding assertion; bytes and SHA identical; failed before child/browser start",
+    "childStarted": false,
+    "browserStarted": false,
+    "productionRequests": 0
+  }
+}

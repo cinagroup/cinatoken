@@ -1,0 +1,12 @@
+{
+  "command": [
+    "gh",
+    "api",
+    "--allow-escape-sequences",
+    "repos/cinagroup/cinatoken/actions/runs/37390678029"
+  ],
+  "completedAt": "2026-10-05T23:53:30.7388376Z",
+  "terminal": true,
+  "actualExitCode": 0,
+  "startedAt": "2026-10-05T23:53:29.0842040Z"
+}

@@ -1,0 +1,14 @@
+{
+  "at": "2026-10-06T00:03:15.447Z",
+  "actualExit": 0,
+  "file": "C:/cinagroup/cinatoken/docs/developers/architecture/web-frontend-migration.md",
+  "before": {
+    "bytes": 760499,
+    "sha256": "fb74cb835f79837916aff8d499af9aef6762ecb3098dde504fd0f411b63b73e7"
+  },
+  "after": {
+    "bytes": 763020,
+    "sha256": "d7058e87442a430c8ef28fcc4a97efff7dd5fda6eb7f159fee461851afac50e4"
+  },
+  "productionChanged": false
+}

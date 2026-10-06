@@ -1,0 +1,8 @@
+{
+  "startedAt": "2026-10-05T23:41:31.0210679Z",
+  "completedAt": "2026-10-05T23:41:31.0781363Z",
+  "dockerRuntimeExecuted": false,
+  "command": "node --check docker/web/fixtures/catalog-server.mjs",
+  "terminal": true,
+  "actualExitCode": 0
+}

@@ -1,0 +1,815 @@
+{
+  "schema": "cinatoken-v4-original-assertion-equivalence-v1",
+  "at": "2026-10-05T23:45:15.495Z",
+  "actualExit": 0,
+  "parser": "@babel/parser existing workspace dependency",
+  "originalScript": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\production-web-browser-observe-v3.mjs",
+    "bytes": 25585,
+    "sha256": "5fe013bb9c8cd533aa144b4c3820b11008359370dfef44b1b4a4f922781ffa34"
+  },
+  "v4Script": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-functional-browser-v4-final-20261006-qfXa5E\\production-web-browser-observe-v4.mjs",
+    "bytes": 27443,
+    "sha256": "387a33fa5278dc0bc5b713c5a5ddafcd6f143e310bf64c2fc878635ddce115c6"
+  },
+  "originalAssertionCount": 85,
+  "v4AssertionCount": 85,
+  "exactOrderedASTEquality": true,
+  "exactOriginalAssertionTextEquality": true,
+  "executorOriginalAssertionCount": 4,
+  "executorV4AssertionCount": 4,
+  "executorASTEquality": true,
+  "originalTimeoutDeclarations": [
+    "timeout: 45000",
+    "timeout: 20000",
+    "timeout: 20000",
+    "timeout: 20000",
+    "timeout: 45000",
+    "timeout: 45000",
+    "timeout: 45000"
+  ],
+  "retainedSharedDeadlineMs": 390000,
+  "retainedExecutorDeadlineMs": 420000,
+  "retainedGuard": "GET/HEAD only with original ServiceWorker failclosed shutdown; no cache/SW overrides",
+  "changes": [
+    {
+      "reason": "Four generic navigation waits use DOMContentLoaded; all original timeout values remain",
+      "occurrences": 4,
+      "before": "waitUntil: 'networkidle'",
+      "after": "waitUntil: 'domcontentloaded'"
+    },
+    {
+      "reason": "Add separate readiness/network helper",
+      "before": "import { chromium } from",
+      "after": "import { verifyV4Seals, attachReadinessObserver, beginNavigation, documentReady, functionalReady, inspectFailure, observeNetworkCheckpoint, collectReadinessNetwork, requireReadinessMetadata } from './readiness-v4.mjs';\nimport { chromium } from"
+    },
+    {
+      "reason": "Separate result schema",
+      "before": "schema: 'cinatoken-independent-web-real-browser-v3'",
+      "after": "schema: 'cinatoken-functional-anonymous-web-browser-v4'"
+    },
+    {
+      "reason": "Precise functional-only outcome scope",
+      "before": "scope: 'Real independent Web public SSR/hydration and 37 anonymous private route gates; desktop/theme/locale/mobile'",
+      "after": "scope: 'Functional anonymous Web browser only: all original 45 route/UI/metadata/security assertions plus real public reactive readiness and 37 exact anonymous401; not the original networkidle matrix, real identity, performance P8-09 or full G8'"
+    },
+    {
+      "reason": "Readiness method disclosure",
+      "before": "scheduling: 'Four anonymous contexts run public8/account10/admin14/admin13 concurrently; HTTP routing cache remains disabled. This is a distinct v3 attempt and does not relabel v2 failures.'",
+      "after": "scheduling: 'Original four fresh anonymous contexts public8/account10/admin14/admin13; HTTP routing cache remains disabled. DOMContentLoaded followed by exact UI readiness, required current-page JS/CSS completion and public reactive controls. Original v2/v3 failures remain unchanged.'"
+    },
+    {
+      "reason": "Bind helper bytes",
+      "before": "inputScripts: [raw(fileURLToPath(import.meta.url)), raw(path.join(temp, 'web-route-matrix.mjs'))]",
+      "after": "inputScripts: [raw(fileURLToPath(import.meta.url)), raw(path.join(temp, 'web-route-matrix.mjs')), raw(path.join(temp, 'readiness-v4.mjs'))]"
+    },
+    {
+      "reason": "Verify immutable v3/v2/new scripts before browser",
+      "before": "const configAtStart = raw(configPath);",
+      "after": "result.v4SealedBefore = verifyV4Seals();\nresult.readinessMethod = { navigationWaitUntil: 'domcontentloaded', navigationTimeoutMs: 45000, originalLocatorTimeoutMs: 20000, originalLocatorAndAddedReadinessSharedBudgetMs: 20000, browserDeadlineMs: 390000, executorDeadlineMs: 420000, networkidleMeasuredOrPassed: false, performanceP809Complete: false, realIdentityTested: false, fullG8Complete: false };\nconst configAtStart = raw(configPath);"
+    },
+    {
+      "reason": "Measure direct navigation and snapshot pending at DOMContentLoaded",
+      "before": "  const response = await page.goto(target.origin + route, { waitUntil: 'domcontentloaded', timeout: 45000 });",
+      "after": "  beginNavigation(group, route, kind);\n  const response = await page.goto(target.origin + route, { waitUntil: 'domcontentloaded', timeout: 45000 });\n  documentReady(group);"
+    },
+    {
+      "reason": "Require exact UI/asset/401/public reactive readiness before existing 85 assertions",
+      "before": "  const state = await snapshot(group);",
+      "after": "  const functionalReadinessProof = await functionalReady(group, route, kind);\n  const state = await snapshot(group);"
+    },
+    {
+      "reason": "Attach separate measured readiness proof",
+      "before": "  result.pages.push(entry); group.state.pages.push(entry);",
+      "after": "  entry.functionalReadiness = functionalReadinessProof;\n  result.pages.push(entry); group.state.pages.push(entry);"
+    },
+    {
+      "reason": "Readiness before original desktop interaction",
+      "before": "  await page.goto(target.origin + '/en', { waitUntil: 'domcontentloaded', timeout: 45000 });",
+      "after": "  beginNavigation(group, '/en', 'public', 'original-desktop-dark-reset');\n  await page.goto(target.origin + '/en', { waitUntil: 'domcontentloaded', timeout: 45000 });\n  documentReady(group);\n  await functionalReady(group, '/en', 'public');"
+    },
+    {
+      "reason": "Measure original locale navigation",
+      "before": "  await Promise.all([\n    page.waitForURL",
+      "after": "  beginNavigation(group, '/zh', 'public', 'original-locale-navigation');\n  await Promise.all([\n    page.waitForURL"
+    },
+    {
+      "reason": "Readiness before original locale assertion/state proof",
+      "before": "  await page.waitForFunction(() => document.documentElement.lang === 'zh' && document.documentElement.classList.contains('dark'));\n  result.interactions.push",
+      "after": "  documentReady(group);\n  await functionalReady(group, '/zh', 'public');\n  await page.waitForFunction(() => document.documentElement.lang === 'zh' && document.documentElement.classList.contains('dark'));\n  result.interactions.push"
+    },
+    {
+      "reason": "Readiness before original mobile assertions",
+      "before": "  await page.reload({ waitUntil: 'domcontentloaded', timeout: 45000 });",
+      "after": "  beginNavigation(group, '/zh', 'public', 'original-mobile-reload');\n  await page.reload({ waitUntil: 'domcontentloaded', timeout: 45000 });\n  documentReady(group);\n  await functionalReady(group, '/zh', 'public');"
+    },
+    {
+      "reason": "Observe request lifecycle without changing guard or existing HTTP observers",
+      "before": "  const page = group.page;\n  page.on('pageerror'",
+      "after": "  const page = group.page;\n  attachReadinessObserver(group, target.origin, () => closing);\n  page.on('pageerror'"
+    },
+    {
+      "reason": "Retain synchronous failure pending before screenshot awaits",
+      "before": "    state.status = 'rejected'; state.failure =",
+      "after": "    state.networkFailurePending = inspectFailure(group, error);\n    state.status = 'rejected'; state.failure ="
+    },
+    {
+      "reason": "Retain network pending before closure",
+      "before": "      group.state.finalServiceWorkers =",
+      "after": "      group.state.networkBeforeClose = observeNetworkCheckpoint(group);\n      group.state.finalServiceWorkers ="
+    },
+    {
+      "reason": "Retain complete final request/timing/terminal events",
+      "before": "  classifyConsoleAndAggregate();",
+      "after": "  classifyConsoleAndAggregate();\n  result.readinessNetwork = collectReadinessNetwork(groups);"
+    },
+    {
+      "reason": "Add bounded asset/reactivity checks and distinct pass outcome",
+      "before": "    result.actualExit = 0; result.outcome = 'PASS_REAL_WEB_ENTRY_ANONYMOUS_GATES_AND_THEME_LOCALE_MOBILE_PARALLEL_V3';",
+      "after": "    requireReadinessMetadata(groups);\n    result.v4SealedAfter = verifyV4Seals();\n    result.actualExit = 0; result.outcome = 'PASS_FUNCTIONAL_ANONYMOUS_WEB_BROWSER_V4_ONLY';"
+    }
+  ],
+  "orderedAssertions": [
+    {
+      "index": 1,
+      "originalLine": 13,
+      "v4Line": 14,
+      "method": "match",
+      "text": "assert.match(label ?? '', /^[a-z0-9-]+$/)",
+      "canonicalASTSHA256": "b5d9ed162f039edb2e1f8072ed2d2b0a50f5b2d2298a25120bc08397ac893c0a"
+    },
+    {
+      "index": 2,
+      "originalLine": 16,
+      "v4Line": 17,
+      "method": "ok",
+      "text": "assert.ok(Object.keys(config).every(key => allowedConfigKeys.has(key)), 'config contains only public execution metadata')",
+      "canonicalASTSHA256": "95e7a049a3c696b0b35784a6852c0d0fa90e3eadae2f79aad653b8b7a7ff6fc8"
+    },
+    {
+      "index": 3,
+      "originalLine": 17,
+      "v4Line": 18,
+      "method": "match",
+      "text": "assert.match(config.gitSHA ?? '', /^[a-f0-9]{40}$/)",
+      "canonicalASTSHA256": "4a8cc14ce4f04c8a0aeca21dc2f541f192a09a3bdc099fddf49e6f2bcb4fed51"
+    },
+    {
+      "index": 4,
+      "originalLine": 18,
+      "v4Line": 19,
+      "method": "match",
+      "text": "assert.match(config.workerVersionId ?? '', /^[a-f0-9-]{36}$/)",
+      "canonicalASTSHA256": "d992fa1cbe86afe98a604b8ff0b0323131e4bf3f11a7bb934ff8fc638a00234c"
+    },
+    {
+      "index": 5,
+      "originalLine": 19,
+      "v4Line": 20,
+      "method": "ok",
+      "text": "assert.ok(['preview', 'cutover'].includes(config.phase))",
+      "canonicalASTSHA256": "91f10e9d1e5d6b76022ac67eaa47f02dc2001c3cbb9807ea86e7e7237e2d447d"
+    },
+    {
+      "index": 6,
+      "originalLine": 21,
+      "v4Line": 22,
+      "method": "equal",
+      "text": "assert.equal(target.protocol, 'https:')",
+      "canonicalASTSHA256": "06c2875321a70827750047e96dee665897cb7ecf938a0e21a621cc4111ed15c1"
+    },
+    {
+      "index": 7,
+      "originalLine": 22,
+      "v4Line": 23,
+      "method": "equal",
+      "text": "assert.equal(target.pathname, '/')",
+      "canonicalASTSHA256": "f6f781b6bf52dbca819c019cf6242a54241ad3bf76e0f7c6062bb59b91a06a08"
+    },
+    {
+      "index": 8,
+      "originalLine": 23,
+      "v4Line": 24,
+      "method": "equal",
+      "text": "assert.equal(target.search + target.hash + target.username + target.password, '')",
+      "canonicalASTSHA256": "71957c88d3d888bbe525f6fe27ab4e1b775bcb3bcf97dff33eae7c2e17596eb3"
+    },
+    {
+      "index": 9,
+      "originalLine": 24,
+      "v4Line": 25,
+      "method": "equal",
+      "text": "assert.equal(config.canonicalOrigin, 'https://cinatoken.com')",
+      "canonicalASTSHA256": "f3fd28632876ed629723618c7037b45469f3636aa29e6e663f943231f8642cfd"
+    },
+    {
+      "index": 10,
+      "originalLine": 25,
+      "v4Line": 26,
+      "method": "equal",
+      "text": "assert.equal(target.origin, config.canonicalOrigin)",
+      "canonicalASTSHA256": "63a1c5108c8299853c372dd92cdf97e0e4a1e88610b758c9d57906bf74520107"
+    },
+    {
+      "index": 11,
+      "originalLine": 26,
+      "v4Line": 27,
+      "method": "equal",
+      "text": "assert.equal(config.operatorVerifiedLiveVersion, true)",
+      "canonicalASTSHA256": "b30ba3e44221713a0e385f0e7831991907fe8c0a316e6e236b4249da099a593c"
+    },
+    {
+      "index": 12,
+      "originalLine": 27,
+      "v4Line": 28,
+      "method": "equal",
+      "text": "assert.equal(config.all29FlagsEnabled, true)",
+      "canonicalASTSHA256": "878066b5d52c2f5fd1ac3fb920295634ff0406a3e9691a8051b65e4d1cd9bd3e"
+    },
+    {
+      "index": 13,
+      "originalLine": 28,
+      "v4Line": 29,
+      "method": "equal",
+      "text": "assert.equal(ALL_FLAGS.length, 29)",
+      "canonicalASTSHA256": "01690f2d82d76c077db27293f86c72cb40b05ceebea05e9da834b935bc27b9f4"
+    },
+    {
+      "index": 14,
+      "originalLine": 29,
+      "v4Line": 30,
+      "method": "equal",
+      "text": "assert.equal(ACCOUNT_PAGES.length + ADMIN_FLAGS_AND_PAGES.length, 37)",
+      "canonicalASTSHA256": "6c6785c33cfda29423f5f583fcf6f506847eb0a8b6e59b76e2d82e4e68d15666"
+    },
+    {
+      "index": 15,
+      "originalLine": 31,
+      "v4Line": 32,
+      "method": "ok",
+      "text": "assert.ok(config.liveProof?.path && config.liveProof?.bytes > 0)",
+      "canonicalASTSHA256": "62d86ae4ec3c4a7919e2db9f8c4ab5bdc64d43c9eba276a53458e16264f11711"
+    },
+    {
+      "index": 16,
+      "originalLine": 32,
+      "v4Line": 33,
+      "method": "match",
+      "text": "assert.match(config.liveProof.sha256 ?? '', /^[a-f0-9]{64}$/)",
+      "canonicalASTSHA256": "1ec1ef3d0fadf9b5ff57e26505bbf25af0519be60bb6c61d256b11df7f7c05b2"
+    },
+    {
+      "index": 17,
+      "originalLine": 33,
+      "v4Line": 34,
+      "method": "deepEqual",
+      "text": "assert.deepEqual(raw(config.liveProof.path), config.liveProof, 'Root live API proof raw binding')",
+      "canonicalASTSHA256": "80431c43a0b84351f2282818b69ba3ae70acaaaec585563d1a6588574381b1c6"
+    },
+    {
+      "index": 18,
+      "originalLine": 52,
+      "v4Line": 53,
+      "method": "equal",
+      "text": "assert.equal(fs.existsSync(output), false, 'fresh label only')",
+      "canonicalASTSHA256": "42c92f06c33e6dbb51ce3a40c88c864f504f937e3103c760fe0e9ff774e657fa"
+    },
+    {
+      "index": 19,
+      "originalLine": 57,
+      "v4Line": 60,
+      "method": "deepEqual",
+      "text": "assert.deepEqual(raw(item.path), item, 'sealed v2 input before browser execution')",
+      "canonicalASTSHA256": "3d97a76ccb5d229b2841ef58729d270f7f1c8a678da3517118419bdf6b7280ec"
+    },
+    {
+      "index": 20,
+      "originalLine": 58,
+      "v4Line": 61,
+      "method": "equal",
+      "text": "assert.equal(raw(path.join(temp, 'web-route-matrix.mjs')).sha256, originalV2.find(item => item.path.endsWith('web-route-matrix.mjs')).sha256)",
+      "canonicalASTSHA256": "198e7da9952e47350dcb7b4ba74dd24ce5b7a843ebb20279656f72bdbf44437b"
+    },
+    {
+      "index": 21,
+      "originalLine": 65,
+      "v4Line": 68,
+      "method": "deepEqual",
+      "text": "assert.deepEqual(SHARDS.map(shard => shard.routes.length), [8, 10, 14, 13])",
+      "canonicalASTSHA256": "2c2fe5ae05a0b676374cb2ef5fe04b537b5df89680f1a8f3202f58d9a5a6a5aa"
+    },
+    {
+      "index": 22,
+      "originalLine": 67,
+      "v4Line": 70,
+      "method": "equal",
+      "text": "assert.equal(expectedRoutes.length, 45)",
+      "canonicalASTSHA256": "361a7f1771f0c06ee106118045e5e4a327b51c1cef801c3e34c8e11ab6575afc"
+    },
+    {
+      "index": 23,
+      "originalLine": 67,
+      "v4Line": 70,
+      "method": "equal",
+      "text": "assert.equal(new Set(expectedRoutes).size, 45)",
+      "canonicalASTSHA256": "c04eb59dae107c74b42a437c25b80cac2062f1341688663c54cbc4da5ac3c765"
+    },
+    {
+      "index": 24,
+      "originalLine": 84,
+      "v4Line": 87,
+      "method": "equal",
+      "text": "assert.equal(fs.existsSync(file), false)",
+      "canonicalASTSHA256": "1b5f710a8f3dd45cddcf7b8c96176842a5afd6cafddc38ca1f1a3595bc5c7e4d"
+    },
+    {
+      "index": 25,
+      "originalLine": 103,
+      "v4Line": 108,
+      "method": "equal",
+      "text": "assert.equal(response?.status(), expectedStatus, route + ' document status')",
+      "canonicalASTSHA256": "543c9464440f05383230deaf4731d9677808d22adc98335c3320fd8929f8af3e"
+    },
+    {
+      "index": 26,
+      "originalLine": 110,
+      "v4Line": 115,
+      "method": "equal",
+      "text": "assert.equal(await page.locator('#cinatoken-public-bootstrap').count(), 1, route + ' actual SSR bootstrap')",
+      "canonicalASTSHA256": "db0fa922bff9d990d2c967d832b21d99e29f31d7e79feeb42bed76da50600d1e"
+    },
+    {
+      "index": 27,
+      "originalLine": 124,
+      "v4Line": 131,
+      "method": "equal",
+      "text": "assert.equal(new URL(entry.finalURL).pathname, route)",
+      "canonicalASTSHA256": "a575a6d94d885698629b6b4d616579d0176acda9bd3603685b1dcdb5785d066b"
+    },
+    {
+      "index": 28,
+      "originalLine": 125,
+      "v4Line": 132,
+      "method": "ok",
+      "text": "assert.ok(entry.title.trim().length > 0, route + ' title')",
+      "canonicalASTSHA256": "fac427ad35bc9fa58ddbf60f993864692a9aa58807dd98a6064a9bc69e0139d2"
+    },
+    {
+      "index": 29,
+      "originalLine": 126,
+      "v4Line": 133,
+      "method": "ok",
+      "text": "assert.ok(entry.nonblank, route + ' meaningful screen')",
+      "canonicalASTSHA256": "86296f06eb9b47f2e8c9dae4dfcff27bc02a46aa2c89fbc90382835f0931ff40"
+    },
+    {
+      "index": 30,
+      "originalLine": 127,
+      "v4Line": 134,
+      "method": "equal",
+      "text": "assert.equal(entry.frameworkOverlay, false, route + ' framework overlay')",
+      "canonicalASTSHA256": "459fa6074a12c808fa02aca7e464c013160da7a413a2575ed77693937e2c88e5"
+    },
+    {
+      "index": 31,
+      "originalLine": 128,
+      "v4Line": 135,
+      "method": "equal",
+      "text": "assert.equal(state.hydrationFailure, false, route + ' hydration failure')",
+      "canonicalASTSHA256": "ef53acdd6a3539e515ffa90c49f3fdf6db476fc5af1e725fe5f21f972a3d0d19"
+    },
+    {
+      "index": 32,
+      "originalLine": 130,
+      "v4Line": 137,
+      "method": "equal",
+      "text": "assert.equal(bootstrap.version, 1)",
+      "canonicalASTSHA256": "4d4038ac30ca10212cbb8cfe629637699f0b1e3177874ae50150487e414749a0"
+    },
+    {
+      "index": 33,
+      "originalLine": 130,
+      "v4Line": 137,
+      "method": "equal",
+      "text": "assert.equal(bootstrap.status, expectedStatus)",
+      "canonicalASTSHA256": "89f36069fa19a3de403ce8f065e59759dcf0e77ae13f750b28500d68a65d9a60"
+    },
+    {
+      "index": 34,
+      "originalLine": 131,
+      "v4Line": 138,
+      "method": "equal",
+      "text": "assert.equal(bootstrap.pathname, route)",
+      "canonicalASTSHA256": "808ecb04bce0fcc5c5a059c246fb7f29666a2bf775124031a0d0fed54111eea1"
+    },
+    {
+      "index": 35,
+      "originalLine": 131,
+      "v4Line": 138,
+      "method": "equal",
+      "text": "assert.equal(bootstrap.search, '')",
+      "canonicalASTSHA256": "a10578e94d7ee5e82904f54dbb5bb972142d0998aa0c6f56ae169282442b6803"
+    },
+    {
+      "index": 36,
+      "originalLine": 132,
+      "v4Line": 139,
+      "method": "equal",
+      "text": "assert.equal(bootstrap.locale, 'en')",
+      "canonicalASTSHA256": "e606f93fea3df81539bd283d774105d68bf596fe2aa0af156ad451bec7260319"
+    },
+    {
+      "index": 37,
+      "originalLine": 134,
+      "v4Line": 141,
+      "method": "deepEqual",
+      "text": "assert.deepEqual(metadata.canonical, [config.canonicalOrigin + route])",
+      "canonicalASTSHA256": "6bfe699b849927569fd201758d517c40aa51f390869202659985b317702d3f98"
+    },
+    {
+      "index": 38,
+      "originalLine": 135,
+      "v4Line": 142,
+      "method": "equal",
+      "text": "assert.equal(metadata.ogURL, config.canonicalOrigin + route)",
+      "canonicalASTSHA256": "1c20b955472c4c3d281a6181aa74253694f98e19e1f895984f28bce92c2f1b9b"
+    },
+    {
+      "index": 39,
+      "originalLine": 136,
+      "v4Line": 143,
+      "method": "equal",
+      "text": "assert.equal(metadata.robots, route === '/en/chat' ? 'noindex, nofollow' : 'index, follow')",
+      "canonicalASTSHA256": "7ce2923ab5249033b8af9cfe996b43848b1ddf2302e271b4bc348bbf4d45a7bf"
+    },
+    {
+      "index": 40,
+      "originalLine": 137,
+      "v4Line": 144,
+      "method": "deepEqual",
+      "text": "assert.deepEqual(metadata.canonical, [])",
+      "canonicalASTSHA256": "64608fb37a37711f5f6b823e98d9cd95822d8968f1322b23d4c5ed621bb85635"
+    },
+    {
+      "index": 41,
+      "originalLine": 137,
+      "v4Line": 144,
+      "method": "equal",
+      "text": "assert.equal(metadata.ogURL, null)",
+      "canonicalASTSHA256": "1c0f3ee1c5e8ddafe8e5b3f71fef2dbe7ba5f944fe506d084a4bc06acae6611b"
+    },
+    {
+      "index": 42,
+      "originalLine": 137,
+      "v4Line": 144,
+      "method": "equal",
+      "text": "assert.equal(metadata.robots, 'noindex, nofollow')",
+      "canonicalASTSHA256": "a10054e093e8a5800cbefba8f2ee409fd2f03cbea4b7f1681198a5c838fd44d5"
+    },
+    {
+      "index": 43,
+      "originalLine": 139,
+      "v4Line": 146,
+      "method": "equal",
+      "text": "assert.equal(await page.locator('#workspace').count(), 0, 'anonymous has no workspace picker')",
+      "canonicalASTSHA256": "ceac61d9bf765330f5e03f1fb9fa66d3a7e5960ae162963e47a01f675bf90e2e"
+    },
+    {
+      "index": 44,
+      "originalLine": 140,
+      "v4Line": 147,
+      "method": "equal",
+      "text": "assert.equal(await page.getByRole('navigation', { name: 'Console navigation', exact: true }).count(), 0, 'anonymous has no privileged navigation')",
+      "canonicalASTSHA256": "768de5adf8c162d4e730a66948c205da16defb8f8ac4421e8097f6af361bc443"
+    },
+    {
+      "index": 45,
+      "originalLine": 158,
+      "v4Line": 171,
+      "method": "equal",
+      "text": "assert.equal(await page.locator('header select:has(option[value=\"zh\"])').inputValue(), 'zh')",
+      "canonicalASTSHA256": "f9ad673dc0f5ee616c79613b22c8301ab4c221270f80f514ae1a9051f945cf0d"
+    },
+    {
+      "index": 46,
+      "originalLine": 163,
+      "v4Line": 179,
+      "method": "equal",
+      "text": "assert.equal(mobile.themeCookie, 'cinatoken-theme=dark')",
+      "canonicalASTSHA256": "ae516b074c0c955c04b852d8fd3ef0578f53b945fc18aac97f59679c01b8d99b"
+    },
+    {
+      "index": 47,
+      "originalLine": 164,
+      "v4Line": 180,
+      "method": "equal",
+      "text": "assert.equal(mobile.hydrationFailure, false)",
+      "canonicalASTSHA256": "7d1ad31e8ead9f7bd3ff25e30b620afab735713c04f78cd9912d28a42d76f029"
+    },
+    {
+      "index": 48,
+      "originalLine": 165,
+      "v4Line": 181,
+      "method": "ok",
+      "text": "assert.ok(mobile.documentWidth <= mobile.width + 1, 'mobile horizontal overflow')",
+      "canonicalASTSHA256": "06e4f1d05ccf123d88b2311dd13ad317876ed6b793c8a9b15a26be8451f9bd66"
+    },
+    {
+      "index": 49,
+      "originalLine": 176,
+      "v4Line": 192,
+      "method": "deepEqual",
+      "text": "assert.deepEqual(state.initialCookies, [], spec.name + ' fresh anonymous cookies')",
+      "canonicalASTSHA256": "5117a4ca6338fd0fdf3c2e912ccb91399277e689b3744bbd1c9b415572b7e292"
+    },
+    {
+      "index": 50,
+      "originalLine": 178,
+      "v4Line": 194,
+      "method": "deepEqual",
+      "text": "assert.deepEqual(state.initialServiceWorkers, [], spec.name + ' no initial Service Worker')",
+      "canonicalASTSHA256": "5928e1989777ecb6cb964521366b740d465bc3740d6fcef292a27d3d72577d29"
+    },
+    {
+      "index": 51,
+      "originalLine": 273,
+      "v4Line": 293,
+      "method": "deepEqual",
+      "text": "assert.deepEqual(raw(config.liveProof.path), config.liveProof)",
+      "canonicalASTSHA256": "68d4201c01b602d837b6481cfee06b76cf488f5641d50400ec08eb069d2e60c1"
+    },
+    {
+      "index": 52,
+      "originalLine": 275,
+      "v4Line": 295,
+      "method": "deepEqual",
+      "text": "assert.deepEqual(raw(configPath), configAtStart)",
+      "canonicalASTSHA256": "7daaf84c54d54c32302b1eff46447c022c50befacd974e5ec613feec25ed930a"
+    },
+    {
+      "index": 53,
+      "originalLine": 275,
+      "v4Line": 295,
+      "method": "deepEqual",
+      "text": "assert.deepEqual(raw(fileURLToPath(import.meta.url)), selfAtStart)",
+      "canonicalASTSHA256": "7de95ec5a255d63ecc30edf9f2426e949e02681b633c1cd303141a311fbed4f9"
+    },
+    {
+      "index": 54,
+      "originalLine": 276,
+      "v4Line": 296,
+      "method": "deepEqual",
+      "text": "assert.deepEqual(raw(item.path), item)",
+      "canonicalASTSHA256": "f3319922d8e85f7eca9c5418acb31a32391761a39950a1729eedebeb578c55a3"
+    },
+    {
+      "index": 55,
+      "originalLine": 277,
+      "v4Line": 297,
+      "method": "equal",
+      "text": "assert.equal(raw(path.join(temp, 'web-route-matrix.mjs')).sha256, originalV2.find(item => item.path.endsWith('web-route-matrix.mjs')).sha256)",
+      "canonicalASTSHA256": "198e7da9952e47350dcb7b4ba74dd24ce5b7a843ebb20279656f72bdbf44437b"
+    },
+    {
+      "index": 56,
+      "originalLine": 281,
+      "v4Line": 301,
+      "method": "equal",
+      "text": "assert.equal(result.failure, undefined, 'no setup failure')",
+      "canonicalASTSHA256": "23722d89f4cbcfe27b78490d1a8fb231a99e9315c48a545d3f6905f0761fa8d9"
+    },
+    {
+      "index": 57,
+      "originalLine": 282,
+      "v4Line": 302,
+      "method": "equal",
+      "text": "assert.equal(result.groupSettled.length, 4, 'four groups converged')",
+      "canonicalASTSHA256": "cf6449ec5cb6e80acf0373484d43012ddb3cc06c56fe5b23bdb80c5bb3166385"
+    },
+    {
+      "index": 58,
+      "originalLine": 283,
+      "v4Line": 303,
+      "method": "ok",
+      "text": "assert.ok(result.groupSettled.every(entry => entry.status === 'fulfilled'), 'all groups fulfilled')",
+      "canonicalASTSHA256": "f569929e75c230eea1349aa2d8b156830460f5e26d4d1f0336e755b7579f6c51"
+    },
+    {
+      "index": 59,
+      "originalLine": 284,
+      "v4Line": 304,
+      "method": "equal",
+      "text": "assert.equal(result.timedOut ?? false, false, 'original 390 second browser deadline')",
+      "canonicalASTSHA256": "c25b2662edfd4598e88133583902e108498c29a28b0f32744cb29147a8e94802"
+    },
+    {
+      "index": 60,
+      "originalLine": 285,
+      "v4Line": 305,
+      "method": "equal",
+      "text": "assert.equal(result.pages.length, 45, 'all 8 public kinds and 37 private route gates')",
+      "canonicalASTSHA256": "20d407df099e9513116fee734f987371ead8ea07f55420e675d6c4e97c584ccc"
+    },
+    {
+      "index": 61,
+      "originalLine": 286,
+      "v4Line": 306,
+      "method": "equal",
+      "text": "assert.equal(new Set(result.pages.map(entry => entry.route)).size, 45, '45 unique direct routes')",
+      "canonicalASTSHA256": "5fd254e92b0fcdec0db83769522828532e126570ac767b0121dd0be2bc7b93e2"
+    },
+    {
+      "index": 62,
+      "originalLine": 287,
+      "v4Line": 307,
+      "method": "deepEqual",
+      "text": "assert.deepEqual(result.pages.map(entry => entry.route).sort(), [...expectedRoutes].sort(), 'exact original route matrix')",
+      "canonicalASTSHA256": "c20ba387c5ee227f2ff1c77381046bf7cd8cdaedabb456ad66a4bf14f5b5585e"
+    },
+    {
+      "index": 63,
+      "originalLine": 288,
+      "v4Line": 308,
+      "method": "deepEqual",
+      "text": "assert.deepEqual(result.pages.map(entry => JSON.stringify([entry.route, entry.kind, entry.http])).sort(), expectedTuples.map(tuple => JSON.stringify(tuple)).sort(), 'exact original route/kind/http tuple matrix')",
+      "canonicalASTSHA256": "c24645017c23a9845fe3514f6f192de34c8ff8fc6a05ad5af06b0f35b6f24987"
+    },
+    {
+      "index": 64,
+      "originalLine": 290,
+      "v4Line": 310,
+      "method": "deepEqual",
+      "text": "assert.deepEqual(group.state.pages.map(entry => entry.route).sort(), [...group.state.expectedRoutes].sort(), group.state.name + ' exact route set')",
+      "canonicalASTSHA256": "a0ca45a8acc4fb7eb5843b455c8928288dfe51ba80c07afac3d3f1e2d181be70"
+    },
+    {
+      "index": 65,
+      "originalLine": 291,
+      "v4Line": 311,
+      "method": "deepEqual",
+      "text": "assert.deepEqual(group.state.initialCookies, [], group.state.name + ' anonymous context')",
+      "canonicalASTSHA256": "174c519145776c520a21774a53a5d07cd9c7a74e74812e62d7dc37e08917e391"
+    },
+    {
+      "index": 66,
+      "originalLine": 292,
+      "v4Line": 312,
+      "method": "deepEqual",
+      "text": "assert.deepEqual(group.state.initialServiceWorkers, [], group.state.name + ' no initial service worker')",
+      "canonicalASTSHA256": "2744b35ca8edb7b6e5ef507f1712340f383ff50ce15dd905964cb1b0a7c276b6"
+    },
+    {
+      "index": 67,
+      "originalLine": 293,
+      "v4Line": 313,
+      "method": "deepEqual",
+      "text": "assert.deepEqual(group.state.finalServiceWorkers, [], group.state.name + ' no final service worker')",
+      "canonicalASTSHA256": "5cc870caf99d5c61373fcac8cb78792ea4f69bf86910f3fce4884d5ab094b9f2"
+    },
+    {
+      "index": 68,
+      "originalLine": 294,
+      "v4Line": 314,
+      "method": "equal",
+      "text": "assert.equal(group.state.serviceWorkerEvents.length, 0, group.state.name + ' no unguarded service worker')",
+      "canonicalASTSHA256": "8c14536742f29db6a5fc24ed37f97def00f27053a88793a98d109f8dd072993c"
+    },
+    {
+      "index": 69,
+      "originalLine": 295,
+      "v4Line": 315,
+      "method": "equal",
+      "text": "assert.equal(group.state.observerFailures.length, 0, group.state.name + ' complete HTTP body observation')",
+      "canonicalASTSHA256": "d3388148e4a44fca4d3c6287e8c3fc75dfa1f9706a984d450ada4543d8127c7a"
+    },
+    {
+      "index": 70,
+      "originalLine": 296,
+      "v4Line": 316,
+      "method": "equal",
+      "text": "assert.equal(group.state.contextClosed, true, group.state.name + ' real context closure')",
+      "canonicalASTSHA256": "f76b75cc11506c191c94fa8d72418189820f82652c25f1467ca1a93021c38f2d"
+    },
+    {
+      "index": 71,
+      "originalLine": 298,
+      "v4Line": 318,
+      "method": "equal",
+      "text": "assert.equal(result.expectedAnonymous401.length, 37, '37 exact anonymous user/me 401 responses')",
+      "canonicalASTSHA256": "ee6c3b3096881e1fe6d2719576530fbd5e1d0f490711d30fd69886a978d59493"
+    },
+    {
+      "index": 72,
+      "originalLine": 300,
+      "v4Line": 320,
+      "method": "equal",
+      "text": "assert.equal(privatePages.length, 37, '37 completed private pages')",
+      "canonicalASTSHA256": "bb573874e82910f9b210490dd37a064b8ca2d5cff00cde0a558a7690e0eeef7b"
+    },
+    {
+      "index": 73,
+      "originalLine": 303,
+      "v4Line": 323,
+      "method": "equal",
+      "text": "assert.equal(matching.length, 1, entry.shard + ' ' + entry.route + ' exactly one originating-page anonymous 401')",
+      "canonicalASTSHA256": "fe60ddc775c7ca6115af6b9a30527632366071be7f27d0b644698c70a74576bc"
+    },
+    {
+      "index": 74,
+      "originalLine": 306,
+      "v4Line": 326,
+      "method": "equal",
+      "text": "assert.equal(result.expectedMissingModel404.length, 1, 'one exact reserved missing-model 404 response')",
+      "canonicalASTSHA256": "6f0a296cbf6780c2b1a4a254b8b2fc9a666cbdf761cf7a17ea086d6a0bb64738"
+    },
+    {
+      "index": 75,
+      "originalLine": 307,
+      "v4Line": 327,
+      "method": "equal",
+      "text": "assert.equal(result.refusedMutations.length, 0, 'no attempted business/API mutation')",
+      "canonicalASTSHA256": "72c6f31f07b459b1a47750b31dcc6e14fc7073d1f781af7c45a15f15550f4ad1"
+    },
+    {
+      "index": 76,
+      "originalLine": 308,
+      "v4Line": 328,
+      "method": "equal",
+      "text": "assert.equal(result.requestFailures.length, 0, 'no unexplained failed request')",
+      "canonicalASTSHA256": "a8cb2ab98adf5fc219a85ae98ae92151304798f7698f1e25f732f7e730666672"
+    },
+    {
+      "index": 77,
+      "originalLine": 309,
+      "v4Line": 329,
+      "method": "equal",
+      "text": "assert.equal(result.pageErrors.length, 0, 'real runtime errors')",
+      "canonicalASTSHA256": "aa297f60297937f2b04b8071eff9443af992d784186fdf2c8af2a23e386e53f6"
+    },
+    {
+      "index": 78,
+      "originalLine": 310,
+      "v4Line": 330,
+      "method": "equal",
+      "text": "assert.equal(result.unknownHTTPErrors.length, 0, 'unknown HTTP errors')",
+      "canonicalASTSHA256": "5a2b99456dbc32b2bbe31459ba60c3498d5d73472492c21736c338dc582df255"
+    },
+    {
+      "index": 79,
+      "originalLine": 311,
+      "v4Line": 331,
+      "method": "equal",
+      "text": "assert.equal(result.unexplainedConsoleErrors.length, 0, 'unexplained console errors')",
+      "canonicalASTSHA256": "4bf84cf4011d222c53723496adc9853561868caf31d94eb8c69169e9da50c674"
+    },
+    {
+      "index": 80,
+      "originalLine": 312,
+      "v4Line": 332,
+      "method": "equal",
+      "text": "assert.equal(result.warnings.length, 0, 'unexplained warnings')",
+      "canonicalASTSHA256": "8c15a9a565fad54df447e52d519af19ce001c2484fe093dd54452cb36eb95e61"
+    },
+    {
+      "index": 81,
+      "originalLine": 313,
+      "v4Line": 333,
+      "method": "deepEqual",
+      "text": "assert.deepEqual(result.interactions.map(entry => entry.step), ['desktop-dark-selected', 'language-zh-navigated', 'mobile-zh-dark-reload'], 'all three original interactions')",
+      "canonicalASTSHA256": "6ff36f60dfabc3486cb024eb50b7a7b245fbba7898d47be3ec83b34828d12048"
+    },
+    {
+      "index": 82,
+      "originalLine": 314,
+      "v4Line": 334,
+      "method": "equal",
+      "text": "assert.equal(result.contextClosed, true, 'all four contexts closed')",
+      "canonicalASTSHA256": "e1de5e5fb8007be93d18e449e7ff3c34a8264436d427edae36db013fa9cb9562"
+    },
+    {
+      "index": 83,
+      "originalLine": 314,
+      "v4Line": 334,
+      "method": "equal",
+      "text": "assert.equal(result.browserClosed, true, 'browser closed')",
+      "canonicalASTSHA256": "2fbb937f9c11c20b4bf68876a392d74ef340450a9fcf02d8001571b3e87fa25e"
+    },
+    {
+      "index": 84,
+      "originalLine": 315,
+      "v4Line": 335,
+      "method": "equal",
+      "text": "assert.equal(result.liveProofRawStillSame, true)",
+      "canonicalASTSHA256": "eede5c3ae144c6ac9b8fe3a9bf558fdf2cdb96687ccb4f45960a5b81b2181c23"
+    },
+    {
+      "index": 85,
+      "originalLine": 315,
+      "v4Line": 335,
+      "method": "equal",
+      "text": "assert.equal(result.sourceAndConfigRawStillSame, true)",
+      "canonicalASTSHA256": "4f5e79704a783b43959d18cabcad76efbf0dc812764ff452c4d187f6bcb9c38e"
+    }
+  ]
+}

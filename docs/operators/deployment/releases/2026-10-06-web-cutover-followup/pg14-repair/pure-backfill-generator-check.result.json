@@ -1,0 +1,16 @@
+{
+  "startedAt": "2026-10-05T23:30:04.750Z",
+  "completedAt": "2026-10-05T23:30:05.175Z",
+  "program": "node",
+  "arguments": [
+    "--test",
+    "scripts/db/cutover/build-postgres-replay-reservation-backfill.test.mjs"
+  ],
+  "actualExitCode": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdoutPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-reference-repair-ee01603721fe44e391a089409cd94959\\pure-backfill-generator-check.stdout.txt",
+  "stderrPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-reference-repair-ee01603721fe44e391a089409cd94959\\pure-backfill-generator-check.stderr.txt",
+  "stdoutBytes": 279,
+  "stderrBytes": 0
+}

@@ -1,0 +1,15 @@
+{
+  "startedAt": "2026-10-05T23:30:02.380Z",
+  "completedAt": "2026-10-05T23:30:02.474Z",
+  "program": "node",
+  "arguments": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-reference-repair-ee01603721fe44e391a089409cd94959\\verify-argument-binding.mjs"
+  ],
+  "actualExitCode": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdoutPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-reference-repair-ee01603721fe44e391a089409cd94959\\argument-binding-check.stdout.txt",
+  "stderrPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-reference-repair-ee01603721fe44e391a089409cd94959\\argument-binding-check.stderr.txt",
+  "stdoutBytes": 1583,
+  "stderrBytes": 0
+}

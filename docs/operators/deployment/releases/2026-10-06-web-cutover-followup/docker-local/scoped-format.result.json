@@ -1,0 +1,8 @@
+{
+  "startedAt": "2026-10-05T23:41:31.0794655Z",
+  "completedAt": "2026-10-05T23:41:31.5102585Z",
+  "dockerRuntimeExecuted": false,
+  "command": "node node_modules/prettier/bin-prettier.js --check docker/web/ssr-smoke.mjs docker/web/fixtures/catalog-server.mjs .github/workflows/web-frontend.yml",
+  "terminal": true,
+  "actualExitCode": 0
+}

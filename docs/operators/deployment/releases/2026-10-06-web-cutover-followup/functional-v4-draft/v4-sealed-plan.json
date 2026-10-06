@@ -1,0 +1,200 @@
+{
+  "schema": "cinatoken-functional-anonymous-v4-sealed-plan-v1",
+  "at": "2026-10-05T23:44:05.667Z",
+  "status": "PREPARED_ONLY_AWAIT_ROOT_REVIEW_NO_PRODUCTION_RUN",
+  "originalV3": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\production-web-browser-observe-v3.mjs",
+    "bytes": 25585,
+    "sha256": "5fe013bb9c8cd533aa144b4c3820b11008359370dfef44b1b4a4f922781ffa34"
+  },
+  "assertionEquivalence": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-functional-browser-v4-20261006-FwrtMf\\v4-assertion-equivalence.json",
+    "bytes": 33221,
+    "sha256": "459491802d0e962ef547ce7ffc506a3417028993271c3f3a195e41d0d7aa719b"
+  },
+  "exactDiff": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-functional-browser-v4-20261006-FwrtMf\\original-v3-to-functional-v4.diff",
+    "bytes": 12090,
+    "sha256": "182c51b4e629daf5dd72daf683e84449b81bee390d1daf992b16543ae04a3b20"
+  },
+  "executorDiff": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-functional-browser-v4-20261006-FwrtMf\\executor-v3-to-v4.diff",
+    "bytes": 4690,
+    "sha256": "26da41e16f520982f0de463af3f569a647108ae7707fed70a06817a81f7643e3"
+  },
+  "originalInputs": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\production-web-browser-observe-v2.mjs",
+      "bytes": 15695,
+      "sha256": "415d123bbc71cfdb5d8ed02bf91f01d9021031358667cd7aaf2f0fd6edcd55be"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\execute-web-browser-observe-v2.mjs",
+      "bytes": 3432,
+      "sha256": "ffd074ec8b52d5ce7c9dbd8a9dace29ec29130b661e0290e72f1f2d2d0424ed8"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\web-route-matrix.mjs",
+      "bytes": 1770,
+      "sha256": "c8a3211d07979c037022f689aa442bd95de9b7c11843fb52b9ae9fa93ac01e61"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\retention-c13a64b9-v2.json",
+      "bytes": 81183,
+      "sha256": "8b07f5439bb92498498b47a89a1a92e5703779e32e40c03b26e977d51afb8de2"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-696cc8df85ea423aa0d2545df155d197\\retention-c13a64b9-v2-retry.json",
+      "bytes": 81011,
+      "sha256": "e61e4c6c574167722d611b496031bfe5edac8b9c74343469e2a37974d7996e9a"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\production-web-browser-observe-v3.mjs",
+      "bytes": 25585,
+      "sha256": "5fe013bb9c8cd533aa144b4c3820b11008359370dfef44b1b4a4f922781ffa34"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\execute-web-browser-observe-v3.mjs",
+      "bytes": 4436,
+      "sha256": "f43341b099a5c8bcba8e3dfd625b3e1a24de7467ad03370b25a14a08a5d736e4"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\web-route-matrix.mjs",
+      "bytes": 1770,
+      "sha256": "c8a3211d07979c037022f689aa442bd95de9b7c11843fb52b9ae9fa93ac01e61"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\retention-c13a64b9-v3.json",
+      "bytes": 258217,
+      "sha256": "3c0e86227908a771ae8463bd7de714664f444e8f6a474c98ad7eb77c93febb2f"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\retention-c13a64b9-v3-execution-closed.json",
+      "bytes": 6519,
+      "sha256": "6ca17e2bf34611013514bea53428cf698397ce9bc73869c0ad0b10eb8a96f382"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\final-browser-v3-review.json",
+      "bytes": 17521,
+      "sha256": "0c2069c47d06e418da92c2d86bf42f9d2c80dd2f945634acdc753d08a2fa0048"
+    }
+  ],
+  "newInputs": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-functional-browser-v4-20261006-FwrtMf\\production-web-browser-observe-v4.mjs",
+      "bytes": 27422,
+      "sha256": "dc342488667fd9785c83f556a55d3c2a8e06ac24f0edaabff4147fafcaf410b2"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-functional-browser-v4-20261006-FwrtMf\\execute-web-browser-observe-v4.mjs",
+      "bytes": 5020,
+      "sha256": "3304210e93266dbad6635e8ad160c2ed9e531f21abc7addf832cc04125c7495c"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-functional-browser-v4-20261006-FwrtMf\\web-route-matrix.mjs",
+      "bytes": 1770,
+      "sha256": "c8a3211d07979c037022f689aa442bd95de9b7c11843fb52b9ae9fa93ac01e61"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-functional-browser-v4-20261006-FwrtMf\\readiness-v4.mjs",
+      "bytes": 15232,
+      "sha256": "1a9c4bab756e6343b29f418838357e7e04bc164062f690b1dd25b27932369c9c"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-functional-browser-v4-20261006-FwrtMf\\prepare-functional-v4.mjs",
+      "bytes": 18304,
+      "sha256": "a6bb790eac1b86c0f246ad4af02fbb530dcb83fa7a4f5173c3c38626f4666b76"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-functional-browser-v4-20261006-FwrtMf\\v4-assertion-equivalence.json",
+      "bytes": 33221,
+      "sha256": "459491802d0e962ef547ce7ffc506a3417028993271c3f3a195e41d0d7aa719b"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-functional-browser-v4-20261006-FwrtMf\\original-v3-to-functional-v4.diff",
+      "bytes": 12090,
+      "sha256": "182c51b4e629daf5dd72daf683e84449b81bee390d1daf992b16543ae04a3b20"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-functional-browser-v4-20261006-FwrtMf\\executor-v3-to-v4.diff",
+      "bytes": 4690,
+      "sha256": "26da41e16f520982f0de463af3f569a647108ae7707fed70a06817a81f7643e3"
+    }
+  ],
+  "availableProofLinks": {
+    "freshConfig": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-migration-progress-20261006-541315903c5243bc9a08bbc8a3515df4\\fresh.browser-config.json",
+      "bytes": 578,
+      "sha256": "2a3f7a900a2b32c03db115ebff1e02d821f986e42dee034dc7d469ddfbd072fd"
+    },
+    "freshCFProof": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-migration-progress-20261006-541315903c5243bc9a08bbc8a3515df4\\production-live.live-proof.json",
+      "bytes": 6014,
+      "sha256": "e13f0a32321f945130f215cb2659ff4f1003eb7aa8d7b509a1e3a71f8ac3bef4"
+    },
+    "freshGuard": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-migration-progress-20261006-541315903c5243bc9a08bbc8a3515df4\\fresh-guard.deployment-guard.json",
+      "bytes": 1030,
+      "sha256": "19c6d56cf6c71ccb419090abceb408258b3df74988b339e7d036ceb1e3333c8a"
+    }
+  },
+  "limits": {
+    "originalNavigationMs": 45000,
+    "originalLocatorMs": 20000,
+    "addedSharedAppReadinessMs": 20000,
+    "sharedBrowserMs": 390000,
+    "outerExecutorMs": 420000,
+    "shards": [
+      8,
+      10,
+      14,
+      13
+    ]
+  },
+  "addedReadiness": {
+    "public": "All observed current-page JS/CSS terminal success plus actual reactive theme control changes HTML dark class and cinatoken-theme preference; restore original control mode; dynamic import SSR hydration is not inferred from DOMContentLoaded/main/bootstrap alone.",
+    "private": "Original visible anonymous Gate plus all observed current-page JS/CSS terminal success and original observer exact same-origin GET user/me401 successfalse/messageUnauthorized for originating page.",
+    "interaction": "Original desktop-dark, language-zh, mobile-zh-dark-reload sequence and assertions retained exactly; readiness control loops recorded separately.",
+    "requestTelemetry": "Per-request start/response/finished/failed timestamps, whitelisted response cache headers/TTFB, per-navigation ResourceTiming/pending checkpoints at DOMContentLoaded/readiness/failure/closure; no globalnetworkidle acceptance criterion.",
+    "noKnownMissingAssets": "All known JS/CSS must finish successfully by readiness and final closure; original unknown HTTP/console/failures/mutations/ServiceWorker refusal assertions unchanged.",
+    "localThemeCookie": "Additional readiness control loops may set local theme preference cookie; restore prior UI mode; this is disclosed separately, not business/API write."
+  },
+  "officialSources": [
+    {
+      "title": "Playwright Page.goto waitUntil",
+      "url": "https://playwright.dev/docs/api/class-page#page-goto-option-wait-until",
+      "observedAt": "2026-10-05T23:44:05.678Z",
+      "fact": "networkidle marked DISCOURAGED; testing should use UI assertions to determine readiness."
+    },
+    {
+      "title": "Playwright Locator.waitFor",
+      "url": "https://playwright.dev/docs/api/class-locator#locator-wait-for",
+      "fact": "Bounded locator state readiness checks."
+    }
+  ],
+  "p809": {
+    "file": "C:/cinagroup/cinatoken/docs/developers/architecture/web-frontend-migration.md",
+    "line": 482,
+    "requirement": "Measure first paint, route changes, long lists, charts and SSE, then optimize bundling/lazy loading/virtualization and record measured budget/results.",
+    "remainsUnchecked": true,
+    "limitation": "Anonymous45-route functional matrix records navigation/readiness budgets; does not test all performance surfaces or prove P8-09/fullG8/real identity."
+  },
+  "preservedHistoricalFailure": "v2 actual1 at25/45 and23/45 globaldeadline; v3 actual1 at31/45 two original45snetworkidle timeouts; no overwritten or relabeled results.",
+  "permittedFutureOutcome": "Functional anonymous browser only; never original strict45networkidlePASS/real identity/fullG8/performancePASS",
+  "writes": {
+    "source": 0,
+    "Git": 0,
+    "deployments": 0,
+    "database": 0,
+    "api": 0
+  },
+  "execution": {
+    "command": [
+      "node",
+      "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-functional-browser-v4-20261006-FwrtMf\\execute-web-browser-observe-v4.mjs",
+      "ROOT-UNIQUE-LABEL",
+      "ROOT-FRESH-CONFIG-PATH"
+    ],
+    "authorization": "Wait for Root review and explicit execution instruction; no production browser launched by this preparation."
+  }
+}

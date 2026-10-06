@@ -1,0 +1,2363 @@
+{
+  "schema": "independent-followup-evidence-byte-verification-v1",
+  "at": "2026-10-06T00:06:40.716Z",
+  "actualExitCode": 0,
+  "terminal": true,
+  "sourceReport": {
+    "path": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-web-cutover-followup.json",
+    "bytes": 288112,
+    "sha256": "3d9c9d5826630966239cd9a982bf9d5ef2472a0f7b5658862cdc85721ff80f89"
+  },
+  "all390StoredHashBytesExact": true,
+  "all390DecodedOriginalHashBytesExact": true,
+  "all390CurrentTempSourceBytesExact": true,
+  "directoryMatchesIndexExactly": true,
+  "entries": 390,
+  "gzipEntries": 125,
+  "identityEntries": 265,
+  "originalBytes": 16051045,
+  "storedBytes": 3838035,
+  "failures": [],
+  "rows": [
+    {
+      "storedPath": "root-progress/after-functional-v4-guard.deployment-guard.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/after-functional-v4-guard.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/after-functional-v4-guard.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/after-functional-v4-guard.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/after-functional-v4.live-proof.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/after-functional-v4.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/after-functional-v4.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/after-functional-v4.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/before-functional-v4-guard.deployment-guard.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/before-functional-v4-guard.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/before-functional-v4-guard.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/before-functional-v4-guard.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/before-functional-v4.browser-config.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/before-functional-v4.live-proof.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/before-functional-v4.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/before-functional-v4.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/before-functional-v4.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/checklist-before-controls.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/checklist-before-scope-v2.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/checklist-before.md.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/checklist-final-scope.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/checklist-final-scope.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/checklist-final-scope.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/checklist-final-scope.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/checklist-final-update.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/checklist-final-update.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/checklist-final-update.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/checklist-final-update.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/checklist-progress-scope.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/ci-followup-push.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/ci-followup-push.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/ci-followup-push.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/docker-ssr-commit.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/docker-ssr-commit.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/docker-ssr-commit.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/docker-ssr-stage.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/docker-ssr-stage.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/docker-ssr-stage.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/finalize-checklist.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/fresh-guard.deployment-guard.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/fresh-guard.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/fresh-guard.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/fresh-guard.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/fresh.browser-config.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/guard-live-deployment.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/helper-preparation.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/inventory-before.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/local-replay-builder.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/local-replay-builder.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/local-replay-builder.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/pg-ci-initial.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/pg-ci-initial.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/pg-ci-initial.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/pg-ci-progress-1.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/pg-ci-progress-1.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/pg-ci-progress-1.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/pg-ci-progress-2.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/pg-ci-progress-2.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/pg-ci-progress-2.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/pg-ci-progress-3.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/pg-ci-progress-3.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/pg-ci-progress-3.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/pg-dispatch-job-log.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/pg-dispatch-job-log.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/pg-dispatch-job-log.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/pg-fix-commit.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/pg-fix-commit.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/pg-fix-commit.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/pg-fix-push.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/pg-fix-push.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/pg-fix-push.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/pg-fix-stage.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/pg-fix-stage.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/pg-fix-stage.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/pg-fix-syntax.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/pg-fix-syntax.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/pg-fix-syntax.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/pg-native-job-log-retry.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/pg-native-job-log-retry.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/pg-native-job-log-retry.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/pg-native-job-log.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/pg-native-job-log.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/pg-native-job-log.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/pg-usage-commit.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/pg-usage-commit.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/pg-usage-commit.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/pg-usage-stage.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/pg-usage-stage.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/pg-usage-stage.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/prepare-before-v4-config.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/prepare-fresh-config.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/prepare-helpers.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/prepare-v4-config-copy.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/production-live.live-proof.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/production-live.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/production-live.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/production-live.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/review-v4-ast.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/root-functional-v4-summary.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/root-v4-method-review.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/root-v4-review.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/root-v4-review.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/root-v4-review.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/root-v4-summary.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/root-v4-summary.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/root-v4-summary.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/run-command.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/second-ci-initial-fullsha.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/second-ci-initial-fullsha.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/second-ci-initial-fullsha.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/second-ci-initial.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/second-ci-initial.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/second-ci-initial.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/second-dispatch-job-log.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/second-dispatch-job-log.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/second-dispatch-job-log.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/second-native-job-log.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/second-native-job-log.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/second-native-job-log.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/second-proxy-ci-final.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/second-proxy-ci-final.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/second-proxy-ci-final.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/second-proxy-ci-progress-1.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/second-proxy-ci-progress-1.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/second-proxy-ci-progress-1.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/snapshot-checklist.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/snapshot-scope-v2.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/summarize-ci.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/summarize-v4.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/update-checklist-progress.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/verify-checklist-scope.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/verify-live-web.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/web-format-before-ssr-ci.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/web-format-before-ssr-ci.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "root-progress/web-format-before-ssr-ci.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "network-diagnostic-draft/execute-network-diagnostic-v1.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "network-diagnostic-draft/pre-spawn-execution-failure.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "network-diagnostic-draft/preparation.receipt.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "network-diagnostic-draft/production-network-diagnostic-v1.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "network-diagnostic/execute-network-diagnostic-v1.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "network-diagnostic/fresh-three-route-diag-account.png",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "network-diagnostic/fresh-three-route-diag-admin.png",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "network-diagnostic/fresh-three-route-diag-events.jsonl.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "network-diagnostic/fresh-three-route-diag-execution-closed.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "network-diagnostic/fresh-three-route-diag-public.png",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "network-diagnostic/fresh-three-route-diag-stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "network-diagnostic/fresh-three-route-diag-stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "network-diagnostic/fresh-three-route-diag.json.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "network-diagnostic/preparation.receipt.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "network-diagnostic/production-network-diagnostic-v1.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "network-diagnostic/three-route-network-review.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "functional-v4-draft/execute-web-browser-observe-v4.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "functional-v4-draft/executor-v3-to-v4.diff",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "functional-v4-draft/original-v3-to-functional-v4.diff",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "functional-v4-draft/prepare-functional-v4.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "functional-v4-draft/production-web-browser-observe-v4.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "functional-v4-draft/readiness-v4.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "functional-v4-draft/v4-assertion-equivalence.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "functional-v4-draft/v4-sealed-plan.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "functional-v4-draft/web-route-matrix.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "functional-v4/before-functional-v4-final-once-account-1.png",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "functional-v4/before-functional-v4-final-once-admin-a-1.png",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "functional-v4/before-functional-v4-final-once-admin-b-1.png",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "functional-v4/before-functional-v4-final-once-desktop-dark.png",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "functional-v4/before-functional-v4-final-once-execution-closed.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "functional-v4/before-functional-v4-final-once-mobile-zh-dark.png",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "functional-v4/before-functional-v4-final-once-public-1.png",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "functional-v4/before-functional-v4-final-once-public-2.png",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "functional-v4/before-functional-v4-final-once-stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "functional-v4/before-functional-v4-final-once-stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "functional-v4/before-functional-v4-final-once.json.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "functional-v4/execute-web-browser-observe-v4.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "functional-v4/executor-v3-to-v4.diff",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "functional-v4/final-functional-v4-review.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "functional-v4/local-seal-check.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "functional-v4/original-v3-to-functional-v4.diff",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "functional-v4/peer-reviewed-v4.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "functional-v4/prepare-functional-v4.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "functional-v4/production-web-browser-observe-v4.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "functional-v4/readiness-v4.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "functional-v4/v4-assertion-equivalence.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "functional-v4/v4-sealed-plan.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "functional-v4/web-route-matrix.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg14-repair/argument-binding-check.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg14-repair/argument-binding-check.stderr.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg14-repair/argument-binding-check.stdout.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg14-repair/argument-binding-corrected-check.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg14-repair/argument-binding-corrected-check.stderr.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg14-repair/argument-binding-corrected-check.stdout.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg14-repair/argument-binding.proof-v2.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg14-repair/argument-binding.proof.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg14-repair/before.native.test.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg14-repair/FINAL-pg73-reference-repair.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg14-repair/final-repair-report-seal-v2.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg14-repair/final-repair-report-seal-v2.stderr.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg14-repair/final-repair-report-seal-v2.stdout.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg14-repair/final-repair-report-seal.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg14-repair/final-repair-report-seal.stderr.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg14-repair/final-repair-report-seal.stdout.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg14-repair/pure-backfill-generator-check.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg14-repair/pure-backfill-generator-check.stderr.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg14-repair/pure-backfill-generator-check.stdout.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg14-repair/run-readonly.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg14-repair/seal-repair-report.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg14-repair/syntax-check.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg14-repair/syntax-check.stderr.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg14-repair/syntax-check.stdout.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg14-repair/target-diff-check.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg14-repair/target-diff-check.stderr.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg14-repair/target-diff-check.stdout.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg14-repair/target-patch.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg14-repair/target-patch.stderr.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg14-repair/target-patch.stdout.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg14-repair/verify-argument-binding-v1.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg14-repair/verify-argument-binding.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg17-repair/after-step17-inventory-v2.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg17-repair/after-step17-inventory-v2.stderr.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg17-repair/after-step17-inventory-v2.stdout.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg17-repair/after-step17-inventory-v3.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg17-repair/after-step17-inventory-v3.stderr.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg17-repair/after-step17-inventory-v3.stdout.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg17-repair/after-step17-inventory.json.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg17-repair/after-step17-inventory.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg17-repair/after-step17-inventory.stderr.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg17-repair/after-step17-inventory.stdout.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg17-repair/audit-usage-jobs.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg17-repair/before.native.test.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg17-repair/FINAL-pg73-usage-jobs-repair.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg17-repair/inventory-native-workflow.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg17-repair/local-audit.proof.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg17-repair/local-readonly-audit.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg17-repair/local-readonly-audit.stderr.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg17-repair/local-readonly-audit.stdout.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg17-repair/pure-repair-builders.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg17-repair/pure-repair-builders.stderr.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg17-repair/pure-repair-builders.stdout.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg17-repair/repair-seal.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg17-repair/repair-seal.stderr.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg17-repair/repair-seal.stdout.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg17-repair/run-readonly.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg17-repair/seal-repair.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg17-repair/syntax-check.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg17-repair/syntax-check.stderr.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg17-repair/syntax-check.stdout.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg17-repair/target-diff-check.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg17-repair/target-diff-check.stderr.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg17-repair/target-diff-check.stdout.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg17-repair/target-patch.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg17-repair/target-patch.stderr.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg17-repair/target-patch.stdout.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg20-plan/FINAL-step20-runtime-grant-plan.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg20-plan/readonly-plan-seal.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg20-plan/readonly-plan-seal.stderr.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg20-plan/readonly-plan-seal.stdout.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg20-plan/run-readonly.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg20-plan/runtime-grant.before.native.test.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "pg20-plan/seal-plan.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "workerd-diagnosis/diagnosis-seal.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "workerd-diagnosis/diagnosis-seal.stderr.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "workerd-diagnosis/diagnosis-seal.stdout.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "workerd-diagnosis/FINAL-workerd-v364-cancel-diagnosis.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "workerd-diagnosis/issue6832.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "workerd-diagnosis/issue6832.stderr.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "workerd-diagnosis/issue6832.stdout.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "workerd-diagnosis/locked-compatibility.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "workerd-diagnosis/locked-compatibility.source.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "workerd-diagnosis/locked-compatibility.stderr.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "workerd-diagnosis/locked-compatibility.stdout.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "workerd-diagnosis/locked-readable.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "workerd-diagnosis/locked-readable.source.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "workerd-diagnosis/locked-readable.stderr.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "workerd-diagnosis/locked-readable.stdout.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "workerd-diagnosis/locked-release-ref.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "workerd-diagnosis/locked-release-ref.stderr.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "workerd-diagnosis/locked-release-ref.stdout.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "workerd-diagnosis/locked-standard.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "workerd-diagnosis/locked-standard.source.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "workerd-diagnosis/locked-standard.stderr.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "workerd-diagnosis/locked-standard.stdout.txt.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "workerd-diagnosis/locked-worker-entrypoint.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "workerd-diagnosis/locked-worker-entrypoint.source.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "workerd-diagnosis/locked-worker-entrypoint.stderr.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "workerd-diagnosis/locked-worker-entrypoint.stdout.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "workerd-diagnosis/pr6833.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "workerd-diagnosis/pr6833.stderr.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "workerd-diagnosis/pr6833.stdout.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "workerd-diagnosis/pr7600-files.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "workerd-diagnosis/pr7600-files.stderr.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "workerd-diagnosis/pr7600-files.stdout.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "workerd-diagnosis/pr7600.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "workerd-diagnosis/pr7600.stderr.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "workerd-diagnosis/pr7600.stdout.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "workerd-diagnosis/run-readonly.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "workerd-diagnosis/seal-diagnosis.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/fixture-contract.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/fixture-contract.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/fixture-contract.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/fixture-contract.test.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/formatter-v2/before.receipt.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/formatter-v2/complete-ast.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/formatter-v2/complete-ast.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/formatter-v2/complete-ast.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/formatter-v2/explicit-fixture-format.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/formatter-v2/explicit-fixture-format.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/formatter-v2/explicit-fixture-format.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/formatter-v2/full-web-format.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/formatter-v2/full-web-format.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/formatter-v2/full-web-format.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/formatter-v2/local-validation-v2.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/formatter-v2/scope-diff-check.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/formatter-v2/scope-diff-check.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/formatter-v2/scope-diff-check.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/formatter-v2/seal-v2.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/formatter-v2/seal-v2.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/formatter-v2/seal-v2.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/formatter-v2/ssr-smoke.before.mjs",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/formatter-v2/syntax-fixture.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/formatter-v2/syntax-fixture.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/formatter-v2/syntax-fixture.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/formatter-v2/syntax-ssr.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/formatter-v2/syntax-ssr.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/formatter-v2/syntax-ssr.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/formatter-v2/workspace-format-write.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/formatter-v2/workspace-format-write.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/formatter-v2/workspace-format-write.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/local-validation.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/scope-diff-check.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/scope-diff-check.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/scope-diff-check.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/scoped-format.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/scoped-format.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/scoped-format.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/seal.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/seal.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/seal.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/syntax-fixture.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/syntax-fixture.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/syntax-fixture.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/syntax-ssr.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/syntax-ssr.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/syntax-ssr.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/workflow-before.yml",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-local/workspace.txt",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/admin-job-112034744172-closed.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/admin-job-112034744172-closed.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/admin-job-112034744172-closed.stdout.raw.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/compose-job-112034742256-closed.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/compose-job-112034742256-closed.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/compose-job-112034742256-closed.stdout.raw.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/final-ci-verification.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/final-seal.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/final-seal.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/final-seal.stdout.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/snapshot-01-compose-jobs.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/snapshot-01-compose-jobs.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/snapshot-01-compose-jobs.stdout.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/snapshot-01-compose-run.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/snapshot-01-compose-run.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/snapshot-01-compose-run.stdout.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/snapshot-01-web-jobs.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/snapshot-01-web-jobs.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/snapshot-01-web-jobs.stdout.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/snapshot-01-web-run.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/snapshot-01-web-run.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/snapshot-01-web-run.stdout.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/snapshot-02-compose-jobs.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/snapshot-02-compose-jobs.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/snapshot-02-compose-jobs.stdout.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/snapshot-02-compose-run.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/snapshot-02-compose-run.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/snapshot-02-compose-run.stdout.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/snapshot-02-web-jobs.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/snapshot-02-web-jobs.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/snapshot-02-web-jobs.stdout.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/snapshot-02-web-run.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/snapshot-02-web-run.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/snapshot-02-web-run.stdout.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/snapshot-03-web-artifacts.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/snapshot-03-web-artifacts.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/snapshot-03-web-artifacts.stdout.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/snapshot-03-web-jobs.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/snapshot-03-web-jobs.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/snapshot-03-web-jobs.stdout.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/snapshot-03-web-run.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/snapshot-03-web-run.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/snapshot-03-web-run.stdout.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/web-job-112034744317-closed.result.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/web-job-112034744317-closed.stderr.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/web-job-112034744317-closed.stdout.raw.log.gz",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    },
+    {
+      "storedPath": "docker-linux-ci/web-ssr-actual-runtime.proof.json",
+      "storedExact": true,
+      "decodedOriginalExact": true,
+      "currentTempSourceExact": true
+    }
+  ]
+}

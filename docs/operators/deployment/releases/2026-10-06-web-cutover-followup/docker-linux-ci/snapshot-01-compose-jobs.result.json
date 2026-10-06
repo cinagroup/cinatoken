@@ -1,0 +1,12 @@
+{
+  "startedAt": "2026-10-05T23:52:54.1589941Z",
+  "completedAt": "2026-10-05T23:52:54.2653164Z",
+  "actualExitCode": 1,
+  "command": [
+    "gh",
+    "api",
+    "--allow-escape-sequences",
+    "repos/cinagroup/cinatoken/actions/runs/37390677930/jobs?per_page=100"
+  ],
+  "terminal": true
+}

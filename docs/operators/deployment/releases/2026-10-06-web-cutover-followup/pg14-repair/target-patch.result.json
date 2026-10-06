@@ -1,0 +1,17 @@
+{
+  "startedAt": "2026-10-05T23:31:07.840Z",
+  "completedAt": "2026-10-05T23:31:07.895Z",
+  "program": "git",
+  "arguments": [
+    "diff",
+    "--",
+    "scripts/db/cutover/postgres-replay-scale-lock.native.test.mjs"
+  ],
+  "actualExitCode": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdoutPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-reference-repair-ee01603721fe44e391a089409cd94959\\target-patch.stdout.txt",
+  "stderrPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-reference-repair-ee01603721fe44e391a089409cd94959\\target-patch.stderr.txt",
+  "stdoutBytes": 877,
+  "stderrBytes": 0
+}

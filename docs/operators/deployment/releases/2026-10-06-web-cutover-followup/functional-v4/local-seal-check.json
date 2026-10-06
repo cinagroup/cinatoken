@@ -1,0 +1,39 @@
+{
+  "at": "2026-10-05T23:45:30.787Z",
+  "actualExit": 0,
+  "preparationOnly": true,
+  "browserStarted": false,
+  "productionRequests": 0,
+  "nodeSyntaxChecks": [
+    {
+      "name": "main",
+      "actualExit": 0
+    },
+    {
+      "name": "executor",
+      "actualExit": 0
+    },
+    {
+      "name": "helper",
+      "actualExit": 0
+    }
+  ],
+  "planRaw": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-functional-browser-v4-final-20261006-qfXa5E\\v4-sealed-plan.json",
+    "bytes": 11163,
+    "sha256": "ae4999f480a9bad068e38e3dcb70d73cfd897b3664df44bd127b283178d670ba"
+  },
+  "originalV3Raw": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-independent-web-browser-v3-56686244d1194d108aad8107f6374be2\\production-web-browser-observe-v3.mjs",
+    "bytes": 25585,
+    "sha256": "5fe013bb9c8cd533aa144b4c3820b11008359370dfef44b1b4a4f922781ffa34"
+  },
+  "assertionEquivalenceRaw": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-functional-browser-v4-final-20261006-qfXa5E\\v4-assertion-equivalence.json",
+    "bytes": 33248,
+    "sha256": "c4baa18bf9e4a52682a10572e1ab45900a953f2663da049616a702f1b00222c4"
+  },
+  "original85AssertCallsRetained": true,
+  "originalInputsStillSame": true,
+  "newInputsStillSame": true
+}

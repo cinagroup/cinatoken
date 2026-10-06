@@ -1,0 +1,15 @@
+{
+  "at": "2026-10-05T23:48:04.930Z",
+  "finishedAt": "2026-10-05T23:48:05.061Z",
+  "executable": "C:/Program Files/Git/cmd/git.exe",
+  "args": [
+    "commit",
+    "-m",
+    "fix(ci): freeze the historical usage repair fixture at PG73"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-migration-progress-20261006-541315903c5243bc9a08bbc8a3515df4/pg-usage-commit.stdout.log",
+  "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-migration-progress-20261006-541315903c5243bc9a08bbc8a3515df4/pg-usage-commit.stderr.log"
+}

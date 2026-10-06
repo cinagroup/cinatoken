@@ -1,0 +1,14 @@
+{
+  "gitSHA": "c13a64b9c3b2c90adcf736910ea408868d7854f1",
+  "workerVersionId": "2a0a2777-d3b1-47f0-a0a7-88e701b4d2d9",
+  "phase": "cutover",
+  "targetOrigin": "https://cinatoken.com",
+  "canonicalOrigin": "https://cinatoken.com",
+  "operatorVerifiedLiveVersion": true,
+  "all29FlagsEnabled": true,
+  "liveProof": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-migration-progress-20261006-541315903c5243bc9a08bbc8a3515df4/production-live.live-proof.json",
+    "bytes": 6014,
+    "sha256": "e13f0a32321f945130f215cb2659ff4f1003eb7aa8d7b509a1e3a71f8ac3bef4"
+  }
+}

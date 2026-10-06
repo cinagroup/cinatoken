@@ -1,0 +1,462 @@
+{
+  "schema": "workerd-v364-cancel-readonly-upstream-diagnosis",
+  "at": "2026-10-05T23:39:57.453Z",
+  "localAuditActualExit": 0,
+  "currentHead": "abe8eb89e8cdbac005bc085d61acf5d2213a2f23",
+  "scope": {
+    "repositoryChanges": 0,
+    "dependencyUpgrades": 0,
+    "fixtureAssertionChanges": 0,
+    "CIInvocations": 0,
+    "CIPolls": 0,
+    "localWorkerdExecutions": 0,
+    "productionRequests": 0,
+    "DBConnections": 0,
+    "DBWrites": 0,
+    "productionBindingsOrFlagsChanged": false
+  },
+  "lockedRuntime": {
+    "workerd": "1.20260828.1",
+    "miniflare": "5.20260828.0-alpha",
+    "wrangler": "4.127.1",
+    "releaseRef": "refs/tags/v1.20260828.1",
+    "releaseCommit": "8ea63498c7aa107995f9b2ffee7789631707e09f"
+  },
+  "historicalStrictFailure": {
+    "runID": 37297885860,
+    "headSHA": "bdc1bfcf15d93a9b2769d3f52352bfa39eab8928",
+    "url": "https://github.com/cinagroup/cinatoken/actions/runs/37297885860",
+    "readAt": "2026-10-05T12:37:36.450Z",
+    "inventory": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e/FINAL-native-ci-inventory-v2.json",
+      "bytes": 94215,
+      "sha256": "f438a29e21e9aa9943b04159fd7811062960f0fe3ea629d874e0c61bb4e69f64"
+    },
+    "latestRunNotRequeried": true,
+    "assertion": "null !== observed at http-cancel-successor.test.mjs:278",
+    "counts": {
+      "tests": 8,
+      "passed": 7,
+      "failed": 1,
+      "skipped": 0
+    },
+    "excerpt": {
+      "source": "proxy-run-latest-failed-log.stdout.txt",
+      "firstLine": 35573,
+      "lastLine": 35618,
+      "text": "dispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5123048Z not ok 5 - response-body cancellation is observed inside the private holder\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5124277Z   ---\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5124815Z   duration_ms: 1601.564601\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5125326Z   type: 'test'\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5126687Z   location: '/home/runner/work/cinatoken/cinatoken/packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs:260:1'\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5128105Z   failureType: 'testCodeFailure'\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5128620Z   error: |-\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5129346Z     Expected values to be strictly equal:\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5129873Z     \ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5130248Z     null !== 'observed'\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5130667Z     \ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5131056Z   code: 'ERR_ASSERTION'\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5131513Z   name: 'AssertionError'\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5131973Z   expected: 'observed'\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5132401Z   actual: ~\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5132809Z   operator: 'strictEqual'\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5133263Z   stack: |-\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5134586Z     TestContext.<anonymous> (file:///home/runner/work/cinatoken/cinatoken/packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs:278:10)\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5135503Z     async Test.run (node:internal/test_runner/test:1054:7)\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5136031Z     async Test.processPendingSubtests (node:internal/test_runner/test:744:7)\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5136435Z   ...\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5452895Z # Subtest: v364 in-process contract: private holder bounds and validates six fields; gateway forwards no auth or provider data\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5454859Z ok 6 - v364 in-process contract: private holder bounds and validates six fields; gateway forwards no auth or provider data\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5455926Z   ---\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5456889Z   duration_ms: 81.001827\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5457418Z   type: 'test'\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5457827Z   ...\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5459468Z # Subtest: v364 in-process contract: one Response yields a first chunk before holder release and cancellation reaches source\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5461332Z ok 7 - v364 in-process contract: one Response yields a first chunk before holder release and cancellation reaches source\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5462417Z   ---\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5462816Z   duration_ms: 62.602941\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5463277Z   type: 'test'\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5463662Z   ...\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5464721Z # Subtest: v364 in-process cancellation retains the asynchronous holder observation in its request lifetime\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5466380Z ok 8 - v364 in-process cancellation retains the asynchronous holder observation in its request lifetime\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5467319Z   ---\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5467721Z   duration_ms: 4.938205\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5468205Z   type: 'test'\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5468621Z   ...\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5469388Z 1..8\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5469782Z # tests 8\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5470158Z # suites 0\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5470588Z # pass 7\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5470958Z # fail 1\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5471363Z # cancelled 0\ndispatch-safety\tUNKNOWN STEP\t2026-10-05T10:45:27.5471763Z # skipped 0"
+    },
+    "rawLog": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-ci-inventory-d7b57ac3c0804fc0a7fbddb860e5bc8e\\proxy-run-latest-failed-log.stdout.txt",
+      "bytes": 3794329,
+      "sha256": "af6809db84c3c6118690a7c48ee3728c8b0d60a49292740c4c5f50f66c44d2c6"
+    },
+    "runtimePass": false
+  },
+  "sourceFindings": [
+    {
+      "id": "knownLockedDropPath",
+      "evidence": "locked-standard lines3540-3610 and3743-3775; locked-readable284-287; locked-standard291-324",
+      "finding": "The locked JS controller always pumps via DrainingReader. The coroutine cancels the reader only in its exception path. Frame teardown destroys DrainingReader, whose destructor releases the reader with no isolate lock; that release path does not invoke source cancel."
+    },
+    {
+      "id": "fixtureMatchesAsyncSource",
+      "evidence": "private-holder65-91; gateway10-28; successor260-281",
+      "finding": "The synthetic holder enqueues an initial SSE frame and awaits asynchronous KV/timer work in pull. The gateway forwards this one response body. The dedicated HTTP client destroys request and response after the first frame and asserts incomplete socket closure. The strict source-cancel KV observation remains null in the known Linux run."
+    },
+    {
+      "id": "requestSignalNotMissing",
+      "evidence": "both frozen JSONC configs6; successor120-129; locked-compatibility794-798; locked-worker-entrypoint427-468",
+      "finding": "Both fixture Workers already explicitly opt into enable_request_signal. The flag creates an incoming request AbortSignal and the entrypoint triggers abort on disconnect; it does not add source cancel to the dropped pump. Private syntheticStream has no abort listener. Its waitUntil retains an observation only after cancel is invoked."
+    },
+    {
+      "id": "compatibilityDateDoesNotFixDrop",
+      "evidence": "successor28 and120/128; locked-standard3743-3775",
+      "finding": "The local successor uses supported runtime date2026-09-04 while frozen configs stay2026-09-25. The locked pump path has no old-draining implementation selection. Changing the compatibility date or claiming a flag waiver does not establish cancellation correctness."
+    },
+    {
+      "id": "currentUpstreamProposedFix",
+      "evidence": "pr7600 raw file diff pinned955f31cf92df5461463e48fae6c870f86a07b537",
+      "finding": "PR7600 adds a cancellation-aware pump frame teardown and schedules source cancellation through a weak IoContext reference and waitUntil. That mechanism is absent in the locked release source. The PR remains open and unmerged at this audit."
+    }
+  ],
+  "confidence": {
+    "proven": "The locked runtime contains the exact missing drop-cancel mechanism described by upstream issue6832, and the project failure reaches the matching async SSE/socket-close boundary.",
+    "inference": "An upstream runtime regression is a strong candidate for the project null cancellation observation.",
+    "notYetProven": [
+      "No isolated differential execution with a fixed runtime was run; the exact project failure causal chain remains unconfirmed.",
+      "The one-second observation poll and KV request lifetime are not independently ruled out as contributing factors.",
+      "No production Web SSE defect or general Service Binding/RPC cancellation failure is established."
+    ],
+    "strictFailedTestRetained": true
+  },
+  "nextValidation": {
+    "readyOnly": true,
+    "steps": [
+      "Use an isolated Linux reproduction with an async source and explicit socket close to compare the locked release and a known corrected runtime; record request abort and source cancel separately without satisfying source assertions from an abort listener.",
+      "Only after an upstream fix is merged and packaged, evaluate an isolated compatible Miniflare/workerd pair and rerun the unchanged full strict holder test plus dispatch suite.",
+      "Keep the private-holder source cancel observation, socket incomplete close, exactly one acceptance, no release, original body/header/secret isolation assertions. No success record or gate change before execution."
+    ],
+    "excluded": [
+      "Blind global dependency upgrade",
+      "A synthetic abort hook that writes the source-cancel observation itself",
+      "Relaxing the null assertion or extending the timeout without evidence",
+      "Production holder enablement or flags/bindings changes"
+    ]
+  },
+  "apiReads": [
+    {
+      "label": "issue6832",
+      "startedAt": "2026-10-05T23:36:37.907Z",
+      "completedAt": "2026-10-05T23:36:39.835Z",
+      "actualExit": 0,
+      "result": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-workerd-cancel-diagnosis-393aa84d3e474d2184c6c0b189c803a9\\issue6832.result.json",
+        "bytes": 588,
+        "sha256": "655023391df6695cd8bc68eee8495a43d2931a971f010608bad1af335a6609e5"
+      },
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-workerd-cancel-diagnosis-393aa84d3e474d2184c6c0b189c803a9\\issue6832.stdout.txt",
+        "bytes": 8540,
+        "sha256": "b72bd2e14bdd05ad09cc4106126c7124da744a4f8ba009a33305535432030fdd"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-workerd-cancel-diagnosis-393aa84d3e474d2184c6c0b189c803a9\\issue6832.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "label": "pr6833",
+      "startedAt": "2026-10-05T23:36:36.081Z",
+      "completedAt": "2026-10-05T23:36:38.352Z",
+      "actualExit": 0,
+      "result": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-workerd-cancel-diagnosis-393aa84d3e474d2184c6c0b189c803a9\\pr6833.result.json",
+        "bytes": 582,
+        "sha256": "f02c2af4e0ca7b1453e602151fb99cdc7a2a954549f4faaa4edb5e88121f5bdb"
+      },
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-workerd-cancel-diagnosis-393aa84d3e474d2184c6c0b189c803a9\\pr6833.stdout.txt",
+        "bytes": 22819,
+        "sha256": "300fbc16c0a7be3ca448d18a1bd46bfa8cbf02e2383b1b8d1cab07a847a3c45b"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-workerd-cancel-diagnosis-393aa84d3e474d2184c6c0b189c803a9\\pr6833.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "label": "pr7600",
+      "startedAt": "2026-10-05T23:36:36.938Z",
+      "completedAt": "2026-10-05T23:36:38.993Z",
+      "actualExit": 0,
+      "result": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-workerd-cancel-diagnosis-393aa84d3e474d2184c6c0b189c803a9\\pr7600.result.json",
+        "bytes": 582,
+        "sha256": "604bb6e0cfafa92a49f7e5be826e53f6fa2279fde11ac11dfec632cd651f8548"
+      },
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-workerd-cancel-diagnosis-393aa84d3e474d2184c6c0b189c803a9\\pr7600.stdout.txt",
+        "bytes": 18882,
+        "sha256": "571d37136970021a603e8b490688d3e8d40d52633dc2e3dcf05f437cb12d728d"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-workerd-cancel-diagnosis-393aa84d3e474d2184c6c0b189c803a9\\pr7600.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "label": "locked-release-ref",
+      "startedAt": "2026-10-05T23:36:36.687Z",
+      "completedAt": "2026-10-05T23:36:38.200Z",
+      "actualExit": 0,
+      "result": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-workerd-cancel-diagnosis-393aa84d3e474d2184c6c0b189c803a9\\locked-release-ref.result.json",
+        "bytes": 620,
+        "sha256": "ea722d98313a8379c36c8d7eb2e17fb152314883b4b9e3d50d97d11133fb8a71"
+      },
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-workerd-cancel-diagnosis-393aa84d3e474d2184c6c0b189c803a9\\locked-release-ref.stdout.txt",
+        "bytes": 361,
+        "sha256": "af47a8a34c782efe3a4490f3314c5ec7ba488cce5d5a0486f361622b0dec2343"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-workerd-cancel-diagnosis-393aa84d3e474d2184c6c0b189c803a9\\locked-release-ref.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "label": "locked-standard",
+      "startedAt": "2026-10-05T23:37:19.240Z",
+      "completedAt": "2026-10-05T23:37:22.483Z",
+      "actualExit": 0,
+      "result": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-workerd-cancel-diagnosis-393aa84d3e474d2184c6c0b189c803a9\\locked-standard.result.json",
+        "bytes": 681,
+        "sha256": "56218160f5d0ea31780e5bb90c0dfc6aaa3500d5a628cd0d6ab5499e10cadf44"
+      },
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-workerd-cancel-diagnosis-393aa84d3e474d2184c6c0b189c803a9\\locked-standard.stdout.txt",
+        "bytes": 267455,
+        "sha256": "87c9f7d2e826d325753969881a1b513324d777cb3655752fedee7b576239db21"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-workerd-cancel-diagnosis-393aa84d3e474d2184c6c0b189c803a9\\locked-standard.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "label": "locked-readable",
+      "startedAt": "2026-10-05T23:37:18.943Z",
+      "completedAt": "2026-10-05T23:37:20.789Z",
+      "actualExit": 0,
+      "result": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-workerd-cancel-diagnosis-393aa84d3e474d2184c6c0b189c803a9\\locked-readable.result.json",
+        "bytes": 680,
+        "sha256": "d81915d5ec649538b2409fa013af183a8b0bc69d6319659206d27b1d50a0ad80"
+      },
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-workerd-cancel-diagnosis-393aa84d3e474d2184c6c0b189c803a9\\locked-readable.stdout.txt",
+        "bytes": 44912,
+        "sha256": "28be723698c973bb690793e82b1a2ad6205216d2e4917f49f30642ab75c3ac85"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-workerd-cancel-diagnosis-393aa84d3e474d2184c6c0b189c803a9\\locked-readable.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "label": "locked-compatibility",
+      "startedAt": "2026-10-05T23:37:22.271Z",
+      "completedAt": "2026-10-05T23:37:24.712Z",
+      "actualExit": 0,
+      "result": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-workerd-cancel-diagnosis-393aa84d3e474d2184c6c0b189c803a9\\locked-compatibility.result.json",
+        "bytes": 694,
+        "sha256": "8cf4f13a6991d38f4e4c5aeaca263ff451eb223b6e6b8b67dca5142a543f7d5b"
+      },
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-workerd-cancel-diagnosis-393aa84d3e474d2184c6c0b189c803a9\\locked-compatibility.stdout.txt",
+        "bytes": 123322,
+        "sha256": "205add3273bcf806c42f20e60ea4d5a5c50ec4471def1e08f893b096bb600701"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-workerd-cancel-diagnosis-393aa84d3e474d2184c6c0b189c803a9\\locked-compatibility.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "label": "locked-worker-entrypoint",
+      "startedAt": "2026-10-05T23:37:18.447Z",
+      "completedAt": "2026-10-05T23:37:20.601Z",
+      "actualExit": 0,
+      "result": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-workerd-cancel-diagnosis-393aa84d3e474d2184c6c0b189c803a9\\locked-worker-entrypoint.result.json",
+        "bytes": 698,
+        "sha256": "53eaf4b9f60ce06a0885d9619ca832048bf2d8868b67d79867655ea9b087b2b1"
+      },
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-workerd-cancel-diagnosis-393aa84d3e474d2184c6c0b189c803a9\\locked-worker-entrypoint.stdout.txt",
+        "bytes": 71291,
+        "sha256": "2be4b4e582be2871b0f889938fe170fffa0dc3f2f3021f0bc5f50ad0e1a21d84"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-workerd-cancel-diagnosis-393aa84d3e474d2184c6c0b189c803a9\\locked-worker-entrypoint.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "label": "pr7600-files",
+      "startedAt": "2026-10-05T23:37:15.141Z",
+      "completedAt": "2026-10-05T23:37:17.126Z",
+      "actualExit": 0,
+      "result": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-workerd-cancel-diagnosis-393aa84d3e474d2184c6c0b189c803a9\\pr7600-files.result.json",
+        "bytes": 613,
+        "sha256": "356924a646fa5c57e6f18d450507f73fe8cd4f564c2610af66365f90d449f2e3"
+      },
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-workerd-cancel-diagnosis-393aa84d3e474d2184c6c0b189c803a9\\pr7600-files.stdout.txt",
+        "bytes": 15133,
+        "sha256": "7ed0a3a92f9279543e2889755a8b3a1b7ce47caf36b98413e408e67e56ca8b58"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-workerd-cancel-diagnosis-393aa84d3e474d2184c6c0b189c803a9\\pr7600-files.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "upstreamStates": [
+    {
+      "number": 6832,
+      "title": "🐛 Bug Report — Runtime APIs: client disconnect no longer cancels async ReadableStream response body (regressed in 1.20260619.1, persists in 1.20260717.1)",
+      "state": "open",
+      "updatedAt": "2026-07-17T11:39:03Z",
+      "merged": null,
+      "mergedAt": null,
+      "headSHA": null,
+      "url": "https://github.com/cloudflare/workerd/issues/6832"
+    },
+    {
+      "number": 6833,
+      "title": "Cancel the JS source when a ReadableStream pump is dropped mid-stream",
+      "state": "open",
+      "updatedAt": "2026-07-25T08:25:30Z",
+      "merged": false,
+      "mergedAt": null,
+      "headSHA": "8fe8fa68f0b93cf8ae90f20c4ac4b975158b5a8c",
+      "url": "https://github.com/cloudflare/workerd/pull/6833"
+    },
+    {
+      "number": 7600,
+      "title": "Fixup streams cancelation regression",
+      "state": "open",
+      "updatedAt": "2026-10-05T17:26:49Z",
+      "merged": false,
+      "mergedAt": null,
+      "headSHA": "955f31cf92df5461463e48fae6c870f86a07b537",
+      "url": "https://github.com/cloudflare/workerd/pull/7600"
+    }
+  ],
+  "decodedSources": [
+    {
+      "label": "locked-standard",
+      "repositoryPath": "src/workerd/api/streams/standard.c++",
+      "gitBlobSHA": "3f53c539816eecf7c6925833549b9636911f4f12",
+      "url": "https://github.com/cloudflare/workerd/blob/8ea63498c7aa107995f9b2ffee7789631707e09f/src/workerd/api/streams/standard.c%2B%2B",
+      "source": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-workerd-cancel-diagnosis-393aa84d3e474d2184c6c0b189c803a9\\locked-standard.source.txt",
+        "bytes": 193298,
+        "sha256": "f64a9fe8ab0c2f3bc397ac18d35d59e5c1be8ead1182c7ccd668bfbd993bc698"
+      }
+    },
+    {
+      "label": "locked-readable",
+      "repositoryPath": "src/workerd/api/streams/readable.c++",
+      "gitBlobSHA": "68456cc982fac386c596bd71a290e8a31a209ad0",
+      "url": "https://github.com/cloudflare/workerd/blob/8ea63498c7aa107995f9b2ffee7789631707e09f/src/workerd/api/streams/readable.c%2B%2B",
+      "source": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-workerd-cancel-diagnosis-393aa84d3e474d2184c6c0b189c803a9\\locked-readable.source.txt",
+        "bytes": 31774,
+        "sha256": "ca762b8e7ea908b29eb2c99db4bcad7e50b5f206cd1a75312f4b2b658bfe7f08"
+      }
+    },
+    {
+      "label": "locked-compatibility",
+      "repositoryPath": "src/workerd/io/compatibility-date.capnp",
+      "gitBlobSHA": "c53b043a6aaaca64cf237e63b81fe6b343479868",
+      "url": "https://github.com/cloudflare/workerd/blob/8ea63498c7aa107995f9b2ffee7789631707e09f/src/workerd/io/compatibility-date.capnp",
+      "source": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-workerd-cancel-diagnosis-393aa84d3e474d2184c6c0b189c803a9\\locked-compatibility.source.txt",
+        "bytes": 88675,
+        "sha256": "dde45e2337fe1c8991f165b452968c86008852e086ccdc5e0470a25bd6dafb95"
+      }
+    },
+    {
+      "label": "locked-worker-entrypoint",
+      "repositoryPath": "src/workerd/io/worker-entrypoint.c++",
+      "gitBlobSHA": "f3ed3fb4d6ac227d320dce99fb1ac9741c7a9d0a",
+      "url": "https://github.com/cloudflare/workerd/blob/8ea63498c7aa107995f9b2ffee7789631707e09f/src/workerd/io/worker-entrypoint.c%2B%2B",
+      "source": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-workerd-cancel-diagnosis-393aa84d3e474d2184c6c0b189c803a9\\locked-worker-entrypoint.source.txt",
+        "bytes": 50916,
+        "sha256": "5a26985f9d80021e9af91b0569c54b7d9c987bf5b6ca6d63d37da5c1fab28bf9"
+      }
+    }
+  ],
+  "localSources": [
+    {
+      "name": "package-lock.json",
+      "currentGitBlob": "d197e99ccff37fd105e436d27f182282049625f3",
+      "historicalGitBlob": "d197e99ccff37fd105e436d27f182282049625f3",
+      "identicalToKnownFailedSource": true,
+      "workingFile": {
+        "path": "C:\\cinagroup\\cinatoken\\package-lock.json",
+        "bytes": 830546,
+        "sha256": "f9c65b6e373a231d52d6eda634bb5f947dda3174734cd70e2b811e09fff0b6f0"
+      }
+    },
+    {
+      "name": ".github/workflows/proxy-dispatch-safety.yml",
+      "currentGitBlob": "2165a20b2b2b235a95521d5fedad44a5c37b423d",
+      "historicalGitBlob": "2165a20b2b2b235a95521d5fedad44a5c37b423d",
+      "identicalToKnownFailedSource": true,
+      "workingFile": {
+        "path": "C:\\cinagroup\\cinatoken\\.github\\workflows\\proxy-dispatch-safety.yml",
+        "bytes": 45882,
+        "sha256": "ed33fec56d1260e651b733d4b61c002c9f8ebea762e440e700c8c564797374ef"
+      }
+    },
+    {
+      "name": "packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs",
+      "currentGitBlob": "255082f148bd7773be35a1956fae5cbcf2b3a621",
+      "historicalGitBlob": "255082f148bd7773be35a1956fae5cbcf2b3a621",
+      "identicalToKnownFailedSource": true,
+      "workingFile": {
+        "path": "C:\\cinagroup\\cinatoken\\packages\\proxy\\scripts\\staging\\chat-holder-binding-v364-http-cancel-successor.test.mjs",
+        "bytes": 13354,
+        "sha256": "d23d1c710b539b6c64655fbb1fa4e4de85b228bab19c757bc0e4de48528972e5"
+      }
+    },
+    {
+      "name": "packages/proxy/scripts/staging/chat-holder-private-v364.ts",
+      "currentGitBlob": "b97800f8bfcdfc6f5c3f561f812ac9df43e7bd69",
+      "historicalGitBlob": "b97800f8bfcdfc6f5c3f561f812ac9df43e7bd69",
+      "identicalToKnownFailedSource": true,
+      "workingFile": {
+        "path": "C:\\cinagroup\\cinatoken\\packages\\proxy\\scripts\\staging\\chat-holder-private-v364.ts",
+        "bytes": 5367,
+        "sha256": "44070fcbb7058b915329a150634eaa649c1b3601724495a1620e94ce2d54d1bf"
+      }
+    },
+    {
+      "name": "packages/proxy/scripts/staging/chat-holder-gateway-v364.ts",
+      "currentGitBlob": "90ff9ffdf486f19fc80c57111053595ff3786aa7",
+      "historicalGitBlob": "90ff9ffdf486f19fc80c57111053595ff3786aa7",
+      "identicalToKnownFailedSource": true,
+      "workingFile": {
+        "path": "C:\\cinagroup\\cinatoken\\packages\\proxy\\scripts\\staging\\chat-holder-gateway-v364.ts",
+        "bytes": 1534,
+        "sha256": "8c85b01ba54daa9b7302c726d20693d08ccb3395350ea6a333817eed46441eaf"
+      }
+    },
+    {
+      "name": "packages/proxy/scripts/staging/wrangler.chat-holder-private-v364.jsonc",
+      "currentGitBlob": "2edaf2a4825cb7162f462d3242657aec90336f99",
+      "historicalGitBlob": "2edaf2a4825cb7162f462d3242657aec90336f99",
+      "identicalToKnownFailedSource": true,
+      "workingFile": {
+        "path": "C:\\cinagroup\\cinatoken\\packages\\proxy\\scripts\\staging\\wrangler.chat-holder-private-v364.jsonc",
+        "bytes": 568,
+        "sha256": "6b897d8aa7b01087b75d4b74968d4004e2b6ddb87650bad1203c7693160b2047"
+      }
+    },
+    {
+      "name": "packages/proxy/scripts/staging/wrangler.chat-holder-gateway-v364.jsonc",
+      "currentGitBlob": "46bf8a6c158c0b94d8de0829fe3add3545cdd4d0",
+      "historicalGitBlob": "46bf8a6c158c0b94d8de0829fe3add3545cdd4d0",
+      "identicalToKnownFailedSource": true,
+      "workingFile": {
+        "path": "C:\\cinagroup\\cinatoken\\packages\\proxy\\scripts\\staging\\wrangler.chat-holder-gateway-v364.jsonc",
+        "bytes": 598,
+        "sha256": "e1a0354ff5bf7915c6c125f3003683a56b708d8bdd6006cce6b33c4ff8a6bb77"
+      }
+    }
+  ],
+  "citations": [
+    "https://github.com/cloudflare/workerd/issues/6832",
+    "https://github.com/cloudflare/workerd/pull/6833",
+    "https://github.com/cloudflare/workerd/pull/7600",
+    "https://github.com/cnluzhang/workerd-stream-cancel-repro"
+  ],
+  "limitations": "Read-only diagnosis, not a runtime PASS. All upstream data is primary source and exact-tag source blobs are checked; the original failed native result remains authoritative for its run."
+}

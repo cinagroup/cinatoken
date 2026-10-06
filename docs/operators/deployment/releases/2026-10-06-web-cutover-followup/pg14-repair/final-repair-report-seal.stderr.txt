@@ -1,0 +1,35 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
++ actual - expected
+
+  {
+    bytes: 17692,
++   path: 'C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\postgres-replay-scale-lock.native.test.mjs',
+-   path: 'C:/cinagroup/cinatoken/scripts/db/cutover/postgres-replay-scale-lock.native.test.mjs',
+    sha256: '5356a63ec6e73cf63910d9f9fc8956731319a7d8f485d9c34dd318fcc6c1a340'
+  }
+
+    at file:///C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-reference-repair-ee01603721fe44e391a089409cd94959/seal-repair-report.mjs:15:8
+    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:661:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: {
+    path: 'C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\postgres-replay-scale-lock.native.test.mjs',
+    bytes: 17692,
+    sha256: '5356a63ec6e73cf63910d9f9fc8956731319a7d8f485d9c34dd318fcc6c1a340'
+  },
+  expected: {
+    path: 'C:/cinagroup/cinatoken/scripts/db/cutover/postgres-replay-scale-lock.native.test.mjs',
+    bytes: 17692,
+    sha256: '5356a63ec6e73cf63910d9f9fc8956731319a7d8f485d9c34dd318fcc6c1a340'
+  },
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.14.1

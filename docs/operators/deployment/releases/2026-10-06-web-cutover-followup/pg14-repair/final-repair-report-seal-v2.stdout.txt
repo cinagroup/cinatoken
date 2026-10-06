@@ -1,0 +1,24 @@
+{
+  "report": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-reference-repair-ee01603721fe44e391a089409cd94959\\FINAL-pg73-reference-repair.json",
+    "bytes": 13207,
+    "sha256": "5bde20780387175f3fcf88b319f3614c981f8a44b28e7bf0e9542cb034a46b18"
+  },
+  "target": "scripts/db/cutover/postgres-replay-scale-lock.native.test.mjs",
+  "beforeGitBlob": "36168c0b44180e55e7119873522c4807c76c9fc8",
+  "afterWorktreeGitBlob": "b308aee16e57becc3deec5d8de44af82b4a36029",
+  "after": {
+    "path": "C:/cinagroup/cinatoken/scripts/db/cutover/postgres-replay-scale-lock.native.test.mjs",
+    "bytes": 17692,
+    "sha256": "5356a63ec6e73cf63910d9f9fc8956731319a7d8f485d9c34dd318fcc6c1a340"
+  },
+  "localAuditActualExit": 0,
+  "nativeFixtureExecuted": false,
+  "pendingValidation": {
+    "workflow": ".github/workflows/proxy-dispatch-safety.yml",
+    "job": "native-financial-consumer",
+    "platform": "ubuntu-latest in postgres:18.6-bookworm container",
+    "command": "gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin node --import tsx --test scripts/db/cutover/postgres-replay-scale-lock.native.test.mjs",
+    "result": "NOT RUN; Root commit/push required for actual Linux PostgreSQL CI result"
+  }
+}

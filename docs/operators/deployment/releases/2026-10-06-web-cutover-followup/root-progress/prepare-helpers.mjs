@@ -1,0 +1,5 @@
+import fs from 'node:fs';import path from 'node:path';import crypto from 'node:crypto';
+const previous='C:/Users/cina/AppData/Local/Temp/cinatoken-web-retention-40bda77a453343d89d5fe50706d58326',temp="C:/Users/cina/AppData/Local/Temp/cinatoken-migration-progress-20261006-541315903c5243bc9a08bbc8a3515df4";
+const receipt={at:new Date().toISOString(),sourceScriptsUnmodified:true,files:[]};
+for(const name of ['run-command.mjs','verify-live-web.mjs','guard-live-deployment.mjs','inventory-before.json']){const raw=fs.readFileSync(previous+'/'+name);const b=name==='run-command.mjs'?Buffer.from(raw.toString().replace("const t='"+previous+"';","const t='"+temp+"';")):raw;fs.writeFileSync(temp+'/'+name,b,{flag:'wx'});receipt.files.push({name,bytes:b.length,sha256:crypto.createHash('sha256').update(b).digest('hex'),originalBytes:raw.length,unchanged:name!=='run-command.mjs'});}
+fs.writeFileSync(temp+'/helper-preparation.json',JSON.stringify(receipt,null,2)+'\n',{flag:'wx'});console.log(JSON.stringify(receipt));

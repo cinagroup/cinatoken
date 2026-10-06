@@ -1,0 +1,16 @@
+{
+  "startedAt": "2026-10-05T23:36:36.081Z",
+  "completedAt": "2026-10-05T23:36:38.352Z",
+  "program": "gh",
+  "arguments": [
+    "api",
+    "repos/cloudflare/workerd/pulls/6833"
+  ],
+  "actualExitCode": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdoutPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-workerd-cancel-diagnosis-393aa84d3e474d2184c6c0b189c803a9\\pr6833.stdout.txt",
+  "stderrPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-workerd-cancel-diagnosis-393aa84d3e474d2184c6c0b189c803a9\\pr6833.stderr.txt",
+  "stdoutBytes": 22819,
+  "stderrBytes": 0
+}

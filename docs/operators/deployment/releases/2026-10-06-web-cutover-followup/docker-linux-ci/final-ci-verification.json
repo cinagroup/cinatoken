@@ -1,0 +1,937 @@
+{
+  "schema": "independent-same-sha-linux-web-and-compose-ci-verification-v1",
+  "verifiedAt": "2026-10-05T23:57:56.115Z",
+  "actualExitCode": 0,
+  "terminal": true,
+  "gitSHA": "5471899c8fd43daf9df1f15261d75171a6dbb8b8",
+  "web": {
+    "runId": 37390678029,
+    "url": "https://github.com/cinagroup/cinatoken/actions/runs/37390678029",
+    "event": "push",
+    "runAttempt": 1,
+    "status": "completed",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "id": 112034744172,
+        "name": "Admin contracts and public SSR build",
+        "status": "completed",
+        "conclusion": "success",
+        "headSHA": "5471899c8fd43daf9df1f15261d75171a6dbb8b8",
+        "labels": [
+          "ubuntu-latest"
+        ],
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1,
+            "started_at": "2026-10-05T23:49:38Z",
+            "completed_at": "2026-10-05T23:49:39Z"
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2,
+            "started_at": "2026-10-05T23:49:39Z",
+            "completed_at": "2026-10-05T23:49:44Z"
+          },
+          {
+            "name": "Run actions/setup-node@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3,
+            "started_at": "2026-10-05T23:49:44Z",
+            "completed_at": "2026-10-05T23:49:48Z"
+          },
+          {
+            "name": "Run npm ci --ignore-scripts",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4,
+            "started_at": "2026-10-05T23:49:48Z",
+            "completed_at": "2026-10-05T23:50:27Z"
+          },
+          {
+            "name": "Run npm run typecheck -w @octafuse/core",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5,
+            "started_at": "2026-10-05T23:50:27Z",
+            "completed_at": "2026-10-05T23:50:38Z"
+          },
+          {
+            "name": "Run npm run build:node-index -w @octafuse/core",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6,
+            "started_at": "2026-10-05T23:50:38Z",
+            "completed_at": "2026-10-05T23:50:38Z"
+          },
+          {
+            "name": "Validate account repository types and database contracts",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 7,
+            "started_at": "2026-10-05T23:50:38Z",
+            "completed_at": "2026-10-05T23:50:43Z"
+          },
+          {
+            "name": "Validate integration-key atomic audits and migration contracts",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 8,
+            "started_at": "2026-10-05T23:50:43Z",
+            "completed_at": "2026-10-05T23:50:45Z"
+          },
+          {
+            "name": "Validate Tools atomic configuration, single snapshots and private clients",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 9,
+            "started_at": "2026-10-05T23:50:45Z",
+            "completed_at": "2026-10-05T23:50:48Z"
+          },
+          {
+            "name": "Validate global Gateway Key paging and atomic profile conditions",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 10,
+            "started_at": "2026-10-05T23:50:48Z",
+            "completed_at": "2026-10-05T23:50:49Z"
+          },
+          {
+            "name": "Validate Shared Keys state guards and formal earning history protection",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 11,
+            "started_at": "2026-10-05T23:50:49Z",
+            "completed_at": "2026-10-05T23:50:51Z"
+          },
+          {
+            "name": "Validate Shared Keys atomic governance and exact request log detail",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 12,
+            "started_at": "2026-10-05T23:50:51Z",
+            "completed_at": "2026-10-05T23:50:52Z"
+          },
+          {
+            "name": "Validate authority currency failures and anonymous catalog boundary",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 13,
+            "started_at": "2026-10-05T23:50:52Z",
+            "completed_at": "2026-10-05T23:51:10Z"
+          },
+          {
+            "name": "Run npm run typecheck -w @octafuse/admin",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 14,
+            "started_at": "2026-10-05T23:51:10Z",
+            "completed_at": "2026-10-05T23:51:44Z"
+          },
+          {
+            "name": "Validate auth, workspace, keys, account and public BFF contracts",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 15,
+            "started_at": "2026-10-05T23:51:44Z",
+            "completed_at": "2026-10-05T23:52:07Z"
+          },
+          {
+            "name": "Build Admin public SSR and standalone output",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 16,
+            "started_at": "2026-10-05T23:52:07Z",
+            "completed_at": "2026-10-05T23:53:37Z"
+          },
+          {
+            "name": "Post Run actions/setup-node@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 31,
+            "started_at": "2026-10-05T23:53:37Z",
+            "completed_at": "2026-10-05T23:53:37Z"
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 32,
+            "started_at": "2026-10-05T23:53:37Z",
+            "completed_at": "2026-10-05T23:53:37Z"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 33,
+            "started_at": "2026-10-05T23:53:37Z",
+            "completed_at": "2026-10-05T23:53:37Z"
+          }
+        ]
+      },
+      {
+        "id": 112034744317,
+        "name": "web",
+        "status": "completed",
+        "conclusion": "success",
+        "headSHA": "5471899c8fd43daf9df1f15261d75171a6dbb8b8",
+        "labels": [
+          "ubuntu-latest"
+        ],
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1,
+            "started_at": "2026-10-05T23:49:38Z",
+            "completed_at": "2026-10-05T23:49:39Z"
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2,
+            "started_at": "2026-10-05T23:49:39Z",
+            "completed_at": "2026-10-05T23:49:43Z"
+          },
+          {
+            "name": "Run actions/setup-node@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3,
+            "started_at": "2026-10-05T23:49:43Z",
+            "completed_at": "2026-10-05T23:49:48Z"
+          },
+          {
+            "name": "Run npm ci --ignore-scripts",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4,
+            "started_at": "2026-10-05T23:49:48Z",
+            "completed_at": "2026-10-05T23:50:24Z"
+          },
+          {
+            "name": "Run npm run verify:package-versions",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5,
+            "started_at": "2026-10-05T23:50:24Z",
+            "completed_at": "2026-10-05T23:50:24Z"
+          },
+          {
+            "name": "Run npm run format:check -w @cinatoken/web",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6,
+            "started_at": "2026-10-05T23:50:24Z",
+            "completed_at": "2026-10-05T23:50:39Z"
+          },
+          {
+            "name": "Run npm run test:web",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 7,
+            "started_at": "2026-10-05T23:50:39Z",
+            "completed_at": "2026-10-05T23:51:15Z"
+          },
+          {
+            "name": "Run npm run lint -w @cinatoken/web",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 8,
+            "started_at": "2026-10-05T23:51:15Z",
+            "completed_at": "2026-10-05T23:51:41Z"
+          },
+          {
+            "name": "Run bash -n docker/web/entrypoint.sh",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 9,
+            "started_at": "2026-10-05T23:51:41Z",
+            "completed_at": "2026-10-05T23:51:41Z"
+          },
+          {
+            "name": "Run npm run build:web",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 10,
+            "started_at": "2026-10-05T23:51:41Z",
+            "completed_at": "2026-10-05T23:52:07Z"
+          },
+          {
+            "name": "Freeze and verify release artifact",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 11,
+            "started_at": "2026-10-05T23:52:07Z",
+            "completed_at": "2026-10-05T23:52:11Z"
+          },
+          {
+            "name": "Generate verified production Worker configuration",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 12,
+            "started_at": "2026-10-05T23:52:11Z",
+            "completed_at": "2026-10-05T23:52:12Z"
+          },
+          {
+            "name": "Validate release image and Nginx configuration",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 13,
+            "started_at": "2026-10-05T23:52:12Z",
+            "completed_at": "2026-10-05T23:52:20Z"
+          },
+          {
+            "name": "Validate isolated Docker public SSR runtime",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 14,
+            "started_at": "2026-10-05T23:52:20Z",
+            "completed_at": "2026-10-05T23:52:23Z"
+          },
+          {
+            "name": "Run actions/upload-artifact@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 15,
+            "started_at": "2026-10-05T23:52:23Z",
+            "completed_at": "2026-10-05T23:52:25Z"
+          },
+          {
+            "name": "Post Run actions/setup-node@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 29,
+            "started_at": "2026-10-05T23:52:25Z",
+            "completed_at": "2026-10-05T23:52:25Z"
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 30,
+            "started_at": "2026-10-05T23:52:25Z",
+            "completed_at": "2026-10-05T23:52:25Z"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 31,
+            "started_at": "2026-10-05T23:52:25Z",
+            "completed_at": "2026-10-05T23:52:25Z"
+          }
+        ]
+      }
+    ],
+    "stepsAllSuccess": 37,
+    "unit": {
+      "tests": 1596,
+      "pass": 1596,
+      "fail": 0,
+      "source": "actual closed Web job log"
+    },
+    "actualTypecheck": "tsc -b && tsc -p edge/tsconfig.json",
+    "adminCompiledStaticPages": 53,
+    "adminFinalContractSuite": {
+      "tests": 462,
+      "pass": 462,
+      "fail": 0
+    },
+    "manifestSha256": "672c10dc8efae8a55bcb5a23652a48bddf5e487de4209bd5d6ed352b1b340542",
+    "staticNginxSmoke": true,
+    "isolatedDockerSSR": {
+      "realHttpCases": 87,
+      "statusCounts": {
+        "200": 70,
+        "308": 3,
+        "404": 6,
+        "503": 8
+      },
+      "realAnonymousCatalogHttpReads": 64,
+      "ownedContainersVerifiedRemoved": 4,
+      "ownedNetworkVerifiedRemoved": 1,
+      "proofRaw": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-ssr-linux-ci-0be4c64d661e4b73a0d2573908eb7048\\web-ssr-actual-runtime.proof.json",
+        "bytes": 28430,
+        "sha256": "32944ee22d57b43af34d98e14421df0c198d28b4c6e893c26c64447cb2b872d5"
+      },
+      "scope": "Actual isolated Nginx+Node SSR+controlled catalog only, not real Admin/Proxy/TLS/CinaAuth/full G7"
+    }
+  },
+  "artifact": {
+    "id": 11380788781,
+    "name": "cinatoken-web",
+    "sizeInBytes": 6976082,
+    "GitHubReportedDigest": "sha256:ef0a12b4fb5ed7e5700f49e4233c87d7984951c7906dfa90501387df7634ac17",
+    "expired": false,
+    "expiresAt": "2027-01-03T23:49:34Z",
+    "workflowRunId": 37390678029,
+    "headSHA": "5471899c8fd43daf9df1f15261d75171a6dbb8b8",
+    "downloaded": false,
+    "note": "GitHub API reported digest only; no downloaded ZIP digest claim"
+  },
+  "compose": {
+    "runId": 37390677930,
+    "url": "https://github.com/cinagroup/cinatoken/actions/runs/37390677930",
+    "event": "push",
+    "runAttempt": 1,
+    "status": "completed",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "id": 112034742256,
+        "name": "smoke-node-pg",
+        "status": "completed",
+        "conclusion": "success",
+        "headSHA": "5471899c8fd43daf9df1f15261d75171a6dbb8b8",
+        "labels": [
+          "ubuntu-latest"
+        ],
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1,
+            "started_at": "2026-10-05T23:49:38Z",
+            "completed_at": "2026-10-05T23:49:40Z"
+          },
+          {
+            "name": "Checkout",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2,
+            "started_at": "2026-10-05T23:49:40Z",
+            "completed_at": "2026-10-05T23:49:45Z"
+          },
+          {
+            "name": "Set up Docker Buildx",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3,
+            "started_at": "2026-10-05T23:49:45Z",
+            "completed_at": "2026-10-05T23:49:57Z"
+          },
+          {
+            "name": "Start postgres",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4,
+            "started_at": "2026-10-05T23:49:57Z",
+            "completed_at": "2026-10-05T23:50:07Z"
+          },
+          {
+            "name": "Verify legacy schema rename and migration idempotency",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5,
+            "started_at": "2026-10-05T23:50:07Z",
+            "completed_at": "2026-10-05T23:50:27Z"
+          },
+          {
+            "name": "Build and start proxy + admin",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6,
+            "started_at": "2026-10-05T23:50:27Z",
+            "completed_at": "2026-10-05T23:52:43Z"
+          },
+          {
+            "name": "Wait for proxy health",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 7,
+            "started_at": "2026-10-05T23:52:43Z",
+            "completed_at": "2026-10-05T23:52:45Z"
+          },
+          {
+            "name": "Wait for admin health",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 8,
+            "started_at": "2026-10-05T23:52:45Z",
+            "completed_at": "2026-10-05T23:52:45Z"
+          },
+          {
+            "name": "Smoke GET endpoints",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 9,
+            "started_at": "2026-10-05T23:52:45Z",
+            "completed_at": "2026-10-05T23:52:45Z"
+          },
+          {
+            "name": "Teardown",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 10,
+            "started_at": "2026-10-05T23:52:45Z",
+            "completed_at": "2026-10-05T23:52:55Z"
+          },
+          {
+            "name": "Post Set up Docker Buildx",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 19,
+            "started_at": "2026-10-05T23:52:55Z",
+            "completed_at": "2026-10-05T23:53:25Z"
+          },
+          {
+            "name": "Post Checkout",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 20,
+            "started_at": "2026-10-05T23:53:25Z",
+            "completed_at": "2026-10-05T23:53:25Z"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 21,
+            "started_at": "2026-10-05T23:53:25Z",
+            "completed_at": "2026-10-05T23:53:25Z"
+          }
+        ]
+      }
+    ],
+    "stepsAllSuccess": 13,
+    "actualScope": "PG16 + real migration/idempotency/legacy rename and isolated fixture contracts + real Proxy/Admin start/health/root GET + own teardown",
+    "actualHealth": {
+      "proxyAfterSeconds": 2,
+      "adminAfterSeconds": 1,
+      "adminRootHttp": 200
+    },
+    "webSSRIncluded": false,
+    "TLSIncluded": false,
+    "realCinaAuthIncluded": false,
+    "fullG7Pass": false
+  },
+  "transport": {
+    "firstSandboxReadsActual1Preserved": 4,
+    "reason": "sandbox socket access denied; not a CI product failure",
+    "approvedReadOnlyGhApiActual0": 10,
+    "closedJobLogFetchCount": 3,
+    "jobLogsFetchedOnlyOncePerClosedJob": true
+  },
+  "receipts": [
+    {
+      "file": "admin-job-112034744172-closed.result.json",
+      "terminal": true,
+      "actualExitCode": 0,
+      "command": [
+        "gh",
+        "api",
+        "--allow-escape-sequences",
+        "repos/cinagroup/cinatoken/actions/jobs/112034744172/logs"
+      ],
+      "closedJobLogFetchAttempt": 1,
+      "startedAt": "2026-10-05T23:56:27.5022196Z",
+      "completedAt": "2026-10-05T23:56:32.9555727Z"
+    },
+    {
+      "file": "compose-job-112034742256-closed.result.json",
+      "terminal": true,
+      "actualExitCode": 0,
+      "completedAt": "2026-10-05T23:54:27.6348235Z",
+      "command": [
+        "gh",
+        "api",
+        "--allow-escape-sequences",
+        "repos/cinagroup/cinatoken/actions/jobs/112034742256/logs"
+      ],
+      "startedAt": "2026-10-05T23:54:22.7776092Z",
+      "closedJobLogFetchAttempt": 1
+    },
+    {
+      "file": "snapshot-01-compose-jobs.result.json",
+      "startedAt": "2026-10-05T23:52:54.1589941Z",
+      "completedAt": "2026-10-05T23:52:54.2653164Z",
+      "actualExitCode": 1,
+      "command": [
+        "gh",
+        "api",
+        "--allow-escape-sequences",
+        "repos/cinagroup/cinatoken/actions/runs/37390677930/jobs?per_page=100"
+      ],
+      "terminal": true
+    },
+    {
+      "file": "snapshot-01-compose-run.result.json",
+      "startedAt": "2026-10-05T23:52:54.0581101Z",
+      "completedAt": "2026-10-05T23:52:54.1502553Z",
+      "actualExitCode": 1,
+      "command": [
+        "gh",
+        "api",
+        "--allow-escape-sequences",
+        "repos/cinagroup/cinatoken/actions/runs/37390677930"
+      ],
+      "terminal": true
+    },
+    {
+      "file": "snapshot-01-web-jobs.result.json",
+      "startedAt": "2026-10-05T23:52:53.9525872Z",
+      "completedAt": "2026-10-05T23:52:54.0496216Z",
+      "actualExitCode": 1,
+      "command": [
+        "gh",
+        "api",
+        "--allow-escape-sequences",
+        "repos/cinagroup/cinatoken/actions/runs/37390678029/jobs?per_page=100"
+      ],
+      "terminal": true
+    },
+    {
+      "file": "snapshot-01-web-run.result.json",
+      "startedAt": "2026-10-05T23:52:53.7755628Z",
+      "completedAt": "2026-10-05T23:52:53.9143298Z",
+      "actualExitCode": 1,
+      "command": [
+        "gh",
+        "api",
+        "--allow-escape-sequences",
+        "repos/cinagroup/cinatoken/actions/runs/37390678029"
+      ],
+      "terminal": true
+    },
+    {
+      "file": "snapshot-02-compose-jobs.result.json",
+      "command": [
+        "gh",
+        "api",
+        "--allow-escape-sequences",
+        "repos/cinagroup/cinatoken/actions/runs/37390677930/jobs?per_page=100"
+      ],
+      "completedAt": "2026-10-05T23:53:35.3748944Z",
+      "terminal": true,
+      "actualExitCode": 0,
+      "startedAt": "2026-10-05T23:53:33.8310810Z"
+    },
+    {
+      "file": "snapshot-02-compose-run.result.json",
+      "command": [
+        "gh",
+        "api",
+        "--allow-escape-sequences",
+        "repos/cinagroup/cinatoken/actions/runs/37390677930"
+      ],
+      "completedAt": "2026-10-05T23:53:33.8164503Z",
+      "terminal": true,
+      "actualExitCode": 0,
+      "startedAt": "2026-10-05T23:53:32.3152277Z"
+    },
+    {
+      "file": "snapshot-02-web-jobs.result.json",
+      "command": [
+        "gh",
+        "api",
+        "--allow-escape-sequences",
+        "repos/cinagroup/cinatoken/actions/runs/37390678029/jobs?per_page=100"
+      ],
+      "completedAt": "2026-10-05T23:53:32.2692854Z",
+      "terminal": true,
+      "actualExitCode": 0,
+      "startedAt": "2026-10-05T23:53:30.7780756Z"
+    },
+    {
+      "file": "snapshot-02-web-run.result.json",
+      "command": [
+        "gh",
+        "api",
+        "--allow-escape-sequences",
+        "repos/cinagroup/cinatoken/actions/runs/37390678029"
+      ],
+      "completedAt": "2026-10-05T23:53:30.7388376Z",
+      "terminal": true,
+      "actualExitCode": 0,
+      "startedAt": "2026-10-05T23:53:29.0842040Z"
+    },
+    {
+      "file": "snapshot-03-web-artifacts.result.json",
+      "command": [
+        "gh",
+        "api",
+        "--allow-escape-sequences",
+        "repos/cinagroup/cinatoken/actions/runs/37390678029/artifacts?per_page=100"
+      ],
+      "completedAt": "2026-10-05T23:55:57.7345056Z",
+      "startedAt": "2026-10-05T23:55:56.1955940Z",
+      "terminal": true,
+      "actualExitCode": 0
+    },
+    {
+      "file": "snapshot-03-web-jobs.result.json",
+      "command": [
+        "gh",
+        "api",
+        "--allow-escape-sequences",
+        "repos/cinagroup/cinatoken/actions/runs/37390678029/jobs?per_page=100"
+      ],
+      "completedAt": "2026-10-05T23:55:56.1400566Z",
+      "startedAt": "2026-10-05T23:55:54.5588647Z",
+      "terminal": true,
+      "actualExitCode": 0
+    },
+    {
+      "file": "snapshot-03-web-run.result.json",
+      "command": [
+        "gh",
+        "api",
+        "--allow-escape-sequences",
+        "repos/cinagroup/cinatoken/actions/runs/37390678029"
+      ],
+      "completedAt": "2026-10-05T23:55:54.5005244Z",
+      "startedAt": "2026-10-05T23:55:52.8562401Z",
+      "terminal": true,
+      "actualExitCode": 0
+    },
+    {
+      "file": "web-job-112034744317-closed.result.json",
+      "terminal": true,
+      "actualExitCode": 0,
+      "completedAt": "2026-10-05T23:54:22.7410535Z",
+      "command": [
+        "gh",
+        "api",
+        "--allow-escape-sequences",
+        "repos/cinagroup/cinatoken/actions/jobs/112034744317/logs"
+      ],
+      "startedAt": "2026-10-05T23:54:16.4116439Z",
+      "closedJobLogFetchAttempt": 1
+    }
+  ],
+  "rawInventory": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-ssr-linux-ci-0be4c64d661e4b73a0d2573908eb7048\\admin-job-112034744172-closed.result.json",
+      "bytes": 322,
+      "sha256": "a2f8d40b9d68bb1d5ab39557616ffc6e666959738d82a987177b7d8607bc84ce"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-ssr-linux-ci-0be4c64d661e4b73a0d2573908eb7048\\admin-job-112034744172-closed.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-ssr-linux-ci-0be4c64d661e4b73a0d2573908eb7048\\admin-job-112034744172-closed.stdout.raw.log",
+      "bytes": 510076,
+      "sha256": "46772ccdfcb07cf025d7f532e848fd177d84f49d267034b822040c01838ccb2f"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-ssr-linux-ci-0be4c64d661e4b73a0d2573908eb7048\\compose-job-112034742256-closed.result.json",
+      "bytes": 322,
+      "sha256": "061d6e196d3a1d3f15341033e877ced58fe1e0beaceca5af925c585b3f998282"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-ssr-linux-ci-0be4c64d661e4b73a0d2573908eb7048\\compose-job-112034742256-closed.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-ssr-linux-ci-0be4c64d661e4b73a0d2573908eb7048\\compose-job-112034742256-closed.stdout.raw.log",
+      "bytes": 136198,
+      "sha256": "1c63cef1bf20990322cdff9d9579c11de2b7a6cef1339a37625856e8bbfdaa39"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-ssr-linux-ci-0be4c64d661e4b73a0d2573908eb7048\\snapshot-01-compose-jobs.result.json",
+      "bytes": 300,
+      "sha256": "70c788dcd3f8db9b4b0241c338324cd3947993f3dcf14dad29671c8f119d327a"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-ssr-linux-ci-0be4c64d661e4b73a0d2573908eb7048\\snapshot-01-compose-jobs.stderr.log",
+      "bytes": 222,
+      "sha256": "ca1ac827fa0e14fec2a81c3630685dd4fc0eeb904287b22c8a67dcd8746dd840"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-ssr-linux-ci-0be4c64d661e4b73a0d2573908eb7048\\snapshot-01-compose-jobs.stdout.json",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-ssr-linux-ci-0be4c64d661e4b73a0d2573908eb7048\\snapshot-01-compose-run.result.json",
+      "bytes": 282,
+      "sha256": "401389be9103f5a76d655b685545cbf907d2de7bed794ee27a1fc5546210e90e"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-ssr-linux-ci-0be4c64d661e4b73a0d2573908eb7048\\snapshot-01-compose-run.stderr.log",
+      "bytes": 204,
+      "sha256": "cc2ff2c565c981ba116e06854d4a61d4878ad6bc3d09271b1b23fd29a0b5fc1b"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-ssr-linux-ci-0be4c64d661e4b73a0d2573908eb7048\\snapshot-01-compose-run.stdout.json",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-ssr-linux-ci-0be4c64d661e4b73a0d2573908eb7048\\snapshot-01-web-jobs.result.json",
+      "bytes": 300,
+      "sha256": "53ed833130b51213bf413e26cd3660cded34098c381ce57cde15b9ad79f4cf2a"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-ssr-linux-ci-0be4c64d661e4b73a0d2573908eb7048\\snapshot-01-web-jobs.stderr.log",
+      "bytes": 222,
+      "sha256": "ba86215bda84c54a447c9b92dab2cdaf1af1ce9dfbaab1548bf0b8c3ef74040f"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-ssr-linux-ci-0be4c64d661e4b73a0d2573908eb7048\\snapshot-01-web-jobs.stdout.json",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-ssr-linux-ci-0be4c64d661e4b73a0d2573908eb7048\\snapshot-01-web-run.result.json",
+      "bytes": 282,
+      "sha256": "98f203e06ffdc13cb5997ea9a49de859a08ab1e1181cc8634035f7b611faae9a"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-ssr-linux-ci-0be4c64d661e4b73a0d2573908eb7048\\snapshot-01-web-run.stderr.log",
+      "bytes": 204,
+      "sha256": "f0567ea82913f5333d13328599a2849e31e025d326d0f3e719c0d19cf6c1f7a0"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-ssr-linux-ci-0be4c64d661e4b73a0d2573908eb7048\\snapshot-01-web-run.stdout.json",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-ssr-linux-ci-0be4c64d661e4b73a0d2573908eb7048\\snapshot-02-compose-jobs.result.json",
+      "bytes": 300,
+      "sha256": "44cbb924e2cacab46286b1970f24fa18844d7ad3d296e032d1a2433abbe1e05c"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-ssr-linux-ci-0be4c64d661e4b73a0d2573908eb7048\\snapshot-02-compose-jobs.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-ssr-linux-ci-0be4c64d661e4b73a0d2573908eb7048\\snapshot-02-compose-jobs.stdout.json",
+      "bytes": 3025,
+      "sha256": "c2da6b824a0f1ba02d0a1b940e97779e1cfc54bb2deebc1f66e43e687ef7c6ed"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-ssr-linux-ci-0be4c64d661e4b73a0d2573908eb7048\\snapshot-02-compose-run.result.json",
+      "bytes": 282,
+      "sha256": "0b3cb177a18fab0a28de9307852b87e0067d6f19bb1a426841af38d3969515e5"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-ssr-linux-ci-0be4c64d661e4b73a0d2573908eb7048\\snapshot-02-compose-run.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-ssr-linux-ci-0be4c64d661e4b73a0d2573908eb7048\\snapshot-02-compose-run.stdout.json",
+      "bytes": 12401,
+      "sha256": "f005a9e0811b6947aa257bb691b093d860a38f9e86ad8c71e97d785940903f4f"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-ssr-linux-ci-0be4c64d661e4b73a0d2573908eb7048\\snapshot-02-web-jobs.result.json",
+      "bytes": 300,
+      "sha256": "cb7107edf503bc4899a72211390dff42493e84ce3880aedfde046947a2b0548a"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-ssr-linux-ci-0be4c64d661e4b73a0d2573908eb7048\\snapshot-02-web-jobs.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-ssr-linux-ci-0be4c64d661e4b73a0d2573908eb7048\\snapshot-02-web-jobs.stdout.json",
+      "bytes": 8168,
+      "sha256": "91460b6570090f82c0909798a2ba5195e681737539dabedd25e043ad1d7cebb1"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-ssr-linux-ci-0be4c64d661e4b73a0d2573908eb7048\\snapshot-02-web-run.result.json",
+      "bytes": 282,
+      "sha256": "4f998007f2e67ab2d42806fd4b8701983a8bb97a4abba5ced29e08bc265a95b9"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-ssr-linux-ci-0be4c64d661e4b73a0d2573908eb7048\\snapshot-02-web-run.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-ssr-linux-ci-0be4c64d661e4b73a0d2573908eb7048\\snapshot-02-web-run.stdout.json",
+      "bytes": 12372,
+      "sha256": "477f6cdb50404dd7a24c59c177de2fd36675d23d6abc835de80895ac66bd7e83"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-ssr-linux-ci-0be4c64d661e4b73a0d2573908eb7048\\snapshot-03-web-artifacts.result.json",
+      "bytes": 305,
+      "sha256": "cd768196b7b5232036a2f0a8f43e3ef8fc41bd4f8fa75544724cb7e72b13f267"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-ssr-linux-ci-0be4c64d661e4b73a0d2573908eb7048\\snapshot-03-web-artifacts.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-ssr-linux-ci-0be4c64d661e4b73a0d2573908eb7048\\snapshot-03-web-artifacts.stdout.json",
+      "bytes": 712,
+      "sha256": "d5d7625c327c750d0897c29f2e82c1f653782a897b51a7fa218c47025023fa95"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-ssr-linux-ci-0be4c64d661e4b73a0d2573908eb7048\\snapshot-03-web-jobs.result.json",
+      "bytes": 300,
+      "sha256": "ee5c8cb31b55b13171cf75079aa158a8891538eb2313064332927de23f8b0b28"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-ssr-linux-ci-0be4c64d661e4b73a0d2573908eb7048\\snapshot-03-web-jobs.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-ssr-linux-ci-0be4c64d661e4b73a0d2573908eb7048\\snapshot-03-web-jobs.stdout.json",
+      "bytes": 8450,
+      "sha256": "d6bb5b571e12632c3c1831d8363007630814d7349e197260b94fbac2eb45101b"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-ssr-linux-ci-0be4c64d661e4b73a0d2573908eb7048\\snapshot-03-web-run.result.json",
+      "bytes": 282,
+      "sha256": "e395be207f774920ceb4a73cff40cc0b5bcb037b3614104bf41d1dd4122b2645"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-ssr-linux-ci-0be4c64d661e4b73a0d2573908eb7048\\snapshot-03-web-run.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-ssr-linux-ci-0be4c64d661e4b73a0d2573908eb7048\\snapshot-03-web-run.stdout.json",
+      "bytes": 12375,
+      "sha256": "0626c46d0947b714fc2e2575198b2080dcc7f863d5182e54b63729ac2ad9fad7"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-ssr-linux-ci-0be4c64d661e4b73a0d2573908eb7048\\web-job-112034744317-closed.result.json",
+      "bytes": 322,
+      "sha256": "78646f7c0a229f34165816e1701572143e7cb9112c3f7df3f1e07108cc4ade4c"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-ssr-linux-ci-0be4c64d661e4b73a0d2573908eb7048\\web-job-112034744317-closed.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-ssr-linux-ci-0be4c64d661e4b73a0d2573908eb7048\\web-job-112034744317-closed.stdout.raw.log",
+      "bytes": 728552,
+      "sha256": "c76b5fdfd92188bc2498304ef90d184a3f607e34699e3333643ad9a94e8c729e"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-docker-ssr-linux-ci-0be4c64d661e4b73a0d2573908eb7048\\web-ssr-actual-runtime.proof.json",
+      "bytes": 28430,
+      "sha256": "32944ee22d57b43af34d98e14421df0c198d28b4c6e893c26c64447cb2b872d5"
+    }
+  ],
+  "scopeLimits": [
+    "No workflow rerun, source/Git mutation, artifact download, Cloudflare read/deploy or business/identity requests.",
+    "This same-SHA Linux CI evidence advances the isolated Docker SSR transport requirement only; complete Admin/Proxy/TLS/auth/writes/SSE/WS/rollout/rollback and full G7 remain pending.",
+    "Current Cloudflare Web version and v4 browser result are owned independently by Root; this report makes no production/browser pass claim."
+  ],
+  "selfLogPolicy": "This report indexes only already-closed input receipts/logs. final-seal stdout/stderr are excluded during execution and get a separate terminal result after process exits."
+}

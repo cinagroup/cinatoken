@@ -1,0 +1,15 @@
+{
+  "startedAt": "2026-10-05T23:35:10.406Z",
+  "completedAt": "2026-10-05T23:35:10.830Z",
+  "program": "node",
+  "arguments": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-reference-repair-ee01603721fe44e391a089409cd94959/seal-repair-report.mjs"
+  ],
+  "actualExitCode": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdoutPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-reference-repair-ee01603721fe44e391a089409cd94959\\final-repair-report-seal-v2.stdout.txt",
+  "stderrPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-pg73-reference-repair-ee01603721fe44e391a089409cd94959\\final-repair-report-seal-v2.stderr.txt",
+  "stdoutBytes": 1256,
+  "stderrBytes": 0
+}
