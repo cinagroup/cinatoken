@@ -4,9 +4,9 @@
 	"version": "2.8.0",
 	"type": "module",
 	"scripts": {
-		"dev": "rsbuild dev --environment web",
-		"build": "rsbuild build",
-		"build:check": "npm run typecheck && rsbuild build",
+		"dev": "rsbuild dev --no-env --environment web",
+		"build": "rsbuild build --no-env",
+		"build:check": "npm run typecheck && rsbuild build --no-env",
 		"typecheck": "tsc -b && tsc -p edge/tsconfig.json",
 		"test:unit": "node scripts/test-unit.mjs",
 		"gen:wrangler": "node scripts/gen-web-wrangler.mjs",
@@ -14,7 +14,7 @@
 		"release:package": "node scripts/package-release.mjs",
 		"preview:edge": "wrangler dev --config wrangler.web.jsonc --port 8790",
 		"lint": "eslint src/main.tsx src/legacy-root.tsx src/cinatoken rsbuild.config.ts edge scripts",
-		"preview": "rsbuild preview --environment web",
+		"preview": "rsbuild preview --no-env --environment web",
 		"format:check": "prettier --check src/main.tsx src/legacy-root.tsx src/env.d.ts src/cinatoken src/components/ui src/context/theme-provider.tsx src/styles src/lib/utils.ts src/lib/cookies.ts src/hooks/use-mobile.ts src/hooks/use-mobile.tsx index.html package.json rsbuild.config.ts tsconfig*.json eslint.config.js postcss.config.mjs .prettierrc components.json edge scripts ../../docker/web/*.mjs ../../.github/workflows/web-frontend.yml",
 		"format": "prettier --write src/main.tsx src/legacy-root.tsx src/env.d.ts src/cinatoken src/components/ui src/context/theme-provider.tsx src/styles src/lib/utils.ts src/lib/cookies.ts src/hooks/use-mobile.ts src/hooks/use-mobile.tsx index.html package.json rsbuild.config.ts tsconfig*.json eslint.config.js postcss.config.mjs .prettierrc components.json edge scripts ../../docker/web/*.mjs ../../.github/workflows/web-frontend.yml",
 		"copyright:check": "node scripts/add-copyright.mjs --check",
@@ -101,18 +101,5 @@
 		"shadcn": "^4.8.0",
 		"typescript": "~6.0.3",
 		"typescript-eslint": "^8.59.4"
-	},
-	"overrides": {
-		"brace-expansion": "2.1.1",
-		"dompurify": "3.4.5",
-		"fast-uri": "3.1.2",
-		"hono": "4.12.22",
-		"ip-address": "10.2.0",
-		"js-cookie": "3.0.7",
-		"mermaid": "11.15.0",
-		"minimist": "1.2.8",
-		"postcss": "8.5.15",
-		"qs": "6.15.2",
-		"uuid": "14.0.0"
 	}
 }

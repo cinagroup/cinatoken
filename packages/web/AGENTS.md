@@ -154,7 +154,7 @@
 ### 3.16 构建与部署
 
 - 使用 Rsbuild，配置见 `rsbuild.config.ts`；在仓库根运行 `npm run dev:web`、`npm run build:web`、`npm run typecheck:web`、`npm run test:web`。
-- 浏览器 API 使用同源相对路径；开发代理通过 `CINATOKEN_WEB_ADMIN_ORIGIN` / `CINATOKEN_WEB_PROXY_ORIGIN` 配置，不把代理地址注入浏览器。只有明确公开的构建变量可用 `PUBLIC_` 前缀。
+- 浏览器 API 使用同源相对路径；开发代理通过 `CINATOKEN_WEB_ADMIN_ORIGIN` / `CINATOKEN_WEB_PROXY_ORIGIN` 配置，不把代理地址注入浏览器。`scripts/build-environment.mjs` 的公开变量白名单当前为空，未批准的 `PUBLIC_*` 会使构建失败，错误只记录变量名。npm 开发/构建/预览使用 `--no-env` 关闭 Rsbuild 自动公开注入，由配置隔离加载 Web 包目录的模式环境文件，并监听文件变化后重启开发服务。新增公开变量必须显式更新白名单、注入策略与浏览器产物 canary 验证。
 - **发布前**：执行 typecheck、lint、format 检查，完成生产构建并检查产物体积与环境变量配置。
 
 ---

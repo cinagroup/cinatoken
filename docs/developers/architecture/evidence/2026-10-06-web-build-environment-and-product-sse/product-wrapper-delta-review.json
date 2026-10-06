@@ -1,0 +1,82 @@
+{
+  "schema": "cinatoken-product-sse-wrapper-delta-source-review-v1",
+  "at": "2026-10-06T10:05:01.007Z",
+  "reviewedSource": {
+    "path": "C:/cinagroup/cinatoken/scripts/smoke/run-workerd-product-sse-cancel.py",
+    "snapshot": "reviewed-wrapper.snapshot.py",
+    "bytes": 4401,
+    "sha256": "241d11ea35ec46e80e1d4e3b95f4d570a97ad28c4204dd9d3db21dc6d9e637b5"
+  },
+  "unchangedWorkflow": {
+    "path": "C:/cinagroup/cinatoken/.github/workflows/product-text-sse-workerd-cancellation.yml",
+    "bytes": 1257,
+    "sha256": "c7a682e844b2147b3578c317c9de2d53dcc5a62d3f180d1b480659a746079ac9"
+  },
+  "originalReview": {
+    "root": "C:/Users/cina/AppData/Local/Temp/cinatoken-product-sse-fixture-independent-review-OnwjH3",
+    "FINAL": {
+      "file": "FINAL-product-sse-fixture-independent-review.json",
+      "bytes": 12427,
+      "sha256": "a67035ad8ff087023c7ad6b9f37f678898f908ec272a8f6d982e77cdbc58abb7"
+    },
+    "originalWrapper": {
+      "bytes": 3358,
+      "sha256": "e57c41f1bcc872f43ad89e336f9a38436e432fd77982baf342c1914433375e52"
+    },
+    "preserved": true,
+    "notModified": true
+  },
+  "originalSourceReadTool": {
+    "chunkId": "b72ae7",
+    "actualExit": 0
+  },
+  "reviewScope": "Only updated4401-byte wrapper source plus unchanged workflow fingerprint; no real process-control branch or fixture executed",
+  "F4": {
+    "status": "Resolved for catchable failures in reviewed current source",
+    "currentLines": "35-90,95-104",
+    "facts": [
+      "Popen and120/TERM5/KILL5 waits now under outertry/exceptBaseException/finally",
+      "Timeout after KILL, killpg error and KeyboardInterrupt are recorded in errors, while finally tries owned group cleanup and true child wait",
+      "actualExit is always taken from child.returncode after finally, not a synthetic forced-termination status",
+      "Unknown child/returncode is None; unknown group inquiry is None; terminalClosedfalse or any errors/timeouts/fallback/groupremaining prevent pass"
+    ]
+  },
+  "normalOwnedBoundary": {
+    "timeoutSeconds": 120,
+    "TERMWaitSeconds": 5,
+    "KILLWaitSeconds": 5,
+    "residualGroupScanSeconds": 2,
+    "residualKILLFails": true,
+    "finalWaitSeconds": 5,
+    "finalGroupScanSeconds": 3,
+    "maximumExpectedBoundApproxSeconds": 145,
+    "group": "Own Node session/processgroup created by start_new_session",
+    "childCompletionAuthoritative": "Actual real child.wait/Popen.returncode; this static review does not assert a child has run or closed",
+    "gracefulWorkerdExitProven": false,
+    "noPIDHeapClaim": true
+  },
+  "remainingLimits": [
+    "Default OS SIGTERM/SIGKILL termination of the Python executor is not a Python BaseException; no signal handler is installed, so this review does not promise terminal report/group cleanup after externally killing the executor",
+    "Filesystem failure opening/writing output can prevent a receipt; original outer workflow/step result and any existing raw bytes must stay retained, never inferred as0",
+    "killpg0 distinguishes group existence, not live vs zombie members; residual fallback remains a conservative failure, never claimed graceful"
+  ],
+  "workflow": {
+    "manualOnly": true,
+    "contentsRead": true,
+    "noSecretOrProductionBindingsFound": true,
+    "node22FromNvmrc": true,
+    "lockedNpmCiIgnoreScripts": true,
+    "timeoutStepMinutes": 4,
+    "timeoutJobMinutes": 10,
+    "alwaysUpload": true,
+    "noContinueOnError": true,
+    "freshOwnedUniqueOutput": true,
+    "sourceSHAGithubBound": true
+  },
+  "conclusion": "No additional source-level blocker for the intended single normal bounded owned Linux run. Report unknown/forced/interrupted states honestly; do not claim universal closure after external hard kill. Original failed strict source.cancel remains independent. All runtime/product/process outcomes still await actual Linux execution.",
+  "runtimeExecuted": false,
+  "workerdExecuted": false,
+  "processControlBranchesExecuted": false,
+  "GitCIAPIProductionDBOperations": false,
+  "repoChanges": false
+}

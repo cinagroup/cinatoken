@@ -1,0 +1,7 @@
+npm error Lifecycle script `typecheck` failed with error:
+npm error code 2
+npm error path C:\cinagroup\cinatoken\packages\web
+npm error workspace @cinatoken/web@2.8.0
+npm error location C:\cinagroup\cinatoken\packages\web
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c tsc -b && tsc -p edge/tsconfig.json

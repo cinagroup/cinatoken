@@ -1,0 +1,12 @@
+✔ the managed build rejects an unapproved process PUBLIC variable before compiling (1138.8214ms)
+✔ bare Rsbuild CLI cannot bypass the allowlist through a mode env file (222.3041ms)
+✔ private mode values reload without contaminating the dev process (153.5255ms)
+✔ the real Web config never inlines private canaries, including in source maps (8789.7199ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 10397.465

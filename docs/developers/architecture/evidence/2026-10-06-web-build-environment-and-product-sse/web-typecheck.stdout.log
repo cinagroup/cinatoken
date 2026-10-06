@@ -1,0 +1,9 @@
+
+> cinatoken@2.8.0 typecheck:web
+> npm run typecheck -w @cinatoken/web
+
+
+> @cinatoken/web@2.8.0 typecheck
+> tsc -b && tsc -p edge/tsconfig.json
+
+rsbuild.config.ts(16,41): error TS7016: Could not find a declaration file for module './scripts/build-environment.mjs'. 'C:/cinagroup/cinatoken/packages/web/scripts/build-environment.mjs' implicitly has an 'any' type.

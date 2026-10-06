@@ -1,0 +1,956 @@
+{
+  "schema": "p1-02-bounded-dependency-override-compatibility-review-v1",
+  "at": "2026-10-06T09:55:37.916Z",
+  "actualReadOnlyAnalysisExit": 0,
+  "primaryPolicy": {
+    "officialBundledDocument": {
+      "path": "C:/Program Files/nodejs/node_modules/npm/docs/output/configuring-npm/package-json.html",
+      "bytes": 53299,
+      "sha256": "a2c731ab77c9aea8a343c59e63043a55141734b4857e963434c9550bc99b112f"
+    },
+    "workspaceOverridesIgnored": true,
+    "nestedAncestorScopeSupported": true,
+    "directDependencyOverrideExactSpecOrDollarReferenceRequired": true
+  },
+  "sourcePins": [
+    {
+      "relative": "package.json",
+      "path": "C:/cinagroup/cinatoken/package.json",
+      "bytes": 5550,
+      "sha256": "6454126bb47e39c135d3178ce3500b0901581b5b4f9b4b0067ace88e894da3aa"
+    },
+    {
+      "relative": "package-lock.json",
+      "path": "C:/cinagroup/cinatoken/package-lock.json",
+      "bytes": 830546,
+      "sha256": "f9c65b6e373a231d52d6eda634bb5f947dda3174734cd70e2b811e09fff0b6f0"
+    },
+    {
+      "relative": "packages/web/package.json",
+      "path": "C:/cinagroup/cinatoken/packages/web/package.json",
+      "bytes": 4526,
+      "sha256": "c356dcd7dc834e63a65d8c0d6f45eb8327147198fd5f6b18b1538ba760f81256"
+    },
+    {
+      "relative": "packages/admin/package.json",
+      "path": "C:/cinagroup/cinatoken/packages/admin/package.json",
+      "bytes": 4163,
+      "sha256": "fef666db8d2ed6876f90b48a51b6a636d7b342dab1cae1e0dc82e72657df8188"
+    },
+    {
+      "relative": "packages/proxy/package.json",
+      "path": "C:/cinagroup/cinatoken/packages/proxy/package.json",
+      "bytes": 18988,
+      "sha256": "14e2d996c5d81a9ec101e9506dc05d1693c05911aad146fb062742c0c4aca2a1"
+    },
+    {
+      "relative": "packages/core/package.json",
+      "path": "C:/cinagroup/cinatoken/packages/core/package.json",
+      "bytes": 13537,
+      "sha256": "eef3793fdc1098c901c18a0e97160d4204fb765a786c3445bc558ce7efc49e1e"
+    },
+    {
+      "relative": "packages/tool-engines/package.json",
+      "path": "C:/cinagroup/cinatoken/packages/tool-engines/package.json",
+      "bytes": 856,
+      "sha256": "82e4981558fca23d8bf5766a64745a084aa33a1df38a0569554b4bd4b534156e"
+    },
+    {
+      "relative": "packages/chain-worker/package.json",
+      "path": "C:/cinagroup/cinatoken/packages/chain-worker/package.json",
+      "bytes": 714,
+      "sha256": "841388960dbfbf598768ec8eaf2fcea39abee114952ff467e8f3697464f5809a"
+    },
+    {
+      "relative": "packages/web/eslint.config.js",
+      "path": "C:/cinagroup/cinatoken/packages/web/eslint.config.js",
+      "bytes": 1837,
+      "sha256": "29942bc2cb27453d2db6bd2531193d7a78886f2d3571215c24e6c05565098273"
+    },
+    {
+      "relative": "packages/web/postcss.config.mjs",
+      "path": "C:/cinagroup/cinatoken/packages/web/postcss.config.mjs",
+      "bytes": 65,
+      "sha256": "51f6c2caff919bd4f4786476beb5196b5cb4558640ca055b2ba094b249184cb1"
+    },
+    {
+      "relative": "packages/web/.prettierrc",
+      "path": "C:/cinagroup/cinatoken/packages/web/.prettierrc",
+      "bytes": 984,
+      "sha256": "b623c80eef9ca24da4cec91b8afb91c579d3a8907ec6e52587c44dc0301d62b9"
+    },
+    {
+      "relative": "packages/web/src/context/theme-provider.tsx",
+      "path": "C:/cinagroup/cinatoken/packages/web/src/context/theme-provider.tsx",
+      "bytes": 3876,
+      "sha256": "72c528090fb6cee9a89cfdb594ab8a2580c26ad0abe3527081c38bfd27d62cc0"
+    },
+    {
+      "relative": "packages/web/src/lib/cookies.ts",
+      "path": "C:/cinagroup/cinatoken/packages/web/src/lib/cookies.ts",
+      "bytes": 1763,
+      "sha256": "9dc10d730669f6c9572eaa3851e4e52012e2c94fb404c4f25e52ad8db3506ad9"
+    }
+  ],
+  "actualNpmLs": {
+    "receipt": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-p1-dependency-coverage-readonly-vPnpSj/npm-ls-web-overrides.closed.json",
+      "bytes": 1215,
+      "sha256": "506ece4ced23448660b88a9ed8fe818b2534f43c561f7c25772d615ce7328adc"
+    },
+    "actualExit": 0,
+    "stderrBytes": 0,
+    "rootReportedProblems": [
+      "extraneous: js-cookie@3.0.8 C:\\cinagroup\\cinatoken\\node_modules\\js-cookie",
+      "extraneous: uuid@14.0.2 C:\\cinagroup\\cinatoken\\node_modules\\uuid"
+    ],
+    "noInvalidTargetRows": true,
+    "extraneousNotCountedAsLockedOrCleanInstall": true,
+    "noRegistryAccessRequested": true
+  },
+  "reachabilityMethod": "Exact root lock Node ancestor path resolution of dependency/optional edges; workspace development dependencies included because root installation is a full monorepo development install. Peer-only edges are excluded; this is declared install graph, not a bundled module graph.",
+  "overrides": [
+    {
+      "name": "brace-expansion",
+      "declaredWebOverride": "2.1.1",
+      "lockedNodes": [
+        {
+          "path": "node_modules/@node-minify/core/node_modules/brace-expansion",
+          "version": "2.1.2",
+          "parents": [
+            {
+              "path": "node_modules/@node-minify/core/node_modules/minimatch",
+              "name": "minimatch",
+              "version": "8.0.7",
+              "range": "^2.0.1"
+            }
+          ],
+          "reachableFromWorkspaces": [
+            "@octafuse/admin"
+          ]
+        },
+        {
+          "path": "node_modules/@ts-morph/common/node_modules/brace-expansion",
+          "version": "5.0.12",
+          "parents": [
+            {
+              "path": "node_modules/@ts-morph/common/node_modules/minimatch",
+              "name": "minimatch",
+              "version": "10.2.6",
+              "range": "^5.0.8"
+            }
+          ],
+          "reachableFromWorkspaces": [
+            "@octafuse/admin",
+            "@cinatoken/web"
+          ]
+        },
+        {
+          "path": "node_modules/@typescript-eslint/typescript-estree/node_modules/brace-expansion",
+          "version": "5.0.12",
+          "parents": [
+            {
+              "path": "node_modules/@typescript-eslint/typescript-estree/node_modules/minimatch",
+              "name": "minimatch",
+              "version": "10.2.6",
+              "range": "^5.0.8"
+            }
+          ],
+          "reachableFromWorkspaces": [
+            "@octafuse/admin",
+            "@cinatoken/web"
+          ]
+        },
+        {
+          "path": "node_modules/brace-expansion",
+          "version": "1.1.14",
+          "parents": [
+            {
+              "path": "node_modules/minimatch",
+              "name": "minimatch",
+              "version": "3.1.5",
+              "range": "^1.1.7"
+            }
+          ],
+          "reachableFromWorkspaces": [
+            "@octafuse/admin"
+          ]
+        },
+        {
+          "path": "node_modules/glob/node_modules/brace-expansion",
+          "version": "5.0.5",
+          "parents": [
+            {
+              "path": "node_modules/glob/node_modules/minimatch",
+              "name": "minimatch",
+              "version": "10.2.5",
+              "range": "^5.0.5"
+            }
+          ],
+          "reachableFromWorkspaces": [
+            "@octafuse/admin"
+          ]
+        },
+        {
+          "path": "packages/web/node_modules/@eslint/config-array/node_modules/brace-expansion",
+          "version": "5.0.12",
+          "parents": [
+            {
+              "path": "packages/web/node_modules/@eslint/config-array/node_modules/minimatch",
+              "name": "minimatch",
+              "version": "10.2.6",
+              "range": "^5.0.8"
+            }
+          ],
+          "reachableFromWorkspaces": [
+            "@octafuse/admin",
+            "@cinatoken/web"
+          ]
+        },
+        {
+          "path": "packages/web/node_modules/brace-expansion",
+          "version": "2.1.7",
+          "parents": [
+            {
+              "path": "packages/web/node_modules/minimatch",
+              "name": "minimatch",
+              "version": "9.0.9",
+              "range": "^2.0.2"
+            }
+          ],
+          "reachableFromWorkspaces": [
+            "@octafuse/admin",
+            "@cinatoken/web"
+          ]
+        },
+        {
+          "path": "packages/web/node_modules/eslint/node_modules/brace-expansion",
+          "version": "5.0.12",
+          "parents": [
+            {
+              "path": "packages/web/node_modules/eslint/node_modules/minimatch",
+              "name": "minimatch",
+              "version": "10.2.6",
+              "range": "^5.0.8"
+            }
+          ],
+          "reachableFromWorkspaces": [
+            "@octafuse/admin",
+            "@cinatoken/web"
+          ]
+        }
+      ],
+      "installedOccurrences": [
+        {
+          "name": "brace-expansion",
+          "version": "1.1.14",
+          "path": "C:\\cinagroup\\cinatoken\\node_modules\\brace-expansion",
+          "chain": [
+            "@cinatoken/web@2.8.0",
+            "@tanstack/eslint-plugin-query@5.104.0",
+            "eslint@9.39.4",
+            "minimatch@3.1.5",
+            "brace-expansion@1.1.14"
+          ],
+          "invalid": false,
+          "overridden": false
+        },
+        {
+          "name": "brace-expansion",
+          "version": "2.1.7",
+          "path": "C:\\cinagroup\\cinatoken\\packages\\web\\node_modules\\brace-expansion",
+          "chain": [
+            "@cinatoken/web@2.8.0",
+            "@trivago/prettier-plugin-sort-imports@6.0.2",
+            "minimatch@9.0.9",
+            "brace-expansion@2.1.7"
+          ],
+          "invalid": false,
+          "overridden": false
+        },
+        {
+          "name": "brace-expansion",
+          "version": "5.0.12",
+          "path": "C:\\cinagroup\\cinatoken\\packages\\web\\node_modules\\@eslint\\config-array\\node_modules\\brace-expansion",
+          "chain": [
+            "@cinatoken/web@2.8.0",
+            "eslint@10.11.0",
+            "@eslint/config-array@0.23.5",
+            "minimatch@10.2.6",
+            "brace-expansion@5.0.12"
+          ],
+          "invalid": false,
+          "overridden": false
+        },
+        {
+          "name": "brace-expansion",
+          "version": "5.0.12",
+          "path": "C:\\cinagroup\\cinatoken\\packages\\web\\node_modules\\eslint\\node_modules\\brace-expansion",
+          "chain": [
+            "@cinatoken/web@2.8.0",
+            "eslint@10.11.0",
+            "minimatch@10.2.6",
+            "brace-expansion@5.0.12"
+          ],
+          "invalid": false,
+          "overridden": false
+        },
+        {
+          "name": "brace-expansion",
+          "version": "5.0.12",
+          "path": "C:\\cinagroup\\cinatoken\\node_modules\\@ts-morph\\common\\node_modules\\brace-expansion",
+          "chain": [
+            "@cinatoken/web@2.8.0",
+            "shadcn@4.21.0",
+            "ts-morph@26.0.0",
+            "@ts-morph/common@0.27.0",
+            "minimatch@10.2.6",
+            "brace-expansion@5.0.12"
+          ],
+          "invalid": false,
+          "overridden": false
+        },
+        {
+          "name": "brace-expansion",
+          "version": "5.0.12",
+          "path": "C:\\cinagroup\\cinatoken\\node_modules\\@typescript-eslint\\typescript-estree\\node_modules\\brace-expansion",
+          "chain": [
+            "@cinatoken/web@2.8.0",
+            "typescript-eslint@8.70.1",
+            "@typescript-eslint/typescript-estree@8.70.1",
+            "minimatch@10.2.6",
+            "brace-expansion@5.0.12"
+          ],
+          "invalid": false,
+          "overridden": false
+        }
+      ],
+      "recommendation": "remove stale workspace pin; no new root override needed for compatibility",
+      "why": "There are1.x/2.x/5.x resolver families. Forcing2.1.1 globally violates minimatch10 ^5.0.8 and drops versions already newer. Any security update must retain the parent major family.",
+      "active": "Web ESLint/query plugin and import-sort formatter; other repository tooling also resolves these families.",
+      "securityNecessityEstablished": false,
+      "registryTargetAvailabilityVerified": false
+    },
+    {
+      "name": "dompurify",
+      "declaredWebOverride": "3.4.5",
+      "lockedNodes": [],
+      "installedOccurrences": [],
+      "recommendation": "remove misleading unused override",
+      "why": "No node in root lock or current npm-ls filtered tree; no effective dependency to override.",
+      "active": "No admitted declared dependency path found; absence is not a proof that all HTML rendering is safe.",
+      "securityNecessityEstablished": false,
+      "registryTargetAvailabilityVerified": false
+    },
+    {
+      "name": "fast-uri",
+      "declaredWebOverride": "3.1.2",
+      "lockedNodes": [
+        {
+          "path": "node_modules/fast-uri",
+          "version": "3.1.8",
+          "parents": [
+            {
+              "path": "node_modules/@modelcontextprotocol/sdk/node_modules/ajv",
+              "name": "ajv",
+              "version": "8.20.0",
+              "range": "^3.0.1"
+            },
+            {
+              "path": "node_modules/ajv-formats/node_modules/ajv",
+              "name": "ajv",
+              "version": "8.20.0",
+              "range": "^3.0.1"
+            },
+            {
+              "path": "node_modules/conf/node_modules/ajv",
+              "name": "ajv",
+              "version": "8.20.0",
+              "range": "^3.0.1"
+            }
+          ],
+          "reachableFromWorkspaces": [
+            "@octafuse/admin",
+            "@cinatoken/web"
+          ]
+        }
+      ],
+      "installedOccurrences": [
+        {
+          "name": "fast-uri",
+          "version": "3.1.8",
+          "path": "C:\\cinagroup\\cinatoken\\node_modules\\fast-uri",
+          "chain": [
+            "@cinatoken/web@2.8.0",
+            "@hookform/resolvers@5.9.1",
+            "ajv-formats@3.0.1",
+            "ajv@8.20.0",
+            "fast-uri@3.1.8"
+          ],
+          "invalid": false,
+          "overridden": false
+        },
+        {
+          "name": "fast-uri",
+          "version": "3.1.8",
+          "path": "C:\\cinagroup\\cinatoken\\node_modules\\fast-uri",
+          "chain": [
+            "@cinatoken/web@2.8.0",
+            "shadcn@4.21.0",
+            "@dotenvx/dotenvx@1.75.1",
+            "conf@10.2.0",
+            "ajv@8.20.0",
+            "fast-uri@3.1.8"
+          ],
+          "invalid": false,
+          "overridden": false
+        },
+        {
+          "name": "fast-uri",
+          "version": "3.1.8",
+          "path": "C:\\cinagroup\\cinatoken\\node_modules\\fast-uri",
+          "chain": [
+            "@cinatoken/web@2.8.0",
+            "shadcn@4.21.0",
+            "@modelcontextprotocol/sdk@1.30.1",
+            "ajv@8.20.0",
+            "fast-uri@3.1.8"
+          ],
+          "invalid": false,
+          "overridden": false
+        }
+      ],
+      "recommendation": "remove stale downgrade pin; keep lock3.1.8",
+      "why": "Every current Ajv8 parent requests ^3.0.1 and current lock already3.1.8; no observed compatibility need to force3.1.2.",
+      "active": "@hookform/resolvers declared dependency chain and shadcn/conf/MCP developer chain. Active code imports resolver/zod; an aggregate resolver manifest dependency does not prove Ajv branch enters browser bundle.",
+      "securityNecessityEstablished": false,
+      "registryTargetAvailabilityVerified": false
+    },
+    {
+      "name": "hono",
+      "declaredWebOverride": "4.12.22",
+      "lockedNodes": [
+        {
+          "path": "node_modules/hono",
+          "version": "4.12.12",
+          "parents": [
+            {
+              "path": "node_modules/@modelcontextprotocol/sdk",
+              "name": "@modelcontextprotocol/sdk",
+              "version": "1.30.1",
+              "range": "^4.11.4"
+            },
+            {
+              "path": "packages/admin",
+              "name": "@octafuse/admin",
+              "version": "2.8.0",
+              "range": "^4.12.9"
+            },
+            {
+              "path": "packages/proxy",
+              "name": "@octafuse/proxy",
+              "version": "2.8.0",
+              "range": "^4.12.9"
+            }
+          ],
+          "reachableFromWorkspaces": [
+            "@octafuse/proxy",
+            "@octafuse/admin",
+            "@cinatoken/web"
+          ]
+        }
+      ],
+      "installedOccurrences": [
+        {
+          "name": "hono",
+          "version": "4.12.12",
+          "path": "C:\\cinagroup\\cinatoken\\node_modules\\hono",
+          "chain": [
+            "@cinatoken/web@2.8.0",
+            "shadcn@4.21.0",
+            "@modelcontextprotocol/sdk@1.30.1",
+            "@hono/node-server@1.19.14",
+            "hono@4.12.12"
+          ],
+          "invalid": false,
+          "overridden": false
+        },
+        {
+          "name": "hono",
+          "version": "4.12.12",
+          "path": "C:\\cinagroup\\cinatoken\\node_modules\\hono",
+          "chain": [
+            "@cinatoken/web@2.8.0",
+            "shadcn@4.21.0",
+            "@modelcontextprotocol/sdk@1.30.1",
+            "hono@4.12.12"
+          ],
+          "invalid": false,
+          "overridden": false
+        }
+      ],
+      "recommendation": "remove inert Web-only declaration unless a separate reviewed security policy requires update",
+      "why": "Web sees Hono via shadcn development/MCP, while Admin and Proxy directly use same4.12.12. A global4.12.22 override affects real server apps, not just Web. New target existence/security justification not verified offline.",
+      "active": "shadcn developer tooling; Admin/Proxy runtime independently use Hono. Optional narrow developer-only proposal shadcn -> @modelcontextprotocol/sdk -> hono must be validated by isolated npm resolution.",
+      "securityNecessityEstablished": false,
+      "registryTargetAvailabilityVerified": false
+    },
+    {
+      "name": "ip-address",
+      "declaredWebOverride": "10.2.0",
+      "lockedNodes": [
+        {
+          "path": "node_modules/ip-address",
+          "version": "10.7.2",
+          "parents": [
+            {
+              "path": "node_modules/express-rate-limit",
+              "name": "express-rate-limit",
+              "version": "8.7.0",
+              "range": "^10.2.0"
+            },
+            {
+              "path": "node_modules/socks",
+              "name": "socks",
+              "version": "2.8.10",
+              "range": "^10.1.1"
+            }
+          ],
+          "reachableFromWorkspaces": [
+            "@octafuse/admin",
+            "@cinatoken/web"
+          ]
+        }
+      ],
+      "installedOccurrences": [
+        {
+          "name": "ip-address",
+          "version": "10.7.2",
+          "path": "C:\\cinagroup\\cinatoken\\node_modules\\ip-address",
+          "chain": [
+            "@cinatoken/web@2.8.0",
+            "shadcn@4.21.0",
+            "@modelcontextprotocol/sdk@1.30.1",
+            "express-rate-limit@8.7.0",
+            "ip-address@10.7.2"
+          ],
+          "invalid": false,
+          "overridden": false
+        },
+        {
+          "name": "ip-address",
+          "version": "10.7.2",
+          "path": "C:\\cinagroup\\cinatoken\\node_modules\\ip-address",
+          "chain": [
+            "@cinatoken/web@2.8.0",
+            "shadcn@4.21.0",
+            "socks@2.8.10",
+            "ip-address@10.7.2"
+          ],
+          "invalid": false,
+          "overridden": false
+        }
+      ],
+      "recommendation": "remove stale downgrade pin; keep10.7.2",
+      "why": "socks ^10.1.1 and express-rate-limit ^10.2.0 accept current10.7.2; no compatibility requirement for10.2.0.",
+      "active": "shadcn/socks/MCP/Express developer graph, not a direct cinatoken browser import.",
+      "securityNecessityEstablished": false,
+      "registryTargetAvailabilityVerified": false
+    },
+    {
+      "name": "js-cookie",
+      "declaredWebOverride": "3.0.7",
+      "lockedNodes": [],
+      "installedOccurrences": [
+        {
+          "name": "js-cookie",
+          "version": "3.0.8",
+          "path": "C:\\cinagroup\\cinatoken\\node_modules\\js-cookie",
+          "chain": [
+            "ahooks@3.10.0",
+            "js-cookie@3.0.8"
+          ],
+          "invalid": false,
+          "overridden": false
+        },
+        {
+          "name": "js-cookie",
+          "version": "3.0.8",
+          "path": "C:\\cinagroup\\cinatoken\\node_modules\\js-cookie",
+          "chain": [
+            "js-cookie@3.0.8"
+          ],
+          "invalid": false,
+          "overridden": false
+        }
+      ],
+      "recommendation": "remove misleading unused override; do not archive installed extraneous as locked dependency",
+      "why": "No root-lock node. npm ls exposes3.0.8 only as extraneous inherited stock/root node, not the admitted Web dependency graph.",
+      "active": "Current theme uses own lib/cookies.ts. Installed ahooks/js-cookie stock is separate from locked current delivery.",
+      "securityNecessityEstablished": false,
+      "registryTargetAvailabilityVerified": false
+    },
+    {
+      "name": "mermaid",
+      "declaredWebOverride": "11.15.0",
+      "lockedNodes": [],
+      "installedOccurrences": [],
+      "recommendation": "remove misleading unused override",
+      "why": "No root-lock node and no current npm-ls target occurrence. Adding an override cannot supply missing dependency.",
+      "active": "No admitted declared dependency path found.",
+      "securityNecessityEstablished": false,
+      "registryTargetAvailabilityVerified": false
+    },
+    {
+      "name": "minimist",
+      "declaredWebOverride": "1.2.8",
+      "lockedNodes": [
+        {
+          "path": "node_modules/geojson-flatten/node_modules/minimist",
+          "version": "1.2.0",
+          "parents": [
+            {
+              "path": "node_modules/geojson-flatten",
+              "name": "geojson-flatten",
+              "version": "0.2.4",
+              "range": "1.2.0"
+            }
+          ],
+          "reachableFromWorkspaces": [
+            "@octafuse/admin",
+            "@cinatoken/web"
+          ]
+        },
+        {
+          "path": "node_modules/minimist",
+          "version": "1.2.8",
+          "parents": [
+            {
+              "path": "node_modules/dotenv-cli",
+              "name": "dotenv-cli",
+              "version": "11.0.0",
+              "range": "^1.2.6"
+            },
+            {
+              "path": "node_modules/shadcn/node_modules/tsconfig-paths",
+              "name": "tsconfig-paths",
+              "version": "4.2.0",
+              "range": "^1.2.6"
+            },
+            {
+              "path": "node_modules/tsconfig-paths",
+              "name": "tsconfig-paths",
+              "version": "3.15.0",
+              "range": "^1.2.6"
+            },
+            {
+              "path": "node_modules/tsconfig-paths/node_modules/json5",
+              "name": "json5",
+              "version": "1.0.2",
+              "range": "^1.2.0"
+            }
+          ],
+          "reachableFromWorkspaces": [
+            "cinatoken",
+            "@octafuse/proxy",
+            "@octafuse/admin",
+            "@cinatoken/web"
+          ]
+        },
+        {
+          "path": "node_modules/simplify-geojson/node_modules/minimist",
+          "version": "1.2.6",
+          "parents": [
+            {
+              "path": "node_modules/simplify-geojson",
+              "name": "simplify-geojson",
+              "version": "1.0.5",
+              "range": "1.2.6"
+            }
+          ],
+          "reachableFromWorkspaces": [
+            "@octafuse/admin",
+            "@cinatoken/web"
+          ]
+        }
+      ],
+      "installedOccurrences": [
+        {
+          "name": "minimist",
+          "version": "1.2.0",
+          "path": "C:\\cinagroup\\cinatoken\\node_modules\\geojson-flatten\\node_modules\\minimist",
+          "chain": [
+            "@cinatoken/web@2.8.0",
+            "@visactor/vchart@2.1.7",
+            "@visactor/vdataset@1.0.24",
+            "geojson-dissolve@3.1.0",
+            "geojson-flatten@0.2.4",
+            "minimist@1.2.0"
+          ],
+          "invalid": false,
+          "overridden": false
+        },
+        {
+          "name": "minimist",
+          "version": "1.2.6",
+          "path": "C:\\cinagroup\\cinatoken\\node_modules\\simplify-geojson\\node_modules\\minimist",
+          "chain": [
+            "@cinatoken/web@2.8.0",
+            "@visactor/vchart@2.1.7",
+            "@visactor/vdataset@1.0.24",
+            "simplify-geojson@1.0.5",
+            "minimist@1.2.6"
+          ],
+          "invalid": false,
+          "overridden": false
+        },
+        {
+          "name": "minimist",
+          "version": "1.2.8",
+          "path": "C:\\cinagroup\\cinatoken\\node_modules\\minimist",
+          "chain": [
+            "@cinatoken/web@2.8.0",
+            "shadcn@4.21.0",
+            "tsconfig-paths@4.2.0",
+            "minimist@1.2.8"
+          ],
+          "invalid": false,
+          "overridden": false
+        }
+      ],
+      "recommendation": "remove ineffective declaration; if retaining originalpatch policy, use two parent-scoped root overrides as a separate tested change",
+      "why": "Declared graph has Visactor -> vdataset -> geojson-flatten0.2.4 -> minimist1.2.0 and simplify-geojson1.0.5 -> minimist1.2.6. Both parents pin exact old versions; current tool chains already1.2.8. Targeted1.2.8 changes only those two branches but actual compatibility still requires new CI.",
+      "active": "Visactor/vchart is declared Web runtime stock; no @visactor import found in reviewed cinatoken/current sharedUI/context source. Do not equate declared dependency closure with emitted client graph, or remove Visactor dependency without separate review.",
+      "securityNecessityEstablished": false,
+      "registryTargetAvailabilityVerified": false
+    },
+    {
+      "name": "postcss",
+      "declaredWebOverride": "8.5.15",
+      "lockedNodes": [
+        {
+          "path": "node_modules/next/node_modules/postcss",
+          "version": "8.4.31",
+          "parents": [
+            {
+              "path": "node_modules/next",
+              "name": "next",
+              "version": "16.2.3",
+              "range": "8.4.31"
+            }
+          ],
+          "reachableFromWorkspaces": [
+            "@octafuse/admin"
+          ]
+        },
+        {
+          "path": "node_modules/postcss",
+          "version": "8.5.28",
+          "parents": [
+            {
+              "path": "node_modules/@tailwindcss/postcss",
+              "name": "@tailwindcss/postcss",
+              "version": "4.3.3",
+              "range": "^8.5.16"
+            },
+            {
+              "path": "node_modules/shadcn",
+              "name": "shadcn",
+              "version": "4.21.0",
+              "range": "^8.5.6"
+            },
+            {
+              "path": "node_modules/tailwindcss",
+              "name": "tailwindcss",
+              "version": "3.4.19",
+              "range": "^8.4.47"
+            },
+            {
+              "path": "packages/admin",
+              "name": "@octafuse/admin",
+              "version": "2.8.0",
+              "range": "^8.4.35"
+            }
+          ],
+          "reachableFromWorkspaces": [
+            "@octafuse/admin",
+            "@cinatoken/web"
+          ]
+        }
+      ],
+      "installedOccurrences": [
+        {
+          "name": "postcss",
+          "version": "8.5.28",
+          "path": "C:\\cinagroup\\cinatoken\\node_modules\\postcss",
+          "chain": [
+            "@cinatoken/web@2.8.0",
+            "@tailwindcss/postcss@4.3.3",
+            "postcss@8.5.28"
+          ],
+          "invalid": false,
+          "overridden": false
+        },
+        {
+          "name": "postcss",
+          "version": "8.5.28",
+          "path": "C:\\cinagroup\\cinatoken\\node_modules\\postcss",
+          "chain": [
+            "@cinatoken/web@2.8.0",
+            "shadcn@4.21.0",
+            "postcss@8.5.28"
+          ],
+          "invalid": false,
+          "overridden": false
+        }
+      ],
+      "recommendation": "remove incompatible stale pin; retain Web8.5.28 and Next own8.4.31",
+      "why": "Web @tailwindcss/postcss4.3.3 requires ^8.5.16, which8.5.15 cannot satisfy. Global override also touches Next16.2.3 exact8.4.31 and Admin tool graph. No root override required to maintain current admitted installation.",
+      "active": "Current Web postcss.config.mjs uses @tailwindcss/postcss; shadcn developer tooling; Admin Next/Tailwind separate.",
+      "securityNecessityEstablished": false,
+      "registryTargetAvailabilityVerified": false
+    },
+    {
+      "name": "qs",
+      "declaredWebOverride": "6.15.2",
+      "lockedNodes": [
+        {
+          "path": "node_modules/qs",
+          "version": "6.15.3",
+          "parents": [
+            {
+              "path": "node_modules/body-parser",
+              "name": "body-parser",
+              "version": "2.3.0",
+              "range": "^6.15.2"
+            },
+            {
+              "path": "node_modules/express",
+              "name": "express",
+              "version": "5.2.1",
+              "range": "^6.14.0"
+            }
+          ],
+          "reachableFromWorkspaces": [
+            "@octafuse/admin",
+            "@cinatoken/web"
+          ]
+        }
+      ],
+      "installedOccurrences": [
+        {
+          "name": "qs",
+          "version": "6.15.3",
+          "path": "C:\\cinagroup\\cinatoken\\node_modules\\qs",
+          "chain": [
+            "@cinatoken/web@2.8.0",
+            "shadcn@4.21.0",
+            "@modelcontextprotocol/sdk@1.30.1",
+            "express@5.2.1",
+            "body-parser@2.3.0",
+            "qs@6.15.3"
+          ],
+          "invalid": false,
+          "overridden": false
+        },
+        {
+          "name": "qs",
+          "version": "6.15.3",
+          "path": "C:\\cinagroup\\cinatoken\\node_modules\\qs",
+          "chain": [
+            "@cinatoken/web@2.8.0",
+            "shadcn@4.21.0",
+            "@modelcontextprotocol/sdk@1.30.1",
+            "express@5.2.1",
+            "qs@6.15.3"
+          ],
+          "invalid": false,
+          "overridden": false
+        }
+      ],
+      "recommendation": "remove stale downgrade pin; keep6.15.3",
+      "why": "express5 ^6.14.0 and body-parser2.3 ^6.15.2 accept existing6.15.3; no compatibility reason to force6.15.2.",
+      "active": "shadcn -> MCP -> Express/body-parser developer chain, not a current direct cinatoken browser import.",
+      "securityNecessityEstablished": false,
+      "registryTargetAvailabilityVerified": false
+    },
+    {
+      "name": "uuid",
+      "declaredWebOverride": "14.0.0",
+      "lockedNodes": [],
+      "installedOccurrences": [
+        {
+          "name": "uuid",
+          "version": "14.0.2",
+          "path": "C:\\cinagroup\\cinatoken\\node_modules\\uuid",
+          "chain": [
+            "@lobehub/ui@5.50.2",
+            "uuid@14.0.2"
+          ],
+          "invalid": false,
+          "overridden": false
+        },
+        {
+          "name": "uuid",
+          "version": "14.0.2",
+          "path": "C:\\cinagroup\\cinatoken\\node_modules\\uuid",
+          "chain": [
+            "uuid@14.0.2"
+          ],
+          "invalid": false,
+          "overridden": false
+        }
+      ],
+      "recommendation": "remove misleading unused override",
+      "why": "No root-lock node. npm ls exposes14.0.2 only as extraneous @lobehub/ui/root inherited stock; current source uses crypto.randomUUID and Zod uuid validation, not this package.",
+      "active": "No admitted current Web dependency edge; stock installed packages are not cold npm-ci results.",
+      "securityNecessityEstablished": false,
+      "registryTargetAvailabilityVerified": false
+    }
+  ],
+  "minimalRecommendedFix": {
+    "paths": [
+      "packages/web/package.json"
+    ],
+    "change": "Delete the entire nonfunctional workspace overrides object. Preserve all dependency/devDependency ranges and root lock bytes; add a dependency policy comment/document explaining root-only scope and review trigger.",
+    "rootOverrideNecessaryForCurrentCompatibility": false,
+    "blindMoving11PinsToRootRejected": true,
+    "noPackageOrLockUpgradeRequiredByThisRecommendation": true,
+    "why": "Every retained declaration is either absent from admitted lock, stale versus already-resolved version, incompatible with another major/minimum, or an unproven isolated/security patch policy. Removing ignored metadata does not change the current resolution."
+  },
+  "optionalScopedMinimistProposal": {
+    "notApplied": true,
+    "rootPackageJson": {
+      "overrides": {
+        "geojson-flatten@0.2.4": {
+          "minimist": "1.2.8"
+        },
+        "simplify-geojson@1.0.5": {
+          "minimist": "1.2.8"
+        }
+      }
+    },
+    "requiresRegistryExistenceIntegrityReadBeforeInstall": true,
+    "requiresFreshRootLockAndWebCI": true,
+    "scope": "Only these two declared Visactor dependency branches; no blanket minimist override or Visactor update.",
+    "notProvenSecurityFix": true
+  },
+  "optionalHonoPolicy": {
+    "notApplied": true,
+    "target": "4.12.22",
+    "availabilityAndSecurityRationaleUnknown": true,
+    "globalImpact": "Admin/Proxy runtime plus root/CLI consumers must be separately verified.",
+    "notRequiredToDeleteMisleadingWorkspaceMetadata": true
+  },
+  "futureValidation": {
+    "afterMetadataRemoval": "Assert root lock unchanged, cold root npm ci --ignore-scripts and current Web/Admin/Proxy checks on new SHA; inspect actual npm tree before calling P1-02 complete.",
+    "ifTargetedOverridesApproved": "Read public registry version/engines/integrity only with explicit permission; regenerate root lock in controlled scope; assert only admitted nodes change and run affected workspace CI."
+  },
+  "limits": [
+    "No installs, lock writes, code edits, Git/CI/API or network",
+    "No vulnerability advisory scan; resolved newer version is not blanket security assurance",
+    "No new emitted client-module graph assertion",
+    "Local npm-ls extraneous entries are preserved observations, not cold CI installation conflicts"
+  ],
+  "noGateOrTaskCheckboxChanged": true
+}

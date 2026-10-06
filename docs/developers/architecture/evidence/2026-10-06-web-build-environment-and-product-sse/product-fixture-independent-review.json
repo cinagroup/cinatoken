@@ -1,0 +1,218 @@
+{
+  "schema": "cinatoken-product-sse-fixture-independent-source-review-v2",
+  "at": "2026-10-06T10:01:38.530Z",
+  "source": {
+    "path": "C:/cinagroup/cinatoken/scripts/smoke/test-workerd-product-sse-cancel.mjs",
+    "original": {
+      "bytes": 26023,
+      "sha256": "86056813aed549bdf5f69e31ccfc982415f13bfd7f51cbc26c556c71a7b864de",
+      "firstFullReadTool": "2fcc8f",
+      "originalToolActualExit": 0
+    },
+    "current": {
+      "bytes": 26263,
+      "sha256": "69762d5eafcae0829ab7d7b53572c287139a2a446c83665e7bec7df9d0677713",
+      "snapshot": "reviewed-fixture.snapshot.mjs"
+    },
+    "exactOnlyReviewedDelta": true,
+    "inverseDeltaProof": [
+      {
+        "current": "await until(() => observation('product', 'usage-settled') && observation('product', 'resource-completion-settled') && observation('product', 'request-signal-aborted'), 5000, 'actual request signal, usage and resource settlement');",
+        "old": "await until(() => observation('product', 'usage-settled') && observation('product', 'resource-completion-settled'), 5000, 'actual driver usage and resource settlement');",
+        "count": 1
+      },
+      {
+        "current": "      assert.equal(observation('product', 'request-signal-aborted').value.aborted, true);\n",
+        "old": "",
+        "count": 1
+      },
+      {
+        "current": "new Promise((done, reject) => { server.close(error => error ? reject(error) : done());",
+        "old": "new Promise(done => { server.close(done);",
+        "count": 1
+      },
+      {
+        "current": "    let sourcePinsVerified = false;\n",
+        "old": "",
+        "count": 1
+      },
+      {
+        "current": "assert.deepEqual(bundlePaths.map(pin), bundleInputs); sourcePinsVerified = true;",
+        "old": "assert.deepEqual(bundlePaths.map(pin), bundleInputs);",
+        "count": 1
+      },
+      {
+        "current": "sourceUnchanged:sourcePinsVerified",
+        "old": "sourceUnchanged:!fatal.some(error=>error.name==='AssertionError')",
+        "count": 1
+      },
+      {
+        "current": "intendedExitCode:passed?0:1",
+        "old": "actualExit:passed?0:1",
+        "count": 2
+      }
+    ],
+    "inverseBytesAndShaEqualOriginal": true
+  },
+  "scope": {
+    "independentSourceOnly": true,
+    "productionCodeExecuted": false,
+    "workerdExecuted": false,
+    "testsRun": false,
+    "repositoryChanged": false,
+    "GitOrCIOrAPIOperations": false,
+    "DBOrProductionOperations": false,
+    "workflowNotProvidedOrReviewed": false
+  },
+  "findings": [
+    {
+      "id": "F1",
+      "originalLines": "353-357",
+      "currentLines": "354-359",
+      "title": "Source equality previously could be true after a failed ordinary file read",
+      "originalEvidence": "sourceUnchanged used !fatal.some(error=>error.name==='AssertionError'); ENOENT/EACCES ordinary Error could leave true",
+      "status": "Resolved in reviewed current byte pin",
+      "fix": "Independent sourcePinsVerified=false; true assigned only after both exact comparisons finish; sourceUnchanged uses that flag",
+      "overallFalsePassBeforeFix": false
+    },
+    {
+      "id": "F2",
+      "originalLines": "348-349",
+      "currentLines": "349-350",
+      "title": "HTTP server close callback error previously ignored",
+      "status": "Resolved in reviewed current byte pin",
+      "fix": "Callback error now rejects Promise and is captured as cleanup error rather than successful close",
+      "overallFalsePassEstablished": false
+    },
+    {
+      "id": "F3",
+      "originalLines": "357-359",
+      "currentLines": "359-361",
+      "title": "Internal chosen result code previously named actualExit before real process completion",
+      "status": "Resolved in reviewed current byte pin",
+      "fix": "Internal report/stdout use intendedExitCode; real process exit remains externally authoritative"
+    },
+    {
+      "id": "N1",
+      "originalLines": "316-326",
+      "currentLines": "316-327",
+      "title": "Signal observation previously optional even when product cleanup passed",
+      "status": "Resolved in reviewed current byte pin",
+      "fix": "Await actual request-signal-aborted observation alongside actual usage and resource observations; assert its original value.aborted===true; no synthetic abort introduced"
+    },
+    {
+      "id": "F4",
+      "file": "C:/cinagroup/cinatoken/scripts/smoke/run-workerd-product-sse-cancel.py",
+      "lines": "35-71",
+      "priority": 2,
+      "status": "Open for the reviewed3358-byte wrapper; no modified wrapper execution or semantics inferred",
+      "title": "Some exceptional executor paths bypass cleanup/terminal report",
+      "evidence": "KILL-after-timeout child.wait(timeout5)61 can again throw TimeoutExpired; nonESRCH killpg error or other raised exception also bypasses72-83. There is no outerfinally/interrupt handler owning group cleanup or an incomplete terminal record",
+      "impact": "Those failure branches may leave no executor.json and cannot be claimed owned-group closed. Normal actual0 path and fallback-as-fail logic are appropriate; no false0 branch was found",
+      "minimumFix": "Catch and preserve unknown wait/cleanup result in an outerfinally, stop/reap owned group best-effort on interruption, record child.returncode orNone and terminalClosedfalse when unknown, return1. Never synthesize actual-9/0 or turn forcedcleanup into graceful"
+    }
+  ],
+  "positiveReview": {
+    "realProductionDriver": "Worker82/130 imports actual dispatchOpenAiRoute and passes exact incoming request.signal. Real usage/cost helpers imported83. No product driver/fetch stub, artificial AbortController or test reader.cancel drives product cancellation",
+    "realHTTPClient": "198-254 requires200/SSE first3 sequences[1,2,3], unfinished Response, live127.0.0.1 socket; actual resetAndDestroy251 and actual socket close252 precede success",
+    "realOwnedUpstream": "267-286 permits one actual physical upstream dispatch and fixed synthetic credential/stream body;308-315 requires response and socket close before cleanup, not the400chunk safety ceiling, interval stopped and no further chunks",
+    "actualUsageAndResource": "132-138 independently observe actual production driver usage and resource promises under waitUntil while returning original response;320-326 checks cancelled usage, unknown cost, rawusage null/tokens0 only because fixture emitted no authoritative usage frame, plus actual resource outcome confirmed",
+    "noFakeNaturalCancel": "112-127 minimal-source-cancel emitted only in the actual ReadableStream.cancel callback; abort listener106 only observes signal.331-337 require exact cancel callback and reject enqueue-error substitution",
+    "aggregateFailure": "357 requires both independent cases PASS, no fatal and no cleanup errors. This new probe does not supersede any frozen original strict failure",
+    "noSecretsOrProductionBindingsFound": "Synthetic-only provider credential,2 explicit loopback env origins and cf:false; no database/service/production binding, credentials file loading or Cloudflare API. Header match output is boolean. Logs/errors may include synthetic paths/data; do not generalize this logging boundary to real credentials",
+    "sourceProtection": "Exact inverse of the reviewed evidence-field changes reproduces original26023B/860568; all remaining bytes including RST, real driver/upstream/minimal logic and strict protectedpaths are unchanged"
+  },
+  "cleanupBoundary": {
+    "caseSuccess": "Successful clientRST awaited actual close. Failed helper finally destroys handles and deletes tracked client before actual close is proven, so activeClients0 is tracking state only",
+    "timerAndSocketMeaning": "342-343 clears local tracked clients/intervals;353 server socket count depends on close callbacks, not proof of all native PIDs gone",
+    "miniflare": "345 bounded dispose API promise; gracefulWorkerdExitProven remains false. A Promise.race timeout does not itself cancel native disposal",
+    "outerRequired": "Actual owned Linux process-group deadline, true child returncode/runner outcome, kill/reap and census remain authoritative and preserve forced/nonzero outcomes; internal intendedExitCode is not terminal evidence",
+    "preRuntimeErrors": "Pre-runtime import/build failure occurs before mf creation; original outer failure/raw artifacts must be retained even if report.json is absent"
+  },
+  "workflow": {
+    "reviewed": true,
+    "originalFullReadTool": {
+      "chunkId": "73ed6d",
+      "actualExit": 0
+    },
+    "sourcePins": [
+      {
+        "file": "C:/cinagroup/cinatoken/scripts/smoke/run-workerd-product-sse-cancel.py",
+        "reviewedBytes": 3358,
+        "reviewedSha256": "e57c41f1bcc872f43ad89e336f9a38436e432fd77982baf342c1914433375e52",
+        "currentAtReport": {
+          "bytes": 4401,
+          "sha256": "241d11ea35ec46e80e1d4e3b95f4d570a97ad28c4204dd9d3db21dc6d9e637b5"
+        },
+        "currentSameReviewedPin": false
+      },
+      {
+        "file": "C:/cinagroup/cinatoken/.github/workflows/product-text-sse-workerd-cancellation.yml",
+        "reviewedBytes": 1257,
+        "reviewedSha256": "c7a682e844b2147b3578c317c9de2d53dcc5a62d3f180d1b480659a746079ac9",
+        "currentAtReport": {
+          "bytes": 1257,
+          "sha256": "c7a682e844b2147b3578c317c9de2d53dcc5a62d3f180d1b480659a746079ac9"
+        },
+        "currentSameReviewedPin": true
+      }
+    ],
+    "manualOnly": true,
+    "permissions": "contents read",
+    "secretsOrProductionOperationsFound": false,
+    "nodeFromNvmrc": true,
+    "lockedNpmCiIgnoreScripts": true,
+    "concurrencyCancelsInProgress": false,
+    "uniqueFreshRunnerTempOut": true,
+    "stepTimeoutMinutes": 4,
+    "jobTimeoutMinutes": 10,
+    "alwaysUploadRawAndOutput": true,
+    "continueOnErrorPresent": false,
+    "wrapperNormalPath": "start_new_session creates Node owned group; child.wait120; timeoutTERMgroup/wait5, timeoutKILLgroup/wait5; parent0 with remaining group invokesKILL fallback. Any timeout/fallback/remaining/nonzero makes return1",
+    "normalChildExitField": "Python actualExit comes from real child.wait and is distinct from fixture intendedExitCode",
+    "gracefulClaim": false
+  },
+  "limitations": {
+    "oneProductMidstreamRSTScenarioOnly": true,
+    "noSilentOrProvenPendingWriteMatrixClaim": true,
+    "upstreamTransportAndRegisteredResourceOnly": true,
+    "noFreeOrZeroChargedCostClaim": true,
+    "noRealPGSettlementOrCapacityLeaseReleaseClaim": true,
+    "noRealIdentityOrFullWebAdminFlow": true,
+    "fullG7G8": false,
+    "originalStrictNaturalSourceCancelStillIndependent": true,
+    "cppPendingWriteOrDropPromiseCauseUnknown": true,
+    "nativeRuntimeExecuted": false
+  },
+  "secondaryPeer": {
+    "agent": "/root/cloudflare_review/boundary_peer",
+    "scope": "Client198-255 and cleanup339-359 of exact original860568 byte pin only",
+    "originalTool": {
+      "chunkId": "bbaa94",
+      "actualExit": 0
+    },
+    "finding": "Independently found ignored close callback error; no fabricatedRST success found; no execution or writes"
+  },
+  "preservedNegative": {
+    "toolChunkId": "341ffe",
+    "toolActualExit": 1,
+    "phase": "Snapshot preparation rejected changed26206-byte intermediate source before creating any Temp files",
+    "originalMessage": "AssertionError26206!==26023",
+    "scope": "Legitimate source drift while owner applied findings; not a fixture runtime failure, not overwritten or promoted to0"
+  },
+  "currentDeltaRead": {
+    "toolChunkId": "a80379",
+    "toolActualExit": 0,
+    "scope": "Only current source hash and reviewed product/cleanup field lines; current26263/69762d captured"
+  },
+  "conclusion": "JS69762d evidence corrections fullyverified by inverse original860568 bytes. Workflow manual/read-only/noSecrets/freshoutput/alwaysupload/fail natural result contract is appropriate. The original3358-byte executor has an exceptional cleanup/terminal-report gap recordedF4; this review does not bless all executor paths as closed. Runtime and naturalcancel remain unexecuted and separate.",
+  "preservedReadNegativeNotes": [
+    {
+      "toolChunkId": "341ffe",
+      "toolActualExit": 1,
+      "phase": "Snapshot preparation rejected changed26206-byte intermediate source before creating any Temp files",
+      "originalMessage": "AssertionError26206!==26023",
+      "scope": "Legitimate source drift while owner applied findings; not a fixture runtime failure, not overwritten or promoted to0"
+    }
+  ]
+}

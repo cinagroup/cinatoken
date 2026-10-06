@@ -1,0 +1,4 @@
+
+> @cinatoken/web@2.8.0 lint
+> eslint src/main.tsx src/legacy-root.tsx src/cinatoken rsbuild.config.ts edge scripts
+

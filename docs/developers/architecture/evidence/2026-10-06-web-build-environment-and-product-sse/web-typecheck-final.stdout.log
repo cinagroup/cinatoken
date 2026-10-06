@@ -1,0 +1,10 @@
+
+> cinatoken@2.8.0 typecheck:web
+> npm run typecheck -w @cinatoken/web
+
+
+> @cinatoken/web@2.8.0 typecheck
+> tsc -b && tsc -p edge/tsconfig.json
+
+rsbuild.config.ts(36,51): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.

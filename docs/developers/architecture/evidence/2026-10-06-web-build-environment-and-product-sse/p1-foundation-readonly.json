@@ -1,0 +1,582 @@
+{
+  "schema": "p1-current-foundation-bounded-readonly-audit-v1",
+  "at": "2026-10-06T09:45:36.457Z",
+  "actualReadOnlyAuditExit": 0,
+  "currentHead": "e006c77302bb2f0335e1d058c64e9772f006c5c3",
+  "actualCIHead": "757490181564aa822f960f5d8704857b98b230d0",
+  "sameScopeDifferentSHA": true,
+  "scopeGitDiffReceipt": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-p1-foundation-readonly-9ecfX5/source-scope-git-diff.closed.json",
+    "bytes": 1136,
+    "sha256": "ccf29edf1353a16de5816d711218b303d479f66d5fe34fce8ece28bc98547670"
+  },
+  "scopeGitDiffEmpty": true,
+  "actualWebCI": {
+    "run": 37429192615,
+    "url": "https://github.com/cinagroup/cinatoken/actions/runs/37429192615",
+    "headSha": "757490181564aa822f960f5d8704857b98b230d0",
+    "jobs": [
+      {
+        "name": "Admin contracts and public SSR build",
+        "id": 112155792428,
+        "conclusion": "success",
+        "stepCount": 19,
+        "steps": [
+          {
+            "number": 1,
+            "name": "Set up job",
+            "conclusion": "success"
+          },
+          {
+            "number": 2,
+            "name": "Run actions/checkout@v4",
+            "conclusion": "success"
+          },
+          {
+            "number": 3,
+            "name": "Run actions/setup-node@v4",
+            "conclusion": "success"
+          },
+          {
+            "number": 4,
+            "name": "Run npm ci --ignore-scripts",
+            "conclusion": "success"
+          },
+          {
+            "number": 5,
+            "name": "Run npm run typecheck -w @octafuse/core",
+            "conclusion": "success"
+          },
+          {
+            "number": 6,
+            "name": "Run npm run build:node-index -w @octafuse/core",
+            "conclusion": "success"
+          },
+          {
+            "number": 7,
+            "name": "Validate account repository types and database contracts",
+            "conclusion": "success"
+          },
+          {
+            "number": 8,
+            "name": "Validate integration-key atomic audits and migration contracts",
+            "conclusion": "success"
+          },
+          {
+            "number": 9,
+            "name": "Validate Tools atomic configuration, single snapshots and private clients",
+            "conclusion": "success"
+          },
+          {
+            "number": 10,
+            "name": "Validate global Gateway Key paging and atomic profile conditions",
+            "conclusion": "success"
+          },
+          {
+            "number": 11,
+            "name": "Validate Shared Keys state guards and formal earning history protection",
+            "conclusion": "success"
+          },
+          {
+            "number": 12,
+            "name": "Validate Shared Keys atomic governance and exact request log detail",
+            "conclusion": "success"
+          },
+          {
+            "number": 13,
+            "name": "Validate authority currency failures and anonymous catalog boundary",
+            "conclusion": "success"
+          },
+          {
+            "number": 14,
+            "name": "Run npm run typecheck -w @octafuse/admin",
+            "conclusion": "success"
+          },
+          {
+            "number": 15,
+            "name": "Validate auth, workspace, keys, account and public BFF contracts",
+            "conclusion": "success"
+          },
+          {
+            "number": 16,
+            "name": "Build Admin public SSR and standalone output",
+            "conclusion": "success"
+          },
+          {
+            "number": 31,
+            "name": "Post Run actions/setup-node@v4",
+            "conclusion": "success"
+          },
+          {
+            "number": 32,
+            "name": "Post Run actions/checkout@v4",
+            "conclusion": "success"
+          },
+          {
+            "number": 33,
+            "name": "Complete job",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "name": "web",
+        "id": 112155792725,
+        "conclusion": "success",
+        "stepCount": 18,
+        "steps": [
+          {
+            "number": 1,
+            "name": "Set up job",
+            "conclusion": "success"
+          },
+          {
+            "number": 2,
+            "name": "Run actions/checkout@v4",
+            "conclusion": "success"
+          },
+          {
+            "number": 3,
+            "name": "Run actions/setup-node@v4",
+            "conclusion": "success"
+          },
+          {
+            "number": 4,
+            "name": "Run npm ci --ignore-scripts",
+            "conclusion": "success"
+          },
+          {
+            "number": 5,
+            "name": "Run npm run verify:package-versions",
+            "conclusion": "success"
+          },
+          {
+            "number": 6,
+            "name": "Run npm run format:check -w @cinatoken/web",
+            "conclusion": "success"
+          },
+          {
+            "number": 7,
+            "name": "Run npm run test:web",
+            "conclusion": "success"
+          },
+          {
+            "number": 8,
+            "name": "Run npm run lint -w @cinatoken/web",
+            "conclusion": "success"
+          },
+          {
+            "number": 9,
+            "name": "Run bash -n docker/web/entrypoint.sh",
+            "conclusion": "success"
+          },
+          {
+            "number": 10,
+            "name": "Run npm run build:web",
+            "conclusion": "success"
+          },
+          {
+            "number": 11,
+            "name": "Freeze and verify release artifact",
+            "conclusion": "success"
+          },
+          {
+            "number": 12,
+            "name": "Generate verified production Worker configuration",
+            "conclusion": "success"
+          },
+          {
+            "number": 13,
+            "name": "Validate release image and Nginx configuration",
+            "conclusion": "success"
+          },
+          {
+            "number": 14,
+            "name": "Validate isolated Docker public SSR runtime",
+            "conclusion": "success"
+          },
+          {
+            "number": 15,
+            "name": "Run actions/upload-artifact@v4",
+            "conclusion": "success"
+          },
+          {
+            "number": 29,
+            "name": "Post Run actions/setup-node@v4",
+            "conclusion": "success"
+          },
+          {
+            "number": 30,
+            "name": "Post Run actions/checkout@v4",
+            "conclusion": "success"
+          },
+          {
+            "number": 31,
+            "name": "Complete job",
+            "conclusion": "success"
+          }
+        ]
+      }
+    ],
+    "all37StepsSuccess": true,
+    "metadata": {
+      "path": "C:/cinagroup/cinatoken/docs/developers/architecture/evidence/2026-10-06-native-all-green-and-http-cancellation-boundary/ci-terminal/web-terminal.stdout.log",
+      "bytes": 7397,
+      "sha256": "551dd3067641d18df46da8519f255c2f3c7a99cdd831dfdfae2002e011ac06c9"
+    },
+    "actualMetadataReadReceipt": {
+      "path": "C:/cinagroup/cinatoken/docs/developers/architecture/evidence/2026-10-06-native-all-green-and-http-cancellation-boundary/ci-terminal/web-terminal.closed.json",
+      "bytes": 951,
+      "sha256": "46a1b47d2f73545a8ab9e2188de6910870340ec3d2b7e8826350750a00ac9308"
+    }
+  },
+  "requirements": [
+    "- [ ] P1-01：将 `@cinatoken/web` 纳入根 workspace、版本核验、根锁文件及 CI；统一 npm 安装流程和局部规范。",
+    "- [ ] P1-02：核对 Node、React、TypeScript、依赖覆盖与 peer 依赖；干净安装可复现，既有包不受冲突影响。",
+    "- [ ] P1-03：提供 Web 开发、类型检查、lint、格式检查、单测、生产构建和预览命令；版本/变更范围核验符合现有发布约定。",
+    "- [ ] P1-04：建立独立 cinatoken 浏览器入口，不将旧 New API API client、store 或路由隐式带入运行图。",
+    "- [ ] P1-05：区分开发代理地址与生产浏览器请求地址；产物使用同源请求，不能默认指向 `localhost:3000`。",
+    "- [ ] P1-06：客户端环境变量明确白名单；后端秘密、身份凭据、数据库连接等不进入客户端产物。",
+    "- [ ] P1-07：建立公开、账户、管理布局以及加载、无权限、空态、错误与真实 404 状态。",
+    "- [ ] P1-08：统一品牌资源、可见归属、主题 token、light/dark/system 与 `en/zh/ja/ko`；消息键集合一致。",
+    "- [ ] P1-09：明确迁移期间原导入代码的类型/lint 范围，记录基线债务；不能通过排除最终要交付的页面掩盖缺陷。"
+  ],
+  "verdicts": [
+    {
+      "id": "P1-01",
+      "status": "complete",
+      "recommendCheck": true,
+      "reason": "Root workspace includes Web; six-package version verifier and Changesets fixed line include Web; lock v3 includes Web and root workspace link; no nested Web lock. AGENTS sections3.15/3.16 establish root npm workflow. Actual CI step4 npm ci --ignore-scripts and step5 version verification success; delivery/CI scope byte unchanged from actual757 CI."
+    },
+    {
+      "id": "P1-02",
+      "status": "contradicted",
+      "recommendCheck": false,
+      "reason": "Node22 policy, React19.3 resolution and separate TS5.9.3/6.0.3 installations build in actual CI, but Web overrides are declared only in workspace and root has none. npm official bundled primary document states workspace overrides are not used. Lock contains differing versions including hono4.12.12 versus declared4.12.22, postcss8.4.31/8.5.28 versus8.5.15. Peer compatibility/no effects across all existing packages not proved solely by npm ci success.",
+      "smallestFix": "First reconcile each inherited override against actual workspace dependencies/peer ranges. Remove stale declarations or install reviewed scoped root overrides; regenerate root lock and run exact Web/Admin/Proxy checks at new SHA. Do not copy every old pin to global root or blindly downgrade unrelated packages."
+    },
+    {
+      "id": "P1-03",
+      "status": "complete",
+      "recommendCheck": true,
+      "reason": "Web package provides dev/typecheck/lint/format/test/build/preview; root aliases integrated. Actual757 CI executes verification, format/test/lint/build:check (typecheck), freeze/verify and config generation. Six-package fixed Changesets + prettier:false matches current release convention.",
+      "limit": "Provision of dev/preview commands is proved; no claim this review executed a dev server or preview, or that a release was published."
+    },
+    {
+      "id": "P1-04",
+      "status": "complete",
+      "recommendCheck": true,
+      "reason": "main performs public bootstrap hydration or explicitly loads legacy-root; legacy-root uses only cinatoken router/session/i18n and shared theme. Router imports current cinatoken routes; authenticated API uses own cookie fetch transport; old New-Api-User appears in active contract tests only as forbidden header assertions. Actual build and tests succeed for unchanged active entry.",
+      "limit": "legacy-root name denotes current non-public rendering path, not old New API route/store. Historical import stock is not claimed migrated."
+    },
+    {
+      "id": "P1-05",
+      "status": "complete",
+      "recommendCheck": true,
+      "reason": "Rsbuild server-only development targets explicit8789/8787, browser API paths are relative /api and Cookie transport credentials=same-origin; real API/catalog/chat contracts tested by the discover-all current suite. No production browser default localhost3000 is introduced."
+    },
+    {
+      "id": "P1-06",
+      "status": "missing-evidence-and-explicit-policy",
+      "recommendCheck": false,
+      "reason": "AGENTS permits explicitly public PUBLIC_ prefix and build config requests prefixesPUBLIC_, with no explicit variable-name whitelist. Existing source provenance tests exclude secrets from source archives, which is a different artifact. No read actual production browser-asset secret/environment canary admission proof.",
+      "smallestFix": "Declare browser variable allowlist (empty if none required), reject unexpected public names, add bounded fresh-build private canaries and inspect every browser asset including maps for canary absence; enforce in Web CI. No real secret values are needed."
+    },
+    {
+      "id": "P1-07",
+      "status": "implemented-partial-evidence",
+      "recommendCheck": false,
+      "reason": "Source implements public shell/AccountLayout/AdminLayout, loading/unavailable/session/console gates and HTTP404 public SSR; actual CI includes HTTP/document contracts. Current production anonymous45 historical proves public and anonymous private entry rendering. This review has not verified one complete foundation-state proof covering loading/403/empty/error/404 across all three layout classes.",
+      "smallestFix": "Use existing real components and controlled session/API fixtures to produce one bounded three-layout foundation-state proof, retain real HTTP404 distinction. This is not blocked on production OAuth and is not full business acceptance."
+    },
+    {
+      "id": "P1-08",
+      "status": "implemented-partial-evidence",
+      "recommendCheck": false,
+      "reason": "CinaToken title/favicon/header, exact NOTICE English footer/link, CSS token theme and light/dark/system media subscription exist; en/zh/ja/ko runtime and namespace key tests are included in actual Web suite. Private shell + public SSR are both explicit. Full all-current-message-namespace key equality and system/light/dark restoration across both browser entry paths has not been bound in this small evidence review.",
+      "smallestFix": "A single complete current-message key inventory and bounded public/private shell theme-system/locale render proof can close this engineering item; do not substitute a subset of names or actual business login."
+    },
+    {
+      "id": "P1-09",
+      "status": "complete",
+      "recommendCheck": true,
+      "reason": "MD366 states current delivery and excluded import inventory; MD368 explicitly records229/232 inherited copyright-template debt and forbids blindly applying wrong upstream ownership. TS include main/cinatoken follows imported shared modules; lint explicitly covers main/legacy-root/cinatoken/edge/scripts; all delivered page implementations are in cinatoken. Shared UI ignore is explicit rather than excluding pages.",
+      "limit": "No claim every unmodified shared UI helper is linted, imported inventory is migrated, copyright debt is cleared, or all upstream attribution is proven."
+    }
+  ],
+  "overrideFacts": [
+    {
+      "name": "brace-expansion",
+      "declared": "2.1.1",
+      "lockVersions": [
+        "2.1.2",
+        "5.0.12",
+        "1.1.14",
+        "5.0.5",
+        "2.1.7"
+      ]
+    },
+    {
+      "name": "dompurify",
+      "declared": "3.4.5",
+      "lockVersions": []
+    },
+    {
+      "name": "fast-uri",
+      "declared": "3.1.2",
+      "lockVersions": [
+        "3.1.8"
+      ]
+    },
+    {
+      "name": "hono",
+      "declared": "4.12.22",
+      "lockVersions": [
+        "4.12.12"
+      ]
+    },
+    {
+      "name": "ip-address",
+      "declared": "10.2.0",
+      "lockVersions": [
+        "10.7.2"
+      ]
+    },
+    {
+      "name": "js-cookie",
+      "declared": "3.0.7",
+      "lockVersions": []
+    },
+    {
+      "name": "mermaid",
+      "declared": "11.15.0",
+      "lockVersions": []
+    },
+    {
+      "name": "minimist",
+      "declared": "1.2.8",
+      "lockVersions": [
+        "1.2.0",
+        "1.2.8",
+        "1.2.6"
+      ]
+    },
+    {
+      "name": "postcss",
+      "declared": "8.5.15",
+      "lockVersions": [
+        "8.4.31",
+        "8.5.28"
+      ]
+    },
+    {
+      "name": "qs",
+      "declared": "6.15.2",
+      "lockVersions": [
+        "6.15.3"
+      ]
+    },
+    {
+      "name": "uuid",
+      "declared": "14.0.0",
+      "lockVersions": []
+    }
+  ],
+  "npmPrimaryDocument": {
+    "path": "C:/Program Files/nodejs/node_modules/npm/docs/output/configuring-npm/package-json.html",
+    "bytes": 53299,
+    "sha256": "a2c731ab77c9aea8a343c59e63043a55141734b4857e963434c9550bc99b112f"
+  },
+  "runtimeVersions": {
+    "nodePolicy": "22",
+    "react": "19.3.0",
+    "reactDom": "19.3.0",
+    "rootTS": "5.9.3",
+    "webTS": "6.0.3"
+  },
+  "sourcePins": [
+    {
+      "relative": "package.json",
+      "path": "C:/cinagroup/cinatoken/package.json",
+      "bytes": 5550,
+      "sha256": "6454126bb47e39c135d3178ce3500b0901581b5b4f9b4b0067ace88e894da3aa"
+    },
+    {
+      "relative": "package-lock.json",
+      "path": "C:/cinagroup/cinatoken/package-lock.json",
+      "bytes": 830546,
+      "sha256": "f9c65b6e373a231d52d6eda634bb5f947dda3174734cd70e2b811e09fff0b6f0"
+    },
+    {
+      "relative": ".nvmrc",
+      "path": "C:/cinagroup/cinatoken/.nvmrc",
+      "bytes": 3,
+      "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56"
+    },
+    {
+      "relative": ".changeset/config.json",
+      "path": "C:/cinagroup/cinatoken/.changeset/config.json",
+      "bytes": 446,
+      "sha256": "854a0cf774e1fe3299c94dcd00e5b55d9eb0ac96441225f9a723a002eb7ffd1b"
+    },
+    {
+      "relative": "scripts/ci/verify-package-versions.mjs",
+      "path": "C:/cinagroup/cinatoken/scripts/ci/verify-package-versions.mjs",
+      "bytes": 1584,
+      "sha256": "631cd6e6077698bb838a057400b92c657860c9a8b1ef638cb12715a351ddf139"
+    },
+    {
+      "relative": ".github/workflows/web-frontend.yml",
+      "path": "C:/cinagroup/cinatoken/.github/workflows/web-frontend.yml",
+      "bytes": 8779,
+      "sha256": "56f518a0a597743e25c069e26326deb7c2316672a21e8793bc670a189e84b142"
+    },
+    {
+      "relative": "packages/web/AGENTS.md",
+      "path": "C:/cinagroup/cinatoken/packages/web/AGENTS.md",
+      "bytes": 11617,
+      "sha256": "9f37f40e644cb2fe2010f9434615bfc264b93b496fca8ebb6a4d2b226c8c3297"
+    },
+    {
+      "relative": "packages/web/package.json",
+      "path": "C:/cinagroup/cinatoken/packages/web/package.json",
+      "bytes": 4490,
+      "sha256": "dd231d8595d364fd70999f3e84414cc60bb50d41c700572607d5ec717b84c4bd"
+    },
+    {
+      "relative": "packages/web/rsbuild.config.ts",
+      "path": "C:/cinagroup/cinatoken/packages/web/rsbuild.config.ts",
+      "bytes": 3845,
+      "sha256": "0bdba90f18c4b3a0aeffc1fe5004420b02bc406fa049380e4cf8a54f5cc637e8"
+    },
+    {
+      "relative": "packages/web/tsconfig.app.json",
+      "path": "C:/cinagroup/cinatoken/packages/web/tsconfig.app.json",
+      "bytes": 771,
+      "sha256": "e825bde72fa4ab87138bf623417dc8a6a2d1f2173e2eefcbce098d582aa6be80"
+    },
+    {
+      "relative": "packages/web/eslint.config.js",
+      "path": "C:/cinagroup/cinatoken/packages/web/eslint.config.js",
+      "bytes": 1837,
+      "sha256": "29942bc2cb27453d2db6bd2531193d7a78886f2d3571215c24e6c05565098273"
+    },
+    {
+      "relative": "packages/web/scripts/test-unit.mjs",
+      "path": "C:/cinagroup/cinatoken/packages/web/scripts/test-unit.mjs",
+      "bytes": 1036,
+      "sha256": "ed7a5a8c4eebefe08be24a2fb53fdf4a5f3f6fc406d9a43ec4252eff07ad316b"
+    },
+    {
+      "relative": "packages/web/src/main.tsx",
+      "path": "C:/cinagroup/cinatoken/packages/web/src/main.tsx",
+      "bytes": 854,
+      "sha256": "78335aad93de3ebc667e0a5261891a1f727fdb058b59353a752ad862f4a1aca4"
+    },
+    {
+      "relative": "packages/web/src/legacy-root.tsx",
+      "path": "C:/cinagroup/cinatoken/packages/web/src/legacy-root.tsx",
+      "bytes": 1058,
+      "sha256": "c310a42472d9a30a73a9cc8f464ae7c817cc0d79272a4f97545138742467cb09"
+    },
+    {
+      "relative": "packages/web/src/cinatoken/api.ts",
+      "path": "C:/cinagroup/cinatoken/packages/web/src/cinatoken/api.ts",
+      "bytes": 16921,
+      "sha256": "d63117cf3ddfad5b735ce4430ebea826f6afeffda4bdbe40da325f7947b1f988"
+    },
+    {
+      "relative": "packages/web/src/cinatoken/api.test.ts",
+      "path": "C:/cinagroup/cinatoken/packages/web/src/cinatoken/api.test.ts",
+      "bytes": 26595,
+      "sha256": "427f600cd2335b1545f93f958448ef5dbe6739d10930dc6abd88fd5d137708b8"
+    },
+    {
+      "relative": "packages/web/src/cinatoken/router.tsx",
+      "path": "C:/cinagroup/cinatoken/packages/web/src/cinatoken/router.tsx",
+      "bytes": 14020,
+      "sha256": "e09cde2a905511350ec621bb7b39f9f9ba8b1fb2a99b323c1300d1ef96d7f7ca"
+    },
+    {
+      "relative": "packages/web/src/cinatoken/app-shell.tsx",
+      "path": "C:/cinagroup/cinatoken/packages/web/src/cinatoken/app-shell.tsx",
+      "bytes": 9846,
+      "sha256": "be0f26a622a03450696d9110fd8906aae305ddd56e70d5619afcfd523fee1d4d"
+    },
+    {
+      "relative": "packages/web/src/cinatoken/session-gate.tsx",
+      "path": "C:/cinagroup/cinatoken/packages/web/src/cinatoken/session-gate.tsx",
+      "bytes": 2125,
+      "sha256": "a363056a240b93dde9d675028365f6cd281eb851085b4c783884d2894c68056b"
+    },
+    {
+      "relative": "packages/web/src/cinatoken/admin/AdminLayout.tsx",
+      "path": "C:/cinagroup/cinatoken/packages/web/src/cinatoken/admin/AdminLayout.tsx",
+      "bytes": 3951,
+      "sha256": "9168d43420bfd3d06c722e8c51c172598dbcb9bcf2ee1e05fa734caf17c41502"
+    },
+    {
+      "relative": "packages/web/src/context/theme-provider.tsx",
+      "path": "C:/cinagroup/cinatoken/packages/web/src/context/theme-provider.tsx",
+      "bytes": 3876,
+      "sha256": "72c528090fb6cee9a89cfdb594ab8a2580c26ad0abe3527081c38bfd27d62cc0"
+    },
+    {
+      "relative": "packages/web/src/cinatoken/i18n.ts",
+      "path": "C:/cinagroup/cinatoken/packages/web/src/cinatoken/i18n.ts",
+      "bytes": 8051,
+      "sha256": "b74ff8e326c00643577bb14b47894fe7194f5d8df18899292f4a951fb503fc46"
+    },
+    {
+      "relative": "packages/web/src/cinatoken/public/ssr/public-i18n.test.ts",
+      "path": "C:/cinagroup/cinatoken/packages/web/src/cinatoken/public/ssr/public-i18n.test.ts",
+      "bytes": 1237,
+      "sha256": "a96d1644b3a420d134811c4d66daa0c98df04fc8fc03e1fd702eed54ccb7ef99"
+    },
+    {
+      "relative": "packages/web/src/cinatoken/public/ssr/public-request-app.test.ts",
+      "path": "C:/cinagroup/cinatoken/packages/web/src/cinatoken/public/ssr/public-request-app.test.ts",
+      "bytes": 21319,
+      "sha256": "818d18f0a1eea3ac646c3ddc46ff2176c2b5a5a6befd05a4b47ae6b358525d22"
+    },
+    {
+      "relative": "packages/web/src/cinatoken/public-server/public-response.test.ts",
+      "path": "C:/cinagroup/cinatoken/packages/web/src/cinatoken/public-server/public-response.test.ts",
+      "bytes": 13749,
+      "sha256": "e88ffbaf7a38d21c5be01fad177d9c41434e14bac5315d9c82ffbfc3f07b1cb2"
+    },
+    {
+      "relative": "packages/web/index.html",
+      "path": "C:/cinagroup/cinatoken/packages/web/index.html",
+      "bytes": 549,
+      "sha256": "fd30e0dea4ba596e4c44568b6f508464c389acaf63dbf40d119c4efb1bca0c22"
+    },
+    {
+      "relative": "NOTICE.frontend",
+      "path": "C:/cinagroup/cinatoken/NOTICE.frontend",
+      "bytes": 1290,
+      "sha256": "191f9af183f6e5bb099e56f5e7f5ebbe3f24656d6762d0e70facc579cc51e2b3"
+    }
+  ],
+  "G1": {
+    "status": "pending",
+    "definition": "MD370: clean install; Web types/lint/format/build; rendered entry; production artifact environment and license checks",
+    "requiresFullBusinessOrDockerOrNativeCancel": false,
+    "missing": [
+      "explicit production browser environment proof",
+      "full provenance/license acceptance",
+      "P1-02 dependency override/peer admission"
+    ],
+    "strictCancelFailureNotNewG1Requirement": true
+  },
+  "noTestAppDBAPINetworkOrGitMutationPerformed": true,
+  "noRepositoryOrOldRootWrites": true,
+  "noFullGateDerived": true,
+  "scope102UnchangedByReviewer": true,
+  "readLimitations": [
+    "No full archive walk or prior3357/42roots",
+    "No GitHub API or fresh CI read",
+    "No test/dev/build/native execution",
+    "Exploratory missing-path/PowerShell regex reads were not product check failures"
+  ]
+}

@@ -1,4 +1,4 @@
-import { defineConfig, loadEnv } from '@rsbuild/core'
+import { defineConfig } from '@rsbuild/core'
 import { pluginReact } from '@rsbuild/plugin-react'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -13,9 +13,10 @@ import {
 	ADMIN_NFT_MINTS_PAGE_PATHS,
 } from './edge/page-paths'
 import { pluginWebBuildContract } from './scripts/build-contract.mjs'
+import { loadWebBuildEnvironment } from './scripts/build-environment.mjs'
 
 const packageRoot = path.dirname(fileURLToPath(import.meta.url))
-// Local Web previews only. Hosted public pages remain behind the Next SSR entry.
+// Local previews use the browser shell; hosted public pages use the Web SSR entry.
 const localPublicPages = new Set([
 	'/chat',
 	'/chat/',
@@ -32,15 +33,11 @@ const localPublicPages = new Set([
 ])
 
 export default defineConfig(({ envMode }) => {
-	const env = loadEnv({ mode: envMode, prefixes: ['PUBLIC_'] })
+	const env = loadWebBuildEnvironment(packageRoot, envMode)
 	const adminOrigin =
-		process.env.CINATOKEN_WEB_ADMIN_ORIGIN ||
-		env.parsed.CINATOKEN_WEB_ADMIN_ORIGIN ||
-		'http://localhost:8789'
+		env.values.CINATOKEN_WEB_ADMIN_ORIGIN || 'http://localhost:8789'
 	const proxyOrigin =
-		process.env.CINATOKEN_WEB_PROXY_ORIGIN ||
-		env.parsed.CINATOKEN_WEB_PROXY_ORIGIN ||
-		'http://localhost:8787'
+		env.values.CINATOKEN_WEB_PROXY_ORIGIN || 'http://localhost:8787'
 	const legacyPages = [
 		'/models',
 		'/providers',
@@ -56,6 +53,11 @@ export default defineConfig(({ envMode }) => {
 
 	return {
 		plugins: [pluginReact(), pluginWebBuildContract(packageRoot)],
+		dev: {
+			watchFiles: env.filePaths.length
+				? [{ paths: env.filePaths, type: 'restart' }]
+				: [],
+		},
 		environments: {
 			web: { source: { entry: { index: './src/main.tsx' } } },
 			worker: {

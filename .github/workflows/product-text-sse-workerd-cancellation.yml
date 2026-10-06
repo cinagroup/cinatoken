@@ -1,0 +1,47 @@
+name: Product text SSE Workerd cancellation
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: product-text-sse-workerd-cancellation-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  product-transport:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - id: install
+        run: npm ci --ignore-scripts
+      - name: Verify real ingress RST and separate native source cancel
+        timeout-minutes: 4
+        env:
+          FIXTURE_OUT: ${{ runner.temp }}/product-sse-cancel-${{ github.run_id }}-${{ github.run_attempt }}
+        run: >-
+          python3 scripts/smoke/run-workerd-product-sse-cancel.py
+          --repo "$GITHUB_WORKSPACE"
+          --out "$FIXTURE_OUT"
+          --source-sha "$GITHUB_SHA"
+      - name: Verify clean Web dependency and peer tree
+        if: always() && steps.install.outcome == 'success'
+        run: npm ls --all -w @cinatoken/web > "$RUNNER_TEMP/product-sse-web-dependencies-${{ github.run_id }}-${{ github.run_attempt }}.log" 2>&1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: product-sse-cancel-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/product-sse-cancel-${{ github.run_id }}-${{ github.run_attempt }}
+            ${{ runner.temp }}/product-sse-web-dependencies-${{ github.run_id }}-${{ github.run_attempt }}.log
+          if-no-files-found: error
+          retention-days: 14

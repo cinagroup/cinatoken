@@ -1,0 +1,44 @@
+{
+  "schema": "actual-readonly-npm-tree-command-closed-v1",
+  "closed": true,
+  "program": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "C:/Program Files/nodejs/node_modules/npm/bin/npm-cli.js",
+    "ls",
+    "--workspace",
+    "@cinatoken/web",
+    "--all",
+    "--json",
+    "--long",
+    "--loglevel",
+    "error",
+    "brace-expansion",
+    "dompurify",
+    "fast-uri",
+    "hono",
+    "ip-address",
+    "js-cookie",
+    "mermaid",
+    "minimist",
+    "postcss",
+    "qs",
+    "uuid"
+  ],
+  "beganAt": "2026-10-06T09:51:00.620Z",
+  "endedAt": "2026-10-06T09:51:06.489Z",
+  "actualExit": 0,
+  "signal": null,
+  "error": null,
+  "stdout": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-p1-dependency-coverage-readonly-vPnpSj/npm-ls-web-overrides.stdout.log",
+    "bytes": 346804,
+    "sha256": "0e58329b809669c4c2c656d39c73bfa95678f907174f7de0b16673362ba4a81e"
+  },
+  "stderr": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-p1-dependency-coverage-readonly-vPnpSj/npm-ls-web-overrides.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "registryContactRequested": false,
+  "installOrRepoMutationRequested": false
+}

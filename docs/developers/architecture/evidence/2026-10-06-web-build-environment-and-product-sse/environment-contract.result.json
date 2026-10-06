@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-06T09:57:18.347Z",
+  "finishedAt": "2026-10-06T09:57:28.807Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "--test",
+    "packages/web/scripts/build-environment.test.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\environment-contract.stdout.log",
+    "bytes": 476,
+    "sha256": "5c8dbec7258502dfb26788eaf65e9db6a5b6c308b295a0e0473dfce238795396"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\environment-contract.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

@@ -1,0 +1,11 @@
+[warn] rsbuild.config.ts
+[warn] scripts/build-environment.mjs
+[warn] scripts/build-environment.test.mjs
+[warn] Code style issues found in 3 files. Run Prettier with --write to fix.
+npm error Lifecycle script `format:check` failed with error:
+npm error code 1
+npm error path C:\cinagroup\cinatoken\packages\web
+npm error workspace @cinatoken/web@2.8.0
+npm error location C:\cinagroup\cinatoken\packages\web
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c prettier --check src/main.tsx src/legacy-root.tsx src/env.d.ts src/cinatoken src/components/ui src/context/theme-provider.tsx src/styles src/lib/utils.ts src/lib/cookies.ts src/hooks/use-mobile.ts src/hooks/use-mobile.tsx index.html package.json rsbuild.config.ts tsconfig*.json eslint.config.js postcss.config.mjs .prettierrc components.json edge scripts ../../docker/web/*.mjs ../../.github/workflows/web-frontend.yml

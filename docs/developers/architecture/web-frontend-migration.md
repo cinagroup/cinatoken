@@ -28,7 +28,7 @@
 
 当前发布（2026-10-05）：`cinatoken.com/*` 继续由独立 `cinatoken-web` 承接，当前源码 `c13a64b9c3b2c90adcf736910ea408868d7854f1`、version `2a0a2777-d3b1-47f0-a0a7-88e701b4d2d9`、deployment `fd24618f-121e-4640-9edf-f15d243a6d75`、100%流量、29页面开关启用；资源Route保留，Workers.dev/Preview关闭。同SHA Linux CI37312669228两个job/36步骤全部success，冻结产物与2289 Git输入/18195586 B精确匹配。实际部署由已验证的3847955＋bdc1bfcf bridge与新CI产物合成，137资产/35服务端文件，三档对应源码可下载；GET23/HEAD6、认证转发GET3、4个HTML no-transform与资源组合137/137通过，首轮超时及定向重试均保留。Admin/Proxy仍为34c742d1。本SHA原v2两轮25/23页超时、新v3 31/45页及三交互后actual1，完整严格浏览器未通过；5.72的3847955严格45/45及交互结果仅保留为历史。当前资源保留修复见5.73，首轮遥测冲突/配置403见5.71。真实登录/资金/链、完整G0–G8和旧页退役仍待验收。
 
-当前推进：独立Web生产c13/2a0仍100%（08:16只读路由/版本核验0）。757原Linux native全部106financial步骤/109TAP tests成功、0失败/0跳过，26目标/剩6/94/109及110–113本SHA全通过，报价24/收据90/父级110各TAP1/1/0。其余四push workflow成功，Proxy仍因dispatch原strict8/7/1失败。单次同757手动HTTP诊断真实1：原五退出[0,1,1,1,1]，额外有限8MiB实验真实内核积压2.6→2.5MB，Signal及合成清理各1、自然source cancel仍0/KV NULL；C++分支与根因未证。真实浏览器登录已实际推进至CinaAuth，但授权端点302回调invalid_target（hasCode=false/hasState=true）。线上只读已确认client/resource存在且未禁用、缺少exact关联；单条关联修复已准备并通过9项SQLite事务验证，自动审批拒绝具体生产权限变更，待用户明确批准（5.87）。尚未登录、切工作区或写密钥。原102/54/211、完整G7/G8、真实身份/ACL、资金链/SSE取消/回滚/旧UI退役继续。
+当前推进：本批完成并勾选P1-01/03/04/05/06/09，删除失效workspace overrides而不改根锁文件；Web1600/1600、types/lint/format及三target生产构建通过，130浏览器文件秘密canary检查通过。新Workerd入站RST→生产driver与独立source.cancel fixture已准备，同SHA Linux待执行（5.88）。原757 native106步骤/109TAP全成功，原strict8/7/1失败及C++根因未知保留。真实CinaAuth authorize回调invalid_target；线上已确认client/resource启用而缺exact关联，生产写入具体批准仍待，不重试或绕过（5.87）。已有专用测试工作区、密钥及完整G0–G8继续验收；当前独立Web已切流c13/2a0/100%，本批尚未新部署。
 
 上一批状态：NEXT-41四语公开署名修复与NEXT-13 B1五个活跃文件修复完成本地验收（5.54）。新P66 Web1401/1401、完整Web/Edge types及Web lint/format、三目标build/freeze/gen0；同一492产物真实Node HTTP45、Node compiled Worker77、Chrome JS32/真正NoJS36通过，68HTML实际footer英文原文/lang=en/译文/链接均通过。Admin源组件Chrome19/相关unit26/保留合同AST22、完整types与目标lint/format0；全量lint实际67E9W→58E5W，仍未全量通过。本地来源946文件tree/修复前1795观察已补，不能当上游导入ref/日期。P65原24/32缺英文、修前测试40失败与其他历史失败完整保留；workerd产品/最小例0xc0000005、WSL E_ACCESSDENIED，0原生case获验。29入口false、未部署；下一步NEXT-13 B2/B3按真实行为清理及来源/真实身份/三库/目录/链/LinuxCI/双平台/发布回滚，完整102主任务/54矩阵/G0–G8/E00–E08未提前完成。
 
@@ -353,15 +353,15 @@ rg -n 'Routes\.(get|post|put|patch|delete)\(' packages/admin/lib/routes/user pac
 
 ### P1：工程与最小可运行入口
 
-- [ ] P1-01：将 `@cinatoken/web` 纳入根 workspace、版本核验、根锁文件及 CI；统一 npm 安装流程和局部规范。
+- [x] P1-01：将 `@cinatoken/web` 纳入根 workspace、版本核验、根锁文件及 CI；统一 npm 安装流程和局部规范。
 - [ ] P1-02：核对 Node、React、TypeScript、依赖覆盖与 peer 依赖；干净安装可复现，既有包不受冲突影响。
-- [ ] P1-03：提供 Web 开发、类型检查、lint、格式检查、单测、生产构建和预览命令；版本/变更范围核验符合现有发布约定。
-- [ ] P1-04：建立独立 cinatoken 浏览器入口，不将旧 New API API client、store 或路由隐式带入运行图。
-- [ ] P1-05：区分开发代理地址与生产浏览器请求地址；产物使用同源请求，不能默认指向 `localhost:3000`。
-- [ ] P1-06：客户端环境变量明确白名单；后端秘密、身份凭据、数据库连接等不进入客户端产物。
+- [x] P1-03：提供 Web 开发、类型检查、lint、格式检查、单测、生产构建和预览命令；版本/变更范围核验符合现有发布约定。
+- [x] P1-04：建立独立 cinatoken 浏览器入口，不将旧 New API API client、store 或路由隐式带入运行图。
+- [x] P1-05：区分开发代理地址与生产浏览器请求地址；产物使用同源请求，不能默认指向 `localhost:3000`。
+- [x] P1-06：客户端环境变量明确白名单；后端秘密、身份凭据、数据库连接等不进入客户端产物。
 - [ ] P1-07：建立公开、账户、管理布局以及加载、无权限、空态、错误与真实 404 状态。
 - [ ] P1-08：统一品牌资源、可见归属、主题 token、light/dark/system 与 `en/zh/ja/ko`；消息键集合一致。
-- [ ] P1-09：明确迁移期间原导入代码的类型/lint 范围，记录基线债务；不能通过排除最终要交付的页面掩盖缺陷。
+- [x] P1-09：明确迁移期间原导入代码的类型/lint 范围，记录基线债务；不能通过排除最终要交付的页面掩盖缺陷。
 
 当前交付源是 `src/main.tsx`、`src/cinatoken`、共享 UI/主题/样式及其辅助模块，连同 Rsbuild/TypeScript/ESLint/PostCSS 配置、`edge` 和 `scripts`。`format` / `format:check` 显式覆盖这些文件和 Docker 配置测试、Web CI 工作流。原导入的 `src/features`、`src/routes`、`src/stores` 等尚未迁移页面仍是库存，未纳入当前交付不表示全量迁移完成。每次接管一个领域必须把其实现纳入交付检查范围；不能由 ignore-everything 配置让显式格式检查虚假通过。
 
@@ -2462,6 +2462,20 @@ dcc6原native94历史hash失败出处已只读追溯：原94c12c1e37e7346330486c
 
 新归档[静态授权边界索引](./evidence/2026-10-06-native-all-green-and-http-cancellation-boundary/auth-boundary-static-index.json)完整142来源文件＋20准备材料，逐byte/SHA/set核验；[实际诊断与审批边界索引](./evidence/2026-10-06-native-all-green-and-http-cancellation-boundary/auth-runtime-index.json)单列真实线上只读、浏览器日志、修复预备与拒绝记录。原757 native106步骤/109TAP全成功、严格HTTP取消仍失败、102主任务/54矩阵/211实际checkbox以及G0–G8/E00–E08全部原状态保持。独立Web生产c13/2a0继续100%，此次未重新部署前端或认证Worker。
 
+### 5.88 Web 构建变量白名单与真实 SSE 入站取消验收准备（2026-10-06）
+
+本批先按原任务字面要求核查P1，完成并勾选P1-01/03/04/05/09；原757→e006的产品/锁文件/规范/CI限定差量为空，先前Web两job/37步骤成功可继承到e006。本批随后修改Web构建配置并重新完整验证，新增证据单独记录，不把继承CI当作新源码CI。
+
+P1-02发现Web子workspace overrides被npm忽略；逐项祖先/版本核对后删除该失效对象，根锁文件和真实依赖版本保持。没有将brace-expansion的旧major或低于Tailwind要求的PostCSS pin搬到根，也不称已修复全部依赖漏洞。本机npm ls指定11目标actual0但含两extraneous，只作为现有安装观察；新Linux干净安装与完整Web peer树仍待独立工作流核验，所以P1-02暂不勾选。
+
+P1-06已完成：当前浏览器使用同源URL和运行时bootstrap，自定义构建公开变量白名单明确为空。npm dev/build/preview加--no-env关闭Rsbuild自动PUBLIC注入，手动隔离加载包目录模式文件，只报告未知PUBLIC变量名并在编译前拒绝；私有代理地址保留在server.proxy。文件监听与隔离processEnv避免开发重启沿用旧值。四项实际验证覆盖进程PUBLIC拒绝、bare CLI模式文件拒绝、私有值重载、真实Web配置编译探针及source map秘密canary；六类合成身份/数据库/Cloudflare/代理地址值没有进入实际130文件浏览器产物。完整Web1600/1600、skip0、types/lint/format及三target生产构建actual0。初次声明缺失/可选mode类型错误与格式失败原收据保留；修复后通过。局部许可/完整主题与布局验收仍不足，P1-07/08及G1继续待验。
+
+新增独立manual Linux Product text SSE Workerd cancellation：真实Workerd普通HTTP入站客户端在三帧后RST，真实Request.signal传生产dispatchOpenAiRoute，验证owned本地HTTP上游socket/response关闭和停止发帧、实际usage.cancelled、生产costUnknown helper、真实driver resourceCompletion；另列最小原生ReadableStream.cancel回调，signal不能代替source.cancel。Node syntax/esbuild准备及独立静态审查通过，Windows未启动Workerd；Linux本批尚未执行。执行器120s deadline→TERM/KILL并记录真实child.returncode，未知/残留/回退均失败，always上传完整raw。只证明此transport/driver边界，不证明PG ledger、真实capacity lease释放、native graceful exit或完整G7/G8。原strict8/7/1、五臂[0,1,1,1,1]及C++根因未知状态保留，没有修改原驱动或原取消断言。
+
+真实CinaAuth仍在authorize阶段invalid_target，已有专用测试工作区尚未进入。固定client/resource授权关联写入被自动审批拒绝后，具体批准仍未到达，本批未重试该写入或绕过认证。e006 Release已真实success；本轮代码提交、同SHA Linux CI与发布尚待。独立Web最近已核生产c13/2a0/100%，本批尚未新部署。原102主任务/54矩阵/G0–G8/E00–E08及211实际task checkbox范围保持，本批仅以上六项合法完成状态更新，其他任务继续。
+
+直接证据：[本批索引](./evidence/2026-10-06-web-build-environment-and-product-sse/index.json)。只收本批必要原raw/收据和有界审查，不重归档历史大包。公开变量行为参考[Rsbuild官方环境契约](https://rsbuild.rs/guide/advanced/env-vars)。
+
 ## 6. 更新记录
 
 | 日期 | 更新内容 | 对应范围 | 验证与下一步 |
@@ -2701,3 +2715,5 @@ dcc6原native94历史hash失败出处已只读追溯：原94c12c1e37e7346330486c
 
 2026-10-06：5.84记录d537原Linux报价24/26targets/剩6/94和109实际通过；native110未声明migrator失败、后三skip，三处已有sql绑定最小修复准备完成并待新原CI。strict8/7/1保持，直接完整日志与全部读取失败封存；独立Web100%、完整102/54/G/E/211状态继续。
 2026-10-06：5.86/5.87记录757原native106步骤/109测试全通过、原strict和手动HTTP诊断仍失败；真实CinaAuth登录invalid_target，线上只读确认启用client/resource缺exact授权关联，临时诊断Worker已删除/404复核。单条关联修复9项SQLite通过但生产写入被自动审批拒绝，待具体批准，真实登录/专用工作区/密钥及完整G7/G8不提前完成。
+
+2026-10-06：5.88完成Web显式空公开变量白名单、私有模式文件隔离与dev重载保护，删除失效workspace overrides；1600单测/完整types-lint-format/三target构建及130浏览器文件六类秘密canary通过。P1六项完成，P1-02冷安装/peer树与新Workerd真实RST工作流待Linux；原strict失败与待批准OAuth授权边界保持，本批尚未新部署。
