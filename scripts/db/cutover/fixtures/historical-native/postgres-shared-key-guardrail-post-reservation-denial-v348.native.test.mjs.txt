@@ -1,8 +1,7 @@
-// Review-only v348 fixture successor: explicit runtime/buyer clients and exact aggregate proof.
-// The historical v348 fixture, SQL proposals, test-only grants and denial assertions stay frozen.
+// Review-only native proof: v2 event producer moves to a distinct buyer LOGIN.
 import assert from 'node:assert/strict';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
-import { readFile, writeFile } from 'node:fs/promises';
+import { readFile, readdir, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import test from 'node:test';
 import postgres from 'postgres';
@@ -18,7 +17,7 @@ import { EMPTY_USAGE } from '../../../packages/proxy/src/services/proxy.ts';
 import { handleChatCompletion } from '../../../packages/proxy/src/routes/v1/chat.ts';
 import { createPostgresSharedKeyEconomicProducer } from '../../../packages/proxy/src/services/shared-key-quote-attempt.ts';
 import { drainNodeBackgroundWork } from '../../../packages/proxy/src/runtime/schedule-background-work.ts';
-import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
+import { grantPostgresRuntime } from './grant-postgres-runtime.ts';
 
 const gateway = 'cinatoken_gateway';
 const quotes = 'cinatoken_economic_quotes';
@@ -38,7 +37,6 @@ const proposals = [
 ];
 const successorName = 'shared-key-economic-producer-buyer-login-v347.sql';
 const denialName = 'shared-key-guardrail-post-reservation-denial-v348.sql';
-const historicalFixtureSha256 = '603646803c82d3209987260ad682a34169b4e53ca7b03b672d818e3a28d7cc13';
 const digest = value => createHash('sha256').update(value).digest('hex');
 
 function client(cluster, username, password, label) {
@@ -108,15 +106,13 @@ function charge(id, attempt, { mode, basis = 'actual',
   return params;
 }
 
-test('post-reservation Guardrail denial closes only a proven pre-send released buyer lease (runtime/buyer client successor)',
+test('post-reservation Guardrail denial closes only a proven pre-send released buyer lease',
   { timeout: 300_000, skip: !process.env.GATEWAY_NATIVE_PG_BIN }, async () => {
     const cluster = await startNativePostgres();
     const reportPath = join(dirname(cluster.owned),
-      `report-guardrail-post-reservation-denial-v348-runtime-buyer-client-successor-${randomUUID()}.json`);
+      `report-guardrail-post-reservation-denial-v348-${randomUUID()}.json`);
     const report = { status: 'RUNNING', cleanup: 'PENDING',
       binaryVersion: cluster.binaryVersion, sourceSha256: {}, stages: [],
-      lineage: { historicalFixture: 'scripts/db/cutover/fixtures/historical-native/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs.txt',
-        historicalFixtureSha256, contract: 'explicit runtime read and buyer financial clients; exact aggregate reviewed-v1' },
       scope: 'owned loopback PostgreSQL 18.6; PG73 plus review-only C04 v348 denial proposal',
       limitations: [
         'No production role, migration, grant routine, secret, Worker, Queue, or Hyperdrive binding changed.',
@@ -128,7 +124,6 @@ test('post-reservation Guardrail denial closes only a proven pre-send released b
         'The private denial receipt trusts the buyer LOGIN release reason and the mark-before-fetch contract; no independent Guardrail-denial record is present.',
         'The Chat fixture adds buyer INSERT on reservations and SELECT on system_config/workspace_budgets only after proving the existing role lacks admission permission; this is not a reviewed production admission role.',
         'A failed release leaves a reserved orphan for independent manual review; this proposal does not infer buyer or provider cost.',
-        'This successor uses the runtime LOGIN for route reads and the existing buyer LOGIN for financial writes; userBudgets retains only the old test-only buyer admission capability, not a reviewed production admission identity. POSTGRES_CHAT_BUDGET_OWNER_ENABLED remains unset.',
       ] };
     const stage = (name, detail = {}) => report.stages.push({ name, result: 'PASS', ...detail });
     const clients = [];
@@ -164,7 +159,7 @@ test('post-reservation Guardrail denial closes only a proven pre-send released b
       clients.push(migrator, runtime, buyer, quoteProducer);
       await migrator.unsafe(`CREATE TABLE ${gateway}.schema_migrations
         (version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);
-      const names = await listPg73Migrations();
+      const names = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();
       assert.equal(names.length, 73);
       const corpus = [];
       for (const name of names) {
@@ -182,12 +177,9 @@ test('post-reservation Guardrail denial closes only a proven pre-send released b
       report.sourceSha256.criticalWriter = digest(await readFile(new URL(
         '../../../packages/core/src/db/postgres/critical-writes.impl.ts', import.meta.url)));
       report.sourceSha256.fixture = digest(await readFile(new URL(import.meta.url)));
-      report.sourceSha256.historicalFixture = digest(await readFile(new URL(
-        './fixtures/historical-native/postgres-shared-key-guardrail-post-reservation-denial-v348.native.test.mjs.txt', import.meta.url)));
-      assert.equal(report.sourceSha256.historicalFixture, historicalFixtureSha256);
       const migratorUrl = `postgres://cinatoken_gateway_migrator:${migratorPassword}`
         + `@127.0.0.1:${cluster.port}/postgres`;
-      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
+      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
       stage('formal-pg73-and-current-runtime-grant-installed');
 
       for (const [name, activation, value] of proposals) {
@@ -301,18 +293,6 @@ test('post-reservation Guardrail denial closes only a proven pre-send released b
       const buyerDb = { driver: 'postgres', raw: buyer,
         drizzle: drizzle(buyer, { schema: pgCoreSchema }) };
       const buyerRepositories = createPostgresRepositories(buyerDb);
-      const runtimeDb = { driver: 'postgres', raw: runtime,
-        drizzle: drizzle(runtime, { schema: pgCoreSchema }) };
-      const runtimeRepositories = createPostgresRepositories(runtimeDb);
-      assert.notEqual(runtimeDb.raw, buyerDb.raw);
-      const [runtimeIdentity] = await runtime.unsafe('SELECT current_user AS current_user, session_user AS session_user');
-      const [buyerIdentity] = await buyer.unsafe('SELECT current_user AS current_user, session_user AS session_user');
-      assert.deepEqual(runtimeIdentity, { current_user: 'cinatoken_gateway_runtime',
-        session_user: 'cinatoken_gateway_runtime' });
-      assert.deepEqual(buyerIdentity, { current_user: 'cinatoken_gateway_buyer_settlement',
-        session_user: 'cinatoken_gateway_buyer_settlement' });
-      stage('successor-runtime-buyer-clients-have-distinct-owned-login-identities',
-        { runtimeIdentity, buyerIdentity });
       const reservationInput = id => ({ requestId: id,
         userId: 'buyer-v347', apiKeyId: 'api-key-v347',
         expectedBudgetEpoch: 0, reservedMicros: 20_000,
@@ -623,35 +603,33 @@ test('post-reservation Guardrail denial closes only a proven pre-send released b
         ${gateway}.system_config
         TO cinatoken_gateway_buyer_settlement`);
       const chatRepositories = {
-        ...runtimeRepositories,
-        // Preserve the original owned test-only admission methods without changing runtime client identity.
-        userBudgets: buyerRepositories.userBudgets,
-        guardrails: { ...runtimeRepositories.guardrails,
+        ...buyerRepositories,
+        guardrails: { ...buyerRepositories.guardrails,
           getEffectiveForRequest: async () => [effectiveBudgetGuardrail] },
-        guardrailBudgets: { ...runtimeRepositories.guardrailBudgets,
+        guardrailBudgets: { ...buyerRepositories.guardrailBudgets,
           expireBefore: async () => 0,
           reserveMany: async () => ({ status: 'blocked',
             assignmentId: 'assignment-v348' }) },
-        modelRouting: { ...runtimeRepositories.modelRouting,
+        modelRouting: { ...buyerRepositories.modelRouting,
           getModelById: async id => id === chatModel.id ? chatModel : null,
           getModelRoutesByModelId: async id => id === chatModel.id
             ? [chatRouteRow] : [],
           resolveModelSurface: async () => null },
-        providers: { ...runtimeRepositories.providers,
+        providers: { ...buyerRepositories.providers,
           getProvidersByIds: async ids => ids.includes(chatProviderRow.id)
             ? [chatProviderRow] : [] },
-        modelEndpoints: { ...runtimeRepositories.modelEndpoints,
+        modelEndpoints: { ...buyerRepositories.modelEndpoints,
           listRuntimeBindingsByRouteTargetIds: async ids =>
             ids.includes(chatRouteRow.id) ? [chatEndpoint] : [] },
-        routeDataPolicies: { ...runtimeRepositories.routeDataPolicies,
+        routeDataPolicies: { ...buyerRepositories.routeDataPolicies,
           getByRouteTargetIds: async () => [] },
-        sharedKeys: { ...runtimeRepositories.sharedKeys,
+        sharedKeys: { ...buyerRepositories.sharedKeys,
           listActiveSharedKeysByChannel: async channel =>
             channel === 'openai' ? [chatSharedKey] : [] },
-        byokKeys: { ...runtimeRepositories.byokKeys,
+        byokKeys: { ...buyerRepositories.byokKeys,
           listActiveForRequest: async () => [],
           shouldSuppressSharedCapacityForRequest: async () => false },
-        requestLogs: { ...runtimeRepositories.requestLogs,
+        requestLogs: { ...buyerRepositories.requestLogs,
           getRecentRoutePerformanceSamples: async () => [],
           getRouteAvailabilityAggregates: async () => [] },
       };
@@ -670,7 +648,7 @@ test('post-reservation Guardrail denial closes only a proven pre-send released b
           c.set('generationId', id);
           c.set('requestBodyLoggingMode', 'off');
           c.set('sharedKeyEconomicProducer',
-            createPostgresSharedKeyEconomicProducer(buyerDb));
+            createPostgresSharedKeyEconomicProducer());
           return handleChatCompletion(c);
         });
         const result = await app.request('http://localhost/v1/chat/completions', {
@@ -680,7 +658,6 @@ test('post-reservation Guardrail denial closes only a proven pre-send released b
             max_tokens: 16 }),
         }, {
           SHARED_KEY_QUOTE_ATTEMPTS_ENABLED: 'reviewed-v1',
-          AUTHENTICATED_CHAT_BUDGET_PROOF_ENABLED: 'reviewed-v1',
           QUOTE_ATTEMPT_HYPERDRIVE: { connectionString:
             `postgresql://cinatoken_gateway_shared_quote_attempt_producer:${quotePassword}`
               + `@127.0.0.1:${cluster.port}/postgres?sslmode=disable` },
@@ -830,7 +807,7 @@ test('post-reservation Guardrail denial closes only a proven pre-send released b
         logs: 0, events: 0, attempts: 0, receipt_spent: null });
       stage('runtime-forged-log-rolls-back-and-cannot-create-private-v2-event');
 
-      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl });
+      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
       const [rerun] = await migrator.unsafe(`SELECT
         pg_catalog.has_column_privilege('cinatoken_gateway_runtime',
           '${gateway}.users','budget_spent','UPDATE') AS runtime_spend_update,
@@ -862,7 +839,7 @@ test('post-reservation Guardrail denial closes only a proven pre-send released b
         report.cleanupError = String(error?.stack ?? error).slice(0, 1500);
         failure ??= error; }
       await writeFile(reportPath, JSON.stringify(report, null, 2) + '\n');
-      process.stdout.write(`guardrail-post-reservation-denial-v348-runtime-buyer-client-successor-report=${reportPath}\n`);
+      process.stdout.write(`guardrail-post-reservation-denial-v348-report=${reportPath}\n`);
     }
     if (failure) throw failure;
     assert.equal(report.cleanup, 'PASS');
