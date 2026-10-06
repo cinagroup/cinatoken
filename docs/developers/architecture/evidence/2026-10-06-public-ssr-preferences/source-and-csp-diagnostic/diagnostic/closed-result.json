@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-06T11:43:55.274Z",
+  "closedAt": "2026-10-06T11:44:03.390Z",
+  "processStarted": true,
+  "pid": 22540,
+  "actualExitCode": 0,
+  "signal": null,
+  "files": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-eval-diagnostic-ea849e9a904a4a01b7a2122c38de7335\\diagnostic.stdout.log",
+      "bytes": 6771,
+      "sha256": "1a4b179377aa9539b6f1daa6a40d36693426015bc7f0640e2c24bd807e851c17"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-eval-diagnostic-ea849e9a904a4a01b7a2122c38de7335\\diagnostic.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

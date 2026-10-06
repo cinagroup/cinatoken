@@ -1,0 +1,29 @@
+{
+  "command": {
+    "executable": "C:\\Program Files\\nodejs\\node.exe",
+    "args": [
+      "C:\\cinagroup\\cinatoken\\packages\\web\\node_modules\\prettier\\bin\\prettier.cjs",
+      "--write",
+      "src/cinatoken/public/ssr/public-preferences.test.ts"
+    ],
+    "cwd": "C:\\cinagroup\\cinatoken\\packages\\web",
+    "environmentKeys": []
+  },
+  "startedAt": "2026-10-06T11:34:45.714Z",
+  "endedAt": "2026-10-06T11:34:47.169Z",
+  "actualExitCode": 0,
+  "signal": null,
+  "error": null,
+  "streams": {
+    "stdout": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-early-controls-review-8316d33a4c54478ba04118ab45d0560e\\unit-verification\\format.stdout.log",
+      "bytes": 58,
+      "sha256": "6755c0331ae3d9c64bd40c859ab1e80219d2c36898e5f5262f5467e857ca7a7d"
+    },
+    "stderr": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-early-controls-review-8316d33a4c54478ba04118ab45d0560e\\unit-verification\\format.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  }
+}

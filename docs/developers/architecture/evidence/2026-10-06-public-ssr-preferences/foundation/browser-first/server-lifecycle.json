@@ -1,0 +1,20 @@
+{
+  "startedAt": "2026-10-06T11:34:54.987Z",
+  "shutdownStartedAt": "2026-10-06T11:40:45.818Z",
+  "finishedAt": "2026-10-06T11:40:47.777Z",
+  "reason": "stdin-shutdown",
+  "origin": "http://127.0.0.1:64896",
+  "pid": 1960,
+  "requestedExitCode": 0,
+  "actualExitCode": 0,
+  "forcedSocketClose": false,
+  "serverListening": false,
+  "remainingSocketCount": 0,
+  "requestCount": 264,
+  "failures": [],
+  "unchangedInputs": true,
+  "privateSessionOrCredentialAccess": false,
+  "liveApiRequests": false,
+  "browserStarted": false,
+  "workerdStarted": false
+}

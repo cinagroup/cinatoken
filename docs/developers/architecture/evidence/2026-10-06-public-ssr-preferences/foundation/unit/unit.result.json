@@ -1,0 +1,32 @@
+{
+  "command": {
+    "executable": "C:\\Program Files\\nodejs\\node.exe",
+    "args": [
+      "--import",
+      "tsx",
+      "--test",
+      "packages/web/src/cinatoken/public/ssr/public-preferences.test.ts"
+    ],
+    "cwd": "C:/cinagroup/cinatoken",
+    "environmentKeys": [
+      "TSX_TSCONFIG_PATH"
+    ]
+  },
+  "startedAt": "2026-10-06T11:34:47.175Z",
+  "endedAt": "2026-10-06T11:34:47.857Z",
+  "actualExitCode": 0,
+  "signal": null,
+  "error": null,
+  "streams": {
+    "stdout": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-early-controls-review-8316d33a4c54478ba04118ab45d0560e\\unit-verification\\unit.stdout.log",
+      "bytes": 1204,
+      "sha256": "a126b2739439371d4b9a0d4192aedf56b35632ed5e3d82091e973faf68666b79"
+    },
+    "stderr": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-early-controls-review-8316d33a4c54478ba04118ab45d0560e\\unit-verification\\unit.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  }
+}

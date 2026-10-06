@@ -1,0 +1,180 @@
+{
+  "status": "completed-static-review",
+  "at": "2026-10-06T11:38:44.910Z",
+  "reviewer": "/root/public_preferences_fixture",
+  "baseCommit": "f77b97de76d0d838f2f03c173055b0c38c9f1785",
+  "severityCounts": {
+    "P0": 0,
+    "P1": 0,
+    "P2": 0
+  },
+  "findings": [],
+  "summary": "No actionable P1/P2 found in reviewed current source. Compiled-browser acceptance remains required and is not claimed by this static review.",
+  "sourceInputs": [
+    {
+      "path": "packages/web/src/cinatoken/public/ssr/public-preferences.ts",
+      "bytes": 4107,
+      "sha256": "7dff49280dbf9c671a476bab3b79e20dddac4b31f9224031178a88f06a1daf3d"
+    },
+    {
+      "path": "packages/web/src/cinatoken/public/ssr/public-shell.tsx",
+      "bytes": 4717,
+      "sha256": "d9508ea2da5820cdb5bddba6087d3fb090f7804857ce414457958492460d57ef"
+    },
+    {
+      "path": "packages/web/src/cinatoken/public-server/public-response.tsx",
+      "bytes": 11614,
+      "sha256": "d7d7a493cfd366d1638bc4ced62954f811116c176ee621d1b0116d8a3bd5c94e"
+    },
+    {
+      "path": "packages/web/src/cinatoken/public-server/public-response.test.ts",
+      "bytes": 14422,
+      "sha256": "d9e7c02d29b1aaacf5f4e85957820bfd4c3797cb16f91ffa71a9d163eb2214b4"
+    },
+    {
+      "path": "packages/web/src/cinatoken/public/ssr/public-preferences.test.ts",
+      "bytes": 14872,
+      "sha256": "fa6e48423446174c6c4582b281e8f1092b98804169493e2166b8d4589f6ead0b"
+    },
+    {
+      "path": "packages/web/src/cinatoken/public/ssr/public-location.tsx",
+      "bytes": 2867,
+      "sha256": "ab4f455ec264a5b9d7dace995f386111d4c558be7e1b94e19e2f02c5204215ae"
+    },
+    {
+      "path": "packages/web/src/cinatoken/public/ssr/hydrate-public-root.tsx",
+      "bytes": 1903,
+      "sha256": "0066c8478975abe31bab74aefff450542ecb78e7a20d8e5471df3930bb0fd443"
+    },
+    {
+      "path": "packages/web/src/cinatoken/public/ssr/public-application.tsx",
+      "bytes": 909,
+      "sha256": "bde19b959fbda99d5a4a808246bea668ed75e2fd1fc0d9ab2131276ec16b6848"
+    },
+    {
+      "path": "packages/web/src/cinatoken/public/ssr/public-router.tsx",
+      "bytes": 5948,
+      "sha256": "c9c256ab0febcd3cb5557a23f43008a559a2fc6a74737b26fd1def80c54469f2"
+    },
+    {
+      "path": "packages/web/src/cinatoken/public/auth/PublicAuthAccessLink.tsx",
+      "bytes": 1246,
+      "sha256": "c188e7164f28787129964cb914f334e95f5773429052e340d66b44838d637727"
+    },
+    {
+      "path": "packages/web/src/cinatoken/public/auth/public-auth-controller.ts",
+      "bytes": 5990,
+      "sha256": "2b86db826a51c6836bf379e33271d6b2088c8890bdf6753ba68d6addef755f35"
+    },
+    {
+      "path": "packages/web/src/main.tsx",
+      "bytes": 854,
+      "sha256": "78335aad93de3ebc667e0a5261891a1f727fdb058b59353a752ad862f4a1aca4"
+    },
+    {
+      "path": "packages/web/src/cinatoken/public-server/http-policy.ts",
+      "bytes": 5302,
+      "sha256": "cd46c0e1c32d6117da5c0aa4958b028a5bcb7f892d32115411d5664f25418d02"
+    },
+    {
+      "path": "packages/web/src/cinatoken/chat/PublicChatPage.tsx",
+      "bytes": 18249,
+      "sha256": "f6df6b36eaeab63c8aca8aab4a592ebad654c19b861e20e38938106584592377"
+    },
+    {
+      "path": "node_modules/react-dom/cjs/react-dom-client.development.js",
+      "bytes": 1182785,
+      "sha256": "c10b5e5ad37ca22c88b58bf4ada9a3b655ab79934c0b5cc6bad26f42c774584f"
+    }
+  ],
+  "checks": [
+    {
+      "area": "XSS and CSP",
+      "outcome": "source-review-pass",
+      "evidence": [
+        "public-preferences.ts:13 fixed String.raw literal has no request, DTO, cookie, translation, href or nonce interpolation; exact literal parses as JavaScript without execution.",
+        "Cookie reads only drive a three-value parser; cookie writes only receive fixed theme/locale enums. Invalid values cannot add attributes, executable code or cookie directives.",
+        "public-response.tsx Head script and post-root sync script use the same nonce as publicSecurityHeaders; existing catalog/bootstrap escaping remains unchanged.",
+        "New document scripts are outside the hydrated app root, and fixed code contains no literal closing script marker. Public chat uses ReactMarkdown without rehypeRaw."
+      ]
+    },
+    {
+      "area": "Public locale and private isolation",
+      "outcome": "source-review-pass",
+      "evidence": [
+        "Captured input requires a native HTMLSelectElement carrying an exact marker inside current #root. Unsupported controls, detached roots and unmarked input are ignored.",
+        "Locales are the same en/zh/ja/ko enum as public-location.tsx. Existing prefixed public page and model-detail regexes, backslash rejection and query/hash preservation agree with localizePublicHref.",
+        "Private routes, unsupported locale prefixes and malformed public paths return before NEXT_LOCALE write or navigation; destination is rooted /<allowed-locale>/..., preserving same-origin navigation.",
+        "This is a document-scoped public preference owner. main.tsx selects public SSR or Legacy at document startup; account/auth completion uses location.assign, so current production does not reuse this document owner for a Legacy root."
+      ]
+    },
+    {
+      "area": "Cookie denial and restore",
+      "outcome": "source-review-pass",
+      "evidence": [
+        "Absent readable cookie null is distinguished from denied read undefined. Denied reads do not reset the document memory theme to system.",
+        "Theme change stores the last observed readable cookie after attempted write; silently denied or throwing writes leave the current memory choice intact through subsequent sync/media/pageshow.",
+        "pageshow adopts a readable cookie only if its value differs from the last observation; external preference updates/removal can restore while unchanged denied-write cookies do not overwrite current memory.",
+        "Explicit light/dark remains explicit across OS media changes; system follows media.matches. Locale navigation proceeds even if the preference-cookie write throws."
+      ]
+    },
+    {
+      "area": "Hydration and app tree",
+      "outcome": "source-review-pass-runtime-acceptance-pending",
+      "evidence": [
+        "PublicShell removes React onChange and useSyncExternalStore/effect theme ownership. Native selects use stable SSR defaults; React effect only syncs values and exposes/cleans readiness metadata.",
+        "Head initialization runs before CSS/main body; suffix synchronization runs after complete #root markup and before bootstrap/router/client entry scripts.",
+        "Local installed React19 prepareToHydrateHostInstance select branch validates props/registers invalid and does not reset selected options; uncontrolled select updates only reset options on multiple-state changes. This patch keeps multiple absent/stable.",
+        "No new component/provider is inserted into PublicApplication, router tree or app root; identifierPrefix remains cinatoken-public-. Document-composition useId test is retained."
+      ]
+    },
+    {
+      "area": "Listener lifetime, dispose and BFCache",
+      "outcome": "source-review-pass-runtime-acceptance-pending",
+      "evidence": [
+        "Guarded singleton install owns one document change capture listener, one media listener and one pageshow listener; React does not add another preference change handler.",
+        "dispose is idempotent, removes all three listeners using the same callbacks/capture flag, and deletes the global only if it still refers to this instance; stale dispose cannot delete a later owner.",
+        "No pagehide disposal is performed, retaining the document controller across BFCache. pageshow restores readable shared cookies and re-syncs selectors/classes.",
+        "Root React unmount cleans readiness metadata but does not dispose the document owner; this matches the early-to-late document lifetime contract and current production full-navigation boundary."
+      ]
+    }
+  ],
+  "inlineLiteral": {
+    "bytes": 3679,
+    "sha256": "cb5827ad21ddd7a0f3e3498cdd58cbb763618aab11722082c5ce7d58f9f01fb4",
+    "syntaxParsed": true,
+    "closingScriptMarker": false,
+    "interpolation": false,
+    "bundlerNameHelper": false
+  },
+  "reviewedTests": {
+    "newControllerFile": "public-preferences.test.ts",
+    "coverageReadOnly": [
+      "initial saved/system theme before root",
+      "live value vs SSR default",
+      "early native theme and later sync",
+      "read/write cookie denial",
+      "OS explicit/system and pageshow changes/removal",
+      "all four locale/path/query/hash parity",
+      "blocked cookie locale navigation",
+      "native marked-root enum guard",
+      "private/unknown/malformed path guards",
+      "singleton/dispose/reinstall"
+    ],
+    "serverContract": "32 existing full-document cases retain real nonce/anonymous SDK/SEO and add head/init + after-main/before-entry sync ordering.",
+    "actualTestRunClaimed": false
+  },
+  "remainingRuntimeAcceptance": [
+    "Frozen compiled Node/Worker bundle parity and strict CSP nonce validation.",
+    "Real Chrome with main/dynamic chunks held: early theme changes and canonical language navigation.",
+    "Hydration preserves selected value, h1 identity, app ids, no console/page/hydration errors, and does not register a second preference owner.",
+    "Normal four-language interaction, keyboard/mobile, reload, cookie-blocked document memory, No-JS visible content and BFCache pageshow behavior."
+  ],
+  "permissions": {
+    "repositoryWrites": false,
+    "gitWrites": false,
+    "productionApiWrites": false,
+    "credentialsOrPrivateSessionAccess": false,
+    "onlyOwnedTempReportWritten": true
+  }
+}

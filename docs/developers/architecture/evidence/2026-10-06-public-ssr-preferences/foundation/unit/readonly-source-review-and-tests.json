@@ -1,0 +1,55 @@
+{
+  "observedAtUtc": "2026-10-06T11:36:09.3621782Z",
+  "sourceReview": "Read-only audit of root-authored preference runtime, shell, response composition and unchanged CSP",
+  "modifiedRepositoryFiles": [
+    "packages/web/src/cinatoken/public/ssr/public-preferences.test.ts"
+  ],
+  "initialFindings": [
+    "Cookie read exception must differ from truly missing cookie in pageshow restore",
+    "Stale disposer must not delete controller installed later"
+  ],
+  "findingsResolvedInObservedSource": true,
+  "tests": {
+    "framework": "Node test plus vm.runInNewContext of emitted fixed script",
+    "passed": 10,
+    "failed": 0,
+    "skipped": 0,
+    "localeResourceCombinations": 128,
+    "browserEmulation": "Strict owned DOM/media/window shim, no real browser claim",
+    "unitReceipt": "unit.result.json",
+    "formatReceipt": "format.result.json"
+  },
+  "remainingAcceptance": [
+    "Real cold candidate Chrome: blocked deferred assets, early native/keyboard actions, released assets, unchanged real hydration and subsequent actions",
+    "Exact canonical locale navigation once with query/hash and all four languages",
+    "JavaScript-disabled prepared content and nonce CSP HTTP contract",
+    "Full Web types/lint/format/unit and cold three-target Linux production artifacts"
+  ],
+  "files": [
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\web\\src\\cinatoken\\public\\ssr\\public-preferences.ts",
+      "bytes": 4107,
+      "sha256": "7dff49280dbf9c671a476bab3b79e20dddac4b31f9224031178a88f06a1daf3d"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\web\\src\\cinatoken\\public\\ssr\\public-shell.tsx",
+      "bytes": 4717,
+      "sha256": "d9508ea2da5820cdb5bddba6087d3fb090f7804857ce414457958492460d57ef"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\web\\src\\cinatoken\\public-server\\public-response.tsx",
+      "bytes": 11614,
+      "sha256": "d7d7a493cfd366d1638bc4ced62954f811116c176ee621d1b0116d8a3bd5c94e"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\web\\src\\cinatoken\\public-server\\http-policy.ts",
+      "bytes": 5302,
+      "sha256": "cd46c0e1c32d6117da5c0aa4958b028a5bcb7f892d32115411d5664f25418d02"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\web\\src\\cinatoken\\public\\ssr\\public-preferences.test.ts",
+      "bytes": 14872,
+      "sha256": "fa6e48423446174c6c4582b281e8f1092b98804169493e2166b8d4589f6ead0b"
+    }
+  ]
+}

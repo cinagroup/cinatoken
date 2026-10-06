@@ -1,0 +1,18 @@
+✔ fixed inline code initializes saved or system appearance before root exists without writing cookies (6.9409ms)
+✔ root synchronization restores live values while preserving rendered defaults and URL locale authority (1.1847ms)
+✔ captured native theme input immediately persists and survives later synchronization (1.3746ms)
+✔ cookie read and write denial preserve current theme through media, sync and pageshow (4.2666ms)
+✔ system tracks OS changes but explicit appearance does not; pageshow adopts readable external cookie changes (1.2089ms)
+✔ all four native locale choices preserve public resource, query and fragment exactly like existing href policy (108.9615ms)
+✔ native locale choice still navigates when preference cookies are rejected (0.9872ms)
+✔ only marked native selects inside the current root accept valid preference values (1.0029ms)
+✔ locale input cannot cross private, unsupported or malformed public path boundaries (7.7191ms)
+✔ install and disposal are idempotent with one listener per surface and stale disposal cannot destroy reinstall (2.644ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 606.6685

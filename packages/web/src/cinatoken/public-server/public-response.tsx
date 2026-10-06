@@ -13,6 +13,7 @@ import {
 	serializePublicBootstrap,
 	type PublicRequestApp,
 } from '../public/ssr'
+import { publicPreferencesScript } from '../public/ssr/public-preferences'
 import { publicDocumentBody } from './document-stream'
 import {
 	PUBLIC_HTTP_LOCALES,
@@ -38,11 +39,20 @@ export type PublicResponseOptions = {
 	onFailure?: (error: unknown) => void
 }
 
-function Head(props: { metadata: PublicMetadata; styles: string[] }) {
+function Head(props: {
+	metadata: PublicMetadata
+	styles: string[]
+	nonce: string
+}) {
 	return (
 		<head>
 			<meta charSet='utf-8' />
 			<meta name='viewport' content='width=device-width, initial-scale=1' />
+			<script
+				id='cinatoken-preferences-init'
+				nonce={props.nonce}
+				dangerouslySetInnerHTML={{ __html: publicPreferencesScript }}
+			/>
 			<title>{props.metadata.title}</title>
 			<meta name='description' content={props.metadata.description} />
 			<meta name='robots' content={props.metadata.robots} />
@@ -303,9 +313,16 @@ export async function renderPublicResponse(
 			throw new TypeError('Missing public router hydration scripts')
 		const documentShell = renderToStaticMarkup(
 			<html lang={route.locale}>
-				<Head metadata={metadata} styles={assets.styles} />
+				<Head metadata={metadata} styles={assets.styles} nonce={nonce} />
 				<body>
 					<div id='root' />
+					<script
+						id='cinatoken-preferences-sync'
+						nonce={nonce}
+						dangerouslySetInnerHTML={{
+							__html: 'window.cinatokenPublicPreferences?.syncControls();',
+						}}
+					/>
 					<script
 						id='cinatoken-public-bootstrap'
 						type='application/json'

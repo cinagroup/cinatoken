@@ -1,0 +1,1198 @@
+{
+  "id": "normal-ja-mobile-system",
+  "at": "2026-10-06T11:39:14.606Z",
+  "kind": "normal",
+  "javaScriptEnabled": true,
+  "gate": null,
+  "syntheticPreferenceCookies": [
+    {
+      "name": "cinatoken-theme",
+      "value": "system"
+    }
+  ],
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "colorScheme": "dark",
+  "cookieSetterFailureInjected": false,
+  "navigationRequests": [
+    {
+      "sequence": 1,
+      "at": "2026-10-06T11:39:14.804Z",
+      "url": "http://127.0.0.1:64896/ja",
+      "method": "GET",
+      "resourceType": "document",
+      "documentAtStart": "nullblank",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 15,
+      "at": "2026-10-06T11:39:15.472Z",
+      "url": "http://127.0.0.1:64896/ko",
+      "method": "GET",
+      "resourceType": "document",
+      "documentAtStart": "http://127.0.0.1:64896/ja",
+      "finished": true,
+      "failed": false
+    }
+  ],
+  "requestStarts": [
+    {
+      "sequence": 1,
+      "at": "2026-10-06T11:39:14.804Z",
+      "url": "http://127.0.0.1:64896/ja",
+      "method": "GET",
+      "resourceType": "document",
+      "documentAtStart": "nullblank",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 2,
+      "at": "2026-10-06T11:39:14.843Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/css/index.3797954594.css",
+      "method": "GET",
+      "resourceType": "stylesheet",
+      "documentAtStart": "http://127.0.0.1:64896/ja",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 3,
+      "at": "2026-10-06T11:39:14.844Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/index.fdfed7ea65.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/ja",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 4,
+      "at": "2026-10-06T11:39:15.153Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/lib-react.6356ddf42c.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/ja",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 5,
+      "at": "2026-10-06T11:39:15.153Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/6u.79a8483cd5.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/ja",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 6,
+      "at": "2026-10-06T11:39:15.153Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/qi.78b72ac6dc.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/ja",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 7,
+      "at": "2026-10-06T11:39:15.154Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/4b.c6831b40a7.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/ja",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 8,
+      "at": "2026-10-06T11:39:15.216Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/ta.350a9de34e.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/ja",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 9,
+      "at": "2026-10-06T11:39:15.217Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/cn.e7cc2f2c5b.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/ja",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 10,
+      "at": "2026-10-06T11:39:15.217Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/fd.7dd19fd28b.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/ja",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 11,
+      "at": "2026-10-06T11:39:15.252Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/30.5583d3d88f.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/ja",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 12,
+      "at": "2026-10-06T11:39:15.252Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/hw.419e09a2b0.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/ja",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 13,
+      "at": "2026-10-06T11:39:15.252Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/r4.4d0fa2a207.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/ja",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 14,
+      "at": "2026-10-06T11:39:15.299Z",
+      "url": "http://127.0.0.1:64896/web-assets/logo.png",
+      "method": "GET",
+      "resourceType": "other",
+      "documentAtStart": "http://127.0.0.1:64896/ja",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 15,
+      "at": "2026-10-06T11:39:15.472Z",
+      "url": "http://127.0.0.1:64896/ko",
+      "method": "GET",
+      "resourceType": "document",
+      "documentAtStart": "http://127.0.0.1:64896/ja",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 16,
+      "at": "2026-10-06T11:39:15.516Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/css/index.3797954594.css",
+      "method": "GET",
+      "resourceType": "stylesheet",
+      "documentAtStart": "http://127.0.0.1:64896/ko",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 17,
+      "at": "2026-10-06T11:39:15.519Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/index.fdfed7ea65.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/ko",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 18,
+      "at": "2026-10-06T11:39:15.604Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/lib-react.6356ddf42c.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/ko",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 19,
+      "at": "2026-10-06T11:39:15.604Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/6u.79a8483cd5.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/ko",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 20,
+      "at": "2026-10-06T11:39:15.611Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/qi.78b72ac6dc.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/ko",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 21,
+      "at": "2026-10-06T11:39:15.614Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/4b.c6831b40a7.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/ko",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 22,
+      "at": "2026-10-06T11:39:15.648Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/ta.350a9de34e.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/ko",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 23,
+      "at": "2026-10-06T11:39:15.648Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/cn.e7cc2f2c5b.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/ko",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 24,
+      "at": "2026-10-06T11:39:15.650Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/fd.7dd19fd28b.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/ko",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 25,
+      "at": "2026-10-06T11:39:15.663Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/30.5583d3d88f.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/ko",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 26,
+      "at": "2026-10-06T11:39:15.664Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/hw.419e09a2b0.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/ko",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 27,
+      "at": "2026-10-06T11:39:15.664Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/r4.4d0fa2a207.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/ko",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 28,
+      "at": "2026-10-06T11:39:15.684Z",
+      "url": "http://127.0.0.1:64896/web-assets/logo.png",
+      "method": "GET",
+      "resourceType": "other",
+      "documentAtStart": "http://127.0.0.1:64896/ko",
+      "finished": true,
+      "failed": false
+    }
+  ],
+  "responses": [
+    {
+      "sequence": 1,
+      "url": "http://127.0.0.1:64896/ja",
+      "status": 200,
+      "type": "document",
+      "at": "2026-10-06T11:39:14.819Z"
+    },
+    {
+      "sequence": 2,
+      "url": "http://127.0.0.1:64896/web-assets/static/css/index.3797954594.css",
+      "status": 200,
+      "type": "stylesheet",
+      "at": "2026-10-06T11:39:15.012Z"
+    },
+    {
+      "sequence": 3,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/index.fdfed7ea65.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:15.138Z"
+    },
+    {
+      "sequence": 7,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/4b.c6831b40a7.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:15.175Z"
+    },
+    {
+      "sequence": 6,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/qi.78b72ac6dc.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:15.176Z"
+    },
+    {
+      "sequence": 5,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/6u.79a8483cd5.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:15.187Z"
+    },
+    {
+      "sequence": 4,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/lib-react.6356ddf42c.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:15.187Z"
+    },
+    {
+      "sequence": 8,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/ta.350a9de34e.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:15.231Z"
+    },
+    {
+      "sequence": 9,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/cn.e7cc2f2c5b.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:15.233Z"
+    },
+    {
+      "sequence": 10,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/fd.7dd19fd28b.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:15.234Z"
+    },
+    {
+      "sequence": 11,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/30.5583d3d88f.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:15.260Z"
+    },
+    {
+      "sequence": 12,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/hw.419e09a2b0.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:15.260Z"
+    },
+    {
+      "sequence": 13,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/r4.4d0fa2a207.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:15.261Z"
+    },
+    {
+      "sequence": 14,
+      "url": "http://127.0.0.1:64896/web-assets/logo.png",
+      "status": 200,
+      "type": "other",
+      "at": "2026-10-06T11:39:15.306Z"
+    },
+    {
+      "sequence": 15,
+      "url": "http://127.0.0.1:64896/ko",
+      "status": 200,
+      "type": "document",
+      "at": "2026-10-06T11:39:15.489Z"
+    },
+    {
+      "sequence": 16,
+      "url": "http://127.0.0.1:64896/web-assets/static/css/index.3797954594.css",
+      "status": 200,
+      "type": "stylesheet",
+      "at": "2026-10-06T11:39:15.530Z"
+    },
+    {
+      "sequence": 17,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/index.fdfed7ea65.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:15.532Z"
+    },
+    {
+      "sequence": 20,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/qi.78b72ac6dc.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:15.627Z"
+    },
+    {
+      "sequence": 21,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/4b.c6831b40a7.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:15.628Z"
+    },
+    {
+      "sequence": 18,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/lib-react.6356ddf42c.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:15.639Z"
+    },
+    {
+      "sequence": 19,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/6u.79a8483cd5.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:15.640Z"
+    },
+    {
+      "sequence": 22,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/ta.350a9de34e.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:15.657Z"
+    },
+    {
+      "sequence": 23,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/cn.e7cc2f2c5b.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:15.658Z"
+    },
+    {
+      "sequence": 24,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/fd.7dd19fd28b.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:15.658Z"
+    },
+    {
+      "sequence": 25,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/30.5583d3d88f.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:15.670Z"
+    },
+    {
+      "sequence": 26,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/hw.419e09a2b0.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:15.671Z"
+    },
+    {
+      "sequence": 27,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/r4.4d0fa2a207.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:15.671Z"
+    },
+    {
+      "sequence": 28,
+      "url": "http://127.0.0.1:64896/web-assets/logo.png",
+      "status": 200,
+      "type": "other",
+      "at": "2026-10-06T11:39:15.692Z"
+    }
+  ],
+  "assetResponses": [
+    {
+      "sequence": 2,
+      "url": "http://127.0.0.1:64896/web-assets/static/css/index.3797954594.css",
+      "status": 200,
+      "type": "stylesheet",
+      "at": "2026-10-06T11:39:15.012Z",
+      "bytes": 237922,
+      "sha256": "6ed64a183f0a48c55281a9e7d63c73aeecf0cb3b2f8b131bd0470eb27e441863"
+    },
+    {
+      "sequence": 3,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/index.fdfed7ea65.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:15.138Z",
+      "bytes": 4827,
+      "sha256": "0ad49911dc6bd54ef0275370d61e99dc1d12ded0604667132f8a97b4fbae6e95"
+    },
+    {
+      "sequence": 7,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/4b.c6831b40a7.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:15.175Z",
+      "bytes": 21425,
+      "sha256": "6012b2b1602d0e3943381c1d39960196a1a15b5731b06212f39641ca903226a6"
+    },
+    {
+      "sequence": 6,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/qi.78b72ac6dc.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:15.176Z",
+      "bytes": 73256,
+      "sha256": "04d7645d408798891e9135f43dbb81d18573df94afa8741f9c1b3ba028bd64eb"
+    },
+    {
+      "sequence": 5,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/6u.79a8483cd5.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:15.187Z",
+      "bytes": 238399,
+      "sha256": "4486ba3f38dc424c597c1ce70add2641e5ee3ba901c9d5d9572bdfd5d1956727"
+    },
+    {
+      "sequence": 4,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/lib-react.6356ddf42c.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:15.187Z",
+      "bytes": 218895,
+      "sha256": "2dd3207f37d0618a8b5284cbb4e288af0bcb6f785bdc350aa09489ae6a098a2d"
+    },
+    {
+      "sequence": 8,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/ta.350a9de34e.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:15.231Z",
+      "bytes": 11558,
+      "sha256": "ecb75b65763428076ccaad14a0ff6c1a0f6adedf73589994e83f8ba23fe9125f"
+    },
+    {
+      "sequence": 9,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/cn.e7cc2f2c5b.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:15.233Z",
+      "bytes": 10516,
+      "sha256": "77fb021e8fdcc3f4d49dcdf8957941aa5785d35529977b9ba82ed71be2b18412"
+    },
+    {
+      "sequence": 10,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/fd.7dd19fd28b.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:15.234Z",
+      "bytes": 1743,
+      "sha256": "7fe20b44fce11ee1b5b18158d5a0af4ffbd116fc3a38b33a58c5b414d5af16ad"
+    },
+    {
+      "sequence": 11,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/30.5583d3d88f.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:15.260Z",
+      "bytes": 27685,
+      "sha256": "537b78fb6c5cd1fa97f2e85c469d1f50b4ad44d35ccb1e7a116525f4047f4a41"
+    },
+    {
+      "sequence": 12,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/hw.419e09a2b0.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:15.260Z",
+      "bytes": 12739,
+      "sha256": "2605cfc1d8276e7a7fb91687337dced9df8282c7785f58fce0851cf6a1353233"
+    },
+    {
+      "sequence": 13,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/r4.4d0fa2a207.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:15.261Z",
+      "bytes": 5119,
+      "sha256": "889939cb0a90d434e1bf81052f5a834b07ae638f671c72bc64121accc4828886"
+    },
+    {
+      "sequence": 16,
+      "url": "http://127.0.0.1:64896/web-assets/static/css/index.3797954594.css",
+      "status": 200,
+      "type": "stylesheet",
+      "at": "2026-10-06T11:39:15.530Z",
+      "bytes": 237922,
+      "sha256": "6ed64a183f0a48c55281a9e7d63c73aeecf0cb3b2f8b131bd0470eb27e441863"
+    },
+    {
+      "sequence": 17,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/index.fdfed7ea65.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:15.532Z",
+      "bytes": 4827,
+      "sha256": "0ad49911dc6bd54ef0275370d61e99dc1d12ded0604667132f8a97b4fbae6e95"
+    },
+    {
+      "sequence": 20,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/qi.78b72ac6dc.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:15.627Z",
+      "bytes": 73256,
+      "sha256": "04d7645d408798891e9135f43dbb81d18573df94afa8741f9c1b3ba028bd64eb"
+    },
+    {
+      "sequence": 21,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/4b.c6831b40a7.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:15.628Z",
+      "bytes": 21425,
+      "sha256": "6012b2b1602d0e3943381c1d39960196a1a15b5731b06212f39641ca903226a6"
+    },
+    {
+      "sequence": 18,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/lib-react.6356ddf42c.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:15.639Z",
+      "bytes": 218895,
+      "sha256": "2dd3207f37d0618a8b5284cbb4e288af0bcb6f785bdc350aa09489ae6a098a2d"
+    },
+    {
+      "sequence": 19,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/6u.79a8483cd5.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:15.640Z",
+      "bytes": 238399,
+      "sha256": "4486ba3f38dc424c597c1ce70add2641e5ee3ba901c9d5d9572bdfd5d1956727"
+    },
+    {
+      "sequence": 22,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/ta.350a9de34e.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:15.657Z",
+      "bytes": 11558,
+      "sha256": "ecb75b65763428076ccaad14a0ff6c1a0f6adedf73589994e83f8ba23fe9125f"
+    },
+    {
+      "sequence": 23,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/cn.e7cc2f2c5b.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:15.658Z",
+      "bytes": 10516,
+      "sha256": "77fb021e8fdcc3f4d49dcdf8957941aa5785d35529977b9ba82ed71be2b18412"
+    },
+    {
+      "sequence": 24,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/fd.7dd19fd28b.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:15.658Z",
+      "bytes": 1743,
+      "sha256": "7fe20b44fce11ee1b5b18158d5a0af4ffbd116fc3a38b33a58c5b414d5af16ad"
+    },
+    {
+      "sequence": 25,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/30.5583d3d88f.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:15.670Z",
+      "bytes": 27685,
+      "sha256": "537b78fb6c5cd1fa97f2e85c469d1f50b4ad44d35ccb1e7a116525f4047f4a41"
+    },
+    {
+      "sequence": 26,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/hw.419e09a2b0.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:15.671Z",
+      "bytes": 12739,
+      "sha256": "2605cfc1d8276e7a7fb91687337dced9df8282c7785f58fce0851cf6a1353233"
+    },
+    {
+      "sequence": 27,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/r4.4d0fa2a207.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:15.671Z",
+      "bytes": 5119,
+      "sha256": "889939cb0a90d434e1bf81052f5a834b07ae638f671c72bc64121accc4828886"
+    }
+  ],
+  "failedRequests": [],
+  "policyViolations": [
+    {
+      "effectiveDirective": "script-src",
+      "violatedDirective": "script-src",
+      "blockedURI": "eval",
+      "disposition": "enforce",
+      "sample": ""
+    }
+  ],
+  "console": [],
+  "pageErrors": [],
+  "gateRequests": [],
+  "blockedRequests": [],
+  "evidenceErrors": [],
+  "expectedAnonymous401": [],
+  "observations": [
+    {
+      "stage": "actual-document-security-contract",
+      "sequence": 1,
+      "url": "http://127.0.0.1:64896/ja",
+      "status": 200,
+      "type": "document",
+      "at": "2026-10-06T11:39:14.819Z",
+      "headers": {
+        "connection": "keep-alive",
+        "date": "Tue, 06 Oct 2026 11:39:14 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked",
+        "cache-control": "no-store",
+        "content-security-policy": "default-src 'self'; script-src 'self' 'nonce-e1ce97162a6247ab90947f6b4bd2da06'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self' wss:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; frame-src 'none'; form-action 'self'",
+        "content-type": "text/html; charset=utf-8",
+        "cross-origin-opener-policy": "same-origin",
+        "cross-origin-resource-policy": "same-origin",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY"
+      },
+      "bytes": 28570,
+      "sha256": "b3e02f25cfad55e7010547e0b65f5d099061785a5c93ed410ee1b9ef8eeec5f8",
+      "contract": {
+        "nonce": "e1ce97162a6247ab90947f6b4bd2da06",
+        "scriptCount": 6,
+        "entryPaths": [
+          "/web-assets/static/js/index.fdfed7ea65.js"
+        ]
+      },
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\browser-local\\normal-ja-mobile-system-document-1.html"
+    },
+    {
+      "stage": "hydrated",
+      "at": "2026-10-06T11:39:15.301Z",
+      "url": "http://127.0.0.1:64896/ja",
+      "readyState": "complete",
+      "locale": "ja",
+      "classes": [
+        "dark"
+      ],
+      "publicHydration": "ready",
+      "hydrationFailure": null,
+      "theme": "system",
+      "localeControl": "ja",
+      "themeCookie": "cinatoken-theme=system",
+      "localeCookie": null,
+      "title": "CinaToken — 統合 AI ゲートウェイ",
+      "canonical": "https://cinatoken-public-preferences-fixture.test/ja",
+      "overflow": false,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "mainTextLength": 1879,
+      "heading": "AI リソースをひとつに。",
+      "controller": {
+        "present": true,
+        "syncControls": true,
+        "dispose": true
+      },
+      "observation": {
+        "themeFrames": [],
+        "policyViolations": [
+          {
+            "effectiveDirective": "script-src",
+            "violatedDirective": "script-src",
+            "blockedURI": "eval",
+            "disposition": "enforce",
+            "sample": ""
+          }
+        ],
+        "pageshow": [
+          {
+            "persisted": false,
+            "at": 481.20000000298023
+          }
+        ],
+        "cookieSetterFailures": 0
+      }
+    },
+    {
+      "stage": "theme-accepted-dark",
+      "at": "2026-10-06T11:39:15.453Z",
+      "url": "http://127.0.0.1:64896/ja",
+      "readyState": "complete",
+      "locale": "ja",
+      "classes": [
+        "dark"
+      ],
+      "publicHydration": "ready",
+      "hydrationFailure": null,
+      "theme": "dark",
+      "localeControl": "ja",
+      "themeCookie": "cinatoken-theme=dark",
+      "localeCookie": null,
+      "title": "CinaToken — 統合 AI ゲートウェイ",
+      "canonical": "https://cinatoken-public-preferences-fixture.test/ja",
+      "overflow": false,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "mainTextLength": 1879,
+      "heading": "AI リソースをひとつに。",
+      "controller": {
+        "present": true,
+        "syncControls": true,
+        "dispose": true
+      },
+      "observation": {
+        "themeFrames": [],
+        "policyViolations": [
+          {
+            "effectiveDirective": "script-src",
+            "violatedDirective": "script-src",
+            "blockedURI": "eval",
+            "disposition": "enforce",
+            "sample": ""
+          }
+        ],
+        "pageshow": [
+          {
+            "persisted": false,
+            "at": 481.20000000298023
+          }
+        ],
+        "cookieSetterFailures": 0
+      }
+    },
+    {
+      "stage": "actual-document-security-contract",
+      "sequence": 15,
+      "url": "http://127.0.0.1:64896/ko",
+      "status": 200,
+      "type": "document",
+      "at": "2026-10-06T11:39:15.489Z",
+      "headers": {
+        "connection": "keep-alive",
+        "date": "Tue, 06 Oct 2026 11:39:15 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked",
+        "cache-control": "no-store",
+        "content-security-policy": "default-src 'self'; script-src 'self' 'nonce-18a97f299cf3447c907ebc3178c74085'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self' wss:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; frame-src 'none'; form-action 'self'",
+        "content-type": "text/html; charset=utf-8",
+        "cross-origin-opener-policy": "same-origin",
+        "cross-origin-resource-policy": "same-origin",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY"
+      },
+      "bytes": 27866,
+      "sha256": "2dcfebc6b3cb1d0fec0ef5f14cefde4b5a5c7b5e8adf26b5f4932d587543e7d3",
+      "contract": {
+        "nonce": "18a97f299cf3447c907ebc3178c74085",
+        "scriptCount": 6,
+        "entryPaths": [
+          "/web-assets/static/js/index.fdfed7ea65.js"
+        ]
+      },
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\browser-local\\normal-ja-mobile-system-document-15.html"
+    },
+    {
+      "stage": "normal-locale-navigated",
+      "at": "2026-10-06T11:39:15.621Z",
+      "url": "http://127.0.0.1:64896/ko",
+      "readyState": "interactive",
+      "locale": "ko",
+      "classes": [
+        "dark"
+      ],
+      "publicHydration": null,
+      "hydrationFailure": null,
+      "theme": "dark",
+      "localeControl": "ko",
+      "themeCookie": "cinatoken-theme=dark",
+      "localeCookie": "NEXT_LOCALE=ko",
+      "title": "CinaToken — 통합 AI 게이트웨이",
+      "canonical": "https://cinatoken-public-preferences-fixture.test/ko",
+      "overflow": false,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "mainTextLength": 1793,
+      "heading": "AI 리소스를 한곳에 모으세요.",
+      "controller": {
+        "present": true,
+        "syncControls": true,
+        "dispose": true
+      },
+      "observation": {
+        "themeFrames": [],
+        "policyViolations": [],
+        "pageshow": [],
+        "cookieSetterFailures": 0
+      }
+    },
+    {
+      "stage": "locale-request-window",
+      "selected": "ko",
+      "baseline": 1,
+      "expectedURL": "http://127.0.0.1:64896/ko",
+      "startedRequests": [
+        {
+          "sequence": 15,
+          "at": "2026-10-06T11:39:15.472Z",
+          "url": "http://127.0.0.1:64896/ko",
+          "method": "GET",
+          "resourceType": "document",
+          "documentAtStart": "http://127.0.0.1:64896/ja",
+          "finished": true,
+          "failed": false
+        }
+      ]
+    },
+    {
+      "stage": "hydrated",
+      "at": "2026-10-06T11:39:15.686Z",
+      "url": "http://127.0.0.1:64896/ko",
+      "readyState": "complete",
+      "locale": "ko",
+      "classes": [
+        "dark"
+      ],
+      "publicHydration": "ready",
+      "hydrationFailure": null,
+      "theme": "dark",
+      "localeControl": "ko",
+      "themeCookie": "cinatoken-theme=dark",
+      "localeCookie": "NEXT_LOCALE=ko",
+      "title": "CinaToken — 통합 AI 게이트웨이",
+      "canonical": "https://cinatoken-public-preferences-fixture.test/ko",
+      "overflow": false,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "mainTextLength": 1793,
+      "heading": "AI 리소스를 한곳에 모으세요.",
+      "controller": {
+        "present": true,
+        "syncControls": true,
+        "dispose": true
+      },
+      "observation": {
+        "themeFrames": [],
+        "policyViolations": [
+          {
+            "effectiveDirective": "script-src",
+            "violatedDirective": "script-src",
+            "blockedURI": "eval",
+            "disposition": "enforce",
+            "sample": ""
+          }
+        ],
+        "pageshow": [
+          {
+            "persisted": false,
+            "at": 211.59999999403954
+          }
+        ],
+        "cookieSetterFailures": 0
+      }
+    },
+    {
+      "stage": "theme-accepted-dark",
+      "at": "2026-10-06T11:39:15.735Z",
+      "url": "http://127.0.0.1:64896/ko",
+      "readyState": "complete",
+      "locale": "ko",
+      "classes": [
+        "dark"
+      ],
+      "publicHydration": "ready",
+      "hydrationFailure": null,
+      "theme": "dark",
+      "localeControl": "ko",
+      "themeCookie": "cinatoken-theme=dark",
+      "localeCookie": "NEXT_LOCALE=ko",
+      "title": "CinaToken — 통합 AI 게이트웨이",
+      "canonical": "https://cinatoken-public-preferences-fixture.test/ko",
+      "overflow": false,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "mainTextLength": 1793,
+      "heading": "AI 리소스를 한곳에 모으세요.",
+      "controller": {
+        "present": true,
+        "syncControls": true,
+        "dispose": true
+      },
+      "observation": {
+        "themeFrames": [],
+        "policyViolations": [
+          {
+            "effectiveDirective": "script-src",
+            "violatedDirective": "script-src",
+            "blockedURI": "eval",
+            "disposition": "enforce",
+            "sample": ""
+          }
+        ],
+        "pageshow": [
+          {
+            "persisted": false,
+            "at": 211.59999999403954
+          }
+        ],
+        "cookieSetterFailures": 0
+      }
+    },
+    {
+      "stage": "final",
+      "at": "2026-10-06T11:39:15.736Z",
+      "url": "http://127.0.0.1:64896/ko",
+      "readyState": "complete",
+      "locale": "ko",
+      "classes": [
+        "dark"
+      ],
+      "publicHydration": "ready",
+      "hydrationFailure": null,
+      "theme": "dark",
+      "localeControl": "ko",
+      "themeCookie": "cinatoken-theme=dark",
+      "localeCookie": "NEXT_LOCALE=ko",
+      "title": "CinaToken — 통합 AI 게이트웨이",
+      "canonical": "https://cinatoken-public-preferences-fixture.test/ko",
+      "overflow": false,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "mainTextLength": 1793,
+      "heading": "AI 리소스를 한곳에 모으세요.",
+      "controller": {
+        "present": true,
+        "syncControls": true,
+        "dispose": true
+      },
+      "observation": {
+        "themeFrames": [],
+        "policyViolations": [
+          {
+            "effectiveDirective": "script-src",
+            "violatedDirective": "script-src",
+            "blockedURI": "eval",
+            "disposition": "enforce",
+            "sample": ""
+          }
+        ],
+        "pageshow": [
+          {
+            "persisted": false,
+            "at": 211.59999999403954
+          }
+        ],
+        "cookieSetterFailures": 0
+      }
+    },
+    {
+      "stage": "failure",
+      "at": "2026-10-06T11:39:15.738Z",
+      "url": "http://127.0.0.1:64896/ko",
+      "readyState": "complete",
+      "locale": "ko",
+      "classes": [
+        "dark"
+      ],
+      "publicHydration": "ready",
+      "hydrationFailure": null,
+      "theme": "dark",
+      "localeControl": "ko",
+      "themeCookie": "cinatoken-theme=dark",
+      "localeCookie": "NEXT_LOCALE=ko",
+      "title": "CinaToken — 통합 AI 게이트웨이",
+      "canonical": "https://cinatoken-public-preferences-fixture.test/ko",
+      "overflow": false,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "mainTextLength": 1793,
+      "heading": "AI 리소스를 한곳에 모으세요.",
+      "controller": {
+        "present": true,
+        "syncControls": true,
+        "dispose": true
+      },
+      "observation": {
+        "themeFrames": [],
+        "policyViolations": [
+          {
+            "effectiveDirective": "script-src",
+            "violatedDirective": "script-src",
+            "blockedURI": "eval",
+            "disposition": "enforce",
+            "sample": ""
+          }
+        ],
+        "pageshow": [
+          {
+            "persisted": false,
+            "at": 211.59999999403954
+          }
+        ],
+        "cookieSetterFailures": 0
+      }
+    }
+  ],
+  "screenshots": [
+    {
+      "stage": "failure",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\browser-local\\normal-ja-mobile-system-failure.png",
+      "bytes": 29127,
+      "sha256": "2327704452325252e8066c772caecf2e9e97d3ba5c985844e64caaaf1b8e0891"
+    }
+  ],
+  "checks": {
+    "systemMediaChange": true,
+    "normalFourLanguageShellInteraction": true
+  },
+  "timedOut": false,
+  "outcome": "FAIL",
+  "intendedExitCode": 1,
+  "failure": {
+    "name": "AssertionError",
+    "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ [\n+   {\n+     blockedURI: 'eval',\n+     disposition: 'enforce',\n+     effectiveDirective: 'script-src',\n+     sample: '',\n+     violatedDirective: 'script-src'\n+   }\n+ ]\n- []\n",
+    "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ [\n+   {\n+     blockedURI: 'eval',\n+     disposition: 'enforce',\n+     effectiveDirective: 'script-src',\n+     sample: '',\n+     violatedDirective: 'script-src'\n+   }\n+ ]\n- []\n\n    at checkNetwork (file:///C:/Users/cina/AppData/Local/Temp/cinatoken-public-early-controls-browser-ea4cfe25cf774b9fb7d91829a7aa5e19/run-public-early-controls.mjs:329:12)\n    at async file:///C:/Users/cina/AppData/Local/Temp/cinatoken-public-early-controls-browser-ea4cfe25cf774b9fb7d91829a7aa5e19/run-public-early-controls.mjs:615:21\n    at async runCase (file:///C:/Users/cina/AppData/Local/Temp/cinatoken-public-early-controls-browser-ea4cfe25cf774b9fb7d91829a7aa5e19/run-public-early-controls.mjs:622:5)\n    at async file:///C:/Users/cina/AppData/Local/Temp/cinatoken-public-early-controls-browser-ea4cfe25cf774b9fb7d91829a7aa5e19/run-public-early-controls.mjs:693:5"
+  },
+  "contextClosed": true,
+  "gateCounts": {
+    "held": 0,
+    "continuedAfterRelease": 0,
+    "expectedNavigationAborts": 0,
+    "pendingAtEnd": 0,
+    "activeRouteTasksAtEnd": 0
+  },
+  "finishedAt": "2026-10-06T11:39:15.771Z"
+}

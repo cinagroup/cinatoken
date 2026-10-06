@@ -30,7 +30,7 @@
 
 当前发布（2026-10-06）：独立 `cinatoken-web` 源码/tag `2e40b9212b246152594ea60a774c85a9a0a4ad93`，version `a898c3fd-3df4-4e1d-bd97-da19936b3bfe`、deployment `7223b0c5-6044-49b6-bf8b-e261f3c1f6ae`、100%流量；同SHA Web Linux run37450271483两job/37步骤及1600测试通过，冻结138资产/35服务端文件/4源码包，生产原字节匹配。三Route、29开关、Admin服务绑定与预览关闭最终读回0；匿名桌面/移动功能通过，实际登录及原生严格取消/完整G0–G8仍待，直接证据见5.91–5.92。
 
-当前推进：独立Web exact2e已正式发布，a898/7223/tag2e/100%，三Route/29true/预览关闭最终读回0；138资产/4源码包匹配，匿名Chrome三页及暗色/中文/mobile重载功能通过（5.92）。同0d新Linux产品SSE三帧RST后上游物理关闭、usage取消/costUnknown/resource confirmed真实PASS；minimal source.cancel仍FAIL，workflow实际1，原strict8/7/1不变。P1-01–06/09完成，初始化前SSR控件输入体验、G1及完整G0–G8待验；生产OAuth具体关联批准待，真实身份/已有专用测试工作区/密钥未验收。
+当前推进：独立Web exact2e生产仍为a898/7223/tag2e/100%；本轮已修复公开SSR初始化前主题/语言输入丢失，nonce head固定脚本统一拥有公开偏好，React使用原生uncontrolled选择并在实际shell commit后同步（5.93）。新增10项回归和完整Web1610/1610、types/lint/format及三target build actual0；首轮Chrome4/13通过、9JS未通过，eval CSP来源与旧文档held chunk终态观察正在核查，新源码尚未发布。产品SSE transport PASS/minimal source.cancel FAIL和原strict8/7/1保持；P1-07、G1及完整G0–G8待验。生产OAuth具体关联批准待，真实身份/已有专用测试工作区/密钥未验收。
 
 上一批状态：NEXT-41四语公开署名修复与NEXT-13 B1五个活跃文件修复完成本地验收（5.54）。新P66 Web1401/1401、完整Web/Edge types及Web lint/format、三目标build/freeze/gen0；同一492产物真实Node HTTP45、Node compiled Worker77、Chrome JS32/真正NoJS36通过，68HTML实际footer英文原文/lang=en/译文/链接均通过。Admin源组件Chrome19/相关unit26/保留合同AST22、完整types与目标lint/format0；全量lint实际67E9W→58E5W，仍未全量通过。本地来源946文件tree/修复前1795观察已补，不能当上游导入ref/日期。P65原24/32缺英文、修前测试40失败与其他历史失败完整保留；workerd产品/最小例0xc0000005、WSL E_ACCESSDENIED，0原生case获验。29入口false、未部署；下一步NEXT-13 B2/B3按真实行为清理及来源/真实身份/三库/目录/链/LinuxCI/双平台/发布回滚，完整102主任务/54矩阵/G0–G8/E00–E08未提前完成。
 
@@ -2532,6 +2532,22 @@ checklist原102主任务（8完成/94待）、54矩阵、211实际task（55完�
 
 直接证据：[浏览器与产品取消最终索引](./evidence/2026-10-06-web-build-environment-and-product-sse/final-browser-and-product-transport/index.json)，含两项真实子进程终态、完整Linux artifact/全事件/两case、六浏览器图和最终Cloudflare读回。所有历史成功/失败仍按原范围保留。
 
+### 5.93 公开 SSR 早期主题与语言输入修复（2026-10-06）
+
+5.92 的真实缺陷已进入源码修复：主bundle或动态SSR模块尚未下载时，公开header的两个native select也能立即处理用户选择。新增固定JavaScript literal通过现有每响应nonce在head安装一个document捕获change监听，根正文后、defer入口前同步偏好；不使用function.toString或动态eval，不插入请求数据、凭据或HTML，不放宽CSP。React两个select使用与SSR相同的defaultValue，移除第二份cookie/class写入及语言assign；实际PublicShell effect只同步现有控制器并标记真实commit。
+
+控制器只接受当前root内、精确theme/locale标记的HTMLSelectElement；公开语言路径保留query/hash，URL locale为权威，私有或未知路径不导航，相同locale不再次导航。主题立即写公开偏好cookie并更新html class；Cookie读写被拒时保留页面内选择，system跟随OS。幂等安装只有一组change/media/pageshow监听，旧disposer不能删除重装实例；页面恢复可采用可读的外部偏好变化。
+
+新增10项VM执行真实fixed script的回归actual0/skip0，含128个四语公开href组合、earlyroot、Cookie拒绝、非法目标、私有路径、systemmedia、pageshow与清理反例；现有32四语×八页面文档契约增加两个inline script的nonce/顺序及native marker断言，原SSR useId树不变。完整Web1610/1610、skip0，最终types/lint/format及三target生产build actual0。首轮Chrome13context中真正NoJS四语4/4通过、9JS未通过：8项因一次eval CSP事件严格失败，dynamic语言还因旧文档held请求无terminal观察而失败；已完成的early输入/主题保持不覆盖整体失败。来源诊断、浏览器完整验收、同SHA Linux CI/冻结与新发布继续，本节不声称新版本已上线。
+
+原102主任务（8完成/94待）、54矩阵、211实际task（55完成/156待）、G0–G8/E00–E08范围和状态保持；P1-07还包括公开/账户/管理布局和各状态整体验收，本轮局部偏好修复不勾整项。生产OAuth固定关联写入的具体批准仍待，未重试被拒动作或绕过认证；真实登录、已有专用测试工作区与密钥操作尚未验收。
+
+直接证据：[本批源码、完整Web检查、独立审查与首轮负面浏览器索引](./evidence/2026-10-06-public-ssr-preferences/foundation/index.json)。原始失败与actual exit保持；后续不通过删去CSP观察或等待ready逃过early动作。
+
+CSP事件已独立实际定位：仅真实产品导航、首次automation evaluate前，Debugger捕获Web Zod4.6.5的allowsEval→Function探测；同CSP最小页执行automation waitForFunction无事件。原资产/sourceFile/行列与3个真实context闭合actual0直接封存。浏览器main现最早静态导入z.config({jitless:true})，在Public/Legacy任何dynamic应用schema之前启用与strict CSP相符的解释执行；不升级依赖、不修改CSP或泛化过滤eval事件。新源完整Web1610/1610、types/lint/format与三target build再次actual0，真实Chrome仍严格要求零未解释CSP事件；完整新浏览器与同SHA Linux/发布待验。
+
+直接证据：[新七源检查与原始CSP来源诊断](./evidence/2026-10-06-public-ssr-preferences/source-and-csp-diagnostic/index.json)。
+
 ## 6. 更新记录
 
 | 日期 | 更新内容 | 对应范围 | 验证与下一步 |
@@ -2781,3 +2797,5 @@ checklist原102主任务（8完成/94待）、54矩阵、211实际task（55完�
 2026-10-06：5.91正式发布exact2e冻结产物并读回100%新版本、三Route/29true；138资产及4源码包实际匹配，HTTP验收器误判原失败与四项重验均保存。c9minimal真实RST/signal但cancel未触发，product夹具bundle初始化缺失最小修复待Linux，浏览器外观交互继续诊断，原任务/授权边界保持。
 
 2026-10-06：5.92记录当前正式Web最终读回0及Chrome三页/真实暗色-中文-mobile硬重载功能0；0d原生product三帧RST、上游关闭/usage取消/resource confirmed PASS，minimal source.cancel依然FAIL/workflow1，完整负面与严格门槛保持。阶段表刷新证据，102/54/G/E/211任务状态不变，OAuth具体批准及真实工作区/密钥继续待。
+
+2026-10-06：5.93启动公开SSR真实早期输入修复，统一nonce native偏好控制器与uncontrolled React控件；10项新回归通过，完整Web/真实延迟资产Chrome/LinuxCI和新发布推进中。生产仍exact2e，原102/54/G/E/211状态不变，OAuth具体批准及真实工作区/密钥待。

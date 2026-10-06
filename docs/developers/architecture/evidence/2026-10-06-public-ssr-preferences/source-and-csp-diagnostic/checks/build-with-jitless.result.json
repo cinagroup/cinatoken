@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-06T11:46:35.132Z",
+  "finishedAt": "2026-10-06T11:48:37.927Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:/Program Files/nodejs/node_modules/npm/bin/npm-cli.js",
+    "run",
+    "build:web"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\build-with-jitless.stdout.log",
+    "bytes": 11147,
+    "sha256": "b462940cc5ed5b73b4378a924034e0564b38b71694528fe14139bde68c28a980"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\build-with-jitless.stderr.log",
+    "bytes": 88,
+    "sha256": "450f7d9b44a0069e2dc02e9a02a23203117a5bb107a866c9b2ae7784994db796"
+  }
+}

@@ -1,0 +1,1400 @@
+{
+  "id": "normal-ko",
+  "at": "2026-10-06T11:39:15.772Z",
+  "kind": "normal",
+  "javaScriptEnabled": true,
+  "gate": null,
+  "syntheticPreferenceCookies": [],
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  },
+  "colorScheme": "light",
+  "cookieSetterFailureInjected": false,
+  "navigationRequests": [
+    {
+      "sequence": 1,
+      "at": "2026-10-06T11:39:15.973Z",
+      "url": "http://127.0.0.1:64896/ko/models",
+      "method": "GET",
+      "resourceType": "document",
+      "documentAtStart": "nullblank",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 19,
+      "at": "2026-10-06T11:39:16.413Z",
+      "url": "http://127.0.0.1:64896/en/models",
+      "method": "GET",
+      "resourceType": "document",
+      "documentAtStart": "http://127.0.0.1:64896/ko/models",
+      "finished": true,
+      "failed": false
+    }
+  ],
+  "requestStarts": [
+    {
+      "sequence": 1,
+      "at": "2026-10-06T11:39:15.973Z",
+      "url": "http://127.0.0.1:64896/ko/models",
+      "method": "GET",
+      "resourceType": "document",
+      "documentAtStart": "nullblank",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 2,
+      "at": "2026-10-06T11:39:16.008Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/css/index.3797954594.css",
+      "method": "GET",
+      "resourceType": "stylesheet",
+      "documentAtStart": "http://127.0.0.1:64896/ko/models",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 3,
+      "at": "2026-10-06T11:39:16.008Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/index.fdfed7ea65.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/ko/models",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 4,
+      "at": "2026-10-06T11:39:16.143Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/lib-react.6356ddf42c.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/ko/models",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 5,
+      "at": "2026-10-06T11:39:16.144Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/6u.79a8483cd5.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/ko/models",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 6,
+      "at": "2026-10-06T11:39:16.144Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/qi.78b72ac6dc.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/ko/models",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 7,
+      "at": "2026-10-06T11:39:16.144Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/4b.c6831b40a7.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/ko/models",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 8,
+      "at": "2026-10-06T11:39:16.209Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/ta.350a9de34e.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/ko/models",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 9,
+      "at": "2026-10-06T11:39:16.209Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/cn.e7cc2f2c5b.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/ko/models",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 10,
+      "at": "2026-10-06T11:39:16.209Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/fd.7dd19fd28b.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/ko/models",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 11,
+      "at": "2026-10-06T11:39:16.242Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/p.a4236303c6.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/ko/models",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 12,
+      "at": "2026-10-06T11:39:16.243Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/f.963b5743eb.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/ko/models",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 13,
+      "at": "2026-10-06T11:39:16.243Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/30.5583d3d88f.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/ko/models",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 14,
+      "at": "2026-10-06T11:39:16.243Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/9.c52e089d75.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/ko/models",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 15,
+      "at": "2026-10-06T11:39:16.244Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/im.89f48440bc.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/ko/models",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 16,
+      "at": "2026-10-06T11:39:16.244Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/3.744dd7185a.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/ko/models",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 17,
+      "at": "2026-10-06T11:39:16.245Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/a.5180dd3ac4.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/ko/models",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 18,
+      "at": "2026-10-06T11:39:16.296Z",
+      "url": "http://127.0.0.1:64896/web-assets/logo.png",
+      "method": "GET",
+      "resourceType": "other",
+      "documentAtStart": "http://127.0.0.1:64896/ko/models",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 19,
+      "at": "2026-10-06T11:39:16.413Z",
+      "url": "http://127.0.0.1:64896/en/models",
+      "method": "GET",
+      "resourceType": "document",
+      "documentAtStart": "http://127.0.0.1:64896/ko/models",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 20,
+      "at": "2026-10-06T11:39:16.447Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/css/index.3797954594.css",
+      "method": "GET",
+      "resourceType": "stylesheet",
+      "documentAtStart": "http://127.0.0.1:64896/en/models",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 21,
+      "at": "2026-10-06T11:39:16.449Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/index.fdfed7ea65.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/en/models",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 22,
+      "at": "2026-10-06T11:39:16.513Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/lib-react.6356ddf42c.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/en/models",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 23,
+      "at": "2026-10-06T11:39:16.516Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/6u.79a8483cd5.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/en/models",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 24,
+      "at": "2026-10-06T11:39:16.516Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/qi.78b72ac6dc.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/en/models",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 25,
+      "at": "2026-10-06T11:39:16.517Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/4b.c6831b40a7.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/en/models",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 26,
+      "at": "2026-10-06T11:39:16.555Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/ta.350a9de34e.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/en/models",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 27,
+      "at": "2026-10-06T11:39:16.555Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/cn.e7cc2f2c5b.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/en/models",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 28,
+      "at": "2026-10-06T11:39:16.556Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/fd.7dd19fd28b.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/en/models",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 29,
+      "at": "2026-10-06T11:39:16.573Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/p.a4236303c6.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/en/models",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 30,
+      "at": "2026-10-06T11:39:16.575Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/f.963b5743eb.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/en/models",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 31,
+      "at": "2026-10-06T11:39:16.575Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/30.5583d3d88f.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/en/models",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 32,
+      "at": "2026-10-06T11:39:16.575Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/9.c52e089d75.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/en/models",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 33,
+      "at": "2026-10-06T11:39:16.576Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/im.89f48440bc.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/en/models",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 34,
+      "at": "2026-10-06T11:39:16.576Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/3.744dd7185a.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/en/models",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 35,
+      "at": "2026-10-06T11:39:16.576Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/a.5180dd3ac4.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/en/models",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 36,
+      "at": "2026-10-06T11:39:16.607Z",
+      "url": "http://127.0.0.1:64896/web-assets/logo.png",
+      "method": "GET",
+      "resourceType": "other",
+      "documentAtStart": "http://127.0.0.1:64896/en/models",
+      "finished": true,
+      "failed": false
+    }
+  ],
+  "responses": [
+    {
+      "sequence": 1,
+      "url": "http://127.0.0.1:64896/ko/models",
+      "status": 200,
+      "type": "document",
+      "at": "2026-10-06T11:39:15.992Z"
+    },
+    {
+      "sequence": 2,
+      "url": "http://127.0.0.1:64896/web-assets/static/css/index.3797954594.css",
+      "status": 200,
+      "type": "stylesheet",
+      "at": "2026-10-06T11:39:16.084Z"
+    },
+    {
+      "sequence": 3,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/index.fdfed7ea65.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.132Z"
+    },
+    {
+      "sequence": 7,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/4b.c6831b40a7.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.163Z"
+    },
+    {
+      "sequence": 6,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/qi.78b72ac6dc.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.164Z"
+    },
+    {
+      "sequence": 4,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/lib-react.6356ddf42c.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.168Z"
+    },
+    {
+      "sequence": 5,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/6u.79a8483cd5.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.178Z"
+    },
+    {
+      "sequence": 10,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/fd.7dd19fd28b.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.221Z"
+    },
+    {
+      "sequence": 8,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/ta.350a9de34e.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.222Z"
+    },
+    {
+      "sequence": 9,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/cn.e7cc2f2c5b.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.223Z"
+    },
+    {
+      "sequence": 11,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/p.a4236303c6.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.252Z"
+    },
+    {
+      "sequence": 12,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/f.963b5743eb.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.256Z"
+    },
+    {
+      "sequence": 13,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/30.5583d3d88f.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.258Z"
+    },
+    {
+      "sequence": 16,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/3.744dd7185a.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.258Z"
+    },
+    {
+      "sequence": 17,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/a.5180dd3ac4.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.258Z"
+    },
+    {
+      "sequence": 15,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/im.89f48440bc.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.258Z"
+    },
+    {
+      "sequence": 14,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/9.c52e089d75.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.258Z"
+    },
+    {
+      "sequence": 18,
+      "url": "http://127.0.0.1:64896/web-assets/logo.png",
+      "status": 200,
+      "type": "other",
+      "at": "2026-10-06T11:39:16.303Z"
+    },
+    {
+      "sequence": 19,
+      "url": "http://127.0.0.1:64896/en/models",
+      "status": 200,
+      "type": "document",
+      "at": "2026-10-06T11:39:16.426Z"
+    },
+    {
+      "sequence": 20,
+      "url": "http://127.0.0.1:64896/web-assets/static/css/index.3797954594.css",
+      "status": 200,
+      "type": "stylesheet",
+      "at": "2026-10-06T11:39:16.461Z"
+    },
+    {
+      "sequence": 21,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/index.fdfed7ea65.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.462Z"
+    },
+    {
+      "sequence": 25,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/4b.c6831b40a7.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.534Z"
+    },
+    {
+      "sequence": 24,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/qi.78b72ac6dc.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.535Z"
+    },
+    {
+      "sequence": 22,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/lib-react.6356ddf42c.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.547Z"
+    },
+    {
+      "sequence": 23,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/6u.79a8483cd5.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.548Z"
+    },
+    {
+      "sequence": 26,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/ta.350a9de34e.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.568Z"
+    },
+    {
+      "sequence": 28,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/fd.7dd19fd28b.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.568Z"
+    },
+    {
+      "sequence": 27,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/cn.e7cc2f2c5b.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.569Z"
+    },
+    {
+      "sequence": 29,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/p.a4236303c6.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.584Z"
+    },
+    {
+      "sequence": 30,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/f.963b5743eb.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.586Z"
+    },
+    {
+      "sequence": 33,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/im.89f48440bc.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.586Z"
+    },
+    {
+      "sequence": 32,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/9.c52e089d75.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.587Z"
+    },
+    {
+      "sequence": 34,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/3.744dd7185a.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.588Z"
+    },
+    {
+      "sequence": 31,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/30.5583d3d88f.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.588Z"
+    },
+    {
+      "sequence": 35,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/a.5180dd3ac4.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.588Z"
+    },
+    {
+      "sequence": 36,
+      "url": "http://127.0.0.1:64896/web-assets/logo.png",
+      "status": 200,
+      "type": "other",
+      "at": "2026-10-06T11:39:16.618Z"
+    }
+  ],
+  "assetResponses": [
+    {
+      "sequence": 2,
+      "url": "http://127.0.0.1:64896/web-assets/static/css/index.3797954594.css",
+      "status": 200,
+      "type": "stylesheet",
+      "at": "2026-10-06T11:39:16.084Z",
+      "bytes": 237922,
+      "sha256": "6ed64a183f0a48c55281a9e7d63c73aeecf0cb3b2f8b131bd0470eb27e441863"
+    },
+    {
+      "sequence": 3,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/index.fdfed7ea65.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.132Z",
+      "bytes": 4827,
+      "sha256": "0ad49911dc6bd54ef0275370d61e99dc1d12ded0604667132f8a97b4fbae6e95"
+    },
+    {
+      "sequence": 7,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/4b.c6831b40a7.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.163Z",
+      "bytes": 21425,
+      "sha256": "6012b2b1602d0e3943381c1d39960196a1a15b5731b06212f39641ca903226a6"
+    },
+    {
+      "sequence": 6,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/qi.78b72ac6dc.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.164Z",
+      "bytes": 73256,
+      "sha256": "04d7645d408798891e9135f43dbb81d18573df94afa8741f9c1b3ba028bd64eb"
+    },
+    {
+      "sequence": 4,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/lib-react.6356ddf42c.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.168Z",
+      "bytes": 218895,
+      "sha256": "2dd3207f37d0618a8b5284cbb4e288af0bcb6f785bdc350aa09489ae6a098a2d"
+    },
+    {
+      "sequence": 5,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/6u.79a8483cd5.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.178Z",
+      "bytes": 238399,
+      "sha256": "4486ba3f38dc424c597c1ce70add2641e5ee3ba901c9d5d9572bdfd5d1956727"
+    },
+    {
+      "sequence": 10,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/fd.7dd19fd28b.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.221Z",
+      "bytes": 1743,
+      "sha256": "7fe20b44fce11ee1b5b18158d5a0af4ffbd116fc3a38b33a58c5b414d5af16ad"
+    },
+    {
+      "sequence": 8,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/ta.350a9de34e.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.222Z",
+      "bytes": 11558,
+      "sha256": "ecb75b65763428076ccaad14a0ff6c1a0f6adedf73589994e83f8ba23fe9125f"
+    },
+    {
+      "sequence": 9,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/cn.e7cc2f2c5b.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.223Z",
+      "bytes": 10516,
+      "sha256": "77fb021e8fdcc3f4d49dcdf8957941aa5785d35529977b9ba82ed71be2b18412"
+    },
+    {
+      "sequence": 11,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/p.a4236303c6.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.252Z",
+      "bytes": 8429,
+      "sha256": "5d651492e9d9276b906cac0c32edb825aaec16665c5bfc7c9ef2f7361842d6f2"
+    },
+    {
+      "sequence": 12,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/f.963b5743eb.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.256Z",
+      "bytes": 5917,
+      "sha256": "a3a403cb5526b52781c2a2e19b2a3f852efc1671850d2a4fa0cb1e3d815b1d3b"
+    },
+    {
+      "sequence": 13,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/30.5583d3d88f.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.258Z",
+      "bytes": 27685,
+      "sha256": "537b78fb6c5cd1fa97f2e85c469d1f50b4ad44d35ccb1e7a116525f4047f4a41"
+    },
+    {
+      "sequence": 16,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/3.744dd7185a.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.258Z",
+      "bytes": 11488,
+      "sha256": "b97cab3d52aac5c5a2956a4630643a0cf033db342c5a2dcac9bd015921a2237f"
+    },
+    {
+      "sequence": 17,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/a.5180dd3ac4.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.258Z",
+      "bytes": 6374,
+      "sha256": "868b851daf7d311d11c854bb7cee4518f4490bf4725479c1f8f1d8e74cf9ef8c"
+    },
+    {
+      "sequence": 15,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/im.89f48440bc.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.258Z",
+      "bytes": 10088,
+      "sha256": "d49346f51aa7d9da95838bc90a2b7fe00b7d6deaf6fd553ffa27aef446bb0940"
+    },
+    {
+      "sequence": 14,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/9.c52e089d75.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.258Z",
+      "bytes": 9659,
+      "sha256": "9c81b5643b0a8f497880376808e85581ccd2543a6639e61e2aa20ef9d6b57954"
+    },
+    {
+      "sequence": 20,
+      "url": "http://127.0.0.1:64896/web-assets/static/css/index.3797954594.css",
+      "status": 200,
+      "type": "stylesheet",
+      "at": "2026-10-06T11:39:16.461Z",
+      "bytes": 237922,
+      "sha256": "6ed64a183f0a48c55281a9e7d63c73aeecf0cb3b2f8b131bd0470eb27e441863"
+    },
+    {
+      "sequence": 21,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/index.fdfed7ea65.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.462Z",
+      "bytes": 4827,
+      "sha256": "0ad49911dc6bd54ef0275370d61e99dc1d12ded0604667132f8a97b4fbae6e95"
+    },
+    {
+      "sequence": 25,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/4b.c6831b40a7.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.534Z",
+      "bytes": 21425,
+      "sha256": "6012b2b1602d0e3943381c1d39960196a1a15b5731b06212f39641ca903226a6"
+    },
+    {
+      "sequence": 24,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/qi.78b72ac6dc.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.535Z",
+      "bytes": 73256,
+      "sha256": "04d7645d408798891e9135f43dbb81d18573df94afa8741f9c1b3ba028bd64eb"
+    },
+    {
+      "sequence": 22,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/lib-react.6356ddf42c.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.547Z",
+      "bytes": 218895,
+      "sha256": "2dd3207f37d0618a8b5284cbb4e288af0bcb6f785bdc350aa09489ae6a098a2d"
+    },
+    {
+      "sequence": 23,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/6u.79a8483cd5.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.548Z",
+      "bytes": 238399,
+      "sha256": "4486ba3f38dc424c597c1ce70add2641e5ee3ba901c9d5d9572bdfd5d1956727"
+    },
+    {
+      "sequence": 26,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/ta.350a9de34e.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.568Z",
+      "bytes": 11558,
+      "sha256": "ecb75b65763428076ccaad14a0ff6c1a0f6adedf73589994e83f8ba23fe9125f"
+    },
+    {
+      "sequence": 28,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/fd.7dd19fd28b.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.568Z",
+      "bytes": 1743,
+      "sha256": "7fe20b44fce11ee1b5b18158d5a0af4ffbd116fc3a38b33a58c5b414d5af16ad"
+    },
+    {
+      "sequence": 27,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/cn.e7cc2f2c5b.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.569Z",
+      "bytes": 10516,
+      "sha256": "77fb021e8fdcc3f4d49dcdf8957941aa5785d35529977b9ba82ed71be2b18412"
+    },
+    {
+      "sequence": 29,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/p.a4236303c6.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.584Z",
+      "bytes": 8429,
+      "sha256": "5d651492e9d9276b906cac0c32edb825aaec16665c5bfc7c9ef2f7361842d6f2"
+    },
+    {
+      "sequence": 30,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/f.963b5743eb.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.586Z",
+      "bytes": 5917,
+      "sha256": "a3a403cb5526b52781c2a2e19b2a3f852efc1671850d2a4fa0cb1e3d815b1d3b"
+    },
+    {
+      "sequence": 33,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/im.89f48440bc.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.586Z",
+      "bytes": 10088,
+      "sha256": "d49346f51aa7d9da95838bc90a2b7fe00b7d6deaf6fd553ffa27aef446bb0940"
+    },
+    {
+      "sequence": 32,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/9.c52e089d75.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.587Z",
+      "bytes": 9659,
+      "sha256": "9c81b5643b0a8f497880376808e85581ccd2543a6639e61e2aa20ef9d6b57954"
+    },
+    {
+      "sequence": 34,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/3.744dd7185a.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.588Z",
+      "bytes": 11488,
+      "sha256": "b97cab3d52aac5c5a2956a4630643a0cf033db342c5a2dcac9bd015921a2237f"
+    },
+    {
+      "sequence": 31,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/30.5583d3d88f.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.588Z",
+      "bytes": 27685,
+      "sha256": "537b78fb6c5cd1fa97f2e85c469d1f50b4ad44d35ccb1e7a116525f4047f4a41"
+    },
+    {
+      "sequence": 35,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/a.5180dd3ac4.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:39:16.588Z",
+      "bytes": 6374,
+      "sha256": "868b851daf7d311d11c854bb7cee4518f4490bf4725479c1f8f1d8e74cf9ef8c"
+    }
+  ],
+  "failedRequests": [],
+  "policyViolations": [
+    {
+      "effectiveDirective": "script-src",
+      "violatedDirective": "script-src",
+      "blockedURI": "eval",
+      "disposition": "enforce",
+      "sample": ""
+    }
+  ],
+  "console": [],
+  "pageErrors": [],
+  "gateRequests": [],
+  "blockedRequests": [],
+  "evidenceErrors": [],
+  "expectedAnonymous401": [],
+  "observations": [
+    {
+      "stage": "actual-document-security-contract",
+      "sequence": 1,
+      "url": "http://127.0.0.1:64896/ko/models",
+      "status": 200,
+      "type": "document",
+      "at": "2026-10-06T11:39:15.992Z",
+      "headers": {
+        "connection": "keep-alive",
+        "date": "Tue, 06 Oct 2026 11:39:15 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked",
+        "cache-control": "no-store",
+        "content-security-policy": "default-src 'self'; script-src 'self' 'nonce-152c03c712db4992af19904b782a6f7b'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self' wss:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; frame-src 'none'; form-action 'self'",
+        "content-type": "text/html; charset=utf-8",
+        "cross-origin-opener-policy": "same-origin",
+        "cross-origin-resource-policy": "same-origin",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY"
+      },
+      "bytes": 22775,
+      "sha256": "626faa7b6e22e5f0c846c8f1615f1ace4eac30ecc82d388f19febc25123b2c45",
+      "contract": {
+        "nonce": "152c03c712db4992af19904b782a6f7b",
+        "scriptCount": 6,
+        "entryPaths": [
+          "/web-assets/static/js/index.fdfed7ea65.js"
+        ]
+      },
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\browser-local\\normal-ko-document-1.html"
+    },
+    {
+      "stage": "hydrated",
+      "at": "2026-10-06T11:39:16.297Z",
+      "url": "http://127.0.0.1:64896/ko/models",
+      "readyState": "complete",
+      "locale": "ko",
+      "classes": [
+        "light"
+      ],
+      "publicHydration": "ready",
+      "hydrationFailure": null,
+      "theme": "system",
+      "localeControl": "ko",
+      "themeCookie": null,
+      "localeCookie": null,
+      "title": "모델 카탈로그 — CinaToken",
+      "canonical": "https://cinatoken-public-preferences-fixture.test/ko/models",
+      "overflow": false,
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "mainTextLength": 560,
+      "heading": "모델 카탈로그",
+      "controller": {
+        "present": true,
+        "syncControls": true,
+        "dispose": true
+      },
+      "observation": {
+        "themeFrames": [],
+        "policyViolations": [
+          {
+            "effectiveDirective": "script-src",
+            "violatedDirective": "script-src",
+            "blockedURI": "eval",
+            "disposition": "enforce",
+            "sample": ""
+          }
+        ],
+        "pageshow": [
+          {
+            "persisted": false,
+            "at": 303.40000000596046
+          }
+        ],
+        "cookieSetterFailures": 0
+      }
+    },
+    {
+      "stage": "theme-accepted-dark",
+      "at": "2026-10-06T11:39:16.397Z",
+      "url": "http://127.0.0.1:64896/ko/models",
+      "readyState": "complete",
+      "locale": "ko",
+      "classes": [
+        "dark"
+      ],
+      "publicHydration": "ready",
+      "hydrationFailure": null,
+      "theme": "dark",
+      "localeControl": "ko",
+      "themeCookie": "cinatoken-theme=dark",
+      "localeCookie": null,
+      "title": "모델 카탈로그 — CinaToken",
+      "canonical": "https://cinatoken-public-preferences-fixture.test/ko/models",
+      "overflow": false,
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "mainTextLength": 560,
+      "heading": "모델 카탈로그",
+      "controller": {
+        "present": true,
+        "syncControls": true,
+        "dispose": true
+      },
+      "observation": {
+        "themeFrames": [],
+        "policyViolations": [
+          {
+            "effectiveDirective": "script-src",
+            "violatedDirective": "script-src",
+            "blockedURI": "eval",
+            "disposition": "enforce",
+            "sample": ""
+          }
+        ],
+        "pageshow": [
+          {
+            "persisted": false,
+            "at": 303.40000000596046
+          }
+        ],
+        "cookieSetterFailures": 0
+      }
+    },
+    {
+      "stage": "actual-document-security-contract",
+      "sequence": 19,
+      "url": "http://127.0.0.1:64896/en/models",
+      "status": 200,
+      "type": "document",
+      "at": "2026-10-06T11:39:16.426Z",
+      "headers": {
+        "connection": "keep-alive",
+        "date": "Tue, 06 Oct 2026 11:39:16 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked",
+        "cache-control": "no-store",
+        "content-security-policy": "default-src 'self'; script-src 'self' 'nonce-af586a7179744defa80cd15edce1d7ab'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self' wss:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; frame-src 'none'; form-action 'self'",
+        "content-type": "text/html; charset=utf-8",
+        "cross-origin-opener-policy": "same-origin",
+        "cross-origin-resource-policy": "same-origin",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY"
+      },
+      "bytes": 22340,
+      "sha256": "8bd07c65ba6a6d4661723cc467140a25a05dab60c02a054cba17bffd0637e455",
+      "contract": {
+        "nonce": "af586a7179744defa80cd15edce1d7ab",
+        "scriptCount": 6,
+        "entryPaths": [
+          "/web-assets/static/js/index.fdfed7ea65.js"
+        ]
+      },
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\browser-local\\normal-ko-document-19.html"
+    },
+    {
+      "stage": "normal-locale-navigated",
+      "at": "2026-10-06T11:39:16.529Z",
+      "url": "http://127.0.0.1:64896/en/models",
+      "readyState": "interactive",
+      "locale": "en",
+      "classes": [
+        "dark"
+      ],
+      "publicHydration": null,
+      "hydrationFailure": null,
+      "theme": "dark",
+      "localeControl": "en",
+      "themeCookie": "cinatoken-theme=dark",
+      "localeCookie": "NEXT_LOCALE=en",
+      "title": "Model catalog — CinaToken",
+      "canonical": "https://cinatoken-public-preferences-fixture.test/en/models",
+      "overflow": false,
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "mainTextLength": 850,
+      "heading": "Model catalog",
+      "controller": {
+        "present": true,
+        "syncControls": true,
+        "dispose": true
+      },
+      "observation": {
+        "themeFrames": [],
+        "policyViolations": [],
+        "pageshow": [],
+        "cookieSetterFailures": 0
+      }
+    },
+    {
+      "stage": "locale-request-window",
+      "selected": "en",
+      "baseline": 1,
+      "expectedURL": "http://127.0.0.1:64896/en/models",
+      "startedRequests": [
+        {
+          "sequence": 19,
+          "at": "2026-10-06T11:39:16.413Z",
+          "url": "http://127.0.0.1:64896/en/models",
+          "method": "GET",
+          "resourceType": "document",
+          "documentAtStart": "http://127.0.0.1:64896/ko/models",
+          "finished": true,
+          "failed": false
+        }
+      ]
+    },
+    {
+      "stage": "hydrated",
+      "at": "2026-10-06T11:39:16.609Z",
+      "url": "http://127.0.0.1:64896/en/models",
+      "readyState": "complete",
+      "locale": "en",
+      "classes": [
+        "dark"
+      ],
+      "publicHydration": "ready",
+      "hydrationFailure": null,
+      "theme": "dark",
+      "localeControl": "en",
+      "themeCookie": "cinatoken-theme=dark",
+      "localeCookie": "NEXT_LOCALE=en",
+      "title": "Model catalog — CinaToken",
+      "canonical": "https://cinatoken-public-preferences-fixture.test/en/models",
+      "overflow": false,
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "mainTextLength": 850,
+      "heading": "Model catalog",
+      "controller": {
+        "present": true,
+        "syncControls": true,
+        "dispose": true
+      },
+      "observation": {
+        "themeFrames": [],
+        "policyViolations": [
+          {
+            "effectiveDirective": "script-src",
+            "violatedDirective": "script-src",
+            "blockedURI": "eval",
+            "disposition": "enforce",
+            "sample": ""
+          }
+        ],
+        "pageshow": [
+          {
+            "persisted": false,
+            "at": 184.30000001192093
+          }
+        ],
+        "cookieSetterFailures": 0
+      }
+    },
+    {
+      "stage": "theme-accepted-dark",
+      "at": "2026-10-06T11:39:16.664Z",
+      "url": "http://127.0.0.1:64896/en/models",
+      "readyState": "complete",
+      "locale": "en",
+      "classes": [
+        "dark"
+      ],
+      "publicHydration": "ready",
+      "hydrationFailure": null,
+      "theme": "dark",
+      "localeControl": "en",
+      "themeCookie": "cinatoken-theme=dark",
+      "localeCookie": "NEXT_LOCALE=en",
+      "title": "Model catalog — CinaToken",
+      "canonical": "https://cinatoken-public-preferences-fixture.test/en/models",
+      "overflow": false,
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "mainTextLength": 850,
+      "heading": "Model catalog",
+      "controller": {
+        "present": true,
+        "syncControls": true,
+        "dispose": true
+      },
+      "observation": {
+        "themeFrames": [],
+        "policyViolations": [
+          {
+            "effectiveDirective": "script-src",
+            "violatedDirective": "script-src",
+            "blockedURI": "eval",
+            "disposition": "enforce",
+            "sample": ""
+          }
+        ],
+        "pageshow": [
+          {
+            "persisted": false,
+            "at": 184.30000001192093
+          }
+        ],
+        "cookieSetterFailures": 0
+      }
+    },
+    {
+      "stage": "final",
+      "at": "2026-10-06T11:39:16.666Z",
+      "url": "http://127.0.0.1:64896/en/models",
+      "readyState": "complete",
+      "locale": "en",
+      "classes": [
+        "dark"
+      ],
+      "publicHydration": "ready",
+      "hydrationFailure": null,
+      "theme": "dark",
+      "localeControl": "en",
+      "themeCookie": "cinatoken-theme=dark",
+      "localeCookie": "NEXT_LOCALE=en",
+      "title": "Model catalog — CinaToken",
+      "canonical": "https://cinatoken-public-preferences-fixture.test/en/models",
+      "overflow": false,
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "mainTextLength": 850,
+      "heading": "Model catalog",
+      "controller": {
+        "present": true,
+        "syncControls": true,
+        "dispose": true
+      },
+      "observation": {
+        "themeFrames": [],
+        "policyViolations": [
+          {
+            "effectiveDirective": "script-src",
+            "violatedDirective": "script-src",
+            "blockedURI": "eval",
+            "disposition": "enforce",
+            "sample": ""
+          }
+        ],
+        "pageshow": [
+          {
+            "persisted": false,
+            "at": 184.30000001192093
+          }
+        ],
+        "cookieSetterFailures": 0
+      }
+    },
+    {
+      "stage": "failure",
+      "at": "2026-10-06T11:39:16.667Z",
+      "url": "http://127.0.0.1:64896/en/models",
+      "readyState": "complete",
+      "locale": "en",
+      "classes": [
+        "dark"
+      ],
+      "publicHydration": "ready",
+      "hydrationFailure": null,
+      "theme": "dark",
+      "localeControl": "en",
+      "themeCookie": "cinatoken-theme=dark",
+      "localeCookie": "NEXT_LOCALE=en",
+      "title": "Model catalog — CinaToken",
+      "canonical": "https://cinatoken-public-preferences-fixture.test/en/models",
+      "overflow": false,
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "mainTextLength": 850,
+      "heading": "Model catalog",
+      "controller": {
+        "present": true,
+        "syncControls": true,
+        "dispose": true
+      },
+      "observation": {
+        "themeFrames": [],
+        "policyViolations": [
+          {
+            "effectiveDirective": "script-src",
+            "violatedDirective": "script-src",
+            "blockedURI": "eval",
+            "disposition": "enforce",
+            "sample": ""
+          }
+        ],
+        "pageshow": [
+          {
+            "persisted": false,
+            "at": 184.30000001192093
+          }
+        ],
+        "cookieSetterFailures": 0
+      }
+    }
+  ],
+  "screenshots": [
+    {
+      "stage": "failure",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\browser-local\\normal-ko-failure.png",
+      "bytes": 49981,
+      "sha256": "aa62c021544e9ab597180f7372d3c784b4c16ee68d9e67dc25def8f91736427d"
+    }
+  ],
+  "checks": {
+    "normalFourLanguageShellInteraction": true
+  },
+  "timedOut": false,
+  "outcome": "FAIL",
+  "intendedExitCode": 1,
+  "failure": {
+    "name": "AssertionError",
+    "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ [\n+   {\n+     blockedURI: 'eval',\n+     disposition: 'enforce',\n+     effectiveDirective: 'script-src',\n+     sample: '',\n+     violatedDirective: 'script-src'\n+   }\n+ ]\n- []\n",
+    "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ [\n+   {\n+     blockedURI: 'eval',\n+     disposition: 'enforce',\n+     effectiveDirective: 'script-src',\n+     sample: '',\n+     violatedDirective: 'script-src'\n+   }\n+ ]\n- []\n\n    at checkNetwork (file:///C:/Users/cina/AppData/Local/Temp/cinatoken-public-early-controls-browser-ea4cfe25cf774b9fb7d91829a7aa5e19/run-public-early-controls.mjs:329:12)\n    at async file:///C:/Users/cina/AppData/Local/Temp/cinatoken-public-early-controls-browser-ea4cfe25cf774b9fb7d91829a7aa5e19/run-public-early-controls.mjs:615:21\n    at async runCase (file:///C:/Users/cina/AppData/Local/Temp/cinatoken-public-early-controls-browser-ea4cfe25cf774b9fb7d91829a7aa5e19/run-public-early-controls.mjs:622:5)\n    at async file:///C:/Users/cina/AppData/Local/Temp/cinatoken-public-early-controls-browser-ea4cfe25cf774b9fb7d91829a7aa5e19/run-public-early-controls.mjs:693:5"
+  },
+  "contextClosed": true,
+  "gateCounts": {
+    "held": 0,
+    "continuedAfterRelease": 0,
+    "expectedNavigationAborts": 0,
+    "pendingAtEnd": 0,
+    "activeRouteTasksAtEnd": 0
+  },
+  "finishedAt": "2026-10-06T11:39:16.724Z"
+}

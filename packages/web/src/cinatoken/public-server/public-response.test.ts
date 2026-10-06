@@ -202,6 +202,22 @@ for (const locale of PUBLIC_HTTP_LOCALES) {
 			)
 			for (const script of scripts)
 				assert.ok(script[1].includes(`nonce="${nonce}"`))
+			const preferences = scripts.find((script) =>
+				script[1].includes('id="cinatoken-preferences-init"')
+			)
+			const preferenceSync = scripts.find((script) =>
+				script[1].includes('id="cinatoken-preferences-sync"')
+			)
+			assert.ok(preferences)
+			assert.ok(preferenceSync)
+			assert.ok(html.indexOf(preferences[0]) < html.indexOf('</head>'))
+			assert.ok(html.indexOf(preferenceSync[0]) > html.indexOf('</main>'))
+			assert.ok(
+				html.indexOf(preferenceSync[0]) <
+					html.indexOf('src="/web-assets/static/js/index.123.js"')
+			)
+			assert.match(html, /data-cinatoken-public-preference="theme"/)
+			assert.match(html, /data-cinatoken-public-preference="locale"/)
 			const routerScript = scripts.find((script) => script[2].includes('$_TSR'))
 			assert.ok(
 				routerScript,

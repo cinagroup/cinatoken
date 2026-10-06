@@ -1,0 +1,610 @@
+{
+  "mode": "real-public-host-wait-only",
+  "at": "2026-10-06T11:43:57.074Z",
+  "pauseEvents": [
+    {
+      "reason": "exception",
+      "data": {
+        "type": "object",
+        "subtype": "error",
+        "className": "EvalError",
+        "description": "EvalError: Evaluating a string as JavaScript violates the following Content Security Policy directive because 'unsafe-eval' is not an allowed source of script: script-src 'self' 'nonce-454b0089fa514ea090a53e4d8e6eeeb9'\".\n\n    at Function (<anonymous>)\n    at http://127.0.0.1:57478/web-assets/static/js/async/6u.79a8483cd5.js:56:57062\n    at get value (http://127.0.0.1:57478/web-assets/static/js/async/6u.79a8483cd5.js:56:55421)\n    at http://127.0.0.1:57478/web-assets/static/js/async/6u.79a8483cd5.js:4:11410\n    at $ZodObjectJIT.u (http://127.0.0.1:57478/web-assets/static/js/async/6u.79a8483cd5.js:56:49408)\n    at f.xI.keyof (http://127.0.0.1:57478/web-assets/static/js/async/6u.79a8483cd5.js:56:24884)\n    at u (http://127.0.0.1:57478/web-assets/static/js/async/6u.79a8483cd5.js:56:49408)\n    at new ZodObject (http://127.0.0.1:57478/web-assets/static/js/async/6u.79a8483cd5.js:56:49938)\n    at Object.rT (http://127.0.0.1:57478/web-assets/static/js/async/6u.79a8483cd5.js:56:26353)\n    at Object.bu (http://127.0.0.1:57478/web-assets/static/js/async/qi.78b72ac6dc.js:1:18242)",
+        "objectId": "-1755135092842152731.1.1",
+        "uncaught": false
+      },
+      "at": "2026-10-06T11:43:57.804Z",
+      "callFrames": [
+        {
+          "functionName": "",
+          "url": "",
+          "location": {
+            "scriptId": "12",
+            "lineNumber": 55,
+            "columnNumber": 57061
+          },
+          "scopeTypes": [
+            "local",
+            "closure",
+            "global"
+          ]
+        },
+        {
+          "functionName": "get value",
+          "url": "",
+          "location": {
+            "scriptId": "12",
+            "lineNumber": 55,
+            "columnNumber": 55420
+          },
+          "scopeTypes": [
+            "local",
+            "closure",
+            "global"
+          ]
+        },
+        {
+          "functionName": "",
+          "url": "",
+          "location": {
+            "scriptId": "12",
+            "lineNumber": 3,
+            "columnNumber": 11409
+          },
+          "scopeTypes": [
+            "local",
+            "closure",
+            "global"
+          ]
+        },
+        {
+          "functionName": "u",
+          "url": "",
+          "location": {
+            "scriptId": "12",
+            "lineNumber": 55,
+            "columnNumber": 49407
+          },
+          "scopeTypes": [
+            "local",
+            "closure",
+            "closure",
+            "global"
+          ]
+        },
+        {
+          "functionName": "f.xI.keyof",
+          "url": "",
+          "location": {
+            "scriptId": "12",
+            "lineNumber": 55,
+            "columnNumber": 24883
+          },
+          "scopeTypes": [
+            "local",
+            "closure",
+            "global"
+          ]
+        },
+        {
+          "functionName": "u",
+          "url": "",
+          "location": {
+            "scriptId": "12",
+            "lineNumber": 55,
+            "columnNumber": 49407
+          },
+          "scopeTypes": [
+            "local",
+            "closure",
+            "closure",
+            "global"
+          ]
+        },
+        {
+          "functionName": "ZodObject",
+          "url": "",
+          "location": {
+            "scriptId": "12",
+            "lineNumber": 55,
+            "columnNumber": 49937
+          },
+          "scopeTypes": [
+            "local",
+            "closure",
+            "closure",
+            "global"
+          ]
+        },
+        {
+          "functionName": "rT",
+          "url": "",
+          "location": {
+            "scriptId": "12",
+            "lineNumber": 55,
+            "columnNumber": 26352
+          },
+          "scopeTypes": [
+            "local",
+            "closure",
+            "global"
+          ]
+        },
+        {
+          "functionName": "bu",
+          "url": "",
+          "location": {
+            "scriptId": "13",
+            "lineNumber": 0,
+            "columnNumber": 18241
+          },
+          "scopeTypes": [
+            "local",
+            "global"
+          ]
+        },
+        {
+          "functionName": "d",
+          "url": "",
+          "location": {
+            "scriptId": "7",
+            "lineNumber": 0,
+            "columnNumber": 785
+          },
+          "scopeTypes": [
+            "local",
+            "closure",
+            "global"
+          ]
+        },
+        {
+          "functionName": "e",
+          "url": "",
+          "location": {
+            "scriptId": "14",
+            "lineNumber": 0,
+            "columnNumber": 7948
+          },
+          "scopeTypes": [
+            "local",
+            "global"
+          ]
+        },
+        {
+          "functionName": "d",
+          "url": "",
+          "location": {
+            "scriptId": "7",
+            "lineNumber": 0,
+            "columnNumber": 785
+          },
+          "scopeTypes": [
+            "local",
+            "closure",
+            "global"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "scriptId": "12",
+          "url": "http://127.0.0.1:57478/web-assets/static/js/async/6u.79a8483cd5.js",
+          "lineNumber0": 55,
+          "columnNumber0": 57061,
+          "lineNumber1": 56,
+          "columnNumber1": 57062,
+          "bytes": 238399,
+          "sha256": "4486ba3f38dc424c597c1ce70add2641e5ee3ba901c9d5d9572bdfd5d1956727",
+          "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-eval-diagnostic-ea849e9a904a4a01b7a2122c38de7335\\asset-4486ba3f38dc424c597c1ce70add2641e5ee3ba901c9d5d9572bdfd5d1956727.js",
+          "excerpt": "e)Object.assign(t,Object.getOwnPropertyDescriptors(r));return Object.defineProperties({},t)}function w(e){return JSON.stringify(e)}function k(e){return e.toLowerCase().trim().replace(/[^\\w\\s-]/g,\"\").replace(/[\\s_-]+/g,\"-\").replace(/^-+|-+$/g,\"\")}let S=\"captureStackTrace\"in Error?Error.captureStackTrace:(...e)=>{};function O(e){return\"object\"==typeof e&&null!==e&&!Array.isArray(e)}let z=u(()=>{if(i.cr.jitless||\"u\">typeof navigator&&navigator?.userAgent?.includes(\"Cloudflare\"))return!1;try{return Function(\"\"),!0}catch(e){return!1}});function $(e){if(!1===O(e))return!1;let t=e.constructor;if(void 0===t||\"function\"!=typeof t)return!0;let r=t.prototype;return!1!==O(r)&&!1!==Object.prototype.hasOwnProperty.call(r,\"isPrototypeOf\")}function I(e){return $(e)?{...e}:Array.isArray(e)?[...e]:e instanceof Map?new Map(e):e instanceof Set?new Set(e):e}let P=new Set([\"string\",\"number\",\"symbol\"]);function j(e){return e.replace(/[.*+?^${}()|[\\]\\\\]/g,\"\\\\$&\")}function L(e,t,r){let n=new e._zod.constr(t??e._zod.def);return(!t||r?.parent)&&(n._zod.parent=e),n}function R(e){if(!e)return{};if(\"string\"==typeof e)return{error:()=>e};if(e?.message!==void 0){if(e?.error!==void 0)throw Error(\"Cannot specify bo"
+        }
+      ]
+    }
+  ],
+  "scripts": [
+    {
+      "scriptId": "3",
+      "url": "",
+      "startLine": 0,
+      "startColumn": 0,
+      "endLine": 4,
+      "endColumn": 9,
+      "hash": "9e22374178d30310bf36b9ad25aeb7e094195c70fae675a5d8e48cad46b77308",
+      "sourceMapURL": "",
+      "executionContextId": 1
+    },
+    {
+      "scriptId": "4",
+      "url": "",
+      "startLine": 0,
+      "startColumn": 0,
+      "endLine": 5,
+      "endColumn": 9,
+      "hash": "488fe0c28830ac45cd62c907ebc421dc4e08031d8e8acf69482258dda8f194d7",
+      "sourceMapURL": "",
+      "executionContextId": 1
+    },
+    {
+      "scriptId": "3",
+      "url": "",
+      "startLine": 0,
+      "startColumn": 0,
+      "endLine": 0,
+      "endColumn": 0,
+      "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sourceMapURL": "",
+      "executionContextId": 2
+    },
+    {
+      "scriptId": "4",
+      "url": "",
+      "startLine": 0,
+      "startColumn": 0,
+      "endLine": 4,
+      "endColumn": 9,
+      "hash": "9e22374178d30310bf36b9ad25aeb7e094195c70fae675a5d8e48cad46b77308",
+      "sourceMapURL": "",
+      "executionContextId": 1
+    },
+    {
+      "scriptId": "5",
+      "url": "",
+      "startLine": 0,
+      "startColumn": 0,
+      "endLine": 5,
+      "endColumn": 9,
+      "hash": "488fe0c28830ac45cd62c907ebc421dc4e08031d8e8acf69482258dda8f194d7",
+      "sourceMapURL": "",
+      "executionContextId": 1
+    },
+    {
+      "scriptId": "6",
+      "url": "http://127.0.0.1:57478/en",
+      "startLine": 0,
+      "startColumn": 1678,
+      "endLine": 95,
+      "endColumn": 11,
+      "hash": "cb5827ad21ddd7a0f3e3498cdd58cbb763618aab11722082c5ce7d58f9f01fb4",
+      "sourceMapURL": "",
+      "executionContextId": 1
+    },
+    {
+      "scriptId": "8",
+      "url": "http://127.0.0.1:57478/en",
+      "startLine": 112,
+      "startColumn": 13935,
+      "endLine": 112,
+      "endColumn": 13985,
+      "hash": "9afcdf331598fb83812fd9b9cdd0748e4baf090264bf95b5f4a7cb551d0b852b",
+      "sourceMapURL": "",
+      "executionContextId": 1
+    },
+    {
+      "scriptId": "9",
+      "url": "http://127.0.0.1:57478/en",
+      "startLine": 112,
+      "startColumn": 14263,
+      "endLine": 112,
+      "endColumn": 14823,
+      "hash": "a6e15a0229cdfb83a913c6342c4bab6449cf06ea54b99e9bcddea2234335c8c1",
+      "sourceMapURL": "",
+      "executionContextId": 1
+    },
+    {
+      "scriptId": "10",
+      "url": "http://127.0.0.1:57478/en",
+      "startLine": 112,
+      "startColumn": 14881,
+      "endLine": 112,
+      "endColumn": 14937,
+      "hash": "44491343799935d3a7674c56c6529da8110059d215a497484fab66e7b82fabc6",
+      "sourceMapURL": "",
+      "executionContextId": 1
+    },
+    {
+      "scriptId": "7",
+      "url": "http://127.0.0.1:57478/web-assets/static/js/index.fdfed7ea65.js",
+      "startLine": 0,
+      "startColumn": 0,
+      "endLine": 0,
+      "endColumn": 4827,
+      "hash": "0ad49911dc6bd54ef0275370d61e99dc1d12ded0604667132f8a97b4fbae6e95",
+      "sourceMapURL": "",
+      "executionContextId": 1
+    },
+    {
+      "scriptId": "14",
+      "url": "http://127.0.0.1:57478/web-assets/static/js/async/4b.c6831b40a7.js",
+      "startLine": 0,
+      "startColumn": 0,
+      "endLine": 0,
+      "endColumn": 21404,
+      "hash": "6012b2b1602d0e3943381c1d39960196a1a15b5731b06212f39641ca903226a6",
+      "sourceMapURL": "",
+      "executionContextId": 1
+    },
+    {
+      "scriptId": "13",
+      "url": "http://127.0.0.1:57478/web-assets/static/js/async/qi.78b72ac6dc.js",
+      "startLine": 0,
+      "startColumn": 0,
+      "endLine": 0,
+      "endColumn": 54685,
+      "hash": "04d7645d408798891e9135f43dbb81d18573df94afa8741f9c1b3ba028bd64eb",
+      "sourceMapURL": "",
+      "executionContextId": 1
+    },
+    {
+      "scriptId": "11",
+      "url": "http://127.0.0.1:57478/web-assets/static/js/async/lib-react.6356ddf42c.js",
+      "startLine": 0,
+      "startColumn": 0,
+      "endLine": 1,
+      "endColumn": 218843,
+      "hash": "2dd3207f37d0618a8b5284cbb4e288af0bcb6f785bdc350aa09489ae6a098a2d",
+      "sourceMapURL": "",
+      "executionContextId": 1
+    },
+    {
+      "scriptId": "12",
+      "url": "http://127.0.0.1:57478/web-assets/static/js/async/6u.79a8483cd5.js",
+      "startLine": 0,
+      "startColumn": 0,
+      "endLine": 55,
+      "endColumn": 63899,
+      "hash": "4486ba3f38dc424c597c1ce70add2641e5ee3ba901c9d5d9572bdfd5d1956727",
+      "sourceMapURL": "",
+      "executionContextId": 1
+    },
+    {
+      "scriptId": "15",
+      "url": "http://127.0.0.1:57478/web-assets/static/js/async/ta.350a9de34e.js",
+      "startLine": 0,
+      "startColumn": 0,
+      "endLine": 0,
+      "endColumn": 11558,
+      "hash": "ecb75b65763428076ccaad14a0ff6c1a0f6adedf73589994e83f8ba23fe9125f",
+      "sourceMapURL": "",
+      "executionContextId": 1
+    },
+    {
+      "scriptId": "16",
+      "url": "http://127.0.0.1:57478/web-assets/static/js/async/cn.e7cc2f2c5b.js",
+      "startLine": 0,
+      "startColumn": 0,
+      "endLine": 0,
+      "endColumn": 10516,
+      "hash": "77fb021e8fdcc3f4d49dcdf8957941aa5785d35529977b9ba82ed71be2b18412",
+      "sourceMapURL": "",
+      "executionContextId": 1
+    },
+    {
+      "scriptId": "17",
+      "url": "http://127.0.0.1:57478/web-assets/static/js/async/fd.7dd19fd28b.js",
+      "startLine": 0,
+      "startColumn": 0,
+      "endLine": 0,
+      "endColumn": 1743,
+      "hash": "7fe20b44fce11ee1b5b18158d5a0af4ffbd116fc3a38b33a58c5b414d5af16ad",
+      "sourceMapURL": "",
+      "executionContextId": 1
+    },
+    {
+      "scriptId": "20",
+      "url": "http://127.0.0.1:57478/web-assets/static/js/async/r4.4d0fa2a207.js",
+      "startLine": 0,
+      "startColumn": 0,
+      "endLine": 1,
+      "endColumn": 5074,
+      "hash": "889939cb0a90d434e1bf81052f5a834b07ae638f671c72bc64121accc4828886",
+      "sourceMapURL": "",
+      "executionContextId": 1
+    },
+    {
+      "scriptId": "18",
+      "url": "http://127.0.0.1:57478/web-assets/static/js/async/30.5583d3d88f.js",
+      "startLine": 0,
+      "startColumn": 0,
+      "endLine": 0,
+      "endColumn": 27685,
+      "hash": "537b78fb6c5cd1fa97f2e85c469d1f50b4ad44d35ccb1e7a116525f4047f4a41",
+      "sourceMapURL": "",
+      "executionContextId": 1
+    },
+    {
+      "scriptId": "19",
+      "url": "http://127.0.0.1:57478/web-assets/static/js/async/hw.419e09a2b0.js",
+      "startLine": 0,
+      "startColumn": 0,
+      "endLine": 0,
+      "endColumn": 12738,
+      "hash": "2605cfc1d8276e7a7fb91687337dced9df8282c7785f58fce0851cf6a1353233",
+      "sourceMapURL": "",
+      "executionContextId": 1
+    },
+    {
+      "scriptId": "21",
+      "url": "",
+      "startLine": 0,
+      "startColumn": 0,
+      "endLine": 345,
+      "endColumn": 11,
+      "hash": "fd3b882cab3a898b34e827ab330d9fb152340d61f7d0c3cec30247018af131e4",
+      "sourceMapURL": "",
+      "executionContextId": 1
+    },
+    {
+      "scriptId": "27",
+      "url": "",
+      "startLine": 0,
+      "startColumn": 0,
+      "endLine": 0,
+      "endColumn": 61,
+      "hash": "a3c74b2aecbdd0b615e6a2eed4788a374366e25d5fdcd45dca45d55fbb119046",
+      "sourceMapURL": "",
+      "executionContextId": 1
+    },
+    {
+      "scriptId": "28",
+      "url": "",
+      "startLine": 0,
+      "startColumn": 0,
+      "endLine": 0,
+      "endColumn": 263,
+      "hash": "54584e18e3b906c239bc127eb8d36249d3285dc6f902cbf006b08eeaec245ce7",
+      "sourceMapURL": "",
+      "executionContextId": 1
+    }
+  ],
+  "responses": [
+    {
+      "url": "http://127.0.0.1:57478/en",
+      "status": 200,
+      "type": "document"
+    },
+    {
+      "url": "http://127.0.0.1:57478/web-assets/static/css/index.3797954594.css",
+      "status": 200,
+      "type": "stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:57478/web-assets/static/js/index.fdfed7ea65.js",
+      "status": 200,
+      "type": "script",
+      "bytes": 4827,
+      "sha256": "0ad49911dc6bd54ef0275370d61e99dc1d12ded0604667132f8a97b4fbae6e95",
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-eval-diagnostic-ea849e9a904a4a01b7a2122c38de7335\\asset-0ad49911dc6bd54ef0275370d61e99dc1d12ded0604667132f8a97b4fbae6e95.js"
+    },
+    {
+      "url": "http://127.0.0.1:57478/web-assets/static/js/async/4b.c6831b40a7.js",
+      "status": 200,
+      "type": "script",
+      "bytes": 21425,
+      "sha256": "6012b2b1602d0e3943381c1d39960196a1a15b5731b06212f39641ca903226a6",
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-eval-diagnostic-ea849e9a904a4a01b7a2122c38de7335\\asset-6012b2b1602d0e3943381c1d39960196a1a15b5731b06212f39641ca903226a6.js"
+    },
+    {
+      "url": "http://127.0.0.1:57478/web-assets/static/js/async/qi.78b72ac6dc.js",
+      "status": 200,
+      "type": "script",
+      "bytes": 73256,
+      "sha256": "04d7645d408798891e9135f43dbb81d18573df94afa8741f9c1b3ba028bd64eb",
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-eval-diagnostic-ea849e9a904a4a01b7a2122c38de7335\\asset-04d7645d408798891e9135f43dbb81d18573df94afa8741f9c1b3ba028bd64eb.js"
+    },
+    {
+      "url": "http://127.0.0.1:57478/web-assets/static/js/async/lib-react.6356ddf42c.js",
+      "status": 200,
+      "type": "script",
+      "bytes": 218895,
+      "sha256": "2dd3207f37d0618a8b5284cbb4e288af0bcb6f785bdc350aa09489ae6a098a2d",
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-eval-diagnostic-ea849e9a904a4a01b7a2122c38de7335\\asset-2dd3207f37d0618a8b5284cbb4e288af0bcb6f785bdc350aa09489ae6a098a2d.js"
+    },
+    {
+      "url": "http://127.0.0.1:57478/web-assets/static/js/async/6u.79a8483cd5.js",
+      "status": 200,
+      "type": "script",
+      "bytes": 238399,
+      "sha256": "4486ba3f38dc424c597c1ce70add2641e5ee3ba901c9d5d9572bdfd5d1956727",
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-eval-diagnostic-ea849e9a904a4a01b7a2122c38de7335\\asset-4486ba3f38dc424c597c1ce70add2641e5ee3ba901c9d5d9572bdfd5d1956727.js"
+    },
+    {
+      "url": "http://127.0.0.1:57478/web-assets/static/js/async/ta.350a9de34e.js",
+      "status": 200,
+      "type": "script",
+      "bytes": 11558,
+      "sha256": "ecb75b65763428076ccaad14a0ff6c1a0f6adedf73589994e83f8ba23fe9125f",
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-eval-diagnostic-ea849e9a904a4a01b7a2122c38de7335\\asset-ecb75b65763428076ccaad14a0ff6c1a0f6adedf73589994e83f8ba23fe9125f.js"
+    },
+    {
+      "url": "http://127.0.0.1:57478/web-assets/static/js/async/cn.e7cc2f2c5b.js",
+      "status": 200,
+      "type": "script",
+      "bytes": 10516,
+      "sha256": "77fb021e8fdcc3f4d49dcdf8957941aa5785d35529977b9ba82ed71be2b18412",
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-eval-diagnostic-ea849e9a904a4a01b7a2122c38de7335\\asset-77fb021e8fdcc3f4d49dcdf8957941aa5785d35529977b9ba82ed71be2b18412.js"
+    },
+    {
+      "url": "http://127.0.0.1:57478/web-assets/static/js/async/fd.7dd19fd28b.js",
+      "status": 200,
+      "type": "script",
+      "bytes": 1743,
+      "sha256": "7fe20b44fce11ee1b5b18158d5a0af4ffbd116fc3a38b33a58c5b414d5af16ad",
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-eval-diagnostic-ea849e9a904a4a01b7a2122c38de7335\\asset-7fe20b44fce11ee1b5b18158d5a0af4ffbd116fc3a38b33a58c5b414d5af16ad.js"
+    },
+    {
+      "url": "http://127.0.0.1:57478/web-assets/static/js/async/r4.4d0fa2a207.js",
+      "status": 200,
+      "type": "script",
+      "bytes": 5119,
+      "sha256": "889939cb0a90d434e1bf81052f5a834b07ae638f671c72bc64121accc4828886",
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-eval-diagnostic-ea849e9a904a4a01b7a2122c38de7335\\asset-889939cb0a90d434e1bf81052f5a834b07ae638f671c72bc64121accc4828886.js"
+    },
+    {
+      "url": "http://127.0.0.1:57478/web-assets/static/js/async/30.5583d3d88f.js",
+      "status": 200,
+      "type": "script",
+      "bytes": 27685,
+      "sha256": "537b78fb6c5cd1fa97f2e85c469d1f50b4ad44d35ccb1e7a116525f4047f4a41",
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-eval-diagnostic-ea849e9a904a4a01b7a2122c38de7335\\asset-537b78fb6c5cd1fa97f2e85c469d1f50b4ad44d35ccb1e7a116525f4047f4a41.js"
+    },
+    {
+      "url": "http://127.0.0.1:57478/web-assets/static/js/async/hw.419e09a2b0.js",
+      "status": 200,
+      "type": "script",
+      "bytes": 12739,
+      "sha256": "2605cfc1d8276e7a7fb91687337dced9df8282c7785f58fce0851cf6a1353233",
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-eval-diagnostic-ea849e9a904a4a01b7a2122c38de7335\\asset-2605cfc1d8276e7a7fb91687337dced9df8282c7785f58fce0851cf6a1353233.js"
+    },
+    {
+      "url": "http://127.0.0.1:57478/web-assets/logo.png",
+      "status": 200,
+      "type": "other"
+    }
+  ],
+  "console": [],
+  "pageErrors": [],
+  "blocked": [],
+  "stages": [
+    {
+      "stage": "before-goto",
+      "at": "2026-10-06T11:43:57.426Z"
+    },
+    {
+      "stage": "after-goto-no-page-evaluation",
+      "at": "2026-10-06T11:43:57.741Z",
+      "pauseCount": 0
+    },
+    {
+      "stage": "after-host-wait-no-page-evaluation",
+      "at": "2026-10-06T11:43:59.255Z",
+      "pauseCount": 1
+    },
+    {
+      "stage": "before-first-observational-page-evaluate",
+      "at": "2026-10-06T11:43:59.255Z",
+      "pauseCount": 1
+    }
+  ],
+  "dom": {
+    "violations": [
+      {
+        "at": 418.20000000298023,
+        "effectiveDirective": "script-src",
+        "violatedDirective": "script-src",
+        "blockedURI": "eval",
+        "disposition": "enforce",
+        "sample": "",
+        "sourceFile": "http://127.0.0.1:57478/web-assets/static/js/async/6u.79a8483cd5.js",
+        "lineNumber": 56,
+        "columnNumber": 57062,
+        "originalPolicy": "default-src 'self'; script-src 'self' 'nonce-454b0089fa514ea090a53e4d8e6eeeb9'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self' wss:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; frame-src 'none'; form-action 'self'"
+      }
+    ],
+    "hydrated": "ready",
+    "hydrationFailed": null,
+    "title": "CinaToken — Unified AI gateway",
+    "h1": "Bring your AI resources together."
+  },
+  "outcome": "OBSERVED",
+  "contextClosed": true,
+  "finishedAt": "2026-10-06T11:43:59.285Z"
+}

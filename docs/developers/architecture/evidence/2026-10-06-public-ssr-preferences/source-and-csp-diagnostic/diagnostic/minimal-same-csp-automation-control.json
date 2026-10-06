@@ -1,0 +1,202 @@
+{
+  "mode": "minimal-same-csp-automation-control",
+  "at": "2026-10-06T11:43:59.287Z",
+  "pauseEvents": [],
+  "scripts": [
+    {
+      "scriptId": "3",
+      "url": "",
+      "startLine": 0,
+      "startColumn": 0,
+      "endLine": 4,
+      "endColumn": 9,
+      "hash": "9e22374178d30310bf36b9ad25aeb7e094195c70fae675a5d8e48cad46b77308",
+      "sourceMapURL": "",
+      "executionContextId": 1
+    },
+    {
+      "scriptId": "4",
+      "url": "",
+      "startLine": 0,
+      "startColumn": 0,
+      "endLine": 5,
+      "endColumn": 9,
+      "hash": "488fe0c28830ac45cd62c907ebc421dc4e08031d8e8acf69482258dda8f194d7",
+      "sourceMapURL": "",
+      "executionContextId": 1
+    },
+    {
+      "scriptId": "3",
+      "url": "",
+      "startLine": 0,
+      "startColumn": 0,
+      "endLine": 0,
+      "endColumn": 0,
+      "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sourceMapURL": "",
+      "executionContextId": 2
+    },
+    {
+      "scriptId": "4",
+      "url": "",
+      "startLine": 0,
+      "startColumn": 0,
+      "endLine": 4,
+      "endColumn": 9,
+      "hash": "9e22374178d30310bf36b9ad25aeb7e094195c70fae675a5d8e48cad46b77308",
+      "sourceMapURL": "",
+      "executionContextId": 1
+    },
+    {
+      "scriptId": "5",
+      "url": "",
+      "startLine": 0,
+      "startColumn": 0,
+      "endLine": 5,
+      "endColumn": 9,
+      "hash": "488fe0c28830ac45cd62c907ebc421dc4e08031d8e8acf69482258dda8f194d7",
+      "sourceMapURL": "",
+      "executionContextId": 1
+    },
+    {
+      "scriptId": "6",
+      "url": "",
+      "startLine": 0,
+      "startColumn": 0,
+      "endLine": 8289,
+      "endColumn": 6,
+      "hash": "ae82aac797443816587dc0cc98faaaf7462ffdd368f68b59d6ceace83dd46225",
+      "sourceMapURL": "",
+      "executionContextId": 1
+    },
+    {
+      "scriptId": "7",
+      "url": "",
+      "startLine": 0,
+      "startColumn": 0,
+      "endLine": 345,
+      "endColumn": 11,
+      "hash": "fd3b882cab3a898b34e827ab330d9fb152340d61f7d0c3cec30247018af131e4",
+      "sourceMapURL": "",
+      "executionContextId": 1
+    },
+    {
+      "scriptId": "14",
+      "url": "",
+      "startLine": 0,
+      "startColumn": 0,
+      "endLine": 0,
+      "endColumn": 61,
+      "hash": "a3c74b2aecbdd0b615e6a2eed4788a374366e25d5fdcd45dca45d55fbb119046",
+      "sourceMapURL": "",
+      "executionContextId": 1
+    },
+    {
+      "scriptId": "15",
+      "url": "",
+      "startLine": 0,
+      "startColumn": 0,
+      "endLine": 43,
+      "endColumn": 11,
+      "hash": "4029e8c7ff767ef93a9e82b83e55f007929e5c8ece48f220db6f88c94c384ca5",
+      "sourceMapURL": "",
+      "executionContextId": 1
+    },
+    {
+      "scriptId": "16",
+      "url": "",
+      "startLine": 0,
+      "startColumn": 0,
+      "endLine": 0,
+      "endColumn": 74,
+      "hash": "d0a8dc19950bc91f2f5b7ce1cc6e263e6e3853f8edf84cf31e00ba0f106803f4",
+      "sourceMapURL": "",
+      "executionContextId": 1
+    },
+    {
+      "scriptId": "23",
+      "url": "",
+      "startLine": 0,
+      "startColumn": 0,
+      "endLine": 0,
+      "endColumn": 61,
+      "hash": "a3c74b2aecbdd0b615e6a2eed4788a374366e25d5fdcd45dca45d55fbb119046",
+      "sourceMapURL": "",
+      "executionContextId": 1
+    },
+    {
+      "scriptId": "24",
+      "url": "",
+      "startLine": 0,
+      "startColumn": 0,
+      "endLine": 0,
+      "endColumn": 15,
+      "hash": "3f85a97b5a0c3c734908f4e84a1d80d348a63deb166b4bc8dc81ffd782bab2a0",
+      "sourceMapURL": "",
+      "executionContextId": 1
+    },
+    {
+      "scriptId": "30",
+      "url": "",
+      "startLine": 0,
+      "startColumn": 0,
+      "endLine": 0,
+      "endColumn": 61,
+      "hash": "a3c74b2aecbdd0b615e6a2eed4788a374366e25d5fdcd45dca45d55fbb119046",
+      "sourceMapURL": "",
+      "executionContextId": 1
+    },
+    {
+      "scriptId": "31",
+      "url": "",
+      "startLine": 0,
+      "startColumn": 0,
+      "endLine": 0,
+      "endColumn": 263,
+      "hash": "54584e18e3b906c239bc127eb8d36249d3285dc6f902cbf006b08eeaec245ce7",
+      "sourceMapURL": "",
+      "executionContextId": 1
+    }
+  ],
+  "responses": [
+    {
+      "url": "http://127.0.0.1:57478/en",
+      "status": 200,
+      "type": "document"
+    }
+  ],
+  "console": [],
+  "pageErrors": [],
+  "blocked": [],
+  "stages": [
+    {
+      "stage": "before-goto",
+      "at": "2026-10-06T11:43:59.538Z"
+    },
+    {
+      "stage": "after-goto-no-page-evaluation",
+      "at": "2026-10-06T11:43:59.597Z",
+      "pauseCount": 0
+    },
+    {
+      "stage": "after-host-wait-no-page-evaluation",
+      "at": "2026-10-06T11:44:01.105Z",
+      "pauseCount": 0
+    },
+    {
+      "stage": "before-first-observational-page-evaluate",
+      "at": "2026-10-06T11:44:01.139Z",
+      "pauseCount": 0
+    }
+  ],
+  "dom": {
+    "violations": [],
+    "hydrated": null,
+    "hydrationFailed": null,
+    "title": "Owned automation control",
+    "h1": "Owned automation control"
+  },
+  "outcome": "OBSERVED",
+  "contextClosed": true,
+  "finishedAt": "2026-10-06T11:44:01.155Z"
+}

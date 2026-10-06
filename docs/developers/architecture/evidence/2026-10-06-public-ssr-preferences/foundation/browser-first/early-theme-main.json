@@ -1,0 +1,2977 @@
+{
+  "id": "early-theme-main",
+  "at": "2026-10-06T11:38:52.450Z",
+  "kind": "theme",
+  "javaScriptEnabled": true,
+  "gate": "main",
+  "syntheticPreferenceCookies": [],
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  },
+  "colorScheme": "light",
+  "cookieSetterFailureInjected": false,
+  "navigationRequests": [
+    {
+      "sequence": 1,
+      "at": "2026-10-06T11:38:52.843Z",
+      "url": "http://127.0.0.1:64896/en",
+      "method": "GET",
+      "resourceType": "document",
+      "documentAtStart": "nullblank",
+      "finished": true,
+      "failed": false
+    }
+  ],
+  "requestStarts": [
+    {
+      "sequence": 1,
+      "at": "2026-10-06T11:38:52.843Z",
+      "url": "http://127.0.0.1:64896/en",
+      "method": "GET",
+      "resourceType": "document",
+      "documentAtStart": "nullblank",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 2,
+      "at": "2026-10-06T11:38:52.901Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/css/index.3797954594.css",
+      "method": "GET",
+      "resourceType": "stylesheet",
+      "documentAtStart": "http://127.0.0.1:64896/en",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 3,
+      "at": "2026-10-06T11:38:52.901Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/index.fdfed7ea65.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/en",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 4,
+      "at": "2026-10-06T11:38:53.312Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/lib-react.6356ddf42c.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/en",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 5,
+      "at": "2026-10-06T11:38:53.313Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/6u.79a8483cd5.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/en",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 6,
+      "at": "2026-10-06T11:38:53.315Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/qi.78b72ac6dc.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/en",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 7,
+      "at": "2026-10-06T11:38:53.315Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/4b.c6831b40a7.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/en",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 8,
+      "at": "2026-10-06T11:38:53.686Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/ta.350a9de34e.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/en",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 9,
+      "at": "2026-10-06T11:38:53.687Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/cn.e7cc2f2c5b.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/en",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 10,
+      "at": "2026-10-06T11:38:53.688Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/fd.7dd19fd28b.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/en",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 11,
+      "at": "2026-10-06T11:38:53.789Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/30.5583d3d88f.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/en",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 12,
+      "at": "2026-10-06T11:38:53.790Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/hw.419e09a2b0.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/en",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 13,
+      "at": "2026-10-06T11:38:53.790Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/r4.4d0fa2a207.js",
+      "method": "GET",
+      "resourceType": "script",
+      "documentAtStart": "http://127.0.0.1:64896/en",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 14,
+      "at": "2026-10-06T11:38:53.896Z",
+      "url": "http://127.0.0.1:64896/web-assets/logo.png",
+      "method": "GET",
+      "resourceType": "other",
+      "documentAtStart": "http://127.0.0.1:64896/en",
+      "finished": true,
+      "failed": false
+    }
+  ],
+  "responses": [
+    {
+      "sequence": 1,
+      "url": "http://127.0.0.1:64896/en",
+      "status": 200,
+      "type": "document",
+      "at": "2026-10-06T11:38:52.877Z"
+    },
+    {
+      "sequence": 2,
+      "url": "http://127.0.0.1:64896/web-assets/static/css/index.3797954594.css",
+      "status": 200,
+      "type": "stylesheet",
+      "at": "2026-10-06T11:38:53.000Z"
+    },
+    {
+      "sequence": 3,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/index.fdfed7ea65.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:38:53.310Z"
+    },
+    {
+      "sequence": 4,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/lib-react.6356ddf42c.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:38:53.479Z"
+    },
+    {
+      "sequence": 5,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/6u.79a8483cd5.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:38:53.583Z"
+    },
+    {
+      "sequence": 6,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/qi.78b72ac6dc.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:38:53.610Z"
+    },
+    {
+      "sequence": 7,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/4b.c6831b40a7.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:38:53.645Z"
+    },
+    {
+      "sequence": 8,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/ta.350a9de34e.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:38:53.722Z"
+    },
+    {
+      "sequence": 9,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/cn.e7cc2f2c5b.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:38:53.748Z"
+    },
+    {
+      "sequence": 10,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/fd.7dd19fd28b.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:38:53.769Z"
+    },
+    {
+      "sequence": 11,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/30.5583d3d88f.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:38:53.827Z"
+    },
+    {
+      "sequence": 12,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/hw.419e09a2b0.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:38:53.846Z"
+    },
+    {
+      "sequence": 13,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/r4.4d0fa2a207.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:38:53.866Z"
+    },
+    {
+      "sequence": 14,
+      "url": "http://127.0.0.1:64896/web-assets/logo.png",
+      "status": 200,
+      "type": "other",
+      "at": "2026-10-06T11:38:53.904Z"
+    }
+  ],
+  "assetResponses": [
+    {
+      "sequence": 2,
+      "url": "http://127.0.0.1:64896/web-assets/static/css/index.3797954594.css",
+      "status": 200,
+      "type": "stylesheet",
+      "at": "2026-10-06T11:38:53.000Z",
+      "bytes": 237922,
+      "sha256": "6ed64a183f0a48c55281a9e7d63c73aeecf0cb3b2f8b131bd0470eb27e441863"
+    },
+    {
+      "sequence": 3,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/index.fdfed7ea65.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:38:53.310Z",
+      "bytes": 4827,
+      "sha256": "0ad49911dc6bd54ef0275370d61e99dc1d12ded0604667132f8a97b4fbae6e95"
+    },
+    {
+      "sequence": 4,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/lib-react.6356ddf42c.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:38:53.479Z",
+      "bytes": 218895,
+      "sha256": "2dd3207f37d0618a8b5284cbb4e288af0bcb6f785bdc350aa09489ae6a098a2d"
+    },
+    {
+      "sequence": 5,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/6u.79a8483cd5.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:38:53.583Z",
+      "bytes": 238399,
+      "sha256": "4486ba3f38dc424c597c1ce70add2641e5ee3ba901c9d5d9572bdfd5d1956727"
+    },
+    {
+      "sequence": 6,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/qi.78b72ac6dc.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:38:53.610Z",
+      "bytes": 73256,
+      "sha256": "04d7645d408798891e9135f43dbb81d18573df94afa8741f9c1b3ba028bd64eb"
+    },
+    {
+      "sequence": 7,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/4b.c6831b40a7.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:38:53.645Z",
+      "bytes": 21425,
+      "sha256": "6012b2b1602d0e3943381c1d39960196a1a15b5731b06212f39641ca903226a6"
+    },
+    {
+      "sequence": 8,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/ta.350a9de34e.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:38:53.722Z",
+      "bytes": 11558,
+      "sha256": "ecb75b65763428076ccaad14a0ff6c1a0f6adedf73589994e83f8ba23fe9125f"
+    },
+    {
+      "sequence": 9,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/cn.e7cc2f2c5b.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:38:53.748Z",
+      "bytes": 10516,
+      "sha256": "77fb021e8fdcc3f4d49dcdf8957941aa5785d35529977b9ba82ed71be2b18412"
+    },
+    {
+      "sequence": 10,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/fd.7dd19fd28b.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:38:53.769Z",
+      "bytes": 1743,
+      "sha256": "7fe20b44fce11ee1b5b18158d5a0af4ffbd116fc3a38b33a58c5b414d5af16ad"
+    },
+    {
+      "sequence": 11,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/30.5583d3d88f.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:38:53.827Z",
+      "bytes": 27685,
+      "sha256": "537b78fb6c5cd1fa97f2e85c469d1f50b4ad44d35ccb1e7a116525f4047f4a41"
+    },
+    {
+      "sequence": 12,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/hw.419e09a2b0.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:38:53.846Z",
+      "bytes": 12739,
+      "sha256": "2605cfc1d8276e7a7fb91687337dced9df8282c7785f58fce0851cf6a1353233"
+    },
+    {
+      "sequence": 13,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/async/r4.4d0fa2a207.js",
+      "status": 200,
+      "type": "script",
+      "at": "2026-10-06T11:38:53.866Z",
+      "bytes": 5119,
+      "sha256": "889939cb0a90d434e1bf81052f5a834b07ae638f671c72bc64121accc4828886"
+    }
+  ],
+  "failedRequests": [],
+  "policyViolations": [
+    {
+      "effectiveDirective": "script-src",
+      "violatedDirective": "script-src",
+      "blockedURI": "eval",
+      "disposition": "enforce",
+      "sample": ""
+    }
+  ],
+  "console": [],
+  "pageErrors": [],
+  "gateRequests": [
+    {
+      "sequence": 3,
+      "url": "http://127.0.0.1:64896/web-assets/static/js/index.fdfed7ea65.js",
+      "documentAtStart": "http://127.0.0.1:64896/en",
+      "gate": "main",
+      "isEntry": true,
+      "held": true,
+      "pending": false,
+      "fulfilled": true,
+      "at": "2026-10-06T11:38:52.902Z",
+      "releaseAt": "2026-10-06T11:38:53.272Z"
+    }
+  ],
+  "blockedRequests": [],
+  "evidenceErrors": [],
+  "expectedAnonymous401": [],
+  "observations": [
+    {
+      "stage": "actual-document-security-contract",
+      "sequence": 1,
+      "url": "http://127.0.0.1:64896/en",
+      "status": 200,
+      "type": "document",
+      "at": "2026-10-06T11:38:52.877Z",
+      "headers": {
+        "connection": "keep-alive",
+        "date": "Tue, 06 Oct 2026 11:38:52 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked",
+        "cache-control": "no-store",
+        "content-security-policy": "default-src 'self'; script-src 'self' 'nonce-1b4f0fd8391c49eea47fe6ba6b0273eb'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self' wss:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; frame-src 'none'; form-action 'self'",
+        "content-type": "text/html; charset=utf-8",
+        "cross-origin-opener-policy": "same-origin",
+        "cross-origin-resource-policy": "same-origin",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY"
+      },
+      "bytes": 27365,
+      "sha256": "94b38797fe8a4396c006301ef6554a2782b5ae9e97ac3ad6719044ee9f5a86fc",
+      "contract": {
+        "nonce": "1b4f0fd8391c49eea47fe6ba6b0273eb",
+        "scriptCount": 6,
+        "entryPaths": [
+          "/web-assets/static/js/index.fdfed7ea65.js"
+        ]
+      },
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\browser-local\\early-theme-main-document-1.html"
+    },
+    {
+      "stage": "before-early-action",
+      "at": "2026-10-06T11:38:53.150Z",
+      "url": "http://127.0.0.1:64896/en",
+      "readyState": "interactive",
+      "locale": "en",
+      "classes": [
+        "light"
+      ],
+      "publicHydration": null,
+      "hydrationFailure": null,
+      "theme": "system",
+      "localeControl": "en",
+      "themeCookie": null,
+      "localeCookie": null,
+      "title": "CinaToken — Unified AI gateway",
+      "canonical": "https://cinatoken-public-preferences-fixture.test/en",
+      "overflow": false,
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "mainTextLength": 2859,
+      "heading": "Bring your AI resources together.",
+      "controller": {
+        "present": true,
+        "syncControls": true,
+        "dispose": true
+      },
+      "observation": {
+        "themeFrames": [],
+        "policyViolations": [],
+        "pageshow": [],
+        "cookieSetterFailures": 0
+      }
+    },
+    {
+      "stage": "initial-preference",
+      "at": "2026-10-06T11:38:53.153Z",
+      "url": "http://127.0.0.1:64896/en",
+      "readyState": "interactive",
+      "locale": "en",
+      "classes": [
+        "light"
+      ],
+      "publicHydration": null,
+      "hydrationFailure": null,
+      "theme": "system",
+      "localeControl": "en",
+      "themeCookie": null,
+      "localeCookie": null,
+      "title": "CinaToken — Unified AI gateway",
+      "canonical": "https://cinatoken-public-preferences-fixture.test/en",
+      "overflow": false,
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "mainTextLength": 2859,
+      "heading": "Bring your AI resources together.",
+      "controller": {
+        "present": true,
+        "syncControls": true,
+        "dispose": true
+      },
+      "observation": {
+        "themeFrames": [],
+        "policyViolations": [],
+        "pageshow": [],
+        "cookieSetterFailures": 0
+      }
+    },
+    {
+      "stage": "theme-accepted-dark",
+      "at": "2026-10-06T11:38:53.190Z",
+      "url": "http://127.0.0.1:64896/en",
+      "readyState": "interactive",
+      "locale": "en",
+      "classes": [
+        "dark"
+      ],
+      "publicHydration": null,
+      "hydrationFailure": null,
+      "theme": "dark",
+      "localeControl": "en",
+      "themeCookie": "cinatoken-theme=dark",
+      "localeCookie": null,
+      "title": "CinaToken — Unified AI gateway",
+      "canonical": "https://cinatoken-public-preferences-fixture.test/en",
+      "overflow": false,
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "mainTextLength": 2859,
+      "heading": "Bring your AI resources together.",
+      "controller": {
+        "present": true,
+        "syncControls": true,
+        "dispose": true
+      },
+      "observation": {
+        "themeFrames": [],
+        "policyViolations": [],
+        "pageshow": [],
+        "cookieSetterFailures": 0
+      }
+    },
+    {
+      "stage": "hydrated",
+      "at": "2026-10-06T11:38:53.901Z",
+      "url": "http://127.0.0.1:64896/en",
+      "readyState": "complete",
+      "locale": "en",
+      "classes": [
+        "dark"
+      ],
+      "publicHydration": "ready",
+      "hydrationFailure": null,
+      "theme": "dark",
+      "localeControl": "en",
+      "themeCookie": "cinatoken-theme=dark",
+      "localeCookie": null,
+      "title": "CinaToken — Unified AI gateway",
+      "canonical": "https://cinatoken-public-preferences-fixture.test/en",
+      "overflow": false,
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "mainTextLength": 2859,
+      "heading": "Bring your AI resources together.",
+      "controller": {
+        "present": true,
+        "syncControls": true,
+        "dispose": true
+      },
+      "observation": {
+        "themeFrames": [
+          {
+            "at": 363.40000000596046,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 379,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 395.90000000596046,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 413.6000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 429.40000000596046,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 445.40000000596046,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 461.90000000596046,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 479.1000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 495.6000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 512.9000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 529.3000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 546.9000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 561.8000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 579.1000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 595.4000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 611.9000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 628.8000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 646.7000000029802,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 661.8000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 679.3000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 695.1000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 711.9000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 728.8000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 746.4000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 762.3000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 779.6000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 795.5,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 850.3000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 850.6000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 862.6000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 878.7000000029802,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 895.9000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 912.1000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 928.4000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 952.2000000029802,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 962.5,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 979.3000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 995.7000000029802,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 1012.8000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 1029.2000000029802,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 1054.5,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": "ready"
+          }
+        ],
+        "policyViolations": [
+          {
+            "effectiveDirective": "script-src",
+            "violatedDirective": "script-src",
+            "blockedURI": "eval",
+            "disposition": "enforce",
+            "sample": ""
+          }
+        ],
+        "pageshow": [
+          {
+            "persisted": false,
+            "at": 1045.5
+          }
+        ],
+        "cookieSetterFailures": 0
+      }
+    },
+    {
+      "stage": "theme-no-rollback-dark",
+      "at": "2026-10-06T11:38:53.936Z",
+      "url": "http://127.0.0.1:64896/en",
+      "readyState": "complete",
+      "locale": "en",
+      "classes": [
+        "dark"
+      ],
+      "publicHydration": "ready",
+      "hydrationFailure": null,
+      "theme": "dark",
+      "localeControl": "en",
+      "themeCookie": "cinatoken-theme=dark",
+      "localeCookie": null,
+      "title": "CinaToken — Unified AI gateway",
+      "canonical": "https://cinatoken-public-preferences-fixture.test/en",
+      "overflow": false,
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "mainTextLength": 2859,
+      "heading": "Bring your AI resources together.",
+      "controller": {
+        "present": true,
+        "syncControls": true,
+        "dispose": true
+      },
+      "observation": {
+        "themeFrames": [
+          {
+            "at": 363.40000000596046,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 379,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 395.90000000596046,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 413.6000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 429.40000000596046,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 445.40000000596046,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 461.90000000596046,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 479.1000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 495.6000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 512.9000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 529.3000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 546.9000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 561.8000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 579.1000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 595.4000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 611.9000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 628.8000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 646.7000000029802,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 661.8000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 679.3000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 695.1000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 711.9000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 728.8000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 746.4000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 762.3000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 779.6000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 795.5,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 850.3000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 850.6000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 862.6000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 878.7000000029802,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 895.9000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 912.1000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 928.4000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 952.2000000029802,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 962.5,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 979.3000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 995.7000000029802,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 1012.8000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 1029.2000000029802,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 1054.5,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": "ready"
+          },
+          {
+            "at": 1063.9000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": "ready"
+          },
+          {
+            "at": 1079.300000011921,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": "ready"
+          },
+          {
+            "at": 1095.7000000029802,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": "ready"
+          }
+        ],
+        "policyViolations": [
+          {
+            "effectiveDirective": "script-src",
+            "violatedDirective": "script-src",
+            "blockedURI": "eval",
+            "disposition": "enforce",
+            "sample": ""
+          }
+        ],
+        "pageshow": [
+          {
+            "persisted": false,
+            "at": 1045.5
+          }
+        ],
+        "cookieSetterFailures": 0
+      }
+    },
+    {
+      "stage": "theme-accepted-light",
+      "at": "2026-10-06T11:38:53.958Z",
+      "url": "http://127.0.0.1:64896/en",
+      "readyState": "complete",
+      "locale": "en",
+      "classes": [
+        "light"
+      ],
+      "publicHydration": "ready",
+      "hydrationFailure": null,
+      "theme": "light",
+      "localeControl": "en",
+      "themeCookie": "cinatoken-theme=light",
+      "localeCookie": null,
+      "title": "CinaToken — Unified AI gateway",
+      "canonical": "https://cinatoken-public-preferences-fixture.test/en",
+      "overflow": false,
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "mainTextLength": 2859,
+      "heading": "Bring your AI resources together.",
+      "controller": {
+        "present": true,
+        "syncControls": true,
+        "dispose": true
+      },
+      "observation": {
+        "themeFrames": [
+          {
+            "at": 363.40000000596046,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 379,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 395.90000000596046,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 413.6000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 429.40000000596046,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 445.40000000596046,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 461.90000000596046,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 479.1000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 495.6000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 512.9000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 529.3000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 546.9000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 561.8000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 579.1000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 595.4000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 611.9000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 628.8000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 646.7000000029802,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 661.8000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 679.3000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 695.1000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 711.9000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 728.8000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 746.4000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 762.3000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 779.6000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 795.5,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 850.3000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 850.6000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 862.6000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 878.7000000029802,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 895.9000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 912.1000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 928.4000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 952.2000000029802,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 962.5,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 979.3000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 995.7000000029802,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 1012.8000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 1029.2000000029802,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 1054.5,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": "ready"
+          },
+          {
+            "at": 1063.9000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": "ready"
+          },
+          {
+            "at": 1079.300000011921,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": "ready"
+          },
+          {
+            "at": 1095.7000000029802,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": "ready"
+          }
+        ],
+        "policyViolations": [
+          {
+            "effectiveDirective": "script-src",
+            "violatedDirective": "script-src",
+            "blockedURI": "eval",
+            "disposition": "enforce",
+            "sample": ""
+          }
+        ],
+        "pageshow": [
+          {
+            "persisted": false,
+            "at": 1045.5
+          }
+        ],
+        "cookieSetterFailures": 0
+      }
+    },
+    {
+      "stage": "system-media-dark",
+      "at": "2026-10-06T11:38:54.007Z",
+      "url": "http://127.0.0.1:64896/en",
+      "readyState": "complete",
+      "locale": "en",
+      "classes": [
+        "dark"
+      ],
+      "publicHydration": "ready",
+      "hydrationFailure": null,
+      "theme": "system",
+      "localeControl": "en",
+      "themeCookie": "cinatoken-theme=system",
+      "localeCookie": null,
+      "title": "CinaToken — Unified AI gateway",
+      "canonical": "https://cinatoken-public-preferences-fixture.test/en",
+      "overflow": false,
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "mainTextLength": 2859,
+      "heading": "Bring your AI resources together.",
+      "controller": {
+        "present": true,
+        "syncControls": true,
+        "dispose": true
+      },
+      "observation": {
+        "themeFrames": [
+          {
+            "at": 363.40000000596046,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 379,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 395.90000000596046,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 413.6000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 429.40000000596046,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 445.40000000596046,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 461.90000000596046,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 479.1000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 495.6000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 512.9000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 529.3000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 546.9000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 561.8000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 579.1000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 595.4000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 611.9000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 628.8000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 646.7000000029802,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 661.8000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 679.3000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 695.1000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 711.9000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 728.8000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 746.4000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 762.3000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 779.6000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 795.5,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 850.3000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 850.6000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 862.6000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 878.7000000029802,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 895.9000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 912.1000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 928.4000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 952.2000000029802,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 962.5,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 979.3000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 995.7000000029802,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 1012.8000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 1029.2000000029802,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 1054.5,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": "ready"
+          },
+          {
+            "at": 1063.9000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": "ready"
+          },
+          {
+            "at": 1079.300000011921,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": "ready"
+          },
+          {
+            "at": 1095.7000000029802,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": "ready"
+          }
+        ],
+        "policyViolations": [
+          {
+            "effectiveDirective": "script-src",
+            "violatedDirective": "script-src",
+            "blockedURI": "eval",
+            "disposition": "enforce",
+            "sample": ""
+          }
+        ],
+        "pageshow": [
+          {
+            "persisted": false,
+            "at": 1045.5
+          }
+        ],
+        "cookieSetterFailures": 0
+      }
+    },
+    {
+      "stage": "final",
+      "at": "2026-10-06T11:38:54.041Z",
+      "url": "http://127.0.0.1:64896/en",
+      "readyState": "complete",
+      "locale": "en",
+      "classes": [
+        "light"
+      ],
+      "publicHydration": "ready",
+      "hydrationFailure": null,
+      "theme": "system",
+      "localeControl": "en",
+      "themeCookie": "cinatoken-theme=system",
+      "localeCookie": null,
+      "title": "CinaToken — Unified AI gateway",
+      "canonical": "https://cinatoken-public-preferences-fixture.test/en",
+      "overflow": false,
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "mainTextLength": 2859,
+      "heading": "Bring your AI resources together.",
+      "controller": {
+        "present": true,
+        "syncControls": true,
+        "dispose": true
+      },
+      "observation": {
+        "themeFrames": [
+          {
+            "at": 363.40000000596046,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 379,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 395.90000000596046,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 413.6000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 429.40000000596046,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 445.40000000596046,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 461.90000000596046,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 479.1000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 495.6000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 512.9000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 529.3000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 546.9000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 561.8000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 579.1000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 595.4000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 611.9000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 628.8000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 646.7000000029802,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 661.8000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 679.3000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 695.1000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 711.9000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 728.8000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 746.4000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 762.3000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 779.6000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 795.5,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 850.3000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 850.6000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 862.6000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 878.7000000029802,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 895.9000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 912.1000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 928.4000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 952.2000000029802,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 962.5,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 979.3000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 995.7000000029802,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 1012.8000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 1029.2000000029802,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 1054.5,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": "ready"
+          },
+          {
+            "at": 1063.9000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": "ready"
+          },
+          {
+            "at": 1079.300000011921,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": "ready"
+          },
+          {
+            "at": 1095.7000000029802,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": "ready"
+          }
+        ],
+        "policyViolations": [
+          {
+            "effectiveDirective": "script-src",
+            "violatedDirective": "script-src",
+            "blockedURI": "eval",
+            "disposition": "enforce",
+            "sample": ""
+          }
+        ],
+        "pageshow": [
+          {
+            "persisted": false,
+            "at": 1045.5
+          }
+        ],
+        "cookieSetterFailures": 0
+      }
+    },
+    {
+      "stage": "failure",
+      "at": "2026-10-06T11:38:54.047Z",
+      "url": "http://127.0.0.1:64896/en",
+      "readyState": "complete",
+      "locale": "en",
+      "classes": [
+        "light"
+      ],
+      "publicHydration": "ready",
+      "hydrationFailure": null,
+      "theme": "system",
+      "localeControl": "en",
+      "themeCookie": "cinatoken-theme=system",
+      "localeCookie": null,
+      "title": "CinaToken — Unified AI gateway",
+      "canonical": "https://cinatoken-public-preferences-fixture.test/en",
+      "overflow": false,
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "mainTextLength": 2859,
+      "heading": "Bring your AI resources together.",
+      "controller": {
+        "present": true,
+        "syncControls": true,
+        "dispose": true
+      },
+      "observation": {
+        "themeFrames": [
+          {
+            "at": 363.40000000596046,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 379,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 395.90000000596046,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 413.6000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 429.40000000596046,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 445.40000000596046,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 461.90000000596046,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 479.1000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 495.6000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 512.9000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 529.3000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 546.9000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 561.8000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 579.1000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 595.4000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 611.9000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 628.8000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 646.7000000029802,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 661.8000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 679.3000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 695.1000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 711.9000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 728.8000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 746.4000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 762.3000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 779.6000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 795.5,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 850.3000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 850.6000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 862.6000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 878.7000000029802,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 895.9000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 912.1000000089407,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 928.4000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 952.2000000029802,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 962.5,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 979.3000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 995.7000000029802,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 1012.8000000119209,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 1029.2000000029802,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": null
+          },
+          {
+            "at": 1054.5,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": "ready"
+          },
+          {
+            "at": 1063.9000000059605,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": "ready"
+          },
+          {
+            "at": 1079.300000011921,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": "ready"
+          },
+          {
+            "at": 1095.7000000029802,
+            "classes": [
+              "dark"
+            ],
+            "theme": "dark",
+            "hydration": "ready"
+          }
+        ],
+        "policyViolations": [
+          {
+            "effectiveDirective": "script-src",
+            "violatedDirective": "script-src",
+            "blockedURI": "eval",
+            "disposition": "enforce",
+            "sample": ""
+          }
+        ],
+        "pageshow": [
+          {
+            "persisted": false,
+            "at": 1045.5
+          }
+        ],
+        "cookieSetterFailures": 0
+      }
+    }
+  ],
+  "screenshots": [
+    {
+      "stage": "accepted-before-client",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\browser-local\\early-theme-main-accepted-before-client.png",
+      "bytes": 51212,
+      "sha256": "fb4b47c9655ae7b39f88a70ce4c5f05dbac182edc02dc7fad358e8ecca508bbc"
+    },
+    {
+      "stage": "failure",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\browser-local\\early-theme-main-failure.png",
+      "bytes": 50268,
+      "sha256": "0e706e0cc85748aa6bec5e42cbb3adbfce5924f315228e70ddb11cb27f6e78a2"
+    }
+  ],
+  "checks": {
+    "actualScriptHeldBeforeAction": true,
+    "themeStableThroughHydration": true,
+    "serverH1AndIDsRetained": true,
+    "systemMediaChange": true
+  },
+  "timedOut": false,
+  "gatePendingBeforeAction": 1,
+  "earlyActionAt": "2026-10-06T11:38:53.193Z",
+  "gatePendingAfterAcceptedAction": 1,
+  "outcome": "FAIL",
+  "intendedExitCode": 1,
+  "failure": {
+    "name": "AssertionError",
+    "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ [\n+   {\n+     blockedURI: 'eval',\n+     disposition: 'enforce',\n+     effectiveDirective: 'script-src',\n+     sample: '',\n+     violatedDirective: 'script-src'\n+   }\n+ ]\n- []\n",
+    "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ [\n+   {\n+     blockedURI: 'eval',\n+     disposition: 'enforce',\n+     effectiveDirective: 'script-src',\n+     sample: '',\n+     violatedDirective: 'script-src'\n+   }\n+ ]\n- []\n\n    at checkNetwork (file:///C:/Users/cina/AppData/Local/Temp/cinatoken-public-early-controls-browser-ea4cfe25cf774b9fb7d91829a7aa5e19/run-public-early-controls.mjs:329:12)\n    at async file:///C:/Users/cina/AppData/Local/Temp/cinatoken-public-early-controls-browser-ea4cfe25cf774b9fb7d91829a7aa5e19/run-public-early-controls.mjs:615:21\n    at async runCase (file:///C:/Users/cina/AppData/Local/Temp/cinatoken-public-early-controls-browser-ea4cfe25cf774b9fb7d91829a7aa5e19/run-public-early-controls.mjs:622:5)\n    at async file:///C:/Users/cina/AppData/Local/Temp/cinatoken-public-early-controls-browser-ea4cfe25cf774b9fb7d91829a7aa5e19/run-public-early-controls.mjs:693:5"
+  },
+  "contextClosed": true,
+  "gateCounts": {
+    "held": 1,
+    "continuedAfterRelease": 1,
+    "expectedNavigationAborts": 0,
+    "pendingAtEnd": 0,
+    "activeRouteTasksAtEnd": 0
+  },
+  "finishedAt": "2026-10-06T11:38:54.106Z"
+}

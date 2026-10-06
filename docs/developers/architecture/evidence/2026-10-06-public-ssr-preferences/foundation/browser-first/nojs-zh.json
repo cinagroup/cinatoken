@@ -1,0 +1,219 @@
+{
+  "id": "nojs-zh",
+  "at": "2026-10-06T11:39:17.195Z",
+  "kind": "nojs",
+  "javaScriptEnabled": false,
+  "gate": null,
+  "syntheticPreferenceCookies": [],
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "colorScheme": "light",
+  "cookieSetterFailureInjected": false,
+  "navigationRequests": [
+    {
+      "sequence": 1,
+      "at": "2026-10-06T11:39:17.383Z",
+      "url": "http://127.0.0.1:64896/zh/models",
+      "method": "GET",
+      "resourceType": "document",
+      "documentAtStart": "nullblank",
+      "finished": true,
+      "failed": false
+    }
+  ],
+  "requestStarts": [
+    {
+      "sequence": 1,
+      "at": "2026-10-06T11:39:17.383Z",
+      "url": "http://127.0.0.1:64896/zh/models",
+      "method": "GET",
+      "resourceType": "document",
+      "documentAtStart": "nullblank",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 2,
+      "at": "2026-10-06T11:39:17.422Z",
+      "url": "http://127.0.0.1:64896/web-assets/static/css/index.3797954594.css",
+      "method": "GET",
+      "resourceType": "stylesheet",
+      "documentAtStart": "http://127.0.0.1:64896/zh/models",
+      "finished": true,
+      "failed": false
+    },
+    {
+      "sequence": 3,
+      "at": "2026-10-06T11:39:17.544Z",
+      "url": "http://127.0.0.1:64896/web-assets/logo.png",
+      "method": "GET",
+      "resourceType": "other",
+      "documentAtStart": "http://127.0.0.1:64896/zh/models",
+      "finished": true,
+      "failed": false
+    }
+  ],
+  "responses": [
+    {
+      "sequence": 1,
+      "url": "http://127.0.0.1:64896/zh/models",
+      "status": 200,
+      "type": "document",
+      "at": "2026-10-06T11:39:17.402Z"
+    },
+    {
+      "sequence": 2,
+      "url": "http://127.0.0.1:64896/web-assets/static/css/index.3797954594.css",
+      "status": 200,
+      "type": "stylesheet",
+      "at": "2026-10-06T11:39:17.480Z"
+    },
+    {
+      "sequence": 3,
+      "url": "http://127.0.0.1:64896/web-assets/logo.png",
+      "status": 200,
+      "type": "other",
+      "at": "2026-10-06T11:39:17.556Z"
+    }
+  ],
+  "assetResponses": [
+    {
+      "sequence": 2,
+      "url": "http://127.0.0.1:64896/web-assets/static/css/index.3797954594.css",
+      "status": 200,
+      "type": "stylesheet",
+      "at": "2026-10-06T11:39:17.480Z",
+      "bytes": 237922,
+      "sha256": "6ed64a183f0a48c55281a9e7d63c73aeecf0cb3b2f8b131bd0470eb27e441863"
+    }
+  ],
+  "failedRequests": [],
+  "policyViolations": [],
+  "console": [],
+  "pageErrors": [],
+  "gateRequests": [],
+  "blockedRequests": [],
+  "evidenceErrors": [],
+  "expectedAnonymous401": [],
+  "observations": [
+    {
+      "stage": "actual-document-security-contract",
+      "sequence": 1,
+      "url": "http://127.0.0.1:64896/zh/models",
+      "status": 200,
+      "type": "document",
+      "at": "2026-10-06T11:39:17.402Z",
+      "headers": {
+        "connection": "keep-alive",
+        "date": "Tue, 06 Oct 2026 11:39:17 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked",
+        "cache-control": "no-store",
+        "content-security-policy": "default-src 'self'; script-src 'self' 'nonce-057f04684f764274b02d2edbf56aab2f'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self' wss:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; frame-src 'none'; form-action 'self'",
+        "content-type": "text/html; charset=utf-8",
+        "cross-origin-opener-policy": "same-origin",
+        "cross-origin-resource-policy": "same-origin",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY"
+      },
+      "bytes": 22370,
+      "sha256": "7d1e01d784c2207c5dca20a02adde6d19114c650102174d6a10ea2133bbe96c5",
+      "contract": {
+        "nonce": "057f04684f764274b02d2edbf56aab2f",
+        "scriptCount": 6,
+        "entryPaths": [
+          "/web-assets/static/js/index.fdfed7ea65.js"
+        ]
+      },
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\browser-local\\nojs-zh-document-1.html"
+    },
+    {
+      "stage": "true-no-javascript",
+      "at": "2026-10-06T11:39:17.559Z",
+      "url": "http://127.0.0.1:64896/zh/models",
+      "readyState": "complete",
+      "locale": "zh",
+      "classes": [],
+      "publicHydration": null,
+      "hydrationFailure": null,
+      "theme": "system",
+      "localeControl": "zh",
+      "themeCookie": null,
+      "localeCookie": null,
+      "title": "模型目录 — CinaToken",
+      "canonical": "https://cinatoken-public-preferences-fixture.test/zh/models",
+      "overflow": false,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "mainTextLength": 481,
+      "heading": "模型目录",
+      "controller": {
+        "present": false,
+        "syncControls": false,
+        "dispose": false
+      },
+      "observation": null
+    },
+    {
+      "stage": "final",
+      "at": "2026-10-06T11:39:17.615Z",
+      "url": "http://127.0.0.1:64896/zh/models",
+      "readyState": "complete",
+      "locale": "zh",
+      "classes": [],
+      "publicHydration": null,
+      "hydrationFailure": null,
+      "theme": "system",
+      "localeControl": "zh",
+      "themeCookie": null,
+      "localeCookie": null,
+      "title": "模型目录 — CinaToken",
+      "canonical": "https://cinatoken-public-preferences-fixture.test/zh/models",
+      "overflow": false,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "mainTextLength": 481,
+      "heading": "模型目录",
+      "controller": {
+        "present": false,
+        "syncControls": false,
+        "dispose": false
+      },
+      "observation": null
+    }
+  ],
+  "screenshots": [
+    {
+      "stage": "visible-nojs",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-public-preferences-6e3e9f61c91546db9fc1c9886740fed4\\browser-local\\nojs-zh-visible-nojs.png",
+      "bytes": 26128,
+      "sha256": "24535eaa9e0f0631d38968ab0cbc33991f4131274ad32c63b5a254cc5609b90c"
+    }
+  ],
+  "checks": {
+    "trueNoJSVisibleSSR": true,
+    "noUnexpectedNetworkPageOrCSPError": true,
+    "noPageOverflow": true
+  },
+  "timedOut": false,
+  "explainedConsole": [],
+  "unexplainedConsole": [],
+  "outcome": "PASS",
+  "intendedExitCode": 0,
+  "contextClosed": true,
+  "gateCounts": {
+    "held": 0,
+    "continuedAfterRelease": 0,
+    "expectedNavigationAborts": 0,
+    "pendingAtEnd": 0,
+    "activeRouteTasksAtEnd": 0
+  },
+  "finishedAt": "2026-10-06T11:39:17.624Z"
+}
