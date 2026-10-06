@@ -1,7 +1,7 @@
 // Owned PostgreSQL 18.6 proof of holder-only selected route and ciphertext read.
 import assert from 'node:assert/strict';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import test from 'node:test';
 import postgres from 'postgres';
 import { computeRouteDataPolicySubjectFingerprintFromRows } from '../../../packages/core/src/route-data-policy.ts';
@@ -10,7 +10,7 @@ import {
   createPostgresPrivateCompleteTextReadPortsV366,
 } from '../../../packages/proxy/src/services/postgres-private-complete-text-reader-v366.ts';
 import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';
-import { grantPostgresRuntime } from './grant-postgres-runtime.ts';
+import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
 
 const g='cinatoken_gateway';
 const migrations=new URL('../../../packages/core/migrations-postgres/',import.meta.url);
@@ -78,7 +78,7 @@ test('v366 private reader returns only a fresh selected v360 route under its dir
       clients.push(migrator,runtime,cap,verifier,complete,planner,reader);
       await migrator.unsafe(`CREATE TABLE ${g}.schema_migrations
         (version text PRIMARY KEY,applied_at timestamptz NOT NULL DEFAULT now())`);
-      const names=(await readdir(migrations)).filter(x=>x.endsWith('.sql')).sort();
+      const names=await listPg73Migrations();
       assert.equal(names.length,73);
       const corpus=[];
       for(const name of names) {
@@ -92,6 +92,9 @@ test('v366 private reader returns only a fresh selected v360 route under its dir
       report.sourceSha256.formalMigrations=sha(corpus.join('\n'));
       const migratorUrl=`postgres://${roles.migrator}:${passwords.migrator}`
         +`@127.0.0.1:${cluster.port}/postgres`;
+      // Keep original grant calls and rejection checks on the owned PG73 ledger.
+      const grantPostgresRuntime = ({ DATABASE_URL }) =>
+        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });
       await grantPostgresRuntime({DATABASE_URL:migratorUrl});
       stage('formal-pg73-and-legacy-runtime-grants-installed');
 

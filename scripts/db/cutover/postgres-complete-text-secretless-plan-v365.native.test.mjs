@@ -1,12 +1,12 @@
 // Review-only PostgreSQL 18.6 proof of the v365 secretless ingress projection.
 import assert from 'node:assert/strict';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import test from 'node:test';
 import postgres from 'postgres';
 import { computeRouteDataPolicySubjectFingerprintFromRows } from '../../../packages/core/src/route-data-policy.ts';
 import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';
-import { grantPostgresRuntime } from './grant-postgres-runtime.ts';
+import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
 
 const g='cinatoken_gateway';
 const migrations=new URL('../../../packages/core/migrations-postgres/',import.meta.url);
@@ -74,7 +74,7 @@ test('v365 direct ingress LOGIN sees only fresh committed quote route IDs',
       clients.push(migrator,runtime,cap,verifier,complete,planner);
       await migrator.unsafe(`CREATE TABLE ${g}.schema_migrations
         (version text PRIMARY KEY,applied_at timestamptz NOT NULL DEFAULT now())`);
-      const names=(await readdir(migrations)).filter(x=>x.endsWith('.sql')).sort();
+      const names=await listPg73Migrations();
       assert.equal(names.length,73);
       const corpus=[];
       for(const name of names) {
@@ -90,6 +90,9 @@ test('v365 direct ingress LOGIN sees only fresh committed quote route IDs',
         new URL('./grant-postgres-runtime.ts',import.meta.url)));
       const migratorUrl=`postgres://cinatoken_gateway_migrator:${passwords.migrator}`
         +`@127.0.0.1:${cluster.port}/postgres`;
+      // Keep original grant calls and rejection checks on the owned PG73 ledger.
+      const grantPostgresRuntime = ({ DATABASE_URL }) =>
+        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });
       await grantPostgresRuntime({DATABASE_URL:migratorUrl});
       stage('formal-pg73-and-current-runtime-grants-installed');
 
