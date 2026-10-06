@@ -1,12 +1,12 @@
 // Owned PG18.6 proof of the default-off ordinary budget recovery LOGIN.
 import assert from 'node:assert/strict';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import test from 'node:test';
 import postgres from 'postgres';
 import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';
-import { grantPostgresRuntime } from './grant-postgres-runtime.ts';
+import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
 import { activatePostgresBuyerSplitV348 } from './activate-postgres-buyer-split-v348.ts';
 import { openPostgresOrdinaryBudgetRecoveryOwner } from '../../../packages/proxy/src/services/postgres-ordinary-budget-recovery.ts';
 
@@ -84,7 +84,7 @@ test('independent ordinary budget recovery LOGIN preserves dispatched ceilings',
       clients.push(migrator,runtime,admission,recovery,buyer);
       await migrator.unsafe(`CREATE TABLE ${gateway}.schema_migrations
         (version text PRIMARY KEY,applied_at timestamptz NOT NULL DEFAULT now())`);
-      const names=(await readdir(migrations)).filter(name=>name.endsWith('.sql')).sort();
+      const names=await listPg73Migrations();
       assert.equal(names.length,73);
       const corpus=[];
       for(const name of names){
@@ -102,6 +102,9 @@ test('independent ordinary budget recovery LOGIN preserves dispatched ceilings',
         +`@127.0.0.1:${cluster.port}/postgres`;
       const recoveryUrl=`postgres://cinatoken_gateway_budget_recovery:${passwords.budget_recovery}`
         +`@127.0.0.1:${cluster.port}/postgres`;
+      // Keep the original grant calls and exact rejection checks on the PG73 ledger.
+      const grantPostgresRuntime = ({ DATABASE_URL }) =>
+        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });
       await grantPostgresRuntime({DATABASE_URL:migratorUrl});
       for(const [name,setting,value] of prerequisites){
         const body=await readFile(new URL(name,proposals),'utf8');

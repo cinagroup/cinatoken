@@ -1,13 +1,13 @@
 // Owned PG18.6 proof of a multi-intent Guardrail admission API with no raw grants.
 import assert from 'node:assert/strict';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import test from 'node:test';
 import { setTimeout as sleep } from 'node:timers/promises';
 import postgres from 'postgres';
 import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';
-import { grantPostgresRuntime } from './grant-postgres-runtime.ts';
+import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
 import { grantPostgresBuyerSplitV348 } from './grant-postgres-buyer-split-v348.ts';
 import { activatePostgresBuyerSplitV348 } from './activate-postgres-buyer-split-v348.ts';
 import { activatePostgresBuyerGuardrailSplitV349 } from './activate-postgres-buyer-guardrail-split-v349.ts';
@@ -92,8 +92,7 @@ test('Guardrail admission LOGIN can reserve only checked multi-intent windows',
       clients.push(migrator,runtime,buyer,admission,peer);
       await migrator.unsafe(`CREATE TABLE ${gateway}.schema_migrations
         (version text PRIMARY KEY,applied_at timestamptz NOT NULL DEFAULT now())`);
-      const migrationNames = (await readdir(migrations))
-        .filter(name => name.endsWith('.sql')).sort();
+      const migrationNames = await listPg73Migrations();
       assert.equal(migrationNames.length,73);
       const corpus = [];
       for (const name of migrationNames) {
@@ -108,6 +107,9 @@ test('Guardrail admission LOGIN can reserve only checked multi-intent windows',
       report.sourceSha256.formalMigrations = digest(corpus.join('\n'));
       const migratorUrl = `postgres://cinatoken_gateway_migrator:${passwords.migrator}`
         + `@127.0.0.1:${cluster.port}/postgres`;
+      // Keep the original grant calls and exact rejection checks on the PG73 ledger.
+      const grantPostgresRuntime = ({ DATABASE_URL }) =>
+        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });
       await grantPostgresRuntime({ DATABASE_URL:migratorUrl });
       for (const [name,setting,value] of prerequisites) {
         const body = await readFile(new URL(name,proposals),'utf8');

@@ -1,20 +1,20 @@
 # 版本治理与发版（长期维护）
 
-本文约定 **cinatoken Gateway** 单仓（`cinatoken` + `@octafuse/core` / `@octafuse/proxy` / `@octafuse/admin`）的版本线、Git 标签、镜像与 GitHub Release 的关系，便于长期运维与回滚。
+本文约定 **cinatoken Gateway** 单仓（`cinatoken` + `@octafuse/core` / `@octafuse/tool-engines` / `@octafuse/proxy` / `@octafuse/admin` / `@cinatoken/web`）的版本线、Git 标签、镜像与 GitHub Release 的关系，便于长期运维与回滚。
 
 ## 核心原则
 
 | 项目               | 约定                                                                                                                                                    |
 | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **版本真源**       | Git 标签 **`vX.Y.Z`**（与 `package.json` 的 `version` 字段一致，无前导 `v`）                                                                            |
-| **版本线**         | **Fixed 单线**：根包与三个 workspace **同一 semver**，不独立涨版本                                                                                      |
+| **版本线**         | **Fixed 单线**：根包与五个 workspace（Core、Tool Engines、Proxy、Admin、Web） **同一 semver**，不独立涨版本                                                                                      |
 | **稳定分支**       | **`main`** 只接收当前稳定线的修复、准备正式发布的版本，以及不影响制品的维护变更；正式 tag 只从 `main` 产生                                              |
 | **开发分支**       | 长期集成分支统一为 **`develop`**；功能与外部贡献 PR 默认合入该分支，发布后继续沿用，不按版本重建                                                        |
 | **发布分支**       | 需要冻结和集中验收时，从 `develop` 创建临时 **`release/X.Y.Z`**；发布完成后删除                                                                         |
 | **热修分支**       | 当前稳定版 patch 从 `main` 创建临时 **`hotfix/X.Y.Z`**，完成后先合入 `main` 发版，再同步到 `develop`                                                    |
 | **对外制品**       | **proxy / admin / migrate** 三镜像 **同一 tag** 发布；生产可追溯 **digest**                                                                             |
 | **变更记录**       | [Changesets](https://github.com/changesets/changesets) → 合并入根目录 **`CHANGELOG.md`**                                                                |
-| **npm workspaces** | 根目录 `package.json` 含 **`"."`**，使 **`cinatoken`** 与 **`packages/*`** 一并被工具识别，从而纳入 Changesets **fixed** 组（与 `@octafuse/*` 同版本）。 |
+| **npm workspaces** | 根目录 `package.json` 含 **`"."`**，使 **`cinatoken`** 与 **`packages/*`** 一并被工具识别，从而纳入 Changesets **fixed** 组（与 `@octafuse/*`、`@cinatoken/web` 同版本）。 |
 
 详细操作入口见仓库 **[`.changeset/README.md`](../../.changeset/README.md)**。
 

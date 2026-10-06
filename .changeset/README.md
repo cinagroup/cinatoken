@@ -1,6 +1,6 @@
 # Changesets
 
-本仓库用 [**Changesets**](https://github.com/changesets/changesets) 做 **fixed 单版本线**：根包 `cinatoken` 与 `@octafuse/core` / `@octafuse/proxy` / `@octafuse/admin` **共用同一 `version`**，与 Git 标签 **`vX.Y.Z`** 及 GHCR 镜像 tag 对齐。
+本仓库用 [**Changesets**](https://github.com/changesets/changesets) 做 **fixed 单版本线**：根包 `cinatoken` 与 `@octafuse/core` / `@octafuse/tool-engines` / `@octafuse/proxy` / `@octafuse/admin` / `@cinatoken/web` **共用同一 `version`**，与 Git 标签 **`vX.Y.Z`** 及 GHCR 镜像 tag 对齐。
 
 根目录 **`package.json`** 的 **`workspaces`** 含 **`"."`**，以便 Changesets / manypkg 将根包与其它 workspace **一并**纳入 fixed 组（勿删，否则 `cinatoken` 不会出现在 Changesets 包列表中）。
 

@@ -5,7 +5,7 @@
 		{ "repo": "cinagroup/cinatoken" }
 	],
 	"commit": false,
-	"fixed": [["cinatoken", "@octafuse/core", "@octafuse/tool-engines", "@octafuse/proxy", "@octafuse/admin"]],
+	"fixed": [["cinatoken", "@octafuse/core", "@octafuse/tool-engines", "@octafuse/proxy", "@octafuse/admin", "@cinatoken/web"]],
 	"linked": [],
 	"access": "restricted",
 	"baseBranch": "main",

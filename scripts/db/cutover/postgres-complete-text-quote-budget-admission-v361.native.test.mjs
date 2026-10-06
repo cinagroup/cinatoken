@@ -1,13 +1,13 @@
 // Owned PostgreSQL 18.6 proof of v360-manifest-derived ordinary/Guardrail holds.
 import assert from 'node:assert/strict';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import test from 'node:test';
 import postgres from 'postgres';
 import { computeRouteDataPolicySubjectFingerprintFromRows } from '../../../packages/core/src/route-data-policy.ts';
 import { admitPostgresCompleteChatQuoteV361 } from '../../../packages/proxy/src/services/postgres-complete-chat-admission-v361.ts';
 import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';
-import { grantPostgresRuntime } from './grant-postgres-runtime.ts';
+import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
 import { activatePostgresBuyerSplitV348 } from './activate-postgres-buyer-split-v348.ts';
 import { grantPostgresBuyerSplitV348 } from './grant-postgres-buyer-split-v348.ts';
 import { activatePostgresBuyerGuardrailSplitV349 } from './activate-postgres-buyer-guardrail-split-v349.ts';
@@ -99,7 +99,7 @@ test('v361 admission derives exact holds from committed complete quote',
       clients.push(migrator,runtime,admission,cap,verifier,complete);
       await migrator.unsafe(`CREATE TABLE ${g}.schema_migrations
         (version text PRIMARY KEY,applied_at timestamptz NOT NULL DEFAULT now())`);
-      const migrationNames=(await readdir(migrationDir)).filter(x=>x.endsWith('.sql')).sort();
+      const migrationNames=await listPg73Migrations();
       assert.equal(migrationNames.length,73);
       const corpus=[];
       for(const name of migrationNames) {
@@ -113,6 +113,9 @@ test('v361 admission derives exact holds from committed complete quote',
       report.sourceSha256.formalMigrations=sha(corpus.join('\n'));
       const migratorUrl=`postgres://${roles.migrator}:${passwords.migrator}`
         +`@127.0.0.1:${cluster.port}/postgres`;
+      // Keep the original grant calls and exact rejection checks on the PG73 ledger.
+      const grantPostgresRuntime = ({ DATABASE_URL }) =>
+        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });
       await grantPostgresRuntime({DATABASE_URL:migratorUrl});
       for(const [name,setting] of preliminary) {
         const body=await readFile(proposal(name),'utf8');

@@ -1,13 +1,13 @@
 // Isolated PG18 proof for the review-only v359 freshness fence on v357 fragments.
 import assert from 'node:assert/strict';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { setTimeout as delay } from 'node:timers/promises';
 import test from 'node:test';
 import postgres from 'postgres';
 import { computeRouteDataPolicySubjectFingerprintFromRows } from '../../../packages/core/src/route-data-policy.ts';
 import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';
-import { grantPostgresRuntime } from './grant-postgres-runtime.ts';
+import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
 
 const gateway = 'cinatoken_gateway';
 const migrations = new URL('../../../packages/core/migrations-postgres/', import.meta.url);
@@ -83,7 +83,7 @@ test('PG73 direct verifier invalidates and reattests v357 route sources across A
       clients.push(migrator,runtime,cap,quoteIssuer,verifier);
       await migrator.unsafe(`CREATE TABLE ${gateway}.schema_migrations
         (version text PRIMARY KEY,applied_at timestamptz NOT NULL DEFAULT now())`);
-      const names=(await readdir(migrations)).filter(x=>x.endsWith('.sql')).sort();
+      const names=await listPg73Migrations();
       assert.equal(names.length,73);
       assert.equal(names.at(-1),'0073_recovery_api_key_workspace_lock.sql');
       const corpus=[];
@@ -100,6 +100,9 @@ test('PG73 direct verifier invalidates and reattests v357 route sources across A
         new URL('./grant-postgres-runtime.ts',import.meta.url)));
       const migratorUrl=`postgres://cinatoken_gateway_migrator:${passwords.migrator}`
         +`@127.0.0.1:${cluster.port}/postgres`;
+      // Keep the original grant calls and exact rejection checks on the PG73 ledger.
+      const grantPostgresRuntime = ({ DATABASE_URL }) =>
+        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });
       await grantPostgresRuntime({DATABASE_URL:migratorUrl});
       stage('formal-pg73-and-legacy-runtime-grants-installed');
 

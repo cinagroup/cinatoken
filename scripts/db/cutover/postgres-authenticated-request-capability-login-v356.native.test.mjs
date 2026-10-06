@@ -1,12 +1,12 @@
 // Owned PG18 proof of the first review-only authenticated request boundary.
 import assert from 'node:assert/strict';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { setTimeout as delay } from 'node:timers/promises';
 import test from 'node:test';
 import postgres from 'postgres';
 import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';
-import { grantPostgresRuntime } from './grant-postgres-runtime.ts';
+import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
 
 const gateway = 'cinatoken_gateway';
 const migrations = new URL('../../../packages/core/migrations-postgres/', import.meta.url);
@@ -64,14 +64,15 @@ test('PG73 direct LOGINs issue and consume one bearer-verified request capabilit
           cinatoken_gateway_runtime,${issuerRole},${claimRole};
         GRANT CREATE ON DATABASE postgres TO cinatoken_gateway_migrator;`).simple();
       const migrator = connection(cluster,'cinatoken_gateway_migrator',passwords.migrator,'migrator');
+      const grantPeer = connection(cluster,'cinatoken_gateway_migrator',passwords.migrator,'grant-peer');
       const runtime = connection(cluster,'cinatoken_gateway_runtime',passwords.runtime,'runtime');
       const issuer = connection(cluster,issuerRole,passwords.request_capability_issuer,'issuer');
       const claim = connection(cluster,claimRole,passwords.request_capability_claim,'claim');
       const peer = connection(cluster,claimRole,passwords.request_capability_claim,'claim-peer');
-      clients.push(migrator,runtime,issuer,claim,peer);
+      clients.push(migrator,grantPeer,runtime,issuer,claim,peer);
       await migrator.unsafe(`CREATE TABLE ${gateway}.schema_migrations
         (version text PRIMARY KEY,applied_at timestamptz NOT NULL DEFAULT now())`);
-      const names = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();
+      const names = await listPg73Migrations();
       assert.equal(names.length,73);
       assert.equal(names.at(-1),'0073_recovery_api_key_workspace_lock.sql');
       const corpus = [];
@@ -88,6 +89,10 @@ test('PG73 direct LOGINs issue and consume one bearer-verified request capabilit
         new URL('./grant-postgres-runtime.ts',import.meta.url)));
       const migratorUrl = `postgres://cinatoken_gateway_migrator:${passwords.migrator}`
         + `@127.0.0.1:${cluster.port}/postgres`;
+      // The concurrent call reuses its already running owned peer bridge.
+      let preparedConcurrentGrant;
+      const grantPostgresRuntime = ({ DATABASE_URL }) => preparedConcurrentGrant
+        ?? grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });
       await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
       stage('formal-pg73-and-current-runtime-grants-installed');
 
@@ -110,9 +115,44 @@ test('PG73 direct LOGINs issue and consume one bearer-verified request capabilit
       assert.equal((await migrator.unsafe(`SELECT pg_catalog.to_regclass(
         '${gateway}.authenticated_request_capabilities_v356') IS NULL AS absent`))[0].absent,true);
       let concurrentGrant;
+      let preparationSessionLockHeld = false;
+      try {
       await migrator.begin(async tx => {
+        // A session lock only coordinates temporary 0074 preparation; the
+        // original proposal must acquire its own transaction lock below.
+        // Only this owned transaction removes its ledger row: proposal preflight
+        // sees PG73 while the external grant still sees the committed 0074 row.
+        await tx.unsafe('SELECT pg_catalog.pg_advisory_lock(746923553)');
+        preparationSessionLockHeld = true;
+        preparedConcurrentGrant = grantPg73RuntimeFixture({
+          cluster, migrator: grantPeer, migratorUrl });
+        // The original handler is attached after proposal installation below.
+        preparedConcurrentGrant.catch(() => {});
+        let temporaryAuditVisible = false;
+        for (let attempt=0;attempt<60;attempt++) {
+          const [audit] = await tx.unsafe(`SELECT EXISTS (
+            SELECT 1 FROM cinatoken_gateway.schema_migrations
+            WHERE version='0074_config_change_audit.sql') AS installed`);
+          if (audit.installed) {temporaryAuditVisible=true;break;}
+          await delay(25);
+        }
+        assert.equal(temporaryAuditVisible,true,'owned peer must commit temporary 0074 before PG73 activation');
+        await tx.unsafe(`DELETE FROM cinatoken_gateway.schema_migrations
+          WHERE version='0074_config_change_audit.sql'`);
         await tx.unsafe("SET LOCAL cinatoken.request_capability_login_activation = 'reviewed-v1'");
         await tx.unsafe(body).simple();
+        // Release the preparation lock before the original wait assertion:
+        // only the unmodified proposal transaction lock can block the grant.
+        const [preparation] = await tx.unsafe(`SELECT
+          pg_catalog.pg_advisory_unlock(746923553) AS released`);
+        preparationSessionLockHeld = false;
+        assert.equal(preparation.released,true,'owned preparation session lock must be released');
+        const [proposalInterlock] = await tx.unsafe(`SELECT EXISTS (
+          SELECT 1 FROM pg_catalog.pg_locks
+          WHERE locktype='advisory' AND pid=pg_catalog.pg_backend_pid()
+            AND granted AND classid=0 AND objid=746923553 AND objsubid=1
+        ) AS held`);
+        assert.equal(proposalInterlock.held,true,'original proposal transaction must retain its interlock after session unlock');
         concurrentGrant=grantPostgresRuntime({ DATABASE_URL: migratorUrl }).then(
           () => ({status:'unexpected-success'}),
           error => ({status:'rejected',message:String(error)}));
@@ -131,6 +171,25 @@ test('PG73 direct LOGINs issue and consume one bearer-verified request capabilit
       const concurrentResult=await concurrentGrant;
       assert.equal(concurrentResult.status,'rejected');
       assert.match(concurrentResult.message,/Request capability v356 is installed/u);
+      } finally {
+        // A failed proposal transaction also releases the interlock; await the
+        // helper finally before disconnecting its peer or making another grant.
+        try {
+          if (preparationSessionLockHeld) {
+            try {
+              await migrator.unsafe('SELECT pg_catalog.pg_advisory_unlock(746923553)');
+            } catch (error) {
+              // Closing this same owned session releases a preparation lock
+              // even if the transaction or connection failed before unlock.
+              await migrator.end({ timeout: 1 });
+              throw error;
+            }
+          }
+        } finally {
+          if (preparedConcurrentGrant) await preparedConcurrentGrant.catch(() => {});
+          preparedConcurrentGrant = undefined;
+        }
+      }
       stage('default-off-contaminated-role-rejection-and-concurrent-grant-interlock');
       await assert.rejects(grantPostgresRuntime({ DATABASE_URL: migratorUrl }),
         /Request capability v356 is installed/u);
