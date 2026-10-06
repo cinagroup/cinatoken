@@ -1,0 +1,37 @@
+{
+  "schema": "cinatoken-isolated-release-command-v1",
+  "label": "after-git-commit-baseline",
+  "program": "git",
+  "args": [
+    "-c",
+    "user.name=Isolated Release Validation",
+    "-c",
+    "user.email=release-validation@example.invalid",
+    "-c",
+    "core.hooksPath=/dev/null",
+    "commit",
+    "-m",
+    "Isolated exact-source baseline; no remote"
+  ],
+  "cwd": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\isolated-after",
+  "startedAt": "2026-10-06T02:08:34.487Z",
+  "finishedAt": "2026-10-06T02:08:34.605Z",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "closed": true,
+  "expectedActualExits": [
+    0
+  ],
+  "expectedExitMatched": true,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\after-git-commit-baseline.stdout.log",
+    "bytes": 850,
+    "sha256": "c680223af65e2414934fcf1267e65700908c9029b4635ed81f4706915d8be31a"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\after-git-commit-baseline.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

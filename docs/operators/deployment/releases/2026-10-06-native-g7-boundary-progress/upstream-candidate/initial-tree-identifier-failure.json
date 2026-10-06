@@ -1,0 +1,21 @@
+{
+  "schema": "observed-tool-negative-result-provenance-v1",
+  "scope": "This bounded audit first attempt only; original upstream APIs closed0 but controller rejected returned identifier differing from root treeSHA; no code file comparison occurred before failure",
+  "commandWasRerun": false,
+  "originalRequest": {
+    "cmd": "& 'C:/Program Files/nodejs/node.exe' 'C:/Users/cina/AppData/Local/Temp/cinatoken-source-upstream-candidate-H03WpG/compare-upstream.mjs'",
+    "workdir": "C:/cinagroup/cinatoken"
+  },
+  "originalResult": {
+    "chunk_id": "dfbe14",
+    "wall_time_seconds": 5.937691,
+    "exit_code": 1,
+    "outputSummary": "AssertionError at compare-upstream.mjs:48:43: tree API requested using commitSHA returned sha973cf8ef4600947a4270e95ada7916740fa8264c; expected explicit commit.commit.tree.sha66da7fcfe1338d30e84683256547684a69abe716. Actual Node process exited1. Exact API outputs retained under api/."
+  },
+  "originalTimestamp": null,
+  "originalTimestampRetained": false,
+  "firstCandidatePinnedAndReused": "973cf8ef4600947a4270e95ada7916740fa8264c",
+  "repair": "Use same commit metadata and request explicit Git root treeSHA once; no second candidate/ref",
+  "originalOutputVerbatimRetained": false,
+  "noSyntheticRawOutputCreated": true
+}

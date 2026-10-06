@@ -1,0 +1,13 @@
+{
+  "at": "2026-10-06T01:45:08.940Z",
+  "finishedAt": "2026-10-06T01:45:09.372Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-boundary-next-20261006-Zm6Z3E/record-release-sync-repair.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-boundary-next-20261006-Zm6Z3E/release-sync-repair-proof.stdout.log",
+  "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-boundary-next-20261006-Zm6Z3E/release-sync-repair-proof.stderr.log"
+}

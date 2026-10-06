@@ -1,0 +1,14 @@
+✔ actual source wrapper and bridge preserve LOGIN and restore PG73 after initial production success (24.9236ms)
+✔ original exact Request capability assert reaches actual production marker guard and bridge finally restores PG73 (11.7786ms)
+✔ unchanged direct production grant without bridge hits real 0074 preflight before Request capability (1.9142ms)
+✔ owned URL admission rejects remote target before any inert SQL call (2.7081ms)
+✔ runtime membership admission rejects before 0074 installation and leaves original role intact (0.7784ms)
+✔ original exact Request capability assertion still fails on an unrelated production error while bridge cleans audit (8.0297ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 831.8808

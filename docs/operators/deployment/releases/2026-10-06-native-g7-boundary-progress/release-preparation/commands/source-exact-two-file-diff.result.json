@@ -1,0 +1,32 @@
+{
+  "schema": "cinatoken-isolated-release-command-v1",
+  "label": "source-exact-two-file-diff",
+  "program": "git",
+  "args": [
+    "diff",
+    "--",
+    ".changeset/config.json",
+    ".changeset/README.md"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "startedAt": "2026-10-06T02:11:20.840Z",
+  "finishedAt": "2026-10-06T02:11:20.923Z",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "closed": true,
+  "expectedActualExits": [
+    0
+  ],
+  "expectedExitMatched": true,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\source-exact-two-file-diff.stdout.log",
+    "bytes": 1344,
+    "sha256": "f21e5e64ca732b1c34cfedd1ae4957bd28d6ce32004b5f91b4b5772ab53e122c"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\source-exact-two-file-diff.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

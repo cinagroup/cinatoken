@@ -1,0 +1,364 @@
+{
+  "schema": "root-v364-boundary-terminal-analysis-v1",
+  "at": "2026-10-06T02:07:48.478Z",
+  "closed": true,
+  "actualExit": 0,
+  "runId": "37402302570",
+  "sourceSHA": "67f8b3df2f2b6e8159806767ecce1efa1904d27a",
+  "strictBaseline": {
+    "code": 1,
+    "signal": null,
+    "timedOut": false,
+    "stdout": {
+      "bytes": 2870,
+      "sha256": "020adcc84ef0ef0da558fc37dd57f54154923435b1f9dac0110ffec6b1affe18"
+    },
+    "stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "tap": [
+    "# tests 8",
+    "# pass 7",
+    "# fail 1",
+    "# cancelled 0",
+    "# skipped 0"
+  ],
+  "rows": [
+    {
+      "caseId": "node-http-calibration-destroy",
+      "actualExit": 0,
+      "closed": true,
+      "originalWindow": null,
+      "tail": null,
+      "finalPreDisposeSnapshot": null,
+      "error": null
+    },
+    {
+      "caseId": "node-http-calibration-rst",
+      "actualExit": 0,
+      "closed": true,
+      "originalWindow": null,
+      "tail": null,
+      "finalPreDisposeSnapshot": null,
+      "error": null
+    },
+    {
+      "caseId": "locked-bare-destroy",
+      "actualExit": 1,
+      "closed": true,
+      "originalWindow": {
+        "pollCount": 100,
+        "sleepMs": 10,
+        "elapsedMs": 1274.1735669999998,
+        "actual": null,
+        "expected": "observed",
+        "actualExit": 1
+      },
+      "tail": {
+        "elapsedMs": 4038.6711730000006,
+        "reads": 76,
+        "actual": null,
+        "usedForPass": false
+      },
+      "finalPreDisposeSnapshot": {
+        "cancel": null,
+        "release": null,
+        "accepted": "one",
+        "usedForPass": false
+      },
+      "error": null
+    },
+    {
+      "caseId": "locked-bare-rst",
+      "actualExit": 1,
+      "closed": true,
+      "originalWindow": {
+        "pollCount": 100,
+        "sleepMs": 10,
+        "elapsedMs": 1227.3664480000007,
+        "actual": null,
+        "expected": "observed",
+        "actualExit": 1
+      },
+      "tail": {
+        "elapsedMs": 4033.7517499999994,
+        "reads": 76,
+        "actual": null,
+        "usedForPass": false
+      },
+      "finalPreDisposeSnapshot": {
+        "cancel": null,
+        "release": null,
+        "accepted": "one",
+        "usedForPass": false
+      },
+      "error": null
+    },
+    {
+      "caseId": "locked-direct-destroy",
+      "actualExit": 1,
+      "closed": true,
+      "originalWindow": {
+        "pollCount": 100,
+        "sleepMs": 10,
+        "elapsedMs": 1251.1428619999988,
+        "actual": null,
+        "expected": "observed",
+        "actualExit": 1
+      },
+      "tail": {
+        "elapsedMs": 4022.962382999998,
+        "reads": 76,
+        "actual": null,
+        "usedForPass": false
+      },
+      "finalPreDisposeSnapshot": {
+        "cancel": null,
+        "release": null,
+        "accepted": "one",
+        "usedForPass": false
+      },
+      "error": null
+    },
+    {
+      "caseId": "locked-direct-rst",
+      "actualExit": 1,
+      "closed": true,
+      "originalWindow": {
+        "pollCount": 100,
+        "sleepMs": 10,
+        "elapsedMs": 1217.0151100000003,
+        "actual": null,
+        "expected": "observed",
+        "actualExit": 1
+      },
+      "tail": {
+        "elapsedMs": 4029.9668280000005,
+        "reads": 76,
+        "actual": null,
+        "usedForPass": false
+      },
+      "finalPreDisposeSnapshot": {
+        "cancel": null,
+        "release": null,
+        "accepted": "one",
+        "usedForPass": false
+      },
+      "error": null
+    },
+    {
+      "caseId": "locked-binding-destroy",
+      "actualExit": 1,
+      "closed": true,
+      "originalWindow": {
+        "pollCount": 100,
+        "sleepMs": 10,
+        "elapsedMs": 1214.981746999998,
+        "actual": null,
+        "expected": "observed",
+        "actualExit": 1
+      },
+      "tail": {
+        "elapsedMs": 4011.387015999997,
+        "reads": 76,
+        "actual": null,
+        "usedForPass": false
+      },
+      "finalPreDisposeSnapshot": {
+        "cancel": null,
+        "release": null,
+        "accepted": "one",
+        "usedForPass": false
+      },
+      "error": null
+    },
+    {
+      "caseId": "locked-binding-rst",
+      "actualExit": 1,
+      "closed": true,
+      "originalWindow": {
+        "pollCount": 100,
+        "sleepMs": 10,
+        "elapsedMs": 1220.7450519999984,
+        "actual": null,
+        "expected": "observed",
+        "actualExit": 1
+      },
+      "tail": {
+        "elapsedMs": 4013.019505999997,
+        "reads": 76,
+        "actual": null,
+        "usedForPass": false
+      },
+      "finalPreDisposeSnapshot": {
+        "cancel": null,
+        "release": null,
+        "accepted": "one",
+        "usedForPass": false
+      },
+      "error": null
+    }
+  ],
+  "executorActualExit": 1,
+  "cleanup": {
+    "authority": "this executor",
+    "subreaperEnabled": true,
+    "directChildReaped": true,
+    "groupGone": true,
+    "leftoverGroupKilled": false,
+    "signalAttempts": [],
+    "reapedDescendants": [
+      {
+        "pid": 2633,
+        "startTimeTicks": "22301",
+        "waitStatus": 0,
+        "waitExitCode": 0,
+        "source": "individually identified adopted zombie"
+      },
+      {
+        "pid": 2670,
+        "startTimeTicks": "22334",
+        "waitStatus": 0,
+        "waitExitCode": 0,
+        "source": "individually identified adopted zombie"
+      },
+      {
+        "pid": 2678,
+        "startTimeTicks": "22337",
+        "waitStatus": 0,
+        "waitExitCode": 0,
+        "source": "individually identified adopted zombie"
+      },
+      {
+        "pid": 2685,
+        "startTimeTicks": "22405",
+        "waitStatus": 0,
+        "waitExitCode": 0,
+        "source": "individually identified adopted zombie"
+      }
+    ],
+    "processCensus": [
+      {
+        "label": "before-initial-adopted-reap",
+        "elapsedMs": 37331.42770999999,
+        "pgrp": 2597,
+        "session": 2597,
+        "members": [
+          {
+            "pid": 2633,
+            "comm": "esbuild",
+            "state": "Z",
+            "ppid": 2595,
+            "pgrp": 2597,
+            "session": 2597,
+            "startTimeTicks": "22301"
+          },
+          {
+            "pid": 2670,
+            "comm": "esbuild",
+            "state": "Z",
+            "ppid": 2595,
+            "pgrp": 2597,
+            "session": 2597,
+            "startTimeTicks": "22334"
+          },
+          {
+            "pid": 2678,
+            "comm": "esbuild",
+            "state": "Z",
+            "ppid": 2595,
+            "pgrp": 2597,
+            "session": 2597,
+            "startTimeTicks": "22337"
+          },
+          {
+            "pid": 2685,
+            "comm": "esbuild",
+            "state": "Z",
+            "ppid": 2595,
+            "pgrp": 2597,
+            "session": 2597,
+            "startTimeTicks": "22405"
+          }
+        ],
+        "live": 0,
+        "zombies": 4,
+        "unknown": [],
+        "complete": true,
+        "groupExists": true
+      },
+      {
+        "label": "after-initial-adopted-reap",
+        "elapsedMs": 37337.531465000015,
+        "pgrp": 2597,
+        "session": 2597,
+        "members": [],
+        "live": 0,
+        "zombies": 0,
+        "unknown": [],
+        "complete": true,
+        "groupExists": false
+      },
+      {
+        "label": "after-term-before-reap",
+        "elapsedMs": 37343.387799,
+        "pgrp": 2597,
+        "session": 2597,
+        "members": [],
+        "live": 0,
+        "zombies": 0,
+        "unknown": [],
+        "complete": true,
+        "groupExists": false
+      },
+      {
+        "label": "after-term-after-reap",
+        "elapsedMs": 37349.21350699997,
+        "pgrp": 2597,
+        "session": 2597,
+        "members": [],
+        "live": 0,
+        "zombies": 0,
+        "unknown": [],
+        "complete": true,
+        "groupExists": false
+      },
+      {
+        "label": "final-adopt-drain",
+        "elapsedMs": 37355.10705099998,
+        "pgrp": 2597,
+        "session": 2597,
+        "members": [],
+        "live": 0,
+        "zombies": 0,
+        "unknown": [],
+        "complete": true,
+        "groupExists": false
+      },
+      {
+        "label": "final-post-reap",
+        "elapsedMs": 37361.077136999964,
+        "pgrp": 2597,
+        "session": 2597,
+        "members": [],
+        "live": 0,
+        "zombies": 0,
+        "unknown": [],
+        "complete": true,
+        "groupExists": false
+      }
+    ],
+    "apiDisposalReported": true,
+    "outerUnforcedGroupClose": true,
+    "gracefulWorkerdExitProven": false,
+    "miniflareDisposeMaySendSIGKILL": true,
+    "errors": []
+  },
+  "timedOut": false,
+  "sourceUnchanged": true,
+  "allEightBaselineEligibleFalse": true,
+  "causeProven": false,
+  "remoteZIPHashOnlyReported": "sha256:b02bea900a32639c5e49952b9c711c31e2906bf20145794a89f724909dec2fe2"
+}

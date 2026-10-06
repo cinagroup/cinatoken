@@ -1,0 +1,64 @@
+{
+  "at": "2026-10-06T02:53:08.385877+00:00",
+  "closed": true,
+  "reviewWriter": {
+    "toolChunk": "7cdd7e",
+    "actualExit": 0
+  },
+  "reports": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\FINAL-cinatoken-latest-md-evidence-tools-peer-readonly-1201558a824344d988c867b817caacc4\\FINAL-evidence-g7-boundary-tools-peer-review.json",
+      "bytes": 30228,
+      "sha256": "635b905af5f36df50bc9c03b76f4be4d43c41368190714bfe6e4efe1cae08e81"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\FINAL-cinatoken-latest-md-evidence-tools-peer-readonly-1201558a824344d988c867b817caacc4\\FINAL-checklist-577-latest-evidence-peer-review.json",
+      "bytes": 702138,
+      "sha256": "464451841e2da01b1edd09eabfbfec03a08869bf1e8dad62b7199768687de0c5"
+    }
+  ],
+  "snapshotFilesExactToFrozenAuthorSources": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\FINAL-cinatoken-latest-md-evidence-tools-peer-readonly-1201558a824344d988c867b817caacc4\\frozen-inputs\\collector-g7-boundary-descriptor-tests.mjs",
+      "bytes": 17857,
+      "sha256": "472655242f66455a5c0db0b416aad2e0385c93fb9b3a275608d9343c11a77d38"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\FINAL-cinatoken-latest-md-evidence-tools-peer-readonly-1201558a824344d988c867b817caacc4\\frozen-inputs\\evidence-lib.mjs",
+      "bytes": 43891,
+      "sha256": "62e288a1f7b415a43472acd9d12a337eb2a4604d2cf6e3e4166035a28430a941"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\FINAL-cinatoken-latest-md-evidence-tools-peer-readonly-1201558a824344d988c867b817caacc4\\frozen-inputs\\original-source-index.json",
+      "bytes": 924,
+      "sha256": "d357b52d8bd6c81a5f175ad87c111487f11ab9a123e7a6fa8d14c48e15a6e6f3"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\FINAL-cinatoken-latest-md-evidence-tools-peer-readonly-1201558a824344d988c867b817caacc4\\frozen-inputs\\tool-validation.proof.json",
+      "bytes": 13935,
+      "sha256": "80c2f8be53b91205a111459bb7473aa2088b0530103f69d159441755754c7219"
+    }
+  ],
+  "currentMdExact": {
+    "path": "C:\\cinagroup\\cinatoken\\docs\\developers\\architecture\\web-frontend-migration.md",
+    "bytes": 789548,
+    "sha256": "f11fe3bf076a6d3b1d848021a520657dbadf1b46479f5f83e20d6eb71d227cb0"
+  },
+  "peerEarlierReadOnlyAttemptFailuresPreservedInReports": [
+    {
+      "toolChunk": "0d4bfb",
+      "actualExit": 1,
+      "reportOrSourceWritesBeforeFailure": false
+    },
+    {
+      "toolChunk": "62c10e",
+      "actualExit": 1,
+      "reportOrSourceWritesBeforeFailure": false
+    }
+  ],
+  "repoWrites": false,
+  "cliOrTestsOrRuntimeExecutedByPeer": false,
+  "networkRequestsByPeer": 0,
+  "durableArchiveCompleteClaim": false,
+  "businessGatePassDerived": false
+}

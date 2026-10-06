@@ -1,0 +1,17 @@
+{
+  "at": "2026-10-06T02:04:04.963Z",
+  "finishedAt": "2026-10-06T02:04:08.588Z",
+  "executable": "C:/Program Files/GitHub CLI/gh.exe",
+  "args": [
+    "workflow",
+    "run",
+    "web-platform-g7.yml",
+    "--ref",
+    "main"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-boundary-next-20261006-Zm6Z3E/owned19-g7-dispatch.stdout.log",
+  "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-boundary-next-20261006-Zm6Z3E/owned19-g7-dispatch.stderr.log"
+}

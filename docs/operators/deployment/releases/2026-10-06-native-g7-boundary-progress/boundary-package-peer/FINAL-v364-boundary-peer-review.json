@@ -1,0 +1,268 @@
+{
+  "schema": "cinatoken.v364.boundary-peer.readonly-review.v1",
+  "reviewActualExit": 0,
+  "runtimeExecuted": false,
+  "repoWrites": 0,
+  "ciRequests": 0,
+  "productionRequests": 0,
+  "sourceFiles": [
+    {
+      "path": "C:\\cinagroup\\cinatoken\\docs\\operators\\deployment\\releases\\2026-10-06-pg73-docker-progress\\native-agent\\FINAL-v364-linux-artifact-analysis.json",
+      "bytes": 66439,
+      "sha256": "9bc548f9d070256bcbe9c22cb4ae05d39bb9936103eb91192069e23965f731d2"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-owned-linux\\run-v364-owned-diagnostic.mjs",
+      "bytes": 22852,
+      "sha256": "11850fbe29355f705e3bc4ec68c1b6416565b943dfb7a0f200d4090de5158666"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-owned-linux\\execute-owned-linux.py",
+      "bytes": 9535,
+      "sha256": "45c479a4602a3e79b42daa8dcca6e8b9ef876fa986136598b263a505d5320e31"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-owned-linux\\holder-observer.mjs",
+      "bytes": 2461,
+      "sha256": "740727cae646ae757fa50ef7bb6c02a9f9cb4b1b3aa64b0de539c88bbbe09a25"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-owned-linux\\gateway-observer.mjs",
+      "bytes": 1244,
+      "sha256": "3ec2e49a72697f61bd1867bcde369a7c508cdbf669cd86d7e0eebdfc41dcfe00"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\proxy\\scripts\\staging\\chat-holder-private-v364.ts",
+      "bytes": 5367,
+      "sha256": "44070fcbb7058b915329a150634eaa649c1b3601724495a1620e94ce2d54d1bf"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\proxy\\scripts\\staging\\chat-holder-gateway-v364.ts",
+      "bytes": 1534,
+      "sha256": "8c85b01ba54daa9b7302c726d20693d08ccb3395350ea6a333817eed46441eaf"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\node_modules\\miniflare\\dist\\src\\index.js",
+      "bytes": 4843426,
+      "sha256": "58ca83056cf67838add064edcbfd1d654ed204527b8eb01307ba208d7e59fa20"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\proxy\\src\\routes\\catalog.ts",
+      "bytes": 13271,
+      "sha256": "fccb6775cc09954c591c72464be5a3001ce3d9869b2b6858b73f0aae10d5c247"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\proxy\\src\\services\\catalog-discovery.ts",
+      "bytes": 9176,
+      "sha256": "e247a3b6c035e50c8f73884823a0449c4a04921017c5e4f4b3a044e8894501c9"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\proxy\\src\\services\\public-model-endpoints.ts",
+      "bytes": 38776,
+      "sha256": "64499006ea16eb08fc8900a3c61e4498c1ce165ee891a44861108498ee6f486e"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\core\\src\\model-endpoint-runtime.ts",
+      "bytes": 13469,
+      "sha256": "0ba47ba277af4042ff9159f4ff0466d1f9dd9126af71a238f5c86035a9c9a8df"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\core\\src\\db\\postgres\\model-routing.impl.ts",
+      "bytes": 6127,
+      "sha256": "d764dde9aae33a41f447b2045c95f571762078e6daa9cc83675f9c41dbe2aa70"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\admin\\lib\\public-catalog-bff.ts",
+      "bytes": 16595,
+      "sha256": "9e6e7759091d05ffa304837bd32d3b86151aad79e759b0e647df98ed9b931d63"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\admin\\lib\\public-gateway.ts",
+      "bytes": 1644,
+      "sha256": "4035d0a73595f578239685b8a37d42581ee702824035036432764ed5a52c29a7"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\web\\src\\cinatoken\\public-server\\public-response.tsx",
+      "bytes": 11176,
+      "sha256": "81e7420b3f3cb5e1bea9fd8ad583b477643f15c788ab46aba21c6121fd37cabc"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\db\\cutover\\postgres-image-http-financial.native.test.mjs",
+      "bytes": 24686,
+      "sha256": "4f3d95559912747daba4393258dfc52ff55f59cb3d4f96391ea74a89dc762868"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-tls-origin-review-05f0d38f8b16432581a7cbb91ff3007d\\future-tls-smoke.mjs",
+      "bytes": 4363,
+      "sha256": "05c4f5ae5bb0dccdaa75ccf94bffb27a6a37d618266d14476285b51d74259388"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-tls-origin-review-05f0d38f8b16432581a7cbb91ff3007d\\trusted-ingress.example.conf",
+      "bytes": 1337,
+      "sha256": "eb105cc5da1d55d284b28e251fdcdf2ced1e6495df4893087041f8d088259e0b"
+    }
+  ],
+  "priorArtifact": {
+    "conclusion": "STRICT_FAILURE_CONFIRMED_CAUSE_UNPROVEN",
+    "strictBaseline": {
+      "code": 1,
+      "signal": null,
+      "timedOut": false,
+      "stdout": {
+        "bytes": 2870,
+        "sha256": "e92e5054f09bd9d580f5d8e2edd7d8694a6c1e80f0aced769765b92a6e0095bd"
+      },
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "tapStats": {
+        "tests": 8,
+        "pass": 7,
+        "fail": 1,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      "failedName": "response-body cancellation is observed inside the private holder",
+      "actualObserved": null,
+      "expected": "observed",
+      "originalLine": 278,
+      "rawStatus": "FAIL_RETAINED"
+    },
+    "diagnostic": {
+      "calibrationPassed": 3,
+      "cancellationFailed": 5,
+      "allEightReportedClosed": true,
+      "activeMiniflare": 0,
+      "originalPoll100AndSleep10Preserved": true,
+      "allFiveOriginalNull": true,
+      "allFive4sTailNull": true,
+      "tailDoesNotUpgradePass": true,
+      "isolatedPassthroughVariantAlsoFailed": true
+    },
+    "outerClosure": {
+      "authority": "this executor",
+      "subreaperEnabled": true,
+      "directChildReaped": true,
+      "groupGone": true,
+      "leftoverGroupKilled": true,
+      "reapedDescendants": [
+        {
+          "pid": 2648,
+          "waitStatus": 0
+        },
+        {
+          "pid": 2661,
+          "waitStatus": 0
+        },
+        {
+          "pid": 2654,
+          "waitStatus": 0
+        },
+        {
+          "pid": 2609,
+          "waitStatus": 0
+        }
+      ],
+      "cooperativeNativeFinallyVerified": true,
+      "errors": [],
+      "actualProcessExit": 1,
+      "runnerOutcomeCode": 1,
+      "actualExit": 1,
+      "timedOut": false,
+      "interpretation": "Node reports eight fixture finally closures and zero active Miniflare; Python still reports leftoverGroupKilled=true, attempted outer process-group cleanup, adopted and reaped four group descendants, and ultimately groupGone=true. Therefore wholly cooperative process-group closure is not established. Four waitStatus0 records prove normal recorded exits of those adopted descendants, not that SIGTERM killed a live process. killpg(group,0) may have detected zombies; the artifact contains no live/zombie census to distinguish them.",
+      "forcedFlagMustRemainTrue": true,
+      "allCooperativeGroupClosureProven": false,
+      "sigtermKilledLiveProcessProven": false
+    },
+    "causeProven": false,
+    "oldForcedFlagPreserved": true
+  },
+  "matchedNewTopologyRecommendations": {
+    "eightCases": "Two dedicated Node HTTP calibration arms destroy/RST, then bare no-binding / frozen direct-holder / frozen Service Binding each destroy/RST. Run original two-file strict suite once before these diagnostics and retain its raw failure.",
+    "bare": "Single Worker, exact first SSE frame, asynchronous 300 KV release reads with 10ms sleep, highWaterMark0, same original cancel KV put then same waitUntil promise then await. Frozen holder lines65-92 are the pattern. A synchronous source would not match.",
+    "direct": "Import original frozen gateway and original observed holder; map only env.TEXT_HOLDER.fetch to holder.fetch using the same forwarded Request, owned KV environment and same execution context. Retain gateway Request constructor/body/signal/duplex (lines9-17) and Response(body) wrap (lines26-29). Synthetic diagnostic literals in this bundle remain isolated.",
+    "baselineEligibility": "All new topology variants are diagnostic-only and cannot upgrade the strict original Service Binding baseline. Keep original flags/dependencies/source unchanged; no passthrough variant needed in this matched matrix.",
+    "observations": "Incoming/forwarded/holder signal initial+abort, original KV get/put invoke+settle, same original waitUntil register+settle; no tee, alternate cancel write, source cancellation, extra waitUntil or changed returned promise. Exact original100 reads/10ms remains the strict window. Four-second tail and final pre-dispose accepted/release/cancel read are separate observations, never success overrides.",
+    "disposePhases": "Emit explicit dispose-start before invoking dispose and dispose-settled/failed afterwards; capture each Worker log with current host phase. Pre-dispose source callback inference requires positive cancel KV invocation; zero observer events does not establish callback absence outside captured coverage."
+  },
+  "nodeTransport": {
+    "existingCancel": "main lines159-166 waits response.close, which is not the actual socket-close event. Retain its original result and additionally bound client socket close and server socket close; request body exact and requestCount1, response writableFinishedfalse are calibration observations.",
+    "rst": "resetAndDestroy is the dedicated Node TCP RST API. agent:false gives a dedicated connection; record invocation once, loopback peer address, socket closure and peer error codes. destroy alone is not RST. Server hadError/ECONNRESET must not be mistaken for a packet trace."
+  },
+  "miniflareClosure": {
+    "installedSpawn": "node_modules/miniflare/dist/src/index.js:95844-95853 workerd spawn has no detached option and inherits the cleaned outer environment. Debug watchdog detached=true at95876-95900 is conditional on VSCode inspector/Node bootloader variables; do not inherit those.",
+    "installedDispose": "Runtime.dispose:95923-95937 destroys stdio then sends SIGKILL and returns processExitPromise. waitForExit:95726-95729 waits exit rather than close and discards code/signal. Miniflare.dispose:114075-114109 aborts its dispose controller/poisons proxies and awaits runtime disposal.",
+    "meaning": "dispose-settled proves a completed API cleanup, not graceful workerd termination. Logs can be lost after stdio destruction, and shutdown-only signals cannot be attributed to pre-dispose client cancellation. Preserve old cooperativeNativeFinallyVerified field without broadening its claim."
+  },
+  "linuxOwnedProcessRecommendations": {
+    "scope": "Python Popen start_new_session creates the owned Node process group/session. Census records only pgrp=session=child.pid members, plus explicit unknown/read-race errors. This proves group coverage, not absence of hypothetical escaped processes.",
+    "statParse": "Parse /proc/PID/stat after the last closing parenthesis delimiter; residual fields: state[0],ppid[1],pgrp[2],session[3],starttime[19]. Record PID+starttime identity. No cmdline/env collection.",
+    "directChildOwnership": "Only Popen.poll/wait may reap the direct Node child. Never waitpid(-child.pid): after a Popen wait timeout the direct child could exit and its status could be consumed by the group reaper.",
+    "descendantReaping": "Use individual waitpid(pid,WNOHANG) only for an identity-matched adopted child whose current ppid==executorPID and pid!=directChildPID. Retain actual raw wait status and decoded exit/signal. Recheck/re-census on disappear/adoption races.",
+    "signals": "Before outer signaling record census and reap bounded adopted zombies first. A zombie-only group needs bounded adoption/reaping, not TERM/KILL. Live or unknown leftovers require necessary bounded cleanup and retain forced=true; signal attempted is not proof the signal killed a live process.",
+    "success": "Require directChildReaped, final empty owned-group census/groupGone and no census/reap errors. killpg(group,0) is an existence probe, not a live-versus-zombie census. Prior artifact forced flag and four waitStatus0 records remain unchanged."
+  },
+  "G7PreparedTLSNineWireCases": {
+    "executed": false,
+    "common": "Owned Linux only, fixed app.test:443, SNI app.test, explicit CA/rejectUnauthorized, TLSAuthorized asserted; no TLS bypass.",
+    "loginPOST": [
+      {
+        "case": "exact HTTPS Origin without client forwarding metadata",
+        "status": 410,
+        "setCookieCount": 0
+      },
+      {
+        "case": "spoofed XFPhttp+XFHost attacker+Forwarded overwritten",
+        "status": 410,
+        "setCookieCount": 0
+      },
+      {
+        "case": "ambiguous XFPhttp,https overwritten",
+        "status": 410,
+        "setCookieCount": 0
+      },
+      {
+        "case": "missing Origin",
+        "status": 403,
+        "setCookieCount": 0
+      },
+      {
+        "case": "cross Origin",
+        "status": 403,
+        "setCookieCount": 0
+      },
+      {
+        "case": "same Origin but explicit cross-site",
+        "status": 403,
+        "setCookieCount": 0
+      },
+      {
+        "case": "unknown Host with valid app.test SNI",
+        "status": 421,
+        "setCookieCount": 0
+      }
+    ],
+    "registerGET": "302, HTTPS app.test Location to /api/auth/cinaauth/login, no-store.",
+    "invalidCallbackGET": "302, HTTPS app.test fallback with auth_error=invalid_transaction, zero Set-Cookie.",
+    "ingress": "Future nginx-t required. Allowlist Host/SNI, fixed Host and XFH app.test/XFPhttps/XFPort443, clear Forwarded, overwrite XFF remote_addr. Preserve Origin/Cookie and Location/separate Set-Cookie fields. Raw Web/Admin ports must remain private.",
+    "limits": "These nine cases do not execute successful OIDC/PKCE, Secure business-session cookie persistence, multi-cookie logout or actual PostgreSQL sessions. Synthetic signed identity and real authorized identity are separate gates."
+  },
+  "G7ActualPGCatalogContract": {
+    "proxyContract": "app.ts:458 mounts /catalog. catalog.ts:216-227 list is object=list,data,billing_currency,generated_at;231-251 detail matches exactslug/case-insensitivevendor or404;254-264 providers is sanitizedaggregate.",
+    "nonemptyRequirements": "catalog-discovery.ts:178-180 loads real listModelsWithActiveRoutes and verified public endpoint links. Active models/routes alone are insufficient;219-220 drops rows with no verified protocol.",
+    "seed": "Create actual models, active non-shared provider with nonempty credential and configured protocol endpoint, active model_routes and route_pool with compatible model_surfaces, verified unexpired model_endpoints with operation/capabilities, and model_endpoint_routes using actual computed route/provider subject fingerprint.",
+    "validation": "public-model-endpoints.ts:321-338 active route/pool and fingerprint validity/exact recomputation;363 valid endpoint snapshot;374-384 model/provider/legacy routing metadata/operation;420-421 provider callable and matching fingerprint. model-endpoint-runtime.ts:264 requires verified status;291-293 requires verifiedAt not future and expiresAt strictly future.",
+    "reference": "postgres-image-http-financial.native.test.mjs:182-200 seeds the real tables;210-215 loads actual repository route/provider and computes computeRouteDataPolicySubjectFingerprintFromRows before the link insert;230-232 asserts snapshot/operation. This existing image fixture is a pattern, not proof for new full text topology. 0002_seed.sql contains only system_config seeds and produces no nonempty catalog.",
+    "adminBFF": "public-catalog-bff.ts:440 GET/HEAD only;455-487 anonymous GET with AcceptJSON/credentialsomit/manual redirects/exactupstream200;488-503 schema/uniqueIDs/detailmatch;536-540 public cache/nosniff. Real Proxy -> Admin -> SSR must be observed, not substituted JSON.",
+    "egress": "public-gateway.ts:3/16-30 absent or invalid CINATOKEN_PUBLIC_API_ORIGIN defaults to production api.cinatoken.com;45-56 Node without Service Binding performs actual fetch. Owned Compose must explicitly validate the controlled proxy origin and use internal-only networking before any request.",
+    "ssr": "public-response.tsx:123-145 only same-request-origin exact public catalog paths, anonymous GET/credentialsomit/manualredirect/AcceptJSON. Verify nonempty list/detail/render across four locales, plus disabled/expired/wrong-fingerprint negative, with actual PG persistence."
+  },
+  "primaryReferences": [
+    "https://man7.org/linux/man-pages/man2/waitpid.2.html",
+    "https://man7.org/linux/man-pages/man2/PR_SET_CHILD_SUBREAPER.2const.html",
+    "https://man7.org/linux/man-pages/man5/proc_pid_stat.5.html",
+    "https://nodejs.org/download/release/latest-v22.x/docs/api/net.html#socketresetanddestroy",
+    "https://nodejs.org/download/release/latest-v22.x/docs/api/http.html"
+  ]
+}

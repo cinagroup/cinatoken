@@ -1,0 +1,3061 @@
+{
+  "schema": "cinatoken.web.upstream-candidate-import-boundary-sidecar.v1",
+  "observedAt": "2026-10-06T01:49:47.090Z",
+  "conclusion": "DECLARED_NORMALIZED_BOUNDARIES_ONLY_IMPORT_IDENTITY_PENDING",
+  "candidateSha": "973cf8ef4600947a4270e95ada7916740fa8264c",
+  "candidateTreeSha": "66da7fcfe1338d30e84683256547684a69abe716",
+  "previousImmutableReport": {
+    "path": "FINAL-upstream-candidate-provenance.json",
+    "bytes": 77227,
+    "sha256": "088273e16bd03412d342546763f24ba2f3efa1e092d83bdf7824aa57c225e082"
+  },
+  "upstreamPathsFetchedAcrossThisBoundedAudit": 20,
+  "additionalUpstreamPath": "web/tsconfig.app.json",
+  "additionalApiClosedReceipt": {
+    "path": "api/blob-20-tsconfig.result.json",
+    "bytes": 613,
+    "sha256": "06da08d485339548f6be3aead95d3675b6deaee443816591acfc313cd71d1cff"
+  },
+  "aliasProof": {
+    "currentTsconfig": {
+      "path": "current-raw/packages/web/tsconfig.app.json",
+      "bytes": 771,
+      "sha256": "e825bde72fa4ab87138bf623417dc8a6a2d1f2173e2eefcbce098d582aa6be80"
+    },
+    "upstreamTsconfig": {
+      "path": "upstream-raw/web/tsconfig.app.json",
+      "bytes": 783,
+      "sha256": "2f63361258de723cecb08a178454b59294e7c1b64d4e57d688f80d27573125dc"
+    },
+    "currentAlias": [
+      "./src/*"
+    ],
+    "upstreamAlias": [
+      "./src/*"
+    ],
+    "candidateGitBlobSha": "79f70fc0860fa7b5dd4172595cd495769e1a8ff9"
+  },
+  "normalization": {
+    "typescriptVersion": "5.9.3",
+    "prettierVersion": "2.8.8",
+    "parsedSyntaxDiagnostics": 0,
+    "body": "TypeScript printer removeComments; exclude top-level import declarations; Prettier fixed formatting. No transpilation or renaming of declarations, function bodies, literals, identifiers, JSX, or import bindings.",
+    "imports": "Resolve only explicit @/*->./src/* mappings proven from both app tsconfigs and ordinary relative POSIX path normalization. Retain imported/local/typeOnly bindings. Compare records ignoring order; this does not prove runtime module resolution or side-effect ordering equivalence.",
+    "bodyOnlyMatchIsNotFullModuleRawMatch": true,
+    "wholeModuleNormalizedMatchIsNotImportRefOrCopyrightOwnership": true,
+    "prettierOptions": {
+      "semi": false,
+      "singleQuote": true,
+      "tabWidth": 2,
+      "useTabs": false,
+      "trailingComma": "all",
+      "quoteProps": "as-needed",
+      "endOfLine": "lf"
+    }
+  },
+  "mappings": [
+    {
+      "localPath": "packages/web/src/context/theme-provider.tsx",
+      "upstreamPath": "web/src/context/theme-provider.tsx",
+      "candidateUrl": "https://github.com/QuantumNous/new-api/blob/973cf8ef4600947a4270e95ada7916740fa8264c/web/src/context/theme-provider.tsx",
+      "originalRawMatch": false,
+      "copyrightAndFormattingMatch": false,
+      "bodyPrintedWithoutImportsOrCommentsEqual": false,
+      "resolvedImportRecordsEqualIgnoringOrder": false,
+      "moduleSyntaxMatchesOnlyAfterDeclaredTransforms": false,
+      "imports": {
+        "current": [
+          {
+            "specifier": "react",
+            "resolved": "react",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "createContext",
+                "local": "createContext",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "useCallback",
+                "local": "useCallback",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "useContext",
+                "local": "useContext",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "useEffect",
+                "local": "useEffect",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "useMemo",
+                "local": "useMemo",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "useState",
+                "local": "useState",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@/lib/cookies",
+            "resolved": "src/lib/cookies",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "getCookie",
+                "local": "getCookie",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "removeCookie",
+                "local": "removeCookie",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "setCookie",
+                "local": "setCookie",
+                "typeOnly": false
+              }
+            ]
+          }
+        ],
+        "upstream": [
+          {
+            "specifier": "react",
+            "resolved": "react",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "createContext",
+                "local": "createContext",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "useCallback",
+                "local": "useCallback",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "useContext",
+                "local": "useContext",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "useEffect",
+                "local": "useEffect",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "useMemo",
+                "local": "useMemo",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "useState",
+                "local": "useState",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@/lib/theme-storage",
+            "resolved": "src/lib/theme-storage",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "readThemePreference",
+                "local": "readThemePreference",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "THEME_STORAGE_KEYS",
+                "local": "THEME_STORAGE_KEYS",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "writeThemePreference",
+                "local": "writeThemePreference",
+                "typeOnly": false
+              }
+            ]
+          }
+        ]
+      },
+      "bodyRecords": {
+        "current": {
+          "path": "module-body-printed/current/src/context/theme-provider.tsx",
+          "bytes": 2996,
+          "sha256": "aebb7f93d223a65819e2ffce8d3e9bb970f7771db172f7a2c0a7f873cd82bf76"
+        },
+        "upstream": {
+          "path": "module-body-printed/upstream/src/context/theme-provider.tsx",
+          "bytes": 2683,
+          "sha256": "3b4cc7cd657f1940e6c8f5727d1303c21a020495127f084a0e43141a483592cb"
+        }
+      }
+    },
+    {
+      "localPath": "packages/web/src/context/theme-customization-provider.tsx",
+      "upstreamPath": "web/src/context/theme-customization-provider.tsx",
+      "candidateUrl": "https://github.com/QuantumNous/new-api/blob/973cf8ef4600947a4270e95ada7916740fa8264c/web/src/context/theme-customization-provider.tsx",
+      "originalRawMatch": false,
+      "copyrightAndFormattingMatch": false,
+      "bodyPrintedWithoutImportsOrCommentsEqual": false,
+      "resolvedImportRecordsEqualIgnoringOrder": false,
+      "moduleSyntaxMatchesOnlyAfterDeclaredTransforms": false,
+      "imports": {
+        "current": [
+          {
+            "specifier": "react",
+            "resolved": "react",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "createContext",
+                "local": "createContext",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "useCallback",
+                "local": "useCallback",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "useContext",
+                "local": "useContext",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "useEffect",
+                "local": "useEffect",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "useMemo",
+                "local": "useMemo",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "useState",
+                "local": "useState",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@/lib/cookies",
+            "resolved": "src/lib/cookies",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "getCookie",
+                "local": "getCookie",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "removeCookie",
+                "local": "removeCookie",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "setCookie",
+                "local": "setCookie",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@/lib/theme-customization",
+            "resolved": "src/lib/theme-customization",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "CONTENT_LAYOUT_VALUES",
+                "local": "CONTENT_LAYOUT_VALUES",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "ContentLayout",
+                "local": "ContentLayout",
+                "typeOnly": true
+              },
+              {
+                "kind": "named",
+                "imported": "DEFAULT_THEME_CUSTOMIZATION",
+                "local": "DEFAULT_THEME_CUSTOMIZATION",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "resolveThemeFont",
+                "local": "resolveThemeFont",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "THEME_COOKIE_KEYS",
+                "local": "THEME_COOKIE_KEYS",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "THEME_FONT_VALUES",
+                "local": "THEME_FONT_VALUES",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "THEME_PRESET_VALUES",
+                "local": "THEME_PRESET_VALUES",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "THEME_RADIUS_VALUES",
+                "local": "THEME_RADIUS_VALUES",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "THEME_SCALE_VALUES",
+                "local": "THEME_SCALE_VALUES",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "ThemeCustomization",
+                "local": "ThemeCustomization",
+                "typeOnly": true
+              },
+              {
+                "kind": "named",
+                "imported": "ThemeFont",
+                "local": "ThemeFont",
+                "typeOnly": true
+              },
+              {
+                "kind": "named",
+                "imported": "ThemePreset",
+                "local": "ThemePreset",
+                "typeOnly": true
+              },
+              {
+                "kind": "named",
+                "imported": "ThemeRadius",
+                "local": "ThemeRadius",
+                "typeOnly": true
+              },
+              {
+                "kind": "named",
+                "imported": "ThemeScale",
+                "local": "ThemeScale",
+                "typeOnly": true
+              }
+            ]
+          }
+        ],
+        "upstream": [
+          {
+            "specifier": "react",
+            "resolved": "react",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "createContext",
+                "local": "createContext",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "useCallback",
+                "local": "useCallback",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "useContext",
+                "local": "useContext",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "useEffect",
+                "local": "useEffect",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "useMemo",
+                "local": "useMemo",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "useState",
+                "local": "useState",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@/lib/theme-customization",
+            "resolved": "src/lib/theme-customization",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "CONTENT_LAYOUT_VALUES",
+                "local": "CONTENT_LAYOUT_VALUES",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "ContentLayout",
+                "local": "ContentLayout",
+                "typeOnly": true
+              },
+              {
+                "kind": "named",
+                "imported": "DEFAULT_THEME_CUSTOMIZATION",
+                "local": "DEFAULT_THEME_CUSTOMIZATION",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "resolveThemeFont",
+                "local": "resolveThemeFont",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "THEME_FONT_VALUES",
+                "local": "THEME_FONT_VALUES",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "THEME_PRESET_VALUES",
+                "local": "THEME_PRESET_VALUES",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "THEME_RADIUS_VALUES",
+                "local": "THEME_RADIUS_VALUES",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "THEME_SCALE_VALUES",
+                "local": "THEME_SCALE_VALUES",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "ThemeCustomization",
+                "local": "ThemeCustomization",
+                "typeOnly": true
+              },
+              {
+                "kind": "named",
+                "imported": "ThemeFont",
+                "local": "ThemeFont",
+                "typeOnly": true
+              },
+              {
+                "kind": "named",
+                "imported": "ThemePreset",
+                "local": "ThemePreset",
+                "typeOnly": true
+              },
+              {
+                "kind": "named",
+                "imported": "ThemeRadius",
+                "local": "ThemeRadius",
+                "typeOnly": true
+              },
+              {
+                "kind": "named",
+                "imported": "ThemeScale",
+                "local": "ThemeScale",
+                "typeOnly": true
+              }
+            ]
+          },
+          {
+            "specifier": "@/lib/theme-storage",
+            "resolved": "src/lib/theme-storage",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "readThemePreference",
+                "local": "readThemePreference",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "THEME_STORAGE_KEYS",
+                "local": "THEME_STORAGE_KEYS",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "writeThemePreference",
+                "local": "writeThemePreference",
+                "typeOnly": false
+              }
+            ]
+          }
+        ]
+      },
+      "bodyRecords": {
+        "current": {
+          "path": "module-body-printed/current/src/context/theme-customization-provider.tsx",
+          "bytes": 5554,
+          "sha256": "057dbabc5d67e96957090d96a013d1fa827d8736418224a96993fa596a24ed10"
+        },
+        "upstream": {
+          "path": "module-body-printed/upstream/src/context/theme-customization-provider.tsx",
+          "bytes": 5087,
+          "sha256": "7b2c71fa74192412f0d85cb8bcf5651ec0bde40db1e86ada2cf6aeab1ccac252"
+        }
+      }
+    },
+    {
+      "localPath": "packages/web/src/context/layout-provider.tsx",
+      "upstreamPath": "web/src/context/layout-provider.tsx",
+      "candidateUrl": "https://github.com/QuantumNous/new-api/blob/973cf8ef4600947a4270e95ada7916740fa8264c/web/src/context/layout-provider.tsx",
+      "originalRawMatch": false,
+      "copyrightAndFormattingMatch": false,
+      "bodyPrintedWithoutImportsOrCommentsEqual": true,
+      "resolvedImportRecordsEqualIgnoringOrder": true,
+      "moduleSyntaxMatchesOnlyAfterDeclaredTransforms": true,
+      "imports": {
+        "current": [
+          {
+            "specifier": "react",
+            "resolved": "react",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "createContext",
+                "local": "createContext",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "useContext",
+                "local": "useContext",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "useState",
+                "local": "useState",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@/lib/cookies",
+            "resolved": "src/lib/cookies",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "getCookie",
+                "local": "getCookie",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "setCookie",
+                "local": "setCookie",
+                "typeOnly": false
+              }
+            ]
+          }
+        ],
+        "upstream": [
+          {
+            "specifier": "react",
+            "resolved": "react",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "createContext",
+                "local": "createContext",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "useContext",
+                "local": "useContext",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "useState",
+                "local": "useState",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@/lib/cookies",
+            "resolved": "src/lib/cookies",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "getCookie",
+                "local": "getCookie",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "setCookie",
+                "local": "setCookie",
+                "typeOnly": false
+              }
+            ]
+          }
+        ]
+      },
+      "bodyRecords": {
+        "current": {
+          "path": "module-body-printed/current/src/context/layout-provider.tsx",
+          "bytes": 2094,
+          "sha256": "0e9542b3cfef26f947d6af16495feb26849ff45281d0487a1d133294cd957fbc"
+        },
+        "upstream": {
+          "path": "module-body-printed/upstream/src/context/layout-provider.tsx",
+          "bytes": 2094,
+          "sha256": "0e9542b3cfef26f947d6af16495feb26849ff45281d0487a1d133294cd957fbc"
+        }
+      }
+    },
+    {
+      "localPath": "packages/web/src/context/direction-provider.tsx",
+      "upstreamPath": "web/src/context/direction-provider.tsx",
+      "candidateUrl": "https://github.com/QuantumNous/new-api/blob/973cf8ef4600947a4270e95ada7916740fa8264c/web/src/context/direction-provider.tsx",
+      "originalRawMatch": false,
+      "copyrightAndFormattingMatch": false,
+      "bodyPrintedWithoutImportsOrCommentsEqual": true,
+      "resolvedImportRecordsEqualIgnoringOrder": true,
+      "moduleSyntaxMatchesOnlyAfterDeclaredTransforms": true,
+      "imports": {
+        "current": [
+          {
+            "specifier": "react",
+            "resolved": "react",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "createContext",
+                "local": "createContext",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "useContext",
+                "local": "useContext",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "useEffect",
+                "local": "useEffect",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "useState",
+                "local": "useState",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@base-ui/react/direction-provider",
+            "resolved": "@base-ui/react/direction-provider",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "DirectionProvider",
+                "local": "BaseDirectionProvider",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@/lib/cookies",
+            "resolved": "src/lib/cookies",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "getCookie",
+                "local": "getCookie",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "removeCookie",
+                "local": "removeCookie",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "setCookie",
+                "local": "setCookie",
+                "typeOnly": false
+              }
+            ]
+          }
+        ],
+        "upstream": [
+          {
+            "specifier": "@base-ui/react/direction-provider",
+            "resolved": "@base-ui/react/direction-provider",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "DirectionProvider",
+                "local": "BaseDirectionProvider",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "react",
+            "resolved": "react",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "createContext",
+                "local": "createContext",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "useContext",
+                "local": "useContext",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "useEffect",
+                "local": "useEffect",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "useState",
+                "local": "useState",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@/lib/cookies",
+            "resolved": "src/lib/cookies",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "getCookie",
+                "local": "getCookie",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "removeCookie",
+                "local": "removeCookie",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "setCookie",
+                "local": "setCookie",
+                "typeOnly": false
+              }
+            ]
+          }
+        ]
+      },
+      "bodyRecords": {
+        "current": {
+          "path": "module-body-printed/current/src/context/direction-provider.tsx",
+          "bytes": 1382,
+          "sha256": "208a9b7c92c0698300db5c28fe751fc9a0d471fadd73c166d8b0027519936632"
+        },
+        "upstream": {
+          "path": "module-body-printed/upstream/src/context/direction-provider.tsx",
+          "bytes": 1382,
+          "sha256": "208a9b7c92c0698300db5c28fe751fc9a0d471fadd73c166d8b0027519936632"
+        }
+      }
+    },
+    {
+      "localPath": "packages/web/src/context/font-provider.tsx",
+      "upstreamPath": "web/src/context/font-provider.tsx",
+      "candidateUrl": "https://github.com/QuantumNous/new-api/blob/973cf8ef4600947a4270e95ada7916740fa8264c/web/src/context/font-provider.tsx",
+      "originalRawMatch": false,
+      "copyrightAndFormattingMatch": false,
+      "bodyPrintedWithoutImportsOrCommentsEqual": true,
+      "resolvedImportRecordsEqualIgnoringOrder": true,
+      "moduleSyntaxMatchesOnlyAfterDeclaredTransforms": true,
+      "imports": {
+        "current": [
+          {
+            "specifier": "react",
+            "resolved": "react",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "createContext",
+                "local": "createContext",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "useContext",
+                "local": "useContext",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "useEffect",
+                "local": "useEffect",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "useState",
+                "local": "useState",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@/config/fonts",
+            "resolved": "src/config/fonts",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "fonts",
+                "local": "fonts",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@/lib/cookies",
+            "resolved": "src/lib/cookies",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "getCookie",
+                "local": "getCookie",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "removeCookie",
+                "local": "removeCookie",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "setCookie",
+                "local": "setCookie",
+                "typeOnly": false
+              }
+            ]
+          }
+        ],
+        "upstream": [
+          {
+            "specifier": "react",
+            "resolved": "react",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "createContext",
+                "local": "createContext",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "useContext",
+                "local": "useContext",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "useEffect",
+                "local": "useEffect",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "useState",
+                "local": "useState",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@/config/fonts",
+            "resolved": "src/config/fonts",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "fonts",
+                "local": "fonts",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@/lib/cookies",
+            "resolved": "src/lib/cookies",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "getCookie",
+                "local": "getCookie",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "removeCookie",
+                "local": "removeCookie",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "setCookie",
+                "local": "setCookie",
+                "typeOnly": false
+              }
+            ]
+          }
+        ]
+      },
+      "bodyRecords": {
+        "current": {
+          "path": "module-body-printed/current/src/context/font-provider.tsx",
+          "bytes": 1316,
+          "sha256": "28eb740c6e4aecec1c37ccee53081b0b4106619d84ddd1d9e051efcb3b7d5064"
+        },
+        "upstream": {
+          "path": "module-body-printed/upstream/src/context/font-provider.tsx",
+          "bytes": 1316,
+          "sha256": "28eb740c6e4aecec1c37ccee53081b0b4106619d84ddd1d9e051efcb3b7d5064"
+        }
+      }
+    },
+    {
+      "localPath": "packages/web/src/lib/utils.ts",
+      "upstreamPath": "web/src/lib/utils.ts",
+      "candidateUrl": "https://github.com/QuantumNous/new-api/blob/973cf8ef4600947a4270e95ada7916740fa8264c/web/src/lib/utils.ts",
+      "originalRawMatch": false,
+      "copyrightAndFormattingMatch": true,
+      "bodyPrintedWithoutImportsOrCommentsEqual": true,
+      "resolvedImportRecordsEqualIgnoringOrder": true,
+      "moduleSyntaxMatchesOnlyAfterDeclaredTransforms": true,
+      "imports": {
+        "current": [
+          {
+            "specifier": "clsx",
+            "resolved": "clsx",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "ClassValue",
+                "local": "ClassValue",
+                "typeOnly": true
+              },
+              {
+                "kind": "named",
+                "imported": "clsx",
+                "local": "clsx",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "tailwind-merge",
+            "resolved": "tailwind-merge",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "twMerge",
+                "local": "twMerge",
+                "typeOnly": false
+              }
+            ]
+          }
+        ],
+        "upstream": [
+          {
+            "specifier": "clsx",
+            "resolved": "clsx",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "ClassValue",
+                "local": "ClassValue",
+                "typeOnly": true
+              },
+              {
+                "kind": "named",
+                "imported": "clsx",
+                "local": "clsx",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "tailwind-merge",
+            "resolved": "tailwind-merge",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "twMerge",
+                "local": "twMerge",
+                "typeOnly": false
+              }
+            ]
+          }
+        ]
+      },
+      "bodyRecords": {
+        "current": {
+          "path": "module-body-printed/current/src/lib/utils.ts",
+          "bytes": 1371,
+          "sha256": "22d89b4eba4b7e0b125857a445690c673caaeee2e1318861e971328d68c5cd4f"
+        },
+        "upstream": {
+          "path": "module-body-printed/upstream/src/lib/utils.ts",
+          "bytes": 1371,
+          "sha256": "22d89b4eba4b7e0b125857a445690c673caaeee2e1318861e971328d68c5cd4f"
+        }
+      }
+    },
+    {
+      "localPath": "packages/web/src/lib/cookies.ts",
+      "upstreamPath": "web/src/lib/cookies.ts",
+      "candidateUrl": "https://github.com/QuantumNous/new-api/blob/973cf8ef4600947a4270e95ada7916740fa8264c/web/src/lib/cookies.ts",
+      "originalRawMatch": false,
+      "copyrightAndFormattingMatch": true,
+      "bodyPrintedWithoutImportsOrCommentsEqual": true,
+      "resolvedImportRecordsEqualIgnoringOrder": true,
+      "moduleSyntaxMatchesOnlyAfterDeclaredTransforms": true,
+      "imports": {
+        "current": [],
+        "upstream": []
+      },
+      "bodyRecords": {
+        "current": {
+          "path": "module-body-printed/current/src/lib/cookies.ts",
+          "bytes": 741,
+          "sha256": "a4dc05e04551a4e4c9fc6d9913816ed57a00cd79248d205a32d14792d400618d"
+        },
+        "upstream": {
+          "path": "module-body-printed/upstream/src/lib/cookies.ts",
+          "bytes": 741,
+          "sha256": "a4dc05e04551a4e4c9fc6d9913816ed57a00cd79248d205a32d14792d400618d"
+        }
+      }
+    },
+    {
+      "localPath": "packages/web/src/hooks/use-mobile.tsx",
+      "upstreamPath": "web/src/hooks/use-mobile.tsx",
+      "candidateUrl": "https://github.com/QuantumNous/new-api/blob/973cf8ef4600947a4270e95ada7916740fa8264c/web/src/hooks/use-mobile.tsx",
+      "originalRawMatch": false,
+      "copyrightAndFormattingMatch": true,
+      "bodyPrintedWithoutImportsOrCommentsEqual": true,
+      "resolvedImportRecordsEqualIgnoringOrder": true,
+      "moduleSyntaxMatchesOnlyAfterDeclaredTransforms": true,
+      "imports": {
+        "current": [
+          {
+            "specifier": "react",
+            "resolved": "react",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "namespace",
+                "local": "React"
+              }
+            ]
+          }
+        ],
+        "upstream": [
+          {
+            "specifier": "react",
+            "resolved": "react",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "namespace",
+                "local": "React"
+              }
+            ]
+          }
+        ]
+      },
+      "bodyRecords": {
+        "current": {
+          "path": "module-body-printed/current/src/hooks/use-mobile.tsx",
+          "bytes": 530,
+          "sha256": "e4b8022da5d4f6b156b31918a49ef5ba01f1636d1c8f795cfb8294dfc4de4ac9"
+        },
+        "upstream": {
+          "path": "module-body-printed/upstream/src/hooks/use-mobile.tsx",
+          "bytes": 530,
+          "sha256": "e4b8022da5d4f6b156b31918a49ef5ba01f1636d1c8f795cfb8294dfc4de4ac9"
+        }
+      }
+    },
+    {
+      "localPath": "packages/web/src/components/ui/sidebar.tsx",
+      "upstreamPath": "web/src/components/ui/sidebar.tsx",
+      "candidateUrl": "https://github.com/QuantumNous/new-api/blob/973cf8ef4600947a4270e95ada7916740fa8264c/web/src/components/ui/sidebar.tsx",
+      "originalRawMatch": false,
+      "copyrightAndFormattingMatch": false,
+      "bodyPrintedWithoutImportsOrCommentsEqual": false,
+      "resolvedImportRecordsEqualIgnoringOrder": true,
+      "moduleSyntaxMatchesOnlyAfterDeclaredTransforms": false,
+      "imports": {
+        "current": [
+          {
+            "specifier": "react",
+            "resolved": "react",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "namespace",
+                "local": "React"
+              }
+            ]
+          },
+          {
+            "specifier": "@base-ui/react/merge-props",
+            "resolved": "@base-ui/react/merge-props",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "mergeProps",
+                "local": "mergeProps",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@base-ui/react/use-render",
+            "resolved": "@base-ui/react/use-render",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "useRender",
+                "local": "useRender",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@hugeicons/core-free-icons",
+            "resolved": "@hugeicons/core-free-icons",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "SidebarLeftIcon",
+                "local": "SidebarLeftIcon",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@hugeicons/react",
+            "resolved": "@hugeicons/react",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "HugeiconsIcon",
+                "local": "HugeiconsIcon",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "class-variance-authority",
+            "resolved": "class-variance-authority",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "cva",
+                "local": "cva",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "VariantProps",
+                "local": "VariantProps",
+                "typeOnly": true
+              }
+            ]
+          },
+          {
+            "specifier": "@/lib/utils",
+            "resolved": "src/lib/utils",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "cn",
+                "local": "cn",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@/hooks/use-mobile",
+            "resolved": "src/hooks/use-mobile",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "useIsMobile",
+                "local": "useIsMobile",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@/components/ui/button",
+            "resolved": "src/components/ui/button",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "Button",
+                "local": "Button",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@/components/ui/input",
+            "resolved": "src/components/ui/input",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "Input",
+                "local": "Input",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@/components/ui/separator",
+            "resolved": "src/components/ui/separator",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "Separator",
+                "local": "Separator",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@/components/ui/sheet",
+            "resolved": "src/components/ui/sheet",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "Sheet",
+                "local": "Sheet",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "SheetContent",
+                "local": "SheetContent",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "SheetDescription",
+                "local": "SheetDescription",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "SheetHeader",
+                "local": "SheetHeader",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "SheetTitle",
+                "local": "SheetTitle",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@/components/ui/skeleton",
+            "resolved": "src/components/ui/skeleton",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "Skeleton",
+                "local": "Skeleton",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@/components/ui/tooltip",
+            "resolved": "src/components/ui/tooltip",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "Tooltip",
+                "local": "Tooltip",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "TooltipContent",
+                "local": "TooltipContent",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "TooltipProvider",
+                "local": "TooltipProvider",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "TooltipTrigger",
+                "local": "TooltipTrigger",
+                "typeOnly": false
+              }
+            ]
+          }
+        ],
+        "upstream": [
+          {
+            "specifier": "@base-ui/react/merge-props",
+            "resolved": "@base-ui/react/merge-props",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "mergeProps",
+                "local": "mergeProps",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@base-ui/react/use-render",
+            "resolved": "@base-ui/react/use-render",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "useRender",
+                "local": "useRender",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@hugeicons/core-free-icons",
+            "resolved": "@hugeicons/core-free-icons",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "SidebarLeftIcon",
+                "local": "SidebarLeftIcon",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@hugeicons/react",
+            "resolved": "@hugeicons/react",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "HugeiconsIcon",
+                "local": "HugeiconsIcon",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "class-variance-authority",
+            "resolved": "class-variance-authority",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "cva",
+                "local": "cva",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "VariantProps",
+                "local": "VariantProps",
+                "typeOnly": true
+              }
+            ]
+          },
+          {
+            "specifier": "react",
+            "resolved": "react",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "namespace",
+                "local": "React"
+              }
+            ]
+          },
+          {
+            "specifier": "@/components/ui/button",
+            "resolved": "src/components/ui/button",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "Button",
+                "local": "Button",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@/components/ui/input",
+            "resolved": "src/components/ui/input",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "Input",
+                "local": "Input",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@/components/ui/separator",
+            "resolved": "src/components/ui/separator",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "Separator",
+                "local": "Separator",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@/components/ui/sheet",
+            "resolved": "src/components/ui/sheet",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "Sheet",
+                "local": "Sheet",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "SheetContent",
+                "local": "SheetContent",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "SheetDescription",
+                "local": "SheetDescription",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "SheetHeader",
+                "local": "SheetHeader",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "SheetTitle",
+                "local": "SheetTitle",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@/components/ui/skeleton",
+            "resolved": "src/components/ui/skeleton",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "Skeleton",
+                "local": "Skeleton",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@/components/ui/tooltip",
+            "resolved": "src/components/ui/tooltip",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "Tooltip",
+                "local": "Tooltip",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "TooltipContent",
+                "local": "TooltipContent",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "TooltipProvider",
+                "local": "TooltipProvider",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "TooltipTrigger",
+                "local": "TooltipTrigger",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@/hooks/use-mobile",
+            "resolved": "src/hooks/use-mobile",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "useIsMobile",
+                "local": "useIsMobile",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@/lib/utils",
+            "resolved": "src/lib/utils",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "cn",
+                "local": "cn",
+                "typeOnly": false
+              }
+            ]
+          }
+        ]
+      },
+      "bodyRecords": {
+        "current": {
+          "path": "module-body-printed/current/src/components/ui/sidebar.tsx",
+          "bytes": 20527,
+          "sha256": "b8739af95ecf577bae10e78a2df232afe237d59c8de88911c346bea617a41cfb"
+        },
+        "upstream": {
+          "path": "module-body-printed/upstream/src/components/ui/sidebar.tsx",
+          "bytes": 20601,
+          "sha256": "31d53c92d828530e812c83a0f4f91a0982687b77ff27abd9d0d412568983d473"
+        }
+      }
+    },
+    {
+      "localPath": "packages/web/src/components/ui/button.tsx",
+      "upstreamPath": "web/src/components/ui/button.tsx",
+      "candidateUrl": "https://github.com/QuantumNous/new-api/blob/973cf8ef4600947a4270e95ada7916740fa8264c/web/src/components/ui/button.tsx",
+      "originalRawMatch": false,
+      "copyrightAndFormattingMatch": false,
+      "bodyPrintedWithoutImportsOrCommentsEqual": true,
+      "resolvedImportRecordsEqualIgnoringOrder": true,
+      "moduleSyntaxMatchesOnlyAfterDeclaredTransforms": true,
+      "imports": {
+        "current": [
+          {
+            "specifier": "react",
+            "resolved": "react",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "isValidElement",
+                "local": "isValidElement",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@base-ui/react/button",
+            "resolved": "@base-ui/react/button",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "Button",
+                "local": "ButtonPrimitive",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "class-variance-authority",
+            "resolved": "class-variance-authority",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "cva",
+                "local": "cva",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "VariantProps",
+                "local": "VariantProps",
+                "typeOnly": true
+              }
+            ]
+          },
+          {
+            "specifier": "../../lib/utils",
+            "resolved": "src/lib/utils",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "cn",
+                "local": "cn",
+                "typeOnly": false
+              }
+            ]
+          }
+        ],
+        "upstream": [
+          {
+            "specifier": "@base-ui/react/button",
+            "resolved": "@base-ui/react/button",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "Button",
+                "local": "ButtonPrimitive",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "class-variance-authority",
+            "resolved": "class-variance-authority",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "cva",
+                "local": "cva",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "VariantProps",
+                "local": "VariantProps",
+                "typeOnly": true
+              }
+            ]
+          },
+          {
+            "specifier": "react",
+            "resolved": "react",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "isValidElement",
+                "local": "isValidElement",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@/lib/utils",
+            "resolved": "src/lib/utils",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "cn",
+                "local": "cn",
+                "typeOnly": false
+              }
+            ]
+          }
+        ]
+      },
+      "bodyRecords": {
+        "current": {
+          "path": "module-body-printed/current/src/components/ui/button.tsx",
+          "bytes": 3202,
+          "sha256": "fbbdbaf078cb0bcc97ae7238a7e00e8b978aa3a5fd821aa9253344871f470ed6"
+        },
+        "upstream": {
+          "path": "module-body-printed/upstream/src/components/ui/button.tsx",
+          "bytes": 3202,
+          "sha256": "fbbdbaf078cb0bcc97ae7238a7e00e8b978aa3a5fd821aa9253344871f470ed6"
+        }
+      }
+    },
+    {
+      "localPath": "packages/web/src/components/ui/card.tsx",
+      "upstreamPath": "web/src/components/ui/card.tsx",
+      "candidateUrl": "https://github.com/QuantumNous/new-api/blob/973cf8ef4600947a4270e95ada7916740fa8264c/web/src/components/ui/card.tsx",
+      "originalRawMatch": false,
+      "copyrightAndFormattingMatch": false,
+      "bodyPrintedWithoutImportsOrCommentsEqual": true,
+      "resolvedImportRecordsEqualIgnoringOrder": true,
+      "moduleSyntaxMatchesOnlyAfterDeclaredTransforms": true,
+      "imports": {
+        "current": [
+          {
+            "specifier": "react",
+            "resolved": "react",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "namespace",
+                "local": "React"
+              }
+            ]
+          },
+          {
+            "specifier": "../../lib/utils",
+            "resolved": "src/lib/utils",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "cn",
+                "local": "cn",
+                "typeOnly": false
+              }
+            ]
+          }
+        ],
+        "upstream": [
+          {
+            "specifier": "react",
+            "resolved": "react",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "namespace",
+                "local": "React"
+              }
+            ]
+          },
+          {
+            "specifier": "@/lib/utils",
+            "resolved": "src/lib/utils",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "cn",
+                "local": "cn",
+                "typeOnly": false
+              }
+            ]
+          }
+        ]
+      },
+      "bodyRecords": {
+        "current": {
+          "path": "module-body-printed/current/src/components/ui/card.tsx",
+          "bytes": 2562,
+          "sha256": "e0f4f000f1f89cbd746fa2485ad17073e46d166a72cfab43b42d6e4467c19749"
+        },
+        "upstream": {
+          "path": "module-body-printed/upstream/src/components/ui/card.tsx",
+          "bytes": 2562,
+          "sha256": "e0f4f000f1f89cbd746fa2485ad17073e46d166a72cfab43b42d6e4467c19749"
+        }
+      }
+    },
+    {
+      "localPath": "packages/web/src/components/ui/dialog.tsx",
+      "upstreamPath": "web/src/components/ui/dialog.tsx",
+      "candidateUrl": "https://github.com/QuantumNous/new-api/blob/973cf8ef4600947a4270e95ada7916740fa8264c/web/src/components/ui/dialog.tsx",
+      "originalRawMatch": false,
+      "copyrightAndFormattingMatch": false,
+      "bodyPrintedWithoutImportsOrCommentsEqual": false,
+      "resolvedImportRecordsEqualIgnoringOrder": false,
+      "moduleSyntaxMatchesOnlyAfterDeclaredTransforms": false,
+      "imports": {
+        "current": [
+          {
+            "specifier": "react",
+            "resolved": "react",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "namespace",
+                "local": "React"
+              }
+            ]
+          },
+          {
+            "specifier": "@base-ui/react/dialog",
+            "resolved": "@base-ui/react/dialog",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "Dialog",
+                "local": "DialogPrimitive",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@hugeicons/core-free-icons",
+            "resolved": "@hugeicons/core-free-icons",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "Cancel01Icon",
+                "local": "Cancel01Icon",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@hugeicons/react",
+            "resolved": "@hugeicons/react",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "HugeiconsIcon",
+                "local": "HugeiconsIcon",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "../../lib/utils",
+            "resolved": "src/lib/utils",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "cn",
+                "local": "cn",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "./button",
+            "resolved": "src/components/ui/button",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "Button",
+                "local": "Button",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "./portal-container",
+            "resolved": "src/components/ui/portal-container",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "useUiPortalContainer",
+                "local": "useUiPortalContainer",
+                "typeOnly": false
+              }
+            ]
+          }
+        ],
+        "upstream": [
+          {
+            "specifier": "@base-ui/react/dialog",
+            "resolved": "@base-ui/react/dialog",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "Dialog",
+                "local": "DialogPrimitive",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@hugeicons/core-free-icons",
+            "resolved": "@hugeicons/core-free-icons",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "Cancel01Icon",
+                "local": "Cancel01Icon",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@hugeicons/react",
+            "resolved": "@hugeicons/react",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "HugeiconsIcon",
+                "local": "HugeiconsIcon",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "react",
+            "resolved": "react",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "namespace",
+                "local": "React"
+              }
+            ]
+          },
+          {
+            "specifier": "@/components/ui/button",
+            "resolved": "src/components/ui/button",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "Button",
+                "local": "Button",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@/lib/utils",
+            "resolved": "src/lib/utils",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "cn",
+                "local": "cn",
+                "typeOnly": false
+              }
+            ]
+          }
+        ]
+      },
+      "bodyRecords": {
+        "current": {
+          "path": "module-body-printed/current/src/components/ui/dialog.tsx",
+          "bytes": 3930,
+          "sha256": "80005e3b8a02e0b71533685ea41354a443c6c4636ec55926034eed9244786699"
+        },
+        "upstream": {
+          "path": "module-body-printed/upstream/src/components/ui/dialog.tsx",
+          "bytes": 3959,
+          "sha256": "4c718b87a28aeb8828bc9b36f15064277e86a97eafe5e11585d01da3ae7341b3"
+        }
+      }
+    },
+    {
+      "localPath": "packages/web/src/components/layout/components/app-sidebar.tsx",
+      "upstreamPath": "web/src/components/layout/components/app-sidebar.tsx",
+      "candidateUrl": "https://github.com/QuantumNous/new-api/blob/973cf8ef4600947a4270e95ada7916740fa8264c/web/src/components/layout/components/app-sidebar.tsx",
+      "originalRawMatch": false,
+      "copyrightAndFormattingMatch": false,
+      "bodyPrintedWithoutImportsOrCommentsEqual": true,
+      "resolvedImportRecordsEqualIgnoringOrder": true,
+      "moduleSyntaxMatchesOnlyAfterDeclaredTransforms": true,
+      "imports": {
+        "current": [
+          {
+            "specifier": "motion/react",
+            "resolved": "motion/react",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "AnimatePresence",
+                "local": "AnimatePresence",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "motion",
+                "local": "motion",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "useReducedMotion",
+                "local": "useReducedMotion",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@/lib/motion",
+            "resolved": "src/lib/motion",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "MOTION_TRANSITION",
+                "local": "MOTION_TRANSITION",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "MOTION_VARIANTS",
+                "local": "MOTION_VARIANTS",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@/context/layout-provider",
+            "resolved": "src/context/layout-provider",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "useLayout",
+                "local": "useLayout",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@/hooks/use-sidebar-view",
+            "resolved": "src/hooks/use-sidebar-view",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "useSidebarView",
+                "local": "useSidebarView",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@/components/ui/sidebar",
+            "resolved": "src/components/ui/sidebar",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "Sidebar",
+                "local": "Sidebar",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "SidebarContent",
+                "local": "SidebarContent",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "SidebarRail",
+                "local": "SidebarRail",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "./nav-group",
+            "resolved": "src/components/layout/components/nav-group",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "NavGroup",
+                "local": "NavGroup",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "./sidebar-view-header",
+            "resolved": "src/components/layout/components/sidebar-view-header",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "SidebarViewHeader",
+                "local": "SidebarViewHeader",
+                "typeOnly": false
+              }
+            ]
+          }
+        ],
+        "upstream": [
+          {
+            "specifier": "motion/react",
+            "resolved": "motion/react",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "AnimatePresence",
+                "local": "AnimatePresence",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "motion",
+                "local": "motion",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "useReducedMotion",
+                "local": "useReducedMotion",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@/components/ui/sidebar",
+            "resolved": "src/components/ui/sidebar",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "Sidebar",
+                "local": "Sidebar",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "SidebarContent",
+                "local": "SidebarContent",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "SidebarRail",
+                "local": "SidebarRail",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@/context/layout-provider",
+            "resolved": "src/context/layout-provider",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "useLayout",
+                "local": "useLayout",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@/hooks/use-sidebar-view",
+            "resolved": "src/hooks/use-sidebar-view",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "useSidebarView",
+                "local": "useSidebarView",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@/lib/motion",
+            "resolved": "src/lib/motion",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "MOTION_TRANSITION",
+                "local": "MOTION_TRANSITION",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "MOTION_VARIANTS",
+                "local": "MOTION_VARIANTS",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "./nav-group",
+            "resolved": "src/components/layout/components/nav-group",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "NavGroup",
+                "local": "NavGroup",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "./sidebar-view-header",
+            "resolved": "src/components/layout/components/sidebar-view-header",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "SidebarViewHeader",
+                "local": "SidebarViewHeader",
+                "typeOnly": false
+              }
+            ]
+          }
+        ]
+      },
+      "bodyRecords": {
+        "current": {
+          "path": "module-body-printed/current/src/components/layout/components/app-sidebar.tsx",
+          "bytes": 1020,
+          "sha256": "caed304571f5336f8092832407dc5e87500d2cba0ea6f6784e97f8da4eb26081"
+        },
+        "upstream": {
+          "path": "module-body-printed/upstream/src/components/layout/components/app-sidebar.tsx",
+          "bytes": 1020,
+          "sha256": "caed304571f5336f8092832407dc5e87500d2cba0ea6f6784e97f8da4eb26081"
+        }
+      }
+    },
+    {
+      "localPath": "packages/web/src/components/layout/components/nav-group.tsx",
+      "upstreamPath": "web/src/components/layout/components/nav-group.tsx",
+      "candidateUrl": "https://github.com/QuantumNous/new-api/blob/973cf8ef4600947a4270e95ada7916740fa8264c/web/src/components/layout/components/nav-group.tsx",
+      "originalRawMatch": false,
+      "copyrightAndFormattingMatch": false,
+      "bodyPrintedWithoutImportsOrCommentsEqual": false,
+      "resolvedImportRecordsEqualIgnoringOrder": false,
+      "moduleSyntaxMatchesOnlyAfterDeclaredTransforms": false,
+      "imports": {
+        "current": [
+          {
+            "specifier": "react",
+            "resolved": "react",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "ReactNode",
+                "local": "ReactNode",
+                "typeOnly": true
+              },
+              {
+                "kind": "named",
+                "imported": "useEffect",
+                "local": "useEffect",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "useState",
+                "local": "useState",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@tanstack/react-router",
+            "resolved": "@tanstack/react-router",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "Link",
+                "local": "Link",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "useLocation",
+                "local": "useLocation",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "lucide-react",
+            "resolved": "lucide-react",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "ChevronRight",
+                "local": "ChevronRight",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@/components/ui/badge",
+            "resolved": "src/components/ui/badge",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "Badge",
+                "local": "Badge",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@/components/ui/collapsible",
+            "resolved": "src/components/ui/collapsible",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "Collapsible",
+                "local": "Collapsible",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "CollapsibleContent",
+                "local": "CollapsibleContent",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "CollapsibleTrigger",
+                "local": "CollapsibleTrigger",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@/components/ui/dropdown-menu",
+            "resolved": "src/components/ui/dropdown-menu",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "DropdownMenu",
+                "local": "DropdownMenu",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "DropdownMenuContent",
+                "local": "DropdownMenuContent",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "DropdownMenuGroup",
+                "local": "DropdownMenuGroup",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "DropdownMenuItem",
+                "local": "DropdownMenuItem",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "DropdownMenuLabel",
+                "local": "DropdownMenuLabel",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "DropdownMenuSeparator",
+                "local": "DropdownMenuSeparator",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "DropdownMenuTrigger",
+                "local": "DropdownMenuTrigger",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@/components/ui/sidebar",
+            "resolved": "src/components/ui/sidebar",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "SidebarGroup",
+                "local": "SidebarGroup",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "SidebarGroupLabel",
+                "local": "SidebarGroupLabel",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "SidebarMenu",
+                "local": "SidebarMenu",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "SidebarMenuButton",
+                "local": "SidebarMenuButton",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "SidebarMenuItem",
+                "local": "SidebarMenuItem",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "SidebarMenuSub",
+                "local": "SidebarMenuSub",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "SidebarMenuSubButton",
+                "local": "SidebarMenuSubButton",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "SidebarMenuSubItem",
+                "local": "SidebarMenuSubItem",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "useSidebar",
+                "local": "useSidebar",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "../lib/url-utils",
+            "resolved": "src/components/layout/lib/url-utils",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "checkIsActive",
+                "local": "checkIsActive",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "../types",
+            "resolved": "src/components/layout/types",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "NavChatPresets",
+                "local": "NavChatPresets",
+                "typeOnly": true
+              },
+              {
+                "kind": "named",
+                "imported": "NavCollapsible",
+                "local": "NavCollapsible",
+                "typeOnly": true
+              },
+              {
+                "kind": "named",
+                "imported": "NavGroup",
+                "local": "NavGroupProps",
+                "typeOnly": true
+              },
+              {
+                "kind": "named",
+                "imported": "NavLink",
+                "local": "NavLink",
+                "typeOnly": true
+              }
+            ]
+          },
+          {
+            "specifier": "./chat-presets-item",
+            "resolved": "src/components/layout/components/chat-presets-item",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "ChatPresetsItem",
+                "local": "ChatPresetsItem",
+                "typeOnly": false
+              }
+            ]
+          }
+        ],
+        "upstream": [
+          {
+            "specifier": "@tanstack/react-router",
+            "resolved": "@tanstack/react-router",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "Link",
+                "local": "Link",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "useLocation",
+                "local": "useLocation",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "lucide-react",
+            "resolved": "lucide-react",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "ChevronRight",
+                "local": "ChevronRight",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "react",
+            "resolved": "react",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "ReactNode",
+                "local": "ReactNode",
+                "typeOnly": true
+              },
+              {
+                "kind": "named",
+                "imported": "useEffect",
+                "local": "useEffect",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "useState",
+                "local": "useState",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@/components/ui/badge",
+            "resolved": "src/components/ui/badge",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "Badge",
+                "local": "Badge",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@/components/ui/collapsible",
+            "resolved": "src/components/ui/collapsible",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "Collapsible",
+                "local": "Collapsible",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "CollapsibleContent",
+                "local": "CollapsibleContent",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "CollapsibleTrigger",
+                "local": "CollapsibleTrigger",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@/components/ui/dropdown-menu",
+            "resolved": "src/components/ui/dropdown-menu",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "DropdownMenu",
+                "local": "DropdownMenu",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "DropdownMenuContent",
+                "local": "DropdownMenuContent",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "DropdownMenuGroup",
+                "local": "DropdownMenuGroup",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "DropdownMenuItem",
+                "local": "DropdownMenuItem",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "DropdownMenuLabel",
+                "local": "DropdownMenuLabel",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "DropdownMenuSeparator",
+                "local": "DropdownMenuSeparator",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "DropdownMenuTrigger",
+                "local": "DropdownMenuTrigger",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "@/components/ui/sidebar",
+            "resolved": "src/components/ui/sidebar",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "SidebarGroup",
+                "local": "SidebarGroup",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "SidebarGroupLabel",
+                "local": "SidebarGroupLabel",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "SidebarMenu",
+                "local": "SidebarMenu",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "SidebarMenuButton",
+                "local": "SidebarMenuButton",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "SidebarMenuItem",
+                "local": "SidebarMenuItem",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "SidebarMenuSub",
+                "local": "SidebarMenuSub",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "SidebarMenuSubButton",
+                "local": "SidebarMenuSubButton",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "SidebarMenuSubItem",
+                "local": "SidebarMenuSubItem",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "useSidebar",
+                "local": "useSidebar",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "../lib/url-utils",
+            "resolved": "src/components/layout/lib/url-utils",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "checkIsActive",
+                "local": "checkIsActive",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "../types",
+            "resolved": "src/components/layout/types",
+            "isTypeOnly": true,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "NavChatPresets",
+                "local": "NavChatPresets",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "NavCollapsible",
+                "local": "NavCollapsible",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "NavGroup",
+                "local": "NavGroupProps",
+                "typeOnly": false
+              },
+              {
+                "kind": "named",
+                "imported": "NavLink",
+                "local": "NavLink",
+                "typeOnly": false
+              }
+            ]
+          },
+          {
+            "specifier": "./chat-presets-item",
+            "resolved": "src/components/layout/components/chat-presets-item",
+            "isTypeOnly": false,
+            "sideEffectOnly": false,
+            "bindings": [
+              {
+                "kind": "named",
+                "imported": "ChatPresetsItem",
+                "local": "ChatPresetsItem",
+                "typeOnly": false
+              }
+            ]
+          }
+        ]
+      },
+      "bodyRecords": {
+        "current": {
+          "path": "module-body-printed/current/src/components/layout/components/nav-group.tsx",
+          "bytes": 5635,
+          "sha256": "6fc2af3dc0a598284ff7a1935d39eb4449b80737b616d0c27fc0597c30f84d94"
+        },
+        "upstream": {
+          "path": "module-body-printed/upstream/src/components/layout/components/nav-group.tsx",
+          "bytes": 5877,
+          "sha256": "79d9cdf9a5d97a77a85ceefab912e9fe4bb83012206e679ac3878472b428e0f2"
+        }
+      }
+    }
+  ],
+  "counts": {
+    "typescriptCodeFiles": 14,
+    "bodyOnlyMatches": 9,
+    "resolvedImportsAndBodyMatches": 9,
+    "wholeRawMatches": 0
+  },
+  "legalFacts": {
+    "commonUpstreamFrontendNoticePrefixRetainedInLocal": true,
+    "commonPrefixBytes": 959,
+    "commonPrefixSha256": "e5a6ab301a65155847a4a2dde9f66566e54cdf6bf165ef30e57b8ad03423dd19",
+    "upstreamAdditionalSections": [
+      "Third-Party Notices",
+      "Apache-2.0 Notices",
+      "Electron / Chromium Notices"
+    ],
+    "copyingAllAdditionalSectionsToWebNotRecommendedByThisEvidence": true,
+    "licenseOriginalRawMatches": false,
+    "licenseCollapsedWhitespaceOnlyMatches": true,
+    "copyrightHeaders": {
+      "upstream": "2023-2026 QuantumNous",
+      "local": "2023-2026 CinaGroup",
+      "differenceRecordedOnly": true,
+      "ownershipNotInferred": true
+    },
+    "thirdPartyDirectDependencyNoticeIsNotProofOfAllCopiedSourceOrigins": true
+  },
+  "unchangedOriginalUnknownMapping": {
+    "total": 579,
+    "corresponding": 253,
+    "unknown": 326,
+    "reclassified": 0
+  },
+  "actualImportRef": null,
+  "physicalImportDate": null,
+  "sourceRequirementComplete": false,
+  "productionRequests": 0,
+  "repositoryWrites": 0,
+  "oldProjectEvidenceWrites": 0,
+  "productTests": 0,
+  "limitations": [
+    "Only one fixed candidate and 20 upstream paths inspected; no exhaustive upstream/import history search.",
+    "Ignoring import order supports a syntax mapping only and is not a runtime-equivalence claim when modules have side effects.",
+    "Differences in remaining modules stay unresolved; this candidate being later than first tracking commit is explicit.",
+    "No copyright owner or legal/license compliance decision made."
+  ]
+}

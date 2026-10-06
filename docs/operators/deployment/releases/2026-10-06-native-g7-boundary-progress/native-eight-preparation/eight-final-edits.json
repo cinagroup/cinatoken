@@ -1,0 +1,274 @@
+{
+  "schema": "cinatoken.pg73.next-eight-edit.v1",
+  "startedAt": "2026-10-06T01:30:53.271Z",
+  "baseCommit": "6658ec978009afa5fe3f4beccf6bde358590b663",
+  "files": [
+    {
+      "file": "scripts/db/cutover/postgres-ordinary-budget-recovery-v354.native.test.mjs",
+      "before": {
+        "bytes": 22491,
+        "sha256": "3a6754fe2fd1e8d5a3a101bfb79e9c15ca3fdff3eec0edcca3da0cc6c7e62c0b"
+      },
+      "after": {
+        "bytes": 22685,
+        "sha256": "110093eda6ec9a116e695ed3ca54468bbf7dafa7b3ee0a34ad346dc7b9883c53"
+      },
+      "operations": [
+        {
+          "needle": "import { readFile, readdir, writeFile } from 'node:fs/promises';",
+          "replacement": "import { readFile, writeFile } from 'node:fs/promises';"
+        },
+        {
+          "needle": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';",
+          "replacement": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';"
+        },
+        {
+          "needle": "(await readdir(migrations)).filter(name=>name.endsWith('.sql')).sort()",
+          "replacement": "await listPg73Migrations()"
+        },
+        {
+          "needle": "      await grantPostgresRuntime({DATABASE_URL:migratorUrl});",
+          "replacement": "      // Keep the original grant calls and exact rejection checks on the PG73 ledger.\n      const grantPostgresRuntime = ({ DATABASE_URL }) =>\n        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });\n      await grantPostgresRuntime({DATABASE_URL:migratorUrl});"
+        }
+      ],
+      "reverseExact": true
+    },
+    {
+      "file": "scripts/db/cutover/postgres-guardrail-budget-admission-login-v351.native.test.mjs",
+      "before": {
+        "bytes": 26904,
+        "sha256": "bbcbb33aa07d33530692d64d7ab5d24844bbfd44777f9ab8170533d2af0a60af"
+      },
+      "after": {
+        "bytes": 27087,
+        "sha256": "83c956c75d60958721cdfdb4fe72aa5b7cde37eaeaf857fac70745274b92da59"
+      },
+      "operations": [
+        {
+          "needle": "import { readFile, readdir, writeFile } from 'node:fs/promises';",
+          "replacement": "import { readFile, writeFile } from 'node:fs/promises';"
+        },
+        {
+          "needle": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';",
+          "replacement": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';"
+        },
+        {
+          "needle": "(await readdir(migrations))\n        .filter(name => name.endsWith('.sql')).sort()",
+          "replacement": "await listPg73Migrations()"
+        },
+        {
+          "needle": "      await grantPostgresRuntime({ DATABASE_URL:migratorUrl });",
+          "replacement": "      // Keep the original grant calls and exact rejection checks on the PG73 ledger.\n      const grantPostgresRuntime = ({ DATABASE_URL }) =>\n        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });\n      await grantPostgresRuntime({ DATABASE_URL:migratorUrl });"
+        }
+      ],
+      "reverseExact": true
+    },
+    {
+      "file": "scripts/db/cutover/postgres-authenticated-request-capability-login-v356.native.test.mjs",
+      "before": {
+        "bytes": 23606,
+        "sha256": "c4c11dff6781b771c7dbbcba2ed32ab6a46053741e9af56844d1e641539711cd"
+      },
+      "after": {
+        "bytes": 26966,
+        "sha256": "7efb7dcdce5330c5851c269c3e2102ee4b57e67fb9e6125dcb34e238bb876847"
+      },
+      "operations": [
+        {
+          "needle": "import { readFile, readdir, writeFile } from 'node:fs/promises';",
+          "replacement": "import { readFile, writeFile } from 'node:fs/promises';"
+        },
+        {
+          "needle": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';",
+          "replacement": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';"
+        },
+        {
+          "needle": "(await readdir(migrations)).filter(name => name.endsWith('.sql')).sort()",
+          "replacement": "await listPg73Migrations()"
+        },
+        {
+          "needle": "      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });",
+          "replacement": "      // The concurrent call reuses its already running owned peer bridge.\n      let preparedConcurrentGrant;\n      const grantPostgresRuntime = ({ DATABASE_URL }) => preparedConcurrentGrant\n        ?? grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });\n      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });"
+        },
+        {
+          "needle": "      const runtime = connection(cluster,'cinatoken_gateway_runtime',passwords.runtime,'runtime');",
+          "replacement": "      const grantPeer = connection(cluster,'cinatoken_gateway_migrator',passwords.migrator,'grant-peer');\n      const runtime = connection(cluster,'cinatoken_gateway_runtime',passwords.runtime,'runtime');"
+        },
+        {
+          "needle": "      clients.push(migrator,runtime,issuer,claim,peer);",
+          "replacement": "      clients.push(migrator,grantPeer,runtime,issuer,claim,peer);"
+        },
+        {
+          "needle": "      let concurrentGrant;\n      await migrator.begin(async tx => {",
+          "replacement": "      let concurrentGrant;\n      let preparationSessionLockHeld = false;\n      try {\n      await migrator.begin(async tx => {\n        // A session lock only coordinates temporary 0074 preparation; the\n        // original proposal must acquire its own transaction lock below.\n        // Only this owned transaction removes its ledger row: proposal preflight\n        // sees PG73 while the external grant still sees the committed 0074 row.\n        await tx.unsafe('SELECT pg_catalog.pg_advisory_lock(746923553)');\n        preparationSessionLockHeld = true;\n        preparedConcurrentGrant = grantPg73RuntimeFixture({\n          cluster, migrator: grantPeer, migratorUrl });\n        // The original handler is attached after proposal installation below.\n        preparedConcurrentGrant.catch(() => {});\n        let temporaryAuditVisible = false;\n        for (let attempt=0;attempt<60;attempt++) {\n          const [audit] = await tx.unsafe(`SELECT EXISTS (\n            SELECT 1 FROM cinatoken_gateway.schema_migrations\n            WHERE version='0074_config_change_audit.sql') AS installed`);\n          if (audit.installed) {temporaryAuditVisible=true;break;}\n          await delay(25);\n        }\n        assert.equal(temporaryAuditVisible,true,'owned peer must commit temporary 0074 before PG73 activation');\n        await tx.unsafe(`DELETE FROM cinatoken_gateway.schema_migrations\n          WHERE version='0074_config_change_audit.sql'`);"
+        },
+        {
+          "needle": "        concurrentGrant=grantPostgresRuntime({ DATABASE_URL: migratorUrl }).then(",
+          "replacement": "        // Release the preparation lock before the original wait assertion:\n        // only the unmodified proposal transaction lock can block the grant.\n        const [preparation] = await tx.unsafe(`SELECT\n          pg_catalog.pg_advisory_unlock(746923553) AS released`);\n        preparationSessionLockHeld = false;\n        assert.equal(preparation.released,true,'owned preparation session lock must be released');\n        concurrentGrant=grantPostgresRuntime({ DATABASE_URL: migratorUrl }).then("
+        },
+        {
+          "needle": "      assert.match(concurrentResult.message,/Request capability v356 is installed/u);",
+          "replacement": "      assert.match(concurrentResult.message,/Request capability v356 is installed/u);\n      } finally {\n        // A failed proposal transaction also releases the interlock; await the\n        // helper finally before disconnecting its peer or making another grant.\n        try {\n          if (preparationSessionLockHeld) {\n            try {\n              await migrator.unsafe('SELECT pg_catalog.pg_advisory_unlock(746923553)');\n            } catch (error) {\n              // Closing this same owned session releases a preparation lock\n              // even if the transaction or connection failed before unlock.\n              await migrator.end({ timeout: 1 });\n              throw error;\n            }\n          }\n        } finally {\n          if (preparedConcurrentGrant) await preparedConcurrentGrant.catch(() => {});\n          preparedConcurrentGrant = undefined;\n        }\n      }"
+        },
+        {
+          "needle": "        concurrentGrant=grantPostgresRuntime({ DATABASE_URL: migratorUrl }).then(",
+          "replacement": "        const [proposalInterlock] = await tx.unsafe(`SELECT EXISTS (\r\n          SELECT 1 FROM pg_catalog.pg_locks\r\n          WHERE locktype='advisory' AND pid=pg_catalog.pg_backend_pid()\r\n            AND granted AND classid=0 AND objid=746923553 AND objsubid=1\r\n        ) AS held`);\r\n        assert.equal(proposalInterlock.held,true,'original proposal transaction must retain its interlock after session unlock');\r\n        concurrentGrant=grantPostgresRuntime({ DATABASE_URL: migratorUrl }).then("
+        }
+      ],
+      "reverseExact": true
+    },
+    {
+      "file": "scripts/db/cutover/postgres-authenticated-text-route-ceiling-v357.native.test.mjs",
+      "before": {
+        "bytes": 21479,
+        "sha256": "25186e7b24c310b1b45fdf490356539593aeb7ab0bbe89596fd835920cc661bb"
+      },
+      "after": {
+        "bytes": 21673,
+        "sha256": "0502916463be8d95bf0c7d4aae4070b7b8e2d94f6978c187c7f786eccf3a8c3f"
+      },
+      "operations": [
+        {
+          "needle": "import { readFile, readdir, writeFile } from 'node:fs/promises';",
+          "replacement": "import { readFile, writeFile } from 'node:fs/promises';"
+        },
+        {
+          "needle": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';",
+          "replacement": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';"
+        },
+        {
+          "needle": "(await readdir(migrations)).filter(name=>name.endsWith('.sql')).sort()",
+          "replacement": "await listPg73Migrations()"
+        },
+        {
+          "needle": "      await grantPostgresRuntime({DATABASE_URL:migratorUrl});",
+          "replacement": "      // Keep the original grant calls and exact rejection checks on the PG73 ledger.\n      const grantPostgresRuntime = ({ DATABASE_URL }) =>\n        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });\n      await grantPostgresRuntime({DATABASE_URL:migratorUrl});"
+        }
+      ],
+      "reverseExact": true
+    },
+    {
+      "file": "scripts/db/cutover/postgres-authenticated-text-route-source-fence-v359.native.test.mjs",
+      "before": {
+        "bytes": 23398,
+        "sha256": "c735503883dd25e1ab20c2fd43a1f9d60821d385942e473449097f985757dc46"
+      },
+      "after": {
+        "bytes": 23598,
+        "sha256": "e5398315db6353023400c255093080497276a9d27db5989dd6229db9c75c251c"
+      },
+      "operations": [
+        {
+          "needle": "import { readFile, readdir, writeFile } from 'node:fs/promises';",
+          "replacement": "import { readFile, writeFile } from 'node:fs/promises';"
+        },
+        {
+          "needle": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';",
+          "replacement": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';"
+        },
+        {
+          "needle": "(await readdir(migrations)).filter(x=>x.endsWith('.sql')).sort()",
+          "replacement": "await listPg73Migrations()"
+        },
+        {
+          "needle": "      await grantPostgresRuntime({DATABASE_URL:migratorUrl});",
+          "replacement": "      // Keep the original grant calls and exact rejection checks on the PG73 ledger.\n      const grantPostgresRuntime = ({ DATABASE_URL }) =>\n        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });\n      await grantPostgresRuntime({DATABASE_URL:migratorUrl});"
+        }
+      ],
+      "reverseExact": true
+    },
+    {
+      "file": "scripts/db/cutover/postgres-authenticated-complete-text-quote-v360.native.test.mjs",
+      "before": {
+        "bytes": 20448,
+        "sha256": "bf43350602f779a9f6bd626e136490d7bcbdac36d1bbd75fc0e8a432570a8390"
+      },
+      "after": {
+        "bytes": 20648,
+        "sha256": "18cb4237ca6a1d4cead3f4819f04e64927a6bb1138636393858df52ef8f79b8f"
+      },
+      "operations": [
+        {
+          "needle": "import { readFile, readdir, writeFile } from 'node:fs/promises';",
+          "replacement": "import { readFile, writeFile } from 'node:fs/promises';"
+        },
+        {
+          "needle": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';",
+          "replacement": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';"
+        },
+        {
+          "needle": "(await readdir(migrations)).filter(x=>x.endsWith('.sql')).sort()",
+          "replacement": "await listPg73Migrations()"
+        },
+        {
+          "needle": "      await grantPostgresRuntime({DATABASE_URL:migratorUrl});",
+          "replacement": "      // Keep the original grant calls and exact rejection checks on the PG73 ledger.\n      const grantPostgresRuntime = ({ DATABASE_URL }) =>\n        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });\n      await grantPostgresRuntime({DATABASE_URL:migratorUrl});"
+        }
+      ],
+      "reverseExact": true
+    },
+    {
+      "file": "scripts/db/cutover/postgres-complete-text-quote-budget-admission-v361.native.test.mjs",
+      "before": {
+        "bytes": 23357,
+        "sha256": "b48077d2035d04ce981614ecf2eb317496f04f98440c79dadb68047e71e5b92a"
+      },
+      "after": {
+        "bytes": 23555,
+        "sha256": "47d2dff22ae15ee6e3ba5337746513f3262d5ead74c5bbcc030508b0af6d8f72"
+      },
+      "operations": [
+        {
+          "needle": "import { readFile, readdir, writeFile } from 'node:fs/promises';",
+          "replacement": "import { readFile, writeFile } from 'node:fs/promises';"
+        },
+        {
+          "needle": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';",
+          "replacement": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';"
+        },
+        {
+          "needle": "(await readdir(migrationDir)).filter(x=>x.endsWith('.sql')).sort()",
+          "replacement": "await listPg73Migrations()"
+        },
+        {
+          "needle": "      await grantPostgresRuntime({DATABASE_URL:migratorUrl});",
+          "replacement": "      // Keep the original grant calls and exact rejection checks on the PG73 ledger.\n      const grantPostgresRuntime = ({ DATABASE_URL }) =>\n        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });\n      await grantPostgresRuntime({DATABASE_URL:migratorUrl});"
+        }
+      ],
+      "reverseExact": true
+    },
+    {
+      "file": "scripts/db/cutover/postgres-complete-text-attempt-grant-v362.native.test.mjs",
+      "before": {
+        "bytes": 37867,
+        "sha256": "a57330725f2393d09f145429f280f2cfb7a28b3a72f5146b6205f0e0d40d7784"
+      },
+      "after": {
+        "bytes": 38065,
+        "sha256": "05d2cd1f0b080ab416c08b48ce02fcd812522238b32e38732a94908ec075b8a2"
+      },
+      "operations": [
+        {
+          "needle": "import { readFile, readdir, writeFile } from 'node:fs/promises';",
+          "replacement": "import { readFile, writeFile } from 'node:fs/promises';"
+        },
+        {
+          "needle": "import { grantPostgresRuntime } from './grant-postgres-runtime.ts';",
+          "replacement": "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';"
+        },
+        {
+          "needle": "(await readdir(migrationDir)).filter(x=>x.endsWith('.sql')).sort()",
+          "replacement": "await listPg73Migrations()"
+        },
+        {
+          "needle": "      await grantPostgresRuntime({DATABASE_URL:migratorUrl});",
+          "replacement": "      // Keep the original grant calls and exact rejection checks on the PG73 ledger.\n      const grantPostgresRuntime = ({ DATABASE_URL }) =>\n        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });\n      await grantPostgresRuntime({DATABASE_URL:migratorUrl});"
+        }
+      ],
+      "reverseExact": true
+    }
+  ],
+  "completedAt": "2026-10-06T01:33:09.370Z",
+  "actualExit": 0,
+  "originalCandidate": "eight-edits.json"
+}

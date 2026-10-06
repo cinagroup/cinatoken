@@ -1,0 +1,977 @@
+{
+  "schema": "web-platform-g7-final-package-peer-readonly-review-v1",
+  "reviewedAt": "2026-10-06T02:02:16.402259+00:00",
+  "reviewer": "/root/cloudflare_review/boundary_peer",
+  "reviewScope": "Only the new G7 harness and workflow were reviewed; existing core, Admin, Proxy, Web and Docker sources were read as contract references. No repository file was written.",
+  "reviewActualExit": 0,
+  "ownerPreparationReceipt": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-tls-pg-package-20261006-552eab3dd02f4b15a01d765d9a2aab8f\\FINAL-local-package-checks.json",
+    "bytes": 23411,
+    "sha256": "404f1d8b571ca89253b55af46a55aebdcd0e631f02941b6b8e926982463905c8",
+    "actualExit": 0,
+    "preparedAtHead": "6658ec978009afa5fe3f4beccf6bde358590b663",
+    "observedCurrentHead": "4e2ed5196a26cc43c2a3cb7ea852f1fc6284ff27",
+    "historicalHeadIsNotFutureWorkflowSHA": true
+  },
+  "sourceFiles": [
+    {
+      "path": "scripts/verification/web-platform-g7/admission.mjs",
+      "bytes": 2405,
+      "sha256": "565e1cb4bc7950dbcc64947135b35ed11b0efe6cda29524c3e57b5be3e475870",
+      "matchesFrozenSnapshot": true,
+      "matchesOwnerManifest": true,
+      "carriageReturns": 0
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/admission.test.mjs",
+      "bytes": 2430,
+      "sha256": "af55b4503339fdc28960ea0932da49107e4e3e11dca19233a9e066a4e03c6f39",
+      "matchesFrozenSnapshot": true,
+      "matchesOwnerManifest": true,
+      "carriageReturns": 0
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/cleanup-owned-linux.mjs",
+      "bytes": 5560,
+      "sha256": "c267533ae691b4dd192fc7fa679b4a21874ebe0eb9d4c4a708a0f302d6b20948",
+      "matchesFrozenSnapshot": true,
+      "matchesOwnerManifest": true,
+      "carriageReturns": 0
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/database.mjs",
+      "bytes": 8401,
+      "sha256": "641e2df787ab80167ffd85d0c1a21b18d6454ab68543f073f17d6f73a3cb6372",
+      "matchesFrozenSnapshot": true,
+      "matchesOwnerManifest": true,
+      "carriageReturns": 0
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/fixture.test.mjs",
+      "bytes": 5209,
+      "sha256": "e73f154b87ec48acef2c0d6c25ffdfbc5786ccc6718a613021795db3573ff53c",
+      "matchesFrozenSnapshot": true,
+      "matchesOwnerManifest": true,
+      "carriageReturns": 0
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/ingress.conf",
+      "bytes": 1549,
+      "sha256": "d7e33e890c1ed5862986b34b67d57bb6380d72fe6be33808698a048e4a145d61",
+      "matchesFrozenSnapshot": true,
+      "matchesOwnerManifest": true,
+      "carriageReturns": 0
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/README.md",
+      "bytes": 3918,
+      "sha256": "472bfa5785a62b7b85ce8d80e5c8f8a3fa14ae28f2da4a124d3dd1f0ac9e35f2",
+      "matchesFrozenSnapshot": true,
+      "matchesOwnerManifest": true,
+      "carriageReturns": 0
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/run-owned-linux.mjs",
+      "bytes": 26853,
+      "sha256": "e95dc592e533c4b15593b4649f168390aa19ef3c2126ebf0de4f071c521e18a7",
+      "matchesFrozenSnapshot": true,
+      "matchesOwnerManifest": true,
+      "carriageReturns": 0
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/wire.mjs",
+      "bytes": 15504,
+      "sha256": "ac31a92534d0cb5f47fcb66126d86f13602ff68cf8ab218b9f06fae6997cd3cd",
+      "matchesFrozenSnapshot": true,
+      "matchesOwnerManifest": true,
+      "carriageReturns": 0
+    },
+    {
+      "path": ".github/workflows/web-platform-g7.yml",
+      "bytes": 3065,
+      "sha256": "bb9a2e0be66e3ba74bf15e0769bc85bf740ebf282a91eadcdf73f9f9e4bd8e54",
+      "matchesFrozenSnapshot": true,
+      "matchesOwnerManifest": true,
+      "carriageReturns": 0
+    }
+  ],
+  "allTenRepoAndFrozenSourceByteComparisonsMatched": true,
+  "ownerRawReceiptComparisons": [
+    {
+      "id": "head",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-tls-pg-package-20261006-552eab3dd02f4b15a01d765d9a2aab8f\\final-head.result.json",
+      "bytes": 602,
+      "sha256": "125bf250edb3934d5c8411953134df3bf5ea41d34392f7ded915e0163d959ac0",
+      "closed": true,
+      "actualExit": 0,
+      "expectedExit": 0,
+      "streams": [
+        {
+          "stream": "stdout",
+          "file": "final-head.stdout.log",
+          "bytes": 41,
+          "sha256": "9c1f7bbdc444ffa593d4ea368e0e0b4d87badd6c2c90932cbf9938ec71c3a3f1",
+          "matchesRaw": true
+        },
+        {
+          "stream": "stderr",
+          "file": "final-head.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "matchesRaw": true
+        }
+      ]
+    },
+    {
+      "id": "base-absent-0",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-tls-pg-package-20261006-552eab3dd02f4b15a01d765d9a2aab8f\\final-base-absent-0.result.json",
+      "bytes": 728,
+      "sha256": "e00e1e5ab923174c184338d527110819573053a66daeda247e86f872074c5382",
+      "closed": true,
+      "actualExit": 128,
+      "expectedExit": 128,
+      "streams": [
+        {
+          "stream": "stdout",
+          "file": "final-base-absent-0.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "matchesRaw": true
+        },
+        {
+          "stream": "stderr",
+          "file": "final-base-absent-0.stderr.log",
+          "bytes": 135,
+          "sha256": "641ebd945cb051f411cafb20f7888006a9994391a5e1f87037071f484abfca28",
+          "matchesRaw": true
+        }
+      ]
+    },
+    {
+      "id": "base-absent-1",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-tls-pg-package-20261006-552eab3dd02f4b15a01d765d9a2aab8f\\final-base-absent-1.result.json",
+      "bytes": 733,
+      "sha256": "4df036763ecfd6df3e08340da89d816ab2cd27823796daa7ecbea31c644968f2",
+      "closed": true,
+      "actualExit": 128,
+      "expectedExit": 128,
+      "streams": [
+        {
+          "stream": "stdout",
+          "file": "final-base-absent-1.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "matchesRaw": true
+        },
+        {
+          "stream": "stderr",
+          "file": "final-base-absent-1.stderr.log",
+          "bytes": 140,
+          "sha256": "a5c35e0d620cecc721da4af5b32f3b3cd49af6f4b6180c2aa8770a82ad29353b",
+          "matchesRaw": true
+        }
+      ]
+    },
+    {
+      "id": "base-absent-2",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-tls-pg-package-20261006-552eab3dd02f4b15a01d765d9a2aab8f\\final-base-absent-2.result.json",
+      "bytes": 738,
+      "sha256": "0ea35ee41e2f9e67a13e389f9d46e4d6dad2d352e552dd66563c127a3e058573",
+      "closed": true,
+      "actualExit": 128,
+      "expectedExit": 128,
+      "streams": [
+        {
+          "stream": "stdout",
+          "file": "final-base-absent-2.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "matchesRaw": true
+        },
+        {
+          "stream": "stderr",
+          "file": "final-base-absent-2.stderr.log",
+          "bytes": 145,
+          "sha256": "f896ff525bc02ddbaa50f555ad0308fc6359f4e02ce2263520daa20516cefaa3",
+          "matchesRaw": true
+        }
+      ]
+    },
+    {
+      "id": "base-absent-3",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-tls-pg-package-20261006-552eab3dd02f4b15a01d765d9a2aab8f\\final-base-absent-3.result.json",
+      "bytes": 727,
+      "sha256": "73b1654b92c8b4e330d5a1bcd37bbac97ce3cf399ed6777f771f74423062695c",
+      "closed": true,
+      "actualExit": 128,
+      "expectedExit": 128,
+      "streams": [
+        {
+          "stream": "stdout",
+          "file": "final-base-absent-3.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "matchesRaw": true
+        },
+        {
+          "stream": "stderr",
+          "file": "final-base-absent-3.stderr.log",
+          "bytes": 134,
+          "sha256": "9af6906b6f158141ec6a66e6293d4b690d9efb833fd840cd91e5548ce7029b5a",
+          "matchesRaw": true
+        }
+      ]
+    },
+    {
+      "id": "base-absent-4",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-tls-pg-package-20261006-552eab3dd02f4b15a01d765d9a2aab8f\\final-base-absent-4.result.json",
+      "bytes": 731,
+      "sha256": "a14b3d4320750817cfead2ec6d9ecd2ab9451e779662e95a4a921f43cefa063e",
+      "closed": true,
+      "actualExit": 128,
+      "expectedExit": 128,
+      "streams": [
+        {
+          "stream": "stdout",
+          "file": "final-base-absent-4.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "matchesRaw": true
+        },
+        {
+          "stream": "stderr",
+          "file": "final-base-absent-4.stderr.log",
+          "bytes": 138,
+          "sha256": "5da4966c4cb0a9eb18b9e4483f84ec46305f6e3882268b19f401fa9d1dedfe7f",
+          "matchesRaw": true
+        }
+      ]
+    },
+    {
+      "id": "base-absent-5",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-tls-pg-package-20261006-552eab3dd02f4b15a01d765d9a2aab8f\\final-base-absent-5.result.json",
+      "bytes": 727,
+      "sha256": "1bf1ef64a0d5e4bd9bc52529fc5d0d178fe2e0b5d8e4cf85442d0da1ebce22c4",
+      "closed": true,
+      "actualExit": 128,
+      "expectedExit": 128,
+      "streams": [
+        {
+          "stream": "stdout",
+          "file": "final-base-absent-5.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "matchesRaw": true
+        },
+        {
+          "stream": "stderr",
+          "file": "final-base-absent-5.stderr.log",
+          "bytes": 134,
+          "sha256": "07283351dca6cebc299024dd4107cdf24988760c4327eb43e8d196dc2d161ff7",
+          "matchesRaw": true
+        }
+      ]
+    },
+    {
+      "id": "base-absent-6",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-tls-pg-package-20261006-552eab3dd02f4b15a01d765d9a2aab8f\\final-base-absent-6.result.json",
+      "bytes": 724,
+      "sha256": "27e77a0a7b346fd74a9131f8e705cbd835ab41bad3f0d34d9e8382f67c5a425e",
+      "closed": true,
+      "actualExit": 128,
+      "expectedExit": 128,
+      "streams": [
+        {
+          "stream": "stdout",
+          "file": "final-base-absent-6.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "matchesRaw": true
+        },
+        {
+          "stream": "stderr",
+          "file": "final-base-absent-6.stderr.log",
+          "bytes": 131,
+          "sha256": "71f614d6773b25eff953ad7dc42861f786f6526806ad8f91d9d2754d8801a520",
+          "matchesRaw": true
+        }
+      ]
+    },
+    {
+      "id": "base-absent-7",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-tls-pg-package-20261006-552eab3dd02f4b15a01d765d9a2aab8f\\final-base-absent-7.result.json",
+      "bytes": 734,
+      "sha256": "6abd7341b80b5d361df2d4c1749d2eccc883c9c786fbd84aecc5588486fa4a50",
+      "closed": true,
+      "actualExit": 128,
+      "expectedExit": 128,
+      "streams": [
+        {
+          "stream": "stdout",
+          "file": "final-base-absent-7.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "matchesRaw": true
+        },
+        {
+          "stream": "stderr",
+          "file": "final-base-absent-7.stderr.log",
+          "bytes": 141,
+          "sha256": "01baee39e2914b30a11c98c3fb83104aea1af0a9e246eb5f8cdd8c298c13b430",
+          "matchesRaw": true
+        }
+      ]
+    },
+    {
+      "id": "base-absent-8",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-tls-pg-package-20261006-552eab3dd02f4b15a01d765d9a2aab8f\\final-base-absent-8.result.json",
+      "bytes": 723,
+      "sha256": "9fedd257bbb93370a59db1ca40b82eec3fe4b0e26606789398fb2fc0be566c7d",
+      "closed": true,
+      "actualExit": 128,
+      "expectedExit": 128,
+      "streams": [
+        {
+          "stream": "stdout",
+          "file": "final-base-absent-8.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "matchesRaw": true
+        },
+        {
+          "stream": "stderr",
+          "file": "final-base-absent-8.stderr.log",
+          "bytes": 130,
+          "sha256": "ca0ffa01ba472e40274891860963a96e951db7a1f93e1d72a292682a8aad936a",
+          "matchesRaw": true
+        }
+      ]
+    },
+    {
+      "id": "base-absent-9",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-tls-pg-package-20261006-552eab3dd02f4b15a01d765d9a2aab8f\\final-base-absent-9.result.json",
+      "bytes": 715,
+      "sha256": "9f48323f902492748f79df46d9296bced8e79d95eab070cf53065af010ed66e4",
+      "closed": true,
+      "actualExit": 128,
+      "expectedExit": 128,
+      "streams": [
+        {
+          "stream": "stdout",
+          "file": "final-base-absent-9.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "matchesRaw": true
+        },
+        {
+          "stream": "stderr",
+          "file": "final-base-absent-9.stderr.log",
+          "bytes": 122,
+          "sha256": "b34c314c99f21ec0bdcab2badbe69155441fd9a4c14f5328c8b86993bdf66a2f",
+          "matchesRaw": true
+        }
+      ]
+    },
+    {
+      "id": "formatter",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-tls-pg-package-20261006-552eab3dd02f4b15a01d765d9a2aab8f\\final-formatter.result.json",
+      "bytes": 1203,
+      "sha256": "84087e1b2950a210555c88013867c60faa9d61aaafc576d27545368b46ca8510",
+      "closed": true,
+      "actualExit": 0,
+      "expectedExit": 0,
+      "streams": [
+        {
+          "stream": "stdout",
+          "file": "final-formatter.stdout.log",
+          "bytes": 66,
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+          "matchesRaw": true
+        },
+        {
+          "stream": "stderr",
+          "file": "final-formatter.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "matchesRaw": true
+        }
+      ]
+    },
+    {
+      "id": "syntax-0",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-tls-pg-package-20261006-552eab3dd02f4b15a01d765d9a2aab8f\\final-syntax-0.result.json",
+      "bytes": 689,
+      "sha256": "b2cce5a1e140856828390b604f1531a097947413f47284dec8758ef5525ca802",
+      "closed": true,
+      "actualExit": 0,
+      "expectedExit": 0,
+      "streams": [
+        {
+          "stream": "stdout",
+          "file": "final-syntax-0.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "matchesRaw": true
+        },
+        {
+          "stream": "stderr",
+          "file": "final-syntax-0.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "matchesRaw": true
+        }
+      ]
+    },
+    {
+      "id": "syntax-1",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-tls-pg-package-20261006-552eab3dd02f4b15a01d765d9a2aab8f\\final-syntax-1.result.json",
+      "bytes": 694,
+      "sha256": "af6a28a1837c9db862563561b55383d5f45e39ee4bafdc7edb59ced91f2cc6ce",
+      "closed": true,
+      "actualExit": 0,
+      "expectedExit": 0,
+      "streams": [
+        {
+          "stream": "stdout",
+          "file": "final-syntax-1.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "matchesRaw": true
+        },
+        {
+          "stream": "stderr",
+          "file": "final-syntax-1.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "matchesRaw": true
+        }
+      ]
+    },
+    {
+      "id": "syntax-2",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-tls-pg-package-20261006-552eab3dd02f4b15a01d765d9a2aab8f\\final-syntax-2.result.json",
+      "bytes": 699,
+      "sha256": "cb4ea4ebdd00e5564ec22ebc9f9d2ab3f42122bedaf4e593e834fb10a8987f0d",
+      "closed": true,
+      "actualExit": 0,
+      "expectedExit": 0,
+      "streams": [
+        {
+          "stream": "stdout",
+          "file": "final-syntax-2.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "matchesRaw": true
+        },
+        {
+          "stream": "stderr",
+          "file": "final-syntax-2.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "matchesRaw": true
+        }
+      ]
+    },
+    {
+      "id": "syntax-3",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-tls-pg-package-20261006-552eab3dd02f4b15a01d765d9a2aab8f\\final-syntax-3.result.json",
+      "bytes": 688,
+      "sha256": "1f4c9846682785ebf01521d94fc11f790e9762f4cbe1688c8dc43afabe15292c",
+      "closed": true,
+      "actualExit": 0,
+      "expectedExit": 0,
+      "streams": [
+        {
+          "stream": "stdout",
+          "file": "final-syntax-3.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "matchesRaw": true
+        },
+        {
+          "stream": "stderr",
+          "file": "final-syntax-3.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "matchesRaw": true
+        }
+      ]
+    },
+    {
+      "id": "syntax-4",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-tls-pg-package-20261006-552eab3dd02f4b15a01d765d9a2aab8f\\final-syntax-4.result.json",
+      "bytes": 692,
+      "sha256": "70c6de691b85aa3478349e8e5bac62823ce41043541de5d773d1e546092d7966",
+      "closed": true,
+      "actualExit": 0,
+      "expectedExit": 0,
+      "streams": [
+        {
+          "stream": "stdout",
+          "file": "final-syntax-4.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "matchesRaw": true
+        },
+        {
+          "stream": "stderr",
+          "file": "final-syntax-4.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "matchesRaw": true
+        }
+      ]
+    },
+    {
+      "id": "syntax-5",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-tls-pg-package-20261006-552eab3dd02f4b15a01d765d9a2aab8f\\final-syntax-5.result.json",
+      "bytes": 695,
+      "sha256": "81d55d698cca42051bf4b940c86e832c55ac6fe29c007215bac7c469c32b649b",
+      "closed": true,
+      "actualExit": 0,
+      "expectedExit": 0,
+      "streams": [
+        {
+          "stream": "stdout",
+          "file": "final-syntax-5.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "matchesRaw": true
+        },
+        {
+          "stream": "stderr",
+          "file": "final-syntax-5.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "matchesRaw": true
+        }
+      ]
+    },
+    {
+      "id": "syntax-6",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-tls-pg-package-20261006-552eab3dd02f4b15a01d765d9a2aab8f\\final-syntax-6.result.json",
+      "bytes": 684,
+      "sha256": "7436b329675dcabe4b16a7aa4aa08a59ab39fb7b675445ca772dbf4d8e109ab2",
+      "closed": true,
+      "actualExit": 0,
+      "expectedExit": 0,
+      "streams": [
+        {
+          "stream": "stdout",
+          "file": "final-syntax-6.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "matchesRaw": true
+        },
+        {
+          "stream": "stderr",
+          "file": "final-syntax-6.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "matchesRaw": true
+        }
+      ]
+    },
+    {
+      "id": "unit",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-tls-pg-package-20261006-552eab3dd02f4b15a01d765d9a2aab8f\\final-unit.result.json",
+      "bytes": 771,
+      "sha256": "ff05efeba0f859956d05182583c8cc77da99be85054202c06681b13227e18b9f",
+      "closed": true,
+      "actualExit": 0,
+      "expectedExit": 0,
+      "streams": [
+        {
+          "stream": "stdout",
+          "file": "final-unit.stdout.log",
+          "bytes": 649,
+          "sha256": "d608a8a5f85edf057b5653cf2b7a5a6d51661b6d64a081e2690f392d4c4cbeae",
+          "matchesRaw": true
+        },
+        {
+          "stream": "stderr",
+          "file": "final-unit.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "matchesRaw": true
+        }
+      ]
+    },
+    {
+      "id": "windows-admission",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-tls-pg-package-20261006-552eab3dd02f4b15a01d765d9a2aab8f\\final-windows-admission.result.json",
+      "bytes": 957,
+      "sha256": "a11d88542b2ffc1f5a2683f42a6969e4dceca50fe11cc498d99bbe9a9cedb3a0",
+      "closed": true,
+      "actualExit": 1,
+      "expectedExit": 1,
+      "streams": [
+        {
+          "stream": "stdout",
+          "file": "final-windows-admission.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "matchesRaw": true
+        },
+        {
+          "stream": "stderr",
+          "file": "final-windows-admission.stderr.log",
+          "bytes": 785,
+          "sha256": "42b64b78c79cb1127ed91cc9e29b31d463565173b895dd4ce8390eba865b637f",
+          "matchesRaw": true
+        }
+      ]
+    }
+  ],
+  "ownerLocalValidation": {
+    "unitTests": 6,
+    "passed": 6,
+    "failed": 0,
+    "skipped": 0,
+    "syntaxFiles": 7,
+    "formatterActualExit": 0,
+    "expectedBaseAbsenceExit128Count": 10,
+    "expectedWindowsAdmissionExit": 1,
+    "WindowsRuntimeOutputNeverCreated": true,
+    "reviewerReranTests": false
+  },
+  "historicalFailurePreservation": {
+    "declaredByOwner": [
+      "format-before.result.json",
+      "source-contracts.mjs original core operation failure actual1 tool transcript",
+      "initial fixture SQL extractor failure actual1 tool transcript"
+    ],
+    "formatBefore": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-tls-pg-package-20261006-552eab3dd02f4b15a01d765d9a2aab8f\\format-before.result.json",
+      "bytes": 706,
+      "sha256": "7aac90b18609edd268fb557960e4d09a469736cfb01897409751896fe3354f60",
+      "actualExit": 1,
+      "closed": true
+    },
+    "originalCoreOperationAndExtractorFailuresRemainTranscriptEvidence": true,
+    "oldResultsWereNotOverwrittenByReviewer": true
+  },
+  "findingsResolvedByOwnerAndReadVerified": [
+    {
+      "finding": "Runtime commands were not clamped to the remaining 720-second budget.",
+      "resolution": "Main and fallback use the single-clock boundedCommandTimeout helper; positive integer remaining time is required, so zero timeout cannot disable the bound.",
+      "evidence": [
+        {
+          "path": "scripts/verification/web-platform-g7/admission.mjs",
+          "line": 17,
+          "needle": "const remaining = deadline - now"
+        },
+        {
+          "path": "scripts/verification/web-platform-g7/admission.mjs",
+          "line": 19,
+          "needle": "remaining > 0"
+        },
+        {
+          "path": "scripts/verification/web-platform-g7/run-owned-linux.mjs",
+          "line": 118,
+          "needle": "timeout = boundedCommandTimeout(deadline, timeout)"
+        },
+        {
+          "path": "scripts/verification/web-platform-g7/cleanup-owned-linux.mjs",
+          "line": 51,
+          "needle": "boundedCommandTimeout(deadline, 15_000)"
+        }
+      ]
+    },
+    {
+      "finding": "A log-capture failure skipped removal of an owned container.",
+      "resolution": "Main log collection and owned removal have independent attempt loops; failures remain errors. Separate always-step fallback checks every registered object and final owner-label census.",
+      "evidence": [
+        {
+          "path": "scripts/verification/web-platform-g7/run-owned-linux.mjs",
+          "line": 823,
+          "needle": "for (const name of [...created.containers].reverse())"
+        },
+        {
+          "path": "scripts/verification/web-platform-g7/cleanup-owned-linux.mjs",
+          "line": 194,
+          "needle": "runtimePassedClaim: false"
+        },
+        {
+          "path": ".github/workflows/web-platform-g7.yml",
+          "line": 51,
+          "needle": "Independently verify or recover owned resource cleanup"
+        }
+      ]
+    },
+    {
+      "finding": "Default TERM termination bypassed finally, then a handler alone deferred interrupted-state observation through synchronous work.",
+      "resolution": "Signal listeners preserve interruption as failure, event-loop drains occur before main success and at both ends of finally, and independent cleanup runs separately. Rapid signal response and forced host/job termination closure were not executed or certified.",
+      "evidence": [
+        {
+          "path": "scripts/verification/web-platform-g7/run-owned-linux.mjs",
+          "line": 805,
+          "needle": "Interrupted runtime cannot pass"
+        },
+        {
+          "path": "scripts/verification/web-platform-g7/run-owned-linux.mjs",
+          "line": 804,
+          "needle": "await new Promise((accept) => setImmediate(accept))"
+        },
+        {
+          "path": "scripts/verification/web-platform-g7/run-owned-linux.mjs",
+          "line": 114,
+          "needle": "interruptedSignal,"
+        }
+      ]
+    },
+    {
+      "finding": "PG readiness retry mode tolerated unknown or timed-out process results.",
+      "resolution": "Every spawn result requires integer status, null signal and no error; pg_isready permits only explicit 0/1/2 statuses. Expected nonzero readiness is retained distinctly.",
+      "evidence": [
+        {
+          "path": "scripts/verification/web-platform-g7/run-owned-linux.mjs",
+          "line": 172,
+          "needle": "Number.isInteger(result.status) && result.signal === null && !result.error"
+        },
+        {
+          "path": "scripts/verification/web-platform-g7/run-owned-linux.mjs",
+          "line": 467,
+          "needle": "[0, 1, 2].includes(result.status)"
+        },
+        {
+          "path": "scripts/verification/web-platform-g7/run-owned-linux.mjs",
+          "line": 154,
+          "needle": "expectedNumericReadinessNonzero:"
+        }
+      ]
+    },
+    {
+      "finding": "The fixture test SQL extractor required formatter-sensitive contiguous method calls.",
+      "resolution": "The extractor accepts whitespace around the actual seeder transaction chain; owner raw final unit receipt verifies all six tests passed.",
+      "evidence": [
+        {
+          "path": "scripts/verification/web-platform-g7/fixture.test.mjs",
+          "line": 21,
+          "needle": "source.matchAll"
+        }
+      ]
+    },
+    {
+      "finding": "Registration wire evidence omitted mode and zero-cookie assertions; invalid callback omitted no-store.",
+      "resolution": "All nine original cases now enforce zero Set-Cookie; register requires mode=register and callback intent/path, and invalid callback requires no-store.",
+      "evidence": [
+        {
+          "path": "scripts/verification/web-platform-g7/wire.mjs",
+          "line": 257,
+          "needle": "location.searchParams.get(\"mode\")"
+        },
+        {
+          "path": "scripts/verification/web-platform-g7/wire.mjs",
+          "line": 261,
+          "needle": "noCookie(register)"
+        },
+        {
+          "path": "scripts/verification/web-platform-g7/wire.mjs",
+          "line": 271,
+          "needle": "noStore(invalid)"
+        }
+      ]
+    },
+    {
+      "finding": "DNS failure alone did not prove direct private-IP TCP isolation.",
+      "resolution": "The harness now checks five inaccessible internal aliases and seven actual owner-inspected private IPv4 endpoints. The distinct error/timeout outcomes are retained.",
+      "evidence": [
+        {
+          "path": "scripts/verification/web-platform-g7/run-owned-linux.mjs",
+          "line": 647,
+          "needle": "assert.equal(privateEndpoints.length, 7)"
+        },
+        {
+          "path": "scripts/verification/web-platform-g7/run-owned-linux.mjs",
+          "line": 639,
+          "needle": "assert.equal(isIP(connection.IPAddress), 4)"
+        },
+        {
+          "path": "scripts/verification/web-platform-g7/wire.mjs",
+          "line": 289,
+          "needle": "await rawPortNegative(endpoint.ip, endpoint.port)"
+        }
+      ]
+    }
+  ],
+  "actualPGContractReadReview": {
+    "mode": "Source-only; no PostgreSQL process or query was executed by reviewer.",
+    "migrationLedger": "Image SQL filenames are sorted and compared exactly with qualified schema_migrations; migrator runs twice. Seed and Admin/Proxy read-only observations compare migration corpus and schema hashes.",
+    "migrationReferences": [
+      "packages/core/migrations-postgres/0016_route_surfaces_pools.sql",
+      "packages/core/migrations-postgres/0023_admin_access_identity.sql",
+      "packages/core/migrations-postgres/0027_user_portal_shared_keys.sql",
+      "packages/core/migrations-postgres/0046_model_endpoints.sql",
+      "packages/core/migrations-postgres/0047_model_endpoint_route_subject_fingerprint.sql",
+      "packages/core/migrations-postgres/0048_model_endpoint_audio_capabilities.sql"
+    ],
+    "actualSeed": "Six related rows: provider, model, route pool, model surface, model route, verified text endpoint; model_endpoint_routes adds the real subject fingerprint. Both operation values and parser admission use chat. Expiry is future, context/prompt/completion fit 8192, text pricing/capabilities are explicit.",
+    "encryptionAndFingerprint": "The stored provider key is enc:v2 and binds cinatoken:provider-key:g7-provider. Seed computes fingerprint using the decrypted credential. The real Proxy Node runtime wraps its providers repository with the same decryption before public endpoint subject comparison.",
+    "contractReferences": [
+      {
+        "path": "packages/core/src/lib/provider-key-encryption.ts",
+        "lines": [
+          35,
+          36,
+          99,
+          113
+        ]
+      },
+      {
+        "path": "packages/proxy/src/runtime/node.ts",
+        "lines": [
+          32,
+          34,
+          42,
+          43
+        ]
+      },
+      {
+        "path": "packages/proxy/src/services/public-model-endpoints.ts",
+        "lines": [
+          331,
+          334,
+          363,
+          380,
+          420,
+          421
+        ]
+      },
+      {
+        "path": "packages/core/src/storage/drizzle/client-postgres.ts",
+        "lines": [
+          19,
+          53,
+          57,
+          63
+        ]
+      },
+      {
+        "path": "packages/web/src/cinatoken/public/ssr/public-request-app.ts",
+        "lines": [
+          150,
+          158,
+          168,
+          175,
+          193,
+          209
+        ]
+      }
+    ],
+    "limits": "Controlled verified endpoint rows attest to local catalog contract only; no real provider validation. All processes use owned PG16 postgres superuser. Restricted ACL and native PG18 remain false."
+  },
+  "TLSAndTopologyReadReview": {
+    "entry": "Fresh local CA and app.test SAN leaf; QA trusts only supplied CA, rejects unauthorized certificate, and keeps hostname checking enabled.",
+    "canonicalHeaders": "Ingress validates app.test SNI and Host (optional :443), returns 421 for unknown Host/missing SNI, overwrites Host/XFH/app.test and XFP/https, clears Forwarded, preserves browser Origin and cookies.",
+    "ownedNetworks": "client/app/db are internal bridge networks with no published ports. QA joins only client; ingress joins client+app; Web/SSR join app; Proxy/Admin join app+db; PG/migrator/seed join db.",
+    "wireExtraNegatives": "Untrusted CA, wrong SNI certificate hostname, missing SNI 421, five aliases and seven inspected private IPv4 ports are separate assertions.",
+    "nineOriginalCases": [
+      {
+        "case": "same HTTPS Origin",
+        "method": "POST",
+        "path": "/api/auth/login",
+        "status": 410,
+        "setCookieCount": 0
+      },
+      {
+        "case": "spoofed forwarding overwritten",
+        "method": "POST",
+        "path": "/api/auth/login",
+        "status": 410,
+        "setCookieCount": 0
+      },
+      {
+        "case": "ambiguous forwarding overwritten",
+        "method": "POST",
+        "path": "/api/auth/login",
+        "status": 410,
+        "setCookieCount": 0
+      },
+      {
+        "case": "missing Origin",
+        "method": "POST",
+        "path": "/api/auth/login",
+        "status": 403,
+        "setCookieCount": 0
+      },
+      {
+        "case": "cross Origin preserved",
+        "method": "POST",
+        "path": "/api/auth/login",
+        "status": 403,
+        "setCookieCount": 0
+      },
+      {
+        "case": "explicit cross-site",
+        "method": "POST",
+        "path": "/api/auth/login",
+        "status": 403,
+        "setCookieCount": 0
+      },
+      {
+        "case": "unknown Host",
+        "method": "POST",
+        "path": "/api/auth/login",
+        "status": 421,
+        "setCookieCount": 0
+      },
+      {
+        "case": "registration redirect",
+        "method": "GET",
+        "status": 302,
+        "location": "https://app.test/api/auth/cinaauth/login with mode=register, intent=portal, callbackURL=/account/keys",
+        "noStore": true,
+        "setCookieCount": 0
+      },
+      {
+        "case": "invalid callback",
+        "method": "GET",
+        "status": 302,
+        "locationOrigin": "https://app.test",
+        "authError": "invalid_transaction",
+        "noStore": true,
+        "setCookieCount": 0
+      }
+    ],
+    "sourceEvidenceOnly": true
+  },
+  "SSRAndResourceEvidenceBounds": {
+    "SSRRequests": 64,
+    "matrix": "en/zh/ja/ko x home/models/detail/providers/compare/chat/rankings/benchmarks x GET/HEAD",
+    "SSRAssertions": "Status200, no-store, no-cookie, COOP same-origin, HEAD empty; GET checks locale, main h1, canonical app.test, five alternates, expected bootstrap records, nonce on each script and manifest-linked assets. Models/providers/detail nonempty; statistics may be empty without inference.",
+    "resources": "Each frozen manifest file GET has exact bytes and SHA256; HEAD has zero body. Count is 2 x manifest files. This does not prove ranges, conditional requests, retained/gray/rollback or authenticated behavior.",
+    "countsNeedOverallZero": "Rows count completed responses, not independent passes. Main first requires actual QA exit0 and matching wire.actualExit0 before accepting 64 and 2N counts.",
+    "fullG7Verified": false,
+    "fullG8Verified": false
+  },
+  "cleanupAndSecretEvidenceBounds": {
+    "mainRuntimeBudgetMs": 720000,
+    "mainCleanupBudgetMs": 120000,
+    "fallbackCleanupBudgetMs": 180000,
+    "mainOuterTimeoutSeconds": 1020,
+    "mainStepTimeoutMinutes": 18,
+    "fallbackStepTimeoutMinutes": 4,
+    "ownershipRegistry": "Written before any Docker command; fixed exact sourceSHA, UUID owner, 9 names, 3 network names and volume. Both removal paths verify exact owner labels and retain errors.",
+    "fallbackVerifiedAbsent": "Success requires 13 explicit absence rows plus empty container/network/volume owner-label scans. Independent cleanup never rewrites or promotes the original runtime result.",
+    "secrets": "Main-generated seven random credentials are not command argument values, are placed in private env files outside output, and exact matches in captured main output are redacted. CA and leaf private keys are not uploaded. Fallback reads only exact-name listings and formatted Labels, never container Env or application logs.",
+    "limits": "Fast interrupt response, independent fallback runtime, Docker isolation and actual absence are still unexecuted. An always-step cannot attest to recovery after termination of the host/job itself."
+  },
+  "primarySemanticsReferences": [
+    "https://nodejs.org/download/release/latest-v22.x/docs/api/child_process.html#synchronous-process-creation",
+    "https://nodejs.org/download/release/latest-v22.x/docs/api/process.html#signal-events",
+    "https://www.postgresql.org/docs/16/app-pg-isready.html"
+  ],
+  "conclusion": {
+    "remainingSourceBlockers": [],
+    "readyForAuthorizedOwnedLinuxAttempt": true,
+    "realLinuxDockerExecuted": false,
+    "actualTLSExecuted": false,
+    "nativeDatabaseExecuted": false,
+    "CIExecutedByReviewer": false,
+    "productionRequests": 0,
+    "G7OrG8PassClaim": false,
+    "repositoryWritesByReviewer": 0,
+    "reviewerRanHarnessOrTests": false
+  }
+}

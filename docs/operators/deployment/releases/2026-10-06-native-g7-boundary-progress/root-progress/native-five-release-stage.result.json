@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-06T02:15:14.120Z",
+  "finishedAt": "2026-10-06T02:15:14.303Z",
+  "executable": "C:/Program Files/Git/cmd/git.exe",
+  "args": [
+    "add",
+    "--",
+    ".changeset/README.md",
+    ".changeset/config.json",
+    "docs/developers/architecture/web-frontend-migration.md",
+    "scripts/db/cutover/postgres-complete-text-private-route-reader-v366.native.test.mjs",
+    "scripts/db/cutover/postgres-complete-text-read-grant-bridge-v367.native.test.mjs",
+    "scripts/db/cutover/postgres-complete-text-result-facts-v366.native.test.mjs",
+    "scripts/db/cutover/postgres-complete-text-secretless-plan-v365.native.test.mjs",
+    "scripts/db/cutover/postgres-complete-text-send-start-v365.native.test.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-boundary-next-20261006-Zm6Z3E/native-five-release-stage.stdout.log",
+  "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-boundary-next-20261006-Zm6Z3E/native-five-release-stage.stderr.log"
+}

@@ -1,0 +1,257 @@
+cancellation-boundary	Set up job	﻿2026-10-06T02:04:02.8995621Z Current runner version: '2.337.0'
+cancellation-boundary	Set up job	2026-10-06T02:04:02.9020944Z ##[group]Runner Image Provisioner
+cancellation-boundary	Set up job	2026-10-06T02:04:02.9022051Z Hosted Compute Agent
+cancellation-boundary	Set up job	2026-10-06T02:04:02.9022664Z Version: 20260901.588
+cancellation-boundary	Set up job	2026-10-06T02:04:02.9023396Z Commit: f88ec8081b781fac6c440065ac7ff9e710ce3d0b
+cancellation-boundary	Set up job	2026-10-06T02:04:02.9024126Z Build Date: 2026-09-01T19:56:44Z
+cancellation-boundary	Set up job	2026-10-06T02:04:02.9024780Z Worker ID: {19c9aa0c-7f03-4fb6-b3be-36d9e62bfc13}
+cancellation-boundary	Set up job	2026-10-06T02:04:02.9025589Z Azure Region: westus
+cancellation-boundary	Set up job	2026-10-06T02:04:02.9026178Z ##[endgroup]
+cancellation-boundary	Set up job	2026-10-06T02:04:02.9028119Z ##[group]Operating System
+cancellation-boundary	Set up job	2026-10-06T02:04:02.9028827Z Ubuntu
+cancellation-boundary	Set up job	2026-10-06T02:04:02.9029339Z 24.04.5
+cancellation-boundary	Set up job	2026-10-06T02:04:02.9029937Z LTS
+cancellation-boundary	Set up job	2026-10-06T02:04:02.9030482Z ##[endgroup]
+cancellation-boundary	Set up job	2026-10-06T02:04:02.9031059Z ##[group]Runner Image
+cancellation-boundary	Set up job	2026-10-06T02:04:02.9031674Z Image: ubuntu-24.04
+cancellation-boundary	Set up job	2026-10-06T02:04:02.9032233Z Version: 20260927.320.1
+cancellation-boundary	Set up job	2026-10-06T02:04:02.9033366Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260927.320/images/ubuntu/Ubuntu2404-Readme.md
+cancellation-boundary	Set up job	2026-10-06T02:04:02.9035120Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260927.320
+cancellation-boundary	Set up job	2026-10-06T02:04:02.9036103Z ##[endgroup]
+cancellation-boundary	Set up job	2026-10-06T02:04:02.9038046Z ##[group]GITHUB_TOKEN Permissions
+cancellation-boundary	Set up job	2026-10-06T02:04:02.9040254Z Contents: read
+cancellation-boundary	Set up job	2026-10-06T02:04:02.9040866Z Metadata: read
+cancellation-boundary	Set up job	2026-10-06T02:04:02.9041536Z ##[endgroup]
+cancellation-boundary	Set up job	2026-10-06T02:04:02.9043560Z Secret source: Actions
+cancellation-boundary	Set up job	2026-10-06T02:04:02.9044591Z Cache mode: write
+cancellation-boundary	Set up job	2026-10-06T02:04:02.9045375Z Prepare workflow directory
+cancellation-boundary	Set up job	2026-10-06T02:04:02.9384442Z Prepare all required actions
+cancellation-boundary	Set up job	2026-10-06T02:04:02.9434754Z Getting action download info
+cancellation-boundary	Set up job	2026-10-06T02:04:03.3117155Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+cancellation-boundary	Set up job	2026-10-06T02:04:03.4150556Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+cancellation-boundary	Set up job	2026-10-06T02:04:03.4992166Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+cancellation-boundary	Set up job	2026-10-06T02:04:03.7139055Z Complete job name: cancellation-boundary
+cancellation-boundary	Run actions/checkout@v4	﻿2026-10-06T02:04:03.7922992Z ##[group]Run actions/checkout@v4
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.7924108Z with:
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.7924581Z   persist-credentials: false
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.7925151Z   repository: cinagroup/cinatoken
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.7929100Z   token: ***
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.7929547Z   ssh-strict: true
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.7929986Z   ssh-user: git
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.7930412Z   clean: true
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.7930858Z   sparse-checkout-cone-mode: true
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.7931380Z   fetch-depth: 1
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.7931806Z   fetch-tags: false
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.7932248Z   show-progress: true
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.7932689Z   lfs: false
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.7933093Z   submodules: false
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.7933536Z   set-safe-directory: true
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.7934041Z   allow-unsafe-pr-checkout: false
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.7934880Z ##[endgroup]
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.8953770Z Syncing repository: cinagroup/cinatoken
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.8956349Z ##[group]Getting Git version info
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.8957821Z Working directory is '/home/runner/work/cinatoken/cinatoken'
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.8959757Z [command]/usr/bin/git version
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.9089099Z git version 2.55.0
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.9106061Z ##[endgroup]
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.9113804Z Temporarily overriding HOME='/home/runner/work/_temp/226f0d8f-ed47-4656-b3c9-8a8b6a9e64bd' before making global git config changes
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.9116040Z Adding repository directory to the temporary git global config as a safe directory
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.9120052Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/cinatoken/cinatoken
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.9178673Z Deleting the contents of '/home/runner/work/cinatoken/cinatoken'
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.9196354Z ##[group]Initializing the repository
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.9197825Z [command]/usr/bin/git init /home/runner/work/cinatoken/cinatoken
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.9327742Z hint: Using 'master' as the name for the initial branch. This default branch name
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.9329819Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.9331240Z hint: to use in all of your new repositories, which will suppress this warning,
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.9331990Z hint: call:
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.9332660Z hint:
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.9333197Z hint: 	git config --global init.defaultBranch <name>
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.9333817Z hint:
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.9334402Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.9335342Z hint: 'development'. The just-created branch can be renamed via this command:
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.9336081Z hint:
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.9336867Z hint: 	git branch -m <name>
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.9337747Z hint:
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.9338861Z hint: Disable this message with "git config set advice.defaultBranchName false"
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.9340823Z Initialized empty Git repository in /home/runner/work/cinatoken/cinatoken/.git/
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.9355160Z [command]/usr/bin/git remote add origin https://github.com/cinagroup/cinatoken
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.9415265Z ##[endgroup]
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.9418842Z ##[group]Disabling automatic garbage collection
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.9420364Z [command]/usr/bin/git config --local gc.auto 0
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.9469849Z ##[endgroup]
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.9471710Z ##[group]Setting up auth
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.9474812Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.9507569Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:03.9994858Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:04.0037562Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:04.0295025Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:04.0333054Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:04.0565061Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:04.0606973Z ##[endgroup]
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:04.0616066Z ##[group]Fetching the repository
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:04.0618100Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +67f8b3df2f2b6e8159806767ecce1efa1904d27a:refs/remotes/origin/main
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:10.6419198Z From https://github.com/cinagroup/cinatoken
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:10.6421243Z  * [new ref]         67f8b3df2f2b6e8159806767ecce1efa1904d27a -> origin/main
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:10.6424889Z ##[endgroup]
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:10.6427343Z ##[group]Determining the checkout info
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:10.6429373Z ##[endgroup]
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:10.6434615Z [command]/usr/bin/git sparse-checkout disable
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:10.6493028Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:10.6529623Z ##[group]Checking out the ref
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:10.6534285Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:11.6652738Z Updating files:  77% (5786/7441)
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:11.6697914Z Updating files:  78% (5804/7441)
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:11.6742818Z Updating files:  79% (5879/7441)
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:11.6786795Z Updating files:  80% (5953/7441)
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:11.6829725Z Updating files:  81% (6028/7441)
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:11.6871048Z Updating files:  82% (6102/7441)
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:11.6911512Z Updating files:  83% (6177/7441)
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:11.6968557Z Updating files:  84% (6251/7441)
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:11.7015632Z Updating files:  85% (6325/7441)
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:11.7063923Z Updating files:  86% (6400/7441)
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:11.7112663Z Updating files:  87% (6474/7441)
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:11.7159283Z Updating files:  88% (6549/7441)
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:11.7210238Z Updating files:  89% (6623/7441)
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:11.7265121Z Updating files:  90% (6697/7441)
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:11.7330520Z Updating files:  91% (6772/7441)
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:11.7423348Z Updating files:  92% (6846/7441)
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:11.7479199Z Updating files:  93% (6921/7441)
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:11.7579136Z Updating files:  94% (6995/7441)
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:11.7655263Z Updating files:  95% (7069/7441)
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:11.7720559Z Updating files:  96% (7144/7441)
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:11.7783073Z Updating files:  97% (7218/7441)
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:11.7833660Z Updating files:  98% (7293/7441)
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:11.7885651Z Updating files:  99% (7367/7441)
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:11.7887332Z Updating files: 100% (7441/7441)
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:11.7888853Z Updating files: 100% (7441/7441), done.
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:11.7973381Z Switched to a new branch 'main'
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:11.7980511Z branch 'main' set up to track 'origin/main'.
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:11.8047430Z ##[endgroup]
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:11.8092948Z [command]/usr/bin/git log -1 --format=%H
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:11.8120936Z 67f8b3df2f2b6e8159806767ecce1efa1904d27a
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:11.8132580Z ##[group]Removing auth
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:11.8136962Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:11.8178368Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:11.8412242Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:11.8439638Z http.https://github.com/.extraheader
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:11.8448988Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:11.8485227Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:11.8725670Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:11.8758805Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+cancellation-boundary	Run actions/checkout@v4	2026-10-06T02:04:11.8988325Z ##[endgroup]
+cancellation-boundary	Run actions/setup-node@v4	﻿2026-10-06T02:04:11.9418363Z ##[group]Run actions/setup-node@v4
+cancellation-boundary	Run actions/setup-node@v4	2026-10-06T02:04:11.9419549Z with:
+cancellation-boundary	Run actions/setup-node@v4	2026-10-06T02:04:11.9420356Z   node-version-file: .nvmrc
+cancellation-boundary	Run actions/setup-node@v4	2026-10-06T02:04:11.9421332Z   cache: npm
+cancellation-boundary	Run actions/setup-node@v4	2026-10-06T02:04:11.9422133Z   always-auth: false
+cancellation-boundary	Run actions/setup-node@v4	2026-10-06T02:04:11.9423033Z   check-latest: false
+cancellation-boundary	Run actions/setup-node@v4	2026-10-06T02:04:11.9432666Z   token: ***
+cancellation-boundary	Run actions/setup-node@v4	2026-10-06T02:04:11.9433509Z ##[endgroup]
+cancellation-boundary	Run actions/setup-node@v4	2026-10-06T02:04:12.0851987Z Resolved .nvmrc as 22
+cancellation-boundary	Run actions/setup-node@v4	2026-10-06T02:04:12.0913602Z Found in cache @ /opt/hostedtoolcache/node/22.23.3/x64
+cancellation-boundary	Run actions/setup-node@v4	2026-10-06T02:04:12.0920205Z (node:2390) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+cancellation-boundary	Run actions/setup-node@v4	2026-10-06T02:04:12.0923481Z (Use `node --trace-deprecation ...` to show where the warning was created)
+cancellation-boundary	Run actions/setup-node@v4	2026-10-06T02:04:12.0925828Z ##[group]Environment details
+cancellation-boundary	Run actions/setup-node@v4	2026-10-06T02:04:12.5431989Z node: v22.23.3
+cancellation-boundary	Run actions/setup-node@v4	2026-10-06T02:04:12.5432527Z npm: 10.9.9
+cancellation-boundary	Run actions/setup-node@v4	2026-10-06T02:04:12.5432797Z yarn: 1.22.22
+cancellation-boundary	Run actions/setup-node@v4	2026-10-06T02:04:12.5433624Z ##[endgroup]
+cancellation-boundary	Run actions/setup-node@v4	2026-10-06T02:04:12.5474704Z [command]/opt/hostedtoolcache/node/22.23.3/x64/bin/npm config get cache
+cancellation-boundary	Run actions/setup-node@v4	2026-10-06T02:04:12.6591072Z /home/runner/.npm
+cancellation-boundary	Run actions/setup-node@v4	2026-10-06T02:04:12.9289405Z Cache hit for: node-cache-Linux-x64-npm-75880b4bbd0ff5ec746d7c72b50f76a896a6c03c1ce6640cd295bc994cd01db2
+cancellation-boundary	Run actions/setup-node@v4	2026-10-06T02:04:12.9401641Z (node:2390) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+cancellation-boundary	Run actions/setup-node@v4	2026-10-06T02:04:14.1963517Z Received 4194304 of 460488608 (0.9%), 4.0 MBs/sec
+cancellation-boundary	Run actions/setup-node@v4	2026-10-06T02:04:15.1971645Z Received 134217728 of 460488608 (29.1%), 64.0 MBs/sec
+cancellation-boundary	Run actions/setup-node@v4	2026-10-06T02:04:16.1982240Z Received 314572800 of 460488608 (68.3%), 100.0 MBs/sec
+cancellation-boundary	Run actions/setup-node@v4	2026-10-06T02:04:17.0297527Z Received 460488608 of 460488608 (100.0%), 114.7 MBs/sec
+cancellation-boundary	Run actions/setup-node@v4	2026-10-06T02:04:17.0327022Z Cache Size: ~439 MB (460488608 B)
+cancellation-boundary	Run actions/setup-node@v4	2026-10-06T02:04:17.0389652Z [command]/usr/bin/tar -xf /home/runner/work/_temp/cb2d30ed-7c65-4870-8d25-41d18ac4018d/cache.tzst -P -C /home/runner/work/cinatoken/cinatoken --use-compress-program unzstd
+cancellation-boundary	Run actions/setup-node@v4	2026-10-06T02:04:18.0021628Z Cache restored successfully
+cancellation-boundary	Run actions/setup-node@v4	2026-10-06T02:04:18.0226630Z Cache restored from key: node-cache-Linux-x64-npm-75880b4bbd0ff5ec746d7c72b50f76a896a6c03c1ce6640cd295bc994cd01db2
+cancellation-boundary	Install the existing dependency lock	﻿2026-10-06T02:04:18.0427746Z ##[group]Run npm ci
+cancellation-boundary	Install the existing dependency lock	2026-10-06T02:04:18.0428104Z ^[[36;1mnpm ci^[[0m
+cancellation-boundary	Install the existing dependency lock	2026-10-06T02:04:18.0817395Z shell: /usr/bin/bash -e {0}
+cancellation-boundary	Install the existing dependency lock	2026-10-06T02:04:18.0817771Z ##[endgroup]
+cancellation-boundary	Install the existing dependency lock	2026-10-06T02:04:28.8748366Z npm warn deprecated geojson-linestring-dissolve@0.0.1: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+cancellation-boundary	Install the existing dependency lock	2026-10-06T02:04:30.3928520Z npm warn deprecated text-encoding@0.6.4: no longer maintained
+cancellation-boundary	Install the existing dependency lock	2026-10-06T02:04:31.4708636Z npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+cancellation-boundary	Install the existing dependency lock	2026-10-06T02:04:33.6259219Z npm warn deprecated glob@9.3.5: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+cancellation-boundary	Install the existing dependency lock	2026-10-06T02:05:11.1113063Z 
+cancellation-boundary	Install the existing dependency lock	2026-10-06T02:05:11.1115997Z > cinatoken@2.8.0 postinstall
+cancellation-boundary	Install the existing dependency lock	2026-10-06T02:05:11.1117524Z > npm run gen:wrangler
+cancellation-boundary	Install the existing dependency lock	2026-10-06T02:05:11.1118116Z 
+cancellation-boundary	Install the existing dependency lock	2026-10-06T02:05:11.2646066Z 
+cancellation-boundary	Install the existing dependency lock	2026-10-06T02:05:11.2647224Z > cinatoken@2.8.0 gen:wrangler
+cancellation-boundary	Install the existing dependency lock	2026-10-06T02:05:11.2648093Z > node scripts/deploy/gen-wrangler.mjs
+cancellation-boundary	Install the existing dependency lock	2026-10-06T02:05:11.2648505Z 
+cancellation-boundary	Install the existing dependency lock	2026-10-06T02:05:11.2958125Z gen-wrangler: wrote packages/proxy/wrangler.jsonc
+cancellation-boundary	Install the existing dependency lock	2026-10-06T02:05:11.2967757Z gen-wrangler: wrote packages/admin/wrangler.jsonc
+cancellation-boundary	Install the existing dependency lock	2026-10-06T02:05:11.2988000Z gen-wrangler: wrote packages/chain-worker/wrangler.jsonc
+cancellation-boundary	Install the existing dependency lock	2026-10-06T02:05:11.2989255Z gen-wrangler: wrote packages/core/wrangler.d1.jsonc
+cancellation-boundary	Install the existing dependency lock	2026-10-06T02:05:11.3006767Z gen-wrangler: proxy=cinatoken-proxy admin=cinatoken-admin chain=cinatoken-chain-worker queue=cinatoken-chain-jobs d1=cinatoken (local, no database_id) batch-infra=false
+cancellation-boundary	Install the existing dependency lock	2026-10-06T02:05:11.3278065Z 
+cancellation-boundary	Install the existing dependency lock	2026-10-06T02:05:11.3278964Z added 1480 packages, and audited 1487 packages in 53s
+cancellation-boundary	Install the existing dependency lock	2026-10-06T02:05:11.3279603Z 
+cancellation-boundary	Install the existing dependency lock	2026-10-06T02:05:11.3279880Z 450 packages are looking for funding
+cancellation-boundary	Install the existing dependency lock	2026-10-06T02:05:11.3280289Z   run `npm fund` for details
+cancellation-boundary	Install the existing dependency lock	2026-10-06T02:05:11.6871158Z 
+cancellation-boundary	Install the existing dependency lock	2026-10-06T02:05:11.6872119Z 50 vulnerabilities (1 low, 9 moderate, 31 high, 9 critical)
+cancellation-boundary	Install the existing dependency lock	2026-10-06T02:05:11.6872659Z 
+cancellation-boundary	Install the existing dependency lock	2026-10-06T02:05:11.6873126Z To address issues that do not require attention, run:
+cancellation-boundary	Install the existing dependency lock	2026-10-06T02:05:11.6873846Z   npm audit fix
+cancellation-boundary	Install the existing dependency lock	2026-10-06T02:05:11.6874114Z 
+cancellation-boundary	Install the existing dependency lock	2026-10-06T02:05:11.6874568Z To address all issues (including breaking changes), run:
+cancellation-boundary	Install the existing dependency lock	2026-10-06T02:05:11.6875165Z   npm audit fix --force
+cancellation-boundary	Install the existing dependency lock	2026-10-06T02:05:11.6875363Z 
+cancellation-boundary	Install the existing dependency lock	2026-10-06T02:05:11.6875498Z Run `npm audit` for details.
+cancellation-boundary	Compare owned boundaries once and retain every strict failure	﻿2026-10-06T02:05:11.9175990Z ##[group]Run python3 scripts/diagnostics/v364-owned-linux-boundary/execute-owned-linux.py --repo "$GITHUB_WORKSPACE" --out "$DIAGNOSTIC_OUT" --execute-linux
+cancellation-boundary	Compare owned boundaries once and retain every strict failure	2026-10-06T02:05:11.9177459Z ^[[36;1mpython3 scripts/diagnostics/v364-owned-linux-boundary/execute-owned-linux.py --repo "$GITHUB_WORKSPACE" --out "$DIAGNOSTIC_OUT" --execute-linux^[[0m
+cancellation-boundary	Compare owned boundaries once and retain every strict failure	2026-10-06T02:05:11.9244275Z shell: /usr/bin/bash -e {0}
+cancellation-boundary	Compare owned boundaries once and retain every strict failure	2026-10-06T02:05:11.9244539Z env:
+cancellation-boundary	Compare owned boundaries once and retain every strict failure	2026-10-06T02:05:11.9244857Z   DIAGNOSTIC_OUT: /home/runner/work/_temp/v364-boundary-once-37402302570-1
+cancellation-boundary	Compare owned boundaries once and retain every strict failure	2026-10-06T02:05:11.9245250Z ##[endgroup]
+cancellation-boundary	Compare owned boundaries once and retain every strict failure	2026-10-06T02:05:49.3395234Z {"actualExit": 1, "actualProcessExit": 1, "runnerOutcomeCode": 1, "timedOut": false, "output": "/home/runner/work/_temp/v364-boundary-once-37402302570-1"}
+cancellation-boundary	Compare owned boundaries once and retain every strict failure	2026-10-06T02:05:49.3479561Z ##[error]Process completed with exit code 1.
+cancellation-boundary	Retain SHA-bound raw receipts on success or failure	﻿2026-10-06T02:05:49.3561058Z ##[group]Run actions/upload-artifact@v4
+cancellation-boundary	Retain SHA-bound raw receipts on success or failure	2026-10-06T02:05:49.3561374Z with:
+cancellation-boundary	Retain SHA-bound raw receipts on success or failure	2026-10-06T02:05:49.3561768Z   name: v364-owned-linux-boundary-67f8b3df2f2b6e8159806767ecce1efa1904d27a-37402302570-1
+cancellation-boundary	Retain SHA-bound raw receipts on success or failure	2026-10-06T02:05:49.3562682Z   path: /home/runner/work/_temp/v364-boundary-once-37402302570-1/
+cancellation-boundary	Retain SHA-bound raw receipts on success or failure	scripts/diagnostics/v364-owned-linux-boundary/
+cancellation-boundary	Retain SHA-bound raw receipts on success or failure	.github/workflows/v364-owned-linux-boundary.yml
+cancellation-boundary	Retain SHA-bound raw receipts on success or failure	
+cancellation-boundary	Retain SHA-bound raw receipts on success or failure	2026-10-06T02:05:49.3563406Z   if-no-files-found: error
+cancellation-boundary	Retain SHA-bound raw receipts on success or failure	2026-10-06T02:05:49.3563661Z   include-hidden-files: true
+cancellation-boundary	Retain SHA-bound raw receipts on success or failure	2026-10-06T02:05:49.3563903Z   retention-days: 14
+cancellation-boundary	Retain SHA-bound raw receipts on success or failure	2026-10-06T02:05:49.3564134Z   compression-level: 6
+cancellation-boundary	Retain SHA-bound raw receipts on success or failure	2026-10-06T02:05:49.3564359Z   overwrite: false
+cancellation-boundary	Retain SHA-bound raw receipts on success or failure	2026-10-06T02:05:49.3564582Z ##[endgroup]
+cancellation-boundary	Retain SHA-bound raw receipts on success or failure	2026-10-06T02:05:49.5211436Z (node:2751) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+cancellation-boundary	Retain SHA-bound raw receipts on success or failure	2026-10-06T02:05:49.5212338Z (Use `node --trace-deprecation ...` to show where the warning was created)
+cancellation-boundary	Retain SHA-bound raw receipts on success or failure	2026-10-06T02:05:49.5316826Z Multiple search paths detected. Calculating the least common ancestor of all paths
+cancellation-boundary	Retain SHA-bound raw receipts on success or failure	2026-10-06T02:05:49.5319755Z The least common ancestor is /home/runner/work. This will be the root directory of the artifact
+cancellation-boundary	Retain SHA-bound raw receipts on success or failure	2026-10-06T02:05:49.5320940Z With the provided path, there will be 18 files uploaded
+cancellation-boundary	Retain SHA-bound raw receipts on success or failure	2026-10-06T02:05:49.5325872Z Artifact name is valid!
+cancellation-boundary	Retain SHA-bound raw receipts on success or failure	2026-10-06T02:05:49.5327570Z Root directory input is valid!
+cancellation-boundary	Retain SHA-bound raw receipts on success or failure	2026-10-06T02:05:49.9332049Z Beginning upload of artifact content to blob storage
+cancellation-boundary	Retain SHA-bound raw receipts on success or failure	2026-10-06T02:05:49.9872702Z (node:2751) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+cancellation-boundary	Retain SHA-bound raw receipts on success or failure	2026-10-06T02:05:50.4541029Z Uploaded bytes 121949
+cancellation-boundary	Retain SHA-bound raw receipts on success or failure	2026-10-06T02:05:50.5314674Z Finished uploading artifact content to blob storage!
+cancellation-boundary	Retain SHA-bound raw receipts on success or failure	2026-10-06T02:05:50.5316034Z SHA256 digest of uploaded artifact zip is b02bea900a32639c5e49952b9c711c31e2906bf20145794a89f724909dec2fe2
+cancellation-boundary	Retain SHA-bound raw receipts on success or failure	2026-10-06T02:05:50.5317687Z Finalizing artifact upload
+cancellation-boundary	Retain SHA-bound raw receipts on success or failure	2026-10-06T02:05:50.7750394Z Artifact v364-owned-linux-boundary-67f8b3df2f2b6e8159806767ecce1efa1904d27a-37402302570-1.zip successfully finalized. Artifact ID 11385955755
+cancellation-boundary	Retain SHA-bound raw receipts on success or failure	2026-10-06T02:05:50.7753255Z Artifact v364-owned-linux-boundary-67f8b3df2f2b6e8159806767ecce1efa1904d27a-37402302570-1 has been successfully uploaded! Final size is 121949 bytes. Artifact ID is 11385955755
+cancellation-boundary	Retain SHA-bound raw receipts on success or failure	2026-10-06T02:05:50.7758483Z Artifact download URL: https://github.com/cinagroup/cinatoken/actions/runs/37402302570/artifacts/11385955755
+cancellation-boundary	Post Run actions/checkout@v4	﻿2026-10-06T02:05:50.7954040Z Post job cleanup.
+cancellation-boundary	Post Run actions/checkout@v4	2026-10-06T02:05:50.8817755Z [command]/usr/bin/git version
+cancellation-boundary	Post Run actions/checkout@v4	2026-10-06T02:05:50.8860957Z git version 2.55.0
+cancellation-boundary	Post Run actions/checkout@v4	2026-10-06T02:05:50.8900109Z Temporarily overriding HOME='/home/runner/work/_temp/83230c5b-c9c8-499e-b400-548e274d508c' before making global git config changes
+cancellation-boundary	Post Run actions/checkout@v4	2026-10-06T02:05:50.8901642Z Adding repository directory to the temporary git global config as a safe directory
+cancellation-boundary	Post Run actions/checkout@v4	2026-10-06T02:05:50.8905934Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/cinatoken/cinatoken
+cancellation-boundary	Post Run actions/checkout@v4	2026-10-06T02:05:50.8945065Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+cancellation-boundary	Post Run actions/checkout@v4	2026-10-06T02:05:50.8982219Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+cancellation-boundary	Post Run actions/checkout@v4	2026-10-06T02:05:50.9252602Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+cancellation-boundary	Post Run actions/checkout@v4	2026-10-06T02:05:50.9291195Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+cancellation-boundary	Post Run actions/checkout@v4	2026-10-06T02:05:50.9567381Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+cancellation-boundary	Post Run actions/checkout@v4	2026-10-06T02:05:50.9604932Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+cancellation-boundary	Complete job	﻿2026-10-06T02:05:51.0044731Z Cleaning up orphan processes
+cancellation-boundary	Complete job	2026-10-06T02:05:51.0349068Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-node@v4, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

@@ -1,0 +1,29 @@
+{
+  "schema": "cinatoken-isolated-release-command-v1",
+  "label": "before-git-remotes",
+  "program": "git",
+  "args": [
+    "remote"
+  ],
+  "cwd": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\isolated-before",
+  "startedAt": "2026-10-06T02:08:07.592Z",
+  "finishedAt": "2026-10-06T02:08:07.643Z",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "closed": true,
+  "expectedActualExits": [
+    0
+  ],
+  "expectedExitMatched": true,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\before-git-remotes.stdout.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\before-git-remotes.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

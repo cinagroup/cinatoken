@@ -1,0 +1,6 @@
+[warn] scripts\verification\web-platform-g7\admission.mjs
+[warn] scripts\verification\web-platform-g7\admission.test.mjs
+[warn] scripts\verification\web-platform-g7\database.mjs
+[warn] scripts\verification\web-platform-g7\run-owned-linux.mjs
+[warn] scripts\verification\web-platform-g7\wire.mjs
+[warn] Code style issues found in 5 files. Forgot to run Prettier?

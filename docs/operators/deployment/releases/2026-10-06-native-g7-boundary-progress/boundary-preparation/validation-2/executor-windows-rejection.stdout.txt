@@ -1,0 +1,1 @@
+{"actualExit": 1, "actualProcessExit": null, "runnerOutcomeCode": 1, "timedOut": false, "output": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38\\validation-2\\executor-windows-rejection"}

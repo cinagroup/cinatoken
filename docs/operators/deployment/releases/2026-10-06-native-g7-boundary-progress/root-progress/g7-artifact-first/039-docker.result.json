@@ -1,0 +1,45 @@
+{
+  "schema": "web-platform-g7-child-command-closed-v1",
+  "program": "docker",
+  "args": [
+    "--host",
+    "unix:///var/run/docker.sock",
+    "create",
+    "--name",
+    "g7-6225aa47d5aa463cbcbb48bc4c983312-seed",
+    "--label",
+    "cinatoken.g7.owner=g7-6225aa47d5aa463cbcbb48bc4c983312",
+    "--network",
+    "g7-6225aa47d5aa463cbcbb48bc4c983312-db",
+    "--env-file",
+    "/tmp/cinatoken-g7-private-mt77bB/seed.env",
+    "--mount",
+    "type=bind,src=/home/runner/work/cinatoken/cinatoken/scripts/verification/web-platform-g7,dst=/qa,readonly",
+    "--entrypoint",
+    "node",
+    "sha256:dc18e78eea32e87a2195b700ae85f8ce6ce24b5ee085cff8bab6a1ee98dacd24",
+    "/qa/database.mjs",
+    "--seed"
+  ],
+  "begin": "2026-10-06T02:10:04.284Z",
+  "endedAt": "2026-10-06T02:10:04.310Z",
+  "closed": true,
+  "actualExit": 0,
+  "signal": null,
+  "errorCode": null,
+  "timedOut": false,
+  "timeoutMs": 90000,
+  "expectedNumericReadinessNonzero": false,
+  "stdout": {
+    "file": "039-docker.stdout.log",
+    "bytes": 65,
+    "sha256": "ef7f896e150161141dddb3bafa6c2858fc4338630e2c99038eacbe952f969cf1",
+    "redacted": false
+  },
+  "stderr": {
+    "file": "039-docker.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redacted": false
+  }
+}

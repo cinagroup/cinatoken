@@ -1,0 +1,704 @@
+{
+  "closed": true,
+  "actualValidationOutcome": 0,
+  "endedAt": "2026-10-06T02:56:38.960Z",
+  "oldControlled": {
+    "closed": true,
+    "actualExitCode": 0,
+    "controlledTests": 12,
+    "pass": 12,
+    "fail": 0,
+    "skipped": 0,
+    "cases": [
+      "all-three-real-closure-dialects-and-failures-preserved",
+      "large-binary-gzip-stored-original-source-exact",
+      "wx-repeat-never-overwrites",
+      "unclosed-log-blocked-before-output",
+      "missing-exit-is-not-zero",
+      "reused-late-log-blocked",
+      "receipt-path-escape-blocked",
+      "gzip-path-collision-blocked-before-output",
+      "repository-write-blocked",
+      "duplicate-root-blocked",
+      "stored-tamper-detected",
+      "exact-stored-directory-set-checked"
+    ],
+    "fixtureDirectory": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-collector-controlled-dkSgAC",
+    "fixtureReport": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-collector-controlled-dkSgAC\\good-output\\2026-10-06-controlled-collector-test.json",
+    "fixtureReportSha256": "4073e0f9f46226054902364ffdc227ed78996aa313ccbebbdc04c0cc06662da9",
+    "realSourceCollectionPerformed": false,
+    "productionRequests": 0,
+    "repoWrites": 0,
+    "actualDockerOrCiExecution": false,
+    "receipt": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-collector-controlled-dkSgAC\\controlled-tests.proof.json"
+  },
+  "oldClosure": {
+    "closed": true,
+    "actualExitCode": 0,
+    "pass": 10,
+    "fail": 0,
+    "skipped": 0,
+    "cases": [
+      "executor-authority-nonstandard-name-seven-sha-bound-files-and-failure-retained",
+      "executor-manifest-log-tamper-blocks",
+      "executor-process-group-not-gone-cannot-close-logs",
+      "exact-no-child-preflight-rejection-preserved-without-linux-or-child-exit-proof",
+      "historical-closed-false-report-retained-without-command-proof",
+      "historical-exception-does-not-admit-active-command-logs",
+      "cross-root-copy-provenance-original-receipt-and-exact-negative-terminal-ci-bound",
+      "copied-log-without-explicit-binding-blocked",
+      "mismatched-terminal-ci-sha-blocked",
+      "copied-log-byte-mismatch-blocked"
+    ],
+    "fixtureDirectory": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-collector-closure-boundaries-Y8A7BX",
+    "realSourceCollectionPerformed": false,
+    "repoWrites": 0,
+    "productionRequests": 0,
+    "actualDockerOrCiExecution": false
+  },
+  "firstAdded": {
+    "closed": true,
+    "actualExitCode": 0,
+    "pass": 36,
+    "fail": 0,
+    "skipped": 0,
+    "cases": [
+      "nested-g7-receipt-relative-to-parent-exact-sha-redacted-stored-bytes-and-exit1-preserved",
+      "g7-sha-tamper-blocks",
+      "g7-wrong-bytes-blocks",
+      "g7-bad-hash-blocks",
+      "g7-escape-blocks",
+      "g7-absolute-file-blocks",
+      "g7-missing-descriptor-blocks",
+      "g7-unknown-status-blocks",
+      "g7-not-closed-blocks",
+      "g7-reverse-time-blocks",
+      "g7-secondary-wrong-number-blocks",
+      "g7-secondary-negative-blocks",
+      "g7-secondary-missing-sha-blocks",
+      "g7-secondary-wrong-sha-blocks",
+      "timeout-and-signal-retained-without-invented-numeric-exit",
+      "release-nested-path-descriptor-admitted-with-sha",
+      "string-pointer-object-byte-and-sha-descriptor-retains-exit1",
+      "byte-object-sha-tamper-blocks",
+      "unbound-byte-exact-copy-logs-stay-blocked",
+      "pinned-copy-provenance-only-propagates-original-download-closure-without-ci-success",
+      "wrong-explicit-copy-provenance-sha-blocks",
+      "copy-raw-byte-tamper-blocks",
+      "producer-exit0-cannot-close-unclosed-original-copy",
+      "matching-mirror-basename-does-not-authorize-excluding-other-roots",
+      "actual-release-only-two-mirror-trees-skipped-all-generated-source-closed-commands-retained",
+      "directory-path-escape-blocks",
+      "negative-or-generic-directory-exclusion-not-authorized",
+      "all-other-symlink-inputs-remain-rejected",
+      "actual-old-collector-lacks-new-dialects-negative-audit-preserved",
+      "actual352-original-and601-new-g7-files-and-new-boundary-manifest-admitted-readonly-with-failures-preserved",
+      "actual-new-wire0-kept-separate-from-overall1-and-admin-observer-command1",
+      "even-wire-report-closed-true-and-exit0-never-close-child-logs",
+      "invalid-aggregate-source-sha-blocks",
+      "new-boundary-manifest-tamper-blocks",
+      "new-boundary-group-not-gone-is-not-terminal-authority",
+      "new-boundary-unknown-child-exit-cannot-be-guessed"
+    ],
+    "fixtureDirectory": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-controls-gSrAmu",
+    "realSourceRootsReadonly": 4,
+    "realFilesAdmitted": 962,
+    "actualOldFailuresPreserved": true,
+    "realSourceFilesModified": false,
+    "actualRuntimeOrCiExecution": false,
+    "productionRequests": 0,
+    "repoWrites": 0
+  },
+  "secondAdded": {
+    "closed": true,
+    "actualExitCode": 0,
+    "pass": 29,
+    "fail": 0,
+    "skipped": 0,
+    "cases": [
+      "terminal-spawnSync-status1-sha-bound-two-outputs-preserved-despite-expected0",
+      "terminal-wrong-source-blocks",
+      "terminal-terminal-false-blocks",
+      "terminal-unknown-status-blocks",
+      "terminal-fractional-status-blocks",
+      "terminal-output-sha-tamper-blocks",
+      "terminal-output-byte-tamper-blocks",
+      "terminal-duplicate-output-blocks",
+      "terminal-output-cross-root-blocks",
+      "terminal-invalid-timeout-blocks",
+      "same-stem-without-explicit-binding-remains-blocked",
+      "pinned-explicit-closed-command-and-two-raw-hashes-retain-actual1",
+      "explicit-wrong-receipt-pin-blocks",
+      "explicit-wrong-output-sha-blocks",
+      "explicit-wrong-output-bytes-blocks",
+      "explicit-duplicate-output-blocks",
+      "explicit-output-path-escape-blocks",
+      "explicit-output-newer-than-pinned-receipt-blocks",
+      "explicit-binding-cannot-turn-aggregate0-with-no-program-into-command",
+      "partial-copy-without-explicit-schema-binding-stays-blocked",
+      "explicit-partial-stderr-only-copy-inherits-original1-full-empty-stdout-retained",
+      "partial-wrong-receipt-pin-blocks",
+      "partial-wrong-log-hash-blocks",
+      "partial-wrong-log-bytes-blocks",
+      "partial-wrong-original-stream-blocks",
+      "partial-duplicate-copy-log-blocks",
+      "partial-copy-requires-explicit-partial-declaration",
+      "partial-copy-cannot-inherit-original-report-without-own-recognized-terminal-authority",
+      "actual-root-full-config-admits-all-raw-with-negative-exits-preserved-and-only-two-declared-release-directory-exclusions"
+    ],
+    "fixtureDirectory": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-explicit-association-controls-Jspa2f",
+    "actualRuntimeOrCiExecution": false,
+    "sourceGitOrRepositoryWrites": false,
+    "sourceCollectionPerformed": false,
+    "productionRequests": 0,
+    "realAudit": {
+      "configPath": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/archive-config-v2.json",
+      "configBytes": 14088,
+      "configSha256": "16cf36f5fe33cec40cbd262b5c8cf6601fcaa053d9a85baa7572a13253ad0485",
+      "roots": 17,
+      "entries": 2118,
+      "receipts": 554,
+      "aggregates": 6,
+      "exclusions": [
+        {
+          "root": "release-preparation",
+          "directory": "isolated-before",
+          "scope": "entire-explicit-directory-tree",
+          "reason": "CLI execution mirror contains temporary Git state and a node_modules junction. All executed command receipts/raw, generated-before output, source-before and integrity reports are included separately.",
+          "descendantsEnumerated": false
+        },
+        {
+          "root": "release-preparation",
+          "directory": "isolated-after",
+          "scope": "entire-explicit-directory-tree",
+          "reason": "CLI execution mirror contains temporary Git state and a node_modules junction. All executed command receipts/raw, generated-after output, source-after and integrity reports are included separately.",
+          "descendantsEnumerated": false
+        }
+      ],
+      "blockers": [],
+      "realSourceCollectionPerformed": false
+    }
+  },
+  "commands": [
+    {
+      "closed": true,
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-v2-344bf6aba6864fafba8f6d1a5e9e7e7f\\evidence-lib.mjs"
+      ],
+      "cwd": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-v2-344bf6aba6864fafba8f6d1a5e9e7e7f",
+      "startedAt": "2026-10-06T02:54:48.648Z",
+      "finishedAt": "2026-10-06T02:54:48.708Z",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-v2-344bf6aba6864fafba8f6d1a5e9e7e7f\\syntax-evidence-lib.mjs.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-v2-344bf6aba6864fafba8f6d1a5e9e7e7f\\syntax-evidence-lib.mjs.stderr.log",
+      "stdoutBytes": 0,
+      "stderrBytes": 0,
+      "stdoutDescriptor": {
+        "file": "syntax-evidence-lib.mjs.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderrDescriptor": {
+        "file": "syntax-evidence-lib.mjs.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "closed": true,
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-v2-344bf6aba6864fafba8f6d1a5e9e7e7f\\collect-evidence.mjs"
+      ],
+      "cwd": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-v2-344bf6aba6864fafba8f6d1a5e9e7e7f",
+      "startedAt": "2026-10-06T02:54:48.711Z",
+      "finishedAt": "2026-10-06T02:54:48.767Z",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-v2-344bf6aba6864fafba8f6d1a5e9e7e7f\\syntax-collect-evidence.mjs.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-v2-344bf6aba6864fafba8f6d1a5e9e7e7f\\syntax-collect-evidence.mjs.stderr.log",
+      "stdoutBytes": 0,
+      "stderrBytes": 0,
+      "stdoutDescriptor": {
+        "file": "syntax-collect-evidence.mjs.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderrDescriptor": {
+        "file": "syntax-collect-evidence.mjs.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "closed": true,
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-v2-344bf6aba6864fafba8f6d1a5e9e7e7f\\verify-evidence.mjs"
+      ],
+      "cwd": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-v2-344bf6aba6864fafba8f6d1a5e9e7e7f",
+      "startedAt": "2026-10-06T02:54:48.770Z",
+      "finishedAt": "2026-10-06T02:54:48.828Z",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-v2-344bf6aba6864fafba8f6d1a5e9e7e7f\\syntax-verify-evidence.mjs.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-v2-344bf6aba6864fafba8f6d1a5e9e7e7f\\syntax-verify-evidence.mjs.stderr.log",
+      "stdoutBytes": 0,
+      "stderrBytes": 0,
+      "stdoutDescriptor": {
+        "file": "syntax-verify-evidence.mjs.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderrDescriptor": {
+        "file": "syntax-verify-evidence.mjs.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "closed": true,
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-v2-344bf6aba6864fafba8f6d1a5e9e7e7f\\collector-explicit-association-tests.mjs"
+      ],
+      "cwd": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-v2-344bf6aba6864fafba8f6d1a5e9e7e7f",
+      "startedAt": "2026-10-06T02:54:48.831Z",
+      "finishedAt": "2026-10-06T02:54:48.890Z",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-v2-344bf6aba6864fafba8f6d1a5e9e7e7f\\syntax-collector-explicit-association-tests.mjs.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-v2-344bf6aba6864fafba8f6d1a5e9e7e7f\\syntax-collector-explicit-association-tests.mjs.stderr.log",
+      "stdoutBytes": 0,
+      "stderrBytes": 0,
+      "stdoutDescriptor": {
+        "file": "syntax-collector-explicit-association-tests.mjs.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderrDescriptor": {
+        "file": "syntax-collector-explicit-association-tests.mjs.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "closed": true,
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-v2-344bf6aba6864fafba8f6d1a5e9e7e7f\\collector-controlled-tests.mjs"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "startedAt": "2026-10-06T02:54:48.892Z",
+      "finishedAt": "2026-10-06T02:54:49.279Z",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-v2-344bf6aba6864fafba8f6d1a5e9e7e7f\\old-controlled-regression.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-v2-344bf6aba6864fafba8f6d1a5e9e7e7f\\old-controlled-regression.stderr.log",
+      "stdoutBytes": 1103,
+      "stderrBytes": 0,
+      "stdoutDescriptor": {
+        "file": "old-controlled-regression.stdout.log",
+        "bytes": 1103,
+        "sha256": "76c2eb014ae9600ffdfe3ac61da7d133030c04185f5d95ec60bc989347675445"
+      },
+      "stderrDescriptor": {
+        "file": "old-controlled-regression.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "closed": true,
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "collector-closure-boundary-tests.mjs"
+      ],
+      "cwd": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-v2-344bf6aba6864fafba8f6d1a5e9e7e7f",
+      "startedAt": "2026-10-06T02:54:49.282Z",
+      "finishedAt": "2026-10-06T02:54:49.473Z",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-v2-344bf6aba6864fafba8f6d1a5e9e7e7f\\old-closure-regression.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-v2-344bf6aba6864fafba8f6d1a5e9e7e7f\\old-closure-regression.stderr.log",
+      "stdoutBytes": 876,
+      "stderrBytes": 0,
+      "stdoutDescriptor": {
+        "file": "old-closure-regression.stdout.log",
+        "bytes": 876,
+        "sha256": "0267c57b123cf45450e5a44667804a74f570c474c420bd8831653b6720ab475a"
+      },
+      "stderrDescriptor": {
+        "file": "old-closure-regression.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "closed": true,
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "collector-g7-boundary-descriptor-tests.mjs"
+      ],
+      "cwd": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-v2-344bf6aba6864fafba8f6d1a5e9e7e7f",
+      "startedAt": "2026-10-06T02:56:35.176Z",
+      "finishedAt": "2026-10-06T02:56:36.930Z",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-v2-344bf6aba6864fafba8f6d1a5e9e7e7f\\first-added-regression-v2.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-v2-344bf6aba6864fafba8f6d1a5e9e7e7f\\first-added-regression-v2.stderr.log",
+      "stdoutBytes": 2069,
+      "stderrBytes": 0,
+      "stdoutDescriptor": {
+        "file": "first-added-regression-v2.stdout.log",
+        "bytes": 2069,
+        "sha256": "fffa607899430e35b658d59687d58bc34156e31fcf00e1dcac83f3a258d84132"
+      },
+      "stderrDescriptor": {
+        "file": "first-added-regression-v2.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "closed": true,
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "collector-explicit-association-tests.mjs",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/archive-config-v2.json"
+      ],
+      "cwd": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-v2-344bf6aba6864fafba8f6d1a5e9e7e7f",
+      "startedAt": "2026-10-06T02:56:36.934Z",
+      "finishedAt": "2026-10-06T02:56:38.936Z",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-v2-344bf6aba6864fafba8f6d1a5e9e7e7f\\second-added-controls-and-full-config.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-v2-344bf6aba6864fafba8f6d1a5e9e7e7f\\second-added-controls-and-full-config.stderr.log",
+      "stdoutBytes": 2772,
+      "stderrBytes": 0,
+      "stdoutDescriptor": {
+        "file": "second-added-controls-and-full-config.stdout.log",
+        "bytes": 2772,
+        "sha256": "7de1a24fae65e44f3d5393a0f5713b42929e8d0813d4e5b8fc6ec203310821a0"
+      },
+      "stderrDescriptor": {
+        "file": "second-added-controls-and-full-config.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "previousSixFrozenFilesRemainExact": true,
+  "wrappersAndTwoOldSuitesUnchanged": true,
+  "firstAddedOnlyImportLocatorAdjusted": true,
+  "historicalOriginalLibrary": {
+    "file": "historical-original-library/evidence-lib.mjs",
+    "bytes": 31432,
+    "sha256": "c9c46be6e8c08b1c693cec02fc2f94386394412527e46b91028a113be2af7cc4"
+  },
+  "tests": {
+    "prior": 58,
+    "added": 29,
+    "passed": 87,
+    "failed": 0,
+    "skipped": 0
+  },
+  "initialV2TestInvocationFailure": {
+    "actualExit": 1,
+    "receipt": {
+      "file": "first-added-regression.result.json",
+      "bytes": 778,
+      "sha256": "e15eb34d9524478ed6ca970bd910a961c1c08bf7be8d0fca429aa1f32bc0734e"
+    },
+    "raw": {
+      "file": "first-added-regression.stderr.log",
+      "bytes": 846,
+      "sha256": "fe4236d85f1480e8439becb9db2938decb3b259de1ddd867df7814a9303834f1"
+    },
+    "reason": "COPY changed original-source to v1 final library. One test negative specifically requires older pre-extension library. Only new copied suite import locator was changed to byte-exact original 31432B snapshot. All prior test assertions remain identical.",
+    "originalWrapperRemainsUnchanged": true
+  },
+  "fullReadonlyConfigAudit": {
+    "file": "full-config-readonly-audit.json",
+    "bytes": 1236,
+    "sha256": "b11844abe9541c5fc02242af6db53edb51b8fd9fa86212d258541df25a085bb9"
+  },
+  "sourceFiles": [
+    {
+      "file": "evidence-lib.mjs",
+      "bytes": 50356,
+      "sha256": "f6f86b8c7de1f49c4485cb6171b670d105b94efbb73a4cea5e0f1f5d80c6cbfa"
+    },
+    {
+      "file": "collect-evidence.mjs",
+      "bytes": 1002,
+      "sha256": "95d1670211f5fdceb6bbdd2ce1db38036de4fb7c31e5d522eef10af3e479bdd5"
+    },
+    {
+      "file": "verify-evidence.mjs",
+      "bytes": 617,
+      "sha256": "ac6c531cc665341fbf51dc3ceed6adbd3f629ab5c17aef51a214de1f1613422d"
+    },
+    {
+      "file": "collector-explicit-association-tests.mjs",
+      "bytes": 10741,
+      "sha256": "7580f6b13250d4a53ddd8b022dfaa48ef2fdc3382310fd60f010d035395b1f7c"
+    },
+    {
+      "file": "run-v2-tool-validation.mjs",
+      "bytes": 4217,
+      "sha256": "cbade5bab1336ab1530caead7799b5bb0e039ca6884444b44c861679fa74280e"
+    },
+    {
+      "file": "finish-v2-tool-validation.mjs",
+      "bytes": 5931,
+      "sha256": "f4d15f6880e2b663c52ae083ab3a42625b26e242b4dcd6532cea622ae686e71d"
+    }
+  ],
+  "completeInputFileListBeforeThisFinal": [
+    {
+      "file": "collect-evidence.mjs",
+      "bytes": 1002,
+      "sha256": "95d1670211f5fdceb6bbdd2ce1db38036de4fb7c31e5d522eef10af3e479bdd5"
+    },
+    {
+      "file": "collector-closure-boundary-tests.mjs",
+      "bytes": 8703,
+      "sha256": "967171ef8a84ae50abb69549d85d2ed58aa3c481c27bb3ae456cad0e66f60eb6"
+    },
+    {
+      "file": "collector-controlled-tests.mjs",
+      "bytes": 6887,
+      "sha256": "749953cc540f88e86822b33ade25daf4c59ef26864a7445bb413bb3c2f425614"
+    },
+    {
+      "file": "collector-explicit-association-tests.mjs",
+      "bytes": 10741,
+      "sha256": "7580f6b13250d4a53ddd8b022dfaa48ef2fdc3382310fd60f010d035395b1f7c"
+    },
+    {
+      "file": "collector-g7-boundary-descriptor-tests.mjs",
+      "bytes": 17869,
+      "sha256": "f983fe626f4d2b2d8af357cc36e8ff372f4bbee88ef316a1c9c274d945e9bf65"
+    },
+    {
+      "file": "evidence-lib.mjs",
+      "bytes": 50356,
+      "sha256": "f6f86b8c7de1f49c4485cb6171b670d105b94efbb73a4cea5e0f1f5d80c6cbfa"
+    },
+    {
+      "file": "finish-v2-tool-validation.mjs",
+      "bytes": 5931,
+      "sha256": "f4d15f6880e2b663c52ae083ab3a42625b26e242b4dcd6532cea622ae686e71d"
+    },
+    {
+      "file": "first-added-regression-v2.result.json",
+      "bytes": 785,
+      "sha256": "5b6950f3e209353ff989bf4415a1917f4f0e3265437b2a35067570403716ebf7"
+    },
+    {
+      "file": "first-added-regression-v2.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "first-added-regression-v2.stdout.log",
+      "bytes": 2069,
+      "sha256": "fffa607899430e35b658d59687d58bc34156e31fcf00e1dcac83f3a258d84132"
+    },
+    {
+      "file": "first-added-regression.result.json",
+      "bytes": 778,
+      "sha256": "e15eb34d9524478ed6ca970bd910a961c1c08bf7be8d0fca429aa1f32bc0734e"
+    },
+    {
+      "file": "first-added-regression.stderr.log",
+      "bytes": 846,
+      "sha256": "fe4236d85f1480e8439becb9db2938decb3b259de1ddd867df7814a9303834f1"
+    },
+    {
+      "file": "first-added-regression.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "full-config-readonly-audit.json",
+      "bytes": 1236,
+      "sha256": "b11844abe9541c5fc02242af6db53edb51b8fd9fa86212d258541df25a085bb9"
+    },
+    {
+      "file": "historical-original-library/evidence-lib.mjs",
+      "bytes": 31432,
+      "sha256": "c9c46be6e8c08b1c693cec02fc2f94386394412527e46b91028a113be2af7cc4"
+    },
+    {
+      "file": "old-closure-regression.result.json",
+      "bytes": 772,
+      "sha256": "4df01ae9a7830a5e21b9b638f3cabe7e22d8231fb74e415e509e623911732b1b"
+    },
+    {
+      "file": "old-closure-regression.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "old-closure-regression.stdout.log",
+      "bytes": 876,
+      "sha256": "0267c57b123cf45450e5a44667804a74f570c474c420bd8831653b6720ab475a"
+    },
+    {
+      "file": "old-controlled-regression.result.json",
+      "bytes": 797,
+      "sha256": "3157d8cb1cbb6cd819acec436bdd63bc6190790fecd52725de19d6b8e98e85ec"
+    },
+    {
+      "file": "old-controlled-regression.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "old-controlled-regression.stdout.log",
+      "bytes": 1103,
+      "sha256": "76c2eb014ae9600ffdfe3ac61da7d133030c04185f5d95ec60bc989347675445"
+    },
+    {
+      "file": "original-source/collect-evidence.mjs",
+      "bytes": 1002,
+      "sha256": "95d1670211f5fdceb6bbdd2ce1db38036de4fb7c31e5d522eef10af3e479bdd5"
+    },
+    {
+      "file": "original-source/collector-closure-boundary-tests.mjs",
+      "bytes": 8703,
+      "sha256": "967171ef8a84ae50abb69549d85d2ed58aa3c481c27bb3ae456cad0e66f60eb6"
+    },
+    {
+      "file": "original-source/collector-controlled-tests.mjs",
+      "bytes": 6887,
+      "sha256": "749953cc540f88e86822b33ade25daf4c59ef26864a7445bb413bb3c2f425614"
+    },
+    {
+      "file": "original-source/collector-g7-boundary-descriptor-tests.mjs",
+      "bytes": 17857,
+      "sha256": "472655242f66455a5c0db0b416aad2e0385c93fb9b3a275608d9343c11a77d38"
+    },
+    {
+      "file": "original-source/evidence-lib.mjs",
+      "bytes": 43891,
+      "sha256": "62e288a1f7b415a43472acd9d12a337eb2a4604d2cf6e3e4166035a28430a941"
+    },
+    {
+      "file": "original-source/verify-evidence.mjs",
+      "bytes": 617,
+      "sha256": "ac6c531cc665341fbf51dc3ceed6adbd3f629ab5c17aef51a214de1f1613422d"
+    },
+    {
+      "file": "original-source-index.json",
+      "bytes": 1132,
+      "sha256": "b9b3f8814751baa4d3ca96e4e861b9ea88199cb46cf2a2b9469068ba61e7c506"
+    },
+    {
+      "file": "run-v2-tool-validation.mjs",
+      "bytes": 4217,
+      "sha256": "cbade5bab1336ab1530caead7799b5bb0e039ca6884444b44c861679fa74280e"
+    },
+    {
+      "file": "second-added-controls-and-full-config.result.json",
+      "bytes": 936,
+      "sha256": "a9b5f7bd224e0e787bf8cb9d481d9801abc685968b5aadb38d501fae994f636e"
+    },
+    {
+      "file": "second-added-controls-and-full-config.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "second-added-controls-and-full-config.stdout.log",
+      "bytes": 2772,
+      "sha256": "7de1a24fae65e44f3d5393a0f5713b42929e8d0813d4e5b8fc6ec203310821a0"
+    },
+    {
+      "file": "syntax-collect-evidence.mjs.result.json",
+      "bytes": 892,
+      "sha256": "b01a7489abcd71d607f92d660597fa884a611f59297a3ea959d2d1c2c1e1dc14"
+    },
+    {
+      "file": "syntax-collect-evidence.mjs.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "syntax-collect-evidence.mjs.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "syntax-collector-explicit-association-tests.mjs.result.json",
+      "bytes": 952,
+      "sha256": "5f0dbbe5eb097e274d38846e26b628e7e66da8b7be27111d92e4c08c4c30f4bc"
+    },
+    {
+      "file": "syntax-collector-explicit-association-tests.mjs.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "syntax-collector-explicit-association-tests.mjs.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "syntax-evidence-lib.mjs.result.json",
+      "bytes": 880,
+      "sha256": "9ed56866fb433d4ae11c2f7d59e80d5a00eba4d0f30a7f95eca8b2deb6df17f1"
+    },
+    {
+      "file": "syntax-evidence-lib.mjs.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "syntax-evidence-lib.mjs.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "syntax-verify-evidence.mjs.result.json",
+      "bytes": 889,
+      "sha256": "2f126977377fd61211eb5e81897674e9a00b2d6601be5d9ccf53c8ed18e6568f"
+    },
+    {
+      "file": "syntax-verify-evidence.mjs.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "syntax-verify-evidence.mjs.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "verify-evidence.mjs",
+      "bytes": 617,
+      "sha256": "ac6c531cc665341fbf51dc3ceed6adbd3f629ab5c17aef51a214de1f1613422d"
+    }
+  ],
+  "sourceGitOrRepositoryWrites": false,
+  "realServiceOrCiExecution": false,
+  "sourceCollectionPerformed": false,
+  "productionRequests": 0,
+  "originalFailuresExcluded": false
+}

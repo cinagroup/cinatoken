@@ -1,0 +1,85 @@
+{
+  "at": "2026-10-06T01:49:10.073Z",
+  "closed": true,
+  "actualExitCode": 0,
+  "exactStagedSet": true,
+  "allStagedBytesExact": true,
+  "files": [
+    {
+      "file": ".changeset/README.md",
+      "bytes": 3059,
+      "sha256": "3a4b7d568eb9d91b2adafc4f817a4a9400220ca9da1067302348a8ccb3b5d792",
+      "gitBlob": "2ba616bbe429aa6c81f2e1451af645d1f2136371"
+    },
+    {
+      "file": ".changeset/config.json",
+      "bytes": 426,
+      "sha256": "2b4128d5eb962f60967d24cec0320bed15a6db2d630312a075ba3d4f2a6a4d14",
+      "gitBlob": "32270939e2c6d5fd8cea1f2701be74672bb70061"
+    },
+    {
+      "file": "docs/developers/architecture/web-frontend-migration.md",
+      "bytes": 780256,
+      "sha256": "4bde7182f4df47c594ed5ba002ca819575ea3a7d426aa37aeef4f7a665227d04",
+      "gitBlob": "56b3605b44d39179b73d77157ccb4fe9d7c37ca6"
+    },
+    {
+      "file": "docs/maintainers/release-versioning.md",
+      "bytes": 19560,
+      "sha256": "7b43aebca7369c774fcf2031837cafc38d054492cba7b0b7839f530d7ff77abd",
+      "gitBlob": "ff50c0c22ed7ae8afc23ea0ce682f48a41c843e3"
+    },
+    {
+      "file": "scripts/db/cutover/postgres-authenticated-complete-text-quote-v360.native.test.mjs",
+      "bytes": 20648,
+      "sha256": "18cb4237ca6a1d4cead3f4819f04e64927a6bb1138636393858df52ef8f79b8f",
+      "gitBlob": "144a2d7f53c6cc61dc938ee648efd4989f0ed623"
+    },
+    {
+      "file": "scripts/db/cutover/postgres-authenticated-request-capability-login-v356.native.test.mjs",
+      "bytes": 26960,
+      "sha256": "705e662847be88aeee6a97017cf4ab4de27b915a1f86db412f9dd7c119bcdcef",
+      "gitBlob": "6381016e0e139cdaa132e5744b22407fb96a5821"
+    },
+    {
+      "file": "scripts/db/cutover/postgres-authenticated-text-route-ceiling-v357.native.test.mjs",
+      "bytes": 21673,
+      "sha256": "0502916463be8d95bf0c7d4aae4070b7b8e2d94f6978c187c7f786eccf3a8c3f",
+      "gitBlob": "3fe3def6dfbd759ad1883c062da2597c0ce16602"
+    },
+    {
+      "file": "scripts/db/cutover/postgres-authenticated-text-route-source-fence-v359.native.test.mjs",
+      "bytes": 23598,
+      "sha256": "e5398315db6353023400c255093080497276a9d27db5989dd6229db9c75c251c",
+      "gitBlob": "2ddabc3b28368616208f61a9080cc052746237b3"
+    },
+    {
+      "file": "scripts/db/cutover/postgres-complete-text-attempt-grant-v362.native.test.mjs",
+      "bytes": 38065,
+      "sha256": "05d2cd1f0b080ab416c08b48ce02fcd812522238b32e38732a94908ec075b8a2",
+      "gitBlob": "d46bdd8f418ffd60e2b67448d0ba8c2952d4ba98"
+    },
+    {
+      "file": "scripts/db/cutover/postgres-complete-text-quote-budget-admission-v361.native.test.mjs",
+      "bytes": 23555,
+      "sha256": "47d2dff22ae15ee6e3ba5337746513f3262d5ead74c5bbcc030508b0af6d8f72",
+      "gitBlob": "87804d45309c075be7ac560859db3ceebd8c51e4"
+    },
+    {
+      "file": "scripts/db/cutover/postgres-guardrail-budget-admission-login-v351.native.test.mjs",
+      "bytes": 27087,
+      "sha256": "83c956c75d60958721cdfdb4fe72aa5b7cde37eaeaf857fac70745274b92da59",
+      "gitBlob": "c399b63d564b0e593f500c41908de3d0fde540fd"
+    },
+    {
+      "file": "scripts/db/cutover/postgres-ordinary-budget-recovery-v354.native.test.mjs",
+      "bytes": 22685,
+      "sha256": "110093eda6ec9a116e695ed3ca54468bbf7dafa7b3ee0a34ad346dc7b9883c53",
+      "gitBlob": "077a9562302b9034f2907574bd356f241e41570a"
+    }
+  ],
+  "producerSha256": "cc5f96ce5a9f657791b589a3c0b111100fb2e7a053135095e4b05b3e288e809e",
+  "peerSha256": "3bb08436115c238874a3547c2d14bfdac41bc86f8a800d99b8356fd999b679a4",
+  "nativeExecuted": false,
+  "productionChanged": false
+}

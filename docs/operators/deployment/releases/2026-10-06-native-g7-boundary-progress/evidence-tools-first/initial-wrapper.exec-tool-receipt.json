@@ -1,0 +1,25 @@
+{
+  "closed": true,
+  "actualExit": 1,
+  "signal": null,
+  "chunkId": "f3e34e",
+  "wallTimeSeconds": 0.6816093,
+  "output": {
+    "file": "initial-wrapper.tool-output.txt",
+    "bytes": 853,
+    "sha256": "0ed8393c639c0f5dcd7779eebae520b725a323cddbcb22c1957a46f4026ac2d7"
+  },
+  "stdoutStderrPartitionClaimed": false,
+  "source": "Original execution tool result transcribed from delivered output; child raw is separately preserved",
+  "failurePreserved": true,
+  "unchangedOriginalWrapper": {
+    "file": "run-tool-validation.mjs",
+    "bytes": 4651,
+    "sha256": "34a29161571a1827b98b70722c76ca629ee8a15e6aac02d0680696ef6996b510"
+  },
+  "childReceipt": {
+    "file": "old-controlled-regression.result.json",
+    "bytes": 759,
+    "sha256": "3e4f2ec14d941e97583b0018894f0b6268ec5cdef61789a83fcfc6762b0e156f"
+  }
+}

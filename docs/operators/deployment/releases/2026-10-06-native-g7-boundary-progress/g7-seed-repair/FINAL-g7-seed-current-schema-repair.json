@@ -1,0 +1,85 @@
+{
+  "schema": "cinatoken-g7-seed-current-schema-repair-v1",
+  "closed": true,
+  "actualOutcome": 0,
+  "createdAt": "2026-10-06T02:20:07.905Z",
+  "out": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57",
+  "observedSourceHead": "00858e90592d55fa1d58b15bf1a4ebec1883b848",
+  "changedSourceFiles": [
+    {
+      "relative": "scripts/verification/web-platform-g7/database.mjs",
+      "bytes": 11117,
+      "sha256": "643686dc1f78e75601a6b339c22fb06e91caf4c21403ad5ed24a231598d5e5f1"
+    },
+    {
+      "relative": "scripts/verification/web-platform-g7/fixture.test.mjs",
+      "bytes": 5964,
+      "sha256": "2db99943e1228b81f3c2a5b3fc958af8c65f904cb6745ecda8fc94d96d00d844"
+    }
+  ],
+  "exactDiff": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\owned-exact-diff.stdout.log",
+  "originalFailureSourceSHA": "67f8b3df2f2b6e8159806767ecce1efa1904d27a",
+  "originalLinuxRun": "37402317152",
+  "originalActualExit": 1,
+  "originalWireActualExit": null,
+  "originalArtifact": {
+    "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-boundary-next-20261006-Zm6Z3E/g7-artifact-first",
+    "files": 350,
+    "allFilesByteAndHashUnchanged": true,
+    "index": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\original-artifact-immutable-index.json",
+    "originalCleanupVerifiedAbsent": true
+  },
+  "cause": "Actual 0023 migrates MASTER_KEY to existing admin_api_keys legacy-master; 0024 deletes the old system_config MASTER_KEY. The original owned seeder updated that deleted row and required one returned row.",
+  "repair": {
+    "onlyOwnedSeedAndUnitTest": true,
+    "productionBusinessSourceUnchanged": true,
+    "noWorkflowEdit": true,
+    "rotatedExistingActiveLegacyMasterRowRequired": true,
+    "exactNamePermissionsAndDevelopmentKeySelector": true,
+    "secretKeyHashFromProductionCore": true,
+    "prefixFirst12MatchesProductionRotation": true,
+    "originalPermissionsAndStatusPreserved": true,
+    "noObsoleteMasterConfigRecreated": true,
+    "actualAdminRepositoryNewKeyHitAndOldDevelopmentKeyMissRequiredOnLinux": true,
+    "safeFailureDiagnostics": "Constant stage and allowlisted assertion operator only; scalar selectors contain integer/boolean expected and actual. No error message/stack, credential, connection string or query parameters printed."
+  },
+  "localChecks": {
+    "unit": "7/7 pass, 0 fail, 0 skipped",
+    "newUnit": "Actual production lookup hash compared with independent Node SHA-256; correct key succeeds, development key and stale development hash reject.",
+    "syntax": "7/7 actual0",
+    "packageFormatterActualExit": 0,
+    "scopedDiffCheckActualExit": 0,
+    "allCommandReceipts": 14,
+    "allClosedNumericExits": true,
+    "allRawBytesExact": true,
+    "beforeFormatActualExit": 1
+  },
+  "runtimeClaims": {
+    "localDockerRun": false,
+    "localPostgresRun": false,
+    "localTlsRun": false,
+    "sqliteSubstitute": false,
+    "pgliteClaim": false,
+    "LinuxSeedRepairVerified": false,
+    "realCinaAuthIdentityVerified": false,
+    "fullG7Verified": false,
+    "fullG8Verified": false,
+    "productionRequests": 0,
+    "commitOrPush": false
+  },
+  "historicalLocalProducerFailure": {
+    "actualExit": 1,
+    "originalExecToolChunk": "ea7562",
+    "error": "Producer expected TAP prefix #; Node24 default spec uses ℹ. The actual unit child exited0 with7pass/0skip.",
+    "originalSource": {
+      "bytes": 8527,
+      "sha256": "a0ad3cbaf4c48e8faea94579e83452befa8941218a7caa7c16ac72e295a143cf"
+    },
+    "originalUnitReceipt": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\actual-owned-unit-tests.result.json",
+    "noUnitOrFormattingWriteRerun": true
+  },
+  "toolSource": {
+    "bytes": 7786,
+    "sha256": "db33d0076cb09c2c491c0eeb7573219bc2f2c1453fbab64c707d2e9494d8eabe"
+  }
+}

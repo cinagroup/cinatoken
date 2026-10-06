@@ -1,0 +1,26 @@
+{
+  "schema": "web-platform-g7-local-command-closed-v1",
+  "id": "base-absent-9",
+  "program": "git",
+  "args": [
+    "cat-file",
+    "-e",
+    "6658ec978009afa5fe3f4beccf6bde358590b663:.github/workflows/web-platform-g7.yml"
+  ],
+  "begin": "2026-10-06T01:59:14.881Z",
+  "endedAt": "2026-10-06T01:59:14.919Z",
+  "closed": true,
+  "actualExit": 128,
+  "signal": null,
+  "errorCode": null,
+  "stdout": {
+    "file": "final-base-absent-9.stdout.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stderr": {
+    "file": "final-base-absent-9.stderr.log",
+    "bytes": 122,
+    "sha256": "b34c314c99f21ec0bdcab2badbe69155441fd9a4c14f5328c8b86993bdf66a2f"
+  }
+}

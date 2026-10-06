@@ -1,0 +1,32 @@
+{
+  "id": "prepare",
+  "program": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "C:/cinagroup/cinatoken/scripts/diagnostics/v364-owned-linux-boundary/run-boundary.mjs",
+    "--repo",
+    "C:/cinagroup/cinatoken",
+    "--out",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/prepare-once",
+    "--prepare-only"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "timeout": 60000,
+  "status": 0,
+  "signal": null,
+  "error": null,
+  "expectedExit": 0,
+  "outputs": [
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/prepare.stdout.txt",
+      "bytes": 188,
+      "sha256": "d0fb6ddfb2f28125b237ea941afef91ed4d42eabce2f2cd719d8aa56ca7e1b76"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/prepare.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "source": "actual synchronous spawnSync return, not aggregate report",
+  "terminal": true
+}

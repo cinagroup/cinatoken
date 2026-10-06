@@ -1,0 +1,12 @@
+{
+  "at": "2026-10-06T02:31:11.743Z",
+  "finishedAt": "2026-10-06T02:31:12.201Z",
+  "executable": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-five-ci-readonly-0f234236c0474390a980e09910ae9e7c\\review.mjs"
+  ],
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-five-ci-readonly-0f234236c0474390a980e09910ae9e7c\\review.stdout.log",
+  "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-five-ci-readonly-0f234236c0474390a980e09910ae9e7c\\review.stderr.log"
+}

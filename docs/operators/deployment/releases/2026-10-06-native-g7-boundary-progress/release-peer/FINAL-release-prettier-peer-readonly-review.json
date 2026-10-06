@@ -1,0 +1,1528 @@
+{
+  "schema": "cinatoken-release-prettier-repair-peer-readonly-review-v1",
+  "createdAt": "2026-10-06T02:16:59.452676+00:00",
+  "closed": true,
+  "sourceBlockers": [],
+  "conclusion": "No source blocker in the exact two-file repair. Installed config preserves false and installed apply-release-plan skips only optional generated-changelog formatting. Actual isolated generation plus retained negative and positive integrity receipts support this change.",
+  "reviewerBoundary": {
+    "readOnlyRepository": true,
+    "newExclusiveTempReportOnly": true,
+    "noGitExecution": true,
+    "noTestsOrChangesetsCliExecution": true,
+    "noNetworkOrProduction": true
+  },
+  "ownerFinal": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\FINAL-release-prettier-repair.json",
+    "bytes": 8721,
+    "sha256": "56dd3e6d26db93e241b9e1649c5b9004c335df7e0f8000b30e588f997d22f907"
+  },
+  "ownerPreparedAtHead": "67f8b3df2f2b6e8159806767ecce1efa1904d27a",
+  "shaBoundary": "Owner preparation history only; no reviewer Git executed and no future CI GITHUB_SHA inferred.",
+  "installed": {
+    "@changesets/cli": "2.31.0",
+    "@changesets/apply-release-plan": "7.1.1",
+    "@changesets/config": "3.1.4",
+    "@changesets/changelog-github": "0.5.2",
+    "prettier": "2.8.8",
+    "Web prettier": "3.9.9"
+  },
+  "changedSourceFiles": [
+    {
+      "relative": ".changeset/config.json",
+      "path": "C:\\cinagroup\\cinatoken\\.changeset\\config.json",
+      "bytes": 446,
+      "sha256": "854a0cf774e1fe3299c94dcd00e5b55d9eb0ac96441225f9a723a002eb7ffd1b"
+    },
+    {
+      "relative": ".changeset/README.md",
+      "path": "C:\\cinagroup\\cinatoken\\.changeset\\README.md",
+      "bytes": 3431,
+      "sha256": "f6e68489b02a206a5a665cf1195dd3445a5b2586870cc1373e5e4c94c263b24d"
+    }
+  ],
+  "unchangedInputs": [
+    {
+      "relative": "package.json",
+      "path": "C:\\cinagroup\\cinatoken\\package.json",
+      "bytes": 5550,
+      "sha256": "6454126bb47e39c135d3178ce3500b0901581b5b4f9b4b0067ace88e894da3aa"
+    },
+    {
+      "relative": "packages/core/package.json",
+      "path": "C:\\cinagroup\\cinatoken\\packages\\core\\package.json",
+      "bytes": 13537,
+      "sha256": "eef3793fdc1098c901c18a0e97160d4204fb765a786c3445bc558ce7efc49e1e"
+    },
+    {
+      "relative": "packages/tool-engines/package.json",
+      "path": "C:\\cinagroup\\cinatoken\\packages\\tool-engines\\package.json",
+      "bytes": 856,
+      "sha256": "82e4981558fca23d8bf5766a64745a084aa33a1df38a0569554b4bd4b534156e"
+    },
+    {
+      "relative": "packages/proxy/package.json",
+      "path": "C:\\cinagroup\\cinatoken\\packages\\proxy\\package.json",
+      "bytes": 18988,
+      "sha256": "14e2d996c5d81a9ec101e9506dc05d1693c05911aad146fb062742c0c4aca2a1"
+    },
+    {
+      "relative": "packages/admin/package.json",
+      "path": "C:\\cinagroup\\cinatoken\\packages\\admin\\package.json",
+      "bytes": 4163,
+      "sha256": "fef666db8d2ed6876f90b48a51b6a636d7b342dab1cae1e0dc82e72657df8188"
+    },
+    {
+      "relative": "packages/web/package.json",
+      "path": "C:\\cinagroup\\cinatoken\\packages\\web\\package.json",
+      "bytes": 4490,
+      "sha256": "dd231d8595d364fd70999f3e84414cc60bb50d41c700572607d5ec717b84c4bd"
+    },
+    {
+      "relative": "packages/chain-worker/package.json",
+      "path": "C:\\cinagroup\\cinatoken\\packages\\chain-worker\\package.json",
+      "bytes": 714,
+      "sha256": "841388960dbfbf598768ec8eaf2fcea39abee114952ff467e8f3697464f5809a"
+    },
+    {
+      "relative": "CHANGELOG.md",
+      "path": "C:\\cinagroup\\cinatoken\\CHANGELOG.md",
+      "bytes": 52356,
+      "sha256": "e20e2dd52096a6009d5b5e127a36aada9632eb127f84a0d5b76b3a95d511ad47"
+    },
+    {
+      "relative": "packages/core/CHANGELOG.md",
+      "path": "C:\\cinagroup\\cinatoken\\packages\\core\\CHANGELOG.md",
+      "bytes": 27280,
+      "sha256": "f07c73c37389001396d3d76d006ea913ff2f24e70bd2005a8cdf358e1f89cf5e"
+    },
+    {
+      "relative": "packages/tool-engines/CHANGELOG.md",
+      "path": "C:\\cinagroup\\cinatoken\\packages\\tool-engines\\CHANGELOG.md",
+      "bytes": 5243,
+      "sha256": "be30497d70ad45e0b9463ed0c727cb34c54b534e059405bb0f3590ca51930d5a"
+    },
+    {
+      "relative": "packages/proxy/CHANGELOG.md",
+      "path": "C:\\cinagroup\\cinatoken\\packages\\proxy\\CHANGELOG.md",
+      "bytes": 31562,
+      "sha256": "91d9551db8268024e60d59fd09b5f36712b04bae7fd80e2160c1250d967beb15"
+    },
+    {
+      "relative": "packages/admin/CHANGELOG.md",
+      "path": "C:\\cinagroup\\cinatoken\\packages\\admin\\CHANGELOG.md",
+      "bytes": 32940,
+      "sha256": "8baae6d6cf39b746d3947d6b023c796b06c71428358d26e9b06723ed2c29b314"
+    },
+    {
+      "relative": "packages/web/CHANGELOG.md",
+      "exists": false
+    },
+    {
+      "relative": ".changeset/cinatoken-gateway-postgres.md",
+      "path": "C:\\cinagroup\\cinatoken\\.changeset\\cinatoken-gateway-postgres.md",
+      "bytes": 538,
+      "sha256": "adda18fbadb5d0c14027eaf61c7a66cff9f367148fc316899510e84afd8ef5e8"
+    },
+    {
+      "relative": "packages/web/.prettierrc",
+      "path": "C:\\cinagroup\\cinatoken\\packages\\web\\.prettierrc",
+      "bytes": 984,
+      "sha256": "b623c80eef9ca24da4cec91b8afb91c579d3a8907ec6e52587c44dc0301d62b9"
+    },
+    {
+      "relative": "packages/web/.prettierignore",
+      "path": "C:\\cinagroup\\cinatoken\\packages\\web\\.prettierignore",
+      "bytes": 381,
+      "sha256": "a658f636bb46ee42c92fc310935976958a8a5a0c2cd46287e6992301bd10c5e9"
+    },
+    {
+      "relative": "package-lock.json",
+      "path": "C:\\cinagroup\\cinatoken\\package-lock.json",
+      "bytes": 830546,
+      "sha256": "f9c65b6e373a231d52d6eda634bb5f947dda3174734cd70e2b811e09fff0b6f0"
+    }
+  ],
+  "sourceDelta": {
+    "onlyPrettierFalseKeyAdded": true,
+    "otherConfigFieldsEqual": true,
+    "readmeOneParagraphAdditionPreservesAllPriorText": true,
+    "readmeContentComparisonUsesTextLineEndingNormalizationOnly": true,
+    "allRawSnapshotHashesSeparatelyVerified": true
+  },
+  "originalVersions": [
+    {
+      "path": "C:\\cinagroup\\cinatoken\\package.json",
+      "name": "cinatoken",
+      "version": "2.8.0"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\core\\package.json",
+      "name": "@octafuse/core",
+      "version": "2.8.0"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\tool-engines\\package.json",
+      "name": "@octafuse/tool-engines",
+      "version": "2.8.0"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\proxy\\package.json",
+      "name": "@octafuse/proxy",
+      "version": "2.8.0"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\admin\\package.json",
+      "name": "@octafuse/admin",
+      "version": "2.8.0"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\web\\package.json",
+      "name": "@cinatoken/web",
+      "version": "2.8.0"
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\chain-worker\\package.json",
+      "name": "@cinatoken/chain-worker",
+      "version": "2.8.0"
+    }
+  ],
+  "installedImplementation": [
+    {
+      "path": "C:\\cinagroup\\cinatoken\\node_modules\\@changesets\\config\\dist\\changesets-config.cjs.js",
+      "lines": [
+        303,
+        304,
+        358
+      ],
+      "meaning": "Boolean false accepted and preserved."
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\node_modules\\@changesets\\apply-release-plan\\dist\\changesets-apply-release-plan.cjs.js",
+      "lines": [
+        340,
+        364,
+        372,
+        381,
+        383,
+        385,
+        474,
+        476,
+        477,
+        510,
+        511,
+        513,
+        516
+      ],
+      "meaning": "Generation/version updates occur unchanged. False omits prettier instance and writes generated content directly. updateChangelog catch warns and suppresses error, explaining before CLI exit zero despite missing Web changelog."
+    }
+  ],
+  "receipts": [
+    {
+      "label": "after-actual-changesets-cli-version",
+      "actualExit": 0,
+      "closed": true,
+      "expectedActualExits": [
+        0
+      ],
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "C:\\cinagroup\\cinatoken\\node_modules\\@changesets\\cli\\bin.js",
+        "version"
+      ],
+      "cwd": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\isolated-after",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\after-actual-changesets-cli-version.result.json",
+      "bytes": 1228,
+      "sha256": "a9422f5419e9370719914b468ddde725d5a7baa8dc819b366b72ea429ce2a508"
+    },
+    {
+      "label": "after-actual-six-changelog-integrity",
+      "actualExit": 0,
+      "closed": true,
+      "expectedActualExits": [
+        0
+      ],
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\check-generated-output.mjs",
+        "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\isolated-after"
+      ],
+      "cwd": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\after-actual-six-changelog-integrity.result.json",
+      "bytes": 1405,
+      "sha256": "ff89666c8d62dc75df699eeaade60137b507dfb7044517b1e0ec214e63a9f994"
+    },
+    {
+      "label": "after-git-add-baseline",
+      "actualExit": 0,
+      "closed": true,
+      "expectedActualExits": [
+        0
+      ],
+      "program": "git",
+      "args": [
+        "-c",
+        "core.autocrlf=false",
+        "add",
+        "--",
+        "package.json",
+        "packages/core/package.json",
+        "packages/tool-engines/package.json",
+        "packages/proxy/package.json",
+        "packages/admin/package.json",
+        "packages/web/package.json",
+        "packages/chain-worker/package.json",
+        "CHANGELOG.md",
+        "packages/core/CHANGELOG.md",
+        "packages/tool-engines/CHANGELOG.md",
+        "packages/proxy/CHANGELOG.md",
+        "packages/admin/CHANGELOG.md",
+        ".changeset/config.json",
+        ".changeset/README.md",
+        "packages/web/.prettierrc",
+        "packages/web/.prettierignore"
+      ],
+      "cwd": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\isolated-after",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\after-git-add-baseline.result.json",
+      "bytes": 1661,
+      "sha256": "045c53ccb49308137df9b67d671740d078565ced5e071b971c2522de1265f191"
+    },
+    {
+      "label": "after-git-commit-baseline",
+      "actualExit": 0,
+      "closed": true,
+      "expectedActualExits": [
+        0
+      ],
+      "program": "git",
+      "args": [
+        "-c",
+        "user.name=Isolated Release Validation",
+        "-c",
+        "user.email=release-validation@example.invalid",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "commit",
+        "-m",
+        "Isolated exact-source baseline; no remote"
+      ],
+      "cwd": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\isolated-after",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\after-git-commit-baseline.result.json",
+      "bytes": 1313,
+      "sha256": "0c32fc72f4d9094cdd2145c80b92cb32c976031ab09b15c5a242bfba3e75d214"
+    },
+    {
+      "label": "after-git-init",
+      "actualExit": 0,
+      "closed": true,
+      "expectedActualExits": [
+        0
+      ],
+      "program": "git",
+      "args": [
+        "init",
+        "--initial-branch=main"
+      ],
+      "cwd": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\isolated-after",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\after-git-init.result.json",
+      "bytes": 1088,
+      "sha256": "a229848a48c16c7ffef701802cf959fd8ba89fe7eab8fa2693fbb4f26e49b2ce"
+    },
+    {
+      "label": "after-git-remotes",
+      "actualExit": 0,
+      "closed": true,
+      "expectedActualExits": [
+        0
+      ],
+      "program": "git",
+      "args": [
+        "remote"
+      ],
+      "cwd": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\isolated-after",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\after-git-remotes.result.json",
+      "bytes": 1068,
+      "sha256": "02d079b555547294783cc6495b368ca20e6790a1ca4d628d5e7f5f8d26721e25"
+    },
+    {
+      "label": "after-inspect-actual-release-plan",
+      "actualExit": 0,
+      "closed": true,
+      "expectedActualExits": [
+        0
+      ],
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\inspect-after.cjs"
+      ],
+      "cwd": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\isolated-after",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\after-inspect-actual-release-plan.result.json",
+      "bytes": 1272,
+      "sha256": "f29d734d5d5a0cb35df271ba251110f860eb8ae5ee27de9415ed3d301122507f"
+    },
+    {
+      "label": "base--changeset-cinatoken-gateway-postgres-md",
+      "actualExit": 0,
+      "closed": true,
+      "expectedActualExits": [
+        0
+      ],
+      "program": "git",
+      "args": [
+        "show",
+        "4e2ed5196a26cc43c2a3cb7ea852f1fc6284ff27:.changeset/cinatoken-gateway-postgres.md"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\base--changeset-cinatoken-gateway-postgres-md.result.json",
+      "bytes": 1139,
+      "sha256": "75c7586f1992be83300eb337be6158ce45d1a3af7dd19236d629dd4c9874055e"
+    },
+    {
+      "label": "base--changeset-config-json",
+      "actualExit": 0,
+      "closed": true,
+      "expectedActualExits": [
+        0
+      ],
+      "program": "git",
+      "args": [
+        "show",
+        "4e2ed5196a26cc43c2a3cb7ea852f1fc6284ff27:.changeset/config.json"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\base--changeset-config-json.result.json",
+      "bytes": 1067,
+      "sha256": "63a88b4d2cb4e91924be7eb88cb3b598b7bba8c2e9dbd5593ef9834de1c2df34"
+    },
+    {
+      "label": "base--changeset-README-md",
+      "actualExit": 0,
+      "closed": true,
+      "expectedActualExits": [
+        0
+      ],
+      "program": "git",
+      "args": [
+        "show",
+        "4e2ed5196a26cc43c2a3cb7ea852f1fc6284ff27:.changeset/README.md"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\base--changeset-README-md.result.json",
+      "bytes": 1060,
+      "sha256": "8747aa8937b1c216cccf688c99f3b2d99038e5a3aac3c73554d5501243f0b996"
+    },
+    {
+      "label": "base-package-json",
+      "actualExit": 0,
+      "closed": true,
+      "expectedActualExits": [
+        0
+      ],
+      "program": "git",
+      "args": [
+        "show",
+        "4e2ed5196a26cc43c2a3cb7ea852f1fc6284ff27:package.json"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\base-package-json.result.json",
+      "bytes": 1028,
+      "sha256": "b1fd73325edd51f269aa5afc31164aed74b9a11eb7fff319c05c2cff4bff8817"
+    },
+    {
+      "label": "base-packages-admin-package-json",
+      "actualExit": 0,
+      "closed": true,
+      "expectedActualExits": [
+        0
+      ],
+      "program": "git",
+      "args": [
+        "show",
+        "4e2ed5196a26cc43c2a3cb7ea852f1fc6284ff27:packages/admin/package.json"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\base-packages-admin-package-json.result.json",
+      "bytes": 1088,
+      "sha256": "06fdd0a7628471f41498cdc23ceed5dcc5d99e6797fbdb66301e045471d56eae"
+    },
+    {
+      "label": "base-packages-chain-worker-package-json",
+      "actualExit": 0,
+      "closed": true,
+      "expectedActualExits": [
+        0
+      ],
+      "program": "git",
+      "args": [
+        "show",
+        "4e2ed5196a26cc43c2a3cb7ea852f1fc6284ff27:packages/chain-worker/package.json"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\base-packages-chain-worker-package-json.result.json",
+      "bytes": 1115,
+      "sha256": "bcd81fd5a5d36de58bfab67376ec593c479a2a05b87a7e539e4a51cf317e62d5"
+    },
+    {
+      "label": "base-packages-core-package-json",
+      "actualExit": 0,
+      "closed": true,
+      "expectedActualExits": [
+        0
+      ],
+      "program": "git",
+      "args": [
+        "show",
+        "4e2ed5196a26cc43c2a3cb7ea852f1fc6284ff27:packages/core/package.json"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\base-packages-core-package-json.result.json",
+      "bytes": 1085,
+      "sha256": "d33b4e1b7536a667e18610e84ecc7d248aebd740bbc1c7509a38da18da10ac2f"
+    },
+    {
+      "label": "base-packages-proxy-package-json",
+      "actualExit": 0,
+      "closed": true,
+      "expectedActualExits": [
+        0
+      ],
+      "program": "git",
+      "args": [
+        "show",
+        "4e2ed5196a26cc43c2a3cb7ea852f1fc6284ff27:packages/proxy/package.json"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\base-packages-proxy-package-json.result.json",
+      "bytes": 1089,
+      "sha256": "8f71c434a9778dea6f9efdb525e51974f568ffc6faae2a0038b2cf3dfe648de2"
+    },
+    {
+      "label": "base-packages-tool-engines-package-json",
+      "actualExit": 0,
+      "closed": true,
+      "expectedActualExits": [
+        0
+      ],
+      "program": "git",
+      "args": [
+        "show",
+        "4e2ed5196a26cc43c2a3cb7ea852f1fc6284ff27:packages/tool-engines/package.json"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\base-packages-tool-engines-package-json.result.json",
+      "bytes": 1115,
+      "sha256": "4d1ac5b1555f9c6d47ec3e54b026b1b2f9697dae84aebd6f23037066b8172383"
+    },
+    {
+      "label": "base-packages-web--prettierrc",
+      "actualExit": 0,
+      "closed": true,
+      "expectedActualExits": [
+        0
+      ],
+      "program": "git",
+      "args": [
+        "show",
+        "4e2ed5196a26cc43c2a3cb7ea852f1fc6284ff27:packages/web/.prettierrc"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\base-packages-web--prettierrc.result.json",
+      "bytes": 1075,
+      "sha256": "c97c0096fae359d87e2deeebea8efb3bfe801ccad4439281930190603a9e099d"
+    },
+    {
+      "label": "base-packages-web-package-json",
+      "actualExit": 0,
+      "closed": true,
+      "expectedActualExits": [
+        0
+      ],
+      "program": "git",
+      "args": [
+        "show",
+        "4e2ed5196a26cc43c2a3cb7ea852f1fc6284ff27:packages/web/package.json"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\base-packages-web-package-json.result.json",
+      "bytes": 1080,
+      "sha256": "0945e1b9e5becac09323e6e51318534e5f28d66ba571c9bc44e47912cb4cb97d"
+    },
+    {
+      "label": "before-actual-changesets-cli-version",
+      "actualExit": 0,
+      "closed": true,
+      "expectedActualExits": [
+        0
+      ],
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "C:\\cinagroup\\cinatoken\\node_modules\\@changesets\\cli\\bin.js",
+        "version"
+      ],
+      "cwd": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\isolated-before",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\before-actual-changesets-cli-version.result.json",
+      "bytes": 1235,
+      "sha256": "3eb1aad96f0d75013cd94ada2a7305489fc499846f4d6eeab0dd3b9d92621037"
+    },
+    {
+      "label": "before-actual-six-changelog-integrity",
+      "actualExit": 1,
+      "closed": true,
+      "expectedActualExits": [
+        1
+      ],
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\check-generated-output.mjs",
+        "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\isolated-before"
+      ],
+      "cwd": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\before-actual-six-changelog-integrity.result.json",
+      "bytes": 1409,
+      "sha256": "2070fdc3b7a91ca4935bb31d4dd5378b39f6347207d7807e3fc16b147ed9b344"
+    },
+    {
+      "label": "before-git-add-baseline",
+      "actualExit": 0,
+      "closed": true,
+      "expectedActualExits": [
+        0
+      ],
+      "program": "git",
+      "args": [
+        "-c",
+        "core.autocrlf=false",
+        "add",
+        "--",
+        "package.json",
+        "packages/core/package.json",
+        "packages/tool-engines/package.json",
+        "packages/proxy/package.json",
+        "packages/admin/package.json",
+        "packages/web/package.json",
+        "packages/chain-worker/package.json",
+        "CHANGELOG.md",
+        "packages/core/CHANGELOG.md",
+        "packages/tool-engines/CHANGELOG.md",
+        "packages/proxy/CHANGELOG.md",
+        "packages/admin/CHANGELOG.md",
+        ".changeset/config.json",
+        ".changeset/README.md",
+        "packages/web/.prettierrc",
+        "packages/web/.prettierignore"
+      ],
+      "cwd": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\isolated-before",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\before-git-add-baseline.result.json",
+      "bytes": 1665,
+      "sha256": "7dfa4959ac3170bbd9d7f95579f6a068576fa3577aea0dc54fea3344d085dc9b"
+    },
+    {
+      "label": "before-git-commit-baseline",
+      "actualExit": 0,
+      "closed": true,
+      "expectedActualExits": [
+        0
+      ],
+      "program": "git",
+      "args": [
+        "-c",
+        "user.name=Isolated Release Validation",
+        "-c",
+        "user.email=release-validation@example.invalid",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "commit",
+        "-m",
+        "Isolated exact-source baseline; no remote"
+      ],
+      "cwd": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\isolated-before",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\before-git-commit-baseline.result.json",
+      "bytes": 1317,
+      "sha256": "8ccbaaf9aed93e8e4fbc978add152f9166ada8557eae32e2fa0b4627f0696ac4"
+    },
+    {
+      "label": "before-git-init",
+      "actualExit": 0,
+      "closed": true,
+      "expectedActualExits": [
+        0
+      ],
+      "program": "git",
+      "args": [
+        "init",
+        "--initial-branch=main"
+      ],
+      "cwd": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\isolated-before",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\before-git-init.result.json",
+      "bytes": 1092,
+      "sha256": "38dd4943a376f86893d161d66b99598d79ba508f81c452d0390feb2421b6e444"
+    },
+    {
+      "label": "before-git-remotes",
+      "actualExit": 0,
+      "closed": true,
+      "expectedActualExits": [
+        0
+      ],
+      "program": "git",
+      "args": [
+        "remote"
+      ],
+      "cwd": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\isolated-before",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\before-git-remotes.result.json",
+      "bytes": 1072,
+      "sha256": "e83d08743cae9255d522d1694dd9dc62b2caf6716c6b38ba85d5abaa3ccdaa31"
+    },
+    {
+      "label": "before-inspect-actual-release-plan",
+      "actualExit": 0,
+      "closed": true,
+      "expectedActualExits": [
+        0
+      ],
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\inspect-before.cjs"
+      ],
+      "cwd": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\isolated-before",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\before-inspect-actual-release-plan.result.json",
+      "bytes": 1277,
+      "sha256": "6b9a037f9c559f76d2b358609850ec4fff82810b7439914f83c3b274530fd6c2"
+    },
+    {
+      "label": "source-exact-two-file-diff",
+      "actualExit": 0,
+      "closed": true,
+      "expectedActualExits": [
+        0
+      ],
+      "program": "git",
+      "args": [
+        "diff",
+        "--",
+        ".changeset/config.json",
+        ".changeset/README.md"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\source-exact-two-file-diff.result.json",
+      "bytes": 1062,
+      "sha256": "93f239ac2f6fd86883dde3689df3c7220f2c32cc2f6a67d7d63734313fec41ad"
+    },
+    {
+      "label": "source-head-at-seal",
+      "actualExit": 0,
+      "closed": true,
+      "expectedActualExits": [
+        0
+      ],
+      "program": "git",
+      "args": [
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\source-head-at-seal.result.json",
+      "bytes": 988,
+      "sha256": "5d8236f68c129bb1cbb54b13353623ae96d69105e2718107d7f990629c23d877"
+    },
+    {
+      "label": "source-head-before",
+      "actualExit": 0,
+      "closed": true,
+      "expectedActualExits": [
+        0
+      ],
+      "program": "git",
+      "args": [
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\source-head-before.result.json",
+      "bytes": 985,
+      "sha256": "e4aabe2feee4db4446dd4ec855a032d2baa7abfb15cc4f06254168223dcdf93b"
+    },
+    {
+      "label": "source-two-file-diff-check",
+      "actualExit": 0,
+      "closed": true,
+      "expectedActualExits": [
+        0
+      ],
+      "program": "git",
+      "args": [
+        "diff",
+        "--check",
+        "--",
+        ".changeset/config.json",
+        ".changeset/README.md"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\source-two-file-diff-check.result.json",
+      "bytes": 1074,
+      "sha256": "d02a1ba91b4ba377ea2d4ecbd19bd22e308414ed9b0d62073403118a410ebc54"
+    },
+    {
+      "label": "unchanged-web-full-format-check",
+      "actualExit": 0,
+      "closed": true,
+      "expectedActualExits": [
+        0
+      ],
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+        "run",
+        "format:check",
+        "--workspace",
+        "@cinatoken/web"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\unchanged-web-full-format-check.result.json",
+      "bytes": 1169,
+      "sha256": "58c597af43c1149aa7aedccc8434deee0bba007bda51b8ba97c9c77eb44adcc9"
+    }
+  ],
+  "rawStreams": [
+    {
+      "label": "after-actual-changesets-cli-version",
+      "stream": "stdout",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\after-actual-changesets-cli-version.stdout.log",
+      "bytes": 74,
+      "sha256": "dcccf189565497aac06bf5d1ce187bd2c26431861f43a9a26c1b895b21ac30af"
+    },
+    {
+      "label": "after-actual-changesets-cli-version",
+      "stream": "stderr",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\after-actual-changesets-cli-version.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "after-actual-six-changelog-integrity",
+      "stream": "stdout",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\after-actual-six-changelog-integrity.stdout.log",
+      "bytes": 846,
+      "sha256": "f8bdf9eec0f35a110d9df19f3091e994f9259fb0d3b36d4ac8ba1f878dd8649a"
+    },
+    {
+      "label": "after-actual-six-changelog-integrity",
+      "stream": "stderr",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\after-actual-six-changelog-integrity.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "after-git-add-baseline",
+      "stream": "stdout",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\after-git-add-baseline.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "after-git-add-baseline",
+      "stream": "stderr",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\after-git-add-baseline.stderr.log",
+      "bytes": 80,
+      "sha256": "4637b2478cea95e221ecbde1b46874fb0f18d282e08504cf0d1074595c4348d1"
+    },
+    {
+      "label": "after-git-commit-baseline",
+      "stream": "stdout",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\after-git-commit-baseline.stdout.log",
+      "bytes": 850,
+      "sha256": "c680223af65e2414934fcf1267e65700908c9029b4635ed81f4706915d8be31a"
+    },
+    {
+      "label": "after-git-commit-baseline",
+      "stream": "stderr",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\after-git-commit-baseline.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "after-git-init",
+      "stream": "stdout",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\after-git-init.stdout.log",
+      "bytes": 160,
+      "sha256": "a660c0f690f741453d401bfd50fc881f5c768c4296aa034ef42b273fc0d63e7a"
+    },
+    {
+      "label": "after-git-init",
+      "stream": "stderr",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\after-git-init.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "after-git-remotes",
+      "stream": "stdout",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\after-git-remotes.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "after-git-remotes",
+      "stream": "stderr",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\after-git-remotes.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "after-inspect-actual-release-plan",
+      "stream": "stdout",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\after-inspect-actual-release-plan.stdout.log",
+      "bytes": 1854,
+      "sha256": "1ea12f1613cabf5f26e4c7a66a6970852275d61681c7a7059b331f14c822f15a"
+    },
+    {
+      "label": "after-inspect-actual-release-plan",
+      "stream": "stderr",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\after-inspect-actual-release-plan.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "base--changeset-cinatoken-gateway-postgres-md",
+      "stream": "stdout",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\base--changeset-cinatoken-gateway-postgres-md.stdout.log",
+      "bytes": 538,
+      "sha256": "adda18fbadb5d0c14027eaf61c7a66cff9f367148fc316899510e84afd8ef5e8"
+    },
+    {
+      "label": "base--changeset-cinatoken-gateway-postgres-md",
+      "stream": "stderr",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\base--changeset-cinatoken-gateway-postgres-md.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "base--changeset-config-json",
+      "stream": "stdout",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\base--changeset-config-json.stdout.log",
+      "bytes": 426,
+      "sha256": "2b4128d5eb962f60967d24cec0320bed15a6db2d630312a075ba3d4f2a6a4d14"
+    },
+    {
+      "label": "base--changeset-config-json",
+      "stream": "stderr",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\base--changeset-config-json.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "base--changeset-README-md",
+      "stream": "stdout",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\base--changeset-README-md.stdout.log",
+      "bytes": 3059,
+      "sha256": "3a4b7d568eb9d91b2adafc4f817a4a9400220ca9da1067302348a8ccb3b5d792"
+    },
+    {
+      "label": "base--changeset-README-md",
+      "stream": "stderr",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\base--changeset-README-md.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "base-package-json",
+      "stream": "stdout",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\base-package-json.stdout.log",
+      "bytes": 5550,
+      "sha256": "6454126bb47e39c135d3178ce3500b0901581b5b4f9b4b0067ace88e894da3aa"
+    },
+    {
+      "label": "base-package-json",
+      "stream": "stderr",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\base-package-json.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "base-packages-admin-package-json",
+      "stream": "stdout",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\base-packages-admin-package-json.stdout.log",
+      "bytes": 4163,
+      "sha256": "fef666db8d2ed6876f90b48a51b6a636d7b342dab1cae1e0dc82e72657df8188"
+    },
+    {
+      "label": "base-packages-admin-package-json",
+      "stream": "stderr",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\base-packages-admin-package-json.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "base-packages-chain-worker-package-json",
+      "stream": "stdout",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\base-packages-chain-worker-package-json.stdout.log",
+      "bytes": 714,
+      "sha256": "841388960dbfbf598768ec8eaf2fcea39abee114952ff467e8f3697464f5809a"
+    },
+    {
+      "label": "base-packages-chain-worker-package-json",
+      "stream": "stderr",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\base-packages-chain-worker-package-json.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "base-packages-core-package-json",
+      "stream": "stdout",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\base-packages-core-package-json.stdout.log",
+      "bytes": 13537,
+      "sha256": "eef3793fdc1098c901c18a0e97160d4204fb765a786c3445bc558ce7efc49e1e"
+    },
+    {
+      "label": "base-packages-core-package-json",
+      "stream": "stderr",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\base-packages-core-package-json.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "base-packages-proxy-package-json",
+      "stream": "stdout",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\base-packages-proxy-package-json.stdout.log",
+      "bytes": 18988,
+      "sha256": "14e2d996c5d81a9ec101e9506dc05d1693c05911aad146fb062742c0c4aca2a1"
+    },
+    {
+      "label": "base-packages-proxy-package-json",
+      "stream": "stderr",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\base-packages-proxy-package-json.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "base-packages-tool-engines-package-json",
+      "stream": "stdout",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\base-packages-tool-engines-package-json.stdout.log",
+      "bytes": 856,
+      "sha256": "82e4981558fca23d8bf5766a64745a084aa33a1df38a0569554b4bd4b534156e"
+    },
+    {
+      "label": "base-packages-tool-engines-package-json",
+      "stream": "stderr",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\base-packages-tool-engines-package-json.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "base-packages-web--prettierrc",
+      "stream": "stdout",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\base-packages-web--prettierrc.stdout.log",
+      "bytes": 984,
+      "sha256": "b623c80eef9ca24da4cec91b8afb91c579d3a8907ec6e52587c44dc0301d62b9"
+    },
+    {
+      "label": "base-packages-web--prettierrc",
+      "stream": "stderr",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\base-packages-web--prettierrc.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "base-packages-web-package-json",
+      "stream": "stdout",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\base-packages-web-package-json.stdout.log",
+      "bytes": 4490,
+      "sha256": "dd231d8595d364fd70999f3e84414cc60bb50d41c700572607d5ec717b84c4bd"
+    },
+    {
+      "label": "base-packages-web-package-json",
+      "stream": "stderr",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\base-packages-web-package-json.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "before-actual-changesets-cli-version",
+      "stream": "stdout",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\before-actual-changesets-cli-version.stdout.log",
+      "bytes": 74,
+      "sha256": "dcccf189565497aac06bf5d1ce187bd2c26431861f43a9a26c1b895b21ac30af"
+    },
+    {
+      "label": "before-actual-changesets-cli-version",
+      "stream": "stderr",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\before-actual-changesets-cli-version.stderr.log",
+      "bytes": 1613,
+      "sha256": "62c084f13f8693a3dbfd8eba7468aba641499d374bcf20fcdebcd82d3074f285"
+    },
+    {
+      "label": "before-actual-six-changelog-integrity",
+      "stream": "stdout",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\before-actual-six-changelog-integrity.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "before-actual-six-changelog-integrity",
+      "stream": "stderr",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\before-actual-six-changelog-integrity.stderr.log",
+      "bytes": 986,
+      "sha256": "c53bffaf156df0d390ee65d1ea2810c603e234f071e2e7b4f0f6b6b6adc81425"
+    },
+    {
+      "label": "before-git-add-baseline",
+      "stream": "stdout",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\before-git-add-baseline.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "before-git-add-baseline",
+      "stream": "stderr",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\before-git-add-baseline.stderr.log",
+      "bytes": 80,
+      "sha256": "4637b2478cea95e221ecbde1b46874fb0f18d282e08504cf0d1074595c4348d1"
+    },
+    {
+      "label": "before-git-commit-baseline",
+      "stream": "stdout",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\before-git-commit-baseline.stdout.log",
+      "bytes": 850,
+      "sha256": "6dd2c052baa2642fe7e8177ed5289fa0029283b7abf7fbf5a138e56106bd58ca"
+    },
+    {
+      "label": "before-git-commit-baseline",
+      "stream": "stderr",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\before-git-commit-baseline.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "before-git-init",
+      "stream": "stdout",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\before-git-init.stdout.log",
+      "bytes": 161,
+      "sha256": "67dbeb1aa2e97765ee68f7c8b99e389db2c97a78dae0514dccb9a487029bfdd6"
+    },
+    {
+      "label": "before-git-init",
+      "stream": "stderr",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\before-git-init.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "before-git-remotes",
+      "stream": "stdout",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\before-git-remotes.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "before-git-remotes",
+      "stream": "stderr",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\before-git-remotes.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "before-inspect-actual-release-plan",
+      "stream": "stdout",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\before-inspect-actual-release-plan.stdout.log",
+      "bytes": 1854,
+      "sha256": "1ea12f1613cabf5f26e4c7a66a6970852275d61681c7a7059b331f14c822f15a"
+    },
+    {
+      "label": "before-inspect-actual-release-plan",
+      "stream": "stderr",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\before-inspect-actual-release-plan.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "source-exact-two-file-diff",
+      "stream": "stdout",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\source-exact-two-file-diff.stdout.log",
+      "bytes": 1344,
+      "sha256": "f21e5e64ca732b1c34cfedd1ae4957bd28d6ce32004b5f91b4b5772ab53e122c"
+    },
+    {
+      "label": "source-exact-two-file-diff",
+      "stream": "stderr",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\source-exact-two-file-diff.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "source-head-at-seal",
+      "stream": "stdout",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\source-head-at-seal.stdout.log",
+      "bytes": 41,
+      "sha256": "d46cb96258b7c0345336d52095a8d53f3a011d4222167453e5a3e9db850c0c58"
+    },
+    {
+      "label": "source-head-at-seal",
+      "stream": "stderr",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\source-head-at-seal.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "source-head-before",
+      "stream": "stdout",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\source-head-before.stdout.log",
+      "bytes": 41,
+      "sha256": "d46cb96258b7c0345336d52095a8d53f3a011d4222167453e5a3e9db850c0c58"
+    },
+    {
+      "label": "source-head-before",
+      "stream": "stderr",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\source-head-before.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "source-two-file-diff-check",
+      "stream": "stdout",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\source-two-file-diff-check.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "source-two-file-diff-check",
+      "stream": "stderr",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\source-two-file-diff-check.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "unchanged-web-full-format-check",
+      "stream": "stdout",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\unchanged-web-full-format-check.stdout.log",
+      "bytes": 526,
+      "sha256": "2b0035c6efe61dde18467e93abfae487b1218cc9033b8e77a6e847442bf4b52c"
+    },
+    {
+      "label": "unchanged-web-full-format-check",
+      "stream": "stderr",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\unchanged-web-full-format-check.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "commandReceiptCount": 30,
+  "rawStreamCount": 60,
+  "before": {
+    "actualCliExit": 0,
+    "generationActualOutcome": 1,
+    "independentIntegrityActualExit": 1,
+    "moduleNotFoundExact": "@trivago/prettier-plugin-sort-imports",
+    "webChangelogAbsent": true,
+    "zeroCliIsNotPass": true
+  },
+  "after": {
+    "actualCliExit": 0,
+    "generationActualOutcome": 0,
+    "independentIntegrityActualExit": 0,
+    "sixGeneratedVersions": "2.9.0",
+    "sixGeneratedChangelogs": true,
+    "fivePriorHistoryTailsByteExact": true,
+    "chainWorkerVersion": "2.8.0",
+    "originalRootSummaryPresent": true,
+    "webGeneratedChangelog": "# @cinatoken/web\n\n## 2.9.0\n",
+    "webChangelogExplanation": "Actual CLI produces this 27-byte fixed-group version entry; no zero-byte/manual placeholder. No claim Web has its own summary.",
+    "unchangedWebFormatCheckActualExit": 0,
+    "webFormatScope": "Original explicit format:check selector, no claim all legacy repository paths are formatted."
+  },
+  "generatedOutput": {
+    "before": [
+      {
+        "name": "cinatoken",
+        "manifest": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\generated-before\\package.json",
+          "bytes": 5550,
+          "sha256": "a21780f677a4388a3cae914b733402b2bf57aec14fadb7af80bed0c298b860e1"
+        },
+        "version": "2.9.0",
+        "changelogExists": true,
+        "changelog": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\generated-before\\CHANGELOG.md",
+          "bytes": 52898,
+          "sha256": "c3efbe0fc39653635b983454f4c12ee5aa43801a65c6ebadecd64664f793c81c"
+        },
+        "heading2_9_0": true,
+        "historyAfterPackageTitleByteExact": true
+      },
+      {
+        "name": "@octafuse/core",
+        "manifest": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\generated-before\\packages\\core\\package.json",
+          "bytes": 13537,
+          "sha256": "0343d9777e9f21cb373c25b36211b78c95c72aed46baac9f4852fee39b47d914"
+        },
+        "version": "2.9.0",
+        "changelogExists": true,
+        "changelog": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\generated-before\\packages\\core\\CHANGELOG.md",
+          "bytes": 27290,
+          "sha256": "c0a1badc8b514635164d23ee601388944393c31dc66c2bfa3c308804d8e20880"
+        },
+        "heading2_9_0": true,
+        "historyAfterPackageTitleByteExact": true
+      },
+      {
+        "name": "@octafuse/tool-engines",
+        "manifest": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\generated-before\\packages\\tool-engines\\package.json",
+          "bytes": 856,
+          "sha256": "54bb7af295b23943fb2efe544bb63cd203310f90b7d8ae3a8d6ddb95c3871bd7"
+        },
+        "version": "2.9.0",
+        "changelogExists": true,
+        "changelog": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\generated-before\\packages\\tool-engines\\CHANGELOG.md",
+          "bytes": 5325,
+          "sha256": "a672de3cd43ab18f5704209e6bc1bdd467b52459db74df150f6df3ef8ccfe2ee"
+        },
+        "heading2_9_0": true,
+        "historyAfterPackageTitleByteExact": true
+      },
+      {
+        "name": "@octafuse/proxy",
+        "manifest": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\generated-before\\packages\\proxy\\package.json",
+          "bytes": 18988,
+          "sha256": "e591093b06eb1c0bd31de9e22079ee5ecd6b8b6b6ed15af8e32536edc950f514"
+        },
+        "version": "2.9.0",
+        "changelogExists": true,
+        "changelog": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\generated-before\\packages\\proxy\\CHANGELOG.md",
+          "bytes": 31677,
+          "sha256": "a05ecdcb5e57bcc915f74d6ad5a688b4b3474ec06e24be3f1c07c37dc146dceb"
+        },
+        "heading2_9_0": true,
+        "historyAfterPackageTitleByteExact": true
+      },
+      {
+        "name": "@octafuse/admin",
+        "manifest": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\generated-before\\packages\\admin\\package.json",
+          "bytes": 4163,
+          "sha256": "55c942bd728f56e783255b147b185518b596495e09940d95eabb24512bed70f2"
+        },
+        "version": "2.9.0",
+        "changelogExists": true,
+        "changelog": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\generated-before\\packages\\admin\\CHANGELOG.md",
+          "bytes": 33080,
+          "sha256": "d3fd779618b32c4cf0f8421fe3e56361a1ad4643f129be4bd29413cd41f8969b"
+        },
+        "heading2_9_0": true,
+        "historyAfterPackageTitleByteExact": true
+      },
+      {
+        "name": "@cinatoken/web",
+        "manifest": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\generated-before\\packages\\web\\package.json",
+          "bytes": 4490,
+          "sha256": "c9f5fc14d0eaa9cdf4c7d538c98d3b8a78786ae081082a0f7d6304a85c70ff44"
+        },
+        "version": "2.9.0",
+        "changelogExists": false
+      }
+    ],
+    "after": [
+      {
+        "name": "cinatoken",
+        "manifest": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\generated-after\\package.json",
+          "bytes": 5550,
+          "sha256": "a21780f677a4388a3cae914b733402b2bf57aec14fadb7af80bed0c298b860e1"
+        },
+        "version": "2.9.0",
+        "changelogExists": true,
+        "changelog": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\generated-after\\CHANGELOG.md",
+          "bytes": 52899,
+          "sha256": "1760b8c62e835744d1ee41590ea62c6f3d1f2e553fa0c5c43288313de4a0fbde"
+        },
+        "heading2_9_0": true,
+        "historyAfterPackageTitleByteExact": true
+      },
+      {
+        "name": "@octafuse/core",
+        "manifest": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\generated-after\\packages\\core\\package.json",
+          "bytes": 13537,
+          "sha256": "0343d9777e9f21cb373c25b36211b78c95c72aed46baac9f4852fee39b47d914"
+        },
+        "version": "2.9.0",
+        "changelogExists": true,
+        "changelog": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\generated-after\\packages\\core\\CHANGELOG.md",
+          "bytes": 27290,
+          "sha256": "c0a1badc8b514635164d23ee601388944393c31dc66c2bfa3c308804d8e20880"
+        },
+        "heading2_9_0": true,
+        "historyAfterPackageTitleByteExact": true
+      },
+      {
+        "name": "@octafuse/tool-engines",
+        "manifest": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\generated-after\\packages\\tool-engines\\package.json",
+          "bytes": 856,
+          "sha256": "54bb7af295b23943fb2efe544bb63cd203310f90b7d8ae3a8d6ddb95c3871bd7"
+        },
+        "version": "2.9.0",
+        "changelogExists": true,
+        "changelog": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\generated-after\\packages\\tool-engines\\CHANGELOG.md",
+          "bytes": 5324,
+          "sha256": "0de5b5fbbc4ade3220d601569d4e0106fb86b17a83a57b0a4836260a1e5814c4"
+        },
+        "heading2_9_0": true,
+        "historyAfterPackageTitleByteExact": true
+      },
+      {
+        "name": "@octafuse/proxy",
+        "manifest": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\generated-after\\packages\\proxy\\package.json",
+          "bytes": 18988,
+          "sha256": "e591093b06eb1c0bd31de9e22079ee5ecd6b8b6b6ed15af8e32536edc950f514"
+        },
+        "version": "2.9.0",
+        "changelogExists": true,
+        "changelog": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\generated-after\\packages\\proxy\\CHANGELOG.md",
+          "bytes": 31676,
+          "sha256": "2c86a9e0187776b7c6af3b767fd7a0a7203ca3efebade2e5d671699bcec65255"
+        },
+        "heading2_9_0": true,
+        "historyAfterPackageTitleByteExact": true
+      },
+      {
+        "name": "@octafuse/admin",
+        "manifest": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\generated-after\\packages\\admin\\package.json",
+          "bytes": 4163,
+          "sha256": "55c942bd728f56e783255b147b185518b596495e09940d95eabb24512bed70f2"
+        },
+        "version": "2.9.0",
+        "changelogExists": true,
+        "changelog": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\generated-after\\packages\\admin\\CHANGELOG.md",
+          "bytes": 33079,
+          "sha256": "5b5defd6168699ab206480a31fdf6aa1510b4714c6bace6acce87261bb468c34"
+        },
+        "heading2_9_0": true,
+        "historyAfterPackageTitleByteExact": true
+      },
+      {
+        "name": "@cinatoken/web",
+        "manifest": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\generated-after\\packages\\web\\package.json",
+          "bytes": 4490,
+          "sha256": "c9f5fc14d0eaa9cdf4c7d538c98d3b8a78786ae081082a0f7d6304a85c70ff44"
+        },
+        "version": "2.9.0",
+        "changelogExists": true,
+        "changelog": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\generated-after\\packages\\web\\CHANGELOG.md",
+          "bytes": 27,
+          "sha256": "c985a119bdfb72867d0eea7f386bc8720876a96d7806e02788e568e4852c4ed8"
+        },
+        "heading2_9_0": true,
+        "historyAfterPackageTitleByteExact": true
+      }
+    ]
+  },
+  "releasePlans": [
+    {
+      "phase": "before",
+      "pendingChangesetAddingCommit": null,
+      "sixActualReleases": true,
+      "remotesEmpty": true
+    },
+    {
+      "phase": "after",
+      "pendingChangesetAddingCommit": null,
+      "sixActualReleases": true,
+      "remotesEmpty": true
+    }
+  ],
+  "originalCiFailure": {
+    "entries": [
+      {
+        "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-boundary-next-20261006-Zm6Z3E\\native12-release-terminal-failed.result.json",
+        "copy": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\original-ci-failure\\native12-release-terminal-failed.result.json",
+          "bytes": 571,
+          "sha256": "6bfd608fea65e5b3e4df99941460a34c21e4817ba32d667323dc89a68f05a4ff"
+        },
+        "exact": true
+      },
+      {
+        "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-boundary-next-20261006-Zm6Z3E\\native12-release-terminal-failed.stdout.log",
+        "copy": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\original-ci-failure\\native12-release-terminal-failed.stdout.log",
+          "bytes": 8072,
+          "sha256": "ea4bc6f9c36f981ff2a831e30b55ea921c7a92b1f477f8b438bd7f7436e21eff"
+        },
+        "exact": true
+      },
+      {
+        "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-boundary-next-20261006-Zm6Z3E\\native12-release-terminal-failed.stderr.log",
+        "copy": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\original-ci-failure\\native12-release-terminal-failed.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "exact": true
+      }
+    ],
+    "sameFormatterAndMissingChangelogErrorsRetained": true,
+    "downloadOrArchiveZeroIsNotReleaseSuccess": true
+  },
+  "artifacts": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\source-before.json",
+      "bytes": 4099,
+      "sha256": "a987aa3927f9e2d93c639c3df2c90f98d4300dc0cca852ad6b65ce2807e0fd8d"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\before-generation-observed.json",
+      "bytes": 5033,
+      "sha256": "b8864b9bfbb249fef5d0ede19c696c3988adee79616413970477db3a56777ba4"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\after-generation-observed.json",
+      "bytes": 5129,
+      "sha256": "da7dcd5422b6f7532226cdc36c0ccfb1369bf374e884eb563c0026d44c133b21"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\actual-integrity-and-format-gates.json",
+      "bytes": 496,
+      "sha256": "ec0beb5e05a4d05c40126aaaa0f473b6120ad7c0e8b88efb8039fa4e7978fead"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\FINAL-release-prettier-repair.exec-tool-receipt.json",
+      "bytes": 995,
+      "sha256": "aad8ece4a1798ccea3c8b9fd09180fb1b1fde3ed63022a52214bb60e2f433ecc"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\check-generated-output.mjs",
+      "bytes": 881,
+      "sha256": "ff03e2fe81f72367fd61b6d171dbbf98bf9afb9c4432b0e1149dc00fb0480d99"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\verify-release-generation.mjs",
+      "bytes": 19157,
+      "sha256": "9ce363960b16bde7e6599eca7174c50041eb8c4b4750f5a1cd11fec8f893dfc8"
+    }
+  ],
+  "reviewerPriorReadFailure": {
+    "chunk_id": "610f25",
+    "exit_code": 1,
+    "error": "UnicodeDecodeError from a display-only first-120-byte Chinese preview cutting a UTF-8 codepoint. No peer report or repository write occurred; final reader omits the preview. This is not a product/test failure."
+  },
+  "limits": [
+    "GitHub commit/PR attribution is not exercised: real isolated pending changeset adding commit is null and actual plugin is unchanged.",
+    "No Linux Release CI, Action PR creation, tag push, publish or Cloudflare deploy was executed or verified by this read-only peer.",
+    "Only the listed two source files are the reviewed repair; no global working-tree status is inferred without Git."
+  ]
+}

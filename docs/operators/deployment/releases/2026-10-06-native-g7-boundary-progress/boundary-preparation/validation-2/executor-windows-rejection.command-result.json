@@ -1,0 +1,32 @@
+{
+  "id": "executor-windows-rejection",
+  "program": "C:/Users/cina/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+  "args": [
+    "C:/cinagroup/cinatoken/scripts/diagnostics/v364-owned-linux-boundary/execute-owned-linux.py",
+    "--repo",
+    "C:/cinagroup/cinatoken",
+    "--out",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/executor-windows-rejection",
+    "--execute-linux"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "timeout": 10000,
+  "status": 1,
+  "signal": null,
+  "error": null,
+  "expectedExit": 1,
+  "outputs": [
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/executor-windows-rejection.stdout.txt",
+      "bytes": 252,
+      "sha256": "242c1a92b738edb1fed3a8ac9030b24a4afb2008a5e91414713502133d6fd57a"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/executor-windows-rejection.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "source": "actual synchronous spawnSync return, not aggregate report",
+  "terminal": true
+}

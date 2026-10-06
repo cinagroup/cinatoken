@@ -1,0 +1,79 @@
+{
+  "schema": "web-platform-g7-independent-cleanup-closed-v1",
+  "startedAt": "2026-10-06T02:32:55.559Z",
+  "endedAt": "2026-10-06T02:32:55.956Z",
+  "sourceSHA": "07d19c1c941cc373019811be3dbf553c441a0ff3",
+  "owner": "g7-8a88cf68945741d1843b63f670b4d364",
+  "actualExit": 0,
+  "verifiedAbsent": true,
+  "rows": [
+    {
+      "type": "container",
+      "name": "g7-8a88cf68945741d1843b63f670b4d364-qa",
+      "verifiedAbsent": true
+    },
+    {
+      "type": "container",
+      "name": "g7-8a88cf68945741d1843b63f670b4d364-ingress",
+      "verifiedAbsent": true
+    },
+    {
+      "type": "container",
+      "name": "g7-8a88cf68945741d1843b63f670b4d364-web",
+      "verifiedAbsent": true
+    },
+    {
+      "type": "container",
+      "name": "g7-8a88cf68945741d1843b63f670b4d364-ssr",
+      "verifiedAbsent": true
+    },
+    {
+      "type": "container",
+      "name": "g7-8a88cf68945741d1843b63f670b4d364-admin",
+      "verifiedAbsent": true
+    },
+    {
+      "type": "container",
+      "name": "g7-8a88cf68945741d1843b63f670b4d364-proxy",
+      "verifiedAbsent": true
+    },
+    {
+      "type": "container",
+      "name": "g7-8a88cf68945741d1843b63f670b4d364-seed",
+      "verifiedAbsent": true
+    },
+    {
+      "type": "container",
+      "name": "g7-8a88cf68945741d1843b63f670b4d364-migrate",
+      "verifiedAbsent": true
+    },
+    {
+      "type": "container",
+      "name": "g7-8a88cf68945741d1843b63f670b4d364-pg",
+      "verifiedAbsent": true
+    },
+    {
+      "type": "network",
+      "name": "g7-8a88cf68945741d1843b63f670b4d364-db",
+      "verifiedAbsent": true
+    },
+    {
+      "type": "network",
+      "name": "g7-8a88cf68945741d1843b63f670b4d364-app",
+      "verifiedAbsent": true
+    },
+    {
+      "type": "network",
+      "name": "g7-8a88cf68945741d1843b63f670b4d364-client",
+      "verifiedAbsent": true
+    },
+    {
+      "type": "volume",
+      "name": "g7-8a88cf68945741d1843b63f670b4d364-pgdata",
+      "verifiedAbsent": true
+    }
+  ],
+  "errors": [],
+  "runtimePassedClaim": false,
+  "doesNotOverrideOriginalRuntimeExit": true
+}

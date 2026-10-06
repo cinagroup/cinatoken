@@ -1,0 +1,41 @@
+{
+  "actualOutcome": 0,
+  "rows": [
+    {
+      "name": "cinatoken",
+      "version": "2.9.0",
+      "changelogBytes": 52899,
+      "hasVersionHeading": true
+    },
+    {
+      "name": "@octafuse/core",
+      "version": "2.9.0",
+      "changelogBytes": 27290,
+      "hasVersionHeading": true
+    },
+    {
+      "name": "@octafuse/tool-engines",
+      "version": "2.9.0",
+      "changelogBytes": 5324,
+      "hasVersionHeading": true
+    },
+    {
+      "name": "@octafuse/proxy",
+      "version": "2.9.0",
+      "changelogBytes": 31676,
+      "hasVersionHeading": true
+    },
+    {
+      "name": "@octafuse/admin",
+      "version": "2.9.0",
+      "changelogBytes": 33079,
+      "hasVersionHeading": true
+    },
+    {
+      "name": "@cinatoken/web",
+      "version": "2.9.0",
+      "changelogBytes": 27,
+      "hasVersionHeading": true
+    }
+  ]
+}

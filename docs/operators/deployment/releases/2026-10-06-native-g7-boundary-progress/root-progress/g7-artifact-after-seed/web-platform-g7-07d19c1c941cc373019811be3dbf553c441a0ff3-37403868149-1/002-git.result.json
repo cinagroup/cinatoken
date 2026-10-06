@@ -1,0 +1,30 @@
+{
+  "schema": "web-platform-g7-child-command-closed-v1",
+  "program": "git",
+  "args": [
+    "status",
+    "--porcelain",
+    "--untracked-files=normal"
+  ],
+  "begin": "2026-10-06T02:32:28.081Z",
+  "endedAt": "2026-10-06T02:32:28.340Z",
+  "closed": true,
+  "actualExit": 0,
+  "signal": null,
+  "errorCode": null,
+  "timedOut": false,
+  "timeoutMs": 90000,
+  "expectedNumericReadinessNonzero": false,
+  "stdout": {
+    "file": "002-git.stdout.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redacted": false
+  },
+  "stderr": {
+    "file": "002-git.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redacted": false
+  }
+}

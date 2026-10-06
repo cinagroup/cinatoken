@@ -1,0 +1,16 @@
+{
+  "label": "native-environment-probe",
+  "executable": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-next-eight-repair-0511920406eb4b37baca7e103b9080d5/native-environment-probe.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "startedAt": "2026-10-06T01:35:21.995Z",
+  "finishedAt": "2026-10-06T01:35:22.426Z",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "childClosed": true,
+  "stdout": "native-environment-probe.stdout.log",
+  "stderr": "native-environment-probe.stderr.log"
+}

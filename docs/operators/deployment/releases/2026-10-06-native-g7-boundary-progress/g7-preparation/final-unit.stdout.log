@@ -1,0 +1,14 @@
+✔ command budget never admits zero, negative or oversized remaining timeout (2.1198ms)
+✔ execution admission rejects wrong SHA, platform, endpoint and TLS bypass (1.2382ms)
+✔ cleanup ownership never admits foreign or unlabeled resources (0.4186ms)
+✔ topology rejects public ports, extra networks and writable input mounts (1.4787ms)
+✔ the real SQL text fixture satisfies production endpoint and operation admission (4.8662ms)
+✔ provider encryption and real route fingerprint bind the seeded plaintext credential (13.9483ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 358.1309

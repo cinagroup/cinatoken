@@ -1,0 +1,32 @@
+{
+  "label": "format-before",
+  "executable": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "node_modules/prettier/bin-prettier.js",
+    "--check",
+    "scripts/verification/web-platform-g7/database.mjs",
+    "scripts/verification/web-platform-g7/fixture.test.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "startedAt": "2026-10-06T02:18:59.006Z",
+  "finishedAt": "2026-10-06T02:18:59.407Z",
+  "actualExit": 1,
+  "signal": null,
+  "spawnError": null,
+  "closed": true,
+  "expectedActualExits": [
+    0,
+    1
+  ],
+  "expectedExitMatched": true,
+  "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\format-before.stdout.log",
+  "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\format-before.stderr.log",
+  "stdoutBytes": {
+    "bytes": 23,
+    "sha256": "ebe82dad128d5e5d8936334ceac09492f3c60bd9e0b4a16cc7fd7075513b33de"
+  },
+  "stderrBytes": {
+    "bytes": 185,
+    "sha256": "507621fde8eeeb34099014707799d1ffa5aeb907c26793befa9083220c145a63"
+  }
+}

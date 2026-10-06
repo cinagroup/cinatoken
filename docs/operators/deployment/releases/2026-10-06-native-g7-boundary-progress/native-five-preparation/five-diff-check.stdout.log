@@ -1,0 +1,16 @@
+scripts/db/cutover/postgres-complete-text-read-grant-bridge-v367.native.test.mjs:19: trailing whitespace.
++import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
+scripts/db/cutover/postgres-complete-text-read-grant-bridge-v367.native.test.mjs:121: trailing whitespace.
++      const migrationNames=await listPg73Migrations();
+scripts/db/cutover/postgres-complete-text-result-facts-v366.native.test.mjs:4: trailing whitespace.
++import { readFile, writeFile } from 'node:fs/promises';
+scripts/db/cutover/postgres-complete-text-result-facts-v366.native.test.mjs:9: trailing whitespace.
++import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
+scripts/db/cutover/postgres-complete-text-result-facts-v366.native.test.mjs:115: trailing whitespace.
++      const migrationNames=await listPg73Migrations();
+scripts/db/cutover/postgres-complete-text-send-start-v365.native.test.mjs:4: trailing whitespace.
++import { readFile, writeFile } from 'node:fs/promises';
+scripts/db/cutover/postgres-complete-text-send-start-v365.native.test.mjs:14: trailing whitespace.
++import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
+scripts/db/cutover/postgres-complete-text-send-start-v365.native.test.mjs:116: trailing whitespace.
++      const migrationNames=await listPg73Migrations();

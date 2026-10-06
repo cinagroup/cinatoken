@@ -1,0 +1,28 @@
+{
+  "id": "syntax-direct-holder.mjs",
+  "program": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "--check",
+    "C:/cinagroup/cinatoken/scripts/diagnostics/v364-owned-linux-boundary/direct-holder.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "timeout": 60000,
+  "status": 0,
+  "signal": null,
+  "error": null,
+  "expectedExit": 0,
+  "outputs": [
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/syntax-direct-holder.mjs.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/syntax-direct-holder.mjs.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "source": "actual synchronous spawnSync return, not aggregate report",
+  "terminal": true
+}

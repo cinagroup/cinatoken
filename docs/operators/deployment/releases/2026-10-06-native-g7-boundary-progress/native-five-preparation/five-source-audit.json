@@ -1,0 +1,1403 @@
+{
+  "at": "2026-10-06T02:02:51.387Z",
+  "baseCommit": "4e2ed5196a26cc43c2a3cb7ea852f1fc6284ff27",
+  "actualExit": 0,
+  "files": [
+    {
+      "file": "scripts/db/cutover/postgres-complete-text-secretless-plan-v365.native.test.mjs",
+      "before": {
+        "bytes": 21116,
+        "sha256": "9b40c2e9bd75937e2875bb75f73ea17be610d03db3a64332674644610c6bd2a2"
+      },
+      "after": {
+        "bytes": 21312,
+        "sha256": "a74819c23d460174ccc76e7c489f923220f0fbebd82b5e3a116eccaf0cf7ef75"
+      },
+      "originalAssertions": 30,
+      "originalGrantCalls": 2,
+      "allOriginalAssertionsAstAndSourceExact": true,
+      "allOriginalGrantCallsAstAndSourceExact": true,
+      "originalTimeoutAndSkipExact": true,
+      "wholeFileReverseBytesExact": true
+    },
+    {
+      "file": "scripts/db/cutover/postgres-complete-text-send-start-v365.native.test.mjs",
+      "before": {
+        "bytes": 42033,
+        "sha256": "d9b5abfec6f7b7cb4d00f4531bc64e60e5f182fb605d329dd33afa86d8dbf605"
+      },
+      "after": {
+        "bytes": 42227,
+        "sha256": "329783762e9a9b1c3beb25e5cd2c3f601e7b9745eaea3a4401aa151820991ed7"
+      },
+      "originalAssertions": 69,
+      "originalGrantCalls": 1,
+      "allOriginalAssertionsAstAndSourceExact": true,
+      "allOriginalGrantCallsAstAndSourceExact": true,
+      "originalTimeoutAndSkipExact": true,
+      "wholeFileReverseBytesExact": true
+    },
+    {
+      "file": "scripts/db/cutover/postgres-complete-text-private-route-reader-v366.native.test.mjs",
+      "before": {
+        "bytes": 20511,
+        "sha256": "199af733a105deb2eccdb47513df2902fbcee73b1e412d2ffeec18081bbd9d76"
+      },
+      "after": {
+        "bytes": 20707,
+        "sha256": "02e9a66f4064dd408640b88889b288df8ebe78afbcb8cb9b930046632d719918"
+      },
+      "originalAssertions": 46,
+      "originalGrantCalls": 2,
+      "allOriginalAssertionsAstAndSourceExact": true,
+      "allOriginalGrantCallsAstAndSourceExact": true,
+      "originalTimeoutAndSkipExact": true,
+      "wholeFileReverseBytesExact": true
+    },
+    {
+      "file": "scripts/db/cutover/postgres-complete-text-read-grant-bridge-v367.native.test.mjs",
+      "before": {
+        "bytes": 39799,
+        "sha256": "cbe99abc41edd66d2b66318b197d9270d400b200b22f884890b59a8c6ebf731c"
+      },
+      "after": {
+        "bytes": 39993,
+        "sha256": "b30369a66bf566e826da86b38aaab48eb629535f1eb0d2c602be7a8557741f73"
+      },
+      "originalAssertions": 53,
+      "originalGrantCalls": 1,
+      "allOriginalAssertionsAstAndSourceExact": true,
+      "allOriginalGrantCallsAstAndSourceExact": true,
+      "originalTimeoutAndSkipExact": true,
+      "wholeFileReverseBytesExact": true
+    },
+    {
+      "file": "scripts/db/cutover/postgres-complete-text-result-facts-v366.native.test.mjs",
+      "before": {
+        "bytes": 46991,
+        "sha256": "9bf0b5b68b52e51413cd19f366d883833c35448c81176d887b409603d5438cbd"
+      },
+      "after": {
+        "bytes": 47185,
+        "sha256": "99ae01d748e367bf4e7b91f966e69cd4dc5e9524f9f919b1fcd2fecefc43c159"
+      },
+      "originalAssertions": 78,
+      "originalGrantCalls": 1,
+      "allOriginalAssertionsAstAndSourceExact": true,
+      "allOriginalGrantCallsAstAndSourceExact": true,
+      "originalTimeoutAndSkipExact": true,
+      "wholeFileReverseBytesExact": true
+    }
+  ],
+  "totals": {
+    "files": 5,
+    "originalAssertions": 276,
+    "originalGrantCalls": 7,
+    "unchangedSources": 181
+  },
+  "corpus": {
+    "count": 73,
+    "last": "0073_recovery_api_key_workspace_lock.sql",
+    "sha256": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc",
+    "ledgerMd5": "ca1ea96a1b4bcd0675642f30dcf48042",
+    "actualHelperValidation": true
+  },
+  "originalCi": {
+    "runId": "37401132384",
+    "jobId": "112068342381",
+    "step": 47,
+    "logPath": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-boundary-next-20261006-Zm6Z3E/native12-native-terminal-log.stdout.log",
+    "bytes": 263676,
+    "sha256": "189d5a219c43609ef5f763ec9fbb153e1497642d608fa0043d4c3c908a962ca4",
+    "failure": "81 !== 73 at v365 fixture:78:14",
+    "downloadReceipt": {
+      "at": "2026-10-06T01:58:23.052Z",
+      "finishedAt": "2026-10-06T01:58:32.063Z",
+      "executable": "C:/Program Files/GitHub CLI/gh.exe",
+      "args": [
+        "run",
+        "view",
+        "--job",
+        "112068342381",
+        "--log"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-boundary-next-20261006-Zm6Z3E/native12-native-terminal-log.stdout.log",
+      "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-boundary-next-20261006-Zm6Z3E/native12-native-terminal-log.stderr.log"
+    }
+  },
+  "unchangedSources": [
+    {
+      "file": "scripts/db/cutover/pg73-native-fixture.mjs",
+      "blob": "1f687e72d4ce844abe70cf1141d5df0b1050e2f6",
+      "bytes": 6849,
+      "sha256": "124ddd43c2594d0daaac66a4e7158e5df90b00a6d73f03cbcac9e8f853a7346f",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "scripts/db/cutover/grant-postgres-runtime.ts",
+      "blob": "797c0914a37d087567b339aca335fc7c36460ef5",
+      "bytes": 25946,
+      "sha256": "3f95f18f557696d8a36b93f7fe0d0d35a391e8ac9cf953376a234a6b629ea242",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "scripts/db/cutover/provision-postgres-roles.ts",
+      "blob": "437c30d706354de4d92728cc6b5f8177394fa3af",
+      "bytes": 7028,
+      "sha256": "afeac8b67002c610a193c9a3ee1b3d583c5e2097082ad88824e9157a71a61d64",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "scripts/db/cutover/activate-postgres-buyer-split-v348.ts",
+      "blob": "50f12c5ad1958c8c9ed8be9fe1f29b32216f1a9f",
+      "bytes": 2011,
+      "sha256": "135a3c67fd9e20e9c098717219c4f0aae749fc4f1f765bfc29729af23e6e0507",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "scripts/db/cutover/grant-postgres-buyer-split-v348.ts",
+      "blob": "2eff86b74c96a8e62a85e033b10b6785c6f1b40e",
+      "bytes": 1456,
+      "sha256": "6bd5ad47d44639e12d9c0ee54c12d2cee9ce8160ce213037d538d5369bec29b8",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "scripts/db/cutover/activate-postgres-buyer-guardrail-split-v349.ts",
+      "blob": "01778bf08e5d5a0f564c994d7688b6dfed7b22f5",
+      "bytes": 1920,
+      "sha256": "640ce0a6fbf3c684b2ccccd7884b395b592d7321cd613cb16b8bfeafab3aec55",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "scripts/db/cutover/grant-postgres-buyer-guardrail-split-v349.ts",
+      "blob": "1cf0a924b96d44cfd784911fcb91e7224a8b1226",
+      "bytes": 1498,
+      "sha256": "29160246eb2faca261a1c46a8aacdf8dd71a6b70a06443476443cff3b3c67ade",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "scripts/db/cutover/postgres-complete-text-result-client-digest-v367.native.test.mjs",
+      "blob": "4c8e2bd4c024cfb2a8143e19e5c36993a62641ab",
+      "bytes": 6349,
+      "sha256": "25351413e8cc641f7673e1e09d109f09ccc8c376d845c2d553caa3d05058aa35",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/src/test-support/postgres-native-cluster.mjs",
+      "blob": "23c803e7c078f2ed76ca970597e8777a62c8dfec",
+      "bytes": 6300,
+      "sha256": "6b5923be8d3bdcd061033eed1af2f67f3b87fa2fca1f2cf0a0b2eb0eb2cb8d2a",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/src/route-data-policy.ts",
+      "blob": "aad990cbb82702923d4bc253b59596e4328f5c0d",
+      "bytes": 7004,
+      "sha256": "aa23743b500608be0412cdf56544c36617b8a0a1e1a00039760c5129d044af42",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/proxy/src/services/postgres-complete-text-attempt-grant-v362.ts",
+      "blob": "6c7ed349c2ea9145d6a28c3d1a28b417a4d7b1b9",
+      "bytes": 9974,
+      "sha256": "618e165e73ba595eaaa589fa491140a36cfcab6dcb2349ae7e9824d69adc34ec",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/proxy/src/services/postgres-complete-text-send-start-v365.ts",
+      "blob": "1c79eb135cadfb2df4b7b4231d01672e6fa02176",
+      "bytes": 7986,
+      "sha256": "a7f78a3ccfbbdf148e68bfee7eae7a69047752e49f2ea32b55bef80a5149d62e",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/proxy/src/services/postgres-private-complete-text-reader-v366.ts",
+      "blob": "83d82edd7b13d4d2d8e4010609f429a47c21135e",
+      "bytes": 12890,
+      "sha256": "326ca816124e29af282cc12fe81b783fbf3e3ef0b0a045f7bca24d5c476bfea9",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/proxy/src/services/postgres-complete-text-result-facts-v367.ts",
+      "blob": "875e8af0e3136f1275aed4e49c47844f39059e39",
+      "bytes": 14291,
+      "sha256": "266f3790fae0813378bc870ead524130453c1cd67fcab0dfb07514ef393f2aea",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": ".github/workflows/proxy-dispatch-safety.yml",
+      "blob": "6bde583d25f82a751b59d560e402a890e092bc03",
+      "bytes": 45895,
+      "sha256": "8e883e7f21f77f8367d361f6bd3d060e16c241c28641b3eac85af6835841f152",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0001_baseline.sql",
+      "blob": "51879763ad08da2c8778e61ef34e45500f6ecf38",
+      "bytes": 7857,
+      "sha256": "b0dd34c1ec7e4351db5df5b97e5ce9202e929df43368e606eae3c4f08f4d7d58",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0002_seed.sql",
+      "blob": "e709f0f9896d1ebbf72b7572e9b9e143bfaab5e9",
+      "bytes": 888,
+      "sha256": "8c47cc8e9404e725f9891d49a0b2249f4c13d3c1f2fc4b255aed6de42348017a",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0003_model_modalities_released.sql",
+      "blob": "40c5b5b016c919acb8b92f151d915d00821731ba",
+      "bytes": 316,
+      "sha256": "a27e19953cfddb81c3f94ab0c3efcb33edf7a59c0ad79c0671892774763e71c6",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0004_provider_api_keys.sql",
+      "blob": "17fb61b831b76bffaa85cd40b538981d7249ad75",
+      "bytes": 1128,
+      "sha256": "d7c6857a77a56271993640cdae0915affd9c6eeba177adf9ed7217f2807e1bab",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0005_drop_providers_api_key.sql",
+      "blob": "f5304ff8df96fa5b5e24290893b9beedc8b592fa",
+      "bytes": 205,
+      "sha256": "bac4c00834ada66ad890ad5ff3cfb63b3929eb89410d5017d846fb13fc9a396f",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0006_upstream_trace_ids.sql",
+      "blob": "e269418a2536e9ae2666170a5628da0f5d0d1890",
+      "bytes": 389,
+      "sha256": "0d0d998abb393d1def93802943554b77742aeb76856f36a9f83a39d75a4ee273",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0007_key_limits_and_sticky_config.sql",
+      "blob": "db15e14d950f42e4001f8aab23f971495acfd148",
+      "bytes": 398,
+      "sha256": "a641b4760c1923c6cfe23f0d27289868caa49482198070e470cec0dc338ea0ae",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0008_request_timing_metrics.sql",
+      "blob": "fd419a799fa238feb8d4d1f2c076331fb5a5f354",
+      "bytes": 585,
+      "sha256": "3c7d1201fbf90327475cdad3a4117cae55b09ef027de21b8f9cd81df194d5b30",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0009_first_reasoning_token_ms.sql",
+      "blob": "5486cb26a36af9f38e1288a7142e6da57657e376",
+      "bytes": 78,
+      "sha256": "b0de5618cd7d3ab3ec57f27404fccc4fa74a2235c53e77c7e3089d3154c5a331",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0010_models_max_tokens_nullable.sql",
+      "blob": "0880463417644e031387fb04d0b39e48c288263c",
+      "bytes": 147,
+      "sha256": "9c88e3b5051ad9f8fe63ccd9b28cd56f894660fdb47179d2a74557a0ab2f4160",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0011_provider_endpoints.sql",
+      "blob": "16342f2fd010a56b081ba82daeace0c09cdf436f",
+      "bytes": 775,
+      "sha256": "3734aa9b703bb89beaf905e18a0a667f4767287993aae1821bdd4727964e8d1e",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0012_drop_provider_base_url_columns.sql",
+      "blob": "445414dfc5e511d90e327b4dd393cb9b706b3b83",
+      "bytes": 333,
+      "sha256": "c4b4c9565d227486e4fe133333c628361993861ea26c35d3e646438cf72ca31f",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0013_request_log_image_billing.sql",
+      "blob": "c473a397eb3f77341e079db95293de8053fbcd53",
+      "bytes": 244,
+      "sha256": "714ffbbbcdf11ef47d599b7064b1b2a3058fd09b34258ec192aeac50bbd1312a",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0014_request_log_audio_billing.sql",
+      "blob": "e202a6dd2176464ceaf85995c1114245c1208ef0",
+      "bytes": 73,
+      "sha256": "2aa26bc6bfb38999d0993860f1303859ee999c509cda340db01ad43430b537fb",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0015_single_provider_key.sql",
+      "blob": "a783e90d278a0cde067826588318f99d76722c7c",
+      "bytes": 943,
+      "sha256": "9e4dec6a6a207db13231f28e7e23c3c89b9138c8f1d6023ba3f428495d75b4b3",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0016_route_surfaces_pools.sql",
+      "blob": "9f4eb49e447c342386772b15f0e3093e1b25bb51",
+      "bytes": 4487,
+      "sha256": "da21d8b6733ed36f2beabf3e3611a7b2cdb8ee7133e8573914a2a6605b84c6b2",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0017_gemini_models_generate.sql",
+      "blob": "f6cea57cf950ed300c6f4bb044a339eef4fde94a",
+      "bytes": 3304,
+      "sha256": "0bcbd6f3d23aca14e3f7f90e5aac674d93d04df6dbe8c7be47babb2f0b3c1cbe",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0018_route_pool_tier_strategies.sql",
+      "blob": "e2eb56a4fe7f7a0c13c7a6d361bb238e75684dea",
+      "bytes": 207,
+      "sha256": "ae9b8abbad2cde607c54986855fa64c8416948c8d8ce8bf2a2e0dbac784eb060",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0019_route_strategy_canonical_ids.sql",
+      "blob": "542863977a9385f7a47a9c302e3ff49de4513d1b",
+      "bytes": 2242,
+      "sha256": "717f67ee0d9fc49133bcf2bfe3213a977d0db7370eba54a75d9b5afd44faa409",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0020_route_pool_sticky_routing.sql",
+      "blob": "dabaeddda61bfd320c3fa9a81af0a2ec137b7c3b",
+      "bytes": 1148,
+      "sha256": "74540cdeefdf4d88eb4406a01117839dc597f287a1d6ed8dde862458bb07f152",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0021_route_strategy_display_ids.sql",
+      "blob": "b2db0034c88b8a73ba4a1ab27c1367eaf7eaef1a",
+      "bytes": 1838,
+      "sha256": "1709ef3314a9ebb4a883badf1e0d61ab821e81e3e184b1aef86a2c5d1840fb5d",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0022_request_log_audio_characters.sql",
+      "blob": "f30f71bcd07bd21484b0aaf2e231a962dee73ec2",
+      "bytes": 176,
+      "sha256": "0f1d11a0c1f65625f1c0972e2cfd1414458092c0af9da1c7feb9d0aa4b8eb745",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0023_admin_access_identity.sql",
+      "blob": "2df1e2c4facb728a447d97afa780de071dd97a92",
+      "bytes": 1303,
+      "sha256": "f783da40772279265fc6b65fefb31c995e90acf456adc2aad4333ae08180cbab",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0024_drop_legacy_master_key_config.sql",
+      "blob": "72b957adb434cbc780678c5594b4370604e6ed3b",
+      "bytes": 238,
+      "sha256": "9b51f185c29e14e3c6f7b076d1e8ccca5236493fee40992a4cb9247a6ebe2e20",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0025_user_audit_actor_index.sql",
+      "blob": "c117feb458984a8df518fab3cfcfbc3a9b63896c",
+      "bytes": 289,
+      "sha256": "ca2aa66602f3975ee83c6c1eb161fa39a3f1237770996c129328b7004f2e310a",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0026_user_charged_cost_factors.sql",
+      "blob": "ae39694423a7fcc5bde4f70855462c77b4a04c7b",
+      "bytes": 158,
+      "sha256": "53f56090b5d849ab259a8715aa13fe12f2129bf14781f19ed5d1fa54011ff507",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0027_user_portal_shared_keys.sql",
+      "blob": "10879fbf87b62f50fc613a2fc541a6a155bf6eb4",
+      "bytes": 4440,
+      "sha256": "810229968ae69d0565d0a8ba29fa9aa3396b5e821d667883a63dc17c8d48fbdc",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0028_portal_marketplace_config.sql",
+      "blob": "dbcdb9d104f2594dd09771310b8cd1f89ecf44f8",
+      "bytes": 1373,
+      "sha256": "72e19b247028a1e69ef3817e34145b89990ba8eab583db7240143da34e431a46",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0029_portal_integer_ledger.sql",
+      "blob": "8c8b39b13d2a00f34c7b34a622bc10be60c2e7e2",
+      "bytes": 9482,
+      "sha256": "0e2606696c95870253bb392061f9bb1e27f99b0698131fd422a2f36f67fab6a4",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0030_chain_job_transactions.sql",
+      "blob": "df46315c78ce45b87396892452a02b6f4ab4da24",
+      "bytes": 499,
+      "sha256": "9ba0632e2f684a10c1b126a4b56b2a2fb70820d0b67aedacd627e70f9b349a65",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0031_ledger_integrity_guards.sql",
+      "blob": "2e1553ea7c5517d0884279e3bb114232e46cbb19",
+      "bytes": 923,
+      "sha256": "6885eadaba5dbe027a662fdebe7d8acc87c10bef2ade1e3740e3b463f55c0a75",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0032_key_hash_lookup.sql",
+      "blob": "d29ebfe02f26b31ec1c973c4069e80c767e90660",
+      "bytes": 607,
+      "sha256": "c75fd42528e078e7a0853f3c256cd8cb81a1526c492b7acea1122234af5d3195",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0033_gateway_key_secret_removal.sql",
+      "blob": "cbaa5fd3196e8db9cfd08a4056adaf6e38f09888",
+      "bytes": 433,
+      "sha256": "255528fe294b9b5549d5239ba98cd82a5fe689f0013f4299b0fa48a71b04d77d",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0034_public_model_daily_stats.sql",
+      "blob": "5a19a9dc3016d9a2c00aab00dec6a141ba1f7824",
+      "bytes": 1353,
+      "sha256": "348b789041d5947063d3b015b9c09e46ead72098c8c6aa4e9d6a13f3941419cf",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0035_request_presets.sql",
+      "blob": "70fe46223c62360fc9b4efd8329dc5ecc53d0673",
+      "bytes": 1547,
+      "sha256": "0cdd8706e103a3e27df3dd2713ac22cfcc2ef68e056dec0d981a2b86f13e76be",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0036_guardrails.sql",
+      "blob": "1849912689ed3519aea4cd264a35915edb030c49",
+      "bytes": 1774,
+      "sha256": "1e71beb51bdcce885cd05f8ed77c27fc990e016732ff1873d587faa147d91219",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0037_route_data_policies.sql",
+      "blob": "58ddc58b30390e2cf8a8cbfc7515b1311928b12f",
+      "bytes": 1068,
+      "sha256": "576cd6adbf290d68981afceb967d2b810ef62d5b025cf1c139a5ee5b6ca809a3",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0038_organization_identity_projection.sql",
+      "blob": "95ab0d433184cf9cec30e56c5c06a253b3432668",
+      "bytes": 2264,
+      "sha256": "449352ade3ea5859a244b7cd62da1331a01005379bf6ecf1eea746a0a69d8c11",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0039_guardrail_budget_reservations.sql",
+      "blob": "f141e855101dc5d636173947eaa8530c3693fd08",
+      "bytes": 3237,
+      "sha256": "66c2f2c89ef30359ca792362d5f7667f38df6b45c9c37c49e7b3f929141b0d60",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0040_user_budget_reservations.sql",
+      "blob": "e248c478698b380c448864fee9fb28426bab3232",
+      "bytes": 1764,
+      "sha256": "7ed052ca1d55474e9578f0106b009c7fe0add2dd40d73c3f93cb71221cb5930f",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0041_workspaces.sql",
+      "blob": "26592055db5da996f6f57b7ef9b74f9f978328f9",
+      "bytes": 3504,
+      "sha256": "3712088675fbe1e45ddab692083bfbbe73a8e5ab8e834f664a1f1a9dac1ad8eb",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0042_gateway_keys_workspace.sql",
+      "blob": "7b453b4b4e391300c5b9ef3478d87736505ada16",
+      "bytes": 635,
+      "sha256": "57f79685788dd7245f746ed93201b835843ed4bad59e6739e33cc752fc74b7ff",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0043_workspace_presets_guardrails.sql",
+      "blob": "4561d7888c9766b35a5a11cad0656e724e3e17b8",
+      "bytes": 5361,
+      "sha256": "f7751e278cf8251df9a3c4aca5ff7ea0189088463054c9e82b26c194967664a2",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0044_route_routing_metadata.sql",
+      "blob": "c35e567dd4e67428a2a710e4c1455ec8cf97ab04",
+      "bytes": 225,
+      "sha256": "80aeaafc5b537ad5bed5b1500235fccf40bc253980c106fc343b4836f66b479d",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0045_route_data_policy_subject_fingerprint.sql",
+      "blob": "d6834b1cce63c740054402d7e92e3080dffb0228",
+      "bytes": 1254,
+      "sha256": "60f5e63f26378b5a158472b1d4630eaaa74c696ce7a199c41d3397db2dd4fe9f",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0046_model_endpoints.sql",
+      "blob": "b653df93a3b623529ea22f95812739e72778881c",
+      "bytes": 2218,
+      "sha256": "104be2717bd397c8fa98d0c5538cf2d039eb0a859e0fb9f38edbbf87eca65a9d",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0047_model_endpoint_route_subject_fingerprint.sql",
+      "blob": "6a4445ada8df06f9b8d00fc87b71d23e2503a604",
+      "bytes": 490,
+      "sha256": "c719c8a53aac023a938a780ed55c07b06b7bbf3f7ec68113099bc58f836c5d52",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0048_model_endpoint_audio_capabilities.sql",
+      "blob": "415e2ddb71b19eda70b22b5708ba886b8ef95bce",
+      "bytes": 316,
+      "sha256": "c2f9fd6172dddf95ded2ab40077ac96314875a8533f7bc68a6a5c147acfb2bd8",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0049_model_endpoint_evidence_ledger.sql",
+      "blob": "ff10765677114139b09577d984ffd94956d90d61",
+      "bytes": 5884,
+      "sha256": "efbd6c7cc109327db29d1c31586cd6bf2f299c5f51f859dbb6d378257396219f",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0050_management_api_keys.sql",
+      "blob": "d3ac5b3f051bd312296425a549c93e369ab1e36e",
+      "bytes": 1700,
+      "sha256": "eacc8d0320b892dcde1fcc96db2ea25a6ffc4c673b218ce6a64a2d243e3a8941",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0051_gateway_key_expiry.sql",
+      "blob": "a9801dbe90e48485da3426b908e67bcf995067fc",
+      "bytes": 214,
+      "sha256": "1986c1b4aa5f66cbee768f800799038bdcd193a00d4effedfb881ac5ea287155",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0052_gateway_key_limits.sql",
+      "blob": "e1a6b551fd1321b775d642005fdbc72fd75bcfe6",
+      "bytes": 1284,
+      "sha256": "ebd1485e1f8c4308ca177ea8a105049c1f2ac72428366c48d3e0feecf9366ac7",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0053_workspace_budgets.sql",
+      "blob": "bb5a0ad1090d8c6cf144c03870c435cc11a6c237",
+      "bytes": 3756,
+      "sha256": "1da8df4050680f850ae7f7d5834decde02fb276a8ff20069aebbeec1065f0943",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0054_generation_metadata_snapshots.sql",
+      "blob": "b8419e0397501de29e0e9f0b894df84fd70d7fee",
+      "bytes": 993,
+      "sha256": "5f18bdd3e939fa6e1179eaf2c3af169e8f22223fe268108ff04293e577825701",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0055_request_session_id.sql",
+      "blob": "03860f016fabb4aa0c5fe0b1f3a9f583d90e7bd1",
+      "bytes": 277,
+      "sha256": "1a503cb59435a1aa8f97da5786847f60b5abf05509b52b7e4753ef7095f44867",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0056_generation_feedback.sql",
+      "blob": "7ebc78729e8cdbfd1c2bc6b9556749e6d594eb42",
+      "bytes": 1875,
+      "sha256": "0d68c3b49c7badbce5b1347bf115ba7b494f2049c7b835b5ca5f0930096d658e",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0057_guardrail_assignment_management_source.sql",
+      "blob": "4eb75e271bb0fb32e28233f96b7ca8baab356544",
+      "bytes": 801,
+      "sha256": "7c28bddd07c6f7efc3614cdeafaf11100b0c2286a78d95bdf3c75917af239f4f",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0058_workspace_default_guardrails.sql",
+      "blob": "fc4758f5b90ed01e54a544094526176167267dd4",
+      "bytes": 2731,
+      "sha256": "e7b35b5186f2fb51f75e3416b4fb1c0d7578b098fda79ab4c743db77881d2f11",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0059_account_default_guardrails.sql",
+      "blob": "54d3057a4f763944de17788bcaf366a9a4845423",
+      "bytes": 4588,
+      "sha256": "5df579148d4342fd3cbde0069b4161a74431c0df4981a0a000eb26693d33314e",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0060_provider_attempt_availability.sql",
+      "blob": "af9ee2e334b23c608ab7d6b48f78fd70e1266d75",
+      "bytes": 2338,
+      "sha256": "521f383f3ed5fecf79d4e724885a17a42d3dda11f287648fef37a962ce28d9f8",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0061_public_model_total_tokens.sql",
+      "blob": "201b1554d0afcc5d713915639495c2dc73c0c543",
+      "bytes": 1005,
+      "sha256": "44394c537789a0ec7fffb595fa37b812f64689727d03f3ad7f68e8d6ad86d1af",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0062_generation_service_tier.sql",
+      "blob": "2b44d169947772addcf2a2dbf940fbf4dbd68e6f",
+      "bytes": 2330,
+      "sha256": "21abfc5502b53792722beb149b882a45e09c048205f431412435502072dc566d",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0063_private_byok.sql",
+      "blob": "d1b1b0b42f8fc4b3b0fbbbf0f8560c1def3fb67f",
+      "bytes": 2640,
+      "sha256": "e98e96b62de50818b4a8654714e09dbdaf00495a96b0f3691db580e9b433dd3f",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0064_byok_always_use_for_provider.sql",
+      "blob": "d8a4d65f4c9d63697700be4e2341bf2e6e355faa",
+      "bytes": 638,
+      "sha256": "c12309ec47ea38639a451f523a98f19eb743aee1ddc9a32451c269ac67d5d713",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0065_guardrail_budget_settlement_basis.sql",
+      "blob": "1a4a3eca0452e3f8081360ab7da23aa0953c442d",
+      "bytes": 510,
+      "sha256": "569322f61913bd4af9ee27b9bdfb8142b309a95b3dc1c864657722cc0908eab4",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0066_workspace_budget_usage_index.sql",
+      "blob": "df522f1461e20dd459a0fbb193397ba8408d22b6",
+      "bytes": 302,
+      "sha256": "e928ee7c2b1c4709c60ab9bc772d85902d3a3a4e8c323adfe2195ee3cd2f706f",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0067_batch_jobs.sql",
+      "blob": "6cbd08c8dddae8277158819f3e8499380dddfab3",
+      "bytes": 7564,
+      "sha256": "9d8b1c6dadc9628eb3154040a2b33170082883b4e8932a301f3e9496835b0a0f",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0068_function_schema_resolution.sql",
+      "blob": "18dfb32288cb3157aee6c50932ae50e21a749001",
+      "bytes": 1762,
+      "sha256": "cf49030dac3b851788438ff80a2859dd17eadc819db5adcb6f4225b22b8663ec",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0069_recovery_dispatch_intents.sql",
+      "blob": "024261fe1425f06a9b638621ca64e428c25b38dc",
+      "bytes": 6930,
+      "sha256": "0cca7e371a63cdc44c746202909293761aefa226cf221ce48752cb7d2fff646d",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0070_recovery_settlement_facts.sql",
+      "blob": "bf0d1f1c37e4bfdbbca0b29cda5a56b452f1967c",
+      "bytes": 8018,
+      "sha256": "b45741ed725181e96c16c944f2d8f02bcd8c415c8046da6f36617844bd24e5e7",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0071_recovery_jobs.sql",
+      "blob": "ea45ff6b16653483db20df09cd74b7f292a96f13",
+      "bytes": 8622,
+      "sha256": "a694e7d44fd93024603d09931ea2c3b03d4737a5933f3a3748c25b43e55e5cf2",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0072_recovery_commit_receipts.sql",
+      "blob": "01f7cca5cc501a44e7a0de611d812d0c11ad3176",
+      "bytes": 16160,
+      "sha256": "f96d03a30f32faddbb3f8a3d652b78dbc7deef860461dea7f81f7317247e505d",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0073_recovery_api_key_workspace_lock.sql",
+      "blob": "373dff106894fad905b8e453f3d1c668b6da7c7c",
+      "bytes": 1710,
+      "sha256": "07025d295d1cf672235c9d45cea77c4bbef8f3859199708206833d945345593b",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0074_config_change_audit.sql",
+      "blob": "fc71703b7af03906659696177ca48f589a894841",
+      "bytes": 844,
+      "sha256": "8c5f89f12b2de81f60265d140e4d221845ed914a4ff02fb4aeb3f8947e4f2675",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0075_system_config_revision.sql",
+      "blob": "3ddadefb493d81120c72be758a2840989a333fed",
+      "bytes": 256,
+      "sha256": "ba519e72e5acc5c6d3fcffa12f4c11ca70d4612b5a6294afbe5c9cb0fe838565",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0076_user_audit_export_order_index.sql",
+      "blob": "0a75e50c9f3a435b077d35828093c73d4747018f",
+      "bytes": 185,
+      "sha256": "15c8e6b1da7e1e009b5388249546e45b4298593bbc5ebe9e09affe9c4b1b5dc9",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0077_admin_access_key_audit.sql",
+      "blob": "0d9d8b1a895b82174b5b6494516e581c693cc1c5",
+      "bytes": 938,
+      "sha256": "26b80b054389048047332e08fa75bf1ff2e0118e1b8c0b331c11d20bf5f38e95",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0078_shared_key_earnings_history_guard.sql",
+      "blob": "caa438b31f8281c03ea7fde8e45c4b0d3cd44325",
+      "bytes": 3457,
+      "sha256": "199cacd31ed49b13c8b5056ae3c3888ac93a51cb9e5522b43589df4890dfa482",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0079_admin_shared_key_audit.sql",
+      "blob": "7d645112b006bb1031b51125ed463a620c1ca357",
+      "bytes": 1911,
+      "sha256": "495bdf8aebdcc7c1363b80653b8eaad8b522ea77cfcb11f69f39e2292b2d4ddc",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0080_admin_shared_key_actor_bounds.sql",
+      "blob": "e779b1ed88a1dd8c868474a2d18623294a0a6c67",
+      "bytes": 593,
+      "sha256": "8b64c6a9e9df27a98630875a047e00281c79b18ee2affe756e2d390b116646f8",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-postgres/0081_tools_config_group_audit.sql",
+      "blob": "01d3d9b82e2cee0477547d9e99f2f1f05d0ada6c",
+      "bytes": 1918,
+      "sha256": "4e8d403b8908141483a27df8a0195e4c654e0f1e30871261f1fdb562e824d1d1",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/authenticated-complete-text-quote-v360.sql",
+      "blob": "cd57b248eea37bc8862c3e48f07145f11b157437",
+      "bytes": 29748,
+      "sha256": "195eb0fa51df48dccc19c165900ae137f58daf1902fcc32e9673d7d124c2a08d",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/authenticated-request-capability-login-v356.sql",
+      "blob": "b3de819a8335b852bbe9d9eefea78f014e3b81d1",
+      "bytes": 22429,
+      "sha256": "bbf06af6e9e2df6801c0e89442644d208d7213dbb6a7e202b96183b54d67fe9f",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/authenticated-text-route-ceiling-issuer-v357.sql",
+      "blob": "8f394841ffe1435c95ddcc2420bae15e8701eab0",
+      "bytes": 20423,
+      "sha256": "3ce21a1502906f3b24753f62932ada1aa5299ed65365cce4e55c410476b392c4",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/authenticated-text-route-source-fence-v359.sql",
+      "blob": "0ea3b5a69895304386914851fa82d0780e85065c",
+      "bytes": 19520,
+      "sha256": "52ba5207db94bf9f6fb5200c9de89c9ff4633eb453366eb8dcd28f643c1aa03f",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/budget-admission-login-v350.sql",
+      "blob": "1313894e4366522ac16b2e9a459746956dabf3e3",
+      "bytes": 17602,
+      "sha256": "1b5067ec8df7130aee11877d9e4ac9969fef7e92b052a80374b91df2f060737c",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/buyer-critical-writer-privilege-split-v346.sql",
+      "blob": "18751729775b7e2d3c15d7d3591c4b943c4b0073",
+      "bytes": 8058,
+      "sha256": "3ec31913a7d5f5924b4e3f7449a3a35ba1aa064f5cbe3400ce0e063b0df0064c",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/buyer-split-counter-grant-policy-v368.sql",
+      "blob": "a2d986a345f44435befa517553dcd17f40f2e33f",
+      "bytes": 8503,
+      "sha256": "8026d46babea21001cf4bf2e1c7a2c13a9f96559f014b068f72a47c112f5722e",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/buyer-split-grant-marker-v348.sql",
+      "blob": "d6d7e33dd13892cebec661c51916e9db56d7ed07",
+      "bytes": 7300,
+      "sha256": "265837061d960b55b3b721990b88a922340a79e1d51946b59df4007c0483c475",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/buyer-split-guardrail-grant-marker-v349.sql",
+      "blob": "0900f8e09ce5f352f9efe4ee30fc2d20888cf648",
+      "bytes": 9068,
+      "sha256": "39c8e06c5601e31e1eacc42603cb39bdec0ae3448ed2d3b57760144e290653a9",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/buyer-split-guardrail-runtime-grant-v349.sql",
+      "blob": "271aa827107e57d7d0a701f15e81711bf19eb736",
+      "bytes": 24134,
+      "sha256": "7e50bf86944976a166d5ae4c2c726718fe78fe1df2489763c231cfb068170039",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/buyer-split-runtime-grant-v348.sql",
+      "blob": "5ebcefc6a208832501418c28f0608e8c2e72ac86",
+      "bytes": 16660,
+      "sha256": "f875f81cc3577efd649ca9ecc41afe49f374ac2bf08e0646ee6d5f3e98939242",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/complete-text-all-hold-renewal-v367.sql",
+      "blob": "b9d1df523d088919b7210438293106be743ef28c",
+      "bytes": 24229,
+      "sha256": "8cc9c1c2ade73aa96e545ebfbc437186f0cf44c0c0fb756bd7c1487f7fdb5fc4",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/complete-text-attempt-grant-v362.sql",
+      "blob": "cc8af6d8b5c526f0daad065004440e92414d129a",
+      "bytes": 43590,
+      "sha256": "c9eb17e019dc1bbeeb7d4269cb1c2ce6b8861fab37e2bfed8ac3a8a97ce2d4f7",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/complete-text-auth-routing-recovery-coinstall-v400.sql",
+      "blob": "cde9efd97336e4ddf830f570f1590b11556f24b8",
+      "bytes": 1656127,
+      "sha256": "41ae69406e2319cd11c3a54e320cded0df321265e9e4aa2f97175ec4be3cfdd9",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/complete-text-legacy-buyer-admission-fence-v380.sql",
+      "blob": "b5fa888ebdb94c4c1eb0a73a53b26b7a2a58766e",
+      "bytes": 7675,
+      "sha256": "c77056b5a2c324b42cf535cba78757867dfce21aa248121b4dfe8c8c848f6839",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/complete-text-legacy-buyer-held-writer-v368.sql",
+      "blob": "11c1addc97f3b9088f2ae5f918b85da357539b2f",
+      "bytes": 13528,
+      "sha256": "c2162f7f180c5cc05c011242ca06ad8c37ea41ed76d783941c15754d66be6950",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/complete-text-legacy-buyer-window-accountant-v371.sql",
+      "blob": "b13ba3d2fdd48a7d15939350e02a0eef0d81f388",
+      "bytes": 13407,
+      "sha256": "445d5cc7bb6e17794682694c17d8e76fa774240a8e61c9c73edb85b1462a90b0",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/complete-text-legacy-buyer-window-acl-v372.sql",
+      "blob": "49153a077be620e5b59c4137a93f156cbe61029f",
+      "bytes": 3431,
+      "sha256": "0779bbed42ffe14b00423ee8ba51d6382eadc96eb677756b6378463dfd94c74d",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/complete-text-legacy-reaper-fence-v366.sql",
+      "blob": "2f4eb7453408e645a2af2a3265546adff825a4e2",
+      "bytes": 30476,
+      "sha256": "1ff269a57bff76c3a54267a5c0ff78330335bf50bd5757ca011de04ae5ab60c0",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/complete-text-no-fetch-fence-v370.sql",
+      "blob": "0182aeb4370832048cf9f7aae7f3e1c6bf5b76fe",
+      "bytes": 16522,
+      "sha256": "d0001a0e11e78d2b00b18d6a42fce703de5a7a8a7983a6e79b9810ff90864461",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/complete-text-no-fetch-platform-close-v388.sql",
+      "blob": "3e6180a0d3f57204cd22faffdc0ccb2eb88523ee",
+      "bytes": 39121,
+      "sha256": "49524108ef2f9da489b7c028e7bbbe978c55da68ba63faff107e52028e9b3c7a",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/complete-text-no-fetch-recovery-v389.sql",
+      "blob": "18faabe20faa112905d4c7d881081dce9ebc47c7",
+      "bytes": 32783,
+      "sha256": "ce49e6b9f729a4d6a9e47cde21b4ff503f8767ed65761da1bd25d6700f37140c",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/complete-text-platform-close-fence-v386.sql",
+      "blob": "db3d7f5686aed70dce740fd8066a30a5a3d1c1e6",
+      "bytes": 10862,
+      "sha256": "f15066a9d10513ea1cab1b174c33039053e1d762dd56d4215e4ac28412307d7d",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/complete-text-platform-event-delivery-v402.sql",
+      "blob": "e0f58de3a6f3c702c0b31c9caec329a981b45242",
+      "bytes": 1692768,
+      "sha256": "27fd0ed66d065343223ecf7ca8c151511e76345977c496e49fdceee86012d940",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/complete-text-private-route-reader-v366.sql",
+      "blob": "64833f885701f17acf1886658ec564d7c723ceaf",
+      "bytes": 17690,
+      "sha256": "5f1bd0e30d421c1f8bbe2da48d00403033a3135bc57dd4a3dccacb8eaa1a0286",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/complete-text-quote-budget-admission-v361.sql",
+      "blob": "868d9ddcb99d85489b9722433aa3b54eb042d94e",
+      "bytes": 22506,
+      "sha256": "486b9336eb09232966fb6b2198cb9f621abccea8d17ca09bebfc7f91ea057128",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/complete-text-renewed-holder-facts-v370.sql",
+      "blob": "0d6889546fb0fa1054dfa1a1f96a55974432b18a",
+      "bytes": 17686,
+      "sha256": "9c87c16703fbc07bce09f1359f9b0c3ec5f66588e97a51353919365c07adc00d",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/complete-text-response-no-fetch-coinstall-v397.sql",
+      "blob": "b798dc7f67fef0e7912520403a7c9db2d2392f10",
+      "bytes": 44675,
+      "sha256": "a8ae8c1e7cecc05922b907558da34ce3ffe271a8aad79c2490a5631cf0901590",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/complete-text-response-observation-v392.sql",
+      "blob": "c5ff35fb3e4504ba793b7cc3aaee340098ecb1e8",
+      "bytes": 28213,
+      "sha256": "15fa01db2186b6142518bd8a4ff9be921222615968016b21fcba223b0c31983d",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/complete-text-result-facts-v366.sql",
+      "blob": "5454863063e2c80034d7b694764749486d097374",
+      "bytes": 22813,
+      "sha256": "30322e8fde1e963872ee58411517da2c786752defdaa0babf452ae3a100b89af",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/complete-text-routing-projection-v396.sql",
+      "blob": "cd83556b0024304e1a79d7468e0cde48034d51dc",
+      "bytes": 49666,
+      "sha256": "4d4d9fcfc71d32fc9c814cd4dfe008ba8ebc2e8c1561298331dd9231d2ce9763",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/complete-text-secretless-plan-v365.sql",
+      "blob": "9203a537da94d066bce0417c445371e2d2fe4e53",
+      "bytes": 15974,
+      "sha256": "3b3a319f2b2f3136cdc6da295a53bf2230ce970ea49a06fa442b2a0575ed3ac2",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/complete-text-send-start-v365.sql",
+      "blob": "7703eb9c97b2c02476a2c5f100af379315c0470d",
+      "bytes": 29607,
+      "sha256": "3e965d093394ad03a2a6c4694833a7dc65ce57487c92cf103400add19927a858",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/complete-text-sticky-routing-v398.sql",
+      "blob": "38c5b824403b49e2765e124813b396a56af24cc2",
+      "bytes": 33691,
+      "sha256": "f4a34bad4aee4343b3bce308abd4946c866d577727dd245a157049d7bdb1297d",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/dispatch-intent-producer-definer.sql",
+      "blob": "a15f39cd003b37fcf0cffe9ee4eb548f411594d1",
+      "bytes": 13680,
+      "sha256": "02cf4ffde6d37bb9253e9466cbde59047b5b8a0b19d73897ae69d60696db077d",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/guardrail-budget-admission-login-v351.sql",
+      "blob": "a61bee667c60916fd9e7eb2aa146996a7cce166a",
+      "bytes": 31165,
+      "sha256": "d20e754b9c523597a6cc1e76d434aac90618045d543a431e3ae269836cf47a8d",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/guardrail-budget-dispatched-extension-login-v355.sql",
+      "blob": "1608a60859a3bc99dad0aec372c0d314ee5bebce",
+      "bytes": 28763,
+      "sha256": "32060dd95d62de0689eb986bf3dea5ec7a42bc31bb41de9b5420bcfdea1f46ce",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/guardrail-budget-lifecycle-login-v353.sql",
+      "blob": "6d7f99619f2b33704a1f1d6f4c5ecaa31f2a87f2",
+      "bytes": 15012,
+      "sha256": "b0c97481d475b413fc2a2e77e6db018c680e667db10805f30605e3e78edf08ff",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/legacy-buyer-commit-journal-v378.sql",
+      "blob": "2819b32582e500fc80f03568bd0fdd026dae2641",
+      "bytes": 26399,
+      "sha256": "fa4f937f6ef876185d1c358029040677b419c25ac97c40c29d61cc7b57812f05",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/legacy-buyer-request-projection-receipt-v383.sql",
+      "blob": "ec77e8a4c6f70f053620cdad822bd63e215f5765",
+      "bytes": 21290,
+      "sha256": "0ae99953388a2db3fe4c172fd4be8c1b6500532fd7915aeda9620cdd85bb8672",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/legacy-buyer-terminal-reader-v375.sql",
+      "blob": "dd872a3760ab01e60c4fb38857a6523e15dbcad8",
+      "bytes": 14566,
+      "sha256": "4979a5404f768dc49b090125dcd71ef399f77a16fecef526610f37159aa451f0",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/legacy-buyer-windowed-app-privileges-renewal-v376.sql",
+      "blob": "fc6fd8ce30b2c4dafd3f2e86eeb8be0bfdc3bc1d",
+      "bytes": 25499,
+      "sha256": "22806f4f8085ded0bc842569b968ed1286f8b75d59e24b6f7818a2c3607722e6",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/legacy-buyer-windowed-app-privileges-v374.sql",
+      "blob": "90067ae88509f68761849abe3be0a1ecf271eeb8",
+      "bytes": 20926,
+      "sha256": "36d79e470b0c28c70931e085dbecb6ba0c13594174b2e5add7f01d683c667289",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/ordinary-budget-recovery-login-v354.sql",
+      "blob": "53df472731b14f81a49608d340c1ab0dae0689f2",
+      "bytes": 15521,
+      "sha256": "2046bac92fd9d099ed577b26d9b1c56def0ede79b65f8cbe242ae03067d423aa",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/personal-key-auth-period-v395.sql",
+      "blob": "d8244e54a121d8696d7694fbf9e4131746ff99a5",
+      "bytes": 25870,
+      "sha256": "4fb71cebf2814283a01733d4f8219524f6f6f8c4ec89f3ac0f9e3ecb6e7ab805",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/request-dispatch-intents.sql",
+      "blob": "e7fb054c9dd02339b11e2f7d9792683bd255203e",
+      "bytes": 6456,
+      "sha256": "38d9b1c322d377bad4545fe567e7ac6f4c25c818ef9ac477b71c9c406383e2e8",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/request-dispatch-legacy-parent-backfill.sql",
+      "blob": "19f5d21824bcde4ec40e1dbf3f222f1a973e9f21",
+      "bytes": 24497,
+      "sha256": "49c59a2329d008f05f2bff2f4f1bb649a819ed69c7d9e66c3b193e7058b51758",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/request-dispatch-parent-deadline-budget.sql",
+      "blob": "3bfb39de494608fcfa7e7d71008ff4d9e79a04c5",
+      "bytes": 21436,
+      "sha256": "2e8c20088f72271ecf89bc4f43583ec3b2247893a11b84cc6a220563a72de8de",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/request-dispatch-replay-parent-gate.sql",
+      "blob": "fe310e6c59f6f8c794d14c98b940671dd8726b94",
+      "bytes": 8732,
+      "sha256": "1079eb858811c70dd850b95be68f64e5c7b8361926e8c3f0a9e80621f6125b10",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/request-dispatch-replay-reservations.sql",
+      "blob": "1d59978a4ec80f1dcef3bba00e955fac8ba6a1b9",
+      "bytes": 12380,
+      "sha256": "c288bbc43fad3bbb8b3b1a88fa1b1d01b9e5f2f9f520753873e0cdf21643c3d8",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/request-dispatch-single-claim.sql",
+      "blob": "4d4d59b4d9af7e0ebb7cad6bb9ec9e5818cb6924",
+      "bytes": 5242,
+      "sha256": "6e62e12c25a94e4b32fe0121c728198a409f95427ef4cdcb14c51ebe1a629112",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/request-usage-commit-receipts.sql",
+      "blob": "69e809dfb1ec151fa319da5e895551361485faec",
+      "bytes": 17207,
+      "sha256": "a15d71873bf55340779e996c4710c50efa9f4461956693b4ec710c2f7ed9f734",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/request-usage-recovery-jobs.sql",
+      "blob": "66c79c08e7426aeb32149198304e9930d3cd72e4",
+      "bytes": 8223,
+      "sha256": "e3e1e1b4954fd60a8607a8269ffb925c66feb03c814a11a9b19e7d32f0160643",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/request-usage-settlement-facts.sql",
+      "blob": "f34b4e5d6075fe976a5592cd4f5f0f4f7e6f821f",
+      "bytes": 7584,
+      "sha256": "840c483a83a8f08135e787a08ba8c69f1e0fc2a13b35bfbdba5ee1daa0ca443e",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/settlement-outbox-producer-definer.sql",
+      "blob": "549c981c6c41db08d68c5c441c9868573fb1156d",
+      "bytes": 12995,
+      "sha256": "c3995e07159d4fe0b2aac5ab96ee2d14e6e11fddc3bf9868d258d43620612f52",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/shared-key-buyer-budget-receipt-due-index-v346.sql",
+      "blob": "7b5e75562c978530921bef2e1c0ac29ea21f8701",
+      "bytes": 384,
+      "sha256": "84cef19f61c0cac8532ed31e954583e084906654f939d323d490a85e3d0fd826",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/shared-key-buyer-budget-receipt-maintenance.sql",
+      "blob": "6c40f9246b4dff06c819149672c218fcc0062368",
+      "bytes": 9522,
+      "sha256": "107f4109e905e346fbd8c2b88c47f3b8068237d854e2033a4dbd2e45eb0c4f67",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/shared-key-buyer-budget-receipt-retention-v346.sql",
+      "blob": "93afa539b25694d0d731c05946fc18faa0c9abac",
+      "bytes": 11375,
+      "sha256": "f1f745cff5724ee048c7d7272fa57546b61b6d3a4ed1711e1a97b1db80fa4767",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/shared-key-buyer-budget-receipt-unobserved-index-v346.sql",
+      "blob": "41fca7390b80a9fe8f41edcfd88569526b84c2ad",
+      "bytes": 356,
+      "sha256": "8c64d73a0bf7c3a6b09b3672353c54b346ed762123fccd6dd0440be0cb772465",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/shared-key-buyer-budget-receipt-v2.sql",
+      "blob": "5a6b72a7b30f379d5176b497ef6ee93424451782",
+      "bytes": 31614,
+      "sha256": "56ebaecd1425206df81c9dc7981c34e5e246047f188355f5d14103e2dee3270c",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/shared-key-buyer-debit-v2.sql",
+      "blob": "c7175e95d7925ee76b28032af3b73d3577c6dbf2",
+      "bytes": 21162,
+      "sha256": "fc327b411e8ae6a417a156ab4ba3b633a47a2e615d249b8861503fc4cbf68593",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/shared-key-credited-usage-gap-audit.sql",
+      "blob": "250d7a97dbc21f2b115981ca12bff0626e4420cc",
+      "bytes": 4465,
+      "sha256": "796ec5789c9a9f13672d97c0e1596b89c283aa8dd6b44049a45a191991daf8b5",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/shared-key-credited-usage-reader.sql",
+      "blob": "531f07634d65aab5a763ff223b0bcc1fee99a40a",
+      "bytes": 12345,
+      "sha256": "1a9cc67854e71e6245aa6ea0c88b96ee666bbbbfe53cfe5d2c8a3d9977211b5c",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/shared-key-credited-usage-store.sql",
+      "blob": "9146cc6f2296923d0fc77ee007963dd0a688d007",
+      "bytes": 19005,
+      "sha256": "72dc6bfdcfd1b369e8465374168995f7680ee8593a037496487a7fdd7afd1d4e",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/shared-key-delivery-backlog-observation.sql",
+      "blob": "cc3a0f97ce06260f3322b982af68d20fdc2ad99d",
+      "bytes": 10271,
+      "sha256": "855dc10543a13fd173ee7f3654b4b658d7b3d92a2b16e5f9f4c79b4b7302a02e",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/shared-key-dispatch-quote-attempts.sql",
+      "blob": "19257536a776262a32cb9dfef1df9305fb72be61",
+      "bytes": 20028,
+      "sha256": "c89c79e803fd69a2d09d44b33be3301aeb8aa4ed72c5dff5518439ec29fafb83",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/shared-key-earnings-history-guard.sql",
+      "blob": "f6c282784aec03e4f1c27401210a6dc8d41ed481",
+      "bytes": 4037,
+      "sha256": "454a720f9a6b7410e0aad99c2aaa2eb3327fbbac8c86bb3e3cd4537131e6611b",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/shared-key-earnings-projection-index.sql",
+      "blob": "8b09aee24deedf664de1eecaeb4d5255cf20f5cb",
+      "bytes": 913,
+      "sha256": "6a0501b08476a37a3fca3ea24e9360806d19cd8fdd75109671f3a07eebc42048",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/shared-key-economic-delivery.sql",
+      "blob": "34f1c68ff8503215e77f89c5e4de9b877f4b4e6b",
+      "bytes": 39099,
+      "sha256": "79e53d2ef830dc2641732d24ef0230befac344c9d1a30469487b44074f78ece8",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/shared-key-economic-outbox-producer.sql",
+      "blob": "c5530eb8c1c6c1ea5e3bd9aebeac749324292343",
+      "bytes": 33143,
+      "sha256": "ea9ccc7138cbd641d386e14d1bb95b8cabee942501a49d6b0763e8e1b3eb0920",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/shared-key-economic-outbox.sql",
+      "blob": "ccdbbf4ccb0e48858bab63626d747585cf139342",
+      "bytes": 26841,
+      "sha256": "f92835c72ff02cba23879ed90ad640832455ccb98764f28fe4ee04ce52aab1ac",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/shared-key-economic-producer-buyer-login-v347.sql",
+      "blob": "4645e9e484102eadd79322bffd5911a50ec9f1e1",
+      "bytes": 28163,
+      "sha256": "f5692bc9a309ce8695db1ea2003c71a8cbaf8eee8db0aa459ef3b522af0ef62f",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/shared-key-economic-producer-v2.sql",
+      "blob": "ea16b297f5b84088ae5ccace1b5bd8d23b9c43f4",
+      "bytes": 24768,
+      "sha256": "3871f01eed2a058c9df9e1ca7c2d6898e995e9fa007115ccb6d62082e57712f3",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/shared-key-guardrail-post-reservation-denial-v348.sql",
+      "blob": "554262593b2511c945e16b266431f261b917fd85",
+      "bytes": 39156,
+      "sha256": "d679aecdef28a66bbc82b1e2afebface4d140ec2c7b7b38380133d64d960affb",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/shared-key-orphan-review-v348.sql",
+      "blob": "a2c5e501c020f8b20d37bb0e7b61cf8794f70c91",
+      "bytes": 31172,
+      "sha256": "aa299de2f5c2be07ca8f8a9b4fa91b70456d91b166ea5c70257d91b202626752",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/shared-key-quote-versions.sql",
+      "blob": "3f4dfb64abf22e020aeff142d9564db1724337ed",
+      "bytes": 28629,
+      "sha256": "1249a7ff07f95b48c7b45a41833c96c9a028e4bfe3a47e44e9dc6b72c3c77246",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/shared-key-selected-attempt-identity-v357.sql",
+      "blob": "552fa7b6a64259d361dc79ca584dcab84deb9e7f",
+      "bytes": 10021,
+      "sha256": "646375994c1ef67c1c815d1f245d25692c30b10e82373b0a34fca131cc9f1f39",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/shared-key-selected-event-gate-v351.sql",
+      "blob": "04900054b10c40202f1990332aa484e89620c111",
+      "bytes": 13120,
+      "sha256": "3973281aad8fa0a0043bf3a279fdf1a2df5828ca638b182ecef7ade9ee63239d",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/shared-key-snapshot-earning-consumer-v2.sql",
+      "blob": "4da942145263f683769a8cdfae8883d444548bf1",
+      "bytes": 13192,
+      "sha256": "272158acbed2ab52965d154f342ef6452d626d1e4393c40cae32d5f519f4b984",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/shared-key-snapshot-earning-consumer.sql",
+      "blob": "d3af0fdfa6a81ceefcf54534507e07c0f346e8f6",
+      "bytes": 28712,
+      "sha256": "66fbd89c3453320284133de06d72793d4e1d2f68aaf756087857c18493e955db",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/shared-key-stats-claim-reader-v349.sql",
+      "blob": "2c972bab48be35df4aecd5500f6c0f25672944b6",
+      "bytes": 8446,
+      "sha256": "f60c9a0d0fcd2351b003845d2151da3d3b5a1a744b6f2ea07c2bd753e64cf39a",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/shared-key-stats-signed-claim-v348.sql",
+      "blob": "89b20ecc8f2db5dc7e4cf13aa6d8212c86d25fbf",
+      "bytes": 9029,
+      "sha256": "6ded328640ab6c63a7a0e8a20572b760df9ca52b4aeb1b90eb3f7edd8485ff54",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/shared-key-usage-repair-durable-claim.sql",
+      "blob": "b1eac185dace032d02775f3388bbb286c9ad0c3b",
+      "bytes": 18196,
+      "sha256": "b90fa530433a632280c91837b3981eba026e50ccf863cebc8d161871cc349338",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/shared-key-usage-repair-failure-isolation.sql",
+      "blob": "55feb1d21bca380a4a41aeab6260f8e70be90322",
+      "bytes": 14838,
+      "sha256": "14a9be7e9ed354f63b7d74c81303502a0217c9be080f541009466804d3e19b63",
+      "baseGitBytesExact": true
+    },
+    {
+      "file": "packages/core/migrations-proposals/postgres/shared-key-usage-repair-jobs.sql",
+      "blob": "d17b6fedc559ed008843e1a8715c05cfe4a96a42",
+      "bytes": 10373,
+      "sha256": "7b2f288ecb83e34207bcfd5a2a4eec934c0d6e156190826816ab033716c173d4",
+      "baseGitBytesExact": true
+    }
+  ],
+  "nativeFixtureExecuted": false,
+  "realPgResultNotClaimed": true,
+  "productionWrites": 0
+}

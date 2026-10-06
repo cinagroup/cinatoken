@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import { readFile, writeFile } from 'node:fs/promises';
+import { join } from 'node:path';
+const root = "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-next-eight-repair-0511920406eb4b37baca7e103b9080d5";
+const repo = 'C:/cinagroup/cinatoken';
+const historical = 'docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/native-agent/bridge-control-flow.test.mjs';
+const bytes = await readFile(join(repo, historical));
+await writeFile(join(root, 'existing-bridge-control-flow.test.mjs'), bytes, { flag: 'wx' });
+const body = `import { spawnSync } from 'node:child_process';\nconst names = ['postgres', 'initdb', 'pg_ctl', 'docker'];\nconst results = names.map(name => { const child = spawnSync('C:/Windows/System32/where.exe', [name], { encoding: 'utf8', windowsHide: true }); return { name, actualExit: child.status, signal: child.signal, error: child.error ? String(child.error) : null, stdout: child.stdout ?? '', stderr: child.stderr ?? '' }; });\nprocess.stdout.write(JSON.stringify({ platform: process.platform, GATEWAY_NATIVE_PG_BIN_present: Boolean(process.env.GATEWAY_NATIVE_PG_BIN), availableCommands: results, nativeFixtureExecuted: false, skipNeverCountedAsPass: true }) + '\\n');\n`;
+await writeFile(join(root,'native-environment-probe.mjs'), body, { flag: 'wx' });
+process.stdout.write(JSON.stringify({ actualExit:0, historicalHelperTestCopiedByteExact: true, historicalFile:historical, nativeProbeReadOnly:true })+'\n');

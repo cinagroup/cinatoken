@@ -1,0 +1,1 @@
+{"actualExit":0,"file":"scripts/db/cutover/postgres-authenticated-request-capability-login-v356.native.test.mjs","before":{"bytes":26551,"sha256":"3e4b39b5abc42858ecf15d0a80ab16709c9b0bcb660c7e2c01d7ff8229a58863"},"after":{"bytes":26966,"sha256":"7efb7dcdce5330c5851c269c3e2102ee4b57e67fb9e6125dcb34e238bb876847"},"originalCandidateRetained":true}

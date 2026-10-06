@@ -1,0 +1,22 @@
+{
+  "schema": "web-platform-g7-owned-resources-v1",
+  "sourceSHA": "67f8b3df2f2b6e8159806767ecce1efa1904d27a",
+  "owner": "g7-6225aa47d5aa463cbcbb48bc4c983312",
+  "names": {
+    "pg": "g7-6225aa47d5aa463cbcbb48bc4c983312-pg",
+    "migrate": "g7-6225aa47d5aa463cbcbb48bc4c983312-migrate",
+    "seed": "g7-6225aa47d5aa463cbcbb48bc4c983312-seed",
+    "proxy": "g7-6225aa47d5aa463cbcbb48bc4c983312-proxy",
+    "admin": "g7-6225aa47d5aa463cbcbb48bc4c983312-admin",
+    "ssr": "g7-6225aa47d5aa463cbcbb48bc4c983312-ssr",
+    "web": "g7-6225aa47d5aa463cbcbb48bc4c983312-web",
+    "ingress": "g7-6225aa47d5aa463cbcbb48bc4c983312-ingress",
+    "qa": "g7-6225aa47d5aa463cbcbb48bc4c983312-qa"
+  },
+  "networks": {
+    "client": "g7-6225aa47d5aa463cbcbb48bc4c983312-client",
+    "app": "g7-6225aa47d5aa463cbcbb48bc4c983312-app",
+    "db": "g7-6225aa47d5aa463cbcbb48bc4c983312-db"
+  },
+  "volume": "g7-6225aa47d5aa463cbcbb48bc4c983312-pgdata"
+}

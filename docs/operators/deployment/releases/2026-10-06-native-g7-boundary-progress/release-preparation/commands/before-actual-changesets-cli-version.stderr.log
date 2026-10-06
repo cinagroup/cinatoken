@@ -1,0 +1,24 @@
+Error: Cannot find module '@trivago/prettier-plugin-sort-imports'
+Require stack:
+- C:\cinagroup\cinatoken\node_modules\prettier\index.js
+- C:\cinagroup\cinatoken\node_modules\@changesets\write\dist\changesets-write.cjs.js
+- C:\cinagroup\cinatoken\node_modules\@changesets\cli\dist\changesets-cli.cjs.js
+- C:\cinagroup\cinatoken\node_modules\@changesets\cli\bin.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1456:15)
+    at resolve (node:internal/modules/helpers:163:19)
+    at C:\cinagroup\cinatoken\node_modules\prettier\index.js:38119:25
+    at Array.map (<anonymous>)
+    at Object.load (C:\cinagroup\cinatoken\node_modules\prettier\index.js:38114:65)
+    at Object.load [as loadPlugins] (C:\cinagroup\cinatoken\node_modules\prettier\index.js:16147:23)
+    at C:\cinagroup\cinatoken\node_modules\prettier\index.js:38181:24
+    at Object.format (C:\cinagroup\cinatoken\node_modules\prettier\index.js:38197:12)
+    at writeFormattedMarkdownFile (C:\cinagroup\cinatoken\node_modules\@changesets\apply-release-plan\dist\changesets-apply-release-plan.cjs.js:513:26)
+    at async updateChangelog (C:\cinagroup\cinatoken\node_modules\@changesets\apply-release-plan\dist\changesets-apply-release-plan.cjs.js:474:7) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\cinagroup\\cinatoken\\node_modules\\prettier\\index.js',
+    'C:\\cinagroup\\cinatoken\\node_modules\\@changesets\\write\\dist\\changesets-write.cjs.js',
+    'C:\\cinagroup\\cinatoken\\node_modules\\@changesets\\cli\\dist\\changesets-cli.cjs.js',
+    'C:\\cinagroup\\cinatoken\\node_modules\\@changesets\\cli\\bin.js'
+  ]
+}

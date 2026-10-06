@@ -1,0 +1,30 @@
+{
+  "schema": "cinatoken-isolated-release-command-v1",
+  "label": "before-git-init",
+  "program": "git",
+  "args": [
+    "init",
+    "--initial-branch=main"
+  ],
+  "cwd": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\isolated-before",
+  "startedAt": "2026-10-06T02:08:05.029Z",
+  "finishedAt": "2026-10-06T02:08:05.118Z",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "closed": true,
+  "expectedActualExits": [
+    0
+  ],
+  "expectedExitMatched": true,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\before-git-init.stdout.log",
+    "bytes": 161,
+    "sha256": "67dbeb1aa2e97765ee68f7c8b99e389db2c97a78dae0514dccb9a487029bfdd6"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\before-git-init.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

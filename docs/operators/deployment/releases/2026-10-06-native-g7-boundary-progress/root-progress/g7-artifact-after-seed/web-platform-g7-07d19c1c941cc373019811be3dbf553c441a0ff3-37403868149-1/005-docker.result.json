@@ -1,0 +1,32 @@
+{
+  "schema": "web-platform-g7-child-command-closed-v1",
+  "program": "docker",
+  "args": [
+    "--host",
+    "unix:///var/run/docker.sock",
+    "image",
+    "inspect",
+    "cinatoken-g7-admin:07d19c1c941cc373019811be3dbf553c441a0ff3"
+  ],
+  "begin": "2026-10-06T02:32:28.880Z",
+  "endedAt": "2026-10-06T02:32:28.895Z",
+  "closed": true,
+  "actualExit": 0,
+  "signal": null,
+  "errorCode": null,
+  "timedOut": false,
+  "timeoutMs": 90000,
+  "expectedNumericReadinessNonzero": false,
+  "stdout": {
+    "file": "005-docker.stdout.log",
+    "bytes": 6676,
+    "sha256": "00814d688b1954505d8cae57ba6f94664120b00b33e655c9a701ca720270b66e",
+    "redacted": false
+  },
+  "stderr": {
+    "file": "005-docker.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redacted": false
+  }
+}

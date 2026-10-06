@@ -1,0 +1,16 @@
+{
+  "at": "2026-10-06T01:40:22.931Z",
+  "finishedAt": "2026-10-06T01:40:29.003Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "node_modules/@changesets/cli/bin.js",
+    "status",
+    "--output",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-boundary-next-20261006-Zm6Z3E/changeset-plan-before.json"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-boundary-next-20261006-Zm6Z3E/changeset-plan-before.stdout.log",
+  "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-boundary-next-20261006-Zm6Z3E/changeset-plan-before.stderr.log"
+}

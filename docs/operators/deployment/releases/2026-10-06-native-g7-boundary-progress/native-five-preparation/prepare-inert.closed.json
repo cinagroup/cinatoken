@@ -1,0 +1,13 @@
+{
+  "at": "2026-10-06T02:02:35.296Z",
+  "finishedAt": "2026-10-06T02:02:35.390Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-native-next-six-8d357e3fd84b4810a7210ece167eb07a/prepare-inert-controls.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-next-six-8d357e3fd84b4810a7210ece167eb07a\\prepare-inert.stdout.log",
+  "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-next-six-8d357e3fd84b4810a7210ece167eb07a\\prepare-inert.stderr.log"
+}

@@ -1,0 +1,1571 @@
+{
+  "schema": "cinatoken-g7-seed-terminal-independent-analysis-v1",
+  "at": "2026-10-06T02:38:11.253Z",
+  "closed": true,
+  "actualExit": 0,
+  "analysisOnly": true,
+  "gatePassDerived": false,
+  "sourceSHA": "07d19c1c941cc373019811be3dbf553c441a0ff3",
+  "artifactFiles": 600,
+  "originalRuntimeActualExit": 1,
+  "wireActualExit": 0,
+  "qaActualExit": 0,
+  "seedActualExit": 0,
+  "proxyObserveActualExit": 0,
+  "adminObserveActualExit": 1,
+  "adminObserverFailure": "ERR_MODULE_NOT_FOUND drizzle-orm via Core-wide import",
+  "publicSSRRequests": 64,
+  "resources": 135,
+  "resourceRequests": 270,
+  "wireRows": 375,
+  "wireCaseLabels": [
+    {
+      "label": "startup probe",
+      "status": 200,
+      "errorCode": null
+    },
+    {
+      "label": "untrusted CA is rejected",
+      "status": null,
+      "errorCode": "UNABLE_TO_VERIFY_LEAF_SIGNATURE"
+    },
+    {
+      "label": "wrong SNI fails certificate hostname validation",
+      "status": null,
+      "errorCode": "ERR_TLS_CERT_ALTNAME_INVALID"
+    },
+    {
+      "label": "missing SNI rejected by default ingress",
+      "status": 421,
+      "errorCode": null
+    },
+    {
+      "label": "same HTTPS Origin",
+      "status": 410,
+      "errorCode": null
+    },
+    {
+      "label": "spoofed forwarding overwritten",
+      "status": 410,
+      "errorCode": null
+    },
+    {
+      "label": "ambiguous forwarding overwritten",
+      "status": 410,
+      "errorCode": null
+    },
+    {
+      "label": "missing Origin",
+      "status": 403,
+      "errorCode": null
+    },
+    {
+      "label": "cross Origin preserved",
+      "status": 403,
+      "errorCode": null
+    },
+    {
+      "label": "explicit cross-site",
+      "status": 403,
+      "errorCode": null
+    },
+    {
+      "label": "unknown Host",
+      "status": 421,
+      "errorCode": null
+    },
+    {
+      "label": "registration redirect",
+      "status": 302,
+      "errorCode": null
+    },
+    {
+      "label": "invalid callback restores HTTPS",
+      "status": 302,
+      "errorCode": null
+    },
+    {
+      "label": "QA cannot reach gateway-web:8080",
+      "status": null,
+      "errorCode": null
+    },
+    {
+      "label": "QA cannot reach gateway-web-ssr:8791",
+      "status": null,
+      "errorCode": null
+    },
+    {
+      "label": "QA cannot reach gateway-admin:8789",
+      "status": null,
+      "errorCode": null
+    },
+    {
+      "label": "QA cannot reach gateway-proxy:8787",
+      "status": null,
+      "errorCode": null
+    },
+    {
+      "label": "QA cannot reach pg:5432",
+      "status": null,
+      "errorCode": null
+    },
+    {
+      "label": "QA cannot reach 172.19.0.5:8080",
+      "status": null,
+      "errorCode": "ENETUNREACH"
+    },
+    {
+      "label": "QA cannot reach 172.19.0.4:8791",
+      "status": null,
+      "errorCode": "ENETUNREACH"
+    },
+    {
+      "label": "QA cannot reach 172.19.0.3:8789",
+      "status": null,
+      "errorCode": "ENETUNREACH"
+    },
+    {
+      "label": "QA cannot reach 172.20.0.4:8789",
+      "status": null,
+      "errorCode": "ENETUNREACH"
+    },
+    {
+      "label": "QA cannot reach 172.19.0.2:8787",
+      "status": null,
+      "errorCode": "ENETUNREACH"
+    },
+    {
+      "label": "QA cannot reach 172.20.0.3:8787",
+      "status": null,
+      "errorCode": "ENETUNREACH"
+    },
+    {
+      "label": "QA cannot reach 172.20.0.2:5432",
+      "status": null,
+      "errorCode": "ENETUNREACH"
+    },
+    {
+      "label": "actual PG-backed models",
+      "status": 200,
+      "errorCode": null
+    },
+    {
+      "label": "actual PG-backed providers",
+      "status": 200,
+      "errorCode": null
+    },
+    {
+      "label": "actual PG-backed model",
+      "status": 200,
+      "errorCode": null
+    },
+    {
+      "label": "actual PG-backed proxy-models",
+      "status": 200,
+      "errorCode": null
+    },
+    {
+      "label": "actual PG-backed proxy-providers",
+      "status": 200,
+      "errorCode": null
+    },
+    {
+      "label": "Admin API remains API before SPA",
+      "status": 401,
+      "errorCode": null
+    },
+    {
+      "label": "unknown Proxy API remains JSON404",
+      "status": 404,
+      "errorCode": null
+    },
+    {
+      "label": "SSR metadata/status",
+      "status": 200,
+      "errorCode": null
+    },
+    {
+      "label": "SSR metadata/status",
+      "status": 200,
+      "errorCode": null
+    },
+    {
+      "label": "SSR metadata/status",
+      "status": 404,
+      "errorCode": null
+    },
+    {
+      "label": "SSR metadata/status",
+      "status": 404,
+      "errorCode": null
+    },
+    {
+      "label": "SSR metadata/status",
+      "status": 200,
+      "errorCode": null
+    },
+    {
+      "label": "SSR metadata/status",
+      "status": 200,
+      "errorCode": null
+    },
+    {
+      "label": "SSR metadata/status",
+      "status": 404,
+      "errorCode": null
+    },
+    {
+      "label": "SSR metadata/status",
+      "status": 404,
+      "errorCode": null
+    },
+    {
+      "label": "missing resource never becomes SPA",
+      "status": 404,
+      "errorCode": null
+    }
+  ],
+  "runtimeClosedChildren": 165,
+  "fallbackClosedChildren": 29,
+  "commands": [
+    {
+      "file": "001-git.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "002-git.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "003-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "004-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "005-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "006-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "007-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "008-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "009-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "010-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "011-openssl.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "012-openssl.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "013-openssl.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "014-openssl.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "015-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "016-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "017-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "018-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "019-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "020-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "021-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "022-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "023-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "024-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "025-docker.result.json",
+      "actualExit": 2,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": true
+    },
+    {
+      "file": "026-docker.result.json",
+      "actualExit": 2,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": true
+    },
+    {
+      "file": "027-docker.result.json",
+      "actualExit": 2,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": true
+    },
+    {
+      "file": "028-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "029-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "030-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "031-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "032-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "033-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "034-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "035-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "036-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "037-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "038-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "039-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "040-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "041-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "042-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "043-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "044-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "045-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "046-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "047-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "048-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "049-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "050-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "051-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "052-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "053-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "054-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "055-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "056-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "057-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "058-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "059-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "060-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "061-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "062-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "063-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "064-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "065-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "066-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "067-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "068-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "069-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "070-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "071-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "072-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "073-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "074-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "075-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "076-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "077-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "078-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "079-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "080-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "081-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "082-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "083-docker.result.json",
+      "actualExit": 1,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "084-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "085-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "086-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "087-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "088-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "089-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "090-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "091-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "092-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "093-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "094-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "095-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "096-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "097-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "098-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "099-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "100-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "101-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "102-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "103-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "104-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "105-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "106-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "107-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "108-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "109-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "110-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "111-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "112-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "113-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "114-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "115-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "116-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "117-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "118-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "119-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "120-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "121-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "122-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "123-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "124-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "125-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "126-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "127-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "128-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "129-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "130-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "131-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "132-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "133-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "134-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "135-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "136-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "137-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "138-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "139-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "140-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "141-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "142-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "143-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "144-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "145-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "146-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "147-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "148-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "149-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "150-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "151-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "152-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "153-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "154-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "155-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "156-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "157-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "158-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "159-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "160-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "161-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "162-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "163-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "164-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "165-docker.result.json",
+      "actualExit": 0,
+      "signal": null,
+      "timedOut": false,
+      "expectedNumericReadinessNonzero": false
+    },
+    {
+      "file": "fallback-001-docker.result.json",
+      "actualExit": 0,
+      "signal": null
+    },
+    {
+      "file": "fallback-002-docker.result.json",
+      "actualExit": 0,
+      "signal": null
+    },
+    {
+      "file": "fallback-003-docker.result.json",
+      "actualExit": 0,
+      "signal": null
+    },
+    {
+      "file": "fallback-004-docker.result.json",
+      "actualExit": 0,
+      "signal": null
+    },
+    {
+      "file": "fallback-005-docker.result.json",
+      "actualExit": 0,
+      "signal": null
+    },
+    {
+      "file": "fallback-006-docker.result.json",
+      "actualExit": 0,
+      "signal": null
+    },
+    {
+      "file": "fallback-007-docker.result.json",
+      "actualExit": 0,
+      "signal": null
+    },
+    {
+      "file": "fallback-008-docker.result.json",
+      "actualExit": 0,
+      "signal": null
+    },
+    {
+      "file": "fallback-009-docker.result.json",
+      "actualExit": 0,
+      "signal": null
+    },
+    {
+      "file": "fallback-010-docker.result.json",
+      "actualExit": 0,
+      "signal": null
+    },
+    {
+      "file": "fallback-011-docker.result.json",
+      "actualExit": 0,
+      "signal": null
+    },
+    {
+      "file": "fallback-012-docker.result.json",
+      "actualExit": 0,
+      "signal": null
+    },
+    {
+      "file": "fallback-013-docker.result.json",
+      "actualExit": 0,
+      "signal": null
+    },
+    {
+      "file": "fallback-014-docker.result.json",
+      "actualExit": 0,
+      "signal": null
+    },
+    {
+      "file": "fallback-015-docker.result.json",
+      "actualExit": 0,
+      "signal": null
+    },
+    {
+      "file": "fallback-016-docker.result.json",
+      "actualExit": 0,
+      "signal": null
+    },
+    {
+      "file": "fallback-017-docker.result.json",
+      "actualExit": 0,
+      "signal": null
+    },
+    {
+      "file": "fallback-018-docker.result.json",
+      "actualExit": 0,
+      "signal": null
+    },
+    {
+      "file": "fallback-019-docker.result.json",
+      "actualExit": 0,
+      "signal": null
+    },
+    {
+      "file": "fallback-020-docker.result.json",
+      "actualExit": 0,
+      "signal": null
+    },
+    {
+      "file": "fallback-021-docker.result.json",
+      "actualExit": 0,
+      "signal": null
+    },
+    {
+      "file": "fallback-022-docker.result.json",
+      "actualExit": 0,
+      "signal": null
+    },
+    {
+      "file": "fallback-023-docker.result.json",
+      "actualExit": 0,
+      "signal": null
+    },
+    {
+      "file": "fallback-024-docker.result.json",
+      "actualExit": 0,
+      "signal": null
+    },
+    {
+      "file": "fallback-025-docker.result.json",
+      "actualExit": 0,
+      "signal": null
+    },
+    {
+      "file": "fallback-026-docker.result.json",
+      "actualExit": 0,
+      "signal": null
+    },
+    {
+      "file": "fallback-027-docker.result.json",
+      "actualExit": 0,
+      "signal": null
+    },
+    {
+      "file": "fallback-028-docker.result.json",
+      "actualExit": 0,
+      "signal": null
+    },
+    {
+      "file": "fallback-029-docker.result.json",
+      "actualExit": 0,
+      "signal": null
+    }
+  ],
+  "cleanupVerifiedAbsent": true,
+  "fallbackVerifiedAbsent": true,
+  "fullG7Verified": false,
+  "fullG8Verified": false,
+  "nativePG18Verified": false,
+  "restrictedRuntimeACLVerified": false,
+  "productionRequests": 0,
+  "reports": [
+    {
+      "file": "result.json",
+      "bytes": 17123,
+      "sha256": "ec0beadfbc53bfa252f8e3a13eecc260a61be7cb5ca3d3b3338757d5eb904489"
+    },
+    {
+      "file": "fallback-cleanup-result.json",
+      "bytes": 2056,
+      "sha256": "aabde8532b4866ffcc79ab8128004efff24e0b59635d093a56d9f37d1f69cac5"
+    },
+    {
+      "file": "wire-result.json",
+      "bytes": 92758,
+      "sha256": "b2e0da71df5a8fbe8c4f6ce781685c1f80936e6d80b81feae767a37675a62ae2"
+    },
+    {
+      "file": "frozen-manifest.json",
+      "bytes": 67752,
+      "sha256": "b31d19149d41e74097a00c8f7abead829f32b0dbda8a4aeb1c6594b9682ad44c"
+    },
+    {
+      "file": "082-docker.result.json",
+      "bytes": 859,
+      "sha256": "136a76bcadb8c915f43cf781c492703f83f2a9086ed318876df47fb5c15f9c88"
+    },
+    {
+      "file": "083-docker.result.json",
+      "bytes": 857,
+      "sha256": "92d7505748a0968c5537738abf271dec61b2efe2176d335cd79c658a9c9eaf20"
+    }
+  ]
+}

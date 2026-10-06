@@ -1,0 +1,301 @@
+[docker-entrypoint:migrate] DATABASE_DRIVER=postgres (default)
+[migrate-postgres] 连接目标: host=pg port=5432 user=postgres database=g7
+[migrate-postgres] 迁移目录: /app/packages/core/migrations-postgres
+[migrate-postgres] 已获取迁移锁（pg_advisory_lock=746923551）
+[migrate-postgres] 已确保表 cinatoken_gateway.schema_migrations 存在（%.0f ms） 8.421244999999999
+[migrate-postgres] 共 81 个迁移文件（按文件名排序）
+[migrate-postgres] 执行: 0001_baseline.sql（约 8 KB）…
+[migrate-postgres] 完成: 0001_baseline.sql（%.0f ms） 70.166246
+[migrate-postgres] 执行: 0002_seed.sql（888 B）…
+[migrate-postgres] 完成: 0002_seed.sql（%.0f ms） 2.1027990000000045
+[migrate-postgres] 执行: 0003_model_modalities_released.sql（316 B）…
+[migrate-postgres] 完成: 0003_model_modalities_released.sql（%.0f ms） 1.8904440000000022
+[migrate-postgres] 执行: 0004_provider_api_keys.sql（约 1 KB）…
+[migrate-postgres] 完成: 0004_provider_api_keys.sql（%.0f ms） 9.11983699999999
+[migrate-postgres] 执行: 0005_drop_providers_api_key.sql（205 B）…
+[migrate-postgres] 完成: 0005_drop_providers_api_key.sql（%.0f ms） 2.103490999999991
+[migrate-postgres] 执行: 0006_upstream_trace_ids.sql（389 B）…
+[migrate-postgres] 完成: 0006_upstream_trace_ids.sql（%.0f ms） 1.7406269999999893
+[migrate-postgres] 执行: 0007_key_limits_and_sticky_config.sql（398 B）…
+[migrate-postgres] 完成: 0007_key_limits_and_sticky_config.sql（%.0f ms） 1.737558999999976
+[migrate-postgres] 执行: 0008_request_timing_metrics.sql（585 B）…
+[migrate-postgres] 完成: 0008_request_timing_metrics.sql（%.0f ms） 3.0777399999999773
+[migrate-postgres] 执行: 0009_first_reasoning_token_ms.sql（78 B）…
+[migrate-postgres] 完成: 0009_first_reasoning_token_ms.sql（%.0f ms） 1.535933
+[migrate-postgres] 执行: 0010_models_max_tokens_nullable.sql（147 B）…
+[migrate-postgres] 完成: 0010_models_max_tokens_nullable.sql（%.0f ms） 1.4831450000000075
+[migrate-postgres] 执行: 0011_provider_endpoints.sql（775 B）…
+[migrate-postgres] 完成: 0011_provider_endpoints.sql（%.0f ms） 2.127555000000001
+[migrate-postgres] 执行: 0012_drop_provider_base_url_columns.sql（333 B）…
+[migrate-postgres] 完成: 0012_drop_provider_base_url_columns.sql（%.0f ms） 2.1826079999999877
+[migrate-postgres] 执行: 0013_request_log_image_billing.sql（244 B）…
+[migrate-postgres] 完成: 0013_request_log_image_billing.sql（%.0f ms） 3.261741999999998
+[migrate-postgres] 执行: 0014_request_log_audio_billing.sql（73 B）…
+[migrate-postgres] 完成: 0014_request_log_audio_billing.sql（%.0f ms） 1.689799999999991
+[migrate-postgres] 执行: 0015_single_provider_key.sql（943 B）…
+[migrate-postgres] 完成: 0015_single_provider_key.sql（%.0f ms） 11.102793999999989
+[migrate-postgres] 执行: 0016_route_surfaces_pools.sql（约 4 KB）…
+[migrate-postgres] 完成: 0016_route_surfaces_pools.sql（%.0f ms） 26.001491999999985
+[migrate-postgres] 执行: 0017_gemini_models_generate.sql（约 3 KB）…
+[migrate-postgres] 完成: 0017_gemini_models_generate.sql（%.0f ms） 4.676335999999992
+[migrate-postgres] 执行: 0018_route_pool_tier_strategies.sql（207 B）…
+[migrate-postgres] 完成: 0018_route_pool_tier_strategies.sql（%.0f ms） 1.9633699999999976
+[migrate-postgres] 执行: 0019_route_strategy_canonical_ids.sql（约 2 KB）…
+[migrate-postgres] 完成: 0019_route_strategy_canonical_ids.sql（%.0f ms） 2.7519969999999603
+[migrate-postgres] 执行: 0020_route_pool_sticky_routing.sql（约 1 KB）…
+[migrate-postgres] 完成: 0020_route_pool_sticky_routing.sql（%.0f ms） 10.618610999999987
+[migrate-postgres] 执行: 0021_route_strategy_display_ids.sql（约 2 KB）…
+[migrate-postgres] 完成: 0021_route_strategy_display_ids.sql（%.0f ms） 1.757204999999999
+[migrate-postgres] 执行: 0022_request_log_audio_characters.sql（176 B）…
+[migrate-postgres] 完成: 0022_request_log_audio_characters.sql（%.0f ms） 1.531485000000032
+[migrate-postgres] 执行: 0023_admin_access_identity.sql（约 1 KB）…
+[migrate-postgres] 完成: 0023_admin_access_identity.sql（%.0f ms） 13.469082999999955
+[migrate-postgres] 执行: 0024_drop_legacy_master_key_config.sql（238 B）…
+[migrate-postgres] 完成: 0024_drop_legacy_master_key_config.sql（%.0f ms） 1.1744199999999978
+[migrate-postgres] 执行: 0025_user_audit_actor_index.sql（289 B）…
+[migrate-postgres] 完成: 0025_user_audit_actor_index.sql（%.0f ms） 2.294145999999955
+[migrate-postgres] 执行: 0026_user_charged_cost_factors.sql（158 B）…
+[migrate-postgres] 完成: 0026_user_charged_cost_factors.sql（%.0f ms） 1.4994350000000054
+[migrate-postgres] 执行: 0027_user_portal_shared_keys.sql（约 4 KB）…
+[migrate-postgres] 完成: 0027_user_portal_shared_keys.sql（%.0f ms） 41.48591400000004
+[migrate-postgres] 执行: 0028_portal_marketplace_config.sql（约 1 KB）…
+[migrate-postgres] 完成: 0028_portal_marketplace_config.sql（%.0f ms） 1.4426990000000046
+[migrate-postgres] 执行: 0029_portal_integer_ledger.sql（约 9 KB）…
+[migrate-postgres] 完成: 0029_portal_integer_ledger.sql（%.0f ms） 19.64775000000003
+[migrate-postgres] 执行: 0030_chain_job_transactions.sql（499 B）…
+[migrate-postgres] 完成: 0030_chain_job_transactions.sql（%.0f ms） 6.4663209999999935
+[migrate-postgres] 执行: 0031_ledger_integrity_guards.sql（923 B）…
+[migrate-postgres] 完成: 0031_ledger_integrity_guards.sql（%.0f ms） 5.947345000000041
+[migrate-postgres] 执行: 0032_key_hash_lookup.sql（607 B）…
+[migrate-postgres] 完成: 0032_key_hash_lookup.sql（%.0f ms） 4.098379000000023
+[migrate-postgres] 执行: 0033_gateway_key_secret_removal.sql（433 B）…
+[migrate-postgres] 完成: 0033_gateway_key_secret_removal.sql（%.0f ms） 3.210222999999985
+[migrate-postgres] 执行: 0034_public_model_daily_stats.sql（约 1 KB）…
+[migrate-postgres] 完成: 0034_public_model_daily_stats.sql（%.0f ms） 7.286570999999981
+[migrate-postgres] 执行: 0035_request_presets.sql（约 2 KB）…
+[migrate-postgres] 完成: 0035_request_presets.sql（%.0f ms） 17.711750999999992
+[migrate-postgres] 执行: 0036_guardrails.sql（约 2 KB）…
+[migrate-postgres] 完成: 0036_guardrails.sql（%.0f ms） 24.377186999999992
+[migrate-postgres] 执行: 0037_route_data_policies.sql（约 1 KB）…
+[migrate-postgres] 完成: 0037_route_data_policies.sql（%.0f ms） 12.83557300000001
+[migrate-postgres] 执行: 0038_organization_identity_projection.sql（约 2 KB）…
+[migrate-postgres] 完成: 0038_organization_identity_projection.sql（%.0f ms） 21.982642
+[migrate-postgres] 执行: 0039_guardrail_budget_reservations.sql（约 3 KB）…
+[migrate-postgres] 完成: 0039_guardrail_budget_reservations.sql（%.0f ms） 20.326314000000025
+[migrate-postgres] 执行: 0040_user_budget_reservations.sql（约 2 KB）…
+[migrate-postgres] 完成: 0040_user_budget_reservations.sql（%.0f ms） 12.126490999999987
+[migrate-postgres] 执行: 0041_workspaces.sql（约 3 KB）…
+[migrate-postgres] 完成: 0041_workspaces.sql（%.0f ms） 27.386308999999983
+[migrate-postgres] 执行: 0042_gateway_keys_workspace.sql（635 B）…
+[migrate-postgres] 完成: 0042_gateway_keys_workspace.sql（%.0f ms） 6.000313000000006
+[migrate-postgres] 执行: 0043_workspace_presets_guardrails.sql（约 5 KB）…
+[migrate-postgres] 完成: 0043_workspace_presets_guardrails.sql（%.0f ms） 39.797619000000054
+[migrate-postgres] 执行: 0044_route_routing_metadata.sql（225 B）…
+[migrate-postgres] 完成: 0044_route_routing_metadata.sql（%.0f ms） 1.5064579999999523
+[migrate-postgres] 执行: 0045_route_data_policy_subject_fingerprint.sql（约 1 KB）…
+[migrate-postgres] 完成: 0045_route_data_policy_subject_fingerprint.sql（%.0f ms） 3.282667999999944
+[migrate-postgres] 执行: 0046_model_endpoints.sql（约 2 KB）…
+[migrate-postgres] 完成: 0046_model_endpoints.sql（%.0f ms） 17.306746999999973
+[migrate-postgres] 执行: 0047_model_endpoint_route_subject_fingerprint.sql（490 B）…
+[migrate-postgres] 完成: 0047_model_endpoint_route_subject_fingerprint.sql（%.0f ms） 1.6957009999999855
+[migrate-postgres] 执行: 0048_model_endpoint_audio_capabilities.sql（316 B）…
+[migrate-postgres] 完成: 0048_model_endpoint_audio_capabilities.sql（%.0f ms） 1.8698849999999538
+[migrate-postgres] 执行: 0049_model_endpoint_evidence_ledger.sql（约 6 KB）…
+[migrate-postgres] 完成: 0049_model_endpoint_evidence_ledger.sql（%.0f ms） 28.209112000000005
+[migrate-postgres] 执行: 0050_management_api_keys.sql（约 2 KB）…
+[migrate-postgres] 完成: 0050_management_api_keys.sql（%.0f ms） 13.218902000000071
+[migrate-postgres] 执行: 0051_gateway_key_expiry.sql（214 B）…
+[migrate-postgres] 完成: 0051_gateway_key_expiry.sql（%.0f ms） 2.5283609999999044
+[migrate-postgres] 执行: 0052_gateway_key_limits.sql（约 1 KB）…
+[migrate-postgres] 完成: 0052_gateway_key_limits.sql（%.0f ms） 5.235306999999921
+[migrate-postgres] 执行: 0053_workspace_budgets.sql（约 4 KB）…
+[migrate-postgres] 完成: 0053_workspace_budgets.sql（%.0f ms） 16.03073299999994
+[migrate-postgres] 执行: 0054_generation_metadata_snapshots.sql（993 B）…
+[migrate-postgres] 完成: 0054_generation_metadata_snapshots.sql（%.0f ms） 4.047092000000021
+[migrate-postgres] 执行: 0055_request_session_id.sql（277 B）…
+[migrate-postgres] 完成: 0055_request_session_id.sql（%.0f ms） 1.7678880000000845
+[migrate-postgres] 执行: 0056_generation_feedback.sql（约 2 KB）…
+[migrate-postgres] 完成: 0056_generation_feedback.sql（%.0f ms） 12.800183000000061
+[migrate-postgres] 执行: 0057_guardrail_assignment_management_source.sql（801 B）…
+[migrate-postgres] 完成: 0057_guardrail_assignment_management_source.sql（%.0f ms） 6.514761000000021
+[migrate-postgres] 执行: 0058_workspace_default_guardrails.sql（约 3 KB）…
+[migrate-postgres] 完成: 0058_workspace_default_guardrails.sql（%.0f ms） 6.616229999999973
+[migrate-postgres] 执行: 0059_account_default_guardrails.sql（约 4 KB）…
+[migrate-postgres] 完成: 0059_account_default_guardrails.sql（%.0f ms） 9.705748999999969
+[migrate-postgres] 执行: 0060_provider_attempt_availability.sql（约 2 KB）…
+[migrate-postgres] 完成: 0060_provider_attempt_availability.sql（%.0f ms） 8.502146000000039
+[migrate-postgres] 执行: 0061_public_model_total_tokens.sql（1005 B）…
+[migrate-postgres] 完成: 0061_public_model_total_tokens.sql（%.0f ms） 2.880818999999974
+[migrate-postgres] 执行: 0062_generation_service_tier.sql（约 2 KB）…
+[migrate-postgres] 完成: 0062_generation_service_tier.sql（%.0f ms） 6.986900999999989
+[migrate-postgres] 执行: 0063_private_byok.sql（约 3 KB）…
+[migrate-postgres] 完成: 0063_private_byok.sql（%.0f ms） 15.19955600000003
+[migrate-postgres] 执行: 0064_byok_always_use_for_provider.sql（638 B）…
+[migrate-postgres] 完成: 0064_byok_always_use_for_provider.sql（%.0f ms） 3.6032450000000154
+[migrate-postgres] 执行: 0065_guardrail_budget_settlement_basis.sql（510 B）…
+[migrate-postgres] 完成: 0065_guardrail_budget_settlement_basis.sql（%.0f ms） 2.2701410000000806
+[migrate-postgres] 执行: 0066_workspace_budget_usage_index.sql（302 B）…
+[migrate-postgres] 完成: 0066_workspace_budget_usage_index.sql（%.0f ms） 2.9275259999999435
+[migrate-postgres] 执行: 0067_batch_jobs.sql（约 7 KB）…
+[migrate-postgres] 完成: 0067_batch_jobs.sql（%.0f ms） 33.14747599999998
+[migrate-postgres] 执行: 0068_function_schema_resolution.sql（约 2 KB）…
+[migrate-postgres] 完成: 0068_function_schema_resolution.sql（%.0f ms） 2.8066610000000765
+[migrate-postgres] 执行: 0069_recovery_dispatch_intents.sql（约 7 KB）…
+[migrate-postgres] 完成: 0069_recovery_dispatch_intents.sql（%.0f ms） 19.2938069999999
+[migrate-postgres] 执行: 0070_recovery_settlement_facts.sql（约 8 KB）…
+[migrate-postgres] 完成: 0070_recovery_settlement_facts.sql（%.0f ms） 20.565977999999973
+[migrate-postgres] 执行: 0071_recovery_jobs.sql（约 8 KB）…
+[migrate-postgres] 完成: 0071_recovery_jobs.sql（%.0f ms） 16.26497299999994
+[migrate-postgres] 执行: 0072_recovery_commit_receipts.sql（约 16 KB）…
+[migrate-postgres] 完成: 0072_recovery_commit_receipts.sql（%.0f ms） 16.90614800000003
+[migrate-postgres] 执行: 0073_recovery_api_key_workspace_lock.sql（约 2 KB）…
+[migrate-postgres] 完成: 0073_recovery_api_key_workspace_lock.sql（%.0f ms） 1.6517989999999827
+[migrate-postgres] 执行: 0074_config_change_audit.sql（844 B）…
+[migrate-postgres] 完成: 0074_config_change_audit.sql（%.0f ms） 7.531766999999945
+[migrate-postgres] 执行: 0075_system_config_revision.sql（256 B）…
+[migrate-postgres] 完成: 0075_system_config_revision.sql（%.0f ms） 1.645607000000041
+[migrate-postgres] 执行: 0076_user_audit_export_order_index.sql（185 B）…
+[migrate-postgres] 完成: 0076_user_audit_export_order_index.sql（%.0f ms） 2.2367949999999155
+[migrate-postgres] 执行: 0077_admin_access_key_audit.sql（938 B）…
+[migrate-postgres] 完成: 0077_admin_access_key_audit.sql（%.0f ms） 6.294359999999983
+[migrate-postgres] 执行: 0078_shared_key_earnings_history_guard.sql（约 3 KB）…
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'trigger "shared_key_earnings_history_immutable" for relation "cinatoken_gateway.shared_key_earnings" does not exist, skipping',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'trigger "shared_key_earnings_history_no_truncate" for relation "cinatoken_gateway.shared_key_earnings" does not exist, skipping',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+[migrate-postgres] 完成: 0078_shared_key_earnings_history_guard.sql（%.0f ms） 11.331548000000112
+[migrate-postgres] 执行: 0079_admin_shared_key_audit.sql（约 2 KB）…
+[migrate-postgres] 完成: 0079_admin_shared_key_audit.sql（%.0f ms） 9.41256199999998
+[migrate-postgres] 执行: 0080_admin_shared_key_actor_bounds.sql（593 B）…
+[migrate-postgres] 完成: 0080_admin_shared_key_actor_bounds.sql（%.0f ms） 2.1292479999999614
+[migrate-postgres] 执行: 0081_tools_config_group_audit.sql（约 2 KB）…
+[migrate-postgres] 完成: 0081_tools_config_group_audit.sql（%.0f ms） 9.370894000000021
+[migrate-postgres] 汇总: 新执行 81 个, 跳过 0 个, 扫描 81 个文件
+[migrate-postgres] 全部完成。
+[docker-entrypoint:migrate] MIGRATE_DONE
+[docker-entrypoint:migrate] 一次性任务已完成，容器将正常退出。
+[docker-entrypoint:migrate] Zeabur/K8s 上请勿将此镜像作为常驻 Service；见 docs/operators/deployment/zeabur.md
+[docker-entrypoint:migrate] DATABASE_DRIVER=postgres (default)
+[migrate-postgres] 连接目标: host=pg port=5432 user=postgres database=g7
+[migrate-postgres] 迁移目录: /app/packages/core/migrations-postgres
+[migrate-postgres] 已获取迁移锁（pg_advisory_lock=746923551）
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P06',
+  message: 'schema "cinatoken_gateway" already exists, skipping',
+  file: 'schemacmds.c',
+  line: '132',
+  routine: 'CreateSchemaCommand'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "schema_migrations" already exists, skipping',
+  file: 'parse_utilcmd.c',
+  line: '207',
+  routine: 'transformCreateStmt'
+}
+[migrate-postgres] 已确保表 cinatoken_gateway.schema_migrations 存在（%.0f ms） 2.825476000000009
+[migrate-postgres] 共 81 个迁移文件（按文件名排序）
+[migrate-postgres] 跳过（已记录）: 0001_baseline.sql
+[migrate-postgres] 跳过（已记录）: 0002_seed.sql
+[migrate-postgres] 跳过（已记录）: 0003_model_modalities_released.sql
+[migrate-postgres] 跳过（已记录）: 0004_provider_api_keys.sql
+[migrate-postgres] 跳过（已记录）: 0005_drop_providers_api_key.sql
+[migrate-postgres] 跳过（已记录）: 0006_upstream_trace_ids.sql
+[migrate-postgres] 跳过（已记录）: 0007_key_limits_and_sticky_config.sql
+[migrate-postgres] 跳过（已记录）: 0008_request_timing_metrics.sql
+[migrate-postgres] 跳过（已记录）: 0009_first_reasoning_token_ms.sql
+[migrate-postgres] 跳过（已记录）: 0010_models_max_tokens_nullable.sql
+[migrate-postgres] 跳过（已记录）: 0011_provider_endpoints.sql
+[migrate-postgres] 跳过（已记录）: 0012_drop_provider_base_url_columns.sql
+[migrate-postgres] 跳过（已记录）: 0013_request_log_image_billing.sql
+[migrate-postgres] 跳过（已记录）: 0014_request_log_audio_billing.sql
+[migrate-postgres] 跳过（已记录）: 0015_single_provider_key.sql
+[migrate-postgres] 跳过（已记录）: 0016_route_surfaces_pools.sql
+[migrate-postgres] 跳过（已记录）: 0017_gemini_models_generate.sql
+[migrate-postgres] 跳过（已记录）: 0018_route_pool_tier_strategies.sql
+[migrate-postgres] 跳过（已记录）: 0019_route_strategy_canonical_ids.sql
+[migrate-postgres] 跳过（已记录）: 0020_route_pool_sticky_routing.sql
+[migrate-postgres] 跳过（已记录）: 0021_route_strategy_display_ids.sql
+[migrate-postgres] 跳过（已记录）: 0022_request_log_audio_characters.sql
+[migrate-postgres] 跳过（已记录）: 0023_admin_access_identity.sql
+[migrate-postgres] 跳过（已记录）: 0024_drop_legacy_master_key_config.sql
+[migrate-postgres] 跳过（已记录）: 0025_user_audit_actor_index.sql
+[migrate-postgres] 跳过（已记录）: 0026_user_charged_cost_factors.sql
+[migrate-postgres] 跳过（已记录）: 0027_user_portal_shared_keys.sql
+[migrate-postgres] 跳过（已记录）: 0028_portal_marketplace_config.sql
+[migrate-postgres] 跳过（已记录）: 0029_portal_integer_ledger.sql
+[migrate-postgres] 跳过（已记录）: 0030_chain_job_transactions.sql
+[migrate-postgres] 跳过（已记录）: 0031_ledger_integrity_guards.sql
+[migrate-postgres] 跳过（已记录）: 0032_key_hash_lookup.sql
+[migrate-postgres] 跳过（已记录）: 0033_gateway_key_secret_removal.sql
+[migrate-postgres] 跳过（已记录）: 0034_public_model_daily_stats.sql
+[migrate-postgres] 跳过（已记录）: 0035_request_presets.sql
+[migrate-postgres] 跳过（已记录）: 0036_guardrails.sql
+[migrate-postgres] 跳过（已记录）: 0037_route_data_policies.sql
+[migrate-postgres] 跳过（已记录）: 0038_organization_identity_projection.sql
+[migrate-postgres] 跳过（已记录）: 0039_guardrail_budget_reservations.sql
+[migrate-postgres] 跳过（已记录）: 0040_user_budget_reservations.sql
+[migrate-postgres] 跳过（已记录）: 0041_workspaces.sql
+[migrate-postgres] 跳过（已记录）: 0042_gateway_keys_workspace.sql
+[migrate-postgres] 跳过（已记录）: 0043_workspace_presets_guardrails.sql
+[migrate-postgres] 跳过（已记录）: 0044_route_routing_metadata.sql
+[migrate-postgres] 跳过（已记录）: 0045_route_data_policy_subject_fingerprint.sql
+[migrate-postgres] 跳过（已记录）: 0046_model_endpoints.sql
+[migrate-postgres] 跳过（已记录）: 0047_model_endpoint_route_subject_fingerprint.sql
+[migrate-postgres] 跳过（已记录）: 0048_model_endpoint_audio_capabilities.sql
+[migrate-postgres] 跳过（已记录）: 0049_model_endpoint_evidence_ledger.sql
+[migrate-postgres] 跳过（已记录）: 0050_management_api_keys.sql
+[migrate-postgres] 跳过（已记录）: 0051_gateway_key_expiry.sql
+[migrate-postgres] 跳过（已记录）: 0052_gateway_key_limits.sql
+[migrate-postgres] 跳过（已记录）: 0053_workspace_budgets.sql
+[migrate-postgres] 跳过（已记录）: 0054_generation_metadata_snapshots.sql
+[migrate-postgres] 跳过（已记录）: 0055_request_session_id.sql
+[migrate-postgres] 跳过（已记录）: 0056_generation_feedback.sql
+[migrate-postgres] 跳过（已记录）: 0057_guardrail_assignment_management_source.sql
+[migrate-postgres] 跳过（已记录）: 0058_workspace_default_guardrails.sql
+[migrate-postgres] 跳过（已记录）: 0059_account_default_guardrails.sql
+[migrate-postgres] 跳过（已记录）: 0060_provider_attempt_availability.sql
+[migrate-postgres] 跳过（已记录）: 0061_public_model_total_tokens.sql
+[migrate-postgres] 跳过（已记录）: 0062_generation_service_tier.sql
+[migrate-postgres] 跳过（已记录）: 0063_private_byok.sql
+[migrate-postgres] 跳过（已记录）: 0064_byok_always_use_for_provider.sql
+[migrate-postgres] 跳过（已记录）: 0065_guardrail_budget_settlement_basis.sql
+[migrate-postgres] 跳过（已记录）: 0066_workspace_budget_usage_index.sql
+[migrate-postgres] 跳过（已记录）: 0067_batch_jobs.sql
+[migrate-postgres] 跳过（已记录）: 0068_function_schema_resolution.sql
+[migrate-postgres] 跳过（已记录）: 0069_recovery_dispatch_intents.sql
+[migrate-postgres] 跳过（已记录）: 0070_recovery_settlement_facts.sql
+[migrate-postgres] 跳过（已记录）: 0071_recovery_jobs.sql
+[migrate-postgres] 跳过（已记录）: 0072_recovery_commit_receipts.sql
+[migrate-postgres] 跳过（已记录）: 0073_recovery_api_key_workspace_lock.sql
+[migrate-postgres] 跳过（已记录）: 0074_config_change_audit.sql
+[migrate-postgres] 跳过（已记录）: 0075_system_config_revision.sql
+[migrate-postgres] 跳过（已记录）: 0076_user_audit_export_order_index.sql
+[migrate-postgres] 跳过（已记录）: 0077_admin_access_key_audit.sql
+[migrate-postgres] 跳过（已记录）: 0078_shared_key_earnings_history_guard.sql
+[migrate-postgres] 跳过（已记录）: 0079_admin_shared_key_audit.sql
+[migrate-postgres] 跳过（已记录）: 0080_admin_shared_key_actor_bounds.sql
+[migrate-postgres] 跳过（已记录）: 0081_tools_config_group_audit.sql
+[migrate-postgres] 汇总: 新执行 0 个, 跳过 81 个, 扫描 81 个文件
+[migrate-postgres] 全部完成。
+[docker-entrypoint:migrate] MIGRATE_DONE
+[docker-entrypoint:migrate] 一次性任务已完成，容器将正常退出。
+[docker-entrypoint:migrate] Zeabur/K8s 上请勿将此镜像作为常驻 Service；见 docs/operators/deployment/zeabur.md

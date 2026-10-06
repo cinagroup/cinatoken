@@ -1,0 +1,14 @@
+{
+  "at": "2026-10-06T02:02:56.558Z",
+  "finishedAt": "2026-10-06T02:02:56.626Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "--check",
+    "scripts/db/cutover/postgres-complete-text-read-grant-bridge-v367.native.test.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-next-six-8d357e3fd84b4810a7210ece167eb07a\\syntax-4.stdout.log",
+  "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-next-six-8d357e3fd84b4810a7210ece167eb07a\\syntax-4.stderr.log"
+}

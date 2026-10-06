@@ -1,0 +1,694 @@
+// Owned PostgreSQL 18.6 proof of one-shot v365 text send-start custody.
+import assert from 'node:assert/strict';
+import { createHash, randomBytes, randomUUID } from 'node:crypto';
+import { readFile, readdir, writeFile } from 'node:fs/promises';
+import test from 'node:test';
+import postgres from 'postgres';
+import { computeRouteDataPolicySubjectFingerprintFromRows } from '../../../packages/core/src/route-data-policy.ts';
+import { grantPostgresCompleteTextAttemptV362 } from '../../../packages/proxy/src/services/postgres-complete-text-attempt-grant-v362.ts';
+import { claimPostgresCompleteTextCustodyV365,
+  recordPostgresCompleteTextSendStartV365,
+  PostgresCompleteTextSendStartRejectedError,
+} from '../../../packages/proxy/src/services/postgres-complete-text-send-start-v365.ts';
+import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';
+import { grantPostgresRuntime } from './grant-postgres-runtime.ts';
+import { activatePostgresBuyerSplitV348 } from './activate-postgres-buyer-split-v348.ts';
+import { grantPostgresBuyerSplitV348 } from './grant-postgres-buyer-split-v348.ts';
+import { activatePostgresBuyerGuardrailSplitV349 } from './activate-postgres-buyer-guardrail-split-v349.ts';
+import { grantPostgresBuyerGuardrailSplitV349 } from './grant-postgres-buyer-guardrail-split-v349.ts';
+
+const g='cinatoken_gateway';
+const migrationDir=new URL('../../../packages/core/migrations-postgres/',import.meta.url);
+const proposal=name=>new URL(`../../../packages/core/migrations-proposals/postgres/${name}`,import.meta.url);
+const reportUrl=new URL('../../../docs/developers/architecture/implementation-evidence/C04-complete-text-send-start-v365-report.json',import.meta.url);
+const sha=value=>createHash('sha256').update(value).digest('hex');
+const bearer='sk-local-complete-text-admission-v361-bearer';
+const keyHash=`sha256:${sha(bearer)}`;
+const originalHash=sha('original-v361-ingress-body');
+const finalBody=JSON.stringify({model:'v361-model',models:['v361-model'],
+  messages:[{role:'user',content:'hello'}],max_completion_tokens:300});
+const preliminary=[
+  ['shared-key-quote-versions.sql','shared_key_quote_versions_activation'],
+  ['shared-key-dispatch-quote-attempts.sql','shared_quote_attempt_activation'],
+  ['shared-key-economic-outbox.sql','shared_key_economic_outbox_activation'],
+  ['shared-key-economic-outbox-producer.sql','shared_key_economic_producer_activation'],
+  ['shared-key-snapshot-earning-consumer.sql','shared_key_snapshot_consumer_activation'],
+  ['shared-key-buyer-debit-v2.sql','shared_key_buyer_debit_v2_activation'],
+  ['shared-key-economic-producer-v2.sql','shared_key_economic_producer_v2_activation'],
+  ['shared-key-buyer-budget-receipt-v2.sql','shared_key_buyer_budget_receipt_activation'],
+];
+const later=[
+  ['budget-admission-login-v350.sql','budget_admission_login_activation'],
+  ['guardrail-budget-admission-login-v351.sql','guardrail_budget_admission_v351_activation'],
+  ['authenticated-request-capability-login-v356.sql','request_capability_login_activation'],
+  ['authenticated-text-route-ceiling-issuer-v357.sql','request_route_ceiling_activation'],
+  ['authenticated-text-route-source-fence-v359.sql','route_source_fence_activation'],
+  ['authenticated-complete-text-quote-v360.sql','complete_text_quote_activation'],
+];
+const roles={migrator:'cinatoken_gateway_migrator',runtime:'cinatoken_gateway_runtime',
+  buyer:'cinatoken_gateway_buyer_settlement',
+  admission:'cinatoken_gateway_budget_admission',
+  sharedProducer:'cinatoken_gateway_shared_quote_attempt_producer',
+  sharedConsumer:'cinatoken_gateway_shared_earning_consumer',
+  cap:'cinatoken_gateway_request_capability_issuer',
+  claim:'cinatoken_gateway_request_capability_claim',
+  fragment:'cinatoken_gateway_request_route_ceiling_issuer',
+  verifier:'cinatoken_gateway_route_source_verifier',
+  complete:'cinatoken_gateway_complete_text_quote_issuer',
+  granter:'cinatoken_gateway_complete_text_attempt_granter',
+  holder:'cinatoken_gateway_complete_text_send_holder'};
+
+function connection(cluster,name,password,label) {
+  return postgres({host:'127.0.0.1',port:cluster.port,database:'postgres',
+    username:name,password,ssl:false,max:1,prepare:false,fetch_types:false,
+    connect_timeout:3,idle_timeout:0,max_lifetime:0,backoff:false,onnotice(){},
+    connection:{application_name:`complete-send-start-v365-${label}`}});
+}
+async function denied(work,code='42501') {
+  await assert.rejects(work,error=>{
+    assert.equal((error?.cause??error)?.code,code,String(error));return true;
+  });
+}
+
+test('v365 holder records one committed send-start per v362 unknown grant',
+  {timeout:300_000,skip:!process.env.GATEWAY_NATIVE_PG_BIN},async()=>{
+    const cluster=await startNativePostgres();
+    const report={status:'RUNNING',cleanup:'PENDING',binaryVersion:cluster.binaryVersion,
+      sourceSha256:{},stages:[],limitations:[
+        'Review-only PG73 proposal; no formal migration, deployed Worker, remote database or production credentials changed.',
+        'The SQL start_recorded response is in-transaction data, not a COMMIT/connection-close ACK. This fixture proves persistence and rollback but cannot certify a caller-side physical-send barrier.',
+        'A recorded send start means possible send and remains unknown, even if the holder crashes before fetch. Replay never returns a fresh send right.',
+        'The raw upload digest is a holder assertion. PostgreSQL compares it with v362 but cannot inspect the actual bytes, URL, effective bearer or physical provider fetch.',
+        'Selected-source, capability/key identity and exact admitted hold rechecks use broad locks; full v360 manifest and current Guardrail/workspace-budget source parity remain an activation blocker.',
+        'Legacy v353/v354 explicit forfeit can terminalize dispatched holds immediately after start; expiry can split the two budget families. Same-transaction grant-aware writer/reaper fences are required before activation.',
+        'The v353 window-first writer can conflict with this review proof\'s reservation-table-before-window lock order. A coordinated lock order and concurrency proof are required before activation.',
+        'There is no custody lease renewal. A holder crash after claim or start leaves unknown custody for a later recovery protocol.',
+        'Result resolution, renewal of the 15-minute dispatched holds, late bills, buyer settlement and economic outbox are not implemented.',
+        'D1/MySQL parity, Linux CI outcome and real Worker/Hyperdrive behavior are not established by this local run.'
+      ]};
+    const stage=(name,detail={})=>report.stages.push({name,result:'PASS',...detail});
+    const clients=[];let failure;
+    try {
+      assert.match(cluster.binaryVersion,/PostgreSQL\) 18\.6/u);
+      const passwords=Object.fromEntries(Object.keys(roles).map(x=>[
+        x,randomBytes(24).toString('hex')]));
+      await cluster.admin.unsafe(`${Object.entries(roles).map(([label,name])=>
+        `CREATE ROLE ${name} LOGIN ${label==='migrator'||label==='runtime'||
+          label==='sharedProducer'||label==='sharedConsumer'?'':'NOINHERIT'} PASSWORD '${passwords[label]}';`).join('\n')}
+        CREATE SCHEMA ${g} AUTHORIZATION ${roles.migrator};
+        REVOKE CREATE ON SCHEMA public FROM PUBLIC;
+        GRANT CONNECT ON DATABASE postgres TO ${Object.values(roles).join(',')};
+        GRANT CREATE ON DATABASE postgres TO ${roles.migrator};`).simple();
+      const migrator=connection(cluster,roles.migrator,passwords.migrator,'migrator');
+      const runtime=connection(cluster,roles.runtime,passwords.runtime,'runtime');
+      const admission=connection(cluster,roles.admission,passwords.admission,'admission');
+      const granter=connection(cluster,roles.granter,passwords.granter,'granter');
+      const granterPeer=connection(cluster,roles.granter,passwords.granter,'granter-peer');
+      const holder=connection(cluster,roles.holder,passwords.holder,'holder');
+      const holderPeer=connection(cluster,roles.holder,passwords.holder,'holder-peer');
+      const cap=connection(cluster,roles.cap,passwords.cap,'cap');
+      const verifier=connection(cluster,roles.verifier,passwords.verifier,'verifier');
+      const complete=connection(cluster,roles.complete,passwords.complete,'complete');
+      clients.push(migrator,runtime,admission,granter,granterPeer,holder,holderPeer,
+        cap,verifier,complete);
+      await migrator.unsafe(`CREATE TABLE ${g}.schema_migrations
+        (version text PRIMARY KEY,applied_at timestamptz NOT NULL DEFAULT now())`);
+      const migrationNames=(await readdir(migrationDir)).filter(x=>x.endsWith('.sql')).sort();
+      assert.equal(migrationNames.length,73);
+      const corpus=[];
+      for(const name of migrationNames) {
+        const body=await readFile(new URL(name,migrationDir),'utf8');
+        corpus.push(`${name}\n${body}`);
+        await migrator.begin(async tx=>{
+          await tx.unsafe(body).simple();
+          await tx.unsafe(`INSERT INTO ${g}.schema_migrations(version) VALUES($1)`,[name]);
+        });
+      }
+      report.sourceSha256.formalMigrations=sha(corpus.join('\n'));
+      const migratorUrl=`postgres://${roles.migrator}:${passwords.migrator}`
+        +`@127.0.0.1:${cluster.port}/postgres`;
+      await grantPostgresRuntime({DATABASE_URL:migratorUrl});
+      for(const [name,setting] of preliminary) {
+        const body=await readFile(proposal(name),'utf8');
+        report.sourceSha256[name]=sha(body);
+        await migrator.begin(async tx=>{
+          await tx.unsafe(`SET LOCAL cinatoken.${setting}='reviewed-v1'`);
+          if(name==='shared-key-quote-versions.sql')
+            await tx.unsafe(`SET LOCAL cinatoken.${setting}='reviewed-v2'`);
+          await tx.unsafe(body).simple();
+        });
+      }
+      await activatePostgresBuyerSplitV348({DATABASE_URL:migratorUrl});
+      await grantPostgresBuyerSplitV348({DATABASE_URL:migratorUrl});
+      await activatePostgresBuyerGuardrailSplitV349({DATABASE_URL:migratorUrl});
+      await grantPostgresBuyerGuardrailSplitV349({DATABASE_URL:migratorUrl});
+      stage('formal-pg73-and-buyer-budget-split-prerequisites-installed');
+
+      for(const [name,setting] of later) {
+        const body=await readFile(proposal(name),'utf8');
+        report.sourceSha256[name]=sha(body);
+        await migrator.begin(async tx=>{
+          await tx.unsafe(`SET LOCAL cinatoken.${setting}='reviewed-v1'`);
+          await tx.unsafe(body).simple();
+        });
+      }
+      const sql=await readFile(proposal('complete-text-quote-budget-admission-v361.sql'),'utf8');
+      report.sourceSha256['complete-text-quote-budget-admission-v361.sql']=sha(sql);
+      report.sourceSha256.fixture=sha(await readFile(new URL(import.meta.url)));
+      await assert.rejects(migrator.begin(tx=>tx.unsafe(sql).simple()),
+        /activation or dependency differs/u);
+      await assert.rejects(migrator.begin(async tx=>{
+        await tx.unsafe(`GRANT SELECT ON ${g}.complete_text_quotes_v360
+          TO ${roles.admission}`);
+        await tx.unsafe(`SET LOCAL cinatoken.complete_text_budget_admission_activation='reviewed-v1'`);
+        await tx.unsafe(sql).simple();
+      }),/activation or dependency differs/u);
+      await migrator.begin(async tx=>{
+        await tx.unsafe(`SET LOCAL cinatoken.complete_text_budget_admission_activation='reviewed-v1'`);
+        await tx.unsafe(sql).simple();
+      });
+      stage('v361-default-off-and-role-drift-fail-before-atomic-install');
+
+      const grantSql=await readFile(proposal('complete-text-attempt-grant-v362.sql'),'utf8');
+      report.sourceSha256['complete-text-attempt-grant-v362.sql']=sha(grantSql);
+      await assert.rejects(migrator.begin(tx=>tx.unsafe(grantSql).simple()),
+        /activation or dependency differs/u);
+      await assert.rejects(migrator.begin(async tx=>{
+        await tx.unsafe(`GRANT SELECT ON ${g}.complete_text_quotes_v360
+          TO ${roles.granter}`);
+        await tx.unsafe(`SET LOCAL cinatoken.complete_text_attempt_grant_activation='reviewed-v1'`);
+        await tx.unsafe(grantSql).simple();
+      }),/activation or dependency differs/u);
+      await migrator.begin(async tx=>{
+        await tx.unsafe(`SET LOCAL cinatoken.complete_text_attempt_grant_activation='reviewed-v1'`);
+        await tx.unsafe(grantSql).simple();
+      });
+      stage('v362-default-off-and-role-drift-fail-before-atomic-install');
+
+      const startSql=await readFile(proposal('complete-text-send-start-v365.sql'),'utf8');
+      report.sourceSha256['complete-text-send-start-v365.sql']=sha(startSql);
+      await assert.rejects(migrator.begin(tx=>tx.unsafe(startSql).simple()),
+        /activation or dependency differs/u);
+      await assert.rejects(migrator.begin(async tx=>{
+        await tx.unsafe(`GRANT SELECT ON ${g}.complete_text_attempt_grants_v362
+          TO ${roles.holder}`);
+        await tx.unsafe(`SET LOCAL cinatoken.complete_text_send_start_activation='reviewed-v1'`);
+        await tx.unsafe(startSql).simple();
+      }),/activation or dependency differs/u);
+      await assert.rejects(migrator.begin(async tx=>{
+        await tx.unsafe(`GRANT USAGE ON SCHEMA cinatoken_economic_outbox
+          TO ${roles.holder}`);
+        await tx.unsafe(`SET LOCAL cinatoken.complete_text_send_start_activation='reviewed-v1'`);
+        await tx.unsafe(startSql).simple();
+      }),/activation or dependency differs/u);
+      await migrator.begin(async tx=>{
+        await tx.unsafe(`SET LOCAL cinatoken.complete_text_send_start_activation='reviewed-v1'`);
+        await tx.unsafe(startSql).simple();
+      });
+      stage('v365-default-off-and-holder-role-drift-fail-before-atomic-install');
+
+      await denied(runtime.unsafe(`SELECT ${g}.record_complete_text_send_start_v365(
+        pg_catalog.gen_random_uuid(),pg_catalog.gen_random_uuid(),1,
+        repeat('a',64))`));
+      await denied(admission.unsafe(`SELECT ${g}.record_complete_text_send_start_v365(
+        pg_catalog.gen_random_uuid(),pg_catalog.gen_random_uuid(),1,
+        repeat('a',64))`));
+      await denied(granter.unsafe(`SELECT ${g}.record_complete_text_send_start_v365(
+        pg_catalog.gen_random_uuid(),pg_catalog.gen_random_uuid(),1,
+        repeat('a',64))`));
+      await denied(runtime.unsafe(`SELECT ${g}.claim_complete_text_send_custody_v365(
+        pg_catalog.gen_random_uuid(),pg_catalog.gen_random_uuid())`));
+      await denied(holder.unsafe(`SELECT * FROM ${g}.complete_text_send_starts_v365`));
+      await denied(holder.unsafe(`SELECT * FROM ${g}.complete_text_send_custody_v365`));
+      await denied(holder.unsafe(`SELECT * FROM ${g}.complete_text_attempt_grants_v362`));
+      await denied(holder.unsafe(`SELECT ${g}.grant_complete_flat_text_attempt_v362(
+        pg_catalog.gen_random_uuid(),'{}'::jsonb)`));
+      const [holderAcl]=await migrator.unsafe(`SELECT
+        pg_catalog.has_function_privilege('${roles.holder}',
+          '${g}.record_complete_text_send_start_v365(uuid,uuid,bigint,text)','EXECUTE') AS start_call,
+        pg_catalog.has_function_privilege('${roles.holder}',
+          '${g}.claim_complete_text_send_custody_v365(uuid,uuid)','EXECUTE') AS custody_call,
+        pg_catalog.has_function_privilege('${roles.holder}',
+          '${g}.grant_complete_flat_text_attempt_v362(uuid,jsonb)','EXECUTE') AS grant_call,
+        pg_catalog.has_table_privilege('${roles.holder}',
+          '${g}.complete_text_send_starts_v365','SELECT,INSERT,UPDATE,DELETE') AS raw_start,
+        pg_catalog.has_table_privilege('${roles.holder}',
+          '${g}.complete_text_send_custody_v365','SELECT,INSERT,UPDATE,DELETE') AS raw_custody,
+        (SELECT NOT rolinherit FROM pg_catalog.pg_roles
+          WHERE rolname='${roles.holder}') AS noinherit,
+        (SELECT pg_catalog.count(*)::integer FROM pg_catalog.pg_auth_members m
+          JOIN pg_catalog.pg_roles r ON r.oid=m.member
+          WHERE r.rolname='${roles.holder}') AS memberships`);
+      assert.deepEqual(holderAcl,{start_call:true,custody_call:true,grant_call:false,
+        raw_start:false,raw_custody:false,noinherit:true,memberships:0});
+      stage('distinct-direct-holder-login-has-only-two-wrappers-and-no-raw-access',
+        {holderAcl});
+
+      await denied(runtime.unsafe(`SELECT ${g}.grant_complete_flat_text_attempt_v362(
+        pg_catalog.gen_random_uuid(),'{}'::jsonb)`));
+      await denied(admission.unsafe(`SELECT ${g}.grant_complete_flat_text_attempt_v362(
+        pg_catalog.gen_random_uuid(),'{}'::jsonb)`));
+      await denied(granter.unsafe(`SELECT * FROM ${g}.complete_text_attempt_grants_v362`));
+      await denied(admission.unsafe(`SELECT ${g}.mark_user_budget_dispatched_v350(
+        'x',now(),now()+interval '1 minute')`));
+      await denied(admission.unsafe(`SELECT ${g}.mark_guardrail_budgets_dispatched_v351(
+        'x',now(),now()+interval '1 minute')`));
+      const [grantAcl]=await migrator.unsafe(`SELECT
+        pg_catalog.has_function_privilege('${roles.granter}',
+          '${g}.grant_complete_flat_text_attempt_v362(uuid,jsonb)','EXECUTE') AS grant_call,
+        pg_catalog.has_table_privilege('${roles.granter}',
+          '${g}.complete_text_attempt_grants_v362','SELECT,INSERT,UPDATE,DELETE') AS raw_table,
+        pg_catalog.has_function_privilege('${roles.admission}',
+          '${g}.mark_user_budget_dispatched_v350(text,timestamptz,timestamptz)','EXECUTE') AS raw_ordinary_mark,
+        pg_catalog.has_function_privilege('${roles.admission}',
+          '${g}.mark_guardrail_budgets_dispatched_v351(text,timestamptz,timestamptz)','EXECUTE') AS raw_guardrail_mark`);
+      assert.deepEqual(grantAcl,{grant_call:true,raw_table:false,
+        raw_ordinary_mark:false,raw_guardrail_mark:false});
+      stage('isolated-granter-only-and-old-dispatch-mark-side-door-closed',{grantAcl});
+
+      await denied(admission.unsafe(`SELECT ${g}.reserve_user_budget_v350(
+        'one-micro','u','k',0,1,now(),now()+interval '1 minute')`));
+      await denied(admission.unsafe(`SELECT ${g}.reserve_guardrail_budgets_v351(
+        'one-micro','u','k','[]'::jsonb,1,'charged',now(),now()+interval '1 minute')`));
+      await denied(runtime.unsafe(`SELECT ${g}.admit_complete_flat_text_quote_v361(
+        'x',pg_catalog.gen_random_uuid(),'[]'::jsonb)`));
+      await denied(admission.unsafe(`SELECT * FROM ${g}.complete_text_admissions_v361`));
+      const [acl]=await migrator.unsafe(`SELECT
+        pg_catalog.has_function_privilege('${roles.admission}',
+          '${g}.admit_complete_flat_text_quote_v361(text,uuid,jsonb)','EXECUTE') AS wrapper,
+        pg_catalog.has_function_privilege('${roles.admission}',
+          '${g}.reserve_user_budget_v350(text,text,text,bigint,bigint,timestamptz,timestamptz)','EXECUTE') AS raw_ordinary,
+        pg_catalog.has_function_privilege('${roles.admission}',
+          '${g}.reserve_guardrail_budgets_v351(text,text,text,jsonb,bigint,text,timestamptz,timestamptz)','EXECUTE') AS raw_guardrail`);
+      assert.deepEqual(acl,{wrapper:true,raw_ordinary:false,raw_guardrail:false});
+      stage('direct-admission-login-can-call-only-no-amount-reserve-wrapper',{acl});
+
+      await migrator.unsafe(`INSERT INTO ${g}.users(id,email,budget_max)
+        VALUES('v361-user','v361@example.invalid',10);
+        INSERT INTO ${g}.workspaces(id,scope_type,personal_owner_user_id,name,slug,status)
+        VALUES('v361-workspace','personal','v361-user','Admission','v361','active');`).simple();
+      await migrator.unsafe(`INSERT INTO ${g}.api_keys
+        (id,key,key_hash,user_id,workspace_id,status,limit_micros,limit_reset)
+        VALUES('v361-key',$1,$2,'v361-user','v361-workspace','active',2000000,'daily')`,
+        [`hashref:${keyHash}`,keyHash]);
+      await migrator.unsafe(`INSERT INTO ${g}.workspace_budgets
+          (id,workspace_id,reset_interval,limit_micros)
+          VALUES('v361-budget','v361-workspace','daily',2000000);
+        INSERT INTO ${g}.guardrails
+          (id,workspace_id,owner_user_id,name,status)
+          VALUES('v361-guardrail','v361-workspace','v361-user','Budget','active');
+        INSERT INTO ${g}.guardrail_versions(id,guardrail_id,version,config_json)
+          VALUES('v361-version','v361-guardrail',1,
+            '{"budget":{"limit":2,"period":"daily"}}');
+        INSERT INTO ${g}.guardrail_assignments
+          (id,workspace_id,guardrail_id,scope_type,scope_id)
+          VALUES('v361-assignment','v361-workspace','v361-guardrail',
+            'user','v361-user');
+        INSERT INTO ${g}.providers(id,name,api_key,status)
+          VALUES('v361-provider','V361 Provider','enc:v2:fixture','active');
+        INSERT INTO ${g}.models(id,vendor) VALUES('v361-model','other');
+        INSERT INTO ${g}.route_pools(id,model_id,route_group,name,status)
+          VALUES('v361-pool','v361-model','default','Default','active');
+        INSERT INTO ${g}.model_surfaces
+          (id,model_id,route_group,request_protocol,request_operation,
+            route_pool_id,status)
+          VALUES('v361-surface','v361-model','default','openai','chat',
+            'v361-pool','active');
+        INSERT INTO ${g}.model_routes
+          (id,model_id,provider_id,provider_model_name,route_pool_id,
+            upstream_protocol,upstream_operation,adapter,status)
+          VALUES('v361-route','v361-model','v361-provider','upstream-v361',
+            'v361-pool','openai','chat','passthrough','active');
+        INSERT INTO ${g}.model_endpoints
+          (id,model_id,provider_id,provider_slug,tag,context_length,pricing,
+            evidence_url,verified_by,verified_at,expires_at,status)
+          VALUES('v361-endpoint','v361-model','v361-provider','v361-provider',
+            'default',1000,'{"currency":"USD","prompt":"0.000010","completion":"0.000020"}',
+            'https://example.invalid/v361','fixture',now()-interval '1 minute',
+            now()+interval '5 minutes','verified');
+        INSERT INTO ${g}.model_endpoint_routes(endpoint_id,route_target_id)
+          VALUES('v361-endpoint','v361-route');`).simple();
+      const attest=async()=>{
+        const [route]=await migrator.unsafe(`SELECT provider_id,provider_model_name,
+          custom_params,upstream_protocol,upstream_operation,adapter
+          FROM ${g}.model_routes WHERE id='v361-route'`);
+        const [provider]=await migrator.unsafe(`SELECT id,endpoints,api_key,
+          shared_channel_type FROM ${g}.providers WHERE id=$1`,[route.provider_id]);
+        const fingerprint=await computeRouteDataPolicySubjectFingerprintFromRows(route,provider);
+        await migrator.unsafe(`UPDATE ${g}.model_endpoint_routes
+          SET subject_fingerprint=$1 WHERE route_target_id='v361-route'`,[fingerprint]);
+        const [generation]=await verifier.unsafe(`SELECT generation::text AS generation
+          FROM ${g}.route_source_generations_v359 WHERE route_target_id='v361-route'`);
+        const [row]=await verifier.unsafe(`SELECT ${g}.attest_text_route_source_v359(
+          'v361-route',$1,$2) AS value`,[generation.generation,fingerprint]);
+        assert.equal(row.value.status,'attested');
+      };
+      await attest();
+      stage('authoritative-route-and-three-budget-source-fixture-ready');
+
+      const issueQuote=async(bearerValue=bearer)=>{
+        const id=`v362-${randomUUID()}`;
+        const [issued]=await cap.unsafe(`SELECT ${g}.issue_request_capability_v356(
+          $1,$2,$3) AS value`,[id,bearerValue,originalHash]);
+        assert.equal(issued.value.status,'issued');
+        const [quoted]=await complete.unsafe(`SELECT ${g}.issue_complete_flat_text_quote_v360(
+          $1,$2,$3,$4) AS value`,[id,issued.value.capability,originalHash,finalBody]);
+        assert.equal(quoted.value.status,'quoted_complete_subset');
+        return quoted.value;
+      };
+      const intents=()=>{
+        const at=new Date();
+        const start=new Date(Date.UTC(at.getUTCFullYear(),at.getUTCMonth(),at.getUTCDate()));
+        const end=new Date(start.getTime()+86_400_000);
+        const common={workspaceId:'v361-workspace',guardrailVersion:1,
+          period:'daily',periodStart:start.toISOString(),periodEnd:end.toISOString(),
+          limitMicros:2_000_000};
+        return [
+          {...common,assignmentId:'v361-assignment',guardrailId:'v361-guardrail',
+            scopeType:'user',scopeId:'v361-user'},
+          {...common,assignmentId:'workspace-budget:v361-budget',
+            guardrailId:'workspace-budget:v361-budget',scopeType:'workspace',
+            scopeId:'v361-workspace'},
+          {...common,assignmentId:'gateway-key-limit:v361-key',
+            guardrailId:'gateway-key-limit:v361-key',scopeType:'api_key',
+            scopeId:'v361-key'}];
+      };
+      const admit=async(quote,items=intents(),requestId=quote.requestId,
+        quoteId=quote.quoteId)=>{
+        const [row]=await admission.unsafe(`SELECT
+          ${g}.admit_complete_flat_text_quote_v361($1,$2::uuid,$3::jsonb) AS value`,
+          [requestId,quoteId,admission.json(items)]);
+        return row.value;
+      };
+      const claimFor=async(quote,overrides={})=>{
+        const [manifest]=await migrator.unsafe(`SELECT candidate_index,model_id,
+          route_target_id,provider_id,endpoint_id,credential_class,
+          credential_id,provider_ciphertext_sha256
+          FROM ${g}.complete_text_quote_routes_v360
+          WHERE quote_id=$1::uuid ORDER BY candidate_index,route_target_id
+          LIMIT 1`,[quote.quoteId]);
+        assert.ok(manifest);
+        return {requestId:quote.requestId,quoteId:quote.quoteId,
+          finalBodySha256:quote.finalBodySha256,
+          candidateIndex:manifest.candidate_index,modelId:manifest.model_id,
+          routeTargetId:manifest.route_target_id,providerId:manifest.provider_id,
+          endpointId:manifest.endpoint_id,credentialClass:manifest.credential_class,
+          credentialId:manifest.credential_id,
+          providerCiphertextSha256:manifest.provider_ciphertext_sha256,
+          preparedRouteSourceSha256:sha('prepared-v362-route-dto'),method:'POST',
+          upstreamUrlSha256:sha('https://example.invalid/v1/chat/completions'),
+          outboundBodySha256:sha(finalBody),
+          outboundBodyCanonicalSha256:sha(JSON.stringify(JSON.parse(finalBody))),
+          outboundBodyBytes:Buffer.byteLength(finalBody),
+          credentialFingerprintSha256:sha('opaque-plaintext-bearer'),
+          ...overrides};
+      };
+      const grant=async(claim,nonce=randomUUID(),client=granter)=>{
+        const [row]=await client.unsafe(`SELECT
+          ${g}.grant_complete_flat_text_attempt_v362($1::uuid,$2::jsonb) AS value`,
+          [nonce,client.json(claim)]);
+        return row.value;
+      };
+
+      const issueGranted=async()=>{
+        const quote=await issueQuote();
+        assert.equal((await admit(quote)).status,'admitted');
+        const grantClaim=await claimFor(quote);
+        const result=await grant(grantClaim);
+        assert.equal(result.status,'grant_recorded');
+        return {quote,grantClaim,result};
+      };
+      const custody=async(grantId,runId,client=holder)=>{
+        const [row]=await client.unsafe(`SELECT
+          ${g}.claim_complete_text_send_custody_v365(
+            $1::uuid,$2::uuid) AS value`,[grantId,runId]);
+        return row.value;
+      };
+      const start=async(grantId,runId,epoch,uploadSha,client=holder)=>{
+        const [row]=await client.unsafe(`SELECT
+          ${g}.record_complete_text_send_start_v365(
+            $1::uuid,$2::uuid,$3::bigint,$4) AS value`,
+          [grantId,runId,epoch,uploadSha]);
+        return row.value;
+      };
+      const countRows=async(table,grantId)=>{
+        assert.ok(['complete_text_send_custody_v365',
+          'complete_text_send_starts_v365'].includes(table));
+        const [row]=await migrator.unsafe(`SELECT count(*)::integer AS n
+          FROM ${g}.${table} WHERE grant_id=$1::uuid`,[grantId]);
+        return row.n;
+      };
+      const first=await issueGranted();
+      const run=randomUUID();
+      const upload=first.grantClaim.outboundBodySha256;
+      assert.equal((await start(first.result.grantId,run,1,upload)).status,
+        'custody_required');
+      await denied(()=>custody(first.result.grantId,run,granter),'42501');
+      await denied(()=>start(first.result.grantId,run,1,upload,granter),'42501');
+      await denied(migrator.unsafe(`SELECT
+        ${g}.claim_complete_text_send_custody_v365(
+          pg_catalog.gen_random_uuid(),pg_catalog.gen_random_uuid())`),'23514');
+      stage('unclaimed-grant-and-foreign-logins-cannot-start');
+
+      const claimed=await custody(first.result.grantId,run);
+      assert.deepEqual(claimed,{status:'custody_claim_recorded',
+        grantId:first.result.grantId,holderRunId:run,leaseEpoch:1,
+        leaseUntil:first.result.holdRecoveryExpiresAt});
+      assert.equal(await countRows('complete_text_send_custody_v365',
+        first.result.grantId),1);
+      assert.equal((await custody(first.result.grantId,run)).status,
+        'already_claimed_unknown');
+      assert.equal((await custody(first.result.grantId,randomUUID())).status,
+        'holder_run_conflict');
+      stage('committed-custody-has-one-run-and-an-immutable-epoch');
+
+      assert.equal((await start(first.result.grantId,randomUUID(),1,upload)).status,
+        'holder_run_conflict');
+      assert.equal((await start(first.result.grantId,run,2,upload)).status,
+        'holder_run_conflict');
+      assert.equal((await start(first.result.grantId,run,1,sha('wrong-upload'))).status,
+        'grant_upload_differs');
+      await denied(()=>start(first.result.grantId,run,0,upload),'23514');
+      await denied(()=>start(first.result.grantId,run,1,'bad'),'23514');
+      assert.equal(await countRows('complete_text_send_starts_v365',
+        first.result.grantId),0);
+      stage('holder-run-epoch-and-frozen-raw-upload-digest-fence-start');
+
+      const [guardrail]=await migrator.unsafe(`SELECT id,assignment_id,
+        reserved_micros FROM ${g}.guardrail_budget_reservations
+        WHERE request_id=$1 ORDER BY id LIMIT 1`,[first.quote.requestId]);
+      // Some legacy Guardrail columns remain mutable to the migrator. The
+      // v365 verifier must reject that same-count committed corruption.
+      const faultUpdate=async(sql,params)=>cluster.admin.begin(async tx=>{
+        await tx.unsafe(`SET LOCAL session_replication_role='replica'`);
+        await tx.unsafe(sql,params);
+      });
+      const [keyBefore]=await migrator.unsafe(`SELECT limit_epoch
+        FROM ${g}.api_keys WHERE id='v361-key'`);
+      await faultUpdate(`UPDATE ${g}.api_keys SET limit_epoch=limit_epoch+1
+        WHERE id='v361-key'`);
+      assert.equal((await start(first.result.grantId,run,1,upload)).status,
+        'stale_identity');
+      await faultUpdate(`UPDATE ${g}.api_keys SET limit_epoch=$1
+        WHERE id='v361-key'`,[keyBefore.limit_epoch]);
+      stage('post-grant-request-key-epoch-drift-rejects-before-start');
+      await migrator.unsafe(`UPDATE ${g}.guardrail_budget_reservations
+        SET reserved_micros=reserved_micros+1 WHERE id=$1`,[guardrail.id]);
+      assert.equal((await start(first.result.grantId,run,1,upload)).status,
+        'missing_hold');
+      await migrator.unsafe(`UPDATE ${g}.guardrail_budget_reservations
+        SET reserved_micros=$2 WHERE id=$1`,
+        [guardrail.id,guardrail.reserved_micros]);
+      await migrator.unsafe(`UPDATE ${g}.guardrail_budget_reservations
+        SET assignment_id='v365-wrong-assignment' WHERE id=$1`,[guardrail.id]);
+      assert.equal((await start(first.result.grantId,run,1,upload)).status,
+        'missing_hold');
+      await migrator.unsafe(`UPDATE ${g}.guardrail_budget_reservations
+        SET assignment_id=$2 WHERE id=$1`,
+        [guardrail.id,guardrail.assignment_id]);
+      const [windowBefore]=await migrator.unsafe(`SELECT
+        w.workspace_id,w.scope_type,w.scope_id,w.period,w.period_start,
+        w.reserved_micros FROM ${g}.guardrail_budget_windows w
+        JOIN ${g}.guardrail_budget_reservations r
+          ON r.workspace_id=w.workspace_id AND r.scope_type=w.scope_type
+            AND r.scope_id=w.scope_id AND r.period=w.period
+            AND r.period_start=w.period_start WHERE r.id=$1`,[guardrail.id]);
+      const windowKey=[windowBefore.workspace_id,windowBefore.scope_type,
+        windowBefore.scope_id,windowBefore.period,windowBefore.period_start];
+      await faultUpdate(`UPDATE ${g}.guardrail_budget_windows
+        SET reserved_micros=reserved_micros+1
+        WHERE workspace_id=$1 AND scope_type=$2 AND scope_id=$3
+          AND period=$4 AND period_start=$5`,windowKey);
+      assert.equal((await start(first.result.grantId,run,1,upload)).status,
+        'hold_counter_differs');
+      await faultUpdate(`UPDATE ${g}.guardrail_budget_windows
+        SET reserved_micros=$6
+        WHERE workspace_id=$1 AND scope_type=$2 AND scope_id=$3
+          AND period=$4 AND period_start=$5`,
+        [...windowKey,windowBefore.reserved_micros]);
+      const [ordinary]=await migrator.unsafe(`SELECT reserved_micros
+        FROM ${g}.user_budget_reservations WHERE request_id=$1`,
+        [first.quote.requestId]);
+      await denied(migrator.unsafe(`UPDATE ${g}.user_budget_reservations
+        SET reserved_micros=reserved_micros+1 WHERE request_id=$1`,
+        [first.quote.requestId]),'23514');
+      // Fault inject only the old buyer-admission-guarded ordinary amount in
+      // this owned cluster. No runtime or migrator login can make this update.
+      await faultUpdate(`UPDATE ${g}.user_budget_reservations
+        SET reserved_micros=reserved_micros+1 WHERE request_id=$1`,
+        [first.quote.requestId]);
+      assert.equal((await start(first.result.grantId,run,1,upload)).status,
+        'missing_hold');
+      await faultUpdate(`UPDATE ${g}.user_budget_reservations
+        SET reserved_micros=$2 WHERE request_id=$1`,
+        [first.quote.requestId,ordinary.reserved_micros]);
+      assert.equal(await countRows('complete_text_send_starts_v365',
+        first.result.grantId),0);
+      stage('same-count-Guardrail-identity-amount-and-ordinary-amount-drift-reject');
+
+      const freshStart=await start(first.result.grantId,run,1,upload);
+      assert.deepEqual(freshStart,{status:'start_recorded',
+        sendStartId:freshStart.sendStartId,grantId:first.result.grantId,
+        holderRunId:run,leaseEpoch:1,uploadSha256:upload,
+        expiresAt:first.result.expiresAt});
+      assert.equal(await countRows('complete_text_send_starts_v365',
+        first.result.grantId),1);
+      const [stored]=await migrator.unsafe(`SELECT s.holder_run_id,
+        s.lease_epoch,s.outbound_body_sha256,g.obligation_state
+        FROM ${g}.complete_text_send_starts_v365 s
+        JOIN ${g}.complete_text_attempt_grants_v362 g USING(grant_id)
+        WHERE s.grant_id=$1::uuid`,[first.result.grantId]);
+      assert.equal(stored.holder_run_id,run);
+      assert.equal(Number(stored.lease_epoch),1);
+      assert.equal(stored.outbound_body_sha256,upload);
+      assert.equal(stored.obligation_state,'unknown');
+      stage('fresh-start-commits-exact-run-epoch-and-upload-while-grant-stays-unknown');
+
+      assert.equal((await start(first.result.grantId,run,1,upload)).status,
+        'already_possible_send');
+      assert.equal((await start(first.result.grantId,run,1,sha('changed'))).status,
+        'already_possible_send');
+      assert.equal(await countRows('complete_text_send_starts_v365',
+        first.result.grantId),1);
+      await denied(migrator.unsafe(`UPDATE ${g}.complete_text_send_starts_v365
+        SET holder_run_id=pg_catalog.gen_random_uuid()
+        WHERE grant_id=$1::uuid`,[first.result.grantId]),'P0001');
+      await denied(migrator.unsafe(`UPDATE ${g}.complete_text_send_custody_v365
+        SET lease_epoch=2 WHERE grant_id=$1::uuid`,
+        [first.result.grantId]),'P0001');
+      stage('lost-start-ACK-replay-and-row-mutation-cannot-return-fresh-start');
+
+      const rolled=await issueGranted();
+      const rolledRun=randomUUID();
+      await assert.rejects(holder.begin(async tx=>{
+        assert.equal((await custody(rolled.result.grantId,rolledRun,tx)).status,
+          'custody_claim_recorded');
+        assert.equal(await countRows('complete_text_send_custody_v365',
+          rolled.result.grantId),0);
+        throw new Error('force custody rollback');
+      }),/force custody rollback/u);
+      assert.equal((await start(rolled.result.grantId,rolledRun,1,
+        rolled.grantClaim.outboundBodySha256)).status,'custody_required');
+      await custody(rolled.result.grantId,rolledRun);
+      await assert.rejects(holder.begin(async tx=>{
+        assert.equal((await start(rolled.result.grantId,rolledRun,1,
+          rolled.grantClaim.outboundBodySha256,tx)).status,'start_recorded');
+        assert.equal(await countRows('complete_text_send_starts_v365',
+          rolled.result.grantId),0);
+        throw new Error('force start rollback');
+      }),/force start rollback/u);
+      assert.equal(await countRows('complete_text_send_starts_v365',
+        rolled.result.grantId),0);
+      assert.equal((await start(rolled.result.grantId,rolledRun,1,
+        rolled.grantClaim.outboundBodySha256)).status,'start_recorded');
+      stage('in-transaction-custody-or-start-result-without-COMMIT-is-unusable');
+
+      const parallel=await issueGranted();
+      const parallelRun=randomUUID();
+      await custody(parallel.result.grantId,parallelRun);
+      const contenders=await Promise.all([
+        start(parallel.result.grantId,parallelRun,1,
+          parallel.grantClaim.outboundBodySha256,holder),
+        start(parallel.result.grantId,parallelRun,1,
+          parallel.grantClaim.outboundBodySha256,holderPeer)]);
+      assert.deepEqual(contenders.map(x=>x.status).sort(),
+        ['already_possible_send','start_recorded']);
+      assert.equal(await countRows('complete_text_send_starts_v365',
+        parallel.result.grantId),1);
+      stage('parallel-holder-logins-serialize-to-one-fresh-start');
+
+      const clientGrant=await issueGranted();
+      const clientRun=randomUUID();
+      const clientConnection=`postgres://${roles.holder}:${passwords.holder}`
+        +`@127.0.0.1:${cluster.port}/postgres?sslmode=disable`;
+      const clientCustody=await claimPostgresCompleteTextCustodyV365({
+        holderConnectionString:clientConnection,
+        grantId:clientGrant.result.grantId,holderRunId:clientRun,
+      });
+      assert.equal(clientCustody.status,'custody_claim_recorded');
+      assert.equal(clientCustody.commitAcknowledged,true);
+      assert.equal(await countRows('complete_text_send_custody_v365',
+        clientGrant.result.grantId),1);
+      const clientStart=await recordPostgresCompleteTextSendStartV365({
+        holderConnectionString:clientConnection,
+        grantId:clientGrant.result.grantId,holderRunId:clientRun,
+        expectedEpoch:clientCustody.leaseEpoch,
+        uploadSha256:clientGrant.grantClaim.outboundBodySha256,
+      });
+      assert.equal(clientStart.status,'start_recorded');
+      assert.equal(clientStart.commitAcknowledged,true);
+      assert.equal(clientStart.grantId,clientGrant.result.grantId);
+      assert.equal(await countRows('complete_text_send_starts_v365',
+        clientGrant.result.grantId),1);
+      await assert.rejects(recordPostgresCompleteTextSendStartV365({
+        holderConnectionString:clientConnection,
+        grantId:clientGrant.result.grantId,holderRunId:clientRun,
+        expectedEpoch:clientCustody.leaseEpoch,
+        uploadSha256:clientGrant.grantClaim.outboundBodySha256,
+      }),error=>error instanceof PostgresCompleteTextSendStartRejectedError
+        && error.status==='already_possible_send');
+      stage('native-one-shot-client-waits-for-PG-COMMIT-and-close-ACK');
+
+      const stale=await issueGranted();
+      const staleRun=randomUUID();
+      await custody(stale.result.grantId,staleRun);
+      await migrator.unsafe(`UPDATE ${g}.providers
+        SET api_key='enc:v2:substituted' WHERE id='v361-provider'`);
+      assert.equal((await start(stale.result.grantId,staleRun,1,
+        stale.grantClaim.outboundBodySha256)).status,'stale_source');
+      assert.equal(await countRows('complete_text_send_starts_v365',
+        stale.result.grantId),0);
+      await migrator.unsafe(`UPDATE ${g}.providers
+        SET api_key='enc:v2:fixture' WHERE id='v361-provider'`);
+      await attest();
+      stage('selected-provider-ciphertext-drift-before-start-rejects');
+
+      const expiring=await issueGranted();
+      const expiringRun=randomUUID();
+      await custody(expiring.result.grantId,expiringRun);
+      await new Promise(resolve=>setTimeout(resolve,
+        Math.max(0,Date.parse(expiring.result.expiresAt)-Date.now()+150)));
+      assert.equal((await start(expiring.result.grantId,expiringRun,1,
+        expiring.grantClaim.outboundBodySha256)).status,'expired_or_stale');
+      assert.equal(await countRows('complete_text_send_starts_v365',
+        expiring.result.grantId),0);
+      stage('v362-send-deadline-expiry-rejects-on-server-clock');
+
+      report.status='PASS';
+
+    } catch(error) {
+      failure=error;report.status='FAIL';
+      const cause=error?.cause??error;
+      report.failure={code:cause?.code??null,constraint:cause?.constraint_name??null,
+        message:String(error?.stack??error).slice(0,5000)};
+    } finally {
+      await Promise.allSettled(clients.map(c=>c.end({timeout:1})));
+      try {await cluster.cleanup();report.cleanup='PASS';}
+      catch(error) {report.cleanup='FAIL';report.cleanupError=String(error).slice(0,1500);
+        failure??=error;}
+      await writeFile(reportUrl,JSON.stringify(report,null,2)+'\n');
+      process.stdout.write(`complete-text-send-start-v365-report=${reportUrl.pathname}\n`);
+    }
+    if(failure) throw failure;
+    assert.equal(report.cleanup,'PASS');
+  });

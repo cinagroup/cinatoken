@@ -1,0 +1,30 @@
+{
+  "closed": true,
+  "actualArchiveOutcome": 0,
+  "originalDownloadActualExit": 0,
+  "originalReleaseFailurePreserved": true,
+  "noWorkflowRerun": true,
+  "entries": [
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-boundary-next-20261006-Zm6Z3E\\native12-release-terminal-failed.result.json",
+      "copy": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\original-ci-failure\\native12-release-terminal-failed.result.json",
+      "bytes": 571,
+      "sha256": "6bfd608fea65e5b3e4df99941460a34c21e4817ba32d667323dc89a68f05a4ff",
+      "exact": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-boundary-next-20261006-Zm6Z3E\\native12-release-terminal-failed.stdout.log",
+      "copy": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\original-ci-failure\\native12-release-terminal-failed.stdout.log",
+      "bytes": 8072,
+      "sha256": "ea4bc6f9c36f981ff2a831e30b55ea921c7a92b1f477f8b438bd7f7436e21eff",
+      "exact": true
+    },
+    {
+      "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-boundary-next-20261006-Zm6Z3E\\native12-release-terminal-failed.stderr.log",
+      "copy": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\original-ci-failure\\native12-release-terminal-failed.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exact": true
+    }
+  ]
+}

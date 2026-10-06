@@ -1,0 +1,255 @@
+{
+  "schema": "g7-tls-pg-package-local-preparation-v1",
+  "actualExit": 0,
+  "checks": [
+    {
+      "id": "format-write",
+      "pass": true
+    },
+    {
+      "id": "format-after",
+      "pass": true
+    },
+    {
+      "id": "syntax-0",
+      "pass": true
+    },
+    {
+      "id": "syntax-1",
+      "pass": true
+    },
+    {
+      "id": "syntax-2",
+      "pass": true
+    },
+    {
+      "id": "syntax-3",
+      "pass": true
+    },
+    {
+      "id": "syntax-4",
+      "pass": true
+    },
+    {
+      "id": "admission-tests",
+      "pass": true
+    },
+    {
+      "id": "windows-runtime-rejected",
+      "pass": true
+    }
+  ],
+  "receipts": [
+    {
+      "id": "format-before",
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "node_modules/prettier/bin-prettier.js",
+        "--check",
+        "scripts/verification/web-platform-g7/admission.mjs",
+        "scripts/verification/web-platform-g7/admission.test.mjs",
+        "scripts/verification/web-platform-g7/database.mjs",
+        "scripts/verification/web-platform-g7/README.md",
+        "scripts/verification/web-platform-g7/run-owned-linux.mjs",
+        "scripts/verification/web-platform-g7/wire.mjs",
+        ".github/workflows/web-platform-g7.yml"
+      ],
+      "begin": "2026-10-06T01:45:33.188Z",
+      "endedAt": "2026-10-06T01:45:34.239Z",
+      "closed": true,
+      "actualExit": 1,
+      "signal": null,
+      "errorCode": null
+    },
+    {
+      "id": "format-write",
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "node_modules/prettier/bin-prettier.js",
+        "--write",
+        "scripts/verification/web-platform-g7/admission.mjs",
+        "scripts/verification/web-platform-g7/admission.test.mjs",
+        "scripts/verification/web-platform-g7/database.mjs",
+        "scripts/verification/web-platform-g7/README.md",
+        "scripts/verification/web-platform-g7/run-owned-linux.mjs",
+        "scripts/verification/web-platform-g7/wire.mjs",
+        ".github/workflows/web-platform-g7.yml"
+      ],
+      "begin": "2026-10-06T01:45:34.239Z",
+      "endedAt": "2026-10-06T01:45:34.884Z",
+      "closed": true,
+      "actualExit": 0,
+      "signal": null,
+      "errorCode": null
+    },
+    {
+      "id": "format-after",
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "node_modules/prettier/bin-prettier.js",
+        "--check",
+        "scripts/verification/web-platform-g7/admission.mjs",
+        "scripts/verification/web-platform-g7/admission.test.mjs",
+        "scripts/verification/web-platform-g7/database.mjs",
+        "scripts/verification/web-platform-g7/README.md",
+        "scripts/verification/web-platform-g7/run-owned-linux.mjs",
+        "scripts/verification/web-platform-g7/wire.mjs",
+        ".github/workflows/web-platform-g7.yml"
+      ],
+      "begin": "2026-10-06T01:45:34.885Z",
+      "endedAt": "2026-10-06T01:45:35.565Z",
+      "closed": true,
+      "actualExit": 0,
+      "signal": null,
+      "errorCode": null
+    },
+    {
+      "id": "syntax-0",
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "scripts/verification/web-platform-g7/admission.mjs"
+      ],
+      "begin": "2026-10-06T01:45:35.566Z",
+      "endedAt": "2026-10-06T01:45:35.627Z",
+      "closed": true,
+      "actualExit": 0,
+      "signal": null,
+      "errorCode": null
+    },
+    {
+      "id": "syntax-1",
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "scripts/verification/web-platform-g7/admission.test.mjs"
+      ],
+      "begin": "2026-10-06T01:45:35.627Z",
+      "endedAt": "2026-10-06T01:45:35.687Z",
+      "closed": true,
+      "actualExit": 0,
+      "signal": null,
+      "errorCode": null
+    },
+    {
+      "id": "syntax-2",
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "scripts/verification/web-platform-g7/database.mjs"
+      ],
+      "begin": "2026-10-06T01:45:35.688Z",
+      "endedAt": "2026-10-06T01:45:35.743Z",
+      "closed": true,
+      "actualExit": 0,
+      "signal": null,
+      "errorCode": null
+    },
+    {
+      "id": "syntax-3",
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "scripts/verification/web-platform-g7/run-owned-linux.mjs"
+      ],
+      "begin": "2026-10-06T01:45:35.744Z",
+      "endedAt": "2026-10-06T01:45:35.800Z",
+      "closed": true,
+      "actualExit": 0,
+      "signal": null,
+      "errorCode": null
+    },
+    {
+      "id": "syntax-4",
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "scripts/verification/web-platform-g7/wire.mjs"
+      ],
+      "begin": "2026-10-06T01:45:35.801Z",
+      "endedAt": "2026-10-06T01:45:35.861Z",
+      "closed": true,
+      "actualExit": 0,
+      "signal": null,
+      "errorCode": null
+    },
+    {
+      "id": "admission-tests",
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--test",
+        "scripts/verification/web-platform-g7/admission.test.mjs"
+      ],
+      "begin": "2026-10-06T01:45:35.862Z",
+      "endedAt": "2026-10-06T01:45:36.036Z",
+      "closed": true,
+      "actualExit": 0,
+      "signal": null,
+      "errorCode": null
+    },
+    {
+      "id": "windows-runtime-rejected",
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "scripts/verification/web-platform-g7/run-owned-linux.mjs",
+        "--execute-owned-linux",
+        "--sha",
+        "6658ec978009afa5fe3f4beccf6bde358590b663",
+        "--out",
+        "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-tls-pg-package-20261006-552eab3dd02f4b15a01d765d9a2aab8f\\never-created-runtime"
+      ],
+      "begin": "2026-10-06T01:45:36.036Z",
+      "endedAt": "2026-10-06T01:45:36.131Z",
+      "closed": true,
+      "actualExit": 1,
+      "signal": null,
+      "errorCode": null
+    }
+  ],
+  "files": [
+    {
+      "path": "scripts/verification/web-platform-g7/admission.mjs",
+      "bytes": 1978,
+      "sha256": "d29ec650aeda1717bd0fa9004a655334544666b47923330577ac06561a74682c"
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/admission.test.mjs",
+      "bytes": 2008,
+      "sha256": "9c2d5ffc29be49f94061245841b5127bb0b8fb3ecb6725685ef331ab217a963f"
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/database.mjs",
+      "bytes": 8288,
+      "sha256": "417638552cbccbd0cd61baeb521d1884bb2cb271e6f3787fee59d71caca9aa76"
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/ingress.conf",
+      "bytes": 1549,
+      "sha256": "d7e33e890c1ed5862986b34b67d57bb6380d72fe6be33808698a048e4a145d61"
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/README.md",
+      "bytes": 3725,
+      "sha256": "66afeccd5b1fd55d99e819ebda8fb8eaf33ca2f97a8a2236a0d8bebc2345b06d"
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/run-owned-linux.mjs",
+      "bytes": 22014,
+      "sha256": "72599975d91c55ba2bd4c8de37ce53de7e49fb1fff24b7d791699f4c2f9bd0ff"
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/wire.mjs",
+      "bytes": 14963,
+      "sha256": "d4d125dd806a7608a7f3542a0b82fbf8b6c9ecbc62c5ae6216de1b738d72d926"
+    },
+    {
+      "path": ".github/workflows/web-platform-g7.yml",
+      "bytes": 2801,
+      "sha256": "9eedfdc1feb644307c3f74d6744f537ac6dbea950da4dc119bb2c328ae8be7db"
+    }
+  ],
+  "realLinuxDockerExecuted": false,
+  "actualTLSExecuted": false,
+  "realDatabaseExecuted": false,
+  "productionRequests": 0
+}

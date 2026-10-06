@@ -1,0 +1,18 @@
+[main (root-commit) 0122d8a] Isolated exact-source baseline; no remote
+ 16 files changed, 3166 insertions(+)
+ create mode 100644 .changeset/README.md
+ create mode 100644 .changeset/config.json
+ create mode 100644 CHANGELOG.md
+ create mode 100644 package.json
+ create mode 100644 packages/admin/CHANGELOG.md
+ create mode 100644 packages/admin/package.json
+ create mode 100644 packages/chain-worker/package.json
+ create mode 100644 packages/core/CHANGELOG.md
+ create mode 100644 packages/core/package.json
+ create mode 100644 packages/proxy/CHANGELOG.md
+ create mode 100644 packages/proxy/package.json
+ create mode 100644 packages/tool-engines/CHANGELOG.md
+ create mode 100644 packages/tool-engines/package.json
+ create mode 100644 packages/web/.prettierignore
+ create mode 100644 packages/web/.prettierrc
+ create mode 100644 packages/web/package.json

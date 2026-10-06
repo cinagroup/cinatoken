@@ -1,0 +1,16 @@
+{
+  "at": "2026-10-06T02:48:01.845Z",
+  "finishedAt": "2026-10-06T02:48:03.993Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-evidence-g7-boundary-tools-82ab15ef384141c7bf99246c437325d2/collect-evidence.mjs",
+    "audit",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/archive-config-final.json",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/full-evidence-input-audit.json"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 1,
+  "signal": null,
+  "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/full-evidence-input-audit.stdout.log",
+  "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/full-evidence-input-audit.stderr.log"
+}

@@ -1,0 +1,33 @@
+[
+    {
+        "Name": "g7-6225aa47d5aa463cbcbb48bc4c983312-client",
+        "Id": "7b2061251fc085c44078603c61a6fb382bca1fd4efc6de25ea754100677c450e",
+        "Created": "2026-10-06T02:10:00.590116871Z",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv4": true,
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": {},
+            "Config": [
+                {
+                    "Subnet": "172.18.0.0/16",
+                    "Gateway": "172.18.0.1"
+                }
+            ]
+        },
+        "Internal": true,
+        "Attachable": false,
+        "Ingress": false,
+        "ConfigFrom": {
+            "Network": ""
+        },
+        "ConfigOnly": false,
+        "Containers": {},
+        "Options": {},
+        "Labels": {
+            "cinatoken.g7.owner": "g7-6225aa47d5aa463cbcbb48bc4c983312"
+        }
+    }
+]

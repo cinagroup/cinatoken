@@ -1,0 +1,22 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Real Docker acceptance requires Linux
+
+'win32' !== 'linux'
+
+    at admit (file:///C:/cinagroup/cinatoken/scripts/verification/web-platform-g7/admission.mjs:26:9)
+    at file:///C:/cinagroup/cinatoken/scripts/verification/web-platform-g7/run-owned-linux.mjs:28:15
+    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:661:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 'win32',
+  expected: 'linux',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.14.1

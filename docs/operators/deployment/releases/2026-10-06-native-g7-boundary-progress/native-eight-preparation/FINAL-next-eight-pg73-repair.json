@@ -1,0 +1,1215 @@
+{
+  "schema": "cinatoken.pg73.next-eight.final.v1",
+  "sealedAt": "2026-10-06T01:37:29.708Z",
+  "actualExit": 0,
+  "baseCommit": "6658ec978009afa5fe3f4beccf6bde358590b663",
+  "sourceOwnership": [
+    "scripts/db/cutover/postgres-ordinary-budget-recovery-v354.native.test.mjs",
+    "scripts/db/cutover/postgres-guardrail-budget-admission-login-v351.native.test.mjs",
+    "scripts/db/cutover/postgres-authenticated-request-capability-login-v356.native.test.mjs",
+    "scripts/db/cutover/postgres-authenticated-text-route-ceiling-v357.native.test.mjs",
+    "scripts/db/cutover/postgres-authenticated-text-route-source-fence-v359.native.test.mjs",
+    "scripts/db/cutover/postgres-authenticated-complete-text-quote-v360.native.test.mjs",
+    "scripts/db/cutover/postgres-complete-text-quote-budget-admission-v361.native.test.mjs",
+    "scripts/db/cutover/postgres-complete-text-attempt-grant-v362.native.test.mjs"
+  ],
+  "files": [
+    {
+      "file": "scripts/db/cutover/postgres-ordinary-budget-recovery-v354.native.test.mjs",
+      "before": {
+        "bytes": 22491,
+        "sha256": "3a6754fe2fd1e8d5a3a101bfb79e9c15ca3fdff3eec0edcca3da0cc6c7e62c0b"
+      },
+      "after": {
+        "bytes": 22685,
+        "sha256": "110093eda6ec9a116e695ed3ca54468bbf7dafa7b3ee0a34ad346dc7b9883c53"
+      },
+      "beforeSnapshot": "postgres-ordinary-budget-recovery-v354.native.test.mjs.before",
+      "afterSnapshot": "postgres-ordinary-budget-recovery-v354.native.test.mjs.final-after-v2",
+      "allOriginalAssertionsAstAndSourceExact": true,
+      "originalAssertionCount": 51,
+      "originalGrantCallCount": 1,
+      "originalGrantCallsAstAndSourceExact": true,
+      "fullReverseByteExact": true,
+      "originalTimeoutAndSkipExact": true
+    },
+    {
+      "file": "scripts/db/cutover/postgres-guardrail-budget-admission-login-v351.native.test.mjs",
+      "before": {
+        "bytes": 26904,
+        "sha256": "bbcbb33aa07d33530692d64d7ab5d24844bbfd44777f9ab8170533d2af0a60af"
+      },
+      "after": {
+        "bytes": 27087,
+        "sha256": "83c956c75d60958721cdfdb4fe72aa5b7cde37eaeaf857fac70745274b92da59"
+      },
+      "beforeSnapshot": "postgres-guardrail-budget-admission-login-v351.native.test.mjs.before",
+      "afterSnapshot": "postgres-guardrail-budget-admission-login-v351.native.test.mjs.final-after-v2",
+      "allOriginalAssertionsAstAndSourceExact": true,
+      "originalAssertionCount": 43,
+      "originalGrantCallCount": 1,
+      "originalGrantCallsAstAndSourceExact": true,
+      "fullReverseByteExact": true,
+      "originalTimeoutAndSkipExact": true
+    },
+    {
+      "file": "scripts/db/cutover/postgres-authenticated-request-capability-login-v356.native.test.mjs",
+      "before": {
+        "bytes": 23606,
+        "sha256": "c4c11dff6781b771c7dbbcba2ed32ab6a46053741e9af56844d1e641539711cd"
+      },
+      "after": {
+        "bytes": 26960,
+        "sha256": "705e662847be88aeee6a97017cf4ab4de27b915a1f86db412f9dd7c119bcdcef"
+      },
+      "beforeSnapshot": "postgres-authenticated-request-capability-login-v356.native.test.mjs.before",
+      "afterSnapshot": "postgres-authenticated-request-capability-login-v356.native.test.mjs.final-after-v2",
+      "allOriginalAssertionsAstAndSourceExact": true,
+      "originalAssertionCount": 55,
+      "originalGrantCallCount": 3,
+      "originalGrantCallsAstAndSourceExact": true,
+      "fullReverseByteExact": true,
+      "originalTimeoutAndSkipExact": true
+    },
+    {
+      "file": "scripts/db/cutover/postgres-authenticated-text-route-ceiling-v357.native.test.mjs",
+      "before": {
+        "bytes": 21479,
+        "sha256": "25186e7b24c310b1b45fdf490356539593aeb7ab0bbe89596fd835920cc661bb"
+      },
+      "after": {
+        "bytes": 21673,
+        "sha256": "0502916463be8d95bf0c7d4aae4070b7b8e2d94f6978c187c7f786eccf3a8c3f"
+      },
+      "beforeSnapshot": "postgres-authenticated-text-route-ceiling-v357.native.test.mjs.before",
+      "afterSnapshot": "postgres-authenticated-text-route-ceiling-v357.native.test.mjs.final-after-v2",
+      "allOriginalAssertionsAstAndSourceExact": true,
+      "originalAssertionCount": 46,
+      "originalGrantCallCount": 2,
+      "originalGrantCallsAstAndSourceExact": true,
+      "fullReverseByteExact": true,
+      "originalTimeoutAndSkipExact": true
+    },
+    {
+      "file": "scripts/db/cutover/postgres-authenticated-text-route-source-fence-v359.native.test.mjs",
+      "before": {
+        "bytes": 23398,
+        "sha256": "c735503883dd25e1ab20c2fd43a1f9d60821d385942e473449097f985757dc46"
+      },
+      "after": {
+        "bytes": 23598,
+        "sha256": "e5398315db6353023400c255093080497276a9d27db5989dd6229db9c75c251c"
+      },
+      "beforeSnapshot": "postgres-authenticated-text-route-source-fence-v359.native.test.mjs.before",
+      "afterSnapshot": "postgres-authenticated-text-route-source-fence-v359.native.test.mjs.final-after-v2",
+      "allOriginalAssertionsAstAndSourceExact": true,
+      "originalAssertionCount": 50,
+      "originalGrantCallCount": 2,
+      "originalGrantCallsAstAndSourceExact": true,
+      "fullReverseByteExact": true,
+      "originalTimeoutAndSkipExact": true
+    },
+    {
+      "file": "scripts/db/cutover/postgres-authenticated-complete-text-quote-v360.native.test.mjs",
+      "before": {
+        "bytes": 20448,
+        "sha256": "bf43350602f779a9f6bd626e136490d7bcbdac36d1bbd75fc0e8a432570a8390"
+      },
+      "after": {
+        "bytes": 20648,
+        "sha256": "18cb4237ca6a1d4cead3f4819f04e64927a6bb1138636393858df52ef8f79b8f"
+      },
+      "beforeSnapshot": "postgres-authenticated-complete-text-quote-v360.native.test.mjs.before",
+      "afterSnapshot": "postgres-authenticated-complete-text-quote-v360.native.test.mjs.final-after-v2",
+      "allOriginalAssertionsAstAndSourceExact": true,
+      "originalAssertionCount": 37,
+      "originalGrantCallCount": 1,
+      "originalGrantCallsAstAndSourceExact": true,
+      "fullReverseByteExact": true,
+      "originalTimeoutAndSkipExact": true
+    },
+    {
+      "file": "scripts/db/cutover/postgres-complete-text-quote-budget-admission-v361.native.test.mjs",
+      "before": {
+        "bytes": 23357,
+        "sha256": "b48077d2035d04ce981614ecf2eb317496f04f98440c79dadb68047e71e5b92a"
+      },
+      "after": {
+        "bytes": 23555,
+        "sha256": "47d2dff22ae15ee6e3ba5337746513f3262d5ead74c5bbcc030508b0af6d8f72"
+      },
+      "beforeSnapshot": "postgres-complete-text-quote-budget-admission-v361.native.test.mjs.before",
+      "afterSnapshot": "postgres-complete-text-quote-budget-admission-v361.native.test.mjs.final-after-v2",
+      "allOriginalAssertionsAstAndSourceExact": true,
+      "originalAssertionCount": 38,
+      "originalGrantCallCount": 1,
+      "originalGrantCallsAstAndSourceExact": true,
+      "fullReverseByteExact": true,
+      "originalTimeoutAndSkipExact": true
+    },
+    {
+      "file": "scripts/db/cutover/postgres-complete-text-attempt-grant-v362.native.test.mjs",
+      "before": {
+        "bytes": 37867,
+        "sha256": "a57330725f2393d09f145429f280f2cfb7a28b3a72f5146b6205f0e0d40d7784"
+      },
+      "after": {
+        "bytes": 38065,
+        "sha256": "05d2cd1f0b080ab416c08b48ce02fcd812522238b32e38732a94908ec075b8a2"
+      },
+      "beforeSnapshot": "postgres-complete-text-attempt-grant-v362.native.test.mjs.before",
+      "afterSnapshot": "postgres-complete-text-attempt-grant-v362.native.test.mjs.final-after-v2",
+      "allOriginalAssertionsAstAndSourceExact": true,
+      "originalAssertionCount": 89,
+      "originalGrantCallCount": 1,
+      "originalGrantCallsAstAndSourceExact": true,
+      "fullReverseByteExact": true,
+      "originalTimeoutAndSkipExact": true
+    }
+  ],
+  "sourceFrozen": true,
+  "uniqueChecklistEdited": false,
+  "workflowEdited": false,
+  "productionCodeEdited": false,
+  "gitMutation": false,
+  "deployment": false,
+  "sourceAudit": {
+    "file": "eight-source-audit-v2.json",
+    "bytes": 104890,
+    "sha256": "4c665d7ad92a6e85ad7de0538ab3b898acb53e3a8f0aa06c702c6352a154cd48",
+    "actualExit": 0,
+    "originalAssertions": 409,
+    "originalGrantCalls": 12,
+    "unchangedSourceCount": 171,
+    "originalAssertionsAstAndSourceExact": true,
+    "allReverseBytesExact": true,
+    "productionGrantAndSharedHelperByteExact": true
+  },
+  "corpus": {
+    "count": 73,
+    "last": "0073_recovery_api_key_workspace_lock.sql",
+    "sha256": "23afef61a8a670e0af8c90e3a138f522e6b283b454e380a592bf85bca83108dc",
+    "ledgerMd5": "ca1ea96a1b4bcd0675642f30dcf48042",
+    "actualUnchangedHelperValidated": true
+  },
+  "concurrency": {
+    "onlyNewLockOperation": "one preparation session lock",
+    "noNewTransactionLockOperation": true,
+    "explicitSessionUnlockBeforeOriginalWait": true,
+    "exactCurrentBackendGrantedBigintLockCheckedAfterUnlock": true,
+    "original60By25msAdvisoryWaitSourceExact": true,
+    "independentOwnedDirectMigratorPeer": true,
+    "originalProposalBodyUnchanged": true,
+    "pendingHelperSettledBeforePeerDisconnect": true,
+    "nativeLockWaitNotYetProven": true
+  },
+  "v359MembershipNegativeWithFinallyByteExact": true,
+  "localValidation": {
+    "syntax": {
+      "files": 8,
+      "actualExit": 0,
+      "changedV356AfterLFFixRechecked": true
+    },
+    "diffCheck": {
+      "actualExit": 0
+    },
+    "existingBridgeControlFlow": {
+      "tests": 6,
+      "pass": 6,
+      "fail": 0,
+      "skip": 0,
+      "actualExit": 0,
+      "scope": "Byte-identical pre-existing v350 inert control-flow script executes actual unchanged production grant source and PG73 helper; these cases do not execute the new v356 concurrency or model PostgreSQL MVCC/table locks."
+    },
+    "nativeEnvironment": {
+      "platform": "win32",
+      "GATEWAY_NATIVE_PG_BIN_present": false,
+      "availableCommands": [
+        {
+          "name": "postgres",
+          "actualExit": 1,
+          "signal": null,
+          "error": null,
+          "stdout": "",
+          "stderr": "INFO: Could not find files for the given pattern(s).\r\n"
+        },
+        {
+          "name": "initdb",
+          "actualExit": 1,
+          "signal": null,
+          "error": null,
+          "stdout": "",
+          "stderr": "INFO: Could not find files for the given pattern(s).\r\n"
+        },
+        {
+          "name": "pg_ctl",
+          "actualExit": 1,
+          "signal": null,
+          "error": null,
+          "stdout": "",
+          "stderr": "INFO: Could not find files for the given pattern(s).\r\n"
+        },
+        {
+          "name": "docker",
+          "actualExit": 1,
+          "signal": null,
+          "error": null,
+          "stdout": "",
+          "stderr": "INFO: Could not find files for the given pattern(s).\r\n"
+        }
+      ],
+      "nativeFixtureExecuted": false,
+      "skipNeverCountedAsPass": true
+    }
+  },
+  "closedReceipts": [
+    {
+      "label": "implement-eight-v2",
+      "file": "implement-eight-v2.closed.json",
+      "bytes": 527,
+      "sha256": "53a138418b1b9cb8d212aaba45ce8634736a9d7b77fc5c58ebe1cfc678be3933",
+      "actualExit": 0,
+      "startedAt": "2026-10-06T01:30:53.112Z",
+      "finishedAt": "2026-10-06T01:30:53.324Z",
+      "childClosed": true,
+      "stdout": {
+        "file": "implement-eight-v2.stdout.log",
+        "bytes": 2542,
+        "sha256": "11b1a1170fddc8947f309b7af2d112e7f71bf457497cfe72f8abf093bd0b57ed"
+      },
+      "stderr": {
+        "file": "implement-eight-v2.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "label": "add-original-lock-proof",
+      "file": "add-original-lock-proof.closed.json",
+      "bytes": 550,
+      "sha256": "0584e592af21d7a9c7b5efae14f124b34e49f6660d0e57995cc7fc8a78432ed5",
+      "actualExit": 0,
+      "startedAt": "2026-10-06T01:33:09.273Z",
+      "finishedAt": "2026-10-06T01:33:09.390Z",
+      "childClosed": true,
+      "stdout": {
+        "file": "add-original-lock-proof.stdout.log",
+        "bytes": 348,
+        "sha256": "71f79c6be18ca9b552ab30acfda76c48917c383a50072ee25fc8f0c8fa404749"
+      },
+      "stderr": {
+        "file": "add-original-lock-proof.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "label": "audit-eight",
+      "file": "audit-eight.closed.json",
+      "bytes": 529,
+      "sha256": "8936a8e955de452e043ab2d97b4eb03434e8ae453f0e5c321a85981fab6a5d58",
+      "actualExit": 0,
+      "startedAt": "2026-10-06T01:34:30.251Z",
+      "finishedAt": "2026-10-06T01:34:31.852Z",
+      "childClosed": true,
+      "stdout": {
+        "file": "audit-eight.stdout.log",
+        "bytes": 145,
+        "sha256": "4d087d35909a8ca08a41dfe595ec96fbcdb2b158eaaa3ecc853e1a03791a487f"
+      },
+      "stderr": {
+        "file": "audit-eight.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "label": "prepare-final-local-checks",
+      "file": "prepare-final-local-checks.closed.json",
+      "bytes": 562,
+      "sha256": "ddd40524cf21d221106d5d04399141d5ceed9607b1f46074665db4a26804c996",
+      "actualExit": 0,
+      "startedAt": "2026-10-06T01:35:15.887Z",
+      "finishedAt": "2026-10-06T01:35:15.966Z",
+      "childClosed": true,
+      "stdout": {
+        "file": "prepare-final-local-checks.stdout.log",
+        "bytes": 215,
+        "sha256": "650c14308b68d8d9f3162d9018504b12e165f6d1af84fec7eaa5f10e607eadc6"
+      },
+      "stderr": {
+        "file": "prepare-final-local-checks.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "label": "syntax-1",
+      "file": "syntax-1.closed.json",
+      "bytes": 467,
+      "sha256": "2d12f490a7c7ace98a1ec6298e7a921c75eaa590dc614d1dce162d49567aeb8a",
+      "actualExit": 0,
+      "startedAt": "2026-10-06T01:35:17.286Z",
+      "finishedAt": "2026-10-06T01:35:17.358Z",
+      "childClosed": true,
+      "stdout": {
+        "file": "syntax-1.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "file": "syntax-1.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "label": "syntax-2",
+      "file": "syntax-2.closed.json",
+      "bytes": 475,
+      "sha256": "eb7c69ff6e5f63b1fa797bd9701ce4b73607baffca1861dbf85d2ef3a522333d",
+      "actualExit": 0,
+      "startedAt": "2026-10-06T01:35:17.763Z",
+      "finishedAt": "2026-10-06T01:35:17.835Z",
+      "childClosed": true,
+      "stdout": {
+        "file": "syntax-2.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "file": "syntax-2.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "label": "syntax-3-v2",
+      "file": "syntax-3-v2.closed.json",
+      "bytes": 490,
+      "sha256": "807561046af99740f9f2ebf5c43bddea21aa692711e67c5a2e48dafab356d482",
+      "actualExit": 0,
+      "startedAt": "2026-10-06T01:36:31.747Z",
+      "finishedAt": "2026-10-06T01:36:31.861Z",
+      "childClosed": true,
+      "stdout": {
+        "file": "syntax-3-v2.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "file": "syntax-3-v2.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "label": "syntax-4",
+      "file": "syntax-4.closed.json",
+      "bytes": 475,
+      "sha256": "f516e17e02b3db424d89155a990e8cb474968a6006ef04a0c49f5261ecb94c54",
+      "actualExit": 0,
+      "startedAt": "2026-10-06T01:35:18.789Z",
+      "finishedAt": "2026-10-06T01:35:18.861Z",
+      "childClosed": true,
+      "stdout": {
+        "file": "syntax-4.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "file": "syntax-4.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "label": "syntax-5",
+      "file": "syntax-5.closed.json",
+      "bytes": 480,
+      "sha256": "bf43af6f6c75df174a8419f7579cd4f5064d31b2bea9dbe7605f4a670a5dfbbf",
+      "actualExit": 0,
+      "startedAt": "2026-10-06T01:35:19.309Z",
+      "finishedAt": "2026-10-06T01:35:19.379Z",
+      "childClosed": true,
+      "stdout": {
+        "file": "syntax-5.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "file": "syntax-5.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "label": "syntax-6",
+      "file": "syntax-6.closed.json",
+      "bytes": 476,
+      "sha256": "bf37c91f3498785ccd405c5d1cba1e7857e9f3fa61595a35f42a59e4e5268160",
+      "actualExit": 0,
+      "startedAt": "2026-10-06T01:35:19.815Z",
+      "finishedAt": "2026-10-06T01:35:19.890Z",
+      "childClosed": true,
+      "stdout": {
+        "file": "syntax-6.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "file": "syntax-6.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "label": "syntax-7",
+      "file": "syntax-7.closed.json",
+      "bytes": 479,
+      "sha256": "2c1d8ea5fc74f358d33ffdacd6376337334cde99240f2d0eaaf3f61fa2950b94",
+      "actualExit": 0,
+      "startedAt": "2026-10-06T01:35:20.435Z",
+      "finishedAt": "2026-10-06T01:35:20.546Z",
+      "childClosed": true,
+      "stdout": {
+        "file": "syntax-7.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "file": "syntax-7.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "label": "syntax-8",
+      "file": "syntax-8.closed.json",
+      "bytes": 470,
+      "sha256": "a1a89bc953b57c7ee4c298dc93bbafdc2d41b11e0137ea761f48b8cc077a7041",
+      "actualExit": 0,
+      "startedAt": "2026-10-06T01:35:20.947Z",
+      "finishedAt": "2026-10-06T01:35:21.017Z",
+      "childClosed": true,
+      "stdout": {
+        "file": "syntax-8.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "file": "syntax-8.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "label": "existing-helper-control-flow",
+      "file": "existing-helper-control-flow.closed.json",
+      "bytes": 589,
+      "sha256": "283ff73e4063ba3951261e530ee97e69fdac0f78bb5d5cdcd8e80713a9ed2425",
+      "actualExit": 0,
+      "startedAt": "2026-10-06T01:35:21.495Z",
+      "finishedAt": "2026-10-06T01:35:22.459Z",
+      "childClosed": true,
+      "stdout": {
+        "file": "existing-helper-control-flow.stdout.log",
+        "bytes": 769,
+        "sha256": "a5cb5c633adaae9f8a7568990a5cbf6b7ed269d265e7c1df8780ea46f47ff94a"
+      },
+      "stderr": {
+        "file": "existing-helper-control-flow.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "label": "native-environment-probe",
+      "file": "native-environment-probe.closed.json",
+      "bytes": 554,
+      "sha256": "1b0960bb7ba54436767a1ecd0e0e7c6844da6e9591452e453a38a76d6f58b8f2",
+      "actualExit": 0,
+      "startedAt": "2026-10-06T01:35:21.995Z",
+      "finishedAt": "2026-10-06T01:35:22.426Z",
+      "childClosed": true,
+      "stdout": {
+        "file": "native-environment-probe.stdout.log",
+        "bytes": 703,
+        "sha256": "f1251ab6c80dbac67afea5c614882529fcd5c1ccdb03378f4b62e016151ce9e8"
+      },
+      "stderr": {
+        "file": "native-environment-probe.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "label": "fix-new-lock-lines-lf",
+      "file": "fix-new-lock-lines-lf.closed.json",
+      "bytes": 542,
+      "sha256": "4f2391cf1fee32d42abf10ab5284b110577fe90d0b4d6eaa53878a543cc7c2c9",
+      "actualExit": 0,
+      "startedAt": "2026-10-06T01:36:29.659Z",
+      "finishedAt": "2026-10-06T01:36:29.753Z",
+      "childClosed": true,
+      "stdout": {
+        "file": "fix-new-lock-lines-lf.stdout.log",
+        "bytes": 355,
+        "sha256": "bd9e0cd45d074d564fcede6894fa5d34058bf8a6beafe2f37a05677015ac615d"
+      },
+      "stderr": {
+        "file": "fix-new-lock-lines-lf.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "label": "audit-eight-v2",
+      "file": "audit-eight-v2.closed.json",
+      "bytes": 541,
+      "sha256": "33ef2e1b80e03c5b1507d0b352f246923f535c860c7a4d2a189e74e3f909258e",
+      "actualExit": 0,
+      "startedAt": "2026-10-06T01:36:32.626Z",
+      "finishedAt": "2026-10-06T01:36:33.999Z",
+      "childClosed": true,
+      "stdout": {
+        "file": "audit-eight-v2.stdout.log",
+        "bytes": 145,
+        "sha256": "4d087d35909a8ca08a41dfe595ec96fbcdb2b158eaaa3ecc853e1a03791a487f"
+      },
+      "stderr": {
+        "file": "audit-eight-v2.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "label": "eight-diff-check-v2",
+      "file": "eight-diff-check-v2.closed.json",
+      "bytes": 1124,
+      "sha256": "9e1d7df9e669b9d27e1c743625c573110dca681dc0ef9ae94a0924442572d55c",
+      "actualExit": 0,
+      "startedAt": "2026-10-06T01:36:33.151Z",
+      "finishedAt": "2026-10-06T01:36:33.224Z",
+      "childClosed": true,
+      "stdout": {
+        "file": "eight-diff-check-v2.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "file": "eight-diff-check-v2.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "preservedFailedAttempts": [
+    {
+      "label": "implement-eight",
+      "file": "implement-eight.closed.json",
+      "bytes": 518,
+      "sha256": "6679349b1dafd1618834c9aa5714fbe09be0ddd8e95c4d80649db8fc816f7b10",
+      "actualExit": 1,
+      "startedAt": "2026-10-06T01:29:47.242Z",
+      "finishedAt": "2026-10-06T01:29:47.431Z",
+      "stdout": "implement-eight.stdout.log",
+      "stderr": "implement-eight.stderr.log",
+      "meaning": "Initial loader regex tooling error before any repository write; v1 script and raw stderr preserved."
+    },
+    {
+      "label": "eight-diff-check",
+      "file": "eight-diff-check.closed.json",
+      "bytes": 1115,
+      "sha256": "8c499b559b3352c43f1885759b52c107023790a90a908e643c3d64b543c277ba",
+      "actualExit": 2,
+      "startedAt": "2026-10-06T01:35:22.481Z",
+      "finishedAt": "2026-10-06T01:35:22.552Z",
+      "stdout": "eight-diff-check.stdout.log",
+      "stderr": "eight-diff-check.stderr.log",
+      "meaning": "Six newly inserted CRLF line endings treated as trailing whitespace; corrected to original LF only, original runtime behavior unchanged."
+    }
+  ],
+  "rawFiles": [
+    {
+      "file": "add-original-lock-proof.closed.json",
+      "bytes": 550,
+      "sha256": "0584e592af21d7a9c7b5efae14f124b34e49f6660d0e57995cc7fc8a78432ed5"
+    },
+    {
+      "file": "add-original-lock-proof.mjs",
+      "bytes": 2300,
+      "sha256": "4a7c4674312efb918ed8e0c55099e162179d8f79a5abef7fb9b96c6319334e87"
+    },
+    {
+      "file": "add-original-lock-proof.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "add-original-lock-proof.stdout.log",
+      "bytes": 348,
+      "sha256": "71f79c6be18ca9b552ab30acfda76c48917c383a50072ee25fc8f0c8fa404749"
+    },
+    {
+      "file": "audit-eight-v2.closed.json",
+      "bytes": 541,
+      "sha256": "33ef2e1b80e03c5b1507d0b352f246923f535c860c7a4d2a189e74e3f909258e"
+    },
+    {
+      "file": "audit-eight-v2.mjs",
+      "bytes": 9604,
+      "sha256": "53b4389fbdf7eab01991176a8a3b7bb8c1a0b7ab9d314562898a818e850f5ae5"
+    },
+    {
+      "file": "audit-eight-v2.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "audit-eight-v2.stdout.log",
+      "bytes": 145,
+      "sha256": "4d087d35909a8ca08a41dfe595ec96fbcdb2b158eaaa3ecc853e1a03791a487f"
+    },
+    {
+      "file": "audit-eight.closed.json",
+      "bytes": 529,
+      "sha256": "8936a8e955de452e043ab2d97b4eb03434e8ae453f0e5c321a85981fab6a5d58"
+    },
+    {
+      "file": "audit-eight.mjs",
+      "bytes": 9595,
+      "sha256": "1d5cc521082fba5bceeb3a60cfe5cf50c6a3e4ce0f7cf2936c4b93ac2c680a58"
+    },
+    {
+      "file": "audit-eight.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "audit-eight.stdout.log",
+      "bytes": 145,
+      "sha256": "4d087d35909a8ca08a41dfe595ec96fbcdb2b158eaaa3ecc853e1a03791a487f"
+    },
+    {
+      "file": "eight-diff-check-v2.closed.json",
+      "bytes": 1124,
+      "sha256": "9e1d7df9e669b9d27e1c743625c573110dca681dc0ef9ae94a0924442572d55c"
+    },
+    {
+      "file": "eight-diff-check-v2.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "eight-diff-check-v2.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "eight-diff-check.closed.json",
+      "bytes": 1115,
+      "sha256": "8c499b559b3352c43f1885759b52c107023790a90a908e643c3d64b543c277ba"
+    },
+    {
+      "file": "eight-diff-check.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "eight-diff-check.stdout.log",
+      "bytes": 1105,
+      "sha256": "337017ad1363ec947f91628872909c6ff3b2e4c8e56d37f7792b144e5a9e2bc4"
+    },
+    {
+      "file": "eight-edits.json",
+      "bytes": 15809,
+      "sha256": "751d3bbd9cf2566d3df330b48ba4ce625f09c7000868d1d2d6f85ed338a82569"
+    },
+    {
+      "file": "eight-final-edits-v2.json",
+      "bytes": 17597,
+      "sha256": "3ac28930a6a80565934a0ce11afb1a1a6d33d5845eb62a7f3611da9eb570c923"
+    },
+    {
+      "file": "eight-final-edits.json",
+      "bytes": 16514,
+      "sha256": "91c14209f4f4a331e49006d5963c33358a75a44b174324c69b2d625cec18a922"
+    },
+    {
+      "file": "eight-source-audit-v2.json",
+      "bytes": 104890,
+      "sha256": "4c665d7ad92a6e85ad7de0538ab3b898acb53e3a8f0aa06c702c6352a154cd48"
+    },
+    {
+      "file": "eight-source-audit.json",
+      "bytes": 103813,
+      "sha256": "38b1aa0f148bde4732ac2889b0f0247f606d3eb7410881fc6bc7ab778034d613"
+    },
+    {
+      "file": "existing-bridge-control-flow.test.mjs",
+      "bytes": 8762,
+      "sha256": "59c583f99819f5d628f27c29bb2e69d258fd64631df1ca01fcba37f82c510105"
+    },
+    {
+      "file": "existing-helper-control-flow.closed.json",
+      "bytes": 589,
+      "sha256": "283ff73e4063ba3951261e530ee97e69fdac0f78bb5d5cdcd8e80713a9ed2425"
+    },
+    {
+      "file": "existing-helper-control-flow.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "existing-helper-control-flow.stdout.log",
+      "bytes": 769,
+      "sha256": "a5cb5c633adaae9f8a7568990a5cbf6b7ed269d265e7c1df8780ea46f47ff94a"
+    },
+    {
+      "file": "fix-new-lock-lines-lf.closed.json",
+      "bytes": 542,
+      "sha256": "4f2391cf1fee32d42abf10ab5284b110577fe90d0b4d6eaa53878a543cc7c2c9"
+    },
+    {
+      "file": "fix-new-lock-lines-lf.mjs",
+      "bytes": 2170,
+      "sha256": "492860c4c3329f466a7aba47725df07b401fd706497bcd619c0e794e1031d7af"
+    },
+    {
+      "file": "fix-new-lock-lines-lf.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "fix-new-lock-lines-lf.stdout.log",
+      "bytes": 355,
+      "sha256": "bd9e0cd45d074d564fcede6894fa5d34058bf8a6beafe2f37a05677015ac615d"
+    },
+    {
+      "file": "implement-eight-v1-loader-tool-error.mjs",
+      "bytes": 7072,
+      "sha256": "a5729865311f4985b7ea230c40e51d9641a0ad93cabb615901ccd0053f5ade43"
+    },
+    {
+      "file": "implement-eight-v2.closed.json",
+      "bytes": 527,
+      "sha256": "53a138418b1b9cb8d212aaba45ce8634736a9d7b77fc5c58ebe1cfc678be3933"
+    },
+    {
+      "file": "implement-eight-v2.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "implement-eight-v2.stdout.log",
+      "bytes": 2542,
+      "sha256": "11b1a1170fddc8947f309b7af2d112e7f71bf457497cfe72f8abf093bd0b57ed"
+    },
+    {
+      "file": "implement-eight.closed.json",
+      "bytes": 518,
+      "sha256": "6679349b1dafd1618834c9aa5714fbe09be0ddd8e95c4d80649db8fc816f7b10"
+    },
+    {
+      "file": "implement-eight.mjs",
+      "bytes": 8516,
+      "sha256": "e13d7b3a518dcf81da1ca98e3f23a56289c575c5c0301bea70624c93c6b3a355"
+    },
+    {
+      "file": "implement-eight.stderr.log",
+      "bytes": 492,
+      "sha256": "907effb013925969d92782da439fd48bf4eda130e881a45c90031f4428733d72"
+    },
+    {
+      "file": "implement-eight.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "native-environment-probe.closed.json",
+      "bytes": 554,
+      "sha256": "1b0960bb7ba54436767a1ecd0e0e7c6844da6e9591452e453a38a76d6f58b8f2"
+    },
+    {
+      "file": "native-environment-probe.mjs",
+      "bytes": 663,
+      "sha256": "3b52f17054e10e23f575675c78c075dc58327ba3c1691d2e82146d9dbcb7f604"
+    },
+    {
+      "file": "native-environment-probe.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "native-environment-probe.stdout.log",
+      "bytes": 703,
+      "sha256": "f1251ab6c80dbac67afea5c614882529fcd5c1ccdb03378f4b62e016151ce9e8"
+    },
+    {
+      "file": "postgres-authenticated-complete-text-quote-v360.native.test.mjs.after",
+      "bytes": 20648,
+      "sha256": "18cb4237ca6a1d4cead3f4819f04e64927a6bb1138636393858df52ef8f79b8f"
+    },
+    {
+      "file": "postgres-authenticated-complete-text-quote-v360.native.test.mjs.before",
+      "bytes": 20448,
+      "sha256": "bf43350602f779a9f6bd626e136490d7bcbdac36d1bbd75fc0e8a432570a8390"
+    },
+    {
+      "file": "postgres-authenticated-complete-text-quote-v360.native.test.mjs.final-after",
+      "bytes": 20648,
+      "sha256": "18cb4237ca6a1d4cead3f4819f04e64927a6bb1138636393858df52ef8f79b8f"
+    },
+    {
+      "file": "postgres-authenticated-complete-text-quote-v360.native.test.mjs.final-after-v2",
+      "bytes": 20648,
+      "sha256": "18cb4237ca6a1d4cead3f4819f04e64927a6bb1138636393858df52ef8f79b8f"
+    },
+    {
+      "file": "postgres-authenticated-request-capability-login-v356.native.test.mjs.after",
+      "bytes": 26551,
+      "sha256": "3e4b39b5abc42858ecf15d0a80ab16709c9b0bcb660c7e2c01d7ff8229a58863"
+    },
+    {
+      "file": "postgres-authenticated-request-capability-login-v356.native.test.mjs.after-lf-fix",
+      "bytes": 26960,
+      "sha256": "705e662847be88aeee6a97017cf4ab4de27b915a1f86db412f9dd7c119bcdcef"
+    },
+    {
+      "file": "postgres-authenticated-request-capability-login-v356.native.test.mjs.after-original-lock-proof",
+      "bytes": 26966,
+      "sha256": "7efb7dcdce5330c5851c269c3e2102ee4b57e67fb9e6125dcb34e238bb876847"
+    },
+    {
+      "file": "postgres-authenticated-request-capability-login-v356.native.test.mjs.before",
+      "bytes": 23606,
+      "sha256": "c4c11dff6781b771c7dbbcba2ed32ab6a46053741e9af56844d1e641539711cd"
+    },
+    {
+      "file": "postgres-authenticated-request-capability-login-v356.native.test.mjs.before-lf-fix",
+      "bytes": 26966,
+      "sha256": "7efb7dcdce5330c5851c269c3e2102ee4b57e67fb9e6125dcb34e238bb876847"
+    },
+    {
+      "file": "postgres-authenticated-request-capability-login-v356.native.test.mjs.before-original-lock-proof",
+      "bytes": 26551,
+      "sha256": "3e4b39b5abc42858ecf15d0a80ab16709c9b0bcb660c7e2c01d7ff8229a58863"
+    },
+    {
+      "file": "postgres-authenticated-request-capability-login-v356.native.test.mjs.final-after",
+      "bytes": 26966,
+      "sha256": "7efb7dcdce5330c5851c269c3e2102ee4b57e67fb9e6125dcb34e238bb876847"
+    },
+    {
+      "file": "postgres-authenticated-request-capability-login-v356.native.test.mjs.final-after-v2",
+      "bytes": 26960,
+      "sha256": "705e662847be88aeee6a97017cf4ab4de27b915a1f86db412f9dd7c119bcdcef"
+    },
+    {
+      "file": "postgres-authenticated-text-route-ceiling-v357.native.test.mjs.after",
+      "bytes": 21673,
+      "sha256": "0502916463be8d95bf0c7d4aae4070b7b8e2d94f6978c187c7f786eccf3a8c3f"
+    },
+    {
+      "file": "postgres-authenticated-text-route-ceiling-v357.native.test.mjs.before",
+      "bytes": 21479,
+      "sha256": "25186e7b24c310b1b45fdf490356539593aeb7ab0bbe89596fd835920cc661bb"
+    },
+    {
+      "file": "postgres-authenticated-text-route-ceiling-v357.native.test.mjs.final-after",
+      "bytes": 21673,
+      "sha256": "0502916463be8d95bf0c7d4aae4070b7b8e2d94f6978c187c7f786eccf3a8c3f"
+    },
+    {
+      "file": "postgres-authenticated-text-route-ceiling-v357.native.test.mjs.final-after-v2",
+      "bytes": 21673,
+      "sha256": "0502916463be8d95bf0c7d4aae4070b7b8e2d94f6978c187c7f786eccf3a8c3f"
+    },
+    {
+      "file": "postgres-authenticated-text-route-source-fence-v359.native.test.mjs.after",
+      "bytes": 23598,
+      "sha256": "e5398315db6353023400c255093080497276a9d27db5989dd6229db9c75c251c"
+    },
+    {
+      "file": "postgres-authenticated-text-route-source-fence-v359.native.test.mjs.before",
+      "bytes": 23398,
+      "sha256": "c735503883dd25e1ab20c2fd43a1f9d60821d385942e473449097f985757dc46"
+    },
+    {
+      "file": "postgres-authenticated-text-route-source-fence-v359.native.test.mjs.final-after",
+      "bytes": 23598,
+      "sha256": "e5398315db6353023400c255093080497276a9d27db5989dd6229db9c75c251c"
+    },
+    {
+      "file": "postgres-authenticated-text-route-source-fence-v359.native.test.mjs.final-after-v2",
+      "bytes": 23598,
+      "sha256": "e5398315db6353023400c255093080497276a9d27db5989dd6229db9c75c251c"
+    },
+    {
+      "file": "postgres-complete-text-attempt-grant-v362.native.test.mjs.after",
+      "bytes": 38065,
+      "sha256": "05d2cd1f0b080ab416c08b48ce02fcd812522238b32e38732a94908ec075b8a2"
+    },
+    {
+      "file": "postgres-complete-text-attempt-grant-v362.native.test.mjs.before",
+      "bytes": 37867,
+      "sha256": "a57330725f2393d09f145429f280f2cfb7a28b3a72f5146b6205f0e0d40d7784"
+    },
+    {
+      "file": "postgres-complete-text-attempt-grant-v362.native.test.mjs.final-after",
+      "bytes": 38065,
+      "sha256": "05d2cd1f0b080ab416c08b48ce02fcd812522238b32e38732a94908ec075b8a2"
+    },
+    {
+      "file": "postgres-complete-text-attempt-grant-v362.native.test.mjs.final-after-v2",
+      "bytes": 38065,
+      "sha256": "05d2cd1f0b080ab416c08b48ce02fcd812522238b32e38732a94908ec075b8a2"
+    },
+    {
+      "file": "postgres-complete-text-quote-budget-admission-v361.native.test.mjs.after",
+      "bytes": 23555,
+      "sha256": "47d2dff22ae15ee6e3ba5337746513f3262d5ead74c5bbcc030508b0af6d8f72"
+    },
+    {
+      "file": "postgres-complete-text-quote-budget-admission-v361.native.test.mjs.before",
+      "bytes": 23357,
+      "sha256": "b48077d2035d04ce981614ecf2eb317496f04f98440c79dadb68047e71e5b92a"
+    },
+    {
+      "file": "postgres-complete-text-quote-budget-admission-v361.native.test.mjs.final-after",
+      "bytes": 23555,
+      "sha256": "47d2dff22ae15ee6e3ba5337746513f3262d5ead74c5bbcc030508b0af6d8f72"
+    },
+    {
+      "file": "postgres-complete-text-quote-budget-admission-v361.native.test.mjs.final-after-v2",
+      "bytes": 23555,
+      "sha256": "47d2dff22ae15ee6e3ba5337746513f3262d5ead74c5bbcc030508b0af6d8f72"
+    },
+    {
+      "file": "postgres-guardrail-budget-admission-login-v351.native.test.mjs.after",
+      "bytes": 27087,
+      "sha256": "83c956c75d60958721cdfdb4fe72aa5b7cde37eaeaf857fac70745274b92da59"
+    },
+    {
+      "file": "postgres-guardrail-budget-admission-login-v351.native.test.mjs.before",
+      "bytes": 26904,
+      "sha256": "bbcbb33aa07d33530692d64d7ab5d24844bbfd44777f9ab8170533d2af0a60af"
+    },
+    {
+      "file": "postgres-guardrail-budget-admission-login-v351.native.test.mjs.final-after",
+      "bytes": 27087,
+      "sha256": "83c956c75d60958721cdfdb4fe72aa5b7cde37eaeaf857fac70745274b92da59"
+    },
+    {
+      "file": "postgres-guardrail-budget-admission-login-v351.native.test.mjs.final-after-v2",
+      "bytes": 27087,
+      "sha256": "83c956c75d60958721cdfdb4fe72aa5b7cde37eaeaf857fac70745274b92da59"
+    },
+    {
+      "file": "postgres-ordinary-budget-recovery-v354.native.test.mjs.after",
+      "bytes": 22685,
+      "sha256": "110093eda6ec9a116e695ed3ca54468bbf7dafa7b3ee0a34ad346dc7b9883c53"
+    },
+    {
+      "file": "postgres-ordinary-budget-recovery-v354.native.test.mjs.before",
+      "bytes": 22491,
+      "sha256": "3a6754fe2fd1e8d5a3a101bfb79e9c15ca3fdff3eec0edcca3da0cc6c7e62c0b"
+    },
+    {
+      "file": "postgres-ordinary-budget-recovery-v354.native.test.mjs.final-after",
+      "bytes": 22685,
+      "sha256": "110093eda6ec9a116e695ed3ca54468bbf7dafa7b3ee0a34ad346dc7b9883c53"
+    },
+    {
+      "file": "postgres-ordinary-budget-recovery-v354.native.test.mjs.final-after-v2",
+      "bytes": 22685,
+      "sha256": "110093eda6ec9a116e695ed3ca54468bbf7dafa7b3ee0a34ad346dc7b9883c53"
+    },
+    {
+      "file": "prepare-final-local-checks.closed.json",
+      "bytes": 562,
+      "sha256": "ddd40524cf21d221106d5d04399141d5ceed9607b1f46074665db4a26804c996"
+    },
+    {
+      "file": "prepare-final-local-checks.mjs",
+      "bytes": 1487,
+      "sha256": "59e4b0013fabffa6af10d75d38e995303d086f2049ed86953ab0accb5d7e6084"
+    },
+    {
+      "file": "prepare-final-local-checks.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "prepare-final-local-checks.stdout.log",
+      "bytes": 215,
+      "sha256": "650c14308b68d8d9f3162d9018504b12e165f6d1af84fec7eaa5f10e607eadc6"
+    },
+    {
+      "file": "run-command.mjs",
+      "bytes": 1819,
+      "sha256": "945b8d1abae080cff6e04eaf07f89134c091f38f8edae39f1be29be79eda8958"
+    },
+    {
+      "file": "seal-final.mjs",
+      "bytes": 7878,
+      "sha256": "08d0fed47b980be16dadf2b1c945a4832d54655118acd675fe0b2f0251f26e3c"
+    },
+    {
+      "file": "syntax-1.closed.json",
+      "bytes": 467,
+      "sha256": "2d12f490a7c7ace98a1ec6298e7a921c75eaa590dc614d1dce162d49567aeb8a"
+    },
+    {
+      "file": "syntax-1.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "syntax-1.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "syntax-2.closed.json",
+      "bytes": 475,
+      "sha256": "eb7c69ff6e5f63b1fa797bd9701ce4b73607baffca1861dbf85d2ef3a522333d"
+    },
+    {
+      "file": "syntax-2.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "syntax-2.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "syntax-3-v2.closed.json",
+      "bytes": 490,
+      "sha256": "807561046af99740f9f2ebf5c43bddea21aa692711e67c5a2e48dafab356d482"
+    },
+    {
+      "file": "syntax-3-v2.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "syntax-3-v2.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "syntax-3.closed.json",
+      "bytes": 481,
+      "sha256": "db7ee861c3338f93f88fea8bd581e1bf251658568647d1733d083b7df4eed5ba"
+    },
+    {
+      "file": "syntax-3.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "syntax-3.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "syntax-4.closed.json",
+      "bytes": 475,
+      "sha256": "f516e17e02b3db424d89155a990e8cb474968a6006ef04a0c49f5261ecb94c54"
+    },
+    {
+      "file": "syntax-4.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "syntax-4.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "syntax-5.closed.json",
+      "bytes": 480,
+      "sha256": "bf43af6f6c75df174a8419f7579cd4f5064d31b2bea9dbe7605f4a670a5dfbbf"
+    },
+    {
+      "file": "syntax-5.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "syntax-5.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "syntax-6.closed.json",
+      "bytes": 476,
+      "sha256": "bf37c91f3498785ccd405c5d1cba1e7857e9f3fa61595a35f42a59e4e5268160"
+    },
+    {
+      "file": "syntax-6.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "syntax-6.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "syntax-7.closed.json",
+      "bytes": 479,
+      "sha256": "2c1d8ea5fc74f358d33ffdacd6376337334cde99240f2d0eaaf3f61fa2950b94"
+    },
+    {
+      "file": "syntax-7.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "syntax-7.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "syntax-8.closed.json",
+      "bytes": 470,
+      "sha256": "a1a89bc953b57c7ee4c298dc93bbafdc2d41b11e0137ea761f48b8cc077a7041"
+    },
+    {
+      "file": "syntax-8.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "syntax-8.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "nativeResult": {
+    "executed": false,
+    "pgPassClaim": false,
+    "skipCountNeverTreatedAsPass": true,
+    "nextAuthority": "Root same-source-SHA existing Proxy native Linux workflow using owned PostgreSQL18.6; especially v356 original lock wait, MVCC73/0074 bridge and cleanup remain pending."
+  },
+  "concurrencyReasoning": {
+    "sharedMigratorRejected": "max1 connection is held by original proposal transaction, so helper state queries would queue; independent owned direct migrator peer used instead.",
+    "naivePeerRejected": "The original proposal holds schema_migrations SHARE ROW EXCLUSIVE, so starting 0074 ledger INSERT after body would wait on that table before reaching production advisory wait.",
+    "preparation": "One session advisory lock holds the external unchanged production grant while peer helper commits temporary0074; original transaction removes only that ledger row and runs original frozen proposal on73.",
+    "originalInterlock": "After original SQL acquired its existing xact lock, preparation session lock is explicitly unlocked/released=true. A current-backend bigint-key granted pg_locks read must still be true, then original60x25ms wait=true and exact Request capability rejection run unchanged.",
+    "cleanup": "Original transaction commits/deletes temporary ledger row; unchanged helper finally drops audit and restores exact73. On transaction error, same max1 migrator releases preparation session lock after rollback; if unlock connection fails it ends only that owned session. Its nested finally settles peer helper before original client/cluster cleanup.",
+    "assertionCoverageLimitation": "Static exact-source and read-only lock checks reduce false-positive risk; only real PostgreSQL Linux execution can establish MVCC, lock handoff and cleanup.",
+    "nativeNegativeControlRecommendation": "With owned Linux and all other source bytes frozen, remove only proposal SELECT pg_advisory_xact_lock(746923553) from an isolated diagnostic body. New after-session-unlock current-backend held probe must fail even if pg_stat_activity temporarily shows the earlier session wait; preserve failure/cleanup evidence. Do not change production proposal or original test acceptance."
+  },
+  "limitations": [
+    "No Windows native fixture was run because explicit binary is absent; no skipped native test is counted as passing.",
+    "No full G1/G7/G8 completion or original102 checklist task completion claim.",
+    "No production database, Cloudflare route, secret or authentication identity changed by this agent."
+  ]
+}

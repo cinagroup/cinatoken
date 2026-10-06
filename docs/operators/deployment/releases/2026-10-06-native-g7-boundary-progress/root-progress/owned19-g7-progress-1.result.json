@@ -1,0 +1,17 @@
+{
+  "at": "2026-10-06T02:05:35.362Z",
+  "finishedAt": "2026-10-06T02:05:38.868Z",
+  "executable": "C:/Program Files/GitHub CLI/gh.exe",
+  "args": [
+    "run",
+    "view",
+    "37402317152",
+    "--json",
+    "status,conclusion,headSha,jobs,url"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-boundary-next-20261006-Zm6Z3E/owned19-g7-progress-1.stdout.log",
+  "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-boundary-next-20261006-Zm6Z3E/owned19-g7-progress-1.stderr.log"
+}

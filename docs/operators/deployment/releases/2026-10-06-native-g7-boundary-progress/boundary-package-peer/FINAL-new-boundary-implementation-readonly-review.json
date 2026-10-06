@@ -1,0 +1,134 @@
+{
+  "schema": "cinatoken.v364.boundary-implementation.independent-readonly-review.v1",
+  "reviewActualExit": 0,
+  "runtimeExecuted": false,
+  "runtimeAcceptanceProven": false,
+  "repoWrites": 0,
+  "ciRequests": 0,
+  "productionRequests": 0,
+  "manifest": {
+    "path": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-owned-linux-boundary\\sealed-package.json",
+    "bytes": 1396,
+    "sha256": "5d7d30ad7d77971a244fd693324d0854981cc1280cc4f8a394b0f4cc51d922ce"
+  },
+  "sealedChecks": [
+    {
+      "relativePath": "bare-async-source.mjs",
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-owned-linux-boundary\\bare-async-source.mjs",
+      "bytes": 1864,
+      "sha256": "86b67412be0b8ef8434edfd0f44c8c6e5d306ce3f76ed3deed8305cca2771bfd",
+      "exact": true
+    },
+    {
+      "relativePath": "direct-holder.mjs",
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-owned-linux-boundary\\direct-holder.mjs",
+      "bytes": 785,
+      "sha256": "4019fbebd9575bcad6dd3a987d320cd7eb96d646ab344bea5918f7305faaee84",
+      "exact": true
+    },
+    {
+      "relativePath": "proc-census.mjs",
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-owned-linux-boundary\\proc-census.mjs",
+      "bytes": 1443,
+      "sha256": "bd6d4ebe4fea6ac1c11b6a67b4f44fcb23595e79a2fdcf10360101888026b8a0",
+      "exact": true
+    },
+    {
+      "relativePath": "run-boundary.mjs",
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-owned-linux-boundary\\run-boundary.mjs",
+      "bytes": 28489,
+      "sha256": "9341885b2890b8270b2b9732cd46c169bb41c4a3a4f6d4eef5f662ee3cda7cda",
+      "exact": true
+    },
+    {
+      "relativePath": "execute-owned-linux.py",
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-owned-linux-boundary\\execute-owned-linux.py",
+      "bytes": 15923,
+      "sha256": "950feb5d0556d4dcaa2fcb2e690dd53cfcea5234c3a941501269baa01ffd2f13",
+      "exact": true
+    },
+    {
+      "relativePath": "README.md",
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-owned-linux-boundary\\README.md",
+      "bytes": 6071,
+      "sha256": "c4f87c06031bbe6bb9e8179272ce0636e4723ab8892d74f21345e0d376f421ba",
+      "exact": true
+    },
+    {
+      "relativePath": "source-inputs.json",
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-owned-linux-boundary\\source-inputs.json",
+      "bytes": 6588,
+      "sha256": "7b7b322398fe389f2ae1426746c65f6fe9ee0bc9ea1f91dfc3febfb8aeadfa3d",
+      "exact": true
+    },
+    {
+      "relativePath": ".github/workflows/v364-owned-linux-boundary.yml",
+      "path": "C:\\cinagroup\\cinatoken\\.github\\workflows\\v364-owned-linux-boundary.yml",
+      "bytes": 1575,
+      "sha256": "08977f1966eb42e67aebdb9986b66cb9f05a618f6a12964a8a2daffc64ce4712",
+      "exact": true
+    }
+  ],
+  "sourceInputReviewMetadata": {
+    "reviewBaseHEAD": "6658ec978009afa5fe3f4beccf6bde358590b663",
+    "preparedAtHead": "6658ec978009afa5fe3f4beccf6bde358590b663",
+    "executionSHAIsSeparate": true
+  },
+  "conclusion": "NO_REMAINING_SPECIFIC_IMPLEMENTATION_BLOCKER_AFTER_READONLY_REPAIR_REVIEW",
+  "reviewed": [
+    "bare-async-source.mjs preserves frozen SSE first frame, HWM0, async300 KV release poll/10ms, cancel KV put then same ctx.waitUntil and await. Envelope validation is deliberately simpler and the arm remains a diagnostic variant.",
+    "direct-holder.mjs imports frozen observers whose esbuild plugin resolves __ORIGINAL__ to the correct frozen gateway/holder. Its TEXT_HOLDER.fetch is only a local function mapping with the exact gateway-created Request, owned env and ctx; original Response(body) rewrap remains.",
+    "createFixture registers Miniflare before readiness or binding awaits. Bare/direct have exactly OBSERVATIONS binding; binding arm has original gateway TEXT_HOLDER and holder OBSERVATIONS. Locked flags/dependencies unchanged.",
+    "Explicit Node HTTP destroy/RST calibration checks exact received request body, single request, incomplete response, and client plus peer socket/response closure. RST API invocation has its own event and a dedicated agent:false connection.",
+    "Each explicit cancel requires the response and socket to remain open beforehand. socketClosed is bounded even outside the response.closed conditional; an already closed response cannot be attributed as a new RST.",
+    "Safe event/census wrappers record observationFailures without throwing past fixture disposal. Observation failure prevents actualExit0. Disposal API fulfillment remains separate from census completeness and from graceful workerd termination.",
+    "Calibration cleanup error is retained with actualExit1 and the result is still pushed. Each fixture performs final pre-dispose KV reads as usedForPassfalse and explicit dispose-start/dispose-settled phases; active fixtures are retried in outer finally.",
+    "Python owns direct child through Popen.poll/wait only. Adopted Z descendants are individually revalidated by PID,starttime,group,session,ppid and individually waited; no waitpid(-group) can consume the direct child status.",
+    "Known adopted zombie disappearance/no wait status and WNOHANG0 now append cleanup_errors. No synthetic successful exit status is assigned, and unknown closure cannot satisfy outerUnforcedGroupClose.",
+    "Zombie-only owned groups undergo bounded adoption/reaping rather than signals; live/unknown remnants permit necessary TERM/KILL and actual successful signal send retains leftoverGroupKilledtrue. killpg0 alone never establishes a live process.",
+    "Missing, invalid JSON and wrong Node report shape are caught into fatal/rawNone; schema, exact eight IDs, caseIdstring, closedbool and baselineEligiblefalse are checked before closure evaluation. actualProcessExit uses real child.returncode and runnerOutcomeCode keeps timeout124/interrupt130 independently.",
+    "360 second child wait plus initial zombie drain1s and waits10+10 and final drain5 means nominal cleanup ceiling26s, with census/preflight overhead. Diagnostic step7min is larger than nominal386s plus bounded git preflight10s; job10min. A scheduler or /proc syscall delay is not covered by a precise25second claim.",
+    "Workflow is manual-only, contentsread, checkout persistcredentialsfalse, npmci with existing lock, separate concurrency cancelinprogressfalse; original strict failure naturally fails the step with no continueonerror. Artifact name binds SHA/run/attempt, alwaysupload and include-hidden-filestrue includes the exact sealed .github workflow file.",
+    "reviewBaseHEAD6658 is historical preparation metadata; actual checkoutSHA is read at execution, checked against every pinned Git blob, bound through executor-start and compared against GITHUB_SHA by Python. No equality with historical review base is imposed.",
+    "Original two-file baseline runs once first and its actual/raw TAP remains authoritative. All eight new comparisons remain baselineEligiblefalse, 100poll/10ms original window is immutable, 4s tail and pre-dispose snapshot cannot upgrade a failure; old artifact exit1/leftoverGroupKilledtrue is pinned and preserved."
+  ],
+  "repairedFindings": [
+    {
+      "finding": "response closed branch skipped socket wait and RST invocation attribution",
+      "status": "FIX_VERIFIED_BY_SOURCE_READ"
+    },
+    {
+      "finding": "census/event throw could bypass Miniflare dispose in finally",
+      "status": "FIX_VERIFIED_BY_SOURCE_READ"
+    },
+    {
+      "finding": "lost adopted descendant wait status did not reject success",
+      "status": "FIX_VERIFIED_BY_SOURCE_READ"
+    },
+    {
+      "finding": "calibration cleanup failure dropped its negative result",
+      "status": "FIX_VERIFIED_BY_SOURCE_READ"
+    },
+    {
+      "finding": "wrong shape valid Node JSON could prevent executor closed receipt",
+      "status": "FIX_VERIFIED_BY_SOURCE_READ"
+    },
+    {
+      "finding": "hidden .github workflow excluded from artifact by default",
+      "status": "FIX_VERIFIED_BY_SOURCE_READ"
+    }
+  ],
+  "limits": [
+    "This is a source/seal review, not execution of prepare-only or Linux workerd, a CI run, a causal trace, a dependency/runtime fix, or production validation.",
+    "processCensus scopes one owned process group/session. It is observational, does not reap and does not prove the absence of processes that hypothetically escaped that group.",
+    "The locked Miniflare Runtime.dispose destroys stdio then sends SIGKILL and awaits exit, not full close/stdio flush. API disposal and unforced outer group cleanup do not prove graceful runtime shutdown or complete late logs.",
+    "A malformed activeMiniflare boolean equals zero in Python; strict integer validation would be optional additional report-shape defense. Current immutable Node producer emits the numeric Map size, so no concrete execution blocker is asserted from this."
+  ],
+  "primaryReferences": [
+    "https://github.com/actions/upload-artifact/blob/v4/README.md#uploading-hidden-files",
+    "https://man7.org/linux/man-pages/man2/waitpid.2.html",
+    "https://man7.org/linux/man-pages/man2/PR_SET_CHILD_SUBREAPER.2const.html",
+    "https://man7.org/linux/man-pages/man5/proc_pid_stat.5.html",
+    "https://nodejs.org/download/release/latest-v22.x/docs/api/net.html#socketresetanddestroy"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "at": "2026-10-06T01:58:25.245Z",
+  "finishedAt": "2026-10-06T01:58:31.041Z",
+  "executable": "C:/Program Files/GitHub CLI/gh.exe",
+  "args": [
+    "run",
+    "view",
+    "37401132382",
+    "--log-failed"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-boundary-next-20261006-Zm6Z3E/native12-release-terminal-failed.stdout.log",
+  "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-boundary-next-20261006-Zm6Z3E/native12-release-terminal-failed.stderr.log"
+}

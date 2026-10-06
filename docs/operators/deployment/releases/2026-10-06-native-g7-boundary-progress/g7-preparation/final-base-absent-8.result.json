@@ -1,0 +1,26 @@
+{
+  "schema": "web-platform-g7-local-command-closed-v1",
+  "id": "base-absent-8",
+  "program": "git",
+  "args": [
+    "cat-file",
+    "-e",
+    "6658ec978009afa5fe3f4beccf6bde358590b663:scripts/verification/web-platform-g7/wire.mjs"
+  ],
+  "begin": "2026-10-06T01:59:14.841Z",
+  "endedAt": "2026-10-06T01:59:14.880Z",
+  "closed": true,
+  "actualExit": 128,
+  "signal": null,
+  "errorCode": null,
+  "stdout": {
+    "file": "final-base-absent-8.stdout.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stderr": {
+    "file": "final-base-absent-8.stderr.log",
+    "bytes": 130,
+    "sha256": "ca0ffa01ba472e40274891860963a96e951db7a1f93e1d72a292682a8aad936a"
+  }
+}

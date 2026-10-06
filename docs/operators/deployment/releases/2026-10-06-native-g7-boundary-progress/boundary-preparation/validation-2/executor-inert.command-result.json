@@ -1,0 +1,27 @@
+{
+  "id": "executor-inert",
+  "program": "C:/Users/cina/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/check-executor-inert.py"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "timeout": 60000,
+  "status": 0,
+  "signal": null,
+  "error": null,
+  "expectedExit": 0,
+  "outputs": [
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/executor-inert.stdout.txt",
+      "bytes": 1108,
+      "sha256": "daf28a85f4aef51786f466c4f9d4b744f47463f63843a6c20bae43e4e06be1a9"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/executor-inert.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "source": "actual synchronous spawnSync return, not aggregate report",
+  "terminal": true
+}

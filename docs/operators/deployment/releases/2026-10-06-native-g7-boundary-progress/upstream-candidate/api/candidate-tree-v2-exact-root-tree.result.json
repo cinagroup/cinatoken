@@ -1,0 +1,17 @@
+{
+  "closed": true,
+  "actualExitCode": 0,
+  "signal": null,
+  "spawnError": null,
+  "program": "gh",
+  "arguments": [
+    "api",
+    "repos/QuantumNous/new-api/git/trees/66da7fcfe1338d30e84683256547684a69abe716?recursive=1"
+  ],
+  "startedAt": "2026-10-06T01:46:40.070Z",
+  "completedAt": "2026-10-06T01:46:42.728Z",
+  "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-upstream-candidate-H03WpG\\api\\candidate-tree-v2-exact-root-tree.stdout.json",
+  "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-upstream-candidate-H03WpG\\api\\candidate-tree-v2-exact-root-tree.stderr.txt",
+  "stdoutBytes": 744975,
+  "stderrBytes": 0
+}

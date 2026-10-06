@@ -1,0 +1,560 @@
+warning: unable to access 'C:\Users\cina/.config/git/ignore': Permission denied
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+... Skipped lines
+
+  '// Owned PostgreSQL 18.6 proof that a committed private read is not a grant.\n' +
+    "import assert from 'node:assert/strict';\n" +
+    "import { createHash, randomBytes, randomUUID } from 'node:crypto';\n" +
+    "import { once } from 'node:events';\n" +
+    "import { readFile, writeFile } from 'node:fs/promises';\n" +
+...
+    "import { createPrivateCompleteTextHolderV365 } from '../../../packages/proxy/src/services/private-complete-text-holder-v365.ts';\n" +
++   'import { claimPostgresCompleteTextCustodyV365,\r\n' +
++   '  recordPostgresCompleteTextSendStartV365,\r\n' +
++   '  PostgresCompleteTextSendStartRejectedError,\r\n' +
++   "} from '../../../packages/proxy/src/services/postgres-complete-text-send-start-v365.ts';\r\n" +
++   "import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';\r\n" +
+-   'import { claimPostgresCompleteTextCustodyV365,\n' +
+-   '  recordPostgresCompleteTextSendStartV365,\n' +
+-   '  PostgresCompleteTextSendStartRejectedError,\n' +
+-   "} from '../../../packages/proxy/src/services/postgres-complete-text-send-start-v365.ts';\n" +
+-   "import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';\n" +
+    "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';\n" +
++   "import { activatePostgresBuyerSplitV348 } from './activate-postgres-buyer-split-v348.ts';\r\n" +
++   "import { grantPostgresBuyerSplitV348 } from './grant-postgres-buyer-split-v348.ts';\r\n" +
++   "import { activatePostgresBuyerGuardrailSplitV349 } from './activate-postgres-buyer-guardrail-split-v349.ts';\r\n" +
++   "import { grantPostgresBuyerGuardrailSplitV349 } from './grant-postgres-buyer-guardrail-split-v349.ts';\r\n" +
++   '\r\n' +
++   "const g='cinatoken_gateway';\r\n" +
++   "const migrationDir=new URL('../../../packages/core/migrations-postgres/',import.meta.url);\r\n" +
++   'const proposal=name=>new URL(`../../../packages/core/migrations-proposals/postgres/${name}`,import.meta.url);\r\n' +
+-   "import { activatePostgresBuyerSplitV348 } from './activate-postgres-buyer-split-v348.ts';\n" +
+-   "import { grantPostgresBuyerSplitV348 } from './grant-postgres-buyer-split-v348.ts';\n" +
+-   "import { activatePostgresBuyerGuardrailSplitV349 } from './activate-postgres-buyer-guardrail-split-v349.ts';\n" +
+-   "import { grantPostgresBuyerGuardrailSplitV349 } from './grant-postgres-buyer-guardrail-split-v349.ts';\n" +
+-   '\n' +
+-   "const g='cinatoken_gateway';\n" +
+-   "const migrationDir=new URL('../../../packages/core/migrations-postgres/',import.meta.url);\n" +
+-   'const proposal=name=>new URL(`../../../packages/core/migrations-proposals/postgres/${name}`,import.meta.url);\n' +
+    "const reportUrl=new URL('../../../docs/developers/architecture/implementation-evidence/C04-complete-text-read-grant-bridge-v367-report.json',import.meta.url);\n" +
+    "const sha=value=>createHash('sha256').update(value).digest('hex');\n" +
+    "const providerSecret='v367-local-provider-kek-with-no-production-use';\n" +
+    "const providerBearer='v367-local-provider-bearer';\n" +
++   "const bearer='sk-local-complete-text-admission-v361-bearer';\r\n" +
++   'const keyHash=`sha256:${sha(bearer)}`;\r\n' +
++   "const originalHash=sha('original-v361-ingress-body');\r\n" +
++   "const finalBody=JSON.stringify({model:'v361-model',models:['v361-model'],\r\n" +
++   "  messages:[{role:'user',content:'hello'}],max_completion_tokens:300});\r\n" +
++   'const preliminary=[\r\n' +
++   "  ['shared-key-quote-versions.sql','shared_key_quote_versions_activation'],\r\n" +
++   "  ['shared-key-dispatch-quote-attempts.sql','shared_quote_attempt_activation'],\r\n" +
++   "  ['shared-key-economic-outbox.sql','shared_key_economic_outbox_activation'],\r\n" +
++   "  ['shared-key-economic-outbox-producer.sql','shared_key_economic_producer_activation'],\r\n" +
++   "  ['shared-key-snapshot-earning-consumer.sql','shared_key_snapshot_consumer_activation'],\r\n" +
++   "  ['shared-key-buyer-debit-v2.sql','shared_key_buyer_debit_v2_activation'],\r\n" +
++   "  ['shared-key-economic-producer-v2.sql','shared_key_economic_producer_v2_activation'],\r\n" +
++   "  ['shared-key-buyer-budget-receipt-v2.sql','shared_key_buyer_budget_receipt_activation'],\r\n" +
++   '];\r\n' +
++   'const later=[\r\n' +
++   "  ['budget-admission-login-v350.sql','budget_admission_login_activation'],\r\n" +
++   "  ['guardrail-budget-admission-login-v351.sql','guardrail_budget_admission_v351_activation'],\r\n" +
++   "  ['authenticated-request-capability-login-v356.sql','request_capability_login_activation'],\r\n" +
++   "  ['authenticated-text-route-ceiling-issuer-v357.sql','request_route_ceiling_activation'],\r\n" +
++   "  ['authenticated-text-route-source-fence-v359.sql','route_source_fence_activation'],\r\n" +
++   "  ['authenticated-complete-text-quote-v360.sql','complete_text_quote_activation'],\r\n" +
++   '];\r\n' +
++   "const roles={migrator:'cinatoken_gateway_migrator',runtime:'cinatoken_gateway_runtime',\r\n" +
++   "  buyer:'cinatoken_gateway_buyer_settlement',\r\n" +
++   "  admission:'cinatoken_gateway_budget_admission',\r\n" +
++   "  sharedProducer:'cinatoken_gateway_shared_quote_attempt_producer',\r\n" +
++   "  sharedConsumer:'cinatoken_gateway_shared_earning_consumer',\r\n" +
++   "  cap:'cinatoken_gateway_request_capability_issuer',\r\n" +
++   "  claim:'cinatoken_gateway_request_capability_claim',\r\n" +
++   "  fragment:'cinatoken_gateway_request_route_ceiling_issuer',\r\n" +
++   "  verifier:'cinatoken_gateway_route_source_verifier',\r\n" +
+-   "const bearer='sk-local-complete-text-admission-v361-bearer';\n" +
+-   'const keyHash=`sha256:${sha(bearer)}`;\n' +
+-   "const originalHash=sha('original-v361-ingress-body');\n" +
+-   "const finalBody=JSON.stringify({model:'v361-model',models:['v361-model'],\n" +
+-   "  messages:[{role:'user',content:'hello'}],max_completion_tokens:300});\n" +
+-   'const preliminary=[\n' +
+-   "  ['shared-key-quote-versions.sql','shared_key_quote_versions_activation'],\n" +
+-   "  ['shared-key-dispatch-quote-attempts.sql','shared_quote_attempt_activation'],\n" +
+-   "  ['shared-key-economic-outbox.sql','shared_key_economic_outbox_activation'],\n" +
+-   "  ['shared-key-economic-outbox-producer.sql','shared_key_economic_producer_activation'],\n" +
+-   "  ['shared-key-snapshot-earning-consumer.sql','shared_key_snapshot_consumer_activation'],\n" +
+-   "  ['shared-key-buyer-debit-v2.sql','shared_key_buyer_debit_v2_activation'],\n" +
+-   "  ['shared-key-economic-producer-v2.sql','shared_key_economic_producer_v2_activation'],\n" +
+-   "  ['shared-key-buyer-budget-receipt-v2.sql','shared_key_buyer_budget_receipt_activation'],\n" +
+-   '];\n' +
+-   'const later=[\n' +
+-   "  ['budget-admission-login-v350.sql','budget_admission_login_activation'],\n" +
+-   "  ['guardrail-budget-admission-login-v351.sql','guardrail_budget_admission_v351_activation'],\n" +
+-   "  ['authenticated-request-capability-login-v356.sql','request_capability_login_activation'],\n" +
+-   "  ['authenticated-text-route-ceiling-issuer-v357.sql','request_route_ceiling_activation'],\n" +
+-   "  ['authenticated-text-route-source-fence-v359.sql','route_source_fence_activation'],\n" +
+-   "  ['authenticated-complete-text-quote-v360.sql','complete_text_quote_activation'],\n" +
+-   '];\n' +
+-   "const roles={migrator:'cinatoken_gateway_migrator',runtime:'cinatoken_gateway_runtime',\n" +
+-   "  buyer:'cinatoken_gateway_buyer_settlement',\n" +
+-   "  admission:'cinatoken_gateway_budget_admission',\n" +
+-   "  sharedProducer:'cinatoken_gateway_shared_quote_attempt_producer',\n" +
+-   "  sharedConsumer:'cinatoken_gateway_shared_earning_consumer',\n" +
+-   "  cap:'cinatoken_gateway_request_capability_issuer',\n" +
+-   "  claim:'cinatoken_gateway_request_capability_claim',\n" +
+-   "  fragment:'cinatoken_gateway_request_route_ceiling_issuer',\n" +
+-   "  verifier:'cinatoken_gateway_route_source_verifier',\n" +
+    "  complete:'cinatoken_gateway_complete_text_quote_issuer',\n" +
+    "  granter:'cinatoken_gateway_complete_text_attempt_granter',\n" +
+    "  holder:'cinatoken_gateway_complete_text_send_holder',\n" +
+    "  reader:'cinatoken_gateway_complete_text_private_reader'};\n" +
++   '\r\n' +
++   'function connection(cluster,name,password,label) {\r\n' +
++   "  return postgres({host:'127.0.0.1',port:cluster.port,database:'postgres',\r\n" +
++   '    username:name,password,ssl:false,max:1,prepare:false,fetch_types:false,\r\n' +
++   '    connect_timeout:3,idle_timeout:0,max_lifetime:0,backoff:false,onnotice(){},\r\n' +
+-   '\n' +
+-   'function connection(cluster,name,password,label) {\n' +
+-   "  return postgres({host:'127.0.0.1',port:cluster.port,database:'postgres',\n" +
+-   '    username:name,password,ssl:false,max:1,prepare:false,fetch_types:false,\n' +
+-   '    connect_timeout:3,idle_timeout:0,max_lifetime:0,backoff:false,onnotice(){},\n' +
+    '    connection:{application_name:`complete-read-grant-v367-${label}`}});\n' +
++   '}\r\n' +
++   "async function denied(work,code='42501') {\r\n" +
++   '  await assert.rejects(work,error=>{\r\n' +
++   '    assert.equal((error?.cause??error)?.code,code,String(error));return true;\r\n' +
++   '  });\r\n' +
++   '}\r\n' +
++   '\r\n' +
+-   '}\n' +
+-   "async function denied(work,code='42501') {\n" +
+-   '  await assert.rejects(work,error=>{\n' +
+-   '    assert.equal((error?.cause??error)?.code,code,String(error));return true;\n' +
+-   '  });\n' +
+-   '}\n' +
+-   '\n' +
+    "test('v367 committed private read cannot authorize send after source mutation',\n" +
++   '  {timeout:300_000,skip:!process.env.GATEWAY_NATIVE_PG_BIN},async()=>{\r\n' +
++   '    const cluster=await startNativePostgres();\r\n' +
++   "    const report={status:'RUNNING',cleanup:'PENDING',binaryVersion:cluster.binaryVersion,\r\n" +
++   '      sourceSha256:{},stages:[],limitations:[\r\n' +
++   "        'Review-only PG73 proposal; no formal migration, deployed Worker, remote database or production credentials changed.',\r\n" +
+-   '  {timeout:300_000,skip:!process.env.GATEWAY_NATIVE_PG_BIN},async()=>{\n' +
+-   '    const cluster=await startNativePostgres();\n' +
+-   "    const report={status:'RUNNING',cleanup:'PENDING',binaryVersion:cluster.binaryVersion,\n" +
+-   '      sourceSha256:{},stages:[],limitations:[\n' +
+-   "        'Review-only PG73 proposal; no formal migration, deployed Worker, remote database or production credentials changed.',\n" +
+    "        'This proof holds a committed v366 read snapshot in memory across a later source mutation, then invokes the real v362 grant function through direct LOGIN. It is not a production Worker or network run.',\n" +
+    "        'The physical-fetch counter is a local injected transport spy. Zero fetch means this test holder never reached its injected fetch; it does not observe other processes or providers.',\n" +
+    "        'One positive control establishes SQL grant, custody and start eligibility; a second runs their acknowledged direct clients through the local holder and one owned loopback HTTP POST. Neither contacts a Provider. Both leave unknown obligations for local cluster teardown.',\n" +
+    "        'Broad selected-source locks are review-only; long SSE renewal, result settlement and legacy reaper coordination remain open.',\n" +
++   "        'D1/MySQL parity, Linux CI outcome and real Worker/Hyperdrive behavior are not established by this local run.'\r\n" +
++   '      ]};\r\n' +
++   "    const stage=(name,detail={})=>report.stages.push({name,result:'PASS',...detail});\r\n" +
++   '    const clients=[];let failure;\r\n' +
++   '    try {\r\n' +
++   '      assert.match(cluster.binaryVersion,/PostgreSQL\\) 18\\.6/u);\r\n' +
++   '      const passwords=Object.fromEntries(Object.keys(roles).map(x=>[\r\n' +
++   "        x,randomBytes(24).toString('hex')]));\r\n" +
++   '      await cluster.admin.unsafe(`${Object.entries(roles).map(([label,name])=>\r\n' +
++   "        `CREATE ROLE ${name} LOGIN ${label==='migrator'||label==='runtime'||\r\n" +
++   "          label==='sharedProducer'||label==='sharedConsumer'?'':'NOINHERIT'} PASSWORD '${passwords[label]}';`).join('\\n')}\r\n" +
++   '        CREATE SCHEMA ${g} AUTHORIZATION ${roles.migrator};\r\n' +
++   '        REVOKE CREATE ON SCHEMA public FROM PUBLIC;\r\n' +
++   "        GRANT CONNECT ON DATABASE postgres TO ${Object.values(roles).join(',')};\r\n" +
++   '        GRANT CREATE ON DATABASE postgres TO ${roles.migrator};`).simple();\r\n' +
++   "      const migrator=connection(cluster,roles.migrator,passwords.migrator,'migrator');\r\n" +
++   "      const runtime=connection(cluster,roles.runtime,passwords.runtime,'runtime');\r\n" +
++   "      const admission=connection(cluster,roles.admission,passwords.admission,'admission');\r\n" +
++   "      const granter=connection(cluster,roles.granter,passwords.granter,'granter');\r\n" +
++   "      const granterPeer=connection(cluster,roles.granter,passwords.granter,'granter-peer');\r\n" +
+-   "        'D1/MySQL parity, Linux CI outcome and real Worker/Hyperdrive behavior are not established by this local run.'\n" +
+-   '      ]};\n' +
+-   "    const stage=(name,detail={})=>report.stages.push({name,result:'PASS',...detail});\n" +
+-   '    const clients=[];let failure;\n' +
+-   '    try {\n' +
+-   '      assert.match(cluster.binaryVersion,/PostgreSQL\\) 18\\.6/u);\n' +
+-   '      const passwords=Object.fromEntries(Object.keys(roles).map(x=>[\n' +
+-   "        x,randomBytes(24).toString('hex')]));\n" +
+-   '      await cluster.admin.unsafe(`${Object.entries(roles).map(([label,name])=>\n' +
+-   "        `CREATE ROLE ${name} LOGIN ${label==='migrator'||label==='runtime'||\n" +
+-   "          label==='sharedProducer'||label==='sharedConsumer'?'':'NOINHERIT'} PASSWORD '${passwords[label]}';`).join('\\n')}\n" +
+-   '        CREATE SCHEMA ${g} AUTHORIZATION ${roles.migrator};\n' +
+-   '        REVOKE CREATE ON SCHEMA public FROM PUBLIC;\n' +
+-   "        GRANT CONNECT ON DATABASE postgres TO ${Object.values(roles).join(',')};\n" +
+-   '        GRANT CREATE ON DATABASE postgres TO ${roles.migrator};`).simple();\n' +
+-   "      const migrator=connection(cluster,roles.migrator,passwords.migrator,'migrator');\n" +
+-   "      const runtime=connection(cluster,roles.runtime,passwords.runtime,'runtime');\n" +
+-   "      const admission=connection(cluster,roles.admission,passwords.admission,'admission');\n" +
+-   "      const granter=connection(cluster,roles.granter,passwords.granter,'granter');\n" +
+-   "      const granterPeer=connection(cluster,roles.granter,passwords.granter,'granter-peer');\n" +
+    "      const holder=connection(cluster,roles.holder,passwords.holder,'holder');\n" +
+    "      const holderPeer=connection(cluster,roles.holder,passwords.holder,'holder-peer');\n" +
+    "      const reader=connection(cluster,roles.reader,passwords.reader,'reader');\n" +
++   "      const cap=connection(cluster,roles.cap,passwords.cap,'cap');\r\n" +
++   "      const verifier=connection(cluster,roles.verifier,passwords.verifier,'verifier');\r\n" +
++   "      const complete=connection(cluster,roles.complete,passwords.complete,'complete');\r\n" +
+-   "      const cap=connection(cluster,roles.cap,passwords.cap,'cap');\n" +
+-   "      const verifier=connection(cluster,roles.verifier,passwords.verifier,'verifier');\n" +
+-   "      const complete=connection(cluster,roles.complete,passwords.complete,'complete');\n" +
+    '      clients.push(migrator,runtime,admission,granter,granterPeer,holder,holderPeer,\n' +
+    '        reader,cap,verifier,complete);\n' +
++   '      await migrator.unsafe(`CREATE TABLE ${g}.schema_migrations\r\n' +
++   '        (version text PRIMARY KEY,applied_at timestamptz NOT NULL DEFAULT now())`);\r\n' +
+-   '      await migrator.unsafe(`CREATE TABLE ${g}.schema_migrations\n' +
+-   '        (version text PRIMARY KEY,applied_at timestamptz NOT NULL DEFAULT now())`);\n' +
+    '      const migrationNames=await listPg73Migrations();\n' +
++   '      assert.equal(migrationNames.length,73);\r\n' +
++   '      const corpus=[];\r\n' +
++   '      for(const name of migrationNames) {\r\n' +
++   "        const body=await readFile(new URL(name,migrationDir),'utf8');\r\n" +
++   '        corpus.push(`${name}\\n${body}`);\r\n' +
++   '        await migrator.begin(async tx=>{\r\n' +
++   '          await tx.unsafe(body).simple();\r\n' +
++   '          await tx.unsafe(`INSERT INTO ${g}.schema_migrations(version) VALUES($1)`,[name]);\r\n' +
++   '        });\r\n' +
++   '      }\r\n' +
++   "      report.sourceSha256.formalMigrations=sha(corpus.join('\\n'));\r\n" +
++   '      const migratorUrl=`postgres://${roles.migrator}:${passwords.migrator}`\r\n' +
++   '        +`@127.0.0.1:${cluster.port}/postgres`;\r\n' +
+-   '      assert.equal(migrationNames.length,73);\n' +
+-   '      const corpus=[];\n' +
+-   '      for(const name of migrationNames) {\n' +
+-   "        const body=await readFile(new URL(name,migrationDir),'utf8');\n" +
+-   '        corpus.push(`${name}\\n${body}`);\n' +
+-   '        await migrator.begin(async tx=>{\n' +
+-   '          await tx.unsafe(body).simple();\n' +
+-   '          await tx.unsafe(`INSERT INTO ${g}.schema_migrations(version) VALUES($1)`,[name]);\n' +
+-   '        });\n' +
+-   '      }\n' +
+-   "      report.sourceSha256.formalMigrations=sha(corpus.join('\\n'));\n" +
+-   '      const migratorUrl=`postgres://${roles.migrator}:${passwords.migrator}`\n' +
+-   '        +`@127.0.0.1:${cluster.port}/postgres`;\n' +
+    '      // Keep original grant calls and rejection checks on the owned PG73 ledger.\n' +
+    '      const grantPostgresRuntime = ({ DATABASE_URL }) =>\n' +
+    '        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });\n' +
++   '      await grantPostgresRuntime({DATABASE_URL:migratorUrl});\r\n' +
++   '      for(const [name,setting] of preliminary) {\r\n' +
++   "        const body=await readFile(proposal(name),'utf8');\r\n" +
++   '        report.sourceSha256[name]=sha(body);\r\n' +
++   '        await migrator.begin(async tx=>{\r\n' +
++   "          await tx.unsafe(`SET LOCAL cinatoken.${setting}='reviewed-v1'`);\r\n" +
++   "          if(name==='shared-key-quote"... 29991 more characters
+-   '      await grantPostgresRuntime({DATABASE_URL:migratorUrl});\n' +
+-   '      for(const [name,setting] of preliminary) {\n' +
+-   "        const body=await readFile(proposal(name),'utf8');\n" +
+-   '        report.sourceSha256[name]=sha(body);\n' +
+-   '        await migrator.begin(async tx=>{\n' +
+-   "          await tx.unsafe(`SET LOCAL cinatoken.${setting}='reviewed-v1'`);\n" +
+-   "          if(name==='shared-key-quote-versions.sql')\n" +
+-   "            await tx.unsafe(`SET LOCAL cinatoken.${setting}='reviewed-v2'`);\n" +
+-   '          awa'... 29601 more characters
+
+    at file:///C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-boundary-next-20261006-Zm6Z3E/verify-native-five-release-staged.mjs:10:94
+    at Array.map (<anonymous>)
+    at file:///C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-boundary-next-20261006-Zm6Z3E/verify-native-five-release-staged.mjs:10:21
+    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:661:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: '// Owned PostgreSQL 18.6 proof that a committed private read is not a grant.\n' +
+    "import assert from 'node:assert/strict';\n" +
+    "import { createHash, randomBytes, randomUUID } from 'node:crypto';\n" +
+    "import { once } from 'node:events';\n" +
+    "import { readFile, writeFile } from 'node:fs/promises';\n" +
+    "import { createServer } from 'node:http';\n" +
+    "import test from 'node:test';\n" +
+    "import postgres from 'postgres';\n" +
+    "import { encryptSharedKeySecret } from '@octafuse/core';\n" +
+    "import { computeRouteDataPolicySubjectFingerprintFromRows } from '../../../packages/core/src/route-data-policy.ts';\n" +
+    "import { grantPostgresCompleteTextAttemptV362 } from '../../../packages/proxy/src/services/postgres-complete-text-attempt-grant-v362.ts';\n" +
+    "import { readPostgresPrivateCompleteTextRouteV366 } from '../../../packages/proxy/src/services/postgres-private-complete-text-reader-v366.ts';\n" +
+    "import { createPrivateCompleteTextHolderV365 } from '../../../packages/proxy/src/services/private-complete-text-holder-v365.ts';\n" +
+    'import { claimPostgresCompleteTextCustodyV365,\r\n' +
+    '  recordPostgresCompleteTextSendStartV365,\r\n' +
+    '  PostgresCompleteTextSendStartRejectedError,\r\n' +
+    "} from '../../../packages/proxy/src/services/postgres-complete-text-send-start-v365.ts';\r\n" +
+    "import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';\r\n" +
+    "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';\n" +
+    "import { activatePostgresBuyerSplitV348 } from './activate-postgres-buyer-split-v348.ts';\r\n" +
+    "import { grantPostgresBuyerSplitV348 } from './grant-postgres-buyer-split-v348.ts';\r\n" +
+    "import { activatePostgresBuyerGuardrailSplitV349 } from './activate-postgres-buyer-guardrail-split-v349.ts';\r\n" +
+    "import { grantPostgresBuyerGuardrailSplitV349 } from './grant-postgres-buyer-guardrail-split-v349.ts';\r\n" +
+    '\r\n' +
+    "const g='cinatoken_gateway';\r\n" +
+    "const migrationDir=new URL('../../../packages/core/migrations-postgres/',import.meta.url);\r\n" +
+    'const proposal=name=>new URL(`../../../packages/core/migrations-proposals/postgres/${name}`,import.meta.url);\r\n' +
+    "const reportUrl=new URL('../../../docs/developers/architecture/implementation-evidence/C04-complete-text-read-grant-bridge-v367-report.json',import.meta.url);\n" +
+    "const sha=value=>createHash('sha256').update(value).digest('hex');\n" +
+    "const providerSecret='v367-local-provider-kek-with-no-production-use';\n" +
+    "const providerBearer='v367-local-provider-bearer';\n" +
+    "const bearer='sk-local-complete-text-admission-v361-bearer';\r\n" +
+    'const keyHash=`sha256:${sha(bearer)}`;\r\n' +
+    "const originalHash=sha('original-v361-ingress-body');\r\n" +
+    "const finalBody=JSON.stringify({model:'v361-model',models:['v361-model'],\r\n" +
+    "  messages:[{role:'user',content:'hello'}],max_completion_tokens:300});\r\n" +
+    'const preliminary=[\r\n' +
+    "  ['shared-key-quote-versions.sql','shared_key_quote_versions_activation'],\r\n" +
+    "  ['shared-key-dispatch-quote-attempts.sql','shared_quote_attempt_activation'],\r\n" +
+    "  ['shared-key-economic-outbox.sql','shared_key_economic_outbox_activation'],\r\n" +
+    "  ['shared-key-economic-outbox-producer.sql','shared_key_economic_producer_activation'],\r\n" +
+    "  ['shared-key-snapshot-earning-consumer.sql','shared_key_snapshot_consumer_activation'],\r\n" +
+    "  ['shared-key-buyer-debit-v2.sql','shared_key_buyer_debit_v2_activation'],\r\n" +
+    "  ['shared-key-economic-producer-v2.sql','shared_key_economic_producer_v2_activation'],\r\n" +
+    "  ['shared-key-buyer-budget-receipt-v2.sql','shared_key_buyer_budget_receipt_activation'],\r\n" +
+    '];\r\n' +
+    'const later=[\r\n' +
+    "  ['budget-admission-login-v350.sql','budget_admission_login_activation'],\r\n" +
+    "  ['guardrail-budget-admission-login-v351.sql','guardrail_budget_admission_v351_activation'],\r\n" +
+    "  ['authenticated-request-capability-login-v356.sql','request_capability_login_activation'],\r\n" +
+    "  ['authenticated-text-route-ceiling-issuer-v357.sql','request_route_ceiling_activation'],\r\n" +
+    "  ['authenticated-text-route-source-fence-v359.sql','route_source_fence_activation'],\r\n" +
+    "  ['authenticated-complete-text-quote-v360.sql','complete_text_quote_activation'],\r\n" +
+    '];\r\n' +
+    "const roles={migrator:'cinatoken_gateway_migrator',runtime:'cinatoken_gateway_runtime',\r\n" +
+    "  buyer:'cinatoken_gateway_buyer_settlement',\r\n" +
+    "  admission:'cinatoken_gateway_budget_admission',\r\n" +
+    "  sharedProducer:'cinatoken_gateway_shared_quote_attempt_producer',\r\n" +
+    "  sharedConsumer:'cinatoken_gateway_shared_earning_consumer',\r\n" +
+    "  cap:'cinatoken_gateway_request_capability_issuer',\r\n" +
+    "  claim:'cinatoken_gateway_request_capability_claim',\r\n" +
+    "  fragment:'cinatoken_gateway_request_route_ceiling_issuer',\r\n" +
+    "  verifier:'cinatoken_gateway_route_source_verifier',\r\n" +
+    "  complete:'cinatoken_gateway_complete_text_quote_issuer',\n" +
+    "  granter:'cinatoken_gateway_complete_text_attempt_granter',\n" +
+    "  holder:'cinatoken_gateway_complete_text_send_holder',\n" +
+    "  reader:'cinatoken_gateway_complete_text_private_reader'};\n" +
+    '\r\n' +
+    'function connection(cluster,name,password,label) {\r\n' +
+    "  return postgres({host:'127.0.0.1',port:cluster.port,database:'postgres',\r\n" +
+    '    username:name,password,ssl:false,max:1,prepare:false,fetch_types:false,\r\n' +
+    '    connect_timeout:3,idle_timeout:0,max_lifetime:0,backoff:false,onnotice(){},\r\n' +
+    '    connection:{application_name:`complete-read-grant-v367-${label}`}});\n' +
+    '}\r\n' +
+    "async function denied(work,code='42501') {\r\n" +
+    '  await assert.rejects(work,error=>{\r\n' +
+    '    assert.equal((error?.cause??error)?.code,code,String(error));return true;\r\n' +
+    '  });\r\n' +
+    '}\r\n' +
+    '\r\n' +
+    "test('v367 committed private read cannot authorize send after source mutation',\n" +
+    '  {timeout:300_000,skip:!process.env.GATEWAY_NATIVE_PG_BIN},async()=>{\r\n' +
+    '    const cluster=await startNativePostgres();\r\n' +
+    "    const report={status:'RUNNING',cleanup:'PENDING',binaryVersion:cluster.binaryVersion,\r\n" +
+    '      sourceSha256:{},stages:[],limitations:[\r\n' +
+    "        'Review-only PG73 proposal; no formal migration, deployed Worker, remote database or production credentials changed.',\r\n" +
+    "        'This proof holds a committed v366 read snapshot in memory across a later source mutation, then invokes the real v362 grant function through direct LOGIN. It is not a production Worker or network run.',\n" +
+    "        'The physical-fetch counter is a local injected transport spy. Zero fetch means this test holder never reached its injected fetch; it does not observe other processes or providers.',\n" +
+    "        'One positive control establishes SQL grant, custody and start eligibility; a second runs their acknowledged direct clients through the local holder and one owned loopback HTTP POST. Neither contacts a Provider. Both leave unknown obligations for local cluster teardown.',\n" +
+    "        'Broad selected-source locks are review-only; long SSE renewal, result settlement and legacy reaper coordination remain open.',\n" +
+    "        'D1/MySQL parity, Linux CI outcome and real Worker/Hyperdrive behavior are not established by this local run.'\r\n" +
+    '      ]};\r\n' +
+    "    const stage=(name,detail={})=>report.stages.push({name,result:'PASS',...detail});\r\n" +
+    '    const clients=[];let failure;\r\n' +
+    '    try {\r\n' +
+    '      assert.match(cluster.binaryVersion,/PostgreSQL\\) 18\\.6/u);\r\n' +
+    '      const passwords=Object.fromEntries(Object.keys(roles).map(x=>[\r\n' +
+    "        x,randomBytes(24).toString('hex')]));\r\n" +
+    '      await cluster.admin.unsafe(`${Object.entries(roles).map(([label,name])=>\r\n' +
+    "        `CREATE ROLE ${name} LOGIN ${label==='migrator'||label==='runtime'||\r\n" +
+    "          label==='sharedProducer'||label==='sharedConsumer'?'':'NOINHERIT'} PASSWORD '${passwords[label]}';`).join('\\n')}\r\n" +
+    '        CREATE SCHEMA ${g} AUTHORIZATION ${roles.migrator};\r\n' +
+    '        REVOKE CREATE ON SCHEMA public FROM PUBLIC;\r\n' +
+    "        GRANT CONNECT ON DATABASE postgres TO ${Object.values(roles).join(',')};\r\n" +
+    '        GRANT CREATE ON DATABASE postgres TO ${roles.migrator};`).simple();\r\n' +
+    "      const migrator=connection(cluster,roles.migrator,passwords.migrator,'migrator');\r\n" +
+    "      const runtime=connection(cluster,roles.runtime,passwords.runtime,'runtime');\r\n" +
+    "      const admission=connection(cluster,roles.admission,passwords.admission,'admission');\r\n" +
+    "      const granter=connection(cluster,roles.granter,passwords.granter,'granter');\r\n" +
+    "      const granterPeer=connection(cluster,roles.granter,passwords.granter,'granter-peer');\r\n" +
+    "      const holder=connection(cluster,roles.holder,passwords.holder,'holder');\n" +
+    "      const holderPeer=connection(cluster,roles.holder,passwords.holder,'holder-peer');\n" +
+    "      const reader=connection(cluster,roles.reader,passwords.reader,'reader');\n" +
+    "      const cap=connection(cluster,roles.cap,passwords.cap,'cap');\r\n" +
+    "      const verifier=connection(cluster,roles.verifier,passwords.verifier,'verifier');\r\n" +
+    "      const complete=connection(cluster,roles.complete,passwords.complete,'complete');\r\n" +
+    '      clients.push(migrator,runtime,admission,granter,granterPeer,holder,holderPeer,\n' +
+    '        reader,cap,verifier,complete);\n' +
+    '      await migrator.unsafe(`CREATE TABLE ${g}.schema_migrations\r\n' +
+    '        (version text PRIMARY KEY,applied_at timestamptz NOT NULL DEFAULT now())`);\r\n' +
+    '      const migrationNames=await listPg73Migrations();\n' +
+    '      assert.equal(migrationNames.length,73);\r\n' +
+    '      const corpus=[];\r\n' +
+    '      for(const name of migrationNames) {\r\n' +
+    "        const body=await readFile(new URL(name,migrationDir),'utf8');\r\n" +
+    '        corpus.push(`${name}\\n${body}`);\r\n' +
+    '        await migrator.begin(async tx=>{\r\n' +
+    '          await tx.unsafe(body).simple();\r\n' +
+    '          await tx.unsafe(`INSERT INTO ${g}.schema_migrations(version) VALUES($1)`,[name]);\r\n' +
+    '        });\r\n' +
+    '      }\r\n' +
+    "      report.sourceSha256.formalMigrations=sha(corpus.join('\\n'));\r\n" +
+    '      const migratorUrl=`postgres://${roles.migrator}:${passwords.migrator}`\r\n' +
+    '        +`@127.0.0.1:${cluster.port}/postgres`;\r\n' +
+    '      // Keep original grant calls and rejection checks on the owned PG73 ledger.\n' +
+    '      const grantPostgresRuntime = ({ DATABASE_URL }) =>\n' +
+    '        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });\n' +
+    '      await grantPostgresRuntime({DATABASE_URL:migratorUrl});\r\n' +
+    '      for(const [name,setting] of preliminary) {\r\n' +
+    "        const body=await readFile(proposal(name),'utf8');\r\n" +
+    '        report.sourceSha256[name]=sha(body);\r\n' +
+    '        await migrator.begin(async tx=>{\r\n' +
+    "          await tx.unsafe(`SET LOCAL cinatoken.${setting}='reviewed-v1'`);\r\n" +
+    "          if(name==='shared-key-quote"... 29991 more characters,
+  expected: '// Owned PostgreSQL 18.6 proof that a committed private read is not a grant.\n' +
+    "import assert from 'node:assert/strict';\n" +
+    "import { createHash, randomBytes, randomUUID } from 'node:crypto';\n" +
+    "import { once } from 'node:events';\n" +
+    "import { readFile, writeFile } from 'node:fs/promises';\n" +
+    "import { createServer } from 'node:http';\n" +
+    "import test from 'node:test';\n" +
+    "import postgres from 'postgres';\n" +
+    "import { encryptSharedKeySecret } from '@octafuse/core';\n" +
+    "import { computeRouteDataPolicySubjectFingerprintFromRows } from '../../../packages/core/src/route-data-policy.ts';\n" +
+    "import { grantPostgresCompleteTextAttemptV362 } from '../../../packages/proxy/src/services/postgres-complete-text-attempt-grant-v362.ts';\n" +
+    "import { readPostgresPrivateCompleteTextRouteV366 } from '../../../packages/proxy/src/services/postgres-private-complete-text-reader-v366.ts';\n" +
+    "import { createPrivateCompleteTextHolderV365 } from '../../../packages/proxy/src/services/private-complete-text-holder-v365.ts';\n" +
+    'import { claimPostgresCompleteTextCustodyV365,\n' +
+    '  recordPostgresCompleteTextSendStartV365,\n' +
+    '  PostgresCompleteTextSendStartRejectedError,\n' +
+    "} from '../../../packages/proxy/src/services/postgres-complete-text-send-start-v365.ts';\n" +
+    "import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';\n" +
+    "import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';\n" +
+    "import { activatePostgresBuyerSplitV348 } from './activate-postgres-buyer-split-v348.ts';\n" +
+    "import { grantPostgresBuyerSplitV348 } from './grant-postgres-buyer-split-v348.ts';\n" +
+    "import { activatePostgresBuyerGuardrailSplitV349 } from './activate-postgres-buyer-guardrail-split-v349.ts';\n" +
+    "import { grantPostgresBuyerGuardrailSplitV349 } from './grant-postgres-buyer-guardrail-split-v349.ts';\n" +
+    '\n' +
+    "const g='cinatoken_gateway';\n" +
+    "const migrationDir=new URL('../../../packages/core/migrations-postgres/',import.meta.url);\n" +
+    'const proposal=name=>new URL(`../../../packages/core/migrations-proposals/postgres/${name}`,import.meta.url);\n' +
+    "const reportUrl=new URL('../../../docs/developers/architecture/implementation-evidence/C04-complete-text-read-grant-bridge-v367-report.json',import.meta.url);\n" +
+    "const sha=value=>createHash('sha256').update(value).digest('hex');\n" +
+    "const providerSecret='v367-local-provider-kek-with-no-production-use';\n" +
+    "const providerBearer='v367-local-provider-bearer';\n" +
+    "const bearer='sk-local-complete-text-admission-v361-bearer';\n" +
+    'const keyHash=`sha256:${sha(bearer)}`;\n' +
+    "const originalHash=sha('original-v361-ingress-body');\n" +
+    "const finalBody=JSON.stringify({model:'v361-model',models:['v361-model'],\n" +
+    "  messages:[{role:'user',content:'hello'}],max_completion_tokens:300});\n" +
+    'const preliminary=[\n' +
+    "  ['shared-key-quote-versions.sql','shared_key_quote_versions_activation'],\n" +
+    "  ['shared-key-dispatch-quote-attempts.sql','shared_quote_attempt_activation'],\n" +
+    "  ['shared-key-economic-outbox.sql','shared_key_economic_outbox_activation'],\n" +
+    "  ['shared-key-economic-outbox-producer.sql','shared_key_economic_producer_activation'],\n" +
+    "  ['shared-key-snapshot-earning-consumer.sql','shared_key_snapshot_consumer_activation'],\n" +
+    "  ['shared-key-buyer-debit-v2.sql','shared_key_buyer_debit_v2_activation'],\n" +
+    "  ['shared-key-economic-producer-v2.sql','shared_key_economic_producer_v2_activation'],\n" +
+    "  ['shared-key-buyer-budget-receipt-v2.sql','shared_key_buyer_budget_receipt_activation'],\n" +
+    '];\n' +
+    'const later=[\n' +
+    "  ['budget-admission-login-v350.sql','budget_admission_login_activation'],\n" +
+    "  ['guardrail-budget-admission-login-v351.sql','guardrail_budget_admission_v351_activation'],\n" +
+    "  ['authenticated-request-capability-login-v356.sql','request_capability_login_activation'],\n" +
+    "  ['authenticated-text-route-ceiling-issuer-v357.sql','request_route_ceiling_activation'],\n" +
+    "  ['authenticated-text-route-source-fence-v359.sql','route_source_fence_activation'],\n" +
+    "  ['authenticated-complete-text-quote-v360.sql','complete_text_quote_activation'],\n" +
+    '];\n' +
+    "const roles={migrator:'cinatoken_gateway_migrator',runtime:'cinatoken_gateway_runtime',\n" +
+    "  buyer:'cinatoken_gateway_buyer_settlement',\n" +
+    "  admission:'cinatoken_gateway_budget_admission',\n" +
+    "  sharedProducer:'cinatoken_gateway_shared_quote_attempt_producer',\n" +
+    "  sharedConsumer:'cinatoken_gateway_shared_earning_consumer',\n" +
+    "  cap:'cinatoken_gateway_request_capability_issuer',\n" +
+    "  claim:'cinatoken_gateway_request_capability_claim',\n" +
+    "  fragment:'cinatoken_gateway_request_route_ceiling_issuer',\n" +
+    "  verifier:'cinatoken_gateway_route_source_verifier',\n" +
+    "  complete:'cinatoken_gateway_complete_text_quote_issuer',\n" +
+    "  granter:'cinatoken_gateway_complete_text_attempt_granter',\n" +
+    "  holder:'cinatoken_gateway_complete_text_send_holder',\n" +
+    "  reader:'cinatoken_gateway_complete_text_private_reader'};\n" +
+    '\n' +
+    'function connection(cluster,name,password,label) {\n' +
+    "  return postgres({host:'127.0.0.1',port:cluster.port,database:'postgres',\n" +
+    '    username:name,password,ssl:false,max:1,prepare:false,fetch_types:false,\n' +
+    '    connect_timeout:3,idle_timeout:0,max_lifetime:0,backoff:false,onnotice(){},\n' +
+    '    connection:{application_name:`complete-read-grant-v367-${label}`}});\n' +
+    '}\n' +
+    "async function denied(work,code='42501') {\n" +
+    '  await assert.rejects(work,error=>{\n' +
+    '    assert.equal((error?.cause??error)?.code,code,String(error));return true;\n' +
+    '  });\n' +
+    '}\n' +
+    '\n' +
+    "test('v367 committed private read cannot authorize send after source mutation',\n" +
+    '  {timeout:300_000,skip:!process.env.GATEWAY_NATIVE_PG_BIN},async()=>{\n' +
+    '    const cluster=await startNativePostgres();\n' +
+    "    const report={status:'RUNNING',cleanup:'PENDING',binaryVersion:cluster.binaryVersion,\n" +
+    '      sourceSha256:{},stages:[],limitations:[\n' +
+    "        'Review-only PG73 proposal; no formal migration, deployed Worker, remote database or production credentials changed.',\n" +
+    "        'This proof holds a committed v366 read snapshot in memory across a later source mutation, then invokes the real v362 grant function through direct LOGIN. It is not a production Worker or network run.',\n" +
+    "        'The physical-fetch counter is a local injected transport spy. Zero fetch means this test holder never reached its injected fetch; it does not observe other processes or providers.',\n" +
+    "        'One positive control establishes SQL grant, custody and start eligibility; a second runs their acknowledged direct clients through the local holder and one owned loopback HTTP POST. Neither contacts a Provider. Both leave unknown obligations for local cluster teardown.',\n" +
+    "        'Broad selected-source locks are review-only; long SSE renewal, result settlement and legacy reaper coordination remain open.',\n" +
+    "        'D1/MySQL parity, Linux CI outcome and real Worker/Hyperdrive behavior are not established by this local run.'\n" +
+    '      ]};\n' +
+    "    const stage=(name,detail={})=>report.stages.push({name,result:'PASS',...detail});\n" +
+    '    const clients=[];let failure;\n' +
+    '    try {\n' +
+    '      assert.match(cluster.binaryVersion,/PostgreSQL\\) 18\\.6/u);\n' +
+    '      const passwords=Object.fromEntries(Object.keys(roles).map(x=>[\n' +
+    "        x,randomBytes(24).toString('hex')]));\n" +
+    '      await cluster.admin.unsafe(`${Object.entries(roles).map(([label,name])=>\n' +
+    "        `CREATE ROLE ${name} LOGIN ${label==='migrator'||label==='runtime'||\n" +
+    "          label==='sharedProducer'||label==='sharedConsumer'?'':'NOINHERIT'} PASSWORD '${passwords[label]}';`).join('\\n')}\n" +
+    '        CREATE SCHEMA ${g} AUTHORIZATION ${roles.migrator};\n' +
+    '        REVOKE CREATE ON SCHEMA public FROM PUBLIC;\n' +
+    "        GRANT CONNECT ON DATABASE postgres TO ${Object.values(roles).join(',')};\n" +
+    '        GRANT CREATE ON DATABASE postgres TO ${roles.migrator};`).simple();\n' +
+    "      const migrator=connection(cluster,roles.migrator,passwords.migrator,'migrator');\n" +
+    "      const runtime=connection(cluster,roles.runtime,passwords.runtime,'runtime');\n" +
+    "      const admission=connection(cluster,roles.admission,passwords.admission,'admission');\n" +
+    "      const granter=connection(cluster,roles.granter,passwords.granter,'granter');\n" +
+    "      const granterPeer=connection(cluster,roles.granter,passwords.granter,'granter-peer');\n" +
+    "      const holder=connection(cluster,roles.holder,passwords.holder,'holder');\n" +
+    "      const holderPeer=connection(cluster,roles.holder,passwords.holder,'holder-peer');\n" +
+    "      const reader=connection(cluster,roles.reader,passwords.reader,'reader');\n" +
+    "      const cap=connection(cluster,roles.cap,passwords.cap,'cap');\n" +
+    "      const verifier=connection(cluster,roles.verifier,passwords.verifier,'verifier');\n" +
+    "      const complete=connection(cluster,roles.complete,passwords.complete,'complete');\n" +
+    '      clients.push(migrator,runtime,admission,granter,granterPeer,holder,holderPeer,\n' +
+    '        reader,cap,verifier,complete);\n' +
+    '      await migrator.unsafe(`CREATE TABLE ${g}.schema_migrations\n' +
+    '        (version text PRIMARY KEY,applied_at timestamptz NOT NULL DEFAULT now())`);\n' +
+    '      const migrationNames=await listPg73Migrations();\n' +
+    '      assert.equal(migrationNames.length,73);\n' +
+    '      const corpus=[];\n' +
+    '      for(const name of migrationNames) {\n' +
+    "        const body=await readFile(new URL(name,migrationDir),'utf8');\n" +
+    '        corpus.push(`${name}\\n${body}`);\n' +
+    '        await migrator.begin(async tx=>{\n' +
+    '          await tx.unsafe(body).simple();\n' +
+    '          await tx.unsafe(`INSERT INTO ${g}.schema_migrations(version) VALUES($1)`,[name]);\n' +
+    '        });\n' +
+    '      }\n' +
+    "      report.sourceSha256.formalMigrations=sha(corpus.join('\\n'));\n" +
+    '      const migratorUrl=`postgres://${roles.migrator}:${passwords.migrator}`\n' +
+    '        +`@127.0.0.1:${cluster.port}/postgres`;\n' +
+    '      // Keep original grant calls and rejection checks on the owned PG73 ledger.\n' +
+    '      const grantPostgresRuntime = ({ DATABASE_URL }) =>\n' +
+    '        grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: DATABASE_URL });\n' +
+    '      await grantPostgresRuntime({DATABASE_URL:migratorUrl});\n' +
+    '      for(const [name,setting] of preliminary) {\n' +
+    "        const body=await readFile(proposal(name),'utf8');\n" +
+    '        report.sourceSha256[name]=sha(body);\n' +
+    '        await migrator.begin(async tx=>{\n' +
+    "          await tx.unsafe(`SET LOCAL cinatoken.${setting}='reviewed-v1'`);\n" +
+    "          if(name==='shared-key-quote-versions.sql')\n" +
+    "            await tx.unsafe(`SET LOCAL cinatoken.${setting}='reviewed-v2'`);\n" +
+    '          awa'... 29601 more characters,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.14.1

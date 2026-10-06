@@ -1,0 +1,94 @@
+[
+    {
+        "Id": "sha256:dc18e78eea32e87a2195b700ae85f8ce6ce24b5ee085cff8bab6a1ee98dacd24",
+        "RepoTags": [
+            "cinatoken-g7-proxy:67f8b3df2f2b6e8159806767ecce1efa1904d27a"
+        ],
+        "RepoDigests": [],
+        "Parent": "",
+        "Comment": "buildkit.dockerfile.v0",
+        "Created": "2026-10-06T02:09:40.755288527Z",
+        "DockerVersion": "",
+        "Author": "",
+        "Config": {
+            "Hostname": "",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "ExposedPorts": {
+                "8787/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "NODE_VERSION=22.22.2",
+                "YARN_VERSION=1.22.22",
+                "NODE_ENV=production",
+                "PORT=8787"
+            ],
+            "Cmd": [
+                "node",
+                "packages/proxy/dist/runtime/node.js"
+            ],
+            "Healthcheck": {
+                "Test": [
+                    "CMD-SHELL",
+                    "node -e \"fetch('http://127.0.0.1:'+(process.env.PORT||8787)+'/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\""
+                ],
+                "Interval": 30000000000,
+                "Timeout": 5000000000,
+                "StartPeriod": 20000000000,
+                "Retries": 3
+            },
+            "ArgsEscaped": true,
+            "Image": "",
+            "Volumes": null,
+            "WorkingDir": "/app",
+            "Entrypoint": [
+                "/app/docker/entrypoint.app.sh"
+            ],
+            "OnBuild": null,
+            "Labels": null
+        },
+        "Architecture": "amd64",
+        "Os": "linux",
+        "Size": 245281598,
+        "GraphDriver": {
+            "Data": {
+                "LowerDir": "/var/lib/docker/overlay2/hwurg40omk6ovbpqk9dcqkoxj/diff:/var/lib/docker/overlay2/rk952qx08z9j7jm53duvq9yg1/diff:/var/lib/docker/overlay2/smka153hvkpwj9kl41lw1ymje/diff:/var/lib/docker/overlay2/jgcc0jzmnp8e5rqpe4rmwreeu/diff:/var/lib/docker/overlay2/6bmxf742quq0dk9kxt2w98avz/diff:/var/lib/docker/overlay2/vcez3jbrl37otaqyjyru21a08/diff:/var/lib/docker/overlay2/sldut9vlubtgga7zsgvdl7fb1/diff:/var/lib/docker/overlay2/xs8diy0e1tgx6wpgowerarht6/diff:/var/lib/docker/overlay2/2zglgkq3rmtcei5wshdjpyd06/diff:/var/lib/docker/overlay2/z4wh9h0z8fcinsfqk5v3yeyjx/diff:/var/lib/docker/overlay2/bv4how5eskczeb35v6ev20fc5/diff:/var/lib/docker/overlay2/f4eb7746dc843e9be00b51a55829b6fc60de7f26084cdb3d3e80a15a724f75bb/diff:/var/lib/docker/overlay2/c0a745408f5b5ea2568eae9eb382d4bce6c9600a21e2c8f895a61154f3072bf8/diff:/var/lib/docker/overlay2/5e82ec449ad38ae32c187043d6a09074d55a9cdbefc82f953a07f43505730f14/diff:/var/lib/docker/overlay2/6e8a777904560941f3a80d635a8fd7fc1331cbeedb7fe2f5258bfacec416a971/diff",
+                "MergedDir": "/var/lib/docker/overlay2/ae3aqh1ywg92rj4tz8uge5pxl/merged",
+                "UpperDir": "/var/lib/docker/overlay2/ae3aqh1ywg92rj4tz8uge5pxl/diff",
+                "WorkDir": "/var/lib/docker/overlay2/ae3aqh1ywg92rj4tz8uge5pxl/work"
+            },
+            "Name": "overlay2"
+        },
+        "RootFS": {
+            "Type": "layers",
+            "Layers": [
+                "sha256:0854555d70acaa318b38ee50bc667cb51ff6bf0757624624c7ff3b6fe17459a0",
+                "sha256:fbebc70d4d603718f2e3756832ff13d8b68c1fb0995ae9add5fc06748aada9c9",
+                "sha256:ba0964557d8871ad28733d08b70ac9cefedda87ddd769e439b9d4f6d100baa3e",
+                "sha256:04acce0ed98abf602c24e1b97ef716d3e2fda797c28a1e4394846e13e39730b4",
+                "sha256:3c1a52eed1257e7288e7c9730f54b3f8e493e6b87b2e9ade3f535b7ac449e4ab",
+                "sha256:4e2254c29484760434e877164ea8048a4017901548ad479ff1aad6a85de41365",
+                "sha256:926b872e709c95511de2ee92fb3c4586d45ae5d46e8212a7a6624ea07d930f61",
+                "sha256:bc726bd62cc544cfd9fe1f2bb63bb02d10fa7cb58206cb3e5780d371ab7e1ff8",
+                "sha256:3aa0829451e30060ca9ccb81632ce9f131cbdc5dc8bbd85ce3a92313046e2506",
+                "sha256:c55b7fe27ef145bbf90e799efceaa2d3e4d16eae378bf32afb44faf72935e954",
+                "sha256:72297cd456fa12ecc35bb00e7ff87d4e0511c069b43419ad9f5ec4e2bd890c37",
+                "sha256:31b032ef599987874a172a2306c3dbfdb97f23996d9e7e82bea0467fc717a52a",
+                "sha256:d12183e4c7203432683932fca7f556039085b690716c6cce2fd74d9698bcb26b",
+                "sha256:485d1319a270dea7af0b9ca4d26f4d6490f006c1850ba0f509d49560a5031214",
+                "sha256:9f750bc32ec57524e1981c735f34d59cee7953d986cc8ff64fe29e1e125762fd",
+                "sha256:1153334a32e7469b608cbaae9efce1aca35e28d43e03bfd83cf4fc47143fac0f"
+            ]
+        },
+        "Metadata": {
+            "LastTagTime": "2026-10-06T02:09:42.509012818Z"
+        }
+    }
+]

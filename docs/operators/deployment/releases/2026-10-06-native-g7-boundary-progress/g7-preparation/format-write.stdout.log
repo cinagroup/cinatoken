@@ -1,0 +1,7 @@
+scripts\verification\web-platform-g7\admission.mjs 75ms
+scripts\verification\web-platform-g7\admission.test.mjs 20ms
+scripts\verification\web-platform-g7\database.mjs 25ms
+scripts\verification\web-platform-g7\README.md 55ms
+scripts\verification\web-platform-g7\run-owned-linux.mjs 83ms
+scripts\verification\web-platform-g7\wire.mjs 48ms
+.github\workflows\web-platform-g7.yml 46ms

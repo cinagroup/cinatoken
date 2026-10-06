@@ -1,0 +1,17 @@
+{
+  "label": "existing-helper-control-flow",
+  "executable": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "--test",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-next-eight-repair-0511920406eb4b37baca7e103b9080d5/existing-bridge-control-flow.test.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "startedAt": "2026-10-06T01:35:21.495Z",
+  "finishedAt": "2026-10-06T01:35:22.459Z",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "childClosed": true,
+  "stdout": "existing-helper-control-flow.stdout.log",
+  "stderr": "existing-helper-control-flow.stderr.log"
+}

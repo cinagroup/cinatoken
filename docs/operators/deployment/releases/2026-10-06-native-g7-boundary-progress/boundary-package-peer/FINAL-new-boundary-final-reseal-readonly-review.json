@@ -1,0 +1,219 @@
+{
+  "schema": "cinatoken.v364.boundary-final-reseal.independent-readonly-review.v1",
+  "reviewActualExit": 0,
+  "conclusion": "FINAL_RESEALED_PACKAGE_EXACT_OPTIONAL_INTEGER_GUARD_VERIFIED",
+  "earlierReviewPreserved": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-boundary-peer-79ca7e6f2470461d9554856f33950460\\FINAL-new-boundary-implementation-readonly-review.json",
+    "bytes": 9292,
+    "sha256": "ec1b1d91ba031b6671a2d8e81fb6ad315187581d0a1160a28a124dcfc2ad9c6c"
+  },
+  "finalManifest": {
+    "path": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-owned-linux-boundary\\sealed-package.json",
+    "bytes": 1396,
+    "sha256": "b99ede67c0e949fc6aee728f450d564d60c9eed14b60e542e3282e9a8d163af9"
+  },
+  "sealedChecks": [
+    {
+      "relativePath": "bare-async-source.mjs",
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-owned-linux-boundary\\bare-async-source.mjs",
+      "bytes": 1864,
+      "sha256": "86b67412be0b8ef8434edfd0f44c8c6e5d306ce3f76ed3deed8305cca2771bfd",
+      "exact": true
+    },
+    {
+      "relativePath": "direct-holder.mjs",
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-owned-linux-boundary\\direct-holder.mjs",
+      "bytes": 785,
+      "sha256": "4019fbebd9575bcad6dd3a987d320cd7eb96d646ab344bea5918f7305faaee84",
+      "exact": true
+    },
+    {
+      "relativePath": "proc-census.mjs",
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-owned-linux-boundary\\proc-census.mjs",
+      "bytes": 1443,
+      "sha256": "bd6d4ebe4fea6ac1c11b6a67b4f44fcb23595e79a2fdcf10360101888026b8a0",
+      "exact": true
+    },
+    {
+      "relativePath": "run-boundary.mjs",
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-owned-linux-boundary\\run-boundary.mjs",
+      "bytes": 28489,
+      "sha256": "9341885b2890b8270b2b9732cd46c169bb41c4a3a4f6d4eef5f662ee3cda7cda",
+      "exact": true
+    },
+    {
+      "relativePath": "execute-owned-linux.py",
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-owned-linux-boundary\\execute-owned-linux.py",
+      "bytes": 16016,
+      "sha256": "18c13e59a48eb27bc840aa1f9bb21aa5da73b7f73ad927dbaf5da24d0b0bbca2",
+      "exact": true
+    },
+    {
+      "relativePath": "README.md",
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-owned-linux-boundary\\README.md",
+      "bytes": 6071,
+      "sha256": "c4f87c06031bbe6bb9e8179272ce0636e4723ab8892d74f21345e0d376f421ba",
+      "exact": true
+    },
+    {
+      "relativePath": "source-inputs.json",
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\diagnostics\\v364-owned-linux-boundary\\source-inputs.json",
+      "bytes": 6588,
+      "sha256": "7b7b322398fe389f2ae1426746c65f6fe9ee0bc9ea1f91dfc3febfb8aeadfa3d",
+      "exact": true
+    },
+    {
+      "relativePath": ".github/workflows/v364-owned-linux-boundary.yml",
+      "path": "C:\\cinagroup\\cinatoken\\.github\\workflows\\v364-owned-linux-boundary.yml",
+      "bytes": 1575,
+      "sha256": "08977f1966eb42e67aebdb9986b66cb9f05a618f6a12964a8a2daffc64ce4712",
+      "exact": true
+    }
+  ],
+  "changedSealedFileSinceEarlierReview": [
+    "execute-owned-linux.py"
+  ],
+  "pythonLFOnly": true,
+  "additionalGuard": "execute-owned-linux.py:296 now rejects bool, missing, non-int and negative activeMiniflare before closure evaluation. Genuine nonnegative int Map size remains valid; all actual exit/runner/status logic otherwise reviewed earlier.",
+  "ownerPreparationReceipt": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38\\FINAL-v364-boundary-portable-preparation.json",
+    "bytes": 34463,
+    "sha256": "6a871bc68a5611273d64d65d4ea9d6aee46d87f9c92bc427238604710e092f02"
+  },
+  "preparationCommandReceiptsReadOnly": [
+    {
+      "id": "syntax-bare-async-source.mjs",
+      "status": 0,
+      "expectedExit": 0,
+      "terminal": true
+    },
+    {
+      "id": "syntax-direct-holder.mjs",
+      "status": 0,
+      "expectedExit": 0,
+      "terminal": true
+    },
+    {
+      "id": "syntax-proc-census.mjs",
+      "status": 0,
+      "expectedExit": 0,
+      "terminal": true
+    },
+    {
+      "id": "syntax-run-boundary.mjs",
+      "status": 0,
+      "expectedExit": 0,
+      "terminal": true
+    },
+    {
+      "id": "python-syntax",
+      "status": 0,
+      "expectedExit": 0,
+      "terminal": true
+    },
+    {
+      "id": "executor-inert",
+      "status": 0,
+      "expectedExit": 0,
+      "terminal": true
+    },
+    {
+      "id": "prepare",
+      "status": 0,
+      "expectedExit": 0,
+      "terminal": true
+    },
+    {
+      "id": "fresh-out-rejection",
+      "status": 1,
+      "expectedExit": 1,
+      "terminal": true
+    },
+    {
+      "id": "executor-windows-rejection",
+      "status": 1,
+      "expectedExit": 1,
+      "terminal": true
+    }
+  ],
+  "retainedNegativePreparationKeys": {
+    "historicalPreparationFailure": {
+      "toolChunk": "6c6527",
+      "actualExit": 1,
+      "issue": "Temp builder syntax error before any generated main write; subsequent repaired builder closed0 chunk414b6d. No runtime ran."
+    },
+    "historicalAuditEntryFailure": {
+      "toolChunk": "12f84c",
+      "actualExit": 1,
+      "issue": "Temp auditor Windows static ESM import path rejected before execution; corrected to file URL. No package mutation or runtime ran in failed entry."
+    },
+    "historicalInertStubFailure": {
+      "toolChunk": "52cc24",
+      "actualExit": 1,
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/executor-inert.command-result.json",
+      "issue": "Windows Python lacks signal.SIGKILL; Linux signal constants now explicit in inert stub only. Original failed stdout/stderr/result preserved; no native runtime ran."
+    },
+    "negativeWindowsReceipt": {
+      "schema": "v364-owned-linux-boundary-executor-closed-v1",
+      "startedEpoch": 1791250953.8295524,
+      "elapsedMs": 16.00000000325963,
+      "actualProcessExit": null,
+      "runnerOutcomeCode": 1,
+      "actualExit": 1,
+      "outcome": "STRICT_FAILURE_OR_UNKNOWN_PRESERVED",
+      "timedOut": false,
+      "interrupted": false,
+      "fatal": {
+        "name": "RuntimeError",
+        "message": "Requires explicit --execute-linux on an owned Linux runner"
+      },
+      "packageSHA256": null,
+      "checkoutSHA": null,
+      "run": {
+        "GITHUB_SHA": null,
+        "GITHUB_RUN_ID": null,
+        "GITHUB_RUN_ATTEMPT": null,
+        "GITHUB_WORKFLOW": null,
+        "GITHUB_JOB": null
+      },
+      "reportedActualExit": null,
+      "closedReportPresent": false,
+      "closure": {
+        "authority": "this executor",
+        "subreaperEnabled": false,
+        "directChildReaped": false,
+        "groupGone": true,
+        "leftoverGroupKilled": false,
+        "signalAttempts": [],
+        "reapedDescendants": [],
+        "processCensus": [],
+        "apiDisposalReported": false,
+        "outerUnforcedGroupClose": false,
+        "gracefulWorkerdExitProven": false,
+        "miniflareDisposeMaySendSIGKILL": true,
+        "errors": []
+      },
+      "causeProven": false,
+      "productionRequests": 0,
+      "ciInvocations": 0,
+      "files": [
+        {
+          "path": "executor.stderr.txt",
+          "bytes": 317,
+          "sha256": "307ed99242cc629b73747b6c4ce900772e7a3a2043c00a0c8516e41f50eff183"
+        },
+        {
+          "path": "executor.stdout.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    "negativeIsLinuxClosureProof": false
+  },
+  "limits": "Only new final package bytes and owner preparation receipts read. Earlier report is unchanged. Preparation no-child Windows rejection and inert Linux constants branch checks are not actual Linux process cleanup proof. No runtime/test/preparation command rerun by this reviewer.",
+  "repoWrites": 0,
+  "runtimeExecuted": false,
+  "ciRequests": 0,
+  "productionRequests": 0
+}

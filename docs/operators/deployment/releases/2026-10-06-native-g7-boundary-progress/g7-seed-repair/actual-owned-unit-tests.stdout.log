@@ -1,0 +1,15 @@
+✔ command budget never admits zero, negative or oversized remaining timeout (2.4868ms)
+✔ execution admission rejects wrong SHA, platform, endpoint and TLS bypass (2.8898ms)
+✔ cleanup ownership never admits foreign or unlabeled resources (0.6425ms)
+✔ topology rejects public ports, extra networks and writable input mounts (1.7236ms)
+✔ the real SQL text fixture satisfies production endpoint and operation admission (5.8407ms)
+✔ provider encryption and real route fingerprint bind the seeded plaintext credential (20.0908ms)
+✔ the rotated owned Admin key uses the production lookup hash and rejects the migration's development key (3.3111ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 478.6688

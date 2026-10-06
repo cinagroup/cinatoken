@@ -1,0 +1,15 @@
+{
+	"$schema": "https://unpkg.com/@changesets/config@3.1.1/schema.json",
+	"changelog": [
+		"@changesets/changelog-github",
+		{ "repo": "cinagroup/cinatoken" }
+	],
+	"commit": false,
+	"prettier": false,
+	"fixed": [["cinatoken", "@octafuse/core", "@octafuse/tool-engines", "@octafuse/proxy", "@octafuse/admin", "@cinatoken/web"]],
+	"linked": [],
+	"access": "restricted",
+	"baseBranch": "main",
+	"updateInternalDependencies": "patch",
+	"ignore": []
+}

@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-06T02:19:15.355Z",
+  "finishedAt": "2026-10-06T02:19:20.340Z",
+  "executable": "C:/Program Files/GitHub CLI/gh.exe",
+  "args": [
+    "pr",
+    "create",
+    "--draft",
+    "--base",
+    "main",
+    "--head",
+    "changeset-release/main",
+    "--title",
+    "chore: version packages",
+    "--body-file",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-boundary-next-20261006-Zm6Z3E/release-draft-body.md"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-boundary-next-20261006-Zm6Z3E/native-five-release-create-draft.stdout.log",
+  "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-boundary-next-20261006-Zm6Z3E/native-five-release-create-draft.stderr.log"
+}

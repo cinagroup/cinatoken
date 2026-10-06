@@ -1,0 +1,30 @@
+{
+  "schema": "cinatoken-isolated-release-command-v1",
+  "label": "base-packages-proxy-package-json",
+  "program": "git",
+  "args": [
+    "show",
+    "4e2ed5196a26cc43c2a3cb7ea852f1fc6284ff27:packages/proxy/package.json"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "startedAt": "2026-10-06T02:07:59.111Z",
+  "finishedAt": "2026-10-06T02:07:59.165Z",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "closed": true,
+  "expectedActualExits": [
+    0
+  ],
+  "expectedExitMatched": true,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\base-packages-proxy-package-json.stdout.log",
+    "bytes": 18988,
+    "sha256": "14e2d996c5d81a9ec101e9506dc05d1693c05911aad146fb062742c0c4aca2a1"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\base-packages-proxy-package-json.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "closed": true,
+  "sourceFiles": [
+    {
+      "relative": "scripts/verification/web-platform-g7/database.mjs",
+      "bytes": 8401,
+      "sha256": "641e2df787ab80167ffd85d0c1a21b18d6454ab68543f073f17d6f73a3cb6372"
+    },
+    {
+      "relative": "scripts/verification/web-platform-g7/fixture.test.mjs",
+      "bytes": 5209,
+      "sha256": "e73f154b87ec48acef2c0d6c25ffdfbc5786ccc6718a613021795db3573ff53c"
+    },
+    {
+      "relative": "packages/core/migrations-postgres/0023_admin_access_identity.sql",
+      "bytes": 1303,
+      "sha256": "f783da40772279265fc6b65fefb31c995e90acf456adc2aad4333ae08180cbab"
+    },
+    {
+      "relative": "packages/core/migrations-postgres/0024_drop_legacy_master_key_config.sql",
+      "bytes": 238,
+      "sha256": "9b51f185c29e14e3c6f7b076d1e8ccca5236493fee40992a4cb9247a6ebe2e20"
+    },
+    {
+      "relative": "packages/core/migrations-postgres/0032_key_hash_lookup.sql",
+      "bytes": 607,
+      "sha256": "c75fd42528e078e7a0853f3c256cd8cb81a1526c492b7acea1122234af5d3195"
+    }
+  ]
+}

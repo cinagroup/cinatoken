@@ -1,0 +1,45 @@
+{
+  "preparedAtHead": "6658ec978009afa5fe3f4beccf6bde358590b663",
+  "files": [
+    {
+      "path": "scripts/verification/web-platform-g7/admission.mjs",
+      "bytes": 1928,
+      "sha256": "6a4ee2c7ae3cfb5574b93dc4193195a6fd4a93d8a260ddd86eebdb2a9219cfb1"
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/admission.test.mjs",
+      "bytes": 2027,
+      "sha256": "96c68aed349f16888599f2c3bdc4c4d209797043fd4b8d0563e8d6379131a1d9"
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/database.mjs",
+      "bytes": 8144,
+      "sha256": "2e34976023e511016a9669ef36a7fa7cd542f5216887dcceb8716a915a7d03a2"
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/ingress.conf",
+      "bytes": 1549,
+      "sha256": "d7e33e890c1ed5862986b34b67d57bb6380d72fe6be33808698a048e4a145d61"
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/README.md",
+      "bytes": 3725,
+      "sha256": "66afeccd5b1fd55d99e819ebda8fb8eaf33ca2f97a8a2236a0d8bebc2345b06d"
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/run-owned-linux.mjs",
+      "bytes": 20845,
+      "sha256": "5265f18eeceb35edc3791c344ffba095a7bc13472432243af390efbe07870eb9"
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/wire.mjs",
+      "bytes": 14177,
+      "sha256": "55b10bd3c459ca37893efe7cd898d87c4ecf304f33a245a141c745e684f6a9d0"
+    },
+    {
+      "path": ".github/workflows/web-platform-g7.yml",
+      "bytes": 2801,
+      "sha256": "9eedfdc1feb644307c3f74d6744f537ac6dbea950da4dc119bb2c328ae8be7db"
+    }
+  ]
+}

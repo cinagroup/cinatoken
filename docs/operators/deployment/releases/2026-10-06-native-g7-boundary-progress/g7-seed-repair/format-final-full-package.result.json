@@ -1,0 +1,38 @@
+{
+  "label": "format-final-full-package",
+  "executable": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "node_modules/prettier/bin-prettier.js",
+    "--check",
+    "scripts/verification/web-platform-g7/admission.mjs",
+    "scripts/verification/web-platform-g7/admission.test.mjs",
+    "scripts/verification/web-platform-g7/cleanup-owned-linux.mjs",
+    "scripts/verification/web-platform-g7/database.mjs",
+    "scripts/verification/web-platform-g7/fixture.test.mjs",
+    "scripts/verification/web-platform-g7/run-owned-linux.mjs",
+    "scripts/verification/web-platform-g7/wire.mjs",
+    "scripts/verification/web-platform-g7/README.md",
+    ".github/workflows/web-platform-g7.yml"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "startedAt": "2026-10-06T02:20:06.989Z",
+  "finishedAt": "2026-10-06T02:20:07.666Z",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "closed": true,
+  "expectedActualExits": [
+    0
+  ],
+  "expectedExitMatched": true,
+  "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\format-final-full-package.stdout.log",
+  "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\format-final-full-package.stderr.log",
+  "stdoutBytes": {
+    "bytes": 66,
+    "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+  },
+  "stderrBytes": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

@@ -1,0 +1,116 @@
+[
+    {
+        "Id": "sha256:64b2f0e5a8e3e698c585fb3ab90d9c3e5292be79723267dcedb303bf4d19a2bc",
+        "RepoTags": [
+            "cinatoken-g7-web:67f8b3df2f2b6e8159806767ecce1efa1904d27a"
+        ],
+        "RepoDigests": [],
+        "Parent": "",
+        "Comment": "buildkit.dockerfile.v0",
+        "Created": "2026-10-06T02:09:52.764360034Z",
+        "DockerVersion": "",
+        "Author": "",
+        "Config": {
+            "Hostname": "",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "ExposedPorts": {
+                "80/tcp": {},
+                "8080/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "NGINX_VERSION=1.30.5",
+                "PKG_RELEASE=1",
+                "DYNPKG_RELEASE=1",
+                "NJS_VERSION=1.0.1",
+                "NJS_RELEASE=1",
+                "ACME_VERSION=0.4.1",
+                "CINATOKEN_WEB_PUBLIC_ENABLED=false",
+                "CINATOKEN_WEB_SSR_UPSTREAM=http://gateway-web-ssr:8791",
+                "CINATOKEN_WEB_ACCOUNT_ENABLED=false",
+                "CINATOKEN_WEB_ADMIN_DASHBOARD_ENABLED=false",
+                "CINATOKEN_WEB_ADMIN_USERS_ENABLED=false",
+                "CINATOKEN_WEB_ADMIN_USER_DETAIL_ENABLED=false",
+                "CINATOKEN_WEB_ADMIN_PROVIDERS_ENABLED=false",
+                "CINATOKEN_WEB_ADMIN_MODELS_ENABLED=false",
+                "CINATOKEN_WEB_ADMIN_ENDPOINTS_ENABLED=false",
+                "CINATOKEN_WEB_ADMIN_ROUTES_ENABLED=false",
+                "CINATOKEN_WEB_ADMIN_DATA_POLICIES_ENABLED=false",
+                "CINATOKEN_WEB_ADMIN_PRESETS_ENABLED=false",
+                "CINATOKEN_WEB_ADMIN_GUARDRAILS_ENABLED=false",
+                "CINATOKEN_WEB_ADMIN_RELIABILITY_ENABLED=false",
+                "CINATOKEN_WEB_ADMIN_MODEL_ANALYTICS_ENABLED=false",
+                "CINATOKEN_WEB_ADMIN_PROVIDER_ANALYTICS_ENABLED=false",
+                "CINATOKEN_WEB_ADMIN_USER_ANALYTICS_ENABLED=false",
+                "CINATOKEN_WEB_ADMIN_REQUEST_LOGS_ENABLED=false",
+                "CINATOKEN_WEB_ADMIN_BUDGET_AUDIT_ENABLED=false",
+                "CINATOKEN_WEB_ADMIN_TOOL_INVOCATIONS_ENABLED=false",
+                "CINATOKEN_WEB_ADMIN_CONFIG_TIMEZONE_ENABLED=false",
+                "CINATOKEN_WEB_ADMIN_CONFIG_ENABLED=false",
+                "CINATOKEN_WEB_ADMIN_ACCESS_KEYS_ENABLED=false",
+                "CINATOKEN_WEB_ADMIN_KEYS_ENABLED=false",
+                "CINATOKEN_WEB_ADMIN_SHARED_KEYS_ENABLED=false",
+                "CINATOKEN_WEB_ADMIN_TOOLS_ENABLED=false",
+                "CINATOKEN_WEB_ADMIN_PLAYGROUND_ENABLED=false",
+                "CINATOKEN_WEB_ADMIN_SIMULATOR_ENABLED=false",
+                "CINATOKEN_WEB_ADMIN_WITHDRAWALS_ENABLED=false",
+                "CINATOKEN_WEB_ADMIN_NFT_MINTS_ENABLED=false",
+                "CINATOKEN_WEB_PROXY_ORIGINS=",
+                "CINATOKEN_ADMIN_UPSTREAM=http://admin:8789"
+            ],
+            "Cmd": null,
+            "Image": "",
+            "Volumes": null,
+            "WorkingDir": "/",
+            "Entrypoint": [
+                "/web-entrypoint.sh"
+            ],
+            "OnBuild": null,
+            "Labels": {
+                "maintainer": "NGINX Docker Maintainers <docker-maint@nginx.com>"
+            },
+            "StopSignal": "SIGQUIT"
+        },
+        "Architecture": "amd64",
+        "Os": "linux",
+        "Size": 71046183,
+        "GraphDriver": {
+            "Data": {
+                "LowerDir": "/var/lib/docker/overlay2/c95gwryb9j4r3zkon8h68p5g4/diff:/var/lib/docker/overlay2/w3belq2g21h01sj9vbr3kareo/diff:/var/lib/docker/overlay2/nbrj66hftb9h606mjtcy32qgg/diff:/var/lib/docker/overlay2/kjuo8h7aly6hn9r1wacdhlftn/diff:/var/lib/docker/overlay2/lvaiyrg6bbfwxb36c08kz8q8c/diff:/var/lib/docker/overlay2/e3411c5417e7612c6dd5d188b5ede74a8740e1bb9d637f35c53696d121275e7f/diff:/var/lib/docker/overlay2/9e60fb048b761d69b52429fa7167a0b4dbd35fff5bc358fcd8cf1f2fa3015a78/diff:/var/lib/docker/overlay2/9c60cc9d9a58c7c5e3542c3ab113ce0dd527d82147d41d59eee3920a359b5e61/diff:/var/lib/docker/overlay2/3a233896e626c00003785a15d76473c7af0e59c47f07d569bea807f26ff76f12/diff:/var/lib/docker/overlay2/4bbdd3620c585318185eb88bac2ff2d18b964e05692bd41be3d877a1aa0c8594/diff:/var/lib/docker/overlay2/3ca4ec2845f1bb1c763a681542d76c414a103b336b7352583494c7b3f32ae853/diff:/var/lib/docker/overlay2/cebac3982dac5480158896dc2df2edde22c37230c37e4b832e7e0e81bc3365c8/diff:/var/lib/docker/overlay2/2ae0b48eecfe9a6e2756191da34c38096ffcefcfe60a3735da2ca81df409a0ef/diff",
+                "MergedDir": "/var/lib/docker/overlay2/97mgdhc34vhnhrzje8k5rteaq/merged",
+                "UpperDir": "/var/lib/docker/overlay2/97mgdhc34vhnhrzje8k5rteaq/diff",
+                "WorkDir": "/var/lib/docker/overlay2/97mgdhc34vhnhrzje8k5rteaq/work"
+            },
+            "Name": "overlay2"
+        },
+        "RootFS": {
+            "Type": "layers",
+            "Layers": [
+                "sha256:74d97c428c51a828f9051a7a40a53ff1fc99e54fc30323ce36760701b0b7f711",
+                "sha256:2d3fbe0ca19dd389108f7e9a1d89ec5c1f1d7dc3c11fb2123bc425fed39c5f22",
+                "sha256:ed752e851ebe79a0e72be1fd48e90474d36ae2bb2ddccff2475f8e050c20a804",
+                "sha256:ec2b9a359ab960e2254545e79e9bca77edaeefb652d97b26855217fb8a9c80b3",
+                "sha256:267e83adf4c4e342b08cbe40814662493e030c88311c720fbce2f0d7c809f3f4",
+                "sha256:8fb5da5ad6fa936ba8c24999da33095b2b6c5fd2bcf4aa22acbf299b0e7294df",
+                "sha256:0d250d8db7c20b3c0bd3059b3431dd47f130cb81e7a4c7820950139daafb91d6",
+                "sha256:e46f4042ccf5f36d1605617ef6912bdaac437fa0bca12530e77529b191eb02fa",
+                "sha256:a523e3505e2df76e3bc985ffd173255f20070567319f740135c455eb3c5fd83f",
+                "sha256:8dc4f811427b16cd983b82db0bc47c56f44ebe602e9c50a9c05a5eaa5ac7d17a",
+                "sha256:e9b01bd0eb21d30c944fa563fb6f2064b1eb4941629d0aab602580f4765de99c",
+                "sha256:a1830fbbe07f5746ced9e99defc3ecef07c93b333b642723aefba7b1d6c9042e",
+                "sha256:917b77d8636b796528c4535c66d2292b210719f9fed7e345fc45d0e3dc3627cb",
+                "sha256:2fe0e904cc083a1e75e4ff17ff28e3de6a09a7c944bd810a2f060cfc4869eb98"
+            ]
+        },
+        "Metadata": {
+            "LastTagTime": "2026-10-06T02:09:53.126759929Z"
+        }
+    }
+]

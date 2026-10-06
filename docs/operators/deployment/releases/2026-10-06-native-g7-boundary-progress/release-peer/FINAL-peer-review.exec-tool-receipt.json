@@ -1,0 +1,18 @@
+{
+  "schema": "cinatoken-peer-readonly-original-exec-tool-receipts-v1",
+  "provenance": "Exact completed exec_command results from this peer; not reruns and not inferred product statuses.",
+  "initialDisplayPreviewFailure": {
+    "chunk_id": "610f25",
+    "wall_time_seconds": 1.2713003,
+    "exit_code": 1,
+    "original_token_count": 44,
+    "output": "Traceback (most recent call last):\r\n  File \"<stdin>\", line 80, in <module>\r\nUnicodeDecodeError: 'utf-8' codec can't decode byte 0xe8 in position 119: unexpected end of data\r\n"
+  },
+  "finalReportWriter": {
+    "chunk_id": "480ad3",
+    "wall_time_seconds": 0.4758458,
+    "exit_code": 0,
+    "original_token_count": 172,
+    "output": "{\"peerFinal\": {\"path\": \"C:\\\\Users\\\\cina\\\\AppData\\\\Local\\\\Temp\\\\FINAL-cinatoken-release-prettier-peer-readonly-2e6884feac2c43b7b162f303b1190554\\\\FINAL-release-prettier-peer-readonly-review.json\", \"bytes\": 67205, \"sha256\": \"e7416bbe07e582c84a59883f7afebc41258e40410452ac5610fef285d591756b\"}, \"sourceBlockers\": [], \"verifiedCommandReceipts\": 30, \"verifiedRawStreams\": 60, \"unchangedInputs\": 17, \"installed\": {\"@changesets/cli\": \"2.31.0\", \"@changesets/apply-release-plan\": \"7.1.1\", \"@changesets/config\": \"3.1.4\", \"@changesets/changelog-github\": \"0.5.2\", \"prettier\": \"2.8.8\", \"Web prettier\": \"3.9.9\"}, \"beforeIntegrityActual\": 1, \"afterIntegrityActual\": 0, \"unchangedWebFullFormatActual\": 0}\r\n"
+  }
+}

@@ -1,0 +1,179 @@
+{
+  "schemaVersion": 1,
+  "releaseSlug": "2026-10-06-native-g7-boundary-progress",
+  "sourceCommit": "07d19c1c941cc373019811be3dbf553c441a0ff3",
+  "outputDirectory": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/output",
+  "gzipThresholdBytes": 100000,
+  "roots": [
+    {
+      "id": "root-progress",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-boundary-next-20261006-Zm6Z3E",
+      "phase": "historical-and-current"
+    },
+    {
+      "id": "native-eight-preparation",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-next-eight-repair-0511920406eb4b37baca7e103b9080d5",
+      "phase": "local-validation"
+    },
+    {
+      "id": "native-eight-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next-eight-independent-peer-MoXSUZ",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "native-five-preparation",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-next-six-8d357e3fd84b4810a7210ece167eb07a",
+      "phase": "local-validation"
+    },
+    {
+      "id": "native-five-ci-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-five-ci-readonly-0f234236c0474390a980e09910ae9e7c",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "boundary-preparation",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38",
+      "phase": "prepared-only"
+    },
+    {
+      "id": "boundary-package-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-peer-79ca7e6f2470461d9554856f33950460",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "g7-preparation",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-g7-tls-pg-package-20261006-552eab3dd02f4b15a01d765d9a2aab8f",
+      "phase": "local-validation"
+    },
+    {
+      "id": "g7-package-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/FINAL-cinatoken-g7-peer-readonly-6c2b5589c453487fbd13b36caacb0e1e",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "g7-seed-repair",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57",
+      "phase": "local-validation"
+    },
+    {
+      "id": "g7-seed-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/FINAL-cinatoken-g7-seed-repair-peer-readonly-450de998ee044958801e669dbb50a3ca",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "release-preparation",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2",
+      "phase": "local-validation",
+      "excludeDirectories": [
+        {
+          "directory": "isolated-before",
+          "reason": "CLI execution mirror contains temporary Git state and a node_modules junction. All executed command receipts/raw, generated-before output, source-before and integrity reports are included separately."
+        },
+        {
+          "directory": "isolated-after",
+          "reason": "CLI execution mirror contains temporary Git state and a node_modules junction. All executed command receipts/raw, generated-after output, source-after and integrity reports are included separately."
+        }
+      ]
+    },
+    {
+      "id": "release-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/FINAL-cinatoken-release-prettier-peer-readonly-2e6884feac2c43b7b162f303b1190554",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "upstream-candidate",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-source-upstream-candidate-H03WpG",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "boundary-terminal-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-terminal-readonly-dadfa5000d064bd08eeab54de4130cd8",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "native-next-four-inventory",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native53-six-inventory-b5e488785b0d4b00a7f69724a8a418e4",
+      "phase": "prepared-only"
+    },
+    {
+      "id": "checklist-terminal-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-checklist-577-independent-ced29ba591694a8eb7267a62e38a36b5",
+      "phase": "source-peer-review"
+    }
+  ],
+  "requiredRootIds": [
+    "root-progress",
+    "native-eight-preparation",
+    "native-eight-peer",
+    "native-five-preparation",
+    "native-five-ci-peer",
+    "boundary-preparation",
+    "boundary-package-peer",
+    "g7-preparation",
+    "g7-package-peer",
+    "g7-seed-repair",
+    "g7-seed-peer",
+    "release-preparation",
+    "release-peer",
+    "upstream-candidate",
+    "boundary-terminal-peer",
+    "native-next-four-inventory",
+    "checklist-terminal-peer"
+  ],
+  "semantics": {
+    "collectionOnly": true,
+    "gatePassDerived": false,
+    "productionVersion": "2a0a2777-d3b1-47f0-a0a7-88e701b4d2d9",
+    "productionCommit": "c13a64b9c3b2c90adcf736910ea408868d7854f1",
+    "productionChanged": false,
+    "fullGoalComplete": false,
+    "fullScope": {
+      "mainTasks": 102,
+      "matrixRows": 54,
+      "gates": 9,
+      "evidenceRows": 9,
+      "taskCheckboxes": 211,
+      "checkboxLines": 213,
+      "checkboxTokens": 214
+    },
+    "sourceCohorts": [
+      "4e2ed5196a26cc43c2a3cb7ea852f1fc6284ff27",
+      "67f8b3df2f2b6e8159806767ecce1efa1904d27a",
+      "00858e90592d55fa1d58b15bf1a4ebec1883b848",
+      "07d19c1c941cc373019811be3dbf553c441a0ff3"
+    ],
+    "boundaryRuntimeActualExit": 1,
+    "originalCancellationProven": false,
+    "gracefulWorkerdExitProven": false,
+    "g7FirstRuntimeActualExit": 1,
+    "releaseDraft": "https://github.com/cinagroup/cinatoken/pull/4",
+    "releasePublished": false,
+    "g7SecondRuntimeActualExit": 1,
+    "g7SecondWireActualExit": 0,
+    "g7SecondSeedActualExit": 0,
+    "g7SecondProxyObserveActualExit": 0,
+    "g7SecondAdminObserveActualExit": 1,
+    "g7SecondRuntimeChildren": 165,
+    "g7SecondFallbackChildren": 29,
+    "g7InitialRecursiveArtifactFiles": 352,
+    "g7SecondRecursiveArtifactFiles": 601,
+    "g7InitialTopLevelFiles": 350,
+    "g7SecondTopLevelEntries": 600,
+    "fullG7Verified": false,
+    "fullG8Verified": false,
+    "release07RunActualConclusion": "success",
+    "release07RunId": 37403800144,
+    "releaseDraftHead": "117c3ba4d7c0d10c5ce8cfc264ba1d6548339812",
+    "releaseDraftOpen": true,
+    "releaseDraftStillDraft": true,
+    "mainVersionsPublished": false,
+    "nextNativeInventoryIsStaticNotExecution": true
+  },
+  "explicitByteCopyBindings": [
+    {
+      "rootId": "release-preparation",
+      "provenanceFile": "original-ci-failure-provenance.json",
+      "expectedProvenanceSha256": "a5a4fd5a04b84d5fd172b4469fa6ef1af26eb4388d17f2dddf9e0e0974fe2b5d"
+    }
+  ]
+}

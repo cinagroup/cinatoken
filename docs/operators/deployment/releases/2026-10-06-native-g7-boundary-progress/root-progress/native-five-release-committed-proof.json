@@ -1,0 +1,96 @@
+{
+  "schema": "root-native-five-release-committed-proof-v1",
+  "at": "2026-10-06T02:17:18.283Z",
+  "closed": true,
+  "actualExit": 0,
+  "sourceSHA": "00858e90592d55fa1d58b15bf1a4ebec1883b848",
+  "files": [
+    {
+      "path": ".changeset/README.md",
+      "gitBytes": 3431,
+      "gitSha256": "f6e68489b02a206a5a665cf1195dd3445a5b2586870cc1373e5e4c94c263b24d",
+      "workingBytes": 3431,
+      "workingSha256": "f6e68489b02a206a5a665cf1195dd3445a5b2586870cc1373e5e4c94c263b24d",
+      "gitCleanBlob": "df57b3d2adb468be12caac43930237f6e569355b",
+      "committedBlob": "df57b3d2adb468be12caac43930237f6e569355b",
+      "exactGitCleanHash": true
+    },
+    {
+      "path": ".changeset/config.json",
+      "gitBytes": 446,
+      "gitSha256": "854a0cf774e1fe3299c94dcd00e5b55d9eb0ac96441225f9a723a002eb7ffd1b",
+      "workingBytes": 446,
+      "workingSha256": "854a0cf774e1fe3299c94dcd00e5b55d9eb0ac96441225f9a723a002eb7ffd1b",
+      "gitCleanBlob": "99bd448902437009ac3f60f4fd98f67ce01586da",
+      "committedBlob": "99bd448902437009ac3f60f4fd98f67ce01586da",
+      "exactGitCleanHash": true
+    },
+    {
+      "path": "docs/developers/architecture/web-frontend-migration.md",
+      "gitBytes": 784613,
+      "gitSha256": "7ec3a2f1e1538b06410ea20152346913fd80a369ceba4cb08eb4d9043d4a75b0",
+      "workingBytes": 784613,
+      "workingSha256": "7ec3a2f1e1538b06410ea20152346913fd80a369ceba4cb08eb4d9043d4a75b0",
+      "gitCleanBlob": "d32b4db522190909f163ee971b180523fe79352b",
+      "committedBlob": "d32b4db522190909f163ee971b180523fe79352b",
+      "exactGitCleanHash": true
+    },
+    {
+      "path": "scripts/db/cutover/postgres-complete-text-private-route-reader-v366.native.test.mjs",
+      "gitBytes": 20707,
+      "gitSha256": "02e9a66f4064dd408640b88889b288df8ebe78afbcb8cb9b930046632d719918",
+      "workingBytes": 20707,
+      "workingSha256": "02e9a66f4064dd408640b88889b288df8ebe78afbcb8cb9b930046632d719918",
+      "gitCleanBlob": "6ee078cf05e84bdca3da98b9016ec48b4ba7f2a0",
+      "committedBlob": "6ee078cf05e84bdca3da98b9016ec48b4ba7f2a0",
+      "exactGitCleanHash": true
+    },
+    {
+      "path": "scripts/db/cutover/postgres-complete-text-read-grant-bridge-v367.native.test.mjs",
+      "gitBytes": 39991,
+      "gitSha256": "de0d3f29f294d63d8d96617c0f6eb42dc5fe92c142330698056cd98de006dafa",
+      "workingBytes": 39991,
+      "workingSha256": "de0d3f29f294d63d8d96617c0f6eb42dc5fe92c142330698056cd98de006dafa",
+      "gitCleanBlob": "a80f4f5e2a292523995cc1ff07e86b999116cb87",
+      "committedBlob": "a80f4f5e2a292523995cc1ff07e86b999116cb87",
+      "exactGitCleanHash": true
+    },
+    {
+      "path": "scripts/db/cutover/postgres-complete-text-result-facts-v366.native.test.mjs",
+      "gitBytes": 47182,
+      "gitSha256": "9fc4580826c0ba46974a66c1ce91f40e36c68db8e954f10a5c935d0d8fc84d83",
+      "workingBytes": 47182,
+      "workingSha256": "9fc4580826c0ba46974a66c1ce91f40e36c68db8e954f10a5c935d0d8fc84d83",
+      "gitCleanBlob": "5322b35f075261a238ddc3a24000b648adceca3b",
+      "committedBlob": "5322b35f075261a238ddc3a24000b648adceca3b",
+      "exactGitCleanHash": true
+    },
+    {
+      "path": "scripts/db/cutover/postgres-complete-text-secretless-plan-v365.native.test.mjs",
+      "gitBytes": 21312,
+      "gitSha256": "a74819c23d460174ccc76e7c489f923220f0fbebd82b5e3a116eccaf0cf7ef75",
+      "workingBytes": 21312,
+      "workingSha256": "a74819c23d460174ccc76e7c489f923220f0fbebd82b5e3a116eccaf0cf7ef75",
+      "gitCleanBlob": "4bad5fe67a5ab536ff0365572db7d4f3407ba60b",
+      "committedBlob": "4bad5fe67a5ab536ff0365572db7d4f3407ba60b",
+      "exactGitCleanHash": true
+    },
+    {
+      "path": "scripts/db/cutover/postgres-complete-text-send-start-v365.native.test.mjs",
+      "gitBytes": 42224,
+      "gitSha256": "101eedb93baa61695aeee8c44a4a5c1e06d6c617e44708af76457c69287f301f",
+      "workingBytes": 42224,
+      "workingSha256": "101eedb93baa61695aeee8c44a4a5c1e06d6c617e44708af76457c69287f301f",
+      "gitCleanBlob": "fcc366be4ace5d134311078bb1c15ff063bdc9e0",
+      "committedBlob": "fcc366be4ace5d134311078bb1c15ff063bdc9e0",
+      "exactGitCleanHash": true
+    }
+  ],
+  "protectedSources": 181,
+  "releaseUnchangedInputs": 17,
+  "previousRootAuditActualExit": 1,
+  "previousRootAuditFailure": "Root incorrectly assumed full LF normalization for historic mixed-EOL Git blobs; original output preserved",
+  "committedBeforeThisRepairedAudit": true,
+  "canonicalGitCleanBytesNowVerified": true,
+  "productionChanged": false
+}

@@ -1,0 +1,301 @@
+[
+    {
+        "Id": "8afb442dfa9ec5914cf03e8166998bb9b184ccf8852eda6c39375a55561099d0",
+        "Created": "2026-10-06T02:32:36.462205193Z",
+        "Path": "node",
+        "Args": [
+            "/qa/wire.mjs",
+            "--execute-owned-linux"
+        ],
+        "State": {
+            "Status": "exited",
+            "Running": false,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 0,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-10-06T02:32:36.539256784Z",
+            "FinishedAt": "2026-10-06T02:32:52.112894659Z"
+        },
+        "Image": "sha256:518268bdf478be30b9bdcf753beb314f41d2032552986b3f0f513a560365439f",
+        "ResolvConfPath": "/var/lib/docker/containers/8afb442dfa9ec5914cf03e8166998bb9b184ccf8852eda6c39375a55561099d0/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/8afb442dfa9ec5914cf03e8166998bb9b184ccf8852eda6c39375a55561099d0/hostname",
+        "HostsPath": "/var/lib/docker/containers/8afb442dfa9ec5914cf03e8166998bb9b184ccf8852eda6c39375a55561099d0/hosts",
+        "LogPath": "/var/lib/docker/containers/8afb442dfa9ec5914cf03e8166998bb9b184ccf8852eda6c39375a55561099d0/8afb442dfa9ec5914cf03e8166998bb9b184ccf8852eda6c39375a55561099d0-json.log",
+        "Name": "/g7-8a88cf68945741d1843b63f670b4d364-qa",
+        "RestartCount": 0,
+        "Driver": "overlay2",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "docker-default",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": null,
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "g7-8a88cf68945741d1843b63f670b4d364-client",
+            "PortBindings": {},
+            "RestartPolicy": {
+                "Name": "no",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": [
+                "ALL"
+            ],
+            "CgroupnsMode": "private",
+            "Dns": [],
+            "DnsOptions": [],
+            "DnsSearch": [],
+            "ExtraHosts": null,
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": true,
+            "SecurityOpt": [
+                "no-new-privileges"
+            ],
+            "Tmpfs": {
+                "/tmp": ""
+            },
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 0,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": [],
+            "BlkioDeviceReadBps": [],
+            "BlkioDeviceWriteBps": [],
+            "BlkioDeviceReadIOps": [],
+            "BlkioDeviceWriteIOps": [],
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": [],
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 0,
+            "MemorySwap": 0,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": null,
+            "Ulimits": [],
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "Mounts": [
+                {
+                    "Type": "bind",
+                    "Source": "/home/runner/work/cinatoken/cinatoken/scripts/verification/web-platform-g7",
+                    "Target": "/qa",
+                    "ReadOnly": true
+                },
+                {
+                    "Type": "bind",
+                    "Source": "/tmp/cinatoken-g7-private-R4qOk7/tls/qa-root-ca.crt",
+                    "Target": "/tls/qa-root-ca.crt",
+                    "ReadOnly": true
+                },
+                {
+                    "Type": "bind",
+                    "Source": "/home/runner/work/cinatoken/cinatoken/.release/web/07d19c1c941cc373019811be3dbf553c441a0ff3/manifest.json",
+                    "Target": "/release/manifest.json",
+                    "ReadOnly": true
+                },
+                {
+                    "Type": "bind",
+                    "Source": "/home/runner/work/cinatoken/cinatoken/.release/web/07d19c1c941cc373019811be3dbf553c441a0ff3/manifest.sha256",
+                    "Target": "/release/manifest.sha256",
+                    "ReadOnly": true
+                },
+                {
+                    "Type": "bind",
+                    "Source": "/tmp/cinatoken-g7-receipts-37403868149-1",
+                    "Target": "/receipts"
+                }
+            ],
+            "MaskedPaths": [
+                "/proc/asound",
+                "/proc/acpi",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/sys/firmware",
+                "/sys/devices/virtual/powercap"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "GraphDriver": {
+            "Data": {
+                "ID": "8afb442dfa9ec5914cf03e8166998bb9b184ccf8852eda6c39375a55561099d0",
+                "LowerDir": "/var/lib/docker/overlay2/909855347d3806a32004632e6937dd77a63ed0d3a635a11209ad088875318ac0-init/diff:/var/lib/docker/overlay2/7z35olbv2gcck0ri33a7m9yd7/diff:/var/lib/docker/overlay2/rekm25hb9hh2nrthtzs3mssek/diff:/var/lib/docker/overlay2/v9ifz0dyeq2hevs5kbmp8mobm/diff:/var/lib/docker/overlay2/zr15g9mva810tpgjxax5896r4/diff:/var/lib/docker/overlay2/hx4t58ldh19a42hnc4boe5htp/diff:/var/lib/docker/overlay2/9i27nmq4i4oz632og5dl08xux/diff:/var/lib/docker/overlay2/0dbc652ec6fab134aed8e900b6cf3c2fd9d7096109db11d2989d55bc673f88bc/diff:/var/lib/docker/overlay2/7eeb7da616888c0b14972b022038f33035f7d0bde45e4ee6dd3138022933d316/diff:/var/lib/docker/overlay2/605f0c743350fec83c89abc3a244f57465320826da8de8d6dca11988407dacb2/diff:/var/lib/docker/overlay2/b98c447331a3bd062b2486eea5c71fc91da5869987092257bc175115d784d64f/diff",
+                "MergedDir": "/var/lib/docker/overlay2/909855347d3806a32004632e6937dd77a63ed0d3a635a11209ad088875318ac0/merged",
+                "UpperDir": "/var/lib/docker/overlay2/909855347d3806a32004632e6937dd77a63ed0d3a635a11209ad088875318ac0/diff",
+                "WorkDir": "/var/lib/docker/overlay2/909855347d3806a32004632e6937dd77a63ed0d3a635a11209ad088875318ac0/work"
+            },
+            "Name": "overlay2"
+        },
+        "Mounts": [
+            {
+                "Type": "bind",
+                "Source": "/home/runner/work/cinatoken/cinatoken/.release/web/07d19c1c941cc373019811be3dbf553c441a0ff3/manifest.json",
+                "Destination": "/release/manifest.json",
+                "Mode": "",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "/home/runner/work/cinatoken/cinatoken/.release/web/07d19c1c941cc373019811be3dbf553c441a0ff3/manifest.sha256",
+                "Destination": "/release/manifest.sha256",
+                "Mode": "",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "/tmp/cinatoken-g7-receipts-37403868149-1",
+                "Destination": "/receipts",
+                "Mode": "",
+                "RW": true,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "/home/runner/work/cinatoken/cinatoken/scripts/verification/web-platform-g7",
+                "Destination": "/qa",
+                "Mode": "",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "/tmp/cinatoken-g7-private-R4qOk7/tls/qa-root-ca.crt",
+                "Destination": "/tls/qa-root-ca.crt",
+                "Mode": "",
+                "RW": false,
+                "Propagation": "rprivate"
+            }
+        ],
+        "Config": {
+            "Hostname": "8afb442dfa9e",
+            "Domainname": "",
+            "User": "node",
+            "AttachStdin": false,
+            "AttachStdout": true,
+            "AttachStderr": true,
+            "ExposedPorts": {
+                "8791/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "G7_MANIFEST_SHA=b31d19149d41e74097a00c8f7abead829f32b0dbda8a4aeb1c6594b9682ad44c",
+                "G7_RELEASE_SHA=07d19c1c941cc373019811be3dbf553c441a0ff3",
+                "G7_PRIVATE_ENDPOINTS=[{\"role\":\"web\",\"port\":8080,\"network\":\"g7-8a88cf68945741d1843b63f670b4d364-app\",\"ip\":\"172.19.0.5\"},{\"role\":\"ssr\",\"port\":8791,\"network\":\"g7-8a88cf68945741d1843b63f670b4d364-app\",\"ip\":\"172.19.0.4\"},{\"role\":\"admin\",\"port\":8789,\"network\":\"g7-8a88cf68945741d1843b63f670b4d364-app\",\"ip\":\"172.19.0.3\"},{\"role\":\"admin\",\"port\":8789,\"network\":\"g7-8a88cf68945741d1843b63f670b4d364-db\",\"ip\":\"172.20.0.4\"},{\"role\":\"proxy\",\"port\":8787,\"network\":\"g7-8a88cf68945741d1843b63f670b4d364-app\",\"ip\":\"172.19.0.2\"},{\"role\":\"proxy\",\"port\":8787,\"network\":\"g7-8a88cf68945741d1843b63f670b4d364-db\",\"ip\":\"172.20.0.3\"},{\"role\":\"pg\",\"port\":5432,\"network\":\"g7-8a88cf68945741d1843b63f670b4d364-db\",\"ip\":\"172.20.0.2\"}]",
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "NODE_VERSION=22.22.2",
+                "YARN_VERSION=1.22.22",
+                "CINATOKEN_WEB_PUBLIC_ENABLED=false",
+                "CINATOKEN_WEB_PUBLIC_ORIGIN=",
+                "CINATOKEN_ADMIN_UPSTREAM=http://gateway-admin:8789",
+                "CINATOKEN_WEB_SSR_PORT=8791"
+            ],
+            "Cmd": [
+                "/qa/wire.mjs",
+                "--execute-owned-linux"
+            ],
+            "Image": "sha256:518268bdf478be30b9bdcf753beb314f41d2032552986b3f0f513a560365439f",
+            "Volumes": null,
+            "WorkingDir": "/app",
+            "Entrypoint": [
+                "node"
+            ],
+            "OnBuild": null,
+            "Labels": {
+                "cinatoken.g7.owner": "g7-8a88cf68945741d1843b63f670b4d364"
+            }
+        },
+        "NetworkSettings": {
+            "Bridge": "",
+            "SandboxID": "",
+            "SandboxKey": "",
+            "Ports": {},
+            "HairpinMode": false,
+            "LinkLocalIPv6Address": "",
+            "LinkLocalIPv6PrefixLen": 0,
+            "SecondaryIPAddresses": null,
+            "SecondaryIPv6Addresses": null,
+            "EndpointID": "",
+            "Gateway": "",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "IPAddress": "",
+            "IPPrefixLen": 0,
+            "IPv6Gateway": "",
+            "MacAddress": "",
+            "Networks": {
+                "g7-8a88cf68945741d1843b63f670b4d364-client": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": null,
+                    "MacAddress": "",
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "e292f8bd9c48488b917c9ff7806f9874630964a94e806b651cdaa87fb1be43f7",
+                    "EndpointID": "",
+                    "Gateway": "",
+                    "IPAddress": "",
+                    "IPPrefixLen": 0,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": [
+                        "g7-8a88cf68945741d1843b63f670b4d364-qa",
+                        "8afb442dfa9e"
+                    ]
+                }
+            }
+        }
+    }
+]

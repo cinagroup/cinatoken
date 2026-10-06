@@ -1,0 +1,222 @@
+{
+  "schema": "v364-owned-linux-boundary-executor-closed-v1",
+  "startedEpoch": 1791252311.9760587,
+  "elapsedMs": 37361.33159099998,
+  "actualProcessExit": 1,
+  "runnerOutcomeCode": 1,
+  "actualExit": 1,
+  "outcome": "STRICT_FAILURE_OR_UNKNOWN_PRESERVED",
+  "timedOut": false,
+  "interrupted": false,
+  "fatal": null,
+  "packageSHA256": "b99ede67c0e949fc6aee728f450d564d60c9eed14b60e542e3282e9a8d163af9",
+  "checkoutSHA": "67f8b3df2f2b6e8159806767ecce1efa1904d27a",
+  "run": {
+    "GITHUB_SHA": "67f8b3df2f2b6e8159806767ecce1efa1904d27a",
+    "GITHUB_RUN_ID": "37402302570",
+    "GITHUB_RUN_ATTEMPT": "1",
+    "GITHUB_WORKFLOW": "v364 owned Linux cancellation boundary",
+    "GITHUB_JOB": "cancellation-boundary"
+  },
+  "reportedActualExit": 1,
+  "closedReportPresent": true,
+  "closure": {
+    "authority": "this executor",
+    "subreaperEnabled": true,
+    "directChildReaped": true,
+    "groupGone": true,
+    "leftoverGroupKilled": false,
+    "signalAttempts": [],
+    "reapedDescendants": [
+      {
+        "pid": 2633,
+        "startTimeTicks": "22301",
+        "waitStatus": 0,
+        "waitExitCode": 0,
+        "source": "individually identified adopted zombie"
+      },
+      {
+        "pid": 2670,
+        "startTimeTicks": "22334",
+        "waitStatus": 0,
+        "waitExitCode": 0,
+        "source": "individually identified adopted zombie"
+      },
+      {
+        "pid": 2678,
+        "startTimeTicks": "22337",
+        "waitStatus": 0,
+        "waitExitCode": 0,
+        "source": "individually identified adopted zombie"
+      },
+      {
+        "pid": 2685,
+        "startTimeTicks": "22405",
+        "waitStatus": 0,
+        "waitExitCode": 0,
+        "source": "individually identified adopted zombie"
+      }
+    ],
+    "processCensus": [
+      {
+        "label": "before-initial-adopted-reap",
+        "elapsedMs": 37331.42770999999,
+        "pgrp": 2597,
+        "session": 2597,
+        "members": [
+          {
+            "pid": 2633,
+            "comm": "esbuild",
+            "state": "Z",
+            "ppid": 2595,
+            "pgrp": 2597,
+            "session": 2597,
+            "startTimeTicks": "22301"
+          },
+          {
+            "pid": 2670,
+            "comm": "esbuild",
+            "state": "Z",
+            "ppid": 2595,
+            "pgrp": 2597,
+            "session": 2597,
+            "startTimeTicks": "22334"
+          },
+          {
+            "pid": 2678,
+            "comm": "esbuild",
+            "state": "Z",
+            "ppid": 2595,
+            "pgrp": 2597,
+            "session": 2597,
+            "startTimeTicks": "22337"
+          },
+          {
+            "pid": 2685,
+            "comm": "esbuild",
+            "state": "Z",
+            "ppid": 2595,
+            "pgrp": 2597,
+            "session": 2597,
+            "startTimeTicks": "22405"
+          }
+        ],
+        "live": 0,
+        "zombies": 4,
+        "unknown": [],
+        "complete": true,
+        "groupExists": true
+      },
+      {
+        "label": "after-initial-adopted-reap",
+        "elapsedMs": 37337.531465000015,
+        "pgrp": 2597,
+        "session": 2597,
+        "members": [],
+        "live": 0,
+        "zombies": 0,
+        "unknown": [],
+        "complete": true,
+        "groupExists": false
+      },
+      {
+        "label": "after-term-before-reap",
+        "elapsedMs": 37343.387799,
+        "pgrp": 2597,
+        "session": 2597,
+        "members": [],
+        "live": 0,
+        "zombies": 0,
+        "unknown": [],
+        "complete": true,
+        "groupExists": false
+      },
+      {
+        "label": "after-term-after-reap",
+        "elapsedMs": 37349.21350699997,
+        "pgrp": 2597,
+        "session": 2597,
+        "members": [],
+        "live": 0,
+        "zombies": 0,
+        "unknown": [],
+        "complete": true,
+        "groupExists": false
+      },
+      {
+        "label": "final-adopt-drain",
+        "elapsedMs": 37355.10705099998,
+        "pgrp": 2597,
+        "session": 2597,
+        "members": [],
+        "live": 0,
+        "zombies": 0,
+        "unknown": [],
+        "complete": true,
+        "groupExists": false
+      },
+      {
+        "label": "final-post-reap",
+        "elapsedMs": 37361.077136999964,
+        "pgrp": 2597,
+        "session": 2597,
+        "members": [],
+        "live": 0,
+        "zombies": 0,
+        "unknown": [],
+        "complete": true,
+        "groupExists": false
+      }
+    ],
+    "apiDisposalReported": true,
+    "outerUnforcedGroupClose": true,
+    "gracefulWorkerdExitProven": false,
+    "miniflareDisposeMaySendSIGKILL": true,
+    "errors": []
+  },
+  "causeProven": false,
+  "productionRequests": 0,
+  "ciInvocations": 0,
+  "files": [
+    {
+      "path": "closed-result.json",
+      "bytes": 22206,
+      "sha256": "f76dc98765d470f26434bb611bfceb098806b8b8987a0ec8d2088a684ff61a8d"
+    },
+    {
+      "path": "events.json",
+      "bytes": 575797,
+      "sha256": "504c40a249279483807f82fec2221690e772bbbcf7e68ed85b59fe9005cb1c51"
+    },
+    {
+      "path": "events.ndjson",
+      "bytes": 441412,
+      "sha256": "e0fbc57e5914d8cbc05cbf0a533caab2f8bf3297778a75854a910d62506d3bc3"
+    },
+    {
+      "path": "executor-start.json",
+      "bytes": 683,
+      "sha256": "8863d3acedb4246cf83d41d7065840d44c627c45b3d5995da1fca62e78294fd5"
+    },
+    {
+      "path": "executor.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "executor.stdout.txt",
+      "bytes": 165,
+      "sha256": "fc5b0d42a1870084b4fd5538bea6a3521ce22303f3049dd17bcc5461197b45f6"
+    },
+    {
+      "path": "original-strict.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "original-strict.stdout.txt",
+      "bytes": 2870,
+      "sha256": "020adcc84ef0ef0da558fc37dd57f54154923435b1f9dac0110ffec6b1affe18"
+    }
+  ]
+}

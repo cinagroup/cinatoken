@@ -1,0 +1,20 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+import path from 'node:path';
+import {createHash} from 'node:crypto';
+import {execFileSync} from 'node:child_process';
+const cwd='C:/cinagroup/cinatoken';
+const out="C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-boundary-next-20261006-Zm6Z3E";
+const expected=[".github/workflows/v364-owned-linux-boundary.yml",".github/workflows/web-platform-g7.yml","scripts/diagnostics/v364-owned-linux-boundary/README.md","scripts/diagnostics/v364-owned-linux-boundary/bare-async-source.mjs","scripts/diagnostics/v364-owned-linux-boundary/direct-holder.mjs","scripts/diagnostics/v364-owned-linux-boundary/execute-owned-linux.py","scripts/diagnostics/v364-owned-linux-boundary/proc-census.mjs","scripts/diagnostics/v364-owned-linux-boundary/run-boundary.mjs","scripts/diagnostics/v364-owned-linux-boundary/sealed-package.json","scripts/diagnostics/v364-owned-linux-boundary/source-inputs.json","scripts/verification/web-platform-g7/README.md","scripts/verification/web-platform-g7/admission.mjs","scripts/verification/web-platform-g7/admission.test.mjs","scripts/verification/web-platform-g7/cleanup-owned-linux.mjs","scripts/verification/web-platform-g7/database.mjs","scripts/verification/web-platform-g7/fixture.test.mjs","scripts/verification/web-platform-g7/ingress.conf","scripts/verification/web-platform-g7/run-owned-linux.mjs","scripts/verification/web-platform-g7/wire.mjs"];
+const git=(args)=>execFileSync('C:/Program Files/Git/cmd/git.exe',args,{cwd,maxBuffer:4*1024*1024});
+const hash=b=>createHash('sha256').update(b).digest('hex');
+const actual=git(['diff','--cached','--name-only','-z']).toString().split('\0').filter(Boolean).sort();
+assert.deepEqual(actual,expected);
+const rows=expected.map(p=>{const b=git(['show',':'+p]);const w=fs.readFileSync(path.join(cwd,p));assert.equal(b.toString(),w.toString().replaceAll('\r\n','\n'));return {path:p,bytes:b.length,sha256:hash(b),workingBytes:w.length,workingSha256:hash(w)};});
+const sealed=JSON.parse(fs.readFileSync(path.join(cwd,'scripts/diagnostics/v364-owned-linux-boundary/sealed-package.json')));
+for(const item of sealed.files){const r=rows.find(x=>x.path==='scripts/diagnostics/v364-owned-linux-boundary/'+item.path);assert.equal(r.bytes,item.bytes);assert.equal(r.sha256,item.sha256);}
+const workflow=rows.find(x=>x.path===sealed.workflow.path);assert.equal(workflow.bytes,sealed.workflow.bytes);assert.equal(workflow.sha256,sealed.workflow.sha256);
+git(['diff','--cached','--check']);
+const report={schema:'root-owned19-git-stage-closed-v1',at:new Date().toISOString(),actualExit:0,baseSHA:git(['rev-parse','HEAD']).toString().trim(),files:rows,exactNineteenPaths:true,boundarySealMatchesGitBytes:true,g7PreparedWorkingBytesSeparatelyLabeled:true};
+fs.writeFileSync(path.join(out,'owned19-staged-proof.json'),JSON.stringify(report,null,2)+'\n',{flag:'wx'});
+console.log(JSON.stringify({actualExit:0,paths:rows.length,boundarySealMatchesGitBytes:true}));

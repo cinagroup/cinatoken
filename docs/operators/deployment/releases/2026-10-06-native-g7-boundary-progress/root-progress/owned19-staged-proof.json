@@ -1,0 +1,144 @@
+{
+  "schema": "root-owned19-git-stage-closed-v1",
+  "at": "2026-10-06T02:02:54.359Z",
+  "actualExit": 0,
+  "baseSHA": "4e2ed5196a26cc43c2a3cb7ea852f1fc6284ff27",
+  "files": [
+    {
+      "path": ".github/workflows/v364-owned-linux-boundary.yml",
+      "bytes": 1575,
+      "sha256": "08977f1966eb42e67aebdb9986b66cb9f05a618f6a12964a8a2daffc64ce4712",
+      "workingBytes": 1575,
+      "workingSha256": "08977f1966eb42e67aebdb9986b66cb9f05a618f6a12964a8a2daffc64ce4712"
+    },
+    {
+      "path": ".github/workflows/web-platform-g7.yml",
+      "bytes": 3065,
+      "sha256": "bb9a2e0be66e3ba74bf15e0769bc85bf740ebf282a91eadcdf73f9f9e4bd8e54",
+      "workingBytes": 3065,
+      "workingSha256": "bb9a2e0be66e3ba74bf15e0769bc85bf740ebf282a91eadcdf73f9f9e4bd8e54"
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux-boundary/README.md",
+      "bytes": 6071,
+      "sha256": "c4f87c06031bbe6bb9e8179272ce0636e4723ab8892d74f21345e0d376f421ba",
+      "workingBytes": 6071,
+      "workingSha256": "c4f87c06031bbe6bb9e8179272ce0636e4723ab8892d74f21345e0d376f421ba"
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux-boundary/bare-async-source.mjs",
+      "bytes": 1864,
+      "sha256": "86b67412be0b8ef8434edfd0f44c8c6e5d306ce3f76ed3deed8305cca2771bfd",
+      "workingBytes": 1864,
+      "workingSha256": "86b67412be0b8ef8434edfd0f44c8c6e5d306ce3f76ed3deed8305cca2771bfd"
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux-boundary/direct-holder.mjs",
+      "bytes": 785,
+      "sha256": "4019fbebd9575bcad6dd3a987d320cd7eb96d646ab344bea5918f7305faaee84",
+      "workingBytes": 785,
+      "workingSha256": "4019fbebd9575bcad6dd3a987d320cd7eb96d646ab344bea5918f7305faaee84"
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux-boundary/execute-owned-linux.py",
+      "bytes": 16016,
+      "sha256": "18c13e59a48eb27bc840aa1f9bb21aa5da73b7f73ad927dbaf5da24d0b0bbca2",
+      "workingBytes": 16016,
+      "workingSha256": "18c13e59a48eb27bc840aa1f9bb21aa5da73b7f73ad927dbaf5da24d0b0bbca2"
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux-boundary/proc-census.mjs",
+      "bytes": 1443,
+      "sha256": "bd6d4ebe4fea6ac1c11b6a67b4f44fcb23595e79a2fdcf10360101888026b8a0",
+      "workingBytes": 1443,
+      "workingSha256": "bd6d4ebe4fea6ac1c11b6a67b4f44fcb23595e79a2fdcf10360101888026b8a0"
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux-boundary/run-boundary.mjs",
+      "bytes": 28489,
+      "sha256": "9341885b2890b8270b2b9732cd46c169bb41c4a3a4f6d4eef5f662ee3cda7cda",
+      "workingBytes": 28489,
+      "workingSha256": "9341885b2890b8270b2b9732cd46c169bb41c4a3a4f6d4eef5f662ee3cda7cda"
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux-boundary/sealed-package.json",
+      "bytes": 1396,
+      "sha256": "b99ede67c0e949fc6aee728f450d564d60c9eed14b60e542e3282e9a8d163af9",
+      "workingBytes": 1396,
+      "workingSha256": "b99ede67c0e949fc6aee728f450d564d60c9eed14b60e542e3282e9a8d163af9"
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux-boundary/source-inputs.json",
+      "bytes": 6588,
+      "sha256": "7b7b322398fe389f2ae1426746c65f6fe9ee0bc9ea1f91dfc3febfb8aeadfa3d",
+      "workingBytes": 6588,
+      "workingSha256": "7b7b322398fe389f2ae1426746c65f6fe9ee0bc9ea1f91dfc3febfb8aeadfa3d"
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/README.md",
+      "bytes": 3918,
+      "sha256": "472bfa5785a62b7b85ce8d80e5c8f8a3fa14ae28f2da4a124d3dd1f0ac9e35f2",
+      "workingBytes": 3918,
+      "workingSha256": "472bfa5785a62b7b85ce8d80e5c8f8a3fa14ae28f2da4a124d3dd1f0ac9e35f2"
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/admission.mjs",
+      "bytes": 2405,
+      "sha256": "565e1cb4bc7950dbcc64947135b35ed11b0efe6cda29524c3e57b5be3e475870",
+      "workingBytes": 2405,
+      "workingSha256": "565e1cb4bc7950dbcc64947135b35ed11b0efe6cda29524c3e57b5be3e475870"
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/admission.test.mjs",
+      "bytes": 2430,
+      "sha256": "af55b4503339fdc28960ea0932da49107e4e3e11dca19233a9e066a4e03c6f39",
+      "workingBytes": 2430,
+      "workingSha256": "af55b4503339fdc28960ea0932da49107e4e3e11dca19233a9e066a4e03c6f39"
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/cleanup-owned-linux.mjs",
+      "bytes": 5560,
+      "sha256": "c267533ae691b4dd192fc7fa679b4a21874ebe0eb9d4c4a708a0f302d6b20948",
+      "workingBytes": 5560,
+      "workingSha256": "c267533ae691b4dd192fc7fa679b4a21874ebe0eb9d4c4a708a0f302d6b20948"
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/database.mjs",
+      "bytes": 8401,
+      "sha256": "641e2df787ab80167ffd85d0c1a21b18d6454ab68543f073f17d6f73a3cb6372",
+      "workingBytes": 8401,
+      "workingSha256": "641e2df787ab80167ffd85d0c1a21b18d6454ab68543f073f17d6f73a3cb6372"
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/fixture.test.mjs",
+      "bytes": 5209,
+      "sha256": "e73f154b87ec48acef2c0d6c25ffdfbc5786ccc6718a613021795db3573ff53c",
+      "workingBytes": 5209,
+      "workingSha256": "e73f154b87ec48acef2c0d6c25ffdfbc5786ccc6718a613021795db3573ff53c"
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/ingress.conf",
+      "bytes": 1549,
+      "sha256": "d7e33e890c1ed5862986b34b67d57bb6380d72fe6be33808698a048e4a145d61",
+      "workingBytes": 1549,
+      "workingSha256": "d7e33e890c1ed5862986b34b67d57bb6380d72fe6be33808698a048e4a145d61"
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/run-owned-linux.mjs",
+      "bytes": 26853,
+      "sha256": "e95dc592e533c4b15593b4649f168390aa19ef3c2126ebf0de4f071c521e18a7",
+      "workingBytes": 26853,
+      "workingSha256": "e95dc592e533c4b15593b4649f168390aa19ef3c2126ebf0de4f071c521e18a7"
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/wire.mjs",
+      "bytes": 15504,
+      "sha256": "ac31a92534d0cb5f47fcb66126d86f13602ff68cf8ab218b9f06fae6997cd3cd",
+      "workingBytes": 15504,
+      "workingSha256": "ac31a92534d0cb5f47fcb66126d86f13602ff68cf8ab218b9f06fae6997cd3cd"
+    }
+  ],
+  "exactNineteenPaths": true,
+  "boundarySealMatchesGitBytes": true,
+  "g7PreparedWorkingBytesSeparatelyLabeled": true
+}

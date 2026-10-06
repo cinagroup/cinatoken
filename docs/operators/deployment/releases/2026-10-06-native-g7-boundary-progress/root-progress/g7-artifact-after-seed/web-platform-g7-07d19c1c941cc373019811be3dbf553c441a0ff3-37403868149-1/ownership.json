@@ -1,0 +1,22 @@
+{
+  "schema": "web-platform-g7-owned-resources-v1",
+  "sourceSHA": "07d19c1c941cc373019811be3dbf553c441a0ff3",
+  "owner": "g7-8a88cf68945741d1843b63f670b4d364",
+  "names": {
+    "pg": "g7-8a88cf68945741d1843b63f670b4d364-pg",
+    "migrate": "g7-8a88cf68945741d1843b63f670b4d364-migrate",
+    "seed": "g7-8a88cf68945741d1843b63f670b4d364-seed",
+    "proxy": "g7-8a88cf68945741d1843b63f670b4d364-proxy",
+    "admin": "g7-8a88cf68945741d1843b63f670b4d364-admin",
+    "ssr": "g7-8a88cf68945741d1843b63f670b4d364-ssr",
+    "web": "g7-8a88cf68945741d1843b63f670b4d364-web",
+    "ingress": "g7-8a88cf68945741d1843b63f670b4d364-ingress",
+    "qa": "g7-8a88cf68945741d1843b63f670b4d364-qa"
+  },
+  "networks": {
+    "client": "g7-8a88cf68945741d1843b63f670b4d364-client",
+    "app": "g7-8a88cf68945741d1843b63f670b4d364-app",
+    "db": "g7-8a88cf68945741d1843b63f670b4d364-db"
+  },
+  "volume": "g7-8a88cf68945741d1843b63f670b4d364-pgdata"
+}

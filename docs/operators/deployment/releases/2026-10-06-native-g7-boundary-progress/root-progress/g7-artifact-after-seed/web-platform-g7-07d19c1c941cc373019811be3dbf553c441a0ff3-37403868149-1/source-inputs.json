@@ -1,0 +1,106 @@
+{
+  "sourceSHA": "07d19c1c941cc373019811be3dbf553c441a0ff3",
+  "files": [
+    {
+      "path": "scripts/verification/web-platform-g7/README.md",
+      "bytes": 3918,
+      "sha256": "472bfa5785a62b7b85ce8d80e5c8f8a3fa14ae28f2da4a124d3dd1f0ac9e35f2"
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/admission.mjs",
+      "bytes": 2405,
+      "sha256": "565e1cb4bc7950dbcc64947135b35ed11b0efe6cda29524c3e57b5be3e475870"
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/admission.test.mjs",
+      "bytes": 2430,
+      "sha256": "af55b4503339fdc28960ea0932da49107e4e3e11dca19233a9e066a4e03c6f39"
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/cleanup-owned-linux.mjs",
+      "bytes": 5560,
+      "sha256": "c267533ae691b4dd192fc7fa679b4a21874ebe0eb9d4c4a708a0f302d6b20948"
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/database.mjs",
+      "bytes": 11117,
+      "sha256": "643686dc1f78e75601a6b339c22fb06e91caf4c21403ad5ed24a231598d5e5f1"
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/fixture.test.mjs",
+      "bytes": 5964,
+      "sha256": "2db99943e1228b81f3c2a5b3fc958af8c65f904cb6745ecda8fc94d96d00d844"
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/ingress.conf",
+      "bytes": 1549,
+      "sha256": "d7e33e890c1ed5862986b34b67d57bb6380d72fe6be33808698a048e4a145d61"
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/run-owned-linux.mjs",
+      "bytes": 26853,
+      "sha256": "e95dc592e533c4b15593b4649f168390aa19ef3c2126ebf0de4f071c521e18a7"
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/wire.mjs",
+      "bytes": 15504,
+      "sha256": "ac31a92534d0cb5f47fcb66126d86f13602ff68cf8ab218b9f06fae6997cd3cd"
+    },
+    {
+      "path": ".github/workflows/web-platform-g7.yml",
+      "bytes": 3065,
+      "sha256": "bb9a2e0be66e3ba74bf15e0769bc85bf740ebf282a91eadcdf73f9f9e4bd8e54"
+    },
+    {
+      "path": "Dockerfile.admin",
+      "bytes": 4654,
+      "sha256": "8410d3d3f22c23d57f32b1a0a87c571fe824edfa92f99c827111625d39834fd1"
+    },
+    {
+      "path": "Dockerfile.proxy",
+      "bytes": 2937,
+      "sha256": "cd3bef116cc1eafe1912e882092e0c54c11b246c856bfba092bbb6196c438739"
+    },
+    {
+      "path": "Dockerfile.migrate",
+      "bytes": 1774,
+      "sha256": "d62b8d5e0093096eff4fd13af96f43728f86a91509b1b50092c2fd3065cc1066"
+    },
+    {
+      "path": "Dockerfile.web",
+      "bytes": 3046,
+      "sha256": "d6ef36c9fd5d3912e46ec37b5879f7a0d4769860779e11c064cf0544db7170f2"
+    },
+    {
+      "path": "Dockerfile.web-ssr",
+      "bytes": 1154,
+      "sha256": "7d2dc09a6540e1a3438c0a48d8df28dc84d139cbc577e638d532684a8786425a"
+    },
+    {
+      "path": "docker/web/nginx.conf.template",
+      "bytes": 12095,
+      "sha256": "f1fbc0934b340cc8cdabe4f9cd2a3e36539bea2a55b201935b7b2dcbec310c18"
+    },
+    {
+      "path": "docker/web/admin-proxy.conf",
+      "bytes": 695,
+      "sha256": "e1a638ba929379fafa099811984f434ac8defddb1ae95e2513a51b6e165b875e"
+    },
+    {
+      "path": "docker/web/entrypoint.sh",
+      "bytes": 13192,
+      "sha256": "0465d0a5a76fc500113e2b8c1eb5c164fe3ffb480a80265ce2fda5586a7270a1"
+    },
+    {
+      "path": "docker/web/public-server.mjs",
+      "bytes": 6012,
+      "sha256": "d2c627beee86ae281903eef6a39a0061ccf3fc8b594f7131281982d9790273cf"
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 830546,
+      "sha256": "f9c65b6e373a231d52d6eda634bb5f947dda3174734cd70e2b811e09fff0b6f0"
+    }
+  ],
+  "manifestSha256": "b31d19149d41e74097a00c8f7abead829f32b0dbda8a4aeb1c6594b9682ad44c"
+}

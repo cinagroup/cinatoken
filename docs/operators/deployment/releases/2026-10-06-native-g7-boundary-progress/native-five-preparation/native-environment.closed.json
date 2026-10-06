@@ -1,0 +1,13 @@
+{
+  "at": "2026-10-06T02:05:04.957Z",
+  "finishedAt": "2026-10-06T02:05:05.453Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-native-next-six-8d357e3fd84b4810a7210ece167eb07a/native-env-probe.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-next-six-8d357e3fd84b4810a7210ece167eb07a\\native-environment.stdout.log",
+  "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-next-six-8d357e3fd84b4810a7210ece167eb07a\\native-environment.stderr.log"
+}

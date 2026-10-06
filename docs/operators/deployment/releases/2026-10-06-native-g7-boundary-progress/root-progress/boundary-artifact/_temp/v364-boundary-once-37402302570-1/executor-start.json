@@ -1,0 +1,17 @@
+{
+  "schema": "v364-owned-linux-boundary-executor-start-v1",
+  "repo": "/home/runner/work/cinatoken/cinatoken",
+  "output": "/home/runner/work/_temp/v364-boundary-once-37402302570-1",
+  "startedEpoch": 1791252311.9760587,
+  "freshOutputCreated": true,
+  "packageSHA256": "b99ede67c0e949fc6aee728f450d564d60c9eed14b60e542e3282e9a8d163af9",
+  "checkoutSHA": "67f8b3df2f2b6e8159806767ecce1efa1904d27a",
+  "run": {
+    "GITHUB_SHA": "67f8b3df2f2b6e8159806767ecce1efa1904d27a",
+    "GITHUB_RUN_ID": "37402302570",
+    "GITHUB_RUN_ATTEMPT": "1",
+    "GITHUB_WORKFLOW": "v364 owned Linux cancellation boundary",
+    "GITHUB_JOB": "cancellation-boundary"
+  },
+  "outerTimeoutSeconds": 360
+}

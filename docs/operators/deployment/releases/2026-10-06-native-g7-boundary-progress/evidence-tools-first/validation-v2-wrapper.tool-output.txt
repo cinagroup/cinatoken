@@ -1,0 +1,1 @@
+{"actualOutcome":0,"proof":"C:\Users\cina\AppData\Local\Temp\cinatoken-evidence-g7-boundary-tools-82ab15ef384141c7bf99246c437325d2\tool-validation.proof.json","bytes":13935,"sha256":"80c2f8be53b91205a111459bb7473aa2088b0530103f69d159441755754c7219","oldChecks":22,"newChecks":36}

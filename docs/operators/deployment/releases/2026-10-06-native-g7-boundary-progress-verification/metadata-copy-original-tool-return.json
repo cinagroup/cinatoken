@@ -1,0 +1,13 @@
+{
+  "schema": "cinatoken-original-exec-command-return-copy-v1",
+  "originalCommand": "node C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/copy-verification-bundle.mjs",
+  "commandWasRerun": false,
+  "originalToolResult": {
+    "chunk_id": "142652",
+    "wall_time_seconds": 0.5743392,
+    "exit_code": 0,
+    "original_token_count": 23,
+    "output": "{\"closed\":true,\"actualCopyExit\":0,\"files\":86,\"roundtripExact\":true,\"productionRequests\":0}\n"
+  },
+  "metadataSourceIndexScopeUnchanged": true
+}

@@ -1,0 +1,25 @@
+diff --git a/.changeset/README.md b/.changeset/README.md
+index 2ba616bb..df57b3d2 100644
+--- a/.changeset/README.md
++++ b/.changeset/README.md
+@@ -4,6 +4,8 @@
+ 
+ 根目录 **`package.json`** 的 **`workspaces`** 含 **`"."`**，以便 Changesets / manypkg 将根包与其它 workspace **一并**纳入 fixed 组（勿删，否则 `cinatoken` 不会出现在 Changesets 包列表中）。
+ 
++`.changeset/config.json` 的 **`"prettier": false`** 仅关闭 Changesets 对版本生成的 `CHANGELOG.md` 的可选格式化，避免根目录 Prettier 2 加载 Web 的 Prettier 3 插件配置而使 changelog 写入失败。版本计算与 changelog 内容生成仍由 Changesets 完成；Web 自身的 `format:check` 和 `format` 脚本及其 CI 门槛保持不变。
++
+ ## 日常开发
+ 
+ 日常功能与外部贡献 PR 默认合入长期开发分支 **`develop`**。在包含用户可见变更的 PR 里添加一条 changeset：
+diff --git a/.changeset/config.json b/.changeset/config.json
+index 32270939..99bd4489 100644
+--- a/.changeset/config.json
++++ b/.changeset/config.json
+@@ -5,6 +5,7 @@
+ 		{ "repo": "cinagroup/cinatoken" }
+ 	],
+ 	"commit": false,
++	"prettier": false,
+ 	"fixed": [["cinatoken", "@octafuse/core", "@octafuse/tool-engines", "@octafuse/proxy", "@octafuse/admin", "@cinatoken/web"]],
+ 	"linked": [],
+ 	"access": "restricted",

@@ -1,0 +1,147 @@
+{
+  "schema": "cinatoken-release-generation-observed-v1",
+  "closed": true,
+  "phase": "before",
+  "isolated": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\isolated-before",
+  "actualCliExit": 0,
+  "completeGenerationActualOutcome": 1,
+  "allSixGenerationComplete": false,
+  "rows": [
+    {
+      "name": "cinatoken",
+      "dir": ".",
+      "version": "2.9.0",
+      "manifest": {
+        "bytes": 5550,
+        "sha256": "a21780f677a4388a3cae914b733402b2bf57aec14fadb7af80bed0c298b860e1"
+      },
+      "changelog": {
+        "exists": true,
+        "bytes": 52898,
+        "sha256": "c3efbe0fc39653635b983454f4c12ee5aa43801a65c6ebadecd64664f793c81c",
+        "hasVersionHeading": true,
+        "originalHistoryPreserved": true
+      }
+    },
+    {
+      "name": "@octafuse/core",
+      "dir": "packages/core",
+      "version": "2.9.0",
+      "manifest": {
+        "bytes": 13537,
+        "sha256": "0343d9777e9f21cb373c25b36211b78c95c72aed46baac9f4852fee39b47d914"
+      },
+      "changelog": {
+        "exists": true,
+        "bytes": 27290,
+        "sha256": "c0a1badc8b514635164d23ee601388944393c31dc66c2bfa3c308804d8e20880",
+        "hasVersionHeading": true,
+        "originalHistoryPreserved": true
+      }
+    },
+    {
+      "name": "@octafuse/tool-engines",
+      "dir": "packages/tool-engines",
+      "version": "2.9.0",
+      "manifest": {
+        "bytes": 856,
+        "sha256": "54bb7af295b23943fb2efe544bb63cd203310f90b7d8ae3a8d6ddb95c3871bd7"
+      },
+      "changelog": {
+        "exists": true,
+        "bytes": 5325,
+        "sha256": "a672de3cd43ab18f5704209e6bc1bdd467b52459db74df150f6df3ef8ccfe2ee",
+        "hasVersionHeading": true,
+        "originalHistoryPreserved": true
+      }
+    },
+    {
+      "name": "@octafuse/proxy",
+      "dir": "packages/proxy",
+      "version": "2.9.0",
+      "manifest": {
+        "bytes": 18988,
+        "sha256": "e591093b06eb1c0bd31de9e22079ee5ecd6b8b6b6ed15af8e32536edc950f514"
+      },
+      "changelog": {
+        "exists": true,
+        "bytes": 31677,
+        "sha256": "a05ecdcb5e57bcc915f74d6ad5a688b4b3474ec06e24be3f1c07c37dc146dceb",
+        "hasVersionHeading": true,
+        "originalHistoryPreserved": true
+      }
+    },
+    {
+      "name": "@octafuse/admin",
+      "dir": "packages/admin",
+      "version": "2.9.0",
+      "manifest": {
+        "bytes": 4163,
+        "sha256": "55c942bd728f56e783255b147b185518b596495e09940d95eabb24512bed70f2"
+      },
+      "changelog": {
+        "exists": true,
+        "bytes": 33080,
+        "sha256": "d3fd779618b32c4cf0f8421fe3e56361a1ad4643f129be4bd29413cd41f8969b",
+        "hasVersionHeading": true,
+        "originalHistoryPreserved": true
+      }
+    },
+    {
+      "name": "@cinatoken/web",
+      "dir": "packages/web",
+      "version": "2.9.0",
+      "manifest": {
+        "bytes": 4490,
+        "sha256": "c9f5fc14d0eaa9cdf4c7d538c98d3b8a78786ae081082a0f7d6304a85c70ff44"
+      },
+      "changelog": {
+        "exists": false,
+        "hasVersionHeading": false,
+        "originalHistoryPreserved": false
+      }
+    }
+  ],
+  "exactFormatterFailureObserved": true,
+  "webChangelogAbsent": true,
+  "chainWorkerVersion": "2.8.0",
+  "noEmptyChangelogCreated": true,
+  "cliCommand": {
+    "schema": "cinatoken-isolated-release-command-v1",
+    "label": "before-actual-changesets-cli-version",
+    "program": "C:\\Program Files\\nodejs\\node.exe",
+    "args": [
+      "C:\\cinagroup\\cinatoken\\node_modules\\@changesets\\cli\\bin.js",
+      "version"
+    ],
+    "cwd": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\isolated-before",
+    "startedAt": "2026-10-06T02:08:05.797Z",
+    "finishedAt": "2026-10-06T02:08:07.561Z",
+    "actualExit": 0,
+    "signal": null,
+    "spawnError": null,
+    "closed": true,
+    "expectedActualExits": [
+      0
+    ],
+    "expectedExitMatched": true,
+    "stdout": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\before-actual-changesets-cli-version.stdout.log",
+      "bytes": 74,
+      "sha256": "dcccf189565497aac06bf5d1ce187bd2c26431861f43a9a26c1b895b21ac30af"
+    },
+    "stderr": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\before-actual-changesets-cli-version.stderr.log",
+      "bytes": 1613,
+      "sha256": "62c084f13f8693a3dbfd8eba7468aba641499d374bcf20fcdebcd82d3074f285"
+    }
+  },
+  "offlineGitHubPluginBoundary": {
+    "actualPluginUnmodified": true,
+    "actualChangesetCommit": null,
+    "sourceChangesetSummaryHasNoPrOrCommitDirective": true,
+    "noGitRemotes": true,
+    "noRemoteCommandsIssued": true
+  },
+  "limitation": "Real installed Changesets CLI and changelog plugin; source pending changeset is uncommitted only in the isolated Git tree, so GitHub commit/PR attribution is not exercised. No Action PR/tag/publish or Linux CI executed."
+}

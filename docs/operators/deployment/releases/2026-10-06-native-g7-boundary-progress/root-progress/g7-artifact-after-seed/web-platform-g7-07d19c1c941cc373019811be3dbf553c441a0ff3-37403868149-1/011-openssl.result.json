@@ -1,0 +1,42 @@
+{
+  "schema": "web-platform-g7-child-command-closed-v1",
+  "program": "openssl",
+  "args": [
+    "req",
+    "-x509",
+    "-newkey",
+    "rsa:2048",
+    "-nodes",
+    "-days",
+    "2",
+    "-subj",
+    "/CN=G7 Owned Ephemeral Root",
+    "-addext",
+    "basicConstraints=critical,CA:TRUE",
+    "-keyout",
+    "/tmp/cinatoken-g7-private-R4qOk7/tls/qa-root-ca.key",
+    "-out",
+    "/tmp/cinatoken-g7-private-R4qOk7/tls/qa-root-ca.crt"
+  ],
+  "begin": "2026-10-06T02:32:28.980Z",
+  "endedAt": "2026-10-06T02:32:29.145Z",
+  "closed": true,
+  "actualExit": 0,
+  "signal": null,
+  "errorCode": null,
+  "timedOut": false,
+  "timeoutMs": 90000,
+  "expectedNumericReadinessNonzero": false,
+  "stdout": {
+    "file": "011-openssl.stdout.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redacted": false
+  },
+  "stderr": {
+    "file": "011-openssl.stderr.log",
+    "bytes": 1190,
+    "sha256": "f80f9238a7a16c8eb185d0ef746dc7e5bda086867a62c5356acf8475aea8a593",
+    "redacted": false
+  }
+}

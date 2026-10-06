@@ -1,0 +1,735 @@
+{
+  "schema": "web-platform-g7-package-local-preparation-closed-v2",
+  "preparedAtHead": "6658ec978009afa5fe3f4beccf6bde358590b663",
+  "observedCurrentHead": "4e2ed5196a26cc43c2a3cb7ea852f1fc6284ff27",
+  "endedAt": "2026-10-06T01:59:16.539Z",
+  "actualExit": 0,
+  "files": [
+    {
+      "path": "scripts/verification/web-platform-g7/admission.mjs",
+      "bytes": 2405,
+      "sha256": "565e1cb4bc7950dbcc64947135b35ed11b0efe6cda29524c3e57b5be3e475870"
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/admission.test.mjs",
+      "bytes": 2430,
+      "sha256": "af55b4503339fdc28960ea0932da49107e4e3e11dca19233a9e066a4e03c6f39"
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/cleanup-owned-linux.mjs",
+      "bytes": 5560,
+      "sha256": "c267533ae691b4dd192fc7fa679b4a21874ebe0eb9d4c4a708a0f302d6b20948"
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/database.mjs",
+      "bytes": 8401,
+      "sha256": "641e2df787ab80167ffd85d0c1a21b18d6454ab68543f073f17d6f73a3cb6372"
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/fixture.test.mjs",
+      "bytes": 5209,
+      "sha256": "e73f154b87ec48acef2c0d6c25ffdfbc5786ccc6718a613021795db3573ff53c"
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/ingress.conf",
+      "bytes": 1549,
+      "sha256": "d7e33e890c1ed5862986b34b67d57bb6380d72fe6be33808698a048e4a145d61"
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/README.md",
+      "bytes": 3918,
+      "sha256": "472bfa5785a62b7b85ce8d80e5c8f8a3fa14ae28f2da4a124d3dd1f0ac9e35f2"
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/run-owned-linux.mjs",
+      "bytes": 26853,
+      "sha256": "e95dc592e533c4b15593b4649f168390aa19ef3c2126ebf0de4f071c521e18a7"
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/wire.mjs",
+      "bytes": 15504,
+      "sha256": "ac31a92534d0cb5f47fcb66126d86f13602ff68cf8ab218b9f06fae6997cd3cd"
+    },
+    {
+      "path": ".github/workflows/web-platform-g7.yml",
+      "bytes": 3065,
+      "sha256": "bb9a2e0be66e3ba74bf15e0769bc85bf740ebf282a91eadcdf73f9f9e4bd8e54"
+    }
+  ],
+  "checks": [
+    {
+      "id": "base-absent-0",
+      "expectedNegative128": true,
+      "path": "scripts/verification/web-platform-g7/admission.mjs"
+    },
+    {
+      "id": "base-absent-1",
+      "expectedNegative128": true,
+      "path": "scripts/verification/web-platform-g7/admission.test.mjs"
+    },
+    {
+      "id": "base-absent-2",
+      "expectedNegative128": true,
+      "path": "scripts/verification/web-platform-g7/cleanup-owned-linux.mjs"
+    },
+    {
+      "id": "base-absent-3",
+      "expectedNegative128": true,
+      "path": "scripts/verification/web-platform-g7/database.mjs"
+    },
+    {
+      "id": "base-absent-4",
+      "expectedNegative128": true,
+      "path": "scripts/verification/web-platform-g7/fixture.test.mjs"
+    },
+    {
+      "id": "base-absent-5",
+      "expectedNegative128": true,
+      "path": "scripts/verification/web-platform-g7/ingress.conf"
+    },
+    {
+      "id": "base-absent-6",
+      "expectedNegative128": true,
+      "path": "scripts/verification/web-platform-g7/README.md"
+    },
+    {
+      "id": "base-absent-7",
+      "expectedNegative128": true,
+      "path": "scripts/verification/web-platform-g7/run-owned-linux.mjs"
+    },
+    {
+      "id": "base-absent-8",
+      "expectedNegative128": true,
+      "path": "scripts/verification/web-platform-g7/wire.mjs"
+    },
+    {
+      "id": "base-absent-9",
+      "expectedNegative128": true,
+      "path": ".github/workflows/web-platform-g7.yml"
+    },
+    {
+      "id": "formatter",
+      "actualExit": 0
+    },
+    {
+      "id": "syntax-0",
+      "actualExit": 0,
+      "path": "scripts/verification/web-platform-g7/admission.mjs"
+    },
+    {
+      "id": "syntax-1",
+      "actualExit": 0,
+      "path": "scripts/verification/web-platform-g7/admission.test.mjs"
+    },
+    {
+      "id": "syntax-2",
+      "actualExit": 0,
+      "path": "scripts/verification/web-platform-g7/cleanup-owned-linux.mjs"
+    },
+    {
+      "id": "syntax-3",
+      "actualExit": 0,
+      "path": "scripts/verification/web-platform-g7/database.mjs"
+    },
+    {
+      "id": "syntax-4",
+      "actualExit": 0,
+      "path": "scripts/verification/web-platform-g7/fixture.test.mjs"
+    },
+    {
+      "id": "syntax-5",
+      "actualExit": 0,
+      "path": "scripts/verification/web-platform-g7/run-owned-linux.mjs"
+    },
+    {
+      "id": "syntax-6",
+      "actualExit": 0,
+      "path": "scripts/verification/web-platform-g7/wire.mjs"
+    },
+    {
+      "id": "unit",
+      "actualExit": 0,
+      "tests": 6,
+      "passed": 6,
+      "skipped": 0
+    },
+    {
+      "id": "windows-admission",
+      "expectedNegative1": true,
+      "outputNeverCreated": true
+    },
+    {
+      "id": "workflow-YAML",
+      "manualOnly": true,
+      "alwaysCleanup": true
+    }
+  ],
+  "receipts": [
+    {
+      "schema": "web-platform-g7-local-command-closed-v1",
+      "id": "head",
+      "program": "git",
+      "args": [
+        "rev-parse",
+        "HEAD"
+      ],
+      "begin": "2026-10-06T01:59:14.466Z",
+      "endedAt": "2026-10-06T01:59:14.512Z",
+      "closed": true,
+      "actualExit": 0,
+      "signal": null,
+      "errorCode": null,
+      "stdout": {
+        "file": "final-head.stdout.log",
+        "bytes": 41,
+        "sha256": "9c1f7bbdc444ffa593d4ea368e0e0b4d87badd6c2c90932cbf9938ec71c3a3f1"
+      },
+      "stderr": {
+        "file": "final-head.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "schema": "web-platform-g7-local-command-closed-v1",
+      "id": "base-absent-0",
+      "program": "git",
+      "args": [
+        "cat-file",
+        "-e",
+        "6658ec978009afa5fe3f4beccf6bde358590b663:scripts/verification/web-platform-g7/admission.mjs"
+      ],
+      "begin": "2026-10-06T01:59:14.513Z",
+      "endedAt": "2026-10-06T01:59:14.553Z",
+      "closed": true,
+      "actualExit": 128,
+      "signal": null,
+      "errorCode": null,
+      "stdout": {
+        "file": "final-base-absent-0.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "file": "final-base-absent-0.stderr.log",
+        "bytes": 135,
+        "sha256": "641ebd945cb051f411cafb20f7888006a9994391a5e1f87037071f484abfca28"
+      }
+    },
+    {
+      "schema": "web-platform-g7-local-command-closed-v1",
+      "id": "base-absent-1",
+      "program": "git",
+      "args": [
+        "cat-file",
+        "-e",
+        "6658ec978009afa5fe3f4beccf6bde358590b663:scripts/verification/web-platform-g7/admission.test.mjs"
+      ],
+      "begin": "2026-10-06T01:59:14.555Z",
+      "endedAt": "2026-10-06T01:59:14.596Z",
+      "closed": true,
+      "actualExit": 128,
+      "signal": null,
+      "errorCode": null,
+      "stdout": {
+        "file": "final-base-absent-1.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "file": "final-base-absent-1.stderr.log",
+        "bytes": 140,
+        "sha256": "a5c35e0d620cecc721da4af5b32f3b3cd49af6f4b6180c2aa8770a82ad29353b"
+      }
+    },
+    {
+      "schema": "web-platform-g7-local-command-closed-v1",
+      "id": "base-absent-2",
+      "program": "git",
+      "args": [
+        "cat-file",
+        "-e",
+        "6658ec978009afa5fe3f4beccf6bde358590b663:scripts/verification/web-platform-g7/cleanup-owned-linux.mjs"
+      ],
+      "begin": "2026-10-06T01:59:14.597Z",
+      "endedAt": "2026-10-06T01:59:14.637Z",
+      "closed": true,
+      "actualExit": 128,
+      "signal": null,
+      "errorCode": null,
+      "stdout": {
+        "file": "final-base-absent-2.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "file": "final-base-absent-2.stderr.log",
+        "bytes": 145,
+        "sha256": "f896ff525bc02ddbaa50f555ad0308fc6359f4e02ce2263520daa20516cefaa3"
+      }
+    },
+    {
+      "schema": "web-platform-g7-local-command-closed-v1",
+      "id": "base-absent-3",
+      "program": "git",
+      "args": [
+        "cat-file",
+        "-e",
+        "6658ec978009afa5fe3f4beccf6bde358590b663:scripts/verification/web-platform-g7/database.mjs"
+      ],
+      "begin": "2026-10-06T01:59:14.638Z",
+      "endedAt": "2026-10-06T01:59:14.677Z",
+      "closed": true,
+      "actualExit": 128,
+      "signal": null,
+      "errorCode": null,
+      "stdout": {
+        "file": "final-base-absent-3.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "file": "final-base-absent-3.stderr.log",
+        "bytes": 134,
+        "sha256": "9af6906b6f158141ec6a66e6293d4b690d9efb833fd840cd91e5548ce7029b5a"
+      }
+    },
+    {
+      "schema": "web-platform-g7-local-command-closed-v1",
+      "id": "base-absent-4",
+      "program": "git",
+      "args": [
+        "cat-file",
+        "-e",
+        "6658ec978009afa5fe3f4beccf6bde358590b663:scripts/verification/web-platform-g7/fixture.test.mjs"
+      ],
+      "begin": "2026-10-06T01:59:14.678Z",
+      "endedAt": "2026-10-06T01:59:14.720Z",
+      "closed": true,
+      "actualExit": 128,
+      "signal": null,
+      "errorCode": null,
+      "stdout": {
+        "file": "final-base-absent-4.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "file": "final-base-absent-4.stderr.log",
+        "bytes": 138,
+        "sha256": "5da4966c4cb0a9eb18b9e4483f84ec46305f6e3882268b19f401fa9d1dedfe7f"
+      }
+    },
+    {
+      "schema": "web-platform-g7-local-command-closed-v1",
+      "id": "base-absent-5",
+      "program": "git",
+      "args": [
+        "cat-file",
+        "-e",
+        "6658ec978009afa5fe3f4beccf6bde358590b663:scripts/verification/web-platform-g7/ingress.conf"
+      ],
+      "begin": "2026-10-06T01:59:14.720Z",
+      "endedAt": "2026-10-06T01:59:14.759Z",
+      "closed": true,
+      "actualExit": 128,
+      "signal": null,
+      "errorCode": null,
+      "stdout": {
+        "file": "final-base-absent-5.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "file": "final-base-absent-5.stderr.log",
+        "bytes": 134,
+        "sha256": "07283351dca6cebc299024dd4107cdf24988760c4327eb43e8d196dc2d161ff7"
+      }
+    },
+    {
+      "schema": "web-platform-g7-local-command-closed-v1",
+      "id": "base-absent-6",
+      "program": "git",
+      "args": [
+        "cat-file",
+        "-e",
+        "6658ec978009afa5fe3f4beccf6bde358590b663:scripts/verification/web-platform-g7/README.md"
+      ],
+      "begin": "2026-10-06T01:59:14.760Z",
+      "endedAt": "2026-10-06T01:59:14.800Z",
+      "closed": true,
+      "actualExit": 128,
+      "signal": null,
+      "errorCode": null,
+      "stdout": {
+        "file": "final-base-absent-6.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "file": "final-base-absent-6.stderr.log",
+        "bytes": 131,
+        "sha256": "71f614d6773b25eff953ad7dc42861f786f6526806ad8f91d9d2754d8801a520"
+      }
+    },
+    {
+      "schema": "web-platform-g7-local-command-closed-v1",
+      "id": "base-absent-7",
+      "program": "git",
+      "args": [
+        "cat-file",
+        "-e",
+        "6658ec978009afa5fe3f4beccf6bde358590b663:scripts/verification/web-platform-g7/run-owned-linux.mjs"
+      ],
+      "begin": "2026-10-06T01:59:14.800Z",
+      "endedAt": "2026-10-06T01:59:14.840Z",
+      "closed": true,
+      "actualExit": 128,
+      "signal": null,
+      "errorCode": null,
+      "stdout": {
+        "file": "final-base-absent-7.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "file": "final-base-absent-7.stderr.log",
+        "bytes": 141,
+        "sha256": "01baee39e2914b30a11c98c3fb83104aea1af0a9e246eb5f8cdd8c298c13b430"
+      }
+    },
+    {
+      "schema": "web-platform-g7-local-command-closed-v1",
+      "id": "base-absent-8",
+      "program": "git",
+      "args": [
+        "cat-file",
+        "-e",
+        "6658ec978009afa5fe3f4beccf6bde358590b663:scripts/verification/web-platform-g7/wire.mjs"
+      ],
+      "begin": "2026-10-06T01:59:14.841Z",
+      "endedAt": "2026-10-06T01:59:14.880Z",
+      "closed": true,
+      "actualExit": 128,
+      "signal": null,
+      "errorCode": null,
+      "stdout": {
+        "file": "final-base-absent-8.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "file": "final-base-absent-8.stderr.log",
+        "bytes": 130,
+        "sha256": "ca0ffa01ba472e40274891860963a96e951db7a1f93e1d72a292682a8aad936a"
+      }
+    },
+    {
+      "schema": "web-platform-g7-local-command-closed-v1",
+      "id": "base-absent-9",
+      "program": "git",
+      "args": [
+        "cat-file",
+        "-e",
+        "6658ec978009afa5fe3f4beccf6bde358590b663:.github/workflows/web-platform-g7.yml"
+      ],
+      "begin": "2026-10-06T01:59:14.881Z",
+      "endedAt": "2026-10-06T01:59:14.919Z",
+      "closed": true,
+      "actualExit": 128,
+      "signal": null,
+      "errorCode": null,
+      "stdout": {
+        "file": "final-base-absent-9.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "file": "final-base-absent-9.stderr.log",
+        "bytes": 122,
+        "sha256": "b34c314c99f21ec0bdcab2badbe69155441fd9a4c14f5328c8b86993bdf66a2f"
+      }
+    },
+    {
+      "schema": "web-platform-g7-local-command-closed-v1",
+      "id": "formatter",
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "node_modules/prettier/bin-prettier.js",
+        "--check",
+        "scripts/verification/web-platform-g7/admission.mjs",
+        "scripts/verification/web-platform-g7/admission.test.mjs",
+        "scripts/verification/web-platform-g7/cleanup-owned-linux.mjs",
+        "scripts/verification/web-platform-g7/database.mjs",
+        "scripts/verification/web-platform-g7/fixture.test.mjs",
+        "scripts/verification/web-platform-g7/README.md",
+        "scripts/verification/web-platform-g7/run-owned-linux.mjs",
+        "scripts/verification/web-platform-g7/wire.mjs",
+        ".github/workflows/web-platform-g7.yml"
+      ],
+      "begin": "2026-10-06T01:59:14.920Z",
+      "endedAt": "2026-10-06T01:59:15.583Z",
+      "closed": true,
+      "actualExit": 0,
+      "signal": null,
+      "errorCode": null,
+      "stdout": {
+        "file": "final-formatter.stdout.log",
+        "bytes": 66,
+        "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+      },
+      "stderr": {
+        "file": "final-formatter.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "schema": "web-platform-g7-local-command-closed-v1",
+      "id": "syntax-0",
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "scripts/verification/web-platform-g7/admission.mjs"
+      ],
+      "begin": "2026-10-06T01:59:15.584Z",
+      "endedAt": "2026-10-06T01:59:15.650Z",
+      "closed": true,
+      "actualExit": 0,
+      "signal": null,
+      "errorCode": null,
+      "stdout": {
+        "file": "final-syntax-0.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "file": "final-syntax-0.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "schema": "web-platform-g7-local-command-closed-v1",
+      "id": "syntax-1",
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "scripts/verification/web-platform-g7/admission.test.mjs"
+      ],
+      "begin": "2026-10-06T01:59:15.650Z",
+      "endedAt": "2026-10-06T01:59:15.710Z",
+      "closed": true,
+      "actualExit": 0,
+      "signal": null,
+      "errorCode": null,
+      "stdout": {
+        "file": "final-syntax-1.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "file": "final-syntax-1.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "schema": "web-platform-g7-local-command-closed-v1",
+      "id": "syntax-2",
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "scripts/verification/web-platform-g7/cleanup-owned-linux.mjs"
+      ],
+      "begin": "2026-10-06T01:59:15.710Z",
+      "endedAt": "2026-10-06T01:59:15.765Z",
+      "closed": true,
+      "actualExit": 0,
+      "signal": null,
+      "errorCode": null,
+      "stdout": {
+        "file": "final-syntax-2.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "file": "final-syntax-2.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "schema": "web-platform-g7-local-command-closed-v1",
+      "id": "syntax-3",
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "scripts/verification/web-platform-g7/database.mjs"
+      ],
+      "begin": "2026-10-06T01:59:15.766Z",
+      "endedAt": "2026-10-06T01:59:15.821Z",
+      "closed": true,
+      "actualExit": 0,
+      "signal": null,
+      "errorCode": null,
+      "stdout": {
+        "file": "final-syntax-3.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "file": "final-syntax-3.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "schema": "web-platform-g7-local-command-closed-v1",
+      "id": "syntax-4",
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "scripts/verification/web-platform-g7/fixture.test.mjs"
+      ],
+      "begin": "2026-10-06T01:59:15.822Z",
+      "endedAt": "2026-10-06T01:59:15.878Z",
+      "closed": true,
+      "actualExit": 0,
+      "signal": null,
+      "errorCode": null,
+      "stdout": {
+        "file": "final-syntax-4.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "file": "final-syntax-4.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "schema": "web-platform-g7-local-command-closed-v1",
+      "id": "syntax-5",
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "scripts/verification/web-platform-g7/run-owned-linux.mjs"
+      ],
+      "begin": "2026-10-06T01:59:15.879Z",
+      "endedAt": "2026-10-06T01:59:15.946Z",
+      "closed": true,
+      "actualExit": 0,
+      "signal": null,
+      "errorCode": null,
+      "stdout": {
+        "file": "final-syntax-5.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "file": "final-syntax-5.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "schema": "web-platform-g7-local-command-closed-v1",
+      "id": "syntax-6",
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "scripts/verification/web-platform-g7/wire.mjs"
+      ],
+      "begin": "2026-10-06T01:59:15.946Z",
+      "endedAt": "2026-10-06T01:59:16.003Z",
+      "closed": true,
+      "actualExit": 0,
+      "signal": null,
+      "errorCode": null,
+      "stdout": {
+        "file": "final-syntax-6.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "file": "final-syntax-6.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "schema": "web-platform-g7-local-command-closed-v1",
+      "id": "unit",
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--import",
+        "tsx",
+        "--test",
+        "scripts/verification/web-platform-g7/admission.test.mjs",
+        "scripts/verification/web-platform-g7/fixture.test.mjs"
+      ],
+      "begin": "2026-10-06T01:59:16.004Z",
+      "endedAt": "2026-10-06T01:59:16.428Z",
+      "closed": true,
+      "actualExit": 0,
+      "signal": null,
+      "errorCode": null,
+      "stdout": {
+        "file": "final-unit.stdout.log",
+        "bytes": 649,
+        "sha256": "d608a8a5f85edf057b5653cf2b7a5a6d51661b6d64a081e2690f392d4c4cbeae"
+      },
+      "stderr": {
+        "file": "final-unit.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "schema": "web-platform-g7-local-command-closed-v1",
+      "id": "windows-admission",
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "scripts/verification/web-platform-g7/run-owned-linux.mjs",
+        "--execute-owned-linux",
+        "--sha",
+        "4e2ed5196a26cc43c2a3cb7ea852f1fc6284ff27",
+        "--out",
+        "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-tls-pg-package-20261006-552eab3dd02f4b15a01d765d9a2aab8f\\never-created-final-runtime"
+      ],
+      "begin": "2026-10-06T01:59:16.428Z",
+      "endedAt": "2026-10-06T01:59:16.516Z",
+      "closed": true,
+      "actualExit": 1,
+      "signal": null,
+      "errorCode": null,
+      "stdout": {
+        "file": "final-windows-admission.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "file": "final-windows-admission.stderr.log",
+        "bytes": 785,
+        "sha256": "42b64b78c79cb1127ed91cc9e29b31d463565173b895dd4ce8390eba865b637f"
+      }
+    }
+  ],
+  "baseFilesAbsent": 10,
+  "ownedNewFileCount": 10,
+  "localUnitTests": 6,
+  "realLinuxDockerExecuted": false,
+  "actualTLSExecuted": false,
+  "nativeDatabaseExecuted": false,
+  "productionRequests": 0,
+  "formalG7Complete": false,
+  "formalG8Complete": false,
+  "remaining": "Linux actual run pending; signed OIDC/auth writes/isolation/SSE/gray rollback/real identity and restricted ACL/PG18 remain pending",
+  "historicalFailuresPreserved": [
+    "format-before.result.json",
+    "source-contracts.mjs original core operation failure actual1 tool transcript",
+    "initial fixture SQL extractor failure actual1 tool transcript"
+  ]
+}

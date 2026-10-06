@@ -1,0 +1,368 @@
+// Owned PG18 proof of the first review-only authenticated request boundary.
+import assert from 'node:assert/strict';
+import { createHash, randomBytes, randomUUID } from 'node:crypto';
+import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { setTimeout as delay } from 'node:timers/promises';
+import test from 'node:test';
+import postgres from 'postgres';
+import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';
+import { grantPostgresRuntime } from './grant-postgres-runtime.ts';
+
+const gateway = 'cinatoken_gateway';
+const migrations = new URL('../../../packages/core/migrations-postgres/', import.meta.url);
+const proposal = new URL('../../../packages/core/migrations-proposals/postgres/authenticated-request-capability-login-v356.sql', import.meta.url);
+const reportUrl = new URL('../../../docs/developers/architecture/implementation-evidence/C04-authenticated-request-capability-v356-report.json', import.meta.url);
+const digest = value => createHash('sha256').update(value).digest('hex');
+const bodyHash = digest('synthetic-normalized-body');
+const bearer = 'sk-local-capability-v356-bearer-only';
+const lookupHash = `sha256:${digest(bearer)}`;
+
+function connection(cluster, username, password, label) {
+  return postgres({ host: '127.0.0.1', port: cluster.port, database: 'postgres',
+    username, password, ssl: false, max: 1, prepare: false, fetch_types: false,
+    connect_timeout: 3, idle_timeout: 0, max_lifetime: 0, backoff: false,
+    onnotice() {}, connection: { application_name: `request-capability-v356-${label}` } });
+}
+async function expectDenied(promise) {
+  await assert.rejects(promise, error => {
+    assert.equal((error?.cause ?? error)?.code, '42501', String(error));
+    return true;
+  });
+}
+
+test('PG73 direct LOGINs issue and consume one bearer-verified request capability without a budget amount',
+  { timeout: 300_000, skip: !process.env.GATEWAY_NATIVE_PG_BIN }, async () => {
+    const cluster = await startNativePostgres();
+    const report = { status: 'RUNNING', cleanup: 'PENDING', binaryVersion: cluster.binaryVersion,
+      sourceSha256: {}, stages: [], limitations: [
+        'Review-only PG73 SQL; no formal migration, production role, Worker binding, or remote DB changed.',
+        'The bearer is sent to PostgreSQL as a bound parameter; production transport and query logging policy are unverified.',
+        'This one-shot authentication capability has no route, price, budget ceiling, financial hold, dispatch permission, or settlement effect.',
+        'The body digest is supplied by the issuer caller and is not independently reconstructed by PostgreSQL.',
+        'Legacy plaintext Gateway Keys are deliberately rejected until backfilled to hashref storage.',
+        'This first phase admits personal workspaces only; organization membership is not independently proved.',
+        'Expired capability rows are excluded from invalidation scans but still need an owned retention and purge policy.',
+        'Production invalidation-trigger scan and write capacity under Key, user, and Workspace churn is unmeasured.',
+        'D1/MySQL parity and Linux CI are not proved by this native fixture.',
+      ] };
+    const stage = (name, detail = {}) => report.stages.push({ name, result: 'PASS', ...detail });
+    const clients = [];
+    let failure;
+    try {
+      assert.match(cluster.binaryVersion, /PostgreSQL\) 18\.6/u);
+      const passwords = Object.fromEntries(['migrator','runtime','request_capability_issuer',
+        'request_capability_claim'].map(label => [label, randomBytes(24).toString('hex')]));
+      const issuerRole = 'cinatoken_gateway_request_capability_issuer';
+      const claimRole = 'cinatoken_gateway_request_capability_claim';
+      await cluster.admin.unsafe(`CREATE ROLE cinatoken_gateway_migrator LOGIN PASSWORD '${passwords.migrator}';
+        CREATE ROLE cinatoken_gateway_runtime LOGIN PASSWORD '${passwords.runtime}';
+        CREATE ROLE ${issuerRole} LOGIN NOINHERIT PASSWORD '${passwords.request_capability_issuer}';
+        CREATE ROLE ${claimRole} LOGIN NOINHERIT PASSWORD '${passwords.request_capability_claim}';
+        CREATE SCHEMA ${gateway} AUTHORIZATION cinatoken_gateway_migrator;
+        REVOKE CREATE ON SCHEMA public FROM PUBLIC;
+        GRANT CONNECT ON DATABASE postgres TO cinatoken_gateway_migrator,
+          cinatoken_gateway_runtime,${issuerRole},${claimRole};
+        GRANT CREATE ON DATABASE postgres TO cinatoken_gateway_migrator;`).simple();
+      const migrator = connection(cluster,'cinatoken_gateway_migrator',passwords.migrator,'migrator');
+      const runtime = connection(cluster,'cinatoken_gateway_runtime',passwords.runtime,'runtime');
+      const issuer = connection(cluster,issuerRole,passwords.request_capability_issuer,'issuer');
+      const claim = connection(cluster,claimRole,passwords.request_capability_claim,'claim');
+      const peer = connection(cluster,claimRole,passwords.request_capability_claim,'claim-peer');
+      clients.push(migrator,runtime,issuer,claim,peer);
+      await migrator.unsafe(`CREATE TABLE ${gateway}.schema_migrations
+        (version text PRIMARY KEY,applied_at timestamptz NOT NULL DEFAULT now())`);
+      const names = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();
+      assert.equal(names.length,73);
+      assert.equal(names.at(-1),'0073_recovery_api_key_workspace_lock.sql');
+      const corpus = [];
+      for (const name of names) {
+        const body = await readFile(new URL(name,migrations),'utf8');
+        corpus.push(`${name}\n${body}`);
+        await migrator.begin(async tx => {
+          await tx.unsafe(body).simple();
+          await tx.unsafe(`INSERT INTO ${gateway}.schema_migrations(version) VALUES($1)`,[name]);
+        });
+      }
+      report.sourceSha256.formalMigrations = digest(corpus.join('\n'));
+      report.sourceSha256.runtimeGrant = digest(await readFile(
+        new URL('./grant-postgres-runtime.ts',import.meta.url)));
+      const migratorUrl = `postgres://cinatoken_gateway_migrator:${passwords.migrator}`
+        + `@127.0.0.1:${cluster.port}/postgres`;
+      await grantPostgresRuntime({ DATABASE_URL: migratorUrl });
+      stage('formal-pg73-and-current-runtime-grants-installed');
+
+      const body = await readFile(proposal,'utf8');
+      report.sourceSha256.proposal = digest(body);
+      report.sourceSha256.fixture = digest(await readFile(new URL(import.meta.url)));
+      await assert.rejects(migrator.begin(tx => tx.unsafe(body).simple()),
+        /activation or dependency differs/u);
+      await assert.rejects(migrator.begin(async tx => {
+        await tx.unsafe(`GRANT SELECT ON ${gateway}.api_keys TO ${issuerRole}`);
+        await tx.unsafe("SET LOCAL cinatoken.request_capability_login_activation = 'reviewed-v1'");
+        await tx.unsafe(body).simple();
+      }),/activation or dependency differs/u);
+      await assert.rejects(migrator.begin(async tx => {
+        await tx.unsafe(`GRANT EXECUTE ON FUNCTION
+          ${gateway}.recovery_api_key_workspace_matches(text,text) TO ${claimRole}`);
+        await tx.unsafe("SET LOCAL cinatoken.request_capability_login_activation = 'reviewed-v1'");
+        await tx.unsafe(body).simple();
+      }),/activation or dependency differs/u);
+      assert.equal((await migrator.unsafe(`SELECT pg_catalog.to_regclass(
+        '${gateway}.authenticated_request_capabilities_v356') IS NULL AS absent`))[0].absent,true);
+      let concurrentGrant;
+      await migrator.begin(async tx => {
+        await tx.unsafe("SET LOCAL cinatoken.request_capability_login_activation = 'reviewed-v1'");
+        await tx.unsafe(body).simple();
+        concurrentGrant=grantPostgresRuntime({ DATABASE_URL: migratorUrl }).then(
+          () => ({status:'unexpected-success'}),
+          error => ({status:'rejected',message:String(error)}));
+        let blocked=false;
+        for (let attempt=0;attempt<60;attempt++) {
+          const [activity] = await cluster.admin.unsafe(`SELECT count(*)::int AS blocked
+            FROM pg_catalog.pg_stat_activity
+            WHERE datname=pg_catalog.current_database()
+              AND wait_event_type='Lock'
+              AND query LIKE '%pg_advisory_xact_lock%'`);
+          if (activity.blocked>0) {blocked=true;break;}
+          await delay(25);
+        }
+        assert.equal(blocked,true,'legacy grant rerun must wait for the v356 install lock');
+      });
+      const concurrentResult=await concurrentGrant;
+      assert.equal(concurrentResult.status,'rejected');
+      assert.match(concurrentResult.message,/Request capability v356 is installed/u);
+      stage('default-off-contaminated-role-rejection-and-concurrent-grant-interlock');
+      await assert.rejects(grantPostgresRuntime({ DATABASE_URL: migratorUrl }),
+        /Request capability v356 is installed/u);
+      stage('legacy-runtime-grant-rerun-rejects-before-broad-regrant');
+
+      const [acl] = await migrator.unsafe(`SELECT
+        pg_catalog.has_function_privilege('${issuerRole}',
+          '${gateway}.issue_request_capability_v356(text,text,text)','EXECUTE') AS issuer_issue,
+        pg_catalog.has_function_privilege('${issuerRole}',
+          '${gateway}.claim_request_capability_v356(text,text,text)','EXECUTE') AS issuer_claim,
+        pg_catalog.has_function_privilege('${claimRole}',
+          '${gateway}.issue_request_capability_v356(text,text,text)','EXECUTE') AS claim_issue,
+        pg_catalog.has_function_privilege('${claimRole}',
+          '${gateway}.claim_request_capability_v356(text,text,text)','EXECUTE') AS claim_claim,
+        pg_catalog.has_function_privilege('cinatoken_gateway_runtime',
+          '${gateway}.issue_request_capability_v356(text,text,text)','EXECUTE') AS runtime_issue,
+        pg_catalog.has_table_privilege('${issuerRole}',
+          '${gateway}.authenticated_request_capabilities_v356','SELECT,INSERT,UPDATE,DELETE') AS issuer_table,
+        pg_catalog.has_table_privilege('${claimRole}',
+          '${gateway}.authenticated_request_capabilities_v356','SELECT,INSERT,UPDATE,DELETE') AS claim_table`);
+      assert.deepEqual(acl,{issuer_issue:true,issuer_claim:false,
+        claim_issue:false,claim_claim:true,runtime_issue:false,
+        issuer_table:false,claim_table:false});
+      await expectDenied(issuer.unsafe(`SELECT * FROM ${gateway}.api_keys`));
+      await expectDenied(claim.unsafe(`SELECT * FROM ${gateway}.authenticated_request_capabilities_v356`));
+      await expectDenied(issuer.unsafe(`INSERT INTO ${gateway}.authenticated_request_capabilities_v356
+        (request_id,capability_sha256,body_sha256,api_key_id,key_hash,user_id,workspace_id,
+          budget_epoch,issued_at,expires_at) VALUES ('forged',repeat('a',64),repeat('b',64),
+          'forged','sha256:'||repeat('c',64),'forged','forged',0,now(),now()+interval '1 minute')`));
+      await expectDenied(issuer.unsafe(`SELECT ${gateway}.claim_request_capability_v356('x','x','x')`));
+      await expectDenied(claim.unsafe(`SELECT ${gateway}.issue_request_capability_v356('x','x','x')`));
+      await expectDenied(runtime.unsafe(`SELECT ${gateway}.issue_request_capability_v356('x','x','x')`));
+      stage('two-direct-logins-have-only-their-own-function-and-no-table-dml',{acl});
+
+      await migrator.unsafe(`INSERT INTO ${gateway}.users(id,email,budget_max)
+          VALUES('v356-user','v356@example.invalid',1),
+            ('v356-foreign','v356-foreign@example.invalid',1);
+        INSERT INTO ${gateway}.workspaces
+          (id,scope_type,personal_owner_user_id,name,slug,status)
+          VALUES('v356-workspace','personal','v356-user','Capability','v356','active');`).simple();
+      await migrator.unsafe(`INSERT INTO ${gateway}.api_keys
+        (id,key,key_hash,user_id,workspace_id,status)
+        VALUES('v356-key',$1,$2,'v356-user','v356-workspace','active')`,
+        [`hashref:${lookupHash}`,lookupHash]);
+      const issue = (requestId,secret=bearer,hash=bodyHash) => issuer.unsafe(
+        `SELECT ${gateway}.issue_request_capability_v356($1,$2,$3) AS value`,
+        [requestId,secret,hash]).then(rows => rows[0].value);
+      const use = (requestId,capability,hash=bodyHash,db=claim) => db.unsafe(
+        `SELECT ${gateway}.claim_request_capability_v356($1,$2,$3) AS value`,
+        [requestId,capability,hash]).then(rows => rows[0].value);
+      assert.equal((await issue(`wrong-${randomUUID()}`,'sk-wrong-bearer-value')).status,'unauthorized');
+      assert.equal((await issue(`hash-${randomUUID()}`,lookupHash)).status,'unauthorized');
+      await migrator.unsafe(`UPDATE ${gateway}.api_keys SET key=$1 WHERE id='v356-key'`,[bearer]);
+      assert.equal((await issue(`legacy-${randomUUID()}`)).status,'unauthorized');
+      await migrator.unsafe(`UPDATE ${gateway}.api_keys SET key=$1 WHERE id='v356-key'`,[`hashref:${lookupHash}`]);
+      const managementBearer = `sk-cina-mgmt-${'a'.repeat(64)}`;
+      const managementHash = `sha256:${digest(managementBearer)}`;
+      await migrator.unsafe(`UPDATE ${gateway}.api_keys SET key=$1,key_hash=$2
+        WHERE id='v356-key'`,[`hashref:${managementHash}`,managementHash]);
+      assert.equal((await issue(`management-${randomUUID()}`,managementBearer)).status,
+        'unauthorized');
+      await migrator.unsafe(`UPDATE ${gateway}.api_keys SET key=$1,key_hash=$2
+        WHERE id='v356-key'`,[`hashref:${lookupHash}`,lookupHash]);
+      await migrator.unsafe(`UPDATE ${gateway}.api_keys SET user_id='v356-foreign' WHERE id='v356-key'`);
+      assert.equal((await issue(`foreign-owner-${randomUUID()}`)).status,'unauthorized');
+      await migrator.unsafe(`UPDATE ${gateway}.api_keys SET user_id='v356-user' WHERE id='v356-key'`);
+      await migrator.unsafe(`UPDATE ${gateway}.api_keys SET expires_at=now()-interval '1 second'
+        WHERE id='v356-key'`);
+      assert.equal((await issue(`expired-key-${randomUUID()}`)).status,'unauthorized');
+      await migrator.unsafe(`UPDATE ${gateway}.api_keys SET expires_at=NULL WHERE id='v356-key'`);
+      stage('bearer-hashref-pair-namespace-personal-owner-and-current-expiry-required');
+
+      const requestId = `cap-${randomUUID()}`;
+      const issued = await issue(requestId);
+      assert.equal(issued.status,'issued');
+      assert.equal(issued.userId,'v356-user');
+      assert.equal(issued.apiKeyId,'v356-key');
+      assert.equal(issued.workspaceId,'v356-workspace');
+      assert.equal(issued.budgetEpoch,0);
+      assert.equal(issued.keyLimitEpoch,0);
+      assert.match(issued.capability,/^[0-9a-f-]{72}$/u);
+      assert.equal((await issue(requestId)).status,'conflict');
+      const [stored] = await migrator.unsafe(`SELECT capability_sha256,body_sha256,key_hash,
+        state,pg_catalog.to_jsonb(t) ? 'reserved_micros' AS has_amount
+        FROM ${gateway}.authenticated_request_capabilities_v356 t WHERE request_id=$1`,[requestId]);
+      assert.equal(stored.capability_sha256,digest(issued.capability));
+      assert.equal(stored.body_sha256,bodyHash);
+      assert.equal(stored.key_hash,lookupHash);
+      assert.equal(stored.state,'issued');
+      assert.equal(stored.has_amount,false);
+      assert.equal((await use(requestId,randomUUID()+randomUUID())).status,'unauthorized');
+      assert.equal((await use(requestId,issued.capability,digest('other-body'))).status,'unauthorized');
+      const claimed = await use(requestId,issued.capability);
+      assert.deepEqual(claimed,{status:'claimed',requestId,apiKeyId:'v356-key',
+        userId:'v356-user',workspaceId:'v356-workspace',budgetEpoch:0,
+        keyLimitEpoch:0,bodySha256:bodyHash});
+      assert.equal((await use(requestId,issued.capability)).status,'already_claimed');
+      stage('one-request-verifier-stored-only-as-hash-and-claim-is-one-shot');
+
+      const raceId = `race-${randomUUID()}`;
+      const raceIssued = await issue(raceId);
+      const outcomes = await Promise.all([use(raceId,raceIssued.capability,bodyHash,claim),
+        use(raceId,raceIssued.capability,bodyHash,peer)]);
+      assert.deepEqual(outcomes.map(value=>value.status).sort(),['already_claimed','claimed']);
+      stage('simultaneous-claim-serializes-to-one-winner');
+
+      const staleId = `stale-${randomUUID()}`;
+      const staleIssued = await issue(staleId);
+      await migrator.unsafe(`UPDATE ${gateway}.users SET budget_epoch=budget_epoch+1
+        WHERE id='v356-user'`);
+      assert.equal((await use(staleId,staleIssued.capability)).status,'stale');
+      const limitId = `limit-${randomUUID()}`;
+      const limitIssued = await issue(limitId);
+      await migrator.unsafe(`UPDATE ${gateway}.api_keys SET limit_epoch=limit_epoch+1
+        WHERE id='v356-key'`);
+      assert.equal((await use(limitId,limitIssued.capability)).status,'stale');
+      const ownerId = `owner-${randomUUID()}`;
+      const ownerIssued = await issue(ownerId);
+      await migrator.unsafe(`UPDATE ${gateway}.api_keys SET user_id='v356-foreign'
+        WHERE id='v356-key'`);
+      assert.equal((await use(ownerId,ownerIssued.capability)).status,'stale');
+      await migrator.unsafe(`UPDATE ${gateway}.api_keys SET user_id='v356-user'
+        WHERE id='v356-key'`);
+      const revokedId = `revoked-${randomUUID()}`;
+      const revokedIssued = await issue(revokedId);
+      const expiredRowId=`expired-history-${randomUUID()}`;
+      await migrator.unsafe(`INSERT INTO ${gateway}.authenticated_request_capabilities_v356
+        (request_id,capability_sha256,body_sha256,api_key_id,key_hash,user_id,
+          workspace_id,budget_epoch,key_limit_epoch,issued_at,expires_at)
+        VALUES($1,$2,$3,'v356-key',$4,'v356-user','v356-workspace',1,1,
+          now()-interval '2 minutes',now()-interval '1 minute')`,
+        [expiredRowId,digest(randomUUID()),bodyHash,lookupHash]);
+      await migrator.unsafe(`UPDATE ${gateway}.api_keys SET status='revoked' WHERE id='v356-key'`);
+      assert.equal((await use(revokedId,revokedIssued.capability)).status,'stale');
+      await migrator.unsafe(`UPDATE ${gateway}.api_keys SET status='active' WHERE id='v356-key'`);
+      assert.equal((await use(revokedId,revokedIssued.capability)).status,'stale');
+      const [expiredHistory] = await migrator.unsafe(`SELECT invalidated_at IS NULL AS untouched
+        FROM ${gateway}.authenticated_request_capabilities_v356 WHERE request_id=$1`,
+        [expiredRowId]);
+      assert.equal(expiredHistory.untouched,true);
+      const keyIdAbaId=`key-id-aba-${randomUUID()}`;
+      const keyIdAbaIssued=await issue(keyIdAbaId);
+      await migrator.unsafe(`UPDATE ${gateway}.api_keys SET id='v356-key-temporary'
+        WHERE id='v356-key'`);
+      await migrator.unsafe(`UPDATE ${gateway}.api_keys SET id='v356-key'
+        WHERE id='v356-key-temporary'`);
+      assert.equal((await use(keyIdAbaId,keyIdAbaIssued.capability)).status,'stale');
+      const userAbaId = `user-aba-${randomUUID()}`;
+      const userAbaIssued = await issue(userAbaId);
+      await migrator.unsafe(`UPDATE ${gateway}.users SET status='disabled' WHERE id='v356-user'`);
+      await migrator.unsafe(`UPDATE ${gateway}.users SET status='active' WHERE id='v356-user'`);
+      assert.equal((await use(userAbaId,userAbaIssued.capability)).status,'stale');
+      const waitForLock = async pid => {
+        for (let attempt=0;attempt<30;attempt++) {
+          const [activity] = await cluster.admin.unsafe(`SELECT wait_event_type
+            FROM pg_catalog.pg_stat_activity WHERE pid=$1`,[pid]);
+          if (activity?.wait_event_type==='Lock') return;
+          await delay(25);
+        }
+        assert.fail(`backend ${pid} did not wait on the owned row lock`);
+      };
+      const claimPid = (await claim.unsafe('SELECT pg_backend_pid() AS pid'))[0].pid;
+      const expiryId = `expiry-${randomUUID()}`;
+      const expiryIssued = await issue(expiryId);
+      let waitingClaim;
+      await migrator.begin(async tx => {
+        await tx.unsafe(`UPDATE ${gateway}.authenticated_request_capabilities_v356
+          SET expires_at=now()+interval '500 milliseconds' WHERE request_id=$1`,[expiryId]);
+        waitingClaim=use(expiryId,expiryIssued.capability);
+        await waitForLock(claimPid);
+        await delay(550);
+      });
+      assert.equal((await waitingClaim).status,'expired');
+      const issuerPid = (await issuer.unsafe('SELECT pg_backend_pid() AS pid'))[0].pid;
+      let waitingIssue;
+      await migrator.begin(async tx => {
+        await tx.unsafe(`UPDATE ${gateway}.api_keys
+          SET expires_at=now()+interval '500 milliseconds' WHERE id='v356-key'`);
+        waitingIssue=issue(`issue-expiry-${randomUUID()}`);
+        await waitForLock(issuerPid);
+        await delay(550);
+      });
+      assert.equal((await waitingIssue).status,'unauthorized');
+      await migrator.unsafe(`UPDATE ${gateway}.api_keys SET expires_at=NULL WHERE id='v356-key'`);
+      stage('row-lock-waits-crossing-capability-or-key-deadline-fail-closed');
+      const archivedId = `archived-${randomUUID()}`;
+      const archivedIssued = await issue(archivedId);
+      await migrator.unsafe(`UPDATE ${gateway}.workspaces SET status='archived'
+        WHERE id='v356-workspace'`);
+      assert.equal((await use(archivedId,archivedIssued.capability)).status,'stale');
+      await migrator.unsafe(`UPDATE ${gateway}.workspaces SET status='active'
+        WHERE id='v356-workspace'`);
+      assert.equal((await use(archivedId,archivedIssued.capability)).status,'stale');
+      stage('epochs-status-and-id-ABA-invalidation-spares-expired-history');
+
+      const blockerPid = (await issuer.unsafe('SELECT pg_backend_pid() AS pid'))[0].pid;
+      await migrator.begin(async tx => {
+        await tx.unsafe(`UPDATE ${gateway}.api_keys SET name='held-lock'
+          WHERE id='v356-key'`);
+        const blockedIssue = issue(`lock-timeout-${randomUUID()}`);
+        await waitForLock(blockerPid);
+        await assert.rejects(blockedIssue,error => {
+          assert.equal((error?.cause??error)?.code,'55P03',String(error));
+          return true;
+        });
+      });
+      stage('security-definer-lock-wait-is-bounded-at-two-seconds');
+
+      const [shape] = await migrator.unsafe(`SELECT
+        (SELECT pg_catalog.count(*) FROM pg_catalog.pg_attribute
+          WHERE attrelid='${gateway}.authenticated_request_capabilities_v356'::regclass
+            AND attnum>0 AND NOT attisdropped
+            AND attname LIKE '%micros%')::int AS amount_columns,
+        (SELECT pronargs FROM pg_catalog.pg_proc WHERE oid=
+          '${gateway}.issue_request_capability_v356(text,text,text)'::regprocedure) AS issue_args,
+        (SELECT pronargs FROM pg_catalog.pg_proc WHERE oid=
+          '${gateway}.claim_request_capability_v356(text,text,text)'::regprocedure) AS claim_args`);
+      assert.deepEqual(shape,{amount_columns:0,issue_args:3,claim_args:3});
+      stage('neither-function-accepts-numeric-budget-and-capability-record-has-no-amount',{shape});
+      report.status='PASS';
+    } catch(error) {
+      failure=error;report.status='FAIL';
+      const cause=error?.cause??error;
+      report.failure={code:cause?.code??null,constraint:cause?.constraint_name??null,
+        message:String(error?.stack??error).slice(0,4000)};
+    } finally {
+      await Promise.allSettled(clients.map(sql=>sql.end({timeout:1})));
+      try { await cluster.cleanup();report.cleanup='PASS'; }
+      catch(error) { report.cleanup='FAIL';report.cleanupError=String(error?.stack??error).slice(0,1500);failure??=error; }
+      await writeFile(reportUrl,JSON.stringify(report,null,2)+'\n');
+      process.stdout.write(`request-capability-v356-report=${reportUrl.pathname}\n`);
+    }
+    if (failure) throw failure;
+    assert.equal(report.cleanup,'PASS');
+  });

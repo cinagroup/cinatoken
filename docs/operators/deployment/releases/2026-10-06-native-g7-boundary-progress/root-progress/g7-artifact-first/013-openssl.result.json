@@ -1,0 +1,42 @@
+{
+  "schema": "web-platform-g7-child-command-closed-v1",
+  "program": "openssl",
+  "args": [
+    "x509",
+    "-req",
+    "-days",
+    "2",
+    "-in",
+    "/tmp/cinatoken-g7-private-mt77bB/tls/app.test.csr",
+    "-CA",
+    "/tmp/cinatoken-g7-private-mt77bB/tls/qa-root-ca.crt",
+    "-CAkey",
+    "/tmp/cinatoken-g7-private-mt77bB/tls/qa-root-ca.key",
+    "-CAcreateserial",
+    "-extfile",
+    "/tmp/cinatoken-g7-private-mt77bB/tls/leaf.ext",
+    "-out",
+    "/tmp/cinatoken-g7-private-mt77bB/tls/app.test.crt"
+  ],
+  "begin": "2026-10-06T02:10:00.542Z",
+  "endedAt": "2026-10-06T02:10:00.569Z",
+  "closed": true,
+  "actualExit": 0,
+  "signal": null,
+  "errorCode": null,
+  "timedOut": false,
+  "timeoutMs": 90000,
+  "expectedNumericReadinessNonzero": false,
+  "stdout": {
+    "file": "013-openssl.stdout.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redacted": false
+  },
+  "stderr": {
+    "file": "013-openssl.stderr.log",
+    "bytes": 60,
+    "sha256": "a97bce3a7b2d0e9afc27534d020cb092640791c3a3649b43937563460f46fe74",
+    "redacted": false
+  }
+}

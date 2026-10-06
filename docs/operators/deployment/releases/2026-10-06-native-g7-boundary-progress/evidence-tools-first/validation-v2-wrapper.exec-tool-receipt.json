@@ -1,0 +1,19 @@
+{
+  "closed": true,
+  "actualExit": 0,
+  "signal": null,
+  "chunkId": "c93d79",
+  "wallTimeSeconds": 4.3398755,
+  "output": {
+    "file": "validation-v2-wrapper.tool-output.txt",
+    "bytes": 280,
+    "sha256": "0cf601bc9462dbbf8f2d90a7ecce23eefc2ca40788e72d66c8b3d97498c6b323"
+  },
+  "stdoutStderrPartitionClaimed": false,
+  "source": "Original execution tool result transcribed from delivered output; seven child commands have independent raw and closed receipts",
+  "report": {
+    "file": "tool-validation.proof.json",
+    "bytes": 13935,
+    "sha256": "80c2f8be53b91205a111459bb7473aa2088b0530103f69d159441755754c7219"
+  }
+}

@@ -1,0 +1,21 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+
+  assert.ok(oldPrepare(config([input('original-g7', realG7), input('original-boundary', realBoundary)])).blockers.length > 0)
+
+    at file:///C:/Users/cina/AppData/Local/Temp/cinatoken-evidence-g7-boundary-tools-v2-344bf6aba6864fafba8f6d1a5e9e7e7f/collector-g7-boundary-descriptor-tests.mjs:89:8
+    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:661:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.14.1

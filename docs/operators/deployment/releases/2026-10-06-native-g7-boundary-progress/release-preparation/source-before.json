@@ -1,0 +1,131 @@
+{
+  "schema": "cinatoken-release-source-snapshot-v1",
+  "closed": true,
+  "createdAt": "2026-10-06T02:07:59.613Z",
+  "repository": "C:/cinagroup/cinatoken",
+  "authorizedBase": "4e2ed5196a26cc43c2a3cb7ea852f1fc6284ff27",
+  "observedHead": "67f8b3df2f2b6e8159806767ecce1efa1904d27a",
+  "source": [
+    {
+      "relative": "package.json",
+      "exists": true,
+      "bytes": 5550,
+      "sha256": "6454126bb47e39c135d3178ce3500b0901581b5b4f9b4b0067ace88e894da3aa"
+    },
+    {
+      "relative": "packages/core/package.json",
+      "exists": true,
+      "bytes": 13537,
+      "sha256": "eef3793fdc1098c901c18a0e97160d4204fb765a786c3445bc558ce7efc49e1e"
+    },
+    {
+      "relative": "packages/tool-engines/package.json",
+      "exists": true,
+      "bytes": 856,
+      "sha256": "82e4981558fca23d8bf5766a64745a084aa33a1df38a0569554b4bd4b534156e"
+    },
+    {
+      "relative": "packages/proxy/package.json",
+      "exists": true,
+      "bytes": 18988,
+      "sha256": "14e2d996c5d81a9ec101e9506dc05d1693c05911aad146fb062742c0c4aca2a1"
+    },
+    {
+      "relative": "packages/admin/package.json",
+      "exists": true,
+      "bytes": 4163,
+      "sha256": "fef666db8d2ed6876f90b48a51b6a636d7b342dab1cae1e0dc82e72657df8188"
+    },
+    {
+      "relative": "packages/web/package.json",
+      "exists": true,
+      "bytes": 4490,
+      "sha256": "dd231d8595d364fd70999f3e84414cc60bb50d41c700572607d5ec717b84c4bd"
+    },
+    {
+      "relative": "packages/chain-worker/package.json",
+      "exists": true,
+      "bytes": 714,
+      "sha256": "841388960dbfbf598768ec8eaf2fcea39abee114952ff467e8f3697464f5809a"
+    },
+    {
+      "relative": "CHANGELOG.md",
+      "exists": true,
+      "bytes": 52356,
+      "sha256": "e20e2dd52096a6009d5b5e127a36aada9632eb127f84a0d5b76b3a95d511ad47"
+    },
+    {
+      "relative": "packages/core/CHANGELOG.md",
+      "exists": true,
+      "bytes": 27280,
+      "sha256": "f07c73c37389001396d3d76d006ea913ff2f24e70bd2005a8cdf358e1f89cf5e"
+    },
+    {
+      "relative": "packages/tool-engines/CHANGELOG.md",
+      "exists": true,
+      "bytes": 5243,
+      "sha256": "be30497d70ad45e0b9463ed0c727cb34c54b534e059405bb0f3590ca51930d5a"
+    },
+    {
+      "relative": "packages/proxy/CHANGELOG.md",
+      "exists": true,
+      "bytes": 31562,
+      "sha256": "91d9551db8268024e60d59fd09b5f36712b04bae7fd80e2160c1250d967beb15"
+    },
+    {
+      "relative": "packages/admin/CHANGELOG.md",
+      "exists": true,
+      "bytes": 32940,
+      "sha256": "8baae6d6cf39b746d3947d6b023c796b06c71428358d26e9b06723ed2c29b314"
+    },
+    {
+      "relative": "packages/web/CHANGELOG.md",
+      "exists": false
+    },
+    {
+      "relative": ".changeset/config.json",
+      "exists": true,
+      "bytes": 426,
+      "sha256": "2b4128d5eb962f60967d24cec0320bed15a6db2d630312a075ba3d4f2a6a4d14"
+    },
+    {
+      "relative": ".changeset/README.md",
+      "exists": true,
+      "bytes": 3059,
+      "sha256": "3a4b7d568eb9d91b2adafc4f817a4a9400220ca9da1067302348a8ccb3b5d792"
+    },
+    {
+      "relative": ".changeset/cinatoken-gateway-postgres.md",
+      "exists": true,
+      "bytes": 538,
+      "sha256": "adda18fbadb5d0c14027eaf61c7a66cff9f367148fc316899510e84afd8ef5e8"
+    },
+    {
+      "relative": "packages/web/.prettierrc",
+      "exists": true,
+      "bytes": 984,
+      "sha256": "b623c80eef9ca24da4cec91b8afb91c579d3a8907ec6e52587c44dc0301d62b9"
+    },
+    {
+      "relative": "packages/web/.prettierignore",
+      "exists": true,
+      "bytes": 381,
+      "sha256": "a658f636bb46ee42c92fc310935976958a8a5a0c2cd46287e6992301bd10c5e9"
+    },
+    {
+      "relative": "package-lock.json",
+      "exists": true,
+      "bytes": 830546,
+      "sha256": "f9c65b6e373a231d52d6eda634bb5f947dda3174734cd70e2b811e09fff0b6f0"
+    }
+  ],
+  "baseContentNormalization": "CRLF to LF only for base comparison; raw source snapshots remain exact",
+  "versions": "all seven manifests 2.8.0",
+  "installed": {
+    "@changesets/cli": "2.31.0",
+    "@changesets/apply-release-plan": "7.1.1",
+    "@changesets/config": "3.1.4",
+    "@changesets/changelog-github": "0.5.2",
+    "prettier": "2.8.8"
+  }
+}

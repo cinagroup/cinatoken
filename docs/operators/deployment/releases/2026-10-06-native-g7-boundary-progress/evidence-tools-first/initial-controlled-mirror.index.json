@@ -1,0 +1,216 @@
+{
+  "closed": true,
+  "actualArchiveOutcome": 0,
+  "materialKind": "lossless-synthetic-controlled-test-mirror",
+  "reason": "Initial immutable old suite was invoked from Temp instead of repo, so its repository-output negative check wrote a synthetic controlled fixture mirror then failed actual1. No source repository write occurred. Original command raw/receipt and test source remain separately retained. The exact mirror remains untouched and is preserved losslessly here.",
+  "sourceDirectory": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-82ab15ef384141c7bf99246c437325d2\\collector-must-not-write-repo",
+  "sourceModified": false,
+  "archive": "initial-controlled-mirror.zip",
+  "archiveBytes": 7138,
+  "archiveSha256": "466c230f4b8743900bd5326fef76ea1d0ac83f472d83a1a1affce7140546122e",
+  "memberCount": 18,
+  "entries": [
+    {
+      "sourceRelative": "collector-must-not-write-repo/2026-10-06-controlled-collector-test.json",
+      "member": "2026-10-06-controlled-collector-test.json",
+      "bytes": 22350,
+      "sha256": "948201eb094c51ac4bd1b8456ece5a90aa60fd5da9d9c56321e7448c2d35dd5a",
+      "roundtripExact": true
+    },
+    {
+      "sourceRelative": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/failure.result.json",
+      "member": "2026-10-06-controlled-collector-test/controlled/failure.result.json",
+      "bytes": 94,
+      "sha256": "9482c75195dff6be54f33f17041e06bd4ca07c337a7134ed4c4be22ef5d441d4",
+      "roundtripExact": true
+    },
+    {
+      "sourceRelative": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/failure.stderr.log",
+      "member": "2026-10-06-controlled-collector-test/controlled/failure.stderr.log",
+      "bytes": 27,
+      "sha256": "f78f7954770597b111c6b97f4e35c2de756dab2987a0f56df12d094dd2fd5168",
+      "roundtripExact": true
+    },
+    {
+      "sourceRelative": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/failure.stdout.log",
+      "member": "2026-10-06-controlled-collector-test/controlled/failure.stdout.log",
+      "bytes": 15,
+      "sha256": "90d2d659382db4a2bada247876f39e3c92fa3df86d18f3c3ff0724a00ea7a3c8",
+      "roundtripExact": true
+    },
+    {
+      "sourceRelative": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/large-before.source.gz",
+      "member": "2026-10-06-controlled-collector-test/controlled/large-before.source.gz",
+      "bytes": 519,
+      "sha256": "240fe789863b6aae88570a18f7a1c7417e77afa726add238eb14c400d0b4f83a",
+      "roundtripExact": true
+    },
+    {
+      "sourceRelative": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/peer-dialect.result.json",
+      "member": "2026-10-06-controlled-collector-test/controlled/peer-dialect.result.json",
+      "bytes": 422,
+      "sha256": "b372daf72f89fe340849443761f2ada18cd4f7e50973496c28ffa933c68fd8bf",
+      "roundtripExact": true
+    },
+    {
+      "sourceRelative": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/peer-dialect.stderr.log",
+      "member": "2026-10-06-controlled-collector-test/controlled/peer-dialect.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "roundtripExact": true
+    },
+    {
+      "sourceRelative": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/peer-dialect.stdout.log",
+      "member": "2026-10-06-controlled-collector-test/controlled/peer-dialect.stdout.log",
+      "bytes": 20,
+      "sha256": "4a27fe4a055f3caf98fc07a8119072134b6398e1f7899dae0ecc522a6c7f3661",
+      "roundtripExact": true
+    },
+    {
+      "sourceRelative": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/root-dialect.result.json",
+      "member": "2026-10-06-controlled-collector-test/controlled/root-dialect.result.json",
+      "bytes": 170,
+      "sha256": "66e6d3f084a438be29d9b31ee184c1889038ee0ac43374fc1ffea0a36203067c",
+      "roundtripExact": true
+    },
+    {
+      "sourceRelative": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/root-dialect.stderr.log",
+      "member": "2026-10-06-controlled-collector-test/controlled/root-dialect.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "roundtripExact": true
+    },
+    {
+      "sourceRelative": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/root-dialect.stdout.log",
+      "member": "2026-10-06-controlled-collector-test/controlled/root-dialect.stdout.log",
+      "bytes": 20,
+      "sha256": "e57abd69d41557462601499eea852fec4414f8b0d49c32267e5a5ac3c97abaf3",
+      "roundtripExact": true
+    },
+    {
+      "sourceRelative": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/script.mjs",
+      "member": "2026-10-06-controlled-collector-test/controlled/script.mjs",
+      "bytes": 22,
+      "sha256": "a46bf97e5d13fea263d32c13ab4bbf77ca07809b141dd17c1ea808285aeb7761",
+      "roundtripExact": true
+    },
+    {
+      "sourceRelative": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/signaled.result.json",
+      "member": "2026-10-06-controlled-collector-test/controlled/signaled.result.json",
+      "bytes": 118,
+      "sha256": "c0dc0fa8eb3660eb3d6625e879216c5b2aeba6363332610678e7d5fbe14efeb4",
+      "roundtripExact": true
+    },
+    {
+      "sourceRelative": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/signaled.stderr.log",
+      "member": "2026-10-06-controlled-collector-test/controlled/signaled.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "roundtripExact": true
+    },
+    {
+      "sourceRelative": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/signaled.stdout.log",
+      "member": "2026-10-06-controlled-collector-test/controlled/signaled.stdout.log",
+      "bytes": 16,
+      "sha256": "18f95b8efbc9961cd7614c07d6712514a2d01d3d76ea7942bd05f15d8c8392ab",
+      "roundtripExact": true
+    },
+    {
+      "sourceRelative": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/zero.result.json",
+      "member": "2026-10-06-controlled-collector-test/controlled/zero.result.json",
+      "bytes": 88,
+      "sha256": "9ce70db0b7b28d6775a7bba2ad46b0d4dcfbae3766c4f228aca7334af2416257",
+      "roundtripExact": true
+    },
+    {
+      "sourceRelative": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/zero.stderr.log",
+      "member": "2026-10-06-controlled-collector-test/controlled/zero.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "roundtripExact": true
+    },
+    {
+      "sourceRelative": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/zero.stdout.log",
+      "member": "2026-10-06-controlled-collector-test/controlled/zero.stdout.log",
+      "bytes": 12,
+      "sha256": "5ab90e31f4e1aa9bdaf8403938ef42227f09e923fa94178a6388bbd91fd351f4",
+      "roundtripExact": true
+    }
+  ],
+  "explicitDuplicateFileExclusions": [
+    {
+      "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test.json",
+      "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+    },
+    {
+      "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/failure.result.json",
+      "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+    },
+    {
+      "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/failure.stderr.log",
+      "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+    },
+    {
+      "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/failure.stdout.log",
+      "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+    },
+    {
+      "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/large-before.source.gz",
+      "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+    },
+    {
+      "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/peer-dialect.result.json",
+      "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+    },
+    {
+      "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/peer-dialect.stderr.log",
+      "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+    },
+    {
+      "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/peer-dialect.stdout.log",
+      "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+    },
+    {
+      "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/root-dialect.result.json",
+      "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+    },
+    {
+      "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/root-dialect.stderr.log",
+      "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+    },
+    {
+      "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/root-dialect.stdout.log",
+      "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+    },
+    {
+      "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/script.mjs",
+      "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+    },
+    {
+      "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/signaled.result.json",
+      "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+    },
+    {
+      "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/signaled.stderr.log",
+      "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+    },
+    {
+      "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/signaled.stdout.log",
+      "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+    },
+    {
+      "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/zero.result.json",
+      "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+    },
+    {
+      "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/zero.stderr.log",
+      "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+    },
+    {
+      "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/zero.stdout.log",
+      "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+    }
+  ],
+  "serviceOrCiExecution": false,
+  "productionRequests": 0
+}

@@ -1,0 +1,145 @@
+{
+  "schema": "v364-boundary-source-inputs-v1",
+  "reviewBaseHEAD": "6658ec978009afa5fe3f4beccf6bde358590b663",
+  "preparedAtHead": "6658ec978009afa5fe3f4beccf6bde358590b663",
+  "executionSHAIsSeparate": true,
+  "priorAnalysisPath": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/native-agent/FINAL-v364-linux-artifact-analysis.json",
+  "priorArtifactRoot": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/root-followup/diagnostic-linux-download/_temp/v364-owned-once-37396338452-1",
+  "files": [
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs",
+      "bytes": 13354,
+      "sha256": "d23d1c710b539b6c64655fbb1fa4e4de85b228bab19c757bc0e4de48528972e5"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-binding-v364.node.test.mjs",
+      "bytes": 5908,
+      "sha256": "bf02a63395f450b889a784dc58bc537b6cb2f4a3004de07e1833c3e747c27fcc"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-gateway-v364.ts",
+      "bytes": 1534,
+      "sha256": "8c85b01ba54daa9b7302c726d20693d08ccb3395350ea6a333817eed46441eaf"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-private-v364.ts",
+      "bytes": 5367,
+      "sha256": "44070fcbb7058b915329a150634eaa649c1b3601724495a1620e94ce2d54d1bf"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-synthetic-v364.ts",
+      "bytes": 1019,
+      "sha256": "d89c6964454d9368a0257b6a585c8d5d707c91d09e55f5f2ea7c3545e5f0a16d"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/wrangler.chat-holder-gateway-v364.jsonc",
+      "bytes": 598,
+      "sha256": "e1a0354ff5bf7915c6c125f3003683a56b708d8bdd6006cce6b33c4ff8a6bb77"
+    },
+    {
+      "path": "packages/proxy/scripts/staging/wrangler.chat-holder-private-v364.jsonc",
+      "bytes": 568,
+      "sha256": "6b897d8aa7b01087b75d4b74968d4004e2b6ddb87650bad1203c7693160b2047"
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 830546,
+      "sha256": "f9c65b6e373a231d52d6eda634bb5f947dda3174734cd70e2b811e09fff0b6f0"
+    },
+    {
+      "path": ".nvmrc",
+      "bytes": 3,
+      "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56"
+    },
+    {
+      "path": ".github/workflows/proxy-dispatch-safety.yml",
+      "bytes": 45895,
+      "sha256": "8e883e7f21f77f8367d361f6bd3d060e16c241c28641b3eac85af6835841f152"
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux/execute-owned-linux.py",
+      "bytes": 9535,
+      "sha256": "45c479a4602a3e79b42daa8dcca6e8b9ef876fa986136598b263a505d5320e31"
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux/gateway-observer.mjs",
+      "bytes": 1244,
+      "sha256": "3ec2e49a72697f61bd1867bcde369a7c508cdbf669cd86d7e0eebdfc41dcfe00"
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux/holder-observer.mjs",
+      "bytes": 2461,
+      "sha256": "740727cae646ae757fa50ef7bb6c02a9f9cb4b1b3aa64b0de539c88bbbe09a25"
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux/README.md",
+      "bytes": 6385,
+      "sha256": "75f8f7e5e678157349712128cc68dbb9323de2daa6686e9b4d47e6098f075263"
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux/run-v364-owned-diagnostic.mjs",
+      "bytes": 22852,
+      "sha256": "11850fbe29355f705e3bc4ec68c1b6416565b943dfb7a0f200d4090de5158666"
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux/sealed-package.json",
+      "bytes": 1067,
+      "sha256": "392f5a44294abf70c4bc3cbb7b727103f96d5ce8f5e87bfc3fe3dc8bd1fc6bd4"
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux/source-inputs.json",
+      "bytes": 1789,
+      "sha256": "d42cda26a0f175bace59626b666cfc6e84c29929767c5344cc6680d98b96a083"
+    },
+    {
+      "path": ".github/workflows/v364-owned-linux-diagnostic.yml",
+      "bytes": 1610,
+      "sha256": "5f6c5de1d989f1331bad5a0a861accb848c8b02f5e0a196637e5f35540df241b"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/native-agent/FINAL-v364-linux-artifact-analysis.json",
+      "bytes": 66439,
+      "sha256": "9bc548f9d070256bcbe9c22cb4ae05d39bb9936103eb91192069e23965f731d2"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/root-followup/diagnostic-linux-download/_temp/v364-owned-once-37396338452-1/executor.closed.json",
+      "bytes": 2372,
+      "sha256": "fd99e106e006730699d3e8e08cc75c76efe631f117e918c4d18b62d6a5b8850c"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/root-followup/diagnostic-linux-download/_temp/v364-owned-once-37396338452-1/closed-result.json",
+      "bytes": 10587,
+      "sha256": "ce4fc862e1424dfcb16c77e18346b2d5d16c35390f9dfcd0b8c7a404780d3c1f"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/root-followup/diagnostic-linux-download/_temp/v364-owned-once-37396338452-1/executor-start.json",
+      "bytes": 675,
+      "sha256": "861ac92d3a2e88ce12161d383cf879b4cd15961534142a301006006067363827"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/root-followup/diagnostic-linux-download/_temp/v364-owned-once-37396338452-1/executor.stdout.txt",
+      "bytes": 162,
+      "sha256": "e2f1da32c548d2ae6ed4bfeaabcc29ae1a66dd56152a9a423248ed2233def675"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/root-followup/diagnostic-linux-download/_temp/v364-owned-once-37396338452-1/executor.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/root-followup/diagnostic-linux-download/_temp/v364-owned-once-37396338452-1/original-strict.stdout.txt",
+      "bytes": 2870,
+      "sha256": "e92e5054f09bd9d580f5d8e2edd7d8694a6c1e80f0aced769765b92a6e0095bd"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/root-followup/diagnostic-linux-download/_temp/v364-owned-once-37396338452-1/original-strict.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/root-followup/diagnostic-linux-download/_temp/v364-owned-once-37396338452-1/events.json.gz",
+      "bytes": 31967,
+      "sha256": "09e36873ea521e8f24727634655cec81a5bc365a6b74fe96b7a57daa185a823c"
+    }
+  ]
+}

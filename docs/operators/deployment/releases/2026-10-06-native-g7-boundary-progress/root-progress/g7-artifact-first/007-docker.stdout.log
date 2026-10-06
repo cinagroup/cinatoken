@@ -1,0 +1,74 @@
+[
+    {
+        "Id": "sha256:40d8750553426890d16c7ecf9d866fa631f5c4fdd420e5a80939280fcd8a4cdf",
+        "RepoTags": [
+            "cinatoken-g7-migrate:67f8b3df2f2b6e8159806767ecce1efa1904d27a"
+        ],
+        "RepoDigests": [],
+        "Parent": "",
+        "Comment": "buildkit.dockerfile.v0",
+        "Created": "2026-10-06T02:09:49.519571814Z",
+        "DockerVersion": "",
+        "Author": "",
+        "Config": {
+            "Hostname": "",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "NODE_VERSION=22.22.2",
+                "YARN_VERSION=1.22.22",
+                "NODE_ENV=production"
+            ],
+            "Cmd": null,
+            "Image": "",
+            "Volumes": null,
+            "WorkingDir": "/app",
+            "Entrypoint": [
+                "/app/docker/entrypoint.migrate.sh"
+            ],
+            "OnBuild": null,
+            "Labels": null
+        },
+        "Architecture": "amd64",
+        "Os": "linux",
+        "Size": 251529270,
+        "GraphDriver": {
+            "Data": {
+                "LowerDir": "/var/lib/docker/overlay2/j2e2eeqilz7xxnzeqo0ekk9cq/diff:/var/lib/docker/overlay2/rkw2lygrddvgyi4tfvep4oar2/diff:/var/lib/docker/overlay2/wp2z8sjnh3u7dt2qdtzguaoj3/diff:/var/lib/docker/overlay2/w08dc7lazhicv5nx8yzoqfwtv/diff:/var/lib/docker/overlay2/luujqyk56ygyd4twd0j6i5pob/diff:/var/lib/docker/overlay2/mugi3vgogbs2u67f031ci4t53/diff:/var/lib/docker/overlay2/2zglgkq3rmtcei5wshdjpyd06/diff:/var/lib/docker/overlay2/z4wh9h0z8fcinsfqk5v3yeyjx/diff:/var/lib/docker/overlay2/bv4how5eskczeb35v6ev20fc5/diff:/var/lib/docker/overlay2/f4eb7746dc843e9be00b51a55829b6fc60de7f26084cdb3d3e80a15a724f75bb/diff:/var/lib/docker/overlay2/c0a745408f5b5ea2568eae9eb382d4bce6c9600a21e2c8f895a61154f3072bf8/diff:/var/lib/docker/overlay2/5e82ec449ad38ae32c187043d6a09074d55a9cdbefc82f953a07f43505730f14/diff:/var/lib/docker/overlay2/6e8a777904560941f3a80d635a8fd7fc1331cbeedb7fe2f5258bfacec416a971/diff",
+                "MergedDir": "/var/lib/docker/overlay2/rl7dan9oxwb56ltjzntmp9bnl/merged",
+                "UpperDir": "/var/lib/docker/overlay2/rl7dan9oxwb56ltjzntmp9bnl/diff",
+                "WorkDir": "/var/lib/docker/overlay2/rl7dan9oxwb56ltjzntmp9bnl/work"
+            },
+            "Name": "overlay2"
+        },
+        "RootFS": {
+            "Type": "layers",
+            "Layers": [
+                "sha256:0854555d70acaa318b38ee50bc667cb51ff6bf0757624624c7ff3b6fe17459a0",
+                "sha256:fbebc70d4d603718f2e3756832ff13d8b68c1fb0995ae9add5fc06748aada9c9",
+                "sha256:ba0964557d8871ad28733d08b70ac9cefedda87ddd769e439b9d4f6d100baa3e",
+                "sha256:04acce0ed98abf602c24e1b97ef716d3e2fda797c28a1e4394846e13e39730b4",
+                "sha256:3c1a52eed1257e7288e7c9730f54b3f8e493e6b87b2e9ade3f535b7ac449e4ab",
+                "sha256:4e2254c29484760434e877164ea8048a4017901548ad479ff1aad6a85de41365",
+                "sha256:926b872e709c95511de2ee92fb3c4586d45ae5d46e8212a7a6624ea07d930f61",
+                "sha256:bd6350195ae8a0978b4644dc0778ff66d149ced4dd1715cd97fa4e5334fd9e95",
+                "sha256:066b952342e402d2530e1bee6bc1cc8b3cc6206a4c03452d29b7a4800dcb7af4",
+                "sha256:4141479e8d49b9f00b08acc15cc4e3fd7725c9f513e770c4eaae178016b07f2b",
+                "sha256:3b806fe8c5c9ae5ee542c92d6710f0eb1e10a91c28c4a12c66f4d98bf8fac2bc",
+                "sha256:8d7a6ded1fcb67ce63e240a125607b61fc542b0d2106cd61f6b0531831da4058",
+                "sha256:8cb0afe932f6e15e483850250e1ffff803a1f9796ff9bead941a4a9bf930149c",
+                "sha256:c26928babe110b038fdce7484fb92b4b7808ccf16d681247127b21e2c7e84312"
+            ]
+        },
+        "Metadata": {
+            "LastTagTime": "2026-10-06T02:09:50.831760488Z"
+        }
+    }
+]

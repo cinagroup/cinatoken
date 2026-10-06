@@ -1,0 +1,12 @@
+scripts/db/cutover/postgres-authenticated-request-capability-login-v356.native.test.mjs:150: trailing whitespace.
++        const [proposalInterlock] = await tx.unsafe(`SELECT EXISTS (
+scripts/db/cutover/postgres-authenticated-request-capability-login-v356.native.test.mjs:151: trailing whitespace.
++          SELECT 1 FROM pg_catalog.pg_locks
+scripts/db/cutover/postgres-authenticated-request-capability-login-v356.native.test.mjs:152: trailing whitespace.
++          WHERE locktype='advisory' AND pid=pg_catalog.pg_backend_pid()
+scripts/db/cutover/postgres-authenticated-request-capability-login-v356.native.test.mjs:153: trailing whitespace.
++            AND granted AND classid=0 AND objid=746923553 AND objsubid=1
+scripts/db/cutover/postgres-authenticated-request-capability-login-v356.native.test.mjs:154: trailing whitespace.
++        ) AS held`);
+scripts/db/cutover/postgres-authenticated-request-capability-login-v356.native.test.mjs:155: trailing whitespace.
++        assert.equal(proposalInterlock.held,true,'original proposal transaction must retain its interlock after session unlock');

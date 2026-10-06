@@ -1,0 +1,21 @@
+{
+  "id": "format-after",
+  "program": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "node_modules/prettier/bin-prettier.js",
+    "--check",
+    "scripts/verification/web-platform-g7/admission.mjs",
+    "scripts/verification/web-platform-g7/admission.test.mjs",
+    "scripts/verification/web-platform-g7/database.mjs",
+    "scripts/verification/web-platform-g7/README.md",
+    "scripts/verification/web-platform-g7/run-owned-linux.mjs",
+    "scripts/verification/web-platform-g7/wire.mjs",
+    ".github/workflows/web-platform-g7.yml"
+  ],
+  "begin": "2026-10-06T01:45:34.885Z",
+  "endedAt": "2026-10-06T01:45:35.565Z",
+  "closed": true,
+  "actualExit": 0,
+  "signal": null,
+  "errorCode": null
+}

@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "C:\Users\cina\AppData\Local\Temp\cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38\check-executor-inert.py", line 128, in <module>
+    cleanup_stub(True)
+  File "C:\Users\cina\AppData\Local\Temp\cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38\check-executor-inert.py", line 119, in cleanup_stub
+    ns['terminate_group']()
+  File "<inert-extracted-functions>", line 189, in terminate_group
+AttributeError: module 'signal' has no attribute 'SIGKILL'. Did you mean: 'SIGILL'?

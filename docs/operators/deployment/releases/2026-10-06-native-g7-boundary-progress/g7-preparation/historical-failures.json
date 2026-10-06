@@ -1,0 +1,57 @@
+{
+  "schema": "web-platform-g7-local-historical-failures-v1",
+  "records": [
+    {
+      "id": "initial-format",
+      "receipt": "format-before.result.json",
+      "actualExit": 1,
+      "logs": [
+        "format-before.stdout.log",
+        "format-before.stderr.log"
+      ],
+      "subsequentCorrection": "Owned candidates formatted by the locked root Prettier; current final formatter exit0 is separately captured."
+    },
+    {
+      "id": "initial-core-operation",
+      "tool": "tools.exec_command",
+      "chunk_id": "c959d7",
+      "exit_code": 1,
+      "program": "node",
+      "args": [
+        "--import",
+        "tsx",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-g7-tls-pg-package-20261006-552eab3dd02f4b15a01d765d9a2aab8f/source-contracts.mjs"
+      ],
+      "originalProducerScript": "source-contracts.mjs",
+      "observedFailure": "modelEndpointSupportsOperation(snapshot,'chat.completions') returned false; expected true",
+      "primarySource": "packages/core/src/model-endpoint-runtime.ts ENDPOINT_FACT_KIND_BY_OPERATION uses chat",
+      "correction": "Only owned seed request/upstream operation and seed assertion changed to chat. Current owned fixture test reads real SQL and rejects chat.completions."
+    },
+    {
+      "id": "initial-fixture-SQL-extractor",
+      "tool": "tools.exec_command",
+      "chunk_id": "95572c",
+      "exit_code": 1,
+      "program": "node",
+      "args": [
+        "--import",
+        "tsx",
+        "--test",
+        "scripts/verification/web-platform-g7/admission.test.mjs",
+        "scripts/verification/web-platform-g7/fixture.test.mjs"
+      ],
+      "observedCounts": {
+        "tests": 5,
+        "passed": 3,
+        "failed": 2,
+        "skipped": 0
+      },
+      "observedFailure": "fixtureRows blocks.length 0 !== 1, both production fixture test groups failed after formatter inserted whitespace in tx.unsafe(...).simple()",
+      "correction": "Only extractor accepts formatting whitespace; it still asserts exactly one SQL block, zero interpolations and six table rows."
+    }
+  ],
+  "unknownOriginalStandaloneStdoutStderrSplit": true,
+  "originalToolOutputIsTheAvailableCombinedChannel": true,
+  "notNativeDockerOrTLSProof": true,
+  "productionRequests": 0
+}

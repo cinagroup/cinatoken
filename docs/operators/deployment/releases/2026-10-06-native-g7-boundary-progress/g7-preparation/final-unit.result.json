@@ -1,0 +1,28 @@
+{
+  "schema": "web-platform-g7-local-command-closed-v1",
+  "id": "unit",
+  "program": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "--import",
+    "tsx",
+    "--test",
+    "scripts/verification/web-platform-g7/admission.test.mjs",
+    "scripts/verification/web-platform-g7/fixture.test.mjs"
+  ],
+  "begin": "2026-10-06T01:59:16.004Z",
+  "endedAt": "2026-10-06T01:59:16.428Z",
+  "closed": true,
+  "actualExit": 0,
+  "signal": null,
+  "errorCode": null,
+  "stdout": {
+    "file": "final-unit.stdout.log",
+    "bytes": 649,
+    "sha256": "d608a8a5f85edf057b5653cf2b7a5a6d51661b6d64a081e2690f392d4c4cbeae"
+  },
+  "stderr": {
+    "file": "final-unit.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

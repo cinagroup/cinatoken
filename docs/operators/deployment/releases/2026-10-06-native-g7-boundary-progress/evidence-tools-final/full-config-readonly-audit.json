@@ -1,0 +1,29 @@
+{
+  "closed": true,
+  "actualAuditOutcome": 0,
+  "configPath": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/archive-config-v2.json",
+  "configBytes": 14088,
+  "configSha256": "16cf36f5fe33cec40cbd262b5c8cf6601fcaa053d9a85baa7572a13253ad0485",
+  "roots": 17,
+  "entries": 2118,
+  "receipts": 554,
+  "aggregates": 6,
+  "exclusions": [
+    {
+      "root": "release-preparation",
+      "directory": "isolated-before",
+      "scope": "entire-explicit-directory-tree",
+      "reason": "CLI execution mirror contains temporary Git state and a node_modules junction. All executed command receipts/raw, generated-before output, source-before and integrity reports are included separately.",
+      "descendantsEnumerated": false
+    },
+    {
+      "root": "release-preparation",
+      "directory": "isolated-after",
+      "scope": "entire-explicit-directory-tree",
+      "reason": "CLI execution mirror contains temporary Git state and a node_modules junction. All executed command receipts/raw, generated-after output, source-after and integrity reports are included separately.",
+      "descendantsEnumerated": false
+    }
+  ],
+  "blockers": [],
+  "realSourceCollectionPerformed": false
+}

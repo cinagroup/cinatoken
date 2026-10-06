@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-06T02:32:00.849Z",
+  "finishedAt": "2026-10-06T02:32:04.069Z",
+  "executable": "C:/Program Files/GitHub CLI/gh.exe",
+  "args": [
+    "run",
+    "view",
+    "37403868149",
+    "--json",
+    "status,conclusion,headSha,jobs,url",
+    "--jq",
+    "{status,conclusion,headSha,url,jobs:[.jobs[]|{name,databaseId,status,conclusion,steps:[.steps[]|select(.conclusion==\"failure\" or .status==\"in_progress\")|{name,number,status,conclusion}]}]}"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-boundary-next-20261006-Zm6Z3E/g7-seed-status-3.stdout.log",
+  "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-boundary-next-20261006-Zm6Z3E/g7-seed-status-3.stderr.log"
+}

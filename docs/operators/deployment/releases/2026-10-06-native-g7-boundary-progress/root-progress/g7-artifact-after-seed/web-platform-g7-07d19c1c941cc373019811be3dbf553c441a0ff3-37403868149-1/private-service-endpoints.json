@@ -1,0 +1,44 @@
+[
+  {
+    "role": "web",
+    "port": 8080,
+    "network": "g7-8a88cf68945741d1843b63f670b4d364-app",
+    "ip": "172.19.0.5"
+  },
+  {
+    "role": "ssr",
+    "port": 8791,
+    "network": "g7-8a88cf68945741d1843b63f670b4d364-app",
+    "ip": "172.19.0.4"
+  },
+  {
+    "role": "admin",
+    "port": 8789,
+    "network": "g7-8a88cf68945741d1843b63f670b4d364-app",
+    "ip": "172.19.0.3"
+  },
+  {
+    "role": "admin",
+    "port": 8789,
+    "network": "g7-8a88cf68945741d1843b63f670b4d364-db",
+    "ip": "172.20.0.4"
+  },
+  {
+    "role": "proxy",
+    "port": 8787,
+    "network": "g7-8a88cf68945741d1843b63f670b4d364-app",
+    "ip": "172.19.0.2"
+  },
+  {
+    "role": "proxy",
+    "port": 8787,
+    "network": "g7-8a88cf68945741d1843b63f670b4d364-db",
+    "ip": "172.20.0.3"
+  },
+  {
+    "role": "pg",
+    "port": 5432,
+    "network": "g7-8a88cf68945741d1843b63f670b4d364-db",
+    "ip": "172.20.0.2"
+  }
+]

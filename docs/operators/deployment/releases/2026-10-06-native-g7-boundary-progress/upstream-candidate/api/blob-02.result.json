@@ -1,0 +1,17 @@
+{
+  "closed": true,
+  "actualExitCode": 0,
+  "signal": null,
+  "spawnError": null,
+  "program": "gh",
+  "arguments": [
+    "api",
+    "repos/QuantumNous/new-api/git/blobs/03a54e2eb7ab97fc7b360e3f6e3eeb32aec6afae"
+  ],
+  "startedAt": "2026-10-06T01:46:42.741Z",
+  "completedAt": "2026-10-06T01:46:44.233Z",
+  "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-upstream-candidate-H03WpG\\api\\blob-02.stdout.json",
+  "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-source-upstream-candidate-H03WpG\\api\\blob-02.stderr.txt",
+  "stdoutBytes": 10355,
+  "stderrBytes": 0
+}

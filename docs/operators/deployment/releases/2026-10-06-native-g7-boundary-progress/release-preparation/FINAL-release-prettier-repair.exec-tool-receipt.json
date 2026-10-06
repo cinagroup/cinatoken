@@ -1,0 +1,18 @@
+{
+  "schema": "cinatoken-original-exec-command-tool-receipts-v1",
+  "provenance": "Exact original completed tools.exec_command results from this task; copies of tool receipts, no commands rerun and no child status inferred from a summary.",
+  "archiveOriginalCiFailure": {
+    "chunk_id": "081598",
+    "wall_time_seconds": 0.3541319,
+    "exit_code": 0,
+    "original_token_count": 27,
+    "output": "{\"actualArchiveOutcome\":0,\"copiedFiles\":3,\"originalDownloadActualExit\":0,\"releaseFailurePreserved\":true}\n"
+  },
+  "finalProducer": {
+    "chunk_id": "fc2ea8",
+    "wall_time_seconds": 0.563185,
+    "exit_code": 0,
+    "original_token_count": 72,
+    "output": "{\"actualOutcome\":0,\"report\":\"C:\\\\Users\\\\cina\\\\AppData\\\\Local\\\\Temp\\\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\\\FINAL-release-prettier-repair.json\",\"bytes\":8721,\"sha256\":\"56dd3e6d26db93e241b9e1649c5b9004c335df7e0f8000b30e588f997d22f907\",\"commandReceipts\":30}\n"
+  }
+}

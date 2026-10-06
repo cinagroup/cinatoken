@@ -1,0 +1,873 @@
+{
+  "schema": "cinatoken-immutable-verification-metadata-bundle-v1",
+  "at": "2026-10-06T03:01:46.746Z",
+  "collectionOnly": true,
+  "gatePassDerived": false,
+  "sourceDirectory": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7",
+  "copyScope": "All regular top-level files as observed before this index was created; output evidence directory is already indexed separately by the primary report.",
+  "files": 86,
+  "entries": [
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/add-final-tools-config.mjs",
+      "relative": "add-final-tools-config.mjs",
+      "encoding": "identity",
+      "originalBytes": 1242,
+      "originalSha256": "37720094af520f5708f87f965c10e28a023d85eedef9908d074eb35d98bcd3bd",
+      "storedBytes": 1242,
+      "storedSha256": "37720094af520f5708f87f965c10e28a023d85eedef9908d074eb35d98bcd3bd",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/add-first-tools-config.mjs",
+      "relative": "add-first-tools-config.mjs",
+      "encoding": "identity",
+      "originalBytes": 1337,
+      "originalSha256": "287b21f79d4b7c20e3a3e2fd62682c0723738e8aa7197d432a5fadc0c929f095",
+      "storedBytes": 1337,
+      "storedSha256": "287b21f79d4b7c20e3a3e2fd62682c0723738e8aa7197d432a5fadc0c929f095",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/add-latest-evidence-peer-config.mjs",
+      "relative": "add-latest-evidence-peer-config.mjs",
+      "encoding": "identity",
+      "originalBytes": 957,
+      "originalSha256": "1717d63dcc1b8bfe132f2b918ea955d0e0a622755e89950197d960aa68ea2dde",
+      "storedBytes": 957,
+      "storedSha256": "1717d63dcc1b8bfe132f2b918ea955d0e0a622755e89950197d960aa68ea2dde",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/archive-config-final.json",
+      "relative": "archive-config-final.json",
+      "encoding": "identity",
+      "originalBytes": 6751,
+      "originalSha256": "514aa70a907148c9f413843cdf6a0d9301bfd4c8d32d874a1d4c73f508881823",
+      "storedBytes": 6751,
+      "storedSha256": "514aa70a907148c9f413843cdf6a0d9301bfd4c8d32d874a1d4c73f508881823",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/archive-config-prepared.json",
+      "relative": "archive-config-prepared.json",
+      "encoding": "identity",
+      "originalBytes": 5017,
+      "originalSha256": "ea6e4bca97cc45a8ce7931ae65610b9eb17e4345a6a0b3c11e63ce116e54e896",
+      "storedBytes": 5017,
+      "storedSha256": "ea6e4bca97cc45a8ce7931ae65610b9eb17e4345a6a0b3c11e63ce116e54e896",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/archive-config-v2.json",
+      "relative": "archive-config-v2.json",
+      "encoding": "identity",
+      "originalBytes": 14088,
+      "originalSha256": "16cf36f5fe33cec40cbd262b5c8cf6601fcaa053d9a85baa7572a13253ad0485",
+      "storedBytes": 14088,
+      "storedSha256": "16cf36f5fe33cec40cbd262b5c8cf6601fcaa053d9a85baa7572a13253ad0485",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/archive-config-v2.result.json",
+      "relative": "archive-config-v2.result.json",
+      "encoding": "identity",
+      "originalBytes": 646,
+      "originalSha256": "55ee68d546dc8948bf705b616927fb94044dad61becd37a75b0b8b2fc1e91e0d",
+      "storedBytes": 646,
+      "storedSha256": "55ee68d546dc8948bf705b616927fb94044dad61becd37a75b0b8b2fc1e91e0d",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/archive-config-v2.stderr.log",
+      "relative": "archive-config-v2.stderr.log",
+      "encoding": "identity",
+      "originalBytes": 0,
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "storedBytes": 0,
+      "storedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/archive-config-v2.stdout.log",
+      "relative": "archive-config-v2.stdout.log",
+      "encoding": "identity",
+      "originalBytes": 1076,
+      "originalSha256": "52822e8a79c61fac381d5197b1cb709b0b84c5a950fd6f14db3eab72cb77b1ab",
+      "storedBytes": 1076,
+      "storedSha256": "52822e8a79c61fac381d5197b1cb709b0b84c5a950fd6f14db3eab72cb77b1ab",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/archive-config-v3.json",
+      "relative": "archive-config-v3.json",
+      "encoding": "identity",
+      "originalBytes": 20922,
+      "originalSha256": "ed80a8d8313bc54a9540f2974703d2277de2609b357f4224fc5354ecb93bdba7",
+      "storedBytes": 20922,
+      "storedSha256": "ed80a8d8313bc54a9540f2974703d2277de2609b357f4224fc5354ecb93bdba7",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/archive-config-v4.json",
+      "relative": "archive-config-v4.json",
+      "encoding": "identity",
+      "originalBytes": 21193,
+      "originalSha256": "5fc0019b1e8165497463871e9070f4d4321d246907e2235a0bfbaf5cb9cc320a",
+      "storedBytes": 21193,
+      "storedSha256": "5fc0019b1e8165497463871e9070f4d4321d246907e2235a0bfbaf5cb9cc320a",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/archive-config-v5.json",
+      "relative": "archive-config-v5.json",
+      "encoding": "identity",
+      "originalBytes": 21640,
+      "originalSha256": "6d556cfd1a449c5edee0102ef93341537097b9dc07e1edc2a5abe0e5c9644895",
+      "storedBytes": 21640,
+      "storedSha256": "6d556cfd1a449c5edee0102ef93341537097b9dc07e1edc2a5abe0e5c9644895",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/checklist-before-count-correction.md",
+      "relative": "checklist-before-count-correction.md.gz",
+      "encoding": "gzip",
+      "originalBytes": 789007,
+      "originalSha256": "b26e4bd40adc058cfee59a53d8c9275ecb0d9da480f0ef1cbd6ec935b337b67e",
+      "storedBytes": 325498,
+      "storedSha256": "a82d6f3ee73fa070293ba80d71d1331daca0803985cd1f5c74d4e87ddb9d50e3",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/checklist-count-correction-proof.json",
+      "relative": "checklist-count-correction-proof.json",
+      "encoding": "identity",
+      "originalBytes": 555,
+      "originalSha256": "e72d7f13e0e8f8609f6e090e759eddd65b0d1eea1eb3adb9aea62477f169eb35",
+      "storedBytes": 555,
+      "storedSha256": "e72d7f13e0e8f8609f6e090e759eddd65b0d1eea1eb3adb9aea62477f169eb35",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/complete-evidence-collection.result.json",
+      "relative": "complete-evidence-collection.result.json",
+      "encoding": "identity",
+      "originalBytes": 809,
+      "originalSha256": "a69526793256c2da50501c710a7f38a901ffc9dd18829c0b908a0de8a9524e82",
+      "storedBytes": 809,
+      "storedSha256": "a69526793256c2da50501c710a7f38a901ffc9dd18829c0b908a0de8a9524e82",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/complete-evidence-collection.stderr.log",
+      "relative": "complete-evidence-collection.stderr.log",
+      "encoding": "identity",
+      "originalBytes": 0,
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "storedBytes": 0,
+      "storedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/complete-evidence-collection.stdout.log",
+      "relative": "complete-evidence-collection.stdout.log",
+      "encoding": "identity",
+      "originalBytes": 417,
+      "originalSha256": "5bd46f202d0f89310054427b003ac276083bda7a3caf5bfa428da7067029c564",
+      "storedBytes": 417,
+      "storedSha256": "5bd46f202d0f89310054427b003ac276083bda7a3caf5bfa428da7067029c564",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/complete-repository-evidence-verification.result.json",
+      "relative": "complete-repository-evidence-verification.result.json",
+      "encoding": "identity",
+      "originalBytes": 958,
+      "originalSha256": "ab8376d4c75837d214b2bd6bbe57525890ceae4032463cb85efc8e582433710e",
+      "storedBytes": 958,
+      "storedSha256": "ab8376d4c75837d214b2bd6bbe57525890ceae4032463cb85efc8e582433710e",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/complete-repository-evidence-verification.stderr.log",
+      "relative": "complete-repository-evidence-verification.stderr.log",
+      "encoding": "identity",
+      "originalBytes": 0,
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "storedBytes": 0,
+      "storedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/complete-repository-evidence-verification.stdout.log",
+      "relative": "complete-repository-evidence-verification.stdout.log",
+      "encoding": "identity",
+      "originalBytes": 422,
+      "originalSha256": "7204d4b8602613e273cb4bda91f35da5ce7b18351a0bcf3a9117f98ebc463000",
+      "storedBytes": 422,
+      "storedSha256": "7204d4b8602613e273cb4bda91f35da5ce7b18351a0bcf3a9117f98ebc463000",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/complete-temp-evidence-verification-v2.result.json",
+      "relative": "complete-temp-evidence-verification-v2.result.json",
+      "encoding": "identity",
+      "originalBytes": 994,
+      "originalSha256": "2ef954c5459a7e6684ab7fb0368cf35a8fd71aab010c1acbe49ef678a6234f85",
+      "storedBytes": 994,
+      "storedSha256": "2ef954c5459a7e6684ab7fb0368cf35a8fd71aab010c1acbe49ef678a6234f85",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/complete-temp-evidence-verification-v2.stderr.log",
+      "relative": "complete-temp-evidence-verification-v2.stderr.log",
+      "encoding": "identity",
+      "originalBytes": 0,
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "storedBytes": 0,
+      "storedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/complete-temp-evidence-verification-v2.stdout.log",
+      "relative": "complete-temp-evidence-verification-v2.stdout.log",
+      "encoding": "identity",
+      "originalBytes": 471,
+      "originalSha256": "3d75de5c369ec92217e2b61641fbf309032e0eb975aab7fd2301cc2fcea05d86",
+      "storedBytes": 471,
+      "storedSha256": "3d75de5c369ec92217e2b61641fbf309032e0eb975aab7fd2301cc2fcea05d86",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/complete-temp-evidence-verification.result.json",
+      "relative": "complete-temp-evidence-verification.result.json",
+      "encoding": "identity",
+      "originalBytes": 835,
+      "originalSha256": "7bc0a2c24ae5ed864f6b41c654b21c673bc25b1db790349a77c1a31e2248fcd6",
+      "storedBytes": 835,
+      "storedSha256": "7bc0a2c24ae5ed864f6b41c654b21c673bc25b1db790349a77c1a31e2248fcd6",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/complete-temp-evidence-verification.stderr.log",
+      "relative": "complete-temp-evidence-verification.stderr.log",
+      "encoding": "identity",
+      "originalBytes": 957,
+      "originalSha256": "ce57fc9a7c3901cc5a6d6d863e55771e83c09c9e57fe18e1e5aa122439406538",
+      "storedBytes": 957,
+      "storedSha256": "ce57fc9a7c3901cc5a6d6d863e55771e83c09c9e57fe18e1e5aa122439406538",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/complete-temp-evidence-verification.stdout.log",
+      "relative": "complete-temp-evidence-verification.stdout.log",
+      "encoding": "identity",
+      "originalBytes": 0,
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "storedBytes": 0,
+      "storedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/config-builder-syntax.result.json",
+      "relative": "config-builder-syntax.result.json",
+      "encoding": "identity",
+      "originalBytes": 666,
+      "originalSha256": "73677bf843970bf307637e26703bd0b56d3722c1fb747175639adc7e4fee21f5",
+      "storedBytes": 666,
+      "storedSha256": "73677bf843970bf307637e26703bd0b56d3722c1fb747175639adc7e4fee21f5",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/config-builder-syntax.stderr.log",
+      "relative": "config-builder-syntax.stderr.log",
+      "encoding": "identity",
+      "originalBytes": 0,
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "storedBytes": 0,
+      "storedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/config-builder-syntax.stdout.log",
+      "relative": "config-builder-syntax.stdout.log",
+      "encoding": "identity",
+      "originalBytes": 0,
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "storedBytes": 0,
+      "storedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/copy-evidence-to-repository.mjs",
+      "relative": "copy-evidence-to-repository.mjs",
+      "encoding": "identity",
+      "originalBytes": 1856,
+      "originalSha256": "bb9296bf39de717182e755bf733e674bb939b1049e1789198dba8b7493e103db",
+      "storedBytes": 1856,
+      "storedSha256": "bb9296bf39de717182e755bf733e674bb939b1049e1789198dba8b7493e103db",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/copy-verification-bundle.mjs",
+      "relative": "copy-verification-bundle.mjs",
+      "encoding": "identity",
+      "originalBytes": 2099,
+      "originalSha256": "376aab2592eeb34be9b0a6f8fc40df23a939c7f1dfc5c5a35b3549e29189e222",
+      "storedBytes": 2099,
+      "storedSha256": "376aab2592eeb34be9b0a6f8fc40df23a939c7f1dfc5c5a35b3549e29189e222",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/correct-checklist-count-labels.mjs",
+      "relative": "correct-checklist-count-labels.mjs",
+      "encoding": "identity",
+      "originalBytes": 2640,
+      "originalSha256": "66ef52c611bd9d4417c094f25acaeaded04f3e8d207d6a283639f97434075535",
+      "storedBytes": 2640,
+      "storedSha256": "66ef52c611bd9d4417c094f25acaeaded04f3e8d207d6a283639f97434075535",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/final-archive-config.result.json",
+      "relative": "final-archive-config.result.json",
+      "encoding": "identity",
+      "originalBytes": 758,
+      "originalSha256": "ebe937ce3900874958173ff51f38969839d4dc170168f784b8d36f5db5171f7c",
+      "storedBytes": 758,
+      "storedSha256": "ebe937ce3900874958173ff51f38969839d4dc170168f784b8d36f5db5171f7c",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/final-archive-config.stderr.log",
+      "relative": "final-archive-config.stderr.log",
+      "encoding": "identity",
+      "originalBytes": 0,
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "storedBytes": 0,
+      "storedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/final-archive-config.stdout.log",
+      "relative": "final-archive-config.stdout.log",
+      "encoding": "identity",
+      "originalBytes": 128,
+      "originalSha256": "f7a0ae7de253f91c36a8a7c16743d75e58fc6200d729292f835bc0dba44cf208",
+      "storedBytes": 128,
+      "storedSha256": "f7a0ae7de253f91c36a8a7c16743d75e58fc6200d729292f835bc0dba44cf208",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/final-checklist-archive-update.result.json",
+      "relative": "final-checklist-archive-update.result.json",
+      "encoding": "identity",
+      "originalBytes": 678,
+      "originalSha256": "00992b2fd55aeed7d8078965fa9e35be9e7231c95eca5cb5faba0f11c6d33b01",
+      "storedBytes": 678,
+      "storedSha256": "00992b2fd55aeed7d8078965fa9e35be9e7231c95eca5cb5faba0f11c6d33b01",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/final-checklist-archive-update.stderr.log",
+      "relative": "final-checklist-archive-update.stderr.log",
+      "encoding": "identity",
+      "originalBytes": 0,
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "storedBytes": 0,
+      "storedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/final-checklist-archive-update.stdout.log",
+      "relative": "final-checklist-archive-update.stdout.log",
+      "encoding": "identity",
+      "originalBytes": 478,
+      "originalSha256": "822f4877077a00fe0cdb3562299676da3ce09e7e5dfb0827aa91743c49a05fdb",
+      "storedBytes": 478,
+      "storedSha256": "822f4877077a00fe0cdb3562299676da3ce09e7e5dfb0827aa91743c49a05fdb",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/final-checklist-with-archive-proof.json",
+      "relative": "final-checklist-with-archive-proof.json",
+      "encoding": "identity",
+      "originalBytes": 564,
+      "originalSha256": "0a16256384121c2f3e1bcd82b5881a7bf98a5b3a87b6472b9d5b8303c43128f8",
+      "storedBytes": 564,
+      "storedSha256": "0a16256384121c2f3e1bcd82b5881a7bf98a5b3a87b6472b9d5b8303c43128f8",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/final-full-evidence-input-audit.json",
+      "relative": "final-full-evidence-input-audit.json.gz",
+      "encoding": "gzip",
+      "originalBytes": 2746519,
+      "originalSha256": "434eae420dfed27f77beaa672afba40fd3cf9ebefc393f5d2db9db3aaf8daac8",
+      "storedBytes": 148248,
+      "storedSha256": "2022019975780c1519f443d4d9bcd1d78e7804f5377158c257d0dd0d5bd060dd",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/final-full-evidence-input-audit.result.json",
+      "relative": "final-full-evidence-input-audit.result.json",
+      "encoding": "identity",
+      "originalBytes": 956,
+      "originalSha256": "f34ebb8652ad2bbb61b0125bf6b70e03398e039f7c5a980e5d93103fd94d6c59",
+      "storedBytes": 956,
+      "storedSha256": "f34ebb8652ad2bbb61b0125bf6b70e03398e039f7c5a980e5d93103fd94d6c59",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/final-full-evidence-input-audit.stderr.log",
+      "relative": "final-full-evidence-input-audit.stderr.log",
+      "encoding": "identity",
+      "originalBytes": 0,
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "storedBytes": 0,
+      "storedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/final-full-evidence-input-audit.stdout.log",
+      "relative": "final-full-evidence-input-audit.stdout.log",
+      "encoding": "identity",
+      "originalBytes": 62,
+      "originalSha256": "2c60971d7841627a64acce9518a7022669bf599d321d3a943366602c6869879f",
+      "storedBytes": 62,
+      "storedSha256": "2c60971d7841627a64acce9518a7022669bf599d321d3a943366602c6869879f",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/final-tools-config.result.json",
+      "relative": "final-tools-config.result.json",
+      "encoding": "identity",
+      "originalBytes": 644,
+      "originalSha256": "7096ac721bfdd7c379330d1dfd019991c8f371194f80ca26d8f8f7ff42d10bd9",
+      "storedBytes": 644,
+      "storedSha256": "7096ac721bfdd7c379330d1dfd019991c8f371194f80ca26d8f8f7ff42d10bd9",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/final-tools-config.stderr.log",
+      "relative": "final-tools-config.stderr.log",
+      "encoding": "identity",
+      "originalBytes": 0,
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "storedBytes": 0,
+      "storedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/final-tools-config.stdout.log",
+      "relative": "final-tools-config.stdout.log",
+      "encoding": "identity",
+      "originalBytes": 51,
+      "originalSha256": "8692e571c6757e750799b918dbe506c23268aaee38839c7e855b454bf71987cf",
+      "storedBytes": 51,
+      "storedSha256": "8692e571c6757e750799b918dbe506c23268aaee38839c7e855b454bf71987cf",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/finalize-archive-config-v2.mjs",
+      "relative": "finalize-archive-config-v2.mjs",
+      "encoding": "identity",
+      "originalBytes": 3000,
+      "originalSha256": "1fd7d8dfbdbde3ca7b63f4db48459fc727a96305892e4f82ca7e78bdaf3fc101",
+      "storedBytes": 3000,
+      "storedSha256": "1fd7d8dfbdbde3ca7b63f4db48459fc727a96305892e4f82ca7e78bdaf3fc101",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/finalize-archive-config.mjs",
+      "relative": "finalize-archive-config.mjs",
+      "encoding": "identity",
+      "originalBytes": 2330,
+      "originalSha256": "66882fb5c062cbaaa0228f3cab5929346d6ae9b029b01e1523ef9ff7943b8890",
+      "storedBytes": 2330,
+      "storedSha256": "66882fb5c062cbaaa0228f3cab5929346d6ae9b029b01e1523ef9ff7943b8890",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/first-tools-config.result.json",
+      "relative": "first-tools-config.result.json",
+      "encoding": "identity",
+      "originalBytes": 644,
+      "originalSha256": "4d82cf091cc92db1fb022643d966442b7b4166553e3259b0fd532efaf52a53ee",
+      "storedBytes": 644,
+      "storedSha256": "4d82cf091cc92db1fb022643d966442b7b4166553e3259b0fd532efaf52a53ee",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/first-tools-config.stderr.log",
+      "relative": "first-tools-config.stderr.log",
+      "encoding": "identity",
+      "originalBytes": 0,
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "storedBytes": 0,
+      "storedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/first-tools-config.stdout.log",
+      "relative": "first-tools-config.stdout.log",
+      "encoding": "identity",
+      "originalBytes": 84,
+      "originalSha256": "6db1038ae0aa47263977bc7b5b0fdd218b034a4c585038b23a120867480ed78f",
+      "storedBytes": 84,
+      "storedSha256": "6db1038ae0aa47263977bc7b5b0fdd218b034a4c585038b23a120867480ed78f",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/full-evidence-input-audit-v2.json",
+      "relative": "full-evidence-input-audit-v2.json.gz",
+      "encoding": "gzip",
+      "originalBytes": 2694645,
+      "originalSha256": "843996664e8a424266ddefef3367802fde5be146f9320693bd4dd7faaaa64ea0",
+      "storedBytes": 145063,
+      "storedSha256": "d22d07b7ebe1cd42c73b6254e393ebe8e4c0224e3487c85decfbd2f2c0658a86",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/full-evidence-input-audit-v2.result.json",
+      "relative": "full-evidence-input-audit-v2.result.json",
+      "encoding": "identity",
+      "originalBytes": 947,
+      "originalSha256": "b882072a89504bc868388181668951ba9125460078b398a47782f73a67f63c90",
+      "storedBytes": 947,
+      "storedSha256": "b882072a89504bc868388181668951ba9125460078b398a47782f73a67f63c90",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/full-evidence-input-audit-v2.stderr.log",
+      "relative": "full-evidence-input-audit-v2.stderr.log",
+      "encoding": "identity",
+      "originalBytes": 0,
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "storedBytes": 0,
+      "storedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/full-evidence-input-audit-v2.stdout.log",
+      "relative": "full-evidence-input-audit-v2.stdout.log",
+      "encoding": "identity",
+      "originalBytes": 62,
+      "originalSha256": "a5a74ba61f70dd59ed07d09ec51df828da7ecd13d9c61ab72b6e2a07522da932",
+      "storedBytes": 62,
+      "storedSha256": "a5a74ba61f70dd59ed07d09ec51df828da7ecd13d9c61ab72b6e2a07522da932",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/full-evidence-input-audit.json",
+      "relative": "full-evidence-input-audit.json.gz",
+      "encoding": "gzip",
+      "originalBytes": 2567469,
+      "originalSha256": "5bb85c135c866af9e38796342121fa5cf4b8e09bd94c1e216c631e33fc3b28eb",
+      "storedBytes": 138244,
+      "storedSha256": "e10a62d5ad0acf27ed8229095be780670e43e085c645a455625c477b3f04670b",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/full-evidence-input-audit.result.json",
+      "relative": "full-evidence-input-audit.result.json",
+      "encoding": "identity",
+      "originalBytes": 938,
+      "originalSha256": "652c54d46e58085d6b5183b79b7e2bc0bcfd46fb6d1ade449616dc98fb833ed3",
+      "storedBytes": 938,
+      "storedSha256": "652c54d46e58085d6b5183b79b7e2bc0bcfd46fb6d1ade449616dc98fb833ed3",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/full-evidence-input-audit.stderr.log",
+      "relative": "full-evidence-input-audit.stderr.log",
+      "encoding": "identity",
+      "originalBytes": 0,
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "storedBytes": 0,
+      "storedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/full-evidence-input-audit.stdout.log",
+      "relative": "full-evidence-input-audit.stdout.log",
+      "encoding": "identity",
+      "originalBytes": 9290,
+      "originalSha256": "3740dc9b16eb68316bf089979422d9115cfc13025ebe86d205a3c05a0bf91d19",
+      "storedBytes": 9290,
+      "storedSha256": "3740dc9b16eb68316bf089979422d9115cfc13025ebe86d205a3c05a0bf91d19",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/git-working-before-archive.result.json",
+      "relative": "git-working-before-archive.result.json",
+      "encoding": "identity",
+      "originalBytes": 556,
+      "originalSha256": "59da981298750fadc41d085736d5286a352c2b9ce71cfefadee64d381cfdb22f",
+      "storedBytes": 556,
+      "storedSha256": "59da981298750fadc41d085736d5286a352c2b9ce71cfefadee64d381cfdb22f",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/git-working-before-archive.stderr.log",
+      "relative": "git-working-before-archive.stderr.log",
+      "encoding": "identity",
+      "originalBytes": 160,
+      "originalSha256": "6e1eceb7157a6dd83e27b00cc96938a50132ed7fadf81d3f0954f8257e1ba406",
+      "storedBytes": 160,
+      "storedSha256": "6e1eceb7157a6dd83e27b00cc96938a50132ed7fadf81d3f0954f8257e1ba406",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/git-working-before-archive.stdout.log",
+      "relative": "git-working-before-archive.stdout.log",
+      "encoding": "identity",
+      "originalBytes": 58,
+      "originalSha256": "e1e49e5808bccb15b7c114eb6e99ad887ba97520a7cd19ea5fb64deab3a8f611",
+      "storedBytes": 58,
+      "storedSha256": "e1e49e5808bccb15b7c114eb6e99ad887ba97520a7cd19ea5fb64deab3a8f611",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/latest-evidence-peer-config.result.json",
+      "relative": "latest-evidence-peer-config.result.json",
+      "encoding": "identity",
+      "originalBytes": 671,
+      "originalSha256": "a67eb2ff1015a9261f274aa9437a6f02546fd158ef239f387e729c7d38f80173",
+      "storedBytes": 671,
+      "storedSha256": "a67eb2ff1015a9261f274aa9437a6f02546fd158ef239f387e729c7d38f80173",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/latest-evidence-peer-config.stderr.log",
+      "relative": "latest-evidence-peer-config.stderr.log",
+      "encoding": "identity",
+      "originalBytes": 0,
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "storedBytes": 0,
+      "storedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/latest-evidence-peer-config.stdout.log",
+      "relative": "latest-evidence-peer-config.stdout.log",
+      "encoding": "identity",
+      "originalBytes": 86,
+      "originalSha256": "3f84d2885458bc07c6514260111a68e5feb3dd827c5d53a7236b3959128b30ff",
+      "storedBytes": 86,
+      "storedSha256": "3f84d2885458bc07c6514260111a68e5feb3dd827c5d53a7236b3959128b30ff",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/md-before-archive-diff-check.result.json",
+      "relative": "md-before-archive-diff-check.result.json",
+      "encoding": "identity",
+      "originalBytes": 558,
+      "originalSha256": "90afa406c9f8ae0fc99eeabceecd447641bc022afafc48bb0c8d551f72047d5b",
+      "storedBytes": 558,
+      "storedSha256": "90afa406c9f8ae0fc99eeabceecd447641bc022afafc48bb0c8d551f72047d5b",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/md-before-archive-diff-check.stderr.log",
+      "relative": "md-before-archive-diff-check.stderr.log",
+      "encoding": "identity",
+      "originalBytes": 0,
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "storedBytes": 0,
+      "storedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/md-before-archive-diff-check.stdout.log",
+      "relative": "md-before-archive-diff-check.stdout.log",
+      "encoding": "identity",
+      "originalBytes": 0,
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "storedBytes": 0,
+      "storedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/md-count-correction.result.json",
+      "relative": "md-count-correction.result.json",
+      "encoding": "identity",
+      "originalBytes": 654,
+      "originalSha256": "85195dedeec63825fd26e63af6582ffe2adc8d088c5c36e063866a3e49c08b63",
+      "storedBytes": 654,
+      "storedSha256": "85195dedeec63825fd26e63af6582ffe2adc8d088c5c36e063866a3e49c08b63",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/md-count-correction.stderr.log",
+      "relative": "md-count-correction.stderr.log",
+      "encoding": "identity",
+      "originalBytes": 0,
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "storedBytes": 0,
+      "storedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/md-count-correction.stdout.log",
+      "relative": "md-count-correction.stdout.log",
+      "encoding": "identity",
+      "originalBytes": 465,
+      "originalSha256": "91b79e33b3dc88d4e873be25fae63d5022da772f4fc66c72a3d8bb7a10cf41e3",
+      "storedBytes": 465,
+      "storedSha256": "91b79e33b3dc88d4e873be25fae63d5022da772f4fc66c72a3d8bb7a10cf41e3",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/repository-evidence-transfer-proof.json",
+      "relative": "repository-evidence-transfer-proof.json",
+      "encoding": "identity",
+      "originalBytes": 349,
+      "originalSha256": "88c11cf05b66c08c7cc517263203e2d2144b4b39a1772d2e066bd659db228dfd",
+      "storedBytes": 349,
+      "storedSha256": "88c11cf05b66c08c7cc517263203e2d2144b4b39a1772d2e066bd659db228dfd",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/repository-evidence-transfer.result.json",
+      "relative": "repository-evidence-transfer.result.json",
+      "encoding": "identity",
+      "originalBytes": 669,
+      "originalSha256": "ff8f120d2d4019b31d8fc6ed69969d45a1cc72811752c8955542bd0f4390e387",
+      "storedBytes": 669,
+      "storedSha256": "ff8f120d2d4019b31d8fc6ed69969d45a1cc72811752c8955542bd0f4390e387",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/repository-evidence-transfer.stderr.log",
+      "relative": "repository-evidence-transfer.stderr.log",
+      "encoding": "identity",
+      "originalBytes": 0,
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "storedBytes": 0,
+      "storedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/repository-evidence-transfer.stdout.log",
+      "relative": "repository-evidence-transfer.stdout.log",
+      "encoding": "identity",
+      "originalBytes": 304,
+      "originalSha256": "3502fb0b8abe9bbdd9dbff856cc07399f683dd12c4f9911b1a0954245c7f2602",
+      "storedBytes": 304,
+      "storedSha256": "3502fb0b8abe9bbdd9dbff856cc07399f683dd12c4f9911b1a0954245c7f2602",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/run-command.mjs",
+      "relative": "run-command.mjs",
+      "encoding": "identity",
+      "originalBytes": 1818,
+      "originalSha256": "7320fe67e82f50269e657ccc0c4790cceb4be6ef5f1bc002351aeab561f6ad69",
+      "storedBytes": 1818,
+      "storedSha256": "7320fe67e82f50269e657ccc0c4790cceb4be6ef5f1bc002351aeab561f6ad69",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/staged-auditor-syntax.result.json",
+      "relative": "staged-auditor-syntax.result.json",
+      "encoding": "identity",
+      "originalBytes": 662,
+      "originalSha256": "27b631dbc3a613299ea9b8ca0502c6602ff451a090998c598c96840c3d1e4da2",
+      "storedBytes": 662,
+      "storedSha256": "27b631dbc3a613299ea9b8ca0502c6602ff451a090998c598c96840c3d1e4da2",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/staged-auditor-syntax.stderr.log",
+      "relative": "staged-auditor-syntax.stderr.log",
+      "encoding": "identity",
+      "originalBytes": 0,
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "storedBytes": 0,
+      "storedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/staged-auditor-syntax.stdout.log",
+      "relative": "staged-auditor-syntax.stdout.log",
+      "encoding": "identity",
+      "originalBytes": 0,
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "storedBytes": 0,
+      "storedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/transfer-script-syntax.result.json",
+      "relative": "transfer-script-syntax.result.json",
+      "encoding": "identity",
+      "originalBytes": 672,
+      "originalSha256": "bad1fc3e1f6ccbd3aa968fbe9639389855163f4f485d4ad55791794fb0279acf",
+      "storedBytes": 672,
+      "storedSha256": "bad1fc3e1f6ccbd3aa968fbe9639389855163f4f485d4ad55791794fb0279acf",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/transfer-script-syntax.stderr.log",
+      "relative": "transfer-script-syntax.stderr.log",
+      "encoding": "identity",
+      "originalBytes": 0,
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "storedBytes": 0,
+      "storedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/transfer-script-syntax.stdout.log",
+      "relative": "transfer-script-syntax.stdout.log",
+      "encoding": "identity",
+      "originalBytes": 0,
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "storedBytes": 0,
+      "storedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/update-checklist-archive-closure.mjs",
+      "relative": "update-checklist-archive-closure.mjs",
+      "encoding": "identity",
+      "originalBytes": 3976,
+      "originalSha256": "11608c04a2123554051b76d504dcb01ab86a2687b243663a5be07ca29273a7ef",
+      "storedBytes": 3976,
+      "storedSha256": "11608c04a2123554051b76d504dcb01ab86a2687b243663a5be07ca29273a7ef",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/verified-repository-evidence.json",
+      "relative": "verified-repository-evidence.json",
+      "encoding": "identity",
+      "originalBytes": 467,
+      "originalSha256": "311c3ad65c96867a0c70b5c6b81579177126fabd2307e9b3ad9652132f290def",
+      "storedBytes": 467,
+      "storedSha256": "311c3ad65c96867a0c70b5c6b81579177126fabd2307e9b3ad9652132f290def",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/verified-temp-evidence.json",
+      "relative": "verified-temp-evidence.json",
+      "encoding": "identity",
+      "originalBytes": 516,
+      "originalSha256": "20548d8ae7a2ce33dbf05189429c0f41d90ad5bb471bdc3412e5cfdc445fd7fb",
+      "storedBytes": 516,
+      "storedSha256": "20548d8ae7a2ce33dbf05189429c0f41d90ad5bb471bdc3412e5cfdc445fd7fb",
+      "roundtripExact": true
+    },
+    {
+      "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/verify-final-staged.mjs",
+      "relative": "verify-final-staged.mjs",
+      "encoding": "identity",
+      "originalBytes": 4118,
+      "originalSha256": "6b55ef7a08be6e57b70f63ef4ab846be34f77853052e326dc09d99c4c6777f71",
+      "storedBytes": 4118,
+      "storedSha256": "6b55ef7a08be6e57b70f63ef4ab846be34f77853052e326dc09d99c4c6777f71",
+      "roundtripExact": true
+    }
+  ],
+  "productionRequests": 0,
+  "fullGoalComplete": false
+}

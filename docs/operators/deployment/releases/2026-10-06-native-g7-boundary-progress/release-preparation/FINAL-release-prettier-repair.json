@@ -1,0 +1,233 @@
+{
+  "schema": "cinatoken-changesets-prettier-repair-v1",
+  "createdAt": "2026-10-06T02:11:21.092Z",
+  "closed": true,
+  "actualOutcome": 0,
+  "repository": "C:/cinagroup/cinatoken",
+  "taskRoot": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2",
+  "authorizedBase": "4e2ed5196a26cc43c2a3cb7ea852f1fc6284ff27",
+  "preparedAtHead": "67f8b3df2f2b6e8159806767ecce1efa1904d27a",
+  "observedHeadAtSeal": "67f8b3df2f2b6e8159806767ecce1efa1904d27a",
+  "nodeVersion": "v24.14.1",
+  "installed": {
+    "@changesets/cli": "2.31.0",
+    "@changesets/apply-release-plan": "7.1.1",
+    "@changesets/config": "3.1.4",
+    "@changesets/changelog-github": "0.5.2",
+    "prettier": "2.8.8"
+  },
+  "changedSourceFiles": [
+    {
+      "relative": ".changeset/config.json",
+      "bytes": 446,
+      "sha256": "854a0cf774e1fe3299c94dcd00e5b55d9eb0ac96441225f9a723a002eb7ffd1b"
+    },
+    {
+      "relative": ".changeset/README.md",
+      "bytes": 3431,
+      "sha256": "f6e68489b02a206a5a665cf1195dd3445a5b2586870cc1373e5e4c94c263b24d"
+    }
+  ],
+  "unchangedSourceInputCount": 17,
+  "unchangedSourceInputs": [
+    {
+      "relative": "package.json",
+      "exists": true,
+      "bytes": 5550,
+      "sha256": "6454126bb47e39c135d3178ce3500b0901581b5b4f9b4b0067ace88e894da3aa"
+    },
+    {
+      "relative": "packages/core/package.json",
+      "exists": true,
+      "bytes": 13537,
+      "sha256": "eef3793fdc1098c901c18a0e97160d4204fb765a786c3445bc558ce7efc49e1e"
+    },
+    {
+      "relative": "packages/tool-engines/package.json",
+      "exists": true,
+      "bytes": 856,
+      "sha256": "82e4981558fca23d8bf5766a64745a084aa33a1df38a0569554b4bd4b534156e"
+    },
+    {
+      "relative": "packages/proxy/package.json",
+      "exists": true,
+      "bytes": 18988,
+      "sha256": "14e2d996c5d81a9ec101e9506dc05d1693c05911aad146fb062742c0c4aca2a1"
+    },
+    {
+      "relative": "packages/admin/package.json",
+      "exists": true,
+      "bytes": 4163,
+      "sha256": "fef666db8d2ed6876f90b48a51b6a636d7b342dab1cae1e0dc82e72657df8188"
+    },
+    {
+      "relative": "packages/web/package.json",
+      "exists": true,
+      "bytes": 4490,
+      "sha256": "dd231d8595d364fd70999f3e84414cc60bb50d41c700572607d5ec717b84c4bd"
+    },
+    {
+      "relative": "packages/chain-worker/package.json",
+      "exists": true,
+      "bytes": 714,
+      "sha256": "841388960dbfbf598768ec8eaf2fcea39abee114952ff467e8f3697464f5809a"
+    },
+    {
+      "relative": "CHANGELOG.md",
+      "exists": true,
+      "bytes": 52356,
+      "sha256": "e20e2dd52096a6009d5b5e127a36aada9632eb127f84a0d5b76b3a95d511ad47"
+    },
+    {
+      "relative": "packages/core/CHANGELOG.md",
+      "exists": true,
+      "bytes": 27280,
+      "sha256": "f07c73c37389001396d3d76d006ea913ff2f24e70bd2005a8cdf358e1f89cf5e"
+    },
+    {
+      "relative": "packages/tool-engines/CHANGELOG.md",
+      "exists": true,
+      "bytes": 5243,
+      "sha256": "be30497d70ad45e0b9463ed0c727cb34c54b534e059405bb0f3590ca51930d5a"
+    },
+    {
+      "relative": "packages/proxy/CHANGELOG.md",
+      "exists": true,
+      "bytes": 31562,
+      "sha256": "91d9551db8268024e60d59fd09b5f36712b04bae7fd80e2160c1250d967beb15"
+    },
+    {
+      "relative": "packages/admin/CHANGELOG.md",
+      "exists": true,
+      "bytes": 32940,
+      "sha256": "8baae6d6cf39b746d3947d6b023c796b06c71428358d26e9b06723ed2c29b314"
+    },
+    {
+      "relative": "packages/web/CHANGELOG.md",
+      "exists": false
+    },
+    {
+      "relative": ".changeset/cinatoken-gateway-postgres.md",
+      "exists": true,
+      "bytes": 538,
+      "sha256": "adda18fbadb5d0c14027eaf61c7a66cff9f367148fc316899510e84afd8ef5e8"
+    },
+    {
+      "relative": "packages/web/.prettierrc",
+      "exists": true,
+      "bytes": 984,
+      "sha256": "b623c80eef9ca24da4cec91b8afb91c579d3a8907ec6e52587c44dc0301d62b9"
+    },
+    {
+      "relative": "packages/web/.prettierignore",
+      "exists": true,
+      "bytes": 381,
+      "sha256": "a658f636bb46ee42c92fc310935976958a8a5a0c2cd46287e6992301bd10c5e9"
+    },
+    {
+      "relative": "package-lock.json",
+      "exists": true,
+      "bytes": 830546,
+      "sha256": "f9c65b6e373a231d52d6eda634bb5f947dda3174734cd70e2b811e09fff0b6f0"
+    }
+  ],
+  "originalRepositoryVersions": "All six fixed manifests and chain-worker remain 2.8.0; Web CHANGELOG remains absent; original lockfile/changelogs/formatter/config scripts exact.",
+  "configDelta": {
+    "prettier": false,
+    "allOtherFieldsEqual": true,
+    "changelogPluginUnchanged": true,
+    "fixedGroupUnchanged": true
+  },
+  "before": {
+    "actualCliExit": 0,
+    "generationOutcome": 1,
+    "actualCompleteOutputIntegrityExit": 1,
+    "exactModuleNotFound": true,
+    "webChangelogAbsent": true
+  },
+  "after": {
+    "actualCliExit": 0,
+    "generationOutcome": 0,
+    "actualCompleteOutputIntegrityExit": 0,
+    "allSixVersion": "2.9.0",
+    "sixNonemptyChangelogsWithVersionHeading": true,
+    "originalHistoryPreserved": true,
+    "chainWorkerVersion": "2.8.0",
+    "noFormatterError": true,
+    "originalRootSummaryPresent": true,
+    "unchangedWebFullFormatGateActualExit": 0
+  },
+  "evidence": {
+    "sourceBefore": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\source-before.json",
+    "before": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\before-generation-observed.json",
+    "after": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\after-generation-observed.json",
+    "exactDiff": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\source-exact-two-file-diff.stdout.log",
+      "bytes": 1344,
+      "sha256": "f21e5e64ca732b1c34cfedd1ae4957bd28d6ce32004b5f91b4b5772ab53e122c"
+    },
+    "commandReceipts": 30,
+    "allCapturedCommandsClosed": true,
+    "allRawBytesVerified": true
+  },
+  "originalCiFailureEvidence": {
+    "closed": true,
+    "actualArchiveOutcome": 0,
+    "originalDownloadActualExit": 0,
+    "originalReleaseFailurePreserved": true,
+    "noWorkflowRerun": true,
+    "entries": [
+      {
+        "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-boundary-next-20261006-Zm6Z3E\\native12-release-terminal-failed.result.json",
+        "copy": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\original-ci-failure\\native12-release-terminal-failed.result.json",
+        "bytes": 571,
+        "sha256": "6bfd608fea65e5b3e4df99941460a34c21e4817ba32d667323dc89a68f05a4ff",
+        "exact": true
+      },
+      {
+        "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-boundary-next-20261006-Zm6Z3E\\native12-release-terminal-failed.stdout.log",
+        "copy": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\original-ci-failure\\native12-release-terminal-failed.stdout.log",
+        "bytes": 8072,
+        "sha256": "ea4bc6f9c36f981ff2a831e30b55ea921c7a92b1f477f8b438bd7f7436e21eff",
+        "exact": true
+      },
+      {
+        "source": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-boundary-next-20261006-Zm6Z3E\\native12-release-terminal-failed.stderr.log",
+        "copy": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\original-ci-failure\\native12-release-terminal-failed.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exact": true
+      }
+    ]
+  },
+  "frozenToolSources": [
+    {
+      "relative": "verify-release-generation.mjs",
+      "bytes": 19157,
+      "sha256": "9ce363960b16bde7e6599eca7174c50041eb8c4b4750f5a1cd11fec8f893dfc8"
+    },
+    {
+      "relative": "check-generated-output.mjs",
+      "bytes": 881,
+      "sha256": "ff03e2fe81f72367fd61b6d171dbbf98bf9afb9c4432b0e1149dc00fb0480d99"
+    },
+    {
+      "relative": "archive-original-release-ci.mjs",
+      "bytes": 1954,
+      "sha256": "78d455e1e05f0ceeca39aee710b0af068716e743290a4831ad569dd7ff8c049f"
+    }
+  ],
+  "boundaries": {
+    "actualReleaseCi37401132382FailurePreserved": true,
+    "noSourcePackageVersionWrite": true,
+    "noSourceWebFormatterWrite": true,
+    "noDependenciesChanged": true,
+    "noSourceGitMutation": true,
+    "onlyIsolatedGitInitAndBaselineCommit": true,
+    "noRemoteWrite": true,
+    "noPublishPrOrTag": true,
+    "noProductionAccess": true,
+    "githubAttributionNotExercised": true,
+    "linuxReleaseCiNotRunByThisTask": true
+  }
+}

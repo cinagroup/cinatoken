@@ -1,0 +1,48 @@
+{
+  "schema": "cinatoken-isolated-release-command-v1",
+  "label": "before-git-add-baseline",
+  "program": "git",
+  "args": [
+    "-c",
+    "core.autocrlf=false",
+    "add",
+    "--",
+    "package.json",
+    "packages/core/package.json",
+    "packages/tool-engines/package.json",
+    "packages/proxy/package.json",
+    "packages/admin/package.json",
+    "packages/web/package.json",
+    "packages/chain-worker/package.json",
+    "CHANGELOG.md",
+    "packages/core/CHANGELOG.md",
+    "packages/tool-engines/CHANGELOG.md",
+    "packages/proxy/CHANGELOG.md",
+    "packages/admin/CHANGELOG.md",
+    ".changeset/config.json",
+    ".changeset/README.md",
+    "packages/web/.prettierrc",
+    "packages/web/.prettierignore"
+  ],
+  "cwd": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\isolated-before",
+  "startedAt": "2026-10-06T02:08:05.122Z",
+  "finishedAt": "2026-10-06T02:08:05.229Z",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "closed": true,
+  "expectedActualExits": [
+    0
+  ],
+  "expectedExitMatched": true,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\before-git-add-baseline.stdout.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\before-git-add-baseline.stderr.log",
+    "bytes": 80,
+    "sha256": "4637b2478cea95e221ecbde1b46874fb0f18d282e08504cf0d1074595c4348d1"
+  }
+}

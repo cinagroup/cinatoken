@@ -1,0 +1,153 @@
+
+────────────────────────────────────────────────────────────
+  cinatoken · gateway-proxy · Node（Postgres）
+────────────────────────────────────────────────────────────
+  服务地址       http://127.0.0.1:8787
+  健康检查       GET  http://127.0.0.1:8787/health
+  Chat           POST http://127.0.0.1:8787/v1/chat/completions
+  Responses      POST http://127.0.0.1:8787/v1/responses
+  Images         POST http://127.0.0.1:8787/v1/images/generations
+  Image edits    POST http://127.0.0.1:8787/v1/images/edits
+  Anthropic      POST http://127.0.0.1:8787/v1/messages
+  Gemini         POST http://127.0.0.1:8787/v1beta/models/{model}:generateContent
+  Web search     POST http://127.0.0.1:8787/v1/tools/web-search
+  DashScope WS   GET  http://127.0.0.1:8787/v1/dashscope/realtime
+
+  数据库         Postgres  postgres://postgres:***@pg:5432/g7
+  DATABASE_DRIVER postgres
+  NODE_ENV       production
+  Admin API/UI   独立部署（本进程不含 /admin）
+────────────────────────────────────────────────────────────
+
+{"message":"gateway request started","method":"GET","path":"/catalog/models"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/models","status":200,"duration_ms":67}
+{"message":"gateway request started","method":"GET","path":"/health"}
+{"message":"gateway request completed","method":"GET","path":"/health","status":200,"duration_ms":1}
+{"message":"gateway request started","method":"GET","path":"/catalog/models"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/models","status":200,"duration_ms":11}
+{"message":"gateway request started","method":"GET","path":"/catalog/providers"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/providers","status":200,"duration_ms":8}
+{"message":"gateway request started","method":"GET","path":"/catalog/models/qa/~cWEvZzctbW9kZWw"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/models/qa/~cWEvZzctbW9kZWw","status":200,"duration_ms":18}
+{"message":"gateway request started","method":"GET","path":"/api/v1/models"}
+{"message":"gateway request completed","method":"GET","path":"/api/v1/models","status":200,"duration_ms":42}
+{"message":"gateway request started","method":"GET","path":"/api/v1/providers"}
+{"message":"gateway request completed","method":"GET","path":"/api/v1/providers","status":200,"duration_ms":1}
+{"message":"gateway request started","method":"GET","path":"/v1/__g7_missing"}
+{"message":"gateway request completed","method":"GET","path":"/v1/__g7_missing","status":404,"duration_ms":4}
+{"message":"gateway request started","method":"GET","path":"/catalog/models"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/models","status":200,"duration_ms":9}
+{"message":"gateway request started","method":"GET","path":"/catalog/models"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/models","status":200,"duration_ms":10}
+{"message":"gateway request started","method":"GET","path":"/catalog/models/qa/~cWEvZzctbW9kZWw"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/models/qa/~cWEvZzctbW9kZWw","status":200,"duration_ms":7}
+{"message":"gateway request started","method":"GET","path":"/catalog/models/qa/~cWEvZzctbW9kZWw"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/models/qa/~cWEvZzctbW9kZWw","status":200,"duration_ms":9}
+{"message":"gateway request started","method":"GET","path":"/catalog/providers"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/providers","status":200,"duration_ms":8}
+{"message":"gateway request started","method":"GET","path":"/catalog/providers"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/providers","status":200,"duration_ms":7}
+{"message":"gateway request started","method":"GET","path":"/catalog/models"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/models","status":200,"duration_ms":8}
+{"message":"gateway request started","method":"GET","path":"/catalog/models"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/models","status":200,"duration_ms":5}
+{"message":"gateway request started","method":"GET","path":"/catalog/models"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/models","status":200,"duration_ms":7}
+{"message":"gateway request started","method":"GET","path":"/catalog/models"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/models","status":200,"duration_ms":6}
+{"message":"gateway request started","method":"GET","path":"/catalog/stats/models"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/stats/models","status":200,"duration_ms":9}
+{"message":"gateway request started","method":"GET","path":"/catalog/stats/models"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/stats/models","status":200,"duration_ms":8}
+{"message":"gateway request started","method":"GET","path":"/catalog/stats/models"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/stats/models","status":200,"duration_ms":9}
+{"message":"gateway request started","method":"GET","path":"/catalog/stats/models"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/stats/models","status":200,"duration_ms":1}
+{"message":"gateway request started","method":"GET","path":"/catalog/models"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/models","status":200,"duration_ms":10}
+{"message":"gateway request started","method":"GET","path":"/catalog/models"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/models","status":200,"duration_ms":10}
+{"message":"gateway request started","method":"GET","path":"/catalog/models/qa/~cWEvZzctbW9kZWw"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/models/qa/~cWEvZzctbW9kZWw","status":200,"duration_ms":6}
+{"message":"gateway request started","method":"GET","path":"/catalog/models/qa/~cWEvZzctbW9kZWw"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/models/qa/~cWEvZzctbW9kZWw","status":200,"duration_ms":6}
+{"message":"gateway request started","method":"GET","path":"/catalog/providers"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/providers","status":200,"duration_ms":6}
+{"message":"gateway request started","method":"GET","path":"/catalog/providers"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/providers","status":200,"duration_ms":7}
+{"message":"gateway request started","method":"GET","path":"/catalog/models"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/models","status":200,"duration_ms":6}
+{"message":"gateway request started","method":"GET","path":"/catalog/models"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/models","status":200,"duration_ms":13}
+{"message":"gateway request started","method":"GET","path":"/catalog/models"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/models","status":200,"duration_ms":6}
+{"message":"gateway request started","method":"GET","path":"/catalog/models"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/models","status":200,"duration_ms":5}
+{"message":"gateway request started","method":"GET","path":"/catalog/stats/models"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/stats/models","status":200,"duration_ms":1}
+{"message":"gateway request started","method":"GET","path":"/catalog/stats/models"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/stats/models","status":200,"duration_ms":1}
+{"message":"gateway request started","method":"GET","path":"/catalog/stats/models"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/stats/models","status":200,"duration_ms":1}
+{"message":"gateway request started","method":"GET","path":"/catalog/stats/models"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/stats/models","status":200,"duration_ms":1}
+{"message":"gateway request started","method":"GET","path":"/catalog/models"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/models","status":200,"duration_ms":6}
+{"message":"gateway request started","method":"GET","path":"/catalog/models"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/models","status":200,"duration_ms":6}
+{"message":"gateway request started","method":"GET","path":"/catalog/models/qa/~cWEvZzctbW9kZWw"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/models/qa/~cWEvZzctbW9kZWw","status":200,"duration_ms":5}
+{"message":"gateway request started","method":"GET","path":"/catalog/models/qa/~cWEvZzctbW9kZWw"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/models/qa/~cWEvZzctbW9kZWw","status":200,"duration_ms":6}
+{"message":"gateway request started","method":"GET","path":"/catalog/providers"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/providers","status":200,"duration_ms":5}
+{"message":"gateway request started","method":"GET","path":"/catalog/providers"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/providers","status":200,"duration_ms":6}
+{"message":"gateway request started","method":"GET","path":"/catalog/models"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/models","status":200,"duration_ms":5}
+{"message":"gateway request started","method":"GET","path":"/catalog/models"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/models","status":200,"duration_ms":5}
+{"message":"gateway request started","method":"GET","path":"/catalog/models"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/models","status":200,"duration_ms":7}
+{"message":"gateway request started","method":"GET","path":"/catalog/models"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/models","status":200,"duration_ms":5}
+{"message":"gateway request started","method":"GET","path":"/catalog/stats/models"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/stats/models","status":200,"duration_ms":1}
+{"message":"gateway request started","method":"GET","path":"/catalog/stats/models"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/stats/models","status":200,"duration_ms":1}
+{"message":"gateway request started","method":"GET","path":"/catalog/stats/models"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/stats/models","status":200,"duration_ms":1}
+{"message":"gateway request started","method":"GET","path":"/catalog/stats/models"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/stats/models","status":200,"duration_ms":1}
+{"message":"gateway request started","method":"GET","path":"/catalog/models"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/models","status":200,"duration_ms":5}
+{"message":"gateway request started","method":"GET","path":"/catalog/models"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/models","status":200,"duration_ms":6}
+{"message":"gateway request started","method":"GET","path":"/catalog/models/qa/~cWEvZzctbW9kZWw"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/models/qa/~cWEvZzctbW9kZWw","status":200,"duration_ms":9}
+{"message":"gateway request started","method":"GET","path":"/catalog/models/qa/~cWEvZzctbW9kZWw"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/models/qa/~cWEvZzctbW9kZWw","status":200,"duration_ms":7}
+{"message":"gateway request started","method":"GET","path":"/catalog/providers"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/providers","status":200,"duration_ms":5}
+{"message":"gateway request started","method":"GET","path":"/catalog/providers"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/providers","status":200,"duration_ms":6}
+{"message":"gateway request started","method":"GET","path":"/catalog/models"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/models","status":200,"duration_ms":6}
+{"message":"gateway request started","method":"GET","path":"/catalog/models"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/models","status":200,"duration_ms":6}
+{"message":"gateway request started","method":"GET","path":"/catalog/models"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/models","status":200,"duration_ms":6}
+{"message":"gateway request started","method":"GET","path":"/catalog/models"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/models","status":200,"duration_ms":6}
+{"message":"gateway request started","method":"GET","path":"/catalog/stats/models"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/stats/models","status":200,"duration_ms":1}
+{"message":"gateway request started","method":"GET","path":"/catalog/stats/models"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/stats/models","status":200,"duration_ms":1}
+{"message":"gateway request started","method":"GET","path":"/catalog/stats/models"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/stats/models","status":200,"duration_ms":1}
+{"message":"gateway request started","method":"GET","path":"/catalog/stats/models"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/stats/models","status":200,"duration_ms":1}
+{"message":"gateway request started","method":"GET","path":"/catalog/models"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/models","status":200,"duration_ms":7}
+{"message":"gateway request started","method":"GET","path":"/catalog/models"}
+{"message":"gateway request completed","method":"GET","path":"/catalog/models","status":200,"duration_ms":7}

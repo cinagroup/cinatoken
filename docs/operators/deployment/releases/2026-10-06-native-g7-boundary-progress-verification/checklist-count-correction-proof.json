@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-06T02:44:50.599Z",
+  "closed": true,
+  "actualExit": 0,
+  "allTaskStatesExact": true,
+  "originalCounts": [
+    102,
+    54,
+    213,
+    9,
+    9,
+    9
+  ],
+  "checkboxLines": 213,
+  "checkboxTokens": 214,
+  "firstG7RecursiveFiles": 352,
+  "secondG7RecursiveFiles": 601,
+  "beforeSha256": "b26e4bd40adc058cfee59a53d8c9275ecb0d9da480f0ef1cbd6ec935b337b67e",
+  "afterSha256": "f11fe3bf076a6d3b1d848021a520657dbadf1b46479f5f83e20d6eb71d227cb0",
+  "oldMetadataPreserved": true,
+  "productionChanged": false,
+  "fullGoalComplete": false
+}

@@ -1,0 +1,17 @@
+{
+  "at": "2026-10-06T02:03:54.521Z",
+  "finishedAt": "2026-10-06T02:03:57.890Z",
+  "executable": "C:/Program Files/GitHub CLI/gh.exe",
+  "args": [
+    "workflow",
+    "run",
+    "v364-owned-linux-boundary.yml",
+    "--ref",
+    "main"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-boundary-next-20261006-Zm6Z3E/owned19-boundary-dispatch.stdout.log",
+  "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-boundary-next-20261006-Zm6Z3E/owned19-boundary-dispatch.stderr.log"
+}

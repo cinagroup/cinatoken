@@ -1,0 +1,32 @@
+{
+  "label": "actual-owned-unit-tests",
+  "executable": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "--import",
+    "tsx",
+    "--test",
+    "scripts/verification/web-platform-g7/admission.test.mjs",
+    "scripts/verification/web-platform-g7/fixture.test.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "startedAt": "2026-10-06T02:18:59.834Z",
+  "finishedAt": "2026-10-06T02:19:00.398Z",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "closed": true,
+  "expectedActualExits": [
+    0
+  ],
+  "expectedExitMatched": true,
+  "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\actual-owned-unit-tests.stdout.log",
+  "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\actual-owned-unit-tests.stderr.log",
+  "stdoutBytes": {
+    "bytes": 768,
+    "sha256": "3aade2ac95ae9a7b33295fd335f6b2839837d38fde398d3c74483a15f4309d6e"
+  },
+  "stderrBytes": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

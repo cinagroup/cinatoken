@@ -1,0 +1,12 @@
+{
+  "at": "2026-10-06T01:28:09.712Z",
+  "closed": true,
+  "actualExitCode": 0,
+  "sourceCommit": "6658ec978009afa5fe3f4beccf6bde358590b663",
+  "checklistBytes": 776589,
+  "checklistSha256": "7eec7bbefeef52ca19a5113526c8c441af681c426afc5659292bec83406ec404",
+  "previousTurn": "progress",
+  "previousEvidenceReport": "2026-10-06-pg73-docker-progress.json",
+  "originalScopeRetained": true,
+  "goalStatus": "active"
+}

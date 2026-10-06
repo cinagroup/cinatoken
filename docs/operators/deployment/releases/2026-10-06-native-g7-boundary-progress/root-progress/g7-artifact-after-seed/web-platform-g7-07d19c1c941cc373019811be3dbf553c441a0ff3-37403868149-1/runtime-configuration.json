@@ -1,0 +1,18 @@
+{
+  "adminPublicAPIOrigin": "http://gateway-proxy:8787",
+  "appOrigin": "https://app.test",
+  "issuerOrigin": "https://auth.test",
+  "accountOrigin": "https://accounts.test",
+  "database": {
+    "host": "pg",
+    "port": 5432,
+    "name": "g7",
+    "role": "postgres",
+    "sharedByAdminAndProxy": true
+  },
+  "sharedEncryptionKeyMatches": true,
+  "oidcSecretsPresentAndMatch": true,
+  "webFlagsTrue": 29,
+  "ssrPublicOrigin": "https://app.test",
+  "secretsLogged": false
+}

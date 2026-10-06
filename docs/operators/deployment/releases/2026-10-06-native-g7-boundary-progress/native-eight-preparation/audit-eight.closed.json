@@ -1,0 +1,18 @@
+{
+  "label": "audit-eight",
+  "executable": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "--import",
+    "tsx",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-next-eight-repair-0511920406eb4b37baca7e103b9080d5/audit-eight.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "startedAt": "2026-10-06T01:34:30.251Z",
+  "finishedAt": "2026-10-06T01:34:31.852Z",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "childClosed": true,
+  "stdout": "audit-eight.stdout.log",
+  "stderr": "audit-eight.stderr.log"
+}

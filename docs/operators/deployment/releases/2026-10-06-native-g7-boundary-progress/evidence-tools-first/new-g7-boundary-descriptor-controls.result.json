@@ -1,0 +1,18 @@
+{
+  "executable": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "collector-g7-boundary-descriptor-tests.mjs"
+  ],
+  "cwd": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-82ab15ef384141c7bf99246c437325d2",
+  "startedAt": "2026-10-06T02:44:48.597Z",
+  "finishedAt": "2026-10-06T02:44:51.296Z",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "closed": true,
+  "expectedActualExits": [
+    0
+  ],
+  "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-82ab15ef384141c7bf99246c437325d2\\new-g7-boundary-descriptor-controls.stdout.log",
+  "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-82ab15ef384141c7bf99246c437325d2\\new-g7-boundary-descriptor-controls.stderr.log"
+}

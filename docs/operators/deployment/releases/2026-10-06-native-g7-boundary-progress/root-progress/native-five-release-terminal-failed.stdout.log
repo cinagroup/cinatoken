@@ -1,0 +1,51 @@
+Changesets	Create Version PR or push tags	﻿2026-10-06T02:17:06.4593248Z ##[group]Run changesets/action@v1
+Changesets	Create Version PR or push tags	2026-10-06T02:17:06.4593429Z with:
+Changesets	Create Version PR or push tags	2026-10-06T02:17:06.4593561Z   title: chore: version packages
+Changesets	Create Version PR or push tags	2026-10-06T02:17:06.4593716Z   commit: chore: version packages
+Changesets	Create Version PR or push tags	2026-10-06T02:17:06.4593881Z   publish: npm run ci:changeset-tag-push
+Changesets	Create Version PR or push tags	2026-10-06T02:17:06.4594051Z   createGithubReleases: false
+Changesets	Create Version PR or push tags	2026-10-06T02:17:06.4595553Z   github-token: ***
+Changesets	Create Version PR or push tags	2026-10-06T02:17:06.4595688Z   setupGitUser: true
+Changesets	Create Version PR or push tags	2026-10-06T02:17:06.4595836Z   commitMode: git-cli
+Changesets	Create Version PR or push tags	2026-10-06T02:17:06.4595962Z env:
+Changesets	Create Version PR or push tags	2026-10-06T02:17:06.4597382Z   GITHUB_TOKEN: ***
+Changesets	Create Version PR or push tags	2026-10-06T02:17:06.4597512Z ##[endgroup]
+Changesets	Create Version PR or push tags	2026-10-06T02:17:06.5263137Z using resolved cwd: /home/runner/work/cinatoken/cinatoken
+Changesets	Create Version PR or push tags	2026-10-06T02:17:06.5273074Z setting git user
+Changesets	Create Version PR or push tags	2026-10-06T02:17:06.5293452Z [command]/usr/bin/git config user.name "github-actions[bot]"
+Changesets	Create Version PR or push tags	2026-10-06T02:17:06.5351146Z [command]/usr/bin/git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+Changesets	Create Version PR or push tags	2026-10-06T02:17:06.5382475Z setting GitHub credentials
+Changesets	Create Version PR or push tags	2026-10-06T02:17:06.5434997Z [command]/usr/bin/git checkout changeset-release/main
+Changesets	Create Version PR or push tags	2026-10-06T02:17:07.1905021Z Switched to a new branch 'changeset-release/main'
+Changesets	Create Version PR or push tags	2026-10-06T02:17:07.1907069Z branch 'changeset-release/main' set up to track 'origin/changeset-release/main'.
+Changesets	Create Version PR or push tags	2026-10-06T02:17:07.1932534Z [command]/usr/bin/git reset --hard 00858e90592d55fa1d58b15bf1a4ebec1883b848
+Changesets	Create Version PR or push tags	2026-10-06T02:17:07.2256186Z HEAD is now at 00858e90 fix(ci): preserve PG73 fixtures and generate Web release changelog
+Changesets	Create Version PR or push tags	2026-10-06T02:17:07.2391337Z [command]/opt/hostedtoolcache/node/22.23.3/x64/bin/node /home/runner/work/cinatoken/cinatoken/node_modules/@changesets/cli/bin.js version
+Changesets	Create Version PR or push tags	2026-10-06T02:17:07.7868008Z 🦋  All files have been updated. Review them and commit at your leisure
+Changesets	Create Version PR or push tags	2026-10-06T02:17:08.0987103Z Existing pull requests: []
+Changesets	Create Version PR or push tags	2026-10-06T02:17:08.0996899Z [command]/usr/bin/git status --porcelain
+Changesets	Create Version PR or push tags	2026-10-06T02:17:08.1327204Z  D .changeset/cinatoken-gateway-postgres.md
+Changesets	Create Version PR or push tags	2026-10-06T02:17:08.1327513Z  M CHANGELOG.md
+Changesets	Create Version PR or push tags	2026-10-06T02:17:08.1327650Z  M package.json
+Changesets	Create Version PR or push tags	2026-10-06T02:17:08.1327866Z  M packages/admin/CHANGELOG.md
+Changesets	Create Version PR or push tags	2026-10-06T02:17:08.1328043Z  M packages/admin/package.json
+Changesets	Create Version PR or push tags	2026-10-06T02:17:08.1328199Z  M packages/core/CHANGELOG.md
+Changesets	Create Version PR or push tags	2026-10-06T02:17:08.1328357Z  M packages/core/package.json
+Changesets	Create Version PR or push tags	2026-10-06T02:17:08.1328517Z  M packages/proxy/CHANGELOG.md
+Changesets	Create Version PR or push tags	2026-10-06T02:17:08.1328676Z  M packages/proxy/package.json
+Changesets	Create Version PR or push tags	2026-10-06T02:17:08.1328851Z  M packages/tool-engines/CHANGELOG.md
+Changesets	Create Version PR or push tags	2026-10-06T02:17:08.1329250Z  M packages/tool-engines/package.json
+Changesets	Create Version PR or push tags	2026-10-06T02:17:08.1329555Z  M packages/web/package.json
+Changesets	Create Version PR or push tags	2026-10-06T02:17:08.1329815Z ?? packages/web/CHANGELOG.md
+Changesets	Create Version PR or push tags	2026-10-06T02:17:08.1343288Z [command]/usr/bin/git add .
+Changesets	Create Version PR or push tags	2026-10-06T02:17:08.1590951Z [command]/usr/bin/git commit -m chore: version packages
+Changesets	Create Version PR or push tags	2026-10-06T02:17:08.1753450Z [changeset-release/main 4d167799] chore: version packages
+Changesets	Create Version PR or push tags	2026-10-06T02:17:08.1753986Z  13 files changed, 39 insertions(+), 11 deletions(-)
+Changesets	Create Version PR or push tags	2026-10-06T02:17:08.1754464Z  delete mode 100644 .changeset/cinatoken-gateway-postgres.md
+Changesets	Create Version PR or push tags	2026-10-06T02:17:08.1754923Z  create mode 100644 packages/web/CHANGELOG.md
+Changesets	Create Version PR or push tags	2026-10-06T02:17:08.1765748Z [command]/usr/bin/git push origin HEAD:changeset-release/main --force
+Changesets	Create Version PR or push tags	2026-10-06T02:17:09.3971718Z To https://github.com/cinagroup/cinatoken
+Changesets	Create Version PR or push tags	2026-10-06T02:17:09.3972322Z  + 7b868373...4d167799 HEAD -> changeset-release/main (forced update)
+Changesets	Create Version PR or push tags	2026-10-06T02:17:09.4011758Z creating pull request
+Changesets	Create Version PR or push tags	2026-10-06T02:17:09.5714773Z ##[error]HttpError: GitHub Actions is not permitted to create or approve pull requests. - https://docs.github.com/rest/pulls/pulls#create-a-pull-request
+Changesets	Create Version PR or push tags	2026-10-06T02:17:09.5720908Z ##[error]GitHub Actions is not permitted to create or approve pull requests. - https://docs.github.com/rest/pulls/pulls#create-a-pull-request

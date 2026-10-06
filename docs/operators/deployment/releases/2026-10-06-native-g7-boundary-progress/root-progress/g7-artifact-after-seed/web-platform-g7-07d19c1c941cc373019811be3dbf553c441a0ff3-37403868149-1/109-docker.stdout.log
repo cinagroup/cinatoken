@@ -1,0 +1,245 @@
+[
+    {
+        "Id": "80cc261150096df2159edd180a0fc2dacbfb0dd3086e05aad382ec70666deb8e",
+        "Created": "2026-10-06T02:32:29.591873181Z",
+        "Path": "docker-entrypoint.sh",
+        "Args": [
+            "postgres"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 5017,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-10-06T02:32:29.649305899Z",
+            "FinishedAt": "0001-01-01T00:00:00Z"
+        },
+        "Image": "sha256:81bd698b4594e751a3269e4dcd3e03a4a0ec0daf7b72e7aa1abd43cce9887542",
+        "ResolvConfPath": "/var/lib/docker/containers/80cc261150096df2159edd180a0fc2dacbfb0dd3086e05aad382ec70666deb8e/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/80cc261150096df2159edd180a0fc2dacbfb0dd3086e05aad382ec70666deb8e/hostname",
+        "HostsPath": "/var/lib/docker/containers/80cc261150096df2159edd180a0fc2dacbfb0dd3086e05aad382ec70666deb8e/hosts",
+        "LogPath": "/var/lib/docker/containers/80cc261150096df2159edd180a0fc2dacbfb0dd3086e05aad382ec70666deb8e/80cc261150096df2159edd180a0fc2dacbfb0dd3086e05aad382ec70666deb8e-json.log",
+        "Name": "/g7-8a88cf68945741d1843b63f670b4d364-pg",
+        "RestartCount": 0,
+        "Driver": "overlay2",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "docker-default",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": null,
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "g7-8a88cf68945741d1843b63f670b4d364-db",
+            "PortBindings": {},
+            "RestartPolicy": {
+                "Name": "no",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": null,
+            "CgroupnsMode": "private",
+            "Dns": [],
+            "DnsOptions": [],
+            "DnsSearch": [],
+            "ExtraHosts": null,
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 0,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": [],
+            "BlkioDeviceReadBps": [],
+            "BlkioDeviceWriteBps": [],
+            "BlkioDeviceReadIOps": [],
+            "BlkioDeviceWriteIOps": [],
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": [],
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 0,
+            "MemorySwap": 0,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": null,
+            "Ulimits": [],
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "Mounts": [
+                {
+                    "Type": "volume",
+                    "Source": "g7-8a88cf68945741d1843b63f670b4d364-pgdata",
+                    "Target": "/var/lib/postgresql/data"
+                }
+            ],
+            "MaskedPaths": [
+                "/proc/asound",
+                "/proc/acpi",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/sys/firmware",
+                "/sys/devices/virtual/powercap"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "GraphDriver": {
+            "Data": {
+                "ID": "80cc261150096df2159edd180a0fc2dacbfb0dd3086e05aad382ec70666deb8e",
+                "LowerDir": "/var/lib/docker/overlay2/ed669d32bc3d131579e5c0e6a375b8471f32a543cf02da626e1888d953d0d007-init/diff:/var/lib/docker/overlay2/2e35bb9214aae79dbd6d0dd0493e95c792d15e27a7dd4f8e42091bf0d3dde98d/diff:/var/lib/docker/overlay2/8e9bb84730bde3c3bed1e019528be9dbea00dec8e3f74bd87a7f86b422f770da/diff:/var/lib/docker/overlay2/81a58cf364cc793bdb4523c9a1fabe6c3387e0daa4a9d6e9f15e8f6701d481fa/diff:/var/lib/docker/overlay2/40a9a438a92e1900f47ddec3a8ba9af02c4b2c2c08cb6255130b2fed8563fd2b/diff:/var/lib/docker/overlay2/1d30b8c631673cbb0c278d292317656349c959ee30f266e525558af2f045eda7/diff:/var/lib/docker/overlay2/1102999c395f78422c18346719702f42d6b901e0edf5937b521d75b3c8d51e98/diff:/var/lib/docker/overlay2/51c4176d4f13d9f50922bc8b2f8e6bd1873a5ffa8006bebe4c6fdc2bb83d3289/diff:/var/lib/docker/overlay2/5df251a71e606ee111890bbfa941e7679ee989d7b6c041a7db3aca3638bfa6a9/diff:/var/lib/docker/overlay2/89258d270ccd214c41f9df954db325771d45f3456c65dff051c24e7fdd6907bd/diff:/var/lib/docker/overlay2/031c246260f248e1f620bba17d6acd977dbad21bfc27a75a935b28a877fbd318/diff:/var/lib/docker/overlay2/2ae0b48eecfe9a6e2756191da34c38096ffcefcfe60a3735da2ca81df409a0ef/diff",
+                "MergedDir": "/var/lib/docker/overlay2/ed669d32bc3d131579e5c0e6a375b8471f32a543cf02da626e1888d953d0d007/merged",
+                "UpperDir": "/var/lib/docker/overlay2/ed669d32bc3d131579e5c0e6a375b8471f32a543cf02da626e1888d953d0d007/diff",
+                "WorkDir": "/var/lib/docker/overlay2/ed669d32bc3d131579e5c0e6a375b8471f32a543cf02da626e1888d953d0d007/work"
+            },
+            "Name": "overlay2"
+        },
+        "Mounts": [
+            {
+                "Type": "volume",
+                "Name": "g7-8a88cf68945741d1843b63f670b4d364-pgdata",
+                "Source": "/var/lib/docker/volumes/g7-8a88cf68945741d1843b63f670b4d364-pgdata/_data",
+                "Destination": "/var/lib/postgresql/data",
+                "Driver": "local",
+                "Mode": "z",
+                "RW": true,
+                "Propagation": ""
+            }
+        ],
+        "Config": {
+            "Hostname": "80cc26115009",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": true,
+            "AttachStderr": true,
+            "ExposedPorts": {
+                "5432/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "POSTGRES_USER=postgres",
+                "POSTGRES_PASSWORD=[REDACTED-G7-EPHEMERAL]",
+                "POSTGRES_DB=g7",
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "GOSU_VERSION=1.19",
+                "LANG=en_US.utf8",
+                "PG_MAJOR=16",
+                "PG_VERSION=16.15",
+                "PG_SHA256=c1575341fa7bd40f5274ea465b34390f4dc64cdd0770af327005caaeb9f6b7ed",
+                "DOCKER_PG_LLVM_DEPS=llvm21-dev \t\tclang21",
+                "PGDATA=/var/lib/postgresql/data"
+            ],
+            "Cmd": [
+                "postgres"
+            ],
+            "Image": "sha256:81bd698b4594e751a3269e4dcd3e03a4a0ec0daf7b72e7aa1abd43cce9887542",
+            "Volumes": {
+                "/var/lib/postgresql/data": {}
+            },
+            "WorkingDir": "/",
+            "Entrypoint": [
+                "docker-entrypoint.sh"
+            ],
+            "OnBuild": null,
+            "Labels": {
+                "cinatoken.g7.owner": "g7-8a88cf68945741d1843b63f670b4d364"
+            },
+            "StopSignal": "SIGINT"
+        },
+        "NetworkSettings": {
+            "Bridge": "",
+            "SandboxID": "dd7e33c40c3879777b9ac0f1b2a523f3e9c605e299ea1ebf98940cd88a1e337e",
+            "SandboxKey": "/var/run/docker/netns/dd7e33c40c38",
+            "Ports": {},
+            "HairpinMode": false,
+            "LinkLocalIPv6Address": "",
+            "LinkLocalIPv6PrefixLen": 0,
+            "SecondaryIPAddresses": null,
+            "SecondaryIPv6Addresses": null,
+            "EndpointID": "",
+            "Gateway": "",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "IPAddress": "",
+            "IPPrefixLen": 0,
+            "IPv6Gateway": "",
+            "MacAddress": "",
+            "Networks": {
+                "g7-8a88cf68945741d1843b63f670b4d364-db": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": [
+                        "pg"
+                    ],
+                    "MacAddress": "2e:06:ec:69:a5:96",
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "6f810ce679f8278ca7834f8ff3a5d5b1064a83fc6f539933fb2dd13af8592df4",
+                    "EndpointID": "bb8d65230d2f929fc5a890b2d31a498b58813b88ebe617deb567c4ce8278ccc2",
+                    "Gateway": "",
+                    "IPAddress": "172.20.0.2",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": [
+                        "g7-8a88cf68945741d1843b63f670b4d364-pg",
+                        "pg",
+                        "80cc26115009"
+                    ]
+                }
+            }
+        }
+    }
+]

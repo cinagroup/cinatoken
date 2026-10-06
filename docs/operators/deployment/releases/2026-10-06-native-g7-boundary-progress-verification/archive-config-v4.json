@@ -1,0 +1,481 @@
+{
+  "schemaVersion": 1,
+  "releaseSlug": "2026-10-06-native-g7-boundary-progress",
+  "sourceCommit": "07d19c1c941cc373019811be3dbf553c441a0ff3",
+  "outputDirectory": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/output",
+  "gzipThresholdBytes": 100000,
+  "roots": [
+    {
+      "id": "root-progress",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-boundary-next-20261006-Zm6Z3E",
+      "phase": "historical-and-current"
+    },
+    {
+      "id": "native-eight-preparation",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-pg73-next-eight-repair-0511920406eb4b37baca7e103b9080d5",
+      "phase": "local-validation"
+    },
+    {
+      "id": "native-eight-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-next-eight-independent-peer-MoXSUZ",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "native-five-preparation",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-next-six-8d357e3fd84b4810a7210ece167eb07a",
+      "phase": "local-validation"
+    },
+    {
+      "id": "native-five-ci-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-five-ci-readonly-0f234236c0474390a980e09910ae9e7c",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "boundary-preparation",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38",
+      "phase": "prepared-only"
+    },
+    {
+      "id": "boundary-package-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-peer-79ca7e6f2470461d9554856f33950460",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "g7-preparation",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-g7-tls-pg-package-20261006-552eab3dd02f4b15a01d765d9a2aab8f",
+      "phase": "local-validation"
+    },
+    {
+      "id": "g7-package-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/FINAL-cinatoken-g7-peer-readonly-6c2b5589c453487fbd13b36caacb0e1e",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "g7-seed-repair",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57",
+      "phase": "local-validation"
+    },
+    {
+      "id": "g7-seed-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/FINAL-cinatoken-g7-seed-repair-peer-readonly-450de998ee044958801e669dbb50a3ca",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "release-preparation",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2",
+      "phase": "local-validation",
+      "excludeDirectories": [
+        {
+          "directory": "isolated-before",
+          "reason": "CLI execution mirror contains temporary Git state and a node_modules junction. All executed command receipts/raw, generated-before output, source-before and integrity reports are included separately."
+        },
+        {
+          "directory": "isolated-after",
+          "reason": "CLI execution mirror contains temporary Git state and a node_modules junction. All executed command receipts/raw, generated-after output, source-after and integrity reports are included separately."
+        }
+      ]
+    },
+    {
+      "id": "release-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/FINAL-cinatoken-release-prettier-peer-readonly-2e6884feac2c43b7b162f303b1190554",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "upstream-candidate",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-source-upstream-candidate-H03WpG",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "boundary-terminal-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-terminal-readonly-dadfa5000d064bd08eeab54de4130cd8",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "native-next-four-inventory",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-native53-six-inventory-b5e488785b0d4b00a7f69724a8a418e4",
+      "phase": "prepared-only"
+    },
+    {
+      "id": "checklist-terminal-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-checklist-577-independent-ced29ba591694a8eb7267a62e38a36b5",
+      "phase": "source-peer-review"
+    },
+    {
+      "id": "evidence-tools-first",
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-evidence-g7-boundary-tools-82ab15ef384141c7bf99246c437325d2",
+      "phase": "local-validation",
+      "exclude": [
+        {
+          "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test.json",
+          "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+        },
+        {
+          "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/failure.result.json",
+          "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+        },
+        {
+          "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/failure.stderr.log",
+          "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+        },
+        {
+          "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/failure.stdout.log",
+          "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+        },
+        {
+          "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/large-before.source.gz",
+          "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+        },
+        {
+          "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/peer-dialect.result.json",
+          "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+        },
+        {
+          "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/peer-dialect.stderr.log",
+          "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+        },
+        {
+          "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/peer-dialect.stdout.log",
+          "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+        },
+        {
+          "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/root-dialect.result.json",
+          "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+        },
+        {
+          "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/root-dialect.stderr.log",
+          "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+        },
+        {
+          "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/root-dialect.stdout.log",
+          "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+        },
+        {
+          "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/script.mjs",
+          "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+        },
+        {
+          "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/signaled.result.json",
+          "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+        },
+        {
+          "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/signaled.stderr.log",
+          "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+        },
+        {
+          "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/signaled.stdout.log",
+          "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+        },
+        {
+          "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/zero.result.json",
+          "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+        },
+        {
+          "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/zero.stderr.log",
+          "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+        },
+        {
+          "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/zero.stdout.log",
+          "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+        }
+      ]
+    },
+    {
+      "id": "checklist-actual-evidence-peer",
+      "path": "C:/Users/cina/AppData/Local/Temp/FINAL-cinatoken-latest-md-evidence-tools-peer-readonly-1201558a824344d988c867b817caacc4",
+      "phase": "source-peer-review"
+    }
+  ],
+  "requiredRootIds": [
+    "root-progress",
+    "native-eight-preparation",
+    "native-eight-peer",
+    "native-five-preparation",
+    "native-five-ci-peer",
+    "boundary-preparation",
+    "boundary-package-peer",
+    "g7-preparation",
+    "g7-package-peer",
+    "g7-seed-repair",
+    "g7-seed-peer",
+    "release-preparation",
+    "release-peer",
+    "upstream-candidate",
+    "boundary-terminal-peer",
+    "native-next-four-inventory",
+    "checklist-terminal-peer",
+    "evidence-tools-first",
+    "checklist-actual-evidence-peer"
+  ],
+  "semantics": {
+    "collectionOnly": true,
+    "gatePassDerived": false,
+    "productionVersion": "2a0a2777-d3b1-47f0-a0a7-88e701b4d2d9",
+    "productionCommit": "c13a64b9c3b2c90adcf736910ea408868d7854f1",
+    "productionChanged": false,
+    "fullGoalComplete": false,
+    "fullScope": {
+      "mainTasks": 102,
+      "matrixRows": 54,
+      "gates": 9,
+      "evidenceRows": 9,
+      "taskCheckboxes": 211,
+      "checkboxLines": 213,
+      "checkboxTokens": 214
+    },
+    "sourceCohorts": [
+      "4e2ed5196a26cc43c2a3cb7ea852f1fc6284ff27",
+      "67f8b3df2f2b6e8159806767ecce1efa1904d27a",
+      "00858e90592d55fa1d58b15bf1a4ebec1883b848",
+      "07d19c1c941cc373019811be3dbf553c441a0ff3"
+    ],
+    "boundaryRuntimeActualExit": 1,
+    "originalCancellationProven": false,
+    "gracefulWorkerdExitProven": false,
+    "g7FirstRuntimeActualExit": 1,
+    "releaseDraft": "https://github.com/cinagroup/cinatoken/pull/4",
+    "releasePublished": false,
+    "g7SecondRuntimeActualExit": 1,
+    "g7SecondWireActualExit": 0,
+    "g7SecondSeedActualExit": 0,
+    "g7SecondProxyObserveActualExit": 0,
+    "g7SecondAdminObserveActualExit": 1,
+    "g7SecondRuntimeChildren": 165,
+    "g7SecondFallbackChildren": 29,
+    "g7InitialRecursiveArtifactFiles": 352,
+    "g7SecondRecursiveArtifactFiles": 601,
+    "g7InitialTopLevelFiles": 350,
+    "g7SecondTopLevelEntries": 600,
+    "fullG7Verified": false,
+    "fullG8Verified": false,
+    "release07RunActualConclusion": "success",
+    "release07RunId": 37403800144,
+    "releaseDraftHead": "117c3ba4d7c0d10c5ce8cfc264ba1d6548339812",
+    "releaseDraftOpen": true,
+    "releaseDraftStillDraft": true,
+    "mainVersionsPublished": false,
+    "nextNativeInventoryIsStaticNotExecution": true,
+    "initialCompleteInputAuditActualExit": 1,
+    "initialAuditBlockersWereUnsupportedReceiptBindings": true,
+    "noFailedReceiptOrRawExcluded": true,
+    "partialSelectedFailureCopiesAreExplicit": true,
+    "fullOriginalFailureStdoutAndStderrIncludedInRootArtifact": true,
+    "toolFirstPreparationActualExit": 0,
+    "toolFirstActualChecks": 58,
+    "toolFirstControlledCwdFailurePreserved": true,
+    "toolSyntheticMirrorDuplicateFiles": 18,
+    "toolSyntheticMirrorDuplicateBytesPreservedAsZipAndIndex": true
+  },
+  "explicitByteCopyBindings": [
+    {
+      "rootId": "release-preparation",
+      "provenanceFile": "original-ci-failure-provenance.json",
+      "expectedProvenanceSha256": "a5a4fd5a04b84d5fd172b4469fa6ef1af26eb4388d17f2dddf9e0e0974fe2b5d"
+    }
+  ],
+  "explicitCommandOutputBindings": [
+    {
+      "rootId": "g7-preparation",
+      "receiptFile": "admission-tests.result.json",
+      "expectedReceiptSha256": "51ad0d76a45db3c7514c7ebaba62b07262bc560c0ccb35494675e5075dcc652e",
+      "outputs": [
+        {
+          "file": "admission-tests.stdout.log",
+          "bytes": 365,
+          "sha256": "0ce7eea36259379e5674719baa29b904906efbce93189640e5129a40e2ad1b88"
+        },
+        {
+          "file": "admission-tests.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "rootId": "g7-preparation",
+      "receiptFile": "format-after.result.json",
+      "expectedReceiptSha256": "a6ac13b616e0138b947a2ea42847d688137acd7a7094840f1db21fb0e9b6ae04",
+      "outputs": [
+        {
+          "file": "format-after.stdout.log",
+          "bytes": 66,
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "format-after.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "rootId": "g7-preparation",
+      "receiptFile": "format-before.result.json",
+      "expectedReceiptSha256": "7aac90b18609edd268fb557960e4d09a469736cfb01897409751896fe3354f60",
+      "outputs": [
+        {
+          "file": "format-before.stdout.log",
+          "bytes": 23,
+          "sha256": "ebe82dad128d5e5d8936334ceac09492f3c60bd9e0b4a16cc7fd7075513b33de"
+        },
+        {
+          "file": "format-before.stderr.log",
+          "bytes": 362,
+          "sha256": "df622d2202c59d3f30cbae1ef33620cabdb1d0c40c8cdfcee5206e76dd81484a"
+        }
+      ]
+    },
+    {
+      "rootId": "g7-preparation",
+      "receiptFile": "format-write.result.json",
+      "expectedReceiptSha256": "cb5b52564c5876684560388df9a5eab3a3209dc9dec17c2581c43e6582bc7b8b",
+      "outputs": [
+        {
+          "file": "format-write.stdout.log",
+          "bytes": 380,
+          "sha256": "31eccfe5de7d66f6664e857778254b8c2588eaa4599811d734b8f6d0b90a1da4"
+        },
+        {
+          "file": "format-write.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "rootId": "g7-preparation",
+      "receiptFile": "syntax-0.result.json",
+      "expectedReceiptSha256": "f0ae1f0062c3ecaf96df17e802cb543777ef0951f66ba35ef28e59968fa1148c",
+      "outputs": [
+        {
+          "file": "syntax-0.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "syntax-0.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "rootId": "g7-preparation",
+      "receiptFile": "syntax-1.result.json",
+      "expectedReceiptSha256": "adc3b87e2152d9622dc06ce8d450bc8caf6eba535f108b8c4519b9f4bdfc2ba5",
+      "outputs": [
+        {
+          "file": "syntax-1.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "syntax-1.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "rootId": "g7-preparation",
+      "receiptFile": "syntax-2.result.json",
+      "expectedReceiptSha256": "075c2c9fa3d7c60a02ba50225135c710410c8bdf638f495038f921d0c6584937",
+      "outputs": [
+        {
+          "file": "syntax-2.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "syntax-2.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "rootId": "g7-preparation",
+      "receiptFile": "syntax-3.result.json",
+      "expectedReceiptSha256": "057868cce9de3d2586aefab8a256e147d3b531a3e1ae2203d36c9b0f704fd9d6",
+      "outputs": [
+        {
+          "file": "syntax-3.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "syntax-3.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "rootId": "g7-preparation",
+      "receiptFile": "syntax-4.result.json",
+      "expectedReceiptSha256": "c3417b03cb4ef40d4512279fe6ed92d066f345184cfd0e2f4c67771a431bb1a2",
+      "outputs": [
+        {
+          "file": "syntax-4.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "syntax-4.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "rootId": "g7-preparation",
+      "receiptFile": "windows-runtime-rejected.result.json",
+      "expectedReceiptSha256": "ee60a2d0e98b6f76d0e8c03a7f8fec8edc8b4d4ecf76a9300746b29999384055",
+      "outputs": [
+        {
+          "file": "windows-runtime-rejected.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "windows-runtime-rejected.stderr.log",
+          "bytes": 784,
+          "sha256": "5e0ee683a12c329c28a81c030db6c8d4848721dc9fbaa7ba0eb62ed4c394c966"
+        }
+      ]
+    }
+  ],
+  "immutableSchemaCopies": [
+    {
+      "rootId": "g7-seed-repair",
+      "file": "original-failure-selected/044-docker.result.json",
+      "originalRootId": "root-progress",
+      "originalFile": "g7-artifact-first/044-docker.result.json",
+      "sha256": "597f58986a9a0b10dec148780d86bc17ab79054d872de1e5915daffa245b0d4d",
+      "partialLogCopy": true,
+      "includedLogCopies": [
+        {
+          "file": "original-failure-selected/044-docker.stderr.log",
+          "bytes": 159,
+          "sha256": "1dfbf8e24f4edbf62999ea5708796dfc9fb411bdac3a8789f4454d3c70056641",
+          "originalFile": "g7-artifact-first/044-docker.stderr.log"
+        }
+      ]
+    },
+    {
+      "rootId": "g7-seed-repair",
+      "file": "original-failure-selected/047-docker.result.json",
+      "originalRootId": "root-progress",
+      "originalFile": "g7-artifact-first/047-docker.result.json",
+      "sha256": "96d36cf7cd8c861a32f8749f9e9d3a335e0fe33a639cf8fc38f3988b250a213d",
+      "partialLogCopy": true,
+      "includedLogCopies": [
+        {
+          "file": "original-failure-selected/047-docker.stderr.log",
+          "bytes": 159,
+          "sha256": "1dfbf8e24f4edbf62999ea5708796dfc9fb411bdac3a8789f4454d3c70056641",
+          "originalFile": "g7-artifact-first/047-docker.stderr.log"
+        }
+      ]
+    }
+  ]
+}

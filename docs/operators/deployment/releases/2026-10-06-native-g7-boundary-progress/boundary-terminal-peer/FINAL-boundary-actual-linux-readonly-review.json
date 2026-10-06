@@ -1,0 +1,1152 @@
+{
+  "schema": "cinatoken.v364.boundary.actual-linux-terminal.independent-readonly-review.v1",
+  "at": "2026-10-06T02:34:05.933Z",
+  "reviewActualExit": 0,
+  "diagnosticActualExit": 1,
+  "conclusion": "STRICT_CANCELLATION_FAILURE_CONFIRMED_UNFORCED_OUTER_REAP_CONFIRMED_CAUSE_UNPROVEN",
+  "run": {
+    "GITHUB_SHA": "67f8b3df2f2b6e8159806767ecce1efa1904d27a",
+    "GITHUB_RUN_ID": "37402302570",
+    "GITHUB_RUN_ATTEMPT": "1",
+    "GITHUB_WORKFLOW": "v364 owned Linux cancellation boundary",
+    "GITHUB_JOB": "cancellation-boundary"
+  },
+  "checkoutSHA": "67f8b3df2f2b6e8159806767ecce1efa1904d27a",
+  "actualProcessExit": 1,
+  "runnerOutcomeCode": 1,
+  "evidence": {
+    "originalExecutor": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-boundary-next-20261006-Zm6Z3E\\boundary-artifact\\_temp\\v364-boundary-once-37402302570-1\\executor.closed.json",
+      "bytes": 5901,
+      "sha256": "9b505b71486eb69fa34203fd4e1c7d173a1aa12de2b0aa55d32552c5dba47113"
+    },
+    "originalNode": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-boundary-next-20261006-Zm6Z3E\\boundary-artifact\\_temp\\v364-boundary-once-37402302570-1\\closed-result.json",
+      "bytes": 22206,
+      "sha256": "f76dc98765d470f26434bb611bfceb098806b8b8987a0ec8d2088a684ff61a8d"
+    },
+    "originalStart": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-boundary-next-20261006-Zm6Z3E\\boundary-artifact\\_temp\\v364-boundary-once-37402302570-1\\executor-start.json",
+      "bytes": 683,
+      "sha256": "8863d3acedb4246cf83d41d7065840d44c627c45b3d5995da1fca62e78294fd5"
+    },
+    "originalFiles": [
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-boundary-next-20261006-Zm6Z3E\\boundary-artifact\\_temp\\v364-boundary-once-37402302570-1\\closed-result.json",
+        "bytes": 22206,
+        "sha256": "f76dc98765d470f26434bb611bfceb098806b8b8987a0ec8d2088a684ff61a8d",
+        "originalExecutorDigestExact": true
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-boundary-next-20261006-Zm6Z3E\\boundary-artifact\\_temp\\v364-boundary-once-37402302570-1\\events.json",
+        "bytes": 575797,
+        "sha256": "504c40a249279483807f82fec2221690e772bbbcf7e68ed85b59fe9005cb1c51",
+        "originalExecutorDigestExact": true
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-boundary-next-20261006-Zm6Z3E\\boundary-artifact\\_temp\\v364-boundary-once-37402302570-1\\events.ndjson",
+        "bytes": 441412,
+        "sha256": "e0fbc57e5914d8cbc05cbf0a533caab2f8bf3297778a75854a910d62506d3bc3",
+        "originalExecutorDigestExact": true
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-boundary-next-20261006-Zm6Z3E\\boundary-artifact\\_temp\\v364-boundary-once-37402302570-1\\executor-start.json",
+        "bytes": 683,
+        "sha256": "8863d3acedb4246cf83d41d7065840d44c627c45b3d5995da1fca62e78294fd5",
+        "originalExecutorDigestExact": true
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-boundary-next-20261006-Zm6Z3E\\boundary-artifact\\_temp\\v364-boundary-once-37402302570-1\\executor.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "originalExecutorDigestExact": true
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-boundary-next-20261006-Zm6Z3E\\boundary-artifact\\_temp\\v364-boundary-once-37402302570-1\\executor.stdout.txt",
+        "bytes": 165,
+        "sha256": "fc5b0d42a1870084b4fd5538bea6a3521ce22303f3049dd17bcc5461197b45f6",
+        "originalExecutorDigestExact": true
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-boundary-next-20261006-Zm6Z3E\\boundary-artifact\\_temp\\v364-boundary-once-37402302570-1\\original-strict.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "originalExecutorDigestExact": true
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-boundary-next-20261006-Zm6Z3E\\boundary-artifact\\_temp\\v364-boundary-once-37402302570-1\\original-strict.stdout.txt",
+        "bytes": 2870,
+        "sha256": "020adcc84ef0ef0da558fc37dd57f54154923435b1f9dac0110ffec6b1affe18",
+        "originalExecutorDigestExact": true
+      }
+    ],
+    "packageManifest": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-boundary-next-20261006-Zm6Z3E\\boundary-artifact\\cinatoken\\cinatoken\\scripts\\diagnostics\\v364-owned-linux-boundary\\sealed-package.json",
+      "bytes": 1396,
+      "sha256": "b99ede67c0e949fc6aee728f450d564d60c9eed14b60e542e3282e9a8d163af9"
+    },
+    "packageFiles": [
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-boundary-next-20261006-Zm6Z3E\\boundary-artifact\\cinatoken\\cinatoken\\scripts\\diagnostics\\v364-owned-linux-boundary\\bare-async-source.mjs",
+        "bytes": 1864,
+        "sha256": "86b67412be0b8ef8434edfd0f44c8c6e5d306ce3f76ed3deed8305cca2771bfd",
+        "artifactManifestDigestExact": true
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-boundary-next-20261006-Zm6Z3E\\boundary-artifact\\cinatoken\\cinatoken\\scripts\\diagnostics\\v364-owned-linux-boundary\\direct-holder.mjs",
+        "bytes": 785,
+        "sha256": "4019fbebd9575bcad6dd3a987d320cd7eb96d646ab344bea5918f7305faaee84",
+        "artifactManifestDigestExact": true
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-boundary-next-20261006-Zm6Z3E\\boundary-artifact\\cinatoken\\cinatoken\\scripts\\diagnostics\\v364-owned-linux-boundary\\proc-census.mjs",
+        "bytes": 1443,
+        "sha256": "bd6d4ebe4fea6ac1c11b6a67b4f44fcb23595e79a2fdcf10360101888026b8a0",
+        "artifactManifestDigestExact": true
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-boundary-next-20261006-Zm6Z3E\\boundary-artifact\\cinatoken\\cinatoken\\scripts\\diagnostics\\v364-owned-linux-boundary\\run-boundary.mjs",
+        "bytes": 28489,
+        "sha256": "9341885b2890b8270b2b9732cd46c169bb41c4a3a4f6d4eef5f662ee3cda7cda",
+        "artifactManifestDigestExact": true
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-boundary-next-20261006-Zm6Z3E\\boundary-artifact\\cinatoken\\cinatoken\\scripts\\diagnostics\\v364-owned-linux-boundary\\execute-owned-linux.py",
+        "bytes": 16016,
+        "sha256": "18c13e59a48eb27bc840aa1f9bb21aa5da73b7f73ad927dbaf5da24d0b0bbca2",
+        "artifactManifestDigestExact": true
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-boundary-next-20261006-Zm6Z3E\\boundary-artifact\\cinatoken\\cinatoken\\scripts\\diagnostics\\v364-owned-linux-boundary\\README.md",
+        "bytes": 6071,
+        "sha256": "c4f87c06031bbe6bb9e8179272ce0636e4723ab8892d74f21345e0d376f421ba",
+        "artifactManifestDigestExact": true
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-boundary-next-20261006-Zm6Z3E\\boundary-artifact\\cinatoken\\cinatoken\\scripts\\diagnostics\\v364-owned-linux-boundary\\source-inputs.json",
+        "bytes": 6588,
+        "sha256": "7b7b322398fe389f2ae1426746c65f6fe9ee0bc9ea1f91dfc3febfb8aeadfa3d",
+        "artifactManifestDigestExact": true
+      }
+    ],
+    "workflow": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-boundary-next-20261006-Zm6Z3E\\boundary-artifact\\cinatoken\\cinatoken\\.github\\workflows\\v364-owned-linux-boundary.yml",
+      "bytes": 1575,
+      "sha256": "08977f1966eb42e67aebdb9986b66cb9f05a618f6a12964a8a2daffc64ce4712"
+    },
+    "rootAnalysis": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-boundary-next-20261006-Zm6Z3E\\boundary-terminal-analysis.json",
+      "bytes": 8810,
+      "sha256": "e2f8bc5db5e951e14a3744ebc4d94486af2f5d7da25bd8b44999b2ef8d78d4fc"
+    },
+    "rootAnalysisMatchesActual": true,
+    "eventsNDJSONMatchesFinalSnapshot": true
+  },
+  "strictBaseline": {
+    "code": 1,
+    "signal": null,
+    "timedOut": false,
+    "stdout": {
+      "bytes": 2870,
+      "sha256": "020adcc84ef0ef0da558fc37dd57f54154923435b1f9dac0110ffec6b1affe18"
+    },
+    "stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tests": 8,
+    "pass": 7,
+    "fail": 1,
+    "skip": 0,
+    "cancelAssertionActual": null,
+    "expected": "observed",
+    "failureRetained": true
+  },
+  "rows": [
+    {
+      "caseId": "node-http-calibration-destroy",
+      "actualExit": 0,
+      "closed": true,
+      "baselineEligible": false,
+      "originalWindow": null,
+      "tail": null,
+      "finalPreDisposeSnapshot": null,
+      "clientCancelInvoke": [
+        {
+          "hostMs": 3420.11812,
+          "mode": "destroy"
+        }
+      ],
+      "clientRSTAPIInvoke": [],
+      "clientSettled": [
+        {
+          "hostMs": 3421.052642
+        }
+      ],
+      "clientSocketClose": [
+        {
+          "hostMs": 3420.984365
+        }
+      ],
+      "disposeInvoke": [],
+      "disposeFulfilled": [],
+      "observedMetadata": {
+        "parsedCount": 0,
+        "cancelKVInvoke": 0,
+        "cancelKVFulfilled": 0,
+        "waitUntilRegister": 0,
+        "signalAbort": []
+      }
+    },
+    {
+      "caseId": "node-http-calibration-rst",
+      "actualExit": 0,
+      "closed": true,
+      "baselineEligible": false,
+      "originalWindow": null,
+      "tail": null,
+      "finalPreDisposeSnapshot": null,
+      "clientCancelInvoke": [
+        {
+          "hostMs": 3424.725759,
+          "mode": "rst"
+        }
+      ],
+      "clientRSTAPIInvoke": [
+        {
+          "hostMs": 3424.820255
+        }
+      ],
+      "clientSettled": [
+        {
+          "hostMs": 3425.296633
+        }
+      ],
+      "clientSocketClose": [
+        {
+          "hostMs": 3425.245417
+        }
+      ],
+      "disposeInvoke": [],
+      "disposeFulfilled": [],
+      "observedMetadata": {
+        "parsedCount": 0,
+        "cancelKVInvoke": 0,
+        "cancelKVFulfilled": 0,
+        "waitUntilRegister": 0,
+        "signalAbort": []
+      }
+    },
+    {
+      "caseId": "locked-bare-destroy",
+      "actualExit": 1,
+      "closed": true,
+      "baselineEligible": false,
+      "originalWindow": {
+        "pollCount": 100,
+        "sleepMs": 10,
+        "elapsedMs": 1274.1735669999998,
+        "actual": null,
+        "expected": "observed",
+        "actualExit": 1
+      },
+      "tail": {
+        "elapsedMs": 4038.6711730000006,
+        "reads": 76,
+        "actual": null,
+        "usedForPass": false
+      },
+      "finalPreDisposeSnapshot": {
+        "cancel": null,
+        "release": null,
+        "accepted": "one",
+        "usedForPass": false
+      },
+      "clientCancelInvoke": [
+        {
+          "hostMs": 3734.839161,
+          "mode": "destroy"
+        }
+      ],
+      "clientRSTAPIInvoke": [],
+      "clientSettled": [
+        {
+          "hostMs": 3735.812506
+        }
+      ],
+      "clientSocketClose": [
+        {
+          "hostMs": 3735.760749
+        }
+      ],
+      "disposeInvoke": [
+        {
+          "hostMs": 9065.274449
+        }
+      ],
+      "disposeFulfilled": [
+        {
+          "hostMs": 9073.151949000001
+        }
+      ],
+      "observedMetadata": {
+        "parsedCount": 11,
+        "cancelKVInvoke": 0,
+        "cancelKVFulfilled": 0,
+        "waitUntilRegister": 0,
+        "signalAbort": []
+      }
+    },
+    {
+      "caseId": "locked-bare-rst",
+      "actualExit": 1,
+      "closed": true,
+      "baselineEligible": false,
+      "originalWindow": {
+        "pollCount": 100,
+        "sleepMs": 10,
+        "elapsedMs": 1227.3664480000007,
+        "actual": null,
+        "expected": "observed",
+        "actualExit": 1
+      },
+      "tail": {
+        "elapsedMs": 4033.7517499999994,
+        "reads": 76,
+        "actual": null,
+        "usedForPass": false
+      },
+      "finalPreDisposeSnapshot": {
+        "cancel": null,
+        "release": null,
+        "accepted": "one",
+        "usedForPass": false
+      },
+      "clientCancelInvoke": [
+        {
+          "hostMs": 9338.899136,
+          "mode": "rst"
+        }
+      ],
+      "clientRSTAPIInvoke": [
+        {
+          "hostMs": 9338.947176000001
+        }
+      ],
+      "clientSettled": [
+        {
+          "hostMs": 9339.52381
+        }
+      ],
+      "clientSocketClose": [
+        {
+          "hostMs": 9339.475931
+        }
+      ],
+      "disposeInvoke": [
+        {
+          "hostMs": 14622.773016000001
+        }
+      ],
+      "disposeFulfilled": [
+        {
+          "hostMs": 14635.533257000001
+        }
+      ],
+      "observedMetadata": {
+        "parsedCount": 6,
+        "cancelKVInvoke": 0,
+        "cancelKVFulfilled": 0,
+        "waitUntilRegister": 0,
+        "signalAbort": [
+          {
+            "boundary": "holder",
+            "hostMs": 9341.066005,
+            "receiptPhase": "original-poll"
+          }
+        ]
+      }
+    },
+    {
+      "caseId": "locked-direct-destroy",
+      "actualExit": 1,
+      "closed": true,
+      "baselineEligible": false,
+      "originalWindow": {
+        "pollCount": 100,
+        "sleepMs": 10,
+        "elapsedMs": 1251.1428619999988,
+        "actual": null,
+        "expected": "observed",
+        "actualExit": 1
+      },
+      "tail": {
+        "elapsedMs": 4022.962382999998,
+        "reads": 76,
+        "actual": null,
+        "usedForPass": false
+      },
+      "finalPreDisposeSnapshot": {
+        "cancel": null,
+        "release": null,
+        "accepted": "one",
+        "usedForPass": false
+      },
+      "clientCancelInvoke": [
+        {
+          "hostMs": 14885.502318,
+          "mode": "destroy"
+        }
+      ],
+      "clientRSTAPIInvoke": [],
+      "clientSettled": [
+        {
+          "hostMs": 14885.986551
+        }
+      ],
+      "clientSocketClose": [
+        {
+          "hostMs": 14885.944292
+        }
+      ],
+      "disposeInvoke": [
+        {
+          "hostMs": 20176.540332
+        }
+      ],
+      "disposeFulfilled": [
+        {
+          "hostMs": 20183.819627999997
+        }
+      ],
+      "observedMetadata": {
+        "parsedCount": 14,
+        "cancelKVInvoke": 0,
+        "cancelKVFulfilled": 0,
+        "waitUntilRegister": 0,
+        "signalAbort": []
+      }
+    },
+    {
+      "caseId": "locked-direct-rst",
+      "actualExit": 1,
+      "closed": true,
+      "baselineEligible": false,
+      "originalWindow": {
+        "pollCount": 100,
+        "sleepMs": 10,
+        "elapsedMs": 1217.0151100000003,
+        "actual": null,
+        "expected": "observed",
+        "actualExit": 1
+      },
+      "tail": {
+        "elapsedMs": 4029.9668280000005,
+        "reads": 76,
+        "actual": null,
+        "usedForPass": false
+      },
+      "finalPreDisposeSnapshot": {
+        "cancel": null,
+        "release": null,
+        "accepted": "one",
+        "usedForPass": false
+      },
+      "clientCancelInvoke": [
+        {
+          "hostMs": 20467.250273999998,
+          "mode": "rst"
+        }
+      ],
+      "clientRSTAPIInvoke": [
+        {
+          "hostMs": 20467.325614999998
+        }
+      ],
+      "clientSettled": [
+        {
+          "hostMs": 20468.034266
+        }
+      ],
+      "clientSocketClose": [
+        {
+          "hostMs": 20467.979203
+        }
+      ],
+      "disposeInvoke": [
+        {
+          "hostMs": 25729.684081
+        }
+      ],
+      "disposeFulfilled": [
+        {
+          "hostMs": 25736.163126
+        }
+      ],
+      "observedMetadata": {
+        "parsedCount": 11,
+        "cancelKVInvoke": 0,
+        "cancelKVFulfilled": 0,
+        "waitUntilRegister": 0,
+        "signalAbort": [
+          {
+            "boundary": "gateway",
+            "hostMs": 20469.258938,
+            "receiptPhase": "original-poll"
+          },
+          {
+            "boundary": "gateway",
+            "hostMs": 20469.298371,
+            "receiptPhase": "original-poll"
+          },
+          {
+            "boundary": "holder",
+            "hostMs": 20469.367991,
+            "receiptPhase": "original-poll"
+          }
+        ]
+      }
+    },
+    {
+      "caseId": "locked-binding-destroy",
+      "actualExit": 1,
+      "closed": true,
+      "baselineEligible": false,
+      "originalWindow": {
+        "pollCount": 100,
+        "sleepMs": 10,
+        "elapsedMs": 1214.981746999998,
+        "actual": null,
+        "expected": "observed",
+        "actualExit": 1
+      },
+      "tail": {
+        "elapsedMs": 4011.387015999997,
+        "reads": 76,
+        "actual": null,
+        "usedForPass": false
+      },
+      "finalPreDisposeSnapshot": {
+        "cancel": null,
+        "release": null,
+        "accepted": "one",
+        "usedForPass": false
+      },
+      "clientCancelInvoke": [
+        {
+          "hostMs": 26015.970734,
+          "mode": "destroy"
+        }
+      ],
+      "clientRSTAPIInvoke": [],
+      "clientSettled": [
+        {
+          "hostMs": 26016.472309
+        }
+      ],
+      "clientSocketClose": [
+        {
+          "hostMs": 26016.431543
+        }
+      ],
+      "disposeInvoke": [
+        {
+          "hostMs": 31255.687586
+        }
+      ],
+      "disposeFulfilled": [
+        {
+          "hostMs": 31261.703802
+        }
+      ],
+      "observedMetadata": {
+        "parsedCount": 14,
+        "cancelKVInvoke": 0,
+        "cancelKVFulfilled": 0,
+        "waitUntilRegister": 0,
+        "signalAbort": []
+      }
+    },
+    {
+      "caseId": "locked-binding-rst",
+      "actualExit": 1,
+      "closed": true,
+      "baselineEligible": false,
+      "originalWindow": {
+        "pollCount": 100,
+        "sleepMs": 10,
+        "elapsedMs": 1220.7450519999984,
+        "actual": null,
+        "expected": "observed",
+        "actualExit": 1
+      },
+      "tail": {
+        "elapsedMs": 4013.019505999997,
+        "reads": 76,
+        "actual": null,
+        "usedForPass": false
+      },
+      "finalPreDisposeSnapshot": {
+        "cancel": null,
+        "release": null,
+        "accepted": "one",
+        "usedForPass": false
+      },
+      "clientCancelInvoke": [
+        {
+          "hostMs": 31549.699226999997,
+          "mode": "rst"
+        }
+      ],
+      "clientRSTAPIInvoke": [
+        {
+          "hostMs": 31549.733952
+        }
+      ],
+      "clientSettled": [
+        {
+          "hostMs": 31550.344848999997
+        }
+      ],
+      "clientSocketClose": [
+        {
+          "hostMs": 31550.256434
+        }
+      ],
+      "disposeInvoke": [
+        {
+          "hostMs": 36798.798795999995
+        }
+      ],
+      "disposeFulfilled": [
+        {
+          "hostMs": 36805.158188
+        }
+      ],
+      "observedMetadata": {
+        "parsedCount": 9,
+        "cancelKVInvoke": 0,
+        "cancelKVFulfilled": 0,
+        "waitUntilRegister": 0,
+        "signalAbort": [
+          {
+            "boundary": "holder",
+            "hostMs": 31551.464853999998,
+            "receiptPhase": "original-poll"
+          }
+        ]
+      }
+    }
+  ],
+  "closure": {
+    "authority": "this executor",
+    "subreaperEnabled": true,
+    "directChildReaped": true,
+    "groupGone": true,
+    "leftoverGroupKilled": false,
+    "signalAttempts": [],
+    "reapedDescendants": [
+      {
+        "pid": 2633,
+        "startTimeTicks": "22301",
+        "waitStatus": 0,
+        "waitExitCode": 0,
+        "source": "individually identified adopted zombie"
+      },
+      {
+        "pid": 2670,
+        "startTimeTicks": "22334",
+        "waitStatus": 0,
+        "waitExitCode": 0,
+        "source": "individually identified adopted zombie"
+      },
+      {
+        "pid": 2678,
+        "startTimeTicks": "22337",
+        "waitStatus": 0,
+        "waitExitCode": 0,
+        "source": "individually identified adopted zombie"
+      },
+      {
+        "pid": 2685,
+        "startTimeTicks": "22405",
+        "waitStatus": 0,
+        "waitExitCode": 0,
+        "source": "individually identified adopted zombie"
+      }
+    ],
+    "processCensus": [
+      {
+        "label": "before-initial-adopted-reap",
+        "elapsedMs": 37331.42770999999,
+        "pgrp": 2597,
+        "session": 2597,
+        "members": [
+          {
+            "pid": 2633,
+            "comm": "esbuild",
+            "state": "Z",
+            "ppid": 2595,
+            "pgrp": 2597,
+            "session": 2597,
+            "startTimeTicks": "22301"
+          },
+          {
+            "pid": 2670,
+            "comm": "esbuild",
+            "state": "Z",
+            "ppid": 2595,
+            "pgrp": 2597,
+            "session": 2597,
+            "startTimeTicks": "22334"
+          },
+          {
+            "pid": 2678,
+            "comm": "esbuild",
+            "state": "Z",
+            "ppid": 2595,
+            "pgrp": 2597,
+            "session": 2597,
+            "startTimeTicks": "22337"
+          },
+          {
+            "pid": 2685,
+            "comm": "esbuild",
+            "state": "Z",
+            "ppid": 2595,
+            "pgrp": 2597,
+            "session": 2597,
+            "startTimeTicks": "22405"
+          }
+        ],
+        "live": 0,
+        "zombies": 4,
+        "unknown": [],
+        "complete": true,
+        "groupExists": true
+      },
+      {
+        "label": "after-initial-adopted-reap",
+        "elapsedMs": 37337.531465000015,
+        "pgrp": 2597,
+        "session": 2597,
+        "members": [],
+        "live": 0,
+        "zombies": 0,
+        "unknown": [],
+        "complete": true,
+        "groupExists": false
+      },
+      {
+        "label": "after-term-before-reap",
+        "elapsedMs": 37343.387799,
+        "pgrp": 2597,
+        "session": 2597,
+        "members": [],
+        "live": 0,
+        "zombies": 0,
+        "unknown": [],
+        "complete": true,
+        "groupExists": false
+      },
+      {
+        "label": "after-term-after-reap",
+        "elapsedMs": 37349.21350699997,
+        "pgrp": 2597,
+        "session": 2597,
+        "members": [],
+        "live": 0,
+        "zombies": 0,
+        "unknown": [],
+        "complete": true,
+        "groupExists": false
+      },
+      {
+        "label": "final-adopt-drain",
+        "elapsedMs": 37355.10705099998,
+        "pgrp": 2597,
+        "session": 2597,
+        "members": [],
+        "live": 0,
+        "zombies": 0,
+        "unknown": [],
+        "complete": true,
+        "groupExists": false
+      },
+      {
+        "label": "final-post-reap",
+        "elapsedMs": 37361.077136999964,
+        "pgrp": 2597,
+        "session": 2597,
+        "members": [],
+        "live": 0,
+        "zombies": 0,
+        "unknown": [],
+        "complete": true,
+        "groupExists": false
+      }
+    ],
+    "apiDisposalReported": true,
+    "outerUnforcedGroupClose": true,
+    "gracefulWorkerdExitProven": false,
+    "miniflareDisposeMaySendSIGKILL": true,
+    "errors": []
+  },
+  "source": {
+    "priorReviewBaseHEAD": "6658ec978009afa5fe3f4beccf6bde358590b663",
+    "priorPreparedAtHead": "6658ec978009afa5fe3f4beccf6bde358590b663",
+    "actualRunSHADistinctFromPreparation": true,
+    "sourceUnchanged": true,
+    "frozenInputsBeforeAfterExact": true,
+    "allComparisonsBaselineEligible": false
+  },
+  "preparationSources": {
+    "finalPeerReport": {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-peer-79ca7e6f2470461d9554856f33950460/FINAL-new-boundary-final-reseal-readonly-review.json",
+      "bytes": 8007,
+      "sha256": "2067c48c0f0999febbc56a910747e4990ce78802ff4d6c5e45f2a4fde70a0e54"
+    },
+    "ownerPreparation": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38\\FINAL-v364-boundary-portable-preparation.json",
+      "bytes": 34463,
+      "sha256": "6a871bc68a5611273d64d65d4ea9d6aee46d87f9c92bc427238604710e092f02"
+    },
+    "commands": [
+      {
+        "id": "syntax-bare-async-source.mjs",
+        "commandFile": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38\\validation-2\\syntax-bare-async-source.mjs.command-result.json",
+          "bytes": 1034,
+          "sha256": "dbf86e1e35d1d4dab9a2e6594df3d7ee269aa2c3487750edac5bea2004dc9393"
+        },
+        "program": "C:\\Program Files\\nodejs\\node.exe",
+        "args": [
+          "--check",
+          "C:/cinagroup/cinatoken/scripts/diagnostics/v364-owned-linux-boundary/bare-async-source.mjs"
+        ],
+        "status": 0,
+        "expectedExit": 0,
+        "outputs": [
+          {
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/syntax-bare-async-source.mjs.stdout.txt",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/syntax-bare-async-source.mjs.stderr.txt",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "sourceScope": "Owner local synchronous spawnSync producer-observed status; not an independent Linux command or per-child unified tool return"
+      },
+      {
+        "id": "syntax-direct-holder.mjs",
+        "commandFile": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38\\validation-2\\syntax-direct-holder.mjs.command-result.json",
+          "bytes": 1018,
+          "sha256": "98d138372612358c75f0a6ad8f97580048d3f6ad5e89792c9a831ae60563efb1"
+        },
+        "program": "C:\\Program Files\\nodejs\\node.exe",
+        "args": [
+          "--check",
+          "C:/cinagroup/cinatoken/scripts/diagnostics/v364-owned-linux-boundary/direct-holder.mjs"
+        ],
+        "status": 0,
+        "expectedExit": 0,
+        "outputs": [
+          {
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/syntax-direct-holder.mjs.stdout.txt",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/syntax-direct-holder.mjs.stderr.txt",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "sourceScope": "Owner local synchronous spawnSync producer-observed status; not an independent Linux command or per-child unified tool return"
+      },
+      {
+        "id": "syntax-proc-census.mjs",
+        "commandFile": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38\\validation-2\\syntax-proc-census.mjs.command-result.json",
+          "bytes": 1010,
+          "sha256": "6afdea734ec6e5cc1188e0dd1884934f83668a0fa746e332e0a0e9516c5c816f"
+        },
+        "program": "C:\\Program Files\\nodejs\\node.exe",
+        "args": [
+          "--check",
+          "C:/cinagroup/cinatoken/scripts/diagnostics/v364-owned-linux-boundary/proc-census.mjs"
+        ],
+        "status": 0,
+        "expectedExit": 0,
+        "outputs": [
+          {
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/syntax-proc-census.mjs.stdout.txt",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/syntax-proc-census.mjs.stderr.txt",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "sourceScope": "Owner local synchronous spawnSync producer-observed status; not an independent Linux command or per-child unified tool return"
+      },
+      {
+        "id": "syntax-run-boundary.mjs",
+        "commandFile": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38\\validation-2\\syntax-run-boundary.mjs.command-result.json",
+          "bytes": 1014,
+          "sha256": "6b7188dfdd6d58ab60ef5d07ce55150447ccf824197aabe767fee3037f8a4001"
+        },
+        "program": "C:\\Program Files\\nodejs\\node.exe",
+        "args": [
+          "--check",
+          "C:/cinagroup/cinatoken/scripts/diagnostics/v364-owned-linux-boundary/run-boundary.mjs"
+        ],
+        "status": 0,
+        "expectedExit": 0,
+        "outputs": [
+          {
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/syntax-run-boundary.mjs.stdout.txt",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/syntax-run-boundary.mjs.stderr.txt",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "sourceScope": "Owner local synchronous spawnSync producer-observed status; not an independent Linux command or per-child unified tool return"
+      },
+      {
+        "id": "python-syntax",
+        "commandFile": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38\\validation-2\\python-syntax.command-result.json",
+          "bytes": 1147,
+          "sha256": "5e853922cd631a6e19513eb01acbf14d90a63ca263456644dbbdb4024620e5ae"
+        },
+        "program": "C:/Users/cina/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+        "args": [
+          "-c",
+          "import ast,sys; from pathlib import Path; ast.parse(Path(sys.argv[1]).read_text()); print(\"AST OK\")",
+          "C:/cinagroup/cinatoken/scripts/diagnostics/v364-owned-linux-boundary/execute-owned-linux.py"
+        ],
+        "status": 0,
+        "expectedExit": 0,
+        "outputs": [
+          {
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/python-syntax.stdout.txt",
+            "bytes": 8,
+            "sha256": "ff06d4d965d57ea548627e0bbdfa9fc6afc758841f07c19518346f6b69b77fd7"
+          },
+          {
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/python-syntax.stderr.txt",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "sourceScope": "Owner local synchronous spawnSync producer-observed status; not an independent Linux command or per-child unified tool return"
+      },
+      {
+        "id": "executor-inert",
+        "commandFile": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38\\validation-2\\executor-inert.command-result.json",
+          "bytes": 1068,
+          "sha256": "54e7e8bdd001dea98bc2faec776a7db92477a312afc467f99d10685c1318fce6"
+        },
+        "program": "C:/Users/cina/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+        "args": [
+          "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/check-executor-inert.py"
+        ],
+        "status": 0,
+        "expectedExit": 0,
+        "outputs": [
+          {
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/executor-inert.stdout.txt",
+            "bytes": 1108,
+            "sha256": "daf28a85f4aef51786f466c4f9d4b744f47463f63843a6c20bae43e4e06be1a9"
+          },
+          {
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/executor-inert.stderr.txt",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "sourceScope": "Owner local synchronous spawnSync producer-observed status; not an independent Linux command or per-child unified tool return"
+      },
+      {
+        "id": "prepare",
+        "commandFile": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38\\validation-2\\prepare.command-result.json",
+          "bytes": 1167,
+          "sha256": "500ae80e035fd64d4d086522961202e3e31e050c4b0c57ff8c2c5de9aeb092c9"
+        },
+        "program": "C:\\Program Files\\nodejs\\node.exe",
+        "args": [
+          "C:/cinagroup/cinatoken/scripts/diagnostics/v364-owned-linux-boundary/run-boundary.mjs",
+          "--repo",
+          "C:/cinagroup/cinatoken",
+          "--out",
+          "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/prepare-once",
+          "--prepare-only"
+        ],
+        "status": 0,
+        "expectedExit": 0,
+        "outputs": [
+          {
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/prepare.stdout.txt",
+            "bytes": 188,
+            "sha256": "d0fb6ddfb2f28125b237ea941afef91ed4d42eabce2f2cd719d8aa56ca7e1b76"
+          },
+          {
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/prepare.stderr.txt",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "sourceScope": "Owner local synchronous spawnSync producer-observed status; not an independent Linux command or per-child unified tool return"
+      },
+      {
+        "id": "fresh-out-rejection",
+        "commandFile": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38\\validation-2\\fresh-out-rejection.command-result.json",
+          "bytes": 1203,
+          "sha256": "1249c3207183b4f03ea0b8135dedab481d5d8f0d71b244122f4d3c052cd84ffd"
+        },
+        "program": "C:\\Program Files\\nodejs\\node.exe",
+        "args": [
+          "C:/cinagroup/cinatoken/scripts/diagnostics/v364-owned-linux-boundary/run-boundary.mjs",
+          "--repo",
+          "C:/cinagroup/cinatoken",
+          "--out",
+          "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/prepare-once",
+          "--prepare-only"
+        ],
+        "status": 1,
+        "expectedExit": 1,
+        "outputs": [
+          {
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/fresh-out-rejection.stdout.txt",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/fresh-out-rejection.stderr.txt",
+            "bytes": 670,
+            "sha256": "cfca2a479d081baea6fe93611cb4d0e7ef401c70ce1d82569c1bf655413b27ef"
+          }
+        ],
+        "sourceScope": "Owner local synchronous spawnSync producer-observed status; not an independent Linux command or per-child unified tool return"
+      },
+      {
+        "id": "executor-windows-rejection",
+        "commandFile": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38\\validation-2\\executor-windows-rejection.command-result.json",
+          "bytes": 1298,
+          "sha256": "6d3ce3abe41c22f67e90b6c4b7aaa81bba2b0bacac53a950428c12ac09e7a672"
+        },
+        "program": "C:/Users/cina/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+        "args": [
+          "C:/cinagroup/cinatoken/scripts/diagnostics/v364-owned-linux-boundary/execute-owned-linux.py",
+          "--repo",
+          "C:/cinagroup/cinatoken",
+          "--out",
+          "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/executor-windows-rejection",
+          "--execute-linux"
+        ],
+        "status": 1,
+        "expectedExit": 1,
+        "outputs": [
+          {
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/executor-windows-rejection.stdout.txt",
+            "bytes": 252,
+            "sha256": "242c1a92b738edb1fed3a8ac9030b24a4afb2008a5e91414713502133d6fd57a"
+          },
+          {
+            "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/executor-windows-rejection.stderr.txt",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "sourceScope": "Owner local synchronous spawnSync producer-observed status; not an independent Linux command or per-child unified tool return"
+      }
+    ],
+    "ownerProducer": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38\\audit-boundary.mjs",
+      "bytes": 11000,
+      "sha256": "7fe8dc9aab337865c2a14b7f2ee4e0905d0b2a2e36704cd297e5ce903d98a39e"
+    },
+    "ownerOuterToolEvidence": {
+      "chunkId": "0d93dc",
+      "actualExitCode": 0,
+      "wallTimeSeconds": 7.6567148,
+      "source": "Original retained exec_command tool return for owner audit-boundary.mjs. No newly executed preparation command.",
+      "individualInnerUnifiedToolReceiptsExisted": false
+    },
+    "scope": "Local Node24 preparation/syntax/esbuild, Python AST and inert no-process simulations; expected Windows/no-child and reused-out failures only. This is not Node22 Linux runtime proof.",
+    "originalHistoricalPreparationFailuresRetained": [
+      {
+        "toolChunk": "6c6527",
+        "actualExit": 1,
+        "issue": "Temp builder syntax error before any generated main write; subsequent repaired builder closed0 chunk414b6d. No runtime ran."
+      },
+      {
+        "toolChunk": "12f84c",
+        "actualExit": 1,
+        "issue": "Temp auditor Windows static ESM import path rejected before execution; corrected to file URL. No package mutation or runtime ran in failed entry."
+      },
+      {
+        "toolChunk": "52cc24",
+        "actualExit": 1,
+        "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/executor-inert.command-result.json",
+        "issue": "Windows Python lacks signal.SIGKILL; Linux signal constants now explicit in inert stub only. Original failed stdout/stderr/result preserved; no native runtime ran."
+      }
+    ],
+    "windowsNegative": {
+      "actualProcessExit": null,
+      "runnerOutcomeCode": 1,
+      "actualExit": 1,
+      "noDiagnosticChild": true,
+      "noNativeRuntime": true,
+      "directChildReaped": false,
+      "linuxClosureProof": false
+    }
+  },
+  "supported": [
+    "The original strict baseline remains 7 pass, 1 failed, 0 skipped. Both Node transport calibrations pass.",
+    "Bare/no-Service-Binding, original-holder local-call and Service Binding paths each fail both destroy and RST source-cancel windows: six null original100x10ms windows, null separate4s tails and cancel-null final pre-dispose snapshots.",
+    "A failure specific only to the Service Binding boundary is weakened by matched direct and bare failures; an upstream defect or precise pump/callback cause is still not proven.",
+    "This run starts outer cleanup with four adopted esbuild zombies and no observed live group members; exact PID/start identity wait statuses are0, reap empties the group, no outer signal is sent. This new observation cannot rewrite the old forced flag.",
+    "Miniflare API disposal can itself SIGKILL workerd. Outer unforced group close is not proof of graceful workerd exit or cancellation propagation."
+  ],
+  "limitations": [
+    "This is a finite hash-checked artifact snapshot from the one specified run; it cannot establish absence of every later/unlogged callback.",
+    "Worker metadata receive phase is host attribution; after dispose stdio closure may suppress late logs.",
+    "Bare source simplifies envelope validation and direct holder shares request context; both remain diagnostic variants and cannot pass the original suite.",
+    "Remote ZIP hash is only source-reported in Root analysis; this reviewer has not downloaded or independently verified that archive.",
+    "No fixed runtime comparison or causal C++ trace is supplied, so causeProven remains false; G7/G8 or production holder readiness is not inferred."
+  ],
+  "reviewerActions": {
+    "onlyLocalArtifactReadsAndNewTempWrites": true,
+    "repositoryWrites": 0,
+    "gitCommands": 0,
+    "sourceChanges": 0,
+    "ciRequests": 0,
+    "runtimeReruns": 0,
+    "productionRequests": 0,
+    "databaseRequests": 0,
+    "historicalCommandsRerun": false
+  },
+  "reviewerEntryFailurePreserved": {
+    "chunkId": "6bec7e",
+    "actualExitCode": 1,
+    "issue": "Reviewer asserted Node fatal exact null, but undefined fatal is omitted by JSON serialization. Corrected reviewer to accept absent fatal; original runtime artifacts were not changed."
+  },
+  "causeProven": false
+}

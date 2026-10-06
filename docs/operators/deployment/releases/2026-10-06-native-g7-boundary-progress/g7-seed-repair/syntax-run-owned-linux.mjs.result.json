@@ -1,0 +1,29 @@
+{
+  "label": "syntax-run-owned-linux.mjs",
+  "executable": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "--check",
+    "scripts/verification/web-platform-g7/run-owned-linux.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "startedAt": "2026-10-06T02:20:06.854Z",
+  "finishedAt": "2026-10-06T02:20:06.919Z",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "closed": true,
+  "expectedActualExits": [
+    0
+  ],
+  "expectedExitMatched": true,
+  "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\syntax-run-owned-linux.mjs.stdout.log",
+  "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\syntax-run-owned-linux.mjs.stderr.log",
+  "stdoutBytes": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stderrBytes": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

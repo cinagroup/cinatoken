@@ -1,0 +1,47 @@
+name: v364 owned Linux cancellation boundary
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: v364-owned-linux-boundary-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  cancellation-boundary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: npm
+      - name: Install the existing dependency lock
+        run: npm ci
+      - name: Compare owned boundaries once and retain every strict failure
+        timeout-minutes: 7
+        env:
+          DIAGNOSTIC_OUT: ${{ runner.temp }}/v364-boundary-once-${{ github.run_id }}-${{ github.run_attempt }}
+        run: >-
+          python3 scripts/diagnostics/v364-owned-linux-boundary/execute-owned-linux.py
+          --repo "$GITHUB_WORKSPACE"
+          --out "$DIAGNOSTIC_OUT"
+          --execute-linux
+      - name: Retain SHA-bound raw receipts on success or failure
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: v364-owned-linux-boundary-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/v364-boundary-once-${{ github.run_id }}-${{ github.run_attempt }}/
+            scripts/diagnostics/v364-owned-linux-boundary/
+            .github/workflows/v364-owned-linux-boundary.yml
+          if-no-files-found: error
+          include-hidden-files: true
+          retention-days: 14

@@ -1,0 +1,26 @@
+{
+  "schema": "web-platform-g7-local-command-closed-v1",
+  "id": "base-absent-4",
+  "program": "git",
+  "args": [
+    "cat-file",
+    "-e",
+    "6658ec978009afa5fe3f4beccf6bde358590b663:scripts/verification/web-platform-g7/fixture.test.mjs"
+  ],
+  "begin": "2026-10-06T01:59:14.678Z",
+  "endedAt": "2026-10-06T01:59:14.720Z",
+  "closed": true,
+  "actualExit": 128,
+  "signal": null,
+  "errorCode": null,
+  "stdout": {
+    "file": "final-base-absent-4.stdout.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stderr": {
+    "file": "final-base-absent-4.stderr.log",
+    "bytes": 138,
+    "sha256": "5da4966c4cb0a9eb18b9e4483f84ec46305f6e3882268b19f401fa9d1dedfe7f"
+  }
+}

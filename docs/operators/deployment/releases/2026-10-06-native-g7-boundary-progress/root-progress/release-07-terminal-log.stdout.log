@@ -1,0 +1,695 @@
+Changesets	Set up job	﻿2026-10-06T02:25:51.1488871Z Current runner version: '2.337.0'
+Changesets	Set up job	2026-10-06T02:25:51.1514921Z ##[group]Runner Image Provisioner
+Changesets	Set up job	2026-10-06T02:25:51.1516170Z Hosted Compute Agent
+Changesets	Set up job	2026-10-06T02:25:51.1516774Z Version: 20260901.588
+Changesets	Set up job	2026-10-06T02:25:51.1517541Z Commit: f88ec8081b781fac6c440065ac7ff9e710ce3d0b
+Changesets	Set up job	2026-10-06T02:25:51.1518320Z Build Date: 2026-09-01T19:56:44Z
+Changesets	Set up job	2026-10-06T02:25:51.1519074Z Worker ID: {7d3db33b-559d-4e0f-81cc-5b76242d3bcc}
+Changesets	Set up job	2026-10-06T02:25:51.1519840Z Azure Region: northcentralus
+Changesets	Set up job	2026-10-06T02:25:51.1520451Z ##[endgroup]
+Changesets	Set up job	2026-10-06T02:25:51.1522291Z ##[group]Operating System
+Changesets	Set up job	2026-10-06T02:25:51.1523057Z Ubuntu
+Changesets	Set up job	2026-10-06T02:25:51.1523569Z 24.04.5
+Changesets	Set up job	2026-10-06T02:25:51.1524162Z LTS
+Changesets	Set up job	2026-10-06T02:25:51.1524687Z ##[endgroup]
+Changesets	Set up job	2026-10-06T02:25:51.1525996Z ##[group]Runner Image
+Changesets	Set up job	2026-10-06T02:25:51.1526683Z Image: ubuntu-24.04
+Changesets	Set up job	2026-10-06T02:25:51.1527265Z Version: 20260927.320.1
+Changesets	Set up job	2026-10-06T02:25:51.1528414Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260927.320/images/ubuntu/Ubuntu2404-Readme.md
+Changesets	Set up job	2026-10-06T02:25:51.1530225Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260927.320
+Changesets	Set up job	2026-10-06T02:25:51.1531261Z ##[endgroup]
+Changesets	Set up job	2026-10-06T02:25:51.1532673Z ##[group]GITHUB_TOKEN Permissions
+Changesets	Set up job	2026-10-06T02:25:51.1534828Z Actions: write
+Changesets	Set up job	2026-10-06T02:25:51.1535837Z Contents: write
+Changesets	Set up job	2026-10-06T02:25:51.1536559Z Metadata: read
+Changesets	Set up job	2026-10-06T02:25:51.1537158Z PullRequests: write
+Changesets	Set up job	2026-10-06T02:25:51.1537770Z ##[endgroup]
+Changesets	Set up job	2026-10-06T02:25:51.1540259Z Secret source: Actions
+Changesets	Set up job	2026-10-06T02:25:51.1541333Z Cache mode: write
+Changesets	Set up job	2026-10-06T02:25:51.1542266Z Prepare workflow directory
+Changesets	Set up job	2026-10-06T02:25:51.2006416Z Prepare all required actions
+Changesets	Set up job	2026-10-06T02:25:51.2076470Z Getting action download info
+Changesets	Set up job	2026-10-06T02:25:51.4297319Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+Changesets	Set up job	2026-10-06T02:25:51.5595669Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+Changesets	Set up job	2026-10-06T02:25:51.7237412Z Download action repository 'changesets/action@v1' (SHA:a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d)
+Changesets	Set up job	2026-10-06T02:25:52.0846149Z Complete job name: Changesets
+Changesets	Checkout	﻿2026-10-06T02:25:52.1719683Z ##[group]Run actions/checkout@v4
+Changesets	Checkout	2026-10-06T02:25:52.1720573Z with:
+Changesets	Checkout	2026-10-06T02:25:52.1720999Z   fetch-depth: 0
+Changesets	Checkout	2026-10-06T02:25:52.1724937Z   token: ***
+Changesets	Checkout	2026-10-06T02:25:52.1725597Z   repository: cinagroup/cinatoken
+Changesets	Checkout	2026-10-06T02:25:52.1726120Z   ssh-strict: true
+Changesets	Checkout	2026-10-06T02:25:52.1726545Z   ssh-user: git
+Changesets	Checkout	2026-10-06T02:25:52.1726985Z   persist-credentials: true
+Changesets	Checkout	2026-10-06T02:25:52.1727463Z   clean: true
+Changesets	Checkout	2026-10-06T02:25:52.1727901Z   sparse-checkout-cone-mode: true
+Changesets	Checkout	2026-10-06T02:25:52.1728416Z   fetch-tags: false
+Changesets	Checkout	2026-10-06T02:25:52.1728848Z   show-progress: true
+Changesets	Checkout	2026-10-06T02:25:52.1729283Z   lfs: false
+Changesets	Checkout	2026-10-06T02:25:52.1729726Z   submodules: false
+Changesets	Checkout	2026-10-06T02:25:52.1730161Z   set-safe-directory: true
+Changesets	Checkout	2026-10-06T02:25:52.1730662Z   allow-unsafe-pr-checkout: false
+Changesets	Checkout	2026-10-06T02:25:52.1731438Z ##[endgroup]
+Changesets	Checkout	2026-10-06T02:25:52.2759342Z Syncing repository: cinagroup/cinatoken
+Changesets	Checkout	2026-10-06T02:25:52.2762250Z ##[group]Getting Git version info
+Changesets	Checkout	2026-10-06T02:25:52.2763578Z Working directory is '/home/runner/work/cinatoken/cinatoken'
+Changesets	Checkout	2026-10-06T02:25:52.2765815Z [command]/usr/bin/git version
+Changesets	Checkout	2026-10-06T02:25:52.2855549Z git version 2.55.0
+Changesets	Checkout	2026-10-06T02:25:52.2908182Z ##[endgroup]
+Changesets	Checkout	2026-10-06T02:25:52.2914593Z Temporarily overriding HOME='/home/runner/work/_temp/cc6d198f-fb6a-463c-bb07-3c132ab3c3b2' before making global git config changes
+Changesets	Checkout	2026-10-06T02:25:52.2917134Z Adding repository directory to the temporary git global config as a safe directory
+Changesets	Checkout	2026-10-06T02:25:52.2918950Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/cinatoken/cinatoken
+Changesets	Checkout	2026-10-06T02:25:52.2967443Z Deleting the contents of '/home/runner/work/cinatoken/cinatoken'
+Changesets	Checkout	2026-10-06T02:25:52.2972853Z ##[group]Initializing the repository
+Changesets	Checkout	2026-10-06T02:25:52.2978190Z [command]/usr/bin/git init /home/runner/work/cinatoken/cinatoken
+Changesets	Checkout	2026-10-06T02:25:52.3098449Z hint: Using 'master' as the name for the initial branch. This default branch name
+Changesets	Checkout	2026-10-06T02:25:52.3100216Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+Changesets	Checkout	2026-10-06T02:25:52.3102134Z hint: to use in all of your new repositories, which will suppress this warning,
+Changesets	Checkout	2026-10-06T02:25:52.3103637Z hint: call:
+Changesets	Checkout	2026-10-06T02:25:52.3104735Z hint:
+Changesets	Checkout	2026-10-06T02:25:52.3106229Z hint: 	git config --global init.defaultBranch <name>
+Changesets	Checkout	2026-10-06T02:25:52.3107655Z hint:
+Changesets	Checkout	2026-10-06T02:25:52.3109032Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+Changesets	Checkout	2026-10-06T02:25:52.3111056Z hint: 'development'. The just-created branch can be renamed via this command:
+Changesets	Checkout	2026-10-06T02:25:52.3112706Z hint:
+Changesets	Checkout	2026-10-06T02:25:52.3113588Z hint: 	git branch -m <name>
+Changesets	Checkout	2026-10-06T02:25:52.3114536Z hint:
+Changesets	Checkout	2026-10-06T02:25:52.3115954Z hint: Disable this message with "git config set advice.defaultBranchName false"
+Changesets	Checkout	2026-10-06T02:25:52.3118024Z Initialized empty Git repository in /home/runner/work/cinatoken/cinatoken/.git/
+Changesets	Checkout	2026-10-06T02:25:52.3127634Z [command]/usr/bin/git remote add origin https://github.com/cinagroup/cinatoken
+Changesets	Checkout	2026-10-06T02:25:52.3185036Z ##[endgroup]
+Changesets	Checkout	2026-10-06T02:25:52.3187203Z ##[group]Disabling automatic garbage collection
+Changesets	Checkout	2026-10-06T02:25:52.3188853Z [command]/usr/bin/git config --local gc.auto 0
+Changesets	Checkout	2026-10-06T02:25:52.3222582Z ##[endgroup]
+Changesets	Checkout	2026-10-06T02:25:52.3223812Z ##[group]Setting up auth
+Changesets	Checkout	2026-10-06T02:25:52.3230117Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+Changesets	Checkout	2026-10-06T02:25:52.3266977Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Changesets	Checkout	2026-10-06T02:25:52.3644287Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Changesets	Checkout	2026-10-06T02:25:52.3681670Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Changesets	Checkout	2026-10-06T02:25:52.3909603Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Changesets	Checkout	2026-10-06T02:25:52.3948203Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Changesets	Checkout	2026-10-06T02:25:52.4176578Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+Changesets	Checkout	2026-10-06T02:25:52.4219106Z ##[endgroup]
+Changesets	Checkout	2026-10-06T02:25:52.4220572Z ##[group]Fetching the repository
+Changesets	Checkout	2026-10-06T02:25:52.4230793Z [command]/usr/bin/git -c protocol.version=2 fetch --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+Changesets	Checkout	2026-10-06T02:25:56.4100672Z From https://github.com/cinagroup/cinatoken
+Changesets	Checkout	2026-10-06T02:25:56.4101939Z  * [new branch]        changeset-release/main -> origin/changeset-release/main
+Changesets	Checkout	2026-10-06T02:25:56.4102765Z  * [new branch]        main                   -> origin/main
+Changesets	Checkout	2026-10-06T02:25:56.4103605Z  * [new branch]        origin                 -> origin/origin
+Changesets	Checkout	2026-10-06T02:25:56.4104459Z  * [new tag]           v2.6.0                 -> v2.6.0
+Changesets	Checkout	2026-10-06T02:25:56.4105251Z  * [new tag]           v2.8.0                 -> v2.8.0
+Changesets	Checkout	2026-10-06T02:25:56.4113398Z [command]/usr/bin/git branch --list --remote origin/main
+Changesets	Checkout	2026-10-06T02:25:56.4143067Z   origin/main
+Changesets	Checkout	2026-10-06T02:25:56.4153512Z [command]/usr/bin/git rev-parse refs/remotes/origin/main
+Changesets	Checkout	2026-10-06T02:25:56.4180217Z 07d19c1c941cc373019811be3dbf553c441a0ff3
+Changesets	Checkout	2026-10-06T02:25:56.4185394Z ##[endgroup]
+Changesets	Checkout	2026-10-06T02:25:56.4186264Z ##[group]Determining the checkout info
+Changesets	Checkout	2026-10-06T02:25:56.4187481Z ##[endgroup]
+Changesets	Checkout	2026-10-06T02:25:56.4192342Z [command]/usr/bin/git sparse-checkout disable
+Changesets	Checkout	2026-10-06T02:25:56.4253265Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+Changesets	Checkout	2026-10-06T02:25:56.4285520Z ##[group]Checking out the ref
+Changesets	Checkout	2026-10-06T02:25:56.4288720Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+Changesets	Checkout	2026-10-06T02:25:57.4397867Z Updating files:  76% (5711/7441)
+Changesets	Checkout	2026-10-06T02:25:57.4441688Z Updating files:  77% (5730/7441)
+Changesets	Checkout	2026-10-06T02:25:57.4488957Z Updating files:  78% (5804/7441)
+Changesets	Checkout	2026-10-06T02:25:57.4534685Z Updating files:  79% (5879/7441)
+Changesets	Checkout	2026-10-06T02:25:57.4579214Z Updating files:  80% (5953/7441)
+Changesets	Checkout	2026-10-06T02:25:57.4621808Z Updating files:  81% (6028/7441)
+Changesets	Checkout	2026-10-06T02:25:57.4664711Z Updating files:  82% (6102/7441)
+Changesets	Checkout	2026-10-06T02:25:57.4703311Z Updating files:  83% (6177/7441)
+Changesets	Checkout	2026-10-06T02:25:57.4768286Z Updating files:  84% (6251/7441)
+Changesets	Checkout	2026-10-06T02:25:57.4815501Z Updating files:  85% (6325/7441)
+Changesets	Checkout	2026-10-06T02:25:57.4866260Z Updating files:  86% (6400/7441)
+Changesets	Checkout	2026-10-06T02:25:57.4915348Z Updating files:  87% (6474/7441)
+Changesets	Checkout	2026-10-06T02:25:57.4961320Z Updating files:  88% (6549/7441)
+Changesets	Checkout	2026-10-06T02:25:57.5022869Z Updating files:  89% (6623/7441)
+Changesets	Checkout	2026-10-06T02:25:57.5095278Z Updating files:  90% (6697/7441)
+Changesets	Checkout	2026-10-06T02:25:57.5160061Z Updating files:  91% (6772/7441)
+Changesets	Checkout	2026-10-06T02:25:57.5252366Z Updating files:  92% (6846/7441)
+Changesets	Checkout	2026-10-06T02:25:57.5308657Z Updating files:  93% (6921/7441)
+Changesets	Checkout	2026-10-06T02:25:57.5411096Z Updating files:  94% (6995/7441)
+Changesets	Checkout	2026-10-06T02:25:57.5489442Z Updating files:  95% (7069/7441)
+Changesets	Checkout	2026-10-06T02:25:57.5553571Z Updating files:  96% (7144/7441)
+Changesets	Checkout	2026-10-06T02:25:57.5614128Z Updating files:  97% (7218/7441)
+Changesets	Checkout	2026-10-06T02:25:57.5664157Z Updating files:  98% (7293/7441)
+Changesets	Checkout	2026-10-06T02:25:57.5715144Z Updating files:  99% (7367/7441)
+Changesets	Checkout	2026-10-06T02:25:57.5716191Z Updating files: 100% (7441/7441)
+Changesets	Checkout	2026-10-06T02:25:57.5716813Z Updating files: 100% (7441/7441), done.
+Changesets	Checkout	2026-10-06T02:25:57.5806294Z Switched to a new branch 'main'
+Changesets	Checkout	2026-10-06T02:25:57.5812927Z branch 'main' set up to track 'origin/main'.
+Changesets	Checkout	2026-10-06T02:25:57.5888443Z ##[endgroup]
+Changesets	Checkout	2026-10-06T02:25:57.5939270Z [command]/usr/bin/git log -1 --format=%H
+Changesets	Checkout	2026-10-06T02:25:57.5973938Z 07d19c1c941cc373019811be3dbf553c441a0ff3
+Changesets	Setup Node.js	﻿2026-10-06T02:25:57.6303702Z ##[group]Run actions/setup-node@v4
+Changesets	Setup Node.js	2026-10-06T02:25:57.6304049Z with:
+Changesets	Setup Node.js	2026-10-06T02:25:57.6304268Z   node-version-file: .nvmrc
+Changesets	Setup Node.js	2026-10-06T02:25:57.6304517Z   cache: npm
+Changesets	Setup Node.js	2026-10-06T02:25:57.6304720Z   always-auth: false
+Changesets	Setup Node.js	2026-10-06T02:25:57.6304943Z   check-latest: false
+Changesets	Setup Node.js	2026-10-06T02:25:57.6308901Z   token: ***
+Changesets	Setup Node.js	2026-10-06T02:25:57.6309129Z ##[endgroup]
+Changesets	Setup Node.js	2026-10-06T02:25:57.7679721Z Resolved .nvmrc as 22
+Changesets	Setup Node.js	2026-10-06T02:25:57.7737511Z Found in cache @ /opt/hostedtoolcache/node/22.23.3/x64
+Changesets	Setup Node.js	2026-10-06T02:25:57.7741003Z (node:2314) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+Changesets	Setup Node.js	2026-10-06T02:25:57.7741830Z (Use `node --trace-deprecation ...` to show where the warning was created)
+Changesets	Setup Node.js	2026-10-06T02:25:57.7743993Z ##[group]Environment details
+Changesets	Setup Node.js	2026-10-06T02:25:58.1874672Z node: v22.23.3
+Changesets	Setup Node.js	2026-10-06T02:25:58.1875242Z npm: 10.9.9
+Changesets	Setup Node.js	2026-10-06T02:25:58.1875493Z yarn: 1.22.22
+Changesets	Setup Node.js	2026-10-06T02:25:58.1876344Z ##[endgroup]
+Changesets	Setup Node.js	2026-10-06T02:25:58.1920756Z [command]/opt/hostedtoolcache/node/22.23.3/x64/bin/npm config get cache
+Changesets	Setup Node.js	2026-10-06T02:25:58.3012918Z /home/runner/.npm
+Changesets	Setup Node.js	2026-10-06T02:25:58.4176569Z Cache hit for: node-cache-Linux-x64-npm-75880b4bbd0ff5ec746d7c72b50f76a896a6c03c1ce6640cd295bc994cd01db2
+Changesets	Setup Node.js	2026-10-06T02:25:58.4286510Z (node:2314) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+Changesets	Setup Node.js	2026-10-06T02:25:59.5260672Z Received 142606336 of 460488608 (31.0%), 136.1 MBs/sec
+Changesets	Setup Node.js	2026-10-06T02:26:00.5267363Z Received 394264576 of 460488608 (85.6%), 188.0 MBs/sec
+Changesets	Setup Node.js	2026-10-06T02:26:00.8983459Z Received 460488608 of 460488608 (100.0%), 185.1 MBs/sec
+Changesets	Setup Node.js	2026-10-06T02:26:00.8985260Z Cache Size: ~439 MB (460488608 B)
+Changesets	Setup Node.js	2026-10-06T02:26:00.9121433Z [command]/usr/bin/tar -xf /home/runner/work/_temp/65594ded-d079-43da-9439-607c0e18f7bf/cache.tzst -P -C /home/runner/work/cinatoken/cinatoken --use-compress-program unzstd
+Changesets	Setup Node.js	2026-10-06T02:26:01.9003616Z Cache restored successfully
+Changesets	Setup Node.js	2026-10-06T02:26:01.9206523Z Cache restored from key: node-cache-Linux-x64-npm-75880b4bbd0ff5ec746d7c72b50f76a896a6c03c1ce6640cd295bc994cd01db2
+Changesets	Install dependencies	﻿2026-10-06T02:26:01.9421385Z ##[group]Run npm ci
+Changesets	Install dependencies	2026-10-06T02:26:01.9421708Z ^[[36;1mnpm ci^[[0m
+Changesets	Install dependencies	2026-10-06T02:26:01.9744706Z shell: /usr/bin/bash -e {0}
+Changesets	Install dependencies	2026-10-06T02:26:01.9745299Z ##[endgroup]
+Changesets	Install dependencies	2026-10-06T02:26:12.7853579Z npm warn deprecated geojson-linestring-dissolve@0.0.1: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+Changesets	Install dependencies	2026-10-06T02:26:14.2990967Z npm warn deprecated text-encoding@0.6.4: no longer maintained
+Changesets	Install dependencies	2026-10-06T02:26:15.2863394Z npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+Changesets	Install dependencies	2026-10-06T02:26:17.4572107Z npm warn deprecated glob@9.3.5: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+Changesets	Install dependencies	2026-10-06T02:26:53.5502640Z 
+Changesets	Install dependencies	2026-10-06T02:26:53.5503443Z > cinatoken@2.8.0 postinstall
+Changesets	Install dependencies	2026-10-06T02:26:53.5504019Z > npm run gen:wrangler
+Changesets	Install dependencies	2026-10-06T02:26:53.5504374Z 
+Changesets	Install dependencies	2026-10-06T02:26:53.6981542Z 
+Changesets	Install dependencies	2026-10-06T02:26:53.6982268Z > cinatoken@2.8.0 gen:wrangler
+Changesets	Install dependencies	2026-10-06T02:26:53.6982798Z > node scripts/deploy/gen-wrangler.mjs
+Changesets	Install dependencies	2026-10-06T02:26:53.6983088Z 
+Changesets	Install dependencies	2026-10-06T02:26:53.7312561Z gen-wrangler: wrote packages/proxy/wrangler.jsonc
+Changesets	Install dependencies	2026-10-06T02:26:53.7322645Z gen-wrangler: wrote packages/admin/wrangler.jsonc
+Changesets	Install dependencies	2026-10-06T02:26:53.7328766Z gen-wrangler: wrote packages/chain-worker/wrangler.jsonc
+Changesets	Install dependencies	2026-10-06T02:26:53.7338393Z gen-wrangler: wrote packages/core/wrangler.d1.jsonc
+Changesets	Install dependencies	2026-10-06T02:26:53.7340294Z gen-wrangler: proxy=cinatoken-proxy admin=cinatoken-admin chain=cinatoken-chain-worker queue=cinatoken-chain-jobs d1=cinatoken (local, no database_id) batch-infra=false
+Changesets	Install dependencies	2026-10-06T02:26:53.7664031Z 
+Changesets	Install dependencies	2026-10-06T02:26:53.7666040Z added 1480 packages, and audited 1487 packages in 52s
+Changesets	Install dependencies	2026-10-06T02:26:53.7666575Z 
+Changesets	Install dependencies	2026-10-06T02:26:53.7666880Z 450 packages are looking for funding
+Changesets	Install dependencies	2026-10-06T02:26:53.7667439Z   run `npm fund` for details
+Changesets	Install dependencies	2026-10-06T02:26:54.1296886Z 
+Changesets	Install dependencies	2026-10-06T02:26:54.1298500Z 50 vulnerabilities (1 low, 9 moderate, 31 high, 9 critical)
+Changesets	Install dependencies	2026-10-06T02:26:54.1299305Z 
+Changesets	Install dependencies	2026-10-06T02:26:54.1299762Z To address issues that do not require attention, run:
+Changesets	Install dependencies	2026-10-06T02:26:54.1300489Z   npm audit fix
+Changesets	Install dependencies	2026-10-06T02:26:54.1300736Z 
+Changesets	Install dependencies	2026-10-06T02:26:54.1301163Z To address all issues (including breaking changes), run:
+Changesets	Install dependencies	2026-10-06T02:26:54.1301859Z   npm audit fix --force
+Changesets	Install dependencies	2026-10-06T02:26:54.1302140Z 
+Changesets	Install dependencies	2026-10-06T02:26:54.1302393Z Run `npm audit` for details.
+Changesets	Verify package versions (no drift)	﻿2026-10-06T02:26:54.3619752Z ##[group]Run npm run verify:package-versions
+Changesets	Verify package versions (no drift)	2026-10-06T02:26:54.3620167Z ^[[36;1mnpm run verify:package-versions^[[0m
+Changesets	Verify package versions (no drift)	2026-10-06T02:26:54.3707231Z shell: /usr/bin/bash -e {0}
+Changesets	Verify package versions (no drift)	2026-10-06T02:26:54.3707511Z ##[endgroup]
+Changesets	Verify package versions (no drift)	2026-10-06T02:26:54.4722597Z 
+Changesets	Verify package versions (no drift)	2026-10-06T02:26:54.4723215Z > cinatoken@2.8.0 verify:package-versions
+Changesets	Verify package versions (no drift)	2026-10-06T02:26:54.4723946Z > node scripts/ci/verify-package-versions.mjs
+Changesets	Verify package versions (no drift)	2026-10-06T02:26:54.4724236Z 
+Changesets	Verify package versions (no drift)	2026-10-06T02:26:54.5034134Z OK: all package versions == 2.8.0
+Changesets	Create Version PR or push tags	﻿2026-10-06T02:26:54.5212719Z ##[group]Run changesets/action@v1
+Changesets	Create Version PR or push tags	2026-10-06T02:26:54.5213034Z with:
+Changesets	Create Version PR or push tags	2026-10-06T02:26:54.5213259Z   title: chore: version packages
+Changesets	Create Version PR or push tags	2026-10-06T02:26:54.5213538Z   commit: chore: version packages
+Changesets	Create Version PR or push tags	2026-10-06T02:26:54.5213832Z   publish: npm run ci:changeset-tag-push
+Changesets	Create Version PR or push tags	2026-10-06T02:26:54.5214136Z   createGithubReleases: false
+Changesets	Create Version PR or push tags	2026-10-06T02:26:54.5217837Z   github-token: ***
+Changesets	Create Version PR or push tags	2026-10-06T02:26:54.5218080Z   setupGitUser: true
+Changesets	Create Version PR or push tags	2026-10-06T02:26:54.5218310Z   commitMode: git-cli
+Changesets	Create Version PR or push tags	2026-10-06T02:26:54.5218524Z env:
+Changesets	Create Version PR or push tags	2026-10-06T02:26:54.5221759Z   GITHUB_TOKEN: ***
+Changesets	Create Version PR or push tags	2026-10-06T02:26:54.5221988Z ##[endgroup]
+Changesets	Create Version PR or push tags	2026-10-06T02:26:54.6241675Z using resolved cwd: /home/runner/work/cinatoken/cinatoken
+Changesets	Create Version PR or push tags	2026-10-06T02:26:54.6260110Z setting git user
+Changesets	Create Version PR or push tags	2026-10-06T02:26:54.6297847Z [command]/usr/bin/git config user.name "github-actions[bot]"
+Changesets	Create Version PR or push tags	2026-10-06T02:26:54.6386394Z [command]/usr/bin/git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+Changesets	Create Version PR or push tags	2026-10-06T02:26:54.6413583Z setting GitHub credentials
+Changesets	Create Version PR or push tags	2026-10-06T02:26:54.6506022Z [command]/usr/bin/git checkout changeset-release/main
+Changesets	Create Version PR or push tags	2026-10-06T02:26:55.3208305Z Switched to a new branch 'changeset-release/main'
+Changesets	Create Version PR or push tags	2026-10-06T02:26:55.3211274Z branch 'changeset-release/main' set up to track 'origin/changeset-release/main'.
+Changesets	Create Version PR or push tags	2026-10-06T02:26:55.3245356Z [command]/usr/bin/git reset --hard 07d19c1c941cc373019811be3dbf553c441a0ff3
+Changesets	Create Version PR or push tags	2026-10-06T02:26:55.3566397Z HEAD is now at 07d19c1c fix(test): seed current Admin key schema for isolated Web acceptance
+Changesets	Create Version PR or push tags	2026-10-06T02:26:55.3761908Z [command]/opt/hostedtoolcache/node/22.23.3/x64/bin/node /home/runner/work/cinatoken/cinatoken/node_modules/@changesets/cli/bin.js version
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.0008276Z 🦋  All files have been updated. Review them and commit at your leisure
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3489698Z Existing pull requests: [
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3490763Z   {
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3491928Z     "url": "https://api.github.com/repos/cinagroup/cinatoken/pulls/4",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3492678Z     "id": 4753252927,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3493201Z     "node_id": "PR_kwDOT-ESUs8AAAABG1DiPw",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3494007Z     "html_url": "https://github.com/cinagroup/cinatoken/pull/4",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3494919Z     "diff_url": "https://github.com/cinagroup/cinatoken/pull/4.diff",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3496140Z     "patch_url": "https://github.com/cinagroup/cinatoken/pull/4.patch",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3497126Z     "issue_url": "https://api.github.com/repos/cinagroup/cinatoken/issues/4",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3497863Z     "number": 4,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3498261Z     "state": "open",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3498811Z     "locked": false,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3499300Z     "title": "chore: version packages",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3499773Z     "user": {
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3500135Z       "login": "cinagroup",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3500566Z       "id": 224764184,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3501013Z       "node_id": "U_kgDODWWhGA",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3501782Z       "avatar_url": "https://avatars.githubusercontent.com/u/224764184?v=4",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3502524Z       "gravatar_id": "",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3503117Z       "url": "https://api.github.com/users/cinagroup",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3503807Z       "html_url": "https://github.com/cinagroup",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3504646Z       "followers_url": "https://api.github.com/users/cinagroup/followers",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3505956Z       "following_url": "https://api.github.com/users/cinagroup/following{/other_user}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3507107Z       "gists_url": "https://api.github.com/users/cinagroup/gists{/gist_id}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3508150Z       "starred_url": "https://api.github.com/users/cinagroup/starred{/owner}{/repo}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3509247Z       "subscriptions_url": "https://api.github.com/users/cinagroup/subscriptions",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3510274Z       "organizations_url": "https://api.github.com/users/cinagroup/orgs",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3511203Z       "repos_url": "https://api.github.com/users/cinagroup/repos",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3512132Z       "events_url": "https://api.github.com/users/cinagroup/events{/privacy}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3513798Z       "received_events_url": "https://api.github.com/users/cinagroup/received_events",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3514578Z       "type": "User",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3525366Z       "user_view_type": "public",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3525986Z       "site_admin": false
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3526451Z     },
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3533898Z     "body": "Changesets 固定版本组此前漏掉独立 Web，且根 Prettier 2 无法加载 Web 的 Prettier 3 插件，导致 Web changelog 缺失。修复后真实 Release 已生成本候选：根、Core、Tool Engines、Proxy、Admin、Web 六包同步为 2.9.0，并生成六份 changelog；Chain Worker 保持 2.8.0。\n\n候选由 Release run 37403320523 从 main `00858e90592d55fa1d58b15bf1a4ebec1883b848` 生成，已核对候选提交 `4d167799e2d7cf290053003d878e144cb50d3360` 的 13 个差异文件。Actions 在创建 PR 时被仓库现有策略拒绝，因此以草稿保存可审阅候选；仓库权限和 secrets 没有变更。\n\n验证与待办：\n\n- 原 main `4e2ed519` 的 Web frontend、Docker Compose Smoke 和版本校验通过，8 个修复的 PG73 native 测试在原 Linux CI 通过。\n- 新 5 个 PG73 夹具已保留 276 原断言和 7 原 grant 调用；本地语法、既有桥接控制及源码核对通过，当前提交的真实 native CI 待终态。\n- 首轮隔离 G7 在 seed 夹具失败，清理验证通过；HTTPS、认证写、灰度与回滚等完整验收待完成。\n- v364 严格流取消测试仍失败，诊断证据已保留。\n\n本 PR 保持草稿，尚未合并、打 tag 或发布版本。现有独立 Web 生产切流使用 `c13a64b9`，本版本候选未部署。\n\n",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3539549Z     "created_at": "2026-10-06T02:19:18Z",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3540175Z     "updated_at": "2026-10-06T02:19:18Z",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3540666Z     "closed_at": null,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3541018Z     "merged_at": null,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3541385Z     "merge_commit_sha": "7616d64764f895d1a6d1c589da0371086595ac7f",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3541767Z     "assignees": [],
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3542031Z     "requested_reviewers": [],
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3542303Z     "requested_teams": [],
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3542544Z     "labels": [],
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3542767Z     "milestone": null,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3542998Z     "draft": true,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3543436Z     "commits_url": "https://api.github.com/repos/cinagroup/cinatoken/pulls/4/commits",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3544190Z     "review_comments_url": "https://api.github.com/repos/cinagroup/cinatoken/pulls/4/comments",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3545007Z     "review_comment_url": "https://api.github.com/repos/cinagroup/cinatoken/pulls/comments{/number}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3546670Z     "comments_url": "https://api.github.com/repos/cinagroup/cinatoken/issues/4/comments",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3548415Z     "statuses_url": "https://api.github.com/repos/cinagroup/cinatoken/statuses/4d167799e2d7cf290053003d878e144cb50d3360",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3549701Z     "head": {
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3550219Z       "label": "cinagroup:changeset-release/main",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3550880Z       "ref": "changeset-release/main",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3551807Z       "sha": "4d167799e2d7cf290053003d878e144cb50d3360",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3552589Z       "user": {
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3553102Z         "login": "cinagroup",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3553767Z         "id": 224764184,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3554423Z         "node_id": "U_kgDODWWhGA",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3555884Z         "avatar_url": "https://avatars.githubusercontent.com/u/224764184?v=4",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3556667Z         "gravatar_id": "",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3557273Z         "url": "https://api.github.com/users/cinagroup",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3558008Z         "html_url": "https://github.com/cinagroup",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3558876Z         "followers_url": "https://api.github.com/users/cinagroup/followers",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3559998Z         "following_url": "https://api.github.com/users/cinagroup/following{/other_user}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3561178Z         "gists_url": "https://api.github.com/users/cinagroup/gists{/gist_id}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3562359Z         "starred_url": "https://api.github.com/users/cinagroup/starred{/owner}{/repo}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3563510Z         "subscriptions_url": "https://api.github.com/users/cinagroup/subscriptions",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3564597Z         "organizations_url": "https://api.github.com/users/cinagroup/orgs",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3565782Z         "repos_url": "https://api.github.com/users/cinagroup/repos",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3566723Z         "events_url": "https://api.github.com/users/cinagroup/events{/privacy}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3568172Z         "received_events_url": "https://api.github.com/users/cinagroup/received_events",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3568956Z         "type": "User",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3569424Z         "user_view_type": "public",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3569909Z         "site_admin": false
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3570312Z       },
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3570646Z       "repo": {
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3571002Z         "id": 1340150354,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3571470Z         "node_id": "R_kgDOT-ESUg",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3571946Z         "name": "cinatoken",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3572472Z         "full_name": "cinagroup/cinatoken",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3572991Z         "private": false,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3573393Z         "owner": {
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3573813Z           "login": "cinagroup",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3574435Z           "id": 224764184,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3574897Z           "node_id": "U_kgDODWWhGA",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3575892Z           "avatar_url": "https://avatars.githubusercontent.com/u/224764184?v=4",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3576645Z           "gravatar_id": "",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3577231Z           "url": "https://api.github.com/users/cinagroup",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3577942Z           "html_url": "https://github.com/cinagroup",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3578795Z           "followers_url": "https://api.github.com/users/cinagroup/followers",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3579889Z           "following_url": "https://api.github.com/users/cinagroup/following{/other_user}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3581041Z           "gists_url": "https://api.github.com/users/cinagroup/gists{/gist_id}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3582161Z           "starred_url": "https://api.github.com/users/cinagroup/starred{/owner}{/repo}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3583332Z           "subscriptions_url": "https://api.github.com/users/cinagroup/subscriptions",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3584463Z           "organizations_url": "https://api.github.com/users/cinagroup/orgs",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3585694Z           "repos_url": "https://api.github.com/users/cinagroup/repos",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3586776Z           "events_url": "https://api.github.com/users/cinagroup/events{/privacy}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3588000Z           "received_events_url": "https://api.github.com/users/cinagroup/received_events",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3588901Z           "type": "User",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3589516Z           "user_view_type": "public",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3590059Z           "site_admin": false
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3590522Z         },
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3591081Z         "html_url": "https://github.com/cinagroup/cinatoken",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3592595Z         "description": "Cinatoken是可自托管的开源 AI Gateway：把多供应商、多账号、多 API Key 收成一个 Base URL、一个 API Key，并带路由、预算、计费与审计。",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3593560Z         "fork": true,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3594203Z         "url": "https://api.github.com/repos/cinagroup/cinatoken",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3595465Z         "forks_url": "https://api.github.com/repos/cinagroup/cinatoken/forks",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3596595Z         "keys_url": "https://api.github.com/repos/cinagroup/cinatoken/keys{/key_id}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3598017Z         "collaborators_url": "https://api.github.com/repos/cinagroup/cinatoken/collaborators{/collaborator}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3599388Z         "teams_url": "https://api.github.com/repos/cinagroup/cinatoken/teams",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3600547Z         "hooks_url": "https://api.github.com/repos/cinagroup/cinatoken/hooks",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3601856Z         "issue_events_url": "https://api.github.com/repos/cinagroup/cinatoken/issues/events{/number}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3603185Z         "events_url": "https://api.github.com/repos/cinagroup/cinatoken/events",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3604441Z         "assignees_url": "https://api.github.com/repos/cinagroup/cinatoken/assignees{/user}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3606048Z         "branches_url": "https://api.github.com/repos/cinagroup/cinatoken/branches{/branch}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3607264Z         "tags_url": "https://api.github.com/repos/cinagroup/cinatoken/tags",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3608447Z         "blobs_url": "https://api.github.com/repos/cinagroup/cinatoken/git/blobs{/sha}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3610002Z         "git_tags_url": "https://api.github.com/repos/cinagroup/cinatoken/git/tags{/sha}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3611248Z         "git_refs_url": "https://api.github.com/repos/cinagroup/cinatoken/git/refs{/sha}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3612459Z         "trees_url": "https://api.github.com/repos/cinagroup/cinatoken/git/trees{/sha}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3613690Z         "statuses_url": "https://api.github.com/repos/cinagroup/cinatoken/statuses/{sha}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3614941Z         "languages_url": "https://api.github.com/repos/cinagroup/cinatoken/languages",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3616609Z         "stargazers_url": "https://api.github.com/repos/cinagroup/cinatoken/stargazers",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3617871Z         "contributors_url": "https://api.github.com/repos/cinagroup/cinatoken/contributors",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3619374Z         "subscribers_url": "https://api.github.com/repos/cinagroup/cinatoken/subscribers",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3620670Z         "subscription_url": "https://api.github.com/repos/cinagroup/cinatoken/subscription",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3621915Z         "commits_url": "https://api.github.com/repos/cinagroup/cinatoken/commits{/sha}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3623169Z         "git_commits_url": "https://api.github.com/repos/cinagroup/cinatoken/git/commits{/sha}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3624445Z         "comments_url": "https://api.github.com/repos/cinagroup/cinatoken/comments{/number}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3626029Z         "issue_comment_url": "https://api.github.com/repos/cinagroup/cinatoken/issues/comments{/number}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3627369Z         "contents_url": "https://api.github.com/repos/cinagroup/cinatoken/contents/{+path}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3628650Z         "compare_url": "https://api.github.com/repos/cinagroup/cinatoken/compare/{base}...{head}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3629796Z         "merges_url": "https://api.github.com/repos/cinagroup/cinatoken/merges",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3630940Z         "archive_url": "https://api.github.com/repos/cinagroup/cinatoken/{archive_format}{/ref}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3632127Z         "downloads_url": "https://api.github.com/repos/cinagroup/cinatoken/downloads",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3633203Z         "issues_url": "https://api.github.com/repos/cinagroup/cinatoken/issues{/number}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3634277Z         "pulls_url": "https://api.github.com/repos/cinagroup/cinatoken/pulls{/number}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3635694Z         "milestones_url": "https://api.github.com/repos/cinagroup/cinatoken/milestones{/number}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3699658Z         "notifications_url": "https://api.github.com/repos/cinagroup/cinatoken/notifications{?since,all,participating}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3701220Z         "labels_url": "https://api.github.com/repos/cinagroup/cinatoken/labels{/name}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3702509Z         "releases_url": "https://api.github.com/repos/cinagroup/cinatoken/releases{/id}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3703775Z         "deployments_url": "https://api.github.com/repos/cinagroup/cinatoken/deployments",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3704773Z         "created_at": "2026-08-20T00:53:28Z",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3705736Z         "updated_at": "2026-10-06T02:22:25Z",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3706354Z         "pushed_at": "2026-10-06T02:22:21Z",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3707084Z         "git_url": "git://github.com/cinagroup/cinatoken.git",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3707953Z         "ssh_url": "git@github.com:cinagroup/cinatoken.git",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3710879Z         "clone_url": "https://github.com/cinagroup/cinatoken.git",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3711810Z         "svn_url": "https://github.com/cinagroup/cinatoken",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3712607Z         "homepage": "https://cinatoken.com",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3712947Z         "size": 109101,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3713221Z         "stargazers_count": 0,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3713510Z         "watchers_count": 0,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3713798Z         "language": "TypeScript",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3714090Z         "has_issues": false,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3714613Z         "has_projects": true,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3714903Z         "has_downloads": false,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3715456Z         "has_wiki": true,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3715712Z         "has_pages": false,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3715983Z         "has_discussions": false,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3716248Z         "forks_count": 0,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3716483Z         "mirror_url": null,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3716735Z         "archived": false,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3716981Z         "disabled": false,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3717243Z         "open_issues_count": 1,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3717510Z         "license": {
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3717745Z           "key": "agpl-3.0",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3718086Z           "name": "GNU Affero General Public License v3.0",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3718464Z           "spdx_id": "AGPL-3.0",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3718986Z           "url": "https://api.github.com/licenses/agpl-3.0",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3719693Z           "node_id": "MDc6TGljZW5zZTE="
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3720260Z         },
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3720657Z         "allow_forking": true,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3721056Z         "is_template": false,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3721581Z         "web_commit_signoff_required": false,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3722181Z         "has_pull_requests": true,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3722741Z         "pull_request_creation_policy": "all",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3723275Z         "topics": [],
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3723729Z         "visibility": "public",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3724161Z         "forks": 0,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3724542Z         "open_issues": 1,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3724978Z         "watchers": 0,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3725692Z         "default_branch": "main"
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3726134Z       }
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3726452Z     },
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3726794Z     "base": {
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3727214Z       "label": "cinagroup:main",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3727666Z       "ref": "main",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3728197Z       "sha": "00858e90592d55fa1d58b15bf1a4ebec1883b848",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3728742Z       "user": {
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3729126Z         "login": "cinagroup",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3729587Z         "id": 224764184,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3730057Z         "node_id": "U_kgDODWWhGA",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3730840Z         "avatar_url": "https://avatars.githubusercontent.com/u/224764184?v=4",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3731575Z         "gravatar_id": "",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3732157Z         "url": "https://api.github.com/users/cinagroup",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3732859Z         "html_url": "https://github.com/cinagroup",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3733700Z         "followers_url": "https://api.github.com/users/cinagroup/followers",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3734778Z         "following_url": "https://api.github.com/users/cinagroup/following{/other_user}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3736156Z         "gists_url": "https://api.github.com/users/cinagroup/gists{/gist_id}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3737237Z         "starred_url": "https://api.github.com/users/cinagroup/starred{/owner}{/repo}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3738372Z         "subscriptions_url": "https://api.github.com/users/cinagroup/subscriptions",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3739441Z         "organizations_url": "https://api.github.com/users/cinagroup/orgs",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3740391Z         "repos_url": "https://api.github.com/users/cinagroup/repos",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3741356Z         "events_url": "https://api.github.com/users/cinagroup/events{/privacy}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3742471Z         "received_events_url": "https://api.github.com/users/cinagroup/received_events",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3743271Z         "type": "User",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3743721Z         "user_view_type": "public",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3744216Z         "site_admin": false
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3744623Z       },
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3744954Z       "repo": {
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3745582Z         "id": 1340150354,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3746055Z         "node_id": "R_kgDOT-ESUg",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3746540Z         "name": "cinatoken",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3747062Z         "full_name": "cinagroup/cinatoken",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3747800Z         "private": false,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3748209Z         "owner": {
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3748647Z           "login": "cinagroup",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3749090Z           "id": 224764184,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3749562Z           "node_id": "U_kgDODWWhGA",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3750353Z           "avatar_url": "https://avatars.githubusercontent.com/u/224764184?v=4",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3751096Z           "gravatar_id": "",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3751695Z           "url": "https://api.github.com/users/cinagroup",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3752421Z           "html_url": "https://github.com/cinagroup",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3753281Z           "followers_url": "https://api.github.com/users/cinagroup/followers",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3754377Z           "following_url": "https://api.github.com/users/cinagroup/following{/other_user}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3756857Z           "gists_url": "https://api.github.com/users/cinagroup/gists{/gist_id}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3758209Z           "starred_url": "https://api.github.com/users/cinagroup/starred{/owner}{/repo}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3759328Z           "subscriptions_url": "https://api.github.com/users/cinagroup/subscriptions",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3760374Z           "organizations_url": "https://api.github.com/users/cinagroup/orgs",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3761294Z           "repos_url": "https://api.github.com/users/cinagroup/repos",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3762223Z           "events_url": "https://api.github.com/users/cinagroup/events{/privacy}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3763305Z           "received_events_url": "https://api.github.com/users/cinagroup/received_events",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3764091Z           "type": "User",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3764550Z           "user_view_type": "public",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3765894Z           "site_admin": false
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3766350Z         },
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3766879Z         "html_url": "https://github.com/cinagroup/cinatoken",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3768351Z         "description": "Cinatoken是可自托管的开源 AI Gateway：把多供应商、多账号、多 API Key 收成一个 Base URL、一个 API Key，并带路由、预算、计费与审计。",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3769443Z         "fork": true,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3770070Z         "url": "https://api.github.com/repos/cinagroup/cinatoken",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3771037Z         "forks_url": "https://api.github.com/repos/cinagroup/cinatoken/forks",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3772097Z         "keys_url": "https://api.github.com/repos/cinagroup/cinatoken/keys{/key_id}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3773407Z         "collaborators_url": "https://api.github.com/repos/cinagroup/cinatoken/collaborators{/collaborator}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3774644Z         "teams_url": "https://api.github.com/repos/cinagroup/cinatoken/teams",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3775908Z         "hooks_url": "https://api.github.com/repos/cinagroup/cinatoken/hooks",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3777093Z         "issue_events_url": "https://api.github.com/repos/cinagroup/cinatoken/issues/events{/number}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3778299Z         "events_url": "https://api.github.com/repos/cinagroup/cinatoken/events",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3779447Z         "assignees_url": "https://api.github.com/repos/cinagroup/cinatoken/assignees{/user}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3780701Z         "branches_url": "https://api.github.com/repos/cinagroup/cinatoken/branches{/branch}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3781786Z         "tags_url": "https://api.github.com/repos/cinagroup/cinatoken/tags",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3782819Z         "blobs_url": "https://api.github.com/repos/cinagroup/cinatoken/git/blobs{/sha}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3783961Z         "git_tags_url": "https://api.github.com/repos/cinagroup/cinatoken/git/tags{/sha}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3785594Z         "git_refs_url": "https://api.github.com/repos/cinagroup/cinatoken/git/refs{/sha}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3786753Z         "trees_url": "https://api.github.com/repos/cinagroup/cinatoken/git/trees{/sha}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3787922Z         "statuses_url": "https://api.github.com/repos/cinagroup/cinatoken/statuses/{sha}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3789077Z         "languages_url": "https://api.github.com/repos/cinagroup/cinatoken/languages",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3790420Z         "stargazers_url": "https://api.github.com/repos/cinagroup/cinatoken/stargazers",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3791606Z         "contributors_url": "https://api.github.com/repos/cinagroup/cinatoken/contributors",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3792817Z         "subscribers_url": "https://api.github.com/repos/cinagroup/cinatoken/subscribers",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3794003Z         "subscription_url": "https://api.github.com/repos/cinagroup/cinatoken/subscription",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3795404Z         "commits_url": "https://api.github.com/repos/cinagroup/cinatoken/commits{/sha}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3796726Z         "git_commits_url": "https://api.github.com/repos/cinagroup/cinatoken/git/commits{/sha}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3797971Z         "comments_url": "https://api.github.com/repos/cinagroup/cinatoken/comments{/number}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3799503Z         "issue_comment_url": "https://api.github.com/repos/cinagroup/cinatoken/issues/comments{/number}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3800816Z         "contents_url": "https://api.github.com/repos/cinagroup/cinatoken/contents/{+path}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3802091Z         "compare_url": "https://api.github.com/repos/cinagroup/cinatoken/compare/{base}...{head}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3803232Z         "merges_url": "https://api.github.com/repos/cinagroup/cinatoken/merges",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3804372Z         "archive_url": "https://api.github.com/repos/cinagroup/cinatoken/{archive_format}{/ref}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3805797Z         "downloads_url": "https://api.github.com/repos/cinagroup/cinatoken/downloads",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3806930Z         "issues_url": "https://api.github.com/repos/cinagroup/cinatoken/issues{/number}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3808048Z         "pulls_url": "https://api.github.com/repos/cinagroup/cinatoken/pulls{/number}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3809246Z         "milestones_url": "https://api.github.com/repos/cinagroup/cinatoken/milestones{/number}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3810789Z         "notifications_url": "https://api.github.com/repos/cinagroup/cinatoken/notifications{?since,all,participating}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3812197Z         "labels_url": "https://api.github.com/repos/cinagroup/cinatoken/labels{/name}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3813335Z         "releases_url": "https://api.github.com/repos/cinagroup/cinatoken/releases{/id}",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3814486Z         "deployments_url": "https://api.github.com/repos/cinagroup/cinatoken/deployments",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3815656Z         "created_at": "2026-08-20T00:53:28Z",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3816253Z         "updated_at": "2026-10-06T02:22:25Z",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3816834Z         "pushed_at": "2026-10-06T02:22:21Z",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3817522Z         "git_url": "git://github.com/cinagroup/cinatoken.git",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3818301Z         "ssh_url": "git@github.com:cinagroup/cinatoken.git",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3819114Z         "clone_url": "https://github.com/cinagroup/cinatoken.git",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3819928Z         "svn_url": "https://github.com/cinagroup/cinatoken",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3820625Z         "homepage": "https://cinatoken.com",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3821150Z         "size": 109101,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3821608Z         "stargazers_count": 0,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3822073Z         "watchers_count": 0,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3822570Z         "language": "TypeScript",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3823101Z         "has_issues": false,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3823561Z         "has_projects": true,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3824060Z         "has_downloads": false,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3824508Z         "has_wiki": true,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3824941Z         "has_pages": false,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3825648Z         "has_discussions": false,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3826138Z         "forks_count": 0,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3826579Z         "mirror_url": null,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3827015Z         "archived": false,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3827461Z         "disabled": false,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3827940Z         "open_issues_count": 1,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3828392Z         "license": {
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3828795Z           "key": "agpl-3.0",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3829592Z           "name": "GNU Affero General Public License v3.0",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3830232Z           "spdx_id": "AGPL-3.0",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3830859Z           "url": "https://api.github.com/licenses/agpl-3.0",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3831505Z           "node_id": "MDc6TGljZW5zZTE="
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3831980Z         },
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3832374Z         "allow_forking": true,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3832835Z         "is_template": false,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3833370Z         "web_commit_signoff_required": false,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3833948Z         "has_pull_requests": true,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3834521Z         "pull_request_creation_policy": "all",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3835260Z         "topics": [],
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3835734Z         "visibility": "public",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3836176Z         "forks": 0,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3836859Z         "open_issues": 1,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3837290Z         "watchers": 0,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3837742Z         "default_branch": "main"
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3838199Z       }
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3838535Z     },
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3838870Z     "_links": {
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3839229Z       "self": {
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3839857Z         "href": "https://api.github.com/repos/cinagroup/cinatoken/pulls/4"
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3840633Z       },
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3840965Z       "html": {
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3841518Z         "href": "https://github.com/cinagroup/cinatoken/pull/4"
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3842127Z       },
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3842457Z       "issue": {
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3843098Z         "href": "https://api.github.com/repos/cinagroup/cinatoken/issues/4"
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3843793Z       },
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3844138Z       "comments": {
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3844860Z         "href": "https://api.github.com/repos/cinagroup/cinatoken/issues/4/comments"
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3845947Z       },
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3846309Z       "review_comments": {
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3847049Z         "href": "https://api.github.com/repos/cinagroup/cinatoken/pulls/4/comments"
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3847831Z       },
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3848193Z       "review_comment": {
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3849020Z         "href": "https://api.github.com/repos/cinagroup/cinatoken/pulls/comments{/number}"
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3849800Z       },
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3850134Z       "commits": {
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3850833Z         "href": "https://api.github.com/repos/cinagroup/cinatoken/pulls/4/commits"
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3851549Z       },
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3851904Z       "statuses": {
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3852865Z         "href": "https://api.github.com/repos/cinagroup/cinatoken/statuses/4d167799e2d7cf290053003d878e144cb50d3360"
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3853802Z       }
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3854131Z     },
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3854526Z     "author_association": "OWNER",
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3854992Z     "auto_merge": null,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3855668Z     "assignee": null,
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3856127Z     "active_lock_reason": null
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3856557Z   }
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3856885Z ]
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3857376Z [command]/usr/bin/git status --porcelain
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3959813Z  D .changeset/cinatoken-gateway-postgres.md
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3960453Z  M CHANGELOG.md
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3960762Z  M package.json
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3961068Z  M packages/admin/CHANGELOG.md
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3961397Z  M packages/admin/package.json
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3961690Z  M packages/core/CHANGELOG.md
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3961967Z  M packages/core/package.json
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3962256Z  M packages/proxy/CHANGELOG.md
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3962553Z  M packages/proxy/package.json
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3962976Z  M packages/tool-engines/CHANGELOG.md
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3963600Z  M packages/tool-engines/package.json
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3964199Z  M packages/web/package.json
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3964755Z ?? packages/web/CHANGELOG.md
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.3983866Z [command]/usr/bin/git add .
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.4291485Z [command]/usr/bin/git commit -m chore: version packages
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.4502698Z [changeset-release/main 117c3ba4] chore: version packages
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.4503967Z  13 files changed, 39 insertions(+), 11 deletions(-)
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.4504763Z  delete mode 100644 .changeset/cinatoken-gateway-postgres.md
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.4505750Z  create mode 100644 packages/web/CHANGELOG.md
+Changesets	Create Version PR or push tags	2026-10-06T02:26:56.4520799Z [command]/usr/bin/git push origin HEAD:changeset-release/main --force
+Changesets	Create Version PR or push tags	2026-10-06T02:26:57.5442367Z To https://github.com/cinagroup/cinatoken
+Changesets	Create Version PR or push tags	2026-10-06T02:26:57.5443028Z  + 4d167799...117c3ba4 HEAD -> changeset-release/main (forced update)
+Changesets	Create Version PR or push tags	2026-10-06T02:26:57.5487848Z updating found pull request #4
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	﻿2026-10-06T02:26:58.1874434Z ##[group]Run set -euo pipefail
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.1874792Z ^[[36;1mset -euo pipefail^[[0m
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.1875394Z ^[[36;1mif [ -n "${CHANGESETS_PAT}" ]; then^[[0m
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.1876153Z ^[[36;1m  echo "PAT mode detected; expecting tag push to chain-trigger Docker — skip dispatch."^[[0m
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.1876683Z ^[[36;1m  exit 0^[[0m
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.1876891Z ^[[36;1mfi^[[0m
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.1877338Z ^[[36;1mPKG_VERSION="$(node -p "JSON.parse(require('fs').readFileSync('package.json','utf8')).version")"^[[0m
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.1877907Z ^[[36;1mEXPECTED_TAG="v${PKG_VERSION}"^[[0m
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.1878407Z ^[[36;1mecho "Root package.json version: ${PKG_VERSION} (expected release tag: ${EXPECTED_TAG})"^[[0m
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.1878927Z ^[[36;1mecho "GITHUB_SHA: ${GITHUB_SHA}"^[[0m
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.1879224Z ^[[36;1mgit fetch origin --tags^[[0m
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.1879583Z ^[[36;1m# 防御性切回 GITHUB_SHA（changesets/action 通常不改本地 HEAD，但保险）。^[[0m
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.1879962Z ^[[36;1mgit checkout "${GITHUB_SHA}"^[[0m
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.1880397Z ^[[36;1mTAG=$(git describe --tags --exact-match HEAD 2>/dev/null || true)^[[0m
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.1880815Z ^[[36;1mif [ -z "${TAG}" ]; then^[[0m
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.1881212Z ^[[36;1m  if git ls-remote --tags origin -l "${EXPECTED_TAG}" | grep -q .; then^[[0m
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.1882432Z ^[[36;1m    echo "::notice::No tag on HEAD, but origin already has ${EXPECTED_TAG}. \`changeset tag\` skips when the tag exists remotely (even on another commit) — **优先**用新 changeset bump 版本再走 Version PR；**勿**轻易删除远端公共 tag；确需修复远端 tag 后再重跑 Release。"^[[0m
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.1883518Z ^[[36;1m  else^[[0m
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.1884298Z ^[[36;1m    echo "::notice::No exact tag on ${GITHUB_SHA}. Often: changesets/action only opened a Version PR (unreleased .changeset/*.md still on main), or \`changeset tag\` did not push."^[[0m
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.1885576Z ^[[36;1m  fi^[[0m
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.1885811Z ^[[36;1m  echo "Nothing to dispatch."^[[0m
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.1886092Z ^[[36;1m  exit 0^[[0m
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.1886290Z ^[[36;1mfi^[[0m
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.1886508Z ^[[36;1mcase "${TAG}" in^[[0m
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.1886738Z ^[[36;1m  v*) ;;^[[0m
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.1886932Z ^[[36;1m  *)^[[0m
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.1887209Z ^[[36;1m    echo "Tag ${TAG} is not a v* release tag — skip."^[[0m
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.1887558Z ^[[36;1m    exit 0^[[0m
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.1887766Z ^[[36;1m    ;;^[[0m
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.1887959Z ^[[36;1mesac^[[0m
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.1888287Z ^[[36;1mecho "Dispatching cinatoken Docker Images workflow for ref ${TAG}"^[[0m
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.1888932Z ^[[36;1mgh workflow run cinatoken-docker-images.yml --ref "${TAG}" -R "${GITHUB_REPOSITORY}"^[[0m
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.1952712Z shell: /usr/bin/bash -e {0}
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.1952974Z env:
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.1956399Z   GH_TOKEN: ***
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.1956629Z   CHANGESETS_PAT: 
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.1956846Z ##[endgroup]
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.2323150Z Root package.json version: 2.9.0 (expected release tag: v2.9.0)
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.2323868Z GITHUB_SHA: 07d19c1c941cc373019811be3dbf553c441a0ff3
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.7282637Z Note: switching to '07d19c1c941cc373019811be3dbf553c441a0ff3'.
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.7283203Z 
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.7283763Z You are in 'detached HEAD' state. You can look around, make experimental
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.7284898Z changes and commit them, and you can discard any commits you make in this
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.7286309Z state without impacting any branches by switching back to a branch.
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.7286842Z 
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.7287347Z If you want to create a new branch to retain commits you create, you may
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.7288378Z do so (now or later) by using -c with the switch command. Example:
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.7288872Z 
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.7289110Z   git switch -c <new-branch-name>
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.7289428Z 
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.7289648Z Or undo this operation with:
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.7289971Z 
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.7290076Z   git switch -
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.7290213Z 
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.7290524Z Turn off this advice by setting config variable advice.detachedHead to false
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.7291132Z 
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:58.7291597Z HEAD is now at 07d19c1c fix(test): seed current Admin key schema for isolated Web acceptance
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:59.0340836Z ##[notice]No exact tag on 07d19c1c941cc373019811be3dbf553c441a0ff3. Often: changesets/action only opened a Version PR (unreleased .changeset/*.md still on main), or `changeset tag` did not push.
+Changesets	Dispatch Docker images workflow when tag did not chain-trigger	2026-10-06T02:26:59.0348228Z Nothing to dispatch.
+Changesets	Post Setup Node.js	﻿2026-10-06T02:26:59.0436449Z Post job cleanup.
+Changesets	Post Setup Node.js	2026-10-06T02:26:59.1643555Z (node:2707) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+Changesets	Post Setup Node.js	2026-10-06T02:26:59.1644671Z (Use `node --trace-deprecation ...` to show where the warning was created)
+Changesets	Post Setup Node.js	2026-10-06T02:26:59.1648062Z Cache hit occurred on the primary key node-cache-Linux-x64-npm-75880b4bbd0ff5ec746d7c72b50f76a896a6c03c1ce6640cd295bc994cd01db2, not saving cache.
+Changesets	Post Checkout	﻿2026-10-06T02:26:59.1785551Z Post job cleanup.
+Changesets	Post Checkout	2026-10-06T02:26:59.2643984Z [command]/usr/bin/git version
+Changesets	Post Checkout	2026-10-06T02:26:59.2690297Z git version 2.55.0
+Changesets	Post Checkout	2026-10-06T02:26:59.2729107Z Temporarily overriding HOME='/home/runner/work/_temp/fb499708-27b2-4d43-a8c2-e7b1aa2e467e' before making global git config changes
+Changesets	Post Checkout	2026-10-06T02:26:59.2730835Z Adding repository directory to the temporary git global config as a safe directory
+Changesets	Post Checkout	2026-10-06T02:26:59.2734207Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/cinatoken/cinatoken
+Changesets	Post Checkout	2026-10-06T02:26:59.2773649Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+Changesets	Post Checkout	2026-10-06T02:26:59.2810096Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Changesets	Post Checkout	2026-10-06T02:26:59.3068983Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Changesets	Post Checkout	2026-10-06T02:26:59.3098940Z http.https://github.com/.extraheader
+Changesets	Post Checkout	2026-10-06T02:26:59.3111007Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+Changesets	Post Checkout	2026-10-06T02:26:59.3155744Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Changesets	Post Checkout	2026-10-06T02:26:59.3473948Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Changesets	Post Checkout	2026-10-06T02:26:59.3555285Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Changesets	Complete job	﻿2026-10-06T02:26:59.3982042Z Cleaning up orphan processes
+Changesets	Complete job	2026-10-06T02:26:59.4316957Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-node@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

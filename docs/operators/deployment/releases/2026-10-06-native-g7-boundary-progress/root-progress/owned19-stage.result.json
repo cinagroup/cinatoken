@@ -1,0 +1,33 @@
+{
+  "at": "2026-10-06T02:02:48.204Z",
+  "finishedAt": "2026-10-06T02:02:48.343Z",
+  "executable": "C:/Program Files/Git/cmd/git.exe",
+  "args": [
+    "add",
+    "--",
+    ".github/workflows/v364-owned-linux-boundary.yml",
+    ".github/workflows/web-platform-g7.yml",
+    "scripts/diagnostics/v364-owned-linux-boundary/README.md",
+    "scripts/diagnostics/v364-owned-linux-boundary/bare-async-source.mjs",
+    "scripts/diagnostics/v364-owned-linux-boundary/direct-holder.mjs",
+    "scripts/diagnostics/v364-owned-linux-boundary/execute-owned-linux.py",
+    "scripts/diagnostics/v364-owned-linux-boundary/proc-census.mjs",
+    "scripts/diagnostics/v364-owned-linux-boundary/run-boundary.mjs",
+    "scripts/diagnostics/v364-owned-linux-boundary/sealed-package.json",
+    "scripts/diagnostics/v364-owned-linux-boundary/source-inputs.json",
+    "scripts/verification/web-platform-g7/README.md",
+    "scripts/verification/web-platform-g7/admission.mjs",
+    "scripts/verification/web-platform-g7/admission.test.mjs",
+    "scripts/verification/web-platform-g7/cleanup-owned-linux.mjs",
+    "scripts/verification/web-platform-g7/database.mjs",
+    "scripts/verification/web-platform-g7/fixture.test.mjs",
+    "scripts/verification/web-platform-g7/ingress.conf",
+    "scripts/verification/web-platform-g7/run-owned-linux.mjs",
+    "scripts/verification/web-platform-g7/wire.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-boundary-next-20261006-Zm6Z3E/owned19-stage.stdout.log",
+  "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-boundary-next-20261006-Zm6Z3E/owned19-stage.stderr.log"
+}

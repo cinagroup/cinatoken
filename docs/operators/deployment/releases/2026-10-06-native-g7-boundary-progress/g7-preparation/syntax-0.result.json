@@ -1,0 +1,14 @@
+{
+  "id": "syntax-0",
+  "program": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "--check",
+    "scripts/verification/web-platform-g7/admission.mjs"
+  ],
+  "begin": "2026-10-06T01:45:35.566Z",
+  "endedAt": "2026-10-06T01:45:35.627Z",
+  "closed": true,
+  "actualExit": 0,
+  "signal": null,
+  "errorCode": null
+}

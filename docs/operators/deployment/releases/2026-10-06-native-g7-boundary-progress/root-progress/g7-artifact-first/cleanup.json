@@ -1,0 +1,38 @@
+{
+  "containers": [
+    {
+      "name": "g7-6225aa47d5aa463cbcbb48bc4c983312-seed",
+      "verifiedAbsent": true
+    },
+    {
+      "name": "g7-6225aa47d5aa463cbcbb48bc4c983312-migrate",
+      "verifiedAbsent": true
+    },
+    {
+      "name": "g7-6225aa47d5aa463cbcbb48bc4c983312-pg",
+      "verifiedAbsent": true
+    }
+  ],
+  "networks": [
+    {
+      "name": "g7-6225aa47d5aa463cbcbb48bc4c983312-db",
+      "verifiedAbsent": true
+    },
+    {
+      "name": "g7-6225aa47d5aa463cbcbb48bc4c983312-app",
+      "verifiedAbsent": true
+    },
+    {
+      "name": "g7-6225aa47d5aa463cbcbb48bc4c983312-client",
+      "verifiedAbsent": true
+    }
+  ],
+  "volumes": [
+    {
+      "name": "g7-6225aa47d5aa463cbcbb48bc4c983312-pgdata",
+      "verifiedAbsent": true
+    }
+  ],
+  "errors": [],
+  "verifiedAbsent": true
+}

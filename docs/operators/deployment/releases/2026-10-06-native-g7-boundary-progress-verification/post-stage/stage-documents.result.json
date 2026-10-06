@@ -1,0 +1,17 @@
+{
+  "at": "2026-10-06T03:02:25.129Z",
+  "finishedAt": "2026-10-06T03:02:25.330Z",
+  "executable": "C:/Program Files/Git/cmd/git.exe",
+  "args": [
+    "add",
+    "--",
+    ".gitattributes",
+    "docs/developers/architecture/web-frontend-migration.md",
+    "docs/operators/deployment/releases/2026-10-06-native-g7-boundary-progress.json"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/stage-documents.stdout.log",
+  "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-durable-meta-4d1a6190eb7e440fb1bce29961eaaea7/stage-documents.stderr.log"
+}

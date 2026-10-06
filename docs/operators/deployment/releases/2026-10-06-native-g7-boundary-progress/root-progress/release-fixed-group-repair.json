@@ -1,0 +1,93 @@
+{
+  "at": "2026-10-06T01:45:09.360Z",
+  "closed": true,
+  "actualExitCode": 0,
+  "baseCommit": "6658ec978009afa5fe3f4beccf6bde358590b663",
+  "actualChangesetsCliPlanBefore": {
+    "releases": 5,
+    "webIncluded": false
+  },
+  "actualChangesetsCliPlanAfter": {
+    "releases": 6,
+    "webIncluded": true,
+    "newVersion": "2.9.0"
+  },
+  "existingFiveReleaseEntriesExact": true,
+  "allCurrentManifestBytesExact": true,
+  "currentVersionUnchanged": "2.8.0",
+  "productionMutation": false,
+  "repositoryPermissionMutation": false,
+  "draftVersionCandidateNotMerged": true,
+  "manifestProof": [
+    {
+      "file": "package.json",
+      "bytes": 5550,
+      "sha256": "6454126bb47e39c135d3178ce3500b0901581b5b4f9b4b0067ace88e894da3aa",
+      "version": "2.8.0"
+    },
+    {
+      "file": "packages/core/package.json",
+      "bytes": 13537,
+      "sha256": "eef3793fdc1098c901c18a0e97160d4204fb765a786c3445bc558ce7efc49e1e",
+      "version": "2.8.0"
+    },
+    {
+      "file": "packages/tool-engines/package.json",
+      "bytes": 856,
+      "sha256": "82e4981558fca23d8bf5766a64745a084aa33a1df38a0569554b4bd4b534156e",
+      "version": "2.8.0"
+    },
+    {
+      "file": "packages/proxy/package.json",
+      "bytes": 18988,
+      "sha256": "14e2d996c5d81a9ec101e9506dc05d1693c05911aad146fb062742c0c4aca2a1",
+      "version": "2.8.0"
+    },
+    {
+      "file": "packages/admin/package.json",
+      "bytes": 4163,
+      "sha256": "fef666db8d2ed6876f90b48a51b6a636d7b342dab1cae1e0dc82e72657df8188",
+      "version": "2.8.0"
+    },
+    {
+      "file": "packages/web/package.json",
+      "bytes": 4490,
+      "sha256": "dd231d8595d364fd70999f3e84414cc60bb50d41c700572607d5ec717b84c4bd",
+      "version": "2.8.0"
+    }
+  ],
+  "config": {
+    "before": {
+      "bytes": 408,
+      "sha256": "cd84f14c7fbfe742c9af31a9b339336f0ffb8221334e9eed651c4ff3096b6835"
+    },
+    "after": {
+      "bytes": 426,
+      "sha256": "2b4128d5eb962f60967d24cec0320bed15a6db2d630312a075ba3d4f2a6a4d14"
+    }
+  },
+  "documents": [
+    {
+      "file": ".changeset/README.md",
+      "before": {
+        "bytes": 3013,
+        "sha256": "33bd66ccbff3b7e64607c6e310da38be3acbfdc1f6303eb22b2039bf44db855e"
+      },
+      "after": {
+        "bytes": 3059,
+        "sha256": "3a4b7d568eb9d91b2adafc4f817a4a9400220ca9da1067302348a8ccb3b5d792"
+      }
+    },
+    {
+      "file": "docs/maintainers/release-versioning.md",
+      "before": {
+        "bytes": 19448,
+        "sha256": "a240b38cea831901db5a6005eadb1ee59cd26f99e565d1a442647051d5b0adc0"
+      },
+      "after": {
+        "bytes": 19560,
+        "sha256": "7b43aebca7369c774fcf2031837cafc38d054492cba7b0b7839f530d7ff77abd"
+      }
+    }
+  ]
+}

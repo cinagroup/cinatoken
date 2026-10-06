@@ -1,0 +1,59 @@
+name: Web platform G7 isolated TLS and PostgreSQL
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: web-platform-g7-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  owned-linux:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      G7_RECEIPTS: /tmp/cinatoken-g7-receipts-${{ github.run_id }}-${{ github.run_attempt }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Install exact locked dependencies
+        run: npm ci --ignore-scripts
+      - name: Validate owned harness admission and syntax
+        run: |
+          node --test scripts/verification/web-platform-g7/admission.test.mjs
+          for file in scripts/verification/web-platform-g7/*.mjs; do node --check "$file"; done
+          node node_modules/prettier/bin-prettier.js --check scripts/verification/web-platform-g7/*.mjs scripts/verification/web-platform-g7/README.md .github/workflows/web-platform-g7.yml
+      - name: Build and freeze same-SHA Web and SSR
+        run: |
+          npm run build:web
+          node packages/web/scripts/package-release.mjs --id "$GITHUB_SHA" --at "$(git show -s --format=%cI "$GITHUB_SHA")"
+          node packages/web/scripts/package-release.mjs --verify "$GITHUB_SHA"
+      - name: Build actual application images and preload runtime dependencies
+        timeout-minutes: 40
+        run: |
+          docker build --file Dockerfile.admin --tag "cinatoken-g7-admin:$GITHUB_SHA" .
+          docker build --file Dockerfile.proxy --tag "cinatoken-g7-proxy:$GITHUB_SHA" .
+          docker build --file Dockerfile.migrate --tag "cinatoken-g7-migrate:$GITHUB_SHA" .
+          docker build --file Dockerfile.web --build-arg "WEB_RELEASE_PATH=.release/web/$GITHUB_SHA" --tag "cinatoken-g7-web:$GITHUB_SHA" .
+          docker build --file Dockerfile.web-ssr --build-arg "WEB_RELEASE_PATH=.release/web/$GITHUB_SHA" --tag "cinatoken-g7-ssr:$GITHUB_SHA" .
+          docker pull postgres:16-alpine
+          docker pull nginx:stable-alpine
+          openssl version
+      - name: Execute real isolated TLS, Origin, Host, PG catalog and resource checks
+        timeout-minutes: 18
+        run: timeout --signal=TERM --kill-after=60s 17m node scripts/verification/web-platform-g7/run-owned-linux.mjs --execute-owned-linux --sha "$GITHUB_SHA" --out "$G7_RECEIPTS"
+      - name: Retain every available closed success and failure receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-platform-g7-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ env.G7_RECEIPTS }}
+          if-no-files-found: warn
+          retention-days: 30
+          include-hidden-files: false

@@ -1,0 +1,324 @@
+{
+  "closed": true,
+  "actualExitCode": 0,
+  "phase": "tool-validation-only",
+  "oldControlled": {
+    "closed": true,
+    "actualExitCode": 0,
+    "controlledTests": 12,
+    "pass": 12,
+    "fail": 0,
+    "skipped": 0,
+    "cases": [
+      "all-three-real-closure-dialects-and-failures-preserved",
+      "large-binary-gzip-stored-original-source-exact",
+      "wx-repeat-never-overwrites",
+      "unclosed-log-blocked-before-output",
+      "missing-exit-is-not-zero",
+      "reused-late-log-blocked",
+      "receipt-path-escape-blocked",
+      "gzip-path-collision-blocked-before-output",
+      "repository-write-blocked",
+      "duplicate-root-blocked",
+      "stored-tamper-detected",
+      "exact-stored-directory-set-checked"
+    ],
+    "fixtureDirectory": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-collector-controlled-Oconzs",
+    "fixtureReport": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-collector-controlled-Oconzs\\good-output\\2026-10-06-controlled-collector-test.json",
+    "fixtureReportSha256": "5a0f7d9a9a61b774dcbfdcb4f3bbfcb680de868f7893ce5df133c990b9ff4ee1",
+    "realSourceCollectionPerformed": false,
+    "productionRequests": 0,
+    "repoWrites": 0,
+    "actualDockerOrCiExecution": false,
+    "receipt": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-collector-controlled-Oconzs\\controlled-tests.proof.json"
+  },
+  "oldClosure": {
+    "closed": true,
+    "actualExitCode": 0,
+    "pass": 10,
+    "fail": 0,
+    "skipped": 0,
+    "cases": [
+      "executor-authority-nonstandard-name-seven-sha-bound-files-and-failure-retained",
+      "executor-manifest-log-tamper-blocks",
+      "executor-process-group-not-gone-cannot-close-logs",
+      "exact-no-child-preflight-rejection-preserved-without-linux-or-child-exit-proof",
+      "historical-closed-false-report-retained-without-command-proof",
+      "historical-exception-does-not-admit-active-command-logs",
+      "cross-root-copy-provenance-original-receipt-and-exact-negative-terminal-ci-bound",
+      "copied-log-without-explicit-binding-blocked",
+      "mismatched-terminal-ci-sha-blocked",
+      "copied-log-byte-mismatch-blocked"
+    ],
+    "fixtureDirectory": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-collector-closure-boundaries-kDF9wZ",
+    "realSourceCollectionPerformed": false,
+    "repoWrites": 0,
+    "productionRequests": 0,
+    "actualDockerOrCiExecution": false
+  },
+  "newBoundary": {
+    "closed": true,
+    "actualExitCode": 0,
+    "pass": 36,
+    "fail": 0,
+    "skipped": 0,
+    "cases": [
+      "nested-g7-receipt-relative-to-parent-exact-sha-redacted-stored-bytes-and-exit1-preserved",
+      "g7-sha-tamper-blocks",
+      "g7-wrong-bytes-blocks",
+      "g7-bad-hash-blocks",
+      "g7-escape-blocks",
+      "g7-absolute-file-blocks",
+      "g7-missing-descriptor-blocks",
+      "g7-unknown-status-blocks",
+      "g7-not-closed-blocks",
+      "g7-reverse-time-blocks",
+      "g7-secondary-wrong-number-blocks",
+      "g7-secondary-negative-blocks",
+      "g7-secondary-missing-sha-blocks",
+      "g7-secondary-wrong-sha-blocks",
+      "timeout-and-signal-retained-without-invented-numeric-exit",
+      "release-nested-path-descriptor-admitted-with-sha",
+      "string-pointer-object-byte-and-sha-descriptor-retains-exit1",
+      "byte-object-sha-tamper-blocks",
+      "unbound-byte-exact-copy-logs-stay-blocked",
+      "pinned-copy-provenance-only-propagates-original-download-closure-without-ci-success",
+      "wrong-explicit-copy-provenance-sha-blocks",
+      "copy-raw-byte-tamper-blocks",
+      "producer-exit0-cannot-close-unclosed-original-copy",
+      "matching-mirror-basename-does-not-authorize-excluding-other-roots",
+      "actual-release-only-two-mirror-trees-skipped-all-generated-source-closed-commands-retained",
+      "directory-path-escape-blocks",
+      "negative-or-generic-directory-exclusion-not-authorized",
+      "all-other-symlink-inputs-remain-rejected",
+      "actual-old-collector-lacks-new-dialects-negative-audit-preserved",
+      "actual352-original-and601-new-g7-files-and-new-boundary-manifest-admitted-readonly-with-failures-preserved",
+      "actual-new-wire0-kept-separate-from-overall1-and-admin-observer-command1",
+      "even-wire-report-closed-true-and-exit0-never-close-child-logs",
+      "invalid-aggregate-source-sha-blocks",
+      "new-boundary-manifest-tamper-blocks",
+      "new-boundary-group-not-gone-is-not-terminal-authority",
+      "new-boundary-unknown-child-exit-cannot-be-guessed"
+    ],
+    "fixtureDirectory": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-controls-BXwxFW",
+    "realSourceRootsReadonly": 4,
+    "realFilesAdmitted": 962,
+    "actualOldFailuresPreserved": true,
+    "realSourceFilesModified": false,
+    "actualRuntimeOrCiExecution": false,
+    "productionRequests": 0,
+    "repoWrites": 0
+  },
+  "commands": [
+    {
+      "label": "old-controlled-regression-v2",
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-82ab15ef384141c7bf99246c437325d2\\collector-controlled-tests.mjs"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "startedAt": "2026-10-06T02:44:47.673Z",
+      "finishedAt": "2026-10-06T02:44:48.280Z",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "closed": true,
+      "expectedActualExits": [
+        0
+      ],
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-82ab15ef384141c7bf99246c437325d2\\old-controlled-regression-v2.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-82ab15ef384141c7bf99246c437325d2\\old-controlled-regression-v2.stderr.log",
+      "stdoutDescriptor": {
+        "bytes": 1103,
+        "sha256": "e521534b908f1c2779b192371044f67bf7325cc8d07c26d9d31298e16f8ba63f"
+      },
+      "stderrDescriptor": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "label": "old-closure-regression",
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "collector-closure-boundary-tests.mjs"
+      ],
+      "cwd": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-82ab15ef384141c7bf99246c437325d2",
+      "startedAt": "2026-10-06T02:44:48.284Z",
+      "finishedAt": "2026-10-06T02:44:48.595Z",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "closed": true,
+      "expectedActualExits": [
+        0
+      ],
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-82ab15ef384141c7bf99246c437325d2\\old-closure-regression.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-82ab15ef384141c7bf99246c437325d2\\old-closure-regression.stderr.log",
+      "stdoutDescriptor": {
+        "bytes": 876,
+        "sha256": "d2b4545b0a18b016e81165540aa9e109f2538fd47a1a14430f8062d84623d4e8"
+      },
+      "stderrDescriptor": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "label": "new-g7-boundary-descriptor-controls",
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "collector-g7-boundary-descriptor-tests.mjs"
+      ],
+      "cwd": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-82ab15ef384141c7bf99246c437325d2",
+      "startedAt": "2026-10-06T02:44:48.597Z",
+      "finishedAt": "2026-10-06T02:44:51.296Z",
+      "actualExit": 0,
+      "signal": null,
+      "spawnError": null,
+      "closed": true,
+      "expectedActualExits": [
+        0
+      ],
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-82ab15ef384141c7bf99246c437325d2\\new-g7-boundary-descriptor-controls.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-82ab15ef384141c7bf99246c437325d2\\new-g7-boundary-descriptor-controls.stderr.log",
+      "stdoutDescriptor": {
+        "bytes": 2069,
+        "sha256": "9cf7be7d2fd5eaa62b743aec2946c0a6d38f6c42505fa1f758bbd415ca48312f"
+      },
+      "stderrDescriptor": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "label": "syntax-evidence-lib.mjs",
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "evidence-lib.mjs"
+      ],
+      "cwd": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-82ab15ef384141c7bf99246c437325d2",
+      "startedAt": "2026-10-06T02:44:51.299Z",
+      "finishedAt": "2026-10-06T02:44:51.375Z",
+      "actualExit": 0,
+      "signal": null,
+      "closed": true,
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-82ab15ef384141c7bf99246c437325d2\\syntax-evidence-lib.mjs.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-82ab15ef384141c7bf99246c437325d2\\syntax-evidence-lib.mjs.stderr.log",
+      "stdoutDescriptor": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderrDescriptor": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "label": "syntax-collect-evidence.mjs",
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "collect-evidence.mjs"
+      ],
+      "cwd": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-82ab15ef384141c7bf99246c437325d2",
+      "startedAt": "2026-10-06T02:44:51.376Z",
+      "finishedAt": "2026-10-06T02:44:51.448Z",
+      "actualExit": 0,
+      "signal": null,
+      "closed": true,
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-82ab15ef384141c7bf99246c437325d2\\syntax-collect-evidence.mjs.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-82ab15ef384141c7bf99246c437325d2\\syntax-collect-evidence.mjs.stderr.log",
+      "stdoutDescriptor": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderrDescriptor": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "label": "syntax-verify-evidence.mjs",
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "verify-evidence.mjs"
+      ],
+      "cwd": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-82ab15ef384141c7bf99246c437325d2",
+      "startedAt": "2026-10-06T02:44:51.449Z",
+      "finishedAt": "2026-10-06T02:44:51.526Z",
+      "actualExit": 0,
+      "signal": null,
+      "closed": true,
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-82ab15ef384141c7bf99246c437325d2\\syntax-verify-evidence.mjs.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-82ab15ef384141c7bf99246c437325d2\\syntax-verify-evidence.mjs.stderr.log",
+      "stdoutDescriptor": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderrDescriptor": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "label": "syntax-collector-g7-boundary-descriptor-tests.mjs",
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "collector-g7-boundary-descriptor-tests.mjs"
+      ],
+      "cwd": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-82ab15ef384141c7bf99246c437325d2",
+      "startedAt": "2026-10-06T02:44:51.526Z",
+      "finishedAt": "2026-10-06T02:44:51.598Z",
+      "actualExit": 0,
+      "signal": null,
+      "closed": true,
+      "stdout": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-82ab15ef384141c7bf99246c437325d2\\syntax-collector-g7-boundary-descriptor-tests.mjs.stdout.log",
+      "stderr": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-evidence-g7-boundary-tools-82ab15ef384141c7bf99246c437325d2\\syntax-collector-g7-boundary-descriptor-tests.mjs.stderr.log",
+      "stdoutDescriptor": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderrDescriptor": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "originalFiveFilesRemainExact": true,
+  "wrappersAndOldTestsRemainExact": true,
+  "sourceGitOrRepositoryWrites": false,
+  "serviceOrCiExecution": false,
+  "sourceCollectionPerformed": false,
+  "productionRequests": 0,
+  "sourceFiles": [
+    {
+      "file": "evidence-lib.mjs",
+      "bytes": 43891,
+      "sha256": "62e288a1f7b415a43472acd9d12a337eb2a4604d2cf6e3e4166035a28430a941"
+    },
+    {
+      "file": "collect-evidence.mjs",
+      "bytes": 1002,
+      "sha256": "95d1670211f5fdceb6bbdd2ce1db38036de4fb7c31e5d522eef10af3e479bdd5"
+    },
+    {
+      "file": "verify-evidence.mjs",
+      "bytes": 617,
+      "sha256": "ac6c531cc665341fbf51dc3ceed6adbd3f629ab5c17aef51a214de1f1613422d"
+    },
+    {
+      "file": "collector-g7-boundary-descriptor-tests.mjs",
+      "bytes": 17857,
+      "sha256": "472655242f66455a5c0db0b416aad2e0385c93fb9b3a275608d9343c11a77d38"
+    },
+    {
+      "file": "run-tool-validation.mjs",
+      "bytes": 4651,
+      "sha256": "34a29161571a1827b98b70722c76ca629ee8a15e6aac02d0680696ef6996b510"
+    }
+  ]
+}

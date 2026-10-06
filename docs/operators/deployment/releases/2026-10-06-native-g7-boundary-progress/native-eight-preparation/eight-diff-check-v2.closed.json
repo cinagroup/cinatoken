@@ -1,0 +1,26 @@
+{
+  "label": "eight-diff-check-v2",
+  "executable": "git",
+  "args": [
+    "diff",
+    "--check",
+    "--",
+    "scripts/db/cutover/postgres-ordinary-budget-recovery-v354.native.test.mjs",
+    "scripts/db/cutover/postgres-guardrail-budget-admission-login-v351.native.test.mjs",
+    "scripts/db/cutover/postgres-authenticated-request-capability-login-v356.native.test.mjs",
+    "scripts/db/cutover/postgres-authenticated-text-route-ceiling-v357.native.test.mjs",
+    "scripts/db/cutover/postgres-authenticated-text-route-source-fence-v359.native.test.mjs",
+    "scripts/db/cutover/postgres-authenticated-complete-text-quote-v360.native.test.mjs",
+    "scripts/db/cutover/postgres-complete-text-quote-budget-admission-v361.native.test.mjs",
+    "scripts/db/cutover/postgres-complete-text-attempt-grant-v362.native.test.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "startedAt": "2026-10-06T01:36:33.151Z",
+  "finishedAt": "2026-10-06T01:36:33.224Z",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "childClosed": true,
+  "stdout": "eight-diff-check-v2.stdout.log",
+  "stderr": "eight-diff-check-v2.stderr.log"
+}

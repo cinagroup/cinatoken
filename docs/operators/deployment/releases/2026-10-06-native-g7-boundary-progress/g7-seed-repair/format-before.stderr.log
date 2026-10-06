@@ -1,0 +1,3 @@
+[warn] scripts\verification\web-platform-g7\database.mjs
+[warn] scripts\verification\web-platform-g7\fixture.test.mjs
+[warn] Code style issues found in 2 files. Forgot to run Prettier?

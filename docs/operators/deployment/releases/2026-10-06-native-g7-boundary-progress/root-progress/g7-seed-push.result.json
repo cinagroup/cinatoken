@@ -1,0 +1,15 @@
+{
+  "at": "2026-10-06T02:22:17.813Z",
+  "finishedAt": "2026-10-06T02:22:21.706Z",
+  "executable": "C:/Program Files/Git/cmd/git.exe",
+  "args": [
+    "push",
+    "origin",
+    "main"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-boundary-next-20261006-Zm6Z3E/g7-seed-push.stdout.log",
+  "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-boundary-next-20261006-Zm6Z3E/g7-seed-push.stderr.log"
+}

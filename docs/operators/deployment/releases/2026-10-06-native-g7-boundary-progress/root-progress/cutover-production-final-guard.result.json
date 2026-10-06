@@ -1,0 +1,16 @@
+{
+  "at": "2026-10-06T01:59:18.457Z",
+  "finishedAt": "2026-10-06T01:59:24.446Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-boundary-next-20261006-Zm6Z3E/guard-live-deployment.mjs",
+    "cutover-current",
+    "2a0a2777-d3b1-47f0-a0a7-88e701b4d2d9",
+    "c13a64b9c3b2c90adcf736910ea408868d7854f1"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-boundary-next-20261006-Zm6Z3E/cutover-production-final-guard.stdout.log",
+  "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-boundary-next-20261006-Zm6Z3E/cutover-production-final-guard.stderr.log"
+}

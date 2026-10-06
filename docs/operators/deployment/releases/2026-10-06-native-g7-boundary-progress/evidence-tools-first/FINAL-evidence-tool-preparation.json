@@ -1,0 +1,398 @@
+{
+  "schema": "evidence-g7-boundary-tool-preparation-v1",
+  "closed": true,
+  "actualPreparationOutcome": 0,
+  "endedAt": "2026-10-06T02:50:22.816Z",
+  "frozenLibrary": {
+    "file": "evidence-lib.mjs",
+    "bytes": 43891,
+    "sha256": "62e288a1f7b415a43472acd9d12a337eb2a4604d2cf6e3e4166035a28430a941"
+  },
+  "oldLibrary": {
+    "file": "evidence-lib.mjs",
+    "bytes": 31432,
+    "sha256": "c9c46be6e8c08b1c693cec02fc2f94386394412527e46b91028a113be2af7cc4"
+  },
+  "originalFiveExact": true,
+  "wrappersAndOldTestsExact": true,
+  "validation": {
+    "file": "tool-validation.proof.json",
+    "bytes": 13935,
+    "sha256": "80c2f8be53b91205a111459bb7473aa2088b0530103f69d159441755754c7219"
+  },
+  "tests": {
+    "old": 22,
+    "added": 36,
+    "passed": 58,
+    "failed": 0,
+    "skipped": 0,
+    "syntaxChecks": 4
+  },
+  "initialFailure": {
+    "actualExit": 1,
+    "reason": "Old controlled suite invoked from Temp; its repository-output negative test requires repository cwd. Separate v2 invocation used repository cwd without changing original test source.",
+    "receipt": {
+      "file": "old-controlled-regression.result.json",
+      "bytes": 759,
+      "sha256": "3e4f2ec14d941e97583b0018894f0b6268ec5cdef61789a83fcfc6762b0e156f"
+    },
+    "rawFailure": {
+      "file": "old-controlled-regression.stderr.log",
+      "bytes": 706,
+      "sha256": "7a9619f73f58be2f238c9d2b605926dac3aee629c906b79157c94c5d20c75777"
+    },
+    "mirrorArchive": {
+      "file": "initial-controlled-mirror.zip",
+      "bytes": 7138,
+      "sha256": "466c230f4b8743900bd5326fef76ea1d0ac83f472d83a1a1affce7140546122e"
+    },
+    "mirrorIndex": {
+      "file": "initial-controlled-mirror.index.json",
+      "bytes": 13626,
+      "sha256": "6045a29edc7d353de2a80d3c65a8107f4081381e79461d45e9c6f630be4a558e"
+    },
+    "mirrorUnmodified": true
+  },
+  "keepWholeToolRootExceptExactDuplicateFiles": [
+    {
+      "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test.json",
+      "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+    },
+    {
+      "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/failure.result.json",
+      "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+    },
+    {
+      "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/failure.stderr.log",
+      "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+    },
+    {
+      "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/failure.stdout.log",
+      "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+    },
+    {
+      "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/large-before.source.gz",
+      "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+    },
+    {
+      "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/peer-dialect.result.json",
+      "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+    },
+    {
+      "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/peer-dialect.stderr.log",
+      "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+    },
+    {
+      "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/peer-dialect.stdout.log",
+      "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+    },
+    {
+      "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/root-dialect.result.json",
+      "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+    },
+    {
+      "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/root-dialect.stderr.log",
+      "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+    },
+    {
+      "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/root-dialect.stdout.log",
+      "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+    },
+    {
+      "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/script.mjs",
+      "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+    },
+    {
+      "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/signaled.result.json",
+      "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+    },
+    {
+      "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/signaled.stderr.log",
+      "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+    },
+    {
+      "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/signaled.stdout.log",
+      "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+    },
+    {
+      "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/zero.result.json",
+      "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+    },
+    {
+      "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/zero.stderr.log",
+      "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+    },
+    {
+      "file": "collector-must-not-write-repo/2026-10-06-controlled-collector-test/controlled/zero.stdout.log",
+      "reason": "Duplicate stored synthetic controlled-test mirror bytes preserved losslessly in initial-controlled-mirror.zip and exact per-member index. Original failure receipt/raw/source remain included."
+    }
+  ],
+  "completeFrozenInputFileListBeforeThisFinal": [
+    {
+      "file": "collect-evidence.mjs",
+      "bytes": 1002,
+      "sha256": "95d1670211f5fdceb6bbdd2ce1db38036de4fb7c31e5d522eef10af3e479bdd5"
+    },
+    {
+      "file": "collector-closure-boundary-tests.mjs",
+      "bytes": 8703,
+      "sha256": "967171ef8a84ae50abb69549d85d2ed58aa3c481c27bb3ae456cad0e66f60eb6"
+    },
+    {
+      "file": "collector-controlled-tests.mjs",
+      "bytes": 6887,
+      "sha256": "749953cc540f88e86822b33ade25daf4c59ef26864a7445bb413bb3c2f425614"
+    },
+    {
+      "file": "collector-g7-boundary-descriptor-tests.mjs",
+      "bytes": 17857,
+      "sha256": "472655242f66455a5c0db0b416aad2e0385c93fb9b3a275608d9343c11a77d38"
+    },
+    {
+      "file": "evidence-lib.mjs",
+      "bytes": 43891,
+      "sha256": "62e288a1f7b415a43472acd9d12a337eb2a4604d2cf6e3e4166035a28430a941"
+    },
+    {
+      "file": "initial-controlled-mirror.index.json",
+      "bytes": 13626,
+      "sha256": "6045a29edc7d353de2a80d3c65a8107f4081381e79461d45e9c6f630be4a558e"
+    },
+    {
+      "file": "initial-controlled-mirror.zip",
+      "bytes": 7138,
+      "sha256": "466c230f4b8743900bd5326fef76ea1d0ac83f472d83a1a1affce7140546122e"
+    },
+    {
+      "file": "initial-wrapper.exec-tool-receipt.json",
+      "bytes": 815,
+      "sha256": "001d2d9cc44496b951651a94f19b2d8a790fdc1699ef1f601de91e9279df5e64"
+    },
+    {
+      "file": "initial-wrapper.tool-output.txt",
+      "bytes": 853,
+      "sha256": "0ed8393c639c0f5dcd7779eebae520b725a323cddbcb22c1957a46f4026ac2d7"
+    },
+    {
+      "file": "new-g7-boundary-descriptor-controls.result.json",
+      "bytes": 791,
+      "sha256": "5a29c20a41d83b1021184642ea3d834ae9cf95a011f1f9d5f937ae26b599d128"
+    },
+    {
+      "file": "new-g7-boundary-descriptor-controls.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "new-g7-boundary-descriptor-controls.stdout.log",
+      "bytes": 2069,
+      "sha256": "9cf7be7d2fd5eaa62b743aec2946c0a6d38f6c42505fa1f758bbd415ca48312f"
+    },
+    {
+      "file": "old-closure-regression.result.json",
+      "bytes": 759,
+      "sha256": "5b14e8f4d9be5bae5e61b44a2608293ac4eee81cdda1337e05b6ea662e8649c2"
+    },
+    {
+      "file": "old-closure-regression.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "old-closure-regression.stdout.log",
+      "bytes": 876,
+      "sha256": "d2b4545b0a18b016e81165540aa9e109f2538fd47a1a14430f8062d84623d4e8"
+    },
+    {
+      "file": "old-controlled-regression-v2.result.json",
+      "bytes": 789,
+      "sha256": "77c4cff89b712e7e195b406e776d460bad8078e64cd15083057b787b7c0f58ec"
+    },
+    {
+      "file": "old-controlled-regression-v2.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "old-controlled-regression-v2.stdout.log",
+      "bytes": 1103,
+      "sha256": "e521534b908f1c2779b192371044f67bf7325cc8d07c26d9d31298e16f8ba63f"
+    },
+    {
+      "file": "old-controlled-regression.result.json",
+      "bytes": 759,
+      "sha256": "3e4f2ec14d941e97583b0018894f0b6268ec5cdef61789a83fcfc6762b0e156f"
+    },
+    {
+      "file": "old-controlled-regression.stderr.log",
+      "bytes": 706,
+      "sha256": "7a9619f73f58be2f238c9d2b605926dac3aee629c906b79157c94c5d20c75777"
+    },
+    {
+      "file": "old-controlled-regression.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "original-source/collect-evidence.mjs",
+      "bytes": 1002,
+      "sha256": "95d1670211f5fdceb6bbdd2ce1db38036de4fb7c31e5d522eef10af3e479bdd5"
+    },
+    {
+      "file": "original-source/collector-closure-boundary-tests.mjs",
+      "bytes": 8703,
+      "sha256": "967171ef8a84ae50abb69549d85d2ed58aa3c481c27bb3ae456cad0e66f60eb6"
+    },
+    {
+      "file": "original-source/collector-controlled-tests.mjs",
+      "bytes": 6887,
+      "sha256": "749953cc540f88e86822b33ade25daf4c59ef26864a7445bb413bb3c2f425614"
+    },
+    {
+      "file": "original-source/evidence-lib.mjs",
+      "bytes": 31432,
+      "sha256": "c9c46be6e8c08b1c693cec02fc2f94386394412527e46b91028a113be2af7cc4"
+    },
+    {
+      "file": "original-source/verify-evidence.mjs",
+      "bytes": 617,
+      "sha256": "ac6c531cc665341fbf51dc3ceed6adbd3f629ab5c17aef51a214de1f1613422d"
+    },
+    {
+      "file": "original-source-index.json",
+      "bytes": 924,
+      "sha256": "d357b52d8bd6c81a5f175ad87c111487f11ab9a123e7a6fa8d14c48e15a6e6f3"
+    },
+    {
+      "file": "preserve-controlled-mirror.ps1",
+      "bytes": 5061,
+      "sha256": "22ca05c7c0d4de36d2130e76a2de90277342a946a86de119633ceb81c1aae3b6"
+    },
+    {
+      "file": "preserve-controlled-mirror.result.json",
+      "bytes": 968,
+      "sha256": "7ed82b2bb2a858decad507b6e2c0f446037d1fbe28d58a7adb9555edd9bec812"
+    },
+    {
+      "file": "preserve-controlled-mirror.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "preserve-controlled-mirror.stdout.log",
+      "bytes": 296,
+      "sha256": "a23cf0030d9900176f086508eaa40a0d82537ed72c4b68b36efb7ed3b7b5a4ea"
+    },
+    {
+      "file": "run-tool-validation-v2.mjs",
+      "bytes": 4732,
+      "sha256": "7270b47586abee6cff65491edc653f6a166272960b4072b6ea93099279d5e5d7"
+    },
+    {
+      "file": "run-tool-validation.mjs",
+      "bytes": 4651,
+      "sha256": "34a29161571a1827b98b70722c76ca629ee8a15e6aac02d0680696ef6996b510"
+    },
+    {
+      "file": "seal-tool-preparation.mjs",
+      "bytes": 7169,
+      "sha256": "2ea98977706ba900031de45b68e1ed33e9e87c629d3bf21eeab3cbae052cb73e"
+    },
+    {
+      "file": "syntax-collect-evidence.mjs.result.json",
+      "bytes": 708,
+      "sha256": "482946d31681c1f6225c8712c56c0390e97e8c3fe7f1eef30c0061a9165fd79a"
+    },
+    {
+      "file": "syntax-collect-evidence.mjs.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "syntax-collect-evidence.mjs.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "syntax-collector-g7-boundary-descriptor-tests.mjs.result.json",
+      "bytes": 774,
+      "sha256": "4bd671e2572c2c4bc07607f4cab46636f07aec08034e5776f740ccd9553e3886"
+    },
+    {
+      "file": "syntax-collector-g7-boundary-descriptor-tests.mjs.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "syntax-collector-g7-boundary-descriptor-tests.mjs.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "syntax-evidence-lib.mjs.result.json",
+      "bytes": 696,
+      "sha256": "25ef223490b338d7903604f2f876948cabc0b3578a8a12bca132b80d63dfad7b"
+    },
+    {
+      "file": "syntax-evidence-lib.mjs.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "syntax-evidence-lib.mjs.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "syntax-verify-evidence.mjs.result.json",
+      "bytes": 705,
+      "sha256": "cd85ec3445d641291da90152e6afa530a22f5ac47f98eab1d00d44989b319016"
+    },
+    {
+      "file": "syntax-verify-evidence.mjs.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "syntax-verify-evidence.mjs.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "tool-validation.proof.json",
+      "bytes": 13935,
+      "sha256": "80c2f8be53b91205a111459bb7473aa2088b0530103f69d159441755754c7219"
+    },
+    {
+      "file": "validation-v2-wrapper.exec-tool-receipt.json",
+      "bytes": 630,
+      "sha256": "81c47f1c9335b176e9176b0c24c8aa175982f0ae3de7d6dac6b7c6587f5376f6"
+    },
+    {
+      "file": "validation-v2-wrapper.tool-output.txt",
+      "bytes": 280,
+      "sha256": "0cf601bc9462dbbf8f2d90a7ecce23eefc2ca40788e72d66c8b3d97498c6b323"
+    },
+    {
+      "file": "verify-evidence.mjs",
+      "bytes": 617,
+      "sha256": "ac6c531cc665341fbf51dc3ceed6adbd3f629ab5c17aef51a214de1f1613422d"
+    }
+  ],
+  "explicitByteCopyBindingsExample": [
+    {
+      "rootId": "release-preparation",
+      "provenanceFile": "original-ci-failure-provenance.json",
+      "expectedProvenanceSha256": "a5a4fd5a04b84d5fd172b4469fa6ef1af26eb4388d17f2dddf9e0e0974fe2b5d"
+    }
+  ],
+  "limitations": {
+    "sourceArchiveCollected": false,
+    "rootFullConfigAuditPerformed": false,
+    "sourceGitOrRepositoryWrites": false,
+    "realServiceOrCiExecution": false,
+    "productionRequests": 0,
+    "fullG7Complete": false,
+    "fullG8Complete": false
+  }
+}

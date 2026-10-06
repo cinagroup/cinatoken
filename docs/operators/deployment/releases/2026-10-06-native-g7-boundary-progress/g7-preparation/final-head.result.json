@@ -1,0 +1,25 @@
+{
+  "schema": "web-platform-g7-local-command-closed-v1",
+  "id": "head",
+  "program": "git",
+  "args": [
+    "rev-parse",
+    "HEAD"
+  ],
+  "begin": "2026-10-06T01:59:14.466Z",
+  "endedAt": "2026-10-06T01:59:14.512Z",
+  "closed": true,
+  "actualExit": 0,
+  "signal": null,
+  "errorCode": null,
+  "stdout": {
+    "file": "final-head.stdout.log",
+    "bytes": 41,
+    "sha256": "9c1f7bbdc444ffa593d4ea368e0e0b4d87badd6c2c90932cbf9938ec71c3a3f1"
+  },
+  "stderr": {
+    "file": "final-head.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

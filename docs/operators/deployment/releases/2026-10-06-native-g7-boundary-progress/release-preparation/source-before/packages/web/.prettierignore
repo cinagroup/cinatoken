@@ -1,0 +1,10 @@
+# Generated or installed files are outside the delivered source checks.
+node_modules/
+dist/
+.wrangler/
+wrangler.web.jsonc
+src/routeTree.gen.ts
+
+# format/format:check explicitly select the cinatoken entry, shared UI/theme,
+# styles, their shared helpers, configs, edge and scripts. Imported legacy
+# features/routes/stores remain migration inventory, not delivered pages.

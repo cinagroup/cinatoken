@@ -1,0 +1,850 @@
+{
+  "schema": "v364-boundary-portable-preparation-closed-v1",
+  "actualExit": 0,
+  "endedAt": "2026-10-06T01:42:35.580Z",
+  "outcome": "PREPARED_ONLY_LINUX_RUNTIME_NOT_EXECUTED",
+  "reviewBaseHEAD": "6658ec978009afa5fe3f4beccf6bde358590b663",
+  "preparedAtHead": "6658ec978009afa5fe3f4beccf6bde358590b663",
+  "auditedAtHead": "6658ec978009afa5fe3f4beccf6bde358590b663",
+  "executionSHAIsSeparate": true,
+  "commands": [
+    {
+      "id": "syntax-bare-async-source.mjs",
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "C:/cinagroup/cinatoken/scripts/diagnostics/v364-owned-linux-boundary/bare-async-source.mjs"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "timeout": 60000,
+      "status": 0,
+      "signal": null,
+      "error": null,
+      "expectedExit": 0,
+      "outputs": [
+        {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/syntax-bare-async-source.mjs.stdout.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/syntax-bare-async-source.mjs.stderr.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "source": "actual synchronous spawnSync return, not aggregate report",
+      "terminal": true
+    },
+    {
+      "id": "syntax-direct-holder.mjs",
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "C:/cinagroup/cinatoken/scripts/diagnostics/v364-owned-linux-boundary/direct-holder.mjs"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "timeout": 60000,
+      "status": 0,
+      "signal": null,
+      "error": null,
+      "expectedExit": 0,
+      "outputs": [
+        {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/syntax-direct-holder.mjs.stdout.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/syntax-direct-holder.mjs.stderr.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "source": "actual synchronous spawnSync return, not aggregate report",
+      "terminal": true
+    },
+    {
+      "id": "syntax-proc-census.mjs",
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "C:/cinagroup/cinatoken/scripts/diagnostics/v364-owned-linux-boundary/proc-census.mjs"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "timeout": 60000,
+      "status": 0,
+      "signal": null,
+      "error": null,
+      "expectedExit": 0,
+      "outputs": [
+        {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/syntax-proc-census.mjs.stdout.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/syntax-proc-census.mjs.stderr.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "source": "actual synchronous spawnSync return, not aggregate report",
+      "terminal": true
+    },
+    {
+      "id": "syntax-run-boundary.mjs",
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "C:/cinagroup/cinatoken/scripts/diagnostics/v364-owned-linux-boundary/run-boundary.mjs"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "timeout": 60000,
+      "status": 0,
+      "signal": null,
+      "error": null,
+      "expectedExit": 0,
+      "outputs": [
+        {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/syntax-run-boundary.mjs.stdout.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/syntax-run-boundary.mjs.stderr.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "source": "actual synchronous spawnSync return, not aggregate report",
+      "terminal": true
+    },
+    {
+      "id": "python-syntax",
+      "program": "C:/Users/cina/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+      "args": [
+        "-c",
+        "import ast,sys; from pathlib import Path; ast.parse(Path(sys.argv[1]).read_text()); print(\"AST OK\")",
+        "C:/cinagroup/cinatoken/scripts/diagnostics/v364-owned-linux-boundary/execute-owned-linux.py"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "timeout": 60000,
+      "status": 0,
+      "signal": null,
+      "error": null,
+      "expectedExit": 0,
+      "outputs": [
+        {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/python-syntax.stdout.txt",
+          "bytes": 8,
+          "sha256": "ff06d4d965d57ea548627e0bbdfa9fc6afc758841f07c19518346f6b69b77fd7"
+        },
+        {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/python-syntax.stderr.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "source": "actual synchronous spawnSync return, not aggregate report",
+      "terminal": true
+    },
+    {
+      "id": "executor-inert",
+      "program": "C:/Users/cina/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+      "args": [
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/check-executor-inert.py"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "timeout": 60000,
+      "status": 0,
+      "signal": null,
+      "error": null,
+      "expectedExit": 0,
+      "outputs": [
+        {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/executor-inert.stdout.txt",
+          "bytes": 1108,
+          "sha256": "daf28a85f4aef51786f466c4f9d4b744f47463f63843a6c20bae43e4e06be1a9"
+        },
+        {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/executor-inert.stderr.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "source": "actual synchronous spawnSync return, not aggregate report",
+      "terminal": true
+    },
+    {
+      "id": "prepare",
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "C:/cinagroup/cinatoken/scripts/diagnostics/v364-owned-linux-boundary/run-boundary.mjs",
+        "--repo",
+        "C:/cinagroup/cinatoken",
+        "--out",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/prepare-once",
+        "--prepare-only"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "timeout": 60000,
+      "status": 0,
+      "signal": null,
+      "error": null,
+      "expectedExit": 0,
+      "outputs": [
+        {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/prepare.stdout.txt",
+          "bytes": 188,
+          "sha256": "d0fb6ddfb2f28125b237ea941afef91ed4d42eabce2f2cd719d8aa56ca7e1b76"
+        },
+        {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/prepare.stderr.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "source": "actual synchronous spawnSync return, not aggregate report",
+      "terminal": true
+    },
+    {
+      "id": "fresh-out-rejection",
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "C:/cinagroup/cinatoken/scripts/diagnostics/v364-owned-linux-boundary/run-boundary.mjs",
+        "--repo",
+        "C:/cinagroup/cinatoken",
+        "--out",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/prepare-once",
+        "--prepare-only"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "timeout": 10000,
+      "status": 1,
+      "signal": null,
+      "error": null,
+      "expectedExit": 1,
+      "outputs": [
+        {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/fresh-out-rejection.stdout.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/fresh-out-rejection.stderr.txt",
+          "bytes": 670,
+          "sha256": "cfca2a479d081baea6fe93611cb4d0e7ef401c70ce1d82569c1bf655413b27ef"
+        }
+      ],
+      "source": "actual synchronous spawnSync return, not aggregate report",
+      "terminal": true
+    },
+    {
+      "id": "executor-windows-rejection",
+      "program": "C:/Users/cina/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+      "args": [
+        "C:/cinagroup/cinatoken/scripts/diagnostics/v364-owned-linux-boundary/execute-owned-linux.py",
+        "--repo",
+        "C:/cinagroup/cinatoken",
+        "--out",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/executor-windows-rejection",
+        "--execute-linux"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "timeout": 10000,
+      "status": 1,
+      "signal": null,
+      "error": null,
+      "expectedExit": 1,
+      "outputs": [
+        {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/executor-windows-rejection.stdout.txt",
+          "bytes": 252,
+          "sha256": "242c1a92b738edb1fed3a8ac9030b24a4afb2008a5e91414713502133d6fd57a"
+        },
+        {
+          "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/validation-2/executor-windows-rejection.stderr.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "source": "actual synchronous spawnSync return, not aggregate report",
+      "terminal": true
+    }
+  ],
+  "checks": [
+    {
+      "name": "inert Python exact parser/reap/live/Z/kill and actual receipt field branches",
+      "actualExit": 0,
+      "cases": 10,
+      "realProcessSpawned": false
+    },
+    {
+      "name": "original strict baseline command/function byte-equivalent",
+      "actualExit": 0,
+      "bytes": 1343,
+      "sha256": "59e2d9ef356cc80dfc9f62677bea246f1bdf63a71145a36983b5980c9260813a"
+    },
+    {
+      "name": "JS proc parser preserves parenthesized comm and actual start identity",
+      "actualExit": 0
+    },
+    {
+      "name": "workflow manual-only/read-only/no-secrets/strict-exit/bounded/always artifact with hidden exact workflow",
+      "actualExit": 0
+    }
+  ],
+  "newFiles": [
+    {
+      "path": "scripts/diagnostics/v364-owned-linux-boundary/README.md",
+      "bytes": 6071,
+      "sha256": "c4f87c06031bbe6bb9e8179272ce0636e4723ab8892d74f21345e0d376f421ba",
+      "LF": true,
+      "gitCleanFilterPreservesBytes": true,
+      "gitBlobSHA": "46ef2d04d37404eaae38be397a8b5a31ab05a28e"
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux-boundary/bare-async-source.mjs",
+      "bytes": 1864,
+      "sha256": "86b67412be0b8ef8434edfd0f44c8c6e5d306ce3f76ed3deed8305cca2771bfd",
+      "LF": true,
+      "gitCleanFilterPreservesBytes": true,
+      "gitBlobSHA": "2fd188d9878bb5e0afb44de9600661aa4df0787e"
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux-boundary/direct-holder.mjs",
+      "bytes": 785,
+      "sha256": "4019fbebd9575bcad6dd3a987d320cd7eb96d646ab344bea5918f7305faaee84",
+      "LF": true,
+      "gitCleanFilterPreservesBytes": true,
+      "gitBlobSHA": "505931d3c52798671aee5512bf496dfea2bd4213"
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux-boundary/execute-owned-linux.py",
+      "bytes": 16016,
+      "sha256": "18c13e59a48eb27bc840aa1f9bb21aa5da73b7f73ad927dbaf5da24d0b0bbca2",
+      "LF": true,
+      "gitCleanFilterPreservesBytes": true,
+      "gitBlobSHA": "4bf92ed7179244cbe9a0fdc52c0605e42582789c"
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux-boundary/proc-census.mjs",
+      "bytes": 1443,
+      "sha256": "bd6d4ebe4fea6ac1c11b6a67b4f44fcb23595e79a2fdcf10360101888026b8a0",
+      "LF": true,
+      "gitCleanFilterPreservesBytes": true,
+      "gitBlobSHA": "357c6a4df2a92d7d6e82268fd6f0d2a3781eacc1"
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux-boundary/run-boundary.mjs",
+      "bytes": 28489,
+      "sha256": "9341885b2890b8270b2b9732cd46c169bb41c4a3a4f6d4eef5f662ee3cda7cda",
+      "LF": true,
+      "gitCleanFilterPreservesBytes": true,
+      "gitBlobSHA": "a69cf80ce31bc11e45f007019a67b52370f9028a"
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux-boundary/sealed-package.json",
+      "bytes": 1396,
+      "sha256": "b99ede67c0e949fc6aee728f450d564d60c9eed14b60e542e3282e9a8d163af9",
+      "LF": true,
+      "gitCleanFilterPreservesBytes": true,
+      "gitBlobSHA": "aeb3e447bc48f1466ded7acfc845d82297438dba"
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux-boundary/source-inputs.json",
+      "bytes": 6588,
+      "sha256": "7b7b322398fe389f2ae1426746c65f6fe9ee0bc9ea1f91dfc3febfb8aeadfa3d",
+      "LF": true,
+      "gitCleanFilterPreservesBytes": true,
+      "gitBlobSHA": "838ebb7fdf608f1b0e24f21b7933f0b29123e7da"
+    },
+    {
+      "path": ".github/workflows/v364-owned-linux-boundary.yml",
+      "bytes": 1575,
+      "sha256": "08977f1966eb42e67aebdb9986b66cb9f05a618f6a12964a8a2daffc64ce4712",
+      "LF": true,
+      "gitCleanFilterPreservesBytes": true,
+      "gitBlobSHA": "d3f6ce14b4dee4e5ed9e962008fea08ebd5f66df"
+    }
+  ],
+  "pinnedGit": [
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs",
+      "bytes": 13354,
+      "sha256": "d23d1c710b539b6c64655fbb1fa4e4de85b228bab19c757bc0e4de48528972e5",
+      "currentGitBlobExact": true
+    },
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-binding-v364.node.test.mjs",
+      "bytes": 5908,
+      "sha256": "bf02a63395f450b889a784dc58bc537b6cb2f4a3004de07e1833c3e747c27fcc",
+      "currentGitBlobExact": true
+    },
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-gateway-v364.ts",
+      "bytes": 1534,
+      "sha256": "8c85b01ba54daa9b7302c726d20693d08ccb3395350ea6a333817eed46441eaf",
+      "currentGitBlobExact": true
+    },
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-private-v364.ts",
+      "bytes": 5367,
+      "sha256": "44070fcbb7058b915329a150634eaa649c1b3601724495a1620e94ce2d54d1bf",
+      "currentGitBlobExact": true
+    },
+    {
+      "path": "packages/proxy/scripts/staging/chat-holder-synthetic-v364.ts",
+      "bytes": 1019,
+      "sha256": "d89c6964454d9368a0257b6a585c8d5d707c91d09e55f5f2ea7c3545e5f0a16d",
+      "currentGitBlobExact": true
+    },
+    {
+      "path": "packages/proxy/scripts/staging/wrangler.chat-holder-gateway-v364.jsonc",
+      "bytes": 598,
+      "sha256": "e1a0354ff5bf7915c6c125f3003683a56b708d8bdd6006cce6b33c4ff8a6bb77",
+      "currentGitBlobExact": true
+    },
+    {
+      "path": "packages/proxy/scripts/staging/wrangler.chat-holder-private-v364.jsonc",
+      "bytes": 568,
+      "sha256": "6b897d8aa7b01087b75d4b74968d4004e2b6ddb87650bad1203c7693160b2047",
+      "currentGitBlobExact": true
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 830546,
+      "sha256": "f9c65b6e373a231d52d6eda634bb5f947dda3174734cd70e2b811e09fff0b6f0",
+      "currentGitBlobExact": true
+    },
+    {
+      "path": ".nvmrc",
+      "bytes": 3,
+      "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56",
+      "currentGitBlobExact": true
+    },
+    {
+      "path": ".github/workflows/proxy-dispatch-safety.yml",
+      "bytes": 45895,
+      "sha256": "8e883e7f21f77f8367d361f6bd3d060e16c241c28641b3eac85af6835841f152",
+      "currentGitBlobExact": true
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux/execute-owned-linux.py",
+      "bytes": 9535,
+      "sha256": "45c479a4602a3e79b42daa8dcca6e8b9ef876fa986136598b263a505d5320e31",
+      "currentGitBlobExact": true
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux/gateway-observer.mjs",
+      "bytes": 1244,
+      "sha256": "3ec2e49a72697f61bd1867bcde369a7c508cdbf669cd86d7e0eebdfc41dcfe00",
+      "currentGitBlobExact": true
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux/holder-observer.mjs",
+      "bytes": 2461,
+      "sha256": "740727cae646ae757fa50ef7bb6c02a9f9cb4b1b3aa64b0de539c88bbbe09a25",
+      "currentGitBlobExact": true
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux/README.md",
+      "bytes": 6385,
+      "sha256": "75f8f7e5e678157349712128cc68dbb9323de2daa6686e9b4d47e6098f075263",
+      "currentGitBlobExact": true
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux/run-v364-owned-diagnostic.mjs",
+      "bytes": 22852,
+      "sha256": "11850fbe29355f705e3bc4ec68c1b6416565b943dfb7a0f200d4090de5158666",
+      "currentGitBlobExact": true
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux/sealed-package.json",
+      "bytes": 1067,
+      "sha256": "392f5a44294abf70c4bc3cbb7b727103f96d5ce8f5e87bfc3fe3dc8bd1fc6bd4",
+      "currentGitBlobExact": true
+    },
+    {
+      "path": "scripts/diagnostics/v364-owned-linux/source-inputs.json",
+      "bytes": 1789,
+      "sha256": "d42cda26a0f175bace59626b666cfc6e84c29929767c5344cc6680d98b96a083",
+      "currentGitBlobExact": true
+    },
+    {
+      "path": ".github/workflows/v364-owned-linux-diagnostic.yml",
+      "bytes": 1610,
+      "sha256": "5f6c5de1d989f1331bad5a0a861accb848c8b02f5e0a196637e5f35540df241b",
+      "currentGitBlobExact": true
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/native-agent/FINAL-v364-linux-artifact-analysis.json",
+      "bytes": 66439,
+      "sha256": "9bc548f9d070256bcbe9c22cb4ae05d39bb9936103eb91192069e23965f731d2",
+      "currentGitBlobExact": true
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/root-followup/diagnostic-linux-download/_temp/v364-owned-once-37396338452-1/executor.closed.json",
+      "bytes": 2372,
+      "sha256": "fd99e106e006730699d3e8e08cc75c76efe631f117e918c4d18b62d6a5b8850c",
+      "currentGitBlobExact": true
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/root-followup/diagnostic-linux-download/_temp/v364-owned-once-37396338452-1/closed-result.json",
+      "bytes": 10587,
+      "sha256": "ce4fc862e1424dfcb16c77e18346b2d5d16c35390f9dfcd0b8c7a404780d3c1f",
+      "currentGitBlobExact": true
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/root-followup/diagnostic-linux-download/_temp/v364-owned-once-37396338452-1/executor-start.json",
+      "bytes": 675,
+      "sha256": "861ac92d3a2e88ce12161d383cf879b4cd15961534142a301006006067363827",
+      "currentGitBlobExact": true
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/root-followup/diagnostic-linux-download/_temp/v364-owned-once-37396338452-1/executor.stdout.txt",
+      "bytes": 162,
+      "sha256": "e2f1da32c548d2ae6ed4bfeaabcc29ae1a66dd56152a9a423248ed2233def675",
+      "currentGitBlobExact": true
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/root-followup/diagnostic-linux-download/_temp/v364-owned-once-37396338452-1/executor.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "currentGitBlobExact": true
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/root-followup/diagnostic-linux-download/_temp/v364-owned-once-37396338452-1/original-strict.stdout.txt",
+      "bytes": 2870,
+      "sha256": "e92e5054f09bd9d580f5d8e2edd7d8694a6c1e80f0aced769765b92a6e0095bd",
+      "currentGitBlobExact": true
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/root-followup/diagnostic-linux-download/_temp/v364-owned-once-37396338452-1/original-strict.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "currentGitBlobExact": true
+    },
+    {
+      "path": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/root-followup/diagnostic-linux-download/_temp/v364-owned-once-37396338452-1/events.json.gz",
+      "bytes": 31967,
+      "sha256": "09e36873ea521e8f24727634655cec81a5bc365a6b74fe96b7a57daa185a823c",
+      "currentGitBlobExact": true
+    }
+  ],
+  "frozen10Unchanged": true,
+  "legacyDiagnosticUnchanged": true,
+  "prepared": {
+    "schema": "v364-linux-boundary-prepare-v1",
+    "actualExit": 0,
+    "runtimeExecuted": false,
+    "versions": {
+      "workerd": "1.20260828.1",
+      "miniflare": "5.20260828.0-alpha",
+      "wrangler": "4.127.1"
+    },
+    "runtimeCompatibilityDate": "2026-09-04",
+    "frozenConfigDate": "2026-09-25",
+    "sourceUnchanged": true,
+    "reviewBaseHEAD": "6658ec978009afa5fe3f4beccf6bde358590b663",
+    "checkoutSHA": "6658ec978009afa5fe3f4beccf6bde358590b663",
+    "priorRun": {
+      "runId": "37396338452",
+      "checkoutSHA": "fc17551b3016d3533c17cc4ec9b0151a4eedae44",
+      "actualExit": 1,
+      "actualProcessExit": 1,
+      "runnerOutcomeCode": 1,
+      "leftoverGroupKilled": true,
+      "reapedDescendants": [
+        {
+          "pid": 2648,
+          "waitStatus": 0
+        },
+        {
+          "pid": 2661,
+          "waitStatus": 0
+        },
+        {
+          "pid": 2654,
+          "waitStatus": 0
+        },
+        {
+          "pid": 2609,
+          "waitStatus": 0
+        }
+      ],
+      "causeProven": false,
+      "unchangedHistoricalFailure": true
+    },
+    "inputsBefore": [
+      {
+        "path": "packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs",
+        "bytes": 13354,
+        "sha256": "d23d1c710b539b6c64655fbb1fa4e4de85b228bab19c757bc0e4de48528972e5"
+      },
+      {
+        "path": "packages/proxy/scripts/staging/chat-holder-binding-v364.node.test.mjs",
+        "bytes": 5908,
+        "sha256": "bf02a63395f450b889a784dc58bc537b6cb2f4a3004de07e1833c3e747c27fcc"
+      },
+      {
+        "path": "packages/proxy/scripts/staging/chat-holder-gateway-v364.ts",
+        "bytes": 1534,
+        "sha256": "8c85b01ba54daa9b7302c726d20693d08ccb3395350ea6a333817eed46441eaf"
+      },
+      {
+        "path": "packages/proxy/scripts/staging/chat-holder-private-v364.ts",
+        "bytes": 5367,
+        "sha256": "44070fcbb7058b915329a150634eaa649c1b3601724495a1620e94ce2d54d1bf"
+      },
+      {
+        "path": "packages/proxy/scripts/staging/chat-holder-synthetic-v364.ts",
+        "bytes": 1019,
+        "sha256": "d89c6964454d9368a0257b6a585c8d5d707c91d09e55f5f2ea7c3545e5f0a16d"
+      },
+      {
+        "path": "packages/proxy/scripts/staging/wrangler.chat-holder-gateway-v364.jsonc",
+        "bytes": 598,
+        "sha256": "e1a0354ff5bf7915c6c125f3003683a56b708d8bdd6006cce6b33c4ff8a6bb77"
+      },
+      {
+        "path": "packages/proxy/scripts/staging/wrangler.chat-holder-private-v364.jsonc",
+        "bytes": 568,
+        "sha256": "6b897d8aa7b01087b75d4b74968d4004e2b6ddb87650bad1203c7693160b2047"
+      },
+      {
+        "path": "package-lock.json",
+        "bytes": 830546,
+        "sha256": "f9c65b6e373a231d52d6eda634bb5f947dda3174734cd70e2b811e09fff0b6f0"
+      },
+      {
+        "path": ".nvmrc",
+        "bytes": 3,
+        "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56"
+      },
+      {
+        "path": ".github/workflows/proxy-dispatch-safety.yml",
+        "bytes": 45895,
+        "sha256": "8e883e7f21f77f8367d361f6bd3d060e16c241c28641b3eac85af6835841f152"
+      },
+      {
+        "path": "scripts/diagnostics/v364-owned-linux/execute-owned-linux.py",
+        "bytes": 9535,
+        "sha256": "45c479a4602a3e79b42daa8dcca6e8b9ef876fa986136598b263a505d5320e31"
+      },
+      {
+        "path": "scripts/diagnostics/v364-owned-linux/gateway-observer.mjs",
+        "bytes": 1244,
+        "sha256": "3ec2e49a72697f61bd1867bcde369a7c508cdbf669cd86d7e0eebdfc41dcfe00"
+      },
+      {
+        "path": "scripts/diagnostics/v364-owned-linux/holder-observer.mjs",
+        "bytes": 2461,
+        "sha256": "740727cae646ae757fa50ef7bb6c02a9f9cb4b1b3aa64b0de539c88bbbe09a25"
+      },
+      {
+        "path": "scripts/diagnostics/v364-owned-linux/README.md",
+        "bytes": 6385,
+        "sha256": "75f8f7e5e678157349712128cc68dbb9323de2daa6686e9b4d47e6098f075263"
+      },
+      {
+        "path": "scripts/diagnostics/v364-owned-linux/run-v364-owned-diagnostic.mjs",
+        "bytes": 22852,
+        "sha256": "11850fbe29355f705e3bc4ec68c1b6416565b943dfb7a0f200d4090de5158666"
+      },
+      {
+        "path": "scripts/diagnostics/v364-owned-linux/sealed-package.json",
+        "bytes": 1067,
+        "sha256": "392f5a44294abf70c4bc3cbb7b727103f96d5ce8f5e87bfc3fe3dc8bd1fc6bd4"
+      },
+      {
+        "path": "scripts/diagnostics/v364-owned-linux/source-inputs.json",
+        "bytes": 1789,
+        "sha256": "d42cda26a0f175bace59626b666cfc6e84c29929767c5344cc6680d98b96a083"
+      },
+      {
+        "path": ".github/workflows/v364-owned-linux-diagnostic.yml",
+        "bytes": 1610,
+        "sha256": "5f6c5de1d989f1331bad5a0a861accb848c8b02f5e0a196637e5f35540df241b"
+      },
+      {
+        "path": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/native-agent/FINAL-v364-linux-artifact-analysis.json",
+        "bytes": 66439,
+        "sha256": "9bc548f9d070256bcbe9c22cb4ae05d39bb9936103eb91192069e23965f731d2"
+      },
+      {
+        "path": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/root-followup/diagnostic-linux-download/_temp/v364-owned-once-37396338452-1/executor.closed.json",
+        "bytes": 2372,
+        "sha256": "fd99e106e006730699d3e8e08cc75c76efe631f117e918c4d18b62d6a5b8850c"
+      },
+      {
+        "path": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/root-followup/diagnostic-linux-download/_temp/v364-owned-once-37396338452-1/closed-result.json",
+        "bytes": 10587,
+        "sha256": "ce4fc862e1424dfcb16c77e18346b2d5d16c35390f9dfcd0b8c7a404780d3c1f"
+      },
+      {
+        "path": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/root-followup/diagnostic-linux-download/_temp/v364-owned-once-37396338452-1/executor-start.json",
+        "bytes": 675,
+        "sha256": "861ac92d3a2e88ce12161d383cf879b4cd15961534142a301006006067363827"
+      },
+      {
+        "path": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/root-followup/diagnostic-linux-download/_temp/v364-owned-once-37396338452-1/executor.stdout.txt",
+        "bytes": 162,
+        "sha256": "e2f1da32c548d2ae6ed4bfeaabcc29ae1a66dd56152a9a423248ed2233def675"
+      },
+      {
+        "path": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/root-followup/diagnostic-linux-download/_temp/v364-owned-once-37396338452-1/executor.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/root-followup/diagnostic-linux-download/_temp/v364-owned-once-37396338452-1/original-strict.stdout.txt",
+        "bytes": 2870,
+        "sha256": "e92e5054f09bd9d580f5d8e2edd7d8694a6c1e80f0aced769765b92a6e0095bd"
+      },
+      {
+        "path": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/root-followup/diagnostic-linux-download/_temp/v364-owned-once-37396338452-1/original-strict.stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "docs/operators/deployment/releases/2026-10-06-pg73-docker-progress/root-followup/diagnostic-linux-download/_temp/v364-owned-once-37396338452-1/events.json.gz",
+        "bytes": 31967,
+        "sha256": "09e36873ea521e8f24727634655cec81a5bc365a6b74fe96b7a57daa185a823c"
+      }
+    ],
+    "bundleHashes": [
+      {
+        "name": "gateway",
+        "bytes": 1474,
+        "sha256": "ee2b63670af2ed15320204f46ce1130b0b71b3bfbc5d901b160069c595388bd4"
+      },
+      {
+        "name": "holder",
+        "bytes": 5595,
+        "sha256": "05100170dca4896eb11b723e65df7cf437f886797c0e2d255bb238c16e55089c"
+      },
+      {
+        "name": "observedGateway",
+        "bytes": 2690,
+        "sha256": "edafc7ec0e604c51d58ffde272a83c04404d816effa734b1cff1d64b6f84b1f6"
+      },
+      {
+        "name": "observedHolder",
+        "bytes": 7979,
+        "sha256": "573d54572570e06fb83328191156fd2c6ec7fd3551369d802b3d1a3d2646eee1"
+      },
+      {
+        "name": "bare",
+        "bytes": 4254,
+        "sha256": "51a9c4fd45a91b2965f796d4c59223c781822c9d1df204391ba181de8c74f640"
+      },
+      {
+        "name": "direct",
+        "bytes": 11126,
+        "sha256": "6acf670cc4005d3bd47dbb0d6bb076516c0335c8e443f53f96934242b1d22be9"
+      }
+    ],
+    "productionRequests": 0,
+    "ciInvocations": 0
+  },
+  "negativeWindowsReceipt": {
+    "schema": "v364-owned-linux-boundary-executor-closed-v1",
+    "startedEpoch": 1791250953.8295524,
+    "elapsedMs": 16.00000000325963,
+    "actualProcessExit": null,
+    "runnerOutcomeCode": 1,
+    "actualExit": 1,
+    "outcome": "STRICT_FAILURE_OR_UNKNOWN_PRESERVED",
+    "timedOut": false,
+    "interrupted": false,
+    "fatal": {
+      "name": "RuntimeError",
+      "message": "Requires explicit --execute-linux on an owned Linux runner"
+    },
+    "packageSHA256": null,
+    "checkoutSHA": null,
+    "run": {
+      "GITHUB_SHA": null,
+      "GITHUB_RUN_ID": null,
+      "GITHUB_RUN_ATTEMPT": null,
+      "GITHUB_WORKFLOW": null,
+      "GITHUB_JOB": null
+    },
+    "reportedActualExit": null,
+    "closedReportPresent": false,
+    "closure": {
+      "authority": "this executor",
+      "subreaperEnabled": false,
+      "directChildReaped": false,
+      "groupGone": true,
+      "leftoverGroupKilled": false,
+      "signalAttempts": [],
+      "reapedDescendants": [],
+      "processCensus": [],
+      "apiDisposalReported": false,
+      "outerUnforcedGroupClose": false,
+      "gracefulWorkerdExitProven": false,
+      "miniflareDisposeMaySendSIGKILL": true,
+      "errors": []
+    },
+    "causeProven": false,
+    "productionRequests": 0,
+    "ciInvocations": 0,
+    "files": [
+      {
+        "path": "executor.stderr.txt",
+        "bytes": 317,
+        "sha256": "307ed99242cc629b73747b6c4ce900772e7a3a2043c00a0c8516e41f50eff183"
+      },
+      {
+        "path": "executor.stdout.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ]
+  },
+  "negativeIsLinuxClosureProof": false,
+  "allowedRepositoryWrites": [
+    "scripts/diagnostics/v364-owned-linux-boundary/README.md",
+    "scripts/diagnostics/v364-owned-linux-boundary/bare-async-source.mjs",
+    "scripts/diagnostics/v364-owned-linux-boundary/direct-holder.mjs",
+    "scripts/diagnostics/v364-owned-linux-boundary/execute-owned-linux.py",
+    "scripts/diagnostics/v364-owned-linux-boundary/proc-census.mjs",
+    "scripts/diagnostics/v364-owned-linux-boundary/run-boundary.mjs",
+    "scripts/diagnostics/v364-owned-linux-boundary/sealed-package.json",
+    "scripts/diagnostics/v364-owned-linux-boundary/source-inputs.json",
+    ".github/workflows/v364-owned-linux-boundary.yml"
+  ],
+  "originalStrictFailureRetained": true,
+  "causeProven": false,
+  "runtimeExecuted": false,
+  "ciInvocations": 0,
+  "ciPolls": 0,
+  "productionRequests": 0,
+  "databaseRequests": 0,
+  "commits": 0,
+  "historicalPreparationFailure": {
+    "toolChunk": "6c6527",
+    "actualExit": 1,
+    "issue": "Temp builder syntax error before any generated main write; subsequent repaired builder closed0 chunk414b6d. No runtime ran."
+  },
+  "historicalAuditEntryFailure": {
+    "toolChunk": "12f84c",
+    "actualExit": 1,
+    "issue": "Temp auditor Windows static ESM import path rejected before execution; corrected to file URL. No package mutation or runtime ran in failed entry."
+  },
+  "historicalInertStubFailure": {
+    "toolChunk": "52cc24",
+    "actualExit": 1,
+    "source": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/executor-inert.command-result.json",
+    "issue": "Windows Python lacks signal.SIGKILL; Linux signal constants now explicit in inert stub only. Original failed stdout/stderr/result preserved; no native runtime ran."
+  },
+  "limitations": [
+    "Inert stub checks do not prove Linux process behavior.",
+    "Prepare-only used local Node24.14.1; runtime requires Node22.",
+    "Strict original and every new cancellation window remain unexecuted in this preparation; Root owns one actual Linux dispatch.",
+    "Known old runtime cancellation failure and forced flag are retained; no cause/fix/production holder enablement is claimed."
+  ]
+}

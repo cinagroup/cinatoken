@@ -1,0 +1,277 @@
+[
+    {
+        "Id": "44827180d67a32349e5abfd9a40ad10e5c4ebfc7b1df9ea9119fbf24c89512c6",
+        "Created": "2026-10-06T02:32:34.723429768Z",
+        "Path": "/app/docker/entrypoint.app.sh",
+        "Args": [
+            "node",
+            "packages/admin/server.js"
+        ],
+        "State": {
+            "Status": "created",
+            "Running": false,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 0,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "0001-01-01T00:00:00Z",
+            "FinishedAt": "0001-01-01T00:00:00Z"
+        },
+        "Image": "sha256:873e38e6b086bea90f108e023fc4bbcffed9dbe0db77b0c376785f11835aa9d5",
+        "ResolvConfPath": "",
+        "HostnamePath": "",
+        "HostsPath": "",
+        "LogPath": "",
+        "Name": "/g7-8a88cf68945741d1843b63f670b4d364-admin",
+        "RestartCount": 0,
+        "Driver": "overlay2",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": null,
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "g7-8a88cf68945741d1843b63f670b4d364-app",
+            "PortBindings": {},
+            "RestartPolicy": {
+                "Name": "no",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": null,
+            "CgroupnsMode": "private",
+            "Dns": [],
+            "DnsOptions": [],
+            "DnsSearch": [],
+            "ExtraHosts": null,
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 0,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": [],
+            "BlkioDeviceReadBps": [],
+            "BlkioDeviceWriteBps": [],
+            "BlkioDeviceReadIOps": [],
+            "BlkioDeviceWriteIOps": [],
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": [],
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 0,
+            "MemorySwap": 0,
+            "MemorySwappiness": null,
+            "OomKillDisable": false,
+            "PidsLimit": null,
+            "Ulimits": [],
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "Mounts": [
+                {
+                    "Type": "bind",
+                    "Source": "/home/runner/work/cinatoken/cinatoken/scripts/verification/web-platform-g7",
+                    "Target": "/qa",
+                    "ReadOnly": true
+                }
+            ],
+            "MaskedPaths": [
+                "/proc/asound",
+                "/proc/acpi",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/sys/firmware",
+                "/sys/devices/virtual/powercap"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "GraphDriver": {
+            "Data": {
+                "ID": "44827180d67a32349e5abfd9a40ad10e5c4ebfc7b1df9ea9119fbf24c89512c6",
+                "LowerDir": "/var/lib/docker/overlay2/54ccf18e514dfcda30a1d5af3efcbebec4d92bf7cc03045949b7d40dadb3977a-init/diff:/var/lib/docker/overlay2/1sqlrkkj83vraukdn9p5qswep/diff:/var/lib/docker/overlay2/qerb2i3y1cdy5j6bfwe603cmd/diff:/var/lib/docker/overlay2/v3mpcu543hdf7d1tz7d826wev/diff:/var/lib/docker/overlay2/xcb4htuq173dsmrsw5v0bvcm5/diff:/var/lib/docker/overlay2/amun7yn675jwo6ruoa1xxah83/diff:/var/lib/docker/overlay2/p01awe19mte17cgvjht75369h/diff:/var/lib/docker/overlay2/1a47bw3li51uuntj78z4zv9dm/diff:/var/lib/docker/overlay2/ilt336xrh10m8xaljila3gec3/diff:/var/lib/docker/overlay2/3nezeq8pbal3wco292c6d0r8u/diff:/var/lib/docker/overlay2/uxd3ls6an5qon27hq32eqs4yw/diff:/var/lib/docker/overlay2/mkk7dj5trz849ta8s0wixd04l/diff:/var/lib/docker/overlay2/pca9mb37zjd4k7i9xswsqhfbz/diff:/var/lib/docker/overlay2/ey1pdinpbdz03gbyvy1vdvfai/diff:/var/lib/docker/overlay2/o5mhn4f0mziv3yz5gmynlb00e/diff:/var/lib/docker/overlay2/vipaz5nmlgag7ry4cqi4e9p6v/diff:/var/lib/docker/overlay2/kx6v7grlgonb94xlyxkj6a45z/diff:/var/lib/docker/overlay2/sq6pjdhg41hiln5l5vzndxolf/diff:/var/lib/docker/overlay2/r6m0lh6g7uf9exrya8qv9vnw2/diff:/var/lib/docker/overlay2/w34k5l17vf24uav7nxs8rsn3x/diff:/var/lib/docker/overlay2/i6y42fmn1lqfcm6748mohdjlk/diff:/var/lib/docker/overlay2/9cfafzllvgwytumbt5ghtk52k/diff:/var/lib/docker/overlay2/yxy34czkxdpe45qjlstnphyb0/diff:/var/lib/docker/overlay2/9i27nmq4i4oz632og5dl08xux/diff:/var/lib/docker/overlay2/0dbc652ec6fab134aed8e900b6cf3c2fd9d7096109db11d2989d55bc673f88bc/diff:/var/lib/docker/overlay2/7eeb7da616888c0b14972b022038f33035f7d0bde45e4ee6dd3138022933d316/diff:/var/lib/docker/overlay2/605f0c743350fec83c89abc3a244f57465320826da8de8d6dca11988407dacb2/diff:/var/lib/docker/overlay2/b98c447331a3bd062b2486eea5c71fc91da5869987092257bc175115d784d64f/diff",
+                "MergedDir": "/var/lib/docker/overlay2/54ccf18e514dfcda30a1d5af3efcbebec4d92bf7cc03045949b7d40dadb3977a/merged",
+                "UpperDir": "/var/lib/docker/overlay2/54ccf18e514dfcda30a1d5af3efcbebec4d92bf7cc03045949b7d40dadb3977a/diff",
+                "WorkDir": "/var/lib/docker/overlay2/54ccf18e514dfcda30a1d5af3efcbebec4d92bf7cc03045949b7d40dadb3977a/work"
+            },
+            "Name": "overlay2"
+        },
+        "Mounts": [
+            {
+                "Type": "bind",
+                "Source": "/home/runner/work/cinatoken/cinatoken/scripts/verification/web-platform-g7",
+                "Destination": "/qa",
+                "Mode": "",
+                "RW": false,
+                "Propagation": "rprivate"
+            }
+        ],
+        "Config": {
+            "Hostname": "44827180d67a",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": true,
+            "AttachStderr": true,
+            "ExposedPorts": {
+                "8789/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "DATABASE_DRIVER=postgres",
+                "DATABASE_URL=postgres://postgres:[REDACTED-G7-EPHEMERAL]@pg:5432/g7",
+                "SHARED_KEY_ENCRYPTION_SECRET=[REDACTED-G7-EPHEMERAL]",
+                "AUTO_MIGRATE=false",
+                "PORT=8789",
+                "HOSTNAME=0.0.0.0",
+                "CINATOKEN_PUBLIC_API_ORIGIN=http://gateway-proxy:8787",
+                "CINATOKEN_APP_ORIGIN=https://app.test",
+                "CINAAUTH_ISSUER=https://auth.test",
+                "CINAAUTH_ACCOUNT_ORIGIN=https://accounts.test",
+                "CINATOKEN_OIDC_CLIENT_ID=g7-controlled-local",
+                "CINATOKEN_OIDC_CLIENT_SECRET=[REDACTED-G7-EPHEMERAL]",
+                "CINATOKEN_OIDC_BRIDGE_SECRET=[REDACTED-G7-EPHEMERAL]",
+                "CINATOKEN_OIDC_TRANSACTION_SECRET=[REDACTED-G7-EPHEMERAL]",
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "NODE_VERSION=22.22.2",
+                "YARN_VERSION=1.22.22",
+                "NODE_ENV=production",
+                "NEXT_TELEMETRY_DISABLED=1"
+            ],
+            "Cmd": [
+                "node",
+                "packages/admin/server.js"
+            ],
+            "Healthcheck": {
+                "Test": [
+                    "CMD-SHELL",
+                    "node -e \"fetch('http://127.0.0.1:'+(process.env.PORT||8789)+'/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\""
+                ],
+                "Interval": 30000000000,
+                "Timeout": 5000000000,
+                "StartPeriod": 40000000000,
+                "Retries": 3
+            },
+            "Image": "sha256:873e38e6b086bea90f108e023fc4bbcffed9dbe0db77b0c376785f11835aa9d5",
+            "Volumes": null,
+            "WorkingDir": "/app",
+            "Entrypoint": [
+                "/app/docker/entrypoint.app.sh"
+            ],
+            "OnBuild": null,
+            "Labels": {
+                "cinatoken.g7.owner": "g7-8a88cf68945741d1843b63f670b4d364"
+            }
+        },
+        "NetworkSettings": {
+            "Bridge": "",
+            "SandboxID": "",
+            "SandboxKey": "",
+            "Ports": {},
+            "HairpinMode": false,
+            "LinkLocalIPv6Address": "",
+            "LinkLocalIPv6PrefixLen": 0,
+            "SecondaryIPAddresses": null,
+            "SecondaryIPv6Addresses": null,
+            "EndpointID": "",
+            "Gateway": "",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "IPAddress": "",
+            "IPPrefixLen": 0,
+            "IPv6Gateway": "",
+            "MacAddress": "",
+            "Networks": {
+                "g7-8a88cf68945741d1843b63f670b4d364-app": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": [
+                        "gateway-admin"
+                    ],
+                    "MacAddress": "",
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "",
+                    "EndpointID": "",
+                    "Gateway": "",
+                    "IPAddress": "",
+                    "IPPrefixLen": 0,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": null
+                },
+                "g7-8a88cf68945741d1843b63f670b4d364-db": {
+                    "IPAMConfig": {},
+                    "Links": null,
+                    "Aliases": [],
+                    "MacAddress": "",
+                    "DriverOpts": {},
+                    "GwPriority": 0,
+                    "NetworkID": "",
+                    "EndpointID": "",
+                    "Gateway": "",
+                    "IPAddress": "",
+                    "IPPrefixLen": 0,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": [
+                        "g7-8a88cf68945741d1843b63f670b4d364-admin",
+                        "44827180d67a"
+                    ]
+                }
+            }
+        }
+    }
+]

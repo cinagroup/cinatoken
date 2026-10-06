@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-06T02:11:54.638Z",
+  "finishedAt": "2026-10-06T02:12:00.397Z",
+  "executable": "C:/Program Files/GitHub CLI/gh.exe",
+  "args": [
+    "run",
+    "download",
+    "37402317152",
+    "--name",
+    "web-platform-g7-67f8b3df2f2b6e8159806767ecce1efa1904d27a-37402317152-1",
+    "--dir",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-boundary-next-20261006-Zm6Z3E/g7-artifact-first"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-boundary-next-20261006-Zm6Z3E/owned19-g7-artifact-download.stdout.log",
+  "stderr": "C:/Users/cina/AppData/Local/Temp/cinatoken-native-g7-boundary-next-20261006-Zm6Z3E/owned19-g7-artifact-download.stderr.log"
+}

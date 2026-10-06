@@ -1,0 +1,299 @@
+{
+  "schema": "cinatoken.native-five-ci-readonly-review.v1",
+  "at": "2026-10-06T02:31:12.179Z",
+  "actualExit": 0,
+  "currentHead": "07d19c1c941cc373019811be3dbf553c441a0ff3",
+  "actualCiSource": "00858e90592d55fa1d58b15bf1a4ebec1883b848",
+  "runId": 37403320556,
+  "jobId": 112075179249,
+  "conclusionSupported": true,
+  "cases": [
+    {
+      "step": 47,
+      "file": "scripts/db/cutover/postgres-complete-text-secretless-plan-v365.native.test.mjs",
+      "commandLine": 1334,
+      "pass": 1,
+      "fail": 0,
+      "skipped": 0,
+      "directTap": [
+        "native-financial-consumer\tRun gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\t2026-10-06T02:20:06.3542846Z ok 1 - v365 direct ingress LOGIN sees only fresh committed quote route IDs",
+        "native-financial-consumer\tRun gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\t2026-10-06T02:20:06.3808340Z # pass 1",
+        "native-financial-consumer\tRun gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\t2026-10-06T02:20:06.3808640Z # fail 0",
+        "native-financial-consumer\tRun gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\t2026-10-06T02:20:06.3809406Z # skipped 0"
+      ]
+    },
+    {
+      "step": 48,
+      "file": "scripts/db/cutover/postgres-complete-text-send-start-v365.native.test.mjs",
+      "commandLine": 1357,
+      "pass": 1,
+      "fail": 0,
+      "skipped": 0,
+      "directTap": [
+        "native-financial-consumer\tRun gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\t2026-10-06T02:20:38.9742647Z ok 1 - v365 holder records one committed send-start per v362 unknown grant",
+        "native-financial-consumer\tRun gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\t2026-10-06T02:20:38.9895637Z # pass 1",
+        "native-financial-consumer\tRun gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\t2026-10-06T02:20:38.9895916Z # fail 0",
+        "native-financial-consumer\tRun gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\t2026-10-06T02:20:38.9905886Z # skipped 0"
+      ]
+    },
+    {
+      "step": 49,
+      "file": "scripts/db/cutover/postgres-complete-text-private-route-reader-v366.native.test.mjs",
+      "commandLine": 1384,
+      "pass": 1,
+      "fail": 0,
+      "skipped": 0,
+      "directTap": [
+        "native-financial-consumer\tRun gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\t2026-10-06T02:20:42.1991026Z ok 1 - v366 private reader returns only a fresh selected v360 route under its direct LOGIN",
+        "native-financial-consumer\tRun gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\t2026-10-06T02:20:42.2576387Z # pass 1",
+        "native-financial-consumer\tRun gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\t2026-10-06T02:20:42.2576909Z # fail 0",
+        "native-financial-consumer\tRun gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\t2026-10-06T02:20:42.2578858Z # skipped 0"
+      ]
+    },
+    {
+      "step": 50,
+      "file": "scripts/db/cutover/postgres-complete-text-read-grant-bridge-v367.native.test.mjs",
+      "commandLine": 1407,
+      "pass": 1,
+      "fail": 0,
+      "skipped": 0,
+      "directTap": [
+        "native-financial-consumer\tRun gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\t2026-10-06T02:20:45.9761216Z ok 1 - v367 committed private read cannot authorize send after source mutation",
+        "native-financial-consumer\tRun gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\t2026-10-06T02:20:46.0390047Z # pass 1",
+        "native-financial-consumer\tRun gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\t2026-10-06T02:20:46.0390535Z # fail 0",
+        "native-financial-consumer\tRun gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\t2026-10-06T02:20:46.0391332Z # skipped 0"
+      ]
+    },
+    {
+      "step": 51,
+      "file": "scripts/db/cutover/postgres-complete-text-result-facts-v366.native.test.mjs",
+      "commandLine": 1434,
+      "pass": 1,
+      "fail": 0,
+      "skipped": 0,
+      "directTap": [
+        "native-financial-consumer\tRun gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\t2026-10-06T02:20:48.3781533Z ok 1 - v366 appends role-separated result facts to a v365 send start",
+        "native-financial-consumer\tRun gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\t2026-10-06T02:20:48.3957056Z # pass 1",
+        "native-financial-consumer\tRun gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\t2026-10-06T02:20:48.3957380Z # fail 0",
+        "native-financial-consumer\tRun gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\t2026-10-06T02:20:48.3959385Z # skipped 0"
+      ]
+    },
+    {
+      "step": 52,
+      "file": "scripts/db/cutover/postgres-complete-text-result-client-digest-v367.native.test.mjs",
+      "commandLine": 1461,
+      "pass": 1,
+      "fail": 0,
+      "skipped": 0,
+      "directTap": [
+        "native-financial-consumer\tRun gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\t2026-10-06T02:20:49.6152845Z ok 1 - v367 canonical evidence and text-to-JSONB bind equal PostgreSQL 18.6",
+        "native-financial-consumer\tRun gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\t2026-10-06T02:20:49.6306499Z # pass 1",
+        "native-financial-consumer\tRun gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\t2026-10-06T02:20:49.6306828Z # fail 0",
+        "native-financial-consumer\tRun gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\t2026-10-06T02:20:49.6307452Z # skipped 0"
+      ]
+    },
+    {
+      "step": 53,
+      "file": "scripts/db/cutover/postgres-complete-text-legacy-reaper-fence-v366.native.test.mjs",
+      "commandLine": 1482,
+      "pass": 0,
+      "fail": 1,
+      "skipped": 0,
+      "directTap": [
+        "native-financial-consumer\tRun gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\t2026-10-06T02:20:50.9522108Z not ok 1 - v366 fences old explicit-forfeit and expiry on grant-linked holds",
+        "native-financial-consumer\tRun gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\t2026-10-06T02:20:50.9528945Z     81 !== 73",
+        "native-financial-consumer\tRun gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\t2026-10-06T02:20:50.9532441Z     TestContext.<anonymous> (file:///__w/cinatoken/cinatoken/scripts/db/cutover/postgres-complete-text-legacy-reaper-fence-v366.native.test.mjs:117:14)",
+        "native-financial-consumer\tRun gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\t2026-10-06T02:20:50.9684261Z # pass 0",
+        "native-financial-consumer\tRun gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\t2026-10-06T02:20:50.9684604Z # fail 1",
+        "native-financial-consumer\tRun gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\t2026-10-06T02:20:50.9690036Z # skipped 0",
+        "native-financial-consumer\tRun gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \\\t2026-10-06T02:20:50.9786610Z ##[error]Process completed with exit code 1."
+      ]
+    }
+  ],
+  "producerReport": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-next-six-8d357e3fd84b4810a7210ece167eb07a\\FINAL-next-five-pg73-repair.json",
+    "bytes": 75500,
+    "sha256": "030316e3c0943e672eb02605f206ffadb1755f3310d014e26f19257d598a0a1f",
+    "closedReceipt": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-next-six-8d357e3fd84b4810a7210ece167eb07a\\finalize-five.closed.json",
+    "closedReceiptActualExit": 0
+  },
+  "peerReport": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-boundary-next-20261006-Zm6Z3E\\native-five-root-review.json",
+    "bytes": 1521,
+    "sha256": "db06c73b1c205bcb4508a3e9f84bed768da6f4dff7abf7a3f1cd10b16d732384",
+    "closedReceipt": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-boundary-next-20261006-Zm6Z3E\\native-five-root-review.result.json",
+    "closedReceiptActualExit": 0,
+    "kind": "Root independent readonly source review of these five files",
+    "notHistoricalEightPeer": true,
+    "notRuntimePeer": true
+  },
+  "sourceGitBytes": [
+    {
+      "sourceSha": "00858e90592d55fa1d58b15bf1a4ebec1883b848",
+      "file": "scripts/db/cutover/postgres-complete-text-secretless-plan-v365.native.test.mjs",
+      "blob": "4bad5fe67a5ab536ff0365572db7d4f3407ba60b",
+      "bytes": 21312,
+      "sha256": "a74819c23d460174ccc76e7c489f923220f0fbebd82b5e3a116eccaf0cf7ef75",
+      "producerFinalHashExact": true
+    },
+    {
+      "sourceSha": "00858e90592d55fa1d58b15bf1a4ebec1883b848",
+      "file": "scripts/db/cutover/postgres-complete-text-send-start-v365.native.test.mjs",
+      "blob": "fcc366be4ace5d134311078bb1c15ff063bdc9e0",
+      "bytes": 42224,
+      "sha256": "101eedb93baa61695aeee8c44a4a5c1e06d6c617e44708af76457c69287f301f",
+      "producerFinalHashExact": true
+    },
+    {
+      "sourceSha": "00858e90592d55fa1d58b15bf1a4ebec1883b848",
+      "file": "scripts/db/cutover/postgres-complete-text-private-route-reader-v366.native.test.mjs",
+      "blob": "6ee078cf05e84bdca3da98b9016ec48b4ba7f2a0",
+      "bytes": 20707,
+      "sha256": "02e9a66f4064dd408640b88889b288df8ebe78afbcb8cb9b930046632d719918",
+      "producerFinalHashExact": true
+    },
+    {
+      "sourceSha": "00858e90592d55fa1d58b15bf1a4ebec1883b848",
+      "file": "scripts/db/cutover/postgres-complete-text-read-grant-bridge-v367.native.test.mjs",
+      "blob": "a80f4f5e2a292523995cc1ff07e86b999116cb87",
+      "bytes": 39991,
+      "sha256": "de0d3f29f294d63d8d96617c0f6eb42dc5fe92c142330698056cd98de006dafa",
+      "producerFinalHashExact": true
+    },
+    {
+      "sourceSha": "00858e90592d55fa1d58b15bf1a4ebec1883b848",
+      "file": "scripts/db/cutover/postgres-complete-text-result-facts-v366.native.test.mjs",
+      "blob": "5322b35f075261a238ddc3a24000b648adceca3b",
+      "bytes": 47182,
+      "sha256": "9fc4580826c0ba46974a66c1ce91f40e36c68db8e954f10a5c935d0d8fc84d83",
+      "producerFinalHashExact": true
+    },
+    {
+      "sourceSha": "07d19c1c941cc373019811be3dbf553c441a0ff3",
+      "file": "scripts/db/cutover/postgres-complete-text-secretless-plan-v365.native.test.mjs",
+      "blob": "4bad5fe67a5ab536ff0365572db7d4f3407ba60b",
+      "bytes": 21312,
+      "sha256": "a74819c23d460174ccc76e7c489f923220f0fbebd82b5e3a116eccaf0cf7ef75",
+      "producerFinalHashExact": true
+    },
+    {
+      "sourceSha": "07d19c1c941cc373019811be3dbf553c441a0ff3",
+      "file": "scripts/db/cutover/postgres-complete-text-send-start-v365.native.test.mjs",
+      "blob": "fcc366be4ace5d134311078bb1c15ff063bdc9e0",
+      "bytes": 42224,
+      "sha256": "101eedb93baa61695aeee8c44a4a5c1e06d6c617e44708af76457c69287f301f",
+      "producerFinalHashExact": true
+    },
+    {
+      "sourceSha": "07d19c1c941cc373019811be3dbf553c441a0ff3",
+      "file": "scripts/db/cutover/postgres-complete-text-private-route-reader-v366.native.test.mjs",
+      "blob": "6ee078cf05e84bdca3da98b9016ec48b4ba7f2a0",
+      "bytes": 20707,
+      "sha256": "02e9a66f4064dd408640b88889b288df8ebe78afbcb8cb9b930046632d719918",
+      "producerFinalHashExact": true
+    },
+    {
+      "sourceSha": "07d19c1c941cc373019811be3dbf553c441a0ff3",
+      "file": "scripts/db/cutover/postgres-complete-text-read-grant-bridge-v367.native.test.mjs",
+      "blob": "a80f4f5e2a292523995cc1ff07e86b999116cb87",
+      "bytes": 39991,
+      "sha256": "de0d3f29f294d63d8d96617c0f6eb42dc5fe92c142330698056cd98de006dafa",
+      "producerFinalHashExact": true
+    },
+    {
+      "sourceSha": "07d19c1c941cc373019811be3dbf553c441a0ff3",
+      "file": "scripts/db/cutover/postgres-complete-text-result-facts-v366.native.test.mjs",
+      "blob": "5322b35f075261a238ddc3a24000b648adceca3b",
+      "bytes": 47182,
+      "sha256": "9fc4580826c0ba46974a66c1ce91f40e36c68db8e954f10a5c935d0d8fc84d83",
+      "producerFinalHashExact": true
+    }
+  ],
+  "evidence": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-boundary-next-20261006-Zm6Z3E\\native-five-all-ci-terminal.stdout.log",
+      "bytes": 1165,
+      "sha256": "2b074cd0a382b611c80d3e04cc1af04015c7204fef9ed0bb57868c6adf71a6f6"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-boundary-next-20261006-Zm6Z3E\\native-five-all-ci-terminal.result.json",
+      "bytes": 686,
+      "sha256": "08e1e5e2c7095dff36e2d3d8c924f2466ba1ff23734ba426b528431eb06f8057"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-boundary-next-20261006-Zm6Z3E\\native-five-proxy-progress-2.stdout.log",
+      "bytes": 1768,
+      "sha256": "8c61f741cc63a55240d3d64ddb7cdf680464d71d29b7b741a440420a50c96b1f"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-boundary-next-20261006-Zm6Z3E\\native-five-proxy-progress-2.result.json",
+      "bytes": 921,
+      "sha256": "4c967b600f0e72de45bcfb2fed73b48e67e9825ad0c135563db4af1ec2f3d633"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-boundary-next-20261006-Zm6Z3E\\native-five-native-terminal-log.result.json",
+      "bytes": 576,
+      "sha256": "822a766fcf127fb237b2d59d48e48b817eb716192872fa9f8b24289e2e89335f"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-boundary-next-20261006-Zm6Z3E\\native-five-native-terminal-log.stdout.log",
+      "bytes": 292429,
+      "sha256": "ac7de72003263c1f0e0152ccfbd4e2886c50710cee32124143db23e38368502f"
+    }
+  ],
+  "boundary": {
+    "fiveNativeActuallyPassedInOriginalLinuxCi": true,
+    "unchangedDigestActuallyPassed": true,
+    "firstNextFailure": {
+      "step": 53,
+      "file": "scripts/db/cutover/postgres-complete-text-legacy-reaper-fence-v366.native.test.mjs",
+      "line": 117,
+      "column": 14,
+      "actual": 81,
+      "expected": 73
+    },
+    "fullProxyWorkflowStillFailed": true,
+    "producerLocalInertNotRealPg": true,
+    "ciSourceNotCurrentHead": true,
+    "sourceFilesExactBetweenProducerCiAndCurrentHead": true,
+    "productionDeploymentNotProvenByTheseChecks": true,
+    "fullGatesNotClosed": true,
+    "originalLaterNativeStepsNotClaimedPassed": true,
+    "readOnlyChecksOnly": true
+  },
+  "suggestedMd": "00858e90592d55fa1d58b15bf1a4ebec1883b848 的原 Linux PostgreSQL 18.6 CI run37403320556 中，五个 PG73 夹具（native steps47–51）均真实成功，未改的 step52 JSONB/digest 也成功；六项均 TAP pass1/fail0/skip0。native 随后在 step53 legacy-reaper-fence-v366:117:14 因 81!=73 失败，Proxy dispatch safety 整体仍失败，原 dispatch-safety step27 strict 取消失败也保留；后续 native 步骤未获验证。本地 276 原 assert/7 grant、181 保护源及惰性桥接证据只证明源码与局部控制边界，真实 Linux 成功由该独立 CI 证明；不据此关闭完整数据库、取消、G7/G8 或生产部署门槛。",
+  "gitReadReceipts": [
+    {
+      "at": "2026-10-06T02:31:11.881Z",
+      "finishedAt": "2026-10-06T02:31:12.038Z",
+      "executable": "git",
+      "args": [
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "stdout": "head.stdout.log",
+      "stderr": "head.stderr.log"
+    },
+    {
+      "at": "2026-10-06T02:31:12.065Z",
+      "finishedAt": "2026-10-06T02:31:12.164Z",
+      "executable": "git",
+      "args": [
+        "cat-file",
+        "--batch"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExit": 0,
+      "signal": null,
+      "stdout": "five-git-source-bytes.stdout.log",
+      "stderr": "five-git-source-bytes.stderr.log"
+    }
+  ],
+  "repositoryWrites": 0,
+  "ciWrites": 0,
+  "productionWrites": 0,
+  "databaseExecutions": 0
+}

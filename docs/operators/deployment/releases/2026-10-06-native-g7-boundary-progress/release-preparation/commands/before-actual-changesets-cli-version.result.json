@@ -1,0 +1,30 @@
+{
+  "schema": "cinatoken-isolated-release-command-v1",
+  "label": "before-actual-changesets-cli-version",
+  "program": "C:\\Program Files\\nodejs\\node.exe",
+  "args": [
+    "C:\\cinagroup\\cinatoken\\node_modules\\@changesets\\cli\\bin.js",
+    "version"
+  ],
+  "cwd": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\isolated-before",
+  "startedAt": "2026-10-06T02:08:05.797Z",
+  "finishedAt": "2026-10-06T02:08:07.561Z",
+  "actualExit": 0,
+  "signal": null,
+  "spawnError": null,
+  "closed": true,
+  "expectedActualExits": [
+    0
+  ],
+  "expectedExitMatched": true,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\before-actual-changesets-cli-version.stdout.log",
+    "bytes": 74,
+    "sha256": "dcccf189565497aac06bf5d1ce187bd2c26431861f43a9a26c1b895b21ac30af"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-changesets-prettier-repair-ebc93278d4d847c7ae00b3cd29ba4ff2\\commands\\before-actual-changesets-cli-version.stderr.log",
+    "bytes": 1613,
+    "sha256": "62c084f13f8693a3dbfd8eba7468aba641499d374bcf20fcdebcd82d3074f285"
+  }
+}

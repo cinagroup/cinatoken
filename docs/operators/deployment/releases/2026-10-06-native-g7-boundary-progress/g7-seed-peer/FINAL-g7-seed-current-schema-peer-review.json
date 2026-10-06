@@ -1,0 +1,897 @@
+{
+  "schema": "cinatoken-g7-seed-current-schema-repair-peer-readonly-v1",
+  "createdAt": "2026-10-06T02:23:31.532109+00:00",
+  "closed": true,
+  "sourceBlockers": [],
+  "conclusion": "No source blocker in the frozen two-file owned seed repair. The old config-row UPDATE is inconsistent with current migrations. Candidate strictly rotates the expected active legacy-master Admin API key with production hash/prefix and requires repository admission and absence of legacy state. Real PostgreSQL/TLS wire validation remains pending at the new run source SHA.",
+  "reviewerBoundary": {
+    "readOnlyRepository": true,
+    "newExclusiveTempReportOnly": true,
+    "noGitCommands": true,
+    "noTestsOrRuntimeCommands": true,
+    "noSqlDockerCIOrNetwork": true
+  },
+  "ownerFinal": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\FINAL-g7-seed-current-schema-repair.json",
+    "bytes": 3994,
+    "sha256": "421899867db8000a1d1b3bd7971a4dfa20e66d0e2e319bf5f5700796e8fd0ab9"
+  },
+  "ownerObservedSourceHead": "00858e90592d55fa1d58b15bf1a4ebec1883b848",
+  "sourceShaBoundary": "Preparation HEAD from sealed owner receipt only; not the future GITHUB_SHA for Linux validation.",
+  "frozenChangedFiles": [
+    {
+      "relative": "scripts/verification/web-platform-g7/database.mjs",
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\verification\\web-platform-g7\\database.mjs",
+      "bytes": 11117,
+      "sha256": "643686dc1f78e75601a6b339c22fb06e91caf4c21403ad5ed24a231598d5e5f1"
+    },
+    {
+      "relative": "scripts/verification/web-platform-g7/fixture.test.mjs",
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\verification\\web-platform-g7\\fixture.test.mjs",
+      "bytes": 5964,
+      "sha256": "2db99943e1228b81f3c2a5b3fc958af8c65f904cb6745ecda8fc94d96d00d844"
+    }
+  ],
+  "unchangedOriginalSourceInputs": [
+    {
+      "relative": "scripts/verification/web-platform-g7/README.md",
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\verification\\web-platform-g7\\README.md",
+      "bytes": 3918,
+      "sha256": "472bfa5785a62b7b85ce8d80e5c8f8a3fa14ae28f2da4a124d3dd1f0ac9e35f2"
+    },
+    {
+      "relative": "scripts/verification/web-platform-g7/admission.mjs",
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\verification\\web-platform-g7\\admission.mjs",
+      "bytes": 2405,
+      "sha256": "565e1cb4bc7950dbcc64947135b35ed11b0efe6cda29524c3e57b5be3e475870"
+    },
+    {
+      "relative": "scripts/verification/web-platform-g7/admission.test.mjs",
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\verification\\web-platform-g7\\admission.test.mjs",
+      "bytes": 2430,
+      "sha256": "af55b4503339fdc28960ea0932da49107e4e3e11dca19233a9e066a4e03c6f39"
+    },
+    {
+      "relative": "scripts/verification/web-platform-g7/cleanup-owned-linux.mjs",
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\verification\\web-platform-g7\\cleanup-owned-linux.mjs",
+      "bytes": 5560,
+      "sha256": "c267533ae691b4dd192fc7fa679b4a21874ebe0eb9d4c4a708a0f302d6b20948"
+    },
+    {
+      "relative": "scripts/verification/web-platform-g7/ingress.conf",
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\verification\\web-platform-g7\\ingress.conf",
+      "bytes": 1549,
+      "sha256": "d7e33e890c1ed5862986b34b67d57bb6380d72fe6be33808698a048e4a145d61"
+    },
+    {
+      "relative": "scripts/verification/web-platform-g7/run-owned-linux.mjs",
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\verification\\web-platform-g7\\run-owned-linux.mjs",
+      "bytes": 26853,
+      "sha256": "e95dc592e533c4b15593b4649f168390aa19ef3c2126ebf0de4f071c521e18a7"
+    },
+    {
+      "relative": "scripts/verification/web-platform-g7/wire.mjs",
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\verification\\web-platform-g7\\wire.mjs",
+      "bytes": 15504,
+      "sha256": "ac31a92534d0cb5f47fcb66126d86f13602ff68cf8ab218b9f06fae6997cd3cd"
+    },
+    {
+      "relative": ".github/workflows/web-platform-g7.yml",
+      "path": "C:\\cinagroup\\cinatoken\\.github\\workflows\\web-platform-g7.yml",
+      "bytes": 3065,
+      "sha256": "bb9a2e0be66e3ba74bf15e0769bc85bf740ebf282a91eadcdf73f9f9e4bd8e54"
+    },
+    {
+      "relative": "Dockerfile.admin",
+      "path": "C:\\cinagroup\\cinatoken\\Dockerfile.admin",
+      "bytes": 4654,
+      "sha256": "8410d3d3f22c23d57f32b1a0a87c571fe824edfa92f99c827111625d39834fd1"
+    },
+    {
+      "relative": "Dockerfile.proxy",
+      "path": "C:\\cinagroup\\cinatoken\\Dockerfile.proxy",
+      "bytes": 2937,
+      "sha256": "cd3bef116cc1eafe1912e882092e0c54c11b246c856bfba092bbb6196c438739"
+    },
+    {
+      "relative": "Dockerfile.migrate",
+      "path": "C:\\cinagroup\\cinatoken\\Dockerfile.migrate",
+      "bytes": 1774,
+      "sha256": "d62b8d5e0093096eff4fd13af96f43728f86a91509b1b50092c2fd3065cc1066"
+    },
+    {
+      "relative": "Dockerfile.web",
+      "path": "C:\\cinagroup\\cinatoken\\Dockerfile.web",
+      "bytes": 3046,
+      "sha256": "d6ef36c9fd5d3912e46ec37b5879f7a0d4769860779e11c064cf0544db7170f2"
+    },
+    {
+      "relative": "Dockerfile.web-ssr",
+      "path": "C:\\cinagroup\\cinatoken\\Dockerfile.web-ssr",
+      "bytes": 1154,
+      "sha256": "7d2dc09a6540e1a3438c0a48d8df28dc84d139cbc577e638d532684a8786425a"
+    },
+    {
+      "relative": "docker/web/nginx.conf.template",
+      "path": "C:\\cinagroup\\cinatoken\\docker\\web\\nginx.conf.template",
+      "bytes": 12095,
+      "sha256": "f1fbc0934b340cc8cdabe4f9cd2a3e36539bea2a55b201935b7b2dcbec310c18"
+    },
+    {
+      "relative": "docker/web/admin-proxy.conf",
+      "path": "C:\\cinagroup\\cinatoken\\docker\\web\\admin-proxy.conf",
+      "bytes": 695,
+      "sha256": "e1a638ba929379fafa099811984f434ac8defddb1ae95e2513a51b6e165b875e"
+    },
+    {
+      "relative": "docker/web/entrypoint.sh",
+      "path": "C:\\cinagroup\\cinatoken\\docker\\web\\entrypoint.sh",
+      "bytes": 13192,
+      "sha256": "0465d0a5a76fc500113e2b8c1eb5c164fe3ffb480a80265ce2fda5586a7270a1"
+    },
+    {
+      "relative": "docker/web/public-server.mjs",
+      "path": "C:\\cinagroup\\cinatoken\\docker\\web\\public-server.mjs",
+      "bytes": 6012,
+      "sha256": "d2c627beee86ae281903eef6a39a0061ccf3fc8b594f7131281982d9790273cf"
+    },
+    {
+      "relative": "package-lock.json",
+      "path": "C:\\cinagroup\\cinatoken\\package-lock.json",
+      "bytes": 830546,
+      "sha256": "f9c65b6e373a231d52d6eda634bb5f947dda3174734cd70e2b811e09fff0b6f0"
+    }
+  ],
+  "unchangedMigrationSnapshots": [
+    {
+      "relative": "packages/core/migrations-postgres/0023_admin_access_identity.sql",
+      "path": "C:\\cinagroup\\cinatoken\\packages\\core\\migrations-postgres\\0023_admin_access_identity.sql",
+      "bytes": 1303,
+      "sha256": "f783da40772279265fc6b65fefb31c995e90acf456adc2aad4333ae08180cbab"
+    },
+    {
+      "relative": "packages/core/migrations-postgres/0024_drop_legacy_master_key_config.sql",
+      "path": "C:\\cinagroup\\cinatoken\\packages\\core\\migrations-postgres\\0024_drop_legacy_master_key_config.sql",
+      "bytes": 238,
+      "sha256": "9b51f185c29e14e3c6f7b076d1e8ccca5236493fee40992a4cb9247a6ebe2e20"
+    },
+    {
+      "relative": "packages/core/migrations-postgres/0032_key_hash_lookup.sql",
+      "path": "C:\\cinagroup\\cinatoken\\packages\\core\\migrations-postgres\\0032_key_hash_lookup.sql",
+      "bytes": 607,
+      "sha256": "c75fd42528e078e7a0853f3c256cd8cb81a1526c492b7acea1122234af5d3195"
+    }
+  ],
+  "sourceDelta": [
+    {
+      "relative": "scripts/verification/web-platform-g7/database.mjs",
+      "textDiff": "--- before/scripts/verification/web-platform-g7/database.mjs\n+++ scripts/verification/web-platform-g7/database.mjs\n@@ -25,6 +25,18 @@\n const sql = context.client.raw;\n let failure;\n let report;\n+let stage = \"migration-ledger\";\n+let assertionObservation;\n+const checkScalar = (selector, actual, expected) => {\n+\tassert.ok(\n+\t\t[actual, expected].every(\n+\t\t\t(value) => typeof value === \"boolean\" || Number.isSafeInteger(value)\n+\t\t)\n+\t);\n+\tassertionObservation = { selector, actual, expected };\n+\tassert.equal(actual, expected);\n+\tassertionObservation = undefined;\n+};\n try {\n \tconst migrations = readdirSync(\"/app/packages/core/migrations-postgres\")\n \t\t.filter((name) => name.endsWith(\".sql\"))\n@@ -44,6 +56,7 @@\n \t);\n \tlet fixture;\n \tif (mode === \"--seed\") {\n+\t\tstage = \"fixture-secret-format\";\n \t\tconst secret = process.env.SHARED_KEY_ENCRYPTION_SECRET;\n \t\tconst providerKey = process.env.G7_PROVIDER_KEY;\n \t\tconst masterKey = process.env.G7_MASTER_KEY;\n@@ -55,13 +68,32 @@\n \t\t\t\"cinatoken:provider-key:g7-provider\"\n \t\t);\n \t\tawait sql.begin(async (tx) => {\n-\t\t\tconst updated =\n-\t\t\t\tawait tx`UPDATE cinatoken_gateway.system_config SET value=${masterKey} WHERE key='MASTER_KEY' RETURNING key`;\n-\t\t\tassert.equal(\n-\t\t\t\tupdated.length,\n-\t\t\t\t1,\n-\t\t\t\t\"Replace the migration's development master key in the owned database\"\n+\t\t\tstage = \"legacy-admin-key-rotation\";\n+\t\t\t// 0023 migrates the development key to admin_api_keys; 0024 removes its old config row.\n+\t\t\tconst rotated = await tx.unsafe(\n+\t\t\t\t`UPDATE cinatoken_gateway.admin_api_keys\n+         SET secret_key=$1, secret_key_hash=$2, key_prefix=$3, updated_at=CURRENT_TIMESTAMP\n+         WHERE id='legacy-master' AND name='legacy-master' AND status='active'\n+           AND permissions_json='[\"*\"]' AND secret_key='sk-dev-admin-key'\n+         RETURNING id,name,permissions_json,status`,\n+\t\t\t\t[masterKey, await core.hashLookupKey(masterKey), masterKey.slice(0, 12)]\n \t\t\t);\n+\t\t\tcheckScalar(\"legacy_master_rotated_row_count\", rotated.length, 1);\n+\t\t\tassert.deepEqual(\n+\t\t\t\t[...rotated],\n+\t\t\t\t[\n+\t\t\t\t\t{\n+\t\t\t\t\t\tid: \"legacy-master\",\n+\t\t\t\t\t\tname: \"legacy-master\",\n+\t\t\t\t\t\tpermissions_json: '[\"*\"]',\n+\t\t\t\t\t\tstatus: \"active\",\n+\t\t\t\t\t},\n+\t\t\t\t]\n+\t\t\t);\n+\t\t\tconst obsoleteConfig =\n+\t\t\t\tawait tx`SELECT key FROM cinatoken_gateway.system_config WHERE key='MASTER_KEY'`;\n+\t\t\tcheckScalar(\"obsolete_master_config_row_count\", obsoleteConfig.length, 0);\n+\t\t\tstage = \"catalog-fixture-write\";\n \t\t\tawait tx\n \t\t\t\t.unsafe(\n \t\t\t\t\t`\n@@ -85,6 +117,22 @@\n \t\t\t\t.simple();\n \t\t\tawait tx`UPDATE cinatoken_gateway.providers SET api_key=${encrypted} WHERE id='g7-provider'`;\n \t\t});\n+\t\tstage = \"legacy-admin-key-admission\";\n+\t\tconst adminKey =\n+\t\t\tawait context.repositories.adminAccess.getActiveApiKeyBySecret(masterKey);\n+\t\tassert.ok(adminKey);\n+\t\tassert.equal(adminKey.id, \"legacy-master\");\n+\t\tassert.equal(adminKey.name, \"legacy-master\");\n+\t\tassert.equal(adminKey.status, \"active\");\n+\t\tassert.equal(adminKey.permissionsJson, '[\"*\"]');\n+\t\tassert.equal(adminKey.keyPrefix, masterKey.slice(0, 12));\n+\t\tassert.equal(\n+\t\t\tawait context.repositories.adminAccess.getActiveApiKeyBySecret(\n+\t\t\t\t\"sk-dev-admin-key\"\n+\t\t\t),\n+\t\t\tnull\n+\t\t);\n+\t\tstage = \"provider-admission\";\n \t\tconst route = (\n \t\t\tawait context.repositories.modelRouting.getModelRoutesByModelId(\n \t\t\t\t\"qa/g7-model\"\n@@ -110,6 +158,7 @@\n \t\t\t});\n \t\tawait sql`INSERT INTO cinatoken_gateway.model_endpoint_routes(endpoint_id,route_target_id,subject_fingerprint)\n       VALUES ('g7-endpoint','g7-route',${fingerprint})`;\n+\t\tstage = \"endpoint-admission\";\n \t\tconst bindings =\n \t\t\tawait context.repositories.modelEndpoints.listRuntimeBindingsByRouteTargetIds(\n \t\t\t\t[\"g7-route\"]\n@@ -125,9 +174,11 @@\n \t\t\tendpointId: \"g7-endpoint\",\n \t\t\tfingerprint,\n \t\t\tstoredProviderKeyEncrypted: true,\n+\t\t\tlegacyMasterKeyRotated: true,\n \t\t\tcontrolledCatalogEvidenceOnly: true,\n \t\t};\n \t}\n+\tstage = \"database-observation\";\n \tconst observation = await sql.begin(\"read only\", async (tx) => {\n \t\tconst [identity] = await tx`SELECT version() AS server_version,\n       current_setting('server_version_num') AS server_version_num,\n@@ -144,8 +195,12 @@\n       (SELECT count(*)::int FROM cinatoken_gateway.models) AS models,\n       (SELECT count(*)::int FROM cinatoken_gateway.providers) AS providers,\n       (SELECT count(*)::int FROM cinatoken_gateway.model_endpoints WHERE status='verified') AS verified_endpoints,\n+      (SELECT count(*)::int FROM cinatoken_gateway.admin_api_keys WHERE id='legacy-master' AND name='legacy-master' AND status='active' AND permissions_json='[\"*\"]') AS legacy_master_api_keys,\n+      (SELECT count(*)::int FROM cinatoken_gateway.admin_api_keys WHERE secret_key='sk-dev-admin-key') AS legacy_development_keys,\n+      (SELECT count(*)::int FROM cinatoken_gateway.system_config WHERE key='MASTER_KEY') AS obsolete_master_config,\n       (SELECT count(*)::int FROM cinatoken_gateway.admin_sessions) AS admin_sessions,\n       (SELECT count(*)::int FROM cinatoken_gateway.portal_sessions) AS portal_sessions`;\n+\t\tstage = \"database-identity\";\n \t\tassert.ok(\n \t\t\tNumber(identity.server_version_num) >= 160000 &&\n \t\t\t\tNumber(identity.server_version_num) < 170000\n@@ -154,11 +209,18 @@\n \t\tassert.equal(identity.superuser, true);\n \t\tassert.equal(identity.database, \"g7\");\n \t\tassert.equal(identity.schema, \"cinatoken_gateway\");\n-\t\tassert.equal(counts.models, 1);\n-\t\tassert.equal(counts.providers, 1);\n-\t\tassert.equal(counts.verified_endpoints, 1);\n-\t\tassert.equal(counts.admin_sessions, 0);\n-\t\tassert.equal(counts.portal_sessions, 0);\n+\t\tstage = \"database-counts\";\n+\t\tfor (const [selector, expectedCount] of Object.entries({\n+\t\t\tmodels: 1,\n+\t\t\tproviders: 1,\n+\t\t\tverified_endpoints: 1,\n+\t\t\tlegacy_master_api_keys: 1,\n+\t\t\tlegacy_development_keys: 0,\n+\t\t\tobsolete_master_config: 0,\n+\t\t\tadmin_sessions: 0,\n+\t\t\tportal_sessions: 0,\n+\t\t}))\n+\t\t\tcheckScalar(selector, counts[selector], expectedCount);\n \t\treturn {\n \t\t\t...identity,\n \t\t\tschemaSha256: sha256(JSON.stringify({ columns, constraints })),\n@@ -189,7 +251,16 @@\n \t\t\tschema: \"web-platform-g7-database-v1\",\n \t\t\tactualExit: 1,\n \t\t\tmode,\n+\t\t\tstage,\n \t\t\terrorName: failure.name,\n+\t\t\tassertionOperator:\n+\t\t\t\tfailure.name === \"AssertionError\" &&\n+\t\t\t\t[\"strictEqual\", \"deepStrictEqual\", \"match\", \"==\"].includes(\n+\t\t\t\t\tfailure.operator\n+\t\t\t\t)\n+\t\t\t\t\t? failure.operator\n+\t\t\t\t\t: null,\n+\t\t\tassertionObservation,\n \t\t\tmessage: \"Database contract or fixture admission failed\",\n \t\t})\n \t);\n"
+    },
+    {
+      "relative": "scripts/verification/web-platform-g7/fixture.test.mjs",
+      "textDiff": "--- before/scripts/verification/web-platform-g7/fixture.test.mjs\n+++ scripts/verification/web-platform-g7/fixture.test.mjs\n@@ -1,5 +1,5 @@\n import assert from \"node:assert/strict\";\n-import { randomBytes } from \"node:crypto\";\n+import { createHash, randomBytes } from \"node:crypto\";\n import { readFileSync } from \"node:fs\";\n import { test } from \"node:test\";\n import {\n@@ -10,6 +10,10 @@\n import { parseProviderEndpoints } from \"../../../packages/core/src/provider-endpoints.ts\";\n import { encryptSharedKeySecret } from \"../../../packages/core/src/lib/shared-key-encryption.ts\";\n import { decryptProviderApiKeyReadOnly } from \"../../../packages/core/src/lib/provider-key-encryption.ts\";\n+import {\n+\thashLookupKey,\n+\tmatchesLookupKeyHash,\n+} from \"../../../packages/core/src/lib/key-hash.ts\";\n \n // Read the SQL that the owned Linux seeder really executes, rather than a second fixture definition.\n function fixtureRows() {\n@@ -170,3 +174,24 @@\n \t\tdecryptProviderApiKeyReadOnly(\"different-owned-provider\", encrypted, secret)\n \t);\n });\n+\n+test(\"the rotated owned Admin key uses the production lookup hash and rejects the migration's development key\", async () => {\n+\tconst masterKey = randomBytes(32).toString(\"hex\");\n+\tconst expected = `sha256:${createHash(\"sha256\")\n+\t\t.update(masterKey)\n+\t\t.digest(\"hex\")}`;\n+\tconst lookupHash = await hashLookupKey(masterKey);\n+\tassert.equal(lookupHash, expected);\n+\tassert.equal(await matchesLookupKeyHash(masterKey, lookupHash), true);\n+\tassert.equal(\n+\t\tawait matchesLookupKeyHash(\"sk-dev-admin-key\", lookupHash),\n+\t\tfalse\n+\t);\n+\tassert.equal(\n+\t\tawait matchesLookupKeyHash(\n+\t\t\tmasterKey,\n+\t\t\tawait hashLookupKey(\"sk-dev-admin-key\")\n+\t\t),\n+\t\tfalse\n+\t);\n+});\n"
+    }
+  ],
+  "catalogLiteralReadBoundary": "Peer independently uses a single-backtick-delimited literal extraction. The fixture helper uses a broader regex which can span the earlier rotation literal and intervening source; all six extracted INSERTs still match the unchanged actual catalog SQL. This is not a PostgreSQL execution claim.",
+  "reviewerInitialReadFailure": {
+    "actualExit": 1,
+    "toolChunk": "065b34",
+    "meaning": "Display-free reader initially reused broad fixture regex for equality of catalog literals; the regex spanned the newly preceding rotation query. Reader tightened its own literal boundary and did not edit source."
+  },
+  "productionContractReferences": [
+    {
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\verification\\web-platform-g7\\database.mjs",
+      "lines": [
+        28,
+        30,
+        36,
+        37,
+        38,
+        71,
+        74,
+        75,
+        76,
+        77,
+        79,
+        81,
+        83,
+        95,
+        120,
+        122,
+        124,
+        126,
+        127,
+        130,
+        198,
+        199,
+        200,
+        217,
+        218,
+        219,
+        223,
+        244,
+        245,
+        251,
+        255,
+        257,
+        259,
+        263
+      ],
+      "meaning": "Strict current-row rotation and count admission, actual production repository checks, plain array Result comparison, fixed stage and numeric/boolean diagnostics, existing owned teardown."
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\scripts\\verification\\web-platform-g7\\fixture.test.mjs",
+      "lines": [
+        14,
+        15,
+        178,
+        180,
+        183,
+        185,
+        187,
+        191,
+        193
+      ],
+      "meaning": "Independent Node crypto expected hash and current/development/stale-hash negative controls using production hash helper. No PostgreSQL runtime substitute."
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\core\\migrations-postgres\\0002_seed.sql",
+      "lines": [
+        8,
+        9
+      ],
+      "meaning": "Initial development MASTER_KEY value."
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\core\\migrations-postgres\\0023_admin_access_identity.sql",
+      "lines": [
+        29,
+        33,
+        34,
+        36,
+        38,
+        39,
+        41
+      ],
+      "meaning": "Migration moves development master key into named active legacy-master Admin API row with wildcard permissions."
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\core\\migrations-postgres\\0024_drop_legacy_master_key_config.sql",
+      "lines": [
+        1,
+        2,
+        4
+      ],
+      "meaning": "Old config row deleted; auth no longer uses this row."
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\core\\migrations-postgres\\0032_key_hash_lookup.sql",
+      "lines": [
+        7,
+        8
+      ],
+      "meaning": "Admin lookup hash column and index introduced."
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\core\\src\\db\\postgres\\admin-access.impl.ts",
+      "lines": [
+        45,
+        47,
+        48,
+        50,
+        51,
+        52,
+        54,
+        55,
+        100
+      ],
+      "meaning": "Production hash lookup validates current plaintext on hash hit, then migration plaintext fallback; production rotation hash and prefix12 match candidate."
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\admin\\lib\\auth.ts",
+      "lines": [
+        131,
+        134,
+        136,
+        137,
+        138,
+        143
+      ],
+      "meaning": "Actual Admin Bearer auth uses this same active-key repository."
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\core\\src\\lib\\key-hash.ts",
+      "lines": [
+        21,
+        22,
+        23,
+        31,
+        32,
+        33
+      ],
+      "meaning": "Production SHA-256 prefix and stale hash validation."
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\node_modules\\postgres\\src\\result.js",
+      "lines": [
+        1,
+        13,
+        14,
+        15
+      ],
+      "meaning": "Result extends Array; species Array makes applied.map ordinary array already, and spreading rotated makes strict plain-array metadata comparison reliable."
+    }
+  ],
+  "sourceChecks": {
+    "onlyReviewedTwoFiles": true,
+    "catalogInsertSqlBlockByteForTextExact": true,
+    "strictExpectedLegacyRowAndOneRotation": true,
+    "productionHashAndPrefix12": true,
+    "plainArrayForRotatedMetadata": true,
+    "oldConfigNotRecreated": true,
+    "newKeyRepositoryMetadataAndOldDevNullChecks": true,
+    "readOnlyObservationStrict1And0Counts": true,
+    "safeFailureDiagnosticsNoActualSecretsOrParams": true,
+    "fixtureUsesIndependentCryptoHashAndProductionStaleHashCheck": true
+  },
+  "originalLinuxFailure": {
+    "run": "37402317152",
+    "sourceSHA": "67f8b3df2f2b6e8159806767ecce1efa1904d27a",
+    "actualExit": 1,
+    "seedContainerActualExit": 1,
+    "wireActualExit": null,
+    "primaryCleanupVerifiedAbsent": true,
+    "fallbackCleanupActualExit": 0,
+    "fallbackRowsVerifiedAbsent": 13,
+    "index": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\original-artifact-immutable-index.json",
+      "bytes": 57518,
+      "sha256": "3d9f12f2a69b127b496297fdc6070700d9244972b24462156baada9cc26dfdbd"
+    },
+    "all350ArtifactFileBytesAndHashesExact": true,
+    "selectedCopies": [
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\original-failure-selected\\044-docker.result.json",
+        "bytes": 803,
+        "sha256": "597f58986a9a0b10dec148780d86bc17ab79054d872de1e5915daffa245b0d4d"
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\original-failure-selected\\044-docker.stderr.log",
+        "bytes": 159,
+        "sha256": "1dfbf8e24f4edbf62999ea5708796dfc9fb411bdac3a8789f4454d3c70056641"
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\original-failure-selected\\047-docker.result.json",
+        "bytes": 802,
+        "sha256": "96d36cf7cd8c861a32f8749f9e9d3a335e0fe33a639cf8fc38f3988b250a213d"
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\original-failure-selected\\047-docker.stderr.log",
+        "bytes": 159,
+        "sha256": "1dfbf8e24f4edbf62999ea5708796dfc9fb411bdac3a8789f4454d3c70056641"
+      },
+      {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\original-failure-selected\\result.json",
+        "bytes": 2658,
+        "sha256": "759d8332dc6ae874a27bb4e05aef2f950bda4a8a83da6530657ceb244b172eb5"
+      }
+    ],
+    "result": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-boundary-next-20261006-Zm6Z3E\\g7-artifact-first\\result.json",
+      "bytes": 2658,
+      "sha256": "759d8332dc6ae874a27bb4e05aef2f950bda4a8a83da6530657ceb244b172eb5"
+    },
+    "fallback": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-boundary-next-20261006-Zm6Z3E\\g7-artifact-first\\fallback-cleanup-result.json",
+      "bytes": 2056,
+      "sha256": "ef58bbef392479e250eb0a13d2ce85f9f0e96d77e428b43912141c6943170a63"
+    },
+    "seed": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-native-g7-boundary-next-20261006-Zm6Z3E\\g7-artifact-first\\g7-6225aa47d5aa463cbcbb48bc4c983312-seed-43.container-closed.json",
+      "bytes": 234,
+      "sha256": "4f70940474e543286335fe291b799fc5af109936a7ca0093f8ead97b2ec7bf05"
+    },
+    "runtimeLimit": "Original stderr reports generic AssertionError with no stage. The deleted-row contract mismatch is proved from migration and old source, not a newly observed exact failing assertion location. Cleanup success does not alter original runtime failure."
+  },
+  "localCheckReceipts": [
+    {
+      "label": "actual-owned-unit-tests",
+      "actualExit": 0,
+      "closed": true,
+      "expectedActualExits": [
+        0
+      ],
+      "args": [
+        "--import",
+        "tsx",
+        "--test",
+        "scripts/verification/web-platform-g7/admission.test.mjs",
+        "scripts/verification/web-platform-g7/fixture.test.mjs"
+      ],
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\actual-owned-unit-tests.result.json",
+      "bytes": 1115,
+      "sha256": "f6857708004811cac6f16603024347c840d935089966eed2db06240cfa53113a"
+    },
+    {
+      "label": "format-before",
+      "actualExit": 1,
+      "closed": true,
+      "expectedActualExits": [
+        0,
+        1
+      ],
+      "args": [
+        "node_modules/prettier/bin-prettier.js",
+        "--check",
+        "scripts/verification/web-platform-g7/database.mjs",
+        "scripts/verification/web-platform-g7/fixture.test.mjs"
+      ],
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\format-before.result.json",
+      "bytes": 1106,
+      "sha256": "d26871f1b802c8633e4b67382c3d1e11cb37a45199c11d29a0ec9da0faff7269"
+    },
+    {
+      "label": "format-final-full-package",
+      "actualExit": 0,
+      "closed": true,
+      "expectedActualExits": [
+        0
+      ],
+      "args": [
+        "node_modules/prettier/bin-prettier.js",
+        "--check",
+        "scripts/verification/web-platform-g7/admission.mjs",
+        "scripts/verification/web-platform-g7/admission.test.mjs",
+        "scripts/verification/web-platform-g7/cleanup-owned-linux.mjs",
+        "scripts/verification/web-platform-g7/database.mjs",
+        "scripts/verification/web-platform-g7/fixture.test.mjs",
+        "scripts/verification/web-platform-g7/run-owned-linux.mjs",
+        "scripts/verification/web-platform-g7/wire.mjs",
+        "scripts/verification/web-platform-g7/README.md",
+        ".github/workflows/web-platform-g7.yml"
+      ],
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\format-final-full-package.result.json",
+      "bytes": 1538,
+      "sha256": "2d16986c133ed4df40aec0aed091cf0ca52cfee2fdd086d5b580dd3573d3b1bc"
+    },
+    {
+      "label": "format-owned-write",
+      "actualExit": 0,
+      "closed": true,
+      "expectedActualExits": [
+        0
+      ],
+      "args": [
+        "node_modules/prettier/bin-prettier.js",
+        "--write",
+        "scripts/verification/web-platform-g7/database.mjs",
+        "scripts/verification/web-platform-g7/fixture.test.mjs"
+      ],
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\format-owned-write.result.json",
+      "bytes": 1113,
+      "sha256": "743e082e83f0be1d436178b5ff7d1adffe802155540eaa41d6cfda11afb8c110"
+    },
+    {
+      "label": "observed-source-head",
+      "actualExit": 0,
+      "closed": true,
+      "expectedActualExits": [
+        0
+      ],
+      "args": [
+        "rev-parse",
+        "HEAD"
+      ],
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\observed-source-head.result.json",
+      "bytes": 937,
+      "sha256": "bae60070512fac6d1dc7eedb31d1554ef19f476e1782d28245fcf32ef05474c9"
+    },
+    {
+      "label": "owned-diff-check",
+      "actualExit": 0,
+      "closed": true,
+      "expectedActualExits": [
+        0
+      ],
+      "args": [
+        "diff",
+        "--check",
+        "--",
+        "scripts/verification/web-platform-g7/database.mjs",
+        "scripts/verification/web-platform-g7/fixture.test.mjs"
+      ],
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\owned-diff-check.result.json",
+      "bytes": 1050,
+      "sha256": "c7b0a3491e0c2965e7bc09e9283727ef22513cc17dbad0b4ed83a956303d69ef"
+    },
+    {
+      "label": "owned-exact-diff",
+      "actualExit": 0,
+      "closed": true,
+      "expectedActualExits": [
+        0
+      ],
+      "args": [
+        "diff",
+        "--",
+        "scripts/verification/web-platform-g7/database.mjs",
+        "scripts/verification/web-platform-g7/fixture.test.mjs"
+      ],
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\owned-exact-diff.result.json",
+      "bytes": 1038,
+      "sha256": "b0cae804a6a3ee4a47d55e77d0105ce736030bd762c3a346bb2b4162c3bdbf66"
+    },
+    {
+      "label": "syntax-admission.mjs",
+      "actualExit": 0,
+      "closed": true,
+      "expectedActualExits": [
+        0
+      ],
+      "args": [
+        "--check",
+        "scripts/verification/web-platform-g7/admission.mjs"
+      ],
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\syntax-admission.mjs.result.json",
+      "bytes": 1012,
+      "sha256": "f83f3d0cbf17cdb5335196c936e393f00ccedc0ebce3be97f90c8e168799d414"
+    },
+    {
+      "label": "syntax-admission.test.mjs",
+      "actualExit": 0,
+      "closed": true,
+      "expectedActualExits": [
+        0
+      ],
+      "args": [
+        "--check",
+        "scripts/verification/web-platform-g7/admission.test.mjs"
+      ],
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\syntax-admission.test.mjs.result.json",
+      "bytes": 1032,
+      "sha256": "55b8e370737e3c2a068b9076ea943e93cb091110c184c564b250855e12f5ec2c"
+    },
+    {
+      "label": "syntax-cleanup-owned-linux.mjs",
+      "actualExit": 0,
+      "closed": true,
+      "expectedActualExits": [
+        0
+      ],
+      "args": [
+        "--check",
+        "scripts/verification/web-platform-g7/cleanup-owned-linux.mjs"
+      ],
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\syntax-cleanup-owned-linux.mjs.result.json",
+      "bytes": 1052,
+      "sha256": "e62b3a570bbbf51d320ce1b4ff6c71627ec475fc3e12f27f723dca8cb51cdc72"
+    },
+    {
+      "label": "syntax-database.mjs",
+      "actualExit": 0,
+      "closed": true,
+      "expectedActualExits": [
+        0
+      ],
+      "args": [
+        "--check",
+        "scripts/verification/web-platform-g7/database.mjs"
+      ],
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\syntax-database.mjs.result.json",
+      "bytes": 1008,
+      "sha256": "3bd8d2494bf5337fd6c1c9abdfab9bfad3ab71ab1c2e854aa3f96b6d488b73f4"
+    },
+    {
+      "label": "syntax-fixture.test.mjs",
+      "actualExit": 0,
+      "closed": true,
+      "expectedActualExits": [
+        0
+      ],
+      "args": [
+        "--check",
+        "scripts/verification/web-platform-g7/fixture.test.mjs"
+      ],
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\syntax-fixture.test.mjs.result.json",
+      "bytes": 1024,
+      "sha256": "207260b24fa2b7d43032ccb1b82f635b57f3b4443c783de16877ed0d81ddaf1c"
+    },
+    {
+      "label": "syntax-run-owned-linux.mjs",
+      "actualExit": 0,
+      "closed": true,
+      "expectedActualExits": [
+        0
+      ],
+      "args": [
+        "--check",
+        "scripts/verification/web-platform-g7/run-owned-linux.mjs"
+      ],
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\syntax-run-owned-linux.mjs.result.json",
+      "bytes": 1036,
+      "sha256": "0015ea57d420d549e35c39cf3b6e8d7b79221f377087092aa58ae2f501e473b7"
+    },
+    {
+      "label": "syntax-wire.mjs",
+      "actualExit": 0,
+      "closed": true,
+      "expectedActualExits": [
+        0
+      ],
+      "args": [
+        "--check",
+        "scripts/verification/web-platform-g7/wire.mjs"
+      ],
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\syntax-wire.mjs.result.json",
+      "bytes": 992,
+      "sha256": "051dca92d5ebe50979cdf7bf5640afbb91a8be8f0c2c114d46a16cbc997e6497"
+    }
+  ],
+  "rawStreams": [
+    {
+      "label": "actual-owned-unit-tests",
+      "stream": "stdout",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\actual-owned-unit-tests.stdout.log",
+      "bytes": 768,
+      "sha256": "3aade2ac95ae9a7b33295fd335f6b2839837d38fde398d3c74483a15f4309d6e"
+    },
+    {
+      "label": "actual-owned-unit-tests",
+      "stream": "stderr",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\actual-owned-unit-tests.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "format-before",
+      "stream": "stdout",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\format-before.stdout.log",
+      "bytes": 23,
+      "sha256": "ebe82dad128d5e5d8936334ceac09492f3c60bd9e0b4a16cc7fd7075513b33de"
+    },
+    {
+      "label": "format-before",
+      "stream": "stderr",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\format-before.stderr.log",
+      "bytes": 185,
+      "sha256": "507621fde8eeeb34099014707799d1ffa5aeb907c26793befa9083220c145a63"
+    },
+    {
+      "label": "format-final-full-package",
+      "stream": "stdout",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\format-final-full-package.stdout.log",
+      "bytes": 66,
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    },
+    {
+      "label": "format-final-full-package",
+      "stream": "stderr",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\format-final-full-package.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "format-owned-write",
+      "stream": "stdout",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\format-owned-write.stdout.log",
+      "bytes": 115,
+      "sha256": "660b35a90369d5aa8349002c52c09442154be4a6efc7978a960c1e651754a356"
+    },
+    {
+      "label": "format-owned-write",
+      "stream": "stderr",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\format-owned-write.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "observed-source-head",
+      "stream": "stdout",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\observed-source-head.stdout.log",
+      "bytes": 41,
+      "sha256": "c9553e3bfcd6fb9b5a9879a172fd6c8a000f427ede0293c026251e768a82952e"
+    },
+    {
+      "label": "observed-source-head",
+      "stream": "stderr",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\observed-source-head.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "owned-diff-check",
+      "stream": "stdout",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\owned-diff-check.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "owned-diff-check",
+      "stream": "stderr",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\owned-diff-check.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "owned-exact-diff",
+      "stream": "stdout",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\owned-exact-diff.stdout.log",
+      "bytes": 8645,
+      "sha256": "6ab38ae115f0273fc362b1b346fac0515e1287dd0edd619926df7e6a674f0678"
+    },
+    {
+      "label": "owned-exact-diff",
+      "stream": "stderr",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\owned-exact-diff.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "syntax-admission.mjs",
+      "stream": "stdout",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\syntax-admission.mjs.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "syntax-admission.mjs",
+      "stream": "stderr",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\syntax-admission.mjs.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "syntax-admission.test.mjs",
+      "stream": "stdout",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\syntax-admission.test.mjs.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "syntax-admission.test.mjs",
+      "stream": "stderr",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\syntax-admission.test.mjs.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "syntax-cleanup-owned-linux.mjs",
+      "stream": "stdout",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\syntax-cleanup-owned-linux.mjs.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "syntax-cleanup-owned-linux.mjs",
+      "stream": "stderr",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\syntax-cleanup-owned-linux.mjs.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "syntax-database.mjs",
+      "stream": "stdout",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\syntax-database.mjs.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "syntax-database.mjs",
+      "stream": "stderr",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\syntax-database.mjs.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "syntax-fixture.test.mjs",
+      "stream": "stdout",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\syntax-fixture.test.mjs.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "syntax-fixture.test.mjs",
+      "stream": "stderr",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\syntax-fixture.test.mjs.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "syntax-run-owned-linux.mjs",
+      "stream": "stdout",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\syntax-run-owned-linux.mjs.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "syntax-run-owned-linux.mjs",
+      "stream": "stderr",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\syntax-run-owned-linux.mjs.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "syntax-wire.mjs",
+      "stream": "stdout",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\syntax-wire.mjs.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "syntax-wire.mjs",
+      "stream": "stderr",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\syntax-wire.mjs.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "localClaims": {
+    "actualUnitChildExit": 0,
+    "unitPass": 7,
+    "unitFail": 0,
+    "unitSkipped": 0,
+    "syntaxChildCount": 7,
+    "syntaxAllActual0": true,
+    "fullPackageFormatterActual0": true,
+    "scopedDiffCheckActual0": true,
+    "formatterBeforeActual1Preserved": true,
+    "all14NumericClosed": true,
+    "all28RawHashesExact": true,
+    "reviewerDidNotRerun": true
+  },
+  "ownerHistoricalProducerFailure": {
+    "declaredActualExit": 1,
+    "declaredToolChunk": "ea7562",
+    "failureMeaning": "Original owner producer parsed only TAP # prefix, but unchanged actual Node24 raw unit result uses ℹ and child actual0 with7pass/0skip.",
+    "originalSource": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\run-local-checks.mjs",
+      "bytes": 8527,
+      "sha256": "a0ad3cbaf4c48e8faea94579e83452befa8941218a7caa7c16ac72e295a143cf"
+    },
+    "continuationSource": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\finish-local-checks.mjs",
+      "bytes": 7786,
+      "sha256": "db33d0076cb09c2c491c0eeb7573219bc2f2c1453fbab64c707d2e9494d8eabe"
+    },
+    "continuationDoesNotRerunUnitOrFormatWrite": true,
+    "originalToolResultBoundary": "Owner declares original tool actual1 in final; reviewer independently verifies retained original/continuation source and actual unit child receipt and raw output, not a separate unprovided tool object."
+  },
+  "notVerified": {
+    "sameShaLinuxPGSeedRepair": true,
+    "tlsOrDockerRuntime": true,
+    "sqliteOrPgliteSubstituteUsed": false,
+    "fullG7": true,
+    "fullG8": true,
+    "nativePG18": true,
+    "restrictedRuntimeACL": true,
+    "CinaAuthIdentity": true,
+    "CloudflareDeploy": true
+  },
+  "artifacts": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\source-before.json",
+      "bytes": 1033,
+      "sha256": "27d6c04d93d2e42fe478b72a6c31d0cd818505bd92b4d8d7d7b282c8a249f758"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\owned-exact-diff.stdout.log",
+      "bytes": 8645,
+      "sha256": "6ab38ae115f0273fc362b1b346fac0515e1287dd0edd619926df7e6a674f0678"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\actual-owned-unit-tests.stdout.log",
+      "bytes": 768,
+      "sha256": "3aade2ac95ae9a7b33295fd335f6b2839837d38fde398d3c74483a15f4309d6e"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\format-final-full-package.stdout.log",
+      "bytes": 66,
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-g7-seed-current-schema-repair-fea67a837643495ba516bfee9c889f57\\create-final-continuation.mjs",
+      "bytes": 2315,
+      "sha256": "25a5e22ac9f11dbec41f90e1da3481bd8857a7155ca2454cb86a9f47292963f3"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "id": "python-syntax",
+  "program": "C:/Users/cina/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+  "args": [
+    "-c",
+    "import ast,sys; from pathlib import Path; ast.parse(Path(sys.argv[1]).read_text()); print(\"AST OK\")",
+    "C:/cinagroup/cinatoken/scripts/diagnostics/v364-owned-linux-boundary/execute-owned-linux.py"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "timeout": 60000,
+  "status": 0,
+  "signal": null,
+  "error": null,
+  "expectedExit": 0,
+  "outputs": [
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/python-syntax.stdout.txt",
+      "bytes": 8,
+      "sha256": "ff06d4d965d57ea548627e0bbdfa9fc6afc758841f07c19518346f6b69b77fd7"
+    },
+    {
+      "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-v364-boundary-preparation-1427c951d98b46c6ae8299694b679b38/python-syntax.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "source": "actual synchronous spawnSync return, not aggregate report",
+  "terminal": true
+}

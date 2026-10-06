@@ -1,0 +1,26 @@
+{
+  "schema": "root-g7-current-schema-seed-stage-v1",
+  "at": "2026-10-06T02:21:56.258Z",
+  "closed": true,
+  "actualExit": 0,
+  "files": [
+    {
+      "path": "scripts/verification/web-platform-g7/database.mjs",
+      "bytes": 11117,
+      "sha256": "643686dc1f78e75601a6b339c22fb06e91caf4c21403ad5ed24a231598d5e5f1",
+      "gitBytes": 11117,
+      "gitSha256": "643686dc1f78e75601a6b339c22fb06e91caf4c21403ad5ed24a231598d5e5f1",
+      "gitCleanBlobExact": true
+    },
+    {
+      "path": "scripts/verification/web-platform-g7/fixture.test.mjs",
+      "bytes": 5964,
+      "sha256": "2db99943e1228b81f3c2a5b3fc958af8c65f904cb6745ecda8fc94d96d00d844",
+      "gitBytes": 5964,
+      "gitSha256": "2db99943e1228b81f3c2a5b3fc958af8c65f904cb6745ecda8fc94d96d00d844",
+      "gitCleanBlobExact": true
+    }
+  ],
+  "productionDatabaseWrites": 0,
+  "realPGAfterRepairExecuted": false
+}

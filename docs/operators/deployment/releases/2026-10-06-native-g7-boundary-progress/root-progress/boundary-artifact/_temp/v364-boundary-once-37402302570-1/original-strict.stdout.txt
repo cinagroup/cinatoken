@@ -1,0 +1,74 @@
+TAP version 13
+# Subtest: v364 configs keep the synthetic holder private and bind only the named holder
+ok 1 - v364 configs keep the synthetic holder private and bind only the named holder
+  ---
+  duration_ms: 1.704757
+  type: 'test'
+  ...
+# Subtest: HTTP fixture cancellation closes its dedicated TCP response before completion
+ok 2 - HTTP fixture cancellation closes its dedicated TCP response before completion
+  ---
+  duration_ms: 24.935961
+  type: 'test'
+  ...
+# Subtest: private Worker rejects oversized, foreign, and malformed six-field requests without disclosing holder data
+ok 3 - private Worker rejects oversized, foreign, and malformed six-field requests without disclosing holder data
+  ---
+  duration_ms: 462.35214
+  type: 'test'
+  ...
+# Subtest: one holder Response streams through the Service Binding before its final chunk is released
+ok 4 - one holder Response streams through the Service Binding before its final chunk is released
+  ---
+  duration_ms: 378.089251
+  type: 'test'
+  ...
+# Subtest: response-body cancellation is observed inside the private holder
+not ok 5 - response-body cancellation is observed inside the private holder
+  ---
+  duration_ms: 1537.029929
+  type: 'test'
+  location: '/home/runner/work/cinatoken/cinatoken/packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs:260:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    null !== 'observed'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'observed'
+  actual: ~
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///home/runner/work/cinatoken/cinatoken/packages/proxy/scripts/staging/chat-holder-binding-v364-http-cancel-successor.test.mjs:278:10)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: v364 in-process contract: private holder bounds and validates six fields; gateway forwards no auth or provider data
+ok 6 - v364 in-process contract: private holder bounds and validates six fields; gateway forwards no auth or provider data
+  ---
+  duration_ms: 72.621359
+  type: 'test'
+  ...
+# Subtest: v364 in-process contract: one Response yields a first chunk before holder release and cancellation reaches source
+ok 7 - v364 in-process contract: one Response yields a first chunk before holder release and cancellation reaches source
+  ---
+  duration_ms: 60.287357
+  type: 'test'
+  ...
+# Subtest: v364 in-process cancellation retains the asynchronous holder observation in its request lifetime
+ok 8 - v364 in-process cancellation retains the asynchronous holder observation in its request lifetime
+  ---
+  duration_ms: 5.614846
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 7
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3359.951511
