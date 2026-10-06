@@ -2,13 +2,13 @@
 // quotes only. No ambient database URL, real seller, cloud or deployment.
 import assert from 'node:assert/strict';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
 import test from 'node:test';
 import postgres from 'postgres';
 import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';
-import { grantPostgresRuntime } from './grant-postgres-runtime.ts';
+import { grantPg73RuntimeFixture, listPg73Migrations } from './pg73-native-fixture.mjs';
 
 const gateway = 'cinatoken_gateway';
 const quotes = 'cinatoken_economic_quotes';
@@ -119,7 +119,7 @@ test('native PG18 immutable shared-key quote supersession preserves history and 
       clients.push(migrator, competing, runtime, proxy);
       await migrator.unsafe(`CREATE TABLE ${gateway}.schema_migrations (
         version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);
-      const files = (await readdir(migrations)).filter(name => name.endsWith('.sql')).sort();
+      const files = await listPg73Migrations();
       assert.equal(files.length, 73);
       const corpus = [];
       for (const name of files) {
@@ -563,8 +563,8 @@ test('native PG18 immutable shared-key quote supersession preserves history and 
       stage('fact-transition-mutation-empty-mutation-truncate-and-parent-delete-refused');
 
       const url = `postgres://cinatoken_gateway_migrator:${migratorPassword}@127.0.0.1:${cluster.port}/postgres`;
-      await grantPostgresRuntime({ DATABASE_URL: url });
-      await grantPostgresRuntime({ DATABASE_URL: url });
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: url });
+      await grantPg73RuntimeFixture({ cluster, migrator, migratorUrl: url });
       const [acl] = await migrator.unsafe(`SELECT
         pg_catalog.has_schema_privilege('cinatoken_gateway_runtime','${quotes}','USAGE') AS schema_usage,
         pg_catalog.has_table_privilege('cinatoken_gateway_runtime','${table}','SELECT') AS fact_select,

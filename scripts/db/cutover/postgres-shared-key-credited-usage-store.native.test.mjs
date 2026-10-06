@@ -1,11 +1,12 @@
 // Review-only C04.7 contribution-store fixture. Owns a fresh loopback PG cluster.
 import assert from 'node:assert/strict';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import test from 'node:test';
 import postgres from 'postgres';
 import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';
+import { listPg73Migrations } from './pg73-native-fixture.mjs';
 
 const root = new URL('../../../', import.meta.url);
 const migrations = new URL('packages/core/migrations-postgres/', root);
@@ -103,7 +104,7 @@ test('native PG18 C04.7 immutable credited-usage store and bounded backfill',
       clients.push(migrator,runtime,producer,consumerA,consumerB);
       await migrator.unsafe(`CREATE TABLE cinatoken_gateway.schema_migrations
         (version text PRIMARY KEY,applied_at timestamptz NOT NULL DEFAULT now())`);
-      const files=(await readdir(migrations)).filter(name=>name.endsWith('.sql')).sort();
+      const files = await listPg73Migrations();
       assert.equal(files.length,73);
       const corpus=[];
       for(const name of files) {

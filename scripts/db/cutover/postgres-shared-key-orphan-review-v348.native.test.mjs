@@ -1,12 +1,13 @@
 // Review-only owned PG18.6 proof. Every identity and economic row is synthetic.
 import assert from 'node:assert/strict';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
 import test from 'node:test';
 import postgres from 'postgres';
 import { startNativePostgres } from '../../../packages/core/src/test-support/postgres-native-cluster.mjs';
+import { listPg73Migrations } from './pg73-native-fixture.mjs';
 
 const gateway = 'cinatoken_gateway';
 const quotes = 'cinatoken_economic_quotes';
@@ -102,7 +103,7 @@ test('native PG18 orphan review enqueues every committed claim without charging'
       clients.push(migrator,installer,producer,producer2,worker,worker2,recovery,runtime);
       await migrator.unsafe(`CREATE TABLE ${gateway}.schema_migrations
         (version text PRIMARY KEY,applied_at timestamptz NOT NULL DEFAULT now())`);
-      const names = (await readdir(migrations)).filter(name=>name.endsWith('.sql')).sort();
+      const names = await listPg73Migrations();
       assert.equal(names.length,73);
       const corpus = [];
       for (const name of names) {

@@ -584,7 +584,7 @@ jobs:
             node --import tsx --test scripts/db/cutover/postgres-shared-key-credited-usage-gap.native.test.mjs
       - run: |
           gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
-            node --test scripts/db/cutover/postgres-shared-key-credited-usage-store.native.test.mjs
+            node --import tsx --test scripts/db/cutover/postgres-shared-key-credited-usage-store.native.test.mjs
       - run: |
           gosu postgres env HOME=/var/lib/postgresql GATEWAY_NATIVE_PG_BIN=/usr/lib/postgresql/18/bin \
             node --import tsx --test scripts/db/cutover/postgres-shared-key-credited-usage-reader.native.test.mjs
