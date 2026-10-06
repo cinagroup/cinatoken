@@ -1,0 +1,25 @@
+{
+  "at": "2026-10-06T10:30:41.734Z",
+  "finishedAt": "2026-10-06T10:30:47.566Z",
+  "executable": "C:/Program Files/Git/cmd/git.exe",
+  "args": [
+    "-c",
+    "core.longpaths=true",
+    "push",
+    "origin",
+    "main"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExit": 0,
+  "signal": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\push-peer-followup.stdout.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-web-foundation-5b11fb36c4074c9da1317f28ef4c7111\\push-peer-followup.stderr.log",
+    "bytes": 78,
+    "sha256": "365ad66e20ea200cd09fb5bdc4aa77ea4faacc578bd485eac009bdfd2070d778"
+  }
+}

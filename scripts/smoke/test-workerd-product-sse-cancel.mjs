@@ -90,7 +90,7 @@ function localURL(raw) {
 }
 async function observe(env, caseId, kind, value) {
   const target = localURL(env.OBSERVATION_URL);
-  const response = await fetch(target, { method: 'POST', redirect: 'error', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ caseId, kind, value, workerWallTime: Date.now() }) });
+  const response = await fetch(target, { method: 'POST', redirect: 'manual', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ caseId, kind, value, workerWallTime: Date.now() }) });
   if (response.status !== 204) throw Error('observation was not recorded');
   await response.body?.cancel();
 }

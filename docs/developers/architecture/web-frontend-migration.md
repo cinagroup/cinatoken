@@ -28,7 +28,7 @@
 
 当前发布（2026-10-05）：`cinatoken.com/*` 继续由独立 `cinatoken-web` 承接，当前源码 `c13a64b9c3b2c90adcf736910ea408868d7854f1`、version `2a0a2777-d3b1-47f0-a0a7-88e701b4d2d9`、deployment `fd24618f-121e-4640-9edf-f15d243a6d75`、100%流量、29页面开关启用；资源Route保留，Workers.dev/Preview关闭。同SHA Linux CI37312669228两个job/36步骤全部success，冻结产物与2289 Git输入/18195586 B精确匹配。实际部署由已验证的3847955＋bdc1bfcf bridge与新CI产物合成，137资产/35服务端文件，三档对应源码可下载；GET23/HEAD6、认证转发GET3、4个HTML no-transform与资源组合137/137通过，首轮超时及定向重试均保留。Admin/Proxy仍为34c742d1。本SHA原v2两轮25/23页超时、新v3 31/45页及三交互后actual1，完整严格浏览器未通过；5.72的3847955严格45/45及交互结果仅保留为历史。当前资源保留修复见5.73，首轮遥测冲突/配置403见5.71。真实登录/资金/链、完整G0–G8和旧页退役仍待验收。
 
-当前推进：P1-01/03/04/05/06/09已完成。51a72同SHA Web Linux两job/37步骤及1600测试全通过；额外Product run37448535797两POST在RST前结束，HTTP原因尚缺原响应字段，完整依赖树发现两个AJV peer冲突和五WASM orphan。已补诊断并建立Web兼容peer岛，既有版本/integrity保持；候选1600单测和三targetbuild/类型/格式0，新Linux待验（5.89）。P1-02/G1仍待，原strict8/7/1失败及C++根因未知保留。CinaAuth authorize仍invalid_target，生产OAuth关联具体批准待，已有测试工作区/密钥尚未验收（5.87）。独立Web已切流c13/2a0/100%，新前端尚未部署，完整G0–G8继续。
+当前推进：P1-01–06/09已完成。同2e Web Linux两job/37步骤及1600测试成功，干净安装/full Web peer树0；五可选WASM extraneous标签原样保留，AJV invalid已消失（5.90）。独立SSE两POST因观察fetch redirect:error返回500、未进入RST，夹具改manual严格204后待新Linux。原strict8/7/1失败和C++根因未知保持。独立Web已切流c13/2a0/100%，正在准备发布exact2e CI产物。生产OAuth关联具体批准待，已有测试工作区/密钥未验收，G1及完整G0–G8继续。
 
 上一批状态：NEXT-41四语公开署名修复与NEXT-13 B1五个活跃文件修复完成本地验收（5.54）。新P66 Web1401/1401、完整Web/Edge types及Web lint/format、三目标build/freeze/gen0；同一492产物真实Node HTTP45、Node compiled Worker77、Chrome JS32/真正NoJS36通过，68HTML实际footer英文原文/lang=en/译文/链接均通过。Admin源组件Chrome19/相关unit26/保留合同AST22、完整types与目标lint/format0；全量lint实际67E9W→58E5W，仍未全量通过。本地来源946文件tree/修复前1795观察已补，不能当上游导入ref/日期。P65原24/32缺英文、修前测试40失败与其他历史失败完整保留；workerd产品/最小例0xc0000005、WSL E_ACCESSDENIED，0原生case获验。29入口false、未部署；下一步NEXT-13 B2/B3按真实行为清理及来源/真实身份/三库/目录/链/LinuxCI/双平台/发布回滚，完整102主任务/54矩阵/G0–G8/E00–E08未提前完成。
 
@@ -354,7 +354,7 @@ rg -n 'Routes\.(get|post|put|patch|delete)\(' packages/admin/lib/routes/user pac
 ### P1：工程与最小可运行入口
 
 - [x] P1-01：将 `@cinatoken/web` 纳入根 workspace、版本核验、根锁文件及 CI；统一 npm 安装流程和局部规范。
-- [ ] P1-02：核对 Node、React、TypeScript、依赖覆盖与 peer 依赖；干净安装可复现，既有包不受冲突影响。
+- [x] P1-02：核对 Node、React、TypeScript、依赖覆盖与 peer 依赖；干净安装可复现，既有包不受冲突影响。
 - [x] P1-03：提供 Web 开发、类型检查、lint、格式检查、单测、生产构建和预览命令；版本/变更范围核验符合现有发布约定。
 - [x] P1-04：建立独立 cinatoken 浏览器入口，不将旧 New API API client、store 或路由隐式带入运行图。
 - [x] P1-05：区分开发代理地址与生产浏览器请求地址；产物使用同源请求，不能默认指向 `localhost:3000`。
@@ -2488,6 +2488,18 @@ P1-06已完成：当前浏览器使用同源URL和运行时bootstrap，自定义
 
 直接证据：[51 Linux及peer候选索引](./evidence/2026-10-06-web-build-environment-and-product-sse/linux-51-and-peer-followup/index.json)。完整2.2MB Web日志gzip保留解码bytes/SHA并回验，独立Product artifact原十文件及外部实际终态完整保存。
 
+### 5.90 同 2e Web 冷安装通过与 Workerd 观察端修复（2026-10-06）
+
+2e40b921已提交推送。同SHA Web run37450271483两个job/37步骤全部success，完整1600测试、类型/lint/format、三target构建、冻结产物、Docker及隔离SSR验证通过；下载的不可变artifact验签为135 assets/35 server，manifest 4a1bfe65ca1eee8978010e96292e00b0e4a2bbc5f38b2c17b3b24d854daf0363，本节落盘时尚未部署。
+
+独立manual run37450342919同SHA npm ci和原样完整npm ls --all -w @cinatoken/web都真实0，两个AJV invalid peer消失。原五个可选平台WASM子包仍显示extraneous，但本轮没有npm error且该步骤真实success；原raw完整保留，没有过滤、虚加依赖或宣称全仓依赖无漏洞。结合既有版本/integrity保持与完整Web检查，按字面范围完成P1-02；P1-07/08及G1整体仍待。
+
+该manual的SSE步骤仍真实1：新增诊断确认两POST都返回HTTP500，Workerd在第一条观察fetch拒绝redirect:error，上游尚未到达、未收到三帧、未发送RST，所以没有产生取消结果。只将夹具observe请求改为支持的manual，继续严格检查204、拒绝重定向；生产driver、真实RST、signal/usage/resource及最小source.cancel断言保持。Windowsprepare-only实际0仅证明bundle准备，新提交Linux执行待验。原两轮失败、strict8/7/1和未知C++根因保持。
+
+发布准备使用exact2e通过CI的不可变产物和当前真实c13保留资产activation；先记录c13当前选择时间，再组合新产物，旧384/bdc资源与源码TTL不续期。本节尚不声称上线成功。生产OAuth固定关联具体批准仍待，未重试被拒写入，真实浏览器身份/已有专用测试工作区/密钥未验收。原102主任务/54矩阵/G0–G8/E00–E08和211实际task范围保持，本批仅P1-02新增完成。
+
+直接证据：[2e Linux与观察端修复索引](./evidence/2026-10-06-web-build-environment-and-product-sse/linux-2e-and-observer-fix/index.json)。完整Web日志压缩前后原字节/SHA回验，独立Product原artifact全部保存。
+
 ## 6. 更新记录
 
 | 日期 | 更新内容 | 对应范围 | 验证与下一步 |
@@ -2731,3 +2743,5 @@ P1-06已完成：当前浏览器使用同源URL和运行时bootstrap，自定义
 2026-10-06：5.88完成Web显式空公开变量白名单、私有模式文件隔离与dev重载保护，删除失效workspace overrides；1600单测/完整types-lint-format/三target构建及130浏览器文件六类秘密canary通过。P1六项完成，P1-02冷安装/peer树与新Workerd真实RST工作流待Linux；原strict失败与待批准OAuth授权边界保持，本批尚未新部署。
 
 2026-10-06：5.89记录51同SHA Web Linux37步骤全成功及独立Product真实1，POST尚未RST且原HTTP字段缺失；完整依赖树真实发现两AJV冲突与五WASM orphan。最小Web peer岛/诊断候选本地1600/build0待新Linux，原失败/门槛与待批准OAuth保持，未部署。
+
+2026-10-06：5.90记录同2e Web37步骤/1600及冷安装完整peer树0，P1-02按范围完成；SSE实际500定位观察fetch不支持redirect:error，最小manual修复待新Linux；准备发布exact2e产物，原严格失败/OAuth审批边界与完整任务保持。
