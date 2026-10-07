@@ -1,0 +1,130 @@
+{
+  "at": "2026-10-07T07:39:47.576Z",
+  "records": [
+    {
+      "receipt": {
+        "startedAt": "2026-10-07T07:36:58.221Z",
+        "closedAt": "2026-10-07T07:36:58.304Z",
+        "executable": "C:/Program Files/Git/cmd/git.exe",
+        "args": [
+          "diff",
+          "--cached",
+          "--check"
+        ],
+        "cwd": "C:/cinagroup/cinatoken",
+        "actualExitCode": 2,
+        "signal": null,
+        "spawnError": null,
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-layout-bfcache-597-428cdeed165e40b0bc2d41c0e0c44483\\git-staged-check-docs-597.stdout.log",
+          "bytes": 454,
+          "sha256": "7d0131676815e9e9c2ff2963225207b03954f9114e2eb1f93d90c51eeb35c335"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-layout-bfcache-597-428cdeed165e40b0bc2d41c0e0c44483\\git-staged-check-docs-597.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "originalStreams": {
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-layout-bfcache-597-428cdeed165e40b0bc2d41c0e0c44483\\git-staged-check-docs-597.stdout.log",
+          "bytes": 454,
+          "sha256": "7d0131676815e9e9c2ff2963225207b03954f9114e2eb1f93d90c51eeb35c335",
+          "base64": "ZG9jcy9kZXZlbG9wZXJzL2FyY2hpdGVjdHVyZS9ldmlkZW5jZS8yMDI2LTEwLTA3LWxheW91dC1hdHRyaWJ1dGlvbi1hbmQtcHJlZmVyZW5jZS1yZXN0b3JhdGlvbi9jb2xsZWN0aW9uLnN0ZG91dC50eHQ6MTogdHJhaWxpbmcgd2hpdGVzcGFjZS4KK3siZmlsZXMiOiAxNDY5LCAiemlwQnl0ZXMiOiAyNzUzMTI5NCwgInppcFNoYTI1NiI6ICIxYzI2ODhmMmFjNDc4Y2NhMzBlNGE4MjY4ZGMwMDMyODQ3MGYzZjRmY2QzMmZkNjVkZDU5ZDFmMDJmYjRmMTI5IiwgImluZGV4IjogIkM6XFxjaW5hZ3JvdXBcXGNpbmF0b2tlblxcZG9jc1xcZGV2ZWxvcGVyc1xcYXJjaGl0ZWN0dXJlXFxldmlkZW5jZVxcMjAyNi0xMC0wNy1sYXlvdXQtYXR0cmlidXRpb24tYW5kLXByZWZlcmVuY2UtcmVzdG9yYXRpb25cXGluZGV4Lmpzb24iLCAiYWxsT3JpZ2luYWxBbmRFeHRyYWN0ZWRCeXRlc0VxdWFsIjogdHJ1ZX0NCg=="
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-layout-bfcache-597-428cdeed165e40b0bc2d41c0e0c44483\\git-staged-check-docs-597.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "base64": ""
+        }
+      }
+    },
+    {
+      "receipt": {
+        "startedAt": "2026-10-07T07:38:18.890Z",
+        "closedAt": "2026-10-07T07:38:18.948Z",
+        "executable": "C:/Program Files/nodejs/node.exe",
+        "args": [
+          "C:/Users/cina/AppData/Local/Temp/cinatoken-layout-bfcache-597-428cdeed165e40b0bc2d41c0e0c44483/preserve-late-git-check-597.mjs"
+        ],
+        "cwd": "C:/cinagroup/cinatoken",
+        "actualExitCode": 1,
+        "signal": null,
+        "spawnError": null,
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-layout-bfcache-597-428cdeed165e40b0bc2d41c0e0c44483\\preserve-late-git-check-597.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-layout-bfcache-597-428cdeed165e40b0bc2d41c0e0c44483\\preserve-late-git-check-597.stderr.log",
+          "bytes": 1253,
+          "sha256": "a6d01f32865c1b21266d192604e38957b7a9f5e09315764c202db84ef110b3bd"
+        }
+      },
+      "originalStreams": {
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-layout-bfcache-597-428cdeed165e40b0bc2d41c0e0c44483\\preserve-late-git-check-597.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "base64": ""
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-layout-bfcache-597-428cdeed165e40b0bc2d41c0e0c44483\\preserve-late-git-check-597.stderr.log",
+          "bytes": 1253,
+          "sha256": "a6d01f32865c1b21266d192604e38957b7a9f5e09315764c202db84ef110b3bd",
+          "base64": "ZmlsZTovLy9DOi9Vc2Vycy9jaW5hL0FwcERhdGEvTG9jYWwvVGVtcC9jaW5hdG9rZW4tbGF5b3V0LWJmY2FjaGUtNTk3LTQyOGNkZWVkMTY1ZTQwYjBiYzJkNDFjMGUwYzQ0NDgzL3ByZXNlcnZlLWxhdGUtZ2l0LWNoZWNrLTU5Ny5tanM6Ng0KY29uc3Qgb3JpZ2luYWxTdHJlYW1zPU9iamVjdC5mcm9tRW50cmllcyhbJ3N0ZG91dCcsJ3N0ZGVyciddLm1hcChrZXk9PltrZXksey4uLnJlY2VpcHRba2V5XSxiYXNlNjQ6ZnMucmVhZEZpbGVTeW5jKHJlY2VpcHRba2V5XS5wYXRoKS50b1N0cmluZygnYmFzZTY0Jyl9XSkpKTsNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF4NCg0KU3ludGF4RXJyb3I6IFVuZXhwZWN0ZWQgdG9rZW4gJyknDQogICAgYXQgY29tcGlsZVNvdXJjZVRleHRNb2R1bGUgKG5vZGU6aW50ZXJuYWwvbW9kdWxlcy9lc20vdXRpbHM6MzE4OjE2KQ0KICAgIGF0IE1vZHVsZUxvYWRlci5tb2R1bGVTdHJhdGVneSAobm9kZTppbnRlcm5hbC9tb2R1bGVzL2VzbS90cmFuc2xhdG9yczo5OToxOCkNCiAgICBhdCAjdHJhbnNsYXRlIChub2RlOmludGVybmFsL21vZHVsZXMvZXNtL2xvYWRlcjo0NzM6MjApDQogICAgYXQgYWZ0ZXJMb2FkIChub2RlOmludGVybmFsL21vZHVsZXMvZXNtL2xvYWRlcjo1Mjk6MjkpDQogICAgYXQgTW9kdWxlTG9hZGVyLmxvYWRBbmRUcmFuc2xhdGUgKG5vZGU6aW50ZXJuYWwvbW9kdWxlcy9lc20vbG9hZGVyOjUzNDoxMikNCiAgICBhdCAjZ2V0T3JDcmVhdGVNb2R1bGVKb2JBZnRlclJlc29sdmUgKG5vZGU6aW50ZXJuYWwvbW9kdWxlcy9lc20vbG9hZGVyOjU3NzozNikNCiAgICBhdCBhZnRlclJlc29sdmUgKG5vZGU6aW50ZXJuYWwvbW9kdWxlcy9lc20vbG9hZGVyOjYyNTo1MikNCiAgICBhdCBNb2R1bGVMb2FkZXIuZ2V0T3JDcmVhdGVNb2R1bGVKb2IgKG5vZGU6aW50ZXJuYWwvbW9kdWxlcy9lc20vbG9hZGVyOjYzMToxMikNCiAgICBhdCBvbkltcG9ydC50cmFjZVByb21pc2UuX19wcm90b19fIChub2RlOmludGVybmFsL21vZHVsZXMvZXNtL2xvYWRlcjo2NTA6MzIpDQogICAgYXQgVHJhY2luZ0NoYW5uZWwudHJhY2VQcm9taXNlIChub2RlOmRpYWdub3N0aWNzX2NoYW5uZWw6MzUwOjE0KQ0KDQpOb2RlLmpzIHYyNC4xNC4xDQo="
+        }
+      }
+    },
+    {
+      "receipt": {
+        "startedAt": "2026-10-07T07:38:31.893Z",
+        "closedAt": "2026-10-07T07:38:31.961Z",
+        "executable": "C:/Program Files/Git/cmd/git.exe",
+        "args": [
+          "add",
+          "--",
+          "docs/developers/architecture/evidence/2026-10-07-layout-attribution-and-preference-restoration/.gitattributes",
+          "docs/developers/architecture/evidence/2026-10-07-layout-attribution-and-preference-restoration/late-git-check.json"
+        ],
+        "cwd": "C:/cinagroup/cinatoken",
+        "actualExitCode": 128,
+        "signal": null,
+        "spawnError": null,
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-layout-bfcache-597-428cdeed165e40b0bc2d41c0e0c44483\\git-stage-evidence-attributes-597.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-layout-bfcache-597-428cdeed165e40b0bc2d41c0e0c44483\\git-stage-evidence-attributes-597.stderr.log",
+          "bytes": 157,
+          "sha256": "8ba9eac08f83ada645b43533ffc7c8515bd065097bf042c52672e4e9a5a4912d"
+        }
+      },
+      "originalStreams": {
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-layout-bfcache-597-428cdeed165e40b0bc2d41c0e0c44483\\git-stage-evidence-attributes-597.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "base64": ""
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-layout-bfcache-597-428cdeed165e40b0bc2d41c0e0c44483\\git-stage-evidence-attributes-597.stderr.log",
+          "bytes": 157,
+          "sha256": "8ba9eac08f83ada645b43533ffc7c8515bd065097bf042c52672e4e9a5a4912d",
+          "base64": "ZmF0YWw6IHBhdGhzcGVjICdkb2NzL2RldmVsb3BlcnMvYXJjaGl0ZWN0dXJlL2V2aWRlbmNlLzIwMjYtMTAtMDctbGF5b3V0LWF0dHJpYnV0aW9uLWFuZC1wcmVmZXJlbmNlLXJlc3RvcmF0aW9uL2xhdGUtZ2l0LWNoZWNrLmpzb24nIGRpZCBub3QgbWF0Y2ggYW55IGZpbGVzCg=="
+        }
+      }
+    }
+  ],
+  "originalFailedHelper": {
+    "bytes": 997,
+    "sha256": "8cac73fd0613f40df2e719a495a47ed7f9e264ee4ac2e54afdc82e13718f0088",
+    "base64": "aW1wb3J0IGZzIGZyb20gJ25vZGU6ZnMnOwppbXBvcnQgcGF0aCBmcm9tICdub2RlOnBhdGgnOwppbXBvcnQge2ZpbGVVUkxUb1BhdGh9IGZyb20gJ25vZGU6dXJsJzsKY29uc3Qgb3duPXBhdGguZGlybmFtZShmaWxlVVJMVG9QYXRoKGltcG9ydC5tZXRhLnVybCkpOwpjb25zdCByZWNlaXB0PUpTT04ucGFyc2UoZnMucmVhZEZpbGVTeW5jKHBhdGguam9pbihvd24sJ2dpdC1zdGFnZWQtY2hlY2stZG9jcy01OTcucmVzdWx0Lmpzb24nKSkpOwpjb25zdCBvcmlnaW5hbFN0cmVhbXM9T2JqZWN0LmZyb21FbnRyaWVzKFsnc3Rkb3V0Jywnc3RkZXJyJ10ubWFwKGtleT0+W2tleSx7Li4ucmVjZWlwdFtrZXldLGJhc2U2NDpmcy5yZWFkRmlsZVN5bmMocmVjZWlwdFtrZXldLnBhdGgpLnRvU3RyaW5nKCdiYXNlNjQnKX1dKSkpOwpmcy53cml0ZUZpbGVTeW5jKCdDOi9jaW5hZ3JvdXAvY2luYXRva2VuL2RvY3MvZGV2ZWxvcGVycy9hcmNoaXRlY3R1cmUvZXZpZGVuY2UvMjAyNi0xMC0wNy1sYXlvdXQtYXR0cmlidXRpb24tYW5kLXByZWZlcmVuY2UtcmVzdG9yYXRpb24vbGF0ZS1naXQtY2hlY2suanNvbicsSlNPTi5zdHJpbmdpZnkoe2F0Om5ldyBEYXRlKCkudG9JU09TdHJpbmcoKSxyZWNlaXB0LG9yaWdpbmFsU3RyZWFtcyxyZWFzb246J1JhdyBQeXRob24gc3Rkb3V0IGVuZHMgQ1JMRi4gR2l0IGRpZmYgY2xhc3NpZmllZCB0aGUgcHJlc2VydmVkIENSIGFzIHRyYWlsaW5nIHdoaXRlc3BhY2UuIE9ubHkgZXZpZGVuY2UgdHh0IGlzIGRlY2xhcmVkIC1kaWZmOyBhY3R1YWwgcmF3IGJ5dGVzIHJlbWFpbiB1bmNoYW5nZWQuIFByb2R1Y3QgY2hlY2tzIGFyZSB1bmFmZmVjdGVkLid9LG51bGwsMikrJ1xuJyx7ZmxhZzond3gnfSk7CmNvbnNvbGUubG9nKEpTT04uc3RyaW5naWZ5KHtwcmVzZXJ2ZWRBY3R1YWxDaGlsZEV4aXQ6cmVjZWlwdC5hY3R1YWxFeGl0Q29kZSxyYXdTdHJlYW1zUHJlc2VydmVkOnRydWUscHJvZHVjdFNvdXJjZUNoYW5nZWQ6ZmFsc2V9KSk7Cg=="
+  },
+  "reason": "Raw Python stdout CRLF was reported as trailing whitespace. Evidence txt is declared -diff to retain bytes. The first preservation helper had a syntax error; dependent git add found the missing JSON. These actual exits 2/1/128 are preserved. No product source changed."
+}

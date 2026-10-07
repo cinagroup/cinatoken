@@ -1,0 +1,1 @@
+{"files": 1469, "zipBytes": 27531294, "zipSha256": "1c2688f2ac478cca30e4a8268dc00328470f3f4fcd32fd65dd59d1f02fb4f129", "index": "C:\\cinagroup\\cinatoken\\docs\\developers\\architecture\\evidence\\2026-10-07-layout-attribution-and-preference-restoration\\index.json", "allOriginalAndExtractedBytesEqual": true}
