@@ -1,0 +1,391 @@
+{
+  "schema": "cinatoken-layout-preferences-597-local-v1",
+  "at": "2026-10-07T07:08:18.560Z",
+  "sourceState": "Eight final source files, uncommitted local candidate; production remains 3494",
+  "source": {
+    "at": "2026-10-07T07:01:54.130Z",
+    "sources": [
+      {
+        "relative": "packages/web/src/cinatoken/app-shell.tsx",
+        "bytes": 9713,
+        "sha256": "058c723f527dba9862cec46290f0a3685f3019c0a87dba92e28fe339c7e7a56b"
+      },
+      {
+        "relative": "packages/web/src/cinatoken/private-preferences.test.ts",
+        "bytes": 18396,
+        "sha256": "99be1a71c8c8af2f318facdc93d0d373e74aa86cb4d076da32a7a25e26bbf774"
+      },
+      {
+        "relative": "packages/web/src/cinatoken/public/ssr/public-preferences.test.ts",
+        "bytes": 16314,
+        "sha256": "28c07951fc5923d4f39abceee2426aa5348925b0aeeac9bef282147801e1ebc9"
+      },
+      {
+        "relative": "packages/web/src/cinatoken/public/ssr/public-preferences.ts",
+        "bytes": 4260,
+        "sha256": "50741365ef1020ff507b10a5eb8dbc0de220d2af38be8aa544f193fef1b7e40e"
+      },
+      {
+        "relative": "packages/web/src/context/theme-provider.tsx",
+        "bytes": 5547,
+        "sha256": "f769c1242354a3108ee68f6971360009561996711ca34c6160ac4b3e99eb1dad"
+      },
+      {
+        "relative": "packages/web/src/legacy-root.tsx",
+        "bytes": 1152,
+        "sha256": "2a8e813d4ea294b676125508192c9e12419654a3ac89f900e0d40ff00b5428a5"
+      },
+      {
+        "relative": "packages/web/src/cinatoken/PrivateLanguageRestoration.tsx",
+        "bytes": 352,
+        "sha256": "53bed298e44da357a548047b57219f53e56053fa8832dde447192be5940ec670"
+      },
+      {
+        "relative": "packages/web/src/cinatoken/private-language-restoration.ts",
+        "bytes": 1556,
+        "sha256": "7d2507107d9bb396fe80eaf51405b2bea7ab1df20a3710ed38816c7b39b5bc04"
+      }
+    ],
+    "localBuildContract": {
+      "version": 2,
+      "buildId": "0c1b0a43-0a42-4fc6-a76a-25096c4bb150",
+      "sourceSha256": "188480faecf721ccd9fbd5cf40f40afb9f7af98b70cc8657b8009719982e76d3"
+    },
+    "mutatesProduction": false
+  },
+  "receipts": [
+    {
+      "physical": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-layout-bfcache-597-428cdeed165e40b0bc2d41c0e0c44483\\types-web-597.result.json",
+        "bytes": 867,
+        "sha256": "b4784178a9a145a6868323c93868cc7057bef5ca3221ef1fcbe4e37934c0524e"
+      },
+      "startedAt": "2026-10-07T06:49:09.361Z",
+      "closedAt": "2026-10-07T06:50:20.906Z",
+      "executable": "C:/Program Files/nodejs/node.exe",
+      "args": [
+        "C:/Program Files/nodejs/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "typecheck:web"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExitCode": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-layout-bfcache-597-428cdeed165e40b0bc2d41c0e0c44483\\types-web-597.stdout.log",
+        "bytes": 145,
+        "sha256": "e8686b831448219f02dfec0083f1cdf5dcf47d85fdf301d2464408c48b20a989"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-layout-bfcache-597-428cdeed165e40b0bc2d41c0e0c44483\\types-web-597.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "physical": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-layout-bfcache-597-428cdeed165e40b0bc2d41c0e0c44483\\test-web-597.result.json",
+        "bytes": 863,
+        "sha256": "d47bc1913a4a7f7f4f3bee7b6b882cdde3dde7557bc7155faec02e97412a13cd"
+      },
+      "startedAt": "2026-10-07T06:49:13.885Z",
+      "closedAt": "2026-10-07T06:50:25.896Z",
+      "executable": "C:/Program Files/nodejs/node.exe",
+      "args": [
+        "C:/Program Files/nodejs/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "test:web"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExitCode": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-layout-bfcache-597-428cdeed165e40b0bc2d41c0e0c44483\\test-web-597.stdout.log",
+        "bytes": 161803,
+        "sha256": "2af37e48a3dfc7f18dc20847cf932816e51f8ce46a038bf5cc118b19fe216456"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-layout-bfcache-597-428cdeed165e40b0bc2d41c0e0c44483\\test-web-597.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "physical": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-layout-bfcache-597-428cdeed165e40b0bc2d41c0e0c44483\\private-bfcache-lint-fix-unit-v1.result.json",
+        "bytes": 913,
+        "sha256": "f67fd3eef5a4f60a858607d692f0cd408c10fe044fc21fa08cd18afadaa16159"
+      },
+      "startedAt": "2026-10-07T06:52:51.378Z",
+      "closedAt": "2026-10-07T06:52:52.412Z",
+      "executable": "C:/Program Files/nodejs/node.exe",
+      "args": [
+        "--import",
+        "tsx",
+        "--test",
+        "packages/web/src/cinatoken/private-preferences.test.ts"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExitCode": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-layout-bfcache-597-428cdeed165e40b0bc2d41c0e0c44483\\private-bfcache-lint-fix-unit-v1.stdout.log",
+        "bytes": 768,
+        "sha256": "5ca4443c694a00926d874fe2933b46b59aa51a3b55aa8c721814833a68c8c0a4"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-layout-bfcache-597-428cdeed165e40b0bc2d41c0e0c44483\\private-bfcache-lint-fix-unit-v1.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "physical": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-layout-bfcache-597-428cdeed165e40b0bc2d41c0e0c44483\\public-unknown-cookie-after-597.result.json",
+        "bytes": 922,
+        "sha256": "39a1be556d7a927096268a4d2a95051921816204198303fde7c693ccbd163d5d"
+      },
+      "startedAt": "2026-10-07T06:48:25.195Z",
+      "closedAt": "2026-10-07T06:48:25.738Z",
+      "executable": "C:/Program Files/nodejs/node.exe",
+      "args": [
+        "--import",
+        "tsx",
+        "--test",
+        "packages/web/src/cinatoken/public/ssr/public-preferences.test.ts"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExitCode": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-layout-bfcache-597-428cdeed165e40b0bc2d41c0e0c44483\\public-unknown-cookie-after-597.stdout.log",
+        "bytes": 1317,
+        "sha256": "d2f5ecd20797d32caed30d212efcbdc3301501131c1325d08a111e8d113b704c"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-layout-bfcache-597-428cdeed165e40b0bc2d41c0e0c44483\\public-unknown-cookie-after-597.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "physical": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-layout-bfcache-597-428cdeed165e40b0bc2d41c0e0c44483\\format-web-final-597.result.json",
+        "bytes": 912,
+        "sha256": "e9402c1eeb98cd46d13c0f1541abedee1b035365d2ebd6ef0d99cb672e2bacac"
+      },
+      "startedAt": "2026-10-07T06:53:55.060Z",
+      "closedAt": "2026-10-07T06:54:16.711Z",
+      "executable": "C:/Program Files/nodejs/node.exe",
+      "args": [
+        "C:/Program Files/nodejs/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "format:check",
+        "-w",
+        "@cinatoken/web"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExitCode": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-layout-bfcache-597-428cdeed165e40b0bc2d41c0e0c44483\\format-web-final-597.stdout.log",
+        "bytes": 526,
+        "sha256": "2b0035c6efe61dde18467e93abfae487b1218cc9033b8e77a6e847442bf4b52c"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-layout-bfcache-597-428cdeed165e40b0bc2d41c0e0c44483\\format-web-final-597.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "physical": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-layout-bfcache-597-428cdeed165e40b0bc2d41c0e0c44483\\lint-web-final-597.result.json",
+        "bytes": 900,
+        "sha256": "cfd3b1f56fd56fa3270ff3e886cabb67adea287d28a2a5c927b03eb58351ec92"
+      },
+      "startedAt": "2026-10-07T06:53:59.648Z",
+      "closedAt": "2026-10-07T06:54:30.055Z",
+      "executable": "C:/Program Files/nodejs/node.exe",
+      "args": [
+        "C:/Program Files/nodejs/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "lint",
+        "-w",
+        "@cinatoken/web"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExitCode": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-layout-bfcache-597-428cdeed165e40b0bc2d41c0e0c44483\\lint-web-final-597.stdout.log",
+        "bytes": 117,
+        "sha256": "f3ba516bde29fd499321f1375fc5d965e048b42a611a0adc77944b00de9b4099"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-layout-bfcache-597-428cdeed165e40b0bc2d41c0e0c44483\\lint-web-final-597.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "physical": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-layout-bfcache-597-428cdeed165e40b0bc2d41c0e0c44483\\build-web-final-597.result.json",
+        "bytes": 878,
+        "sha256": "9e15a914934e05fb50090fde3001c590b84b7934dd7275eb42a92d675fc400f6"
+      },
+      "startedAt": "2026-10-07T06:53:58.435Z",
+      "closedAt": "2026-10-07T06:54:40.882Z",
+      "executable": "C:/Program Files/nodejs/node.exe",
+      "args": [
+        "C:/Program Files/nodejs/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "build:web"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExitCode": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-layout-bfcache-597-428cdeed165e40b0bc2d41c0e0c44483\\build-web-final-597.stdout.log",
+        "bytes": 11147,
+        "sha256": "194628ac5cbca6295ea390ba5f73cc95901585c554e0feb1112a85bdc0b1238b"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-layout-bfcache-597-428cdeed165e40b0bc2d41c0e0c44483\\build-web-final-597.stderr.log",
+        "bytes": 88,
+        "sha256": "450f7d9b44a0069e2dc02e9a02a23203117a5bb107a866c9b2ae7784994db796"
+      }
+    },
+    {
+      "physical": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-layout-bfcache-597-428cdeed165e40b0bc2d41c0e0c44483\\browser-private-layout-597.result.json",
+        "bytes": 1166,
+        "sha256": "f2ffdee4b6443cb29086a7fafbfb46906fdf23954864e7c1c44a158d07aad469"
+      },
+      "startedAt": "2026-10-07T06:58:10.998Z",
+      "closedAt": "2026-10-07T06:58:33.809Z",
+      "executable": "C:/Program Files/nodejs/node.exe",
+      "args": [
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-layout-bfcache-597-428cdeed165e40b0bc2d41c0e0c44483/run-private-layout-browser-597.mjs",
+        "--assets=C:/cinagroup/cinatoken/packages/web/dist",
+        "--out=C:/Users/cina/AppData/Local/Temp/cinatoken-layout-bfcache-597-428cdeed165e40b0bc2d41c0e0c44483/after-private-layout-597",
+        "--label=after-private-layout-597"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExitCode": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-layout-bfcache-597-428cdeed165e40b0bc2d41c0e0c44483\\browser-private-layout-597.stdout.log",
+        "bytes": 2238,
+        "sha256": "0abf68c9e52faafaeda0a9ccafaccf314706b84e41ea34271158d13ad514a61f"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-layout-bfcache-597-428cdeed165e40b0bc2d41c0e0c44483\\browser-private-layout-597.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "focusedReceipt": {
+    "physical": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-bfcache-preferences-597-a4c7b90a89184209ab28251d8ee1e0f6\\after-focused-597-owned-v2.process-closed.json",
+      "bytes": 956,
+      "sha256": "491d51511a13c37328b0b7e1d5d4b1fa0edadb90d330cd92cf92d34cfb1877c7"
+    },
+    "startedAt": "2026-10-07T07:05:35.175Z",
+    "program": "C:/Program Files/nodejs/node.exe",
+    "args": [
+      "C:/Users/cina/AppData/Local/Temp/cinatoken-bfcache-preferences-597-a4c7b90a89184209ab28251d8ee1e0f6/serve-and-run-focused-after-597-v2.mjs"
+    ],
+    "actualExitCode": 0,
+    "signal": null,
+    "closedAt": "2026-10-07T07:05:46.053Z",
+    "spawnError": null,
+    "streams": {
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-bfcache-preferences-597-a4c7b90a89184209ab28251d8ee1e0f6\\after-focused-597-owned-v2.stdout.log",
+        "bytes": 1482,
+        "sha256": "004252f4d94a6a2c7e1e10564a0364ff29a3f1af6ac7cdfc63147eb990f5f5ba"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-bfcache-preferences-597-a4c7b90a89184209ab28251d8ee1e0f6\\after-focused-597-owned-v2.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  },
+  "privateBrowser": {
+    "physical": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-layout-bfcache-597-428cdeed165e40b0bc2d41c0e0c44483\\after-private-layout-597\\report.json",
+      "bytes": 1585741,
+      "sha256": "f8c938507ff6e5ce158bc83bd9416f2a034f136170fe2581cd913e18dbadf3f2"
+    },
+    "passed": 15,
+    "failed": 0,
+    "notExecuted": 0,
+    "closure": {
+      "contextsBeforeBrowserClose": 0,
+      "browserDisconnectedAt": "2026-10-07T06:58:33.587Z",
+      "browserCloseFulfilled": true,
+      "browserConnectedAfter": false,
+      "contextsAfterBrowserClose": 0,
+      "browserServerCloseEvent": {
+        "code": 0,
+        "signal": null,
+        "at": "2026-10-07T06:58:33.709Z"
+      },
+      "childClose": {
+        "code": 0,
+        "signal": null,
+        "at": "2026-10-07T06:58:33.710Z"
+      },
+      "browserServerCloseFulfilled": true,
+      "serverCloseEventAt": "2026-10-07T06:58:33.725Z",
+      "staticServerCloseFulfilled": true,
+      "serverCloseEvent": true,
+      "serverListeningAfter": false,
+      "openSockets": 0
+    },
+    "scope": "Actual bundled browser private application shared Shell, anonymous controlled HTTP fixture. NOT real CinaAuth, identity/workspace/keys, public SSR, Cloudflare, BFCache, or authenticated account/console business acceptance."
+  },
+  "focusedBrowser": {
+    "physical": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-bfcache-preferences-597-a4c7b90a89184209ab28251d8ee1e0f6\\after-compiled-597-focused-v4\\report.json",
+      "bytes": 661448,
+      "sha256": "73f0746ed2fba6d219ae47aedc854c8a92608d74a83f1c12e4e2ae0856ac722a"
+    },
+    "scope": "Owned 127.0.0.1 compiled Node SSR with anonymous401 and controlled catalog; two real public BFCache cases plus two separate private replacement-Document cases",
+    "counts": {
+      "pass": 4,
+      "fail": 0,
+      "notExecuted": 0
+    }
+  },
+  "productionBefore": {
+    "physical": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-bfcache-preferences-597-a4c7b90a89184209ab28251d8ee1e0f6\\before-production-3494-v2-network\\report.json",
+      "bytes": 1031212,
+      "sha256": "04d544b07fb348619936dcc247072173f66025f95bfd54a433f87256ed5f2e52"
+    },
+    "functionalPass": 2,
+    "strictFail": 4,
+    "actualNodeExit": 1,
+    "incompleteLateFavicons": 2,
+    "completeResponseValidationPass": false
+  },
+  "limits": [
+    "Full1628 and standalone typecheck precede final component/Probe lint cleanup; final build includes typecheck; final private5 and compiled15 bind final files",
+    "Public fixed-script tests11",
+    "Private replacement Document is not BFCache acceptance",
+    "No real auth/workspace/keys, production BFCache improvement, full migration or performance completion"
+  ],
+  "rawEvidence": "Original paths and bytes/SHA retained; publication will add a repository raw ZIP and final index"
+}

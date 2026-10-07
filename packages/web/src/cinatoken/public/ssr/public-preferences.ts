@@ -80,8 +80,10 @@ export const publicPreferencesScript = String.raw`(function (browser) {
 	const restore = () => {
 		const current = readCookie('cinatoken-theme');
 		if (current !== undefined && current !== stored) {
+			const previouslyObserved = stored !== undefined;
 			stored = current;
-			theme = parseTheme(current);
+			// A first readable value cannot prove a change while storage was denied.
+			if (previouslyObserved) theme = parseTheme(current);
 		}
 		applyTheme();
 		syncControls();

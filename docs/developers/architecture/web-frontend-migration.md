@@ -4,7 +4,7 @@
 
 目标是以 `packages/web` 的 React、Rsbuild 与现有 UI 基础作为 cinatoken 前端，覆盖公开发现、账户中心及管理后台的全部现有能力。首个交付切片是认证、工作区和网关密钥闭环；切片通过不代表整个迁移完成。
 
-**可行性结论：可行。** `packages/web` 已作为独立 `cinatoken-web` 部署，并接管生产主入口与公开SSR。当前3494版本为100%流量，新增账户/管理偏好存储拒绝容错及四语安全路由状态；本地、Linux CI、匿名偏好和受控路由/真实编译dist验证通过（5.96），本次生产相关只读验收仍按实际结果推进。Admin继续提供认证、用户/管理API、BFF与兼容旧路由。真实CinaAuth/已有专用工作区/密钥尚未验收，完整业务、数据库、双平台、取消与旧页退役继续按原门槛推进。
+**可行性结论：可行。** `packages/web` 已作为独立 `cinatoken-web` 部署，并接管生产主入口与公开SSR。当前3494版本为100%流量，新增账户/管理偏好存储拒绝容错及四语安全路由状态；本地、Linux CI、匿名偏好和受控路由/真实编译dist验证通过（5.96），本次生产相关只读验收仍按实际结果推进。Admin继续提供认证、用户/管理API、BFF与兼容旧路由。真实CinaAuth/已有专用工作区/密钥尚未验收，完整业务、数据库、双平台、取消与旧页退役继续按原门槛推进。 5.97已完成本地共享页脚归属与偏好恢复边界验收，新候选尚未发布；具体范围与保留失败见5.97。
 
 本文同时保存方案、checklist 和进度，不另建会分叉的实施清单。按以下入口阅读：
 
@@ -33,6 +33,8 @@
 当前发布（2026-10-06）：独立 `cinatoken-web` 源码/tag `f9b9140f7fdc35b4bddcd27e13df14cb2e444a34`，version `218e2b8c-6153-4163-8b9f-cffc34445e27`、deployment `b1fc86e3-a392-488c-9eca-6b5a99f8c713`、100%流量；同SHA Linux run37459304184两job/37步骤全部success，Web1610/1610、冷npm ci、三target构建/冻结和Docker SSR通过。Linux对应源码2297/2297与Git blob和完整策略集合一致；激活产物158资产/35服务端文件/5源码包。三Route、29true、Admin服务绑定、正式origins及预览关闭最终读回0；生产匿名Chrome13/13及公开SSR/HEAD/索引通过。HTTP V2矩阵175/177、两个30s源码下载超时仍actual1；额外60s五包为3/5、actual1。只读重核前两HTTP轮成功body形成unique158正文覆盖、154重叠字节一致，不能写177/177、五包60s全绿或性能预算通过。直接证据见5.94，原2e发布见5.91–5.92历史范围。
 
 当前推进：3494私有偏好/四语安全route已100%发布，c5314d77/c7c90b4c；本地1624、CI37/2302exactGit、匿名本地/Linux各15、source PublicShell24和真实compiled Windows/Linux各2通过。新生产HTTP原13/19actual1，offline按primary18/19；current源码30s下载失败、真实登录无session继续。f9公开SSR早期偏好修复和严格CSP已发布（5.93–5.94）；生产桌面Chrome .98真实后退/前进BFCache恢复通过（5.95），原Document/DOM/controller/nonce保留。20次下载采集离线重放及独立复核完成，仅反映当前本地操作；旧30s HTTP与60s源码下载实际失败、性能根因未证保持。离页cookie/媒体变化、移动及恢复后原生输入/监听器等完整BFCache验收继续。原102主任务8完成/94待、211任务55完成/156待及54矩阵/G0–G8/E00–E08未变；生产OAuth固定关联写入仍待具体批准，真实身份/已有专用测试工作区/密钥未验收。产品SSE transport PASS/minimal source.cancel FAIL及原strict8/7/1保持。
+
+本批推进（5.97）：8源文件统一账户/管理共享署名和可下载源码入口，补私有pageshow与公私初始Cookie未知的保守恢复。本地最终format/lint/build实际0、private5/public11、匿名compiled15及focused4通过；较早完整1628时点独立记录。focused4仅公开系统外观2项真BFCache和私有Cookie2项自然重载；原生产before2PASS/4FAIL、latefavicon缺证及全部完整门槛保持。源码/CI/发布继续，线上仍为3494。
 
 上一批状态：NEXT-41四语公开署名修复与NEXT-13 B1五个活跃文件修复完成本地验收（5.54）。新P66 Web1401/1401、完整Web/Edge types及Web lint/format、三目标build/freeze/gen0；同一492产物真实Node HTTP45、Node compiled Worker77、Chrome JS32/真正NoJS36通过，68HTML实际footer英文原文/lang=en/译文/链接均通过。Admin源组件Chrome19/相关unit26/保留合同AST22、完整types与目标lint/format0；全量lint实际67E9W→58E5W，仍未全量通过。本地来源946文件tree/修复前1795观察已补，不能当上游导入ref/日期。P65原24/32缺英文、修前测试40失败与其他历史失败完整保留；workerd产品/最小例0xc0000005、WSL E_ACCESSDENIED，0原生case获验。29入口false、未部署；下一步NEXT-13 B2/B3按真实行为清理及来源/真实身份/三库/目录/链/LinuxCI/双平台/发布回滚，完整102主任务/54矩阵/G0–G8/E00–E08未提前完成。
 
@@ -63,12 +65,12 @@ P48为2026-09-30历史Web候选（仅证明原冻结范围）：protocol-07 与�
 | 阶段 | 当前状态 | 已有实现或证据 | 下一验收重点 |
 | --- | --- | --- | --- |
 | P0 基线与范围 | 进行中 | 本文已列出页面/API/权限矩阵与来源要求 | 补齐可核验上游版本、基线及矩阵审查 |
-| P1 工程基础 | 本批Web工程与Linux CI通过，整体待验；持续实施 | f9完整Web1610/1610、types/lint/format和三target build actual0；同SHA Linux Node22两job/37步骤success，2297源码与完整Git输入逐文件匹配；早期nonce固定脚本/uncontrolled原生控件及解释模式通过独立审查，本地/Linux/生产各13浏览器通过（5.93–5.94）。原J6/构建变量白名单/peer树证据按5.69/5.88–5.92历史范围保留；5.96源码3494本地1624、Linux CI两job/37步骤/2302exactGit、匿名本地/Linux偏好各15、受控source PublicShell24及真实compiled dist Windows/Linux各2通过；仅本批工程切片，不升级P1-07/08整项。 | P1-07/08、G1整体仍待；早期偏好局部修复不证明账户/管理所有布局与状态。326历史来源/上游ref/日期/归属与许可、全仓及原strict取消继续，完整G0–G8不提前完成。 |
+| P1 工程基础 | 本批Web工程与Linux CI通过，整体待验；持续实施 | f9完整Web1610/1610、types/lint/format和三target build actual0；同SHA Linux Node22两job/37步骤success，2297源码与完整Git输入逐文件匹配；早期nonce固定脚本/uncontrolled原生控件及解释模式通过独立审查，本地/Linux/生产各13浏览器通过（5.93–5.94）。原J6/构建变量白名单/peer树证据按5.69/5.88–5.92历史范围保留；5.96源码3494本地1624、Linux CI两job/37步骤/2302exactGit、匿名本地/Linux偏好各15、受控source PublicShell24及真实compiled dist Windows/Linux各2通过；仅本批工程切片，不升级P1-07/08整项。 5.97本地最终8文件format/lint/build0、private5/public11及匿名compiled15通过；共享署名/初始未知Cookie/pageshow仅局部验收。 | P1-07/08、G1整体仍待；早期偏好局部修复不证明账户/管理所有布局与状态。326历史来源/上游ref/日期/归属与许可、全仓及原strict取消继续，完整G0–G8不提前完成。 |
 | P2 认证与工作区 | 本地切片通过，完整验收待办 | NEXT-42 B1先Portal可信身份与expected-user校验，再读Admin/复验IdP、解析workspace和领域操作；同subject才提升Portal管理能力。新Next真实HTTP45/45含401/400/409、角色复验与两个退出语义，独立重写观测2/2通过（5.63）；5.62 P70 Chrome10历史保留 | IdP/数据库/组织成员与Queue为受控binding，角色撤销或复验暂不可用分支不等于真实发行方验收；真实CinaAuth/同源登录及原生三库仍待验。 |
 | P3 数据与请求层 | 进行中 | NEXT-42 canonical预期user/workspace组合、62账户调用绑定及未知写不重放已接入；B1新Next六exports旧A/B请求在Admin/IdP/workspace/domain之前409，401/400/403/409/500及成功响应private,no-store，统一退出另由精确配置保障（5.63） | 完整金额/日期/权限、缓存/Retry-After、原生三库并发及Queue/链/账本对账继续；独立两case构造观测不读取或修改请求体，不能替代真实领域平台验收。 |
 | P4 账户中心 | 本地证据补齐，完整验收待办 | 十组路由/十五能力已实现，P6 244 fixture及5.62 P70 Keys/NFT/Preset Chrome10保留；B1同一新Next合法NFT POST在显式受控tier105配置下实际创建SQL行/Queue1，身份拒绝无领域增量，两退出通过（5.63） | 受控Node SQLite执行77正式D1迁移不等于原生D1/PG/MySQL；正式tier200–203配置未改，真实ACC-01–15授权、预算/收益账本、钱包/链与平台继续。 |
 | P5 管理后台 | 本地证据持续补齐，整域待验 | 5.45提现/NFT完整Screen/API/四语/旧Next桥；P53历史、5.46 P54焦点48/48；5.47 NEXT-38完整四域源码及新P58三域270/270、Routes126unique、已发写切scope8/8本地证据，Root1062/类型/两构建0 | 其余域和真实身份/三库/链/账本/经济证据/Proxy/平台与G5继续；MySQL无journal模型待验 |
-| P6 公开页与 SEO | 当前匿名功能验收通过，整域待验 | 历史5.94的f9 Web公开四语首页/models SSR、HEAD、robots/sitemap及完整158资产原字节覆盖已核；生产Chrome V4严格13/13，包括真正NoJS4、移动2、早期主入口/动态chunk输入4，零CSP/pageerror/取证错误（5.94）。c13 functional45/45与2e三页证据保留历史范围；5.95实际Chrome .98桌面双向BFCache恢复与36 body/20 unique assets独立复核通过，离线20次采集诊断不改变性能失败；5.96四语安全状态及source PublicShell24、真实compiled dist Windows/Linux各2通过；生产8SSR/6static/3HEAD/匿名401按primary契约offline验证通过，首轮HTTPactual1及current源码30s下载失败保留。 | 离页cookie/媒体变化、移动及恢复后输入/监听器等完整BFCache仍待；真实Auth、非空目录/完整聊天、整域SEO/性能、上游来源与G6继续。旧networkidle31/45失败及未证根因保持，公开SSR由Web提供、兼容路由保留Admin。 |
+| P6 公开页与 SEO | 当前匿名功能验收通过，整域待验 | 历史5.94的f9 Web公开四语首页/models SSR、HEAD、robots/sitemap及完整158资产原字节覆盖已核；生产Chrome V4严格13/13，包括真正NoJS4、移动2、早期主入口/动态chunk输入4，零CSP/pageerror/取证错误（5.94）。c13 functional45/45与2e三页证据保留历史范围；5.95实际Chrome .98桌面双向BFCache恢复与36 body/20 unique assets独立复核通过，离线20次采集诊断不改变性能失败；5.96四语安全状态及source PublicShell24、真实compiled dist Windows/Linux各2通过；生产8SSR/6static/3HEAD/匿名401按primary契约offline验证通过，首轮HTTPactual1及current源码30s下载失败保留。 5.97受控compiled focused4通过：公开system媒体2项真BFCache、私有Cookie2项自然重载；生产before4项CookieModified严格失败与2个latefavicon缺证保持。 | 离页cookie/媒体变化、移动及恢复后输入/监听器等完整BFCache仍待；真实Auth、非空目录/完整聊天、整域SEO/性能、上游来源与G6继续。旧networkidle31/45失败及未证根因保持，公开SSR由Web提供、兼容路由保留Admin。 |
 | P7 双平台部署 | Cloudflare切流及独立Docker SSR冒烟通过，完整双平台待验 | f9/218e/b1fc/tagf9正式100%及三Route/29true/预览关闭读回0；158资产/5源码包按真实原字节覆盖，同SHA Web CI37与Linux冻结Chrome13通过（5.94）。原产品SSE RST→上游关闭/usage取消/resourceconfirmed及Docker旧证据按5.91–5.92历史范围保留；5.96源码3494/versionc5314d77/deploymentc7c90b4c正式100%已实际发布；前后3routes/29true/33binding与Admin/Proxy IDs/tagsexact不变。原HTTP13/19actual1、offline18/19、current源码30s失败，14day原门槛仍待。 | 完整SSR/Admin/Proxy/TLS、真实身份/资金链/PG lease与账务、SSE/WebSocket、灰度/实际回滚和G7继续。HTTP原两个30s下载失败仍actual1，分开60s源码核验不证明30s性能。原strict8/7/1及minimal source.cancel5000ms失败保持。 |
 | P8 发布与退役 | 切流完成，匿名功能验收通过，完整验收及退役未完成 | f9正式部署100%/158资产/5源码包和前后只读guard通过；生产匿名Chrome严格13/13、本地与Linux各13通过。全部前序browser/HTTP负面原件和actual1保持，无损归档、范围独立核验见5.94；5.95实际Chrome .98桌面双向BFCache恢复与36 body/20 unique assets独立复核通过，离线20次采集诊断不改变性能失败；5.96源/CI、各匿名偏好15/source24/compiled各2及实际发布有独立复核，生产匿名主题/四语实际观察；原HTTP1与source超时保留，真实登录仍无session，全部业务/性能/G门槛不提前完成。 | 全矩阵真实业务、来源/许可、完整BFCache与性能预算、完整双平台、灰度/实际回滚及旧UI退役继续。真实CinaAuth/已有专用工作区/密钥待具体OAuth关联批准；匿名功能或产品transport局部通过不勾G8。 |
 
@@ -244,6 +246,8 @@ rg -n 'Routes\.(get|post|put|patch|delete)\(' packages/admin/lib/routes/user pac
 
 - [ ] SRC-01：记录原项目地址、导入日期、上游提交/标签或可核验快照、源目录摘要与已有本地修改边界。
 - [ ] SRC-02：保留 NOTICE.frontend 指定的可见署名 Frontend design and development by New API contributors.、原项目链接及修改说明；核对第三方许可、绑定构建的可下载对应源码、保留资产与源码版本映射及正式发布渠道。S2当前源码/S3原P67归档与已证子集本地通过，326继承旧资产及正式发布仍待验（5.60–5.61）。
+
+5.97本地账户/管理共享页脚的英文原文/lang=en、四语补充、上游链接和源码入口15场景已验证；历史来源、完整许可与正式发布渠道继续按原要求验收。
 - [ ] SRC-03：记录开发工作开始时未提交文件，保护与迁移无关的既有修改；提交范围和审查结果可追溯。
 
 ## 3. 页面 / API / 权限 / 迁移矩阵
@@ -365,6 +369,8 @@ rg -n 'Routes\.(get|post|put|patch|delete)\(' packages/admin/lib/routes/user pac
 - [x] P1-06：客户端环境变量明确白名单；后端秘密、身份凭据、数据库连接等不进入客户端产物。
 - [ ] P1-07：建立公开、账户、管理布局以及加载、无权限、空态、错误与真实 404 状态。
 - [ ] P1-08：统一品牌资源、可见归属、主题 token、light/dark/system 与 `en/zh/ja/ko`；消息键集合一致。
+
+5.97本地补齐共享归属及偏好恢复边界，初始Cookie不可读后首次可读仅建立基线，system重采媒体、语言清理监听器；本批8文件/15匿名浏览器与focused4仅证局部要求，整项未完成。
 - [x] P1-09：明确迁移期间原导入代码的类型/lint 范围，记录基线债务；不能通过排除最终要交付的页面掩盖缺陷。
 
 当前交付源是 `src/main.tsx`、`src/cinatoken`、共享 UI/主题/样式及其辅助模块，连同 Rsbuild/TypeScript/ESLint/PostCSS 配置、`edge` 和 `scripts`。`format` / `format:check` 显式覆盖这些文件和 Docker 配置测试、Web CI 工作流。原导入的 `src/features`、`src/routes`、`src/stores` 等尚未迁移页面仍是库存，未纳入当前交付不表示全量迁移完成。每次接管一个领域必须把其实现纳入交付检查范围；不能由 ignore-everything 配置让显式格式检查虚假通过。
@@ -2604,6 +2610,20 @@ Windows Chrome在同一最终源码的本机编译HTTP产物和f9 Linux冻结编
 
 后续继续当前源码包完整下载、原性能/实际14day及真实CinaAuth/已有专用工作区/密钥验收，完整业务、双平台、BFCache、来源/许可和旧UI退役按原门槛推进。逐文件哈希、夹具更正与全部原失败见[物理索引](evidence/2026-10-07-private-preferences-and-route-recovery/index.json)及[原字节证据ZIP](evidence/2026-10-07-private-preferences-and-route-recovery/raw-evidence.zip)。[中文移动错误状态](evidence/2026-10-07-private-preferences-and-route-recovery/gallery/zh-lazy-mobile-first-error.png)和[Linux移动匿名偏好](evidence/2026-10-07-private-preferences-and-route-recovery/gallery/linux-private-12-mobile.png)为已实际目视原图；Root本地实际查看累计16次，仅限已记录图，不称全部截图视觉通过。原102主任务（8完成/94待）、211实际任务（55完成/156待）、54矩阵与G0–G8/E00–E08完整保留，P1-07/P1-08/P8-05不勾整项完成，旧30s/60s下载、SSE及strict失败不由本批相关验证改写。
 
+### 5.97 共享页脚归属与偏好恢复边界（2026-10-07）
+
+本批推进 P1-08、SRC-02 与 P6 的局部要求。账户/管理共享 Shell 复用现有 FrontendAttribution，保留品牌、网关说明和页脚样式，并统一显示带 lang=en 的英文原文、四语译文、New API 原项目链接及对应源码入口。新增独立 PrivateLanguageRestoration 组件接入私有入口；独立组件只解决导出边界，不改变恢复行为。本批共 8 个源文件，不据此完成整个品牌/主题/四语、来源许可或公开页迁移任务。
+
+私有主题及语言在 pageshow 时只采纳已观察到的 Cookie 变化；system 同时重新读取系统外观。Cookie 不可读、写入被拒绝或持久化仍为旧值时，保留当前文档选择。若初始读取不可用，恢复后的首次可读值（包括已知不存在）只建立基线，后续真正不同的值才被采纳，避免旧 light/zh 覆盖本页 dark/ja。公共固定内联脚本使用同一保守边界，继续以公开 URL 决定语言；没有新增请求数据插值、恢复写 Cookie 或跳转，也没有扩大认证 Cookie 的容错范围。
+
+验证按真实执行时点区分：Web types 于 06:50:20.906Z 退出 0，完整 Web 1628/1628 于 06:50:25.896Z 退出 0，二者绑定随后组件拆分和 Probe lint 修正之前的快照。修正后实际 React/i18n 定向 5/5 于 06:52:52.412Z 退出 0；公共 fixed VM 定向真实为 11/11，于 06:48:25.738Z 退出 0。最终 format/lint/build 分别于 06:54:16.711Z、06:54:30.055Z、06:54:40.882Z 退出 0。最终编译产物的匿名共享 Shell Chrome 15/15 于 06:58:33.809Z 退出 0，覆盖桌面/移动、四语可见署名及源码链接、light/dark/system 与偏好存储拒绝；165 次渲染状态均通过，无 pageerror 或未解释 console 错误，浏览器、上下文及 HTTP 服务实际关闭。该夹具禁用 BFCache，不作为 BFCache、真实 Auth、Cloudflare 或已登录账户/管理业务验收。Root 只目视记录的两张代表图，不称全部截图视觉通过。
+
+生产 3494 的原 BFCache before 轮仍为 2 PASS / 4 FAIL，实际 Node 退出 1。两项系统外观场景通过真实 persisted 恢复；两种视口下的私有/公开 Cookie 场景均被 Chrome 以 CacheControlNoStoreCookieModified 拒绝缓存并重新 GET Document，页面重载后显示正确偏好不能作为 BFCache 通过，也没有复现私有旧状态。原完整响应审计失败及两个未完成 late favicon 请求继续保留；有限离线复核退出 0 只确认已有证据与这些缺证事实。初始未知 Cookie 的定向 before 两项私有失败与公共失败另按原字节保留。新候选编译Node SSR focused v4实际4/4通过，父0于07:05:46.053Z、子0于07:05:45.938Z、Chrome0于07:05:45.779Z；公开系统媒体桌面/移动2项严格保持原Document/DOM/nonce且0替换Document，私有Cookie2项另按真实重载dark/ko验收，不升级为BFCachePASS。268自然CDP请求全部terminal，除2重定向外266body完整，108服务器请求均finish，服务/浏览器/socket实际关闭。首v3的观察器documentElement未创建TypeError/3PASS1FAIL保留；v4只修观察器等待，没有放宽缓存/30s/产品条件。
+
+本批尚无新的提交/CI/部署结论，线上仍以 5.96 的 3494、version c5314d77-ba0d-4f7e-9b38-f8241e2d4424、deployment c7c90b4c-aa1e-4fbc-a0f5-0a988423a1a4 和 100% 流量记录为准。真实 CinaAuth/已有专用工作区/密钥仍待验收，生产 OAuth 固定关联写入仍待单独批准；326 历史资产来源、上游 ref/日期/归属与完整许可、当前源码 30s 下载失败、旧性能/双平台/取消/实际 14day/退役要求继续。原 102 主任务（8 完成/94 待）、211 实际任务（55 完成/156 待）、54 矩阵及 G0–G8/E00–E08 保持，P1-08、SRC-02 与 P6 整域不勾完成。
+
+直接证据见[本地验证索引](evidence/2026-10-07-layout-attribution-and-preference-restoration/local-validation.json)，原生产before、首观察器失败和所有定向修前失败按原字节保留；后续将补本SHA CI、发布及同目录raw证据。
+
 ## 6. 更新记录
 
 | 日期 | 更新内容 | 对应范围 | 验证与下一步 |
@@ -2861,3 +2881,5 @@ Windows Chrome在同一最终源码的本机编译HTTP产物和f9 Linux冻结编
 2026-10-06：5.95记录真实Chrome .98桌面匿名双向BFCache恢复actual0与独立物理复核、20次固定数据离线采集诊断actual0；前置浏览器/reviewer actual1和旧30s/60s失败原样归档，不归因网络或Cloudflare，不改变预算。生产f9/100%保持；完整任务/54矩阵/G/E、真实Auth/已有专用工作区/密钥和OAuth具体批准继续。
 
 2026-10-07：5.96私有偏好容错与四语安全route的11源码3494提交推送并100%发布c5314d77/c7c90b4c；本地1624、CI37/2302exactGit、匿名本地/Linux各15、source PublicShell24及真实compiled Windows/Linux各2通过。生产HTTP原13/19actual1保留，primary离线18/19，current源码30s部分下载失败与真实登录无session继续；102/211/54/G/E及Auth/性能/实际14day全scope不改，P1/P8未提前完成。
+
+2026-10-07：5.97本地8源文件完成共享页脚归属及pageshow/未知Cookie恢复边界；private5/public11、最终format/lint/build0、compiled15及focused4通过。较早完整1628时点另记，生产before2PASS/4FAIL、latefavicon2缺证和首observer失败保留；候选提交/CI/部署继续，102/211/54/G/E原状态保持。

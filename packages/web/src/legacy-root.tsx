@@ -3,7 +3,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { RouterProvider } from '@tanstack/react-router'
-import './cinatoken/i18n'
+import { PrivateLanguageRestoration } from './cinatoken/PrivateLanguageRestoration'
 import { router } from './cinatoken/router'
 import { CinaTokenSessionProvider } from './cinatoken/session-context'
 import { ThemeProvider } from './context/theme-provider'
@@ -20,6 +20,7 @@ export function startLegacyApplication(element: HTMLElement): void {
 		<StrictMode>
 			<QueryClientProvider client={queryClient}>
 				<ThemeProvider storageKey='cinatoken-theme'>
+					<PrivateLanguageRestoration />
 					<CinaTokenSessionProvider>
 						<RouterProvider router={router} />
 					</CinaTokenSessionProvider>

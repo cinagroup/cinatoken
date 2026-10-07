@@ -22,6 +22,7 @@ import {
 	useContext,
 	useEffect,
 	useMemo,
+	useRef,
 	useState,
 } from 'react'
 import { getCookie, setCookie, removeCookie } from '@/lib/cookies'
@@ -69,13 +70,17 @@ function resolveTheme(theme: Theme): ResolvedTheme {
 	return theme === 'system' ? getSystemTheme() : theme
 }
 
-function getStoredTheme(storageKey: string, fallback: Theme): Theme {
+// null is an absent cookie; undefined means optional storage could not be read.
+function readThemeCookie(storageKey: string): string | null | undefined {
 	try {
-		const storedTheme = getCookie(storageKey) as Theme | undefined
-		return storedTheme && THEMES.has(storedTheme) ? storedTheme : fallback
+		return getCookie(storageKey) ?? null
 	} catch {
-		return fallback
+		return undefined
 	}
+}
+
+function parseTheme(value: string | null | undefined, fallback: Theme): Theme {
+	return value && THEMES.has(value as Theme) ? (value as Theme) : fallback
 }
 
 export function ThemeProvider({
@@ -84,30 +89,56 @@ export function ThemeProvider({
 	storageKey = THEME_COOKIE_NAME,
 	...props
 }: ThemeProviderProps) {
+	const [initialCookie] = useState(() => readThemeCookie(storageKey))
+	const storedCookie = useRef(initialCookie)
 	const [theme, _setTheme] = useState<Theme>(() =>
-		getStoredTheme(storageKey, defaultTheme)
+		parseTheme(initialCookie, defaultTheme)
 	)
+	const currentTheme = useRef(theme)
 	const [resolvedTheme, setResolvedTheme] = useState<ResolvedTheme>(() =>
-		resolveTheme(getStoredTheme(storageKey, defaultTheme))
+		resolveTheme(parseTheme(initialCookie, defaultTheme))
 	)
 
 	useEffect(() => {
 		const root = window.document.documentElement
 		const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
 
-		const applyTheme = () => {
-			const nextResolvedTheme = theme === 'system' ? getSystemTheme() : theme
+		const applyTheme = (selection: Theme) => {
+			const nextResolvedTheme =
+				selection === 'system' ? getSystemTheme() : selection
 			root.classList.remove('light', 'dark')
 			root.classList.add(nextResolvedTheme)
 			setResolvedTheme(nextResolvedTheme)
 		}
 
-		applyTheme()
+		const applyCurrentTheme = () => applyTheme(currentTheme.current)
+		const restore = () => {
+			const current = readThemeCookie(storageKey)
+			let selection = currentTheme.current
+			if (current !== undefined) {
+				const changed =
+					storedCookie.current !== undefined && current !== storedCookie.current
+				storedCookie.current = current
+				// An unavailable previous read cannot prove an external change.
+				if (changed) {
+					selection = parseTheme(current, defaultTheme)
+					currentTheme.current = selection
+					_setTheme(selection)
+				}
+			}
+			// A frozen document may miss media events, even with an unchanged cookie.
+			applyTheme(selection)
+		}
+		applyCurrentTheme()
 
-		mediaQuery.addEventListener('change', applyTheme)
+		mediaQuery.addEventListener('change', applyCurrentTheme)
+		window.addEventListener('pageshow', restore)
 
-		return () => mediaQuery.removeEventListener('change', applyTheme)
-	}, [theme])
+		return () => {
+			mediaQuery.removeEventListener('change', applyCurrentTheme)
+			window.removeEventListener('pageshow', restore)
+		}
+	}, [defaultTheme, storageKey, theme])
 
 	const setTheme = useCallback(
 		(theme: Theme) => {
@@ -116,6 +147,9 @@ export function ThemeProvider({
 			} catch {
 				// Preference storage is optional; apply the user's current selection.
 			}
+			const current = readThemeCookie(storageKey)
+			if (current !== undefined) storedCookie.current = current
+			currentTheme.current = theme
 			_setTheme(theme)
 		},
 		[storageKey]
@@ -127,6 +161,9 @@ export function ThemeProvider({
 		} catch {
 			// Reset still applies for this document when persistence is denied.
 		}
+		const current = readThemeCookie(storageKey)
+		if (current !== undefined) storedCookie.current = current
+		currentTheme.current = defaultTheme
 		_setTheme(defaultTheme)
 	}, [defaultTheme, storageKey])
 

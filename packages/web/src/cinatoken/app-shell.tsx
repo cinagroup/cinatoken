@@ -3,6 +3,7 @@ import { Link, Outlet, useRouterState } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '@/context/theme-provider'
 import { Button } from '@/components/ui/button'
+import { FrontendAttribution } from './public/FrontendAttribution'
 import { useCinaTokenSession } from './session-context'
 import { SessionGate } from './session-gate'
 
@@ -184,15 +185,7 @@ export function ApplicationShell() {
 			<footer className='text-muted-foreground border-t px-4 py-5 text-center text-xs leading-6'>
 				<span>CinaToken · {t('cinatoken.shell.gateway')}</span>
 				<br />
-				<span>Frontend design and development by New API contributors. </span>
-				<a
-					href='https://github.com/QuantumNous/new-api'
-					target='_blank'
-					rel='noopener noreferrer'
-					className='underline underline-offset-2'
-				>
-					New API
-				</a>
+				<FrontendAttribution originalProjectLabel='New API' />
 			</footer>
 		</div>
 	)

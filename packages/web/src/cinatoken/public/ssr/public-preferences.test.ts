@@ -291,6 +291,49 @@ test('cookie read and write denial preserve current theme through media, sync an
 	assert.equal(controls.theme.value, 'light')
 })
 
+test('newly readable public cookies establish a baseline without erasing a denied-persistence selection', () => {
+	for (const initialTheme of ['light', undefined]) {
+		for (const selected of ['dark', 'system']) {
+			const browser = new OwnedBrowser({ theme: initialTheme, dark: false })
+			browser.document.readBlocked = true
+			browser.document.writeBlocked = true
+			const controls = mount(browser)
+			install(browser)
+			choose(browser, controls.theme, selected)
+			browser.document.readBlocked = false
+			browser.media.setMatches(true)
+			browser.dispatch('pageshow')
+			assert.equal(
+				controls.theme.value,
+				selected,
+				'The previously unobserved cookie is not proof of an external change'
+			)
+			assert.equal(appearance(browser), 'dark')
+			browser.dispatch('pageshow')
+			assert.equal(
+				controls.theme.value,
+				selected,
+				'The established unchanged baseline preserves the current choice'
+			)
+			const externalTheme = selected === 'dark' ? 'system' : 'dark'
+			browser.document.cookieValues.set('cinatoken-theme', externalTheme)
+			browser.dispatch('pageshow')
+			assert.equal(
+				controls.theme.value,
+				externalTheme,
+				'A subsequent observed cookie change still applies'
+			)
+			assert.equal(appearance(browser), 'dark')
+			assert.deepEqual(browser.navigations, [])
+			assert.equal(
+				browser.document.cookieWrites.length,
+				1,
+				'Restoration does not persist or touch unrelated cookies'
+			)
+		}
+	}
+})
+
 test('system tracks OS changes but explicit appearance does not; pageshow adopts readable external cookie changes', () => {
 	const browser = new OwnedBrowser()
 	const controls = mount(browser)
