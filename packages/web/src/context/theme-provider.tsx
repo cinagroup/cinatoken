@@ -70,8 +70,12 @@ function resolveTheme(theme: Theme): ResolvedTheme {
 }
 
 function getStoredTheme(storageKey: string, fallback: Theme): Theme {
-	const storedTheme = getCookie(storageKey) as Theme | undefined
-	return storedTheme && THEMES.has(storedTheme) ? storedTheme : fallback
+	try {
+		const storedTheme = getCookie(storageKey) as Theme | undefined
+		return storedTheme && THEMES.has(storedTheme) ? storedTheme : fallback
+	} catch {
+		return fallback
+	}
 }
 
 export function ThemeProvider({
@@ -107,14 +111,22 @@ export function ThemeProvider({
 
 	const setTheme = useCallback(
 		(theme: Theme) => {
-			setCookie(storageKey, theme, THEME_COOKIE_MAX_AGE)
+			try {
+				setCookie(storageKey, theme, THEME_COOKIE_MAX_AGE)
+			} catch {
+				// Preference storage is optional; apply the user's current selection.
+			}
 			_setTheme(theme)
 		},
 		[storageKey]
 	)
 
 	const resetTheme = useCallback(() => {
-		removeCookie(storageKey)
+		try {
+			removeCookie(storageKey)
+		} catch {
+			// Reset still applies for this document when persistence is denied.
+		}
 		_setTheme(defaultTheme)
 	}, [defaultTheme, storageKey])
 

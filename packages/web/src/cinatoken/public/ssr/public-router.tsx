@@ -11,6 +11,7 @@ import {
 	type RouterHistory,
 } from '@tanstack/react-router'
 import { validateChatSearch } from '../../chat/chat-search'
+import { RouteErrorComponent, RoutePendingComponent } from '../../route-state'
 import {
 	validateCompareSearch,
 	validateModelCatalogSearch,
@@ -204,6 +205,8 @@ export function createPublicRouter(input: {
 		},
 		isServer: input.isServer,
 		defaultPreload: 'intent',
+		defaultErrorComponent: RouteErrorComponent,
+		defaultPendingComponent: RoutePendingComponent,
 		defaultPendingMs: 150,
 		scrollRestoration: !input.isServer,
 	})

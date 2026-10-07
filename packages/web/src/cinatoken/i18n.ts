@@ -1,6 +1,5 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
 import i18n from 'i18next'
-import LanguageDetector from 'i18next-browser-languagedetector'
 import { initReactI18next } from 'react-i18next'
 import { workspaceBudgetMessages } from './account/budgets/messages'
 import { earningsMessages } from './account/earnings/messages'
@@ -42,13 +41,14 @@ import { adminToolMessages } from './admin/tools/messages'
 import { adminUserDetailMessages } from './admin/user-detail/messages'
 import { adminUsersMessages } from './admin/users/messages'
 import { chatMessages } from './chat/messages'
+import { createPreferenceLanguageDetector } from './preference-language-detector'
 import { publicAuthMessages } from './public/auth/messages'
 import { publicHomeMessages } from './public/home/home-messages'
 import { publicMessages } from './public/messages'
 import { shellMessages } from './shell-messages'
 
 void i18n
-	.use(LanguageDetector)
+	.use(createPreferenceLanguageDetector())
 	.use(initReactI18next)
 	.init({
 		resources: Object.fromEntries(
@@ -191,7 +191,11 @@ void i18n
 
 i18n.on('languageChanged', (language) => {
 	document.documentElement.lang = language
-	document.cookie = `NEXT_LOCALE=${encodeURIComponent(language)}; Path=/; SameSite=Lax; Max-Age=31536000`
+	try {
+		document.cookie = `NEXT_LOCALE=${encodeURIComponent(language)}; Path=/; SameSite=Lax; Max-Age=31536000`
+	} catch {
+		// Optional persistence must not interrupt the current language change.
+	}
 })
 document.documentElement.lang = i18n.resolvedLanguage ?? 'en'
 

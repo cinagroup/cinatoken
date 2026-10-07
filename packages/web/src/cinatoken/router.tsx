@@ -31,6 +31,7 @@ import {
 	validateStatsSearch,
 } from './public/catalog-search'
 import { validateBenchmarkSearch } from './public/catalog-view-model'
+import { RouteErrorComponent, RoutePendingComponent } from './route-state'
 
 const rootRoute = createRootRoute({
 	component: ApplicationShell,
@@ -491,6 +492,8 @@ export const router = createRouter({
 		]),
 	]),
 	defaultPreload: 'intent',
+	defaultErrorComponent: RouteErrorComponent,
+	defaultPendingComponent: RoutePendingComponent,
 	defaultPendingMs: 150,
 	scrollRestoration: true,
 })

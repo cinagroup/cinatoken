@@ -147,6 +147,12 @@ async function prepare(app: PublicRequestApp): Promise<PreparedPublicRequest> {
 	app.signal.throwIfAborted()
 	if (!app.router.state.matches.length)
 		throw new Error('Public route did not produce renderable matches')
+	const failedMatch = app.router.state.matches.find(
+		(match) => match.status === 'error'
+	)
+	// A router failure must become the adapter's safe 503 before SSR serializes
+	// match.error, which can contain internal exception messages and stacks.
+	if (failedMatch) throw failedMatch.error
 	let record: PublicSnapshot | undefined
 	const route = app.route
 	if (
