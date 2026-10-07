@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "C:\Users\cina\AppData\Local\Temp\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\archive-596-v6.py", line 108, in <module>
+    assert directory.get("completedOwnerReceiptRole") in roles, "Directory needs selected actual closed owner"
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Directory needs selected actual closed owner

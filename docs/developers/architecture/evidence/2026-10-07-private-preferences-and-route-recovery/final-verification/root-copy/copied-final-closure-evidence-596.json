@@ -1,0 +1,1220 @@
+{
+  "at": "2026-10-07T06:27:03.624Z",
+  "status": "PASS",
+  "purpose": "Finite original-byte copies of already closed evidence after immutable ZIP; no source, deployment or acceptance changes",
+  "files": [
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-596-v5.py",
+      "bytes": 11976,
+      "sha256": "31ab9e2acf030b7ea04cb546c2574719219b4eb92392d0ebdfcf57b8c550bd22",
+      "mtimeNs": "1791351295740337500",
+      "destination": "final-verification/archive/archive-596-v5.py",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\archive\\archive-596-v5.py"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-596-v6.py",
+      "bytes": 14520,
+      "sha256": "ec441791152f95705e336739314e8d6077a8562b5bca9feb42a798b8d5d84391",
+      "mtimeNs": "1791353026325090600",
+      "destination": "final-verification/archive/archive-596-v6.py",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\archive\\archive-596-v6.py"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-596-v7.py",
+      "bytes": 18252,
+      "sha256": "82a20acb8c444904074453616809f2ab6e0cf1a3eb782343e0ec930562c7ed3a",
+      "mtimeNs": "1791353494406450200",
+      "destination": "final-verification/archive/archive-596-v7.py",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\archive\\archive-596-v7.py"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-final-596-schema-v6.process-closed.json",
+      "bytes": 1413,
+      "sha256": "639f77d1f26e71786c02604bc162fdf72d64ec24f0dc66afb278381e602a3b40",
+      "mtimeNs": "1791353192982345200",
+      "destination": "final-verification/archive/archive-final-596-schema-v6.process-closed.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\archive\\archive-final-596-schema-v6.process-closed.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-final-596-schema-v6.stderr.log",
+      "bytes": 434,
+      "sha256": "2737aa8875eb3dee76fa7d869082e110feb57a47925c453f3fffb1828d23e47c",
+      "mtimeNs": "1791353192982345200",
+      "destination": "final-verification/archive/archive-final-596-schema-v6.stderr.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\archive\\archive-final-596-schema-v6.stderr.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-final-596-schema-v6.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": "1791353192982345200",
+      "destination": "final-verification/archive/archive-final-596-schema-v6.stdout.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\archive\\archive-final-596-schema-v6.stdout.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-final-596-schema-v7.process-closed.json",
+      "bytes": 1413,
+      "sha256": "e5061690ded9aee9b01b162f4b7c1780577e879dae1ffe87670ec250dee6dfb8",
+      "mtimeNs": "1791353638257198800",
+      "destination": "final-verification/archive/archive-final-596-schema-v7.process-closed.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\archive\\archive-final-596-schema-v7.process-closed.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-final-596-schema-v7.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": "1791353638257198800",
+      "destination": "final-verification/archive/archive-final-596-schema-v7.stderr.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\archive\\archive-final-596-schema-v7.stderr.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-final-596-schema-v7.stdout.log",
+      "bytes": 337,
+      "sha256": "a7fea911c2ccf51af91687958d82c5317a9b7f4c688be7edb8d7e9432c02ae48",
+      "mtimeNs": "1791353638257198800",
+      "destination": "final-verification/archive/archive-final-596-schema-v7.stdout.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\archive\\archive-final-596-schema-v7.stdout.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-final-596-v5.process-closed.json",
+      "bytes": 1382,
+      "sha256": "9169ade774aebcae9ecd57dc5207b4b82eb5b45da806cea78bedd21b0d00461e",
+      "mtimeNs": "1791352767938712400",
+      "destination": "final-verification/archive/archive-final-596-v5.process-closed.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\archive\\archive-final-596-v5.process-closed.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-final-596-v5.stderr.log",
+      "bytes": 397,
+      "sha256": "354e3d732c197f397d65eba42f311099fe0947e6de379c38eb2b3518f213e993",
+      "mtimeNs": "1791352767937512000",
+      "destination": "final-verification/archive/archive-final-596-v5.stderr.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\archive\\archive-final-596-v5.stderr.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-final-596-v5.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": "1791352767936449400",
+      "destination": "final-verification/archive/archive-final-596-v5.stdout.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\archive\\archive-final-596-v5.stdout.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-v6-full-prezip-readonly.json",
+      "bytes": 1789,
+      "sha256": "921adf0179b96f6827110c9c363567e4a4398a4565ccb954a1ddfd769859fe43",
+      "mtimeNs": "1791353392769943200",
+      "destination": "final-verification/archive/archive-v6-full-prezip-readonly.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\archive\\archive-v6-full-prezip-readonly.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-v6-full-prezip-readonly.process-closed.json",
+      "bytes": 1131,
+      "sha256": "620501a68568245670ea78c764758e5d90ccc6388116ebc654bd4b70639219bc",
+      "mtimeNs": "1791353392800780200",
+      "destination": "final-verification/archive/archive-v6-full-prezip-readonly.process-closed.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\archive\\archive-v6-full-prezip-readonly.process-closed.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-v6-full-prezip-readonly.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": "1791353392800780200",
+      "destination": "final-verification/archive/archive-v6-full-prezip-readonly.stderr.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\archive\\archive-v6-full-prezip-readonly.stderr.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-v6-full-prezip-readonly.stdout.log",
+      "bytes": 251,
+      "sha256": "7f7df30b8a4f3d32ca9b17a98d69f4bea7ca5700c0e5cc961787c7f9c55a54d3",
+      "mtimeNs": "1791353392800780200",
+      "destination": "final-verification/archive/archive-v6-full-prezip-readonly.stdout.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\archive\\archive-v6-full-prezip-readonly.stdout.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\preflight-archive-v6-full-readonly.py",
+      "bytes": 2595,
+      "sha256": "13b32576765003c1540226a6146b2289f51022627e1b9c0ad33cbe42f20a7044",
+      "mtimeNs": "1791353317178552700",
+      "destination": "final-verification/archive/preflight-archive-v6-full-readonly.py",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\archive\\preflight-archive-v6-full-readonly.py"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\prepare-archive-596-v6.mjs",
+      "bytes": 4291,
+      "sha256": "63de16447c5506293ef3e7635a190721df1f2591583a7fbfd71a044be29ec089",
+      "mtimeNs": "1791353024837252200",
+      "destination": "final-verification/archive/prepare-archive-596-v6.mjs",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\archive\\prepare-archive-596-v6.mjs"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\prepare-archive-596-v6.process-closed.json",
+      "bytes": 1037,
+      "sha256": "bd5d6dc1d56f87fd2b71eb696e5a02a48419ca27bd75e83d4c5ac250e68e63e7",
+      "mtimeNs": "1791353026341360000",
+      "destination": "final-verification/archive/prepare-archive-596-v6.process-closed.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\archive\\prepare-archive-596-v6.process-closed.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\prepare-archive-596-v6.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": "1791353026339886100",
+      "destination": "final-verification/archive/prepare-archive-596-v6.stderr.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\archive\\prepare-archive-596-v6.stderr.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\prepare-archive-596-v6.stdout.log",
+      "bytes": 247,
+      "sha256": "d99462f4be5a907624fb961ce3c7336ddbd7511b1d6ce7b2c8418267265974d7",
+      "mtimeNs": "1791353026339886100",
+      "destination": "final-verification/archive/prepare-archive-596-v6.stdout.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\archive\\prepare-archive-596-v6.stdout.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\prepare-archive-596-v7.process-closed.json",
+      "bytes": 1092,
+      "sha256": "49ede034dd915326dddcad290925517d6b8ef65825f5615c7a3faf159f312c20",
+      "mtimeNs": "1791353494429141200",
+      "destination": "final-verification/archive/prepare-archive-596-v7.process-closed.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\archive\\prepare-archive-596-v7.process-closed.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\prepare-archive-596-v7.py",
+      "bytes": 5184,
+      "sha256": "1f2a53a72c4776333eb345e267f0648ca4cc5839ab2d1a7d69453af6b24320bf",
+      "mtimeNs": "1791353492699905500",
+      "destination": "final-verification/archive/prepare-archive-596-v7.py",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\archive\\prepare-archive-596-v7.py"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\prepare-archive-596-v7.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": "1791353494428398100",
+      "destination": "final-verification/archive/prepare-archive-596-v7.stderr.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\archive\\prepare-archive-596-v7.stderr.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\prepare-archive-596-v7.stdout.log",
+      "bytes": 199,
+      "sha256": "9e3a3a0d93d41cf174f77e7da6a7e49cfa680160870524c56e51dc66f8b1e91c",
+      "mtimeNs": "1791353494426103000",
+      "destination": "final-verification/archive/prepare-archive-596-v7.stdout.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\archive\\prepare-archive-596-v7.stdout.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\run-helper-closed.mjs",
+      "bytes": 1818,
+      "sha256": "fec142f91e6393cf915fea8ad50798de9c99973b6c64e657b42a767cfadafd09",
+      "mtimeNs": "1791347154072912900",
+      "destination": "final-verification/archive/run-helper-closed.mjs",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\archive\\run-helper-closed.mjs"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\syntax-archive-596-v6.process-closed.json",
+      "bytes": 1169,
+      "sha256": "e7e20a6473c09a760122bbcfa09b6b1ca6bc09d9ae92bf57911752a1bfedde91",
+      "mtimeNs": "1791353027758864600",
+      "destination": "final-verification/archive/syntax-archive-596-v6.process-closed.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\archive\\syntax-archive-596-v6.process-closed.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\syntax-archive-596-v6.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": "1791353027758864600",
+      "destination": "final-verification/archive/syntax-archive-596-v6.stderr.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\archive\\syntax-archive-596-v6.stderr.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\syntax-archive-596-v6.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": "1791353027756814000",
+      "destination": "final-verification/archive/syntax-archive-596-v6.stdout.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\archive\\syntax-archive-596-v6.stdout.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\archive-all22-dir-owner-bindings-v1.process-closed.json",
+      "bytes": 1187,
+      "sha256": "c023abca7d2e7f57e3ca234ac0c638f17065fbec31f3f1f6234c14fe302810d3",
+      "mtimeNs": "1791353439647336100",
+      "destination": "final-verification/independent-review/archive-all22-dir-owner-bindings-v1.process-closed.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review\\archive-all22-dir-owner-bindings-v1.process-closed.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\archive-all22-dir-owner-bindings-v1.stderr.log",
+      "bytes": 972,
+      "sha256": "5e056a0ae565a9501ebdb642a43cb384f53f668cbbc132195a16bb387734f0fd",
+      "mtimeNs": "1791353439631928400",
+      "destination": "final-verification/independent-review/archive-all22-dir-owner-bindings-v1.stderr.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review\\archive-all22-dir-owner-bindings-v1.stderr.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\archive-all22-dir-owner-bindings-v1.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": "1791353433687821700",
+      "destination": "final-verification/independent-review/archive-all22-dir-owner-bindings-v1.stdout.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review\\archive-all22-dir-owner-bindings-v1.stdout.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\archive-all22-dir-owner-bindings-v2.process-closed.json",
+      "bytes": 1187,
+      "sha256": "ebcd09d68888034aaecc4954bba9410f259d97bbf4fd2e1c58019855f4b5202b",
+      "mtimeNs": "1791353479440611400",
+      "destination": "final-verification/independent-review/archive-all22-dir-owner-bindings-v2.process-closed.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review\\archive-all22-dir-owner-bindings-v2.process-closed.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\archive-all22-dir-owner-bindings-v2.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": "1791353473987160900",
+      "destination": "final-verification/independent-review/archive-all22-dir-owner-bindings-v2.stderr.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review\\archive-all22-dir-owner-bindings-v2.stderr.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\archive-all22-dir-owner-bindings-v2.stdout.log",
+      "bytes": 731,
+      "sha256": "883dd4e091233589bef8bd4fc077fa99f16c76f0e5341c17aefb930980bb2d53",
+      "mtimeNs": "1791353479428012500",
+      "destination": "final-verification/independent-review/archive-all22-dir-owner-bindings-v2.stdout.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review\\archive-all22-dir-owner-bindings-v2.stdout.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\archive-original-stream-bindings-review-v1.process-closed.json",
+      "bytes": 1210,
+      "sha256": "fae26ff3981820286ff1ee7def355d8aa8a588c40d90081abe345ee4fc7f1ebd",
+      "mtimeNs": "1791352973755425000",
+      "destination": "final-verification/independent-review/archive-original-stream-bindings-review-v1.process-closed.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review\\archive-original-stream-bindings-review-v1.process-closed.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\archive-original-stream-bindings-review-v1.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": "1791352968911841300",
+      "destination": "final-verification/independent-review/archive-original-stream-bindings-review-v1.stderr.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review\\archive-original-stream-bindings-review-v1.stderr.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\archive-original-stream-bindings-review-v1.stdout.log",
+      "bytes": 465,
+      "sha256": "bd0d3ef69b282237ff457ded85f44b56689de2537072d8250a19c4c1d3c47df9",
+      "mtimeNs": "1791352973739347200",
+      "destination": "final-verification/independent-review/archive-original-stream-bindings-review-v1.stdout.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review\\archive-original-stream-bindings-review-v1.stdout.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\archive-schema-v6-readonly-review-v2.process-closed.json",
+      "bytes": 1186,
+      "sha256": "dad78344dc8c29d1fc1ab88af0f9e4e662aa1493482056b9b2461c3c1e19f178",
+      "mtimeNs": "1791353100680466300",
+      "destination": "final-verification/independent-review/archive-schema-v6-readonly-review-v2.process-closed.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review\\archive-schema-v6-readonly-review-v2.process-closed.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\archive-schema-v6-readonly-review-v2.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": "1791353100580892400",
+      "destination": "final-verification/independent-review/archive-schema-v6-readonly-review-v2.stderr.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review\\archive-schema-v6-readonly-review-v2.stderr.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\archive-schema-v6-readonly-review-v2.stdout.log",
+      "bytes": 710,
+      "sha256": "31a32a2d9fae4f5966ebc654a702f835a26a86ead27428721d690aaad316878d",
+      "mtimeNs": "1791353100667010000",
+      "destination": "final-verification/independent-review/archive-schema-v6-readonly-review-v2.stdout.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review\\archive-schema-v6-readonly-review-v2.stdout.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\archive-schema-v6-readonly-review.process-closed.json",
+      "bytes": 1175,
+      "sha256": "116d00d9026e06cac267d112642db3d46a276ef98704b26d52e763d0d0303761",
+      "mtimeNs": "1791353077515288700",
+      "destination": "final-verification/independent-review/archive-schema-v6-readonly-review.process-closed.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review\\archive-schema-v6-readonly-review.process-closed.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\archive-schema-v6-readonly-review.stderr.log",
+      "bytes": 1241,
+      "sha256": "0e6586916cd4aed864a61c4db987bf2c94d68e1970ee1ddde7229866a454658b",
+      "mtimeNs": "1791353077504004400",
+      "destination": "final-verification/independent-review/archive-schema-v6-readonly-review.stderr.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review\\archive-schema-v6-readonly-review.stderr.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\archive-schema-v6-readonly-review.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": "1791353077424364800",
+      "destination": "final-verification/independent-review/archive-schema-v6-readonly-review.stdout.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review\\archive-schema-v6-readonly-review.stdout.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\archive-secret-review-596-v1\\all22-dir-owner-output-bindings-v2.json",
+      "bytes": 38543,
+      "sha256": "f6cc2a769ef3f2fdea3b82d55be970ffae6a2a1371e33b971a15ae4ba778d9e3",
+      "mtimeNs": "1791353479425754300",
+      "destination": "final-verification/independent-review/archive-secret-review-596-v1/all22-dir-owner-output-bindings-v2.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review\\archive-secret-review-596-v1\\all22-dir-owner-output-bindings-v2.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\archive-secret-review-596-v1\\archive-schema-v6-readonly-review-v2.json",
+      "bytes": 4304,
+      "sha256": "9204ed22819a0870893021e64dc7a1dae77aa273c1d385b54cd8908ff18bdcc3",
+      "mtimeNs": "1791353100664045100",
+      "destination": "final-verification/independent-review/archive-secret-review-596-v1/archive-schema-v6-readonly-review-v2.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review\\archive-secret-review-596-v1\\archive-schema-v6-readonly-review-v2.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\archive-secret-review-596-v1\\archive-v7-complete-prezip-readonly-review.json",
+      "bytes": 3705,
+      "sha256": "3cd646f40f9ca84a54bf6bf693f0536eb617c41b5af5f7da4b5b304f53b63cfa",
+      "mtimeNs": "1791353565077098300",
+      "destination": "final-verification/independent-review/archive-secret-review-596-v1/archive-v7-complete-prezip-readonly-review.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review\\archive-secret-review-596-v1\\archive-v7-complete-prezip-readonly-review.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\archive-secret-review-596-v1\\audit-all-dir-owner-bindings-v1.mjs",
+      "bytes": 6379,
+      "sha256": "ec27efe4313be02e49c2015125be8857eabc351152762cf6d198beb8f4875197",
+      "mtimeNs": "1791353432196039600",
+      "destination": "final-verification/independent-review/archive-secret-review-596-v1/audit-all-dir-owner-bindings-v1.mjs",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review\\archive-secret-review-596-v1\\audit-all-dir-owner-bindings-v1.mjs"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\archive-secret-review-596-v1\\audit-all-dir-owner-bindings-v2.mjs",
+      "bytes": 6373,
+      "sha256": "7d5c453f967b4390dfafde226502288d9256eecddc3b9ba581791e4a1881c879",
+      "mtimeNs": "1791353472379074500",
+      "destination": "final-verification/independent-review/archive-secret-review-596-v1/audit-all-dir-owner-bindings-v2.mjs",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review\\archive-secret-review-596-v1\\audit-all-dir-owner-bindings-v2.mjs"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\archive-secret-review-596-v1\\audit-original-stream-bindings-v1.mjs",
+      "bytes": 4091,
+      "sha256": "f73bde132689907943ea87c6a28fb8492d077c6df6f4bb94d1ce0d34dad87897",
+      "mtimeNs": "1791352967570706000",
+      "destination": "final-verification/independent-review/archive-secret-review-596-v1/audit-original-stream-bindings-v1.mjs",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review\\archive-secret-review-596-v1\\audit-original-stream-bindings-v1.mjs"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\archive-secret-review-596-v1\\original-stream-bindings-review-v1.json",
+      "bytes": 5574,
+      "sha256": "c7aaeb691f94800bd38dc4e1214a37f85e105e0c812a212dd7c0f82dd159981e",
+      "mtimeNs": "1791352973737158800",
+      "destination": "final-verification/independent-review/archive-secret-review-596-v1/original-stream-bindings-review-v1.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review\\archive-secret-review-596-v1\\original-stream-bindings-review-v1.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\archive-secret-review-596-v1\\prepare-archive-review-v2.mjs",
+      "bytes": 666,
+      "sha256": "6edda4b64700d5cb3da85214e7bbe95a93504ed66cc7f38ad7f3b804ad455fcf",
+      "mtimeNs": "1791353097946990000",
+      "destination": "final-verification/independent-review/archive-secret-review-596-v1/prepare-archive-review-v2.mjs",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review\\archive-secret-review-596-v1\\prepare-archive-review-v2.mjs"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\archive-secret-review-596-v1\\prepare-dir-owner-audit-v2.mjs",
+      "bytes": 763,
+      "sha256": "27ad479edd20fed6cb9bcc2846beef00d35215d4d8d3719bec209dd22cfe6c5a",
+      "mtimeNs": "1791353470766318900",
+      "destination": "final-verification/independent-review/archive-secret-review-596-v1/prepare-dir-owner-audit-v2.mjs",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review\\archive-secret-review-596-v1\\prepare-dir-owner-audit-v2.mjs"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\archive-secret-review-596-v1\\review-archive-schema-v6-v2.mjs",
+      "bytes": 5223,
+      "sha256": "fcc4af13c287d8e280e48a3a552e41e98a3d695319d3987725717a2f85cf17b8",
+      "mtimeNs": "1791353099251547800",
+      "destination": "final-verification/independent-review/archive-secret-review-596-v1/review-archive-schema-v6-v2.mjs",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review\\archive-secret-review-596-v1\\review-archive-schema-v6-v2.mjs"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\archive-secret-review-596-v1\\review-archive-schema-v6.mjs",
+      "bytes": 5204,
+      "sha256": "e8df4711447ad89bd2302d7f82ed1ddb64247ac294448664d4508132458ce86e",
+      "mtimeNs": "1791353076136906000",
+      "destination": "final-verification/independent-review/archive-secret-review-596-v1/review-archive-schema-v6.mjs",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review\\archive-secret-review-596-v1\\review-archive-schema-v6.mjs"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\archive-secret-review-596-v1\\review-archive-v7-prezip-closure.mjs",
+      "bytes": 5182,
+      "sha256": "48eccf245719cb9fc8c6e042742192d9aca61184d0be35b880cd7b0152df4a4f",
+      "mtimeNs": "1791353563772006000",
+      "destination": "final-verification/independent-review/archive-secret-review-596-v1/review-archive-v7-prezip-closure.mjs",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review\\archive-secret-review-596-v1\\review-archive-v7-prezip-closure.mjs"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\archive-v7-complete-prezip-readonly-review.process-closed.json",
+      "bytes": 1209,
+      "sha256": "56a3371df7749aa9d388e0f875147e08cfd7e0852785ae61ba7542671ac37733",
+      "mtimeNs": "1791353565092504600",
+      "destination": "final-verification/independent-review/archive-v7-complete-prezip-readonly-review.process-closed.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review\\archive-v7-complete-prezip-readonly-review.process-closed.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\archive-v7-complete-prezip-readonly-review.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": "1791353565003260800",
+      "destination": "final-verification/independent-review/archive-v7-complete-prezip-readonly-review.stderr.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review\\archive-v7-complete-prezip-readonly-review.stderr.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\archive-v7-complete-prezip-readonly-review.stdout.log",
+      "bytes": 718,
+      "sha256": "6a5818d0aef98103be3d2201253e42d8ced5c609e2f8b3e5d10774fb88540084",
+      "mtimeNs": "1791353565077098300",
+      "destination": "final-verification/independent-review/archive-v7-complete-prezip-readonly-review.stdout.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review\\archive-v7-complete-prezip-readonly-review.stdout.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\prepare-archive-schema-v6-review-v2.process-closed.json",
+      "bytes": 1063,
+      "sha256": "1a16417d4f7cb9e01f0fe012956870d38a64c5eaefb2a64327d417c00e7c94e6",
+      "mtimeNs": "1791353099266263000",
+      "destination": "final-verification/independent-review/prepare-archive-schema-v6-review-v2.process-closed.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review\\prepare-archive-schema-v6-review-v2.process-closed.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\prepare-archive-schema-v6-review-v2.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": "1791353099196674200",
+      "destination": "final-verification/independent-review/prepare-archive-schema-v6-review-v2.stderr.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review\\prepare-archive-schema-v6-review-v2.stderr.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\prepare-archive-schema-v6-review-v2.stdout.log",
+      "bytes": 147,
+      "sha256": "ef1e8c0c2693b73b87f1059d9186c349127fd9e1c745a0f022a4cc1fd91f7bc8",
+      "mtimeNs": "1791353099254086600",
+      "destination": "final-verification/independent-review/prepare-archive-schema-v6-review-v2.stdout.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review\\prepare-archive-schema-v6-review-v2.stdout.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\prepare-dir-owner-audit-v2.process-closed.json",
+      "bytes": 1037,
+      "sha256": "c3a0d7f285c06f4fa36459a621e24a3608aa89ad9db1ab676d5b5204e46ad649",
+      "mtimeNs": "1791353472392779400",
+      "destination": "final-verification/independent-review/prepare-dir-owner-audit-v2.process-closed.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review\\prepare-dir-owner-audit-v2.process-closed.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\prepare-dir-owner-audit-v2.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": "1791353472318135400",
+      "destination": "final-verification/independent-review/prepare-dir-owner-audit-v2.stderr.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review\\prepare-dir-owner-audit-v2.stderr.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\prepare-dir-owner-audit-v2.stdout.log",
+      "bytes": 240,
+      "sha256": "19a52bc5160152b542f7afedee33747aa8de8d81af37acd0ab613f794a64d019",
+      "mtimeNs": "1791353472379920300",
+      "destination": "final-verification/independent-review/prepare-dir-owner-audit-v2.stdout.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review\\prepare-dir-owner-audit-v2.stdout.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\audit-migration-scope.mjs",
+      "bytes": 14013,
+      "sha256": "31be3ad45f2b0b0afb629533161bab7157ed971f6d2bfecd7c99cc7ade0b8166",
+      "mtimeNs": "1791289263617342200",
+      "destination": "final-verification/installed-scope/audit-migration-scope.mjs",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\installed-scope\\audit-migration-scope.mjs"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\compare-81-publication-v1.mjs",
+      "bytes": 9222,
+      "sha256": "99df79b9c9d08a3e9f5d8a9bc9c6885a24cb205db3bdaf2c9b852baa36557e0d",
+      "mtimeNs": "1791351018907428100",
+      "destination": "final-verification/installed-scope/compare-81-publication-v1.mjs",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\installed-scope\\compare-81-publication-v1.mjs"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\publication-metadata-contract-v1.mjs",
+      "bytes": 2632,
+      "sha256": "f54186c89765abd706b6f769740ade0a45d2a4731b50dfe274967691e28ae3e9",
+      "mtimeNs": "1791350964889901000",
+      "destination": "final-verification/installed-scope/publication-metadata-contract-v1.mjs",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\installed-scope\\publication-metadata-contract-v1.mjs"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-publication-596.81-scope.report.json",
+      "bytes": 365589,
+      "sha256": "0285f9b57e3aa397faa54add2740faeaaf5b88612ec985f26bb0deff38ae3853",
+      "mtimeNs": "1791353737642229600",
+      "destination": "final-verification/installed-scope/root-final-publication-596.81-scope.report.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\installed-scope\\root-final-publication-596.81-scope.report.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-publication-596.working.md",
+      "bytes": 880135,
+      "sha256": "063f2c6138ba3097d1f90b406773e15d2cd7143fcb3532cacdaed81915f90f7e",
+      "mtimeNs": "1791353737450554800",
+      "destination": "final-verification/installed-scope/root-final-publication-596.working.md",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\installed-scope\\root-final-publication-596.working.md"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-scope-596.audit.result.json",
+      "bytes": 1039,
+      "sha256": "9ae3386962de150c44cc02e08cdc1c7bae107150be73760d1b9bf489bcb7bdf3",
+      "mtimeNs": "1791353737888490100",
+      "destination": "final-verification/installed-scope/root-final-scope-596.audit.result.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\installed-scope\\root-final-scope-596.audit.result.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-scope-596.audit.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": "1791353737888490100",
+      "destination": "final-verification/installed-scope/root-final-scope-596.audit.stderr.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\installed-scope\\root-final-scope-596.audit.stderr.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-scope-596.audit.stdout.log",
+      "bytes": 739,
+      "sha256": "f589d4f7134aa170f2a72edbf142172da19e3cd58f3408d6c08f23af18fc63b0",
+      "mtimeNs": "1791353737887447800",
+      "destination": "final-verification/installed-scope/root-final-scope-596.audit.stdout.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\installed-scope\\root-final-scope-596.audit.stdout.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-scope-596.f77.git-show.result.json",
+      "bytes": 608,
+      "sha256": "077053d67f4cdd9a56998a573f073769e007dbe4ab6df07b9b6a823cd32dd533",
+      "mtimeNs": "1791353737634702400",
+      "destination": "final-verification/installed-scope/root-final-scope-596.f77.git-show.result.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\installed-scope\\root-final-scope-596.f77.git-show.result.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-scope-596.f77.git-show.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": "1791353737632582900",
+      "destination": "final-verification/installed-scope/root-final-scope-596.f77.git-show.stderr.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\installed-scope\\root-final-scope-596.f77.git-show.stderr.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-scope-596.f77.git-show.stdout.log",
+      "bytes": 852467,
+      "sha256": "b2f9a998af564d0eed354789ada7706ad2085ed815f327c9d98a065542c0aef9",
+      "mtimeNs": "1791353737632582900",
+      "destination": "final-verification/installed-scope/root-final-scope-596.f77.git-show.stdout.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\installed-scope\\root-final-scope-596.f77.git-show.stdout.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-scope-596.f9.git-show.result.json",
+      "bytes": 608,
+      "sha256": "5c2589a14a4c855063ce0b4d7e809a7c8bf0d0b713560d18b04412c85b3f84ff",
+      "mtimeNs": "1791353737713243300",
+      "destination": "final-verification/installed-scope/root-final-scope-596.f9.git-show.result.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\installed-scope\\root-final-scope-596.f9.git-show.result.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-scope-596.f9.git-show.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": "1791353737713243300",
+      "destination": "final-verification/installed-scope/root-final-scope-596.f9.git-show.stderr.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\installed-scope\\root-final-scope-596.f9.git-show.stderr.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-scope-596.f9.git-show.stdout.log",
+      "bytes": 856233,
+      "sha256": "d30f67026b3ca6a98a7f2d1ffe6e9981f9d6d9d9f49005d022b51a5052cdba6a",
+      "mtimeNs": "1791353737713243300",
+      "destination": "final-verification/installed-scope/root-final-scope-596.f9.git-show.stdout.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\installed-scope\\root-final-scope-596.f9.git-show.stdout.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-scope-596.report.json",
+      "bytes": 258054,
+      "sha256": "f1b4c83a4ffb3d2abdb1f3a420a48ae328460cd6f372b776df8c36a467b73cc8",
+      "mtimeNs": "1791353737865299400",
+      "destination": "final-verification/installed-scope/root-final-scope-596.report.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\installed-scope\\root-final-scope-596.report.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-scope-596.working.md",
+      "bytes": 880135,
+      "sha256": "063f2c6138ba3097d1f90b406773e15d2cd7143fcb3532cacdaed81915f90f7e",
+      "mtimeNs": "1791353737716406400",
+      "destination": "final-verification/installed-scope/root-final-scope-596.working.md",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\installed-scope\\root-final-scope-596.working.md"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\run-owned-audit.mjs",
+      "bytes": 1622,
+      "sha256": "dbb62b94f0bc94c23ffd3dfd16cdf84618b57cd6dc7eaf6995cfa5a9b8488666",
+      "mtimeNs": "1791289304951606400",
+      "destination": "final-verification/installed-scope/run-owned-audit.mjs",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\installed-scope\\run-owned-audit.mjs"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\final-main-publication-596.result.json",
+      "bytes": 1137,
+      "sha256": "b4d77dd08681e4cf98c1cfad83bb919368c76eb9333ddcf01693b65150e11845",
+      "mtimeNs": "1791353737661631500",
+      "destination": "final-verification/root/final-main-publication-596.result.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\root\\final-main-publication-596.result.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\final-main-publication-596.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": "1791353737372696700",
+      "destination": "final-verification/root/final-main-publication-596.stderr.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\root\\final-main-publication-596.stderr.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\final-main-publication-596.stdout.log",
+      "bytes": 1310,
+      "sha256": "25a80b917dd37d9dc0341552ec2fbf4b35b8612c25d5bf708933018405fa7fc8",
+      "mtimeNs": "1791353737644281300",
+      "destination": "final-verification/root/final-main-publication-596.stdout.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\root\\final-main-publication-596.stdout.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\final-main-scope-596.result.json",
+      "bytes": 953,
+      "sha256": "ac3ebbc9076d2c46404fc9cd675245aa96dd2aeade8c18054285919be3491e74",
+      "mtimeNs": "1791353737903144600",
+      "destination": "final-verification/root/final-main-scope-596.result.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\root\\final-main-scope-596.result.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\final-main-scope-596.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": "1791353737372696700",
+      "destination": "final-verification/root/final-main-scope-596.stderr.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\root\\final-main-scope-596.stderr.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\final-main-scope-596.stdout.log",
+      "bytes": 1826,
+      "sha256": "0b87ab6d9db32dcc338747ac6165305bc007b2a4f61cfcafbc09060f7c3d3f2c",
+      "mtimeNs": "1791353737888490100",
+      "destination": "final-verification/root/final-main-scope-596.stdout.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\root\\final-main-scope-596.stdout.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\final-md-diff-check-596.result.json",
+      "bytes": 893,
+      "sha256": "9a17cdc92da0dfe36469d2e573e457eac3ab5103b710109b12d9218255cd0511",
+      "mtimeNs": "1791353737465353900",
+      "destination": "final-verification/root/final-md-diff-check-596.result.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\root\\final-md-diff-check-596.result.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\final-md-diff-check-596.stderr.log",
+      "bytes": 147,
+      "sha256": "1468a63fdf31df86704ecc5a8901c6c133bad6edcfa58be87d80d4dfa5da3964",
+      "mtimeNs": "1791353737438760200",
+      "destination": "final-verification/root/final-md-diff-check-596.stderr.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\root\\final-md-diff-check-596.stderr.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\final-md-diff-check-596.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": "1791353737372696700",
+      "destination": "final-verification/root/final-md-diff-check-596.stdout.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\root\\final-md-diff-check-596.stdout.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\install-final-evidence-596.mjs",
+      "bytes": 5429,
+      "sha256": "3920ea9fcf449140f827a9a28d6190b6f7da8b65b14f719b032f01c8090a2055",
+      "mtimeNs": "1791351884412789200",
+      "destination": "final-verification/root/install-final-evidence-596.mjs",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\root\\install-final-evidence-596.mjs"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\install-final-evidence-596.result.json",
+      "bytes": 1693,
+      "sha256": "29309fc6ed27c0bf41a62537e7f39bc85b31021a5d0604511e9a336cd3cfb48b",
+      "mtimeNs": "1791353709256436300",
+      "destination": "final-verification/root/install-final-evidence-596.result.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\root\\install-final-evidence-596.result.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\install-final-evidence-596.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": "1791353707420196200",
+      "destination": "final-verification/root/install-final-evidence-596.stderr.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\root\\install-final-evidence-596.stderr.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\install-final-evidence-596.stdout.log",
+      "bytes": 234,
+      "sha256": "729cc80b952d53b30b2853120284001b74f11a435ed12da5f59752af76d0d186",
+      "mtimeNs": "1791353709241556300",
+      "destination": "final-verification/root/install-final-evidence-596.stdout.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\root\\install-final-evidence-596.stdout.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\installed-final-evidence-596.json",
+      "bytes": 5398,
+      "sha256": "85afac92e1a05c7a4441e03758c8b4c946b6457ae92631e33a2a0d2b7b7629b9",
+      "mtimeNs": "1791353709238488100",
+      "destination": "final-verification/root/installed-final-evidence-596.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\root\\installed-final-evidence-596.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\run-all-closed.mjs",
+      "bytes": 2278,
+      "sha256": "fc7ce410ae40bc7c74b05c31d0eb1cf6deb75c64920b93f009e6904c29da7084",
+      "mtimeNs": "1791347383454069800",
+      "destination": "final-verification/root/run-all-closed.mjs",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\root\\run-all-closed.mjs"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\syntax-doc-git-596.result.json",
+      "bytes": 935,
+      "sha256": "8e912e5bc6510b73e1c51df271acc072de83cd365859071b72b48c92ec40958f",
+      "mtimeNs": "1791353530042536000",
+      "destination": "final-verification/root/syntax-doc-git-596.result.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\root\\syntax-doc-git-596.result.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\syntax-doc-git-596.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": "1791353529977047000",
+      "destination": "final-verification/root/syntax-doc-git-596.stderr.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\root\\syntax-doc-git-596.stderr.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\syntax-doc-git-596.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": "1791353529976048500",
+      "destination": "final-verification/root/syntax-doc-git-596.stdout.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\root\\syntax-doc-git-596.stdout.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\syntax-final-install-596.result.json",
+      "bytes": 943,
+      "sha256": "454348dca01c0e4132453f75c62a0117f6cfc50b05662806ef34bec5eb959d94",
+      "mtimeNs": "1791351886223604300",
+      "destination": "final-verification/root/syntax-final-install-596.result.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\root\\syntax-final-install-596.result.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\syntax-final-install-596.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": "1791351886143661800",
+      "destination": "final-verification/root/syntax-final-install-596.stderr.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\root\\syntax-final-install-596.stderr.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\syntax-final-install-596.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": "1791351886143661800",
+      "destination": "final-verification/root/syntax-final-install-596.stdout.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\root\\syntax-final-install-596.stdout.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\verify-doc-publication-git-596.mjs",
+      "bytes": 3208,
+      "sha256": "614c021a8750dfe642a206d0168665c186098685d9e819cf639784d777ac361d",
+      "mtimeNs": "1791353528624990000",
+      "destination": "final-verification/root/verify-doc-publication-git-596.mjs",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\root\\verify-doc-publication-git-596.mjs"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\final-closure-copy-manifest-596-v1.json",
+      "bytes": 93314,
+      "sha256": "a4cf3f7afbf02d41fc0bbc9a4c93deb8fd976881b7724733921dece32164ba6b",
+      "mtimeNs": "1791354088745901600",
+      "destination": "final-verification/manifest/final-closure-copy-manifest-596-v1.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\manifest\\final-closure-copy-manifest-596-v1.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\record-final-closure-copy-manifest-596-v1.py",
+      "bytes": 10803,
+      "sha256": "7c5792e390e5dce093d747687741c6f7f61bd78a981e23a5440650cf5e7b6ff4",
+      "mtimeNs": "1791354085984680200",
+      "destination": "final-verification/manifest/record-final-closure-copy-manifest-596-v1.py",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\manifest\\record-final-closure-copy-manifest-596-v1.py"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\record-final-closure-copy-manifest-596-v1.process-closed.json",
+      "bytes": 1168,
+      "sha256": "8b2ead4187d413e5d34a896d47b5aab2c8a3c5145db9bbdeccb274e4d1ddae3e",
+      "mtimeNs": "1791354088766969700",
+      "destination": "final-verification/manifest/record-final-closure-copy-manifest-596-v1.process-closed.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\manifest\\record-final-closure-copy-manifest-596-v1.process-closed.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\record-final-closure-copy-manifest-596-v1.stdout.log",
+      "bytes": 378,
+      "sha256": "c2379800e9c9e2b9e8a6620888ea74d8527dc9e3c47f1765eccae1bd53d2ddbb",
+      "mtimeNs": "1791354088765351300",
+      "destination": "final-verification/manifest/record-final-closure-copy-manifest-596-v1.stdout.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\manifest\\record-final-closure-copy-manifest-596-v1.stdout.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\record-final-closure-copy-manifest-596-v1.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": "1791354088766074200",
+      "destination": "final-verification/manifest/record-final-closure-copy-manifest-596-v1.stderr.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\manifest\\record-final-closure-copy-manifest-596-v1.stderr.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\correct-current-metadata-596.mjs",
+      "bytes": 4664,
+      "sha256": "40d20049d3a26a479f2c50d376c3e6e99a233a00990b6353021289a67f41090d",
+      "mtimeNs": "1791354035180229200",
+      "destination": "final-verification/current-metadata-v7/correct-current-metadata-596.mjs",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\current-metadata-v7\\correct-current-metadata-596.mjs"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\corrected-current-metadata-596.json",
+      "bytes": 3463,
+      "sha256": "9a081e9e436f71a18f66cbce54ebab74d7e4b68e061399707efe58a067e26faf",
+      "mtimeNs": "1791354038142530400",
+      "destination": "final-verification/current-metadata-v7/corrected-current-metadata-596.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\current-metadata-v7\\corrected-current-metadata-596.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\correct-current-metadata-596.result.json",
+      "bytes": 940,
+      "sha256": "27e95d744a804f609331d204bf11118fa79789b6392eeea014981d0030cb6dca",
+      "mtimeNs": "1791354038155068100",
+      "destination": "final-verification/current-metadata-v7/correct-current-metadata-596.result.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\current-metadata-v7\\correct-current-metadata-596.result.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\correct-current-metadata-596.stdout.log",
+      "bytes": 135,
+      "sha256": "eefd910d637c456cbad9a46e4ea05b962c626edc4de0e69efa9dd336209f1785",
+      "mtimeNs": "1791354038143085500",
+      "destination": "final-verification/current-metadata-v7/correct-current-metadata-596.stdout.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\current-metadata-v7\\correct-current-metadata-596.stdout.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\correct-current-metadata-596.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": "1791354036417442600",
+      "destination": "final-verification/current-metadata-v7/correct-current-metadata-596.stderr.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\current-metadata-v7\\correct-current-metadata-596.stderr.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\compare-81-publication-v2.mjs",
+      "bytes": 10799,
+      "sha256": "c13eaa0f3adc7037fefd4e4571d5c2016d01fd334e673fc181cc9f52f4d5bacd",
+      "mtimeNs": "1791354038138543400",
+      "destination": "final-verification/current-metadata-v7/compare-81-publication-v2.mjs",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\current-metadata-v7\\compare-81-publication-v2.mjs"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\final-main-scope-596-v7.result.json",
+      "bytes": 962,
+      "sha256": "0c0e34a7f39e1b5c03d4e1bb0c69909ae6e3d5af16f9e60dc8738bc59ac5fb6b",
+      "mtimeNs": "1791354308510345800",
+      "destination": "final-verification/current-metadata-v7/final-main-scope-596-v7.result.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\current-metadata-v7\\final-main-scope-596-v7.result.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\final-main-scope-596-v7.stdout.log",
+      "bytes": 1841,
+      "sha256": "eec221c011c9d4fb719b98c228f1cc1747db724e45012c59c9780a6bfde39927",
+      "mtimeNs": "1791354308496747400",
+      "destination": "final-verification/current-metadata-v7/final-main-scope-596-v7.stdout.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\current-metadata-v7\\final-main-scope-596-v7.stdout.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\final-main-scope-596-v7.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": "1791354307977430800",
+      "destination": "final-verification/current-metadata-v7/final-main-scope-596-v7.stderr.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\current-metadata-v7\\final-main-scope-596-v7.stderr.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\final-main-publication-596-v7.result.json",
+      "bytes": 1370,
+      "sha256": "f4f4847f7d391e4c8f472be4fa580a75a44756c3b4fe3756b878044e623655ac",
+      "mtimeNs": "1791354308323425400",
+      "destination": "final-verification/current-metadata-v7/final-main-publication-596-v7.result.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\current-metadata-v7\\final-main-publication-596-v7.result.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\final-main-publication-596-v7.stdout.log",
+      "bytes": 1316,
+      "sha256": "61741575d90081649f8952d6ff1001dcaefd4b810b1db690666f688c4a1389f0",
+      "mtimeNs": "1791354308307423100",
+      "destination": "final-verification/current-metadata-v7/final-main-publication-596-v7.stdout.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\current-metadata-v7\\final-main-publication-596-v7.stdout.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\final-main-publication-596-v7.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": "1791354308034170100",
+      "destination": "final-verification/current-metadata-v7/final-main-publication-596-v7.stderr.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\current-metadata-v7\\final-main-publication-596-v7.stderr.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\final-md-diff-check-596-v7.result.json",
+      "bytes": 899,
+      "sha256": "f3bb02d73a31517ca97eec6feed045f623feb9d0cc24287d5edc8fe0894f3cb4",
+      "mtimeNs": "1791354308177239800",
+      "destination": "final-verification/current-metadata-v7/final-md-diff-check-596-v7.result.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\current-metadata-v7\\final-md-diff-check-596-v7.result.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\final-md-diff-check-596-v7.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": "1791354308087198700",
+      "destination": "final-verification/current-metadata-v7/final-md-diff-check-596-v7.stdout.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\current-metadata-v7\\final-md-diff-check-596-v7.stdout.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\final-md-diff-check-596-v7.stderr.log",
+      "bytes": 147,
+      "sha256": "1468a63fdf31df86704ecc5a8901c6c133bad6edcfa58be87d80d4dfa5da3964",
+      "mtimeNs": "1791354308149111600",
+      "destination": "final-verification/current-metadata-v7/final-md-diff-check-596-v7.stderr.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\current-metadata-v7\\final-md-diff-check-596-v7.stderr.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-publication-596-v7.81-scope.report.json",
+      "bytes": 366567,
+      "sha256": "7b41eeb70a95f270390419988017a594cc4828cb7709cfe3fd9eb31bcb9bd2f2",
+      "mtimeNs": "1791354308304859700",
+      "destination": "final-verification/current-metadata-v7/root-final-publication-596-v7.81-scope.report.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\current-metadata-v7\\root-final-publication-596-v7.81-scope.report.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-publication-596-v7.working.md",
+      "bytes": 880195,
+      "sha256": "20cdbe51e5996505e4333b585f5138549e7444525573d6d5a32fa121b3cc2c0c",
+      "mtimeNs": "1791354308111809600",
+      "destination": "final-verification/current-metadata-v7/root-final-publication-596-v7.working.md",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\current-metadata-v7\\root-final-publication-596-v7.working.md"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-scope-596-v7.audit.result.json",
+      "bytes": 1048,
+      "sha256": "c0167638a023208b6005c50b6fc18563d4f55bda5f6916b5603bae249cd7007b",
+      "mtimeNs": "1791354308496747400",
+      "destination": "final-verification/current-metadata-v7/root-final-scope-596-v7.audit.result.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\current-metadata-v7\\root-final-scope-596-v7.audit.result.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-scope-596-v7.audit.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": "1791354308496747400",
+      "destination": "final-verification/current-metadata-v7/root-final-scope-596-v7.audit.stderr.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\current-metadata-v7\\root-final-scope-596-v7.audit.stderr.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-scope-596-v7.audit.stdout.log",
+      "bytes": 742,
+      "sha256": "3479a23314deabbc08fa99e76992d797badab75ebe723473cae31eca27863635",
+      "mtimeNs": "1791354308495037600",
+      "destination": "final-verification/current-metadata-v7/root-final-scope-596-v7.audit.stdout.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\current-metadata-v7\\root-final-scope-596-v7.audit.stdout.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-scope-596-v7.f77.git-show.result.json",
+      "bytes": 608,
+      "sha256": "70fb491ae0243cf1b669ea6ea9a75c781d95c040470d18019c2ad02f3645fe1a",
+      "mtimeNs": "1791354308226528500",
+      "destination": "final-verification/current-metadata-v7/root-final-scope-596-v7.f77.git-show.result.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\current-metadata-v7\\root-final-scope-596-v7.f77.git-show.result.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-scope-596-v7.f77.git-show.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": "1791354308226528500",
+      "destination": "final-verification/current-metadata-v7/root-final-scope-596-v7.f77.git-show.stderr.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\current-metadata-v7\\root-final-scope-596-v7.f77.git-show.stderr.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-scope-596-v7.f77.git-show.stdout.log",
+      "bytes": 852467,
+      "sha256": "b2f9a998af564d0eed354789ada7706ad2085ed815f327c9d98a065542c0aef9",
+      "mtimeNs": "1791354308226528500",
+      "destination": "final-verification/current-metadata-v7/root-final-scope-596-v7.f77.git-show.stdout.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\current-metadata-v7\\root-final-scope-596-v7.f77.git-show.stdout.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-scope-596-v7.f9.git-show.result.json",
+      "bytes": 608,
+      "sha256": "1f44b97a5f8e6ad49dfe1169451a58135446b45e4807917795fabba248815183",
+      "mtimeNs": "1791354308309494600",
+      "destination": "final-verification/current-metadata-v7/root-final-scope-596-v7.f9.git-show.result.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\current-metadata-v7\\root-final-scope-596-v7.f9.git-show.result.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-scope-596-v7.f9.git-show.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": "1791354308309494600",
+      "destination": "final-verification/current-metadata-v7/root-final-scope-596-v7.f9.git-show.stderr.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\current-metadata-v7\\root-final-scope-596-v7.f9.git-show.stderr.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-scope-596-v7.f9.git-show.stdout.log",
+      "bytes": 856233,
+      "sha256": "d30f67026b3ca6a98a7f2d1ffe6e9981f9d6d9d9f49005d022b51a5052cdba6a",
+      "mtimeNs": "1791354308309494600",
+      "destination": "final-verification/current-metadata-v7/root-final-scope-596-v7.f9.git-show.stdout.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\current-metadata-v7\\root-final-scope-596-v7.f9.git-show.stdout.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-scope-596-v7.report.json",
+      "bytes": 258064,
+      "sha256": "163ed66dd22bd04a3ab96f48be90e353642ab0affed8b875f9c992e262ea746a",
+      "mtimeNs": "1791354308473315800",
+      "destination": "final-verification/current-metadata-v7/root-final-scope-596-v7.report.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\current-metadata-v7\\root-final-scope-596-v7.report.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-scope-596-v7.working.md",
+      "bytes": 880195,
+      "sha256": "20cdbe51e5996505e4333b585f5138549e7444525573d6d5a32fa121b3cc2c0c",
+      "mtimeNs": "1791354308312999900",
+      "destination": "final-verification/current-metadata-v7/root-final-scope-596-v7.working.md",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\current-metadata-v7\\root-final-scope-596-v7.working.md"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-physical-review-8d62bf186d8094e571837dc076e217eb\\final-checklist-publication-review-596.json",
+      "bytes": 46143,
+      "sha256": "6c9ef10a21cdde4bede363b2d6ea6c3ff73e91a56d0d92f606e11dce1b318a15",
+      "mtimeNs": "1791354221208508000",
+      "destination": "final-verification/independent-review/final-checklist-publication-review-596.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review\\final-checklist-publication-review-596.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-physical-review-8d62bf186d8094e571837dc076e217eb\\final-checklist-publication-review-596.md",
+      "bytes": 1166,
+      "sha256": "483bf9423ee976a7e1815ad06e8232df4bcedc38f210d863e6194f0775914ac2",
+      "mtimeNs": "1791354221210229600",
+      "destination": "final-verification/independent-review/final-checklist-publication-review-596.md",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review\\final-checklist-publication-review-596.md"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-physical-review-8d62bf186d8094e571837dc076e217eb\\final-checklist-publication-review-596.process-closed.json",
+      "bytes": 1477,
+      "sha256": "b8d865ef58bd57cd813f7553c143827ac52e52faf68f3b0469b687f0323b7d4c",
+      "mtimeNs": "1791354221242577800",
+      "destination": "final-verification/independent-review/final-checklist-publication-review-596.process-closed.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review\\final-checklist-publication-review-596.process-closed.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-physical-review-8d62bf186d8094e571837dc076e217eb\\final-checklist-publication-review-596.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": "1791354221239726600",
+      "destination": "final-verification/independent-review/final-checklist-publication-review-596.stderr.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review\\final-checklist-publication-review-596.stderr.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-physical-review-8d62bf186d8094e571837dc076e217eb\\final-checklist-publication-review-596.stdout.log",
+      "bytes": 695,
+      "sha256": "debcdbe2028769015d347294e65ca7d6cde8ec7cfc21db9044d991357cb5f167",
+      "mtimeNs": "1791354221239726600",
+      "destination": "final-verification/independent-review/final-checklist-publication-review-596.stdout.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review\\final-checklist-publication-review-596.stdout.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-physical-review-8d62bf186d8094e571837dc076e217eb\\record-final-checklist-publication-review-596.py",
+      "bytes": 12424,
+      "sha256": "fe605ecbb6185a45d91dac1dc16e4efad05bbffca6b6c66bbfce38013d90d23d",
+      "mtimeNs": "1791354214231234500",
+      "destination": "final-verification/independent-review/record-final-checklist-publication-review-596.py",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review\\record-final-checklist-publication-review-596.py"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-physical-review-8d62bf186d8094e571837dc076e217eb\\run-final-checklist-publication-review-596.mjs",
+      "bytes": 2022,
+      "sha256": "9cd93e140f0e6042fa83ca15336ea480e1904b9af115b49d94a2eddf12d9d303",
+      "mtimeNs": "1791354214236875900",
+      "destination": "final-verification/independent-review/run-final-checklist-publication-review-596.mjs",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review\\run-final-checklist-publication-review-596.mjs"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-physical-review-8d62bf186d8094e571837dc076e217eb\\final-checklist-publication-v7-addendum.json",
+      "bytes": 20954,
+      "sha256": "5e66d5fcdd9f82ce1c3a889ae444232bfea4dba925f82ef26ece50b60fc28294",
+      "mtimeNs": "1791354396706717700",
+      "destination": "final-verification/independent-review-v7/final-checklist-publication-v7-addendum.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review-v7\\final-checklist-publication-v7-addendum.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-physical-review-8d62bf186d8094e571837dc076e217eb\\final-checklist-publication-v7-addendum.md",
+      "bytes": 878,
+      "sha256": "50813876cf3b23242d30e5068652c08995432df0da07aee437f420e15105a0e4",
+      "mtimeNs": "1791354396706717700",
+      "destination": "final-verification/independent-review-v7/final-checklist-publication-v7-addendum.md",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review-v7\\final-checklist-publication-v7-addendum.md"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-physical-review-8d62bf186d8094e571837dc076e217eb\\final-checklist-publication-v7-addendum.process-closed.json",
+      "bytes": 1481,
+      "sha256": "e3406f531919b7e0d35841534b0de1a89d55571eefdafd1e5efefbf71a5a1acc",
+      "mtimeNs": "1791354396742332100",
+      "destination": "final-verification/independent-review-v7/final-checklist-publication-v7-addendum.process-closed.json",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review-v7\\final-checklist-publication-v7-addendum.process-closed.json"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-physical-review-8d62bf186d8094e571837dc076e217eb\\final-checklist-publication-v7-addendum.stdout.log",
+      "bytes": 636,
+      "sha256": "c5d7594c9b4c2c735bd00086a32280002924d37ccdf35ed0bd3728144c6e96b4",
+      "mtimeNs": "1791354396741057800",
+      "destination": "final-verification/independent-review-v7/final-checklist-publication-v7-addendum.stdout.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review-v7\\final-checklist-publication-v7-addendum.stdout.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-physical-review-8d62bf186d8094e571837dc076e217eb\\final-checklist-publication-v7-addendum.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": "1791354396742332100",
+      "destination": "final-verification/independent-review-v7/final-checklist-publication-v7-addendum.stderr.log",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review-v7\\final-checklist-publication-v7-addendum.stderr.log"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-physical-review-8d62bf186d8094e571837dc076e217eb\\record-final-checklist-publication-v7-addendum.py",
+      "bytes": 8264,
+      "sha256": "0a0a39836940cabc5fa4087c62abdc561c9775110b30d06b3265ac3e890e0a45",
+      "mtimeNs": "1791354396323066300",
+      "destination": "final-verification/independent-review-v7/record-final-checklist-publication-v7-addendum.py",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review-v7\\record-final-checklist-publication-v7-addendum.py"
+    },
+    {
+      "file": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-physical-review-8d62bf186d8094e571837dc076e217eb\\run-final-checklist-publication-v7-addendum.mjs",
+      "bytes": 2023,
+      "sha256": "5d1e66f016463a1ae1dab901a0dfc2e0d4e4c7a0c99d5f578547e1e55e0a3d1f",
+      "mtimeNs": "1791354396328699100",
+      "destination": "final-verification/independent-review-v7/run-final-checklist-publication-v7-addendum.mjs",
+      "target": "docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\final-verification\\independent-review-v7\\run-final-checklist-publication-v7-addendum.mjs"
+    }
+  ],
+  "mainDocumentSha256": "20cdbe51e5996505e4333b585f5138549e7444525573d6d5a32fa121b3cc2c0c",
+  "limits": [
+    "Older installed-v6 proofs bind the 880135-byte historical snapshot; v7 proofs separately bind the current 880195-byte checklist.",
+    "No rearchive, future Git proof or realAuth/workspace/key acceptance included."
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "startedAt": "2026-10-07T06:27:03.118Z",
+  "closedAt": "2026-10-07T06:27:03.641Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099/copy-final-closure-evidence-596.mjs",
+    "final-checklist-publication-v7-addendum.json",
+    "final-checklist-publication-v7-addendum.md",
+    "final-checklist-publication-v7-addendum.process-closed.json",
+    "final-checklist-publication-v7-addendum.stdout.log",
+    "final-checklist-publication-v7-addendum.stderr.log",
+    "record-final-checklist-publication-v7-addendum.py",
+    "run-final-checklist-publication-v7-addendum.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExitCode": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\copy-final-closure-evidence-596.stdout.log",
+    "bytes": 119,
+    "sha256": "0ad36336eac309f142ff792c31cdb99ae9c9455e88e587e52e84d0850908afd7"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\copy-final-closure-evidence-596.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

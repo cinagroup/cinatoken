@@ -1,0 +1,96 @@
+{
+  "status": "PASS_READONLY_ORIGINAL_STREAM_ENTITY_BINDINGS",
+  "at": "2026-10-07T06:02:53.733Z",
+  "recipe": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-ready-596.json",
+    "bytes": 378570,
+    "sha256": "a1a977d575de5cad10fcca7262b1de16835bf4c84f34c9525380215d17ee26e2"
+  },
+  "manifest": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-input-plan-v16\\selected-inputs-physical.json",
+    "bytes": 1067952,
+    "sha256": "5f98d5b097ff89023b09af644233f230eb2dd61aca7cac6ecea38cfaf3081c21"
+  },
+  "originalActualReceipts": 195,
+  "physicalStreamEntityBindings": 390,
+  "everyOriginalReceiptStreamBytesShaMatchesPhysicalEntity": true,
+  "everyStreamFrozenSelectedBytesShaMtimeMatches": true,
+  "directOriginalPathBindings": 384,
+  "pathlessOriginalReceipts": 3,
+  "pathlessBindings": [
+    {
+      "receipt": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-browser-3d847b4a1aa74da796d9a8f4000eb20c\\prepare-process-closed.json",
+      "role": "private/preparation-v3/prepare",
+      "stream": "stdout",
+      "bindingSource": "frozen_selected_role_alias",
+      "originalPathDeclared": false,
+      "originalFileDeclared": false,
+      "frozenAlias": "receipts/private/preparation-v3/prepare/stdout.log",
+      "physicalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-browser-3d847b4a1aa74da796d9a8f4000eb20c\\prepare.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "receipt": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-browser-3d847b4a1aa74da796d9a8f4000eb20c\\prepare-process-closed.json",
+      "role": "private/preparation-v3/prepare",
+      "stream": "stderr",
+      "bindingSource": "frozen_selected_role_alias",
+      "originalPathDeclared": false,
+      "originalFileDeclared": false,
+      "frozenAlias": "receipts/private/preparation-v3/prepare/stderr.log",
+      "physicalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-browser-3d847b4a1aa74da796d9a8f4000eb20c\\prepare.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "receipt": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-browser-3d847b4a1aa74da796d9a8f4000eb20c\\prepare-v2-process-closed.json",
+      "role": "private/preparation-v3/prepare-v2",
+      "stream": "stdout",
+      "bindingSource": "frozen_selected_role_alias",
+      "originalPathDeclared": false,
+      "originalFileDeclared": false,
+      "frozenAlias": "receipts/private/preparation-v3/prepare-v2/stdout.log",
+      "physicalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-browser-3d847b4a1aa74da796d9a8f4000eb20c\\prepare-v2.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "receipt": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-browser-3d847b4a1aa74da796d9a8f4000eb20c\\prepare-v2-process-closed.json",
+      "role": "private/preparation-v3/prepare-v2",
+      "stream": "stderr",
+      "bindingSource": "frozen_selected_role_alias",
+      "originalPathDeclared": false,
+      "originalFileDeclared": false,
+      "frozenAlias": "receipts/private/preparation-v3/prepare-v2/stderr.log",
+      "physicalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-browser-3d847b4a1aa74da796d9a8f4000eb20c\\prepare-v2.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "receipt": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-browser-3d847b4a1aa74da796d9a8f4000eb20c\\prepare-v3-process-closed.json",
+      "role": "private/preparation-v3/prepare-v3",
+      "stream": "stdout",
+      "bindingSource": "frozen_selected_role_alias",
+      "originalPathDeclared": false,
+      "originalFileDeclared": false,
+      "frozenAlias": "receipts/private/preparation-v3/prepare-v3/stdout.log",
+      "physicalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-browser-3d847b4a1aa74da796d9a8f4000eb20c\\prepare-v3.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "receipt": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-browser-3d847b4a1aa74da796d9a8f4000eb20c\\prepare-v3-process-closed.json",
+      "role": "private/preparation-v3/prepare-v3",
+      "stream": "stderr",
+      "bindingSource": "frozen_selected_role_alias",
+      "originalPathDeclared": false,
+      "originalFileDeclared": false,
+      "frozenAlias": "receipts/private/preparation-v3/prepare-v3/stderr.log",
+      "physicalPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-browser-3d847b4a1aa74da796d9a8f4000eb20c\\prepare-v3.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "bindingInventorySha256": "b7d483dd1b01b90e93bf8363e1c8f9bf54f9623d4a3eb99272d3cc80dc0fcc17",
+  "limitation": "The six pathless original declarations contain bytes/SHA only; physical path is bound by explicit frozen role alias, never represented as an original path declaration. This read-only entity audit does not execute the archive helper."
+}

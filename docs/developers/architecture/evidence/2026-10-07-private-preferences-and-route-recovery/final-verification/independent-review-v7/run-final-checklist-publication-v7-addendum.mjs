@@ -1,0 +1,25 @@
+import assert from 'node:assert/strict';
+import {spawn} from 'node:child_process';
+import {createHash} from 'node:crypto';
+import {readFileSync,writeFileSync} from 'node:fs';
+import {dirname,join} from 'node:path';
+import {fileURLToPath} from 'node:url';
+const OWN=dirname(fileURLToPath(import.meta.url));
+const label=process.argv[2];assert(/^[a-z0-9-]+$/u.test(label));
+const args=[join(OWN,'record-final-checklist-publication-v7-addendum.py'),label,...process.argv.slice(3)];
+const stdout=[],stderr=[];const startedAt=new Date().toISOString();
+const executable='C:/Users/cina/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe';
+const child=spawn(executable,args,{windowsHide:true,stdio:['ignore','pipe','pipe']});
+let spawnError=null;child.once('error',e=>{spawnError={name:e.name,message:e.message,code:e.code??null};});
+child.stdout.on('data',b=>stdout.push(b));child.stderr.on('data',b=>stderr.push(b));
+const result=await new Promise(ok=>child.once('close',(code,signal)=>ok({code,signal,closedAt:new Date().toISOString()})));
+const hash=b=>createHash('sha256').update(b).digest('hex');
+const out=Buffer.concat(stdout),err=Buffer.concat(stderr);
+const stdoutPath=join(OWN,label+'.stdout.log'),stderrPath=join(OWN,label+'.stderr.log');
+writeFileSync(stdoutPath,out,{flag:'wx'});writeFileSync(stderrPath,err,{flag:'wx'});
+const script=readFileSync(args[0]);
+const receipt={startedAt,closedAt:result.closedAt,executable,args,actualExitCode:result.code,signal:result.signal,spawnError,scope:'Physical local evidence audit only, no browser/server/network',script:{path:args[0],bytes:script.length,sha256:hash(script)},stdout:{path:stdoutPath,bytes:out.length,sha256:hash(out)},stderr:{path:stderrPath,bytes:err.length,sha256:hash(err)}};
+writeFileSync(join(OWN,label+'.process-closed.json'),JSON.stringify(receipt,null,2)+'\n',{flag:'wx'});
+console.log(JSON.stringify(receipt));if(out.length)console.log(out.toString());if(err.length)console.log(err.toString());
+process.exitCode=result.code??1;
+

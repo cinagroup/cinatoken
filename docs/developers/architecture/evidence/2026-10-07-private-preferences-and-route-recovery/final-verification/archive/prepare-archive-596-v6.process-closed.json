@@ -1,0 +1,25 @@
+{
+  "label": "prepare-archive-596-v6",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd/prepare-archive-596-v6.mjs"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "startedAt": "2026-10-07T06:03:46.227Z",
+  "closedAt": "2026-10-07T06:03:46.340Z",
+  "actualExitCode": 0,
+  "signal": null,
+  "spawnError": null,
+  "streams": {
+    "stdout": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\prepare-archive-596-v6.stdout.log",
+      "bytes": 247,
+      "sha256": "d99462f4be5a907624fb961ce3c7336ddbd7511b1d6ce7b2c8418267265974d7"
+    },
+    "stderr": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\prepare-archive-596-v6.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  }
+}

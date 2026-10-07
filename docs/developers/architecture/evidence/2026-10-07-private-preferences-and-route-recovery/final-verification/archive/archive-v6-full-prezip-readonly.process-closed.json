@@ -1,0 +1,25 @@
+{
+  "label": "archive-v6-full-prezip-readonly",
+  "executable": "C:/Users/cina/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd/preflight-archive-v6-full-readonly.py"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "startedAt": "2026-10-07T06:08:38.770Z",
+  "closedAt": "2026-10-07T06:09:52.800Z",
+  "actualExitCode": 0,
+  "signal": null,
+  "spawnError": null,
+  "streams": {
+    "stdout": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-v6-full-prezip-readonly.stdout.log",
+      "bytes": 251,
+      "sha256": "7f7df30b8a4f3d32ca9b17a98d69f4bea7ca5700c0e5cc961787c7f9c55a54d3"
+    },
+    "stderr": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-v6-full-prezip-readonly.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  }
+}

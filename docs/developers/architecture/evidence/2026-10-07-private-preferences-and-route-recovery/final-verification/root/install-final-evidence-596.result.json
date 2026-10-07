@@ -1,0 +1,27 @@
+{
+  "startedAt": "2026-10-07T06:15:07.420Z",
+  "closedAt": "2026-10-07T06:15:09.254Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099/install-final-evidence-596.mjs",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd/archive-final-596-schema-v7",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd/596-final-publication-v6.candidate.md",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd/actual-publication-metadata-596-v1.json",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd/archive-final-596-schema-v7.process-closed.json",
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd/gallery-snapshots-596-v1"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExitCode": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\install-final-evidence-596.stdout.log",
+    "bytes": 234,
+    "sha256": "729cc80b952d53b30b2853120284001b74f11a435ed12da5f59752af76d0d186"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\install-final-evidence-596.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

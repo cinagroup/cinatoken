@@ -1,0 +1,702 @@
+{
+  "status": "PASS_READONLY_ALL22_DIRECTORY_OWNER_OUTPUT_BINDINGS",
+  "at": "2026-10-07T06:11:19.423Z",
+  "recipe": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-ready-596.json",
+    "bytes": 378570,
+    "sha256": "a1a977d575de5cad10fcca7262b1de16835bf4c84f34c9525380215d17ee26e2",
+    "mtimeNs": "1791352755675485100"
+  },
+  "manifest": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-input-plan-v16\\selected-inputs-physical.json",
+    "bytes": 1067952,
+    "sha256": "5f98d5b097ff89023b09af644233f230eb2dd61aca7cac6ecea38cfaf3081c21",
+    "mtimeNs": "1791352722437600100"
+  },
+  "actualClosedOwnerDirectoryCount": 22,
+  "legacyMissingRoleFields": 5,
+  "shapeTotals": {
+    "outArgument": 18,
+    "preparedFrozenList": 2,
+    "fixedGallery": 1,
+    "productionLabel": 1
+  },
+  "bindings": [
+    {
+      "alias": "private/raw/before-f9-v3",
+      "ownerRole": "root/browser-private-before-f9-v3",
+      "ownerRoleOriginalFieldPresent": false,
+      "roleBindingSource": "five-explicit-legacy-role-map",
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\browser-private-before-f9-v3.result.json",
+        "bytes": 1172,
+        "sha256": "8a63875d7dcbc199453e41151db5b07bc0f05e57926acb973785bf45e41a1dae",
+        "mtimeNs": "1791346883125004900"
+      },
+      "actualExitCode": 1,
+      "closedAt": "2026-10-07T04:21:23.121Z",
+      "script": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-private-preferences-browser-3d847b4a1aa74da796d9a8f4000eb20c/run-private-preferences-browser-v3.mjs",
+        "bytes": 28723,
+        "sha256": "db880b610c8401cfcf9447ece41ae3c0c79ab8e3ee7edce99388876f03040370",
+        "mtimeNs": "1791346554368569500"
+      },
+      "shape": "outArgument",
+      "outputPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-browser-3d847b4a1aa74da796d9a8f4000eb20c\\before-f9-v3",
+      "physicalDirectory": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-browser-3d847b4a1aa74da796d9a8f4000eb20c\\before-f9-v3",
+      "selectedFiles": 69,
+      "report": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-browser-3d847b4a1aa74da796d9a8f4000eb20c\\before-f9-v3\\report.json",
+        "bytes": 1067438,
+        "sha256": "6f92b4c0129c96d142049ebf4144ec3f22819a6622fd569a23506e65d75fe339",
+        "mtimeNs": "1791346883074659600"
+      },
+      "additionalPreparedProof": null
+    },
+    {
+      "alias": "private/raw/after-built-v3",
+      "ownerRole": "root/browser-private-after-built-v3",
+      "ownerRoleOriginalFieldPresent": false,
+      "roleBindingSource": "five-explicit-legacy-role-map",
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\browser-private-after-built-v3.result.json",
+        "bytes": 1143,
+        "sha256": "64d25a292f3f63ff86327bf202b637541e30fa664fd9e16b3fe3496307344dd1",
+        "mtimeNs": "1791346861143969500"
+      },
+      "actualExitCode": 1,
+      "closedAt": "2026-10-07T04:21:01.138Z",
+      "script": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-private-preferences-browser-3d847b4a1aa74da796d9a8f4000eb20c/run-private-preferences-browser-v3.mjs",
+        "bytes": 28723,
+        "sha256": "db880b610c8401cfcf9447ece41ae3c0c79ab8e3ee7edce99388876f03040370",
+        "mtimeNs": "1791346554368569500"
+      },
+      "shape": "outArgument",
+      "outputPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-browser-3d847b4a1aa74da796d9a8f4000eb20c\\after-built-v3",
+      "physicalDirectory": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-browser-3d847b4a1aa74da796d9a8f4000eb20c\\after-built-v3",
+      "selectedFiles": 69,
+      "report": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-browser-3d847b4a1aa74da796d9a8f4000eb20c\\after-built-v3\\report.json",
+        "bytes": 1417350,
+        "sha256": "f4436176d404d1c7457ddff2ff2eca1a396197dd1f2bf52d184537b00a42f9f2",
+        "mtimeNs": "1791346861103798900"
+      },
+      "additionalPreparedProof": null
+    },
+    {
+      "alias": "private/raw/before-f9-v4",
+      "ownerRole": "root/browser-private-before-f9-v4",
+      "ownerRoleOriginalFieldPresent": false,
+      "roleBindingSource": "five-explicit-legacy-role-map",
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\browser-private-before-f9-v4.result.json",
+        "bytes": 1178,
+        "sha256": "213218f9523f9fe4442e38fa09902b74859d34430af85631034a5f26b4f526c7",
+        "mtimeNs": "1791347158047049900"
+      },
+      "actualExitCode": 1,
+      "closedAt": "2026-10-07T04:25:58.045Z",
+      "script": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-private-preferences-browser-v4-1456cc15241a70f0b232d5948df6532f/run-private-preferences-browser-v4.mjs",
+        "bytes": 29316,
+        "sha256": "b41022c2f6cb52202f137b4c06fcef5cf959a47053ed2f128787f176e299b091",
+        "mtimeNs": "1791346995573832800"
+      },
+      "shape": "outArgument",
+      "outputPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-browser-v4-1456cc15241a70f0b232d5948df6532f\\before-f9-v4",
+      "physicalDirectory": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-browser-v4-1456cc15241a70f0b232d5948df6532f\\before-f9-v4",
+      "selectedFiles": 69,
+      "report": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-browser-v4-1456cc15241a70f0b232d5948df6532f\\before-f9-v4\\report.json",
+        "bytes": 1068046,
+        "sha256": "e58169df8682a4f3a481bd60ac70665537ba13e5484e882947f3de11ee10e2de",
+        "mtimeNs": "1791347157989310700"
+      },
+      "additionalPreparedProof": null
+    },
+    {
+      "alias": "private/raw/after-built-v4",
+      "ownerRole": "root/browser-private-after-built-v4",
+      "ownerRoleOriginalFieldPresent": false,
+      "roleBindingSource": "five-explicit-legacy-role-map",
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\browser-private-after-built-v4.result.json",
+        "bytes": 1149,
+        "sha256": "ed124052bb05c64437d8038585c1ade9ed47a1201d450656375a3bf54d03aee5",
+        "mtimeNs": "1791347058232022100"
+      },
+      "actualExitCode": 0,
+      "closedAt": "2026-10-07T04:24:18.230Z",
+      "script": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-private-preferences-browser-v4-1456cc15241a70f0b232d5948df6532f/run-private-preferences-browser-v4.mjs",
+        "bytes": 29316,
+        "sha256": "b41022c2f6cb52202f137b4c06fcef5cf959a47053ed2f128787f176e299b091",
+        "mtimeNs": "1791346995573832800"
+      },
+      "shape": "outArgument",
+      "outputPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-browser-v4-1456cc15241a70f0b232d5948df6532f\\after-built-v4",
+      "physicalDirectory": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-browser-v4-1456cc15241a70f0b232d5948df6532f\\after-built-v4",
+      "selectedFiles": 69,
+      "report": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-browser-v4-1456cc15241a70f0b232d5948df6532f\\after-built-v4\\report.json",
+        "bytes": 1418017,
+        "sha256": "061830afe6c5188bc4cf459994332855cdc1324d0984286e8f612c570f69314b",
+        "mtimeNs": "1791347058194503800"
+      },
+      "additionalPreparedProof": null
+    },
+    {
+      "alias": "route/v1-raw",
+      "ownerRole": "root/browser-route-v1",
+      "ownerRoleOriginalFieldPresent": false,
+      "roleBindingSource": "five-explicit-legacy-role-map",
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\browser-route-v1.result.json",
+        "bytes": 999,
+        "sha256": "ce55fcde30dbe935f1a92ccc32019356a8c2f2bbbb6da3167ff32f5545df94f7",
+        "mtimeNs": "1791347345344051300"
+      },
+      "actualExitCode": 1,
+      "closedAt": "2026-10-07T04:29:05.342Z",
+      "script": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9/attempt-v4/run-browser.mjs",
+        "bytes": 24427,
+        "sha256": "af9b73a92f625ea0b1f67c7d5dbb14372bad48743c4d33a2dd794fe978cfaec8",
+        "mtimeNs": "1791347177344537700"
+      },
+      "shape": "outArgument",
+      "outputPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\attempt-v4\\results-v1",
+      "physicalDirectory": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\attempt-v4\\results-v1",
+      "selectedFiles": 9,
+      "report": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\attempt-v4\\results-v1\\report.json",
+        "bytes": 32204,
+        "sha256": "ad17639d4bfe21bc285287933128fd2cd4d068a44edecbf2c13531323fb09ca9",
+        "mtimeNs": "1791347335907389000"
+      },
+      "additionalPreparedProof": null
+    },
+    {
+      "alias": "route/v2-raw",
+      "ownerRole": "root/browser-route-v2",
+      "ownerRoleOriginalFieldPresent": true,
+      "roleBindingSource": "original-directory-role",
+      "receipt": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099/browser-route-v2.result.json",
+        "bytes": 1002,
+        "sha256": "dc82eeb381906fe100917a51d48d2ec829d1d539aba1f72f0f237dc4a9f2a9a2",
+        "mtimeNs": "1791347833984816000"
+      },
+      "actualExitCode": 1,
+      "closedAt": "2026-10-07T04:37:13.982Z",
+      "script": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9/attempt-v4/run-browser-v2.mjs",
+        "bytes": 36366,
+        "sha256": "a42c62e4bc8dc3f364284c320100e28145abf1f41a49eaff9e4538661c5856ad",
+        "mtimeNs": "1791347747960830800"
+      },
+      "shape": "outArgument",
+      "outputPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\attempt-v4\\results-v2",
+      "physicalDirectory": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\attempt-v4\\results-v2",
+      "selectedFiles": 9,
+      "report": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\attempt-v4\\results-v2\\report.json",
+        "bytes": 33687,
+        "sha256": "bb66e35e4ae399d1ba25761865b081859e58a801d19f041632d24142dd23cc1e",
+        "mtimeNs": "1791347824549648100"
+      },
+      "additionalPreparedProof": null
+    },
+    {
+      "alias": "route/visibility-debug-v3-raw",
+      "ownerRole": "root/browser-route-visibility-debug-v3",
+      "ownerRoleOriginalFieldPresent": true,
+      "roleBindingSource": "original-directory-role",
+      "receipt": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099/browser-route-visibility-debug-v3.result.json",
+        "bytes": 1070,
+        "sha256": "b238bc3bfa4fc4410ee267a3389868ae40e738f79e2eaf8c5425efd8ad9b4a23",
+        "mtimeNs": "1791348127906260700"
+      },
+      "actualExitCode": 1,
+      "closedAt": "2026-10-07T04:42:07.904Z",
+      "script": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9/attempt-v4/run-browser-visibility-debug-v3.mjs",
+        "bytes": 40307,
+        "sha256": "0af53b6b3744402d1c3148557bd88fcdecdf7cafec07e93a3b720d878f003146",
+        "mtimeNs": "1791348066521190100"
+      },
+      "shape": "outArgument",
+      "outputPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\attempt-v4\\results-visibility-debug-v3",
+      "physicalDirectory": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\attempt-v4\\results-visibility-debug-v3",
+      "selectedFiles": 10,
+      "report": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\attempt-v4\\results-visibility-debug-v3\\report.json",
+        "bytes": 62182,
+        "sha256": "fd1870cec7e54944f5ff331d24a4a19f316361e26055f5e22ae2782d9e2a230f",
+        "mtimeNs": "1791348118672336000"
+      },
+      "additionalPreparedProof": null
+    },
+    {
+      "alias": "route/v4-raw",
+      "ownerRole": "root/browser-route-v4",
+      "ownerRoleOriginalFieldPresent": true,
+      "roleBindingSource": "original-directory-role",
+      "receipt": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099/browser-route-v4.result.json",
+        "bytes": 1002,
+        "sha256": "6048072ba91ca16e7d41c896dbdb2dee2b9e56026fdf81c644540f33256f2263",
+        "mtimeNs": "1791348329559530100"
+      },
+      "actualExitCode": 1,
+      "closedAt": "2026-10-07T04:45:29.556Z",
+      "script": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9/attempt-v4/run-browser-v4.mjs",
+        "bytes": 39318,
+        "sha256": "7e36eb8a33a60f86c53b249d53eba6e0c2d811bd163755934c0f824c5f7ec1a3",
+        "mtimeNs": "1791348247273479800"
+      },
+      "shape": "outArgument",
+      "outputPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\attempt-v4\\results-v4",
+      "physicalDirectory": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\attempt-v4\\results-v4",
+      "selectedFiles": 14,
+      "report": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\attempt-v4\\results-v4\\report.json",
+        "bytes": 91665,
+        "sha256": "a7f7a18bf8298fe49d341d1dbab66c2b8656ff2bd0e5be2fd572247d79746c64",
+        "mtimeNs": "1791348320118273100"
+      },
+      "additionalPreparedProof": null
+    },
+    {
+      "alias": "real-dist/frozen-build",
+      "ownerRole": "real-dist/preparation/real-dist-v1-ready-verify",
+      "ownerRoleOriginalFieldPresent": true,
+      "roleBindingSource": "original-directory-role",
+      "receipt": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9/real-dist-chunk-v1/real-dist-v1-ready-verify.process-closed.json",
+        "bytes": 1002,
+        "sha256": "530a009bf0d93693350a061f3bfa186c76d34d80d5eec15a33b1f6cfebfd2aea",
+        "mtimeNs": "1791348744955785300"
+      },
+      "actualExitCode": 0,
+      "closedAt": "2026-10-07T04:52:24.952Z",
+      "script": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9/real-dist-chunk-v1/verify-real-dist-ready.mjs",
+        "bytes": 3065,
+        "sha256": "93bfe034f2891d950d2b564ca05c55155b3d9f7bb03cb2f70654ab7c0f0e032a",
+        "mtimeNs": "1791348740080086600"
+      },
+      "shape": "preparedFrozenList",
+      "outputPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\frozen-dist",
+      "physicalDirectory": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\frozen-dist",
+      "selectedFiles": 131,
+      "report": null,
+      "additionalPreparedProof": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\prepared-real-dist.json",
+        "bytes": 724849,
+        "sha256": "77d3af0bc3d4c34f8eb08b98dd94355fb72513d9a9d0f187d666d20ac0fe82e9",
+        "mtimeNs": "1791348146274521900"
+      }
+    },
+    {
+      "alias": "route/v5-raw",
+      "ownerRole": "root/browser-route-v5",
+      "ownerRoleOriginalFieldPresent": true,
+      "roleBindingSource": "original-directory-role",
+      "receipt": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099/browser-route-v5.result.json",
+        "bytes": 1002,
+        "sha256": "79c521cdd8e1e49e55725e57996e714a26cd1060935ebe91c99b89cadeac71c2",
+        "mtimeNs": "1791348680688883200"
+      },
+      "actualExitCode": 1,
+      "closedAt": "2026-10-07T04:51:20.686Z",
+      "script": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9/attempt-v4/run-browser-v5.mjs",
+        "bytes": 43146,
+        "sha256": "7d3a675a3948346f6bd9f380a94c9f99392b8cb98ca145d3576a21e1daa13851",
+        "mtimeNs": "1791348586895465400"
+      },
+      "shape": "outArgument",
+      "outputPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\attempt-v4\\results-v5",
+      "physicalDirectory": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\attempt-v4\\results-v5",
+      "selectedFiles": 20,
+      "report": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\attempt-v4\\results-v5\\report.json",
+        "bytes": 163365,
+        "sha256": "d6c881931301c030f3a6831ff50e40ec779408a6b8a009e30212de746928407e",
+        "mtimeNs": "1791348671262457100"
+      },
+      "additionalPreparedProof": null
+    },
+    {
+      "alias": "real-dist/v1-raw-failed-reporter",
+      "ownerRole": "root/browser-real-dist-chunk-v1",
+      "ownerRoleOriginalFieldPresent": true,
+      "roleBindingSource": "original-directory-role",
+      "receipt": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099/browser-real-dist-chunk-v1.result.json",
+        "bytes": 953,
+        "sha256": "3f6da64738abdc254b372ef924ba1efe39e2369c18589e47a8f372d105fa9482",
+        "mtimeNs": "1791348803286693100"
+      },
+      "actualExitCode": 1,
+      "closedAt": "2026-10-07T04:53:23.284Z",
+      "script": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9/real-dist-chunk-v1/run-real-dist-chunk.mjs",
+        "bytes": 26864,
+        "sha256": "cccb945602452fb0778a68f391c7b7d6857ed0deb0143df4792339d39abc0ffd",
+        "mtimeNs": "1791348685708052300"
+      },
+      "shape": "outArgument",
+      "outputPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\results-real-dist-v1",
+      "physicalDirectory": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\results-real-dist-v1",
+      "selectedFiles": 21,
+      "report": null,
+      "additionalPreparedProof": null
+    },
+    {
+      "alias": "private/raw/after-linux-596-v4",
+      "ownerRole": "root/browser-private-linux-596-v4",
+      "ownerRoleOriginalFieldPresent": true,
+      "roleBindingSource": "original-directory-role",
+      "receipt": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099/browser-private-linux-596-v4.result.json",
+        "bytes": 1231,
+        "sha256": "018ed5305734e11cc6e3e47065403f4478c04face997dfcc31c67ea423cd1f24",
+        "mtimeNs": "1791349234859248500"
+      },
+      "actualExitCode": 0,
+      "closedAt": "2026-10-07T05:00:34.847Z",
+      "script": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-private-preferences-browser-v4-1456cc15241a70f0b232d5948df6532f/run-private-preferences-browser-v4.mjs",
+        "bytes": 29316,
+        "sha256": "b41022c2f6cb52202f137b4c06fcef5cf959a47053ed2f128787f176e299b091",
+        "mtimeNs": "1791346995573832800"
+      },
+      "shape": "outArgument",
+      "outputPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-browser-v4-1456cc15241a70f0b232d5948df6532f\\after-linux-596-v4",
+      "physicalDirectory": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-browser-v4-1456cc15241a70f0b232d5948df6532f\\after-linux-596-v4",
+      "selectedFiles": 69,
+      "report": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-browser-v4-1456cc15241a70f0b232d5948df6532f\\after-linux-596-v4\\report.json",
+        "bytes": 1419638,
+        "sha256": "0d323089e639896a477fb54dcf4c756b709456cc9a97affe19cac0bb6f2c88df",
+        "mtimeNs": "1791349234779502100"
+      },
+      "additionalPreparedProof": null
+    },
+    {
+      "alias": "route/v6-raw",
+      "ownerRole": "root/browser-route-v6",
+      "ownerRoleOriginalFieldPresent": true,
+      "roleBindingSource": "original-directory-role",
+      "receipt": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099/browser-route-v6.result.json",
+        "bytes": 1037,
+        "sha256": "dc655d3ad21a6075f76ad74107693262407950b6b1fc9a5ad321456adbd15b4c",
+        "mtimeNs": "1791349198530467500"
+      },
+      "actualExitCode": 1,
+      "closedAt": "2026-10-07T04:59:58.525Z",
+      "script": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9/attempt-v4/run-browser-v6.mjs",
+        "bytes": 46878,
+        "sha256": "252bbe910dfef35194e5b9ce677c260fb8aba56486d0da058859c6d13da3d33a",
+        "mtimeNs": "1791349096978953400"
+      },
+      "shape": "outArgument",
+      "outputPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\attempt-v4\\results-v6",
+      "physicalDirectory": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\attempt-v4\\results-v6",
+      "selectedFiles": 39,
+      "report": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\attempt-v4\\results-v6\\report.json",
+        "bytes": 347743,
+        "sha256": "2376d1b9993f3bf9d642bc0a4dc7970d3242f2d5695b8ac2f6354298ba63fc0f",
+        "mtimeNs": "1791349189377938400"
+      },
+      "additionalPreparedProof": null
+    },
+    {
+      "alias": "route/v7-raw",
+      "ownerRole": "root/browser-route-v7",
+      "ownerRoleOriginalFieldPresent": true,
+      "roleBindingSource": "original-directory-role",
+      "receipt": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099/browser-route-v7.result.json",
+        "bytes": 1037,
+        "sha256": "b70df00ddde15bc3c8d2eb165360b90c95777f014dc891bb1b6a41ac1162b92d",
+        "mtimeNs": "1791349644965712500"
+      },
+      "actualExitCode": 0,
+      "closedAt": "2026-10-07T05:07:24.963Z",
+      "script": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9/attempt-v4/run-browser-v7.mjs",
+        "bytes": 50636,
+        "sha256": "acbf288e0ca6df742c9d29eb7f637c2129a6109d16a9d6660d36b1c7b60ddd8f",
+        "mtimeNs": "1791349397438146200"
+      },
+      "shape": "outArgument",
+      "outputPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\attempt-v4\\results-v7",
+      "physicalDirectory": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\attempt-v4\\results-v7",
+      "selectedFiles": 190,
+      "report": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\attempt-v4\\results-v7\\report.json",
+        "bytes": 1837486,
+        "sha256": "6e7a1fc0cf53c55207707d1e4511d6b919ed2c190bec195807db72360345149a",
+        "mtimeNs": "1791349635942510200"
+      },
+      "additionalPreparedProof": null
+    },
+    {
+      "alias": "gallery",
+      "ownerRole": "independent-scope/record-contract-scopes-gallery",
+      "ownerRoleOriginalFieldPresent": true,
+      "roleBindingSource": "original-directory-role",
+      "receipt": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd/record-contract-scopes-gallery.process-closed.json",
+        "bytes": 1074,
+        "sha256": "c2831f6a78e20fe24afefaf5b46034e76286a98f2310fb67a13d8751dcd5a420",
+        "mtimeNs": "1791350099327776900"
+      },
+      "actualExitCode": 0,
+      "closedAt": "2026-10-07T05:14:59.326Z",
+      "script": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd/record-contract-scopes-and-gallery.mjs",
+        "bytes": 3256,
+        "sha256": "59a6e8702dc1af62d9bfddf7ccd92fbb92b470cac1de9a1335c5cab18dfbeadc",
+        "mtimeNs": "1791350097958560100"
+      },
+      "shape": "fixedGallery",
+      "outputPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\gallery-snapshots-596-v1",
+      "physicalDirectory": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\gallery-snapshots-596-v1",
+      "selectedFiles": 3,
+      "report": null,
+      "additionalPreparedProof": null
+    },
+    {
+      "alias": "real-dist/v2-raw",
+      "ownerRole": "root/browser-real-dist-chunk-v2",
+      "ownerRoleOriginalFieldPresent": true,
+      "roleBindingSource": "original-directory-role",
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\browser-real-dist-chunk-v2.result.json",
+        "bytes": 990,
+        "sha256": "e98f29e702e28b4abeb2d3b2a4e4df4cc99a9d83122a934d80a616b1cdfd406b",
+        "mtimeNs": "1791349827904531800"
+      },
+      "actualExitCode": 1,
+      "closedAt": "2026-10-07T05:10:27.904Z",
+      "script": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9/real-dist-chunk-v1/run-real-dist-chunk-v2.mjs",
+        "bytes": 32572,
+        "sha256": "6a59b521c298602c3113d2b79ff0e5eddd1218cb97893a0a945e3200c5060301",
+        "mtimeNs": "1791349755547801800"
+      },
+      "shape": "outArgument",
+      "outputPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\results-real-dist-v2",
+      "physicalDirectory": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\results-real-dist-v2",
+      "selectedFiles": 31,
+      "report": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\results-real-dist-v2\\report.json",
+        "bytes": 45889,
+        "sha256": "3a85e31b5c3f1b6a8bac85cf38ce0cb73a320a01791b72db3f94ea9cab032ac9",
+        "mtimeNs": "1791349818577062800"
+      },
+      "additionalPreparedProof": null
+    },
+    {
+      "alias": "real-dist/v3-raw",
+      "ownerRole": "root/browser-real-dist-chunk-v3",
+      "ownerRoleOriginalFieldPresent": true,
+      "roleBindingSource": "original-directory-role",
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\browser-real-dist-chunk-v3.result.json",
+        "bytes": 990,
+        "sha256": "66a78814b713516807d88290f812958cbf6649cabc09aefaa55f101815817106",
+        "mtimeNs": "1791350154405627200"
+      },
+      "actualExitCode": 1,
+      "closedAt": "2026-10-07T05:15:54.403Z",
+      "script": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9/real-dist-chunk-v1/run-real-dist-chunk-v3.mjs",
+        "bytes": 38242,
+        "sha256": "a519c085702b2d666f381509c37def6fca16ad5ab05b8fbcf8d4e6d8cf44ed3d",
+        "mtimeNs": "1791350066521066200"
+      },
+      "shape": "outArgument",
+      "outputPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\results-real-dist-v3",
+      "physicalDirectory": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\results-real-dist-v3",
+      "selectedFiles": 35,
+      "report": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\results-real-dist-v3\\report.json",
+        "bytes": 59683,
+        "sha256": "734ce4a63b17571c9727f617f31b1158366098d5cdcbd82734ef27128972ac37",
+        "mtimeNs": "1791350145181825600"
+      },
+      "additionalPreparedProof": null
+    },
+    {
+      "alias": "real-dist/v4-diagnostic-raw",
+      "ownerRole": "root/browser-real-dist-chunk-v4-diagnostic",
+      "ownerRoleOriginalFieldPresent": true,
+      "roleBindingSource": "original-directory-role",
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\browser-real-dist-chunk-v4-diagnostic.result.json",
+        "bytes": 1031,
+        "sha256": "897e3970bc954eb8dfb3fde5c00ade8d6c1640aca66fac2cd81bd53d12b59e9e",
+        "mtimeNs": "1791350559113999500"
+      },
+      "actualExitCode": 1,
+      "closedAt": "2026-10-07T05:22:39.102Z",
+      "script": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9/real-dist-chunk-v1/launch-v4-with-protocol.mjs",
+        "bytes": 1671,
+        "sha256": "84605ae9f3e1be1a07b10b62cf1aa0425c4e91c1cb0f4a14ad61478300ae5f42",
+        "mtimeNs": "1791350465919674700"
+      },
+      "shape": "outArgument",
+      "outputPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\results-real-dist-v4-diagnostic",
+      "physicalDirectory": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\results-real-dist-v4-diagnostic",
+      "selectedFiles": 41,
+      "report": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\results-real-dist-v4-diagnostic\\report.json",
+        "bytes": 256103,
+        "sha256": "d7b10cd00b6c252597b59f8123daca533effe68c590382f64abe9269ba96f66b",
+        "mtimeNs": "1791350549806938200"
+      },
+      "additionalPreparedProof": null
+    },
+    {
+      "alias": "real-dist/v5-windows-final-raw",
+      "ownerRole": "root/browser-real-dist-chunk-v5",
+      "ownerRoleOriginalFieldPresent": true,
+      "roleBindingSource": "original-directory-role",
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\browser-real-dist-chunk-v5.result.json",
+        "bytes": 998,
+        "sha256": "e45852f4b6a2a55cf90b46b0e19eca69da6983f0167641fa7b0037109dc7a50f",
+        "mtimeNs": "1791350918198432600"
+      },
+      "actualExitCode": 0,
+      "closedAt": "2026-10-07T05:28:38.187Z",
+      "script": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9/real-dist-chunk-v1/launch-v5-with-protocol.mjs",
+        "bytes": 1681,
+        "sha256": "dee20771e24024c670b591a8566e29094437ca5804c7f3de4357cb4c58980f9d",
+        "mtimeNs": "1791350824505308700"
+      },
+      "shape": "outArgument",
+      "outputPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\results-real-dist-v5",
+      "physicalDirectory": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\results-real-dist-v5",
+      "selectedFiles": 62,
+      "report": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\results-real-dist-v5\\report.json",
+        "bytes": 781174,
+        "sha256": "623017936d4c8036163c7a3f7100fc831afeaac8d95555298df6fedfe42f2acb",
+        "mtimeNs": "1791350908947551400"
+      },
+      "additionalPreparedProof": null
+    },
+    {
+      "alias": "real-dist/linux-ci-v2-final-raw",
+      "ownerRole": "root/browser-real-dist-linux-ci-v2",
+      "ownerRoleOriginalFieldPresent": true,
+      "roleBindingSource": "original-directory-role",
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\browser-real-dist-linux-ci-v2.result.json",
+        "bytes": 1016,
+        "sha256": "2d7f1112ec615fc7c29273112e023008195790a117f5c174a0b5ca5e0e460fe9",
+        "mtimeNs": "1791351024522360900"
+      },
+      "actualExitCode": 0,
+      "closedAt": "2026-10-07T05:30:24.512Z",
+      "script": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9/real-dist-linux-ci-v2/launch-v5-with-protocol.mjs",
+        "bytes": 1681,
+        "sha256": "dee20771e24024c670b591a8566e29094437ca5804c7f3de4357cb4c58980f9d",
+        "mtimeNs": "1791350824505308700"
+      },
+      "shape": "outArgument",
+      "outputPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-linux-ci-v2\\results-real-dist-linux-ci-v2",
+      "physicalDirectory": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-linux-ci-v2\\results-real-dist-linux-ci-v2",
+      "selectedFiles": 62,
+      "report": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-linux-ci-v2\\results-real-dist-linux-ci-v2\\report.json",
+        "bytes": 785986,
+        "sha256": "a6fc8f667ab59607f0aa146192da06bf0200d54f8d3b5f2d066e1a8914cb5c2b",
+        "mtimeNs": "1791351015428367300"
+      },
+      "additionalPreparedProof": null
+    },
+    {
+      "alias": "build/linux-ci-frozen-runtime-131",
+      "ownerRole": "real-dist/preparation/real-dist-linux-ci-corrected-prepare",
+      "ownerRoleOriginalFieldPresent": true,
+      "roleBindingSource": "original-directory-role",
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\real-dist-linux-ci-corrected-prepare.process-closed.json",
+        "bytes": 1034,
+        "sha256": "1f805326ed95f12072022ab78cea5191a87ccb7e7e0f5a9c8ded80c94e577251",
+        "mtimeNs": "1791350267341300900"
+      },
+      "actualExitCode": 0,
+      "closedAt": "2026-10-07T05:17:47.338Z",
+      "script": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9/real-dist-linux-ci-v1/prepare-linux-ci-b.mjs",
+        "bytes": 11975,
+        "sha256": "f7be9101989bee100061385522f8efa5468471751e254489a83f35d14f59e81a",
+        "mtimeNs": "1791350257275887700"
+      },
+      "shape": "preparedFrozenList",
+      "outputPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-linux-ci-v1\\frozen-dist",
+      "physicalDirectory": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-linux-ci-v1\\frozen-dist",
+      "selectedFiles": 131,
+      "report": null,
+      "additionalPreparedProof": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-linux-ci-v1\\prepared-real-dist.json",
+        "bytes": 741075,
+        "sha256": "e842caad369e118d9d153f10c57c522e645dd5583a8eaf71f7d8b96f9e8dd5e9",
+        "mtimeNs": "1791350267292388400"
+      }
+    },
+    {
+      "alias": "production/http-v2-original-actual1",
+      "ownerRole": "root/production-http-596-v2",
+      "ownerRoleOriginalFieldPresent": true,
+      "roleBindingSource": "original-directory-role",
+      "receipt": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\production-http-596-v2.result.json",
+        "bytes": 1001,
+        "sha256": "8ee896addfe5007e3eda3ce9319d6330a3d55b0ead53bbdd5c323ec5cde5ba15",
+        "mtimeNs": "1791351568162492700"
+      },
+      "actualExitCode": 1,
+      "closedAt": "2026-10-07T05:39:28.160Z",
+      "script": {
+        "path": "C:/Users/cina/AppData/Local/Temp/cinatoken-private-preferences-physical-review-8d62bf186d8094e571837dc076e217eb/run-production-http-smoke-v2.mjs",
+        "bytes": 16568,
+        "sha256": "70113d65269f655030e2419598155f7bee84078649f698ba9754db266f279077",
+        "mtimeNs": "1791350152676579900"
+      },
+      "shape": "productionLabel",
+      "outputPath": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-physical-review-8d62bf186d8094e571837dc076e217eb\\production-http-596-v2",
+      "physicalDirectory": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-physical-review-8d62bf186d8094e571837dc076e217eb\\production-http-596-v2",
+      "selectedFiles": 59,
+      "report": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-physical-review-8d62bf186d8094e571837dc076e217eb\\production-http-596-v2\\report.json",
+        "bytes": 112782,
+        "sha256": "1371a927ea63167c7409f9015d5267113636fd0d0e3e4fe77497f497f5ce1d6f",
+        "mtimeNs": "1791351568143015500"
+      },
+      "additionalPreparedProof": null
+    }
+  ],
+  "noRoleGuesses": true,
+  "originalOwnerFailureExitCodesPreserved": true,
+  "archiveExecuted": false,
+  "scope": "Finite all22 READY-directory owner role, actual child closure, explicit argument/source/prepared/report output path association and frozen-selected binding; no source/QA/CI/production rerun or mutation."
+}

@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "C:\Users\cina\AppData\Local\Temp\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\archive-596-v5.py", line 63, in <module>
+    assert declared and declared.get("path"), "Closed receipt needs original stream binding"
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Closed receipt needs original stream binding

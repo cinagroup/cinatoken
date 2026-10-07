@@ -1,0 +1,23 @@
+{
+  "startedAt": "2026-10-07T06:15:37.372Z",
+  "closedAt": "2026-10-07T06:15:37.900Z",
+  "executable": "C:/Program Files/nodejs/node.exe",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd/run-owned-audit.mjs",
+    "root-final-scope-596"
+  ],
+  "cwd": "C:/cinagroup/cinatoken",
+  "actualExitCode": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\final-main-scope-596.stdout.log",
+    "bytes": 1826,
+    "sha256": "0b87ab6d9db32dcc338747ac6165305bc007b2a4f61cfcafbc09060f7c3d3f2c"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\final-main-scope-596.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

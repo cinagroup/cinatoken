@@ -1,0 +1,11 @@
+file:///C:/Users/cina/AppData/Local/Temp/cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9/real-dist-chunk-v1/archive-secret-review-596-v1/review-archive-schema-v6.mjs:19
+const originalReceipt=JSON.parse(readFileSync(resolve(scope,'archive-final-596-v5.process-closed.json'),'utf8'));assert.equal(originalReceipt.actualExitCode,1);assert.equal(originalReceipt.signal,null);assert.equal(originalReceipt.stderr.sha256,proof(originalReceipt.stderr.path).sha256)
+                                                                                                                                                                                                                                              ^
+
+TypeError: Cannot read properties of undefined (reading 'sha256')
+    at file:///C:/Users/cina/AppData/Local/Temp/cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9/real-dist-chunk-v1/archive-secret-review-596-v1/review-archive-schema-v6.mjs:19:239
+    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:661:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.14.1

@@ -1,0 +1,363 @@
+{
+  "kind": "Finite final v7 publication and scope addendum",
+  "recordedAt": "2026-10-07T06:26:36.706717+00:00",
+  "outcome": "NO_BLOCKING_FINDINGS_IN_REVIEWED_SCOPE",
+  "currentDocument": {
+    "path": "C:\\cinagroup\\cinatoken\\docs\\developers\\architecture\\web-frontend-migration.md",
+    "bytes": 880195,
+    "sha256": "20cdbe51e5996505e4333b585f5138549e7444525573d6d5a32fa121b3cc2c0c",
+    "mtimeNs": 1791354038139352600
+  },
+  "v2StaticReview": {
+    "v1": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\compare-81-publication-v1.mjs",
+      "bytes": 9222,
+      "sha256": "99df79b9c9d08a3e9f5d8a9bc9c6885a24cb205db3bdaf2c9b852baa36557e0d",
+      "mtimeNs": 1791351018907428100
+    },
+    "v2": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\compare-81-publication-v2.mjs",
+      "bytes": 10799,
+      "sha256": "c13eaa0f3adc7037fefd4e4571d5c2016d01fd334e673fc181cc9f52f4d5bacd",
+      "mtimeNs": 1791354038138543400
+    },
+    "exactThreeDiffHunks": [
+      {
+        "operation": "insert",
+        "oldLines": [
+          26,
+          25
+        ],
+        "newLines": [
+          26,
+          28
+        ],
+        "before": [],
+        "after": [
+          "const statusPatchPath=process.argv[5];assert(statusPatchPath,'Exact current-status correction proof required')\n",
+          "const currentStatusPatch=JSON.parse(fs.readFileSync(statusPatchPath,'utf8'));assert.equal(currentStatusPatch.kind,'EXACT_CURRENT_METADATA_CORRECTION_596');assert.equal(currentStatusPatch.sourceCommit,m.sourceCommit);assert.equal(currentStatusPatch.versionId,m.versionId);assert.equal(currentStatusPatch.statusBefore,\"5.7 的 `index.7ff2962b93.js` 仅是历史冻结检查点。当前生产公开页面由5.94的f9独立Web SSR承载，账户/管理HTML选路已开启；`/dashboard`、`/gateway/*`等兼容路由仍回到Admin，旧页面尚未退役。\");assert.equal(currentStatusPatch.statusAfter,\"5.7 的 `index.7ff2962b93.js` 仅是历史冻结检查点。当前生产公开页面由5.96的3494独立Web SSR承载，账户/管理HTML选路已开启；`/dashboard`、`/gateway/*`等兼容路由仍回到Admin，旧页面尚未退役。5.94的f9发布记录按原字节保留为历史。\");assert.equal(hash(current),currentStatusPatch.documentAfter.sha256)\n",
+          "\n"
+        ]
+      },
+      {
+        "operation": "insert",
+        "oldLines": [
+          57,
+          56
+        ],
+        "newLines": [
+          60,
+          60
+        ],
+        "before": [],
+        "after": [
+          " assert.equal(text.split(currentStatusPatch.statusAfter).length,2,'Exactly one current status correction');assert.equal(a.split(currentStatusPatch.statusBefore).length,2,'Exactly one original status line');text=text.replace(currentStatusPatch.statusAfter,currentStatusPatch.statusBefore)\n"
+        ]
+      },
+      {
+        "operation": "replace",
+        "oldLines": [
+          117,
+          117
+        ],
+        "newLines": [
+          121,
+          121
+        ],
+        "before": [
+          "  baselineCommit:prepared.baselineCommit,metadataContract,exactAllowedMetadata:['new publication paragraph inserted before complete original f9 paragraph','introduction exactly from actual metadata','date only2026-10-06to2026-10-07 with scope suffix unchanged'],\n"
+        ],
+        "after": [
+          "  baselineCommit:prepared.baselineCommit,metadataContract,currentStatusPatch: {proof:proof(statusPatchPath),before:currentStatusPatch.statusBefore,after:currentStatusPatch.statusAfter},exactAllowedMetadata:['new publication paragraph inserted before complete original f9 paragraph','introduction exactly from actual metadata','date only2026-10-06to2026-10-07 with scope suffix unchanged','one exact current summary corrected fromf9to3494; historical5.94/5.95 blocks untouched'],\n"
+        ]
+      }
+    ],
+    "conclusion": "Only exact kind/source/version/full current hash status correction binding, one unique whole status paragraph normalization, and correction-proof report field were added. All previous v1 checks remain byte-identical outside these three additions. P6 change stays inside the previously allowed phase evidence column; protected status/checkbox/history constraints remain."
+  },
+  "currentCorrectionProof": {
+    "kind": "EXACT_CURRENT_METADATA_CORRECTION_596",
+    "at": "2026-10-07T06:20:38.139Z",
+    "sourceCommit": "3494dca3fd14f8433ede2679fcb54916256a9113",
+    "versionId": "c5314d77-ba0d-4f7e-9b38-f8241e2d4424",
+    "documentBefore": {
+      "bytes": 880135,
+      "sha256": "063f2c6138ba3097d1f90b406773e15d2cd7143fcb3532cacdaed81915f90f7e"
+    },
+    "documentAfter": {
+      "path": "C:/cinagroup/cinatoken/docs/developers/architecture/web-frontend-migration.md",
+      "bytes": 880195,
+      "sha256": "20cdbe51e5996505e4333b585f5138549e7444525573d6d5a32fa121b3cc2c0c"
+    },
+    "statusBefore": "5.7 的 `index.7ff2962b93.js` 仅是历史冻结检查点。当前生产公开页面由5.94的f9独立Web SSR承载，账户/管理HTML选路已开启；`/dashboard`、`/gateway/*`等兼容路由仍回到Admin，旧页面尚未退役。",
+    "statusAfter": "5.7 的 `index.7ff2962b93.js` 仅是历史冻结检查点。当前生产公开页面由5.96的3494独立Web SSR承载，账户/管理HTML选路已开启；`/dashboard`、`/gateway/*`等兼容路由仍回到Admin，旧页面尚未退役。5.94的f9发布记录按原字节保留为历史。",
+    "phaseBefore": "| P6 公开页与 SEO | 当前匿名功能验收通过，整域待验 | 当前f9 Web公开四语首页/models SSR、HEAD、robots/sitemap及完整158资产原字节覆盖已核；生产Chrome V4严格13/13，包括真正NoJS4、移动2、早期主入口/动态chunk输入4，零CSP/pageerror/取证错误（5.94）。c13 functional45/45与2e三页证据保留历史范围；5.95实际Chrome .98桌面双向BFCache恢复与36 body/20 unique assets独立复核通过，离线20次采集诊断不改变性能失败；5.96四语安全状态及source PublicShell24、真实compiled dist Windows/Linux各2通过；生产8SSR/6static/3HEAD/匿名401按primary契约offline验证通过，首轮HTTPactual1及current源码30s下载失败保留。 | 离页cookie/媒体变化、移动及恢复后输入/监听器等完整BFCache仍待；真实Auth、非空目录/完整聊天、整域SEO/性能、上游来源与G6继续。旧networkidle31/45失败及未证根因保持，公开SSR由Web提供、兼容路由保留Admin。 |\r",
+    "phaseAfter": "| P6 公开页与 SEO | 当前匿名功能验收通过，整域待验 | 历史5.94的f9 Web公开四语首页/models SSR、HEAD、robots/sitemap及完整158资产原字节覆盖已核；生产Chrome V4严格13/13，包括真正NoJS4、移动2、早期主入口/动态chunk输入4，零CSP/pageerror/取证错误（5.94）。c13 functional45/45与2e三页证据保留历史范围；5.95实际Chrome .98桌面双向BFCache恢复与36 body/20 unique assets独立复核通过，离线20次采集诊断不改变性能失败；5.96四语安全状态及source PublicShell24、真实compiled dist Windows/Linux各2通过；生产8SSR/6static/3HEAD/匿名401按primary契约offline验证通过，首轮HTTPactual1及current源码30s下载失败保留。 | 离页cookie/媒体变化、移动及恢复后输入/监听器等完整BFCache仍待；真实Auth、非空目录/完整聊天、整域SEO/性能、上游来源与G6继续。旧networkidle31/45失败及未证根因保持，公开SSR由Web提供、兼容路由保留Admin。 |\r",
+    "limits": [
+      "Only two stale current-state text pointers corrected",
+      "Original dated publication/evidence/history blocks, all checkboxes/states and source bytes remain unchanged",
+      "No change to actual deployed3494 or any QA/failed outcome"
+    ]
+  },
+  "actualV7Receipts": {
+    "scope": {
+      "startedAt": "2026-10-07T06:25:07.977Z",
+      "closedAt": "2026-10-07T06:25:08.507Z",
+      "executable": "C:/Program Files/nodejs/node.exe",
+      "args": [
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd/run-owned-audit.mjs",
+        "root-final-scope-596-v7"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExitCode": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\final-main-scope-596-v7.stdout.log",
+        "bytes": 1841,
+        "sha256": "eec221c011c9d4fb719b98c228f1cc1747db724e45012c59c9780a6bfde39927"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\final-main-scope-596-v7.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "publication": {
+      "startedAt": "2026-10-07T06:25:08.034Z",
+      "closedAt": "2026-10-07T06:25:08.320Z",
+      "executable": "C:/Program Files/nodejs/node.exe",
+      "args": [
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd/compare-81-publication-v2.mjs",
+        "root-final-publication-596-v7",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd/actual-publication-metadata-596-v1.json",
+        "C:/cinagroup/cinatoken/docs/developers/architecture/web-frontend-migration.md",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099/corrected-current-metadata-596.json"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExitCode": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\final-main-publication-596-v7.stdout.log",
+        "bytes": 1316,
+        "sha256": "61741575d90081649f8952d6ff1001dcaefd4b810b1db690666f688c4a1389f0"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\final-main-publication-596-v7.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "diffWhitespace": {
+      "startedAt": "2026-10-07T06:25:08.088Z",
+      "closedAt": "2026-10-07T06:25:08.175Z",
+      "executable": "C:/Program Files/Git/cmd/git.exe",
+      "args": [
+        "diff",
+        "--check",
+        "--",
+        "docs/developers/architecture/web-frontend-migration.md"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExitCode": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\final-md-diff-check-596-v7.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\final-md-diff-check-596-v7.stderr.log",
+        "bytes": 147,
+        "sha256": "1468a63fdf31df86704ecc5a8901c6c133bad6edcfa58be87d80d4dfa5da3964"
+      }
+    },
+    "scopeNested": {
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\audit-migration-scope.mjs",
+        "root-final-scope-596-v7"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "startedAt": "2026-10-07T06:25:08.049Z",
+      "endedAt": "2026-10-07T06:25:08.493Z",
+      "actualExitCode": 0,
+      "signal": null,
+      "error": null,
+      "streams": {
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-scope-596-v7.audit.stdout.log",
+          "bytes": 742,
+          "sha256": "3479a23314deabbc08fa99e76992d797badab75ebe723473cae31eca27863635"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-scope-596-v7.audit.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    }
+  },
+  "reports": {
+    "scope": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-scope-596-v7.report.json",
+    "publication": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-publication-596-v7.81-scope.report.json"
+  },
+  "counts": {
+    "rawCheckboxLines": 213,
+    "actual": {
+      "total": 211,
+      "done": 55,
+      "pending": 156
+    },
+    "main": {
+      "total": 102,
+      "done": 8,
+      "pending": 94
+    },
+    "matrix": 54,
+    "gates": 9,
+    "evidence": 9,
+    "phases": 9
+  },
+  "scopeRequireFinalFlag": false,
+  "scopeFinalChecksCount": 0,
+  "allScopeComparisonAndPublicationChecksTrue": true,
+  "fourRelativeLinkProofsSameAsPriorIndependentReview": true,
+  "earlierIndependentReview": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-physical-review-8d62bf186d8094e571837dc076e217eb\\final-checklist-publication-review-596.json",
+  "allInputsUnchanged": true,
+  "physicalInputs": [
+    {
+      "path": "C:\\cinagroup\\cinatoken\\docs\\developers\\architecture\\web-frontend-migration.md",
+      "bytes": 880195,
+      "sha256": "20cdbe51e5996505e4333b585f5138549e7444525573d6d5a32fa121b3cc2c0c",
+      "mtimeNs": 1791354038139352600
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-physical-review-8d62bf186d8094e571837dc076e217eb\\final-checklist-publication-review-596.json",
+      "bytes": 46143,
+      "sha256": "6c9ef10a21cdde4bede363b2d6ea6c3ff73e91a56d0d92f606e11dce1b318a15",
+      "mtimeNs": 1791354221208508000
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\compare-81-publication-v1.mjs",
+      "bytes": 9222,
+      "sha256": "99df79b9c9d08a3e9f5d8a9bc9c6885a24cb205db3bdaf2c9b852baa36557e0d",
+      "mtimeNs": 1791351018907428100
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\compare-81-publication-v2.mjs",
+      "bytes": 10799,
+      "sha256": "c13eaa0f3adc7037fefd4e4571d5c2016d01fd334e673fc181cc9f52f4d5bacd",
+      "mtimeNs": 1791354038138543400
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\corrected-current-metadata-596.json",
+      "bytes": 3463,
+      "sha256": "9a081e9e436f71a18f66cbce54ebab74d7e4b68e061399707efe58a067e26faf",
+      "mtimeNs": 1791354038142530400
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\final-main-scope-596-v7.result.json",
+      "bytes": 962,
+      "sha256": "0c0e34a7f39e1b5c03d4e1bb0c69909ae6e3d5af16f9e60dc8738bc59ac5fb6b",
+      "mtimeNs": 1791354308510345800
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\final-main-scope-596-v7.stdout.log",
+      "bytes": 1841,
+      "sha256": "eec221c011c9d4fb719b98c228f1cc1747db724e45012c59c9780a6bfde39927",
+      "mtimeNs": 1791354308496747400
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\final-main-scope-596-v7.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": 1791354307977430800
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\final-main-publication-596-v7.result.json",
+      "bytes": 1370,
+      "sha256": "f4f4847f7d391e4c8f472be4fa580a75a44756c3b4fe3756b878044e623655ac",
+      "mtimeNs": 1791354308323425400
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\final-main-publication-596-v7.stdout.log",
+      "bytes": 1316,
+      "sha256": "61741575d90081649f8952d6ff1001dcaefd4b810b1db690666f688c4a1389f0",
+      "mtimeNs": 1791354308307423100
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\final-main-publication-596-v7.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": 1791354308034170100
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\final-md-diff-check-596-v7.result.json",
+      "bytes": 899,
+      "sha256": "f3bb02d73a31517ca97eec6feed045f623feb9d0cc24287d5edc8fe0894f3cb4",
+      "mtimeNs": 1791354308177239800
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\final-md-diff-check-596-v7.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": 1791354308087198700
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\final-md-diff-check-596-v7.stderr.log",
+      "bytes": 147,
+      "sha256": "1468a63fdf31df86704ecc5a8901c6c133bad6edcfa58be87d80d4dfa5da3964",
+      "mtimeNs": 1791354308149111600
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-scope-596-v7.audit.result.json",
+      "bytes": 1048,
+      "sha256": "c0167638a023208b6005c50b6fc18563d4f55bda5f6916b5603bae249cd7007b",
+      "mtimeNs": 1791354308496747400
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-scope-596-v7.audit.stdout.log",
+      "bytes": 742,
+      "sha256": "3479a23314deabbc08fa99e76992d797badab75ebe723473cae31eca27863635",
+      "mtimeNs": 1791354308495037600
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-scope-596-v7.audit.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": 1791354308496747400
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-scope-596-v7.report.json",
+      "bytes": 258064,
+      "sha256": "163ed66dd22bd04a3ab96f48be90e353642ab0affed8b875f9c992e262ea746a",
+      "mtimeNs": 1791354308473315800
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-publication-596-v7.81-scope.report.json",
+      "bytes": 366567,
+      "sha256": "7b41eeb70a95f270390419988017a594cc4828cb7709cfe3fd9eb31bcb9bd2f2",
+      "mtimeNs": 1791354308304859700
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-scope-596-v7.working.md",
+      "bytes": 880195,
+      "sha256": "20cdbe51e5996505e4333b585f5138549e7444525573d6d5a32fa121b3cc2c0c",
+      "mtimeNs": 1791354308312999900
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-publication-596-v7.working.md",
+      "bytes": 880195,
+      "sha256": "20cdbe51e5996505e4333b585f5138549e7444525573d6d5a32fa121b3cc2c0c",
+      "mtimeNs": 1791354308111809600
+    }
+  ],
+  "limits": [
+    "This addendum binds new actual v7 receipts to current 880195-byte document, replacing no earlier immutable receipt.",
+    "No product, production HTTP, source, ZIP or historical acceptance checks were rerun; no network, browser, service or repository writes.",
+    "Original HTTP failures, partial current source archive download, absent real CinaAuth session/workspace/key acceptance and unchanged 102/211/54/full gates remain.",
+    "No later Git commit/push completion is inferred."
+  ]
+}

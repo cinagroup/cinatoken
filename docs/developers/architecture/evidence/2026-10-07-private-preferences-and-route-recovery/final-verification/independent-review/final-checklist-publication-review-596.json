@@ -1,0 +1,837 @@
+{
+  "kind": "Finite independent final checklist publication and installed archive review",
+  "recordedAt": "2026-10-07T06:23:41.206634+00:00",
+  "outcome": "NO_BLOCKING_FINDINGS_IN_REVIEWED_SCOPE",
+  "currentDocument": {
+    "path": "C:\\cinagroup\\cinatoken\\docs\\developers\\architecture\\web-frontend-migration.md",
+    "bytes": 880195,
+    "sha256": "20cdbe51e5996505e4333b585f5138549e7444525573d6d5a32fa121b3cc2c0c",
+    "mtimeNs": 1791354038139352600
+  },
+  "publicationMetadata": {
+    "status": "ACTUAL_PUBLISHED_METADATA",
+    "date": "2026-10-07",
+    "sourceCommit": "3494dca3fd14f8433ede2679fcb54916256a9113",
+    "versionId": "c5314d77-ba0d-4f7e-9b38-f8241e2d4424",
+    "deploymentId": "c7c90b4c-aa1e-4fbc-a0f5-0a988423a1a4",
+    "trafficPercent": 100,
+    "introductionLine": "**可行性结论：可行。** `packages/web` 已作为独立 `cinatoken-web` 部署，并接管生产主入口与公开SSR。当前3494版本为100%流量，新增账户/管理偏好存储拒绝容错及四语安全路由状态；本地、Linux CI、匿名偏好和受控路由/真实编译dist验证通过（5.96），本次生产相关只读验收仍按实际结果推进。Admin继续提供认证、用户/管理API、BFF与兼容旧路由。真实CinaAuth/已有专用工作区/密钥尚未验收，完整业务、数据库、双平台、取消与旧页退役继续按原门槛推进。",
+    "publicationLine": "当前发布（2026-10-07）：独立 `cinatoken-web` 源码 `3494dca3fd14f8433ede2679fcb54916256a9113`，version `c5314d77-ba0d-4f7e-9b38-f8241e2d4424`、deployment `c7c90b4c-aa1e-4fbc-a0f5-0a988423a1a4`、100%流量；同SHA Linux CI37573558229两job/37步骤全部success，2302输入与Git blob原字节一致。激活保留包168资产/35服务端文件/6源码包，Linux与Windows构建合同分别保存。真实上传/切流及发布后只读三Route、29true、完整33绑定名称/类型、服务/origins与预览关闭读回0，Admin/Proxy部署与34c742d1源码保持；相关生产HTTP/匿名账户结果与局限见5.96，不改历史30s/60s失败或完整门禁。下方2026-10-06原发布段按原字节保留为历史。",
+    "actualEvidence": [
+      {
+        "role": "actual-upload-receipt",
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\wrangler-upload-596.result.json",
+        "bytes": 1154,
+        "sha256": "4f69c319123b7cd6f097872fb6b516b3af925d44e253a371f5a0f402e3fcf79b",
+        "expectedActualExitCode": 0
+      },
+      {
+        "role": "actual-deploy-receipt",
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\wrangler-deploy-596.result.json",
+        "bytes": 1154,
+        "sha256": "c36c14950eddbc6b795191c223a9b46eedc36ebacb0846677011c04c1dbf5e9d",
+        "expectedActualExitCode": 0
+      },
+      {
+        "role": "post-publish-web-guard-receipt",
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\post-publish-596-live.result.json",
+        "bytes": 1038,
+        "sha256": "400a1353135238e48b17668d0052030c896c494e5e7557ceb1480adff7415558",
+        "expectedActualExitCode": 0
+      },
+      {
+        "role": "post-publish-web-bindings-receipt",
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\post-publish-web-bindings-596.result.json",
+        "bytes": 974,
+        "sha256": "f1a65a2a9c64775c39d0c639ef0d730bb6e8ff0276029fbafc628e1ed97a4727",
+        "expectedActualExitCode": 0
+      },
+      {
+        "role": "post-publish-linked-backends-receipt",
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\post-publish-linked-backends-596.result.json",
+        "bytes": 1024,
+        "sha256": "2487f10119b98ffc28c164924b5a787313bd8adbe976a171648aa01b87e01480",
+        "expectedActualExitCode": 0
+      },
+      {
+        "role": "post-publish-web-guard-json",
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\post-publish-596-live.deployment-guard.json",
+        "bytes": 3925,
+        "sha256": "bd49d86f354fb258237c67aea6ddfa9638a27c2a4383eca4d6cf60f4925a7772"
+      },
+      {
+        "role": "post-publish-web-bindings-json",
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\post-publish-web-bindings-596.web-bindings.json",
+        "bytes": 6422,
+        "sha256": "25b5438af532abecddaf29a9b6df082b6ed00ed74d6ab09840f8f63de87de901"
+      },
+      {
+        "role": "post-publish-linked-backends-json",
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\post-publish-linked-backends-596.linked-backends.json",
+        "bytes": 845,
+        "sha256": "afbcdf947fb70f8d86f0312e2842d7402918b36ab4e2de5c00101db93117820a"
+      }
+    ],
+    "semanticsValidated": {
+      "routes3": true,
+      "publicFlags29True": true,
+      "bindingNamesTypes33Exact": true,
+      "backendDeploymentsVersionsTagsExactUnchanged": true,
+      "workersDevPreviewFalse": true,
+      "secretsRecorded": false
+    },
+    "acceptanceBoundary": "Actual publication/configuration readback only. Related first HTTP failed and any offline correction or anonymous browser must remain separate exact records; no full Auth/workspace/keys/business/performance/BFCache/gate acceptance."
+  },
+  "earlierActualScope": {
+    "receipt": {
+      "startedAt": "2026-10-07T06:15:37.372Z",
+      "closedAt": "2026-10-07T06:15:37.900Z",
+      "executable": "C:/Program Files/nodejs/node.exe",
+      "args": [
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd/run-owned-audit.mjs",
+        "root-final-scope-596"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExitCode": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\final-main-scope-596.stdout.log",
+        "bytes": 1826,
+        "sha256": "0b87ab6d9db32dcc338747ac6165305bc007b2a4f61cfcafbc09060f7c3d3f2c"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\final-main-scope-596.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "nestedReceipt": {
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\audit-migration-scope.mjs",
+        "root-final-scope-596"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "startedAt": "2026-10-07T06:15:37.444Z",
+      "endedAt": "2026-10-07T06:15:37.887Z",
+      "actualExitCode": 0,
+      "signal": null,
+      "error": null,
+      "streams": {
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-scope-596.audit.stdout.log",
+          "bytes": 739,
+          "sha256": "f589d4f7134aa170f2a72edbf142172da19e3cd58f3408d6c08f23af18fc63b0"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-scope-596.audit.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    "requireFinalFlag": false,
+    "finalChecksCount": 0,
+    "counts": {
+      "rawCheckboxLines": 213,
+      "actual": {
+        "total": 211,
+        "done": 55,
+        "pending": 156
+      },
+      "main": {
+        "total": 102,
+        "done": 8,
+        "pending": 94
+      },
+      "matrix": 54,
+      "gates": 9,
+      "evidence": 9,
+      "phases": 9
+    },
+    "report": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-scope-596.report.json"
+  },
+  "earlierActualPublication": {
+    "receipt": {
+      "startedAt": "2026-10-07T06:15:37.372Z",
+      "closedAt": "2026-10-07T06:15:37.659Z",
+      "executable": "C:/Program Files/nodejs/node.exe",
+      "args": [
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd/compare-81-publication-v1.mjs",
+        "root-final-publication-596",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd/actual-publication-metadata-596-v1.json"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "actualExitCode": 0,
+      "signal": null,
+      "spawnError": null,
+      "stdout": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\final-main-publication-596.stdout.log",
+        "bytes": 1310,
+        "sha256": "25a80b917dd37d9dc0341552ec2fbf4b35b8612c25d5bf708933018405fa7fc8"
+      },
+      "stderr": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\final-main-publication-596.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "report": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-publication-596.81-scope.report.json",
+    "snapshot": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-publication-596.working.md",
+      "bytes": 880135,
+      "sha256": "063f2c6138ba3097d1f90b406773e15d2cd7143fcb3532cacdaed81915f90f7e"
+    }
+  },
+  "twoCurrentTenseClarifications": [
+    {
+      "operation": "replace",
+      "oldLines": [
+        71,
+        71
+      ],
+      "newLines": [
+        71,
+        71
+      ],
+      "before": [
+        "| P6 公开页与 SEO | 当前匿名功能验收通过，整域待验 | 当前f9 Web公开四语首页/models SSR、HEAD、robots/sitemap及完整158资产原字节覆盖已核；生产Chrome V4严格13/13，包括真正NoJS4、移动2、早期主入口/动态chunk输入4，零CSP/pageerror/取证错误（5.94）。c13 functional45/45与2e三页证据保留历史范围；5.95实际Chrome .98桌面双向BFCache恢复与36 body/20 unique assets独立复核通过，离线20次采集诊断不改变性能失败；5.96四语安全状态及source PublicShell24、真实compiled dist Windows/Linux各2通过；生产8SSR/6static/3HEAD/匿名401按primary契约offline验证通过，首轮HTTPactual1及current源码30s下载失败保留。 | 离页cookie/媒体变化、移动及恢复后输入/监听器等完整BFCache仍待；真实Auth、非空目录/完整聊天、整域SEO/性能、上游来源与G6继续。旧networkidle31/45失败及未证根因保持，公开SSR由Web提供、兼容路由保留Admin。 |\r\n"
+      ],
+      "after": [
+        "| P6 公开页与 SEO | 当前匿名功能验收通过，整域待验 | 历史5.94的f9 Web公开四语首页/models SSR、HEAD、robots/sitemap及完整158资产原字节覆盖已核；生产Chrome V4严格13/13，包括真正NoJS4、移动2、早期主入口/动态chunk输入4，零CSP/pageerror/取证错误（5.94）。c13 functional45/45与2e三页证据保留历史范围；5.95实际Chrome .98桌面双向BFCache恢复与36 body/20 unique assets独立复核通过，离线20次采集诊断不改变性能失败；5.96四语安全状态及source PublicShell24、真实compiled dist Windows/Linux各2通过；生产8SSR/6static/3HEAD/匿名401按primary契约offline验证通过，首轮HTTPactual1及current源码30s下载失败保留。 | 离页cookie/媒体变化、移动及恢复后输入/监听器等完整BFCache仍待；真实Auth、非空目录/完整聊天、整域SEO/性能、上游来源与G6继续。旧networkidle31/45失败及未证根因保持，公开SSR由Web提供、兼容路由保留Admin。 |\r\n"
+      ]
+    },
+    {
+      "operation": "replace",
+      "oldLines": [
+        75,
+        75
+      ],
+      "newLines": [
+        75,
+        75
+      ],
+      "before": [
+        "5.7 的 `index.7ff2962b93.js` 仅是历史冻结检查点。当前生产公开页面由5.94的f9独立Web SSR承载，账户/管理HTML选路已开启；`/dashboard`、`/gateway/*`等兼容路由仍回到Admin，旧页面尚未退役。\n"
+      ],
+      "after": [
+        "5.7 的 `index.7ff2962b93.js` 仅是历史冻结检查点。当前生产公开页面由5.96的3494独立Web SSR承载，账户/管理HTML选路已开启；`/dashboard`、`/gateway/*`等兼容路由仍回到Admin，旧页面尚未退役。5.94的f9发布记录按原字节保留为历史。\n"
+      ]
+    }
+  ],
+  "checkboxBytesUnchanged": true,
+  "fourRelativeLinks": [
+    {
+      "href": "evidence/2026-10-07-private-preferences-and-route-recovery/index.json",
+      "file": {
+        "path": "C:\\cinagroup\\cinatoken\\docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\index.json",
+        "bytes": 1687417,
+        "sha256": "f9c864bdffd67cc940c5dd87c82f8a7c7aeea614da2fdd08147ee2d23f93c13b",
+        "mtimeNs": 1791353709189314600
+      }
+    },
+    {
+      "href": "evidence/2026-10-07-private-preferences-and-route-recovery/raw-evidence.zip",
+      "file": {
+        "path": "C:\\cinagroup\\cinatoken\\docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\raw-evidence.zip",
+        "bytes": 20586523,
+        "sha256": "a74c859ce9772d2f00d460347de9d37983e6381f2252bbb7711bf8cd7c55f973",
+        "mtimeNs": 1791353709202706600
+      }
+    },
+    {
+      "href": "evidence/2026-10-07-private-preferences-and-route-recovery/gallery/zh-lazy-mobile-first-error.png",
+      "file": {
+        "path": "C:\\cinagroup\\cinatoken\\docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\gallery\\zh-lazy-mobile-first-error.png",
+        "bytes": 22468,
+        "sha256": "6d843a8989dce8326ce4eb0b2070b3c5e0d9e98bc5b64e99555c81519c74ab32",
+        "mtimeNs": 1791353709234238300
+      }
+    },
+    {
+      "href": "evidence/2026-10-07-private-preferences-and-route-recovery/gallery/linux-private-12-mobile.png",
+      "file": {
+        "path": "C:\\cinagroup\\cinatoken\\docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\gallery\\linux-private-12-mobile.png",
+        "bytes": 20381,
+        "sha256": "76868b060db2c4349920da93a36c9f03b7b8a23880d1098ea1d32812a7819f80",
+        "mtimeNs": 1791353709232608800
+      }
+    }
+  ],
+  "executedArchive": {
+    "actualCloseReceipt": {
+      "label": "archive-final-596-schema-v7",
+      "executable": "C:/Users/cina/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+      "args": [
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd/archive-596-v7.py",
+        "--manifest",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd/archive-ready-596.json",
+        "--out",
+        "C:/Users/cina/AppData/Local/Temp/cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd/archive-final-596-schema-v7"
+      ],
+      "cwd": "C:/cinagroup/cinatoken",
+      "startedAt": "2026-10-07T06:13:04.349Z",
+      "closedAt": "2026-10-07T06:13:58.258Z",
+      "actualExitCode": 0,
+      "signal": null,
+      "spawnError": null,
+      "streams": {
+        "stdout": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-final-596-schema-v7.stdout.log",
+          "bytes": 337,
+          "sha256": "a7fea911c2ccf51af91687958d82c5317a9b7f4c688be7edb8d7e9432c02ae48"
+        },
+        "stderr": {
+          "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-final-596-schema-v7.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    "producer": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-596-v7.py",
+      "bytes": 18252,
+      "sha256": "82a20acb8c444904074453616809f2ab6e0cf1a3eb782343e0ec930562c7ed3a",
+      "mtimeNs": 1791353494406450200
+    },
+    "verification": {
+      "allOriginalBytesEqualDecodedZip": true,
+      "allOriginalMtimeUnchanged": true,
+      "allPriorProofBytesMtimeUnchanged": true,
+      "crcErrors": 0
+    },
+    "uniqueMembers": 1156,
+    "physicalOriginals": 2238,
+    "priorProtectedInputs": 292,
+    "index": "C:\\cinagroup\\cinatoken\\docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\index.json",
+    "bundle": {
+      "path": "raw-evidence.zip",
+      "bytes": 20586523,
+      "sha256": "a74c859ce9772d2f00d460347de9d37983e6381f2252bbb7711bf8cd7c55f973"
+    },
+    "allCentralDirectoryNamesMatchIndex": true,
+    "fullCrcAuthority": "Previously executed archive.testzip() before receipt actual 0; all archive and producer physical bytes bound here."
+  },
+  "finalSourceBindings": [
+    {
+      "relative": "packages/web/src/cinatoken/i18n.ts",
+      "bytes": 8183,
+      "sha256": "318d9918afce86fcf61f2c7dcae6e929f13147745d46b6da8bb2b79addf40e06",
+      "member": "sha256/318d9918afce86fcf61f2c7dcae6e929f13147745d46b6da8bb2b79addf40e06",
+      "crc32": 74057144,
+      "selectedMemberDecodedCrcAndShaVerified": true,
+      "priorSourceReview": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-physical-review-8d62bf186d8094e571837dc076e217eb\\eleven-source-review.json"
+    },
+    {
+      "relative": "packages/web/src/cinatoken/preference-language-detector.ts",
+      "bytes": 1715,
+      "sha256": "7c49d262ed6d6a08b0816c87e6047c226fe409168590231af7a8b9abae060e36",
+      "member": "sha256/7c49d262ed6d6a08b0816c87e6047c226fe409168590231af7a8b9abae060e36",
+      "crc32": 1633306628,
+      "selectedMemberDecodedCrcAndShaVerified": true,
+      "priorSourceReview": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-physical-review-8d62bf186d8094e571837dc076e217eb\\eleven-source-review.json"
+    },
+    {
+      "relative": "packages/web/src/context/theme-provider.tsx",
+      "bytes": 4117,
+      "sha256": "633b439550be252869a1346a9c866d4c6ebde6c1403cf16086f00725609093d5",
+      "member": "sha256/633b439550be252869a1346a9c866d4c6ebde6c1403cf16086f00725609093d5",
+      "crc32": 3183259898,
+      "selectedMemberDecodedCrcAndShaVerified": true,
+      "priorSourceReview": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-physical-review-8d62bf186d8094e571837dc076e217eb\\eleven-source-review.json"
+    },
+    {
+      "relative": "packages/web/src/cinatoken/route-state.tsx",
+      "bytes": 2156,
+      "sha256": "6a68fa2f0b27ce23a8fcfc264c91941ada659678fcd6e09739eb77997b1a0ae8",
+      "member": "sha256/6a68fa2f0b27ce23a8fcfc264c91941ada659678fcd6e09739eb77997b1a0ae8",
+      "crc32": 1330146079,
+      "selectedMemberDecodedCrcAndShaVerified": true,
+      "priorSourceReview": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-physical-review-8d62bf186d8094e571837dc076e217eb\\eleven-source-review.json"
+    },
+    {
+      "relative": "packages/web/src/cinatoken/route-recovery.ts",
+      "bytes": 393,
+      "sha256": "f1bbc602094858780e8fa3eda04a998c7d7ab1f16d640e77fe0dcbeba1d50c8a",
+      "member": "sha256/f1bbc602094858780e8fa3eda04a998c7d7ab1f16d640e77fe0dcbeba1d50c8a",
+      "crc32": 780473149,
+      "selectedMemberDecodedCrcAndShaVerified": true,
+      "priorSourceReview": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-physical-review-8d62bf186d8094e571837dc076e217eb\\eleven-source-review.json"
+    },
+    {
+      "relative": "packages/web/src/cinatoken/public/ssr/public-router.tsx",
+      "bytes": 6123,
+      "sha256": "b3aa7ecf866dbe15d08e3e7c7a5829e9cba287677c9d12083b3c2f013c3108e9",
+      "member": "sha256/b3aa7ecf866dbe15d08e3e7c7a5829e9cba287677c9d12083b3c2f013c3108e9",
+      "crc32": 1651480934,
+      "selectedMemberDecodedCrcAndShaVerified": true,
+      "priorSourceReview": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-physical-review-8d62bf186d8094e571837dc076e217eb\\eleven-source-review.json"
+    },
+    {
+      "relative": "packages/web/src/cinatoken/router.tsx",
+      "bytes": 14189,
+      "sha256": "cfa7edb481d193af3228ab36af504c33cbca0ee6d864fb66198ee7b4f0be3fad",
+      "member": "sha256/cfa7edb481d193af3228ab36af504c33cbca0ee6d864fb66198ee7b4f0be3fad",
+      "crc32": 190174005,
+      "selectedMemberDecodedCrcAndShaVerified": true,
+      "priorSourceReview": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-physical-review-8d62bf186d8094e571837dc076e217eb\\eleven-source-review.json"
+    },
+    {
+      "relative": "packages/web/src/cinatoken/public/ssr/public-request-app.ts",
+      "bytes": 6707,
+      "sha256": "36cb52b93c99c8738a8d190a528816e26868b40ce133b9f460a3578f8e40e125",
+      "member": "sha256/36cb52b93c99c8738a8d190a528816e26868b40ce133b9f460a3578f8e40e125",
+      "crc32": 2270945449,
+      "selectedMemberDecodedCrcAndShaVerified": true,
+      "priorSourceReview": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-physical-review-8d62bf186d8094e571837dc076e217eb\\eleven-source-review.json"
+    },
+    {
+      "relative": "packages/web/src/cinatoken/shell-messages.ts",
+      "bytes": 10635,
+      "sha256": "ca9a3eea1d04a9a3ed7bbd71b7044d51d28ae69a137adef75c24767c7dcbded3",
+      "member": "sha256/ca9a3eea1d04a9a3ed7bbd71b7044d51d28ae69a137adef75c24767c7dcbded3",
+      "crc32": 3954081574,
+      "selectedMemberDecodedCrcAndShaVerified": true,
+      "priorSourceReview": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-physical-review-8d62bf186d8094e571837dc076e217eb\\eleven-source-review.json"
+    },
+    {
+      "relative": "packages/web/src/cinatoken/private-preferences.test.ts",
+      "bytes": 4746,
+      "sha256": "05825508585b07cdef9b3dc5f3d0a73b340829ad771a704bd07e273c1f3e5af5",
+      "member": "sha256/05825508585b07cdef9b3dc5f3d0a73b340829ad771a704bd07e273c1f3e5af5",
+      "crc32": 1486452334,
+      "selectedMemberDecodedCrcAndShaVerified": true,
+      "priorSourceReview": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-physical-review-8d62bf186d8094e571837dc076e217eb\\eleven-source-review.json"
+    },
+    {
+      "relative": "packages/web/src/cinatoken/route-state.test.ts",
+      "bytes": 8707,
+      "sha256": "f3b2979fb106ebb3449ee5a61a380ba8408b3579d6fad08e2ce06401c34d9b4c",
+      "member": "sha256/f3b2979fb106ebb3449ee5a61a380ba8408b3579d6fad08e2ce06401c34d9b4c",
+      "crc32": 1088464476,
+      "selectedMemberDecodedCrcAndShaVerified": true,
+      "priorSourceReview": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-physical-review-8d62bf186d8094e571837dc076e217eb\\eleven-source-review.json"
+    }
+  ],
+  "galleryBindings": [
+    {
+      "file": {
+        "path": "C:\\cinagroup\\cinatoken\\docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\gallery\\zh-lazy-mobile-first-error.png",
+        "bytes": 22468,
+        "sha256": "6d843a8989dce8326ce4eb0b2070b3c5e0d9e98bc5b64e99555c81519c74ab32",
+        "mtimeNs": 1791353709234238300
+      },
+      "dimensions": [
+        390,
+        844
+      ],
+      "archivedMember": "sha256/6d843a8989dce8326ce4eb0b2070b3c5e0d9e98bc5b64e99555c81519c74ab32",
+      "physicalOnlyNoNewVisualReview": true
+    },
+    {
+      "file": {
+        "path": "C:\\cinagroup\\cinatoken\\docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\gallery\\linux-private-12-mobile.png",
+        "bytes": 20381,
+        "sha256": "76868b060db2c4349920da93a36c9f03b7b8a23880d1098ea1d32812a7819f80",
+        "mtimeNs": 1791353709232608800
+      },
+      "dimensions": [
+        390,
+        844
+      ],
+      "archivedMember": "sha256/76868b060db2c4349920da93a36c9f03b7b8a23880d1098ea1d32812a7819f80",
+      "physicalOnlyNoNewVisualReview": true
+    }
+  ],
+  "priorProductionIndependentReview": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-physical-review-8d62bf186d8094e571837dc076e217eb\\production-596-deployment-and-offline-smoke-review.json",
+  "allReadInputsUnchanged": true,
+  "physicalInputs": [
+    {
+      "path": "C:\\cinagroup\\cinatoken\\docs\\developers\\architecture\\web-frontend-migration.md",
+      "bytes": 880195,
+      "sha256": "20cdbe51e5996505e4333b585f5138549e7444525573d6d5a32fa121b3cc2c0c",
+      "mtimeNs": 1791354038139352600
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\actual-publication-metadata.json",
+      "bytes": 4953,
+      "sha256": "c60dbd1059528b9082753555fdc6724e9007dd6760a4a677b66285f4d31ef115",
+      "mtimeNs": 1791353709225562300
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\wrangler-upload-596.result.json",
+      "bytes": 1154,
+      "sha256": "4f69c319123b7cd6f097872fb6b516b3af925d44e253a371f5a0f402e3fcf79b",
+      "mtimeNs": 1791351436239308400
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\wrangler-deploy-596.result.json",
+      "bytes": 1154,
+      "sha256": "c36c14950eddbc6b795191c223a9b46eedc36ebacb0846677011c04c1dbf5e9d",
+      "mtimeNs": 1791351464780694200
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\post-publish-596-live.result.json",
+      "bytes": 1038,
+      "sha256": "400a1353135238e48b17668d0052030c896c494e5e7557ceb1480adff7415558",
+      "mtimeNs": 1791351502927500400
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\post-publish-web-bindings-596.result.json",
+      "bytes": 974,
+      "sha256": "f1a65a2a9c64775c39d0c639ef0d730bb6e8ff0276029fbafc628e1ed97a4727",
+      "mtimeNs": 1791351496498543100
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\post-publish-linked-backends-596.result.json",
+      "bytes": 1024,
+      "sha256": "2487f10119b98ffc28c164924b5a787313bd8adbe976a171648aa01b87e01480",
+      "mtimeNs": 1791351503300557700
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\post-publish-596-live.deployment-guard.json",
+      "bytes": 3925,
+      "sha256": "bd49d86f354fb258237c67aea6ddfa9638a27c2a4383eca4d6cf60f4925a7772",
+      "mtimeNs": 1791351502911182100
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\post-publish-web-bindings-596.web-bindings.json",
+      "bytes": 6422,
+      "sha256": "25b5438af532abecddaf29a9b6df082b6ed00ed74d6ab09840f8f63de87de901",
+      "mtimeNs": 1791351496459062200
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\post-publish-linked-backends-596.linked-backends.json",
+      "bytes": 845,
+      "sha256": "afbcdf947fb70f8d86f0312e2842d7402918b36ab4e2de5c00101db93117820a",
+      "mtimeNs": 1791351503284644100
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-scope-596.report.json",
+      "bytes": 258054,
+      "sha256": "f1b4c83a4ffb3d2abdb1f3a420a48ae328460cd6f372b776df8c36a467b73cc8",
+      "mtimeNs": 1791353737865299400
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-publication-596.81-scope.report.json",
+      "bytes": 365589,
+      "sha256": "0285f9b57e3aa397faa54add2740faeaaf5b88612ec985f26bb0deff38ae3853",
+      "mtimeNs": 1791353737642229600
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\final-main-scope-596.result.json",
+      "bytes": 953,
+      "sha256": "ac3ebbc9076d2c46404fc9cd675245aa96dd2aeade8c18054285919be3491e74",
+      "mtimeNs": 1791353737903144600
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\final-main-scope-596.stdout.log",
+      "bytes": 1826,
+      "sha256": "0b87ab6d9db32dcc338747ac6165305bc007b2a4f61cfcafbc09060f7c3d3f2c",
+      "mtimeNs": 1791353737888490100
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\final-main-scope-596.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": 1791353737372696700
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\final-main-publication-596.result.json",
+      "bytes": 1137,
+      "sha256": "b4d77dd08681e4cf98c1cfad83bb919368c76eb9333ddcf01693b65150e11845",
+      "mtimeNs": 1791353737661631500
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\final-main-publication-596.stdout.log",
+      "bytes": 1310,
+      "sha256": "25a80b917dd37d9dc0341552ec2fbf4b35b8612c25d5bf708933018405fa7fc8",
+      "mtimeNs": 1791353737644281300
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\final-main-publication-596.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": 1791353737372696700
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-scope-596.audit.result.json",
+      "bytes": 1039,
+      "sha256": "9ae3386962de150c44cc02e08cdc1c7bae107150be73760d1b9bf489bcb7bdf3",
+      "mtimeNs": 1791353737888490100
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-scope-596.audit.stdout.log",
+      "bytes": 739,
+      "sha256": "f589d4f7134aa170f2a72edbf142172da19e3cd58f3408d6c08f23af18fc63b0",
+      "mtimeNs": 1791353737887447800
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-scope-596.audit.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": 1791353737888490100
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-scope-596.working.md",
+      "bytes": 880135,
+      "sha256": "063f2c6138ba3097d1f90b406773e15d2cd7143fcb3532cacdaed81915f90f7e",
+      "mtimeNs": 1791353737716406400
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\root-final-publication-596.working.md",
+      "bytes": 880135,
+      "sha256": "063f2c6138ba3097d1f90b406773e15d2cd7143fcb3532cacdaed81915f90f7e",
+      "mtimeNs": 1791353737450554800
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\index.json",
+      "bytes": 1687417,
+      "sha256": "f9c864bdffd67cc940c5dd87c82f8a7c7aeea614da2fdd08147ee2d23f93c13b",
+      "mtimeNs": 1791353709189314600
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\archive-verification.json",
+      "bytes": 83364,
+      "sha256": "501b54472251ca6a1699558f431c8c8b8e982fcbe25e39c9fe97bb898e8396b1",
+      "mtimeNs": 1791353709186251000
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\archive-process-closed.json",
+      "bytes": 1413,
+      "sha256": "e5061690ded9aee9b01b162f4b7c1780577e879dae1ffe87670ec250dee6dfb8",
+      "mtimeNs": 1791353709228336000
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-final-596-schema-v7.stdout.log",
+      "bytes": 337,
+      "sha256": "a7fea911c2ccf51af91687958d82c5317a9b7f4c688be7edb8d7e9432c02ae48",
+      "mtimeNs": 1791353638257198800
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-final-596-schema-v7.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": 1791353638257198800
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-596-v7.py",
+      "bytes": 18252,
+      "sha256": "82a20acb8c444904074453616809f2ab6e0cf1a3eb782343e0ec930562c7ed3a",
+      "mtimeNs": 1791353494406450200
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\archive-input-plan.json",
+      "bytes": 378570,
+      "sha256": "a1a977d575de5cad10fcca7262b1de16835bf4c84f34c9525380215d17ee26e2",
+      "mtimeNs": 1791353709183171600
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\selected-inputs-physical.json",
+      "bytes": 1067952,
+      "sha256": "5f98d5b097ff89023b09af644233f230eb2dd61aca7cac6ecea38cfaf3081c21",
+      "mtimeNs": 1791353709220624100
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\raw-evidence.zip",
+      "bytes": 20586523,
+      "sha256": "a74c859ce9772d2f00d460347de9d37983e6381f2252bbb7711bf8cd7c55f973",
+      "mtimeNs": 1791353709202706600
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\archive.stdout.log",
+      "bytes": 337,
+      "sha256": "a7fea911c2ccf51af91687958d82c5317a9b7f4c688be7edb8d7e9432c02ae48",
+      "mtimeNs": 1791353709230303900
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\archive.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtimeNs": 1791353709230303900
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-physical-review-8d62bf186d8094e571837dc076e217eb\\eleven-source-review.json",
+      "bytes": 13884,
+      "sha256": "e9cb68562d7989f9cbdebe8ad4352bfc4dabac82b7a4209ce205b7c1b3f0ab58",
+      "mtimeNs": 1791347563803999200
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\web\\src\\cinatoken\\i18n.ts",
+      "bytes": 8183,
+      "sha256": "318d9918afce86fcf61f2c7dcae6e929f13147745d46b6da8bb2b79addf40e06",
+      "mtimeNs": 1791346186157226900
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-input-plan-v2\\final-source-snapshot\\packages\\web\\src\\cinatoken\\i18n.ts",
+      "bytes": 8183,
+      "sha256": "318d9918afce86fcf61f2c7dcae6e929f13147745d46b6da8bb2b79addf40e06",
+      "mtimeNs": 1791347953699309800
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\web\\src\\cinatoken\\preference-language-detector.ts",
+      "bytes": 1715,
+      "sha256": "7c49d262ed6d6a08b0816c87e6047c226fe409168590231af7a8b9abae060e36",
+      "mtimeNs": 1791346187736420200
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-input-plan-v2\\final-source-snapshot\\packages\\web\\src\\cinatoken\\preference-language-detector.ts",
+      "bytes": 1715,
+      "sha256": "7c49d262ed6d6a08b0816c87e6047c226fe409168590231af7a8b9abae060e36",
+      "mtimeNs": 1791347953703501000
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\web\\src\\context\\theme-provider.tsx",
+      "bytes": 4117,
+      "sha256": "633b439550be252869a1346a9c866d4c6ebde6c1403cf16086f00725609093d5",
+      "mtimeNs": 1791345860065974200
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-input-plan-v2\\final-source-snapshot\\packages\\web\\src\\context\\theme-provider.tsx",
+      "bytes": 4117,
+      "sha256": "633b439550be252869a1346a9c866d4c6ebde6c1403cf16086f00725609093d5",
+      "mtimeNs": 1791347953707985100
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\web\\src\\cinatoken\\route-state.tsx",
+      "bytes": 2156,
+      "sha256": "6a68fa2f0b27ce23a8fcfc264c91941ada659678fcd6e09739eb77997b1a0ae8",
+      "mtimeNs": 1791345837075820800
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-input-plan-v2\\final-source-snapshot\\packages\\web\\src\\cinatoken\\route-state.tsx",
+      "bytes": 2156,
+      "sha256": "6a68fa2f0b27ce23a8fcfc264c91941ada659678fcd6e09739eb77997b1a0ae8",
+      "mtimeNs": 1791347953712357400
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\web\\src\\cinatoken\\route-recovery.ts",
+      "bytes": 393,
+      "sha256": "f1bbc602094858780e8fa3eda04a998c7d7ab1f16d640e77fe0dcbeba1d50c8a",
+      "mtimeNs": 1791345765938350800
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-input-plan-v2\\final-source-snapshot\\packages\\web\\src\\cinatoken\\route-recovery.ts",
+      "bytes": 393,
+      "sha256": "f1bbc602094858780e8fa3eda04a998c7d7ab1f16d640e77fe0dcbeba1d50c8a",
+      "mtimeNs": 1791347953715647200
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\web\\src\\cinatoken\\public\\ssr\\public-router.tsx",
+      "bytes": 6123,
+      "sha256": "b3aa7ecf866dbe15d08e3e7c7a5829e9cba287677c9d12083b3c2f013c3108e9",
+      "mtimeNs": 1791345766430879400
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-input-plan-v2\\final-source-snapshot\\packages\\web\\src\\cinatoken\\public\\ssr\\public-router.tsx",
+      "bytes": 6123,
+      "sha256": "b3aa7ecf866dbe15d08e3e7c7a5829e9cba287677c9d12083b3c2f013c3108e9",
+      "mtimeNs": 1791347953719458000
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\web\\src\\cinatoken\\router.tsx",
+      "bytes": 14189,
+      "sha256": "cfa7edb481d193af3228ab36af504c33cbca0ee6d864fb66198ee7b4f0be3fad",
+      "mtimeNs": 1791345766264889200
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-input-plan-v2\\final-source-snapshot\\packages\\web\\src\\cinatoken\\router.tsx",
+      "bytes": 14189,
+      "sha256": "cfa7edb481d193af3228ab36af504c33cbca0ee6d864fb66198ee7b4f0be3fad",
+      "mtimeNs": 1791347953722540500
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\web\\src\\cinatoken\\public\\ssr\\public-request-app.ts",
+      "bytes": 6707,
+      "sha256": "36cb52b93c99c8738a8d190a528816e26868b40ce133b9f460a3578f8e40e125",
+      "mtimeNs": 1791345766595341700
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-input-plan-v2\\final-source-snapshot\\packages\\web\\src\\cinatoken\\public\\ssr\\public-request-app.ts",
+      "bytes": 6707,
+      "sha256": "36cb52b93c99c8738a8d190a528816e26868b40ce133b9f460a3578f8e40e125",
+      "mtimeNs": 1791347953726860700
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\web\\src\\cinatoken\\shell-messages.ts",
+      "bytes": 10635,
+      "sha256": "ca9a3eea1d04a9a3ed7bbd71b7044d51d28ae69a137adef75c24767c7dcbded3",
+      "mtimeNs": 1791345766764143500
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-input-plan-v2\\final-source-snapshot\\packages\\web\\src\\cinatoken\\shell-messages.ts",
+      "bytes": 10635,
+      "sha256": "ca9a3eea1d04a9a3ed7bbd71b7044d51d28ae69a137adef75c24767c7dcbded3",
+      "mtimeNs": 1791347953730264100
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\web\\src\\cinatoken\\private-preferences.test.ts",
+      "bytes": 4746,
+      "sha256": "05825508585b07cdef9b3dc5f3d0a73b340829ad771a704bd07e273c1f3e5af5",
+      "mtimeNs": 1791346188778650400
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-input-plan-v2\\final-source-snapshot\\packages\\web\\src\\cinatoken\\private-preferences.test.ts",
+      "bytes": 4746,
+      "sha256": "05825508585b07cdef9b3dc5f3d0a73b340829ad771a704bd07e273c1f3e5af5",
+      "mtimeNs": 1791347953732877200
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\packages\\web\\src\\cinatoken\\route-state.test.ts",
+      "bytes": 8707,
+      "sha256": "f3b2979fb106ebb3449ee5a61a380ba8408b3579d6fad08e2ce06401c34d9b4c",
+      "mtimeNs": 1791346292422619000
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-input-plan-v2\\final-source-snapshot\\packages\\web\\src\\cinatoken\\route-state.test.ts",
+      "bytes": 8707,
+      "sha256": "f3b2979fb106ebb3449ee5a61a380ba8408b3579d6fad08e2ce06401c34d9b4c",
+      "mtimeNs": 1791347953735451900
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\gallery\\gallery-proof.json",
+      "bytes": 2028,
+      "sha256": "42b8d58d28494130c2b20fd83cdb338beddaaedaa64cd5f5cadab123d3d534a4",
+      "mtimeNs": 1791353709230303900
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\gallery\\zh-lazy-mobile-first-error.png",
+      "bytes": 22468,
+      "sha256": "6d843a8989dce8326ce4eb0b2070b3c5e0d9e98bc5b64e99555c81519c74ab32",
+      "mtimeNs": 1791353709234238300
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\attempt-v4\\results-v7\\screenshots\\zh-lazy-mobile-first-error.png",
+      "bytes": 22468,
+      "sha256": "6d843a8989dce8326ce4eb0b2070b3c5e0d9e98bc5b64e99555c81519c74ab32",
+      "mtimeNs": 1791349600430387400
+    },
+    {
+      "path": "C:\\cinagroup\\cinatoken\\docs\\developers\\architecture\\evidence\\2026-10-07-private-preferences-and-route-recovery\\gallery\\linux-private-12-mobile.png",
+      "bytes": 20381,
+      "sha256": "76868b060db2c4349920da93a36c9f03b7b8a23880d1098ea1d32812a7819f80",
+      "mtimeNs": 1791353709232608800
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-browser-v4-1456cc15241a70f0b232d5948df6532f\\after-linux-596-v4\\12-all-storage-denied-account-mobile.png",
+      "bytes": 20381,
+      "sha256": "76868b060db2c4349920da93a36c9f03b7b8a23880d1098ea1d32812a7819f80",
+      "mtimeNs": 1791349226870101700
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-physical-review-8d62bf186d8094e571837dc076e217eb\\production-596-deployment-and-offline-smoke-review.json",
+      "bytes": 151260,
+      "sha256": "1adfc88fa2b327dbf0de8ac9f92dde4b8d06df1af63acdd199f50a4017def0c0",
+      "mtimeNs": 1791351895414302500
+    }
+  ],
+  "limits": [
+    "Read-only finite documentation/archive physical review; no repository mutation, browser, service, network or completed product checks rerun.",
+    "Old final-main receipts actual 0 bind the 880135-byte snapshot only. This review separately verifies exactly two current tense clarifications and unchanged checkbox bytes in the 880195-byte current file.",
+    "Existing executed archive receipt and producer source bind full CRC 0 and byte round-trip; only final source11 and two gallery members are decoded here, without rerunning all historical audits.",
+    "Original production HTTP 13/19 actual 1 and current source archive 30-second partial download failure remain unchanged; primary offline 18/19 is a separate interpretation record.",
+    "Real CinaAuth session, existing dedicated workspace, key creation/revocation, full business/database/dual-platform/BFCache/performance, 14-day retention and full gates are not accepted by this review.",
+    "No future Git commit/push proof is claimed."
+  ]
+}

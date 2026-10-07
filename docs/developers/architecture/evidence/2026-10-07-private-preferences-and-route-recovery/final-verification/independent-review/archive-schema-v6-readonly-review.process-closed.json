@@ -1,0 +1,23 @@
+{
+  "label": "archive-schema-v6-readonly-review",
+  "executable": "C:\\Program Files\\nodejs\\node.exe",
+  "script": "C:/Users/cina/AppData/Local/Temp/cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9/real-dist-chunk-v1/archive-secret-review-596-v1/review-archive-schema-v6.mjs",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd"
+  ],
+  "startedAt": "2026-10-07T06:04:37.425Z",
+  "closedAt": "2026-10-07T06:04:37.512Z",
+  "actualExitCode": 1,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\archive-schema-v6-readonly-review.stdout.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\archive-schema-v6-readonly-review.stderr.log",
+    "bytes": 1241,
+    "sha256": "0e6586916cd4aed864a61c4db987bf2c94d68e1970ee1ddde7229866a454658b"
+  }
+}

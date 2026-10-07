@@ -1,0 +1,93 @@
+{
+  "status": "PASS_READONLY_MINIMAL_ARCHIVE_SCHEMA_V6_REVIEW",
+  "at": "2026-10-07T06:05:00.661Z",
+  "oldHelper": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-596-v5.py",
+    "bytes": 11976,
+    "sha256": "31ab9e2acf030b7ea04cb546c2574719219b4eb92392d0ebdfcf57b8c550bd22"
+  },
+  "newHelper": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-596-v6.py",
+    "bytes": 14520,
+    "sha256": "ec441791152f95705e336739314e8d6077a8562b5bca9feb42a798b8d5d84391"
+  },
+  "readyRecipe": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-ready-596.json",
+    "bytes": 378570,
+    "sha256": "a1a977d575de5cad10fcca7262b1de16835bf4c84f34c9525380215d17ee26e2"
+  },
+  "selectedInputs": 2238,
+  "originalActualStreamEntityAudit": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\archive-secret-review-596-v1\\original-stream-bindings-review-v1.json",
+    "bytes": 5574,
+    "sha256": "c7aaeb691f94800bd38dc4e1214a37f85e105e0c812a212dd7c0f82dd159981e"
+  },
+  "actualReceipts": 195,
+  "actualStreams": 390,
+  "legacyReceiptCount": 1,
+  "legacyStreamEntities": 2,
+  "legacy": [
+    {
+      "role": "root/pre-source-596-live-guard",
+      "stream": "stdout",
+      "physical": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\pre-source-596-live-guard.stdout.log",
+        "bytes": 2864,
+        "sha256": "7ad4c46e831128b9661a1dafc5b72ca4ba7b47d57c9606124da3e09a3fb66bc6"
+      }
+    },
+    {
+      "role": "root/pre-source-596-live-guard",
+      "stream": "stderr",
+      "physical": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\pre-source-596-live-guard.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "producers": [
+    {
+      "role": "private/preparation-v3/prepare",
+      "producer": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-browser-3d847b4a1aa74da796d9a8f4000eb20c\\prepare-closed.mjs",
+        "bytes": 1745,
+        "sha256": "5994fe1971e16935a71cc1c96da1132433dadc6b36272ae187420bb06b8be114"
+      },
+      "originalProducedNamesMatchExplicitFrozenRole": true
+    },
+    {
+      "role": "private/preparation-v3/prepare-v2",
+      "producer": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-browser-3d847b4a1aa74da796d9a8f4000eb20c\\prepare-v2-closed.mjs",
+        "bytes": 1757,
+        "sha256": "06c9a3f000b350c47bd668411bc9f107b9bf5959107c927d83556270f8dfd52e"
+      },
+      "originalProducedNamesMatchExplicitFrozenRole": true
+    },
+    {
+      "role": "private/preparation-v3/prepare-v3",
+      "producer": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-browser-3d847b4a1aa74da796d9a8f4000eb20c\\prepare-v3-closed.mjs",
+        "bytes": 1757,
+        "sha256": "fcaa8f9011b10541ba784114a9f6cf29056fed59846e0503ecc0b8a6e83ccde6"
+      },
+      "originalProducedNamesMatchExplicitFrozenRole": true
+    }
+  ],
+  "originalV5FailureReceipt": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-final-596-v5.process-closed.json",
+    "bytes": 1382,
+    "sha256": "9169ade774aebcae9ecd57dc5207b4b82eb5b45da806cea78bedd21b0d00461e"
+  },
+  "originalV5FailurePreserved": true,
+  "compatibleOmittedPathOnlyRoles": 3,
+  "omittedPathStreamCount": 6,
+  "allOriginalEntityBytesShaStillRequired": true,
+  "frozenAliasAndProducerBytesShaMtimeRequired": true,
+  "otherUnknownPathlessSchemasRejected": true,
+  "originalPathDeclarationNeverInvented": true,
+  "sourceSelectionZipProtectedChecksUnchanged": true,
+  "archiveExecutedByThisReview": false,
+  "scope": "Only immutable v5→v6 compatibility diff and original receipt/stream/producer entity mapping; no source/browser/network/production changes."
+}

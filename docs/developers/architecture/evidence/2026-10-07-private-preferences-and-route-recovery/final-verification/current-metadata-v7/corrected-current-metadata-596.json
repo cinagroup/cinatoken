@@ -1,0 +1,24 @@
+{
+  "kind": "EXACT_CURRENT_METADATA_CORRECTION_596",
+  "at": "2026-10-07T06:20:38.139Z",
+  "sourceCommit": "3494dca3fd14f8433ede2679fcb54916256a9113",
+  "versionId": "c5314d77-ba0d-4f7e-9b38-f8241e2d4424",
+  "documentBefore": {
+    "bytes": 880135,
+    "sha256": "063f2c6138ba3097d1f90b406773e15d2cd7143fcb3532cacdaed81915f90f7e"
+  },
+  "documentAfter": {
+    "path": "C:/cinagroup/cinatoken/docs/developers/architecture/web-frontend-migration.md",
+    "bytes": 880195,
+    "sha256": "20cdbe51e5996505e4333b585f5138549e7444525573d6d5a32fa121b3cc2c0c"
+  },
+  "statusBefore": "5.7 的 `index.7ff2962b93.js` 仅是历史冻结检查点。当前生产公开页面由5.94的f9独立Web SSR承载，账户/管理HTML选路已开启；`/dashboard`、`/gateway/*`等兼容路由仍回到Admin，旧页面尚未退役。",
+  "statusAfter": "5.7 的 `index.7ff2962b93.js` 仅是历史冻结检查点。当前生产公开页面由5.96的3494独立Web SSR承载，账户/管理HTML选路已开启；`/dashboard`、`/gateway/*`等兼容路由仍回到Admin，旧页面尚未退役。5.94的f9发布记录按原字节保留为历史。",
+  "phaseBefore": "| P6 公开页与 SEO | 当前匿名功能验收通过，整域待验 | 当前f9 Web公开四语首页/models SSR、HEAD、robots/sitemap及完整158资产原字节覆盖已核；生产Chrome V4严格13/13，包括真正NoJS4、移动2、早期主入口/动态chunk输入4，零CSP/pageerror/取证错误（5.94）。c13 functional45/45与2e三页证据保留历史范围；5.95实际Chrome .98桌面双向BFCache恢复与36 body/20 unique assets独立复核通过，离线20次采集诊断不改变性能失败；5.96四语安全状态及source PublicShell24、真实compiled dist Windows/Linux各2通过；生产8SSR/6static/3HEAD/匿名401按primary契约offline验证通过，首轮HTTPactual1及current源码30s下载失败保留。 | 离页cookie/媒体变化、移动及恢复后输入/监听器等完整BFCache仍待；真实Auth、非空目录/完整聊天、整域SEO/性能、上游来源与G6继续。旧networkidle31/45失败及未证根因保持，公开SSR由Web提供、兼容路由保留Admin。 |\r",
+  "phaseAfter": "| P6 公开页与 SEO | 当前匿名功能验收通过，整域待验 | 历史5.94的f9 Web公开四语首页/models SSR、HEAD、robots/sitemap及完整158资产原字节覆盖已核；生产Chrome V4严格13/13，包括真正NoJS4、移动2、早期主入口/动态chunk输入4，零CSP/pageerror/取证错误（5.94）。c13 functional45/45与2e三页证据保留历史范围；5.95实际Chrome .98桌面双向BFCache恢复与36 body/20 unique assets独立复核通过，离线20次采集诊断不改变性能失败；5.96四语安全状态及source PublicShell24、真实compiled dist Windows/Linux各2通过；生产8SSR/6static/3HEAD/匿名401按primary契约offline验证通过，首轮HTTPactual1及current源码30s下载失败保留。 | 离页cookie/媒体变化、移动及恢复后输入/监听器等完整BFCache仍待；真实Auth、非空目录/完整聊天、整域SEO/性能、上游来源与G6继续。旧networkidle31/45失败及未证根因保持，公开SSR由Web提供、兼容路由保留Admin。 |\r",
+  "limits": [
+    "Only two stale current-state text pointers corrected",
+    "Original dated publication/evidence/history blocks, all checkboxes/states and source bytes remain unchanged",
+    "No change to actual deployed3494 or any QA/failed outcome"
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "status": "PASS_READONLY_V7_DIFF_PLUS_COMPLETE_PREZIP_CLOSURE",
+  "at": "2026-10-07T06:12:45.071Z",
+  "v6Helper": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-596-v6.py",
+    "bytes": 14520,
+    "sha256": "ec441791152f95705e336739314e8d6077a8562b5bca9feb42a798b8d5d84391"
+  },
+  "v7Helper": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-596-v7.py",
+    "bytes": 18252,
+    "sha256": "82a20acb8c444904074453616809f2ab6e0cf1a3eb782343e0ec930562c7ed3a"
+  },
+  "recipe": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-ready-596.json",
+    "bytes": 378570,
+    "sha256": "a1a977d575de5cad10fcca7262b1de16835bf4c84f34c9525380215d17ee26e2"
+  },
+  "fullPrezipOriginalHelper": {
+    "report": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-v6-full-prezip-readonly.json",
+      "bytes": 1789,
+      "sha256": "921adf0179b96f6827110c9c363567e4a4398a4565ccb954a1ddfd769859fe43"
+    },
+    "actualReceipt": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-v6-full-prezip-readonly.process-closed.json",
+      "bytes": 1131,
+      "sha256": "620501a68568245670ea78c764758e5d90ccc6388116ebc654bd4b70639219bc"
+    },
+    "actualExitCode": 0,
+    "inputs": 2238,
+    "protectedInputs": 292,
+    "actualReceipts": 195,
+    "streamEntities": 390,
+    "legacyReceipts": 1,
+    "finalSources": 11,
+    "onlyMissingFields": 5
+  },
+  "all22DirectoryOwnerBindings": {
+    "report": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\archive-secret-review-596-v1\\all22-dir-owner-output-bindings-v2.json",
+      "bytes": 38543,
+      "sha256": "f6cc2a769ef3f2fdea3b82d55be970ffae6a2a1371e33b971a15ae4ba778d9e3"
+    },
+    "actualReceipt": {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\archive-all22-dir-owner-bindings-v2.process-closed.json",
+      "bytes": 1187,
+      "sha256": "ebcd09d68888034aaecc4954bba9410f259d97bbf4fd2e1c58019855f4b5202b"
+    },
+    "actualExitCode": 0,
+    "directories": 22,
+    "roleGuesses": 0,
+    "sourceArgsPreparedAndOutputPathsExact": true
+  },
+  "newHelperOnlyFiveLegacyOwnerMappings": true,
+  "unknownMissingOwnerStillRejected": true,
+  "old17OwnerChecksPreserved": true,
+  "originalNoOwnerDeclarationNotInvented": true,
+  "originalFailureReceipts": [
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-final-596-v5.process-closed.json",
+      "bytes": 1382,
+      "sha256": "9169ade774aebcae9ecd57dc5207b4b82eb5b45da806cea78bedd21b0d00461e"
+    },
+    {
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\archive-final-596-schema-v6.process-closed.json",
+      "bytes": 1413,
+      "sha256": "639f77d1f26e71786c02604bc162fdf72d64ec24f0dc66afb278381e602a3b40"
+    }
+  ],
+  "sourceSelectionZipProtectedChecksUnchanged": true,
+  "noRemainingPreZipShapeDifference": true,
+  "archiveNotExecutedByThisReview": true,
+  "limits": "This closes read-only immutable archive compatibility review, not the archive run or any source/QA/CI/production/Auth/performance acceptance."
+}

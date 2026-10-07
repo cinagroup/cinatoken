@@ -1,0 +1,44 @@
+{
+  "purpose": "Read-only exact archive-v6 PRE-ZIP assertions; missing original owner fields collected once, not waived for execution",
+  "helperSha256": "ec441791152f95705e336739314e8d6077a8562b5bca9feb42a798b8d5d84391",
+  "readySha256": "a1a977d575de5cad10fcca7262b1de16835bf4c84f34c9525380215d17ee26e2",
+  "missingOwnerDirs": [
+    {
+      "alias": "private/raw/before-f9-v3",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-browser-3d847b4a1aa74da796d9a8f4000eb20c\\before-f9-v3",
+      "selectedFiles": 69
+    },
+    {
+      "alias": "private/raw/after-built-v3",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-browser-3d847b4a1aa74da796d9a8f4000eb20c\\after-built-v3",
+      "selectedFiles": 69
+    },
+    {
+      "alias": "private/raw/before-f9-v4",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-browser-v4-1456cc15241a70f0b232d5948df6532f\\before-f9-v4",
+      "selectedFiles": 69
+    },
+    {
+      "alias": "private/raw/after-built-v4",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-browser-v4-1456cc15241a70f0b232d5948df6532f\\after-built-v4",
+      "selectedFiles": 69
+    },
+    {
+      "alias": "route/v1-raw",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\attempt-v4\\results-v1",
+      "selectedFiles": 9
+    }
+  ],
+  "evidenceDirs": 22,
+  "actualReceipts": 195,
+  "receiptStreams": 390,
+  "legacyProofReceipts": 1,
+  "finalSources": 11,
+  "physicalFiles": 2238,
+  "uniquePayloads": 1156,
+  "rawBytes": 152011513,
+  "protectedInputs": 292,
+  "exactFrozenAliasAndPathSet": true,
+  "allPhysicalBytesShaMtime": true,
+  "noArchiveOrMkdirPerformed": true
+}

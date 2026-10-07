@@ -1,0 +1,74 @@
+{
+  "status": "ACTUAL_PUBLISHED_METADATA",
+  "date": "2026-10-07",
+  "sourceCommit": "3494dca3fd14f8433ede2679fcb54916256a9113",
+  "versionId": "c5314d77-ba0d-4f7e-9b38-f8241e2d4424",
+  "deploymentId": "c7c90b4c-aa1e-4fbc-a0f5-0a988423a1a4",
+  "trafficPercent": 100,
+  "introductionLine": "**可行性结论：可行。** `packages/web` 已作为独立 `cinatoken-web` 部署，并接管生产主入口与公开SSR。当前3494版本为100%流量，新增账户/管理偏好存储拒绝容错及四语安全路由状态；本地、Linux CI、匿名偏好和受控路由/真实编译dist验证通过（5.96），本次生产相关只读验收仍按实际结果推进。Admin继续提供认证、用户/管理API、BFF与兼容旧路由。真实CinaAuth/已有专用工作区/密钥尚未验收，完整业务、数据库、双平台、取消与旧页退役继续按原门槛推进。",
+  "publicationLine": "当前发布（2026-10-07）：独立 `cinatoken-web` 源码 `3494dca3fd14f8433ede2679fcb54916256a9113`，version `c5314d77-ba0d-4f7e-9b38-f8241e2d4424`、deployment `c7c90b4c-aa1e-4fbc-a0f5-0a988423a1a4`、100%流量；同SHA Linux CI37573558229两job/37步骤全部success，2302输入与Git blob原字节一致。激活保留包168资产/35服务端文件/6源码包，Linux与Windows构建合同分别保存。真实上传/切流及发布后只读三Route、29true、完整33绑定名称/类型、服务/origins与预览关闭读回0，Admin/Proxy部署与34c742d1源码保持；相关生产HTTP/匿名账户结果与局限见5.96，不改历史30s/60s失败或完整门禁。下方2026-10-06原发布段按原字节保留为历史。",
+  "actualEvidence": [
+    {
+      "role": "actual-upload-receipt",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\wrangler-upload-596.result.json",
+      "bytes": 1154,
+      "sha256": "4f69c319123b7cd6f097872fb6b516b3af925d44e253a371f5a0f402e3fcf79b",
+      "expectedActualExitCode": 0
+    },
+    {
+      "role": "actual-deploy-receipt",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\wrangler-deploy-596.result.json",
+      "bytes": 1154,
+      "sha256": "c36c14950eddbc6b795191c223a9b46eedc36ebacb0846677011c04c1dbf5e9d",
+      "expectedActualExitCode": 0
+    },
+    {
+      "role": "post-publish-web-guard-receipt",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\post-publish-596-live.result.json",
+      "bytes": 1038,
+      "sha256": "400a1353135238e48b17668d0052030c896c494e5e7557ceb1480adff7415558",
+      "expectedActualExitCode": 0
+    },
+    {
+      "role": "post-publish-web-bindings-receipt",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\post-publish-web-bindings-596.result.json",
+      "bytes": 974,
+      "sha256": "f1a65a2a9c64775c39d0c639ef0d730bb6e8ff0276029fbafc628e1ed97a4727",
+      "expectedActualExitCode": 0
+    },
+    {
+      "role": "post-publish-linked-backends-receipt",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\post-publish-linked-backends-596.result.json",
+      "bytes": 1024,
+      "sha256": "2487f10119b98ffc28c164924b5a787313bd8adbe976a171648aa01b87e01480",
+      "expectedActualExitCode": 0
+    },
+    {
+      "role": "post-publish-web-guard-json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\post-publish-596-live.deployment-guard.json",
+      "bytes": 3925,
+      "sha256": "bd49d86f354fb258237c67aea6ddfa9638a27c2a4383eca4d6cf60f4925a7772"
+    },
+    {
+      "role": "post-publish-web-bindings-json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\post-publish-web-bindings-596.web-bindings.json",
+      "bytes": 6422,
+      "sha256": "25b5438af532abecddaf29a9b6df082b6ed00ed74d6ab09840f8f63de87de901"
+    },
+    {
+      "role": "post-publish-linked-backends-json",
+      "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-38ed4ea0f0a742aca3705cba2813a099\\post-publish-linked-backends-596.linked-backends.json",
+      "bytes": 845,
+      "sha256": "afbcdf947fb70f8d86f0312e2842d7402918b36ab4e2de5c00101db93117820a"
+    }
+  ],
+  "semanticsValidated": {
+    "routes3": true,
+    "publicFlags29True": true,
+    "bindingNamesTypes33Exact": true,
+    "backendDeploymentsVersionsTagsExactUnchanged": true,
+    "workersDevPreviewFalse": true,
+    "secretsRecorded": false
+  },
+  "acceptanceBoundary": "Actual publication/configuration readback only. Related first HTTP failed and any offline correction or anonymous browser must remain separate exact records; no full Auth/workspace/keys/business/performance/BFCache/gate acceptance."
+}

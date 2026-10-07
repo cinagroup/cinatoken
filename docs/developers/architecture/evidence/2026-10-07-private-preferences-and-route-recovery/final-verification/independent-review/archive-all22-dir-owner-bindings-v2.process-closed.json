@@ -1,0 +1,23 @@
+{
+  "label": "archive-all22-dir-owner-bindings-v2",
+  "executable": "C:\\Program Files\\nodejs\\node.exe",
+  "script": "C:/Users/cina/AppData/Local/Temp/cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9/real-dist-chunk-v1/archive-secret-review-596-v1/audit-all-dir-owner-bindings-v2.mjs",
+  "args": [
+    "C:/Users/cina/AppData/Local/Temp/cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd"
+  ],
+  "startedAt": "2026-10-07T06:11:13.987Z",
+  "closedAt": "2026-10-07T06:11:19.439Z",
+  "actualExitCode": 0,
+  "signal": null,
+  "spawnError": null,
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\archive-all22-dir-owner-bindings-v2.stdout.log",
+    "bytes": 731,
+    "sha256": "883dd4e091233589bef8bd4fc077fa99f16c76f0e5341c17aefb930980bb2d53"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\real-dist-chunk-v1\\archive-all22-dir-owner-bindings-v2.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

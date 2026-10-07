@@ -1,0 +1,28 @@
+{
+  "startedAt": "2026-10-07T06:26:36.393Z",
+  "closedAt": "2026-10-07T06:26:36.740Z",
+  "executable": "C:/Users/cina/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+  "args": [
+    "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-physical-review-8d62bf186d8094e571837dc076e217eb\\record-final-checklist-publication-v7-addendum.py",
+    "final-checklist-publication-v7-addendum"
+  ],
+  "actualExitCode": 0,
+  "signal": null,
+  "spawnError": null,
+  "scope": "Physical local evidence audit only, no browser/server/network",
+  "script": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-physical-review-8d62bf186d8094e571837dc076e217eb\\record-final-checklist-publication-v7-addendum.py",
+    "bytes": 8264,
+    "sha256": "0a0a39836940cabc5fa4087c62abdc561c9775110b30d06b3265ac3e890e0a45"
+  },
+  "stdout": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-physical-review-8d62bf186d8094e571837dc076e217eb\\final-checklist-publication-v7-addendum.stdout.log",
+    "bytes": 636,
+    "sha256": "c5d7594c9b4c2c735bd00086a32280002924d37ccdf35ed0bd3728144c6e96b4"
+  },
+  "stderr": {
+    "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-physical-review-8d62bf186d8094e571837dc076e217eb\\final-checklist-publication-v7-addendum.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

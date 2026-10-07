@@ -1,0 +1,44 @@
+{
+  "at": "2026-10-07T05:14:59.311Z",
+  "scope": "Two requested immutable byte-identical Temp copies for parent final gallery; no repository writes and no new visual review claim",
+  "images": [
+    {
+      "alias": "gallery/zh-lazy-mobile-first-error.png",
+      "source": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-route-state-browser-a2a330f399d44a19b86afb6934937dc9\\attempt-v4\\results-v7\\screenshots\\zh-lazy-mobile-first-error.png",
+        "bytes": 22468,
+        "sha256": "6d843a8989dce8326ce4eb0b2070b3c5e0d9e98bc5b64e99555c81519c74ab32",
+        "mtimeNs": "1791349600430387400"
+      },
+      "copied": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\gallery-snapshots-596-v1\\zh-lazy-mobile-first-error.png",
+        "bytes": 22468,
+        "sha256": "6d843a8989dce8326ce4eb0b2070b3c5e0d9e98bc5b64e99555c81519c74ab32",
+        "mtimeNs": "1791350099307993800"
+      },
+      "width": 390,
+      "height": 844,
+      "originalUnchanged": true,
+      "identicalCopyBytes": true
+    },
+    {
+      "alias": "gallery/linux-private-12-mobile.png",
+      "source": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-browser-v4-1456cc15241a70f0b232d5948df6532f\\after-linux-596-v4\\12-all-storage-denied-account-mobile.png",
+        "bytes": 20381,
+        "sha256": "76868b060db2c4349920da93a36c9f03b7b8a23880d1098ea1d32812a7819f80",
+        "mtimeNs": "1791349226870101700"
+      },
+      "copied": {
+        "path": "C:\\Users\\cina\\AppData\\Local\\Temp\\cinatoken-private-preferences-md-596-scope-205e5c1e2d444a7c8a8fa1de33de32bd\\gallery-snapshots-596-v1\\linux-private-12-mobile.png",
+        "bytes": 20381,
+        "sha256": "76868b060db2c4349920da93a36c9f03b7b8a23880d1098ea1d32812a7819f80",
+        "mtimeNs": "1791350099310355300"
+      },
+      "width": 390,
+      "height": 844,
+      "originalUnchanged": true,
+      "identicalCopyBytes": true
+    }
+  ]
+}
