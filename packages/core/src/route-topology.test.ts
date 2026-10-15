@@ -7,6 +7,7 @@ import {
 	isDashScopeRealtimeAsrModelOperationCompatible,
 	isRouteAdapterCompatible,
 	isRequestOperationForProtocol,
+	isUpstreamOperationForProtocol,
 	normalizeRouteOperation,
 	requestOperationAliasRank,
 } from './route-topology';
@@ -27,6 +28,15 @@ describe('route topology operations', () => {
 			isRequestOperationForProtocol('dashscope', 'audio.transcriptions.async'),
 			true
 		);
+		assert.equal(isRequestOperationForProtocol('minimax', 'audio.transcriptions'), true);
+		assert.equal(isRequestOperationForProtocol('minimax', 'audio.speech'), true);
+		assert.equal(isRequestOperationForProtocol('minimax', 'images.generations'), true);
+		assert.equal(isUpstreamOperationForProtocol('minimax', 'audio.transcriptions'), true);
+		assert.equal(isUpstreamOperationForProtocol('minimax', 'audio.speech'), true);
+		assert.equal(isUpstreamOperationForProtocol('minimax', 'chat'), false);
+		assert.equal(isRequestOperationForProtocol('volcengine', 'images.generations'), true);
+		assert.equal(isUpstreamOperationForProtocol('volcengine', 'images.generations'), true);
+		assert.equal(isRequestOperationForProtocol('volcengine', 'chat'), false);
 	});
 
 	it('canonicalizes legacy Gemini operations to models.generate', () => {
@@ -58,6 +68,14 @@ describe('route topology operations', () => {
 		assert.equal(normalizeRouteOperation(undefined), '*');
 		assert.equal(isRequestOperationForProtocol('openai', '*'), true);
 		assert.equal(effectiveUpstreamOperation('*', 'images.generations'), 'images.generations');
+		assert.equal(
+			effectiveUpstreamOperation('*', 'images.generations', 'dashscope-image-wan'),
+			'images.generations.multimodal',
+		);
+		assert.equal(
+			effectiveUpstreamOperation('*', 'chat', 'passthrough'),
+			'chat',
+		);
 		assert.equal(effectiveUpstreamOperation('chat', 'responses'), 'chat');
 	});
 
@@ -162,6 +180,28 @@ describe('route adapters', () => {
 					requestOperation: 'audio.speech',
 					upstreamProtocol: 'dashscope',
 					upstreamOperation: 'audio.speech.multimodal',
+				}),
+				true
+			);
+		}
+		for (const adapter of ['dashscope-image-qwen', 'dashscope-image-wan']) {
+			assert.equal(
+				isRouteAdapterCompatible({
+					adapter,
+					requestProtocol: 'openai',
+					requestOperation: 'images.generations',
+					upstreamProtocol: 'dashscope',
+					upstreamOperation: 'images.generations.multimodal',
+				}),
+				true
+			);
+			assert.equal(
+				isRouteAdapterCompatible({
+					adapter,
+					requestProtocol: 'openai',
+					requestOperation: 'images.generations',
+					upstreamProtocol: 'dashscope',
+					upstreamOperation: '*',
 				}),
 				true
 			);

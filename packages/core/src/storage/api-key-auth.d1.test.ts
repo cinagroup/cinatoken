@@ -150,6 +150,7 @@ function setupDatabase(userStatus: 'active' | 'disabled'): DatabaseSync {
 			'2026-08-29T00:00:00.000Z',
 			'2026-08-29T00:00:00.000Z',
 		);
+	database.exec('ALTER TABLE users ADD COLUMN wallet_granted REAL NOT NULL DEFAULT 0; ALTER TABLE users ADD COLUMN wallet_spent REAL NOT NULL DEFAULT 0; ALTER TABLE users ADD COLUMN rate_limit TEXT; ALTER TABLE api_keys ADD COLUMN rate_limit TEXT;');
 	return database;
 }
 

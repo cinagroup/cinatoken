@@ -2,8 +2,9 @@
  * Build Proxy-facing requests from the browser: URL, headers, and JSON body per protocol
  * (including OpenAI/Anthropic `model` field) or Agent Tools (`/v1/tools/*`).
  */
-import { applyGeminiStreamQueryParams } from "@octafuse/core/gemini-upstream-url";
-import type { ImageOperation } from "@/lib/image-generations";
+import { applyGeminiStreamQueryParams } from '@octafuse/core/gemini-upstream-url';
+import { requestSurfacePath } from '@octafuse/core/adapters/registry';
+import { openaiEditImageFormField, type ImageOperation } from '@/lib/image-generations';
 import {
 	parseGatewayToolId,
 	proxyToolPath,
@@ -13,7 +14,7 @@ import {
 	type InvokeKind,
 	type OpenaiLlmOperation,
 	type SimulatorProtocol,
-} from "@/lib/invoke-kind";
+} from '@/lib/invoke-kind';
 
 export type { SimulatorProtocol };
 export type SimulatorGeminiAction = GeminiContentAction;
@@ -81,55 +82,46 @@ export function buildSimulatorDashScopeRealtimeUrl(input: {
 }): string {
 	const base = stripTrailingSlash(input.baseUrl.trim());
 	const url = new URL(`${base}/v1/dashscope/realtime`);
-	if (url.protocol === "http:") url.protocol = "ws:";
-	if (url.protocol === "https:") url.protocol = "wss:";
-	url.searchParams.set("model", input.modelForRouting);
-	url.searchParams.set("operation", input.operation);
+	if (url.protocol === 'http:') url.protocol = 'ws:';
+	if (url.protocol === 'https:') url.protocol = 'wss:';
+	url.searchParams.set('model', input.modelForRouting);
+	url.searchParams.set('operation', input.operation);
 	return url.toString();
 }
 
 function stripTrailingSlash(u: string): string {
-	return u.replace(/\/$/, "");
+	return u.replace(/\/$/, '');
 }
 
 function bearerHeader(apiKey: string): string {
 	const t = apiKey.trim();
-	if (t.toLowerCase().startsWith("bearer ")) return t;
+	if (t.toLowerCase().startsWith('bearer ')) return t;
 	return `Bearer ${t}`;
 }
 
-function resolveImageOperation(
-	input: BuildSimulatorRequestInput
-): ImageOperation | null {
-	if (
-		input.imageOperation === "generations" ||
-		input.imageOperation === "edits"
-	) {
+function resolveImageOperation(input: BuildSimulatorRequestInput): ImageOperation | null {
+	if (input.imageOperation === 'generations' || input.imageOperation === 'edits') {
 		return input.imageOperation;
 	}
-	if (input.imagesGenerations) return "generations";
+	if (input.imagesGenerations) return 'generations';
 	return null;
 }
 
 function resolveKind(input: BuildSimulatorRequestInput): InvokeKind {
 	if (input.kind) return input.kind;
-	if (input.audioOperation) return "audio";
-	if (resolveImageOperation(input) != null) return "image";
-	return "llm";
+	if (input.audioOperation) return 'audio';
+	if (resolveImageOperation(input) != null) return 'image';
+	return 'llm';
 }
 
-function appendOptionalFormField(
-	fd: FormData,
-	key: string,
-	value: unknown
-): void {
+function appendOptionalFormField(fd: FormData, key: string, value: unknown): void {
 	if (value == null) return;
-	if (typeof value === "string") {
+	if (typeof value === 'string') {
 		const t = value.trim();
-		if (t !== "") fd.append(key, t);
+		if (t !== '') fd.append(key, t);
 		return;
 	}
-	if (typeof value === "number" && Number.isFinite(value)) {
+	if (typeof value === 'number' && Number.isFinite(value)) {
 		fd.append(key, String(value));
 	}
 }
@@ -137,14 +129,12 @@ function appendOptionalFormField(
 /**
  * Build `fetch` arguments for the Proxy (no `signal`).
  */
-export function buildSimulatorRequest(
-	input: BuildSimulatorRequestInput
-): BuildSimulatorRequestResult {
+export function buildSimulatorRequest(input: BuildSimulatorRequestInput): BuildSimulatorRequestResult {
 	const base = stripTrailingSlash(input.baseUrl.trim());
 	const auth = bearerHeader(input.apiKey);
 	const kind = resolveKind(input);
 
-	if (kind === "tool") {
+	if (kind === 'tool') {
 		const toolId = parseGatewayToolId(input.toolId);
 		if (!toolId) {
 			throw new Error(`Unsupported toolId: ${String(input.toolId)}`);
@@ -152,7 +142,7 @@ export function buildSimulatorRequest(
 		return {
 			url: `${base}${proxyToolPath(toolId)}`,
 			headers: {
-				"Content-Type": "application/json",
+				'Content-Type': 'application/json',
 				Authorization: auth,
 			},
 			bodyText: JSON.stringify(input.body),
@@ -160,20 +150,20 @@ export function buildSimulatorRequest(
 	}
 
 	switch (input.protocol) {
-		case "openai": {
-			if (kind === "audio") {
-				const audioOperation = input.audioOperation ?? "transcriptions";
-				if (audioOperation === "speech") {
+		case 'openai': {
+			if (kind === 'audio') {
+				const audioOperation = input.audioOperation ?? 'transcriptions';
+				if (audioOperation === 'speech') {
 					const merged = { ...input.body, model: input.modelForRouting };
 					const path = resolveProxyPathForModelInvoke({
-						kind: "audio",
-						protocol: "openai",
+						kind: 'audio',
+						protocol: 'openai',
 						audioOperation,
 					});
 					return {
 						url: `${base}${path}`,
 						headers: {
-							"Content-Type": "application/json",
+							'Content-Type': 'application/json',
 							Authorization: auth,
 						},
 						bodyText: JSON.stringify(merged),
@@ -181,40 +171,32 @@ export function buildSimulatorRequest(
 				}
 				const file = input.audioFile ?? null;
 				const fd = new FormData();
-				fd.append("model", input.modelForRouting);
-				appendOptionalFormField(fd, "language", input.body.language);
-				appendOptionalFormField(
-					fd,
-					"response_format",
-					input.body.response_format
-				);
-				appendOptionalFormField(fd, "prompt", input.body.prompt);
-				appendOptionalFormField(fd, "temperature", input.body.temperature);
-				appendOptionalFormField(fd, "file_url", input.body.file_url);
+				fd.append('model', input.modelForRouting);
+				appendOptionalFormField(fd, 'language', input.body.language);
+				appendOptionalFormField(fd, 'response_format', input.body.response_format);
+				appendOptionalFormField(fd, 'prompt', input.body.prompt);
+				appendOptionalFormField(fd, 'temperature', input.body.temperature);
+				appendOptionalFormField(fd, 'file_url', input.body.file_url);
 				const fileLines: string[] = [];
 				if (file) {
-					fd.append("file", file, file.name || "audio.webm");
-					fileLines.push(`${file.name || "audio.webm"} (${file.size} bytes)`);
+					fd.append('file', file, file.name || 'audio.webm');
+					fileLines.push(`${file.name || 'audio.webm'} (${file.size} bytes)`);
 				}
-				const fieldParts = ["model", "file"];
-				if (input.body.language != null) fieldParts.push("language");
-				if (input.body.response_format != null)
-					fieldParts.push("response_format");
-				if (input.body.prompt != null) fieldParts.push("prompt");
-				if (input.body.temperature != null) fieldParts.push("temperature");
-				if (input.body.file_url != null) fieldParts.push("file_url");
-				const fileUrl =
-					typeof input.body.file_url === "string"
-						? input.body.file_url.trim()
-						: "";
+				const fieldParts = ['model', 'file'];
+				if (input.body.language != null) fieldParts.push('language');
+				if (input.body.response_format != null) fieldParts.push('response_format');
+				if (input.body.prompt != null) fieldParts.push('prompt');
+				if (input.body.temperature != null) fieldParts.push('temperature');
+				if (input.body.file_url != null) fieldParts.push('file_url');
+				const fileUrl = typeof input.body.file_url === 'string' ? input.body.file_url.trim() : '';
 				const fileSummary = fileUrl
 					? `file_url: ${fileUrl}`
 					: !file
-					? "file: (none selected yet — required before Send)"
-					: [`file:`, ...fileLines.map((l) => `  - ${l}`)].join("\n");
+						? 'file: (none selected yet — required before Send)'
+						: [`file:`, ...fileLines.map((l) => `  - ${l}`)].join('\n');
 				const path = resolveProxyPathForModelInvoke({
-					kind: "audio",
-					protocol: "openai",
+					kind: 'audio',
+					protocol: 'openai',
 					audioOperation,
 				});
 				return {
@@ -222,99 +204,93 @@ export function buildSimulatorRequest(
 					headers: {
 						Authorization: auth,
 					},
-					bodyText: "",
+					bodyText: '',
 					formData: fd,
-					multipartSummary: [
-						`multipart/form-data fields: ${fieldParts.join(", ")}`,
-						fileSummary,
-					].join("\n"),
+					multipartSummary: [`multipart/form-data fields: ${fieldParts.join(', ')}`, fileSummary].join('\n'),
 				};
 			}
 			const imageOp = resolveImageOperation(input);
-			if (kind === "image" && imageOp === "edits") {
+			if (kind === 'image' && imageOp === 'edits') {
 				// Allow empty files for live URL preview; Send path validates before fetch.
 				const files = input.editImages ?? [];
 				const fd = new FormData();
-				fd.append("model", input.modelForRouting);
-				appendOptionalFormField(fd, "prompt", input.body.prompt);
-				appendOptionalFormField(fd, "n", input.body.n);
-				appendOptionalFormField(fd, "size", input.body.size);
-				appendOptionalFormField(fd, "quality", input.body.quality);
-				appendOptionalFormField(fd, "background", input.body.background);
+				fd.append('model', input.modelForRouting);
+				appendOptionalFormField(fd, 'prompt', input.body.prompt);
+				appendOptionalFormField(fd, 'n', input.body.n);
+				appendOptionalFormField(fd, 'size', input.body.size);
+				appendOptionalFormField(fd, 'quality', input.body.quality);
+				appendOptionalFormField(fd, 'background', input.body.background);
 				const fileLines: string[] = [];
+				const imageField = openaiEditImageFormField(files.length);
 				for (const file of files) {
-					fd.append("image", file, file.name || "image.png");
-					fileLines.push(`${file.name || "image.png"} (${file.size} bytes)`);
+					fd.append(imageField, file, file.name || 'image.png');
+					fileLines.push(`${file.name || 'image.png'} (${file.size} bytes)`);
 				}
-				const fieldParts = ["model", "prompt"];
-				if (input.body.n != null) fieldParts.push("n");
-				if (input.body.size != null) fieldParts.push("size");
-				if (input.body.quality != null) fieldParts.push("quality");
-				if (input.body.background != null) fieldParts.push("background");
+				const fieldParts = ['model', 'prompt'];
+				if (input.body.n != null) fieldParts.push('n');
+				if (input.body.size != null) fieldParts.push('size');
+				if (input.body.quality != null) fieldParts.push('quality');
+				if (input.body.background != null) fieldParts.push('background');
 				const imageSummary =
 					files.length === 0
-						? "images: (none selected yet — required before Send)"
-						: [
-								`images (${files.length}):`,
-								...fileLines.map((l) => `  - ${l}`),
-						  ].join("\n");
+						? 'images: (none selected yet — required before Send)'
+						: [`images (${files.length}):`, ...fileLines.map((l) => `  - ${l}`)].join('\n');
 				const path = resolveProxyPathForModelInvoke({
-					kind: "image",
-					protocol: "openai",
-					imageOperation: "edits",
+					kind: 'image',
+					protocol: 'openai',
+					imageOperation: 'edits',
 				});
 				return {
 					url: `${base}${path}`,
 					headers: {
 						Authorization: auth,
 					},
-					bodyText: "",
+					bodyText: '',
 					formData: fd,
-					multipartSummary: [
-						`multipart/form-data fields: ${fieldParts.join(", ")}`,
-						imageSummary,
-					].join("\n"),
+					multipartSummary: [`multipart/form-data fields: ${fieldParts.join(', ')}`, imageSummary].join('\n'),
 				};
 			}
 			const merged = { ...input.body, model: input.modelForRouting };
 			const path = resolveProxyPathForModelInvoke({
-				kind: kind === "image" ? "image" : "llm",
-				protocol: "openai",
-				imageOperation: imageOp === "generations" ? "generations" : undefined,
+				kind: kind === 'image' ? 'image' : 'llm',
+				protocol: 'openai',
+				imageOperation: imageOp === 'generations' ? 'generations' : undefined,
 				llmOperation: input.llmOperation,
 			});
 			return {
 				url: `${base}${path}`,
 				headers: {
-					"Content-Type": "application/json",
+					'Content-Type': 'application/json',
 					Authorization: auth,
 				},
 				bodyText: JSON.stringify(merged),
 			};
 		}
-		case "anthropic": {
+		case 'anthropic': {
 			const merged = { ...input.body, model: input.modelForRouting };
 			const path = resolveProxyPathForModelInvoke({
-				kind: "llm",
-				protocol: "anthropic",
+				kind: 'llm',
+				protocol: 'anthropic',
 			});
 			return {
 				url: `${base}${path}`,
 				headers: {
-					"Content-Type": "application/json",
+					'Content-Type': 'application/json',
 					Authorization: auth,
 				},
 				bodyText: JSON.stringify(merged),
 			};
 		}
-		case "gemini": {
+		case 'gemini': {
 			const action: SimulatorGeminiAction =
-				input.geminiAction === "generateContent"
-					? "generateContent"
-					: "streamGenerateContent";
+				kind === 'image'
+					? 'generateContent'
+					: input.geminiAction === 'generateContent'
+						? 'generateContent'
+						: 'streamGenerateContent';
 			const path = resolveProxyPathForModelInvoke({
-				kind: "llm",
-				protocol: "gemini",
+				kind: kind === 'image' ? 'image' : 'llm',
+				protocol: 'gemini',
 				geminiAction: action,
 				geminiModelSegment: input.modelForRouting,
 			});
@@ -323,34 +299,107 @@ export function buildSimulatorRequest(
 			return {
 				url: url.toString(),
 				headers: {
-					"Content-Type": "application/json",
+					'Content-Type': 'application/json',
 					Authorization: auth,
 				},
 				bodyText: JSON.stringify(input.body),
 			};
 		}
-		case "dashscope": {
-			if (
-				input.dashscopeRequestOperation === "audio.transcriptions.multimodal"
-			) {
+		case 'volcengine': {
+			if (kind !== 'image') {
+				throw new Error('Volcengine simulator currently supports image generation only');
+			}
+			const path = resolveProxyPathForModelInvoke({
+				kind: 'image',
+				protocol: 'volcengine',
+				imageOperation: 'generations',
+			});
+			const merged = { ...input.body, model: input.modelForRouting };
+			return {
+				url: `${base}${path}`,
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: auth,
+				},
+				bodyText: JSON.stringify(merged),
+			};
+		}
+		case 'minimax': {
+			if (kind === 'image' || (kind === 'audio' && (input.audioOperation ?? 'transcriptions') === 'speech')) {
 				const path = resolveProxyPathForModelInvoke({
-					kind: "audio",
-					protocol: "dashscope",
-					audioOperation: "transcriptions",
+					kind: kind === 'image' ? 'image' : 'audio',
+					protocol: 'minimax',
+					audioOperation: kind === 'audio' ? 'speech' : undefined,
+					imageOperation: kind === 'image' ? 'generations' : undefined,
 				});
 				const merged = { ...input.body, model: input.modelForRouting };
 				return {
 					url: `${base}${path}`,
 					headers: {
-						"Content-Type": "application/json",
+						'Content-Type': 'application/json',
 						Authorization: auth,
 					},
 					bodyText: JSON.stringify(merged),
 				};
 			}
-			throw new Error(
-				"DashScope realtime requests must use the WebSocket simulator path"
-			);
+			if (kind !== 'audio') {
+				throw new Error('MiniMax simulator supports file transcriptions, speech, and image generation');
+			}
+			const file = input.audioFile ?? null;
+			const fd = new FormData();
+			fd.append('model', input.modelForRouting);
+			const skip = new Set(['model', 'file', 'audio', 'file_name', 'filename']);
+			const fieldParts = ['model', 'file'];
+			for (const [key, value] of Object.entries(input.body)) {
+				if (skip.has(key)) continue;
+				appendOptionalFormField(fd, key, value);
+				if (value != null && String(value).trim() !== '') fieldParts.push(key);
+			}
+			const fileLines: string[] = [];
+			if (file) {
+				fd.append('file', file, file.name || 'audio.wav');
+				fileLines.push(`${file.name || 'audio.wav'} (${file.size} bytes)`);
+			}
+			const fileSummary = !file
+				? 'file: (none selected yet — required before Send)'
+				: [`file:`, ...fileLines.map((line) => `  - ${line}`)].join('\n');
+			const path = resolveProxyPathForModelInvoke({
+				kind: 'audio',
+				protocol: 'minimax',
+				audioOperation: 'transcriptions',
+			});
+			return {
+				url: `${base}${path}`,
+				headers: {
+					Authorization: auth,
+				},
+				bodyText: '',
+				formData: fd,
+				multipartSummary: [
+					`multipart/form-data fields: ${fieldParts.join(', ')}`,
+					fileSummary,
+					'language is forwarded as the MiniMax language header',
+				].join('\n'),
+			};
+		}
+		case 'dashscope': {
+			const operation = input.kind === 'image' ? 'images.generations.multimodal' : input.dashscopeRequestOperation;
+			if (!operation || operation.includes('.realtime.')) {
+				throw new Error('DashScope realtime requests must use the WebSocket simulator path');
+			}
+			const path = requestSurfacePath('dashscope', operation);
+			const headers: Record<string, string> = {
+				'Content-Type': 'application/json',
+				Authorization: auth,
+			};
+			if (operation === 'audio.speech.stream') headers['X-DashScope-SSE'] = 'enable';
+			if (operation === 'audio.transcriptions.async') headers['X-DashScope-Async'] = 'enable';
+			const merged = { ...input.body, model: input.modelForRouting };
+			return {
+				url: `${base}${path}`,
+				headers,
+				bodyText: JSON.stringify(merged),
+			};
 		}
 		default: {
 			const _exhaustive: never = input.protocol;

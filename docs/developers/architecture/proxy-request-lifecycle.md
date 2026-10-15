@@ -2,7 +2,7 @@
 
 本文档描述 **cinatoken** `packages/proxy` 在收到一次 AI 推理请求后，从 HTTP 入口到上游供应商调用、故障转移（Failover）、异步记账的完整处理路径。
 
-**适用路由**（三协议共用同一调度内核，差异仅在协议过滤与 egress driver）：
+**适用路由**（文本入口共用 `runProxyPipeline`，差异只在 spec；调度内核仍是 `failoverDispatch`）：
 
 | 入口 | 协议 | 路由文件 |
 |------|------|----------|
@@ -10,6 +10,8 @@
 | `POST /v1/responses` | OpenAI Responses | `packages/proxy/src/routes/v1/responses.ts` |
 | `POST /v1/messages` | Anthropic | `packages/proxy/src/routes/v1/messages.ts` |
 | `POST /v1beta/models/{model}:generateContent` 等 | Gemini | `packages/proxy/src/routes/v1/gemini.ts` |
+
+图与音频入口复用流水线的选路与策略计算，计费仍走各自模块。适配器与驱动的边界见 [adapters-and-drivers.md](./adapters-and-drivers.md)。
 
 **相关文档**：
 
@@ -28,15 +30,16 @@ flowchart TB
   subgraph entry [HTTP 入口]
     app["createProxyApp (app.ts)"]
     auth["requireApiKey (middleware/auth.ts)"]
-    route["协议路由 chat / messages / gemini / images / audio"]
+    route["协议路由 chat / messages / responses / gemini / images / audio"]
   end
 
   subgraph preDispatch [调度前]
+    pipeline["runProxyPipeline / loadProxyRouteSurface"]
     model["resolveModelRouting"]
     surface["resolveRoutesForSurface"]
     budget["用户 budget 校验"]
     sensitive["敏感内容熔断检查"]
-    strategy["resolveRouteStrategy"]
+    strategy["resolveRouteStrategyPlan"]
   end
 
   subgraph dispatch [供应商调度]
@@ -52,10 +55,11 @@ flowchart TB
   end
 
   subgraph post [响应后]
-    usage["usagePromise → recordUsage (异步)"]
+    usage["usagePromise → describeOutcome → buildAccountingEvent → sink"]
   end
 
-  app --> auth --> route --> model --> budget --> surface --> sensitive --> strategy --> failover
+  app --> auth --> route --> pipeline
+  pipeline --> model --> budget --> surface --> sensitive --> strategy --> failover
   failover --> planner
   planner --> strategies
   planner --> breaker
@@ -67,6 +71,7 @@ flowchart TB
 |------|------|------|
 | App 装配 | `packages/proxy/src/app.ts` | Hono 应用、路由挂载、注入 `repositories` |
 | 鉴权 | `middleware/auth.ts` → `services/api-key-auth.ts` | 提取 sk、校验用户 API Key、懒重置预算周期 |
+| 文本入口流水线 | `services/proxy-pipeline.ts` | Chat / Messages / Responses / Gemini 共用：模型解析、预算、选路、策略、熔断、usage 兜底；记账为 `describeOutcome` → `buildAccountingEvent` → `sink.flush` |
 | 模型与请求入口路由 | `resolve-model-route-group.ts`、`model-router.ts` | 解析 `model` / `:route_group`，按 request protocol / operation 查精确或通配请求入口（Request Surface），再读取路由池（Route Pool）的上游目标（Upstream Target）、JOIN 供应商（单键 `api_key`） |
 | 策略解析 | `route-strategies/index.ts` → `resolveRouteStrategyPlan` | 先解析路由池 → capability rule → protocol rule → model → global → `hash_affinity` 的 base，再叠加 `tier_strategies[priority]` |
 | 代理入口 | `services/proxy.ts` | 三协议（及 Images / Audio）统一调用 `failoverDispatch` |
@@ -76,9 +81,9 @@ flowchart TB
 | 失败分类 | `services/upstream-failure-classifier.ts` | 决定 retry（换供应商）vs fail_immediately |
 | User+model 熔断 | `services/user-model-circuit-*.ts` | 敏感 / 普通 400 共用短递增（user+model）；code 区分 |
 | 错误码 | `services/gateway-error-codes.ts` / `gateway-error-response.ts` | `gateway.*` / `circuit.*` / `upstream.*` + `X-OctaFuse-Error-Code` |
-| 用量记账 | `services/usage-tracker.ts` | 流结束后写 `api_key_request_logs`、累加 `budget_spent` |
+| 用量记账 | `services/accounting/*`、`services/usage-tracker.ts` | 纯函数合成可序列化 `AccountingEvent`（含稳定 `requestLogId`）；默认 sink 直接 `recordUsage` 写 `api_key_request_logs`、累加 `budget_spent` |
 
-> **客户端约定**：非 2xx 时以响应头 **`X-OctaFuse-Error-Code`**（及网关自造错误 body 顶层 / 嵌套 `code`）为**分类权威**；`error` / `error.message` 仍保留人类可读原文（上游透传或固定英文短句）。集成方应优先按该 code 分类，再回退英文文案。
+> **客户端约定**：非 2xx 时以响应头 **`X-OctaFuse-Error-Code`**（及网关自造错误 body 顶层 / 嵌套 `code`）为**分类权威**；`error` / `error.message` 仍保留人类可读原文（上游透传或固定英文短句）。集成方应优先按该 code 分类，再回退英文文案。完整清单见 [error-codes.md](../api/error-codes.md)。
 
 > **已移除**：供应商 key pool、旧 `models.sticky_config`、网关侧 RPM/TPM/并发软限流（`limit_config`）。一个供应商 = 一把 `api_key` + `status`。跨请求供应商粘性（Provider sticky）见路由池配置与 `route_pool_sticky_bindings`。
 
@@ -90,18 +95,18 @@ flowchart TB
 
 ### 2.1 鉴权与解析
 
-1. **`requireApiKey`**：从 `Authorization: Bearer sk-...`、`x-api-key` 或 query `key` 提取密钥；`authenticateApiKey` 查库并注入 `c.set('apiKey')`（含 `userId`、`budgetMax`、`budgetSpent` 等）。
+1. **`requireApiKey`**：从 `Authorization: Bearer sk-...`、`x-api-key` 或 query `key` 提取密钥；`authenticateApiKey` 查库并注入 `c.set('apiKey')`（含 `userId`、`budgetMax`、`budgetSpent`、`walletGranted`、`walletSpent` 等）。若 Key 或用户配置了 `rate_limit.rpm`，先消耗 Key 窗口再消耗用户合计窗口（两层都是从当前时刻回溯 60 秒）；超限返回 **429** `gateway.rate_limited`。`GET /v1/me` 与 `GET /v1/models` 两层都不计入。
 2. **解析 JSON body**：非法 JSON → **400**；缺少 `model` → **400**。
 3. **`resolveModelRouting`**：支持 `baseModelId` 或 `baseModelId:route_group`；模型不存在 → **404**。
-4. **用户预算**：`budgetMax != null && budgetSpent >= budgetMax` → **403**。
+4. **用户额度**：`hasPositiveTotalBalance(budgetMax, budgetSpent, walletGranted, walletSpent)` 为假 → **403**。`budgetMax == null` 表示周期不限额；否则看周期剩余 + 永久余额。**`budgetMax=0` 且 wallet 仍有余额时允许请求**（勿用旧式 `budgetSpent >= budgetMax`，`0 >= 0` 会误杀）。
 5. **请求入口 / 路由池查询**：
    - `resolveRoutesForSurface` 按 `modelId + routeGroup + requestProtocol + requestOperation` 查精确请求入口，未命中时回退 `request_operation='*'`
    - 请求入口命中后按 `route_pool_id` 读取 active 上游目标；滚动升级期间若 0016 尚不可用，临时回退旧的 model / group 路径
    - `resolveRouteResultsFromRows` → `RouteResult[]`（携带请求入口 / 路由池 / 上游目标、operation、`providerApiKey`、`routePriority`、`routeWeight`；**供应商 disabled / 无 api_key 的行会被跳过**）
-   - 无匹配请求入口、路由池或上游目标 → **400 / 502**
-6. **协议 / adapter 过滤**：2.0 保留 `upstreamProtocol === requestProtocol` 且 `adapter === 'passthrough'` 的上游目标；无匹配 → **502**。
+   - 无匹配请求入口、路由池或上游目标 → **404** `No available route`（`gateway.no_route`，没有可用路由）
+6. **协议 / adapter 过滤**：`isRouteAdapterCompatible` 按注册表校验请求入口与上游目标。`passthrough` 仅允许同协议、同 operation；转换 adapter 必须精确匹配注册表声明的 request / upstream 映射。无匹配 → **404** `No available route`。
 7. **`resolveRouteStrategyPlan`**：解析 base（`route_pools.strategy` → `models.route_policy` → `system_config.ROUTE_STRATEGY`）以及 `route_pools.tier_strategies`；编排时每层优先用 tier override（见 [route-strategies.md](../reference/route-strategies.md)）。
-8. **Driver 出站 URL**：各 driver 按 capability 调用 `resolveUpstreamEndpoint`；Gemini 鉴权与 `alt=sse` 仍由 `prepareGeminiUpstreamFetch` 处理。
+8. **Adapter / Driver 出站**：文本透传入口使用对应协议 driver；Images / Audio 由 `dispatch-table.ts` 按 adapter 选择转换 driver。各 driver 再按 capability 调用 `resolveUpstreamEndpoint`；Gemini 鉴权与 `alt=sse` 仍由 `prepareGeminiUpstreamFetch` 处理。
 
 ### 2.2 User+model 熔断（调度前）
 
@@ -129,7 +134,7 @@ Gateway 策略统一保护供应商；**退避不区分**敏感 / 普通 400，�
 **`proxyChatCompletions` → `failoverDispatch`**：
 
 1. 再次按 `expectedProtocol` 过滤 routes。
-2. 无可用 route → **502** `No routes configured`（`gateway.no_route`）。
+2. 无可用 route → **404** `No available route`（`gateway.no_route`，没有可用路由）。
 3. **`buildRouteAttemptPlan`**：按 priority 分层 → 层内策略排序 → 跳过熔断中的供应商（见 §3）。
 4. **`plan.attempts.length === 0`**（全部熔断）→ **429** `circuit.upstream_capacity_exhausted` + `Retry-After`（**零上游调用**）。
 5. **逐 attempt 执行**：
@@ -146,7 +151,9 @@ Gateway 策略统一保护供应商；**退避不区分**敏感 / 普通 400，�
 
 1. **`materializeNonOkResponse`**：非 2xx 时物化 body 供日志与敏感内容检测。
 2. **`usagePromise`** 与 **5min 超时** race：流结束解析 token；超时记 `incomplete`。
-3. **`scheduleBackgroundWork` → `recordUsage`**：写 `api_key_request_logs`、累加 `budget_spent`；失败时可选 webhook 告警。
+3. **`describeOutcome`**：按协议解读 usage 是否完整、错误文案、上游 request id 与额外字段（如 Gemini `gemini_wire_action`）。
+4. **`buildAccountingEvent`**：纯函数合成可序列化记账事件，并在此生成 `requestLogId`（写库语义不变）。
+5. **`scheduleBackgroundWork` → `sink.flush`**：默认 sink 直接 `recordUsage`，写 `api_key_request_logs`、累加 `budget_spent`；失败时可选 webhook 告警。图 / 音频入口尚未走该接缝。
 
 ```mermaid
 sequenceDiagram
@@ -175,7 +182,7 @@ sequenceDiagram
       F-->>C: upstream 4xx / abort
     end
   end
-  R->>R: recordUsage (background)
+  R->>R: sink.flush / recordUsage (background)
 ```
 
 ---
@@ -212,7 +219,7 @@ sequenceDiagram
 
 - 默认策略 **`hash_affinity`**（加权 Rendezvous hash）在同用户 + 模型 + group + 协议下给出稳定首选供应商，以利于上游 prompt cache。
 - 可选 **供应商粘性**（路由池级）：成功后跨请求绑定上游目标（共享 DB）；有效时可跨 priority 优先尝试；见 [route-strategies.md](../reference/route-strategies.md)「供应商粘性」。
-- **无**网关侧 RPM/TPM/并发软限流；供应商限额由上游 429 与熔断间接体现（后续可能重设计）。
+- **无**网关侧 TPM/并发软限流；旧 `limit_config` 已移除。Key / 用户 `rate_limit.rpm` 为鉴权后进程内存窗口（见 [user-keys-data-model.md](./user-keys-data-model.md)）。供应商限额仍由上游 429 与熔断间接体现。
 
 > **调试台除外**：管理后台（Admin）的 **`playground-service`** 直连单条 route 打上游，**不经过** `failoverDispatch`，因此无故障转移 / 策略排序；生产代理服务（Proxy）路径才生效。
 
@@ -230,8 +237,9 @@ sequenceDiagram
 | Images edits multipart 非法 | 400 | `Invalid multipart body` | 否 |
 | 模型不存在 | 404 | `Model not found` | 否 |
 | 用户 budget 耗尽 | 403 | `Budget exceeded` | 否 |
-| 无匹配请求入口 / active 路由池上游目标 | 400 / 502 | `No active routes ...` / `No routes configured` 等 | 否 |
-| 无协议 / adapter 匹配上游目标或无可用供应商 | 502 | `No OpenAI route ...` / `No routes configured` 等 | 否 |
+| Key / 用户 RPM 超限 | 429 | `gateway.rate_limited` + `Retry-After` | 否 |
+| 无匹配请求入口 / 活跃路由池上游目标 | 404 | `No available route`（`gateway.no_route`） | 否 |
+| 无协议 / adapter 匹配上游目标或无可用供应商 | 404 | `No available route`（`gateway.no_route`） | 否 |
 | 敏感内容熔断中 | 429 | `circuit.sensitive_content` + `Retry-After`（退避档位与普通 400 相同） | 是（error） |
 | 上游 400 客户端错误熔断中 | 400 | `circuit.client_error`（回放原文）；**images / audio 不短路此 reason** | 是（error） |
 | 全部供应商熔断 | 429 | `circuit.upstream_capacity_exhausted` + `Retry-After` | 否 |
@@ -249,12 +257,13 @@ sequenceDiagram
 | 上游 404 等 | **fail_immediately**，不重试 | 直接透传该 4xx |
 | fetch 网络错误 / 524 | 同次换供应商，不跨请求熔断 | 全失败时最后 502 或上游响应 |
 | Images 客户端取消 / Gateway 超时 | 合成 504，**禁止**故障转移 | 504 |
-| 流式 usage 5min 未就绪 | **不**触发供应商熔断 | 2xx 仍返回；日志 `incomplete` |
+| 流式 usage 绝对兜底未就绪 | **不**触发供应商熔断 | 2xx 仍返回；日志 `incomplete`。持续吐 chunk 的长思考会等到流结束再记账；尚未吐包时最多等首包超时（默认 2 分钟），已吐 chunk 后按空闲超时收口（默认 90s，`error_message=Stream idle timeout`）。三档时长由代理服务环境变量覆盖，见 [streaming-billing.md](../reference/streaming-billing.md) |
 
 ### 4.3 两类 429 的区别
 
 | 来源 | 含义 | Body 特征 |
 |------|------|-----------|
+| **网关生成** | Key / 用户 RPM 超限 | `code: gateway.rate_limited` + `Retry-After`，**未调用上游** |
 | **网关生成** | 调度阶段无任何可试供应商 | `code: circuit.upstream_capacity_exhausted`，**未调用上游** |
 | **上游返回** | 某供应商被上游限流 | 换供应商重试；全失败则**透传最后上游 429** |
 

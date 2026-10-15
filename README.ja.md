@@ -32,30 +32,50 @@ cinatoken Gateway の中核的な目標は、**一人会社（OPC）や企業向
       - Models：`GET /v1/models`
     - Anthropic エンドポイント：`POST /v1/messages`
     - Google Gemini エンドポイント：`POST /v1beta/models/{model}:generateContent`（`streamGenerateContent` を含む）
-    - DashScope リアルタイム音声：`GET /v1/dashscope/realtime`
-4. Agent ツールの接続：`/v1/tools/*` で Agent 向けツールを統一的に提供し、ログ、課金、コスト管理を一元化します。モデルとツールを同じ Gateway から利用できます。
+    - DashScope ネイティブエンドポイント：
+      - 同期マルチモーダル（ASR、Qwen-TTS、画像生成）：`POST /v1/dashscope/services/aigc/multimodal-generation/generation`
+      - 音声合成：`POST /v1/dashscope/services/audio/tts/SpeechSynthesizer`
+      - 非同期ファイル文字起こし：`POST /v1/dashscope/services/audio/asr/transcription`、`GET /v1/dashscope/tasks/{taskId}`
+      - リアルタイム音声：`GET /v1/dashscope/realtime`
+    - MiniMax ネイティブエンドポイント：
+      - ファイル文字起こし：`POST /v1/minimax/speech_to_text`
+      - 音声合成：`POST /v1/minimax/t2a_v2`
+      - 画像生成：`POST /v1/minimax/image_generation`
+    - Volcengine Ark ネイティブエンドポイント（Seedream 画像生成）：`POST /v1/volcengine/images/generations`
+4. Protocol の適合と変換：クライアントとアップストリームの Protocol 変換を Route で選択でき、使い慣れた呼び出し方式のまま異なる Provider を利用できます。たとえば、OpenAI Images クライアントから Alibaba Cloud Model Studio の Qwen Image / Wan Image、Volcengine Ark の Seedream、MiniMax の画像モデルを呼び出せます。OpenAI Audio クライアントからは Model Studio と MiniMax の音声認識・音声合成を利用できます。
+5. Agent ツールの接続：`/v1/tools/*` で Agent 向けツールを統一的に提供し、ログ、課金、コスト管理を一元化します。モデルとツールを同じ Gateway から利用できます。
     - Web 検索（`POST /v1/tools/web-search`）：Bocha、Tavily、Alibaba Cloud CleverSee、Tencent Cloud WSA
     - Web ページ取得（`POST /v1/tools/web-fetch`）：Firecrawl、Tavily Extract、Jina Reader
     - 深掘り検索（`POST /v1/tools/web-deep-search`、検索 + 読み取り）：Firecrawl Search、Jina Search
     - AI 生成テキスト検出（`POST /v1/tools/ai-detection`）：Tencent Cloud TMS を実装済みで、複数エンジンへ拡張できるカタログを用意しています
     - Agent 向けツールは今後も追加予定で、PR も歓迎します。
-5. AI 機能の統一エンドポイント：接続したモデル、プラットフォーム、ツールは、デプロイ済み cinatoken Gateway の Base URL から提供されます。クライアントが覚える接続先は 1 つだけです。
-6. 複数のルーティング戦略：同じモデルに複数のアップストリームリソースがある場合、用途に応じて次の戦略を選択できます。
+6. AI 機能の統一エンドポイント：接続したモデル、プラットフォーム、ツールは、デプロイ済み CinaToken Gateway の Base URL から提供されます。クライアントが覚える接続先は 1 つだけです。
+7. 複数のルーティング戦略：同じモデルに複数のアップストリームリソースがある場合、用途に応じて次の戦略を選択できます。
     - `hash_affinity`：既定の戦略。同一ユーザー、モデル、プロトコルを安定して同じアップストリームに割り当て、**Prompt Cache のヒット率を高める**ため、キャッシュやセッション継続性を重視する用途に適します。短時間のトラフィックは完全に均等にならない場合があります
     - `weighted_random`：重みに応じてランダムに分配し、**高い負荷分散性**を実現します。コストの比率配分や A/B テストに適しますが、同じユーザーでも Provider が頻繁に変わり、キャッシュヒット率が下がる可能性があります
     - `weight_priority`：重みの高い順に固定して試行する決定的な戦略です。同一優先度内で明確なプライマリ / バックアップを構成する用途に適しますが、先頭の Provider に大部分のトラフィックが集中します
     - `weighted_round_robin`：重みに基づくローテーションで、より均等にトラフィックを分配します。カウンターは実行インスタンスごとに管理され、複数インスタンス間では同期されません
-7. ユーザー管理と会計の統合：
+8. ユーザー管理と会計の統合：
     - External system、User、API Key の 3 階層：External system でシステムやチームを分離し、API Key で認証、課金、監査を行います
+    - 2 種類のクォータ：周期クォータはサブスクリプション、永久クォータは追加購入に利用でき、両方を同時に使えます
     - 3 種の台帳：各呼び出しについて、カタログ価格、実際の Provider 原価、ユーザー請求額を個別に記録します
-    - 時間帯別倍率：ピーク / オフピーク料金に加え、平日と週末で異なる係数を設定でき、原価計算の精度を高め、顧客向け価格やキャンペーンを柔軟に構成できます
-8. 管理画面と管理 API：
+    - ピーク / オフピーク料金：モデルと Route の価格を時間帯や曜日ごとに設定し、実際の価格をプレビューできます
+    - モデル別ユーザー倍率：ユーザーとカタログモデルの組み合わせごとに割引、割増、無料化を設定でき、カタログ価格や Provider 原価は変更しません
+9. 管理画面と管理 API：
     - 手動運用にも外部ポータル連携にも利用できる管理画面と API
     - リクエスト詳細、統計、運用分析を確認できる可観測性とデータ分析
-    - Provider、モデル、Route、クライアント設定を素早く検証できる Playground / Simulator
-9. 柔軟なデプロイ方式：
+    - Provider、モデル、Route、クライアント設定を素早く検証できる Playground / Simulator。リアルタイム音声認識もテストできます
+10. 柔軟なデプロイ方式：
     - **Cloudflare Workers + D1 への無料デプロイ**
     - Docker + Postgres / MySQL によるデプロイ
+
+## 管理画面の概要
+
+| Provider の接続 | Request Surface → 戦略 → Upstream Target の Route 構成 |
+|---|---|
+| ![Provider：Key の状態、Protocol 機能、Route 数をカードで表示](./docs/assets/screenshots/providers.webp) | ![Route：Request Surface、Route Pool、戦略、スティッキー、フェイルオーバーを階層表示](./docs/assets/screenshots/routes.webp) |
+
+Providers ページではアップストリームアカウントと Protocol Endpoint を接続します。Routes ページではクライアントの Request Surface、Route 戦略、Upstream Target を一つの流れとして確認できます。設定手順の全体は [管理画面設定ガイド](./docs/users/configuration.md) を参照してください。
 
 ## 他のオープンソース AI Gateway との違い
 
@@ -77,14 +97,16 @@ cinatoken Gateway の中核的な目標は、**一人会社（OPC）や企業向
 - **⚪ なし**：公式公開ドキュメントに同種の組み込み機能として記載なし
 
 <details>
-<summary><strong>機能比較の全 22 項目を表示</strong></summary>
+<summary><strong>機能比較の全 24 項目を表示</strong></summary>
 
 ### 接続と Agent 機能
 
 | 機能の評価項目 | cinatoken | New API | LiteLLM | Sub2API | Bifrost |
 |---|:---:|:---:|:---:|:---:|:---:|
 | Provider / モデルプリセットとワンクリックインポート | ✅ | 🟡 | 🟡 | 🟡 | 🟡 |
-| ネイティブプロトコルとマルチモーダル対応 | 🟡¹ | ✅ | ✅ | ✅ | ✅ |
+| OpenAI、Anthropic、Gemini の主要 Protocol Endpoint | ✅ | ✅ | ✅ | ✅ | ✅ |
+| DashScope ネイティブ同期 / リアルタイム音声と Protocol 変換 Route | ✅¹ | ⚪ | ⚪ | ⚪ | ⚪ |
+| テキスト、画像、音声、動画などのマルチモーダル対応 | 🟡² | ✅ | ✅ | 🟡 | ✅ |
 | Web 検索、取得、深掘り検索の内蔵 | ✅ | ⚪ | 🟠 | 🟠 | 🟠 |
 | ツール Provider 設定、呼び出しログ、課金 | ✅ | ⚪ | 🟡 | 🟠 | 🟠 |
 
@@ -121,7 +143,9 @@ cinatoken Gateway の中核的な目標は、**一人会社（OPC）や企業向
 | Docker セルフホスト | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Cloudflare Workers エッジデプロイ | ✅ | ⚪ | ⚪ | ⚪ | ⚪ |
 
-<sup>1</sup> cinatoken のネイティブプロトコルとマルチモーダル対応は引き続き拡充中です。
+<sup>1</sup> CinaToken は DashScope ネイティブの同期 / 非同期 ASR、音声合成、リアルタイム ASR / TTS、画像生成に対応し、OpenAI 互換の画像、ASR、TTS リクエストを DashScope へ Protocol 変換して Route できます。MiniMax と Volcengine Ark のネイティブエンドポイントも同じ方式で接続します。
+<br />
+<sup>2</sup> CinaToken は現在、テキスト、画像、ASR、TTS、リアルタイム音声に対応しています。動画はまだ統一 Request Surface に含まれていません。
 
 </details>
 

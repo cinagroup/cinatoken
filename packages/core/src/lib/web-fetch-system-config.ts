@@ -1,7 +1,7 @@
 /**
  * Agent Web Fetch（`POST /v1/tools/web-fetch`）的 `system_config` 键与解析。
  * 权威配置：`WEB_FETCH_ACTIVE` + `WEB_FETCH_CATALOG`（JSON）；旧三键仅读时兼容。
- * Catalog 单价为三账本：metered / standard / charged（旧 `cost` 为 charged 别名）。
+ * Catalog 新价格存 pricing（标准价与倍率）；旧三账本单价及 `cost` 继续兼容读取。
  */
 
 import type { GatewayRepositories } from '../storage/repositories';
@@ -9,9 +9,10 @@ import type { ConfigSnapshot } from '../db/system-config-group-types';
 import { TOOL_CONFIG_FAMILY_KEYS, toolConfigValuesFromSnapshots } from '../db/system-config-group';
 import { roundGatewayMoney } from './money-precision';
 import {
-	normalizeToolUnitPrices,
+	parseToolCatalogPricing,
+	toolCatalogPricingForStorage,
+	type ToolCatalogPricingFields,
 	parseToolMoneyField,
-	toToolPricingFields,
 	type ToolUnitPrices,
 } from './tool-pricing';
 
@@ -40,6 +41,7 @@ export type WebFetchCatalogEntry = {
 	metered: number;
 	standard: number;
 	charged: number;
+	pricing?: ToolCatalogPricingFields['pricing'];
 };
 
 export type WebFetchCatalog = Partial<Record<WebFetchProvider, WebFetchCatalogEntry>>;
@@ -65,20 +67,17 @@ export function parseWebFetchActiveInput(raw: string | null | undefined): WebFet
 	return parseWebFetchProviderInput(raw);
 }
 
-function parseEntry(
-	rec: Record<string, unknown>,
-	strict: boolean
-): WebFetchCatalogEntry | null {
+function parseEntry(rec: Record<string, unknown>, strict: boolean): WebFetchCatalogEntry | null {
 	if (typeof rec.apiKey !== 'string') {
 		return null;
 	}
-	const prices = normalizeToolUnitPrices(rec, DEFAULT_WEB_FETCH_COST, strict);
+	const prices = parseToolCatalogPricing(rec, DEFAULT_WEB_FETCH_COST, strict);
 	if (!prices) {
 		return null;
 	}
 	return {
 		apiKey: rec.apiKey.trim(),
-		...toToolPricingFields(prices),
+		...prices,
 	};
 }
 
@@ -147,16 +146,15 @@ export function parseWebFetchCatalogLenient(raw: string | null | undefined): Web
 }
 
 export function serializeWebFetchCatalog(catalog: WebFetchCatalog): string {
-	const normalized: WebFetchCatalog = {};
-	for (const [key, entry] of Object.entries(catalog) as [WebFetchProvider, WebFetchCatalogEntry | undefined][]) {
+	const normalized: Record<string, unknown> = {};
+	for (const [key, entry] of Object.entries(catalog) as [
+		WebFetchProvider,
+		WebFetchCatalogEntry | undefined
+	][]) {
 		if (!entry) continue;
 		normalized[key] = {
 			apiKey: entry.apiKey,
-			...toToolPricingFields({
-				metered: entry.metered,
-				standard: entry.standard,
-				charged: entry.charged ?? entry.cost,
-			}),
+			...toolCatalogPricingForStorage(entry),
 		};
 	}
 	return JSON.stringify(normalized);
@@ -178,6 +176,7 @@ export type ResolvedWebFetchConfig = {
 		cost: 'system_config' | 'default';
 		mode: 'catalog' | 'legacy';
 	};
+	pricing?: ToolCatalogPricingFields['pricing'];
 };
 
 export type ResolveWebFetchConfigResult =
@@ -254,6 +253,7 @@ export function resolveWebFetchConfigFromSnapshots(snapshots: readonly ConfigSna
 				apiKey,
 				cost: prices.charged,
 				...prices,
+				...(entry?.pricing ? { pricing: entry.pricing } : {}),
 				sources: {
 					provider: providerSource,
 					apiKey: 'system_config',

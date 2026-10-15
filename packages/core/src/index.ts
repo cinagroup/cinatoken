@@ -2,128 +2,163 @@
  * @octafuse/core — 共享类型、D1/Postgres 仓储、关键写入路径、用户/密钥预算逻辑。
  */
 
-export * from "./types";
-export * from "./upstream-protocol";
-export * from "./provider-endpoints";
-export * from "./gemini-upstream-url";
-export * from "./gcp-service-account-token";
-export * from "./request-auxiliary-auth-budget";
-export * from "./request-deadline";
-export * from "./preparation-control";
-export * from "./vertex-openai-model";
-export * from "./route-topology";
-export * from "./realtime-protocol";
-export * from "./chain-jobs";
-export * from "./request-presets";
-export * from "./guardrails";
-export * from "./guardrail-builtins";
-export * from "./route-comparable-price";
-export * from "./route-performance";
-export * from "./route-planner-preview";
-export * from "./public-model-catalog";
-export * from "./gateway-key-limits";
-export * from "./workspace-budgets";
-export * from "./management-workspaces";
-export * from "./management-guardrails";
-export * from "./route-data-policy";
-export * from "./organization-identity";
-export * from "./workspaces";
+export * from './types';
+export * from './upstream-protocol';
+export * from './provider-endpoints';
+export * from './gemini-upstream-url';
+export * from './gcp-service-account-token';
+export * from './request-auxiliary-auth-budget';
+export * from './request-deadline';
+export * from './preparation-control';
+export * from './vertex-openai-model';
+export {
+	ADAPTER_REGISTRY,
+	adaptersForModelKind,
+	getAdapterById,
+	getAdapterByOptionKey,
+	getAdapterByPresetIntent,
+	listConversionAdapters,
+	listSelectableAdapters,
+	requestOperationsFromRegistry,
+	requestSurfacePath,
+	requiredCapabilitiesForUpstreamOperation,
+	SURFACE_PATH_MODEL_PLACEHOLDER,
+	upstreamOperationsFromRegistry,
+	type AdapterBilling,
+	type AdapterDescriptor,
+	type AdapterExchange,
+	type AdapterModality,
+	type AdapterModelKind,
+	type AdapterPresetIntent,
+} from './adapters/registry';
+export * from './route-topology';
+export * from './realtime-protocol';
+export * from './chain-jobs';
+export * from './request-presets';
+export * from './guardrails';
+export * from './guardrail-builtins';
+export * from './route-comparable-price';
+export * from './route-performance';
+export * from './route-planner-preview';
+export * from './public-model-catalog';
+export * from './gateway-key-limits';
+export * from './workspace-budgets';
+export * from './management-workspaces';
+export * from './management-guardrails';
+export * from './route-data-policy';
+export * from './organization-identity';
+export * from './workspaces';
+export * from './route-custom-params';
+export * from './upstream-extra-fields';
 
-export * from "./storage/context";
-export * from "./storage/postgres-initialization";
-export * from "./storage/database-client";
-export * from "./storage/runtime-database-config";
-export * from "./storage/repositories";
-export * from "./storage/gateway-repository-interfaces";
-export * from "./storage/repository-dtos";
-export * from "./storage/critical-write-paths";
-export * from "./storage/critical-write-paths-utils";
-export * from "./db/provider-attempt-availability";
-export * from "./storage/organization-identity";
-export * from "./storage/workspaces";
-export * from "./storage/workspace-budgets";
-export * from "./storage/management-workspaces";
-export * from "./storage/management-workspace-members";
-export * from "./storage/byok-keys";
-export * from "./storage/management-guardrails";
-export * from "./storage/management-guardrail-assignments";
+export * from './storage/context';
+export * from './storage/postgres-initialization';
+export * from './storage/database-client';
+export * from './storage/runtime-database-config';
+export * from './storage/repositories';
+export * from './storage/gateway-repository-interfaces';
+export * from './storage/repository-dtos';
+export * from './storage/critical-write-paths';
+export * from './storage/critical-write-paths-utils';
+export * from './db/provider-attempt-availability';
+export * from './storage/organization-identity';
+export * from './storage/workspaces';
+export * from './storage/workspace-budgets';
+export * from './storage/management-workspaces';
+export * from './storage/management-workspace-members';
+export * from './storage/byok-keys';
+export * from './storage/management-guardrails';
+export * from './storage/management-guardrail-assignments';
 
-export * from "./db/providers";
-export * from "./db/system-config";
-export * from "./db/user-budget-audit-params";
-export * from "./db/user-budget-audit-mapper";
-export * from "./db/user-audit-catalog";
-export * from "./db/user-audit-snapshot";
-export * from "./db/api-keys-types";
-export * from "./db/providers-types";
-export * from "./db/provider-key-utils";
-export * from "./db/model-route-policy";
-export * from "./db/route-routing-metadata";
-export * from "./db/route-pool-tier-strategies";
-export * from "./db/route-pool-sticky-types";
-export * from "./db/request-logs-types";
+export * from './db/providers';
+export * from './db/system-config';
+export * from './db/user-budget-audit-params';
+export * from './db/user-budget-audit-mapper';
+export * from './db/user-audit-catalog';
+export * from './db/user-audit-snapshot';
+export * from './db/api-keys-types';
+export * from './db/providers-types';
+export * from './db/provider-key-utils';
+export * from './db/model-route-policy';
+export * from './db/route-routing-metadata';
+export * from './db/route-pool-tier-strategies';
+export * from './db/route-pool-sticky-types';
+export * from './db/request-logs-types';
 export type {
 	SharedKeyEconomicAttemptOutcome,
 	SharedKeyEconomicOutboxInput,
-} from "./db/shared-key-economic-outbox-types";
-export * from "./db/analytics-query";
-export * from "./generation-metadata";
-export * from "./db/generation-feedback-types";
-export * from "./db/public-model-daily-stats";
-export * from "./db/pricing-audit";
-export * from "./db/pricing-profile";
-export * from "./db/image-token-usage";
-export * from "./db/audio-token-usage";
-export * from "./db/image-per-image-usage";
-export * from "./db/pricing-schedule";
-export * from "./db/user-charged-cost-factors";
-export * from "./db/model-modalities";
-export * from "./db/request-log-status-filter";
-export * from "./db/system-config-types";
-export * from "./db/system-config-group-types";
-export * from "./db/system-config-group";
-export * from "./db/admin-access-types";
-export * from "./db/admin-access-audit";
-export * from "./db/shared-keys-types";
-export * from "./db/portal-withdrawal-rejection-types";
-export * from "./db/admin-shared-key-governance";
-export * from "./db/request-presets-types";
-export * from "./db/guardrails-types";
-export * from "./db/guardrail-budget-types";
-export * from "./db/user-budget-reservation-types";
-export * from "./db/route-data-policy-types";
-export * from "./db/model-endpoints-types";
-export * from "./db/management-api-keys-types";
-export * from "./db/byok-keys-types";
-export * from "./db/batch-types";
-export * from "./model-endpoint-catalog";
-export * from "./model-endpoint-runtime";
-export * from "./model-endpoint-backfill";
-export * from "./shared-channels";
+} from './db/shared-key-economic-outbox-types';
+export * from './db/analytics-query';
+export * from './generation-metadata';
+export * from './db/generation-feedback-types';
+export * from './db/public-model-daily-stats';
+export * from './db/wallet-credit';
+export * from './db/pricing-audit';
+export * from './db/pricing-profile';
+export * from './db/image-token-usage';
+export * from './db/audio-token-usage';
+export * from './db/image-per-image-usage';
+export * from './db/pricing-schedule';
+export * from './db/display-discount';
+export * from './db/user-charged-cost-factors';
+export * from './db/model-modalities';
+export * from './db/request-log-status-filter';
+export * from './db/system-config-types';
+export * from './db/system-config-group-types';
+export * from './db/system-config-group';
+export * from './db/admin-access-types';
+export * from './db/admin-access-audit';
+export * from './db/shared-keys-types';
+export * from './db/portal-withdrawal-rejection-types';
+export * from './db/admin-shared-key-governance';
+export * from './db/request-presets-types';
+export * from './db/guardrails-types';
+export * from './db/guardrail-budget-types';
+export * from './db/user-budget-reservation-types';
+export * from './db/route-data-policy-types';
+export * from './db/model-endpoints-types';
+export * from './db/management-api-keys-types';
+export * from './db/byok-keys-types';
+export * from './db/batch-types';
+export * from './model-endpoint-catalog';
+export * from './model-endpoint-runtime';
+export * from './model-endpoint-backfill';
+export * from './shared-channels';
+export * from './db/mcp-types';
+export * from './mcp/hash';
+export * from './mcp/namespace';
+export * from './mcp/pricing';
+export * from './mcp/secrets';
+export * from './mcp/sync-plan';
+export * from './mcp/upstream-client';
+export * from './mcp/url-guard';
 
-export * from "./lib/business-timezone";
-export * from "./lib/billing-currency";
-export * from "./lib/public-model-slug";
-export * from "./lib/alert-webhook-system-config";
-export * from "./lib/web-search-system-config";
-export * from "./lib/web-fetch-system-config";
-export * from "./lib/web-deep-search-system-config";
-export * from "./lib/ai-detection-system-config";
-export * from "./lib/tool-pricing";
-export * from "./lib/route-strategy-system-config";
-export * from "./lib/money-precision";
-export * from "./lib/shared-key-encryption";
-export * from "./lib/provider-key-encryption";
-export * from "./lib/byok-key-encryption";
-export * from "./lib/provider-key-environment";
-export * from "./lib/string-utils";
-export * from "./lib/time-format";
-export * from "./lib/resolve-me-metadata";
-export { hashLookupKey } from "./lib/key-hash";
-export { normalizeFutureKeyExpiry } from "./lib/key-expiry";
+export * from './lib/business-timezone';
+export * from './lib/billing-currency';
+export * from './lib/public-model-slug';
+export * from './lib/alert-webhook-system-config';
+export * from './lib/web-search-system-config';
+export * from './lib/web-fetch-system-config';
+export * from './lib/web-deep-search-system-config';
+export * from './lib/ai-detection-system-config';
+export * from './lib/tool-pricing';
+export * from './lib/route-strategy-system-config';
+export * from './lib/user-charged-cost-factor-mode';
+export * from './lib/api-key-rate-limit';
+export * from './lib/money-precision';
+export * from './lib/shared-key-encryption';
+export * from './lib/provider-key-encryption';
+export * from './lib/byok-key-encryption';
+export * from './lib/provider-key-environment';
+export * from './lib/string-utils';
+export * from './lib/time-format';
+export * from './lib/resolve-me-metadata';
+export { hashLookupKey } from './lib/key-hash';
+export { normalizeFutureKeyExpiry } from './lib/key-expiry';
 
-export * from "./services/user-service";
-export * from "./services/budget-transition-service";
-export * from "./services/key-service";
-export * from "./services/management-key-service";
-export * from "./services/shared-key-earnings";
+export * from './services/user-service';
+export * from './services/wallet-balance';
+export * from './services/budget-transition-service';
+export * from './services/key-service';
+export * from './services/management-key-service';
+export * from './services/shared-key-earnings';

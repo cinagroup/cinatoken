@@ -21,7 +21,7 @@ OIDC Core 的标准 `sub` 上限为 255 个 ASCII 字符，保存的 Console use
 
 Web 管理入口使用服务器 Cookie 会话，不内置集成 Bearer Key。`GET /api/auth/check` 仅在 CinaAuth 当前角色验证成功且主体一致时返回 `authenticated: true`、`principalType: "console"`、`verification: "verified"` 和精确 `subject`。API Key 验证成功不会返回 Console subject；身份服务故障可返回 `verification: "degraded"`，也不提供 subject。旧响应缺少 subject 时，严格 Web Gate 不授予管理权限；先发布后端扩展，再启用新管理页面。每个管理业务请求继续独立复验权限，前端入口验证不能替代它。
 
-集成密钥（Integration Keys）在后台 **系统集成 → 集成密钥（Integration Keys）** 创建。每个外部集成应使用独立、最小权限 Key；Key 主体记录为 `admin_key:<id>`。权限包括 `users.*`、`user_keys.*`、`providers.*`、`models.*`、`routes.*`、`config.*`、`analytics.read`、`logs.read` 和 `playground.execute`；`*.write` 自动包含对应 `*.read`，`*` 代表全部可委派业务权限，但不包含集成密钥或 Session 管理。
+集成密钥（Integration Keys）在后台 **系统集成 → 集成密钥（Integration Keys）** 创建。每个外部集成应使用独立、最小权限 Key；Key 主体记录为 `admin_key:<id>`。权限包括 `users.*`、`user_keys.*`、`providers.*`、`models.*`、`routes.*`、`config.*`、`analytics.read`、`logs.read`、`playground.execute`、`mcp.read`、`mcp.write` 和 `mcp.secrets.read`；`*.write` 自动包含对应 `*.read`，`*.secrets.read` 不随 write 授予，`*` 代表全部可委派业务权限，但不包含集成密钥或 Session 管理。
 
 升级迁移会把非空 `system_config.MASTER_KEY` 原值复制为普通全权限 Key `legacy-master`，确保旧调用方继续工作；随后的迁移会删除该配置行。新认证只读取 `admin_api_keys`。请在稳定后为外部系统创建具名 Key，并轮换或吊销 `legacy-master`。
 
@@ -49,6 +49,7 @@ Web 管理入口使用服务器 Cookie 会话，不内置集成 Bearer Key。`GE
 
 - **计费币种**：`system_config.BILLING_CURRENCY` 仅允许 **`USD`** 或 **`CNY`**（各库的 **`0002_seed.sql`** 默认 `USD`），与 `pricing_profile` / Key 预算数值单位一致；`GET /v1/me` 返回 `billing_currency`（见用户接口文档）。**`PUT /admin/config`** 写入该键时由服务端白名单校验。
 - **全局路由策略**：`system_config.ROUTE_STRATEGY`（默认 `hash_affinity`；四选一，见 [route-strategies.md](../reference/route-strategies.md)）。**`PUT /admin/config`** 白名单校验；Route Pool / 模型级配置可覆盖。
+- **用户计费倍率合成**：`system_config.USER_CHARGED_COST_FACTOR_MODE`（默认 `multiply`；另允许 `min`）。控制 `users.charged_cost_factors` 如何与路由 Charged 有效倍率合成最终用户费用。**`PUT /admin/config`** 白名单校验；Proxy 进程内缓存约 30s。
 - **Proxy 错误告警（可选）**：`ALERT_WEBHOOK_WECOM_URL`、`ALERT_WEBHOOK_FEISHU_URL` 存**完整**群机器人 Webhook URL（含 query `key` / hook id）。**未配置或值为空则不告警**。Proxy 在 **`api_key_request_logs.status = error`** 且用量写入成功后，分别向已配置的 URL 发送一条**按错误类型归类**的文本摘要（企业微信 `msgtype=text`、飞书 `msg_type=text`）：首行含类别与优先级（如上游超时、供应商鉴权、限流、5xx、敏感内容拦截、请求/模型错误、路由配置），并分组展示影响用户、路由/协议、供应商、原始 `error_message`、处理建议与发生时间（UTC+8）；发送失败只打日志，不影响请求。键名常量见 `@octafuse/core` 导出 `ALERT_WEBHOOK_WECOM_URL_KEY` / `ALERT_WEBHOOK_FEISHU_URL_KEY`。
 
 ### `/admin/keys` 统一响应格式
@@ -70,12 +71,15 @@ Web 管理入口使用服务器 Cookie 会话，不内置集成 Bearer Key。`GE
 |------|------|----------------|--------|
 | `/admin/users` | GET, POST | `users`（分页列表 / 按外部对幂等创建） | Admin UI、外部集成方 |
 | `/admin/users/:id` | GET, PATCH, DELETE | `users`（`:id` 为 uuid 或 `ext:…` 外部路由，见下节） | Admin UI、外部集成方 |
+| `/admin/users/:id/display-discounts` | GET | 该用户 `charged_cost_factors` 叠进公开目录 `discounts`（只返回已配置倍率的模型） | 外部集成方 |
+| `/admin/users/:id/models` | GET | 按已保存倍率模拟 `GET /v1/models`（默认 `default,free` 文本模型，最多 40 条） | 管理后台 |
 | `/admin/users/:id/keys` | GET, POST | `api_keys`（用户范围内） | Admin UI |
 | `/admin/users/:id/keys/:keyId` | PATCH, DELETE | `api_keys` | Admin UI |
 | `/admin/users/:id/logs` | GET | `api_key_request_logs`（按 `user_id`） | Admin UI |
 | `/admin/users/:id/audit-logs` | GET | `user_audit_logs`（按 `user_id`） | Admin UI |
 | `/admin/users/:id/budget/transition/preview` | POST | `users`（只读计算） | 外部集成方 |
 | `/admin/users/:id/budget/transition` | POST | `users` + `user_audit_logs`（原子转换） | 外部集成方 |
+| `/admin/users/:id/wallet/credit` | POST | `users.wallet_granted` + `user_audit_logs`（`wallet_credit`，`dedup_key` 幂等） | 门户加购、外部集成方 |
 | `/admin/keys` | GET | `api_keys` **JOIN** `users`（分页列表；预算只读） | Admin UI、外部集成方 |
 | `/admin/keys` | POST | `api_keys`（+ 可能 `users`） | 外部集成方、运维脚本 |
 | `/admin/keys/maintenance/scrub-legacy-secrets` | POST | `api_keys` 历史明文在线清理（分批、幂等） | 生产迁移运维 |
@@ -84,12 +88,17 @@ Web 管理入口使用服务器 Cookie 会话，不内置集成 Bearer Key。`GE
 | `/admin/keys/:id/logs` | GET | `api_key_request_logs`（Key 范围，分页） | 外部集成方、Admin UI |
 | `/admin/providers` | GET, POST, GET/PATCH/DELETE `/:id` | `providers`（单键 `api_key` + `status`；列表脱敏） | Admin UI |
 | `/admin/providers/:id/api-key` | GET | `providers.api_key` 明文揭示 | Admin UI |
+| `/admin/providers/:id/quota` | GET | 按 `kind` 实时查询上游余额 / 周期额度；不落库、不回显密钥 | Admin UI |
 | `/admin/providers/import/catalog` | GET | 内置 Provider 模板摘要（无密钥） | Admin UI |
 | `/admin/providers/import` | POST | 请求体 `{"ids":["0","1",…]}`：catalog 键（非 provider id）；普通模板新增 UUID 行、同名自动后缀及待替换 key。受支持托管模板使用固定 Provider id 和 `env:NAME` 引用，固定 id 已存在则进入 `skipped_existing`，不覆盖。返回 `created`、`updated`（恒为 0）、`skipped_existing`、`failed`，允许部分成功 | Admin UI、运维脚本 |
 | `/admin/models` | GET, POST, GET/PATCH/DELETE `/:id` | `models`（含可选 `route_policy`），`model_tags`；列表与详情 GET 顶层返回当前 `billing_currency` | Admin UI |
 | `/admin/models/import/catalog` | GET | 内置静态目录可选项摘要（不含完整 `pricing_profile`） | Admin UI |
 | `/admin/models/import` | POST | 请求体 `{"ids":["…"]}`：仅导入指定预设 → `models`，`model_tags`（按 `BILLING_CURRENCY` 选用 USD/CNY 价；**同 id 不覆盖**，记入 `skipped_existing`） | Admin UI、运维脚本 |
 
+| `/admin/providers/sync/diff` | GET | 各 Provider 与内置官方模板的差异报告：按 `kind` 分组，逐字段（`description`、`endpoints.<protocol>`）列出新增 / 变更 / 仅本地有；另列出 `kind` 已不在模板中的 provider（`orphans`） | Admin UI |
+| `/admin/providers/sync/apply` | POST | 请求体 `{"items":[{"provider_id","fields":["description","endpoints.openai",…]}]}`：服务端重算差异，只把选中字段写成官方值；不写 `api_key` / `status` / `name` / `kind` | Admin UI |
+| `/admin/models/sync/diff` | GET | 各 Model 与内置静态目录的差异报告：按厂商分组，逐字段（`display_name`、`vendor`、`context_window`、`max_tokens`、`description`、`released_at`、`input_modalities`、`output_modalities`、`pricing_profile`）列出新增 / 变更；价格按 `BILLING_CURRENCY` 取目录价并逐叶子路径对比。目录里没有的自建模型、目录未给出的字段不参与 | Admin UI |
+| `/admin/models/sync/apply` | POST | 请求体 `{"items":[{"model_id","fields":["description","pricing_profile",…]}]}`：服务端重算差异，只把选中字段写成官方值（经 `updateModelService`，路由价格覆盖时段对齐照常执行）；不写 `tags` / `metadata` / `route_policy` | Admin UI |
 | `/admin/routes` | GET（`?model_id=&provider_id=`）, POST, GET/PATCH/DELETE `/:id` | `model_surfaces`、`route_pools`、`model_routes`（Surface → Pool → Target） | Admin UI |
 | `/admin/routes/context` | GET | 仅当前有效全局路由策略、计费币种和业务时区的归一化只读投影；要求 `routes.read` 与 `config.read` | Admin UI |
 | `/admin/routes/pools/:poolId` | PATCH | `route_pools.strategy` / `tier_strategies` / `sticky_routing`（Pool 策略与 Provider 粘性） | Admin UI |
@@ -112,17 +121,28 @@ Web 管理入口使用服务器 Cookie 会话，不内置集成 Bearer Key。`GE
 | `/admin/config/webhooks/:channel` | PUT, DELETE | `wecom`/`feishu` 独立条件替换/清除，只返回启用状态与新版本 | Web Admin UI |
 | `/admin/config/webhooks/:channel/reveal`、`/verify` | GET, POST | 显式揭示单个 URL / 按候选值只读核对 | Web Admin UI |
 | `/admin/access-keys`、`/:id`、`/:id/secret`、`/:id/rotate`、`/:id/revoke`、`/:id/audit` | GET, POST, PATCH | `admin_api_keys` + `admin_access_key_audit`；仅 Console Session，同源写请求；生命周期/reveal 原子审计 | Admin UI |
+| `/admin/mcp-servers` | GET, POST | `mcp_servers`（列表脱敏 URL 与鉴权头） | Admin UI |
+| `/admin/mcp-servers/:id` | GET, PATCH, DELETE | `mcp_servers`（`pricing` 为服务默认按次价格） | Admin UI |
+| `/admin/mcp-servers/:id/reveal` | GET | 明文 URL 与鉴权头；需要 `mcp.secrets.read` | Admin UI |
+| `/admin/mcp-servers/:id/test` | POST | 只执行上游 `initialize` | Admin UI |
+| `/admin/mcp-servers/:id/sync` | POST | 拉取目录并返回新增、变更、移除差异；新条目默认停用 | Admin UI |
+| `/admin/mcp-servers/:id/items/status` | POST | 批量 `enabled` / `disabled` | Admin UI |
+| `/admin/mcp-servers/:id/items/:itemId` | PATCH | `{ pricing }` 设置工具按次价格（`v=2`、`unit=request`、`standard`、`chargedFactor`、`meteredFactor`、空 `config`；兼容 v1 独立单价），整组替换服务价格；`null` 恢复服务默认价格 | Admin UI |
+| `/admin/mcp-servers/:id/items/:itemId/accept` | POST | 接受已启用条目的待发布定义 | Admin UI |
+| `/admin/access-keys`、`/:id`、`/:id/secret`、`/:id/rotate`、`/:id/revoke` | GET, POST, PATCH | `admin_api_keys`；仅 Console Session，同源写请求 | Admin UI |
 | `/admin/business-timezone` | GET | `system_config.BUSINESS_TIMEZONE` | Admin UI（Provider 首屏加载） |
 | `/admin/request-logs` | GET | `api_key_request_logs`（**GlobalLogs**，多条件筛选分页） | Admin UI |
 | `/admin/budget-audit-logs` | GET | **`user_audit_logs`**（左联 **`users`** 取 `email` 等，多维筛选分页） | Admin UI |
 | `/admin/analytics/models` | GET | `api_key_request_logs`，可选联 `model_tags` | Admin UI |
 | `/admin/analytics/providers` | GET | `api_key_request_logs`，按 Provider 聚合 | Admin UI |
 | `/admin/analytics/users` | GET | `api_key_request_logs`，左联 **`users`**（用户维度） | Admin UI |
+| `/admin/analytics/keys` | GET | `api_key_request_logs`，按 `api_key_id` 聚合（需 `user_id`） | 外部集成方、Admin UI |
 | `/admin/analytics/reliability` | GET | `api_key_request_logs` | Admin UI |
 
 `GET /admin/models` 与 `GET /admin/models/:id` 的顶层 `billing_currency` 来自当前 `system_config.BILLING_CURRENCY`，缺省或无效配置按网关现行规则解释为 `USD`；读取配置失败则请求失败，不返回伪默认值。它说明当前网关如何解释模型金额，不是单条旧记录写入时的币种证明：旧 `models` 行没有逐行币种字段，历史配置变更后的原始币种无法从该字段反推。静态导入目录的顶层币种仍只描述本次预览/导入所用的价格分支。
 
 静态导入预览与写入仅支持 `USD`/`CNY` 价格分支。若遗留配置是有效但未支持的三字母币种（例如 `EUR`），两者返回错误，导入在访问模型仓库前停止，避免 USD 数值被当作 EUR 写入；缺省或无效配置仍依网关现行规则按 `USD` 处理。
+`POST /admin/playground` 的 `routeId`、`routeDraft`、`toolId` 三选一。路由编辑器「快速测试」使用 `routeDraft`，包含 `model_id`、`provider_id`、`provider_model_name`、`request_protocol`、`request_operation`、`upstream_protocol`、`upstream_operation`、`adapter` 与可选的 `custom_params`（JSON 对象或字符串）；`body` 为测试请求对象。草稿只在本次请求中生效，不创建或更新路由，供应商端点与密钥仍从服务端读取。响应、流式输出及 `x-playground-*` 调试头与 `routeId` 模式一致；实时 WebSocket 仍使用已保存的 `routeId`。
 
 说明：**GlobalLogs**（`/admin/request-logs`）与 **KeyScopedLogs**（`/admin/keys/:id/logs`）互补；**UserScopedLogs**（`/admin/users/:id/logs`）按 `user_id` 拉全量请求历史。**全局审计列表**（`/admin/budget-audit-logs`，表为 **`user_audit_logs`**）记录预算与用户/密钥生命周期事件，与请求日志正交。各类审计行何时产生（含高频 `usage_charge`）见 [`../reference/user-audit-logs.md`](../reference/user-audit-logs.md)。**数据模型总览**见 [`../architecture/user-keys-data-model.md`](../architecture/user-keys-data-model.md)。
 
@@ -132,11 +152,11 @@ Web 管理入口使用服务器 Cookie 会话，不内置集成 Bearer Key。`GE
 
 | 接口 | 部署 | 鉴权 | 数据含义 |
 |------|------|------|----------|
-| **`GET /catalog/models`**（Proxy） | `GATEWAY_URL` | 无 | **运行时**可调用模型 + `protocols` / `protocols_by_group`（由 active `model_routes` 聚合） |
+| **`GET /catalog/models`**（Proxy） | `GATEWAY_URL` | 无 | **运行时**可调用模型 + `protocols` / `protocols_by_group` / `inbound`（由 active `model_routes` 聚合） |
 | **`GET /admin/models`** | Admin `/api/admin/*` | Console Session 或 `models.read` | 库内 **全部**模型 CRUD 列表（含 tags、路由计数；**不**含按 route 的协议聚合） |
 | **`GET /admin/models/import/catalog`** | Admin | Console Session 或 `models.read` | 仓库内 **静态 preset** 摘要，供导入 UI 勾选，**非**运行时 route 真相 |
 
-门户 / 公开站应使用 Proxy **`GET /catalog/models`**，详见 [用户接口 · 公开模型目录](./user.md#公开模型目录catalog-discovery)。Agent 与兼容客户端默认仍用 **`GET /v1/models`**（需用户 Key，默认 `default,free` route group）。
+门户 / 公开站应使用 Proxy **`GET /catalog/models`**，详见 [用户接口 · 公开模型目录](./user.md#公开模型目录catalog-discovery)。用户个性化折扣用 **`GET /admin/users/:id/display-discounts`** overlay。门户仍走 Catalog + display-discounts；Agent 拉列表不再计入 RPM。Agent 与兼容客户端默认仍用 **`GET /v1/models`**（需用户 Key，默认 `default,free` route group）。
 
 ---
 
@@ -167,7 +187,7 @@ Web 管理入口使用服务器 Cookie 会话，不内置集成 Bearer Key。`GE
 
 `budget_reset_at` 排序时 NULL 规则：`asc` → `NULLS LAST`，`desc` → `NULLS FIRST`（与 Keys 列表一致）。
 
-响应：`{ success, data: [...], total, page, page_size }`；列表行含 **`active_keys_count`**（激活中的 API Key 数）、**`keys_count`**（该用户全部 API Key 数，含已吊销）等（与实现 `AdminUserListItem` 对齐）。
+响应：`{ success, data: [...], total, page, page_size }`；列表行含 **`active_keys_count`**（激活中的 API Key 数）、**`keys_count`**（该用户全部 API Key 数，含已吊销）、**`rate_limit`**（用户层 JSON，与 Key 同形状：`{"rpm": n}` 或 `null`）等（与实现 `AdminUserListItem` 对齐）。
 
 列表、详情、用户子资源及创建的响应（包括提前拒绝的 401/403）均为 `Cache-Control: private, no-store`；列表和详情需要 `users.read`，创建需要 `users.write`。Web 管理页只投影所需字段，不把完整列表行持久化。
 
@@ -175,15 +195,41 @@ Web 管理入口使用服务器 Cookie 会话，不内置集成 Bearer Key。`GE
 
 按 **`(external_system, external_user_id)`** 幂等创建（若已存在则返回已有用户）；无外部对时每次新建随机 uuid 用户。请求体至少含 **`email`**；可选 `budget_max`、`budget_base`、`budget_period`、`metadata`、`charged_cost_factors` 等（与 `AdminUserCreateInput` 对齐）。外部对须同空或同非空。
 
-`charged_cost_factors` 为 `{ "<models.id>": number }`（倍率 ≥ 0）。`null` 或 `{}` 表示清空。未知目录模型 ID、负数或非对象会返回 **400**。创建后可在管理后台用户详情的 Charged cost factors 中维护。
+`charged_cost_factors` 为 `{ "<models.id>": number | { "<route_group>" | "*": number } }`（倍率 ≥ 0）。数字覆盖该模型全部分组；对象先按本次 route group 匹配（trim 后小写），未命中再用 `"*"`。仅含 `"*"` 的对象写入时折叠成数字。`null` 或 `{}` 表示清空。未知目录模型 ID、未知 route group（`"*"` 除外，且须是该模型已有路由的分组）、负数或非对象会返回 **400**。创建后可在管理后台用户详情的用户专属倍率中按模型和路由组维护。
 
 ### `GET /admin/users/:id`
 
-用户详情（`getUserInfo`：含预算列、外部身份、`charged_cost_factors` 对象或 `null` 等；周期型预算可能触发懒重置）。**不含**密钥列表；枚举密钥请用 **`GET /admin/users/:id/keys`**。用户列表行（`GET /admin/users`）含 **`active_keys_count`**、**`keys_count`**，其中 `charged_cost_factors` 同样解析为对象或 `null`。
+用户详情（`getUserInfo`：含预算列、外部身份、`charged_cost_factors` 对象或 `null`、`rate_limit` 等；周期型预算可能触发懒重置）。**不含**密钥列表；枚举密钥请用 **`GET /admin/users/:id/keys`**。用户列表行（`GET /admin/users`）含 **`active_keys_count`**、**`keys_count`**，以及与详情相同的 **`rate_limit`** 与 `charged_cost_factors`（对象或 `null`）。
+
+### `GET /admin/users/:id/display-discounts`
+
+只读：把该用户 `charged_cost_factors` 按全局 `USER_CHARGED_COST_FACTOR_MODE` 叠进公开目录同款 `discounts`（官方时段 × 代表路由 Charged，再按 route group 叠用户倍率）。每个分组的查找顺序是具体分组、`"*"`、模型级数字；没有命中的分组保持目录折扣。需 **`users.read`**。**只返回至少有一个分组配置了倍率的模型**；未配置时 `data` 为空数组。不计入用户 API Key / 用户合计 RPM。
+
+可选 query：`route_groups`（CSV，大小写不敏感）。省略或空 → 全部 active 路由组（与 `GET /catalog/models` 相同，**不是** `/v1/models` 的 `default,free` 默认）。
+
+响应：`{ success, data: [{ id, discounts }] }`。`discounts` 形状与 `GET /catalog/models` / `GET /v1/models` 的 `discounts` 相同。不要用 **`GET /admin/models`**（运维 CRUD，无展示折扣）。
+
+公开目录用 `GET /catalog/models`，用户个性化折扣用本接口 overlay；Agent 仍用用户 Key 的 `GET /v1/models`。
+
+### `GET /admin/users/:id/models`
+
+只读预览：按该用户**已保存**的 `charged_cost_factors` 组装与 Proxy `GET /v1/models` 相同的列表折扣。不调用 Proxy，不使用用户 API Key，不计入 RPM。需 **`users.read`**。未配置用户倍率时仍返回目录折扣，便于对照 Agent 看到的 `catalog_factor`、`route_factor`、`composite_factor`。
+
+Query 与 `/v1/models` 对齐：
+
+| 参数 | 默认 | 说明 |
+|------|------|------|
+| `route_groups` | `default,free` | CSV，大小写不敏感 |
+| `kind` | `llm` | `llm` \| `image` \| `audio` \| `all` |
+| `model` | 空 | 按模型 ID 或展示名包含匹配；空则按目录顺序返回 |
+
+单次最多 40 条。响应 `{ success, data: { object: "list", data, preview } }`。`data.data[]` 的 `model_info.discounts` 与 `/v1/models` 相同；`preview` 含 `user_charged_factor_mode`、实际采用的 `route_groups` / `kind`，以及是否 `truncated`。不含 `inbound`。
 
 ### `PATCH /admin/users/:id`
 
-更新邮箱、预算计划、`status`、`metadata`（合并或 `metadata_replace`）、外部身份对、`charged_cost_factors`（对象或 `null`，校验规则与创建相同）等。仅改用户计费倍率时，审计 `reason_code` 为 `admin_patch_charged_cost_factors`。**密钥级字段不可在此修改**。
+更新邮箱、预算计划、`status`、`metadata`（合并或 `metadata_replace`）、外部身份对、`charged_cost_factors`（对象或 `null`，校验规则与创建相同）、`wallet_granted` / `wallet_spent`（永久额度绝对值，运维修正）、`rate_limit`（用户层 JSON，与 Key 同形状；`null` 表示该层不限）等。仅改用户计费倍率时，审计 `reason_code` 为 `admin_patch_charged_cost_factors`；仅改用户限流时为 `admin_patch_rate_limit`；仅改永久额度绝对值时为 `admin_patch_wallet`（周期额度同时变化时仍为 `admin_patch_budget`）。**密钥级字段不可在此修改**（密钥 `rate_limit` 走 `PATCH /admin/keys/:id`）。加购增量请用下方 **`wallet/credit`**，不要把金额加进 `budget_max`。
+
+`users.rate_limit` 是该用户**所有 Key 合计**的共享池，不会复制到新建 Key，也不要求 `key.rpm <= user.rpm`。只限制某一把钥匙时，只写该 Key 的 `rate_limit`，用户层保持 `null`。Key 层与 User 层的 `rpm` 都是从当前时刻回溯 60 秒的滚动窗口，不是 UTC 自然分钟。
 
 用于**绝对值**设置、运维修正、取消/到期回收等不依赖当前预算快照的变更。若需基于当前 `budget_max/budget_spent` 计算结转并原子写入，请使用下方 **`budget/transition`**。
 
@@ -210,7 +256,20 @@ Web 管理入口使用服务器 Cookie 会话，不内置集成 Bearer Key。`GE
 
 原子应用上述转换并写入 `user_audit_logs`（`eventType=admin_adjust`，`reasonCode=budget_transition`）。请求体与 preview 相同（`metadata`/`reason` 在 apply 时生效）。交互式客户端应附 `expected_before`，并把预览计算出的 `after.budget_reset_at` 明确传回，避免自动重置时点在两次请求间移动。过期快照会在任何懒重置写之前返回 409；提交前预算快照变化也会拒绝旧预览。
 
-响应：`{ success, message, data: { transition: { before, after, carryover }, user: <getUserInfo> } }`。
+响应：`{ success, message, data: { transition: { before, after, carryover }, user: <getUserInfo> } }`。换档只动周期额度，永久额度不变。
+
+### `POST /admin/users/:id/wallet/credit`
+
+永久额度增量加额（门户加购、注册赠额、退款扣回）。请求体：
+
+| 字段 | 必填 | 说明 |
+|------|------|------|
+| `amount` | 是 | 非零数字；负值用于退款扣回 |
+| `kind` | 是 | `topup` \| `signup_bonus` \| `admin_adjust` \| `refund` |
+| `external_ref` | 是 | 写入 `user_audit_logs.dedup_key`；同一用户同一引用重放不重复加额 |
+| `reason` | 否 | 审计 `reason_text` |
+
+响应：`{ success, data: { status: "applied" \| "duplicate", walletGranted, walletSpent, walletBalance } }`。加额流水用现有 `GET /admin/budget-audit-logs?user_id=&event_type=wallet_credit`，不另建端点。
 
 ### `DELETE /admin/users/:id`
 
@@ -226,7 +285,14 @@ Web 管理入口使用服务器 Cookie 会话，不内置集成 Bearer Key。`GE
 
 ### `GET /admin/users/:id/logs`
 
-分页返回该 **`user_id`** 的 `api_key_request_logs`（可选 `status`）。
+分页返回该 **`user_id`** 的 `api_key_request_logs`。
+
+| 查询参数 | 说明 |
+|----------|------|
+| `page` | 默认 `1` |
+| `page_size` | 默认 `20`，最大 `100` |
+| `status` | 可选，精确匹配 |
+| `api_key_id` | 可选；限定该用户下的一把 Key。不属于该用户则 `404` |
 
 ### `GET /admin/users/:id/audit-logs`
 
@@ -416,7 +482,7 @@ POST /admin/users/:id/keys
 
 ---
 
-## 更新 API Key（名称 / 状态 / metadata）
+## 更新 API Key（名称 / 状态 / metadata / 限流）
 
 **不支持**在 `PATCH /admin/keys/:id` 上修改预算、`user_email` 等用户级字段；若传入 `budget_max`、`budget_base`、`budget_spent`、`budget_period`、`reset_budget`、`budget_reset_at`、`user_email` 等，服务端返回 **400**（提示改用 **`PATCH /admin/users/:id`**）。
 
@@ -442,6 +508,7 @@ PATCH /admin/keys/:id
   "status": "revoked",
   "metadata": { "plan": "pro" },
   "expected_revision": "sha256:<revision read from detail>",
+  "rate_limit": { "rpm": 60 },
   "reason": "Admin update"
 }
 ```
@@ -454,6 +521,8 @@ PATCH /admin/keys/:id
 | `metadata_replace` | 可选；JSON 对象或其 JSON 字符串，整段替换；`null` 或空字符串清空。与任何形式的 `metadata` 互斥 |
 | `reason` | 可选；最长 1000 的字符串，不接受控制字符，缺省由服务端默认 |
 | `expected_revision` | 客户端从列表/详情取得的 opaque profile 条件；PATCH/DELETE 使用相同 JSON body 字段，不放 URL |
+
+| `rate_limit` | 可选；JSON 对象。`null` 表示该 Key 不限。当前仅支持 `rpm`（非负整数，该 Key 从当前时刻回溯 60 秒的滚动窗口内允许的请求数；`0` 拒绝所有计次请求）。与用户层 `users.rate_limit` **双重执行**（两层都是回溯 60 秒，各自独立计数），两者都要通过；超限仍返回同一 `429` + `gateway.rate_limited`（不区分哪一层）。`GET /v1/me` 与 `GET /v1/models` 两层都不计入。计数在代理服务进程内存中（多 isolate / 多副本为软上限）。省略则不改 |
 
 ### 响应
 
@@ -512,6 +581,8 @@ GET /admin/keys/:id
     "budget_period": "monthly",
     "budget_reset_at": "2024-02-01T00:00:00.000Z",
     "status": "active",
+    "last_used_at": "2026-09-05T04:12:00.000Z",
+    "rate_limit": { "rpm": 60 },
     "created_at": "2024-01-15T10:30:00.000Z",
     "updated_at": "2024-01-20T14:22:00.000Z",
     "spend": 15.50,
@@ -655,17 +726,56 @@ curl "http://localhost:8789/api/admin/keys/uuid-here/logs?page=1&page_size=10" \
 
 ### Providers（`/admin/providers`）
 
-一个 Provider = **一把** `api_key` + **`status`**（`active` \| `disabled`）。**无** `/admin/providers/:id/keys*` 子资源（迁移 0015 已删除 `provider_api_keys`）。
+一个 Provider = **一把** `api_key` + **`status`**（`active` \| `disabled`）+ **`kind`**。**无** `/admin/providers/:id/keys*` 子资源（迁移 0015 已删除 `provider_api_keys`）。
+
+`name` 是账号别名。`kind` 取导入模板的稳定英文 `name`（如 `OpenCode Zen`），或显式自定义 `__custom__`。已有行默认 `''`，表示尚未分类。唯一约束是 `(name, kind)`：同一别名可以属于不同类型；同一类型下同名返回 **409**，正文为 `A provider with this name and type already exists`。列表与详情会附带运行时解析的 `kind_labels`、`vendor_key`、`icon_key`、`catalog_links`（不落库）。已设置 `kind` 时图标与链接只跟模板走；`__custom__` 使用通用图标；空 `kind` 仍按名称与 Endpoint 推断。
 
 | 方法 | 路径 | 说明 |
 |------|------|------|
-| GET | `/admin/providers` | 列表；`api_key` **脱敏**；含 `endpoints`、`status`、`has_pending_key`、`routes_count`、`active_routes_count` |
-| POST | `/admin/providers` | 创建；**`name` + `api_key` 必填**；可选 `id`、`description`、`endpoints`、`status` |
+| GET | `/admin/providers` | 列表；`api_key` **脱敏**；含 `kind`、`endpoints`、`status`、`has_pending_key`、`quota_supported`、`routes_count`、`active_routes_count` |
+| POST | `/admin/providers` | 创建；**`name` + `api_key` + `kind` 必填**；`kind` 须为已知模板英文名或 `__custom__`；管理后台不提交 `id`，由服务端生成 UUID。API 仍可传可选 `id`。另可传 `description`、`endpoints`、`status` |
 | GET | `/admin/providers/:id` | 详情（脱敏 `api_key`） |
-| PATCH | `/admin/providers/:id` | 部分更新；`api_key` 空串/未传 = **不改密钥**；`status` 仅 `active` \| `disabled` |
+| PATCH | `/admin/providers/:id` | 部分更新；省略 `kind` = 不改类型；`kind: ""` = 标为尚未分类；`api_key` 空串/未传 = **不改密钥**；`status` 仅 `active` \| `disabled`。改 `kind` 不覆盖已有 `endpoints` |
 | DELETE | `/admin/providers/:id` | 删除；仍被 `model_routes` 引用时返回 **409**，须先删除或改绑对应 Target |
 | GET | `/admin/providers/:id/api-key` | **揭示明文** `api_key`（`{ success, data: { api_key } }`） |
-| GET / POST | `/admin/providers/import/catalog`、`/import` | 静态模板导入（占位 key，须手动替换） |
+| GET | `/admin/providers/:id/quota` | 用该账号现有 `api_key` 实时查询额度。权限是 `providers.read`，响应不含密钥。不支持的 `kind`、空密钥或导入占位密钥返回 **400**。上游非 2xx 或响应无法解析返回 **502**（`message` 只有状态码，没有响应体）。超时返回 **504** |
+| GET / POST | `/admin/providers/sync/diff`、`/sync/apply` | 与官方模板同步：`diff` 只读；`apply` 逐字段写入官方值。差异只在管理员手动检查时计算，列表接口不带 |
+| GET / POST | `/admin/providers/import/catalog`、`/import` | 静态模板导入（占位 key，须手动替换）。写入 `kind =` 模板英文名；仅同一 `kind` 下同名才追加 `(2)` 后缀 |
+
+`GET /admin/providers/:id/quota` 的 `data` 是归一化快照，不保存。请求发往与该 `kind` 默认域名同一注册域的 https origin；保存的 Endpoint 若换了注册域，则回退默认 origin。
+
+```json
+{
+  "success": true,
+  "data": {
+    "adapter": "deepseek",
+    "checkedAt": "2026-09-25T05:00:00.000Z",
+    "state": "ok",
+    "balances": [{ "currency": "CNY", "total": 9.99, "granted": 0, "paid": 9.99 }],
+    "windows": []
+  }
+}
+```
+
+`state` 为 `ok`、`low`（任一窗口已用 ≥ 90%）、`exhausted`（返回的余额全部 ≤ 0、厂商标记不可用，或任一窗口已用 ≥ 100%）或 `unknown`。
+
+| `kind` | 上游 | 映射 |
+|--------|------|------|
+| `DeepSeek` | `GET /user/balance` | 余额（含币种、赠送、充值） |
+| `Moonshot AI` | `GET /v1/users/me/balance` | 可用余额、代金券、现金。`api.moonshot.cn` 为 CNY，`api.moonshot.ai` 为 USD |
+| `SiliconFlow` | `GET /v1/user/info` | `totalBalance` / `balance` / `chargeBalance`，币种 CNY |
+| `SiliconFlow (International)` | 同上，`api.siliconflow.com` | 同上，币种 USD |
+| `OpenRouter` | `GET /api/v1/key` | Key 消费上限窗口 `key_limit`（USD）。未设上限时没有 `usedPercent` |
+| `Novita AI` | `GET /openapi/v1/billing/balance/detail` | `availableBalance` / `cashBalance`，单位是 1/10000 USD |
+| `DeepInfra` | `GET /payment/checklist` | 负的 `stripe_balance` 转为可消费 USD；正的 `limit` 与 `recent` 组成消费上限窗口。`suspended: true` 视为已用尽 |
+| `StepFun` | `GET /v1/accounts` | `balance` 为可用余额（CNY）。累计充值与累计赠送不写入快照 |
+| `Vercel AI Gateway` | `GET /v1/credits` | `balance` 为剩余额度（USD） |
+| `OpenCode Go` | `GET /zen/go/v1/usage` | `rolling` / `weekly` / `monthly` 的已用百分比与重置时间。`rolling` 记为 `5h`。`status: rate-limited` 视为该窗口已用尽 |
+| `MiniMax` | `GET https://www.minimaxi.com/v1/token_plan/remains`，失败时再请求 `GET https://api.minimaxi.com/v1/api/openplatform/coding_plan/remains` | 优先取 `general` 模型的 5 小时与每周窗口。`*_usage_count` 是剩余次数；次数为 0 时改用剩余百分比。两台主机都在 `minimaxi.com` 上 |
+| `Zhipu GLM (Coding Plan)` | `GET /api/monitor/usage/quota/limit` | `CREDIT_LIMIT` / `TOKENS_LIMIT`。`unit=3,number=5` 为 5 小时，`unit=6,number=1` 为每周。`usage` 是上限，`percentage` 是已用百分比 |
+| `Z.AI GLM (Coding Plan)` | 同上，`api.z.ai` | 同上 |
+
+`Kimi Code (Coding API)` 的额度接口没有稳定公开契约，当前 `quota_supported` 为 false。ZenMux、xAI、OpenAI、Anthropic 以及火山、百炼、腾讯的余额查询需要另一把管理密钥或 AK/SK，也不在这一接口里。
 
 `endpoints` JSON 权威形状：
 
@@ -856,14 +966,22 @@ OpenAI-compatible TTS 还可在同一 v1 JSON 中声明请求形状证据。`spe
 - **校验**：`normalizeModelRoutePolicyInput`；须含顶层 `strategy` 和/或至少一条合法 `rules`。
 - **运行时**：仅 Proxy failover 路径；Admin Playground **不走**策略排序。解析时先看 `route_pools.tier_strategies[priority]`，再看 `route_pools.strategy`，然后才是模型 `route_policy`。
 
+### `GET /admin/models/sync/diff` 与 `POST /admin/models/sync/apply`
+
+- **用途**：静态目录（`packages/admin/lib/model-presets/*.json`）更新后，让已导入的 `models` 行与官方值对齐。差异只在管理员点「检查官方更新」时计算，`GET /admin/models` 列表不带差异信息。
+- **比对范围**：按 `models.id` 与目录项一一对应，字段为 `display_name`、`vendor`、`context_window`、`max_tokens`、`description`、`released_at`、`input_modalities`、`output_modalities`、`pricing_profile`。目录未给出（null）的字段不报差异，不会建议清空；模态不看顺序；价格按 `BILLING_CURRENCY` 选 `usd` / `cny` 分支，按叶子路径（如 `tiers[0].input_price`）展示新增 / 变更 / 仅本地有。
+- **默认选择**：普通字段默认「采用官方」；`pricing_profile` 直接影响计费，默认「保留当前」，需管理员核对后再选。「保留当前」不落库，下次检查仍会显示。
+- **应用**：请求体 `{ "items": [{ "model_id": "...", "fields": ["description", "pricing_profile"] }] }`。服务端重新计算差异，只处理确实存在差异的所选字段，经 `updateModelService` 写入（路由价格覆盖的时段对齐照常执行）；不写 `tags`、`metadata`、`route_policy`，不碰路由。响应 `{ updated, skipped, failed: [{ model_id, message }] }`，单个模型失败不影响其它。
+- **权限**：与其它 Admin 路由相同，后台 Session，或具有 `models.read` / `models.write` 的 `Authorization: Bearer <ADMIN_API_KEY>`。
+
 ### `GET /admin/models/import/catalog`
 
-- **行为**：返回 `packages/admin/lib/model-presets/*.json`（合并后）每条预设的摘要（`id`、`display_name`、`vendor`、`context_window`、`max_tokens`、`description`、`i18n`、`tier_count`、`pricing_label`、`pricing_preview`），供管理端勾选后再调用 **`POST /admin/models/import`**。英文描述与本地化摘要直接维护在对应的模型预设记录中。价格预览按当前 **`BILLING_CURRENCY`** 选用 `usd` / `cny` 分支（与导入写入同源）；响应另含顶层 **`billing_currency`**。
+- **行为**：返回 `packages/admin/lib/model-presets/*.json`（合并后）每条预设的摘要（`id`、`display_name`、`vendor`、`kind`、`context_window`、`max_tokens`、`description`、`i18n`、`tier_count`、`pricing_label`、`pricing_preview`），供管理端勾选后再调用 **`POST /admin/models/import`**。`kind` 为 `llm` \| `image` \| `audio`（与管理后台模型列表 Kind 一致）；此处 `audio` **同时包含**语音转写与语音合成，与用户接口 `GET /v1/models?kind=audio` 对齐。英文描述与本地化摘要直接维护在对应的模型预设记录中。价格预览按当前 **`BILLING_CURRENCY`** 选用 `usd` / `cny` 分支（与导入写入同源）；响应另含顶层 **`billing_currency`**。
 
 ### `POST /admin/models/import`
 
 - **请求体**：`{ "ids": ["glm-5", "gpt-5.2", ...] }`（**必填**；`ids` 须为非空字符串数组；重复 id 会去重；顺序保留）。
-- **行为**：仅处理 `ids` 中在静态目录存在的 id；根据当前 **`BILLING_CURRENCY`**（`USD` → `usd` 分支，`CNY` → `cny` 分支；库内为其他历史值时按 **`USD`** 分支取价）写入 `models.pricing_profile`；**已存在同 `id` 的不导入、不覆盖**，该 id 记入 **`skipped_existing`**；否则 **INSERT** 新建并写入 `model_tags`。未知 id 或校验失败记入 **`failed`**，其余仍处理。
+- **行为**：仅处理 `ids` 中在静态目录存在的 id；根据当前 **`BILLING_CURRENCY`**（`USD` → `usd` 分支，`CNY` → `cny` 分支；库内为其他历史值时按 **`USD`** 分支取价）把该分支**整段**写入 `models.pricing_profile`（含 `tiers` / 图音频单价，以及可选官方时段 `schedule`）；**已存在同 `id` 的不导入、不覆盖**，该 id 记入 **`skipped_existing`**；否则 **INSERT** 新建。标签由运营在导入后自行维护，导入**不**写入 `model_tags`。未知 id 或校验失败记入 **`failed`**，其余仍处理。
 - **响应** `data`：`{ "billing_currency_used", "created", "updated"（恒为 0）, "skipped_existing": string[], "failed": [{ "id", "message" }] }`。
 
 ### 运维验收：Embedding 模型
@@ -904,9 +1022,9 @@ Rerank 与 LLM 共用 Models、Endpoints 与 Routes；数据面提供 `POST /v1/
 1. **Provider**：配置可用的 OpenAI（或兼容）Provider Key，并在 `endpoints.openai` 写 `base`（如 `https://api.openai.com/v1`）或 `endpoints.images.generations` 完整 URL。
 2. **Import**：Admin → Models → Import → 勾选 **`gpt-image-2`**（`output_modalities: ["image"]`，`pricing_profile.tiers` 含 `image_*` token 单价）。**已存在同 id 不会覆盖**——旧按张行需 **删除后 re-import** 或打开编辑填入 token 单价后保存。
 3. **列表**：筛选 Kind=Image，卡片应显示 Image token 单价（如 text / img-in / img-out）。
-4. **Routes**：为 `gpt-image-2` 建路由；弹窗 Billing「Standard (catalog)」应显示 **token 分项单价**；`upstream_protocol` **锁定 openai**（保存 anthropic/gemini 应 400）。Models admin 本身不引用 provider base URL。
-5. **Playground**（不计费、不写 logs）：选该 openai 路由 → Send → 上游由 `resolveUpstreamEndpoint(…, images.generations)` 解析（通常 `…/images/generations`）返回图并可预览。非 openai 路由禁用 Send。
-6. **Simulator**（真实 Proxy）：选同一模型 → 协议锁定 openai → 请求打到 `{proxy}/v1/images/generations` → 出图；**Open Request Logs** 核对 `raw_usage` 与 `pricing_audit.kind=image_tokens`，`charged_cost` 随 usage 分项变化（非固定按张）。
+4. **Routes**：为 `gpt-image-2` 建路由；弹窗 Billing「Standard (catalog)」应显示 **token 分项单价**；`upstream_protocol` 对 OpenAI 兼容生图锁定 `openai`，DashScope 转换允许 `dashscope`（保存 anthropic/gemini 应 400）。Models admin 本身不引用 provider base URL。
+5. **Playground**（不计费、不写 logs）：选 openai 透传路由 → Send → 上游由 `resolveUpstreamEndpoint(…, images.generations)` 解析（通常 `…/images/generations`）返回图并可预览。DashScope 转换路由同样可测：请求体仍用 OpenAI Images JSON，调试台改写成 `images.generations.multimodal`。anthropic / gemini 路由禁用 Send。
+6. **Simulator**（真实 Proxy）：选同一模型 → 协议锁定 openai → 请求打到 `{proxy}/v1/images/generations` → 出图；**Open Request Logs** 核对 `raw_usage` 与 `pricing_audit.kind=image_tokens`，`charged_cost` 随 usage 分项变化（非固定按张）。DashScope 转换路由也走这条 OpenAI 入口（adapter `dashscope-image-*`），不要改成 dashscope 协议。
 7. **回归**：任意 LLM 模型仍走 chat/completions（Playground / Simulator 行为不变）。
 8. **curl**（可选，用户 API Key）：
 
@@ -946,14 +1064,14 @@ curl -sS "$GATEWAY_URL/v1/audio/transcriptions" \
 
 与 `gpt-image-2` 共用同一套 OpenAI Images 驱动；Seedream 目录价为 **`image_billing_mode: per_image`**（按张），不再用 16384 token 折算。
 
-1. **Provider**：Admin → Providers → Import → **Volcengine Ark**（**不要**写 `openai.base`；只配 `endpoints.chat` + `endpoints.images.generations`，避免派生出不存在的 `/images/edits`）。填入火山 API Key。
+1. **Provider**：Admin → Providers → Import → **Volcengine Ark**（`openai` 只配 `endpoints.chat`，生图走 `volcengine.base`；**不要**写 `openai.base`，否则会派生出不存在的 `/images/edits`）。填入火山 API Key。
 2. **Import**：Models → Import → 勾选：**`doubao-seedream-5-0`** / **`doubao-seedream-5-0-pro`**。**已存在同 id 不会覆盖**——改价需删后 re-import、PATCH，或跑 `node scripts/db/migrate-image-billing-modes.mjs --dry-run` / `--apply`。
 3. **目录价口径**（**`per_image`**；权威单价 `image.default`；与火山方舟 / BytePlus 公开价对齐）：
    | catalog / `provider_model_name` | 官方约价 | `image.default` CNY | USD |
    |---|---|---|---|
    | `doubao-seedream-5-0` | ¥0.22 / 张（一口价，不按分辨率翻倍） | **0.22** | **0.035** |
-   | `doubao-seedream-5-0-pro` | ≤2.36MP ¥0.30 / >2.36MP ¥0.60；参考图首张免费、之后 ¥0.02 | **0.30**（`2k`）；高档 **0.60**（`3k`/`4k`）；`image.input.default=0.02` | **0.045** / **0.09**；input **0.003** |
-4. **Routes**：`upstream_protocol=openai`（锁定）；`provider_model_name` 与 catalog id 同名即可。`watermark` / `sequential_image_generation` 等由客户端请求或 route `custom_params` 按需传入，**不**写在模型预设里。
+   | `doubao-seedream-5-0-pro` | 单图生成 ≤261 万像素（1.5K 及以下）¥0.30 / 以上 ¥0.60；参考图首张免费、之后 ¥0.02 | `by_size`：`1k` / `1.5k` **0.30**，`2k` **0.60**；缺省 **0.60**（方舟默认 2K）；`image.input.default=0.02` | **0.045** / **0.09**；input **0.003** |
+4. **Routes**：OpenAI SDK 入口选适配器 `volcengine-image`（上游 `volcengine` / `images.generations`）；流式与方舟原文走原生透传 `POST /v1/volcengine/images/generations`。`provider_model_name` 填方舟 Model ID。`watermark` 等由客户端请求或 route `custom_params` 按需传入，**不**写在模型预设里。
 5. **Playground / Simulator**：选该路由 → generations；Seedream **图生图**走 `POST /v1/images/generations` + JSON `image`（勿用 multipart `/v1/images/edits`，火山无 OpenAI edits 形态）。
 6. **Request Logs**：核对 `pricing_audit.kind=image_per_image`、`billing_kind`、`output_image_count=1`、`charged_cost≈官方单价×charged_factor`。
 7. **curl**（用户 API Key）：
@@ -978,6 +1096,7 @@ curl -sS "$GATEWAY_URL/v1/images/generations" \
     - **`per_second`**：legacy `{ "audio_billing_mode": "per_second", "audio": { "price_per_second", "minimum_seconds"? } }` 只作目录描述；运行时须在 Endpoint `audio_capabilities.pricing_by_operation` 为 exact operation 声明 `duration` / `second` meter。
     - **`token`**：legacy `{ "audio_billing_mode": "token", "tiers": [...] }` 只作目录描述；Endpoint token meter 虽可声明五维价格，但当前数据面尚无权威分项 breakdown，因而 dispatch 前 fail closed。
     - 预设：`whisper-1` → `per_second`；`gpt-4o-mini-transcribe` / `gpt-4o-transcribe` / `gpt-4o-transcribe-diarize` → `token`（见 [user.md「语音转写」](user.md#语音转写audio-transcriptions)）。
+  - **官方分时时段（`schedule`，可选）**：与 `tiers` / `image` / `audio` 同级，写入已有 `pricing_profile` TEXT JSON，无独立迁移。元素复用路由侧窗口形状 `{ start, end, factor, days? }`，单一 `factor` 作用于该档全部单价（input / output / cache / image_* / audio_*）。命中窗口取 `factor`，未命中为 `1`（无需 `mode`）。时区沿用 `system_config.BUSINESS_TIMEZONE`，不写入 JSON。半开区间 `[start, end)`，仅 `end` 可为 `24:00`，`start` 不得为 `24:00`；`factor ≥ 0`；同侧窗口禁止重叠。非法 `schedule` 会使整个 `pricing_profile` 解析失败。未配置时行为与历史一致。
   - Request log：迁移 **`0013_request_log_image_billing`** 增加 `billing_kind`、`input_image_count`、`output_image_count`；**`0014_request_log_audio_billing`** 增加 `audio_duration_seconds`。
 - **模型 Kind（Admin UI，无独立 DB 列）**：
   - **Audio（ASR/TTS）**：优先使用 OpenRouter 输出模态；ASR 为 `output_modalities: ["transcription"]`，TTS 为 `["speech"]`。旧数据仍可由有效 `audio_billing_mode`（`per_second`/`token` 为 ASR，`per_character` 为 TTS）兼容识别，但新建与静态预设不再把它们写成通用 `text`/`audio` 输出。
@@ -990,10 +1109,16 @@ curl -sS "$GATEWAY_URL/v1/images/generations" \
 
 ```json
 {
+  "provider_factor": 0.5,
+  "provider_factor_starts_at": "2026-10-01T00:00:00.000Z",
+  "provider_factor_expires_at": "2026-11-01T00:00:00.000Z",
   "charged_factor": 1.2,
   "metered_factor": 1.0,
   "schedule": {
     "mode": "override",
+    "provider": [
+      { "start": "00:00", "end": "08:00", "factor": 0.4, "validity": { "starts_at": "2026-10-15T00:00:00.000Z", "expires_at": "2026-12-01T00:00:00.000Z" } }
+    ],
     "charged": [
       { "start": "00:00", "end": "24:00", "factor": 1.2, "days": [1, 2, 3, 4, 5] },
       { "start": "00:00", "end": "24:00", "factor": 0.8, "days": [6, 7] }
@@ -1023,9 +1148,11 @@ curl -sS "$GATEWAY_URL/v1/images/generations" \
 | **Standard price** | Legacy 目录价展示（只读；不能证明 Route 可计费） | `models.pricing_profile`；运行时标准价请在 `/admin/endpoints` 查看和维护 |
 | **Charged factor** | 用户侧默认倍率（窗外） | `price_override.charged_factor` |
 | **Metered factor** | 供应侧默认倍率（窗外） | `price_override.metered_factor` |
-| **Schedule** | 共享 start/end 与可选星期，每行 Charged / Metered 倍率（覆盖默认） | `price_override.schedule`（`mode: "override"`） |
+| **计费倍率** | 统一展示默认行与时段行。默认行显示“全部时段”或“其他时段”；每行可编辑三侧倍率及独立供应商有效期。模型已配官方时段时 start/end/days 只读 | `price_override.schedule`（`mode: "override"`） |
 
-路由列表卡片展示 **`Ch ×`** / **`M ×`**；有 schedule 时附加 **Sch** 提示。
+编辑旧配置时会将继承的供应商有效期显式保留到每行，之后调整默认行日期不影响其他时段；保存继续使用 `override` 模式。
+
+路由列表卡片展示 **`Ch ×`** / **`M ×`**；配置了供应商倍率时附加 **`P ×`** 及生效中 / 未开始 / 已过期。有 schedule 时附加 **Sch** 提示。公开折扣按目录价 × 有效供应商倍率 × 用户倍率展示。
 
 ---
 
@@ -1050,7 +1177,7 @@ curl -sS "$GATEWAY_URL/v1/images/generations" \
 - **`kpi`**：时间窗内总请求、成功率、三档成本、`activeUsers`、错误率、Token 汇总（input/output/cache）、`avgLatencyMs`、近 60 秒近似 **`rpm`** / **`tpm`**
 - **`modelDistribution`**：按 `model_id` 聚合 Top 10（请求、Token、三档成本）
 - **`topUsers`**：按 `charged_cost` 排序 Top 12
-- **`timeseries`**：按 `granularity`（`1h`/`1d`/`24h`→`hour`，更长→`day`）的 Token/请求/成本趋势；含 `cache_hit_rate`
+- **`timeseries`**：按 `granularity`（仅 `range` 时 `1h`/`1d`/`24h`→`hour`，更长→`day`；显式起止时不超过 48 小时为 `hour`）的 Token/请求/成本趋势；含 `cache_hit_rate`。`bucket` 是 `BUSINESS_TIMEZONE` 墙钟（日：`YYYY-MM-DD`，小时：`YYYY-MM-DD HH:MM:SS`），不是 UTC
 - **`granularity`**：`hour` | `day`
 - **`recentLogs`**、**`recentErrors`**：每项仅含 `id`、`model_id`、`provider_id`、`provider_name`、`status`、`created_at`；不返回错误原文、请求体、路由轨迹、计价审计、用户或密钥详情
 
@@ -1117,7 +1244,22 @@ Agent Tools 的八个 catalog/active 键仍接受受控通用 PUT 兼容；新 W
 | Web Deep Search | `WEB_DEEP_SEARCH_CATALOG` | `WEB_DEEP_SEARCH_ACTIVE` | `firecrawl`、`jina` |
 | AI Detection | `AI_DETECTION_CATALOG` | `AI_DETECTION_ACTIVE` | 当前 `tencent_tms`（多 provider 架构，可扩展） |
 
-Catalog JSON 以 Provider id 为键。联网类工具每项为 `{ apiKey, metered, standard, charged }`（Admin 保存时同步写兼容键 `cost = charged`；仅有旧 `cost` 时 resolve 三列相等）；AI Detection 为凭证字段并集 + 三账本单价 + 可选 `billingUnitChars`。设置 Active 前必须配齐该引擎所需凭证（未实现引擎不可 Active）。每种工具同时只启用一个 Active Provider。单价均须 ≥ 0。
+Catalog JSON 以 Provider id 为键。新价格使用版本化 `pricing`，例如：
+
+```json
+{
+  "bocha": {
+    "apiKey": "your-provider-key",
+    "pricing": { "v": 2, "standard": 0.01, "chargedFactor": 1.2, "meteredFactor": 0.8 }
+  }
+}
+```
+
+标准价与倍率均须为非负有限数字，两个倍率省略时为 1；标准价先舍入到六位小数，再计算收费和成本并分别舍入到六位小数，倍率保留精度。REST 与 MCP 共用 `resolveToolFactorPrices` 和价格编辑器。用户倍率为 0 时用户免费，仍记录供应成本。三个联网工具成功时计 1 request；AI Detection 的凭证字段并集 + `pricing` + 可选 `billingUnitChars` 保持原字符计费：按输入字符数向上取整为计费单元，单元数乘三个已解析单价。
+
+旧 `{ apiKey, metered, standard, charged, cost }` 继续按独立单价结算；仅有旧 `cost` 时三列相等。序列化时，新价格只保存 `pricing` 定义，旧价格保持旧格式。界面仅在用户修改价格后写入新格式，连接凭证修改不会转换旧价格。标准价为 0 但收费或成本非零等无法无损转换的情况，会提示重新填写价格；保存前仍执行原价格。新格式的无效版本、倍率或混合独立单价会拒绝写入，读到无效新格式也不会回退为默认或免费价格。
+
+价格继续使用现有 `system_config` JSON，不新增数据库字段、不迁移数据。用户鉴权与限流保持生效；REST 的余额预检在解析实际价格后执行，免费服务与 `GET /v1/tools/pricing` 可在零余额下使用。日志的 `tool_pricing` 保存当次倍率快照，公开价格接口继续返回计算后的三个单价及 `cost = charged`。设置 Active 前必须配齐该引擎所需凭证（未实现引擎不可 Active）。每种工具同时只启用一个 Active Provider。
 
 ### Tools 完整版本、原子保存与审计
 
@@ -1149,7 +1291,7 @@ expected_version 是有界 opaque 完整 family 版本向量，包含 legacy 及
 
 Admin 内闭环：**Tools Config → Playground（引擎）→ Simulator（Proxy）→ Tools Invocations**。
 
-1. **Config**：Admin → Tools → Configuration，为某引擎填入凭证与**三账本单价**（供应 / 目录 / 用户）并保存；Active 指向已配齐凭证的引擎（AI Detection 第一版为 `tencent_tms`）。再保存后 catalog JSON 应展开为 `metered` / `standard` / `charged`（及 `cost`）。
+1. **Config**：Admin → Tools → Configuration，在“连接设置”维护凭证，在“计费规则”维护**标准价、用户倍率、供应倍率**并保存；Active 指向已配齐凭证的引擎（AI Detection 第一版为 `tencent_tms`）。修改价格并保存后 catalog JSON 应包含 `pricing: { v: 2, standard, chargedFactor, meteredFactor }`。
 2. **Playground Tools**（不计费、不写 logs）：Admin → Playground → **Tools** 模式，或 Config 行内 **Test in Playground**（`?mode=tools&tool=…&provider=…`）。选工具 + **任意 catalog 引擎**（不限 Active）→ Send → 直连上游引擎，确认密钥与响应形态。
 3. **Simulator Tools**（真实 Proxy）：Admin → Simulator → Kind=**Tools** → 选工具与用户 API Key → Send 打到 `{proxy}/v1/tools/{id}` → 核对响应 `cost`（= charged）与预算；**Open Tools Invocations** / Request Logs 核对三列不同（若配置了不同单价）、`budget_spent` 仅增 charged、失败请求三列 0、`pricing_audit` v4 `fixed_tool_cost`。
 4. **边界**：Playground Tools **不经** Proxy、**不扣**用户预算、**不写** `api_key_request_logs`；Simulator Tools **走** Proxy 全链路。二者共用 **`@octafuse/tool-engines`** 引擎客户端（Admin 不得再依赖 `packages/proxy`）。LLM / Image / Audio 的 Routes 模式行为不变。
@@ -1190,6 +1332,9 @@ curl -sS "$GATEWAY_URL/v1/tools/ai-detection" \
 | `api_key_id` | 精确匹配 |
 | `user_email` | 精确匹配 |
 | `model_id` | 精确匹配 |
+| `provider_id` | 精确匹配 |
+| `provider_ids` | 逗号分隔，最多 10 个，匹配其中任一 `provider_id` |
+| `model_id_prefix` | `model_id` 前缀；`%`、`_` 和 `\` 按字面量匹配 |
 | `route_group` | 精确匹配 |
 | `status` | 精确匹配 |
 | `start_date` / `end_date` | 过滤 `created_at`（UTC，格式：`YYYY-MM-DD HH:mm:ss`） |
@@ -1251,10 +1396,12 @@ revision 绑定归属/渠道/凭据身份、治理状态/验证时间/标签/优
 | `tag` | 可选；非空时只统计带该 `model_tags.tag` 的模型 |
 | `provider_id` | 可选；Provider 精确匹配 |
 | `user_email` | 可选；用户邮箱精确匹配 |
+| `user_id` | 可选；用户 UUID 或 `ext:` 路由（解析后过滤 `rl.user_id`） |
+| `api_key_id` | 可选；API Key UUID 精确匹配 |
 
 响应：`{ success, data: [...], tags: string[] }`（`tags` 为库内全部 distinct 标签，供筛选 UI）。
 
-`data` 每行除用量/成本/可靠性字段外，含 TTFT 聚合（来自 `api_key_request_logs.first_reasoning_token_ms` / `first_token_ms`）：
+`data` 每行除用量、成本与可靠性字段外，含缓存、TTFT 与质量聚合。TTFT 来自 `api_key_request_logs.first_reasoning_token_ms` / `first_token_ms`：
 
 | 字段 | 说明 |
 |------|------|
@@ -1266,6 +1413,12 @@ revision 绑定归属/渠道/凭据身份、治理状态/验证时间/标签/优
 | `avg_reasoning_phase_ms` | reasoning → content 过渡阶段平均时长（两者均非空时） |
 | `reasoning_ttft_rate` | 含 reasoning TTFT 的请求占比（%） |
 | `content_ttft_rate` | 含 content TTFT 的请求占比（%） |
+| `failover_request_count` | `upstream_failover_count > 0` 的请求数 |
+| `failover_request_rate` | 上述请求数 / 总请求数 × 100，范围 0–100% |
+| `stream_sample_count` | `status = success` 且 `stream_duration_ms > 0` 的样本数 |
+| `stream_tokens_per_second` | 仅在上述样本上计算 `SUM(output_tokens) * 1000 / SUM(stream_duration_ms)`；无样本为 `null` |
+
+`failover_rate` 仍是转移事件数 / 请求数 × 100，可能超过 100%。`tokens_per_second` 仍按全部有流式时长的请求聚合。新接入方应使用上表中的请求占比和流式样本字段。D1、Postgres 与 MySQL 口径一致。
 
 ### `GET /admin/analytics/providers`
 
@@ -1275,7 +1428,7 @@ revision 绑定归属/渠道/凭据身份、治理状态/验证时间/标签/优
 | `tag` | 可选；非空时只统计带该 `model_tags.tag` 的模型 |
 | `model_id` / `route_group` | 可选；钻取过滤 |
 
-响应：`{ success, data: [...], tags: string[] }`；`data` 行字段与 **models** 分析相同（含上表 TTFT 聚合列），按 `provider_id` 分组。
+响应：`{ success, data: [...], tags: string[] }`；`data` 行字段与 **models** 分析相同（含上表 TTFT 与质量字段），按最终 `provider_id` 分组。未归属供应商的请求不计入；重试链中的前序失败也不拆成独立样本，因此这里的成功率不是上游逐次尝试可用率。
 
 ### `GET /admin/analytics/users`
 
@@ -1283,6 +1436,19 @@ revision 绑定归属/渠道/凭据身份、治理状态/验证时间/标签/优
 |----------|------|
 | `start_date` / `end_date` | 同上 |
 | `email` | 可选，`user_email` **模糊**匹配（`LIKE %...%`） |
+
+`data` 另含 `success_count`（`status = success` 的请求数）。`budget_*` 与 `wallet_*` 是账户当前值，不是所选区间的历史余额。用户按日志中的 `user_email` 聚合。
+
+### `GET /admin/analytics/keys`
+
+按用户下 **API Key** 聚合 `api_key_request_logs`（含当前 0 用量的 Key）。删除后 `api_key_id` 被置空的历史日志归入 `api_key_id = null` 行。`spend` 以 `charged_cost` 为准，**不是** `GET /admin/keys/:id` 上的用户级 `spend`。
+
+| 查询参数 | 说明 |
+|----------|------|
+| `start_date` / `end_date` | 同上 |
+| `user_id` | **必填**；用户 UUID 或 `ext:` 路由 |
+
+`data` 每行：`api_key_id`、`key_name`、`request_count`、`input_tokens`、`output_tokens`、`charged_cost`、`metered_cost`、`standard_cost`、`distinct_models`、`last_active_at`、`success_count`、`error_count`、`success_rate`。
 
 ### `GET /admin/analytics/reliability`
 

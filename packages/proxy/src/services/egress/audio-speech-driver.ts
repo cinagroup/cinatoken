@@ -3,24 +3,34 @@
  * DashScope 统一使用 SSE 上游，以便边转发音频边读取最终真实 usage；不会用输入长度伪造最终用量。
  */
 import { RequestAuxiliaryAuthLimitError, resolveProviderUpstreamSecret, resolveUpstreamEndpoint } from '@octafuse/core';
-import { createResourceCompletionGroup, observeResourceCleanup, type ResourceCompletion, type ResourceCompletionOutcome } from '../resource-completion';
-import { audioRequestAbortResponse, createAudioRequestLifecycle, validateAudioUpstreamUrl, type AudioRequestLifecycleOptions } from './audio-request-lifecycle';
-import { cancelSpeechReader, createSpeechStreamLifecycle, SpeechProtocolError, type SpeechRequestLifecycle } from './audio-speech-stream-lifecycle';
+import {
+	createResourceCompletionGroup,
+	observeResourceCleanup,
+	type ResourceCompletion,
+	type ResourceCompletionOutcome,
+} from '../resource-completion';
+import {
+	audioRequestAbortResponse,
+	createAudioRequestLifecycle,
+	validateAudioUpstreamUrl,
+	type AudioRequestLifecycleOptions,
+} from './audio-request-lifecycle';
+import {
+	cancelSpeechReader,
+	createSpeechStreamLifecycle,
+	SpeechProtocolError,
+	type SpeechRequestLifecycle,
+} from './audio-speech-stream-lifecycle';
 import { responseTextWithinLimit } from './bounded-response-body';
 import { audioEndpointSpeechRequestCapabilities } from '@octafuse/core/model-endpoint-catalog';
+import { applyRouteExtraHeaders } from '@octafuse/core';
+import { applyUpstreamExtraFields, protectedUpstreamPathsForRoute } from '@octafuse/core/upstream-extra-fields';
 import type { RouteResult } from '../model-router';
 import { EMPTY_USAGE, type UsageFromStream } from '../proxy';
-import { buildRouteRequestBody } from '../route-default-params';
 import type { RequestTimingAttempt, RequestTimingCollector } from '../request-timing';
 import { extractUpstreamRequestId } from './upstream-request-id';
-import {
-	sanitizeUpstreamUrlForLog,
-	upstreamErrorNameForLog,
-} from './upstream-observability';
-import {
-	resolveAudioProviderOptionsForRoute,
-	type AudioProviderOptions,
-} from './audio-provider-options';
+import { sanitizeUpstreamUrlForLog, upstreamErrorNameForLog } from './upstream-observability';
+import { resolveAudioProviderOptionsForRoute, type AudioProviderOptions } from './audio-provider-options';
 
 export type AudioSpeechResponseFormat = 'mp3' | 'opus' | 'aac' | 'flac' | 'wav' | 'pcm';
 export type AudioSpeechStreamFormat = 'audio' | 'sse';
@@ -43,6 +53,7 @@ export type NormalizedAudioSpeechRequest = {
 	speed: number;
 	streamFormat: AudioSpeechStreamFormat;
 	instructions?: string;
+	extraFields?: Record<string, unknown>;
 	inputReferences?: readonly AudioSpeechInputReferencePart[];
 	/** OpenRouter `provider.options.<provider>`; resolved per concrete attempt. */
 	providerOptions?: AudioProviderOptions;
@@ -53,6 +64,7 @@ export const AUDIO_SPEECH_TIMEOUT_MS = 300_000;
 export const AUDIO_SPEECH_MAX_ERROR_RESPONSE_BYTES = 64 * 1024;
 
 type SpeechDispatchMeta = {
+	restoredUpstreamPaths?: string[];
 	gatewayGeneratedError?: boolean;
 	admissionDeniedPreDispatch?: boolean;
 	upstreamOutcomeUnknown?: boolean;
@@ -77,7 +89,9 @@ async function withSpeechResources(
 		const result = await run(resources.track);
 		if (result.resourceCompletion) resources.track(result.resourceCompletion);
 		return { ...result, resourceCompletion: resources.completion };
-	} finally { resources.seal(); }
+	} finally {
+		resources.seal();
+	}
 }
 
 type DashScopeTtsKind = 'speech' | 'qwen' | 'minimax';
@@ -145,57 +159,106 @@ function integerInSet(value: unknown, allowed: ReadonlySet<number>): boolean {
 }
 
 const QWEN_TTS_LANGUAGES = new Set([
-	'Auto', 'Chinese', 'English', 'German', 'Italian', 'Portuguese', 'Spanish',
-	'Japanese', 'Korean', 'French', 'Russian',
+	'Auto',
+	'Chinese',
+	'English',
+	'German',
+	'Italian',
+	'Portuguese',
+	'Spanish',
+	'Japanese',
+	'Korean',
+	'French',
+	'Russian',
 ]);
-const MINIMAX_TTS_EMOTIONS = new Set([
-	'happy', 'sad', 'angry', 'fearful', 'disgusted', 'surprised', 'calm', 'whisper',
-]);
-const MINIMAX_TTS_SOUND_EFFECTS = new Set([
-	'spacious_echo', 'auditorium_echo', 'lofi_telephone', 'robotic',
-]);
+const MINIMAX_TTS_EMOTIONS = new Set(['happy', 'sad', 'angry', 'fearful', 'disgusted', 'surprised', 'calm', 'whisper']);
+const MINIMAX_TTS_SOUND_EFFECTS = new Set(['spacious_echo', 'auditorium_echo', 'lofi_telephone', 'robotic']);
 const MINIMAX_TTS_LANGUAGE_BOOSTS = new Set([
-	'Chinese', 'Chinese,Yue', 'English', 'Arabic', 'Russian', 'Spanish', 'French',
-	'Portuguese', 'German', 'Turkish', 'Dutch', 'Ukrainian', 'Vietnamese',
-	'Indonesian', 'Japanese', 'Italian', 'Korean', 'Thai', 'Polish', 'Romanian',
-	'Greek', 'Czech', 'Finnish', 'Hindi', 'Bulgarian', 'Danish', 'Hebrew', 'Malay',
-	'Persian', 'Slovak', 'Swedish', 'Croatian', 'Filipino', 'Hungarian', 'Norwegian',
-	'Slovenian', 'Catalan', 'Nynorsk', 'Tamil', 'Afrikaans', 'auto',
+	'Chinese',
+	'Chinese,Yue',
+	'English',
+	'Arabic',
+	'Russian',
+	'Spanish',
+	'French',
+	'Portuguese',
+	'German',
+	'Turkish',
+	'Dutch',
+	'Ukrainian',
+	'Vietnamese',
+	'Indonesian',
+	'Japanese',
+	'Italian',
+	'Korean',
+	'Thai',
+	'Polish',
+	'Romanian',
+	'Greek',
+	'Czech',
+	'Finnish',
+	'Hindi',
+	'Bulgarian',
+	'Danish',
+	'Hebrew',
+	'Malay',
+	'Persian',
+	'Slovak',
+	'Swedish',
+	'Croatian',
+	'Filipino',
+	'Hungarian',
+	'Norwegian',
+	'Slovenian',
+	'Catalan',
+	'Nynorsk',
+	'Tamil',
+	'Afrikaans',
+	'auto',
 ]);
 
 function validateDashScopeSpeechOptions(
 	options: Readonly<Record<string, unknown>>,
 	request: NormalizedAudioSpeechRequest,
 ): boolean {
-	if (!hasOnlyFields(options, new Set([
-		'sample_rate', 'volume', 'bit_rate', 'pitch', 'enable_ssml',
-		'word_timestamp_enabled', 'seed',
-	]))) return false;
-	if (options.sample_rate !== undefined && !integerInSet(
-		options.sample_rate,
-		new Set([8_000, 16_000, 22_050, 24_000, 44_100, 48_000]),
-	)) return false;
-	if (options.volume !== undefined && (
-		!Number.isInteger(options.volume) || !finiteNumberInRange(options.volume, 0, 100)
-	)) return false;
-	if (options.bit_rate !== undefined && (
-		!Number.isInteger(options.bit_rate)
-		|| !finiteNumberInRange(options.bit_rate, 6, 510)
-		|| request.responseFormat !== 'opus'
-	)) return false;
+	if (
+		!hasOnlyFields(
+			options,
+			new Set(['sample_rate', 'volume', 'bit_rate', 'pitch', 'enable_ssml', 'word_timestamp_enabled', 'seed']),
+		)
+	)
+		return false;
+	if (
+		options.sample_rate !== undefined &&
+		!integerInSet(options.sample_rate, new Set([8_000, 16_000, 22_050, 24_000, 44_100, 48_000]))
+	)
+		return false;
+	if (
+		options.volume !== undefined &&
+		(!Number.isInteger(options.volume) || !finiteNumberInRange(options.volume, 0, 100))
+	)
+		return false;
+	if (
+		options.bit_rate !== undefined &&
+		(!Number.isInteger(options.bit_rate) ||
+			!finiteNumberInRange(options.bit_rate, 6, 510) ||
+			request.responseFormat !== 'opus')
+	)
+		return false;
 	if (options.pitch !== undefined && !finiteNumberInRange(options.pitch, 0.5, 2)) return false;
 	for (const field of ['enable_ssml', 'word_timestamp_enabled'] as const) {
 		if (options[field] !== undefined && typeof options[field] !== 'boolean') return false;
 	}
-	return options.seed === undefined
-		|| (typeof options.seed === 'number' && Number.isSafeInteger(options.seed));
+	return options.seed === undefined || (typeof options.seed === 'number' && Number.isSafeInteger(options.seed));
 }
 
 function validateDashScopeQwenOptions(options: Readonly<Record<string, unknown>>): boolean {
 	if (!hasOnlyFields(options, new Set(['language_type', 'optimize_instructions']))) return false;
-	if (options.language_type !== undefined && (
-		typeof options.language_type !== 'string' || !QWEN_TTS_LANGUAGES.has(options.language_type)
-	)) return false;
+	if (
+		options.language_type !== undefined &&
+		(typeof options.language_type !== 'string' || !QWEN_TTS_LANGUAGES.has(options.language_type))
+	)
+		return false;
 	return options.optimize_instructions === undefined || typeof options.optimize_instructions === 'boolean';
 }
 
@@ -203,84 +266,107 @@ function validateMiniMaxNestedOptions(
 	options: Readonly<Record<string, unknown>>,
 	request: NormalizedAudioSpeechRequest,
 ): boolean {
-	if (!hasOnlyFields(options, new Set([
-		'voice_setting', 'audio_setting', 'pronunciation_dict', 'language_boost',
-		'voice_modify', 'text_normalization', 'latex_read', 'subtitle_enable', 'aigc_watermark',
-	]))) return false;
+	if (
+		!hasOnlyFields(
+			options,
+			new Set([
+				'voice_setting',
+				'audio_setting',
+				'pronunciation_dict',
+				'language_boost',
+				'voice_modify',
+				'text_normalization',
+				'latex_read',
+				'subtitle_enable',
+				'aigc_watermark',
+			]),
+		)
+	)
+		return false;
 
 	if (options.voice_setting !== undefined) {
-		if (!isObject(options.voice_setting) || !hasOnlyFields(
-			options.voice_setting,
-			new Set(['vol', 'pitch', 'emotion']),
-		)) return false;
-		if (options.voice_setting.vol !== undefined && !(
-			finiteNumberInRange(options.voice_setting.vol, Number.MIN_VALUE, 10)
-		)) return false;
-		if (options.voice_setting.pitch !== undefined && (
-			!Number.isInteger(options.voice_setting.pitch)
-			|| !finiteNumberInRange(options.voice_setting.pitch, -12, 12)
-		)) return false;
-		if (options.voice_setting.emotion !== undefined && (
-			typeof options.voice_setting.emotion !== 'string'
-			|| !MINIMAX_TTS_EMOTIONS.has(options.voice_setting.emotion)
-		)) return false;
+		if (!isObject(options.voice_setting) || !hasOnlyFields(options.voice_setting, new Set(['vol', 'pitch', 'emotion'])))
+			return false;
+		if (
+			options.voice_setting.vol !== undefined &&
+			!finiteNumberInRange(options.voice_setting.vol, Number.MIN_VALUE, 10)
+		)
+			return false;
+		if (
+			options.voice_setting.pitch !== undefined &&
+			(!Number.isInteger(options.voice_setting.pitch) || !finiteNumberInRange(options.voice_setting.pitch, -12, 12))
+		)
+			return false;
+		if (
+			options.voice_setting.emotion !== undefined &&
+			(typeof options.voice_setting.emotion !== 'string' || !MINIMAX_TTS_EMOTIONS.has(options.voice_setting.emotion))
+		)
+			return false;
 	}
 
 	if (options.audio_setting !== undefined) {
-		if (!isObject(options.audio_setting) || !hasOnlyFields(
-			options.audio_setting,
-			new Set(['sample_rate', 'bitrate', 'channel', 'force_cbr']),
-		)) return false;
-		if (options.audio_setting.sample_rate !== undefined && !integerInSet(
-			options.audio_setting.sample_rate,
-			new Set([8_000, 16_000, 22_050, 24_000, 32_000, 44_100]),
-		)) return false;
-		if (options.audio_setting.bitrate !== undefined && (
-			!integerInSet(options.audio_setting.bitrate, new Set([32_000, 64_000, 128_000, 256_000]))
-			|| request.responseFormat !== 'mp3'
-		)) return false;
-		if (options.audio_setting.channel !== undefined
-			&& !integerInSet(options.audio_setting.channel, new Set([1, 2]))) return false;
-		if (options.audio_setting.force_cbr !== undefined
-			&& (
-				typeof options.audio_setting.force_cbr !== 'boolean'
-				|| request.responseFormat !== 'mp3'
-			)) return false;
+		if (
+			!isObject(options.audio_setting) ||
+			!hasOnlyFields(options.audio_setting, new Set(['sample_rate', 'bitrate', 'channel', 'force_cbr']))
+		)
+			return false;
+		if (
+			options.audio_setting.sample_rate !== undefined &&
+			!integerInSet(options.audio_setting.sample_rate, new Set([8_000, 16_000, 22_050, 24_000, 32_000, 44_100]))
+		)
+			return false;
+		if (
+			options.audio_setting.bitrate !== undefined &&
+			(!integerInSet(options.audio_setting.bitrate, new Set([32_000, 64_000, 128_000, 256_000])) ||
+				request.responseFormat !== 'mp3')
+		)
+			return false;
+		if (options.audio_setting.channel !== undefined && !integerInSet(options.audio_setting.channel, new Set([1, 2])))
+			return false;
+		if (
+			options.audio_setting.force_cbr !== undefined &&
+			(typeof options.audio_setting.force_cbr !== 'boolean' || request.responseFormat !== 'mp3')
+		)
+			return false;
 	}
 
 	if (options.pronunciation_dict !== undefined) {
-		if (!isObject(options.pronunciation_dict)
-			|| !hasOnlyFields(options.pronunciation_dict, new Set(['tone']))) return false;
+		if (!isObject(options.pronunciation_dict) || !hasOnlyFields(options.pronunciation_dict, new Set(['tone'])))
+			return false;
 		const tone = options.pronunciation_dict.tone;
-		if (tone !== undefined && (
-			!Array.isArray(tone)
-			|| tone.length > 16
-			|| !tone.every((item) => typeof item === 'string' && item.length <= 256)
-		)) return false;
+		if (
+			tone !== undefined &&
+			(!Array.isArray(tone) ||
+				tone.length > 16 ||
+				!tone.every((item) => typeof item === 'string' && item.length <= 256))
+		)
+			return false;
 	}
 
 	if (options.voice_modify !== undefined) {
 		if (request.responseFormat !== 'mp3') return false;
-		if (!isObject(options.voice_modify) || !hasOnlyFields(
-			options.voice_modify,
-			new Set(['pitch', 'intensity', 'timbre', 'sound_effects']),
-		)) return false;
+		if (
+			!isObject(options.voice_modify) ||
+			!hasOnlyFields(options.voice_modify, new Set(['pitch', 'intensity', 'timbre', 'sound_effects']))
+		)
+			return false;
 		for (const field of ['pitch', 'intensity', 'timbre'] as const) {
 			const value = options.voice_modify[field];
-			if (value !== undefined && (
-				!Number.isInteger(value) || !finiteNumberInRange(value, -100, 100)
-			)) return false;
+			if (value !== undefined && (!Number.isInteger(value) || !finiteNumberInRange(value, -100, 100))) return false;
 		}
-		if (options.voice_modify.sound_effects !== undefined && (
-			typeof options.voice_modify.sound_effects !== 'string'
-			|| !MINIMAX_TTS_SOUND_EFFECTS.has(options.voice_modify.sound_effects)
-		)) return false;
+		if (
+			options.voice_modify.sound_effects !== undefined &&
+			(typeof options.voice_modify.sound_effects !== 'string' ||
+				!MINIMAX_TTS_SOUND_EFFECTS.has(options.voice_modify.sound_effects))
+		)
+			return false;
 	}
 
-	if (options.language_boost !== undefined && (
-		typeof options.language_boost !== 'string'
-		|| !MINIMAX_TTS_LANGUAGE_BOOSTS.has(options.language_boost)
-	)) return false;
+	if (
+		options.language_boost !== undefined &&
+		(typeof options.language_boost !== 'string' || !MINIMAX_TTS_LANGUAGE_BOOSTS.has(options.language_boost))
+	)
+		return false;
 	for (const field of ['text_normalization', 'latex_read'] as const) {
 		if (options[field] !== undefined && typeof options[field] !== 'boolean') return false;
 	}
@@ -328,26 +414,31 @@ function buildStreamingOpenAiSpeechBody(
 		throw new Error('Stateless voice cloning requires one reference audio part');
 	}
 	const marker = `__cinatoken_speech_audio_${crypto.randomUUID()}__`;
-	const serializedReferences = parts.map((part) => part.type === 'text'
-		? { type: 'text', text: part.text }
-		: { type: 'input_audio', input_audio: { data: marker } });
+	const serializedReferences = parts.map((part) =>
+		part.type === 'text' ? { type: 'text', text: part.text } : { type: 'input_audio', input_audio: { data: marker } },
+	);
 	const serialized = JSON.stringify({ ...body, input_references: serializedReferences });
 	const quotedMarker = JSON.stringify(marker);
 	const markerIndex = serialized.indexOf(quotedMarker);
 	if (markerIndex < 0 || serialized.indexOf(quotedMarker, markerIndex + quotedMarker.length) >= 0) {
 		throw new Error('Could not isolate the stateless voice-cloning payload');
 	}
-	const dataUriPrefix = audio.inputAudio.encoding.kind === 'data_uri'
-		? `data:${audio.inputAudio.encoding.mediaType};base64,`
-		: '';
+	const dataUriPrefix =
+		audio.inputAudio.encoding.kind === 'data_uri' ? `data:${audio.inputAudio.encoding.mediaType};base64,` : '';
 	const prefix = `${serialized.slice(0, markerIndex + 1)}${dataUriPrefix}`;
 	const suffix = serialized.slice(markerIndex + quotedMarker.length - 1);
 	return createOwnedSpeechUpload(prefix, suffix, audio.inputAudio.bytes);
 }
 
 /** Own producer state separately from the caller's normalized request. */
-function createOwnedSpeechUpload(prefix: string, suffix: string, bytes: Uint8Array | null): {
-	body: ReadableStream<Uint8Array>; resourceCompletion: ResourceCompletion; stop(): void;
+function createOwnedSpeechUpload(
+	prefix: string,
+	suffix: string,
+	bytes: Uint8Array | null,
+): {
+	body: ReadableStream<Uint8Array>;
+	resourceCompletion: ResourceCompletion;
+	stop(): void;
 } {
 	const encoder = new TextEncoder();
 	// Divisible by three so every non-final chunk has no Base64 padding.
@@ -357,7 +448,9 @@ function createOwnedSpeechUpload(prefix: string, suffix: string, bytes: Uint8Arr
 	let closed = false;
 	let source: ReadableStreamDefaultController<Uint8Array>;
 	let resolveResource!: (outcome: ResourceCompletionOutcome) => void;
-	const resourceCompletion: ResourceCompletion = new Promise(resolve => { resolveResource = resolve; });
+	const resourceCompletion: ResourceCompletion = new Promise((resolve) => {
+		resolveResource = resolve;
+	});
 	const finish = (outcome: ResourceCompletionOutcome) => {
 		if (closed) return;
 		closed = true;
@@ -368,40 +461,45 @@ function createOwnedSpeechUpload(prefix: string, suffix: string, bytes: Uint8Arr
 		offset = 0;
 		resolveResource(outcome);
 	};
-	const bodyStream = new ReadableStream<Uint8Array>({
-		start(controller) { source = controller; },
-		pull(controller) {
-			if (closed) return;
-			try {
-				if (phase === 'prefix') {
-					phase = 'audio';
-					controller.enqueue(encoder.encode(prefix));
-					return;
+	const bodyStream = new ReadableStream<Uint8Array>(
+		{
+			start(controller) {
+				source = controller;
+			},
+			pull(controller) {
+				if (closed) return;
+				try {
+					if (phase === 'prefix') {
+						phase = 'audio';
+						controller.enqueue(encoder.encode(prefix));
+						return;
+					}
+					if (phase === 'audio' && bytes && offset < bytes.byteLength) {
+						const chunk = bytes.subarray(offset, Math.min(offset + chunkSize, bytes.byteLength));
+						offset += chunk.byteLength;
+						controller.enqueue(encoder.encode(bytesToBase64(chunk)));
+						return;
+					}
+					if (phase === 'audio') phase = 'suffix';
+					if (phase === 'suffix') {
+						phase = 'done';
+						controller.enqueue(encoder.encode(suffix));
+						return;
+					}
+					controller.close();
+					finish('confirmed');
+				} catch {
+					controller.error(new SpeechProtocolError('Audio speech upload encoding failed'));
+					finish('unconfirmed');
 				}
-				if (phase === 'audio' && bytes && offset < bytes.byteLength) {
-					const chunk = bytes.subarray(offset, Math.min(offset + chunkSize, bytes.byteLength));
-					offset += chunk.byteLength;
-					controller.enqueue(encoder.encode(bytesToBase64(chunk)));
-					return;
-				}
-				if (phase === 'audio') phase = 'suffix';
-				if (phase === 'suffix') {
-					phase = 'done';
-					controller.enqueue(encoder.encode(suffix));
-					return;
-				}
-				controller.close();
+			},
+			cancel() {
+				// Native consumer cancellation invokes our synchronous source cleanup.
 				finish('confirmed');
-			} catch {
-				controller.error(new SpeechProtocolError('Audio speech upload encoding failed'));
-				finish('unconfirmed');
-			}
+			},
 		},
-		cancel() {
-			// Native consumer cancellation invokes our synchronous source cleanup.
-			finish('confirmed');
-		},
-	}, { highWaterMark: 0 });
+		{ highWaterMark: 0 },
+	);
 	return {
 		body: bodyStream,
 		resourceCompletion,
@@ -443,21 +541,26 @@ function unknownSpeechFailure(params: {
 	upstreamRequestId: string | null;
 }): SpeechDispatchResult {
 	forbidSpeechFailover(params.meta);
-	console.error(JSON.stringify({
-		event: 'gateway.audio_speech.upstream_error',
-		operation: params.operation,
-		upstream: params.upstreamLabel,
-		providerId: params.providerId,
-		routeTargetId: params.routeTargetId,
-		errorName: upstreamErrorNameForLog(params.error),
-	}));
-	return {
-		response: new Response(JSON.stringify({
-			error: { message: 'Audio speech upstream outcome could not be verified' },
-		}), {
-			status: 502,
-			headers: { 'Content-Type': 'application/json' },
+	console.error(
+		JSON.stringify({
+			event: 'gateway.audio_speech.upstream_error',
+			operation: params.operation,
+			upstream: params.upstreamLabel,
+			providerId: params.providerId,
+			routeTargetId: params.routeTargetId,
+			errorName: upstreamErrorNameForLog(params.error),
 		}),
+	);
+	return {
+		response: new Response(
+			JSON.stringify({
+				error: { message: 'Audio speech upstream outcome could not be verified' },
+			}),
+			{
+				status: 502,
+				headers: { 'Content-Type': 'application/json' },
+			},
+		),
 		usagePromise: Promise.resolve(EMPTY_USAGE),
 		upstreamRequestId: params.upstreamRequestId,
 		meta: params.meta,
@@ -560,9 +663,7 @@ function parseDashScopeTtsEvent(value: unknown, kind: DashScopeTtsKind): ParsedT
 		const baseResponse = isObject(output.base_resp) ? output.base_resp : null;
 		const statusCode = baseResponse ? finiteInteger(baseResponse.status_code) : null;
 		if (statusCode != null && statusCode !== 0) {
-			error = typeof baseResponse?.status_msg === 'string'
-				? baseResponse.status_msg
-				: `MiniMax status ${statusCode}`;
+			error = typeof baseResponse?.status_msg === 'string' ? baseResponse.status_msg : `MiniMax status ${statusCode}`;
 		}
 		const data = isObject(output.data) ? output.data : null;
 		const hex = data && typeof data.audio === 'string' ? data.audio : '';
@@ -597,14 +698,12 @@ function speechDoneEvent(usage: UsageFromStream): Uint8Array {
 				output_tokens: usage.output_tokens,
 				total_tokens: usage.total_tokens,
 			},
-		})}\n\n`
+		})}\n\n`,
 	);
 }
 
 function speechDeltaEvent(audioBase64: string): Uint8Array {
-	return new TextEncoder().encode(
-		`data: ${JSON.stringify({ type: 'speech.audio.delta', audio: audioBase64 })}\n\n`
-	);
+	return new TextEncoder().encode(`data: ${JSON.stringify({ type: 'speech.audio.delta', audio: audioBase64 })}\n\n`);
 }
 
 function updateUsageFromTtsEvent(usage: UsageFromStream, event: ParsedTtsEvent): void {
@@ -627,50 +726,67 @@ function dashScopeStreamResponse(options: {
 	markUpstreamOutcomeUnknown: () => void;
 }): { response: Response; usagePromise: Promise<UsageFromStream>; resourceCompletion: ResourceCompletion } {
 	const usage: UsageFromStream = { ...EMPTY_USAGE };
-	const owned = createSpeechStreamLifecycle(options.reader, options.lifecycle, usage, options.markUpstreamOutcomeUnknown, options.timing);
+	const owned = createSpeechStreamLifecycle(
+		options.reader,
+		options.lifecycle,
+		usage,
+		options.markUpstreamOutcomeUnknown,
+		options.timing,
+	);
 	let emittedAudio = false;
 	const pending = [...options.initialEvents];
-	const body = new ReadableStream<Uint8Array>({
-		start: owned.start,
-		async pull(controller) {
-			if (owned.closed) return;
-			try {
-				while (!owned.closed) {
-					if (pending.length === 0) {
-						const next = await owned.read();
-						if (owned.closed) return;
-						pending.push(...options.parser.push(next.value ?? new Uint8Array(), next.done));
-						if (next.done && pending.length === 0) {
-							throw new SpeechProtocolError('DashScope TTS stream ended before a terminal event');
+	const body = new ReadableStream<Uint8Array>(
+		{
+			start: owned.start,
+			async pull(controller) {
+				if (owned.closed) return;
+				try {
+					while (!owned.closed) {
+						if (pending.length === 0) {
+							const next = await owned.read();
+							if (owned.closed) return;
+							pending.push(...options.parser.push(next.value ?? new Uint8Array(), next.done));
+							if (next.done && pending.length === 0) {
+								throw new SpeechProtocolError('DashScope TTS stream ended before a terminal event');
+							}
 						}
+						const raw = pending.shift();
+						if (raw === undefined) continue;
+						const event = parseDashScopeTtsEvent(raw, options.kind);
+						if (event.error) throw new Error(event.error);
+						updateUsageFromTtsEvent(usage, event);
+						if (event.audioBase64) {
+							emittedAudio = true;
+							options.timing?.markFirstByte();
+							controller.enqueue(
+								options.request.streamFormat === 'sse'
+									? speechDeltaEvent(event.audioBase64)
+									: base64ToBytes(event.audioBase64),
+							);
+						}
+						if (event.terminal) {
+							if (!emittedAudio) throw new SpeechProtocolError('DashScope TTS completed without audio data');
+							if (options.request.streamFormat === 'sse') controller.enqueue(speechDoneEvent(usage));
+							owned.complete();
+							return;
+						}
+						if (event.audioBase64) return;
 					}
-					const raw = pending.shift();
-					if (raw === undefined) continue;
-					const event = parseDashScopeTtsEvent(raw, options.kind);
-					if (event.error) throw new Error(event.error);
-					updateUsageFromTtsEvent(usage, event);
-					if (event.audioBase64) {
-						emittedAudio = true;
-						options.timing?.markFirstByte();
-						controller.enqueue(options.request.streamFormat === 'sse'
-							? speechDeltaEvent(event.audioBase64) : base64ToBytes(event.audioBase64));
-					}
-					if (event.terminal) {
-						if (!emittedAudio) throw new SpeechProtocolError('DashScope TTS completed without audio data');
-						if (options.request.streamFormat === 'sse') controller.enqueue(speechDoneEvent(usage));
-						owned.complete();
-						return;
-					}
-					if (event.audioBase64) return;
+				} catch (error) {
+					owned.fail(error);
 				}
-			} catch (error) { owned.fail(error); }
+			},
+			cancel: owned.cancel,
 		},
-		cancel: owned.cancel,
-	}, { highWaterMark: 0 });
+		{ highWaterMark: 0 },
+	);
 	return {
-		response: new Response(body, { headers: {
-			'Content-Type': speechResponseContentType(options.request), 'Cache-Control': 'no-cache',
-		} }),
+		response: new Response(body, {
+			headers: {
+				'Content-Type': speechResponseContentType(options.request),
+				'Cache-Control': 'no-cache',
+			},
+		}),
 		usagePromise: owned.usagePromise,
 		resourceCompletion: owned.resourceCompletion,
 	};
@@ -712,10 +828,7 @@ async function firstDashScopeEvents(
 	}
 }
 
-function validateDashScopeRequest(
-	kind: DashScopeTtsKind,
-	request: NormalizedAudioSpeechRequest
-): string | null {
+function validateDashScopeRequest(kind: DashScopeTtsKind, request: NormalizedAudioSpeechRequest): string | null {
 	if (request.inputReferences) {
 		return 'DashScope TTS adapters do not support OpenRouter stateless voice cloning';
 	}
@@ -749,10 +862,7 @@ function validateDashScopeRequest(
  * already-normalized public request.
  */
 export function audioSpeechRouteCanDispatch(
-	route: Pick<
-		RouteResult,
-		'adapter' | 'upstreamProtocol' | 'endpoint' | 'providerId' | 'providerName'
-	>,
+	route: Pick<RouteResult, 'adapter' | 'upstreamProtocol' | 'endpoint' | 'providerId' | 'providerName'>,
 	request: NormalizedAudioSpeechRequest,
 ): boolean {
 	if (route.adapter === 'passthrough' && route.upstreamProtocol === 'openai') {
@@ -760,51 +870,49 @@ export function audioSpeechRouteCanDispatch(
 			? audioEndpointSpeechRequestCapabilities(route.endpoint.audioCapabilities)
 			: null;
 		if (request.inputReferences) {
-			if (
-				route.endpoint?.capabilities.voice_cloning !== true ||
-				!speechCapabilities
-			) {
+			if (route.endpoint?.capabilities.voice_cloning !== true || !speechCapabilities) {
 				return false;
 			}
-			const audio = request.inputReferences.find(
-				(part) => part.type === 'input_audio',
-			);
+			const audio = request.inputReferences.find((part) => part.type === 'input_audio');
 			if (audio?.type !== 'input_audio') return false;
-			const mediaType = audio.inputAudio.encoding.kind === 'data_uri'
-				? audio.inputAudio.encoding.mediaType.toLowerCase()
-				: speechCapabilities.reference_audio_default_media_type;
-			return mediaType !== null
-				&& speechCapabilities.reference_audio_media_types.includes(mediaType);
+			const mediaType =
+				audio.inputAudio.encoding.kind === 'data_uri'
+					? audio.inputAudio.encoding.mediaType.toLowerCase()
+					: speechCapabilities.reference_audio_default_media_type;
+			return mediaType !== null && speechCapabilities.reference_audio_media_types.includes(mediaType);
 		}
-		return request.voice != null
-			|| speechCapabilities?.supports_default_voice === true;
+		return request.voice != null || speechCapabilities?.supports_default_voice === true;
 	}
 	if (route.upstreamProtocol !== 'dashscope') return false;
 	if (route.adapter === 'dashscope-tts-speech') {
-		return validateDashScopeRequest('speech', request) === null
-			&& validateDashScopeProviderOptions('speech', route, request);
+		return (
+			validateDashScopeRequest('speech', request) === null && validateDashScopeProviderOptions('speech', route, request)
+		);
 	}
 	if (route.adapter === 'dashscope-tts-qwen') {
-		return validateDashScopeRequest('qwen', request) === null
-			&& validateDashScopeProviderOptions('qwen', route, request);
+		return (
+			validateDashScopeRequest('qwen', request) === null && validateDashScopeProviderOptions('qwen', route, request)
+		);
 	}
 	if (route.adapter === 'dashscope-tts-minimax') {
-		return validateDashScopeRequest('minimax', request) === null
-			&& validateDashScopeProviderOptions('minimax', route, request);
+		return (
+			validateDashScopeRequest('minimax', request) === null &&
+			validateDashScopeProviderOptions('minimax', route, request)
+		);
 	}
 	return false;
 }
 
 /** 显式 adapter 决定请求形状，避免按模型名称猜测 MiniMax 与 Qwen 协议。 */
-export function buildDashScopeTtsBody(
+function buildDashScopeTtsBase(
 	route: RouteResult,
 	request: NormalizedAudioSpeechRequest,
-	kind: DashScopeTtsKind
+	kind: DashScopeTtsKind,
 ): Record<string, unknown> {
 	const voice = requiredVoiceId(request.voice);
 	const providerOptions = resolveAudioProviderOptionsForRoute(request.providerOptions, route);
 	if (kind === 'speech') {
-		return buildRouteRequestBody(route, {
+		return {
 			model: route.providerModelName,
 			input: {
 				...providerOptions,
@@ -814,10 +922,10 @@ export function buildDashScopeTtsBody(
 				rate: request.speed,
 				...(request.instructions ? { instruction: request.instructions } : {}),
 			},
-		});
+		};
 	}
 	if (kind === 'qwen') {
-		return buildRouteRequestBody(route, {
+		return {
 			model: route.providerModelName,
 			input: {
 				...providerOptions,
@@ -825,18 +933,12 @@ export function buildDashScopeTtsBody(
 				voice,
 				...(request.instructions ? { instructions: request.instructions } : {}),
 			},
-		});
+		};
 	}
-	const providerVoiceSetting = isObject(providerOptions.voice_setting)
-		? providerOptions.voice_setting
-		: {};
-	const providerAudioSetting = isObject(providerOptions.audio_setting)
-		? providerOptions.audio_setting
-		: {};
-	const providerStreamOptions = isObject(providerOptions.stream_options)
-		? providerOptions.stream_options
-		: {};
-	return buildRouteRequestBody(route, {
+	const providerVoiceSetting = isObject(providerOptions.voice_setting) ? providerOptions.voice_setting : {};
+	const providerAudioSetting = isObject(providerOptions.audio_setting) ? providerOptions.audio_setting : {};
+	const providerStreamOptions = isObject(providerOptions.stream_options) ? providerOptions.stream_options : {};
+	return {
 		model: route.providerModelName,
 		input: {
 			...providerOptions,
@@ -856,12 +958,42 @@ export function buildDashScopeTtsBody(
 				exclude_aggregated_audio: true,
 			},
 		},
+	};
+}
+
+export function composeDashScopeTtsBody(
+	route: RouteResult,
+	request: NormalizedAudioSpeechRequest,
+	kind: DashScopeTtsKind,
+): { body: Record<string, unknown>; restoredPaths: string[] } {
+	return applyUpstreamExtraFields({
+		built: buildDashScopeTtsBase(route, request, kind),
+		customParams: route.customParams,
+		extras: request.extraFields,
+		protectedPaths: protectedUpstreamPathsForRoute(route),
 	});
+}
+export function buildDashScopeTtsBody(
+	route: RouteResult,
+	request: NormalizedAudioSpeechRequest,
+	kind: DashScopeTtsKind,
+): Record<string, unknown> {
+	return composeDashScopeTtsBody(route, request, kind).body;
 }
 
 async function boundedSpeechErrorResponse(response: Response, lifecycle: SpeechRequestLifecycle): Promise<Response> {
-	const text = await responseTextWithinLimit(response, AUDIO_SPEECH_MAX_ERROR_RESPONSE_BYTES, lifecycle.signal, undefined, lifecycle.trackResourceCompletion);
-	return new Response(text || null, { status: response.status, statusText: response.statusText, headers: copyResponseHeaders(response.headers) });
+	const text = await responseTextWithinLimit(
+		response,
+		AUDIO_SPEECH_MAX_ERROR_RESPONSE_BYTES,
+		lifecycle.signal,
+		undefined,
+		lifecycle.trackResourceCompletion,
+	);
+	return new Response(text || null, {
+		status: response.status,
+		statusText: response.statusText,
+		headers: copyResponseHeaders(response.headers),
+	});
 }
 
 function failedSpeechDispatch(
@@ -871,8 +1003,7 @@ function failedSpeechDispatch(
 ): SpeechDispatchResult {
 	if (lifecycle.admissionFailed || params.error instanceof RequestAuxiliaryAuthLimitError) throw params.error;
 	const explicitNonOk = upstreamStatus != null && (upstreamStatus < 200 || upstreamStatus >= 300);
-	const unknown = lifecycle.dispatchStarted
-		&& (!explicitNonOk || speechStatusMayHideAcceptedWork(upstreamStatus!));
+	const unknown = lifecycle.dispatchStarted && (!explicitNonOk || speechStatusMayHideAcceptedWork(upstreamStatus!));
 	const abortReason = lifecycle.getAbortReason();
 	if (!lifecycle.dispatchStarted) params.meta.admissionDeniedPreDispatch = true;
 	if (unknown) forbidSpeechFailover(params.meta);
@@ -880,8 +1011,12 @@ function failedSpeechDispatch(
 		params.meta.failoverForbidden = true;
 		if (!explicitNonOk) {
 			params.meta.gatewayGeneratedError = true;
-			return { response: audioRequestAbortResponse(abortReason === 'gateway_timeout'),
-				usagePromise: Promise.resolve(EMPTY_USAGE), upstreamRequestId: params.upstreamRequestId, meta: params.meta };
+			return {
+				response: audioRequestAbortResponse(abortReason === 'gateway_timeout'),
+				usagePromise: Promise.resolve(EMPTY_USAGE),
+				upstreamRequestId: params.upstreamRequestId,
+				meta: params.meta,
+			};
 		}
 	}
 	if (unknown) return unknownSpeechFailure(params);
@@ -890,7 +1025,9 @@ function failedSpeechDispatch(
 			status: explicitNonOk && upstreamStatus !== 304 && upstreamStatus !== 101 ? upstreamStatus! : 502,
 			headers: { 'Content-Type': 'application/json' },
 		}),
-		usagePromise: Promise.resolve(EMPTY_USAGE), upstreamRequestId: params.upstreamRequestId, meta: params.meta,
+		usagePromise: Promise.resolve(EMPTY_USAGE),
+		upstreamRequestId: params.upstreamRequestId,
+		meta: params.meta,
 	};
 }
 
@@ -901,9 +1038,9 @@ async function dispatchDashScopeTts(
 	requestSignal?: AbortSignal,
 	timing?: RequestTimingCollector | null,
 	attempt?: RequestTimingAttempt,
-	options?: AudioSpeechDispatchOptions
+	options?: AudioSpeechDispatchOptions,
 ): Promise<SpeechDispatchResult> {
-	return withSpeechResources(async trackResourceCompletion => {
+	return withSpeechResources(async (trackResourceCompletion) => {
 		const validationError = validateDashScopeRequest(kind, request);
 		if (validationError) {
 			return {
@@ -921,21 +1058,33 @@ async function dispatchDashScopeTts(
 		});
 		const upstreamLabel = sanitizeUpstreamUrlForLog(url);
 		validateAudioUpstreamUrl(url);
-		const serializedBody = JSON.stringify(buildDashScopeTtsBody(route, request, kind));
-		const meta: SpeechDispatchMeta = {};
-		const lifecycle = createAudioRequestLifecycle(requestSignal, AUDIO_SPEECH_TIMEOUT_MS, { ...options, trackResourceCompletion });
+		const composed = composeDashScopeTtsBody(route, request, kind);
+		const serializedBody = JSON.stringify(composed.body);
+		const meta: SpeechDispatchMeta = { restoredUpstreamPaths: composed.restoredPaths };
+		const lifecycle = createAudioRequestLifecycle(requestSignal, AUDIO_SPEECH_TIMEOUT_MS, {
+			...options,
+			trackResourceCompletion,
+		});
 		let streamOwnsLifecycle = false;
 		let upstreamStatus: number | null = null;
 		let observedUpstreamRequestId: string | null = null;
 		try {
-			const { secret } = await resolveProviderUpstreamSecret(route.providerApiKey, { signal: lifecycle.signal, auxiliaryAuth: options?.auxiliaryAuth });
+			const { secret } = await resolveProviderUpstreamSecret(route.providerApiKey, {
+				signal: lifecycle.signal,
+				auxiliaryAuth: options?.auxiliaryAuth,
+			});
 			const response = await lifecycle.dispatch(url, {
 				method: 'POST',
-				headers: new Headers({
-					Authorization: `Bearer ${secret}`,
-					'Content-Type': 'application/json',
-					'X-DashScope-SSE': 'enable',
-				}),
+				headers: new Headers(
+					applyRouteExtraHeaders(
+						{
+							Authorization: `Bearer ${secret}`,
+							'Content-Type': 'application/json',
+							'X-DashScope-SSE': 'enable',
+						},
+						route.customParams,
+					),
+				),
 				body: serializedBody,
 				signal: lifecycle.signal,
 			});
@@ -988,10 +1137,17 @@ async function dispatchDashScopeTts(
 		} catch (error) {
 			timing?.markStreamComplete();
 			return failedSpeechDispatch(lifecycle, upstreamStatus, {
-				operation: 'dashscope.tts', providerId: route.providerId, routeTargetId: route.targetId,
-				upstreamLabel, error, meta, upstreamRequestId: observedUpstreamRequestId,
+				operation: 'dashscope.tts',
+				providerId: route.providerId,
+				routeTargetId: route.targetId,
+				upstreamLabel,
+				error,
+				meta,
+				upstreamRequestId: observedUpstreamRequestId,
 			});
-		} finally { if (!streamOwnsLifecycle) lifecycle.clear(); }
+		} finally {
+			if (!streamOwnsLifecycle) lifecycle.clear();
+		}
 	});
 }
 
@@ -1010,7 +1166,11 @@ function wrapOpenAiSpeechBody(
 	lifecycle: SpeechRequestLifecycle,
 	timing: RequestTimingCollector | null | undefined,
 	markOutcomeUnknown: () => void,
-): { body: ReadableStream<Uint8Array>; usagePromise: Promise<UsageFromStream>; resourceCompletion: ResourceCompletion } {
+): {
+	body: ReadableStream<Uint8Array>;
+	usagePromise: Promise<UsageFromStream>;
+	resourceCompletion: ResourceCompletion;
+} {
 	const reader = body.getReader();
 	const parser = streamFormat === 'sse' ? new SpeechSseParser() : null;
 	const usage: UsageFromStream = { ...EMPTY_USAGE };
@@ -1018,39 +1178,44 @@ function wrapOpenAiSpeechBody(
 	let sawTerminal = false;
 	let emittedBytes = false;
 	return {
-		body: new ReadableStream<Uint8Array>({
-			start: owned.start,
-			async pull(controller) {
-				if (owned.closed) return;
-				try {
-					const next = await owned.read();
+		body: new ReadableStream<Uint8Array>(
+			{
+				start: owned.start,
+				async pull(controller) {
 					if (owned.closed) return;
-					if (next.done) {
-						for (const event of parser?.push(new Uint8Array(), true) ?? []) {
+					try {
+						const next = await owned.read();
+						if (owned.closed) return;
+						if (next.done) {
+							for (const event of parser?.push(new Uint8Array(), true) ?? []) {
+								sawTerminal = parseOpenAiSpeechUsage(event, usage) || sawTerminal;
+							}
+							if (streamFormat === 'sse' && !sawTerminal) {
+								throw new SpeechProtocolError('OpenAI speech SSE ended before speech.audio.done');
+							}
+							if (streamFormat === 'audio' && !emittedBytes) {
+								throw new SpeechProtocolError('OpenAI speech stream ended without audio data');
+							}
+							owned.complete(true);
+							return;
+						}
+						timing?.markFirstByte();
+						emittedBytes ||= next.value.byteLength > 0;
+						for (const event of parser?.push(next.value) ?? []) {
 							sawTerminal = parseOpenAiSpeechUsage(event, usage) || sawTerminal;
 						}
-						if (streamFormat === 'sse' && !sawTerminal) {
-							throw new SpeechProtocolError('OpenAI speech SSE ended before speech.audio.done');
-						}
-						if (streamFormat === 'audio' && !emittedBytes) {
-							throw new SpeechProtocolError('OpenAI speech stream ended without audio data');
-						}
-						owned.complete(true);
-						return;
+						controller.enqueue(next.value);
+						// A valid protocol terminal event completes usage even if the
+						// provider keeps its HTTP connection open afterwards.
+						if (sawTerminal) owned.complete();
+					} catch (error) {
+						owned.fail(error);
 					}
-					timing?.markFirstByte();
-					emittedBytes ||= next.value.byteLength > 0;
-					for (const event of parser?.push(next.value) ?? []) {
-						sawTerminal = parseOpenAiSpeechUsage(event, usage) || sawTerminal;
-					}
-					controller.enqueue(next.value);
-					// A valid protocol terminal event completes usage even if the
-					// provider keeps its HTTP connection open afterwards.
-					if (sawTerminal) owned.complete();
-				} catch (error) { owned.fail(error); }
+				},
+				cancel: owned.cancel,
 			},
-			cancel: owned.cancel,
-		}, { highWaterMark: 0 }),
+			{ highWaterMark: 0 },
+		),
 		usagePromise: owned.usagePromise,
 		resourceCompletion: owned.resourceCompletion,
 	};
@@ -1062,16 +1227,17 @@ export async function dispatchOpenAiAudioSpeech(
 	requestSignal?: AbortSignal,
 	timing?: RequestTimingCollector | null,
 	attempt?: RequestTimingAttempt,
-	options?: AudioSpeechDispatchOptions
+	options?: AudioSpeechDispatchOptions,
 ): Promise<SpeechDispatchResult> {
-	return withSpeechResources(async trackResourceCompletion => {
+	return withSpeechResources(async (trackResourceCompletion) => {
 		const url = resolveUpstreamEndpoint('openai', 'audio.speech', route.providerEndpoints, {
 			providerId: route.providerId,
 		});
 		const upstreamLabel = sanitizeUpstreamUrlForLog(url);
 		validateAudioUpstreamUrl(url);
 		const providerOptions = resolveAudioProviderOptionsForRoute(request.providerOptions, route);
-		const upstreamBody = buildRouteRequestBody(route, {
+		const applied = applyUpstreamExtraFields({
+			built: {
 				...providerOptions,
 				model: route.providerModelName,
 				input: request.input,
@@ -1080,27 +1246,44 @@ export async function dispatchOpenAiAudioSpeech(
 				speed: request.speed,
 				stream_format: request.streamFormat,
 				...(request.instructions ? { instructions: request.instructions } : {}),
+			},
+			customParams: route.customParams,
+			extras: request.extraFields,
+			protectedPaths: protectedUpstreamPathsForRoute(route),
 		});
+		const upstreamBody = applied.body;
 		// Reference audio is a request-scoped, Guardrail-projected capability. Route
 		// defaults must never synthesize it outside the verified cloning gate.
 		delete upstreamBody.input_references;
 		const streamedUpload = request.inputReferences
-			? buildStreamingOpenAiSpeechBody(upstreamBody, request.inputReferences) : null;
+			? buildStreamingOpenAiSpeechBody(upstreamBody, request.inputReferences)
+			: null;
 		if (streamedUpload) trackResourceCompletion(streamedUpload.resourceCompletion);
 		const serializedBody = streamedUpload?.body ?? JSON.stringify(upstreamBody);
-		const meta: SpeechDispatchMeta = {};
-		const lifecycle = createAudioRequestLifecycle(requestSignal, AUDIO_SPEECH_TIMEOUT_MS, { ...options, trackResourceCompletion });
+		const meta: SpeechDispatchMeta = { restoredUpstreamPaths: applied.restoredPaths };
+		const lifecycle = createAudioRequestLifecycle(requestSignal, AUDIO_SPEECH_TIMEOUT_MS, {
+			...options,
+			trackResourceCompletion,
+		});
 		let streamOwnsLifecycle = false;
 		let upstreamStatus: number | null = null;
 		let observedUpstreamRequestId: string | null = null;
 		try {
-			const { secret } = await resolveProviderUpstreamSecret(route.providerApiKey, { signal: lifecycle.signal, auxiliaryAuth: options?.auxiliaryAuth });
+			const { secret } = await resolveProviderUpstreamSecret(route.providerApiKey, {
+				signal: lifecycle.signal,
+				auxiliaryAuth: options?.auxiliaryAuth,
+			});
 			const fetchInit: RequestInit & { duplex?: 'half' } = {
 				method: 'POST',
-				headers: new Headers({
-					Authorization: `Bearer ${secret}`,
-					'Content-Type': 'application/json',
-				}),
+				headers: new Headers(
+					applyRouteExtraHeaders(
+						{
+							Authorization: `Bearer ${secret}`,
+							'Content-Type': 'application/json',
+						},
+						route.customParams,
+					),
+				),
 				body: serializedBody,
 				signal: lifecycle.signal,
 				...(request.inputReferences ? { duplex: 'half' as const } : {}),
@@ -1112,7 +1295,12 @@ export async function dispatchOpenAiAudioSpeech(
 			observedUpstreamRequestId = upstreamRequestId;
 			if (!response.ok) {
 				if (speechStatusMayHideAcceptedWork(response.status)) forbidSpeechFailover(meta);
-				return { response: await boundedSpeechErrorResponse(response, lifecycle), usagePromise: Promise.resolve(EMPTY_USAGE), upstreamRequestId, meta };
+				return {
+					response: await boundedSpeechErrorResponse(response, lifecycle),
+					usagePromise: Promise.resolve(EMPTY_USAGE),
+					upstreamRequestId,
+					meta,
+				};
 			}
 			if (!response.body) {
 				return unknownSpeechFailure({
@@ -1126,7 +1314,9 @@ export async function dispatchOpenAiAudioSpeech(
 				});
 			}
 			if (!isExpectedOpenAiSpeechContentType(response.headers.get('content-type'), request)) {
-				lifecycle.trackResourceCompletion(observeResourceCleanup(() => response.body!.cancel('speech_unexpected_content_type')));
+				lifecycle.trackResourceCompletion(
+					observeResourceCleanup(() => response.body!.cancel('speech_unexpected_content_type')),
+				);
 				return unknownSpeechFailure({
 					operation: 'openai.speech',
 					providerId: route.providerId,
@@ -1157,8 +1347,13 @@ export async function dispatchOpenAiAudioSpeech(
 		} catch (error) {
 			timing?.markStreamComplete();
 			return failedSpeechDispatch(lifecycle, upstreamStatus, {
-				operation: 'openai.speech', providerId: route.providerId, routeTargetId: route.targetId,
-				upstreamLabel, error, meta, upstreamRequestId: observedUpstreamRequestId,
+				operation: 'openai.speech',
+				providerId: route.providerId,
+				routeTargetId: route.targetId,
+				upstreamLabel,
+				error,
+				meta,
+				upstreamRequestId: observedUpstreamRequestId,
 			});
 		} finally {
 			if (!streamOwnsLifecycle) lifecycle.clear();
@@ -1173,7 +1368,7 @@ export function dispatchDashScopeSpeechSynthesizer(
 	requestSignal?: AbortSignal,
 	timing?: RequestTimingCollector | null,
 	attempt?: RequestTimingAttempt,
-	options?: AudioSpeechDispatchOptions
+	options?: AudioSpeechDispatchOptions,
 ): Promise<SpeechDispatchResult> {
 	return dispatchDashScopeTts(route, request, 'speech', requestSignal, timing, attempt, options);
 }
@@ -1184,7 +1379,7 @@ export function dispatchDashScopeQwenTts(
 	requestSignal?: AbortSignal,
 	timing?: RequestTimingCollector | null,
 	attempt?: RequestTimingAttempt,
-	options?: AudioSpeechDispatchOptions
+	options?: AudioSpeechDispatchOptions,
 ): Promise<SpeechDispatchResult> {
 	return dispatchDashScopeTts(route, request, 'qwen', requestSignal, timing, attempt, options);
 }
@@ -1195,14 +1390,14 @@ export function dispatchDashScopeMiniMaxTts(
 	requestSignal?: AbortSignal,
 	timing?: RequestTimingCollector | null,
 	attempt?: RequestTimingAttempt,
-	options?: AudioSpeechDispatchOptions
+	options?: AudioSpeechDispatchOptions,
 ): Promise<SpeechDispatchResult> {
 	return dispatchDashScopeTts(route, request, 'minimax', requestSignal, timing, attempt, options);
 }
 
 export function redactAudioSpeechRequestForLog(
 	model: string,
-	request: NormalizedAudioSpeechRequest
+	request: NormalizedAudioSpeechRequest,
 ): Record<string, unknown> {
 	const inputAudio = request.inputReferences?.find((part) => part.type === 'input_audio');
 	return {
@@ -1215,9 +1410,7 @@ export function redactAudioSpeechRequestForLog(
 		has_instructions: Boolean(request.instructions),
 		has_provider_options: request.providerOptions != null,
 		input_reference_count: request.inputReferences?.length ?? 0,
-		reference_audio_bytes: inputAudio?.type === 'input_audio'
-			? inputAudio.inputAudio.bytes.byteLength
-			: 0,
+		reference_audio_bytes: inputAudio?.type === 'input_audio' ? inputAudio.inputAudio.bytes.byteLength : 0,
 		has_reference_transcript: request.inputReferences?.some((part) => part.type === 'text') ?? false,
 	};
 }

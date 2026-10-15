@@ -1,52 +1,192 @@
-import assert from "node:assert/strict";
-import { describe, it } from "node:test";
+import assert from 'node:assert/strict';
+import { describe, it } from 'node:test';
 import {
 	inferStaticProviderIconKey,
 	inferStaticProviderVendorKey,
 	listStaticProviderImportPresets,
-} from "@/lib/provider-import-preset";
-import type { ProviderEndpointsMap } from "@octafuse/core/provider-endpoints";
+	lookupStaticProviderCatalogLinks,
+	providerCatalogOutboundRel,
+	resolveProviderCatalogOutbound,
+	resolveStoredProviderPresentation,
+} from '@/lib/provider-import-preset';
+import { CUSTOM_PROVIDER_KIND, suggestUniqueProviderImportName } from '@/lib/provider-kind';
+import {
+	listConfiguredCapabilities,
+	resolveUpstreamEndpoint,
+	type ProviderEndpointCapability,
+	type ProviderEndpointsMap,
+} from '@octafuse/core/provider-endpoints';
 
-function replaceEndpointPaths(
-	endpoints: ProviderEndpointsMap
-): ProviderEndpointsMap {
+function replaceEndpointPaths(endpoints: ProviderEndpointsMap): ProviderEndpointsMap {
 	const copy = structuredClone(endpoints);
 	for (const config of Object.values(copy)) {
 		const replacePath = (rawUrl: string): string => {
 			const url = new URL(rawUrl);
-			url.pathname = "/custom/gateway/v1";
-			url.search = "";
-			url.hash = "";
-			return url.toString().replace(/\/$/, "");
+			url.pathname = '/custom/gateway/v1';
+			url.search = '';
+			url.hash = '';
+			return url.toString().replace(/\/$/, '');
 		};
 		if (config?.base) config.base = replacePath(config.base);
 		for (const capability of Object.keys(config?.endpoints ?? {})) {
 			const key = capability as keyof NonNullable<typeof config.endpoints>;
 			const rawUrl = config?.endpoints?.[key];
-			if (rawUrl && config?.endpoints)
-				config.endpoints[key] = replacePath(rawUrl);
+			if (rawUrl && config?.endpoints) config.endpoints[key] = replacePath(rawUrl);
 		}
 	}
 	return copy;
 }
 
-describe("provider import preset catalog metadata", () => {
-	it("includes the limited Qwen Token Plan DashScope audio endpoints", () => {
-		const qwenTokenPlan = listStaticProviderImportPresets().find(
-			(row) => row.name === "Qwen AI Platform (Token Plan)"
+describe('provider import preset catalog metadata', () => {
+	const explicitEndpointCases: [string, ProviderEndpointCapability, string][] = [
+		['OpenRouter', 'responses', 'https://openrouter.ai/api/v1/responses'],
+		['SiliconFlow', 'audio.transcriptions', 'https://api.siliconflow.cn/v1/audio/transcriptions'],
+		['SiliconFlow (International)', 'audio.transcriptions', 'https://api.siliconflow.com/v1/audio/transcriptions'],
+		['Together AI', 'audio.transcriptions', 'https://api.together.ai/v1/audio/transcriptions'],
+		['Together AI', 'audio.speech', 'https://api.together.ai/v1/audio/speech'],
+	];
+	for (const [name, capability, expectedUrl] of explicitEndpointCases) {
+		it(`advertises and resolves the explicit ${name} ${capability} endpoint`, () => {
+			const row = listStaticProviderImportPresets().find((preset) => preset.name === name);
+			assert.ok(row, name);
+			assert.equal(row.endpoints.openai?.base, undefined);
+			assert.equal(row.endpoints.openai?.endpoints?.[capability], expectedUrl);
+			const capabilities = listConfiguredCapabilities(row.endpoints, 'openai');
+			assert.ok(capabilities.includes(capability));
+			assert.ok(!capabilities.includes('images.edits'));
+			if (name !== 'OpenRouter') assert.ok(!capabilities.includes('responses'));
+			assert.equal(resolveUpstreamEndpoint('openai', capability, row.endpoints), expectedUrl);
+		});
+	}
+
+	it('includes Xiaomi MiMo OpenAI chat and responses endpoints', () => {
+		const rows = listStaticProviderImportPresets();
+		const mimo = rows.find((row) => row.name === 'Xiaomi MiMo');
+		const tokenPlan = rows.find((row) => row.name === 'Xiaomi MiMo (Token Plan)');
+		assert.ok(mimo);
+		assert.ok(tokenPlan);
+		assert.deepEqual(mimo.endpoints.openai?.endpoints, {
+			chat: 'https://api.xiaomimimo.com/v1/chat/completions',
+			responses: 'https://api.xiaomimimo.com/v1/responses',
+		});
+		assert.equal(mimo.endpoints.anthropic?.base, 'https://api.xiaomimimo.com/anthropic');
+		assert.deepEqual(tokenPlan.endpoints.openai?.endpoints, {
+			chat: 'https://token-plan-cn.xiaomimimo.com/v1/chat/completions',
+			responses: 'https://token-plan-cn.xiaomimimo.com/v1/responses',
+		});
+		assert.equal(tokenPlan.endpoints.anthropic?.base, 'https://token-plan-cn.xiaomimimo.com/anthropic');
+	});
+
+	it('includes documented China-region chat, responses, and Anthropic endpoints', () => {
+		const rows = listStaticProviderImportPresets();
+		const byName = new Map(rows.map((row) => [row.name, row]));
+		const expectEndpoints = (
+			name: string,
+			expected: {
+				chat?: string;
+				responses?: string;
+				anthropic?: string;
+			},
+		) => {
+			const row = byName.get(name);
+			assert.ok(row, name);
+			assert.equal(row.endpoints.openai?.endpoints?.chat ?? row.endpoints.openai?.base, expected.chat);
+			assert.equal(row.endpoints.openai?.endpoints?.responses, expected.responses);
+			assert.equal(row.endpoints.anthropic?.base, expected.anthropic);
+		};
+
+		expectEndpoints('DeepSeek', {
+			chat: 'https://api.deepseek.com/chat/completions',
+			responses: 'https://api.deepseek.com/responses',
+			anthropic: 'https://api.deepseek.com/anthropic',
+		});
+		expectEndpoints('Tencent Hunyuan', {
+			chat: 'https://api.hunyuan.cloud.tencent.com/v1/chat/completions',
+			anthropic: 'https://api.hunyuan.cloud.tencent.com/anthropic',
+		});
+		expectEndpoints('Baidu Qianfan', {
+			chat: 'https://qianfan.baidubce.com/v2/chat/completions',
+			responses: 'https://qianfan.baidubce.com/v2/responses',
+			anthropic: 'https://qianfan.baidubce.com/anthropic',
+		});
+		expectEndpoints('Zhipu GLM', {
+			chat: 'https://open.bigmodel.cn/api/paas/v4/chat/completions',
+			responses: 'https://open.bigmodel.cn/api/v1/responses',
+			anthropic: 'https://open.bigmodel.cn/api/anthropic',
+		});
+		assert.equal(byName.get('Zhipu GLM')?.endpoints.openai?.base, undefined);
+		assert.equal(
+			byName.get('Zhipu GLM')?.endpoints.openai?.endpoints?.['images.generations'],
+			'https://open.bigmodel.cn/api/paas/v4/images/generations',
 		);
+		expectEndpoints('Zhipu GLM (Coding Plan)', {
+			chat: 'https://open.bigmodel.cn/api/coding/paas/v4/chat/completions',
+			responses: 'https://open.bigmodel.cn/api/v1/responses',
+			anthropic: 'https://open.bigmodel.cn/api/anthropic',
+		});
+		expectEndpoints('Meituan LongCat', {
+			chat: 'https://api.longcat.chat/openai/v1/chat/completions',
+			responses: 'https://api.longcat.chat/openai/v1/responses',
+			anthropic: 'https://api.longcat.chat/anthropic',
+		});
+		expectEndpoints('Moonshot AI', {
+			chat: 'https://api.moonshot.cn/v1/chat/completions',
+			responses: 'https://api.moonshot.cn/v1/responses',
+			anthropic: 'https://api.moonshot.cn/anthropic',
+		});
+		expectEndpoints('Kimi Code (Coding API)', {
+			chat: 'https://api.kimi.com/coding/v1/chat/completions',
+			anthropic: 'https://api.kimi.com/coding',
+		});
+		expectEndpoints('StepFun', {
+			chat: 'https://api.stepfun.com/v1/chat/completions',
+			responses: 'https://api.stepfun.com/v1/responses',
+			anthropic: 'https://api.stepfun.com',
+		});
+		expectEndpoints('Qiniu AI', {
+			chat: 'https://api.qnaigc.com/v1/chat/completions',
+			responses: 'https://api.qnaigc.com/bypass/openai/v1/responses',
+			anthropic: 'https://api.qnaigc.com',
+		});
+		expectEndpoints('SiliconFlow', {
+			chat: 'https://api.siliconflow.cn/v1/chat/completions',
+			anthropic: 'https://api.siliconflow.cn',
+		});
+		assert.equal(byName.get('SiliconFlow')?.endpoints.openai?.base, undefined);
+		assert.equal(
+			byName.get('SiliconFlow')?.endpoints.openai?.endpoints?.['images.generations'],
+			'https://api.siliconflow.cn/v1/images/generations',
+		);
+		assert.equal(
+			byName.get('SiliconFlow')?.endpoints.openai?.endpoints?.['audio.speech'],
+			'https://api.siliconflow.cn/v1/audio/speech',
+		);
+		assert.equal(byName.get('Alibaba Cloud Bailian (Coding Plan)')?.endpoints.openai?.endpoints?.responses, undefined);
+		assert.equal(byName.get('Tencent TokenHub (Hy Token Plan)')?.endpoints.openai?.endpoints?.responses, undefined);
+	});
+
+	it('includes the limited Qwen Token Plan DashScope audio endpoints', () => {
+		const qwenTokenPlan = listStaticProviderImportPresets().find((row) => row.name === 'Qwen AI Platform (Token Plan)');
 		assert.ok(qwenTokenPlan);
+		assert.equal(qwenTokenPlan.endpoints.openai?.base, undefined);
+		assert.deepEqual(qwenTokenPlan.endpoints.openai?.endpoints, {
+			chat: 'https://token-plan.maas.qianwenaiapi.com/compatible-mode/v1/chat/completions',
+			responses: 'https://token-plan.maas.qianwenaiapi.com/compatible-mode/v1/responses',
+		});
+		assert.equal(qwenTokenPlan.endpoints.anthropic?.base, 'https://token-plan.maas.qianwenaiapi.com/apps/anthropic');
+		assert.equal(qwenTokenPlan.endpoints.dashscope?.base, undefined);
 		assert.deepEqual(qwenTokenPlan.endpoints.dashscope?.endpoints, {
-			"audio.speech":
-				"https://token-plan.cn-beijing.maas.aliyuncs.com/api/v1/services/audio/tts/SpeechSynthesizer",
-			"audio.realtime.inference":
-				"wss://token-plan.cn-beijing.maas.aliyuncs.com/api-ws/v1/inference",
-			"audio.realtime.session":
-				"wss://token-plan.cn-beijing.maas.aliyuncs.com/api-ws/v1/realtime",
+			'audio.transcriptions.multimodal':
+				'https://token-plan.maas.qianwenaiapi.com/api/v1/services/aigc/multimodal-generation/generation',
+			'images.generations.multimodal':
+				'https://token-plan.maas.qianwenaiapi.com/api/v1/services/aigc/multimodal-generation/generation',
+			'audio.speech': 'https://token-plan.maas.qianwenaiapi.com/api/v1/services/audio/tts/SpeechSynthesizer',
+			'audio.realtime.inference': 'wss://token-plan.maas.qianwenaiapi.com/api-ws/v1/inference',
+			'audio.realtime.session': 'wss://token-plan.maas.qianwenaiapi.com/api-ws/v1/realtime',
 		});
 	});
 
-	it("keeps localized catalog copy and an official platform link for every preset", () => {
+	it('keeps localized catalog copy and an official platform link for every preset', () => {
 		const rows = listStaticProviderImportPresets();
 
 		assert.ok(rows.length > 0);
@@ -55,266 +195,381 @@ describe("provider import preset catalog metadata", () => {
 			assert.ok(row.catalog?.i18n.zh.description.trim(), row.name);
 			assert.ok(row.catalog?.i18n.en.name.trim(), row.name);
 			assert.ok(row.catalog?.i18n.en.description.trim(), row.name);
-			assert.match(row.catalog?.links?.platform ?? "", /^https:\/\//, row.name);
+			assert.match(row.catalog?.links?.platform ?? '', /^https:\/\//, row.name);
 			if (row.catalog?.links?.api_keys) {
 				assert.match(row.catalog.links.api_keys, /^https:\/\//, row.name);
+			}
+			if (row.catalog?.links?.referral) {
+				assert.match(row.catalog.links.referral, /^https:\/\//, row.name);
 			}
 		}
 	});
 
-	it("infers an imported Provider vendor without storing a database column", () => {
+	it('infers an imported Provider vendor without storing a database column', () => {
 		const rows = listStaticProviderImportPresets();
-		const deepseek = rows.find((row) => row.name === "DeepSeek");
+		const deepseek = rows.find((row) => row.name === 'DeepSeek');
 		assert.ok(deepseek);
 
-		assert.equal(
-			inferStaticProviderVendorKey({ name: deepseek.name }),
-			"deepseek"
-		);
-		assert.equal(
-			inferStaticProviderVendorKey({ name: `${deepseek.name} (2)` }),
-			"deepseek"
-		);
+		assert.equal(inferStaticProviderVendorKey({ name: deepseek.name }), 'deepseek');
+		assert.equal(inferStaticProviderVendorKey({ name: `${deepseek.name} (2)` }), 'deepseek');
 		assert.equal(
 			inferStaticProviderVendorKey({
-				name: "Renamed production upstream",
+				name: 'Renamed production upstream',
 				endpoints: deepseek.endpoints,
 			}),
-			"deepseek"
+			'deepseek',
 		);
 		assert.equal(
 			inferStaticProviderVendorKey({
-				name: "Private upstream",
+				name: 'Private upstream',
 				endpoints: {
 					openai: {
-						endpoints: { chat: "https://example.com/v1/chat/completions" },
+						endpoints: { chat: 'https://example.com/v1/chat/completions' },
 					},
 				},
 			}),
-			"other"
+			'other',
 		);
 	});
 
-	it("prefers a product icon over the parent vendor logo without storing a database column", () => {
+	it('prefers a product icon over the parent vendor logo without storing a database column', () => {
 		const rows = listStaticProviderImportPresets();
-		const mimo = rows.find((row) => row.name === "Xiaomi MiMo");
+		const mimo = rows.find((row) => row.name === 'Xiaomi MiMo');
 		assert.ok(mimo);
 
-		assert.equal(mimo.vendor_key, "xiaomi");
-		assert.equal(mimo.icon_key, "xiaomimimo");
-		assert.equal(inferStaticProviderIconKey({ name: mimo.name }), "xiaomimimo");
+		assert.equal(mimo.vendor_key, 'xiaomi');
+		assert.equal(mimo.icon_key, 'xiaomimimo');
+		assert.equal(inferStaticProviderIconKey({ name: mimo.name }), 'xiaomimimo');
 		assert.equal(
 			inferStaticProviderIconKey({
-				name: "Renamed MiMo upstream",
+				name: 'Renamed MiMo upstream',
 				endpoints: mimo.endpoints,
 				vendor_key: mimo.vendor_key,
 			}),
-			"xiaomimimo"
+			'xiaomimimo',
 		);
 		assert.equal(
 			inferStaticProviderIconKey({
-				name: "Private upstream",
-				vendor_key: "openai",
+				name: 'Private upstream',
+				vendor_key: 'openai',
 			}),
-			"openai"
+			'openai',
 		);
 	});
 
-	it("recognizes every preset by hostname even when its name and URL paths are customized", () => {
+	it('recognizes every preset by hostname even when its name and URL paths are customized', () => {
 		for (const row of listStaticProviderImportPresets()) {
 			const expectedIcon = row.icon_key ?? row.vendor_key;
 			const provider = {
-				name: "Renamed production upstream",
+				name: 'Renamed production upstream',
 				endpoints: replaceEndpointPaths(row.endpoints),
 			};
-			assert.equal(
-				inferStaticProviderVendorKey(provider),
-				row.vendor_key,
-				row.name
-			);
-			assert.equal(
-				inferStaticProviderIconKey({ ...provider, vendor_key: row.vendor_key }),
-				expectedIcon,
-				row.name
-			);
+			assert.equal(inferStaticProviderVendorKey(provider), row.vendor_key, row.name);
+			assert.equal(inferStaticProviderIconKey({ ...provider, vendor_key: row.vendor_key }), expectedIcon, row.name);
 		}
 	});
 
-	it("recognizes a catalog product from base URL or a localized custom name", () => {
+	it('recognizes a catalog product from base URL or a localized custom name', () => {
 		const bailianBaseOnly = {
-			name: "百炼-谷仓",
+			name: '百炼-谷仓',
 			endpoints: {
-				openai: { base: "https://dashscope.aliyuncs.com/compatible-mode/v1" },
+				openai: { base: 'https://dashscope.aliyuncs.com/compatible-mode/v1' },
 			},
 		} satisfies { name: string; endpoints: ProviderEndpointsMap };
-		assert.equal(inferStaticProviderVendorKey(bailianBaseOnly), "aliyun");
-		assert.equal(inferStaticProviderIconKey(bailianBaseOnly), "bailian");
+		assert.equal(inferStaticProviderVendorKey(bailianBaseOnly), 'aliyun');
+		assert.equal(inferStaticProviderIconKey(bailianBaseOnly), 'bailian');
 
 		const proxiedMimo = {
-			name: "小米 MiMo 私有代理",
+			name: '小米 MiMo 私有代理',
 			endpoints: {
-				openai: { base: "https://llm.example.com/v1" },
+				openai: { base: 'https://llm.example.com/v1' },
 			},
 		} satisfies { name: string; endpoints: ProviderEndpointsMap };
-		assert.equal(inferStaticProviderVendorKey(proxiedMimo), "xiaomi");
-		assert.equal(inferStaticProviderIconKey(proxiedMimo), "xiaomimimo");
+		assert.equal(inferStaticProviderVendorKey(proxiedMimo), 'xiaomi');
+		assert.equal(inferStaticProviderIconKey(proxiedMimo), 'xiaomimimo');
 	});
 
-	it("includes the DashScope base needed to derive Alibaba audio endpoints", () => {
-		const bailian = listStaticProviderImportPresets().find(
-			(row) => row.name === "Alibaba Cloud Bailian"
-		);
+	it('includes the DashScope base needed to derive Alibaba audio endpoints', () => {
+		const bailian = listStaticProviderImportPresets().find((row) => row.name === 'Alibaba Cloud Bailian');
 		assert.ok(bailian);
-		assert.equal(
-			bailian.endpoints.dashscope?.base,
-			"https://dashscope.aliyuncs.com/api/v1"
-		);
+		assert.equal(bailian.endpoints.dashscope?.base, 'https://dashscope.aliyuncs.com/api/v1');
+		assert.equal(bailian.endpoints.openai?.base, undefined);
+		assert.equal(bailian.endpoints.anthropic?.base, 'https://dashscope.aliyuncs.com/apps/anthropic');
 	});
 
-	it("includes official OpenAI/Anthropic endpoints for newly added import presets", () => {
+	it('includes official OpenAI/Anthropic endpoints for newly added import presets', () => {
 		const rows = listStaticProviderImportPresets();
 		const byName = new Map(rows.map((row) => [row.name, row]));
-		const chatOf = (name: string) =>
-			byName.get(name)?.endpoints.openai?.endpoints?.chat;
-		const openaiBaseOf = (name: string) =>
-			byName.get(name)?.endpoints.openai?.base;
-		const anthropicBaseOf = (name: string) =>
-			byName.get(name)?.endpoints.anthropic?.base;
-		const responsesOf = (name: string) =>
-			byName.get(name)?.endpoints.openai?.endpoints?.responses;
+		const chatOf = (name: string) => byName.get(name)?.endpoints.openai?.endpoints?.chat;
+		const openaiBaseOf = (name: string) => byName.get(name)?.endpoints.openai?.base;
+		const anthropicBaseOf = (name: string) => byName.get(name)?.endpoints.anthropic?.base;
+		const responsesOf = (name: string) => byName.get(name)?.endpoints.openai?.endpoints?.responses;
 
-		assert.equal(responsesOf("DeepSeek"), "https://api.deepseek.com/responses");
-		assert.equal(
-			anthropicBaseOf("DeepSeek"),
-			"https://api.deepseek.com/anthropic"
-		);
-		assert.deepEqual(byName.get("DeepSeek")?.managed_environment_key, {
-			provider_id: "deepseek-official",
-			env_name: "DEEPSEEK_API_KEY",
+		assert.equal(responsesOf('DeepSeek'), 'https://api.deepseek.com/responses');
+		assert.equal(anthropicBaseOf('DeepSeek'), 'https://api.deepseek.com/anthropic');
+		assert.deepEqual(byName.get('DeepSeek')?.managed_environment_key, {
+			provider_id: 'deepseek-official',
+			env_name: 'DEEPSEEK_API_KEY',
 		});
 
+		assert.equal(chatOf('Command Code'), 'https://api.commandcode.ai/provider/v1/chat/completions');
+		assert.equal(anthropicBaseOf('Command Code'), 'https://api.commandcode.ai/provider');
+		assert.equal(chatOf('Cerebras'), 'https://api.cerebras.ai/v1/chat/completions');
+		assert.equal(chatOf('Hugging Face Inference Providers'), 'https://router.huggingface.co/v1/chat/completions');
+		assert.equal(chatOf('Vercel AI Gateway'), 'https://ai-gateway.vercel.sh/v1/chat/completions');
 		assert.equal(
-			chatOf("Command Code"),
-			"https://api.commandcode.ai/provider/v1/chat/completions"
+			byName.get('Vercel AI Gateway')?.endpoints.openai?.endpoints?.responses,
+			'https://ai-gateway.vercel.sh/v1/responses',
+		);
+		assert.equal(openaiBaseOf('Vercel AI Gateway'), undefined);
+		assert.equal(anthropicBaseOf('Vercel AI Gateway'), 'https://ai-gateway.vercel.sh');
+		assert.equal(chatOf('SambaNova Cloud'), 'https://api.sambanova.ai/v1/chat/completions');
+		assert.equal(anthropicBaseOf('SambaNova Cloud'), 'https://api.sambanova.ai');
+		assert.equal(chatOf('DeepInfra'), 'https://api.deepinfra.com/v1/openai/chat/completions');
+		assert.equal(chatOf('Novita AI'), 'https://api.novita.ai/openai/v1/chat/completions');
+		assert.equal(chatOf('Meta Model API'), 'https://api.meta.ai/v1/chat/completions');
+		assert.equal(anthropicBaseOf('Meta Model API'), 'https://api.meta.ai');
+		assert.equal(
+			chatOf('Alibaba Cloud Bailian (International)'),
+			'https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions',
 		);
 		assert.equal(
-			anthropicBaseOf("Command Code"),
-			"https://api.commandcode.ai/provider"
+			byName.get('Alibaba Cloud Bailian')?.endpoints.openai?.endpoints?.responses,
+			'https://dashscope.aliyuncs.com/compatible-mode/v1/responses',
 		);
 		assert.equal(
-			chatOf("Cerebras"),
-			"https://api.cerebras.ai/v1/chat/completions"
+			byName.get('Alibaba Cloud Bailian (International)')?.endpoints.openai?.endpoints?.responses,
+			'https://dashscope-intl.aliyuncs.com/compatible-mode/v1/responses',
+		);
+		assert.equal(byName.get('Alibaba Cloud Bailian')?.endpoints.openai?.base, undefined);
+		assert.equal(
+			byName.get('Alibaba Cloud Bailian (International)')?.endpoints.dashscope?.base,
+			'https://dashscope-intl.aliyuncs.com/api/v1',
 		);
 		assert.equal(
-			chatOf("Hugging Face Inference Providers"),
-			"https://router.huggingface.co/v1/chat/completions"
+			anthropicBaseOf('Alibaba Cloud Bailian (International)'),
+			'https://dashscope-intl.aliyuncs.com/apps/anthropic',
+		);
+		assert.equal(chatOf('Qwen AI Platform'), 'https://maas.qianwenaiapi.com/compatible-mode/v1/chat/completions');
+		assert.equal(
+			byName.get('Qwen AI Platform')?.endpoints.openai?.endpoints?.responses,
+			'https://maas.qianwenaiapi.com/compatible-mode/v1/responses',
+		);
+		assert.equal(byName.get('Qwen AI Platform')?.endpoints.openai?.base, undefined);
+		assert.equal(byName.get('Qwen AI Platform')?.endpoints.dashscope?.base, 'https://maas.qianwenaiapi.com/api/v1');
+		assert.equal(anthropicBaseOf('Qwen AI Platform'), 'https://maas.qianwenaiapi.com/apps/anthropic');
+		assert.equal(
+			chatOf('Alibaba Cloud Bailian (Coding Plan International)'),
+			'https://coding-intl.dashscope.aliyuncs.com/v1/chat/completions',
 		);
 		assert.equal(
-			openaiBaseOf("Vercel AI Gateway"),
-			"https://ai-gateway.vercel.sh/v1"
+			anthropicBaseOf('Alibaba Cloud Bailian (Coding Plan International)'),
+			'https://coding-intl.dashscope.aliyuncs.com/apps/anthropic',
 		);
+		assert.equal(chatOf('BytePlus ModelArk'), 'https://ark.ap-southeast.bytepluses.com/api/v3/chat/completions');
 		assert.equal(
-			anthropicBaseOf("Vercel AI Gateway"),
-			"https://ai-gateway.vercel.sh"
+			chatOf('BytePlus ModelArk (Coding Plan)'),
+			'https://ark.ap-southeast.bytepluses.com/api/coding/v3/chat/completions',
 		);
-		assert.equal(
-			chatOf("SambaNova Cloud"),
-			"https://api.sambanova.ai/v1/chat/completions"
-		);
-		assert.equal(
-			anthropicBaseOf("SambaNova Cloud"),
-			"https://api.sambanova.ai"
-		);
-		assert.equal(
-			chatOf("DeepInfra"),
-			"https://api.deepinfra.com/v1/openai/chat/completions"
-		);
-		assert.equal(
-			chatOf("Novita AI"),
-			"https://api.novita.ai/openai/v1/chat/completions"
-		);
-		assert.equal(
-			chatOf("Meta Model API"),
-			"https://api.meta.ai/v1/chat/completions"
-		);
-		assert.equal(anthropicBaseOf("Meta Model API"), "https://api.meta.ai");
-		assert.equal(
-			chatOf("Alibaba Cloud Bailian (International)"),
-			"https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions"
-		);
-		assert.equal(
-			byName.get("Alibaba Cloud Bailian (International)")?.endpoints.dashscope
-				?.base,
-			"https://dashscope-intl.aliyuncs.com/api/v1"
-		);
-		assert.equal(
-			chatOf("Alibaba Cloud Bailian (Coding Plan International)"),
-			"https://coding-intl.dashscope.aliyuncs.com/v1/chat/completions"
-		);
-		assert.equal(
-			anthropicBaseOf("Alibaba Cloud Bailian (Coding Plan International)"),
-			"https://coding-intl.dashscope.aliyuncs.com/apps/anthropic"
-		);
-		assert.equal(
-			chatOf("BytePlus ModelArk"),
-			"https://ark.ap-southeast.bytepluses.com/api/v3/chat/completions"
-		);
-		assert.equal(
-			chatOf("BytePlus ModelArk (Coding Plan)"),
-			"https://ark.ap-southeast.bytepluses.com/api/coding/v3/chat/completions"
-		);
-		assert.equal(
-			chatOf("SCNet"),
-			"https://api.scnet.cn/api/llm/v1/chat/completions"
-		);
-		assert.equal(
-			anthropicBaseOf("SCNet"),
-			"https://api.scnet.cn/api/llm/anthropic"
-		);
+		assert.equal(chatOf('SCNet'), 'https://api.scnet.cn/api/llm/v1/chat/completions');
+		assert.equal(anthropicBaseOf('SCNet'), 'https://api.scnet.cn/api/llm/anthropic');
+		assert.equal(chatOf('SiliconFlow'), 'https://api.siliconflow.cn/v1/chat/completions');
+		assert.equal(openaiBaseOf('SiliconFlow'), undefined);
+		assert.equal(byName.get('SiliconFlow')?.catalog?.links?.referral, 'https://cloud.siliconflow.cn/i/rA30k5VJ');
+		assert.equal(chatOf('SiliconFlow (International)'), 'https://api.siliconflow.com/v1/chat/completions');
+		assert.equal(openaiBaseOf('SiliconFlow (International)'), undefined);
+		assert.equal(byName.get('SiliconFlow (International)')?.catalog?.links?.referral, undefined);
+		assert.equal(byName.get('SiliconFlow (International)')?.catalog?.links?.platform, 'https://cloud.siliconflow.com/');
 	});
 
-	it("keeps Vertex Express on Gemini query-key and adds project-scoped OpenAI chat", () => {
+	it('keeps Vertex Express on Gemini query-key and adds project-scoped OpenAI chat', () => {
 		const rows = listStaticProviderImportPresets();
-		const express = rows.find(
-			(row) => row.name === "Google Vertex AI (Express Mode · API Key)"
-		);
-		const projectScoped = rows.find(
-			(row) => row.name === "Google Vertex AI (replace project ID)"
-		);
+		const express = rows.find((row) => row.name === 'Google Vertex AI (Express Mode · API Key)');
+		const projectScoped = rows.find((row) => row.name === 'Google Vertex AI');
 
 		assert.ok(express);
-		assert.equal(
-			express.endpoints.gemini?.base,
-			"https://aiplatform.googleapis.com/v1/publishers/google/models"
-		);
+		assert.equal(express.endpoints.gemini?.base, 'https://aiplatform.googleapis.com/v1/publishers/google/models');
 		assert.equal(express.endpoints.gemini?.auth, undefined);
 		assert.equal(express.endpoints.openai, undefined);
 
 		assert.ok(projectScoped);
-		assert.equal(projectScoped.icon_key, "vertexai");
+		assert.equal(projectScoped.icon_key, 'vertexai');
 		assert.equal(
 			projectScoped.endpoints.openai?.endpoints?.chat,
-			"https://aiplatform.googleapis.com/v1/projects/YOUR_PROJECT_ID/locations/global/endpoints/openapi/chat/completions"
+			'https://aiplatform.googleapis.com/v1/projects/YOUR_PROJECT_ID/locations/global/endpoints/openapi/chat/completions',
 		);
 		assert.equal(projectScoped.endpoints.openai?.base, undefined);
 		assert.equal(
 			projectScoped.endpoints.gemini?.base,
-			"https://aiplatform.googleapis.com/v1/projects/YOUR_PROJECT_ID/locations/global/publishers/google/models"
+			'https://aiplatform.googleapis.com/v1/projects/YOUR_PROJECT_ID/locations/global/publishers/google/models',
 		);
-		assert.equal(projectScoped.endpoints.gemini?.auth, "bearer");
-		assert.match(projectScoped.description ?? "", /service account JSON/i);
+		assert.equal(projectScoped.endpoints.gemini?.auth, 'bearer');
+		assert.match(projectScoped.description ?? '', /service account JSON/i);
 	});
 
-	it("does not guess when configured endpoints identify different vendors", () => {
+	it('does not guess when configured endpoints identify different vendors', () => {
 		const conflicting = {
-			name: "Mixed upstream",
+			name: 'Mixed upstream',
 			endpoints: {
-				openai: { base: "https://api.openai.com/v1" },
-				anthropic: { base: "https://api.anthropic.com" },
+				openai: { base: 'https://api.openai.com/v1' },
+				anthropic: { base: 'https://api.anthropic.com' },
 			},
 		} satisfies { name: string; endpoints: ProviderEndpointsMap };
 
-		assert.equal(inferStaticProviderVendorKey(conflicting), "other");
-		assert.equal(inferStaticProviderIconKey(conflicting), "other");
+		assert.equal(inferStaticProviderVendorKey(conflicting), 'other');
+		assert.equal(inferStaticProviderIconKey(conflicting), 'other');
+	});
+
+	it('overlays catalog links by template name or endpoint signature, preferring referral', () => {
+		const rows = listStaticProviderImportPresets();
+		const siliconflowChina = rows.find((row) => row.name === 'SiliconFlow');
+		const zen = rows.find((row) => row.name === 'OpenCode Zen');
+		const go = rows.find((row) => row.name === 'OpenCode Go');
+		assert.ok(siliconflowChina);
+		assert.ok(zen);
+		assert.ok(go);
+
+		assert.deepEqual(lookupStaticProviderCatalogLinks({ name: 'SiliconFlow (2)' }), {
+			platform: 'https://cloud.siliconflow.cn/',
+			api_keys: 'https://cloud.siliconflow.cn/account/ak',
+			referral: 'https://cloud.siliconflow.cn/i/rA30k5VJ',
+		});
+		assert.deepEqual(
+			lookupStaticProviderCatalogLinks({
+				name: 'Renamed production upstream',
+				endpoints: siliconflowChina.endpoints,
+			}),
+			lookupStaticProviderCatalogLinks({ name: 'SiliconFlow' }),
+		);
+		assert.equal(
+			lookupStaticProviderCatalogLinks({
+				name: 'Private upstream',
+				endpoints: {
+					openai: { endpoints: { chat: 'https://example.com/v1/chat/completions' } },
+				},
+			}),
+			null,
+		);
+
+		assert.equal(lookupStaticProviderCatalogLinks({ name: zen.name })?.platform, 'https://opencode.ai/zen');
+		assert.equal(lookupStaticProviderCatalogLinks({ name: go.name })?.platform, 'https://opencode.ai/go');
+
+		const outbound = resolveProviderCatalogOutbound(lookupStaticProviderCatalogLinks({ name: 'SiliconFlow' }));
+		assert.deepEqual(outbound, {
+			href: 'https://cloud.siliconflow.cn/i/rA30k5VJ',
+			kind: 'referral',
+		});
+		assert.deepEqual(resolveProviderCatalogOutbound(lookupStaticProviderCatalogLinks({ name: 'ZenMux' })), {
+			href: 'https://zenmux.ai/invite/PNWNOJ',
+			kind: 'referral',
+		});
+		assert.deepEqual(lookupStaticProviderCatalogLinks({ name: 'SiliconFlow' }), {
+			platform: 'https://cloud.siliconflow.cn/',
+			api_keys: 'https://cloud.siliconflow.cn/account/ak',
+			referral: 'https://cloud.siliconflow.cn/i/rA30k5VJ',
+		});
+		assert.deepEqual(lookupStaticProviderCatalogLinks({ name: 'SiliconFlow (International)' }), {
+			platform: 'https://cloud.siliconflow.com/',
+			api_keys: 'https://cloud.siliconflow.com/account/ak',
+		});
+		const siliconflowIntl = rows.find((row) => row.name === 'SiliconFlow (International)');
+		assert.ok(siliconflowIntl);
+		assert.deepEqual(
+			lookupStaticProviderCatalogLinks({
+				name: 'Renamed production upstream',
+				endpoints: siliconflowChina.endpoints,
+			}),
+			lookupStaticProviderCatalogLinks({ name: 'SiliconFlow' }),
+		);
+		assert.deepEqual(
+			lookupStaticProviderCatalogLinks({
+				name: 'Renamed production upstream',
+				endpoints: siliconflowIntl.endpoints,
+			}),
+			lookupStaticProviderCatalogLinks({ name: 'SiliconFlow (International)' }),
+		);
+		assert.deepEqual(resolveProviderCatalogOutbound(lookupStaticProviderCatalogLinks({ name: 'SiliconFlow' })), {
+			href: 'https://cloud.siliconflow.cn/i/rA30k5VJ',
+			kind: 'referral',
+		});
+		assert.equal(
+			resolveProviderCatalogOutbound(lookupStaticProviderCatalogLinks({ name: 'SiliconFlow (International)' }))?.kind,
+			'api_keys',
+		);
+		assert.equal(providerCatalogOutboundRel('referral'), 'sponsored noopener noreferrer');
+		assert.equal(
+			resolveProviderCatalogOutbound({
+				platform: 'https://example.com/',
+				api_keys: 'https://example.com/keys',
+			})?.kind,
+			'api_keys',
+		);
+		assert.equal(resolveProviderCatalogOutbound({ platform: 'https://example.com/' })?.kind, 'platform');
+		assert.equal(resolveProviderCatalogOutbound({ referral: 'http://insecure.example' }), null);
+	});
+
+	it('uses the stored kind for the icon and catalog links instead of the endpoint URL', () => {
+		const openaiEndpoints = { openai: { base: 'https://api.openai.com/v1' } } satisfies ProviderEndpointsMap;
+		const stored = resolveStoredProviderPresentation({
+			kind: 'OpenCode Zen',
+			name: 'dyc',
+			endpoints: openaiEndpoints,
+		});
+		const preset = listStaticProviderImportPresets().find((row) => row.name === 'OpenCode Zen');
+
+		assert.ok(preset);
+		assert.equal(stored.iconKey, preset.icon_key?.trim() || preset.vendor_key);
+		assert.equal(stored.catalogLinks?.platform, 'https://opencode.ai/zen');
+		assert.notEqual(stored.iconKey, inferStaticProviderIconKey({ name: 'dyc', endpoints: openaiEndpoints }));
+	});
+
+	it('keeps name and URL inference when kind is empty', () => {
+		const provider = {
+			name: 'Private upstream',
+			endpoints: { openai: { base: 'https://api.openai.com/v1' } } satisfies ProviderEndpointsMap,
+		};
+		const stored = resolveStoredProviderPresentation(provider);
+
+		assert.equal(stored.iconKey, inferStaticProviderIconKey(provider));
+		assert.equal(stored.kindLabels, null);
+		assert.deepEqual(stored.catalogLinks, lookupStaticProviderCatalogLinks(provider));
+	});
+
+	it('uses a generic icon for an explicit custom kind', () => {
+		const stored = resolveStoredProviderPresentation({
+			kind: CUSTOM_PROVIDER_KIND,
+			name: 'relay',
+			endpoints: { openai: { base: 'https://api.openai.com/v1' } },
+		});
+
+		assert.equal(stored.iconKey, 'other');
+		assert.equal(stored.vendorKey, 'other');
+		assert.equal(stored.catalogLinks, null);
+	});
+
+	it('adds a MiniMax native base for speech_to_text without replacing chat or Anthropic', () => {
+		const minimax = listStaticProviderImportPresets().find((row) => row.name === 'MiniMax');
+		assert.ok(minimax);
+		assert.equal(minimax.endpoints.openai?.base, undefined);
+		assert.equal(minimax.endpoints.openai?.endpoints?.chat, 'https://api.minimaxi.com/v1/chat/completions');
+		assert.equal(minimax.endpoints.openai?.endpoints?.responses, 'https://api.minimaxi.com/v1/responses');
+		assert.equal(minimax.endpoints.anthropic?.base, 'https://api.minimaxi.com/anthropic');
+		assert.equal(minimax.endpoints.minimax?.base, 'https://api.minimaxi.com/v1');
+
+		const international = listStaticProviderImportPresets().find((row) => row.name === 'MiniMax (International)');
+		assert.ok(international);
+		assert.equal(international.endpoints.openai?.base, undefined);
+		assert.equal(international.endpoints.openai?.endpoints?.chat, 'https://api.minimax.io/v1/chat/completions');
+		assert.equal(international.endpoints.openai?.endpoints?.responses, 'https://api.minimax.io/v1/responses');
+		assert.equal(international.endpoints.anthropic?.base, 'https://api.minimax.io/anthropic');
+		assert.equal(international.endpoints.minimax?.base, 'https://api.minimax.io/v1');
+	});
+
+	it('suffixes import names only within the same kind', () => {
+		const existing = new Set(['opencode zen\0opencode zen', '谷云\0alibaba cloud bailian']);
+
+		assert.equal(suggestUniqueProviderImportName('OpenCode Zen', 'OpenCode Zen', existing), 'OpenCode Zen (2)');
+		assert.equal(suggestUniqueProviderImportName('谷云', 'Volcengine Ark', existing), '谷云');
+		assert.equal(suggestUniqueProviderImportName('谷云', 'Alibaba Cloud Bailian', existing), '谷云 (2)');
 	});
 });

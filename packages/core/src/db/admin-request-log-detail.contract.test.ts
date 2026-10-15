@@ -9,6 +9,9 @@ import { createPostgresRequestLogsRepository } from './postgres/request-logs.imp
 
 const stamp = '2026-09-30T02:00:00.123Z';
 const row: RequestLogRow = {
+charged_wallet_cost: 0,
+ingress_host: null,
+
 	id: 'request-exact', user_id: 'buyer-1', workspace_id: 'personal:buyer-1', api_key_id: 'gateway-1',
 	user_email: 'buyer@example.test', model_id: 'model-1', provider_id: 'provider-1', provider_model_name: 'upstream-model',
 	model_name: 'Public model', provider_name: 'Public provider', request_body: 'body-private-sentinel',

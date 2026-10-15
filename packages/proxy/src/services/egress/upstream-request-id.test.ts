@@ -26,20 +26,18 @@ describe('extractUpstreamRequestId', () => {
 	it('captures vendor/CDN fallback headers (Bedrock, Azure, Wangsu, Qiniu)', () => {
 		expect(extractUpstreamRequestId(new Headers({ 'x-amzn-requestid': 'amzn_1' }))).toBe('amzn_1');
 		expect(extractUpstreamRequestId(new Headers({ 'x-ms-request-id': 'ms_1' }))).toBe('ms_1');
-		expect(
-			extractUpstreamRequestId(new Headers({ 'x-ws-request-id': '6a4654e1_PS-SHA_45108-42805' }))
-		).toBe('6a4654e1_PS-SHA_45108-42805');
-		expect(
-			extractUpstreamRequestId(new Headers({ 'http_x_reqid': 'chatptvtx-2d9b7da15a764f169bfc8459bdfec300' }))
-		).toBe('chatptvtx-2d9b7da15a764f169bfc8459bdfec300');
+		expect(extractUpstreamRequestId(new Headers({ 'x-ws-request-id': '6a4654e1_PS-SHA_45108-42805' }))).toBe(
+			'6a4654e1_PS-SHA_45108-42805',
+		);
+		expect(extractUpstreamRequestId(new Headers({ http_x_reqid: 'chatptvtx-2d9b7da15a764f169bfc8459bdfec300' }))).toBe(
+			'chatptvtx-2d9b7da15a764f169bfc8459bdfec300',
+		);
 	});
 
 	it('parses x-cloud-trace-context trace id segment', () => {
-		expect(
-			extractUpstreamRequestId(
-				new Headers({ 'x-cloud-trace-context': 'abc123def456/0123456789;o=1' })
-			)
-		).toBe('abc123def456');
+		expect(extractUpstreamRequestId(new Headers({ 'x-cloud-trace-context': 'abc123def456/0123456789;o=1' }))).toBe(
+			'abc123def456',
+		);
 	});
 
 	it('prefers standard provider headers over vendor/CDN fallbacks', () => {
@@ -89,7 +87,7 @@ describe('resolveGeminiLoggedRequestId', () => {
 			resolveGeminiLoggedRequestId({
 				headerRequestId: 'req_header',
 				bodyRequestId: 'req_body',
-			})
+			}),
 		).toBe('req_header');
 	});
 
@@ -98,7 +96,7 @@ describe('resolveGeminiLoggedRequestId', () => {
 			resolveGeminiLoggedRequestId({
 				headerRequestId: null,
 				bodyRequestId: 'req_body',
-			})
+			}),
 		).toBe('req_body');
 	});
 
@@ -107,7 +105,7 @@ describe('resolveGeminiLoggedRequestId', () => {
 			resolveGeminiLoggedRequestId({
 				headerRequestId: null,
 				bodyRequestId: null,
-			})
+			}),
 		).toBeNull();
 	});
 });

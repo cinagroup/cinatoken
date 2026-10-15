@@ -4,11 +4,14 @@ import type { GatewayRepositories } from '@octafuse/core';
 import type { RouteResult } from '../model-router';
 import { failoverDispatch } from '../failover-dispatch';
 import {
+	appendOpenaiEditImages,
 	countValidImageResults,
 	dispatchOpenAiImageEdits,
 	dispatchOpenAiImageGenerations,
 	normalizeOpenRouterImageResponse,
+	isOpenaiEditImageFormKey,
 	normalizeImageCommonParams,
+	openaiEditImageFormField,
 	redactImageRequestForLog,
 	validateImageUpload,
 	IMAGE_GENERATION_TIMEOUT_MS,
@@ -20,13 +23,24 @@ const CANARY_SECRET = 'CANARY_SECRET';
 
 function route(overrides: Partial<RouteResult> = {}): RouteResult {
 	return {
-		targetId: 'target-image', modelSurfaceId: 'surface-image', routePoolId: 'pool-image',
-		providerId: 'openai', providerName: 'OpenAI', providerModelName: 'gpt-image-1',
-		upstreamProtocol: 'openai', upstreamOperation: 'images.generations', adapter: 'passthrough',
+		targetId: 'target-image',
+		modelSurfaceId: 'surface-image',
+		routePoolId: 'pool-image',
+		providerId: 'openai',
+		providerName: 'OpenAI',
+		providerModelName: 'gpt-image-1',
+		upstreamProtocol: 'openai',
+		upstreamOperation: 'images.generations',
+		adapter: 'passthrough',
 		providerEndpoints: { openai: { base: 'https://openai.example/v1' } },
-		providerApiKey: 'sk-test', priceOverrideRaw: null, routeMeteredProfileJson: null,
-		routeChargedProfileJson: null, customParams: null, routeGroup: 'default',
-		routePriority: 1, routeWeight: 1,
+		providerApiKey: 'sk-test',
+		priceOverrideRaw: null,
+		routeMeteredProfileJson: null,
+		routeChargedProfileJson: null,
+		customParams: null,
+		routeGroup: 'default',
+		routePriority: 1,
+		routeWeight: 1,
 		...overrides,
 	};
 }
@@ -35,8 +49,12 @@ async function captureConsole<T>(run: () => Promise<T>): Promise<{ value: T; out
 	const originalLog = console.log;
 	const originalError = console.error;
 	const entries: string[] = [];
-	console.log = (...data: unknown[]) => { entries.push(data.map(String).join(' ')); };
-	console.error = (...data: unknown[]) => { entries.push(data.map(String).join(' ')); };
+	console.log = (...data: unknown[]) => {
+		entries.push(data.map(String).join(' '));
+	};
+	console.error = (...data: unknown[]) => {
+		entries.push(data.map(String).join(' '));
+	};
 	try {
 		return { value: await run(), output: entries.join('\n') };
 	} finally {
@@ -79,6 +97,14 @@ describe('normalizeImageCommonParams', () => {
 		assert.equal(normalizeImageCommonParams({ prompt: 'hi', n: '11' }).ok, false);
 	});
 
+	it('allows n up to options.maxN while defaulting to 1', () => {
+		const allowed = normalizeImageCommonParams({ prompt: 'hi', n: 4 }, { maxN: 4 });
+		assert.equal(allowed.ok, true);
+		if (allowed.ok) assert.equal(allowed.n, 4);
+		assert.equal(normalizeImageCommonParams({ prompt: 'hi', n: 5 }, { maxN: 4 }).ok, false);
+		assert.equal(normalizeImageCommonParams({ prompt: 'hi', n: 2 }, { maxN: 1 }).ok, false);
+	});
+
 	it('rejects oversized prompt', () => {
 		const r = normalizeImageCommonParams({ prompt: 'x'.repeat(IMAGE_MAX_PROMPT_CHARS + 1) });
 		assert.equal(r.ok, false);
@@ -117,7 +143,11 @@ describe('OpenRouter image response normalization', () => {
 describe('OpenRouter native image SSE', () => {
 	it('fails closed when a successful stream request is not an event stream', async () => {
 		const result = await dispatchOpenAiImageGenerations(
-			route(), { prompt: 'cat', n: 1, stream: true }, undefined, null, undefined,
+			route(),
+			{ prompt: 'cat', n: 1, stream: true },
+			undefined,
+			null,
+			undefined,
 			{ fetchImpl: async () => Response.json({ data: [{ b64_json: 'iVBORw0KGgo=' }] }) },
 		);
 		assert.equal(result.response.status, 502);
@@ -131,13 +161,19 @@ describe('OpenRouter native image SSE', () => {
 		const source = new ReadableStream<Uint8Array>({
 			start(controller) {
 				sourceController = controller;
-				controller.enqueue(encoder.encode(
-					'data: {"type":"image_generation.partial_image","partial_image_index":0,"b64_json":"cGFydGlhbA=="}\n\n',
-				));
+				controller.enqueue(
+					encoder.encode(
+						'data: {"type":"image_generation.partial_image","partial_image_index":0,"b64_json":"cGFydGlhbA=="}\n\n',
+					),
+				);
 			},
 		});
 		const result = await dispatchOpenAiImageGenerations(
-			route(), { prompt: 'cat', n: 1, stream: true }, undefined, null, undefined,
+			route(),
+			{ prompt: 'cat', n: 1, stream: true },
+			undefined,
+			null,
+			undefined,
 			{ fetchImpl: async () => new Response(source, { headers: { 'content-type': 'text/event-stream' } }) },
 		);
 		assert.match(result.response.headers.get('content-type') ?? '', /text\/event-stream/);
@@ -146,10 +182,12 @@ describe('OpenRouter native image SSE', () => {
 		assert.equal(first.done, false);
 		assert.match(new TextDecoder().decode(first.value), /image_generation\.partial_image/);
 
-		sourceController.enqueue(encoder.encode(
-			'data: {"type":"image_generation.completed","b64_json":"iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB","created":1,"usage":{"prompt_tokens":3,"completion_tokens":7,"total_tokens":10,"cost":0.04}}\n\n'
-			+ 'data: [DONE]\n\n',
-		));
+		sourceController.enqueue(
+			encoder.encode(
+				'data: {"type":"image_generation.completed","b64_json":"iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB","created":1,"usage":{"prompt_tokens":3,"completion_tokens":7,"total_tokens":10,"cost":0.04}}\n\n' +
+					'data: [DONE]\n\n',
+			),
+		);
 		sourceController.close();
 		let rest = '';
 		for (;;) {
@@ -170,11 +208,13 @@ describe('OpenRouter native image SSE', () => {
 	});
 
 	it('accepts provider shortfall and settles by the observed image count', async () => {
-		const body =
-			'data: {"type":"image_generation.completed","b64_json":"iVBORw0KGgo="}\n\n'
-			+ 'data: [DONE]\n\n';
+		const body = 'data: {"type":"image_generation.completed","b64_json":"iVBORw0KGgo="}\n\n' + 'data: [DONE]\n\n';
 		const result = await dispatchOpenAiImageGenerations(
-			route(), { prompt: 'cat', n: 3, stream: true }, undefined, null, undefined,
+			route(),
+			{ prompt: 'cat', n: 3, stream: true },
+			undefined,
+			null,
+			undefined,
 			{ fetchImpl: async () => new Response(body, { headers: { 'content-type': 'text/event-stream' } }) },
 		);
 		await result.response.text();
@@ -187,10 +227,16 @@ describe('OpenRouter native image SSE', () => {
 		let upstreamSignal: AbortSignal | null = null;
 		let upstreamCancelled = false;
 		const source = new ReadableStream<Uint8Array>({
-			cancel() { upstreamCancelled = true; },
+			cancel() {
+				upstreamCancelled = true;
+			},
 		});
 		const result = await dispatchOpenAiImageGenerations(
-			route(), { prompt: 'cat', n: 1, stream: true }, undefined, null, undefined,
+			route(),
+			{ prompt: 'cat', n: 1, stream: true },
+			undefined,
+			null,
+			undefined,
 			{
 				fetchImpl: async (_input, init) => {
 					upstreamSignal = init?.signal as AbortSignal;
@@ -207,11 +253,13 @@ describe('OpenRouter native image SSE', () => {
 	});
 
 	it('does not settle as billable when the client cancels queued terminal output', async () => {
-		const body =
-			'data: {"type":"image_generation.completed","b64_json":"iVBORw0KGgo="}\n\n'
-			+ 'data: [DONE]\n\n';
+		const body = 'data: {"type":"image_generation.completed","b64_json":"iVBORw0KGgo="}\n\n' + 'data: [DONE]\n\n';
 		const result = await dispatchOpenAiImageGenerations(
-			route(), { prompt: 'cat', n: 1, stream: true }, undefined, null, undefined,
+			route(),
+			{ prompt: 'cat', n: 1, stream: true },
+			undefined,
+			null,
+			undefined,
 			{ fetchImpl: async () => new Response(body, { headers: { 'content-type': 'text/event-stream' } }) },
 		);
 		await result.response.body!.cancel('client_cancelled_before_delivery');
@@ -227,7 +275,11 @@ describe('OpenRouter native image SSE', () => {
 			'data: {"type":"image_generation.completed","b64_json":"iVBORw0KGgo="}\n\ndata: [DONE]\n\n',
 		]) {
 			const result = await dispatchOpenAiImageGenerations(
-				route(), { prompt: 'cat', n: 1, stream: true }, undefined, null, undefined,
+				route(),
+				{ prompt: 'cat', n: 1, stream: true },
+				undefined,
+				null,
+				undefined,
 				{
 					requireAuthoritativeUsage: true,
 					fetchImpl: async () => new Response(body, { headers: { 'content-type': 'text/event-stream' } }),
@@ -255,7 +307,11 @@ describe('OpenRouter native image SSE', () => {
 			},
 		});
 		const result = await dispatchOpenAiImageGenerations(
-			route(), { prompt: 'cat', n: 1, stream: true }, undefined, null, undefined,
+			route(),
+			{ prompt: 'cat', n: 1, stream: true },
+			undefined,
+			null,
+			undefined,
 			{ fetchImpl: async () => new Response(source, { headers: { 'content-type': 'text/event-stream' } }) },
 		);
 		const text = await result.response.text();
@@ -270,11 +326,18 @@ describe('OpenRouter native image SSE', () => {
 	it('redacts credential-shaped fragments in upstream SSE errors', async () => {
 		const secret = 'sk-1234567890abcdef';
 		const result = await dispatchOpenAiImageGenerations(
-			route(), { prompt: 'cat', n: 1, stream: true }, undefined, null, undefined,
-			{ fetchImpl: async () => new Response(
-				`data: {"type":"error","error":{"message":"provider key ${secret}","code":"server_error"}}\n\n`,
-				{ headers: { 'content-type': 'text/event-stream' } },
-			) },
+			route(),
+			{ prompt: 'cat', n: 1, stream: true },
+			undefined,
+			null,
+			undefined,
+			{
+				fetchImpl: async () =>
+					new Response(
+						`data: {"type":"error","error":{"message":"provider key ${secret}","code":"server_error"}}\n\n`,
+						{ headers: { 'content-type': 'text/event-stream' } },
+					),
+			},
 		);
 		const text = await result.response.text();
 		assert.equal(text.includes(secret), false);
@@ -284,16 +347,14 @@ describe('OpenRouter native image SSE', () => {
 
 describe('authoritative image usage', () => {
 	it('fails closed instead of guessing token usage for a non-stream response', async () => {
-		const result = await dispatchOpenAiImageGenerations(
-			route(), { prompt: 'cat', n: 1 }, undefined, null, undefined,
-			{
-				requireAuthoritativeUsage: true,
-				fetchImpl: async () => Response.json({
+		const result = await dispatchOpenAiImageGenerations(route(), { prompt: 'cat', n: 1 }, undefined, null, undefined, {
+			requireAuthoritativeUsage: true,
+			fetchImpl: async () =>
+				Response.json({
 					created: 1,
 					data: [{ b64_json: 'iVBORw0KGgo=' }],
 				}),
-			},
-		);
+		});
 		assert.equal(result.response.status, 502);
 		assert.equal(result.meta.failoverForbidden, true);
 		assert.match(await result.response.text(), /without authoritative usage/);
@@ -304,7 +365,7 @@ describe('validateImageUpload / countValidImageResults', () => {
 	it('validates mime and size', () => {
 		assert.equal(
 			validateImageUpload({ filename: 'a.png', mimeType: 'image/png', bytes: new Uint8Array([1, 2, 3]) }),
-			null
+			null,
 		);
 		assert.match(
 			validateImageUpload({
@@ -312,11 +373,11 @@ describe('validateImageUpload / countValidImageResults', () => {
 				mimeType: 'image/gif',
 				bytes: new Uint8Array([1]),
 			}) ?? '',
-			/mime/
+			/mime/,
 		);
 		assert.match(
 			validateImageUpload({ filename: 'a.png', mimeType: 'image/png', bytes: new Uint8Array() }) ?? '',
-			/empty/
+			/empty/,
 		);
 	});
 
@@ -324,6 +385,35 @@ describe('validateImageUpload / countValidImageResults', () => {
 		assert.equal(countValidImageResults({ data: [{ b64_json: 'abc' }, { url: 'https://x' }] }), 2);
 		assert.equal(countValidImageResults({ data: [{ b64_json: '' }, {}] }), 0);
 		assert.equal(countValidImageResults(null), 0);
+	});
+});
+
+describe('openaiEditImageFormField', () => {
+	it('uses scalar image for one file and image[] for two or more', () => {
+		assert.equal(openaiEditImageFormField(0), 'image');
+		assert.equal(openaiEditImageFormField(1), 'image');
+		assert.equal(openaiEditImageFormField(2), 'image[]');
+		assert.equal(openaiEditImageFormField(5), 'image[]');
+	});
+
+	it('skips custom_params keys that would duplicate the image field', () => {
+		assert.equal(isOpenaiEditImageFormKey('image'), true);
+		assert.equal(isOpenaiEditImageFormKey('images'), true);
+		assert.equal(isOpenaiEditImageFormKey('image[]'), true);
+		assert.equal(isOpenaiEditImageFormKey('prompt'), false);
+	});
+
+	it('appends one file as image and many as image[]', () => {
+		const png = { filename: 'a.png', mimeType: 'image/png', bytes: new Uint8Array([1, 2, 3]) };
+		const one = new FormData();
+		appendOpenaiEditImages(one, [png]);
+		assert.equal(one.getAll('image').length, 1);
+		assert.equal(one.getAll('image[]').length, 0);
+
+		const many = new FormData();
+		appendOpenaiEditImages(many, [png, { ...png, filename: 'b.png' }]);
+		assert.equal(many.getAll('image').length, 0);
+		assert.equal(many.getAll('image[]').length, 2);
 	});
 });
 
@@ -361,7 +451,9 @@ describe('OpenAI image outcome certainty', () => {
 					return Response.json({ data: [{ b64_json: 'must-not-run' }] });
 				},
 			},
-			async () => { boundaryCalls += 1; },
+			async () => {
+				boundaryCalls += 1;
+			},
 		);
 		assert.equal(boundaryCalls, 0);
 		assert.equal(fetchCalls, 0);
@@ -382,11 +474,13 @@ describe('OpenAI image outcome certainty', () => {
 			{
 				prompt: 'cat',
 				n: 1,
-				images: [{
-					filename: 'cat.png',
-					mimeType: 'image/png',
-					bytes: new Uint8Array([1, 2, 3]),
-				}],
+				images: [
+					{
+						filename: 'cat.png',
+						mimeType: 'image/png',
+						bytes: new Uint8Array([1, 2, 3]),
+					},
+				],
 			},
 			controller.signal,
 			null,
@@ -397,7 +491,9 @@ describe('OpenAI image outcome certainty', () => {
 					return Response.json({ data: [{ b64_json: 'must-not-run' }] });
 				},
 			},
-			async () => { boundaryCalls += 1; },
+			async () => {
+				boundaryCalls += 1;
+			},
 		);
 		assert.equal(boundaryCalls, 0);
 		assert.equal(fetchCalls, 0);
@@ -409,14 +505,11 @@ describe('OpenAI image outcome certainty', () => {
 	});
 
 	it('marks a post-dispatch network failure as outcome-unknown', async () => {
-		const result = await dispatchOpenAiImageGenerations(
-			route(),
-			{ prompt: 'cat', n: 1 },
-			undefined,
-			null,
-			undefined,
-			{ fetchImpl: async () => { throw new TypeError('connection reset'); } },
-		);
+		const result = await dispatchOpenAiImageGenerations(route(), { prompt: 'cat', n: 1 }, undefined, null, undefined, {
+			fetchImpl: async () => {
+				throw new TypeError('connection reset');
+			},
+		});
 		assert.equal(result.response.status, 502);
 		assert.equal(result.meta.upstreamOutcomeUnknown, true);
 		assert.equal(result.meta.failoverForbidden, true);
@@ -440,12 +533,18 @@ describe('OpenAI image outcome certainty', () => {
 
 	it('bounds 2xx responses and distinguishes clear 4xx from ambiguous 3xx/5xx', async () => {
 		const tooLarge2xx = await dispatchOpenAiImageGenerations(
-			route(), { prompt: 'cat', n: 1 }, undefined, null, undefined,
+			route(),
+			{ prompt: 'cat', n: 1 },
+			undefined,
+			null,
+			undefined,
 			{
 				maxResponseBytes: 8,
-				fetchImpl: async () => new Response('0123456789', {
-					status: 200, headers: { 'content-length': '10' },
-				}),
+				fetchImpl: async () =>
+					new Response('0123456789', {
+						status: 200,
+						headers: { 'content-length': '10' },
+					}),
 			},
 		);
 		assert.equal(tooLarge2xx.response.status, 502);
@@ -454,12 +553,18 @@ describe('OpenAI image outcome certainty', () => {
 		assert.equal(tooLarge2xx.meta.failoverForbidden, true);
 
 		const explicit4xx = await dispatchOpenAiImageGenerations(
-			route(), { prompt: 'cat', n: 1 }, undefined, null, undefined,
+			route(),
+			{ prompt: 'cat', n: 1 },
+			undefined,
+			null,
+			undefined,
 			{
 				maxResponseBytes: 8,
-				fetchImpl: async () => new Response('0123456789', {
-					status: 400, headers: { 'content-length': '10' },
-				}),
+				fetchImpl: async () =>
+					new Response('0123456789', {
+						status: 400,
+						headers: { 'content-length': '10' },
+					}),
 			},
 		);
 		assert.equal(explicit4xx.response.status, 400);
@@ -469,12 +574,18 @@ describe('OpenAI image outcome certainty', () => {
 
 		for (const status of [307, 503]) {
 			const ambiguousResponse = await dispatchOpenAiImageGenerations(
-				route(), { prompt: 'cat', n: 1 }, undefined, null, undefined,
+				route(),
+				{ prompt: 'cat', n: 1 },
+				undefined,
+				null,
+				undefined,
 				{
 					maxResponseBytes: 8,
-					fetchImpl: async () => new Response('0123456789', {
-						status, headers: { 'content-length': '10' },
-					}),
+					fetchImpl: async () =>
+						new Response('0123456789', {
+							status,
+							headers: { 'content-length': '10' },
+						}),
 				},
 			);
 			assert.equal(ambiguousResponse.response.status, status);
@@ -484,10 +595,9 @@ describe('OpenAI image outcome certainty', () => {
 	});
 
 	it('keeps a validated 2xx image result certain', async () => {
-		const result = await dispatchOpenAiImageGenerations(
-			route(), { prompt: 'cat', n: 1 }, undefined, null, undefined,
-			{ fetchImpl: async () => Response.json({ data: [{ b64_json: 'AQI=' }] }) },
-		);
+		const result = await dispatchOpenAiImageGenerations(route(), { prompt: 'cat', n: 1 }, undefined, null, undefined, {
+			fetchImpl: async () => Response.json({ data: [{ b64_json: 'AQI=' }] }),
+		});
 		assert.equal(result.meta.upstreamOutcomeUnknown, undefined);
 		assert.equal(result.meta.failoverForbidden, undefined);
 	});
@@ -518,41 +628,43 @@ describe('OpenAI image outcome certainty', () => {
 			const edit = {
 				prompt: 'cat',
 				n: 1,
-				images: [{
-					filename: 'cat.png',
-					mimeType: 'image/png',
-					bytes: new Uint8Array([1, 2, 3]),
-				}],
+				images: [
+					{
+						filename: 'cat.png',
+						mimeType: 'image/png',
+						bytes: new Uint8Array([1, 2, 3]),
+					},
+				],
 			};
 
-			const captured = await captureConsole(async () => failoverDispatch(
-				{} as GatewayRepositories,
-				[first, second],
-				'openai',
-				async (candidate, signal, timing, attempt) => {
-					const options = {
-						maxResponseBytes: 8,
-						fetchImpl: async () => {
-							fetchCalls += 1;
-							return new Response('0123456789', {
-								status: 200,
-								headers: { 'content-length': '10' },
-							});
-						},
-					};
-					return operation === 'generations'
-						? dispatchOpenAiImageGenerations(
-							candidate, { prompt: 'cat', n: 1 }, signal, timing, attempt, options,
-						)
-						: dispatchOpenAiImageEdits(candidate, edit, signal, timing, attempt, options);
-				},
-				undefined,
-				{
-					affinityKey: `image-${operation}`,
-					tierKeyPrefix: `image-${operation}`,
-					strategy: 'weight_priority',
-				},
-			));
+			const captured = await captureConsole(async () =>
+				failoverDispatch(
+					{} as GatewayRepositories,
+					[first, second],
+					'openai',
+					async (candidate, signal, timing, attempt) => {
+						const options = {
+							maxResponseBytes: 8,
+							fetchImpl: async () => {
+								fetchCalls += 1;
+								return new Response('0123456789', {
+									status: 200,
+									headers: { 'content-length': '10' },
+								});
+							},
+						};
+						return operation === 'generations'
+							? dispatchOpenAiImageGenerations(candidate, { prompt: 'cat', n: 1 }, signal, timing, attempt, options)
+							: dispatchOpenAiImageEdits(candidate, edit, signal, timing, attempt, options);
+					},
+					undefined,
+					{
+						affinityKey: `image-${operation}`,
+						tierKeyPrefix: `image-${operation}`,
+						strategy: 'weight_priority',
+					},
+				),
+			);
 
 			const clientPayload = await captured.value.response.text();
 			assert.equal(fetchCalls, 1, `${operation} must not replay an accepted upstream attempt`);

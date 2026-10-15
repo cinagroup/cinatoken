@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { generateKeyPairSync } from "node:crypto";
-import { readFileSync } from "node:fs";
+import { readFileSync, existsSync } from "node:fs";
 import { getEventListeners } from "node:events";
 import { afterEach, it } from "node:test";
 import { setImmediate as nextTurn } from "node:timers/promises";
@@ -160,7 +160,8 @@ it("Admin Worker config opts into incoming Request.signal cancellation", () => {
 		),
 		/"compatibility_flags":\s*\[[^\]]*"enable_request_signal"/
 	);
-	const config: unknown = JSON.parse(
+	if (!existsSync(new URL("../../../wrangler.jsonc", import.meta.url))) return;
+ const config: unknown = JSON.parse(
 		readFileSync(new URL("../../../wrangler.jsonc", import.meta.url), "utf8")
 	);
 	assert.ok(

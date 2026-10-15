@@ -1,77 +1,46 @@
-"use client";
+'use client';
+import { OMIT_AUDIT_LOG_SNAPSHOT_FIELDS } from '@/lib/audit-log-display';
 
 /**
  * 全站用户审计日志（`user_audit_logs`）：筛选、分页；数据来自 `/api/admin/budget-audit-logs`。
  */
-import { useTranslations } from "next-intl";
-import { useState, useEffect, useMemo } from "react";
-import Link from "next/link";
-import { readApiJson } from "@/lib/api-json";
+import { FilterDisclosure } from '@/components/FilterDisclosure';
+import { useTranslations } from 'next-intl';
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import Link from 'next/link';
+import { readApiJson } from '@/lib/api-json';
 import {
 	API_KEY_BUDGET_AUDIT_ACTOR_TYPES,
 	API_KEY_BUDGET_AUDIT_EVENT_TYPES,
 	API_KEY_BUDGET_AUDIT_SOURCE_CHANNELS,
-	USER_AUDIT_ACTOR_KINDS,
 	type GatewayApiKeyBudgetAuditLog,
-} from "@/lib/types";
-import { GatewayTimeRangePicker } from "@/components/GatewayTimeRangePicker";
+} from '@/lib/types';
+import { GatewayTimeRangePicker } from '@/components/GatewayTimeRangePicker';
 import {
 	createRangeValue,
 	DEFAULT_GATEWAY_TIME_RANGE_PRESET,
 	detectRollingPreset,
 	type GatewayTimeRangeValue,
-} from "@/lib/analytics-range";
-import {
-	useListPageBrowserReady,
-	useReplaceListPageQuery,
-} from "@/lib/use-replace-list-query";
-import { formatGatewayDateTime } from "@/lib/datetime";
-import {
-	formatGatewayMoneyCode,
-	formatGatewayMoneyCodeSigned,
-} from "@/lib/format-gateway-currency";
-import { GATEWAY_MONEY_DECIMAL_PLACES } from "@/lib/gateway-money";
-import { useBillingCurrency } from "@/lib/use-billing-currency";
-import { useGatewayDateTime } from "@/lib/use-gateway-datetime";
+} from '@/lib/analytics-range';
+import { useListPageBrowserReady, useReplaceListPageQuery } from '@/lib/use-replace-list-query';
+import { formatGatewayDateTime } from '@/lib/datetime';
+import { formatGatewayMoneyCode, formatGatewayMoneyCodeSigned } from '@/lib/format-gateway-currency';
+import { GATEWAY_MONEY_DECIMAL_PLACES } from '@/lib/gateway-money';
+import { MultiSelectDropdown } from '@/components/MultiSelectDropdown';
+import { AuditChangeDetailModal, AuditLogSharedCells } from '@/components/AuditLogSharedCells';
+import { auditEnumLabel } from '@/lib/audit-log-display';
+import { useBillingCurrency } from '@/lib/use-billing-currency';
+import { useGatewayDateTime } from '@/lib/use-gateway-datetime';
 
-/** 已在 Spend / Budget plan 列展示的快照字段，不在「User change detail」重复 */
-const OMIT_AUDIT_LOG_SNAPSHOT_FIELDS = [
-	"budget_spent",
-	"budget_max",
-	"budget_base",
-	"budget_period",
-	"budget_reset_at",
-] as const;
-
-const DEFAULT_AUDIT_LOG_EVENT_TYPES = API_KEY_BUDGET_AUDIT_EVENT_TYPES.filter(
-	(type) => type !== "usage_charge"
-);
-const AUDIT_LOG_EVENT_TYPE_SET = new Set<string>(
-	API_KEY_BUDGET_AUDIT_EVENT_TYPES
-);
+const DEFAULT_AUDIT_LOG_EVENT_TYPES = API_KEY_BUDGET_AUDIT_EVENT_TYPES.filter((type) => type !== 'usage_charge');
+const AUDIT_LOG_EVENT_TYPE_SET = new Set<string>(API_KEY_BUDGET_AUDIT_EVENT_TYPES);
 const DEFAULT_AUDIT_LOG_ACTOR_TYPES = [...API_KEY_BUDGET_AUDIT_ACTOR_TYPES];
-const AUDIT_LOG_ACTOR_TYPE_SET = new Set<string>(
-	API_KEY_BUDGET_AUDIT_ACTOR_TYPES
-);
-const DEFAULT_AUDIT_LOG_SOURCE_CHANNELS = [
-	...API_KEY_BUDGET_AUDIT_SOURCE_CHANNELS,
-];
-const AUDIT_LOG_SOURCE_CHANNEL_SET = new Set<string>(
-	API_KEY_BUDGET_AUDIT_SOURCE_CHANNELS
-);
-/** 完整前缀目录（含历史 `admin:`），表格徽章仍能识别老 Master Key 行。 */
-const AUDIT_LOG_ACTOR_KIND_SET = new Set<string>(USER_AUDIT_ACTOR_KINDS);
+const AUDIT_LOG_ACTOR_TYPE_SET = new Set<string>(API_KEY_BUDGET_AUDIT_ACTOR_TYPES);
+const DEFAULT_AUDIT_LOG_SOURCE_CHANNELS = [...API_KEY_BUDGET_AUDIT_SOURCE_CHANNELS];
+const AUDIT_LOG_SOURCE_CHANNEL_SET = new Set<string>(API_KEY_BUDGET_AUDIT_SOURCE_CHANNELS);
 /** 筛选 UI 不含历史 Master Key；全选时不传 `actor_kind`，默认列表仍含老 `admin:` 行。 */
-const AUDIT_LOG_ACTOR_KIND_FILTERS = [
-	"console",
-	"admin_key",
-	"system",
-	"service",
-	"portal",
-] as const;
-const AUDIT_LOG_ACTOR_KIND_FILTER_SET = new Set<string>(
-	AUDIT_LOG_ACTOR_KIND_FILTERS
-);
+const AUDIT_LOG_ACTOR_KIND_FILTERS = ['console', 'admin_key', 'system', 'service', 'portal'] as const;
+const AUDIT_LOG_ACTOR_KIND_FILTER_SET = new Set<string>(AUDIT_LOG_ACTOR_KIND_FILTERS);
 
 type AuditLogFilterOptions = {
 	reasonCodes: string[];
@@ -80,11 +49,10 @@ type AuditLogFilterOptions = {
 function normalizeAuditEventTypes(values: string[]): string[] {
 	const normalized: string[] = [];
 	values
-		.flatMap((value) => value.split(","))
+		.flatMap((value) => value.split(','))
 		.map((value) => value.trim())
 		.forEach((value) => {
-			if (AUDIT_LOG_EVENT_TYPE_SET.has(value) && !normalized.includes(value))
-				normalized.push(value);
+			if (AUDIT_LOG_EVENT_TYPE_SET.has(value) && !normalized.includes(value)) normalized.push(value);
 		});
 	return normalized;
 }
@@ -92,11 +60,10 @@ function normalizeAuditEventTypes(values: string[]): string[] {
 function normalizeAuditActorTypes(values: string[]): string[] {
 	const normalized: string[] = [];
 	values
-		.flatMap((value) => value.split(","))
+		.flatMap((value) => value.split(','))
 		.map((value) => value.trim())
 		.forEach((value) => {
-			if (AUDIT_LOG_ACTOR_TYPE_SET.has(value) && !normalized.includes(value))
-				normalized.push(value);
+			if (AUDIT_LOG_ACTOR_TYPE_SET.has(value) && !normalized.includes(value)) normalized.push(value);
 		});
 	return normalized;
 }
@@ -104,14 +71,10 @@ function normalizeAuditActorTypes(values: string[]): string[] {
 function normalizeAuditActorKinds(values: string[]): string[] {
 	const normalized: string[] = [];
 	values
-		.flatMap((value) => value.split(","))
+		.flatMap((value) => value.split(','))
 		.map((value) => value.trim())
 		.forEach((value) => {
-			if (
-				AUDIT_LOG_ACTOR_KIND_FILTER_SET.has(value) &&
-				!normalized.includes(value)
-			)
-				normalized.push(value);
+			if (AUDIT_LOG_ACTOR_KIND_FILTER_SET.has(value) && !normalized.includes(value)) normalized.push(value);
 		});
 	return normalized;
 }
@@ -121,26 +84,21 @@ function parseAuditActorId(actorId: string | null | undefined): {
 	kind: string | null;
 	identifier: string;
 } {
-	if (!actorId) return { kind: null, identifier: "" };
-	const separator = actorId.indexOf(":");
+	if (!actorId) return { kind: null, identifier: '' };
+	const separator = actorId.indexOf(':');
 	if (separator === -1) return { kind: null, identifier: actorId };
 	const kind = actorId.slice(0, separator);
-	if (!AUDIT_LOG_ACTOR_KIND_SET.has(kind))
-		return { kind: null, identifier: actorId };
+	if (!AUDIT_LOG_ACTOR_KIND_FILTER_SET.has(kind)) return { kind: null, identifier: actorId };
 	return { kind, identifier: actorId.slice(separator + 1) };
 }
 
 function normalizeAuditSourceChannels(values: string[]): string[] {
 	const normalized: string[] = [];
 	values
-		.flatMap((value) => value.split(","))
+		.flatMap((value) => value.split(','))
 		.map((value) => value.trim())
 		.forEach((value) => {
-			if (
-				AUDIT_LOG_SOURCE_CHANNEL_SET.has(value) &&
-				!normalized.includes(value)
-			)
-				normalized.push(value);
+			if (AUDIT_LOG_SOURCE_CHANNEL_SET.has(value) && !normalized.includes(value)) normalized.push(value);
 		});
 	return normalized;
 }
@@ -148,109 +106,84 @@ function normalizeAuditSourceChannels(values: string[]): string[] {
 function normalizeAuditReasonCodes(values: string[]): string[] {
 	const normalized: string[] = [];
 	values
-		.flatMap((value) => value.split(","))
+		.flatMap((value) => value.split(','))
 		.map((value) => value.trim())
 		.forEach((value) => {
-			if (value !== "" && !normalized.includes(value)) normalized.push(value);
+			if (value !== '' && !normalized.includes(value)) normalized.push(value);
 		});
 	return normalized;
 }
 
-function appendAuditEventTypeParams(
-	params: URLSearchParams,
-	eventTypes: string[]
-): void {
-	eventTypes.forEach((eventType) => params.append("event_type", eventType));
+function isSameStringSet(left: readonly string[], right: readonly string[]): boolean {
+	if (left.length !== right.length) return false;
+	const rightSet = new Set(right);
+	return left.every((value) => rightSet.has(value));
 }
 
-function appendAuditActorTypeParams(
-	params: URLSearchParams,
-	actorTypes: string[]
-): void {
+/** 浏览器 URL：Default（8 种，不含 usage_charge）省略参数，短链刷新仍还原为 Default UI。 */
+function appendAuditEventTypeUrlParams(params: URLSearchParams, eventTypes: string[]): void {
+	if (isSameStringSet(eventTypes, DEFAULT_AUDIT_LOG_EVENT_TYPES)) return;
+	eventTypes.forEach((eventType) => params.append('event_type', eventType));
+}
+
+/** API 查询：仅全选 9 种时省略（不过滤）；Default 必须带上 8 个 event_type。 */
+function appendAuditEventTypeQueryParams(params: URLSearchParams, eventTypes: string[]): void {
+	if (isSameStringSet(eventTypes, API_KEY_BUDGET_AUDIT_EVENT_TYPES)) return;
+	eventTypes.forEach((eventType) => params.append('event_type', eventType));
+}
+
+function appendAuditActorTypeParams(params: URLSearchParams, actorTypes: string[]): void {
 	if (actorTypes.length === DEFAULT_AUDIT_LOG_ACTOR_TYPES.length) return;
-	actorTypes.forEach((actorType) => params.append("actor_type", actorType));
+	actorTypes.forEach((actorType) => params.append('actor_type', actorType));
 }
 
-function appendAuditActorKindParams(
-	params: URLSearchParams,
-	actorKinds: string[]
-): void {
+function appendAuditActorKindParams(params: URLSearchParams, actorKinds: string[]): void {
 	if (actorKinds.length === AUDIT_LOG_ACTOR_KIND_FILTERS.length) return;
-	actorKinds.forEach((actorKind) => params.append("actor_kind", actorKind));
+	actorKinds.forEach((actorKind) => params.append('actor_kind', actorKind));
 }
 
-function appendAuditSourceParams(
-	params: URLSearchParams,
-	sources: string[]
-): void {
+function appendAuditSourceParams(params: URLSearchParams, sources: string[]): void {
 	if (sources.length === DEFAULT_AUDIT_LOG_SOURCE_CHANNELS.length) return;
-	sources.forEach((source) => params.append("source", source));
+	sources.forEach((source) => params.append('source', source));
 }
 
-function appendAuditReasonCodeParams(
-	params: URLSearchParams,
-	reasonCodes: string[],
-	allReasonCodes: string[]
-): void {
+function appendAuditReasonCodeParams(params: URLSearchParams, reasonCodes: string[], allReasonCodes: string[]): void {
 	const selectedSet = new Set(reasonCodes);
-	const isAllSelected =
-		allReasonCodes.length > 0 &&
-		allReasonCodes.every((reasonCode) => selectedSet.has(reasonCode));
+	const isAllSelected = allReasonCodes.length > 0 && allReasonCodes.every((reasonCode) => selectedSet.has(reasonCode));
 	if (reasonCodes.length === 0 || isAllSelected) return;
-	reasonCodes.forEach((reasonCode) => params.append("reason_code", reasonCode));
+	reasonCodes.forEach((reasonCode) => params.append('reason_code', reasonCode));
 }
 
 /** change_payload 展开行：去掉已由 Budget plan / Time / Event 列展示的键 */
 function shouldOmitChangePayloadDisplayLine(line: string): boolean {
-	const colon = line.indexOf(":");
+	const colon = line.indexOf(':');
 	const key = (colon === -1 ? line : line.slice(0, colon)).trim();
 	if (!key) return false;
-	if (key.startsWith("before_budget_") || key.startsWith("after_budget_"))
-		return true;
-	if (
-		[
-			"actor_id",
-			"reason_code",
-			"reason_text",
-			"source",
-			"correlation_id",
-		].includes(key)
-	)
-		return true;
+	if (key.startsWith('before_budget_') || key.startsWith('after_budget_')) return true;
+	if (['actor_id', 'reason_code', 'reason_text', 'source', 'correlation_id'].includes(key)) return true;
 	return false;
 }
 
 function formatSignedMoney(value: number, currency: string): string {
-	return formatGatewayMoneyCodeSigned(
-		value,
-		currency,
-		GATEWAY_MONEY_DECIMAL_PLACES
-	);
+	return formatGatewayMoneyCodeSigned(value, currency, GATEWAY_MONEY_DECIMAL_PLACES);
 }
 
 function formatPlainMoney(value: number, currency: string): string {
 	return formatGatewayMoneyCode(value, currency, GATEWAY_MONEY_DECIMAL_PLACES);
 }
 
-function formatBudgetMax(
-	value: number | null,
-	currency: string,
-	noLimitLabel = "no limit"
-): string {
+function formatBudgetMax(value: number | null, currency: string, noLimitLabel = 'no limit'): string {
 	if (value == null) return noLimitLabel;
 	return formatGatewayMoneyCode(value, currency, GATEWAY_MONEY_DECIMAL_PLACES);
 }
 
-function formatAuditTime(
-	iso: string | null | undefined,
-	timeZone: string
-): string {
-	if (iso == null || iso === "") return "—";
+function formatAuditTime(iso: string | null | undefined, timeZone: string): string {
+	if (iso == null || iso === '') return '—';
 	return formatGatewayDateTime(iso, timeZone);
 }
 
 function shortId(id: string | null | undefined): string {
-	if (id == null || id === "") return "—";
+	if (id == null || id === '') return '—';
 	if (id.length < 14) return id;
 	return `${id.slice(0, 8)}…${id.slice(-4)}`;
 }
@@ -258,15 +191,15 @@ function shortId(id: string | null | undefined): string {
 /** Reason 行：code / text 并存且不同时压缩为一行「code · text」，否则单行。 */
 function auditReasonOneLine(
 	reasonCode: string | null | undefined,
-	reasonText: string | null | undefined
+	reasonText: string | null | undefined,
 ): {
 	line: string;
 	isMono: boolean;
 	title: string;
 } {
-	const rc = (reasonCode ?? "").trim();
-	const rt = (reasonText ?? "").trim();
-	if (!rc && !rt) return { line: "—", isMono: true, title: "" };
+	const rc = (reasonCode ?? '').trim();
+	const rt = (reasonText ?? '').trim();
+	if (!rc && !rt) return { line: '—', isMono: true, title: '' };
 	if (rc && rt && rc !== rt) {
 		const line = `${rc} · ${rt}`;
 		return { line, isMono: false, title: line };
@@ -284,46 +217,33 @@ function auditDisplayExtras(item: GatewayApiKeyBudgetAuditLog) {
 	} catch {
 		/* keep empty */
 	}
-	const str = (v: unknown) => (typeof v === "string" ? v : null);
+	const str = (v: unknown) => (typeof v === 'string' ? v : null);
 	return {
 		reason_text: item.reason_text ?? str(m.reason_text),
 		reason_code: item.reason_code ?? str(m.reason_code),
 		actor_id: item.actor_id ?? str(m.actor_id),
 		source: item.source ?? str(m.source),
 		correlation_id: item.correlation_id ?? str(m.correlation_id),
-		before_budget_period:
-			item.before_budget_period ?? str(m.before_budget_period),
+		before_budget_period: item.before_budget_period ?? str(m.before_budget_period),
 		after_budget_period: item.after_budget_period ?? str(m.after_budget_period),
-		before_budget_reset_at:
-			item.before_budget_reset_at ?? str(m.before_budget_reset_at),
-		after_budget_reset_at:
-			item.after_budget_reset_at ?? str(m.after_budget_reset_at),
+		before_budget_reset_at: item.before_budget_reset_at ?? str(m.before_budget_reset_at),
+		after_budget_reset_at: item.after_budget_reset_at ?? str(m.after_budget_reset_at),
 	};
 }
 
 function isAuditObject(value: unknown): value is Record<string, unknown> {
-	return Boolean(value && typeof value === "object" && !Array.isArray(value));
+	return Boolean(value && typeof value === 'object' && !Array.isArray(value));
 }
 
 /** 与网关金额精度一致，用于判断 budget_max / budget_base 是否变化 */
-function budgetMoneySemanticallyEqual(
-	before: number | null | undefined,
-	after: number | null | undefined
-): boolean {
+function budgetMoneySemanticallyEqual(before: number | null | undefined, after: number | null | undefined): boolean {
 	if (before == null && after == null) return true;
 	if (before == null || after == null) return false;
-	return (
-		before.toFixed(GATEWAY_MONEY_DECIMAL_PLACES) ===
-		after.toFixed(GATEWAY_MONEY_DECIMAL_PLACES)
-	);
+	return before.toFixed(GATEWAY_MONEY_DECIMAL_PLACES) === after.toFixed(GATEWAY_MONEY_DECIMAL_PLACES);
 }
 
-function budgetResetAtSemanticallyEqual(
-	before: string | null | undefined,
-	after: string | null | undefined
-): boolean {
-	if ((before == null || before === "") && (after == null || after === ""))
-		return true;
+function budgetResetAtSemanticallyEqual(before: string | null | undefined, after: string | null | undefined): boolean {
+	if ((before == null || before === '') && (after == null || after === '')) return true;
 	if (!before || !after) return false;
 	const tb = new Date(before).getTime();
 	const ta = new Date(after).getTime();
@@ -332,20 +252,18 @@ function budgetResetAtSemanticallyEqual(
 }
 
 const budgetPlanHighlight = {
-	before: "rounded px-0.5 bg-amber-50 text-amber-900",
-	after: "rounded px-0.5 bg-sky-50 text-sky-900",
+	before: 'rounded px-0.5 bg-amber-50 text-amber-900',
+	after: 'rounded px-0.5 bg-sky-50 text-sky-900',
 } as const;
 
 type AuditDiffRow = {
-	group: "snapshot" | "payload";
+	group: 'snapshot' | 'payload';
 	field: string;
 	before: string;
 	after: string;
 };
 
-function parseAuditJsonObject(
-	raw: string | null | undefined
-): Record<string, unknown> | null {
+function parseAuditJsonObject(raw: string | null | undefined): Record<string, unknown> | null {
 	const trimmed = raw?.trim();
 	if (!trimmed) return null;
 	try {
@@ -357,27 +275,22 @@ function parseAuditJsonObject(
 	return null;
 }
 
-function parseAuditChangedFields(
-	raw: string | null | undefined
-): string[] | null {
+function parseAuditChangedFields(raw: string | null | undefined): string[] | null {
 	const trimmed = raw?.trim();
 	if (!trimmed) return null;
 	try {
 		const parsed = JSON.parse(trimmed) as unknown;
 		if (!Array.isArray(parsed)) return null;
-		return parsed.filter(
-			(value): value is string => typeof value === "string" && value.length > 0
-		);
+		return parsed.filter((value): value is string => typeof value === 'string' && value.length > 0);
 	} catch {
 		return null;
 	}
 }
 
 function formatAuditDiffValue(value: unknown): string {
-	if (value == null || value === "") return "—";
-	if (typeof value === "string") return value;
-	if (typeof value === "number" || typeof value === "boolean")
-		return String(value);
+	if (value == null || value === '') return '—';
+	if (typeof value === 'string') return value;
+	if (typeof value === 'number' || typeof value === 'boolean') return String(value);
 	try {
 		return JSON.stringify(value, null, 2);
 	} catch {
@@ -387,10 +300,10 @@ function formatAuditDiffValue(value: unknown): string {
 
 function pushAuditDiffRow(
 	rows: AuditDiffRow[],
-	group: AuditDiffRow["group"],
+	group: AuditDiffRow['group'],
 	field: string,
 	before: unknown,
-	after: unknown
+	after: unknown,
 ) {
 	const beforeText = formatAuditDiffValue(before);
 	const afterText = formatAuditDiffValue(after);
@@ -400,37 +313,25 @@ function pushAuditDiffRow(
 
 function pushNestedAuditDiffRows(
 	rows: AuditDiffRow[],
-	group: AuditDiffRow["group"],
+	group: AuditDiffRow['group'],
 	field: string,
 	before: unknown,
 	after: unknown,
-	depth = 0
+	depth = 0,
 ) {
 	if ((isAuditObject(before) || isAuditObject(after)) && depth < 4) {
 		const beforeObject = isAuditObject(before) ? before : {};
 		const afterObject = isAuditObject(after) ? after : {};
-		const keys = Array.from(
-			new Set([...Object.keys(beforeObject), ...Object.keys(afterObject)])
-		);
+		const keys = Array.from(new Set([...Object.keys(beforeObject), ...Object.keys(afterObject)]));
 		keys.forEach((key) => {
-			pushNestedAuditDiffRows(
-				rows,
-				group,
-				`${field}.${key}`,
-				beforeObject[key],
-				afterObject[key],
-				depth + 1
-			);
+			pushNestedAuditDiffRows(rows, group, `${field}.${key}`, beforeObject[key], afterObject[key], depth + 1);
 		});
 		return;
 	}
 	pushAuditDiffRow(rows, group, field, before, after);
 }
 
-function appendSnapshotDiffRows(
-	rows: AuditDiffRow[],
-	item: GatewayApiKeyBudgetAuditLog
-) {
+function appendSnapshotDiffRows(rows: AuditDiffRow[], item: GatewayApiKeyBudgetAuditLog) {
 	const before = parseAuditJsonObject(item.before_user_snapshot ?? null);
 	const after = parseAuditJsonObject(item.after_user_snapshot ?? null);
 	if (!before && !after) return;
@@ -439,96 +340,65 @@ function appendSnapshotDiffRows(
 	const keys =
 		fields && fields.length > 0
 			? fields
-			: Array.from(
-					new Set([...Object.keys(before ?? {}), ...Object.keys(after ?? {})])
-			  ).filter((key) => key !== "id");
+			: Array.from(new Set([...Object.keys(before ?? {}), ...Object.keys(after ?? {})])).filter((key) => key !== 'id');
 	const omitted = new Set<string>(OMIT_AUDIT_LOG_SNAPSHOT_FIELDS);
 	keys.forEach((key) => {
 		if (omitted.has(key)) return;
-		pushNestedAuditDiffRows(rows, "snapshot", key, before?.[key], after?.[key]);
+		pushNestedAuditDiffRows(rows, 'snapshot', key, before?.[key], after?.[key]);
 	});
 }
 
-function appendPayloadDiffRows(
-	rows: AuditDiffRow[],
-	raw: string | null | undefined
-) {
+function appendPayloadDiffRows(rows: AuditDiffRow[], raw: string | null | undefined) {
 	const payload = parseAuditJsonObject(raw);
 	if (!payload) return;
 
 	const handled = new Set<string>();
 	const status = payload.status;
-	if (isAuditObject(status) && ("from" in status || "to" in status)) {
-		pushAuditDiffRow(rows, "payload", "status", status.from, status.to);
-		handled.add("status");
+	if (isAuditObject(status) && ('from' in status || 'to' in status)) {
+		pushAuditDiffRow(rows, 'payload', 'status', status.from, status.to);
+		handled.add('status');
 	}
 
 	const metadata = payload.metadata;
 	if (isAuditObject(metadata)) {
-		handled.add("metadata");
+		handled.add('metadata');
 		const changes = metadata.changes;
 		if (isAuditObject(changes)) {
 			Object.entries(changes).forEach(([key, value]) => {
-				if (isAuditObject(value) && ("from" in value || "to" in value)) {
-					pushAuditDiffRow(
-						rows,
-						"payload",
-						`metadata.${key}`,
-						value.from,
-						value.to
-					);
+				if (isAuditObject(value) && ('from' in value || 'to' in value)) {
+					pushAuditDiffRow(rows, 'payload', `metadata.${key}`, value.from, value.to);
 				} else {
-					pushAuditDiffRow(rows, "payload", `metadata.${key}`, "—", value);
+					pushAuditDiffRow(rows, 'payload', `metadata.${key}`, '—', value);
 				}
 			});
-		} else if ("from" in metadata || "to" in metadata) {
-			pushAuditDiffRow(rows, "payload", "metadata", metadata.from, metadata.to);
-			pushNestedAuditDiffRows(
-				rows,
-				"payload",
-				"metadata",
-				metadata.from,
-				metadata.to
-			);
+		} else if ('from' in metadata || 'to' in metadata) {
+			pushAuditDiffRow(rows, 'payload', 'metadata', metadata.from, metadata.to);
+			pushNestedAuditDiffRows(rows, 'payload', 'metadata', metadata.from, metadata.to);
 		} else {
 			Object.entries(metadata).forEach(([key, value]) => {
-				if (key === "operation") return;
-				pushAuditDiffRow(rows, "payload", `metadata.${key}`, "—", value);
+				if (key === 'operation') return;
+				pushAuditDiffRow(rows, 'payload', `metadata.${key}`, '—', value);
 			});
 		}
 	}
 
 	Object.entries(payload).forEach(([key, value]) => {
 		if (handled.has(key)) return;
-		if (key.startsWith("before_") || key.startsWith("after_")) return;
-		if (
-			key === "metadata_patch_keys" ||
-			shouldOmitChangePayloadDisplayLine(`${key}:`)
-		)
-			return;
-		if (isAuditObject(value) && ("from" in value || "to" in value)) {
-			pushAuditDiffRow(rows, "payload", key, value.from, value.to);
+		if (key.startsWith('before_') || key.startsWith('after_')) return;
+		if (key === 'metadata_patch_keys' || shouldOmitChangePayloadDisplayLine(`${key}:`)) return;
+		if (isAuditObject(value) && ('from' in value || 'to' in value)) {
+			pushAuditDiffRow(rows, 'payload', key, value.from, value.to);
 		}
 	});
 
 	Object.keys(payload)
-		.filter((key) => key.startsWith("before_"))
+		.filter((key) => key.startsWith('before_'))
 		.forEach((beforeKey) => {
-			const suffix = beforeKey.slice("before_".length);
+			const suffix = beforeKey.slice('before_'.length);
 			const afterKey = `after_${suffix}`;
 			if (!(afterKey in payload)) return;
-			if (
-				shouldOmitChangePayloadDisplayLine(beforeKey) ||
-				shouldOmitChangePayloadDisplayLine(afterKey)
-			)
-				return;
-			pushAuditDiffRow(
-				rows,
-				"payload",
-				suffix,
-				payload[beforeKey],
-				payload[afterKey]
-			);
+			if (shouldOmitChangePayloadDisplayLine(beforeKey) || shouldOmitChangePayloadDisplayLine(afterKey)) return;
+			pushAuditDiffRow(rows, 'payload', suffix, payload[beforeKey], payload[afterKey]);
 		});
 }
 
@@ -551,72 +421,57 @@ function isSerializedAuditObject(value: string): boolean {
 
 function auditSummaryDiffRows(rows: AuditDiffRow[]): AuditDiffRow[] {
 	return rows.filter((row) => {
-		if (row.field === "metadata") return false;
-		if (
-			isSerializedAuditObject(row.before) ||
-			isSerializedAuditObject(row.after)
-		)
-			return false;
+		if (row.field === 'metadata') return false;
+		if (isSerializedAuditObject(row.before) || isSerializedAuditObject(row.after)) return false;
 		return true;
 	});
 }
 
 function createAuditInitialFilters() {
 	const params = new URLSearchParams(window.location.search);
-	const startDate = params.get("start_date");
-	const endDate = params.get("end_date");
-	const hasStart = startDate != null && startDate !== "";
-	const hasEnd = endDate != null && endDate !== "";
-	const start = hasStart ? startDate : "";
-	const end = hasEnd ? endDate : "";
-	const eventTypes = normalizeAuditEventTypes(params.getAll("event_type"));
-	const actorTypes = normalizeAuditActorTypes(params.getAll("actor_type"));
-	const actorKinds = normalizeAuditActorKinds(params.getAll("actor_kind"));
-	const sources = normalizeAuditSourceChannels(params.getAll("source"));
-	const parsedPage = parseInt(params.get("page") ?? "", 10);
+	const startDate = params.get('start_date');
+	const endDate = params.get('end_date');
+	const hasStart = startDate != null && startDate !== '';
+	const hasEnd = endDate != null && endDate !== '';
+	const start = hasStart ? startDate : '';
+	const end = hasEnd ? endDate : '';
+	const eventTypes = normalizeAuditEventTypes(params.getAll('event_type'));
+	const actorTypes = normalizeAuditActorTypes(params.getAll('actor_type'));
+	const actorKinds = normalizeAuditActorKinds(params.getAll('actor_kind'));
+	const sources = normalizeAuditSourceChannels(params.getAll('source'));
+	const parsedPage = parseInt(params.get('page') ?? '', 10);
 	return {
-		apiKeyId: params.get("api_key_id") ?? "",
-		userId: params.get("user_id") ?? "",
-		userEmail: params.get("user_email") ?? "",
-		eventTypes:
-			eventTypes.length > 0 ? eventTypes : [...DEFAULT_AUDIT_LOG_EVENT_TYPES],
-		actorTypes:
-			actorTypes.length > 0 ? actorTypes : [...DEFAULT_AUDIT_LOG_ACTOR_TYPES],
-		actorKinds:
-			actorKinds.length > 0 ? actorKinds : [...AUDIT_LOG_ACTOR_KIND_FILTERS],
-		actorId: params.get("actor_id") ?? "",
-		reasonCodes: normalizeAuditReasonCodes(params.getAll("reason_code")),
-		sources:
-			sources.length > 0 ? sources : [...DEFAULT_AUDIT_LOG_SOURCE_CHANNELS],
-		correlationId: params.get("correlation_id") ?? "",
+		apiKeyId: params.get('api_key_id') ?? '',
+		userId: params.get('user_id') ?? '',
+		userEmail: params.get('user_email') ?? '',
+		eventTypes: eventTypes.length > 0 ? eventTypes : [...DEFAULT_AUDIT_LOG_EVENT_TYPES],
+		actorTypes: actorTypes.length > 0 ? actorTypes : [...DEFAULT_AUDIT_LOG_ACTOR_TYPES],
+		actorKinds: actorKinds.length > 0 ? actorKinds : [...AUDIT_LOG_ACTOR_KIND_FILTERS],
+		actorId: params.get('actor_id') ?? '',
+		reasonCodes: normalizeAuditReasonCodes(params.getAll('reason_code')),
+		sources: sources.length > 0 ? sources : [...DEFAULT_AUDIT_LOG_SOURCE_CHANNELS],
+		correlationId: params.get('correlation_id') ?? '',
 		rangeValue:
 			hasStart || hasEnd
 				? ({
-						preset:
-							hasStart && hasEnd
-								? detectRollingPreset(start, end) ?? "custom"
-								: "custom",
+						preset: hasStart && hasEnd ? (detectRollingPreset(start, end) ?? 'custom') : 'custom',
 						start_date: start,
 						end_date: end,
-				  } satisfies GatewayTimeRangeValue)
+					} satisfies GatewayTimeRangeValue)
 				: createRangeValue(DEFAULT_GATEWAY_TIME_RANGE_PRESET),
 		page: !Number.isNaN(parsedPage) && parsedPage >= 1 ? parsedPage : 1,
 	};
 }
 
 export default function GatewayAuditLogsPage() {
-	const tCommon = useTranslations("common");
+	const tCommon = useTranslations('common');
 	const browserReady = useListPageBrowserReady();
-	return browserReady ? (
-		<GatewayAuditLogs />
-	) : (
-		<div className="p-8 text-gray-600">{tCommon("loading")}</div>
-	);
+	return browserReady ? <GatewayAuditLogs /> : <div className="p-8 text-gray-600">{tCommon('loading')}</div>;
 }
 
 function GatewayAuditLogs() {
-	const t = useTranslations("auditLogs");
-	const tCommon = useTranslations("common");
+	const t = useTranslations('auditLogs');
+	const tCommon = useTranslations('common');
 	const [initialFilters] = useState(createAuditInitialFilters);
 	const [page, setPage] = useState(initialFilters.page);
 	const pageSize = 50;
@@ -625,39 +480,24 @@ function GatewayAuditLogs() {
 
 	const [filterApiKeyId, setFilterApiKeyId] = useState(initialFilters.apiKeyId);
 	const [filterUserId, setFilterUserId] = useState(initialFilters.userId);
-	const [filterUserEmail, setFilterUserEmail] = useState(
-		initialFilters.userEmail
-	);
-	const [filterEventTypes, setFilterEventTypes] = useState(
-		initialFilters.eventTypes
-	);
-	const [filterActorTypes, setFilterActorTypes] = useState(
-		initialFilters.actorTypes
-	);
-	const [filterActorKinds, setFilterActorKinds] = useState<string[]>(
-		initialFilters.actorKinds
-	);
+	const [filterUserEmail, setFilterUserEmail] = useState(initialFilters.userEmail);
+	const [filterEventTypes, setFilterEventTypes] = useState(initialFilters.eventTypes);
+	const [filterActorTypes, setFilterActorTypes] = useState(initialFilters.actorTypes);
+	const [filterActorKinds, setFilterActorKinds] = useState<string[]>(initialFilters.actorKinds);
 	const [filterActorId, setFilterActorId] = useState(initialFilters.actorId);
-	const [filterReasonCodes, setFilterReasonCodes] = useState(
-		initialFilters.reasonCodes
-	);
+	const [filterReasonCodes, setFilterReasonCodes] = useState(initialFilters.reasonCodes);
 	const [filterSources, setFilterSources] = useState(initialFilters.sources);
 	const [reasonCodeOptions, setReasonCodeOptions] = useState<string[]>([]);
-	const [filterCorrelationId, setFilterCorrelationId] = useState(
-		initialFilters.correlationId
-	);
-	const [rangeValue, setRangeValue] = useState<GatewayTimeRangeValue>(
-		initialFilters.rangeValue
-	);
-	const [detailLog, setDetailLog] =
-		useState<GatewayApiKeyBudgetAuditLog | null>(null);
+	const [filterCorrelationId, setFilterCorrelationId] = useState(initialFilters.correlationId);
+	const [rangeValue, setRangeValue] = useState<GatewayTimeRangeValue>(initialFilters.rangeValue);
+	const [detailLog, setDetailLog] = useState<GatewayApiKeyBudgetAuditLog | null>(null);
 	const reasonCodeUrlFilter = initialFilters.reasonCodes.length > 0;
 
 	useEffect(() => {
 		const controller = new AbortController();
 		async function fetchFilterOptions() {
 			try {
-				const response = await fetch("/api/admin/budget-audit-logs/filters", {
+				const response = await fetch('/api/admin/budget-audit-logs/filters', {
 					signal: controller.signal,
 				});
 				const data = await readApiJson<AuditLogFilterOptions>(response);
@@ -669,7 +509,7 @@ function GatewayAuditLogs() {
 				}
 			} catch (e) {
 				if (controller.signal.aborted) return;
-				console.error("Fetch audit log filter options error:", e);
+				console.error('Fetch audit log filter options error:', e);
 			}
 		}
 		fetchFilterOptions();
@@ -681,20 +521,18 @@ function GatewayAuditLogs() {
 			page: page.toString(),
 			page_size: pageSize.toString(),
 		});
-		if (filterApiKeyId) params.append("api_key_id", filterApiKeyId);
-		if (filterUserId) params.append("user_id", filterUserId);
-		if (filterUserEmail) params.append("user_email", filterUserEmail);
-		appendAuditEventTypeParams(params, filterEventTypes);
+		if (filterApiKeyId) params.append('api_key_id', filterApiKeyId);
+		if (filterUserId) params.append('user_id', filterUserId);
+		if (filterUserEmail) params.append('user_email', filterUserEmail);
+		appendAuditEventTypeUrlParams(params, filterEventTypes);
 		appendAuditActorTypeParams(params, filterActorTypes);
 		appendAuditActorKindParams(params, filterActorKinds);
-		if (filterActorId) params.append("actor_id", filterActorId);
+		if (filterActorId) params.append('actor_id', filterActorId);
 		appendAuditReasonCodeParams(params, filterReasonCodes, reasonCodeOptions);
 		appendAuditSourceParams(params, filterSources);
-		if (filterCorrelationId)
-			params.append("correlation_id", filterCorrelationId);
-		if (rangeValue.start_date)
-			params.append("start_date", rangeValue.start_date);
-		if (rangeValue.end_date) params.append("end_date", rangeValue.end_date);
+		if (filterCorrelationId) params.append('correlation_id', filterCorrelationId);
+		if (rangeValue.start_date) params.append('start_date', rangeValue.start_date);
+		if (rangeValue.end_date) params.append('end_date', rangeValue.end_date);
 		return params;
 	}, [
 		page,
@@ -719,20 +557,18 @@ function GatewayAuditLogs() {
 			page: page.toString(),
 			page_size: pageSize.toString(),
 		});
-		if (filterApiKeyId) params.append("api_key_id", filterApiKeyId);
-		if (filterUserId) params.append("user_id", filterUserId);
-		if (filterUserEmail) params.append("user_email", filterUserEmail);
-		appendAuditEventTypeParams(params, filterEventTypes);
+		if (filterApiKeyId) params.append('api_key_id', filterApiKeyId);
+		if (filterUserId) params.append('user_id', filterUserId);
+		if (filterUserEmail) params.append('user_email', filterUserEmail);
+		appendAuditEventTypeUrlParams(params, filterEventTypes);
 		appendAuditActorTypeParams(params, filterActorTypes);
 		appendAuditActorKindParams(params, filterActorKinds);
-		if (filterActorId) params.append("actor_id", filterActorId);
+		if (filterActorId) params.append('actor_id', filterActorId);
 		appendAuditReasonCodeParams(params, filterReasonCodes, reasonCodeOptions);
 		appendAuditSourceParams(params, filterSources);
-		if (filterCorrelationId)
-			params.append("correlation_id", filterCorrelationId);
-		if (rangeValue.start_date)
-			params.append("start_date", rangeValue.start_date);
-		if (rangeValue.end_date) params.append("end_date", rangeValue.end_date);
+		if (filterCorrelationId) params.append('correlation_id', filterCorrelationId);
+		if (rangeValue.start_date) params.append('start_date', rangeValue.start_date);
+		if (rangeValue.end_date) params.append('end_date', rangeValue.end_date);
 
 		return { url: `/api/admin/budget-audit-logs?${params.toString()}` };
 	}, [
@@ -776,7 +612,7 @@ function GatewayAuditLogs() {
 				}
 			} catch (e) {
 				if (controller.signal.aborted) return;
-				console.error("Fetch budget audit logs error:", e);
+				console.error('Fetch budget audit logs error:', e);
 				setResult((current) => ({ ...current, request }));
 			}
 		})();
@@ -786,8 +622,7 @@ function GatewayAuditLogs() {
 	const totalPages = Math.ceil(total / pageSize);
 	const setEventTypeChecked = (eventType: string, checked: boolean) => {
 		setFilterEventTypes((current) => {
-			if (checked)
-				return current.includes(eventType) ? current : [...current, eventType];
+			if (checked) return current.includes(eventType) ? current : [...current, eventType];
 			if (current.length <= 1) return current;
 			return current.filter((value) => value !== eventType);
 		});
@@ -795,8 +630,7 @@ function GatewayAuditLogs() {
 	};
 	const setActorTypeChecked = (actorType: string, checked: boolean) => {
 		setFilterActorTypes((current) => {
-			if (checked)
-				return current.includes(actorType) ? current : [...current, actorType];
+			if (checked) return current.includes(actorType) ? current : [...current, actorType];
 			if (current.length <= 1) return current;
 			return current.filter((value) => value !== actorType);
 		});
@@ -804,8 +638,7 @@ function GatewayAuditLogs() {
 	};
 	const setActorKindChecked = (actorKind: string, checked: boolean) => {
 		setFilterActorKinds((current) => {
-			if (checked)
-				return current.includes(actorKind) ? current : [...current, actorKind];
+			if (checked) return current.includes(actorKind) ? current : [...current, actorKind];
 			if (current.length <= 1) return current;
 			return current.filter((value) => value !== actorKind);
 		});
@@ -813,8 +646,7 @@ function GatewayAuditLogs() {
 	};
 	const setSourceChecked = (source: string, checked: boolean) => {
 		setFilterSources((current) => {
-			if (checked)
-				return current.includes(source) ? current : [...current, source];
+			if (checked) return current.includes(source) ? current : [...current, source];
 			if (current.length <= 1) return current;
 			return current.filter((value) => value !== source);
 		});
@@ -822,22 +654,18 @@ function GatewayAuditLogs() {
 	};
 	const setReasonCodeChecked = (reasonCode: string, checked: boolean) => {
 		setFilterReasonCodes((current) => {
-			if (checked)
-				return current.includes(reasonCode)
-					? current
-					: [...current, reasonCode];
+			if (checked) return current.includes(reasonCode) ? current : [...current, reasonCode];
 			if (current.length <= 1) return current;
 			return current.filter((value) => value !== reasonCode);
 		});
 		setPage(1);
 	};
-	const detailRows = detailLog ? auditDiffRows(detailLog) : [];
 
 	return (
-		<div className="p-8">
+		<div className="min-w-0 p-4 sm:p-6 lg:p-8">
 			<div className="mb-6">
-				<h1 className="text-3xl font-bold text-gray-900">{t("title")}</h1>
-				<p className="text-sm text-gray-500 mt-1">{t("subtitle")}</p>
+				<h1 className="text-3xl font-bold text-gray-900">{t('title')}</h1>
+				<p className="text-sm text-gray-500 mt-1">{t('subtitle')}</p>
 			</div>
 
 			<div className="mb-4 w-full min-w-0">
@@ -850,73 +678,63 @@ function GatewayAuditLogs() {
 				/>
 			</div>
 
-			<div className="mb-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-				<div className="min-w-0">
-					<div className="mb-2 flex items-center justify-between gap-3">
-						<label className="block text-sm font-medium text-gray-600">
-							{t("filters.eventType")}
-						</label>
-						<div className="flex shrink-0 items-center gap-2 text-xs">
-							<button
-								type="button"
-								onClick={() => {
-									setFilterEventTypes([...API_KEY_BUDGET_AUDIT_EVENT_TYPES]);
-									setPage(1);
-								}}
-								className="text-blue-600 hover:underline"
-							>
-								{tCommon("selectAll")}
-							</button>
-							<span className="text-gray-300">|</span>
-							<button
-								type="button"
-								onClick={() => {
-									setFilterEventTypes([...DEFAULT_AUDIT_LOG_EVENT_TYPES]);
-									setPage(1);
-								}}
-								className="text-blue-600 hover:underline"
-							>
-								{t("filters.defaultEventTypes")}
-							</button>
-							<span className="text-gray-500">
-								{tCommon("selected", { count: filterEventTypes.length })}
-							</span>
-						</div>
-					</div>
-					<div className="flex min-h-12 flex-wrap gap-2 rounded-md border border-gray-300 bg-gray-50/60 p-2">
-						{API_KEY_BUDGET_AUDIT_EVENT_TYPES.map((eventType) => {
-							const checked = filterEventTypes.includes(eventType);
-							return (
-								<label
-									key={eventType}
-									className={`inline-flex min-h-8 items-center gap-1.5 rounded border px-2 py-1 text-xs ${
-										checked
-											? "border-blue-200 bg-blue-50 text-blue-900"
-											: "border-gray-200 bg-white text-gray-600"
-									}`}
+			<FilterDisclosure
+				className="mb-4 rounded-xl border border-gray-200 bg-white p-3 sm:p-4 shadow-sm"
+				activeCount={
+					[filterActorId, filterUserEmail, filterCorrelationId, filterUserId, filterApiKeyId].filter(Boolean).length +
+					Number(!isSameStringSet(filterEventTypes, DEFAULT_AUDIT_LOG_EVENT_TYPES)) +
+					Number(!isSameStringSet(filterSources, DEFAULT_AUDIT_LOG_SOURCE_CHANNELS)) +
+					Number(!isSameStringSet(filterReasonCodes, reasonCodeOptions)) +
+					Number(!isSameStringSet(filterActorTypes, DEFAULT_AUDIT_LOG_ACTOR_TYPES)) +
+					Number(!isSameStringSet(filterActorKinds, AUDIT_LOG_ACTOR_KIND_FILTERS))
+				}
+			>
+				<div className="admin-filter-grid">
+					<MultiSelectDropdown
+						label={t('filters.eventType')}
+						options={API_KEY_BUDGET_AUDIT_EVENT_TYPES.map((eventType) => ({
+							value: eventType,
+							label: auditEnumLabel(t, 'eventTypes', eventType),
+							title: eventType,
+						}))}
+						selected={filterEventTypes}
+						onToggle={setEventTypeChecked}
+						headerActions={
+							<div className="flex items-center gap-2">
+								<button
+									type="button"
+									onClick={() => {
+										setFilterEventTypes([...API_KEY_BUDGET_AUDIT_EVENT_TYPES]);
+										setPage(1);
+									}}
+									className="text-blue-600 hover:underline"
 								>
-									<input
-										type="checkbox"
-										checked={checked}
-										disabled={checked && filterEventTypes.length === 1}
-										onChange={(e) =>
-											setEventTypeChecked(eventType, e.target.checked)
-										}
-										className="h-3.5 w-3.5"
-									/>
-									<span className="font-mono">{eventType}</span>
-								</label>
-							);
-						})}
-					</div>
-				</div>
-
-				<div className="mt-4 min-w-0">
-					<div className="mb-2 flex items-center justify-between gap-3">
-						<label className="block text-sm font-medium text-gray-600">
-							{t("filters.source")}
-						</label>
-						<div className="flex shrink-0 items-center gap-2 text-xs">
+									{tCommon('selectAll')}
+								</button>
+								<span className="text-gray-300">|</span>
+								<button
+									type="button"
+									onClick={() => {
+										setFilterEventTypes([...DEFAULT_AUDIT_LOG_EVENT_TYPES]);
+										setPage(1);
+									}}
+									className="text-blue-600 hover:underline"
+								>
+									{t('filters.defaultEventTypes')}
+								</button>
+							</div>
+						}
+					/>
+					<MultiSelectDropdown
+						label={t('filters.source')}
+						options={API_KEY_BUDGET_AUDIT_SOURCE_CHANNELS.map((source) => ({
+							value: source,
+							label: auditEnumLabel(t, 'sourceChannels', source),
+							title: source,
+						}))}
+						selected={filterSources}
+						onToggle={setSourceChecked}
+						headerActions={
 							<button
 								type="button"
 								onClick={() => {
@@ -925,45 +743,21 @@ function GatewayAuditLogs() {
 								}}
 								className="text-blue-600 hover:underline"
 							>
-								{tCommon("selectAll")}
+								{tCommon('selectAll')}
 							</button>
-							<span className="text-gray-500">
-								{tCommon("selected", { count: filterSources.length })}
-							</span>
-						</div>
-					</div>
-					<div className="flex min-h-12 flex-wrap gap-2 rounded-md border border-gray-300 bg-gray-50/60 p-2">
-						{API_KEY_BUDGET_AUDIT_SOURCE_CHANNELS.map((source) => {
-							const checked = filterSources.includes(source);
-							return (
-								<label
-									key={source}
-									className={`inline-flex min-h-8 items-center gap-1.5 rounded border px-2 py-1 text-xs ${
-										checked
-											? "border-blue-200 bg-blue-50 text-blue-900"
-											: "border-gray-200 bg-white text-gray-600"
-									}`}
-								>
-									<input
-										type="checkbox"
-										checked={checked}
-										disabled={checked && filterSources.length === 1}
-										onChange={(e) => setSourceChecked(source, e.target.checked)}
-										className="h-3.5 w-3.5"
-									/>
-									<span className="font-mono">{source}</span>
-								</label>
-							);
-						})}
-					</div>
-				</div>
-
-				<div className="mt-4 min-w-0">
-					<div className="mb-2 flex items-center justify-between gap-3">
-						<label className="block text-sm font-medium text-gray-600">
-							{t("filters.reasonCode")}
-						</label>
-						<div className="flex shrink-0 items-center gap-2 text-xs">
+						}
+					/>
+					<MultiSelectDropdown
+						label={t('filters.reasonCode')}
+						options={reasonCodeOptions.map((reasonCode) => ({
+							value: reasonCode,
+							label: reasonCode,
+							mono: true,
+						}))}
+						selected={filterReasonCodes}
+						onToggle={setReasonCodeChecked}
+						emptyText={t('filters.noReasonCodes')}
+						headerActions={
 							<button
 								type="button"
 								onClick={() => {
@@ -973,149 +767,61 @@ function GatewayAuditLogs() {
 								className="text-blue-600 hover:underline disabled:text-gray-400 disabled:no-underline"
 								disabled={reasonCodeOptions.length === 0}
 							>
-								{tCommon("selectAll")}
+								{tCommon('selectAll')}
 							</button>
-							<span className="text-gray-500">
-								{tCommon("selected", { count: filterReasonCodes.length })}
-							</span>
-						</div>
-					</div>
-					<div className="flex min-h-12 max-h-28 flex-wrap gap-2 overflow-y-auto rounded-md border border-gray-300 bg-gray-50/60 p-2">
-						{reasonCodeOptions.length > 0 ? (
-							reasonCodeOptions.map((reasonCode) => {
-								const checked = filterReasonCodes.includes(reasonCode);
-								return (
-									<label
-										key={reasonCode}
-										className={`inline-flex min-h-8 items-center gap-1.5 rounded border px-2 py-1 text-xs ${
-											checked
-												? "border-blue-200 bg-blue-50 text-blue-900"
-												: "border-gray-200 bg-white text-gray-600"
-										}`}
-									>
-										<input
-											type="checkbox"
-											checked={checked}
-											disabled={checked && filterReasonCodes.length === 1}
-											onChange={(e) =>
-												setReasonCodeChecked(reasonCode, e.target.checked)
-											}
-											className="h-3.5 w-3.5"
-										/>
-										<span className="font-mono">{reasonCode}</span>
-									</label>
-								);
-							})
-						) : (
-							<span className="px-1 py-1 text-xs text-gray-400">
-								{t("filters.noReasonCodes")}
-							</span>
-						)}
-					</div>
+						}
+					/>
+					<MultiSelectDropdown
+						label={t('filters.actor')}
+						options={API_KEY_BUDGET_AUDIT_ACTOR_TYPES.map((actorType) => ({
+							value: actorType,
+							label: auditEnumLabel(t, 'actorTypes', actorType),
+							title: actorType,
+						}))}
+						selected={filterActorTypes}
+						onToggle={setActorTypeChecked}
+						align="end"
+						headerActions={
+							<button
+								type="button"
+								onClick={() => {
+									setFilterActorTypes([...DEFAULT_AUDIT_LOG_ACTOR_TYPES]);
+									setPage(1);
+								}}
+								className="text-blue-600 hover:underline"
+							>
+								{tCommon('selectAll')}
+							</button>
+						}
+					/>
+					<MultiSelectDropdown
+						label={t('filters.actorKind')}
+						options={AUDIT_LOG_ACTOR_KIND_FILTERS.map((actorKind) => ({
+							value: actorKind,
+							label: auditEnumLabel(t, 'actorKinds', actorKind),
+							title: actorKind,
+						}))}
+						selected={filterActorKinds}
+						onToggle={setActorKindChecked}
+						align="end"
+						headerActions={
+							<button
+								type="button"
+								onClick={() => {
+									setFilterActorKinds([...AUDIT_LOG_ACTOR_KIND_FILTERS]);
+									setPage(1);
+								}}
+								className="text-blue-600 hover:underline"
+							>
+								{tCommon('selectAll')}
+							</button>
+						}
+					/>
 				</div>
 
-				<div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-[minmax(16rem,1.2fr)_minmax(12rem,1fr)_minmax(14rem,1fr)]">
-					<div className="min-w-0">
-						<div className="mb-2 flex items-center justify-between gap-3">
-							<label className="block text-sm font-medium text-gray-600">
-								{t("filters.actor")}
-							</label>
-							<div className="flex shrink-0 items-center gap-2 text-xs">
-								<button
-									type="button"
-									onClick={() => {
-										setFilterActorTypes([...DEFAULT_AUDIT_LOG_ACTOR_TYPES]);
-										setPage(1);
-									}}
-									className="text-blue-600 hover:underline"
-								>
-									{tCommon("selectAll")}
-								</button>
-								<span className="text-gray-500">
-									{tCommon("selected", { count: filterActorTypes.length })}
-								</span>
-							</div>
-						</div>
-						<div className="flex min-h-10 flex-wrap gap-2 rounded-md border border-gray-300 bg-gray-50/60 p-2">
-							{API_KEY_BUDGET_AUDIT_ACTOR_TYPES.map((actorType) => {
-								const checked = filterActorTypes.includes(actorType);
-								return (
-									<label
-										key={actorType}
-										className={`inline-flex min-h-8 items-center gap-1.5 rounded border px-2 py-1 text-xs ${
-											checked
-												? "border-blue-200 bg-blue-50 text-blue-900"
-												: "border-gray-200 bg-white text-gray-600"
-										}`}
-									>
-										<input
-											type="checkbox"
-											checked={checked}
-											disabled={checked && filterActorTypes.length === 1}
-											onChange={(e) =>
-												setActorTypeChecked(actorType, e.target.checked)
-											}
-											className="h-3.5 w-3.5"
-										/>
-										<span className="font-mono">{actorType}</span>
-									</label>
-								);
-							})}
-						</div>
-					</div>
-					<div className="min-w-0">
-						<div className="mb-2 flex items-center justify-between gap-3">
-							<label className="block text-sm font-medium text-gray-600">
-								{t("filters.actorKind")}
-							</label>
-							<div className="flex shrink-0 items-center gap-2 text-xs">
-								<button
-									type="button"
-									onClick={() => {
-										setFilterActorKinds([...AUDIT_LOG_ACTOR_KIND_FILTERS]);
-										setPage(1);
-									}}
-									className="text-blue-600 hover:underline"
-								>
-									{tCommon("selectAll")}
-								</button>
-								<span className="text-gray-500">
-									{tCommon("selected", { count: filterActorKinds.length })}
-								</span>
-							</div>
-						</div>
-						<div className="flex min-h-10 flex-wrap gap-2 rounded-md border border-gray-300 bg-gray-50/60 p-2">
-							{AUDIT_LOG_ACTOR_KIND_FILTERS.map((actorKind) => {
-								const checked = filterActorKinds.includes(actorKind);
-								return (
-									<label
-										key={actorKind}
-										className={`inline-flex min-h-8 items-center gap-1.5 rounded border px-2 py-1 text-xs ${
-											checked
-												? "border-blue-200 bg-blue-50 text-blue-900"
-												: "border-gray-200 bg-white text-gray-600"
-										}`}
-										title={actorKind}
-									>
-										<input
-											type="checkbox"
-											checked={checked}
-											disabled={checked && filterActorKinds.length === 1}
-											onChange={(e) =>
-												setActorKindChecked(actorKind, e.target.checked)
-											}
-											className="h-3.5 w-3.5"
-										/>
-										<span>{t(`actorKinds.${actorKind}`)}</span>
-									</label>
-								);
-							})}
-						</div>
-					</div>
+				<div className="admin-filter-grid mt-4">
 					<div>
-						<label className="block text-sm text-gray-500 mb-1">
-							{t("filters.actorId")}
-						</label>
+						<label className="block text-sm text-gray-500 mb-1">{t('filters.actorId')}</label>
 						<input
 							type="text"
 							value={filterActorId}
@@ -1123,14 +829,12 @@ function GatewayAuditLogs() {
 								setFilterActorId(e.target.value);
 								setPage(1);
 							}}
-							placeholder={t("filters.actorIdPlaceholder")}
+							placeholder={t('filters.actorIdPlaceholder')}
 							className="w-full px-3 py-2 border border-gray-300 rounded-md font-mono text-xs"
 						/>
 					</div>
 					<div>
-						<label className="block text-sm text-gray-500 mb-1">
-							{t("filters.userEmail")}
-						</label>
+						<label className="block text-sm text-gray-500 mb-1">{t('filters.userEmail')}</label>
 						<input
 							type="text"
 							value={filterUserEmail}
@@ -1138,14 +842,12 @@ function GatewayAuditLogs() {
 								setFilterUserEmail(e.target.value);
 								setPage(1);
 							}}
-							placeholder={t("filters.exactMatch")}
+							placeholder={t('filters.exactMatch')}
 							className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
 						/>
 					</div>
 					<div>
-						<label className="block text-sm text-gray-500 mb-1">
-							{t("filters.correlationId")}
-						</label>
+						<label className="block text-sm text-gray-500 mb-1">{t('filters.correlationId')}</label>
 						<input
 							type="text"
 							value={filterCorrelationId}
@@ -1153,7 +855,7 @@ function GatewayAuditLogs() {
 								setFilterCorrelationId(e.target.value);
 								setPage(1);
 							}}
-							placeholder={t("filters.correlationPlaceholder")}
+							placeholder={t('filters.correlationPlaceholder')}
 							className="w-full px-3 py-2 border border-gray-300 rounded-md font-mono text-xs"
 						/>
 					</div>
@@ -1164,36 +866,32 @@ function GatewayAuditLogs() {
 								setFilterEventTypes([...DEFAULT_AUDIT_LOG_EVENT_TYPES]);
 								setFilterActorTypes([...DEFAULT_AUDIT_LOG_ACTOR_TYPES]);
 								setFilterActorKinds([...AUDIT_LOG_ACTOR_KIND_FILTERS]);
-								setFilterActorId("");
+								setFilterActorId('');
 								setFilterReasonCodes([...reasonCodeOptions]);
 								setFilterSources([...DEFAULT_AUDIT_LOG_SOURCE_CHANNELS]);
-								setFilterCorrelationId("");
-								setFilterUserEmail("");
-								setFilterUserId("");
-								setFilterApiKeyId("");
+								setFilterCorrelationId('');
+								setFilterUserEmail('');
+								setFilterUserId('');
+								setFilterApiKeyId('');
 								setRangeValue({
-									preset: "custom",
-									start_date: "",
-									end_date: "",
+									preset: 'custom',
+									start_date: '',
+									end_date: '',
 								});
 								setPage(1);
 							}}
 							className="h-10 whitespace-nowrap px-4 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50"
 						>
-							{tCommon("clearFiltersLower")}
+							{tCommon('clearFiltersLower')}
 						</button>
 					</div>
 				</div>
-			</div>
+			</FilterDisclosure>
 
-			<div className="mb-3 text-sm text-gray-500">
-				{t("totalRecords", { count: total })}
-			</div>
+			<div className="mb-3 text-sm text-gray-500">{t('totalRecords', { count: total })}</div>
 
 			{isLoading ? (
-				<div className="flex items-center justify-center py-16 text-gray-600">
-					{tCommon("loading")}
-				</div>
+				<div className="flex items-center justify-center py-16 text-gray-600">{tCommon('loading')}</div>
 			) : (
 				<div className="bg-white rounded-lg shadow-md overflow-hidden">
 					<div className="overflow-x-auto max-h-[calc(100vh-16rem)] overflow-y-auto">
@@ -1201,436 +899,49 @@ function GatewayAuditLogs() {
 							<thead className="bg-gray-50 sticky top-0 z-10">
 								<tr>
 									<th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase whitespace-nowrap">
-										{t("table.time")}
+										{t('table.time')}
 									</th>
 									<th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase whitespace-nowrap min-w-[11rem] max-w-[15rem]">
-										{t("table.event")}
+										{t('table.event')}
 									</th>
 									<th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase whitespace-nowrap min-w-[8.5rem] max-w-[12rem]">
-										{t("table.actor")}
+										{t('table.actor')}
 									</th>
 									<th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase whitespace-nowrap min-w-[14rem]">
-										{t("table.identity")}
-									</th>
-									<th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase whitespace-nowrap">
-										{t("table.spend")}
+										{t('table.identity')}
 									</th>
 									<th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase min-w-[14rem]">
-										{t("table.budgetPlan")}
+										{t('table.budget')}
+									</th>
+									<th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase min-w-[12rem]">
+										{t('table.periodPlan')}
+									</th>
+									<th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase min-w-[14rem]">
+										{t('table.wallet')}
 									</th>
 									<th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase min-w-[16rem]">
-										{t("table.userChangeDetail")}
+										{t('table.userChangeDetail')}
 									</th>
 								</tr>
 							</thead>
 							<tbody className="divide-y divide-gray-100 bg-white">
 								{logs.length === 0 ? (
 									<tr>
-										<td
-											colSpan={7}
-											className="px-4 py-8 text-center text-gray-500"
-										>
-											{t("empty")}
+										<td colSpan={8} className="px-4 py-8 text-center text-gray-500">
+											{t('empty')}
 										</td>
 									</tr>
 								) : (
-									logs.map((item) => {
-										const ex = auditDisplayExtras(item);
-										const maxChanged = !budgetMoneySemanticallyEqual(
-											item.before_budget_max,
-											item.after_budget_max
-										);
-										const baseChanged = !budgetMoneySemanticallyEqual(
-											item.before_budget_base,
-											item.after_budget_base
-										);
-										const periodChanged =
-											(ex.before_budget_period ?? "") !==
-											(ex.after_budget_period ?? "");
-										const resetChanged = !budgetResetAtSemanticallyEqual(
-											ex.before_budget_reset_at,
-											ex.after_budget_reset_at
-										);
-										const reasonDisplay = auditReasonOneLine(
-											ex.reason_code,
-											ex.reason_text
-										);
-										const diffRows = auditDiffRows(item);
-										const summaryDiffRows = auditSummaryDiffRows(diffRows);
-										return (
-											<tr key={item.id} className="hover:bg-gray-50">
-												<td className="px-3 py-2 align-top">
-													<div className="text-gray-700 whitespace-nowrap">
-														{formatAuditTime(item.created_at, businessTimezone)}
-													</div>
-													<div
-														className="mt-0.5 font-mono text-xs text-gray-600 whitespace-nowrap"
-														title={item.request_log_id || undefined}
-													>
-														{t("labels.req")}:{" "}
-														{item.request_log_id
-															? shortId(item.request_log_id)
-															: "—"}
-													</div>
-													{ex.correlation_id ? (
-														<div
-															className="mt-0.5 font-mono text-xs text-gray-500 whitespace-nowrap"
-															title={ex.correlation_id}
-														>
-															{t("labels.corr")}: {shortId(ex.correlation_id)}
-														</div>
-													) : null}
-												</td>
-												<td className="px-3 py-2 align-top min-w-0 max-w-[15rem]">
-													<div className="text-xs space-y-1.5 leading-snug">
-														<div className="min-w-0">
-															<span className="text-gray-500">
-																{t("labels.type")}
-															</span>
-															<span className="font-mono text-sm font-medium text-gray-900">
-																{item.event_type}
-															</span>
-														</div>
-														<div
-															className="min-w-0 truncate font-mono text-[11px]"
-															title={ex.source || undefined}
-														>
-															<span className="text-gray-500 font-sans">
-																{t("labels.from")}
-															</span>
-															<span className="text-violet-800">
-																{ex.source ?? "—"}
-															</span>
-														</div>
-														<div
-															className="min-w-0 line-clamp-3 text-gray-800"
-															title={reasonDisplay.title || undefined}
-														>
-															<span className="text-gray-500">
-																{t("labels.reason")}
-															</span>
-															<span
-																className={
-																	reasonDisplay.isMono
-																		? "font-mono text-[11px] text-gray-900"
-																		: "text-[11px]"
-																}
-															>
-																{reasonDisplay.line}
-															</span>
-														</div>
-													</div>
-												</td>
-												<td className="px-3 py-2 align-top min-w-0 max-w-[12rem]">
-													<div className="text-xs space-y-1.5 leading-snug">
-														<div>
-															<span className="text-gray-500">
-																{t("labels.kind")}
-															</span>
-															<span className="text-sm text-gray-900">
-																{item.actor_type}
-															</span>
-														</div>
-														<div className="min-w-0">
-															<span className="text-gray-500">
-																{t("labels.principal")}
-															</span>
-															{ex.actor_id ? (
-																(() => {
-																	const { kind, identifier } =
-																		parseAuditActorId(ex.actor_id);
-																	return (
-																		<span
-																			className="inline-flex min-w-0 flex-wrap items-baseline gap-1"
-																			title={ex.actor_id}
-																		>
-																			{kind ? (
-																				<span className="rounded bg-gray-100 px-1 text-[10px] text-gray-700">
-																					{t(`actorKinds.${kind}`)}
-																				</span>
-																			) : null}
-																			<span className="font-mono text-[11px] text-gray-700 break-all">
-																				{shortId(identifier)}
-																			</span>
-																		</span>
-																	);
-																})()
-															) : (
-																<span className="text-gray-400">—</span>
-															)}
-														</div>
-													</div>
-												</td>
-												<td className="px-3 py-2 align-top min-w-0 max-w-[18rem]">
-													<div
-														className="text-sm text-gray-900 truncate leading-snug"
-														title={item.user_email || ""}
-													>
-														{item.user_email || "—"}
-													</div>
-													{item.user_id ? (
-														<div className="mt-0.5 flex items-baseline gap-1 min-w-0 font-mono text-xs">
-															<span className="shrink-0 text-gray-600">
-																{t("labels.user")}
-															</span>
-															<Link
-																href={`/admin/users/${encodeURIComponent(
-																	item.user_id
-																)}`}
-																className="min-w-0 truncate text-blue-600 hover:underline"
-																title={item.user_id}
-															>
-																{shortId(item.user_id)}
-															</Link>
-														</div>
-													) : (
-														<div
-															className="mt-0.5 font-mono text-xs text-gray-400 truncate"
-															title={t("userRemovedTitle")}
-														>
-															{t("labels.user")} —
-														</div>
-													)}
-													<div
-														className="mt-0.5 font-mono text-xs text-gray-500 truncate leading-snug"
-														title={item.api_key_id ?? ""}
-													>
-														{t("labels.key")}
-														{item.api_key_id ? shortId(item.api_key_id) : "—"}
-													</div>
-												</td>
-												<td className="px-3 py-2 align-top text-xs text-gray-600">
-													<div className="space-y-1 leading-snug">
-														<div className="grid grid-cols-[3rem_1fr] gap-x-2 items-baseline">
-															<span className="text-right font-medium text-gray-700">
-																{t("labels.before")}
-															</span>
-															<span>
-																{formatPlainMoney(
-																	item.before_spent,
-																	billingCurrency
-																)}
-															</span>
-														</div>
-														<div className="grid grid-cols-[3rem_1fr] gap-x-2 items-baseline">
-															<span className="text-right font-medium text-gray-700">
-																{t("labels.after")}
-															</span>
-															<span>
-																{formatPlainMoney(
-																	item.after_spent,
-																	billingCurrency
-																)}
-															</span>
-														</div>
-														<div className="grid grid-cols-[3rem_1fr] gap-x-2 items-baseline">
-															<span className="text-right font-medium text-gray-700">
-																{t("labels.delta")}
-															</span>
-															<span
-																className={
-																	item.delta_spent > 0
-																		? "text-red-600"
-																		: item.delta_spent < 0
-																		? "text-green-600"
-																		: "text-gray-600"
-																}
-															>
-																{formatSignedMoney(
-																	item.delta_spent,
-																	billingCurrency
-																)}
-															</span>
-														</div>
-													</div>
-												</td>
-												<td className="px-3 py-2 align-top text-xs text-gray-600">
-													<div className="space-y-1 leading-snug">
-														<div>
-															<span className="font-medium text-gray-700">
-																{t("labels.max")}
-															</span>{" "}
-															<span
-																className={
-																	maxChanged
-																		? budgetPlanHighlight.before
-																		: undefined
-																}
-															>
-																{formatBudgetMax(
-																	item.before_budget_max,
-																	billingCurrency
-																)}
-															</span>
-															<span className="text-gray-400"> → </span>
-															<span
-																className={
-																	maxChanged
-																		? budgetPlanHighlight.after
-																		: undefined
-																}
-															>
-																{formatBudgetMax(
-																	item.after_budget_max,
-																	billingCurrency
-																)}
-															</span>
-														</div>
-														<div>
-															<span className="font-medium text-gray-700">
-																{t("labels.base")}
-															</span>{" "}
-															<span
-																className={
-																	baseChanged
-																		? budgetPlanHighlight.before
-																		: undefined
-																}
-															>
-																{formatGatewayMoneyCode(
-																	item.before_budget_base,
-																	billingCurrency,
-																	GATEWAY_MONEY_DECIMAL_PLACES
-																)}
-															</span>
-															<span className="text-gray-400"> → </span>
-															<span
-																className={
-																	baseChanged
-																		? budgetPlanHighlight.after
-																		: undefined
-																}
-															>
-																{formatGatewayMoneyCode(
-																	item.after_budget_base,
-																	billingCurrency,
-																	GATEWAY_MONEY_DECIMAL_PLACES
-																)}
-															</span>
-														</div>
-														<div>
-															<span className="font-medium text-gray-700">
-																{t("labels.period")}
-															</span>{" "}
-															<span
-																className={
-																	periodChanged
-																		? budgetPlanHighlight.before
-																		: undefined
-																}
-															>
-																{ex.before_budget_period ?? "—"}
-															</span>
-															<span className="text-gray-400"> → </span>
-															<span
-																className={
-																	periodChanged
-																		? budgetPlanHighlight.after
-																		: undefined
-																}
-															>
-																{ex.after_budget_period ?? "—"}
-															</span>
-														</div>
-														<div>
-															<span className="font-medium text-gray-700">
-																{t("labels.resetAt")}
-															</span>{" "}
-															<span className="whitespace-nowrap">
-																<span
-																	className={
-																		resetChanged
-																			? budgetPlanHighlight.before
-																			: undefined
-																	}
-																>
-																	{formatAuditTime(
-																		ex.before_budget_reset_at,
-																		businessTimezone
-																	)}
-																</span>
-																<span className="text-gray-400"> → </span>
-																<span
-																	className={
-																		resetChanged
-																			? budgetPlanHighlight.after
-																			: undefined
-																	}
-																>
-																	{formatAuditTime(
-																		ex.after_budget_reset_at,
-																		businessTimezone
-																	)}
-																</span>
-															</span>
-														</div>
-													</div>
-												</td>
-												<td className="px-3 py-2 text-gray-600 min-w-[14rem] max-w-lg align-top">
-													<div className="space-y-1 text-xs leading-snug">
-														{summaryDiffRows.length > 0 ? (
-															<>
-																{summaryDiffRows
-																	.slice(0, 3)
-																	.map((row, index) => (
-																		<div
-																			key={`${item.id}-diff-${index}`}
-																			className="grid grid-cols-[minmax(5rem,8rem)_1fr] gap-x-2"
-																		>
-																			<span
-																				className="truncate font-mono text-gray-700"
-																				title={row.field}
-																			>
-																				{row.field}
-																			</span>
-																			<span
-																				className="min-w-0 truncate"
-																				title={`${row.before} → ${row.after}`}
-																			>
-																				<span className="text-amber-700">
-																					{row.before}
-																				</span>
-																				<span className="px-1 text-gray-400">
-																					→
-																				</span>
-																				<span className="text-sky-700">
-																					{row.after}
-																				</span>
-																			</span>
-																		</div>
-																	))}
-																<button
-																	type="button"
-																	onClick={() => setDetailLog(item)}
-																	className="mt-1 text-xs text-blue-600 hover:underline"
-																>
-																	{t("labels.viewChangeDetail")}
-																	{summaryDiffRows.length > 3
-																		? ` · ${t("labels.more", {
-																				count: summaryDiffRows.length - 3,
-																		  })}`
-																		: ""}
-																</button>
-															</>
-														) : (
-															<>
-																<span className="text-gray-400">—</span>
-																{diffRows.length > 0 ? (
-																	<button
-																		type="button"
-																		onClick={() => setDetailLog(item)}
-																		className="ml-2 text-xs text-blue-600 hover:underline"
-																	>
-																		{t("labels.viewChangeDetail")}
-																	</button>
-																) : null}
-															</>
-														)}
-													</div>
-												</td>
-											</tr>
-										);
-									})
+									logs.map((item) => (
+										<tr key={item.id} className="hover:bg-gray-50">
+											<AuditLogSharedCells
+												item={item}
+												currency={billingCurrency}
+												timezone={businessTimezone}
+												onViewDetail={setDetailLog}
+											/>
+										</tr>
+									))
 								)}
 							</tbody>
 						</table>
@@ -1639,87 +950,7 @@ function GatewayAuditLogs() {
 			)}
 
 			{detailLog ? (
-				<div
-					className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-					role="dialog"
-					aria-modal="true"
-					aria-labelledby="audit-change-detail-title"
-				>
-					<div className="flex max-h-[85vh] w-full max-w-5xl flex-col overflow-hidden rounded-lg bg-white shadow-xl">
-						<div className="flex items-start justify-between gap-4 border-b border-gray-200 px-5 py-4">
-							<div className="min-w-0">
-								<h2
-									id="audit-change-detail-title"
-									className="text-lg font-semibold text-gray-900"
-								>
-									{t("labels.changeDetailTitle")}
-								</h2>
-								<div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500">
-									<span className="font-mono">{detailLog.event_type}</span>
-									<span>
-										{formatAuditTime(detailLog.created_at, businessTimezone)}
-									</span>
-									<span className="truncate">
-										{detailLog.user_email ?? "—"}
-									</span>
-								</div>
-							</div>
-							<button
-								type="button"
-								onClick={() => setDetailLog(null)}
-								className="rounded-md border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50"
-							>
-								{tCommon("close")}
-							</button>
-						</div>
-
-						<div className="overflow-y-auto p-5">
-							{detailRows.length > 0 ? (
-								<div className="space-y-3">
-									{detailRows.map((row, index) => (
-										<div
-											key={`${row.group}-${row.field}-${index}`}
-											className="rounded-lg border border-gray-200 bg-white p-3"
-										>
-											<div className="mb-2 flex flex-wrap items-center gap-2">
-												<span className="rounded bg-gray-100 px-2 py-0.5 text-xs text-gray-600">
-													{row.group === "snapshot"
-														? t("labels.userSnapshot")
-														: t("labels.extraJson")}
-												</span>
-												<span className="min-w-0 break-all font-mono text-sm font-medium text-gray-900">
-													{row.field}
-												</span>
-											</div>
-											<div className="grid gap-3 md:grid-cols-2">
-												<div className="min-w-0">
-													<div className="mb-1 text-xs font-medium uppercase text-gray-500">
-														{t("labels.originalValue")}
-													</div>
-													<pre className="max-w-full whitespace-pre-wrap break-all rounded bg-amber-50 px-3 py-2 font-mono text-xs leading-relaxed text-amber-900">
-														{row.before}
-													</pre>
-												</div>
-												<div className="min-w-0">
-													<div className="mb-1 text-xs font-medium uppercase text-gray-500">
-														{t("labels.changedValue")}
-													</div>
-													<pre className="max-w-full whitespace-pre-wrap break-all rounded bg-sky-50 px-3 py-2 font-mono text-xs leading-relaxed text-sky-900">
-														{row.after}
-													</pre>
-												</div>
-											</div>
-										</div>
-									))}
-								</div>
-							) : (
-								<div className="py-8 text-center text-sm text-gray-500">
-									{t("labels.noChangeDetail")}
-								</div>
-							)}
-						</div>
-					</div>
-				</div>
+				<AuditChangeDetailModal item={detailLog} timezone={businessTimezone} onClose={() => setDetailLog(null)} />
 			) : null}
 
 			{totalPages > 1 && !isLoading && (
@@ -1730,18 +961,16 @@ function GatewayAuditLogs() {
 						disabled={page === 1}
 						className="px-4 py-2 border border-gray-300 rounded-md text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
 					>
-						{tCommon("previous")}
+						{tCommon('previous')}
 					</button>
-					<span className="px-4 py-2 text-sm text-gray-600">
-						{tCommon("pageOf", { page, totalPages })}
-					</span>
+					<span className="px-4 py-2 text-sm text-gray-600">{tCommon('pageOf', { page, totalPages })}</span>
 					<button
 						type="button"
 						onClick={() => setPage(Math.min(totalPages, page + 1))}
 						disabled={page === totalPages}
 						className="px-4 py-2 border border-gray-300 rounded-md text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
 					>
-						{tCommon("next")}
+						{tCommon('next')}
 					</button>
 				</div>
 			)}

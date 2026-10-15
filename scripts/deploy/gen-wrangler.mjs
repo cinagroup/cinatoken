@@ -13,7 +13,7 @@
  */
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '../..');
@@ -167,11 +167,79 @@ function applyD1Binding(binding, databaseName, databaseId) {
 	return next;
 }
 
-function customDomainRoutes(domain) {
-	if (!domain) {
+/**
+ * Split `PROXY_CUSTOM_DOMAIN` / `ADMIN_CUSTOM_DOMAIN` into distinct hostnames.
+ * Comma-separated; whitespace around hosts is ignored; empty tokens dropped;
+ * duplicates are de-duped case-insensitively (first spelling kept).
+ *
+ * @param {string | undefined} raw
+ * @returns {string[]}
+ */
+export function parseCustomDomains(raw) {
+	if (typeof raw !== 'string' || !raw.trim()) {
+		return [];
+	}
+	const seen = new Set();
+	const hosts = [];
+	for (const part of raw.split(',')) {
+		const host = part.trim();
+		if (!host) {
+			continue;
+		}
+		const key = host.toLowerCase();
+		if (seen.has(key)) {
+			continue;
+		}
+		seen.add(key);
+		hosts.push(host);
+	}
+	return hosts;
+}
+
+/** First hostname, for bootstrap URL hints (`https://a,b` is not a valid URL). */
+export function primaryCustomDomain(raw) {
+	return parseCustomDomains(raw)[0] ?? '';
+}
+
+/**
+ * Wrangler `routes` for Custom Domains. One Worker, N hostnames.
+ * Returns `undefined` when the env var is empty so callers can `delete config.routes`.
+ *
+ * @param {string | undefined} raw
+ * @returns {{ pattern: string, custom_domain: true }[] | undefined}
+ */
+export function customDomainRoutes(raw) {
+	const hosts = parseCustomDomains(raw);
+	if (hosts.length === 0) {
 		return undefined;
 	}
-	return [{ pattern: domain, custom_domain: true }];
+	return hosts.map((pattern) => ({ pattern, custom_domain: true }));
+}
+
+/** Optional Proxy runtime vars baked into wrangler `[vars]` at deploy time. */
+export const PROXY_RUNTIME_VAR_KEYS = [
+	'STREAM_FIRST_CHUNK_TIMEOUT_MS',
+	'STREAM_IDLE_TIMEOUT_MS',
+	'USAGE_SAFETY_TIMEOUT_MS',
+];
+
+/**
+ * Collect non-empty Proxy timeout overrides from env.
+ * Empty / unset keys are omitted so Worker code defaults apply.
+ *
+ * @param {NodeJS.ProcessEnv | Record<string, string | undefined>} [env]
+ * @returns {Record<string, string> | undefined}
+ */
+export function collectProxyRuntimeVars(env = process.env) {
+	const vars = {};
+	for (const key of PROXY_RUNTIME_VAR_KEYS) {
+		const raw = env[key];
+		const value = typeof raw === 'string' ? raw.trim() : '';
+		if (value) {
+			vars[key] = value;
+		}
+	}
+	return Object.keys(vars).length > 0 ? vars : undefined;
 }
 
 function applyWorkerDatabaseRuntime(config, names) {
@@ -278,7 +346,10 @@ function generateProxy(names) {
 		names,
 	);
 	const config = applySharedKeyUsageRepairHyperdriveBinding(
-		applyReviewProducerHyperdriveBindings(applyBatchInfrastructure(applyHttpMaintenanceMode(runtimeConfig, names), names), names),
+		applyReviewProducerHyperdriveBindings(
+			applyBatchInfrastructure(applyHttpMaintenanceMode(runtimeConfig, names), names),
+			names,
+		),
 		names,
 	);
 	const routes = customDomainRoutes(names.proxyCustomDomain);
@@ -286,6 +357,11 @@ function generateProxy(names) {
 		config.routes = routes;
 	} else if (!Array.isArray(base.routes) || base.routes.length === 0) {
 		delete config.routes;
+	}
+
+	const runtimeVars = collectProxyRuntimeVars();
+	if (runtimeVars) {
+		config.vars = { ...base.vars, ...runtimeVars };
 	}
 
 	writeJson('packages/proxy/wrangler.jsonc', config);
@@ -296,10 +372,14 @@ function generateAdmin(names) {
 	const organizationAdminRoles = trimEnv('CINAAUTH_ORGANIZATION_ADMIN_ROLES');
 	const adminVars = {
 		...base.vars,
-		CINATOKEN_ADMIN_CONFIG_REQUIRE_REVISION: trimEnv('CINATOKEN_ADMIN_CONFIG_REQUIRE_REVISION') === 'true' ? 'true' : 'false',
-		CINATOKEN_ADMIN_KEYS_REQUIRE_REVISION: trimEnv('CINATOKEN_ADMIN_KEYS_REQUIRE_REVISION') === 'true' ? 'true' : 'false',
-		CINATOKEN_ADMIN_SHARED_KEYS_REQUIRE_REVISION: trimEnv('CINATOKEN_ADMIN_SHARED_KEYS_REQUIRE_REVISION') === 'true' ? 'true' : 'false',
-		CINATOKEN_ADMIN_TOOLS_REQUIRE_VERSION: trimEnv('CINATOKEN_ADMIN_TOOLS_REQUIRE_VERSION') === 'true' ? 'true' : 'false',
+		CINATOKEN_ADMIN_CONFIG_REQUIRE_REVISION:
+			trimEnv('CINATOKEN_ADMIN_CONFIG_REQUIRE_REVISION') === 'true' ? 'true' : 'false',
+		CINATOKEN_ADMIN_KEYS_REQUIRE_REVISION:
+			trimEnv('CINATOKEN_ADMIN_KEYS_REQUIRE_REVISION') === 'true' ? 'true' : 'false',
+		CINATOKEN_ADMIN_SHARED_KEYS_REQUIRE_REVISION:
+			trimEnv('CINATOKEN_ADMIN_SHARED_KEYS_REQUIRE_REVISION') === 'true' ? 'true' : 'false',
+		CINATOKEN_ADMIN_TOOLS_REQUIRE_VERSION:
+			trimEnv('CINATOKEN_ADMIN_TOOLS_REQUIRE_VERSION') === 'true' ? 'true' : 'false',
 		CINATOKEN_ADMIN_MODELS_REQUIRE_ROUTE_POLICY_PRECONDITION:
 			trimEnv('CINATOKEN_ADMIN_MODELS_REQUIRE_ROUTE_POLICY_PRECONDITION') === 'true' ? 'true' : 'false',
 		CINATOKEN_ADMIN_DATA_POLICIES_REQUIRE_PRECONDITION:
@@ -422,7 +502,9 @@ function validateReviewProducerHyperdriveBindings(names) {
 		return;
 	}
 	if (names.databaseDriver !== 'postgres' || !names.hyperdriveId) {
-		console.error('gen-wrangler: review producer Hyperdrive bindings require DATABASE_DRIVER=postgres and runtime HYPERDRIVE_ID.');
+		console.error(
+			'gen-wrangler: review producer Hyperdrive bindings require DATABASE_DRIVER=postgres and runtime HYPERDRIVE_ID.',
+		);
 		process.exit(1);
 	}
 	const ids = [
@@ -511,16 +593,22 @@ function main() {
 	generateChain(names);
 	generateD1(names);
 
+	const proxyDomains = parseCustomDomains(names.proxyCustomDomain);
+	const adminDomains = parseCustomDomains(names.adminCustomDomain);
 	console.log(
 		`gen-wrangler: proxy=${names.proxyWorkerName} admin=${names.adminWorkerName} chain=${names.chainWorkerName} queue=${names.chainJobQueueName} d1=${names.d1DatabaseName}` +
 			(names.d1DatabaseId ? ` id=${names.d1DatabaseId}` : ' (local, no database_id)') +
-			(names.hyperdriveId ? ` hyperdrive=${names.hyperdriveId} driver=${names.databaseDriver || 'd1 (staged target, unbound)'}` : '') +
+			(names.hyperdriveId
+				? ` hyperdrive=${names.hyperdriveId} driver=${names.databaseDriver || 'd1 (staged target, unbound)'}`
+				: '') +
 			(names.maintenanceMode ? ' maintenance=true' : '') +
 			(names.reviewProducerHyperdriveBindingsEnabled ? ' review-producer-hyperdrive-bindings=true' : '') +
 			(names.sharedKeyUsageRepairActivation === 'reviewed-v3' ? ' shared-key-usage-repair=reviewed-v3' : '') +
 			(names.batchInfraEnabled
 				? ` batch-infra=true batch-bucket=${names.batchBucketName} batch-queue=${names.batchQueueName}`
-				: ' batch-infra=false'),
+				: ' batch-infra=false') +
+			(proxyDomains.length ? ` proxyDomains=${proxyDomains.join(',')}` : '') +
+			(adminDomains.length ? ` adminDomains=${adminDomains.join(',')}` : ''),
 	);
 
 	if (REMOTE && names.d1DatabaseId) {
@@ -531,4 +619,14 @@ function main() {
 	}
 }
 
-main();
+function isDirectRun() {
+	const entry = process.argv[1];
+	if (!entry) {
+		return false;
+	}
+	return import.meta.url === pathToFileURL(entry).href;
+}
+
+if (isDirectRun()) {
+	main();
+}

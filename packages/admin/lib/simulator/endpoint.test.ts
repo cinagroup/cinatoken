@@ -108,6 +108,24 @@ describe("buildSimulatorRequest openai", () => {
 		assert.equal(result.headers["Content-Type"], undefined);
 		assert.equal(result.headers.Authorization, "Bearer sk-test");
 		assert.match(result.multipartSummary ?? "", /ref\.png/);
+		assert.equal(result.formData?.getAll("image").length, 1);
+		assert.equal(result.formData?.getAll("image[]").length, 0);
+	});
+
+	it("uses image[] for multiple images/edits files", () => {
+		const a = new File([Uint8Array.from([137, 80, 78, 71])], "a.png", { type: "image/png" });
+		const b = new File([Uint8Array.from([137, 80, 78, 71])], "b.png", { type: "image/png" });
+		const result = buildSimulatorRequest({
+			baseUrl: "https://gateway.example.com",
+			protocol: "openai",
+			modelForRouting: "gpt-image-2",
+			body: { prompt: "fuse these" },
+			apiKey: "sk-test",
+			imageOperation: "edits",
+			editImages: [a, b],
+		});
+		assert.equal(result.formData?.getAll("image").length, 0);
+		assert.equal(result.formData?.getAll("image[]").length, 2);
 	});
 
 	it("previews images/edits URL even when no reference files yet", () => {
@@ -179,6 +197,78 @@ describe("buildSimulatorRequest openai", () => {
 		);
 	});
 
+	it("builds MiniMax speech_to_text passthrough multipart", () => {
+		const result = buildSimulatorRequest({
+			baseUrl: "https://gateway.example.com",
+			kind: "audio",
+			protocol: "minimax",
+			modelForRouting: "minimax-asr-1.0",
+			body: { language: "zh", response_format: "verbose_json" },
+			apiKey: "sk-test",
+			audioOperation: "transcriptions",
+			audioFile: null,
+		});
+		assert.equal(result.url, "https://gateway.example.com/v1/minimax/speech_to_text");
+		assert.equal(result.formData?.get("model"), "minimax-asr-1.0");
+		assert.equal(result.formData?.get("language"), "zh");
+		assert.equal(result.formData?.get("response_format"), "verbose_json");
+	});
+
+	it("builds MiniMax speech JSON for /v1/minimax/t2a_v2", () => {
+		const result = buildSimulatorRequest({
+			baseUrl: "https://gateway.example.com",
+			kind: "audio",
+			protocol: "minimax",
+			modelForRouting: "minimax-speech-2.8-turbo",
+			body: { text: "你好", stream: false },
+			apiKey: "sk-test",
+			audioOperation: "speech",
+		});
+		assert.equal(result.url, "https://gateway.example.com/v1/minimax/t2a_v2");
+		assert.equal(result.headers["Content-Type"], "application/json");
+		assert.equal(result.formData, undefined);
+		assert.deepEqual(JSON.parse(result.bodyText), {
+			model: "minimax-speech-2.8-turbo",
+			text: "你好",
+			stream: false,
+		});
+	});
+
+	it("builds MiniMax image JSON for /v1/minimax/image_generation", () => {
+		const result = buildSimulatorRequest({
+			baseUrl: "https://gateway.example.com",
+			kind: "image",
+			protocol: "minimax",
+			modelForRouting: "minimax-image-01",
+			body: { prompt: "a lantern", n: 1 },
+			apiKey: "sk-test",
+			imageOperation: "generations",
+		});
+		assert.equal(result.url, "https://gateway.example.com/v1/minimax/image_generation");
+		assert.equal(JSON.parse(result.bodyText).model, "minimax-image-01");
+		assert.equal(JSON.parse(result.bodyText).prompt, "a lantern");
+	});
+
+	it("builds Volcengine image JSON for /v1/volcengine/images/generations", () => {
+		const result = buildSimulatorRequest({
+			baseUrl: "https://gateway.example.com",
+			kind: "image",
+			protocol: "volcengine",
+			modelForRouting: "doubao-seedream-5-0",
+			body: { prompt: "a cat", size: "2K", stream: false },
+			apiKey: "sk-test",
+			imageOperation: "generations",
+		});
+		assert.equal(result.url, "https://gateway.example.com/v1/volcengine/images/generations");
+		assert.equal(result.headers["Content-Type"], "application/json");
+		assert.deepEqual(JSON.parse(result.bodyText), {
+			model: "doubao-seedream-5-0",
+			prompt: "a cat",
+			size: "2K",
+			stream: false,
+		});
+	});
+
 	it("builds DashScope multimodal HTTP transcriptions", () => {
 		const result = buildSimulatorRequest({
 			baseUrl: "https://gateway.example.com",
@@ -235,6 +325,21 @@ describe("buildSimulatorRequest gemini", () => {
 			"/v1beta/models/gemini-2.5-flash:streamGenerateContent"
 		);
 		assert.equal(u.searchParams.get("alt"), "sse");
+	});
+
+	it("uses generateContent for image models even when streaming is selected", () => {
+		const result = buildSimulatorRequest({
+			baseUrl: "https://gateway.example.com",
+			kind: "image",
+			protocol: "gemini",
+			modelForRouting: "gemini-3.1-flash-image",
+			geminiAction: "streamGenerateContent",
+			body: { contents: [] },
+			apiKey: "sk-test",
+		});
+		const u = new URL(result.url);
+		assert.equal(u.pathname, "/v1beta/models/gemini-3.1-flash-image:generateContent");
+		assert.equal(u.searchParams.has("alt"), false);
 	});
 
 	it("does not include alt for generateContent", () => {

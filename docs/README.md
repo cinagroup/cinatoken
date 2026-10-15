@@ -22,6 +22,7 @@
 | 用户门户：共享个人 API Key 出售 token、收益提现、贡献 NFT | [users/portal.md](./users/portal.md) |
 | 用 Gateway 接入自己的门户、后台或 SaaS | [developers/integration.md](./developers/integration.md) |
 | 查代理服务（Proxy）/ 管理后台 API | [developers/api/README.md](./developers/api/README.md) |
+| 按标准化错误码处理用户侧失败 | [developers/api/error-codes.md](./developers/api/error-codes.md) |
 | 本地二开或贡献代码 | [developers/local-development.md](./developers/local-development.md) |
 | 部署到生产环境 | [operators/deployment/README.md](./operators/deployment/README.md) |
 | Cloudflare 外部一键上云 | [operators/deployment/cloudflare-quickstart.md](./operators/deployment/cloudflare-quickstart.md) |
@@ -36,13 +37,16 @@
 | CF 运维 / Workers Builds | [operators/deployment/cloudflare.md](./operators/deployment/cloudflare.md) |
 | Docker / PG / MySQL 自托管 | [operators/deployment/docker.md](./operators/deployment/docker.md) |
 | 下游集成 env | [developers/integration.md](./developers/integration.md) |
-| 文生图模型（gpt-image-2 / Seedream） | [developers/reference/image-models.md](./developers/reference/image-models.md) |
+| 文生图模型（入口、目录与计费） | [developers/reference/image-models.md](./developers/reference/image-models.md) |
 | 2.0 路由拓扑：请求入口（Request Surface）→ 路由池（Route Pool）→ 上游目标（Upstream Target） | [developers/architecture/route-topology.md](./developers/architecture/route-topology.md) |
 | 公开模型目录、账户中心与管理控制台的产品层契约 | [developers/architecture/public-product-layer.md](./developers/architecture/public-product-layer.md) |
 | 路由策略（hash_affinity / weighted_random / …） | [developers/reference/route-strategies.md](./developers/reference/route-strategies.md) |
 | 2.0 升级（单键供应商 + 路由拓扑，0015 / 0016） | [operators/migrations/single-provider-key-cutover.md](./operators/migrations/single-provider-key-cutover.md) |
 | 2.2.0 升级（Gemini / 按层策略 / canonical ID，0017–0019） | [operators/README.md](./operators/README.md#迁移与切换) |
 | 2.3.0 升级（供应商粘性（Provider sticky）/ 展示 ID 对齐，0020–0021） | [operators/README.md](./operators/README.md#迁移与切换) |
+| 2.4.0 升级（音频字符 / 具名 Admin Key / 审计索引，0022–0025） | [releases/2.4.0.md](./releases/2.4.0.md#升级说明) |
+| 2.7.0 升级（用户级模型计费倍率，0026） | [releases/2.7.0.md](./releases/2.7.0.md#升级说明) |
+| 2.8.0 升级（周期额度 + 永久额度，0027） | [releases/2.8.0.md](./releases/2.8.0.md#升级说明) |
 | 文档规范 | [CONVENTIONS.md](./CONVENTIONS.md) |
 
 ## 文档规范

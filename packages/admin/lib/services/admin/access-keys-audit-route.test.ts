@@ -100,6 +100,8 @@ function fixture(
 	};
 	const app = createAdminApp();
 	const bindings = {
+		// The authenticated outer Console entry already checked the original browser Origin.
+		ADMIN_CSRF_SAME_ORIGIN: true,
 		STORAGE_CONTEXT: {
 			repositories: {
 				adminAccess: repository,

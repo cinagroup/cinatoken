@@ -17,6 +17,8 @@ export type UserBudgetReservationRow = {
 	limit_micros: number | string;
 	reserved_micros: number | string;
 	settled_micros: number | string;
+	/** Permanent-pool share of the last settlement, retained for late reconciliation. */
+	settled_wallet_micros?: number | string;
 	state: UserBudgetReservationState;
 	expires_at: string;
 	dispatched_at: string | null;
@@ -29,6 +31,8 @@ export type UserBudgetReservationRow = {
 export type UserBudgetAccountRow = {
 	id: string;
 	budget_max: number | string | null;
+	wallet_granted?: number | string;
+	wallet_spent?: number | string;
 	budget_spent: number | string;
 	budget_period: string;
 	budget_reset_at: string | null;

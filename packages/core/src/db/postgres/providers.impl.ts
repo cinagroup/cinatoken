@@ -1,17 +1,14 @@
 /**
  * Postgres：`providers` 表（Drizzle）。
  */
-import { eq, inArray } from "drizzle-orm";
-import type { ProviderRow } from "../../types";
-import type { PostgresDatabaseClient } from "../../storage/database-client";
-import type { ProvidersRepository } from "../../storage/gateway-repository-interfaces";
-import { providersTable as pgProvidersTable } from "../../storage/drizzle/schema.pg";
-import {
-	MAX_PROVIDER_ID_BATCH_SIZE,
-	type ProviderProtocolBases,
-} from "../providers-types";
-import type { ProviderAdminRow } from "../../storage/repository-dtos";
-import { PROVIDER_PATCH_COLS } from "../patch-allowlists";
+import { eq, inArray } from 'drizzle-orm';
+import type { ProviderRow } from '../../types';
+import type { PostgresDatabaseClient } from '../../storage/database-client';
+import type { ProvidersRepository } from '../../storage/gateway-repository-interfaces';
+import { providersTable as pgProvidersTable } from '../../storage/drizzle/schema.pg';
+import { MAX_PROVIDER_ID_BATCH_SIZE, type ProviderProtocolBases } from '../providers-types';
+import type { ProviderAdminRow } from '../../storage/repository-dtos';
+import { PROVIDER_PATCH_COLS } from '../patch-allowlists';
 
 function snakeToCamel(key: string): string {
 	return key.replace(/_([a-z])/g, (_, c: string) => c.toUpperCase());
@@ -20,6 +17,7 @@ function snakeToCamel(key: string): string {
 function mapPgProviderRow(r: {
 	id: string;
 	name: string;
+	kind: string;
 	endpoints: string | null;
 	apiKey: string;
 	status: string;
@@ -30,6 +28,7 @@ function mapPgProviderRow(r: {
 	return {
 		id: r.id,
 		name: r.name,
+		kind: r.kind,
 		endpoints: r.endpoints,
 		api_key: r.apiKey,
 		status: r.status,
@@ -39,9 +38,7 @@ function mapPgProviderRow(r: {
 	};
 }
 
-export function createPostgresProvidersRepository(
-	db: PostgresDatabaseClient
-): ProvidersRepository {
+export function createPostgresProvidersRepository(db: PostgresDatabaseClient): ProvidersRepository {
 	const drizzle = db.drizzle;
 	const pg = db.raw;
 	return {
@@ -50,6 +47,7 @@ export function createPostgresProvidersRepository(
 				Array<{
 					id: string;
 					name: string;
+					kind: string;
 					endpoints: string | null;
 					api_key: string;
 					status: string;
@@ -60,7 +58,7 @@ export function createPostgresProvidersRepository(
 					active_routes_count: number;
 				}>
 			>`
-			SELECT p.id, p.name, p.endpoints, p.api_key, p.status, p.description, p.shared_channel_type, p.created_at::text,
+			SELECT p.id, p.name, p.kind, p.endpoints, p.api_key, p.status, p.description, p.shared_channel_type, p.created_at::text,
 				(SELECT COUNT(*)::int FROM model_routes WHERE provider_id = p.id) AS routes_count,
 				(SELECT COUNT(*)::int FROM model_routes WHERE provider_id = p.id AND status = 'active') AS active_routes_count
 			FROM providers p ORDER BY p.created_at DESC
@@ -68,6 +66,7 @@ export function createPostgresProvidersRepository(
 			return rows.map((r) => ({
 				id: r.id,
 				name: r.name,
+				kind: r.kind,
 				endpoints: r.endpoints,
 				api_key: r.api_key,
 				status: r.status,
@@ -81,9 +80,7 @@ export function createPostgresProvidersRepository(
 
 		async getProvidersByIds(ids: string[]): Promise<ProviderRow[]> {
 			if (ids.length > MAX_PROVIDER_ID_BATCH_SIZE) {
-				throw new RangeError(
-					`provider id batch exceeds ${MAX_PROVIDER_ID_BATCH_SIZE}`
-				);
+				throw new RangeError(`provider id batch exceeds ${MAX_PROVIDER_ID_BATCH_SIZE}`);
 			}
 			const uniqueIds = [...new Set(ids)];
 			if (uniqueIds.length === 0) return [];
@@ -107,6 +104,7 @@ export function createPostgresProvidersRepository(
 		async insertProvider(params: {
 			id: string;
 			name: string;
+			kind?: string;
 			endpoints: string | null;
 			description: unknown;
 			apiKey?: string;
@@ -117,23 +115,20 @@ export function createPostgresProvidersRepository(
 			await drizzle.insert(pgProvidersTable).values({
 				id: params.id,
 				name: params.name,
+				kind: params.kind ?? '',
 				endpoints: params.endpoints,
-				apiKey: params.apiKey ?? "",
-				status: params.status ?? "active",
-				description:
-					params.description == null ? null : String(params.description),
+				apiKey: params.apiKey ?? '',
+				status: params.status ?? 'active',
+				description: params.description == null ? null : String(params.description),
 				sharedChannelType: params.sharedChannelType ?? null,
 				createdAt: now,
 			});
 		},
 
-		async updateProviderByPatch(
-			id: string,
-			body: Record<string, unknown>
-		): Promise<number> {
+		async updateProviderByPatch(id: string, body: Record<string, unknown>): Promise<number> {
 			const set: Record<string, unknown> = {};
 			for (const [key, value] of Object.entries(body)) {
-				if (key === "id" || value === undefined) continue;
+				if (key === 'id' || value === undefined) continue;
 				if (!PROVIDER_PATCH_COLS.has(key)) continue;
 				const camel = snakeToCamel(key);
 				set[camel] = value;
@@ -156,11 +151,7 @@ export function createPostgresProvidersRepository(
 		},
 
 		async getProviderById(id: string): Promise<ProviderRow | null> {
-			const rows = await drizzle
-				.select()
-				.from(pgProvidersTable)
-				.where(eq(pgProvidersTable.id, id))
-				.limit(1);
+			const rows = await drizzle.select().from(pgProvidersTable).where(eq(pgProvidersTable.id, id)).limit(1);
 			return rows[0] ? mapPgProviderRow(rows[0]) : null;
 		},
 
@@ -169,6 +160,7 @@ export function createPostgresProvidersRepository(
 				Array<{
 					id: string;
 					name: string;
+					kind: string;
 					endpoints: string | null;
 					api_key: string;
 					status: string;
@@ -179,7 +171,7 @@ export function createPostgresProvidersRepository(
 					active_routes_count: number;
 				}>
 			>`
-			SELECT p.id, p.name, p.endpoints, p.api_key, p.status, p.description, p.shared_channel_type, p.created_at::text,
+			SELECT p.id, p.name, p.kind, p.endpoints, p.api_key, p.status, p.description, p.shared_channel_type, p.created_at::text,
 				(SELECT COUNT(*)::int FROM model_routes WHERE provider_id = p.id) AS routes_count,
 				(SELECT COUNT(*)::int FROM model_routes WHERE provider_id = p.id AND status = 'active') AS active_routes_count
 			FROM providers p WHERE p.id = ${id}
@@ -189,6 +181,7 @@ export function createPostgresProvidersRepository(
 			return {
 				id: r.id,
 				name: r.name,
+				kind: r.kind,
 				endpoints: r.endpoints,
 				api_key: r.api_key,
 				status: r.status,
@@ -200,9 +193,7 @@ export function createPostgresProvidersRepository(
 			};
 		},
 
-		async getProviderProtocolBases(
-			providerId: string
-		): Promise<ProviderProtocolBases | null> {
+		async getProviderProtocolBases(providerId: string): Promise<ProviderProtocolBases | null> {
 			const rows = await drizzle
 				.select({
 					id: pgProvidersTable.id,
@@ -214,9 +205,7 @@ export function createPostgresProvidersRepository(
 			return rows[0] ?? null;
 		},
 
-		async getProviderApiKeyPlaintext(
-			providerId: string
-		): Promise<{ api_key: string } | null> {
+		async getProviderApiKeyPlaintext(providerId: string): Promise<{ api_key: string } | null> {
 			const rows = await drizzle
 				.select({ api_key: pgProvidersTable.apiKey })
 				.from(pgProvidersTable)

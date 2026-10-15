@@ -10,7 +10,7 @@ const mysqlMigrations = readdirSync(join(root, 'packages/core/migrations-mysql')
 	.filter((name) => name.endsWith('.sql'))
 	.sort();
 assert.equal(
-	mysqlMigrations.at(-1),
+	mysqlMigrations.at(74),
 	'0075_chain_job_transactions.sql',
 	'MySQL migration chain must end with the durable transaction outbox required for safe administrative rejection',
 );
@@ -620,3 +620,5 @@ assert.match(toolsGroup, /created_at DATETIME\(6\)/u);
 assert.match(toolsGroup, /family, created_at DESC, id DESC/u);
 assert.doesNotMatch(toolsGroup, /\b(?:FOREIGN KEY|REFERENCES|config_value|value_hash|request_body|secret_key_hash)\b/u);
 for (const column of ['changed_fields_json', 'credentials_json', 'revision_before_json', 'revision_after_json']) assert.match(toolsGroup, new RegExp('\\b' + column + '\\s+TEXT\\s+NOT NULL', 'u'));
+
+assert.deepEqual(mysqlMigrations.slice(75), ['0076_user_wallet_credit.sql', '0077_key_rate_limit_and_ingress.sql', '0078_provider_kind.sql', '0079_mcp_servers.sql']);

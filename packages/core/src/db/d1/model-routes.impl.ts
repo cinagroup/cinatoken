@@ -2,7 +2,10 @@
  * D1：`model_routes`。
  */
 import type { D1DatabaseClient } from '../../storage/database-client';
-import type { ModelRoutesRepository } from '../../storage/gateway-repository-interfaces';
+import type {
+	ListModelRoutesWithJoinsFilters,
+	ModelRoutesRepository,
+} from '../../storage/gateway-repository-interfaces';
 import type { ModelRouteDetailRow, ModelRouteJoinRow } from '../../storage/repository-dtos';
 import { MODEL_ROUTE_PATCH_COLS } from '../patch-allowlists';
 
@@ -28,7 +31,7 @@ const MODEL_ROUTE_LIST_JOIN_SQL = `SELECT mr.id, mr.model_id, mr.provider_id, mr
 export function createD1ModelRoutesRepository(db: D1DatabaseClient): ModelRoutesRepository {
 	const raw = db.raw;
 	return {
-		async listModelRoutesWithJoins(filters: { modelId?: string; providerId?: string; limit?: number }): Promise<ModelRouteJoinRow[]> {
+		async listModelRoutesWithJoins(filters: ListModelRoutesWithJoinsFilters): Promise<ModelRouteJoinRow[]> {
 			const conditions: string[] = [];
 			const bindValues: unknown[] = [];
 			if (filters.modelId) {
@@ -39,11 +42,17 @@ export function createD1ModelRoutesRepository(db: D1DatabaseClient): ModelRoutes
 				conditions.push('mr.provider_id = ?');
 				bindValues.push(filters.providerId);
 			}
+			if (filters.status === 'active') {
+				conditions.push("mr.status = 'active'");
+			}
 			const where = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
 			const limit = filters.limit == null ? null : Math.max(1, Math.min(10_000, Math.trunc(filters.limit)));
 			if (limit != null) bindValues.push(limit);
 			const sqlText = `${MODEL_ROUTE_LIST_JOIN_SQL} ${where} ORDER BY mr.model_id, mr.priority DESC${limit == null ? '' : ' LIMIT ?'}`;
-			const rows = await raw.prepare(sqlText).bind(...bindValues).all<ModelRouteJoinRow>();
+			const rows = await raw
+				.prepare(sqlText)
+				.bind(...bindValues)
+				.all<ModelRouteJoinRow>();
 			return rows.results ?? [];
 		},
 
@@ -67,7 +76,7 @@ export function createD1ModelRoutesRepository(db: D1DatabaseClient): ModelRoutes
 			await raw
 				.prepare(
 					`INSERT INTO model_routes (id, model_id, provider_id, provider_model_name, priority, status, route_group, weight, price_override, custom_params, routing_metadata, upstream_protocol, route_pool_id, upstream_operation, adapter, created_at)
-			 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))`
+			 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))`,
 				)
 				.bind(
 					params.id,
@@ -84,7 +93,7 @@ export function createD1ModelRoutesRepository(db: D1DatabaseClient): ModelRoutes
 					params.upstreamProtocol,
 					params.routePoolId,
 					params.upstreamOperation,
-					params.adapter
+					params.adapter,
 				)
 				.run();
 		},
@@ -99,14 +108,9 @@ export function createD1ModelRoutesRepository(db: D1DatabaseClient): ModelRoutes
 					`SELECT id, route_pool_id FROM model_surfaces
 					 WHERE model_id = ? AND lower(route_group) = lower(?)
 					   AND lower(request_protocol) = lower(?) AND request_operation = ?
-					 LIMIT 1`
+					 LIMIT 1`,
 				)
-				.bind(
-					params.modelId,
-					params.routeGroup,
-					params.requestProtocol,
-					params.requestOperation
-				)
+				.bind(params.modelId, params.routeGroup, params.requestProtocol, params.requestOperation)
 				.first<{ id: string; route_pool_id: string }>();
 			if (existing) return { poolId: existing.route_pool_id, surfaceId: existing.id };
 
@@ -115,14 +119,14 @@ export function createD1ModelRoutesRepository(db: D1DatabaseClient): ModelRoutes
 					.prepare(
 						`INSERT INTO route_pools
 						 (id, model_id, route_group, name, strategy, status, created_at, updated_at)
-						 VALUES (?, ?, ?, ?, NULL, 'active', datetime('now'), datetime('now'))`
+						 VALUES (?, ?, ?, ?, NULL, 'active', datetime('now'), datetime('now'))`,
 					)
 					.bind(params.poolId, params.modelId, params.routeGroup, params.poolName),
 				raw
 					.prepare(
 						`INSERT INTO model_surfaces
 						 (id, model_id, route_group, request_protocol, request_operation, route_pool_id, status, created_at, updated_at)
-						 VALUES (?, ?, ?, ?, ?, ?, 'active', datetime('now'), datetime('now'))`
+						 VALUES (?, ?, ?, ?, ?, ?, 'active', datetime('now'), datetime('now'))`,
 					)
 					.bind(
 						params.surfaceId,
@@ -130,7 +134,7 @@ export function createD1ModelRoutesRepository(db: D1DatabaseClient): ModelRoutes
 						params.routeGroup,
 						params.requestProtocol,
 						params.requestOperation,
-						params.poolId
+						params.poolId,
 					),
 			]);
 			return { poolId: params.poolId, surfaceId: params.surfaceId };
@@ -143,7 +147,7 @@ export function createD1ModelRoutesRepository(db: D1DatabaseClient): ModelRoutes
 				tierStrategies?: string | null;
 				stickyEnabled?: boolean;
 				stickyIdleTtlSeconds?: number;
-			}
+			},
 		): Promise<number> {
 			const sets: string[] = [];
 			const bindValues: unknown[] = [];
@@ -155,8 +159,7 @@ export function createD1ModelRoutesRepository(db: D1DatabaseClient): ModelRoutes
 				sets.push('tier_strategies = ?');
 				bindValues.push(patch.tierStrategies);
 			}
-			const stickyTouched =
-				patch.stickyEnabled !== undefined || patch.stickyIdleTtlSeconds !== undefined;
+			const stickyTouched = patch.stickyEnabled !== undefined || patch.stickyIdleTtlSeconds !== undefined;
 			if (patch.stickyEnabled !== undefined) {
 				sets.push('sticky_enabled = ?');
 				bindValues.push(patch.stickyEnabled ? 1 : 0);
@@ -183,7 +186,7 @@ export function createD1ModelRoutesRepository(db: D1DatabaseClient): ModelRoutes
 					`UPDATE route_pools
 					 SET sticky_epoch = sticky_epoch + 1,
 					     updated_at = datetime('now')
-					 WHERE id = ?`
+					 WHERE id = ?`,
 				)
 				.bind(poolId)
 				.run();

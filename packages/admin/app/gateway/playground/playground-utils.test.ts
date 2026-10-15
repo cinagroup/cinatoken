@@ -1,5 +1,5 @@
-import assert from "node:assert/strict";
-import { describe, it } from "node:test";
+import assert from 'node:assert/strict';
+import { describe, it } from 'node:test';
 import {
 	BODY_TEMPLATES,
 	RERANK_BODY_TEMPLATE,
@@ -12,96 +12,309 @@ import {
 	playgroundLlmFamilyForRoute,
 	playgroundLlmSampleBody,
 	previewPlaygroundMergedBody,
+	previewPlaygroundOutboundHeaderRows,
+	previewPlaygroundRouteHeaders,
+	formatPlaygroundRouteHeadersPreview,
 	resolvePlaygroundLlmFamily,
 	routeMatchesSearch,
 	templateForRoute,
 	resolveRouteModelKind,
 	type PlaygroundLlmFamily,
-} from "./playground-utils";
-import type { RouteListRow } from "./types";
-import type { AdminModelRow } from "@/lib/services/admin/types";
+} from './playground-utils';
+import {
+	AUDIO_TRANSCRIPTIONS_BODY_TEMPLATE,
+	MINIMAX_OPENAI_SPEECH_BODY_TEMPLATE,
+	MINIMAX_SPEECH_BODY_TEMPLATE,
+} from '@/lib/audio-transcriptions';
+import { MINIMAX_IMAGE_BODY_TEMPLATE, VOLCENGINE_IMAGE_BODY_TEMPLATE } from '@/lib/image-generations';
+import type { RouteListRow } from './types';
+import type { AdminModelRow } from '@/lib/services/admin/types';
 
 function route(overrides: Partial<RouteListRow> = {}): RouteListRow {
 	return {
-		id: "route-abc12345",
-		model_id: "gpt-4o",
-		provider_id: "openai",
-		provider_model_name: "gpt-4o",
+		id: 'route-abc12345',
+		model_id: 'gpt-4o',
+		provider_id: 'openai',
+		provider_model_name: 'gpt-4o',
 		priority: 1,
-		status: "active",
-		route_group: "default",
+		status: 'active',
+		route_group: 'default',
 		price_override: null,
 		custom_params: null,
-		upstream_protocol: "openai",
-		upstream_operation: "chat",
-		model_name: "GPT-4o",
-		provider_name: "OpenAI",
+		upstream_protocol: 'openai',
+		upstream_operation: 'chat',
+		model_name: 'GPT-4o',
+		provider_name: 'OpenAI',
 		...overrides,
 	};
 }
 
-describe("playground-utils", () => {
-	it("routeMatchesSearch matches model, provider, protocol, and id", () => {
+describe('playground-utils', () => {
+	it('routeMatchesSearch matches model, provider, protocol, and id', () => {
 		const r = route();
-		assert.equal(routeMatchesSearch(r, ""), true);
-		assert.equal(routeMatchesSearch(r, "gpt-4o"), true);
-		assert.equal(routeMatchesSearch(r, "OpenAI"), true);
-		assert.equal(routeMatchesSearch(r, "openai.chat"), true);
-		assert.equal(routeMatchesSearch(r, "route-abc"), true);
-		assert.equal(routeMatchesSearch(r, "anthropic"), false);
+		assert.equal(routeMatchesSearch(r, ''), true);
+		assert.equal(routeMatchesSearch(r, 'gpt-4o'), true);
+		assert.equal(routeMatchesSearch(r, 'OpenAI'), true);
+		assert.equal(routeMatchesSearch(r, 'openai.chat'), true);
+		assert.equal(routeMatchesSearch(r, 'route-abc'), true);
+		assert.equal(routeMatchesSearch(r, 'anthropic'), false);
 	});
 
-	it("templateForRoute picks Responses vs Chat from upstream_operation", () => {
+	it('templateForRoute uses the Qwen official size for DashScope image routes', () => {
+		const parsed = JSON.parse(
+			templateForRoute(
+				route({
+					upstream_protocol: 'dashscope',
+					upstream_operation: 'images.generations.multimodal',
+					adapter: 'dashscope-image-qwen',
+				}),
+				{ output_modalities: '["image"]' } as never,
+				'edits',
+			),
+		) as { size?: string; quality?: string; parameters?: { negative_prompt?: string } };
+		assert.equal(parsed.size, '1024*1024');
+		assert.equal(parsed.quality, undefined);
+		assert.equal(parsed.parameters?.negative_prompt, 'blurry');
+	});
+
+	it('templateForRoute uses the transcription JSON for MiniMax ASR routes', () => {
 		assert.equal(
-			templateForRoute(route({ upstream_operation: "responses" }), undefined),
-			BODY_TEMPLATES.openai_responses
-		);
-		assert.equal(
-			templateForRoute(route({ upstream_operation: "chat" }), undefined),
-			BODY_TEMPLATES.openai
+			templateForRoute(
+				route({
+					model_id: 'minimax-asr-1.0',
+					upstream_protocol: 'minimax',
+					upstream_operation: 'audio.transcriptions',
+					adapter: 'minimax-asr-file',
+					provider_model_name: 'asr-1.0',
+				}),
+				{
+					pricing_profile: JSON.stringify({
+						audio_billing_mode: 'per_second',
+						audio: { price_per_second: 0.000694444 },
+					}),
+				} as never,
+			),
+			AUDIO_TRANSCRIPTIONS_BODY_TEMPLATE,
 		);
 	});
 
-	it("classifies rerank routes separately and uses a rerank request template", () => {
+	it('templateForRoute uses MiniMax speech and image passthrough JSON', () => {
+		assert.equal(
+			templateForRoute(
+				route({
+					upstream_protocol: 'minimax',
+					upstream_operation: 'audio.speech',
+					adapter: 'passthrough',
+					provider_model_name: 'speech-2.8-turbo',
+				}),
+				{
+					pricing_profile: JSON.stringify({
+						audio_billing_mode: 'per_character',
+						audio: { price_per_character: 0.0002 },
+					}),
+					modalities: JSON.stringify({ input: ['text'], output: ['audio'] }),
+				} as never,
+			),
+			MINIMAX_SPEECH_BODY_TEMPLATE,
+		);
+		assert.equal(
+			templateForRoute(
+				route({
+					upstream_protocol: 'minimax',
+					upstream_operation: 'images.generations',
+					adapter: 'passthrough',
+					provider_model_name: 'image-01',
+				}),
+				{
+					pricing_profile: JSON.stringify({
+						image_billing_mode: 'per_image',
+						image: { default: 0.025 },
+					}),
+					modalities: JSON.stringify({ input: ['text'], output: ['image'] }),
+				} as never,
+			),
+			MINIMAX_IMAGE_BODY_TEMPLATE,
+		);
+		assert.equal(
+			templateForRoute(
+				route({
+					upstream_protocol: 'volcengine',
+					upstream_operation: 'images.generations',
+					adapter: 'passthrough',
+					provider_model_name: 'doubao-seedream-5-0-260128',
+				}),
+				{
+					pricing_profile: JSON.stringify({
+						image_billing_mode: 'per_image',
+						image: { default: 0.22 },
+					}),
+					modalities: JSON.stringify({ input: ['text', 'image'], output: ['image'] }),
+				} as never,
+			),
+			VOLCENGINE_IMAGE_BODY_TEMPLATE,
+		);
+		const gemini = JSON.parse(
+			templateForRoute(
+				route({
+					upstream_protocol: 'gemini',
+					upstream_operation: 'models.generate',
+					adapter: 'passthrough',
+					provider_model_name: 'gemini-3.1-flash-image',
+					model_id: 'gemini-3.1-flash-image',
+				}),
+				{
+					output_modalities: '["image"]',
+					pricing_profile: JSON.stringify({
+						image_billing_mode: 'token',
+						image: { default: 0 },
+					}),
+				} as never,
+			),
+		) as { generationConfig?: { responseModalities?: string[]; imageConfig?: { imageSize?: string } } };
+		assert.deepEqual(gemini.generationConfig?.responseModalities, ['TEXT', 'IMAGE']);
+		assert.equal(gemini.generationConfig?.imageConfig?.imageSize, '1K');
+	});
+
+	it('templateForRoute uses OpenAI bodies for MiniMax conversion routes', () => {
+		assert.equal(
+			templateForRoute(
+				route({
+					upstream_protocol: 'minimax',
+					upstream_operation: 'audio.speech',
+					adapter: 'minimax-tts',
+					provider_model_name: 'speech-2.8-turbo',
+				}),
+				{
+					pricing_profile: JSON.stringify({
+						audio_billing_mode: 'per_character',
+						audio: { price_per_character: 0.0002 },
+					}),
+					modalities: JSON.stringify({ input: ['text'], output: ['audio'] }),
+				} as never,
+			),
+			MINIMAX_OPENAI_SPEECH_BODY_TEMPLATE,
+		);
+		const minimaxOpenAi = JSON.parse(
+			templateForRoute(
+				route({
+					upstream_protocol: 'minimax',
+					upstream_operation: 'images.generations',
+					adapter: 'minimax-image',
+					provider_model_name: 'image-01',
+				}),
+				{
+					pricing_profile: JSON.stringify({
+						image_billing_mode: 'per_image',
+						image: { default: 0.025 },
+					}),
+					modalities: JSON.stringify({ input: ['text'], output: ['image'] }),
+				} as never,
+			),
+		) as { aspect_ratio?: string; size?: string };
+		assert.equal(minimaxOpenAi.aspect_ratio, '1:1');
+		assert.equal(minimaxOpenAi.size, undefined);
+		const seedreamLite = JSON.parse(
+			templateForRoute(
+				route({
+					upstream_protocol: 'volcengine',
+					upstream_operation: 'images.generations',
+					adapter: 'volcengine-image',
+					provider_model_name: 'doubao-seedream-5-0-260128',
+				}),
+				{
+					pricing_profile: JSON.stringify({
+						image_billing_mode: 'per_image',
+						image: { default: 0.22 },
+					}),
+					modalities: JSON.stringify({ input: ['text', 'image'], output: ['image'] }),
+				} as never,
+			),
+		) as { size?: string; watermark?: boolean; quality?: string };
+		assert.equal(seedreamLite.size, '2K');
+		assert.equal(seedreamLite.watermark, false);
+		assert.equal(seedreamLite.quality, undefined);
+		const seedreamPro = JSON.parse(
+			templateForRoute(
+				route({
+					upstream_protocol: 'openai',
+					upstream_operation: 'images.generations',
+					adapter: 'passthrough',
+					model_id: 'doubao-seedream-5-0-pro',
+					provider_model_name: 'doubao-seedream-5-0-pro',
+				}),
+				{
+					pricing_profile: JSON.stringify({
+						image_billing_mode: 'per_image',
+						image: { default: 0.22 },
+					}),
+					modalities: JSON.stringify({ input: ['text', 'image'], output: ['image'] }),
+				} as never,
+			),
+		) as { size?: string };
+		assert.equal(seedreamPro.size, '1K');
+		const seedreamFlash = JSON.parse(
+			templateForRoute(
+				route({
+					upstream_protocol: 'openai',
+					upstream_operation: 'images.generations',
+					adapter: 'passthrough',
+					model_id: 'doubao-seedream-5-0-flash',
+					provider_model_name: 'doubao-seedream-5-0-flash',
+				}),
+				{
+					pricing_profile: JSON.stringify({
+						image_billing_mode: 'per_image',
+						image: { default: 0.12 },
+					}),
+					modalities: JSON.stringify({ input: ['text', 'image'], output: ['image'] }),
+				} as never,
+			),
+		) as { size?: string };
+		assert.equal(seedreamFlash.size, '1K');
+	});
+
+	it('templateForRoute picks Responses vs Chat from upstream_operation', () => {
+		assert.equal(
+			templateForRoute(route({ upstream_operation: 'responses' }), undefined),
+			BODY_TEMPLATES.openai_responses,
+		);
+		assert.equal(templateForRoute(route({ upstream_operation: 'chat' }), undefined), BODY_TEMPLATES.openai);
+	});
+
+	it('classifies rerank routes separately and uses a rerank request template', () => {
 		const model = {
-			id: "deepseek-reranker",
-			output_modalities: JSON.stringify(["rerank"]),
+			id: 'deepseek-reranker',
+			output_modalities: JSON.stringify(['rerank']),
 		} as AdminModelRow;
-		assert.equal(resolveRouteModelKind(model), "rerank");
+		assert.equal(resolveRouteModelKind(model), 'rerank');
 		assert.equal(
 			templateForRoute(
 				route({
 					model_id: model.id,
 					provider_model_name: model.id,
-					upstream_operation: "rerank",
+					upstream_operation: 'rerank',
 				}),
-				model
+				model,
 			),
-			RERANK_BODY_TEMPLATE
+			RERANK_BODY_TEMPLATE,
 		);
 		const body = JSON.parse(RERANK_BODY_TEMPLATE) as Record<string, unknown>;
-		assert.equal(typeof body.query, "string");
+		assert.equal(typeof body.query, 'string');
 		assert.equal(Array.isArray(body.documents), true);
 	});
 
-	it("keeps the default Responses template without tools", () => {
+	it('keeps the default Responses template without tools', () => {
 		const body = JSON.parse(BODY_TEMPLATES.openai_responses) as {
 			tools?: unknown;
 			stream?: boolean;
 		};
 		assert.equal(body.stream, true);
 		assert.equal(body.tools, undefined);
-		assert.equal(
-			isResponsesPlaygroundRoute(route({ upstream_operation: "responses" })),
-			true
-		);
-		assert.equal(
-			isResponsesPlaygroundRoute(route({ upstream_operation: "chat" })),
-			false
-		);
+		assert.equal(isResponsesPlaygroundRoute(route({ upstream_operation: 'responses' })), true);
+		assert.equal(isResponsesPlaygroundRoute(route({ upstream_operation: 'chat' })), false);
 	});
 
-	it("openai_responses_tools includes stream and a function tool", () => {
+	it('openai_responses_tools includes stream and a function tool', () => {
 		const body = JSON.parse(BODY_TEMPLATES.openai_responses_tools) as {
 			stream?: boolean;
 			store?: boolean;
@@ -113,61 +326,45 @@ describe("playground-utils", () => {
 		};
 		assert.equal(body.stream, true);
 		assert.equal(body.store, false);
-		assert.equal(body.tools?.[0]?.type, "function");
-		assert.equal(body.tools?.[0]?.name, "write_note");
+		assert.equal(body.tools?.[0]?.type, 'function');
+		assert.equal(body.tools?.[0]?.name, 'write_note');
 		assert.ok(body.tools?.[0]?.parameters?.properties?.content);
 	});
 
-	it("matchResponsesPlaygroundSample distinguishes connectivity vs tools", () => {
-		assert.equal(
-			matchResponsesPlaygroundSample(BODY_TEMPLATES.openai_responses),
-			"connectivity"
-		);
-		assert.equal(
-			matchResponsesPlaygroundSample(BODY_TEMPLATES.openai_responses_tools),
-			"tools"
-		);
+	it('matchResponsesPlaygroundSample distinguishes connectivity vs tools', () => {
+		assert.equal(matchResponsesPlaygroundSample(BODY_TEMPLATES.openai_responses), 'connectivity');
+		assert.equal(matchResponsesPlaygroundSample(BODY_TEMPLATES.openai_responses_tools), 'tools');
 		assert.equal(matchResponsesPlaygroundSample('{ "input": [] }'), null);
 	});
 
-	it("LLM samples are valid JSON for all families and protocols", () => {
-		const families: PlaygroundLlmFamily[] = [
-			"openai_chat",
-			"openai_responses",
-			"anthropic",
-			"gemini",
-		];
+	it('LLM samples are valid JSON for all families and protocols', () => {
+		const families: PlaygroundLlmFamily[] = ['openai_chat', 'openai_responses', 'anthropic', 'gemini'];
 		for (const family of families) {
 			for (const sampleId of PLAYGROUND_LLM_SAMPLE_IDS) {
-				const parsed = JSON.parse(
-					LLM_SAMPLE_BODIES[family][sampleId]
-				) as Record<string, unknown>;
-				assert.equal(typeof parsed, "object");
-				assert.equal(
-					matchPlaygroundLlmSample(family, LLM_SAMPLE_BODIES[family][sampleId]),
-					sampleId
-				);
+				const parsed = JSON.parse(LLM_SAMPLE_BODIES[family][sampleId]) as Record<string, unknown>;
+				assert.equal(typeof parsed, 'object');
+				assert.equal(matchPlaygroundLlmSample(family, LLM_SAMPLE_BODIES[family][sampleId]), sampleId);
 			}
 		}
 	});
 
-	it("tools samples use the protocol-native write_note shape", () => {
+	it('tools samples use the protocol-native write_note shape', () => {
 		const chat = JSON.parse(LLM_SAMPLE_BODIES.openai_chat.tools) as {
 			tools?: Array<{ type?: string; function?: { name?: string } }>;
 		};
-		assert.equal(chat.tools?.[0]?.type, "function");
-		assert.equal(chat.tools?.[0]?.function?.name, "write_note");
+		assert.equal(chat.tools?.[0]?.type, 'function');
+		assert.equal(chat.tools?.[0]?.function?.name, 'write_note');
 
 		const responses = JSON.parse(LLM_SAMPLE_BODIES.openai_responses.tools) as {
 			tools?: Array<{ type?: string; name?: string }>;
 		};
-		assert.equal(responses.tools?.[0]?.type, "function");
-		assert.equal(responses.tools?.[0]?.name, "write_note");
+		assert.equal(responses.tools?.[0]?.type, 'function');
+		assert.equal(responses.tools?.[0]?.name, 'write_note');
 
 		const anthropic = JSON.parse(LLM_SAMPLE_BODIES.anthropic.tools) as {
 			tools?: Array<{ name?: string; input_schema?: unknown }>;
 		};
-		assert.equal(anthropic.tools?.[0]?.name, "write_note");
+		assert.equal(anthropic.tools?.[0]?.name, 'write_note');
 		assert.ok(anthropic.tools?.[0]?.input_schema);
 
 		const gemini = JSON.parse(LLM_SAMPLE_BODIES.gemini.tools) as {
@@ -184,155 +381,134 @@ describe("playground-utils", () => {
 				};
 			};
 		};
-		assert.equal(
-			gemini.tools?.[0]?.functionDeclarations?.[0]?.name,
-			"write_note"
-		);
-		assert.equal(
-			gemini.tools?.[0]?.functionDeclarations?.[0]?.parameters
-				?.additionalProperties,
-			undefined
-		);
-		assert.equal(gemini.toolConfig?.functionCallingConfig?.mode, "ANY");
-		assert.equal(
-			gemini.toolConfig?.functionCallingConfig?.streamFunctionCallArguments,
-			true
-		);
+		assert.equal(gemini.tools?.[0]?.functionDeclarations?.[0]?.name, 'write_note');
+		assert.equal(gemini.tools?.[0]?.functionDeclarations?.[0]?.parameters?.additionalProperties, undefined);
+		assert.equal(gemini.toolConfig?.functionCallingConfig?.mode, 'ANY');
+		assert.equal(gemini.toolConfig?.functionCallingConfig?.streamFunctionCallArguments, true);
 	});
 
-	it("reasoning samples set protocol-native thinking fields", () => {
+	it('reasoning samples set protocol-native thinking fields', () => {
 		const chat = JSON.parse(LLM_SAMPLE_BODIES.openai_chat.reasoning) as {
 			reasoning_effort?: string;
 		};
-		assert.equal(chat.reasoning_effort, "medium");
-		const responses = JSON.parse(
-			LLM_SAMPLE_BODIES.openai_responses.reasoning
-		) as {
+		assert.equal(chat.reasoning_effort, 'medium');
+		const responses = JSON.parse(LLM_SAMPLE_BODIES.openai_responses.reasoning) as {
 			reasoning?: { effort?: string };
 		};
-		assert.equal(responses.reasoning?.effort, "medium");
+		assert.equal(responses.reasoning?.effort, 'medium');
 		const anthropic = JSON.parse(LLM_SAMPLE_BODIES.anthropic.reasoning) as {
 			thinking?: { type?: string; budget_tokens?: number };
 			max_tokens?: number;
 		};
-		assert.equal(anthropic.thinking?.type, "enabled");
-		assert.ok(
-			(anthropic.max_tokens ?? 0) > (anthropic.thinking?.budget_tokens ?? 0)
-		);
+		assert.equal(anthropic.thinking?.type, 'enabled');
+		assert.ok((anthropic.max_tokens ?? 0) > (anthropic.thinking?.budget_tokens ?? 0));
 		const gemini = JSON.parse(LLM_SAMPLE_BODIES.gemini.reasoning) as {
 			generationConfig?: { thinkingConfig?: { includeThoughts?: boolean } };
 		};
-		assert.equal(
-			gemini.generationConfig?.thinkingConfig?.includeThoughts,
-			true
-		);
+		assert.equal(gemini.generationConfig?.thinkingConfig?.includeThoughts, true);
 	});
 
-	it("Claude reasoning samples follow Anthropic thinking modes by model generation", () => {
+	it('Claude reasoning samples follow Anthropic thinking modes by model generation', () => {
 		const parse = (modelId: string, providerModelName = modelId) =>
 			JSON.parse(
-				playgroundLlmSampleBody("anthropic", "reasoning", {
+				playgroundLlmSampleBody('anthropic', 'reasoning', {
 					modelId,
 					providerModelName,
-				})
+				}),
 			) as {
 				thinking?: { type?: string; budget_tokens?: number; display?: string };
 				output_config?: { effort?: string };
 			};
 
-		const haiku45 = parse("claude-haiku-4.5", "claude-haiku-4-5-20251001");
-		assert.equal(haiku45.thinking?.type, "enabled");
+		const haiku45 = parse('claude-haiku-4.5', 'claude-haiku-4-5-20251001');
+		assert.equal(haiku45.thinking?.type, 'enabled');
 		assert.equal(haiku45.thinking?.budget_tokens, 1024);
 		assert.equal(haiku45.output_config, undefined);
 
-		const sonnet45 = parse("claude-sonnet-4.5", "claude-sonnet-4-5-20250929");
-		assert.equal(sonnet45.thinking?.type, "enabled");
+		const sonnet45 = parse('claude-sonnet-4.5', 'claude-sonnet-4-5-20250929');
+		assert.equal(sonnet45.thinking?.type, 'enabled');
 		assert.equal(sonnet45.output_config, undefined);
 
-		const opus45 = parse("claude-opus-4.5", "claude-opus-4-5-20251101");
-		assert.equal(opus45.thinking?.type, "enabled");
+		const opus45 = parse('claude-opus-4.5', 'claude-opus-4-5-20251101');
+		assert.equal(opus45.thinking?.type, 'enabled');
 		assert.equal(opus45.thinking?.budget_tokens, 1024);
-		assert.equal(opus45.output_config?.effort, "medium");
+		assert.equal(opus45.output_config?.effort, 'medium');
 
-		const sonnet46 = parse("claude-sonnet-4.6", "claude-sonnet-4-6");
-		assert.equal(sonnet46.thinking?.type, "adaptive");
-		assert.equal(sonnet46.thinking?.display, "summarized");
-		assert.equal(sonnet46.output_config?.effort, "high");
+		const sonnet46 = parse('claude-sonnet-4.6', 'claude-sonnet-4-6');
+		assert.equal(sonnet46.thinking?.type, 'adaptive');
+		assert.equal(sonnet46.thinking?.display, 'summarized');
+		assert.equal(sonnet46.output_config?.effort, 'high');
 		assert.equal(sonnet46.thinking?.budget_tokens, undefined);
 
-		const opus47 = parse("claude-opus-4.7", "claude-opus-4-7");
-		assert.equal(opus47.thinking?.type, "adaptive");
-		assert.equal(opus47.output_config?.effort, "high");
+		const opus47 = parse('claude-opus-4.7', 'claude-opus-4-7');
+		assert.equal(opus47.thinking?.type, 'adaptive');
+		assert.equal(opus47.output_config?.effort, 'high');
 
-		const opus5 = parse("claude-opus-5");
-		assert.equal(opus5.thinking?.type, "adaptive");
-		assert.equal(opus5.thinking?.display, "summarized");
+		const opus5 = parse('claude-opus-5');
+		assert.equal(opus5.thinking?.type, 'adaptive');
+		assert.equal(opus5.thinking?.display, 'summarized');
 
-		const fable5 = parse("claude-fable-5");
-		assert.equal(fable5.thinking?.type, "adaptive");
+		const sonnet55 = parse('claude-sonnet-5-5');
+		assert.equal(sonnet55.thinking?.type, 'adaptive');
+		assert.equal(sonnet55.thinking?.display, 'summarized');
+		assert.equal(sonnet55.output_config?.effort, 'high');
+		assert.equal(sonnet55.thinking?.budget_tokens, undefined);
 
-		const sonnet4 = parse("claude-sonnet-4", "claude-sonnet-4-20250514");
-		assert.equal(sonnet4.thinking?.type, "enabled");
+		const fable5 = parse('claude-fable-5');
+		assert.equal(fable5.thinking?.type, 'adaptive');
+
+		const fable51 = parse('claude-fable-5-1');
+		assert.equal(fable51.thinking?.type, 'adaptive');
+		assert.equal(fable51.output_config?.effort, 'high');
+
+		const sonnet4 = parse('claude-sonnet-4', 'claude-sonnet-4-20250514');
+		assert.equal(sonnet4.thinking?.type, 'enabled');
 		assert.equal(sonnet4.output_config, undefined);
 
-		const sonnet37 = parse("claude-3.7-sonnet", "claude-3-7-sonnet-20250219");
-		assert.equal(sonnet37.thinking?.type, "enabled");
+		const sonnet37 = parse('claude-3.7-sonnet', 'claude-3-7-sonnet-20250219');
+		assert.equal(sonnet37.thinking?.type, 'enabled');
 		assert.equal(sonnet37.output_config, undefined);
 
 		assert.equal(
 			matchPlaygroundLlmSample(
-				"anthropic",
-				playgroundLlmSampleBody("anthropic", "reasoning", {
-					modelId: "claude-opus-4.8",
+				'anthropic',
+				playgroundLlmSampleBody('anthropic', 'reasoning', {
+					modelId: 'claude-opus-4.8',
 				}),
-				{ modelId: "claude-opus-4.8" }
+				{ modelId: 'claude-opus-4.8' },
 			),
-			"reasoning"
+			'reasoning',
 		);
 	});
 
-	it("Gemini reasoning samples use thinkingBudget on 2.5 and thinkingLevel on 3+", () => {
+	it('Gemini reasoning samples use thinkingBudget on 2.5 and thinkingLevel on 3+', () => {
 		const gemini25 = JSON.parse(
-			playgroundLlmSampleBody("gemini", "reasoning", {
-				modelId: "gemini-2.5-pro",
-			})
+			playgroundLlmSampleBody('gemini', 'reasoning', {
+				modelId: 'gemini-2.5-pro',
+			}),
 		) as {
 			generationConfig?: {
 				thinkingConfig?: { thinkingBudget?: number; thinkingLevel?: string };
 			};
 		};
-		assert.equal(
-			gemini25.generationConfig?.thinkingConfig?.thinkingBudget,
-			1024
-		);
-		assert.equal(
-			gemini25.generationConfig?.thinkingConfig?.thinkingLevel,
-			undefined
-		);
+		assert.equal(gemini25.generationConfig?.thinkingConfig?.thinkingBudget, 1024);
+		assert.equal(gemini25.generationConfig?.thinkingConfig?.thinkingLevel, undefined);
 
 		const gemini35 = JSON.parse(
-			playgroundLlmSampleBody("gemini", "reasoning", {
-				modelId: "gemini-3.5-flash",
-			})
+			playgroundLlmSampleBody('gemini', 'reasoning', {
+				modelId: 'gemini-3.5-flash',
+			}),
 		) as {
 			generationConfig?: {
 				thinkingConfig?: { thinkingBudget?: number; thinkingLevel?: string };
 			};
 		};
-		assert.equal(
-			gemini35.generationConfig?.thinkingConfig?.thinkingLevel,
-			"MEDIUM"
-		);
-		assert.equal(
-			gemini35.generationConfig?.thinkingConfig?.thinkingBudget,
-			undefined
-		);
+		assert.equal(gemini35.generationConfig?.thinkingConfig?.thinkingLevel, 'MEDIUM');
+		assert.equal(gemini35.generationConfig?.thinkingConfig?.thinkingBudget, undefined);
 	});
 
-	it("omits Chat Completions reasoning_effort for GPT-4o", () => {
-		const gpt4o = JSON.parse(
-			playgroundLlmSampleBody("openai_chat", "reasoning", { modelId: "gpt-4o" })
-		) as {
+	it('omits Chat Completions reasoning_effort for GPT-4o', () => {
+		const gpt4o = JSON.parse(playgroundLlmSampleBody('openai_chat', 'reasoning', { modelId: 'gpt-4o' })) as {
 			reasoning_effort?: string;
 			max_tokens?: number;
 			max_completion_tokens?: number;
@@ -340,199 +516,177 @@ describe("playground-utils", () => {
 		assert.equal(gpt4o.reasoning_effort, undefined);
 		assert.equal(gpt4o.max_tokens, 1024);
 		const gpt5 = JSON.parse(
-			playgroundLlmSampleBody("openai_chat", "reasoning", {
-				modelId: "gpt-5.4",
-			})
+			playgroundLlmSampleBody('openai_chat', 'reasoning', {
+				modelId: 'gpt-5.4',
+			}),
 		) as {
 			reasoning_effort?: string;
 			max_tokens?: number;
 			max_completion_tokens?: number;
 		};
-		assert.equal(gpt5.reasoning_effort, "medium");
+		assert.equal(gpt5.reasoning_effort, 'medium');
 		assert.equal(gpt5.max_completion_tokens, 4096);
 		assert.equal(gpt5.max_tokens, undefined);
+		const gpt6 = JSON.parse(playgroundLlmSampleBody('openai_chat', 'reasoning', { modelId: 'gpt-6-astra' })) as {
+			reasoning_effort?: string;
+			max_tokens?: number;
+			max_completion_tokens?: number;
+		};
+		assert.equal(gpt6.reasoning_effort, 'medium');
+		assert.equal(gpt6.max_completion_tokens, 4096);
+		assert.equal(gpt6.max_tokens, undefined);
 	});
 
-	it("uses OpenAI-compat vendor thinking fields for DeepSeek, GLM, Qwen, MiniMax, and Kimi", () => {
+	it('uses OpenAI-compat vendor thinking fields for DeepSeek, GLM, Qwen, MiniMax, and Kimi', () => {
 		const deepseek = JSON.parse(
-			playgroundLlmSampleBody("openai_chat", "reasoning", {
-				modelId: "deepseek-v4-pro",
-			})
+			playgroundLlmSampleBody('openai_chat', 'reasoning', {
+				modelId: 'deepseek-v4-pro',
+			}),
 		) as { thinking?: { type?: string }; reasoning_effort?: string };
-		assert.equal(deepseek.thinking?.type, "enabled");
-		assert.equal(deepseek.reasoning_effort, "high");
+		assert.equal(deepseek.thinking?.type, 'enabled');
+		assert.equal(deepseek.reasoning_effort, 'high');
 
-		const glm5 = JSON.parse(
-			playgroundLlmSampleBody("openai_chat", "reasoning", { modelId: "glm-5" })
-		) as { thinking?: { type?: string }; reasoning_effort?: string };
-		assert.equal(glm5.thinking?.type, "enabled");
+		const glm5 = JSON.parse(playgroundLlmSampleBody('openai_chat', 'reasoning', { modelId: 'glm-5' })) as {
+			thinking?: { type?: string };
+			reasoning_effort?: string;
+		};
+		assert.equal(glm5.thinking?.type, 'enabled');
 		assert.equal(glm5.reasoning_effort, undefined);
 
 		const glm52 = JSON.parse(
-			playgroundLlmSampleBody("openai_chat", "reasoning", {
-				modelId: "glm-5.2",
-			})
+			playgroundLlmSampleBody('openai_chat', 'reasoning', {
+				modelId: 'glm-5.2',
+			}),
 		) as { thinking?: { type?: string }; reasoning_effort?: string };
-		assert.equal(glm52.thinking?.type, "enabled");
-		assert.equal(glm52.reasoning_effort, "high");
+		assert.equal(glm52.thinking?.type, 'enabled');
+		assert.equal(glm52.reasoning_effort, 'high');
 
 		const qwen = JSON.parse(
-			playgroundLlmSampleBody("openai_chat", "reasoning", {
-				modelId: "qwen3.8-max",
-			})
+			playgroundLlmSampleBody('openai_chat', 'reasoning', {
+				modelId: 'qwen3.8-max',
+			}),
 		) as {
 			enable_thinking?: boolean;
 			reasoning_effort?: string;
 			thinking?: unknown;
 		};
 		assert.equal(qwen.enable_thinking, true);
-		assert.equal(qwen.reasoning_effort, "medium");
+		assert.equal(qwen.reasoning_effort, 'medium');
 		assert.equal(qwen.thinking, undefined);
 
 		const minimax = JSON.parse(
-			playgroundLlmSampleBody("openai_chat", "reasoning", {
-				modelId: "minimax-m2.7",
-			})
+			playgroundLlmSampleBody('openai_chat', 'reasoning', {
+				modelId: 'minimax-m2.7',
+			}),
 		) as {
 			reasoning_split?: boolean;
 			thinking?: { type?: string };
 			reasoning_effort?: string;
 		};
 		assert.equal(minimax.reasoning_split, true);
-		assert.equal(minimax.thinking?.type, "adaptive");
+		assert.equal(minimax.thinking?.type, 'adaptive');
 		assert.equal(minimax.reasoning_effort, undefined);
 
 		const kimi = JSON.parse(
-			playgroundLlmSampleBody("openai_chat", "reasoning", {
-				modelId: "kimi-k2.5",
-			})
+			playgroundLlmSampleBody('openai_chat', 'reasoning', {
+				modelId: 'kimi-k2.5',
+			}),
 		) as { thinking?: { type?: string } };
-		assert.equal(kimi.thinking?.type, "enabled");
+		assert.equal(kimi.thinking?.type, 'enabled');
 
 		const doubao = JSON.parse(
-			playgroundLlmSampleBody("openai_chat", "reasoning", {
-				modelId: "doubao-seed-2-1-pro-260628",
-			})
+			playgroundLlmSampleBody('openai_chat', 'reasoning', {
+				modelId: 'doubao-seed-2-1-pro-260628',
+			}),
 		) as { thinking?: { type?: string } };
-		assert.equal(doubao.thinking?.type, "enabled");
+		assert.equal(doubao.thinking?.type, 'enabled');
 	});
 
-	it("uses max_completion_tokens for GPT-5 connectivity and omits Gemini 2.5 tool arg streaming", () => {
+	it('uses max_completion_tokens for GPT-5 connectivity and omits Gemini 2.5 tool arg streaming', () => {
 		const gpt5 = JSON.parse(
-			playgroundLlmSampleBody("openai_chat", "connectivity", {
-				modelId: "gpt-5.4",
-			})
+			playgroundLlmSampleBody('openai_chat', 'connectivity', {
+				modelId: 'gpt-5.4',
+			}),
 		) as { max_completion_tokens?: number; max_tokens?: number };
 		assert.equal(gpt5.max_completion_tokens, 256);
 		assert.equal(gpt5.max_tokens, undefined);
 
-		const gemini25 = JSON.parse(
-			playgroundLlmSampleBody("gemini", "tools", {
-				modelId: "gemini-2.5-flash",
-			})
-		) as {
-			toolConfig?: {
-				functionCallingConfig?: { streamFunctionCallArguments?: boolean };
-			};
+		const gpt6 = JSON.parse(playgroundLlmSampleBody('openai_chat', 'connectivity', { modelId: 'gpt-6-astra' })) as {
+			max_completion_tokens?: number;
+			max_tokens?: number;
 		};
-		assert.equal(
-			gemini25.toolConfig?.functionCallingConfig?.streamFunctionCallArguments,
-			undefined
-		);
+		assert.equal(gpt6.max_completion_tokens, 256);
+		assert.equal(gpt6.max_tokens, undefined);
+
+		const gemini25 = JSON.parse(playgroundLlmSampleBody('gemini', 'tools', { modelId: 'gemini-2.5-flash' })) as {
+			toolConfig?: { functionCallingConfig?: { streamFunctionCallArguments?: boolean } };
+		};
+		assert.equal(gemini25.toolConfig?.functionCallingConfig?.streamFunctionCallArguments, undefined);
 
 		const gemini3 = JSON.parse(
-			playgroundLlmSampleBody("gemini", "tools", {
-				modelId: "gemini-3.5-flash",
-			})
+			playgroundLlmSampleBody('gemini', 'tools', {
+				modelId: 'gemini-3.5-flash',
+			}),
 		) as {
 			toolConfig?: {
 				functionCallingConfig?: { streamFunctionCallArguments?: boolean };
 			};
 		};
-		assert.equal(
-			gemini3.toolConfig?.functionCallingConfig?.streamFunctionCallArguments,
-			true
-		);
+		assert.equal(gemini3.toolConfig?.functionCallingConfig?.streamFunctionCallArguments, true);
 	});
 
-	it("resolvePlaygroundLlmFamily maps chat, responses, anthropic, gemini", () => {
+	it('resolvePlaygroundLlmFamily maps chat, responses, anthropic, gemini', () => {
+		assert.equal(resolvePlaygroundLlmFamily(route({ upstream_operation: 'chat' })), 'openai_chat');
+		assert.equal(resolvePlaygroundLlmFamily(route({ upstream_operation: 'responses' })), 'openai_responses');
 		assert.equal(
-			resolvePlaygroundLlmFamily(route({ upstream_operation: "chat" })),
-			"openai_chat"
-		);
-		assert.equal(
-			resolvePlaygroundLlmFamily(route({ upstream_operation: "responses" })),
-			"openai_responses"
+			resolvePlaygroundLlmFamily(
+				route({
+					upstream_protocol: 'anthropic',
+					upstream_operation: 'messages',
+				}),
+			),
+			'anthropic',
 		);
 		assert.equal(
 			resolvePlaygroundLlmFamily(
 				route({
-					upstream_protocol: "anthropic",
-					upstream_operation: "messages",
-				})
+					upstream_protocol: 'gemini',
+					upstream_operation: 'generateContent',
+				}),
 			),
-			"anthropic"
+			'gemini',
+		);
+		assert.equal(resolvePlaygroundLlmFamily(route({ upstream_operation: 'images.generations' })), 'openai_chat');
+		assert.equal(
+			playgroundLlmFamilyForRoute(route({ upstream_operation: 'images.generations' }), { isImage: true }),
+			null,
 		);
 		assert.equal(
-			resolvePlaygroundLlmFamily(
-				route({
-					upstream_protocol: "gemini",
-					upstream_operation: "generateContent",
-				})
-			),
-			"gemini"
-		);
-		assert.equal(
-			resolvePlaygroundLlmFamily(
-				route({ upstream_operation: "images.generations" })
-			),
-			"openai_chat"
-		);
-		assert.equal(
-			playgroundLlmFamilyForRoute(
-				route({ upstream_operation: "images.generations" }),
-				{ isImage: true }
-			),
-			null
-		);
-		assert.equal(
-			playgroundLlmFamilyForRoute(route({ upstream_protocol: "anthropic" }), {
+			playgroundLlmFamilyForRoute(route({ upstream_protocol: 'anthropic' }), {
 				isImage: true,
 			}),
-			null
+			null,
 		);
 	});
 
-	it("isPlaygroundBodyDirty ignores whitespace-only edits", () => {
-		assert.equal(
-			isPlaygroundBodyDirty(BODY_TEMPLATES.openai, BODY_TEMPLATES.openai),
-			false
-		);
-		assert.equal(
-			isPlaygroundBodyDirty(
-				`  ${BODY_TEMPLATES.openai}  `,
-				BODY_TEMPLATES.openai
-			),
-			false
-		);
-		assert.equal(
-			isPlaygroundBodyDirty('{ "messages": [] }', BODY_TEMPLATES.openai),
-			true
-		);
+	it('isPlaygroundBodyDirty ignores whitespace-only edits', () => {
+		assert.equal(isPlaygroundBodyDirty(BODY_TEMPLATES.openai, BODY_TEMPLATES.openai), false);
+		assert.equal(isPlaygroundBodyDirty(`  ${BODY_TEMPLATES.openai}  `, BODY_TEMPLATES.openai), false);
+		assert.equal(isPlaygroundBodyDirty('{ "messages": [] }', BODY_TEMPLATES.openai), true);
 	});
 
-	it("previewPlaygroundMergedBody merges custom_params with user fields winning", () => {
+	it('previewPlaygroundMergedBody merges custom_params with user fields winning', () => {
 		const result = previewPlaygroundMergedBody({
 			bodyText: JSON.stringify({
-				model: "glm-5.3",
+				model: 'glm-5.3',
 				stream: true,
 				messages: [],
 			}),
 			customParams: JSON.stringify({ tool_stream: true, stream: false }),
-			upstreamProtocol: "openai",
-			providerModelName: "glm-5.3-upstream",
+			upstreamProtocol: 'openai',
+			providerModelName: 'glm-5.3-upstream',
 		});
-		assert.equal(result.status, "preview");
+		assert.equal(result.status, 'preview');
 		const body = JSON.parse(result.json) as {
 			tool_stream?: boolean;
 			stream?: boolean;
@@ -540,47 +694,137 @@ describe("playground-utils", () => {
 		};
 		assert.equal(body.tool_stream, true);
 		assert.equal(body.stream, true);
-		assert.equal(body.model, "glm-5.3-upstream");
+		assert.equal(body.model, 'glm-5.3-upstream');
 	});
 
-	it("previewPlaygroundMergedBody deep-merges nested custom_params objects", () => {
+	it('previewPlaygroundMergedBody deep-merges nested custom_params objects', () => {
 		const result = previewPlaygroundMergedBody({
 			bodyText: JSON.stringify({ parameters: { temperature: 0.2 } }),
 			customParams: JSON.stringify({
 				parameters: { temperature: 0.8, tool_stream: true },
 			}),
-			upstreamProtocol: "dashscope",
-			providerModelName: "qwen-audio",
+			upstreamProtocol: 'dashscope',
+			providerModelName: 'qwen-audio',
 		});
-		assert.equal(result.status, "preview");
+		assert.equal(result.status, 'preview');
 		const body = JSON.parse(result.json) as {
 			model?: string;
 			parameters?: { temperature?: number; tool_stream?: boolean };
 		};
-		assert.equal(body.model, "qwen-audio");
+		assert.equal(body.model, 'qwen-audio');
 		assert.equal(body.parameters?.temperature, 0.2);
 		assert.equal(body.parameters?.tool_stream, true);
 	});
 
-	it("previewPlaygroundMergedBody does not rewrite Gemini model and rejects invalid JSON", () => {
+	it('previewPlaygroundMergedBody does not rewrite Gemini model and rejects invalid JSON', () => {
 		const preview = previewPlaygroundMergedBody({
 			bodyText: JSON.stringify({ contents: [] }),
 			customParams: JSON.stringify({
 				generationConfig: { thinkingConfig: { includeThoughts: true } },
 			}),
-			upstreamProtocol: "gemini",
-			providerModelName: "gemini-3.1-pro",
+			upstreamProtocol: 'gemini',
+			providerModelName: 'gemini-3.1-pro',
 		});
-		assert.equal(preview.status, "preview");
+		assert.equal(preview.status, 'preview');
 		const body = JSON.parse(preview.json) as {
 			model?: string;
 			generationConfig?: unknown;
 		};
 		assert.equal(body.model, undefined);
 		assert.ok(body.generationConfig);
-		assert.equal(
-			previewPlaygroundMergedBody({ bodyText: "{not json" }).status,
-			"invalid"
+		assert.equal(previewPlaygroundMergedBody({ bodyText: '{not json' }).status, 'invalid');
+	});
+
+	it('previewPlaygroundMergedBody strips custom_params.headers from the body preview', () => {
+		const result = previewPlaygroundMergedBody({
+			bodyText: JSON.stringify({ messages: [] }),
+			customParams: JSON.stringify({
+				temperature: 0.5,
+				headers: { 'HTTP-Referer': 'https://example.com' },
+			}),
+			upstreamProtocol: 'openai',
+			providerModelName: 'gpt-4o-mini',
+		});
+		assert.equal(result.status, 'preview');
+		const body = JSON.parse(result.json) as { temperature?: number; headers?: unknown; model?: string };
+		assert.equal(body.temperature, 0.5);
+		assert.equal(body.headers, undefined);
+		assert.equal(body.model, 'gpt-4o-mini');
+	});
+
+	it('previewPlaygroundMergedBody lets route fields win when force_override.body is on', () => {
+		const result = previewPlaygroundMergedBody({
+			bodyText: JSON.stringify({ model: 'glm-5.3', max_tokens: 8000, messages: [] }),
+			customParams: JSON.stringify({
+				body: { max_tokens: 32000, thinking: { type: 'enabled' } },
+				force_override: { body: true },
+			}),
+			upstreamProtocol: 'openai',
+			providerModelName: 'glm-5.3-upstream',
+		});
+		assert.equal(result.status, 'preview');
+		const body = JSON.parse(result.json) as {
+			max_tokens?: number;
+			thinking?: { type?: string };
+			model?: string;
+		};
+		assert.equal(body.max_tokens, 32000);
+		assert.equal(body.thinking?.type, 'enabled');
+		assert.equal(body.model, 'glm-5.3-upstream');
+	});
+
+	it('previewPlaygroundRouteHeaders lists extra headers and skips protected names', () => {
+		assert.deepEqual(previewPlaygroundRouteHeaders(null), {});
+		assert.equal(formatPlaygroundRouteHeadersPreview({}), '');
+		const headers = previewPlaygroundRouteHeaders(
+			JSON.stringify({
+				temperature: 0.5,
+				headers: {
+					'HTTP-Referer': 'https://example.com',
+					'X-Title': 'My App',
+					Authorization: 'Bearer secret',
+				},
+			}),
 		);
+		assert.deepEqual(headers, {
+			'HTTP-Referer': 'https://example.com',
+			'X-Title': 'My App',
+		});
+		assert.equal(formatPlaygroundRouteHeadersPreview(headers), 'HTTP-Referer: https://example.com\nX-Title: My App');
+	});
+
+	it('previewPlaygroundOutboundHeaderRows merges driver headers and tags custom_params', () => {
+		const rows = previewPlaygroundOutboundHeaderRows({
+			customParams: JSON.stringify({
+				headers: { x: '1', Authorization: 'Bearer secret' },
+			}),
+			upstreamProtocol: 'openai',
+		});
+		assert.deepEqual(
+			rows.map((row) => ({ name: row.name, source: row.source })),
+			[
+				{ name: 'Content-Type', source: 'provider' },
+				{ name: 'Authorization', source: 'provider' },
+				{ name: 'x', source: 'custom_params' },
+			],
+		);
+		const tagged = rows.find((row) => row.name === 'x');
+		assert.equal(tagged?.value, '1');
+	});
+
+	it('previewPlaygroundOutboundHeaderRows prefers sent headers and still tags extras', () => {
+		const rows = previewPlaygroundOutboundHeaderRows({
+			customParams: JSON.stringify({ headers: { x: '1' } }),
+			upstreamProtocol: 'openai',
+			sentHeaders: {
+				'Content-Type': 'application/json',
+				Authorization: 'Bearer sk-abcd…mnop',
+				'X-DashScope-Async': 'enable',
+				x: '1',
+			},
+		});
+		assert.equal(rows.find((row) => row.name === 'X-DashScope-Async')?.source, 'provider');
+		assert.equal(rows.find((row) => row.name === 'x')?.source, 'custom_params');
+		assert.equal(rows.find((row) => row.name === 'Authorization')?.value, 'Bearer sk-abcd…mnop');
 	});
 });

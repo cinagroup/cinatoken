@@ -1,20 +1,12 @@
-"use client";
+'use client';
 
-import { useState, type ReactNode } from "react";
-import { useTranslations } from "next-intl";
+import { type ReactNode } from 'react';
+import { PlusIcon } from '@heroicons/react/24/outline';
+import { useTranslations } from 'next-intl';
 
-import type {
-	ImageBillingModeDraft,
-	ImagePerImageDraft,
-	PricingTierDraftRow,
-} from "@/lib/pricing-tiers-draft";
-import { getGatewayCurrencySymbol } from "@/lib/format-gateway-currency";
-import {
-	createEmptyTierRow,
-	DRAFT_UPTO_OPEN_SENTINEL,
-	ensureLastRowOpenUptoDraft,
-	formatPricingProfilePreview,
-} from "@/lib/pricing-tiers-draft";
+import type { ImageBillingModeDraft, ImagePerImageDraft, PricingTierDraftRow } from '@/lib/pricing-tiers-draft';
+import { getGatewayCurrencySymbol } from '@/lib/format-gateway-currency';
+import { createEmptyTierRow, DRAFT_UPTO_OPEN_SENTINEL, ensureLastRowOpenUptoDraft } from '@/lib/pricing-tiers-draft';
 
 export type PricingTiersEditorProps = {
 	rows: PricingTierDraftRow[];
@@ -31,7 +23,7 @@ export type PricingTiersEditorProps = {
 	 * `image`：展示 Image token 单价列（text / cached text / image in / cached image in / image out）。
 	 * `llm`（默认）：chat 常用 input/output/cache 列。
 	 */
-	variant?: "llm" | "image";
+	variant?: 'llm' | 'image';
 	/** Image variant：token / per_image 模式（与 `perImageDraft` 成对传入） */
 	imageBillingMode?: ImageBillingModeDraft;
 	onImageBillingModeChange?: (mode: ImageBillingModeDraft) => void;
@@ -42,16 +34,13 @@ export type PricingTiersEditorProps = {
 function updateRow(
 	rows: PricingTierDraftRow[],
 	id: string,
-	patch: Partial<Omit<PricingTierDraftRow, "id">>
+	patch: Partial<Omit<PricingTierDraftRow, 'id'>>,
 ): PricingTierDraftRow[] {
 	return rows.map((r) => (r.id === id ? { ...r, ...patch } : r));
 }
 
 /** 原仅末档（开放上界）时拆档，给上一档一个可编辑的默认上界 */
-const DEFAULT_PROMOTED_FINITE_UPTO = "1000000";
-
-const linkActionClass =
-	"text-sm font-medium text-blue-600 underline-offset-2 hover:text-blue-800 hover:underline bg-transparent p-0 border-0 cursor-pointer";
+const DEFAULT_PROMOTED_FINITE_UPTO = '1000000';
 
 function PriceCell(props: {
 	value: string;
@@ -80,61 +69,52 @@ export function PricingTiersEditor({
 	minRows = 0,
 	title,
 	toolbarStart,
-	billingCurrencyCode = "USD",
-	variant = "llm",
-	imageBillingMode = "token",
+	billingCurrencyCode = 'USD',
+	variant = 'llm',
+	imageBillingMode = 'token',
 	onImageBillingModeChange,
 	perImageDraft,
 	onPerImageDraftChange,
 }: PricingTiersEditorProps) {
-	const t = useTranslations("pricing.tiersEditor");
-	const tImage = useTranslations("pricing.readOnlyImage");
-	const tBilling = useTranslations("pricing.imageBilling");
-	const tPricing = useTranslations("pricing");
-	const tCommon = useTranslations("common");
+	const t = useTranslations('pricing.tiersEditor');
+	const tImage = useTranslations('pricing.readOnlyImage');
+	const tBilling = useTranslations('pricing.imageBilling');
+	const tPricing = useTranslations('pricing');
+	const tCommon = useTranslations('common');
 	const billCode = billingCurrencyCode.trim().toUpperCase();
 	const billSym = getGatewayCurrencySymbol(billCode);
 	const perMPlaceholder = `${billSym}/M`;
 	const perImagePlaceholder = `${billSym}/image`;
 	const unitFooter =
-		variant === "image"
-			? imageBillingMode === "per_image"
-				? tBilling("footerPerImage", { currency: billSym })
-				: t("footerImage", { currency: billSym })
-			: t("footer", { currency: billSym });
-	const [jsonPreviewOpen, setJsonPreviewOpen] = useState(false);
+		variant === 'image'
+			? imageBillingMode === 'per_image'
+				? tBilling('footerPerImage', { currency: billSym })
+				: t('footerImage', { currency: billSym })
+			: t('footer', { currency: billSym });
 	const canRemove = rows.length > minRows;
-	const imageDraftForPreview =
-		variant === "image" && perImageDraft
-			? { mode: imageBillingMode, perImage: perImageDraft }
-			: undefined;
-	const jsonPreview = formatPricingProfilePreview(rows, imageDraftForPreview);
 	const hasToolbarLeft = Boolean(toolbarStart) || Boolean(title);
-	const isImage = variant === "image";
-	const isPerImage = isImage && imageBillingMode === "per_image";
+	const isImage = variant === 'image';
+	const isPerImage = isImage && imageBillingMode === 'per_image';
 	const colSpan = isImage && !isPerImage ? 7 : isPerImage ? 1 : 6;
 	/** Image 列名与 Route 只读区共用 `pricing.readOnlyImage`，避免两套文案分叉 */
 	const imageColHeaders =
 		isImage && !isPerImage
 			? ([
-					tImage("textInput"),
-					tImage("cachedText"),
-					tImage("imageInput"),
-					tImage("cachedImageInput"),
-					tImage("imageOutput"),
-			  ] as const)
+					tImage('textInput'),
+					tImage('cachedText'),
+					tImage('imageInput'),
+					tImage('cachedImageInput'),
+					tImage('imageOutput'),
+				] as const)
 			: null;
 
 	const addTier = () => {
-		const base =
-			rows.length > 0 ? rows[rows.length - 1]! : createEmptyTierRow();
+		const base = rows.length > 0 ? rows[rows.length - 1]! : createEmptyTierRow();
 		const promoted =
 			rows.length > 0
 				? rows.map((r, i) =>
-						i === rows.length - 1 && r.upto.trim() === ""
-							? { ...r, upto: DEFAULT_PROMOTED_FINITE_UPTO }
-							: r
-				  )
+						i === rows.length - 1 && r.upto.trim() === '' ? { ...r, upto: DEFAULT_PROMOTED_FINITE_UPTO } : r,
+					)
 				: [];
 		const newLast = {
 			...createEmptyTierRow(),
@@ -159,56 +139,51 @@ export function PricingTiersEditor({
 	};
 
 	const perImage = perImageDraft ?? {
-		default: "",
-		inputDefault: "",
-		uncertainResultPolicy: "requested" as const,
+		default: '',
+		inputDefault: '',
+		uncertainResultPolicy: 'requested' as const,
 	};
 
 	return (
 		<div className="space-y-3">
-			<div
-				className={`mb-1 flex min-h-[1.25rem] flex-wrap items-center gap-x-3 gap-y-2 ${
-					hasToolbarLeft ? "justify-between" : "justify-end"
-				}`}
-			>
-				{hasToolbarLeft ? (
-					<div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-3 gap-y-1.5 text-left">
-						{toolbarStart}
-						{title ? (
-							<span className="text-sm font-medium text-gray-700">{title}</span>
+			<div>
+				<div
+					className={`flex min-h-[1.25rem] flex-wrap items-start gap-x-3 gap-y-2 ${hasToolbarLeft ? 'justify-between' : 'justify-end'}`}
+				>
+					{hasToolbarLeft ? (
+						<div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-3 gap-y-1.5 text-left">
+							{toolbarStart}
+							{title ? <span className="text-sm font-medium text-gray-800">{title}</span> : null}
+						</div>
+					) : null}
+					<div className="flex shrink-0 flex-wrap items-center justify-end gap-x-3 gap-y-1.5">
+						{!isPerImage ? (
+							<button
+								type="button"
+								onClick={addTier}
+								className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md border border-dashed border-gray-400 bg-white text-gray-600 shadow-sm transition hover:border-gray-500 hover:bg-gray-50 hover:text-gray-900"
+								aria-label={t('add')}
+								title={t('add')}
+							>
+								<PlusIcon className="h-3.5 w-3.5" aria-hidden />
+							</button>
 						) : null}
 					</div>
-				) : null}
-				<div className="flex shrink-0 flex-wrap items-center justify-end gap-x-3 gap-y-1.5">
-					{!isPerImage ? (
-						<button type="button" onClick={addTier} className={linkActionClass}>
-							{t("add")}
-						</button>
-					) : null}
-					<button
-						type="button"
-						onClick={() => setJsonPreviewOpen((v) => !v)}
-						aria-expanded={jsonPreviewOpen}
-						className={linkActionClass}
-					>
-						{jsonPreviewOpen ? tCommon("hide") : t("preview")}
-					</button>
 				</div>
+				<p className="mt-1 text-xs leading-5 text-slate-500">{unitFooter}</p>
 			</div>
 			{isImage && onImageBillingModeChange ? (
 				<div className="space-y-1.5">
-					<p className="text-[11px] font-medium text-gray-600">
-						{tBilling("modeLabel")}
-					</p>
+					<p className="text-[11px] font-medium text-gray-600">{tBilling('modeLabel')}</p>
 					<div
 						className="inline-flex rounded-md border border-gray-200 bg-gray-50 p-0.5"
 						role="group"
-						aria-label={tBilling("modeLabel")}
+						aria-label={tBilling('modeLabel')}
 					>
 						{(
 							[
-								{ id: "token" as const, label: tBilling("modeToken") },
-								{ id: "per_image" as const, label: tBilling("modePerImage") },
+								{ id: 'token' as const, label: tBilling('modeToken') },
+								{ id: 'per_image' as const, label: tBilling('modePerImage') },
 							] as const
 						).map((opt) => {
 							const active = imageBillingMode === opt.id;
@@ -223,8 +198,8 @@ export function PricingTiersEditor({
 									}}
 									className={
 										active
-											? "rounded px-3 py-1.5 text-sm font-medium bg-white text-gray-900 shadow-sm"
-											: "rounded px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-900"
+											? 'rounded px-3 py-1.5 text-sm font-medium bg-white text-gray-900 shadow-sm'
+											: 'rounded px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-900'
 									}
 								>
 									{opt.label}
@@ -234,18 +209,12 @@ export function PricingTiersEditor({
 					</div>
 				</div>
 			) : null}
-			{isImage && !isPerImage ? (
-				<p className="text-[11px] text-gray-500 leading-relaxed">
-					{t("imageHint")}
-				</p>
-			) : null}
+			{isImage && !isPerImage ? <p className="text-[11px] text-gray-500 leading-relaxed">{t('imageHint')}</p> : null}
 			{isPerImage && onPerImageDraftChange ? (
 				<div className="overflow-hidden rounded-md border border-gray-200 bg-white">
 					<div className="grid gap-3 p-3 sm:grid-cols-2">
 						<div>
-							<label className="mb-1 block text-[11px] font-medium text-gray-600">
-								{tBilling("outputDefault")}
-							</label>
+							<label className="mb-1 block text-[11px] font-medium text-gray-600">{tBilling('outputDefault')}</label>
 							<input
 								type="text"
 								inputMode="decimal"
@@ -262,7 +231,7 @@ export function PricingTiersEditor({
 						</div>
 						<div>
 							<label className="mb-1 block text-[11px] font-medium text-gray-600">
-								{tBilling("inputDefaultOptional")}
+								{tBilling('inputDefaultOptional')}
 							</label>
 							<input
 								type="text"
@@ -275,33 +244,26 @@ export function PricingTiersEditor({
 									})
 								}
 								className="w-full rounded border border-gray-200 px-2 py-1.5 font-mono text-sm tabular-nums focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500/30"
-								placeholder={tBilling("inputDefaultEmpty")}
+								placeholder={tBilling('inputDefaultEmpty')}
 							/>
 						</div>
 						<div className="sm:col-span-2">
-							<label className="mb-1 block text-[11px] font-medium text-gray-600">
-								{tBilling("uncertainPolicy")}
-							</label>
+							<label className="mb-1 block text-[11px] font-medium text-gray-600">{tBilling('uncertainPolicy')}</label>
 							<select
-								value={perImage.uncertainResultPolicy || "requested"}
+								value={perImage.uncertainResultPolicy || 'requested'}
 								onChange={(e) =>
 									onPerImageDraftChange({
 										...perImage,
-										uncertainResultPolicy: e.target.value as
-											| "requested"
-											| "zero",
+										uncertainResultPolicy: e.target.value as 'requested' | 'zero',
 									})
 								}
 								className="w-full rounded border border-gray-200 bg-white px-2 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500/30"
 							>
-								<option value="requested">{tBilling("policyRequested")}</option>
-								<option value="zero">{tBilling("policyZero")}</option>
+								<option value="requested">{tBilling('policyRequested')}</option>
+								<option value="zero">{tBilling('policyZero')}</option>
 							</select>
 						</div>
 					</div>
-					<p className="border-t border-gray-100 bg-gray-50/90 px-2 py-1.5 text-[11px] leading-snug text-gray-500">
-						{unitFooter}
-					</p>
 				</div>
 			) : (
 				<div className="overflow-hidden rounded-md border border-gray-200 bg-white">
@@ -310,12 +272,12 @@ export function PricingTiersEditor({
 							<thead
 								className={
 									isImage
-										? "bg-gray-50 text-[11px] font-medium text-gray-500"
-										: "bg-gray-50 text-[10px] font-semibold uppercase tracking-wide text-gray-500"
+										? 'bg-gray-50 text-[11px] font-medium text-gray-500'
+										: 'bg-gray-50 text-[10px] font-semibold uppercase tracking-wide text-gray-500'
 								}
 							>
 								<tr>
-									<th className="whitespace-nowrap px-2 py-2">{t("upto")}</th>
+									<th className="whitespace-nowrap px-2 py-2">{t('upto')}</th>
 									{imageColHeaders ? (
 										imageColHeaders.map((label) => (
 											<th key={label} className="whitespace-nowrap px-2 py-2">
@@ -324,18 +286,10 @@ export function PricingTiersEditor({
 										))
 									) : (
 										<>
-											<th className="whitespace-nowrap px-2 py-2">
-												{t("input")}
-											</th>
-											<th className="whitespace-nowrap px-2 py-2">
-												{t("output")}
-											</th>
-											<th className="whitespace-nowrap px-2 py-2">
-												{t("cacheRead")}
-											</th>
-											<th className="whitespace-nowrap px-2 py-2">
-												{t("cacheWrite")}
-											</th>
+											<th className="whitespace-nowrap px-2 py-2">{t('input')}</th>
+											<th className="whitespace-nowrap px-2 py-2">{t('output')}</th>
+											<th className="whitespace-nowrap px-2 py-2">{t('cacheRead')}</th>
+											<th className="whitespace-nowrap px-2 py-2">{t('cacheWrite')}</th>
 										</>
 									)}
 									<th className="w-10 px-1 py-2 text-center"> </th>
@@ -344,11 +298,8 @@ export function PricingTiersEditor({
 							<tbody className="divide-y divide-gray-100">
 								{rows.length === 0 ? (
 									<tr>
-										<td
-											colSpan={colSpan}
-											className="px-3 py-4 text-center text-gray-500"
-										>
-											{t("noTiers")}
+										<td colSpan={colSpan} className="px-3 py-4 text-center text-gray-500">
+											{t('noTiers')}
 										</td>
 									</tr>
 								) : (
@@ -360,10 +311,10 @@ export function PricingTiersEditor({
 													{isLast ? (
 														<div
 															className="flex min-h-[1.75rem] min-w-[4.5rem] items-center rounded border border-dashed border-gray-200 bg-gray-50 px-1.5 font-mono text-[11px] text-gray-600 tabular-nums"
-															title={t("lastTierOpenEnded")}
+															title={t('lastTierOpenEnded')}
 															aria-label={`upto open bound for tier ${r.id}`}
 														>
-															{tCommon("infinity")}
+															{tCommon('infinity')}
 														</div>
 													) : (
 														<input
@@ -374,7 +325,7 @@ export function PricingTiersEditor({
 																onChange(
 																	updateRow(rows, r.id, {
 																		upto: e.target.value,
-																	})
+																	}),
 																)
 															}
 															className="w-full min-w-[4.5rem] rounded border border-gray-200 px-1.5 py-1 font-mono text-[11px] tabular-nums focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500/30"
@@ -389,21 +340,13 @@ export function PricingTiersEditor({
 															value={r.input_price}
 															placeholder={perMPlaceholder}
 															ariaLabel={`text input price ${r.id}`}
-															onChange={(v) =>
-																onChange(
-																	updateRow(rows, r.id, { input_price: v })
-																)
-															}
+															onChange={(v) => onChange(updateRow(rows, r.id, { input_price: v }))}
 														/>
 														<PriceCell
 															value={r.cache_read_price}
-															placeholder={tPricing("emptyCachePlaceholder")}
+															placeholder={tPricing('emptyCachePlaceholder')}
 															ariaLabel={`cached text price ${r.id}`}
-															onChange={(v) =>
-																onChange(
-																	updateRow(rows, r.id, { cache_read_price: v })
-																)
-															}
+															onChange={(v) => onChange(updateRow(rows, r.id, { cache_read_price: v }))}
 														/>
 														<PriceCell
 															value={r.image_input_price}
@@ -413,19 +356,19 @@ export function PricingTiersEditor({
 																onChange(
 																	updateRow(rows, r.id, {
 																		image_input_price: v,
-																	})
+																	}),
 																)
 															}
 														/>
 														<PriceCell
 															value={r.image_input_cache_price}
-															placeholder={tPricing("emptyCachePlaceholder")}
+															placeholder={tPricing('emptyCachePlaceholder')}
 															ariaLabel={`cached image input price ${r.id}`}
 															onChange={(v) =>
 																onChange(
 																	updateRow(rows, r.id, {
 																		image_input_cache_price: v,
-																	})
+																	}),
 																)
 															}
 														/>
@@ -437,7 +380,7 @@ export function PricingTiersEditor({
 																onChange(
 																	updateRow(rows, r.id, {
 																		image_output_price: v,
-																	})
+																	}),
 																)
 															}
 														/>
@@ -448,41 +391,29 @@ export function PricingTiersEditor({
 															value={r.input_price}
 															placeholder={perMPlaceholder}
 															ariaLabel={`input price ${r.id}`}
-															onChange={(v) =>
-																onChange(
-																	updateRow(rows, r.id, { input_price: v })
-																)
-															}
+															onChange={(v) => onChange(updateRow(rows, r.id, { input_price: v }))}
 														/>
 														<PriceCell
 															value={r.output_price}
 															placeholder={perMPlaceholder}
 															ariaLabel={`output price ${r.id}`}
-															onChange={(v) =>
-																onChange(
-																	updateRow(rows, r.id, { output_price: v })
-																)
-															}
+															onChange={(v) => onChange(updateRow(rows, r.id, { output_price: v }))}
 														/>
 														<PriceCell
 															value={r.cache_read_price}
-															placeholder={tPricing("emptyCachePlaceholder")}
+															placeholder={tPricing('emptyCachePlaceholder')}
 															ariaLabel={`cache read ${r.id}`}
-															onChange={(v) =>
-																onChange(
-																	updateRow(rows, r.id, { cache_read_price: v })
-																)
-															}
+															onChange={(v) => onChange(updateRow(rows, r.id, { cache_read_price: v }))}
 														/>
 														<PriceCell
 															value={r.cache_write_price}
-															placeholder={tPricing("emptyCachePlaceholder")}
+															placeholder={tPricing('emptyCachePlaceholder')}
 															ariaLabel={`cache write ${r.id}`}
 															onChange={(v) =>
 																onChange(
 																	updateRow(rows, r.id, {
 																		cache_write_price: v,
-																	})
+																	}),
 																)
 															}
 														/>
@@ -494,7 +425,7 @@ export function PricingTiersEditor({
 														disabled={!canRemove}
 														onClick={() => removeTier(r.id)}
 														className="rounded px-1 text-red-600 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-30"
-														title={t("removeTier")}
+														title={t('removeTier')}
 													>
 														×
 													</button>
@@ -506,43 +437,8 @@ export function PricingTiersEditor({
 							</tbody>
 						</table>
 					</div>
-					<p className="border-t border-gray-100 bg-gray-50/90 px-2 py-1.5 text-[11px] leading-snug text-gray-500">
-						{unitFooter}
-					</p>
 				</div>
 			)}
-			{jsonPreviewOpen ? (
-				<div className="space-y-1.5">
-					<div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-						<label className="text-xs font-medium text-gray-600">
-							<code className="rounded bg-gray-100 px-1">
-								{tPricing("jsonPreviewLabel")}
-							</code>
-						</label>
-						<button
-							type="button"
-							onClick={() => {
-								if (navigator.clipboard?.writeText) {
-									void navigator.clipboard
-										.writeText(jsonPreview)
-										.catch(() => {});
-								}
-							}}
-							className={linkActionClass}
-						>
-							{tCommon("copy")}
-						</button>
-					</div>
-					<textarea
-						readOnly
-						rows={Math.min(14, 4 + rows.length * 3)}
-						value={jsonPreview}
-						className="w-full resize-y rounded-md border border-dashed border-gray-300 bg-gray-50/90 px-2 py-1.5 font-mono text-[11px] leading-relaxed text-gray-800"
-						spellCheck={false}
-						aria-label="pricing_profile JSON preview"
-					/>
-				</div>
-			) : null}
 		</div>
 	);
 }

@@ -3,13 +3,17 @@
  */
 import {
 	buildFixedToolCostPricingAudit,
+	canAffordTotalCost,
 	changedFieldsToJson,
 	computeChangedFields,
+	computeTotalRemaining,
 	getUserBudgetSnapshot,
+	hasPositiveTotalBalance,
 	insertRequestUsageAndChargeTx,
 	roundGatewayMoney,
 	snapshotToJson,
 	snapshotWithOverrides,
+	splitChargeFromBudgetSnapshot,
 	userRowToSnapshot,
 	type GatewayRepositories,
 	type GuardrailBudgetSettlement,
@@ -23,10 +27,7 @@ import {
 	type OrdinaryBudgetLease,
 } from './ordinary-budget-lifecycle';
 import { ordinaryBudgetAuditSnapshotTransition } from './usage-tracker';
-import {
-	applyRequestBodyLoggingPolicy,
-	type RequestBodyLoggingMode,
-} from './request-body-log-policy';
+import { applyRequestBodyLoggingPolicy, type RequestBodyLoggingMode } from './request-body-log-policy';
 
 export type ToolUserBudgetSettlement = UserBudgetSettlement & {
 	/** Audit-only reservation generation; Core revalidates its own stored epoch. */
@@ -49,9 +50,10 @@ export function toolFailureSettlement(
 	error: unknown,
 	options: { knownLocalFailure?: boolean } = {},
 ): ToolFailureSettlement {
-	const outcome = typeof error === 'object' && error !== null && 'upstreamOutcome' in error
-		? (error as { upstreamOutcome?: unknown }).upstreamOutcome
-		: undefined;
+	const outcome =
+		typeof error === 'object' && error !== null && 'upstreamOutcome' in error
+			? (error as { upstreamOutcome?: unknown }).upstreamOutcome
+			: undefined;
 	const knownZero = options.knownLocalFailure === true || outcome === 'known_zero';
 	return knownZero
 		? { mode: 'actual', reason: 'tool_upstream_error_settled' }
@@ -98,8 +100,10 @@ export type ChargeToolUsageParams = {
 	status: 'success' | 'error';
 	/** Output Guardrail failures still charge a successfully completed upstream call. */
 	chargeOnError?: boolean;
-	/** pricing_audit 计费单位；默认 request */
-	pricingUnit?: 'request' | 'chars';
+	/** Request Host (observe only) */
+	ingressHost?: string | null;
+	/** pricing_audit 计费单位；默认 request。MCP 传规则里的单元名。 */
+	pricingUnit?: string;
 	/** 计费单元数；默认 1 */
 	billingUnits?: number;
 	/**
@@ -108,6 +112,10 @@ export type ChargeToolUsageParams = {
 	unitPrices?: ToolUnitPrices;
 	/** 合并进 `pricing_audit`（勿覆盖 `provider`；以 {@link toolProvider} 为准） */
 	pricingAuditExtra?: Record<string, unknown>;
+	/** 默认 `octafuse-tools`。MCP 聚合记 `octafuse-mcp`。 */
+	ledgerProviderId?: string;
+	/** 默认 `OctaFuse Tools`。 */
+	ledgerProviderName?: string;
 };
 
 export async function reserveToolOrdinaryBudget(
@@ -157,10 +165,7 @@ export function toolUserBudgetSettlement(
 }
 
 /** Best-effort cleanup: releases before dispatch or forfeits after dispatch. */
-export async function terminateToolOrdinaryBudgetSafely(
-	lease: OrdinaryBudgetLease,
-	reason: string,
-): Promise<void> {
+export async function terminateToolOrdinaryBudgetSafely(lease: OrdinaryBudgetLease, reason: string): Promise<void> {
 	try {
 		await lease.terminateUnknown(reason);
 	} catch (error) {
@@ -174,16 +179,19 @@ export async function terminateToolOrdinaryBudgetSafely(
  * 成功路径应调用；`status=error` 默认只写零成本日志。只有已完成上游、
  * 但输出被 Guardrail 拦截时才设置 `chargeOnError` 保留实际固定费用。
  */
-export async function chargeToolUsage(params: ChargeToolUsageParams): Promise<{ requestLogId: string; chargedCost: number }> {
+export async function chargeToolUsage(
+	params: ChargeToolUsageParams,
+): Promise<{ requestLogId: string; chargedCost: number }> {
 	const zeroCostError = params.status === 'error' && params.chargeOnError !== true;
 	const meteredCost = roundGatewayMoney(zeroCostError ? 0 : params.meteredCost);
 	const standardCost = roundGatewayMoney(zeroCostError ? 0 : params.standardCost);
 	const chargedCost = roundGatewayMoney(zeroCostError ? 0 : params.chargedCost);
 	const shouldChargeBudget = !zeroCostError && chargedCost > 0;
 	const billingUnits =
-		params.billingUnits != null && Number.isFinite(params.billingUnits) && params.billingUnits > 0
+		params.billingUnits != null && Number.isFinite(params.billingUnits) && params.billingUnits >= 0
 			? params.billingUnits
 			: 1;
+	const divisor = billingUnits > 0 ? billingUnits : 1;
 	const pricingUnit = params.pricingUnit ?? 'request';
 	const unitPrices: ToolUnitPrices = params.unitPrices
 		? {
@@ -192,9 +200,9 @@ export async function chargeToolUsage(params: ChargeToolUsageParams): Promise<{ 
 				charged: roundGatewayMoney(params.unitPrices.charged),
 			}
 		: {
-				metered: roundGatewayMoney(meteredCost / billingUnits),
-				standard: roundGatewayMoney(standardCost / billingUnits),
-				charged: roundGatewayMoney(chargedCost / billingUnits),
+				metered: roundGatewayMoney(meteredCost / divisor),
+				standard: roundGatewayMoney(standardCost / divisor),
+				charged: roundGatewayMoney(chargedCost / divisor),
 			};
 
 	const toolProvider = params.toolProvider.trim();
@@ -212,37 +220,38 @@ export async function chargeToolUsage(params: ChargeToolUsageParams): Promise<{ 
 
 	const id = params.requestLogId ?? crypto.randomUUID();
 	const hasUserBudgetSettlement = params.userBudgetSettlement != null;
-	const userSnapshot = shouldChargeBudget || hasUserBudgetSettlement
-		? await getUserBudgetSnapshot(params.repos, params.userId)
-		: null;
+	const userSnapshot =
+		shouldChargeBudget || hasUserBudgetSettlement ? await getUserBudgetSnapshot(params.repos, params.userId) : null;
 	const beforeSpent = userSnapshot?.budgetSpent ?? 0;
-	const userRow = shouldChargeBudget || hasUserBudgetSettlement
-		? await params.repos.users.getById(params.userId)
-		: null;
+	const userRow =
+		shouldChargeBudget || hasUserBudgetSettlement ? await params.repos.users.getById(params.userId) : null;
 	const ordinaryAuditTransition = ordinaryBudgetAuditSnapshotTransition({
 		settlement: params.userBudgetSettlement
 			? {
-				requestId: params.userBudgetSettlement.requestId,
-				budgetEpoch: params.userBudgetSettlement.budgetEpoch,
-				reservedMicros: params.userBudgetSettlement.reservedMicros,
-				unknownCost: params.userBudgetSettlement.mode === 'reserved',
-			}
+					requestId: params.userBudgetSettlement.requestId,
+					budgetEpoch: params.userBudgetSettlement.budgetEpoch,
+					reservedMicros: params.userBudgetSettlement.reservedMicros,
+					unknownCost: params.userBudgetSettlement.mode === 'reserved',
+				}
 			: undefined,
 		currentBudgetEpoch: userRow == null ? null : Number(userRow.budget_epoch),
 		currentReservedMicros: userRow == null ? 0 : Number(userRow.budget_reserved_micros),
 		chargedCost,
 		shouldChargeBudget,
 	});
-	const afterSpentVal = roundGatewayMoney(beforeSpent + ordinaryAuditTransition.auditCharge);
+	const split = splitChargeFromBudgetSnapshot(userSnapshot, ordinaryAuditTransition.auditCharge);
+	const afterSpentVal = roundGatewayMoney(beforeSpent + ordinaryAuditTransition.auditCharge - split.fromWallet);
 	let usageSnaps: { before: string; after: string; changed: string | null } | null = null;
 	if (userRow) {
 		const beforeS = userRowToSnapshot(userRow);
-		const afterS = params.userBudgetSettlement && !ordinaryAuditTransition.settlementEpochMatches
-			? beforeS
-			: snapshotWithOverrides(beforeS, {
-					budget_spent: afterSpentVal,
-					budget_reserved_micros: ordinaryAuditTransition.afterReservedMicros,
-				});
+		const afterS =
+			params.userBudgetSettlement && !ordinaryAuditTransition.settlementEpochMatches
+				? beforeS
+				: snapshotWithOverrides(beforeS, {
+						budget_spent: afterSpentVal,
+						wallet_spent: roundGatewayMoney(Number(userRow.wallet_spent ?? 0) + split.fromWallet),
+						budget_reserved_micros: ordinaryAuditTransition.afterReservedMicros,
+					});
 		usageSnaps = {
 			before: snapshotToJson(beforeS),
 			after: snapshotToJson(afterS),
@@ -259,15 +268,12 @@ export async function chargeToolUsage(params: ChargeToolUsageParams): Promise<{ 
 			workspaceId: params.workspaceId,
 			userEmail: params.userEmail,
 			modelId: params.toolId,
-			providerId: 'octafuse-tools',
+			providerId: params.ledgerProviderId ?? 'octafuse-tools',
 			/** 引擎 id；Request Logs ROUTE 列第二行展示（不再重复写 tool id） */
 			providerModelName: toolProvider || params.toolId,
 			modelName: params.toolId,
-			providerName: 'cinatoken Tools',
-			requestBody: applyRequestBodyLoggingPolicy(
-				params.requestBody,
-				params.requestBodyLoggingMode
-			),
+			providerName: params.ledgerProviderName ?? 'CinaToken Tools',
+			requestBody: applyRequestBodyLoggingPolicy(params.requestBody, params.requestBodyLoggingMode),
 			upstreamRequestBody: null,
 			requestProtocol: 'openai',
 			/**
@@ -285,12 +291,14 @@ export async function chargeToolUsage(params: ChargeToolUsageParams): Promise<{ 
 			standardCost,
 			chargedCost,
 			budgetAccountedAt: params.budgetAccountedAt ?? null,
+			chargedWalletCost: split.fromWallet,
 			routeGroup: 'default',
 			status: params.status,
 			latencyMs: params.latencyMs,
 			errorMessage: params.errorMessage ?? null,
 			rawUsage: params.responseBody ?? null,
 			pricingAudit: JSON.stringify(pricingAudit),
+			ingressHost: params.ingressHost ?? null,
 		},
 		shouldChargeBudget,
 		beforeSpent,
@@ -298,11 +306,12 @@ export async function chargeToolUsage(params: ChargeToolUsageParams): Promise<{ 
 		guardrailBudgetSettlement: params.guardrailBudgetSettlement,
 		userBudgetSettlement: params.userBudgetSettlement
 			? {
-				requestId: params.userBudgetSettlement.requestId,
-				mode: params.userBudgetSettlement.mode,
-				reason: params.userBudgetSettlement.reason,
-			}
+					requestId: params.userBudgetSettlement.requestId,
+					mode: params.userBudgetSettlement.mode,
+					reason: params.userBudgetSettlement.reason,
+				}
 			: undefined,
+		chargedFromWallet: split.fromWallet,
 		audit: {
 			apiKeyId: params.apiKeyId,
 			eventType: 'usage_charge',
@@ -329,28 +338,51 @@ export async function chargeToolUsage(params: ChargeToolUsageParams): Promise<{ 
 	return { requestLogId: id, chargedCost };
 }
 
-/** 预检：当前额度是否够支付固定费用（budget_max 为 null 表示不限）。仅看 charged。 */
+type AffordPools = {
+	budgetMax: number | null;
+	budgetSpent: number;
+	walletGranted?: number;
+	walletSpent?: number;
+};
+
+/** 预检：总余额是否够支付固定费用（budget_max 为 null 表示不限）。 */
+export function canAffordToolCost(totalRemaining: number | null, toolCost: number): boolean;
 export function canAffordToolCost(
 	budgetMax: number | null,
 	budgetSpent: number,
-	toolCost: number
+	toolCost: number,
+	walletGranted?: number,
+	walletSpent?: number,
+): boolean;
+export function canAffordToolCost(
+	a: number | null,
+	b: number,
+	c?: number,
+	walletGranted = 0,
+	walletSpent = 0,
 ): boolean {
-	if (budgetMax == null) {
-		return Number.isFinite(budgetSpent) && budgetSpent >= 0
-			&& Number.isFinite(toolCost) && toolCost >= 0;
+	if (c === undefined) {
+		if (!Number.isFinite(b) || b < 0 || (a !== null && (!Number.isFinite(a) || a < 0))) return false;
+		if (a == null) return true;
+		return roundGatewayMoney(b) <= roundGatewayMoney(a);
 	}
-	if (
-		!Number.isFinite(budgetMax)
-		|| budgetMax < 0
-		|| !Number.isFinite(budgetSpent)
-		|| budgetSpent < 0
-		|| !Number.isFinite(toolCost)
-		|| toolCost < 0
-	) {
-		return false;
-	}
-	const cost = roundGatewayMoney(toolCost);
-	const total = budgetSpent + cost;
-	if (!Number.isFinite(total)) return false;
-	return roundGatewayMoney(total) <= roundGatewayMoney(budgetMax);
+	return canAffordTotalCost(a, b, walletGranted, walletSpent, c);
+}
+
+export function apiKeyTotalRemaining(apiKey: AffordPools): number | null {
+	return computeTotalRemaining(
+		apiKey.budgetMax,
+		apiKey.budgetSpent,
+		apiKey.walletGranted ?? 0,
+		apiKey.walletSpent ?? 0,
+	);
+}
+
+export function apiKeyHasBalance(apiKey: AffordPools): boolean {
+	return hasPositiveTotalBalance(
+		apiKey.budgetMax,
+		apiKey.budgetSpent,
+		apiKey.walletGranted ?? 0,
+		apiKey.walletSpent ?? 0,
+	);
 }

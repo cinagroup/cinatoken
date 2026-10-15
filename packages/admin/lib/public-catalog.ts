@@ -137,6 +137,7 @@ function parsePricingProfile(
 	// Project every public field explicitly. Costs, credentials and future Core
 	// metadata must never be passed through merely because the parser accepts it.
 	const result: PublicCatalogPricingProfile = {
+ schedule: parsed.schedule.map((window) => ({ ...window })),
 		tiers: parsed.tiers.map((tier) => ({
 			upto: tier.upto,
 			label: tier.label,

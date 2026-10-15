@@ -18,9 +18,18 @@ type JsonBodyLifecycle = {
 };
 
 /** Reject internal non-JSON values BEFORE handing off any response bytes. */
-function assertJsonTree(value: unknown, limits: JsonStructureLimits, checkActive?: () => void): asserts value is JsonValue {
-	if (!Number.isSafeInteger(limits.maxDepth) || limits.maxDepth < 1
-		|| !Number.isSafeInteger(limits.maxNodes) || limits.maxNodes < 1) throw new RangeError('Invalid JSON encoding limits');
+function assertJsonTree(
+	value: unknown,
+	limits: JsonStructureLimits,
+	checkActive?: () => void,
+): asserts value is JsonValue {
+	if (
+		!Number.isSafeInteger(limits.maxDepth) ||
+		limits.maxDepth < 1 ||
+		!Number.isSafeInteger(limits.maxNodes) ||
+		limits.maxNodes < 1
+	)
+		throw new RangeError('Invalid JSON encoding limits');
 	let nodes = 0;
 	const active = new Set<object>();
 	const count = () => {
@@ -30,21 +39,30 @@ function assertJsonTree(value: unknown, limits: JsonStructureLimits, checkActive
 	const visit = (item: unknown, depth: number): void => {
 		count();
 		if (item === null || isJsonString(item) || typeof item === 'boolean' || typeof item === 'number') return;
-		if (typeof item !== 'object' || depth >= limits.maxDepth || active.has(item)) throw new TypeError('Expected a bounded JSON tree');
-		if (!Array.isArray(item) && Object.getPrototypeOf(item) !== Object.prototype && Object.getPrototypeOf(item) !== null) {
+		if (typeof item !== 'object' || depth >= limits.maxDepth || active.has(item))
+			throw new TypeError('Expected a bounded JSON tree');
+		if (
+			!Array.isArray(item) &&
+			Object.getPrototypeOf(item) !== Object.prototype &&
+			Object.getPrototypeOf(item) !== null
+		) {
 			throw new TypeError('Expected a plain JSON object');
 		}
 		active.add(item);
 		const inspectProperty = (key: string): void => {
 			const descriptor = Object.getOwnPropertyDescriptor(item, key);
-			if (!descriptor || !('value' in descriptor)) throw new TypeError('JSON accessors and sparse arrays are not supported');
+			if (!descriptor || !('value' in descriptor))
+				throw new TypeError('JSON accessors and sparse arrays are not supported');
 			const child: unknown = descriptor.value;
 			visit(child, depth + 1);
 		};
 		if (Array.isArray(item)) {
 			for (let index = 0; index < item.length; index++) inspectProperty(String(index));
 		} else {
-			for (const key of Object.keys(item)) { count(); inspectProperty(key); }
+			for (const key of Object.keys(item)) {
+				count();
+				inspectProperty(key);
+			}
 		}
 		active.delete(item);
 	};
@@ -57,12 +75,16 @@ function* stringPieces(value: string | JsonStringPages): Generator<string, void,
 	for (const chunk of jsonStringChunks(value)) {
 		for (let start = 0; start < chunk.length;) {
 			const end = Math.min(chunk.length, start + JSON_STRING_PIECE_CHARS - highSurrogate.length);
-			let piece = highSurrogate + chunk.slice(start, end); start = end;
+			let piece = highSurrogate + chunk.slice(start, end);
+			start = end;
 			highSurrogate = '';
 			// Both decoded page boundaries and scalar-piece boundaries may split
 			// a valid pair. Carry just the high surrogate, never join whole pages.
 			const last = piece.charCodeAt(piece.length - 1);
-			if (last >= 0xd800 && last <= 0xdbff) { highSurrogate = piece.slice(-1); piece = piece.slice(0, -1); }
+			if (last >= 0xd800 && last <= 0xdbff) {
+				highSurrogate = piece.slice(-1);
+				piece = piece.slice(0, -1);
+			}
 			if (piece) yield NEEDS_JSON_ESCAPING.test(piece) ? JSON.stringify(piece).slice(1, -1) : piece;
 		}
 	}
@@ -71,8 +93,14 @@ function* stringPieces(value: string | JsonStringPages): Generator<string, void,
 }
 
 function* valuePieces(value: JsonValue): Generator<string, void, unknown> {
-	if (isJsonString(value)) { yield* stringPieces(value); return; }
-	if (value === null || typeof value !== 'object') { yield JSON.stringify(value); return; }
+	if (isJsonString(value)) {
+		yield* stringPieces(value);
+		return;
+	}
+	if (value === null || typeof value !== 'object') {
+		yield JSON.stringify(value);
+		return;
+	}
 	if (Array.isArray(value)) {
 		yield '[';
 		for (let index = 0; index < value.length; index++) {
@@ -103,14 +131,18 @@ function* valuePieces(value: JsonValue): Generator<string, void, unknown> {
  * units use native well-formed JSON's six ASCII bytes, not UTF-8 replacement.
  */
 function stringByteLength(value: string | JsonStringPages, checkActive?: () => void): number {
-	let length = 2, highSurrogate = false; // Opening and closing quotes.
+	let length = 2,
+		highSurrogate = false; // Opening and closing quotes.
 	for (const chunk of jsonStringChunks(value)) {
 		for (let index = 0; index < chunk.length; index++) {
 			if (index % JSON_STRING_PIECE_CHARS === 0) checkActive?.();
 			const code = chunk.charCodeAt(index);
 			if (highSurrogate) {
 				highSurrogate = false;
-				if (code >= 0xdc00 && code <= 0xdfff) { length += 4; continue; }
+				if (code >= 0xdc00 && code <= 0xdfff) {
+					length += 4;
+					continue;
+				}
 				length += 6;
 			}
 			if (code >= 0xd800 && code <= 0xdbff) highSurrogate = true;
@@ -133,16 +165,25 @@ export function jsonBodyByteLength(value: unknown, limits: JsonStructureLimits, 
 	};
 	const count = (item: JsonValue): void => {
 		checkActive?.();
-		if (isJsonString(item)) { add(stringByteLength(item, checkActive)); return; }
+		if (isJsonString(item)) {
+			add(stringByteLength(item, checkActive));
+			return;
+		}
 		// Native number formatting includes -0, exponent form and non-finite -> null.
-		if (item === null || typeof item !== 'object') { add(JSON.stringify(item).length); return; }
+		if (item === null || typeof item !== 'object') {
+			add(JSON.stringify(item).length);
+			return;
+		}
 		if (Array.isArray(item)) {
 			add(2 + Math.max(0, item.length - 1));
 			for (let index = 0; index < item.length; index++) count(item[index]!);
 		} else {
 			const keys = Object.keys(item);
 			add(2 + Math.max(0, keys.length - 1));
-			for (const key of keys) { add(stringByteLength(key, checkActive) + 1); count(item[key]!); }
+			for (const key of keys) {
+				add(stringByteLength(key, checkActive) + 1);
+				count(item[key]!);
+			}
 		}
 	};
 	count(value);
@@ -160,7 +201,10 @@ export function jsonBodyByteLength(value: unknown, limits: JsonStructureLimits, 
 export function materializeJsonBodyText(value: unknown, limits: JsonStructureLimits, checkActive?: () => void): string {
 	assertJsonTree(value, limits, checkActive);
 	const parts: string[] = [];
-	for (const piece of valuePieces(value)) { checkActive?.(); if (piece) parts.push(piece); }
+	for (const piece of valuePieces(value)) {
+		checkActive?.();
+		if (piece) parts.push(piece);
+	}
 	checkActive?.();
 	const text = parts.join('');
 	checkActive?.();
@@ -178,7 +222,11 @@ export function materializeJsonBodyText(value: unknown, limits: JsonStructureLim
  * <=64 KiB byte page and a bounded escaped string piece, never a whole JSON string
  * or complete encoded byte array. Whole input parsing/aggregate memory is separate.
  */
-export function streamJsonBody(value: unknown, limits: JsonStructureLimits, lifecycle: JsonBodyLifecycle = {}): ReadableStream<Uint8Array> {
+export function streamJsonBody(
+	value: unknown,
+	limits: JsonStructureLimits,
+	lifecycle: JsonBodyLifecycle = {},
+): ReadableStream<Uint8Array> {
 	lifecycle.signal?.throwIfAborted();
 	lifecycle.checkActive?.();
 	assertJsonTree(value, limits, lifecycle.checkActive);
@@ -206,43 +254,62 @@ export function streamJsonBody(value: unknown, limits: JsonStructureLimits, life
 		controller.error(new Error('JSON response delivery was interrupted'));
 	};
 	const onAbort = (): void => fail();
-	return new ReadableStream<Uint8Array>({
-		start(target) {
-			controller = target;
-			lifecycle.signal?.addEventListener('abort', onAbort, { once: true });
-			if (lifecycle.signal?.aborted) onAbort();
-		},
-		pull(target) {
-			if (closed) return;
-			try {
-				lifecycle.checkActive?.();
-				lifecycle.signal?.throwIfAborted();
+	return new ReadableStream<Uint8Array>(
+		{
+			start(target) {
+				controller = target;
+				lifecycle.signal?.addEventListener('abort', onAbort, { once: true });
+				if (lifecycle.signal?.aborted) onAbort();
+			},
+			pull(target) {
 				if (closed) return;
-				const page = new Uint8Array(JSON_OUTPUT_PAGE_BYTES);
-				let used = 0;
-				while (used < page.length) {
-					if (!pending) {
-						const next = iterator!.next();
-						if (next.done) { finish(); break; }
-						pending = next.value;
-						if (!pending) continue;
+				try {
+					lifecycle.checkActive?.();
+					lifecycle.signal?.throwIfAborted();
+					if (closed) return;
+					const page = new Uint8Array(JSON_OUTPUT_PAGE_BYTES);
+					let used = 0;
+					while (used < page.length) {
+						if (!pending) {
+							const next = iterator!.next();
+							if (next.done) {
+								finish();
+								break;
+							}
+							pending = next.value;
+							if (!pending) continue;
+						}
+						const { read, written } = encoder.encodeInto(pending, page.subarray(used));
+						if (read === 0) break; // A final 1-3 bytes may not fit the next UTF-8 character.
+						used += written;
+						pending = pending.slice(read);
 					}
-					const { read, written } = encoder.encodeInto(pending, page.subarray(used));
-					if (read === 0) break; // A final 1-3 bytes may not fit the next UTF-8 character.
-					used += written;
-					pending = pending.slice(read);
+					if (used) target.enqueue(used === page.length ? page : page.subarray(0, used));
+					if (closed) target.close();
+				} catch {
+					fail();
 				}
-				if (used) target.enqueue(used === page.length ? page : page.subarray(0, used));
-				if (closed) target.close();
-			} catch { fail(); }
+			},
+			cancel() {
+				finish();
+			},
 		},
-		cancel() { finish(); },
-	}, { highWaterMark: 0 });
+		{ highWaterMark: 0 },
+	);
 }
 
 /** A rejected Response constructor must not leave an unread encoder/deadline owned. */
-export function streamJsonResponse(value: unknown, limits: JsonStructureLimits, init: ResponseInit, lifecycle: JsonBodyLifecycle = {}): Response {
+export function streamJsonResponse(
+	value: unknown,
+	limits: JsonStructureLimits,
+	init: ResponseInit,
+	lifecycle: JsonBodyLifecycle = {},
+): Response {
 	const body = streamJsonBody(value, limits, lifecycle);
-	try { return new Response(body, init); }
-	catch (error) { void body.cancel().catch(() => undefined); throw error; }
+	try {
+		return new Response(body, init);
+	} catch (error) {
+		void body.cancel().catch(() => undefined);
+		throw error;
+	}
 }

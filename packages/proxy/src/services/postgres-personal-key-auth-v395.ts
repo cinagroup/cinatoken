@@ -8,7 +8,7 @@ type SqlFactory = (connection: string, options: { max: 1 }) => SqlClient;
 type Statement = Pick<SqlClient, 'unsafe'>;
 const LOGIN = 'cinatoken_gateway_personal_key_auth';
 const encoder = new TextEncoder();
-export type AuthenticatedPersonalKeyV395 = Readonly<AuthenticatedApiKey & { keyLimitEpoch: number }>;
+export type AuthenticatedPersonalKeyV395 = Readonly<Omit<AuthenticatedApiKey, 'walletGranted' | 'walletSpent' | 'rateLimit' | 'userRateLimit'> & { keyLimitEpoch: number }>;
 
 export class PostgresPersonalPeriodPendingV395 extends Error {
 	constructor() {

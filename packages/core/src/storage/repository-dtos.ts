@@ -3,7 +3,7 @@
  * 数值列在 SQLite / PG 驱动下可能为 number 或 string，读侧统一为 `number | string` 的联合或经映射后的 number。
  */
 
-import type { ModelRouteRow } from "../types";
+import type { ApiKeyRateLimit, ModelRouteRow } from '../types';
 
 /** 管理端密钥列表行（`getAllApiKeys`，JOIN `users`）。 */
 export interface AdminApiKeyListItem {
@@ -19,8 +19,12 @@ export interface AdminApiKeyListItem {
 	budget_spent: number;
 	budget_period: string;
 	budget_reset_at: string | null;
+	wallet_granted: number;
+	wallet_spent: number;
 	status: string;
 	metadata: string | null;
+	last_used_at?: string | null;
+	rate_limit?: ApiKeyRateLimit | null;
 	created_at: string;
 	updated_at: string;
 }
@@ -86,10 +90,15 @@ export interface ModelRouteJoinRow {
  * Minimal route-target projection used by endpoint discovery.
  *
  * This intentionally excludes model/provider display joins, route-pool strategy
- * metadata, and surfaces. Provider credentials stay behind ProvidersRepository's
+ * metadata. Pricing factors and inbound surfaces support public display; provider
+ * credentials stay behind ProvidersRepository's
  * encryption boundary and are loaded separately in one bounded batch.
  */
 export interface ModelEndpointDiscoveryRouteBindingRow {
+	price_override?: string | null;
+	priority?: number;
+	weight?: number;
+	surfaces?: string | null;
 	endpoint_id: string;
 	subject_fingerprint: string | null;
 	id: string;
@@ -116,6 +125,8 @@ export type ModelRouteDetailRow = ModelRouteRow & { created_at?: string };
 export interface ProviderAdminRow {
 	id: string;
 	name: string;
+	/** 导入模板英文名、`__custom__`，或空字符串（尚未分类）。与 `name` 联合唯一。 */
+	kind?: string | null;
 	/** 协议端点 JSON（权威） */
 	endpoints: string | null;
 	/** 上游 API Key（管理端稍后脱敏） */
@@ -155,7 +166,12 @@ export interface ModelAnalyticsRow {
 	content_ttft_rate: number;
 	avg_upstream_response_ms: number | null;
 	tokens_per_second: number | null;
+	stream_tokens_per_second?: number | null;
+	stream_sample_count?: number;
 	failover_rate: number;
+	/** Requests with at least one failover; legacy failover_rate counts events per 100 requests. */
+	failover_request_count?: number;
+	failover_request_rate?: number;
 	avg_attempts: number | null;
 }
 
@@ -186,6 +202,24 @@ export interface UserAnalyticsRow {
 	last_active_at: string | null;
 	budget_max: number | null;
 	budget_spent: number | null;
+	wallet_granted: number | null;
+	wallet_spent: number | null;
+	success_count: number;
+	error_count: number;
+}
+
+/** 分析：按用户下 API Key 聚合（`api_key_id` 为空表示已删除 Key 的历史日志）。 */
+export interface KeyAnalyticsRow {
+	api_key_id: string | null;
+	key_name: string | null;
+	request_count: number;
+	input_tokens: number;
+	output_tokens: number;
+	charged_cost: number;
+	metered_cost: number;
+	standard_cost: number;
+	distinct_models: number;
+	last_active_at: string | null;
 	success_count: number;
 	error_count: number;
 }
@@ -214,7 +248,12 @@ export interface ProviderAnalyticsRow {
 	content_ttft_rate: number;
 	avg_upstream_response_ms: number | null;
 	tokens_per_second: number | null;
+	stream_tokens_per_second?: number | null;
+	stream_sample_count?: number;
 	failover_rate: number;
+	/** Requests with at least one failover; legacy failover_rate counts events per 100 requests. */
+	failover_request_count?: number;
+	failover_request_rate?: number;
 	avg_attempts: number | null;
 }
 
@@ -287,6 +326,9 @@ export interface ProviderReliabilityRow {
 	avg_latency_ms: number | null;
 	avg_upstream_response_ms: number | null;
 	failover_rate: number;
+	/** Requests with at least one failover; legacy failover_rate counts events per 100 requests. */
+	failover_request_count?: number;
+	failover_request_rate?: number;
 	avg_attempts: number | null;
 	charged_cost: number;
 	metered_cost: number;
@@ -303,6 +345,9 @@ export interface ModelProviderReliabilityRow {
 	avg_latency_ms: number | null;
 	avg_upstream_response_ms: number | null;
 	failover_rate: number;
+	/** Requests with at least one failover; legacy failover_rate counts events per 100 requests. */
+	failover_request_count?: number;
+	failover_request_rate?: number;
 	avg_attempts: number | null;
 	charged_cost: number;
 	metered_cost: number;

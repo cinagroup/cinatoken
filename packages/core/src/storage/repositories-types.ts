@@ -1,4 +1,4 @@
-import type { GatewayDatabaseClient } from "./database-client";
+import type { GatewayDatabaseClient } from './database-client';
 import type {
 	AdminAnalyticsRepository,
 	BatchesRepository,
@@ -8,6 +8,7 @@ import type {
 	RouteDataPoliciesRepository,
 	AdminAccessRepository,
 	ApiKeysRepository,
+	McpServersRepository,
 	ModelRoutesRepository,
 	ModelEndpointsRepository,
 	ManagementApiKeysRepository,
@@ -24,16 +25,11 @@ import type {
 	SystemConfigRepository,
 	UserAuditLogsRepository,
 	UsersRepository,
-} from "./gateway-repository-interfaces";
-import type {
-	ApiKeysD1Statements,
-	RequestLogsD1Statements,
-} from "../db/d1/d1-repository-extras";
+} from './gateway-repository-interfaces';
+import type { ApiKeysD1Statements, RequestLogsD1Statements } from '../db/d1/d1-repository-extras';
 
-export type ApiKeysRepositoryHandle = ApiKeysRepository &
-	Partial<ApiKeysD1Statements>;
-export type RequestLogsRepositoryHandle = RequestLogsRepository &
-	Partial<RequestLogsD1Statements>;
+export type ApiKeysRepositoryHandle = ApiKeysRepository & Partial<ApiKeysD1Statements>;
+export type RequestLogsRepositoryHandle = RequestLogsRepository & Partial<RequestLogsD1Statements>;
 
 export interface GatewayRepositories {
 	readonly client: GatewayDatabaseClient;
@@ -61,11 +57,10 @@ export interface GatewayRepositories {
 	readonly portalAccess: PortalAccessRepository;
 	readonly sharedKeys: SharedKeysRepository;
 	readonly portalLedger: PortalLedgerRepository;
+	readonly mcpServers: McpServersRepository;
 }
 
 /** 统一取 Hono 上下文中的 `GatewayDatabaseClient`。 */
-export function getGatewayDatabaseClient(
-	repositories: GatewayRepositories
-): GatewayDatabaseClient {
+export function getGatewayDatabaseClient(repositories: GatewayRepositories): GatewayDatabaseClient {
 	return repositories.client;
 }

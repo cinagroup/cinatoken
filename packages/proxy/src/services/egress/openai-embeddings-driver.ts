@@ -47,26 +47,20 @@ type EmbeddingsUsage = {
 };
 
 function nonNegativeCount(value: unknown): number {
-	return typeof value === 'number' && Number.isSafeInteger(value) && value >= 0
-		? value
-		: -1;
+	return typeof value === 'number' && Number.isSafeInteger(value) && value >= 0 ? value : -1;
 }
 
 /** Normalize OpenAI-compatible embedding usage onto the gateway token ledger. */
 export function usageFromEmbeddings(raw: EmbeddingsUsage): UsageFromStream {
-	const promptTokens = raw.prompt_tokens === undefined
-		? null
-		: nonNegativeCount(raw.prompt_tokens);
-	const inputAliasTokens = raw.input_tokens === undefined
-		? null
-		: nonNegativeCount(raw.input_tokens);
+	const promptTokens = raw.prompt_tokens === undefined ? null : nonNegativeCount(raw.prompt_tokens);
+	const inputAliasTokens = raw.input_tokens === undefined ? null : nonNegativeCount(raw.input_tokens);
 	const totalTokens = nonNegativeCount(raw.total_tokens);
 	const inputTokens = promptTokens ?? inputAliasTokens;
 	if (
-		inputTokens == null
-		|| inputTokens < 0
-		|| totalTokens < inputTokens
-		|| (promptTokens != null && inputAliasTokens != null && promptTokens !== inputAliasTokens)
+		inputTokens == null ||
+		inputTokens < 0 ||
+		totalTokens < inputTokens ||
+		(promptTokens != null && inputAliasTokens != null && promptTokens !== inputAliasTokens)
 	) {
 		return { ...EMPTY_USAGE_LOCAL };
 	}
@@ -105,9 +99,7 @@ function validBase64(value: string): boolean {
 	const dataEnd = value.length - padding;
 	for (let index = 0; index < dataEnd; index += 1) {
 		const code = value.charCodeAt(index);
-		const alphaNumeric = (code >= 48 && code <= 57)
-			|| (code >= 65 && code <= 90)
-			|| (code >= 97 && code <= 122);
+		const alphaNumeric = (code >= 48 && code <= 57) || (code >= 65 && code <= 90) || (code >= 97 && code <= 122);
 		if (!alphaNumeric && code !== 43 && code !== 47) return false;
 	}
 	for (let index = dataEnd; index < value.length; index += 1) {
@@ -119,28 +111,25 @@ function validBase64(value: string): boolean {
 
 function validEmbeddingValue(value: unknown, encodingFormat: 'float' | 'base64'): boolean {
 	if (encodingFormat === 'base64') return typeof value === 'string' && validBase64(value);
-	return Array.isArray(value)
-		&& value.length > 0
-		&& value.every((item) => typeof item === 'number' && Number.isFinite(item));
+	return (
+		Array.isArray(value) && value.length > 0 && value.every((item) => typeof item === 'number' && Number.isFinite(item))
+	);
 }
 
-function validEmbeddingData(
-	value: unknown,
-	expectedCount: number,
-	encodingFormat: 'float' | 'base64',
-): boolean {
+function validEmbeddingData(value: unknown, expectedCount: number, encodingFormat: 'float' | 'base64'): boolean {
 	if (!Array.isArray(value) || value.length !== expectedCount) return false;
 	const indexes = new Set<number>();
 	for (const item of value) {
 		if (!isPlainObject(item) || item.object !== 'embedding') return false;
 		if (
-			typeof item.index !== 'number'
-			|| !Number.isSafeInteger(item.index)
-			|| item.index < 0
-			|| item.index >= expectedCount
-			|| indexes.has(item.index)
-			|| !validEmbeddingValue(item.embedding, encodingFormat)
-		) return false;
+			typeof item.index !== 'number' ||
+			!Number.isSafeInteger(item.index) ||
+			item.index < 0 ||
+			item.index >= expectedCount ||
+			indexes.has(item.index) ||
+			!validEmbeddingValue(item.embedding, encodingFormat)
+		)
+			return false;
 		indexes.add(item.index);
 	}
 	return indexes.size === expectedCount;
@@ -206,13 +195,14 @@ async function normalizeSuccessfulEmbeddingsResponse(
 	const encodingFormat = requestBody.encoding_format === 'base64' ? 'base64' : 'float';
 	const nativeId = object.id === undefined ? null : normalizeUpstreamId(object.id);
 	if (
-		inputCount == null
-		|| object.object !== 'list'
-		|| typeof object.model !== 'string'
-		|| !object.model.trim()
-		|| !validEmbeddingData(object.data, inputCount, encodingFormat)
-		|| (object.id !== undefined && nativeId == null)
-	) return invalidEmbeddingSuccess(publicCorrelationId);
+		inputCount == null ||
+		object.object !== 'list' ||
+		typeof object.model !== 'string' ||
+		!object.model.trim() ||
+		!validEmbeddingData(object.data, inputCount, encodingFormat) ||
+		(object.id !== undefined && nativeId == null)
+	)
+		return invalidEmbeddingSuccess(publicCorrelationId);
 
 	const usageRaw = object.usage;
 	let usage: UsageFromStream = { ...EMPTY_USAGE_LOCAL };
@@ -265,9 +255,10 @@ export async function dispatchOpenAiEmbeddingsRoute(
 		...buildRouteRequestBody(route, body),
 		model: applyVertexOpenAiModelPrefix(url, route.providerModelName),
 	};
-	return withOwnedJsonUpload(requestBody, requestSignal, async upload => {
+	return withOwnedJsonUpload(requestBody, requestSignal, async (upload) => {
 		const { secret } = await resolveProviderUpstreamSecret(route.providerApiKey, {
-			signal: requestSignal, auxiliaryAuth,
+			signal: requestSignal,
+			auxiliaryAuth,
 		});
 		const headers = {
 			'Content-Type': 'application/json',

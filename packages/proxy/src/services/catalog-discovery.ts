@@ -8,6 +8,7 @@ import {
 	parseModelModalitiesJson,
 	parsePricingProfile,
 	UPSTREAM_PROTOCOLS,
+	type DisplayDiscountGroup,
 	type GatewayRepositories,
 	type ModelEndpointDiscoveryRouteBindingRow,
 	type ParsedPricingProfile,
@@ -17,21 +18,18 @@ import {
 	routeDataPolicyAllowsZdr,
 } from '@octafuse/core';
 import { toPublicModelSlug } from '@octafuse/core/lib/public-model-slug';
-import {
-	filterRouteGroupsByAllowlist,
-	parseTags,
-} from '../lib/model-list-parse';
+import { filterRouteGroupsByAllowlist, parseTags } from '../lib/model-list-parse';
 import {
 	endpointRouteGroup,
 	groupVerifiedEndpointBindingsByModel,
 	summarizePublicEndpointDiscovery,
 } from './public-endpoint-discovery';
-import {
-	listVerifiedPublicEndpointBindings,
-	type VerifiedPublicEndpointBinding,
-} from './public-model-endpoints';
+import { listVerifiedPublicEndpointBindings, type VerifiedPublicEndpointBinding } from './public-model-endpoints';
 
 const POLICY_BATCH_SIZE = 90;
+import { normalizePublicModelVendor, parseMetadata } from '../lib/model-list-parse';
+import { collectInboundSurfaces, type InboundSurface } from './inbound-surfaces';
+import { buildModelDisplayDiscounts as buildSafeModelDisplayDiscounts, getBusinessTimezone } from '@octafuse/core';
 
 export type CatalogDiscoveryModel = {
 	id: string;
@@ -41,10 +39,13 @@ export type CatalogDiscoveryModel = {
 	context_window: number | null;
 	max_tokens: number | null;
 	pricing_profile: ParsedPricingProfile | null;
+	/** 运营维护的展示标签，不含派生 Discount.* */
 	tags: string[];
 	route_groups: string[];
 	protocols: UpstreamProtocol[];
 	protocols_by_group: Record<string, UpstreamProtocol[]>;
+	/** Client request entries (protocol + operation), same shape as `GET /v1/models` `inbound`. */
+	inbound: InboundSurface[];
 	recommended_protocol: UpstreamProtocol;
 	description: string | null;
 	input_modalities: string[] | null;
@@ -59,6 +60,8 @@ export type CatalogDiscoveryModel = {
 		zdr_available: boolean;
 		latest_verified_at: string | null;
 	};
+	discounts?: Record<string, DisplayDiscountGroup>;
+	metadata?: Record<string, unknown>;
 };
 
 export type CatalogProviderSummary = {
@@ -84,7 +87,7 @@ export function resolveRecommendedProtocol(protocols: UpstreamProtocol[]): Upstr
 }
 
 function buildProtocolsByGroup(
-	routes: readonly ModelEndpointDiscoveryRouteBindingRow[]
+	routes: readonly ModelEndpointDiscoveryRouteBindingRow[],
 ): Record<string, UpstreamProtocol[]> {
 	const byGroup = new Map<string, Set<UpstreamProtocol>>();
 	for (const row of routes) {
@@ -108,7 +111,7 @@ function buildProtocolsByGroup(
 }
 
 function routesForBindings(
-	bindings: readonly VerifiedPublicEndpointBinding[]
+	bindings: readonly VerifiedPublicEndpointBinding[],
 ): ModelEndpointDiscoveryRouteBindingRow[] {
 	return bindings.flatMap((binding) => binding.routes);
 }
@@ -173,9 +176,10 @@ export function aggregateCatalogProviders(models: CatalogDiscoveryModel[]): Cata
 
 export async function listCatalogDiscoveryModels(
 	repos: GatewayRepositories,
-	options?: { routeGroups?: string[] | null }
+	options?: { routeGroups?: string[] | null },
 ): Promise<CatalogDiscoveryModel[]> {
 	const models = await repos.modelRouting.listModelsWithActiveRoutes();
+	if (models.length === 0) return [];
 	const endpointBindings = await listVerifiedPublicEndpointBindings(repos, models);
 	const routesByModel = groupVerifiedEndpointBindingsByModel(endpointBindings);
 	const endpointRoutes = routesForBindings(endpointBindings);
@@ -183,12 +187,11 @@ export async function listCatalogDiscoveryModels(
 	const dataPolicies: RouteDataPolicyRow[] = [];
 	for (let index = 0; index < routeIds.length; index += POLICY_BATCH_SIZE) {
 		dataPolicies.push(
-			...(await repos.routeDataPolicies.getByRouteTargetIds(
-				routeIds.slice(index, index + POLICY_BATCH_SIZE)
-			))
+			...(await repos.routeDataPolicies.getByRouteTargetIds(routeIds.slice(index, index + POLICY_BATCH_SIZE))),
 		);
 	}
 	const policyByRoute = new Map(dataPolicies.map((policy) => [policy.route_target_id, policy]));
+	let timezone: string | undefined;
 	const allowedGroups = options?.routeGroups ?? null;
 
 	const list: CatalogDiscoveryModel[] = [];
@@ -232,19 +235,24 @@ export async function listCatalogDiscoveryModels(
 			const value = policy?.verified_at ?? null;
 			return value && (!latest || value > latest) ? value : latest;
 		}, null);
+		const inbound = collectInboundSurfaces(includedRoutes, routeGroups);
+		timezone ??= await getBusinessTimezone(repos);
+		const discounts = buildSafeModelDisplayDiscounts({pricingProfileJson: m.pricing_profile, routes: includedRoutes.map(route => ({...route, priority: route.priority ?? 0, price_override: route.price_override ?? null})), timezone, allowedRouteGroups: routeGroups});
 
 		list.push({
 			id: m.id,
 			slug: toPublicModelSlug(m.id),
 			display_name: m.display_name,
-			vendor: m.vendor?.trim() ? m.vendor : 'other',
+			vendor: normalizePublicModelVendor(m.vendor),
 			context_window: m.context_window,
 			max_tokens: m.max_tokens,
 			pricing_profile: parsePricingProfile(m.pricing_profile ?? undefined),
 			tags: parseTags(m.tags),
 			route_groups: routeGroups,
+			discounts,
 			protocols,
 			protocols_by_group: protocolsByGroup,
+			inbound,
 			recommended_protocol: resolveRecommendedProtocol(protocols),
 			description: m.description,
 			input_modalities: parseModelModalitiesJson(m.input_modalities),
@@ -254,10 +262,9 @@ export async function listCatalogDiscoveryModels(
 			regions: endpointDiscovery.regions,
 			data_policy_summary: {
 				verified_route_count: verifiedPolicies.length,
-				zdr_available: includedRoutes.some((route) => routeDataPolicyAllowsZdr(
-					policyByRoute.get(route.id),
-					route.subject_fingerprint,
-				)),
+				zdr_available: includedRoutes.some((route) =>
+					routeDataPolicyAllowsZdr(policyByRoute.get(route.id), route.subject_fingerprint),
+				),
 				latest_verified_at: latestVerifiedAt,
 			},
 		});

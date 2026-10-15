@@ -1,5 +1,12 @@
 import type { PreparationControl } from '../preparation-control';
-import type { ConfigSnapshot, ConfigGroupApplyInput, ConfigGroupApplyResult, ConfigGroupAuditRow, ConfigGroupAuditPageOptions, ToolConfigFamily } from '../db/system-config-group-types';
+import type {
+	ConfigSnapshot,
+	ConfigGroupApplyInput,
+	ConfigGroupApplyResult,
+	ConfigGroupAuditRow,
+	ConfigGroupAuditPageOptions,
+	ToolConfigFamily,
+} from '../db/system-config-group-types';
 import type {
 	GlobalUserAuditLogRow,
 	ModelRow,
@@ -10,27 +17,18 @@ import type {
 	UserAuditLogRow,
 	UserRow,
 	ApiKeyRow,
-} from "../types";
+} from '../types';
 import type {
 	ExtendDispatchedGuardrailBudgetsParams,
 	ReserveGuardrailBudgetsParams,
 	ReserveGuardrailBudgetsResult,
-} from "../db/guardrail-budget-types";
-import type {
-	ReserveUserBudgetParams,
-	ReserveUserBudgetResult,
-} from "../db/user-budget-reservation-types";
-import type { InsertUserAuditLogParams } from "../db/user-audit-logs-types";
-import type {
-	GenerationRequestLogRow,
-	RoutePerformanceSample,
-} from "../db/request-logs-types";
-import type { InsertGenerationFeedbackForManagementAccountParams } from "../db/generation-feedback-types";
-import type {
-	ManagementAnalyticsQuery,
-	ManagementAnalyticsQueryResult,
-} from "../db/analytics-query";
-import type { RouteAvailabilityAggregate } from "../db/provider-attempt-availability";
+} from '../db/guardrail-budget-types';
+import type { ReserveUserBudgetParams, ReserveUserBudgetResult } from '../db/user-budget-reservation-types';
+import type { InsertUserAuditLogParams } from '../db/user-audit-logs-types';
+import type { GenerationRequestLogRow, RoutePerformanceSample } from '../db/request-logs-types';
+import type { InsertGenerationFeedbackForManagementAccountParams } from '../db/generation-feedback-types';
+import type { ManagementAnalyticsQuery, ManagementAnalyticsQueryResult } from '../db/analytics-query';
+import type { RouteAvailabilityAggregate } from '../db/provider-attempt-availability';
 import type {
 	BudgetFilter,
 	InsertKeyParams,
@@ -38,18 +36,12 @@ import type {
 	ManagementGatewayKeyLookupParams,
 	ManagementGatewayKeyPatch,
 	ManagementGatewayKeyRow,
-} from "../db/api-keys-types";
-import type { InsertUserParams, UserMaxBudgetFilter } from "../db/users-types";
-import type {
-	ApiKeyListSortField,
-	ApiKeyListSortOrder,
-} from "../db/api-keys-list-sort";
-import type {
-	UserListSortField,
-	UserListSortOrder,
-} from "../db/users-list-sort";
-import type { ProviderProtocolBases } from "../db/providers-types";
-import type { SystemConfigRow } from "../db/system-config-types";
+} from '../db/api-keys-types';
+import type { InsertUserParams, UserMaxBudgetFilter } from '../db/users-types';
+import type { ApiKeyListSortField, ApiKeyListSortOrder } from '../db/api-keys-list-sort';
+import type { UserListSortField, UserListSortOrder } from '../db/users-list-sort';
+import type { ProviderProtocolBases } from '../db/providers-types';
+import type { SystemConfigRow } from '../db/system-config-types';
 import type {
 	AdminApiKeyListItem,
 	EntityCountSnapshot,
@@ -68,18 +60,12 @@ import type {
 	RequestTimeseriesRow,
 	ThroughputSnapshot,
 	UserAnalyticsRow,
+	KeyAnalyticsRow,
 	UserTokenTimeseriesRow,
-} from "./repository-dtos";
-import type { ResolvedModelSurfaceRow } from "../route-topology";
-import type {
-	RoutePoolStickyBindingRow,
-	RoutePoolStickyBindingTargetCount,
-} from "../db/route-pool-sticky-types";
-import type {
-	AdminApiKeyRow,
-	AdminSessionRow,
-	InsertAdminApiKeyParams,
-} from "../db/admin-access-types";
+} from './repository-dtos';
+import type { ResolvedModelSurfaceRow } from '../route-topology';
+import type { RoutePoolStickyBindingRow, RoutePoolStickyBindingTargetCount } from '../db/route-pool-sticky-types';
+import type { AdminApiKeyRow, AdminSessionRow, InsertAdminApiKeyParams } from '../db/admin-access-types';
 import type { AdminApiKeyAuditContext, AdminApiKeyAuditCursor, AdminApiKeyAuditRow } from '../db/admin-access-audit';
 import type { AdminSharedKeysRepository } from '../db/admin-shared-key-governance';
 import type { RejectRequestedWithdrawalResult } from '../db/portal-withdrawal-rejection-types';
@@ -98,7 +84,7 @@ import type {
 	UpdateSharedKeyPatch,
 	UserEarningsRow,
 	WithdrawalRow,
-} from "../db/shared-keys-types";
+} from '../db/shared-keys-types';
 import type {
 	AddRequestPresetVersionParams,
 	CreateRequestPresetParams,
@@ -108,7 +94,7 @@ import type {
 	RequestPresetVersionPage,
 	RequestPresetWithVersionRow,
 	UpdateRequestPresetMetadataPatch,
-} from "../db/request-presets-types";
+} from '../db/request-presets-types';
 import type {
 	AddGuardrailVersionParams,
 	CreateGuardrailParams,
@@ -120,14 +106,14 @@ import type {
 	GuardrailWithVersionRow,
 	UpdateGuardrailMetadataPatch,
 	UpsertGuardrailAssignmentParams,
-} from "../db/guardrails-types";
+} from '../db/guardrails-types';
 import type {
 	InvalidateRouteDataPoliciesParams,
 	RouteDataPolicyAdminRow,
 	RouteDataPolicyAuditRow,
 	RouteDataPolicyRow,
 	UpsertRouteDataPolicyParams,
-} from "../db/route-data-policy-types";
+} from '../db/route-data-policy-types';
 import type {
 	InsertUnpublishedModelEndpointParams,
 	LinkModelEndpointRouteParams,
@@ -139,12 +125,12 @@ import type {
 	PublishVerifiedModelEndpointParams,
 	UnlinkModelEndpointRouteParams,
 	UpdateUnpublishedModelEndpointParams,
-} from "../db/model-endpoints-types";
+} from '../db/model-endpoints-types';
 import type {
 	InsertManagementApiKeyParams,
 	ManagementApiKeyAccount,
 	ManagementApiKeyRow,
-} from "../db/management-api-keys-types";
+} from '../db/management-api-keys-types';
 import type {
 	ByokKeyInsertParams,
 	ByokKeyListPage,
@@ -155,7 +141,7 @@ import type {
 	ByokKeyUpdateParams,
 	ByokManagementMutation,
 	ByokRuntimeLookup,
-} from "../db/byok-keys-types";
+} from '../db/byok-keys-types';
 import type {
 	AdvanceBatchValidationParams,
 	AdvanceBatchValidationResult,
@@ -174,18 +160,14 @@ import type {
 	ListBatchesParams,
 	MarkBatchItemDispatchStartedParams,
 	ReleaseBatchItemBeforeDispatchParams,
-} from "../db/batch-types";
+} from '../db/batch-types';
 
 /** Batch metadata only. Prompt and response bodies never cross this repository boundary. */
 export interface BatchesRepository {
 	/** Persist a validating batch, or classify an exact idempotent replay. */
 	create(params: CreateBatchParams): Promise<CreateBatchResult>;
 	/** Account + Workspace scoping is mandatory; cross-tenant IDs resolve to null. */
-	getByIdInWorkspace(
-		id: string,
-		accountId: string,
-		workspaceId: string
-	): Promise<BatchRow | null>;
+	getByIdInWorkspace(id: string, accountId: string, workspaceId: string): Promise<BatchRow | null>;
 	/** Internal Queue lookup. Callers must never expose this unscoped method to HTTP. */
 	getByIdForDispatch(id: string): Promise<BatchRow | null>;
 	/** Newest-first keyset page for the OpenRouter-compatible list surface. */
@@ -197,13 +179,9 @@ export interface BatchesRepository {
 	/** Extend only the caller's still-live lease via revision CAS. */
 	renewLease(params: BatchLeaseParams): Promise<BatchRow | null>;
 	/** Atomically append a body-free validation chunk and advance its R2 byte cursor. */
-	advanceValidation(
-		params: AdvanceBatchValidationParams
-	): Promise<AdvanceBatchValidationResult>;
+	advanceValidation(params: AdvanceBatchValidationParams): Promise<AdvanceBatchValidationResult>;
 	/** Enter in_progress only after every expected item and byte has been validated. */
-	completeValidation(
-		params: CompleteBatchValidationParams
-	): Promise<BatchRow | null>;
+	completeValidation(params: CompleteBatchValidationParams): Promise<BatchRow | null>;
 	/** Fail closed on a terminal input/ledger validation error under the same lease. */
 	failValidation(params: FailBatchValidationParams): Promise<BatchRow | null>;
 	/**
@@ -211,50 +189,36 @@ export interface BatchesRepository {
 	 * lease. A prior dispatch marker is surfaced as outcome_unknown and is never
 	 * silently replayed.
 	 */
-	claimNextItem(
-		params: ClaimNextBatchItemParams
-	): Promise<ClaimNextBatchItemResult>;
+	claimNextItem(params: ClaimNextBatchItemParams): Promise<ClaimNextBatchItemResult>;
 	/**
 	 * Commit the irreversible no-replay boundary before marking budget leases
 	 * dispatched and before issuing the upstream request.
 	 */
-	markItemDispatchStarted(
-		params: MarkBatchItemDispatchStartedParams
-	): Promise<BatchItemRow | null>;
+	markItemDispatchStarted(params: MarkBatchItemDispatchStartedParams): Promise<BatchItemRow | null>;
 	/** Release only a still-live owned item that has not crossed the dispatch fence. */
-	releaseItemBeforeDispatch(
-		params: ReleaseBatchItemBeforeDispatchParams
-	): Promise<BatchItemRow | null>;
+	releaseItemBeforeDispatch(params: ReleaseBatchItemBeforeDispatchParams): Promise<BatchItemRow | null>;
 	/**
 	 * Atomically fail every undispatched open item and the parent Batch when
 	 * consumption-time Gateway-key authorization fails. A dispatch marker wins.
 	 */
-	failExecutionPreflight(
-		params: FailBatchExecutionPreflightParams
-	): Promise<FailBatchExecutionPreflightResult>;
+	failExecutionPreflight(params: FailBatchExecutionPreflightParams): Promise<FailBatchExecutionPreflightResult>;
 }
 
 export interface ManagementApiKeysRepository {
 	getActiveBySecret(secret: string): Promise<ManagementApiKeyRow | null>;
 	listByAccount(
 		account: ManagementApiKeyAccount,
-		options?: { includeRevoked?: boolean }
+		options?: { includeRevoked?: boolean },
 	): Promise<ManagementApiKeyRow[]>;
-	getByIdInAccount(
-		id: string,
-		account: ManagementApiKeyAccount
-	): Promise<ManagementApiKeyRow | null>;
+	getByIdInAccount(id: string, account: ManagementApiKeyAccount): Promise<ManagementApiKeyRow | null>;
 	insert(params: InsertManagementApiKeyParams): Promise<void>;
 	revokeByIdInAccount(
 		id: string,
 		account: ManagementApiKeyAccount,
 		nowIso: string,
-		actorUserId: string
+		actorUserId: string,
 	): Promise<boolean>;
-	workspaceBelongsToAccount(
-		workspaceId: string,
-		account: ManagementApiKeyAccount
-	): Promise<boolean>;
+	workspaceBelongsToAccount(workspaceId: string, account: ManagementApiKeyAccount): Promise<boolean>;
 }
 
 /** Account-scoped, encrypted bring-your-own-provider credentials. */
@@ -266,12 +230,9 @@ export interface ByokKeysRepository {
 			limit: number;
 			workspaceId?: string;
 			provider?: string;
-		}
+		},
 	): Promise<ByokKeyListPage>;
-	getByIdInAccount(
-		id: string,
-		account: ManagementApiKeyAccount
-	): Promise<ByokKeyRow | null>;
+	getByIdInAccount(id: string, account: ManagementApiKeyAccount): Promise<ByokKeyRow | null>;
 	insertForManagement(params: ByokKeyInsertParams): Promise<ByokKeyRow | null>;
 	updateForManagement(params: ByokKeyUpdateParams): Promise<ByokKeyRow | null>;
 	reorderForManagement(params: ByokKeyReorderParams): Promise<ByokKeyReorderResult>;
@@ -292,22 +253,15 @@ export interface ModelEndpointsRepository {
 	list(filters?: ModelEndpointListFilters): Promise<ModelEndpointRow[]>;
 	listByModelId(
 		modelId: string,
-		options?: { status?: ModelEndpointStatus; limit?: number; offset?: number }
+		options?: { status?: ModelEndpointStatus; limit?: number; offset?: number },
 	): Promise<ModelEndpointRow[]>;
 	getById(id: string): Promise<ModelEndpointRow | null>;
 	/** Exact immutable identity lookup; production repositories implement this for bounded audits. */
-	getByIdentity?(
-		modelId: string,
-		providerId: string,
-		tag: string
-	): Promise<ModelEndpointRow | null>;
+	getByIdentity?(modelId: string, providerId: string, tag: string): Promise<ModelEndpointRow | null>;
 	/** Inserts only draft/disabled rows; verified publication is atomic below. */
 	insert(params: InsertUnpublishedModelEndpointParams): Promise<void>;
 	/** Updates claims only while forcing the endpoint into a non-public state. */
-	updateUnpublished(
-		id: string,
-		params: UpdateUnpublishedModelEndpointParams
-	): Promise<number>;
+	updateUnpublished(id: string, params: UpdateUnpublishedModelEndpointParams): Promise<number>;
 	delete(id: string): Promise<number>;
 	/** One bounded batch query; callers must pass no more than 100 endpoint ids. */
 	listRouteLinks(endpointIds: string[]): Promise<ModelEndpointRouteLinkRow[]>;
@@ -316,13 +270,9 @@ export interface ModelEndpointsRepository {
 	 * Input is capped at 100 ids; implementations return at most 1,001 rows so
 	 * callers can fail closed at the 1,000 public binding ceiling.
 	 */
-	listDiscoveryRouteBindings(
-		endpointIds: string[]
-	): Promise<ModelEndpointDiscoveryRouteBindingRow[]>;
+	listDiscoveryRouteBindings(endpointIds: string[]): Promise<ModelEndpointDiscoveryRouteBindingRow[]>;
 	/** Hot-path route -> verified endpoint lookup; raw input is capped at 100 ids. */
-	listRuntimeBindingsByRouteTargetIds(
-		routeTargetIds: string[]
-	): Promise<ModelEndpointRuntimeBindingRow[]>;
+	listRuntimeBindingsByRouteTargetIds(routeTargetIds: string[]): Promise<ModelEndpointRuntimeBindingRow[]>;
 	/** Atomically links a route and invalidates verified publication when needed. */
 	linkRoute(params: LinkModelEndpointRouteParams): Promise<boolean>;
 	/**
@@ -337,143 +287,75 @@ export interface RequestPresetsRepository {
 	listOwnedByWorkspace(
 		workspaceId: string,
 		userId: string,
-		includeArchived?: boolean
+		includeArchived?: boolean,
 	): Promise<RequestPresetWithVersionRow[]>;
 	listAll(includeArchived?: boolean): Promise<RequestPresetWithVersionRow[]>;
 	listVisibleByWorkspacePage(
 		workspaceId: string,
 		userId: string,
-		page: { offset: number; limit: number }
+		page: { offset: number; limit: number },
 	): Promise<RequestPresetPage>;
 	getById(id: string): Promise<RequestPresetWithVersionRow | null>;
-	getByIdInWorkspace(
-		id: string,
-		workspaceId: string
-	): Promise<RequestPresetWithVersionRow | null>;
-	getBySlug(
-		slug: string,
-		workspaceId: string
-	): Promise<RequestPresetWithVersionRow | null>;
-	getAccessibleBySlug(
-		slug: string,
-		workspaceId: string,
-		userId: string
-	): Promise<RequestPresetWithVersionRow | null>;
-	getVisibleBySlug(
-		slug: string,
-		workspaceId: string,
-		userId: string
-	): Promise<RequestPresetWithVersionRow | null>;
+	getByIdInWorkspace(id: string, workspaceId: string): Promise<RequestPresetWithVersionRow | null>;
+	getBySlug(slug: string, workspaceId: string): Promise<RequestPresetWithVersionRow | null>;
+	getAccessibleBySlug(slug: string, workspaceId: string, userId: string): Promise<RequestPresetWithVersionRow | null>;
+	getVisibleBySlug(slug: string, workspaceId: string, userId: string): Promise<RequestPresetWithVersionRow | null>;
 	listVersions(presetId: string): Promise<RequestPresetVersionRow[]>;
-	listVersionsPage(
-		presetId: string,
-		page: { offset: number; limit: number }
-	): Promise<RequestPresetVersionPage>;
-	getVersion(
-		presetId: string,
-		version: number
-	): Promise<RequestPresetVersionRow | null>;
-	createWithVersion(
-		params: CreateRequestPresetParams
-	): Promise<RequestPresetWithVersionRow>;
-	addVersion(
-		params: AddRequestPresetVersionParams
-	): Promise<RequestPresetWithVersionRow>;
-	updateMetadata(
-		id: string,
-		patch: UpdateRequestPresetMetadataPatch
-	): Promise<boolean>;
-	designateVersion(
-		id: string,
-		version: number,
-		nowIso: string
-	): Promise<boolean>;
+	listVersionsPage(presetId: string, page: { offset: number; limit: number }): Promise<RequestPresetVersionPage>;
+	getVersion(presetId: string, version: number): Promise<RequestPresetVersionRow | null>;
+	createWithVersion(params: CreateRequestPresetParams): Promise<RequestPresetWithVersionRow>;
+	addVersion(params: AddRequestPresetVersionParams): Promise<RequestPresetWithVersionRow>;
+	updateMetadata(id: string, patch: UpdateRequestPresetMetadataPatch): Promise<boolean>;
+	designateVersion(id: string, version: number, nowIso: string): Promise<boolean>;
 }
 
 export interface GuardrailsRepository {
 	listOwnedByWorkspace(
 		workspaceId: string,
 		userId: string,
-		includeArchived?: boolean
+		includeArchived?: boolean,
 	): Promise<GuardrailWithVersionRow[]>;
 	listAll(includeArchived?: boolean): Promise<GuardrailWithVersionRow[]>;
 	getById(id: string): Promise<GuardrailWithVersionRow | null>;
-	getByIdInWorkspace(
-		id: string,
-		workspaceId: string
-	): Promise<GuardrailWithVersionRow | null>;
+	getByIdInWorkspace(id: string, workspaceId: string): Promise<GuardrailWithVersionRow | null>;
 	listVersions(guardrailId: string): Promise<GuardrailVersionRow[]>;
 	listAssignments(guardrailId: string): Promise<GuardrailAssignmentRow[]>;
-	getEffectiveForRequest(
-		workspaceId: string,
-		userId: string,
-		apiKeyId: string
-	): Promise<EffectiveGuardrailRow[]>;
-	createWithVersion(
-		params: CreateGuardrailParams
-	): Promise<GuardrailWithVersionRow>;
-	addVersion(
-		params: AddGuardrailVersionParams
-	): Promise<GuardrailWithVersionRow | null>;
-	updateMetadata(
-		id: string,
-		patch: UpdateGuardrailMetadataPatch
-	): Promise<boolean>;
-	designateVersion(
-		id: string,
-		version: number,
-		nowIso: string,
-		options?: GuardrailMutationOptions
-	): Promise<boolean>;
-	upsertAssignment(
-		params: UpsertGuardrailAssignmentParams
-	): Promise<GuardrailAssignmentRow>;
+	getEffectiveForRequest(workspaceId: string, userId: string, apiKeyId: string): Promise<EffectiveGuardrailRow[]>;
+	createWithVersion(params: CreateGuardrailParams): Promise<GuardrailWithVersionRow>;
+	addVersion(params: AddGuardrailVersionParams): Promise<GuardrailWithVersionRow | null>;
+	updateMetadata(id: string, patch: UpdateGuardrailMetadataPatch): Promise<boolean>;
+	designateVersion(id: string, version: number, nowIso: string, options?: GuardrailMutationOptions): Promise<boolean>;
+	upsertAssignment(params: UpsertGuardrailAssignmentParams): Promise<GuardrailAssignmentRow>;
 	deleteAssignment(
 		workspaceId: string,
 		scopeType: GuardrailScopeType,
 		scopeId: string,
 		createdByUserId?: string,
 		/** Require the binding to still point at the Guardrail selected by the caller. */
-		expectedGuardrailId?: string
+		expectedGuardrailId?: string,
 	): Promise<boolean>;
 	getSettledBudgetSpent(
 		workspaceId: string,
 		scopeType: GuardrailScopeType,
 		scopeId: string,
-		sinceIso: string
+		sinceIso: string,
 	): Promise<number>;
 }
 
 export interface GuardrailBudgetsRepository {
 	/** Atomically reserves every user/API-key policy or none of them. */
-	reserveMany(
-		params: ReserveGuardrailBudgetsParams
-	): Promise<ReserveGuardrailBudgetsResult>;
+	reserveMany(params: ReserveGuardrailBudgetsParams): Promise<ReserveGuardrailBudgetsResult>;
 	/**
 	 * Extends an already-dispatched BYOK Gateway-key reservation with the
 	 * charged-budget intents required before shared/platform fallback.
 	 */
-	extendDispatched(
-		params: ExtendDispatchedGuardrailBudgetsParams
-	): Promise<ReserveGuardrailBudgetsResult>;
+	extendDispatched(params: ExtendDispatchedGuardrailBudgetsParams): Promise<ReserveGuardrailBudgetsResult>;
 	/** Transfers lifecycle ownership to the upstream dispatch path. */
-	markDispatched(
-		requestId: string,
-		nowIso: string,
-		expiresAtIso: string
-	): Promise<boolean>;
+	markDispatched(requestId: string, nowIso: string, expiresAtIso: string): Promise<boolean>;
 	/** Releases only leases that have never been dispatched. */
-	releaseMany(
-		requestId: string,
-		nowIso: string,
-		reason: string
-	): Promise<number>;
+	releaseMany(requestId: string, nowIso: string, reason: string): Promise<number>;
 	/** Conservatively consumes the full ceiling after dispatch when exact usage cannot be persisted. */
-	forfeitMany(
-		requestId: string,
-		nowIso: string,
-		reason: string
-	): Promise<number>;
+	forfeitMany(requestId: string, nowIso: string, reason: string): Promise<number>;
 	/**
 	 * Reclaims abandoned leases. Undispatched leases are released; dispatched
 	 * leases are conservatively charged at their reserved ceiling.
@@ -485,19 +367,11 @@ export interface UserBudgetReservationsRepository {
 	/** Atomically admits one finite ordinary-user budget lease. */
 	reserve(params: ReserveUserBudgetParams): Promise<ReserveUserBudgetResult>;
 	/** Transfers lifecycle ownership to the upstream dispatch path. */
-	markDispatched(
-		requestId: string,
-		nowIso: string,
-		expiresAtIso: string
-	): Promise<boolean>;
+	markDispatched(requestId: string, nowIso: string, expiresAtIso: string): Promise<boolean>;
 	/** Releases a lease only before dispatch; returns 1 when already released, otherwise 0 on an illegal/missing lease. */
 	release(requestId: string, nowIso: string, reason: string): Promise<number>;
 	/** Conservatively charges after dispatch; returns 1 when already expired/settled, otherwise 0 on an illegal/missing lease. */
-	forfeitDispatched(
-		requestId: string,
-		nowIso: string,
-		reason: string
-	): Promise<number>;
+	forfeitDispatched(requestId: string, nowIso: string, reason: string): Promise<number>;
 	/** Releases expired reserved leases and forfeits expired dispatched leases. */
 	expireBefore(nowIso: string, limit?: number): Promise<number>;
 }
@@ -507,18 +381,11 @@ export interface RouteDataPoliciesRepository {
 	getByRouteTargetIds(routeTargetIds: string[]): Promise<RouteDataPolicyRow[]>;
 	getByRouteTargetId(routeTargetId: string): Promise<RouteDataPolicyRow | null>;
 	listAudit(routeTargetId: string): Promise<RouteDataPolicyAuditRow[]>;
-	upsertWithAudit(
-		params: UpsertRouteDataPolicyParams
-	): Promise<RouteDataPolicyRow>;
-	invalidateForRouteTarget(
-		routeTargetId: string,
-		params: InvalidateRouteDataPoliciesParams
-	): Promise<number>;
-	invalidateForProvider(
-		providerId: string,
-		params: InvalidateRouteDataPoliciesParams
-	): Promise<number>;
+	upsertWithAudit(params: UpsertRouteDataPolicyParams): Promise<RouteDataPolicyRow>;
+	invalidateForRouteTarget(routeTargetId: string, params: InvalidateRouteDataPoliciesParams): Promise<number>;
+	invalidateForProvider(providerId: string, params: InvalidateRouteDataPoliciesParams): Promise<number>;
 }
+import type { McpServersRepository } from '../db/mcp-servers.repository';
 
 export interface AdminAccessRepository {
 	listApiKeys(): Promise<AdminApiKeyRow[]>;
@@ -532,7 +399,7 @@ export interface AdminAccessRepository {
 			description?: string | null;
 			permissionsJson?: string;
 			secretKey?: string;
-			status?: "active" | "revoked";
+			status?: 'active' | 'revoked';
 			revokedAt?: string | null;
 		},
 		audit: AdminApiKeyAuditContext,
@@ -540,16 +407,18 @@ export interface AdminAccessRepository {
 	rotateApiKey(id: string, secretKey: string, audit: AdminApiKeyAuditContext): Promise<boolean>;
 	revokeApiKey(id: string, audit: AdminApiKeyAuditContext): Promise<boolean>;
 	revealApiKeyWithAudit(id: string, audit: AdminApiKeyAuditContext): Promise<AdminApiKeyRow | null>;
-	listApiKeyAudit(id: string, options: { limit: number; before?: AdminApiKeyAuditCursor }): Promise<AdminApiKeyAuditRow[]>;
+	listApiKeyAudit(
+		id: string,
+		options: { limit: number; before?: AdminApiKeyAuditCursor },
+	): Promise<AdminApiKeyAuditRow[]>;
 	touchApiKey(id: string): Promise<void>;
 	insertSession(session: AdminSessionRow): Promise<void>;
-	getValidSession(
-		tokenHash: string,
-		nowIso: string
-	): Promise<AdminSessionRow | null>;
+	getValidSession(tokenHash: string, nowIso: string): Promise<AdminSessionRow | null>;
 	deleteSession(tokenHash: string): Promise<void>;
 	deleteExpiredSessions(nowIso: string): Promise<void>;
 }
+
+export type { McpServersRepository };
 
 /** 管理端分析聚合 */
 export interface AdminAnalyticsRepository {
@@ -559,18 +428,14 @@ export interface AdminAnalyticsRepository {
 		tag?: string;
 		providerId?: string;
 		userEmail?: string;
+		userId?: string;
+		apiKeyId?: string;
 	}): Promise<ModelAnalyticsRow[]>;
 	/** 公开排行专用：只读按日、按模型预聚合表，禁止回退扫描原始请求日志。 */
-	queryPublicModelAnalytics(options: {
-		startDate: string;
-		endDate: string;
-	}): Promise<PublicModelAnalyticsRow[]>;
+	queryPublicModelAnalytics(options: { startDate: string; endDate: string }): Promise<PublicModelAnalyticsRow[]>;
 	queryDistinctModelTags(): Promise<string[]>;
-	queryUserAnalytics(options: {
-		start: string;
-		end: string;
-		email?: string;
-	}): Promise<UserAnalyticsRow[]>;
+	queryUserAnalytics(options: { start: string; end: string; email?: string }): Promise<UserAnalyticsRow[]>;
+	queryKeyAnalytics(options: { start: string; end: string; userId: string }): Promise<KeyAnalyticsRow[]>;
 	queryProviderAnalytics(options: {
 		start: string;
 		end: string;
@@ -578,14 +443,8 @@ export interface AdminAnalyticsRepository {
 		modelId?: string;
 		routeGroup?: string;
 	}): Promise<ProviderAnalyticsRow[]>;
-	queryProviderReliability(options: {
-		start: string;
-		end: string;
-	}): Promise<ProviderReliabilityRow[]>;
-	queryModelProviderReliability(options: {
-		start: string;
-		end: string;
-	}): Promise<ModelProviderReliabilityRow[]>;
+	queryProviderReliability(options: { start: string; end: string }): Promise<ProviderReliabilityRow[]>;
+	queryModelProviderReliability(options: { start: string; end: string }): Promise<ModelProviderReliabilityRow[]>;
 }
 
 export interface UserAuditLogsRepository {
@@ -593,7 +452,8 @@ export interface UserAuditLogsRepository {
 	getUserAuditLogsByUserId(
 		userId: string,
 		page: number,
-		pageSize: number
+		pageSize: number,
+		eventType?: string,
 	): Promise<{ logs: UserAuditLogRow[]; total: number }>;
 	getGlobalUserAuditLogs(options: {
 		page?: number;
@@ -641,12 +501,28 @@ export interface GlobalUserAuditLogFilters {
 	endDateExclusive?: boolean;
 }
 
-export interface UserAuditLogCursor { createdAt: string; id: string }
+export interface UserAuditLogCursor {
+	createdAt: string;
+	id: string;
+}
 /** Fixed CSV source columns only; raw change payload and changed-fields are never fetched. */
-export type UserAuditLogExportData = Pick<GlobalUserAuditLogRow,
-	'id' | 'created_at' | 'request_log_id' | 'correlation_id' | 'event_type' | 'source' |
-	'reason_code' | 'reason_text' | 'actor_type' | 'actor_id' | 'user_id' | 'user_email' |
-	'api_key_id' | 'before_user_snapshot' | 'after_user_snapshot'
+export type UserAuditLogExportData = Pick<
+	GlobalUserAuditLogRow,
+	| 'id'
+	| 'created_at'
+	| 'request_log_id'
+	| 'correlation_id'
+	| 'event_type'
+	| 'source'
+	| 'reason_code'
+	| 'reason_text'
+	| 'actor_type'
+	| 'actor_id'
+	| 'user_id'
+	| 'user_email'
+	| 'api_key_id'
+	| 'before_user_snapshot'
+	| 'after_user_snapshot'
 >;
 export interface UserAuditLogExportRow {
 	log: UserAuditLogExportData;
@@ -665,8 +541,9 @@ export interface AdminKeyMutationWithAudit {
 		name: string | null;
 		status: string;
 		metadata: string | null;
+		rateLimit?: string | null;
 	};
-	patch: { name?: string | null; status?: string; metadata?: string | null };
+	patch: { name?: string | null; status?: string; metadata?: string | null; rateLimit?: string | null };
 	/** Canonical users row used for the Key audit; checked under the same commit guard. */
 	expectedUserSnapshot: import('../db/user-audit-snapshot').UserAuditSnapshot | null;
 	audit: InsertUserAuditLogParams | null;
@@ -675,19 +552,13 @@ export interface AdminKeyMutationWithAudit {
 export interface ApiKeysRepository {
 	/** Current-key metadata lookup after the same Gateway key has authenticated. */
 	getCurrentById(id: string): Promise<ManagementGatewayKeyRow | null>;
-	listForManagement(
-		params: ManagementGatewayKeyListParams
-	): Promise<ManagementGatewayKeyRow[]>;
-	getByHashForManagement(
-		params: ManagementGatewayKeyLookupParams
-	): Promise<ManagementGatewayKeyRow | null>;
+	listForManagement(params: ManagementGatewayKeyListParams): Promise<ManagementGatewayKeyRow[]>;
+	getByHashForManagement(params: ManagementGatewayKeyLookupParams): Promise<ManagementGatewayKeyRow | null>;
 	updateByHashForManagement(
 		params: ManagementGatewayKeyLookupParams,
-		patch: ManagementGatewayKeyPatch
+		patch: ManagementGatewayKeyPatch,
 	): Promise<boolean>;
-	deleteByHashForManagement(
-		params: ManagementGatewayKeyLookupParams
-	): Promise<boolean>;
+	deleteByHashForManagement(params: ManagementGatewayKeyLookupParams): Promise<boolean>;
 	getApiKeyByKey(key: string): Promise<ApiKeyRow | null>;
 	getApiKeyByKeyAnyStatus(key: string): Promise<ApiKeyRow | null>;
 	getApiKeyById(id: string): Promise<ApiKeyRow | null>;
@@ -697,44 +568,26 @@ export interface ApiKeysRepository {
 	 * Applies the same active Key, user, Workspace, organization, membership,
 	 * and expiry predicates as bearer authentication without requiring plaintext.
 	 */
-	getActiveApiKeyWithUserByLookupHash(
-		keyHash: string
-	): Promise<ResolvedGatewayKeyRow | null>;
+	getActiveApiKeyWithUserByLookupHash(keyHash: string): Promise<ResolvedGatewayKeyRow | null>;
 	getApiKeyWithUserById(id: string): Promise<ResolvedGatewayKeyRow | null>;
-	listKeysByUserId(
-		userId: string,
-		options?: { status?: string }
-	): Promise<ApiKeyRow[]>;
+	listKeysByUserId(userId: string, options?: { status?: string }): Promise<ApiKeyRow[]>;
 	listKeysByWorkspaceId(
 		workspaceId: string,
-		options?: { status?: string; creatorUserId?: string }
+		options?: { status?: string; creatorUserId?: string },
 	): Promise<ApiKeyRow[]>;
-	getApiKeyByIdInWorkspace(
-		id: string,
-		workspaceId: string
-	): Promise<ApiKeyRow | null>;
+	getApiKeyByIdInWorkspace(id: string, workspaceId: string): Promise<ApiKeyRow | null>;
 	insertApiKey(params: InsertKeyParams): Promise<void>;
 	revokeApiKey(id: string): Promise<boolean>;
-	revokeApiKeyInWorkspace(
-		id: string,
-		workspaceId: string,
-		creatorUserId?: string
-	): Promise<boolean>;
+	revokeApiKeyInWorkspace(id: string, workspaceId: string, creatorUserId?: string): Promise<boolean>;
 	deleteApiKeyHard(id: string, secretKey: string): Promise<boolean>;
 	updateApiKeyStatusById(id: string, status: string): Promise<boolean>;
-	setApiKeyMetadataById(
-		id: string,
-		metadataJson: string | null
-	): Promise<boolean>;
+	setApiKeyMetadataById(id: string, metadataJson: string | null): Promise<boolean>;
 	/** Idempotent online migration: replace legacy plaintext bearer values with hash references. */
-	scrubLegacyApiKeySecrets(
-		limit?: number
-	): Promise<{ scrubbed: number; remaining: number }>;
+	scrubLegacyApiKeySecrets(limit?: number): Promise<{ scrubbed: number; remaining: number }>;
 	updateApiKeyName(id: string, name: string | null): Promise<boolean>;
 	/** Admin Key PATCH/DELETE: profile CAS, one row mutation and audit in one database transaction. */
-	applyAdminKeyMutationWithAudit?(
-		mutation: AdminKeyMutationWithAudit
-	): Promise<'applied' | 'conflict' | 'not_found'>;
+	applyAdminKeyMutationWithAudit?(mutation: AdminKeyMutationWithAudit): Promise<'applied' | 'conflict' | 'not_found'>;
+	updateApiKeyRateLimit(id: string, rateLimitJson: string | null): Promise<boolean>;
 	getAllApiKeys(options?: {
 		email?: string;
 		userId?: string;
@@ -751,10 +604,7 @@ export interface ApiKeysRepository {
 
 export interface UsersRepository {
 	getById(id: string): Promise<UserRow | null>;
-	getByExternalPair(
-		externalSystem: string,
-		externalUserId: string
-	): Promise<UserRow | null>;
+	getByExternalPair(externalSystem: string, externalUserId: string): Promise<UserRow | null>;
 	listByEmail(email: string): Promise<UserRow[]>;
 	list(options?: {
 		email?: string;
@@ -776,17 +626,14 @@ export interface UsersRepository {
 		resetBudget?: boolean,
 		metadata?: string | null,
 		budget_spent_override?: number | null,
-		budget_base?: number | null
+		budget_base?: number | null,
+		wallet_granted?: number | null,
+		wallet_spent?: number | null,
 	): Promise<boolean>;
 	updateUserStatus(id: string, status: string): Promise<boolean>;
-	setUserMetadataById(
-		id: string,
-		metadataJson: string | null
-	): Promise<boolean>;
-	setUserChargedCostFactorsById(
-		id: string,
-		chargedCostFactorsJson: string | null
-	): Promise<boolean>;
+	updateUserRateLimit(id: string, rateLimitJson: string | null): Promise<boolean>;
+	setUserMetadataById(id: string, metadataJson: string | null): Promise<boolean>;
+	setUserChargedCostFactorsById(id: string, chargedCostFactorsJson: string | null): Promise<boolean>;
 	setUserEmailById(id: string, email: string): Promise<boolean>;
 	/**
 	 * 同时更新一对 external 身份。两者要么都为非空字符串，要么都为 null
@@ -795,13 +642,13 @@ export interface UsersRepository {
 	setUserExternalIdentityById(
 		id: string,
 		externalSystem: string | null,
-		externalUserId: string | null
+		externalUserId: string | null,
 	): Promise<boolean>;
 	deleteUserHard(id: string): Promise<boolean>;
 	/** Admin deletion: write the success audit and delete atomically on every supported backend; callers fail closed if unavailable. */
 	deleteUserHardWithAudit?(
 		id: string,
-		audit: InsertUserAuditLogParams
+		audit: InsertUserAuditLogParams,
 	): Promise<'deleted' | 'not_deleted' | 'dispatch_history'>;
 	getUsersCount(): Promise<EntityCountSnapshot>;
 }
@@ -809,9 +656,7 @@ export interface UsersRepository {
 /** 模型列表页、标签、级联删除（models + model_tags + model_routes） */
 export interface ModelsRepository {
 	listModelsWithRouteCounts(): Promise<ModelWithRouteCountsRow[]>;
-	getModelDetailWithRouteCounts(
-		id: string
-	): Promise<ModelWithRouteCountsRow | null>;
+	getModelDetailWithRouteCounts(id: string): Promise<ModelWithRouteCountsRow | null>;
 	insertModel(params: {
 		id: string;
 		displayName: unknown;
@@ -826,17 +671,14 @@ export interface ModelsRepository {
 		releasedAt?: unknown;
 	}): Promise<void>;
 	replaceModelTags(modelId: string, tags: string[]): Promise<void>;
-	updateModelByPatch(
-		id: string,
-		rest: Record<string, unknown>
-	): Promise<number>;
+	updateModelByPatch(id: string, rest: Record<string, unknown>): Promise<number>;
 	/** Atomically match the raw nullable route_policy and apply columns and optional tags.
 	 * False means absent/stale; a matched no-op is true. No historical ABA detection. */
 	updateModelWithPolicyPrecondition(
 		id: string,
 		rest: Record<string, unknown>,
 		expectedRoutePolicy: string | null,
-		tags?: string[]
+		tags?: string[],
 	): Promise<boolean>;
 	deleteModelCascade(id: string): Promise<number>;
 }
@@ -862,13 +704,17 @@ export interface ModelRoutingRepository {
 	getModelRoutesByPoolId(poolId: string): Promise<ModelRouteRow[]>;
 }
 
+/** `listModelRoutesWithJoins` 过滤。公开列表传 `status: 'active'`；Admin CRUD 不传以拉全量。 */
+export type ListModelRoutesWithJoinsFilters = {
+	/** Bounded read for public previews. */
+	limit?: number;
+	modelId?: string;
+	providerId?: string;
+	status?: 'active';
+};
+
 export interface ModelRoutesRepository {
-	listModelRoutesWithJoins(filters: {
-		modelId?: string;
-		providerId?: string;
-		/** Optional bounded read for previews and public control surfaces. */
-		limit?: number;
-	}): Promise<ModelRouteJoinRow[]>;
+	listModelRoutesWithJoins(filters: ListModelRoutesWithJoinsFilters): Promise<ModelRouteJoinRow[]>;
 	insertModelRoute(params: {
 		id: string;
 		modelId: string;
@@ -908,17 +754,14 @@ export interface ModelRoutesRepository {
 			tierStrategies?: string | null;
 			stickyEnabled?: boolean;
 			stickyIdleTtlSeconds?: number;
-		}
+		},
 	): Promise<number>;
 	/**
 	 * Atomically bump `sticky_epoch` (invalidates all bindings for this pool).
 	 * Returns new epoch, or null when pool not found.
 	 */
 	bumpRoutePoolStickyEpoch(poolId: string): Promise<number | null>;
-	updateModelRouteByPatch(
-		id: string,
-		patch: Record<string, unknown>
-	): Promise<number>;
+	updateModelRouteByPatch(id: string, patch: Record<string, unknown>): Promise<number>;
 	deleteModelRouteById(id: string): Promise<number>;
 	/** Delete pool (and its surfaces) only when it has no model_routes targets. */
 	deleteRoutePoolIfEmpty(poolId: string): Promise<boolean>;
@@ -926,10 +769,7 @@ export interface ModelRoutesRepository {
 
 /** Shared Provider sticky bindings (cross-isolate / cross-instance). */
 export interface RoutePoolStickyBindingsRepository {
-	getBinding(
-		routePoolId: string,
-		affinityHash: string
-	): Promise<RoutePoolStickyBindingRow | null>;
+	getBinding(routePoolId: string, affinityHash: string): Promise<RoutePoolStickyBindingRow | null>;
 	/**
 	 * Insert binding, or replace when existing row is expired, epoch-mismatched,
 	 * or matches `expectedToken` (stale but still-valid row, e.g. invalid_target).
@@ -955,26 +795,16 @@ export interface RoutePoolStickyBindingsRepository {
 		nowIso: string;
 	}): Promise<boolean>;
 	/** Clear sticky binding; CAS on binding_token. Returns true when deleted. */
-	clearBinding(params: {
-		routePoolId: string;
-		affinityHash: string;
-		expectedToken: string;
-	}): Promise<boolean>;
+	clearBinding(params: { routePoolId: string; affinityHash: string; expectedToken: string }): Promise<boolean>;
 	/**
 	 * Admin force-clear: delete by (pool, hash) without token CAS.
 	 * Returns true when a row was deleted.
 	 */
-	forceClearBinding(params: {
-		routePoolId: string;
-		affinityHash: string;
-	}): Promise<boolean>;
+	forceClearBinding(params: { routePoolId: string; affinityHash: string }): Promise<boolean>;
 	/**
 	 * Active binding counts per target: epoch matches pool.sticky_epoch and not expired.
 	 */
-	listBindingTargetCounts(
-		routePoolId: string,
-		nowIso: string
-	): Promise<RoutePoolStickyBindingTargetCount[]>;
+	listBindingTargetCounts(routePoolId: string, nowIso: string): Promise<RoutePoolStickyBindingTargetCount[]>;
 	/** Rows that are expired or epoch-mismatched (GC debt). */
 	countStaleBindings(routePoolId: string, nowIso: string): Promise<number>;
 	/** Best-effort table hygiene; not required for correctness. */
@@ -989,6 +819,8 @@ export interface ProvidersRepository {
 	insertProvider(params: {
 		id: string;
 		name: string;
+		/** 导入模板英文名、`__custom__`，或空字符串。 */
+		kind?: string;
 		/** `providers.endpoints` JSON 文本 */
 		endpoints: string | null;
 		description: unknown;
@@ -997,20 +829,13 @@ export interface ProvidersRepository {
 		/** 非空 = 接受用户共享密钥池注入的官方渠道。 */
 		sharedChannelType?: string | null;
 	}): Promise<void>;
-	updateProviderByPatch(
-		id: string,
-		body: Record<string, unknown>
-	): Promise<number>;
+	updateProviderByPatch(id: string, body: Record<string, unknown>): Promise<number>;
 	deleteProviderById(id: string): Promise<number>;
 	getProviderById(id: string): Promise<ProviderRow | null>;
 	getProviderRowById(id: string): Promise<ProviderAdminRow | null>;
-	getProviderProtocolBases(
-		providerId: string
-	): Promise<ProviderProtocolBases | null>;
+	getProviderProtocolBases(providerId: string): Promise<ProviderProtocolBases | null>;
 	/** 读取 providers.api_key 明文（仅服务端推理/管理用）。 */
-	getProviderApiKeyPlaintext(
-		providerId: string
-	): Promise<{ api_key: string } | null>;
+	getProviderApiKeyPlaintext(providerId: string): Promise<{ api_key: string } | null>;
 }
 
 /** Filters for {@link RequestLogsRepository.getRequestLogsByKeyId}. If `includeStatuses` is non-empty after whitelist, use `status IN (...)`; else if `excludeStatus` is set, use `(status IS NULL OR status != ?)`; else no status predicate. */
@@ -1033,16 +858,14 @@ export interface RequestLogsRepository {
 	 * Management principal's account boundary. Storage must enforce that
 	 * boundary in SQL rather than relying on caller-supplied Workspace filters.
 	 */
-	queryManagementAnalytics(
-		query: ManagementAnalyticsQuery
-	): Promise<ManagementAnalyticsQueryResult>;
+	queryManagementAnalytics(query: ManagementAnalyticsQuery): Promise<ManagementAnalyticsQueryResult>;
 	/**
 	 * Atomically records feedback only when the generation and Management key
 	 * belong to the same personal or organization account. A false result is an
 	 * indistinguishable missing/foreign/revoked-key outcome.
 	 */
 	insertGenerationFeedbackForManagementAccount(
-		params: InsertGenerationFeedbackForManagementAccountParams
+		params: InsertGenerationFeedbackForManagementAccountParams,
 	): Promise<boolean>;
 	/**
 	 * Resolve one generation within the authenticated user's current Workspace.
@@ -1058,13 +881,15 @@ export interface RequestLogsRepository {
 		apiKeyId: string,
 		page: number,
 		pageSize: number,
-		filter?: RequestLogsByKeyIdFilter
+		filter?: RequestLogsByKeyIdFilter,
 	): Promise<{ logs: RequestLogRow[]; total: number }>;
 	getRequestLogs(options: {
 		page?: number;
 		pageSize?: number;
 		/** Server-controlled resource boundary inherited from the owning Gateway Key. */
 		workspaceId?: string;
+		/** Exact `api_key_request_logs.id`. */
+		id?: string;
 		apiKeyId?: string;
 		userId?: string;
 		userEmail?: string;
@@ -1072,6 +897,10 @@ export interface RequestLogsRepository {
 		providerId?: string;
 		/** Public provider display-name snapshot captured on the request log. */
 		providerName?: string;
+		/** Match any of these `provider_id` values. Combined with `providerId` when both are set. */
+		providerIds?: string[];
+		/** `model_id` prefix match. `%`, `_`, and `\` in the prefix are escaped. */
+		modelIdPrefix?: string;
 		routeGroup?: string;
 		protocol?: string;
 		status?: string;
@@ -1111,7 +940,7 @@ export interface RequestLogsRepository {
 		startDate: string;
 		endDate: string;
 		endExclusive?: boolean;
-		granularity: "hour" | "day";
+		granularity: 'hour' | 'day';
 		/** Optional tenant boundary for ordinary-user Activity trends. */
 		userId?: string;
 		/** Optional Workspace boundary for ordinary-user Activity trends. */
@@ -1121,11 +950,13 @@ export interface RequestLogsRepository {
 		/** Public provider display-name snapshot captured on the request log. */
 		providerName?: string;
 		status?: string;
+		/** IANA 业务时区；桶键为该时区墙钟，不是 UTC。 */
+		timeZone?: string;
 	}): Promise<RequestTimeseriesRow[]>;
 	queryUserTokenTimeseries(options: {
 		startDate: string;
 		endDate: string;
-		granularity: "hour" | "day";
+		granularity: 'hour' | 'day';
 		userEmails: string[];
 	}): Promise<UserTokenTimeseriesRow[]>;
 	getThroughputLastMinute(): Promise<ThroughputSnapshot>;
@@ -1144,15 +975,8 @@ export interface RequestLogsRepository {
 		since1dIso: string;
 	}): Promise<RouteAvailabilityAggregate[]>;
 	/** Bounded oldest-first hygiene; never deletes inside request settlement. */
-	deleteProviderAttemptAvailabilityBefore(options: {
-		cutoffIso: string;
-		limit: number;
-	}): Promise<number>;
-	getDistinctActiveUsersCount(options: {
-		startDate: string;
-		endDate: string;
-		endExclusive?: boolean;
-	}): Promise<number>;
+	deleteProviderAttemptAvailabilityBefore(options: { cutoffIso: string; limit: number }): Promise<number>;
+	getDistinctActiveUsersCount(options: { startDate: string; endDate: string; endExclusive?: boolean }): Promise<number>;
 }
 
 export interface SystemConfigRepository {
@@ -1166,7 +990,7 @@ export interface SystemConfigRepository {
 	upsertSystemConfigValueWithAudit(input: SystemConfigAuditWrite): Promise<void>;
 	/** Conditional Admin write; a missing row has expectedRevision=null. Conflicts do not write or audit. */
 	upsertSystemConfigValueWithAuditIfRevision(
-		input: SystemConfigAuditWrite & { expectedRevision: string | null }
+		input: SystemConfigAuditWrite & { expectedRevision: string | null },
 	): Promise<{ committed: boolean; revision: string | null }>;
 	getConfig(key: string): Promise<string | null>;
 	/** Value and opaque per-key revision from one row read; both null when absent. */
@@ -1186,10 +1010,7 @@ export interface SystemConfigAuditWrite {
 /** 用户门户会话（`user_session` Cookie）。 */
 export interface PortalAccessRepository {
 	insertSession(session: PortalSessionRow): Promise<void>;
-	getValidSession(
-		tokenHash: string,
-		nowIso: string
-	): Promise<PortalSessionRow | null>;
+	getValidSession(tokenHash: string, nowIso: string): Promise<PortalSessionRow | null>;
 	deleteSession(tokenHash: string): Promise<void>;
 	deleteExpiredSessions(nowIso: string): Promise<void>;
 }
@@ -1199,28 +1020,27 @@ export interface SharedKeysRepository extends AdminSharedKeysRepository {
 	insertSharedKey(params: InsertSharedKeyParams): Promise<void>;
 	getSharedKeyById(id: string): Promise<SharedKeyRow | null>;
 	listSharedKeysBySeller(sellerUserId: string): Promise<SharedKeyRow[]>;
-	listAllSharedKeys(options?: {
-		status?: string;
-		channelType?: string;
-	}): Promise<SharedKeyRow[]>;
+	listAllSharedKeys(options?: { status?: string; channelType?: string }): Promise<SharedKeyRow[]>;
 	/** 调度候选：指定渠道全部 active key，已按固定顺序排好（seller_priority DESC → weight DESC → id ASC）。 */
 	listActiveSharedKeysByChannel(channelType: string, control?: PreparationControl): Promise<SharedKeyRow[]>;
 	updateSharedKey(id: string, patch: UpdateSharedKeyPatch): Promise<boolean>;
 	/** Seller state/profile CAS; must not undo governance or activate an unverified key. */
-	updateSharedKeyForSeller(id: string, patch: SellerSharedKeyPatch, expected: SharedKeyStateExpectation): Promise<boolean>;
-	/** Only a confirmed validation may activate invalid/validating keys and write validatedAt. */
-	completeSharedKeyValidation(id: string, expected: SharedKeyStateExpectation, result: SharedKeyValidationResult, nowIso: string): Promise<boolean>;
-	/** Internal encryption migration/write path; never exposed to an HTTP route. */
-	replaceSharedKeySecret?(
+	updateSharedKeyForSeller(
 		id: string,
-		protectedSecret: string
+		patch: SellerSharedKeyPatch,
+		expected: SharedKeyStateExpectation,
 	): Promise<boolean>;
-	/** Runtime upstream 401/403: invalidate only a currently active key, preserving governance/paused states. */
-	markSharedKeyFailure(
+	/** Only a confirmed validation may activate invalid/validating keys and write validatedAt. */
+	completeSharedKeyValidation(
 		id: string,
-		reason: string,
-		nowIso: string
-	): Promise<void>;
+		expected: SharedKeyStateExpectation,
+		result: SharedKeyValidationResult,
+		nowIso: string,
+	): Promise<boolean>;
+	/** Internal encryption migration/write path; never exposed to an HTTP route. */
+	replaceSharedKeySecret?(id: string, protectedSecret: string): Promise<boolean>;
+	/** Runtime upstream 401/403: invalidate only a currently active key, preserving governance/paused states. */
+	markSharedKeyFailure(id: string, reason: string, nowIso: string): Promise<void>;
 	deleteSharedKey(id: string): Promise<boolean>;
 	/** Fast post-credit projection; false if the key row changed or disappeared. */
 	addSharedKeyUsage(
@@ -1240,11 +1060,7 @@ export interface PortalLedgerRepository {
 	getEarningByRequestLogId(requestLogId: string): Promise<SharedKeyEarningRow | null>;
 	/** 幂等建立 1:1 账本行（首次登录/首次上架时调用）。 */
 	ensureUserEarnings(userId: string): Promise<void>;
-	updateWallet(
-		userId: string,
-		walletAddress: string | null,
-		verifiedAtIso: string | null
-	): Promise<void>;
+	updateWallet(userId: string, walletAddress: string | null, verifiedAtIso: string | null): Promise<void>;
 	/** Consume the challenge cutoff atomically; replay/stale challenges never change a wallet. */
 	updateWalletIfChallengeUnused(
 		userId: string,
@@ -1258,77 +1074,48 @@ export interface PortalLedgerRepository {
 	 * 幂等写入收益流水并在同一数据库事务中增加卖家余额。
 	 * 重复 `request_log_id` 不得再次入账。
 	 */
-	recordEarningAndCredit(
-		params: InsertSharedKeyEarningParams
-	): Promise<boolean>;
+	recordEarningAndCredit(params: InsertSharedKeyEarningParams): Promise<boolean>;
 	/**
 	 * Rebuild a shared key's usage projection from committed earning detail.
 	 * The request-log earning must exist and name the expected key. Repeating this
 	 * operation must not add to either the earning detail or seller balance.
 	 * Missing/mismatched detail or a deleted key fails closed.
 	 */
-	rebuildSharedKeyUsageFromEarnings(
-		requestLogId: string,
-		expectedSharedKeyId: string,
-		nowIso: string,
-	): Promise<void>;
+	rebuildSharedKeyUsageFromEarnings(requestLogId: string, expectedSharedKeyId: string, nowIso: string): Promise<void>;
 	/** 收益入账：balance/contribution_value/lifetime_earned 增加 net（与请求计费同批/独立事务均可）。 */
-	creditEarningBalance(
-		sellerUserId: string,
-		netAmount: number,
-		nowIso: string
-	): Promise<void>;
+	creditEarningBalance(sellerUserId: string, netAmount: number, nowIso: string): Promise<void>;
 	listEarningsBySeller(
 		sellerUserId: string,
 		page: number,
-		pageSize: number
+		pageSize: number,
 	): Promise<{ rows: SharedKeyEarningRow[]; total: number }>;
 	insertWithdrawal(params: InsertWithdrawalParams): Promise<void>;
 	/** Atomically creates the withdrawal and locks its balance. */
 	createWithdrawalWithBalanceLock(
-		params: InsertWithdrawalParams
-	): Promise<"created" | "insufficient_balance" | "active_withdrawal_exists">;
+		params: InsertWithdrawalParams,
+	): Promise<'created' | 'insufficient_balance' | 'active_withdrawal_exists'>;
 	getWithdrawal(id: string): Promise<WithdrawalRow | null>;
 	/** requested | processing | submitted 任一状态的进行中提现单。 */
 	getActiveWithdrawalByUser(userId: string): Promise<WithdrawalRow | null>;
 	listWithdrawalsByUser(
 		userId: string,
 		page: number,
-		pageSize: number
+		pageSize: number,
 	): Promise<{ rows: WithdrawalRow[]; total: number }>;
 	listAllWithdrawals(status?: string): Promise<WithdrawalRow[]>;
 	/** @deprecated Use createWithdrawalWithBalanceLock for new callers. */
-	lockBalanceForWithdrawal(
-		userId: string,
-		amount: number,
-		nowIso: string
-	): Promise<boolean>;
+	lockBalanceForWithdrawal(userId: string, amount: number, nowIso: string): Promise<boolean>;
 	/** 提现确认：locked_amount -= amount, lifetime_withdrawn += amount, status=confirmed。 */
-	settleWithdrawalConfirmed(
-		id: string,
-		userId: string,
-		amount: number,
-		nowIso: string
-	): Promise<void>;
+	settleWithdrawalConfirmed(id: string, userId: string, amount: number, nowIso: string): Promise<void>;
 	/** 提现失败/驳回：locked_amount -= amount, balance += amount, status=failed。 */
-	refundWithdrawal(
-		id: string,
-		userId: string,
-		amount: number,
-		reason: string,
-		nowIso: string
-	): Promise<void>;
+	refundWithdrawal(id: string, userId: string, amount: number, reason: string, nowIso: string): Promise<void>;
 	/**
 	 * Atomically reject/refund only a requested, unclaimed withdrawal without a
 	 * transaction hash or durable chain outbox row. Processing/submitted jobs are
 	 * conflicts even if their transaction hash has not been projected yet.
 	 * Throws on a failed/uncertain financial write; never reports it as rejected.
 	 */
-	rejectRequestedWithdrawal(
-		id: string,
-		reason: string,
-		nowIso: string,
-	): Promise<RejectRequestedWithdrawalResult>;
+	rejectRequestedWithdrawal(id: string, reason: string, nowIso: string): Promise<RejectRequestedWithdrawalResult>;
 	updateWithdrawalStatus(
 		id: string,
 		patch: {
@@ -1340,7 +1127,7 @@ export interface PortalLedgerRepository {
 			nowIso: string;
 			/** CAS 条件：仅当当前 status 等于该值才更新（并发处理器防双铸）。 */
 			expectedStatus?: string;
-		}
+		},
 	): Promise<boolean>;
 	/** 幂等创建铸造记录；UNIQUE(user_id, badge_token_id) 冲突返回 false。 */
 	insertNftMint(params: InsertNftMintParams): Promise<boolean>;
@@ -1355,11 +1142,7 @@ export interface PortalLedgerRepository {
 			failureReason?: string | null;
 			confirmedAt?: string | null;
 			expectedStatus?: string;
-		}
+		},
 	): Promise<boolean>;
-	setHighestBadgeTier(
-		userId: string,
-		tier: number,
-		nowIso: string
-	): Promise<void>;
+	setHighestBadgeTier(userId: string, tier: number, nowIso: string): Promise<void>;
 }

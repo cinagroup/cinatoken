@@ -1,14 +1,8 @@
 import type { ProxyDispatchMeta } from '../failover-dispatch';
 import { GATEWAY_ERROR_CODE_HEADER, GatewayErrorCode } from '../gateway-error-codes';
 import { gatewayErrorResponse } from '../gateway-error-response';
-import {
-	buildOpenRouterErrorBody,
-	type OpenRouterErrorSkin,
-} from '../openrouter-error-protocol';
-import {
-	responseTextWithinLimit,
-	UpstreamResponseBodyTooLargeError,
-} from './bounded-response-body';
+import { buildOpenRouterErrorBody, type OpenRouterErrorSkin } from '../openrouter-error-protocol';
+import { responseTextWithinLimit, UpstreamResponseBodyTooLargeError } from './bounded-response-body';
 
 /**
  * A non-streaming text completion is materialized at most once. Eight MiB is
@@ -20,8 +14,7 @@ export const TEXT_JSON_RESPONSE_MAX_BYTES = 8 * 1024 * 1024;
 export const TEXT_SUCCESS_RESPONSE_MAX_COLLECTION_ITEMS = 4_096;
 
 export type BoundedTextJsonObjectResult =
-	| { ok: true; value: Record<string, unknown> }
-	| { ok: false; response: Response; meta: ProxyDispatchMeta };
+	{ ok: true; value: Record<string, unknown> } | { ok: false; response: Response; meta: ProxyDispatchMeta };
 
 export type TextSuccessProtocol = 'Chat Completions' | 'Responses' | 'Anthropic Messages' | 'Rerank';
 
@@ -72,9 +65,7 @@ function unreadableTextJsonResponse(params: {
 	return {
 		response: gatewayErrorResponse({
 			status: 502,
-			code: params.tooLarge
-				? GatewayErrorCode.upstreamResponseTooLarge
-				: GatewayErrorCode.upstreamRequestFailed,
+			code: params.tooLarge ? GatewayErrorCode.upstreamResponseTooLarge : GatewayErrorCode.upstreamRequestFailed,
 			message: params.tooLarge
 				? 'Upstream response exceeded the gateway size limit'
 				: 'Upstream provider returned an invalid JSON response',
@@ -102,11 +93,7 @@ export async function readBoundedTextJsonObject(
 ): Promise<BoundedTextJsonObjectResult> {
 	let text: string;
 	try {
-		text = await responseTextWithinLimit(
-			response,
-			options.maxBytes ?? TEXT_JSON_RESPONSE_MAX_BYTES,
-			options.signal,
-		);
+		text = await responseTextWithinLimit(response, options.maxBytes ?? TEXT_JSON_RESPONSE_MAX_BYTES, options.signal);
 	} catch (error) {
 		return {
 			ok: false,
@@ -136,10 +123,7 @@ export async function readBoundedTextJsonObject(
 }
 
 /** Rebuild a consumed JSON response so the caller always receives a readable body. */
-export function rebuildTextJsonResponse(
-	response: Response,
-	value: Record<string, unknown>,
-): Response {
+export function rebuildTextJsonResponse(response: Response, value: Record<string, unknown>): Response {
 	const headers = new Headers(response.headers);
 	headers.delete('Content-Length');
 	headers.delete('Content-Encoding');
@@ -152,24 +136,26 @@ export function rebuildTextJsonResponse(
 }
 
 /** A request cancelled before admission is known not to have reached a provider. */
-export function preDispatchCancelledTextResponse(
-	skin: OpenRouterErrorSkin,
-	requestId?: string | null,
-): Response {
+export function preDispatchCancelledTextResponse(skin: OpenRouterErrorSkin, requestId?: string | null): Response {
 	const status = 499;
-	return new Response(JSON.stringify(buildOpenRouterErrorBody({
-		skin,
-		status,
-		message: 'Request was cancelled before upstream dispatch',
-		errorType: 'provider_unavailable',
-		legacyCode: GatewayErrorCode.upstreamRequestFailed,
-		requestId,
-	})), {
-		status,
-		headers: {
-			'Content-Type': 'application/json; charset=UTF-8',
-			'Cache-Control': 'no-store',
-			[GATEWAY_ERROR_CODE_HEADER]: GatewayErrorCode.upstreamRequestFailed,
+	return new Response(
+		JSON.stringify(
+			buildOpenRouterErrorBody({
+				skin,
+				status,
+				message: 'Request was cancelled before upstream dispatch',
+				errorType: 'provider_unavailable',
+				legacyCode: GatewayErrorCode.upstreamRequestFailed,
+				requestId,
+			}),
+		),
+		{
+			status,
+			headers: {
+				'Content-Type': 'application/json; charset=UTF-8',
+				'Cache-Control': 'no-store',
+				[GATEWAY_ERROR_CODE_HEADER]: GatewayErrorCode.upstreamRequestFailed,
+			},
 		},
-	});
+	);
 }

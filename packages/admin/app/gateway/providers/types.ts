@@ -1,24 +1,21 @@
-import type { GatewayProvider } from "@/lib/types";
-import type {
-	ProviderEndpointCapability,
-	ProviderEndpointsMap,
-} from "@octafuse/core/provider-endpoints";
-import type { GeminiUpstreamAuthScheme } from "@octafuse/core/gemini-upstream-url";
-import type { UpstreamProtocol } from "@octafuse/core/upstream-protocol";
+import type { GatewayProvider } from '@/lib/types';
+import type { ProviderEndpointCapability, ProviderEndpointsMap } from '@octafuse/core/provider-endpoints';
+import type { GeminiUpstreamAuthScheme } from '@octafuse/core/gemini-upstream-url';
+import type { UpstreamProtocol } from '@octafuse/core/upstream-protocol';
 
 /** 表单鉴权：`auto` 表示省略 `endpoints.gemini.auth`，运行时默认 `query-key`。 */
-export type GeminiAuthFormMode = "auto" | GeminiUpstreamAuthScheme;
+export type GeminiAuthFormMode = 'auto' | GeminiUpstreamAuthScheme;
 
 /** 卡片上紧凑展示的能力标签（OpenAI images.* 合并为 images；audio.transcriptions → audio）。 */
 export type ProviderCapabilityBadge =
-	| "chat"
-	| "responses"
-	| "images"
-	| "audio"
-	| "messages"
-	| "modelsGenerate"
-	| "generateContent"
-	| "streamGenerateContent";
+	| 'chat'
+	| 'responses'
+	| 'images'
+	| 'audio'
+	| 'messages'
+	| 'modelsGenerate'
+	| 'generateContent'
+	| 'streamGenerateContent';
 
 /** `GET /admin/providers/import/catalog` */
 export type ProviderImportCatalogRow = {
@@ -30,6 +27,11 @@ export type ProviderImportCatalogRow = {
 	protocols: UpstreamProtocol[];
 	endpoints: string | null;
 	description: string | null;
+	links?: {
+		platform?: string;
+		api_keys?: string;
+		referral?: string;
+	};
 };
 
 export type ProviderProtocolSummary = {
@@ -44,7 +46,7 @@ export type ProviderProtocolSummary = {
 	endpoints: Array<{
 		capability: ProviderEndpointCapability;
 		url: string;
-		source: "base" | "override";
+		source: 'base' | 'override';
 	}>;
 };
 
@@ -60,6 +62,7 @@ export type ProtocolEndpointForm = {
 	chat: string;
 	responses: string;
 	images_generations: string;
+	images_generations_multimodal: string;
 	images_edits: string;
 	audio_transcriptions: string;
 	audio_transcriptions_multimodal: string;
@@ -86,16 +89,20 @@ export type ProtocolEndpointForm = {
 export type ProviderFormData = {
 	id: string;
 	name: string;
-	/** 创建必填（标记共享渠道时可空）；编辑时空 = 不改 */
+	/** 导入模板英文名、`__custom__`，或空字符串（尚未分类）。 */
+	kind: string;
+	/** 创建必填（共享渠道可空）；编辑时空 = 不改 */
 	api_key: string;
 	/** `active` | `disabled` */
-	status: "active" | "disabled";
+	status: 'active' | 'disabled';
 	/** 用户共享密钥注入渠道（openai/anthropic/zhipu/deepseek；空 = 不参与） */
 	shared_channel_type: string;
 	openai: ProtocolEndpointForm;
 	anthropic: ProtocolEndpointForm;
 	gemini: ProtocolEndpointForm;
 	dashscope: ProtocolEndpointForm;
+	minimax: ProtocolEndpointForm;
+	volcengine: ProtocolEndpointForm;
 	description: string;
 };
 
@@ -106,72 +113,80 @@ export type ProviderImportResult = {
 };
 
 export const EMPTY_PROTOCOL_FORM: ProtocolEndpointForm = {
-	base: "",
-	chat: "",
-	responses: "",
-	images_generations: "",
-	images_edits: "",
-	audio_transcriptions: "",
-	audio_transcriptions_multimodal: "",
-	audio_transcriptions_tasks: "",
-	audio_speech: "",
-	audio_speech_multimodal: "",
-	audio_realtime_inference: "",
-	audio_realtime_session: "",
-	audio_hotwords: "",
-	audio_voices: "",
-	messages: "",
-	modelsGenerate: "",
-	generateContent: "",
-	streamGenerateContent: "",
+	base: '',
+	chat: '',
+	responses: '',
+	images_generations: '',
+	images_generations_multimodal: '',
+	images_edits: '',
+	audio_transcriptions: '',
+	audio_transcriptions_multimodal: '',
+	audio_transcriptions_tasks: '',
+	audio_speech: '',
+	audio_speech_multimodal: '',
+	audio_realtime_inference: '',
+	audio_realtime_session: '',
+	audio_hotwords: '',
+	audio_voices: '',
+	messages: '',
+	modelsGenerate: '',
+	generateContent: '',
+	streamGenerateContent: '',
 	legacyPerAction: null,
-	auth: "auto",
+	auth: 'auto',
 };
 
 export const EMPTY_PROVIDER_FORM: ProviderFormData = {
-	id: "",
-	name: "",
-	api_key: "",
-	status: "disabled",
-	shared_channel_type: "",
+	id: '',
+	name: '',
+	kind: '',
+	api_key: '',
+	status: 'disabled',
+	shared_channel_type: '',
 	openai: { ...EMPTY_PROTOCOL_FORM },
 	anthropic: { ...EMPTY_PROTOCOL_FORM },
 	gemini: { ...EMPTY_PROTOCOL_FORM },
 	dashscope: { ...EMPTY_PROTOCOL_FORM },
-	description: "",
+	minimax: { ...EMPTY_PROTOCOL_FORM },
+	volcengine: { ...EMPTY_PROTOCOL_FORM },
+	description: '',
 };
 
 export type { GatewayProvider, ProviderEndpointsMap };
 
 /** Providers 页列表筛选（URL `?filter=`）。 */
 export type ProviderListFilter =
-	| "all"
-	| "active"
-	| "disabled"
-	| "pending"
-	| "no_key"
-	| "openai"
-	| "anthropic"
-	| "gemini"
-	| "dashscope";
+	| 'all'
+	| 'active'
+	| 'disabled'
+	| 'pending'
+	| 'no_key'
+	| 'outdated'
+	| 'openai'
+	| 'anthropic'
+	| 'gemini'
+	| 'dashscope'
+	| 'minimax'
+	| 'volcengine';
 
-export const DEFAULT_PROVIDER_LIST_FILTER: ProviderListFilter = "all";
+export const DEFAULT_PROVIDER_LIST_FILTER: ProviderListFilter = 'all';
 
 export const PROVIDER_LIST_FILTERS: readonly ProviderListFilter[] = [
-	"all",
-	"active",
-	"disabled",
-	"pending",
-	"no_key",
-	"openai",
-	"anthropic",
-	"gemini",
-	"dashscope",
+	'all',
+	'active',
+	'disabled',
+	'pending',
+	'no_key',
+	'outdated',
+	'openai',
+	'anthropic',
+	'gemini',
+	'dashscope',
+	'minimax',
+	'volcengine',
 ] as const;
 
-export function parseProviderListFilterParam(
-	raw: string | null
-): ProviderListFilter {
+export function parseProviderListFilterParam(raw: string | null): ProviderListFilter {
 	if (!raw) return DEFAULT_PROVIDER_LIST_FILTER;
 	return (PROVIDER_LIST_FILTERS as readonly string[]).includes(raw)
 		? (raw as ProviderListFilter)
@@ -179,8 +194,4 @@ export function parseProviderListFilterParam(
 }
 
 /** 卡片状态行：密钥 / 启停摘要。 */
-export type ProviderKeyStatusKind =
-	| "pending"
-	| "disabled"
-	| "no_key"
-	| "key_set";
+export type ProviderKeyStatusKind = 'pending' | 'disabled' | 'no_key' | 'key_set';

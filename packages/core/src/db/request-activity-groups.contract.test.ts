@@ -153,11 +153,11 @@ test('PostgreSQL Activity timeline applies the complete tenant filter set', asyn
 	});
 
 	assert.match(capturedSql, /created_at >= \$1 AND created_at < \$2/u);
-	assert.match(capturedSql, /user_id = \$3 AND workspace_id = \$4/u);
-	assert.match(capturedSql, /api_key_id = \$5 AND model_id = \$6 AND provider_name = \$7 AND status = \$8/u);
+	assert.match(capturedSql, /user_id = \$4 AND workspace_id = \$5/u);
+	assert.match(capturedSql, /api_key_id = \$6 AND model_id = \$7 AND provider_name = \$8 AND status = \$9/u);
 	assert.match(capturedSql, /GROUP BY 1 ORDER BY 1 ASC$/u);
 	assert.deepEqual(capturedValues, [
-		OPTIONS.startDate, OPTIONS.endDate, OPTIONS.userId, OPTIONS.workspaceId,
+		OPTIONS.startDate, OPTIONS.endDate, 'UTC', OPTIONS.userId, OPTIONS.workspaceId,
 		OPTIONS.apiKeyId, OPTIONS.modelId, OPTIONS.providerName, OPTIONS.status,
 	]);
 	assert.deepEqual(rows, [{
@@ -187,7 +187,7 @@ test('MySQL Activity timeline applies the complete tenant filter set', async () 
 	assert.match(capturedSql, /user_id = \? AND workspace_id = \?/u);
 	assert.match(capturedSql, /api_key_id = \? AND model_id = \? AND provider_name = \? AND status = \?/u);
 	assert.match(capturedSql, /GROUP BY bucket ORDER BY bucket ASC$/u);
-	assert.deepEqual(capturedValues, [
+	assert.deepEqual(capturedValues, [0,
 		OPTIONS.startDate, OPTIONS.endDate, OPTIONS.userId, OPTIONS.workspaceId,
 		OPTIONS.apiKeyId, OPTIONS.modelId, OPTIONS.providerName, OPTIONS.status,
 	]);

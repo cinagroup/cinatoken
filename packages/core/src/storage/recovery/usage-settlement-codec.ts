@@ -36,7 +36,7 @@ export const settlementId: Check = value => typeof value === 'string' && /^[A-Za
 const digest: Check = value => typeof value === 'string' && /^[a-f0-9]{64}$/.test(value);
 const uuid: Check = value => typeof value === 'string' && /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/.test(value);
 const iso: Check = value => typeof value === 'string' && value.length === 24 && Number.isFinite(Date.parse(value)) && new Date(value).toISOString() === value;
-const protocol = oneOf('openai', 'anthropic', 'gemini', 'dashscope');
+const protocol = oneOf('openai', 'anthropic', 'gemini', 'dashscope', 'minimax', 'volcengine');
 function shape(value: unknown, fields: Record<string, Check>): boolean {
 	if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
 	return Object.keys(value).every(key => Object.hasOwn(fields, key))
@@ -64,7 +64,7 @@ const logFields = {
 	inputTokens: integer, outputTokens: integer, cacheReadTokens: integer, cacheWriteTokens: integer, reasoningTokens: integer, totalTokens: integer,
 	nativeTokensPrompt: maybe(integer), nativeTokensCompletion: maybe(integer), nativeTokensCached: maybe(integer),
 	nativeTokensReasoning: maybe(integer), nativeTokensCompletionImages: maybe(integer),
-	meteredCost: amount, standardCost: amount, chargedCost: amount, budgetChargedMicros: maybe(integer), budgetAccountedAt: maybe(iso),
+	meteredCost: amount, standardCost: amount, chargedCost: amount, chargedWalletCost: optional(amount), ingressHost: maybe(text), budgetChargedMicros: maybe(integer), budgetAccountedAt: maybe(iso),
 	routeGroup: text, status: oneOf('success', 'error', 'incomplete', 'cancelled'), latencyMs: nullable(integer),
 	gatewayOverheadMs: maybe(integer), upstreamResponseMs: maybe(integer), finalUpstreamHeadersMs: maybe(integer),
 	firstReasoningTokenMs: maybe(integer), firstTokenMs: maybe(integer), streamDurationMs: maybe(integer),
@@ -91,7 +91,7 @@ const auditFields = {
 const budgetFields = { requestId: settlementId, mode: oneOf('actual', 'reserved'), reason: str(128) } satisfies Shape<NonNullable<InsertRequestUsageAndChargeD1Params['userBudgetSettlement']>>;
 const paramFields = {
 	requestLog: value => shape(value, logFields), shouldChargeBudget: bool, userId: settlementId,
-	beforeSpent: amount, chargedCost: amount, audit: value => shape(value, auditFields),
+	beforeSpent: amount, chargedCost: amount, chargedFromWallet: optional(amount), audit: value => shape(value, auditFields),
 	userBudgetSettlement: optional(value => shape(value, budgetFields)),
 	guardrailBudgetSettlement: optional(value => shape(value, budgetFields)),
 } satisfies Shape<InsertRequestUsageAndChargeD1Params>;

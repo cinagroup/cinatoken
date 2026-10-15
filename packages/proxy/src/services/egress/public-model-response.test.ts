@@ -50,22 +50,28 @@ async function withMockFetch(
 describe('public model response identity', () => {
 	it('rewrites OpenAI Chat JSON and SSE model fields without changing upstream selection', async () => {
 		await withMockFetch(
-			() => new Response(JSON.stringify({
-				id: 'chatcmpl-1',
-				object: 'chat.completion',
-				created: 1_700_000_000,
-				model: 'private/provider-model',
-				service_tier: 'standard',
-				choices: [{
-					index: 0,
-					message: { role: 'assistant', content: 'ok' },
-					finish_reason: 'stop',
-				}],
-				usage: { prompt_tokens: 1, completion_tokens: 2, total_tokens: 3, speed: 'fast' },
-			}), { headers: { 'Content-Type': 'application/json' } }),
+			() =>
+				new Response(
+					JSON.stringify({
+						id: 'chatcmpl-1',
+						object: 'chat.completion',
+						created: 1_700_000_000,
+						model: 'private/provider-model',
+						service_tier: 'standard',
+						choices: [
+							{
+								index: 0,
+								message: { role: 'assistant', content: 'ok' },
+								finish_reason: 'stop',
+							},
+						],
+						usage: { prompt_tokens: 1, completion_tokens: 2, total_tokens: 3, speed: 'fast' },
+					}),
+					{ headers: { 'Content-Type': 'application/json' } },
+				),
 			async () => {
 				const result = await dispatchOpenAiRoute(route('openai'), { model: 'ignored', messages: [] });
-				const payload = await result.response.json() as {
+				const payload = (await result.response.json()) as {
 					model?: string;
 					service_tier?: unknown;
 					usage?: { speed?: unknown };
@@ -81,12 +87,13 @@ describe('public model response identity', () => {
 		);
 
 		await withMockFetch(
-			() => new Response(
-				`data:${JSON.stringify({ id: 'chatcmpl-2', model: 'private/provider-model', service_tier: 'fast', choices: [{ delta: { content: 'hi' } }] })}\n\n` +
-				`data: ${JSON.stringify({ model: 'private/provider-model', choices: [], usage: { prompt_tokens: 1, completion_tokens: 1, total_tokens: 2, speed: 'fast' } })}\n\n` +
-				'data: [DONE]\n\n',
-				{ headers: { 'Content-Type': 'text/event-stream' } },
-			),
+			() =>
+				new Response(
+					`data:${JSON.stringify({ id: 'chatcmpl-2', model: 'private/provider-model', service_tier: 'fast', choices: [{ delta: { content: 'hi' } }] })}\n\n` +
+						`data: ${JSON.stringify({ model: 'private/provider-model', choices: [], usage: { prompt_tokens: 1, completion_tokens: 1, total_tokens: 2, speed: 'fast' } })}\n\n` +
+						'data: [DONE]\n\n',
+					{ headers: { 'Content-Type': 'text/event-stream' } },
+				),
 			async () => {
 				const result = await dispatchOpenAiRoute(route('openai'), { model: 'ignored', stream: true });
 				const text = await result.response.text();
@@ -104,12 +111,17 @@ describe('public model response identity', () => {
 
 	it('rewrites provider model identity in no-space Anthropic and Responses SSE data fields', async () => {
 		await withMockFetch(
-			() => new Response(
-				`data:${JSON.stringify({ type: 'message_start', message: { model: 'private/provider-model', usage: { input_tokens: 1, output_tokens: 0, service_tier: 'default', speed: 'fast' } } })}\n\n`,
-				{ headers: { 'Content-Type': 'text/event-stream' } },
-			),
+			() =>
+				new Response(
+					`data:${JSON.stringify({ type: 'message_start', message: { model: 'private/provider-model', usage: { input_tokens: 1, output_tokens: 0, service_tier: 'default', speed: 'fast' } } })}\n\n`,
+					{ headers: { 'Content-Type': 'text/event-stream' } },
+				),
 			async () => {
-				const result = await dispatchAnthropicRoute(route('anthropic'), { model: 'ignored', messages: [], stream: true });
+				const result = await dispatchAnthropicRoute(route('anthropic'), {
+					model: 'ignored',
+					messages: [],
+					stream: true,
+				});
 				const text = await result.response.text();
 				assert.equal(text.includes('private/provider-model'), false);
 				assert.equal(text.includes('public/model-a'), true);
@@ -122,12 +134,17 @@ describe('public model response identity', () => {
 		);
 
 		await withMockFetch(
-			() => new Response(
-				`data:${JSON.stringify({ type: 'response.completed', response: { model: 'private/provider-model', service_tier: 'fast', usage: { input_tokens: 1, output_tokens: 1, total_tokens: 2, speed: 'fast' } } })}\n\n`,
-				{ headers: { 'Content-Type': 'text/event-stream' } },
-			),
+			() =>
+				new Response(
+					`data:${JSON.stringify({ type: 'response.completed', response: { model: 'private/provider-model', service_tier: 'fast', usage: { input_tokens: 1, output_tokens: 1, total_tokens: 2, speed: 'fast' } } })}\n\n`,
+					{ headers: { 'Content-Type': 'text/event-stream' } },
+				),
 			async () => {
-				const result = await dispatchOpenAiResponsesRoute(route('openai'), { model: 'ignored', input: 'hi', stream: true });
+				const result = await dispatchOpenAiResponsesRoute(route('openai'), {
+					model: 'ignored',
+					input: 'hi',
+					stream: true,
+				});
 				const text = await result.response.text();
 				assert.equal(text.includes('private/provider-model'), false);
 				assert.equal(text.includes('public/model-a'), true);
@@ -142,21 +159,25 @@ describe('public model response identity', () => {
 
 	it('rewrites Responses and Anthropic JSON model fields', async () => {
 		await withMockFetch(
-			() => new Response(JSON.stringify({
-				id: 'resp-1',
-				object: 'response',
-				created_at: 1_700_000_000,
-				completed_at: 1_700_000_001,
-				error: null,
-				model: 'private/provider-model',
-				status: 'completed',
-				service_tier: 'standard',
-				output: [],
-				usage: { input_tokens: 2, output_tokens: 3, total_tokens: 5, speed: 'fast' },
-			}), { headers: { 'Content-Type': 'application/json' } }),
+			() =>
+				new Response(
+					JSON.stringify({
+						id: 'resp-1',
+						object: 'response',
+						created_at: 1_700_000_000,
+						completed_at: 1_700_000_001,
+						error: null,
+						model: 'private/provider-model',
+						status: 'completed',
+						service_tier: 'standard',
+						output: [],
+						usage: { input_tokens: 2, output_tokens: 3, total_tokens: 5, speed: 'fast' },
+					}),
+					{ headers: { 'Content-Type': 'application/json' } },
+				),
 			async () => {
 				const result = await dispatchOpenAiResponsesRoute(route('openai'), { model: 'ignored', input: 'hi' });
-				const payload = await result.response.json() as {
+				const payload = (await result.response.json()) as {
 					model?: string;
 					service_tier?: unknown;
 					usage?: { speed?: unknown };
@@ -172,19 +193,23 @@ describe('public model response identity', () => {
 		);
 
 		await withMockFetch(
-			() => new Response(JSON.stringify({
-				id: 'msg-1',
-				type: 'message',
-				role: 'assistant',
-				model: 'private/provider-model',
-				content: [],
-				stop_reason: 'end_turn',
-				stop_sequence: null,
-				usage: { input_tokens: 2, output_tokens: 4, service_tier: 'default', speed: 'fast' },
-			}), { headers: { 'Content-Type': 'application/json' } }),
+			() =>
+				new Response(
+					JSON.stringify({
+						id: 'msg-1',
+						type: 'message',
+						role: 'assistant',
+						model: 'private/provider-model',
+						content: [],
+						stop_reason: 'end_turn',
+						stop_sequence: null,
+						usage: { input_tokens: 2, output_tokens: 4, service_tier: 'default', speed: 'fast' },
+					}),
+					{ headers: { 'Content-Type': 'application/json' } },
+				),
 			async () => {
 				const result = await dispatchAnthropicRoute(route('anthropic'), { model: 'ignored', messages: [] });
-				const payload = await result.response.json() as {
+				const payload = (await result.response.json()) as {
 					model?: string;
 					usage?: { service_tier?: unknown; speed?: unknown };
 				};

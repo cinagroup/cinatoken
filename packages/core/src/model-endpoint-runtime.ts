@@ -46,6 +46,7 @@ const ENDPOINT_FACT_KIND_BY_OPERATION = {
 	embeddings: "text",
 	rerank: "text",
 	"images.generations": "image",
+	"images.generations.multimodal": "image",
 	"images.edits": "image",
 	"audio.transcriptions": "audio",
 	"audio.speech": "audio",

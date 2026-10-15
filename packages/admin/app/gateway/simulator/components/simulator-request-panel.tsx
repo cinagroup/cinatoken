@@ -1,29 +1,28 @@
-"use client";
+'use client';
 
-import { PaperAirplaneIcon, StopIcon } from "@heroicons/react/24/outline";
-import { useTranslations } from "next-intl";
-import { RequestTargetUrl } from "@/components/request-target-url";
-import { validateAudioTranscriptionFile } from "@/lib/audio-transcriptions";
-import {
-	IMAGE_MAX_REFERENCE_COUNT,
-	validateEditImageFiles,
-	type ImageOperation,
-} from "@/lib/image-generations";
-import type { OpenaiLlmOperation } from "@/lib/invoke-kind";
-import type {
-	SimulatorGeminiAction,
-	SimulatorProtocol,
-} from "@/lib/simulator/endpoint";
+import { PaperAirplaneIcon, StopIcon } from '@heroicons/react/24/outline';
+import { useTranslations } from 'next-intl';
+import { RequestTargetUrl } from '@/components/request-target-url';
+import { validateAudioTranscriptionFile } from '@/lib/audio-transcriptions';
+import { IMAGE_MAX_REFERENCE_COUNT, validateEditImageFiles, type ImageOperation } from '@/lib/image-generations';
+import type { OpenaiLlmOperation } from '@/lib/invoke-kind';
+import type { SimulatorGeminiAction, SimulatorProtocol } from '@/lib/simulator/endpoint';
 import {
 	codeBlockClass,
 	inputClass,
 	labelClass,
 	prettyJsonBody,
 	type SimulatorClientSurfaceOptions,
-} from "../simulator-utils";
-import type { WirePreview } from "../types";
+} from '../simulator-utils';
+import type { WirePreview } from '../types';
+
+import { LlmRequestEditor } from '@/components/model-test/llm-request-editor';
+import type { PlaygroundLlmFamily } from '@/lib/playground/samples';
 
 type Props = {
+	llmFamily: PlaygroundLlmFamily | null;
+	modelHint: string;
+	wireSent: boolean;
 	protocol: SimulatorProtocol;
 	onProtocolChange: (p: SimulatorProtocol) => void;
 	supportedSurfaces: SimulatorClientSurfaceOptions;
@@ -62,11 +61,14 @@ type Props = {
 	audioFile?: File | null;
 	onAudioFileChange?: (file: File | null) => void;
 	showAudioRealtimeMicrophone?: boolean;
-	audioInputMode?: "file" | "microphone";
-	onAudioInputModeChange?: (mode: "file" | "microphone") => void;
+	audioInputMode?: 'file' | 'microphone';
+	onAudioInputModeChange?: (mode: 'file' | 'microphone') => void;
 };
 
 export function SimulatorRequestPanel({
+	llmFamily,
+	modelHint,
+	wireSent,
 	protocol,
 	onProtocolChange,
 	supportedSurfaces,
@@ -91,7 +93,7 @@ export function SimulatorRequestPanel({
 	onSend,
 	onStop,
 	showImageOperation = false,
-	imageOperation = "generations",
+	imageOperation = 'generations',
 	onImageOperationChange,
 	editFiles = [],
 	onEditFilesChange,
@@ -101,31 +103,142 @@ export function SimulatorRequestPanel({
 	audioFile = null,
 	onAudioFileChange,
 	showAudioRealtimeMicrophone = false,
-	audioInputMode = "file",
+	audioInputMode = 'file',
 	onAudioInputModeChange,
 }: Props) {
-	const t = useTranslations("simulator");
-	const tCommon = useTranslations("common");
+	const t = useTranslations('simulator');
+	const tCommon = useTranslations('common');
 
 	const supportedProtocols = supportedSurfaces.protocols;
 	const supportedOpenaiOps = supportedSurfaces.openaiLlmOperations;
 	const supportedGeminiActions = supportedSurfaces.geminiActions;
 	const supportedImageOps = supportedSurfaces.imageOperations;
-	const showOpenaiOperation =
-		protocol === "openai" &&
-		!hideProtocolControls &&
-		supportedOpenaiOps.length > 1;
+	const showOpenaiOperation = protocol === 'openai' && !hideProtocolControls && supportedOpenaiOps.length > 1;
 	const showGeminiAction =
-		protocol === "gemini" &&
-		!hideProtocolControls &&
-		supportedGeminiActions.length > 1;
+		protocol === 'gemini' && !hideProtocolControls && !showImageOperation && supportedGeminiActions.length > 1;
+
+	const protocolControls = hideProtocolControls ? (
+		<p className="text-xs text-gray-500">{t('toolProtocolHidden')}</p>
+	) : !hasSelectedModel ? null : supportedProtocols.length === 0 ? (
+		<p className="text-xs text-amber-800/90">{t('supportedSurfacesEmpty')}</p>
+	) : (
+		<div className="flex flex-wrap items-center gap-2">
+			<div
+				className="inline-flex flex-wrap rounded-md border border-gray-200 bg-gray-50 p-0.5"
+				role="group"
+				aria-label={t('protocol')}
+			>
+				{supportedProtocols.map((p) => {
+					const active = protocol === p;
+					return (
+						<button
+							key={p}
+							type="button"
+							disabled={sending}
+							onClick={() => onProtocolChange(p)}
+							className={
+								active
+									? 'rounded px-2.5 py-1 text-xs font-medium bg-white text-gray-900 shadow-sm'
+									: 'rounded px-2.5 py-1 text-xs font-medium text-gray-600 hover:text-gray-900'
+							}
+						>
+							{p}
+						</button>
+					);
+				})}
+			</div>
+			{showOpenaiOperation ? (
+				<div
+					className="inline-flex rounded-md border border-gray-200 bg-gray-50 p-0.5"
+					role="group"
+					aria-label={t('openaiOperation')}
+					title={t('openaiOperationHint')}
+				>
+					{supportedOpenaiOps.map((op) => {
+						const active = openaiLlmOperation === op;
+						return (
+							<button
+								key={op}
+								type="button"
+								disabled={sending}
+								onClick={() => onOpenaiLlmOperationChange(op)}
+								className={
+									active
+										? 'rounded px-2.5 py-1 text-xs font-medium bg-white text-gray-900 shadow-sm'
+										: 'rounded px-2.5 py-1 text-xs font-medium text-gray-600 hover:text-gray-900'
+								}
+							>
+								{op}
+							</button>
+						);
+					})}
+				</div>
+			) : null}
+			{showGeminiAction && !llmFamily ? (
+				<div
+					className="inline-flex rounded-md border border-gray-200 bg-gray-50 p-0.5"
+					role="group"
+					aria-label={t('geminiAction')}
+				>
+					{supportedGeminiActions.map((action) => {
+						const active = geminiAction === action;
+						return (
+							<button
+								key={action}
+								type="button"
+								disabled={sending}
+								onClick={() => onGeminiActionChange(action)}
+								className={
+									active
+										? 'rounded px-2.5 py-1 font-mono text-[11px] font-medium bg-white text-gray-900 shadow-sm'
+										: 'rounded px-2.5 py-1 font-mono text-[11px] font-medium text-gray-600 hover:text-gray-900'
+								}
+							>
+								{action}
+							</button>
+						);
+					})}
+				</div>
+			) : null}
+		</div>
+	);
+
+	if (llmFamily)
+		return (
+			<LlmRequestEditor
+				family={llmFamily}
+				modelHint={modelHint}
+				modelValue="<auto>"
+				bodyText={bodyText}
+				onChange={onBodyTextChange}
+				geminiStreaming={geminiAction === 'streamGenerateContent'}
+				onGeminiStreamingChange={(stream) => onGeminiActionChange(stream ? 'streamGenerateContent' : 'generateContent')}
+				streamingDisabled={protocol === 'gemini' && supportedGeminiActions.length < 2}
+				controls={protocolControls}
+				sending={sending}
+				canSend={canSend}
+				onSend={onSend}
+				onStop={onStop}
+				blockedHint={sendBlockedHint}
+				error={bodyError}
+				notice={infoHint}
+				url={displayWire?.url ?? null}
+				actualBody={displayWire ? prettyJsonBody(displayWire.bodyText) : null}
+				sent={wireSent}
+				headers={
+					<pre className="whitespace-pre-wrap break-all font-mono text-xs">
+						{Object.entries(displayWire?.headers ?? {})
+							.map(([k, v]) => `${k}: ${v}`)
+							.join('\n')}
+					</pre>
+				}
+			/>
+		);
 
 	return (
 		<section className="flex h-full min-h-0 flex-col space-y-3 rounded-xl border border-gray-200/80 bg-white p-4 shadow-sm">
 			<div className="flex flex-wrap items-center justify-between gap-2">
-				<h2 className="text-sm font-semibold text-gray-900">
-					{t("requestBody")}
-				</h2>
+				<h2 className="text-sm font-semibold text-gray-900">{t('requestBody')}</h2>
 				<div className="flex flex-wrap items-center gap-2">
 					<button
 						type="button"
@@ -133,7 +246,7 @@ export function SimulatorRequestPanel({
 						disabled={!bodyDirty || sending}
 						className="text-xs px-2.5 py-1.5 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
 					>
-						{t("applyTemplate")}
+						{t('applyTemplate')}
 					</button>
 					{sending ? (
 						<button
@@ -142,7 +255,7 @@ export function SimulatorRequestPanel({
 							className="inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 bg-amber-600 text-white text-sm font-medium rounded-md hover:bg-amber-700"
 						>
 							<StopIcon className="h-4 w-4" />
-							{tCommon("stop")}
+							{tCommon('stop')}
 						</button>
 					) : (
 						<button
@@ -153,149 +266,55 @@ export function SimulatorRequestPanel({
 							className="inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
 						>
 							<PaperAirplaneIcon className="h-4 w-4" />
-							{tCommon("send")}
+							{tCommon('send')}
 						</button>
 					)}
 				</div>
 			</div>
-			{sendBlockedHint && !sending ? (
-				<p className="text-xs text-gray-500 -mt-1">{sendBlockedHint}</p>
-			) : null}
+			{sendBlockedHint && !sending ? <p className="text-xs text-gray-500 -mt-1">{sendBlockedHint}</p> : null}
 			{infoHint ? (
-				<div className="p-2.5 bg-blue-50 border border-blue-200 rounded-md text-blue-900 text-sm">
-					{infoHint}
-				</div>
+				<div className="p-2.5 bg-blue-50 border border-blue-200 rounded-md text-blue-900 text-sm">{infoHint}</div>
 			) : null}
-			{hideProtocolControls ? (
-				<p className="text-xs text-gray-500">{t("toolProtocolHidden")}</p>
-			) : !hasSelectedModel ? null : supportedProtocols.length === 0 ? (
-				<p className="text-xs text-amber-800/90">
-					{t("supportedSurfacesEmpty")}
-				</p>
-			) : (
-				<div className="flex flex-wrap items-center gap-2">
-					<div
-						className="inline-flex flex-wrap rounded-md border border-gray-200 bg-gray-50 p-0.5"
-						role="group"
-						aria-label={t("protocol")}
-					>
-						{supportedProtocols.map((p) => {
-							const active = protocol === p;
-							return (
-								<button
-									key={p}
-									type="button"
-									disabled={sending}
-									onClick={() => onProtocolChange(p)}
-									className={
-										active
-											? "rounded px-2.5 py-1 text-xs font-medium bg-white text-gray-900 shadow-sm"
-											: "rounded px-2.5 py-1 text-xs font-medium text-gray-600 hover:text-gray-900"
-									}
-								>
-									{p}
-								</button>
-							);
-						})}
-					</div>
-					{showOpenaiOperation ? (
-						<div
-							className="inline-flex rounded-md border border-gray-200 bg-gray-50 p-0.5"
-							role="group"
-							aria-label={t("openaiOperation")}
-							title={t("openaiOperationHint")}
-						>
-							{supportedOpenaiOps.map((op) => {
-								const active = openaiLlmOperation === op;
-								return (
-									<button
-										key={op}
-										type="button"
-										disabled={sending}
-										onClick={() => onOpenaiLlmOperationChange(op)}
-										className={
-											active
-												? "rounded px-2.5 py-1 text-xs font-medium bg-white text-gray-900 shadow-sm"
-												: "rounded px-2.5 py-1 text-xs font-medium text-gray-600 hover:text-gray-900"
-										}
-									>
-										{op}
-									</button>
-								);
-							})}
-						</div>
-					) : null}
-					{showGeminiAction ? (
-						<div
-							className="inline-flex rounded-md border border-gray-200 bg-gray-50 p-0.5"
-							role="group"
-							aria-label={t("geminiAction")}
-						>
-							{supportedGeminiActions.map((action) => {
-								const active = geminiAction === action;
-								return (
-									<button
-										key={action}
-										type="button"
-										disabled={sending}
-										onClick={() => onGeminiActionChange(action)}
-										className={
-											active
-												? "rounded px-2.5 py-1 font-mono text-[11px] font-medium bg-white text-gray-900 shadow-sm"
-												: "rounded px-2.5 py-1 font-mono text-[11px] font-medium text-gray-600 hover:text-gray-900"
-										}
-									>
-										{action}
-									</button>
-								);
-							})}
-						</div>
-					) : null}
-				</div>
-			)}
+			{protocolControls}
 			{showAudioTranscriptions ? (
 				<div className="space-y-2">
 					<p className="text-xs text-gray-500">
-						{showAudioRealtimeMicrophone
-							? t("audioRealtimeDashScopeHint")
-							: t("audioTranscriptionsHint")}
+						{showAudioRealtimeMicrophone ? t('audioRealtimeDashScopeHint') : t('audioTranscriptionsHint')}
 					</p>
 					{showAudioRealtimeMicrophone ? (
 						<fieldset className="flex flex-wrap items-center gap-4 rounded-md border border-gray-200 px-3 py-2 text-sm">
-							<legend className="sr-only">{t("audioInputMode")}</legend>
-							<span className="font-medium text-gray-600">
-								{t("audioInputMode")}
-							</span>
+							<legend className="sr-only">{t('audioInputMode')}</legend>
+							<span className="font-medium text-gray-600">{t('audioInputMode')}</span>
 							<label className="inline-flex cursor-pointer items-center gap-2">
 								<input
 									type="radio"
 									name="simulatorAudioInput"
 									className="text-blue-600 focus:ring-blue-500"
-									checked={audioInputMode === "file"}
-									onChange={() => onAudioInputModeChange?.("file")}
+									checked={audioInputMode === 'file'}
+									onChange={() => onAudioInputModeChange?.('file')}
 									disabled={sending}
 								/>
-								{t("audioInputFile")}
+								{t('audioInputFile')}
 							</label>
 							<label className="inline-flex cursor-pointer items-center gap-2">
 								<input
 									type="radio"
 									name="simulatorAudioInput"
 									className="text-blue-600 focus:ring-blue-500"
-									checked={audioInputMode === "microphone"}
-									onChange={() => onAudioInputModeChange?.("microphone")}
+									checked={audioInputMode === 'microphone'}
+									onChange={() => onAudioInputModeChange?.('microphone')}
 									disabled={sending}
 								/>
-								{t("audioInputMicrophone")}
+								{t('audioInputMicrophone')}
 							</label>
 						</fieldset>
 					) : null}
-					{!showAudioRealtimeMicrophone || audioInputMode === "file" ? (
+					{!showAudioRealtimeMicrophone || audioInputMode === 'file' ? (
 						<div>
-							<label className={labelClass}>{t("audioFile")}</label>
+							<label className={labelClass}>{t('audioFile')}</label>
 							<input
 								type="file"
-								accept="audio/*,.mp3,.wav,.m4a,.webm,.ogg,.flac"
+								accept="audio/*,.mp3,.wav,.m4a,.webm,.ogg,.flac,.pcm"
 								disabled={sending}
 								className={`${inputClass} file:mr-3 file:rounded file:border-0 file:bg-blue-50 file:px-2 file:py-1 file:text-xs file:font-medium file:text-blue-700`}
 								onChange={(e) => {
@@ -303,14 +322,10 @@ export function SimulatorRequestPanel({
 								}}
 							/>
 							<p className="mt-1 text-[11px] text-gray-400">
-								{showAudioRealtimeMicrophone
-									? t("audioRealtimeFileDashScopeHint")
-									: t("audioFileHint")}
+								{showAudioRealtimeMicrophone ? t('audioRealtimeFileDashScopeHint') : t('audioFileHint')}
 							</p>
 							{!audioFile ? (
-								<p className="mt-1 text-xs text-amber-700">
-									{t("audioFileRequired")}
-								</p>
+								<p className="mt-1 text-xs text-amber-700">{t('audioFileRequired')}</p>
 							) : (
 								<p className="mt-1 text-xs text-gray-600">
 									{audioFile.name} ({audioFile.size} bytes)
@@ -320,9 +335,7 @@ export function SimulatorRequestPanel({
 								if (!audioFile) return null;
 								const validated = validateAudioTranscriptionFile(audioFile);
 								if (validated.ok) return null;
-								return (
-									<p className="mt-1 text-xs text-red-600">{validated.error}</p>
-								);
+								return <p className="mt-1 text-xs text-red-600">{validated.error}</p>;
 							})()}
 						</div>
 					) : null}
@@ -331,23 +344,22 @@ export function SimulatorRequestPanel({
 			{showAudioSpeech ? (
 				<p className="text-xs text-gray-500">
 					{showAudioRealtime
-						? t("audioRealtimeSpeechHint")
-						: t("audioSpeechHint")}
+						? t('audioRealtimeSpeechHint')
+						: protocol === 'dashscope'
+							? t('audioSpeechDashScopeHint')
+							: protocol === 'minimax'
+								? t('audioSpeechMiniMaxHint')
+								: t('audioSpeechHint')}
 				</p>
 			) : null}
 			{showImageOperation ? (
 				<>
 					{supportedImageOps.length > 1 ? (
 						<fieldset className="flex flex-wrap items-center gap-4 text-sm border border-gray-200 rounded-md px-3 py-2">
-							<legend className="sr-only">{t("imageOperation")}</legend>
-							<span className="text-gray-600 font-medium">
-								{t("imageOperation")}
-							</span>
+							<legend className="sr-only">{t('imageOperation')}</legend>
+							<span className="text-gray-600 font-medium">{t('imageOperation')}</span>
 							{supportedImageOps.map((op) => (
-								<label
-									key={op}
-									className="inline-flex items-center gap-2 cursor-pointer"
-								>
+								<label key={op} className="inline-flex items-center gap-2 cursor-pointer">
 									<input
 										type="radio"
 										name="simulatorImageOperation"
@@ -361,14 +373,24 @@ export function SimulatorRequestPanel({
 							))}
 						</fieldset>
 					) : null}
-					{imageOperation === "generations" ? (
-						<p className="text-xs text-gray-500">{t("imageGenerationsHint")}</p>
+					{imageOperation === 'generations' || protocol === 'gemini' ? (
+						<p className="text-xs text-gray-500">
+							{t(
+								protocol === 'gemini'
+									? 'imageGeminiHint'
+									: protocol === 'volcengine'
+										? 'imageVolcengineHint'
+										: protocol === 'minimax'
+											? 'imageMiniMaxHint'
+											: 'imageGenerationsHint',
+							)}
+						</p>
 					) : (
-						<p className="text-xs text-gray-500">{t("imageEditsHint")}</p>
+						<p className="text-xs text-gray-500">{t('imageEditsHint')}</p>
 					)}
-					{imageOperation === "edits" ? (
+					{protocol === 'openai' && imageOperation === 'edits' ? (
 						<div>
-							<label className={labelClass}>{t("referenceImages")}</label>
+							<label className={labelClass}>{t('referenceImages')}</label>
 							<input
 								type="file"
 								accept="image/png,image/jpeg,image/webp,image/*"
@@ -381,25 +403,21 @@ export function SimulatorRequestPanel({
 								}}
 							/>
 							<p className="mt-1 text-[11px] text-gray-400">
-								{t("referenceImagesHint", { max: IMAGE_MAX_REFERENCE_COUNT })}
+								{t('referenceImagesHint', { max: IMAGE_MAX_REFERENCE_COUNT })}
 								{editFiles.length > 0
-									? ` · ${t("referenceImagesSelected", {
+									? ` · ${t('referenceImagesSelected', {
 											count: editFiles.length,
-									  })}`
-									: ""}
+										})}`
+									: ''}
 							</p>
 							{editFiles.length === 0 ? (
-								<p className="mt-1 text-xs text-amber-700">
-									{t("referenceImagesRequired")}
-								</p>
+								<p className="mt-1 text-xs text-amber-700">{t('referenceImagesRequired')}</p>
 							) : null}
 							{(() => {
 								if (editFiles.length === 0) return null;
 								const validated = validateEditImageFiles(editFiles);
 								if (validated.ok) return null;
-								return (
-									<p className="mt-1 text-xs text-red-600">{validated.error}</p>
-								);
+								return <p className="mt-1 text-xs text-red-600">{validated.error}</p>;
 							})()}
 							{editFiles.length > 0 ? (
 								<ul className="mt-1 text-xs text-gray-600 list-disc list-inside">
@@ -417,19 +435,17 @@ export function SimulatorRequestPanel({
 			<div
 				className={
 					wireOpen
-						? "flex min-h-0 flex-1 flex-col gap-3 xl:flex-row xl:items-stretch"
-						: "flex min-h-0 flex-1 flex-col gap-3"
+						? 'flex min-h-0 flex-1 flex-col gap-3 xl:flex-row xl:items-stretch'
+						: 'flex min-h-0 flex-1 flex-col gap-3'
 				}
 			>
 				<div className="flex min-h-0 min-w-0 flex-1 flex-col gap-3">
 					{wireOpen ? null : (
 						<RequestTargetUrl
-							label={t("requestTargetUrl")}
-							method={
-								showAudioRealtime ? "WebSocket" : displayWire?.method ?? "POST"
-							}
+							label={t('requestTargetUrl')}
+							method={showAudioRealtime ? 'WebSocket' : (displayWire?.method ?? 'POST')}
 							url={displayWire?.url}
-							emptyHint={t("requestTargetUrlEmpty")}
+							emptyHint={t('requestTargetUrlEmpty')}
 						/>
 					)}
 					<div className="flex min-h-0 flex-1 flex-col">
@@ -443,9 +459,7 @@ export function SimulatorRequestPanel({
 						/>
 					</div>
 					{bodyError ? (
-						<div className="rounded-md border border-red-200 bg-red-50 p-2.5 text-sm text-red-600">
-							{bodyError}
-						</div>
+						<div className="rounded-md border border-red-200 bg-red-50 p-2.5 text-sm text-red-600">{bodyError}</div>
 					) : null}
 					{wireOpen ? null : (
 						<button
@@ -454,7 +468,7 @@ export function SimulatorRequestPanel({
 							className="flex w-full items-center justify-between border-t border-gray-100 pt-2 text-left text-xs font-medium text-gray-600 hover:text-gray-900"
 							aria-expanded={false}
 						>
-							<span>{t("wirePreview")}</span>
+							<span>{t('wirePreview')}</span>
 							<span className="text-gray-400">▸</span>
 						</button>
 					)}
@@ -462,16 +476,14 @@ export function SimulatorRequestPanel({
 				{wireOpen ? (
 					<div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-md border border-gray-200 bg-slate-50/80 xl:max-w-[50%]">
 						<div className="flex shrink-0 items-center justify-between gap-2 border-b border-gray-200 px-3 py-2">
-							<h3 className="text-xs font-semibold text-gray-800">
-								{t("wirePreview")}
-							</h3>
+							<h3 className="text-xs font-semibold text-gray-800">{t('wirePreview')}</h3>
 							<button
 								type="button"
 								onClick={() => onWireOpenChange(false)}
 								className="text-xs font-medium text-gray-500 hover:text-gray-900"
 								aria-expanded={true}
 							>
-								{tCommon("close")}
+								{tCommon('close')}
 							</button>
 						</div>
 						<div className="min-h-0 flex-1 space-y-2 overflow-y-auto p-3">
@@ -479,38 +491,29 @@ export function SimulatorRequestPanel({
 								<>
 									<div>
 										<div className="mb-1 text-[11px] font-medium uppercase tracking-wide text-gray-500">
-											{t("requestTargetUrl")}
+											{t('requestTargetUrl')}
 										</div>
 										<p className="break-all font-mono text-xs text-gray-800">
-											<span className="font-semibold text-gray-700">
-												{displayWire.method}
-											</span>{" "}
-											{displayWire.url}
+											<span className="font-semibold text-gray-700">{displayWire.method}</span> {displayWire.url}
 										</p>
 									</div>
 									<div>
-										<div className="mb-1 text-[11px] font-medium text-gray-500">
-											{t("wireHeaders")}
-										</div>
+										<div className="mb-1 text-[11px] font-medium text-gray-500">{t('wireHeaders')}</div>
 										<pre className={codeBlockClass}>
 											{Object.entries(displayWire.headers)
 												.map(([k, v]) => `${k}: ${v}`)
-												.join("\n")}
+												.join('\n')}
 										</pre>
 									</div>
 									<div>
-										<div className="mb-1 text-[11px] font-medium text-gray-500">
-											{t("wireBody")}
-										</div>
+										<div className="mb-1 text-[11px] font-medium text-gray-500">{t('wireBody')}</div>
 										<pre className={codeBlockClass}>
-											{displayWire.isMultipart
-												? displayWire.bodyText
-												: prettyJsonBody(displayWire.bodyText)}
+											{displayWire.isMultipart ? displayWire.bodyText : prettyJsonBody(displayWire.bodyText)}
 										</pre>
 									</div>
 								</>
 							) : (
-								<p className="text-xs text-gray-500">{t("wirePreviewEmpty")}</p>
+								<p className="text-xs text-gray-500">{t('wirePreviewEmpty')}</p>
 							)}
 						</div>
 					</div>

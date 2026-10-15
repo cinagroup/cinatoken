@@ -1,0 +1,55 @@
+---
+description: Gateway Admin/Proxy Docker 构建已知陷阱。改 core 类型、adapter、Dockerfile 或 admin 时，先本地 typecheck，不要等 PR 的 Docker 冒烟再修。
+globs: Dockerfile*,packages/core/**,packages/admin/**,packages/proxy/**,docker/**,.github/workflows/docker-compose-smoke.yml,docs/operators/deployment/docker.md
+alwaysApply: false
+---
+
+# Docker 构建：迭代时就要拦住，不要留给 PR
+
+`verify` **不会**跑 Admin `next build`。PR 上的 `smoke-node-pg` 才第一次执行 `Dockerfile.admin` 的 `npm run build:docker`（`next build` 会 **strict 检查被 import 的 `@octafuse/core` 源码**）。改 core / admin / Dockerfile 后，完成前必须先：
+
+```bash
+npm run typecheck -w @octafuse/admin
+```
+
+这条约 6s，等价于镜像里最常见的 TypeScript 失败；不要用完整 `docker compose` 当第一次类型检查。
+
+## 已知会让镜像构建挂掉的模式
+
+1. **类型谓词把已收窄的 union 扩回去**（2026-08：`route-topology.ts` / `isRouteAdapter`）
+   - `ROUTE_ADAPTER_MAPPINGS` 的 key 是 `Exclude<RouteAdapter, 'passthrough'>`。
+   - `if (x !== 'passthrough' && isRouteAdapter(x))` 之后 `x` 又变成完整 `RouteAdapter`（含 `passthrough`），`next build` 报 *Property 'passthrough' does not exist*。
+   - 索引 mapping 必须用 `isConversionRouteAdapter`（或先 `isRouteAdapter` 再排除 passthrough）。新增 adapter / mapping 时同步类型守卫，不要用 `as` 糊弄。
+
+2. **esbuild 原生绑定**
+   - Docker 里 `npm ci --ignore-scripts` 后必须 `find …/esbuild/install.js -exec node {} \;`。
+   - **禁止** `npm rebuild esbuild`（多版本会报 Expected 0.25.4 but got 0.27.3）。
+
+3. **Admin Alpine / arm64 的 SWC musl**
+   - `next-intl` 读 `next.config` 需要 `@swc/core-linux-*-musl`。交叉构建时按 `Dockerfile.admin` 显式安装，不要删那一步。
+
+4. **Docker Admin 不跑 `wrangler types`**
+   - 镜像走 `build:docker` + `types/cloudflare-env-shim.d.ts`。不要让 admin 源码在无 wrangler 时必依赖生成的 CF 类型。
+
+5. **`tsc` 认不出包内 SVG 子路径**（2026-08：`@lobehub/icons-static-svg/icons/*.svg`）
+   - `next build` 当静态资源；裸 `tsc` 报 TS2307。声明在 `packages/admin/types/static-svg.d.ts`。
+   - **不要**因此关掉或放宽 `typecheck:admin`。缺声明就补声明，门禁要对齐 Docker，而不是比它更松。
+
+6. **Admin 实时 WebSocket 依赖 `ws`**
+   - `Dockerfile.admin` 运行层必须 `COPY` `node_modules/ws`；`CMD` 是 `node packages/admin/node-server.mjs`（`build:docker` 会跑 `scripts/build-node-server.mjs`）。
+   - 不要改回裸 `packages/admin/server.js`，否则 Node 调试台实时 ASR 会再次 501。
+
+7. **Admin `build-node-server.mjs` 的 `@/` 别名必须再走 esbuild 解析**（2026-08）
+   - `runtime/node-server.ts` 会打进 `@/lib/*`。插件若把 `@/lib/foo` **join 成无扩展名绝对路径**，esbuild 不再补 `.ts`，Docker 报 `Cannot read file: .../lib/admin-principal`。
+   - 正确做法：`build.resolve('./lib/foo', { resolveDir: pkgRoot })`，让默认解析补扩展名 / `index`。改该脚本后至少本地跑 `node packages/admin/scripts/build-node-server.mjs`。
+
+8. **Admin `node-server.mjs` 不得把 `drizzle-orm` / `hono` 标 external**（2026-08）
+   - 入口会打进 `@octafuse/core`。Admin 运行层只 COPY `postgres` / `mysql2` / `ws` + Next standalone，**没有** `drizzle-orm`。全量 external 时容器启动报 `Cannot find package 'drizzle-orm'`。
+   - 仅 `next` / `ws` / `postgres` / `mysql2` 可为 external；其余纯 JS 依赖打进 bundle。脚本用 metafile 拦住未登记的裸导入。
+
+9. **Admin standalone 必须设 `__NEXT_PRIVATE_STANDALONE_CONFIG`**（2026-08）
+   - `node packages/admin/node-server.mjs` 走 `next({ dir })` → `loadConfig` → `loadWebpackHook()`。standalone 裁掉 `next/dist/compiled/webpack`，未设该变量会 `Cannot find module 'next/dist/compiled/webpack/webpack-lib'`。
+   - 生产入口必须读 `.next/required-server-files.json` 的 `config`（镜像里没有 `next.config.mjs`）。
+   - **本地假阴性**：在仓库内启动 standalone 会向上解析到根 `node_modules/next`（含 webpack-lib），容器里没有。改入口或 Dockerfile.admin 后跑 `npm run verify:standalone -w @octafuse/admin`（把 standalone 拷到系统临时目录再启动），不要只在仓库内 `node .next/standalone/...`。
+
+改 Dockerfile / 构建脚本时同步 `docs/operators/deployment/docker.md`。新踩到的镜像失败补进本规则「已知模式」，不要只修 CI。

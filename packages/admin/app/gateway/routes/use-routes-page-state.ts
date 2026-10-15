@@ -1,59 +1,38 @@
-"use client";
+'use client';
 
+import { useCallback, useEffect, useMemo, useRef, useState, type SetStateAction } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { isAudioModel, isImageGenerationModel, isRerankModel } from '@octafuse/core/db/model-modalities';
+import { useTranslations, useLocale } from 'next-intl';
+import { useFeedback } from '@/components/feedback';
+import { isRouteStrategyName } from '@octafuse/core/db/model-route-policy';
+import { parseRoutePoolTierStrategies } from '@octafuse/core/db/route-pool-tier-strategies';
+import { DEFAULT_STICKY_IDLE_TTL_SECONDS } from '@octafuse/core/db/route-pool-sticky-types';
+import { useBusinessTimezone } from '@/components/BusinessTimezoneProvider';
+import { getCatalogAudioPricingDisplay, isAudioRouteModel } from '@/lib/audio-transcriptions';
+import { isImageRouteModel } from '@/lib/image-generations';
+import { getCatalogImagePricingDisplay, getCatalogPricingTierRows } from '@/lib/pricing-ui';
+import { normalizeModelVendorInput } from '@/lib/model-vendor';
+import { normalizeRouteGroup } from '@/lib/route-group-ui';
 import {
-	useCallback,
-	useEffect,
-	useMemo,
-	useRef,
-	useState,
-	type SetStateAction,
-} from "react";
-import { useSearchParams } from "next/navigation";
+	buildProviderKindFilterOptions,
+	providerKindFilterKey,
+	routeProviderAccountLabel,
+	sortProvidersByKindThenName,
+} from '@/lib/provider-kind';
+import { useBillingCurrency } from '@/lib/use-billing-currency';
+import { useReplaceListPageQuery } from '@/lib/use-replace-list-query';
+import { UPSTREAM_PROTOCOLS, providerSupportsUpstreamProtocol, type UpstreamProtocol } from '@/lib/upstream-protocol';
+import type { GatewayModel, GatewayProvider } from '@/lib/types';
+import { DEFAULT_ROUTE_KIND_FILTER, parseRouteKindFilterParam, type RouteKindFilter } from './types';
+import { useModelEditModal } from '../models/use-model-edit-modal';
+import { useRouteApi } from './route-api';
 import {
-	isAudioModel,
-	isImageGenerationModel,
-	isRerankModel,
-} from "@octafuse/core/db/model-modalities";
-import { isRouteStrategyName } from "@octafuse/core/db/model-route-policy";
-import { parseRoutePoolTierStrategies } from "@octafuse/core/db/route-pool-tier-strategies";
-import { DEFAULT_STICKY_IDLE_TTL_SECONDS } from "@octafuse/core/db/route-pool-sticky-types";
-import { useBusinessTimezone } from "@/components/BusinessTimezoneProvider";
-import {
-	getCatalogAudioPricingDisplay,
-	isAudioRouteModel,
-} from "@/lib/audio-transcriptions";
-import { isImageRouteModel } from "@/lib/image-generations";
-import {
-	getCatalogImagePricingDisplay,
-	getCatalogPricingTierRows,
-} from "@/lib/pricing-ui";
-import { normalizeModelVendorInput } from "@/lib/model-vendor";
-import { normalizeRouteGroup } from "@/lib/route-group-ui";
-import { useBillingCurrency } from "@/lib/use-billing-currency";
-import { useReplaceListPageQuery } from "@/lib/use-replace-list-query";
-import {
-	UPSTREAM_PROTOCOLS,
-	providerSupportsUpstreamProtocol,
-	type UpstreamProtocol,
-} from "@/lib/upstream-protocol";
-import type { GatewayModel, GatewayProvider } from "@/lib/types";
-import {
-	DEFAULT_ROUTE_KIND_FILTER,
-	parseRouteKindFilterParam,
-	type RouteKindFilter,
-} from "./types";
-import { useModelEditModal } from "../models/use-model-edit-modal";
-import {
-	deleteRoute,
-	fetchRoutesPageData,
-	patchModelRoutePolicy,
-	patchRoutePoolPolicy,
-	saveRoute,
-	toggleRouteStatus,
-} from "./route-api";
-import {
+	alignRouteFormAdapter,
+	alignRouteScheduleWindowsToCatalog,
 	buildActiveFilterSummary,
 	buildFormDataFromRoute,
+	catalogScheduleWindowsFromModel,
 	buildRouteCardVendorGroups,
 	buildRoutePolicyPatch,
 	buildRoutesByModel,
@@ -64,7 +43,7 @@ import {
 	resolveEffectiveRouteStrategy,
 	sortRouteCards,
 	upstreamOperationsForProviderModel,
-} from "./route-utils";
+} from './route-utils';
 import {
 	EMPTY_ROUTE_FORM,
 	type ProviderStickyDialogState,
@@ -73,13 +52,13 @@ import {
 	type RouteListRow,
 	type RoutePolicyDialogState,
 	type RoutePolicyFormState,
-} from "./types";
+} from './types';
 
 function normalizeRouteEditorForm(
 	form: RouteFormData,
 	models: GatewayModel[],
 	providers: GatewayProvider[],
-	showModal: boolean
+	showModal: boolean,
 ): RouteFormData {
 	if (!showModal) return form;
 	const provider = providers.find((row) => row.id === form.provider_id);
@@ -89,21 +68,11 @@ function normalizeRouteEditorForm(
 		const protocols = UPSTREAM_PROTOCOLS.filter(
 			(protocol) =>
 				providerSupportsUpstreamProtocol(protocol, provider) &&
-				upstreamOperationsForProviderModel(
-					provider,
-					model,
-					protocol,
-					form.provider_model_name
-				).length > 0
+				upstreamOperationsForProviderModel(provider, model, protocol, form.provider_model_name).length > 0,
 		);
 		if (protocols.length > 0 && !protocols.includes(form.upstream_protocol)) {
 			const protocol = protocols[0]!;
-			const operations = upstreamOperationsForProviderModel(
-				provider,
-				model,
-				protocol,
-				form.provider_model_name
-			);
+			const operations = upstreamOperationsForProviderModel(provider, model, protocol, form.provider_model_name);
 			next = {
 				...form,
 				upstream_protocol: protocol,
@@ -120,58 +89,59 @@ function normalizeRouteEditorForm(
 }
 
 export function useRoutesPageState() {
+	const {
+		deleteRoute,
+		fetchRoutesPageData,
+		patchModelRoutePolicy,
+		patchRoutePoolPolicy,
+		saveRoute,
+		toggleRouteStatus,
+	} = useRouteApi();
+
+	const tModal = useTranslations('routes.modal');
+	const tCommon = useTranslations('common');
+	const tKind = useTranslations('providers.kind');
+	const locale = useLocale();
+	const { notify, confirm } = useFeedback();
 	const searchParams = useSearchParams();
 	const [routes, setRoutes] = useState<RouteListRow[]>([]);
 	const [models, setModels] = useState<GatewayModel[]>([]);
 	const [providers, setProviders] = useState<GatewayProvider[]>([]);
-	const [globalRouteStrategy, setGlobalRouteStrategy] = useState<string | null>(
-		null
-	);
+	const [globalRouteStrategy, setGlobalRouteStrategy] = useState<string | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
 	const [showModal, setShowModal] = useState(false);
 	const [editingRoute, setEditingRoute] = useState<RouteListRow | null>(null);
-	const [duplicateSourceRouteId, setDuplicateSourceRouteId] = useState<
-		string | null
-	>(null);
-	const [draftFormData, setDraftFormData] =
-		useState<RouteFormData>(EMPTY_ROUTE_FORM);
-	const [filterVendor, setFilterVendor] = useState(() =>
-		normalizeModelVendorInput(searchParams.get("vendor") ?? "")
-	);
-	const [filterProviderId, setFilterProviderId] = useState(
-		() => searchParams.get("provider_id") ?? ""
-	);
-	const [filterRouteGroup, setFilterRouteGroup] = useState(
-		() => searchParams.get("route_group") ?? ""
-	);
-	const [filterStatus, setFilterStatus] = useState(
-		() => searchParams.get("status") ?? ""
-	);
+	const [duplicateSourceRouteId, setDuplicateSourceRouteId] = useState<string | null>(null);
+	const [draftFormData, setDraftFormData] = useState<RouteFormData>(EMPTY_ROUTE_FORM);
+	const [filterVendor, setFilterVendor] = useState(() => normalizeModelVendorInput(searchParams.get('vendor') ?? ''));
+	const [filterProviderId, setFilterProviderId] = useState(() => searchParams.get('provider_id') ?? '');
+	const [filterRouteGroup, setFilterRouteGroup] = useState(() => searchParams.get('route_group') ?? '');
+	const [filterStatus, setFilterStatus] = useState(() => searchParams.get('status') ?? '');
 	const [filterKind, setFilterKind] = useState<RouteKindFilter>(() =>
-		parseRouteKindFilterParam(searchParams.get("kind"))
+		parseRouteKindFilterParam(searchParams.get('kind')),
 	);
-	const [saveError, setSaveError] = useState("");
+	const [searchQuery, setSearchQuery] = useState(() => searchParams.get('q') ?? '');
+	const [filterProviderKind, setFilterProviderKind] = useState(() => searchParams.get('provider_kind') ?? '');
+	const [saveError, setSaveError] = useState('');
 	const [isSaving, setIsSaving] = useState(false);
 	const [isDeleting, setIsDeleting] = useState(false);
 	const [togglingId, setTogglingId] = useState<string | null>(null);
 	const [copiedModelId, setCopiedModelId] = useState<string | null>(null);
-	const [strategyDialog, setStrategyDialog] =
-		useState<RoutePolicyDialogState | null>(null);
+	const [strategyDialog, setStrategyDialog] = useState<RoutePolicyDialogState | null>(null);
 	const [strategyForm, setStrategyForm] = useState<RoutePolicyFormState>({
-		protocolStrategy: "",
-		tierStrategy: "",
+		protocolStrategy: '',
+		tierStrategy: '',
 		capabilityStrategies: {},
 	});
 	const [strategySaving, setStrategySaving] = useState(false);
-	const [strategyError, setStrategyError] = useState("");
-	const [stickyDialog, setStickyDialog] =
-		useState<ProviderStickyDialogState | null>(null);
+	const [strategyError, setStrategyError] = useState('');
+	const [stickyDialog, setStickyDialog] = useState<ProviderStickyDialogState | null>(null);
 	const [stickyForm, setStickyForm] = useState<ProviderStickyFormState>({
 		enabled: false,
 		idleTtlSeconds: DEFAULT_STICKY_IDLE_TTL_SECONDS,
 	});
 	const [stickySaving, setStickySaving] = useState(false);
-	const [stickyError, setStickyError] = useState("");
+	const [stickyError, setStickyError] = useState('');
 	const { currency: billingCurrency } = useBillingCurrency();
 	const businessTimezone = useBusinessTimezone();
 
@@ -179,33 +149,28 @@ export function useRoutesPageState() {
 	const [previousSearch, setPreviousSearch] = useState(search);
 	if (previousSearch !== search) {
 		setPreviousSearch(search);
-		setFilterVendor(
-			normalizeModelVendorInput(searchParams.get("vendor") ?? "")
-		);
-		setFilterProviderId(searchParams.get("provider_id") ?? "");
-		setFilterStatus(searchParams.get("status") ?? "");
-		setFilterRouteGroup(searchParams.get("route_group") ?? "");
-		setFilterKind(parseRouteKindFilterParam(searchParams.get("kind")));
+		setSearchQuery(searchParams.get('q') ?? '');
+		setFilterProviderKind(searchParams.get('provider_kind') ?? '');
+		setFilterVendor(normalizeModelVendorInput(searchParams.get('vendor') ?? ''));
+		setFilterProviderId(searchParams.get('provider_id') ?? '');
+		setFilterStatus(searchParams.get('status') ?? '');
+		setFilterRouteGroup(searchParams.get('route_group') ?? '');
+		setFilterKind(parseRouteKindFilterParam(searchParams.get('kind')));
 	}
 
 	const formData = useMemo(
 		() => normalizeRouteEditorForm(draftFormData, models, providers, showModal),
-		[draftFormData, models, providers, showModal]
+		[draftFormData, models, providers, showModal],
 	);
 	const setFormData = useCallback(
 		(action: SetStateAction<RouteFormData>) => {
 			setDraftFormData((draft) => {
-				const current = normalizeRouteEditorForm(
-					draft,
-					models,
-					providers,
-					showModal
-				);
-				const next = typeof action === "function" ? action(current) : action;
+				const current = normalizeRouteEditorForm(draft, models, providers, showModal);
+				const next = typeof action === 'function' ? action(current) : action;
 				return normalizeRouteEditorForm(next, models, providers, showModal);
 			});
 		},
-		[models, providers, showModal]
+		[models, providers, showModal],
 	);
 	const lifetime = useRef<AbortController | null>(null);
 	const loadRequest = useRef<symbol | null>(null);
@@ -213,58 +178,36 @@ export function useRoutesPageState() {
 
 	useReplaceListPageQuery(() => {
 		const params = new URLSearchParams();
-		if (filterVendor) params.set("vendor", filterVendor);
-		if (filterProviderId) params.set("provider_id", filterProviderId);
-		if (filterRouteGroup) params.set("route_group", filterRouteGroup);
-		if (filterStatus) params.set("status", filterStatus);
-		params.set("kind", filterKind);
+		if (searchQuery) params.set('q', searchQuery);
+		if (filterVendor) params.set('vendor', filterVendor);
+		if (filterProviderKind) params.set('provider_kind', filterProviderKind);
+		if (filterProviderId) params.set('provider_id', filterProviderId);
+		if (filterRouteGroup) params.set('route_group', filterRouteGroup);
+		if (filterStatus) params.set('status', filterStatus);
+		params.set('kind', filterKind);
 		return params;
-	}, [
-		filterVendor,
-		filterProviderId,
-		filterRouteGroup,
-		filterStatus,
-		filterKind,
-	]);
+	}, [filterVendor, filterProviderKind, filterProviderId, filterRouteGroup, filterStatus, filterKind, searchQuery]);
 
-	const applyRoutesPageData = useCallback(
-		(data: Awaited<ReturnType<typeof fetchRoutesPageData>>) => {
-			setRoutes(data.routes);
-			setModels(data.models);
-			setProviders(data.providers);
-			setGlobalRouteStrategy(data.globalRouteStrategy);
-		},
-		[]
-	);
+	const applyRoutesPageData = useCallback((data: Awaited<ReturnType<typeof fetchRoutesPageData>>) => {
+		setRoutes(data.routes);
+		setModels(data.models);
+		setProviders(data.providers);
+		setGlobalRouteStrategy(data.globalRouteStrategy);
+	}, []);
 	const refreshRoutesPage = useCallback(async () => {
 		const scope = lifetime.current;
 		if (!scope || scope.signal.aborted) return;
-		const request = Symbol("routes");
+		const request = Symbol('routes');
 		loadRequest.current = request;
 		try {
 			const data = await fetchRoutesPageData();
-			if (
-				scope.signal.aborted ||
-				lifetime.current !== scope ||
-				loadRequest.current !== request
-			)
-				return;
+			if (scope.signal.aborted || lifetime.current !== scope || loadRequest.current !== request) return;
 			applyRoutesPageData(data);
 		} catch (error) {
-			if (
-				scope.signal.aborted ||
-				lifetime.current !== scope ||
-				loadRequest.current !== request
-			)
-				return;
-			console.error("Fetch data error:", error);
+			if (scope.signal.aborted || lifetime.current !== scope || loadRequest.current !== request) return;
+			console.error('Fetch data error:', error);
 		} finally {
-			if (
-				!scope.signal.aborted &&
-				lifetime.current === scope &&
-				loadRequest.current === request
-			)
-				setIsLoading(false);
+			if (!scope.signal.aborted && lifetime.current === scope && loadRequest.current === request) setIsLoading(false);
 		}
 	}, [applyRoutesPageData]);
 
@@ -272,34 +215,20 @@ export function useRoutesPageState() {
 
 	useEffect(() => {
 		const scope = new AbortController();
-		const request = Symbol("routes");
+		const request = Symbol('routes');
 		lifetime.current = scope;
 		loadRequest.current = request;
 		void fetchRoutesPageData()
 			.then((data) => {
-				if (
-					scope.signal.aborted ||
-					lifetime.current !== scope ||
-					loadRequest.current !== request
-				)
-					return;
+				if (scope.signal.aborted || lifetime.current !== scope || loadRequest.current !== request) return;
 				applyRoutesPageData(data);
 			})
 			.catch((error) => {
-				if (
-					!scope.signal.aborted &&
-					lifetime.current === scope &&
-					loadRequest.current === request
-				)
-					console.error("Fetch data error:", error);
+				if (!scope.signal.aborted && lifetime.current === scope && loadRequest.current === request)
+					console.error('Fetch data error:', error);
 			})
 			.finally(() => {
-				if (
-					!scope.signal.aborted &&
-					lifetime.current === scope &&
-					loadRequest.current === request
-				)
-					setIsLoading(false);
+				if (!scope.signal.aborted && lifetime.current === scope && loadRequest.current === request) setIsLoading(false);
 			});
 		return () => {
 			scope.abort();
@@ -327,9 +256,7 @@ export function useRoutesPageState() {
 		for (const r of routes) {
 			set.add(normalizeRouteGroup(r.route_group));
 		}
-		return [...set].sort((a, b) =>
-			a.localeCompare(b, undefined, { sensitivity: "base" })
-		);
+		return [...set].sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
 	}, [routes]);
 
 	const routeGroupFilterOptions = useMemo(() => {
@@ -337,15 +264,44 @@ export function useRoutesPageState() {
 		if (filterRouteGroup && !list.includes(filterRouteGroup)) {
 			list.push(filterRouteGroup);
 		}
-		return list.sort((a, b) =>
-			a.localeCompare(b, undefined, { sensitivity: "base" })
-		);
+		return list.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
 	}, [distinctRouteGroups, filterRouteGroup]);
 
 	const vendorFilterOptions = useMemo(
 		() => buildVendorFilterOptions({ models, routes, modelMeta }),
-		[models, routes, modelMeta]
+		[models, routes, modelMeta],
 	);
+
+	const customKindLabel = tKind('custom');
+	const unclassifiedKindLabel = tKind('unclassified');
+
+	const providerKindFilterOptions = useMemo(
+		() =>
+			buildProviderKindFilterOptions({
+				providers,
+				routeProviderIds: routes.map((route) => route.provider_id),
+				locale,
+				customLabel: customKindLabel,
+				unclassifiedLabel: unclassifiedKindLabel,
+				selectedKey: filterProviderKind,
+			}),
+		[providers, routes, locale, customKindLabel, unclassifiedKindLabel, filterProviderKind],
+	);
+
+	const filterProviders = useMemo(() => {
+		const matched = filterProviderKind
+			? providers.filter((provider) => providerKindFilterKey(provider.kind) === filterProviderKind)
+			: providers;
+		return sortProvidersByKindThenName(matched, locale, customKindLabel);
+	}, [providers, filterProviderKind, locale, customKindLabel]);
+
+	useEffect(() => {
+		if (!filterProviderKind || !filterProviderId || providers.length === 0) return;
+		const provider = providers.find((item) => item.id === filterProviderId);
+		if (!provider || providerKindFilterKey(provider.kind) !== filterProviderKind) {
+			setFilterProviderId('');
+		}
+	}, [filterProviderKind, filterProviderId, providers]);
 
 	const providerRouteCounts = useMemo(() => {
 		const counts = new Map<string, number>();
@@ -368,7 +324,7 @@ export function useRoutesPageState() {
 		let active = 0;
 		let inactive = 0;
 		for (const r of routes) {
-			if (r.status === "active") active += 1;
+			if (r.status === 'active') active += 1;
 			else inactive += 1;
 		}
 		return { all: routes.length, active, inactive };
@@ -396,9 +352,14 @@ export function useRoutesPageState() {
 				modelMeta,
 				filterVendor,
 				filterProviderId,
+				filterProviderKind,
+				providers,
+				locale,
+				customKindLabel: tKind('custom'),
 				filterRouteGroup,
 				filterStatus,
 				filterKind,
+				searchQuery,
 			}),
 		[
 			routes,
@@ -406,35 +367,39 @@ export function useRoutesPageState() {
 			modelMeta,
 			filterVendor,
 			filterProviderId,
+			filterProviderKind,
+			providers,
+			locale,
+			tKind,
 			filterRouteGroup,
 			filterStatus,
 			filterKind,
-		]
+			searchQuery,
+		],
 	);
 
-	const routeCards = useMemo(
-		() => sortRouteCards(routesByModel, modelMeta),
-		[routesByModel, modelMeta]
-	);
+	const routeCards = useMemo(() => sortRouteCards(routesByModel, modelMeta), [routesByModel, modelMeta]);
 
 	const routeCardVendorGroups = useMemo(
 		() => buildRouteCardVendorGroups(routeCards, filterVendor),
-		[routeCards, filterVendor]
+		[routeCards, filterVendor],
 	);
 
 	const visibleModelCount = routesByModel.length;
 
 	const visibleRouteCount = useMemo(
 		() => routesByModel.reduce((sum, g) => sum + g.groupRoutes.length, 0),
-		[routesByModel]
+		[routesByModel],
 	);
 
 	const hasActiveFilters = Boolean(
+		searchQuery ||
 		filterVendor ||
-			filterProviderId ||
-			filterRouteGroup ||
-			filterStatus ||
-			filterKind !== DEFAULT_ROUTE_KIND_FILTER
+		filterProviderId ||
+		filterProviderKind ||
+		filterRouteGroup ||
+		filterStatus ||
+		filterKind !== DEFAULT_ROUTE_KIND_FILTER,
 	);
 
 	const activeFilterSummary = useMemo(
@@ -444,41 +409,45 @@ export function useRoutesPageState() {
 				filterRouteGroup,
 				filterVendor,
 				filterProviderId,
+				filterProviderKindLabel: providerKindFilterOptions.find((option) => option.key === filterProviderKind)?.label,
 				providers,
+				locale,
+				customKindLabel,
 			}),
-		[filterStatus, filterRouteGroup, filterVendor, filterProviderId, providers]
+		[
+			filterStatus,
+			filterRouteGroup,
+			filterVendor,
+			filterProviderId,
+			filterProviderKind,
+			providerKindFilterOptions,
+			providers,
+			locale,
+			customKindLabel,
+		],
 	);
 
 	const selectedProvider = useMemo(
 		() => providers.find((p) => p.id === formData.provider_id),
-		[providers, formData.provider_id]
+		[providers, formData.provider_id],
 	);
 
-	const selectedModel = useMemo(
-		() => models.find((m) => m.id === formData.model_id),
-		[models, formData.model_id]
-	);
+	const selectedModel = useMemo(() => models.find((m) => m.id === formData.model_id), [models, formData.model_id]);
 
 	const selectedModelIsImage = useMemo(
 		() => (selectedModel ? isImageRouteModel(selectedModel) : false),
-		[selectedModel]
+		[selectedModel],
 	);
 
 	const selectedModelIsAudio = useMemo(
 		() => (selectedModel ? isAudioRouteModel(selectedModel) : false),
-		[selectedModel]
+		[selectedModel],
 	);
 
 	const catalogStandardTierRows = useMemo(() => {
-		if (!selectedModel || selectedModelIsImage || selectedModelIsAudio)
-			return [];
+		if (!selectedModel || selectedModelIsImage || selectedModelIsAudio) return [];
 		return getCatalogPricingTierRows(selectedModel, billingCurrency);
-	}, [
-		selectedModel,
-		selectedModelIsImage,
-		selectedModelIsAudio,
-		billingCurrency,
-	]);
+	}, [selectedModel, selectedModelIsImage, selectedModelIsAudio, billingCurrency]);
 
 	const catalogImagePricingDisplay = useMemo(() => {
 		if (!selectedModel || !selectedModelIsImage) return null;
@@ -495,42 +464,35 @@ export function useRoutesPageState() {
 		const supported = UPSTREAM_PROTOCOLS.filter(
 			(proto) =>
 				providerSupportsUpstreamProtocol(proto, selectedProvider) &&
-				upstreamOperationsForProviderModel(
-					selectedProvider,
-					selectedModel,
-					proto,
-					formData.provider_model_name
-				).length > 0
+				upstreamOperationsForProviderModel(selectedProvider, selectedModel, proto, formData.provider_model_name)
+					.length > 0,
 		);
 		return supported;
 	}, [selectedProvider, selectedModel, formData.provider_model_name]);
 
 	const clearAllFilters = useCallback(() => {
+		setSearchQuery('');
 		setFilterKind(DEFAULT_ROUTE_KIND_FILTER);
-		setFilterVendor("");
-		setFilterProviderId("");
-		setFilterRouteGroup("");
-		setFilterStatus("");
+		setFilterVendor('');
+		setFilterProviderKind('');
+		setFilterProviderId('');
+		setFilterRouteGroup('');
+		setFilterStatus('');
 	}, []);
 
 	const handleCreate = useCallback(
-		(
-			presetModelId?: string,
-			preset?: { protocol?: string; operation?: string; group?: string }
-		) => {
+		(presetModelId?: string, preset?: { protocol?: string; operation?: string; group?: string }) => {
 			setEditingRoute(null);
 			setDuplicateSourceRouteId(null);
 			const initial = createInitialRouteForm(models, presetModelId);
 			setFormData({
 				...initial,
 				upstream_protocol:
-					preset?.protocol &&
-					UPSTREAM_PROTOCOLS.includes(preset.protocol as UpstreamProtocol)
+					preset?.protocol && UPSTREAM_PROTOCOLS.includes(preset.protocol as UpstreamProtocol)
 						? (preset.protocol as UpstreamProtocol)
 						: initial.upstream_protocol,
 				request_protocol:
-					preset?.protocol &&
-					UPSTREAM_PROTOCOLS.includes(preset.protocol as UpstreamProtocol)
+					preset?.protocol && UPSTREAM_PROTOCOLS.includes(preset.protocol as UpstreamProtocol)
 						? (preset.protocol as UpstreamProtocol)
 						: initial.request_protocol,
 				request_operation: preset?.operation ?? initial.request_operation,
@@ -538,9 +500,9 @@ export function useRoutesPageState() {
 				route_group: preset?.group ?? initial.route_group,
 			});
 			setShowModal(true);
-			setSaveError("");
+			setSaveError('');
 		},
-		[models, setFormData]
+		[models, setFormData],
 	);
 
 	const handleEdit = useCallback(
@@ -549,9 +511,9 @@ export function useRoutesPageState() {
 			setDuplicateSourceRouteId(null);
 			setFormData(buildFormDataFromRoute(route, models));
 			setShowModal(true);
-			setSaveError("");
+			setSaveError('');
 		},
-		[models, setFormData]
+		[models, setFormData],
 	);
 
 	const handleDuplicate = useCallback(
@@ -560,16 +522,22 @@ export function useRoutesPageState() {
 			setDuplicateSourceRouteId(route.id);
 			setFormData(buildFormDataFromRoute(route, models));
 			setShowModal(true);
-			setSaveError("");
+			setSaveError('');
 		},
-		[models, setFormData]
+		[models, setFormData],
 	);
 
 	const handleDelete = useCallback(
 		async (id: string) => {
 			const scope = lifetime.current;
 			if (!scope || scope.signal.aborted) return;
-			if (!confirm("Are you sure you want to delete this route?")) return;
+			const ok = await confirm({
+				title: tModal('deleteRoute'),
+				message: tModal('confirmDelete'),
+				confirmLabel: tCommon('delete'),
+				danger: true,
+			});
+			if (!ok) return;
 
 			setIsDeleting(true);
 			try {
@@ -581,44 +549,43 @@ export function useRoutesPageState() {
 					setDuplicateSourceRouteId(null);
 					await refreshRoutesPage();
 				} else {
-					alert(result.message);
+					notify('error', result.message || tCommon('failed'));
 				}
 			} catch (error) {
 				if (scope.signal.aborted || lifetime.current !== scope) return;
-				console.error("Delete error:", error);
-				alert("Delete failed");
+				console.error('Delete error:', error);
+				notify('error', tCommon('failed'));
 			} finally {
-				if (!scope.signal.aborted && lifetime.current === scope)
-					setIsDeleting(false);
+				if (!scope.signal.aborted && lifetime.current === scope) setIsDeleting(false);
 			}
 		},
-		[refreshRoutesPage]
+		[confirm, notify, refreshRoutesPage, tCommon, tModal],
 	);
 
-	const handleToggleStatus = useCallback(async (route: RouteListRow) => {
-		const scope = lifetime.current;
-		if (!scope || scope.signal.aborted) return;
-		const newStatus = route.status === "active" ? "inactive" : "active";
-		setTogglingId(route.id);
-		try {
-			const result = await toggleRouteStatus(route.id, newStatus);
-			if (scope.signal.aborted || lifetime.current !== scope) return;
-			if (result.success) {
-				setRoutes((prev) =>
-					prev.map((r) => (r.id === route.id ? { ...r, status: newStatus } : r))
-				);
-			} else {
-				alert(result.message);
+	const handleToggleStatus = useCallback(
+		async (route: RouteListRow) => {
+			const scope = lifetime.current;
+			if (!scope || scope.signal.aborted) return;
+			const newStatus = route.status === 'active' ? 'inactive' : 'active';
+			setTogglingId(route.id);
+			try {
+				const result = await toggleRouteStatus(route.id, newStatus);
+				if (scope.signal.aborted || lifetime.current !== scope) return;
+				if (result.success) {
+					setRoutes((prev) => prev.map((r) => (r.id === route.id ? { ...r, status: newStatus } : r)));
+				} else {
+					notify('error', result.message || tCommon('updateFailed'));
+				}
+			} catch (error) {
+				if (scope.signal.aborted || lifetime.current !== scope) return;
+				console.error('Toggle status error:', error);
+				notify('error', tCommon('updateFailed'));
+			} finally {
+				if (!scope.signal.aborted && lifetime.current === scope) setTogglingId(null);
 			}
-		} catch (error) {
-			if (scope.signal.aborted || lifetime.current !== scope) return;
-			console.error("Toggle status error:", error);
-			alert("Update failed, please try again");
-		} finally {
-			if (!scope.signal.aborted && lifetime.current === scope)
-				setTogglingId(null);
-		}
-	}, []);
+		},
+		[notify, tCommon],
+	);
 
 	const copyModelId = useCallback(async (modelId: string) => {
 		const scope = lifetime.current;
@@ -634,17 +601,24 @@ export function useRoutesPageState() {
 			}, 2000);
 		} catch (error) {
 			if (scope.signal.aborted || lifetime.current !== scope) return;
-			console.error("Copy model id failed:", error);
+			console.error('Copy model id failed:', error);
 		}
 	}, []);
 
 	const handleSave = useCallback(async () => {
 		const scope = lifetime.current;
 		if (!scope || scope.signal.aborted) return;
-		setSaveError("");
+		setSaveError('');
 		setIsSaving(true);
 		try {
-			const result = await saveRoute(formData, editingRoute);
+			const catalog = catalogScheduleWindowsFromModel(models.find((m) => m.id === formData.model_id));
+			const result = await saveRoute(
+				{
+					...formData,
+					schedule_windows: alignRouteScheduleWindowsToCatalog(catalog, formData.schedule_windows),
+				},
+				editingRoute,
+			);
 			if (scope.signal.aborted || lifetime.current !== scope) return;
 			if (result.success) {
 				setShowModal(false);
@@ -656,15 +630,12 @@ export function useRoutesPageState() {
 			}
 		} catch (error) {
 			if (scope.signal.aborted || lifetime.current !== scope) return;
-			console.error("Save error:", error);
-			setSaveError(
-				error instanceof Error ? error.message : "Save failed, please try again"
-			);
+			console.error('Save error:', error);
+			setSaveError(error instanceof Error ? error.message : 'Save failed, please try again');
 		} finally {
-			if (!scope.signal.aborted && lifetime.current === scope)
-				setIsSaving(false);
+			if (!scope.signal.aborted && lifetime.current === scope) setIsSaving(false);
 		}
-	}, [editingRoute, formData, refreshRoutesPage]);
+	}, [editingRoute, formData, models, refreshRoutesPage]);
 
 	const handleOpenStrategyDialog = useCallback(
 		(
@@ -676,7 +647,7 @@ export function useRoutesPageState() {
 			poolId?: string | null,
 			poolStrategy?: string | null,
 			requestOperation?: string,
-			extras?: { priority?: number; poolTierStrategies?: string | null }
+			extras?: { priority?: number; poolTierStrategies?: string | null },
 		) => {
 			const raw = modelMeta.get(modelId)?.route_policy ?? null;
 			const poolTierStrategies = extras?.poolTierStrategies ?? null;
@@ -695,37 +666,30 @@ export function useRoutesPageState() {
 					poolId
 						? route.route_pool_id === poolId
 						: route.model_id === modelId &&
-						  route.upstream_protocol === protocol &&
-						  normalizeRouteGroup(route.route_group) ===
-								normalizeRouteGroup(group)
+							route.upstream_protocol === protocol &&
+							normalizeRouteGroup(route.route_group) === normalizeRouteGroup(group),
 				)
 				.map((route) => ({
 					id: route.id,
 					providerId: route.provider_id,
-					providerName:
-						route.provider_name ||
-						providerMeta.get(route.provider_id)?.name ||
-						route.provider_id,
+					providerName: routeProviderAccountLabel(route, providerMeta.get(route.provider_id), locale, tKind('custom')),
 					providerModelName: route.provider_model_name,
 					priority: route.priority,
 					weight: route.weight ?? 1,
-					active:
-						route.status === "active" &&
-						providerMeta.get(route.provider_id)?.status !== "disabled",
+					active: route.status === 'active' && providerMeta.get(route.provider_id)?.status !== 'disabled',
 				}));
 			const tierMap = parseRoutePoolTierStrategies(poolTierStrategies);
-			const tierStrategy =
-				priority !== undefined ? tierMap.get(priority) ?? "" : "";
+			const tierStrategy = priority !== undefined ? (tierMap.get(priority) ?? '') : '';
 			setStrategyForm(
 				poolId
 					? {
-							protocolStrategy: poolStrategy ?? "",
+							protocolStrategy: poolStrategy ?? '',
 							tierStrategy,
 							capabilityStrategies: {},
-					  }
-					: readRoutePolicyFormFromRaw(raw, protocol, group)
+						}
+					: readRoutePolicyFormFromRaw(raw, protocol, group),
 			);
-			setStrategyError("");
+			setStrategyError('');
 			setStrategyDialog({
 				modelId,
 				modelTitle,
@@ -742,7 +706,7 @@ export function useRoutesPageState() {
 				targets: matchingTargets,
 			});
 		},
-		[globalRouteStrategy, modelMeta, providerMeta, routes]
+		[globalRouteStrategy, locale, modelMeta, providerMeta, routes, tKind],
 	);
 
 	const handleSaveStrategy = useCallback(async () => {
@@ -750,14 +714,12 @@ export function useRoutesPageState() {
 		if (!scope || scope.signal.aborted) return;
 		if (!strategyDialog) return;
 		setStrategySaving(true);
-		setStrategyError("");
+		setStrategyError('');
 		try {
 			let result: { success: true } | { success: false; message: string };
 			if (strategyDialog.poolId) {
 				if (strategyDialog.priority !== undefined) {
-					const tierMap = parseRoutePoolTierStrategies(
-						strategyDialog.poolTierStrategies
-					);
+					const tierMap = parseRoutePoolTierStrategies(strategyDialog.poolTierStrategies);
 					const next = strategyForm.tierStrategy.trim().toLowerCase();
 					if (next && isRouteStrategyName(next)) {
 						tierMap.set(strategyDialog.priority, next);
@@ -784,8 +746,9 @@ export function useRoutesPageState() {
 						modelMeta.get(strategyDialog.modelId)?.route_policy ?? null,
 						strategyDialog.protocol,
 						strategyDialog.group,
-						strategyForm
-					)
+						strategyForm,
+					),
+					modelMeta.get(strategyDialog.modelId)?.route_policy ?? null,
 				);
 			}
 			if (scope.signal.aborted || lifetime.current !== scope) return;
@@ -797,12 +760,9 @@ export function useRoutesPageState() {
 			await refreshRoutesPage();
 		} catch (error) {
 			if (scope.signal.aborted || lifetime.current !== scope) return;
-			setStrategyError(
-				error instanceof Error ? error.message : "Save failed, please try again"
-			);
+			setStrategyError(error instanceof Error ? error.message : 'Save failed, please try again');
 		} finally {
-			if (!scope.signal.aborted && lifetime.current === scope)
-				setStrategySaving(false);
+			if (!scope.signal.aborted && lifetime.current === scope) setStrategySaving(false);
 		}
 	}, [modelMeta, refreshRoutesPage, strategyDialog, strategyForm]);
 
@@ -822,15 +782,13 @@ export function useRoutesPageState() {
 				providerName: string;
 				priority: number;
 				weight: number;
-			}> = []
+			}> = [],
 		) => {
 			setStickyForm({
 				enabled,
-				idleTtlSeconds: Number.isFinite(idleTtlSeconds)
-					? idleTtlSeconds
-					: DEFAULT_STICKY_IDLE_TTL_SECONDS,
+				idleTtlSeconds: Number.isFinite(idleTtlSeconds) ? idleTtlSeconds : DEFAULT_STICKY_IDLE_TTL_SECONDS,
 			});
-			setStickyError("");
+			setStickyError('');
 			setStickyDialog({
 				modelId,
 				modelTitle,
@@ -840,13 +798,11 @@ export function useRoutesPageState() {
 				requestOperation,
 				poolId,
 				enabled,
-				idleTtlSeconds: Number.isFinite(idleTtlSeconds)
-					? idleTtlSeconds
-					: DEFAULT_STICKY_IDLE_TTL_SECONDS,
+				idleTtlSeconds: Number.isFinite(idleTtlSeconds) ? idleTtlSeconds : DEFAULT_STICKY_IDLE_TTL_SECONDS,
 				targets,
 			});
 		},
-		[]
+		[],
 	);
 
 	const handleSaveProviderSticky = useCallback(async () => {
@@ -854,7 +810,7 @@ export function useRoutesPageState() {
 		if (!scope || scope.signal.aborted) return;
 		if (!stickyDialog?.poolId) return;
 		setStickySaving(true);
-		setStickyError("");
+		setStickyError('');
 		try {
 			const result = await patchRoutePoolPolicy(stickyDialog.poolId, {
 				sticky_routing: {
@@ -871,12 +827,9 @@ export function useRoutesPageState() {
 			await refreshRoutesPage();
 		} catch (error) {
 			if (scope.signal.aborted || lifetime.current !== scope) return;
-			setStickyError(
-				error instanceof Error ? error.message : "Save failed, please try again"
-			);
+			setStickyError(error instanceof Error ? error.message : 'Save failed, please try again');
 		} finally {
-			if (!scope.signal.aborted && lifetime.current === scope)
-				setStickySaving(false);
+			if (!scope.signal.aborted && lifetime.current === scope) setStickySaving(false);
 		}
 	}, [refreshRoutesPage, stickyDialog, stickyForm]);
 
@@ -906,8 +859,14 @@ export function useRoutesPageState() {
 		billingCurrency,
 		filterVendor,
 		setFilterVendor,
+		searchQuery,
+		setSearchQuery,
 		filterProviderId,
 		setFilterProviderId,
+		filterProviderKind,
+		setFilterProviderKind,
+		filterProviders,
+		providerKindFilterOptions,
 		filterRouteGroup,
 		setFilterRouteGroup,
 		filterStatus,

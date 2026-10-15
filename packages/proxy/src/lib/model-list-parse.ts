@@ -2,6 +2,11 @@
  * Shared parsers for `GET /v1/models` and `GET /catalog/models`.
  */
 
+/** Public list vendor: empty / whitespace falls back to `other` (Catalog and `/v1/models`). */
+export function normalizePublicModelVendor(vendor: string | null | undefined): string {
+	return vendor?.trim() ? vendor : 'other';
+}
+
 /** D1 / service layer JSON string column → tag id list; parse failure returns []. */
 export function parseTags(tagsJson: string | null): string[] {
 	if (tagsJson == null || tagsJson === '') return [];
@@ -81,8 +86,8 @@ export type ModelsKindFilter = 'llm' | 'image' | 'audio' | 'embedding' | 'all';
 
 /**
  * Parse `kind` for `GET /v1/models`.
- * Empty / missing / unknown → `llm`（默认排除文生图 / ASR，兼容 chat/agent 拉列表）。
- * `image` → 仅文生图；`audio` → ASR/TTS Audio endpoint 模型；`all` → 不按 kind 过滤。
+ * Empty / missing / unknown → `llm`（默认排除文生图 / ASR / TTS，兼容 chat/agent 拉列表）。
+ * `image` → 仅文生图；`audio` → ASR + TTS（与 Admin Kind 对齐）；`all` → 不按 kind 过滤。
  */
 export function parseModelsKindQuery(raw: string | undefined): ModelsKindFilter {
 	if (raw == null || raw.trim() === '') {
@@ -99,7 +104,14 @@ export function parseModelsKindQuery(raw: string | undefined): ModelsKindFilter 
 /** Explicit OpenRouter-style output modality filter; `all` disables filtering. */
 export function parseModelsOutputModalitiesQuery(raw: string | undefined): string[] | null {
 	if (raw == null || raw.trim() === '') return null;
-	const values = [...new Set(raw.split(',').map((value) => value.trim().toLowerCase()).filter(Boolean))];
+	const values = [
+		...new Set(
+			raw
+				.split(',')
+				.map((value) => value.trim().toLowerCase())
+				.filter(Boolean),
+		),
+	];
 	if (values.includes('all')) return null;
 	return values.length > 0 ? values : null;
 }

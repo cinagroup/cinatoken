@@ -60,6 +60,8 @@ function fixture(
 		},
 	} as unknown as GatewayRepositories;
 	const bindings = {
+		// The authenticated outer Console entry already checked the original browser Origin.
+		ADMIN_CSRF_SAME_ORIGIN: true,
 		STORAGE_CONTEXT: { repositories },
 		ADMIN_PRINCIPAL: principal,
 	} as unknown as AdminBindings;

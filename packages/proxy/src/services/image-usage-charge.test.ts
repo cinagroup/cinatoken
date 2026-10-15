@@ -1,11 +1,8 @@
 import assert from 'node:assert/strict';
-import { describe, it } from 'node:test';
-import type {
-	GatewayRepositories,
-	ImageEndpointPricingLine,
-	VerifiedModelEndpointSnapshot,
-} from '@octafuse/core';
+import { beforeEach, describe, it } from 'node:test';
+import type { GatewayRepositories, ImageEndpointPricingLine, VerifiedModelEndpointSnapshot } from '@octafuse/core';
 import { parsePricingProfile, resolveImageBillingMode } from '@octafuse/core';
+import { resetUserChargedCostFactorModeCacheForTests, USER_CHARGED_COST_FACTOR_MODE_KEY } from '@octafuse/core';
 import {
 	createImagePricingContext,
 	estimateImageBudgetPrecheck,
@@ -106,10 +103,14 @@ function verifiedImageEndpoint(
 	};
 }
 
-function mockRepos(): GatewayRepositories {
+function mockRepos(timezone?: string, extra?: Record<string, string | null>): GatewayRepositories {
 	return {
 		systemConfig: {
-			getConfig: async () => null,
+			getConfig: async (key: string) => {
+				if (key === 'BUSINESS_TIMEZONE') return timezone ?? null;
+				if (extra && Object.prototype.hasOwnProperty.call(extra, key)) return extra[key] ?? null;
+				return null;
+			},
 		},
 	} as unknown as GatewayRepositories;
 }
@@ -152,9 +153,7 @@ describe('estimateImageCosts', () => {
 
 	it('uses the verified endpoint tariff when the legacy model profile conflicts', async () => {
 		const costs = await estimateImageCosts(mockRepos(), {
-			endpoint: verifiedImageEndpoint([
-				{ billable: 'output_image', unit: 'image', cost_usd: '0.07' },
-			]),
+			endpoint: verifiedImageEndpoint([{ billable: 'output_image', unit: 'image', cost_usd: '0.07' }]),
 			modelPricingProfileJson: CONFLICTING_PER_IMAGE_PROFILE,
 			routePriceOverrideJson: null,
 			quality: 'high',
@@ -179,9 +178,7 @@ describe('estimateImageCosts', () => {
 		const allDayCharged = [{ start: '00:00', end: '24:00', factor: 2 }];
 		const allDayMetered = [{ start: '00:00', end: '24:00', factor: 4 }];
 		const costs = await estimateImageCosts(mockRepos(), {
-			endpoint: verifiedImageEndpoint([
-				{ billable: 'output_image', unit: 'image', cost_usd: '0.04' },
-			]),
+			endpoint: verifiedImageEndpoint([{ billable: 'output_image', unit: 'image', cost_usd: '0.04' }]),
 			modelPricingProfileJson: CONFLICTING_PER_IMAGE_PROFILE,
 			routePriceOverrideJson: JSON.stringify({
 				charged_factor: 2,
@@ -245,9 +242,9 @@ describe('estimateImageCosts', () => {
 	it('marks empty or unsupported endpoint tariffs as unprovable estimates', async () => {
 		const endpoints = [
 			verifiedImageEndpoint([], { id: 'endpoint-empty' }),
-			verifiedImageEndpoint([
-				{ billable: 'output_image', unit: 'token', cost_usd: '0' },
-			], { id: 'endpoint-unsupported' }),
+			verifiedImageEndpoint([{ billable: 'output_image', unit: 'token', cost_usd: '0' }], {
+				id: 'endpoint-unsupported',
+			}),
 		];
 		for (const endpoint of endpoints) {
 			const estimate = await estimateImageCosts(mockRepos(), {
@@ -264,13 +261,13 @@ describe('estimateImageCosts', () => {
 			assert.equal(audit.source, 'verified_model_endpoint');
 			assert.equal(audit.endpoint_id, endpoint.id);
 			assert.equal(typeof audit.error, 'string');
-			assert.equal(
-				selectConservativeMultimediaBudgetEstimate([estimate])?.estimatedChargedCost,
-				null,
-			);
+			assert.equal(selectConservativeMultimediaBudgetEstimate([estimate])?.estimatedChargedCost, null);
 		}
 	});
 
+	beforeEach(() => {
+		resetUserChargedCostFactorModeCacheForTests();
+	});
 	it('token path: actual usage dominates charged cost (not fixed per-image)', async () => {
 		const costs = await estimateImageCosts(
 			mockRepos(),
@@ -287,11 +284,12 @@ describe('estimateImageCosts', () => {
 					cached_text_tokens: 0,
 					image_input_tokens: 0,
 					cached_image_input_tokens: 0,
+					text_output_tokens: 0,
 					image_output_tokens: 5500,
 					total_tokens: 5520,
 					raw_usage: '{"output_tokens":5500}',
 				},
-			}
+			},
 		);
 		assert.equal(costs.billingKind, 'image_tokens');
 		assert.ok(Math.abs(costs.chargedCost - 0.1651) < 1e-6);
@@ -324,11 +322,12 @@ describe('estimateImageCosts', () => {
 					cached_text_tokens: 0,
 					image_input_tokens: 0,
 					cached_image_input_tokens: 0,
+					text_output_tokens: 0,
 					image_output_tokens: 5500,
 					total_tokens: 5515,
 					raw_usage: null,
 				},
-			}
+			},
 		);
 		assert.equal(precheck.billingKind, 'image_tokens');
 		assert.ok(precheck.chargedCost >= shortGen.chargedCost);
@@ -417,6 +416,45 @@ describe('estimateImageCosts', () => {
 		assert.ok(Math.abs(override.chargedCost - base.chargedCost * 2) < 1e-9);
 	});
 
+	it('stacks official catalog schedule before route factors', async () => {
+		const profile = JSON.stringify({
+			image_billing_mode: 'per_image',
+			image: { default: 0.04 },
+			schedule: [{ start: '23:00', end: '02:00', factor: 0.5 }],
+		});
+		const route = JSON.stringify({
+			charged_factor: 1,
+			metered_factor: 1,
+			schedule: {
+				mode: 'override',
+				charged: [{ start: '23:00', end: '02:00', factor: 0.8 }],
+				metered: [{ start: '23:00', end: '02:00', factor: 1.2 }],
+			},
+		});
+		const hit = await estimateImageCosts(mockRepos('Asia/Shanghai'), {
+			modelPricingProfileJson: profile,
+			routePriceOverrideJson: route,
+			quality: 'auto',
+			size: 'auto',
+			imageCount: 1,
+			requestStartedAtMs: Date.parse('2026-07-10T15:30:00.000Z'),
+		});
+		assert.equal(hit.standardCost, 0.02);
+		assert.equal(hit.chargedCost, 0.016);
+		assert.equal(hit.meteredCost, 0.024);
+		assert.equal(hit.chargedCost / hit.standardCost, 0.8);
+		const miss = await estimateImageCosts(mockRepos('Asia/Shanghai'), {
+			modelPricingProfileJson: profile,
+			routePriceOverrideJson: route,
+			quality: 'auto',
+			size: 'auto',
+			imageCount: 1,
+			requestStartedAtMs: Date.parse('2026-07-10T18:30:00.000Z'),
+		});
+		assert.equal(miss.standardCost, 0.04);
+		assert.equal(miss.chargedCost, 0.04);
+	});
+
 	it('applies user charged cost factor after route charged cost', async () => {
 		const route = await estimateImageCosts(mockRepos(), {
 			modelPricingProfileJson: PER_IMAGE_PROFILE,
@@ -439,6 +477,58 @@ describe('estimateImageCosts', () => {
 		assert.equal(discounted.meteredCost, route.meteredCost);
 		const audit = JSON.parse(discounted.pricingAuditJson) as { user_charged_factor: number };
 		assert.equal(audit.user_charged_factor, 0.5);
+	});
+
+	it('min mode takes the smaller of route and user charged factors', async () => {
+		const repos = mockRepos(undefined, { [USER_CHARGED_COST_FACTOR_MODE_KEY]: 'min' });
+		const route = await estimateImageCosts(repos, {
+			modelPricingProfileJson: PER_IMAGE_PROFILE,
+			routePriceOverrideJson: JSON.stringify({ charged_factor: 2, metered_factor: 1 }),
+			quality: 'auto',
+			size: 'auto',
+			imageCount: 1,
+			catalogModelId: 'gpt-image-1',
+		});
+		const discounted = await estimateImageCosts(repos, {
+			modelPricingProfileJson: PER_IMAGE_PROFILE,
+			routePriceOverrideJson: JSON.stringify({ charged_factor: 2, metered_factor: 1 }),
+			quality: 'auto',
+			size: 'auto',
+			imageCount: 1,
+			catalogModelId: 'gpt-image-1',
+			userChargedCostFactorsJson: JSON.stringify({ 'gpt-image-1': 0.5 }),
+		});
+		assert.ok(Math.abs(discounted.chargedCost - route.chargedCost * (0.5 / 2)) < 1e-9);
+		assert.equal(discounted.meteredCost, route.meteredCost);
+		const audit = JSON.parse(discounted.pricingAuditJson) as {
+			user_charged_factor: number;
+			user_charged_factor_mode: string;
+			combined_charged_factor: number;
+		};
+		assert.equal(audit.user_charged_factor, 0.5);
+		assert.equal(audit.user_charged_factor_mode, 'min');
+		assert.equal(audit.combined_charged_factor, 0.5);
+	});
+
+	it('per_image by_size 2k hits the catalog unit price', async () => {
+		const profile = JSON.stringify({
+			image_billing_mode: 'per_image',
+			image: {
+				default: 0.25,
+				by_size: { '1k': 0.25, '2k': 0.5 },
+			},
+		});
+		const costs = await estimateImageCosts(mockRepos(), {
+			modelPricingProfileJson: profile,
+			routePriceOverrideJson: null,
+			quality: 'auto',
+			size: '2k',
+			imageCount: 1,
+		});
+		assert.equal(costs.billingKind, 'image_per_image');
+		assert.ok(Math.abs(costs.chargedCost - 0.5) < 1e-9);
+		const audit = JSON.parse(costs.pricingAuditJson) as { size: string };
+		assert.equal(audit.size, '2k');
 	});
 
 	it('per_image applies charged_factor from route override', async () => {
@@ -489,7 +579,7 @@ describe('estimateImageCosts', () => {
 				size: '1536x1024',
 				imageCount: 1,
 			},
-			[cheap, expensive]
+			[cheap, expensive],
 		);
 		assert.ok(precheck.chargedCost > withCheapOnly.chargedCost);
 		assert.ok(Math.abs(precheck.chargedCost - withCheapOnly.chargedCost * 2) < 1e-6);
@@ -527,52 +617,87 @@ describe('image Guardrail budget integration', () => {
 		assert.equal(imageGuardrailBudgetMicros({ chargedCost: 0 }), 0);
 		assert.equal(imageGuardrailBudgetMicros({ chargedCost: 0.0000001 }), 1);
 		assert.equal(imageGuardrailBudgetMicros({ chargedCost: 0.123456 }), 123_456);
-		assert.equal(
-			imageGuardrailBudgetMicros({ chargedCost: Number.MAX_VALUE }),
-			Number.MAX_SAFE_INTEGER,
-		);
+		assert.equal(imageGuardrailBudgetMicros({ chargedCost: Number.MAX_VALUE }), Number.MAX_SAFE_INTEGER);
 	});
 
 	it('keeps the lease only when a successful token-priced response lacks usage', () => {
-		assert.equal(imageGuardrailSettlementMode({
-			status: 'success', tokenPriced: true, imageUsage: null,
-		}), 'reserved');
-		assert.equal(imageGuardrailSettlementMode({
-			status: 'error', tokenPriced: true, imageUsage: null,
-		}), 'actual');
-		assert.equal(imageGuardrailSettlementMode({
-			status: 'success', tokenPriced: false, imageUsage: null,
-		}), 'actual');
-		assert.equal(imageGuardrailSettlementMode({
-			status: 'success', tokenPriced: true, imageUsage: {
-				text_tokens: 0,
-				cached_text_tokens: 0,
-				image_input_tokens: 0,
-				cached_image_input_tokens: 0,
-				image_output_tokens: 0,
-				total_tokens: 0,
-				raw_usage: '{}',
-			},
-		}), 'reserved');
-		assert.equal(imageGuardrailSettlementMode({
-			status: 'success', tokenPriced: true, imageUsage: {
-				text_tokens: 0,
-				cached_text_tokens: 0,
-				image_input_tokens: 0,
-				cached_image_input_tokens: 0,
-				image_output_tokens: 1,
-				total_tokens: 1,
-				raw_usage: null,
-			},
-		}), 'actual');
-		assert.equal(imageGuardrailSettlementMode({
-			status: 'error', tokenPriced: false, imageUsage: null,
-			upstreamAccepted: true, resultConfirmed: false,
-		}), 'reserved');
-		assert.equal(imageGuardrailSettlementMode({
-			status: 'error', tokenPriced: true, imageUsage: null,
-			upstreamAccepted: true, resultConfirmed: false, clientOutcomeBillable: false,
-		}), 'actual');
+		assert.equal(
+			imageGuardrailSettlementMode({
+				status: 'success',
+				tokenPriced: true,
+				imageUsage: null,
+			}),
+			'reserved',
+		);
+		assert.equal(
+			imageGuardrailSettlementMode({
+				status: 'error',
+				tokenPriced: true,
+				imageUsage: null,
+			}),
+			'actual',
+		);
+		assert.equal(
+			imageGuardrailSettlementMode({
+				status: 'success',
+				tokenPriced: false,
+				imageUsage: null,
+			}),
+			'actual',
+		);
+		assert.equal(
+			imageGuardrailSettlementMode({
+				status: 'success',
+				tokenPriced: true,
+				imageUsage: {
+					text_tokens: 0,
+					cached_text_tokens: 0,
+					image_input_tokens: 0,
+					cached_image_input_tokens: 0,
+					image_output_tokens: 0,
+					total_tokens: 0,
+					raw_usage: '{}',
+				},
+			}),
+			'reserved',
+		);
+		assert.equal(
+			imageGuardrailSettlementMode({
+				status: 'success',
+				tokenPriced: true,
+				imageUsage: {
+					text_tokens: 0,
+					cached_text_tokens: 0,
+					image_input_tokens: 0,
+					cached_image_input_tokens: 0,
+					image_output_tokens: 1,
+					total_tokens: 1,
+					raw_usage: null,
+				},
+			}),
+			'actual',
+		);
+		assert.equal(
+			imageGuardrailSettlementMode({
+				status: 'error',
+				tokenPriced: false,
+				imageUsage: null,
+				upstreamAccepted: true,
+				resultConfirmed: false,
+			}),
+			'reserved',
+		);
+		assert.equal(
+			imageGuardrailSettlementMode({
+				status: 'error',
+				tokenPriced: true,
+				imageUsage: null,
+				upstreamAccepted: true,
+				resultConfirmed: false,
+				clientOutcomeBillable: false,
+			}),
+			'actual',
+		);
 	});
 
 	it('admits n > 1 only with an explicit per-image or image-token settlement basis', () => {
@@ -580,9 +705,20 @@ describe('image Guardrail budget integration', () => {
 		assert.equal(multipleImageBillingMode(PER_IMAGE_PROFILE), 'per_image');
 		assert.equal(multipleImageBillingMode(null), null);
 		assert.equal(multipleImageBillingMode(JSON.stringify({ image: { default: 0.04 } })), null);
-		assert.equal(multipleImageBillingMode(JSON.stringify({ tiers: [{
-			upto: null, input_price: 1, output_price: 2,
-		}]})), null);
+		assert.equal(
+			multipleImageBillingMode(
+				JSON.stringify({
+					tiers: [
+						{
+							upto: null,
+							input_price: 1,
+							output_price: 2,
+						},
+					],
+				}),
+			),
+			null,
+		);
 	});
 
 	it('writes the fixed request id, accounted-at instant, and atomic settlement', async () => {
@@ -600,12 +736,16 @@ describe('image Guardrail budget integration', () => {
 				return { present: 1 } as T;
 			}
 			async all<T>(): Promise<{ results: T[] }> {
-				return { results: [{
-					assignment_id: 'guardrail-1',
-					scope_type: 'user',
-					scope_id: 'user-1',
-					settlement_basis: 'charged',
-				} as T] };
+				return {
+					results: [
+						{
+							assignment_id: 'guardrail-1',
+							scope_type: 'user',
+							scope_id: 'user-1',
+							settlement_basis: 'charged',
+						} as T,
+					],
+				};
 			}
 		}
 		const raw = {
@@ -629,23 +769,31 @@ describe('image Guardrail budget integration', () => {
 			requestLogId: requestId,
 			budgetAccountedAt: accountedAt,
 			guardrailBudgetSettlement: { requestId },
-			apiKeyId: 'key-1', userId: 'user-1', userEmail: 'user@example.com',
-			modelId: 'openai/image-free', providerId: 'provider-1',
+			apiKeyId: 'key-1',
+			userId: 'user-1',
+			userEmail: 'user@example.com',
+			modelId: 'openai/image-free',
+			providerId: 'provider-1',
 			sessionId: 'session-image-1',
-			requestProtocol: 'openai', requestOperation: 'images.generations',
-			upstreamProtocol: 'openai', routeGroup: 'default', status: 'success', latencyMs: 10,
+			requestProtocol: 'openai',
+			requestOperation: 'images.generations',
+			upstreamProtocol: 'openai',
+			routeGroup: 'default',
+			status: 'success',
+			latencyMs: 10,
 			billing: { modelPricingProfileJson: null, imageCount: 1, operation: 'generations' },
-			effectiveImageCount: 1, imageUsage: null, resultConfirmed: true,
+			effectiveImageCount: 1,
+			imageUsage: null,
+			resultConfirmed: true,
 			suppressErrorAlert: true,
 		});
 
 		assert.equal(result.requestLogId, requestId);
 		assert.equal(batches.length, 1);
-		const requestInsert = batches[0]!.find((statement) =>
-			statement.sql.includes('INSERT INTO api_key_request_logs')
-		);
+		const requestInsert = batches[0]!.find((statement) => statement.sql.includes('INSERT INTO api_key_request_logs'));
 		assert.ok(requestInsert);
-		const columns = /api_key_request_logs\s*\(([^)]+)\)/su.exec(requestInsert!.sql)![1]!
+		const columns = /api_key_request_logs\s*\(([^)]+)\)/su
+			.exec(requestInsert!.sql)![1]!
 			.split(',')
 			.map((column) => column.trim());
 		assert.equal(requestInsert!.values[columns.indexOf('id')], requestId);
@@ -656,9 +804,7 @@ describe('image Guardrail budget integration', () => {
 		assert.equal(requestInsert!.values[columns.indexOf('native_tokens_cached')], null);
 		assert.equal(requestInsert!.values[columns.indexOf('native_tokens_reasoning')], null);
 		assert.equal(requestInsert!.values[columns.indexOf('native_tokens_completion_images')], null);
-		const settlement = batches[0]!.find((statement) =>
-			statement.sql.includes("SET state = 'settled'")
-		);
+		const settlement = batches[0]!.find((statement) => statement.sql.includes("SET state = 'settled'"));
 		assert.ok(settlement);
 		assert.ok(settlement!.values.includes(requestId));
 	});
@@ -668,10 +814,18 @@ describe('image Guardrail budget integration', () => {
 		await recordImageUsage({
 			repos: captureD1ImageRepositories(batches),
 			requestLogId: 'image-native-usage',
-			apiKeyId: 'key-1', workspaceId: 'workspace-1', userId: 'user-1', userEmail: null,
-			modelId: 'openai/image-token', providerId: 'provider-1',
-			requestProtocol: 'openai', requestOperation: 'images.generations',
-			upstreamProtocol: 'openai', routeGroup: 'default', status: 'success', latencyMs: 10,
+			apiKeyId: 'key-1',
+			workspaceId: 'workspace-1',
+			userId: 'user-1',
+			userEmail: null,
+			modelId: 'openai/image-token',
+			providerId: 'provider-1',
+			requestProtocol: 'openai',
+			requestOperation: 'images.generations',
+			upstreamProtocol: 'openai',
+			routeGroup: 'default',
+			status: 'success',
+			latencyMs: 10,
 			billing: { modelPricingProfileJson: TOKEN_PROFILE, imageCount: 1, operation: 'generations' },
 			effectiveImageCount: 1,
 			imageUsage: {
@@ -703,12 +857,22 @@ describe('image Guardrail budget integration', () => {
 			requestLogId: requestId,
 			guardrailBudgetSettlement: { requestId },
 			ordinaryBudgetSettlement: {
-				requestId, budgetEpoch: 7, reservedMicros: 200_000, unknownCost: false,
+				requestId,
+				budgetEpoch: 7,
+				reservedMicros: 200_000,
+				unknownCost: false,
 			},
-			apiKeyId: 'key-1', userId: 'user-1', userEmail: null,
-			modelId: 'openai/image', providerId: 'provider-1',
-			requestProtocol: 'openai', requestOperation: 'images.generations',
-			upstreamProtocol: 'openai', routeGroup: 'default', status: 'error', latencyMs: 10,
+			apiKeyId: 'key-1',
+			userId: 'user-1',
+			userEmail: null,
+			modelId: 'openai/image',
+			providerId: 'provider-1',
+			requestProtocol: 'openai',
+			requestOperation: 'images.generations',
+			upstreamProtocol: 'openai',
+			routeGroup: 'default',
+			status: 'error',
+			latencyMs: 10,
 			errorMessage: 'Upstream returned no image data',
 			billing: {
 				modelPricingProfileJson: PER_IMAGE_PROFILE,
@@ -722,15 +886,17 @@ describe('image Guardrail budget integration', () => {
 			suppressErrorAlert: true,
 		});
 
-		const ordinaryTransition = batches[0]!.find(({ sql }) =>
-			sql.includes('UPDATE user_budget_reservations') && sql.includes('SET state = ?')
+		const ordinaryTransition = batches[0]!.find(
+			({ sql }) => sql.includes('UPDATE user_budget_reservations') && sql.includes('SET state = ?'),
 		);
 		assert.ok(ordinaryTransition);
 		assert.equal(ordinaryTransition.values[0], 'expired');
 		assert.equal(ordinaryTransition.values[1], 200_000);
-		assert.ok(batches[0]!.some(({ sql }) =>
-			sql.includes("SET state = 'expired'") && sql.includes('settled_micros = reserved_micros')
-		));
+		assert.ok(
+			batches[0]!.some(
+				({ sql }) => sql.includes("SET state = 'expired'") && sql.includes('settled_micros = reserved_micros'),
+			),
+		);
 	});
 
 	it('preserves a Guardrail-only ceiling for independent transport uncertainty', async () => {
@@ -740,10 +906,17 @@ describe('image Guardrail budget integration', () => {
 			repos: captureD1ImageRepositories(batches),
 			requestLogId: requestId,
 			guardrailBudgetSettlement: { requestId, mode: 'reserved' },
-			apiKeyId: 'key-1', userId: 'user-1', userEmail: null,
-			modelId: 'openai/image', providerId: 'provider-1',
-			requestProtocol: 'openai', requestOperation: 'images.generations',
-			upstreamProtocol: 'openai', routeGroup: 'default', status: 'error', latencyMs: 10,
+			apiKeyId: 'key-1',
+			userId: 'user-1',
+			userEmail: null,
+			modelId: 'openai/image',
+			providerId: 'provider-1',
+			requestProtocol: 'openai',
+			requestOperation: 'images.generations',
+			upstreamProtocol: 'openai',
+			routeGroup: 'default',
+			status: 'error',
+			latencyMs: 10,
 			errorMessage: 'Image upstream outcome unknown',
 			billing: { modelPricingProfileJson: TOKEN_PROFILE, imageCount: 1 },
 			effectiveImageCount: 0,
@@ -752,10 +925,15 @@ describe('image Guardrail budget integration', () => {
 			suppressErrorAlert: true,
 		});
 
-		assert.equal(batches[0]!.some(({ sql }) => sql.includes('UPDATE user_budget_reservations')), false);
-		assert.ok(batches[0]!.some(({ sql }) =>
-			sql.includes("SET state = 'expired'") && sql.includes('settled_micros = reserved_micros')
-		));
+		assert.equal(
+			batches[0]!.some(({ sql }) => sql.includes('UPDATE user_budget_reservations')),
+			false,
+		);
+		assert.ok(
+			batches[0]!.some(
+				({ sql }) => sql.includes("SET state = 'expired'") && sql.includes('settled_micros = reserved_micros'),
+			),
+		);
 	});
 
 	it('clamps provider overproduction to the admitted image count and preserves both ceilings', async () => {
@@ -766,16 +944,26 @@ describe('image Guardrail budget integration', () => {
 			requestLogId: requestId,
 			guardrailBudgetSettlement: { requestId },
 			ordinaryBudgetSettlement: {
-				requestId, budgetEpoch: 7, reservedMicros: 200_000, unknownCost: false,
+				requestId,
+				budgetEpoch: 7,
+				reservedMicros: 200_000,
+				unknownCost: false,
 			},
-			apiKeyId: 'key-1', userId: 'user-1', userEmail: null,
-			modelId: 'openai/image-endpoint-model', providerId: 'provider-1',
-			requestProtocol: 'openai', requestOperation: 'images.generations',
-			upstreamProtocol: 'openai', routeGroup: 'default', status: 'success', latencyMs: 10,
+			apiKeyId: 'key-1',
+			userId: 'user-1',
+			userEmail: null,
+			modelId: 'openai/image-endpoint-model',
+			providerId: 'provider-1',
+			requestProtocol: 'openai',
+			requestOperation: 'images.generations',
+			upstreamProtocol: 'openai',
+			routeGroup: 'default',
+			status: 'success',
+			latencyMs: 10,
 			billing: {
-				endpoint: verifiedImageEndpoint([
-					{ billable: 'output_image', unit: 'image', cost_usd: '0.04' },
-				], { id: 'endpoint-image-overrun' }),
+				endpoint: verifiedImageEndpoint([{ billable: 'output_image', unit: 'image', cost_usd: '0.04' }], {
+					id: 'endpoint-image-overrun',
+				}),
 				modelPricingProfileJson: CONFLICTING_PER_IMAGE_PROFILE,
 				imageCount: 1,
 				operation: 'generations',
@@ -796,20 +984,20 @@ describe('image Guardrail budget integration', () => {
 		assert.equal(audit.observed_output_image_count, 2);
 		assert.equal(audit.output_count_clamped, true);
 		assert.equal(audit.settlement_basis, 'admission_ceiling');
-		const ordinaryTransition = batches[0]!.find(({ sql }) =>
-			sql.includes('UPDATE user_budget_reservations') && sql.includes('SET state = ?')
+		const ordinaryTransition = batches[0]!.find(
+			({ sql }) => sql.includes('UPDATE user_budget_reservations') && sql.includes('SET state = ?'),
 		);
 		assert.equal(ordinaryTransition?.values[0], 'expired');
-		assert.ok(batches[0]!.some(({ sql }) =>
-			sql.includes("SET state = 'expired'") && sql.includes('settled_micros = reserved_micros')
-		));
+		assert.ok(
+			batches[0]!.some(
+				({ sql }) => sql.includes("SET state = 'expired'") && sql.includes('settled_micros = reserved_micros'),
+			),
+		);
 	});
 
 	it('settles actual underproduction from the chosen endpoint identity', async () => {
 		const batches: ImageCapturedStatement[][] = [];
-		const endpoint = verifiedImageEndpoint([
-			{ billable: 'output_image', unit: 'image', cost_usd: '0.06' },
-		], {
+		const endpoint = verifiedImageEndpoint([{ billable: 'output_image', unit: 'image', cost_usd: '0.06' }], {
 			id: 'endpoint-image-actual',
 			providerId: 'provider-actual',
 			evidenceUrl: 'https://evidence.example/endpoint-image-actual',
@@ -817,10 +1005,17 @@ describe('image Guardrail budget integration', () => {
 		const result = await recordImageUsage({
 			repos: captureD1ImageRepositories(batches),
 			requestLogId: 'image-underproduction',
-			apiKeyId: 'key-1', userId: 'user-1', userEmail: null,
-			modelId: 'openai/image-endpoint-model', providerId: 'provider-actual',
-			requestProtocol: 'openai', requestOperation: 'images.generations',
-			upstreamProtocol: 'openai', routeGroup: 'default', status: 'success', latencyMs: 10,
+			apiKeyId: 'key-1',
+			userId: 'user-1',
+			userEmail: null,
+			modelId: 'openai/image-endpoint-model',
+			providerId: 'provider-actual',
+			requestProtocol: 'openai',
+			requestOperation: 'images.generations',
+			upstreamProtocol: 'openai',
+			routeGroup: 'default',
+			status: 'success',
+			latencyMs: 10,
 			billing: {
 				endpoint,
 				modelPricingProfileJson: CONFLICTING_PER_IMAGE_PROFILE,
@@ -846,23 +1041,31 @@ describe('image Guardrail budget integration', () => {
 	});
 
 	it('rejects a settlement whose endpoint identity does not match the chosen route log', async () => {
-		await assert.rejects(recordImageUsage({
-			repos: mockRepos(),
-			apiKeyId: 'key-1', userId: 'user-1', userEmail: null,
-			modelId: 'openai/image-endpoint-model', providerId: 'provider-wrong',
-			requestProtocol: 'openai', requestOperation: 'images.generations',
-			upstreamProtocol: 'openai', routeGroup: 'default', status: 'success', latencyMs: 1,
-			billing: {
-				endpoint: verifiedImageEndpoint([
-					{ billable: 'output_image', unit: 'image', cost_usd: '0.04' },
-				]),
-				imageCount: 1,
-				operation: 'generations',
-			},
-			effectiveImageCount: 1,
-			resultConfirmed: true,
-			suppressErrorAlert: true,
-		}), /endpoint pricing identity does not match routed usage/);
+		await assert.rejects(
+			recordImageUsage({
+				repos: mockRepos(),
+				apiKeyId: 'key-1',
+				userId: 'user-1',
+				userEmail: null,
+				modelId: 'openai/image-endpoint-model',
+				providerId: 'provider-wrong',
+				requestProtocol: 'openai',
+				requestOperation: 'images.generations',
+				upstreamProtocol: 'openai',
+				routeGroup: 'default',
+				status: 'success',
+				latencyMs: 1,
+				billing: {
+					endpoint: verifiedImageEndpoint([{ billable: 'output_image', unit: 'image', cost_usd: '0.04' }]),
+					imageCount: 1,
+					operation: 'generations',
+				},
+				effectiveImageCount: 1,
+				resultConfirmed: true,
+				suppressErrorAlert: true,
+			}),
+			/endpoint pricing identity does not match routed usage/,
+		);
 	});
 
 	it('waives private BYOK image charges while preserving an unknown route-inclusive key ceiling', async () => {
@@ -873,21 +1076,30 @@ describe('image Guardrail budget integration', () => {
 			requestLogId: requestId,
 			guardrailBudgetSettlement: { requestId, mode: 'reserved' },
 			ordinaryBudgetSettlement: {
-				requestId, budgetEpoch: 7, reservedMicros: 40_000, unknownCost: true,
+				requestId,
+				budgetEpoch: 7,
+				reservedMicros: 40_000,
+				unknownCost: true,
 			},
-			apiKeyId: 'key-1', userId: 'user-1', userEmail: null,
+			apiKeyId: 'key-1',
+			userId: 'user-1',
+			userEmail: null,
 			workspaceId: 'workspace-1',
-			modelId: 'openai/image-endpoint-model', providerId: 'provider-1',
-			requestOrigin: 'https://cinatoken.com', responseStreamed: false,
-			requestProtocol: 'openai', requestOperation: 'images.generations',
-			upstreamProtocol: 'openai', upstreamOperation: 'images.generations',
+			modelId: 'openai/image-endpoint-model',
+			providerId: 'provider-1',
+			requestOrigin: 'https://cinatoken.com',
+			responseStreamed: false,
+			requestProtocol: 'openai',
+			requestOperation: 'images.generations',
+			upstreamProtocol: 'openai',
+			upstreamOperation: 'images.generations',
 			routeTargetId: 'target-image-byok',
-			routeGroup: 'default', status: 'success', latencyMs: 10,
+			routeGroup: 'default',
+			status: 'success',
+			latencyMs: 10,
 			providerKeyId: 'byok:image-1',
 			billing: {
-				endpoint: verifiedImageEndpoint([
-					{ billable: 'output_image', unit: 'image', cost_usd: '0.04' },
-				]),
+				endpoint: verifiedImageEndpoint([{ billable: 'output_image', unit: 'image', cost_usd: '0.04' }]),
 				imageCount: 1,
 				operation: 'generations',
 				requestStartedAtMs: Date.parse('2026-09-03T02:00:00.000Z'),
@@ -912,14 +1124,16 @@ describe('image Guardrail budget integration', () => {
 		};
 		assert.equal(audit.byok?.policy, 'fee_waived_until_entitlement_v1');
 		assert.equal(audit.byok?.standard_equivalent_cost_usd, 0.04);
-		const ordinaryTransition = batches[0]!.find(({ sql }) =>
-			sql.includes('UPDATE user_budget_reservations') && sql.includes('SET state = ?')
+		const ordinaryTransition = batches[0]!.find(
+			({ sql }) => sql.includes('UPDATE user_budget_reservations') && sql.includes('SET state = ?'),
 		);
 		assert.equal(ordinaryTransition?.values[0], 'settled');
 		assert.equal(ordinaryTransition?.values[1], 0);
-		assert.ok(batches[0]!.some(({ sql }) =>
-			sql.includes("SET state = 'expired'") && sql.includes('settled_micros = reserved_micros')
-		));
+		assert.ok(
+			batches[0]!.some(
+				({ sql }) => sql.includes("SET state = 'expired'") && sql.includes('settled_micros = reserved_micros'),
+			),
+		);
 	});
 });
 
@@ -936,7 +1150,7 @@ describe('missing upstream usage fallback', () => {
 			},
 			{
 				auditExtra: { usage_source: 'precheck_fallback', error: 'missing_upstream_usage' },
-			}
+			},
 		);
 		assert.ok(fallback.chargedCost > 0);
 		assert.ok(fallback.pricingAuditJson.includes('missing_upstream_usage'));
@@ -955,7 +1169,7 @@ describe('uncertain result precheck audit', () => {
 				imageCount: 1,
 				isEdit: false,
 			},
-			[null]
+			[null],
 		);
 		assert.ok(precheck.chargedCost > 0);
 		const audited = withClientAbortPrecheckAudit(precheck);
@@ -985,7 +1199,7 @@ describe('shouldChargeUncertainImageResult', () => {
 		JSON.stringify({
 			image_billing_mode: 'per_image',
 			image: { default: 0.04, uncertain_result_policy: 'zero' },
-		})
+		}),
 	);
 	const tokenPrecheck = { chargedCost: 0.98 };
 
@@ -998,7 +1212,7 @@ describe('shouldChargeUncertainImageResult', () => {
 				imageAbortReason: 'client_abort',
 				clientAbortPrecheck: tokenPrecheck,
 			}),
-			false
+			false,
 		);
 	});
 
@@ -1011,7 +1225,7 @@ describe('shouldChargeUncertainImageResult', () => {
 				imageAbortReason: 'gateway_timeout',
 				clientAbortPrecheck: tokenPrecheck,
 			}),
-			false
+			false,
 		);
 	});
 
@@ -1024,7 +1238,7 @@ describe('shouldChargeUncertainImageResult', () => {
 				imageAbortReason: null,
 				clientAbortPrecheck: null,
 			}),
-			false
+			false,
 		);
 		assert.equal(
 			shouldChargeUncertainImageResult({
@@ -1034,7 +1248,7 @@ describe('shouldChargeUncertainImageResult', () => {
 				imageAbortReason: null,
 				clientAbortPrecheck: null,
 			}),
-			false
+			false,
 		);
 	});
 
@@ -1047,7 +1261,7 @@ describe('shouldChargeUncertainImageResult', () => {
 				imageAbortReason: 'client_abort',
 				clientAbortPrecheck: { chargedCost: 0.04 },
 			}),
-			false
+			false,
 		);
 	});
 
@@ -1060,7 +1274,7 @@ describe('shouldChargeUncertainImageResult', () => {
 				imageAbortReason: 'gateway_timeout',
 				clientAbortPrecheck: { chargedCost: 0.04 },
 			}),
-			false
+			false,
 		);
 	});
 });
@@ -1070,21 +1284,35 @@ type ImageCapturedStatement = { sql: string; values: unknown[] };
 it('prepares positive priced Images accounting facts without submitting economic writes', async () => {
 	const batches: ImageCapturedStatement[][] = [];
 	const params = {
-		repos:captureD1ImageRepositories(batches),requestLogId:'image-prepare-only',
-		userId:'user-1',apiKeyId:'key-1',workspaceId:'workspace-1',userEmail:null,
-		modelId:'openai/image-model',providerId:'provider-1',requestProtocol:'openai' as const,
-		upstreamProtocol:'openai' as const,requestOperation:'images.generations',routeGroup:'default',
-		status:'success' as const,latencyMs:10,effectiveImageCount:1,resultConfirmed:true,
-		billing:{modelPricingProfileJson:PER_IMAGE_PROFILE,imageCount:1,operation:'generations' as const},
+		repos: captureD1ImageRepositories(batches),
+		requestLogId: 'image-prepare-only',
+		userId: 'user-1',
+		apiKeyId: 'key-1',
+		workspaceId: 'workspace-1',
+		userEmail: null,
+		modelId: 'openai/image-model',
+		providerId: 'provider-1',
+		requestProtocol: 'openai' as const,
+		upstreamProtocol: 'openai' as const,
+		requestOperation: 'images.generations',
+		routeGroup: 'default',
+		status: 'success' as const,
+		latencyMs: 10,
+		effectiveImageCount: 1,
+		resultConfirmed: true,
+		billing: { modelPricingProfileJson: PER_IMAGE_PROFILE, imageCount: 1, operation: 'generations' as const },
 	};
 	const prepared = await prepareImageUsageWrite(params);
-	assert.equal(batches.length,0);
-	assert.equal(prepared.result.chargedCost,0.04);
-	assert.equal(prepared.write.requestLog.id,params.requestLogId);
-	assert.equal(prepared.write.chargedCost,prepared.write.requestLog.chargedCost);
+	assert.equal(batches.length, 0);
+	assert.equal(prepared.result.chargedCost, 0.04);
+	assert.equal(prepared.write.requestLog.id, params.requestLogId);
+	assert.equal(prepared.write.chargedCost, prepared.write.requestLog.chargedCost);
 	await recordImageUsage(params);
-	assert.equal(batches.length,1);
-	assert.equal(imageRequestLogColumn(findImageRequestLogInsert(batches[0]!), 'charged_cost'),prepared.result.chargedCost);
+	assert.equal(batches.length, 1);
+	assert.equal(
+		imageRequestLogColumn(findImageRequestLogInsert(batches[0]!), 'charged_cost'),
+		prepared.result.chargedCost,
+	);
 });
 
 function captureD1ImageRepositories(
@@ -1092,8 +1320,13 @@ function captureD1ImageRepositories(
 	settlementBasis: 'charged' | 'gateway_key_route' = 'charged',
 ): GatewayRepositories {
 	class Statement {
-		constructor(readonly sql: string, readonly values: unknown[] = []) {}
-		bind(...values: unknown[]): Statement { return new Statement(this.sql, values); }
+		constructor(
+			readonly sql: string,
+			readonly values: unknown[] = [],
+		) {}
+		bind(...values: unknown[]): Statement {
+			return new Statement(this.sql, values);
+		}
 		async first<T>(): Promise<T | null> {
 			if (this.sql.includes('FROM api_key_request_logs')) return null;
 			if (this.sql.includes('SELECT budget_spent_micros')) {
@@ -1101,8 +1334,12 @@ function captureD1ImageRepositories(
 			}
 			if (this.sql.includes('FROM user_budget_reservations')) {
 				return {
-					request_id: this.values[0], user_id: 'user-1', api_key_id: 'key-1',
-					budget_epoch: 7, reserved_micros: 200_000, settled_micros: 0,
+					request_id: this.values[0],
+					user_id: 'user-1',
+					api_key_id: 'key-1',
+					budget_epoch: 7,
+					reserved_micros: 200_000,
+					settled_micros: 0,
 					state: 'dispatched',
 				} as T;
 			}
@@ -1110,16 +1347,22 @@ function captureD1ImageRepositories(
 		}
 		async all<T>(): Promise<{ results: T[] }> {
 			const gatewayKeyRoute = settlementBasis === 'gateway_key_route';
-			return { results: [{
-				assignment_id: gatewayKeyRoute ? 'gateway-key-limit:key-1' : 'guardrail-1',
-				scope_type: gatewayKeyRoute ? 'api_key' : 'user',
-				scope_id: gatewayKeyRoute ? 'key-1' : 'user-1',
-				settlement_basis: settlementBasis,
-			} as T] };
+			return {
+				results: [
+					{
+						assignment_id: gatewayKeyRoute ? 'gateway-key-limit:key-1' : 'guardrail-1',
+						scope_type: gatewayKeyRoute ? 'api_key' : 'user',
+						scope_id: gatewayKeyRoute ? 'key-1' : 'user-1',
+						settlement_basis: settlementBasis,
+					} as T,
+				],
+			};
 		}
 	}
 	const raw = {
-		prepare(sql: string): Statement { return new Statement(sql); },
+		prepare(sql: string): Statement {
+			return new Statement(sql);
+		},
 		async batch(statements: Statement[]) {
 			batches.push(statements.map(({ sql, values }) => ({ sql, values })));
 			return statements.map(() => ({ success: true as const, results: [], meta: { changes: 1 } }));
@@ -1129,10 +1372,14 @@ function captureD1ImageRepositories(
 		select: () => ({
 			from: () => ({
 				where: () => ({
-					limit: async () => [{
-						budgetSpentMicros: 1_000_000,
-						budgetMax: '10', budgetPeriod: 'monthly', budgetResetAt: null,
-					}],
+					limit: async () => [
+						{
+							budgetSpentMicros: 1_000_000,
+							budgetMax: '10',
+							budgetPeriod: 'monthly',
+							budgetResetAt: null,
+						},
+					],
 				}),
 			}),
 		}),
@@ -1151,8 +1398,53 @@ function findImageRequestLogInsert(batch: ImageCapturedStatement[]): ImageCaptur
 }
 
 function imageRequestLogColumn(statement: ImageCapturedStatement, name: string): unknown {
-	const columns = /api_key_request_logs\s*\(([^)]+)\)/su.exec(statement.sql)![1]!
+	const columns = /api_key_request_logs\s*\(([^)]+)\)/su
+		.exec(statement.sql)![1]!
 		.split(',')
 		.map((column) => column.trim());
 	return statement.values[columns.indexOf(name)];
 }
+describe('provider_factor on image routes', () => {
+	const override = JSON.stringify({
+		provider_factor: 0.5,
+		provider_factor_starts_at: '2026-10-01T00:00:00.000Z',
+		provider_factor_expires_at: '2026-11-01T00:00:00.000Z',
+		charged_factor: 1,
+		metered_factor: 0.68,
+	});
+
+	it('multiplies charged and metered while standard stays at catalog price', async () => {
+		const costs = await estimateImageCosts(mockRepos(), {
+			modelPricingProfileJson: PER_IMAGE_PROFILE,
+			routePriceOverrideJson: override,
+			quality: 'high',
+			size: '1536x1024',
+			imageCount: 1,
+			operation: 'generations',
+			requestStartedAtMs: Date.parse('2026-10-15T00:00:00.000Z'),
+		});
+		assert.ok(Math.abs(costs.standardCost - 0.165) < 1e-9);
+		assert.ok(Math.abs(costs.chargedCost - 0.165 * 0.5) < 1e-9);
+		assert.ok(Math.abs(costs.meteredCost - 0.165 * 0.5 * 0.68) < 1e-9);
+		const audit = JSON.parse(costs.pricingAuditJson) as {
+			provider_factor: { effective: number; active: boolean };
+		};
+		assert.equal(audit.provider_factor.active, true);
+		assert.equal(audit.provider_factor.effective, 0.5);
+	});
+
+	it('drops the official factor after it expires', async () => {
+		const costs = await estimateImageCosts(mockRepos(), {
+			modelPricingProfileJson: PER_IMAGE_PROFILE,
+			routePriceOverrideJson: override,
+			quality: 'high',
+			size: '1536x1024',
+			imageCount: 1,
+			operation: 'generations',
+			requestStartedAtMs: Date.parse('2026-11-01T00:00:00.000Z'),
+		});
+		assert.ok(Math.abs(costs.standardCost - 0.165) < 1e-9);
+		assert.ok(Math.abs(costs.chargedCost - 0.165) < 1e-9);
+		assert.ok(Math.abs(costs.meteredCost - 0.165 * 0.68) < 1e-9);
+	});
+});

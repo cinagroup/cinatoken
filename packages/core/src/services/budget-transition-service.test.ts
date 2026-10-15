@@ -13,6 +13,9 @@ test('computeBudgetTransition carries remaining budget forward', () => {
 			budget_reset_at: '2026-06-23T15:31:49.000Z',
 			budget_epoch: 4,
 			budget_reserved_micros: 0,
+			wallet_granted: 5,
+			wallet_spent: 1,
+			wallet_balance: 4,
 		},
 		{
 			target_budget_base: 100,
@@ -20,13 +23,16 @@ test('computeBudgetTransition carries remaining budget forward', () => {
 			budget_reset_at: '2026-07-25T05:49:46.000Z',
 			carryover_strategy: 'remaining_or_overage',
 			reset_spent: true,
-		}
+		},
 	);
 	assert.equal(result.carryover, 9);
 	assert.equal(result.after.budget_max, 109);
 	assert.equal(result.after.budget_spent, 0);
 	assert.equal(result.after.budget_base, 100);
 	assert.equal(result.after.budget_epoch, 5);
+	assert.equal(result.after.wallet_granted, 5);
+	assert.equal(result.after.wallet_spent, 1);
+	assert.equal(result.after.wallet_balance, 4);
 });
 
 test('computeBudgetTransition deducts overage from next period', () => {
@@ -39,13 +45,16 @@ test('computeBudgetTransition deducts overage from next period', () => {
 			budget_reset_at: '2026-06-23T15:31:49.000Z',
 			budget_epoch: 4,
 			budget_reserved_micros: 0,
+			wallet_granted: 5,
+			wallet_spent: 1,
+			wallet_balance: 4,
 		},
 		{
 			target_budget_base: 100,
 			budget_period: 'monthly',
 			carryover_strategy: 'remaining_or_overage',
 			reset_spent: true,
-		}
+		},
 	);
 	assert.equal(result.carryover, -2);
 	assert.equal(result.after.budget_max, 98);
@@ -53,23 +62,38 @@ test('computeBudgetTransition deducts overage from next period', () => {
 });
 
 test('computeBudgetTransition rejects overage that would make the next limit negative', () => {
-	assert.throws(() => computeBudgetTransition({
-		budget_max: 1,
-		budget_base: 1,
-		budget_spent: 10,
-		budget_period: 'none',
-		budget_reset_at: null,
-		budget_epoch: 1,
-		budget_reserved_micros: 0,
-	}, {
-		target_budget_base: 2,
-		budget_period: 'monthly',
-	}), BudgetTransitionInvalidTargetError);
+	assert.throws(
+		() =>
+			computeBudgetTransition(
+				{
+wallet_granted: 0,
+wallet_spent: 0,
+wallet_balance: 0,
+
+					budget_max: 1,
+					budget_base: 1,
+					budget_spent: 10,
+					budget_period: 'none',
+					budget_reset_at: null,
+					budget_epoch: 1,
+					budget_reserved_micros: 0,
+				},
+				{
+					target_budget_base: 2,
+					budget_period: 'monthly',
+				},
+			),
+		BudgetTransitionInvalidTargetError,
+	);
 });
 
 test('computeBudgetTransition does not carry active reservation capacity into a reset period', () => {
 	const result = computeBudgetTransition(
 		{
+wallet_granted: 0,
+wallet_spent: 0,
+wallet_balance: 0,
+
 			budget_max: 10,
 			budget_base: 10,
 			budget_spent: 1,
@@ -100,13 +124,16 @@ test('computeBudgetTransition none strategy skips carryover', () => {
 			budget_reset_at: null,
 			budget_epoch: 4,
 			budget_reserved_micros: 0,
+			wallet_granted: 5,
+			wallet_spent: 1,
+			wallet_balance: 4,
 		},
 		{
 			target_budget_base: 100,
 			budget_period: 'monthly',
 			carryover_strategy: 'none',
 			reset_spent: true,
-		}
+		},
 	);
 	assert.equal(result.carryover, 0);
 	assert.equal(result.after.budget_max, 100);
@@ -115,6 +142,10 @@ test('computeBudgetTransition none strategy skips carryover', () => {
 test('computeBudgetTransition preserves active reservations when spent is not reset', () => {
 	const result = computeBudgetTransition(
 		{
+wallet_granted: 0,
+wallet_spent: 0,
+wallet_balance: 0,
+
 			budget_max: 10,
 			budget_base: 10,
 			budget_spent: 1,
@@ -160,6 +191,6 @@ test('assertAndFinalizeUserAuditInsert rejects unknown admin budget source', () 
 				actorType: 'admin',
 				source: 'admin_budget_transition_typo',
 			}),
-		/invalid source/
+		/invalid source/,
 	);
 });

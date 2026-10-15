@@ -134,10 +134,12 @@ test("D1 model-endpoint repository provides bounded CRUD and route linking", asy
 				api_key TEXT NOT NULL DEFAULT '',
 				status TEXT NOT NULL DEFAULT 'active',
 				description TEXT,
-				shared_channel_type TEXT,
+				shared_channel_type TEXT, kind TEXT NOT NULL DEFAULT '',
 				created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 			);
+			CREATE TABLE model_surfaces (id TEXT PRIMARY KEY, request_protocol TEXT, request_operation TEXT, status TEXT);
 			CREATE TABLE route_pools (
+				model_surface_id TEXT,
 				id TEXT PRIMARY KEY,
 				status TEXT NOT NULL
 			);
@@ -148,6 +150,7 @@ test("D1 model-endpoint repository provides bounded CRUD and route linking", asy
 				provider_model_name TEXT NOT NULL,
 				status TEXT NOT NULL,
 				route_group TEXT NOT NULL DEFAULT 'default',
+				price_override TEXT, priority INTEGER NOT NULL DEFAULT 0, weight INTEGER NOT NULL DEFAULT 1,
 				custom_params TEXT,
 				routing_metadata TEXT,
 				upstream_protocol TEXT NOT NULL,
@@ -357,6 +360,7 @@ test("D1 model-endpoint repository provides bounded CRUD and route linking", asy
 					adapter: "passthrough",
 					route_pool_id: "pool-1",
 					pool_status: "active",
+				price_override: null, priority: 0, weight: 1, surfaces: null,
 				},
 			]
 		);

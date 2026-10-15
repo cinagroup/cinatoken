@@ -1,18 +1,12 @@
-"use client";
+'use client';
 
 /**
  * API 密钥管理：列表分页（预算只读，来自 users JOIN）、创建（关联 user 或外部身份对）、
  * 编辑 name/metadata、吊销/激活、审计墓碑撤销。
  */
-import { useTranslations } from "next-intl";
-import {
-	useState,
-	useEffect,
-	useCallback,
-	useMemo,
-	type ReactNode,
-} from "react";
-import Link from "next/link";
+import { useTranslations } from 'next-intl';
+import { useState, useEffect, useCallback, useMemo, type ReactNode } from 'react';
+import Link from 'next/link';
 import {
 	ClipboardDocumentIcon,
 	ClipboardDocumentListIcon,
@@ -20,20 +14,21 @@ import {
 	MagnifyingGlassIcon,
 	PlusIcon,
 	XMarkIcon,
-} from "@heroicons/react/24/outline";
-import { readApiJson } from "@/lib/api-json";
-import { formatGatewayDateTime } from "@/lib/datetime";
-import { formatGatewayMoneyCode } from "@/lib/format-gateway-currency";
-import { NewApiKeySecretBanner } from "@/lib/new-api-key-secret-banner";
-import { normalizeMetadataClient } from "@/lib/normalize-metadata-client";
-import { summarizeMetadata } from "@/lib/summarize-metadata";
-import { useBillingCurrency } from "@/lib/use-billing-currency";
-import { useGatewayDateTime } from "@/lib/use-gateway-datetime";
-import type { GatewayApiKey } from "@/lib/types";
+} from '@heroicons/react/24/outline';
+import { readApiJson } from '@/lib/api-json';
+import { formatGatewayDateTime } from '@/lib/datetime';
+import { formatGatewayMoneyCode } from '@/lib/format-gateway-currency';
+import { NewApiKeySecretBanner } from '@/lib/new-api-key-secret-banner';
+import { useFeedback } from '@/components/feedback';
+import { normalizeMetadataClient } from '@/lib/normalize-metadata-client';
+import { summarizeMetadata } from '@/lib/summarize-metadata';
+import { useBillingCurrency } from '@/lib/use-billing-currency';
+import { useGatewayDateTime } from '@/lib/use-gateway-datetime';
+import type { GatewayApiKey } from '@/lib/types';
 
-type KeyCreationMode = "existingUser" | "externalIdentity";
-type ApiKeyListSortKey = "created_at";
-type SortDir = "asc" | "desc";
+type KeyCreationMode = 'existingUser' | 'externalIdentity';
+type ApiKeyListSortKey = 'created_at';
+type SortDir = 'asc' | 'desc';
 type GatewayKeyEditorRow = GatewayApiKey & {
 	profile_revision?: string;
 	metadata_preview?: string | null;
@@ -64,17 +59,13 @@ function SortableTh({
 					onSort(columnKey);
 				}}
 				className={`inline-flex items-center gap-0.5 rounded px-0.5 hover:text-gray-800 ${
-					sortKey === columnKey ? "text-gray-800" : "text-gray-500"
+					sortKey === columnKey ? 'text-gray-800' : 'text-gray-500'
 				}`}
 				aria-label={`Sort by ${label}`}
 			>
 				{label}
-				<span
-					className={`text-[10px] leading-none ${
-						sortKey === columnKey ? "text-blue-600" : "text-gray-300"
-					}`}
-				>
-					{sortKey === columnKey ? (sortDir === "asc" ? "↑" : "↓") : "↕"}
+				<span className={`text-[10px] leading-none ${sortKey === columnKey ? 'text-blue-600' : 'text-gray-300'}`}>
+					{sortKey === columnKey ? (sortDir === 'asc' ? '↑' : '↓') : '↕'}
 				</span>
 			</button>
 		</th>
@@ -82,8 +73,8 @@ function SortableTh({
 }
 
 function formatApiKeyMetadataForEditor(raw: string | null | undefined): string {
-	if (raw == null || raw === "") {
-		return "";
+	if (raw == null || raw === '') {
+		return '';
 	}
 	try {
 		return JSON.stringify(JSON.parse(raw), null, 2);
@@ -92,12 +83,9 @@ function formatApiKeyMetadataForEditor(raw: string | null | undefined): string {
 	}
 }
 
-function formatKeyTimestamp(
-	iso: string | null | undefined,
-	timeZone: string
-): string {
-	if (iso == null || iso === "") {
-		return "—";
+function formatKeyTimestamp(iso: string | null | undefined, timeZone: string): string {
+	if (iso == null || iso === '') {
+		return '—';
 	}
 	return formatGatewayDateTime(iso, timeZone);
 }
@@ -105,35 +93,29 @@ function formatKeyTimestamp(
 function formatBudgetPeriodResetLabel(
 	period: string | null | undefined,
 	resetAt: string | null | undefined,
-	timeZone: string
+	timeZone: string,
 ): string {
-	const periodLabel = period && period !== "none" ? period : "none";
-	const resetLabel =
-		resetAt == null || resetAt === ""
-			? "—"
-			: formatGatewayDateTime(resetAt, timeZone);
+	const periodLabel = period && period !== 'none' ? period : 'none';
+	const resetLabel = resetAt == null || resetAt === '' ? '—' : formatGatewayDateTime(resetAt, timeZone);
 	return `${periodLabel} / ${resetLabel}`;
 }
 
 /** 首列状态色块（实心）；悬停色块见完整 status 文案 */
 function keyStatusSwatchClass(status: string) {
-	if (status === "active") return "bg-emerald-500";
-	if (status === "revoked") return "bg-gray-400";
-	return "bg-gray-300";
+	if (status === 'active') return 'bg-emerald-500';
+	if (status === 'revoked') return 'bg-gray-400';
+	return 'bg-gray-300';
 }
 
-function budgetUsageRatio(
-	spent: number,
-	max: number | null | undefined
-): number | null {
+function budgetUsageRatio(spent: number, max: number | null | undefined): number | null {
 	if (max == null || max <= 0) return null;
 	return Math.min(1, Math.max(0, spent / max));
 }
 
 function budgetBarClass(ratio: number): string {
-	if (ratio >= 1) return "bg-red-500";
-	if (ratio >= 0.8) return "bg-amber-500";
-	return "bg-blue-500";
+	if (ratio >= 1) return 'bg-red-500';
+	if (ratio >= 0.8) return 'bg-amber-500';
+	return 'bg-blue-500';
 }
 
 function displayMetadataSummary(summary: string): string {
@@ -141,13 +123,11 @@ function displayMetadataSummary(summary: string): string {
 	return plan ? plan[1] : summary;
 }
 
-function ReadonlyRow({
-	label,
-	children,
-}: {
-	label: string;
-	children: ReactNode;
-}) {
+function keyRpm(key: { rate_limit?: { rpm?: number } | null }): number | null {
+	return key.rate_limit?.rpm ?? null;
+}
+
+function ReadonlyRow({ label, children }: { label: string; children: ReactNode }) {
 	return (
 		<div className="min-w-0">
 			<div className="text-xs font-medium text-gray-500">{label}</div>
@@ -157,43 +137,42 @@ function ReadonlyRow({
 }
 
 export default function GatewayKeysPage() {
-	const t = useTranslations("keysPage");
-	const tCommon = useTranslations("common");
-	const tOptions = useTranslations("options");
+	const t = useTranslations('keysPage');
+	const tCommon = useTranslations('common');
+	const tOptions = useTranslations('options');
 	const [list, setList] = useState<{
 		request: KeysListRequest | null;
 		keys: GatewayKeyEditorRow[];
 		total: number;
 	}>({ request: null, keys: [], total: 0 });
 	const [reloadRevision, setReloadRevision] = useState(0);
+	const { notify, confirm } = useFeedback();
 	const [page, setPage] = useState(1);
 	const pageSize = 20;
-	const [filterEmail, setFilterEmail] = useState("");
-	const [filterUserId, setFilterUserId] = useState("");
-	const [sortKey, setSortKey] = useState<ApiKeyListSortKey>("created_at");
-	const [sortDir, setSortDir] = useState<SortDir>("desc");
+	const [filterEmail, setFilterEmail] = useState('');
+	const [filterUserId, setFilterUserId] = useState('');
+	const [sortKey, setSortKey] = useState<ApiKeyListSortKey>('created_at');
+	const [sortDir, setSortDir] = useState<SortDir>('desc');
 	const [showModal, setShowModal] = useState(false);
 	const [showEditModal, setShowEditModal] = useState(false);
-	const [selectedKey, setSelectedKey] = useState<GatewayKeyEditorRow | null>(
-		null
-	);
+	const [selectedKey, setSelectedKey] = useState<GatewayKeyEditorRow | null>(null);
 	const [formData, setFormData] = useState({
-		user_id: "",
-		email: "",
-		external_system: "",
-		external_user_id: "",
-		name: "",
-		metadata: "",
+		user_id: '',
+		email: '',
+		external_system: '',
+		external_user_id: '',
+		name: '',
+		metadata: '',
 	});
-	const [creationMode, setCreationMode] =
-		useState<KeyCreationMode>("existingUser");
+	const [creationMode, setCreationMode] = useState<KeyCreationMode>('existingUser');
 	const [freshCreatedKey, setFreshCreatedKey] = useState<string | null>(null);
 	const [editFormData, setEditFormData] = useState({
-		id: "",
-		name: "",
-		metadata: "",
+		id: '',
+		name: '',
+		metadata: '',
+		rateLimitRpm: '',
 	});
-	const [saveError, setSaveError] = useState("");
+	const [saveError, setSaveError] = useState('');
 	const [isSaving, setIsSaving] = useState(false);
 	const [isDeleting, setIsDeleting] = useState(false);
 	const [statusTogglingId, setStatusTogglingId] = useState<string | null>(null);
@@ -202,12 +181,12 @@ export default function GatewayKeysPage() {
 
 	const request = useMemo<KeysListRequest>(() => {
 		const params = new URLSearchParams();
-		params.append("page", page.toString());
-		params.append("page_size", pageSize.toString());
-		if (filterEmail) params.append("email", filterEmail);
-		if (filterUserId.trim()) params.append("user_id", filterUserId.trim());
-		params.append("sort", sortKey);
-		params.append("order", sortDir);
+		params.append('page', page.toString());
+		params.append('page_size', pageSize.toString());
+		if (filterEmail) params.append('email', filterEmail);
+		if (filterUserId.trim()) params.append('user_id', filterUserId.trim());
+		params.append('sort', sortKey);
+		params.append('order', sortDir);
 		return {
 			url: `/api/admin/keys?${params.toString()}`,
 			revision: reloadRevision,
@@ -217,17 +196,14 @@ export default function GatewayKeysPage() {
 	const total = list.total;
 	// A new query or mutation refresh is pending until its own result settles.
 	const isLoading = list.request !== request;
-	const fetchKeys = useCallback(
-		() => setReloadRevision((revision) => revision + 1),
-		[]
-	);
+	const fetchKeys = useCallback(() => setReloadRevision((revision) => revision + 1), []);
 
 	useEffect(() => {
 		const controller = new AbortController();
 		const load = async () => {
 			try {
 				const response = await fetch(request.url, {
-					cache: "no-store",
+					cache: 'no-store',
 					signal: controller.signal,
 				});
 				const data = await readApiJson<GatewayKeyEditorRow[]>(response);
@@ -239,7 +215,7 @@ export default function GatewayKeysPage() {
 				}));
 			} catch (error) {
 				if (controller.signal.aborted) return;
-				console.error("Fetch keys error:", error);
+				console.error('Fetch keys error:', error);
 				setList((current) => ({ ...current, request }));
 			}
 		};
@@ -249,10 +225,10 @@ export default function GatewayKeysPage() {
 
 	const toggleSort = (key: ApiKeyListSortKey) => {
 		if (sortKey === key) {
-			setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+			setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'));
 		} else {
 			setSortKey(key);
-			setSortDir("desc");
+			setSortDir('desc');
 		}
 		setPage(1);
 	};
@@ -260,63 +236,58 @@ export default function GatewayKeysPage() {
 	const hasFilters = Boolean(filterEmail.trim() || filterUserId.trim());
 
 	const clearFilters = () => {
-		setFilterEmail("");
-		setFilterUserId("");
+		setFilterEmail('');
+		setFilterUserId('');
 		setPage(1);
 	};
 
 	const handleCreationModeChange = (mode: KeyCreationMode) => {
 		setCreationMode(mode);
 		setFormData((prev) =>
-			mode === "existingUser"
-				? { ...prev, external_system: "", external_user_id: "", email: "" }
-				: { ...prev, user_id: "" }
+			mode === 'existingUser'
+				? { ...prev, external_system: '', external_user_id: '', email: '' }
+				: { ...prev, user_id: '' },
 		);
 	};
 
 	const handleCreate = () => {
 		setFormData({
-			user_id: "",
-			email: "",
-			external_system: "",
-			external_user_id: "",
-			name: "",
-			metadata: "",
+			user_id: '',
+			email: '',
+			external_system: '',
+			external_user_id: '',
+			name: '',
+			metadata: '',
 		});
-		setCreationMode("existingUser");
+		setCreationMode('existingUser');
 		setFreshCreatedKey(null);
 		setShowModal(true);
-		setSaveError("");
+		setSaveError('');
 	};
 
 	const handleStatusToggle = async (key: GatewayKeyEditorRow) => {
-		const nextStatus = key.status === "active" ? "revoked" : "active";
+		const nextStatus = key.status === 'active' ? 'revoked' : 'active';
 		setStatusTogglingId(key.id);
 		try {
-			const response = await fetch(
-				`/api/admin/keys/${encodeURIComponent(key.id)}`,
-				{
-					method: "PATCH",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify({
-						status: nextStatus,
-						expected_revision: key.profile_revision,
-						reason: `gwui:st:${nextStatus}`,
-					}),
-				}
-			);
+			const response = await fetch(`/api/admin/keys/${encodeURIComponent(key.id)}`, {
+				method: 'PATCH',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					status: nextStatus,
+					expected_revision: key.profile_revision,
+					reason: `gwui:st:${nextStatus}`,
+				}),
+			});
 			const data = await readApiJson(response);
 			if (data.success) {
-				setSelectedKey((prev) =>
-					prev?.id === key.id ? { ...prev, status: nextStatus } : prev
-				);
+				setSelectedKey((prev) => (prev?.id === key.id ? { ...prev, status: nextStatus } : prev));
 				fetchKeys();
 			} else {
-				alert(data.message || tCommon("updateFailed"));
+				notify('error', data.message || tCommon('updateFailed'));
 			}
 		} catch (error) {
-			console.error("Status toggle error:", error);
-			alert(tCommon("updateFailed"));
+			console.error('Status toggle error:', error);
+			notify('error', tCommon('updateFailed'));
 		} finally {
 			setStatusTogglingId(null);
 		}
@@ -324,10 +295,7 @@ export default function GatewayKeysPage() {
 
 	const handleEdit = async (key: GatewayKeyEditorRow) => {
 		try {
-			const response = await fetch(
-				`/api/admin/keys/${encodeURIComponent(key.id)}`,
-				{ cache: "no-store" }
-			);
+			const response = await fetch(`/api/admin/keys/${encodeURIComponent(key.id)}`, { cache: 'no-store' });
 			const result = await readApiJson<GatewayKeyEditorRow>(response);
 			if (
 				!response.ok ||
@@ -336,26 +304,27 @@ export default function GatewayKeysPage() {
 				result.data.id !== key.id ||
 				!result.data.profile_revision
 			) {
-				alert(result.message || tCommon("updateFailed"));
+				alert(result.message || tCommon('updateFailed'));
 				return;
 			}
 			const detail = result.data;
 			setSelectedKey(detail);
 			setEditFormData({
 				id: detail.id,
-				name: detail.name ?? "",
+				name: detail.name ?? '',
 				metadata: formatApiKeyMetadataForEditor(detail.metadata_raw),
+				rateLimitRpm: keyRpm(detail) == null ? '' : String(keyRpm(detail)),
 			});
 			setShowEditModal(true);
-			setSaveError("");
+			setSaveError('');
 		} catch {
-			alert(tCommon("updateFailed"));
+			alert(tCommon('updateFailed'));
 		}
 	};
 
 	const handleEditSave = async () => {
 		if (!selectedKey) return;
-		setSaveError("");
+		setSaveError('');
 		setIsSaving(true);
 
 		try {
@@ -366,34 +335,41 @@ export default function GatewayKeysPage() {
 				return;
 			}
 
+			const rpmRaw = editFormData.rateLimitRpm.trim();
+			const rpmParsed = rpmRaw === '' ? null : Number(rpmRaw);
+			if (
+				rpmRaw !== '' &&
+				(rpmParsed == null || !Number.isFinite(rpmParsed) || rpmParsed < 0 || !Number.isInteger(rpmParsed))
+			) {
+				setSaveError(t('help.rateLimitRpmInvalid'));
+				setIsSaving(false);
+				return;
+			}
+
 			const payload: Record<string, unknown> = {
-				name: editFormData.name.trim() === "" ? null : editFormData.name.trim(),
-				...(selectedKey.metadata_unavailable
-					? {}
-					: { metadata_replace: meta.value }),
+				name: editFormData.name.trim() === '' ? null : editFormData.name.trim(),
+				...(selectedKey.metadata_unavailable ? {} : { metadata_replace: meta.value }),
 				expected_revision: selectedKey.profile_revision,
-				reason: "gwui:edit",
+				rate_limit: rpmParsed == null ? null : { rpm: rpmParsed },
+				reason: 'gwui:edit',
 			};
 
-			const response = await fetch(
-				`/api/admin/keys/${encodeURIComponent(selectedKey.id)}`,
-				{
-					method: "PATCH",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify(payload),
-				}
-			);
+			const response = await fetch(`/api/admin/keys/${encodeURIComponent(selectedKey.id)}`, {
+				method: 'PATCH',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(payload),
+			});
 
 			const data = await readApiJson(response);
 			if (data.success) {
 				setShowEditModal(false);
 				fetchKeys();
 			} else {
-				setSaveError(data.message || tCommon("updateFailed"));
+				setSaveError(data.message || tCommon('updateFailed'));
 			}
 		} catch (error) {
-			console.error("Edit error:", error);
-			setSaveError(tCommon("updateFailed"));
+			console.error('Edit error:', error);
+			setSaveError(tCommon('updateFailed'));
 		} finally {
 			setIsSaving(false);
 		}
@@ -401,40 +377,43 @@ export default function GatewayKeysPage() {
 
 	const handleEditDelete = async () => {
 		if (!selectedKey) return;
-		if (!window.confirm(t("confirmDelete"))) {
+		const ok = await confirm({
+			title: t('deleteKey'),
+			message: t('confirmDelete'),
+			confirmLabel: tCommon('delete'),
+			danger: true,
+		});
+		if (!ok) {
 			return;
 		}
-		setSaveError("");
+		setSaveError('');
 		setIsDeleting(true);
 		try {
-			const response = await fetch(
-				`/api/admin/keys/${encodeURIComponent(selectedKey.id)}`,
-				{
-					method: "DELETE",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify({
-						expected_revision: selectedKey.profile_revision,
-					}),
-				}
-			);
+			const response = await fetch(`/api/admin/keys/${encodeURIComponent(selectedKey.id)}`, {
+				method: 'DELETE',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					expected_revision: selectedKey.profile_revision,
+				}),
+			});
 			const data = await readApiJson(response);
 			if (data.success) {
 				setShowEditModal(false);
 				setSelectedKey(null);
 				fetchKeys();
 			} else {
-				setSaveError(data.message || tCommon("updateFailed"));
+				setSaveError(data.message || tCommon('updateFailed'));
 			}
 		} catch (error) {
-			console.error("Delete key error:", error);
-			setSaveError(tCommon("updateFailed"));
+			console.error('Delete key error:', error);
+			setSaveError(tCommon('updateFailed'));
 		} finally {
 			setIsDeleting(false);
 		}
 	};
 
 	const handleSave = async () => {
-		setSaveError("");
+		setSaveError('');
 		setIsSaving(true);
 
 		try {
@@ -447,13 +426,13 @@ export default function GatewayKeysPage() {
 
 			const payload: Record<string, unknown> = {
 				metadata: meta.value,
-				reason: "gwui:new",
+				reason: 'gwui:new',
 			};
 
-			if (creationMode === "existingUser") {
+			if (creationMode === 'existingUser') {
 				const uid = formData.user_id.trim();
 				if (!uid) {
-					setSaveError("User ID is required (gateway users.id)");
+					setSaveError('User ID is required (gateway users.id)');
 					setIsSaving(false);
 					return;
 				}
@@ -462,24 +441,18 @@ export default function GatewayKeysPage() {
 				const extS = formData.external_system.trim();
 				const extU = formData.external_user_id.trim();
 				if ((extS && !extU) || (!extS && extU)) {
-					setSaveError(
-						"External system and external user ID must be set together"
-					);
+					setSaveError('External system and external user ID must be set together');
 					setIsSaving(false);
 					return;
 				}
 				if (!extS || !extU) {
-					setSaveError(
-						"External system and external user ID are required for this mode"
-					);
+					setSaveError('External system and external user ID are required for this mode');
 					setIsSaving(false);
 					return;
 				}
 				const em = formData.email.trim();
 				if (!em) {
-					setSaveError(
-						"Email is required when matching or creating a user by external identity"
-					);
+					setSaveError('Email is required when matching or creating a user by external identity');
 					setIsSaving(false);
 					return;
 				}
@@ -488,11 +461,11 @@ export default function GatewayKeysPage() {
 				payload.email = em;
 			}
 
-			if (formData.name.trim() !== "") payload.name = formData.name.trim();
+			if (formData.name.trim() !== '') payload.name = formData.name.trim();
 
-			const response = await fetch("/api/admin/keys", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
+			const response = await fetch('/api/admin/keys', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify(payload),
 			});
 
@@ -509,11 +482,11 @@ export default function GatewayKeysPage() {
 					setFreshCreatedKey(data.data.key);
 				}
 			} else {
-				setSaveError(data.message || "Save failed");
+				setSaveError(data.message || 'Save failed');
 			}
 		} catch (error) {
-			console.error("Save error:", error);
-			setSaveError("Save failed, please try again");
+			console.error('Save error:', error);
+			setSaveError('Save failed, please try again');
 		} finally {
 			setIsSaving(false);
 		}
@@ -523,30 +496,26 @@ export default function GatewayKeysPage() {
 		try {
 			await navigator.clipboard.writeText(text);
 		} catch (error) {
-			console.error("Copy failed:", error);
+			console.error('Copy failed:', error);
 		}
 	};
 
 	const maskKey = (key: string) => {
 		if (!key || key.length < 10) return key;
-		return key.substring(0, 7) + "..." + key.substring(key.length - 4);
+		return key.substring(0, 7) + '...' + key.substring(key.length - 4);
 	};
 
 	const totalPages = Math.ceil(total / pageSize);
 	const showSkeleton = isLoading && keys.length === 0;
 	const inputClass =
-		"w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500";
+		'w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500';
 
 	return (
-		<div className="p-8">
+		<div className="min-w-0 p-4 sm:p-6 lg:p-8">
 			<div className="mb-5 flex flex-wrap items-start justify-between gap-4">
 				<div>
-					<h1 className="text-2xl font-semibold tracking-tight text-gray-900">
-						{t("title")}
-					</h1>
-					<p className="mt-1 max-w-2xl text-sm text-gray-500">
-						{t("subtitle")}
-					</p>
+					<h1 className="text-2xl font-semibold tracking-tight text-gray-900">{t('title')}</h1>
+					<p className="mt-1 max-w-2xl text-sm text-gray-500">{t('subtitle')}</p>
 				</div>
 				<button
 					type="button"
@@ -554,26 +523,21 @@ export default function GatewayKeysPage() {
 					className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
 				>
 					<PlusIcon className="h-4 w-4" />
-					{t("newKey")}
+					{t('newKey')}
 				</button>
 			</div>
 
 			{freshCreatedKey && (
 				<div className="mb-6 max-w-3xl">
-					<NewApiKeySecretBanner
-						secret={freshCreatedKey}
-						onDismiss={() => setFreshCreatedKey(null)}
-					/>
+					<NewApiKeySecretBanner secret={freshCreatedKey} onDismiss={() => setFreshCreatedKey(null)} />
 				</div>
 			)}
 
 			<div className="mb-4 rounded-xl border border-gray-200 bg-white px-4 py-3 shadow-sm">
 				<div className="flex flex-col gap-3 xl:flex-row xl:items-end xl:justify-between">
-					<div className="grid min-w-0 flex-1 grid-cols-1 gap-3 sm:grid-cols-2">
+					<div className="grid min-w-0 flex-1 grid-cols-1 gap-3 sm:grid-cols-2 xl:max-w-3xl">
 						<div className="min-w-0">
-							<label className="mb-1 block text-xs font-medium text-gray-500">
-								{tCommon("email")}
-							</label>
+							<label className="mb-1 block text-xs font-medium text-gray-500">{tCommon('email')}</label>
 							<div className="relative">
 								<MagnifyingGlassIcon
 									className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400"
@@ -586,16 +550,14 @@ export default function GatewayKeysPage() {
 										setFilterEmail(e.target.value);
 										setPage(1);
 									}}
-									placeholder={t("filters.emailPlaceholder")}
+									placeholder={t('filters.emailPlaceholder')}
 									className={`${inputClass} pl-9`}
 									autoComplete="off"
 								/>
 							</div>
 						</div>
 						<div className="min-w-0">
-							<label className="mb-1 block text-xs font-medium text-gray-500">
-								{t("fields.userId")}
-							</label>
+							<label className="mb-1 block text-xs font-medium text-gray-500">{t('fields.userId')}</label>
 							<input
 								type="text"
 								value={filterUserId}
@@ -603,7 +565,7 @@ export default function GatewayKeysPage() {
 									setFilterUserId(e.target.value);
 									setPage(1);
 								}}
-								placeholder={t("filters.userIdPlaceholder")}
+								placeholder={t('filters.userIdPlaceholder')}
 								className={`${inputClass} font-mono text-xs`}
 								autoComplete="off"
 							/>
@@ -617,72 +579,66 @@ export default function GatewayKeysPage() {
 								className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800"
 							>
 								<XMarkIcon className="h-3.5 w-3.5" aria-hidden />
-								{tCommon("clearFilters")}
+								{tCommon('clearFilters')}
 							</button>
 						)}
 						<span className="inline-flex items-center gap-1.5">
-							<span
-								className="inline-block h-2 w-2 rounded-full bg-emerald-500"
-								aria-hidden
-							/>
-							{tOptions("keyStatus.active")}
+							<span className="inline-block h-2 w-2 rounded-full bg-emerald-500" aria-hidden />
+							{tOptions('keyStatus.active')}
 						</span>
 						<span className="inline-flex items-center gap-1.5">
-							<span
-								className="inline-block h-2 w-2 rounded-full bg-gray-400"
-								aria-hidden
-							/>
-							{tOptions("keyStatus.revoked")}
+							<span className="inline-block h-2 w-2 rounded-full bg-gray-400" aria-hidden />
+							{tOptions('keyStatus.revoked')}
 						</span>
 						<span className="inline-flex items-center gap-1.5">
-							<span
-								className="inline-block h-2 w-2 rounded-full bg-gray-300"
-								aria-hidden
-							/>
-							{t("statusOther")}
+							<span className="inline-block h-2 w-2 rounded-full bg-gray-300" aria-hidden />
+							{t('statusOther')}
 						</span>
 					</div>
 				</div>
 			</div>
 
 			<div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-				<div className={`overflow-x-auto ${isLoading ? "opacity-70" : ""}`}>
-					<table className="w-full min-w-[68rem] table-fixed">
+				<div className={`overflow-x-auto ${isLoading ? 'opacity-70' : ''}`}>
+					<table className="admin-data-table w-full min-w-[64rem] table-fixed">
 						<colgroup>
+							<col className="w-[18%]" />
 							<col className="w-[22%]" />
-							<col className="w-[16%]" />
+							<col className="w-[12%]" />
+							<col className="w-[14%]" />
+							<col className="w-[14%]" />
 							<col className="w-[10%]" />
-							<col className="w-[16%]" />
-							<col className="w-[12%]" />
-							<col className="w-[12%]" />
-							<col className="w-[12%]" />
+							<col className="w-[10%]" />
 						</colgroup>
 						<thead className="border-b border-gray-200 bg-gray-50/80">
 							<tr>
-								<th className="px-4 py-2.5 text-left text-[11px] font-semibold uppercase tracking-wider text-gray-500 whitespace-nowrap">
-									{t("table.user")}
+								<th className="px-4 py-2.5 text-left text-[11px] font-semibold tracking-wide text-gray-500 whitespace-nowrap">
+									{t('table.user')}
 								</th>
-								<th className="px-4 py-2.5 text-left text-[11px] font-semibold uppercase tracking-wider text-gray-500 whitespace-nowrap">
-									{t("table.key")}
+								<th className="px-4 py-2.5 text-left text-[11px] font-semibold tracking-wide text-gray-500 whitespace-nowrap">
+									{t('table.key')}
 								</th>
-								<th className="px-4 py-2.5 text-left text-[11px] font-semibold uppercase tracking-wider text-gray-500 whitespace-nowrap">
-									{t("table.name")}
+								<th
+									className="px-4 py-2.5 text-left text-[11px] font-semibold tracking-wide text-gray-500 whitespace-nowrap"
+									title={t('help.rateLimitRpm')}
+								>
+									{t('table.rateLimit')}
 								</th>
-								<th className="px-4 py-2.5 text-right text-[11px] font-semibold uppercase tracking-wider text-gray-500 whitespace-nowrap">
-									{t("table.userBudget")}
+								<th className="px-4 py-2.5 text-right text-[11px] font-semibold tracking-wide text-gray-500 whitespace-nowrap">
+									{t('table.userBudget')}
 								</th>
-								<th className="px-4 py-2.5 text-left text-[11px] font-semibold uppercase tracking-wider text-gray-500 whitespace-nowrap">
-									{t("table.apiKeyMetadata")}
+								<th className="px-4 py-2.5 text-left text-[11px] font-semibold tracking-wide text-gray-500 whitespace-nowrap">
+									{t('table.apiKeyMetadata')}
 								</th>
 								<SortableTh
-									label={t("table.created")}
+									label={t('table.created')}
 									columnKey="created_at"
 									sortKey={sortKey}
 									sortDir={sortDir}
 									onSort={toggleSort}
 								/>
 								<th className="px-4 py-2.5 text-right text-[11px] font-semibold uppercase tracking-wider text-gray-500 whitespace-nowrap">
-									{t("table.links")}
+									{t('table.links')}
 								</th>
 							</tr>
 						</thead>
@@ -694,7 +650,7 @@ export default function GatewayKeysPage() {
 											<div className="h-4 w-40 rounded bg-gray-100" />
 										</td>
 										<td className="px-4 py-4">
-											<div className="h-4 w-28 rounded bg-gray-100" />
+											<div className="h-8 w-36 rounded bg-gray-100" />
 										</td>
 										<td className="px-4 py-4">
 											<div className="h-4 w-16 rounded bg-gray-100" />
@@ -715,53 +671,36 @@ export default function GatewayKeysPage() {
 								))}
 							{keys.map((key) => {
 								const meta = summarizeMetadata(key.metadata_preview);
-								const revoked = key.status === "revoked";
-								const ratio = budgetUsageRatio(
-									key.budget_spent,
-									key.budget_max
-								);
-								const spentLabel = formatGatewayMoneyCode(
-									key.budget_spent,
-									billingCurrency,
-									2
-								);
+								const revoked = key.status === 'revoked';
+								const ratio = budgetUsageRatio(key.budget_spent, key.budget_max);
+								const spentLabel = formatGatewayMoneyCode(key.budget_spent, billingCurrency, 2);
 								const maxLabel =
 									key.budget_max != null
 										? formatGatewayMoneyCode(key.budget_max, billingCurrency, 2)
-										: tCommon("noLimit");
-								const periodActive = Boolean(
-									key.budget_period && key.budget_period !== "none"
-								);
-								const userHref = `/admin/users/${encodeURIComponent(
-									key.user_id
-								)}`;
-								const logsHref = `/admin/request-logs?api_key_id=${encodeURIComponent(
-									key.id
-								)}`;
-								const auditHref = `/admin/audit-logs?api_key_id=${encodeURIComponent(
-									key.id
-								)}`;
+										: tCommon('noLimit');
+								const periodActive = Boolean(key.budget_period && key.budget_period !== 'none');
+								const userHref = `/admin/users/${encodeURIComponent(key.user_id)}`;
+								const logsHref = `/admin/request-logs?api_key_id=${encodeURIComponent(key.id)}`;
+								const auditHref = `/admin/audit-logs?api_key_id=${encodeURIComponent(key.id)}`;
 								return (
 									<tr
 										key={key.id}
 										onClick={() => handleEdit(key)}
 										onKeyDown={(event) => {
-											if (event.key === "Enter" || event.key === " ") {
+											if (event.key === 'Enter' || event.key === ' ') {
 												event.preventDefault();
 												handleEdit(key);
 											}
 										}}
 										tabIndex={0}
 										className={`cursor-pointer transition-colors hover:bg-blue-50/40 focus:bg-blue-50/60 focus:outline-none ${
-											revoked ? "bg-gray-50/60" : ""
+											revoked ? 'bg-gray-50/60' : ''
 										}`}
 									>
 										<td className="px-4 py-3.5 overflow-hidden">
 											<div className="flex min-w-0 items-start gap-2.5">
 												<span
-													className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${keyStatusSwatchClass(
-														key.status
-													)}`}
+													className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${keyStatusSwatchClass(key.status)}`}
 													title={key.status}
 													role="img"
 													aria-label={`Status: ${key.status}`}
@@ -772,22 +711,19 @@ export default function GatewayKeysPage() {
 															href={userHref}
 															onClick={(event) => event.stopPropagation()}
 															className={`truncate text-sm font-medium hover:underline ${
-																revoked ? "text-gray-500" : "text-blue-700"
+																revoked ? 'text-gray-500' : 'text-blue-700'
 															}`}
-															title={t("links.openUserTitle")}
+															title={t('links.openUserTitle')}
 														>
-															{key.user_email || tCommon("noData")}
+															{key.user_email || tCommon('noData')}
 														</Link>
 														{revoked && (
 															<span className="inline-flex shrink-0 items-center rounded-full bg-gray-100 px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-gray-600 ring-1 ring-inset ring-gray-200">
-																{tOptions("keyStatus.revoked")}
+																{tOptions('keyStatus.revoked')}
 															</span>
 														)}
 													</div>
-													<div
-														className="mt-0.5 truncate font-mono text-[11px] text-gray-400"
-														title={key.user_id}
-													>
+													<div className="mt-0.5 truncate font-mono text-[11px] text-gray-400" title={key.user_id}>
 														{key.user_id}
 													</div>
 												</div>
@@ -795,65 +731,52 @@ export default function GatewayKeysPage() {
 										</td>
 										<td className="px-4 py-3.5 overflow-hidden">
 											<div className="flex min-w-0 items-center gap-1.5">
-												<span
-													className="min-w-0 truncate font-mono text-sm text-gray-900"
-													title={key.key}
-												>
+												<span className="min-w-0 truncate font-mono text-sm text-gray-900" title={key.key}>
 													{maskKey(key.key)}
 												</span>
 											</div>
-											<div
-												className="mt-0.5 truncate font-mono text-[11px] text-gray-400"
-												title={key.id}
-											>
+											<div className="mt-0.5 truncate font-mono text-[11px] text-gray-400" title={key.id}>
 												{key.id}
 											</div>
 										</td>
-										<td className="px-4 py-3.5 overflow-hidden">
-											{key.name?.trim() ? (
-												<span
-													className="block truncate text-sm text-gray-900"
-													title={key.name}
-												>
-													{key.name}
-												</span>
-											) : (
-												<span className="text-gray-300">
-													{tCommon("noData")}
-												</span>
-											)}
+										<td className="px-4 py-3.5 overflow-hidden" title={t('help.rateLimitRpm')}>
+											{(() => {
+												const rpm = keyRpm(key);
+												return rpm == null ? (
+													<span className="text-sm text-gray-400">{tCommon('noLimit')}</span>
+												) : (
+													<span className={`text-sm tabular-nums ${rpm === 0 ? 'text-amber-700' : 'text-gray-900'}`}>
+														{t('table.rateLimitRpmValue', { rpm })}
+													</span>
+												);
+											})()}
 										</td>
 										<td className="px-4 py-3.5 overflow-hidden">
 											<Link
 												href={userHref}
 												onClick={(event) => event.stopPropagation()}
 												className="block w-full text-right"
-												title={t("links.openUserBudgetTitle")}
+												title={t('links.openUserBudgetTitle')}
 											>
 												<div className="truncate text-sm tabular-nums text-gray-900">
 													{spentLabel}
 													<span className="text-gray-400"> / </span>
-													<span
-														className={
-															key.budget_max == null
-																? "text-gray-400"
-																: "text-gray-700"
-														}
-													>
-														{maxLabel}
-													</span>
+													<span className={key.budget_max == null ? 'text-gray-400' : 'text-gray-700'}>{maxLabel}</span>
+												</div>
+												<div className="mt-0.5 truncate text-[11px] tabular-nums text-gray-400">
+													{t('table.wallet')}{' '}
+													{formatGatewayMoneyCode(
+														Number(key.wallet_granted ?? 0) - Number(key.wallet_spent ?? 0),
+														billingCurrency,
+														2,
+													)}
 												</div>
 												{ratio != null ? (
 													<div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-gray-100">
 														<div
-															className={`h-full rounded-full ${budgetBarClass(
-																ratio
-															)}`}
+															className={`h-full rounded-full ${budgetBarClass(ratio)}`}
 															style={{
-																width: `${Math.max(
-																	ratio * 100,
-																	ratio > 0 ? 4 : 0
-																)}%`,
+																width: `${Math.max(ratio * 100, ratio > 0 ? 4 : 0)}%`,
 															}}
 														/>
 													</div>
@@ -863,24 +786,18 @@ export default function GatewayKeysPage() {
 												{periodActive ? (
 													<div className="mt-1 truncate text-[11px] capitalize text-gray-400">
 														{key.budget_period}
-														{key.budget_reset_at
-															? ` · ${formatDate(key.budget_reset_at)}`
-															: ""}
+														{key.budget_reset_at ? ` · ${formatDate(key.budget_reset_at)}` : ''}
 													</div>
 												) : null}
 											</Link>
 										</td>
 										<td className="px-4 py-3.5 overflow-hidden">
 											{meta.empty ? (
-												<span className="text-gray-300">
-													{tCommon("noData")}
-												</span>
+												<span className="text-gray-300">{tCommon('noData')}</span>
 											) : (
 												<span
 													className={`block truncate rounded-md bg-slate-50 px-2 py-1 text-xs font-medium ring-1 ring-inset ${
-														meta.ok
-															? "text-slate-700 ring-slate-200"
-															: "text-red-700 ring-red-200 bg-red-50"
+														meta.ok ? 'text-slate-700 ring-slate-200' : 'text-red-700 ring-red-200 bg-red-50'
 													}`}
 													title={meta.summary}
 												>
@@ -889,9 +806,7 @@ export default function GatewayKeysPage() {
 											)}
 										</td>
 										<td className="px-4 py-3.5 overflow-hidden whitespace-nowrap">
-											<div className="truncate text-sm text-gray-700">
-												{formatDate(key.created_at)}
-											</div>
+											<div className="truncate text-sm text-gray-700">{formatDate(key.created_at)}</div>
 											<div className="truncate text-[11px] tabular-nums text-gray-400">
 												{formatTime(key.created_at)}
 											</div>
@@ -905,14 +820,14 @@ export default function GatewayKeysPage() {
 												<Link
 													href={logsHref}
 													className="inline-flex h-7 w-7 items-center justify-center rounded-md text-gray-400 hover:bg-gray-100 hover:text-blue-700"
-													title={t("links.requestLogsTitle")}
+													title={t('links.requestLogsTitle')}
 												>
 													<DocumentTextIcon className="h-4 w-4" />
 												</Link>
 												<Link
 													href={auditHref}
 													className="inline-flex h-7 w-7 items-center justify-center rounded-md text-gray-400 hover:bg-gray-100 hover:text-blue-700"
-													title={t("links.auditLogsTitle")}
+													title={t('links.auditLogsTitle')}
 												>
 													<ClipboardDocumentListIcon className="h-4 w-4" />
 												</Link>
@@ -925,15 +840,11 @@ export default function GatewayKeysPage() {
 					</table>
 				</div>
 				{!showSkeleton && keys.length === 0 && (
-					<div className="px-4 py-16 text-center text-sm text-gray-500">
-						{t("empty")}
-					</div>
+					<div className="px-4 py-16 text-center text-sm text-gray-500">{t('empty')}</div>
 				)}
 				{!showSkeleton && (
 					<div className="flex flex-wrap items-center justify-between gap-3 border-t border-gray-200 px-4 py-3">
-						<div className="text-sm text-gray-500">
-							{t("totalKeys", { count: total })}
-						</div>
+						<div className="text-sm text-gray-500">{t('totalKeys', { count: total })}</div>
 						{totalPages > 1 && (
 							<div className="flex items-center gap-2">
 								<button
@@ -942,10 +853,10 @@ export default function GatewayKeysPage() {
 									disabled={page === 1}
 									className="rounded-md border border-gray-200 bg-white px-3 py-1.5 text-sm text-gray-700 disabled:opacity-40 hover:bg-gray-50"
 								>
-									{tCommon("previous")}
+									{tCommon('previous')}
 								</button>
 								<span className="min-w-[7rem] text-center text-sm text-gray-600">
-									{tCommon("pageOf", { page, totalPages })}
+									{tCommon('pageOf', { page, totalPages })}
 								</span>
 								<button
 									type="button"
@@ -953,7 +864,7 @@ export default function GatewayKeysPage() {
 									disabled={page === totalPages}
 									className="rounded-md border border-gray-200 bg-white px-3 py-1.5 text-sm text-gray-700 disabled:opacity-40 hover:bg-gray-50"
 								>
-									{tCommon("next")}
+									{tCommon('next')}
 								</button>
 							</div>
 						)}
@@ -966,13 +877,8 @@ export default function GatewayKeysPage() {
 				<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
 					<div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
 						<div className="px-6 py-4 border-b flex justify-between items-center">
-							<h2 className="text-xl font-bold text-gray-900">
-								{t("createTitle")}
-							</h2>
-							<button
-								onClick={() => setShowModal(false)}
-								className="text-gray-400 hover:text-gray-600"
-							>
+							<h2 className="text-xl font-bold text-gray-900">{t('createTitle')}</h2>
+							<button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-600">
 								x
 							</button>
 						</div>
@@ -985,97 +891,77 @@ export default function GatewayKeysPage() {
 							)}
 
 							<fieldset className="mb-5 space-y-2">
-								<legend className="text-sm font-medium text-gray-800">
-									{t("create.attachLegend")}
-								</legend>
+								<legend className="text-sm font-medium text-gray-800">{t('create.attachLegend')}</legend>
 								<div className="mt-2 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-6">
 									<label className="flex cursor-pointer items-center gap-2 text-sm text-gray-700">
 										<input
 											type="radio"
 											name="keyCreationMode"
 											className="text-blue-600 focus:ring-blue-500"
-											checked={creationMode === "existingUser"}
-											onChange={() => handleCreationModeChange("existingUser")}
+											checked={creationMode === 'existingUser'}
+											onChange={() => handleCreationModeChange('existingUser')}
 										/>
-										{t("create.existingUser")}
+										{t('create.existingUser')}
 									</label>
 									<label className="flex cursor-pointer items-center gap-2 text-sm text-gray-700">
 										<input
 											type="radio"
 											name="keyCreationMode"
 											className="text-blue-600 focus:ring-blue-500"
-											checked={creationMode === "externalIdentity"}
-											onChange={() =>
-												handleCreationModeChange("externalIdentity")
-											}
+											checked={creationMode === 'externalIdentity'}
+											onChange={() => handleCreationModeChange('externalIdentity')}
 										/>
-										{t("create.externalIdentity")}
+										{t('create.externalIdentity')}
 									</label>
 								</div>
 							</fieldset>
 
 							<div className="mb-5 rounded-md border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">
-								<p className="font-medium text-slate-800">
-									{t("create.afterCreation")}
-								</p>
-								{creationMode === "existingUser" ? (
+								<p className="font-medium text-slate-800">{t('create.afterCreation')}</p>
+								{creationMode === 'existingUser' ? (
 									<ul className="mt-2 list-disc space-y-1 pl-5 text-slate-600">
 										<li>
-											{t("create.existingHelp1")}{" "}
-											<Link
-												href="/admin/users"
-												className="text-blue-700 underline"
-											>
+											{t('create.existingHelp1')}{' '}
+											<Link href="/admin/users" className="text-blue-700 underline">
 												Users
-											</Link>{" "}
+											</Link>{' '}
 										</li>
 										<li>
-											{t("create.existingHelp2")}{" "}
-											<Link
-												href="/admin/users"
-												className="text-blue-700 underline"
-											>
+											{t('create.existingHelp2')}{' '}
+											<Link href="/admin/users" className="text-blue-700 underline">
 												Users
 											</Link>
 										</li>
-										<li>{t("create.secretOnce")}</li>
-										<li>{t("create.metadataHelp")}</li>
+										<li>{t('create.secretOnce')}</li>
+										<li>{t('create.metadataHelp')}</li>
 									</ul>
 								) : (
 									<ul className="mt-2 list-disc space-y-1 pl-5 text-slate-600">
-										<li>{t("create.externalHelp1")}</li>
+										<li>{t('create.externalHelp1')}</li>
 										<li>
-											{t("create.externalHelp2")}{" "}
-											<Link
-												href="/admin/users"
-												className="text-blue-700 underline"
-											>
+											{t('create.externalHelp2')}{' '}
+											<Link href="/admin/users" className="text-blue-700 underline">
 												Users
 											</Link>
 										</li>
-										<li>{t("create.secretOnce")}</li>
-										<li>{t("create.metadataHelp")}</li>
+										<li>{t('create.secretOnce')}</li>
+										<li>{t('create.metadataHelp')}</li>
 									</ul>
 								)}
 							</div>
 
 							<div className="space-y-4">
-								{creationMode === "existingUser" ? (
+								{creationMode === 'existingUser' ? (
 									<div>
 										<label className="block text-sm font-medium text-gray-700 mb-1">
-											{t("fields.userId")}{" "}
-											<span className="ml-1 text-xs font-normal text-red-500">
-												*
-											</span>
+											{t('fields.userId')} <span className="ml-1 text-xs font-normal text-red-500">*</span>
 										</label>
 										<input
 											type="text"
 											value={formData.user_id}
-											onChange={(e) =>
-												setFormData({ ...formData, user_id: e.target.value })
-											}
+											onChange={(e) => setFormData({ ...formData, user_id: e.target.value })}
 											className="w-full px-3 py-2 border border-gray-300 rounded-md font-mono text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-											placeholder={t("placeholders.userId")}
+											placeholder={t('placeholders.userId')}
 										/>
 									</div>
 								) : (
@@ -1083,10 +969,7 @@ export default function GatewayKeysPage() {
 										<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
 											<div>
 												<label className="block text-sm font-medium text-gray-700 mb-1">
-													{t("fields.externalSystem")}{" "}
-													<span className="ml-1 text-xs font-normal text-red-500">
-														*
-													</span>
+													{t('fields.externalSystem')} <span className="ml-1 text-xs font-normal text-red-500">*</span>
 												</label>
 												<input
 													type="text"
@@ -1098,15 +981,12 @@ export default function GatewayKeysPage() {
 														})
 													}
 													className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-													placeholder={t("placeholders.externalSystem")}
+													placeholder={t('placeholders.externalSystem')}
 												/>
 											</div>
 											<div>
 												<label className="block text-sm font-medium text-gray-700 mb-1">
-													{t("fields.externalUserId")}{" "}
-													<span className="ml-1 text-xs font-normal text-red-500">
-														*
-													</span>
+													{t('fields.externalUserId')} <span className="ml-1 text-xs font-normal text-red-500">*</span>
 												</label>
 												<input
 													type="text"
@@ -1118,65 +998,48 @@ export default function GatewayKeysPage() {
 														})
 													}
 													className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-													placeholder={t("placeholders.externalUserId")}
+													placeholder={t('placeholders.externalUserId')}
 												/>
 											</div>
 										</div>
 										<div>
 											<label className="block text-sm font-medium text-gray-700 mb-1">
-												{t("fields.userEmail")}{" "}
-												<span className="ml-1 text-xs font-normal text-red-500">
-													*
-												</span>
+												{t('fields.userEmail')} <span className="ml-1 text-xs font-normal text-red-500">*</span>
 											</label>
 											<input
 												type="email"
 												value={formData.email}
-												onChange={(e) =>
-													setFormData({ ...formData, email: e.target.value })
-												}
+												onChange={(e) => setFormData({ ...formData, email: e.target.value })}
 												className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-												placeholder={t("placeholders.userEmail")}
+												placeholder={t('placeholders.userEmail')}
 											/>
-											<p className="mt-1 text-xs text-gray-500">
-												{t("help.userEmail")}
-											</p>
+											<p className="mt-1 text-xs text-gray-500">{t('help.userEmail')}</p>
 										</div>
 									</>
 								)}
 								<div>
 									<label className="block text-sm font-medium text-gray-700 mb-1">
-										{t("fields.keyName")}{" "}
-										<span className="ml-1 text-xs font-normal text-gray-400">
-											{tCommon("optional")}
-										</span>
+										{t('fields.keyName')}{' '}
+										<span className="ml-1 text-xs font-normal text-gray-400">{tCommon('optional')}</span>
 									</label>
 									<input
 										type="text"
 										value={formData.name}
-										onChange={(e) =>
-											setFormData({ ...formData, name: e.target.value })
-										}
+										onChange={(e) => setFormData({ ...formData, name: e.target.value })}
 										className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-										placeholder={t("placeholders.keyName")}
+										placeholder={t('placeholders.keyName')}
 									/>
 								</div>
 								<div>
-									<label className="block text-sm font-medium text-gray-700 mb-1">
-										{t("fields.metadataJson")}
-									</label>
+									<label className="block text-sm font-medium text-gray-700 mb-1">{t('fields.metadataJson')}</label>
 									<textarea
 										value={formData.metadata}
-										onChange={(e) =>
-											setFormData({ ...formData, metadata: e.target.value })
-										}
+										onChange={(e) => setFormData({ ...formData, metadata: e.target.value })}
 										rows={6}
 										className="w-full px-3 py-2 border border-gray-300 rounded-md font-mono text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-										placeholder={t("placeholders.metadataJson")}
+										placeholder={t('placeholders.metadataJson')}
 									/>
-									<p className="mt-1 text-xs text-gray-500">
-										{t("help.metadata")}
-									</p>
+									<p className="mt-1 text-xs text-gray-500">{t('help.metadata')}</p>
 								</div>
 							</div>
 						</div>
@@ -1187,14 +1050,14 @@ export default function GatewayKeysPage() {
 								className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
 								disabled={isSaving}
 							>
-								{tCommon("cancel")}
+								{tCommon('cancel')}
 							</button>
 							<button
 								onClick={handleSave}
 								disabled={isSaving}
 								className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
 							>
-								{isSaving ? tCommon("creating") : tCommon("create")}
+								{isSaving ? tCommon('creating') : tCommon('create')}
 							</button>
 						</div>
 					</div>
@@ -1207,27 +1070,20 @@ export default function GatewayKeysPage() {
 					<div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
 						<div className="px-6 py-4 border-b flex justify-between items-start gap-4">
 							<div className="min-w-0">
-								<h2 className="text-xl font-bold text-gray-900">
-									{t("editTitle")}
-								</h2>
+								<h2 className="text-xl font-bold text-gray-900">{t('editTitle')}</h2>
 								<div className="mt-1 flex items-center gap-2">
-									<span className="font-mono text-xs text-gray-500 break-all">
-										{selectedKey.id}
-									</span>
+									<span className="font-mono text-xs text-gray-500 break-all">{selectedKey.id}</span>
 									<button
 										type="button"
 										onClick={() => copyToClipboard(selectedKey.id)}
 										className="shrink-0 text-gray-400 hover:text-gray-600"
-										title={t("copyId")}
+										title={t('copyId')}
 									>
 										<ClipboardDocumentIcon className="h-4 w-4" />
 									</button>
 								</div>
 							</div>
-							<button
-								onClick={() => setShowEditModal(false)}
-								className="text-gray-400 hover:text-gray-600"
-							>
+							<button onClick={() => setShowEditModal(false)} className="text-gray-400 hover:text-gray-600">
 								x
 							</button>
 						</div>
@@ -1241,111 +1097,90 @@ export default function GatewayKeysPage() {
 
 							<div className="mb-6 space-y-4">
 								<div className="grid gap-4 sm:grid-cols-2">
-									<ReadonlyRow label={t("fields.keyPreview")}>
+									<ReadonlyRow label={t('fields.keyPreview')}>
 										<div>
-											<span className="font-mono text-xs break-all">
-												{selectedKey.key}
-											</span>
-											<p className="mt-1 text-[11px] leading-4 text-gray-400">
-												{t("help.keyPreview")}
-											</p>
+											<span className="font-mono text-xs break-all">{selectedKey.key}</span>
+											<p className="mt-1 text-[11px] leading-4 text-gray-400">{t('help.keyPreview')}</p>
 										</div>
 									</ReadonlyRow>
-									<ReadonlyRow label={t("fields.status")}>
+									<ReadonlyRow label={t('fields.status')}>
 										<div className="flex items-center gap-2">
 											<button
 												type="button"
 												role="switch"
-												aria-checked={selectedKey.status === "active"}
+												aria-checked={selectedKey.status === 'active'}
 												disabled={statusTogglingId === selectedKey.id}
 												onClick={() => handleStatusToggle(selectedKey)}
 												className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed ${
-													selectedKey.status === "active"
-														? "bg-blue-600"
-														: "bg-gray-200"
+													selectedKey.status === 'active' ? 'bg-blue-600' : 'bg-gray-200'
 												}`}
 											>
 												<span
 													className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ${
-														selectedKey.status === "active"
-															? "translate-x-5"
-															: "translate-x-1"
+														selectedKey.status === 'active' ? 'translate-x-5' : 'translate-x-1'
 													}`}
 												/>
 											</button>
-											<span className="text-sm text-gray-600 capitalize">
-												{selectedKey.status}
-											</span>
+											<span className="text-sm text-gray-600 capitalize">{selectedKey.status}</span>
 										</div>
 									</ReadonlyRow>
-									<ReadonlyRow label={t("fields.userIdAuth")}>
+									<ReadonlyRow label={t('fields.userIdAuth')}>
 										<Link
-											href={`/admin/users/${encodeURIComponent(
-												selectedKey.user_id
-											)}`}
+											href={`/admin/users/${encodeURIComponent(selectedKey.user_id)}`}
 											className="font-mono text-xs text-blue-600 hover:underline break-all"
 										>
 											{selectedKey.user_id}
 										</Link>
 									</ReadonlyRow>
-									<ReadonlyRow label={t("fields.userEmail")}>
+									<ReadonlyRow label={t('fields.userEmail')}>
 										<Link
-											href={`/admin/users/${encodeURIComponent(
-												selectedKey.user_id
-											)}`}
+											href={`/admin/users/${encodeURIComponent(selectedKey.user_id)}`}
 											className="text-sm text-blue-600 hover:underline break-all"
 										>
 											{selectedKey.user_email || selectedKey.user_id}
 										</Link>
 									</ReadonlyRow>
 									<div className="sm:col-span-2 grid gap-4 sm:grid-cols-2">
-										<ReadonlyRow label={t("fields.budgetReadonly")}>
+										<ReadonlyRow label={t('fields.budgetReadonly')}>
 											<div className="text-sm">
-												{formatGatewayMoneyCode(
-													selectedKey.budget_spent,
-													billingCurrency,
-													2
-												)}{" "}
-												/{" "}
+												{formatGatewayMoneyCode(selectedKey.budget_spent, billingCurrency, 2)} /{' '}
 												{selectedKey.budget_max != null
-													? formatGatewayMoneyCode(
-															selectedKey.budget_max,
-															billingCurrency,
-															2
-													  )
-													: tCommon("noLimit")}
+													? formatGatewayMoneyCode(selectedKey.budget_max, billingCurrency, 2)
+													: tCommon('noLimit')}
 												{selectedKey.budget_base != null && (
 													<span className="ml-1 text-xs text-gray-500">
-														(base{" "}
-														{formatGatewayMoneyCode(
-															selectedKey.budget_base,
-															billingCurrency,
-															2
-														)}
-														)
+														(base {formatGatewayMoneyCode(selectedKey.budget_base, billingCurrency, 2)})
 													</span>
 												)}
 											</div>
 										</ReadonlyRow>
-										<ReadonlyRow label={t("fields.budgetPeriodReset")}>
+										<ReadonlyRow label={t('fields.walletReadonly')}>
+											<div className="text-sm">
+												{formatGatewayMoneyCode(
+													Number(selectedKey.wallet_granted ?? 0) - Number(selectedKey.wallet_spent ?? 0),
+													billingCurrency,
+													2,
+												)}
+											</div>
+										</ReadonlyRow>
+										<ReadonlyRow label={t('fields.budgetPeriodReset')}>
 											{formatBudgetPeriodResetLabel(
 												selectedKey.budget_period,
 												selectedKey.budget_reset_at,
-												businessTimezone
+												businessTimezone,
 											)}
 										</ReadonlyRow>
 									</div>
-									<ReadonlyRow label={t("fields.created")}>
-										{formatKeyTimestamp(
-											selectedKey.created_at,
-											businessTimezone
-										)}
+									<ReadonlyRow label={t('fields.created')}>
+										{formatKeyTimestamp(selectedKey.created_at, businessTimezone)}
 									</ReadonlyRow>
-									<ReadonlyRow label={t("fields.updated")}>
-										{formatKeyTimestamp(
-											selectedKey.updated_at,
-											businessTimezone
-										)}
+									<ReadonlyRow label={t('fields.updated')}>
+										{formatKeyTimestamp(selectedKey.updated_at, businessTimezone)}
+									</ReadonlyRow>
+									<ReadonlyRow label={t('fields.lastUsedAt')}>
+										{selectedKey.last_used_at
+											? formatKeyTimestamp(selectedKey.last_used_at, businessTimezone)
+											: t('fields.lastUsedNever')}
 									</ReadonlyRow>
 								</div>
 								<div className="flex flex-wrap gap-x-4 gap-y-1 text-sm">
@@ -1353,36 +1188,43 @@ export default function GatewayKeysPage() {
 										href={`/admin/request-logs?api_key_id=${selectedKey.id}`}
 										className="font-medium text-blue-600 hover:text-blue-800"
 									>
-										{t("links.requestLogsForKey")}
+										{t('links.requestLogsForKey')}
 									</a>
 									<a
 										href={`/admin/audit-logs?api_key_id=${selectedKey.id}`}
 										className="font-medium text-blue-600 hover:text-blue-800"
 									>
-										{t("links.auditLogsForKey")}
+										{t('links.auditLogsForKey')}
 									</a>
 								</div>
 							</div>
 
 							<div className="space-y-4">
 								<div>
-									<label className="block text-sm font-medium text-gray-700 mb-1">
-										{t("fields.name")}
-									</label>
+									<label className="block text-sm font-medium text-gray-700 mb-1">{t('fields.name')}</label>
 									<input
 										type="text"
 										value={editFormData.name}
-										onChange={(e) =>
-											setEditFormData({ ...editFormData, name: e.target.value })
-										}
+										onChange={(e) => setEditFormData({ ...editFormData, name: e.target.value })}
 										className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-										placeholder={t("placeholders.optionalLabel")}
+										placeholder={t('placeholders.optionalLabel')}
 									/>
 								</div>
 								<div>
-									<label className="block text-sm font-medium text-gray-700 mb-1">
-										{t("fields.metadataJson")}
-									</label>
+									<label className="block text-sm font-medium text-gray-700 mb-1">{t('fields.rateLimitRpm')}</label>
+									<input
+										type="number"
+										min={0}
+										step={1}
+										value={editFormData.rateLimitRpm}
+										onChange={(e) => setEditFormData({ ...editFormData, rateLimitRpm: e.target.value })}
+										className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+										placeholder={t('placeholders.rateLimitRpm')}
+									/>
+									<p className="mt-1 text-xs text-gray-500">{t('help.rateLimitRpm')}</p>
+								</div>
+								<div>
+									<label className="block text-sm font-medium text-gray-700 mb-1">{t('fields.metadataJson')}</label>
 									<textarea
 										value={editFormData.metadata}
 										disabled={selectedKey.metadata_unavailable === true}
@@ -1397,11 +1239,7 @@ export default function GatewayKeysPage() {
 										placeholder="{}"
 									/>
 									<p className="mt-1 text-xs text-gray-500">
-										{t(
-											selectedKey.metadata_unavailable
-												? "help.metadataUnavailable"
-												: "help.editMetadata"
-										)}
+										{t(selectedKey.metadata_unavailable ? 'help.metadataUnavailable' : 'help.editMetadata')}
 									</p>
 								</div>
 							</div>
@@ -1414,7 +1252,7 @@ export default function GatewayKeysPage() {
 								disabled={isSaving || isDeleting}
 								className="px-4 py-2 rounded-md border border-red-300 text-red-700 hover:bg-red-50 disabled:opacity-50 disabled:hover:bg-transparent"
 							>
-								{isDeleting ? tCommon("deleting") : t("deleteKey")}
+								{isDeleting ? tCommon('deleting') : t('deleteKey')}
 							</button>
 							<div className="flex gap-3">
 								<button
@@ -1422,14 +1260,14 @@ export default function GatewayKeysPage() {
 									className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
 									disabled={isSaving || isDeleting}
 								>
-									{tCommon("cancel")}
+									{tCommon('cancel')}
 								</button>
 								<button
 									onClick={handleEditSave}
 									disabled={isSaving || isDeleting}
 									className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
 								>
-									{isSaving ? tCommon("savingDots") : tCommon("save")}
+									{isSaving ? tCommon('savingDots') : tCommon('save')}
 								</button>
 							</div>
 						</div>

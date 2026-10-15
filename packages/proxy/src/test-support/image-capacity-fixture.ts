@@ -62,7 +62,7 @@ export async function createImageCapacityFixture(options: {
 		id: 'image-key', key: 'synthetic-client-key', user_id: 'image-user', workspace_id: 'image-workspace', name: 'Synthetic',
 		status: 'active', metadata: null, last_used_at: null, created_at: now, updated_at: now, user_email: null, user_metadata: null,
 		user_charged_cost_factors: null, budget_max: null, budget_base: 0, budget_spent: 0, budget_period: 'none', budget_reset_at: null,
-		budget_epoch: 0, budget_reserved_micros: 0, include_byok_in_limit: false, limit_micros: null, limit_epoch: 0, limit_reset: null, expires_at: null,
+		wallet_granted: 0, wallet_spent: 0, rate_limit: null, user_rate_limit: null, budget_epoch: 0, budget_reserved_micros: 0, include_byok_in_limit: false, limit_micros: null, limit_epoch: 0, limit_reset: null, expires_at: null,
 	};
 	const model: ModelRow = { id: 'image-model', display_name: 'Synthetic', vendor: 'test', context_window: 8192, max_tokens: 1024,
 		pricing_profile: null, tags: '[]', description: null, metadata: null, input_modalities: '["text","image"]', output_modalities: '["image"]',

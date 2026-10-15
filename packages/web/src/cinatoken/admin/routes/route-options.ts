@@ -39,13 +39,18 @@ export function requestOperationsForModel(
 	providerModelName = ''
 ): readonly string[] {
 	if (!model || !isRouteProtocol(protocol)) return []
-	if (isImageGenerationModel(model))
-		return protocol === 'openai' ? ['images.generations', 'images.edits'] : []
+	if (isImageGenerationModel(model)) {
+		if (protocol === 'openai') return ['images.generations', 'images.edits']
+		if (protocol === 'minimax' || protocol === 'volcengine') return ['images.generations']
+		if (protocol === 'dashscope') return ['images.generations.multimodal']
+		if (protocol === 'gemini') return ['models.generate']
+		return []
+	}
 	if (isEmbeddingModel(model))
 		return protocol === 'openai' ? ['embeddings'] : []
 	if (isRerankModel(model)) return protocol === 'openai' ? ['rerank'] : []
 	if (isAudioTranscriptionModel(model)) {
-		if (protocol === 'openai') return ['audio.transcriptions']
+		if (protocol === 'openai' || protocol === 'minimax') return ['audio.transcriptions']
 		if (protocol !== 'dashscope') return []
 		const realtime = [
 			'audio.transcriptions.realtime.inference',
@@ -64,7 +69,7 @@ export function requestOperationsForModel(
 		]
 	}
 	if (isAudioSpeechModel(model)) {
-		if (protocol === 'openai') return ['audio.speech']
+		if (protocol === 'openai' || protocol === 'minimax') return ['audio.speech']
 		return protocol === 'dashscope' ? ['audio.speech.realtime.inference'] : []
 	}
 	if (isTextLlmModel(model) && protocol === 'openai')

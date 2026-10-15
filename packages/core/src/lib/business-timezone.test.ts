@@ -2,6 +2,8 @@ import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import {
 	getBusinessDayWindow,
+	instantToZonedDatetimeLocalInput,
+	zonedDatetimeLocalInputToInstant,
 	getBusinessTimezone,
 	MAX_BUSINESS_TIMEZONE_LENGTH,
 	parseBusinessTimezoneInput,
@@ -24,6 +26,17 @@ describe('business timezone UTC ↔ wall clock', () => {
 		assert.equal(zonedInputToUtcApi(local, 'Asia/Shanghai'), '2026-07-08 16:00:00');
 	});
 
+	it('keeps optional seconds on a business-timezone wall clock', () => {
+		const local = '2026-07-09T18:00:30';
+		const instant = zonedDatetimeLocalInputToInstant(local, 'Asia/Shanghai');
+		assert.equal(instant?.toISOString(), '2026-07-09T10:00:30.000Z');
+		assert.equal(instantToZonedDatetimeLocalInput(instant!, 'Asia/Shanghai', true), local);
+		assert.equal(
+			zonedDatetimeLocalInputToInstant('2026-07-09T18:00', 'Asia/Shanghai')?.toISOString(),
+			'2026-07-09T10:00:00.000Z',
+		);
+	});
+
 	it('getBusinessDayWindow aligns with Shanghai date key', () => {
 		const now = new Date('2026-07-09T08:00:00.000Z');
 		const window = getBusinessDayWindow(now, 'Asia/Shanghai');
@@ -36,7 +49,18 @@ describe('business timezone UTC ↔ wall clock', () => {
 		assert.equal(parseBusinessTimezoneInput(' Asia/Singapore '), 'Asia/Singapore');
 		assert.equal(parseBusinessTimezoneInput('UTC'), 'UTC');
 		assert.equal(parseBusinessTimezoneInput('Etc/GMT+8'), 'Etc/GMT+8');
-		for (const value of ['', '   ', 'Mars/Olympus', 'UTC\n', 'Asia/\u0000Singapore', 'x'.repeat(MAX_BUSINESS_TIMEZONE_LENGTH + 1), '+01:00', '-04:30', 'EST', 10]) {
+		for (const value of [
+			'',
+			'   ',
+			'Mars/Olympus',
+			'UTC\n',
+			'Asia/\u0000Singapore',
+			'x'.repeat(MAX_BUSINESS_TIMEZONE_LENGTH + 1),
+			'+01:00',
+			'-04:30',
+			'EST',
+			10,
+		]) {
 			assert.equal(parseBusinessTimezoneInput(value), null);
 		}
 	});
@@ -44,12 +68,25 @@ describe('business timezone UTC ↔ wall clock', () => {
 	it('distinguishes legacy missing and invalid configuration without exposing raw values', async () => {
 		assert.deepEqual(resolveBusinessTimezoneConfiguration(null), { businessTimezone: 'UTC', source: 'missing' });
 		assert.deepEqual(resolveBusinessTimezoneConfiguration('   '), { businessTimezone: 'UTC', source: 'missing' });
-		assert.deepEqual(resolveBusinessTimezoneConfiguration('Mars/Olympus'), { businessTimezone: 'UTC', source: 'invalid' });
-		assert.deepEqual(resolveBusinessTimezoneConfiguration(' Asia/Shanghai '), { businessTimezone: 'Asia/Shanghai', source: 'configured' });
+		assert.deepEqual(resolveBusinessTimezoneConfiguration('Mars/Olympus'), {
+			businessTimezone: 'UTC',
+			source: 'invalid',
+		});
+		assert.deepEqual(resolveBusinessTimezoneConfiguration(' Asia/Shanghai '), {
+			businessTimezone: 'Asia/Shanghai',
+			source: 'configured',
+		});
 		assert.deepEqual(resolveBusinessTimezoneConfiguration('EST'), { businessTimezone: 'EST', source: 'legacy' });
 		assert.deepEqual(resolveBusinessTimezoneConfiguration('+01:00'), { businessTimezone: '+01:00', source: 'legacy' });
 		let reads = 0;
-		const repos = { systemConfig: { getConfig: async () => { reads += 1; return ' Asia/Shanghai '; } } } as unknown as GatewayRepositories;
+		const repos = {
+			systemConfig: {
+				getConfig: async () => {
+					reads += 1;
+					return ' Asia/Shanghai ';
+				},
+			},
+		} as unknown as GatewayRepositories;
 		assert.equal(await getBusinessTimezone(repos), 'Asia/Shanghai');
 		assert.equal(reads, 1);
 	});

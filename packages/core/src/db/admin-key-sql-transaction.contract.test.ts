@@ -9,6 +9,10 @@ import { createMySqlApiKeysRepository } from './mysql/api-keys.impl';
 import { createPostgresApiKeysRepository } from './postgres/api-keys.impl';
 
 const userSnapshot = userRowToSnapshot({
+wallet_granted: 0,
+wallet_spent: 0,
+rate_limit: null,
+
 	id: 'u1', email: 'user@example.test',
 	budget_max: 10, budget_base: 10, budget_spent: 3,
 	budget_period: 'none', budget_reset_at: null,

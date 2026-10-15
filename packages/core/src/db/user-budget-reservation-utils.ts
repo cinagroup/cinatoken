@@ -2,12 +2,9 @@ import type {
 	ReserveUserBudgetParams,
 	UserBudgetAccountRow,
 	UserBudgetReservationRow,
-	UserBudgetReservationSnapshot,
+	UserBudgetReservationSnapshot
 } from './user-budget-reservation-types';
-import {
-	isSafeUserBudgetMicros,
-	userBudgetUnits,
-} from './user-budget-reservation-types';
+import { isSafeUserBudgetMicros, userBudgetUnits } from './user-budget-reservation-types';
 
 export function validateReserveUserBudgetParams(params: ReserveUserBudgetParams): string | null {
 	if (!params.requestId || params.requestId.length > 128) return 'requestId must contain 1-128 characters';
@@ -41,20 +38,20 @@ export function userBudgetReservationSnapshot(row: UserBudgetReservationRow): Us
 		apiKeyId: row.api_key_id,
 		budgetEpoch: Number(row.budget_epoch),
 		limitMicros: Number(row.limit_micros),
-		reservedMicros: Number(row.reserved_micros),
+		reservedMicros: Number(row.reserved_micros)
 	};
 }
 
 export function existingUserBudgetReservationReplay(
 	row: UserBudgetReservationRow | null,
-	params: ReserveUserBudgetParams,
+	params: ReserveUserBudgetParams
 ): 'none' | 'idempotent' | 'conflict' {
 	if (!row) return 'none';
 	if (row.state !== 'reserved' && row.state !== 'dispatched') return 'conflict';
-	return row.user_id === params.userId
-		&& row.api_key_id === params.apiKeyId
-		&& Number(row.budget_epoch) === params.expectedBudgetEpoch
-		&& Number(row.reserved_micros) === params.reservedMicros
+	return row.user_id === params.userId &&
+		row.api_key_id === params.apiKeyId &&
+		Number(row.budget_epoch) === params.expectedBudgetEpoch &&
+		Number(row.reserved_micros) === params.reservedMicros
 		? 'idempotent'
 		: 'conflict';
 }
@@ -65,21 +62,50 @@ export function userBudgetCapacity(account: UserBudgetAccountRow): {
 	reservedMicros: number;
 	remainingMicros: number | null;
 } {
-	const limitMicros = account.budget_max == null ? null : userBudgetUnits(Number(account.budget_max));
-	const spentMicros = userBudgetUnits(Number(account.budget_spent));
+	const limitMicros =
+		account.budget_max == null
+			? null
+			: userBudgetUnits(Number(account.budget_max) + Number(account.wallet_granted ?? 0));
+	const spentMicros = userBudgetUnits(Number(account.budget_spent) + Number(account.wallet_spent ?? 0));
 	const reservedMicros = Math.min(
 		Number.isSafeInteger(Number(account.budget_reserved_micros))
 			? Math.max(0, Number(account.budget_reserved_micros))
 			: Number.MAX_SAFE_INTEGER,
-		Number.MAX_SAFE_INTEGER,
+		Number.MAX_SAFE_INTEGER
 	);
-	const remainingMicros = limitMicros == null
-		? null
-		: Math.max(0, limitMicros - Math.min(limitMicros, spentMicros) - Math.min(limitMicros, reservedMicros));
+	const remainingMicros =
+		limitMicros == null
+			? null
+			: Math.max(0, limitMicros - Math.min(limitMicros, spentMicros) - Math.min(limitMicros, reservedMicros));
 	return { limitMicros, spentMicros, reservedMicros, remainingMicros };
 }
 
 export function userBudgetRecoveryLimit(limit: number = 100): number {
 	if (!Number.isFinite(limit)) return 100;
 	return Math.max(1, Math.min(Math.trunc(limit), 1000));
+}
+
+/** Split only the change in one settlement; late refunds restore its wallet share first. */
+export function userBudgetSettlementPools(
+	account: Pick<UserBudgetAccountRow, 'budget_max' | 'budget_spent'>,
+	previousTotalMicros: number,
+	previousWalletMicros: number,
+	nextTotalMicros: number
+): { periodDeltaMicros: number; walletDeltaMicros: number; walletSettledMicros: number } {
+	for (const value of [previousTotalMicros, previousWalletMicros, nextTotalMicros]) {
+		if (!isSafeUserBudgetMicros(value)) throw new TypeError('Invalid wallet settlement micro-units');
+	}
+	if (previousWalletMicros > previousTotalMicros) throw new TypeError('Wallet settlement exceeds request charge');
+	const delta = nextTotalMicros - previousTotalMicros;
+	const remaining =
+		account.budget_max == null
+			? null
+			: Math.max(0, userBudgetUnits(Number(account.budget_max)) - userBudgetUnits(Number(account.budget_spent)));
+	const walletDeltaMicros =
+		delta < 0 ? -Math.min(-delta, previousWalletMicros) : remaining == null ? 0 : Math.max(0, delta - remaining);
+	return {
+		periodDeltaMicros: delta - walletDeltaMicros,
+		walletDeltaMicros,
+		walletSettledMicros: previousWalletMicros + walletDeltaMicros
+	};
 }

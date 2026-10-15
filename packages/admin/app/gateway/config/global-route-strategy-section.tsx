@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { PencilSquareIcon } from "@heroicons/react/24/outline";
-import type { RouteStrategyName } from "@octafuse/core";
-import { isRouteStrategyName } from "@octafuse/core/db/model-route-policy";
-import { useTranslations } from "next-intl";
-import { getRouteStrategyMeta } from "../routes/route-strategy-meta";
-import { RouteStrategyDiagram } from "../routes/components/route-strategy-diagram";
-import { RouteStrategyPicker } from "../routes/components/route-strategy-picker";
+import { useState } from 'react';
+import { PencilSquareIcon } from '@heroicons/react/24/outline';
+import type { RouteStrategyName } from '@octafuse/core';
+import { isRouteStrategyName } from '@octafuse/core/db/model-route-policy';
+import { useTranslations } from 'next-intl';
+import { getRouteStrategyMeta } from '../routes/route-strategy-meta';
+import { RouteStrategyDiagram } from '../routes/components/route-strategy-diagram';
+import { RouteStrategyPicker } from '../routes/components/route-strategy-picker';
 
 type Props = {
 	value: string;
@@ -16,16 +16,15 @@ type Props = {
 };
 
 export function GlobalRouteStrategySection({ value, saving, onSave }: Props) {
-	const t = useTranslations("config.routeStrategy");
-	const tStrategy = useTranslations("routes.strategy");
-	const tCommon = useTranslations("common");
+	const t = useTranslations('config.routeStrategy');
+	const tStrategy = useTranslations('routes.strategy');
+	const tCommon = useTranslations('common');
+	const tUx = useTranslations('config.ux');
 	const [open, setOpen] = useState(false);
 	const [draft, setDraft] = useState(value);
 
 	const meta = getRouteStrategyMeta(value);
-	const title = isRouteStrategyName(value)
-		? tStrategy(`display.${value as RouteStrategyName}`)
-		: value;
+	const title = isRouteStrategyName(value) ? tStrategy(`display.${value as RouteStrategyName}`) : value;
 
 	const openDialog = () => {
 		setDraft(value);
@@ -39,46 +38,43 @@ export function GlobalRouteStrategySection({ value, saving, onSave }: Props) {
 
 	return (
 		<>
-			<div className="rounded-lg border border-indigo-200 bg-indigo-50/50 p-3.5">
-				<div className="flex items-start gap-3">
-					<div className="min-w-0 flex-1">
-						<div className="flex flex-wrap items-center gap-2">
-							<span className="text-sm font-semibold text-gray-900">
-								{title}
-							</span>
-							<span className="rounded bg-emerald-100 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-700">
-								{tStrategy("effective")}
-							</span>
+			<div className="flex flex-1 flex-col">
+				<div className="rounded-lg border border-indigo-200 bg-indigo-50/50 p-3.5">
+					<div className="flex items-start gap-3">
+						<div className="min-w-0 flex-1">
+							<div className="flex flex-wrap items-center gap-2">
+								<span className="text-sm font-semibold text-gray-900">{title}</span>
+								<span className="rounded bg-emerald-100 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-700">
+									{tStrategy('effective')}
+								</span>
+							</div>
+							{meta ? <p className="mt-0.5 font-mono text-[10px] text-gray-400">{meta.machineId}</p> : null}
+							<p className="mt-2 text-xs leading-relaxed text-gray-600">
+								{isRouteStrategyName(value) ? tStrategy(`description.${value}.summary`) : null}
+							</p>
 						</div>
 						{meta ? (
-							<p className="mt-0.5 font-mono text-[10px] text-gray-400">
-								{meta.machineId}
-							</p>
+							<div className="hidden w-44 shrink-0 sm:block">
+								<RouteStrategyDiagram kind={meta.diagram} active caption={tStrategy(`diagramCaption.${meta.id}`)} />
+							</div>
 						) : null}
-						<p className="mt-2 text-xs leading-relaxed text-gray-600">
-							{isRouteStrategyName(value)
-								? tStrategy(`description.${value}.summary`)
-								: null}
-						</p>
+					</div>
+				</div>
+				<div className="mt-5 flex flex-1 flex-col justify-end">
+					<div className="flex items-center justify-between gap-3 border-t border-gray-100 pt-4">
+						<span className="text-xs text-gray-400" role="status">
+							{tUx('saved')}
+						</span>
 						<button
 							type="button"
 							onClick={openDialog}
 							disabled={saving}
-							className="mt-3 inline-flex items-center gap-1.5 rounded-md bg-gray-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50"
+							className="inline-flex items-center gap-1.5 rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50"
 						>
-							<PencilSquareIcon className="h-4 w-4" />
-							{t("change")}
+							<PencilSquareIcon className="h-4 w-4" aria-hidden />
+							{t('change')}
 						</button>
 					</div>
-					{meta ? (
-						<div className="hidden w-44 shrink-0 sm:block">
-							<RouteStrategyDiagram
-								kind={meta.diagram}
-								active
-								caption={tStrategy(`diagramCaption.${meta.id}`)}
-							/>
-						</div>
-					) : null}
 				</div>
 			</div>
 
@@ -97,20 +93,17 @@ export function GlobalRouteStrategySection({ value, saving, onSave }: Props) {
 					>
 						<div className="flex shrink-0 items-center justify-between border-b border-gray-200 px-6 py-4">
 							<div>
-								<h2
-									id="global-route-strategy-dialog-title"
-									className="text-base font-semibold text-gray-900"
-								>
-									{t("title")}
+								<h2 id="global-route-strategy-dialog-title" className="text-base font-semibold text-gray-900">
+									{t('title')}
 								</h2>
-								<p className="mt-1 text-xs text-gray-500">{t("dialogHint")}</p>
+								<p className="mt-1 text-xs text-gray-500">{t('dialogHint')}</p>
 							</div>
 							<button
 								type="button"
 								onClick={() => setOpen(false)}
 								disabled={saving}
 								className="rounded-md p-1.5 text-gray-400 transition hover:bg-gray-100 hover:text-gray-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
-								aria-label={tCommon("close")}
+								aria-label={tCommon('close')}
 							>
 								<span className="block text-xl leading-none" aria-hidden>
 									×
@@ -118,12 +111,7 @@ export function GlobalRouteStrategySection({ value, saving, onSave }: Props) {
 							</button>
 						</div>
 						<div className="min-h-0 flex-1 overflow-y-auto px-6 py-4">
-							<RouteStrategyPicker
-								value={draft}
-								onChange={setDraft}
-								disabled={saving}
-								dense
-							/>
+							<RouteStrategyPicker value={draft} onChange={setDraft} disabled={saving} dense />
 						</div>
 						<div className="flex shrink-0 justify-end gap-2 border-t border-gray-200 px-6 py-4">
 							<button
@@ -132,7 +120,7 @@ export function GlobalRouteStrategySection({ value, saving, onSave }: Props) {
 								disabled={saving}
 								className="rounded-md px-4 py-2 text-sm font-medium text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
 							>
-								{tCommon("cancel")}
+								{tCommon('cancel')}
 							</button>
 							<button
 								type="button"
@@ -140,7 +128,7 @@ export function GlobalRouteStrategySection({ value, saving, onSave }: Props) {
 								disabled={saving || draft === value}
 								className="rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50"
 							>
-								{saving ? tCommon("saving") : tCommon("save")}
+								{saving ? tCommon('saving') : tCommon('save')}
 							</button>
 						</div>
 					</div>

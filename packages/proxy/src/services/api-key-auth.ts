@@ -9,6 +9,7 @@ import {
 	resolveMeMetadata,
 	roundGatewayMoney,
 } from '@octafuse/core';
+import type { ApiKeyRateLimit } from '@octafuse/core';
 
 /** 鉴权成功后注入上下文（与中间件 `ApiKeyContext` 字段对应）。 */
 export type AuthenticatedApiKey = {
@@ -23,6 +24,10 @@ export type AuthenticatedApiKey = {
 	budgetSpent: number;
 	/** 单调预算周期世代；预留准入与结算均以此隔离。 */
 	budgetEpoch: number;
+	/** 累计发放的永久额度 */
+	walletGranted: number;
+	/** 累计消耗的永久额度 */
+	walletSpent: number;
 	budgetPeriod: string;
 	budgetResetAt: string | null;
 	/** Whether private BYOK list-price usage participates in this Key's limit. */
@@ -30,6 +35,10 @@ export type AuthenticatedApiKey = {
 	metadata: Record<string, unknown> | null;
 	/** `users.charged_cost_factors` JSON；无折扣时为 null */
 	chargedCostFactors: string | null;
+	/** `api_keys.rate_limit`；null = unlimited */
+	rateLimit: ApiKeyRateLimit | null;
+	/** `users.rate_limit`；null = user layer unlimited */
+	userRateLimit: ApiKeyRateLimit | null;
 };
 
 async function authenticatedApiKeyFromRow(
@@ -57,11 +66,15 @@ async function authenticatedApiKeyFromRow(
 		budgetMax: nextMax == null ? null : roundGatewayMoney(nextMax),
 		budgetSpent: roundGatewayMoney(nextSpent),
 		budgetEpoch: nextEpoch,
+		walletGranted: roundGatewayMoney(Number(row.wallet_granted ?? 0)),
+		walletSpent: roundGatewayMoney(Number(row.wallet_spent ?? 0)),
 		budgetPeriod: row.budget_period,
 		budgetResetAt: nextReset,
 		includeByokInLimit: row.include_byok_in_limit,
 		metadata: resolveMeMetadata(row.user_metadata, row.metadata),
 		chargedCostFactors: row.user_charged_cost_factors ?? null,
+		rateLimit: row.rate_limit ?? null,
+		userRateLimit: row.user_rate_limit ?? null,
 	};
 }
 
@@ -72,7 +85,9 @@ async function authenticatedApiKeyFromRow(
  * @returns 无效或吊销则 `null`
  */
 export async function authenticateApiKey(
-	repos: GatewayRepositories, key: string, deadline?: RequestDeadline,
+	repos: GatewayRepositories,
+	key: string,
+	deadline?: RequestDeadline,
 ): Promise<AuthenticatedApiKey | null> {
 	deadline?.throwIfStopped();
 	// Credential namespaces are authoritative. Even a malformed/imported

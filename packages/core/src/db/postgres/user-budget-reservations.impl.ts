@@ -11,6 +11,7 @@ import {
 	existingUserBudgetReservationReplay,
 	userBudgetAccountIsStale,
 	userBudgetCapacity,
+	userBudgetSettlementPools,
 	userBudgetRecoveryLimit,
 	userBudgetReservationSnapshot,
 	validateReserveUserBudgetParams,
@@ -65,7 +66,7 @@ async function getAccount(
 ): Promise<UserBudgetAccountRow | null> {
 	const rows = await pg.unsafe<UserBudgetAccountRow[]>(`SELECT
 		id, budget_max, budget_spent, budget_period, budget_reset_at,
-		budget_epoch, budget_reserved_micros
+		budget_epoch, budget_reserved_micros, wallet_granted, wallet_spent
 		FROM cinatoken_gateway.users WHERE id = $1${forUpdate ? ' FOR UPDATE' : ''}`, [userId]);
 	return rows[0]
 		? { ...rows[0], budget_reset_at: timestampString(rows[0].budget_reset_at) }
@@ -141,9 +142,10 @@ async function updateCurrentEpochAccount(
 	row: UserBudgetReservationRow,
 	nowIso: string,
 	settledMicros: number,
-): Promise<void> {
+): Promise<number> {
 	const account = await getAccount(pg, row.user_id, true);
-	if (!account || Number(account.budget_epoch) !== Number(row.budget_epoch)) return;
+	if (!account || Number(account.budget_epoch) !== Number(row.budget_epoch)) return 0;
+	const pools = userBudgetSettlementPools(account, 0, 0, settledMicros);
 	const reservedMicros = Number(row.reserved_micros);
 	if (Number(account.budget_reserved_micros) < reservedMicros) {
 		throw new Error('user_budget_reserved_counter_invariant');
@@ -154,17 +156,20 @@ async function updateCurrentEpochAccount(
 				budget_spent + ($2::numeric / 1000000::numeric),
 				0::numeric
 			), 6),
+			wallet_spent = ROUND(wallet_spent + ($6::numeric / 1000000::numeric), 6),
 			updated_at = $3::timestamptz
 		WHERE id = $4 AND budget_epoch = $5::bigint
 			AND budget_reserved_micros >= $1::bigint
 		RETURNING id`, [
 		reservedMicros,
-		settledMicros,
+		pools.periodDeltaMicros,
 		nowIso,
 		row.user_id,
 		Number(row.budget_epoch),
+		pools.walletDeltaMicros,
 	]);
 	if (updated.length !== 1) throw new Error('user_budget_reserved_counter_invariant');
+	return pools.walletSettledMicros;
 }
 
 async function terminalize(
@@ -175,9 +180,9 @@ async function terminalize(
 	nowIso: string,
 	reason: string,
 ): Promise<void> {
-	await updateCurrentEpochAccount(pg, row, nowIso, settledMicros);
+	const walletMicros = await updateCurrentEpochAccount(pg, row, nowIso, settledMicros);
 	const updated = await pg.unsafe<Array<{ request_id: string }>>(`UPDATE cinatoken_gateway.user_budget_reservations
-		SET state = $1, settled_micros = $2::bigint, terminal_at = $3::timestamptz,
+		SET state = $1, settled_micros = $2::bigint, settled_wallet_micros = $7::bigint, terminal_at = $3::timestamptz,
 			terminal_reason = $4, updated_at = $3::timestamptz
 		WHERE request_id = $5 AND state = $6
 		RETURNING request_id`, [
@@ -187,6 +192,7 @@ async function terminalize(
 		reason.slice(0, 128),
 		row.request_id,
 		row.state,
+		walletMicros,
 	]);
 	if (updated.length !== 1) throw new Error('user_budget_reservation_transition_raced');
 }
@@ -220,7 +226,7 @@ export function createPostgresUserBudgetReservationsRepository(
 							updated_at = $2::timestamptz
 						WHERE id = $3 AND budget_epoch = $4::bigint AND budget_max IS NOT NULL
 							AND LEAST(
-								ROUND(GREATEST(budget_spent, 0::numeric) * 1000000::numeric),
+								ROUND(GREATEST(budget_spent + wallet_spent, 0::numeric) * 1000000::numeric),
 								$5::numeric
 							) + budget_reserved_micros + $1::bigint <= $6::bigint
 						RETURNING id`, [

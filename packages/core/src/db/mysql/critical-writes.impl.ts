@@ -1,3 +1,4 @@
+import { userBudgetSettlementPools } from '../user-budget-reservation-utils';
 /**
  * MySQL：关键写路径（Drizzle 事务），供 `storage/critical-write-paths` 调度。
  */
@@ -22,6 +23,14 @@ import {
 	type UserBudgetSettlement,
 } from '../user-budget-reservation-types';
 import { toPublicModelDailyStatsDelta } from '../public-model-daily-stats';
+import type { GrantWalletCreditParams, GrantWalletCreditResult } from '../wallet-credit';
+import {
+	buildWalletCreditAuditRow,
+	mapStorageUserToRow,
+	walletCreditResult,
+	WalletCreditUserNotFoundError,
+} from '../wallet-credit';
+import type { UserBudgetSnapshot } from '../../storage/critical-write-paths';
 import {
 	userBudgetAuditToInsertRowForBudgetTx,
 	userBudgetAuditToInsertRowForCreateKey,
@@ -47,14 +56,16 @@ import {
 
 export async function getUserBudgetSnapshotMy(
 	client: MySqlDatabaseClient,
-	userId: string
-): Promise<{ budgetSpent: number; budgetMax: number | null; budgetPeriod: string | null; budgetResetAt: string | null } | null> {
+	userId: string,
+): Promise<UserBudgetSnapshot | null> {
 	const row = await client.drizzle
 		.select({
 			budgetSpent: myUsersTable.budgetSpent,
 			budgetMax: myUsersTable.budgetMax,
 			budgetPeriod: myUsersTable.budgetPeriod,
 			budgetResetAt: myUsersTable.budgetResetAt,
+			walletGranted: myUsersTable.walletGranted,
+			walletSpent: myUsersTable.walletSpent,
 		})
 		.from(myUsersTable)
 		.where(eq(myUsersTable.id, userId))
@@ -65,6 +76,8 @@ export async function getUserBudgetSnapshotMy(
 		budgetMax: row[0].budgetMax == null ? null : parseMoney(row[0].budgetMax),
 		budgetPeriod: row[0].budgetPeriod,
 		budgetResetAt: row[0].budgetResetAt,
+		walletGranted: parseMoney(row[0].walletGranted),
+		walletSpent: parseMoney(row[0].walletSpent),
 	};
 }
 
@@ -82,7 +95,7 @@ export async function createApiKeyWithAuditMy(
 	params: {
 		insert: InsertKeyParams;
 		audit: InsertUserBudgetAuditLogParams;
-	}
+	},
 ): Promise<void> {
 	const now = nowIso();
 	const auditRow = userBudgetAuditToInsertRowForCreateKey(params.insert.userId, params.audit);
@@ -99,9 +112,7 @@ export async function createApiKeyWithAuditMy(
 			name: params.insert.name ?? null,
 			status,
 			metadata: params.insert.metadata ?? null,
-			expiresAt: params.insert.expiresAt
-				? toMySqlDateTime(params.insert.expiresAt)
-				: null,
+			expiresAt: params.insert.expiresAt ? toMySqlDateTime(params.insert.expiresAt) : null,
 			lastUsedAt: null,
 			createdAt: now,
 			updatedAt: now,
@@ -126,14 +137,19 @@ export async function updateUserBudgetWithAuditTxMy(
 		budgetMax?: number | null;
 		apiKeyId: string | null;
 		audit: Omit<InsertUserBudgetAuditLogParams, 'id' | 'apiKeyId' | 'afterSpent' | 'afterBudgetResetAt'>;
-	}
+	},
 ): Promise<boolean> {
-	if (!Number.isSafeInteger(params.expectedBudgetEpoch) || params.expectedBudgetEpoch < 0
-		|| !Number.isSafeInteger(params.expectedBudgetReservedMicros) || params.expectedBudgetReservedMicros < 0
-		|| !Number.isFinite(params.expectedBudgetBase) || params.expectedBudgetBase < 0
-		|| !Number.isFinite(params.expectedBudgetSpent) || params.expectedBudgetSpent < 0
-		|| (params.expectedBudgetMax !== null
-			&& (!Number.isFinite(params.expectedBudgetMax) || params.expectedBudgetMax < 0))) {
+	if (
+		!Number.isSafeInteger(params.expectedBudgetEpoch) ||
+		params.expectedBudgetEpoch < 0 ||
+		!Number.isSafeInteger(params.expectedBudgetReservedMicros) ||
+		params.expectedBudgetReservedMicros < 0 ||
+		!Number.isFinite(params.expectedBudgetBase) ||
+		params.expectedBudgetBase < 0 ||
+		!Number.isFinite(params.expectedBudgetSpent) ||
+		params.expectedBudgetSpent < 0 ||
+		(params.expectedBudgetMax !== null && (!Number.isFinite(params.expectedBudgetMax) || params.expectedBudgetMax < 0))
+	) {
 		throw new Error('Invalid expected ordinary-user budget reset accounting values');
 	}
 	const nextSpent = roundGatewayMoney(params.budgetSpent);
@@ -143,7 +159,7 @@ export async function updateUserBudgetWithAuditTxMy(
 		params.apiKeyId,
 		nextSpent,
 		params.budgetResetAt,
-		params.audit
+		params.audit,
 	);
 	return client.drizzle.transaction(async (tx) => {
 		const updateSet: Record<string, unknown> = {
@@ -162,16 +178,16 @@ export async function updateUserBudgetWithAuditTxMy(
 			.where(
 				and(
 					eq(myUsersTable.id, params.userId),
-					sql`${myUsersTable.budgetMax} <=> ${params.expectedBudgetMax == null
-						? null
-						: String(roundGatewayMoney(params.expectedBudgetMax))}`,
+					sql`${myUsersTable.budgetMax} <=> ${
+						params.expectedBudgetMax == null ? null : String(roundGatewayMoney(params.expectedBudgetMax))
+					}`,
 					eq(myUsersTable.budgetBase, String(roundGatewayMoney(params.expectedBudgetBase))),
 					eq(myUsersTable.budgetSpent, String(roundGatewayMoney(params.expectedBudgetSpent))),
 					eq(myUsersTable.budgetPeriod, params.expectedBudgetPeriod),
 					sql`${myUsersTable.budgetResetAt} <=> ${params.expectedBudgetResetAt}`,
 					eq(myUsersTable.budgetEpoch, params.expectedBudgetEpoch),
 					eq(myUsersTable.budgetReservedMicros, params.expectedBudgetReservedMicros),
-				)
+				),
 			)) as unknown as [ResultSetHeader, unknown];
 		if (!header?.affectedRows) {
 			return false;
@@ -186,6 +202,10 @@ export async function applyUserBudgetTransitionWithAuditMy(
 	client: MySqlDatabaseClient,
 	params: {
 		userId: string;
+		expectedWalletGranted?: number;
+		expectedWalletSpent?: number;
+		walletGranted?: number;
+		walletSpent?: number;
 		expectedBudgetMax: number | null;
 		expectedBudgetBase: number;
 		expectedBudgetEpoch: number;
@@ -201,7 +221,7 @@ export async function applyUserBudgetTransitionWithAuditMy(
 		resetEpoch: boolean;
 		metadata?: string | null;
 		audit: InsertUserAuditLogParams;
-	}
+	},
 ): Promise<boolean> {
 	const now = nowIso();
 	let updated = false;
@@ -214,6 +234,8 @@ export async function applyUserBudgetTransitionWithAuditMy(
 			budgetResetAt: params.budgetResetAt,
 			updatedAt: now,
 		};
+		if (params.walletGranted !== undefined) updateSet.walletGranted = String(roundGatewayMoney(params.walletGranted));
+		if (params.walletSpent !== undefined) updateSet.walletSpent = String(roundGatewayMoney(params.walletSpent));
 		if (params.resetEpoch) {
 			updateSet.budgetEpoch = sql`${myUsersTable.budgetEpoch} + 1`;
 			updateSet.budgetReservedMicros = 0;
@@ -224,18 +246,26 @@ export async function applyUserBudgetTransitionWithAuditMy(
 		const [header] = (await tx
 			.update(myUsersTable)
 			.set(updateSet)
-			.where(and(
-				eq(myUsersTable.id, params.userId),
-				sql`${myUsersTable.budgetMax} <=> ${params.expectedBudgetMax == null
-					? null
-					: String(roundGatewayMoney(params.expectedBudgetMax))}`,
-				eq(myUsersTable.budgetBase, String(roundGatewayMoney(params.expectedBudgetBase))),
-				eq(myUsersTable.budgetSpent, String(roundGatewayMoney(params.expectedBudgetSpent))),
-				eq(myUsersTable.budgetPeriod, params.expectedBudgetPeriod),
-				sql`${myUsersTable.budgetResetAt} <=> ${params.expectedBudgetResetAt}`,
-				eq(myUsersTable.budgetEpoch, params.expectedBudgetEpoch),
-				eq(myUsersTable.budgetReservedMicros, params.expectedBudgetReservedMicros),
-			))) as unknown as [ResultSetHeader, unknown];
+			.where(
+				and(
+					eq(myUsersTable.id, params.userId),
+					sql`${myUsersTable.budgetMax} <=> ${
+						params.expectedBudgetMax == null ? null : String(roundGatewayMoney(params.expectedBudgetMax))
+					}`,
+					eq(myUsersTable.budgetBase, String(roundGatewayMoney(params.expectedBudgetBase))),
+					eq(myUsersTable.budgetSpent, String(roundGatewayMoney(params.expectedBudgetSpent))),
+					eq(myUsersTable.budgetPeriod, params.expectedBudgetPeriod),
+					sql`${myUsersTable.budgetResetAt} <=> ${params.expectedBudgetResetAt}`,
+					eq(myUsersTable.budgetEpoch, params.expectedBudgetEpoch),
+					eq(myUsersTable.budgetReservedMicros, params.expectedBudgetReservedMicros),
+					params.expectedWalletGranted === undefined
+						? undefined
+						: eq(myUsersTable.walletGranted, String(roundGatewayMoney(params.expectedWalletGranted))),
+					params.expectedWalletSpent === undefined
+						? undefined
+						: eq(myUsersTable.walletSpent, String(roundGatewayMoney(params.expectedWalletSpent))),
+				),
+			)) as unknown as [ResultSetHeader, unknown];
 		if (!header?.affectedRows) {
 			return;
 		}
@@ -255,17 +285,22 @@ export async function insertRequestUsageAndChargeTxMy(
 		chargedCost: number;
 		guardrailBudgetSettlement?: GuardrailBudgetSettlement;
 		userBudgetSettlement?: UserBudgetSettlement;
+		chargedFromWallet?: number;
 		audit: Omit<InsertUserBudgetAuditLogParams, 'id' | 'afterSpent' | 'deltaSpent'>;
-	}
+	},
 ): Promise<void> {
 	assertGenerationSnapshotIsValid(params.requestLog);
 	assertProviderAttemptAvailabilityFacts(params.requestLog.providerAttempts);
-	if (params.guardrailBudgetSettlement?.requestId !== undefined
-		&& params.guardrailBudgetSettlement.requestId !== params.requestLog.id) {
+	if (
+		params.guardrailBudgetSettlement?.requestId !== undefined &&
+		params.guardrailBudgetSettlement.requestId !== params.requestLog.id
+	) {
 		throw new Error('Guardrail budget settlement requestId must match request log id');
 	}
-	if (params.userBudgetSettlement?.requestId !== undefined
-		&& params.userBudgetSettlement.requestId !== params.requestLog.id) {
+	if (
+		params.userBudgetSettlement?.requestId !== undefined &&
+		params.userBudgetSettlement.requestId !== params.requestLog.id
+	) {
 		throw new Error('Ordinary-user budget settlement requestId must match request log id');
 	}
 	if (params.requestLog.userId !== params.userId) {
@@ -274,27 +309,28 @@ export async function insertRequestUsageAndChargeTxMy(
 	if (!Number.isFinite(params.chargedCost) || params.chargedCost < 0) {
 		throw new Error('Charged cost must be a finite non-negative number');
 	}
-	if (!Number.isFinite(params.requestLog.chargedCost)
-		|| roundGatewayMoney(params.requestLog.chargedCost) !== roundGatewayMoney(params.chargedCost)) {
+	if (
+		!Number.isFinite(params.requestLog.chargedCost) ||
+		roundGatewayMoney(params.requestLog.chargedCost) !== roundGatewayMoney(params.chargedCost)
+	) {
 		throw new Error('Request log charged cost must match the budget settlement charge');
 	}
-	if (params.userBudgetSettlement
-		&& (
-			!['actual', 'reserved'].includes(params.userBudgetSettlement.mode)
-			|| typeof params.userBudgetSettlement.reason !== 'string'
-			|| params.userBudgetSettlement.reason.trim() === ''
-		)) {
+	if (
+		params.userBudgetSettlement &&
+		(!['actual', 'reserved'].includes(params.userBudgetSettlement.mode) ||
+			typeof params.userBudgetSettlement.reason !== 'string' ||
+			params.userBudgetSettlement.reason.trim() === '')
+	) {
 		throw new Error('Ordinary-user budget settlement mode and reason are required');
 	}
 	const charged = roundGatewayMoney(params.chargedCost);
-	if (!Number.isFinite(charged)
-		|| charged > userBudgetAmount(USER_BUDGET_MAX_SAFE_MICROS)) {
+	let fromWallet = 0;
+	if (!Number.isFinite(charged) || charged > userBudgetAmount(USER_BUDGET_MAX_SAFE_MICROS)) {
 		throw new Error('Charged cost exceeds the safe ordinary-user micro-unit range');
 	}
 	const budgetChargedMicros = params.shouldChargeBudget ? guardrailBudgetUnits(charged) : 0;
 	const standard = roundGatewayMoney(params.requestLog.standardCost);
-	if (!Number.isFinite(standard) || standard < 0
-		|| standard > userBudgetAmount(USER_BUDGET_MAX_SAFE_MICROS)) {
+	if (!Number.isFinite(standard) || standard < 0 || standard > userBudgetAmount(USER_BUDGET_MAX_SAFE_MICROS)) {
 		throw new Error('Standard cost exceeds the safe Guardrail budget micro-unit range');
 	}
 	const byokStandardMicros = guardrailBudgetUnits(standard);
@@ -304,78 +340,93 @@ export async function insertRequestUsageAndChargeTxMy(
 	const guardrailNow = toMySqlDateTime(now);
 	const delta = toPublicModelDailyStatsDelta(params.requestLog, now);
 	await client.drizzle.transaction(async (tx) => {
-		const requestWorkspaceId = (await tx
-			.select({ workspaceId: myApiKeysTable.workspaceId })
-			.from(myApiKeysTable)
-			.where(eq(myApiKeysTable.id, params.requestLog.apiKeyId))
-			.for('update'))[0]?.workspaceId ?? null;
+		const requestWorkspaceId =
+			(
+				await tx
+					.select({ workspaceId: myApiKeysTable.workspaceId })
+					.from(myApiKeysTable)
+					.where(eq(myApiKeysTable.id, params.requestLog.apiKeyId))
+					.for('update')
+			)[0]?.workspaceId ?? null;
 		if (requestWorkspaceId === null || requestWorkspaceId !== params.requestLog.workspaceId) {
 			throw new Error('Request log Workspace snapshot does not match API key');
 		}
 		let ordinarySettlementMicros: number | null = null;
 		let ordinaryReservationEpoch: number | null = null;
+		let ordinaryReservationWasExpired = false;
+		let walletSettledMicros = 0;
+		let directPeriodMicros = ordinaryActualMicros;
 		if (params.userBudgetSettlement) {
 			const settlement = params.userBudgetSettlement;
-			const reservations = await tx.select({
-				requestId: myUserBudgetReservationsTable.requestId,
-				userId: myUserBudgetReservationsTable.userId,
-				apiKeyId: myUserBudgetReservationsTable.apiKeyId,
-				budgetEpoch: myUserBudgetReservationsTable.budgetEpoch,
-				reservedMicros: myUserBudgetReservationsTable.reservedMicros,
-				settledMicros: myUserBudgetReservationsTable.settledMicros,
-				state: myUserBudgetReservationsTable.state,
-			}).from(myUserBudgetReservationsTable)
+			const reservations = await tx
+				.select({
+					requestId: myUserBudgetReservationsTable.requestId,
+					userId: myUserBudgetReservationsTable.userId,
+					apiKeyId: myUserBudgetReservationsTable.apiKeyId,
+					budgetEpoch: myUserBudgetReservationsTable.budgetEpoch,
+					reservedMicros: myUserBudgetReservationsTable.reservedMicros,
+					settledMicros: myUserBudgetReservationsTable.settledMicros,
+					settledWalletMicros: myUserBudgetReservationsTable.settledWalletMicros,
+					state: myUserBudgetReservationsTable.state,
+				})
+				.from(myUserBudgetReservationsTable)
 				.where(eq(myUserBudgetReservationsTable.requestId, settlement.requestId))
 				.for('update');
 			const reservation = reservations[0];
 			if (!reservation) {
 				throw new Error('Ordinary-user budget settlement has no matching reservation');
 			}
-			if (reservation.userId !== params.userId
-				|| reservation.userId !== params.requestLog.userId
-				|| reservation.apiKeyId !== params.requestLog.apiKeyId) {
+			if (
+				reservation.userId !== params.userId ||
+				reservation.userId !== params.requestLog.userId ||
+				reservation.apiKeyId !== params.requestLog.apiKeyId
+			) {
 				throw new Error('Ordinary-user budget settlement identity mismatch');
 			}
 			const reservedMicros = Number(reservation.reservedMicros);
 			const previousSettledMicros = Number(reservation.settledMicros);
+			walletSettledMicros = Number(reservation.settledWalletMicros ?? 0);
 			const reservationEpoch = Number(reservation.budgetEpoch);
 			ordinaryReservationEpoch = reservationEpoch;
-			if (!isSafeUserBudgetMicros(reservedMicros) || reservedMicros === 0
-				|| !isSafeUserBudgetMicros(previousSettledMicros)
-				|| !Number.isSafeInteger(reservationEpoch) || reservationEpoch < 0) {
+			ordinaryReservationWasExpired = reservation.state === 'expired';
+			if (
+				!isSafeUserBudgetMicros(reservedMicros) ||
+				reservedMicros === 0 ||
+				!isSafeUserBudgetMicros(previousSettledMicros) ||
+				!Number.isSafeInteger(reservationEpoch) ||
+				reservationEpoch < 0
+			) {
 				throw new Error('Ordinary-user budget reservation contains unsafe accounting values');
 			}
-			ordinarySettlementMicros = settlement.mode === 'reserved'
-				? reservedMicros
-				: ordinaryActualMicros;
+			ordinarySettlementMicros = settlement.mode === 'reserved' ? reservedMicros : ordinaryActualMicros;
 
-			const existingLogs = await tx.select({
-				id: myRequestLogsTable.id,
-				userId: myRequestLogsTable.userId,
-				apiKeyId: myRequestLogsTable.apiKeyId,
-				workspaceId: myRequestLogsTable.workspaceId,
-				chargedCost: myRequestLogsTable.chargedCost,
-				budgetChargedMicros: myRequestLogsTable.budgetChargedMicros,
-			}).from(myRequestLogsTable)
+			const existingLogs = await tx
+				.select({
+					id: myRequestLogsTable.id,
+					userId: myRequestLogsTable.userId,
+					apiKeyId: myRequestLogsTable.apiKeyId,
+					workspaceId: myRequestLogsTable.workspaceId,
+					chargedCost: myRequestLogsTable.chargedCost,
+					budgetChargedMicros: myRequestLogsTable.budgetChargedMicros,
+				})
+				.from(myRequestLogsTable)
 				.where(eq(myRequestLogsTable.id, params.requestLog.id))
 				.for('update');
 			const existingLog = existingLogs[0];
 			const terminalMatches =
-				(settlement.mode === 'actual'
-					&& (
-						(reservation.state === 'settled' && previousSettledMicros === ordinarySettlementMicros)
-						|| (reservation.state === 'expired' && previousSettledMicros === ordinarySettlementMicros)
-					))
-				|| (settlement.mode === 'reserved'
-					&& reservation.state === 'expired'
-					&& previousSettledMicros === reservedMicros);
+				(settlement.mode === 'actual' &&
+					((reservation.state === 'settled' && previousSettledMicros === ordinarySettlementMicros) ||
+						(reservation.state === 'expired' && previousSettledMicros === ordinarySettlementMicros))) ||
+				(settlement.mode === 'reserved' && reservation.state === 'expired' && previousSettledMicros === reservedMicros);
 			if (existingLog) {
-				if (!terminalMatches
-					|| existingLog.userId !== params.requestLog.userId
-					|| existingLog.apiKeyId !== params.requestLog.apiKeyId
-					|| existingLog.workspaceId !== params.requestLog.workspaceId
-					|| Number(existingLog.budgetChargedMicros) !== budgetChargedMicros
-					|| roundGatewayMoney(Number(existingLog.chargedCost)) !== charged) {
+				if (
+					!terminalMatches ||
+					existingLog.userId !== params.requestLog.userId ||
+					existingLog.apiKeyId !== params.requestLog.apiKeyId ||
+					existingLog.workspaceId !== params.requestLog.workspaceId ||
+					Number(existingLog.budgetChargedMicros) !== budgetChargedMicros ||
+					roundGatewayMoney(Number(existingLog.chargedCost)) !== charged
+				) {
 					throw new Error('Conflicting replay for ordinary-user budget settlement');
 				}
 				return;
@@ -394,73 +445,155 @@ export async function insertRequestUsageAndChargeTxMy(
 						throw new Error('Expired ordinary-user budget reservation has an invalid ceiling charge');
 					}
 				} else if (previousSettledMicros !== ordinarySettlementMicros) {
-					const accounts = await tx.select({
-						id: myUsersTable.id,
-						budgetEpoch: myUsersTable.budgetEpoch,
-					}).from(myUsersTable).where(eq(myUsersTable.id, reservation.userId)).for('update');
+					const accounts = await tx
+						.select({
+							id: myUsersTable.id,
+							budgetEpoch: myUsersTable.budgetEpoch,
+							budgetMax: myUsersTable.budgetMax,
+							budgetSpent: myUsersTable.budgetSpent,
+							walletSpent: myUsersTable.walletSpent,
+						})
+						.from(myUsersTable)
+						.where(eq(myUsersTable.id, reservation.userId))
+						.for('update');
 					const account = accounts[0];
 					if (!account) throw new Error('Ordinary-user budget account is missing');
 					const reconciliationMicros = ordinarySettlementMicros - previousSettledMicros;
-					if (Number(account.budgetEpoch) === reservationEpoch && reconciliationMicros !== 0) {
-						const [updated] = (await tx.update(myUsersTable).set({
-							budgetSpent: sql`ROUND(GREATEST(${myUsersTable.budgetSpent} + (${reconciliationMicros} / 1000000), 0), 6)`,
-							updatedAt: guardrailNow,
-						}).where(and(
-							eq(myUsersTable.id, reservation.userId),
-							eq(myUsersTable.budgetEpoch, reservationEpoch),
-						))) as unknown as [ResultSetHeader, unknown];
-						if (updated.affectedRows !== 1) throw new Error('Ordinary-user late settlement account changed concurrently');
+					const pools = userBudgetSettlementPools(
+						{ budget_max: account.budgetMax, budget_spent: account.budgetSpent },
+						previousSettledMicros,
+						walletSettledMicros,
+						ordinarySettlementMicros,
+					);
+					const currentEpoch = Number(account.budgetEpoch) === reservationEpoch;
+					if (!currentEpoch) {
+						pools.periodDeltaMicros = 0;
+						pools.walletDeltaMicros = Math.min(0, pools.walletDeltaMicros);
+						pools.walletSettledMicros = walletSettledMicros + pools.walletDeltaMicros;
 					}
-					const [updated] = (await tx.update(myUserBudgetReservationsTable).set({
-						settledMicros: ordinarySettlementMicros,
-						terminalReason: settlement.reason.slice(0, 128),
-						updatedAt: guardrailNow,
-					}).where(and(
-						eq(myUserBudgetReservationsTable.requestId, settlement.requestId),
-						eq(myUserBudgetReservationsTable.state, 'expired'),
-						eq(myUserBudgetReservationsTable.settledMicros, previousSettledMicros),
-					))) as unknown as [ResultSetHeader, unknown];
-					if (updated.affectedRows !== 1) throw new Error('Ordinary-user late settlement reservation changed concurrently');
+					walletSettledMicros = pools.walletSettledMicros;
+					if (reconciliationMicros !== 0 && (currentEpoch || pools.walletDeltaMicros !== 0)) {
+						const [updated] = (await tx
+							.update(myUsersTable)
+							.set({
+								budgetSpent: sql`ROUND(GREATEST(${myUsersTable.budgetSpent} + (${pools.periodDeltaMicros} / 1000000), 0), 6)`,
+								walletSpent: sql`ROUND(GREATEST(${myUsersTable.walletSpent} + (${pools.walletDeltaMicros} / 1000000), 0), 6)`,
+								updatedAt: guardrailNow,
+							})
+							.where(
+								and(eq(myUsersTable.id, reservation.userId), eq(myUsersTable.budgetEpoch, Number(account.budgetEpoch))),
+							)) as unknown as [ResultSetHeader, unknown];
+						if (updated.affectedRows !== 1)
+							throw new Error('Ordinary-user late settlement account changed concurrently');
+					}
+					const [updated] = (await tx
+						.update(myUserBudgetReservationsTable)
+						.set({
+							settledMicros: ordinarySettlementMicros,
+							settledWalletMicros: walletSettledMicros,
+							terminalReason: settlement.reason.slice(0, 128),
+							updatedAt: guardrailNow,
+						})
+						.where(
+							and(
+								eq(myUserBudgetReservationsTable.requestId, settlement.requestId),
+								eq(myUserBudgetReservationsTable.state, 'expired'),
+								eq(myUserBudgetReservationsTable.settledMicros, previousSettledMicros),
+							),
+						)) as unknown as [ResultSetHeader, unknown];
+					if (updated.affectedRows !== 1)
+						throw new Error('Ordinary-user late settlement reservation changed concurrently');
 				}
 			} else if (reservation.state === 'reserved' || reservation.state === 'dispatched') {
-				const accounts = await tx.select({
-					id: myUsersTable.id,
-					budgetEpoch: myUsersTable.budgetEpoch,
-					budgetReservedMicros: myUsersTable.budgetReservedMicros,
-				}).from(myUsersTable).where(eq(myUsersTable.id, reservation.userId)).for('update');
+				const accounts = await tx
+					.select({
+						id: myUsersTable.id,
+						budgetEpoch: myUsersTable.budgetEpoch,
+						budgetMax: myUsersTable.budgetMax,
+						budgetSpent: myUsersTable.budgetSpent,
+						walletSpent: myUsersTable.walletSpent,
+						budgetReservedMicros: myUsersTable.budgetReservedMicros,
+					})
+					.from(myUsersTable)
+					.where(eq(myUsersTable.id, reservation.userId))
+					.for('update');
 				const account = accounts[0];
 				if (!account) throw new Error('Ordinary-user budget account is missing');
+				const pools =
+					Number(account.budgetEpoch) === reservationEpoch
+						? userBudgetSettlementPools(
+								{ budget_max: account.budgetMax, budget_spent: account.budgetSpent },
+								0,
+								0,
+								ordinarySettlementMicros,
+							)
+						: { periodDeltaMicros: 0, walletDeltaMicros: 0, walletSettledMicros: 0 };
+				walletSettledMicros = pools.walletSettledMicros;
 				if (Number(account.budgetEpoch) === reservationEpoch) {
 					const currentReservedMicros = Number(account.budgetReservedMicros);
 					if (!isSafeUserBudgetMicros(currentReservedMicros) || currentReservedMicros < reservedMicros) {
 						throw new Error('Ordinary-user reserved budget counter invariant violated');
 					}
-					const [updated] = (await tx.update(myUsersTable).set({
-						budgetReservedMicros: sql`${myUsersTable.budgetReservedMicros} - ${reservedMicros}`,
-						budgetSpent: sql`ROUND(GREATEST(${myUsersTable.budgetSpent} + (${ordinarySettlementMicros} / 1000000), 0), 6)`,
-						updatedAt: guardrailNow,
-					}).where(and(
-						eq(myUsersTable.id, reservation.userId),
-						eq(myUsersTable.budgetEpoch, reservationEpoch),
-						sql`${myUsersTable.budgetReservedMicros} >= ${reservedMicros}`,
-					))) as unknown as [ResultSetHeader, unknown];
+					const [updated] = (await tx
+						.update(myUsersTable)
+						.set({
+							budgetReservedMicros: sql`${myUsersTable.budgetReservedMicros} - ${reservedMicros}`,
+							budgetSpent: sql`ROUND(GREATEST(${myUsersTable.budgetSpent} + (${pools.periodDeltaMicros} / 1000000), 0), 6)`,
+							walletSpent: sql`ROUND(GREATEST(${myUsersTable.walletSpent} + (${pools.walletDeltaMicros} / 1000000), 0), 6)`,
+							updatedAt: guardrailNow,
+						})
+						.where(
+							and(
+								eq(myUsersTable.id, reservation.userId),
+								eq(myUsersTable.budgetEpoch, reservationEpoch),
+								sql`${myUsersTable.budgetReservedMicros} >= ${reservedMicros}`,
+							),
+						)) as unknown as [ResultSetHeader, unknown];
 					if (updated.affectedRows !== 1) throw new Error('Ordinary-user reserved budget counter invariant violated');
 				}
-				const [updated] = (await tx.update(myUserBudgetReservationsTable).set({
-					state: settlement.mode === 'reserved' ? 'expired' : 'settled',
-					settledMicros: ordinarySettlementMicros,
-					terminalAt: guardrailNow,
-					terminalReason: settlement.reason.slice(0, 128),
-					updatedAt: guardrailNow,
-				}).where(and(
-					eq(myUserBudgetReservationsTable.requestId, settlement.requestId),
-					inArray(myUserBudgetReservationsTable.state, ['reserved', 'dispatched']),
-				))) as unknown as [ResultSetHeader, unknown];
-				if (updated.affectedRows !== 1) throw new Error('Ordinary-user budget settlement reservation changed concurrently');
+				const [updated] = (await tx
+					.update(myUserBudgetReservationsTable)
+					.set({
+						state: settlement.mode === 'reserved' ? 'expired' : 'settled',
+						settledMicros: ordinarySettlementMicros,
+						settledWalletMicros: walletSettledMicros,
+						terminalAt: guardrailNow,
+						terminalReason: settlement.reason.slice(0, 128),
+						updatedAt: guardrailNow,
+					})
+					.where(
+						and(
+							eq(myUserBudgetReservationsTable.requestId, settlement.requestId),
+							inArray(myUserBudgetReservationsTable.state, ['reserved', 'dispatched']),
+						),
+					)) as unknown as [ResultSetHeader, unknown];
+				if (updated.affectedRows !== 1)
+					throw new Error('Ordinary-user budget settlement reservation changed concurrently');
 			} else {
 				throw new Error('Ordinary-user budget reservation has an invalid state');
 			}
 		}
+		if (!params.userBudgetSettlement && params.shouldChargeBudget) {
+			const accounts = await tx
+				.select({
+					budgetMax: myUsersTable.budgetMax,
+					budgetSpent: myUsersTable.budgetSpent,
+				})
+				.from(myUsersTable)
+				.where(eq(myUsersTable.id, params.userId))
+				.for('update');
+			if (!accounts[0]) throw new Error('Ordinary-user budget account is missing');
+			const pools = userBudgetSettlementPools(
+				{ budget_max: accounts[0].budgetMax, budget_spent: accounts[0].budgetSpent },
+				0,
+				0,
+				ordinaryActualMicros,
+			);
+			walletSettledMicros = pools.walletSettledMicros;
+			directPeriodMicros = pools.periodDeltaMicros;
+		}
+		fromWallet = userBudgetAmount(walletSettledMicros);
+
 		await tx.insert(myRequestLogsTable).values({
 			id: params.requestLog.id,
 			userId: params.requestLog.userId,
@@ -501,6 +634,7 @@ export async function insertRequestUsageAndChargeTxMy(
 			budgetAccountedAt: params.requestLog.budgetAccountedAt
 				? toMySqlDateTime(params.requestLog.budgetAccountedAt)
 				: null,
+			chargedWalletCost: String(fromWallet),
 			routeGroup: params.requestLog.routeGroup,
 			status: params.requestLog.status,
 			latencyMs: params.requestLog.latencyMs ?? null,
@@ -530,21 +664,20 @@ export async function insertRequestUsageAndChargeTxMy(
 			requestOrigin: params.requestLog.requestOrigin ?? null,
 			httpReferer: params.requestLog.httpReferer ?? null,
 			userAgent: params.requestLog.userAgent ?? null,
-			responseStreamed: params.requestLog.responseStreamed == null
-				? null
-				: Number(params.requestLog.responseStreamed),
+			responseStreamed: params.requestLog.responseStreamed == null ? null : Number(params.requestLog.responseStreamed),
 			dataRegion: params.requestLog.dataRegion ?? null,
 			isByok: params.requestLog.isByok == null ? null : Number(params.requestLog.isByok),
-			chargedCostUsd: params.requestLog.chargedCostUsd == null
-				? null
-				: String(roundGatewayMoney(params.requestLog.chargedCostUsd)),
-			upstreamInferenceCostUsd: params.requestLog.upstreamInferenceCostUsd == null
-				? null
-				: String(roundGatewayMoney(params.requestLog.upstreamInferenceCostUsd)),
+			chargedCostUsd:
+				params.requestLog.chargedCostUsd == null ? null : String(roundGatewayMoney(params.requestLog.chargedCostUsd)),
+			upstreamInferenceCostUsd:
+				params.requestLog.upstreamInferenceCostUsd == null
+					? null
+					: String(roundGatewayMoney(params.requestLog.upstreamInferenceCostUsd)),
 			serviceTier: params.requestLog.serviceTier ?? null,
 			finishReason: params.requestLog.finishReason ?? null,
 			nativeFinishReason: params.requestLog.nativeFinishReason ?? null,
 			providerResponses: serializeGenerationProviderResponses(params.requestLog.providerResponses),
+			ingressHost: params.requestLog.ingressHost ?? null,
 			createdAt: now,
 		});
 		if ((params.requestLog.providerAttempts?.length ?? 0) > 0) {
@@ -558,7 +691,7 @@ export async function insertRequestUsageAndChargeTxMy(
 					reason: attempt.reason,
 					httpStatus: attempt.httpStatus,
 					observedAt: toMySqlDateTime(attempt.observedAtIso),
-				}))
+				})),
 			);
 		}
 		await tx
@@ -592,26 +725,35 @@ export async function insertRequestUsageAndChargeTxMy(
 			await tx
 				.update(myUsersTable)
 				.set({
-					budgetSpent: sql`${myUsersTable.budgetSpent} + ${String(charged)}`,
+					budgetSpent: sql`${myUsersTable.budgetSpent} + ${String(userBudgetAmount(directPeriodMicros))}`,
+					walletSpent: sql`${myUsersTable.walletSpent} + ${String(fromWallet)}`,
 					updatedAt: now,
 				})
 				.where(eq(myUsersTable.id, params.userId));
 		}
 		if (params.userBudgetSettlement || params.shouldChargeBudget) {
-			const auditedCharge = params.userBudgetSettlement
-				? userBudgetAmount(ordinarySettlementMicros ?? 0)
-				: charged;
-			const afterSpent = roundGatewayMoney(params.beforeSpent + auditedCharge);
+			const auditedCharge = params.userBudgetSettlement ? userBudgetAmount(ordinarySettlementMicros ?? 0) : charged;
+			const afterSpent = roundGatewayMoney(params.beforeSpent + auditedCharge - fromWallet);
 			let auditParams = params.audit;
 			if (params.userBudgetSettlement && ordinaryReservationEpoch !== null) {
-				const accounts = await tx.select({
-					budgetEpoch: myUsersTable.budgetEpoch,
-				}).from(myUsersTable)
+				const accounts = await tx
+					.select({
+						budgetEpoch: myUsersTable.budgetEpoch,
+						budgetMax: myUsersTable.budgetMax,
+						budgetSpent: myUsersTable.budgetSpent,
+						walletSpent: myUsersTable.walletSpent,
+					})
+					.from(myUsersTable)
 					.where(eq(myUsersTable.id, params.userId))
 					.for('update');
 				const account = accounts[0];
 				if (!account) throw new Error('Ordinary-user budget account is missing');
-				if (Number(account.budgetEpoch) !== ordinaryReservationEpoch) {
+				// A late actual result can refund an already forfeited ceiling. Caller
+				// snapshots add a fresh charge and cannot prove the reconciliation delta.
+				if (
+					Number(account.budgetEpoch) !== ordinaryReservationEpoch ||
+					(ordinaryReservationWasExpired && params.userBudgetSettlement.mode === 'actual')
+				) {
 					auditParams = {
 						...params.audit,
 						beforeUserSnapshot: null,
@@ -620,96 +762,104 @@ export async function insertRequestUsageAndChargeTxMy(
 					};
 				}
 			}
-			const auditRow = userBudgetAuditToInsertRowForUsageCharge(
-				params.userId,
-				afterSpent,
-				auditedCharge,
-				auditParams,
-			);
+			const auditRow = userBudgetAuditToInsertRowForUsageCharge(params.userId, afterSpent, auditedCharge, auditParams);
 			await tx.insert(myUserAuditLogsTable).values(toUserAuditLogDrizzleInsert(auditRow, now));
 		}
 		if (params.guardrailBudgetSettlement) {
 			const settlement = params.guardrailBudgetSettlement;
-			const reservations = await tx.select({
-				id: myGuardrailBudgetReservationsTable.id,
-				assignmentId: myGuardrailBudgetReservationsTable.assignmentId,
-				workspaceId: myGuardrailBudgetReservationsTable.workspaceId,
-				scopeType: myGuardrailBudgetReservationsTable.scopeType,
-				scopeId: myGuardrailBudgetReservationsTable.scopeId,
-				period: myGuardrailBudgetReservationsTable.period,
-				periodStart: myGuardrailBudgetReservationsTable.periodStart,
-				reservedMicros: myGuardrailBudgetReservationsTable.reservedMicros,
-				settledMicros: myGuardrailBudgetReservationsTable.settledMicros,
-				settlementBasis: myGuardrailBudgetReservationsTable.settlementBasis,
-				state: myGuardrailBudgetReservationsTable.state,
-			}).from(myGuardrailBudgetReservationsTable).where(and(
-				eq(myGuardrailBudgetReservationsTable.requestId, settlement.requestId),
-				inArray(myGuardrailBudgetReservationsTable.state, ['reserved', 'dispatched', 'expired', 'released']),
-			)).for('update');
+			const reservations = await tx
+				.select({
+					id: myGuardrailBudgetReservationsTable.id,
+					assignmentId: myGuardrailBudgetReservationsTable.assignmentId,
+					workspaceId: myGuardrailBudgetReservationsTable.workspaceId,
+					scopeType: myGuardrailBudgetReservationsTable.scopeType,
+					scopeId: myGuardrailBudgetReservationsTable.scopeId,
+					period: myGuardrailBudgetReservationsTable.period,
+					periodStart: myGuardrailBudgetReservationsTable.periodStart,
+					reservedMicros: myGuardrailBudgetReservationsTable.reservedMicros,
+					settledMicros: myGuardrailBudgetReservationsTable.settledMicros,
+					settlementBasis: myGuardrailBudgetReservationsTable.settlementBasis,
+					state: myGuardrailBudgetReservationsTable.state,
+				})
+				.from(myGuardrailBudgetReservationsTable)
+				.where(
+					and(
+						eq(myGuardrailBudgetReservationsTable.requestId, settlement.requestId),
+						inArray(myGuardrailBudgetReservationsTable.state, ['reserved', 'dispatched', 'expired', 'released']),
+					),
+				)
+				.for('update');
 			if (reservations.length === 0) {
 				throw new Error('Guardrail budget settlement has no matching reservation');
 			}
-			if (requestWorkspaceId == null
-				|| reservations.some((reservation) => reservation.workspaceId !== requestWorkspaceId)) {
+			if (
+				requestWorkspaceId == null ||
+				reservations.some((reservation) => reservation.workspaceId !== requestWorkspaceId)
+			) {
 				throw new Error('Guardrail budget settlement Workspace identity mismatch');
 			}
-			if (reservations.some((reservation) =>
-				reservation.settlementBasis === 'gateway_key_route'
-				&& (
-					reservation.scopeType !== 'api_key'
-					|| reservation.scopeId !== params.requestLog.apiKeyId
-					|| reservation.assignmentId !== `gateway-key-limit:${params.requestLog.apiKeyId}`
-				))) {
+			if (
+				reservations.some(
+					(reservation) =>
+						reservation.settlementBasis === 'gateway_key_route' &&
+						(reservation.scopeType !== 'api_key' ||
+							reservation.scopeId !== params.requestLog.apiKeyId ||
+							reservation.assignmentId !== `gateway-key-limit:${params.requestLog.apiKeyId}`),
+				)
+			) {
 				throw new Error('Route-selective settlement is not the authenticated Gateway key limit');
 			}
-			if (isByokRequest
-				&& reservations.some((reservation) => reservation.settlementBasis !== 'gateway_key_route')) {
+			if (isByokRequest && reservations.some((reservation) => reservation.settlementBasis !== 'gateway_key_route')) {
 				throw new Error('Private BYOK cannot settle non-key budget reservations');
 			}
 			const orderedReservations = [...reservations].sort((left, right) =>
-				[
-					left.workspaceId,
-					left.scopeType,
-					left.scopeId,
-					left.period,
-					String(left.periodStart),
-				].join('\u0000').localeCompare([
-					right.workspaceId,
-					right.scopeType,
-					right.scopeId,
-					right.period,
-					String(right.periodStart),
-				].join('\u0000')),
+				[left.workspaceId, left.scopeType, left.scopeId, left.period, String(left.periodStart)]
+					.join('\u0000')
+					.localeCompare(
+						[right.workspaceId, right.scopeType, right.scopeId, right.period, String(right.periodStart)].join('\u0000'),
+					),
 			);
 			for (const reservation of orderedReservations) {
 				if (reservation.state === 'released') continue;
-				const actualMicros = reservation.settlementBasis === 'gateway_key_route' && isByokRequest
-					? byokStandardMicros
-					: budgetChargedMicros;
+				const actualMicros =
+					reservation.settlementBasis === 'gateway_key_route' && isByokRequest
+						? byokStandardMicros
+						: budgetChargedMicros;
 				if (reservation.state === 'expired') {
 					if (settlement.mode !== 'actual') continue;
 					const previousSettledMicros = Number(reservation.settledMicros);
 					if (actualMicros <= previousSettledMicros) continue;
 					const lateActualDeltaMicros = actualMicros - previousSettledMicros;
-					const [reservationUpdate] = (await tx.update(myGuardrailBudgetReservationsTable).set({
-						settledMicros: actualMicros,
-						terminalReason: 'late_actual_overrun',
-						updatedAt: guardrailNow,
-					}).where(and(
-						eq(myGuardrailBudgetReservationsTable.id, reservation.id),
-						eq(myGuardrailBudgetReservationsTable.state, 'expired'),
-					))) as unknown as [ResultSetHeader, unknown];
-					if (reservationUpdate.affectedRows !== 1) throw new Error('Guardrail budget late settlement reservation changed concurrently');
-					const [windowUpdate] = (await tx.update(myGuardrailBudgetWindowsTable).set({
-						settledMicros: sql`${myGuardrailBudgetWindowsTable.settledMicros} + ${lateActualDeltaMicros}`,
-						updatedAt: guardrailNow,
-					}).where(and(
-						eq(myGuardrailBudgetWindowsTable.workspaceId, reservation.workspaceId),
-						eq(myGuardrailBudgetWindowsTable.scopeType, reservation.scopeType),
-						eq(myGuardrailBudgetWindowsTable.scopeId, reservation.scopeId),
-						eq(myGuardrailBudgetWindowsTable.period, reservation.period),
-						eq(myGuardrailBudgetWindowsTable.periodStart, reservation.periodStart),
-					))) as unknown as [ResultSetHeader, unknown];
+					const [reservationUpdate] = (await tx
+						.update(myGuardrailBudgetReservationsTable)
+						.set({
+							settledMicros: actualMicros,
+							terminalReason: 'late_actual_overrun',
+							updatedAt: guardrailNow,
+						})
+						.where(
+							and(
+								eq(myGuardrailBudgetReservationsTable.id, reservation.id),
+								eq(myGuardrailBudgetReservationsTable.state, 'expired'),
+							),
+						)) as unknown as [ResultSetHeader, unknown];
+					if (reservationUpdate.affectedRows !== 1)
+						throw new Error('Guardrail budget late settlement reservation changed concurrently');
+					const [windowUpdate] = (await tx
+						.update(myGuardrailBudgetWindowsTable)
+						.set({
+							settledMicros: sql`${myGuardrailBudgetWindowsTable.settledMicros} + ${lateActualDeltaMicros}`,
+							updatedAt: guardrailNow,
+						})
+						.where(
+							and(
+								eq(myGuardrailBudgetWindowsTable.workspaceId, reservation.workspaceId),
+								eq(myGuardrailBudgetWindowsTable.scopeType, reservation.scopeType),
+								eq(myGuardrailBudgetWindowsTable.scopeId, reservation.scopeId),
+								eq(myGuardrailBudgetWindowsTable.period, reservation.period),
+								eq(myGuardrailBudgetWindowsTable.periodStart, reservation.periodStart),
+							),
+						)) as unknown as [ResultSetHeader, unknown];
 					if (windowUpdate.affectedRows !== 1) throw new Error('Guardrail budget late settlement window is missing');
 					console.warn('[guardrail-budget] reconciled late actual usage above an expired reservation', {
 						requestId: settlement.requestId,
@@ -718,31 +868,40 @@ export async function insertRequestUsageAndChargeTxMy(
 					});
 					continue;
 				}
-				const settledMicros = settlement.mode === 'reserved'
-					? Number(reservation.reservedMicros)
-					: actualMicros;
-				const [reservationUpdate] = (await tx.update(myGuardrailBudgetReservationsTable).set({
-					state: settlement.mode === 'reserved' ? 'expired' : 'settled',
-					settledMicros,
-					terminalAt: guardrailNow,
-					terminalReason: settlement.reason.slice(0, 128),
-					updatedAt: guardrailNow,
-				}).where(and(
-					eq(myGuardrailBudgetReservationsTable.id, reservation.id),
-					inArray(myGuardrailBudgetReservationsTable.state, ['reserved', 'dispatched']),
-				))) as unknown as [ResultSetHeader, unknown];
-				if (reservationUpdate.affectedRows !== 1) throw new Error('Guardrail budget settlement reservation changed concurrently');
-				const [windowUpdate] = (await tx.update(myGuardrailBudgetWindowsTable).set({
-					reservedMicros: sql`${myGuardrailBudgetWindowsTable.reservedMicros} - ${reservation.reservedMicros}`,
-					settledMicros: sql`${myGuardrailBudgetWindowsTable.settledMicros} + ${settledMicros}`,
-					updatedAt: guardrailNow,
-				}).where(and(
-					eq(myGuardrailBudgetWindowsTable.workspaceId, reservation.workspaceId),
-					eq(myGuardrailBudgetWindowsTable.scopeType, reservation.scopeType),
-					eq(myGuardrailBudgetWindowsTable.scopeId, reservation.scopeId),
-					eq(myGuardrailBudgetWindowsTable.period, reservation.period),
-					eq(myGuardrailBudgetWindowsTable.periodStart, reservation.periodStart),
-				))) as unknown as [ResultSetHeader, unknown];
+				const settledMicros = settlement.mode === 'reserved' ? Number(reservation.reservedMicros) : actualMicros;
+				const [reservationUpdate] = (await tx
+					.update(myGuardrailBudgetReservationsTable)
+					.set({
+						state: settlement.mode === 'reserved' ? 'expired' : 'settled',
+						settledMicros,
+						terminalAt: guardrailNow,
+						terminalReason: settlement.reason.slice(0, 128),
+						updatedAt: guardrailNow,
+					})
+					.where(
+						and(
+							eq(myGuardrailBudgetReservationsTable.id, reservation.id),
+							inArray(myGuardrailBudgetReservationsTable.state, ['reserved', 'dispatched']),
+						),
+					)) as unknown as [ResultSetHeader, unknown];
+				if (reservationUpdate.affectedRows !== 1)
+					throw new Error('Guardrail budget settlement reservation changed concurrently');
+				const [windowUpdate] = (await tx
+					.update(myGuardrailBudgetWindowsTable)
+					.set({
+						reservedMicros: sql`${myGuardrailBudgetWindowsTable.reservedMicros} - ${reservation.reservedMicros}`,
+						settledMicros: sql`${myGuardrailBudgetWindowsTable.settledMicros} + ${settledMicros}`,
+						updatedAt: guardrailNow,
+					})
+					.where(
+						and(
+							eq(myGuardrailBudgetWindowsTable.workspaceId, reservation.workspaceId),
+							eq(myGuardrailBudgetWindowsTable.scopeType, reservation.scopeType),
+							eq(myGuardrailBudgetWindowsTable.scopeId, reservation.scopeId),
+							eq(myGuardrailBudgetWindowsTable.period, reservation.period),
+							eq(myGuardrailBudgetWindowsTable.periodStart, reservation.periodStart),
+						),
+					)) as unknown as [ResultSetHeader, unknown];
 				if (windowUpdate.affectedRows !== 1) throw new Error('Guardrail budget settlement window is missing');
 			}
 		}
@@ -772,4 +931,51 @@ export async function insertRequestUsageAndChargeTxMy(
 					)`);
 		}
 	});
+}
+
+export async function grantWalletCreditWithAuditTxMy(
+	client: MySqlDatabaseClient,
+	params: GrantWalletCreditParams,
+): Promise<GrantWalletCreditResult> {
+	const rows = await client.drizzle.select().from(myUsersTable).where(eq(myUsersTable.id, params.userId)).limit(1);
+	if (!rows[0]) {
+		throw new WalletCreditUserNotFoundError(params.userId);
+	}
+	const auditId = crypto.randomUUID();
+	const { audit } = buildWalletCreditAuditRow(mapStorageUserToRow(rows[0]), params, auditId);
+	const amount = roundGatewayMoney(params.amount);
+	const now = nowIso();
+	const values = toUserAuditLogDrizzleInsert(audit, now);
+	let applied = false;
+	await client.drizzle.transaction(async (tx) => {
+		await tx
+			.insert(myUserAuditLogsTable)
+			.values(values)
+			.onDuplicateKeyUpdate({
+				set: { id: sql`id` },
+			});
+		const [header] = (await tx
+			.update(myUsersTable)
+			.set({
+				walletGranted: sql`${myUsersTable.walletGranted} + ${String(amount)}`,
+				updatedAt: now,
+			})
+			.where(
+				and(eq(myUsersTable.id, params.userId), sql`EXISTS (SELECT 1 FROM user_audit_logs WHERE id = ${auditId})`),
+			)) as unknown as [ResultSetHeader, unknown];
+		applied = Boolean(header?.affectedRows);
+	});
+	const after = await client.drizzle
+		.select({
+			walletGranted: myUsersTable.walletGranted,
+			walletSpent: myUsersTable.walletSpent,
+		})
+		.from(myUsersTable)
+		.where(eq(myUsersTable.id, params.userId))
+		.limit(1);
+	return walletCreditResult(
+		applied ? 'applied' : 'duplicate',
+		parseMoney(after[0]?.walletGranted),
+		parseMoney(after[0]?.walletSpent),
+	);
 }

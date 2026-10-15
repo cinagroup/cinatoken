@@ -156,15 +156,11 @@ function routeRowToResult(
 	const customParams = parseJsonObject(route.custom_params);
 	const routingMetadata = parseRouteRoutingMetadata(route.routing_metadata);
 	if (route.custom_params && !customParams) {
-		console.warn(
-			`[Gateway Router] ignored invalid custom_params JSON routeId=${route.id} modelId=${route.model_id}`
-		);
+		console.warn(`[Gateway Router] ignored invalid custom_params JSON routeId=${route.id} modelId=${route.model_id}`);
 	}
 
 	const routeGroup =
-		typeof route.route_group === 'string' && route.route_group.trim() !== ''
-			? route.route_group
-			: 'default';
+		typeof route.route_group === 'string' && route.route_group.trim() !== '' ? route.route_group : 'default';
 
 	const routeWeight = typeof route.weight === 'number' && route.weight > 0 ? route.weight : 1;
 
@@ -197,23 +193,14 @@ function routeRowToResult(
 	};
 }
 
-function providerIsCallableForRoute(
-	provider: ProviderRow | undefined,
-	route: ModelRouteRow,
-): provider is ProviderRow {
-	if (
-		!provider
-		|| provider.status !== 'active'
-	) {
+function providerIsCallableForRoute(provider: ProviderRow | undefined, route: ModelRouteRow): provider is ProviderRow {
+	if (!provider || provider.status !== 'active') {
 		return false;
 	}
 	const providerApiKey = provider.api_key?.trim() ?? '';
 	if (providerApiKey && isPendingProviderImportApiKey(providerApiKey)) return false;
 	try {
-		return providerSupportsUpstreamProtocol(
-			normalizeUpstreamProtocol(route.upstream_protocol),
-			provider,
-		);
+		return providerSupportsUpstreamProtocol(normalizeUpstreamProtocol(route.upstream_protocol), provider);
 	} catch {
 		return false;
 	}
@@ -227,7 +214,7 @@ export interface SurfaceRouteResolution {
 /** request surface 只接收与显式 adapter 拓扑完全匹配的 target。 */
 export function routeMatchesSurface(
 	route: Pick<RouteResult, 'adapter' | 'upstreamProtocol' | 'upstreamOperation'>,
-	request: { protocol: UpstreamProtocol; operation: string }
+	request: { protocol: UpstreamProtocol; operation: string },
 ): boolean {
 	return isRouteAdapterCompatible({
 		adapter: route.adapter,
@@ -273,29 +260,23 @@ export async function resolveRoutesForSurface(
 		? await preparationRead(control, () => repos.modelRouting.getModelRoutesByPoolId(surface.route_pool_id))
 		: selectActiveRouteRows(
 				await preparationRead(control, () => repos.modelRouting.getModelRoutesByModelId(params.modelId)),
-				params.routeGroup
+				params.routeGroup,
 			);
 	const routes = (await resolveRouteResultsFromRows(repos, rows, control))
 		.map((route) => ({
 			...route,
 			modelSurfaceId: surface?.id ?? null,
-			upstreamOperation: effectiveUpstreamOperation(
-				route.upstreamOperation,
-				params.requestOperation
-			),
 		}))
 		.filter(
 			(route) =>
 				route.endpoint !== undefined &&
-				modelEndpointSupportsOperation(
-					route.endpoint,
-					route.upstreamOperation
-				) &&
+				modelEndpointSupportsOperation(route.endpoint, route.upstreamOperation) &&
 				routeMatchesSurface(route, {
 					protocol: params.requestProtocol,
 					operation: params.requestOperation,
-				})
-		);
+				}),
+		)
+		.map(route => ({ ...route, upstreamOperation: effectiveUpstreamOperation(route.upstreamOperation, params.requestOperation, route.adapter) }));
 	return { surface, routes };
 }
 
@@ -326,39 +307,37 @@ export async function resolveRouteResultsFromRows(
 	const providersById = new Map(providers.map((provider) => [provider.id, provider]));
 	const bindingsByTarget = new Map<string, (typeof bindings)[number] | null>();
 	for (const binding of bindings) {
-		bindingsByTarget.set(
-			binding.route_target_id,
-			bindingsByTarget.has(binding.route_target_id) ? null : binding,
-		);
+		bindingsByTarget.set(binding.route_target_id, bindingsByTarget.has(binding.route_target_id) ? null : binding);
 	}
 
-	const resolved = await Promise.all(rows.map(async (route): Promise<RouteResult | null> => {
-		control?.throwIfStopped();
-		const binding = bindingsByTarget.get(route.id);
-		const provider = providersById.get(route.provider_id);
-		if (!binding || !providerIsCallableForRoute(provider, route)) return null;
-		if (binding.model_id !== route.model_id || binding.provider_id !== route.provider_id) return null;
+	const resolved = await Promise.all(
+		rows.map(async (route): Promise<RouteResult | null> => {
+			control?.throwIfStopped();
+			const binding = bindingsByTarget.get(route.id);
+			const provider = providersById.get(route.provider_id);
+			if (!binding || !providerIsCallableForRoute(provider, route)) return null;
+			if (binding.model_id !== route.model_id || binding.provider_id !== route.provider_id) return null;
 
-		const endpoint = parseVerifiedModelEndpointSnapshot(binding, now);
-		if (!endpoint || endpoint.modelId !== route.model_id || endpoint.providerId !== provider.id) {
-			return null;
-		}
-		if (!verifiedEndpointMatchesLegacyRoutingMetadata(endpoint, route.routing_metadata)) {
-			return null;
-		}
+			const endpoint = parseVerifiedModelEndpointSnapshot(binding, now);
+			if (!endpoint || endpoint.modelId !== route.model_id || endpoint.providerId !== provider.id) {
+				return null;
+			}
+			if (!verifiedEndpointMatchesLegacyRoutingMetadata(endpoint, route.routing_metadata)) {
+				return null;
+			}
 
-		const currentSubjectFingerprint = await preparationRead(control, () => computeRouteDataPolicySubjectFingerprintFromRows(
-			route,
-			provider,
-		));
-		if (
-			!modelEndpointSubjectFingerprintIsValid(binding.subject_fingerprint)
-			|| binding.subject_fingerprint !== currentSubjectFingerprint
-		) {
-			return null;
-		}
-		return routeRowToResult(route, provider, endpoint, currentSubjectFingerprint);
-	}));
+			const currentSubjectFingerprint = await preparationRead(control, () =>
+				computeRouteDataPolicySubjectFingerprintFromRows(route, provider),
+			);
+			if (
+				!modelEndpointSubjectFingerprintIsValid(binding.subject_fingerprint) ||
+				binding.subject_fingerprint !== currentSubjectFingerprint
+			) {
+				return null;
+			}
+			return routeRowToResult(route, provider, endpoint, currentSubjectFingerprint);
+		}),
+	);
 	return resolved.filter((route): route is RouteResult => route !== null);
 }
 

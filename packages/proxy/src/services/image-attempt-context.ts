@@ -1,3 +1,9 @@
+import {
+	applyUpstreamExtraFields,
+	detachUpstreamExtraFields,
+	protectedUpstreamPathsForRoute,
+	formExtraFieldText,
+} from '@octafuse/core/upstream-extra-fields';
 import { createHash } from 'node:crypto';
 import { resolveUpstreamEndpoint } from '@octafuse/core';
 import { MAX_REQUEST_BODY_BYTES } from './bounded-request-body';
@@ -30,7 +36,20 @@ export function buildImageGenerationUpstreamBody(
 	route: RouteResult,
 	body: Record<string, unknown>,
 ): Record<string, unknown> {
-	return { ...buildRouteRequestBody(route, body), model: route.providerModelName };
+	return composeImageGenerationUpstreamBody(route, body).body;
+}
+
+export function composeImageGenerationUpstreamBody(
+	route: RouteResult,
+	body: Record<string, unknown>,
+): { body: Record<string, unknown>; restoredPaths: string[] } {
+	const detached = detachUpstreamExtraFields(body);
+	return applyUpstreamExtraFields({
+		built: { ...detached.body, model: route.providerModelName },
+		customParams: route.customParams,
+		extras: detached.extras,
+		protectedPaths: protectedUpstreamPathsForRoute(route),
+	});
 }
 
 /**
@@ -41,20 +60,25 @@ export function buildImageEditUpstreamFields(
 	route: RouteResult,
 	edit: NormalizedImageEditRequest,
 ): Array<readonly [string, string]> {
-	const merged = buildRouteRequestBody(route, {
-		...(edit.extra ?? {}),
-		prompt: edit.prompt,
-		n: edit.n,
-		...(edit.size ? { size: edit.size } : {}),
-		...(edit.quality ? { quality: edit.quality } : {}),
-		...(edit.background ? { background: edit.background } : {}),
-	});
+	const merged = applyUpstreamExtraFields({
+		built: {
+			model: route.providerModelName,
+			prompt: edit.prompt,
+			n: edit.n,
+			...(edit.size ? { size: edit.size } : {}),
+			...(edit.quality ? { quality: edit.quality } : {}),
+			...(edit.background ? { background: edit.background } : {}),
+		},
+		customParams: route.customParams,
+		extras: edit.extra,
+		protectedPaths: protectedUpstreamPathsForRoute(route),
+	}).body;
 	const fields: Array<readonly [string, string]> = [['model', normalizeFormLines(route.providerModelName)]];
 	for (const [key, value] of Object.entries(merged)) {
-		if (value == null || key === 'model' || key === 'image' || key === 'images') continue;
-		if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
-			fields.push([normalizeFormLines(key), normalizeFormLines(String(value))]);
-		}
+		if (value == null || key === 'model' || key === 'image' || key === 'images' || key === 'image[]' || key === 'mask')
+			continue;
+		const text = formExtraFieldText(value);
+		if (text != null) fields.push([normalizeFormLines(key), normalizeFormLines(text)]);
 	}
 	return fields;
 }
@@ -107,7 +131,8 @@ async function hashFile(file: MultipartFile, control: ImageAttemptContextControl
 			control.throwIfStopped();
 			if (part.done) break;
 			bytes += part.value.byteLength;
-			if (bytes > file.size || bytes > MAX_FILE_BYTES) throw new RangeError('Image attempt file exceeds its admitted size');
+			if (bytes > file.size || bytes > MAX_FILE_BYTES)
+				throw new RangeError('Image attempt file exceeds its admitted size');
 			hash.update(part.value);
 		}
 		if (bytes !== file.size) throw new RangeError('Image attempt file size changed');
@@ -121,9 +146,12 @@ async function hashFile(file: MultipartFile, control: ImageAttemptContextControl
 
 function routeFacts(route: RouteResult, operation: 'images.generations' | 'images.edits', preparedUrl?: string) {
 	if (route.upstreamProtocol !== 'openai') throw new TypeError('Image attempt requires an OpenAI route');
-	const url = preparedUrl ?? resolveUpstreamEndpoint('openai', operation, route.providerEndpoints, { providerId: route.providerId });
+	const url =
+		preparedUrl ??
+		resolveUpstreamEndpoint('openai', operation, route.providerEndpoints, { providerId: route.providerId });
 	const parsed = new URL(url);
-	if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') throw new TypeError('Image attempt requires an HTTP(S) upstream');
+	if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:')
+		throw new TypeError('Image attempt requires an HTTP(S) upstream');
 	const facts = {
 		targetId: route.targetId,
 		providerId: route.providerId,
@@ -150,9 +178,11 @@ function routeFacts(route: RouteResult, operation: 'images.generations' | 'image
 }
 
 export type ImageAttemptRouteFacts = Readonly<ReturnType<typeof routeFacts>>;
-export type ImageAttemptRouteIdentity = Readonly<Omit<ImageAttemptRouteFacts, 'upstreamUrl'> & {
-	upstreamUrlSha256: string;
-}>;
+export type ImageAttemptRouteIdentity = Readonly<
+	Omit<ImageAttemptRouteFacts, 'upstreamUrl'> & {
+		upstreamUrlSha256: string;
+	}
+>;
 
 function safeRouteIdentity(facts: ImageAttemptRouteFacts): ImageAttemptRouteIdentity {
 	const { upstreamUrl, ...safeFacts } = facts;
@@ -164,7 +194,9 @@ function safeRouteIdentity(facts: ImageAttemptRouteFacts): ImageAttemptRouteIden
 
 /** Capture the selected driver's URL and non-secret route identity before any asynchronous preparation. */
 export function captureImageAttemptRouteFacts(
-	route: RouteResult, operation: 'images.generations' | 'images.edits', upstreamUrl: string,
+	route: RouteResult,
+	operation: 'images.generations' | 'images.edits',
+	upstreamUrl: string,
 ): ImageAttemptRouteFacts {
 	return Object.freeze(routeFacts(route, operation, upstreamUrl));
 }
@@ -174,7 +206,8 @@ export type PreparedImageAttempt = Readonly<{
 	routeIdentity: ImageAttemptRouteIdentity;
 	/** Binds the trusted ingress digest to the exact private payload projection the driver will fetch. */
 	digestTrustedContext: (
-		requestSha256: string, control: ImageAttemptContextControl,
+		requestSha256: string,
+		control: ImageAttemptContextControl,
 	) => Promise<{ contextSha256: string; outboundPayloadSha256: string }>;
 }>;
 
@@ -183,26 +216,38 @@ export function preparedImageAttemptMatchesRoute(prepared: PreparedImageAttempt,
 	try {
 		const expected = safeRouteIdentity(routeFacts(route, prepared.operation));
 		const observed = prepared.routeIdentity;
-		return (Object.keys(expected) as Array<keyof ImageAttemptRouteIdentity>)
-			.every(key => observed[key] === expected[key]);
-	} catch { return false; }
+		return (Object.keys(expected) as Array<keyof ImageAttemptRouteIdentity>).every(
+			(key) => observed[key] === expected[key],
+		);
+	} catch {
+		return false;
+	}
 }
 
 function preparedAttempt(
-	operation: PreparedImageAttempt['operation'], facts: ImageAttemptRouteFacts,
+	operation: PreparedImageAttempt['operation'],
+	facts: ImageAttemptRouteFacts,
 	digestPayload: (control: ImageAttemptContextControl) => Promise<string>,
 ): PreparedImageAttempt {
 	const capturedFacts = Object.freeze({ ...facts });
 	const routeIdentity = safeRouteIdentity(capturedFacts);
 	return Object.freeze({
-		operation, routeIdentity,
+		operation,
+		routeIdentity,
 		async digestTrustedContext(requestSha256: string, control: ImageAttemptContextControl) {
 			control.throwIfStopped();
 			if (!HEX_SHA256.test(requestSha256)) throw new TypeError('Invalid trusted image request digest');
 			const outboundPayloadSha256 = await digestPayload(control);
-			const contextSha256 = await hashJson({
-				operation, requestSha256, route: capturedFacts, outboundPayloadSha256,
-			}, CONTEXT_DOMAIN, control);
+			const contextSha256 = await hashJson(
+				{
+					operation,
+					requestSha256,
+					route: capturedFacts,
+					outboundPayloadSha256,
+				},
+				CONTEXT_DOMAIN,
+				control,
+			);
 			return { contextSha256, outboundPayloadSha256 };
 		},
 	});
@@ -210,10 +255,12 @@ function preparedAttempt(
 
 /** The snapshot is created by createJsonUploadBody and is also owned by its wire stream. */
 export function createPreparedImageGenerationAttempt(
-	facts: ImageAttemptRouteFacts, preparedUploadSnapshot: unknown,
+	facts: ImageAttemptRouteFacts,
+	preparedUploadSnapshot: unknown,
 ): PreparedImageAttempt {
-	return preparedAttempt('images.generations', facts,
-		control => hashJson(preparedUploadSnapshot, GENERATION_PAYLOAD_DOMAIN, control));
+	return preparedAttempt('images.generations', facts, (control) =>
+		hashJson(preparedUploadSnapshot, GENERATION_PAYLOAD_DOMAIN, control),
+	);
 }
 
 export type PreparedImageEditFile = Readonly<{
@@ -229,13 +276,13 @@ export function createPreparedImageEditAttempt(
 	files: ReadonlyArray<PreparedImageEditFile>,
 ): PreparedImageAttempt {
 	const scalars = fields.map(([key, value]) => [key, value] as const);
-	const images = files.map(file => ({
+	const images = files.map((file) => ({
 		filename: file.filename || 'image.png',
 		mimeType: new Blob([], { type: file.mimeType }).type || 'application/octet-stream',
 		payload: file.payload,
 		size: file.payload.size,
 	}));
-	return preparedAttempt('images.edits', facts, async control => {
+	return preparedAttempt('images.edits', facts, async (control) => {
 		if (images.length < 1 || images.length > MAX_FILES) throw new RangeError('Invalid image attempt file count');
 		let totalBytes = 0;
 		const digestedImages: Array<{ filename: string; mimeType: string; size: number; sha256: string }> = [];
@@ -244,18 +291,22 @@ export function createPreparedImageEditAttempt(
 			// Public multipart parsing produces exact MultipartFile instances with
 			// private, sealed pages. A subclass/overridden stream could return new
 			// bytes for the later transport pull and is not grant eligible.
-			if (!(image.payload instanceof MultipartFile)
-				|| Object.getPrototypeOf(image.payload) !== MultipartFile.prototype
-				|| Object.hasOwn(image.payload, 'stream')
-				|| !ALLOWED_IMAGE_MIME.has(image.mimeType)
-				|| image.filename.length > 16_384) {
+			if (
+				!(image.payload instanceof MultipartFile) ||
+				Object.getPrototypeOf(image.payload) !== MultipartFile.prototype ||
+				Object.hasOwn(image.payload, 'stream') ||
+				!ALLOWED_IMAGE_MIME.has(image.mimeType) ||
+				image.filename.length > 16_384
+			) {
 				throw new TypeError('Image attempt requires an admitted multipart file');
 			}
 			if (image.payload.size !== image.size) throw new RangeError('Image attempt file size changed');
 			totalBytes += image.size;
 			if (totalBytes > MAX_REQUEST_BODY_BYTES) throw new RangeError('Image attempt files exceed ingress limit');
 			digestedImages.push({
-				filename: image.filename, mimeType: image.mimeType, size: image.size,
+				filename: image.filename,
+				mimeType: image.mimeType,
+				size: image.size,
 				sha256: await hashFile(image.payload, control),
 			});
 		}
@@ -289,32 +340,53 @@ export async function digestTrustedImageAttemptContext(input: TrustedImageAttemp
 	let outboundPayloadSha256: string;
 	if (operation === 'images.generations') {
 		outboundPayloadSha256 = await hashJson(
-			buildImageGenerationUpstreamBody(route, input.body), GENERATION_PAYLOAD_DOMAIN, control,
+			buildImageGenerationUpstreamBody(route, input.body),
+			GENERATION_PAYLOAD_DOMAIN,
+			control,
 		);
 	} else {
 		const { edit } = input;
-		if (edit.images.length < 1 || edit.images.length > MAX_FILES) throw new RangeError('Invalid image attempt file count');
+		if (edit.images.length < 1 || edit.images.length > MAX_FILES)
+			throw new RangeError('Invalid image attempt file count');
 		let totalBytes = 0;
 		const images: Array<{ filename: string; mimeType: string; size: number; sha256: string }> = [];
 		for (const image of edit.images) {
 			control.throwIfStopped();
-			if (!(image.upload instanceof MultipartFile)
-				|| typeof image.filename !== 'string' || image.filename.length > 16_384
-				|| typeof image.mimeType !== 'string' || !ALLOWED_IMAGE_MIME.has(image.mimeType.trim().toLowerCase())) {
+			if (
+				!(image.upload instanceof MultipartFile) ||
+				typeof image.filename !== 'string' ||
+				image.filename.length > 16_384 ||
+				typeof image.mimeType !== 'string' ||
+				!ALLOWED_IMAGE_MIME.has(image.mimeType.trim().toLowerCase())
+			) {
 				throw new TypeError('Image attempt requires an admitted multipart file');
 			}
 			totalBytes += image.upload.size;
 			if (totalBytes > MAX_REQUEST_BODY_BYTES) throw new RangeError('Image attempt files exceed ingress limit');
-			images.push({ ...imageEditUpstreamFileMetadata(image),
-				size: image.upload.size, sha256: await hashFile(image.upload, control) });
+			images.push({
+				...imageEditUpstreamFileMetadata(image),
+				size: image.upload.size,
+				sha256: await hashFile(image.upload, control),
+			});
 		}
-		outboundPayloadSha256 = await hashJson({
-			fields: buildImageEditUpstreamFields(route, edit),
-			images,
-		}, EDIT_PAYLOAD_DOMAIN, control);
+		outboundPayloadSha256 = await hashJson(
+			{
+				fields: buildImageEditUpstreamFields(route, edit),
+				images,
+			},
+			EDIT_PAYLOAD_DOMAIN,
+			control,
+		);
 	}
-	const contextSha256 = await hashJson({
-		operation, requestSha256, route: identity, outboundPayloadSha256,
-	}, CONTEXT_DOMAIN, control);
+	const contextSha256 = await hashJson(
+		{
+			operation,
+			requestSha256,
+			route: identity,
+			outboundPayloadSha256,
+		},
+		CONTEXT_DOMAIN,
+		control,
+	);
 	return { contextSha256, outboundPayloadSha256 };
 }

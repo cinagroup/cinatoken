@@ -1,65 +1,75 @@
-import type { D1Database, Queue, R2Bucket, RateLimit } from "@cloudflare/workers-types";
+import type { D1Database, Queue, R2Bucket, RateLimit } from '@cloudflare/workers-types';
 import type {
 	BatchDispatchMessage,
 	GatewayRepositories,
 	HyperdriveBinding,
 	ManagementApiKeyPrincipal,
 	StorageContext,
-} from "@octafuse/core";
-import { Hono } from "hono";
-import type { Context, MiddlewareHandler } from "hono";
-import { cors } from "hono/cors";
-import { bodyLimit } from "hono/body-limit";
-import { isAtomicImageBudgetRoute, requireApiKey, type ApiKeyContext } from "./middleware/auth";
-import { healthRoutes } from "./routes/health";
-import { chatRoutes } from "./routes/v1/chat";
-import { completionsRoutes } from "./routes/v1/completions";
-import { responsesRoutes } from "./routes/v1/responses";
-import { geminiRoutes } from "./routes/v1/gemini";
-import { meRoutes } from "./routes/v1/me";
-import { messagesRoutes } from "./routes/v1/messages";
-import { createCatalogRoutes } from "./routes/catalog";
-import { modelsRoutes } from "./routes/v1/models";
-import { endpointDiscoveryRoutes } from "./routes/v1/endpoints";
-import { generationRoutes } from "./routes/v1/generation";
-import { webSearchRoutes } from "./routes/v1/tools/web-search";
-import { webFetchRoutes } from "./routes/v1/tools/web-fetch";
-import { webDeepSearchRoutes } from "./routes/v1/tools/web-deep-search";
-import { aiDetectionRoutes } from "./routes/v1/tools/ai-detection";
-import { toolsPricingRoutes } from "./routes/v1/tools/pricing";
-import { imageRoutes } from "./routes/v1/images";
-import { audioRoutes } from "./routes/v1/audio";
-import { dashScopeRealtimeRoutes } from "./routes/v1/dashscope-realtime";
-import { dashScopeMultimodalRoutes } from "./routes/v1/dashscope-multimodal";
-import { presetRoutes } from "./routes/v1/presets";
-import { embeddingsRoutes } from "./routes/v1/embeddings";
-import { rerankRoutes } from "./routes/v1/rerank";
-import { createOpenRouterPublicCatalogRoutes } from "./routes/v1/openrouter-public-catalog";
-import { managementKeyRoutes } from "./routes/v1/management-keys";
-import { managementWorkspaceRoutes } from "./routes/v1/management-workspaces";
-import { managementWorkspaceBudgetRoutes } from "./routes/v1/management-workspace-budgets";
-import { managementGuardrailRoutes } from "./routes/v1/management-guardrails";
-import { byokRoutes } from "./routes/v1/byok";
-import { currentKeyRoutes } from "./routes/v1/current-key";
-import { analyticsRoutes } from "./routes/v1/analytics";
-import { proxyAppVersion } from "./app-version";
-import type { DashScopeRealtimeNodeDispatch } from "./services/egress/dashscope-realtime-driver";
+} from '@octafuse/core';
+import { Hono } from 'hono';
+import type { Context, MiddlewareHandler } from 'hono';
+import { cors } from 'hono/cors';
+import { bodyLimit } from 'hono/body-limit';
+import { isAtomicImageBudgetRoute, requireApiKey, type ApiKeyContext } from './middleware/auth';
+import { healthRoutes } from './routes/health';
+import { chatRoutes } from './routes/v1/chat';
+import { completionsRoutes } from './routes/v1/completions';
+import { responsesRoutes } from './routes/v1/responses';
+import { geminiRoutes } from './routes/v1/gemini';
+import { meRoutes } from './routes/v1/me';
+import { messagesRoutes } from './routes/v1/messages';
+import { createCatalogRoutes } from './routes/catalog';
+import { modelsRoutes } from './routes/v1/models';
+import { endpointDiscoveryRoutes } from './routes/v1/endpoints';
+import { generationRoutes } from './routes/v1/generation';
+import { webSearchRoutes } from './routes/v1/tools/web-search';
+import { webFetchRoutes } from './routes/v1/tools/web-fetch';
+import { webDeepSearchRoutes } from './routes/v1/tools/web-deep-search';
+import { aiDetectionRoutes } from './routes/v1/tools/ai-detection';
+import { toolsPricingRoutes } from './routes/v1/tools/pricing';
+import { mcpRoutes } from './routes/mcp';
+import { imageRoutes } from './routes/v1/images';
+import { audioRoutes } from './routes/v1/audio';
+import { dashScopeRealtimeRoutes } from './routes/v1/dashscope-realtime';
+import { dashScopeMultimodalRoutes } from './routes/v1/dashscope-multimodal';
+import { presetRoutes } from './routes/v1/presets';
+import { embeddingsRoutes } from './routes/v1/embeddings';
+import { rerankRoutes } from './routes/v1/rerank';
+import { createOpenRouterPublicCatalogRoutes } from './routes/v1/openrouter-public-catalog';
+import { managementKeyRoutes } from './routes/v1/management-keys';
+import { managementWorkspaceRoutes } from './routes/v1/management-workspaces';
+import { managementWorkspaceBudgetRoutes } from './routes/v1/management-workspace-budgets';
+import { managementGuardrailRoutes } from './routes/v1/management-guardrails';
+import { byokRoutes } from './routes/v1/byok';
+import { currentKeyRoutes } from './routes/v1/current-key';
+import { analyticsRoutes } from './routes/v1/analytics';
+import { dashScopeSpeechRoutes } from './routes/v1/dashscope-speech';
+import { dashScopeFileTranscriptionRoutes, dashScopeTaskRoutes } from './routes/v1/dashscope-file-transcription';
+import { miniMaxSpeechToTextRoutes } from './routes/v1/minimax-speech-to-text';
+import { miniMaxT2aRoutes } from './routes/v1/minimax-t2a';
+import { miniMaxImageGenerationRoutes } from './routes/v1/minimax-image-generation';
+import { volcengineImageGenerationRoutes } from './routes/v1/volcengine-image-generation';
 import {
-	resolveRequestBodyLoggingMode,
-	type RequestBodyLoggingMode,
-} from "./services/request-body-log-policy";
-import type { PublicStatsRuntimeGuard } from "./services/public-stats-runtime-guard";
-import {
-	GATEWAY_ERROR_CODE_HEADER,
-	GatewayErrorCode,
-} from "./services/gateway-error-codes";
-import { gatewayErrorJson } from "./services/gateway-error-response";
-import { MAX_REQUEST_BODY_BYTES } from "./services/bounded-request-body";
-import type { RequestCapacityLease } from "./services/request-capacity";
+	DASHSCOPE_FILE_TRANSCRIPTION_PATH,
+	DASHSCOPE_SPEECH_SYNTHESIZER_PATH,
+	DASHSCOPE_TASKS_PATH,
+	MINIMAX_IMAGE_GENERATION_PATH,
+	MINIMAX_SPEECH_TO_TEXT_PATH,
+	MINIMAX_T2A_PATH,
+	VOLCENGINE_IMAGE_GENERATIONS_PATH,
+} from '@octafuse/core/route-topology';
+import { proxyAppVersion } from './app-version';
+import type { DashScopeRealtimeNodeDispatch } from './services/egress/dashscope-realtime-driver';
+import { resolveRequestBodyLoggingMode, type RequestBodyLoggingMode } from './services/request-body-log-policy';
+import type { PublicStatsRuntimeGuard } from './services/public-stats-runtime-guard';
+import { GATEWAY_ERROR_CODE_HEADER, GatewayErrorCode } from './services/gateway-error-codes';
+import { gatewayErrorJson } from './services/gateway-error-response';
+import { MAX_REQUEST_BODY_BYTES } from './services/bounded-request-body';
+import type { RequestCapacityLease } from './services/request-capacity';
 import { resolveRequestStorage } from './runtime/resolve-request-storage';
 import { scheduleResourceCompletion } from './runtime/schedule-resource-completion';
 import { observeResourceCleanup } from './services/resource-completion';
-import { requestCapacityMiddleware, type HttpRequestCapacityPolicy } from "./middleware/request-capacity";
+import { requestCapacityMiddleware, type HttpRequestCapacityPolicy } from './middleware/request-capacity';
 import type { SharedKeyEconomicProducer } from './services/shared-key-quote-attempt';
 import type {
 	PostgresChatBudgetRequestOwner,
@@ -69,15 +79,21 @@ import {
 	createCredentialFreeChatIngressV401,
 	type CredentialFreeChatIngressCompositionV401,
 } from './services/credential-free-chat-ingress-v401';
-import { createImageUsageRecoveryFactory, type ImageUsageRecoveryFactory, type ImageUsageRecoveryOptions } from "./services/image-usage-recovery";
+import {
+	createImageUsageRecoveryFactory,
+	type ImageUsageRecoveryFactory,
+	type ImageUsageRecoveryOptions,
+} from './services/image-usage-recovery';
 import {
 	createPostgresImageUsageRecoveryFactory,
 	type PostgresImageRecoveryAuthorities,
 } from './services/image-usage-recovery-postgres';
 import {
-	assertTextRequestActive, textRequestFailureResponse, textRequestLifecycle,
+	assertTextRequestActive,
+	textRequestFailureResponse,
+	textRequestLifecycle,
 	type TextRequestLifecycle,
-} from "./middleware/text-request-lifecycle";
+} from './middleware/text-request-lifecycle';
 
 /** Cloudflare Worker bindings：D1 `DB`，或显式选择 Hyperdrive Postgres。 */
 export type GatewayBindings = {
@@ -139,6 +155,12 @@ export type GatewayBindings = {
 	PROVIDER_ATTEMPT_RETENTION_BATCH_SIZE?: string;
 	/** Per-Cron statement cap (1..20; default 10). */
 	PROVIDER_ATTEMPT_RETENTION_MAX_BATCHES?: string;
+	/** 可选；尚未收到非空 chunk 的等待上限（毫秒）。空则代码默认 2 分钟。 */
+	STREAM_FIRST_CHUNK_TIMEOUT_MS?: string;
+	/** 可选；已吐 chunk 后的空闲上限（毫秒）。空则代码默认 90 秒。 */
+	STREAM_IDLE_TIMEOUT_MS?: string;
+	/** 可选；usagePromise 绝对兜底（毫秒）。空则代码默认 10 分钟。 */
+	USAGE_SAFETY_TIMEOUT_MS?: string;
 };
 
 export type Env = {
@@ -163,17 +185,20 @@ export type Env = {
 	};
 };
 
-export type StorageResolver = (
-	context: Context<Env>
-) => Promise<StorageContext>;
+export type StorageResolver = (context: Context<Env>) => Promise<StorageContext>;
 
 /** Per-request, server-owned producer clients; close must account for both origins. */
 export type PostgresImageRecoveryAppOptions = Readonly<{
 	maxAttempts: 1 | 2 | 3;
-	open(context: Context<Env>, storage: StorageContext): Promise<Readonly<{
-		authorities: PostgresImageRecoveryAuthorities;
-		close(): Promise<void>;
-	}>>;
+	open(
+		context: Context<Env>,
+		storage: StorageContext,
+	): Promise<
+		Readonly<{
+			authorities: PostgresImageRecoveryAuthorities;
+			close(): Promise<void>;
+		}>
+	>;
 }>;
 
 export type ProxyAppOptions = {
@@ -208,10 +233,7 @@ export type ProxyAppOptions = {
 	organizationAdminRoles?: string;
 };
 
-export function createProxyApp(
-	resolveStorage: StorageResolver,
-	options?: ProxyAppOptions
-): Hono<Env> {
+export function createProxyApp(resolveStorage: StorageResolver, options?: ProxyAppOptions): Hono<Env> {
 	const app = new Hono<Env>();
 	const credentialFreeChatIngressV401 = createCredentialFreeChatIngressV401(
 		options?.credentialFreeChatV401,
@@ -224,15 +246,14 @@ export function createProxyApp(
 	if (postgresImageRecovery) {
 		if (imageRecovery) throw new TypeError('D1 and PostgreSQL Images recovery are mutually exclusive');
 		if (!options?.httpCapacity) throw new TypeError('PostgreSQL Images recovery requires explicit HTTP capacity');
-		if (typeof postgresImageRecovery.open !== 'function'
-			|| ![1, 2, 3].includes(postgresImageRecovery.maxAttempts)) {
+		if (typeof postgresImageRecovery.open !== 'function' || ![1, 2, 3].includes(postgresImageRecovery.maxAttempts)) {
 			throw new TypeError('Invalid PostgreSQL Images recovery composition');
 		}
 	}
 	// Admission must precede any upload read, storage, authentication or mutation.
-	if (options?.httpCapacity) app.use("*", requestCapacityMiddleware(options.httpCapacity));
+	if (options?.httpCapacity) app.use('*', requestCapacityMiddleware(options.httpCapacity));
 	// Capture arrival before runtime checks, upload handling, storage and auth.
-	app.use("*", textRequestLifecycle);
+	app.use('*', textRequestLifecycle);
 	const {
 		publicCatalogRoutes: openRouterPublicCatalogRoutes,
 		managementCatalogRoutes: openRouterManagementCatalogRoutes,
@@ -240,42 +261,46 @@ export function createProxyApp(
 	} = createOpenRouterPublicCatalogRoutes(options?.publicStatsRuntime);
 
 	if (options?.beforeAll) {
-		app.use("*", options.beforeAll);
+		app.use('*', options.beforeAll);
 	}
-	if (imageFetch) app.use('*', async (c, next) => { c.set('imageFetch', imageFetch); await next(); });
-	if (options?.sharedKeyEconomicProducer) app.use('*', async (c, next) => {
-		c.set('sharedKeyEconomicProducer', options.sharedKeyEconomicProducer);
-		await next();
-	});
-	if (options?.chatBudgetRequestOwnerFactory) app.use('*', async (c, next) => {
-		c.set('chatBudgetRequestOwnerFactory', options.chatBudgetRequestOwnerFactory);
-		await next();
-	});
+	if (imageFetch)
+		app.use('*', async (c, next) => {
+			c.set('imageFetch', imageFetch);
+			await next();
+		});
+	if (options?.sharedKeyEconomicProducer)
+		app.use('*', async (c, next) => {
+			c.set('sharedKeyEconomicProducer', options.sharedKeyEconomicProducer);
+			await next();
+		});
+	if (options?.chatBudgetRequestOwnerFactory)
+		app.use('*', async (c, next) => {
+			c.set('chatBudgetRequestOwnerFactory', options.chatBudgetRequestOwnerFactory);
+			await next();
+		});
 
 	/**
 	 * Hono's default logger prints the full request URL, including query strings.
 	 * Generation IDs and Gemini API keys may be carried in the query, so log only
 	 * the already-parsed pathname and bounded request metadata.
 	 */
-	app.use("*", async (c, next) => {
+	app.use('*', async (c, next) => {
 		const startedAt = Date.now();
 		const requestLog = {
 			method: c.req.method,
 			path: c.req.path,
 		};
-		console.log(
-			JSON.stringify({ message: "gateway request started", ...requestLog })
-		);
+		console.log(JSON.stringify({ message: 'gateway request started', ...requestLog }));
 		try {
 			await next();
 		} finally {
 			console.log(
 				JSON.stringify({
-					message: "gateway request completed",
+					message: 'gateway request completed',
 					...requestLog,
 					status: c.res.status,
 					duration_ms: Math.max(0, Date.now() - startedAt),
-				})
+				}),
 			);
 		}
 	});
@@ -283,44 +308,44 @@ export function createProxyApp(
 	// vector (Workers platforms cap bodies natively). 50 MiB covers large
 	// model payloads incl. image multipart uploads.
 	const legacyBodyLimit = bodyLimit({
-			maxSize: MAX_REQUEST_BODY_BYTES,
-			onError: (c) =>
-				gatewayErrorJson(c, {
-					status: 413,
-					code: GatewayErrorCode.payloadTooLarge,
-					message: "Request body exceeds the maximum allowed size",
-				}),
-		});
-	app.use("*", (c, next) => c.get('textRequestLifecycle') ? next() : legacyBodyLimit(c, next));
+		maxSize: MAX_REQUEST_BODY_BYTES,
+		onError: (c) =>
+			gatewayErrorJson(c, {
+				status: 413,
+				code: GatewayErrorCode.payloadTooLarge,
+				message: 'Request body exceeds the maximum allowed size',
+			}),
+	});
+	app.use('*', (c, next) => (c.get('textRequestLifecycle') ? next() : legacyBodyLimit(c, next)));
 	app.use(
-		"*",
+		'*',
 		cors({
-			origin: "*",
-			allowMethods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+			origin: '*',
+			allowMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
 			allowHeaders: [
-				"Content-Type",
-				"Authorization",
-				"HTTP-Referer",
-				"X-Title",
-				"X-OpenRouter-Title",
-				"X-OpenRouter-Categories",
-				"X-OpenRouter-Metadata",
-				"X-OpenRouter-Experimental-Metadata",
+				'Content-Type',
+				'Authorization',
+				'HTTP-Referer',
+				'X-Title',
+				'X-OpenRouter-Title',
+				'X-OpenRouter-Categories',
+				'X-OpenRouter-Metadata',
+				'X-OpenRouter-Experimental-Metadata',
+				'Accept',
+				'language',
+				'X-DashScope-SSE',
+				'X-DashScope-Async',
+				'MCP-Protocol-Version',
+				'Mcp-Session-Id',
 			],
-			exposeHeaders: [
-				"X-Generation-Id",
-				"Retry-After",
-				"X-OctaFuse-Error-Code",
-			],
-		})
+			exposeHeaders: ['X-Generation-Id', 'Retry-After', 'X-OctaFuse-Request-Id', 'X-OctaFuse-Error-Code', 'Mcp-Session-Id'],
+		}),
 	);
 
-	app.use("*", async (c, next) => {
+	app.use('*', async (c, next) => {
 		c.set(
-			"requestBodyLoggingMode",
-			resolveRequestBodyLoggingMode(
-				options?.requestBodyLogging ?? c.env?.REQUEST_BODY_LOGGING
-			)
+			'requestBodyLoggingMode',
+			resolveRequestBodyLoggingMode(options?.requestBodyLogging ?? c.env?.REQUEST_BODY_LOGGING),
 		);
 		await next();
 	});
@@ -331,11 +356,11 @@ export function createProxyApp(
 	 * the client branch has not started reading. The stable error-code header is
 	 * enough for aggregation; route-level diagnostics remain more specific.
 	 */
-	app.use("*", async (c, next) => {
+	app.use('*', async (c, next) => {
 		await next();
 		const status = c.res.status;
 		if (status < 400 || status >= 500) return;
-		console.warn("[Gateway] client error response", {
+		console.warn('[Gateway] client error response', {
 			method: c.req.method,
 			path: c.req.path,
 			status,
@@ -343,20 +368,16 @@ export function createProxyApp(
 		});
 	});
 
-	app.use("*", async (c, next) => {
-		c.set(
-			"organizationAdminRoles",
-			options?.organizationAdminRoles ??
-				c.env?.CINAAUTH_ORGANIZATION_ADMIN_ROLES
-		);
+	app.use('*', async (c, next) => {
+		c.set('organizationAdminRoles', options?.organizationAdminRoles ?? c.env?.CINAAUTH_ORGANIZATION_ADMIN_ROLES);
 		await next();
 	});
 
-	app.use("*", async (c, next) => {
+	app.use('*', async (c, next) => {
 		assertTextRequestActive(c);
 		const storage = await resolveRequestStorage(c, resolveStorage, options?.disposeUnusedStorage);
 		assertTextRequestActive(c);
-		c.set("repositories", storage.repositories);
+		c.set('repositories', storage.repositories);
 		c.set('requestStorage', storage);
 		if (imageRecovery) c.set('imageUsageRecovery', createImageUsageRecoveryFactory(storage, imageRecovery));
 		await next();
@@ -367,11 +388,11 @@ export function createProxyApp(
 
 	// Refuse unauthenticated Images traffic before opening two dedicated PG origins.
 	// The route checks the key again; this opt-in preflight never relaxes route auth.
-	app.use("*", (c, next) => postgresImageRecovery
-		&& isAtomicImageBudgetRoute(c.req.method, c.req.path)
-			? requireApiKey(c, next) : next());
+	app.use('*', (c, next) =>
+		postgresImageRecovery && isAtomicImageBudgetRoute(c.req.method, c.req.path) ? requireApiKey(c, next) : next(),
+	);
 
-	app.use("*", async (c, next) => {
+	app.use('*', async (c, next) => {
 		if (postgresImageRecovery && isAtomicImageBudgetRoute(c.req.method, c.req.path)) {
 			const storage = c.get('requestStorage');
 			if (!storage) throw new Error('Request storage unavailable');
@@ -379,8 +400,9 @@ export function createProxyApp(
 				throw new TypeError('PostgreSQL Images recovery requires PostgreSQL runtime storage');
 			}
 			let owner: Awaited<ReturnType<PostgresImageRecoveryAppOptions['open']>>;
-			try { owner = await postgresImageRecovery.open(c, storage); }
-			catch (error) {
+			try {
+				owner = await postgresImageRecovery.open(c, storage);
+			} catch (error) {
 				// The opener must label a failed partial-open cleanup. Keep numeric
 				// capacity held when it cannot certify both producer origins retired.
 				if (error instanceof Error && error.name === 'PostgresImageProducerCleanupUnconfirmedError') {
@@ -393,82 +415,100 @@ export function createProxyApp(
 				throw new TypeError('PostgreSQL Images producer owner must provide a close receipt');
 			}
 			try {
-				c.set('imageUsageRecovery', createPostgresImageUsageRecoveryFactory(
-					storage, owner.authorities, { maxAttempts: postgresImageRecovery.maxAttempts },
-				));
+				c.set(
+					'imageUsageRecovery',
+					createPostgresImageUsageRecoveryFactory(storage, owner.authorities, {
+						maxAttempts: postgresImageRecovery.maxAttempts,
+					}),
+				);
 				await next();
 			} finally {
 				// Current PG fast path does no SQL; all producer queries are awaited by
 				// the nonstreaming route. An uncertain close keeps the capacity hold.
-				scheduleResourceCompletion(c, observeResourceCleanup(() => owner.close()));
+				scheduleResourceCompletion(
+					c,
+					observeResourceCleanup(() => owner.close()),
+				);
 			}
 			return;
 		}
 		await next();
 	});
 
-	app.route("/health", healthRoutes);
-	app.route("/v1", endpointDiscoveryRoutes);
-	app.route("/v1/generation", generationRoutes);
-	app.route("/v1/chat/completions", chatRoutes);
-	app.route("/v1/completions", completionsRoutes);
-	app.route("/v1/responses", responsesRoutes);
-	app.route("/v1/embeddings", embeddingsRoutes);
-	app.route("/v1/rerank", rerankRoutes);
-	app.route("/v1/images", imageRoutes);
-	app.route("/v1/audio", audioRoutes);
-	app.route("/v1/dashscope/realtime", dashScopeRealtimeRoutes);
-	app.route(
-		"/v1/dashscope/services/aigc/multimodal-generation/generation",
-		dashScopeMultimodalRoutes
-	);
-	app.route("/v1/messages", messagesRoutes);
-	app.route("/v1beta", geminiRoutes);
-	app.route("/v1/me", meRoutes);
-	app.route("/v1/models", modelsRoutes);
-	app.route("/v1/providers", openRouterProvidersAliasRoutes);
-	app.route("/v1/tools/web-search", webSearchRoutes);
-	app.route("/v1/tools/web-fetch", webFetchRoutes);
-	app.route("/v1/tools/web-deep-search", webDeepSearchRoutes);
-	app.route("/v1/tools/ai-detection", aiDetectionRoutes);
-	app.route("/v1/tools/pricing", toolsPricingRoutes);
+	app.route('/health', healthRoutes);
+	app.route('/v1', endpointDiscoveryRoutes);
+	app.route('/v1/generation', generationRoutes);
+	app.route('/v1/chat/completions', chatRoutes);
+	app.route('/v1/completions', completionsRoutes);
+	app.route('/v1/responses', responsesRoutes);
+	app.route('/v1/embeddings', embeddingsRoutes);
+	app.route('/v1/rerank', rerankRoutes);
+	app.route('/v1/images', imageRoutes);
+	app.route('/v1/audio', audioRoutes);
+	app.route('/v1/dashscope/realtime', dashScopeRealtimeRoutes);
+	app.route('/v1/dashscope/services/aigc/multimodal-generation/generation', dashScopeMultimodalRoutes);
+	app.route(DASHSCOPE_SPEECH_SYNTHESIZER_PATH, dashScopeSpeechRoutes);
+	app.route(DASHSCOPE_FILE_TRANSCRIPTION_PATH, dashScopeFileTranscriptionRoutes);
+	app.route(DASHSCOPE_TASKS_PATH, dashScopeTaskRoutes);
+	app.route(MINIMAX_SPEECH_TO_TEXT_PATH, miniMaxSpeechToTextRoutes);
+	app.route(MINIMAX_T2A_PATH, miniMaxT2aRoutes);
+	app.route(MINIMAX_IMAGE_GENERATION_PATH, miniMaxImageGenerationRoutes);
+	app.route(VOLCENGINE_IMAGE_GENERATIONS_PATH, volcengineImageGenerationRoutes);
+	app.route('/v1/messages', messagesRoutes);
+	// TEMP(soloent): 只为兼容 SoloEnt Agent 的历史拼路径，不是公开 API。
+	// 0.18.0–0.18.5 + 旧 token → POST /messages
+	// 0.17.x + 2026-09-17 之后签发的 token → POST /v1/v1/messages
+	// 0.18.6 起 Agent 用 rootUrl 自己拼 /v1，只打 /v1/messages。
+	// 删除条件：0.17.x 与 0.18.0–0.18.5 已退出，且这些版本签发的插件 JWT 已过期（30 天）。
+	// 删除时一并去掉：这两条 route、auth.ts 里 isAnthropicMessagesPath 的别名分支、
+	// messages-legacy-paths.test.ts。正式入口只保留 POST /v1/messages。
+	app.route('/messages', messagesRoutes);
+	app.route('/v1/v1/messages', messagesRoutes);
+	app.route('/v1beta', geminiRoutes);
+	app.route('/v1/me', meRoutes);
+	app.route('/v1/models', modelsRoutes);
+	app.route('/v1/providers', openRouterProvidersAliasRoutes);
+	app.route('/v1/tools/web-search', webSearchRoutes);
+	app.route('/v1/tools/web-fetch', webFetchRoutes);
+	app.route('/v1/tools/web-deep-search', webDeepSearchRoutes);
+	app.route('/v1/tools/ai-detection', aiDetectionRoutes);
+	app.route('/v1/tools/pricing', toolsPricingRoutes);
 	// OpenRouter-compatible base URL. Models and Providers remain anonymous;
 	// canonical per-model Endpoints requires a Management key. Register the
 	// exact contracts before the legacy Gateway-key discovery aliases below.
-	app.route("/api/v1", openRouterPublicCatalogRoutes);
-	app.route("/api/v1", openRouterManagementCatalogRoutes);
-	app.route("/api/v1/key", currentKeyRoutes);
-	app.route("/api/v1/keys", managementKeyRoutes);
-	app.route("/api/v1/workspaces", managementWorkspaceRoutes);
-	app.route("/api/v1/workspaces", managementWorkspaceBudgetRoutes);
-	app.route("/api/v1/guardrails", managementGuardrailRoutes);
-	app.route("/api/v1/byok", byokRoutes);
-	app.route("/api/v1/analytics", analyticsRoutes);
-	app.route("/api/v1", endpointDiscoveryRoutes);
-	app.route("/api/v1/generation", generationRoutes);
-	app.route("/api/v1/chat/completions", chatRoutes);
-	app.route("/api/v1/completions", completionsRoutes);
-	app.route("/api/v1/responses", responsesRoutes);
-	app.route("/api/v1/embeddings", embeddingsRoutes);
-	app.route("/api/v1/rerank", rerankRoutes);
-	app.route("/api/v1/images", imageRoutes);
-	app.route("/api/v1/audio", audioRoutes);
-	app.route("/api/v1/dashscope/realtime", dashScopeRealtimeRoutes);
-	app.route("/api/v1/messages", messagesRoutes);
-	app.route("/catalog", createCatalogRoutes(options?.publicStatsRuntime));
-	app.route("/api/v1/presets", presetRoutes);
-	app.route("/v1/presets", presetRoutes);
+	app.route('/api/v1', openRouterPublicCatalogRoutes);
+	app.route('/api/v1', openRouterManagementCatalogRoutes);
+	app.route('/api/v1/key', currentKeyRoutes);
+	app.route('/api/v1/keys', managementKeyRoutes);
+	app.route('/api/v1/workspaces', managementWorkspaceRoutes);
+	app.route('/api/v1/workspaces', managementWorkspaceBudgetRoutes);
+	app.route('/api/v1/guardrails', managementGuardrailRoutes);
+	app.route('/api/v1/byok', byokRoutes);
+	app.route('/api/v1/analytics', analyticsRoutes);
+	app.route('/api/v1', endpointDiscoveryRoutes);
+	app.route('/api/v1/generation', generationRoutes);
+	app.route('/api/v1/chat/completions', chatRoutes);
+	app.route('/api/v1/completions', completionsRoutes);
+	app.route('/api/v1/responses', responsesRoutes);
+	app.route('/api/v1/embeddings', embeddingsRoutes);
+	app.route('/api/v1/rerank', rerankRoutes);
+	app.route('/api/v1/images', imageRoutes);
+	app.route('/api/v1/audio', audioRoutes);
+	app.route('/api/v1/dashscope/realtime', dashScopeRealtimeRoutes);
+	app.route('/api/v1/messages', messagesRoutes);
+	app.route('/catalog', createCatalogRoutes(options?.publicStatsRuntime));
+	app.route('/api/v1/presets', presetRoutes);
+	app.route('/v1/presets', presetRoutes);
+	app.route('/mcp', mcpRoutes);
 
-	app.get("/", (c) =>
-		c.json({ name: "cinatoken-proxy", version: proxyAppVersion })
-	);
+	app.get('/', (c) => c.json({ name: 'cinatoken-proxy', version: proxyAppVersion }));
 
 	app.notFound((c) =>
 		gatewayErrorJson(c, {
 			status: 404,
 			code: GatewayErrorCode.routeNotFound,
-			message: "Resource not found",
-		})
+			message: 'Resource not found',
+		}),
 	);
 
 	app.onError((error, c) => {
@@ -476,15 +516,15 @@ export function createProxyApp(
 		if (stopped) return stopped;
 		console.error(
 			JSON.stringify({
-				message: "unhandled gateway request error",
+				message: 'unhandled gateway request error',
 				error_type: error.name,
 				path: c.req.path,
-			})
+			}),
 		);
 		return gatewayErrorJson(c, {
 			status: 500,
 			code: GatewayErrorCode.internalError,
-			message: "Internal server error",
+			message: 'Internal server error',
 		});
 	});
 

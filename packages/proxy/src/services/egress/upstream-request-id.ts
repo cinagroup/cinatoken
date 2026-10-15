@@ -53,7 +53,10 @@ function normalizeCloudTraceContextRequestId(value: string): string | null {
 	return normalizeUpstreamId(slash >= 0 ? trimmed.slice(0, slash) : trimmed);
 }
 
-function extractHeaderRequestId(headers: Headers, name: (typeof UPSTREAM_REQUEST_ID_HEADER_NAMES)[number]): string | null {
+function extractHeaderRequestId(
+	headers: Headers,
+	name: (typeof UPSTREAM_REQUEST_ID_HEADER_NAMES)[number],
+): string | null {
 	const raw = headers.get(name);
 	if (!raw) return null;
 	if (name === 'x-cloud-trace-context') {

@@ -8,10 +8,7 @@ import { dispatchAnthropicRoute } from './anthropic-driver';
 import { dispatchOpenAiRoute } from './openai-driver';
 import { dispatchOpenAiResponsesRoute } from './openai-responses-driver';
 import { dispatchGeminiRoute } from './gemini-driver';
-import {
-	TEXT_JSON_RESPONSE_MAX_BYTES,
-	TEXT_SUCCESS_RESPONSE_MAX_COLLECTION_ITEMS,
-} from './text-json-response';
+import { TEXT_JSON_RESPONSE_MAX_BYTES, TEXT_SUCCESS_RESPONSE_MAX_COLLECTION_ITEMS } from './text-json-response';
 
 type Protocol = 'chat' | 'responses' | 'anthropic';
 type DispatchResult = {
@@ -53,38 +50,55 @@ function route(protocol: Protocol): RouteResult {
 function dispatch(protocol: Protocol, stream = false): Promise<DispatchResult> {
 	if (protocol === 'chat') {
 		return dispatchOpenAiRoute(
-			route(protocol), { messages: [], stream }, undefined, undefined, undefined, undefined,
+			route(protocol),
+			{ messages: [], stream },
+			undefined,
+			undefined,
+			undefined,
+			undefined,
 			'gen-json-contract',
 		);
 	}
 	if (protocol === 'responses') {
 		return dispatchOpenAiResponsesRoute(
-			route(protocol), { input: 'hi', stream }, undefined, undefined, undefined, undefined,
+			route(protocol),
+			{ input: 'hi', stream },
+			undefined,
+			undefined,
+			undefined,
+			undefined,
 			'gen-json-contract',
 		);
 	}
 	return dispatchAnthropicRoute(
-		route(protocol), { messages: [], stream }, undefined, undefined, undefined, undefined,
+		route(protocol),
+		{ messages: [], stream },
+		undefined,
+		undefined,
+		undefined,
+		undefined,
 		'gen-json-contract',
 	);
 }
 
 function dispatchGemini(): Promise<DispatchResult> {
-	return dispatchGeminiRoute({
-		...route('chat'),
-		targetId: 'target-gemini',
-		providerId: 'provider-gemini',
-		providerModelName: 'gemini-2.5-flash',
-		upstreamProtocol: 'gemini',
-		upstreamOperation: 'models.generate',
-		providerEndpoints: { gemini: { base: 'https://generativelanguage.googleapis.com/v1beta/models' } },
-	}, {}, 'generateContent', '');
+	return dispatchGeminiRoute(
+		{
+			...route('chat'),
+			targetId: 'target-gemini',
+			providerId: 'provider-gemini',
+			providerModelName: 'gemini-2.5-flash',
+			upstreamProtocol: 'gemini',
+			upstreamOperation: 'models.generate',
+			providerEndpoints: { gemini: { base: 'https://generativelanguage.googleapis.com/v1beta/models' } },
+		},
+		{},
+		'generateContent',
+		'',
+	);
 }
 
-async function withFetchResponse(
-	response: () => Response,
-	run: () => Promise<void>,
-): Promise<void> {
+async function withFetchResponse(response: () => Response, run: () => Promise<void>): Promise<void> {
 	const originalFetch = globalThis.fetch;
 	globalThis.fetch = (async () => response()) as typeof fetch;
 	try {
@@ -129,18 +143,22 @@ const validBody: Record<Protocol, Record<string, unknown>> = {
 describe('bounded non-streaming text JSON responses', () => {
 	it('applies the same bounded accepted-JSON contract to Gemini', async () => {
 		await withFetchResponse(
-			() => new Response(JSON.stringify({
-				responseId: 'gemini-response',
-				candidates: [{ content: { parts: [{ text: 'ok' }] } }],
-				usageMetadata: { promptTokenCount: 2, candidatesTokenCount: 3, totalTokenCount: 5 },
-			}), {
-				headers: {
-					'Content-Type': 'application/json',
-					'Content-Length': '999',
-					'Content-Encoding': 'gzip',
-					'Transfer-Encoding': 'chunked',
-				},
-			}),
+			() =>
+				new Response(
+					JSON.stringify({
+						responseId: 'gemini-response',
+						candidates: [{ content: { parts: [{ text: 'ok' }] } }],
+						usageMetadata: { promptTokenCount: 2, candidatesTokenCount: 3, totalTokenCount: 5 },
+					}),
+					{
+						headers: {
+							'Content-Type': 'application/json',
+							'Content-Length': '999',
+							'Content-Encoding': 'gzip',
+							'Transfer-Encoding': 'chunked',
+						},
+					},
+				),
 			async () => {
 				const result = await dispatchGemini();
 				assert.equal(result.response.status, 200);
@@ -151,8 +169,8 @@ describe('bounded non-streaming text JSON responses', () => {
 				assert.equal(usage.total_tokens, 5);
 				assert.equal(usage.native_tokens_prompt, 2);
 				assert.equal(usage.native_tokens_completion, 3);
-				assert.equal((await result.response.json() as { responseId?: string }).responseId, 'gemini-response');
-			}
+				assert.equal(((await result.response.json()) as { responseId?: string }).responseId, 'gemini-response');
+			},
 		);
 
 		await withFetchResponse(
@@ -163,20 +181,21 @@ describe('bounded non-streaming text JSON responses', () => {
 				assert.equal(result.meta?.upstreamOutcomeUnknown, true);
 				assert.equal(result.meta?.failoverForbidden, true);
 				assert.doesNotMatch(await result.response.text(), /private_secret/);
-			}
+			},
 		);
 
 		await withFetchResponse(
-			() => new Response('{}', {
-				status: 200,
-				headers: { 'Content-Type': 'application/json', 'Content-Length': String(TEXT_JSON_RESPONSE_MAX_BYTES + 1) },
-			}),
+			() =>
+				new Response('{}', {
+					status: 200,
+					headers: { 'Content-Type': 'application/json', 'Content-Length': String(TEXT_JSON_RESPONSE_MAX_BYTES + 1) },
+				}),
 			async () => {
 				const result = await dispatchGemini();
 				assert.equal(result.response.status, 502);
 				assert.equal(result.meta?.responseBodyTooLarge, true);
 				assert.equal(result.meta?.failoverForbidden, true);
-			}
+			},
 		);
 	});
 
@@ -194,10 +213,7 @@ describe('bounded non-streaming text JSON responses', () => {
 					assert.equal(usage.total_tokens, 5);
 					assert.equal(usage.native_tokens_prompt, 2);
 					assert.equal(usage.native_tokens_completion, 3);
-					assert.equal(
-						usage.native_tokens_cached,
-						protocol === 'anthropic' ? 0 : null,
-					);
+					assert.equal(usage.native_tokens_cached, protocol === 'anthropic' ? 0 : null);
 					if (protocol === 'chat') {
 						assert.equal(usage.finish_reason, 'stop');
 						assert.equal(usage.native_finish_reason, 'stop');
@@ -216,18 +232,19 @@ describe('bounded non-streaming text JSON responses', () => {
 
 	it('uses Chat choice zero and preserves conservative Anthropic finish semantics', async () => {
 		await withFetchResponse(
-			() => Response.json({
-				...validBody.chat,
-				choices: [
-					{ index: 1, message: { role: 'assistant', content: 'later' }, finish_reason: 'length' },
-					{
-						index: 0,
-						message: { role: 'assistant', content: 'primary' },
-						finish_reason: 'tool_calls',
-						native_finish_reason: 'tool_use',
-					},
-				],
-			}),
+			() =>
+				Response.json({
+					...validBody.chat,
+					choices: [
+						{ index: 1, message: { role: 'assistant', content: 'later' }, finish_reason: 'length' },
+						{
+							index: 0,
+							message: { role: 'assistant', content: 'primary' },
+							finish_reason: 'tool_calls',
+							native_finish_reason: 'tool_use',
+						},
+					],
+				}),
 			async () => {
 				const usage = await (await dispatch('chat')).usagePromise;
 				assert.equal(usage.finish_reason, 'tool_calls');
@@ -264,7 +281,7 @@ describe('bounded non-streaming text JSON responses', () => {
 					assert.equal((await result.usagePromise).raw_usage, null);
 					assert.equal((await result.usagePromise).total_tokens, 0);
 					assert.equal((await result.usagePromise).native_tokens_prompt, undefined);
-				}
+				},
 			);
 		}
 	});
@@ -285,14 +302,11 @@ describe('bounded non-streaming text JSON responses', () => {
 				},
 				{
 					...validBody.chat,
-					choices: Array.from(
-						{ length: TEXT_SUCCESS_RESPONSE_MAX_COLLECTION_ITEMS + 1 },
-						(_, index) => ({
-							index,
-							message: { role: 'assistant', content: '' },
-							finish_reason: 'stop',
-						}),
-					),
+					choices: Array.from({ length: TEXT_SUCCESS_RESPONSE_MAX_COLLECTION_ITEMS + 1 }, (_, index) => ({
+						index,
+						message: { role: 'assistant', content: '' },
+						finish_reason: 'stop',
+					})),
 				},
 			],
 			responses: [
@@ -307,10 +321,7 @@ describe('bounded non-streaming text JSON responses', () => {
 				{ ...validBody.responses, status: 'failed', error: null },
 				{
 					...validBody.responses,
-					output: Array.from(
-						{ length: TEXT_SUCCESS_RESPONSE_MAX_COLLECTION_ITEMS + 1 },
-						() => ({ type: 'message' }),
-					),
+					output: Array.from({ length: TEXT_SUCCESS_RESPONSE_MAX_COLLECTION_ITEMS + 1 }, () => ({ type: 'message' })),
 				},
 			],
 			anthropic: [
@@ -322,10 +333,10 @@ describe('bounded non-streaming text JSON responses', () => {
 				{ ...validBody.anthropic, usage: undefined },
 				{
 					...validBody.anthropic,
-					content: Array.from(
-						{ length: TEXT_SUCCESS_RESPONSE_MAX_COLLECTION_ITEMS + 1 },
-						() => ({ type: 'text', text: '' }),
-					),
+					content: Array.from({ length: TEXT_SUCCESS_RESPONSE_MAX_COLLECTION_ITEMS + 1 }, () => ({
+						type: 'text',
+						text: '',
+					})),
 				},
 			],
 		};
@@ -341,7 +352,7 @@ describe('bounded non-streaming text JSON responses', () => {
 						assert.equal(result.meta?.failoverForbidden, true, protocol);
 						assert.equal(result.meta?.gatewayGeneratedError, true, protocol);
 						assert.doesNotMatch(await result.response.text(), /must-not-leak|private_secret/);
-					}
+					},
 				);
 			}
 		}
@@ -351,41 +362,45 @@ describe('bounded non-streaming text JSON responses', () => {
 		for (const protocol of ['chat', 'responses', 'anthropic'] as const) {
 			for (const streamRequested of [false, true]) {
 				let cancelled = 0;
-				const bytes = new TextEncoder().encode(
-					streamRequested ? JSON.stringify(validBody[protocol]) : 'must-not-leak',
-				);
+				const bytes = new TextEncoder().encode(streamRequested ? JSON.stringify(validBody[protocol]) : 'must-not-leak');
 				const body = new ReadableStream<Uint8Array>({
-					start(controller) { controller.enqueue(bytes); },
-					cancel() { cancelled += 1; },
+					start(controller) {
+						controller.enqueue(bytes);
+					},
+					cancel() {
+						cancelled += 1;
+					},
 				});
 				await withFetchResponse(
-					() => new Response(body, {
-						status: 200,
-						headers: {
-							'Content-Type': streamRequested ? 'application/json' : 'text/plain',
-						},
-					}),
+					() =>
+						new Response(body, {
+							status: 200,
+							headers: {
+								'Content-Type': streamRequested ? 'application/json' : 'text/plain',
+							},
+						}),
 					async () => {
 						const result = await dispatch(protocol, streamRequested);
 						assert.equal(result.response.status, 502, `${protocol}/${streamRequested}`);
 						assert.equal(result.meta?.upstreamOutcomeUnknown, true);
 						assert.equal(result.meta?.failoverForbidden, true);
 						assert.doesNotMatch(await result.response.text(), /must-not-leak/);
-					}
+					},
 				);
 				assert.equal(cancelled, 1, `${protocol}/${streamRequested}`);
 			}
 
 			await withFetchResponse(
-				() => new Response(null, {
-					status: 200,
-					headers: { 'Content-Type': 'text/event-stream' },
-				}),
+				() =>
+					new Response(null, {
+						status: 200,
+						headers: { 'Content-Type': 'text/event-stream' },
+					}),
 				async () => {
 					const result = await dispatch(protocol, true);
 					assert.equal(result.response.status, 502, `${protocol}/empty-stream`);
 					assert.equal(result.meta?.upstreamOutcomeUnknown, true);
-				}
+				},
 			);
 		}
 	});
@@ -393,10 +408,11 @@ describe('bounded non-streaming text JSON responses', () => {
 	it('turns malformed accepted JSON into a masked typed 502 without replay', async () => {
 		for (const protocol of ['chat', 'responses', 'anthropic'] as const) {
 			await withFetchResponse(
-				() => new Response('{"private_secret":', {
-					status: 200,
-					headers: { 'Content-Type': 'application/json' },
-				}),
+				() =>
+					new Response('{"private_secret":', {
+						status: 200,
+						headers: { 'Content-Type': 'application/json' },
+					}),
 				async () => {
 					const result = await dispatch(protocol);
 					assert.equal(result.response.status, 502);
@@ -404,10 +420,7 @@ describe('bounded non-streaming text JSON responses', () => {
 					assert.equal(result.meta?.failoverForbidden, true);
 					assert.equal(result.meta?.gatewayGeneratedError, true);
 					assert.equal(result.meta?.responseBodyTooLarge, undefined);
-					assert.equal(
-						result.response.headers.get(GATEWAY_ERROR_CODE_HEADER),
-						'gateway.upstream_request_failed',
-					);
+					assert.equal(result.response.headers.get(GATEWAY_ERROR_CODE_HEADER), 'gateway.upstream_request_failed');
 					const publicBody = await result.response.text();
 					assert.doesNotMatch(publicBody, /private_secret/);
 					assert.match(publicBody, /provider|upstream|failed|unavailable/i);
@@ -419,13 +432,14 @@ describe('bounded non-streaming text JSON responses', () => {
 	it('rejects declared oversized accepted JSON before buffering it', async () => {
 		for (const protocol of ['chat', 'responses', 'anthropic'] as const) {
 			await withFetchResponse(
-				() => new Response('{}', {
-					status: 200,
-					headers: {
-						'Content-Type': 'application/json',
-						'Content-Length': String(TEXT_JSON_RESPONSE_MAX_BYTES + 1),
-					},
-				}),
+				() =>
+					new Response('{}', {
+						status: 200,
+						headers: {
+							'Content-Type': 'application/json',
+							'Content-Length': String(TEXT_JSON_RESPONSE_MAX_BYTES + 1),
+						},
+					}),
 				async () => {
 					const result = await dispatch(protocol);
 					assert.equal(result.response.status, 502);
@@ -433,10 +447,7 @@ describe('bounded non-streaming text JSON responses', () => {
 					assert.equal(result.meta?.failoverForbidden, true);
 					assert.equal(result.meta?.gatewayGeneratedError, true);
 					assert.equal(result.meta?.responseBodyTooLarge, true);
-					assert.equal(
-						result.response.headers.get(GATEWAY_ERROR_CODE_HEADER),
-						'gateway.upstream_response_too_large',
-					);
+					assert.equal(result.response.headers.get(GATEWAY_ERROR_CODE_HEADER), 'gateway.upstream_response_too_large');
 					assert.doesNotMatch(await result.response.text(), /provider-secret/);
 				},
 			);
@@ -457,10 +468,11 @@ describe('bounded non-streaming text JSON responses', () => {
 			},
 		});
 		await withFetchResponse(
-			() => new Response(body, {
-				status: 200,
-				headers: { 'Content-Type': 'application/json' },
-			}),
+			() =>
+				new Response(body, {
+					status: 200,
+					headers: { 'Content-Type': 'application/json' },
+				}),
 			async () => {
 				const result = await dispatch('chat');
 				assert.equal(result.response.status, 502);
@@ -475,10 +487,11 @@ describe('bounded non-streaming text JSON responses', () => {
 	it('leaves explicit non-2xx upstream bodies untouched for existing normalization', async () => {
 		for (const protocol of ['chat', 'responses', 'anthropic'] as const) {
 			await withFetchResponse(
-				() => new Response('{"error":{"message":"known rejection"}}', {
-					status: 400,
-					headers: { 'Content-Type': 'application/json' },
-				}),
+				() =>
+					new Response('{"error":{"message":"known rejection"}}', {
+						status: 400,
+						headers: { 'Content-Type': 'application/json' },
+					}),
 				async () => {
 					const result = await dispatch(protocol);
 					assert.equal(result.response.status, 400);

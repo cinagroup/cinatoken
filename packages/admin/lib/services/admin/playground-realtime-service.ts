@@ -2,55 +2,46 @@
  * 调试台的 DashScope 原生 WebSocket 直连：使用管理员会话解析路由，
  * 供应商连接和事件转发都在 Worker 侧完成，因此不会把供应商 API Key 暴露给浏览器，也不写网关用量日志。
  */
-import { resolveUpstreamEndpoint } from "@octafuse/core/provider-endpoints";
-import {
-	mergePlaygroundRequestBody,
-	type PlaygroundResolvedRoute,
-	resolvePlaygroundRoute,
-} from "./playground-service";
-import {
-	createRequestDeadline,
-	RequestExecutionStoppedError,
-	type GatewayRepositories,
-} from "@octafuse/core";
-import { AdminServiceError } from "./errors";
+import { applyRouteExtraHeaders } from '@octafuse/core/route-custom-params';
+import { resolveUpstreamEndpoint } from '@octafuse/core/provider-endpoints';
+import { mergePlaygroundRequestBody, type PlaygroundResolvedRoute, resolvePlaygroundRoute } from './playground-service';
+import { createRequestDeadline, RequestExecutionStoppedError, type GatewayRepositories } from '@octafuse/core';
+import { AdminServiceError } from './errors';
 import {
 	discardPlaygroundResponse,
 	playgroundStoppedError,
 	PLAYGROUND_REQUEST_DEADLINE_MS,
-} from "./playground-request-lifecycle";
-import { safePlaygroundUrl } from "@/lib/playground/private-preview";
-import { copyPlaygroundUpstreamHeaders } from "@/lib/playground/proxy-response-headers";
+} from './playground-request-lifecycle';
+import { safePlaygroundUrl } from '@/lib/playground/private-preview';
+import { copyPlaygroundUpstreamHeaders } from '@/lib/playground/proxy-response-headers';
 
 export const PLAYGROUND_DASHSCOPE_REALTIME_OPERATIONS = [
-	"audio.transcriptions.realtime.inference",
-	"audio.transcriptions.realtime.session",
-	"audio.speech.realtime.inference",
+	'audio.transcriptions.realtime.inference',
+	'audio.transcriptions.realtime.session',
+	'audio.speech.realtime.inference',
+	'audio.speech.realtime.session',
 ] as const;
 
-export type PlaygroundDashScopeRealtimeOperation =
-	(typeof PLAYGROUND_DASHSCOPE_REALTIME_OPERATIONS)[number];
+export type PlaygroundDashScopeRealtimeOperation = (typeof PLAYGROUND_DASHSCOPE_REALTIME_OPERATIONS)[number];
 
 type JsonObject = Record<string, unknown>;
 
 function asObject(value: unknown): JsonObject | null {
-	return value != null && typeof value === "object" && !Array.isArray(value)
-		? (value as JsonObject)
-		: null;
+	return value != null && typeof value === 'object' && !Array.isArray(value) ? (value as JsonObject) : null;
 }
 
 function eventName(event: JsonObject): string {
 	const header = asObject(event.header);
-	if (typeof header?.action === "string") return header.action;
-	if (typeof header?.event === "string") return header.event;
-	return typeof event.type === "string" ? event.type : "";
+	if (typeof header?.action === 'string') return header.action;
+	if (typeof header?.event === 'string') return header.event;
+	return typeof event.type === 'string' ? event.type : '';
 }
 
 /** 与 Proxy 保持同一模型注入和 custom_params 合并规则。 */
 export function rewritePlaygroundRealtimeMessage(
 	route: PlaygroundResolvedRoute,
 	operation: PlaygroundDashScopeRealtimeOperation,
-	message: string
+	message: string,
 ): string {
 	let event: JsonObject;
 	try {
@@ -63,81 +54,62 @@ export function rewritePlaygroundRealtimeMessage(
 	}
 	const name = eventName(event);
 	const shouldMerge =
-		(operation.endsWith(".inference") && name === "run-task") ||
-		(operation.endsWith(".session") && name === "session.update");
+		(operation.endsWith('.inference') && name === 'run-task') ||
+		(operation.endsWith('.session') && name === 'session.update');
 	if (!shouldMerge) return message;
 
 	const merged = mergePlaygroundRequestBody(route, event);
-	if (name === "run-task") {
+	if (name === 'run-task') {
 		const payload = asObject(merged.payload) ?? {};
 		merged.payload = { ...payload, model: route.providerModelName };
 	}
 	return JSON.stringify(merged);
 }
 
+export const rewritePlaygroundRealtimeClientMessage = rewritePlaygroundRealtimeMessage;
+
 function outboundWebSocketFetchUrl(endpoint: string): URL {
 	const url = new URL(endpoint);
-	if (url.protocol === "wss:") url.protocol = "https:";
-	if (url.protocol === "ws:") url.protocol = "http:";
+	if (url.protocol === 'wss:') url.protocol = 'https:';
+	if (url.protocol === 'ws:') url.protocol = 'http:';
 	return url;
 }
 
 function realtimeCapability(
-	operation: PlaygroundDashScopeRealtimeOperation
-): "audio.realtime.inference" | "audio.realtime.session" {
-	return operation.endsWith(".inference")
-		? "audio.realtime.inference"
-		: "audio.realtime.session";
+	operation: PlaygroundDashScopeRealtimeOperation,
+): 'audio.realtime.inference' | 'audio.realtime.session' {
+	return operation.endsWith('.inference') ? 'audio.realtime.inference' : 'audio.realtime.session';
 }
 
-function closeSocket(socket: WebSocket, code = 1000, reason = ""): void {
+function closeSocket(socket: WebSocket, code = 1000, reason = ''): void {
 	if (socket.readyState === WebSocket.CLOSED) return;
 	const valid =
-		[
-			1000, 1001, 1002, 1003, 1007, 1008, 1009, 1010, 1011, 1012, 1013, 1014,
-		].includes(code) ||
+		[1000, 1001, 1002, 1003, 1007, 1008, 1009, 1010, 1011, 1012, 1013, 1014].includes(code) ||
 		(code >= 3000 && code <= 4999);
 	try {
-		socket.close(
-			valid ? code : 1000,
-			new TextDecoder().decode(new TextEncoder().encode(reason).slice(0, 120))
-		);
+		socket.close(valid ? code : 1000, new TextDecoder().decode(new TextEncoder().encode(reason).slice(0, 120)));
 	} catch {
 		/* Transport may already be closing. */
 	}
 }
 
-function isRealtimeOperation(
-	value: string
-): value is PlaygroundDashScopeRealtimeOperation {
-	return (
-		PLAYGROUND_DASHSCOPE_REALTIME_OPERATIONS as readonly string[]
-	).includes(value);
+function isRealtimeOperation(value: string): value is PlaygroundDashScopeRealtimeOperation {
+	return (PLAYGROUND_DASHSCOPE_REALTIME_OPERATIONS as readonly string[]).includes(value);
 }
 
 export function preparePlaygroundRealtimeRequest(
 	route: PlaygroundResolvedRoute,
-	operation: PlaygroundDashScopeRealtimeOperation
+	operation: PlaygroundDashScopeRealtimeOperation,
 ): URL {
-	if (route.upstreamProtocol !== "dashscope" || !route.isAudioModel)
-		throw new AdminServiceError(
-			400,
-			"Playground realtime routes must use an audio DashScope route"
-		);
+	if (route.upstreamProtocol !== 'dashscope' || !route.isAudioModel)
+		throw new AdminServiceError(400, 'Playground realtime routes must use an audio DashScope route');
 	if (route.upstreamOperation !== operation)
-		throw new AdminServiceError(
-			400,
-			"Realtime operation must match the selected route"
-		);
-	const endpoint = resolveUpstreamEndpoint(
-		"dashscope",
-		realtimeCapability(operation),
-		route.providerEndpoints,
-		{ providerId: route.providerId }
-	);
+		throw new AdminServiceError(400, 'Realtime operation must match the selected route');
+	const endpoint = resolveUpstreamEndpoint('dashscope', realtimeCapability(operation), route.providerEndpoints, {
+		providerId: route.providerId,
+	});
 	const url = outboundWebSocketFetchUrl(endpoint);
-	if (operation.endsWith(".session"))
-		url.searchParams.set("model", route.providerModelName);
+	if (operation.endsWith('.session')) url.searchParams.set('model', route.providerModelName);
 	return url;
 }
 
@@ -146,77 +118,91 @@ export type PlaygroundRealtimeDispatchResult = {
 	upstreamUrl: string;
 };
 
-/** 解析路由并建立调试台专用的非计费原生 WebSocket。 */
-export async function dispatchPlaygroundDashScopeRealtime(
-	repos: GatewayRepositories,
-	input: { routeId: string; operation: string },
-	requestSignal?: AbortSignal
+export type PlaygroundRealtimeNodeDispatch = (
+	route: PlaygroundResolvedRoute,
+	operation: PlaygroundDashScopeRealtimeOperation,
+	requestSignal: AbortSignal | undefined,
+	upstreamUrl: string,
+) => Promise<Response>;
+
+export type PlaygroundRealtimeDispatchOptions = {
+	nodeDispatch?: PlaygroundRealtimeNodeDispatch;
+};
+
+function withSessionModel(endpoint: string, operation: PlaygroundDashScopeRealtimeOperation, model: string): string {
+	const url = new URL(endpoint);
+	if (operation.endsWith('.session')) url.searchParams.set('model', model);
+	return url.toString();
+}
+
+/** 在已解析路由上建立调试台专用的非计费原生 WebSocket（Workers 或 Node dispatch）。 */
+export async function connectPlaygroundDashScopeRealtime(
+	route: PlaygroundResolvedRoute,
+	operation: PlaygroundDashScopeRealtimeOperation,
+	requestSignal?: AbortSignal,
+	options?: PlaygroundRealtimeDispatchOptions,
 ): Promise<PlaygroundRealtimeDispatchResult> {
-	const owner = createRequestDeadline(
-		Date.now() + PLAYGROUND_REQUEST_DEADLINE_MS,
-		requestSignal
-	);
+	const owner = createRequestDeadline(Date.now() + PLAYGROUND_REQUEST_DEADLINE_MS, requestSignal);
 	let streaming = false;
 	let handedOff = false;
 	const openingSockets: WebSocket[] = [];
 	let socketAbortCleanup = () => {};
 	try {
 		owner.throwIfStopped();
-		if (!isRealtimeOperation(input.operation)) {
-			throw new AdminServiceError(
-				400,
-				`Unsupported realtime operation: ${input.operation || "(empty)"}`
+		const url = preparePlaygroundRealtimeRequest(route, operation);
+		if (options?.nodeDispatch) {
+			const endpoint = resolveUpstreamEndpoint('dashscope', realtimeCapability(operation), route.providerEndpoints, {
+				providerId: route.providerId,
+			});
+			const response = await owner.wait(
+				() =>
+					options.nodeDispatch!(
+						route,
+						operation,
+						owner.signal,
+						withSessionModel(endpoint, operation, route.providerModelName),
+					),
+				discardPlaygroundResponse,
 			);
+			return { response, upstreamUrl: safePlaygroundUrl(endpoint, [route.providerApiKey]) };
 		}
-		const operation = input.operation;
-		if (typeof WebSocketPair === "undefined") {
-			throw new AdminServiceError(
-				501,
-				"DashScope realtime requires the Cloudflare Workers runtime"
-			);
+		if (typeof WebSocketPair === 'undefined') {
+			throw new AdminServiceError(501, 'DashScope realtime requires the Cloudflare Workers runtime');
 		}
 
-		const route = await resolvePlaygroundRoute(repos, input.routeId, owner);
-		const url = preparePlaygroundRealtimeRequest(route, operation);
 		const upstreamResponse = await owner.wait(
 			() =>
 				fetch(url.toString(), {
-					headers: {
-						Authorization: `Bearer ${route.providerApiKey}`,
-						Upgrade: "websocket",
-					},
+					headers: applyRouteExtraHeaders(
+						{ Authorization: `Bearer ${route.providerApiKey}`, Upgrade: 'websocket' },
+						route.customParams,
+					),
 					signal: owner.signal,
 					// A 307/308 must not send a second authenticated upgrade outside this dispatch.
-					redirect: "manual",
+					redirect: 'manual',
 				}),
 			(response) => {
 				discardPlaygroundResponse(response);
-				if (response.webSocket)
-					closeSocket(response.webSocket, 1000, "Playground upgrade cancelled");
-			}
+				if (response.webSocket) closeSocket(response.webSocket, 1000, 'Playground upgrade cancelled');
+			},
 		);
-		if (upstreamResponse.webSocket)
-			openingSockets.push(upstreamResponse.webSocket);
+		if (upstreamResponse.webSocket) openingSockets.push(upstreamResponse.webSocket);
 		owner.throwIfStopped();
-		const upstreamUrl = safePlaygroundUrl(url.toString(), [
-			route.providerApiKey,
-		]);
+		const upstreamUrl = safePlaygroundUrl(url.toString(), [route.providerApiKey]);
 		if (upstreamResponse.status >= 300 && upstreamResponse.status < 400) {
-			void upstreamResponse.body
-				?.cancel("playground_realtime_redirect_rejected")
-				.catch(() => undefined);
+			void upstreamResponse.body?.cancel('playground_realtime_redirect_rejected').catch(() => undefined);
 			return {
 				response: new Response(
 					JSON.stringify({
-						error: { message: "Realtime upstream redirected the upgrade" },
+						error: { message: 'Realtime upstream redirected the upgrade' },
 					}),
 					{
 						status: 502,
 						headers: {
-							"Content-Type": "application/json",
-							"Cache-Control": "no-store",
+							'Content-Type': 'application/json',
+							'Cache-Control': 'no-store',
 						},
-					}
+					},
 				),
 				upstreamUrl,
 			};
@@ -224,10 +210,7 @@ export async function dispatchPlaygroundDashScopeRealtime(
 		const upstream = upstreamResponse.webSocket;
 		if (upstreamResponse.status === 101 && !upstream) {
 			discardPlaygroundResponse(upstreamResponse);
-			throw new AdminServiceError(
-				502,
-				"Realtime upstream did not provide a WebSocket"
-			);
+			throw new AdminServiceError(502, 'Realtime upstream did not provide a WebSocket');
 		}
 		if (upstreamResponse.status !== 101 || !upstream) {
 			streaming = true;
@@ -236,10 +219,8 @@ export async function dispatchPlaygroundDashScopeRealtime(
 					new Response(upstreamResponse.body, {
 						status: upstreamResponse.status,
 						statusText: upstreamResponse.statusText,
-						headers: copyPlaygroundUpstreamHeaders(upstreamResponse.headers, [
-							route.providerApiKey,
-						]),
-					})
+						headers: copyPlaygroundUpstreamHeaders(upstreamResponse.headers, [route.providerApiKey]),
+					}),
 				),
 				upstreamUrl,
 			};
@@ -250,57 +231,59 @@ export async function dispatchPlaygroundDashScopeRealtime(
 		const server = pair[1];
 		openingSockets.push(client, server);
 		server.accept({ allowHalfOpen: true });
-		upstream.binaryType = "arraybuffer";
+		upstream.binaryType = 'arraybuffer';
 		upstream.accept({ allowHalfOpen: true });
-		const cleanup = () => requestSignal?.removeEventListener("abort", onAbort);
+		const clientSignal = requestSignal;
+		const cleanup = () => {
+			clientSignal?.removeEventListener('abort', onAbort);
+			owner.dispose();
+		};
 		socketAbortCleanup = cleanup;
 		const onAbort = () => {
 			cleanup();
-			closeSocket(server, 1000, "Playground client cancelled");
-			closeSocket(upstream, 1000, "Playground client cancelled");
+			closeSocket(server, 1000, 'Playground client cancelled');
+			closeSocket(upstream, 1000, 'Playground client cancelled');
 		};
-		requestSignal?.addEventListener("abort", onAbort, { once: true });
+		requestSignal?.addEventListener('abort', onAbort, { once: true });
 		if (requestSignal?.aborted) onAbort();
 
-		server.addEventListener("message", (event) => {
+		server.addEventListener('message', (event) => {
 			try {
 				const data =
-					typeof event.data === "string"
-						? rewritePlaygroundRealtimeMessage(route, operation, event.data)
-						: event.data;
+					typeof event.data === 'string' ? rewritePlaygroundRealtimeMessage(route, operation, event.data) : event.data;
 				upstream.send(data);
 			} catch {
-				closeSocket(server, 1011, "Gateway upstream send failed");
-				closeSocket(upstream, 1011, "Gateway upstream send failed");
+				closeSocket(server, 1011, 'Gateway upstream send failed');
+				closeSocket(upstream, 1011, 'Gateway upstream send failed');
 			}
 		});
-		upstream.addEventListener("message", (event) => {
+		upstream.addEventListener('message', (event) => {
 			try {
 				server.send(event.data);
 			} catch {
-				closeSocket(server, 1011, "Gateway client send failed");
-				closeSocket(upstream, 1011, "Gateway client send failed");
+				closeSocket(server, 1011, 'Gateway client send failed');
+				closeSocket(upstream, 1011, 'Gateway client send failed');
 			}
 		});
-		server.addEventListener("close", (event) => {
+		server.addEventListener('close', (event) => {
 			cleanup();
 			closeSocket(upstream, event.code, event.reason);
 			// allowHalfOpen 下必须显式完成本端 Close 握手，避免调试台连接悬挂。
 			closeSocket(server, event.code, event.reason);
 		});
-		upstream.addEventListener("close", (event) => {
+		upstream.addEventListener('close', (event) => {
 			cleanup();
 			closeSocket(server, event.code, event.reason);
 		});
-		server.addEventListener("error", () => {
+		server.addEventListener('error', () => {
 			cleanup();
-			closeSocket(server, 1011, "Client WebSocket error");
-			closeSocket(upstream, 1011, "Client WebSocket error");
+			closeSocket(server, 1011, 'Client WebSocket error');
+			closeSocket(upstream, 1011, 'Client WebSocket error');
 		});
-		upstream.addEventListener("error", () => {
+		upstream.addEventListener('error', () => {
 			cleanup();
-			closeSocket(upstream, 1011, "Upstream WebSocket error");
-			closeSocket(server, 1011, "Upstream WebSocket error");
+			closeSocket(upstream, 1011, 'Upstream WebSocket error');
+			closeSocket(server, 1011, 'Upstream WebSocket error');
 		});
 
 		owner.throwIfStopped();
@@ -308,8 +291,8 @@ export async function dispatchPlaygroundDashScopeRealtime(
 			status: 101,
 			webSocket: client,
 			headers: {
-				"X-Octafuse-Realtime-Protocol": "dashscope-playground",
-				"Cache-Control": "private, no-store",
+				'X-Octafuse-Realtime-Protocol': 'dashscope-playground',
+				'Cache-Control': 'private, no-store',
 			},
 		});
 		handedOff = true;
@@ -318,20 +301,44 @@ export async function dispatchPlaygroundDashScopeRealtime(
 			upstreamUrl,
 		};
 	} catch (error) {
-		if (error instanceof RequestExecutionStoppedError)
-			throw playgroundStoppedError(error);
+		if (error instanceof RequestExecutionStoppedError) throw playgroundStoppedError(error);
 		if (error instanceof AdminServiceError) throw error;
 		throw new AdminServiceError(
 			502,
-			"Playground realtime upstream request failed"
+			error instanceof Error && /^Upstream WebSocket handshake timed out after \d+ms$/.test(error.message)
+				? error.message
+				: 'Playground realtime upstream request failed',
 		);
 	} finally {
 		if (!handedOff) {
 			socketAbortCleanup();
-			for (const socket of openingSockets)
-				closeSocket(socket, 1000, "Playground setup stopped");
+			for (const socket of openingSockets) closeSocket(socket, 1000, 'Playground setup stopped');
 		}
 		await owner.drainOwnedMutations();
 		if (!streaming) owner.dispose();
+	}
+}
+
+/** 解析路由并建立调试台专用的非计费原生 WebSocket。 */
+export async function dispatchPlaygroundDashScopeRealtime(
+	repos: GatewayRepositories,
+	input: { routeId: string; operation: string },
+	requestSignal?: AbortSignal,
+	options?: PlaygroundRealtimeDispatchOptions,
+): Promise<PlaygroundRealtimeDispatchResult> {
+	if (!isRealtimeOperation(input.operation)) {
+		throw new AdminServiceError(400, `Unsupported realtime operation: ${input.operation || '(empty)'}`);
+	}
+	if (requestSignal?.aborted) throw new AdminServiceError(499, 'Playground request was cancelled');
+	if (!options?.nodeDispatch && typeof WebSocketPair === 'undefined')
+		throw new AdminServiceError(501, 'DashScope realtime requires the Cloudflare Workers runtime');
+	const owner = createRequestDeadline(Date.now() + PLAYGROUND_REQUEST_DEADLINE_MS, requestSignal);
+	try {
+		const route = await resolvePlaygroundRoute(repos, input.routeId, owner);
+		const result = await connectPlaygroundDashScopeRealtime(route, input.operation, requestSignal, options);
+		return result;
+	} finally {
+		await owner.drainOwnedMutations();
+		owner.dispose();
 	}
 }

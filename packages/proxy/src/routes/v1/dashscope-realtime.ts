@@ -4,11 +4,7 @@
  *
  * 下游使用网关 API Key，上游使用路由选中的 DashScope API Key。事件保持 DashScope 原生语义。
  */
-import type {
-	AudioEndpointPricingOperation,
-	GatewayRepositories,
-	ModelRow,
-} from '@octafuse/core';
+import type { AudioEndpointPricingOperation, GatewayRepositories, ModelRow } from '@octafuse/core';
 import { getBusinessTimezone } from '@octafuse/core';
 import { Hono } from 'hono';
 import type { Context } from 'hono';
@@ -18,7 +14,7 @@ import {
 	DASHSCOPE_REALTIME_OPERATIONS,
 	type DashScopeRealtimeOperation,
 } from '../../services/egress/dashscope-realtime-driver';
-import { GatewayErrorCode } from '../../services/gateway-error-codes';
+import { GatewayErrorCode, NO_AVAILABLE_ROUTE_MESSAGE } from '../../services/gateway-error-codes';
 import { gatewayErrorJson } from '../../services/gateway-error-response';
 import { proxyDashScopeRealtime, type UsageFromStream } from '../../services/proxy';
 
@@ -27,10 +23,7 @@ import {
 	estimateAudioBudgetPrecheck,
 	recordAudioUsage,
 } from '../../services/audio-usage-charge';
-import {
-	buildAffinityKey,
-	buildTierKeyPrefix,
-} from '../../services/route-strategies';
+import { buildAffinityKey, buildTierKeyPrefix } from '../../services/route-strategies';
 import { RequestTimingCollector } from '../../services/request-timing';
 import { scheduleBackgroundWork } from '../../runtime/schedule-background-work';
 import { parseDashScopeRealtimeAuthProtocol } from '@octafuse/core/realtime-protocol';
@@ -47,9 +40,7 @@ import {
 	DASHSCOPE_REALTIME_MAX_SESSION_MS,
 } from '../../services/dashscope-realtime-guardrails';
 import type { OrdinaryBudgetLease } from '../../services/ordinary-budget-lifecycle';
-import {
-	selectConservativeMultimediaBudgetEstimate,
-} from '../../services/multimedia-ordinary-budget';
+import { selectConservativeMultimediaBudgetEstimate } from '../../services/multimedia-ordinary-budget';
 import type { OrdinaryBudgetUsageSettlement } from '../../services/usage-tracker';
 import { routeUsesUnsupportedMultimediaEndpointPriceSelection } from '../../services/endpoint-billing-pricing';
 import { generationRequestContext } from '../../services/generation-request-context';
@@ -73,15 +64,13 @@ function isRealtimeOperation(value: string): value is DashScopeRealtimeOperation
 export function dashScopeRealtimeProvableBillingOperation(
 	operation: DashScopeRealtimeOperation,
 ): AudioEndpointPricingOperation | null {
-	return operation === 'audio.transcriptions.realtime.inference'
-		|| operation === 'audio.transcriptions.realtime.session'
+	return operation === 'audio.transcriptions.realtime.inference' ||
+		operation === 'audio.transcriptions.realtime.session'
 		? operation
 		: null;
 }
 
-export function dashScopeRealtimeUnprovableOperationMessage(
-	operation: DashScopeRealtimeOperation,
-): string | null {
+export function dashScopeRealtimeUnprovableOperationMessage(operation: DashScopeRealtimeOperation): string | null {
 	if (operation === 'audio.speech.realtime.session') {
 		return 'DashScope realtime TTS sessions require independent inference pricing; session creation itself is not billable';
 	}
@@ -91,9 +80,7 @@ export function dashScopeRealtimeUnprovableOperationMessage(
 	return null;
 }
 
-export function dashScopeRealtimePricingCeilingFailureContract(
-	estimatedChargedCost: number | null,
-): {
+export function dashScopeRealtimePricingCeilingFailureContract(estimatedChargedCost: number | null): {
 	status: 502;
 	code: typeof GatewayErrorCode.routeResolutionFailed;
 	message: string;
@@ -120,12 +107,10 @@ export function dashScopeRealtimeEndpointSettlementMode(params: {
 	if (params.errorMessage || params.initialHandshakeError) return 'forfeit';
 	if (dashScopeRealtimeProvableBillingOperation(params.operation) == null) return 'forfeit';
 	if (
-		typeof params.durationSeconds !== 'number'
-		|| !Number.isFinite(params.durationSeconds)
-		|| params.durationSeconds < 0
-		|| (params.durationSource !== 'upstream'
-			&& params.durationSource !== 'media'
-			&& params.durationSource !== 'client')
+		typeof params.durationSeconds !== 'number' ||
+		!Number.isFinite(params.durationSeconds) ||
+		params.durationSeconds < 0 ||
+		(params.durationSource !== 'upstream' && params.durationSource !== 'media' && params.durationSource !== 'client')
 	) {
 		return 'forfeit';
 	}
@@ -151,13 +136,15 @@ type RealtimeGuardrailBudgetLease = {
 	forfeit(reason: string): Promise<void>;
 };
 
-function routeAwareRealtimeGuardrailLease(
-	admission: RouteAwareBudgetAdmission,
-): RealtimeGuardrailBudgetLease {
+function routeAwareRealtimeGuardrailLease(admission: RouteAwareBudgetAdmission): RealtimeGuardrailBudgetLease {
 	return {
 		requestId: admission.ordinaryLease.requestId,
-		get reserved() { return admission.guardrailReserved; },
-		get dispatched() { return admission.guardrailDispatched; },
+		get reserved() {
+			return admission.guardrailReserved;
+		},
+		get dispatched() {
+			return admission.guardrailDispatched;
+		},
 		release: (reason) => admission.releaseGuardrailPreDispatch(reason),
 		forfeit: (reason) => admission.terminateGuardrailUnknown(reason),
 	};
@@ -188,24 +175,34 @@ async function cleanupRealtimeBudgets(
 	// Each ledger owns independent durable work. A rejected write in one must
 	// neither skip its sibling nor orphan the usage promise after an Upgrade.
 	const actions = [
-		{ ledger: 'guardrail', run: async () => {
-			if (!guardrail.dispatched) await guardrail.release(reason);
-			else if (!preDispatchOnly) await guardrail.forfeit(reason);
-		} },
-		{ ledger: 'ordinary', run: async () => {
-			if (ordinary.state === 'reserved') await ordinary.releasePreDispatch(reason);
-			else if (!preDispatchOnly) await ordinary.terminateUnknown(reason);
-		} },
+		{
+			ledger: 'guardrail',
+			run: async () => {
+				if (!guardrail.dispatched) await guardrail.release(reason);
+				else if (!preDispatchOnly) await guardrail.forfeit(reason);
+			},
+		},
+		{
+			ledger: 'ordinary',
+			run: async () => {
+				if (ordinary.state === 'reserved') await ordinary.releasePreDispatch(reason);
+				else if (!preDispatchOnly) await ordinary.terminateUnknown(reason);
+			},
+		},
 	];
-	const results = await Promise.allSettled(actions.map(action => action.run()));
+	const results = await Promise.allSettled(actions.map((action) => action.run()));
 	for (const [index, result] of results.entries()) {
 		if (result.status !== 'rejected') continue;
 		// Persistence exceptions can contain SQL bindings. Retain the durable
 		// reservation for recovery and log only request/ledger/fixed reason.
-		console.error(JSON.stringify({
-			message: 'realtime budget cleanup failed', requestId: ordinary.requestId,
-			ledger: actions[index]!.ledger, reason,
-		}));
+		console.error(
+			JSON.stringify({
+				message: 'realtime budget cleanup failed',
+				requestId: ordinary.requestId,
+				ledger: actions[index]!.ledger,
+				reason,
+			}),
+		);
 	}
 }
 
@@ -254,9 +251,8 @@ function recordRealtimeUsage(params: {
 				// The driver emits "client" only for mono 16-bit PCM that its
 				// per-session limiter measured locally. The shared audio settlement
 				// contract names that trusted local-media evidence "media".
-				const durationSource = usage.audio_duration_source === 'client'
-					? 'media' as const
-					: usage.audio_duration_source;
+				const durationSource =
+					usage.audio_duration_source === 'client' ? ('media' as const) : usage.audio_duration_source;
 				// A rejected HTTP handshake is known-zero. Once a WebSocket was
 				// upgraded, an incomplete/error stream may already have delivered
 				// useful billable output. A successful terminal event must also carry
@@ -266,8 +262,7 @@ function recordRealtimeUsage(params: {
 					operation,
 					errorMessage,
 					initialHandshakeError: initialErrorMessage != null,
-					upstreamOutcomeUnknown:
-						proxyResult.meta?.upstreamOutcomeUnknown === true,
+					upstreamOutcomeUnknown: proxyResult.meta?.upstreamOutcomeUnknown === true,
 					durationSeconds: usage.audio_duration_seconds,
 					durationSource,
 				});
@@ -279,6 +274,7 @@ function recordRealtimeUsage(params: {
 					workspaceId: apiKey.workspaceId,
 					userId: apiKey.userId,
 					userEmail: apiKey.userEmail,
+					ingressHost: apiKey.ingressHost,
 					modelId: baseModelId,
 					providerId: route.providerId,
 					providerModelName: route.providerModelName,
@@ -309,6 +305,7 @@ function recordRealtimeUsage(params: {
 						operation: billingOperation,
 						catalogModelId: baseModelId,
 						userChargedCostFactorsJson: apiKey.chargedCostFactors,
+						routeGroup: effectiveRouteGroup,
 						routePriceOverrideJson: route.priceOverrideRaw,
 						durationSeconds,
 						durationSource,
@@ -320,35 +317,34 @@ function recordRealtimeUsage(params: {
 					providerKeyFingerprint: route.providerKeyFingerprint ?? null,
 					upstreamRequestId: proxyResult.upstreamRequestId,
 					timing: timing.snapshot(),
-					circuitEvents:
-						proxyResult.circuitEvents.length > 0 ? proxyResult.circuitEvents : undefined,
+					circuitEvents: proxyResult.circuitEvents.length > 0 ? proxyResult.circuitEvents : undefined,
 					suppressErrorAlert: proxyResult.suppressErrorAlert || undefined,
 					guardrailBudgetSettlement:
-						guardrailBudgetLease.reserved &&
-						guardrailBudgetLease.dispatched
-						? {
-								requestId: guardrailBudgetLease.requestId,
-								mode: criticalSettlement.guardrailMode,
-								usageUnavailable: criticalSettlement.ordinaryUnknownCost,
-							}
-						: undefined,
+						guardrailBudgetLease.reserved && guardrailBudgetLease.dispatched
+							? {
+									requestId: guardrailBudgetLease.requestId,
+									mode: criticalSettlement.guardrailMode,
+									usageUnavailable: criticalSettlement.ordinaryUnknownCost,
+								}
+							: undefined,
 					ordinaryBudgetSettlement:
 						ordinaryBudgetLease.state === 'dispatched'
-							? realtimeOrdinaryBudgetSettlement(
-								ordinaryBudgetLease,
-								criticalSettlement.ordinaryUnknownCost,
-							)
+							? realtimeOrdinaryBudgetSettlement(ordinaryBudgetLease, criticalSettlement.ordinaryUnknownCost)
 							: undefined,
 				});
-				await cleanupRealtimeBudgets(ordinaryBudgetLease, guardrailBudgetLease,
-					'realtime_upstream_dispatch_not_started', true);
+				await cleanupRealtimeBudgets(
+					ordinaryBudgetLease,
+					guardrailBudgetLease,
+					'realtime_upstream_dispatch_not_started',
+					true,
+				);
 			})
 			.catch(async () => {
-				console.error(JSON.stringify({ message: 'realtime usage settlement failed',
-					requestId: ordinaryBudgetLease.requestId }));
-				await cleanupRealtimeBudgets(ordinaryBudgetLease, guardrailBudgetLease,
-					'realtime_usage_settlement_failed');
-			})
+				console.error(
+					JSON.stringify({ message: 'realtime usage settlement failed', requestId: ordinaryBudgetLease.requestId }),
+				);
+				await cleanupRealtimeBudgets(ordinaryBudgetLease, guardrailBudgetLease, 'realtime_usage_settlement_failed');
+			}),
 	);
 }
 
@@ -397,9 +393,8 @@ dashScopeRealtimeRoutes.get('/', async (c) => {
 	if (!guardrail.ok) {
 		return gatewayErrorJson(c, {
 			status: guardrail.status,
-			code: guardrail.code === 'guardrail_invalid'
-				? GatewayErrorCode.guardrailInvalid
-				: GatewayErrorCode.guardrailBlocked,
+			code:
+				guardrail.code === 'guardrail_invalid' ? GatewayErrorCode.guardrailInvalid : GatewayErrorCode.guardrailBlocked,
 			message: guardrail.message,
 		});
 	}
@@ -421,12 +416,7 @@ dashScopeRealtimeRoutes.get('/', async (c) => {
 		});
 	}
 	const selectedPlan = fallbackPlan.candidates[0]!;
-	const {
-		model,
-		baseModelId,
-		effectiveRouteGroup,
-		routes,
-	} = selectedPlan;
+	const { model, baseModelId, effectiveRouteGroup, routes } = selectedPlan;
 	if (routes.some(routeUsesUnsupportedMultimediaEndpointPriceSelection)) {
 		return gatewayErrorJson(c, {
 			status: 400,
@@ -444,33 +434,36 @@ dashScopeRealtimeRoutes.get('/', async (c) => {
 		});
 	}
 	const businessTimezone = await getBusinessTimezone(repos);
-	const estimateSelection = selectConservativeMultimediaBudgetEstimate(await Promise.all(
-		routes.map((route) => estimateAudioBudgetPrecheck(repos, {
-			endpoint: route.endpoint ?? null,
-			operation: billingOperation,
-			catalogModelId: baseModelId,
-			userChargedCostFactorsJson: apiKey.chargedCostFactors,
-			fileBytes:
-				DASHSCOPE_REALTIME_BILLING_DURATION_CEILING_SECONDS * 16_000 * 2,
-			mimeType: 'audio/pcm',
-			verifiedDurationCeilingSeconds:
-				DASHSCOPE_REALTIME_BILLING_DURATION_CEILING_SECONDS,
-			requestStartedAtMs: start,
-			businessTimezone,
-		}, [route.priceOverrideRaw])),
-	));
+	const estimateSelection = selectConservativeMultimediaBudgetEstimate(
+		await Promise.all(
+			routes.map((route) =>
+				estimateAudioBudgetPrecheck(
+					repos,
+					{
+						endpoint: route.endpoint ?? null,
+						operation: billingOperation,
+						catalogModelId: baseModelId,
+						userChargedCostFactorsJson: apiKey.chargedCostFactors,
+						fileBytes: DASHSCOPE_REALTIME_BILLING_DURATION_CEILING_SECONDS * 16_000 * 2,
+						mimeType: 'audio/pcm',
+						verifiedDurationCeilingSeconds: DASHSCOPE_REALTIME_BILLING_DURATION_CEILING_SECONDS,
+						requestStartedAtMs: start,
+						businessTimezone,
+					},
+					[route.priceOverrideRaw],
+				),
+			),
+		),
+	);
 	if (!estimateSelection) throw new Error('Realtime fallback plan has no billable route estimate');
 	const { estimate, estimatedChargedCost, estimatedStandardCost } = estimateSelection;
-	const pricingCeilingFailure = dashScopeRealtimePricingCeilingFailureContract(
-		estimatedChargedCost,
-	);
+	const pricingCeilingFailure = dashScopeRealtimePricingCeilingFailureContract(estimatedChargedCost);
 	if (pricingCeilingFailure) return gatewayErrorJson(c, pricingCeilingFailure);
 	const sessionLimits = {
 		maxSessionMs: DASHSCOPE_REALTIME_MAX_SESSION_MS,
 		connectDeadlineAtMs: start + DASHSCOPE_REALTIME_CONNECT_TIMEOUT_MS,
 		maxAudioDurationSeconds: DASHSCOPE_REALTIME_MAX_AUDIO_SECONDS,
-		maxBillableAudioDurationSeconds:
-			DASHSCOPE_REALTIME_BILLING_DURATION_CEILING_SECONDS,
+		maxBillableAudioDurationSeconds: DASHSCOPE_REALTIME_BILLING_DURATION_CEILING_SECONDS,
 		// Realtime TTS is rejected before dispatch; no recursive string or UTF-16
 		// counter participates in Endpoint billing for the admitted ASR session.
 		maxTextCharacters: 0,
@@ -507,51 +500,37 @@ dashScopeRealtimeRoutes.get('/', async (c) => {
 	timing.markGatewayComplete();
 	let proxyResult: Awaited<ReturnType<typeof proxyDashScopeRealtime>>;
 	try {
-		proxyResult = await proxyDashScopeRealtime(
-			repos,
-			routes,
-			operationRaw,
-			c.req.raw.signal,
-			{
-				nodeDispatch: c.env.NODE_REALTIME_DISPATCH,
-				responseProtocol: parseDashScopeRealtimeAuthProtocol(
-					c.req.header('Sec-WebSocket-Protocol')
-				)?.protocol,
-				affinityKey: buildAffinityKey(
-					apiKey.userId,
-					baseModelId,
-					effectiveRouteGroup,
-					'dashscope'
-				),
-				tierKeyPrefix: buildTierKeyPrefix(
-					baseModelId,
-					effectiveRouteGroup,
-					'dashscope'
-				),
-				strategy: selectedPlan.strategy.base,
-				tierStrategies: selectedPlan.strategy.tierOverrides,
-				timing,
-				routePoolId:
-					selectedPlan.surface?.route_pool_id ?? routes[0]?.routePoolId ?? null,
-				sticky: selectedPlan.hasProviderPreferences
-					? null
-					: stickyConfigFromSurface(selectedPlan.surface),
-				beforeUpstreamDispatch: (route) => budgetAdmission.beforeUpstreamDispatch(route),
-				sessionLimits,
-				byok: privateByokContextForApiKey(apiKey),
-			}
-		);
+		proxyResult = await proxyDashScopeRealtime(repos, routes, operationRaw, c.req.raw.signal, {
+			nodeDispatch: c.env.NODE_REALTIME_DISPATCH,
+			inboundHeaders: c.req.raw.headers,
+			responseProtocol: parseDashScopeRealtimeAuthProtocol(c.req.header('Sec-WebSocket-Protocol'))?.protocol,
+			affinityKey: buildAffinityKey(apiKey.userId, baseModelId, effectiveRouteGroup, 'dashscope'),
+			tierKeyPrefix: buildTierKeyPrefix(baseModelId, effectiveRouteGroup, 'dashscope'),
+			strategy: selectedPlan.strategy.base,
+			tierStrategies: selectedPlan.strategy.tierOverrides,
+			timing,
+			routePoolId: selectedPlan.surface?.route_pool_id ?? routes[0]?.routePoolId ?? null,
+			sticky: selectedPlan.hasProviderPreferences ? null : stickyConfigFromSurface(selectedPlan.surface),
+			beforeUpstreamDispatch: (route) => budgetAdmission.beforeUpstreamDispatch(route),
+			sessionLimits,
+			byok: privateByokContextForApiKey(apiKey),
+		});
 	} catch (error) {
-		await cleanupRealtimeBudgets(ordinaryBudgetLease, guardrailBudgetLease,
-			'realtime_upstream_dispatch_failed');
+		await cleanupRealtimeBudgets(ordinaryBudgetLease, guardrailBudgetLease, 'realtime_upstream_dispatch_failed');
 		throw error;
 	}
-	await cleanupRealtimeBudgets(ordinaryBudgetLease, guardrailBudgetLease,
-		'realtime_upstream_dispatch_not_started', true);
+	await cleanupRealtimeBudgets(
+		ordinaryBudgetLease,
+		guardrailBudgetLease,
+		'realtime_upstream_dispatch_not_started',
+		true,
+	);
 	const nodeUpgrade =
-		c.env.NODE_REALTIME_DISPATCH != null &&
-		proxyResult.response.headers.get('x-octafuse-realtime-upgrade') === '1';
-	if (!nodeUpgrade && (proxyResult.response.status !== 101 || !('webSocket' in proxyResult.response) || !proxyResult.response.webSocket)) {
+		c.env.NODE_REALTIME_DISPATCH != null && proxyResult.response.headers.get('x-octafuse-realtime-upgrade') === '1';
+	if (
+		!nodeUpgrade &&
+		(proxyResult.response.status !== 101 || !('webSocket' in proxyResult.response) || !proxyResult.response.webSocket)
+	) {
 		recordRealtimeUsage({
 			c,
 			repos,

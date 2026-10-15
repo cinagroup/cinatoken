@@ -1,3 +1,9 @@
+import {
+	modelPricingScheduleUpdate,
+	modelPricingScheduleChanged,
+	modelPricingRouteAlignments,
+	type ModelPricingRouteSnapshot,
+} from '../model-pricing-alignment';
 /**
  * Postgres：`models` / `model_tags`。
  */
@@ -6,7 +12,12 @@ import type { PostgresDatabaseClient } from '../../storage/database-client';
 import type { ModelsRepository } from '../../storage/gateway-repository-interfaces';
 import type { ModelWithRouteCountsRow } from '../../storage/repository-dtos';
 import { modelsTable as pgModelsTable } from '../../storage/drizzle/schema.pg';
-import { assertModelPolicyExpected, modelPolicyPatch, modelPolicyTags, modelPolicyWriteMatched } from '../model-policy-conditional-write';
+import {
+	assertModelPolicyExpected,
+	modelPolicyPatch,
+	modelPolicyTags,
+	modelPolicyWriteMatched,
+} from '../model-policy-conditional-write';
 
 function snakeToCamel(key: string): string {
 	return key.replace(/_([a-z])/g, (_, c: string) => c.toUpperCase());
@@ -108,14 +119,39 @@ export function createPostgresModelsRepository(db: PostgresDatabaseClient): Mode
 			assertModelPolicyExpected(expectedRoutePolicy);
 			const patch = modelPolicyPatch(rest);
 			return pg.begin(async (tx) => {
+				const nextSchedule = modelPricingScheduleUpdate(rest);
+				let alignment: ReturnType<typeof modelPricingRouteAlignments> = [];
+				if (nextSchedule) {
+					const models = await tx.unsafe<Array<{ pricing_profile: string | null }>>(
+						'SELECT pricing_profile FROM cinatoken_gateway.models WHERE id COLLATE "C" = $1 COLLATE "C" AND route_policy COLLATE "C" IS NOT DISTINCT FROM $2 COLLATE "C" FOR UPDATE',
+						[id, expectedRoutePolicy] as never[],
+					);
+					if (!models.length) return false;
+					if (modelPricingScheduleChanged(models[0].pricing_profile, nextSchedule)) {
+						const routes = await tx.unsafe<ModelPricingRouteSnapshot[]>(
+							'SELECT id, price_override FROM cinatoken_gateway.model_routes WHERE model_id COLLATE "C" = $1 COLLATE "C" ORDER BY id FOR UPDATE',
+							[id] as never[],
+						);
+						alignment = modelPricingRouteAlignments(routes, nextSchedule);
+					}
+				}
 				const values = patch.map(([, value]) => value);
 				const set = patch.length ? patch.map(([key], index) => `${key} = $${index + 1}`).join(', ') : 'id = id';
-				const rows = await tx.unsafe(`UPDATE cinatoken_gateway.models SET ${set} WHERE id COLLATE "C" = $${values.length + 1} COLLATE "C" AND route_policy COLLATE "C" IS NOT DISTINCT FROM $${values.length + 2} COLLATE "C" RETURNING id`, [...values, id, expectedRoutePolicy] as never[]);
+				const rows = await tx.unsafe(
+					`UPDATE cinatoken_gateway.models SET ${set} WHERE id COLLATE "C" = $${values.length + 1} COLLATE "C" AND route_policy COLLATE "C" IS NOT DISTINCT FROM $${values.length + 2} COLLATE "C" RETURNING id`,
+					[...values, id, expectedRoutePolicy] as never[],
+				);
 				if (!modelPolicyWriteMatched(rows, id)) return false;
+				for (const route of alignment)
+					await tx.unsafe(
+						'UPDATE cinatoken_gateway.model_routes SET price_override = $1 WHERE id COLLATE "C" = $2 COLLATE "C" AND model_id COLLATE "C" = $3 COLLATE "C"',
+						[route.next, route.id, id] as never[],
+					);
 				const cleanTags = modelPolicyTags(tags);
 				if (cleanTags !== undefined) {
 					await tx`DELETE FROM cinatoken_gateway.model_tags WHERE model_id COLLATE "C" = ${id} COLLATE "C"`;
-					for (const tag of cleanTags) await tx`INSERT INTO cinatoken_gateway.model_tags (model_id, tag) VALUES (${id}, ${tag})`;
+					for (const tag of cleanTags)
+						await tx`INSERT INTO cinatoken_gateway.model_tags (model_id, tag) VALUES (${id}, ${tag})`;
 				}
 				return true;
 			});

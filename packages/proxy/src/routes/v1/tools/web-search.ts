@@ -3,6 +3,7 @@
  * 引擎/密钥/单价读自 `system_config`（见 `resolveWebSearchConfig`）。
  */
 import { resolveWebSearchConfig } from '@octafuse/core';
+import { toolFactorPricingAudit } from '@octafuse/core';
 import { Hono } from 'hono';
 import type { Env } from '../../../app';
 import { requireApiKey } from '../../../middleware/auth';
@@ -14,10 +15,7 @@ import {
 	toolFailureSettlement,
 	toolUserBudgetSettlement,
 } from '../../../services/tool-usage-charge';
-import {
-	searchWebByProvider,
-	WebSearchProviderError,
-} from '@octafuse/tool-engines/web-search';
+import { searchWebByProvider, WebSearchProviderError } from '@octafuse/tool-engines/web-search';
 import { reserveRequestGuardrailBudgets } from '../../../services/request-guardrails';
 import {
 	dispatchToolGuardrailBudget,
@@ -45,9 +43,7 @@ type WebSearchProviderInput = {
 	blockedDomains?: string[];
 };
 
-type WebSearchProviderInputResult =
-	| { ok: true; value: WebSearchProviderInput }
-	| { ok: false; error: string };
+type WebSearchProviderInputResult = { ok: true; value: WebSearchProviderInput } | { ok: false; error: string };
 
 function isRecord(value: unknown): value is Record<string, unknown> {
 	return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -166,12 +162,8 @@ webSearchRoutes.post('/', async (c) => {
 		toolProvider: provider,
 		input: {
 			query: requestedInput.value.query,
-			...(requestedInput.value.allowedDomains
-				? { allowed_domains: requestedInput.value.allowedDomains }
-				: {}),
-			...(requestedInput.value.blockedDomains
-				? { blocked_domains: requestedInput.value.blockedDomains }
-				: {}),
+			...(requestedInput.value.allowedDomains ? { allowed_domains: requestedInput.value.allowedDomains } : {}),
+			...(requestedInput.value.blockedDomains ? { blocked_domains: requestedInput.value.blockedDomains } : {}),
 		},
 		correlationId: requestCorrelationId,
 		now: requestStartedAt,
@@ -257,21 +249,18 @@ webSearchRoutes.post('/', async (c) => {
 				budgetAccountedAt: requestStartedAt.toISOString(),
 				guardrailBudgetSettlement: guardrailBudgetReserved
 					? {
-						requestId: requestCorrelationId,
-						mode: settlement.mode,
-						reason: settlement.reason,
-					}
+							requestId: requestCorrelationId,
+							mode: settlement.mode,
+							reason: settlement.reason,
+						}
 					: undefined,
-				userBudgetSettlement: toolUserBudgetSettlement(
-					ordinaryBudgetLease,
-					settlement.mode,
-					settlement.reason,
-				),
+				userBudgetSettlement: toolUserBudgetSettlement(ordinaryBudgetLease, settlement.mode, settlement.reason),
 				apiKeyId: apiKey.keyId,
 				workspaceId: apiKey.workspaceId,
 				userId: apiKey.userId,
 				userEmail: apiKey.userEmail,
 				toolId: TOOL_ID,
+				ingressHost: apiKey.ingressHost,
 				toolProvider: provider,
 				meteredCost: 0,
 				standardCost: 0,
@@ -279,6 +268,7 @@ webSearchRoutes.post('/', async (c) => {
 				pricingUnit: 'request',
 				billingUnits: 1,
 				unitPrices: { metered: unitMetered, standard: unitStandard, charged: unitCharged },
+				pricingAuditExtra: toolFactorPricingAudit(resolved.config.pricing),
 				latencyMs,
 				requestBody: JSON.stringify({ query, provider }),
 				requestBodyLoggingMode: c.get('requestBodyLoggingMode'),
@@ -331,17 +321,15 @@ webSearchRoutes.post('/', async (c) => {
 			guardrailBudgetSettlement: guardrailBudgetReserved
 				? { requestId: requestCorrelationId, mode: 'actual', reason: 'tool_request_usage_settled' }
 				: undefined,
-			userBudgetSettlement: toolUserBudgetSettlement(
-				ordinaryBudgetLease,
-				'actual',
-				'tool_request_usage_settled',
-			),
+			userBudgetSettlement: toolUserBudgetSettlement(ordinaryBudgetLease, 'actual', 'tool_request_usage_settled'),
 			apiKeyId: apiKey.keyId,
 			workspaceId: apiKey.workspaceId,
 			userId: apiKey.userId,
 			userEmail: apiKey.userEmail,
 			toolId: TOOL_ID,
 			toolProvider: provider,
+			ingressHost: apiKey.ingressHost,
+			pricingAuditExtra: toolFactorPricingAudit(resolved.config.pricing),
 			meteredCost: unitMetered,
 			standardCost: unitStandard,
 			chargedCost: unitCharged,
@@ -359,14 +347,14 @@ webSearchRoutes.post('/', async (c) => {
 			requestBodyLoggingMode: c.get('requestBodyLoggingMode'),
 			responseBody: guardedOutput.ok
 				? JSON.stringify({
-					result_count: guardedOutput.value.length,
-					results: guardedOutput.value.map((r) => ({
-						title: r.title,
-						url: r.url,
-						snippet: r.snippet?.slice(0, 240) || r.summary?.slice(0, 240) || undefined,
-						siteName: r.siteName,
-					})),
-				})
+						result_count: guardedOutput.value.length,
+						results: guardedOutput.value.map((r) => ({
+							title: r.title,
+							url: r.url,
+							snippet: r.snippet?.slice(0, 240) || r.summary?.slice(0, 240) || undefined,
+							siteName: r.siteName,
+						})),
+					})
 				: JSON.stringify({ guardrail_blocked: true }),
 			errorMessage: guardedOutput.ok ? null : 'Response blocked by output guardrail',
 			status: guardedOutput.ok ? 'success' : 'error',

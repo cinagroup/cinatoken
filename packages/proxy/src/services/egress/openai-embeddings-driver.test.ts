@@ -17,23 +17,41 @@ const nativeFetch = globalThis.fetch.bind(globalThis);
 
 function route(): RouteResult {
 	return {
-		targetId: 'target-1', modelSurfaceId: 'surface-1', routePoolId: 'pool-1',
-		providerId: 'provider-1', providerName: 'Provider', providerModelName: 'text-embedding-3-small',
-		gatewayModelId: 'openai/text-embedding-3-small', upstreamProtocol: 'openai',
-		upstreamOperation: 'embeddings', adapter: 'passthrough',
+		targetId: 'target-1',
+		modelSurfaceId: 'surface-1',
+		routePoolId: 'pool-1',
+		providerId: 'provider-1',
+		providerName: 'Provider',
+		providerModelName: 'text-embedding-3-small',
+		gatewayModelId: 'openai/text-embedding-3-small',
+		upstreamProtocol: 'openai',
+		upstreamOperation: 'embeddings',
+		adapter: 'passthrough',
 		providerEndpoints: { openai: { base: 'https://provider.example/v1' } },
-		providerApiKey: 'provider-secret', providerSharedChannelType: null,
-		priceOverrideRaw: null, routeMeteredProfileJson: null, routeChargedProfileJson: null,
-		customParams: { encoding_format: 'float' }, routeGroup: 'default', routePriority: 0,
-		routeWeight: 1, providerKeyId: null, providerKeyLabel: null, providerKeyFingerprint: null,
+		providerApiKey: 'provider-secret',
+		providerSharedChannelType: null,
+		priceOverrideRaw: null,
+		routeMeteredProfileJson: null,
+		routeChargedProfileJson: null,
+		customParams: { encoding_format: 'float' },
+		routeGroup: 'default',
+		routePriority: 0,
+		routeWeight: 1,
+		providerKeyId: null,
+		providerKeyLabel: null,
+		providerKeyFingerprint: null,
 	};
 }
 
 describe('usageFromEmbeddings', () => {
 	it('maps prompt usage into input-only gateway usage', () => {
 		assert.deepEqual(usageFromEmbeddings({ prompt_tokens: 8, total_tokens: 8 }), {
-			input_tokens: 8, output_tokens: 0, cache_read_tokens: 0, cache_write_tokens: 0,
-			reasoning_tokens: 0, total_tokens: 8,
+			input_tokens: 8,
+			output_tokens: 0,
+			cache_read_tokens: 0,
+			cache_write_tokens: 0,
+			reasoning_tokens: 0,
+			total_tokens: 8,
 			raw_usage: JSON.stringify({ prompt_tokens: 8, total_tokens: 8 }),
 			native_tokens_prompt: 8,
 			native_tokens_completion: 0,
@@ -52,8 +70,13 @@ describe('usageFromEmbeddings', () => {
 			{ prompt_tokens: Number.MAX_SAFE_INTEGER + 1, total_tokens: Number.MAX_SAFE_INTEGER + 1 },
 		]) {
 			assert.deepEqual(usageFromEmbeddings(usage), {
-				input_tokens: 0, output_tokens: 0, cache_read_tokens: 0, cache_write_tokens: 0,
-				reasoning_tokens: 0, total_tokens: 0, raw_usage: null,
+				input_tokens: 0,
+				output_tokens: 0,
+				cache_read_tokens: 0,
+				cache_write_tokens: 0,
+				reasoning_tokens: 0,
+				total_tokens: 0,
+				raw_usage: null,
 			});
 		}
 	});
@@ -64,7 +87,9 @@ describe('dispatchOpenAiEmbeddingsRoute', () => {
 		resetProviderCircuitStateForTests();
 		const posts: string[] = [];
 		const server = createServer(async (request, response) => {
-			for await (const _chunk of request) { /* Receive the complete upload. */ }
+			for await (const _chunk of request) {
+				/* Receive the complete upload. */
+			}
 			posts.push(request.url ?? '');
 			if (request.url === '/first/v1/embeddings') {
 				response.writeHead(503, { 'Content-Type': 'application/json' });
@@ -72,20 +97,36 @@ describe('dispatchOpenAiEmbeddingsRoute', () => {
 				return;
 			}
 			response.writeHead(200, { 'Content-Type': 'application/json' });
-			response.end(JSON.stringify({ object: 'list', model: 'private',
-				data: [{ object: 'embedding', index: 0, embedding: [0.1] }] }));
+			response.end(
+				JSON.stringify({
+					object: 'list',
+					model: 'private',
+					data: [{ object: 'embedding', index: 0, embedding: [0.1] }],
+				}),
+			);
 		});
-		await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve));
+		await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
 		const originalFetch = globalThis.fetch;
 		try {
 			globalThis.fetch = nativeFetch;
 			const port = (server.address() as AddressInfo).port;
-			const first = { ...route(), targetId: 'first', providerId: 'first', routePriority: 2,
-				providerEndpoints: { openai: { base: `http://127.0.0.1:${port}/first/v1` } } };
-			const second = { ...route(), targetId: 'second', providerId: 'second', routePriority: 1,
-				providerEndpoints: { openai: { base: `http://127.0.0.1:${port}/second/v1` } } };
-			const result = await proxyEmbeddings({} as GatewayRepositories, [first, second], { input: 'hello' },
-				undefined, { strategy: 'weight_priority' });
+			const first = {
+				...route(),
+				targetId: 'first',
+				providerId: 'first',
+				routePriority: 2,
+				providerEndpoints: { openai: { base: `http://127.0.0.1:${port}/first/v1` } },
+			};
+			const second = {
+				...route(),
+				targetId: 'second',
+				providerId: 'second',
+				routePriority: 1,
+				providerEndpoints: { openai: { base: `http://127.0.0.1:${port}/second/v1` } },
+			};
+			const result = await proxyEmbeddings({} as GatewayRepositories, [first, second], { input: 'hello' }, undefined, {
+				strategy: 'weight_priority',
+			});
 			assert.deepEqual(posts, ['/first/v1/embeddings']);
 			assert.equal(result.response.status, 503);
 			assert.equal(result.meta?.upstreamOutcomeUnknown, true);
@@ -95,7 +136,7 @@ describe('dispatchOpenAiEmbeddingsRoute', () => {
 		} finally {
 			globalThis.fetch = originalFetch;
 			server.closeAllConnections();
-			await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve()));
+			await new Promise<void>((resolve, reject) => server.close((error) => (error ? reject(error) : resolve())));
 		}
 	});
 
@@ -139,14 +180,18 @@ describe('dispatchOpenAiEmbeddingsRoute', () => {
 			sends++;
 			return sends === 1
 				? Response.json({ error: { message: 'rate limited' } }, { status: 429 })
-				: Response.json({ object: 'list', model: 'private',
-					data: [{ object: 'embedding', index: 0, embedding: [0.1] }] });
+				: Response.json({
+						object: 'list',
+						model: 'private',
+						data: [{ object: 'embedding', index: 0, embedding: [0.1] }],
+					});
 		};
 		try {
 			const first = { ...route(), targetId: 'first', providerId: 'first', routePriority: 2 };
 			const second = { ...route(), targetId: 'second', providerId: 'second', routePriority: 1 };
-			const result = await proxyEmbeddings({} as GatewayRepositories, [first, second], { input: 'hello' },
-				undefined, { strategy: 'weight_priority' });
+			const result = await proxyEmbeddings({} as GatewayRepositories, [first, second], { input: 'hello' }, undefined, {
+				strategy: 'weight_priority',
+			});
 			assert.equal(sends, 2);
 			assert.equal(result.response.status, 200);
 			assert.notEqual(result.meta?.upstreamOutcomeUnknown, true);
@@ -164,14 +209,19 @@ describe('dispatchOpenAiEmbeddingsRoute', () => {
 		globalThis.fetch = async (input, init) => {
 			requestUrl = String(input);
 			requestInit = { ...init, body: await new Response(init?.body).text() };
-			return new Response(JSON.stringify({
-				id: 'embd-private-1', object: 'list', model: 'upstream-name',
-				data: [{ object: 'embedding', index: 0, embedding: 'AQIDBA==' }],
-				usage: { prompt_tokens: 3, total_tokens: 3 },
-			}), {
-				status: 200,
-				headers: { 'Content-Type': 'application/json', 'x-request-id': 'req-upstream' },
-			});
+			return new Response(
+				JSON.stringify({
+					id: 'embd-private-1',
+					object: 'list',
+					model: 'upstream-name',
+					data: [{ object: 'embedding', index: 0, embedding: 'AQIDBA==' }],
+					usage: { prompt_tokens: 3, total_tokens: 3 },
+				}),
+				{
+					status: 200,
+					headers: { 'Content-Type': 'application/json', 'x-request-id': 'req-upstream' },
+				},
+			);
 		};
 		try {
 			let admitted = false;
@@ -181,16 +231,20 @@ describe('dispatchOpenAiEmbeddingsRoute', () => {
 				undefined,
 				undefined,
 				undefined,
-				async () => { admitted = true; },
+				async () => {
+					admitted = true;
+				},
 			);
 			assert.equal(admitted, true);
 			assert.equal(requestUrl, 'https://provider.example/v1/embeddings');
 			assert.equal(new Headers(requestInit?.headers).get('authorization'), 'Bearer provider-secret');
 			assert.deepEqual(JSON.parse(String(requestInit?.body)), {
-				encoding_format: 'base64', model: 'text-embedding-3-small', input: ['hello'],
+				encoding_format: 'base64',
+				model: 'text-embedding-3-small',
+				input: ['hello'],
 			});
 			assert.equal(result.upstreamRequestId, 'req-upstream');
-			const response = await result.response.json() as { id: string; model: string };
+			const response = (await result.response.json()) as { id: string; model: string };
 			assert.equal(response.id, 'embd-private-1');
 			assert.equal(response.model, 'openai/text-embedding-3-small');
 			const usage = await result.usagePromise;
@@ -203,13 +257,14 @@ describe('dispatchOpenAiEmbeddingsRoute', () => {
 
 	it('fails without replaying when a successful upstream body exceeds the bound', async () => {
 		const originalFetch = globalThis.fetch;
-		globalThis.fetch = async () => new Response('{}', {
-			status: 200,
-			headers: {
-				'Content-Type': 'application/json',
-				'Content-Length': String(OPENAI_EMBEDDINGS_RESPONSE_MAX_BYTES + 1),
-			},
-		});
+		globalThis.fetch = async () =>
+			new Response('{}', {
+				status: 200,
+				headers: {
+					'Content-Type': 'application/json',
+					'Content-Length': String(OPENAI_EMBEDDINGS_RESPONSE_MAX_BYTES + 1),
+				},
+			});
 		try {
 			const result = await dispatchOpenAiEmbeddingsRoute(route(), { model: 'x', input: 'hello' });
 			assert.equal(result.response.status, 502);
@@ -239,7 +294,9 @@ describe('dispatchOpenAiEmbeddingsRoute', () => {
 				controller.signal,
 				undefined,
 				undefined,
-				async () => { admissionCalls += 1; },
+				async () => {
+					admissionCalls += 1;
+				},
 				'gen-pre-cancelled',
 			);
 			assert.equal(result.response.status, 499);
@@ -269,7 +326,9 @@ describe('dispatchOpenAiEmbeddingsRoute', () => {
 				controller.signal,
 				undefined,
 				undefined,
-				async () => { controller.abort(); },
+				async () => {
+					controller.abort();
+				},
 				'gen-cancelled-in-admission',
 			);
 			assert.equal(result.response.status, 499);
@@ -283,15 +342,18 @@ describe('dispatchOpenAiEmbeddingsRoute', () => {
 
 	it('marks fetch rejection after admission as an unknown non-replayable outcome', async () => {
 		const originalFetch = globalThis.fetch;
-		globalThis.fetch = async () => { throw new DOMException('aborted', 'AbortError'); };
+		globalThis.fetch = async () => {
+			throw new DOMException('aborted', 'AbortError');
+		};
 		try {
 			await assert.rejects(
 				() => dispatchOpenAiEmbeddingsRoute(route(), { model: 'x', input: 'hello' }),
-				(error: unknown) => Boolean(
-					error
-					&& typeof error === 'object'
-					&& (error as { upstreamOutcomeUnknown?: unknown }).upstreamOutcomeUnknown === true
-				),
+				(error: unknown) =>
+					Boolean(
+						error &&
+						typeof error === 'object' &&
+						(error as { upstreamOutcomeUnknown?: unknown }).upstreamOutcomeUnknown === true,
+					),
 			);
 		} finally {
 			globalThis.fetch = originalFetch;
@@ -300,19 +362,28 @@ describe('dispatchOpenAiEmbeddingsRoute', () => {
 
 	it('allows a valid response without optional usage but keeps usage non-authoritative', async () => {
 		const originalFetch = globalThis.fetch;
-		globalThis.fetch = async () => new Response(JSON.stringify({
-			id: 'embd-no-usage',
-			object: 'list',
-			model: 'private-model',
-			data: [{ object: 'embedding', index: 0, embedding: [0.1, -0.2] }],
-		}), { headers: { 'Content-Type': 'application/json' } });
+		globalThis.fetch = async () =>
+			new Response(
+				JSON.stringify({
+					id: 'embd-no-usage',
+					object: 'list',
+					model: 'private-model',
+					data: [{ object: 'embedding', index: 0, embedding: [0.1, -0.2] }],
+				}),
+				{ headers: { 'Content-Type': 'application/json' } },
+			);
 		try {
 			const result = await dispatchOpenAiEmbeddingsRoute(route(), { model: 'x', input: 'hello' });
 			assert.equal(result.response.status, 200);
-			assert.equal((await result.response.json() as { id?: string }).id, 'embd-no-usage');
+			assert.equal(((await result.response.json()) as { id?: string }).id, 'embd-no-usage');
 			assert.deepEqual(await result.usagePromise, {
-				input_tokens: 0, output_tokens: 0, cache_read_tokens: 0, cache_write_tokens: 0,
-				reasoning_tokens: 0, total_tokens: 0, raw_usage: null,
+				input_tokens: 0,
+				output_tokens: 0,
+				cache_read_tokens: 0,
+				cache_write_tokens: 0,
+				reasoning_tokens: 0,
+				total_tokens: 0,
+				raw_usage: null,
 				upstreamMessageId: 'embd-no-usage',
 			});
 		} finally {
@@ -330,7 +401,8 @@ describe('dispatchOpenAiEmbeddingsRoute', () => {
 			{
 				label: 'duplicate index',
 				body: JSON.stringify({
-					object: 'list', model: 'private',
+					object: 'list',
+					model: 'private',
 					data: [
 						{ object: 'embedding', index: 0, embedding: [0.1] },
 						{ object: 'embedding', index: 0, embedding: [0.2] },
@@ -340,21 +412,25 @@ describe('dispatchOpenAiEmbeddingsRoute', () => {
 			{
 				label: 'wrong encoding',
 				body: JSON.stringify({
-					object: 'list', model: 'private',
+					object: 'list',
+					model: 'private',
 					data: [{ object: 'embedding', index: 0, embedding: 'not base64' }],
 				}),
 			},
 			{
 				label: 'unsafe id',
 				body: JSON.stringify({
-					id: 'embd-bad\nid', object: 'list', model: 'private',
+					id: 'embd-bad\nid',
+					object: 'list',
+					model: 'private',
 					data: [{ object: 'embedding', index: 0, embedding: [0.1] }],
 				}),
 			},
 			{
 				label: 'fractional usage',
 				body: JSON.stringify({
-					object: 'list', model: 'private',
+					object: 'list',
+					model: 'private',
 					data: [{ object: 'embedding', index: 0, embedding: [0.1] }],
 					usage: { prompt_tokens: 1.5, total_tokens: 2 },
 				}),
@@ -363,17 +439,15 @@ describe('dispatchOpenAiEmbeddingsRoute', () => {
 		const originalFetch = globalThis.fetch;
 		try {
 			for (const testCase of invalidBodies) {
-				globalThis.fetch = async () => new Response(testCase.body, {
-					status: 200,
-					headers: { 'Content-Type': 'application/json' },
-				});
+				globalThis.fetch = async () =>
+					new Response(testCase.body, {
+						status: 200,
+						headers: { 'Content-Type': 'application/json' },
+					});
 				const input = testCase.label === 'duplicate index' ? ['a', 'b'] : 'hello';
 				const result = await dispatchOpenAiEmbeddingsRoute(route(), { model: 'x', input });
 				assert.equal(result.response.status, 502, testCase.label);
-				assert.equal(
-					result.response.headers.get(GATEWAY_ERROR_CODE_HEADER),
-					GatewayErrorCode.upstreamRequestFailed,
-				);
+				assert.equal(result.response.headers.get(GATEWAY_ERROR_CODE_HEADER), GatewayErrorCode.upstreamRequestFailed);
 				assert.equal(result.meta?.upstreamOutcomeUnknown, true, testCase.label);
 				assert.equal(result.meta?.failoverForbidden, true, testCase.label);
 				assert.equal(result.meta?.gatewayGeneratedError, true, testCase.label);
@@ -391,12 +465,15 @@ describe('dispatchOpenAiEmbeddingsRoute', () => {
 			pull(controller) {
 				controller.enqueue(new TextEncoder().encode('must-not-leak'));
 			},
-			cancel() { cancelled += 1; },
+			cancel() {
+				cancelled += 1;
+			},
 		});
-		globalThis.fetch = async () => new Response(body, {
-			status: 200,
-			headers: { 'Content-Type': 'text/plain' },
-		});
+		globalThis.fetch = async () =>
+			new Response(body, {
+				status: 200,
+				headers: { 'Content-Type': 'text/plain' },
+			});
 		try {
 			const result = await dispatchOpenAiEmbeddingsRoute(route(), { model: 'x', input: 'hello' });
 			assert.equal(result.response.status, 502);

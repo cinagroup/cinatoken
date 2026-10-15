@@ -43,7 +43,7 @@ async function fixture(
 		name: null,
 		status: "disabled",
 		metadata: '{"token":"private-metadata"}',
-		expires_at: null,
+		expires_at: null, rate_limit: null,
 		limit_micros: 0,
 		limit_reset: null,
 		include_byok_in_limit: false,

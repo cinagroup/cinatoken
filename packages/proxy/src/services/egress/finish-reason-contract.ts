@@ -1,9 +1,4 @@
-export type CanonicalFinishReason =
-	| 'tool_calls'
-	| 'stop'
-	| 'length'
-	| 'content_filter'
-	| 'error';
+export type CanonicalFinishReason = 'tool_calls' | 'stop' | 'length' | 'content_filter' | 'error';
 
 const CONTROL_CHAR_PATTERN = /[\u0000-\u001f\u007f-\u009f\u2028\u2029]/u;
 const MAX_NATIVE_FINISH_REASON_LENGTH = 128;
@@ -12,9 +7,7 @@ const MAX_NATIVE_FINISH_REASON_LENGTH = 128;
 export function normalizeNativeFinishReason(value: unknown): string | null {
 	if (typeof value !== 'string') return null;
 	const trimmed = value.trim();
-	return trimmed
-		&& trimmed.length <= MAX_NATIVE_FINISH_REASON_LENGTH
-		&& !CONTROL_CHAR_PATTERN.test(trimmed)
+	return trimmed && trimmed.length <= MAX_NATIVE_FINISH_REASON_LENGTH && !CONTROL_CHAR_PATTERN.test(trimmed)
 		? trimmed
 		: null;
 }

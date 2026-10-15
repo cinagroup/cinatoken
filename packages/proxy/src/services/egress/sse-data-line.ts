@@ -115,10 +115,7 @@ export class BoundedSseEventFramer {
 		private readonly limitErrorMessage: string,
 	) {}
 
-	async push(
-		chunk: string,
-		handleEvent: (event: string) => boolean | Promise<boolean>,
-	): Promise<boolean> {
+	async push(chunk: string, handleEvent: (event: string) => boolean | Promise<boolean>): Promise<boolean> {
 		this.buffer += chunk;
 		let consumed = 0;
 		while (true) {

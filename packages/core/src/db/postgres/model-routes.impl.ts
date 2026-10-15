@@ -3,7 +3,10 @@
  */
 import { and, desc, eq } from 'drizzle-orm';
 import type { PostgresDatabaseClient } from '../../storage/database-client';
-import type { ModelRoutesRepository } from '../../storage/gateway-repository-interfaces';
+import type {
+	ListModelRoutesWithJoinsFilters,
+	ModelRoutesRepository,
+} from '../../storage/gateway-repository-interfaces';
 import type { ModelRouteDetailRow, ModelRouteJoinRow } from '../../storage/repository-dtos';
 import {
 	modelRoutesTable as pgMr,
@@ -17,10 +20,11 @@ export function createPostgresModelRoutesRepository(db: PostgresDatabaseClient):
 	const drizzle = db.drizzle;
 	const pg = db.raw;
 	return {
-		async listModelRoutesWithJoins(filters: { modelId?: string; providerId?: string; limit?: number }): Promise<ModelRouteJoinRow[]> {
+		async listModelRoutesWithJoins(filters: ListModelRoutesWithJoinsFilters): Promise<ModelRouteJoinRow[]> {
 			const conditions = [];
 			if (filters.modelId) conditions.push(eq(pgMr.modelId, filters.modelId));
 			if (filters.providerId) conditions.push(eq(pgMr.providerId, filters.providerId));
+			if (filters.status === 'active') conditions.push(eq(pgMr.status, 'active'));
 			const whereExpr = conditions.length > 0 ? and(...conditions) : undefined;
 			let q = drizzle
 				.select({
@@ -106,11 +110,8 @@ export function createPostgresModelRoutesRepository(db: PostgresDatabaseClient):
 				pool_status: r.pool_status,
 				pool_sticky_enabled: r.pool_sticky_enabled,
 				pool_sticky_idle_ttl_seconds:
-					r.pool_sticky_idle_ttl_seconds == null
-						? null
-						: Number(r.pool_sticky_idle_ttl_seconds),
-				pool_sticky_epoch:
-					r.pool_sticky_epoch == null ? null : Number(r.pool_sticky_epoch),
+					r.pool_sticky_idle_ttl_seconds == null ? null : Number(r.pool_sticky_idle_ttl_seconds),
+				pool_sticky_epoch: r.pool_sticky_epoch == null ? null : Number(r.pool_sticky_epoch),
 				model_name: r.model_name,
 				provider_name: r.provider_name,
 				provider_status: r.provider_status,
@@ -222,15 +223,10 @@ export function createPostgresModelRoutesRepository(db: PostgresDatabaseClient):
 				tierStrategies?: string | null;
 				stickyEnabled?: boolean;
 				stickyIdleTtlSeconds?: number;
-			}
+			},
 		): Promise<number> {
-			const stickyTouched =
-				patch.stickyEnabled !== undefined || patch.stickyIdleTtlSeconds !== undefined;
-			if (
-				patch.strategy === undefined &&
-				patch.tierStrategies === undefined &&
-				!stickyTouched
-			) {
+			const stickyTouched = patch.stickyEnabled !== undefined || patch.stickyIdleTtlSeconds !== undefined;
+			if (patch.strategy === undefined && patch.tierStrategies === undefined && !stickyTouched) {
 				return 0;
 			}
 			const rows = await pg<Array<{ id: string }>>`

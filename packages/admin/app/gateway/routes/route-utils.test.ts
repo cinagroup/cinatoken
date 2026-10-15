@@ -1,28 +1,42 @@
-import assert from "node:assert/strict";
-import { describe, it } from "node:test";
-import type {
-	GatewayModel,
-	GatewayModelRoute,
-	GatewayProvider,
-} from "@/lib/types";
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { describe, it } from 'node:test';
+import { fileURLToPath } from 'node:url';
+import type { GatewayModel, GatewayModelRoute, GatewayProvider } from '@/lib/types';
 import {
+	adapterOptionMappingSuffix,
+	buildOpenAiAdapterCallSample,
 	applyDashScopeAsrRoutePreset,
+	applyDashScopeImageRoutePreset,
 	applyDashScopeTtsRoutePreset,
+	alignRouteScheduleWindowsToCatalog,
+	composeCustomParamsJson,
 	buildFormDataFromRoute,
 	buildRouteSavePayload,
+	buildRoutePriceOverride,
+	independentProviderWindows,
+	previewRouteBillingFactors,
+	catalogScheduleWindowsFromModel,
 	formatRoutePriceOverridePreview,
 	buildRouteSurfaceCatalog,
+	buildRoutesByModel,
+	compareRoutesWithinPriorityLayer,
 	compatibleAdaptersForRoute,
+	alignRouteFormAdapter,
+	listAdapterOptionsForModel,
 	factorChipClassForValue,
 	factorLevelForValue,
 	formatFactorMultiplierForChip,
 	formatScheduleWindowsHint,
 	formatSharedScheduleWindowsHint,
+	providerFactorTiming,
 	groupScheduleWindows,
 	resolveRouteScheduleDisplay,
 	scheduleWindowShapeKey,
 	hasBasePricingInversion,
+	parseCustomParamsForm,
 	requestOperationsForModel,
+	resolveAdapterOptionKey,
 	requestLogProtocolPath,
 	requestSurfacePath,
 	modelMatchesKindFilter,
@@ -31,138 +45,115 @@ import {
 	SURFACE_PATH_MODEL_PLACEHOLDER,
 	upstreamOperationsForProviderModel,
 	type RouteModelGroup,
-} from "./route-utils";
-import { EMPTY_ROUTE_FORM } from "./types";
+} from './route-utils';
+import { getAdapterByOptionKey, listConversionAdapters } from '@octafuse/core/adapters/registry';
+import { listStaticProviderImportPresets } from '@/lib/provider-import-preset';
+import { resolveRouteEffectiveFactors } from '@octafuse/core/db/pricing-schedule';
+import { EMPTY_ROUTE_FORM } from './types';
 
 function model(overrides: Partial<GatewayModel> = {}): GatewayModel {
 	return {
-		id: "model-1",
-		display_name: "Model 1",
-		vendor: "other",
+		id: 'model-1',
+		display_name: 'Model 1',
+		vendor: 'other',
 		context_window: 128_000,
 		max_tokens: 4096,
-		tags: "[]",
+		tags: '[]',
 		description: null,
 		metadata: null,
-		created_at: "",
+		created_at: '',
 		...overrides,
 	};
 }
 
 function provider(endpoints: object): GatewayProvider {
 	return {
-		id: "provider-1",
-		name: "Provider 1",
+		id: 'provider-1',
+		name: 'Provider 1',
 		endpoints: JSON.stringify(endpoints),
 		description: null,
-		created_at: "",
+		created_at: '',
 	};
 }
 
-describe("route model kind filter", () => {
-	it("keeps rerank models out of the LLM bucket", () => {
+describe('route model kind filter', () => {
+	it('keeps rerank models out of the LLM bucket', () => {
 		const rerank = model({
-			input_modalities: JSON.stringify(["text"]),
-			output_modalities: JSON.stringify(["rerank"]),
+			input_modalities: JSON.stringify(['text']),
+			output_modalities: JSON.stringify(['rerank']),
 		});
-		assert.equal(modelMatchesKindFilter(rerank, "rerank"), true);
-		assert.equal(modelMatchesKindFilter(rerank, "llm"), false);
+		assert.equal(modelMatchesKindFilter(rerank, 'rerank'), true);
+		assert.equal(modelMatchesKindFilter(rerank, 'llm'), false);
 	});
 });
 
-describe("request surface path", () => {
-	it("maps OpenAI audio operations to their real slash-separated endpoints", () => {
+describe('request surface path', () => {
+	it('maps OpenAI audio operations to their real slash-separated endpoints', () => {
+		assert.equal(requestSurfacePath('openai', 'audio.transcriptions', 'audio-model'), '/v1/audio/transcriptions');
+		assert.equal(requestSurfacePath('openai', 'audio.speech', 'audio-model'), '/v1/audio/speech');
+	});
+
+	it('maps the OpenAI embeddings surface', () => {
+		assert.equal(requestSurfacePath('openai', 'embeddings', 'embedding-model'), '/v1/embeddings');
+		assert.equal(requestSurfacePath('openai', 'rerank', 'rerank-model'), '/v1/rerank');
+	});
+
+	it('shows the shared DashScope realtime WebSocket entry with routing parameters', () => {
 		assert.equal(
-			requestSurfacePath("openai", "audio.transcriptions", "audio-model"),
-			"/v1/audio/transcriptions"
-		);
-		assert.equal(
-			requestSurfacePath("openai", "audio.speech", "audio-model"),
-			"/v1/audio/speech"
+			requestSurfacePath('dashscope', 'audio.transcriptions.realtime.inference', 'my fun/asr'),
+			'/v1/dashscope/realtime?model=my%20fun%2Fasr&operation=audio.transcriptions.realtime.inference',
 		);
 	});
 
-	it("maps the OpenAI embeddings surface", () => {
+	it('uses a model placeholder when the catalog path is not bound to one model', () => {
 		assert.equal(
-			requestSurfacePath("openai", "embeddings", "embedding-model"),
-			"/v1/embeddings"
+			requestSurfacePath('gemini', 'models.generate'),
+			`/v1beta/models/${SURFACE_PATH_MODEL_PLACEHOLDER}:{generateContent|streamGenerateContent}`,
 		);
 		assert.equal(
-			requestSurfacePath("openai", "rerank", "rerank-model"),
-			"/v1/rerank"
-		);
-	});
-
-	it("shows the shared DashScope realtime WebSocket entry with routing parameters", () => {
-		assert.equal(
-			requestSurfacePath(
-				"dashscope",
-				"audio.transcriptions.realtime.inference",
-				"my fun/asr"
-			),
-			"/v1/dashscope/realtime?model=my%20fun%2Fasr&operation=audio.transcriptions.realtime.inference"
+			requestSurfacePath('dashscope', 'audio.transcriptions.realtime.inference'),
+			`/v1/dashscope/realtime?model=${SURFACE_PATH_MODEL_PLACEHOLDER}&operation=audio.transcriptions.realtime.inference`,
 		);
 	});
 
-	it("uses a model placeholder when the catalog path is not bound to one model", () => {
+	it('maps DashScope HTTP audio operations to native passthrough endpoints', () => {
 		assert.equal(
-			requestSurfacePath("gemini", "models.generate"),
-			`/v1beta/models/${SURFACE_PATH_MODEL_PLACEHOLDER}:{generateContent|streamGenerateContent}`
+			requestSurfacePath('dashscope', 'audio.speech', 'cosyvoice-v2'),
+			'/v1/dashscope/services/audio/tts/SpeechSynthesizer',
 		);
 		assert.equal(
-			requestSurfacePath(
-				"dashscope",
-				"audio.transcriptions.realtime.inference"
-			),
-			`/v1/dashscope/realtime?model=${SURFACE_PATH_MODEL_PLACEHOLDER}&operation=audio.transcriptions.realtime.inference`
+			requestSurfacePath('dashscope', 'audio.speech.multimodal'),
+			'/v1/dashscope/services/aigc/multimodal-generation/generation',
 		);
-	});
-
-	it("maps DashScope HTTP audio operations to their OpenAI-compatible endpoints", () => {
+		assert.equal(requestSurfacePath('dashscope', 'audio.transcriptions'), '/v1/audio/transcriptions');
 		assert.equal(
-			requestSurfacePath("dashscope", "audio.speech", "cosyvoice-v2"),
-			"/v1/audio/speech"
+			requestSurfacePath('dashscope', 'audio.transcriptions.async'),
+			'/v1/dashscope/services/audio/asr/transcription',
 		);
 		assert.equal(
-			requestSurfacePath("dashscope", "audio.speech.multimodal"),
-			"/v1/audio/speech"
+			requestSurfacePath('dashscope', 'audio.transcriptions.multimodal'),
+			'/v1/dashscope/services/aigc/multimodal-generation/generation',
 		);
 		assert.equal(
-			requestSurfacePath("dashscope", "audio.transcriptions"),
-			"/v1/audio/transcriptions"
-		);
-		assert.equal(
-			requestSurfacePath("dashscope", "audio.transcriptions.multimodal"),
-			"/v1/dashscope/services/aigc/multimodal-generation/generation"
+			requestSurfacePath('dashscope', 'images.generations.multimodal'),
+			'/v1/dashscope/services/aigc/multimodal-generation/generation',
 		);
 	});
 
-	it("compacts Gemini endpoints for request-log rows", () => {
+	it('compacts Gemini endpoints for request-log rows', () => {
+		assert.equal(requestLogProtocolPath('gemini', 'models.generate'), '/v1beta/models');
+		assert.equal(requestLogProtocolPath('gemini', 'streamGenerateContent'), '/v1beta/models');
+		assert.equal(requestLogProtocolPath('openai', 'chat'), '/v1/chat/completions');
 		assert.equal(
-			requestLogProtocolPath("gemini", "models.generate"),
-			"/v1beta/models"
-		);
-		assert.equal(
-			requestLogProtocolPath("gemini", "streamGenerateContent"),
-			"/v1beta/models"
-		);
-		assert.equal(
-			requestLogProtocolPath("openai", "chat"),
-			"/v1/chat/completions"
-		);
-		assert.equal(
-			requestLogProtocolPath("dashscope", "audio.speech"),
-			"/v1/audio/speech"
+			requestLogProtocolPath('dashscope', 'audio.speech'),
+			'/v1/dashscope/services/audio/tts/SpeechSynthesizer',
 		);
 	});
 });
 
-describe("route form capability filters", () => {
-	it("builds DashScope TTS presets for both public modes", () => {
-		const nonRealtime = applyDashScopeTtsRoutePreset(
-			EMPTY_ROUTE_FORM,
-			"nonrealtime"
-		);
+describe('route form capability filters', () => {
+	it('builds DashScope TTS presets for both public modes', () => {
+		const nonRealtime = applyDashScopeTtsRoutePreset(EMPTY_ROUTE_FORM, 'nonrealtime');
 		assert.deepEqual(
 			{
 				requestProtocol: nonRealtime.request_protocol,
@@ -172,15 +163,15 @@ describe("route form capability filters", () => {
 				adapter: nonRealtime.adapter,
 			},
 			{
-				requestProtocol: "openai",
-				requestOperation: "audio.speech",
-				upstreamProtocol: "dashscope",
-				upstreamOperation: "audio.speech",
-				adapter: "dashscope-tts-speech",
-			}
+				requestProtocol: 'openai',
+				requestOperation: 'audio.speech',
+				upstreamProtocol: 'dashscope',
+				upstreamOperation: 'audio.speech',
+				adapter: 'dashscope-tts-speech',
+			},
 		);
 
-		const realtime = applyDashScopeTtsRoutePreset(EMPTY_ROUTE_FORM, "realtime");
+		const realtime = applyDashScopeTtsRoutePreset(EMPTY_ROUTE_FORM, 'realtime');
 		assert.deepEqual(
 			{
 				requestProtocol: realtime.request_protocol,
@@ -190,20 +181,17 @@ describe("route form capability filters", () => {
 				adapter: realtime.adapter,
 			},
 			{
-				requestProtocol: "dashscope",
-				requestOperation: "audio.speech.realtime.inference",
-				upstreamProtocol: "dashscope",
-				upstreamOperation: "audio.speech.realtime.inference",
-				adapter: "passthrough",
-			}
+				requestProtocol: 'dashscope',
+				requestOperation: 'audio.speech.realtime.inference',
+				upstreamProtocol: 'dashscope',
+				upstreamOperation: 'audio.speech.realtime.inference',
+				adapter: 'passthrough',
+			},
 		);
 	});
 
-	it("builds DashScope ASR presets for convert, passthrough and filetrans", () => {
-		const convert = applyDashScopeAsrRoutePreset(
-			EMPTY_ROUTE_FORM,
-			"flash-convert"
-		);
+	it('builds DashScope ASR presets for convert, passthrough and filetrans', () => {
+		const convert = applyDashScopeAsrRoutePreset(EMPTY_ROUTE_FORM, 'flash-convert');
 		assert.deepEqual(
 			{
 				requestProtocol: convert.request_protocol,
@@ -213,45 +201,82 @@ describe("route form capability filters", () => {
 				adapter: convert.adapter,
 			},
 			{
-				requestProtocol: "openai",
-				requestOperation: "audio.transcriptions",
-				upstreamProtocol: "dashscope",
-				upstreamOperation: "audio.transcriptions.multimodal",
-				adapter: "dashscope-asr-qwen-audio-file",
-			}
+				requestProtocol: 'openai',
+				requestOperation: 'audio.transcriptions',
+				upstreamProtocol: 'dashscope',
+				upstreamOperation: 'audio.transcriptions.multimodal',
+				adapter: 'dashscope-asr-qwen-audio-file',
+			},
 		);
-		const passthrough = applyDashScopeAsrRoutePreset(
-			EMPTY_ROUTE_FORM,
-			"flash-passthrough"
-		);
-		assert.equal(passthrough.request_protocol, "dashscope");
-		assert.equal(
-			passthrough.request_operation,
-			"audio.transcriptions.multimodal"
-		);
-		assert.equal(passthrough.adapter, "passthrough");
-		const filetrans = applyDashScopeAsrRoutePreset(
-			EMPTY_ROUTE_FORM,
-			"filetrans"
-		);
-		assert.equal(filetrans.upstream_operation, "audio.transcriptions.async");
-		assert.equal(filetrans.adapter, "dashscope-asr-file-async");
+		const passthrough = applyDashScopeAsrRoutePreset(EMPTY_ROUTE_FORM, 'flash-passthrough');
+		assert.equal(passthrough.request_protocol, 'dashscope');
+		assert.equal(passthrough.request_operation, 'audio.transcriptions.multimodal');
+		assert.equal(passthrough.adapter, 'passthrough');
+		const filetrans = applyDashScopeAsrRoutePreset(EMPTY_ROUTE_FORM, 'filetrans');
+		assert.equal(filetrans.upstream_operation, 'audio.transcriptions.async');
+		assert.equal(filetrans.adapter, 'dashscope-asr-file-async');
 	});
 
-	it("limits public operations by model modality", () => {
-		assert.deepEqual(requestOperationsForModel(model(), "openai"), [
-			"chat",
-			"responses",
-		]);
+	it('wires qwen-audio-3.0-asr-flash on Token Plan to convert and passthrough, not filetrans', () => {
+		const qwenTokenPlan = listStaticProviderImportPresets().find((row) => row.name === 'Qwen AI Platform (Token Plan)');
+		assert.ok(qwenTokenPlan);
+		const asr = model({
+			id: 'qwen-audio-3.0-asr-flash',
+			pricing_profile: JSON.stringify({
+				audio_billing_mode: 'per_second',
+				audio: { price_per_second: 0.0001 },
+			}),
+		});
+		assert.deepEqual(
+			upstreamOperationsForProviderModel(
+				provider(qwenTokenPlan.endpoints),
+				asr,
+				'dashscope',
+				'qwen-audio-3.0-asr-flash',
+			),
+			['audio.transcriptions.multimodal', 'audio.transcriptions.realtime.inference'],
+		);
+		assert.equal(
+			applyDashScopeAsrRoutePreset(EMPTY_ROUTE_FORM, 'flash-convert').adapter,
+			'dashscope-asr-qwen-audio-file',
+		);
+		assert.equal(applyDashScopeAsrRoutePreset(EMPTY_ROUTE_FORM, 'flash-passthrough').adapter, 'passthrough');
+	});
+
+	it('builds DashScope image presets for Qwen and Wan families', () => {
+		const qwen = applyDashScopeImageRoutePreset(EMPTY_ROUTE_FORM, 'qwen');
+		assert.deepEqual(
+			{
+				requestProtocol: qwen.request_protocol,
+				requestOperation: qwen.request_operation,
+				upstreamProtocol: qwen.upstream_protocol,
+				upstreamOperation: qwen.upstream_operation,
+				adapter: qwen.adapter,
+			},
+			{
+				requestProtocol: 'openai',
+				requestOperation: 'images.generations',
+				upstreamProtocol: 'dashscope',
+				upstreamOperation: 'images.generations.multimodal',
+				adapter: 'dashscope-image-qwen',
+			},
+		);
+		const wan = applyDashScopeImageRoutePreset(EMPTY_ROUTE_FORM, 'wan');
+		assert.equal(wan.adapter, 'dashscope-image-wan');
+		assert.equal(wan.upstream_operation, 'images.generations.multimodal');
+	});
+
+	it('limits public operations by model modality', () => {
+		assert.deepEqual(requestOperationsForModel(model(), 'openai'), ['chat', 'responses']);
 		assert.deepEqual(
 			requestOperationsForModel(
 				model({
 					input_modalities: '["text"]',
 					output_modalities: '["embeddings"]',
 				}),
-				"openai"
+				'openai',
 			),
-			["embeddings"]
+			['embeddings'],
 		);
 		assert.deepEqual(
 			requestOperationsForModel(
@@ -259,81 +284,159 @@ describe("route form capability filters", () => {
 					input_modalities: '["text"]',
 					output_modalities: '["rerank"]',
 				}),
-				"openai"
+				'openai',
 			),
-			["rerank"]
+			['rerank'],
 		);
-		assert.deepEqual(
-			requestOperationsForModel(
-				model({
-					input_modalities: '["text","image"]',
-					output_modalities: '["image"]',
-				}),
-				"openai"
+		const imageModel = model({
+			input_modalities: '["text","image"]',
+			output_modalities: '["image"]',
+		});
+		assert.deepEqual(requestOperationsForModel(imageModel, 'openai'), ['images.generations', 'images.edits']);
+		assert.deepEqual(requestOperationsForModel(imageModel, 'gemini', 'gemini-3.1-flash-image'), ['models.generate']);
+		assert.equal(
+			resolveAdapterOptionKey(
+				{
+					...EMPTY_ROUTE_FORM,
+					adapter: 'passthrough',
+					request_protocol: 'gemini',
+					request_operation: 'models.generate',
+					upstream_protocol: 'gemini',
+					upstream_operation: 'models.generate',
+				},
+				'image',
 			),
-			["images.generations", "images.edits"]
+			'passthrough:gemini:models.generate:image',
 		);
+		assert.equal(
+			resolveAdapterOptionKey(
+				{
+					...EMPTY_ROUTE_FORM,
+					adapter: 'passthrough',
+					request_protocol: 'gemini',
+					request_operation: 'models.generate',
+					upstream_protocol: 'gemini',
+					upstream_operation: 'models.generate',
+				},
+				'llm',
+			),
+			'passthrough:gemini:models.generate',
+		);
+		const geminiOptions = listAdapterOptionsForModel(
+			imageModel,
+			provider({ gemini: { base: 'https://generativelanguage.googleapis.com/v1beta/models' } }),
+			'gemini-3.1-flash-image',
+		);
+		assert.equal(
+			geminiOptions.options.some(
+				(option) =>
+					option.descriptor.optionKey === 'passthrough:gemini:models.generate:image' && option.modelMatch === 'match',
+			),
+			true,
+		);
+		const geminiOnly = provider({
+			gemini: { base: 'https://generativelanguage.googleapis.com/v1beta/models' },
+		});
+		const misaligned = alignRouteFormAdapter(
+			{
+				...EMPTY_ROUTE_FORM,
+				adapter: 'passthrough',
+				request_protocol: 'openai',
+				request_operation: 'images.generations',
+				upstream_protocol: 'gemini',
+				upstream_operation: 'models.generate',
+				provider_model_name: 'gemini-nano-banana-2.1',
+			},
+			imageModel,
+			geminiOnly,
+		);
+		assert.equal(misaligned.request_protocol, 'gemini');
+		assert.equal(misaligned.request_operation, 'models.generate');
+		assert.equal(misaligned.upstream_protocol, 'gemini');
+		assert.equal(misaligned.upstream_operation, 'models.generate');
+		assert.equal(misaligned.adapter, 'passthrough');
+		assert.equal(resolveAdapterOptionKey(misaligned, 'image'), 'passthrough:gemini:models.generate:image');
+		const openaiPassthrough = {
+			...EMPTY_ROUTE_FORM,
+			adapter: 'passthrough',
+			request_protocol: 'openai' as const,
+			request_operation: 'images.generations',
+			upstream_protocol: 'openai' as const,
+			upstream_operation: 'images.generations',
+			provider_model_name: 'gpt-image-2',
+		};
+		const kept = alignRouteFormAdapter(
+			openaiPassthrough,
+			imageModel,
+			provider({ openai: { base: 'https://api.openai.com/v1' } }),
+		);
+		assert.equal(kept, openaiPassthrough);
+		const alreadyGemini = {
+			...EMPTY_ROUTE_FORM,
+			adapter: 'passthrough',
+			request_protocol: 'gemini' as const,
+			request_operation: 'models.generate',
+			upstream_protocol: 'gemini' as const,
+			upstream_operation: 'models.generate',
+			provider_model_name: 'gemini-nano-banana-2.1',
+		};
+		assert.equal(alignRouteFormAdapter(alreadyGemini, imageModel, geminiOnly), alreadyGemini);
 		assert.deepEqual(
 			requestOperationsForModel(
 				model({
 					input_modalities: '["audio"]',
 					output_modalities: '["text"]',
 					pricing_profile: JSON.stringify({
-						audio_billing_mode: "per_second",
+						audio_billing_mode: 'per_second',
 						audio: { price_per_second: 0.0001, minimum_seconds: 1 },
 					}),
 				}),
-				"openai"
+				'openai',
 			),
-			["audio.transcriptions"]
+			['audio.transcriptions'],
 		);
 		assert.deepEqual(
 			requestOperationsForModel(
 				model({
 					pricing_profile: JSON.stringify({
-						audio_billing_mode: "per_second",
+						audio_billing_mode: 'per_second',
 						audio: { price_per_second: 0.0001 },
 					}),
 				}),
-				"dashscope"
+				'dashscope',
 			),
 			[
-				"audio.transcriptions.multimodal",
-				"audio.transcriptions.realtime.inference",
-				"audio.transcriptions.realtime.session",
-			]
+				'audio.transcriptions.multimodal',
+				'audio.transcriptions.realtime.inference',
+				'audio.transcriptions.realtime.session',
+				'audio.transcriptions.async',
+			],
 		);
 		assert.deepEqual(
 			requestOperationsForModel(
 				model({
 					pricing_profile: JSON.stringify({
-						audio_billing_mode: "per_second",
+						audio_billing_mode: 'per_second',
 						audio: { price_per_second: 0.0001 },
 					}),
 				}),
-				"dashscope",
-				"fun-asr-realtime"
+				'dashscope',
+				'fun-asr-realtime',
 			),
-			[
-				"audio.transcriptions.multimodal",
-				"audio.transcriptions.realtime.inference",
-			]
+			['audio.transcriptions.multimodal', 'audio.transcriptions.realtime.inference', 'audio.transcriptions.async'],
 		);
 		assert.deepEqual(
 			requestOperationsForModel(
 				model({
 					pricing_profile: JSON.stringify({
-						audio_billing_mode: "per_second",
+						audio_billing_mode: 'per_second',
 						audio: { price_per_second: 0.0001 },
 					}),
 				}),
-				"dashscope",
-				"qwen3-asr-flash-realtime"
+				'dashscope',
+				'qwen3-asr-flash-realtime',
 			),
-			[
-				"audio.transcriptions.multimodal",
-				"audio.transcriptions.realtime.session",
-			]
+			['audio.transcriptions.multimodal', 'audio.transcriptions.realtime.session', 'audio.transcriptions.async'],
 		);
 		assert.deepEqual(
 			requestOperationsForModel(
@@ -341,36 +444,39 @@ describe("route form capability filters", () => {
 					input_modalities: '["text"]',
 					output_modalities: '["audio"]',
 					pricing_profile: JSON.stringify({
-						audio_billing_mode: "per_character",
+						audio_billing_mode: 'per_character',
 						audio: { price_per_character: 0.0001 },
 					}),
 				}),
-				"openai"
+				'openai',
 			),
-			["audio.speech"]
+			['audio.speech'],
 		);
 		assert.deepEqual(
 			requestOperationsForModel(
 				model({
 					pricing_profile: JSON.stringify({
-						audio_billing_mode: "per_character",
+						audio_billing_mode: 'per_character',
 						audio: { price_per_character: 0.0001 },
 					}),
 				}),
-				"dashscope"
+				'dashscope',
 			),
-			["audio.speech.realtime.inference"]
+			[
+				'audio.speech.realtime.inference',
+				'audio.speech',
+				'audio.speech.stream',
+				'audio.speech.multimodal',
+				'audio.speech.realtime.session',
+			],
 		);
 	});
 
-	it("intersects provider endpoint capabilities with the model modality", () => {
+	it('intersects provider endpoint capabilities with the model modality', () => {
 		const baseProvider = provider({
-			openai: { base: "https://example.com/v1" },
+			openai: { base: 'https://example.com/v1' },
 		});
-		assert.deepEqual(
-			upstreamOperationsForProviderModel(baseProvider, model(), "openai"),
-			["chat", "responses"]
-		);
+		assert.deepEqual(upstreamOperationsForProviderModel(baseProvider, model(), 'openai'), ['chat', 'responses']);
 		assert.deepEqual(
 			upstreamOperationsForProviderModel(
 				baseProvider,
@@ -378,9 +484,9 @@ describe("route form capability filters", () => {
 					input_modalities: '["text"]',
 					output_modalities: '["embeddings"]',
 				}),
-				"openai"
+				'openai',
 			),
-			["embeddings"]
+			['embeddings'],
 		);
 		assert.deepEqual(
 			upstreamOperationsForProviderModel(
@@ -389,9 +495,9 @@ describe("route form capability filters", () => {
 					input_modalities: '["text"]',
 					output_modalities: '["rerank"]',
 				}),
-				"openai"
+				'openai',
 			),
-			["rerank"]
+			['rerank'],
 		);
 		assert.deepEqual(
 			upstreamOperationsForProviderModel(
@@ -400,15 +506,15 @@ describe("route form capability filters", () => {
 					input_modalities: '["text","image"]',
 					output_modalities: '["image"]',
 				}),
-				"openai"
+				'openai',
 			),
-			["images.generations", "images.edits"]
+			['images.generations', 'images.edits'],
 		);
 
 		const endpointOnlyProvider = provider({
 			openai: {
 				endpoints: {
-					"images.edits": "https://example.com/v1/images/edits",
+					'images.edits': 'https://example.com/v1/images/edits',
 				},
 			},
 		});
@@ -419,223 +525,409 @@ describe("route form capability filters", () => {
 					input_modalities: '["text","image"]',
 					output_modalities: '["image"]',
 				}),
-				"openai"
+				'openai',
 			),
-			["images.edits"]
+			['images.edits'],
 		);
 	});
 
-	it("maps DashScope endpoint capabilities to explicit audio route operations", () => {
+	it('maps DashScope endpoint capabilities to explicit audio route operations', () => {
 		const dashScope = provider({
-			dashscope: { base: "https://dashscope.aliyuncs.com/api/v1" },
+			dashscope: { base: 'https://dashscope.aliyuncs.com/api/v1' },
 		});
 		const asr = model({
 			pricing_profile: JSON.stringify({
-				audio_billing_mode: "per_second",
+				audio_billing_mode: 'per_second',
 				audio: { price_per_second: 0.0001 },
 			}),
 		});
-		assert.deepEqual(
-			upstreamOperationsForProviderModel(dashScope, asr, "dashscope"),
-			[
-				"audio.transcriptions.multimodal",
-				"audio.transcriptions.async",
-				"audio.transcriptions.realtime.inference",
-				"audio.transcriptions.realtime.session",
-			]
-		);
-		assert.deepEqual(
-			upstreamOperationsForProviderModel(
-				dashScope,
-				asr,
-				"dashscope",
-				"fun-asr-realtime"
-			),
-			[
-				"audio.transcriptions.multimodal",
-				"audio.transcriptions.async",
-				"audio.transcriptions.realtime.inference",
-			]
-		);
+		assert.deepEqual(upstreamOperationsForProviderModel(dashScope, asr, 'dashscope'), [
+			'audio.transcriptions.multimodal',
+			'audio.transcriptions.async',
+			'audio.transcriptions.realtime.inference',
+			'audio.transcriptions.realtime.session',
+		]);
+		assert.deepEqual(upstreamOperationsForProviderModel(dashScope, asr, 'dashscope', 'fun-asr-realtime'), [
+			'audio.transcriptions.multimodal',
+			'audio.transcriptions.async',
+			'audio.transcriptions.realtime.inference',
+		]);
 
 		const tts = model({
 			pricing_profile: JSON.stringify({
-				audio_billing_mode: "per_character",
+				audio_billing_mode: 'per_character',
 				audio: { price_per_character: 0.0001 },
 			}),
 		});
+		assert.deepEqual(upstreamOperationsForProviderModel(dashScope, tts, 'dashscope'), [
+			'audio.speech',
+			'audio.speech.stream',
+			'audio.speech.multimodal',
+			'audio.speech.realtime.inference',
+			'audio.speech.realtime.session',
+		]);
+
+		const image = model({
+			input_modalities: '["text","image"]',
+			output_modalities: '["image"]',
+		});
+		assert.deepEqual(upstreamOperationsForProviderModel(dashScope, image, 'dashscope'), [
+			'images.generations.multimodal',
+		]);
+	});
+
+	it('only offers adapters that exactly match the selected topology', () => {
 		assert.deepEqual(
-			upstreamOperationsForProviderModel(dashScope, tts, "dashscope"),
-			["audio.speech", "audio.speech.realtime.inference"]
+			compatibleAdaptersForRoute({
+				request_protocol: 'openai',
+				request_operation: 'audio.transcriptions',
+				upstream_protocol: 'dashscope',
+				upstream_operation: 'audio.transcriptions.multimodal',
+			}),
+			['dashscope-asr-qwen-file', 'dashscope-asr-qwen-audio-file', 'dashscope-asr-fun-file'],
+		);
+		assert.deepEqual(
+			compatibleAdaptersForRoute({
+				request_protocol: 'openai',
+				request_operation: 'audio.speech',
+				upstream_protocol: 'dashscope',
+				upstream_operation: 'audio.speech.multimodal',
+			}),
+			['dashscope-tts-qwen', 'dashscope-tts-minimax'],
+		);
+		assert.deepEqual(
+			compatibleAdaptersForRoute({
+				request_protocol: 'openai',
+				request_operation: 'audio.transcriptions',
+				upstream_protocol: 'dashscope',
+				upstream_operation: 'audio.transcriptions.async',
+			}),
+			['dashscope-asr-file-async'],
+		);
+		assert.deepEqual(
+			compatibleAdaptersForRoute({
+				request_protocol: 'openai',
+				request_operation: 'audio.transcriptions',
+				upstream_protocol: 'minimax',
+				upstream_operation: 'audio.transcriptions',
+			}),
+			['minimax-asr-file'],
+		);
+		assert.deepEqual(
+			compatibleAdaptersForRoute({
+				request_protocol: 'openai',
+				request_operation: 'images.generations',
+				upstream_protocol: 'dashscope',
+				upstream_operation: 'images.generations.multimodal',
+			}),
+			['dashscope-image-qwen', 'dashscope-image-wan'],
 		);
 	});
 
-	it("only offers adapters that exactly match the selected topology", () => {
-		assert.deepEqual(
-			compatibleAdaptersForRoute({
-				request_protocol: "openai",
-				request_operation: "audio.transcriptions",
-				upstream_protocol: "dashscope",
-				upstream_operation: "audio.transcriptions.multimodal",
-			}),
-			[
-				"dashscope-asr-qwen-file",
-				"dashscope-asr-qwen-audio-file",
-				"dashscope-asr-fun-file",
-			]
+	it('builds dropdown mapping suffixes from the registry', () => {
+		const passthrough = getAdapterByOptionKey('passthrough:openai:audio.transcriptions');
+		assert.ok(passthrough);
+		assert.equal(adapterOptionMappingSuffix(passthrough), ' · openai/audio.transcriptions');
+
+		const syncAsr = getAdapterByOptionKey('dashscope-asr-qwen-audio-file');
+		assert.ok(syncAsr);
+		assert.equal(
+			adapterOptionMappingSuffix(syncAsr),
+			' · openai/audio.transcriptions → dashscope/audio.transcriptions.multimodal',
 		);
-		assert.deepEqual(
-			compatibleAdaptersForRoute({
-				request_protocol: "openai",
-				request_operation: "audio.speech",
-				upstream_protocol: "dashscope",
-				upstream_operation: "audio.speech.multimodal",
-			}),
-			["dashscope-tts-qwen", "dashscope-tts-minimax"]
+
+		const asyncAsr = getAdapterByOptionKey('dashscope-asr-file-async');
+		assert.ok(asyncAsr);
+		assert.equal(
+			adapterOptionMappingSuffix(asyncAsr),
+			' · openai/audio.transcriptions → dashscope/audio.transcriptions.async',
 		);
-		assert.deepEqual(
-			compatibleAdaptersForRoute({
-				request_protocol: "openai",
-				request_operation: "audio.transcriptions",
-				upstream_protocol: "dashscope",
-				upstream_operation: "audio.transcriptions.async",
+
+		const tts = getAdapterByOptionKey('dashscope-tts-qwen');
+		assert.ok(tts);
+		assert.equal(adapterOptionMappingSuffix(tts), ' · openai/audio.speech → dashscope/audio.speech.multimodal');
+	});
+
+	function visibleAdapterKeys(
+		listed: ReturnType<typeof listAdapterOptionsForModel>,
+		providerModelName = 'named',
+	): string[] {
+		return listed.options
+			.filter((option) => {
+				if (!option.available) return false;
+				if (!providerModelName.trim() || listed.modelUnrecognized) return true;
+				return option.modelMatch !== 'mismatch';
+			})
+			.map((option) => option.descriptor.optionKey)
+			.sort();
+	}
+
+	it('does not treat another protocol capability as satisfying this adapter', () => {
+		const dashscopeOnly = provider({
+			dashscope: { base: 'https://dashscope.aliyuncs.com/api/v1' },
+		});
+		const asr = model({
+			pricing_profile: JSON.stringify({
+				audio_billing_mode: 'per_second',
+				audio: { price_per_second: 0.0001 },
 			}),
-			["dashscope-asr-file-async"]
+		});
+		const listed = listAdapterOptionsForModel(asr, dashscopeOnly, 'qwen3-asr-flash');
+		assert.equal(
+			listed.options.find((option) => option.descriptor.optionKey === 'passthrough:openai:audio.transcriptions')
+				?.available,
+			false,
 		);
+		assert.equal(
+			listed.options.find((option) => option.descriptor.optionKey === 'passthrough:minimax:audio.transcriptions')
+				?.available,
+			false,
+		);
+		assert.equal(listed.modelUnrecognized, false);
+		assert.deepEqual(visibleAdapterKeys(listed), [
+			'dashscope-asr-qwen-file',
+			'passthrough:dashscope:audio.transcriptions.multimodal',
+		]);
+	});
+
+	it('filters Token Plan TTS adapters to CosyVoice and Qwen-Audio families', () => {
+		const qwenTokenPlan = listStaticProviderImportPresets().find((row) => row.name === 'Qwen AI Platform (Token Plan)');
+		assert.ok(qwenTokenPlan);
+		const tts = model({
+			id: 'qwen-audio-3.0-tts-plus',
+			pricing_profile: JSON.stringify({
+				audio_billing_mode: 'per_character',
+				audio: { price_per_character: 0.0001 },
+			}),
+		});
+		const listed = listAdapterOptionsForModel(tts, provider(qwenTokenPlan.endpoints), 'qwen-audio-3.0-tts-plus');
+		assert.equal(listed.modelUnrecognized, false);
+		assert.equal(
+			listed.options.find((option) => option.descriptor.optionKey === 'passthrough:openai:audio.speech')?.available,
+			false,
+		);
+		assert.deepEqual(visibleAdapterKeys(listed), [
+			'dashscope-tts-speech',
+			'passthrough:dashscope:audio.speech',
+			'passthrough:dashscope:audio.speech.stream',
+		]);
+	});
+
+	it('keeps MiniMax file transcription adapters and hides other protocols', () => {
+		const minimax = listStaticProviderImportPresets().find((row) => row.name === 'MiniMax');
+		assert.ok(minimax);
+		const asr = model({
+			pricing_profile: JSON.stringify({
+				audio_billing_mode: 'per_second',
+				audio: { price_per_second: 0.0001 },
+			}),
+		});
+		const listed = listAdapterOptionsForModel(asr, provider(minimax.endpoints), 'asr-1.0');
+		assert.equal(listed.modelUnrecognized, false);
+		assert.equal(
+			listed.options.find((option) => option.descriptor.optionKey === 'passthrough:openai:audio.transcriptions')
+				?.available,
+			false,
+		);
+		assert.deepEqual(visibleAdapterKeys(listed), ['minimax-asr-file', 'passthrough:minimax:audio.transcriptions']);
+	});
+
+	it('offers MiniMax speech passthrough for native speech models', () => {
+		const minimax = listStaticProviderImportPresets().find((row) => row.name === 'MiniMax');
+		assert.ok(minimax);
+		const speech = model({
+			id: 'minimax-speech-2.8-turbo',
+			pricing_profile: JSON.stringify({
+				audio_billing_mode: 'per_character',
+				audio: { price_per_character: 0.0002 },
+			}),
+			output_modalities: JSON.stringify(['audio']),
+		});
+		const listed = listAdapterOptionsForModel(speech, provider(minimax.endpoints), 'speech-2.8-turbo');
+		assert.equal(listed.modelUnrecognized, false);
+		assert.deepEqual(visibleAdapterKeys(listed), ['minimax-tts', 'passthrough:minimax:audio.speech']);
+		assert.deepEqual(
+			upstreamOperationsForProviderModel(provider(minimax.endpoints), speech, 'minimax', 'speech-2.8-turbo'),
+			['audio.speech'],
+		);
+	});
+
+	it('offers MiniMax image passthrough for image-01 models', () => {
+		const minimax = listStaticProviderImportPresets().find((row) => row.name === 'MiniMax');
+		assert.ok(minimax);
+		const image = model({
+			id: 'minimax-image-01',
+			pricing_profile: JSON.stringify({
+				image_billing_mode: 'per_image',
+				image: { default: 0.025 },
+			}),
+			output_modalities: JSON.stringify(['image']),
+		});
+		const listed = listAdapterOptionsForModel(image, provider(minimax.endpoints), 'image-01');
+		assert.equal(listed.modelUnrecognized, false);
+		assert.deepEqual(visibleAdapterKeys(listed), ['minimax-image', 'passthrough:minimax:images.generations']);
+	});
+
+	it('shows every available adapter when the provider model name matches no rule', () => {
+		const dashscope = provider({
+			dashscope: { base: 'https://dashscope.aliyuncs.com/api/v1' },
+		});
+		const asr = model({
+			pricing_profile: JSON.stringify({
+				audio_billing_mode: 'per_second',
+				audio: { price_per_second: 0.0001 },
+			}),
+		});
+		const listed = listAdapterOptionsForModel(asr, dashscope, 'brand-new-asr');
+		assert.equal(listed.modelUnrecognized, true);
+		assert.deepEqual(visibleAdapterKeys(listed), [
+			'dashscope-asr-file-async',
+			'dashscope-asr-fun-file',
+			'dashscope-asr-qwen-audio-file',
+			'dashscope-asr-qwen-file',
+			'passthrough:dashscope:audio.transcriptions.async',
+			'passthrough:dashscope:audio.transcriptions.multimodal',
+			'passthrough:dashscope:audio.transcriptions.realtime.inference',
+			'passthrough:dashscope:audio.transcriptions.realtime.session',
+		]);
+
+		const unnamed = listAdapterOptionsForModel(asr, dashscope, '  ');
+		assert.equal(unnamed.modelUnrecognized, false);
+		assert.ok(unnamed.options.every((option) => option.modelMatch === 'generic'));
 	});
 });
 
-describe("route factor presentation", () => {
-	it("classifies distance from the catalog baseline", () => {
-		assert.equal(factorLevelForValue(Number.NaN), "invalid");
-		assert.equal(factorLevelForValue(-1), "invalid");
-		assert.equal(factorLevelForValue(0), "zero");
-		assert.equal(factorLevelForValue(0.79), "veryLow");
-		assert.equal(factorLevelForValue(0.8), "low");
-		assert.equal(factorLevelForValue(0.95), "baseline");
-		assert.equal(factorLevelForValue(1.05), "baseline");
-		assert.equal(factorLevelForValue(1.06), "high");
-		assert.equal(factorLevelForValue(1.2), "high");
-		assert.equal(factorLevelForValue(1.21), "veryHigh");
+describe('route factor presentation', () => {
+	it('classifies distance from the catalog baseline', () => {
+		assert.equal(factorLevelForValue(Number.NaN), 'invalid');
+		assert.equal(factorLevelForValue(-1), 'invalid');
+		assert.equal(factorLevelForValue(0), 'zero');
+		assert.equal(factorLevelForValue(0.79), 'veryLow');
+		assert.equal(factorLevelForValue(0.8), 'low');
+		assert.equal(factorLevelForValue(0.95), 'baseline');
+		assert.equal(factorLevelForValue(1.05), 'baseline');
+		assert.equal(factorLevelForValue(1.06), 'high');
+		assert.equal(factorLevelForValue(1.2), 'high');
+		assert.equal(factorLevelForValue(1.21), 'veryHigh');
 	});
 
-	it("uses different low-factor semantics for charged price and metered cost", () => {
-		assert.match(factorChipClassForValue(0.9, "charged"), /bg-sky-100/);
-		assert.match(factorChipClassForValue(0.9, "metered"), /bg-emerald-100/);
-		assert.match(factorChipClassForValue(0.5, "charged"), /bg-orange-100/);
-		assert.match(factorChipClassForValue(0.5, "metered"), /bg-emerald-200/);
-		assert.match(factorChipClassForValue(1, "charged"), /bg-zinc-100/);
-		assert.match(factorChipClassForValue(1.1, "metered"), /bg-amber-100/);
-		assert.match(factorChipClassForValue(1.5, "metered"), /bg-rose-100/);
+	it('uses different low-factor semantics for charged price and metered cost', () => {
+		assert.match(factorChipClassForValue(0.9, 'charged'), /bg-sky-100/);
+		assert.match(factorChipClassForValue(0.9, 'metered'), /bg-emerald-100/);
+		assert.match(factorChipClassForValue(0.5, 'charged'), /bg-orange-100/);
+		assert.match(factorChipClassForValue(0.5, 'metered'), /bg-emerald-200/);
+		assert.match(factorChipClassForValue(1, 'charged'), /bg-zinc-100/);
+		assert.match(factorChipClassForValue(1.1, 'metered'), /bg-amber-100/);
+		assert.match(factorChipClassForValue(1.5, 'metered'), /bg-rose-100/);
 	});
 
-	it("flags a base-price inversion only when charged is below metered", () => {
+	it('flags a base-price inversion only when charged is below metered', () => {
 		assert.equal(hasBasePricingInversion(0.9, 1), true);
 		assert.equal(hasBasePricingInversion(1, 1), false);
 		assert.equal(hasBasePricingInversion(1.1, 1), false);
 		assert.equal(hasBasePricingInversion(Number.NaN, 1), false);
 	});
 
-	it("drops trailing zeros on chip multipliers", () => {
-		assert.equal(formatFactorMultiplierForChip(1), "×1");
-		assert.equal(formatFactorMultiplierForChip(0), "×0");
-		assert.equal(formatFactorMultiplierForChip(1.9), "×1.9");
-		assert.equal(formatFactorMultiplierForChip(0.75), "×0.75");
+	it('drops trailing zeros on chip multipliers', () => {
+		assert.equal(formatFactorMultiplierForChip(1), '×1');
+		assert.equal(formatFactorMultiplierForChip(0), '×0');
+		assert.equal(formatFactorMultiplierForChip(1.9), '×1.9');
+		assert.equal(formatFactorMultiplierForChip(0.75), '×0.75');
 	});
 });
 
-describe("resolveEffectiveRouteStrategy", () => {
-	it("prefers tier override over pool strategy", () => {
+describe('resolveEffectiveRouteStrategy', () => {
+	it('prefers tier override over pool strategy', () => {
 		const effective = resolveEffectiveRouteStrategy({
-			poolStrategy: "weighted_random",
-			poolTierStrategies: JSON.stringify({ "10": "weight_priority" }),
+			poolStrategy: 'weighted_random',
+			poolTierStrategies: JSON.stringify({ '10': 'weight_priority' }),
 			priority: 10,
-			protocol: "openai",
-			requestOperation: "chat",
-			routeGroup: "default",
-			globalStrategy: "hash_affinity",
+			protocol: 'openai',
+			requestOperation: 'chat',
+			routeGroup: 'default',
+			globalStrategy: 'hash_affinity',
 		});
 		assert.deepEqual(effective, {
-			strategy: "weight_priority",
-			source: "tier",
+			strategy: 'weight_priority',
+			source: 'tier',
 			inherited: false,
 		});
 	});
 
-	it("inherits pool strategy when the tier has no override", () => {
+	it('inherits pool strategy when the tier has no override', () => {
 		const effective = resolveEffectiveRouteStrategy({
-			poolStrategy: "weighted_random",
-			poolTierStrategies: JSON.stringify({ "0": "weight_priority" }),
+			poolStrategy: 'weighted_random',
+			poolTierStrategies: JSON.stringify({ '0': 'weight_priority' }),
 			priority: 10,
-			protocol: "openai",
-			requestOperation: "chat",
-			routeGroup: "default",
-			globalStrategy: "hash_affinity",
+			protocol: 'openai',
+			requestOperation: 'chat',
+			routeGroup: 'default',
+			globalStrategy: 'hash_affinity',
 		});
 		assert.deepEqual(effective, {
-			strategy: "weighted_random",
-			source: "pool",
+			strategy: 'weighted_random',
+			source: 'pool',
 			inherited: true,
 		});
 	});
 
-	it("falls back through model / global when pool is unset", () => {
+	it('falls back through model / global when pool is unset', () => {
 		const effective = resolveEffectiveRouteStrategy({
 			priority: 1,
-			routePolicyRaw: JSON.stringify({ strategy: "weighted_round_robin" }),
-			protocol: "openai",
-			requestOperation: "chat",
-			routeGroup: "default",
-			globalStrategy: "hash_affinity",
+			routePolicyRaw: JSON.stringify({ strategy: 'weighted_round_robin' }),
+			protocol: 'openai',
+			requestOperation: 'chat',
+			routeGroup: 'default',
+			globalStrategy: 'hash_affinity',
 		});
 		assert.deepEqual(effective, {
-			strategy: "weighted_round_robin",
-			source: "model",
+			strategy: 'weighted_round_robin',
+			source: 'model',
 			inherited: true,
 		});
 	});
 });
 
-describe("provider sticky pool mapping", () => {
-	it("maps pool sticky columns onto protocol sections with defaults", () => {
+describe('provider sticky pool mapping', () => {
+	it('maps pool sticky columns onto protocol sections with defaults', () => {
 		const sections = splitRoutesByProtocolAndRouteGroup([
 			{
-				id: "r1",
-				route_pool_id: "pool-1",
-				pool_name: "Pool",
-				route_group: "default",
-				upstream_protocol: "openai",
+				id: 'r1',
+				route_pool_id: 'pool-1',
+				pool_name: 'Pool',
+				route_group: 'default',
+				upstream_protocol: 'openai',
 				pool_sticky_enabled: 1,
 				pool_sticky_idle_ttl_seconds: 1800,
 				surfaces: JSON.stringify([
 					{
-						id: "surf-1",
-						request_protocol: "openai",
-						request_operation: "chat",
-						status: "active",
+						id: 'surf-1',
+						request_protocol: 'openai',
+						request_operation: 'chat',
+						status: 'active',
 					},
 				]),
 			},
 			{
-				id: "r2",
-				route_pool_id: "pool-2",
-				pool_name: "Pool 2",
-				route_group: "default",
-				upstream_protocol: "openai",
+				id: 'r2',
+				route_pool_id: 'pool-2',
+				pool_name: 'Pool 2',
+				route_group: 'default',
+				upstream_protocol: 'openai',
 				pool_sticky_enabled: 0,
 				pool_sticky_idle_ttl_seconds: null,
 				surfaces: JSON.stringify([
 					{
-						id: "surf-2",
-						request_protocol: "openai",
-						request_operation: "chat",
-						status: "active",
+						id: 'surf-2',
+						request_protocol: 'openai',
+						request_operation: 'chat',
+						status: 'active',
 					},
 				]),
 			},
 		]);
-		const stickyOn = sections.find((s) => s.poolId === "pool-1");
-		const stickyOff = sections.find((s) => s.poolId === "pool-2");
+		const stickyOn = sections.find((s) => s.poolId === 'pool-1');
+		const stickyOff = sections.find((s) => s.poolId === 'pool-2');
 		assert.equal(stickyOn?.poolStickyEnabled, true);
 		assert.equal(stickyOn?.poolStickyIdleTtlSeconds, 1800);
 		assert.equal(stickyOff?.poolStickyEnabled, false);
@@ -644,249 +936,225 @@ describe("provider sticky pool mapping", () => {
 });
 
 function catalogCard(
-	overrides: Partial<RouteModelGroup> &
-		Pick<RouteModelGroup, "model_id" | "groupRoutes">
+	overrides: Partial<RouteModelGroup> & Pick<RouteModelGroup, 'model_id' | 'groupRoutes'>,
 ): RouteModelGroup {
 	return {
 		title: overrides.title ?? overrides.model_id,
 		activeCount: overrides.activeCount ?? overrides.groupRoutes.length,
-		vendor: overrides.vendor ?? "other",
+		vendor: overrides.vendor ?? 'other',
 		...overrides,
 	};
 }
 
-describe("surface catalog grouping", () => {
-	it("inverts model cards into request-surface → model → route-group rows", () => {
+describe('surface catalog grouping', () => {
+	it('inverts model cards into request-surface → model → route-group rows', () => {
 		const openaiSurface = JSON.stringify([
 			{
-				id: "surf-chat",
-				request_protocol: "openai",
-				request_operation: "chat",
-				status: "active",
+				id: 'surf-chat',
+				request_protocol: 'openai',
+				request_operation: 'chat',
+				status: 'active',
 			},
 		]);
 		const catalog = buildRouteSurfaceCatalog([
 			catalogCard({
-				model_id: "gpt-4o",
+				model_id: 'gpt-4o',
 				groupRoutes: [
 					{
-						id: "r-default",
-						model_id: "gpt-4o",
-						upstream_protocol: "openai",
-						route_group: "default",
-						route_pool_id: "pool-default",
+						id: 'r-default',
+						model_id: 'gpt-4o',
+						upstream_protocol: 'openai',
+						route_group: 'default',
+						route_pool_id: 'pool-default',
 						surfaces: openaiSurface,
-					} as RouteModelGroup["groupRoutes"][number],
+					} as RouteModelGroup['groupRoutes'][number],
 					{
-						id: "r-vip",
-						model_id: "gpt-4o",
-						upstream_protocol: "openai",
-						route_group: "vip",
-						route_pool_id: "pool-vip",
+						id: 'r-vip',
+						model_id: 'gpt-4o',
+						upstream_protocol: 'openai',
+						route_group: 'vip',
+						route_pool_id: 'pool-vip',
 						surfaces: openaiSurface,
-					} as RouteModelGroup["groupRoutes"][number],
+					} as RouteModelGroup['groupRoutes'][number],
 				],
 			}),
 			catalogCard({
-				model_id: "gpt-4.1",
+				model_id: 'gpt-4.1',
 				groupRoutes: [
 					{
-						id: "r-41",
-						model_id: "gpt-4.1",
-						upstream_protocol: "openai",
-						route_group: "default",
-						route_pool_id: "pool-41",
+						id: 'r-41',
+						model_id: 'gpt-4.1',
+						upstream_protocol: 'openai',
+						route_group: 'default',
+						route_pool_id: 'pool-41',
 						surfaces: openaiSurface,
-					} as RouteModelGroup["groupRoutes"][number],
+					} as RouteModelGroup['groupRoutes'][number],
 				],
 			}),
 			catalogCard({
-				model_id: "orphan",
+				model_id: 'orphan',
 				groupRoutes: [],
 			}),
 		]);
 
 		assert.equal(catalog.surfaces.length, 1);
-		assert.equal(catalog.surfaces[0]?.protocol, "openai");
-		assert.equal(catalog.surfaces[0]?.requestOperation, "chat");
+		assert.equal(catalog.surfaces[0]?.protocol, 'openai');
+		assert.equal(catalog.surfaces[0]?.requestOperation, 'chat');
 		assert.deepEqual(
 			catalog.surfaces[0]?.models.map((row) => row.card.model_id),
-			["gpt-4o", "gpt-4.1"]
+			['gpt-4o', 'gpt-4.1'],
 		);
 		assert.deepEqual(
 			catalog.surfaces[0]?.models[0]?.sections.map((section) => section.group),
-			["default", "vip"]
+			['default', 'vip'],
 		);
 		assert.deepEqual(
 			catalog.unrouted.map((card) => card.model_id),
-			["orphan"]
+			['orphan'],
 		);
 	});
 });
 
-describe("formatScheduleWindowsHint", () => {
-	it("returns null for an empty schedule", () => {
+describe('formatScheduleWindowsHint', () => {
+	it('returns null for an empty schedule', () => {
 		assert.equal(formatScheduleWindowsHint([]), null);
 	});
 
-	it("groups consecutive windows that share a factor", () => {
+	it('groups consecutive windows that share a factor', () => {
 		assert.equal(
 			formatScheduleWindowsHint([
-				{ start: "09:00", end: "12:00", factor: 2 },
-				{ start: "14:00", end: "18:00", factor: 2 },
+				{ start: '09:00', end: '12:00', factor: 2 },
+				{ start: '14:00', end: '18:00', factor: 2 },
 			]),
-			"9:00-12:00, 14:00-18:00 ×2"
+			'9:00-12:00, 14:00-18:00 ×2',
 		);
 	});
 
-	it("keeps different factors as separate groups", () => {
+	it('keeps different factors as separate groups', () => {
 		assert.equal(
 			formatScheduleWindowsHint([
-				{ start: "00:00", end: "08:00", factor: 0.5 },
-				{ start: "09:00", end: "18:00", factor: 2 },
+				{ start: '00:00', end: '08:00', factor: 0.5 },
+				{ start: '09:00', end: '18:00', factor: 2 },
 			]),
-			"0:00-8:00 ×0.5 · 9:00-18:00 ×2"
+			'0:00-8:00 ×0.5 · 9:00-18:00 ×2',
 		);
 	});
 
-	it("keeps minutes when a window is not on the hour", () => {
-		assert.equal(
-			formatScheduleWindowsHint([{ start: "09:30", end: "12:15", factor: 2 }]),
-			"9:30-12:15 ×2"
-		);
+	it('keeps minutes when a window is not on the hour', () => {
+		assert.equal(formatScheduleWindowsHint([{ start: '09:30', end: '12:15', factor: 2 }]), '9:30-12:15 ×2');
 	});
 
-	it("strips leading zeros from hours", () => {
-		assert.equal(
-			formatScheduleWindowsHint([
-				{ start: "09:00", end: "12:00", factor: 1.9 },
-			]),
-			"9:00-12:00 ×1.9"
-		);
+	it('strips leading zeros from hours', () => {
+		assert.equal(formatScheduleWindowsHint([{ start: '09:00', end: '12:00', factor: 1.9 }]), '9:00-12:00 ×1.9');
 	});
 });
 
-describe("schedule window helpers", () => {
-	it("treats matching start/end sequences as the same shape", () => {
+describe('schedule window helpers', () => {
+	it('treats matching start/end sequences as the same shape', () => {
 		assert.equal(
 			scheduleWindowShapeKey([
-				{ start: "09:00", end: "12:00", factor: 1.9 },
-				{ start: "14:00", end: "18:00", factor: 1.9 },
+				{ start: '09:00', end: '12:00', factor: 1.9 },
+				{ start: '14:00', end: '18:00', factor: 1.9 },
 			]),
 			scheduleWindowShapeKey([
-				{ start: "09:00", end: "12:00", factor: 2 },
-				{ start: "14:00", end: "18:00", factor: 2 },
-			])
+				{ start: '09:00', end: '12:00', factor: 2 },
+				{ start: '14:00', end: '18:00', factor: 2 },
+			]),
 		);
 	});
 
-	it("groups readable ranges for tooltip hints", () => {
+	it('groups readable ranges for tooltip hints', () => {
 		assert.deepEqual(
 			groupScheduleWindows([
-				{ start: "09:00", end: "12:00", factor: 1.9 },
-				{ start: "14:00", end: "18:00", factor: 1.9 },
+				{ start: '09:00', end: '12:00', factor: 1.9 },
+				{ start: '14:00', end: '18:00', factor: 1.9 },
 			]),
-			[{ ranges: ["9:00-12:00", "14:00-18:00"], factor: 1.9 }]
+			[{ ranges: ['9:00-12:00', '14:00-18:00'], factor: 1.9 }],
 		);
 	});
 });
 
 function route(overrides: Partial<GatewayModelRoute> = {}): GatewayModelRoute {
 	return {
-		id: "r1",
-		model_id: "m1",
-		provider_id: "p1",
-		provider_model_name: "gpt",
+		id: 'r1',
+		model_id: 'm1',
+		provider_id: 'p1',
+		provider_model_name: 'gpt',
 		priority: 0,
-		status: "active",
-		route_group: "default",
+		status: 'active',
+		route_group: 'default',
 		price_override: null,
 		custom_params: null,
-		upstream_protocol: "openai",
+		upstream_protocol: 'openai',
 		...overrides,
 	};
 }
 
-describe("buildFormDataFromRoute / buildRouteSavePayload schedule", () => {
-	it("bakes legacy multiply windows into shared override rows", () => {
+describe('buildFormDataFromRoute / buildRouteSavePayload schedule', () => {
+	it('bakes legacy multiply windows into shared override rows', () => {
 		const form = buildFormDataFromRoute(
 			route({
 				price_override: JSON.stringify({
 					charged_factor: 1.2,
 					metered_factor: 1,
 					schedule: {
-						charged: [{ start: "09:00", end: "12:00", factor: 0.5 }],
-						metered: [{ start: "09:00", end: "18:00", factor: 2 }],
+						charged: [{ start: '09:00', end: '12:00', factor: 0.5 }],
+						metered: [{ start: '09:00', end: '18:00', factor: 2 }],
 					},
 				}),
 			}),
-			[]
+			[],
 		);
 		assert.deepEqual(form.schedule_windows, [
-			{
-				start: "09:00",
-				end: "12:00",
-				charged_factor: "0.6",
-				metered_factor: "2",
-				days: [],
-			},
-			{
-				start: "12:00",
-				end: "18:00",
-				charged_factor: "1.2",
-				metered_factor: "2",
-				days: [],
-			},
+			{ start: '09:00', end: '12:00', charged_factor: '0.6', metered_factor: '2', provider_factor: '1', days: [] },
+			{ start: '12:00', end: '18:00', charged_factor: '1.2', metered_factor: '2', provider_factor: '1', days: [] },
 		]);
 	});
 
-	it("list display bakes multiply metered 0.5 × window 2 to effective 1", () => {
+	it('list display bakes multiply metered 0.5 × window 2 to effective 1', () => {
 		const windows = resolveRouteScheduleDisplay(
 			JSON.stringify({
 				charged_factor: 1,
 				metered_factor: 0.5,
 				schedule: {
 					charged: [
-						{ start: "09:00", end: "12:00", factor: 2 },
-						{ start: "14:00", end: "18:00", factor: 2 },
+						{ start: '09:00', end: '12:00', factor: 2 },
+						{ start: '14:00', end: '18:00', factor: 2 },
 					],
 					metered: [
-						{ start: "09:00", end: "12:00", factor: 2 },
-						{ start: "14:00", end: "18:00", factor: 2 },
+						{ start: '09:00', end: '12:00', factor: 2 },
+						{ start: '14:00', end: '18:00', factor: 2 },
 					],
 				},
-			})
+			}),
 		);
 		assert.deepEqual(windows, [
-			{ start: "09:00", end: "12:00", charged_factor: 2, metered_factor: 1 },
-			{ start: "14:00", end: "18:00", charged_factor: 2, metered_factor: 1 },
+			{ start: '09:00', end: '12:00', charged_factor: 2, metered_factor: 1, provider_factor: 1 },
+			{ start: '14:00', end: '18:00', charged_factor: 2, metered_factor: 1, provider_factor: 1 },
 		]);
-		assert.equal(
-			formatSharedScheduleWindowsHint(windows),
-			"9:00-12:00 C ×2 · M ×1 · 14:00-18:00 C ×2 · M ×1"
-		);
+		assert.equal(formatSharedScheduleWindowsHint(windows), '9:00-12:00 C ×2 · M ×1 · 14:00-18:00 C ×2 · M ×1');
 	});
 
-	it("writes schedule.mode override with shared windows", () => {
+	it('writes schedule.mode override with shared windows', () => {
 		const payload = buildRouteSavePayload(
 			{
 				...EMPTY_ROUTE_FORM,
-				model_id: "m1",
-				provider_id: "p1",
-				provider_model_name: "gpt",
-				charged_factor: "1",
-				metered_factor: "1",
+				model_id: 'm1',
+				provider_id: 'p1',
+				provider_model_name: 'gpt',
+				charged_factor: '1',
+				metered_factor: '1',
 				schedule_windows: [
 					{
-						start: "09:00",
-						end: "12:00",
-						charged_factor: "2",
-						metered_factor: "2",
+						start: '09:00',
+						end: '12:00',
+						charged_factor: '2',
+						metered_factor: '2',
 						days: [],
 					},
 				],
 			},
-			null
+			null,
 		);
 		assert.equal(
 			payload.price_override,
@@ -894,35 +1162,35 @@ describe("buildFormDataFromRoute / buildRouteSavePayload schedule", () => {
 				charged_factor: 1,
 				metered_factor: 1,
 				schedule: {
-					mode: "override",
-					charged: [{ start: "09:00", end: "12:00", factor: 2 }],
-					metered: [{ start: "09:00", end: "12:00", factor: 2 }],
+					mode: 'override',
+					charged: [{ start: '09:00', end: '12:00', factor: 2 }],
+					metered: [{ start: '09:00', end: '12:00', factor: 2 }],
 				},
-			})
+			}),
 		);
 	});
 
-	it("previews the same price_override JSON that save writes", () => {
+	it('previews the same price_override JSON that save writes', () => {
 		const form = {
 			...EMPTY_ROUTE_FORM,
-			model_id: "m1",
-			provider_id: "p1",
-			provider_model_name: "gpt",
-			charged_factor: "1",
-			metered_factor: "1",
+			model_id: 'm1',
+			provider_id: 'p1',
+			provider_model_name: 'gpt',
+			charged_factor: '1',
+			metered_factor: '1',
 			schedule_windows: [
 				{
-					start: "09:00",
-					end: "12:00",
-					charged_factor: "2",
-					metered_factor: "2",
+					start: '09:00',
+					end: '12:00',
+					charged_factor: '2',
+					metered_factor: '2',
 					days: [],
 				},
 				{
-					start: "14:00",
-					end: "18:00",
-					charged_factor: "2",
-					metered_factor: "2",
+					start: '14:00',
+					end: '18:00',
+					charged_factor: '2',
+					metered_factor: '2',
 					days: [],
 				},
 			],
@@ -930,21 +1198,18 @@ describe("buildFormDataFromRoute / buildRouteSavePayload schedule", () => {
 		const preview = formatRoutePriceOverridePreview(form);
 		assert.equal(preview.ok, true);
 		const payload = buildRouteSavePayload(form, null);
-		assert.equal(
-			preview.text,
-			JSON.stringify(JSON.parse(String(payload.price_override)), null, 2)
-		);
+		assert.equal(preview.text, JSON.stringify(JSON.parse(String(payload.price_override)), null, 2));
 	});
 
-	it("previews an error when a schedule window is invalid", () => {
+	it('previews an error when a schedule window is invalid', () => {
 		const preview = formatRoutePriceOverridePreview({
 			...EMPTY_ROUTE_FORM,
 			schedule_windows: [
 				{
-					start: "09:00",
-					end: "09:00",
-					charged_factor: "2",
-					metered_factor: "2",
+					start: '09:00',
+					end: '09:00',
+					charged_factor: '2',
+					metered_factor: '2',
 					days: [],
 				},
 			],
@@ -953,33 +1218,33 @@ describe("buildFormDataFromRoute / buildRouteSavePayload schedule", () => {
 		assert.match(preview.text, /duration must be non-zero/);
 	});
 
-	it("writes weekday and weekend days and omits a full week", () => {
+	it('writes weekday and weekend days and omits a full week', () => {
 		const payload = buildRouteSavePayload(
 			{
 				...EMPTY_ROUTE_FORM,
-				model_id: "m1",
-				provider_id: "p1",
-				provider_model_name: "gpt",
-				charged_factor: "1",
-				metered_factor: "1",
+				model_id: 'm1',
+				provider_id: 'p1',
+				provider_model_name: 'gpt',
+				charged_factor: '1',
+				metered_factor: '1',
 				schedule_windows: [
 					{
-						start: "00:00",
-						end: "24:00",
-						charged_factor: "1.2",
-						metered_factor: "1.2",
+						start: '00:00',
+						end: '24:00',
+						charged_factor: '1.2',
+						metered_factor: '1.2',
 						days: [1, 2, 3, 4, 5],
 					},
 					{
-						start: "00:00",
-						end: "24:00",
-						charged_factor: "0.8",
-						metered_factor: "0.8",
+						start: '00:00',
+						end: '24:00',
+						charged_factor: '0.8',
+						metered_factor: '0.8',
 						days: [6, 7],
 					},
 				],
 			},
-			null
+			null,
 		);
 		assert.equal(
 			payload.price_override,
@@ -987,54 +1252,660 @@ describe("buildFormDataFromRoute / buildRouteSavePayload schedule", () => {
 				charged_factor: 1,
 				metered_factor: 1,
 				schedule: {
-					mode: "override",
+					mode: 'override',
 					charged: [
 						{
-							start: "00:00",
-							end: "24:00",
+							start: '00:00',
+							end: '24:00',
 							factor: 1.2,
 							days: [1, 2, 3, 4, 5],
 						},
-						{ start: "00:00", end: "24:00", factor: 0.8, days: [6, 7] },
+						{ start: '00:00', end: '24:00', factor: 0.8, days: [6, 7] },
 					],
 					metered: [
 						{
-							start: "00:00",
-							end: "24:00",
+							start: '00:00',
+							end: '24:00',
 							factor: 1.2,
 							days: [1, 2, 3, 4, 5],
 						},
-						{ start: "00:00", end: "24:00", factor: 0.8, days: [6, 7] },
+						{ start: '00:00', end: '24:00', factor: 0.8, days: [6, 7] },
 					],
 				},
-			})
+			}),
 		);
 
-		const form = buildFormDataFromRoute(
-			route({ price_override: String(payload.price_override) }),
-			[]
-		);
+		const form = buildFormDataFromRoute(route({ price_override: String(payload.price_override) }), []);
 		assert.deepEqual(form.schedule_windows, [
 			{
-				start: "00:00",
-				end: "24:00",
-				charged_factor: "1.2",
-				metered_factor: "1.2",
+				start: '00:00',
+				end: '24:00',
+				charged_factor: '1.2',
+				metered_factor: '1.2',
+				provider_factor: '1',
 				days: [1, 2, 3, 4, 5],
 			},
 			{
-				start: "00:00",
-				end: "24:00",
-				charged_factor: "0.8",
-				metered_factor: "0.8",
+				start: '00:00',
+				end: '24:00',
+				charged_factor: '0.8',
+				metered_factor: '0.8',
+				provider_factor: '1',
 				days: [6, 7],
 			},
 		]);
 		assert.equal(
-			formatSharedScheduleWindowsHint(
-				resolveRouteScheduleDisplay(String(payload.price_override))
-			),
-			"Mon–Fri 0:00-24:00 ×1.2 · Sat–Sun 0:00-24:00 ×0.8"
+			formatSharedScheduleWindowsHint(resolveRouteScheduleDisplay(String(payload.price_override))),
+			'Mon–Fri 0:00-24:00 ×1.2 · Sat–Sun 0:00-24:00 ×0.8',
 		);
+	});
+
+	it('round-trips an official factor and reports its timing', () => {
+		const payload = buildRouteSavePayload(
+			{
+				...EMPTY_ROUTE_FORM,
+				model_id: 'm1',
+				provider_id: 'p1',
+				provider_model_name: 'gpt',
+				charged_factor: '1',
+				metered_factor: '0.68',
+				provider_factor: '0.5',
+				provider_factor_starts_at: '2026-10-01T00:00:00.000Z',
+				provider_factor_expires_at: '2026-11-01T00:00:00.000Z',
+			},
+			null,
+		);
+		const saved = JSON.parse(String(payload.price_override)) as {
+			provider_factor: number;
+			provider_factor_starts_at: string;
+			schedule?: { provider?: unknown[] };
+		};
+		assert.equal(saved.provider_factor, 0.5);
+		assert.equal(saved.provider_factor_starts_at, '2026-10-01T00:00:00.000Z');
+		assert.equal(saved.schedule, undefined);
+
+		const form = buildFormDataFromRoute(route({ price_override: String(payload.price_override) }), []);
+		assert.equal(form.provider_factor, '0.5');
+		assert.equal(form.provider_factor_expires_at, '2026-11-01T00:00:00.000Z');
+		assert.equal(providerFactorTiming(String(payload.price_override), new Date('2026-10-15T00:00:00.000Z')), 'active');
+		assert.equal(
+			providerFactorTiming(String(payload.price_override), new Date('2026-09-01T00:00:00.000Z')),
+			'scheduled',
+		);
+		assert.equal(providerFactorTiming(String(payload.price_override), new Date('2026-11-01T00:00:00.000Z')), 'expired');
+		assert.equal(providerFactorTiming(JSON.stringify({ charged_factor: 1 })), null);
+	});
+
+	it('rebuilds route windows from catalog and keeps existing factors', () => {
+		const catalogModel = model({
+			id: 'm1',
+			pricing_profile: JSON.stringify({
+				tiers: [{ upto: null, input_price: 1, output_price: 2 }],
+				schedule: [
+					{ start: '00:30', end: '08:30', factor: 0.5 },
+					{ start: '09:00', end: '12:00', factor: 1.6, days: [1, 2, 3, 4, 5] },
+				],
+			}),
+		});
+		assert.deepEqual(catalogScheduleWindowsFromModel(catalogModel), [
+			{ start: '00:30', end: '08:30', factor: 0.5 },
+			{ start: '09:00', end: '12:00', factor: 1.6, days: [1, 2, 3, 4, 5] },
+		]);
+		assert.deepEqual(
+			alignRouteScheduleWindowsToCatalog(catalogScheduleWindowsFromModel(catalogModel), [
+				{ start: '00:30', end: '08:30', charged_factor: '0.8', metered_factor: '0.9', days: [] },
+				{ start: '13:00', end: '14:00', charged_factor: '3', metered_factor: '3', days: [] },
+			]),
+			[
+				{ start: '00:30', end: '08:30', days: [], charged_factor: '0.8', metered_factor: '0.9', provider_factor: '1' },
+				{
+					start: '09:00',
+					end: '12:00',
+					days: [1, 2, 3, 4, 5],
+					charged_factor: '1',
+					metered_factor: '1',
+					provider_factor: '1',
+				},
+			],
+		);
+		const form = buildFormDataFromRoute(
+			route({
+				model_id: 'm1',
+				price_override: JSON.stringify({
+					charged_factor: 1,
+					metered_factor: 1,
+					schedule: {
+						mode: 'override',
+						charged: [{ start: '00:30', end: '08:30', factor: 0.7 }],
+						metered: [{ start: '00:30', end: '08:30', factor: 0.6 }],
+					},
+				}),
+			}),
+			[catalogModel],
+		);
+		assert.deepEqual(form.schedule_windows, [
+			{ start: '00:30', end: '08:30', days: [], charged_factor: '0.7', metered_factor: '0.6', provider_factor: '1' },
+			{
+				start: '09:00',
+				end: '12:00',
+				days: [1, 2, 3, 4, 5],
+				charged_factor: '1',
+				metered_factor: '1',
+				provider_factor: '1',
+			},
+		]);
+	});
+});
+
+describe('custom params headers / body form', () => {
+	it('splits stored custom_params into header rows and pretty-printed body', () => {
+		const parsed = parseCustomParamsForm(
+			JSON.stringify({
+				temperature: 0.7,
+				headers: { 'HTTP-Referer': 'https://example.com', 'X-Title': 'My App' },
+			}),
+		);
+		assert.equal(parsed.custom_params_json, JSON.stringify({ temperature: 0.7 }, null, 2));
+		assert.deepEqual(parsed.custom_headers, [
+			{ name: 'HTTP-Referer', value: 'https://example.com' },
+			{ name: 'X-Title', value: 'My App' },
+		]);
+	});
+
+	it('keeps invalid JSON in the body editor so the user can fix it', () => {
+		const parsed = parseCustomParamsForm('{not json');
+		assert.equal(parsed.custom_params_json, '{not json');
+		assert.deepEqual(parsed.custom_headers, []);
+	});
+
+	it('starts with no header rows when custom_params has no headers', () => {
+		assert.deepEqual(parseCustomParamsForm(null).custom_headers, []);
+		assert.deepEqual(parseCustomParamsForm(JSON.stringify({ temperature: 0.2 })).custom_headers, []);
+	});
+
+	it('round-trips headers and body through the route form', () => {
+		const form = buildFormDataFromRoute(
+			route({
+				custom_params: JSON.stringify({
+					temperature: 0.7,
+					headers: { 'HTTP-Referer': 'https://example.com', 'X-Title': 'My App' },
+				}),
+			}),
+			[],
+		);
+		assert.equal(form.custom_params_json, JSON.stringify({ temperature: 0.7 }, null, 2));
+		assert.deepEqual(form.custom_headers, [
+			{ name: 'HTTP-Referer', value: 'https://example.com' },
+			{ name: 'X-Title', value: 'My App' },
+		]);
+		const payload = buildRouteSavePayload(
+			{
+				...EMPTY_ROUTE_FORM,
+				...form,
+				model_id: 'm1',
+				provider_id: 'p1',
+				provider_model_name: 'gpt',
+			},
+			null,
+		);
+		assert.deepEqual(JSON.parse(String(payload.custom_params)), {
+			headers: { 'HTTP-Referer': 'https://example.com', 'X-Title': 'My App' },
+			body: { temperature: 0.7 },
+		});
+	});
+
+	it('saves headers-only custom_params without a body object', () => {
+		const payload = buildRouteSavePayload(
+			{
+				...EMPTY_ROUTE_FORM,
+				model_id: 'm1',
+				provider_id: 'p1',
+				provider_model_name: 'gpt',
+				custom_params_json: '',
+				custom_headers: [{ name: 'X-Title', value: 'My App' }],
+			},
+			null,
+		);
+		assert.deepEqual(JSON.parse(String(payload.custom_params)), {
+			headers: { 'X-Title': 'My App' },
+		});
+	});
+
+	it('omits empty headers and empty body', () => {
+		assert.equal(composeCustomParamsJson('', []), null);
+		assert.equal(composeCustomParamsJson('', [{ name: '', value: '' }]), null);
+		assert.equal(composeCustomParamsJson('  ', [{ name: '  ', value: 'x' }]), null);
+		assert.deepEqual(JSON.parse(composeCustomParamsJson('', [], { body: true }) ?? '{}'), {
+			force_override: { body: true },
+		});
+		const payload = buildRouteSavePayload(
+			{
+				...EMPTY_ROUTE_FORM,
+				model_id: 'm1',
+				provider_id: 'p1',
+				provider_model_name: 'gpt',
+			},
+			null,
+		);
+		assert.equal(payload.custom_params, null);
+	});
+
+	it('round-trips independent force_override flags through the envelope', () => {
+		const form = buildFormDataFromRoute(
+			route({
+				custom_params: JSON.stringify({
+					headers: { 'X-Title': 'My App' },
+					body: { max_tokens: 32000 },
+					force_override: { body: true },
+				}),
+			}),
+			[],
+		);
+		assert.equal(form.custom_params_force_override_body, true);
+		assert.equal(form.custom_params_force_override_headers, false);
+		const payload = buildRouteSavePayload(
+			{
+				...EMPTY_ROUTE_FORM,
+				...form,
+				model_id: 'm1',
+				provider_id: 'p1',
+				provider_model_name: 'gpt',
+				custom_params_force_override_headers: true,
+			},
+			null,
+		);
+		assert.equal(payload.custom_params_force_override, undefined);
+		assert.deepEqual(JSON.parse(String(payload.custom_params)), {
+			headers: { 'X-Title': 'My App' },
+			body: { max_tokens: 32000 },
+			force_override: { headers: true, body: true },
+		});
+	});
+
+	it('reads old flat custom_params with force override off', () => {
+		const form = buildFormDataFromRoute(
+			route({
+				custom_params: JSON.stringify({ temperature: 0.7, headers: { 'X-Title': 'A' } }),
+			}),
+			[],
+		);
+		assert.equal(form.custom_params_force_override_headers, false);
+		assert.equal(form.custom_params_force_override_body, false);
+		assert.equal(form.custom_params_json, JSON.stringify({ temperature: 0.7 }, null, 2));
+		const payload = buildRouteSavePayload(
+			{
+				...EMPTY_ROUTE_FORM,
+				...form,
+				model_id: 'm1',
+				provider_id: 'p1',
+				provider_model_name: 'gpt',
+			},
+			null,
+		);
+		assert.deepEqual(JSON.parse(String(payload.custom_params)), {
+			headers: { 'X-Title': 'A' },
+			body: { temperature: 0.7 },
+		});
+	});
+
+	it('defaults force override flags to false', () => {
+		const form = buildFormDataFromRoute(route(), []);
+		assert.equal(form.custom_params_force_override_headers, false);
+		assert.equal(form.custom_params_force_override_body, false);
+		const payload = buildRouteSavePayload(
+			{
+				...EMPTY_ROUTE_FORM,
+				model_id: 'm1',
+				provider_id: 'p1',
+				provider_model_name: 'gpt',
+			},
+			null,
+		);
+		assert.equal(payload.custom_params, null);
+		assert.equal(payload.custom_params_force_override, undefined);
+	});
+
+	it('strips a headers key pasted into the body editor', () => {
+		assert.deepEqual(
+			JSON.parse(
+				composeCustomParamsJson(JSON.stringify({ temperature: 0.5, headers: { leftover: 'nope' } }), [
+					{ name: 'X-Title', value: 'My App' },
+				]) ?? '{}',
+			),
+			{
+				headers: { 'X-Title': 'My App' },
+				body: { temperature: 0.5 },
+			},
+		);
+	});
+});
+
+describe('compareRoutesWithinPriorityLayer', () => {
+	const ark = { en: 'Volcengine Ark', zh: '火山方舟' };
+	const studio = { en: 'Alibaba Cloud Model Studio', zh: '阿里云百炼' };
+	const providersById = new Map([
+		['studio-late', { name: '谷仓', kind: 'studio', kind_labels: studio }],
+		['ark-b', { name: '8612', kind: 'ark', kind_labels: ark }],
+		['ark-a', { name: '1084', kind: 'ark', kind_labels: ark }],
+		['heavy', { name: '重', kind: 'ark', kind_labels: ark }],
+		['off', { name: '停用', kind: 'ark', kind_labels: ark }],
+	]);
+	const context = { providersById, locale: 'zh', customKindLabel: '自定义' };
+
+	function layer(id: string, providerId: string, overrides: Partial<GatewayModelRoute> = {}) {
+		return route({
+			id,
+			provider_id: providerId,
+			provider_model_name: 'upstream',
+			weight: 1,
+			status: 'active',
+			...overrides,
+		});
+	}
+
+	it('orders active routes by weight, then localized provider kind and account name', () => {
+		const sorted = [
+			layer('off', 'off', { status: 'inactive', weight: 99 }),
+			layer('heavy', 'heavy', { weight: 5 }),
+			layer('ark-b', 'ark-b'),
+			layer('studio', 'studio-late'),
+			layer('ark-a', 'ark-a'),
+		].sort((a, b) => compareRoutesWithinPriorityLayer(a, b, context));
+		assert.deepEqual(
+			sorted.map((item) => item.id),
+			['heavy', 'studio', 'ark-a', 'ark-b', 'off'],
+		);
+	});
+});
+
+describe('route workspace search', () => {
+	const models = [
+		model({ id: 'm1', display_name: 'DeepSeek Flash' }),
+		model({ id: 'm2', display_name: 'Unrouted model' }),
+	];
+	const base = {
+		models,
+		modelMeta: new Map(models.map((m) => [m.id, m])),
+		routes: [
+			route({ id: 'r1', provider_model_name: 'upstream-flash' }),
+			route({ id: 'r2', provider_id: 'p2', status: 'inactive' }),
+		],
+		providers: [
+			{ ...provider({}), id: 'p1', name: '谷仓' },
+			{ ...provider({}), id: 'p2', name: 'Backup' },
+		],
+		filterVendor: '',
+		filterProviderId: '',
+		filterRouteGroup: '',
+		filterStatus: '',
+	};
+	it('matches model names case-insensitively and keeps the complete failover topology', () => {
+		const result = buildRoutesByModel({ ...base, searchQuery: '  DEEPSEEK   flash ' });
+		assert.equal(result.length, 1);
+		assert.equal(result[0].groupRoutes.length, 2);
+	});
+	it('finds upstream model IDs and provider names without hiding sibling routes', () => {
+		for (const searchQuery of ['upstream-flash', '谷仓', 'Backup']) {
+			const result = buildRoutesByModel({ ...base, searchQuery });
+			assert.equal(result.length, 1);
+			assert.equal(result[0].groupRoutes.length, 2);
+		}
+	});
+	it('respects route filters and can find models without any routes', () => {
+		assert.equal(buildRoutesByModel({ ...base, filterStatus: 'active', searchQuery: 'Backup' }).length, 0);
+		assert.equal(buildRoutesByModel({ ...base, searchQuery: 'Unrouted' })[0].groupRoutes.length, 0);
+		assert.equal(buildRoutesByModel({ ...base, searchQuery: 'no-match' }).length, 0);
+		assert.equal(buildRoutesByModel({ ...base, searchQuery: ' ' }).length, 2);
+	});
+});
+
+describe('provider validity form round trip', () => {
+	it('preserves legacy billed amounts through editing and saving, including multiply mode', () => {
+		const legacy = JSON.stringify({
+			charged_factor: 2,
+			metered_factor: 0.8,
+			provider_factor: 0.5,
+			provider_factor_starts_at: '2026-10-01T00:00:00.000Z',
+			provider_factor_expires_at: '2026-11-01T00:00:00.000Z',
+			schedule: {
+				charged: [{ start: '09:00', end: '12:00', factor: 0.5, days: [1, 2, 3, 4, 5] }],
+				provider: [{ start: '09:00', end: '12:00', factor: 0.4, days: [1, 2, 3, 4, 5] }],
+			},
+		});
+		const loaded = buildFormDataFromRoute(route({ price_override: legacy }), []);
+		const rows = independentProviderWindows(loaded, loaded.schedule_windows);
+		const saved = buildRoutePriceOverride({ ...loaded, schedule_windows: rows });
+		for (const time of [
+			'2026-09-30T02:00:00Z',
+			'2026-10-01T02:00:00Z',
+			'2026-10-01T12:00:00Z',
+			'2026-11-02T02:00:00Z',
+		]) {
+			const options = { nowUtc: new Date(time), timezone: 'Asia/Shanghai' };
+			const before = resolveRouteEffectiveFactors({ ...options, priceOverrideJson: legacy });
+			const after = resolveRouteEffectiveFactors({ ...options, priceOverrideJson: JSON.stringify(saved) });
+			assert.equal(after.chargedTotal, before.chargedTotal);
+			assert.equal(after.meteredTotal, before.meteredTotal);
+		}
+		const changedBase = buildRoutePriceOverride({
+			...loaded,
+			schedule_windows: rows,
+			provider_factor_starts_at: '2027-01-01T00:00:00Z',
+			provider_factor_expires_at: '',
+		});
+		assert.equal(
+			resolveRouteEffectiveFactors({
+				priceOverrideJson: JSON.stringify(changedBase),
+				nowUtc: new Date('2026-10-01T02:00:00Z'),
+				timezone: 'Asia/Shanghai',
+			}).provider.effective,
+			0.2,
+		);
+	});
+	it('retains unlimited and dated rows even with the same factor as the base', () => {
+		const form = {
+			...EMPTY_ROUTE_FORM,
+			provider_factor: '0.5',
+			provider_factor_expires_at: '2026-01-01T00:00:00.000Z',
+			schedule_windows: [
+				{
+					start: '09:00',
+					end: '12:00',
+					days: [1, 2, 3, 4, 5],
+					charged_factor: '1',
+					metered_factor: '0.5',
+					provider_factor: '0.5',
+					provider_validity: {},
+				},
+				{
+					start: '12:00',
+					end: '18:00',
+					days: [1, 2, 3, 4, 5],
+					charged_factor: '1',
+					metered_factor: '0.5',
+					provider_factor: '0.5',
+					provider_validity: { starts_at: '2026-10-01T00:00:00.000Z' },
+				},
+			],
+		};
+		const saved = buildRoutePriceOverride(form);
+		const loaded = buildFormDataFromRoute(route({ price_override: JSON.stringify(saved) }), []);
+		assert.deepEqual(loaded.schedule_windows, form.schedule_windows);
+		assert.deepEqual(buildRoutePriceOverride(loaded), saved);
+		const catalog = form.schedule_windows.map((w) => ({
+			start: w.start,
+			end: w.end,
+			days: w.days,
+			factor: 2,
+		}));
+		assert.deepEqual(alignRouteScheduleWindowsToCatalog(catalog, loaded.schedule_windows), form.schedule_windows);
+	});
+	it('freezes unlimited inherited rows before changing base validity and rejects reversed row dates', () => {
+		const window = {
+			start: '09:00',
+			end: '12:00',
+			days: [],
+			charged_factor: '1',
+			metered_factor: '1',
+			provider_factor: '0.5',
+		};
+		assert.deepEqual(independentProviderWindows(EMPTY_ROUTE_FORM, [window])[0]?.provider_validity, {});
+		assert.throws(
+			() =>
+				buildRoutePriceOverride({
+					...EMPTY_ROUTE_FORM,
+					schedule_windows: [{ ...window, provider_validity: { starts_at: '2026-11-01', expires_at: '2026-10-01' } }],
+				}),
+			/earlier than end/,
+		);
+	});
+});
+
+describe('catalog rows with independent validity', () => {
+	it('does not lose dates or factors when adjacent equal rows were merged for display', () => {
+		const catalog = [
+			{ start: '09:00', end: '12:00', days: [1, 2, 3, 4, 5], factor: 2 },
+			{ start: '12:00', end: '18:00', days: [1, 2, 3, 4, 5], factor: 2 },
+		];
+		const validity = { starts_at: '2026-10-01T00:00:00.000Z' };
+		const original = {
+			charged_factor: 1,
+			metered_factor: 1,
+			schedule: {
+				mode: 'override',
+				charged: catalog.map((w) => ({ ...w, factor: 0.8 })),
+				metered: catalog.map((w) => ({ ...w, factor: 0.4 })),
+				provider: catalog.map((w) => ({ ...w, factor: 0.5, validity })),
+			},
+		};
+		const loaded = buildFormDataFromRoute(route({ price_override: JSON.stringify(original) }), [
+			model({
+				id: 'm1',
+				pricing_profile: JSON.stringify({
+					tiers: [{ upto: null, input_price: 1, output_price: 4 }],
+					schedule: catalog,
+				}),
+			}),
+		]);
+		assert.equal(loaded.schedule_windows.length, 2);
+		assert.deepEqual(buildRoutePriceOverride(loaded), original);
+	});
+	it('shows each row timing independently of the default row', () => {
+		const now = new Date('2026-10-02T00:00:00Z');
+		const json = JSON.stringify({ provider_factor: 0.5, provider_factor_expires_at: '2026-01-01T00:00:00Z' });
+		const row = { start: '09:00', end: '12:00', charged_factor: 1, metered_factor: 1, provider_factor: 0.3 };
+		assert.equal(providerFactorTiming(json, now), 'expired');
+		assert.equal(providerFactorTiming(json, now, { ...row, provider_validity: {} }), 'active');
+		assert.equal(
+			providerFactorTiming(json, now, { ...row, provider_validity: { starts_at: '2026-11-01T00:00:00Z' } }),
+			'scheduled',
+		);
+	});
+});
+
+describe('previewRouteBillingFactors', () => {
+	const now = new Date('2026-09-30T06:00:00Z');
+	it('multiplies both sides independently and preserves zero without floating-point noise', () => {
+		assert.deepEqual(
+			previewRouteBillingFactors({ provider_factor: '0.1', charged_factor: '0.2', metered_factor: '0' }, {}, now),
+			{ charged: 0.02, metered: 0, provider: 0.1, providerInactive: false },
+		);
+	});
+	it('uses a provider factor of one outside the row validity, including its exclusive end', () => {
+		const factors = { provider_factor: '0.5', charged_factor: '0.8', metered_factor: '0.4' };
+		const validity = { starts_at: '2026-09-30T06:00:00Z', expires_at: '2026-09-30T07:00:00Z' };
+		assert.equal(previewRouteBillingFactors(factors, validity, now).charged, 0.4);
+		for (const instant of ['2026-09-30T05:59:59Z', '2026-09-30T07:00:00Z']) {
+			assert.deepEqual(previewRouteBillingFactors(factors, validity, new Date(instant)), {
+				charged: 0.8,
+				metered: 0.4,
+				provider: 1,
+				providerInactive: true,
+			});
+		}
+	});
+	it('matches save defaults while leaving an incomplete scheduled factor unknown', () => {
+		const blank = { provider_factor: '', charged_factor: '', metered_factor: '' };
+		assert.equal(previewRouteBillingFactors(blank, {}, now).charged, 1);
+		assert.equal(previewRouteBillingFactors(blank, {}, now, true).charged, null);
+	});
+	it('does not display a valid multiplier for invalid input, dates, or overflow', () => {
+		const factors = { provider_factor: '2', charged_factor: 'bad', metered_factor: '-1' };
+		assert.equal(previewRouteBillingFactors(factors, {}, now).charged, null);
+		assert.equal(previewRouteBillingFactors(factors, {}, now).metered, null);
+		assert.equal(previewRouteBillingFactors({ ...factors, charged_factor: '1e308' }, {}, now).charged, null);
+		assert.equal(
+			previewRouteBillingFactors({ ...factors, charged_factor: '1' }, { starts_at: 'invalid' }, now).charged,
+			null,
+		);
+	});
+});
+
+describe('adapter call guide copy', () => {
+	for (const locale of ['zh', 'en', 'ja', 'ko']) {
+		it(`${locale} documents every OpenAI conversion adapter`, () => {
+			const messages = JSON.parse(
+				readFileSync(fileURLToPath(new URL(`../../../messages/${locale}.json`, import.meta.url)), 'utf8'),
+			) as {
+				routes: {
+					modal: {
+						adapterGuides: Record<string, { purpose?: string; mapping?: unknown }>;
+						lossyFeatureNames: Record<string, string>;
+					};
+				};
+			};
+			const guides = messages.routes.modal.adapterGuides;
+			assert.equal(typeof guides.passthrough?.purpose, 'string');
+			assert.ok(guides.passthrough.purpose);
+			for (const adapter of listConversionAdapters()) {
+				if (adapter.request.protocol !== 'openai') continue;
+				const guide = guides[adapter.id];
+				assert.ok(guide, `${locale} ${adapter.id}`);
+				assert.equal(typeof guide.purpose, 'string');
+				assert.ok(guide.purpose && guide.purpose.length > 0);
+				assert.ok(Array.isArray(guide.mapping) && guide.mapping.length > 0, adapter.id);
+				for (const feature of adapter.lossyFeatures ?? []) {
+					assert.equal(typeof messages.routes.modal.lossyFeatureNames[feature], 'string', feature);
+				}
+			}
+		});
+	}
+});
+
+describe('buildOpenAiAdapterCallSample', () => {
+	it('renders OpenAI SDK calls and skips passthrough', () => {
+		const wan = getAdapterByOptionKey('dashscope-image-wan');
+		const wanSample = buildOpenAiAdapterCallSample(wan!);
+		assert.match(wanSample ?? '', /client\.images\.generate\(/);
+		assert.match(wanSample ?? '', /extra_body=\{"parameters": \{"negative_prompt": "blurry", "seed": 42\}\}/);
+
+		const image = getAdapterByOptionKey('minimax-image');
+		const imageSample = buildOpenAiAdapterCallSample(image!);
+		assert.match(imageSample ?? '', /"prompt_optimizer": True/);
+		assert.match(imageSample ?? '', /"aigc_watermark": False/);
+
+		const speech = buildOpenAiAdapterCallSample(getAdapterByOptionKey('dashscope-tts-qwen')!);
+		assert.match(speech ?? '', /client\.audio\.speech\.create\(/);
+		assert.equal(speech?.includes('extra_body'), false);
+		assert.match(speech ?? '', /response_format="wav"/);
+		assert.match(speech ?? '', /voice="YOUR_VOICE_ID"/);
+
+		const asr = buildOpenAiAdapterCallSample(getAdapterByOptionKey('minimax-asr-file')!);
+		assert.match(asr ?? '', /client\.audio\.transcriptions\.create\(/);
+		assert.match(asr ?? '', /"timestamp_level": "sentence"/);
+
+		assert.equal(buildOpenAiAdapterCallSample(getAdapterByOptionKey('passthrough:openai:images.generations')!), null);
+	});
+	it('uses the client model and group, escaping user-supplied text', () => {
+		const sample = buildOpenAiAdapterCallSample(getAdapterByOptionKey('dashscope-image-qwen')!, 'my"model:free');
+		assert.ok(sample?.includes(`model=${JSON.stringify('my"model:free')},`));
+		assert.equal(sample?.includes('your-model'), false);
+	});
+	it('submits a public URL as multipart for asynchronous transcription', () => {
+		const sample = buildOpenAiAdapterCallSample(getAdapterByOptionKey('dashscope-asr-file-async')!, 'asr:free');
+		assert.match(sample ?? '', /httpx\.post\(/);
+		assert.match(sample ?? '', /"model": \(None, "asr:free"\)/);
+		assert.match(sample ?? '', /"file_url": \(None, "https:\/\/example\.com\/audio\.mp3"\)/);
+		assert.equal(sample?.includes('file=open'), false);
 	});
 });

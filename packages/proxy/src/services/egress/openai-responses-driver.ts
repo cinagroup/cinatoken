@@ -1,3 +1,5 @@
+import { prepareTextStreamStart, combineTextStreamResources } from './text-stream-start';
+import { applyRouteExtraHeaders } from '@octafuse/core';
 import type { ResourceCompletion, ResourceCompletionOutcome } from '../resource-completion';
 import { ownUpstreamResponse } from './owned-upstream-response';
 import { withOwnedJsonUpload } from './with-owned-json-upload';
@@ -17,16 +19,10 @@ import {
 	rewriteSseEventData,
 	terminateSseEvent,
 } from './sse-data-line';
-import {
-	markUpstreamOutcomeUnknown,
-	type ProxyDispatchMeta,
-} from '../failover-dispatch';
+import { markUpstreamOutcomeUnknown, type ProxyDispatchMeta } from '../failover-dispatch';
 import { assertTextUpstreamHttpUrl } from './text-upstream-url';
 import { ambiguousDispatchedStatusMeta } from './ambiguous-upstream-status';
-import {
-	buildResponsesFailedEvent,
-	sanitizePublicErrorMessage,
-} from '../openrouter-error-protocol';
+import { buildResponsesFailedEvent, sanitizePublicErrorMessage } from '../openrouter-error-protocol';
 import {
 	cancelInvalidTextSuccessResponse,
 	invalidTextSuccessResponse,
@@ -35,10 +31,14 @@ import {
 	rebuildTextJsonResponse,
 	TEXT_SUCCESS_RESPONSE_MAX_COLLECTION_ITEMS,
 } from './text-json-response';
+import { normalizeOpenAiResponseServiceTier, normalizeResponseTextSpeed } from './service-tier-contract';
+import { type FirstEventTimeoutOptions } from '../stream-first-event-timeout';
 import {
-	normalizeOpenAiResponseServiceTier,
-	normalizeResponseTextSpeed,
-} from './service-tier-contract';
+	applyStreamIdleTimeout,
+	createStreamIdleClock,
+	readWithIdleTimeout,
+	type StreamIdleClockOptions,
+} from './stream-idle-timeout';
 
 /**
  * OpenAI Responses API 透传：
@@ -70,15 +70,9 @@ const TERMINAL_EVENT_TYPES = new Set([
 	'error',
 ]);
 
-const REASONING_DELTA_TYPES = new Set([
-	'response.reasoning_text.delta',
-	'response.reasoning_summary_text.delta',
-]);
+const REASONING_DELTA_TYPES = new Set(['response.reasoning_text.delta', 'response.reasoning_summary_text.delta']);
 
-const OUTPUT_DELTA_TYPES = new Set([
-	'response.output_text.delta',
-	'response.function_call_arguments.delta',
-]);
+const OUTPUT_DELTA_TYPES = new Set(['response.output_text.delta', 'response.function_call_arguments.delta']);
 
 type ResponsesUsage = {
 	input_tokens?: number;
@@ -105,14 +99,7 @@ type ResponsesUsage = {
 	};
 };
 
-const RESPONSE_STATUSES = new Set([
-	'cancelled',
-	'completed',
-	'failed',
-	'in_progress',
-	'incomplete',
-	'queued',
-]);
+const RESPONSE_STATUSES = new Set(['cancelled', 'completed', 'failed', 'in_progress', 'incomplete', 'queued']);
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {
 	return value != null && typeof value === 'object' && !Array.isArray(value);
@@ -138,12 +125,13 @@ function validResponsesUsage(value: unknown): value is ResponsesUsage {
 	const output = value.output_tokens;
 	const completion = value.completion_tokens;
 	if (
-		(!nonNegativeSafeInteger(input) && !nonNegativeSafeInteger(prompt))
-		|| (!nonNegativeSafeInteger(output) && !nonNegativeSafeInteger(completion))
-		|| !nonNegativeSafeInteger(value.total_tokens)
-		|| (input !== undefined && prompt !== undefined && input !== prompt)
-		|| (output !== undefined && completion !== undefined && output !== completion)
-	) return false;
+		(!nonNegativeSafeInteger(input) && !nonNegativeSafeInteger(prompt)) ||
+		(!nonNegativeSafeInteger(output) && !nonNegativeSafeInteger(completion)) ||
+		!nonNegativeSafeInteger(value.total_tokens) ||
+		(input !== undefined && prompt !== undefined && input !== prompt) ||
+		(output !== undefined && completion !== undefined && output !== completion)
+	)
+		return false;
 
 	const inputDetails = value.input_tokens_details;
 	const promptDetails = value.prompt_tokens_details;
@@ -157,77 +145,76 @@ function validResponsesUsage(value: unknown): value is ResponsesUsage {
 	const outputDetailsObject = isPlainObject(outputDetails) ? outputDetails : undefined;
 	const completionDetailsObject = isPlainObject(completionDetails) ? completionDetails : undefined;
 	if (
-		!optionalSafeCount(inputDetailsObject?.cached_tokens)
-		|| !optionalSafeCount(inputDetailsObject?.cache_creation_tokens)
-		|| !optionalSafeCount(promptDetailsObject?.cached_tokens)
-		|| !optionalSafeCount(promptDetailsObject?.cache_creation_tokens)
-		|| !optionalSafeCount(outputDetailsObject?.reasoning_tokens)
-		|| !optionalSafeCount(outputDetailsObject?.image_tokens)
-		|| !optionalSafeCount(completionDetailsObject?.reasoning_tokens)
-		|| !optionalSafeCount(completionDetailsObject?.image_tokens)
-		|| (
-			inputDetailsObject?.cached_tokens !== undefined
-			&& promptDetailsObject?.cached_tokens !== undefined
-			&& inputDetailsObject.cached_tokens !== promptDetailsObject.cached_tokens
-		)
-		|| (
-			outputDetailsObject?.reasoning_tokens !== undefined
-			&& completionDetailsObject?.reasoning_tokens !== undefined
-			&& outputDetailsObject.reasoning_tokens !== completionDetailsObject.reasoning_tokens
-		)
-		|| (
-			outputDetailsObject?.image_tokens !== undefined
-			&& completionDetailsObject?.image_tokens !== undefined
-			&& outputDetailsObject.image_tokens !== completionDetailsObject.image_tokens
-		)
-	) return false;
+		!optionalSafeCount(inputDetailsObject?.cached_tokens) ||
+		!optionalSafeCount(inputDetailsObject?.cache_creation_tokens) ||
+		!optionalSafeCount(promptDetailsObject?.cached_tokens) ||
+		!optionalSafeCount(promptDetailsObject?.cache_creation_tokens) ||
+		!optionalSafeCount(outputDetailsObject?.reasoning_tokens) ||
+		!optionalSafeCount(outputDetailsObject?.image_tokens) ||
+		!optionalSafeCount(completionDetailsObject?.reasoning_tokens) ||
+		!optionalSafeCount(completionDetailsObject?.image_tokens) ||
+		(inputDetailsObject?.cached_tokens !== undefined &&
+			promptDetailsObject?.cached_tokens !== undefined &&
+			inputDetailsObject.cached_tokens !== promptDetailsObject.cached_tokens) ||
+		(outputDetailsObject?.reasoning_tokens !== undefined &&
+			completionDetailsObject?.reasoning_tokens !== undefined &&
+			outputDetailsObject.reasoning_tokens !== completionDetailsObject.reasoning_tokens) ||
+		(outputDetailsObject?.image_tokens !== undefined &&
+			completionDetailsObject?.image_tokens !== undefined &&
+			outputDetailsObject.image_tokens !== completionDetailsObject.image_tokens)
+	)
+		return false;
 
 	const inputCount = effectiveSafeCount(input, prompt);
 	const outputCount = effectiveSafeCount(output, completion);
 	if (inputCount == null || outputCount == null) return false;
 	const cachedValue = inputDetailsObject?.cached_tokens ?? promptDetailsObject?.cached_tokens;
-	const reasoningValue = outputDetailsObject?.reasoning_tokens
-		?? completionDetailsObject?.reasoning_tokens;
+	const reasoningValue = outputDetailsObject?.reasoning_tokens ?? completionDetailsObject?.reasoning_tokens;
 	const cached = nonNegativeSafeInteger(cachedValue) ? cachedValue : 0;
 	const reasoning = nonNegativeSafeInteger(reasoningValue) ? reasoningValue : 0;
-	return Number.isSafeInteger(inputCount + outputCount)
-		&& value.total_tokens === inputCount + outputCount
-		&& cached <= inputCount
-		&& reasoning <= outputCount;
+	return (
+		Number.isSafeInteger(inputCount + outputCount) &&
+		value.total_tokens === inputCount + outputCount &&
+		cached <= inputCount &&
+		reasoning <= outputCount
+	);
 }
 
 function validResponsesError(value: unknown): boolean {
-	return value === null || (
-		isPlainObject(value)
-		&& typeof value.code === 'string'
-		&& value.code.trim().length > 0
-		&& typeof value.message === 'string'
-		&& value.message.trim().length > 0
+	return (
+		value === null ||
+		(isPlainObject(value) &&
+			typeof value.code === 'string' &&
+			value.code.trim().length > 0 &&
+			typeof value.message === 'string' &&
+			value.message.trim().length > 0)
 	);
 }
 
 function validResponsesSuccessResponse(value: Record<string, unknown>): boolean {
 	if (
-		value.object !== 'response'
-		|| normalizeUpstreamId(value.id) == null
-		|| typeof value.model !== 'string'
-		|| !value.model.trim()
-		|| !nonNegativeSafeInteger(value.created_at)
-		|| (value.completed_at !== null && !nonNegativeSafeInteger(value.completed_at))
-		|| typeof value.status !== 'string'
-		|| !RESPONSE_STATUSES.has(value.status)
-		|| !Array.isArray(value.output)
-		|| value.output.length > TEXT_SUCCESS_RESPONSE_MAX_COLLECTION_ITEMS
-		|| (value.error !== undefined && !validResponsesError(value.error))
-		|| (value.usage !== undefined && value.usage !== null && !validResponsesUsage(value.usage))
-	) return false;
+		value.object !== 'response' ||
+		normalizeUpstreamId(value.id) == null ||
+		typeof value.model !== 'string' ||
+		!value.model.trim() ||
+		!nonNegativeSafeInteger(value.created_at) ||
+		(value.completed_at !== null && !nonNegativeSafeInteger(value.completed_at)) ||
+		typeof value.status !== 'string' ||
+		!RESPONSE_STATUSES.has(value.status) ||
+		!Array.isArray(value.output) ||
+		value.output.length > TEXT_SUCCESS_RESPONSE_MAX_COLLECTION_ITEMS ||
+		(value.error !== undefined && !validResponsesError(value.error)) ||
+		(value.usage !== undefined && value.usage !== null && !validResponsesUsage(value.usage))
+	)
+		return false;
 	if (value.status === 'failed' && !isPlainObject(value.error)) return false;
-	return value.output.every((item) => isPlainObject(item)
-		&& typeof item.type === 'string'
-		&& item.type.trim().length > 0);
+	return value.output.every(
+		(item) => isPlainObject(item) && typeof item.type === 'string' && item.type.trim().length > 0,
+	);
 }
 
 type ResponsesEvent = {
+	sequence_number?: number;
 	type?: string;
 	id?: string;
 	model?: unknown;
@@ -245,6 +232,44 @@ type ResponsesEvent = {
 	error?: { message?: string; code?: string };
 };
 
+export function ensureResponsesSequenceNumber(line: string, nextSeq: { value: number }): string {
+	if (!line.startsWith('data: ')) return line;
+	const payload = line.slice(6).trim();
+	if (!payload || payload === '[DONE]') return line;
+	try {
+		const parsed = JSON.parse(payload) as unknown;
+		if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return line;
+		const event = parsed as ResponsesEvent;
+		if (typeof event.sequence_number === 'number') {
+			// 上游已带序号：不覆盖，但让计数器至少越过该值，避免后续注入重复。
+			if (event.sequence_number >= nextSeq.value) {
+				nextSeq.value = event.sequence_number + 1;
+			}
+			return line;
+		}
+		const injected = { ...event, sequence_number: nextSeq.value };
+		nextSeq.value += 1;
+		return `data: ${JSON.stringify(injected)}`;
+	} catch {
+		return line;
+	}
+}
+
+export function syntheticMissingTerminalEvent(nextSeq: { value: number }): string {
+	return (
+		'event: error\n' +
+		`data: ${JSON.stringify({
+			type: 'error',
+			// 合成事件同样必须带序号；缺失会让严格客户端（serde）在兜底错误上报序列化失败。
+			sequence_number: nextSeq.value++,
+			error: {
+				message: 'Upstream stream ended without a terminal Responses event',
+				code: 'responses.incomplete_stream',
+			},
+		})}\n\n`
+	);
+}
+
 type SSEState = {
 	sawTerminal: boolean;
 	sawFailure: boolean;
@@ -261,9 +286,7 @@ function numberOrZero(value: unknown): number {
 export function usageFromResponses(u: ResponsesUsage): UsageFromStream {
 	const inputTokens = numberOrZero(u.input_tokens ?? u.prompt_tokens);
 	const outputTokens = numberOrZero(u.output_tokens ?? u.completion_tokens);
-	const cacheRead = numberOrZero(
-		u.input_tokens_details?.cached_tokens ?? u.prompt_tokens_details?.cached_tokens,
-	);
+	const cacheRead = numberOrZero(u.input_tokens_details?.cached_tokens ?? u.prompt_tokens_details?.cached_tokens);
 	const cacheWrite = numberOrZero(
 		u.input_tokens_details?.cache_creation_tokens ?? u.prompt_tokens_details?.cache_creation_tokens,
 	);
@@ -272,12 +295,11 @@ export function usageFromResponses(u: ResponsesUsage): UsageFromStream {
 	);
 	const nativePrompt = effectiveSafeCount(u.input_tokens, u.prompt_tokens);
 	const nativeCompletion = effectiveSafeCount(u.output_tokens, u.completion_tokens);
-	const nativeCachedValue = u.input_tokens_details?.cached_tokens
-		?? u.prompt_tokens_details?.cached_tokens;
-	const nativeReasoningValue = u.output_tokens_details?.reasoning_tokens
-		?? u.completion_tokens_details?.reasoning_tokens;
-	const nativeCompletionImagesValue = u.output_tokens_details?.image_tokens
-		?? u.completion_tokens_details?.image_tokens;
+	const nativeCachedValue = u.input_tokens_details?.cached_tokens ?? u.prompt_tokens_details?.cached_tokens;
+	const nativeReasoningValue =
+		u.output_tokens_details?.reasoning_tokens ?? u.completion_tokens_details?.reasoning_tokens;
+	const nativeCompletionImagesValue =
+		u.output_tokens_details?.image_tokens ?? u.completion_tokens_details?.image_tokens;
 	const usage: UsageFromStream = {
 		input_tokens: inputTokens,
 		output_tokens: outputTokens,
@@ -348,10 +370,7 @@ function applyResponsesEvent(
 			(typeof parsed.response?.error?.message === 'string' && parsed.response.error.message.trim()) ||
 			(typeof parsed.response?.status === 'string' ? `Responses ${parsed.response.status}` : '') ||
 			'Upstream Responses stream failed';
-		usage.stream_error = sanitizePublicErrorMessage(
-			message,
-			'Upstream Responses stream failed',
-		);
+		usage.stream_error = sanitizePublicErrorMessage(message, 'Upstream Responses stream failed');
 	}
 
 	return { terminal: isResponsesTerminalEventType(type) };
@@ -433,8 +452,7 @@ function processResponsesSseEvent(params: {
 	if (!data) return { wire: params.event, stop: false };
 	if (data === '[DONE]') {
 		if (params.state.sawTerminal) return { wire: params.event, stop: true };
-		params.usage.stream_error =
-			params.usage.stream_error ?? 'Responses stream ended before a typed terminal event';
+		params.usage.stream_error = params.usage.stream_error ?? 'Responses stream ended before a typed terminal event';
 		params.state.sawFailure = true;
 		params.state.sawTerminal = true;
 		return {
@@ -481,11 +499,7 @@ function processResponsesSseEvent(params: {
 	params.state.sawTerminal ||= terminal;
 	params.state.sawFailure ||= failed;
 	return {
-		wire: rewriteResponsesPublicFieldsInSseEvent(
-			params.event,
-			params.publicModelId,
-			params.state.serviceTier,
-		),
+		wire: rewriteResponsesPublicFieldsInSseEvent(params.event, params.publicModelId, params.state.serviceTier),
 		// Error events are terminal and must not be followed by a second,
 		// unrelated synthesized response id.
 		stop: failed,
@@ -502,9 +516,11 @@ async function pumpResponsesWithUsageTracking(
 	timing?: RequestTimingCollector | null,
 	publicModelId?: string,
 	publicCorrelationId?: string,
+	idleOptions?: StreamIdleClockOptions,
 ): Promise<ResourceCompletionOutcome> {
 	const decoder = new TextDecoder();
 	const reader = upstream.getReader();
+	const idleClock = createStreamIdleClock(idleOptions);
 	const writer = downstream.getWriter();
 	const state: SSEState = {
 		sawTerminal: false,
@@ -521,7 +537,9 @@ async function pumpResponsesWithUsageTracking(
 	let cleanupConfirmed = true;
 	let cancellation: Promise<void> | undefined;
 	const cancelUpstream = (reason?: unknown): void => {
-cancellation ??= reader.cancel(reason).catch(() => { cleanupConfirmed = false; });
+		cancellation ??= reader.cancel(reason).catch(() => {
+			cleanupConfirmed = false;
+		});
 	};
 
 	const markClientDisconnected = (): void => {
@@ -543,7 +561,13 @@ cancellation ??= reader.cancel(reason).catch(() => { cleanupConfirmed = false; }
 	// Observe read-side cancellation even when upstream has no next event.
 	void writer.closed.catch(markClientDisconnected);
 
+	const nextSeq = { value: 0 };
 	const writeChunk = async (text: string): Promise<void> => {
+		const data = parseSseEventData(text);
+		if (data !== null) {
+			const line = ensureResponsesSequenceNumber('data: ' + data, nextSeq);
+			if (line !== 'data: ' + data) text = rewriteSseEventData(text, line.slice(6));
+		}
 		if (!text || clientDisconnected) return;
 		try {
 			await writer.write(encoder.encode(text));
@@ -552,13 +576,14 @@ cancellation ??= reader.cancel(reason).catch(() => { cleanupConfirmed = false; }
 			console.log('[Gateway Responses] client disconnected; upstream stream cancelled');
 		}
 	};
-	const processEvent = (event: string): ProcessedResponsesEvent => processResponsesSseEvent({
-		event,
-		state,
-		usage,
-		timing,
-		publicModelId,
-	});
+	const processEvent = (event: string): ProcessedResponsesEvent =>
+		processResponsesSseEvent({
+			event,
+			state,
+			usage,
+			timing,
+			publicModelId,
+		});
 	const handleEvent = async (event: string): Promise<boolean> => {
 		if (clientDisconnected) return true;
 		const processed = processEvent(event);
@@ -569,7 +594,14 @@ cancellation ??= reader.cancel(reason).catch(() => { cleanupConfirmed = false; }
 	try {
 		while (true) {
 			if (clientDisconnected) break;
-			const { done, value } = await reader.read();
+			const chunk = await readWithIdleTimeout(reader, idleClock.timeoutMs());
+			if (chunk.idleTimedOut) {
+				applyStreamIdleTimeout(usage);
+				cancelUpstream('stream_idle_timeout');
+				throw new Error('Stream idle timeout');
+			}
+			const { done, value } = chunk;
+			idleClock.noteChunk(value);
 			if (clientDisconnected) break;
 			if (done) {
 				const stopped = await framer.push(decoder.decode(), handleEvent);
@@ -578,14 +610,15 @@ cancellation ??= reader.cancel(reason).catch(() => { cleanupConfirmed = false; }
 					await handleEvent(terminateSseEvent(remainder));
 				}
 				if (!state.sawTerminal && !clientDisconnected) {
-					usage.stream_error =
-						usage.stream_error ?? 'Upstream stream ended without a terminal Responses event';
+					usage.stream_error = usage.stream_error ?? 'Upstream stream ended without a terminal Responses event';
 					state.sawFailure = true;
 					state.sawTerminal = true;
-					await writeChunk(buildResponsesFailedEvent({
-						id: state.associationId,
-						model: publicModelId,
-					}));
+					await writeChunk(
+						buildResponsesFailedEvent({
+							id: state.associationId,
+							model: publicModelId,
+						}),
+					);
 				}
 				break;
 			}
@@ -601,17 +634,21 @@ cancellation ??= reader.cancel(reason).catch(() => { cleanupConfirmed = false; }
 		if (!clientDisconnected) {
 			cancelUpstream('Responses SSE processing failed');
 			console.warn('[Gateway Responses] pump error', err instanceof Error ? err.message : String(err));
-			usage.stream_error = usage.stream_error ?? sanitizePublicErrorMessage(
-				err instanceof Error ? err.message : String(err),
-				'Upstream Responses stream failed',
-			);
+			usage.stream_error =
+				usage.stream_error ??
+				sanitizePublicErrorMessage(
+					err instanceof Error ? err.message : String(err),
+					'Upstream Responses stream failed',
+				);
 			if (!state.sawFailure) {
 				state.sawFailure = true;
 				state.sawTerminal = true;
-				await writeChunk(buildResponsesFailedEvent({
-					id: state.associationId,
-					model: publicModelId,
-				}));
+				await writeChunk(
+					buildResponsesFailedEvent({
+						id: state.associationId,
+						model: publicModelId,
+					}),
+				);
 			}
 		}
 	} finally {
@@ -643,6 +680,7 @@ function streamResponseWithUsage(
 	timing?: RequestTimingCollector | null,
 	publicModelId?: string,
 	publicCorrelationId?: string,
+	idleOptions?: StreamIdleClockOptions,
 ): { response: Response; usagePromise: Promise<UsageFromStream>; resourceCompletion: ResourceCompletion } {
 	let resolveUsage!: (u: UsageFromStream) => void;
 	const usagePromise = new Promise<UsageFromStream>((resolve) => {
@@ -653,7 +691,9 @@ function streamResponseWithUsage(
 	let stopDownstream!: (reason: unknown) => void;
 	const { readable, writable } = new TransformStream<Uint8Array, Uint8Array>({
 		// Preserve graceful read-side cancellation while rejecting blocked writes.
-		start(controller) { stopDownstream = () => controller.terminate(); },
+		start(controller) {
+			stopDownstream = () => controller.terminate();
+		},
 	});
 
 	const resourceCompletion = pumpResponsesWithUsageTracking(
@@ -666,6 +706,7 @@ function streamResponseWithUsage(
 		timing,
 		publicModelId,
 		publicCorrelationId,
+		idleOptions,
 	).catch(() => 'unconfirmed' as const);
 
 	return {
@@ -683,24 +724,20 @@ function streamResponseWithUsage(
 }
 
 function extractUsageFromResponsesObject(parsed: Record<string, unknown>): UsageFromStream {
-	const responseObject = parsed.response != null
-		&& typeof parsed.response === 'object'
-		&& !Array.isArray(parsed.response)
-		? parsed.response as Record<string, unknown>
-		: null;
+	const responseObject =
+		parsed.response != null && typeof parsed.response === 'object' && !Array.isArray(parsed.response)
+			? (parsed.response as Record<string, unknown>)
+			: null;
 	const usageCandidate = responseObject?.usage ?? parsed.usage;
-	const usageObj = usageCandidate != null
-		&& typeof usageCandidate === 'object'
-		&& !Array.isArray(usageCandidate)
-		? usageCandidate as ResponsesUsage
-		: null;
+	const usageObj =
+		usageCandidate != null && typeof usageCandidate === 'object' && !Array.isArray(usageCandidate)
+			? (usageCandidate as ResponsesUsage)
+			: null;
 	if (usageObj && Object.prototype.hasOwnProperty.call(usageObj, 'speed')) {
 		usageObj.speed = normalizeResponseTextSpeed(usageObj.speed);
 	}
 	let usage: UsageFromStream = usageObj ? usageFromResponses(usageObj) : { ...EMPTY_USAGE_LOCAL };
-	usage.service_tier = normalizeOpenAiResponseServiceTier(
-		responseObject?.service_tier ?? parsed.service_tier,
-	);
+	usage.service_tier = normalizeOpenAiResponseServiceTier(responseObject?.service_tier ?? parsed.service_tier);
 	const msgId = normalizeUpstreamId(parsed.id ?? responseObject?.id);
 	if (msgId) usage = { ...usage, upstreamMessageId: msgId };
 	return usage;
@@ -745,11 +782,10 @@ async function nonStreamResponseWithUsage(
 	}
 	if (publicModelId) {
 		parsed.model = publicModelId;
-		const responseObject = parsed.response != null
-			&& typeof parsed.response === 'object'
-			&& !Array.isArray(parsed.response)
-			? parsed.response as Record<string, unknown>
-			: null;
+		const responseObject =
+			parsed.response != null && typeof parsed.response === 'object' && !Array.isArray(parsed.response)
+				? (parsed.response as Record<string, unknown>)
+				: null;
 		if (responseObject && Object.prototype.hasOwnProperty.call(responseObject, 'model')) {
 			responseObject.model = publicModelId;
 		}
@@ -771,9 +807,11 @@ export async function dispatchOpenAiResponsesRoute(
 	requestSignal?: AbortSignal,
 	timing?: RequestTimingCollector | null,
 	attempt?: RequestTimingAttempt,
-	beforeFetch?: (prepared: PreparedTextAttempt) => Promise<void>,
+	beforeFetchOrOptions?:
+		((prepared: PreparedTextAttempt) => Promise<void>) | (FirstEventTimeoutOptions & StreamIdleClockOptions),
 	publicCorrelationId?: string,
 	auxiliaryAuth?: RequestAuxiliaryAuthBudget,
+	options?: FirstEventTimeoutOptions & StreamIdleClockOptions,
 ): Promise<{
 	response: Response;
 	usagePromise: Promise<UsageFromStream>;
@@ -781,6 +819,8 @@ export async function dispatchOpenAiResponsesRoute(
 	upstreamRequestId: string | null;
 	meta?: ProxyDispatchMeta;
 }> {
+	const beforeFetch = typeof beforeFetchOrOptions === 'function' ? beforeFetchOrOptions : undefined;
+	options = options ?? (typeof beforeFetchOrOptions === 'object' ? beforeFetchOrOptions : undefined);
 	const url = resolveUpstreamEndpoint('openai', 'responses', route.providerEndpoints, {
 		providerId: route.providerId,
 	});
@@ -800,19 +840,28 @@ export async function dispatchOpenAiResponsesRoute(
 		...buildRouteRequestBody(route, body),
 		model: applyVertexOpenAiModelPrefix(url, route.providerModelName),
 	};
-	return withOwnedJsonUpload(requestBody, requestSignal, async upload => {
-		const { secret } = await resolveProviderUpstreamSecret(route.providerApiKey, { signal: requestSignal, auxiliaryAuth });
-		const headers = {
-			'Content-Type': 'application/json',
-			'Content-Length': String(upload.contentLength),
-			Authorization: `Bearer ${secret}`,
-		};
+	return withOwnedJsonUpload(requestBody, requestSignal, async (upload) => {
+		const { secret } = await resolveProviderUpstreamSecret(route.providerApiKey, {
+			signal: requestSignal,
+			auxiliaryAuth,
+		});
+		const headers = applyRouteExtraHeaders(
+			{
+				'Content-Type': 'application/json',
+				'Content-Length': String(upload.contentLength),
+				Authorization: `Bearer ${secret}`,
+			},
+			route.customParams,
+		);
 		new Headers(headers);
 
 		if (requestSignal?.aborted) return cancelledBeforeDispatch();
 		if (beforeFetch) {
 			const prepared = createPreparedTextAttempt({
-				routeIdentity: routeIdentity!, url, method: 'POST', headers,
+				routeIdentity: routeIdentity!,
+				url,
+				method: 'POST',
+				headers,
 				outboundBodySha256: await upload.digestSha256(),
 				outboundBodyBytes: upload.contentLength,
 			});
@@ -841,8 +890,28 @@ export async function dispatchOpenAiResponsesRoute(
 		const streamRequested = requestBody.stream === true;
 		if (response.ok && streamRequested && response.body && normalizedContentType.includes('text/event-stream')) {
 			// Preserve the existing SSE pump's reader and cancellation ownership.
-			const result = streamResponseWithUsage(response, requestSignal, timing, route.gatewayModelId, publicCorrelationId);
-			return { ...result, upstreamRequestId };
+			const streamStart = await prepareTextStreamStart(response, requestSignal, options?.firstEventTimeoutMs ?? 0);
+			if (streamStart.timedOut)
+				return {
+					response: streamStart.response,
+					usagePromise: Promise.resolve({ ...EMPTY_USAGE_LOCAL }),
+					upstreamRequestId,
+					resourceCompletion: streamStart.resourceCompletion,
+					meta: { failoverForbidden: true, upstreamOutcomeUnknown: true, gatewayGeneratedError: true },
+				};
+			const result = streamResponseWithUsage(
+				streamStart.response,
+				requestSignal,
+				timing,
+				route.gatewayModelId,
+				publicCorrelationId,
+				options,
+			);
+			return {
+				...result,
+				upstreamRequestId,
+				resourceCompletion: combineTextStreamResources(result.resourceCompletion, streamStart.resourceCompletion),
+			};
 		}
 		const owned = ownUpstreamResponse(response, requestSignal);
 		response = owned.response;

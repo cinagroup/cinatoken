@@ -3,7 +3,10 @@
  */
 import type { ResultSetHeader, RowDataPacket } from 'mysql2/promise';
 import type { MySqlDatabaseClient } from '../../storage/database-client';
-import type { ModelRoutesRepository } from '../../storage/gateway-repository-interfaces';
+import type {
+	ListModelRoutesWithJoinsFilters,
+	ModelRoutesRepository,
+} from '../../storage/gateway-repository-interfaces';
 import type { ModelRouteDetailRow, ModelRouteJoinRow } from '../../storage/repository-dtos';
 import { MODEL_ROUTE_PATCH_COLS } from '../patch-allowlists';
 import { asMySqlPool } from './mysql2-compat';
@@ -33,7 +36,7 @@ const MODEL_ROUTE_LIST_JOIN_SQL = `SELECT mr.id, mr.model_id, mr.provider_id, mr
 export function createMySqlModelRoutesRepository(db: MySqlDatabaseClient): ModelRoutesRepository {
 	const pool = asMySqlPool(db.raw);
 	return {
-		async listModelRoutesWithJoins(filters: { modelId?: string; providerId?: string; limit?: number }): Promise<ModelRouteJoinRow[]> {
+		async listModelRoutesWithJoins(filters: ListModelRoutesWithJoinsFilters): Promise<ModelRouteJoinRow[]> {
 			const conditions: string[] = [];
 			const bindValues: unknown[] = [];
 			if (filters.modelId) {
@@ -43,6 +46,9 @@ export function createMySqlModelRoutesRepository(db: MySqlDatabaseClient): Model
 			if (filters.providerId) {
 				conditions.push('mr.provider_id = ?');
 				bindValues.push(filters.providerId);
+			}
+			if (filters.status === 'active') {
+				conditions.push("mr.status = 'active'");
 			}
 			const where = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
 			const limit = filters.limit == null ? null : Math.max(1, Math.min(10_000, Math.trunc(filters.limit)));
@@ -90,7 +96,7 @@ export function createMySqlModelRoutesRepository(db: MySqlDatabaseClient): Model
 					params.upstreamOperation,
 					params.adapter,
 					now,
-				]
+				],
 			);
 		},
 
@@ -106,12 +112,7 @@ export function createMySqlModelRoutesRepository(db: MySqlDatabaseClient): Model
 				 WHERE model_id = ? AND lower(route_group) = lower(?)
 				   AND lower(request_protocol) = lower(?) AND request_operation = ?
 				 LIMIT 1`,
-				[
-					params.modelId,
-					params.routeGroup,
-					params.requestProtocol,
-					params.requestOperation,
-				]
+				[params.modelId, params.routeGroup, params.requestProtocol, params.requestOperation],
 			);
 			if (existing[0]) {
 				return { poolId: existing[0].route_pool_id, surfaceId: existing[0].id };
@@ -124,7 +125,7 @@ export function createMySqlModelRoutesRepository(db: MySqlDatabaseClient): Model
 					`INSERT INTO route_pools
 					 (id, model_id, route_group, name, strategy, status, created_at, updated_at)
 					 VALUES (?, ?, ?, ?, NULL, 'active', CURRENT_TIMESTAMP(6), CURRENT_TIMESTAMP(6))`,
-					[params.poolId, params.modelId, params.routeGroup, params.poolName]
+					[params.poolId, params.modelId, params.routeGroup, params.poolName],
 				);
 				await conn.execute(
 					`INSERT INTO model_surfaces
@@ -137,7 +138,7 @@ export function createMySqlModelRoutesRepository(db: MySqlDatabaseClient): Model
 						params.requestProtocol,
 						params.requestOperation,
 						params.poolId,
-					]
+					],
 				);
 				await conn.commit();
 			} catch (error) {
@@ -156,7 +157,7 @@ export function createMySqlModelRoutesRepository(db: MySqlDatabaseClient): Model
 				tierStrategies?: string | null;
 				stickyEnabled?: boolean;
 				stickyIdleTtlSeconds?: number;
-			}
+			},
 		): Promise<number> {
 			const sets: string[] = [];
 			const bindValues: unknown[] = [];
@@ -168,8 +169,7 @@ export function createMySqlModelRoutesRepository(db: MySqlDatabaseClient): Model
 				sets.push('tier_strategies = ?');
 				bindValues.push(patch.tierStrategies);
 			}
-			const stickyTouched =
-				patch.stickyEnabled !== undefined || patch.stickyIdleTtlSeconds !== undefined;
+			const stickyTouched = patch.stickyEnabled !== undefined || patch.stickyIdleTtlSeconds !== undefined;
 			if (patch.stickyEnabled !== undefined) {
 				sets.push('sticky_enabled = ?');
 				bindValues.push(patch.stickyEnabled ? 1 : 0);
@@ -183,10 +183,10 @@ export function createMySqlModelRoutesRepository(db: MySqlDatabaseClient): Model
 			}
 			if (sets.length === 0) return 0;
 			sets.push('updated_at = CURRENT_TIMESTAMP(6)');
-			const [result] = await pool.execute<ResultSetHeader>(
-				`UPDATE route_pools SET ${sets.join(', ')} WHERE id = ?`,
-				[...bindValues, poolId]
-			);
+			const [result] = await pool.execute<ResultSetHeader>(`UPDATE route_pools SET ${sets.join(', ')} WHERE id = ?`, [
+				...bindValues,
+				poolId,
+			]);
 			return result.affectedRows;
 		},
 
@@ -196,12 +196,12 @@ export function createMySqlModelRoutesRepository(db: MySqlDatabaseClient): Model
 				 SET sticky_epoch = sticky_epoch + 1,
 				     updated_at = CURRENT_TIMESTAMP(6)
 				 WHERE id = ?`,
-				[poolId]
+				[poolId],
 			);
 			if (result.affectedRows === 0) return null;
 			const [rows] = await pool.query<Array<{ sticky_epoch: number } & RowDataPacket>>(
 				`SELECT sticky_epoch FROM route_pools WHERE id = ? LIMIT 1`,
-				[poolId]
+				[poolId],
 			);
 			if (!rows[0]) return null;
 			return Number(rows[0].sticky_epoch);
@@ -219,7 +219,7 @@ export function createMySqlModelRoutesRepository(db: MySqlDatabaseClient): Model
 			if (updateFields.length === 0) return 0;
 			const [result] = await pool.execute<ResultSetHeader>(
 				`UPDATE model_routes SET ${updateFields.join(', ')} WHERE id = ?`,
-				[...bindValues, id]
+				[...bindValues, id],
 			);
 			return result.affectedRows;
 		},
@@ -232,7 +232,7 @@ export function createMySqlModelRoutesRepository(db: MySqlDatabaseClient): Model
 		async deleteRoutePoolIfEmpty(poolId: string): Promise<boolean> {
 			const [rows] = await pool.query<Array<{ ok: number }>>(
 				'SELECT 1 AS ok FROM model_routes WHERE route_pool_id = ? LIMIT 1',
-				[poolId]
+				[poolId],
 			);
 			if (rows.length > 0) return false;
 			const conn = await pool.getConnection();

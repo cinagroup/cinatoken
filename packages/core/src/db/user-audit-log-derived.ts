@@ -27,18 +27,17 @@ function parseUserAuditSnapshotWithPresence(raw: string | null | undefined): Par
 			o.budget_reset_at === undefined || o.budget_reset_at === null || o.budget_reset_at === ''
 				? null
 				: String(o.budget_reset_at);
-		const budget_epoch = Number.isSafeInteger(Number(o.budget_epoch))
-			? Math.max(0, Number(o.budget_epoch))
-			: 0;
+		const budget_epoch = Number.isSafeInteger(Number(o.budget_epoch)) ? Math.max(0, Number(o.budget_epoch)) : 0;
 		const budget_reserved_micros = Number.isSafeInteger(Number(o.budget_reserved_micros))
 			? Math.max(0, Number(o.budget_reserved_micros))
 			: 0;
+		const wallet_granted = roundGatewayMoney(Number(o.wallet_granted ?? 0));
+		const wallet_spent = roundGatewayMoney(Number(o.wallet_spent ?? 0));
 		const status = typeof o.status === 'string' ? o.status : '';
 		const metadata = o.metadata === undefined || o.metadata === null ? null : String(o.metadata);
+		const rate_limit = o.rate_limit === undefined || o.rate_limit === null ? null : String(o.rate_limit);
 		const charged_cost_factors =
-			o.charged_cost_factors === undefined || o.charged_cost_factors === null
-				? null
-				: String(o.charged_cost_factors);
+			o.charged_cost_factors === undefined || o.charged_cost_factors === null ? null : String(o.charged_cost_factors);
 		const external_system =
 			o.external_system === undefined || o.external_system === null ? null : String(o.external_system);
 		const external_user_id =
@@ -55,6 +54,9 @@ function parseUserAuditSnapshotWithPresence(raw: string | null | undefined): Par
 				budget_reset_at,
 				budget_epoch,
 				budget_reserved_micros,
+				wallet_granted,
+				wallet_spent,
+				rate_limit,
 				status,
 				metadata,
 				charged_cost_factors,
@@ -88,7 +90,7 @@ export type DerivedUserAuditBudgetFields = Pick<
  */
 export function deriveUserAuditBudgetFromSnapshots(
 	beforeSnapshot: string | null | undefined,
-	afterSnapshot: string | null | undefined
+	afterSnapshot: string | null | undefined,
 ): DerivedUserAuditBudgetFields {
 	const beforeParsed = parseUserAuditSnapshotWithPresence(beforeSnapshot);
 	const afterParsed = parseUserAuditSnapshotWithPresence(afterSnapshot);
@@ -98,8 +100,8 @@ export function deriveUserAuditBudgetFromSnapshots(
 	const afterSpent = roundGatewayMoney(after?.budget_spent ?? before?.budget_spent ?? 0);
 	const beforeMaxValue = beforeParsed?.hasBudgetMax ? beforeParsed.snapshot.budget_max : undefined;
 	const afterMaxValue = afterParsed?.hasBudgetMax ? afterParsed.snapshot.budget_max : undefined;
-	const beforeMax = beforeMaxValue === undefined ? afterMaxValue ?? null : beforeMaxValue;
-	const afterMax = afterMaxValue === undefined ? beforeMaxValue ?? null : afterMaxValue;
+	const beforeMax = beforeMaxValue === undefined ? (afterMaxValue ?? null) : beforeMaxValue;
+	const afterMax = afterMaxValue === undefined ? (beforeMaxValue ?? null) : afterMaxValue;
 	const beforeBase = roundGatewayMoney(before?.budget_base ?? after?.budget_base ?? 0);
 	const afterBase = roundGatewayMoney(after?.budget_base ?? before?.budget_base ?? 0);
 	return {

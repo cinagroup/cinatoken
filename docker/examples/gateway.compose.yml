@@ -25,6 +25,10 @@ services:
       PORT: "8787"
       # Admin and Proxy must reuse the configured encryption secret (at least 32 characters).
       SHARED_KEY_ENCRYPTION_SECRET: ${SHARED_KEY_ENCRYPTION_SECRET:?set SHARED_KEY_ENCRYPTION_SECRET in .env (at least 32 characters)}
+      # 可选：文本流式超时（毫秒）。空则代码默认 2min / 90s / 10min。
+      STREAM_FIRST_CHUNK_TIMEOUT_MS: ${STREAM_FIRST_CHUNK_TIMEOUT_MS:-}
+      STREAM_IDLE_TIMEOUT_MS: ${STREAM_IDLE_TIMEOUT_MS:-}
+      USAGE_SAFETY_TIMEOUT_MS: ${USAGE_SAFETY_TIMEOUT_MS:-}
     healthcheck:
       test:
         [

@@ -2,6 +2,7 @@
  * D1：`users` 表。
  */
 import type { UserRow } from '../../types';
+import { parseApiKeyRateLimit } from '../../lib/api-key-rate-limit';
 import { roundGatewayMoney } from '../../lib/money-precision';
 import { userBudgetAmount, userBudgetUnits } from '../user-budget-reservation-types';
 import type { D1DatabaseClient } from '../../storage/database-client';
@@ -28,8 +29,11 @@ type UserSqlRow = {
 	budget_reset_at: string | null;
 	budget_epoch: number;
 	budget_reserved_micros: number;
+	wallet_granted: number;
+	wallet_spent: number;
 	status: string;
 	metadata: string | null;
+	rate_limit: string | null;
 	charged_cost_factors: string | null;
 	external_system: string | null;
 	external_user_id: string | null;
@@ -55,8 +59,11 @@ function mapUserRow(r: UserSqlRow): UserRow {
 		budget_reset_at: r.budget_reset_at,
 		budget_epoch: Number(r.budget_epoch),
 		budget_reserved_micros: Number(r.budget_reserved_micros),
+		wallet_granted: roundGatewayMoney(Number(r.wallet_granted ?? 0)),
+		wallet_spent: roundGatewayMoney(Number(r.wallet_spent ?? 0)),
 		status: r.status,
 		metadata: r.metadata,
+		rate_limit: parseApiKeyRateLimit(r.rate_limit),
 		charged_cost_factors: r.charged_cost_factors ?? null,
 		external_system: r.external_system,
 		external_user_id: r.external_user_id,
@@ -86,7 +93,10 @@ export function createD1UsersRepository(db: D1DatabaseClient): UsersRepository {
 		},
 
 		async listByEmail(email: string): Promise<UserRow[]> {
-			const rows = await raw.prepare('SELECT * FROM users WHERE email = ? ORDER BY created_at DESC').bind(email).all<UserSqlRow>();
+			const rows = await raw
+				.prepare('SELECT * FROM users WHERE email = ? ORDER BY created_at DESC')
+				.bind(email)
+				.all<UserSqlRow>();
 			return (rows.results ?? []).map(mapUserRow);
 		},
 
@@ -155,49 +165,64 @@ export function createD1UsersRepository(db: D1DatabaseClient): UsersRepository {
 			const accountDefaultGuardrailId = crypto.randomUUID();
 			const accountDefaultGuardrailVersionId = crypto.randomUUID();
 			await raw.batch([
-				raw.prepare(
-					`INSERT INTO users (id, email, budget_max, budget_base, budget_spent, budget_spent_micros, budget_period, budget_reset_at, status, metadata, charged_cost_factors, external_system, external_user_id, created_at, updated_at)
-					 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))`
-				)
-				.bind(
-					params.id,
-					params.email,
-					budgetMax,
-					budgetBase,
-					budgetSpent,
-					budgetSpentMicros,
-					budgetPeriod,
-					budgetResetAt,
-					status,
-					params.metadata ?? null,
-					params.chargedCostFactors ?? null,
-					params.externalSystem ?? null,
-					params.externalUserId ?? null
-				),
-				raw.prepare(`INSERT INTO workspaces (
+				raw
+					.prepare(
+						`INSERT INTO users (id, email, budget_max, budget_base, budget_spent, budget_spent_micros, budget_period, budget_reset_at, status, metadata, charged_cost_factors, external_system, external_user_id, created_at, updated_at)
+					 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))`,
+					)
+					.bind(
+						params.id,
+						params.email,
+						budgetMax,
+						budgetBase,
+						budgetSpent,
+						budgetSpentMicros,
+						budgetPeriod,
+						budgetResetAt,
+						status,
+						params.metadata ?? null,
+						params.chargedCostFactors ?? null,
+						params.externalSystem ?? null,
+						params.externalUserId ?? null,
+					),
+				raw
+					.prepare(
+						`INSERT INTO workspaces (
 					id, scope_type, personal_owner_user_id, name, slug, is_default,
 					default_scope_key, status, created_by_user_id, created_at, updated_at
-				) VALUES (?, 'personal', ?, 'Default', 'default', 1, ?, 'active', ?, datetime('now'), datetime('now'))`)
+				) VALUES (?, 'personal', ?, 'Default', 'default', 1, ?, 'active', ?, datetime('now'), datetime('now'))`,
+					)
 					.bind(workspaceId, params.id, workspaceId, params.id),
-				raw.prepare(`INSERT INTO guardrails (
+				raw
+					.prepare(
+						`INSERT INTO guardrails (
 					id, workspace_id, owner_user_id, name, description, status,
 					is_workspace_default, designated_version, latest_version, created_at, updated_at
-				) VALUES (?, ?, ?, ?, NULL, 'active', 1, 1, 1, datetime('now'), datetime('now'))`)
-					.bind(defaultGuardrailId, workspaceId, params.id,
-						`Workspace ${workspaceId.slice(0, 180)} Default`),
-				raw.prepare(`INSERT INTO guardrail_versions (
+				) VALUES (?, ?, ?, ?, NULL, 'active', 1, 1, 1, datetime('now'), datetime('now'))`,
+					)
+					.bind(defaultGuardrailId, workspaceId, params.id, `Workspace ${workspaceId.slice(0, 180)} Default`),
+				raw
+					.prepare(
+						`INSERT INTO guardrail_versions (
 					id, guardrail_id, version, config_json, created_by_user_id, created_at
-				) VALUES (?, ?, 1, '{}', ?, datetime('now'))`)
+				) VALUES (?, ?, 1, '{}', ?, datetime('now'))`,
+					)
 					.bind(defaultGuardrailVersionId, defaultGuardrailId, params.id),
-				raw.prepare(`INSERT INTO guardrails (
+				raw
+					.prepare(
+						`INSERT INTO guardrails (
 					id, workspace_id, owner_user_id, name, description, status,
 					is_workspace_default, is_account_default, account_scope_key,
 					designated_version, latest_version, created_at, updated_at
-				) VALUES (?, ?, ?, 'Account Default', NULL, 'active', 0, 1, ?, 1, 1, datetime('now'), datetime('now'))`)
+				) VALUES (?, ?, ?, 'Account Default', NULL, 'active', 0, 1, ?, 1, 1, datetime('now'), datetime('now'))`,
+					)
 					.bind(accountDefaultGuardrailId, workspaceId, params.id, `personal:${params.id}`),
-				raw.prepare(`INSERT INTO guardrail_versions (
+				raw
+					.prepare(
+						`INSERT INTO guardrail_versions (
 					id, guardrail_id, version, config_json, created_by_user_id, created_at
-				) VALUES (?, ?, 1, '{}', ?, datetime('now'))`)
+				) VALUES (?, ?, 1, '{}', ?, datetime('now'))`,
+					)
 					.bind(accountDefaultGuardrailVersionId, accountDefaultGuardrailId, params.id),
 			]);
 		},
@@ -210,9 +235,16 @@ export function createD1UsersRepository(db: D1DatabaseClient): UsersRepository {
 			resetBudget: boolean = true,
 			metadata?: string | null,
 			budget_spent_override?: number | null,
-			budget_base?: number | null
+			budget_base?: number | null,
+			wallet_granted?: number | null,
+			wallet_spent?: number | null,
 		): Promise<boolean> {
-			const setClauses: string[] = ['budget_max = ?', 'budget_period = ?', 'budget_reset_at = ?', "updated_at = datetime('now')"];
+			const setClauses: string[] = [
+				'budget_max = ?',
+				'budget_period = ?',
+				'budget_reset_at = ?',
+				"updated_at = datetime('now')",
+			];
 			const bindValues: unknown[] = [
 				budget_max != null ? roundGatewayMoney(budget_max) : null,
 				budget_period,
@@ -233,6 +265,14 @@ export function createD1UsersRepository(db: D1DatabaseClient): UsersRepository {
 				setClauses.push('budget_base = ?');
 				bindValues.push(budget_base != null ? roundGatewayMoney(budget_base) : 0);
 			}
+			if (wallet_granted !== undefined) {
+				setClauses.push('wallet_granted = ?');
+				bindValues.push(roundGatewayMoney(wallet_granted ?? 0));
+			}
+			if (wallet_spent !== undefined) {
+				setClauses.push('wallet_spent = ?');
+				bindValues.push(roundGatewayMoney(wallet_spent ?? 0));
+			}
 			if (metadata !== undefined) {
 				setClauses.push('metadata = ?');
 				bindValues.push(metadata);
@@ -249,6 +289,14 @@ export function createD1UsersRepository(db: D1DatabaseClient): UsersRepository {
 			const result = await raw
 				.prepare("UPDATE users SET status = ?, updated_at = datetime('now') WHERE id = ?")
 				.bind(status, id)
+				.run();
+			return result.meta.changes > 0;
+		},
+
+		async updateUserRateLimit(id: string, rateLimitJson: string | null): Promise<boolean> {
+			const result = await raw
+				.prepare('UPDATE users SET rate_limit = ?, updated_at = datetime("now") WHERE id = ?')
+				.bind(rateLimitJson, id)
 				.run();
 			return result.meta.changes > 0;
 		},
@@ -280,11 +328,11 @@ export function createD1UsersRepository(db: D1DatabaseClient): UsersRepository {
 		async setUserExternalIdentityById(
 			id: string,
 			externalSystem: string | null,
-			externalUserId: string | null
+			externalUserId: string | null,
 		): Promise<boolean> {
 			const result = await raw
 				.prepare(
-					"UPDATE users SET external_system = ?, external_user_id = ?, updated_at = datetime('now') WHERE id = ?"
+					"UPDATE users SET external_system = ?, external_user_id = ?, updated_at = datetime('now') WHERE id = ?",
 				)
 				.bind(externalSystem, externalUserId, id)
 				.run();
@@ -292,8 +340,7 @@ export function createD1UsersRepository(db: D1DatabaseClient): UsersRepository {
 		},
 
 		async deleteUserHard(id: string): Promise<boolean> {
-			const result = await raw.prepare(`DELETE FROM users WHERE id = ? AND ${hardDeleteEligibility}`)
-				.bind(id).run();
+			const result = await raw.prepare(`DELETE FROM users WHERE id = ? AND ${hardDeleteEligibility}`).bind(id).run();
 			return (result.meta.changes ?? 0) > 0;
 		},
 
@@ -305,18 +352,33 @@ export function createD1UsersRepository(db: D1DatabaseClient): UsersRepository {
 			// D1 batch is one transaction. The conditional insert and DELETE use the
 			// same eligibility predicate, so a guarded/missing user leaves no audit.
 			// A DELETE constraint error rolls both statements back.
-			const auditStatement = raw.prepare(`INSERT INTO user_audit_logs (
+			const auditStatement = raw
+				.prepare(
+					`INSERT INTO user_audit_logs (
 				id, user_id, api_key_id, event_type, actor_type, request_log_id,
 				change_payload, before_user_snapshot, after_user_snapshot, changed_fields,
 				correlation_id, source, actor_id, reason_code, reason_text
 			) SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? FROM users
-			WHERE users.id = ? AND ${hardDeleteEligibility}`).bind(
-				p.id, p.userId, p.apiKeyId ?? null, p.eventType, p.actorType,
-				p.requestLogId ?? null, p.changePayload ?? null,
-				p.beforeUserSnapshot ?? null, p.afterUserSnapshot ?? null,
-				p.changedFields ?? null, p.correlationId ?? null, p.source ?? null,
-				p.actorId ?? null, p.reasonCode ?? null, p.reasonText ?? null, id,
-			);
+			WHERE users.id = ? AND ${hardDeleteEligibility}`,
+				)
+				.bind(
+					p.id,
+					p.userId,
+					p.apiKeyId ?? null,
+					p.eventType,
+					p.actorType,
+					p.requestLogId ?? null,
+					p.changePayload ?? null,
+					p.beforeUserSnapshot ?? null,
+					p.afterUserSnapshot ?? null,
+					p.changedFields ?? null,
+					p.correlationId ?? null,
+					p.source ?? null,
+					p.actorId ?? null,
+					p.reasonCode ?? null,
+					p.reasonText ?? null,
+					id,
+				);
 			const deleteStatement = raw.prepare(`DELETE FROM users WHERE id = ? AND ${hardDeleteEligibility}`).bind(id);
 			const [auditResult, deleteResult] = await raw.batch([auditStatement, deleteStatement]);
 			const audited = auditResult?.meta.changes ?? 0;
@@ -331,7 +393,7 @@ export function createD1UsersRepository(db: D1DatabaseClient): UsersRepository {
 					`SELECT
 				COUNT(*) as total,
 				SUM(CASE WHEN status = 'active' THEN 1 ELSE 0 END) as active
-			 FROM users`
+			 FROM users`,
 				)
 				.first<{ total: number; active: number }>();
 			return {

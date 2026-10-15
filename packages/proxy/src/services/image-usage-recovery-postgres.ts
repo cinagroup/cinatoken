@@ -183,7 +183,7 @@ function projectUsage(params: RecordImageUsageParams, repos: StorageContext['rep
 		cached_text_tokens: usage.cached_text_tokens,
 		image_input_tokens: usage.image_input_tokens,
 		cached_image_input_tokens: usage.cached_image_input_tokens,
-		image_output_tokens: usage.image_output_tokens,
+		text_output_tokens: usage.text_output_tokens ?? 0, image_output_tokens: usage.image_output_tokens,
 		total_tokens: usage.total_tokens,
 	} : null;
 	return { ...structuredClone({

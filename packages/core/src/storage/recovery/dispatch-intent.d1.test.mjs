@@ -31,8 +31,8 @@ const claimUpdate = sql => sql.startsWith('UPDATE request_dispatch_intents') && 
 test('proposal expands all existing migrations without joining the automatic migration set', t => {
   const db = setup(t);
   assert.equal(db.sqlite.prepare('PRAGMA foreign_keys').get().foreign_keys, 1);
-  assert.equal(db.migrationFiles.length, 77);
-  assert.equal(db.migrationFiles.at(-1), '0077_withdrawal_balance_update_guards.sql');
+  assert.equal(db.migrationFiles.length, 81);
+  assert.equal(db.migrationFiles.at(-1), '0081_mcp_servers.sql');
   assert.ok(!db.migrationFiles.some(name => name.includes('dispatch-intent')));
   assert.deepEqual(db.sqlite.prepare('PRAGMA foreign_key_check').all(), []);
   assert.equal(db.sqlite.prepare('PRAGMA quick_check').get().quick_check, 'ok');

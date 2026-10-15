@@ -1,25 +1,21 @@
-"use client";
+'use client';
 
 import {
 	DEFAULT_STICKY_IDLE_TTL_SECONDS,
 	MAX_STICKY_IDLE_TTL_SECONDS,
 	MIN_STICKY_IDLE_TTL_SECONDS,
-} from "@octafuse/core/db/route-pool-sticky-types";
-import { useTranslations } from "next-intl";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import {
-	clearStickyBinding,
-	fetchStickyBindingsSummary,
-	lookupStickyBinding,
-	resetStickyBindings,
-} from "../route-api";
-import { useStickyRefreshControls } from "../sticky-summary-store";
+} from '@octafuse/core/db/route-pool-sticky-types';
+import { useTranslations } from 'next-intl';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useFeedback } from '@/components/feedback';
+import { useRouteApi } from '../route-api';
+import { useStickyRefreshControls } from '../sticky-summary-store';
 import type {
 	ProviderStickyDialogState,
 	ProviderStickyFormState,
 	StickyBindingLookup,
 	StickyBindingsSummary,
-} from "../types";
+} from '../types';
 
 type Props = {
 	dialog: ProviderStickyDialogState;
@@ -33,13 +29,13 @@ type Props = {
 };
 
 function looksLikeEmail(value: string): boolean {
-	return value.includes("@");
+	return value.includes('@');
 }
 
 export function ProviderStickyDialog(props: Props) {
 	const [action, setAction] = useState<symbol | null>(null);
 	const startAction = useCallback(() => {
-		const token = Symbol("sticky-write");
+		const token = Symbol('sticky-write');
 		setAction(token);
 		return () => setAction((current) => (current === token ? null : current));
 	}, []);
@@ -51,33 +47,17 @@ export function ProviderStickyDialog(props: Props) {
 		dialog.group,
 		dialog.requestOperation,
 	]);
-	return (
-		<ProviderStickyDialogScope
-			key={scopeKey}
-			{...props}
-			actionBusy={action !== null}
-			startAction={startAction}
-		/>
-	);
+	return <ProviderStickyDialogScope key={scopeKey} {...props} actionBusy={action !== null} startAction={startAction} />;
 }
 
-function ProviderStickyDialogScope(
-	props: Props & { actionBusy: boolean; startAction: () => () => void }
-) {
-	const {
-		dialog,
-		form,
-		error,
-		saving,
-		onClose,
-		onFormChange,
-		onSave,
-		onBindingsChanged,
-		actionBusy,
-		startAction,
-	} = props;
-	const t = useTranslations("routes.providerSticky");
-	const tCommon = useTranslations("common");
+function ProviderStickyDialogScope(props: Props & { actionBusy: boolean; startAction: () => () => void }) {
+	const { clearStickyBinding, fetchStickyBindingsSummary, lookupStickyBinding, resetStickyBindings } = useRouteApi();
+
+	const { dialog, form, error, saving, onClose, onFormChange, onSave, onBindingsChanged, actionBusy, startAction } =
+		props;
+	const t = useTranslations('routes.providerSticky');
+	const tCommon = useTranslations('common');
+	const { confirm } = useFeedback();
 	const { invalidate } = useStickyRefreshControls();
 	const canSave = Boolean(dialog.poolId);
 	const ttlOutOfRange =
@@ -87,26 +67,20 @@ function ProviderStickyDialogScope(
 
 	const [summary, setSummary] = useState<StickyBindingsSummary | null>(null);
 	const [summaryLoading, setSummaryLoading] = useState(Boolean(dialog.poolId));
-	const [summaryError, setSummaryError] = useState("");
-	const [userQuery, setUserQuery] = useState("");
+	const [summaryError, setSummaryError] = useState('');
+	const [userQuery, setUserQuery] = useState('');
 	const [lookupLoading, setLookupLoading] = useState(false);
-	const [lookupError, setLookupError] = useState("");
+	const [lookupError, setLookupError] = useState('');
 	const [lookup, setLookup] = useState<StickyBindingLookup | null>(null);
-	const [actionMessage, setActionMessage] = useState("");
+	const [actionMessage, setActionMessage] = useState('');
 	/** When sticky is off but leftovers exist, ops panels stay collapsed until expanded. */
 	const [opsExpanded, setOpsExpanded] = useState(false);
 
-	const residualCount = summary
-		? summary.total_active + summary.stale_count
-		: 0;
+	const residualCount = summary ? summary.total_active + summary.stale_count : 0;
 	const hasResidual = residualCount > 0;
-	const showFullOps =
-		Boolean(dialog.poolId) && (form.enabled || (hasResidual && opsExpanded));
+	const showFullOps = Boolean(dialog.poolId) && (form.enabled || (hasResidual && opsExpanded));
 	// Quiet fetch when off+empty; only surface a banner once leftovers (or an error) are known.
-	const showResidualBanner =
-		Boolean(dialog.poolId) &&
-		!form.enabled &&
-		(hasResidual || Boolean(summaryError));
+	const showResidualBanner = Boolean(dialog.poolId) && !form.enabled && (hasResidual || Boolean(summaryError));
 
 	const targetMeta = useMemo(() => {
 		const map = new Map(dialog.targets.map((row) => [row.id, row]));
@@ -115,7 +89,7 @@ function ProviderStickyDialogScope(
 
 	const totalWeight = useMemo(
 		() => dialog.targets.reduce((sum, row) => sum + Math.max(1, row.weight), 0),
-		[dialog.targets]
+		[dialog.targets],
 	);
 
 	const lifetime = useRef<AbortController | null>(null);
@@ -128,18 +102,13 @@ function ProviderStickyDialogScope(
 	const refreshSummary = useCallback(async () => {
 		const scope = lifetime.current;
 		if (!dialog.poolId || !scope || scope.signal.aborted) return;
-		const request = Symbol("summary");
+		const request = Symbol('summary');
 		summaryRequest.current = request;
 		setSummaryLoading(true);
-		setSummaryError("");
+		setSummaryError('');
 		try {
 			const result = await fetchStickyBindingsSummary(dialog.poolId);
-			if (
-				scope.signal.aborted ||
-				lifetime.current !== scope ||
-				summaryRequest.current !== request
-			)
-				return;
+			if (scope.signal.aborted || lifetime.current !== scope || summaryRequest.current !== request) return;
 			if (!result.success) {
 				setSummaryError(result.message);
 				setSummary(null);
@@ -147,18 +116,10 @@ function ProviderStickyDialogScope(
 			}
 			setSummary(result.data);
 		} catch (error) {
-			if (
-				!scope.signal.aborted &&
-				lifetime.current === scope &&
-				summaryRequest.current === request
-			)
+			if (!scope.signal.aborted && lifetime.current === scope && summaryRequest.current === request)
 				setSummaryError(error instanceof Error ? error.message : String(error));
 		} finally {
-			if (
-				!scope.signal.aborted &&
-				lifetime.current === scope &&
-				summaryRequest.current === request
-			)
+			if (!scope.signal.aborted && lifetime.current === scope && summaryRequest.current === request)
 				setSummaryLoading(false);
 		}
 	}, [dialog.poolId]);
@@ -166,17 +127,12 @@ function ProviderStickyDialogScope(
 	useEffect(() => {
 		const scope = new AbortController();
 		lifetime.current = scope;
-		const request = Symbol("summary");
+		const request = Symbol('summary');
 		summaryRequest.current = request;
 		if (dialog.poolId) {
 			void fetchStickyBindingsSummary(dialog.poolId)
 				.then((result) => {
-					if (
-						scope.signal.aborted ||
-						lifetime.current !== scope ||
-						summaryRequest.current !== request
-					)
-						return;
+					if (scope.signal.aborted || lifetime.current !== scope || summaryRequest.current !== request) return;
 					if (!result.success) {
 						setSummaryError(result.message);
 						setSummary(null);
@@ -185,21 +141,11 @@ function ProviderStickyDialogScope(
 					setSummary(result.data);
 				})
 				.catch((error) => {
-					if (
-						!scope.signal.aborted &&
-						lifetime.current === scope &&
-						summaryRequest.current === request
-					)
-						setSummaryError(
-							error instanceof Error ? error.message : String(error)
-						);
+					if (!scope.signal.aborted && lifetime.current === scope && summaryRequest.current === request)
+						setSummaryError(error instanceof Error ? error.message : String(error));
 				})
 				.finally(() => {
-					if (
-						!scope.signal.aborted &&
-						lifetime.current === scope &&
-						summaryRequest.current === request
-					)
+					if (!scope.signal.aborted && lifetime.current === scope && summaryRequest.current === request)
 						setSummaryLoading(false);
 				});
 		}
@@ -222,15 +168,15 @@ function ProviderStickyDialogScope(
 		if (!dialog.poolId) return;
 		const q = userQuery.trim();
 		if (!q) {
-			setLookupError(translations.current("lookupRequired"));
+			setLookupError(translations.current('lookupRequired'));
 			return;
 		}
-		const request = Symbol("lookup");
+		const request = Symbol('lookup');
 		lookupRequest.current = request;
 		setLookupLoading(true);
-		setLookupError("");
+		setLookupError('');
 		setLookup(null);
-		setActionMessage("");
+		setActionMessage('');
 		try {
 			const result = await lookupStickyBinding({
 				poolId: dialog.poolId,
@@ -240,30 +186,17 @@ function ProviderStickyDialogScope(
 				requestOperation: dialog.requestOperation,
 				...(looksLikeEmail(q) ? { email: q } : { userId: q }),
 			});
-			if (
-				scope.signal.aborted ||
-				lifetime.current !== scope ||
-				lookupRequest.current !== request
-			)
-				return;
+			if (scope.signal.aborted || lifetime.current !== scope || lookupRequest.current !== request) return;
 			if (!result.success) {
 				setLookupError(result.message);
 				return;
 			}
 			setLookup(result.data);
 		} catch (error) {
-			if (
-				!scope.signal.aborted &&
-				lifetime.current === scope &&
-				lookupRequest.current === request
-			)
+			if (!scope.signal.aborted && lifetime.current === scope && lookupRequest.current === request)
 				setLookupError(error instanceof Error ? error.message : String(error));
 		} finally {
-			if (
-				!scope.signal.aborted &&
-				lifetime.current === scope &&
-				lookupRequest.current === request
-			)
+			if (!scope.signal.aborted && lifetime.current === scope && lookupRequest.current === request)
 				setLookupLoading(false);
 		}
 	};
@@ -272,35 +205,30 @@ function ProviderStickyDialogScope(
 		const scope = lifetime.current;
 		if (!scope || scope.signal.aborted || actionBusy) return;
 		if (!dialog.poolId || !lookup?.affinity_hash) return;
-		if (!window.confirm(t("clearConfirm"))) return;
+		const ok = await confirm({
+			title: t('clearBinding'),
+			message: t('clearConfirm'),
+			danger: true,
+		});
+		if (!ok) return;
 		const finish = startAction();
-		setActionMessage("");
+		setActionMessage('');
 		try {
-			const result = await clearStickyBinding(
-				dialog.poolId,
-				lookup.affinity_hash
-			);
+			const result = await clearStickyBinding(dialog.poolId, lookup.affinity_hash);
 			if (scope.signal.aborted || lifetime.current !== scope) return;
 			if (!result.success) {
 				setActionMessage(result.message);
 				return;
 			}
-			setActionMessage(
-				result.cleared
-					? translations.current("clearDone")
-					: translations.current("clearMiss")
-			);
+			setActionMessage(result.cleared ? translations.current('clearDone') : translations.current('clearMiss'));
 			setLookup((prev) => (prev ? { ...prev, binding: null } : prev));
 			await refreshSummary();
 			if (scope.signal.aborted || lifetime.current !== scope) return;
 			await invalidate(dialog.poolId);
-			if (!scope.signal.aborted && lifetime.current === scope)
-				onBindingsChanged?.();
+			if (!scope.signal.aborted && lifetime.current === scope) onBindingsChanged?.();
 		} catch (error) {
 			if (!scope.signal.aborted && lifetime.current === scope)
-				setActionMessage(
-					error instanceof Error ? error.message : String(error)
-				);
+				setActionMessage(error instanceof Error ? error.message : String(error));
 		} finally {
 			finish();
 		}
@@ -310,9 +238,14 @@ function ProviderStickyDialogScope(
 		const scope = lifetime.current;
 		if (!scope || scope.signal.aborted || actionBusy) return;
 		if (!dialog.poolId) return;
-		if (!window.confirm(t("resetConfirm"))) return;
+		const ok = await confirm({
+			title: t('resetTitle'),
+			message: t('resetConfirm'),
+			danger: true,
+		});
+		if (!ok) return;
 		const finish = startAction();
-		setActionMessage("");
+		setActionMessage('');
 		try {
 			const result = await resetStickyBindings(dialog.poolId);
 			if (scope.signal.aborted || lifetime.current !== scope) return;
@@ -320,29 +253,22 @@ function ProviderStickyDialogScope(
 				setActionMessage(result.message);
 				return;
 			}
-			setActionMessage(
-				translations.current("resetDone", { epoch: result.sticky_epoch })
-			);
+			setActionMessage(translations.current('resetDone', { epoch: result.sticky_epoch }));
 			setLookup((prev) => (prev ? { ...prev, binding: null } : prev));
 			await refreshSummary();
 			if (scope.signal.aborted || lifetime.current !== scope) return;
 			await invalidate(dialog.poolId);
-			if (!scope.signal.aborted && lifetime.current === scope)
-				onBindingsChanged?.();
+			if (!scope.signal.aborted && lifetime.current === scope) onBindingsChanged?.();
 		} catch (error) {
 			if (!scope.signal.aborted && lifetime.current === scope)
-				setActionMessage(
-					error instanceof Error ? error.message : String(error)
-				);
+				setActionMessage(error instanceof Error ? error.message : String(error));
 		} finally {
 			finish();
 		}
 	};
 
 	const distributionRows = useMemo(() => {
-		const counts = new Map(
-			(summary?.targets ?? []).map((row) => [row.route_target_id, row])
-		);
+		const counts = new Map((summary?.targets ?? []).map((row) => [row.route_target_id, row]));
 		const ids = new Set<string>([
 			...dialog.targets.map((row) => row.id),
 			...(summary?.targets ?? []).map((row) => row.route_target_id),
@@ -352,8 +278,7 @@ function ProviderStickyDialogScope(
 				const meta = targetMeta.get(id);
 				const countRow = counts.get(id);
 				const weight = meta ? Math.max(1, meta.weight) : 0;
-				const weightShare =
-					totalWeight > 0 && weight > 0 ? weight / totalWeight : 0;
+				const weightShare = totalWeight > 0 && weight > 0 ? weight / totalWeight : 0;
 				return {
 					id,
 					providerName: meta?.providerName ?? id,
@@ -364,23 +289,18 @@ function ProviderStickyDialogScope(
 					bindingShare: countRow?.share ?? 0,
 				};
 			})
-			.sort(
-				(a, b) =>
-					b.activeCount - a.activeCount || (b.priority ?? 0) - (a.priority ?? 0)
-			);
+			.sort((a, b) => b.activeCount - a.activeCount || (b.priority ?? 0) - (a.priority ?? 0));
 	}, [dialog.targets, summary, targetMeta, totalWeight]);
 
 	const lookupTargetLabel = lookup?.binding
-		? targetMeta.get(lookup.binding.route_target_id)?.providerName ??
-		  lookup.binding.route_target_id
+		? (targetMeta.get(lookup.binding.route_target_id)?.providerName ?? lookup.binding.route_target_id)
 		: null;
 
 	return (
 		<div
 			className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
 			onMouseDown={(event) => {
-				if (event.target === event.currentTarget && !saving && !actionBusy)
-					onClose();
+				if (event.target === event.currentTarget && !saving && !actionBusy) onClose();
 			}}
 		>
 			<div
@@ -391,15 +311,12 @@ function ProviderStickyDialogScope(
 			>
 				<div className="flex shrink-0 items-center justify-between border-b border-gray-200 px-6 py-4">
 					<div>
-						<h2
-							id="provider-sticky-dialog-title"
-							className="text-base font-semibold text-gray-900"
-						>
-							{t("title")}
+						<h2 id="provider-sticky-dialog-title" className="text-base font-semibold text-gray-900">
+							{t('title')}
 						</h2>
 						<p className="mt-1 text-xs text-gray-500">
-							{dialog.modelTitle} · {dialog.protocolLabel} ·{" "}
-							<span className="font-mono">{dialog.requestOperation}</span> ·{" "}
+							{dialog.modelTitle} · {dialog.protocolLabel} ·{' '}
+							<span className="font-mono">{dialog.requestOperation}</span> ·{' '}
 							<span className="font-mono">{dialog.group}</span>
 						</p>
 					</div>
@@ -408,7 +325,7 @@ function ProviderStickyDialogScope(
 						onClick={onClose}
 						disabled={saving || actionBusy}
 						className="rounded-md p-1.5 text-gray-400 transition hover:bg-gray-100 hover:text-gray-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
-						aria-label={tCommon("close")}
+						aria-label={tCommon('close')}
 					>
 						<span className="block text-xl leading-none" aria-hidden>
 							×
@@ -418,14 +335,12 @@ function ProviderStickyDialogScope(
 
 				<div className="min-h-0 flex-1 space-y-5 overflow-y-auto px-6 py-5">
 					{error ? (
-						<div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-700">
-							{error}
-						</div>
+						<div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-700">{error}</div>
 					) : null}
 
 					{!dialog.poolId ? (
 						<div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2.5 text-sm text-amber-800">
-							{t("requiresPool")}
+							{t('requiresPool')}
 						</div>
 					) : null}
 
@@ -434,27 +349,18 @@ function ProviderStickyDialogScope(
 							type="checkbox"
 							checked={form.enabled}
 							disabled={saving || !canSave}
-							onChange={(event) =>
-								onFormChange({ ...form, enabled: event.target.checked })
-							}
+							onChange={(event) => onFormChange({ ...form, enabled: event.target.checked })}
 							className="mt-0.5 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 disabled:cursor-not-allowed"
 						/>
 						<span className="min-w-0">
-							<span className="block text-sm font-medium text-gray-900">
-								{t("enable")}
-							</span>
-							<span className="mt-0.5 block text-xs leading-relaxed text-gray-500">
-								{t("scopeHint")}
-							</span>
+							<span className="block text-sm font-medium text-gray-900">{t('enable')}</span>
+							<span className="mt-0.5 block text-xs leading-relaxed text-gray-500">{t('scopeHint')}</span>
 						</span>
 					</label>
 
 					<div>
-						<label
-							htmlFor="provider-sticky-idle-ttl"
-							className="mb-1 block text-sm font-medium text-gray-700"
-						>
-							{t("idleTtl")}
+						<label htmlFor="provider-sticky-idle-ttl" className="mb-1 block text-sm font-medium text-gray-700">
+							{t('idleTtl')}
 						</label>
 						<input
 							id="provider-sticky-idle-ttl"
@@ -468,15 +374,13 @@ function ProviderStickyDialogScope(
 								const next = Number(event.target.value);
 								onFormChange({
 									...form,
-									idleTtlSeconds: Number.isFinite(next)
-										? Math.round(next)
-										: form.idleTtlSeconds,
+									idleTtlSeconds: Number.isFinite(next) ? Math.round(next) : form.idleTtlSeconds,
 								});
 							}}
 							className="w-full rounded-md border border-gray-300 px-3 py-2 font-mono text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30 disabled:cursor-not-allowed disabled:bg-gray-50"
 						/>
 						<p className="mt-1.5 text-[11px] leading-relaxed text-gray-500">
-							{t("idleTtlHint", {
+							{t('idleTtlHint', {
 								min: MIN_STICKY_IDLE_TTL_SECONDS,
 								max: MAX_STICKY_IDLE_TTL_SECONDS,
 								default: DEFAULT_STICKY_IDLE_TTL_SECONDS,
@@ -485,18 +389,10 @@ function ProviderStickyDialogScope(
 					</div>
 
 					<div className="rounded-lg border border-emerald-200 bg-emerald-50/40 p-3.5">
-						<h3 className="text-sm font-semibold text-gray-900">
-							{t("effectTitle")}
-						</h3>
-						<p className="mt-2 text-xs leading-relaxed text-gray-700">
-							{t("orderPreview")}
-						</p>
-						<p className="mt-2 text-[11px] leading-relaxed text-amber-800">
-							{t("tradeoff")}
-						</p>
-						<p className="mt-2 text-[11px] leading-relaxed text-gray-500">
-							{t("poolSharedHint")}
-						</p>
+						<h3 className="text-sm font-semibold text-gray-900">{t('effectTitle')}</h3>
+						<p className="mt-2 text-xs leading-relaxed text-gray-700">{t('orderPreview')}</p>
+						<p className="mt-2 text-[11px] leading-relaxed text-amber-800">{t('tradeoff')}</p>
+						<p className="mt-2 text-[11px] leading-relaxed text-gray-500">{t('poolSharedHint')}</p>
 					</div>
 
 					{showResidualBanner ? (
@@ -505,11 +401,9 @@ function ProviderStickyDialogScope(
 								<p className="text-xs text-red-600">{summaryError}</p>
 							) : (
 								<>
-									<p className="text-sm font-medium text-amber-900">
-										{t("residualTitle")}
-									</p>
+									<p className="text-sm font-medium text-amber-900">{t('residualTitle')}</p>
 									<p className="mt-1 text-[11px] leading-relaxed text-amber-800">
-										{t("residualHint", {
+										{t('residualHint', {
 											active: summary?.total_active ?? 0,
 											stale: summary?.stale_count ?? 0,
 										})}
@@ -521,7 +415,7 @@ function ProviderStickyDialogScope(
 											disabled={actionBusy || saving}
 											className="rounded-md border border-amber-300 bg-white px-3 py-1.5 text-xs font-medium text-amber-900 hover:bg-amber-100 disabled:opacity-50"
 										>
-											{t("resetButton")}
+											{t('resetButton')}
 										</button>
 										<button
 											type="button"
@@ -529,7 +423,7 @@ function ProviderStickyDialogScope(
 											disabled={actionBusy}
 											className="rounded-md border border-amber-200 bg-transparent px-3 py-1.5 text-xs font-medium text-amber-900 hover:bg-amber-100/70 disabled:opacity-50"
 										>
-											{opsExpanded ? t("hideOps") : t("showOps")}
+											{opsExpanded ? t('hideOps') : t('showOps')}
 										</button>
 									</div>
 								</>
@@ -541,27 +435,21 @@ function ProviderStickyDialogScope(
 						<>
 							<div className="rounded-lg border border-gray-200 p-3.5">
 								<div className="flex items-center justify-between gap-2">
-									<h3 className="text-sm font-semibold text-gray-900">
-										{t("distributionTitle")}
-									</h3>
+									<h3 className="text-sm font-semibold text-gray-900">{t('distributionTitle')}</h3>
 									<button
 										type="button"
 										onClick={() => void refreshSummary()}
 										disabled={summaryLoading || actionBusy}
 										className="rounded-md px-2 py-1 text-[11px] font-medium text-blue-600 hover:bg-blue-50 disabled:opacity-50"
 									>
-										{summaryLoading ? tCommon("loadingEllipsis") : t("refresh")}
+										{summaryLoading ? tCommon('loadingEllipsis') : t('refresh')}
 									</button>
 								</div>
-								<p className="mt-1 text-[11px] leading-relaxed text-gray-500">
-									{t("distributionHint")}
-								</p>
-								{summaryError ? (
-									<p className="mt-2 text-xs text-red-600">{summaryError}</p>
-								) : null}
+								<p className="mt-1 text-[11px] leading-relaxed text-gray-500">{t('distributionHint')}</p>
+								{summaryError ? <p className="mt-2 text-xs text-red-600">{summaryError}</p> : null}
 								{summary ? (
 									<p className="mt-2 text-xs text-gray-600">
-										{t("distributionTotals", {
+										{t('distributionTotals', {
 											active: summary.total_active,
 											stale: summary.stale_count,
 										})}
@@ -569,64 +457,51 @@ function ProviderStickyDialogScope(
 								) : null}
 								<div className="mt-3 space-y-2">
 									{distributionRows.length === 0 ? (
-										<p className="text-xs text-gray-500">
-											{t("distributionEmpty")}
-										</p>
+										<p className="text-xs text-gray-500">{t('distributionEmpty')}</p>
 									) : (
 										distributionRows.map((row) => (
-											<div
-												key={row.id}
-												className="rounded-md border border-gray-100 bg-gray-50/70 px-3 py-2"
-											>
+											<div key={row.id} className="rounded-md border border-gray-100 bg-gray-50/70 px-3 py-2">
 												<div className="flex items-center justify-between gap-2 text-xs">
 													<span className="min-w-0 truncate font-medium text-gray-800">
 														{row.providerName}
 														{row.priority != null ? (
-															<span className="ml-1 font-mono text-[10px] text-gray-500">
-																P{row.priority}
-															</span>
+															<span className="ml-1 font-mono text-[10px] text-gray-500">P{row.priority}</span>
 														) : null}
 													</span>
-													<span className="shrink-0 font-mono text-gray-700">
-														{row.activeCount}
-													</span>
+													<span className="shrink-0 font-mono text-gray-700">{row.activeCount}</span>
 												</div>
 												<div className="mt-1.5 grid grid-cols-2 gap-2">
 													<div>
 														<div className="mb-0.5 flex justify-between text-[10px] text-gray-500">
-															<span>{t("bindingShare")}</span>
+															<span>{t('bindingShare')}</span>
 															<span>{Math.round(row.bindingShare * 100)}%</span>
 														</div>
 														<div className="h-1.5 overflow-hidden rounded bg-gray-200">
 															<div
 																className="h-full rounded bg-emerald-500"
 																style={{
-																	width: `${Math.round(
-																		row.bindingShare * 100
-																	)}%`,
+																	width: `${Math.round(row.bindingShare * 100)}%`,
 																}}
 															/>
 														</div>
 													</div>
 													<div>
 														<div className="mb-0.5 flex justify-between gap-1 text-[10px] text-gray-500">
-															<span>{t("weightShare")}</span>
+															<span>{t('weightShare')}</span>
 															<span className="shrink-0 font-mono">
 																{row.weight > 0
-																	? t("weightShareValue", {
+																	? t('weightShareValue', {
 																			weight: row.weight,
 																			pct: Math.round(row.weightShare * 100),
-																	  })
-																	: "—"}
+																		})
+																	: '—'}
 															</span>
 														</div>
 														<div className="h-1.5 overflow-hidden rounded bg-gray-200">
 															<div
 																className="h-full rounded bg-slate-400"
 																style={{
-																	width: `${Math.round(
-																		row.weightShare * 100
-																	)}%`,
+																	width: `${Math.round(row.weightShare * 100)}%`,
 																}}
 															/>
 														</div>
@@ -639,22 +514,18 @@ function ProviderStickyDialogScope(
 							</div>
 
 							<div className="rounded-lg border border-gray-200 p-3.5">
-								<h3 className="text-sm font-semibold text-gray-900">
-									{t("lookupTitle")}
-								</h3>
-								<p className="mt-1 text-[11px] leading-relaxed text-gray-500">
-									{t("lookupHint")}
-								</p>
+								<h3 className="text-sm font-semibold text-gray-900">{t('lookupTitle')}</h3>
+								<p className="mt-1 text-[11px] leading-relaxed text-gray-500">{t('lookupHint')}</p>
 								<div className="mt-3 flex gap-2">
 									<input
 										type="text"
 										value={userQuery}
 										onChange={(event) => setUserQuery(event.target.value)}
-										placeholder={t("lookupPlaceholder")}
+										placeholder={t('lookupPlaceholder')}
 										disabled={lookupLoading || actionBusy}
 										className="min-w-0 flex-1 rounded-md border border-gray-300 px-3 py-2 font-mono text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30 disabled:bg-gray-50"
 										onKeyDown={(event) => {
-											if (event.key === "Enter") {
+											if (event.key === 'Enter') {
 												event.preventDefault();
 												void handleLookup();
 											}
@@ -666,37 +537,28 @@ function ProviderStickyDialogScope(
 										disabled={lookupLoading || actionBusy}
 										className="rounded-md bg-slate-800 px-3 py-2 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-50"
 									>
-										{lookupLoading ? tCommon("loadingEllipsis") : t("lookup")}
+										{lookupLoading ? tCommon('loadingEllipsis') : t('lookup')}
 									</button>
 								</div>
-								{lookupError ? (
-									<p className="mt-2 text-xs text-red-600">{lookupError}</p>
-								) : null}
+								{lookupError ? <p className="mt-2 text-xs text-red-600">{lookupError}</p> : null}
 								{lookup ? (
 									<div className="mt-3 rounded-md border border-slate-200 bg-slate-50 px-3 py-2.5 text-xs text-slate-700">
 										<p>
-											<span className="font-medium">{t("lookupUser")}</span>{" "}
+											<span className="font-medium">{t('lookupUser')}</span>{' '}
 											<span className="font-mono">{lookup.user_id}</span>
 										</p>
 										{lookup.binding ? (
 											<>
 												<p className="mt-1">
-													<span className="font-medium">
-														{t("lookupTarget")}
-													</span>{" "}
-													{lookupTargetLabel}
+													<span className="font-medium">{t('lookupTarget')}</span> {lookupTargetLabel}
 												</p>
 												<p className="mt-1">
-													{t("lookupTtl", {
+													{t('lookupTtl', {
 														seconds: lookup.binding.remaining_seconds,
 													})}
-													{" · "}
-													{lookup.binding.epoch_valid
-														? t("lookupEpochValid")
-														: t("lookupEpochInvalid")}
-													{lookup.binding.expired
-														? ` · ${t("lookupExpired")}`
-														: ""}
+													{' · '}
+													{lookup.binding.epoch_valid ? t('lookupEpochValid') : t('lookupEpochInvalid')}
+													{lookup.binding.expired ? ` · ${t('lookupExpired')}` : ''}
 												</p>
 												<button
 													type="button"
@@ -704,11 +566,11 @@ function ProviderStickyDialogScope(
 													disabled={actionBusy}
 													className="mt-2 rounded-md border border-red-200 bg-white px-2.5 py-1.5 text-[11px] font-medium text-red-700 hover:bg-red-50 disabled:opacity-50"
 												>
-													{t("clearBinding")}
+													{t('clearBinding')}
 												</button>
 											</>
 										) : (
-											<p className="mt-1 text-slate-500">{t("lookupNone")}</p>
+											<p className="mt-1 text-slate-500">{t('lookupNone')}</p>
 										)}
 									</div>
 								) : null}
@@ -716,28 +578,22 @@ function ProviderStickyDialogScope(
 
 							{form.enabled ? (
 								<div className="rounded-lg border border-amber-200 bg-amber-50/50 p-3.5">
-									<h3 className="text-sm font-semibold text-amber-900">
-										{t("resetTitle")}
-									</h3>
-									<p className="mt-1 text-[11px] leading-relaxed text-amber-800">
-										{t("resetHint")}
-									</p>
+									<h3 className="text-sm font-semibold text-amber-900">{t('resetTitle')}</h3>
+									<p className="mt-1 text-[11px] leading-relaxed text-amber-800">{t('resetHint')}</p>
 									<button
 										type="button"
 										onClick={() => void handleResetPool()}
 										disabled={actionBusy || saving}
 										className="mt-3 rounded-md border border-amber-300 bg-white px-3 py-1.5 text-xs font-medium text-amber-900 hover:bg-amber-100 disabled:opacity-50"
 									>
-										{t("resetButton")}
+										{t('resetButton')}
 									</button>
 								</div>
 							) : null}
 						</>
 					) : null}
 
-					{actionMessage ? (
-						<p className="text-xs text-emerald-700">{actionMessage}</p>
-					) : null}
+					{actionMessage ? <p className="text-xs text-emerald-700">{actionMessage}</p> : null}
 				</div>
 
 				<div className="flex shrink-0 justify-end gap-2 border-t border-gray-200 bg-gray-50/60 px-6 py-3.5">
@@ -747,7 +603,7 @@ function ProviderStickyDialogScope(
 						disabled={saving || actionBusy}
 						className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
 					>
-						{tCommon("cancel")}
+						{tCommon('cancel')}
 					</button>
 					<button
 						type="button"
@@ -755,7 +611,7 @@ function ProviderStickyDialogScope(
 						disabled={saving || actionBusy || !canSave || ttlOutOfRange}
 						className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
 					>
-						{saving ? tCommon("savingDots") : tCommon("save")}
+						{saving ? tCommon('savingDots') : tCommon('save')}
 					</button>
 				</div>
 			</div>

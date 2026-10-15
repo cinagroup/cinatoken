@@ -1,4 +1,4 @@
-import { hashLookupKey } from "@octafuse/core";
+import { hashLookupKey, serializeApiKeyRateLimit, type ApiKeyRateLimit } from "@octafuse/core";
 import { AdminServiceError, badRequest, conflict } from "./errors";
 
 export const GATEWAY_KEY_METADATA_LIMIT = 64 * 1024;
@@ -192,6 +192,8 @@ export function safeGatewayKeyPreview(_value: string): string {
 }
 
 export async function gatewayKeyRevision(row: {
+	rate_limit?: ApiKeyRateLimit | null;
+	rate_limit_raw?: string | null;
 	id: string;
 	user_id: string;
 	workspace_id: string;
@@ -201,13 +203,14 @@ export async function gatewayKeyRevision(row: {
 }): Promise<string> {
 	return hashLookupKey(
 		JSON.stringify([
-			"gateway-key-profile-v1",
+			"gateway-key-profile-v2",
 			row.id,
 			row.user_id,
 			row.workspace_id,
 			row.name,
 			row.status,
 			row.metadata,
+			row.rate_limit_raw !== undefined ? row.rate_limit_raw : serializeApiKeyRateLimit(row.rate_limit),
 		])
 	);
 }

@@ -23,6 +23,8 @@ export type UserPlanMetadataMutation =
 	| { kind: 'replace'; value: string | null };
 
 export type UserPlanPatchWithAuditParams = {
+	wallet_granted?: number;
+	wallet_spent?: number;
 	budget_max?: number | null;
 	budget_period?: BudgetPeriod;
 	reset_budget?: boolean;
@@ -63,6 +65,8 @@ function assertValidInput(input: UserPlanPatchWithAuditParams): void {
 		throw new Error('Invalid user budget period');
 	}
 	const amounts: Array<[string, number | null | undefined]> = [
+		['wallet_granted', input.wallet_granted],
+		['wallet_spent', input.wallet_spent],
 		['budget_max', input.budget_max],
 		['budget_base', input.budget_base],
 		['budget_spent', input.budget_spent],
@@ -123,7 +127,8 @@ function metadataChangePayload(
 }
 
 function computeAfterRow(row: UserRow, input: UserPlanPatchWithAuditParams): UserRow {
-	const resetEpoch = input.budget_spent !== undefined || (input.reset_budget ?? true);
+	const hasBudgetChange = ['budget_max', 'budget_base', 'budget_spent', 'budget_period', 'budget_reset_at'].some(key => Object.hasOwn(input, key));
+	const resetEpoch = input.budget_spent !== undefined || (input.reset_budget ?? hasBudgetChange);
 	if (resetEpoch && row.budget_epoch >= Number.MAX_SAFE_INTEGER) {
 		throw new Error('User budget epoch exhausted');
 	}
@@ -144,6 +149,8 @@ function computeAfterRow(row: UserRow, input: UserPlanPatchWithAuditParams): Use
 	}
 	return {
 		...row,
+		wallet_granted: roundGatewayMoney(input.wallet_granted ?? row.wallet_granted ?? 0),
+		wallet_spent: roundGatewayMoney(input.wallet_spent ?? row.wallet_spent ?? 0),
 		budget_max:
 			input.budget_max === undefined
 				? row.budget_max
@@ -192,6 +199,10 @@ async function applyAttempt(
 
 	const applied = await dependencies.applyTransition(repos, {
 		userId,
+		expectedWalletGranted: row.wallet_granted ?? 0,
+		expectedWalletSpent: row.wallet_spent ?? 0,
+		walletGranted: after.wallet_granted,
+		walletSpent: after.wallet_spent,
 		expectedBudgetMax: row.budget_max,
 		expectedBudgetBase: row.budget_base,
 		expectedBudgetSpent: row.budget_spent,

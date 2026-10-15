@@ -86,7 +86,6 @@ export async function consumeResponseTextWithinLimit(
 		signal?.removeEventListener('abort', onAbort);
 		reader.releaseLock();
 	}
-
 }
 
 /** Buffer bounded text for existing small-body consumers; large JSON can use the sink directly. */
@@ -97,12 +96,22 @@ export async function responseTextWithinLimit(
 	inspectText?: (text: string) => void,
 	trackResourceCompletion?: (task: ResourceCompletion) => void,
 ): Promise<string> {
-	const parts: string[] = []; let page = '';
-	await consumeResponseTextWithinLimit(response, maxBytes, text => {
-		inspectText?.(text);
-		page += text;
-		if (page.length >= 64 * 1024) { parts.push(page); page = ''; }
-	}, signal, trackResourceCompletion);
+	const parts: string[] = [];
+	let page = '';
+	await consumeResponseTextWithinLimit(
+		response,
+		maxBytes,
+		(text) => {
+			inspectText?.(text);
+			page += text;
+			if (page.length >= 64 * 1024) {
+				parts.push(page);
+				page = '';
+			}
+		},
+		signal,
+		trackResourceCompletion,
+	);
 	if (page) parts.push(page);
 	return parts.join('');
 }

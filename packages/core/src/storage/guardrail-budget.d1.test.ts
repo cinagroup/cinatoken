@@ -248,6 +248,7 @@ function setupDatabase(): DatabaseSync {
 	database.exec(readFileSync(fileURLToPath(new URL(
 		'../../migrations-d1/0066_guardrail_budget_settlement_basis.sql', import.meta.url,
 	).href), 'utf8'));
+	database.exec('ALTER TABLE user_audit_logs ADD COLUMN dedup_key TEXT; ALTER TABLE users ADD COLUMN wallet_granted REAL NOT NULL DEFAULT 0; ALTER TABLE users ADD COLUMN wallet_spent REAL NOT NULL DEFAULT 0; ALTER TABLE api_key_request_logs ADD COLUMN charged_wallet_cost REAL NOT NULL DEFAULT 0; ALTER TABLE api_key_request_logs ADD COLUMN ingress_host TEXT;');
 	return database;
 }
 

@@ -37,21 +37,24 @@ import {
 	normalizeRouteAvailabilityAggregate,
 	routeAvailabilityAggregateParams,
 } from '../provider-attempt-availability';
+import { buildManagementAnalyticsQuery, mapManagementAnalyticsResult } from '../analytics-query';
+import { appendModelIdPrefixCondition, appendProviderIdsCondition } from '../request-log-filters';
 import {
-	buildManagementAnalyticsQuery,
-	mapManagementAnalyticsResult,
-} from '../analytics-query';
+	sqliteBusinessTimezoneModifier,
+	sqliteTimeseriesBucketExpr,
+	timeseriesOffsetAnchor,
+} from '../request-timeseries-bucket';
 
 export function buildInsertRequestLogStatement(
 	db: D1Database,
 	params: InsertRequestLogParams,
-	createdAtIso = new Date().toISOString()
+	createdAtIso = new Date().toISOString(),
 ): D1PreparedStatement {
 	assertGenerationSnapshotIsValid(params);
 	return db
 		.prepare(
-			`INSERT INTO api_key_request_logs (id, user_id, api_key_id, workspace_id, user_email, model_id, provider_id, provider_model_name, model_name, provider_name, request_body, upstream_request_body, request_protocol, request_operation, upstream_protocol, upstream_operation, model_surface_id, route_pool_id, route_target_id, adapter, route_trace, input_tokens, output_tokens, cache_read_tokens, cache_write_tokens, reasoning_tokens, total_tokens, native_tokens_prompt, native_tokens_completion, native_tokens_cached, native_tokens_reasoning, native_tokens_completion_images, metered_cost, standard_cost, charged_cost, budget_charged_micros, budget_accounted_at, route_group, status, latency_ms, gateway_overhead_ms, upstream_response_ms, final_upstream_headers_ms, first_reasoning_token_ms, first_token_ms, stream_duration_ms, upstream_attempt_count, upstream_failover_count, timing_metadata, error_message, raw_usage, pricing_audit, provider_key_id, provider_key_label, provider_key_fingerprint, upstream_request_id, upstream_message_id, billing_kind, input_image_count, output_image_count, audio_duration_seconds, audio_characters, session_id, request_origin, response_streamed, data_region, is_byok, charged_cost_usd, upstream_inference_cost_usd, service_tier, finish_reason, native_finish_reason, provider_responses, http_referer, user_agent, created_at)
-			 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+			`INSERT INTO api_key_request_logs (id, user_id, api_key_id, workspace_id, user_email, model_id, provider_id, provider_model_name, model_name, provider_name, request_body, upstream_request_body, request_protocol, request_operation, upstream_protocol, upstream_operation, model_surface_id, route_pool_id, route_target_id, adapter, route_trace, input_tokens, output_tokens, cache_read_tokens, cache_write_tokens, reasoning_tokens, total_tokens, native_tokens_prompt, native_tokens_completion, native_tokens_cached, native_tokens_reasoning, native_tokens_completion_images, metered_cost, standard_cost, charged_cost, budget_charged_micros, budget_accounted_at, charged_wallet_cost, route_group, status, latency_ms, gateway_overhead_ms, upstream_response_ms, final_upstream_headers_ms, first_reasoning_token_ms, first_token_ms, stream_duration_ms, upstream_attempt_count, upstream_failover_count, timing_metadata, error_message, raw_usage, pricing_audit, provider_key_id, provider_key_label, provider_key_fingerprint, upstream_request_id, upstream_message_id, billing_kind, input_image_count, output_image_count, audio_duration_seconds, audio_characters, session_id, request_origin, response_streamed, data_region, is_byok, charged_cost_usd, upstream_inference_cost_usd, service_tier, finish_reason, native_finish_reason, provider_responses, http_referer, user_agent, ingress_host, created_at)
+			 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 		)
 		.bind(
 			params.id,
@@ -91,6 +94,7 @@ export function buildInsertRequestLogStatement(
 			roundGatewayMoney(params.chargedCost),
 			params.budgetChargedMicros ?? null,
 			params.budgetAccountedAt ?? null,
+			roundGatewayMoney(params.chargedWalletCost ?? 0),
 			params.routeGroup,
 			params.status,
 			params.latencyMs,
@@ -122,16 +126,15 @@ export function buildInsertRequestLogStatement(
 			params.dataRegion ?? null,
 			params.isByok == null ? null : Number(params.isByok),
 			params.chargedCostUsd == null ? null : roundGatewayMoney(params.chargedCostUsd),
-			params.upstreamInferenceCostUsd == null
-				? null
-				: roundGatewayMoney(params.upstreamInferenceCostUsd),
+			params.upstreamInferenceCostUsd == null ? null : roundGatewayMoney(params.upstreamInferenceCostUsd),
 			params.serviceTier ?? null,
 			params.finishReason ?? null,
 			params.nativeFinishReason ?? null,
 			serializeGenerationProviderResponses(params.providerResponses),
 			params.httpReferer ?? null,
 			params.userAgent ?? null,
-			createdAtIso
+			params.ingressHost ?? null,
+			createdAtIso,
 		);
 }
 
@@ -152,9 +155,7 @@ export function createD1RequestLogsRepository(db: D1DatabaseClient): RequestLogs
 		async insertGenerationFeedbackForManagementAccount(params): Promise<boolean> {
 			assertGenerationFeedbackInsertParams(params);
 			const personal = params.account.accountType === 'personal';
-			const ownerId = personal
-				? params.account.personalOwnerUserId!
-				: params.account.organizationId!;
+			const ownerId = personal ? params.account.personalOwnerUserId! : params.account.organizationId!;
 			const accountPredicate = personal
 				? `mk.account_type = 'personal'
 				   AND mk.personal_owner_user_id = ?
@@ -169,8 +170,9 @@ export function createD1RequestLogsRepository(db: D1DatabaseClient): RequestLogs
 				   AND w.scope_type = 'organization'
 				   AND w.organization_id = mk.organization_id
 				   AND w.personal_owner_user_id IS NULL`;
-			const result = await raw.prepare(
-				`INSERT INTO generation_feedback (
+			const result = await raw
+				.prepare(
+					`INSERT INTO generation_feedback (
 					id, generation_id, workspace_id, management_api_key_id,
 					account_type, personal_owner_user_id, organization_id,
 					category, comment, created_at
@@ -182,16 +184,18 @@ export function createD1RequestLogsRepository(db: D1DatabaseClient): RequestLogs
 				 JOIN workspaces w ON w.id = rl.workspace_id
 				 JOIN management_api_keys mk ON mk.id = ? AND mk.status = 'active'
 				 WHERE rl.id = ?
-				   AND ${accountPredicate}`
-			).bind(
-				params.id,
-				params.category,
-				params.comment,
-				params.createdAtIso,
-				params.managementApiKeyId,
-				params.generationId,
-				ownerId,
-			).run();
+				   AND ${accountPredicate}`,
+				)
+				.bind(
+					params.id,
+					params.category,
+					params.comment,
+					params.createdAtIso,
+					params.managementApiKeyId,
+					params.generationId,
+					ownerId,
+				)
+				.run();
 			return Number(result.meta.changes ?? 0) === 1;
 		},
 
@@ -219,7 +223,7 @@ export function createD1RequestLogsRepository(db: D1DatabaseClient): RequestLogs
 					 WHERE rl.id = ?
 					   AND rl.user_id = ?
 					   AND rl.workspace_id = ?
-					 LIMIT 1`
+					 LIMIT 1`,
 				)
 				.bind(options.id, options.userId, options.workspaceId)
 				.first<GenerationRequestLogRow>();
@@ -229,7 +233,7 @@ export function createD1RequestLogsRepository(db: D1DatabaseClient): RequestLogs
 			apiKeyId: string,
 			page: number,
 			pageSize: number,
-			filter?: { excludeStatus?: string; includeStatuses?: string[] }
+			filter?: { excludeStatus?: string; includeStatuses?: string[] },
 		): Promise<{ logs: RequestLogRow[]; total: number }> {
 			const offset = (page - 1) * pageSize;
 			const include = filterAllowedRequestLogStatuses(filter?.includeStatuses);
@@ -243,33 +247,33 @@ export function createD1RequestLogsRepository(db: D1DatabaseClient): RequestLogs
 				const total = countRow?.total ?? 0;
 
 				const selectBind = raw
-					.prepare(
-						`SELECT * FROM api_key_request_logs WHERE ${countWhere} ORDER BY created_at DESC LIMIT ? OFFSET ?`
-					)
+					.prepare(`SELECT * FROM api_key_request_logs WHERE ${countWhere} ORDER BY created_at DESC LIMIT ? OFFSET ?`)
 					.bind(apiKeyId, ...include, pageSize, offset);
 				const rows = await selectBind.all<RequestLogRow>();
 				return { logs: rows.results ?? [], total };
 			}
 
 			const excludeStatus = filter?.excludeStatus;
-			const countWhere = excludeStatus
-				? 'api_key_id = ? AND (status IS NULL OR status != ?)'
-				: 'api_key_id = ?';
+			const countWhere = excludeStatus ? 'api_key_id = ? AND (status IS NULL OR status != ?)' : 'api_key_id = ?';
 			const countBind = excludeStatus
-				? raw.prepare(`SELECT COUNT(*) as total FROM api_key_request_logs WHERE ${countWhere}`).bind(apiKeyId, excludeStatus)
+				? raw
+						.prepare(`SELECT COUNT(*) as total FROM api_key_request_logs WHERE ${countWhere}`)
+						.bind(apiKeyId, excludeStatus)
 				: raw.prepare(`SELECT COUNT(*) as total FROM api_key_request_logs WHERE ${countWhere}`).bind(apiKeyId);
 			const countRow = await countBind.first<{ total: number }>();
 			const total = countRow?.total ?? 0;
 
-			const selectWhere = excludeStatus
-				? 'api_key_id = ? AND (status IS NULL OR status != ?)'
-				: 'api_key_id = ?';
+			const selectWhere = excludeStatus ? 'api_key_id = ? AND (status IS NULL OR status != ?)' : 'api_key_id = ?';
 			const selectBind = excludeStatus
 				? raw
-						.prepare(`SELECT * FROM api_key_request_logs WHERE ${selectWhere} ORDER BY created_at DESC LIMIT ? OFFSET ?`)
+						.prepare(
+							`SELECT * FROM api_key_request_logs WHERE ${selectWhere} ORDER BY created_at DESC LIMIT ? OFFSET ?`,
+						)
 						.bind(apiKeyId, excludeStatus, pageSize, offset)
 				: raw
-						.prepare(`SELECT * FROM api_key_request_logs WHERE ${selectWhere} ORDER BY created_at DESC LIMIT ? OFFSET ?`)
+						.prepare(
+							`SELECT * FROM api_key_request_logs WHERE ${selectWhere} ORDER BY created_at DESC LIMIT ? OFFSET ?`,
+						)
 						.bind(apiKeyId, pageSize, offset);
 			const rows = await selectBind.all<RequestLogRow>();
 			return { logs: rows.results ?? [], total };
@@ -279,12 +283,15 @@ export function createD1RequestLogsRepository(db: D1DatabaseClient): RequestLogs
 			page?: number;
 			pageSize?: number;
 			workspaceId?: string;
+			id?: string;
 			apiKeyId?: string;
 			userId?: string;
 			userEmail?: string;
 			modelId?: string;
 			providerId?: string;
 			providerName?: string;
+			providerIds?: string[];
+			modelIdPrefix?: string;
 			routeGroup?: string;
 			protocol?: string;
 			status?: string;
@@ -304,6 +311,11 @@ export function createD1RequestLogsRepository(db: D1DatabaseClient): RequestLogs
 				bindValues.push(options.workspaceId);
 			}
 
+			if (options.id) {
+				conditions.push('id = ?');
+				conditionsRl.push('rl.id = ?');
+				bindValues.push(options.id);
+			}
 			if (options.apiKeyId) {
 				conditions.push('api_key_id = ?');
 				conditionsRl.push('rl.api_key_id = ?');
@@ -333,6 +345,22 @@ export function createD1RequestLogsRepository(db: D1DatabaseClient): RequestLogs
 				conditions.push('provider_name = ?');
 				conditionsRl.push('rl.provider_name = ?');
 				bindValues.push(options.providerName);
+			}
+			const providerIdConditions: string[] = [];
+			const providerIdBinds: unknown[] = [];
+			appendProviderIdsCondition(providerIdConditions, providerIdBinds, 'provider_id', options.providerIds);
+			if (providerIdConditions[0]) {
+				conditions.push(providerIdConditions[0]);
+				conditionsRl.push(providerIdConditions[0].replace('provider_id', 'rl.provider_id'));
+				bindValues.push(...providerIdBinds);
+			}
+			const modelPrefixConditions: string[] = [];
+			const modelPrefixBinds: unknown[] = [];
+			appendModelIdPrefixCondition(modelPrefixConditions, modelPrefixBinds, 'model_id', options.modelIdPrefix);
+			if (modelPrefixConditions[0]) {
+				conditions.push(modelPrefixConditions[0]);
+				conditionsRl.push(modelPrefixConditions[0].replace('model_id', 'rl.model_id'));
+				bindValues.push(...modelPrefixBinds);
 			}
 			if (options.routeGroup) {
 				conditions.push('route_group = ?');
@@ -375,7 +403,7 @@ export function createD1RequestLogsRepository(db: D1DatabaseClient): RequestLogs
 					 FROM api_key_request_logs rl
 					 LEFT JOIN users u ON u.id = rl.user_id
 					 ${whereClauseRl}
-					 ORDER BY rl.created_at DESC LIMIT ? OFFSET ?`
+					 ORDER BY rl.created_at DESC LIMIT ? OFFSET ?`,
 				)
 				.bind(...bindValues, pageSize, offset)
 				.all<RequestLogRow>();
@@ -427,7 +455,7 @@ export function createD1RequestLogsRepository(db: D1DatabaseClient): RequestLogs
 				COALESCE(${sqlMoneyRound('SUM(charged_cost)')}, 0) as charged_cost,
 				COALESCE(${sqlMoneyRound('SUM(metered_cost)')}, 0) as metered_cost,
 				COALESCE(${sqlMoneyRound('SUM(standard_cost)')}, 0) as standard_cost
-				 FROM api_key_request_logs WHERE ${conditions.join(' AND ')}`
+				 FROM api_key_request_logs WHERE ${conditions.join(' AND ')}`,
 				)
 				.bind(...bindValues)
 				.first();
@@ -437,18 +465,8 @@ export function createD1RequestLogsRepository(db: D1DatabaseClient): RequestLogs
 
 		async getRequestActivityGroups(options) {
 			const comparator = options.endExclusive ? '<' : '<=';
-			const conditions = [
-				`created_at >= ?`,
-				`created_at ${comparator} ?`,
-				'user_id = ?',
-				'workspace_id = ?',
-			];
-			const bindValues: unknown[] = [
-				options.startDate,
-				options.endDate,
-				options.userId,
-				options.workspaceId,
-			];
+			const conditions = [`created_at >= ?`, `created_at ${comparator} ?`, 'user_id = ?', 'workspace_id = ?'];
+			const bindValues: unknown[] = [options.startDate, options.endDate, options.userId, options.workspaceId];
 			if (options.apiKeyId) {
 				conditions.push('api_key_id = ?');
 				bindValues.push(options.apiKeyId);
@@ -465,17 +483,12 @@ export function createD1RequestLogsRepository(db: D1DatabaseClient): RequestLogs
 				conditions.push('status = ?');
 				bindValues.push(options.status);
 			}
-			const groupColumn = options.dimension === 'model'
-				? 'model_id'
-				: options.dimension === 'provider' ? 'provider_name' : 'api_key_id';
-			const groupName = options.dimension === 'model'
-				? "MAX(NULLIF(model_name, ''))"
-				: 'NULL';
+			const groupColumn =
+				options.dimension === 'model' ? 'model_id' : options.dimension === 'provider' ? 'provider_name' : 'api_key_id';
+			const groupName = options.dimension === 'model' ? "MAX(NULLIF(model_name, ''))" : 'NULL';
 			conditions.push(`${groupColumn} IS NOT NULL`, `${groupColumn} != ''`);
 			const parsedLimit = Number(options.limit);
-			const limit = Number.isFinite(parsedLimit)
-				? Math.min(25, Math.max(1, Math.trunc(parsedLimit)))
-				: 10;
+			const limit = Number.isFinite(parsedLimit) ? Math.min(25, Math.max(1, Math.trunc(parsedLimit))) : 10;
 			const rows = await raw
 				.prepare(
 					`SELECT
@@ -490,7 +503,7 @@ export function createD1RequestLogsRepository(db: D1DatabaseClient): RequestLogs
 					 WHERE ${conditions.join(' AND ')}
 					 GROUP BY ${groupColumn}
 					 ORDER BY charged_cost DESC, request_count DESC, group_id ASC
-					 LIMIT ?`
+					 LIMIT ?`,
 				)
 				.bind(...bindValues, limit)
 				.all();
@@ -502,6 +515,7 @@ export function createD1RequestLogsRepository(db: D1DatabaseClient): RequestLogs
 			endDate: string;
 			endExclusive?: boolean;
 			granularity: 'hour' | 'day';
+			timeZone?: string;
 			userId?: string;
 			workspaceId?: string;
 			apiKeyId?: string;
@@ -509,13 +523,11 @@ export function createD1RequestLogsRepository(db: D1DatabaseClient): RequestLogs
 			providerName?: string;
 			status?: string;
 		}) {
-			const bucketExpr =
-				options.granularity === 'hour'
-					? "strftime('%Y-%m-%d %H:00:00', created_at)"
-					: "strftime('%Y-%m-%d', created_at)";
+			const bucketExpr = sqliteTimeseriesBucketExpr(options.granularity);
+			const shift = sqliteBusinessTimezoneModifier(options.timeZone ?? 'UTC', timeseriesOffsetAnchor(options.endDate));
 			const comparator = options.endExclusive ? '<' : '<=';
 			const conditions = [`created_at >= ?`, `created_at ${comparator} ?`];
-			const bindValues: unknown[] = [options.startDate, options.endDate];
+			const bindValues: unknown[] = [shift, options.startDate, options.endDate];
 			if (options.userId) {
 				conditions.push('user_id = ?');
 				bindValues.push(options.userId);
@@ -549,7 +561,7 @@ export function createD1RequestLogsRepository(db: D1DatabaseClient): RequestLogs
 			 FROM api_key_request_logs
 				 WHERE ${conditions.join(' AND ')}
 			 GROUP BY bucket
-			 ORDER BY bucket ASC`
+			 ORDER BY bucket ASC`,
 				)
 				.bind(...bindValues)
 				.all();
@@ -578,7 +590,7 @@ export function createD1RequestLogsRepository(db: D1DatabaseClient): RequestLogs
 			 WHERE created_at >= ? AND created_at <= ?
 			   AND user_email IN (${placeholders})
 			 GROUP BY bucket, user_email
-			 ORDER BY bucket ASC`
+			 ORDER BY bucket ASC`,
 				)
 				.bind(options.startDate, options.endDate, ...options.userEmails)
 				.all();
@@ -596,7 +608,7 @@ export function createD1RequestLogsRepository(db: D1DatabaseClient): RequestLogs
 				COUNT(*) as request_count,
 				COALESCE(SUM(total_tokens), 0) as total_tokens
 			 FROM api_key_request_logs
-			 WHERE created_at >= ? AND created_at <= ?`
+			 WHERE created_at >= ? AND created_at <= ?`,
 				)
 				.bind(startDate, endDate)
 				.first();
@@ -624,7 +636,8 @@ export function createD1RequestLogsRepository(db: D1DatabaseClient): RequestLogs
 			const maxSamplesPerRoute = normalizeRoutePerformanceSamplesPerTarget(options.maxSamplesPerRoute);
 			if (maxSamplesPerRoute === 0) return [];
 			const sql = buildRecentRoutePerformanceSamplesSql('d1', options.routeTargetIds.length);
-			const rows = await raw.prepare(sql)
+			const rows = await raw
+				.prepare(sql)
 				.bind(...options.routeTargetIds, options.sinceIso, maxSamplesPerRoute)
 				.all<RoutePerformanceSample>();
 			return rows.results ?? [];
@@ -633,7 +646,8 @@ export function createD1RequestLogsRepository(db: D1DatabaseClient): RequestLogs
 		async getRouteAvailabilityAggregates(options) {
 			if (options.routeTargetIds.length === 0) return [];
 			const sql = buildRouteAvailabilityAggregateSql('d1', options.routeTargetIds.length);
-			const rows = await raw.prepare(sql)
+			const rows = await raw
+				.prepare(sql)
 				.bind(...routeAvailabilityAggregateParams(options))
 				.all<Record<string, unknown>>();
 			return (rows.results ?? []).map(normalizeRouteAvailabilityAggregate);
@@ -641,7 +655,8 @@ export function createD1RequestLogsRepository(db: D1DatabaseClient): RequestLogs
 
 		async deleteProviderAttemptAvailabilityBefore(options) {
 			assertProviderAttemptRetentionDeleteParams(options);
-			const result = await raw.prepare(buildProviderAttemptRetentionDeleteSql('d1'))
+			const result = await raw
+				.prepare(buildProviderAttemptRetentionDeleteSql('d1'))
 				.bind(options.cutoffIso, options.cutoffIso, options.limit)
 				.run();
 			const deleted = Number(result.meta.changes ?? 0);
@@ -651,13 +666,17 @@ export function createD1RequestLogsRepository(db: D1DatabaseClient): RequestLogs
 			return deleted;
 		},
 
-		async getDistinctActiveUsersCount(options: { startDate: string; endDate: string; endExclusive?: boolean }): Promise<number> {
+		async getDistinctActiveUsersCount(options: {
+			startDate: string;
+			endDate: string;
+			endExclusive?: boolean;
+		}): Promise<number> {
 			const comparator = options.endExclusive ? '<' : '<=';
 			const row = await raw
 				.prepare(
 					`SELECT
 				COUNT(DISTINCT CASE WHEN user_email IS NOT NULL AND user_email != '' THEN user_email END) as active_users
-			 FROM api_key_request_logs WHERE created_at >= ? AND created_at ${comparator} ?`
+			 FROM api_key_request_logs WHERE created_at >= ? AND created_at ${comparator} ?`,
 				)
 				.bind(options.startDate, options.endDate)
 				.first<{ active_users: number }>();

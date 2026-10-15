@@ -29,11 +29,11 @@ function fixture() {
 			budget_spent REAL NOT NULL, budget_period TEXT NOT NULL, budget_reset_at TEXT,
 			budget_epoch INTEGER NOT NULL, budget_reserved_micros INTEGER NOT NULL,
 			status TEXT NOT NULL, metadata TEXT, charged_cost_factors TEXT,
-			external_system TEXT, external_user_id TEXT
+			external_system TEXT, external_user_id TEXT, wallet_granted REAL NOT NULL DEFAULT 0, wallet_spent REAL NOT NULL DEFAULT 0, rate_limit TEXT
 		);
 		CREATE TABLE api_keys (
 			id TEXT PRIMARY KEY, key TEXT NOT NULL, user_id TEXT NOT NULL, workspace_id TEXT NOT NULL, name TEXT, status TEXT NOT NULL,
-			metadata TEXT, updated_at TEXT NOT NULL,
+			metadata TEXT, rate_limit TEXT, updated_at TEXT NOT NULL,
 			CHECK (status <> 'forbidden')
 		);
 		CREATE TABLE user_audit_logs (
@@ -44,17 +44,17 @@ function fixture() {
 			source TEXT, actor_id TEXT, reason_code TEXT, reason_text TEXT
 		);`);
 	const userSnapshot: UserAuditSnapshot = {
+wallet_granted: 0,
+wallet_spent: 0,
+rate_limit: null,
+
 		id: 'u1', email: 'user@example.test', budget_max: 10, budget_base: 10,
 		budget_spent: 3, budget_period: 'none', budget_reset_at: null,
 		budget_epoch: 0, budget_reserved_micros: 0,
 		status: 'active', metadata: null, charged_cost_factors: null,
 		external_system: null, external_user_id: null,
 	};
-	db.prepare(`INSERT INTO users (
-		id, email, budget_max, budget_base, budget_spent, budget_period, budget_reset_at,
-		budget_epoch, budget_reserved_micros, status, metadata, charged_cost_factors,
-		external_system, external_user_id
-	) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).run(...Object.values(userSnapshot));
+	db.prepare(`INSERT INTO users (${Object.keys(userSnapshot).join(',')}) VALUES (${Object.keys(userSnapshot).map(() => '?').join(',')})`).run(...Object.values(userSnapshot));
 	db.prepare('INSERT INTO api_keys (id, key, user_id, workspace_id, name, status, metadata, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)')
 		.run('k1', 'sk-secret-value', 'u1', 'w1', 'before', 'active', '{}', '2026-01-01T00:00:00.000Z');
 	const raw = {

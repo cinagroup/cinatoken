@@ -1,11 +1,14 @@
 /**
  * D1：管理后台分析聚合查询。
  */
+import { ANALYTICS_FAILOVER_SELECT_SQL, ANALYTICS_STREAM_SELECT_SQL } from '../../lib/analytics-quality-sql';
 import { ANALYTICS_TTFT_SELECT_SQL } from '../../lib/analytics-ttft-sql';
+import { assembleKeyAnalytics } from '../../lib/key-analytics-assemble';
 import { sqlMoneyRound } from '../../lib/money-precision';
 import type { D1DatabaseClient } from '../../storage/database-client';
 import type { AdminAnalyticsRepository } from '../../storage/gateway-repository-interfaces';
 import type {
+	KeyAnalyticsRow,
 	ModelAnalyticsRow,
 	PublicModelAnalyticsRow,
 	ModelProviderReliabilityRow,
@@ -17,7 +20,15 @@ import type {
 export function createD1AdminAnalyticsRepository(db: D1DatabaseClient): AdminAnalyticsRepository {
 	const raw = db.raw;
 	return {
-		async queryModelAnalytics(options: { start: string; end: string; tag?: string; providerId?: string; userEmail?: string }): Promise<ModelAnalyticsRow[]> {
+		async queryModelAnalytics(options: {
+			start: string;
+			end: string;
+			tag?: string;
+			providerId?: string;
+			userEmail?: string;
+			userId?: string;
+			apiKeyId?: string;
+		}): Promise<ModelAnalyticsRow[]> {
 			const joins: string[] = [];
 			const conditions: string[] = ['rl.created_at >= ?', 'rl.created_at <= ?', 'rl.model_id IS NOT NULL'];
 			const bindValues: unknown[] = [];
@@ -33,6 +44,14 @@ export function createD1AdminAnalyticsRepository(db: D1DatabaseClient): AdminAna
 			if (options.userEmail) {
 				conditions.push('rl.user_email = ?');
 				bindValues.push(options.userEmail);
+			}
+			if (options.userId) {
+				conditions.push('rl.user_id = ?');
+				bindValues.push(options.userId);
+			}
+			if (options.apiKeyId) {
+				conditions.push('rl.api_key_id = ?');
+				bindValues.push(options.apiKeyId);
 			}
 			const rows = await raw
 				.prepare(
@@ -51,12 +70,14 @@ export function createD1AdminAnalyticsRepository(db: D1DatabaseClient): AdminAna
 				SUM(CASE WHEN rl.status = 'error' THEN 1 ELSE 0 END) as error_count,
 				AVG(rl.latency_ms) as avg_latency_ms,
 				${ANALYTICS_TTFT_SELECT_SQL},
+				${ANALYTICS_STREAM_SELECT_SQL},
 				AVG(rl.upstream_response_ms) as avg_upstream_response_ms,
 				CASE WHEN COALESCE(SUM(rl.stream_duration_ms), 0) > 0
 					THEN COALESCE(SUM(rl.output_tokens), 0) * 1000.0 / SUM(rl.stream_duration_ms)
 					ELSE NULL
 				END as tokens_per_second,
 				CASE WHEN COUNT(*) > 0 THEN COALESCE(SUM(rl.upstream_failover_count), 0) * 100.0 / COUNT(*) ELSE 0 END as failover_rate,
+				${ANALYTICS_FAILOVER_SELECT_SQL},
 				AVG(rl.upstream_attempt_count) as avg_attempts
 			 FROM api_key_request_logs rl ${joins.join(' ')}
 			 WHERE ${conditions.join(' AND ')}
@@ -115,6 +136,8 @@ export function createD1AdminAnalyticsRepository(db: D1DatabaseClient): AdminAna
 				MAX(rl.created_at) as last_active_at,
 				${sqlMoneyRound('MAX(u.budget_max)')} as budget_max,
 				${sqlMoneyRound('MAX(u.budget_spent)')} as budget_spent,
+				${sqlMoneyRound('MAX(u.wallet_granted)')} as wallet_granted,
+				${sqlMoneyRound('MAX(u.wallet_spent)')} as wallet_spent,
 				SUM(CASE WHEN rl.status = 'success' THEN 1 ELSE 0 END) as success_count,
 				SUM(CASE WHEN rl.status = 'error' THEN 1 ELSE 0 END) as error_count
 			 FROM api_key_request_logs rl
@@ -127,9 +150,39 @@ export function createD1AdminAnalyticsRepository(db: D1DatabaseClient): AdminAna
 			return rows.results ?? [];
 		},
 
+		async queryKeyAnalytics(options: { start: string; end: string; userId: string }): Promise<KeyAnalyticsRow[]> {
+			const keys = await raw
+				.prepare('SELECT id, name FROM api_keys WHERE user_id = ?')
+				.bind(options.userId)
+				.all<{ id: string; name: string | null }>();
+			const logs = await raw
+				.prepare(
+					`SELECT
+				rl.api_key_id as api_key_id,
+				MAX(k.name) as key_name,
+				COUNT(*) as request_count,
+				COALESCE(SUM(rl.input_tokens), 0) as input_tokens,
+				COALESCE(SUM(rl.output_tokens), 0) as output_tokens,
+				COALESCE(${sqlMoneyRound('SUM(rl.charged_cost)')}, 0) as charged_cost,
+				COALESCE(${sqlMoneyRound('SUM(rl.metered_cost)')}, 0) as metered_cost,
+				COALESCE(${sqlMoneyRound('SUM(rl.standard_cost)')}, 0) as standard_cost,
+				COUNT(DISTINCT rl.model_id) as distinct_models,
+				MAX(rl.created_at) as last_active_at,
+				SUM(CASE WHEN rl.status = 'success' THEN 1 ELSE 0 END) as success_count,
+				SUM(CASE WHEN rl.status = 'error' THEN 1 ELSE 0 END) as error_count
+			 FROM api_key_request_logs rl
+			 LEFT JOIN api_keys k ON k.id = rl.api_key_id
+			 WHERE rl.user_id = ? AND rl.created_at >= ? AND rl.created_at <= ?
+			 GROUP BY rl.api_key_id`
+				)
+				.bind(options.userId, options.start, options.end)
+				.all<KeyAnalyticsRow>();
+			return assembleKeyAnalytics(keys.results ?? [], logs.results ?? []);
+		},
+
 		async queryProviderAnalytics(options: { start: string; end: string; tag?: string; modelId?: string; routeGroup?: string }): Promise<ProviderAnalyticsRow[]> {
 			const joins: string[] = ['LEFT JOIN providers p ON p.id = rl.provider_id'];
-			const conditions: string[] = ['rl.created_at >= ?', 'rl.created_at <= ?', 'rl.provider_id IS NOT NULL'];
+			const conditions: string[] = ['rl.created_at >= ?', 'rl.created_at <= ?', "rl.provider_id IS NOT NULL AND rl.provider_id <> ''"];
 			const bindValues: unknown[] = [];
 			if (options.tag) {
 				joins.push('INNER JOIN model_tags mt ON mt.model_id = rl.model_id AND mt.tag = ?');
@@ -148,7 +201,7 @@ export function createD1AdminAnalyticsRepository(db: D1DatabaseClient): AdminAna
 				.prepare(
 					`SELECT
 				rl.provider_id as provider_id,
-				MAX(p.name) as provider_name,
+				COALESCE(MAX(p.name), MAX(rl.provider_name)) as provider_name,
 				COUNT(*) as request_count,
 				COALESCE(${sqlMoneyRound('SUM(rl.charged_cost)')}, 0) as charged_cost,
 				COALESCE(${sqlMoneyRound('SUM(rl.metered_cost)')}, 0) as metered_cost,
@@ -162,12 +215,14 @@ export function createD1AdminAnalyticsRepository(db: D1DatabaseClient): AdminAna
 				SUM(CASE WHEN rl.status = 'error' THEN 1 ELSE 0 END) as error_count,
 				AVG(rl.latency_ms) as avg_latency_ms,
 				${ANALYTICS_TTFT_SELECT_SQL},
+				${ANALYTICS_STREAM_SELECT_SQL},
 				AVG(rl.upstream_response_ms) as avg_upstream_response_ms,
 				CASE WHEN COALESCE(SUM(rl.stream_duration_ms), 0) > 0
 					THEN COALESCE(SUM(rl.output_tokens), 0) * 1000.0 / SUM(rl.stream_duration_ms)
 					ELSE NULL
 				END as tokens_per_second,
 				CASE WHEN COUNT(*) > 0 THEN COALESCE(SUM(rl.upstream_failover_count), 0) * 100.0 / COUNT(*) ELSE 0 END as failover_rate,
+				${ANALYTICS_FAILOVER_SELECT_SQL},
 				AVG(rl.upstream_attempt_count) as avg_attempts
 			 FROM api_key_request_logs rl ${joins.join(' ')}
 			 WHERE ${conditions.join(' AND ')}
@@ -183,20 +238,21 @@ export function createD1AdminAnalyticsRepository(db: D1DatabaseClient): AdminAna
 				.prepare(
 					`SELECT
 				rl.provider_id as provider_id,
-				MAX(p.name) as provider_name,
+				COALESCE(MAX(p.name), MAX(rl.provider_name)) as provider_name,
 				COUNT(*) as request_count,
 				SUM(CASE WHEN rl.status = 'success' THEN 1 ELSE 0 END) as success_count,
 				SUM(CASE WHEN rl.status = 'error' THEN 1 ELSE 0 END) as error_count,
 				AVG(rl.latency_ms) as avg_latency_ms,
 				AVG(rl.upstream_response_ms) as avg_upstream_response_ms,
 				CASE WHEN COUNT(*) > 0 THEN COALESCE(SUM(rl.upstream_failover_count), 0) * 100.0 / COUNT(*) ELSE 0 END as failover_rate,
+				${ANALYTICS_FAILOVER_SELECT_SQL},
 				AVG(rl.upstream_attempt_count) as avg_attempts,
 				COALESCE(${sqlMoneyRound('SUM(rl.charged_cost)')}, 0) as charged_cost,
 				COALESCE(${sqlMoneyRound('SUM(rl.metered_cost)')}, 0) as metered_cost,
 				COALESCE(${sqlMoneyRound('SUM(rl.standard_cost)')}, 0) as standard_cost
 			 FROM api_key_request_logs rl
 			 LEFT JOIN providers p ON p.id = rl.provider_id
-			 WHERE rl.created_at >= ? AND rl.created_at <= ? AND rl.provider_id IS NOT NULL
+			 WHERE rl.created_at >= ? AND rl.created_at <= ? AND rl.provider_id IS NOT NULL AND rl.provider_id <> ''
 			 GROUP BY rl.provider_id`
 				)
 				.bind(options.start, options.end)
@@ -210,19 +266,20 @@ export function createD1AdminAnalyticsRepository(db: D1DatabaseClient): AdminAna
 					`SELECT
 				rl.model_id as model_id,
 				rl.provider_id as provider_id,
-				MAX(p.name) as provider_name,
+				COALESCE(MAX(p.name), MAX(rl.provider_name)) as provider_name,
 				COUNT(*) as request_count,
 				SUM(CASE WHEN rl.status = 'success' THEN 1 ELSE 0 END) as success_count,
 				AVG(rl.latency_ms) as avg_latency_ms,
 				AVG(rl.upstream_response_ms) as avg_upstream_response_ms,
 				CASE WHEN COUNT(*) > 0 THEN COALESCE(SUM(rl.upstream_failover_count), 0) * 100.0 / COUNT(*) ELSE 0 END as failover_rate,
+				${ANALYTICS_FAILOVER_SELECT_SQL},
 				AVG(rl.upstream_attempt_count) as avg_attempts,
 				COALESCE(${sqlMoneyRound('SUM(rl.charged_cost)')}, 0) as charged_cost,
 				COALESCE(${sqlMoneyRound('SUM(rl.metered_cost)')}, 0) as metered_cost,
 				COALESCE(${sqlMoneyRound('SUM(rl.standard_cost)')}, 0) as standard_cost
 			 FROM api_key_request_logs rl
 			 LEFT JOIN providers p ON p.id = rl.provider_id
-			 WHERE rl.created_at >= ? AND rl.created_at <= ? AND rl.model_id IS NOT NULL AND rl.provider_id IS NOT NULL
+			 WHERE rl.created_at >= ? AND rl.created_at <= ? AND rl.model_id IS NOT NULL AND rl.provider_id IS NOT NULL AND rl.provider_id <> ''
 			 GROUP BY rl.model_id, rl.provider_id`
 				)
 				.bind(options.start, options.end)

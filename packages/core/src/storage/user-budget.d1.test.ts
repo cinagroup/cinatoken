@@ -1,3 +1,4 @@
+import { applyWalletMigrationToBudgetFixture } from './test-support/wallet-fixture';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -90,6 +91,7 @@ function setupDatabase(): DatabaseSync {
 		dirname(fileURLToPath(import.meta.url)),
 		'../../migrations-d1/0041_user_budget_spent_micros.sql',
 	), 'utf8'));
+	applyWalletMigrationToBudgetFixture(database);
 	return database;
 }
 
@@ -420,11 +422,12 @@ test('D1 ordinary budget settlement releases estimate slack and records actual o
 		await budgets.markDispatched('request-overrun', NOW, EXPIRES);
 		settleActual(database, 'request-overrun', 500_000);
 		assert.deepEqual(account(database, 'user-actual'), {
-			budget_spent: 0.85,
+			budget_spent: 0.8,
 			budget_epoch: 0,
 			budget_reserved_micros: 0,
 		});
 		assert.equal(reservation(database, 'request-overrun').settled_micros, 500_000);
+		assert.equal(database.prepare("SELECT wallet_spent FROM users WHERE id = 'user-actual'").get()?.wallet_spent, 0.05);
 		assert.deepEqual(
 			await budgets.reserve(reservationParams('request-after-overrun', 'user-actual', 1)),
 			{ status: 'blocked', remainingMicros: 0 },

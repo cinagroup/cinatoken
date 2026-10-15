@@ -9,60 +9,68 @@
  * 仅作为顶层兼容字段与 `X-OctaFuse-Error-Code` 响应头保留。
  */
 
-export const GATEWAY_ERROR_CODE_HEADER = "X-OctaFuse-Error-Code";
+export const GATEWAY_ERROR_CODE_HEADER = 'X-OctaFuse-Error-Code';
+
+/** 与 `api_key_request_logs.id` 相同。成功和失败都会返回，用来对上请求日志。 */
+export const GATEWAY_REQUEST_ID_HEADER = 'X-OctaFuse-Request-Id';
 
 export const GatewayErrorCode = {
 	// gateway.*
-	invalidJson: "gateway.invalid_json",
-	missingModel: "gateway.missing_model",
-	modelNotFound: "gateway.model_not_found",
-	budgetExceeded: "gateway.budget_exceeded",
-	authFailed: "gateway.auth_failed",
-	permissionDenied: "gateway.permission_denied",
-	authRateLimited: "gateway.auth_rate_limited",
-	publicCatalogRateLimited: "gateway.public_catalog_rate_limited",
-	analyticsRateLimited: "gateway.analytics_rate_limited",
-	publicCatalogUnavailable: "gateway.public_catalog_unavailable",
-	internalError: "gateway.internal_error",
-	imageSettlementUnconfirmed: "gateway.image_settlement_unconfirmed",
-	capacityUnavailable: "gateway.capacity_unavailable",
-	routeNotFound: "gateway.route_not_found",
-	payloadTooLarge: "gateway.payload_too_large",
-	noRoute: "gateway.no_route",
-	routeResolutionFailed: "gateway.route_resolution_failed",
-	invalidRequest: "gateway.invalid_request",
-	resourceConflict: "gateway.resource_conflict",
-	invalidPresetReference: "gateway.invalid_preset_reference",
-	presetNotFound: "gateway.preset_not_found",
-	presetInvalid: "gateway.preset_invalid",
-	guardrailBlocked: "gateway.guardrail_blocked",
-	guardrailInvalid: "gateway.guardrail_invalid",
-	zdrNoRoute: "gateway.zdr_no_route",
-	dataCollectionNoRoute: "gateway.data_collection_no_route",
-	zdrToolsUnsupported: "gateway.zdr_tools_unsupported",
-	upstreamRequestFailed: "gateway.upstream_request_failed",
-	dispatchLimitExceeded: "gateway.dispatch_limit_exceeded",
-	auxiliaryAuthLimitExceeded: "gateway.auxiliary_auth_limit_exceeded",
-	requestDeadlineExceeded: "gateway.request_deadline_exceeded",
-	requestCancelled: "gateway.request_cancelled",
-	upstreamResponseTooLarge: "gateway.upstream_response_too_large",
-	responsesStateRouteUnavailable: "responses.state_route_unavailable",
-	responsesUnsupportedStateOperation: "responses.unsupported_state_operation",
+	invalidJson: 'gateway.invalid_json',
+	missingModel: 'gateway.missing_model',
+	modelNotFound: 'gateway.model_not_found',
+	budgetExceeded: 'gateway.budget_exceeded',
+	rateLimited: 'gateway.rate_limited',
+	authFailed: 'gateway.auth_failed',
+	permissionDenied: 'gateway.permission_denied',
+	authRateLimited: 'gateway.auth_rate_limited',
+	publicCatalogRateLimited: 'gateway.public_catalog_rate_limited',
+	analyticsRateLimited: 'gateway.analytics_rate_limited',
+	publicCatalogUnavailable: 'gateway.public_catalog_unavailable',
+	internalError: 'gateway.internal_error',
+	imageSettlementUnconfirmed: 'gateway.image_settlement_unconfirmed',
+	capacityUnavailable: 'gateway.capacity_unavailable',
+	routeNotFound: 'gateway.route_not_found',
+	payloadTooLarge: 'gateway.payload_too_large',
+	noRoute: 'gateway.no_route',
+	routeResolutionFailed: 'gateway.route_resolution_failed',
+	invalidRequest: 'gateway.invalid_request',
+	resourceConflict: 'gateway.resource_conflict',
+	invalidPresetReference: 'gateway.invalid_preset_reference',
+	presetNotFound: 'gateway.preset_not_found',
+	presetInvalid: 'gateway.preset_invalid',
+	guardrailBlocked: 'gateway.guardrail_blocked',
+	guardrailInvalid: 'gateway.guardrail_invalid',
+	zdrNoRoute: 'gateway.zdr_no_route',
+	dataCollectionNoRoute: 'gateway.data_collection_no_route',
+	zdrToolsUnsupported: 'gateway.zdr_tools_unsupported',
+	mcpItemDisabled: 'gateway.mcp_item_disabled',
+	mcpPricingInvalid: 'gateway.mcp_pricing_invalid',
+	upstreamRequestFailed: 'gateway.upstream_request_failed',
+	dispatchLimitExceeded: 'gateway.dispatch_limit_exceeded',
+	auxiliaryAuthLimitExceeded: 'gateway.auxiliary_auth_limit_exceeded',
+	requestDeadlineExceeded: 'gateway.request_deadline_exceeded',
+	requestCancelled: 'gateway.request_cancelled',
+	upstreamResponseTooLarge: 'gateway.upstream_response_too_large',
+	responsesStateRouteUnavailable: 'responses.state_route_unavailable',
+	responsesUnsupportedStateOperation: 'responses.unsupported_state_operation',
 
 	// circuit.*
-	circuitSensitiveContent: "circuit.sensitive_content",
-	circuitClientError: "circuit.client_error",
-	circuitUpstreamCapacityExhausted: "circuit.upstream_capacity_exhausted",
+	circuitSensitiveContent: 'circuit.sensitive_content',
+	circuitClientError: 'circuit.client_error',
+	circuitUpstreamCapacityExhausted: 'circuit.upstream_capacity_exhausted',
 
 	// upstream.*
-	upstreamContentFilter: "upstream.content_filter",
-	upstreamInvalidRequest: "upstream.invalid_request",
-	upstreamRateLimited: "upstream.rate_limited",
-	upstreamAuthFailed: "upstream.auth_failed",
-	upstreamNotFound: "upstream.not_found",
-	upstreamServerError: "upstream.server_error",
-	upstreamTimeout: "upstream.timeout",
+	upstreamContentFilter: 'upstream.content_filter',
+	upstreamInvalidRequest: 'upstream.invalid_request',
+	upstreamRateLimited: 'upstream.rate_limited',
+	upstreamAuthFailed: 'upstream.auth_failed',
+	upstreamNotFound: 'upstream.not_found',
+	upstreamServerError: 'upstream.server_error',
+	upstreamTimeout: 'upstream.timeout',
 } as const;
 
-export type GatewayErrorCodeValue =
-	(typeof GatewayErrorCode)[keyof typeof GatewayErrorCode];
+export type GatewayErrorCodeValue = (typeof GatewayErrorCode)[keyof typeof GatewayErrorCode];
+
+/** 模型存在但当前入口没有可用上游目标时的统一 `error` 文案。 */
+export const NO_AVAILABLE_ROUTE_MESSAGE = 'No available route';

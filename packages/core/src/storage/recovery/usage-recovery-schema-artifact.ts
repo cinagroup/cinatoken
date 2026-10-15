@@ -1,8 +1,8 @@
 /** Reviewed disabled-prototype schema v1. Not a remote identity/IAM or full-database audit. */
 export const RECOVERY_SCHEMA_ARTIFACT = Object.freeze({
 	version: 1,
-	baseMigrationCount: 77,
-	baseMigrationSetSha256: '679f3a39b3c03fefadbbc33e95b33dbfb89454022dd200ff90626c9698d68560',
+	baseMigrationCount: 81,
+	baseMigrationSetSha256: '1f50404607289d695414c9c6285f070f1a2e2aed756130b377b3c8c263bd7d50',
 	proposals: Object.freeze([
   {
     "name": "request-dispatch-intents.sql",

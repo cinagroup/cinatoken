@@ -10,7 +10,7 @@ import {
 	useState,
 	type ReactNode,
 } from "react";
-import { fetchStickyBindingsSummary } from "./route-api";
+import { useRouteApi } from './route-api';
 import type { StickyRefreshIntervalMs } from "./sticky-refresh-preference";
 import type { StickyBindingsSummary } from "./types";
 
@@ -46,6 +46,8 @@ export function StickySummaryProvider(props: {
 	children: ReactNode;
 	intervalMs: StickyRefreshIntervalMs;
 }) {
+const { fetchStickyBindingsSummary } = useRouteApi();
+
 	const { children, intervalMs } = props;
 	const [summaries, setSummaries] = useState<
 		Map<string, StickyBindingsSummary>

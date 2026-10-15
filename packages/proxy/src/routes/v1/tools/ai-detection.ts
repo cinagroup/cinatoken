@@ -3,15 +3,12 @@
  * 引擎/凭证/单价读自 `system_config`（见 `resolveAiDetectionConfig`）。
  */
 import { resolveAiDetectionConfig, roundGatewayMoney, scaleToolUnitPrices } from '@octafuse/core';
+import { toolFactorPricingAudit } from '@octafuse/core';
 import { Hono } from 'hono';
 import type { Env } from '../../../app';
 import { requireApiKey } from '../../../middleware/auth';
 import { assignGenerationId } from '../../../middleware/generation-id';
-import {
-	AiDetectionProviderError,
-	detectAiRate,
-	getAiDetectionDriver,
-} from '@octafuse/tool-engines/ai-detection';
+import { AiDetectionProviderError, detectAiRate, getAiDetectionDriver } from '@octafuse/tool-engines/ai-detection';
 import {
 	chargeToolUsage,
 	reserveToolOrdinaryBudget,
@@ -179,21 +176,18 @@ aiDetectionRoutes.post('/', async (c) => {
 				budgetAccountedAt: requestStartedAt.toISOString(),
 				guardrailBudgetSettlement: guardrailBudgetReserved
 					? {
-						requestId: requestCorrelationId,
-						mode: settlement.mode,
-						reason: settlement.reason,
-					}
+							requestId: requestCorrelationId,
+							mode: settlement.mode,
+							reason: settlement.reason,
+						}
 					: undefined,
-				userBudgetSettlement: toolUserBudgetSettlement(
-					ordinaryBudgetLease,
-					settlement.mode,
-					settlement.reason,
-				),
+				userBudgetSettlement: toolUserBudgetSettlement(ordinaryBudgetLease, settlement.mode, settlement.reason),
 				apiKeyId: apiKey.keyId,
 				workspaceId: apiKey.workspaceId,
 				userId: apiKey.userId,
 				userEmail: apiKey.userEmail,
 				toolId: TOOL_ID,
+				ingressHost: apiKey.ingressHost,
 				toolProvider: provider,
 				meteredCost: 0,
 				standardCost: 0,
@@ -201,6 +195,7 @@ aiDetectionRoutes.post('/', async (c) => {
 				pricingUnit: 'chars',
 				billingUnits,
 				unitPrices,
+				pricingAuditExtra: toolFactorPricingAudit(resolved.config.pricing),
 				latencyMs,
 				requestBody: logRequestBody,
 				requestBodyLoggingMode: c.get('requestBodyLoggingMode'),
@@ -266,17 +261,15 @@ aiDetectionRoutes.post('/', async (c) => {
 			guardrailBudgetSettlement: guardrailBudgetReserved
 				? { requestId: requestCorrelationId, mode: 'actual', reason: 'tool_request_usage_settled' }
 				: undefined,
-			userBudgetSettlement: toolUserBudgetSettlement(
-				ordinaryBudgetLease,
-				'actual',
-				'tool_request_usage_settled',
-			),
+			userBudgetSettlement: toolUserBudgetSettlement(ordinaryBudgetLease, 'actual', 'tool_request_usage_settled'),
 			apiKeyId: apiKey.keyId,
 			workspaceId: apiKey.workspaceId,
 			userId: apiKey.userId,
 			userEmail: apiKey.userEmail,
 			toolId: TOOL_ID,
 			toolProvider: provider,
+			ingressHost: apiKey.ingressHost,
+			pricingAuditExtra: toolFactorPricingAudit(resolved.config.pricing),
 			meteredCost: totals.metered,
 			standardCost: totals.standard,
 			chargedCost: totals.charged,
@@ -289,16 +282,16 @@ aiDetectionRoutes.post('/', async (c) => {
 			// 仅分数汇总，不含 excerpt / 原文
 			responseBody: guardedOutput.ok
 				? JSON.stringify({
-					overall_score: guardedOutput.value.overall_score,
-					total_chars: guardedOutput.value.total_chars,
-					billing_units: guardedOutput.value.billing_units,
-					segment_count: guardedOutput.value.segments.length,
-					segments: guardedOutput.value.segments.map((segment) => ({
-						index: segment.index,
-						chars: segment.chars,
-						score: segment.score,
-					})),
-				})
+						overall_score: guardedOutput.value.overall_score,
+						total_chars: guardedOutput.value.total_chars,
+						billing_units: guardedOutput.value.billing_units,
+						segment_count: guardedOutput.value.segments.length,
+						segments: guardedOutput.value.segments.map((segment) => ({
+							index: segment.index,
+							chars: segment.chars,
+							score: segment.score,
+						})),
+					})
 				: JSON.stringify({ guardrail_blocked: true }),
 			errorMessage: guardedOutput.ok ? null : 'Response blocked by output guardrail',
 			status: guardedOutput.ok ? 'success' : 'error',

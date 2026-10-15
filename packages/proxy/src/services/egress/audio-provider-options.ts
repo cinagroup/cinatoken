@@ -9,10 +9,7 @@ export interface AudioProviderOptionObject {
 export interface AudioProviderOptionArray extends ReadonlyArray<AudioProviderOptionValue> {}
 
 export type AudioProviderOptionValue =
-	| AudioProviderOptionScalar
-	| null
-	| AudioProviderOptionArray
-	| AudioProviderOptionObject;
+	AudioProviderOptionScalar | null | AudioProviderOptionArray | AudioProviderOptionObject;
 
 export type AudioProviderOptions<Value = AudioProviderOptionValue> = Readonly<
 	Record<string, Readonly<Record<string, Value>>>

@@ -1,50 +1,55 @@
+import { createRequestDeadline, preparationRead } from '@octafuse/core';
+import { createResourceCompletionGroup } from './resource-completion';
+import { dispatchOpenAiAudioTranscriptions } from "./egress/openai-audio-driver";
+import { dispatchDashScopeAsyncAsr, dispatchDashScopeMultimodalPassthrough, dispatchDashScopeSyncAsr } from "./egress/dashscope-audio-driver";
+import { dispatchDashScopeMiniMaxTts, dispatchDashScopeQwenTts, dispatchDashScopeSpeechSynthesizer, dispatchOpenAiAudioSpeech } from "./egress/audio-speech-driver";
 /**
  * 上游 HTTP 代理与故障转移：按协议分发到 openai/anthropic/gemini driver，并在流开始前按路由顺序重试。
  * 返回的 `usagePromise` 在流结束后解析 token 用量，供 `usage-tracker` 记账。
  */
-import type { GatewayRepositories, RequestAuxiliaryAuthBudget } from "@octafuse/core";
+import type { GatewayRepositories, RequestAuxiliaryAuthBudget } from '@octafuse/core';
 import { DEFAULT_ROUTE_STRATEGY } from '@octafuse/core';
 import type { RequestDispatchBudgetSnapshot } from './request-dispatch-budget';
 import { TEXT_REQUEST_DEADLINE_MS } from './request-deadline';
-import { DASHSCOPE_REALTIME_CONNECT_TIMEOUT_MS } from "./dashscope-realtime-guardrails";
-import type { RouteResult } from "./model-router";
-import { dispatchOpenAiRoute } from "./egress/openai-driver";
-import { dispatchOpenAiResponsesRoute } from "./egress/openai-responses-driver";
+import { DASHSCOPE_REALTIME_CONNECT_TIMEOUT_MS } from './dashscope-realtime-guardrails';
+import type { RouteResult } from './model-router';
+import { dispatchOpenAiRoute } from './egress/openai-driver';
+import { dispatchOpenAiResponsesRoute } from './egress/openai-responses-driver';
 import { dispatchOpenAiEmbeddingsRoute } from './egress/openai-embeddings-driver';
 import { dispatchOpenAiRerankRoute } from './egress/openai-rerank-driver';
 import {
-	dispatchOpenAiImageEdits,
-	dispatchOpenAiImageGenerations,
-	IMAGE_GENERATION_TIMEOUT_MS,
-	type NormalizedImageEditRequest,
-} from "./egress/openai-images-driver";
+	loadFirstEventTimeoutConfig,
+	resolveFirstEventTimeoutMs,
+	type FirstEventTimeoutOptions,
+} from './stream-first-event-timeout';
+import type { StreamIdleClockOptions } from './egress/stream-idle-timeout';
+import { dispatchOpenAiImageEdits, dispatchOpenAiImageGenerations, IMAGE_GENERATION_TIMEOUT_MS, type NormalizedImageEditRequest } from './egress/openai-images-driver';
+import { AUDIO_TRANSCRIPTION_TIMEOUT_MS, type NormalizedAudioTranscriptionRequest } from './egress/openai-audio-driver';
+import type { DashScopeAsrDispatchOptions } from './egress/dashscope-audio-driver';
 import {
-	dispatchOpenAiAudioTranscriptions,
-	AUDIO_TRANSCRIPTION_TIMEOUT_MS,
-	type NormalizedAudioTranscriptionRequest,
-} from "./egress/openai-audio-driver";
-import {
-	dispatchDashScopeAsyncAsr,
-	dispatchDashScopeMultimodalPassthrough,
-	dispatchDashScopeSyncAsr,
-	type DashScopeAsrDispatchOptions,
-} from "./egress/dashscope-audio-driver";
-import {
-	dispatchDashScopeMiniMaxTts,
-	dispatchDashScopeQwenTts,
-	dispatchDashScopeSpeechSynthesizer,
-	dispatchOpenAiAudioSpeech,
-	AUDIO_SPEECH_TIMEOUT_MS,
-	type AudioSpeechDispatchOptions,
-	type NormalizedAudioSpeechRequest,
-} from "./egress/audio-speech-driver";
+	dispatchAudioSpeech,
+	dispatchAudioTranscriptions,
+	dispatchImageGenerations,
+	dispatchDashScopeJsonPassthroughRoute,
+	dispatchMiniMaxJsonPassthroughRoute,
+	dispatchGeminiImagePassthroughRoute,
+	dispatchVolcengineJsonPassthroughRoute,
+	dispatchMiniMaxSpeechPassthrough,
+	dispatchMultimodalPassthrough,
+} from './egress/dispatch-table';
+import type { DashScopeJsonPassthroughOptions, DashScopePassthroughSurface } from './egress/dashscope-json-passthrough';
+import type { MiniMaxAsrPassthroughRequest } from './egress/minimax-audio-driver';
+import type { MiniMaxJsonPassthroughOperation, MiniMaxJsonPassthroughOptions } from './egress/minimax-json-passthrough';
+import type { VolcengineJsonPassthroughOptions } from './egress/volcengine-json-passthrough';
+import type { GeminiImageAction, GeminiImagePassthroughOptions } from './egress/gemini-image-passthrough';
+import { AUDIO_SPEECH_TIMEOUT_MS, type AudioSpeechDispatchOptions, type NormalizedAudioSpeechRequest } from './egress/audio-speech-driver';
 import {
 	dispatchDashScopeRealtime,
 	type DashScopeRealtimeDispatchOptions,
 	type DashScopeRealtimeOperation,
-} from "./egress/dashscope-realtime-driver";
-import { dispatchAnthropicRoute } from "./egress/anthropic-driver";
-import { dispatchGeminiRoute } from "./egress/gemini-driver";
+} from './egress/dashscope-realtime-driver';
+import { dispatchAnthropicRoute } from './egress/anthropic-driver';
+import { dispatchGeminiRoute } from './egress/gemini-driver';
 import {
 	failoverDispatch,
 	type FailoverDispatchOptions,
@@ -55,10 +60,7 @@ import type { GatewayCircuitAlertEvent } from './circuit-alert-types';
 import type { StickyTraceSnapshot } from './provider-sticky-routing';
 import type { RequestTimingAttempt, RequestTimingCollector } from './request-timing';
 
-export type {
-	FailoverDispatchOptions,
-	ProxyDispatchMeta,
-} from "./failover-dispatch";
+export type { FailoverDispatchOptions, ProxyDispatchMeta } from './failover-dispatch';
 
 /** 各协议 driver 从上游响应/stream 汇总出的用量（供 `usage-tracker` 计价）。 */
 export interface UsageFromStream {
@@ -145,6 +147,22 @@ export const EMPTY_USAGE: UsageFromStream = {
 	raw_usage: null,
 };
 
+function firstEventTimeoutMsFor(config: { timeoutMs: number; groups: string[] | '*' }, routeGroup: string): number {
+	return resolveFirstEventTimeoutMs(config.timeoutMs, config.groups, routeGroup);
+}
+
+function textStreamDispatchOptions(
+	firstEvent: { timeoutMs: number; groups: string[] | '*' },
+	routeGroup: string,
+	options?: FailoverDispatchOptions,
+): FirstEventTimeoutOptions & StreamIdleClockOptions {
+	return {
+		firstEventTimeoutMs: firstEventTimeoutMsFor(firstEvent, routeGroup),
+		firstChunkTimeoutMs: options?.firstChunkTimeoutMs,
+		idleTimeoutMs: options?.idleTimeoutMs,
+	};
+}
+
 export type AudioTranscriptionProxyOptions = FailoverDispatchOptions & {
 	dashScope?: DashScopeAsrDispatchOptions;
 };
@@ -157,9 +175,7 @@ export type ImageGenerationProxyOptions = FailoverDispatchOptions & {
 	image?: { requireAuthoritativeUsage?: boolean; fetchImpl?: typeof fetch };
 };
 
-export type RouteRequestBody =
-	| Record<string, unknown>
-	| ((route: RouteResult) => Record<string, unknown>);
+export type RouteRequestBody = Record<string, unknown> | ((route: RouteResult) => Record<string, unknown>);
 
 function requestBodyForRoute(body: RouteRequestBody, route: RouteResult): Record<string, unknown> {
 	return typeof body === 'function' ? body(route) : body;
@@ -177,7 +193,10 @@ function delegatedDispatchOptions(options?: FailoverDispatchOptions): FailoverDi
 }
 
 /** Text model loops share the original timestamp; vector calls use the same dispatch ceiling. */
-function textDispatchOptions(options: FailoverDispatchOptions | undefined, errorContext: NonNullable<FailoverDispatchOptions['errorContext']>): FailoverDispatchOptions {
+function textDispatchOptions(
+	options: FailoverDispatchOptions | undefined,
+	errorContext: NonNullable<FailoverDispatchOptions['errorContext']>,
+): FailoverDispatchOptions {
 	const deadlineAtMs = (options?.dispatchBudget?.createdAtMs ?? Date.now()) + TEXT_REQUEST_DEADLINE_MS;
 	return {
 		...delegatedDispatchOptions(options),
@@ -186,6 +205,32 @@ function textDispatchOptions(options: FailoverDispatchOptions | undefined, error
 		// not populated from a client-controlled timeout/header.
 		requestDeadlineAtMs: Math.min(options?.requestDeadlineAtMs ?? deadlineAtMs, deadlineAtMs),
 	};
+}
+
+/** Optional stream configuration belongs to the same absolute preparation deadline. */
+async function withTextStreamConfiguration(
+ repos: GatewayRepositories, routes: readonly RouteResult[], requestSignal: AbortSignal | undefined,
+ options: FailoverDispatchOptions | undefined,
+ errorContext: NonNullable<FailoverDispatchOptions['errorContext']>,
+ execute: (config: { timeoutMs: number; groups: string[] | '*' }, dispatchOptions: FailoverDispatchOptions) => Promise<ProxyResult>,
+): Promise<ProxyResult> {
+ const dispatchOptions = textDispatchOptions(options, errorContext);
+ const resources = createResourceCompletionGroup();
+ const signals = [requestSignal, options?.preparationControl?.signal].filter((signal): signal is AbortSignal => signal !== undefined);
+ const parent = signals.length > 1 ? AbortSignal.any(signals) : signals[0];
+ const owner = createRequestDeadline(dispatchOptions.requestDeadlineAtMs!, parent, undefined, completion => {
+  const task = completion.then(() => 'confirmed' as const, () => 'unconfirmed' as const);
+  resources.track(task);
+  options?.registerResourceCompletion?.(task);
+ });
+ let config: { timeoutMs: number; groups: string[] | '*' } = { timeoutMs: 0, groups: ['default'] };
+ try {
+  if (routes.length) config = await preparationRead(owner, () => loadFirstEventTimeoutConfig(repos));
+ } catch {
+  // Cancellation/deadline is revalidated by dispatchOptions before any dispatch.
+ } finally { owner.dispose(); resources.seal(); }
+ const result = await execute(config, dispatchOptions);
+ return { ...result, resourceCompletion: Promise.all([result.resourceCompletion ?? Promise.resolve('confirmed' as const), resources.completion]).then(values => values.every(value => value === 'confirmed') ? 'confirmed' : 'unconfirmed') };
 }
 
 /**
@@ -199,10 +244,11 @@ export async function proxyChatCompletions(
 	options?: FailoverDispatchOptions,
 	publicCorrelationId?: string,
 ): Promise<ProxyResult> {
+	return withTextStreamConfiguration(repos, routes, requestSignal, options, { skin: 'chat', requestId: publicCorrelationId }, async (firstEvent, dispatchOptions) => {
 	const result = await failoverDispatch(
 		repos,
 		routes,
-		"openai",
+		'openai',
 		(
 			route,
 			signal,
@@ -211,21 +257,24 @@ export async function proxyChatCompletions(
 			beforeFetch?: () => Promise<void>,
 			auxiliaryAuth?: RequestAuxiliaryAuthBudget,
 			upstreamHeadersObserved?: (status: number) => void,
-		) => dispatchOpenAiRoute(
-			route,
-			requestBodyForRoute(body, route),
-			signal,
-			timing,
-			attempt,
-			beforeFetch,
-			publicCorrelationId,
-			auxiliaryAuth,
-			upstreamHeadersObserved,
-		),
+		) =>
+			dispatchOpenAiRoute(
+				route,
+				requestBodyForRoute(body, route),
+				signal,
+				timing,
+				attempt,
+				beforeFetch,
+				publicCorrelationId,
+				auxiliaryAuth,
+				upstreamHeadersObserved,
+				textStreamDispatchOptions(firstEvent, route.routeGroup, options),
+			),
 		requestSignal,
-		textDispatchOptions(options, { skin: 'chat', requestId: publicCorrelationId }),
+		dispatchOptions,
 	);
 	return result;
+	});
 }
 
 /**
@@ -239,10 +288,11 @@ export async function proxyResponses(
 	options?: FailoverDispatchOptions,
 	publicCorrelationId?: string,
 ): Promise<ProxyResult> {
+	return withTextStreamConfiguration(repos, routes, requestSignal, options, { skin: 'responses', requestId: publicCorrelationId }, async (firstEvent, dispatchOptions) => {
 	return failoverDispatch(
 		repos,
 		routes,
-		"openai",
+		'openai',
 		(
 			route,
 			signal,
@@ -250,19 +300,22 @@ export async function proxyResponses(
 			attempt?: RequestTimingAttempt,
 			beforeFetch?: () => Promise<void>,
 			auxiliaryAuth?: RequestAuxiliaryAuthBudget,
-		) => dispatchOpenAiResponsesRoute(
-			route,
-			requestBodyForRoute(body, route),
-			signal,
-			timing,
-			attempt,
-			beforeFetch,
-			publicCorrelationId,
-			auxiliaryAuth,
-		),
+		) =>
+			dispatchOpenAiResponsesRoute(
+				route,
+				requestBodyForRoute(body, route),
+				signal,
+				timing,
+				attempt,
+				beforeFetch,
+				publicCorrelationId,
+				auxiliaryAuth,
+				textStreamDispatchOptions(firstEvent, route.routeGroup, options),
+			),
 		requestSignal,
-		textDispatchOptions(options, { skin: 'responses', requestId: publicCorrelationId }),
+		dispatchOptions,
 	);
+	});
 }
 
 /** Proxy OpenAI-compatible embeddings with provider failover before a paid response is accepted. */
@@ -308,16 +361,7 @@ export async function proxyRerank(
 		routes,
 		'openai',
 		(route, signal, timing, attempt, beforeFetch, auxiliaryAuth) =>
-			dispatchOpenAiRerankRoute(
-				route,
-				body,
-				signal,
-				timing,
-				attempt,
-				beforeFetch,
-				publicCorrelationId,
-				auxiliaryAuth,
-			),
+			dispatchOpenAiRerankRoute(route, body, signal, timing, attempt, beforeFetch, publicCorrelationId, auxiliaryAuth),
 		requestSignal,
 		textDispatchOptions(options, { skin: 'chat', requestId: publicCorrelationId }),
 	);
@@ -334,10 +378,11 @@ export async function proxyAnthropicMessages(
 	options?: FailoverDispatchOptions,
 	publicCorrelationId?: string,
 ): Promise<ProxyResult> {
+	return withTextStreamConfiguration(repos, routes, requestSignal, options, { skin: 'anthropic', requestId: publicCorrelationId }, async (firstEvent, dispatchOptions) => {
 	return failoverDispatch(
 		repos,
 		routes,
-		"anthropic",
+		'anthropic',
 		(
 			route,
 			signal,
@@ -345,19 +390,22 @@ export async function proxyAnthropicMessages(
 			attempt?: RequestTimingAttempt,
 			beforeFetch?: () => Promise<void>,
 			auxiliaryAuth?: RequestAuxiliaryAuthBudget,
-		) => dispatchAnthropicRoute(
-			route,
-			requestBodyForRoute(body, route),
-			signal,
-			timing,
-			attempt,
-			beforeFetch,
-			publicCorrelationId,
-			auxiliaryAuth,
-		),
+		) =>
+			dispatchAnthropicRoute(
+				route,
+				requestBodyForRoute(body, route),
+				signal,
+				timing,
+				attempt,
+				beforeFetch,
+				publicCorrelationId,
+				auxiliaryAuth,
+				textStreamDispatchOptions(firstEvent, route.routeGroup, options),
+			),
 		requestSignal,
-		textDispatchOptions(options, { skin: 'anthropic', requestId: publicCorrelationId }),
+		dispatchOptions,
 	);
+	});
 }
 
 /**
@@ -368,7 +416,7 @@ export async function proxyImageGenerations(
 	routes: RouteResult[],
 	body: Record<string, unknown>,
 	requestSignal?: AbortSignal,
-	options?: ImageGenerationProxyOptions
+	options?: ImageGenerationProxyOptions,
 ): Promise<ProxyResult> {
 	const deadlineAtMs = (options?.dispatchBudget?.createdAtMs ?? Date.now()) + IMAGE_GENERATION_TIMEOUT_MS;
 	// Images owns its SSE/cancellation settlement. Do not install the text
@@ -377,7 +425,7 @@ export async function proxyImageGenerations(
 	return failoverDispatch(
 		repos,
 		routes,
-		"openai",
+		['openai', 'dashscope', 'minimax', 'volcengine', 'gemini'],
 		(
 			route,
 			signal,
@@ -385,13 +433,22 @@ export async function proxyImageGenerations(
 			attempt?: RequestTimingAttempt,
 			beforeFetch?: (preparedAttempt?: unknown) => Promise<void>,
 			auxiliaryAuth?: RequestAuxiliaryAuthBudget,
-		) => dispatchOpenAiImageGenerations(route, body, signal, timing, attempt, {
-			fetchImpl: options?.image?.fetchImpl,
-			requireAuthoritativeUsage: options?.image?.requireAuthoritativeUsage,
-			requestId: options?.errorContext?.requestId,
-			auxiliaryAuth,
-			deadlineAtMs: Math.min(requestDeadlineAtMs ?? deadlineAtMs, deadlineAtMs),
-		}, beforeFetch),
+		) =>
+			dispatchImageGenerations(
+				route,
+				body,
+				signal,
+				timing,
+				attempt,
+				{
+					fetchImpl: options?.image?.fetchImpl,
+					requireAuthoritativeUsage: options?.image?.requireAuthoritativeUsage,
+					requestId: options?.errorContext?.requestId,
+					auxiliaryAuth,
+					deadlineAtMs: Math.min(requestDeadlineAtMs ?? deadlineAtMs, deadlineAtMs),
+				},
+				beforeFetch,
+			),
 		requestSignal,
 		dispatchOptions,
 	);
@@ -405,14 +462,14 @@ export async function proxyImageEdits(
 	routes: RouteResult[],
 	edit: NormalizedImageEditRequest,
 	requestSignal?: AbortSignal,
-	options?: ImageGenerationProxyOptions
+	options?: ImageGenerationProxyOptions,
 ): Promise<ProxyResult> {
 	const deadlineAtMs = (options?.dispatchBudget?.createdAtMs ?? Date.now()) + IMAGE_GENERATION_TIMEOUT_MS;
 	const { requestDeadlineAtMs, ...dispatchOptions } = delegatedDispatchOptions(options);
 	return failoverDispatch(
 		repos,
 		routes,
-		"openai",
+		'openai',
 		(
 			route,
 			signal,
@@ -420,11 +477,20 @@ export async function proxyImageEdits(
 			attempt?: RequestTimingAttempt,
 			beforeFetch?: (preparedAttempt?: unknown) => Promise<void>,
 			auxiliaryAuth?: RequestAuxiliaryAuthBudget,
-		) => dispatchOpenAiImageEdits(route, edit, signal, timing, attempt, {
-			fetchImpl: options?.image?.fetchImpl,
-			auxiliaryAuth,
-			deadlineAtMs: Math.min(requestDeadlineAtMs ?? deadlineAtMs, deadlineAtMs),
-		}, beforeFetch),
+		) =>
+			dispatchOpenAiImageEdits(
+				route,
+				edit,
+				signal,
+				timing,
+				attempt,
+				{
+					fetchImpl: options?.image?.fetchImpl,
+					auxiliaryAuth,
+					deadlineAtMs: Math.min(requestDeadlineAtMs ?? deadlineAtMs, deadlineAtMs),
+				},
+				beforeFetch,
+			),
 		requestSignal,
 		dispatchOptions,
 	);
@@ -438,14 +504,14 @@ export async function proxyAudioTranscriptions(
 	routes: RouteResult[],
 	req: NormalizedAudioTranscriptionRequest,
 	requestSignal?: AbortSignal,
-	options?: AudioTranscriptionProxyOptions
+	options?: AudioTranscriptionProxyOptions,
 ): Promise<ProxyResult> {
 	const deadlineAtMs = (options?.dispatchBudget?.createdAtMs ?? Date.now()) + AUDIO_TRANSCRIPTION_TIMEOUT_MS;
 	const { requestDeadlineAtMs, ...dispatchOptions } = delegatedDispatchOptions(options);
 	return failoverDispatch(
 		repos,
 		routes,
-		["openai", "dashscope"],
+		['openai', 'dashscope', 'minimax'],
 		(
 			route,
 			signal,
@@ -460,66 +526,44 @@ export async function proxyAudioTranscriptions(
 				auxiliaryAuth,
 				deadlineAtMs: Math.min(requestDeadlineAtMs ?? deadlineAtMs, deadlineAtMs),
 			};
-			if (
-				route.adapter === "passthrough" &&
-				route.upstreamProtocol === "openai"
-			) {
-				return dispatchOpenAiAudioTranscriptions(
-					route,
-					req,
-					signal,
-					timing,
-					attempt,
-					{ auxiliaryAuth, beforeUpstreamDispatch: beforeFetch, deadlineAtMs: asrOptions.deadlineAtMs },
-				);
+			if (route.adapter === 'passthrough' && route.upstreamProtocol === 'openai') {
+				return dispatchOpenAiAudioTranscriptions(route, req, signal, timing, attempt, {
+					auxiliaryAuth,
+					beforeUpstreamDispatch: beforeFetch,
+					deadlineAtMs: asrOptions.deadlineAtMs,
+				});
 			}
 			if (
-				route.adapter === "dashscope-asr-qwen-file" ||
-				route.adapter === "dashscope-asr-qwen-audio-file" ||
-				route.adapter === "dashscope-asr-fun-file"
+				route.adapter === 'dashscope-asr-qwen-file' ||
+				route.adapter === 'dashscope-asr-qwen-audio-file' ||
+				route.adapter === 'dashscope-asr-fun-file'
 			) {
-				return dispatchDashScopeSyncAsr(
-					route,
-					req,
-					signal,
-					timing,
-					attempt,
-					asrOptions
-				);
+				return dispatchDashScopeSyncAsr(route, req, signal, timing, attempt, asrOptions);
 			}
-			if (route.adapter === "dashscope-asr-file-async") {
-				return dispatchDashScopeAsyncAsr(
-					route,
-					req,
-					signal,
-					timing,
-					attempt,
-					asrOptions
-				);
+			if (route.adapter === 'dashscope-asr-file-async') {
+				return dispatchDashScopeAsyncAsr(route, req, signal, timing, attempt, asrOptions);
 			}
-			throw new Error(
-				`Unsupported audio transcription adapter: ${route.adapter}`
-			);
+			return dispatchAudioTranscriptions(route, req, signal, timing, attempt, asrOptions);
 		},
 		requestSignal,
-		dispatchOptions
+		dispatchOptions,
 	);
 }
 
-/** 代理 OpenAI Audio Speech，并按显式 adapter 转为三类 DashScope TTS 请求。 */
+/** 代理 OpenAI Audio Speech，并按显式 adapter 转到 DashScope 或 MiniMax 官方语音合成。 */
 export async function proxyAudioSpeech(
 	repos: GatewayRepositories,
 	routes: RouteResult[],
 	request: NormalizedAudioSpeechRequest,
 	requestSignal?: AbortSignal,
-	options?: AudioSpeechProxyOptions
+	options?: AudioSpeechProxyOptions,
 ): Promise<ProxyResult> {
 	const deadlineAtMs = (options?.dispatchBudget?.createdAtMs ?? Date.now()) + AUDIO_SPEECH_TIMEOUT_MS;
 	const { requestDeadlineAtMs, ...dispatchOptions } = delegatedDispatchOptions(options);
 	return failoverDispatch(
 		repos,
 		routes,
-		["openai", "dashscope"],
+		['openai', 'dashscope', 'minimax'],
 		(
 			route,
 			signal,
@@ -534,53 +578,22 @@ export async function proxyAudioSpeech(
 				auxiliaryAuth,
 				deadlineAtMs: Math.min(options?.deadlineAtMs ?? Infinity, requestDeadlineAtMs ?? deadlineAtMs, deadlineAtMs),
 			};
-			if (
-				route.adapter === "passthrough" &&
-				route.upstreamProtocol === "openai"
-			) {
-				return dispatchOpenAiAudioSpeech(
-					route,
-					request,
-					signal,
-					timing,
-					attempt,
-					speechOptions
-				);
+			if (route.adapter === 'passthrough' && route.upstreamProtocol === 'openai') {
+				return dispatchOpenAiAudioSpeech(route, request, signal, timing, attempt, speechOptions);
 			}
-			if (route.adapter === "dashscope-tts-speech") {
-				return dispatchDashScopeSpeechSynthesizer(
-					route,
-					request,
-					signal,
-					timing,
-					attempt,
-					speechOptions
-				);
+			if (route.adapter === 'dashscope-tts-speech') {
+				return dispatchDashScopeSpeechSynthesizer(route, request, signal, timing, attempt, speechOptions);
 			}
-			if (route.adapter === "dashscope-tts-qwen") {
-				return dispatchDashScopeQwenTts(
-					route,
-					request,
-					signal,
-					timing,
-					attempt,
-					speechOptions
-				);
+			if (route.adapter === 'dashscope-tts-qwen') {
+				return dispatchDashScopeQwenTts(route, request, signal, timing, attempt, speechOptions);
 			}
-			if (route.adapter === "dashscope-tts-minimax") {
-				return dispatchDashScopeMiniMaxTts(
-					route,
-					request,
-					signal,
-					timing,
-					attempt,
-					speechOptions
-				);
+			if (route.adapter === 'dashscope-tts-minimax') {
+				return dispatchDashScopeMiniMaxTts(route, request, signal, timing, attempt, speechOptions);
 			}
-			throw new Error(`Unsupported audio speech adapter: ${route.adapter}`);
+			return dispatchAudioSpeech(route, request, signal, timing, attempt, speechOptions);
 		},
 		requestSignal,
-		dispatchOptions
+		dispatchOptions,
 	);
 }
 
@@ -590,14 +603,14 @@ export async function proxyDashScopeMultimodalPassthrough(
 	routes: RouteResult[],
 	body: Record<string, unknown>,
 	requestSignal?: AbortSignal,
-	options?: AudioTranscriptionProxyOptions
+	options?: AudioTranscriptionProxyOptions,
 ): Promise<ProxyResult> {
 	const deadlineAtMs = (options?.dispatchBudget?.createdAtMs ?? Date.now()) + AUDIO_TRANSCRIPTION_TIMEOUT_MS;
 	const { requestDeadlineAtMs, ...dispatchOptions } = delegatedDispatchOptions(options);
 	return failoverDispatch(
 		repos,
 		routes,
-		"dashscope",
+		'dashscope',
 		(
 			route,
 			signal,
@@ -612,25 +625,117 @@ export async function proxyDashScopeMultimodalPassthrough(
 				auxiliaryAuth,
 				deadlineAtMs: Math.min(requestDeadlineAtMs ?? deadlineAtMs, deadlineAtMs),
 			};
-			if (
-				route.adapter !== "passthrough" ||
-				route.upstreamOperation !== "audio.transcriptions.multimodal"
-			) {
-				throw new Error(
-					`Unsupported DashScope multimodal adapter: ${route.adapter}`
-				);
+			if (route.adapter !== 'passthrough' || route.upstreamOperation !== 'audio.transcriptions.multimodal') {
+				throw new Error(`Unsupported DashScope multimodal adapter: ${route.adapter}`);
 			}
-			return dispatchDashScopeMultimodalPassthrough(
-				route,
-				body,
-				signal,
-				timing,
-				attempt,
-				asrOptions
-			);
+			return dispatchDashScopeMultimodalPassthrough(route, body, signal, timing, attempt, asrOptions);
 		},
 		requestSignal,
-		dispatchOptions
+		dispatchOptions,
+	);
+}
+
+/** 代理 DashScope 原生 JSON / SSE 透传（语音合成、生图、异步转写）。 */
+export async function proxyDashScopeJsonPassthrough(
+	repos: GatewayRepositories,
+	routes: RouteResult[],
+	surface: DashScopePassthroughSurface,
+	body: Record<string, unknown> | null,
+	requestSignal?: AbortSignal,
+	options?: AudioTranscriptionProxyOptions & { dashScopeJson?: DashScopeJsonPassthroughOptions },
+): Promise<ProxyResult> {
+	const dispatchOptions = delegatedDispatchOptions(options);
+	return failoverDispatch(
+		repos,
+		routes,
+		'dashscope',
+		(route, signal, timing?: RequestTimingCollector | null, attempt?: RequestTimingAttempt, beforeFetch?: () => Promise<void>, auxiliaryAuth?: RequestAuxiliaryAuthBudget) =>
+			dispatchDashScopeJsonPassthroughRoute(route, surface, body, signal, timing, attempt, { ...options?.dashScopeJson, beforeUpstreamDispatch: beforeFetch, auxiliaryAuth, deadlineAtMs: options?.requestDeadlineAtMs }),
+		requestSignal,
+		dispatchOptions,
+	);
+}
+
+/** 代理 Gemini 原生图片模型（generateContent / streamGenerateContent）。 */
+export async function proxyGeminiImagePassthrough(
+	repos: GatewayRepositories,
+	routes: RouteResult[],
+	action: GeminiImageAction,
+	body: Record<string, unknown>,
+	search: string,
+	requestSignal?: AbortSignal,
+	options?: FailoverDispatchOptions & { geminiImage?: GeminiImagePassthroughOptions },
+): Promise<ProxyResult> {
+	const dispatchOptions = delegatedDispatchOptions(options);
+	return failoverDispatch(
+		repos,
+		routes,
+		'gemini',
+		(route, signal, timing?: RequestTimingCollector | null, attempt?: RequestTimingAttempt, beforeFetch?: () => Promise<void>, auxiliaryAuth?: RequestAuxiliaryAuthBudget) =>
+			dispatchGeminiImagePassthroughRoute(route, action, body, search, signal, timing, attempt, { ...options?.geminiImage, beforeUpstreamDispatch: beforeFetch, auxiliaryAuth, deadlineAtMs: options?.requestDeadlineAtMs }),
+		requestSignal,
+		dispatchOptions,
+	);
+}
+
+/** 代理火山方舟 / BytePlus Seedream 生图透传（JSON 或 SSE）。 */
+export async function proxyVolcengineJsonPassthrough(
+	repos: GatewayRepositories,
+	routes: RouteResult[],
+	body: Record<string, unknown>,
+	requestSignal?: AbortSignal,
+	options?: AudioTranscriptionProxyOptions & { volcengineJson?: VolcengineJsonPassthroughOptions },
+): Promise<ProxyResult> {
+	const dispatchOptions = delegatedDispatchOptions(options);
+	return failoverDispatch(
+		repos,
+		routes,
+		'volcengine',
+		(route, signal, timing?: RequestTimingCollector | null, attempt?: RequestTimingAttempt, beforeFetch?: () => Promise<void>, auxiliaryAuth?: RequestAuxiliaryAuthBudget) =>
+			dispatchVolcengineJsonPassthroughRoute(route, body, signal, timing, attempt, { ...options?.volcengineJson, beforeUpstreamDispatch: beforeFetch, auxiliaryAuth, deadlineAtMs: options?.requestDeadlineAtMs }),
+		requestSignal,
+		dispatchOptions,
+	);
+}
+
+/** 代理 MiniMax 原生 JSON / SSE 透传（语音合成、生图）。 */
+export async function proxyMiniMaxJsonPassthrough(
+	repos: GatewayRepositories,
+	routes: RouteResult[],
+	operation: MiniMaxJsonPassthroughOperation,
+	body: Record<string, unknown>,
+	requestSignal?: AbortSignal,
+	options?: AudioTranscriptionProxyOptions & { miniMaxJson?: MiniMaxJsonPassthroughOptions },
+): Promise<ProxyResult> {
+	const dispatchOptions = delegatedDispatchOptions(options);
+	return failoverDispatch(
+		repos,
+		routes,
+		'minimax',
+		(route, signal, timing?: RequestTimingCollector | null, attempt?: RequestTimingAttempt, beforeFetch?: () => Promise<void>, auxiliaryAuth?: RequestAuxiliaryAuthBudget) =>
+			dispatchMiniMaxJsonPassthroughRoute(route, operation, body, signal, timing, attempt, { ...options?.miniMaxJson, beforeUpstreamDispatch: beforeFetch, auxiliaryAuth, deadlineAtMs: options?.requestDeadlineAtMs }),
+		requestSignal,
+		dispatchOptions,
+	);
+}
+
+/** 代理 MiniMax 原生 ASR 透传（multipart，不转 OpenAI transcriptions）。 */
+export async function proxyMiniMaxAsrPassthrough(
+	repos: GatewayRepositories,
+	routes: RouteResult[],
+	request: MiniMaxAsrPassthroughRequest,
+	requestSignal?: AbortSignal,
+	options?: AudioTranscriptionProxyOptions,
+): Promise<ProxyResult> {
+	const dispatchOptions = delegatedDispatchOptions(options);
+	return failoverDispatch(
+		repos,
+		routes,
+		'minimax',
+		(route, signal, timing?: RequestTimingCollector | null, attempt?: RequestTimingAttempt, beforeFetch?: () => Promise<void>, auxiliaryAuth?: RequestAuxiliaryAuthBudget) =>
+			dispatchMiniMaxSpeechPassthrough(route, request, signal, timing, attempt, { beforeUpstreamDispatch: beforeFetch, auxiliaryAuth, deadlineAtMs: options?.requestDeadlineAtMs }),
+		requestSignal,
+		dispatchOptions,
 	);
 }
 
@@ -640,18 +745,21 @@ export async function proxyDashScopeRealtime(
 	routes: RouteResult[],
 	operation: DashScopeRealtimeOperation,
 	requestSignal?: AbortSignal,
-	options?: DashScopeRealtimeProxyOptions
+	options?: DashScopeRealtimeProxyOptions,
 ): Promise<ProxyResult> {
 	// This is a connection-only ceiling. The generic HTTP owner cannot clone
 	// or materialize a Workers 101 response; session lifetime has its own owner.
 	const { requestDeadlineAtMs, ...dispatchOptions } = delegatedDispatchOptions(options);
-	const connectDeadlineAtMs = Math.min(options?.connectDeadlineAtMs ?? Infinity,
-		options?.sessionLimits?.connectDeadlineAtMs ?? Infinity, requestDeadlineAtMs ?? Infinity,
-		(options?.dispatchBudget?.createdAtMs ?? Date.now()) + DASHSCOPE_REALTIME_CONNECT_TIMEOUT_MS);
+	const connectDeadlineAtMs = Math.min(
+		options?.connectDeadlineAtMs ?? Infinity,
+		options?.sessionLimits?.connectDeadlineAtMs ?? Infinity,
+		requestDeadlineAtMs ?? Infinity,
+		(options?.dispatchBudget?.createdAtMs ?? Date.now()) + DASHSCOPE_REALTIME_CONNECT_TIMEOUT_MS,
+	);
 	return failoverDispatch(
 		repos,
 		routes,
-		"dashscope",
+		'dashscope',
 		(
 			route,
 			signal,
@@ -660,18 +768,12 @@ export async function proxyDashScopeRealtime(
 			beforeFetch?: () => Promise<void>,
 			auxiliaryAuth?: RequestAuxiliaryAuthBudget,
 		) =>
-			dispatchDashScopeRealtime(
-				route,
-				operation,
-				signal,
-				timing,
-				attempt,
-				{
-					...options,
-					connectDeadlineAtMs, auxiliaryAuth,
-					beforeUpstreamDispatch: beforeFetch,
-				},
-			),
+			dispatchDashScopeRealtime(route, operation, signal, timing, attempt, {
+				...options,
+				connectDeadlineAtMs,
+				auxiliaryAuth,
+				beforeUpstreamDispatch: beforeFetch,
+			}),
 		requestSignal,
 		dispatchOptions,
 	);
@@ -683,16 +785,17 @@ export async function proxyDashScopeRealtime(
 export async function proxyGeminiContent(
 	repos: GatewayRepositories,
 	routes: RouteResult[],
-	action: "generateContent" | "streamGenerateContent",
+	action: 'generateContent' | 'streamGenerateContent',
 	body: Record<string, unknown>,
 	search: string,
 	requestSignal?: AbortSignal,
-	options?: FailoverDispatchOptions
+	options?: FailoverDispatchOptions,
 ): Promise<ProxyResult> {
+	return withTextStreamConfiguration(repos, routes, requestSignal, options, options?.errorContext ?? { skin: 'chat' }, async (firstEvent, dispatchOptions) => {
 	return failoverDispatch(
 		repos,
 		routes,
-		"gemini",
+		'gemini',
 		(
 			route,
 			signal,
@@ -700,9 +803,9 @@ export async function proxyGeminiContent(
 			attempt?: RequestTimingAttempt,
 			beforeFetch?: () => Promise<void>,
 			auxiliaryAuth?: RequestAuxiliaryAuthBudget,
-		) =>
-			dispatchGeminiRoute(route, body, action, search, signal, timing, attempt, beforeFetch, auxiliaryAuth),
+		) => dispatchGeminiRoute(route, body, action, search, signal, timing, attempt, beforeFetch, auxiliaryAuth, textStreamDispatchOptions(firstEvent, route.routeGroup, options)),
 		requestSignal,
-		textDispatchOptions(options, options?.errorContext ?? { skin: 'chat' }),
+		dispatchOptions,
 	);
+	});
 }

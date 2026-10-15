@@ -31,7 +31,8 @@ function fixture(driver: 'd1' | 'postgres' | 'mysql') {
 			.replaceAll('<=>', 'IS')
 			.replaceAll('IS NOT DISTINCT FROM', 'IS');
 		const stmt = sqlite.prepare(adapted);
-		if (/^SELECT\b/iu.test(adapted.trim()) || /\bRETURNING\b/u.test(adapted)) return stmt.all(...(params as SQLInputValue[]));
+		if (/^SELECT\b/iu.test(adapted.trim()) || /\bRETURNING\b/u.test(adapted))
+			return stmt.all(...(params as SQLInputValue[]));
 		return { affectedRows: Number(stmt.run(...(params as SQLInputValue[])).changes) };
 	}
 	const tagged = async (strings: TemplateStringsArray, ...params: unknown[]) => execute(strings.join('?'), params);
@@ -78,7 +79,10 @@ function fixture(driver: 'd1' | 'postgres' | 'mysql') {
 			? createD1ModelsRepository({ raw: d1!.binding } as unknown as D1DatabaseClient)
 			: driver === 'postgres'
 				? createPostgresModelsRepository({ raw: pg, drizzle: {} } as unknown as PostgresDatabaseClient)
-				: createMySqlModelsRepository({ raw: { getConnection: async () => conn }, drizzle: {} } as unknown as MySqlDatabaseClient);
+				: createMySqlModelsRepository({
+						raw: { getConnection: async () => conn },
+						drizzle: {},
+					} as unknown as MySqlDatabaseClient);
 	const state = () => ({
 		model: { ...sqlite.prepare('SELECT * FROM models').get() },
 		tags: sqlite
@@ -105,9 +109,9 @@ for (const driver of ['d1', 'postgres', 'mysql'] as const) {
 						metadata: undefined,
 					},
 					null,
-					['new', ' new ', 'second']
+					['new', ' new ', 'second'],
 				),
-				true
+				true,
 			);
 			assert.deepEqual(f.state(), {
 				model: {
@@ -135,10 +139,13 @@ for (const driver of ['d1', 'postgres', 'mysql'] as const) {
 			] as const) {
 				const before = f.state();
 				assert.equal(
-					await f.repo.updateModelWithPolicyPrecondition(id, { route_policy: 'new', display_name: 'overwrite' }, expected, [
-						'overwrite',
-					]),
-					false
+					await f.repo.updateModelWithPolicyPrecondition(
+						id,
+						{ route_policy: 'new', display_name: 'overwrite' },
+						expected,
+						['overwrite'],
+					),
+					false,
 				);
 				assert.deepEqual(f.state(), before);
 			}
@@ -149,11 +156,19 @@ for (const driver of ['d1', 'postgres', 'mysql'] as const) {
 	test(`${driver} conditional policy: concurrent read-set winner leaves stale writer and all its tags untouched`, async () => {
 		const f = fixture(driver);
 		try {
-			assert.equal(await f.repo.updateModelWithPolicyPrecondition('Model-A', { route_policy: 'A' }, null, ['winner']), true);
+			assert.equal(
+				await f.repo.updateModelWithPolicyPrecondition('Model-A', { route_policy: 'A' }, null, ['winner']),
+				true,
+			);
 			const before = f.state();
 			assert.equal(
-				await f.repo.updateModelWithPolicyPrecondition('Model-A', { route_policy: 'B', pricing_profile: 'loser' }, null, ['loser']),
-				false
+				await f.repo.updateModelWithPolicyPrecondition(
+					'Model-A',
+					{ route_policy: 'B', pricing_profile: 'loser' },
+					null,
+					['loser'],
+				),
+				false,
 			);
 			assert.deepEqual(f.state(), before);
 			assert.equal(await f.repo.updateModelWithPolicyPrecondition('Model-A', { route_policy: 'B' }, 'a', []), false);
@@ -166,7 +181,10 @@ for (const driver of ['d1', 'postgres', 'mysql'] as const) {
 		const f = fixture(driver);
 		try {
 			assert.equal(await f.repo.updateModelWithPolicyPrecondition('Model-A', {}, null), true);
-			assert.equal(await f.repo.updateModelWithPolicyPrecondition('Model-A', { unexpected_column: 'ignored' }, null, []), true);
+			assert.equal(
+				await f.repo.updateModelWithPolicyPrecondition('Model-A', { unexpected_column: 'ignored' }, null, []),
+				true,
+			);
 			assert.deepEqual(f.state().tags, []);
 		} finally {
 			f.sqlite.close();
@@ -176,12 +194,15 @@ for (const driver of ['d1', 'postgres', 'mysql'] as const) {
 		const f = fixture(driver);
 		try {
 			f.sqlite.exec(
-				"CREATE TRIGGER tag_failure BEFORE INSERT ON model_tags WHEN NEW.tag='fail' BEGIN SELECT RAISE(ABORT,'tag_failure'); END"
+				"CREATE TRIGGER tag_failure BEFORE INSERT ON model_tags WHEN NEW.tag='fail' BEGIN SELECT RAISE(ABORT,'tag_failure'); END",
 			);
 			const before = f.state();
 			await assert.rejects(
-				f.repo.updateModelWithPolicyPrecondition('Model-A', { route_policy: 'A', display_name: 'New' }, null, ['good', 'fail']),
-				/tag_failure/
+				f.repo.updateModelWithPolicyPrecondition('Model-A', { route_policy: 'A', display_name: 'New' }, null, [
+					'good',
+					'fail',
+				]),
+				/tag_failure/,
 			);
 			assert.deepEqual(f.state(), before);
 		} finally {
@@ -191,11 +212,13 @@ for (const driver of ['d1', 'postgres', 'mysql'] as const) {
 	test(`${driver} conditional policy: model trigger exception rolls back tags too and cannot ACK`, async () => {
 		const f = fixture(driver);
 		try {
-			f.sqlite.exec("CREATE TRIGGER model_failure BEFORE UPDATE ON models BEGIN SELECT RAISE(ABORT,'model_failure'); END");
+			f.sqlite.exec(
+				"CREATE TRIGGER model_failure BEFORE UPDATE ON models BEGIN SELECT RAISE(ABORT,'model_failure'); END",
+			);
 			const before = f.state();
 			await assert.rejects(
 				f.repo.updateModelWithPolicyPrecondition('Model-A', { route_policy: 'A' }, null, ['good']),
-				/model_failure/
+				/model_failure/,
 			);
 			assert.deepEqual(f.state(), before);
 		} finally {
@@ -225,7 +248,7 @@ for (const driver of ['d1', 'postgres', 'mysql'] as const) {
 				const before = f.state();
 				await assert.rejects(
 					f.repo.updateModelWithPolicyPrecondition('Model-A', { route_policy: 'A' }, null, ['new']),
-					/Uncertain commit/
+					/Uncertain commit/,
 				);
 				assert.deepEqual(f.state(), before);
 			} finally {
@@ -244,7 +267,7 @@ test('mysql conditional policy: changedRows=0 no-op is valid; malformed affected
 			const before = f.state();
 			await assert.rejects(
 				f.repo.updateModelWithPolicyPrecondition('Model-A', { route_policy: 'A' }, null, ['new']),
-				/acknowledgement/
+				/acknowledgement/,
 			);
 			assert.deepEqual(f.state(), before);
 		}
@@ -257,29 +280,36 @@ test('D1 full formal migration inventory: raw policy CAS and tags rollback use a
 	const f = createSqliteD1();
 	const repo = createD1ModelsRepository({ raw: f.binding } as unknown as D1DatabaseClient);
 	try {
-		f.sqlite.exec("INSERT INTO models(id,vendor) VALUES('full-model','other'); INSERT INTO model_tags VALUES('full-model','old')");
-		assert.equal(
-			await repo.updateModelWithPolicyPrecondition('full-model', { route_policy: ' A ', max_tokens: null }, null, ['new']),
-			true
-		);
-		assert.equal(await repo.updateModelWithPolicyPrecondition('full-model', { route_policy: 'B' }, 'A', ['stale']), false);
 		f.sqlite.exec(
-			"CREATE TRIGGER full_tag_failure BEFORE INSERT ON model_tags WHEN NEW.tag='fail' BEGIN SELECT RAISE(ABORT,'full_tag_failure'); END"
+			"INSERT INTO models(id,vendor) VALUES('full-model','other'); INSERT INTO model_tags VALUES('full-model','old')",
+		);
+		assert.equal(
+			await repo.updateModelWithPolicyPrecondition('full-model', { route_policy: ' A ', max_tokens: null }, null, [
+				'new',
+			]),
+			true,
+		);
+		assert.equal(
+			await repo.updateModelWithPolicyPrecondition('full-model', { route_policy: 'B' }, 'A', ['stale']),
+			false,
+		);
+		f.sqlite.exec(
+			"CREATE TRIGGER full_tag_failure BEFORE INSERT ON model_tags WHEN NEW.tag='fail' BEGIN SELECT RAISE(ABORT,'full_tag_failure'); END",
 		);
 		await assert.rejects(
 			repo.updateModelWithPolicyPrecondition('full-model', { route_policy: 'B' }, ' A ', ['fail']),
-			/full_tag_failure/
+			/full_tag_failure/,
 		);
 		assert.deepEqual(
 			{ ...f.sqlite.prepare('SELECT route_policy,max_tokens FROM models').get() },
-			{ route_policy: ' A ', max_tokens: null }
+			{ route_policy: ' A ', max_tokens: null },
 		);
 		assert.deepEqual(
 			f.sqlite
 				.prepare('SELECT tag FROM model_tags')
 				.all()
 				.map((r) => r.tag),
-			['new']
+			['new'],
 		);
 		assert.ok(f.migrationFiles.includes('0077_withdrawal_balance_update_guards.sql'));
 	} finally {
@@ -291,7 +321,7 @@ test('D1 matched receipt uses exact RETURNING rows, independent of total_changes
 	const f = createSqliteD1({}, { applyMigrations: false });
 	try {
 		f.sqlite.exec(
-			"CREATE TABLE models(id TEXT PRIMARY KEY,route_policy TEXT); CREATE TABLE model_tags(model_id TEXT,tag TEXT); INSERT INTO models VALUES('m',NULL)"
+			"CREATE TABLE models(id TEXT PRIMARY KEY,route_policy TEXT); CREATE TABLE model_tags(model_id TEXT,tag TEXT); INSERT INTO models VALUES('m',NULL)",
 		);
 		const batch = f.binding.batch.bind(f.binding);
 		let invalidReceipt = false;
@@ -316,3 +346,84 @@ test('D1 matched receipt uses exact RETURNING rows, independent of total_changes
 		f.sqlite.close();
 	}
 });
+
+for (const driver of ['d1', 'postgres', 'mysql'] as const) {
+	test(`${driver} catalog time-window changes and route overrides commit or roll back with model CAS`, async () => {
+		const f = fixture(driver);
+		try {
+			const profile = (start: string, end: string) =>
+				JSON.stringify({
+					tiers: [{ upto: null, input_price: 1, output_price: 2 }],
+					schedule: [{ start, end, factor: 0.8 }],
+				});
+			f.sqlite.exec(
+				'CREATE TABLE model_routes(id TEXT PRIMARY KEY,model_id TEXT REFERENCES models(id),price_override TEXT)',
+			);
+			const previous = profile('00:00', '06:00'),
+				next = profile('06:00', '12:00');
+			f.sqlite.prepare('UPDATE models SET pricing_profile=? WHERE id=?').run(previous, 'Model-A');
+			f.sqlite
+				.prepare('INSERT INTO model_routes VALUES(?,?,?)')
+				.run(
+					'route',
+					'Model-A',
+					JSON.stringify({
+						charged_factor: 0.7,
+						metered_factor: 0.8,
+						provider_factor: 0.9,
+						schedule: {
+							charged: [{ start: '00:00', end: '06:00', factor: 0.4 }],
+							provider: [{ start: '00:00', end: '06:00', factor: 0.3 }],
+						},
+					}),
+				);
+			assert.equal(
+				await f.repo.updateModelWithPolicyPrecondition(
+					'Model-A',
+					{ route_policy: 'new', pricing_profile: next },
+					null,
+					['new'],
+				),
+				true,
+			);
+			const override = JSON.parse(
+				String(f.sqlite.prepare('SELECT price_override FROM model_routes').get()!.price_override),
+			);
+			assert.equal(override.charged_factor, 0.7);
+			assert.equal(override.metered_factor, 0.8);
+			assert.equal(override.provider_factor, 0.9);
+			for (const side of ['charged', 'metered', 'provider'])
+				assert.deepEqual(override.schedule[side], [{ start: '06:00', end: '12:00', factor: 1 }]);
+			const state = () => ({
+				...f.state(),
+				routes: f.sqlite
+					.prepare('SELECT * FROM model_routes')
+					.all()
+					.map((row) => ({ ...row })),
+			});
+			const before = state();
+			assert.equal(
+				await f.repo.updateModelWithPolicyPrecondition(
+					'Model-A',
+					{ pricing_profile: profile('12:00', '18:00') },
+					null,
+					['stale'],
+				),
+				false,
+			);
+			assert.deepEqual(state(), before);
+			f.sqlite.exec(
+				"CREATE TRIGGER alignment_failure BEFORE INSERT ON model_tags BEGIN SELECT RAISE(ABORT,'alignment injected failure'); END",
+			);
+			await assert.rejects(
+				f.repo.updateModelWithPolicyPrecondition('Model-A', { pricing_profile: profile('12:00', '18:00') }, 'new', [
+					'fail',
+				]),
+				/alignment injected failure/,
+			);
+			assert.deepEqual(state(), before);
+		} finally {
+			f.sqlite.close();
+		}
+	});
+}

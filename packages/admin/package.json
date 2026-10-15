@@ -1,14 +1,14 @@
 {
 	"name": "@octafuse/admin",
-	"version": "2.8.0",
+	"version": "2.14.0",
 	"private": true,
 	"scripts": {
 		"dev": "npm run build:tools-css && next dev",
-		"dev:node": "npm run build:tools-css && dotenv -c -- next dev -p 8789",
+		"dev:node": "npm run build:tools-css && dotenv -c -- env PORT=8789 tsx runtime/node-server.ts",
 		"build": "npm run build:tools-css && npm run cf-typegen && next build --webpack && node ./scripts/link-standalone-next.mjs",
-		"build:docker": "npm run build:tools-css && next build --webpack && node ./scripts/link-standalone-next.mjs",
+		"build:docker": "npm run build:tools-css && next build --webpack && node ./scripts/link-standalone-next.mjs && node ./scripts/build-node-server.mjs",
 		"build:cf": "npm run build:tools-css && npm run cf-typegen && node ./scripts/build-cloudflare.mjs",
-		"start": "next start",
+		"start": "NODE_ENV=production tsx runtime/node-server.ts",
 		"lint": "eslint .",
 		"preview": "node ./scripts/ensure-dev-vars.mjs && npm run build:cf && wrangler dev worker.ts --port 8789 --persist-to ../../.wrangler/state",
 		"deploy": "npm run build:cf && node ./scripts/deploy-cloudflare.mjs",
@@ -19,8 +19,9 @@
 		"pretest:unit": "npm run build:node-index -w @octafuse/core && npm run test:endpoints-ui -w @octafuse/admin && npm run test:resilience -w @octafuse/admin",
 		"test:resilience": "tsx --test lib/gateway-read-retry.test.ts lib/portal-fetch.test.ts lib/data-load-error.test.tsx",
 		"test:endpoints-ui": "tsx --test app/gateway/endpoints/endpoint-api.test.ts",
-		"test:unit": "tsx --test lib/admin-auth-rate-limit.test.ts lib/admin-nav.test.ts lib/browser-mutation.test.ts lib/public-request-url.test.ts lib/cinaauth/*.test.ts lib/evm-signature.test.ts lib/portal-contract.test.ts lib/routes/admin/earnings.test.ts lib/routes/admin/model-routes-context.test.ts lib/routes/shared-key-history-error.test.ts lib/routes/user/guardrails-effective.test.ts lib/public-catalog.test.ts components/catalog/PublicCatalogPricing.test.tsx lib/public-catalog-bff.test.ts lib/public-gateway.test.ts lib/public-chat.test.ts lib/public-routes.test.ts lib/unified-session.test.ts lib/wallet-challenge.test.ts lib/workspace-cookie.test.ts lib/user-workspace-precondition.test.ts lib/user-principal-precondition.test.ts lib/summarize-charged-cost-factors.test.ts lib/services/admin/*.test.ts lib/services/user/*.test.ts lib/playground/proxy-response-headers.test.ts lib/dashscope-realtime-client.test.ts lib/pricing-ui-image.test.ts lib/image-generations.test.ts lib/simulator/endpoint.test.ts lib/playground/sse-event-summary.test.ts lib/playground/response-observations.test.ts lib/playground/samples/index.test.ts app/gateway/models/types.test.ts app/gateway/simulator/simulator-utils.test.ts app/gateway/playground/playground-utils.test.ts app/gateway/routes/route-utils.test.ts app/gateway/routes/route-strategy-meta.test.ts app/gateway/providers/provider-utils.test.ts app/gateway/tools/components/provider-card-state.test.ts app/gateway/request-logs/request-log-display.test.ts app/gateway/tools/tools-console.test.ts",
-		"build:tools-css": "node scripts/build-tools-web-compat.mjs"
+		"test:unit": "tsx --test lib/admin-auth-rate-limit.test.ts lib/admin-nav.test.ts lib/browser-mutation.test.ts lib/public-request-url.test.ts lib/cinaauth/*.test.ts lib/evm-signature.test.ts lib/portal-contract.test.ts lib/routes/admin/earnings.test.ts lib/routes/admin/model-routes-context.test.ts lib/routes/shared-key-history-error.test.ts lib/routes/user/guardrails-effective.test.ts lib/public-catalog.test.ts components/catalog/PublicCatalogPricing.test.tsx lib/public-catalog-bff.test.ts lib/public-gateway.test.ts lib/public-chat.test.ts lib/public-routes.test.ts lib/unified-session.test.ts lib/wallet-challenge.test.ts lib/workspace-cookie.test.ts lib/user-workspace-precondition.test.ts lib/user-principal-precondition.test.ts lib/summarize-charged-cost-factors.test.ts lib/services/admin/*.test.ts lib/services/user/*.test.ts lib/playground/proxy-response-headers.test.ts lib/dashscope-realtime-client.test.ts lib/pricing-ui-image.test.ts lib/image-generations.test.ts lib/simulator/endpoint.test.ts lib/playground/sse-event-summary.test.ts lib/playground/response-observations.test.ts lib/playground/samples/index.test.ts app/gateway/models/types.test.ts app/gateway/simulator/simulator-utils.test.ts app/gateway/playground/playground-utils.test.ts app/gateway/routes/route-utils.test.ts app/gateway/routes/route-strategy-meta.test.ts app/gateway/providers/provider-utils.test.ts app/gateway/tools/components/provider-card-state.test.ts app/gateway/request-logs/request-log-display.test.ts app/gateway/tools/tools-console.test.ts app/gateway/mcp/mcp-catalog-test-utils.test.ts app/gateway/mcp/mcp-pricing-draft.test.ts app/gateway/tools/tool-pricing-draft.test.ts lib/mcp-config-import.test.ts lib/tool-invocation-detail.test.ts lib/admin-request-rewrite.test.ts lib/audit-user-snapshot-diff.test.ts lib/provider-kind.test.ts lib/playground/preview-upstream-url.test.ts lib/playground/outbound-headers.test.ts lib/playground-node-realtime.test.ts lib/playground/llm-request.test.ts lib/playground/response-preview.test.ts lib/playground/quick-test-samples.test.ts app/gateway/models/model-duplicate.test.ts components/dashboard/format-dashboard-bucket.test.ts app/gateway/users/user-detail-form.test.ts",
+		"build:tools-css": "node scripts/build-tools-web-compat.mjs",
+		"verify:standalone": "node ./scripts/verify-standalone-boot.mjs"
 	},
 	"dependencies": {
 		"@heroicons/react": "^2.2.0",
@@ -45,7 +46,8 @@
 		"@tanstack/react-query": "^5.100.14",
 		"i18next": "^26.2.0",
 		"react-i18next": "^17.0.8",
-		"@cinatoken/web": "*"
+		"@cinatoken/web": "*",
+		"ws": "^8.21.0"
 	},
 	"devDependencies": {
 		"@cloudflare/workers-types": "^5.20260829.1",
@@ -60,6 +62,8 @@
 		"tailwindcss": "^3.4.1",
 		"typescript": "^5.7.2",
 		"viem": "^2.55.19",
-		"wrangler": "^4.127.1"
+		"wrangler": "^4.127.1",
+		"esbuild": "^0.27.3",
+		"tsx": "^4.21.0"
 	}
 }

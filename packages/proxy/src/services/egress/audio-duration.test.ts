@@ -1,10 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import {
-	acceptClientDurationSeconds,
-	parseWavDurationSeconds,
-	resolveAudioBillingDuration,
-} from './audio-duration';
+import { acceptClientDurationSeconds, parseWavDurationSeconds, resolveAudioBillingDuration } from './audio-duration';
 
 function buildSilentWav(durationSeconds: number, sampleRate = 8000): Uint8Array {
 	const numChannels = 1;

@@ -45,10 +45,15 @@ export type PreparedTextAttempt = Readonly<{
 /** Capture before asynchronous auth/body hashing so route mutation fails closed. */
 export function captureTextRouteIdentity(route: RouteResult): TextRouteIdentity {
 	const source = JSON.stringify([
-		route.targetId, route.providerId, route.endpoint?.id ?? null,
-		route.providerKeyId ?? null, route.providerModelName,
-		route.upstreamProtocol, route.upstreamOperation,
-		route.providerEndpoints, route.providerApiKey,
+		route.targetId,
+		route.providerId,
+		route.endpoint?.id ?? null,
+		route.providerKeyId ?? null,
+		route.providerModelName,
+		route.upstreamProtocol,
+		route.upstreamOperation,
+		route.providerEndpoints,
+		route.providerApiKey,
 	]);
 	if (!source || !route.targetId || !route.providerId || !route.providerModelName) {
 		throw new TypeError('Incomplete text route identity');
@@ -75,10 +80,12 @@ export function createPreparedTextAttempt(params: {
 	outboundBodyBytes: number;
 	outboundBodyCanonicalSha256?: string;
 }): PreparedTextAttempt {
-	if (!SHA256_HEX.test(params.outboundBodySha256)
-		|| (params.outboundBodyCanonicalSha256 !== undefined
-			&& !SHA256_HEX.test(params.outboundBodyCanonicalSha256))
-		|| !Number.isSafeInteger(params.outboundBodyBytes) || params.outboundBodyBytes < 0) {
+	if (
+		!SHA256_HEX.test(params.outboundBodySha256) ||
+		(params.outboundBodyCanonicalSha256 !== undefined && !SHA256_HEX.test(params.outboundBodyCanonicalSha256)) ||
+		!Number.isSafeInteger(params.outboundBodyBytes) ||
+		params.outboundBodyBytes < 0
+	) {
 		throw new TypeError('Invalid prepared text body identity');
 	}
 	const url = new URL(params.url);
@@ -110,11 +117,14 @@ export function createPreparedTextAttempt(params: {
 		upstreamUrlSha256: sha256(params.url),
 		outboundBodySha256: params.outboundBodySha256,
 		outboundBodyBytes: params.outboundBodyBytes,
-		...(params.outboundBodyCanonicalSha256 === undefined ? {}
+		...(params.outboundBodyCanonicalSha256 === undefined
+			? {}
 			: { outboundBodyCanonicalSha256: params.outboundBodyCanonicalSha256 }),
 		credentialBindings,
-		credentialFingerprintSha256: createHash('sha256').update(CREDENTIAL_DOMAIN)
-			.update(JSON.stringify(credentialBindings)).digest('hex'),
+		credentialFingerprintSha256: createHash('sha256')
+			.update(CREDENTIAL_DOMAIN)
+			.update(JSON.stringify(credentialBindings))
+			.digest('hex'),
 	});
 }
 
@@ -122,27 +132,47 @@ export function createPreparedTextAttempt(params: {
 export function preparedTextAttemptMatchesRoute(value: unknown, route: RouteResult): value is PreparedTextAttempt {
 	if (!value || typeof value !== 'object') return false;
 	const prepared = value as Partial<PreparedTextAttempt>;
-	if (!Object.isFrozen(prepared) || !Object.isFrozen(prepared.routeIdentity)
-		|| !Object.isFrozen(prepared.credentialBindings)) return false;
-	if (prepared.kind !== 'text-json-v1' || prepared.method !== 'POST'
-		|| !SHA256_HEX.test(prepared.upstreamUrlSha256 ?? '')
-		|| !SHA256_HEX.test(prepared.outboundBodySha256 ?? '')
-		|| (prepared.outboundBodyCanonicalSha256 !== undefined
-			&& !SHA256_HEX.test(prepared.outboundBodyCanonicalSha256))
-		|| !SHA256_HEX.test(prepared.credentialFingerprintSha256 ?? '')
-		|| !Number.isSafeInteger(prepared.outboundBodyBytes) || (prepared.outboundBodyBytes ?? -1) < 0
-		|| !Array.isArray(prepared.credentialBindings) || prepared.credentialBindings.length === 0
-		|| prepared.credentialBindings.some(binding =>
-			!binding || !Object.isFrozen(binding)
-			|| !['authorization-bearer', 'x-api-key', 'query-key', 'url-userinfo'].includes(binding.location)
-			|| !SHA256_HEX.test(binding.sha256))) return false;
+	if (
+		!Object.isFrozen(prepared) ||
+		!Object.isFrozen(prepared.routeIdentity) ||
+		!Object.isFrozen(prepared.credentialBindings)
+	)
+		return false;
+	if (
+		prepared.kind !== 'text-json-v1' ||
+		prepared.method !== 'POST' ||
+		!SHA256_HEX.test(prepared.upstreamUrlSha256 ?? '') ||
+		!SHA256_HEX.test(prepared.outboundBodySha256 ?? '') ||
+		(prepared.outboundBodyCanonicalSha256 !== undefined && !SHA256_HEX.test(prepared.outboundBodyCanonicalSha256)) ||
+		!SHA256_HEX.test(prepared.credentialFingerprintSha256 ?? '') ||
+		!Number.isSafeInteger(prepared.outboundBodyBytes) ||
+		(prepared.outboundBodyBytes ?? -1) < 0 ||
+		!Array.isArray(prepared.credentialBindings) ||
+		prepared.credentialBindings.length === 0 ||
+		prepared.credentialBindings.some(
+			(binding) =>
+				!binding ||
+				!Object.isFrozen(binding) ||
+				!['authorization-bearer', 'x-api-key', 'query-key', 'url-userinfo'].includes(binding.location) ||
+				!SHA256_HEX.test(binding.sha256),
+		)
+	)
+		return false;
 	try {
-		if (createHash('sha256').update(CREDENTIAL_DOMAIN)
-			.update(JSON.stringify(prepared.credentialBindings)).digest('hex')
-			!== prepared.credentialFingerprintSha256) return false;
+		if (
+			createHash('sha256')
+				.update(CREDENTIAL_DOMAIN)
+				.update(JSON.stringify(prepared.credentialBindings))
+				.digest('hex') !== prepared.credentialFingerprintSha256
+		)
+			return false;
 		const expected = captureTextRouteIdentity(route);
 		const observed = prepared.routeIdentity;
-		return observed != null && (Object.keys(expected) as Array<keyof TextRouteIdentity>)
-			.every(key => observed[key] === expected[key]);
-	} catch { return false; }
+		return (
+			observed != null &&
+			(Object.keys(expected) as Array<keyof TextRouteIdentity>).every((key) => observed[key] === expected[key])
+		);
+	} catch {
+		return false;
+	}
 }

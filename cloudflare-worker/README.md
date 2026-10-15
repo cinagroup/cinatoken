@@ -51,6 +51,7 @@ npm run deploy:cloudflare -- <instance>               # 仅双 Worker
 | `BATCH_INFRA_ENABLED` | 默认 `false`；仅显式设为 `true` 时为 Proxy 生成私有 R2、Batch Queue 与 DLQ 绑定，不代表 API 已开放 |
 | `BATCH_BUCKET_NAME` / `BATCH_QUEUE_NAME` / `BATCH_DLQ_NAME` | 每实例独立的 Batch 资源名；当前 Phase 2 构建固定拒绝 `BATCH_API_ENABLED=true` |
 | `PROXY_CUSTOM_DOMAIN` / `ADMIN_CUSTOM_DOMAIN` | 可选；写入 wrangler `routes` |
+| `STREAM_FIRST_CHUNK_TIMEOUT_MS` / `STREAM_IDLE_TIMEOUT_MS` / `USAGE_SAFETY_TIMEOUT_MS` | 可选；仅代理服务。文本流式超时（毫秒），写入 wrangler `vars`；空则代码默认 2 分钟 / 90 秒 / 10 分钟 |
 
 实现：`npm run gen:wrangler` → [`scripts/deploy/gen-wrangler.mjs`](../scripts/deploy/gen-wrangler.mjs)。
 

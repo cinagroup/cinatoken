@@ -94,6 +94,7 @@ dev 演示**仅 CLI 发版**（有新 SQL 时先 `db:migrate:remote`）；生产
 | `DATABASE_DRIVER` | Cloudflare 省略/`d1` → D1；`postgres` → Hyperdrive。选择 Postgres 时 `HYPERDRIVE_ID` 必填；三个 Worker 必须一致 |
 | `REQUEST_BODY_LOGGING` | Proxy 请求正文日志策略；模板默认 `off`。仅经隐私与留存评审后可设为 `redacted`，且脱敏结果仍可能包含敏感提示词 |
 | `PROXY_CUSTOM_DOMAIN` / `ADMIN_CUSTOM_DOMAIN` | 可选 |
+| `STREAM_FIRST_CHUNK_TIMEOUT_MS` / `STREAM_IDLE_TIMEOUT_MS` / `USAGE_SAFETY_TIMEOUT_MS` | 可选。代理服务文本流式超时（毫秒）。写入 wrangler `vars`；空则代码默认 2 分钟 / 90 秒 / 10 分钟。也可事后在 Dashboard **Settings → Variables** 覆盖。 |
 
 Batch 仍处于功能关闭阶段。`npm run bootstrap:cloudflare -- --batch-infra` 会创建/复用私有 Bucket 和两个 Queue，并让 Proxy 获得绑定；生成器仍强制 `BATCH_API_ENABLED=false`。不得给该 Bucket 开启公共开发 URL/自定义域名，也不得把基础设施已存在误报为 Batch API 可用。对象 30 天生命周期和孤儿清理在后续 maintenance 阶段验收前，应保持功能关闭。
 
@@ -124,6 +125,7 @@ Cloudflare Dashboard → Worker → **设置（Settings）→ 构建（Builds）
 | `HYPERDRIVE_ID` | PG 灰度时必填 | `npx wrangler hyperdrive list`；三个 Worker 使用同一个配置 ID |
 | `DATABASE_DRIVER` | PG 切换时必填 | 先预置 `HYPERDRIVE_ID`，完成迁移/对账/隔离探针后才设为 `postgres` |
 | `PROXY_CUSTOM_DOMAIN` / `ADMIN_CUSTOM_DOMAIN` | 可选 | 写入 wrangler `routes` |
+| `STREAM_FIRST_CHUNK_TIMEOUT_MS` / `STREAM_IDLE_TIMEOUT_MS` / `USAGE_SAFETY_TIMEOUT_MS` | 可选 | 仅代理服务。文本流式超时（毫秒）；空则代码默认 2 分钟 / 90 秒 / 10 分钟 |
 
 ### 构建 / 部署命令
 
@@ -258,6 +260,8 @@ Cloudflare Workers Free 的单 Worker gzip 上限为 **3 MiB**。管理后台依
 ### 回滚
 
 Workers Builds 部署历史 **Rollback**；或 Pause Builds 后回滚版本。
+
+自定义域：把 `PROXY_CUSTOM_DOMAIN` / `ADMIN_CUSTOM_DOMAIN` 改回需要保留的主机名（例如从逗号列表改回单个），再重新 `deploy:proxy` / `deploy:admin`。未再列出的 Custom Domain 会从该 Worker 解绑。新域名若尚未对外公布，解绑无用户影响。
 
 ---
 

@@ -3,6 +3,7 @@
  */
 import { and, asc, count, desc, eq, gt, isNotNull, isNull, like, lte, sql } from 'drizzle-orm';
 import type { UserRow } from '../../types';
+import { parseApiKeyRateLimit } from '../../lib/api-key-rate-limit';
 import { roundGatewayMoney } from '../../lib/money-precision';
 import type { PostgresDatabaseClient } from '../../storage/database-client';
 import type { UsersRepository } from '../../storage/gateway-repository-interfaces';
@@ -87,6 +88,12 @@ function userListOrderByClauses(sort: UserListSortField, order: UserListSortOrde
 	if (sort === 'budget_base') {
 		return [isAsc ? asc(pgUsersTable.budgetBase) : desc(pgUsersTable.budgetBase), tie];
 	}
+	if (sort === 'wallet_granted') {
+		return [isAsc ? asc(pgUsersTable.walletGranted) : desc(pgUsersTable.walletGranted), tie];
+	}
+	if (sort === 'wallet_spent') {
+		return [isAsc ? asc(pgUsersTable.walletSpent) : desc(pgUsersTable.walletSpent), tie];
+	}
 	return [isAsc ? asc(pgUsersTable.createdAt) : desc(pgUsersTable.createdAt)];
 }
 
@@ -100,8 +107,11 @@ function mapPgUserRow(r: {
 	budgetResetAt: string | null;
 	budgetEpoch: number;
 	budgetReservedMicros: number;
+	walletGranted: string;
+	walletSpent: string;
 	status: string;
 	metadata: string | null;
+	rateLimit: string | null;
 	chargedCostFactors: string | null;
 	externalSystem: string | null;
 	externalUserId: string | null;
@@ -118,8 +128,11 @@ function mapPgUserRow(r: {
 		budget_reset_at: r.budgetResetAt,
 		budget_epoch: Number(r.budgetEpoch),
 		budget_reserved_micros: Number(r.budgetReservedMicros),
+		wallet_granted: parseMoney(r.walletGranted),
+		wallet_spent: parseMoney(r.walletSpent),
 		status: r.status,
 		metadata: r.metadata,
+		rate_limit: parseApiKeyRateLimit(r.rateLimit),
 		charged_cost_factors: r.chargedCostFactors ?? null,
 		external_system: r.externalSystem,
 		external_user_id: r.externalUserId,
@@ -188,7 +201,10 @@ export function createPostgresUsersRepository(db: PostgresDatabaseClient): Users
 			const order = options?.order ?? DEFAULT_USER_LIST_ORDER;
 			let listQ = drizzle.select().from(pgUsersTable);
 			if (whereExpr) listQ = listQ.where(whereExpr) as typeof listQ;
-			const rows = await listQ.orderBy(...userListOrderByClauses(sort, order)).limit(pageSize).offset(offset);
+			const rows = await listQ
+				.orderBy(...userListOrderByClauses(sort, order))
+				.limit(pageSize)
+				.offset(offset);
 			return { users: rows.map(mapPgUserRow), total };
 		},
 
@@ -288,7 +304,9 @@ export function createPostgresUsersRepository(db: PostgresDatabaseClient): Users
 			resetBudget: boolean = true,
 			metadata?: string | null,
 			budget_spent_override?: number | null,
-			budget_base?: number | null
+			budget_base?: number | null,
+			wallet_granted?: number | null,
+			wallet_spent?: number | null,
 		): Promise<boolean> {
 			const now = new Date().toISOString();
 			const baseSet: Record<string, unknown> = {
@@ -299,6 +317,12 @@ export function createPostgresUsersRepository(db: PostgresDatabaseClient): Users
 			};
 			if (budget_base !== undefined) {
 				baseSet.budgetBase = String(budget_base != null ? roundGatewayMoney(budget_base) : 0);
+			}
+			if (wallet_granted !== undefined) {
+				baseSet.walletGranted = String(roundGatewayMoney(wallet_granted ?? 0));
+			}
+			if (wallet_spent !== undefined) {
+				baseSet.walletSpent = String(roundGatewayMoney(wallet_spent ?? 0));
 			}
 			if (budget_spent_override !== undefined) {
 				const updated = await drizzle
@@ -349,6 +373,16 @@ export function createPostgresUsersRepository(db: PostgresDatabaseClient): Users
 			return updated.length > 0;
 		},
 
+		async updateUserRateLimit(id: string, rateLimitJson: string | null): Promise<boolean> {
+			const now = new Date().toISOString();
+			const updated = await drizzle
+				.update(pgUsersTable)
+				.set({ rateLimit: rateLimitJson, updatedAt: now })
+				.where(eq(pgUsersTable.id, id))
+				.returning({ id: pgUsersTable.id });
+			return updated.length > 0;
+		},
+
 		async setUserMetadataById(id: string, metadataJson: string | null): Promise<boolean> {
 			const now = new Date().toISOString();
 			const updated = await drizzle
@@ -382,7 +416,7 @@ export function createPostgresUsersRepository(db: PostgresDatabaseClient): Users
 		async setUserExternalIdentityById(
 			id: string,
 			externalSystem: string | null,
-			externalUserId: string | null
+			externalUserId: string | null,
 		): Promise<boolean> {
 			const now = new Date().toISOString();
 			const updated = await drizzle
@@ -394,30 +428,34 @@ export function createPostgresUsersRepository(db: PostgresDatabaseClient): Users
 		},
 
 		async deleteUserHard(id: string): Promise<boolean> {
-			const rows = await db.raw.unsafe<Array<{ id: string }>>(`DELETE FROM cinatoken_gateway.users subject
+			const rows = await db.raw.unsafe<Array<{ id: string }>>(
+				`DELETE FROM cinatoken_gateway.users subject
 				WHERE subject.id = $1 AND NOT EXISTS (
 					SELECT 1 FROM cinatoken_gateway.guardrails guardrail
 					WHERE guardrail.owner_user_id = subject.id
 						AND (guardrail.is_workspace_default OR guardrail.is_account_default)
-				) RETURNING subject.id`, [id]);
+				) RETURNING subject.id`,
+				[id],
+			);
 			return rows.length > 0;
 		},
 
 		async deleteUserHardWithAudit(
 			id: string,
-			audit: InsertUserAuditLogParams
+			audit: InsertUserAuditLogParams,
 		): Promise<'deleted' | 'not_deleted' | 'dispatch_history'> {
 			if (audit.userId !== id || audit.eventType !== 'user_deleted') {
 				throw new TypeError('User deletion audit must identify the deleted user');
 			}
 			try {
 				return await drizzle.transaction(async (tx) => {
-					const existing = await tx.select({ id: pgUsersTable.id })
-						.from(pgUsersTable).where(eq(pgUsersTable.id, id)).for('update');
+					const existing = await tx
+						.select({ id: pgUsersTable.id })
+						.from(pgUsersTable)
+						.where(eq(pgUsersTable.id, id))
+						.for('update');
 					if (existing.length === 0) return 'not_deleted' as const;
-					await tx.insert(pgUserAuditLogsTable).values(
-						toUserAuditLogDrizzleInsert(audit, new Date().toISOString())
-					);
+					await tx.insert(pgUserAuditLogsTable).values(toUserAuditLogDrizzleInsert(audit, new Date().toISOString()));
 					const rows = await tx.execute(sql`DELETE FROM cinatoken_gateway.users subject
 						WHERE subject.id = ${id} AND NOT EXISTS (
 							SELECT 1 FROM cinatoken_gateway.guardrails guardrail

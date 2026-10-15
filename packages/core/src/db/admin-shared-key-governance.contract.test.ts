@@ -179,7 +179,7 @@ test('formal MySQL/PG actor migrations are bounded ALTER-only offline SQL contra
 	assert.match(postgres, /DROP CONSTRAINT admin_shared_key_audit_actor_id_check/u); assert.match(postgres, /ADD CONSTRAINT admin_shared_key_audit_actor_id_check CHECK/u);
 	const drizzle = readFileSync(new NodeURL('../storage/drizzle/schema.mysql.ts', import.meta.url), 'utf8');
 	const sharedAudit = drizzle.slice(drizzle.indexOf('export const adminSharedKeyAuditTable'), drizzle.indexOf('export const adminSharedKeyAuditTable') + 1000);
-	assert.match(sharedAudit, /actorId: varchar\("actor_id", \{ length: 617 \}\)/u); assert.match(sharedAudit, /reason: varchar\("reason", \{ length: 600 \}\)/u);
+	assert.match(sharedAudit, /actorId: varchar\(['"]actor_id['"], \{ length: 617 \}\)/u); assert.match(sharedAudit, /reason: varchar\(['"]reason['"], \{ length: 600 \}\)/u);
 });
 
 /** Real SQLite executes production D1 SQL. Native driver SQL is captured and only syntax/time formatting

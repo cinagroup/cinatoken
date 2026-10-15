@@ -64,7 +64,7 @@ flowchart TB
 
   subgraph node ["Node 路径"]
     NP["Node Proxy\nruntime/node.ts"]
-    NA["Node Admin\nnext start / Docker"]
+    NA["Node Admin\nnode-server / Docker"]
     SQL[("Postgres 或 MySQL")]
     NP --> SQL
     NA --> SQL
@@ -94,7 +94,7 @@ flowchart TB
 
 - 迁移 **`0011_provider_endpoints`**（d1 / postgres / mysql）：`providers` 新增 **`endpoints` TEXT**，并从当时的 `base_url_*` 回填 `{ protocol: { base } }`。
 - 迁移 **`0012_drop_provider_base_url_columns`**：删除 `base_url_openai` / `base_url_anthropic` / `base_url_gemini`；读写仅以 **`endpoints`** 为准（`parseProviderEndpoints` / 管理后台写入）。
-- 形状：`{ "openai"?: { "base"?: string, "endpoints"?: { "chat"|"images.generations"|"images.edits"|"audio.transcriptions": url } }, "anthropic"?: …, "gemini"?: { "base"?: string, "auth"?: "query-key"|"bearer", "endpoints"?: … } }`。`base` 走标准路径派生；capability 完整 URL 模板存在则不再追加后缀。`gemini.auth` 省略时为 `query-key`。
+- 形状：`{ "<protocol>"?: { "base"?: string, "endpoints"?: { "<capability>": url }, "auth"?: "query-key"|"bearer" } }`，协议为 `openai` / `anthropic` / `gemini` / `dashscope` / `minimax` / `volcengine`。各协议可写的 capability 由 `packages/core/src/provider-endpoints.ts` 的 `WRITABLE_CAPABILITIES_BY_PROTOCOL` 决定，例如 `openai` 为 `chat`、`responses`、`images.generations`、`images.edits`、`audio.transcriptions`、`audio.speech`，`minimax` 为 `audio.transcriptions`、`audio.speech`、`images.generations`，`volcengine` 只有 `images.generations`。`base` 走标准路径派生；配置了 capability 完整 URL 模板时直接使用，不追加后缀。`auth` 只对 `gemini` 生效，省略时为 `query-key`。
 - 迁移 **`0015_single_provider_key`**：`providers` 恢复单列 **`api_key`** + **`status`**；删除 **`provider_api_keys`**；`model_routes.weight`；`models.route_policy` 替换 `sticky_config`；种子 **`ROUTE_STRATEGY`**。切换步骤见 [single-provider-key-cutover.md](../../operators/migrations/single-provider-key-cutover.md)。
 - 迁移 **`0016_route_surfaces_pools`**：新增 `model_surfaces` / `route_pools`；`model_routes` 增加 `route_pool_id`、`upstream_operation`、`adapter`；请求日志增加请求入口 / 路由池 / 上游目标与路由追踪字段。完整模型见 [route-topology.md](./route-topology.md)。
 - 迁移 **`0017_gemini_models_generate`**：将 Gemini `generateContent` / `streamGenerateContent` 请求入口合并为家族 operation **`models.generate`**；规范化 `model_routes.upstream_operation`；冲突路由池降级为 `inactive` 并加 `[v220-conflict]` 名字前缀。切换步骤见 [gemini-models-generate-cutover.md](../../operators/migrations/gemini-models-generate-cutover.md)。
@@ -102,6 +102,15 @@ flowchart TB
 - 迁移 **`0019_route_strategy_canonical_ids`**（2.2.0 历史阶段）：将 `affinity` / `strict` / `round_robin` 硬切换为当时的 canonical ID `cache_affinity` / `fixed_order` / `weighted_round_robin`（`weighted_random` 不变）。覆盖 `system_config.ROUTE_STRATEGY`、`route_pools.strategy`、`route_pools.tier_strategies`、`models.route_policy`。历史步骤见 [route-strategy-canonical-ids-cutover.md](../../operators/migrations/route-strategy-canonical-ids-cutover.md)。
 - 迁移 **`0020_route_pool_sticky_routing`**：`route_pools` 增加 `sticky_enabled` / `sticky_idle_ttl_seconds` / `sticky_epoch`；新表 **`route_pool_sticky_bindings`**（跨 isolate 共享供应商粘性）。见 [route-pool-sticky-routing-cutover.md](../../operators/migrations/route-pool-sticky-routing-cutover.md)。
 - 迁移 **`0021_route_strategy_display_ids`**：将 `cache_affinity` / `fixed_order` 再次硬切换为现行 `hash_affinity` / `weight_priority`，覆盖上述四个持久化位置且无旧 ID 别名。维护窗口步骤与校验 SQL 见 [route-strategy-display-ids-cutover.md](../../operators/migrations/route-strategy-display-ids-cutover.md)。
+- 迁移 **`0022_request_log_audio_characters`**：请求日志增加 `audio_characters`，独立记录 TTS 上游返回的有效计费字符数。
+- 迁移 **`0023_admin_access_identity`**：新增 `admin_api_keys` / `admin_sessions`，并把历史 `system_config.MASTER_KEY` 复制为全权限 `legacy-master`。
+- 迁移 **`0024_drop_legacy_master_key_config`**：删除历史 `system_config.MASTER_KEY` 配置行；新版管理认证只读取具名 Admin API Key 与控制台会话。
+- 迁移 **`0025_user_audit_actor_index`**：为 `user_audit_logs(actor_id, created_at)` 增加操作主体查询索引。
+- 迁移 **`0026_user_charged_cost_factors`**：`users` 增加 `charged_cost_factors`，按目录模型 ID 保存用户计费倍率。值可以是数字（覆盖该模型全部分组），也可以是按路由组细分的对象（具体分组或 `"*"`），两种形态共用这一列。
+- 迁移 **`0027_user_wallet_credit`**：`users` 增加 `wallet_granted` / `wallet_spent`（永久额度）；`user_audit_logs.dedup_key` + `UNIQUE(user_id, dedup_key)`；`api_key_request_logs.charged_wallet_cost`。老数据把加购余额从 `budget_max` 拆出；`budget_max IS NULL` 与到期清零行（`max=0 AND period=none`）不抬回 `budget_base`。步骤见 [0027-user-wallet-credit.md](../../operators/migrations/0027-user-wallet-credit.md)。
+- 迁移 **`0028_key_rate_limit_and_ingress`**：`api_keys.rate_limit` 与 `users.rate_limit`（JSON，`NULL` = 该层不限；当前仅 `rpm`）；用户层为所有 Key 合计，Key 层为单把钥匙。`api_key_request_logs.ingress_host` 只记录入口 Host，不做准入。成功记账时回写 `api_keys.last_used_at`。RPM 窗口计数在代理服务进程 / isolate 内存中，不落库。
+- 迁移 **`0029_provider_kind`**：`providers.kind`（`TEXT` / MySQL `VARCHAR(128)`，`NOT NULL DEFAULT ''`）。已有行保持空字符串，表示尚未分类。去掉 `providers.name` 的全局唯一，改为 `UNIQUE (name, kind)`（约束名 `uk_providers_name_kind`）。D1 不能直接删除仍被 `model_routes` 引用的 `providers`，因此先复制 `providers`、`model_routes`、`route_pool_sticky_bindings` 再替换。不回写已有账号别名，也不回写请求日志里的 `provider_name` 快照。模板英文名变更后，已保存的旧 `kind` 不自动改写，由管理员在编辑时重新选择。
+- **`USER_CHARGED_COST_FACTOR_MODE` 无 schema 迁移**：用户 `charged_cost_factors` 与路由 Charged 有效倍率的合成由 `system_config` 该键控制（`multiply` 叠乘，`min` 取较小倍率）。缺键或非法值运行时回退 `multiply`；首次在网关配置（Gateway Config）保存才写入，不必补进 `0002_seed`。
 
 #### Endpoint capability 维护规则
 
@@ -119,7 +128,7 @@ flowchart TB
 - **部分能力上游**（例如仅 chat 的中转）：**清空 Base**，只填写支持的 URL overrides。
 - **不要**用「填了 Base 但留空某些 override」表达「不支持该能力」——运行时仍会从 Base 派生并可能打到错误路径。
 
-管理后台静态导入模板（`packages/admin/lib/provider-import-presets.json`）遵循同一约定：默认 LLM 供应商写入 `openai.endpoints.chat`；具备完整 OpenAI 兼容 Images（含 generations **与** edits）的模板写 `openai.base`（如 OpenAI、Azure OpenAI、SiliconFlow、Zhipu/Z.AI、xAI、Together、Gemini OpenAI 兼容层等）。**Volcengine Ark** 无 edits，故只写 `endpoints.chat` + `endpoints.images.generations`，**不**写 `base`（避免派生死链 `/images/edits`）。OpenRouter Images 路径为 `/api/v1/images`，在 `openai.base` 之外用 `endpoints.images.generations` 覆盖。
+管理后台静态导入模板（`packages/admin/lib/provider-import-presets.json`）遵循同一约定：只支持部分 OpenAI 能力时不写 `openai.base`，只填确认过的完整 URL。官方 OpenAI 与 Azure OpenAI 覆盖 chat、responses、生图、编辑、转写和语音合成，因此保留 `openai.base`。硅基流动、智谱、Z.AI、xAI、Together、Gemini OpenAI 兼容层、OpenRouter 和 Vercel AI Gateway 只列出实际支持的地址。**Volcengine Ark** 的 OpenAI 侧只有 chat 与 responses，生图走 `volcengine.base`。OpenRouter 的生图地址是 `POST /api/v1/images`。
 
 ---
 
@@ -135,15 +144,15 @@ sequenceDiagram
 
   C->>P: Authorization Bearer sk-...
   P->>DB: getApiKeyWithUserByKey(key)
-  DB-->>P: key + user budget 列
-  P->>P: maybeResetBudget(user)
+  DB-->>P: key + user budget / wallet 列 + charged_cost_factors
+  P->>P: maybeResetBudget(user)（不动永久池）
   alt 周期到期需落库
     P->>DB: updateUserBudgetWithAuditTx
   end
-  P-->>C: 403 if spent >= budget_max（可配置）
+  P-->>C: 403 if 总余额 ≤ 0（budget_max 非空时：周期剩余 + wallet_balance）
   C->>P: chat / messages / gemini
   P->>DB: insertRequestUsageAndChargeTx
-  Note over DB: INSERT request_log + UPDATE users.budget_spent += Δ + INSERT user_audit_logs
+  Note over DB: INSERT request_log + UPDATE budget_spent / wallet_spent += Δ + INSERT user_audit_logs
 ```
 
 - **表级关系与不变量**（email / external 约束、多 active key、级联规则）：[user-keys-data-model.md](./user-keys-data-model.md)。
@@ -161,20 +170,34 @@ sequenceDiagram
 > **0018 按优先级层策略切换步骤**：见 **[route-pool-tier-strategies-cutover.md](../../operators/migrations/route-pool-tier-strategies-cutover.md)**。
 > **0019 历史 canonical 策略 ID 切换步骤**：见 **[route-strategy-canonical-ids-cutover.md](../../operators/migrations/route-strategy-canonical-ids-cutover.md)**。
 > **0020 / 0021（2.3.0）切换步骤**：见 **[route-pool-sticky-routing-cutover.md](../../operators/migrations/route-pool-sticky-routing-cutover.md)** 与 **[route-strategy-display-ids-cutover.md](../../operators/migrations/route-strategy-display-ids-cutover.md)**。
+> **0022–0025（2.4.0）升级说明**：见 **[2.4.0 发布说明](../../releases/2.4.0.md#升级说明)**。
+> **0026（2.7.0）升级说明**：见 **[2.7.0 发布说明](../../releases/2.7.0.md#升级说明)**。
 
-### Schema（迁移 **0015–0021**，三库同语义）
+### Schema（迁移 **0015–0029**，三库同语义）
 
 | 对象 | 含义 |
 |------|------|
 | **`providers.api_key`** / **`providers.status`** | 一个供应商（Provider）= 一把上游密钥；`status` 为 `active` \| `disabled`。**无** `provider_api_keys` 表 |
+| **`providers.name`** / **`providers.kind`** | `name` 是账号别名。`kind` 是导入模板的稳定英文 `name`、显式自定义 `__custom__`，或空字符串（尚未分类）。唯一约束为 `(name, kind)`，同一别名可以出现在不同类型下 |
 | **`model_surfaces`** | 公开请求入口（Request Surface）：`model_id + route_group + request_protocol + request_operation` → `route_pool_id` |
 | **`route_pools`** | 一组可故障转移的上游目标（Upstream Target）容器；`strategy` 可覆盖模型与全局策略，`tier_strategies` 可按优先级层继续覆盖；`sticky_enabled` / `sticky_idle_ttl_seconds` / `sticky_epoch` 管理路由池（Route Pool）级供应商粘性（Provider sticky） |
 | **`route_pool_sticky_bindings`** | 供应商粘性的共享绑定；按 affinity hash 记录上游目标、epoch、token、访问与过期时间，供 Worker isolate / Node 实例共同使用 |
 | **`model_routes.priority`** | 硬序优先级层（**DESC**，数字越大越先试） |
 | **`model_routes.weight`** | 同 priority 优先级层内权重（默认 `1`；策略用） |
-| **`model_routes.route_pool_id` / `upstream_operation` / `adapter`** | 上游目标所属路由池、上游 capability 与转换方式；同协议使用 `passthrough`，OpenAI ASR / TTS 转 DashScope 使用显式白名单 adapter |
+| **`model_routes.route_pool_id` / `upstream_operation` / `adapter`** | 上游目标所属路由池、上游 capability 与转换方式；同协议使用 `passthrough`，OpenAI Images / ASR / TTS 转 DashScope 使用注册表中的显式 adapter |
 | **`models.route_policy`** | 可选 TEXT JSON：`strategy` + `rules`；`NULL` = 回退全局 |
 | **`system_config.ROUTE_STRATEGY`** | 全局缺省策略（默认 `hash_affinity`；进程内缓存 30s） |
+| **`api_key_request_logs.audio_characters`** | TTS 上游返回的有效计费字符数；与 ASR 时长独立记录 |
+| **`admin_api_keys` / `admin_sessions`** | 具名管理 API Key 与持久化控制台会话；不再从 `system_config.MASTER_KEY` 鉴权 |
+| **`user_audit_logs(actor_id, created_at)`** | 按操作主体与时间检索用户审计的联合索引 |
+| **`users.charged_cost_factors`** | 可选 JSON：目录模型 ID → 非负用户计费倍率，或 → `{ 路由组或 "*": 倍率 }`。数字覆盖该模型全部分组；对象先匹配本次路由组，再匹配 `"*"`。只改变最终用户费用与预算累加 |
+| **`system_config.USER_CHARGED_COST_FACTOR_MODE`** | 用户倍率与路由 Charged 有效倍率的合成：`multiply`（默认叠乘）或 `min`（取较小）；无 schema 迁移，缺键运行时回退 `multiply`，首次在网关配置保存才写入；进程内缓存 30s |
+| **`users.wallet_granted` / `wallet_spent`** | 永久额度累计发放 / 累计消耗；余额派生，不随周期重置或到期清零 |
+| **`user_audit_logs.dedup_key`** | 加额幂等键（`UNIQUE(user_id, dedup_key)`）；`wallet_credit` 用 `external_ref` |
+| **`api_key_request_logs.charged_wallet_cost`** | 本次请求从永久池扣掉的部分；周期部分 = `charged_cost − charged_wallet_cost` |
+| **`api_keys.rate_limit`** | 每 Key 限流 JSON；`NULL` 不限。当前 `rpm` 为从当前时刻回溯 60 秒的请求上限，`0` 拒绝计次请求 |
+| **`users.rate_limit`** | 用户层限流 JSON（与 Key 同形状）；`NULL` 不限。当前 `rpm` 为该用户所有 Key 合计、同样回溯 60 秒的上限 |
+| **`api_key_request_logs.ingress_host`** | 请求打到的入口 Host（只记录，不做准入） |
 
 已移除：`provider_api_keys`、`limit_config`（网关 RPM/TPM/并发软限流）、`models.sticky_config`（旧粘性 key 绑定；由路由池级 **供应商粘性** + `route_pool_sticky_bindings` 替代）。
 
@@ -189,4 +212,4 @@ sequenceDiagram
 - **`user-model-circuit-breaker.ts`** — 按 **user + model**：敏感内容与普通上游 400 **共用**递增退避 **20s → 1min → 3min → 5min → 10min**（成功清零）；短路仅用 `circuit.sensitive_content` / `circuit.client_error` 区分。**Images / Audio** 不参与普通 400（`client_error`）熔断，仍参与敏感内容熔断（见 [proxy-request-lifecycle.md](./proxy-request-lifecycle.md) §2.2）。
 - **`failover-dispatch.ts`** — `attempts` 为空时 **429** + `Retry-After`（`circuit.upstream_capacity_exhausted`）；循环内复查已熔断供应商；否则按序打上游，全部失败返回最后一次上游响应。
 
-> **一致性注意**：熔断与 weighted round-robin 计数均为**单实例进程内存**。Cloudflare Workers 多 isolate 各自独立，属软状态；Node 单进程更接近精确。默认 **`hash_affinity`** 在协议粒度上稳定首选供应商，以利于上游 prompt cache（affinityKey **不含** capability）。**供应商粘性**绑定存共享 DB（D1/Postgres/MySQL），跨 isolate 一致；读写失败 fail-open 到常规路由。
+> **一致性注意**：熔断、加权轮询计数与 **按密钥 / 按用户 RPM 窗口**均为**单实例进程内存**。Cloudflare Workers 多 isolate 各自独立，属软状态；Node 单进程更接近精确。默认 **`hash_affinity`** 在协议粒度上稳定首选供应商，以利于上游 prompt cache（affinityKey **不含** capability）。**供应商粘性**绑定存共享 DB（D1/Postgres/MySQL），跨 isolate 一致；读写失败 fail-open 到常规路由。

@@ -27,7 +27,7 @@ All participants are expected to follow the [Contributor Covenant Code of Conduc
 
 This repo uses **[Changesets](https://github.com/changesets/changesets)** in **fixed** mode: one shared version for `cinatoken`, `@octafuse/core`, `@octafuse/proxy`, and `@octafuse/admin`.
 
-- Contributors normally target **`develop`**. For user-visible changes, run `npx changeset` and commit the generated `.changeset/*.md` with the PR; maintainers may allow deferring it until release preparation.
+- Contributors normally target **`develop`**. For user-visible changes, add or update **`## Unreleased`** at the top of root **`CHANGELOG.md`**. Do **not** add `.changeset/*.md` in feature PRs; maintainers generate that file only when preparing a release.
 - Maintainers merge release-ready **`develop`** (or a temporary `release/X.Y.Z` branch) into **`main`**. GitHub Actions then opens a **Version Packages** PR; review and merge it.
 - The next **`main`** run pushes **`vX.Y.Z`** tags (`npx changeset tag`), which triggers **Docker images** and a **GitHub Release** with image digests.
 - Temporary environment deployments should be built from `develop` or an immutable commit SHA, without merging unreleased code into `main`.
@@ -37,3 +37,5 @@ Full runbook: **[docs/maintainers/release-versioning.md](./docs/maintainers/rele
 ## Development
 
 See the root [README.md](./README.md) for install, `npm` scripts, and Docker-based workflows. Run relevant smoke tests (for example `npm run test:gateway:postgres-smoke`) before submitting substantial changes when applicable.
+
+Changes under `packages/core`, `packages/admin`, or Dockerfiles must pass **`npm run typecheck:admin`** locally. PR Docker smoke runs `next build` inside `Dockerfile.admin` and typechecks imported core source; `verify` does not. Do not wait for `smoke-node-pg` to discover TypeScript errors.

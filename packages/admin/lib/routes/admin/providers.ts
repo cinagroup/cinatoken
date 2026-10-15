@@ -14,6 +14,12 @@ import {
 	revealProviderApiKeyService,
 	updateProviderService,
 } from "@/lib/services/admin/providers-service";
+import { getProviderQuotaService } from "@/lib/services/admin/provider-quota-service";
+import {
+	applyProviderSyncService,
+	getProviderSyncReportService,
+} from "@/lib/services/admin/provider-sync-service";
+import type { ProviderSyncApplyBody } from "@/lib/provider-sync-diff";
 import {
 	proxyDashScopeAudioResourceService,
 	type DashScopeAudioResource,
@@ -124,6 +130,55 @@ adminProvidersRoutes.post("/import", async (c) => {
 		);
 	} catch (error) {
 		return handleAdminRouteError(c, error, "Failed to import providers");
+	}
+});
+
+/** 与官方模板的差异报告（按模板类型分组）。须注册在 `/:id` 之前。 */
+adminProvidersRoutes.get("/sync/diff", async (c) => {
+	try {
+		const repos = c.get("repositories");
+		const data = await getProviderSyncReportService(repos);
+		return c.json(normalizeApiTimeFields({ success: true, data }));
+	} catch (error) {
+		return handleAdminRouteError(c, error, "Failed to compute provider sync diff");
+	}
+});
+
+/** 把选中的官方值写入 provider（只写 description / endpoints；服务端重算差异）。 */
+adminProvidersRoutes.post("/sync/apply", async (c) => {
+	let body: ProviderSyncApplyBody;
+	try {
+		body = (await c.req.json()) as ProviderSyncApplyBody;
+	} catch {
+		return c.json({ success: false, message: "Invalid JSON body" }, 400);
+	}
+	try {
+		const repos = c.get("repositories");
+		const data = await applyProviderSyncService(repos, body, c.get('principal').id);
+		const parts = [`updated ${data.updated}`];
+		if (data.skipped) parts.push(`${data.skipped} skipped`);
+		if (data.failed.length) parts.push(`${data.failed.length} failed`);
+		return c.json(
+			normalizeApiTimeFields({
+				success: true,
+				message: `Sync finished (${parts.join(", ")}).`,
+				data,
+			})
+		);
+	} catch (error) {
+		return handleAdminRouteError(c, error, "Failed to sync providers");
+	}
+});
+
+/** 实时查询供应商额度。不回显密钥。须注册在 `/:id` 之前。 */
+adminProvidersRoutes.get("/:id/quota", async (c) => {
+	const providerId = c.req.param("id");
+	try {
+		const repos = c.get("repositories");
+		const data = await getProviderQuotaService(repos, providerId);
+		return c.json(normalizeApiTimeFields({ success: true, data }));
+	} catch (error) {
+		return handleAdminRouteError(c, error, "Failed to query provider quota");
 	}
 });
 

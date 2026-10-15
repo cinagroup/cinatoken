@@ -49,11 +49,20 @@ type ErrorListener = (error: Error) => void;
 type SocketEvent = 'message' | 'close' | 'error';
 type SocketListener = MessageListener | CloseListener | ErrorListener;
 
+function isValidWsCloseCode(code: number): boolean {
+	return (
+		(code >= 1000 && code <= 1014 && code !== 1004 && code !== 1005 && code !== 1006) || (code >= 3000 && code <= 4999)
+	);
+}
+
 class FakeSocket implements NodeWebSocket {
 	readyState = 1;
 	bufferedAmount = 0;
 	binaryType = '';
 	sent: Array<string | Buffer> = [];
+	closeCodes: number[] = [];
+	private paused = false;
+	private readonly queuedMessages: Array<{ data: Buffer; isBinary: boolean }> = [];
 	private readonly messageListeners: MessageListener[] = [];
 	private readonly closeListeners: CloseListener[] = [];
 	private readonly errorListeners: ErrorListener[] = [];
@@ -66,9 +75,17 @@ class FakeSocket implements NodeWebSocket {
 	on(event: 'message', listener: MessageListener): this;
 	on(event: 'close', listener: CloseListener): this;
 	on(event: 'error', listener: ErrorListener): this;
-	on(event: SocketEvent | 'open' | 'upgrade' | 'unexpected-response', listener: SocketListener | (() => void) | ((_response: IncomingMessage) => void) | ((_request: IncomingMessage, response: IncomingMessage) => void)): this {
+	on(
+		event: SocketEvent | 'open' | 'upgrade' | 'unexpected-response',
+		listener:
+			| SocketListener
+			| (() => void)
+			| ((_response: IncomingMessage) => void)
+			| ((_request: IncomingMessage, response: IncomingMessage) => void),
+	): this {
 		if (event === 'open') this.openListeners.push(listener as () => void);
-		if (event === 'unexpected-response') this.rejectionListeners.push(listener as (request: IncomingMessage, response: IncomingMessage) => void);
+		if (event === 'unexpected-response')
+			this.rejectionListeners.push(listener as (request: IncomingMessage, response: IncomingMessage) => void);
 		if (event === 'message') this.messageListeners.push(listener as MessageListener);
 		if (event === 'close') this.closeListeners.push(listener as CloseListener);
 		if (event === 'error') this.errorListeners.push(listener as ErrorListener);
@@ -95,16 +112,15 @@ class FakeSocket implements NodeWebSocket {
 			return this;
 		}
 		if (event === 'unexpected-response') {
-			const index = this.rejectionListeners.indexOf(listener as (request: IncomingMessage, response: IncomingMessage) => void);
+			const index = this.rejectionListeners.indexOf(
+				listener as (request: IncomingMessage, response: IncomingMessage) => void,
+			);
 			if (index >= 0) this.rejectionListeners.splice(index, 1);
 			return this;
 		}
 		if (event === 'upgrade') return this;
-		const listeners = event === 'message'
-			? this.messageListeners
-			: event === 'close'
-				? this.closeListeners
-				: this.errorListeners;
+		const listeners =
+			event === 'message' ? this.messageListeners : event === 'close' ? this.closeListeners : this.errorListeners;
 		const index = listeners.indexOf(listener as never);
 		if (index >= 0) listeners.splice(index, 1);
 		return this;
@@ -115,12 +131,29 @@ class FakeSocket implements NodeWebSocket {
 	}
 
 	close(code = 1000, reason = ''): void {
+		if (typeof code !== 'number' || !isValidWsCloseCode(code)) {
+			throw new TypeError('First argument must be a valid error code number');
+		}
+		this.closeCodes.push(code);
 		if (this.readyState === 3) return;
 		this.readyState = 3;
 		for (const listener of [...this.closeListeners]) listener(code, Buffer.from(reason));
 	}
 
-	terminate(): void { this.close(); }
+	terminate(): void {
+		this.close();
+	}
+
+	pause(): void {
+		this.paused = true;
+	}
+
+	resume(): void {
+		this.paused = false;
+		for (const queued of this.queuedMessages.splice(0)) {
+			this.dispatchMessage(queued.data, queued.isBinary);
+		}
+	}
 
 	emitOpen(): void {
 		for (const listener of [...this.openListeners]) listener();
@@ -134,46 +167,94 @@ class FakeSocket implements NodeWebSocket {
 
 	emitMessage(data: string | Buffer, isBinary = typeof data !== 'string'): void {
 		const buffer = typeof data === 'string' ? Buffer.from(data) : data;
-		for (const listener of [...this.messageListeners]) listener(buffer, isBinary);
+		if (this.paused) {
+			this.queuedMessages.push({ data: buffer, isBinary });
+			return;
+		}
+		this.dispatchMessage(buffer, isBinary);
 	}
 
 	emitUpstreamMessage(data: string | Buffer, isBinary = typeof data !== 'string'): void {
 		this.emitMessage(data, isBinary);
 	}
 
+	emitPeerClose(code = 1000, reason = ''): void {
+		if (this.readyState === 3) return;
+		this.readyState = 3;
+		for (const listener of [...this.closeListeners]) listener(code, Buffer.from(reason));
+	}
+
 	emitClose(code = 1000, reason = ''): void {
 		this.close(code, reason);
+	}
+
+	private dispatchMessage(data: Buffer, isBinary: boolean): void {
+		for (const listener of [...this.messageListeners]) listener(data, isBinary);
 	}
 }
 
 describe('Node DashScope realtime adapter', () => {
-	for (const mode of ['gap_frames', 'invalid_candidate', 'gap_overflow', 'gap_frame_count', 'rewritten_overflow'] as const) {
+	for (const mode of [
+		'gap_frames',
+		'invalid_candidate',
+		'gap_overflow',
+		'gap_frame_count',
+		'rewritten_overflow',
+	] as const) {
 		it(`owns original unsent frames across candidate gaps: ${mode}`, async () => {
 			const client = new FakeSocket();
 			const upstreams: FakeSocket[] = [];
 			class Upstream extends FakeSocket {
 				constructor(_url: string) {
-					super(); upstreams.push(this);
-					queueMicrotask(() => upstreams.length === 1 ? this.rejectHandshake() : this.emitOpen());
+					super();
+					upstreams.push(this);
+					queueMicrotask(() => (upstreams.length === 1 ? this.rejectHandshake() : this.emitOpen()));
 				}
 			}
 			const dispatch = createNodeDashScopeRealtimeDispatch(client, Upstream);
 			const limits: DashScopeRealtimeSessionLimits = {
-				maxSessionMs: 10_000, connectDeadlineAtMs: Date.now() + 2_000,
-				maxAudioDurationSeconds: 2, maxBillableAudioDurationSeconds: 3,
-				maxTextCharacters: 0, maxClientMessageBytes: 8 * 1024 * 1024,
-				maxClientBytes: 16 * 1024 * 1024, requirePcmAudio: true,
+				maxSessionMs: 10_000,
+				connectDeadlineAtMs: Date.now() + 2_000,
+				maxAudioDurationSeconds: 2,
+				maxBillableAudioDurationSeconds: 3,
+				maxTextCharacters: 0,
+				maxClientMessageBytes: 8 * 1024 * 1024,
+				maxClientBytes: 16 * 1024 * 1024,
+				requirePcmAudio: true,
 			};
 			// Even frames delivered before the first dispatch callback have an owner.
-			client.emitMessage(JSON.stringify({ header: { action: 'run-task' }, payload: {
-				model: 'public-model', parameters: { format: 'pcm', sample_rate: 16_000 },
-			} }));
-			assert.equal((await dispatch(route(), 'audio.transcriptions.realtime.inference', undefined, undefined, undefined, limits)).response.status, 503);
+			client.emitMessage(
+				JSON.stringify({
+					header: { action: 'run-task' },
+					payload: {
+						model: 'public-model',
+						parameters: { format: 'pcm', sample_rate: 16_000 },
+					},
+				}),
+			);
+			assert.equal(
+				(await dispatch(route(), 'audio.transcriptions.realtime.inference', undefined, undefined, undefined, limits))
+					.response.status,
+				503,
+			);
 			client.emitMessage(Buffer.alloc(mode === 'gap_overflow' ? 4 * 1024 * 1024 : 32_000));
 			if (mode === 'gap_frame_count') for (let index = 0; index < 1_024; index++) client.emitMessage(Buffer.alloc(0));
-			const fallback = route({ providerModelName: mode === 'invalid_candidate' ? 'unsupported-pcm-model'
-				: mode === 'rewritten_overflow' ? `fun-asr-realtime-${'x'.repeat(4 * 1024 * 1024)}` : 'paraformer-realtime-v2' });
-			const result = await dispatch(fallback, 'audio.transcriptions.realtime.inference', undefined, undefined, undefined, limits);
+			const fallback = route({
+				providerModelName:
+					mode === 'invalid_candidate'
+						? 'unsupported-pcm-model'
+						: mode === 'rewritten_overflow'
+							? `fun-asr-realtime-${'x'.repeat(4 * 1024 * 1024)}`
+							: 'paraformer-realtime-v2',
+			});
+			const result = await dispatch(
+				fallback,
+				'audio.transcriptions.realtime.inference',
+				undefined,
+				undefined,
+				undefined,
+				limits,
+			);
 			assert.equal(upstreams[0]!.sent.length, 0);
 			if (mode !== 'gap_frames') {
 				assert.equal(client.readyState, 3);
@@ -213,7 +294,14 @@ describe('Node DashScope realtime adapter', () => {
 			requirePcmAudio: true,
 		};
 		const dispatch = createNodeDashScopeRealtimeDispatch(client, WebSocketCtor);
-		const result = await dispatch(route(), 'audio.transcriptions.realtime.inference', undefined, undefined, undefined, limits);
+		const result = await dispatch(
+			route(),
+			'audio.transcriptions.realtime.inference',
+			undefined,
+			undefined,
+			undefined,
+			limits,
+		);
 		assert.equal(result.response.status, 504);
 		assert.equal(result.meta?.admissionDeniedPreDispatch, true);
 		assert.equal(result.meta?.upstreamOutcomeUnknown, false);
@@ -254,17 +342,23 @@ describe('Node DashScope realtime adapter', () => {
 		assert.match(upstreamUrl, /wss:\/\/dashscope/);
 		assert.equal(providerMaxPayload, DASHSCOPE_REALTIME_MAX_PROVIDER_MESSAGE_BYTES);
 		assert.equal(result.response.headers.get('x-octafuse-realtime-upgrade'), '1');
-		client.emitMessage(JSON.stringify({
-			header: { action: 'run-task' },
-			payload: { model: 'gateway-model' },
-		}), false);
+		client.emitMessage(
+			JSON.stringify({
+				header: { action: 'run-task' },
+				payload: { model: 'gateway-model' },
+			}),
+			false,
+		);
 		assert.equal(typeof holder.upstream!.sent[0], 'string');
 		assert.equal(JSON.parse(String(holder.upstream!.sent[0])).payload.model, 'fun-asr-realtime-v2');
 
-		holder.upstream!.emitUpstreamMessage(JSON.stringify({
-			header: { event: 'task-finished', task_id: 'task-1' },
-			payload: { usage: { duration: 1.5 } },
-		}), false);
+		holder.upstream!.emitUpstreamMessage(
+			JSON.stringify({
+				header: { event: 'task-finished', task_id: 'task-1' },
+				payload: { usage: { duration: 1.5 } },
+			}),
+			false,
+		);
 		holder.upstream!.emitClose();
 		const usage = await result.usagePromise;
 		assert.equal(usage.audio_duration_seconds, 1.5);
@@ -280,7 +374,8 @@ describe('Node DashScope realtime adapter', () => {
 			return holder.upstream;
 		} as unknown as NodeWebSocketConstructor;
 		const result = await createNodeDashScopeRealtimeDispatch(client, WebSocketCtor)(
-			route(), 'audio.transcriptions.realtime.inference',
+			route(),
+			'audio.transcriptions.realtime.inference',
 		);
 		holder.upstream!.emitUpstreamMessage('{"header":{"event":"task-started"}}', false);
 		const usage = await result.usagePromise;
@@ -323,14 +418,20 @@ describe('Node DashScope realtime adapter', () => {
 		const result = await resultPromise;
 		assert.ok(holder.upstream);
 
-		client.emitMessage(JSON.stringify({
-			type: 'session.update',
-			session: { input_audio_format: 'pcm', sample_rate: 8_000 },
-		}), false);
-		client.emitMessage(JSON.stringify({
-			type: 'input_audio_buffer.append',
-			audio: Buffer.alloc(16_000).toString('base64'),
-		}), false);
+		client.emitMessage(
+			JSON.stringify({
+				type: 'session.update',
+				session: { input_audio_format: 'pcm', sample_rate: 8_000 },
+			}),
+			false,
+		);
+		client.emitMessage(
+			JSON.stringify({
+				type: 'input_audio_buffer.append',
+				audio: Buffer.alloc(16_000).toString('base64'),
+			}),
+			false,
+		);
 		holder.upstream!.emitUpstreamMessage(JSON.stringify({ type: 'session.finished' }), false);
 		holder.upstream!.emitClose();
 
@@ -338,5 +439,64 @@ describe('Node DashScope realtime adapter', () => {
 		assert.equal(usage.audio_duration_seconds, 1);
 		assert.equal(usage.audio_duration_source, 'client');
 		assert.equal(usage.stream_error, undefined);
+	});
+
+	it('still records usage when the client closes with reserved code 1005', async () => {
+		const client = new FakeSocket();
+		let upstream: FakeSocket | null = null;
+		const WebSocketCtor = function (_url: string): NodeWebSocket {
+			upstream = new FakeSocket();
+			queueMicrotask(() => upstream?.emitOpen());
+			return upstream;
+		} as unknown as NodeWebSocketConstructor;
+
+		const dispatch = createNodeDashScopeRealtimeDispatch(client, WebSocketCtor);
+		const resultPromise = dispatch(route(), 'audio.transcriptions.realtime.inference');
+		const result = await resultPromise;
+		assert.ok(upstream);
+
+		upstream!.emitUpstreamMessage(
+			JSON.stringify({
+				header: { event: 'task-finished', task_id: 'task-1' },
+				payload: { usage: { duration: 1.5 } },
+			}),
+			false,
+		);
+		assert.doesNotThrow(() => client.emitPeerClose(1005));
+		const usage = await result.usagePromise;
+		assert.equal(usage.audio_duration_seconds, 1.5);
+		assert.equal(upstream!.closeCodes[0], 1000);
+	});
+
+	it('forwards messages queued while the client socket is paused', async () => {
+		const client = new FakeSocket();
+		client.pause();
+		client.emitMessage(
+			JSON.stringify({
+				header: { action: 'run-task' },
+				payload: { model: 'gateway-model' },
+			}),
+			false,
+		);
+
+		let upstream: FakeSocket | null = null;
+		const WebSocketCtor = function (_url: string): NodeWebSocket {
+			upstream = new FakeSocket();
+			queueMicrotask(() => upstream?.emitOpen());
+			return upstream;
+		} as unknown as NodeWebSocketConstructor;
+
+		const dispatch = createNodeDashScopeRealtimeDispatch(client, WebSocketCtor);
+		const resultPromise = dispatch(
+			route({ providerModelName: 'fun-asr-realtime-v2' }),
+			'audio.transcriptions.realtime.inference',
+		);
+		await resultPromise;
+		assert.ok(upstream);
+
+		assert.equal(upstream!.sent.length, 0);
+		client.resume();
+		assert.equal(typeof upstream!.sent[0], 'string');
+		assert.equal(JSON.parse(String(upstream!.sent[0])).payload.model, 'fun-asr-realtime-v2');
 	});
 });

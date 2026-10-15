@@ -3,13 +3,10 @@
  * 无有效目录价则不计费（legacy 仅 image 块须显式 `image_billing_mode: per_image`）。
  * 日志不落 prompt 原文 / 参考图 / Base64。
  */
-import type {
-	GatewayRepositories,
-	UpstreamProtocol,
-	VerifiedModelEndpointSnapshot,
-} from '@octafuse/core';
+import type { GatewayRepositories, UpstreamProtocol, VerifiedModelEndpointSnapshot } from '@octafuse/core';
 import {
 	buildImagePrecheckUsage,
+	canAffordTotalCost,
 	changedFieldsToJson,
 	computeChangedFields,
 	computeImagePerImageMeteredCost,
@@ -19,14 +16,13 @@ import {
 	guardrailBudgetUnits,
 	insertRequestUsageAndChargeTx,
 	parsePricingProfile,
-	parseRouteBaseFactors,
-	parseRoutePricingSchedule,
+	resolveRouteEffectiveFactors,
+	toProviderFactorAudit,
 	PRICING_AUDIT_JSON_SCHEMA_VERSION,
 	profileHasImagePerImagePricing,
 	profileHasImageTokenPricing,
 	resolveChargedBillingPrices,
 	resolveDailyScheduleFactor,
-	resolveEffectiveRouteFactor,
 	resolveImageBillingMode,
 	resolveImageCatalogUnitPrice,
 	resolveStandardBillingPrices,
@@ -38,20 +34,20 @@ import {
 	applyUserChargedCostFactor,
 	lookupUserChargedCostFactor,
 	parseUserChargedCostFactors,
+	getUserChargedCostFactorMode,
 	snapshotToJson,
 	snapshotWithOverrides,
+	splitChargeFromBudgetSnapshot,
 	userRowToSnapshot,
 	type ImageTokenUsage,
 	type ParsedPricingProfile,
 	type PriceResolutionAuditSide,
+	type UserChargedCostFactorMode,
 } from '@octafuse/core';
 import type { GatewayCircuitAlertEvent } from './circuit-alert-types';
 import { fireGatewayErrorWebhooks } from './alert-webhook';
 import type { RequestTimingSnapshot } from './request-timing';
-import {
-	applyRequestBodyLoggingPolicy,
-	type RequestBodyLoggingMode,
-} from './request-body-log-policy';
+import { applyRequestBodyLoggingPolicy, type RequestBodyLoggingMode } from './request-body-log-policy';
 import { verifiedUsdGenerationWriteSnapshot } from './generation-metadata-snapshot';
 import {
 	ordinaryBudgetAuditSnapshotTransition,
@@ -60,10 +56,7 @@ import {
 } from './usage-tracker';
 import { resolveEndpointImagePricing } from './endpoint-image-billing-pricing';
 import { parseByokKeyId } from './byok-key-pool';
-import {
-	applyPrivateByokBillingPolicy,
-	privateByokSettlementMode,
-} from './byok-billing-policy';
+import { applyPrivateByokBillingPolicy, privateByokSettlementMode } from './byok-billing-policy';
 
 export type ImageBillingParams = {
 	/**
@@ -93,6 +86,10 @@ export type ImageBillingParams = {
 	catalogModelId?: string;
 	/** `users.charged_cost_factors` JSON */
 	userChargedCostFactorsJson?: string | null;
+	/** 本次请求的 route group；缺省按 `default` 查找用户倍率 */
+	routeGroup?: string | null;
+	/** 全局合成模式；入口函数会从 system_config 填入 */
+	userChargedCostFactorMode?: UserChargedCostFactorMode;
 };
 
 export type ImagePricingContext = Readonly<{
@@ -127,23 +124,20 @@ export type ImageCostBreakdown = {
 };
 
 /** Convert the conservative image precheck into the integer ledger unit. */
-export function imageGuardrailBudgetMicros(
-	precheck: Pick<ImageCostBreakdown, 'chargedCost'>
-): number {
+export function imageGuardrailBudgetMicros(precheck: Pick<ImageCostBreakdown, 'chargedCost'>): number {
 	const micros = guardrailBudgetUnits(precheck.chargedCost, 'ceiling');
 	return Number.isSafeInteger(micros) ? micros : Number.MAX_SAFE_INTEGER;
 }
 
-export function hasAuthoritativeImageTokenUsage(
-	usage: ImageTokenUsage | null | undefined,
-): usage is ImageTokenUsage {
-	return usage != null && (
-		usage.text_tokens > 0
-		|| usage.cached_text_tokens > 0
-		|| usage.image_input_tokens > 0
-		|| usage.cached_image_input_tokens > 0
-		|| usage.image_output_tokens > 0
-		|| usage.total_tokens > 0
+export function hasAuthoritativeImageTokenUsage(usage: ImageTokenUsage | null | undefined): usage is ImageTokenUsage {
+	return (
+		usage != null &&
+		(usage.text_tokens > 0 ||
+			usage.cached_text_tokens > 0 ||
+			usage.image_input_tokens > 0 ||
+			usage.cached_image_input_tokens > 0 ||
+			usage.image_output_tokens > 0 ||
+			usage.total_tokens > 0)
 	);
 }
 
@@ -167,11 +161,7 @@ export function imageGuardrailSettlementMode(params: {
 	if (params.upstreamAccepted === true && params.resultConfirmed === false) {
 		return 'reserved';
 	}
-	if (
-		params.status === 'success'
-		&& params.tokenPriced
-		&& !hasAuthoritativeImageTokenUsage(params.imageUsage)
-	) {
+	if (params.status === 'success' && params.tokenPriced && !hasAuthoritativeImageTokenUsage(params.imageUsage)) {
 		return 'reserved';
 	}
 	return 'actual';
@@ -218,27 +208,24 @@ function withImageOutputAdmissionAudit(
 	};
 }
 
-function withUserImageChargedFactor(
-	breakdown: ImageCostBreakdown,
-	params: ImageBillingParams
-): ImageCostBreakdown {
+function withUserImageChargedFactor(breakdown: ImageCostBreakdown, params: ImageBillingParams): ImageCostBreakdown {
 	const adjusted = applyUserChargedCostToBreakdown(
 		breakdown,
 		params.userChargedCostFactorsJson,
-		params.catalogModelId ?? ''
-	);
-	const factor = lookupUserChargedCostFactor(
-		parseUserChargedCostFactors(params.userChargedCostFactorsJson),
 		params.catalogModelId ?? '',
+		{ mode: params.userChargedCostFactorMode, routeGroup: params.routeGroup },
 	);
+	const factor = breakdown.chargedCost > 0 ? adjusted.chargedCost / breakdown.chargedCost : 1;
 	return {
 		...adjusted,
-		chargedOutputUnitPrice: breakdown.chargedOutputUnitPrice == null
-			? breakdown.chargedOutputUnitPrice
-			: applyUserChargedCostFactor(breakdown.chargedOutputUnitPrice, factor),
-		chargedRequestPrice: breakdown.chargedRequestPrice == null
-			? breakdown.chargedRequestPrice
-			: applyUserChargedCostFactor(breakdown.chargedRequestPrice, factor),
+		chargedOutputUnitPrice:
+			breakdown.chargedOutputUnitPrice == null
+				? breakdown.chargedOutputUnitPrice
+				: applyUserChargedCostFactor(breakdown.chargedOutputUnitPrice, factor),
+		chargedRequestPrice:
+			breakdown.chargedRequestPrice == null
+				? breakdown.chargedRequestPrice
+				: applyUserChargedCostFactor(breakdown.chargedRequestPrice, factor),
 	};
 }
 
@@ -263,9 +250,7 @@ export type ShouldChargeUncertainImageResultParams = {
  * 未确认结果（客户端取消 / Gateway 超时）是否向用户扣费。
  * token / per_image 一律不扣（与上游 4xx/5xx 对齐）；`uncertain_result_policy` 不再作为 abort 扣费开关。
  */
-export function shouldChargeUncertainImageResult(
-	_params: ShouldChargeUncertainImageResultParams
-): boolean {
+export function shouldChargeUncertainImageResult(_params: ShouldChargeUncertainImageResultParams): boolean {
 	return false;
 }
 
@@ -295,45 +280,51 @@ async function resolveRouteFactors(
 	routePriceOverrideJson: string | null | undefined,
 	requestStartedAtMs?: number,
 	pricingContext?: ImagePricingContext,
+	modelPricingProfileJson?: string | null,
 ): Promise<{
 	meteredFactor: number;
 	chargedFactor: number;
 	pricingAtUtc: string;
 	businessTimezone: string;
-	meteredAuditExtras: Pick<PriceResolutionAuditSide, 'base_factor' | 'schedule' | 'effective_factor'>;
-	chargedAuditExtras: Pick<PriceResolutionAuditSide, 'base_factor' | 'schedule' | 'effective_factor'>;
+	catalogFactor: number;
+	catalogSchedule: ReturnType<typeof toScheduleAudit>;
+	meteredAuditExtras: Pick<
+		PriceResolutionAuditSide,
+		'base_factor' | 'schedule' | 'effective_factor' | 'provider_factor'
+	>;
+	chargedAuditExtras: Pick<
+		PriceResolutionAuditSide,
+		'base_factor' | 'schedule' | 'effective_factor' | 'provider_factor'
+	>;
 }> {
-	const pricingAtUtc = pricingContext
-		? new Date(pricingContext.pricingAtUtcMs)
-		: pricingAtUtcFromParams(requestStartedAtMs);
-	const businessTimezone = pricingContext?.businessTimezone
-		?? await getBusinessTimezone(repos);
-	const baseFactors = parseRouteBaseFactors(routePriceOverrideJson ?? null);
-	const schedule = parseRoutePricingSchedule(routePriceOverrideJson ?? null);
-	const chargedSch = resolveDailyScheduleFactor(schedule.charged, pricingAtUtc, businessTimezone);
-	const meteredSch = resolveDailyScheduleFactor(schedule.metered, pricingAtUtc, businessTimezone);
-	const meteredFactor = resolveEffectiveRouteFactor(
-		baseFactors.meteredFactor,
-		meteredSch,
-		schedule.mode
-	);
-	const chargedFactor = resolveEffectiveRouteFactor(
-		baseFactors.chargedFactor,
-		chargedSch,
-		schedule.mode
-	);
-	const schSide = (sch: typeof chargedSch, base: number, effective: number) => ({
-		base_factor: base,
-		schedule: toScheduleAudit(sch),
+	const pricingAtUtc = pricingContext ? new Date(pricingContext.pricingAtUtcMs) : pricingAtUtcFromParams(requestStartedAtMs);
+	const businessTimezone = pricingContext?.businessTimezone ?? await getBusinessTimezone(repos);
+	const routeFactors = resolveRouteEffectiveFactors({
+		priceOverrideJson: routePriceOverrideJson ?? null,
+		nowUtc: pricingAtUtc,
+		timezone: businessTimezone,
+	});
+	const catalogProfile = parsePricingProfile(modelPricingProfileJson ?? null);
+	const catalogSch = resolveDailyScheduleFactor(catalogProfile?.schedule ?? [], pricingAtUtc, businessTimezone);
+	const providerAudit = toProviderFactorAudit(routeFactors.provider);
+	const schSide = (
+		side: typeof routeFactors.charged,
+		effective: number,
+	): Pick<PriceResolutionAuditSide, 'base_factor' | 'schedule' | 'effective_factor' | 'provider_factor'> => ({
+		base_factor: side.base,
+		schedule: toScheduleAudit(side.schedule),
 		effective_factor: effective,
+		provider_factor: providerAudit,
 	});
 	return {
-		meteredFactor,
-		chargedFactor,
 		pricingAtUtc: pricingAtUtc.toISOString(),
 		businessTimezone,
-		meteredAuditExtras: schSide(meteredSch, baseFactors.meteredFactor, meteredFactor),
-		chargedAuditExtras: schSide(chargedSch, baseFactors.chargedFactor, chargedFactor),
+		meteredFactor: routeFactors.meteredTotal,
+		chargedFactor: routeFactors.chargedTotal,
+		catalogFactor: catalogSch.factor,
+		catalogSchedule: toScheduleAudit(catalogSch),
+		meteredAuditExtras: schSide(routeFactors.metered, routeFactors.meteredTotal),
+		chargedAuditExtras: schSide(routeFactors.charged, routeFactors.chargedTotal),
 	};
 }
 
@@ -341,7 +332,7 @@ function zeroImageCostBreakdown(
 	params: ImageBillingParams,
 	factors: Awaited<ReturnType<typeof resolveRouteFactors>>,
 	billingKind: ImageCostBreakdown['billingKind'],
-	audit: Record<string, unknown>
+	audit: Record<string, unknown>,
 ): ImageCostBreakdown {
 	return withUserImageChargedFactor(
 		{
@@ -373,7 +364,7 @@ function zeroImageCostBreakdown(
 			logImageCounts: { inputImageCount: 0, outputImageCount: 0 },
 			billingKind,
 		},
-		params
+		params,
 	);
 }
 
@@ -398,21 +389,27 @@ function estimateImageTokenCosts(
 	params: ImageBillingParams,
 	usage: ImageTokenUsage,
 	factors: Awaited<ReturnType<typeof resolveRouteFactors>>,
-	auditExtra?: Record<string, unknown>
+	auditExtra?: Record<string, unknown>,
 ): ImageCostBreakdown {
 	// Image 目录价通常为单档 flat；仍复用 LLM 的 input-tokens 选档 API（basis 取 text+image_input）。
 	const basis = usage.text_tokens + usage.image_input_tokens;
 	const supplier = resolveSupplierBillingPrices({
 		basisInputTokens: basis,
 		modelPricingProfileJson: params.modelPricingProfileJson,
+		catalogScheduleFactor: factors.catalogFactor,
+		catalogSchedule: factors.catalogSchedule,
 	});
 	const standard = resolveStandardBillingPrices({
 		basisInputTokens: basis,
 		modelPricingProfileJson: params.modelPricingProfileJson,
+		catalogScheduleFactor: factors.catalogFactor,
+		catalogSchedule: factors.catalogSchedule,
 	});
 	const charged = resolveChargedBillingPrices({
 		basisInputTokens: basis,
 		modelPricingProfileJson: params.modelPricingProfileJson,
+		catalogScheduleFactor: factors.catalogFactor,
+		catalogSchedule: factors.catalogSchedule,
 	});
 
 	const supplierPrices = scaleBillingPrices(supplier.prices, factors.meteredFactor);
@@ -433,6 +430,7 @@ function estimateImageTokenCosts(
 			cached_text: usage.cached_text_tokens,
 			image_input: usage.image_input_tokens,
 			cached_image_input: usage.cached_image_input_tokens,
+			text_output: usage.text_output_tokens,
 			image_output: usage.image_output_tokens,
 			total: usage.total_tokens,
 		},
@@ -471,7 +469,7 @@ function estimateImageTokenCosts(
 			pricingAuditJson,
 			logTokens: {
 				inputTokens: usage.text_tokens,
-				outputTokens: usage.image_output_tokens,
+				outputTokens: usage.image_output_tokens + usage.text_output_tokens,
 				cacheReadTokens: usage.cached_text_tokens,
 				cacheWriteTokens: 0,
 				totalTokens: usage.total_tokens,
@@ -479,7 +477,7 @@ function estimateImageTokenCosts(
 			logImageCounts: { inputImageCount: 0, outputImageCount: 0 },
 			billingKind: 'image_tokens',
 		},
-		params
+		params,
 	);
 }
 
@@ -487,35 +485,23 @@ function estimateImagePerImageCosts(
 	params: ImageBillingParams,
 	profile: ParsedPricingProfile,
 	factors: Awaited<ReturnType<typeof resolveRouteFactors>>,
-	options?: { outputCount?: number; referenceCount?: number; auditExtra?: Record<string, unknown> }
+	options?: { outputCount?: number; referenceCount?: number; auditExtra?: Record<string, unknown> },
 ): ImageCostBreakdown {
 	const imageCfg = profile.image!;
 	const outputCount = Math.max(0, Math.floor(options?.outputCount ?? params.imageCount));
-	const referenceCount = Math.max(
-		0,
-		Math.floor(options?.referenceCount ?? params.referenceCount ?? 0)
-	);
-	const outputUnitPrice = resolveImageCatalogUnitPrice(
-		imageCfg,
-		params.quality,
-		params.size,
-		'output'
-	);
-	const inputUnitPrice = resolveImageCatalogUnitPrice(
-		imageCfg,
-		params.quality,
-		params.size,
-		'input'
-	);
+	const referenceCount = Math.max(0, Math.floor(options?.referenceCount ?? params.referenceCount ?? 0));
+	const outputUnitPrice = resolveImageCatalogUnitPrice(imageCfg, params.quality, params.size, 'output');
+	const inputUnitPrice = resolveImageCatalogUnitPrice(imageCfg, params.quality, params.size, 'input');
 	const baseCost = computeImagePerImageMeteredCost({
 		outputCount,
 		referenceCount,
 		outputUnitPrice,
 		inputUnitPrice,
 	});
-	const meteredCost = roundGatewayMoney(baseCost * factors.meteredFactor);
-	const standardCost = roundGatewayMoney(baseCost);
-	const chargedCost = roundGatewayMoney(baseCost * factors.chargedFactor);
+	const catalogBase = baseCost * factors.catalogFactor;
+	const meteredCost = roundGatewayMoney(catalogBase * factors.meteredFactor);
+	const standardCost = roundGatewayMoney(catalogBase);
+	const chargedCost = roundGatewayMoney(catalogBase * factors.chargedFactor);
 
 	const pricingAuditJson = JSON.stringify({
 		v: PRICING_AUDIT_JSON_SCHEMA_VERSION,
@@ -531,6 +517,8 @@ function estimateImagePerImageCosts(
 		charged_factor: factors.chargedFactor,
 		pricing_at: factors.pricingAtUtc,
 		business_timezone: factors.businessTimezone,
+		provider_factor: factors.chargedAuditExtras.provider_factor,
+		catalog_schedule: factors.catalogSchedule,
 		...(options?.auditExtra ?? {}),
 	});
 
@@ -556,13 +544,11 @@ function estimateImagePerImageCosts(
 			logImageCounts: { inputImageCount: referenceCount, outputImageCount: outputCount },
 			billingKind: 'image_per_image',
 		},
-		params
+		params,
 	);
 }
 
-function endpointImageOperation(
-	operation: ImageBillingParams['operation'],
-): 'images.generations' | 'images.edits' {
+function endpointImageOperation(operation: ImageBillingParams['operation']): 'images.generations' | 'images.edits' {
 	return operation === 'edits' ? 'images.edits' : 'images.generations';
 }
 
@@ -581,10 +567,7 @@ function estimateEndpointImageCosts(
 	},
 ): ImageCostBreakdown {
 	const outputCount = Math.max(0, Math.floor(options?.outputCount ?? params.imageCount));
-	const referenceCount = Math.max(
-		0,
-		Math.floor(options?.referenceCount ?? params.referenceCount ?? 0),
-	);
+	const referenceCount = Math.max(0, Math.floor(options?.referenceCount ?? params.referenceCount ?? 0));
 	const resolved = resolveEndpointImagePricing(params.endpoint, {
 		operation: endpointImageOperation(params.operation),
 		imageCount: outputCount,
@@ -599,12 +582,8 @@ function estimateEndpointImageCosts(
 	}
 
 	const standardCost = roundGatewayMoney(resolved.value.standardBaseCost);
-	const meteredCost = roundGatewayMoney(
-		resolved.value.standardBaseCost * factors.meteredFactor,
-	);
-	const chargedCost = roundGatewayMoney(
-		resolved.value.standardBaseCost * factors.chargedFactor,
-	);
+	const meteredCost = roundGatewayMoney(resolved.value.standardBaseCost * factors.meteredFactor);
+	const chargedCost = roundGatewayMoney(resolved.value.standardBaseCost * factors.chargedFactor);
 	const pricingAuditJson = JSON.stringify({
 		v: PRICING_AUDIT_JSON_SCHEMA_VERSION,
 		kind: 'image_per_image',
@@ -646,12 +625,8 @@ function estimateEndpointImageCosts(
 	return withUserImageChargedFactor(
 		{
 			unitPrice: resolved.value.standardOutputUnitCost,
-			chargedOutputUnitPrice: roundGatewayMoney(
-				resolved.value.standardOutputUnitCost * factors.chargedFactor,
-			),
-			chargedRequestPrice: roundGatewayMoney(
-				resolved.value.standardFixedRequestCost * factors.chargedFactor,
-			),
+			chargedOutputUnitPrice: roundGatewayMoney(resolved.value.standardOutputUnitCost * factors.chargedFactor),
+			chargedRequestPrice: roundGatewayMoney(resolved.value.standardFixedRequestCost * factors.chargedFactor),
 			imageCount: outputCount,
 			meteredCost,
 			standardCost,
@@ -683,13 +658,16 @@ function estimateEndpointImageCosts(
 export async function estimateImageCosts(
 	repos: GatewayRepositories,
 	params: ImageBillingParams,
-	options?: { usage?: ImageTokenUsage | null; auditExtra?: Record<string, unknown> }
+	options?: { usage?: ImageTokenUsage | null; auditExtra?: Record<string, unknown> },
 ): Promise<ImageCostBreakdown> {
+	params = await resolveImageBillingParams(repos, params);
+	const billing = params;
 	const factors = await resolveRouteFactors(
 		repos,
 		params.routePriceOverrideJson,
 		params.requestStartedAtMs,
 		params.pricingContext,
+		params.modelPricingProfileJson,
 	);
 	if (params.endpoint) {
 		return estimateEndpointImageCosts(params, factors, {
@@ -702,9 +680,9 @@ export async function estimateImageCosts(
 	const mode = resolveImageBillingMode(profile);
 
 	if (mode === 'per_image' && profile && profileHasImagePerImagePricing(profile)) {
-		return estimateImagePerImageCosts(params, profile, factors, {
-			outputCount: params.imageCount,
-			referenceCount: params.referenceCount,
+		return estimateImagePerImageCosts(billing, profile, factors, {
+			outputCount: billing.imageCount,
+			referenceCount: billing.referenceCount,
 			auditExtra: options?.auditExtra,
 		});
 	}
@@ -713,16 +691,16 @@ export async function estimateImageCosts(
 		const usage =
 			options?.usage ??
 			buildImagePrecheckUsage({
-				quality: params.quality,
-				size: params.size,
-				isEdit: params.isEdit,
-				imageCount: params.imageCount,
-				referenceCount: params.referenceCount,
+				quality: billing.quality,
+				size: billing.size,
+				isEdit: billing.isEdit,
+				imageCount: billing.imageCount,
+				referenceCount: billing.referenceCount,
 			});
-		return estimateImageTokenCosts(params, usage, factors, options?.auditExtra);
+		return estimateImageTokenCosts(billing, usage, factors, options?.auditExtra);
 	}
 
-	return zeroImageCostBreakdown(params, factors, 'image_tokens', {
+	return zeroImageCostBreakdown(billing, factors, 'image_tokens', {
 		error: 'missing_image_pricing',
 	});
 }
@@ -734,17 +712,21 @@ export async function estimateImageCosts(
 export async function estimateImageBudgetPrecheck(
 	repos: GatewayRepositories,
 	params: Omit<ImageBillingParams, 'routePriceOverrideJson'>,
-	routePriceOverrideJsons: Array<string | null | undefined>
+	routePriceOverrideJsons: Array<string | null | undefined>,
+	options?: { usage?: ImageTokenUsage | null },
 ): Promise<ImageCostBreakdown> {
-	const overrides =
-		routePriceOverrideJsons.length > 0 ? routePriceOverrideJsons : [null];
+	const overrides = routePriceOverrideJsons.length > 0 ? routePriceOverrideJsons : [null];
 	let best: ImageCostBreakdown | null = null;
 	let byokStandardCostCeiling = 0;
 	for (const override of overrides) {
-		const costs = await estimateImageCosts(repos, {
-			...params,
-			routePriceOverrideJson: override ?? null,
-		});
+		const costs = await estimateImageCosts(
+			repos,
+			{
+				...params,
+				routePriceOverrideJson: override ?? null,
+			},
+			options?.usage ? { usage: options.usage } : undefined,
+		);
 		if (!best || costs.chargedCost > best.chargedCost) {
 			best = costs;
 		}
@@ -753,10 +735,21 @@ export async function estimateImageBudgetPrecheck(
 	return { ...best!, byokStandardCostCeiling };
 }
 
+export function canAffordImageCost(
+	budgetMax: number | null,
+	budgetSpent: number,
+	chargedCost: number,
+	walletGranted = 0,
+	walletSpent = 0
+): boolean {
+	return canAffordTotalCost(budgetMax, budgetSpent, walletGranted, walletSpent, chargedCost);
+
+}
+
 /** 将 breakdown 标为未确认结果扣费审计（client abort / gateway timeout / 按请求张数）。 */
 export function withUncertainResultAudit(
 	costs: ImageCostBreakdown,
-	usageSource: UncertainResultUsageSource
+	usageSource: UncertainResultUsageSource,
 ): ImageCostBreakdown {
 	let audit: Record<string, unknown> = {};
 	try {
@@ -783,7 +776,7 @@ export function withClientAbortPrecheckAudit(costs: ImageCostBreakdown): ImageCo
 
 function resolveUncertainUsageSource(
 	imageAbortReason?: ImageAbortReason | null,
-	options?: { charged?: boolean }
+	options?: { charged?: boolean },
 ): UncertainResultUsageSource {
 	const charged = options?.charged ?? true;
 	if (imageAbortReason === 'client_abort') {
@@ -827,7 +820,7 @@ export type RecordImageUsageParams = {
 	/** OpenRouter cross-modal grouping identifier; never used for provider affinity here. */
 	sessionId?: string | null;
 	responseStreamed?: boolean | null;
-	requestProtocol: 'openai';
+	requestProtocol: UpstreamProtocol;
 	requestOperation?: string | null;
 	upstreamProtocol: UpstreamProtocol;
 	upstreamOperation?: string | null;
@@ -869,6 +862,8 @@ export type RecordImageUsageParams = {
 	timing?: RequestTimingSnapshot | null;
 	circuitEvents?: GatewayCircuitAlertEvent[];
 	suppressErrorAlert?: boolean;
+	/** Request Host (observe only) */
+	ingressHost?: string | null;
 };
 
 export type ImageUsageWrite = Parameters<typeof insertRequestUsageAndChargeTx>[1];
@@ -882,37 +877,25 @@ export async function prepareImageUsageWrite(params: RecordImageUsageParams): Pr
 	const hasEndpointPricing = params.billing.endpoint != null;
 	const isByok = parseByokKeyId(params.providerKeyId) !== null;
 	if (
-		hasEndpointPricing
-		&& (
-			params.billing.endpoint!.modelId !== params.modelId
-			|| params.billing.endpoint!.providerId !== params.providerId
-		)
+		hasEndpointPricing &&
+		(params.billing.endpoint!.modelId !== params.modelId || params.billing.endpoint!.providerId !== params.providerId)
 	) {
 		throw new Error('Verified image endpoint pricing identity does not match routed usage');
 	}
-	const profile = hasEndpointPricing
-		? null
-		: parsePricingProfile(params.billing.modelPricingProfileJson ?? null);
+	const profile = hasEndpointPricing ? null : parsePricingProfile(params.billing.modelPricingProfileJson ?? null);
 	const mode = hasEndpointPricing ? 'per_image' : resolveImageBillingMode(profile);
 	const admittedImageCount = Number.isFinite(params.billing.imageCount)
 		? Math.max(0, Math.floor(params.billing.imageCount))
 		: 0;
-	const observedImageCount = params.status === 'success'
-		&& Number.isFinite(params.effectiveImageCount)
-		? Math.max(0, Math.floor(params.effectiveImageCount!))
-		: admittedImageCount;
-	const outputCountExceededAdmission =
-		params.status === 'success' && observedImageCount > admittedImageCount;
-	const outputImageCountForLog =
-		params.status === 'success'
-			? Math.min(observedImageCount, admittedImageCount)
-			: 0;
+	const observedImageCount =
+		params.status === 'success' && Number.isFinite(params.effectiveImageCount)
+			? Math.max(0, Math.floor(params.effectiveImageCount!))
+			: admittedImageCount;
+	const outputCountExceededAdmission = params.status === 'success' && observedImageCount > admittedImageCount;
+	const outputImageCountForLog = params.status === 'success' ? Math.min(observedImageCount, admittedImageCount) : 0;
 	const derivedSettlementMode = imageGuardrailSettlementMode({
 		status: params.status,
-		tokenPriced:
-			mode === 'token'
-			&& profile != null
-			&& profileHasImageTokenPricing(profile),
+		tokenPriced: mode === 'token' && profile != null && profileHasImageTokenPricing(profile),
 		imageUsage: params.imageUsage,
 		upstreamAccepted: params.upstreamAccepted,
 		resultConfirmed: params.resultConfirmed,
@@ -920,9 +903,9 @@ export async function prepareImageUsageWrite(params: RecordImageUsageParams): Pr
 		clientOutcomeBillable: params.clientOutcomeBillable,
 	});
 	const nominalSettlementMode: 'actual' | 'reserved' =
-		params.guardrailBudgetSettlement?.mode === 'reserved'
-		|| params.ordinaryBudgetSettlement?.unknownCost === true
-		|| derivedSettlementMode === 'reserved'
+		params.guardrailBudgetSettlement?.mode === 'reserved' ||
+		params.ordinaryBudgetSettlement?.unknownCost === true ||
+		derivedSettlementMode === 'reserved'
 			? 'reserved'
 			: 'actual';
 	const ordinarySettlementMode = privateByokSettlementMode(isByok, nominalSettlementMode);
@@ -948,11 +931,7 @@ export async function prepareImageUsageWrite(params: RecordImageUsageParams): Pr
 	});
 
 	const effectiveOutputImageCountForLog =
-		params.status === 'success'
-			? outputImageCountForLog
-			: chargeUncertain
-				? admittedImageCount
-				: 0;
+		params.status === 'success' ? outputImageCountForLog : chargeUncertain ? admittedImageCount : 0;
 
 	let costs: ImageCostBreakdown;
 	if (isUncertainCharge) {
@@ -961,11 +940,11 @@ export async function prepareImageUsageWrite(params: RecordImageUsageParams): Pr
 			params.billing.routePriceOverrideJson,
 			params.billing.requestStartedAtMs,
 			params.billing.pricingContext,
+			params.billing.modelPricingProfileJson,
 		);
-		const billingKind =
-			hasEndpointPricing
-				? 'image_per_image'
-				: mode === 'per_image' && profile && profileHasImagePerImagePricing(profile)
+		const billingKind = hasEndpointPricing
+			? 'image_per_image'
+			: mode === 'per_image' && profile && profileHasImagePerImagePricing(profile)
 				? 'image_per_image'
 				: 'image_tokens';
 		costs = zeroImageCostBreakdown(params.billing, factors, billingKind, {
@@ -980,18 +959,12 @@ export async function prepareImageUsageWrite(params: RecordImageUsageParams): Pr
 			params.billing.routePriceOverrideJson,
 			params.billing.requestStartedAtMs,
 			params.billing.pricingContext,
+			params.billing.modelPricingProfileJson,
 		);
-		costs = zeroImageCostBreakdown(
-			params.billing,
-			factors,
-			hasEndpointPricing ? 'image_per_image' : 'image_tokens',
-			{
+		costs = zeroImageCostBreakdown(params.billing, factors, hasEndpointPricing ? 'image_per_image' : 'image_tokens', {
 			error: 'request_failed',
-			...(hasEndpointPricing
-				? endpointImageAuditIdentityFields(params.billing.endpoint)
-				: {}),
-			},
-		);
+			...(hasEndpointPricing ? endpointImageAuditIdentityFields(params.billing.endpoint) : {}),
+		});
 	} else if (outputCountExceededAdmission) {
 		// Never let provider overproduction raise an actual debit above the count
 		// atomically admitted. Re-price from the admitted precheck basis and keep
@@ -1014,6 +987,7 @@ export async function prepareImageUsageWrite(params: RecordImageUsageParams): Pr
 			params.billing.routePriceOverrideJson,
 			params.billing.requestStartedAtMs,
 			params.billing.pricingContext,
+			params.billing.modelPricingProfileJson,
 		);
 		const auditExtra: Record<string, unknown> = {
 			result_confirmed: params.resultConfirmed ?? true,
@@ -1032,6 +1006,7 @@ export async function prepareImageUsageWrite(params: RecordImageUsageParams): Pr
 			params.billing.routePriceOverrideJson,
 			params.billing.requestStartedAtMs,
 			params.billing.pricingContext,
+			params.billing.modelPricingProfileJson,
 		);
 		const auditExtra: Record<string, unknown> = { result_confirmed: params.resultConfirmed ?? true };
 		if (params.upstreamSupplierCostUsdTicks != null) {
@@ -1047,7 +1022,7 @@ export async function prepareImageUsageWrite(params: RecordImageUsageParams): Pr
 			costs = await estimateImageCosts(
 				params.repos,
 				{ ...params.billing, imageCount: effectiveOutputImageCountForLog },
-				{ usage: params.imageUsage }
+				{ usage: params.imageUsage },
 			);
 		} else {
 			const fallbackUsage = buildImagePrecheckUsage({
@@ -1063,7 +1038,7 @@ export async function prepareImageUsageWrite(params: RecordImageUsageParams): Pr
 				{
 					usage: fallbackUsage,
 					auditExtra: { usage_source: 'precheck_fallback', error: 'missing_upstream_usage' },
-				}
+				},
 			);
 		}
 	} else {
@@ -1078,12 +1053,15 @@ export async function prepareImageUsageWrite(params: RecordImageUsageParams): Pr
 			observedImageCount,
 		});
 	}
-	const adjustedBilling = applyPrivateByokBillingPolicy({
-		meteredCost: costs.meteredCost,
-		standardCost: costs.standardCost,
-		chargedCost: costs.chargedCost,
-		pricingAuditJson: costs.pricingAuditJson,
-	}, isByok);
+	const adjustedBilling = applyPrivateByokBillingPolicy(
+		{
+			meteredCost: costs.meteredCost,
+			standardCost: costs.standardCost,
+			chargedCost: costs.chargedCost,
+			pricingAuditJson: costs.pricingAuditJson,
+		},
+		isByok,
+	);
 	costs = { ...costs, ...adjustedBilling };
 
 	const errorWithoutCharge = params.status === 'error' && !chargeUncertain;
@@ -1104,13 +1082,11 @@ export async function prepareImageUsageWrite(params: RecordImageUsageParams): Pr
 	});
 	const id = params.requestLogId ?? crypto.randomUUID();
 	const hasOrdinaryBudgetSettlement = ordinaryBudgetSettlement != null;
-	const userSnapshot = shouldChargeBudget || hasOrdinaryBudgetSettlement
-		? await getUserBudgetSnapshot(params.repos, params.userId)
-		: null;
+	const userSnapshot =
+		shouldChargeBudget || hasOrdinaryBudgetSettlement ? await getUserBudgetSnapshot(params.repos, params.userId) : null;
 	const beforeSpent = userSnapshot?.budgetSpent ?? 0;
-	const userRow = shouldChargeBudget || hasOrdinaryBudgetSettlement
-		? await params.repos.users.getById(params.userId)
-		: null;
+	const userRow =
+		shouldChargeBudget || hasOrdinaryBudgetSettlement ? await params.repos.users.getById(params.userId) : null;
 	const ordinaryAuditTransition = ordinaryBudgetAuditSnapshotTransition({
 		settlement: ordinaryBudgetSettlement,
 		currentBudgetEpoch: userRow == null ? null : Number(userRow.budget_epoch),
@@ -1118,16 +1094,19 @@ export async function prepareImageUsageWrite(params: RecordImageUsageParams): Pr
 		chargedCost,
 		shouldChargeBudget,
 	});
-	const afterSpentVal = roundGatewayMoney(beforeSpent + ordinaryAuditTransition.auditCharge);
+	const split = splitChargeFromBudgetSnapshot(userSnapshot, ordinaryAuditTransition.auditCharge);
+	const afterSpentVal = roundGatewayMoney(beforeSpent + ordinaryAuditTransition.auditCharge - split.fromWallet);
 	let usageSnaps: { before: string; after: string; changed: string | null } | null = null;
 	if (userRow) {
 		const beforeS = userRowToSnapshot(userRow);
-		const afterS = ordinaryBudgetSettlement && !ordinaryAuditTransition.settlementEpochMatches
-			? beforeS
-			: snapshotWithOverrides(beforeS, {
-					budget_spent: afterSpentVal,
-					budget_reserved_micros: ordinaryAuditTransition.afterReservedMicros,
-				});
+		const afterS =
+			ordinaryBudgetSettlement && !ordinaryAuditTransition.settlementEpochMatches
+				? beforeS
+				: snapshotWithOverrides(beforeS, {
+						budget_spent: afterSpentVal,
+						wallet_spent: roundGatewayMoney(Number(userRow.wallet_spent ?? 0) + split.fromWallet),
+						budget_reserved_micros: ordinaryAuditTransition.afterReservedMicros,
+					});
 		usageSnaps = {
 			before: snapshotToJson(beforeS),
 			after: snapshotToJson(afterS),
@@ -1136,19 +1115,14 @@ export async function prepareImageUsageWrite(params: RecordImageUsageParams): Pr
 	}
 
 	const logInputImages = costs.logImageCounts?.inputImageCount ?? 0;
-	const logOutputImages =
-		outputCountExceededAdmission
-			? effectiveOutputImageCountForLog
-			: costs.logImageCounts?.outputImageCount ?? effectiveOutputImageCountForLog;
-	const nativeImageUsage = hasAuthoritativeImageTokenUsage(params.imageUsage)
-		? params.imageUsage
-		: null;
-	const nativeImagePrompt = nativeImageUsage == null
-		? null
-		: nativeImageUsage.text_tokens + nativeImageUsage.image_input_tokens;
-	const nativeImageCached = nativeImageUsage == null
-		? null
-		: nativeImageUsage.cached_text_tokens + nativeImageUsage.cached_image_input_tokens;
+	const logOutputImages = outputCountExceededAdmission
+		? effectiveOutputImageCountForLog
+		: (costs.logImageCounts?.outputImageCount ?? effectiveOutputImageCountForLog);
+	const nativeImageUsage = hasAuthoritativeImageTokenUsage(params.imageUsage) ? params.imageUsage : null;
+	const nativeImagePrompt =
+		nativeImageUsage == null ? null : nativeImageUsage.text_tokens + nativeImageUsage.image_input_tokens;
+	const nativeImageCached =
+		nativeImageUsage == null ? null : nativeImageUsage.cached_text_tokens + nativeImageUsage.cached_image_input_tokens;
 
 	const rawUsage =
 		params.imageUsage?.raw_usage ??
@@ -1185,14 +1159,8 @@ export async function prepareImageUsageWrite(params: RecordImageUsageParams): Pr
 			providerModelName: params.providerModelName ?? null,
 			modelName: params.modelName ?? null,
 			providerName: params.providerName ?? null,
-			requestBody: applyRequestBodyLoggingPolicy(
-				params.requestBody,
-				params.requestBodyLoggingMode
-			),
-			upstreamRequestBody: applyRequestBodyLoggingPolicy(
-				params.upstreamRequestBody,
-				params.requestBodyLoggingMode
-			),
+			requestBody: applyRequestBodyLoggingPolicy(params.requestBody, params.requestBodyLoggingMode),
+			upstreamRequestBody: applyRequestBodyLoggingPolicy(params.upstreamRequestBody, params.requestBodyLoggingMode),
 			requestProtocol: params.requestProtocol,
 			requestOperation: params.requestOperation ?? null,
 			upstreamProtocol: params.upstreamProtocol,
@@ -1214,23 +1182,17 @@ export async function prepareImageUsageWrite(params: RecordImageUsageParams): Pr
 			cacheWriteTokens: costs.logTokens.cacheWriteTokens,
 			reasoningTokens: 0,
 			totalTokens: costs.logTokens.totalTokens,
-			nativeTokensPrompt:
-				Number.isSafeInteger(nativeImagePrompt) && nativeImagePrompt! >= 0
-					? nativeImagePrompt
-					: null,
+			nativeTokensPrompt: Number.isSafeInteger(nativeImagePrompt) && nativeImagePrompt! >= 0 ? nativeImagePrompt : null,
 			nativeTokensCompletion: nativeImageUsage?.image_output_tokens ?? null,
-			nativeTokensCached:
-				Number.isSafeInteger(nativeImageCached) && nativeImageCached! >= 0
-					? nativeImageCached
-					: null,
+			nativeTokensCached: Number.isSafeInteger(nativeImageCached) && nativeImageCached! >= 0 ? nativeImageCached : null,
 			nativeTokensReasoning: null,
 			nativeTokensCompletionImages: nativeImageUsage?.image_output_tokens ?? null,
 			meteredCost,
 			standardCost,
 			chargedCost,
 			budgetAccountedAt:
-				params.budgetAccountedAt
-				?? pricingAtUtcFromParams(params.billing.requestStartedAtMs).toISOString(),
+				params.budgetAccountedAt ?? pricingAtUtcFromParams(params.billing.requestStartedAtMs).toISOString(),
+			chargedWalletCost: split.fromWallet,
 			routeGroup: params.routeGroup,
 			status: params.status,
 			latencyMs: params.latencyMs,
@@ -1257,24 +1219,25 @@ export async function prepareImageUsageWrite(params: RecordImageUsageParams): Pr
 			upstreamRequestId: params.upstreamRequestId ?? null,
 			upstreamMessageId: null,
 			...generationSnapshot,
+			ingressHost: params.ingressHost ?? null,
 		},
 		shouldChargeBudget,
 		beforeSpent,
 		chargedCost,
 		guardrailBudgetSettlement: params.guardrailBudgetSettlement
 			? {
-				requestId: params.guardrailBudgetSettlement.requestId,
-				mode: guardrailSettlementMode,
-				reason: guardrailSettlementMode === 'reserved'
-					? 'image_usage_unavailable_after_dispatch'
-					: isByok
-						? 'private_byok_list_price_settled'
-						: 'image_usage_settled',
-			}
+					requestId: params.guardrailBudgetSettlement.requestId,
+					mode: guardrailSettlementMode,
+					reason:
+						guardrailSettlementMode === 'reserved'
+							? 'image_usage_unavailable_after_dispatch'
+							: isByok
+								? 'private_byok_list_price_settled'
+								: 'image_usage_settled',
+				}
 			: undefined,
-		userBudgetSettlement: ordinaryBudgetSettlementForCriticalWrite(
-			ordinaryBudgetSettlement,
-		),
+		userBudgetSettlement: ordinaryBudgetSettlementForCriticalWrite(ordinaryBudgetSettlement),
+		chargedFromWallet: split.fromWallet,
 		audit: {
 			apiKeyId: params.apiKeyId,
 			eventType: 'usage_charge',
@@ -1304,7 +1267,9 @@ export async function recordImageUsage(params: RecordImageUsageParams): Promise<
 	const prepared = await prepareImageUsageWrite(params);
 	const { requestLogId: id, chargedCost } = prepared.result;
 	const log = prepared.write.requestLog;
-	console.log(`[Gateway Usage] recordImageUsage model_id=${params.modelId} status=${params.status} kind=${log.billingKind} images=${log.outputImageCount} input_images=${log.inputImageCount} metered=${log.meteredCost} standard=${log.standardCost} charged=${chargedCost}`);
+	console.log(
+		`[Gateway Usage] recordImageUsage model_id=${params.modelId} status=${params.status} kind=${log.billingKind} images=${log.outputImageCount} input_images=${log.inputImageCount} metered=${log.meteredCost} standard=${log.standardCost} charged=${chargedCost}`,
+	);
 	await insertRequestUsageAndChargeTx(params.repos, prepared.write);
 	if (params.status === 'error' && !params.suppressErrorAlert) {
 		await fireGatewayErrorWebhooks(params.repos, {
@@ -1328,12 +1293,22 @@ export async function recordImageUsage(params: RecordImageUsageParams): Promise<
 			upstreamRequestId: params.upstreamRequestId ?? null,
 			circuitEvents: params.circuitEvents,
 		}).catch((err: unknown) => {
-			console.warn(
-				'[Gateway Alert] webhook dispatch failed',
-				err instanceof Error ? err.stack ?? err.message : err
-			);
+			console.warn('[Gateway Alert] webhook dispatch failed', err instanceof Error ? (err.stack ?? err.message) : err);
 		});
 	}
 
 	return { requestLogId: id, chargedCost };
+}
+
+async function resolveImageBillingParams(
+	repos: GatewayRepositories,
+	params: ImageBillingParams
+): Promise<ImageBillingParams> {
+	if (params.userChargedCostFactorMode) {
+		return params;
+	}
+	return {
+		...params,
+		userChargedCostFactorMode: params.userChargedCostFactorsJson ? await getUserChargedCostFactorMode(repos) : 'multiply',
+	};
 }

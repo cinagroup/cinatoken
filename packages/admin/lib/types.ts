@@ -5,7 +5,7 @@
 
 // ============== 网关实体（Keys / Providers / Models / Routes / Logs）=============
 
-export type BudgetPeriod = "none" | "daily" | "weekly" | "monthly";
+export type BudgetPeriod = 'none' | 'daily' | 'weekly' | 'monthly';
 
 export interface GatewayApiKey {
 	id: string;
@@ -20,9 +20,13 @@ export interface GatewayApiKey {
 	budget_spent: number;
 	budget_period: string;
 	budget_reset_at: string | null;
+	wallet_granted?: number;
+	wallet_spent?: number;
 	status: string;
 	/** JSON string; extensible key data (e.g. plan), surfaced on GET /v1/me */
 	metadata: string | null;
+	last_used_at?: string | null;
+	rate_limit?: { rpm?: number } | null;
 	created_at: string;
 	updated_at: string;
 }
@@ -76,10 +80,17 @@ export interface GatewayUserListItem {
 	budget_spent: number;
 	budget_period: string;
 	budget_reset_at: string | null;
+	wallet_granted?: number;
+	wallet_spent?: number;
 	status: string;
 	metadata: string | null;
-	/** 已解析的用户级 Charged cost factors；未配置时为 null */
-	charged_cost_factors?: Record<string, number> | null;
+	/**
+	 * 已解析的用户专属倍率。数字覆盖该模型全部分组；
+	 * 对象按 route group，`*` 为未单独配置分组的兜底。未配置时为 null。
+	 */
+	charged_cost_factors?: Record<string, number | Record<string, number>> | null;
+	/** 用户层限流；`null` 表示该层不限 */
+	rate_limit?: { rpm?: number } | null;
 	created_at: string;
 	updated_at: string;
 	active_keys_count: number;
@@ -89,60 +100,63 @@ export interface GatewayUserListItem {
 
 /** 与 octafuse `ApiKeyBudgetAuditEventType` 对齐（筛选下拉与网关枚举一致） */
 export const API_KEY_BUDGET_AUDIT_EVENT_TYPES = [
-	"usage_charge",
-	"period_reset",
-	"admin_adjust",
-	"key_created",
-	"key_revoked",
-	"key_deleted",
-	"user_created",
-	"user_deleted",
+	'usage_charge',
+	'period_reset',
+	'admin_adjust',
+	'key_created',
+	'key_revoked',
+	'key_deleted',
+	'user_created',
+	'user_deleted',
+	'wallet_credit',
 ] as const;
 
 /** 与 octafuse `ApiKeyBudgetAuditActorType` 对齐 */
-export const API_KEY_BUDGET_AUDIT_ACTOR_TYPES = [
-	"system",
-	"admin",
-	"service",
-	"user",
-] as const;
+export const API_KEY_BUDGET_AUDIT_ACTOR_TYPES = ['system', 'admin', 'service', 'user'] as const;
 
 /**
  * 与 octafuse `USER_AUDIT_ACTOR_KINDS` 对齐：`actor_id` 的身份前缀。
  * `actor_type` 只到类别，同一类别下仍有多个身份（`admin` 既是控制台会话也是每把集成密钥）。
  */
-export const USER_AUDIT_ACTOR_KINDS = [
-	"console",
-	"admin_key",
-	"admin",
-	"system",
-	"service",
-	"portal",
-] as const;
+export const USER_AUDIT_ACTOR_KINDS = ['console', 'admin_key', 'admin', 'system', 'service', 'portal'] as const;
 
 /** 与 octafuse `UserAuditSourceChannel` 对齐（筛选多选与网关枚举一致） */
 export const API_KEY_BUDGET_AUDIT_SOURCE_CHANNELS = [
-	"gateway_usage",
-	"gateway_auth",
-	"gateway_user_service",
-	"gateway_key_service",
-	"key_provision",
-	"gateway_user_provision",
-	"admin_users",
-	"admin_budget_transition",
-	"admin_keys",
-	"admin_user_key",
-	"usage_charge",
-	"period_reset",
+	'gateway_usage',
+	'gateway_auth',
+	'gateway_user_service',
+	'gateway_key_service',
+	'key_provision',
+	'gateway_user_provision',
+	'admin_users',
+	'admin_budget_transition',
+	'admin_keys',
+	'admin_user_key',
+	'admin_wallet',
+	'usage_charge',
+	'period_reset',
 ] as const;
 
 export interface GatewayProvider {
 	id: string;
 	name: string;
-	/** Admin API 根据内置预设动态推导；不写入 providers 表。 */
+	/** 导入模板英文名、`__custom__`，或空字符串（尚未分类）。 */
+	kind?: string;
+	/** 已保存类型的中英文展示名。自定义与未分类时省略。 */
+	kind_labels?: {
+		en: string;
+		zh: string;
+	};
+	/** 未设置 kind 时按预设 / Endpoint 推导；已设置 kind 时由模板决定。不单独写入 providers 表。 */
 	vendor_key?: string;
-	/** Admin API 根据内置预设动态推导的产品级图标；不写入 providers 表。 */
+	/** 未设置 kind 时按预设推导；已设置 kind 时由模板决定。不单独写入 providers 表。 */
 	icon_key?: string;
+	/** Admin API 根据内置预设叠加的官网 / 密钥 / 邀请链接；不写入 providers 表。 */
+	catalog_links?: {
+		platform?: string;
+		api_keys?: string;
+		referral?: string;
+	};
 	/** 协议端点 JSON；见 `providers.endpoints` */
 	endpoints?: string | null;
 	/** 脱敏预览；明文仅经 `GET /admin/providers/:id/api-key` */
@@ -158,6 +172,12 @@ export interface GatewayProvider {
 	routes_count?: number;
 	/** 其中 status=active 的数量 */
 	active_routes_count?: number;
+	/** 当前 kind 是否有额度适配器。不落库。 */
+	quota_supported?: boolean;
+	/** 与官方模板存在差异的字段数；仅在管理员手动「检查官方更新」后由前端合并，不来自列表接口，不落库。 */
+	official_update_count?: number;
+	/** `kind` 已不在官方模板中；同上，仅检查后由前端合并。 */
+	kind_orphaned?: boolean;
 }
 
 export interface GatewayModel {
@@ -201,7 +221,7 @@ export interface GatewayModelRoute {
 	/** Route channel: e.g. default, free (gateway migration 0016) */
 	route_group: string;
 	price_override: string | null;
-	/** JSON object string: route-level request body defaults (merged with client body; client wins) */
+	/** JSON object string: envelope `{ headers, body, force_override }` or legacy flat object */
 	custom_params: string | null;
 	/** Gateway-only endpoint capabilities; never merged into the upstream request. */
 	routing_metadata?: string | null;
@@ -302,6 +322,8 @@ export interface GatewayRequestLog {
 	/** 按秒计费：音频时长（秒） */
 	audio_duration_seconds?: number | null;
 	audio_characters?: number | null;
+	/** Request Host snapshot (observe only); null on legacy rows */
+	ingress_host?: string | null;
 	created_at: string;
 }
 
@@ -339,7 +361,7 @@ export interface DashboardStats {
 	modelDistribution?: DashboardModelDistributionRow[];
 	topUsers?: DashboardTopUserRow[];
 	timeseries?: DashboardTimeseriesRow[];
-	granularity?: "hour" | "day";
+	granularity?: 'hour' | 'day';
 	recentLogs: AnalyticsRecentLog[];
 	recentErrors: AnalyticsRecentLog[];
 }
@@ -443,7 +465,12 @@ export interface ModelUsageRow extends AnalyticsRowCosts {
 	content_ttft_rate: number;
 	avg_upstream_response_ms: number | null;
 	tokens_per_second: number | null;
+	stream_tokens_per_second?: number | null;
+	stream_sample_count?: number;
 	failover_rate: number;
+	/** Requests with at least one failover; legacy failover_rate counts events per 100 requests. */
+	failover_request_count?: number;
+	failover_request_rate?: number;
 	avg_attempts: number | null;
 	avg_charged_per_request: number;
 }
@@ -471,7 +498,12 @@ export interface ProviderUsageRow extends AnalyticsRowCosts {
 	content_ttft_rate: number;
 	avg_upstream_response_ms: number | null;
 	tokens_per_second: number | null;
+	stream_tokens_per_second?: number | null;
+	stream_sample_count?: number;
 	failover_rate: number;
+	/** Requests with at least one failover; legacy failover_rate counts events per 100 requests. */
+	failover_request_count?: number;
+	failover_request_rate?: number;
 	avg_attempts: number | null;
 	avg_charged_per_request: number;
 }
@@ -486,7 +518,10 @@ export interface UserUsageRow extends AnalyticsRowCosts {
 	last_active_at: string | null;
 	budget_max: number | null;
 	budget_spent: number;
+	wallet_granted?: number | null;
+	wallet_spent?: number | null;
 	budget_usage_rate: number | null;
+	success_count?: number;
 	success_rate: number;
 	error_count: number;
 }
@@ -502,6 +537,9 @@ export interface ProviderReliabilityRow extends AnalyticsRowCosts {
 	avg_latency_ms: number | null;
 	avg_upstream_response_ms: number | null;
 	failover_rate: number;
+	/** Requests with at least one failover; legacy failover_rate counts events per 100 requests. */
+	failover_request_count?: number;
+	failover_request_rate?: number;
 	avg_attempts: number | null;
 }
 
@@ -515,12 +553,16 @@ export interface ModelProviderRow extends AnalyticsRowCosts {
 	avg_latency_ms: number | null;
 	avg_upstream_response_ms: number | null;
 	failover_rate: number;
+	/** Requests with at least one failover; legacy failover_rate counts events per 100 requests. */
+	failover_request_count?: number;
+	failover_request_rate?: number;
 	avg_attempts: number | null;
 }
 
 // ============== 通用 API 响应包装 ==============
 
 export interface ApiResponse<T = unknown> {
+	code?: string;
 	success: boolean;
 	data?: T;
 	message?: string;

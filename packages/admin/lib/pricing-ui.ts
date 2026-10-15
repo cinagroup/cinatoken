@@ -10,12 +10,9 @@ import {
 	profileHasImageTokenPricing,
 	resolveImageBillingMode,
 	type PricingTierPrices,
-} from "@octafuse/core/db/pricing-profile";
+} from '@octafuse/core/db/pricing-profile';
 
-import {
-	formatGatewayMoneyCompact,
-	getGatewayCurrencySymbol,
-} from "@/lib/format-gateway-currency";
+import { formatGatewayMoneyCompact, getGatewayCurrencySymbol } from '@/lib/format-gateway-currency';
 
 export type CatalogPricingFields = {
 	pricing_profile?: string | null;
@@ -34,7 +31,6 @@ export type PricingLabels = {
 	invalidPriceOverrideJson: string;
 	invalidPriceOverrideRoot: string;
 	noMeteredOverride: string;
-	providerFactorOnly: string;
 	meteredOverrideSingle: string;
 	meteredOverrideMulti: string;
 	chargedOverrideSingle: string;
@@ -44,49 +40,36 @@ export type PricingLabels = {
 };
 
 const DEFAULT_PRICING_LABELS: PricingLabels = {
-	noData: "—",
-	tieredSingle: "tiered · in/out {input} / {output} {unit}",
-	tieredMulti: "tiered · {count} tier(s) · from {minIn} {unit} in",
-	imageTokens:
-		"image tokens · text {text} / img-in {imageIn} / img-out {imageOut} {unit}",
-	imagePerImage: "{price} {unit}",
-	inheritsCatalog: "Inherits catalog · metered uses model pricing_profile",
-	invalidPriceOverrideJson: "Invalid price_override JSON",
-	invalidPriceOverrideRoot: "Invalid price_override root",
-	noMeteredOverride:
-		"Inherits catalog · price_override has no metered override (uses model profile)",
-	providerFactorOnly:
-		"Inherits catalog · stored provider_factor ×{factor} (not used for metered until tiers exist)",
-	meteredOverrideSingle: "Metered override · 1 tier · in {price} {unit}",
-	meteredOverrideMulti:
-		"Metered override · {count} tiers · from {minIn} {unit} in",
-	chargedOverrideSingle: "Charged override · 1 tier · in {price} {unit}",
-	chargedOverrideMulti:
-		"Charged override · {count} tiers · from {minIn} {unit} in",
-	chargedOnlySingle:
-		"Charged override · 1 tier · in {price} {unit} · metered inherits catalog",
-	chargedOnlyMulti:
-		"Charged override · {count} tiers · from {minIn} {unit} in · metered inherits catalog",
+	noData: '—',
+	tieredSingle: 'tiered · in/out {input} / {output} {unit}',
+	tieredMulti: 'tiered · {count} tier(s) · from {minIn} {unit} in',
+	imageTokens: 'image tokens · text {text} / img-in {imageIn} / img-out {imageOut} {unit}',
+	imagePerImage: '{price} {unit}',
+	inheritsCatalog: 'Inherits catalog · metered uses model pricing_profile',
+	invalidPriceOverrideJson: 'Invalid price_override JSON',
+	invalidPriceOverrideRoot: 'Invalid price_override root',
+	noMeteredOverride: 'Inherits catalog · price_override has no metered override (uses model profile)',
+	meteredOverrideSingle: 'Metered override · 1 tier · in {price} {unit}',
+	meteredOverrideMulti: 'Metered override · {count} tiers · from {minIn} {unit} in',
+	chargedOverrideSingle: 'Charged override · 1 tier · in {price} {unit}',
+	chargedOverrideMulti: 'Charged override · {count} tiers · from {minIn} {unit} in',
+	chargedOnlySingle: 'Charged override · 1 tier · in {price} {unit} · metered inherits catalog',
+	chargedOnlyMulti: 'Charged override · {count} tiers · from {minIn} {unit} in · metered inherits catalog',
 };
 
-function formatLabel(
-	template: string,
-	vars: Record<string, string | number>
-): string {
-	return template.replace(/\{(\w+)\}/g, (_, key: string) =>
-		String(vars[key] ?? "")
-	);
+function formatLabel(template: string, vars: Record<string, string | number>): string {
+	return template.replace(/\{(\w+)\}/g, (_, key: string) => String(vars[key] ?? ''));
 }
 
 function billingPerMUnit(currencyCode: string): string {
-	const c = (currencyCode || "USD").trim().toUpperCase();
-	const code = /^[A-Z]{3}$/.test(c) ? c : "USD";
+	const c = (currencyCode || 'USD').trim().toUpperCase();
+	const code = /^[A-Z]{3}$/.test(c) ? c : 'USD';
 	return `${getGatewayCurrencySymbol(code)}/M`;
 }
 
 function billingPerImageUnit(currencyCode: string): string {
-	const c = (currencyCode || "USD").trim().toUpperCase();
-	const code = /^[A-Z]{3}$/.test(c) ? c : "USD";
+	const c = (currencyCode || 'USD').trim().toUpperCase();
+	const code = /^[A-Z]{3}$/.test(c) ? c : 'USD';
 	return `${getGatewayCurrencySymbol(code)}/image`;
 }
 
@@ -102,9 +85,7 @@ export function catalogInputPriceSortKey(m: CatalogPricingFields): number {
 		return p.image.default;
 	}
 	if (profileHasImageTokenPricing(p)) {
-		const outs = p.tiers
-			.map((t) => t.image_output_price)
-			.filter((n): n is number => n != null && Number.isFinite(n));
+		const outs = p.tiers.map((t) => t.image_output_price).filter((n): n is number => n != null && Number.isFinite(n));
 		if (outs.length > 0) return Math.min(...outs);
 	}
 	if (p.tiers.length > 0) {
@@ -122,52 +103,48 @@ export type CatalogCardPricing = {
 
 export function getCatalogCardPricing(
 	m: CatalogPricingFields,
-	currencyCode = "USD",
-	emptyLabel = "—"
+	currencyCode = 'USD',
+	emptyLabel = '—',
 ): CatalogCardPricing {
 	const p = parsePricingProfile(m.pricing_profile ?? undefined);
 	if (!p) {
-		return { amount: emptyLabel, unit: "", tierCount: 0 };
+		return { amount: emptyLabel, unit: '', tierCount: 0 };
 	}
 	const money = (n: number | null | undefined) =>
-		n == null || !Number.isFinite(n)
-			? emptyLabel
-			: formatGatewayMoneyCompact(n, currencyCode);
+		n == null || !Number.isFinite(n) ? emptyLabel : formatGatewayMoneyCompact(n, currencyCode);
 
 	if (profileHasAudioPerSecondPricing(p) && p.audio) {
 		return {
 			amount: money(p.audio.price_per_second),
-			unit: "/s",
+			unit: '/s',
 			tierCount: 1,
 		};
 	}
 	if (profileHasAudioPerCharacterPricing(p) && p.audio) {
 		return {
 			amount: money(p.audio.price_per_character),
-			unit: "/char",
+			unit: '/char',
 			tierCount: 1,
 		};
 	}
 	if (profileHasImagePerImagePricing(p) && p.image?.default != null) {
-		return { amount: money(p.image.default), unit: "/img", tierCount: 1 };
+		return { amount: money(p.image.default), unit: '/img', tierCount: 1 };
 	}
 	if (profileHasImageTokenPricing(p) && p.tiers.length > 0) {
 		const tier = p.tiers[0]!;
 		return {
-			amount: `${money(tier.input_price)} / ${money(
-				tier.image_output_price ?? tier.output_price
-			)}`,
-			unit: "/M",
+			amount: `${money(tier.input_price)} / ${money(tier.image_output_price ?? tier.output_price)}`,
+			unit: '/M',
 			tierCount: p.tiers.length,
 		};
 	}
 	if (p.tiers.length === 0) {
-		return { amount: emptyLabel, unit: "", tierCount: 0 };
+		return { amount: emptyLabel, unit: '', tierCount: 0 };
 	}
 	const tier = p.tiers[0]!;
 	return {
 		amount: `${money(tier.input_price)} / ${money(tier.output_price)}`,
-		unit: "/M",
+		unit: '/M',
 		tierCount: p.tiers.length,
 	};
 }
@@ -175,17 +152,15 @@ export function getCatalogCardPricing(
 /** 模型目录表「定价」列一行摘要 */
 export function formatCatalogPricingSummary(
 	m: CatalogPricingFields,
-	currencyCode = "USD",
-	labels: PricingLabels = DEFAULT_PRICING_LABELS
+	currencyCode = 'USD',
+	labels: PricingLabels = DEFAULT_PRICING_LABELS,
 ): string {
 	const p = parsePricingProfile(m.pricing_profile ?? undefined);
 	if (!p) {
 		return labels.noData;
 	}
 	if (profileHasImagePerImagePricing(p) && p.image?.default != null) {
-		const sym = getGatewayCurrencySymbol(
-			(currencyCode || "USD").trim().toUpperCase()
-		);
+		const sym = getGatewayCurrencySymbol((currencyCode || 'USD').trim().toUpperCase());
 		return formatLabel(labels.imagePerImage, {
 			price: `${sym}${p.image.default}`,
 			unit: billingPerImageUnit(currencyCode),
@@ -230,27 +205,22 @@ export type CatalogPricingTierDisplayRow = {
 
 function formatOptionalPricePerM(n: number | null): string {
 	if (n == null) {
-		return "—";
+		return '—';
 	}
 	return String(n);
 }
 
-function formatTierInputRange(
-	previousUpto: number | null,
-	upto: number | null
-): string {
-	const lower = previousUpto == null ? "0" : previousUpto.toLocaleString();
-	const upper = upto == null ? "∞" : upto.toLocaleString();
-	const close = upto == null ? ")" : "]";
-	return previousUpto == null
-		? `[${lower}, ${upper}${close}`
-		: `(${lower}, ${upper}${close}`;
+function formatTierInputRange(previousUpto: number | null, upto: number | null): string {
+	const lower = previousUpto == null ? '0' : previousUpto.toLocaleString();
+	const upper = upto == null ? '∞' : upto.toLocaleString();
+	const close = upto == null ? ')' : ']';
+	return previousUpto == null ? `[${lower}, ${upper}${close}` : `(${lower}, ${upper}${close}`;
 }
 
 function tierToDisplayRow(
 	t: PricingTierPrices,
 	previousUpto: number | null,
-	currencyCode: string
+	currencyCode: string,
 ): CatalogPricingTierDisplayRow {
 	const rangeLine = formatTierInputRange(previousUpto, t.upto);
 	const inputOutputLine = `${t.input_price} / ${t.output_price}`;
@@ -258,9 +228,7 @@ function tierToDisplayRow(
 	let cacheLine: string | null = null;
 	let pricesLine = `in/out ${t.input_price} / ${t.output_price} ${u}`;
 	if (t.cache_read_price != null || t.cache_write_price != null) {
-		cacheLine = `${formatOptionalPricePerM(
-			t.cache_read_price
-		)} / ${formatOptionalPricePerM(t.cache_write_price)}`;
+		cacheLine = `${formatOptionalPricePerM(t.cache_read_price)} / ${formatOptionalPricePerM(t.cache_write_price)}`;
 		pricesLine += ` · cache r/w ${cacheLine} ${u}`;
 	}
 	return { rangeLine, inputOutputLine, cacheLine, pricesLine };
@@ -271,15 +239,13 @@ function tierToDisplayRow(
  */
 export function getCatalogPricingTierRows(
 	m: CatalogPricingFields,
-	currencyCode = "USD"
+	currencyCode = 'USD',
 ): CatalogPricingTierDisplayRow[] {
 	const p = parsePricingProfile(m.pricing_profile ?? undefined);
 	if (!p || p.tiers.length === 0) {
 		return [];
 	}
-	return p.tiers.map((t, i) =>
-		tierToDisplayRow(t, i === 0 ? null : p.tiers[i - 1]!.upto, currencyCode)
-	);
+	return p.tiers.map((t, i) => tierToDisplayRow(t, i === 0 ? null : p.tiers[i - 1]!.upto, currencyCode));
 }
 
 /** 路由弹窗等只读区：按张价摘要行 */
@@ -301,7 +267,7 @@ export type CatalogImageTokenRatesDisplay = {
 /** 路由 / Models 只读：Image 目录权威价（token 分项或 per_image 单价） */
 export type CatalogImagePricingDisplay = {
 	unit: string;
-	billingKind: "image_tokens" | "image_per_image";
+	billingKind: 'image_tokens' | 'image_per_image';
 	tokenRates?: CatalogImageTokenRatesDisplay;
 	/** 摘要行（token：img-out /1M；per_image：default /image） */
 	defaultLine: string;
@@ -309,7 +275,7 @@ export type CatalogImagePricingDisplay = {
 	perImageDefault?: string;
 	/** per_image 可选 input 参考图单价 */
 	perImageInputDefault?: string | null;
-	uncertainResultPolicy?: "requested" | "zero";
+	uncertainResultPolicy?: 'requested' | 'zero';
 	fallbackRows: CatalogImagePricingDisplayRow[];
 };
 
@@ -320,7 +286,7 @@ export type CatalogImagePricingDisplay = {
  */
 export function getCatalogImagePricingDisplay(
 	m: CatalogPricingFields,
-	currencyCode = "USD"
+	currencyCode = 'USD',
 ): CatalogImagePricingDisplay | null {
 	const p = parsePricingProfile(m.pricing_profile ?? undefined);
 	if (!p) return null;
@@ -328,17 +294,16 @@ export function getCatalogImagePricingDisplay(
 	const perImageUnit = billingPerImageUnit(currencyCode);
 	const mode = resolveImageBillingMode(p);
 
-	if (mode === "per_image" && profileHasImagePerImagePricing(p) && p.image) {
+	if (mode === 'per_image' && profileHasImagePerImagePricing(p) && p.image) {
 		const defaultPrice = String(p.image.default);
-		const inputDefault =
-			p.image.input?.default != null ? String(p.image.input.default) : null;
+		const inputDefault = p.image.input?.default != null ? String(p.image.input.default) : null;
 		return {
 			unit: perImageUnit,
-			billingKind: "image_per_image",
+			billingKind: 'image_per_image',
 			defaultLine: `${defaultPrice} ${perImageUnit}`,
 			perImageDefault: defaultPrice,
 			perImageInputDefault: inputDefault,
-			uncertainResultPolicy: p.image.uncertain_result_policy ?? "requested",
+			uncertainResultPolicy: p.image.uncertain_result_policy ?? 'requested',
 			fallbackRows: [],
 		};
 	}
@@ -347,21 +312,16 @@ export function getCatalogImagePricingDisplay(
 
 	const perMUnit = billingPerMUnit(currencyCode);
 	const t = p.tiers[0]!;
-	const imageOut =
-		t.image_output_price != null ? String(t.image_output_price) : "—";
+	const imageOut = t.image_output_price != null ? String(t.image_output_price) : '—';
 	return {
 		unit: perMUnit,
-		billingKind: "image_tokens",
+		billingKind: 'image_tokens',
 		tokenRates: {
 			unit: perMUnit,
 			textInput: String(t.input_price),
-			cachedText: t.cache_read_price != null ? String(t.cache_read_price) : "—",
-			imageInput:
-				t.image_input_price != null ? String(t.image_input_price) : "—",
-			cachedImageInput:
-				t.image_input_cache_price != null
-					? String(t.image_input_cache_price)
-					: "—",
+			cachedText: t.cache_read_price != null ? String(t.cache_read_price) : '—',
+			imageInput: t.image_input_price != null ? String(t.image_input_price) : '—',
+			cachedImageInput: t.image_input_cache_price != null ? String(t.image_input_cache_price) : '—',
 			imageOutput: imageOut,
 		},
 		defaultLine: `${imageOut} ${perMUnit}`,
@@ -374,14 +334,11 @@ export function getCatalogImagePricingDisplay(
  */
 export function getCatalogImagePricingRows(
 	m: CatalogPricingFields,
-	currencyCode = "USD"
+	currencyCode = 'USD',
 ): CatalogImagePricingDisplayRow[] {
 	const display = getCatalogImagePricingDisplay(m, currencyCode);
 	if (!display) return [];
-	return [
-		{ label: "default", priceLine: display.defaultLine },
-		...display.fallbackRows,
-	];
+	return [{ label: 'default', priceLine: display.defaultLine }, ...display.fallbackRows];
 }
 
 /**
@@ -391,7 +348,7 @@ export function getCatalogImagePricingRows(
 export function getUserChargedCatalogTierRows(
 	m: CatalogPricingFields,
 	chargedFactor: number | null,
-	currencyCode = "USD"
+	currencyCode = 'USD',
 ): CatalogPricingTierDisplayRow[] {
 	if (chargedFactor == null || !Number.isFinite(chargedFactor)) {
 		return [];
@@ -407,50 +364,29 @@ export function getUserChargedCatalogTierRows(
 			label: null,
 			input_price: Number((t.input_price * f).toFixed(6)),
 			output_price: Number((t.output_price * f).toFixed(6)),
-			cache_read_price:
-				t.cache_read_price != null
-					? Number((t.cache_read_price * f).toFixed(6))
-					: null,
-			cache_write_price:
-				t.cache_write_price != null
-					? Number((t.cache_write_price * f).toFixed(6))
-					: null,
-			image_input_price:
-				t.image_input_price != null
-					? Number((t.image_input_price * f).toFixed(6))
-					: null,
+			cache_read_price: t.cache_read_price != null ? Number((t.cache_read_price * f).toFixed(6)) : null,
+			cache_write_price: t.cache_write_price != null ? Number((t.cache_write_price * f).toFixed(6)) : null,
+			image_input_price: t.image_input_price != null ? Number((t.image_input_price * f).toFixed(6)) : null,
 			image_input_cache_price:
-				t.image_input_cache_price != null
-					? Number((t.image_input_cache_price * f).toFixed(6))
-					: null,
-			image_output_price:
-				t.image_output_price != null
-					? Number((t.image_output_price * f).toFixed(6))
-					: null,
+				t.image_input_cache_price != null ? Number((t.image_input_cache_price * f).toFixed(6)) : null,
+			image_output_price: t.image_output_price != null ? Number((t.image_output_price * f).toFixed(6)) : null,
 		};
-		return tierToDisplayRow(
-			scaled,
-			i === 0 ? null : p.tiers[i - 1]!.upto,
-			currencyCode
-		);
+		return tierToDisplayRow(scaled, i === 0 ? null : p.tiers[i - 1]!.upto, currencyCode);
 	});
 }
 
 /** 整格 `title` 用：多档换行拼接 */
-export function formatCatalogPricingTierRowsTooltip(
-	m: CatalogPricingFields,
-	currencyCode = "USD"
-): string {
+export function formatCatalogPricingTierRowsTooltip(m: CatalogPricingFields, currencyCode = 'USD'): string {
 	const rows = getCatalogPricingTierRows(m, currencyCode);
 	if (rows.length === 0) {
-		return "—";
+		return '—';
 	}
-	return rows.map((r) => `${r.rangeLine}\n${r.pricesLine}`).join("\n\n");
+	return rows.map((r) => `${r.rangeLine}\n${r.pricesLine}`).join('\n\n');
 }
 
 export type RoutePriceOverrideCardHint = {
 	/** UI 样式：`inherit` 灰字；`override` 强调 metered 覆盖；`warning` 解析异常 */
-	variant: "inherit" | "override" | "warning";
+	variant: 'inherit' | 'override' | 'warning';
 	text: string;
 };
 
@@ -459,13 +395,13 @@ export type RoutePriceOverrideCardHint = {
  */
 export function getRoutePriceOverrideCardHint(
 	priceOverrideJson: string | null | undefined,
-	_currencyCode = "USD",
-	labels: PricingLabels = DEFAULT_PRICING_LABELS
+	_currencyCode = 'USD',
+	labels: PricingLabels = DEFAULT_PRICING_LABELS,
 ): RoutePriceOverrideCardHint {
 	const raw = priceOverrideJson?.trim();
 	if (!raw) {
 		return {
-			variant: "inherit",
+			variant: 'inherit',
 			text: labels.inheritsCatalog,
 		};
 	}
@@ -473,43 +409,35 @@ export function getRoutePriceOverrideCardHint(
 	try {
 		obj = JSON.parse(raw) as Record<string, unknown>;
 	} catch {
-		return { variant: "warning", text: labels.invalidPriceOverrideJson };
+		return { variant: 'warning', text: labels.invalidPriceOverrideJson };
 	}
-	if (!obj || typeof obj !== "object" || Array.isArray(obj)) {
-		return { variant: "warning", text: labels.invalidPriceOverrideRoot };
+	if (!obj || typeof obj !== 'object' || Array.isArray(obj)) {
+		return { variant: 'warning', text: labels.invalidPriceOverrideRoot };
 	}
 	const charged = parseChargedFactorFromPriceOverride(raw) ?? 1;
 	const metered = parseMeteredFactorFromPriceOverride(raw) ?? 1;
-	const hasSchedule =
-		obj.schedule != null &&
-		typeof obj.schedule === "object" &&
-		!Array.isArray(obj.schedule);
-	const text = `Catalog × Ch ${charged} · M ${metered}${
-		hasSchedule ? " · schedule" : ""
-	}`;
+	const hasSchedule = obj.schedule != null && typeof obj.schedule === 'object' && !Array.isArray(obj.schedule);
+	const text = `Catalog × Ch ${charged} · M ${metered}${hasSchedule ? ' · schedule' : ''}`;
 	if (Number.isFinite(charged) && Number.isFinite(metered)) {
-		return { variant: "override", text };
+		return { variant: 'override', text };
 	}
 	return {
-		variant: "inherit",
+		variant: 'inherit',
 		text: labels.inheritsCatalog,
 	};
 }
 
-function readNumericFromPriceOverrideRoot(
-	priceOverrideJson: string | null | undefined,
-	key: string
-): number | null {
+function readNumericFromPriceOverrideRoot(priceOverrideJson: string | null | undefined, key: string): number | null {
 	if (!priceOverrideJson?.trim()) {
 		return null;
 	}
 	try {
 		const o = JSON.parse(priceOverrideJson) as Record<string, unknown>;
 		const v = o[key];
-		if (typeof v === "number" && Number.isFinite(v)) {
+		if (typeof v === 'number' && Number.isFinite(v)) {
 			return v;
 		}
-		if (typeof v === "string" && v.trim() !== "") {
+		if (typeof v === 'string' && v.trim() !== '') {
 			const n = parseFloat(v.trim());
 			if (Number.isFinite(n)) {
 				return n;
@@ -522,201 +450,170 @@ function readNumericFromPriceOverrideRoot(
 }
 
 /** 路由卡片 / 调试：`price_override.charged_factor`（相对目录标准价的倍率）。 */
-export function parseChargedFactorFromPriceOverride(
-	priceOverrideJson: string | null | undefined
-): number | null {
-	return readNumericFromPriceOverrideRoot(priceOverrideJson, "charged_factor");
+export function parseChargedFactorFromPriceOverride(priceOverrideJson: string | null | undefined): number | null {
+	return readNumericFromPriceOverrideRoot(priceOverrideJson, 'charged_factor');
 }
 
-/**
- * 路由卡片：`price_override.metered_factor`；旧数据可能仅有 `provider_factor`，作回退。
- */
-export function parseMeteredFactorFromPriceOverride(
-	priceOverrideJson: string | null | undefined
-): number | null {
-	const m = readNumericFromPriceOverrideRoot(
-		priceOverrideJson,
-		"metered_factor"
-	);
-	if (m != null) {
-		return m;
-	}
-	return readNumericFromPriceOverrideRoot(priceOverrideJson, "provider_factor");
+/** 路由卡片：`price_override.metered_factor`。 */
+export function parseMeteredFactorFromPriceOverride(priceOverrideJson: string | null | undefined): number | null {
+	return readNumericFromPriceOverrideRoot(priceOverrideJson, 'metered_factor');
 }
 
 /** 路由卡片上 `price_override` 一行摘要（仅含合法嵌套 `metered` tiers 时非空；兼容旧调用方） */
 export function formatRoutePriceOverrideSummary(
 	priceOverrideJson: string | null | undefined,
-	currencyCode = "USD",
-	labels?: PricingLabels
+	currencyCode = 'USD',
+	labels?: PricingLabels,
 ): string {
-	const h = getRoutePriceOverrideCardHint(
-		priceOverrideJson,
-		currencyCode,
-		labels
-	);
-	return h.variant === "override" ? h.text : "";
+	const h = getRoutePriceOverrideCardHint(priceOverrideJson, currencyCode, labels);
+	return h.variant === 'override' ? h.text : '';
 }
 
 /** `api_key_request_logs.pricing_audit` 展示用短文案 */
-export function summarizePricingAuditJson(
-	raw: string | null | undefined
-): string | null {
+function appendProviderFactorSummary(parts: string[], value: unknown): void {
+	if (!value || typeof value !== 'object') return;
+	const effective = (value as Record<string, unknown>).effective;
+	if (typeof effective !== 'number' || effective === 1) return;
+	const label = `provider ×${effective}`;
+	if (parts.includes(label)) return;
+	parts.push(label);
+}
+
+export function summarizePricingAuditJson(raw: string | null | undefined): string | null {
 	if (!raw?.trim()) {
 		return null;
 	}
 	try {
 		const o = JSON.parse(raw) as Record<string, unknown>;
 		const parts: string[] = [];
-		if (typeof o.v === "number") {
+		if (typeof o.v === 'number') {
 			parts.push(`v${o.v}`);
 		}
-		if (o.kind === "image_tokens") {
-			parts.push("image_tokens");
+		if (o.kind === 'image_tokens') {
+			parts.push('image_tokens');
 			const tokens = o.tokens as Record<string, unknown> | undefined;
-			if (tokens && typeof tokens === "object") {
-				const text = typeof tokens.text === "number" ? tokens.text : 0;
-				const imgIn =
-					typeof tokens.image_input === "number" ? tokens.image_input : 0;
-				const imgOut =
-					typeof tokens.image_output === "number" ? tokens.image_output : 0;
+			if (tokens && typeof tokens === 'object') {
+				const text = typeof tokens.text === 'number' ? tokens.text : 0;
+				const imgIn = typeof tokens.image_input === 'number' ? tokens.image_input : 0;
+				const imgOut = typeof tokens.image_output === 'number' ? tokens.image_output : 0;
 				parts.push(`text/img-in/img-out ${text}/${imgIn}/${imgOut}`);
 			}
-			if (typeof o.quality === "string" && typeof o.size === "string") {
+			if (typeof o.quality === 'string' && typeof o.size === 'string') {
 				parts.push(`${o.quality}×${o.size}`);
 			}
 		}
-		if (o.kind === "image_per_image") {
-			parts.push("image_per_image");
-			const inN =
-				typeof o.input_image_count === "number" ? o.input_image_count : 0;
-			const outN =
-				typeof o.output_image_count === "number" ? o.output_image_count : 0;
+		if (o.kind === 'image_per_image') {
+			parts.push('image_per_image');
+			const inN = typeof o.input_image_count === 'number' ? o.input_image_count : 0;
+			const outN = typeof o.output_image_count === 'number' ? o.output_image_count : 0;
 			parts.push(`${inN} in / ${outN} out`);
-			const outPrice =
-				typeof o.output_unit_price === "number" ? o.output_unit_price : null;
-			const inPrice =
-				typeof o.input_unit_price === "number" ? o.input_unit_price : null;
+			const outPrice = typeof o.output_unit_price === 'number' ? o.output_unit_price : null;
+			const inPrice = typeof o.input_unit_price === 'number' ? o.input_unit_price : null;
 			if (outPrice != null) {
 				parts.push(`out ${outPrice}/img`);
 			}
 			if (inPrice != null && inPrice > 0) {
 				parts.push(`in ${inPrice}/img`);
 			}
-			if (typeof o.result_confirmed === "boolean") {
-				parts.push(o.result_confirmed ? "confirmed" : "uncertain");
+			if (typeof o.result_confirmed === 'boolean') {
+				parts.push(o.result_confirmed ? 'confirmed' : 'uncertain');
 			}
-			if (typeof o.uncertain_result_policy === "string") {
+			if (typeof o.uncertain_result_policy === 'string') {
 				parts.push(`policy ${o.uncertain_result_policy}`);
 			}
 		}
-		const snapEarly =
-			o.snapshot && typeof o.snapshot === "object"
-				? (o.snapshot as Record<string, unknown>)
-				: null;
+		const snapEarly = o.snapshot && typeof o.snapshot === 'object' ? (o.snapshot as Record<string, unknown>) : null;
 		const audioKind =
-			o.kind === "audio_per_second" ||
-			o.kind === "audio_tokens" ||
-			o.kind === "audio_per_character"
+			o.kind === 'audio_per_second' || o.kind === 'audio_tokens' || o.kind === 'audio_per_character'
 				? o.kind
-				: snapEarly?.kind === "audio_per_second" ||
-				  snapEarly?.kind === "audio_tokens" ||
-				  snapEarly?.kind === "audio_per_character"
-				? (snapEarly.kind as string)
-				: null;
-		if (audioKind === "audio_per_second") {
-			parts.push("audio_per_second");
-			const audioSrc = o.kind === "audio_per_second" ? o : snapEarly ?? o;
-			const dur =
-				typeof audioSrc.duration_seconds === "number"
-					? audioSrc.duration_seconds
-					: typeof audioSrc.billable_seconds === "number"
-					? audioSrc.billable_seconds
+				: snapEarly?.kind === 'audio_per_second' ||
+					  snapEarly?.kind === 'audio_tokens' ||
+					  snapEarly?.kind === 'audio_per_character'
+					? (snapEarly.kind as string)
 					: null;
+		if (audioKind === 'audio_per_second') {
+			parts.push('audio_per_second');
+			const audioSrc = o.kind === 'audio_per_second' ? o : (snapEarly ?? o);
+			const dur =
+				typeof audioSrc.duration_seconds === 'number'
+					? audioSrc.duration_seconds
+					: typeof audioSrc.billable_seconds === 'number'
+						? audioSrc.billable_seconds
+						: null;
 			if (dur != null) {
 				parts.push(`${dur}s`);
 			}
-			const pps =
-				typeof audioSrc.price_per_second === "number"
-					? audioSrc.price_per_second
-					: null;
+			const pps = typeof audioSrc.price_per_second === 'number' ? audioSrc.price_per_second : null;
 			if (pps != null) {
 				parts.push(`${pps}/s`);
 			}
-			const minS =
-				typeof audioSrc.minimum_seconds === "number"
-					? audioSrc.minimum_seconds
-					: null;
+			const minS = typeof audioSrc.minimum_seconds === 'number' ? audioSrc.minimum_seconds : null;
 			if (minS != null) {
 				parts.push(`min ${minS}s`);
 			}
 		}
-		if (audioKind === "audio_tokens") {
-			parts.push("audio_tokens");
+		if (audioKind === 'audio_tokens') {
+			parts.push('audio_tokens');
 			const tokens = o.tokens as Record<string, unknown> | undefined;
-			if (tokens && typeof tokens === "object") {
-				const input = typeof tokens.input === "number" ? tokens.input : 0;
-				const output = typeof tokens.output === "number" ? tokens.output : 0;
-				const audio = typeof tokens.audio === "number" ? tokens.audio : null;
-				parts.push(
-					audio != null
-						? `in/out/audio ${input}/${output}/${audio}`
-						: `in/out ${input}/${output}`
-				);
+			if (tokens && typeof tokens === 'object') {
+				const input = typeof tokens.input === 'number' ? tokens.input : 0;
+				const output = typeof tokens.output === 'number' ? tokens.output : 0;
+				const audio = typeof tokens.audio === 'number' ? tokens.audio : null;
+				parts.push(audio != null ? `in/out/audio ${input}/${output}/${audio}` : `in/out ${input}/${output}`);
 			}
 		}
-		if (audioKind === "audio_per_character") {
-			parts.push("audio_per_character");
-			const audioSrc = o.kind === "audio_per_character" ? o : snapEarly ?? o;
-			const characters =
-				typeof audioSrc.characters === "number" ? audioSrc.characters : null;
-			const billable =
-				typeof audioSrc.billable_characters === "number"
-					? audioSrc.billable_characters
-					: characters;
+		if (audioKind === 'audio_per_character') {
+			parts.push('audio_per_character');
+			const audioSrc = o.kind === 'audio_per_character' ? o : (snapEarly ?? o);
+			const characters = typeof audioSrc.characters === 'number' ? audioSrc.characters : null;
+			const billable = typeof audioSrc.billable_characters === 'number' ? audioSrc.billable_characters : characters;
 			if (billable != null) parts.push(`${billable} chars`);
-			const price =
-				typeof audioSrc.price_per_character === "number"
-					? audioSrc.price_per_character
-					: null;
+			const price = typeof audioSrc.price_per_character === 'number' ? audioSrc.price_per_character : null;
 			if (price != null) parts.push(`${price}/char`);
 		}
 		if (
-			typeof o.v === "number" &&
-			(o.v === 3 || o.v === 4) &&
+			typeof o.v === 'number' &&
+			(o.v === 3 || o.v === 4 || o.v === 5 || o.v === 6) &&
 			o.snapshot &&
-			typeof o.snapshot === "object"
+			typeof o.snapshot === 'object'
 		) {
 			const snap = o.snapshot as Record<string, unknown>;
 			const uc = snap.user_charge as Record<string, unknown> | undefined;
-			if (uc && typeof uc.source === "string") {
+			if (uc && typeof uc.source === 'string') {
 				parts.push(`charged ${uc.source}`);
 			}
-			if (uc && typeof uc.effective_factor === "number") {
+			if (uc && typeof uc.effective_factor === 'number') {
 				parts.push(`×${uc.effective_factor}`);
 			}
+			appendProviderFactorSummary(parts, uc?.provider_factor);
+			if (o.v === 5 || o.v === 6) {
+				const std = snap.standard as Record<string, unknown> | undefined;
+				const catSch =
+					std && typeof std.schedule === 'object' && std.schedule ? (std.schedule as Record<string, unknown>) : null;
+				if (catSch && typeof catSch.factor === 'number' && catSch.factor !== 1) {
+					parts.push(`catalog ×${catSch.factor}`);
+				}
+			}
 		}
-		const snapForUser =
-			o.snapshot && typeof o.snapshot === "object"
-				? (o.snapshot as Record<string, unknown>)
-				: null;
+		const snapForUser = o.snapshot && typeof o.snapshot === 'object' ? (o.snapshot as Record<string, unknown>) : null;
 		const ucForUser =
-			snapForUser?.user_charge && typeof snapForUser.user_charge === "object"
+			snapForUser?.user_charge && typeof snapForUser.user_charge === 'object'
 				? (snapForUser.user_charge as Record<string, unknown>)
 				: undefined;
 		const userFactor =
-			typeof o.user_charged_factor === "number"
+			typeof o.user_charged_factor === 'number'
 				? o.user_charged_factor
-				: ucForUser && typeof ucForUser.user_charged_factor === "number"
-				? ucForUser.user_charged_factor
-				: null;
+				: ucForUser && typeof ucForUser.user_charged_factor === 'number'
+					? ucForUser.user_charged_factor
+					: null;
+		appendProviderFactorSummary(parts, o.provider_factor);
 		if (userFactor != null) {
 			parts.push(`user ×${userFactor}`);
 		}
-		if (typeof o.basis_tokens === "number") {
+		if (typeof o.basis_tokens === 'number') {
 			parts.push(`basis ${o.basis_tokens.toLocaleString()} in`);
 		}
-		return parts.length > 0 ? parts.join(" · ") : null;
+		return parts.length > 0 ? parts.join(' · ') : null;
 	} catch {
 		return raw.length > 120 ? `${raw.slice(0, 120)}…` : raw;
 	}

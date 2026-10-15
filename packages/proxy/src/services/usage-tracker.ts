@@ -1,3 +1,5 @@
+import { parseRouteBaseFactors, parseRoutePricingSchedule, resolveEffectiveRouteFactor, lookupUserChargedCostFactor } from '@octafuse/core';
+import type { UsageFromStream } from './proxy';
 /**
  * 用量与计费：按百万 token 单价计算 `metered_cost`（供应成本）、`standard_cost`（目录标准成本）、`charged_cost`（用户预算）。
  * - 已路由请求的基数始终来自 request-local verified Model Endpoint flat pricing；
@@ -18,55 +20,47 @@ import {
 	getBusinessTimezone,
 	getUserBudgetSnapshot,
 	insertRequestUsageAndChargeTx,
-	parseRouteBaseFactors,
-	parseRoutePricingSchedule,
+	parsePricingProfile,
+	normalizeScheduleFactor,
 	PRICING_AUDIT_JSON_SCHEMA_VERSION,
 	resolveChargedBillingPrices,
 	resolveDailyScheduleFactor,
-	resolveEffectiveRouteFactor,
+	resolveRouteEffectiveFactors,
 	resolveStandardBillingPrices,
 	resolveSupplierBillingPrices,
 	roundGatewayMoney,
 	scaleBillingPrices,
+	toProviderFactorAudit,
 	toScheduleAudit,
 	applyUserChargedCostFactor,
 	attachUserChargedFactorToPricingAudit,
-	lookupUserChargedCostFactor,
+	getUserChargedCostFactorMode,
 	parseUserChargedCostFactors,
+	resolveCombinedChargedFactor,
+	resolveUserChargedCostFactorMatch,
 	type BillingPriceSnapshot,
 	type PriceResolutionAuditSide,
 	changedFieldsToJson,
 	computeChangedFields,
 	snapshotToJson,
 	snapshotWithOverrides,
+	splitChargeFromBudgetSnapshot,
 	userRowToSnapshot,
 } from '@octafuse/core';
-import type { UsageFromStream } from './proxy';
+import type { RecordUsageParams } from './accounting/types';
 import { fireGatewayErrorWebhooks } from './alert-webhook';
 import { settleSharedKeyEarning } from './shared-key-earnings';
-import type {
-	SharedKeyQuoteAttemptHandoff,
-	SharedKeyQuoteAttemptReference,
-} from './shared-key-quote-attempt';
+import type { SharedKeyQuoteAttemptHandoff, SharedKeyQuoteAttemptReference } from './shared-key-quote-attempt';
 import { providerUsageFacts } from './provider-usage-facts';
 import type { GatewayCircuitAlertEvent } from './circuit-alert-types';
 import type { RequestTimingSnapshot } from './request-timing';
-import {
-	applyRequestBodyLoggingPolicy,
-	type RequestBodyLoggingMode,
-} from './request-body-log-policy';
+import { applyRequestBodyLoggingPolicy, type RequestBodyLoggingMode } from './request-body-log-policy';
 import { verifiedUsdGenerationWriteSnapshot } from './generation-metadata-snapshot';
 import type { ModelFallbackTrace } from './model-fallbacks';
 import type { RouteResult } from './model-router';
-import {
-	resolveEndpointTextPricing,
-	type EndpointPricingAuditIdentity,
-} from './endpoint-billing-pricing';
+import { resolveEndpointTextPricing, type EndpointPricingAuditIdentity } from './endpoint-billing-pricing';
 import { parseByokKeyId } from './byok-key-pool';
-import {
-	applyPrivateByokBillingPolicy,
-	privateByokSettlementMode,
-} from './byok-billing-policy';
+import { applyPrivateByokBillingPolicy, privateByokSettlementMode } from './byok-billing-policy';
 
 const TOKENS_PER_MILLION = 1_000_000;
 
@@ -87,12 +81,13 @@ export function ordinaryBudgetAuditCharge(params: {
 	shouldChargeBudget: boolean;
 }): number {
 	const settlement = params.settlement;
-	if (settlement && (
-		!Number.isSafeInteger(settlement.budgetEpoch)
-		|| settlement.budgetEpoch < 0
-		|| !Number.isSafeInteger(settlement.reservedMicros)
-		|| settlement.reservedMicros <= 0
-	)) {
+	if (
+		settlement &&
+		(!Number.isSafeInteger(settlement.budgetEpoch) ||
+			settlement.budgetEpoch < 0 ||
+			!Number.isSafeInteger(settlement.reservedMicros) ||
+			settlement.reservedMicros <= 0)
+	) {
 		throw new Error('Ordinary budget settlement audit metadata is invalid');
 	}
 	if (settlement && params.currentBudgetEpoch !== settlement.budgetEpoch) return 0;
@@ -115,27 +110,24 @@ export function ordinaryBudgetAuditSnapshotTransition(params: {
 		throw new Error('Ordinary budget audit snapshot reserved total is invalid');
 	}
 	const auditCharge = ordinaryBudgetAuditCharge(params);
-	const settlementEpochMatches = params.settlement == null
-		|| params.currentBudgetEpoch === params.settlement.budgetEpoch;
+	const settlementEpochMatches =
+		params.settlement == null || params.currentBudgetEpoch === params.settlement.budgetEpoch;
 	return {
 		auditCharge,
-		afterReservedMicros: params.settlement && settlementEpochMatches
-			? Math.max(0, params.currentReservedMicros - params.settlement.reservedMicros)
-			: params.currentReservedMicros,
+		afterReservedMicros:
+			params.settlement && settlementEpochMatches
+				? Math.max(0, params.currentReservedMicros - params.settlement.reservedMicros)
+				: params.currentReservedMicros,
 		settlementEpochMatches,
 	};
 }
 
-export function ordinaryBudgetSettlementForCriticalWrite(
-	settlement: OrdinaryBudgetUsageSettlement | null | undefined,
-) {
+export function ordinaryBudgetSettlementForCriticalWrite(settlement: OrdinaryBudgetUsageSettlement | null | undefined) {
 	if (!settlement) return undefined;
 	return {
 		requestId: settlement.requestId,
-		mode: settlement.unknownCost ? 'reserved' as const : 'actual' as const,
-		reason: settlement.unknownCost
-			? 'usage_unavailable_after_dispatch'
-			: 'request_usage_settled',
+		mode: settlement.unknownCost ? ('reserved' as const) : ('actual' as const),
+		reason: settlement.unknownCost ? 'usage_unavailable_after_dispatch' : 'request_usage_settled',
 	};
 }
 
@@ -145,14 +137,14 @@ export type SharedKeyEconomicUsageHandoff = Readonly<{
 }>;
 
 /** A quoted POST past its fetch permit may be billed even when it returned an error. */
-export function hasPotentiallyBillableUnknownSharedKeyAttempt(
-	handoff: SharedKeyQuoteAttemptHandoff,
-): boolean {
-	if (!Array.isArray(handoff.quoteAttempts)
-		|| !Array.isArray(handoff.transport)
-		|| !Array.isArray(handoff.economicOutcomes)
-		|| handoff.quoteAttempts.length !== handoff.transport.length
-		|| handoff.quoteAttempts.length !== handoff.economicOutcomes.length) {
+export function hasPotentiallyBillableUnknownSharedKeyAttempt(handoff: SharedKeyQuoteAttemptHandoff): boolean {
+	if (
+		!Array.isArray(handoff.quoteAttempts) ||
+		!Array.isArray(handoff.transport) ||
+		!Array.isArray(handoff.economicOutcomes) ||
+		handoff.quoteAttempts.length !== handoff.transport.length ||
+		handoff.quoteAttempts.length !== handoff.economicOutcomes.length
+	) {
 		throw new Error('Shared-key economic handoff does not cover every quote attempt');
 	}
 	let unknownSentAttempt = false;
@@ -160,36 +152,44 @@ export function hasPotentiallyBillableUnknownSharedKeyAttempt(
 		const reference = handoff.quoteAttempts[index];
 		const observed = handoff.transport[index];
 		const outcome = handoff.economicOutcomes[index];
-		if (!reference || observed?.reference !== reference
-			|| outcome?.attemptId !== reference.attemptId
-			|| outcome.requestLogId !== reference.requestLogId
-			|| outcome.attemptIndex !== reference.attemptIndex
-			|| outcome.sharedKeyId !== reference.sharedKeyId
-			|| outcome.transitionId !== reference.transitionId
-			|| outcome.quoteVersionId !== reference.quoteVersionId
-			|| (outcome.usageCertainty !== 'actual' && outcome.usageCertainty !== 'unknown')) {
+		if (
+			!reference ||
+			observed?.reference !== reference ||
+			outcome?.attemptId !== reference.attemptId ||
+			outcome.requestLogId !== reference.requestLogId ||
+			outcome.attemptIndex !== reference.attemptIndex ||
+			outcome.sharedKeyId !== reference.sharedKeyId ||
+			outcome.transitionId !== reference.transitionId ||
+			outcome.quoteVersionId !== reference.quoteVersionId ||
+			(outcome.usageCertainty !== 'actual' && outcome.usageCertainty !== 'unknown')
+		) {
 			throw new Error('Shared-key economic handoff quote identity differs');
 		}
 		if (observed.stage === 'claimed_only') {
 			if (observed.upstreamHttpStatus !== null || outcome.usageCertainty !== 'unknown') {
 				throw new Error('Claim-only shared-key attempt has invalid transport or usage facts');
 			}
-		} else if (observed.stage === 'fetch_boundary_permitted'
-			|| observed.stage === 'transport_ambiguous') {
+		} else if (observed.stage === 'fetch_boundary_permitted' || observed.stage === 'transport_ambiguous') {
 			if (observed.upstreamHttpStatus !== null) {
 				throw new Error('Shared-key attempt has unowned upstream status');
 			}
 		} else if (observed.stage === 'upstream_headers_observed') {
-			if (!Number.isInteger(observed.upstreamHttpStatus)
-				|| observed.upstreamHttpStatus! < 100 || observed.upstreamHttpStatus! > 599) {
+			if (
+				!Number.isInteger(observed.upstreamHttpStatus) ||
+				observed.upstreamHttpStatus! < 100 ||
+				observed.upstreamHttpStatus! > 599
+			) {
 				throw new Error('Shared-key attempt has invalid upstream status');
 			}
 		} else {
 			throw new Error('Shared-key attempt has invalid transport stage');
 		}
-		if (outcome.usageCertainty === 'actual'
-			&& (observed.stage !== 'upstream_headers_observed'
-				|| observed.upstreamHttpStatus! < 200 || observed.upstreamHttpStatus! >= 300)) {
+		if (
+			outcome.usageCertainty === 'actual' &&
+			(observed.stage !== 'upstream_headers_observed' ||
+				observed.upstreamHttpStatus! < 200 ||
+				observed.upstreamHttpStatus! >= 300)
+		) {
 			throw new Error('Shared-key actual usage lacks observed successful headers');
 		}
 		if (observed.stage !== 'claimed_only' && outcome.usageCertainty === 'unknown') {
@@ -205,61 +205,74 @@ export function hasPotentiallyBillableUnknownSharedKeyAttempt(
  * selected shared-key attempt; a charge inferred from gateway counters alone
  * is not an actual buyer usage fact.
  */
-export async function prepareSharedKeyEconomicUsageHandoff(input: Readonly<{
-	requestLogId: string;
-	providerKeyId: string | null;
-	routeTargetId: string | null;
-	usage: UsageFromStream;
-	shouldChargeBudget: boolean;
-	chargedCost: number;
-	ordinarySettlement: OrdinaryBudgetUsageSettlement | undefined;
-	economic: SharedKeyEconomicUsageHandoff;
-}>): Promise<SharedKeyEconomicOutboxInput> {
+export async function prepareSharedKeyEconomicUsageHandoff(
+	input: Readonly<{
+		requestLogId: string;
+		providerKeyId: string | null;
+		routeTargetId: string | null;
+		usage: UsageFromStream;
+		shouldChargeBudget: boolean;
+		chargedCost: number;
+		ordinarySettlement: OrdinaryBudgetUsageSettlement | undefined;
+		economic: SharedKeyEconomicUsageHandoff;
+	}>,
+): Promise<SharedKeyEconomicOutboxInput> {
 	const { handoff, selectedReference } = input.economic;
-	if (!Array.isArray(handoff.quoteAttempts) || handoff.quoteAttempts.length < 1
-		|| handoff.quoteAttempts.length !== handoff.transport.length
-		|| handoff.quoteAttempts.length !== handoff.economicOutcomes.length) {
+	if (
+		!Array.isArray(handoff.quoteAttempts) ||
+		handoff.quoteAttempts.length < 1 ||
+		handoff.quoteAttempts.length !== handoff.transport.length ||
+		handoff.quoteAttempts.length !== handoff.economicOutcomes.length
+	) {
 		throw new Error('Shared-key economic handoff does not cover every quote attempt');
 	}
 	for (let index = 0; index < handoff.quoteAttempts.length; index += 1) {
 		const reference = handoff.quoteAttempts[index]!;
 		const observed = handoff.transport[index];
 		const outcome = handoff.economicOutcomes[index];
-		if (reference.requestLogId !== input.requestLogId
-			|| observed?.reference !== reference
-			|| outcome?.attemptId !== reference.attemptId
-			|| outcome.requestLogId !== reference.requestLogId
-			|| outcome.attemptIndex !== reference.attemptIndex
-			|| outcome.sharedKeyId !== reference.sharedKeyId
-			|| outcome.transitionId !== reference.transitionId
-			|| outcome.quoteVersionId !== reference.quoteVersionId) {
+		if (
+			reference.requestLogId !== input.requestLogId ||
+			observed?.reference !== reference ||
+			outcome?.attemptId !== reference.attemptId ||
+			outcome.requestLogId !== reference.requestLogId ||
+			outcome.attemptIndex !== reference.attemptIndex ||
+			outcome.sharedKeyId !== reference.sharedKeyId ||
+			outcome.transitionId !== reference.transitionId ||
+			outcome.quoteVersionId !== reference.quoteVersionId
+		) {
 			throw new Error('Shared-key economic handoff quote identity differs');
 		}
 		// Chat only observes provider usage. Neither endpoint tariff nor a cost
 		// field in a usage response proves the supplier's per-attempt bill.
-		if (outcome.providerCostCertainty !== 'unknown'
-			|| outcome.providerCostMicros !== null) {
+		if (outcome.providerCostCertainty !== 'unknown' || outcome.providerCostMicros !== null) {
 			throw new Error('Shared-key provider cost has no verified bill fact');
 		}
 	}
 	const selectedKey = input.providerKeyId?.startsWith('sharedkey:')
-		? input.providerKeyId.slice('sharedkey:'.length) : null;
+		? input.providerKeyId.slice('sharedkey:'.length)
+		: null;
 	if (selectedReference === null) {
 		if (selectedKey !== null) throw new Error('Selected shared key has no quote reference');
-	} else if (selectedKey !== selectedReference.sharedKeyId
-		|| selectedReference.routeTargetId !== input.routeTargetId
-		|| !handoff.quoteAttempts.includes(selectedReference)) {
+	} else if (
+		selectedKey !== selectedReference.sharedKeyId ||
+		selectedReference.routeTargetId !== input.routeTargetId ||
+		!handoff.quoteAttempts.includes(selectedReference)
+	) {
 		throw new Error('Selected shared-key quote reference differs from the routed request');
 	}
-	if (handoff.economicOutcomes.some((outcome, index) =>
-		handoff.quoteAttempts[index] !== selectedReference
-		&& outcome.usageCertainty !== 'unknown')) {
+	if (
+		handoff.economicOutcomes.some(
+			(outcome, index) => handoff.quoteAttempts[index] !== selectedReference && outcome.usageCertainty !== 'unknown',
+		)
+	) {
 		throw new Error('Earlier shared-key attempt has unowned usage facts');
 	}
-	const basis = input.ordinarySettlement?.unknownCost === true
-		? 'reserved'
-		: input.shouldChargeBudget || input.ordinarySettlement !== undefined
-			? 'actual' : 'none';
+	const basis =
+		input.ordinarySettlement?.unknownCost === true
+			? 'reserved'
+			: input.shouldChargeBudget || input.ordinarySettlement !== undefined
+				? 'actual'
+				: 'none';
 	if (hasPotentiallyBillableUnknownSharedKeyAttempt(handoff) && basis !== 'reserved') {
 		throw new Error('Potentially billable unknown shared-key attempt requires reserved buyer debit');
 	}
@@ -267,8 +280,7 @@ export async function prepareSharedKeyEconomicUsageHandoff(input: Readonly<{
 		throw new Error('Uncharged shared-key economic handoff has a buyer charge');
 	}
 	if (basis === 'actual') {
-		const selectedIndex = selectedReference === null
-			? -1 : handoff.quoteAttempts.indexOf(selectedReference);
+		const selectedIndex = selectedReference === null ? -1 : handoff.quoteAttempts.indexOf(selectedReference);
 		const selectedOutcome = handoff.economicOutcomes[selectedIndex];
 		const rawUsage = input.usage.raw_usage;
 		const providerFact = providerUsageFacts(input.usage);
@@ -278,16 +290,18 @@ export async function prepareSharedKeyEconomicUsageHandoff(input: Readonly<{
 		// A later non-shared route may prove buyer usage; the earlier shared
 		// attempts were already checked above and remain unknown.
 		if (selectedReference !== null) {
-			if (selectedOutcome?.usageCertainty !== 'actual'
-				|| selectedOutcome.evidenceKind !== 'provider_usage'
-				|| selectedOutcome.inputTokens !== providerFact.inputTokens
-				|| selectedOutcome.outputTokens !== providerFact.outputTokens
-				|| selectedOutcome.cacheReadTokens !== providerFact.cacheReadTokens
-				|| selectedOutcome.cacheWriteTokens !== providerFact.cacheWriteTokens) {
+			if (
+				selectedOutcome?.usageCertainty !== 'actual' ||
+				selectedOutcome.evidenceKind !== 'provider_usage' ||
+				selectedOutcome.inputTokens !== providerFact.inputTokens ||
+				selectedOutcome.outputTokens !== providerFact.outputTokens ||
+				selectedOutcome.cacheReadTokens !== providerFact.cacheReadTokens ||
+				selectedOutcome.cacheWriteTokens !== providerFact.cacheWriteTokens
+			) {
 				throw new Error('Actual buyer usage has no matching selected provider fact');
 			}
 			const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(rawUsage));
-			const evidenceSha256 = Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, '0')).join('');
+			const evidenceSha256 = Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, '0')).join('');
 			if (selectedOutcome.evidenceSha256 !== evidenceSha256) {
 				throw new Error('Actual buyer usage digest differs from selected provider fact');
 			}
@@ -309,7 +323,7 @@ export function computeMeteredCost(
 	input_price: number | null,
 	output_price: number | null,
 	cache_read_price: number | null,
-	cache_write_price: number | null
+	cache_write_price: number | null,
 ): number {
 	const inputPrice = input_price ?? 0;
 	const outputPrice = output_price ?? 0;
@@ -350,25 +364,20 @@ function buildRequestPricingAuditJson(options: {
 
 function applyRouteFactorsToSide(options: {
 	catalog: { prices: BillingPriceSnapshot; audit: PriceResolutionAuditSide };
-	baseFactor: number;
-	scheduleFactor: ReturnType<typeof resolveDailyScheduleFactor>;
-	mode: ReturnType<typeof parseRoutePricingSchedule>['mode'];
+	side: ReturnType<typeof resolveRouteEffectiveFactors>['charged'];
+	provider: ReturnType<typeof resolveRouteEffectiveFactors>['provider'];
 }): { prices: BillingPriceSnapshot; audit: PriceResolutionAuditSide } {
-	const effective = resolveEffectiveRouteFactor(
-		options.baseFactor,
-		options.scheduleFactor,
-		options.mode
-	);
+	const effective = normalizeScheduleFactor(options.provider.effective * options.side.effective);
 	const prices = scaleBillingPrices(options.catalog.prices, effective);
-	const sch = options.scheduleFactor;
 	return {
 		prices,
 		audit: {
 			...options.catalog.audit,
 			source: 'model_x_factor',
-			base_factor: options.baseFactor,
-			schedule: toScheduleAudit(sch),
+			base_factor: options.side.base,
+			schedule: toScheduleAudit(options.side.schedule),
 			effective_factor: effective,
+			provider_factor: toProviderFactorAudit(options.provider),
 			prices,
 		},
 	};
@@ -380,6 +389,8 @@ function applyRouteFactorsToSide(options: {
 export async function recordUsage(
 	repos: GatewayRepositories,
 	params: {
+		requestLogId?: string;
+		ingress_host?: string | null;
 		api_key_id: string;
 		workspace_id: string;
 		request_log_id?: string;
@@ -469,8 +480,7 @@ export async function recordUsage(
 	if ((params.shared_key_economic_handoff !== undefined) !== (economicBuyerClient !== undefined)) {
 		throw new Error('Shared-key economic usage requires a dedicated buyer critical writer');
 	}
-	if (economicBuyerClient && (repos.client.driver !== 'postgres'
-		|| repos.client.raw === economicBuyerClient.raw)) {
+	if (economicBuyerClient && (repos.client.driver !== 'postgres' || repos.client.raw === economicBuyerClient.raw)) {
 		throw new Error('Shared-key economic buyer and runtime clients must be distinct PostgreSQL sessions');
 	}
 	if (economicBuyerClient && repos.client.driver === 'postgres') {
@@ -482,12 +492,14 @@ export async function recordUsage(
 				'SELECT CURRENT_USER::text AS current_role, SESSION_USER::text AS session_role',
 			),
 		]);
-		if (runtimeIdentity.length !== 1
-			|| runtimeIdentity[0]?.current_role !== 'cinatoken_gateway_runtime'
-			|| runtimeIdentity[0]?.session_role !== 'cinatoken_gateway_runtime'
-			|| buyerIdentity.length !== 1
-			|| buyerIdentity[0]?.current_role !== 'cinatoken_gateway_buyer_settlement'
-			|| buyerIdentity[0]?.session_role !== 'cinatoken_gateway_buyer_settlement') {
+		if (
+			runtimeIdentity.length !== 1 ||
+			runtimeIdentity[0]?.current_role !== 'cinatoken_gateway_runtime' ||
+			runtimeIdentity[0]?.session_role !== 'cinatoken_gateway_runtime' ||
+			buyerIdentity.length !== 1 ||
+			buyerIdentity[0]?.current_role !== 'cinatoken_gateway_buyer_settlement' ||
+			buyerIdentity[0]?.session_role !== 'cinatoken_gateway_buyer_settlement'
+		) {
 			throw new Error('Dedicated runtime and buyer settlement LOGINs required');
 		}
 	}
@@ -497,14 +509,16 @@ export async function recordUsage(
 		typeof requestStartedAtMs === 'number' && Number.isFinite(requestStartedAtMs)
 			? new Date(requestStartedAtMs)
 			: new Date();
-	const pricingAtUtc = Number.isNaN(requestedPricingAtUtc.getTime())
-		? new Date()
-		: requestedPricingAtUtc;
+	const pricingAtUtc = Number.isNaN(requestedPricingAtUtc.getTime()) ? new Date() : requestedPricingAtUtc;
 	const businessTimezone = await getBusinessTimezone(repos);
-	const baseFactors = parseRouteBaseFactors(params.route_price_override_json ?? null);
-	const schedule = parseRoutePricingSchedule(params.route_price_override_json ?? null);
-	const chargedSch = resolveDailyScheduleFactor(schedule.charged, pricingAtUtc, businessTimezone);
-	const meteredSch = resolveDailyScheduleFactor(schedule.metered, pricingAtUtc, businessTimezone);
+	const routeFactors = resolveRouteEffectiveFactors({
+		priceOverrideJson: params.route_price_override_json ?? null,
+		nowUtc: pricingAtUtc,
+		timezone: businessTimezone,
+	});
+	const catalogProfile = parsePricingProfile(params.model_pricing_profile ?? null);
+	const catalogSch = resolveDailyScheduleFactor(catalogProfile?.schedule ?? [], pricingAtUtc, businessTimezone);
+	const catalogSchedule = toScheduleAudit(catalogSch);
 
 	const endpointPricing = resolveEndpointTextPricing(params.endpoint_pricing_snapshot);
 	const routedUsage = params.route_target_id != null;
@@ -513,25 +527,31 @@ export async function recordUsage(
 			throw new Error(`Verified endpoint pricing is required for routed usage: ${endpointPricing.message}`);
 		}
 		if (
-			params.endpoint_pricing_snapshot?.modelId !== params.model_id
-			|| params.endpoint_pricing_snapshot?.providerId !== params.provider_id
+			params.endpoint_pricing_snapshot?.modelId !== params.model_id ||
+			params.endpoint_pricing_snapshot?.providerId !== params.provider_id
 		) {
 			throw new Error('Verified endpoint pricing identity does not match routed usage');
 		}
 	}
 	const endpointResolved = endpointPricing.ok ? endpointPricing.value : null;
-	const legacySupplier = endpointResolved ? null : resolveSupplierBillingPrices({
-		basisInputTokens: basis,
-		modelPricingProfileJson: params.model_pricing_profile ?? null,
-	});
-	const legacyStandard = endpointResolved ? null : resolveStandardBillingPrices({
-		basisInputTokens: basis,
-		modelPricingProfileJson: params.model_pricing_profile ?? null,
-	});
-	const legacyCharged = endpointResolved ? null : resolveChargedBillingPrices({
-		basisInputTokens: basis,
-		modelPricingProfileJson: params.model_pricing_profile ?? null,
-	});
+	const legacySupplier = endpointResolved
+		? null
+		: resolveSupplierBillingPrices({
+				basisInputTokens: basis,
+				modelPricingProfileJson: params.model_pricing_profile ?? null,
+			});
+	const legacyStandard = endpointResolved
+		? null
+		: resolveStandardBillingPrices({
+				basisInputTokens: basis,
+				modelPricingProfileJson: params.model_pricing_profile ?? null,
+			});
+	const legacyCharged = endpointResolved
+		? null
+		: resolveChargedBillingPrices({
+				basisInputTokens: basis,
+				modelPricingProfileJson: params.model_pricing_profile ?? null,
+			});
 	const auditSide = (
 		prices: BillingPriceSnapshot,
 		source: 'model_x_factor' | 'model',
@@ -547,24 +567,20 @@ export async function recordUsage(
 	const catalogSupplier = endpointResolved
 		? auditSide(endpointResolved.standardPrices, 'model_x_factor')
 		: legacySupplier!;
-	const standardResolved = endpointResolved
-		? auditSide(endpointResolved.standardPrices, 'model')
-		: legacyStandard!;
+	const standardResolved = endpointResolved ? auditSide(endpointResolved.standardPrices, 'model') : legacyStandard!;
 	const catalogCharged = endpointResolved
 		? auditSide(endpointResolved.chargedPrices, 'model_x_factor')
 		: legacyCharged!;
 
 	const supplierResolved = applyRouteFactorsToSide({
 		catalog: catalogSupplier,
-		baseFactor: baseFactors.meteredFactor,
-		scheduleFactor: meteredSch,
-		mode: schedule.mode,
+		side: routeFactors.metered,
+		provider: routeFactors.provider,
 	});
 	const chargedResolved = applyRouteFactorsToSide({
 		catalog: catalogCharged,
-		baseFactor: baseFactors.chargedFactor,
-		scheduleFactor: chargedSch,
-		mode: schedule.mode,
+		side: routeFactors.charged,
+		provider: routeFactors.provider,
 	});
 
 	const supplierRequestCost = endpointResolved
@@ -574,41 +590,57 @@ export async function recordUsage(
 	const chargedRequestCost = endpointResolved
 		? endpointResolved.chargedRequestCost * (chargedResolved.audit.effective_factor ?? 1)
 		: 0;
-	const supplierCost = computeMeteredCost(
-		params.usage,
-		supplierResolved.prices.input_price,
-		supplierResolved.prices.output_price,
-		supplierResolved.prices.cache_read_price,
-		supplierResolved.prices.cache_write_price
-	) + supplierRequestCost;
-	const standardCost = computeMeteredCost(
-		params.usage,
-		standardResolved.prices.input_price,
-		standardResolved.prices.output_price,
-		standardResolved.prices.cache_read_price,
-		standardResolved.prices.cache_write_price
-	) + standardRequestCost;
-	const chargedRaw = computeMeteredCost(
-		params.usage,
-		chargedResolved.prices.input_price,
-		chargedResolved.prices.output_price,
-		chargedResolved.prices.cache_read_price,
-		chargedResolved.prices.cache_write_price
-	) + chargedRequestCost;
+	const supplierCost =
+		computeMeteredCost(
+			params.usage,
+			supplierResolved.prices.input_price,
+			supplierResolved.prices.output_price,
+			supplierResolved.prices.cache_read_price,
+			supplierResolved.prices.cache_write_price,
+		) + supplierRequestCost;
+	const standardCost =
+		computeMeteredCost(
+			params.usage,
+			standardResolved.prices.input_price,
+			standardResolved.prices.output_price,
+			standardResolved.prices.cache_read_price,
+			standardResolved.prices.cache_write_price,
+		) + standardRequestCost;
+	const chargedRaw =
+		computeMeteredCost(
+			params.usage,
+			chargedResolved.prices.input_price,
+			chargedResolved.prices.output_price,
+			chargedResolved.prices.cache_read_price,
+			chargedResolved.prices.cache_write_price,
+		) + chargedRequestCost;
 	const routeChargedCost = roundGatewayMoney(chargedRaw);
 	const factorsJson = params.user_charged_cost_factors_json ?? null;
 	if (factorsJson != null && factorsJson.trim() !== '' && parseUserChargedCostFactors(factorsJson) == null) {
-		console.warn(
-			`[Gateway Billing] invalid users.charged_cost_factors ignored model_id=${params.model_id}`
-		);
+		console.warn(`[Gateway Billing] invalid users.charged_cost_factors ignored model_id=${params.model_id}`);
 	}
-	const userChargedFactor = lookupUserChargedCostFactor(
+	const userChargedMatch = resolveUserChargedCostFactorMatch(
 		parseUserChargedCostFactors(factorsJson),
-		params.model_id
+		params.model_id,
+		params.route_group,
 	);
-	const resolvedChargedCost = applyUserChargedCostFactor(routeChargedCost, userChargedFactor);
-	const billingCommitted = params.status !== 'error' || params.charge_on_error === true;
+	const userChargedFactor = userChargedMatch?.factor ?? null;
+	const userChargedFactorMode = await getUserChargedCostFactorMode(repos);
+	const routeEffectiveFactor = routeFactors.chargedTotal;
+	const combinedChargedFactor = resolveCombinedChargedFactor(
+		routeEffectiveFactor,
+		userChargedFactor,
+		userChargedFactorMode,
+	);
+	const resolvedChargedCost = applyUserChargedCostFactor(routeChargedCost, userChargedFactor, {
+		mode: userChargedFactorMode,
+		routeEffectiveFactor,
+	});
 	chargedResolved.audit.user_charged_factor = userChargedFactor;
+	chargedResolved.audit.user_charged_factor_route_group = userChargedMatch?.routeGroup ?? null;
+	chargedResolved.audit.user_charged_factor_mode = userChargedFactorMode;
+	chargedResolved.audit.combined_charged_factor = combinedChargedFactor;
+	const billingCommitted = params.status !== 'error' || params.charge_on_error === true;
 	const isByok = parseByokKeyId(params.provider_key_id) !== null;
 	const nominalSupplierCost = roundGatewayMoney(supplierCost);
 	const nominalStandardCost = roundGatewayMoney(standardCost);
@@ -619,23 +651,33 @@ export async function recordUsage(
 			supplierAudit: supplierResolved.audit,
 			standardAudit: standardResolved.audit,
 			chargedAudit: chargedResolved.audit,
-			...(endpointResolved ? {
-				endpointPricing: endpointResolved.audit,
-				requestCosts: {
-					supplier: roundGatewayMoney(supplierRequestCost),
-					standard: roundGatewayMoney(standardRequestCost),
-					user_charge: roundGatewayMoney(chargedRequestCost),
-				},
-			} : {}),
+			...(endpointResolved
+				? {
+						endpointPricing: endpointResolved.audit,
+						requestCosts: {
+							supplier: roundGatewayMoney(supplierRequestCost),
+							standard: roundGatewayMoney(standardRequestCost),
+							user_charge: roundGatewayMoney(chargedRequestCost),
+						},
+					}
+				: {}),
 		}),
-		userChargedFactor
+		userChargedFactor,
+		{
+			mode: userChargedFactorMode,
+			combinedChargedFactor,
+			matchedRouteGroup: userChargedMatch?.routeGroup ?? null,
+		},
 	);
-	const billingAmounts = applyPrivateByokBillingPolicy({
-		meteredCost: nominalSupplierCost,
-		standardCost: nominalStandardCost,
-		chargedCost: nominalChargedCost,
-		pricingAuditJson: nominalPricingAuditJson,
-	}, isByok);
+	const billingAmounts = applyPrivateByokBillingPolicy(
+		{
+			meteredCost: nominalSupplierCost,
+			standardCost: nominalStandardCost,
+			chargedCost: nominalChargedCost,
+			pricingAuditJson: nominalPricingAuditJson,
+		},
+		isByok,
+	);
 	const supplierCostR = billingAmounts.meteredCost;
 	const standardCostR = billingAmounts.standardCost;
 	const chargedCost = billingAmounts.chargedCost;
@@ -655,41 +697,38 @@ export async function recordUsage(
 		nativeFinishReason: params.usage.native_finish_reason ?? null,
 	});
 	console.log(
-		`[Gateway Usage] recordUsage model_id=${params.model_id} request_protocol=${params.request_protocol} status=${params.status} route_group=${params.route_group} input_tokens=${params.usage.input_tokens} output_tokens=${params.usage.output_tokens} reasoning_tokens=${params.usage.reasoning_tokens} metered=${supplierCostR} standard=${standardCostR} charged=${chargedCost} is_byok=${isByok ? 1 : 0} charged_eff=${chargedResolved.audit.effective_factor} user_charged_factor=${userChargedFactor ?? 'none'} metered_eff=${supplierResolved.audit.effective_factor}`
+		`[Gateway Usage] recordUsage model_id=${params.model_id} request_protocol=${params.request_protocol} status=${params.status} route_group=${params.route_group} input_tokens=${params.usage.input_tokens} output_tokens=${params.usage.output_tokens} reasoning_tokens=${params.usage.reasoning_tokens} metered=${supplierCostR} standard=${standardCostR} charged=${chargedCost} is_byok=${isByok ? 1 : 0} charged_eff=${chargedResolved.audit.effective_factor} user_charged_factor=${userChargedFactor ?? 'none'} metered_eff=${supplierResolved.audit.effective_factor}`,
 	);
-	const id = params.request_log_id ?? crypto.randomUUID();
+	const id = params.request_log_id ?? params.requestLogId ?? crypto.randomUUID();
 	const shouldChargeBudget = billingCommitted && chargedCost > 0;
 	const hasOrdinaryBudgetSettlement = params.ordinary_budget_settlement != null;
-	const userSnapshot = shouldChargeBudget || hasOrdinaryBudgetSettlement
-		? await getUserBudgetSnapshot(repos, params.user_id)
-		: null;
+	const userSnapshot =
+		shouldChargeBudget || hasOrdinaryBudgetSettlement ? await getUserBudgetSnapshot(repos, params.user_id) : null;
 	const beforeSpent = userSnapshot?.budgetSpent ?? 0;
-	const userRow = shouldChargeBudget || hasOrdinaryBudgetSettlement
-		? await repos.users.getById(params.user_id)
-		: null;
+	const userRow = shouldChargeBudget || hasOrdinaryBudgetSettlement ? await repos.users.getById(params.user_id) : null;
 	const ordinarySettlement = params.ordinary_budget_settlement
 		? {
 				...params.ordinary_budget_settlement,
-				unknownCost: (params.shared_key_economic_handoff !== undefined
-					&& hasPotentiallyBillableUnknownSharedKeyAttempt(
-						params.shared_key_economic_handoff.handoff,
-					)) || privateByokSettlementMode(
-					isByok,
-					params.ordinary_budget_settlement.unknownCost ? 'reserved' : 'actual',
-				) === 'reserved',
+				unknownCost:
+					(params.shared_key_economic_handoff !== undefined &&
+						hasPotentiallyBillableUnknownSharedKeyAttempt(params.shared_key_economic_handoff.handoff)) ||
+					privateByokSettlementMode(isByok, params.ordinary_budget_settlement.unknownCost ? 'reserved' : 'actual') ===
+						'reserved',
 			}
 		: undefined;
-	const economicOutbox = params.shared_key_economic_handoff === undefined
-		? undefined : await prepareSharedKeyEconomicUsageHandoff({
-			requestLogId: id,
-			providerKeyId: params.provider_key_id ?? null,
-			routeTargetId: params.route_target_id ?? null,
-			usage: params.usage,
-			shouldChargeBudget,
-			chargedCost,
-			ordinarySettlement,
-			economic: params.shared_key_economic_handoff,
-		});
+	const economicOutbox =
+		params.shared_key_economic_handoff === undefined
+			? undefined
+			: await prepareSharedKeyEconomicUsageHandoff({
+					requestLogId: id,
+					providerKeyId: params.provider_key_id ?? null,
+					routeTargetId: params.route_target_id ?? null,
+					usage: params.usage,
+					shouldChargeBudget,
+					chargedCost,
+					ordinarySettlement,
+					economic: params.shared_key_economic_handoff,
+				});
 	const ordinaryAuditTransition = ordinaryBudgetAuditSnapshotTransition({
 		settlement: ordinarySettlement,
 		currentBudgetEpoch: userRow == null ? null : Number(userRow.budget_epoch),
@@ -697,16 +736,19 @@ export async function recordUsage(
 		chargedCost,
 		shouldChargeBudget,
 	});
-	const afterSpentVal = roundGatewayMoney(beforeSpent + ordinaryAuditTransition.auditCharge);
+	const split = splitChargeFromBudgetSnapshot(userSnapshot, ordinaryAuditTransition.auditCharge);
+	const afterSpentVal = roundGatewayMoney(beforeSpent + ordinaryAuditTransition.auditCharge - split.fromWallet);
 	let usageSnaps: { before: string; after: string; changed: string | null } | null = null;
 	if (userRow) {
 		const beforeS = userRowToSnapshot(userRow);
-		const afterS = ordinarySettlement && !ordinaryAuditTransition.settlementEpochMatches
-			? beforeS
-			: snapshotWithOverrides(beforeS, {
-					budget_spent: afterSpentVal,
-					budget_reserved_micros: ordinaryAuditTransition.afterReservedMicros,
-				});
+		const afterS =
+			ordinarySettlement && !ordinaryAuditTransition.settlementEpochMatches
+				? beforeS
+				: snapshotWithOverrides(beforeS, {
+						budget_spent: afterSpentVal,
+						wallet_spent: roundGatewayMoney(Number(userRow.wallet_spent ?? 0) + split.fromWallet),
+						budget_reserved_micros: ordinaryAuditTransition.afterReservedMicros,
+					});
 		usageSnaps = {
 			before: snapshotToJson(beforeS),
 			after: snapshotToJson(afterS),
@@ -726,13 +768,10 @@ export async function recordUsage(
 			providerModelName: params.provider_model_name ?? null,
 			modelName: params.model_name ?? null,
 			providerName: params.provider_name ?? null,
-			requestBody: applyRequestBodyLoggingPolicy(
-				params.request_body,
-				params.request_body_logging_mode
-			),
+			requestBody: applyRequestBodyLoggingPolicy(params.request_body, params.request_body_logging_mode),
 			upstreamRequestBody: applyRequestBodyLoggingPolicy(
 				params.upstream_request_body,
-				params.request_body_logging_mode
+				params.request_body_logging_mode,
 			),
 			requestProtocol: params.request_protocol,
 			requestOperation: params.request_operation ?? null,
@@ -747,19 +786,12 @@ export async function recordUsage(
 				pool: params.route_pool_id ?? null,
 				target: params.route_target_id ?? null,
 				...(params.shared_key_economic_handoff?.selectedReference
-					? { selected_shared_quote_attempt_id:
-						params.shared_key_economic_handoff.selectedReference.attemptId }
+					? { selected_shared_quote_attempt_id: params.shared_key_economic_handoff.selectedReference.attemptId }
 					: {}),
-				...(params.gemini_wire_action
-					? { gemini: { action: params.gemini_wire_action } }
-					: {}),
+				...(params.gemini_wire_action ? { gemini: { action: params.gemini_wire_action } } : {}),
 				...(params.sticky_trace ? { sticky: params.sticky_trace } : {}),
-				...(params.model_fallback_trace
-					? { model_fallback: params.model_fallback_trace }
-					: {}),
-				...(params.provider_routing_trace
-					? { provider_routing: params.provider_routing_trace }
-					: {}),
+				...(params.model_fallback_trace ? { model_fallback: params.model_fallback_trace } : {}),
+				...(params.provider_routing_trace ? { provider_routing: params.provider_routing_trace } : {}),
 			}),
 			inputTokens: params.usage.input_tokens,
 			outputTokens: params.usage.output_tokens,
@@ -776,6 +808,7 @@ export async function recordUsage(
 			standardCost: standardCostR,
 			chargedCost: chargedCost,
 			budgetAccountedAt: pricingAtUtc.toISOString(),
+			chargedWalletCost: split.fromWallet,
 			routeGroup: params.route_group,
 			status: params.status,
 			latencyMs: params.latency_ms ?? null,
@@ -799,25 +832,25 @@ export async function recordUsage(
 			upstreamRequestId: params.upstream_request_id ?? null,
 			upstreamMessageId: params.upstream_message_id ?? null,
 			...generationSnapshot,
+			ingressHost: params.ingress_host ?? null,
 		},
 		shouldChargeBudget,
 		beforeSpent,
 		chargedCost,
 		guardrailBudgetSettlement: params.guardrail_budget_settlement
 			? {
-				requestId: params.guardrail_budget_settlement.requestId,
-				mode: params.guardrail_budget_settlement.unknownCost ? 'reserved' : 'actual',
-				reason: params.guardrail_budget_settlement.unknownCost
-					? 'usage_unavailable_after_dispatch'
-					: isByok
-						? 'private_byok_list_price_settled'
-						: 'request_usage_settled',
-			}
+					requestId: params.guardrail_budget_settlement.requestId,
+					mode: params.guardrail_budget_settlement.unknownCost ? 'reserved' : 'actual',
+					reason: params.guardrail_budget_settlement.unknownCost
+						? 'usage_unavailable_after_dispatch'
+						: isByok
+							? 'private_byok_list_price_settled'
+							: 'request_usage_settled',
+				}
 			: undefined,
-		userBudgetSettlement: ordinaryBudgetSettlementForCriticalWrite(
-			ordinarySettlement,
-		),
+		userBudgetSettlement: ordinaryBudgetSettlementForCriticalWrite(ordinarySettlement),
 		economicOutbox,
+		chargedFromWallet: split.fromWallet,
 		audit: {
 			apiKeyId: params.api_key_id,
 			eventType: 'usage_charge',
@@ -861,10 +894,7 @@ export async function recordUsage(
 			upstreamRequestId: params.upstream_request_id ?? null,
 			circuitEvents: params.circuit_events,
 		}).catch((err: unknown) => {
-			console.warn(
-				'[Gateway Alert] webhook dispatch failed',
-				err instanceof Error ? err.stack ?? err.message : err
-			);
+			console.warn('[Gateway Alert] webhook dispatch failed', err instanceof Error ? (err.stack ?? err.message) : err);
 		});
 	}
 

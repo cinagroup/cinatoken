@@ -50,5 +50,9 @@ describe("playground samples", () => {
 			resolvePlaygroundSampleId("openai_chat", "connectivity", "gpt-5.4"),
 			"openai-chat/connectivity.max-completion"
 		);
+		assert.equal(
+			resolvePlaygroundSampleId('openai_chat', 'connectivity', 'gpt-6-astra'),
+			'openai-chat/connectivity.max-completion',
+		);
 	});
 });

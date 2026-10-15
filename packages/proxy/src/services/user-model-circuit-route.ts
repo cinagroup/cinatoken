@@ -16,6 +16,8 @@ import {
 	recordUserModelCircuitTrigger,
 } from './user-model-circuit-breaker';
 import type { GatewayCircuitAlertEvent } from './circuit-alert-types';
+import { allocateRequestLogId } from './accounting';
+import { withGatewayRequestIdHeader } from './gateway-error-response';
 import { recordUsage } from './usage-tracker';
 import type { RequestTimingCollector } from './request-timing';
 import type { ModelFallbackTrace } from './model-fallbacks';
@@ -55,7 +57,7 @@ export function maybeBlockUserModelCircuit<E extends Env>(
 	c: Context<E>,
 	repos: GatewayRepositories,
 	apiKey: ApiKeyContext,
-	ctx: UserModelCircuitRouteContext
+	ctx: UserModelCircuitRouteContext,
 ): Response | null {
 	const open = getUserModelCircuitOpen(apiKey.userId, ctx.baseModelId);
 	if (!open) {
@@ -66,14 +68,17 @@ export function maybeBlockUserModelCircuit<E extends Env>(
 		return null;
 	}
 	const latencyMs = Date.now() - ctx.startMs;
+	const requestLogId = allocateRequestLogId();
 	ctx.timing?.markGatewayComplete();
 	scheduleBackgroundWork(
 		c,
 		recordUsage(repos, {
+			requestLogId,
 			api_key_id: apiKey.keyId,
 			workspace_id: apiKey.workspaceId,
 			user_id: apiKey.userId,
 			user_email: apiKey.userEmail,
+			ingress_host: apiKey.ingressHost ?? null,
 			model_id: ctx.baseModelId,
 			provider_id: GATEWAY_PROVIDER_ID,
 			model_name: ctx.modelNameForLog,
@@ -95,9 +100,9 @@ export function maybeBlockUserModelCircuit<E extends Env>(
 		}).catch((err) => {
 			console.error(
 				'[Gateway] user-model circuit open recordUsage failed',
-				err instanceof Error ? err.message : String(err)
+				err instanceof Error ? err.message : String(err),
 			);
-		})
+		}),
 	);
 	const skin = /(?:^|\/)responses\/?$/.test(c.req.path)
 		? 'responses'
@@ -125,7 +130,7 @@ export function maybeTriggerUserModelCircuitFromUpstream(
 	contentType: string | null,
 	errorBodyText: string | null | undefined,
 	errorMessageForLog?: string,
-	options?: UserModelCircuitTriggerOptions
+	options?: UserModelCircuitTriggerOptions,
 ): GatewayCircuitAlertEvent | null {
 	if (errorBodyText == null) {
 		return null;
@@ -160,7 +165,7 @@ export function maybeTriggerSensitiveContentCircuitFromUpstream(
 	status: number,
 	contentType: string | null,
 	errorBodyText: string | null | undefined,
-	errorMessageForLog?: string
+	errorMessageForLog?: string,
 ): GatewayCircuitAlertEvent | null {
 	return maybeTriggerUserModelCircuitFromUpstream(
 		userId,
@@ -168,7 +173,7 @@ export function maybeTriggerSensitiveContentCircuitFromUpstream(
 		status,
 		contentType,
 		errorBodyText,
-		errorMessageForLog
+		errorMessageForLog,
 	);
 }
 

@@ -5,6 +5,8 @@
 import { Hono } from 'hono';
 import {
 	BILLING_CURRENCY_KEY,
+	computeTotalRemaining,
+	computeWalletBalance,
 	getSystemConfigValue,
 	normalizeApiTimeFields,
 	normalizeBillingCurrencyCode,
@@ -29,6 +31,15 @@ meRoutes.get('/', async (c) => {
       workspace_id: apiKey.workspaceId,
       budget_max: apiKey.budgetMax,
       budget_spent: apiKey.budgetSpent,
+      wallet_granted: apiKey.walletGranted,
+      wallet_spent: apiKey.walletSpent,
+      wallet_balance: computeWalletBalance(apiKey.walletGranted, apiKey.walletSpent),
+      total_remaining: computeTotalRemaining(
+        apiKey.budgetMax,
+        apiKey.budgetSpent,
+        apiKey.walletGranted,
+        apiKey.walletSpent
+      ),
       budget_period: apiKey.budgetPeriod,
       budget_reset_at: apiKey.budgetResetAt,
       billing_currency,

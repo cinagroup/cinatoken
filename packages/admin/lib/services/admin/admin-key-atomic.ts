@@ -1,3 +1,4 @@
+import { coerceRateLimitInput, serializeApiKeyRateLimit } from "@octafuse/core";
 import type {
 	AdminKeyMutationWithAudit,
 	GatewayRepositories,
@@ -20,6 +21,7 @@ import {
 import type { JsonObject } from "./types";
 
 type KeyPatchInput = {
+	rate_limit?: unknown;
 	name?: string | null;
 	status?: string;
 	metadata?: unknown;
@@ -47,6 +49,7 @@ export function expectedAdminKeyProfile(
 		name: row.name,
 		status: row.status,
 		metadata: row.metadata,
+		rateLimit: row.rate_limit_raw !== undefined ? row.rate_limit_raw : serializeApiKeyRateLimit(row.rate_limit),
 	};
 }
 
@@ -94,6 +97,9 @@ export function planAdminKeyPatch(
 		);
 	}
 	const patch: AdminKeyMutationWithAudit["patch"] = {};
+	const rateLimit = coerceRateLimitInput(input.rate_limit);
+	if (!rateLimit.ok) throw badRequest(rateLimit.message);
+	if ("value" in rateLimit) patch.rateLimit = serializeApiKeyRateLimit(rateLimit.value);
 	if (input.name !== undefined) patch.name = keyName(input.name);
 	if (input.status !== undefined) patch.status = keyStatus(input.status);
 	let metadataOperation: "merge" | "replace" | null = null;
@@ -118,7 +124,9 @@ export function planAdminKeyPatch(
 		patch.metadata = metadataReplaceStr;
 		metadataOperation = "replace";
 	}
+	const beforeRateLimit = row.rate_limit_raw !== undefined ? row.rate_limit_raw : serializeApiKeyRateLimit(row.rate_limit);
 	const after = {
+		rateLimit: Object.prototype.hasOwnProperty.call(patch, "rateLimit") ? patch.rateLimit ?? null : beforeRateLimit,
 		name: Object.prototype.hasOwnProperty.call(patch, "name")
 			? patch.name ?? null
 			: row.name,
@@ -138,6 +146,7 @@ export function planAdminKeyPatch(
 		nameChanged: row.name !== after.name,
 		statusChanged: row.status !== after.status,
 		metadataChanged: row.metadata !== after.metadata,
+		rateLimitChanged: beforeRateLimit !== after.rateLimit,
 	};
 }
 
@@ -151,11 +160,12 @@ export function auditAdminKeyPatch(
 		source: "admin_keys" | "admin_user_key";
 	}
 ): AdminKeyMutationWithAudit["audit"] {
-	const { nameChanged, statusChanged, metadataChanged } = plan;
-	if (!nameChanged && !statusChanged && !metadataChanged) return null;
+	const { nameChanged, statusChanged, metadataChanged, rateLimitChanged } = plan;
+	if (!nameChanged && !statusChanged && !metadataChanged && !rateLimitChanged) return null;
 	if (!userSnapshot)
 		throw new Error("Admin Key audit requires a user snapshot");
 	const payload: Record<string, unknown> = {};
+	if (rateLimitChanged) payload.rate_limit = { from: expectedAdminKeyProfile(row).rateLimit, to: plan.after.rateLimit };
 	if (nameChanged)
 		payload.name = { from: row.name ?? null, to: plan.after.name ?? null };
 	if (statusChanged)
@@ -177,12 +187,14 @@ export function auditAdminKeyPatch(
 			options.source === "admin_keys"
 				? "admin_key_revoked"
 				: "admin_user_key_revoked";
-	else if (metadataChanged && !statusChanged && !nameChanged)
+	else if (metadataChanged && !statusChanged && !nameChanged && !rateLimitChanged)
 		reasonCode = "admin_patch_key_metadata";
-	else if (statusChanged && !metadataChanged && !nameChanged)
+	else if (statusChanged && !metadataChanged && !nameChanged && !rateLimitChanged)
 		reasonCode = "admin_patch_key_status";
-	else if (nameChanged && !metadataChanged && !statusChanged)
+	else if (nameChanged && !metadataChanged && !statusChanged && !rateLimitChanged)
 		reasonCode = "admin_patch_key_name";
+	else if (rateLimitChanged && !nameChanged && !statusChanged && !metadataChanged)
+		reasonCode = "admin_patch_key_rate_limit";
 	const spent = userSnapshot.budget_spent;
 	const bmax = userSnapshot.budget_max;
 	const bbase = userSnapshot.budget_base;

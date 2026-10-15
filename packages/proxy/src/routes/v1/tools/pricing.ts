@@ -15,7 +15,10 @@ import {
 	resolveWebFetchConfigFromSnapshots,
 	resolveWebSearchConfigFromSnapshots,
 	TOOL_CONFIG_FAMILY_KEYS,
+	parseStoredMcpPricingRule,
 	roundGatewayMoney,
+	summarizeMcpPricingRule,
+	type McpPricingSummary,
 } from '@octafuse/core';
 import type { SystemConfigRepository } from '@octafuse/core';
 import { Hono } from 'hono';
@@ -40,11 +43,14 @@ type ToolPricingRow =
 			charged: number;
 	  };
 
-function tripleOrDefault(config: {
-	metered: number;
-	standard: number;
-	charged: number;
-} | null, defaultCost: number) {
+function tripleOrDefault(
+	config: {
+		metered: number;
+		standard: number;
+		charged: number;
+	} | null,
+	defaultCost: number,
+) {
 	if (!config) {
 		const d = roundGatewayMoney(defaultCost);
 		return { metered: d, standard: d, charged: d, cost: d };
@@ -92,9 +98,7 @@ export async function readToolsPricing(systemConfig: Pick<SystemConfigRepository
 		{
 			id: 'ai-detection',
 			unit: 'chars',
-			unit_chars: aiDetection.ok
-				? aiDetection.config.billingUnitChars
-				: DEFAULT_AI_DETECTION_BILLING_UNIT_CHARS,
+			unit_chars: aiDetection.ok ? aiDetection.config.billingUnitChars : DEFAULT_AI_DETECTION_BILLING_UNIT_CHARS,
 			...detectPrices,
 		},
 	];
@@ -103,5 +107,11 @@ export async function readToolsPricing(systemConfig: Pick<SystemConfigRepository
 }
 
 toolsPricingRoutes.get('/', async (c) => {
-	return c.json({ data: await readToolsPricing(c.get('repositories').systemConfig) });
+	const repos = c.get('repositories');
+	const prices = await readToolsPricing(repos.systemConfig);
+	const mcpPrices = await repos.mcpServers.listEnabledToolPrices().catch(() => []);
+	const mcp = mcpPrices.flatMap(row => {
+		try { const summary = summarizeMcpPricingRule(parseStoredMcpPricingRule(row.pricing)); return [{id: `mcp:${row.slug}/${row.upstreamKey}`, name: row.exposedName, ...summary, cost: summary.charged}]; } catch { return []; }
+	});
+	return c.json({ data: { ...prices, mcp } });
 });

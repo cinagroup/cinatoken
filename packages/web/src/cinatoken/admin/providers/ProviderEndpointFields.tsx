@@ -17,6 +17,8 @@ const names = {
 	anthropic: 'Anthropic',
 	gemini: 'Gemini',
 	dashscope: 'DashScope',
+	minimax: 'MiniMax',
+	volcengine: 'Volcengine',
 }
 export function ProviderEndpointFields(props: {
 	register: UseFormRegister<ProviderFormValues>

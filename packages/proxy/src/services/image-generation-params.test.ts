@@ -43,3 +43,16 @@ for (const width of [1, 7, 8192]) {
 		assert.deepEqual(normalizeImageGenerationParams({ prompt: parsed.prompt }), normalizeImageCommonParams(JSON.parse(raw)));
 	});
 }
+
+import { imageGenerationDeclaredExtraBody } from './image-generation-extras';
+it('image extras use only capabilities declared by every eligible verified endpoint', () => {
+ const route = (allowed: string[]) => ({ endpoint: { imageCapabilities: { allowed_passthrough_parameters: allowed } } });
+ const body = { seed: 42, safety: { level: 2, secret: 'drop' }, provider: { order: ['private'] }, opaque: [1,2] };
+ assert.deepEqual(imageGenerationDeclaredExtraBody(body,[route(['seed','safety.level']),route(['seed','safety.level'])]),{seed:42,safety:{level:2}});
+ assert.deepEqual(imageGenerationDeclaredExtraBody(body,[route(['seed']),route([])]),{});
+});
+it('declared image extras reject large paged strings before materialization', t => {
+ t.mock.method(JsonStringPages.prototype,'materialize',()=>{throw new Error('must remain paged');});
+ const value = new JsonStringPages(Array.from({length:5},()=> 'x'.repeat(8192)));
+ assert.throws(()=>imageGenerationDeclaredExtraBody({seed:value},[{endpoint:{imageCapabilities:{allowed_passthrough_parameters:['seed']}}}]),RangeError);
+});

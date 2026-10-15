@@ -3,26 +3,20 @@
  * OpenNext 的 Next Server Function 只转发 HTTP 状态和 body，会丢失 Response.webSocket，
  * 因此实时调试请求必须在最外层 Worker 中直接交给 Hono。
  */
-import { authenticateAdminRequest } from "./auth";
-import { handleGatewayApiError } from "./api-error";
-import type { AdminBindings } from "./admin-env";
-import { getAdminApp } from "./admin-app";
-import { resolveAdminStorageContext } from "./storage-context";
-import { verifyCinaAuthConsolePrincipal } from "./cinaauth/principal";
-import { rejectRateLimitedAdminAuth } from "./admin-auth-rate-limit";
-
-function rewriteToInternalAdminPath(request: Request): Request {
-	const url = new URL(request.url);
-	const prefix = "/api/admin";
-	url.pathname = "/admin" + url.pathname.slice(prefix.length);
-	return new Request(url, request);
-}
+import { authenticateAdminRequest } from './auth';
+import { handleGatewayApiError } from './api-error';
+import type { AdminBindings } from './admin-env';
+import { getAdminApp } from './admin-app';
+import { isSameOriginBrowserWrite, rewriteToInternalAdminPath } from './admin-request-rewrite';
+import { resolveAdminStorageContext } from './storage-context';
+import { verifyCinaAuthConsolePrincipal } from './cinaauth/principal';
+import { rejectRateLimitedAdminAuth } from './admin-auth-rate-limit';
 
 /** 处理调试台原生 DashScope WebSocket，保留 Cloudflare 的 `webSocket` 响应对象。 */
 export async function handleAdminRealtimeUpgrade(
 	request: Request,
 	env: CloudflareEnv,
-	ctx: ExecutionContext
+	ctx: ExecutionContext,
 ): Promise<Response> {
 	try {
 		const runtimeBindings: AdminBindings = {
@@ -45,44 +39,25 @@ export async function handleAdminRealtimeUpgrade(
 			AUTH_RATE_LIMITER: env.AUTH_RATE_LIMITER,
 			DATABASE_DRIVER: env.DATABASE_DRIVER,
 		};
-		const storage = await resolveAdminStorageContext(
-			runtimeBindings,
-			"cloudflare"
-		);
-		const authenticated = await authenticateAdminRequest(
-			request,
-			storage.repositories
-		);
+		const storage = await resolveAdminStorageContext(runtimeBindings, 'cloudflare');
+		const authenticated = await authenticateAdminRequest(request, storage.repositories);
 		const principal = authenticated
-			? await verifyCinaAuthConsolePrincipal(
-					request,
-					authenticated,
-					runtimeBindings
-			  )
+			? await verifyCinaAuthConsolePrincipal(request, authenticated, runtimeBindings)
 			: null;
 		if (!principal) {
-			const rateLimited = await rejectRateLimitedAdminAuth(
-				request,
-				runtimeBindings
-			);
+			const rateLimited = await rejectRateLimitedAdminAuth(request, runtimeBindings);
 			if (rateLimited) return rateLimited;
-			return Response.json(
-				{ success: false, message: "Unauthorized" },
-				{ status: 401 }
-			);
+			return Response.json({ success: false, message: 'Unauthorized' }, { status: 401 });
 		}
 
 		const appBindings: AdminBindings = {
 			...runtimeBindings,
 			STORAGE_CONTEXT: storage,
 			ADMIN_PRINCIPAL: principal,
+			ADMIN_CSRF_SAME_ORIGIN: isSameOriginBrowserWrite(request),
 		};
-		return getAdminApp().fetch(
-			rewriteToInternalAdminPath(request),
-			appBindings,
-			ctx
-		);
+		return getAdminApp().fetch(rewriteToInternalAdminPath(request), appBindings, ctx);
 	} catch (error) {
-		return handleGatewayApiError({ route: "admin.realtime.worker", error });
+		return handleGatewayApiError({ route: 'admin.realtime.worker', error });
 	}
 }

@@ -3,10 +3,12 @@ import type { InsertUserBudgetAuditLogParams } from '../db/user-budget-audit-par
 import type { InsertKeyParams } from '../db/api-keys-types';
 import type { InsertRequestLogParams } from '../db/request-logs-types';
 import type { SharedKeyEconomicOutboxInput } from '../db/shared-key-economic-outbox-types';
+import type { GrantWalletCreditParams, GrantWalletCreditResult } from '../db/wallet-credit';
 import {
 	createApiKeyWithAuditD1,
 	getSystemConfigValueD1,
 	getUserBudgetSnapshotD1,
+	grantWalletCreditWithAuditTxD1,
 	insertRequestUsageAndChargeTxD1,
 	updateUserBudgetWithAuditTxD1,
 	applyUserBudgetTransitionWithAuditD1,
@@ -15,6 +17,7 @@ import {
 	createApiKeyWithAuditMy,
 	getSystemConfigValueMy,
 	getUserBudgetSnapshotMy,
+	grantWalletCreditWithAuditTxMy,
 	insertRequestUsageAndChargeTxMy,
 	updateUserBudgetWithAuditTxMy,
 	applyUserBudgetTransitionWithAuditMy,
@@ -23,6 +26,7 @@ import {
 	createApiKeyWithAuditPg,
 	getSystemConfigValuePg,
 	getUserBudgetSnapshotPg,
+	grantWalletCreditWithAuditTxPg,
 	insertRequestUsageAndChargeTxPg,
 	updateUserBudgetWithAuditTxPg,
 	applyUserBudgetTransitionWithAuditPg,
@@ -33,6 +37,15 @@ import type { InsertUserAuditLogParams } from '../db/user-audit-logs-types';
 import type { GuardrailBudgetSettlement } from '../db/guardrail-budget-types';
 import type { UserBudgetSettlement } from '../db/user-budget-reservation-types';
 import type { GatewayRepositories } from './repositories';
+
+export type UserBudgetSnapshot = {
+	budgetSpent: number;
+	budgetMax: number | null;
+	budgetPeriod: string | null;
+	budgetResetAt: string | null;
+	walletGranted: number;
+	walletSpent: number;
+};
 
 export type StorageRef = D1Database | GatewayDatabaseClient | GatewayRepositories;
 
@@ -46,10 +59,7 @@ export function resolveDatabaseClient(storage: StorageRef): GatewayDatabaseClien
 	return createD1DatabaseClient(storage as D1Database);
 }
 
-export async function getUserBudgetSnapshot(
-	storage: StorageRef,
-	userId: string
-): Promise<{ budgetSpent: number; budgetMax: number | null; budgetPeriod: string | null; budgetResetAt: string | null } | null> {
+export async function getUserBudgetSnapshot(storage: StorageRef, userId: string): Promise<UserBudgetSnapshot | null> {
 	const client = resolveDatabaseClient(storage);
 	if (client.driver === 'd1') {
 		return getUserBudgetSnapshotD1(client, userId);
@@ -76,7 +86,7 @@ export async function createApiKeyWithAudit(
 	params: {
 		insert: InsertKeyParams;
 		audit: InsertUserBudgetAuditLogParams;
-	}
+	},
 ): Promise<void> {
 	const client = resolveDatabaseClient(storage);
 	if (client.driver === 'd1') {
@@ -111,14 +121,19 @@ export async function updateUserBudgetWithAuditTx(
 		/** 触发本次写回的密钥（若有），写入审计 `api_key_id` */
 		apiKeyId: string | null;
 		audit: Omit<InsertUserBudgetAuditLogParams, 'id' | 'apiKeyId' | 'afterSpent' | 'afterBudgetResetAt'>;
-	}
+	},
 ): Promise<boolean> {
-	if (!Number.isSafeInteger(params.expectedBudgetEpoch) || params.expectedBudgetEpoch < 0
-		|| !Number.isSafeInteger(params.expectedBudgetReservedMicros) || params.expectedBudgetReservedMicros < 0
-		|| !Number.isFinite(params.expectedBudgetBase) || params.expectedBudgetBase < 0
-		|| !Number.isFinite(params.expectedBudgetSpent) || params.expectedBudgetSpent < 0
-		|| (params.expectedBudgetMax !== null
-			&& (!Number.isFinite(params.expectedBudgetMax) || params.expectedBudgetMax < 0))) {
+	if (
+		!Number.isSafeInteger(params.expectedBudgetEpoch) ||
+		params.expectedBudgetEpoch < 0 ||
+		!Number.isSafeInteger(params.expectedBudgetReservedMicros) ||
+		params.expectedBudgetReservedMicros < 0 ||
+		!Number.isFinite(params.expectedBudgetBase) ||
+		params.expectedBudgetBase < 0 ||
+		!Number.isFinite(params.expectedBudgetSpent) ||
+		params.expectedBudgetSpent < 0 ||
+		(params.expectedBudgetMax !== null && (!Number.isFinite(params.expectedBudgetMax) || params.expectedBudgetMax < 0))
+	) {
 		throw new Error('Invalid expected ordinary-user budget reset accounting values');
 	}
 	const client = resolveDatabaseClient(storage);
@@ -146,8 +161,10 @@ export async function insertRequestUsageAndChargeTx(
 		economicOutbox?: SharedKeyEconomicOutboxInput;
 		/** Review-only PostgreSQL v371 accountant; default path remains unchanged. */
 		legacyBuyerWindowedV371?: 'review-only';
+		/** 本次从永久池扣掉的部分；缺省 0（整笔走周期） */
+		chargedFromWallet?: number;
 		audit: Omit<InsertUserBudgetAuditLogParams, 'id' | 'afterSpent' | 'deltaSpent'>;
-	}
+	},
 ): Promise<void> {
 	const client = resolveDatabaseClient(storage);
 	if (params.economicOutbox !== undefined && client.driver !== 'postgres') {
@@ -172,6 +189,10 @@ export async function applyUserBudgetTransitionWithAuditTx(
 	storage: StorageRef,
 	params: {
 		userId: string;
+		expectedWalletGranted?: number;
+		expectedWalletSpent?: number;
+		walletGranted?: number;
+		walletSpent?: number;
 		expectedBudgetMax: number | null;
 		expectedBudgetBase: number;
 		expectedBudgetEpoch: number;
@@ -188,17 +209,25 @@ export async function applyUserBudgetTransitionWithAuditTx(
 		resetEpoch: boolean;
 		metadata?: string | null;
 		audit: InsertUserAuditLogParams;
-	}
+	},
 ): Promise<boolean> {
-	if (!Number.isSafeInteger(params.expectedBudgetEpoch) || params.expectedBudgetEpoch < 0
-		|| !Number.isSafeInteger(params.expectedBudgetReservedMicros) || params.expectedBudgetReservedMicros < 0
-		|| !Number.isFinite(params.expectedBudgetBase) || params.expectedBudgetBase < 0
-		|| !Number.isFinite(params.expectedBudgetSpent) || params.expectedBudgetSpent < 0
-		|| (params.expectedBudgetMax !== null
-			&& (!Number.isFinite(params.expectedBudgetMax) || params.expectedBudgetMax < 0))
-		|| !Number.isFinite(params.budgetBase) || params.budgetBase < 0
-		|| !Number.isFinite(params.budgetSpent) || params.budgetSpent < 0
-		|| (params.budgetMax !== null && (!Number.isFinite(params.budgetMax) || params.budgetMax < 0))) {
+	if (
+		!Number.isSafeInteger(params.expectedBudgetEpoch) ||
+		params.expectedBudgetEpoch < 0 ||
+		!Number.isSafeInteger(params.expectedBudgetReservedMicros) ||
+		params.expectedBudgetReservedMicros < 0 ||
+		!Number.isFinite(params.expectedBudgetBase) ||
+		params.expectedBudgetBase < 0 ||
+		!Number.isFinite(params.expectedBudgetSpent) ||
+		params.expectedBudgetSpent < 0 ||
+		(params.expectedBudgetMax !== null &&
+			(!Number.isFinite(params.expectedBudgetMax) || params.expectedBudgetMax < 0)) ||
+		!Number.isFinite(params.budgetBase) ||
+		params.budgetBase < 0 ||
+		!Number.isFinite(params.budgetSpent) ||
+		params.budgetSpent < 0 ||
+		(params.budgetMax !== null && (!Number.isFinite(params.budgetMax) || params.budgetMax < 0))
+	) {
 		throw new Error('Invalid ordinary-user budget transition accounting values');
 	}
 	const client = resolveDatabaseClient(storage);
@@ -209,4 +238,22 @@ export async function applyUserBudgetTransitionWithAuditTx(
 		return applyUserBudgetTransitionWithAuditMy(client, params);
 	}
 	return applyUserBudgetTransitionWithAuditPg(client, params);
+}
+
+/**
+ * 永久额度增量加额：`wallet_granted += amount` + 一条 `wallet_credit` 审计。
+ * 靠 `user_audit_logs.dedup_key = external_ref` 幂等；重放返回 `duplicate`。
+ */
+export async function grantWalletCreditWithAuditTx(
+	storage: StorageRef,
+	params: GrantWalletCreditParams,
+): Promise<GrantWalletCreditResult> {
+	const client = resolveDatabaseClient(storage);
+	if (client.driver === 'd1') {
+		return grantWalletCreditWithAuditTxD1(client, params);
+	}
+	if (client.driver === 'mysql') {
+		return grantWalletCreditWithAuditTxMy(client, params);
+	}
+	return grantWalletCreditWithAuditTxPg(client, params);
 }

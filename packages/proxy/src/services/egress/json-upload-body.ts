@@ -27,8 +27,16 @@ function snapshotJson(value: unknown, checkActive: () => void, active = new Set<
 	else if (value instanceof Boolean) value = Boolean.prototype.valueOf.call(value);
 	else if (value instanceof BigInt) throw new TypeError('JSON request bigint is not supported');
 	if (typeof value === 'function' || typeof value === 'symbol') return undefined;
-	if (value === null || typeof value === 'string' || typeof value === 'boolean' || typeof value === 'number' || value === undefined) return value;
-	if (typeof value !== 'object' || active.has(value)) throw new TypeError('Expected a JSON request without cycles or bigint');
+	if (
+		value === null ||
+		typeof value === 'string' ||
+		typeof value === 'boolean' ||
+		typeof value === 'number' ||
+		value === undefined
+	)
+		return value;
+	if (typeof value !== 'object' || active.has(value))
+		throw new TypeError('Expected a JSON request without cycles or bigint');
 	active.add(value);
 	const source = value as Record<string, unknown>;
 	const property = (name: string) => snapshotJson(source[name], checkActive, active, name);
@@ -42,7 +50,8 @@ function snapshotJson(value: unknown, checkActive: () => void, active = new Set<
 		const object: Record<string, unknown> = {};
 		for (const key of Object.keys(value)) {
 			const child = property(key);
-			if (child !== undefined) Object.defineProperty(object, key, { value: child, enumerable: true, configurable: true, writable: true });
+			if (child !== undefined)
+				Object.defineProperty(object, key, { value: child, enumerable: true, configurable: true, writable: true });
 		}
 		result = object;
 	}
@@ -52,16 +61,27 @@ function snapshotJson(value: unknown, checkActive: () => void, active = new Set<
 
 /** Request-owned encoder. dispose also stops a transport-locked, unread body. */
 export function createJsonUploadBody(value: Record<string, unknown>, signal: AbortSignal, checkActive: () => void) {
-	const assertActive = () => { signal.throwIfAborted(); checkActive(); };
+	const assertActive = () => {
+		signal.throwIfAborted();
+		checkActive();
+	};
 	const snapshot = snapshotJson(value, assertActive);
 	const contentLength = jsonBodyByteLength(snapshot, ENCODING_LIMITS, assertActive);
 	const owner = new AbortController();
-	const onAbort = () => { owner.abort(); };
-	const onFinished = () => { signal.removeEventListener('abort', onAbort); };
+	const onAbort = () => {
+		owner.abort();
+	};
+	const onFinished = () => {
+		signal.removeEventListener('abort', onAbort);
+	};
 	signal.addEventListener('abort', onAbort, { once: true });
 	try {
 		assertActive();
-		const body = streamJsonBody(snapshot, ENCODING_LIMITS, { signal: owner.signal, checkActive: assertActive, onFinished });
+		const body = streamJsonBody(snapshot, ENCODING_LIMITS, {
+			signal: owner.signal,
+			checkActive: assertActive,
+			onFinished,
+		});
 		const digestSha256 = async (): Promise<string> => {
 			// Replay the same immutable projection through the same encoder. Digesting
 			// the transport stream would consume it before fetch; stringify would
@@ -92,7 +112,18 @@ export function createJsonUploadBody(value: Record<string, unknown>, signal: Abo
 		};
 		// The Images grant digest consumes this exact private projection. The
 		// caller must never expose or mutate it; the upload stream owns it too.
-		return { body, contentLength, preparedSnapshot: snapshot, digestSha256,
-			dispose: () => { onFinished(); owner.abort(); } };
-	} catch (error) { onFinished(); throw error; }
+		return {
+			body,
+			contentLength,
+			preparedSnapshot: snapshot,
+			digestSha256,
+			dispose: () => {
+				onFinished();
+				owner.abort();
+			},
+		};
+	} catch (error) {
+		onFinished();
+		throw error;
+	}
 }

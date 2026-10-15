@@ -3,6 +3,7 @@
  * 引擎/密钥/单价读自 `system_config`（见 `resolveWebFetchConfig`）。
  */
 import { resolveWebFetchConfig } from '@octafuse/core';
+import { toolFactorPricingAudit } from '@octafuse/core';
 import { Hono } from 'hono';
 import type { Env } from '../../../app';
 import { requireApiKey } from '../../../middleware/auth';
@@ -22,11 +23,7 @@ import {
 	runToolRequestGuardrails,
 	toolGuardrailBudgetMicros,
 } from '../../../services/tool-request-guardrails';
-import {
-	assertFetchUrlSafe,
-	fetchUrlByProvider,
-	WebFetchProviderError,
-} from '@octafuse/tool-engines/web-fetch';
+import { assertFetchUrlSafe, fetchUrlByProvider, WebFetchProviderError } from '@octafuse/tool-engines/web-fetch';
 import { finalizeRequestLogJson } from '../../../services/request-log-shared';
 import {
 	webFetchErrorForLog,
@@ -178,21 +175,18 @@ webFetchRoutes.post('/', async (c) => {
 				budgetAccountedAt: requestStartedAt.toISOString(),
 				guardrailBudgetSettlement: guardrailBudgetReserved
 					? {
-						requestId: requestCorrelationId,
-						mode: settlement.mode,
-						reason: settlement.reason,
-					}
+							requestId: requestCorrelationId,
+							mode: settlement.mode,
+							reason: settlement.reason,
+						}
 					: undefined,
-				userBudgetSettlement: toolUserBudgetSettlement(
-					ordinaryBudgetLease,
-					settlement.mode,
-					settlement.reason,
-				),
+				userBudgetSettlement: toolUserBudgetSettlement(ordinaryBudgetLease, settlement.mode, settlement.reason),
 				apiKeyId: apiKey.keyId,
 				workspaceId: apiKey.workspaceId,
 				userId: apiKey.userId,
 				userEmail: apiKey.userEmail,
 				toolId: TOOL_ID,
+				ingressHost: apiKey.ingressHost,
 				toolProvider: provider,
 				meteredCost: 0,
 				standardCost: 0,
@@ -200,6 +194,7 @@ webFetchRoutes.post('/', async (c) => {
 				pricingUnit: 'request',
 				billingUnits: 1,
 				unitPrices: { metered: unitMetered, standard: unitStandard, charged: unitCharged },
+				pricingAuditExtra: toolFactorPricingAudit(resolved.config.pricing),
 				latencyMs,
 				requestBody: webFetchRequestBodyForLog(guarded.url, provider),
 				requestBodyLoggingMode: c.get('requestBodyLoggingMode'),
@@ -252,17 +247,15 @@ webFetchRoutes.post('/', async (c) => {
 			guardrailBudgetSettlement: guardrailBudgetReserved
 				? { requestId: requestCorrelationId, mode: 'actual', reason: 'tool_request_usage_settled' }
 				: undefined,
-			userBudgetSettlement: toolUserBudgetSettlement(
-				ordinaryBudgetLease,
-				'actual',
-				'tool_request_usage_settled',
-			),
+			userBudgetSettlement: toolUserBudgetSettlement(ordinaryBudgetLease, 'actual', 'tool_request_usage_settled'),
 			apiKeyId: apiKey.keyId,
 			workspaceId: apiKey.workspaceId,
 			userId: apiKey.userId,
 			userEmail: apiKey.userEmail,
 			toolId: TOOL_ID,
 			toolProvider: provider,
+			ingressHost: apiKey.ingressHost,
+			pricingAuditExtra: toolFactorPricingAudit(resolved.config.pricing),
 			meteredCost: unitMetered,
 			standardCost: unitStandard,
 			chargedCost: unitCharged,

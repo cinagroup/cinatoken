@@ -1,6 +1,6 @@
 {
 	"name": "cinatoken",
-	"version": "2.8.0",
+	"version": "2.14.0",
 	"private": true,
 	"repository": {
 		"type": "git",
@@ -66,8 +66,11 @@
 		"test:mysql-migration": "node scripts/ci/verify-mysql-migration-contract.mjs",
 		"test:endpoint-backfill-plan": "tsx --test scripts/db/model-endpoints/*.test.ts",
 		"test:postgres-role-provisioning": "tsx --test scripts/db/cutover/postgres-role-provisioning.test.ts scripts/db/cutover/diagnostic-auth.test.ts scripts/db/cutover/preflight-d1-source.test.ts scripts/db/cutover/hyperdrive-bootstrap-worker.test.ts",
-		"test:unit": "npm run test:deploy && npm run test:d1-portal-ledger && npm run test:postgres-migration && npm run test:mysql-migration && npm run test:endpoint-backfill-plan && npm run test:public-catalog-readiness:contract && npm run test:postgres-role-provisioning && npm run test:unit -w @octafuse/core && npm run test:unit -w @octafuse/tool-engines && npm run test:unit -w @octafuse/proxy && npm run test:unit -w @octafuse/admin && npm run test:unit -w @cinatoken/chain-worker && npm run test:web",
-		"test:public-catalog-boundary": "tsx --tsconfig packages/admin/tsconfig.json --test packages/proxy/src/routes/catalog-public-boundary.test.ts"
+		"test:unit": "npm run test:deploy && npm run test:docs && npm run test:d1-portal-ledger && npm run test:postgres-migration && npm run test:mysql-migration && npm run test:endpoint-backfill-plan && npm run test:public-catalog-readiness:contract && npm run test:postgres-role-provisioning && npm run test:unit -w @octafuse/core && npm run test:unit -w @octafuse/tool-engines && npm run test:unit -w @octafuse/proxy && npm run test:unit -w @octafuse/admin && npm run test:unit -w @cinatoken/chain-worker && npm run test:web",
+		"test:public-catalog-boundary": "tsx --tsconfig packages/admin/tsconfig.json --test packages/proxy/src/routes/catalog-public-boundary.test.ts",
+		"typecheck:admin": "npm run typecheck -w @octafuse/admin",
+		"docs:image-models": "node scripts/docs/gen-image-models.mjs",
+		"test:docs": "node --test scripts/docs/*.test.mjs"
 	},
 	"devDependencies": {
 		"@changesets/changelog-github": "^0.5.1",

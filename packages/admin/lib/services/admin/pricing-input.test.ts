@@ -1,16 +1,19 @@
-import assert from "node:assert/strict";
-import { describe, it } from "node:test";
+import assert from 'node:assert/strict';
+import { describe, it } from 'node:test';
 import {
+	assertRoutePriceOverrideMatchesCatalog,
 	coerceModelPricingProfileInput,
 	coerceRoutePriceOverrideInput,
-} from "./pricing-input";
+	resetRoutePriceOverrideScheduleToCatalog,
+	routePriceOverrideHasScheduleWindows,
+} from './pricing-input';
 
-describe("coerceModelPricingProfileInput", () => {
-	it("rejects token mode with image.default", () => {
+describe('coerceModelPricingProfileInput', () => {
+	it('rejects token mode with image.default', () => {
 		assert.throws(
 			() =>
 				coerceModelPricingProfileInput({
-					image_billing_mode: "token",
+					image_billing_mode: 'token',
 					tiers: [
 						{
 							upto: null,
@@ -23,31 +26,31 @@ describe("coerceModelPricingProfileInput", () => {
 				}),
 			(error: unknown) =>
 				error instanceof Error &&
-				"status" in error &&
+				'status' in error &&
 				(error as { status: unknown }).status === 400 &&
-				error.message.includes('image_billing_mode "token"')
+				error.message.includes('image_billing_mode "token"'),
 		);
 	});
 
-	it("requires image.default for per_image mode", () => {
+	it('requires image.default for per_image mode', () => {
 		assert.throws(
 			() =>
 				coerceModelPricingProfileInput({
-					image_billing_mode: "per_image",
+					image_billing_mode: 'per_image',
 				}),
 			(error: unknown) =>
 				error instanceof Error &&
-				"status" in error &&
+				'status' in error &&
 				(error as { status: unknown }).status === 400 &&
-				error.message.includes("image.default")
+				error.message.includes('image.default'),
 		);
 	});
 
-	it("rejects positive tier image_* under per_image mode", () => {
+	it('rejects positive tier image_* under per_image mode', () => {
 		assert.throws(
 			() =>
 				coerceModelPricingProfileInput({
-					image_billing_mode: "per_image",
+					image_billing_mode: 'per_image',
 					tiers: [
 						{
 							upto: null,
@@ -60,127 +63,263 @@ describe("coerceModelPricingProfileInput", () => {
 				}),
 			(error: unknown) =>
 				error instanceof Error &&
-				"status" in error &&
+				'status' in error &&
 				(error as { status: unknown }).status === 400 &&
-				error.message.includes("image_output_price")
+				error.message.includes('image_output_price'),
 		);
 	});
 
-	it("accepts valid per_image profile and strips placeholder tiers", () => {
+	it('accepts valid per_image profile and strips placeholder tiers', () => {
 		const json = coerceModelPricingProfileInput({
-			image_billing_mode: "per_image",
+			image_billing_mode: 'per_image',
 			tiers: [{ upto: null, input_price: 0, output_price: 0 }],
-			image: { default: 0.22, uncertain_result_policy: "requested" },
+			image: { default: 0.22, uncertain_result_policy: 'requested' },
 		});
 		assert.ok(json);
 		const obj = JSON.parse(json!) as Record<string, unknown>;
-		assert.equal(obj.image_billing_mode, "per_image");
+		assert.equal(obj.image_billing_mode, 'per_image');
 		assert.equal(obj.tiers, undefined);
 		assert.deepEqual(obj.image, { default: 0.22 });
 	});
 
-	it("accepts legacy profile without image_billing_mode", () => {
+	it('accepts legacy profile without image_billing_mode', () => {
 		const json = coerceModelPricingProfileInput({
 			tiers: [{ upto: null, input_price: 2, output_price: 12 }],
 			image: { default: 0.05 },
 		});
 		assert.ok(json);
 	});
+
+	it('accepts a valid catalog schedule on the model profile', () => {
+		const json = coerceModelPricingProfileInput({
+			tiers: [{ upto: null, input_price: 4.5, output_price: 13.5 }],
+			schedule: [{ start: '00:30', end: '08:30', factor: 0.5 }],
+		});
+		assert.ok(json);
+		const obj = JSON.parse(json!) as { schedule: unknown[] };
+		assert.equal(obj.schedule.length, 1);
+	});
+
+	it('rejects overlapping catalog schedule windows', () => {
+		assert.throws(
+			() =>
+				coerceModelPricingProfileInput({
+					tiers: [{ upto: null, input_price: 1, output_price: 2 }],
+					schedule: [
+						{ start: '00:00', end: '12:00', factor: 0.5 },
+						{ start: '08:00', end: '18:00', factor: 1.2 },
+					],
+				}),
+			(error: unknown) => error instanceof Error && 'status' in error && (error as { status: unknown }).status === 400,
+		);
+	});
 });
 
-describe("coerceRoutePriceOverrideInput", () => {
-	it("normalizes complete non-negative numeric strings", () => {
+describe('assertRoutePriceOverrideMatchesCatalog', () => {
+	const catalog = JSON.stringify({
+		tiers: [{ upto: null, input_price: 1, output_price: 2 }],
+		schedule: [
+			{ start: '00:30', end: '08:30', factor: 0.5 },
+			{ start: '09:00', end: '12:00', factor: 1.6, days: [1, 2, 3, 4, 5] },
+		],
+	});
+
+	it('treats empty route schedule as no time-window multipliers', () => {
+		assert.equal(routePriceOverrideHasScheduleWindows(null), false);
+		assert.equal(routePriceOverrideHasScheduleWindows('{}'), false);
+		assert.equal(routePriceOverrideHasScheduleWindows(JSON.stringify({ charged_factor: 1.2 })), false);
 		assert.equal(
-			coerceRoutePriceOverrideInput({
-				charged_factor: "0.5",
-				metered_factor: "1.25",
-			}),
-			JSON.stringify({ charged_factor: 0.5, metered_factor: 1.25 })
+			routePriceOverrideHasScheduleWindows(
+				JSON.stringify({ schedule: { charged: [{ start: '00:00', end: '08:00', factor: 1 }] } }),
+			),
+			true,
 		);
 	});
 
-	it("rejects negative, malformed, and non-numeric factor values", () => {
-		for (const value of [-1, "0abc", "1foo", true]) {
+	it('allows free route windows when the model has no catalog schedule', () => {
+		assert.doesNotThrow(() =>
+			assertRoutePriceOverrideMatchesCatalog(
+				JSON.stringify({ tiers: [{ upto: null, input_price: 1, output_price: 2 }] }),
+				JSON.stringify({
+					schedule: { charged: [{ start: '01:00', end: '02:00', factor: 2 }] },
+				}),
+			),
+		);
+	});
+
+	it('rejects a route that is missing a catalog window', () => {
+		assert.throws(
+			() =>
+				assertRoutePriceOverrideMatchesCatalog(
+					catalog,
+					JSON.stringify({
+						schedule: {
+							mode: 'override',
+							charged: [{ start: '00:30', end: '08:30', factor: 1 }],
+							metered: [
+								{ start: '00:30', end: '08:30', factor: 1 },
+								{ start: '09:00', end: '12:00', factor: 1, days: [1, 2, 3, 4, 5] },
+							],
+						},
+					}),
+				),
+			(error: unknown) =>
+				error instanceof Error &&
+				'status' in error &&
+				(error as { status: unknown }).status === 400 &&
+				error.message.includes('schedule.charged missing'),
+		);
+	});
+});
+
+describe('resetRoutePriceOverrideScheduleToCatalog', () => {
+	it('rewrites both sides to catalog windows with factor 1 and keeps default factors', () => {
+		const next = resetRoutePriceOverrideScheduleToCatalog(
+			JSON.stringify({
+				charged_factor: 1.2,
+				schedule: {
+					mode: 'override',
+					charged: [{ start: '01:00', end: '02:00', factor: 3 }],
+					metered: [{ start: '01:00', end: '02:00', factor: 4 }],
+				},
+			}),
+			[{ start: '00:00', end: '08:00', factor: 2 }],
+		);
+		assert.ok(next);
+		const obj = JSON.parse(next!) as {
+			charged_factor: number;
+			schedule: { mode: string; charged: Array<{ start: string; factor: number }>; metered: Array<{ factor: number }> };
+		};
+		assert.equal(obj.charged_factor, 1.2);
+		assert.equal(obj.schedule.mode, 'override');
+		assert.equal(obj.schedule.charged[0]?.start, '00:00');
+		assert.equal(obj.schedule.charged[0]?.factor, 1);
+		assert.equal(obj.schedule.metered[0]?.factor, 1);
+	});
+});
+
+describe('coerceRoutePriceOverrideInput', () => {
+	it('normalizes complete non-negative numeric strings', () => {
+		assert.equal(
+			coerceRoutePriceOverrideInput({
+				charged_factor: '0.5',
+				metered_factor: '1.25',
+			}),
+			JSON.stringify({ charged_factor: 0.5, metered_factor: 1.25 }),
+		);
+	});
+
+	it('keeps provider_factor and a validity window', () => {
+		const json = coerceRoutePriceOverrideInput({
+			provider_factor: '0.5',
+			provider_factor_starts_at: '2026-10-01T00:00:00.000Z',
+			provider_factor_expires_at: '2026-11-01T00:00:00.000Z',
+			charged_factor: 1,
+			schedule: {
+				mode: 'override',
+				provider: [{ start: '00:00', end: '08:00', factor: 0.4 }],
+			},
+		});
+		assert.ok(json);
+		const obj = JSON.parse(json!) as {
+			provider_factor: number;
+			provider_factor_starts_at: string;
+			schedule: { provider: Array<{ factor: number }> };
+		};
+		assert.equal(obj.provider_factor, 0.5);
+		assert.equal(obj.provider_factor_starts_at, '2026-10-01T00:00:00.000Z');
+		assert.equal(obj.schedule.provider[0]?.factor, 0.4);
+	});
+
+	it('rejects a validity window that ends before it starts', () => {
+		assert.throws(
+			() =>
+				coerceRoutePriceOverrideInput({
+					provider_factor: 0.5,
+					provider_factor_starts_at: '2026-11-01T00:00:00.000Z',
+					provider_factor_expires_at: '2026-10-01T00:00:00.000Z',
+				}),
+			(error: unknown) => error instanceof Error && 'status' in error && (error as { status: unknown }).status === 400,
+		);
+	});
+
+	it('rejects negative, malformed, and non-numeric factor values', () => {
+		for (const value of [-1, '0abc', '1foo', true]) {
 			assert.throws(
 				() => coerceRoutePriceOverrideInput({ charged_factor: value }),
 				(error: unknown) =>
-					error instanceof Error &&
-					"status" in error &&
-					(error as { status: unknown }).status === 400
+					error instanceof Error && 'status' in error && (error as { status: unknown }).status === 400,
 			);
 		}
 	});
 
-	it("keeps the intentional legacy-tier removal on write", () => {
+	it('keeps the intentional legacy-tier removal on write', () => {
 		assert.equal(
 			coerceRoutePriceOverrideInput({
 				charged: { tiers: [{ upto: null, input_price: 9, output_price: 9 }] },
 				metered: { tiers: [{ upto: null, input_price: 8, output_price: 8 }] },
 				charged_factor: 1.1,
 			}),
-			JSON.stringify({ charged_factor: 1.1 })
+			JSON.stringify({ charged_factor: 1.1 }),
 		);
 	});
 
-	it("rejects 24:00 as a schedule start", () => {
+	it('rejects 24:00 as a schedule start', () => {
 		assert.throws(
 			() =>
 				coerceRoutePriceOverrideInput({
-					schedule: { charged: [{ start: "24:00", end: "00:00", factor: 1 }] },
+					schedule: { charged: [{ start: '24:00', end: '00:00', factor: 1 }] },
 				}),
-			(error: unknown) =>
-				error instanceof Error &&
-				"status" in error &&
-				(error as { status: unknown }).status === 400
+			(error: unknown) => error instanceof Error && 'status' in error && (error as { status: unknown }).status === 400,
 		);
 	});
 
-	it("keeps legacy schedule JSON without mode", () => {
+	it('keeps legacy schedule JSON without mode', () => {
 		assert.equal(
 			coerceRoutePriceOverrideInput({
 				charged_factor: 1,
-				schedule: { charged: [{ start: "09:00", end: "12:00", factor: 2 }] },
+				schedule: { charged: [{ start: '09:00', end: '12:00', factor: 2 }] },
 			}),
 			JSON.stringify({
 				charged_factor: 1,
-				schedule: { charged: [{ start: "09:00", end: "12:00", factor: 2 }] },
-			})
+				schedule: { charged: [{ start: '09:00', end: '12:00', factor: 2 }] },
+			}),
 		);
 	});
 
-	it("round-trips schedule.mode override", () => {
+	it('round-trips schedule.mode override', () => {
 		assert.equal(
 			coerceRoutePriceOverrideInput({
 				charged_factor: 1,
 				metered_factor: 1,
 				schedule: {
-					mode: "override",
-					charged: [{ start: "09:00", end: "12:00", factor: 2 }],
-					metered: [{ start: "09:00", end: "12:00", factor: 2 }],
+					mode: 'override',
+					charged: [{ start: '09:00', end: '12:00', factor: 2 }],
+					metered: [{ start: '09:00', end: '12:00', factor: 2 }],
 				},
 			}),
 			JSON.stringify({
 				charged_factor: 1,
 				metered_factor: 1,
 				schedule: {
-					mode: "override",
-					charged: [{ start: "09:00", end: "12:00", factor: 2 }],
-					metered: [{ start: "09:00", end: "12:00", factor: 2 }],
+					mode: 'override',
+					charged: [{ start: '09:00', end: '12:00', factor: 2 }],
+					metered: [{ start: '09:00', end: '12:00', factor: 2 }],
 				},
-			})
+			}),
 		);
 	});
 
-	it("round-trips schedule window days", () => {
+	it('round-trips schedule window days', () => {
 		assert.equal(
 			coerceRoutePriceOverrideInput({
 				charged_factor: 1,
 				schedule: {
-					mode: "override",
+					mode: 'override',
 					charged: [
 						{
-							start: "00:00",
-							end: "24:00",
+							start: '00:00',
+							end: '24:00',
 							factor: 1.2,
 							days: [1, 2, 3, 4, 5],
 						},
@@ -190,33 +329,70 @@ describe("coerceRoutePriceOverrideInput", () => {
 			JSON.stringify({
 				charged_factor: 1,
 				schedule: {
-					mode: "override",
+					mode: 'override',
 					charged: [
 						{
-							start: "00:00",
-							end: "24:00",
+							start: '00:00',
+							end: '24:00',
 							factor: 1.2,
 							days: [1, 2, 3, 4, 5],
 						},
 					],
 				},
-			})
+			}),
 		);
 	});
 
-	it("rejects unknown schedule.mode", () => {
+	it('rejects unknown schedule.mode', () => {
 		assert.throws(
 			() =>
 				coerceRoutePriceOverrideInput({
 					schedule: {
-						mode: "divide",
-						charged: [{ start: "09:00", end: "12:00", factor: 2 }],
+						mode: 'divide',
+						charged: [{ start: '09:00', end: '12:00', factor: 2 }],
 					},
 				}),
-			(error: unknown) =>
-				error instanceof Error &&
-				"status" in error &&
-				(error as { status: unknown }).status === 400
+			(error: unknown) => error instanceof Error && 'status' in error && (error as { status: unknown }).status === 400,
 		);
+	});
+});
+
+describe('provider schedule validity API input', () => {
+	it('stores normalized validity and explicit unlimited', () => {
+		const window = { start: '09:00', end: '12:00', factor: 0.5, days: [1, 2, 3, 4, 5] };
+		for (const validity of [{}, { starts_at: '2026-10-01T08:00:00+08:00', expires_at: '2026-11-01T08:00:00+08:00' }]) {
+			const saved = coerceRoutePriceOverrideInput({
+				schedule: {
+					mode: 'override',
+					charged: [window],
+					metered: [window],
+					provider: [{ ...window, validity }],
+				},
+			});
+			assert.ok(saved);
+			const result = JSON.parse(saved);
+			assert.deepEqual(
+				result.schedule.provider[0].validity,
+				'starts_at' in validity
+					? { starts_at: '2026-10-01T00:00:00.000Z', expires_at: '2026-11-01T00:00:00.000Z' }
+					: {},
+			);
+		}
+	});
+	it('rejects invalid or reversed validity instead of dropping it', () => {
+		for (const validity of [
+			null,
+			'invalid',
+			{ starts_at: 'bad' },
+			{ starts_at: '2026-11-01', expires_at: '2026-10-01' },
+		]) {
+			assert.throws(
+				() =>
+					coerceRoutePriceOverrideInput({
+						schedule: { provider: [{ start: '09:00', end: '12:00', factor: 0.5, validity }] },
+					}),
+				/validity/,
+			);
+		}
 	});
 });

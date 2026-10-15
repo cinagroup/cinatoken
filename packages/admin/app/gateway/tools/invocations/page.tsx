@@ -1,80 +1,73 @@
-"use client";
+'use client';
 
 /**
- * Tools 调用查询：筛选 `provider_id=octafuse-tools`（或单工具 `model_id=tool:*`）的 request logs。
+ * 调用记录：REST 服务（octafuse-tools / tool:*）与 MCP 服务（octafuse-mcp / mcp:*）共用请求日志。
  */
-import Link from "next/link";
-import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
-import { useTranslations } from "next-intl";
-import { GatewayTimeRangePicker } from "@/components/GatewayTimeRangePicker";
-import { readApiJson } from "@/lib/api-json";
+import Link from 'next/link';
+import { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
+import { useTranslations } from 'next-intl';
+import { GatewayTimeRangePicker } from '@/components/GatewayTimeRangePicker';
+import { readApiJson } from '@/lib/api-json';
 import {
 	createRangeValue,
 	DEFAULT_GATEWAY_TIME_RANGE_PRESET,
 	detectRollingPreset,
 	type GatewayTimeRangeValue,
-} from "@/lib/analytics-range";
+} from '@/lib/analytics-range';
 import {
 	formatGatewayMoneyCompact,
 	formatGatewayMoneyCompactSigned,
 	getGatewayCurrencySymbol,
-} from "@/lib/format-gateway-currency";
+} from '@/lib/format-gateway-currency';
+import { findGatewayToolById, GATEWAY_TOOLS, GATEWAY_TOOLS_PROVIDER_ID } from '@/lib/gateway-tools';
+import { MCP_REQUEST_LOG_PROVIDER_ID } from '@/lib/invoke-kind';
 import {
-	findGatewayToolById,
-	GATEWAY_TOOLS,
-	GATEWAY_TOOLS_PROVIDER_ID,
-} from "@/lib/gateway-tools";
-import {
+	parseMcpInvocationSummary,
 	parseToolRequestSummary,
 	parseToolResponseSummary,
+	resolveInvocationSource,
 	resolveToolEngineProvider,
-} from "@/lib/tool-invocation-detail";
-import type { GatewayRequestLog } from "@/lib/types";
-import { useBillingCurrency } from "@/lib/use-billing-currency";
-import { useGatewayDateTime } from "@/lib/use-gateway-datetime";
-import {
-	useListPageBrowserReady,
-	useReplaceListPageQuery,
-} from "@/lib/use-replace-list-query";
+} from '@/lib/tool-invocation-detail';
+import type { GatewayRequestLog } from '@/lib/types';
+import { useBillingCurrency } from '@/lib/use-billing-currency';
+import { useGatewayDateTime } from '@/lib/use-gateway-datetime';
+import { useListPageBrowserReady, useReplaceListPageQuery } from '@/lib/use-replace-list-query';
 
 function initialInvocationFilters() {
 	const params = new URLSearchParams(window.location.search);
-	const start = params.get("start_date");
-	const end = params.get("end_date");
-	const hasStart = start != null && start !== "";
-	const hasEnd = end != null && end !== "";
-	const parsedPage = Number(params.get("page"));
+	const start = params.get('start_date');
+	const end = params.get('end_date');
+	const hasStart = start != null && start !== '';
+	const hasEnd = end != null && end !== '';
+	const parsedPage = Number(params.get('page'));
 	return {
-		tool: findGatewayToolById(params.get("tool"))?.id ?? "",
-		status: params.get("status") ?? "",
+		tool: findGatewayToolById(params.get('tool'))?.id ?? '',
+		status: params.get('status') ?? '',
 		page: Number.isFinite(parsedPage) && parsedPage >= 1 ? parsedPage : 1,
 		range:
 			hasStart || hasEnd
 				? ({
-						preset:
-							hasStart && hasEnd
-								? detectRollingPreset(start, end) ?? "custom"
-								: "custom",
-						start_date: hasStart ? start : "",
-						end_date: hasEnd ? end : "",
-				  } satisfies GatewayTimeRangeValue)
+						preset: hasStart && hasEnd ? (detectRollingPreset(start, end) ?? 'custom') : 'custom',
+						start_date: hasStart ? start : '',
+						end_date: hasEnd ? end : '',
+					} satisfies GatewayTimeRangeValue)
 				: createRangeValue(DEFAULT_GATEWAY_TIME_RANGE_PRESET),
 	};
 }
 
 export default function GatewayToolInvocationsPage() {
 	const ready = useListPageBrowserReady();
-	const tCommon = useTranslations("common");
+	const tCommon = useTranslations('common');
 	return ready ? (
 		<GatewayToolInvocationsContent />
 	) : (
-		<div className="p-8 text-sm text-gray-500">{tCommon("loading")}</div>
+		<div className="p-8 text-sm text-gray-500">{tCommon('loading')}</div>
 	);
 }
 
 function GatewayToolInvocationsContent() {
-	const t = useTranslations("tools");
-	const tCommon = useTranslations("common");
+	const t = useTranslations('tools');
+	const tCommon = useTranslations('common');
 	const { currency: billingCurrency } = useBillingCurrency();
 	const billingCurrencySym = getGatewayCurrencySymbol(billingCurrency);
 	const { formatDateTime } = useGatewayDateTime();
@@ -82,55 +75,79 @@ function GatewayToolInvocationsContent() {
 	const [initial] = useState(initialInvocationFilters);
 	const [toolFilter, setToolFilter] = useState(initial.tool);
 	const [filterStatus, setFilterStatus] = useState(initial.status);
-	const [rangeValue, setRangeValue] = useState<GatewayTimeRangeValue>(
-		initial.range
-	);
+	const [rangeValue, setRangeValue] = useState<GatewayTimeRangeValue>(initial.range);
 	const [page, setPage] = useState(initial.page);
+	const [source, setSource] = useState<'' | 'rest' | 'mcp'>(() => {
+		const value = new URLSearchParams(window.location.search).get('source');
+		return value === 'mcp' || value === 'rest' ? value : '';
+	});
+	const [serverFilter, setServerFilter] = useState(
+		() => new URLSearchParams(window.location.search).get('server') ?? '',
+	);
+	const [mcpServers, setMcpServers] = useState<Array<{ slug: string; name: string }>>([]);
 	const [detailLogId, setDetailLogId] = useState<string | null>(null);
 	/** Response 面板展示格式：可读列表 / 原始 JSON */
-	const [responseView, setResponseView] = useState<"list" | "json">("list");
+	const [responseView, setResponseView] = useState<'list' | 'json'>('list');
 	const pageSize = 50;
 
 	useReplaceListPageQuery(() => {
 		const q = new URLSearchParams();
-		if (toolFilter) q.set("tool", toolFilter);
-		if (filterStatus) q.set("status", filterStatus);
-		if (rangeValue.start_date) q.set("start_date", rangeValue.start_date);
-		if (rangeValue.end_date) q.set("end_date", rangeValue.end_date);
-		if (page > 1) q.set("page", String(page));
+		if (source) q.set('source', source);
+		if (source !== 'mcp' && toolFilter) q.set('tool', toolFilter);
+		if (source === 'mcp' && serverFilter) q.set('server', serverFilter);
+		if (filterStatus) q.set('status', filterStatus);
+		if (rangeValue.start_date) q.set('start_date', rangeValue.start_date);
+		if (rangeValue.end_date) q.set('end_date', rangeValue.end_date);
+		if (page > 1) q.set('page', String(page));
 		return q;
-	}, [
-		toolFilter,
-		filterStatus,
-		rangeValue.start_date,
-		rangeValue.end_date,
-		page,
-	]);
+	}, [source, toolFilter, serverFilter, filterStatus, rangeValue.start_date, rangeValue.end_date, page]);
+
+	useEffect(() => {
+		void (async () => {
+			const data = await readApiJson<Array<{ slug: string; name: string }>>(await fetch('/api/admin/mcp-servers'));
+			if (data.success && data.data) {
+				setMcpServers(data.data.map((server) => ({ slug: server.slug, name: server.name })));
+			}
+		})();
+	}, []);
 
 	const requestLogsHref = useMemo(() => {
 		const q = new URLSearchParams();
-		const tool = findGatewayToolById(toolFilter);
+		const tool = source !== 'mcp' ? findGatewayToolById(toolFilter) : undefined;
 		if (tool) {
-			q.set("model_id", tool.modelId);
-		} else {
-			q.set("provider_id", GATEWAY_TOOLS_PROVIDER_ID);
+			q.set('model_id', tool.modelId);
+		} else if (source === 'mcp') {
+			q.set('provider_id', MCP_REQUEST_LOG_PROVIDER_ID);
+		} else if (source === 'rest') {
+			q.set('provider_id', GATEWAY_TOOLS_PROVIDER_ID);
 		}
-		if (filterStatus) q.set("status", filterStatus);
-		if (rangeValue.start_date) q.set("start_date", rangeValue.start_date);
-		if (rangeValue.end_date) q.set("end_date", rangeValue.end_date);
+		if (filterStatus) q.set('status', filterStatus);
+		if (rangeValue.start_date) q.set('start_date', rangeValue.start_date);
+		if (rangeValue.end_date) q.set('end_date', rangeValue.end_date);
 		return `/admin/request-logs?${q.toString()}`;
-	}, [toolFilter, filterStatus, rangeValue.start_date, rangeValue.end_date]);
+	}, [source, toolFilter, filterStatus, rangeValue.start_date, rangeValue.end_date]);
 
 	const params = new URLSearchParams({
 		page: String(page),
 		page_size: String(pageSize),
 	});
-	const selectedTool = findGatewayToolById(toolFilter);
-	if (selectedTool) params.set("model_id", selectedTool.modelId);
-	else params.set("provider_id", GATEWAY_TOOLS_PROVIDER_ID);
-	if (filterStatus) params.set("status", filterStatus);
-	if (rangeValue.start_date) params.set("start_date", rangeValue.start_date);
-	if (rangeValue.end_date) params.set("end_date", rangeValue.end_date);
+	const tool = source !== 'mcp' ? findGatewayToolById(toolFilter) : undefined;
+	if (tool) {
+		params.set('model_id', tool.modelId);
+	} else if (source === 'mcp' && serverFilter) {
+		params.set('provider_id', MCP_REQUEST_LOG_PROVIDER_ID);
+		params.set('model_id_prefix', `mcp:${serverFilter}/`);
+	} else if (source === 'mcp') {
+		params.set('provider_id', MCP_REQUEST_LOG_PROVIDER_ID);
+	} else if (source === 'rest') {
+		params.set('provider_id', GATEWAY_TOOLS_PROVIDER_ID);
+	} else {
+		params.set('provider_ids', `${GATEWAY_TOOLS_PROVIDER_ID},${MCP_REQUEST_LOG_PROVIDER_ID}`);
+	}
+
+	if (filterStatus) params.set('status', filterStatus);
+	if (rangeValue.start_date) params.set('start_date', rangeValue.start_date);
+	if (rangeValue.end_date) params.set('end_date', rangeValue.end_date);
 	const query = params.toString();
 	const [request, setRequest] = useState(() => ({ query }));
 	if (request.query !== query) setRequest({ query });
@@ -147,12 +164,9 @@ function GatewayToolInvocationsContent() {
 		const controller = new AbortController();
 		void (async () => {
 			try {
-				const response = await fetch(
-					`/api/admin/request-logs?${request.query}`,
-					{
-						signal: controller.signal,
-					}
-				);
+				const response = await fetch(`/api/admin/request-logs?${request.query}`, {
+					signal: controller.signal,
+				});
 				const data = await readApiJson<GatewayRequestLog[]>(response);
 				if (controller.signal.aborted) return;
 				setResult({
@@ -162,7 +176,7 @@ function GatewayToolInvocationsContent() {
 				});
 			} catch (error) {
 				if (controller.signal.aborted) return;
-				console.error("Fetch tool invocations:", error);
+				console.error('Fetch tool invocations:', error);
 				setResult({ request, logs: [], total: 0 });
 			}
 		})();
@@ -174,75 +188,102 @@ function GatewayToolInvocationsContent() {
 	const toolLabel = (modelId: string | null | undefined) => {
 		const found = GATEWAY_TOOLS.find((x) => x.modelId === modelId);
 		if (found) return t(`catalog.${found.nameKey}`);
-		return modelId || "—";
+		return modelId || '—';
 	};
 
 	return (
-		<div className="p-8">
+		<div className="min-w-0 p-4 sm:p-6 lg:p-8">
 			<div className="mb-6 flex flex-wrap items-start justify-between gap-4">
 				<div>
-					<h1 className="text-3xl font-bold text-gray-900">
-						{t("invocations.title")}
-					</h1>
-					<p className="mt-1 max-w-3xl text-sm text-gray-500">
-						{t("invocations.subtitle")}
-					</p>
+					<h1 className="text-3xl font-bold text-gray-900">{t('invocations.title')}</h1>
+					<p className="mt-1 max-w-3xl text-sm text-gray-500">{t('invocations.subtitle')}</p>
 				</div>
 				<div className="flex flex-wrap items-center gap-3">
-					<Link
-						href="/admin/tools"
-						className="text-sm font-medium text-blue-600 hover:underline"
-					>
-						{t("invocations.configureTools")}
+					<Link href="/admin/tools" className="text-sm font-medium text-blue-600 hover:underline">
+						{t('invocations.configureTools')}
 					</Link>
 					<Link
 						href={requestLogsHref}
 						className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-800 shadow-sm hover:bg-gray-50"
 					>
-						{t("invocations.openInRequestLogs")}
+						{t('invocations.openInRequestLogs')}
 					</Link>
 				</div>
 			</div>
 
-			<div className="mb-4 flex flex-wrap items-end gap-3 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+			<div className="mb-4 grid grid-cols-1 gap-3 rounded-lg sm:grid-cols-2 border border-gray-200 bg-white p-4 shadow-sm lg:grid-cols-3">
 				<div>
-					<label className="mb-1 block text-xs font-medium text-gray-600">
-						{t("invocations.toolFilter")}
-					</label>
+					<label className="mb-1 block text-xs font-medium text-gray-600">{t('invocations.source')}</label>
 					<select
-						value={toolFilter}
+						value={source}
 						onChange={(e) => {
-							setToolFilter(e.target.value);
+							const next = e.target.value === 'rest' || e.target.value === 'mcp' ? e.target.value : '';
+							setSource(next);
+							if (next === 'mcp') setToolFilter('');
+							if (next !== 'mcp') setServerFilter('');
 							setPage(1);
 						}}
-						className="min-w-[14rem] rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm"
+						className="w-full min-w-0 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm"
 					>
-						<option value="">{t("invocations.allTools")}</option>
-						{GATEWAY_TOOLS.map((tool) => (
-							<option key={tool.id} value={tool.id}>
-								{t(`catalog.${tool.nameKey}`)}
-							</option>
-						))}
+						<option value="">{t('invocations.allSources')}</option>
+						<option value="rest">{t('invocations.sourceRest')}</option>
+						<option value="mcp">{t('invocations.sourceMcp')}</option>
 					</select>
 				</div>
 				<div>
 					<label className="mb-1 block text-xs font-medium text-gray-600">
-						{t("invocations.status")}
+						{source === 'mcp' ? t('invocations.serverFilter') : t('invocations.toolFilter')}
 					</label>
+					{source === 'mcp' ? (
+						<select
+							value={serverFilter}
+							onChange={(e) => {
+								setServerFilter(e.target.value);
+								setPage(1);
+							}}
+							className="w-full min-w-0 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm"
+						>
+							<option value="">{t('invocations.allServers')}</option>
+							{mcpServers.map((server) => (
+								<option key={server.slug} value={server.slug}>
+									{server.name}
+								</option>
+							))}
+						</select>
+					) : (
+						<select
+							value={toolFilter}
+							onChange={(e) => {
+								setToolFilter(e.target.value);
+								setPage(1);
+							}}
+							className="w-full min-w-0 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm"
+						>
+							<option value="">{t('invocations.allTools')}</option>
+							{GATEWAY_TOOLS.map((tool) => (
+								<option key={tool.id} value={tool.id}>
+									{t(`catalog.${tool.nameKey}`)}
+								</option>
+							))}
+						</select>
+					)}
+				</div>
+				<div>
+					<label className="mb-1 block text-xs font-medium text-gray-600">{t('invocations.status')}</label>
 					<select
 						value={filterStatus}
 						onChange={(e) => {
 							setFilterStatus(e.target.value);
 							setPage(1);
 						}}
-						className="min-w-[10rem] rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm"
+						className="w-full min-w-0 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm"
 					>
-						<option value="">{tCommon("all")}</option>
+						<option value="">{tCommon('all')}</option>
 						<option value="success">success</option>
 						<option value="error">error</option>
 					</select>
 				</div>
-				<div className="min-w-[16rem] flex-1">
+				<div className="min-w-0 sm:col-span-2 sm:border-t sm:border-gray-100 sm:pt-3 lg:col-span-3">
 					<GatewayTimeRangePicker
 						value={rangeValue}
 						onChange={(next) => {
@@ -254,329 +295,254 @@ function GatewayToolInvocationsContent() {
 			</div>
 
 			{isLoading ? (
-				<div className="py-12 text-center text-gray-600">
-					{tCommon("loading")}
-				</div>
+				<div className="py-12 text-center text-gray-600">{tCommon('loading')}</div>
 			) : logs.length === 0 ? (
 				<div className="rounded-lg border border-dashed border-gray-300 bg-white py-12 text-center text-sm text-gray-500">
-					{t("invocations.empty")}
+					{t('invocations.empty')}
 				</div>
 			) : (
 				<div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
-					<table className="min-w-full divide-y divide-gray-200 text-sm">
-						<thead className="bg-gray-50">
-							<tr>
-								<th className="px-4 py-3 text-left font-medium text-gray-600">
-									{t("invocations.columns.time")}
-								</th>
-								<th className="px-4 py-3 text-left font-medium text-gray-600">
-									{t("invocations.columns.tool")}
-								</th>
-								<th className="px-4 py-3 text-left font-medium text-gray-600">
-									{t("invocations.columns.provider")}
-								</th>
-								<th className="px-4 py-3 text-left font-medium text-gray-600">
-									{t("invocations.columns.query")}
-								</th>
-								<th className="px-4 py-3 text-left font-medium text-gray-600">
-									{t("invocations.columns.user")}
-								</th>
-								<th className="px-4 py-3 text-left font-medium text-gray-600">
-									{t("invocations.columns.status")}
-								</th>
-								<th className="px-4 py-3 text-right font-medium text-gray-600">
-									{t("invocations.columns.results")}
-								</th>
-								<th
-									className="px-4 py-3 text-right font-medium text-gray-600"
-									title={t("invocations.titles.standard")}
-								>
-									{t("invocations.columns.standard", {
-										currency: billingCurrencySym,
-									})}
-								</th>
-								<th
-									className="px-4 py-3 text-right font-medium text-gray-600"
-									title={t("invocations.titles.charged")}
-								>
-									{t("invocations.columns.charged", {
-										currency: billingCurrencySym,
-									})}
-								</th>
-								<th
-									className="px-4 py-3 text-right font-medium text-gray-600"
-									title={t("invocations.titles.metered")}
-								>
-									{t("invocations.columns.metered", {
-										currency: billingCurrencySym,
-									})}
-								</th>
-								<th
-									className="px-4 py-3 text-right font-medium text-gray-600"
-									title={t("invocations.titles.profit")}
-								>
-									{t("invocations.columns.profit", {
-										currency: billingCurrencySym,
-									})}
-								</th>
-								<th className="px-4 py-3 text-right font-medium text-gray-600">
-									{t("invocations.columns.latency")}
-								</th>
-							</tr>
-						</thead>
-						<tbody className="divide-y divide-gray-100">
-							{logs.map((log) => {
-								const req = parseToolRequestSummary(log.request_body);
-								const res = parseToolResponseSummary(log.raw_usage);
-								const engine = resolveToolEngineProvider(log);
-								const standardCost = Number(log.standard_cost ?? 0);
-								const chargedCost = Number(log.charged_cost ?? 0);
-								const meteredCost = Number(log.metered_cost ?? 0);
-								const profit = chargedCost - meteredCost;
-								const profitToneClass =
-									profit > 0
-										? "text-emerald-700"
-										: profit < 0
-										? "text-red-600"
-										: "text-gray-600";
-								const expanded = detailLogId === log.id;
-								return (
-									<Fragment key={log.id}>
-										<tr
-											className={`cursor-pointer hover:bg-gray-50 ${
-												expanded
-													? "bg-slate-50"
-													: profit < 0
-													? "bg-amber-50/50"
-													: ""
-											}`}
-											onClick={() => {
-												if (expanded) {
-													setDetailLogId(null);
-												} else {
-													setDetailLogId(log.id);
-													setResponseView("list");
-												}
-											}}
-											aria-expanded={expanded}
-										>
-											<td className="whitespace-nowrap px-4 py-3 text-gray-700">
-												{formatDateTime(log.created_at)}
-											</td>
-											<td className="px-4 py-3 font-mono text-xs text-gray-900">
-												{toolLabel(log.model_id)}
-											</td>
-											<td
-												className="px-4 py-3 font-mono text-xs text-indigo-700"
-												title={engine ?? undefined}
-											>
-												{engine || "—"}
-											</td>
-											<td
-												className="max-w-[18rem] truncate px-4 py-3 text-gray-800"
-												title={req.query ?? ""}
-											>
-												{req.query || "—"}
-											</td>
-											<td
-												className="max-w-[12rem] truncate px-4 py-3 text-gray-700"
-												title={log.user_email ?? ""}
-											>
-												{log.user_email || "—"}
-											</td>
-											<td className="px-4 py-3">
-												<span
-													className={
-														log.status === "success"
-															? "text-green-700"
-															: log.status === "error"
-															? "text-red-700"
-															: "text-gray-700"
+					<div className="overflow-x-auto">
+						<table className="min-w-full divide-y divide-gray-200 text-sm">
+							<thead className="bg-gray-50">
+								<tr>
+									<th className="px-4 py-3 text-left font-medium text-gray-600">{t('invocations.columns.time')}</th>
+									<th className="px-4 py-3 text-left font-medium text-gray-600">{t('invocations.columns.tool')}</th>
+									<th className="px-4 py-3 text-left font-medium text-gray-600">{t('invocations.columns.provider')}</th>
+									<th className="px-4 py-3 text-left font-medium text-gray-600">{t('invocations.columns.query')}</th>
+									<th className="px-4 py-3 text-left font-medium text-gray-600">{t('invocations.columns.user')}</th>
+									<th className="px-4 py-3 text-left font-medium text-gray-600">{t('invocations.columns.status')}</th>
+									<th className="px-4 py-3 text-right font-medium text-gray-600">{t('invocations.columns.results')}</th>
+									<th
+										className="px-4 py-3 text-right font-medium text-gray-600"
+										title={t('invocations.titles.standard')}
+									>
+										{t('invocations.columns.standard', { currency: billingCurrencySym })}
+									</th>
+									<th
+										className="px-4 py-3 text-right font-medium text-gray-600"
+										title={t('invocations.titles.charged')}
+									>
+										{t('invocations.columns.charged', { currency: billingCurrencySym })}
+									</th>
+									<th
+										className="px-4 py-3 text-right font-medium text-gray-600"
+										title={t('invocations.titles.metered')}
+									>
+										{t('invocations.columns.metered', { currency: billingCurrencySym })}
+									</th>
+									<th className="px-4 py-3 text-right font-medium text-gray-600" title={t('invocations.titles.profit')}>
+										{t('invocations.columns.profit', { currency: billingCurrencySym })}
+									</th>
+									<th className="px-4 py-3 text-right font-medium text-gray-600">{t('invocations.columns.latency')}</th>
+								</tr>
+							</thead>
+							<tbody className="divide-y divide-gray-100">
+								{logs.map((log) => {
+									const req = parseToolRequestSummary(log.request_body);
+									const res = parseToolResponseSummary(log.raw_usage);
+									const rowSource = resolveInvocationSource(log);
+									const mcp = rowSource === 'mcp' ? parseMcpInvocationSummary(log) : null;
+									const engine = mcp?.slug || resolveToolEngineProvider(log);
+									const queryText = mcp ? mcp.argumentSummary : req.query;
+									const standardCost = Number(log.standard_cost ?? 0);
+									const chargedCost = Number(log.charged_cost ?? 0);
+									const meteredCost = Number(log.metered_cost ?? 0);
+									const profit = chargedCost - meteredCost;
+									const profitToneClass =
+										profit > 0 ? 'text-emerald-700' : profit < 0 ? 'text-red-600' : 'text-gray-600';
+									const expanded = detailLogId === log.id;
+									return (
+										<Fragment key={log.id}>
+											<tr
+												className={`cursor-pointer hover:bg-gray-50 ${
+													expanded ? 'bg-slate-50' : profit < 0 ? 'bg-amber-50/50' : ''
+												}`}
+												onClick={() => {
+													if (expanded) {
+														setDetailLogId(null);
+													} else {
+														setDetailLogId(log.id);
+														setResponseView(rowSource === 'mcp' ? 'json' : 'list');
 													}
-												>
-													{log.status}
-												</span>
-											</td>
-											<td className="px-4 py-3 text-right font-mono text-xs text-gray-600">
-												{res.resultCount != null ? res.resultCount : "—"}
-											</td>
-											<td
-												className="px-4 py-3 text-right font-mono text-xs tabular-nums text-gray-800"
-												title={t("invocations.titles.standard")}
+												}}
+												aria-expanded={expanded}
 											>
-												{formatGatewayMoneyCompact(
-													standardCost,
-													billingCurrency
-												)}
-											</td>
-											<td
-												className="px-4 py-3 text-right font-mono text-xs tabular-nums text-gray-900"
-												title={t("invocations.titles.charged")}
-											>
-												{formatGatewayMoneyCompact(
-													chargedCost,
-													billingCurrency
-												)}
-											</td>
-											<td
-												className="px-4 py-3 text-right font-mono text-xs tabular-nums text-gray-700"
-												title={t("invocations.titles.metered")}
-											>
-												{formatGatewayMoneyCompact(
-													meteredCost,
-													billingCurrency
-												)}
-											</td>
-											<td
-												className={`px-4 py-3 text-right font-mono text-xs font-medium tabular-nums ${profitToneClass}`}
-												title={t("invocations.titles.profit")}
-											>
-												{formatGatewayMoneyCompactSigned(
-													profit,
-													billingCurrency
-												)}
-											</td>
-											<td className="px-4 py-3 text-right font-mono text-xs text-gray-600">
-												{log.latency_ms != null ? `${log.latency_ms} ms` : "—"}
-											</td>
-										</tr>
-										{expanded && (
-											<tr className="bg-slate-50">
+												<td className="whitespace-nowrap px-4 py-3 text-gray-700">{formatDateTime(log.created_at)}</td>
+												<td className="px-4 py-3 text-xs text-gray-900">
+													<span
+														className={`mr-2 inline-flex rounded-full px-1.5 py-px align-middle font-sans text-[10px] font-medium ring-1 ring-inset ${
+															rowSource === 'mcp'
+																? 'bg-teal-50 text-teal-800 ring-teal-200'
+																: 'bg-gray-50 text-gray-700 ring-gray-200'
+														}`}
+													>
+														{rowSource === 'mcp' ? t('invocations.sourceMcp') : t('invocations.sourceRest')}
+													</span>
+													<span className="font-mono">{mcp ? mcp.label : toolLabel(log.model_id)}</span>
+												</td>
+												<td className="px-4 py-3 font-mono text-xs text-indigo-700" title={engine ?? undefined}>
+													{engine || '—'}
+												</td>
+												<td className="max-w-[18rem] truncate px-4 py-3 text-gray-800" title={queryText ?? ''}>
+													{queryText || '—'}
+												</td>
+												<td className="max-w-[12rem] truncate px-4 py-3 text-gray-700" title={log.user_email ?? ''}>
+													{log.user_email || '—'}
+												</td>
+												<td className="px-4 py-3">
+													<span
+														className={
+															log.status === 'success'
+																? 'text-green-700'
+																: log.status === 'error'
+																	? 'text-red-700'
+																	: 'text-gray-700'
+														}
+													>
+														{log.status}
+													</span>
+												</td>
+												<td className="px-4 py-3 text-right font-mono text-xs text-gray-600">
+													{mcp || res.resultCount == null ? '—' : res.resultCount}
+												</td>
 												<td
-													colSpan={12}
-													className="px-4 py-4"
-													onClick={(e) => e.stopPropagation()}
+													className="px-4 py-3 text-right font-mono text-xs tabular-nums text-gray-800"
+													title={t('invocations.titles.standard')}
 												>
-													<div className="grid items-stretch gap-4 lg:grid-cols-2">
-														<div className="flex min-h-[18rem] flex-col">
-															<h3 className="mb-2 shrink-0 text-xs font-semibold uppercase tracking-wide text-gray-500">
-																{t("invocations.detail.request")}
-															</h3>
-															<pre className="min-h-0 flex-1 overflow-auto rounded-md border border-gray-200 bg-white p-3 font-mono text-xs text-gray-800 whitespace-pre-wrap break-all">
-																{log.request_body
-																	? JSON.stringify(
-																			req.raw ?? log.request_body,
-																			null,
-																			2
-																	  )
-																	: "—"}
-															</pre>
-														</div>
-														<div className="flex min-h-[18rem] flex-col">
-															<div className="mb-2 flex shrink-0 items-center justify-between gap-2">
-																<h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-																	{t("invocations.detail.response")}
-																</h3>
-																<div
-																	className="inline-flex rounded-md border border-gray-200 bg-white p-0.5 text-xs shadow-sm"
-																	role="tablist"
-																	aria-label={t(
-																		"invocations.detail.responseFormat"
-																	)}
-																>
-																	<button
-																		type="button"
-																		role="tab"
-																		aria-selected={responseView === "list"}
-																		onClick={() => setResponseView("list")}
-																		className={`rounded px-2.5 py-1 font-medium ${
-																			responseView === "list"
-																				? "bg-gray-900 text-white"
-																				: "text-gray-600 hover:bg-gray-50"
-																		}`}
-																	>
-																		{t("invocations.detail.formatList")}
-																	</button>
-																	<button
-																		type="button"
-																		role="tab"
-																		aria-selected={responseView === "json"}
-																		onClick={() => setResponseView("json")}
-																		className={`rounded px-2.5 py-1 font-medium ${
-																			responseView === "json"
-																				? "bg-gray-900 text-white"
-																				: "text-gray-600 hover:bg-gray-50"
-																		}`}
-																	>
-																		{t("invocations.detail.formatJson")}
-																	</button>
-																</div>
-															</div>
-															<div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-md border border-gray-200 bg-white">
-																{log.error_message ? (
-																	<p className="shrink-0 border-b border-red-100 bg-red-50 px-3 py-2 text-xs text-red-700">
-																		{log.error_message}
-																	</p>
-																) : null}
-																{responseView === "list" ? (
-																	res.results.length > 0 ? (
-																		<ul className="min-h-0 flex-1 space-y-2 overflow-auto p-3">
-																			{res.results.map((item, idx) => (
-																				<li
-																					key={`${item.url ?? "r"}-${idx}`}
-																					className="text-xs"
-																				>
-																					{item.url ? (
-																						<a
-																							href={item.url}
-																							target="_blank"
-																							rel="noreferrer"
-																							className="font-medium text-blue-700 hover:underline"
-																						>
-																							{item.title || item.url}
-																						</a>
-																					) : (
-																						<span className="font-medium text-gray-900">
-																							{item.title || "—"}
-																						</span>
-																					)}
-																					{item.snippet ? (
-																						<p className="mt-0.5 line-clamp-2 text-gray-600">
-																							{item.snippet}
-																						</p>
-																					) : null}
-																				</li>
-																			))}
-																		</ul>
-																	) : (
-																		<div className="flex min-h-0 flex-1 items-center justify-center px-3 py-6 text-xs text-gray-500">
-																			{log.raw_usage
-																				? t("invocations.detail.noListResults")
-																				: t(
-																						"invocations.detail.noResponseStored"
-																				  )}
-																		</div>
-																	)
-																) : (
-																	<pre className="min-h-0 flex-1 overflow-auto p-3 font-mono text-xs text-gray-800 whitespace-pre-wrap break-all">
-																		{log.raw_usage
-																			? JSON.stringify(
-																					res.raw ?? log.raw_usage,
-																					null,
-																					2
-																			  )
-																			: t(
-																					"invocations.detail.noResponseStored"
-																			  )}
-																	</pre>
-																)}
-															</div>
-														</div>
-													</div>
-													<p className="mt-3 text-xs text-gray-500">
-														{t("invocations.detail.hint")}
-													</p>
+													{formatGatewayMoneyCompact(standardCost, billingCurrency)}
+												</td>
+												<td
+													className="px-4 py-3 text-right font-mono text-xs tabular-nums text-gray-900"
+													title={t('invocations.titles.charged')}
+												>
+													{formatGatewayMoneyCompact(chargedCost, billingCurrency)}
+												</td>
+												<td
+													className="px-4 py-3 text-right font-mono text-xs tabular-nums text-gray-700"
+													title={t('invocations.titles.metered')}
+												>
+													{formatGatewayMoneyCompact(meteredCost, billingCurrency)}
+												</td>
+												<td
+													className={`px-4 py-3 text-right font-mono text-xs font-medium tabular-nums ${profitToneClass}`}
+													title={t('invocations.titles.profit')}
+												>
+													{formatGatewayMoneyCompactSigned(profit, billingCurrency)}
+												</td>
+												<td className="px-4 py-3 text-right font-mono text-xs text-gray-600">
+													{log.latency_ms != null ? `${log.latency_ms} ms` : '—'}
 												</td>
 											</tr>
-										)}
-									</Fragment>
-								);
-							})}
-						</tbody>
-					</table>
-					<div className="flex items-center justify-between border-t border-gray-200 px-4 py-3 text-sm text-gray-600">
+											{expanded && (
+												<tr className="bg-slate-50">
+													<td colSpan={12} className="px-4 py-4" onClick={(e) => e.stopPropagation()}>
+														<div className="grid items-stretch gap-4 lg:grid-cols-2">
+															<div className="flex min-h-[18rem] flex-col">
+																<h3 className="mb-2 shrink-0 text-xs font-semibold uppercase tracking-wide text-gray-500">
+																	{t('invocations.detail.request')}
+																</h3>
+																<pre className="min-h-0 flex-1 overflow-auto rounded-md border border-gray-200 bg-white p-3 font-mono text-xs text-gray-800 whitespace-pre-wrap break-all">
+																	{log.request_body ? JSON.stringify(req.raw ?? log.request_body, null, 2) : '—'}
+																</pre>
+															</div>
+															<div className="flex min-h-[18rem] flex-col">
+																<div className="mb-2 flex shrink-0 items-center justify-between gap-2">
+																	<h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+																		{t('invocations.detail.response')}
+																	</h3>
+																	<div
+																		className="inline-flex rounded-md border border-gray-200 bg-white p-0.5 text-xs shadow-sm"
+																		role="tablist"
+																		aria-label={t('invocations.detail.responseFormat')}
+																	>
+																		<button
+																			type="button"
+																			role="tab"
+																			aria-selected={responseView === 'list'}
+																			onClick={() => setResponseView('list')}
+																			className={`rounded px-2.5 py-1 font-medium ${
+																				responseView === 'list'
+																					? 'bg-gray-900 text-white'
+																					: 'text-gray-600 hover:bg-gray-50'
+																			}`}
+																		>
+																			{t('invocations.detail.formatList')}
+																		</button>
+																		<button
+																			type="button"
+																			role="tab"
+																			aria-selected={responseView === 'json'}
+																			onClick={() => setResponseView('json')}
+																			className={`rounded px-2.5 py-1 font-medium ${
+																				responseView === 'json'
+																					? 'bg-gray-900 text-white'
+																					: 'text-gray-600 hover:bg-gray-50'
+																			}`}
+																		>
+																			{t('invocations.detail.formatJson')}
+																		</button>
+																	</div>
+																</div>
+																<div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-md border border-gray-200 bg-white">
+																	{log.error_message ? (
+																		<p className="shrink-0 border-b border-red-100 bg-red-50 px-3 py-2 text-xs text-red-700">
+																			{log.error_message}
+																		</p>
+																	) : null}
+																	{responseView === 'list' ? (
+																		res.results.length > 0 ? (
+																			<ul className="min-h-0 flex-1 space-y-2 overflow-auto p-3">
+																				{res.results.map((item, idx) => (
+																					<li key={`${item.url ?? 'r'}-${idx}`} className="text-xs">
+																						{item.url ? (
+																							<a
+																								href={item.url}
+																								target="_blank"
+																								rel="noreferrer"
+																								className="font-medium text-blue-700 hover:underline"
+																							>
+																								{item.title || item.url}
+																							</a>
+																						) : (
+																							<span className="font-medium text-gray-900">{item.title || '—'}</span>
+																						)}
+																						{item.snippet ? (
+																							<p className="mt-0.5 line-clamp-2 text-gray-600">{item.snippet}</p>
+																						) : null}
+																					</li>
+																				))}
+																			</ul>
+																		) : (
+																			<div className="flex min-h-0 flex-1 items-center justify-center px-3 py-6 text-xs text-gray-500">
+																				{log.raw_usage
+																					? t('invocations.detail.noListResults')
+																					: t('invocations.detail.noResponseStored')}
+																			</div>
+																		)
+																	) : (
+																		<pre className="min-h-0 flex-1 overflow-auto p-3 font-mono text-xs text-gray-800 whitespace-pre-wrap break-all">
+																			{log.raw_usage
+																				? JSON.stringify(res.raw ?? log.raw_usage, null, 2)
+																				: t('invocations.detail.noResponseStored')}
+																		</pre>
+																	)}
+																</div>
+															</div>
+														</div>
+														<p className="mt-3 text-xs text-gray-500">{t('invocations.detail.hint')}</p>
+													</td>
+												</tr>
+											)}
+										</Fragment>
+									);
+								})}
+							</tbody>
+						</table>
+					</div>
+					<div className="flex flex-wrap items-center justify-between gap-3 border-t border-gray-200 px-4 py-3 text-sm text-gray-600">
 						<span>
-							{tCommon("pageOf", { page, totalPages })} · {total}
+							{tCommon('pageOf', { page, totalPages })} · {total}
 						</span>
 						<div className="flex gap-2">
 							<button
@@ -585,7 +551,7 @@ function GatewayToolInvocationsContent() {
 								onClick={() => setPage((p) => Math.max(1, p - 1))}
 								className="rounded-md border border-gray-300 px-3 py-1 disabled:opacity-40"
 							>
-								{tCommon("previous")}
+								{tCommon('previous')}
 							</button>
 							<button
 								type="button"
@@ -593,7 +559,7 @@ function GatewayToolInvocationsContent() {
 								onClick={() => setPage((p) => p + 1)}
 								className="rounded-md border border-gray-300 px-3 py-1 disabled:opacity-40"
 							>
-								{tCommon("next")}
+								{tCommon('next')}
 							</button>
 						</div>
 					</div>

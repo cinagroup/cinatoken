@@ -212,6 +212,28 @@ describe('resolveUpstreamEndpoint', () => {
 			resolveUpstreamEndpoint('dashscope', 'audio.realtime.session', endpoints),
 			'wss://workspace.cn-beijing.maas.aliyuncs.com/api-ws/v1/realtime'
 		);
+		assert.equal(
+			resolveUpstreamEndpoint('dashscope', 'images.generations.multimodal', endpoints),
+			'https://workspace.cn-beijing.maas.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation'
+		);
+	});
+
+	it('uses the Token Plan multimodal override without deriving filetrans from a DashScope base', () => {
+		const endpoints = {
+			dashscope: {
+				endpoints: {
+					'audio.transcriptions.multimodal':
+						'https://token-plan.maas.qianwenaiapi.com/api/v1/services/aigc/multimodal-generation/generation',
+				},
+			},
+		};
+		assert.equal(
+			resolveUpstreamEndpoint('dashscope', 'audio.transcriptions.multimodal', endpoints),
+			'https://token-plan.maas.qianwenaiapi.com/api/v1/services/aigc/multimodal-generation/generation'
+		);
+		assert.deepEqual(listConfiguredCapabilities(endpoints, 'dashscope'), [
+			'audio.transcriptions.multimodal',
+		]);
 	});
 });
 
@@ -285,6 +307,7 @@ describe('Provider operation endpoint requirements', () => {
 				'audio.realtime.session',
 				'audio.speech',
 				'audio.speech.multimodal',
+				'images.generations.multimodal',
 			]
 		);
 		assert.equal(
@@ -508,6 +531,68 @@ describe('listConfiguredCapabilities', () => {
 		);
 	});
 
+	it('derives MiniMax speech_to_text from the API base', () => {
+		const endpoints = {
+			minimax: { base: 'https://api.minimaxi.com/v1' },
+		};
+		assert.equal(
+			resolveUpstreamEndpoint('minimax', 'audio.transcriptions', endpoints),
+			'https://api.minimaxi.com/v1/speech_to_text'
+		);
+		assert.equal(
+			resolveUpstreamEndpoint('minimax', 'audio.speech', endpoints),
+			'https://api.minimaxi.com/v1/t2a_v2'
+		);
+		assert.equal(
+			resolveUpstreamEndpoint('minimax', 'images.generations', endpoints),
+			'https://api.minimaxi.com/v1/image_generation'
+		);
+		assert.deepEqual(listConfiguredCapabilities(endpoints, 'minimax'), [
+			'audio.transcriptions',
+			'audio.speech',
+			'images.generations',
+		]);
+	});
+
+	it('derives Volcengine images/generations from the Ark API base', () => {
+		const endpoints = {
+			volcengine: { base: 'https://ark.cn-beijing.volces.com/api/v3' },
+		};
+		assert.equal(
+			resolveUpstreamEndpoint('volcengine', 'images.generations', endpoints),
+			'https://ark.cn-beijing.volces.com/api/v3/images/generations'
+		);
+		assert.deepEqual(listConfiguredCapabilities(endpoints, 'volcengine'), ['images.generations']);
+	});
+
+	it('prefers an explicit Volcengine generations URL over the derived path', () => {
+		assert.equal(
+			resolveUpstreamEndpoint('volcengine', 'images.generations', {
+				volcengine: {
+					base: 'https://ark.cn-beijing.volces.com/api/v3',
+					endpoints: {
+						'images.generations': 'https://ark.ap-southeast.bytepluses.com/api/v3/images/generations',
+					},
+				},
+			}),
+			'https://ark.ap-southeast.bytepluses.com/api/v3/images/generations'
+		);
+	});
+
+	it('prefers an explicit MiniMax transcription URL over the derived path', () => {
+		assert.equal(
+			resolveUpstreamEndpoint('minimax', 'audio.transcriptions', {
+				minimax: {
+					base: 'https://api.minimaxi.com/v1',
+					endpoints: {
+						'audio.transcriptions': 'https://api.minimax.io/v1/speech_to_text',
+					},
+				},
+			}),
+			'https://api.minimax.io/v1/speech_to_text'
+		);
+	});
+
 	it('lists every DashScope capability when its API base is configured', () => {
 		assert.deepEqual(
 			listConfiguredCapabilities(
@@ -524,6 +609,7 @@ describe('listConfiguredCapabilities', () => {
 				'audio.realtime.session',
 				'audio.hotwords',
 				'audio.voices',
+				'images.generations.multimodal',
 			]
 		);
 	});

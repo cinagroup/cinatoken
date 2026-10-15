@@ -51,3 +51,6 @@ cloudflare-worker/deploy-octarouter.sh
 Temp/
 packages/web/.tmp/
 packages/web/dist-server/
+
+# Recover release covers
+docs/assets/release-covers/*

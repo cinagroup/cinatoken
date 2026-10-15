@@ -44,15 +44,19 @@ test('prepared text identity commits to the real loopback URL, method, JSON byte
 	const wires: Wire[] = [];
 	const server = createServer((request, response) => {
 		const chunks: Buffer[] = [];
-		request.on('data', chunk => chunks.push(Buffer.from(chunk)));
+		request.on('data', (chunk) => chunks.push(Buffer.from(chunk)));
 		request.on('end', () => {
-			wires.push({ method: request.method, path: request.url ?? '', headers: request.headers,
-				body: Buffer.concat(chunks) });
+			wires.push({
+				method: request.method,
+				path: request.url ?? '',
+				headers: request.headers,
+				body: Buffer.concat(chunks),
+			});
 			response.writeHead(400, { 'content-type': 'application/json' });
 			response.end('{}');
 		});
 	});
-	await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve));
+	await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
 	try {
 		const address = server.address();
 		assert.ok(address && typeof address !== 'string');
@@ -63,37 +67,99 @@ test('prepared text identity commits to the real loopback URL, method, JSON byte
 			send: (beforeFetch: (prepared: PreparedTextAttempt) => Promise<void>) => Promise<unknown>;
 			binding: PreparedTextAttempt['credentialBindings'][number]['location'];
 		}> = [
-			{ name: 'chat', selected: route('openai', origin), binding: 'authorization-bearer',
-				send: beforeFetch => dispatchOpenAiRoute(route('openai', origin), { messages: [{ role: 'user', content: 'hello' }] },
-					undefined, undefined, undefined, beforeFetch) },
-			{ name: 'responses', selected: route('openai', origin), binding: 'authorization-bearer',
-				send: beforeFetch => dispatchOpenAiResponsesRoute(route('openai', origin), { input: 'hello' },
-					undefined, undefined, undefined, beforeFetch) },
-			{ name: 'anthropic', selected: route('anthropic', origin), binding: 'x-api-key',
-				send: beforeFetch => dispatchAnthropicRoute(route('anthropic', origin), { messages: [] },
-					undefined, undefined, undefined, beforeFetch) },
-			{ name: 'gemini-query', selected: route('gemini', origin), binding: 'query-key',
-				send: beforeFetch => dispatchGeminiRoute(route('gemini', origin), {}, 'generateContent', '',
-					undefined, undefined, undefined, beforeFetch) },
-			{ name: 'gemini-existing-query-key', selected: route('gemini', origin), binding: 'query-key',
-				send: beforeFetch => dispatchGeminiRoute(route('gemini', origin), {}, 'generateContent',
-					'key=key-from-route-query', undefined, undefined, undefined, beforeFetch) },
-			{ name: 'gemini-bearer', selected: (() => {
-				const selected = route('gemini', origin);
-				selected.providerEndpoints = { gemini: { base: `${origin}/v1beta/models`, auth: 'bearer' } };
-				return selected;
-			})(), binding: 'authorization-bearer',
-				send: beforeFetch => {
-				const selected = route('gemini', origin);
-				selected.providerEndpoints = { gemini: { base: `${origin}/v1beta/models`, auth: 'bearer' } };
-				return dispatchGeminiRoute(selected, {}, 'generateContent', '',
-					undefined, undefined, undefined, beforeFetch);
-			} },
+			{
+				name: 'chat',
+				selected: route('openai', origin),
+				binding: 'authorization-bearer',
+				send: (beforeFetch) =>
+					dispatchOpenAiRoute(
+						route('openai', origin),
+						{ messages: [{ role: 'user', content: 'hello' }] },
+						undefined,
+						undefined,
+						undefined,
+						beforeFetch,
+					),
+			},
+			{
+				name: 'responses',
+				selected: route('openai', origin),
+				binding: 'authorization-bearer',
+				send: (beforeFetch) =>
+					dispatchOpenAiResponsesRoute(
+						route('openai', origin),
+						{ input: 'hello' },
+						undefined,
+						undefined,
+						undefined,
+						beforeFetch,
+					),
+			},
+			{
+				name: 'anthropic',
+				selected: route('anthropic', origin),
+				binding: 'x-api-key',
+				send: (beforeFetch) =>
+					dispatchAnthropicRoute(
+						route('anthropic', origin),
+						{ messages: [] },
+						undefined,
+						undefined,
+						undefined,
+						beforeFetch,
+					),
+			},
+			{
+				name: 'gemini-query',
+				selected: route('gemini', origin),
+				binding: 'query-key',
+				send: (beforeFetch) =>
+					dispatchGeminiRoute(
+						route('gemini', origin),
+						{},
+						'generateContent',
+						'',
+						undefined,
+						undefined,
+						undefined,
+						beforeFetch,
+					),
+			},
+			{
+				name: 'gemini-existing-query-key',
+				selected: route('gemini', origin),
+				binding: 'query-key',
+				send: (beforeFetch) =>
+					dispatchGeminiRoute(
+						route('gemini', origin),
+						{},
+						'generateContent',
+						'key=key-from-route-query',
+						undefined,
+						undefined,
+						undefined,
+						beforeFetch,
+					),
+			},
+			{
+				name: 'gemini-bearer',
+				selected: (() => {
+					const selected = route('gemini', origin);
+					selected.providerEndpoints = { gemini: { base: `${origin}/v1beta/models`, auth: 'bearer' } };
+					return selected;
+				})(),
+				binding: 'authorization-bearer',
+				send: (beforeFetch) => {
+					const selected = route('gemini', origin);
+					selected.providerEndpoints = { gemini: { base: `${origin}/v1beta/models`, auth: 'bearer' } };
+					return dispatchGeminiRoute(selected, {}, 'generateContent', '', undefined, undefined, undefined, beforeFetch);
+				},
+			},
 		];
 		for (const item of cases) {
 			let prepared: PreparedTextAttempt | undefined;
 			const previous = wires.length;
-			await item.send(async attempt => {
+			await item.send(async (attempt) => {
 				assert.equal(wires.length, previous, `${item.name}: no wire before admission`);
 				prepared = attempt;
 			});
@@ -109,13 +175,17 @@ test('prepared text identity commits to the real loopback URL, method, JSON byte
 			assert.equal(Object.isFrozen(prepared), true);
 			assert.equal(Object.isFrozen(prepared.routeIdentity), true);
 			assert.equal(Object.isFrozen(prepared.credentialBindings), true);
-			const actualSecret = item.binding === 'query-key'
-				? new URL(absoluteUrl).searchParams.get('key')
-				: item.binding === 'x-api-key'
-					? wire.headers['x-api-key']
-					: wire.headers.authorization?.replace(/^Bearer /, '');
+			const actualSecret =
+				item.binding === 'query-key'
+					? new URL(absoluteUrl).searchParams.get('key')
+					: item.binding === 'x-api-key'
+						? wire.headers['x-api-key']
+						: wire.headers.authorization?.replace(/^Bearer /, '');
 			assert.equal(typeof actualSecret, 'string');
-			assert.deepEqual(prepared.credentialBindings.map(binding => binding.location), [item.binding]);
+			assert.deepEqual(
+				prepared.credentialBindings.map((binding) => binding.location),
+				[item.binding],
+			);
 			assert.equal(prepared.credentialBindings[0]!.sha256, sha256(actualSecret!));
 			if (item.name === 'gemini-existing-query-key') {
 				assert.equal(actualSecret, 'key-from-route-query');
@@ -124,7 +194,7 @@ test('prepared text identity commits to the real loopback URL, method, JSON byte
 			assert.equal(JSON.stringify(prepared).includes(actualSecret!), false);
 		}
 	} finally {
-		await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve()));
+		await new Promise<void>((resolve, reject) => server.close((error) => (error ? reject(error) : resolve())));
 	}
 });
 
@@ -141,7 +211,7 @@ test('callback mutation cannot change the already frozen JSON wire projection or
 		const selected = route('openai', 'https://provider.example');
 		const body = { messages: [{ role: 'user', content: 'before' }] };
 		let prepared: PreparedTextAttempt | undefined;
-		await dispatchOpenAiRoute(selected, body, undefined, undefined, undefined, async attempt => {
+		await dispatchOpenAiRoute(selected, body, undefined, undefined, undefined, async (attempt) => {
 			prepared = attempt;
 			body.messages[0]!.content = 'after';
 			selected.providerApiKey = 'rotated-secret';

@@ -7,30 +7,38 @@
 import {
 	isAudioModel,
 	isEmbeddingModel,
+	getUserChargedCostFactorMode,
 	isImageGenerationModel,
 	isTextLlmModel,
+	lookupUserChargedCostFactor,
 	parseModelModalitiesJson,
 	parsePricingProfile,
+	parseUserChargedCostFactors,
+	type DisplayDiscountGroup,
+	type ParsedPricingProfile
 } from '@octafuse/core';
 import { Hono } from 'hono';
 import type { Env } from '../../app';
 import { requireApiKey } from '../../middleware/auth';
 import {
 	filterRouteGroupsByAllowlist,
+	normalizePublicModelVendor,
 	parseMetadata,
 	parseModelsKindQuery,
 	parseModelsOutputModalitiesQuery,
 	parseModelsRouteGroupsQuery,
 	parseRouteGroupsJson,
-	parseTags,
+	parseTags
 } from '../../lib/model-list-parse';
 import { listPublicModelsWithRoutes } from '../../services/public-models';
 import {
 	groupVerifiedEndpointBindingsByModel,
 	parsePublicModelsRegion,
-	summarizePublicEndpointDiscovery,
+	summarizePublicEndpointDiscovery
 } from '../../services/public-endpoint-discovery';
 import { listVerifiedPublicEndpointBindings } from '../../services/public-model-endpoints';
+import { collectInboundSurfaces, type InboundSurface } from '../../services/inbound-surfaces';
+import { buildModelDisplayDiscounts as buildSafeModelDisplayDiscounts, getBusinessTimezone } from '@octafuse/core';
 
 type ModelsEnv = Env & { Variables: { apiKey: import('../../middleware/auth').ApiKeyContext } };
 
@@ -41,24 +49,26 @@ modelsRoutes.use('*', requireApiKey);
 export {
 	DEFAULT_MODELS_ROUTE_GROUPS,
 	parseModelsKindQuery,
-	parseModelsRouteGroupsQuery,
+	parseModelsRouteGroupsQuery
 } from '../../lib/model-list-parse';
 
 /**
  * `/v1/models` 中扩展字段：定价、能力与展示用元数据。
- * 说明：`supports_prompt_cache`、`thinking_config` 等由 Agent 本地维护，不由网关返回。
+ * 说明：`supports_prompt_cache`、`thinking_config` 等由客户端维护，不由网关返回。
+ * `inbound` 是请求入口（protocol + operation），不是上游协议；选哪条由客户端决定。
  */
 interface ModelInfoResponse {
 	display_name: string | null;
-	/** 厂商/品牌；缺省归为 other */
+	/** 厂商/品牌；空串回退 other */
 	vendor: string;
+	/** 运营维护的展示标签，不含派生 Discount.* */
 	tags: string[];
 	/** 来自当前 verified Endpoint 绑定路由的去重 route_group（计费通道） */
 	route_groups: string[];
 	context_window: number | null;
 	max_tokens: number | null;
-	/** 网关主定价 JSON；完整阶梯等以此为准 */
-	pricing_profile: string | null;
+	/** 网关主定价对象（与 Catalog 同形）；完整阶梯等以此为准 */
+	pricing_profile: ParsedPricingProfile | null;
 	/**
 	 * 由 `pricing_profile` 派生的兼容展示价（$/1M）：取各档中 **最低 input_price** 所在档的 in/out；
 	 * 无合法 profile 时为 null。新客户端应解析完整 `pricing_profile`（`tiers`）。
@@ -76,7 +86,14 @@ interface ModelInfoResponse {
 	endpoint_slugs: string[];
 	/** Current verified provider locations; not an inference residency guarantee. */
 	regions: string[];
+	/**
+	 * 按 route_group 派生的前台折扣（官方时段 × 代表路由 charged 有效倍率）。
+	 * 已按 route group 叠该用户的 `charged_cost_factors`（分组键优先，其次 `*`，数字覆盖全部分组）。
+	 */
+	discounts?: Record<string, DisplayDiscountGroup>;
 	metadata?: Record<string, unknown>;
+	/** 请求入口（LLM 文本 + 文生图 / ASR / TTS operation），按可见路由聚合。 */
+	inbound: InboundSurface[];
 }
 
 interface ModelResponse {
@@ -87,16 +104,15 @@ interface ModelResponse {
 }
 
 /** 对外列表：从 `tiers` 取 input 最低价所在档作为 headline in/out；无 profile 返回 null。 */
-function displayCompatPricesFromProfile(pricingProfile: string | null): {
+function displayCompatPricesFromProfile(profile: ParsedPricingProfile | null): {
 	input_price: number | null;
 	output_price: number | null;
 } {
-	const p = parsePricingProfile(pricingProfile ?? undefined);
-	if (!p || p.tiers.length === 0) {
+	if (!profile || profile.tiers.length === 0) {
 		return { input_price: null, output_price: null };
 	}
-	let best = p.tiers[0]!;
-	for (const t of p.tiers) {
+	let best = profile.tiers[0]!;
+	for (const t of profile.tiers) {
 		if (t.input_price < best.input_price) {
 			best = t;
 		}
@@ -106,22 +122,25 @@ function displayCompatPricesFromProfile(pricingProfile: string | null): {
 
 /**
  * `GET /v1/models` — 可选 `route_groups`（CSV）过滤 `model_info.route_groups`；
- * 可选 `kind`：`llm`（默认）| `image` | `audio` | `all`。
+ * 可选 `kind`：`llm`（默认）| `image` | `audio`（ASR + TTS）| `all`。
  * 未传 `route_groups` 时默认 `default,free`，主要为兼容 agent 默认拉列表方式；
  * 业务需额外分组时可显式传 `route_groups=web` 或 `route_groups=default,free,web`。
  */
-modelsRoutes.get('/', async (c) => {
+modelsRoutes.get('/', async c => {
 	const repos = c.get('repositories');
 	const regionResult = parsePublicModelsRegion(c.req.query('region'));
 	if (!regionResult.ok) {
-		return c.json({
-			error: {
-				message: regionResult.message,
-				type: 'invalid_request_error',
-				param: 'region',
-				code: 'invalid_region',
+		return c.json(
+			{
+				error: {
+					message: regionResult.message,
+					type: 'invalid_request_error',
+					param: 'region',
+					code: 'invalid_region'
+				}
 			},
-		}, 400);
+			400
+		);
 	}
 	const region = regionResult.value;
 	const models = await listPublicModelsWithRoutes(repos);
@@ -131,13 +150,17 @@ modelsRoutes.get('/', async (c) => {
 	const allowedRouteGroups = parseModelsRouteGroupsQuery(c.req.query('route_groups'));
 	const kind = parseModelsKindQuery(c.req.query('kind'));
 	const outputModalities = parseModelsOutputModalitiesQuery(c.req.query('output_modalities'));
+	const apiKey = c.get('apiKey');
+	const timezone = await getBusinessTimezone(repos);
+	const userChargedFactorMode = await getUserChargedCostFactorMode(repos);
+	const userFactors = parseUserChargedCostFactors(apiKey.chargedCostFactors);
 
 	const list: ModelResponse[] = [];
 	for (const m of models) {
 		const kindFields = {
 			output_modalities: m.output_modalities,
 			input_modalities: m.input_modalities,
-			pricing_profile: m.pricing_profile,
+			pricing_profile: m.pricing_profile
 		};
 		if (kind === 'llm' && (!isTextLlmModel(kindFields) || isEmbeddingModel(kindFields))) {
 			continue;
@@ -152,36 +175,54 @@ modelsRoutes.get('/', async (c) => {
 			continue;
 		}
 		const parsedOutputModalities = parseModelModalitiesJson(m.output_modalities) ?? [];
-		if (outputModalities && !outputModalities.some((value) => parsedOutputModalities.includes(value))) {
+		if (outputModalities && !outputModalities.some(value => parsedOutputModalities.includes(value))) {
 			continue;
 		}
-		const { input_price, output_price } = displayCompatPricesFromProfile(m.pricing_profile);
-		let routeGroups = filterRouteGroupsByAllowlist(
-			parseRouteGroupsJson(m.route_groups ?? null),
-			allowedRouteGroups
-		);
+		const pricingProfile = parsePricingProfile(m.pricing_profile);
+		const { input_price, output_price } = displayCompatPricesFromProfile(pricingProfile);
+		let routeGroups = filterRouteGroupsByAllowlist(parseRouteGroupsJson(m.route_groups ?? null), allowedRouteGroups);
 		if (routeGroups.length === 0) {
 			continue;
 		}
 		const endpointDiscovery = summarizePublicEndpointDiscovery(endpointBindingsByModel.get(m.id) ?? [], {
 			routeGroups,
-			region,
+			region
 		});
 		if (!endpointDiscovery.has_matching_route) continue;
 		routeGroups = filterRouteGroupsByAllowlist(routeGroups, endpointDiscovery.route_groups);
 		if (routeGroups.length === 0) continue;
+		const matchingBindings = (endpointBindingsByModel.get(m.id) ?? [])
+			.filter(binding => !region || binding.snapshot.region === region)
+			.flatMap(binding => binding.routes)
+			.filter(route => routeGroups.includes(route.route_group));
+		const discounts = buildSafeModelDisplayDiscounts({
+			pricingProfileJson: m.pricing_profile,
+			routes: matchingBindings.map(route => ({
+				...route,
+				priority: route.priority ?? 0,
+				price_override: route.price_override ?? null
+			})),
+			timezone,
+			allowedRouteGroups: routeGroups,
+			resolveUserChargedFactor: userFactors
+				? group => lookupUserChargedCostFactor(userFactors, m.id, group)
+				: undefined,
+			userChargedFactorMode
+		});
+		const inbound = collectInboundSurfaces(matchingBindings, routeGroups);
 		list.push({
 			id: m.id,
 			object: 'model',
 			owned_by: 'cinatoken',
 			model_info: {
 				display_name: m.display_name,
-				vendor: m.vendor,
+				vendor: normalizePublicModelVendor(m.vendor),
 				tags: parseTags(m.tags),
 				route_groups: routeGroups,
+				discounts,
 				context_window: m.context_window,
 				max_tokens: m.max_tokens,
-				pricing_profile: m.pricing_profile,
+				pricing_profile: pricingProfile,
 				input_price,
 				output_price,
 				description: m.description,
@@ -191,19 +232,22 @@ modelsRoutes.get('/', async (c) => {
 				endpoint_slugs: endpointDiscovery.endpoint_slugs,
 				regions: endpointDiscovery.regions,
 				metadata: parseMetadata(m.metadata),
-			},
+				inbound
+			}
 		});
 	}
 
 	return c.json({
 		data: list,
 		object: 'list',
-		...(region ? {
-			region_filter: {
-				region,
-				scope: 'provider_endpoint_location_discovery',
-				inference_data_residency_guaranteed: false,
-			},
-		} : {}),
+		...(region
+			? {
+					region_filter: {
+						region,
+						scope: 'provider_endpoint_location_discovery',
+						inference_data_residency_guaranteed: false
+					}
+				}
+			: {})
 	});
 });

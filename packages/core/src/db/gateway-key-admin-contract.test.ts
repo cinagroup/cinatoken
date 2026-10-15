@@ -29,6 +29,7 @@ function sqliteFixture() {
 		CREATE TABLE user_audit_logs (id TEXT PRIMARY KEY, user_id TEXT, api_key_id TEXT, event_type TEXT, actor_type TEXT,
 		request_log_id TEXT, change_payload TEXT, before_user_snapshot TEXT, after_user_snapshot TEXT, changed_fields TEXT,
 		correlation_id TEXT, source TEXT, actor_id TEXT, reason_code TEXT, reason_text TEXT);`);
+	database.exec('ALTER TABLE users ADD COLUMN wallet_granted REAL NOT NULL DEFAULT 0; ALTER TABLE users ADD COLUMN wallet_spent REAL NOT NULL DEFAULT 0; ALTER TABLE users ADD COLUMN rate_limit TEXT; ALTER TABLE api_keys ADD COLUMN rate_limit TEXT;');
 	class Statement {
 		constructor(readonly query: string, readonly values: SQLInputValue[] = []) {}
 		bind(...values: SQLInputValue[]) { return new Statement(this.query, values) as unknown as D1PreparedStatement; }
@@ -60,7 +61,11 @@ test('D1 real SQL pagination uses ID ties for every primary field and direction'
 
 test('D1 atomic profile mutation rejects workspace races and rolls back missing/failing/ignored audit storage', async () => {
 	const { database, repo } = sqliteFixture();
-	const snapshot = userRowToSnapshot({ id: 'u1', email: 'user@example.test', budget_max: 10, budget_base: 10, budget_spent: 3,
+	const snapshot = userRowToSnapshot({
+wallet_granted: 0,
+wallet_spent: 0,
+rate_limit: null,
+ id: 'u1', email: 'user@example.test', budget_max: 10, budget_base: 10, budget_spent: 3,
 		budget_period: 'none', budget_reset_at: null, budget_epoch: 0, budget_reserved_micros: 0, status: 'active', metadata: null,
 		charged_cost_factors: null, external_system: null, external_user_id: null, created_at: '', updated_at: '' });
 	const mutation: AdminKeyMutationWithAudit = { id: 'a', expected: { userId: 'u1', workspaceId: 'w1', name: 'before', status: 'active', metadata: '{}' },

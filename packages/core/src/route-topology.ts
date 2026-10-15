@@ -1,4 +1,29 @@
 import type { UpstreamProtocol } from "./upstream-protocol";
+import {
+	PASSTHROUGH_ROUTE_ADAPTER,
+	ROUTE_ADAPTER_MAPPINGS,
+	isConversionRouteAdapter,
+	isRouteAdapter,
+} from "./adapters/registry";
+
+export {
+	DASHSCOPE_FILE_TRANSCRIPTION_PATH,
+	DASHSCOPE_MULTIMODAL_GENERATION_PATH,
+	DASHSCOPE_SPEECH_SYNTHESIZER_PATH,
+	DASHSCOPE_TASKS_PATH,
+	MINIMAX_IMAGE_GENERATION_PATH,
+	MINIMAX_SPEECH_TO_TEXT_PATH,
+	MINIMAX_T2A_PATH,
+	VOLCENGINE_IMAGE_GENERATIONS_PATH,
+	PASSTHROUGH_ROUTE_ADAPTER,
+	ROUTE_ADAPTER_MAPPINGS,
+	ROUTE_ADAPTERS,
+	isConversionRouteAdapter,
+	isRouteAdapter,
+	type ConversionRouteAdapter,
+	type RouteAdapter,
+	type RouteAdapterMapping,
+} from "./adapters/registry";
 
 /** Gemini generate-content family (stream + non-stream). */
 export const GEMINI_GENERATE_OPERATION = 'models.generate';
@@ -34,7 +59,19 @@ export const REQUEST_OPERATIONS_BY_PROTOCOL = {
 		"audio.speech.multimodal",
 		"audio.speech.realtime.inference",
 		"audio.speech.realtime.session",
+		"images.generations.multimodal",
 	],
+	/**
+	 * 公开入口：`POST /v1/minimax/speech_to_text`、`POST /v1/minimax/t2a_v2`、
+	 * `POST /v1/minimax/image_generation`。adapter 都是 passthrough。
+	 * `audio.speech` 同时覆盖非流式 JSON 和 `stream: true` 的 SSE。
+	 */
+	minimax: ['audio.transcriptions', 'audio.speech', 'images.generations'],
+	/**
+	 * 公开入口：`POST /v1/volcengine/images/generations`。
+	 * 非流式 JSON 与 `stream: true` 的 SSE 共用这条路径，adapter 是 passthrough。
+	 */
+	volcengine: ['images.generations'],
 } as const satisfies Record<UpstreamProtocol, readonly string[]>;
 
 export type RequestOperation =
@@ -42,85 +79,6 @@ export type RequestOperation =
 	| "*";
 
 export const LEGACY_WILDCARD_OPERATION: RequestOperation = "*";
-export const PASSTHROUGH_ROUTE_ADAPTER = "passthrough";
-
-/** Gateway 对外的 DashScope 同步多模态 HTTP 入口（与上游 path 对齐）。 */
-export const DASHSCOPE_MULTIMODAL_GENERATION_PATH =
-	"/v1/dashscope/services/aigc/multimodal-generation/generation";
-
-/** 显式 adapter 白名单；跨协议映射必须命中下方精确声明。 */
-export const ROUTE_ADAPTERS = [
-	PASSTHROUGH_ROUTE_ADAPTER,
-	"dashscope-asr-qwen-file",
-	"dashscope-asr-qwen-audio-file",
-	"dashscope-asr-fun-file",
-	"dashscope-asr-file-async",
-	"dashscope-tts-speech",
-	"dashscope-tts-qwen",
-	"dashscope-tts-minimax",
-] as const;
-
-export type RouteAdapter = (typeof ROUTE_ADAPTERS)[number];
-
-type RouteAdapterMapping = {
-	requestProtocol: UpstreamProtocol;
-	requestOperation: string;
-	upstreamProtocol: UpstreamProtocol;
-	upstreamOperation: string;
-};
-
-/** 每个转换 adapter 只承担一种协议生命周期，禁止根据模型名隐式切换。 */
-const ROUTE_ADAPTER_MAPPINGS: Record<
-	Exclude<RouteAdapter, "passthrough">,
-	RouteAdapterMapping
-> = {
-	"dashscope-asr-qwen-file": {
-		requestProtocol: "openai",
-		requestOperation: "audio.transcriptions",
-		upstreamProtocol: "dashscope",
-		upstreamOperation: "audio.transcriptions.multimodal",
-	},
-	"dashscope-asr-qwen-audio-file": {
-		requestProtocol: "openai",
-		requestOperation: "audio.transcriptions",
-		upstreamProtocol: "dashscope",
-		upstreamOperation: "audio.transcriptions.multimodal",
-	},
-	"dashscope-asr-fun-file": {
-		requestProtocol: "openai",
-		requestOperation: "audio.transcriptions",
-		upstreamProtocol: "dashscope",
-		upstreamOperation: "audio.transcriptions.multimodal",
-	},
-	"dashscope-asr-file-async": {
-		requestProtocol: "openai",
-		requestOperation: "audio.transcriptions",
-		upstreamProtocol: "dashscope",
-		upstreamOperation: "audio.transcriptions.async",
-	},
-	"dashscope-tts-speech": {
-		requestProtocol: "openai",
-		requestOperation: "audio.speech",
-		upstreamProtocol: "dashscope",
-		upstreamOperation: "audio.speech",
-	},
-	"dashscope-tts-qwen": {
-		requestProtocol: "openai",
-		requestOperation: "audio.speech",
-		upstreamProtocol: "dashscope",
-		upstreamOperation: "audio.speech.multimodal",
-	},
-	"dashscope-tts-minimax": {
-		requestProtocol: "openai",
-		requestOperation: "audio.speech",
-		upstreamProtocol: "dashscope",
-		upstreamOperation: "audio.speech.multimodal",
-	},
-};
-
-export function isRouteAdapter(raw: string): raw is RouteAdapter {
-	return (ROUTE_ADAPTERS as readonly string[]).includes(raw);
-}
 
 /**
  * 校验 request surface 与 upstream target 是否由 adapter 明确定义。
@@ -142,12 +100,14 @@ export function isRouteAdapterCompatible(input: {
 				input.requestOperation === input.upstreamOperation)
 		);
 	}
+	if (!isConversionRouteAdapter(input.adapter)) return false;
 	const mapping = ROUTE_ADAPTER_MAPPINGS[input.adapter];
 	return (
 		input.requestProtocol === mapping.requestProtocol &&
 		input.requestOperation === mapping.requestOperation &&
 		input.upstreamProtocol === mapping.upstreamProtocol &&
-		input.upstreamOperation === mapping.upstreamOperation
+		(input.upstreamOperation === LEGACY_WILDCARD_OPERATION ||
+			input.upstreamOperation === mapping.upstreamOperation)
 	);
 }
 
@@ -160,6 +120,21 @@ export function isRequestOperationForProtocol(
 		(REQUEST_OPERATIONS_BY_PROTOCOL[protocol] as readonly string[]).includes(
 			operation
 		)
+	);
+}
+
+/**
+ * 上游 operation 可以是公开请求 operation，也可以只出现在转换适配器的上游侧。
+ * MiniMax `audio.transcriptions` 同时是公开透传入口和 `minimax-asr-file` 的上游端点。
+ */
+export function isUpstreamOperationForProtocol(
+	protocol: UpstreamProtocol,
+	operation: string
+): boolean {
+	if (isRequestOperationForProtocol(protocol, operation)) return true;
+	return Object.values(ROUTE_ADAPTER_MAPPINGS).some(
+		(mapping) =>
+			mapping.upstreamProtocol === protocol && mapping.upstreamOperation === operation
 	);
 }
 
@@ -217,12 +192,15 @@ export function requestOperationAliasRank(operation: string): number {
 
 export function effectiveUpstreamOperation(
 	configuredOperation: string | null | undefined,
-	requestOperation: string
+	requestOperation: string,
+	adapter?: string | null
 ): string {
 	const configured = normalizeRouteOperation(configuredOperation);
-	return configured === LEGACY_WILDCARD_OPERATION
-		? requestOperation
-		: configured;
+	if (configured !== LEGACY_WILDCARD_OPERATION) return configured;
+	if (adapter && isConversionRouteAdapter(adapter)) {
+		return ROUTE_ADAPTER_MAPPINGS[adapter].upstreamOperation;
+	}
+	return requestOperation;
 }
 
 export interface RoutePoolRow {

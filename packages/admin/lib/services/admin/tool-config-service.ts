@@ -344,12 +344,17 @@ export async function saveToolConfig(
 	const changedFields: ConfigGroupApplyInput["safeAudit"]["changedFields"][number][] =
 		[];
 	const oldPrices = toolConfigEntryPrices(entry, family);
-	for (const field of ["metered", "standard", "charged"] as const)
-		if (oldPrices[field] !== body.prices[field] || !original) {
+	const priceFields = ['metered', 'standard', 'charged'] as const;
+	const pricesChanged = priceFields.some((field) => oldPrices[field] !== body.prices[field]);
+	if (pricesChanged || !original) {
+		delete entry.pricing;
+		for (const field of priceFields) {
 			entry[field] = body.prices[field];
-			changedFields.push({ provider, field });
+			if (oldPrices[field] !== body.prices[field] || !original) changedFields.push({ provider, field });
 		}
-	if (entry.charged !== undefined) entry.cost = body.prices.charged;
+		entry.cost = body.prices.charged;
+	}
+
 	const credentials: ConfigGroupApplyInput["safeAudit"]["credentials"][number][] =
 		[];
 	for (const field of toolConfigFields(family)) {

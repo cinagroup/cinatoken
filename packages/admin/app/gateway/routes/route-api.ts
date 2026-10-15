@@ -1,3 +1,5 @@
+import { useMemo } from 'react';
+import { useAdvancedEditorRequest } from '@/components/routing-workbench/AdvancedEditorGate';
 import { readApiJson } from "@/lib/api-json";
 import type {
 	GatewayModel,
@@ -15,12 +17,12 @@ import type {
 	StickyBindingsSummary,
 } from "./types";
 
-export async function fetchRoutesPageData(): Promise<RoutesPageData> {
+export async function fetchRoutesPageData(request: typeof fetch = fetch): Promise<RoutesPageData> {
 	const [routesRes, modelsRes, providersRes, configRes] = await Promise.all([
-		fetch("/api/admin/routes"),
-		fetch("/api/admin/models"),
-		fetch("/api/admin/providers"),
-		fetch("/api/admin/config"),
+		request("/api/admin/routes"),
+		request("/api/admin/models"),
+		request("/api/admin/providers"),
+		request("/api/admin/config"),
 	]);
 	const routesData = await readApiJson<RouteListRow[]>(routesRes);
 	const modelsData = await readApiJson<GatewayModel[]>(modelsRes);
@@ -50,13 +52,13 @@ export async function fetchRoutesPageData(): Promise<RoutesPageData> {
 
 export async function saveRoute(
 	formData: RouteFormData,
-	editingRoute: RouteListRow | null
+	editingRoute: RouteListRow | null, request: typeof fetch = fetch
 ): Promise<{ success: true } | { success: false; message: string }> {
 	try {
 		const payload = buildRouteSavePayload(formData, editingRoute);
 		let response: Response;
 		if (editingRoute) {
-			response = await fetch(
+			response = await request(
 				`/api/admin/routes/${encodeURIComponent(editingRoute.id)}`,
 				{
 					method: "PATCH",
@@ -65,7 +67,7 @@ export async function saveRoute(
 				}
 			);
 		} else {
-			response = await fetch("/api/admin/routes", {
+			response = await request("/api/admin/routes", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify(payload),
@@ -86,9 +88,9 @@ export async function saveRoute(
 }
 
 export async function deleteRoute(
-	id: string
+	id: string, request: typeof fetch = fetch
 ): Promise<{ success: true } | { success: false; message: string }> {
-	const response = await fetch(`/api/admin/routes/${encodeURIComponent(id)}`, {
+	const response = await request(`/api/admin/routes/${encodeURIComponent(id)}`, {
 		method: "DELETE",
 	});
 	const data = await readApiJson(response);
@@ -98,9 +100,9 @@ export async function deleteRoute(
 
 export async function toggleRouteStatus(
 	id: string,
-	status: "active" | "inactive"
+	status: "active" | "inactive", request: typeof fetch = fetch
 ): Promise<{ success: true } | { success: false; message: string }> {
-	const response = await fetch(`/api/admin/routes/${encodeURIComponent(id)}`, {
+	const response = await request(`/api/admin/routes/${encodeURIComponent(id)}`, {
 		method: "PATCH",
 		headers: { "Content-Type": "application/json" },
 		body: JSON.stringify({ status }),
@@ -112,14 +114,14 @@ export async function toggleRouteStatus(
 
 export async function patchModelRoutePolicy(
 	modelId: string,
-	routePolicy: string | null
+	routePolicy: string | null, expectedRoutePolicy: string | null, request: typeof fetch = fetch
 ): Promise<{ success: true } | { success: false; message: string }> {
-	const response = await fetch(
+	const response = await request(
 		`/api/admin/models/${encodeURIComponent(modelId)}`,
 		{
 			method: "PATCH",
 			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({ route_policy: routePolicy }),
+			body: JSON.stringify({ route_policy: routePolicy, expected_route_policy: expectedRoutePolicy }),
 		}
 	);
 	const data = await readApiJson(response);
@@ -132,9 +134,9 @@ export async function patchModelRoutePolicy(
 
 export async function patchRoutePoolStrategy(
 	poolId: string,
-	strategy: string | null
+	strategy: string | null, request: typeof fetch = fetch
 ): Promise<{ success: true } | { success: false; message: string }> {
-	return patchRoutePoolPolicy(poolId, { strategy });
+	return patchRoutePoolPolicy(poolId, { strategy }, request);
 }
 
 export async function patchRoutePoolPolicy(
@@ -143,9 +145,9 @@ export async function patchRoutePoolPolicy(
 		strategy?: string | null;
 		tier_strategies?: string | null | Record<string, string>;
 		sticky_routing?: { enabled: boolean; idle_ttl_seconds: number };
-	}
+	}, request: typeof fetch = fetch
 ): Promise<{ success: true } | { success: false; message: string }> {
-	const response = await fetch(
+	const response = await request(
 		`/api/admin/routes/pools/${encodeURIComponent(poolId)}`,
 		{
 			method: "PATCH",
@@ -162,12 +164,12 @@ export async function patchRoutePoolPolicy(
 }
 
 export async function fetchStickyBindingsSummary(
-	poolId: string
+	poolId: string, request: typeof fetch = fetch
 ): Promise<
 	| { success: true; data: StickyBindingsSummary }
 	| { success: false; message: string }
 > {
-	const response = await fetch(
+	const response = await request(
 		`/api/admin/routes/pools/${encodeURIComponent(
 			poolId
 		)}/sticky/bindings/summary`
@@ -188,7 +190,7 @@ export async function lookupStickyBinding(params: {
 	requestOperation: string;
 	userId?: string;
 	email?: string;
-}): Promise<
+}, request: typeof fetch = fetch): Promise<
 	| { success: true; data: StickyBindingLookup }
 	| { success: false; message: string }
 > {
@@ -200,7 +202,7 @@ export async function lookupStickyBinding(params: {
 	});
 	if (params.userId?.trim()) qs.set("user_id", params.userId.trim());
 	if (params.email?.trim()) qs.set("email", params.email.trim());
-	const response = await fetch(
+	const response = await request(
 		`/api/admin/routes/pools/${encodeURIComponent(
 			params.poolId
 		)}/sticky/bindings/lookup?${qs}`
@@ -215,11 +217,11 @@ export async function lookupStickyBinding(params: {
 
 export async function clearStickyBinding(
 	poolId: string,
-	affinityHash: string
+	affinityHash: string, request: typeof fetch = fetch
 ): Promise<
 	{ success: true; cleared: boolean } | { success: false; message: string }
 > {
-	const response = await fetch(
+	const response = await request(
 		`/api/admin/routes/pools/${encodeURIComponent(
 			poolId
 		)}/sticky/bindings/${encodeURIComponent(affinityHash)}`,
@@ -235,11 +237,11 @@ export async function clearStickyBinding(
 }
 
 export async function resetStickyBindings(
-	poolId: string
+	poolId: string, request: typeof fetch = fetch
 ): Promise<
 	{ success: true; sticky_epoch: number } | { success: false; message: string }
 > {
-	const response = await fetch(
+	const response = await request(
 		`/api/admin/routes/pools/${encodeURIComponent(poolId)}/sticky/reset`,
 		{ method: "POST" }
 	);
@@ -251,3 +253,29 @@ export async function resetStickyBindings(
 		message: data.message || "Failed to reset sticky bindings",
 	};
 }
+
+export function useRouteApi() { const request = useAdvancedEditorRequest(); return useMemo(() => ({
+fetchRoutesPageData: () => fetchRoutesPageData(request),
+saveRoute: (formData: RouteFormData, editingRoute: RouteListRow | null) => saveRoute(formData, editingRoute, request),
+deleteRoute: (id: string) => deleteRoute(id, request),
+toggleRouteStatus: (id: string, status: "active" | "inactive") => toggleRouteStatus(id, status, request),
+patchModelRoutePolicy: (modelId: string, routePolicy: string | null, expectedRoutePolicy: string | null) => patchModelRoutePolicy(modelId, routePolicy, expectedRoutePolicy, request),
+patchRoutePoolStrategy: (poolId: string, strategy: string | null) => patchRoutePoolStrategy(poolId, strategy, request),
+patchRoutePoolPolicy: (poolId: string, patch: {
+		strategy?: string | null;
+		tier_strategies?: string | null | Record<string, string>;
+		sticky_routing?: { enabled: boolean; idle_ttl_seconds: number };
+	}) => patchRoutePoolPolicy(poolId, patch, request),
+fetchStickyBindingsSummary: (poolId: string) => fetchStickyBindingsSummary(poolId, request),
+lookupStickyBinding: (params: {
+	poolId: string;
+	modelId: string;
+	routeGroup: string;
+	protocol: string;
+	requestOperation: string;
+	userId?: string;
+	email?: string;
+}) => lookupStickyBinding(params, request),
+clearStickyBinding: (poolId: string, affinityHash: string) => clearStickyBinding(poolId, affinityHash, request),
+resetStickyBindings: (poolId: string) => resetStickyBindings(poolId, request),
+}), [request]); }

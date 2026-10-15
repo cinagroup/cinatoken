@@ -63,26 +63,40 @@ function request(overrides: Partial<NormalizedAudioTranscriptionRequest> = {}): 
 
 function endpoint(providerId: string): NonNullable<RouteResult['endpoint']> {
 	return {
-		id: `${providerId}-endpoint`, modelId: 'audio-model', providerId, providerSlug: providerId,
-		selectorSlug: providerId, endpointClass: null, region: null,
-		contextLength: 8_192, maxPromptTokens: null, maxCompletionTokens: null,
-		quantization: null, supportedParameters: [],
+		id: `${providerId}-endpoint`,
+		modelId: 'audio-model',
+		providerId,
+		providerSlug: providerId,
+		selectorSlug: providerId,
+		endpointClass: null,
+		region: null,
+		contextLength: 8_192,
+		maxPromptTokens: null,
+		maxCompletionTokens: null,
+		quantization: null,
+		supportedParameters: [],
 		pricing: { currency: 'USD', prompt: '0', completion: '0', audio: '0' },
 		capabilities: {
-			implicit_caching: false, voice_cloning: false,
+			implicit_caching: false,
+			voice_cloning: false,
 			tool_choice: { auto: false, function: false, none: false, required: false },
 		},
 		imageCapabilities: null,
-		evidenceUrl: 'https://provider.test/evidence', verifiedBy: 'test',
-		verifiedAt: '2026-01-01T00:00:00.000Z', expiresAt: '2099-01-01T00:00:00.000Z',
+		evidenceUrl: 'https://provider.test/evidence',
+		verifiedBy: 'test',
+		verifiedAt: '2026-01-01T00:00:00.000Z',
+		expiresAt: '2099-01-01T00:00:00.000Z',
 	};
 }
 
 for (const mode of ['sync', 'async'] as const) {
 	it(`native DashScope ${mode} 307 submit neither follows Location nor replays another model`, async () => {
-		let posts = 0, redirected = 0;
+		let posts = 0,
+			redirected = 0;
 		const server = createServer(async (incoming, outgoing) => {
-			for await (const _chunk of incoming) { /* Receive the complete upload. */ }
+			for await (const _chunk of incoming) {
+				/* Receive the complete upload. */
+			}
 			if (incoming.url === '/redirected') {
 				redirected++;
 				outgoing.writeHead(200, { 'Content-Type': 'application/json' });
@@ -93,34 +107,51 @@ for (const mode of ['sync', 'async'] as const) {
 			outgoing.writeHead(307, { Location: '/redirected', 'Content-Type': 'application/json' });
 			outgoing.end(JSON.stringify({ error: { message: 'synthetic redirect' } }));
 		});
-		await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve));
+		await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
 		try {
 			const port = (server.address() as AddressInfo).port;
 			const providerEndpoints = { dashscope: { base: `http://127.0.0.1:${port}/api/v1` } };
-			const candidates = [0, 1].map(index => route({
-				targetId: `target-${index}`, providerId: `provider-${index}`,
-				gatewayCandidateIndex: index, routePriority: 2 - index,
-				endpoint: endpoint(`provider-${index}`), providerEndpoints,
-				...(mode === 'async' ? {
-					providerModelName: 'qwen3-asr-flash-filetrans',
-					upstreamOperation: 'audio.transcriptions.async',
-					adapter: 'dashscope-asr-file-async',
-				} : {}),
-			}));
-			const transcriptRequest = mode === 'sync'
-				? request()
-				: request({ file: null, fileSourceUrl: 'https://audio.example/sample.wav' });
-			const originalLog = console.log, originalError = console.error;
+			const candidates = [0, 1].map((index) =>
+				route({
+					targetId: `target-${index}`,
+					providerId: `provider-${index}`,
+					gatewayCandidateIndex: index,
+					routePriority: 2 - index,
+					endpoint: endpoint(`provider-${index}`),
+					providerEndpoints,
+					...(mode === 'async'
+						? {
+								providerModelName: 'qwen3-asr-flash-filetrans',
+								upstreamOperation: 'audio.transcriptions.async',
+								adapter: 'dashscope-asr-file-async',
+							}
+						: {}),
+				}),
+			);
+			const transcriptRequest =
+				mode === 'sync' ? request() : request({ file: null, fileSourceUrl: 'https://audio.example/sample.wav' });
+			const originalLog = console.log,
+				originalError = console.error;
 			console.log = () => {};
 			console.error = () => {};
 			const result = await (async () => {
 				try {
-					return await failoverDispatch({} as GatewayRepositories, candidates, 'dashscope',
-					(candidate, signal, timing, attempt) => mode === 'sync'
-						? dispatchDashScopeSyncAsr(candidate, transcriptRequest, signal, timing, attempt)
-						: dispatchDashScopeAsyncAsr(candidate, transcriptRequest, signal, timing, attempt),
-					undefined, { affinityKey: `dashscope-${mode}-307`, tierKeyPrefix: `dashscope-${mode}-307`,
-						strategy: 'weight_priority', crossModelCandidateFailover: true });
+					return await failoverDispatch(
+						{} as GatewayRepositories,
+						candidates,
+						'dashscope',
+						(candidate, signal, timing, attempt) =>
+							mode === 'sync'
+								? dispatchDashScopeSyncAsr(candidate, transcriptRequest, signal, timing, attempt)
+								: dispatchDashScopeAsyncAsr(candidate, transcriptRequest, signal, timing, attempt),
+						undefined,
+						{
+							affinityKey: `dashscope-${mode}-307`,
+							tierKeyPrefix: `dashscope-${mode}-307`,
+							strategy: 'weight_priority',
+							crossModelCandidateFailover: true,
+						},
+					);
 				} finally {
 					console.log = originalLog;
 					console.error = originalError;
@@ -135,19 +166,22 @@ for (const mode of ['sync', 'async'] as const) {
 			await result.response.text();
 		} finally {
 			server.closeAllConnections();
-			await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve()));
+			await new Promise<void>((resolve, reject) => server.close((error) => (error ? reject(error) : resolve())));
 		}
 	});
 
 	it(`DashScope ${mode} distinguishes ambiguous submit statuses from clear rejection`, async () => {
-		const candidate = route(mode === 'async' ? {
-			providerModelName: 'qwen3-asr-flash-filetrans',
-			upstreamOperation: 'audio.transcriptions.async',
-			adapter: 'dashscope-asr-file-async',
-		} : {});
-		const transcriptRequest = mode === 'sync'
-			? request()
-			: request({ file: null, fileSourceUrl: 'https://audio.example/sample.wav' });
+		const candidate = route(
+			mode === 'async'
+				? {
+						providerModelName: 'qwen3-asr-flash-filetrans',
+						upstreamOperation: 'audio.transcriptions.async',
+						adapter: 'dashscope-asr-file-async',
+					}
+				: {},
+		);
+		const transcriptRequest =
+			mode === 'sync' ? request() : request({ file: null, fileSourceUrl: 'https://audio.example/sample.wav' });
 		for (const status of [300, 301, 302, 303, 307, 308, 408, 499, 500, 503, 524, 400, 401, 429]) {
 			let sends = 0;
 			const fetchImpl = async (_url: string | URL | Request, init?: RequestInit) => {
@@ -155,10 +189,11 @@ for (const mode of ['sync', 'async'] as const) {
 				assert.equal(init?.redirect, 'manual');
 				return Response.json({ error: { message: 'synthetic rejection' } }, { status });
 			};
-			const result = mode === 'sync'
-				? await dispatchDashScopeSyncAsr(candidate, transcriptRequest, undefined, null, undefined, { fetchImpl })
-				: await dispatchDashScopeAsyncAsr(candidate, transcriptRequest, undefined, null, undefined, { fetchImpl });
-			const unknown = status >= 300 && status < 400 || status === 408 || status === 499 || status >= 500;
+			const result =
+				mode === 'sync'
+					? await dispatchDashScopeSyncAsr(candidate, transcriptRequest, undefined, null, undefined, { fetchImpl })
+					: await dispatchDashScopeAsyncAsr(candidate, transcriptRequest, undefined, null, undefined, { fetchImpl });
+			const unknown = (status >= 300 && status < 400) || status === 408 || status === 499 || status >= 500;
 			assert.equal(sends, 1);
 			assert.equal(result.response.status, status);
 			assert.equal(result.meta.upstreamOutcomeUnknown === true, unknown);
@@ -168,23 +203,33 @@ for (const mode of ['sync', 'async'] as const) {
 	});
 
 	it(`DashScope ${mode} preserves outcome certainty when an error body exceeds its limit`, async () => {
-		const candidate = route(mode === 'async' ? {
-			providerModelName: 'qwen3-asr-flash-filetrans',
-			upstreamOperation: 'audio.transcriptions.async',
-			adapter: 'dashscope-asr-file-async',
-		} : {});
-		const transcriptRequest = mode === 'sync'
-			? request()
-			: request({ file: null, fileSourceUrl: 'https://audio.example/sample.wav' });
+		const candidate = route(
+			mode === 'async'
+				? {
+						providerModelName: 'qwen3-asr-flash-filetrans',
+						upstreamOperation: 'audio.transcriptions.async',
+						adapter: 'dashscope-asr-file-async',
+					}
+				: {},
+		);
+		const transcriptRequest =
+			mode === 'sync' ? request() : request({ file: null, fileSourceUrl: 'https://audio.example/sample.wav' });
 		for (const status of [307, 503, 429]) {
-			const fetchImpl = async () => new Response('0123456789', {
-				status, headers: { 'content-length': '10' },
-			});
-			const result = mode === 'sync'
-				? await dispatchDashScopeSyncAsr(candidate, transcriptRequest, undefined, null, undefined,
-					{ maxResponseBytes: 8, fetchImpl })
-				: await dispatchDashScopeAsyncAsr(candidate, transcriptRequest, undefined, null, undefined,
-					{ maxResponseBytes: 8, fetchImpl });
+			const fetchImpl = async () =>
+				new Response('0123456789', {
+					status,
+					headers: { 'content-length': '10' },
+				});
+			const result =
+				mode === 'sync'
+					? await dispatchDashScopeSyncAsr(candidate, transcriptRequest, undefined, null, undefined, {
+							maxResponseBytes: 8,
+							fetchImpl,
+						})
+					: await dispatchDashScopeAsyncAsr(candidate, transcriptRequest, undefined, null, undefined, {
+							maxResponseBytes: 8,
+							fetchImpl,
+						});
 			assert.equal(result.response.status, status);
 			assert.equal(result.meta.upstreamOutcomeUnknown === true, status !== 429);
 			assert.equal(result.meta.failoverForbidden === true, status !== 429);
@@ -198,11 +243,15 @@ it('DashScope native multimodal passthrough keeps ambiguous failures outcome-unk
 		const result = await dispatchDashScopeMultimodalPassthrough(
 			route({ adapter: 'passthrough' }),
 			{ model: 'public-asr', input: { messages: [] } },
-			undefined, null, undefined,
-			{ fetchImpl: async (_url, init) => {
-				assert.equal(init?.redirect, 'manual');
-				return Response.json({ error: { message: 'synthetic failure' } }, { status });
-			} },
+			undefined,
+			null,
+			undefined,
+			{
+				fetchImpl: async (_url, init) => {
+					assert.equal(init?.redirect, 'manual');
+					return Response.json({ error: { message: 'synthetic failure' } }, { status });
+				},
+			},
 		);
 		assert.equal(result.response.status, status);
 		assert.equal(result.meta.upstreamOutcomeUnknown === true, status !== 429);
@@ -431,20 +480,15 @@ describe('DashScope ASR dispatch', () => {
 
 	it('rejects invalid and unusable synchronous 2xx responses as outcome-unknown', async () => {
 		for (const body of ['not-json', JSON.stringify({ output: {}, usage: { seconds: 2 } })]) {
-			const result = await dispatchDashScopeSyncAsr(
-				route(),
-				request(),
-				undefined,
-				null,
-				undefined,
-				{ fetchImpl: async () => new Response(body, { status: 200 }) },
-			);
+			const result = await dispatchDashScopeSyncAsr(route(), request(), undefined, null, undefined, {
+				fetchImpl: async () => new Response(body, { status: 200 }),
+			});
 
 			assert.equal(result.response.status, 502);
 			assert.equal(result.meta.upstreamOutcomeUnknown, true);
 			assert.equal(result.meta.failoverForbidden, true);
 			assert.equal(result.meta.audioDurationSeconds, null);
-			const clientBody = await result.response.json() as { code?: string; error?: { code?: number } };
+			const clientBody = (await result.response.json()) as { code?: string; error?: { code?: number } };
 			assert.equal(clientBody.code, 'gateway.upstream_request_failed');
 			assert.equal(clientBody.error?.code, 502);
 			assert.equal(JSON.stringify(clientBody).includes(body), false);
@@ -503,7 +547,11 @@ describe('DashScope ASR dispatch', () => {
 			}),
 			{
 				model: 'public-asr',
-				input: { messages: [{ role: 'user', content: [{ type: 'input_audio', input_audio: { data: 'https://a.example/a.wav' } }] }] },
+				input: {
+					messages: [
+						{ role: 'user', content: [{ type: 'input_audio', input_audio: { data: 'https://a.example/a.wav' } }] },
+					],
+				},
 				parameters: { format: 'wav' },
 			},
 			undefined,
@@ -538,7 +586,10 @@ describe('DashScope ASR dispatch', () => {
 			'not-json',
 			JSON.stringify({ usage: { duration: 3 } }),
 			JSON.stringify({ output: {}, usage: { duration: 3 } }),
-			JSON.stringify({ output: { choices: [{ message: { content: [{ audio: 'ignored' }] } }] }, usage: { duration: 3 } }),
+			JSON.stringify({
+				output: { choices: [{ message: { content: [{ audio: 'ignored' }] } }] },
+				usage: { duration: 3 },
+			}),
 		]) {
 			const result = await dispatchDashScopeMultimodalPassthrough(
 				route({ adapter: 'passthrough' }),
@@ -553,7 +604,7 @@ describe('DashScope ASR dispatch', () => {
 			assert.equal(result.meta.upstreamOutcomeUnknown, true);
 			assert.equal(result.meta.failoverForbidden, true);
 			assert.equal(result.meta.audioDurationSeconds, null);
-			assert.equal((await result.response.json() as { code?: string }).code, 'gateway.upstream_request_failed');
+			assert.equal(((await result.response.json()) as { code?: string }).code, 'gateway.upstream_request_failed');
 		}
 	});
 
@@ -569,16 +620,17 @@ describe('DashScope ASR dispatch', () => {
 				null,
 				undefined,
 				{
-					fetchImpl: async () => Response.json({
-						output,
-						usage: { seconds: 1 },
-					}),
+					fetchImpl: async () =>
+						Response.json({
+							output,
+							usage: { seconds: 1 },
+						}),
 				},
 			);
 
 			assert.equal(result.response.status, 200);
 			assert.equal(result.meta.audioDurationSeconds, 1);
-			assert.deepEqual((await result.response.json() as { output?: unknown }).output, output);
+			assert.deepEqual(((await result.response.json()) as { output?: unknown }).output, output);
 		}
 	});
 
@@ -591,13 +643,12 @@ describe('DashScope ASR dispatch', () => {
 			null,
 			undefined,
 			{
-				beforeUpstreamDispatch: async () => { events.push('lease-dispatched'); },
+				beforeUpstreamDispatch: async () => {
+					events.push('lease-dispatched');
+				},
 				fetchImpl: async () => {
 					events.push('fetch');
-					return new Response(
-						JSON.stringify({ output: { text: '' }, usage: { seconds: 1 } }),
-						{ status: 200 },
-					);
+					return new Response(JSON.stringify({ output: { text: '' }, usage: { seconds: 1 } }), { status: 200 });
 				},
 			},
 		);
@@ -611,20 +662,25 @@ describe('DashScope ASR dispatch', () => {
 		const failure = new Error('lease rejected');
 		// The dispatcher must receive the original local persistence failure;
 		// returning an upstream 502 here would make it eligible for replay.
-		await assert.rejects(dispatchDashScopeMultimodalPassthrough(
-			route({ adapter: 'passthrough' }),
-			{ model: 'public-asr', input: { messages: [] } },
-			undefined,
-			null,
-			undefined,
-			{
-				beforeUpstreamDispatch: async () => { throw failure; },
-				fetchImpl: async () => {
-					fetchCalled = true;
-					return new Response('{}', { status: 200 });
+		await assert.rejects(
+			dispatchDashScopeMultimodalPassthrough(
+				route({ adapter: 'passthrough' }),
+				{ model: 'public-asr', input: { messages: [] } },
+				undefined,
+				null,
+				undefined,
+				{
+					beforeUpstreamDispatch: async () => {
+						throw failure;
+					},
+					fetchImpl: async () => {
+						fetchCalled = true;
+						return new Response('{}', { status: 200 });
+					},
 				},
-			},
-		), error => error === failure);
+			),
+			(error) => error === failure,
+		);
 		assert.equal(fetchCalled, false);
 	});
 
@@ -640,7 +696,9 @@ describe('DashScope ASR dispatch', () => {
 			null,
 			undefined,
 			{
-				beforeUpstreamDispatch: async () => { leaseCalls += 1; },
+				beforeUpstreamDispatch: async () => {
+					leaseCalls += 1;
+				},
 				fetchImpl: async () => {
 					fetchCalls += 1;
 					return Response.json({ output: {} });
@@ -663,7 +721,9 @@ describe('DashScope ASR dispatch', () => {
 			undefined,
 			{
 				beforeUpstreamDispatch: async () => undefined,
-				fetchImpl: async () => { throw new TypeError('connection reset'); },
+				fetchImpl: async () => {
+					throw new TypeError('connection reset');
+				},
 			},
 		);
 
@@ -676,19 +736,12 @@ describe('DashScope ASR dispatch', () => {
 		const controller = new AbortController();
 		controller.abort();
 		let fetchCalls = 0;
-		const result = await dispatchDashScopeSyncAsr(
-			route(),
-			request(),
-			controller.signal,
-			undefined,
-			undefined,
-			{
-				fetchImpl: async () => {
-					fetchCalls += 1;
-					return new Response('{}', { status: 200 });
-				},
+		const result = await dispatchDashScopeSyncAsr(route(), request(), controller.signal, undefined, undefined, {
+			fetchImpl: async () => {
+				fetchCalls += 1;
+				return new Response('{}', { status: 200 });
 			},
-		);
+		});
 
 		assert.equal(result.response.status, 499);
 		assert.equal(fetchCalls, 0);
@@ -708,13 +761,19 @@ describe('DashScope ASR dispatch', () => {
 			{
 				beforeUpstreamDispatch: async () => undefined,
 				maxResponseBytes: 32,
-				fetchImpl: async () => new Response(new ReadableStream<Uint8Array>({
-					start(controller) {
-						controller.enqueue(new TextEncoder().encode('{"output":"'));
-						controller.enqueue(new TextEncoder().encode('x'.repeat(128)));
-					},
-					cancel() { cancelled = true; },
-				}), { status: 200 }),
+				fetchImpl: async () =>
+					new Response(
+						new ReadableStream<Uint8Array>({
+							start(controller) {
+								controller.enqueue(new TextEncoder().encode('{"output":"'));
+								controller.enqueue(new TextEncoder().encode('x'.repeat(128)));
+							},
+							cancel() {
+								cancelled = true;
+							},
+						}),
+						{ status: 200 },
+					),
 			},
 		);
 
@@ -736,12 +795,18 @@ describe('DashScope ASR dispatch', () => {
 			undefined,
 			{
 				maxResponseBytes: 16,
-				fetchImpl: async () => new Response(new ReadableStream<Uint8Array>({
-					start(controller) {
-						controller.enqueue(new TextEncoder().encode('provider error '.repeat(8)));
-					},
-					cancel() { cancelled = true; },
-				}), { status: 500 }),
+				fetchImpl: async () =>
+					new Response(
+						new ReadableStream<Uint8Array>({
+							start(controller) {
+								controller.enqueue(new TextEncoder().encode('provider error '.repeat(8)));
+							},
+							cancel() {
+								cancelled = true;
+							},
+						}),
+						{ status: 500 },
+					),
 			},
 		);
 
@@ -891,7 +956,7 @@ describe('DashScope ASR dispatch', () => {
 		assert.equal(result.meta.upstreamOutcomeUnknown, true);
 		assert.equal(result.meta.failoverForbidden, true);
 		assert.equal(result.meta.audioDurationSeconds, null);
-		assert.equal((await result.response.json() as { code?: string }).code, 'gateway.upstream_request_failed');
+		assert.equal(((await result.response.json()) as { code?: string }).code, 'gateway.upstream_request_failed');
 	});
 
 	it('rejects a private asynchronous transcription destination without fetching it', async () => {
@@ -900,7 +965,8 @@ describe('DashScope ASR dispatch', () => {
 			Response.json({ output: { task_id: 'task-1', task_status: 'PENDING' } }),
 			Response.json({
 				output: {
-					task_id: 'task-1', task_status: 'SUCCEEDED',
+					task_id: 'task-1',
+					task_status: 'SUCCEEDED',
 					results: [{ transcription_url: 'http://127.0.0.1/admin', subtask_status: 'SUCCEEDED' }],
 				},
 			}),
@@ -915,7 +981,13 @@ describe('DashScope ASR dispatch', () => {
 			undefined,
 			null,
 			undefined,
-			{ fetchImpl: async () => { calls += 1; return responses.shift()!; }, pollIntervalMs: 0 },
+			{
+				fetchImpl: async () => {
+					calls += 1;
+					return responses.shift()!;
+				},
+				pollIntervalMs: 0,
+			},
 		);
 
 		assert.equal(calls, 2);

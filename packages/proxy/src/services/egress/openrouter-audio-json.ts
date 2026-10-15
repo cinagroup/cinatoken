@@ -9,17 +9,12 @@
 export const OPENROUTER_AUDIO_JSON_MAX_DECODED_BYTES = 25 * 1024 * 1024;
 export const OPENROUTER_AUDIO_JSON_MAX_METADATA_BYTES = 256 * 1024;
 export const OPENROUTER_AUDIO_JSON_MAX_REQUEST_BYTES =
-	Math.ceil(OPENROUTER_AUDIO_JSON_MAX_DECODED_BYTES / 3) * 4
-	+ OPENROUTER_AUDIO_JSON_MAX_METADATA_BYTES;
+	Math.ceil(OPENROUTER_AUDIO_JSON_MAX_DECODED_BYTES / 3) * 4 + OPENROUTER_AUDIO_JSON_MAX_METADATA_BYTES;
 
 const AUDIO_DATA_SENTINEL = '__cinatoken_openrouter_audio_data__';
 const BASE64_FLUSH_CHARS = 64 * 1024;
 
-export type OpenRouterAudioJsonFailureKind =
-	| 'invalid_json'
-	| 'invalid_request'
-	| 'payload_too_large'
-	| 'cancelled';
+export type OpenRouterAudioJsonFailureKind = 'invalid_json' | 'invalid_request' | 'payload_too_large' | 'cancelled';
 
 export class OpenRouterAudioJsonError extends Error {
 	constructor(
@@ -43,9 +38,7 @@ export type OpenRouterAudioJsonLimits = {
 };
 
 function boundedPositiveInteger(value: number | undefined, fallback: number): number {
-	return typeof value === 'number' && Number.isSafeInteger(value) && value > 0
-		? Math.min(value, fallback)
-		: fallback;
+	return typeof value === 'number' && Number.isSafeInteger(value) && value > 0 ? Math.min(value, fallback) : fallback;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -209,11 +202,8 @@ class StreamingAudioJsonExtractor {
 				if (this.stringRole === 'audio_data') {
 					const quoteIndex = text.indexOf('"', index);
 					const escapeIndex = text.indexOf('\\', index);
-					const nextSpecial = quoteIndex < 0
-						? escapeIndex
-						: escapeIndex < 0
-							? quoteIndex
-							: Math.min(quoteIndex, escapeIndex);
+					const nextSpecial =
+						quoteIndex < 0 ? escapeIndex : escapeIndex < 0 ? quoteIndex : Math.min(quoteIndex, escapeIndex);
 					const end = nextSpecial < 0 ? text.length : nextSpecial;
 					this.base64.push(text.slice(index, end));
 					index = end;
@@ -320,15 +310,8 @@ class StreamingAudioJsonExtractor {
 			throw new OpenRouterAudioJsonError('invalid_request', 'JSON body must be an object');
 		}
 		const inputAudio = isRecord(parsed.input_audio) ? parsed.input_audio : null;
-		if (
-			this.audioDataCount !== 1
-			|| inputAudio == null
-			|| inputAudio.data !== AUDIO_DATA_SENTINEL
-		) {
-			throw new OpenRouterAudioJsonError(
-				'invalid_request',
-				'input_audio.data must be a single base64 string',
-			);
+		if (this.audioDataCount !== 1 || inputAudio == null || inputAudio.data !== AUDIO_DATA_SENTINEL) {
+			throw new OpenRouterAudioJsonError('invalid_request', 'input_audio.data must be a single base64 string');
 		}
 		const audioBytes = this.base64.finish();
 		const body = {
@@ -352,10 +335,7 @@ class StreamingAudioJsonExtractor {
 			if (audioData) {
 				this.audioDataCount += 1;
 				if (this.audioDataCount > 1) {
-					throw new OpenRouterAudioJsonError(
-						'invalid_request',
-						'input_audio.data must appear exactly once',
-					);
+					throw new OpenRouterAudioJsonError('invalid_request', 'input_audio.data must appear exactly once');
 				}
 				this.appendSanitized(JSON.stringify(AUDIO_DATA_SENTINEL));
 			} else {
@@ -386,9 +366,11 @@ class StreamingAudioJsonExtractor {
 
 	private beginContainer(character: '{' | '['): void {
 		const path = this.valuePath();
-		this.frames.push(character === '{'
-			? { kind: 'object', path, state: 'key_or_end', key: null }
-			: { kind: 'array', path, state: 'value_or_end' });
+		this.frames.push(
+			character === '{'
+				? { kind: 'object', path, state: 'key_or_end', key: null }
+				: { kind: 'array', path, state: 'value_or_end' },
+		);
 	}
 
 	private endContainer(character: '}' | ']'): void {
@@ -465,15 +447,9 @@ class StreamingAudioJsonExtractor {
 	}
 }
 
-function decodeUtf8Chunk(
-	decoder: TextDecoder,
-	value?: Uint8Array,
-	stream = false,
-): string {
+function decodeUtf8Chunk(decoder: TextDecoder, value?: Uint8Array, stream = false): string {
 	try {
-		return value === undefined
-			? decoder.decode()
-			: decoder.decode(value, { stream });
+		return value === undefined ? decoder.decode() : decoder.decode(value, { stream });
 	} catch {
 		throw new OpenRouterAudioJsonError('invalid_json', 'JSON body must be valid UTF-8');
 	}
@@ -528,14 +504,8 @@ export async function parseOpenRouterAudioJson(
 	request: Request,
 	limits: OpenRouterAudioJsonLimits = {},
 ): Promise<OpenRouterAudioJsonResult> {
-	const maxDecodedBytes = boundedPositiveInteger(
-		limits.maxDecodedBytes,
-		OPENROUTER_AUDIO_JSON_MAX_DECODED_BYTES,
-	);
-	const maxMetadataBytes = boundedPositiveInteger(
-		limits.maxMetadataBytes,
-		OPENROUTER_AUDIO_JSON_MAX_METADATA_BYTES,
-	);
+	const maxDecodedBytes = boundedPositiveInteger(limits.maxDecodedBytes, OPENROUTER_AUDIO_JSON_MAX_DECODED_BYTES);
+	const maxMetadataBytes = boundedPositiveInteger(limits.maxMetadataBytes, OPENROUTER_AUDIO_JSON_MAX_METADATA_BYTES);
 	const derivedRequestLimit = Math.ceil(maxDecodedBytes / 3) * 4 + maxMetadataBytes;
 	const maxRequestBytes = boundedPositiveInteger(
 		limits.maxRequestBytes,
@@ -557,10 +527,7 @@ export async function parseOpenRouterAudioJson(
 	// Keep a leading BOM visible so it cannot bypass the UTF-8 metadata byte ceiling.
 	// JSON.parse then rejects it because the public contract requires strict JSON.
 	const utf8 = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true });
-	const extractor = new StreamingAudioJsonExtractor(
-		new BoundedBase64Decoder(maxDecodedBytes),
-		maxMetadataBytes,
-	);
+	const extractor = new StreamingAudioJsonExtractor(new BoundedBase64Decoder(maxDecodedBytes), maxMetadataBytes);
 	let receivedBytes = 0;
 	try {
 		for (;;) {

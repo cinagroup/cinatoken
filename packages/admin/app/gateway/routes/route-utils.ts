@@ -1,3 +1,4 @@
+import { parsePricingProfile } from '@octafuse/core/db/pricing-profile';
 import {
 	isAudioModel,
 	isAudioSpeechModel,
@@ -6,33 +7,54 @@ import {
 	isImageGenerationModel,
 	isRerankModel,
 	isTextLlmModel,
-} from "@octafuse/core/db/model-modalities";
+} from '@octafuse/core/db/model-modalities';
 import {
 	DEFAULT_ROUTE_STRATEGY,
 	isRouteStrategyName,
 	parseModelRoutePolicy,
 	routePolicyRuleKey,
-} from "@octafuse/core/db/model-route-policy";
-import { parseRoutePoolTierStrategies } from "@octafuse/core/db/route-pool-tier-strategies";
-import { parseRoutePoolStickyConfig } from "@octafuse/core/db/route-pool-sticky-types";
+} from '@octafuse/core/db/model-route-policy';
+import { parseRoutePoolTierStrategies } from '@octafuse/core/db/route-pool-tier-strategies';
+import { parseRoutePoolStickyConfig } from '@octafuse/core/db/route-pool-sticky-types';
+import { composeRouteCustomParamsEnvelope, splitRouteCustomParams } from '@octafuse/core/route-custom-params';
 import {
 	ANTHROPIC_ENDPOINT_CAPABILITIES,
 	DASHSCOPE_ENDPOINT_CAPABILITIES,
 	GEMINI_ENDPOINT_CAPABILITIES,
+	MINIMAX_ENDPOINT_CAPABILITIES,
+	VOLCENGINE_ENDPOINT_CAPABILITIES,
 	OPENAI_ENDPOINT_CAPABILITIES,
 	listConfiguredCapabilities,
 	parseProviderEndpoints,
 	type ProviderEndpointCapability,
-} from "@octafuse/core/provider-endpoints";
+} from '@octafuse/core/provider-endpoints';
 import {
-	DASHSCOPE_MULTIMODAL_GENERATION_PATH,
 	isDashScopeRealtimeAsrModelOperationCompatible,
 	isRouteAdapterCompatible,
 	REQUEST_OPERATIONS_BY_PROTOCOL,
 	ROUTE_ADAPTERS,
-} from "@octafuse/core/route-topology";
+} from '@octafuse/core/route-topology';
+import {
+	PASSTHROUGH_ROUTE_ADAPTER,
+	adaptersForModelKind,
+	getAdapterByOptionKey,
+	getAdapterByPresetIntent,
+	listSelectableAdapters,
+	matchAdapterUpstreamModel,
+	type AdapterModelMatch,
+	requestOperationsFromRegistry,
+	requestSurfacePath as requestSurfacePathFromRegistry,
+	requiredCapabilitiesForUpstreamOperation,
+	SURFACE_PATH_MODEL_PLACEHOLDER,
+	upstreamOperationsFromRegistry,
+	type AdapterDescriptor,
+	type AdapterModelKind,
+	type AdapterPresetIntent,
+} from '@octafuse/core/adapters/registry';
 import {
 	findDailyWindowOverlap,
+	coerceProviderFactorValidity,
+	isProviderFactorActive,
 	formatIsoWeekdaysHint,
 	mergeScheduleSidesToSharedWindows,
 	normalizeIsoWeekdays,
@@ -40,51 +62,45 @@ import {
 	parseHhMmToMinutes,
 	parseRouteBaseFactors,
 	parseRoutePricingSchedule,
+	resolveProviderFactorValidity,
+	scheduleWindowKey,
+	type ProviderFactorValidity,
 	type DailyScheduleWindow,
 	type SharedScheduleWindow,
-} from "@octafuse/core/db/pricing-schedule";
-import { compareModelsByReleasedAtDesc } from "@/lib/model-catalog-sort";
+} from '@octafuse/core/db/pricing-schedule';
+import { compareModelsByReleasedAtDesc } from '@/lib/model-catalog-sort';
+import { getModelVendorLabel, normalizeModelVendorInput } from '@/lib/model-vendor';
 import {
-	getModelVendorLabel,
-	normalizeModelVendorInput,
-} from "@/lib/model-vendor";
-import {
-	compareRouteGroupsForDisplay,
-	normalizeRouteGroup,
-} from "@/lib/route-group-ui";
-import {
-	UPSTREAM_PROTOCOLS,
-	isUpstreamProtocol,
-	type UpstreamProtocol,
-} from "@/lib/upstream-protocol";
-import type {
-	GatewayModel,
-	GatewayModelRoute,
-	GatewayProvider,
-} from "@/lib/types";
+	compareProvidersByKindThenName,
+	liveProviderAccountLabel,
+	providerKindFilterKey,
+	type ProviderKindSortable,
+} from '@/lib/provider-kind';
+import { compareRouteGroupsForDisplay, normalizeRouteGroup } from '@/lib/route-group-ui';
+import { UPSTREAM_PROTOCOLS, isUpstreamProtocol, type UpstreamProtocol } from '@/lib/upstream-protocol';
+import type { GatewayModel, GatewayModelRoute, GatewayProvider } from '@/lib/types';
 import {
 	DEFAULT_ROUTE_KIND_FILTER,
 	FACTOR_CHIP_BASE,
 	PROTOCOL_DISPLAY_LABEL,
+	type RouteCustomHeaderRow,
 	type RouteFormData,
 	type RouteKindFilter,
 	type RouteListRow,
 	type RouteProtocolGroupSection,
 	type RouteScheduleFormSide,
+	type RouteScheduleFormWindow,
 	type RouteStrategySource,
-} from "./types";
+} from './types';
 
 export function compareRouteProtocolsForDisplay(a: string, b: string): number {
 	const knownA = isUpstreamProtocol(a);
 	const knownB = isUpstreamProtocol(b);
 	if (knownA && knownB) {
-		return (
-			(UPSTREAM_PROTOCOLS as readonly string[]).indexOf(a) -
-			(UPSTREAM_PROTOCOLS as readonly string[]).indexOf(b)
-		);
+		return (UPSTREAM_PROTOCOLS as readonly string[]).indexOf(a) - (UPSTREAM_PROTOCOLS as readonly string[]).indexOf(b);
 	}
 	if (knownA !== knownB) return knownA ? -1 : 1;
-	return a.localeCompare(b, undefined, { sensitivity: "base" });
+	return a.localeCompare(b, undefined, { sensitivity: 'base' });
 }
 
 export function getProtocolDisplayLabel(protocol: string): string {
@@ -92,73 +108,33 @@ export function getProtocolDisplayLabel(protocol: string): string {
 }
 
 /** 跨模型汇总时路径里的模型占位符（Gemini / DashScope 入口含 model）。 */
-export const SURFACE_PATH_MODEL_PLACEHOLDER = "{model}";
+export { SURFACE_PATH_MODEL_PLACEHOLDER };
 
 /** 将公开协议操作映射为客户端实际调用路径，避免把带点的操作名直接拼进 URL。 */
-export function requestSurfacePath(
-	protocol: string,
-	operation: string,
-	modelId?: string
-): string {
-	const modelSegment =
-		modelId && modelId.length > 0 ? modelId : SURFACE_PATH_MODEL_PLACEHOLDER;
-	if (protocol === "openai") {
+export function requestSurfacePath(protocol: string, operation: string, modelId?: string): string {
+	if (protocol === 'openai' && ['embeddings', 'rerank'].includes(operation)) {
 		const paths: Record<string, string> = {
-			chat: "/v1/chat/completions",
-			responses: "/v1/responses",
-			embeddings: "/v1/embeddings",
-			rerank: "/v1/rerank",
-			"images.generations": "/v1/images/generations",
-			"images.edits": "/v1/images/edits",
-			"audio.transcriptions": "/v1/audio/transcriptions",
-			"audio.speech": "/v1/audio/speech",
+			chat: '/v1/chat/completions',
+			responses: '/v1/responses',
+			embeddings: '/v1/embeddings',
+			rerank: '/v1/rerank',
+			'images.generations': '/v1/images/generations',
+			'images.edits': '/v1/images/edits',
+			'audio.transcriptions': '/v1/audio/transcriptions',
+			'audio.speech': '/v1/audio/speech',
 		};
-		return operation === "*" ? "/v1/*" : paths[operation] ?? `/v1/${operation}`;
+		return operation === '*' ? '/v1/*' : (paths[operation] ?? `/v1/${operation}`);
 	}
-	if (protocol === "anthropic") {
-		return operation === "*" ? "/v1/*" : "/v1/messages";
-	}
-	if (protocol === "gemini") {
-		// `models.generate` 是路由族标识；真实客户端仍使用两种 Gemini wire action。
-		if (operation === "models.generate") {
-			return `/v1beta/models/${modelSegment}:{generateContent|streamGenerateContent}`;
-		}
-		return `/v1beta/models/${modelSegment}:${operation}`;
-	}
-	if (protocol === "dashscope") {
-		if (operation.includes(".realtime.")) {
-			// 原生实时操作共享一个 WSS 入口，模型与操作通过查询参数选择。
-			const modelParam =
-				modelId && modelId.length > 0
-					? encodeURIComponent(modelId)
-					: SURFACE_PATH_MODEL_PLACEHOLDER;
-			return `/v1/dashscope/realtime?model=${modelParam}&operation=${encodeURIComponent(
-				operation
-			)}`;
-		}
-		const paths: Record<string, string> = {
-			"audio.speech": "/v1/audio/speech",
-			"audio.speech.stream": "/v1/audio/speech",
-			"audio.speech.multimodal": "/v1/audio/speech",
-			"audio.transcriptions": "/v1/audio/transcriptions",
-			"audio.transcriptions.multimodal": DASHSCOPE_MULTIMODAL_GENERATION_PATH,
-			"audio.transcriptions.async": "/v1/audio/transcriptions",
-		};
-		return operation === "*" ? "/*" : paths[operation] ?? `/${operation}`;
-	}
-	return operation === "*" ? "/*" : `/${operation}`;
+	return requestSurfacePathFromRegistry(protocol, operation, modelId);
 }
 
 /**
  * Request Logs 密集列表用协议端点：模型 ID 已另列，Gemini 不展开 `{model}:action`。
  * 是否流式由独立列展示，不写进路径。
  */
-export function requestLogProtocolPath(
-	protocol: string,
-	operation: string
-): string {
-	if (protocol === "gemini") {
-		return "/v1beta/models";
+export function requestLogProtocolPath(protocol: string, operation: string): string {
+	if (protocol === 'gemini') {
+		return '/v1beta/models';
 	}
 	return requestSurfacePath(protocol, operation);
 }
@@ -190,71 +166,69 @@ export function resolveEffectiveRouteStrategy(params: {
 		const tierMap = parseRoutePoolTierStrategies(params.poolTierStrategies);
 		const tierStrategy = tierMap.get(params.priority);
 		if (tierStrategy) {
-			return { strategy: tierStrategy, source: "tier", inherited: false };
+			return { strategy: tierStrategy, source: 'tier', inherited: false };
 		}
 	}
 
 	if (params.poolStrategy && isRouteStrategyName(params.poolStrategy)) {
 		return {
 			strategy: params.poolStrategy,
-			source: "pool",
+			source: 'pool',
 			inherited: params.priority !== undefined,
 		};
 	}
 
 	const policy = parseModelRoutePolicy(params.routePolicyRaw);
 	const operation = params.requestOperation?.trim();
-	if (operation && operation !== "*") {
+	if (operation && operation !== '*') {
 		const operationStrategy = policy?.rules.get(
-			routePolicyRuleKey(params.protocol, operation, params.routeGroup)
+			routePolicyRuleKey(params.protocol, operation, params.routeGroup),
 		)?.strategy;
 		if (operationStrategy) {
 			return {
 				strategy: operationStrategy,
-				source: "modelOperation",
+				source: 'modelOperation',
 				inherited: true,
 			};
 		}
 	}
 
-	const protocolStrategy = policy?.rules.get(
-		routePolicyRuleKey(params.protocol, null, params.routeGroup)
-	)?.strategy;
+	const protocolStrategy = policy?.rules.get(routePolicyRuleKey(params.protocol, null, params.routeGroup))?.strategy;
 	if (protocolStrategy) {
 		return {
 			strategy: protocolStrategy,
-			source: "modelProtocol",
+			source: 'modelProtocol',
 			inherited: true,
 		};
 	}
 	if (policy?.strategy) {
-		return { strategy: policy.strategy, source: "model", inherited: true };
+		return { strategy: policy.strategy, source: 'model', inherited: true };
 	}
 	if (params.globalStrategy && isRouteStrategyName(params.globalStrategy)) {
 		return {
 			strategy: params.globalStrategy,
-			source: "global",
+			source: 'global',
 			inherited: true,
 		};
 	}
 	return {
 		strategy: DEFAULT_ROUTE_STRATEGY,
-		source: "default",
+		source: 'default',
 		inherited: true,
 	};
 }
 
 export function protocolBadgeClass(protocol: string): string {
-	if (protocol === "openai") {
-		return "bg-emerald-50 text-emerald-800 ring-emerald-200";
+	if (protocol === 'openai') {
+		return 'bg-emerald-50 text-emerald-800 ring-emerald-200';
 	}
-	if (protocol === "anthropic") {
-		return "bg-orange-50 text-orange-800 ring-orange-200";
+	if (protocol === 'anthropic') {
+		return 'bg-orange-50 text-orange-800 ring-orange-200';
 	}
-	if (protocol === "gemini") {
-		return "bg-indigo-50 text-indigo-800 ring-indigo-200";
+	if (protocol === 'gemini') {
+		return 'bg-indigo-50 text-indigo-800 ring-indigo-200';
 	}
-	return "bg-amber-50 text-amber-900 ring-amber-200";
+	return 'bg-amber-50 text-amber-900 ring-amber-200';
 }
 
 type RouteSurfaceSummary = {
@@ -264,16 +238,12 @@ type RouteSurfaceSummary = {
 	status?: string;
 };
 
-function parseRouteSurfaces(
-	raw: string | null | undefined
-): RouteSurfaceSummary[] {
+function parseRouteSurfaces(raw: string | null | undefined): RouteSurfaceSummary[] {
 	if (!raw) return [];
 	try {
 		const parsed = JSON.parse(raw) as unknown;
 		return Array.isArray(parsed)
-			? parsed.filter((entry): entry is RouteSurfaceSummary =>
-					Boolean(entry && typeof entry === "object")
-			  )
+			? parsed.filter((entry): entry is RouteSurfaceSummary => Boolean(entry && typeof entry === 'object'))
 			: [];
 	} catch {
 		return [];
@@ -291,7 +261,7 @@ export function splitRoutesByProtocolAndRouteGroup<
 		pool_sticky_enabled?: boolean | number | null;
 		pool_sticky_idle_ttl_seconds?: number | null;
 		surfaces?: string | null;
-	}
+	},
 >(routes: T[]): RouteProtocolGroupSection<T>[] {
 	const bySection = new Map<string, RouteProtocolGroupSection<T>>();
 	for (const r of routes) {
@@ -303,19 +273,17 @@ export function splitRoutesByProtocolAndRouteGroup<
 				: [
 						{
 							request_protocol: r.upstream_protocol,
-							request_operation: "*",
-							status: "active",
+							request_operation: '*',
+							status: 'active',
 						},
-				  ];
+					];
 		for (const surface of entries) {
-			if (surface.status === "disabled") continue;
+			if (surface.status === 'disabled') continue;
 			const protocol = String(surface.request_protocol ?? r.upstream_protocol)
 				.trim()
 				.toLowerCase();
-			const requestOperation = String(surface.request_operation ?? "*");
-			const key = `${r.route_pool_id ?? "legacy"}\u0000${
-				surface.id ?? `${protocol}:${requestOperation}`
-			}\u0000${g}`;
+			const requestOperation = String(surface.request_operation ?? '*');
+			const key = `${r.route_pool_id ?? 'legacy'}\u0000${surface.id ?? `${protocol}:${requestOperation}`}\u0000${g}`;
 			const sticky = parseRoutePoolStickyConfig({
 				stickyEnabled: r.pool_sticky_enabled,
 				stickyIdleTtlSeconds: r.pool_sticky_idle_ttl_seconds,
@@ -354,22 +322,14 @@ export type RequestSurfaceGroup<T = RouteListRow> = {
 	sections: RouteProtocolGroupSection<T>[];
 };
 
-export function requestSurfaceGroupKey(
-	protocol: string,
-	requestOperation: string
-): string {
+export function requestSurfaceGroupKey(protocol: string, requestOperation: string): string {
 	return `${protocol}\u0000${requestOperation}`;
 }
 
-export function groupSectionsByRequestSurface<T>(
-	sections: RouteProtocolGroupSection<T>[]
-): RequestSurfaceGroup<T>[] {
+export function groupSectionsByRequestSurface<T>(sections: RouteProtocolGroupSection<T>[]): RequestSurfaceGroup<T>[] {
 	const groups = new Map<string, RequestSurfaceGroup<T>>();
 	for (const section of sections) {
-		const key = requestSurfaceGroupKey(
-			section.protocol,
-			section.requestOperation
-		);
+		const key = requestSurfaceGroupKey(section.protocol, section.requestOperation);
 		const group = groups.get(key) ?? {
 			key,
 			protocol: section.protocol,
@@ -384,96 +344,94 @@ export function groupSectionsByRequestSurface<T>(
 		const protocolCmp = compareRouteProtocolsForDisplay(a.protocol, b.protocol);
 		if (protocolCmp !== 0) return protocolCmp;
 		return a.requestOperation.localeCompare(b.requestOperation, undefined, {
-			sensitivity: "base",
+			sensitivity: 'base',
 		});
 	});
 }
 
-/** Same-priority layer: active first, then weight DESC, then name / id. */
+export type RoutePrioritySortContext = {
+	providersById: ReadonlyMap<string, ProviderKindSortable>;
+	locale: string;
+	customKindLabel: string;
+};
+
+type PriorityLayerRoute = Pick<GatewayModelRoute, 'status' | 'weight' | 'provider_id' | 'id'> & {
+	provider_name?: string | null;
+};
+
+function providerForPrioritySort(
+	route: PriorityLayerRoute,
+	providersById: ReadonlyMap<string, ProviderKindSortable>,
+): ProviderKindSortable {
+	const provider = providersById.get(route.provider_id);
+	const snapshotName = route.provider_name?.trim() || route.provider_id;
+	if (!provider) return { name: snapshotName, kind: '' };
+	return {
+		name: provider.name?.trim() || snapshotName,
+		kind: provider.kind,
+		kind_labels: provider.kind_labels,
+	};
+}
+
+/** Same-priority layer: active first, weight DESC, then provider kind and account name. */
 export function compareRoutesWithinPriorityLayer(
-	a: Pick<
-		GatewayModelRoute,
-		"status" | "weight" | "provider_model_name" | "id"
-	>,
-	b: Pick<GatewayModelRoute, "status" | "weight" | "provider_model_name" | "id">
+	a: PriorityLayerRoute,
+	b: PriorityLayerRoute,
+	context: RoutePrioritySortContext,
 ): number {
-	const enabledA = a.status === "active" ? 1 : 0;
-	const enabledB = b.status === "active" ? 1 : 0;
+	const enabledA = a.status === 'active' ? 1 : 0;
+	const enabledB = b.status === 'active' ? 1 : 0;
 	if (enabledB !== enabledA) return enabledB - enabledA;
 	const dw = (b.weight ?? 1) - (a.weight ?? 1);
 	if (dw !== 0) return dw;
-	const nameCmp = a.provider_model_name.localeCompare(
-		b.provider_model_name,
-		undefined,
-		{
-			sensitivity: "base",
-		}
+	const byProvider = compareProvidersByKindThenName(
+		providerForPrioritySort(a, context.providersById),
+		providerForPrioritySort(b, context.providersById),
+		context.locale,
+		context.customKindLabel,
 	);
-	if (nameCmp !== 0) return nameCmp;
-	return a.id.localeCompare(b.id, undefined, { sensitivity: "base" });
+	if (byProvider !== 0) return byProvider;
+	return a.id.localeCompare(b.id, context.locale, { sensitivity: 'base' });
 }
 
 export function compareModelRoutesForCardDisplay(
-	a: Pick<
-		GatewayModelRoute,
-		| "upstream_protocol"
-		| "priority"
-		| "status"
-		| "weight"
-		| "provider_model_name"
-		| "id"
-	>,
-	b: Pick<
-		GatewayModelRoute,
-		| "upstream_protocol"
-		| "priority"
-		| "status"
-		| "weight"
-		| "provider_model_name"
-		| "id"
-	>
+	a: Pick<GatewayModelRoute, 'upstream_protocol' | 'priority' | 'status' | 'weight' | 'provider_id' | 'id'> & {
+		provider_name?: string | null;
+	},
+	b: Pick<GatewayModelRoute, 'upstream_protocol' | 'priority' | 'status' | 'weight' | 'provider_id' | 'id'> & {
+		provider_name?: string | null;
+	},
+	context: RoutePrioritySortContext,
 ): number {
 	const knownA = isUpstreamProtocol(a.upstream_protocol);
 	const knownB = isUpstreamProtocol(b.upstream_protocol);
 	if (knownA && knownB) {
-		const ia = (UPSTREAM_PROTOCOLS as readonly string[]).indexOf(
-			a.upstream_protocol
-		);
-		const ib = (UPSTREAM_PROTOCOLS as readonly string[]).indexOf(
-			b.upstream_protocol
-		);
+		const ia = (UPSTREAM_PROTOCOLS as readonly string[]).indexOf(a.upstream_protocol);
+		const ib = (UPSTREAM_PROTOCOLS as readonly string[]).indexOf(b.upstream_protocol);
 		if (ia !== ib) return ia - ib;
 	} else if (knownA !== knownB) {
 		return knownA ? -1 : 1;
 	} else {
-		const protoCmp = a.upstream_protocol.localeCompare(
-			b.upstream_protocol,
-			undefined,
-			{
-				sensitivity: "base",
-			}
-		);
+		const protoCmp = a.upstream_protocol.localeCompare(b.upstream_protocol, undefined, {
+			sensitivity: 'base',
+		});
 		if (protoCmp !== 0) return protoCmp;
 	}
 	const dp = b.priority - a.priority;
 	if (dp !== 0) return dp;
-	return compareRoutesWithinPriorityLayer(a, b);
+	return compareRoutesWithinPriorityLayer(a, b, context);
 }
 
 export function compareModelVendorsForDisplay(a: string, b: string): number {
-	if (a === "other") return 1;
-	if (b === "other") return -1;
-	return getModelVendorLabel(a).localeCompare(
-		getModelVendorLabel(b),
-		undefined,
-		{
-			sensitivity: "base",
-		}
-	);
+	if (a === 'other') return 1;
+	if (b === 'other') return -1;
+	return getModelVendorLabel(a).localeCompare(getModelVendorLabel(b), undefined, {
+		sensitivity: 'base',
+	});
 }
 
 export function formatFactorValue(n: number): string {
-	if (!Number.isFinite(n)) return "—";
+	if (!Number.isFinite(n)) return '—';
 	if (Number.isInteger(n)) return String(n);
 	return String(Number(n.toFixed(6)));
 }
@@ -492,139 +450,182 @@ export function formatFactorMultiplierForChip(value: number): string {
 
 export function chargedFactorTooltip(value: number | null): string {
 	if (value == null) {
-		return "Charged factor: not set · customer billing multiplier vs catalog price";
+		return 'Charged factor: not set · customer billing multiplier vs catalog price';
 	}
-	return `Charged factor: ${formatFactorMultiplier(
-		value
-	)} · customer billing multiplier vs catalog price`;
+	return `Charged factor: ${formatFactorMultiplier(value)} · customer billing multiplier vs catalog price`;
 }
 
 export function meteredFactorTooltip(value: number | null): string {
 	if (value == null) {
-		return "Metered factor: not set · provider cost multiplier vs catalog price";
+		return 'Metered factor: not set · provider cost multiplier vs catalog price';
 	}
-	return `Metered factor: ${formatFactorMultiplier(
-		value
-	)} · provider cost multiplier vs catalog price`;
+	return `Metered factor: ${formatFactorMultiplier(value)} · provider cost multiplier vs catalog price`;
 }
 
-export type RouteFactorKind = "charged" | "metered";
+export type RouteFactorKind = 'charged' | 'metered';
 
-export type RouteFactorLevel =
-	| "invalid"
-	| "zero"
-	| "veryLow"
-	| "low"
-	| "baseline"
-	| "high"
-	| "veryHigh";
+export type RouteFactorLevel = 'invalid' | 'zero' | 'veryLow' | 'low' | 'baseline' | 'high' | 'veryHigh';
 
 /**
  * Keep small pricing fluctuations visually quiet, then increase emphasis when a
  * factor moves farther away from the catalog baseline.
  */
 export function factorLevelForValue(n: number): RouteFactorLevel {
-	if (!Number.isFinite(n) || n < 0) return "invalid";
-	if (n === 0) return "zero";
-	if (n < 0.8) return "veryLow";
-	if (n < 0.95) return "low";
-	if (n <= 1.05) return "baseline";
-	if (n <= 1.2) return "high";
-	return "veryHigh";
+	if (!Number.isFinite(n) || n < 0) return 'invalid';
+	if (n === 0) return 'zero';
+	if (n < 0.8) return 'veryLow';
+	if (n < 0.95) return 'low';
+	if (n <= 1.05) return 'baseline';
+	if (n <= 1.2) return 'high';
+	return 'veryHigh';
 }
 
-export function factorChipClassForValue(
-	n: number,
-	kind: RouteFactorKind
-): string {
+export function factorChipClassForValue(n: number, kind: RouteFactorKind): string {
 	const level = factorLevelForValue(n);
-	if (level === "invalid" || level === "zero") {
+	if (level === 'invalid' || level === 'zero') {
 		return `${FACTOR_CHIP_BASE} bg-rose-100 text-rose-950 ring-rose-300/90`;
 	}
-	if (level === "baseline") {
+	if (level === 'baseline') {
 		return `${FACTOR_CHIP_BASE} bg-zinc-100 text-zinc-700 ring-zinc-200/90`;
 	}
-	if (level === "veryHigh") {
+	if (level === 'veryHigh') {
 		return `${FACTOR_CHIP_BASE} bg-rose-100 text-rose-950 ring-rose-300/90`;
 	}
-	if (level === "high") {
+	if (level === 'high') {
 		return `${FACTOR_CHIP_BASE} bg-amber-100 text-amber-950 ring-amber-300/90`;
 	}
 
-	if (kind === "charged") {
-		return level === "veryLow"
+	if (kind === 'charged') {
+		return level === 'veryLow'
 			? `${FACTOR_CHIP_BASE} bg-orange-100 text-orange-950 ring-orange-300/90`
 			: `${FACTOR_CHIP_BASE} bg-sky-100 text-sky-900 ring-sky-300/90`;
 	}
-	return level === "veryLow"
+	return level === 'veryLow'
 		? `${FACTOR_CHIP_BASE} bg-emerald-200 text-emerald-950 ring-emerald-400/80`
 		: `${FACTOR_CHIP_BASE} bg-emerald-100 text-emerald-900 ring-emerald-300/90`;
 }
 
 /** Base factors only; schedule windows may change the effective relationship. */
-export function hasBasePricingInversion(
-	charged: number,
-	metered: number
-): boolean {
+export function hasBasePricingInversion(charged: number, metered: number): boolean {
 	return (
-		Number.isFinite(charged) &&
-		Number.isFinite(metered) &&
-		charged >= 0 &&
-		metered >= 0 &&
-		charged + 1e-6 < metered
+		Number.isFinite(charged) && Number.isFinite(metered) && charged >= 0 && metered >= 0 && charged + 1e-6 < metered
 	);
 }
 
 function parseNonNegativeFactorText(text: string, fieldLabel: string): number {
 	const trimmed = text.trim();
-	const n = trimmed === "" ? 1 : Number(trimmed);
+	const n = trimmed === '' ? 1 : Number(trimmed);
 	if (!Number.isFinite(n) || n < 0) {
 		throw new Error(`${fieldLabel} must be a number ≥ 0`);
 	}
 	return n;
 }
 
-function parseSharedWindowFactor(
-	text: string,
-	fieldLabel: string,
-	index: number
-): number {
-	const factor = text.trim() === "" ? Number.NaN : Number(text.trim());
+/** Preview each row's factors at the current date, before the catalog multiplier. */
+export function previewRouteBillingFactors(
+	factors: Pick<RouteFormData, 'charged_factor' | 'metered_factor' | 'provider_factor'>,
+	validity: ProviderFactorValidity,
+	now: Date,
+	scheduled = false,
+): { charged: number | null; metered: number | null; provider: number | null; providerInactive: boolean } {
+	const resolved = resolveProviderFactorValidity(
+		{ providerStartsAt: null, providerExpiresAt: null, providerWindowInvalid: false },
+		{ start: '00:00', end: '24:00', factor: 1, validity },
+	);
+	const parse = (value: string, requireValue: boolean) => {
+		if (requireValue && !value.trim()) return null;
+		try {
+			return parseNonNegativeFactorText(value, 'Factor');
+		} catch {
+			return null;
+		}
+	};
+	const providerInactive = !isProviderFactorActive(resolved, now);
+	const provider = resolved.providerWindowInvalid ? null : providerInactive ? 1 : parse(factors.provider_factor, false);
+	const combine = (value: string) => {
+		const factor = parse(value, scheduled);
+		if (provider == null || factor == null) return null;
+		const product = provider * factor;
+		return Number.isFinite(product) ? Number(product.toPrecision(12)) : null;
+	};
+	return {
+		charged: combine(factors.charged_factor),
+		metered: combine(factors.metered_factor),
+		provider,
+		providerInactive,
+	};
+}
+
+function parseSharedWindowFactor(text: string, fieldLabel: string, index: number): number {
+	const factor = text.trim() === '' ? Number.NaN : Number(text.trim());
 	if (!Number.isFinite(factor) || factor < 0) {
-		throw new Error(
-			`Schedule window ${index + 1}: ${fieldLabel} must be a number ≥ 0`
-		);
+		throw new Error(`Schedule window ${index + 1}: ${fieldLabel} must be a number ≥ 0`);
 	}
 	return factor;
 }
 
-export function buildRoutePriceOverride(
-	formData: RouteFormData
-): Record<string, unknown> {
-	const chargedFactor = parseNonNegativeFactorText(
-		formData.charged_factor,
-		"Charged factor"
-	);
-	const meteredFactor = parseNonNegativeFactorText(
-		formData.metered_factor,
-		"Metered factor"
-	);
-	const scheduleWindows = validateSharedScheduleWindows(
-		formData.schedule_windows
-	);
+function parseOptionalIsoTimestamp(text: string | undefined, fieldLabel: string): string | undefined {
+	const trimmed = text?.trim() ?? '';
+	if (trimmed === '') {
+		return undefined;
+	}
+	const parsed = new Date(trimmed);
+	if (Number.isNaN(parsed.getTime())) {
+		throw new Error(`${fieldLabel} must be an ISO-8601 timestamp`);
+	}
+	return parsed.toISOString();
+}
+
+/** Materialize inherited route-level default dates before editing, so each visible row is independent. */
+export function independentProviderWindows(form: RouteFormData, windows: RouteScheduleFormWindow[]) {
+	return windows.map((w) => ({
+		...w,
+		provider_validity: w.provider_validity ?? {
+			...(form.provider_factor_starts_at ? { starts_at: form.provider_factor_starts_at } : {}),
+			...(form.provider_factor_expires_at ? { expires_at: form.provider_factor_expires_at } : {}),
+		},
+	}));
+}
+
+export function buildRoutePriceOverride(formData: RouteFormData): Record<string, unknown> {
+	const chargedFactor = parseNonNegativeFactorText(formData.charged_factor, 'Charged factor');
+	const meteredFactor = parseNonNegativeFactorText(formData.metered_factor, 'Metered factor');
+	const providerFactor = parseNonNegativeFactorText(formData.provider_factor, 'Provider factor');
+	const startsAt = parseOptionalIsoTimestamp(formData.provider_factor_starts_at, 'Provider factor start');
+	const expiresAt = parseOptionalIsoTimestamp(formData.provider_factor_expires_at, 'Provider factor end');
+	if (startsAt && expiresAt && startsAt >= expiresAt) {
+		throw new Error('Provider factor start must be earlier than end');
+	}
+	const scheduleWindows = validateSharedScheduleWindows(formData.schedule_windows, providerFactor);
 	const priceOverride: Record<string, unknown> = {
 		charged_factor: chargedFactor,
 		metered_factor: meteredFactor,
 	};
+	if (providerFactor !== 1 || startsAt || expiresAt) {
+		priceOverride.provider_factor = providerFactor;
+	}
+	if (startsAt) {
+		priceOverride.provider_factor_starts_at = startsAt;
+	}
+	if (expiresAt) {
+		priceOverride.provider_factor_expires_at = expiresAt;
+	}
 	if (scheduleWindows.length > 0) {
+		const providerSide = scheduleWindows.some(
+			(w) => w.provider_factor !== providerFactor || w.provider_validity !== undefined,
+		);
 		priceOverride.schedule = {
-			mode: "override",
-			charged: scheduleWindows.map((w) =>
-				persistScheduleSideWindow(w, w.charged_factor)
-			),
-			metered: scheduleWindows.map((w) =>
-				persistScheduleSideWindow(w, w.metered_factor)
-			),
+			mode: 'override',
+			charged: scheduleWindows.map((w) => persistScheduleSideWindow(w, w.charged_factor)),
+			metered: scheduleWindows.map((w) => persistScheduleSideWindow(w, w.metered_factor)),
+			...(providerSide
+				? {
+						provider: scheduleWindows.map((w) => ({
+							...persistScheduleSideWindow(w, w.provider_factor),
+							...(w.provider_validity !== undefined ? { validity: w.provider_validity } : {}),
+						})),
+					}
+				: {}),
 		};
 	}
 	return priceOverride;
@@ -649,9 +650,7 @@ export function formatRoutePriceOverridePreview(formData: RouteFormData):
 	}
 }
 
-function persistableScheduleDays(
-	days: number[] | undefined
-): number[] | undefined {
+function persistableScheduleDays(days: number[] | undefined): number[] | undefined {
 	if (!days || days.length === 0) {
 		return undefined;
 	}
@@ -663,75 +662,57 @@ function persistableScheduleDays(
 }
 
 function persistScheduleSideWindow(
-	w: Pick<SharedScheduleWindow, "start" | "end" | "days">,
-	factor: number
+	w: Pick<SharedScheduleWindow, 'start' | 'end' | 'days'>,
+	factor: number,
 ): DailyScheduleWindow {
 	const days = persistableScheduleDays(w.days);
-	return days
-		? { start: w.start, end: w.end, factor, days }
-		: { start: w.start, end: w.end, factor };
+	return days ? { start: w.start, end: w.end, factor, days } : { start: w.start, end: w.end, factor };
 }
 
-function parseFormScheduleDays(
-	days: number[] | undefined,
-	index: number
-): number[] | undefined {
+function parseFormScheduleDays(days: number[] | undefined, index: number): number[] | undefined {
 	if (!days || days.length === 0) {
 		return undefined;
 	}
 	const normalized = normalizeIsoWeekdays(days);
 	if (normalized === null) {
-		throw new Error(
-			`Schedule window ${
-				index + 1
-			}: days must be a non-empty unique array of integers 1–7`
-		);
+		throw new Error(`Schedule window ${index + 1}: days must be a non-empty unique array of integers 1–7`);
 	}
 	return normalized;
 }
 
 function validateSharedScheduleWindows(
-	windows: RouteScheduleFormSide
+	windows: RouteScheduleFormSide,
+	providerFallback: number,
 ): SharedScheduleWindow[] {
 	const cleaned: SharedScheduleWindow[] = [];
 	for (let i = 0; i < windows.length; i++) {
 		const w = windows[i]!;
-		const start = String(w.start ?? "").trim();
-		const end = String(w.end ?? "").trim();
+		const start = String(w.start ?? '').trim();
+		const end = String(w.end ?? '').trim();
 		if (!start || !end) {
-			throw new Error(
-				`Schedule window ${i + 1}: start and end are required (HH:mm)`
-			);
+			throw new Error(`Schedule window ${i + 1}: start and end are required (HH:mm)`);
 		}
 		const startMinutes = parseHhMmToMinutes(start);
 		const endMinutes = parseHhMmToMinutes(end);
-		if (
-			startMinutes == null ||
-			startMinutes === 24 * 60 ||
-			endMinutes == null ||
-			startMinutes === endMinutes
-		) {
+		if (startMinutes == null || startMinutes === 24 * 60 || endMinutes == null || startMinutes === endMinutes) {
 			throw new Error(
-				`Schedule window ${
-					i + 1
-				}: start must be HH:mm, end may also be 24:00, and duration must be non-zero`
+				`Schedule window ${i + 1}: start must be HH:mm, end may also be 24:00, and duration must be non-zero`,
 			);
 		}
 		const days = parseFormScheduleDays(w.days, i);
+		const validity = w.provider_validity === undefined ? undefined : coerceProviderFactorValidity(w.provider_validity);
+		if (validity && !validity.ok) throw new Error(`Schedule window ${i + 1}: ${validity.message}`);
 		cleaned.push({
 			start,
 			end,
-			charged_factor: parseSharedWindowFactor(
-				w.charged_factor,
-				"Charged factor",
-				i
-			),
-			metered_factor: parseSharedWindowFactor(
-				w.metered_factor,
-				"Metered factor",
-				i
-			),
+			charged_factor: parseSharedWindowFactor(w.charged_factor, 'Charged factor', i),
+			metered_factor: parseSharedWindowFactor(w.metered_factor, 'Metered factor', i),
+			provider_factor:
+				w.provider_factor == null || w.provider_factor.trim() === ''
+					? providerFallback
+					: parseSharedWindowFactor(w.provider_factor, 'Provider factor', i),
 			...(days ? { days } : {}),
+			...(validity?.ok ? { provider_validity: validity.validity } : {}),
 		});
 	}
 	const overlap = findDailyWindowOverlap(
@@ -740,7 +721,7 @@ function validateSharedScheduleWindows(
 			end: w.end,
 			factor: w.charged_factor,
 			days: w.days,
-		}))
+		})),
 	);
 	if (overlap) {
 		throw new Error(`Schedule: ${overlap}`);
@@ -752,64 +733,195 @@ export function formatScheduleFactorText(n: number): string {
 	return String(normalizeScheduleFactor(n));
 }
 
-export function buildFormDataFromRoute(
-	route: GatewayModelRoute,
-	_models: GatewayModel[]
-): RouteFormData {
+export function catalogScheduleWindowsFromModel(model: GatewayModel | undefined | null): DailyScheduleWindow[] {
+	return parsePricingProfile(model?.pricing_profile ?? undefined)?.schedule ?? [];
+}
+
+export function alignRouteScheduleWindowsToCatalog(
+	catalog: DailyScheduleWindow[],
+	existing: RouteScheduleFormWindow[],
+	defaultFactor = '1',
+	defaultProviderFactor = defaultFactor,
+): RouteScheduleFormWindow[] {
+	if (catalog.length === 0) {
+		return existing;
+	}
+	const byKey = new Map(existing.map((w) => [scheduleWindowKey(w), w]));
+	return catalog.map((w) => {
+		const prev = byKey.get(scheduleWindowKey(w));
+		return {
+			start: w.start,
+			end: w.end,
+			days: w.days ? [...w.days] : [],
+			charged_factor: prev?.charged_factor ?? defaultFactor,
+			metered_factor: prev?.metered_factor ?? defaultFactor,
+			provider_factor: prev?.provider_factor ?? defaultProviderFactor,
+			...(prev?.provider_validity !== undefined ? { provider_validity: { ...prev.provider_validity } } : {}),
+		};
+	});
+}
+
+export function emptyCustomHeaderRows(): RouteCustomHeaderRow[] {
+	return [];
+}
+
+export function customHeaderRowsHaveValues(rows: RouteCustomHeaderRow[]): boolean {
+	return rows.some((row) => row.name.trim().length > 0 || row.value.trim().length > 0);
+}
+
+/** 将 `custom_params` JSON 拆成请求体编辑区、HTTP 头行与分侧强制覆盖。 */
+export function parseCustomParamsForm(raw: string | null | undefined): {
+	custom_params_json: string;
+	custom_headers: RouteCustomHeaderRow[];
+	custom_params_force_override_headers: boolean;
+	custom_params_force_override_body: boolean;
+} {
+	const empty = {
+		custom_params_json: '',
+		custom_headers: emptyCustomHeaderRows(),
+		custom_params_force_override_headers: false,
+		custom_params_force_override_body: false,
+	};
+	const text = raw?.trim() ?? '';
+	if (!text) return empty;
+	try {
+		const parsed = JSON.parse(text) as unknown;
+		if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+			return { ...empty, custom_params_json: text };
+		}
+		const split = splitRouteCustomParams(parsed as Record<string, unknown>);
+		const bodyJson = Object.keys(split.body).length > 0 ? JSON.stringify(split.body, null, 2) : '';
+		const headerRows = Object.entries(split.extraHeaders).map(([name, value]) => ({ name, value }));
+		return {
+			custom_params_json: bodyJson,
+			custom_headers: headerRows.length > 0 ? headerRows : emptyCustomHeaderRows(),
+			custom_params_force_override_headers: split.forceOverrideHeaders,
+			custom_params_force_override_body: split.forceOverrideBody,
+		};
+	} catch {
+		return { ...empty, custom_params_json: text };
+	}
+}
+
+/** 把表单的请求体 JSON、头行与分侧强制覆盖合成信封。空则返回 null。 */
+export function composeCustomParamsJson(
+	bodyJson: string,
+	headers: RouteCustomHeaderRow[],
+	forceOverride?: { headers?: boolean; body?: boolean },
+): string | null {
+	const extraHeaders: Record<string, string> = {};
+	for (const row of headers) {
+		const name = row.name.trim();
+		if (!name) continue;
+		extraHeaders[name] = row.value;
+	}
+
+	const bodyText = bodyJson.trim();
+	let body: Record<string, unknown> = {};
+	if (bodyText) {
+		const parsed = JSON.parse(bodyText) as unknown;
+		if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+			throw new Error('custom_params must be a JSON object');
+		}
+		body = { ...(parsed as Record<string, unknown>) };
+	}
+
+	const envelope = composeRouteCustomParamsEnvelope({
+		body,
+		extraHeaders,
+		forceOverrideHeaders: forceOverride?.headers,
+		forceOverrideBody: forceOverride?.body,
+	});
+	return envelope ? JSON.stringify(envelope) : null;
+}
+
+export function routeHasCustomParamsForceOverride(raw: string | null | undefined): boolean {
+	const parsed = parseCustomParamsForm(raw);
+	return parsed.custom_params_force_override_headers || parsed.custom_params_force_override_body;
+}
+
+export function buildFormDataFromRoute(route: GatewayModelRoute, models: GatewayModel[]): RouteFormData {
 	const factors = parseRouteBaseFactors(route.price_override ?? null);
+	const schedule = parseRoutePricingSchedule(route.price_override);
+	const existingWindows = resolveRouteScheduleDisplay(route.price_override).map((w) => ({
+		start: w.start,
+		end: w.end,
+		charged_factor: formatScheduleFactorText(w.charged_factor),
+		metered_factor: formatScheduleFactorText(w.metered_factor),
+		provider_factor: formatScheduleFactorText(w.provider_factor),
+		...(w.provider_validity !== undefined
+			? { provider_validity: { ...w.provider_validity } }
+			: factors.providerStartsAt || factors.providerExpiresAt
+				? {
+						provider_validity: {
+							...(factors.providerStartsAt ? { starts_at: factors.providerStartsAt } : {}),
+							...(factors.providerExpiresAt ? { expires_at: factors.providerExpiresAt } : {}),
+						},
+					}
+				: {}),
+		days: w.days ?? [],
+	}));
+	const catalog = catalogScheduleWindowsFromModel(models.find((m) => m.id === route.model_id));
+	const alignedWindows = alignRouteScheduleWindowsToCatalog(
+		catalog,
+		existingWindows,
+		'1',
+		String(factors.providerFactor),
+	);
+	// Display merging may combine adjacent equal-rate rows. Restore exact catalog rows when editing,
+	// including their independent validity, instead of replacing them with default multipliers.
+	if (catalog.length > 0) {
+		for (const window of alignedWindows) {
+			const key = scheduleWindowKey(window);
+			for (const [side, base] of [
+				['charged', factors.chargedFactor],
+				['metered', factors.meteredFactor],
+				['provider', factors.providerFactor],
+			] as const) {
+				const match = schedule[side].find((w) => scheduleWindowKey(w) === key);
+				if (match)
+					window[`${side}_factor`] = formatScheduleFactorText(match.factor * (schedule.mode === 'multiply' ? base : 1));
+			}
+			const provider = schedule.provider.find((w) => scheduleWindowKey(w) === key);
+			if (provider?.validity !== undefined) window.provider_validity = { ...provider.validity };
+		}
+	}
 	return {
 		model_id: route.model_id,
 		provider_id: route.provider_id,
 		provider_model_name: route.provider_model_name,
 		request_protocol: (() => {
 			const [surface] = parseRouteSurfaces(route.surfaces);
-			return typeof surface?.request_protocol === "string" &&
-				isUpstreamProtocol(surface.request_protocol)
+			return typeof surface?.request_protocol === 'string' && isUpstreamProtocol(surface.request_protocol)
 				? surface.request_protocol
 				: isUpstreamProtocol(route.upstream_protocol)
-				? route.upstream_protocol
-				: "openai";
+					? route.upstream_protocol
+					: 'openai';
 		})(),
-		request_operation:
-			parseRouteSurfaces(route.surfaces)[0]?.request_operation ?? "*",
+		request_operation: parseRouteSurfaces(route.surfaces)[0]?.request_operation ?? '*',
 		upstream_protocol: (isUpstreamProtocol(route.upstream_protocol)
 			? route.upstream_protocol
-			: "openai") as UpstreamProtocol,
-		upstream_operation: route.upstream_operation ?? "*",
-		adapter: route.adapter ?? "passthrough",
+			: 'openai') as UpstreamProtocol,
+		upstream_operation: route.upstream_operation ?? '*',
+		adapter: route.adapter ?? 'passthrough',
 		priority: route.priority,
 		weight: Number(route.weight ?? 1) || 1,
-		custom_params_json: route.custom_params ?? "",
-		routing_metadata_json: route.routing_metadata ?? "",
-		route_group: route.route_group ?? "default",
+		...parseCustomParamsForm(route.custom_params),
+		routing_metadata_json: route.routing_metadata ?? '',
+		route_group: route.route_group ?? 'default',
 		charged_factor: String(factors.chargedFactor),
 		metered_factor: String(factors.meteredFactor),
-		schedule_windows: resolveRouteScheduleDisplay(route.price_override).map(
-			(w) => ({
-				start: w.start,
-				end: w.end,
-				charged_factor: formatScheduleFactorText(w.charged_factor),
-				metered_factor: formatScheduleFactorText(w.metered_factor),
-				days: w.days ?? [],
-			})
-		),
+		provider_factor: String(factors.providerFactor),
+		provider_factor_starts_at: factors.providerStartsAt ?? '',
+		provider_factor_expires_at: factors.providerExpiresAt ?? '',
+		schedule_windows: alignedWindows,
 	};
 }
 
 export function buildRouteSavePayload(
 	formData: RouteFormData,
-	editingRoute: GatewayModelRoute | null
+	editingRoute: GatewayModelRoute | null,
 ): Record<string, unknown> {
-	const normalizeJsonText = (raw: string, fieldName: string): string | null => {
-		const text = raw.trim();
-		if (!text) return null;
-		const parsed = JSON.parse(text) as unknown;
-		if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
-			throw new Error(`${fieldName} must be a JSON object`);
-		}
-		return JSON.stringify(parsed);
-	};
-
 	const priceOverride = buildRoutePriceOverride(formData);
 
 	const payload: Record<string, unknown> = {
@@ -823,153 +935,133 @@ export function buildRouteSavePayload(
 		adapter: formData.adapter,
 		priority: formData.priority,
 		weight: Math.max(1, Math.floor(Number(formData.weight) || 1)),
-		route_group: formData.route_group.trim() || "default",
+		route_group: formData.route_group.trim() || 'default',
 		price_override: JSON.stringify(priceOverride),
-		custom_params: normalizeJsonText(
-			formData.custom_params_json,
-			"custom_params"
-		),
-		routing_metadata: normalizeJsonText(
-			formData.routing_metadata_json,
-			"routing_metadata"
-		),
+		custom_params: composeCustomParamsJson(formData.custom_params_json, formData.custom_headers, {
+			headers: formData.custom_params_force_override_headers,
+			body: formData.custom_params_force_override_body,
+		}),
+		routing_metadata: normalizeJsonText(formData.routing_metadata_json, 'routing_metadata'),
 	};
 	if (!editingRoute) {
-		payload.status = "inactive";
+		payload.status = 'inactive';
 	}
 	return payload;
 }
 
-export const CAPABILITIES_BY_PROTOCOL: Record<
-	string,
-	readonly ProviderEndpointCapability[]
-> = {
+export const CAPABILITIES_BY_PROTOCOL: Record<string, readonly ProviderEndpointCapability[]> = {
 	openai: OPENAI_ENDPOINT_CAPABILITIES,
 	anthropic: ANTHROPIC_ENDPOINT_CAPABILITIES,
 	gemini: GEMINI_ENDPOINT_CAPABILITIES,
 	dashscope: DASHSCOPE_ENDPOINT_CAPABILITIES,
+	minimax: MINIMAX_ENDPOINT_CAPABILITIES,
+	volcengine: VOLCENGINE_ENDPOINT_CAPABILITIES,
 };
+
+export function modelKindForModel(model: GatewayModel | undefined): AdapterModelKind {
+	if (model && isImageGenerationModel(model)) return 'image';
+	if (model && isAudioTranscriptionModel(model)) return 'audio.transcription';
+	if (model && isAudioSpeechModel(model)) return 'audio.speech';
+	return 'llm';
+}
+
+function sortOperationsForProtocol(protocol: UpstreamProtocol, operations: readonly string[]): string[] {
+	const order = REQUEST_OPERATIONS_BY_PROTOCOL[protocol] as readonly string[];
+	return [...operations].sort((a, b) => {
+		const ia = order.indexOf(a);
+		const ib = order.indexOf(b);
+		return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
+	});
+}
+
+function filterRealtimeOperations(operations: readonly string[], providerModelName: string): string[] {
+	if (!providerModelName.trim()) return [...operations];
+	return operations.filter((operation) => isDashScopeRealtimeAsrModelOperationCompatible(providerModelName, operation));
+}
 
 /** Public operations that make sense for the selected model modality. */
 export function requestOperationsForModel(
 	model: GatewayModel | undefined,
 	protocol: UpstreamProtocol,
-	providerModelName = ""
+	providerModelName = '',
 ): readonly string[] {
-	if (model && isImageGenerationModel(model)) {
-		return protocol === "openai" ? ["images.generations", "images.edits"] : [];
-	}
-	if (model && isEmbeddingModel(model)) {
-		return protocol === "openai" ? ["embeddings"] : [];
-	}
-	if (model && isRerankModel(model)) {
-		return protocol === "openai" ? ["rerank"] : [];
-	}
-	if (model && isAudioTranscriptionModel(model)) {
-		if (protocol === "openai") return ["audio.transcriptions"];
-		if (protocol === "dashscope") {
-			const realtimeOperations = [
-				"audio.transcriptions.realtime.inference",
-				"audio.transcriptions.realtime.session",
-			];
-			const compatibleRealtime = providerModelName.trim()
-				? realtimeOperations.filter((operation) =>
-						isDashScopeRealtimeAsrModelOperationCompatible(
-							providerModelName,
-							operation
-						)
-				  )
-				: realtimeOperations;
-			// 同步 HTTP 透传始终可选；实时 operation 按供应商模型族过滤。
-			return ["audio.transcriptions.multimodal", ...compatibleRealtime];
+	if (model && isEmbeddingModel(model)) return protocol === 'openai' ? ['embeddings'] : [];
+	if (model && isRerankModel(model)) return protocol === 'openai' ? ['rerank'] : [];
+	if (
+		model &&
+		(isImageGenerationModel(model) ||
+			isAudioTranscriptionModel(model) ||
+			isAudioSpeechModel(model) ||
+			(isTextLlmModel(model) && protocol === 'openai'))
+	) {
+		const kind = modelKindForModel(model);
+		const operations = requestOperationsFromRegistry(protocol, kind);
+		if (kind === 'audio.transcription' && protocol === 'dashscope') {
+			return filterRealtimeOperations(operations, providerModelName);
 		}
-		return [];
-	}
-	if (model && isAudioSpeechModel(model)) {
-		if (protocol === "openai") return ["audio.speech"];
-		if (protocol === "dashscope") {
-			// Qwen-Audio-TTS/CosyVoice 实时接口使用 inference 任务协议；
-			// Qwen-TTS-Realtime session 不在本项目支持范围内。
-			return ["audio.speech.realtime.inference"];
-		}
-		return [];
-	}
-	if (model && isTextLlmModel(model) && protocol === "openai") {
-		return ["chat", "responses"];
+		return operations;
 	}
 	return REQUEST_OPERATIONS_BY_PROTOCOL[protocol];
 }
 
-export type DashScopeAsrRoutePreset =
-	| "flash-convert"
-	| "flash-passthrough"
-	| "filetrans";
-export type DashScopeTtsRoutePreset = "realtime" | "nonrealtime";
+export type DashScopeAsrRoutePreset = 'flash-convert' | 'flash-passthrough' | 'filetrans';
+export type DashScopeTtsRoutePreset = 'realtime' | 'nonrealtime';
+export type DashScopeImageRoutePreset = 'qwen' | 'wan';
 
 /**
  * 将 DashScope ASR 的用户意图转换为完整路由拓扑。
  * flash 转换保持 OpenAI 兼容入口；透传使用原生 multimodal HTTP；filetrans 走异步 submit/poll。
  */
-export function applyDashScopeAsrRoutePreset(
-	formData: RouteFormData,
-	preset: DashScopeAsrRoutePreset
-): RouteFormData {
-	if (preset === "flash-convert") {
-		return {
-			...formData,
-			request_protocol: "openai",
-			request_operation: "audio.transcriptions",
-			upstream_protocol: "dashscope",
-			upstream_operation: "audio.transcriptions.multimodal",
-			adapter: "dashscope-asr-qwen-audio-file",
-		};
-	}
-	if (preset === "flash-passthrough") {
-		return {
-			...formData,
-			request_protocol: "dashscope",
-			request_operation: "audio.transcriptions.multimodal",
-			upstream_protocol: "dashscope",
-			upstream_operation: "audio.transcriptions.multimodal",
-			adapter: "passthrough",
-		};
-	}
+const ASR_PRESET_INTENT: Record<DashScopeAsrRoutePreset, AdapterPresetIntent> = {
+	'flash-convert': 'dashscope-asr-flash-convert',
+	'flash-passthrough': 'dashscope-asr-flash-passthrough',
+	filetrans: 'dashscope-asr-filetrans',
+};
+
+export function applyAdapterDescriptorToForm(formData: RouteFormData, descriptor: AdapterDescriptor): RouteFormData {
 	return {
 		...formData,
-		request_protocol: "openai",
-		request_operation: "audio.transcriptions",
-		upstream_protocol: "dashscope",
-		upstream_operation: "audio.transcriptions.async",
-		adapter: "dashscope-asr-file-async",
+		request_protocol: descriptor.request.protocol,
+		request_operation: descriptor.request.operation,
+		upstream_protocol: descriptor.upstream.protocol,
+		upstream_operation: descriptor.upstream.operations[0] ?? descriptor.request.operation,
+		adapter: descriptor.id,
 	};
+}
+
+export function applyDashScopeAsrRoutePreset(formData: RouteFormData, preset: DashScopeAsrRoutePreset): RouteFormData {
+	const descriptor = getAdapterByPresetIntent(ASR_PRESET_INTENT[preset]);
+	if (!descriptor) return formData;
+	return applyAdapterDescriptorToForm(formData, descriptor);
 }
 
 /**
  * 将 DashScope TTS 的用户意图转换为完整路由拓扑。
  * 非实时模式保持 OpenAI 兼容入口，实时模式使用网关原生 DashScope WSS 入口。
  */
-export function applyDashScopeTtsRoutePreset(
+const TTS_PRESET_INTENT: Record<DashScopeTtsRoutePreset, AdapterPresetIntent> = {
+	nonrealtime: 'dashscope-tts-nonrealtime',
+	realtime: 'dashscope-tts-realtime',
+};
+
+export function applyDashScopeTtsRoutePreset(formData: RouteFormData, preset: DashScopeTtsRoutePreset): RouteFormData {
+	const descriptor = getAdapterByPresetIntent(TTS_PRESET_INTENT[preset]);
+	if (!descriptor) return formData;
+	return applyAdapterDescriptorToForm(formData, descriptor);
+}
+
+const IMAGE_PRESET_INTENT: Record<DashScopeImageRoutePreset, AdapterPresetIntent> = {
+	qwen: 'dashscope-image-qwen',
+	wan: 'dashscope-image-wan',
+};
+
+export function applyDashScopeImageRoutePreset(
 	formData: RouteFormData,
-	preset: DashScopeTtsRoutePreset
+	preset: DashScopeImageRoutePreset,
 ): RouteFormData {
-	if (preset === "nonrealtime") {
-		return {
-			...formData,
-			request_protocol: "openai",
-			request_operation: "audio.speech",
-			upstream_protocol: "dashscope",
-			upstream_operation: "audio.speech",
-			adapter: "dashscope-tts-speech",
-		};
-	}
-	return {
-		...formData,
-		request_protocol: "dashscope",
-		request_operation: "audio.speech.realtime.inference",
-		upstream_protocol: "dashscope",
-		upstream_operation: "audio.speech.realtime.inference",
-		adapter: "passthrough",
-	};
+	const descriptor = getAdapterByPresetIntent(IMAGE_PRESET_INTENT[preset]);
+	if (!descriptor) return formData;
+	return applyAdapterDescriptorToForm(formData, descriptor);
 }
 
 /**
@@ -981,7 +1073,7 @@ export function upstreamOperationsForProviderModel(
 	provider: GatewayProvider | undefined,
 	model: GatewayModel | undefined,
 	protocol: UpstreamProtocol,
-	providerModelName = ""
+	providerModelName = '',
 ): readonly string[] {
 	if (!provider) return [];
 	const map = parseProviderEndpoints(provider);
@@ -989,75 +1081,190 @@ export function upstreamOperationsForProviderModel(
 	const providerOperations = listConfiguredCapabilities(map, protocol);
 	const capabilities = new Set(providerOperations);
 
-	// DashScope 路由能力表示协议生命周期，供应商能力表示具体端点；此处显式映射。
-	if (model && isAudioTranscriptionModel(model)) {
-		if (protocol === "openai") {
-			return capabilities.has("audio.transcriptions")
-				? ["audio.transcriptions"]
-				: [];
+	if (model && (isImageGenerationModel(model) || isAudioTranscriptionModel(model) || isAudioSpeechModel(model))) {
+		const kind = modelKindForModel(model);
+		const listed = sortOperationsForProtocol(protocol, upstreamOperationsFromRegistry(protocol, kind));
+		const operations = listed.filter((operation) => {
+			const required = requiredCapabilitiesForUpstreamOperation(protocol, operation);
+			return required.every((capability) => capabilities.has(capability as ProviderEndpointCapability));
+		});
+		if (kind === 'audio.transcription') {
+			return filterRealtimeOperations(operations, providerModelName);
 		}
-		if (protocol === "dashscope") {
-			const operations: string[] = [];
-			if (capabilities.has("audio.transcriptions.multimodal")) {
-				operations.push("audio.transcriptions.multimodal");
-			}
-			if (
-				capabilities.has("audio.transcriptions") &&
-				capabilities.has("audio.transcriptions.tasks")
-			) {
-				operations.push("audio.transcriptions.async");
-			}
-			if (
-				capabilities.has("audio.realtime.inference") &&
-				isDashScopeRealtimeAsrModelOperationCompatible(
-					providerModelName,
-					"audio.transcriptions.realtime.inference"
-				)
-			) {
-				operations.push("audio.transcriptions.realtime.inference");
-			}
-			if (
-				capabilities.has("audio.realtime.session") &&
-				isDashScopeRealtimeAsrModelOperationCompatible(
-					providerModelName,
-					"audio.transcriptions.realtime.session"
-				)
-			) {
-				operations.push("audio.transcriptions.realtime.session");
-			}
-			return operations;
-		}
-		return [];
-	}
-	if (model && isAudioSpeechModel(model)) {
-		if (protocol === "openai") {
-			return capabilities.has("audio.speech") ? ["audio.speech"] : [];
-		}
-		if (protocol === "dashscope") {
-			const operations: string[] = [];
-			if (capabilities.has("audio.speech")) operations.push("audio.speech");
-			if (capabilities.has("audio.realtime.inference")) {
-				operations.push("audio.speech.realtime.inference");
-			}
-			return operations;
-		}
-		return [];
+		return operations;
 	}
 	const modelOperations = new Set(requestOperationsForModel(model, protocol));
-	return providerOperations.filter((operation) =>
-		modelOperations.has(operation)
+	return providerOperations.filter((operation) => modelOperations.has(operation));
+}
+
+export type AdapterOptionAvailability = {
+	descriptor: AdapterDescriptor;
+	available: boolean;
+	missingCapabilities: readonly string[];
+	modelMatch: AdapterModelMatch;
+};
+
+export type AdapterOptionList = {
+	options: AdapterOptionAvailability[];
+	/** 供应商模型名没有命中任何带规则的可用适配器，下拉已回退为全部可用项。 */
+	modelUnrecognized: boolean;
+};
+
+export function listAdapterOptionsForModel(
+	model: GatewayModel | undefined,
+	provider: GatewayProvider | undefined,
+	providerModelName = '',
+): AdapterOptionList {
+	const kind = modelKindForModel(model);
+	const capabilitiesByProtocol = new Map<string, ReadonlySet<string>>();
+	if (provider) {
+		const endpoints = parseProviderEndpoints(provider);
+		for (const protocol of UPSTREAM_PROTOCOLS) {
+			if (!endpoints[protocol]) continue;
+			capabilitiesByProtocol.set(protocol, new Set(listConfiguredCapabilities(endpoints, protocol)));
+		}
+	}
+	const options = adaptersForModelKind(kind).map((descriptor) => {
+		const capabilities = capabilitiesByProtocol.get(descriptor.upstream.protocol);
+		const missingCapabilities = provider
+			? descriptor.requiredUpstreamCapabilities.filter((capability) => !capabilities?.has(capability))
+			: descriptor.requiredUpstreamCapabilities;
+		return {
+			descriptor,
+			available: missingCapabilities.length === 0 && Boolean(provider),
+			missingCapabilities,
+			modelMatch: matchAdapterUpstreamModel(descriptor, providerModelName),
+		};
+	});
+	const available = options.filter((option) => option.available);
+	const recognized = available.some((option) => option.modelMatch === 'match');
+	const hasModelRules = available.some((option) => option.modelMatch !== 'generic');
+	return {
+		options,
+		modelUnrecognized: providerModelName.trim().length > 0 && !recognized && hasModelRules,
+	};
+}
+
+export function resolveAdapterOptionKey(
+	formData: Pick<
+		RouteFormData,
+		'adapter' | 'request_protocol' | 'request_operation' | 'upstream_protocol' | 'upstream_operation'
+	>,
+	modelKind?: AdapterModelKind,
+): string | null {
+	const matches = listSelectableAdapters().filter(
+		(descriptor) =>
+			descriptor.id === formData.adapter &&
+			descriptor.request.protocol === formData.request_protocol &&
+			descriptor.request.operation === formData.request_operation &&
+			descriptor.upstream.protocol === formData.upstream_protocol &&
+			descriptor.upstream.operations.includes(formData.upstream_operation),
 	);
+	const preferred = modelKind ? matches.find((descriptor) => descriptor.modelKind === modelKind) : undefined;
+	return preferred?.optionKey ?? matches[0]?.optionKey ?? null;
+}
+
+export function applyAdapterOptionToForm(formData: RouteFormData, optionKey: string): RouteFormData {
+	const descriptor = getAdapterByOptionKey(optionKey);
+	if (!descriptor) return formData;
+	return applyAdapterDescriptorToForm(formData, descriptor);
+}
+
+/**
+ * 当前对外协议与上游对不上任何可用适配器时，套用最匹配的适配器。
+ * 透传会把两边写成同一协议；转换适配器则保留它声明的对外入口。
+ */
+export function alignRouteFormAdapter(
+	formData: RouteFormData,
+	model: GatewayModel | undefined,
+	provider: GatewayProvider | undefined,
+): RouteFormData {
+	if (!model || !provider) return formData;
+	const { options, modelUnrecognized } = listAdapterOptionsForModel(model, provider, formData.provider_model_name);
+	const currentKey = resolveAdapterOptionKey(formData, modelKindForModel(model));
+	const current = options.find((option) => option.descriptor.optionKey === currentKey);
+	const providerModelNamed = formData.provider_model_name.trim().length > 0;
+	const currentFits =
+		current?.available === true && (!providerModelNamed || modelUnrecognized || current.modelMatch !== 'mismatch');
+	if (currentFits) return formData;
+	const candidates = options.filter((option) => {
+		if (!option.available) return false;
+		if (!providerModelNamed || modelUnrecognized) return true;
+		return option.modelMatch !== 'mismatch';
+	});
+	const preferred = candidates.find((option) => option.modelMatch === 'match') ?? candidates[0];
+	if (!preferred) return formData;
+	return applyAdapterDescriptorToForm(formData, preferred.descriptor);
+}
+
+function formatPythonLiteral(value: unknown): string {
+	if (value === null) return 'None';
+	if (typeof value === 'boolean') return value ? 'True' : 'False';
+	if (typeof value === 'number') return Number.isFinite(value) ? String(value) : 'None';
+	if (typeof value === 'string') return JSON.stringify(value);
+	if (Array.isArray(value)) return `[${value.map((item) => formatPythonLiteral(item)).join(', ')}]`;
+	if (value != null && typeof value === 'object') {
+		const entries = Object.entries(value as Record<string, unknown>).map(([key, item]) => {
+			const renderedKey = JSON.stringify(key);
+			return `${renderedKey}: ${formatPythonLiteral(item)}`;
+		});
+		return `{${entries.join(', ')}}`;
+	}
+	return 'None';
+}
+
+/** OpenAI 转换适配器的 Python 调用示例。透传和非 OpenAI 入口返回 null。 */
+export function buildOpenAiAdapterCallSample(
+	descriptor: Pick<AdapterDescriptor, 'id' | 'request' | 'extraBodyExample'>,
+	modelId = 'your-model',
+): string | null {
+	if (descriptor.id === PASSTHROUGH_ROUTE_ADAPTER || descriptor.request.protocol !== 'openai') return null;
+	const model = JSON.stringify(modelId);
+	const extra = descriptor.extraBodyExample ? formatPythonLiteral(descriptor.extraBodyExample) : null;
+	const extraLine = extra ? `,\n    extra_body=${extra}` : '';
+	if (descriptor.id === 'dashscope-asr-file-async') {
+		return `import os
+import httpx
+
+response = httpx.post(
+    os.environ["OCTAFUSE_BASE_URL"].rstrip("/") + "/audio/transcriptions",
+    headers={"Authorization": "Bearer " + os.environ["OCTAFUSE_API_KEY"]},
+    files={
+        "model": (None, ${model}),
+        "file_url": (None, "https://example.com/audio.mp3"),
+    },
+    timeout=300,
+)
+response.raise_for_status()
+print(response.json())`;
+	}
+	if (descriptor.request.operation === 'images.generations') {
+		return `client.images.generate(\n    model=${model},\n    prompt="a red apple"${extraLine},\n)`;
+	}
+	if (descriptor.request.operation === 'audio.speech') {
+		return `client.audio.speech.create(\n    model=${model},\n    input="Hello",\n    voice="YOUR_VOICE_ID"${descriptor.id === 'dashscope-tts-qwen' ? ',\n    response_format="wav"' : ''}${extraLine},\n)`;
+	}
+	if (descriptor.request.operation === 'audio.transcriptions') {
+		return `client.audio.transcriptions.create(\n    model=${model},\n    file=open("audio.mp3", "rb")${extraLine},\n)`;
+	}
+	return null;
+}
+
+/** 下拉项后缀：透传只标 request；转换标 request → upstream。 */
+export function adapterOptionMappingSuffix(descriptor: AdapterDescriptor): string {
+	const from = `${descriptor.request.protocol}/${descriptor.request.operation}`;
+	if (descriptor.id === 'passthrough') {
+		return ` · ${from}`;
+	}
+	const to = descriptor.upstream.operations
+		.map((operation) => `${descriptor.upstream.protocol}/${operation}`)
+		.join(', ');
+	return ` · ${from} → ${to}`;
 }
 
 /** 返回能精确连接当前对外端点与上游目标的 adapter。 */
 export function compatibleAdaptersForRoute(
-	input: Pick<
-		RouteFormData,
-		| "request_protocol"
-		| "request_operation"
-		| "upstream_protocol"
-		| "upstream_operation"
-	>
+	input: Pick<RouteFormData, 'request_protocol' | 'request_operation' | 'upstream_protocol' | 'upstream_operation'>,
 ): readonly string[] {
 	return ROUTE_ADAPTERS.filter((adapter) =>
 		isRouteAdapterCompatible({
@@ -1066,42 +1273,38 @@ export function compatibleAdaptersForRoute(
 			requestOperation: input.request_operation,
 			upstreamProtocol: input.upstream_protocol,
 			upstreamOperation: input.upstream_operation,
-		})
+		}),
 	);
 }
 
 /** Prompt-cache-sensitive capabilities (affinity preferred). */
 export function isPromptCacheSensitiveCapability(capability: string): boolean {
 	return (
-		capability === "chat" ||
-		capability === "responses" ||
-		capability === "messages" ||
-		capability === "models.generate" ||
-		capability === "generateContent" ||
-		capability === "streamGenerateContent"
+		capability === 'chat' ||
+		capability === 'responses' ||
+		capability === 'messages' ||
+		capability === 'models.generate' ||
+		capability === 'generateContent' ||
+		capability === 'streamGenerateContent'
 	);
 }
 
 export function readRoutePolicyFormFromRaw(
 	existingRaw: string | null | undefined,
 	protocol: string,
-	group: string
+	group: string,
 ): {
 	protocolStrategy: string;
 	tierStrategy: string;
 	capabilityStrategies: Record<string, string>;
 } {
 	const parsed = parseModelRoutePolicy(existingRaw);
-	const protocolStrategy =
-		parsed?.rules.get(routePolicyRuleKey(protocol, null, group))?.strategy ??
-		"";
+	const protocolStrategy = parsed?.rules.get(routePolicyRuleKey(protocol, null, group))?.strategy ?? '';
 	const capabilityStrategies: Record<string, string> = {};
 	for (const cap of CAPABILITIES_BY_PROTOCOL[protocol] ?? []) {
-		capabilityStrategies[cap] =
-			parsed?.rules.get(routePolicyRuleKey(protocol, cap, group))?.strategy ??
-			"";
+		capabilityStrategies[cap] = parsed?.rules.get(routePolicyRuleKey(protocol, cap, group))?.strategy ?? '';
 	}
-	return { protocolStrategy, tierStrategy: "", capabilityStrategies };
+	return { protocolStrategy, tierStrategy: '', capabilityStrategies };
 }
 
 /**
@@ -1115,29 +1318,23 @@ export function buildRoutePolicyPatch(
 	form: {
 		protocolStrategy: string;
 		capabilityStrategies: Record<string, string>;
-	}
+	},
 ): string | null {
 	let existing: Record<string, unknown> = {};
 	try {
-		existing = existingRaw
-			? (JSON.parse(existingRaw) as Record<string, unknown>)
-			: {};
+		existing = existingRaw ? (JSON.parse(existingRaw) as Record<string, unknown>) : {};
 	} catch {
 		existing = {};
 	}
 
 	const existingRules =
-		existing.rules &&
-		typeof existing.rules === "object" &&
-		!Array.isArray(existing.rules)
+		existing.rules && typeof existing.rules === 'object' && !Array.isArray(existing.rules)
 			? { ...(existing.rules as Record<string, unknown>) }
 			: {};
 
 	const keysToClear = [
 		routePolicyRuleKey(protocol, null, group),
-		...(CAPABILITIES_BY_PROTOCOL[protocol] ?? []).map((cap) =>
-			routePolicyRuleKey(protocol, cap, group)
-		),
+		...(CAPABILITIES_BY_PROTOCOL[protocol] ?? []).map((cap) => routePolicyRuleKey(protocol, cap, group)),
 	];
 	for (const k of keysToClear) {
 		delete existingRules[k];
@@ -1157,8 +1354,7 @@ export function buildRoutePolicyPatch(
 	}
 
 	const topStrategy =
-		typeof existing.strategy === "string" &&
-		isRouteStrategyName(existing.strategy.trim().toLowerCase())
+		typeof existing.strategy === 'string' && isRouteStrategyName(existing.strategy.trim().toLowerCase())
 			? existing.strategy.trim().toLowerCase()
 			: null;
 
@@ -1179,17 +1375,14 @@ export type RouteModelGroup = {
 	vendor: string;
 };
 
-export function modelMatchesKindFilter(
-	meta: GatewayModel | undefined,
-	filterKind: RouteKindFilter
-): boolean {
-	if (filterKind === "all") return true;
+export function modelMatchesKindFilter(meta: GatewayModel | undefined, filterKind: RouteKindFilter): boolean {
+	if (filterKind === 'all') return true;
 	if (!meta) {
-		return filterKind === "llm";
+		return filterKind === 'llm';
 	}
-	if (filterKind === "image") return isImageGenerationModel(meta);
-	if (filterKind === "audio") return isAudioModel(meta);
-	if (filterKind === "rerank") return isRerankModel(meta);
+	if (filterKind === 'image') return isImageGenerationModel(meta);
+	if (filterKind === 'audio') return isAudioModel(meta);
+	if (filterKind === 'rerank') return isRerankModel(meta);
 	return isTextLlmModel(meta);
 }
 
@@ -1200,7 +1393,7 @@ export function parseModelTagsList(meta: GatewayModel | undefined): string[] {
 	if (Array.isArray(raw)) {
 		return raw.map((t) => String(t).trim()).filter(Boolean);
 	}
-	if (typeof raw === "string" && raw.trim()) {
+	if (typeof raw === 'string' && raw.trim()) {
 		try {
 			const parsed = JSON.parse(raw) as unknown;
 			if (Array.isArray(parsed)) {
@@ -1219,9 +1412,14 @@ export function buildRoutesByModel(params: {
 	modelMeta: Map<string, GatewayModel>;
 	filterVendor: string;
 	filterProviderId: string;
+	filterProviderKind?: string;
+	providers?: Array<Pick<GatewayProvider, 'id' | 'name' | 'kind' | 'kind_labels'>>;
+	locale?: string;
+	customKindLabel?: string;
 	filterRouteGroup: string;
 	filterStatus: string;
 	filterKind?: RouteKindFilter;
+	searchQuery?: string;
 }): RouteModelGroup[] {
 	const {
 		routes,
@@ -1229,39 +1427,48 @@ export function buildRoutesByModel(params: {
 		modelMeta,
 		filterVendor,
 		filterProviderId,
+		filterProviderKind = '',
+		providers = [],
+		locale = 'en',
+		customKindLabel = 'Custom',
 		filterRouteGroup,
 		filterStatus,
 		filterKind = DEFAULT_ROUTE_KIND_FILTER,
+		searchQuery = '',
 	} = params;
+	const searchTerms = searchQuery.toLowerCase().trim().split(/\s+/).filter(Boolean);
+	const providerKindById = new Map(providers.map((provider) => [provider.id, provider.kind]));
+	const routeSortContext: RoutePrioritySortContext = {
+		providersById: new Map(providers.map((provider) => [provider.id, provider])),
+		locale,
+		customKindLabel,
+	};
 
 	const modelMatchesVendor = (modelId: string) => {
 		if (!filterVendor) return true;
-		return (
-			normalizeModelVendorInput(modelMeta.get(modelId)?.vendor) === filterVendor
-		);
+		return normalizeModelVendorInput(modelMeta.get(modelId)?.vendor) === filterVendor;
 	};
 
-	const modelMatchesKind = (modelId: string) =>
-		modelMatchesKindFilter(modelMeta.get(modelId), filterKind);
+	const modelMatchesKind = (modelId: string) => modelMatchesKindFilter(modelMeta.get(modelId), filterKind);
 
 	const routeByModelId = new Map<string, RouteListRow[]>();
 	for (const r of routes) {
 		if (!modelMatchesVendor(r.model_id)) continue;
 		if (!modelMatchesKind(r.model_id)) continue;
 		if (filterProviderId && r.provider_id !== filterProviderId) continue;
+		if (filterProviderKind) {
+			if (!providerKindById.has(r.provider_id)) continue;
+			if (providerKindFilterKey(providerKindById.get(r.provider_id)) !== filterProviderKind) continue;
+		}
 		if (filterStatus && r.status !== filterStatus) continue;
-		if (
-			filterRouteGroup &&
-			normalizeRouteGroup(r.route_group) !== filterRouteGroup
-		)
-			continue;
+		if (filterRouteGroup && normalizeRouteGroup(r.route_group) !== filterRouteGroup) continue;
 		const list = routeByModelId.get(r.model_id) ?? [];
 		list.push(r);
 		routeByModelId.set(r.model_id, list);
 	}
 
 	for (const list of routeByModelId.values()) {
-		list.sort(compareModelRoutesForCardDisplay);
+		list.sort((a, b) => compareModelRoutesForCardDisplay(a, b, routeSortContext));
 	}
 
 	const candidateModelIds = new Set<string>();
@@ -1276,13 +1483,11 @@ export function buildRoutesByModel(params: {
 		candidateModelIds.add(route.model_id);
 	}
 
-	const hasRouteLevelFilter = Boolean(
-		filterProviderId || filterStatus || filterRouteGroup
-	);
+	const hasRouteLevelFilter = Boolean(filterProviderId || filterProviderKind || filterStatus || filterRouteGroup);
 	const entries = [...candidateModelIds].sort((idA, idB) => {
 		const nameA = modelMeta.get(idA)?.display_name || idA;
 		const nameB = modelMeta.get(idB)?.display_name || idB;
-		return nameA.localeCompare(nameB, undefined, { sensitivity: "base" });
+		return nameA.localeCompare(nameB, undefined, { sensitivity: 'base' });
 	});
 
 	return entries
@@ -1291,11 +1496,24 @@ export function buildRoutesByModel(params: {
 			if (hasRouteLevelFilter && groupRoutes.length === 0) {
 				return null;
 			}
-			const active = groupRoutes.filter((r) => r.status === "active").length;
+			const active = groupRoutes.filter((r) => r.status === 'active').length;
 			const meta = modelMeta.get(model_id);
-			const title =
-				meta?.display_name || groupRoutes[0]?.model_name || model_id;
+			const title = meta?.display_name || groupRoutes[0]?.model_name || model_id;
 			const vendor = normalizeModelVendorInput(meta?.vendor);
+			const searchText = [
+				model_id,
+				title,
+				...groupRoutes.flatMap((route) => [
+					route.provider_model_name,
+					route.provider_name,
+					route.model_name,
+					routeSortContext.providersById?.get(route.provider_id)?.name,
+				]),
+			]
+				.filter(Boolean)
+				.join(' ')
+				.toLowerCase();
+			if (!searchTerms.every((term) => searchText.includes(term))) return null;
 			return { model_id, title, groupRoutes, activeCount: active, vendor };
 		})
 		.filter((group): group is RouteModelGroup => group !== null);
@@ -1319,9 +1537,7 @@ export type RouteSurfaceCatalogData = {
 	unrouted: RouteModelGroup[];
 };
 
-export function buildRouteSurfaceCatalog(
-	cards: RouteModelGroup[]
-): RouteSurfaceCatalogData {
+export function buildRouteSurfaceCatalog(cards: RouteModelGroup[]): RouteSurfaceCatalogData {
 	const surfaces = new Map<string, SurfaceCatalogGroup>();
 	const unrouted: RouteModelGroup[] = [];
 
@@ -1349,7 +1565,7 @@ export function buildRouteSurfaceCatalog(
 		const protocolCmp = compareRouteProtocolsForDisplay(a.protocol, b.protocol);
 		if (protocolCmp !== 0) return protocolCmp;
 		return a.requestOperation.localeCompare(b.requestOperation, undefined, {
-			sensitivity: "base",
+			sensitivity: 'base',
 		});
 	});
 
@@ -1358,14 +1574,14 @@ export function buildRouteSurfaceCatalog(
 
 export function sortRouteCards(
 	routesByModel: RouteModelGroup[],
-	modelMeta: Map<string, GatewayModel>
+	modelMeta: Map<string, GatewayModel>,
 ): RouteModelGroup[] {
 	return [...routesByModel].sort((a, b) => {
 		const ma = modelMeta.get(a.model_id);
 		const mb = modelMeta.get(b.model_id);
 		return compareModelsByReleasedAtDesc(
 			ma ?? { id: a.model_id, display_name: a.title },
-			mb ?? { id: b.model_id, display_name: b.title }
+			mb ?? { id: b.model_id, display_name: b.title },
 		);
 	});
 }
@@ -1390,9 +1606,9 @@ export function buildVendorFilterOptions(params: {
 	}
 	return [...keys]
 		.sort((a, b) => {
-			if (a === "other") return 1;
-			if (b === "other") return -1;
-			return a.localeCompare(b, undefined, { sensitivity: "base" });
+			if (a === 'other') return 1;
+			if (b === 'other') return -1;
+			return a.localeCompare(b, undefined, { sensitivity: 'base' });
 		})
 		.map((key) => ({
 			key,
@@ -1403,7 +1619,7 @@ export function buildVendorFilterOptions(params: {
 
 export function buildRouteCardVendorGroups(
 	routeCards: RouteModelGroup[],
-	filterVendor: string
+	filterVendor: string,
 ): Array<{ vendor: string; cards: RouteModelGroup[]; showHeader: boolean }> {
 	if (filterVendor) {
 		return [{ vendor: filterVendor, cards: routeCards, showHeader: false }];
@@ -1416,13 +1632,11 @@ export function buildRouteCardVendorGroups(
 		byVendor.set(card.vendor, list);
 	}
 
-	return [...byVendor.keys()]
-		.sort(compareModelVendorsForDisplay)
-		.map((vendor) => ({
-			vendor,
-			cards: byVendor.get(vendor)!,
-			showHeader: true,
-		}));
+	return [...byVendor.keys()].sort(compareModelVendorsForDisplay).map((vendor) => ({
+		vendor,
+		cards: byVendor.get(vendor)!,
+		showHeader: true,
+	}));
 }
 
 export function buildActiveFilterSummary(params: {
@@ -1430,65 +1644,72 @@ export function buildActiveFilterSummary(params: {
 	filterRouteGroup: string;
 	filterVendor: string;
 	filterProviderId: string;
+	filterProviderKindLabel?: string;
 	providers: GatewayProvider[];
+	locale: string;
+	customKindLabel: string;
 }): string[] {
 	const {
 		filterStatus,
 		filterRouteGroup,
 		filterVendor,
 		filterProviderId,
+		filterProviderKindLabel,
 		providers,
+		locale,
+		customKindLabel,
 	} = params;
 	const parts: string[] = [];
-	if (filterStatus)
-		parts.push(filterStatus === "active" ? "Active" : "Inactive");
+	if (filterStatus) parts.push(filterStatus === 'active' ? 'Active' : 'Inactive');
 	if (filterRouteGroup) parts.push(`Group: ${filterRouteGroup}`);
 	if (filterVendor) parts.push(getModelVendorLabel(filterVendor));
+	if (filterProviderKindLabel) parts.push(filterProviderKindLabel);
 	if (filterProviderId) {
 		const p = providers.find((x) => x.id === filterProviderId);
-		parts.push(p?.name || filterProviderId);
+		parts.push(p ? liveProviderAccountLabel(p, locale, customKindLabel, filterProviderId) : filterProviderId);
 	}
 	return parts;
 }
 
-export function createInitialRouteForm(
-	models: GatewayModel[],
-	presetModelId?: string
-): RouteFormData {
-	const presetModel = presetModelId
-		? models.find((model) => model.id === presetModelId)
-		: undefined;
+export function createInitialRouteForm(models: GatewayModel[], presetModelId?: string): RouteFormData {
+	const presetModel = presetModelId ? models.find((model) => model.id === presetModelId) : undefined;
 	const defaultOperation =
 		presetModel && isImageGenerationModel(presetModel)
-			? "images.generations"
+			? 'images.generations'
 			: presetModel && isAudioTranscriptionModel(presetModel)
-			? "audio.transcriptions"
-			: presetModel && isAudioSpeechModel(presetModel)
-			? "audio.speech"
-			: "chat";
+				? 'audio.transcriptions'
+				: presetModel && isAudioSpeechModel(presetModel)
+					? 'audio.speech'
+					: 'chat';
 	return {
-		model_id: presetModelId ?? "",
-		provider_id: "",
-		provider_model_name: "",
-		request_protocol: "openai",
+		model_id: presetModelId ?? '',
+		provider_id: '',
+		provider_model_name: '',
+		request_protocol: 'openai',
 		request_operation: defaultOperation,
-		upstream_protocol: "openai",
+		upstream_protocol: 'openai',
 		upstream_operation: defaultOperation,
-		adapter: "passthrough",
+		adapter: 'passthrough',
 		priority: 0,
 		weight: 1,
-		custom_params_json: "",
-		routing_metadata_json: "",
-		route_group: "default",
-		charged_factor: "1",
-		metered_factor: "1",
-		schedule_windows: [],
+		custom_params_json: '',
+		routing_metadata_json: '',
+		custom_headers: emptyCustomHeaderRows(),
+		custom_params_force_override_headers: false,
+		custom_params_force_override_body: false,
+		route_group: 'default',
+		charged_factor: '1',
+		metered_factor: '1',
+		provider_factor: '1',
+		provider_factor_starts_at: '',
+		provider_factor_expires_at: '',
+		schedule_windows: alignRouteScheduleWindowsToCatalog(catalogScheduleWindowsFromModel(presetModel), []),
 	};
 }
 
 function formatScheduleTime(value: string): string {
 	const hhmm = value.length >= 5 ? value.slice(0, 5) : value;
-	if (hhmm === "24:00") return "24:00";
+	if (hhmm === '24:00') return '24:00';
 	const match = /^(\d{2}):([0-5]\d)$/.exec(hhmm);
 	if (!match) return hhmm;
 	return `${Number(match[1])}:${match[2]}`;
@@ -1503,19 +1724,13 @@ export type ScheduleWindowGroup = {
 	factor: number;
 };
 
-function formatScheduleRangeWithDays(
-	start: string,
-	end: string,
-	days?: number[]
-): string {
+function formatScheduleRangeWithDays(start: string, end: string, days?: number[]): string {
 	const range = formatScheduleRange(start, end);
 	const daysHint = formatIsoWeekdaysHint(days);
 	return daysHint ? `${daysHint} ${range}` : range;
 }
 
-export function groupScheduleWindows(
-	windows: DailyScheduleWindow[]
-): ScheduleWindowGroup[] {
+export function groupScheduleWindows(windows: DailyScheduleWindow[]): ScheduleWindowGroup[] {
 	const groups: ScheduleWindowGroup[] = [];
 	for (const w of windows) {
 		const range = formatScheduleRangeWithDays(w.start, w.end, w.days);
@@ -1530,54 +1745,90 @@ export function groupScheduleWindows(
 }
 
 export function scheduleWindowShapeKey(windows: DailyScheduleWindow[]): string {
-	return windows
-		.map(
-			(w) =>
-				`${w.start.slice(0, 5)}|${w.end.slice(0, 5)}|${(w.days ?? []).join(
-					"."
-				)}`
-		)
-		.join(",");
+	return windows.map((w) => `${w.start.slice(0, 5)}|${w.end.slice(0, 5)}|${(w.days ?? []).join('.')}`).join(',');
 }
 
 /** Format schedule windows for tooltips, e.g. `9:00-12:00, 14:00-18:00 ×2`. */
-export function formatScheduleWindowsHint(
-	windows: DailyScheduleWindow[]
-): string | null {
+export function formatScheduleWindowsHint(windows: DailyScheduleWindow[]): string | null {
 	const groups = groupScheduleWindows(windows);
 	if (groups.length === 0) return null;
-	return groups
-		.map((g) => `${g.ranges.join(", ")} ${formatFactorMultiplier(g.factor)}`)
-		.join(" · ");
+	return groups.map((g) => `${g.ranges.join(', ')} ${formatFactorMultiplier(g.factor)}`).join(' · ');
 }
 
 /** 列表 / 表单共用：把存量叠乘 bake 成对标准价的有效倍率。 */
-export function resolveRouteScheduleDisplay(
-	priceOverride: string | null | undefined
-): SharedScheduleWindow[] {
+export function resolveRouteScheduleDisplay(priceOverride: string | null | undefined): SharedScheduleWindow[] {
 	const factors = parseRouteBaseFactors(priceOverride ?? null);
 	const schedule = parseRoutePricingSchedule(priceOverride ?? null);
 	return mergeScheduleSidesToSharedWindows(schedule.charged, schedule.metered, {
 		mode: schedule.mode,
 		chargedBase: factors.chargedFactor,
 		meteredBase: factors.meteredFactor,
+		provider: schedule.provider,
+		providerBase: factors.providerFactor,
 	});
 }
 
-export function formatSharedScheduleWindowsHint(
-	windows: SharedScheduleWindow[]
-): string | null {
+export type ProviderFactorTiming = 'scheduled' | 'active' | 'expired';
+
+/** 列表用：未配置供应商倍率时返回 null。 */
+export function providerFactorTiming(
+	priceOverride: string | null | undefined,
+	now: Date = new Date(),
+	window?: SharedScheduleWindow,
+): ProviderFactorTiming | null {
+	const factors = parseRouteBaseFactors(priceOverride ?? null);
+	const validity = resolveProviderFactorValidity(
+		factors,
+		window
+			? {
+					start: window.start,
+					end: window.end,
+					factor: window.provider_factor,
+					...(window.provider_validity !== undefined ? { validity: window.provider_validity } : {}),
+				}
+			: null,
+	);
+	const configured =
+		(window?.provider_factor ?? factors.providerFactor) !== 1 ||
+		validity.providerStartsAt != null ||
+		validity.providerExpiresAt != null ||
+		validity.providerWindowInvalid;
+	if (!configured) {
+		return null;
+	}
+	if (validity.providerWindowInvalid) {
+		return 'expired';
+	}
+	if (isProviderFactorActive(validity, now)) {
+		return 'active';
+	}
+	if (validity.providerStartsAt != null && Date.parse(validity.providerStartsAt) > now.getTime()) {
+		return 'scheduled';
+	}
+	return 'expired';
+}
+
+export function formatSharedScheduleWindowsHint(windows: SharedScheduleWindow[]): string | null {
 	if (windows.length === 0) return null;
 	return windows
 		.map((w) => {
 			const range = formatScheduleRangeWithDays(w.start, w.end, w.days);
-			const same = w.charged_factor === w.metered_factor;
+			const same = w.charged_factor === w.metered_factor && w.provider_factor === 1;
 			if (same) {
 				return `${range} ${formatFactorMultiplier(w.charged_factor)}`;
 			}
-			return `${range} C ${formatFactorMultiplier(
-				w.charged_factor
-			)} · M ${formatFactorMultiplier(w.metered_factor)}`;
+			const provider = w.provider_factor === 1 ? '' : ` · P ${formatFactorMultiplier(w.provider_factor)}`;
+			return `${range} C ${formatFactorMultiplier(w.charged_factor)} · M ${formatFactorMultiplier(w.metered_factor)}${provider}`;
 		})
-		.join(" · ");
+		.join(' · ');
 }
+
+const normalizeJsonText = (raw: string, fieldName: string): string | null => {
+	const text = raw.trim();
+	if (!text) return null;
+	const parsed = JSON.parse(text) as unknown;
+	if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+		throw new Error(`${fieldName} must be a JSON object`);
+	}
+	return JSON.stringify(parsed);
+};

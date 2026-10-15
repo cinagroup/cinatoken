@@ -257,7 +257,7 @@ it("keeps image quality/size/reference maps and uncertainty policy without activ
 		uncertain_result_policy: "zero",
 	};
 	assert.deepEqual(publicPricing({ image_billing_mode: "per_image", image }), {
-		tiers: [],
+		tiers: [], schedule: [],
 		image_billing_mode: "per_image",
 		image,
 	});
@@ -275,7 +275,7 @@ it("preserves fractional audio minimum seconds and integer minimum characters in
 		["per_character", { price_per_character: 0, minimum_characters: 20 }],
 	] as const) {
 		assert.deepEqual(publicPricing({ audio_billing_mode: mode, audio }), {
-			tiers: [],
+			tiers: [], schedule: [],
 			audio_billing_mode: mode,
 			audio,
 		});
@@ -297,6 +297,6 @@ it("uses Core constraints for malformed modes and tier bounds instead of silentl
 			audio_billing_mode: "per_character",
 			audio: { price_per_character: 1, minimum_characters: 1.5 },
 		}),
-		{ tiers: [], audio_billing_mode: "per_character" }
+		{ tiers: [], schedule: [], audio_billing_mode: "per_character" }
 	);
 });

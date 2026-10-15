@@ -1,3 +1,4 @@
+import { parseApiKeyRateLimit } from '../lib/api-key-rate-limit';
 import type { AdminKeyMutationWithAudit } from '../storage/gateway-repository-interfaces';
 import { assertAndFinalizeUserAuditInsert } from './user-audit-catalog';
 import { snapshotToJson, userRowToSnapshot, type UserAuditSnapshot } from './user-audit-snapshot';
@@ -7,18 +8,21 @@ export function assertAdminKeyMutation(mutation: AdminKeyMutationWithAudit): Adm
 	const hasName = Object.prototype.hasOwnProperty.call(patch, 'name');
 	const hasStatus = Object.prototype.hasOwnProperty.call(patch, 'status');
 	const hasMetadata = Object.prototype.hasOwnProperty.call(patch, 'metadata');
-	if (!mutation.id || !expected.userId || !hasName && !hasStatus && !hasMetadata) {
+	const hasRateLimit = Object.prototype.hasOwnProperty.call(patch, 'rateLimit');
+	if (!mutation.id || !expected.userId || !hasName && !hasStatus && !hasMetadata && !hasRateLimit) {
 		throw new TypeError('Admin Key mutation requires an id, user and at least one field');
 	}
 	if (hasName && patch.name !== null && typeof patch.name !== 'string' ||
 		hasStatus && typeof patch.status !== 'string' ||
-		hasMetadata && patch.metadata !== null && typeof patch.metadata !== 'string') {
+		hasMetadata && patch.metadata !== null && typeof patch.metadata !== 'string' ||
+		hasRateLimit && patch.rateLimit !== null && typeof patch.rateLimit !== 'string') {
 		throw new TypeError('Invalid Admin Key patch field');
 	}
 	const changed =
 		(hasName && patch.name !== expected.name) ||
 		(hasStatus && patch.status !== expected.status) ||
-		(hasMetadata && patch.metadata !== expected.metadata);
+		(hasMetadata && patch.metadata !== expected.metadata) ||
+		(hasRateLimit && patch.rateLimit !== expected.rateLimit);
 	if (changed && !mutation.audit) throw new TypeError('Changed Admin Key needs an audit');
 	if (mutation.audit) {
 		if (!mutation.expectedUserSnapshot ||
@@ -45,11 +49,12 @@ export function assertAdminKeyMutation(mutation: AdminKeyMutationWithAudit): Adm
 }
 
 export function matchesAdminKeyProfile(
-	actual: { userId: string; workspaceId?: string; name: string | null; status: string; metadata: string | null },
+	actual: { userId: string; workspaceId?: string; name: string | null; status: string; metadata: string | null; rateLimit?: string | null },
 	expected: AdminKeyMutationWithAudit['expected']
 ): boolean {
 	return actual.userId === expected.userId && (expected.workspaceId === undefined || actual.workspaceId === expected.workspaceId) && actual.name === expected.name &&
-		actual.status === expected.status && actual.metadata === expected.metadata;
+		actual.status === expected.status && actual.metadata === expected.metadata &&
+		(expected.rateLimit === undefined || (actual.rateLimit ?? null) === expected.rateLimit);
 }
 
 /** MySQL/Postgres locking reads use the same normalization as the Admin audit snapshot. */
@@ -58,7 +63,7 @@ export function matchesAdminUserAuditSnapshot(
 		id: string; email: string; budgetMax: string | number | null;
 		budgetBase: string | number; budgetSpent: string | number;
 		budgetPeriod: string; budgetResetAt: string | null;
-		budgetEpoch: number; budgetReservedMicros: number; status: string;
+		budgetEpoch: number; budgetReservedMicros: number; walletGranted?: string | number; walletSpent?: string | number; rateLimit?: string | null; status: string;
 		metadata: string | null; chargedCostFactors: string | null;
 		externalSystem: string | null; externalUserId: string | null;
 	},
@@ -70,6 +75,9 @@ export function matchesAdminUserAuditSnapshot(
 		budget_base: Number(actual.budgetBase), budget_spent: Number(actual.budgetSpent),
 		budget_period: actual.budgetPeriod, budget_reset_at: actual.budgetResetAt,
 		budget_epoch: Number(actual.budgetEpoch),
+		wallet_granted: Number(actual.walletGranted ?? 0),
+		wallet_spent: Number(actual.walletSpent ?? 0),
+		rate_limit: parseApiKeyRateLimit(actual.rateLimit),
 		budget_reserved_micros: Number(actual.budgetReservedMicros),
 		status: actual.status, metadata: actual.metadata,
 		charged_cost_factors: actual.chargedCostFactors,

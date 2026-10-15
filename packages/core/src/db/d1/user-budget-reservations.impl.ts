@@ -35,7 +35,7 @@ async function getReservation(
 async function getAccount(client: D1DatabaseClient, userId: string): Promise<D1UserBudgetAccountRow | null> {
 	return await client.raw.prepare(`SELECT
 		id, budget_max, budget_spent, budget_spent_micros, budget_period, budget_reset_at,
-		budget_epoch, budget_reserved_micros
+		budget_epoch, budget_reserved_micros, wallet_granted, wallet_spent
 		FROM users WHERE id = ?`).bind(userId).first<D1UserBudgetAccountRow>();
 }
 
@@ -43,8 +43,8 @@ function d1UserBudgetCapacity(account: D1UserBudgetAccountRow): {
 	limitMicros: number | null;
 	remainingMicros: number | null;
 } {
-	const limitMicros = account.budget_max == null ? null : userBudgetUnits(Number(account.budget_max));
-	const rawSpentMicros = Number(account.budget_spent_micros);
+	const limitMicros = account.budget_max == null ? null : userBudgetUnits(Number(account.budget_max) + Number(account.wallet_granted ?? 0));
+	const rawSpentMicros = Number(account.budget_spent_micros) + userBudgetUnits(Number(account.wallet_spent ?? 0));
 	const spentMicros = isSafeUserBudgetMicros(rawSpentMicros)
 		? rawSpentMicros
 		: USER_BUDGET_MAX_SAFE_MICROS;
@@ -197,7 +197,7 @@ export function createD1UserBudgetReservationsRepository(
 							AND budget_reserved_micros >= user_budget_reservations.reserved_micros
 							AND budget_max IS NOT NULL
 							AND MIN(
-								CAST(ROUND(MAX(budget_max, 0) * 1000000) AS INTEGER),
+								CAST(ROUND(MAX(budget_max + wallet_granted, 0) * 1000000) AS INTEGER),
 								9007199254740991
 							) = user_budget_reservations.limit_micros
 							AND (budget_period = 'none' OR budget_reset_at IS NULL OR budget_reset_at > ?)

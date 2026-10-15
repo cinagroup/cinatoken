@@ -1,17 +1,13 @@
-"use client";
+'use client';
 
 /**
  * 紧凑时间范围：滚动快捷 + 日历快捷 + 起止（datetime-local），产出与 Gateway 分析 API 一致的 UTC `YYYY-MM-DD HH:mm:ss`。
  * 自定义输入/回显按 `BUSINESS_TIMEZONE` 墙钟，而非浏览器本地时区。
  */
-import { useState } from "react";
-import { useTranslations } from "next-intl";
-import { useBusinessTimezone } from "@/components/BusinessTimezoneProvider";
-import {
-	formatBusinessTimezoneLabel,
-	utcApiToZonedInput,
-	zonedInputToUtcApi,
-} from "@/lib/business-timezone-client";
+import { useState } from 'react';
+import { useTranslations } from 'next-intl';
+import { useBusinessTimezone } from '@/components/BusinessTimezoneProvider';
+import { formatBusinessTimezoneLabel, utcApiToZonedInput, zonedInputToUtcApi } from '@/lib/business-timezone-client';
 import {
 	GATEWAY_CALENDAR_PRESETS,
 	GATEWAY_TIME_RANGE_PRESETS,
@@ -21,40 +17,34 @@ import {
 	type GatewayCalendarPreset,
 	type GatewayRollingPreset,
 	type GatewayTimeRangeValue,
-} from "@/lib/analytics-range";
+} from '@/lib/analytics-range';
 
-const btnBase =
-	"px-2 py-1 text-xs font-medium rounded border transition-colors shrink-0";
-const btnIdle =
-	"border-transparent text-gray-600 hover:text-gray-900 hover:bg-gray-100";
-const btnOn = "border-gray-300 bg-white text-gray-900 shadow-sm";
+const btnBase = 'min-h-9 px-2 py-1 text-xs font-medium rounded border transition-colors shrink-0';
+const btnIdle = 'border-transparent text-gray-600 hover:text-gray-900 hover:bg-gray-100';
+const btnOn = 'border-gray-300 bg-white text-gray-900 shadow-sm';
 
 /** 与 `GET /admin/stats?range=` 一致的滚动快捷键。 */
-export type GatewayDashboardStatsRange = Exclude<GatewayRollingPreset, "90d">;
+export type GatewayDashboardStatsRange = Exclude<GatewayRollingPreset, '90d'>;
 
-function commitCustomLocal(
-	draftStart: string,
-	draftEnd: string,
-	timeZone: string
-): GatewayTimeRangeValue | null {
+function commitCustomLocal(draftStart: string, draftEnd: string, timeZone: string): GatewayTimeRangeValue | null {
 	const s = zonedInputToUtcApi(draftStart, timeZone);
 	const e = zonedInputToUtcApi(draftEnd, timeZone);
 	if (!s || !e) return null;
 	const norm = normalizeCustomApiRange(s, e);
 	if (!norm) return null;
-	return { preset: "custom", ...norm };
+	return { preset: 'custom', ...norm };
 }
 
 export type GatewayTimeRangePickerProps = {
 	value: GatewayTimeRangeValue;
 	onChange: (next: GatewayTimeRangeValue) => void;
-	presets?: Array<Exclude<GatewayRollingPreset, "90d">>;
+	presets?: Array<Exclude<GatewayRollingPreset, '90d'>>;
 	calendarPresets?: GatewayCalendarPreset[];
 	label?: string;
 	/** 业务 IANA 时区；默认从 `BusinessTimezoneProvider` 读取。 */
 	timeZone?: string;
 	/** 整块右对齐；默认与筛选项第一行左对齐 */
-	align?: "start" | "end";
+	align?: 'start' | 'end';
 	className?: string;
 };
 
@@ -67,14 +57,10 @@ function CustomRangeInputs({
 	timeZone: string;
 	onChange: (next: GatewayTimeRangeValue) => void;
 }) {
-	const t = useTranslations("timeRange");
-	const tCommon = useTranslations("common");
-	const [draftStart, setDraftStart] = useState(() =>
-		utcApiToZonedInput(value.start_date, timeZone)
-	);
-	const [draftEnd, setDraftEnd] = useState(() =>
-		utcApiToZonedInput(value.end_date, timeZone)
-	);
+	const t = useTranslations('timeRange');
+	const tCommon = useTranslations('common');
+	const [draftStart, setDraftStart] = useState(() => utcApiToZonedInput(value.start_date, timeZone));
+	const [draftEnd, setDraftEnd] = useState(() => utcApiToZonedInput(value.end_date, timeZone));
 	const applyCustom = () => {
 		const next = commitCustomLocal(draftStart, draftEnd, timeZone);
 		if (next) onChange(next);
@@ -85,7 +71,7 @@ function CustomRangeInputs({
 				type="datetime-local"
 				value={draftStart}
 				onChange={(e) => setDraftStart(e.target.value)}
-				aria-label={t("start")}
+				aria-label={t('start')}
 				className="px-2 py-1 border border-gray-300 rounded-md text-xs w-[11.5rem]"
 			/>
 			<span aria-hidden="true" className="shrink-0 text-sm text-gray-400">
@@ -95,7 +81,7 @@ function CustomRangeInputs({
 				type="datetime-local"
 				value={draftEnd}
 				onChange={(e) => setDraftEnd(e.target.value)}
-				aria-label={t("end")}
+				aria-label={t('end')}
 				className="px-2 py-1 border border-gray-300 rounded-md text-xs w-[11.5rem]"
 			/>
 			<button
@@ -103,7 +89,7 @@ function CustomRangeInputs({
 				onClick={applyCustom}
 				className="px-3 py-1 bg-gray-900 text-white text-xs rounded-md hover:bg-gray-800"
 			>
-				{tCommon("apply")}
+				{tCommon('apply')}
 			</button>
 		</div>
 	);
@@ -116,47 +102,66 @@ export function GatewayTimeRangePicker({
 	calendarPresets = [...GATEWAY_CALENDAR_PRESETS],
 	label,
 	timeZone: timeZoneProp,
-	align = "start",
-	className = "",
+	align = 'start',
+	className = '',
 }: GatewayTimeRangePickerProps) {
-	const t = useTranslations("timeRange");
+	const t = useTranslations('timeRange');
 	const contextTimeZone = useBusinessTimezone();
 	const timeZone = timeZoneProp ?? contextTimeZone;
 	const timezoneLabel = formatBusinessTimezoneLabel(timeZone);
-	const resolvedLabel = label ?? t("label", { timezone: timezoneLabel });
+	const resolvedLabel = label ?? t('label', { timezone: timezoneLabel });
+	const [customOpen, setCustomOpen] = useState(false);
 
-	const selectRolling = (p: Exclude<GatewayRollingPreset, "90d">) => {
+	const selectRolling = (p: Exclude<GatewayRollingPreset, '90d'>) => {
+		setCustomOpen(false);
 		onChange({ preset: p, ...rangeToParams(p) });
 	};
 
 	const selectCalendar = (p: GatewayCalendarPreset) => {
+		setCustomOpen(false);
 		onChange({ preset: p, ...calendarRangeToParams(p, timeZone) });
 	};
 
-	const end = align === "end";
+	const end = align === 'end';
+	const showCustom = customOpen || value.preset === 'custom';
 
 	return (
 		<div className={`w-full min-w-0 ${className}`}>
 			{resolvedLabel ? (
-				<label
-					className={`block text-sm text-gray-500 mb-1 ${
-						end ? "text-right" : ""
-					}`}
-				>
-					{resolvedLabel}
-				</label>
+				<label className={`block text-sm text-gray-500 mb-1 ${end ? 'text-right' : ''}`}>{resolvedLabel}</label>
 			) : null}
-			<div
-				className={`flex w-full min-w-0 flex-wrap items-center gap-x-3 gap-y-2 ${
-					end ? "justify-end" : ""
-				}`}
+			<select
+				aria-label={resolvedLabel || t('custom')}
+				value={showCustom ? 'custom' : value.preset}
+				onChange={(event) => {
+					const preset = event.target.value;
+					if (preset === 'custom') setCustomOpen(true);
+					else if (presets.includes(preset as GatewayDashboardStatsRange))
+						selectRolling(preset as GatewayDashboardStatsRange);
+					else selectCalendar(preset as GatewayCalendarPreset);
+				}}
+				className="mb-2 min-h-11 w-full min-w-0 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm md:hidden"
 			>
-				<div className="inline-flex max-w-full flex-wrap items-center gap-0.5 rounded-lg border border-gray-200 bg-gray-50 p-0.5">
+				{presets.map((p) => (
+					<option key={p} value={p}>
+						{t(`presets.${p}`)}
+					</option>
+				))}
+				{calendarPresets.map((p) => (
+					<option key={p} value={p}>
+						{t(`calendar.${p}`)}
+					</option>
+				))}
+				<option value="custom">{t('custom')}</option>
+			</select>
+			<div className={`flex w-full min-w-0 flex-wrap items-center gap-x-3 gap-y-2 ${end ? 'justify-end' : ''}`}>
+				<div className="hidden max-w-full flex-wrap items-center gap-0.5 rounded-lg border border-gray-200 bg-gray-50 p-0.5 md:inline-flex">
 					{presets.map((p) => (
 						<button
 							key={p}
 							type="button"
 							onClick={() => selectRolling(p)}
+							aria-pressed={value.preset === p}
 							className={`${btnBase} ${value.preset === p ? btnOn : btnIdle}`}
 						>
 							{t(`presets.${p}`)}
@@ -164,12 +169,13 @@ export function GatewayTimeRangePicker({
 					))}
 				</div>
 				{calendarPresets.length > 0 ? (
-					<div className="inline-flex max-w-full flex-wrap items-center gap-0.5 rounded-lg border border-gray-200 bg-gray-50 p-0.5">
+					<div className="hidden max-w-full flex-wrap items-center gap-0.5 rounded-lg border border-gray-200 bg-gray-50 p-0.5 md:inline-flex">
 						{calendarPresets.map((p) => (
 							<button
 								key={p}
 								type="button"
 								onClick={() => selectCalendar(p)}
+								aria-pressed={value.preset === p}
 								className={`${btnBase} ${value.preset === p ? btnOn : btnIdle}`}
 							>
 								{t(`calendar.${p}`)}

@@ -6,10 +6,22 @@ import { fileURLToPath } from 'node:url';
 import test from 'node:test';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '../..');
-const generatedWorkerConfigs = ['packages/proxy/wrangler.jsonc', 'packages/admin/wrangler.jsonc', 'packages/chain-worker/wrangler.jsonc'];
-const reviewProducerEnvKeys = ['REVIEW_PRODUCER_HYPERDRIVE_BINDINGS_ENABLED', 'DISPATCH_HYPERDRIVE_ID', 'FACT_HYPERDRIVE_ID'];
+const generatedWorkerConfigs = [
+	'packages/proxy/wrangler.jsonc',
+	'packages/admin/wrangler.jsonc',
+	'packages/chain-worker/wrangler.jsonc',
+];
+const reviewProducerEnvKeys = [
+	'REVIEW_PRODUCER_HYPERDRIVE_BINDINGS_ENABLED',
+	'DISPATCH_HYPERDRIVE_ID',
+	'FACT_HYPERDRIVE_ID',
+];
 const repairEnvKeys = ['SHARED_KEY_USAGE_REPAIR_ENABLED', 'REPAIR_HYPERDRIVE_ID'];
-const earningEnvKeys = ['SHARED_EARNING_SCANNER_ENABLED', 'EARNING_DELIVERY_HYPERDRIVE_ID', 'EARNING_CONSUMER_HYPERDRIVE_ID'];
+const earningEnvKeys = [
+	'SHARED_EARNING_SCANNER_ENABLED',
+	'EARNING_DELIVERY_HYPERDRIVE_ID',
+	'EARNING_CONSUMER_HYPERDRIVE_ID',
+];
 
 function reviewGeneratorEnv(overrides = {}) {
 	const env = { ...process.env };
@@ -141,7 +153,10 @@ test('Batch infrastructure is explicit, private, renamed, and API-disabled', (t)
 });
 
 test('Phase 2 generation rejects public Batch API activation and malformed flags', () => {
-	for (const overrides of [{ BATCH_API_ENABLED: 'true', BATCH_INFRA_ENABLED: 'true' }, { BATCH_INFRA_ENABLED: 'yes' }]) {
+	for (const overrides of [
+		{ BATCH_API_ENABLED: 'true', BATCH_INFRA_ENABLED: 'true' },
+		{ BATCH_INFRA_ENABLED: 'yes' },
+	]) {
 		const env = { ...process.env, ...overrides };
 		delete env.D1_DATABASE_ID;
 		const result = spawnSync(process.execPath, ['scripts/deploy/gen-wrangler.mjs'], {
@@ -173,7 +188,10 @@ test('admin service binding follows a custom proxy Worker name', (t) => {
 	});
 	assert.equal(result.status, 0, result.stderr);
 	const admin = JSON.parse(readFileSync(join(root, 'packages/admin/wrangler.jsonc'), 'utf8'));
-	assert.equal(admin.services.find((service) => service.binding === 'CINATOKEN_PROXY_SERVICE')?.service, 'tenant-proxy');
+	assert.equal(
+		admin.services.find((service) => service.binding === 'CINATOKEN_PROXY_SERVICE')?.service,
+		'tenant-proxy',
+	);
 });
 
 test('CinaAuth organization admin roles reach both HTTP Workers', (t) => {
@@ -229,7 +247,11 @@ test('generated Worker configs stage one shared Hyperdrive binding and explicit 
 		encoding: 'utf8',
 	});
 	assert.equal(result.status, 0, result.stderr);
-	for (const relativePath of ['packages/proxy/wrangler.jsonc', 'packages/admin/wrangler.jsonc', 'packages/chain-worker/wrangler.jsonc']) {
+	for (const relativePath of [
+		'packages/proxy/wrangler.jsonc',
+		'packages/admin/wrangler.jsonc',
+		'packages/chain-worker/wrangler.jsonc',
+	]) {
 		const config = JSON.parse(readFileSync(join(root, relativePath), 'utf8'));
 		assert.deepEqual(config.hyperdrive, [{ binding: 'HYPERDRIVE', id: env.HYPERDRIVE_ID }]);
 		assert.equal(config.vars.DATABASE_DRIVER, 'postgres');
@@ -262,7 +284,11 @@ test('staged Hyperdrive ID stays unbound until Postgres is selected', (t) => {
 		encoding: 'utf8',
 	});
 	assert.equal(result.status, 0, result.stderr);
-	for (const relativePath of ['packages/proxy/wrangler.jsonc', 'packages/admin/wrangler.jsonc', 'packages/chain-worker/wrangler.jsonc']) {
+	for (const relativePath of [
+		'packages/proxy/wrangler.jsonc',
+		'packages/admin/wrangler.jsonc',
+		'packages/chain-worker/wrangler.jsonc',
+	]) {
 		const config = JSON.parse(readFileSync(join(root, relativePath), 'utf8'));
 		assert.equal(config.hyperdrive, undefined);
 		assert.equal(config.vars?.DATABASE_DRIVER, undefined);
@@ -418,12 +444,21 @@ test('repair Hyperdrive invalid activation and shared IDs fail before any genera
 	for (const [name, overrides, error] of [
 		['invalid activation', { SHARED_KEY_USAGE_REPAIR_ENABLED: 'true' }, /must be reviewed-v3 or false/],
 		['previous activation', { SHARED_KEY_USAGE_REPAIR_ENABLED: 'reviewed-v2' }, /must be reviewed-v3 or false/],
-		['ID with disabled switch', { SHARED_KEY_USAGE_REPAIR_ENABLED: 'false' }, /requires SHARED_KEY_USAGE_REPAIR_ENABLED=reviewed-v3/],
+		[
+			'ID with disabled switch',
+			{ SHARED_KEY_USAGE_REPAIR_ENABLED: 'false' },
+			/requires SHARED_KEY_USAGE_REPAIR_ENABLED=reviewed-v3/,
+		],
 		['missing repair ID', { REPAIR_HYPERDRIVE_ID: '' }, /REPAIR_HYPERDRIVE_ID must be a canonical/],
 		['invalid repair ID', { REPAIR_HYPERDRIVE_ID: 'placeholder' }, /REPAIR_HYPERDRIVE_ID must be a canonical/],
 		[
 			'D1 selected',
-			{ DATABASE_DRIVER: 'd1', REVIEW_PRODUCER_HYPERDRIVE_BINDINGS_ENABLED: 'false', DISPATCH_HYPERDRIVE_ID: '', FACT_HYPERDRIVE_ID: '' },
+			{
+				DATABASE_DRIVER: 'd1',
+				REVIEW_PRODUCER_HYPERDRIVE_BINDINGS_ENABLED: 'false',
+				DISPATCH_HYPERDRIVE_ID: '',
+				FACT_HYPERDRIVE_ID: '',
+			},
 			/requires DATABASE_DRIVER=postgres/,
 		],
 		['runtime ID reused', { REPAIR_HYPERDRIVE_ID: runtimeId }, /must differ/],
@@ -483,7 +518,11 @@ test('HTTP Worker generator refuses every scanner binding shape before write', (
 		['new opt-in', { SHARED_EARNING_SCANNER_ENABLED: 'dedicated-v1' }, /dedicated scheduled Worker/],
 		['delivery ID', { EARNING_DELIVERY_HYPERDRIVE_ID: deliveryId }, /dedicated scheduled Worker/],
 		['consumer ID', { EARNING_CONSUMER_HYPERDRIVE_ID: consumerId }, /dedicated scheduled Worker/],
-		['both IDs', { EARNING_DELIVERY_HYPERDRIVE_ID: deliveryId, EARNING_CONSUMER_HYPERDRIVE_ID: consumerId }, /dedicated scheduled Worker/],
+		[
+			'both IDs',
+			{ EARNING_DELIVERY_HYPERDRIVE_ID: deliveryId, EARNING_CONSUMER_HYPERDRIVE_ID: consumerId },
+			/dedicated scheduled Worker/,
+		],
 	]) {
 		const result = runGenerator(reviewGeneratorEnv({ ...valid, ...overrides }));
 		assert.notEqual(result.status, 0, name);
@@ -539,7 +578,10 @@ test('Admin managed-config revision guard requires exact true at Wrangler genera
 		if (input !== undefined) env.CINATOKEN_ADMIN_CONFIG_REQUIRE_REVISION = input;
 		const result = runGenerator(env);
 		assert.equal(result.status, 0, `${String(input)}: ${result.stderr}`);
-		assert.equal(generatedConfig('packages/admin/wrangler.jsonc').vars.CINATOKEN_ADMIN_CONFIG_REQUIRE_REVISION, expected);
+		assert.equal(
+			generatedConfig('packages/admin/wrangler.jsonc').vars.CINATOKEN_ADMIN_CONFIG_REQUIRE_REVISION,
+			expected,
+		);
 	}
 });
 
@@ -585,4 +627,71 @@ test('Postgres Worker generation fails closed without HYPERDRIVE_ID', () => {
 	});
 	assert.notEqual(result.status, 0);
 	assert.match(result.stderr, /HYPERDRIVE_ID is required/);
+});
+import {
+	customDomainRoutes,
+	parseCustomDomains,
+	primaryCustomDomain,
+	collectProxyRuntimeVars,
+} from './gen-wrangler.mjs';
+
+test('parseCustomDomains splits comma-separated hosts', () => {
+	assert.deepEqual(parseCustomDomains('a.example.com,b.example.com'), ['a.example.com', 'b.example.com']);
+});
+
+test('parseCustomDomains trims whitespace and drops empty tokens', () => {
+	assert.deepEqual(parseCustomDomains(' a.example.com , , b.example.com '), ['a.example.com', 'b.example.com']);
+});
+
+test('parseCustomDomains de-dupes case-insensitively and keeps first spelling', () => {
+	assert.deepEqual(parseCustomDomains('Api.example.com,api.example.com,API.example.com'), ['Api.example.com']);
+});
+
+test('parseCustomDomains treats empty or non-string as no hosts', () => {
+	assert.deepEqual(parseCustomDomains(''), []);
+	assert.deepEqual(parseCustomDomains('   '), []);
+	assert.deepEqual(parseCustomDomains(' , , '), []);
+	assert.deepEqual(parseCustomDomains(undefined), []);
+});
+
+test('primaryCustomDomain is the first parsed host', () => {
+	assert.equal(primaryCustomDomain('a.example.com,b.example.com'), 'a.example.com');
+	assert.equal(primaryCustomDomain(''), '');
+});
+
+test('customDomainRoutes returns undefined when empty', () => {
+	assert.equal(customDomainRoutes(''), undefined);
+	assert.equal(customDomainRoutes('  ,  '), undefined);
+	assert.equal(customDomainRoutes(undefined), undefined);
+});
+
+test('customDomainRoutes emits one custom_domain route per host', () => {
+	assert.deepEqual(customDomainRoutes('a.example.com, b.example.com'), [
+		{ pattern: 'a.example.com', custom_domain: true },
+		{ pattern: 'b.example.com', custom_domain: true },
+	]);
+});
+
+test('customDomainRoutes still accepts a single hostname', () => {
+	assert.deepEqual(customDomainRoutes('api.example.com'), [{ pattern: 'api.example.com', custom_domain: true }]);
+});
+
+test('collectProxyRuntimeVars omits empty keys', () => {
+	assert.equal(collectProxyRuntimeVars({}), undefined);
+	assert.equal(collectProxyRuntimeVars({ STREAM_IDLE_TIMEOUT_MS: '  ' }), undefined);
+});
+
+test('collectProxyRuntimeVars keeps trimmed positive overrides', () => {
+	assert.deepEqual(
+		collectProxyRuntimeVars({
+			STREAM_FIRST_CHUNK_TIMEOUT_MS: ' 180000 ',
+			STREAM_IDLE_TIMEOUT_MS: '80000',
+			USAGE_SAFETY_TIMEOUT_MS: '',
+			UNRELATED: '1',
+		}),
+		{
+			STREAM_FIRST_CHUNK_TIMEOUT_MS: '180000',
+			STREAM_IDLE_TIMEOUT_MS: '80000',
+		},
+	);
 });

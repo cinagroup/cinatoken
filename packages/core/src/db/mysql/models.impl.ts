@@ -1,3 +1,9 @@
+import {
+	modelPricingScheduleUpdate,
+	modelPricingScheduleChanged,
+	modelPricingRouteAlignments,
+	type ModelPricingRouteSnapshot,
+} from '../model-pricing-alignment';
 /**
  * MySQL：`models` / `model_tags`。
  */
@@ -101,7 +107,10 @@ export function createMySqlModelsRepository(db: MySqlDatabaseClient): ModelsRepo
 				bindValues.push(value);
 			}
 			if (patch.length === 0) return 0;
-			const [result] = await pool.execute<ResultSetHeader>(`UPDATE models SET ${patch.join(', ')} WHERE id = ?`, [...bindValues, id]);
+			const [result] = await pool.execute<ResultSetHeader>(`UPDATE models SET ${patch.join(', ')} WHERE id = ?`, [
+				...bindValues,
+				id,
+			]);
 			return result.affectedRows;
 		},
 
@@ -111,29 +120,52 @@ export function createMySqlModelsRepository(db: MySqlDatabaseClient): ModelsRepo
 			const conn = await pool.getConnection();
 			try {
 				await conn.beginTransaction();
-				const [rows] = await conn.execute<Array<{ id: string; route_policy: string | null }>>('SELECT id, route_policy FROM models WHERE BINARY id = BINARY ? FOR UPDATE', [id]);
+				const nextSchedule = modelPricingScheduleUpdate(rest);
+				const fields = nextSchedule ? 'id, route_policy, pricing_profile' : 'id, route_policy';
+				const [rows] = await conn.execute<
+					Array<{ id: string; route_policy: string | null; pricing_profile?: string | null }>
+				>(`SELECT ${fields} FROM models WHERE BINARY id = BINARY ? FOR UPDATE`, [id]);
 				if (!Array.isArray(rows) || rows.length > 1) throw new Error('Invalid conditional model read acknowledgement');
 				if (!rows.length || rows[0].id !== id || rows[0].route_policy !== expectedRoutePolicy) {
 					await conn.rollback();
 					return false;
 				}
+				let alignment: ReturnType<typeof modelPricingRouteAlignments> = [];
+				if (nextSchedule && modelPricingScheduleChanged(rows[0].pricing_profile ?? null, nextSchedule)) {
+					const [routes] = await conn.execute<ModelPricingRouteSnapshot[]>(
+						'SELECT id, price_override FROM model_routes WHERE BINARY model_id = BINARY ? ORDER BY id FOR UPDATE',
+						[id],
+					);
+					alignment = modelPricingRouteAlignments(routes, nextSchedule);
+				}
 				const set = patch.length ? patch.map(([key]) => `${key} = ?`).join(', ') : 'id = id';
-				const [result] = await conn.execute<ResultSetHeader>(`UPDATE models SET ${set} WHERE BINARY id = BINARY ? AND BINARY route_policy <=> BINARY ?`, [...patch.map(([, value]) => value), id, expectedRoutePolicy]);
+				const [result] = await conn.execute<ResultSetHeader>(
+					`UPDATE models SET ${set} WHERE BINARY id = BINARY ? AND BINARY route_policy <=> BINARY ?`,
+					[...patch.map(([, value]) => value), id, expectedRoutePolicy],
+				);
 				// mysql2 may report changed rather than matched rows for a no-op. The locked
 				// exact read above proves the match; invalid/unknown receipts never succeed.
 				if (!Number.isInteger(result.affectedRows) || result.affectedRows < 0 || result.affectedRows > 1)
 					throw new Error('Invalid conditional model write acknowledgement');
+				for (const route of alignment)
+					await conn.execute(
+						'UPDATE model_routes SET price_override = ? WHERE BINARY id = BINARY ? AND BINARY model_id = BINARY ?',
+						[route.next, route.id, id],
+					);
 				const cleanTags = modelPolicyTags(tags);
 				if (cleanTags !== undefined) {
 					await conn.execute('DELETE FROM model_tags WHERE BINARY model_id = BINARY ?', [id]);
-					for (const tag of cleanTags) await conn.execute('INSERT INTO model_tags (model_id, tag) VALUES (?, ?)', [id, tag]);
+					for (const tag of cleanTags)
+						await conn.execute('INSERT INTO model_tags (model_id, tag) VALUES (?, ?)', [id, tag]);
 				}
 				await conn.commit();
 				return true;
 			} catch (error) {
 				await conn.rollback();
 				throw error;
-			} finally { conn.release(); }
+			} finally {
+				conn.release();
+			}
 		},
 
 		async deleteModelCascade(id: string): Promise<number> {

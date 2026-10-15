@@ -195,6 +195,8 @@ async function fixture(
 	const principal =
 		principalOverride === undefined ? storedPrincipal : principalOverride;
 	const bindings = {
+		// The authenticated outer Console entry already checked the original browser Origin.
+		ADMIN_CSRF_SAME_ORIGIN: true,
 		STORAGE_CONTEXT: { repositories },
 		ADMIN_PRINCIPAL: principal ?? undefined,
 	} as unknown as AdminBindings;

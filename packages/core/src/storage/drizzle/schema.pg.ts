@@ -1,4 +1,4 @@
-import { sql } from "drizzle-orm";
+import { sql } from 'drizzle-orm';
 import {
 	pgSchema,
 	text,
@@ -12,1900 +12,1687 @@ import {
 	check,
 	bigint,
 	primaryKey,
-} from "drizzle-orm/pg-core";
+} from 'drizzle-orm/pg-core';
 
 // Match the migration-owned schema without depending on pooled session state.
-const gatewaySchema = pgSchema("cinatoken_gateway");
+const gatewaySchema = pgSchema('cinatoken_gateway');
 
 export const usersTable = gatewaySchema.table(
-	"users",
+	'users',
 	{
-		id: text("id").primaryKey(),
+		id: text('id').primaryKey(),
 		/**
 		 * 在 `external_system` 命名空间内唯一（含 internal 用户，即 `external_system IS NULL`）；
 		 * 由两条 partial unique index 落实，见表选项末尾。
 		 */
-		email: text("email").notNull(),
-		budgetMax: numeric("budget_max", { precision: 18, scale: 6 }),
-		budgetBase: numeric("budget_base", { precision: 18, scale: 6 })
-			.notNull()
-			.default("0"),
-		budgetSpent: numeric("budget_spent", { precision: 18, scale: 6 })
-			.notNull()
-			.default("0"),
-		budgetPeriod: text("budget_period").notNull().default("none"),
-		budgetResetAt: timestamp("budget_reset_at", {
+		email: text('email').notNull(),
+		budgetMax: numeric('budget_max', { precision: 18, scale: 6 }),
+		budgetBase: numeric('budget_base', { precision: 18, scale: 6 }).notNull().default('0'),
+		budgetSpent: numeric('budget_spent', { precision: 18, scale: 6 }).notNull().default('0'),
+		budgetPeriod: text('budget_period').notNull().default('none'),
+		budgetResetAt: timestamp('budget_reset_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}),
-		budgetEpoch: bigint("budget_epoch", { mode: "number" })
-			.notNull()
-			.default(0),
-		budgetReservedMicros: bigint("budget_reserved_micros", { mode: "number" })
-			.notNull()
-			.default(0),
-		status: text("status").notNull().default("active"),
-		metadata: text("metadata"),
+		budgetEpoch: bigint('budget_epoch', { mode: 'number' }).notNull().default(0),
+		budgetReservedMicros: bigint('budget_reserved_micros', { mode: 'number' }).notNull().default(0),
+		walletGranted: numeric('wallet_granted', { precision: 18, scale: 6 }).notNull().default('0'),
+		walletSpent: numeric('wallet_spent', { precision: 18, scale: 6 }).notNull().default('0'),
+		status: text('status').notNull().default('active'),
+		metadata: text('metadata'),
+		/** JSON：`{ rpm?: number }`；NULL = 该用户所有 Key 合计不限 */
+		rateLimit: text('rate_limit'),
 		/** `{ "<models.id>": factor }` JSON；NULL 表示无用户级 Charged 折扣 */
-		chargedCostFactors: text("charged_cost_factors"),
+		chargedCostFactors: text('charged_cost_factors'),
 		/** 上游命名空间（产品/租户），与 external_user_id 成对做幂等；纯网关用户二者皆空。 */
-		externalSystem: text("external_system"),
-		externalUserId: text("external_user_id"),
-		createdAt: timestamp("created_at", {
+		externalSystem: text('external_system'),
+		externalUserId: text('external_user_id'),
+		createdAt: timestamp('created_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
-		updatedAt: timestamp("updated_at", {
+		updatedAt: timestamp('updated_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
 	},
 	(t) => [
-		uniqueIndex("uk_users_external_system_user_id").on(
-			t.externalSystem,
-			t.externalUserId
-		),
-		uniqueIndex("uk_users_external_system_email")
+		uniqueIndex('uk_users_external_system_user_id').on(t.externalSystem, t.externalUserId),
+		uniqueIndex('uk_users_external_system_email')
 			.on(t.externalSystem, t.email)
 			.where(sql`external_system IS NOT NULL`),
-		uniqueIndex("uk_users_internal_email")
+		uniqueIndex('uk_users_internal_email')
 			.on(t.email)
 			.where(sql`external_system IS NULL`),
 		check(
-			"users_external_pair_chk",
-			sql`(external_system IS NULL AND external_user_id IS NULL) OR (external_system IS NOT NULL AND external_user_id IS NOT NULL)`
+			'users_external_pair_chk',
+			sql`(external_system IS NULL AND external_user_id IS NULL) OR (external_system IS NOT NULL AND external_user_id IS NOT NULL)`,
 		),
+		check('users_external_system_nonempty_chk', sql`external_system IS NULL OR length(external_system) > 0`),
+		check('users_budget_epoch_chk', sql`${t.budgetEpoch} >= 0 AND ${t.budgetEpoch} <= 9007199254740991`),
 		check(
-			"users_external_system_nonempty_chk",
-			sql`external_system IS NULL OR length(external_system) > 0`
+			'users_budget_reserved_micros_chk',
+			sql`${t.budgetReservedMicros} >= 0 AND ${t.budgetReservedMicros} <= 9007199254740991`,
 		),
-		check(
-			"users_budget_epoch_chk",
-			sql`${t.budgetEpoch} >= 0 AND ${t.budgetEpoch} <= 9007199254740991`
-		),
-		check(
-			"users_budget_reserved_micros_chk",
-			sql`${t.budgetReservedMicros} >= 0 AND ${t.budgetReservedMicros} <= 9007199254740991`
-		),
-	]
+	],
 );
 
 /** CinaAuth-owned organization projected into the gateway product boundary. */
 export const organizationsTable = gatewaySchema.table(
-	"organizations",
+	'organizations',
 	{
-		id: text("id").primaryKey(),
-		source: text("source").notNull(),
-		name: text("name").notNull(),
-		slug: text("slug"),
-		status: text("status").notNull().default("active"),
-		metadataJson: text("metadata_json"),
-		sourceUpdatedAt: timestamp("source_updated_at", {
+		id: text('id').primaryKey(),
+		source: text('source').notNull(),
+		name: text('name').notNull(),
+		slug: text('slug'),
+		status: text('status').notNull().default('active'),
+		metadataJson: text('metadata_json'),
+		sourceUpdatedAt: timestamp('source_updated_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
-		createdAt: timestamp("created_at", {
+		createdAt: timestamp('created_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
-		updatedAt: timestamp("updated_at", {
+		updatedAt: timestamp('updated_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
 	},
 	(t) => [
-		check(
-			"organizations_status_chk",
-			sql`${t.status} IN ('pending', 'active', 'suspended', 'deleted')`
-		),
-		check("organizations_source_nonempty_chk", sql`length(${t.source}) > 0`),
-	]
+		check('organizations_status_chk', sql`${t.status} IN ('pending', 'active', 'suspended', 'deleted')`),
+		check('organizations_source_nonempty_chk', sql`length(${t.source}) > 0`),
+	],
 );
 
 /** Organization membership keyed by CinaAuth OIDC subject, even before first login. */
 export const organizationMembershipsTable = gatewaySchema.table(
-	"organization_memberships",
+	'organization_memberships',
 	{
-		organizationId: text("organization_id")
+		organizationId: text('organization_id')
 			.notNull()
-			.references(() => organizationsTable.id, { onDelete: "cascade" }),
-		subject: text("subject").notNull(),
-		userId: text("user_id").references(() => usersTable.id, {
-			onDelete: "set null",
+			.references(() => organizationsTable.id, { onDelete: 'cascade' }),
+		subject: text('subject').notNull(),
+		userId: text('user_id').references(() => usersTable.id, {
+			onDelete: 'set null',
 		}),
-		email: text("email"),
-		rolesJson: text("roles_json").notNull().default("[]"),
-		status: text("status").notNull().default("active"),
-		sourceUpdatedAt: timestamp("source_updated_at", {
+		email: text('email'),
+		rolesJson: text('roles_json').notNull().default('[]'),
+		status: text('status').notNull().default('active'),
+		sourceUpdatedAt: timestamp('source_updated_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
-		createdAt: timestamp("created_at", {
+		createdAt: timestamp('created_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
-		updatedAt: timestamp("updated_at", {
+		updatedAt: timestamp('updated_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
 	},
 	(t) => [
 		primaryKey({ columns: [t.organizationId, t.subject] }),
-		check(
-			"organization_memberships_status_chk",
-			sql`${t.status} IN ('active', 'suspended', 'removed')`
-		),
-		check(
-			"organization_memberships_subject_nonempty_chk",
-			sql`length(${t.subject}) > 0`
-		),
-	]
+		check('organization_memberships_status_chk', sql`${t.status} IN ('active', 'suspended', 'removed')`),
+		check('organization_memberships_subject_nonempty_chk', sql`length(${t.subject}) > 0`),
+	],
 );
 
 /** Immutable receipt for idempotent identity-event application. */
 export const identityEventInboxTable = gatewaySchema.table(
-	"identity_event_inbox",
+	'identity_event_inbox',
 	{
-		source: text("source").notNull(),
-		eventId: text("event_id").notNull(),
-		eventType: text("event_type").notNull(),
-		aggregateType: text("aggregate_type").notNull(),
-		aggregateId: text("aggregate_id").notNull(),
-		payloadSha256: text("payload_sha256").notNull(),
-		processorToken: text("processor_token").notNull().unique(),
-		occurredAt: timestamp("occurred_at", {
+		source: text('source').notNull(),
+		eventId: text('event_id').notNull(),
+		eventType: text('event_type').notNull(),
+		aggregateType: text('aggregate_type').notNull(),
+		aggregateId: text('aggregate_id').notNull(),
+		payloadSha256: text('payload_sha256').notNull(),
+		processorToken: text('processor_token').notNull().unique(),
+		occurredAt: timestamp('occurred_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
-		processedAt: timestamp("processed_at", {
+		processedAt: timestamp('processed_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
 	},
-	(t) => [primaryKey({ columns: [t.source, t.eventId] })]
+	(t) => [primaryKey({ columns: [t.source, t.eventId] })],
 );
 
 /** CinaToken-owned gateway resource boundary; identity remains owned by CinaAuth. */
 export const workspacesTable = gatewaySchema.table(
-	"workspaces",
+	'workspaces',
 	{
-		id: text("id").primaryKey(),
-		scopeType: text("scope_type").notNull(),
-		organizationId: text("organization_id").references(
-			() => organizationsTable.id,
-			{ onDelete: "cascade" }
-		),
-		personalOwnerUserId: text("personal_owner_user_id").references(
-			() => usersTable.id,
-			{ onDelete: "cascade" }
-		),
-		name: text("name").notNull(),
-		slug: text("slug").notNull(),
-		description: text("description"),
-		isDefault: boolean("is_default").notNull().default(false),
-		defaultScopeKey: text("default_scope_key").unique(),
-		status: text("status").notNull().default("active"),
-		settingsJson: text("settings_json"),
-		createdByUserId: text("created_by_user_id").references(
-			() => usersTable.id,
-			{ onDelete: "set null" }
-		),
-		createdAt: timestamp("created_at", {
+		id: text('id').primaryKey(),
+		scopeType: text('scope_type').notNull(),
+		organizationId: text('organization_id').references(() => organizationsTable.id, { onDelete: 'cascade' }),
+		personalOwnerUserId: text('personal_owner_user_id').references(() => usersTable.id, { onDelete: 'cascade' }),
+		name: text('name').notNull(),
+		slug: text('slug').notNull(),
+		description: text('description'),
+		isDefault: boolean('is_default').notNull().default(false),
+		defaultScopeKey: text('default_scope_key').unique(),
+		status: text('status').notNull().default('active'),
+		settingsJson: text('settings_json'),
+		createdByUserId: text('created_by_user_id').references(() => usersTable.id, { onDelete: 'set null' }),
+		createdAt: timestamp('created_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
-		updatedAt: timestamp("updated_at", {
+		updatedAt: timestamp('updated_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
 	},
 	(t) => [
-		uniqueIndex("uk_workspaces_personal_slug")
+		uniqueIndex('uk_workspaces_personal_slug')
 			.on(t.personalOwnerUserId, t.slug)
 			.where(sql`${t.personalOwnerUserId} IS NOT NULL`),
-		uniqueIndex("uk_workspaces_organization_slug")
+		uniqueIndex('uk_workspaces_organization_slug')
 			.on(t.organizationId, t.slug)
 			.where(sql`${t.organizationId} IS NOT NULL`),
+		check('workspaces_scope_type_chk', sql`${t.scopeType} IN ('personal', 'organization')`),
+		check('workspaces_status_chk', sql`${t.status} IN ('active', 'archived')`),
 		check(
-			"workspaces_scope_type_chk",
-			sql`${t.scopeType} IN ('personal', 'organization')`
-		),
-		check("workspaces_status_chk", sql`${t.status} IN ('active', 'archived')`),
-		check(
-			"workspaces_scope_owner_chk",
+			'workspaces_scope_owner_chk',
 			sql`(
 			(${t.scopeType} = 'personal' AND ${t.personalOwnerUserId} IS NOT NULL AND ${t.organizationId} IS NULL)
 			OR (${t.scopeType} = 'organization' AND ${t.organizationId} IS NOT NULL AND ${t.personalOwnerUserId} IS NULL)
-		)`
+		)`,
 		),
 		check(
-			"workspaces_default_key_chk",
+			'workspaces_default_key_chk',
 			sql`(
 			(${t.isDefault} AND ${t.defaultScopeKey} IS NOT NULL)
 			OR (NOT ${t.isDefault} AND ${t.defaultScopeKey} IS NULL)
-		)`
+		)`,
 		),
-	]
+	],
 );
 
 export const workspaceBudgetsTable = gatewaySchema.table(
-	"workspace_budgets",
+	'workspace_budgets',
 	{
-		id: text("id").primaryKey(),
-		workspaceId: text("workspace_id")
+		id: text('id').primaryKey(),
+		workspaceId: text('workspace_id')
 			.notNull()
-			.references(() => workspacesTable.id, { onDelete: "cascade" }),
-		resetInterval: text("reset_interval").notNull(),
-		limitMicros: bigint("limit_micros", { mode: "number" }).notNull(),
-		configEpoch: integer("config_epoch").notNull().default(0),
-		createdAt: timestamp("created_at", { withTimezone: true, mode: "string" }).notNull(),
-		updatedAt: timestamp("updated_at", { withTimezone: true, mode: "string" }).notNull(),
+			.references(() => workspacesTable.id, { onDelete: 'cascade' }),
+		resetInterval: text('reset_interval').notNull(),
+		limitMicros: bigint('limit_micros', { mode: 'number' }).notNull(),
+		configEpoch: integer('config_epoch').notNull().default(0),
+		createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' }).notNull(),
+		updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'string' }).notNull(),
 	},
 	(t) => [
-		uniqueIndex("uk_workspace_budgets_interval").on(t.workspaceId, t.resetInterval),
-		index("idx_workspace_budgets_workspace").on(t.workspaceId),
-		check("workspace_budgets_interval_chk", sql`${t.resetInterval} IN ('daily', 'weekly', 'monthly', 'lifetime')`),
-		check("workspace_budgets_limit_chk", sql`${t.limitMicros} > 0 AND ${t.limitMicros} <= 9007199254740991`),
-		check("workspace_budgets_epoch_chk", sql`${t.configEpoch} >= 0 AND ${t.configEpoch} <= 2147483646`),
-	]
+		uniqueIndex('uk_workspace_budgets_interval').on(t.workspaceId, t.resetInterval),
+		index('idx_workspace_budgets_workspace').on(t.workspaceId),
+		check('workspace_budgets_interval_chk', sql`${t.resetInterval} IN ('daily', 'weekly', 'monthly', 'lifetime')`),
+		check('workspace_budgets_limit_chk', sql`${t.limitMicros} > 0 AND ${t.limitMicros} <= 9007199254740991`),
+		check('workspace_budgets_epoch_chk', sql`${t.configEpoch} >= 0 AND ${t.configEpoch} <= 2147483646`),
+	],
 );
 
 /** Explicit access for non-default organization workspaces. */
 export const workspaceMembershipsTable = gatewaySchema.table(
-	"workspace_memberships",
+	'workspace_memberships',
 	{
-		id: text("id").primaryKey(),
-		membershipKey: text("membership_key").notNull().unique(),
-		workspaceId: text("workspace_id")
+		id: text('id').primaryKey(),
+		membershipKey: text('membership_key').notNull().unique(),
+		workspaceId: text('workspace_id')
 			.notNull()
-			.references(() => workspacesTable.id, { onDelete: "cascade" }),
-		subject: text("subject").notNull(),
-		role: text("role").notNull().default("member"),
-		status: text("status").notNull().default("active"),
-		grantedBySubject: text("granted_by_subject"),
-		createdAt: timestamp("created_at", {
+			.references(() => workspacesTable.id, { onDelete: 'cascade' }),
+		subject: text('subject').notNull(),
+		role: text('role').notNull().default('member'),
+		status: text('status').notNull().default('active'),
+		grantedBySubject: text('granted_by_subject'),
+		createdAt: timestamp('created_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
-		updatedAt: timestamp("updated_at", {
+		updatedAt: timestamp('updated_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
 	},
 	(t) => [
-		check(
-			"workspace_memberships_role_chk",
-			sql`${t.role} IN ('admin', 'member')`
-		),
-		check(
-			"workspace_memberships_status_chk",
-			sql`${t.status} IN ('active', 'removed')`
-		),
-		check(
-			"workspace_memberships_subject_chk",
-			sql`length(${t.subject}) BETWEEN 1 AND 255`
-		),
-		check(
-			"workspace_memberships_key_chk",
-			sql`length(${t.membershipKey}) = 64`
-		),
-	]
+		check('workspace_memberships_role_chk', sql`${t.role} IN ('admin', 'member')`),
+		check('workspace_memberships_status_chk', sql`${t.status} IN ('active', 'removed')`),
+		check('workspace_memberships_subject_chk', sql`length(${t.subject}) BETWEEN 1 AND 255`),
+		check('workspace_memberships_key_chk', sql`length(${t.membershipKey}) = 64`),
+	],
 );
 
-export const apiKeysTable = gatewaySchema.table("api_keys", {
-	id: text("id").primaryKey(),
-	key: text("key").notNull(),
-	keyHash: text("key_hash"),
-	keyPreview: text("key_preview"),
-	userId: text("user_id").notNull(),
-	workspaceId: text("workspace_id")
+export const apiKeysTable = gatewaySchema.table('api_keys', {
+	id: text('id').primaryKey(),
+	key: text('key').notNull(),
+	keyHash: text('key_hash'),
+	keyPreview: text('key_preview'),
+	userId: text('user_id').notNull(),
+	workspaceId: text('workspace_id')
 		.notNull()
-		.references(() => workspacesTable.id, { onDelete: "cascade" }),
-	name: text("name"),
-	status: text("status").notNull().default("active"),
-	metadata: text("metadata"),
-	expiresAt: timestamp("expires_at", { withTimezone: true, mode: "string" }),
-	limitMicros: bigint("limit_micros", { mode: "number" }),
-	limitReset: text("limit_reset"),
-	includeByokInLimit: boolean("include_byok_in_limit").notNull().default(false),
-	limitEpoch: integer("limit_epoch").notNull().default(0),
-	lastUsedAt: timestamp("last_used_at", { withTimezone: true, mode: "string" }),
-	createdAt: timestamp("created_at", {
+		.references(() => workspacesTable.id, { onDelete: 'cascade' }),
+	name: text('name'),
+	status: text('status').notNull().default('active'),
+	metadata: text('metadata'),
+	expiresAt: timestamp('expires_at', { withTimezone: true, mode: 'string' }),
+	limitMicros: bigint('limit_micros', { mode: 'number' }),
+	limitReset: text('limit_reset'),
+	includeByokInLimit: boolean('include_byok_in_limit').notNull().default(false),
+	limitEpoch: integer('limit_epoch').notNull().default(0),
+	lastUsedAt: timestamp('last_used_at', { withTimezone: true, mode: 'string' }),
+	/** Per-user rolling request rate limit. */
+	rateLimit: text('rate_limit'),
+	createdAt: timestamp('created_at', {
 		withTimezone: true,
-		mode: "string",
+		mode: 'string',
 	}).notNull(),
-	updatedAt: timestamp("updated_at", {
+	updatedAt: timestamp('updated_at', {
 		withTimezone: true,
-		mode: "string",
+		mode: 'string',
 	}).notNull(),
 });
 
 export const managementApiKeysTable = gatewaySchema.table(
-	"management_api_keys",
+	'management_api_keys',
 	{
-		id: text("id").primaryKey(),
-		keyHash: text("key_hash").notNull().unique(),
-		keyPreview: text("key_preview").notNull(),
-		accountType: text("account_type").notNull(),
-		personalOwnerUserId: text("personal_owner_user_id").references(
-			() => usersTable.id,
-			{ onDelete: "cascade" }
-		),
-		organizationId: text("organization_id").references(
-			() => organizationsTable.id,
-			{ onDelete: "cascade" }
-		),
-		name: text("name").notNull(),
-		status: text("status").notNull().default("active"),
-		expiresAt: timestamp("expires_at", { withTimezone: true, mode: "string" }),
-		lastUsedAt: timestamp("last_used_at", {
+		id: text('id').primaryKey(),
+		keyHash: text('key_hash').notNull().unique(),
+		keyPreview: text('key_preview').notNull(),
+		accountType: text('account_type').notNull(),
+		personalOwnerUserId: text('personal_owner_user_id').references(() => usersTable.id, { onDelete: 'cascade' }),
+		organizationId: text('organization_id').references(() => organizationsTable.id, { onDelete: 'cascade' }),
+		name: text('name').notNull(),
+		status: text('status').notNull().default('active'),
+		expiresAt: timestamp('expires_at', { withTimezone: true, mode: 'string' }),
+		lastUsedAt: timestamp('last_used_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}),
-		createdByUserId: text("created_by_user_id").references(
-			() => usersTable.id,
-			{ onDelete: "set null" }
-		),
-		createdAt: timestamp("created_at", {
+		createdByUserId: text('created_by_user_id').references(() => usersTable.id, { onDelete: 'set null' }),
+		createdAt: timestamp('created_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
-		updatedAt: timestamp("updated_at", {
+		updatedAt: timestamp('updated_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
 	},
 	(t) => [
-		index("idx_management_api_keys_personal_created").on(
-			t.personalOwnerUserId,
-			t.createdAt
-		),
-		index("idx_management_api_keys_organization_created").on(
-			t.organizationId,
-			t.createdAt
-		),
-		index("idx_management_api_keys_status_expiry").on(t.status, t.expiresAt),
+		index('idx_management_api_keys_personal_created').on(t.personalOwnerUserId, t.createdAt),
+		index('idx_management_api_keys_organization_created').on(t.organizationId, t.createdAt),
+		index('idx_management_api_keys_status_expiry').on(t.status, t.expiresAt),
+		check('management_api_keys_hash_chk', sql`${t.keyHash} ~ '^sha256:[0-9a-f]{64}$'`),
+		check('management_api_keys_name_chk', sql`length(${t.name}) BETWEEN 1 AND 128`),
+		check('management_api_keys_status_chk', sql`${t.status} IN ('active', 'revoked')`),
+		check('management_api_keys_account_type_chk', sql`${t.accountType} IN ('personal', 'organization')`),
 		check(
-			"management_api_keys_hash_chk",
-			sql`${t.keyHash} ~ '^sha256:[0-9a-f]{64}$'`
-		),
-		check(
-			"management_api_keys_name_chk",
-			sql`length(${t.name}) BETWEEN 1 AND 128`
-		),
-		check(
-			"management_api_keys_status_chk",
-			sql`${t.status} IN ('active', 'revoked')`
-		),
-		check(
-			"management_api_keys_account_type_chk",
-			sql`${t.accountType} IN ('personal', 'organization')`
-		),
-		check(
-			"management_api_keys_account_owner_chk",
+			'management_api_keys_account_owner_chk',
 			sql`(
 			(${t.accountType} = 'personal' AND ${t.personalOwnerUserId} IS NOT NULL AND ${t.organizationId} IS NULL)
 			OR (${t.accountType} = 'organization' AND ${t.personalOwnerUserId} IS NULL AND ${t.organizationId} IS NOT NULL)
-		)`
+		)`,
 		),
-	]
+	],
 );
 
 export const byokKeysTable = gatewaySchema.table(
-	"byok_keys",
+	'byok_keys',
 	{
-		id: text("id").primaryKey(),
-		workspaceId: text("workspace_id").notNull().references(
-			() => workspacesTable.id,
-			{ onDelete: "cascade" }
-		),
-		provider: text("provider").notNull(),
-		name: text("name"),
-		apiKeyEncrypted: text("api_key_encrypted").notNull(),
-		label: text("label").notNull(),
-		disabled: boolean("disabled").notNull().default(false),
-		isFallback: boolean("is_fallback").notNull().default(false),
-		alwaysUseForProvider: boolean("always_use_for_provider").notNull().default(false),
-		alwaysUseForMatchingModels: boolean("always_use_for_matching_models").notNull().default(false),
-		sortOrder: integer("sort_order").notNull(),
-		allowedModelsJson: text("allowed_models_json"),
-		allowedUserIdsJson: text("allowed_user_ids_json"),
-		allowedApiKeyHashesJson: text("allowed_api_key_hashes_json"),
-		createdByManagementKeyId: text("created_by_management_key_id").references(
-			() => managementApiKeysTable.id,
-			{ onDelete: "set null" }
-		),
-		deletedAt: timestamp("deleted_at", { withTimezone: true, mode: "string" }),
-		createdAt: timestamp("created_at", { withTimezone: true, mode: "string" }).notNull(),
-		updatedAt: timestamp("updated_at", { withTimezone: true, mode: "string" }).notNull(),
+		id: text('id').primaryKey(),
+		workspaceId: text('workspace_id')
+			.notNull()
+			.references(() => workspacesTable.id, { onDelete: 'cascade' }),
+		provider: text('provider').notNull(),
+		name: text('name'),
+		apiKeyEncrypted: text('api_key_encrypted').notNull(),
+		label: text('label').notNull(),
+		disabled: boolean('disabled').notNull().default(false),
+		isFallback: boolean('is_fallback').notNull().default(false),
+		alwaysUseForProvider: boolean('always_use_for_provider').notNull().default(false),
+		alwaysUseForMatchingModels: boolean('always_use_for_matching_models').notNull().default(false),
+		sortOrder: integer('sort_order').notNull(),
+		allowedModelsJson: text('allowed_models_json'),
+		allowedUserIdsJson: text('allowed_user_ids_json'),
+		allowedApiKeyHashesJson: text('allowed_api_key_hashes_json'),
+		createdByManagementKeyId: text('created_by_management_key_id').references(() => managementApiKeysTable.id, {
+			onDelete: 'set null',
+		}),
+		deletedAt: timestamp('deleted_at', { withTimezone: true, mode: 'string' }),
+		createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' }).notNull(),
+		updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'string' }).notNull(),
 	},
 	(t) => [
-		uniqueIndex("uk_byok_keys_active_order")
+		uniqueIndex('uk_byok_keys_active_order')
 			.on(t.workspaceId, t.provider, t.sortOrder)
 			.where(sql`${t.deletedAt} IS NULL`),
-		index("idx_byok_keys_workspace_created").on(t.workspaceId, t.createdAt),
-		index("idx_byok_keys_runtime").on(
-			t.workspaceId,
-			t.provider,
-			t.disabled,
-			t.isFallback,
-			t.sortOrder
-		),
-		index("idx_byok_keys_creator").on(t.createdByManagementKeyId, t.createdAt),
+		index('idx_byok_keys_workspace_created').on(t.workspaceId, t.createdAt),
+		index('idx_byok_keys_runtime').on(t.workspaceId, t.provider, t.disabled, t.isFallback, t.sortOrder),
+		index('idx_byok_keys_creator').on(t.createdByManagementKeyId, t.createdAt),
 		check(
-			"byok_keys_always_use_priority_chk",
-			sql`(NOT ${t.alwaysUseForProvider} AND NOT ${t.alwaysUseForMatchingModels}) OR NOT ${t.isFallback}`
+			'byok_keys_always_use_priority_chk',
+			sql`(NOT ${t.alwaysUseForProvider} AND NOT ${t.alwaysUseForMatchingModels}) OR NOT ${t.isFallback}`,
 		),
 		check(
-			"byok_keys_shared_capacity_policy_exclusive_chk",
-			sql`NOT ${t.alwaysUseForProvider} OR NOT ${t.alwaysUseForMatchingModels}`
+			'byok_keys_shared_capacity_policy_exclusive_chk',
+			sql`NOT ${t.alwaysUseForProvider} OR NOT ${t.alwaysUseForMatchingModels}`,
 		),
-	]
+	],
 );
 
-export const providersTable = gatewaySchema.table("providers", {
-	id: text("id").primaryKey(),
-	name: text("name").notNull(),
-	/** JSON: `{ openai?: { base?, endpoints? }, … }` */
-	endpoints: text("endpoints"),
-	/** 该上游账号唯一 API Key */
-	apiKey: text("api_key").notNull().default(""),
-	/** `active` | `disabled` */
-	status: text("status").notNull().default("active"),
-	description: text("description"),
-	/** 非空时该 provider 接受对应用户共享密钥池注入（openai/anthropic/zhipu/deepseek） */
-	sharedChannelType: text("shared_channel_type"),
-	createdAt: timestamp("created_at", {
-		withTimezone: true,
-		mode: "string",
-	}).notNull(),
-});
+export const providersTable = gatewaySchema.table(
+	'providers',
+	{
+		id: text('id').primaryKey(),
+		name: text('name').notNull(),
+		/** 导入模板英文名、`__custom__`，或空字符串（尚未分类）。与 name 联合唯一。 */
+		kind: text('kind').notNull().default(''),
+		/** JSON: `{ openai?: { base?, endpoints? }, … }` */
+		endpoints: text('endpoints'),
+		/** 该上游账号唯一 API Key */
+		apiKey: text('api_key').notNull().default(''),
+		/** `active` | `disabled` */
+		status: text('status').notNull().default('active'),
+		description: text('description'),
+		sharedChannelType: text('shared_channel_type'),
+		createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' }).notNull(),
+	},
+	(t) => [uniqueIndex('uk_providers_name_kind').on(t.name, t.kind)],
+);
 
-export const modelsTable = gatewaySchema.table("models", {
-	id: text("id").primaryKey(),
-	displayName: text("display_name"),
-	vendor: text("vendor").notNull().default("other"),
-	contextWindow: integer("context_window"),
+export const modelsTable = gatewaySchema.table('models', {
+	id: text('id').primaryKey(),
+	displayName: text('display_name'),
+	vendor: text('vendor').notNull().default('other'),
+	contextWindow: integer('context_window'),
 	/** Chat completion max output tokens; NULL for image-generation models. */
-	maxTokens: integer("max_tokens").default(8192),
-	pricingProfile: text("pricing_profile"),
-	description: text("description"),
-	metadata: text("metadata"),
-	inputModalities: text("input_modalities"),
-	outputModalities: text("output_modalities"),
-	releasedAt: text("released_at"),
+	maxTokens: integer('max_tokens').default(8192),
+	pricingProfile: text('pricing_profile'),
+	description: text('description'),
+	metadata: text('metadata'),
+	inputModalities: text('input_modalities'),
+	outputModalities: text('output_modalities'),
+	releasedAt: text('released_at'),
 	/** 路由策略配置 JSON；NULL=使用全局/代码默认 */
-	routePolicy: text("route_policy"),
-	createdAt: timestamp("created_at", {
+	routePolicy: text('route_policy'),
+	createdAt: timestamp('created_at', {
 		withTimezone: true,
-		mode: "string",
+		mode: 'string',
 	}).notNull(),
 });
 
 /** Endpoint-first provider implementation and its verified public capabilities. */
 export const modelEndpointsTable = gatewaySchema.table(
-	"model_endpoints",
+	'model_endpoints',
 	{
-		id: text("id").primaryKey(),
-		modelId: text("model_id")
+		id: text('id').primaryKey(),
+		modelId: text('model_id')
 			.notNull()
-			.references(() => modelsTable.id, { onDelete: "cascade" }),
-		providerId: text("provider_id")
+			.references(() => modelsTable.id, { onDelete: 'cascade' }),
+		providerId: text('provider_id')
 			.notNull()
-			.references(() => providersTable.id, { onDelete: "cascade" }),
-		providerSlug: text("provider_slug").notNull(),
-		tag: text("tag").notNull(),
-		endpointClass: text("endpoint_class"),
-		region: text("region"),
-		contextLength: integer("context_length"),
-		maxPromptTokens: integer("max_prompt_tokens"),
-		maxCompletionTokens: integer("max_completion_tokens"),
-		quantization: text("quantization"),
-		supportedParameters: text("supported_parameters").notNull().default("[]"),
-		pricing: text("pricing").notNull().default("{}"),
-		supportsToolChoice: text("supports_tool_choice")
+			.references(() => providersTable.id, { onDelete: 'cascade' }),
+		providerSlug: text('provider_slug').notNull(),
+		tag: text('tag').notNull(),
+		endpointClass: text('endpoint_class'),
+		region: text('region'),
+		contextLength: integer('context_length'),
+		maxPromptTokens: integer('max_prompt_tokens'),
+		maxCompletionTokens: integer('max_completion_tokens'),
+		quantization: text('quantization'),
+		supportedParameters: text('supported_parameters').notNull().default('[]'),
+		pricing: text('pricing').notNull().default('{}'),
+		supportsToolChoice: text('supports_tool_choice')
 			.notNull()
 			.default('{"auto":null,"function":null,"none":null,"required":null}'),
-		imageCapabilities: text("image_capabilities").notNull().default("{}"),
-		audioCapabilities: text("audio_capabilities").notNull().default("{}"),
+		imageCapabilities: text('image_capabilities').notNull().default('{}'),
+		audioCapabilities: text('audio_capabilities').notNull().default('{}'),
 		/** Nullable boolean: NULL means the capability has not been verified. */
-		supportsImplicitCaching: boolean("supports_implicit_caching"),
+		supportsImplicitCaching: boolean('supports_implicit_caching'),
 		/** Nullable boolean: NULL means the capability has not been verified. */
-		supportsVoiceCloning: boolean("supports_voice_cloning"),
-		evidenceUrl: text("evidence_url"),
-		verifiedBy: text("verified_by"),
-		verifiedAt: timestamp("verified_at", {
+		supportsVoiceCloning: boolean('supports_voice_cloning'),
+		evidenceUrl: text('evidence_url'),
+		verifiedBy: text('verified_by'),
+		verifiedAt: timestamp('verified_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}),
-		expiresAt: timestamp("expires_at", { withTimezone: true, mode: "string" }),
-		status: text("status").notNull().default("draft"),
-		createdAt: timestamp("created_at", {
+		expiresAt: timestamp('expires_at', { withTimezone: true, mode: 'string' }),
+		status: text('status').notNull().default('draft'),
+		createdAt: timestamp('created_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
-		updatedAt: timestamp("updated_at", {
+		updatedAt: timestamp('updated_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
 	},
 	(t) => [
-		uniqueIndex("uk_model_endpoints_identity").on(
-			t.modelId,
-			t.providerId,
-			t.tag
-		),
-		index("idx_model_endpoints_provider").on(t.providerId),
-		index("idx_model_endpoints_model_status").on(t.modelId, t.status),
+		uniqueIndex('uk_model_endpoints_identity').on(t.modelId, t.providerId, t.tag),
+		index('idx_model_endpoints_provider').on(t.providerId),
+		index('idx_model_endpoints_model_status').on(t.modelId, t.status),
+		check('model_endpoints_status_chk', sql`${t.status} IN ('draft', 'verified', 'disabled')`),
+		check('model_endpoints_context_length_chk', sql`${t.contextLength} IS NULL OR ${t.contextLength} > 0`),
+		check('model_endpoints_max_prompt_tokens_chk', sql`${t.maxPromptTokens} IS NULL OR ${t.maxPromptTokens} > 0`),
 		check(
-			"model_endpoints_status_chk",
-			sql`${t.status} IN ('draft', 'verified', 'disabled')`
+			'model_endpoints_max_completion_tokens_chk',
+			sql`${t.maxCompletionTokens} IS NULL OR ${t.maxCompletionTokens} > 0`,
 		),
-		check(
-			"model_endpoints_context_length_chk",
-			sql`${t.contextLength} IS NULL OR ${t.contextLength} > 0`
-		),
-		check(
-			"model_endpoints_max_prompt_tokens_chk",
-			sql`${t.maxPromptTokens} IS NULL OR ${t.maxPromptTokens} > 0`
-		),
-		check(
-			"model_endpoints_max_completion_tokens_chk",
-			sql`${t.maxCompletionTokens} IS NULL OR ${t.maxCompletionTokens} > 0`
-		),
-	]
+	],
 );
 
-export const routePoolsTable = gatewaySchema.table("route_pools", {
-	id: text("id").primaryKey(),
-	modelId: text("model_id").notNull(),
-	routeGroup: text("route_group").notNull().default("default"),
-	name: text("name").notNull(),
-	strategy: text("strategy"),
+export const routePoolsTable = gatewaySchema.table('route_pools', {
+	id: text('id').primaryKey(),
+	modelId: text('model_id').notNull(),
+	routeGroup: text('route_group').notNull().default('default'),
+	name: text('name').notNull(),
+	strategy: text('strategy'),
 	/** JSON map: {"10":"hash_affinity","0":"weight_priority"} — per-priority-tier overrides */
-	tierStrategies: text("tier_strategies"),
-	stickyEnabled: boolean("sticky_enabled").notNull().default(false),
-	stickyIdleTtlSeconds: integer("sticky_idle_ttl_seconds")
-		.notNull()
-		.default(3600),
+	tierStrategies: text('tier_strategies'),
+	stickyEnabled: boolean('sticky_enabled').notNull().default(false),
+	stickyIdleTtlSeconds: integer('sticky_idle_ttl_seconds').notNull().default(3600),
 	/** Bumped on sticky config change to invalidate existing bindings */
-	stickyEpoch: integer("sticky_epoch").notNull().default(0),
-	status: text("status").notNull().default("active"),
-	createdAt: timestamp("created_at", {
+	stickyEpoch: integer('sticky_epoch').notNull().default(0),
+	status: text('status').notNull().default('active'),
+	createdAt: timestamp('created_at', {
 		withTimezone: true,
-		mode: "string",
+		mode: 'string',
 	}).notNull(),
-	updatedAt: timestamp("updated_at", {
+	updatedAt: timestamp('updated_at', {
 		withTimezone: true,
-		mode: "string",
-	}).notNull(),
-});
-
-export const routePoolStickyBindingsTable = gatewaySchema.table(
-	"route_pool_sticky_bindings",
-	{
-		routePoolId: text("route_pool_id").notNull(),
-		affinityHash: text("affinity_hash").notNull(),
-		routeTargetId: text("route_target_id").notNull(),
-		bindingToken: text("binding_token").notNull(),
-		poolEpoch: integer("pool_epoch").notNull().default(0),
-		expiresAt: timestamp("expires_at", {
-			withTimezone: true,
-			mode: "string",
-		}).notNull(),
-		createdAt: timestamp("created_at", {
-			withTimezone: true,
-			mode: "string",
-		}).notNull(),
-		updatedAt: timestamp("updated_at", {
-			withTimezone: true,
-			mode: "string",
-		}).notNull(),
-	}
-);
-
-export const modelSurfacesTable = gatewaySchema.table("model_surfaces", {
-	id: text("id").primaryKey(),
-	modelId: text("model_id").notNull(),
-	routeGroup: text("route_group").notNull().default("default"),
-	requestProtocol: text("request_protocol").notNull(),
-	requestOperation: text("request_operation").notNull().default("*"),
-	routePoolId: text("route_pool_id").notNull(),
-	status: text("status").notNull().default("active"),
-	createdAt: timestamp("created_at", {
-		withTimezone: true,
-		mode: "string",
-	}).notNull(),
-	updatedAt: timestamp("updated_at", {
-		withTimezone: true,
-		mode: "string",
+		mode: 'string',
 	}).notNull(),
 });
 
-export const modelRoutesTable = gatewaySchema.table("model_routes", {
-	id: text("id").primaryKey(),
-	modelId: text("model_id").notNull(),
-	providerId: text("provider_id").notNull(),
-	providerModelName: text("provider_model_name").notNull(),
-	priority: integer("priority").notNull().default(0),
-	status: text("status").notNull().default("active"),
-	routeGroup: text("route_group").notNull().default("default"),
+export const routePoolStickyBindingsTable = gatewaySchema.table('route_pool_sticky_bindings', {
+	routePoolId: text('route_pool_id').notNull(),
+	affinityHash: text('affinity_hash').notNull(),
+	routeTargetId: text('route_target_id').notNull(),
+	bindingToken: text('binding_token').notNull(),
+	poolEpoch: integer('pool_epoch').notNull().default(0),
+	expiresAt: timestamp('expires_at', {
+		withTimezone: true,
+		mode: 'string',
+	}).notNull(),
+	createdAt: timestamp('created_at', {
+		withTimezone: true,
+		mode: 'string',
+	}).notNull(),
+	updatedAt: timestamp('updated_at', {
+		withTimezone: true,
+		mode: 'string',
+	}).notNull(),
+});
+
+export const modelSurfacesTable = gatewaySchema.table('model_surfaces', {
+	id: text('id').primaryKey(),
+	modelId: text('model_id').notNull(),
+	routeGroup: text('route_group').notNull().default('default'),
+	requestProtocol: text('request_protocol').notNull(),
+	requestOperation: text('request_operation').notNull().default('*'),
+	routePoolId: text('route_pool_id').notNull(),
+	status: text('status').notNull().default('active'),
+	createdAt: timestamp('created_at', {
+		withTimezone: true,
+		mode: 'string',
+	}).notNull(),
+	updatedAt: timestamp('updated_at', {
+		withTimezone: true,
+		mode: 'string',
+	}).notNull(),
+});
+
+export const modelRoutesTable = gatewaySchema.table('model_routes', {
+	id: text('id').primaryKey(),
+	modelId: text('model_id').notNull(),
+	providerId: text('provider_id').notNull(),
+	providerModelName: text('provider_model_name').notNull(),
+	priority: integer('priority').notNull().default(0),
+	status: text('status').notNull().default('active'),
+	routeGroup: text('route_group').notNull().default('default'),
 	/** 同 priority 层内权重 */
-	weight: integer("weight").notNull().default(1),
-	priceOverride: text("price_override"),
-	customParams: text("custom_params"),
-	routingMetadata: text("routing_metadata"),
-	upstreamProtocol: text("upstream_protocol").notNull().default("openai"),
-	routePoolId: text("route_pool_id"),
-	upstreamOperation: text("upstream_operation").notNull().default("*"),
-	adapter: text("adapter").notNull().default("passthrough"),
-	createdAt: timestamp("created_at", {
+	weight: integer('weight').notNull().default(1),
+	priceOverride: text('price_override'),
+	customParams: text('custom_params'),
+	routingMetadata: text('routing_metadata'),
+	upstreamProtocol: text('upstream_protocol').notNull().default('openai'),
+	routePoolId: text('route_pool_id'),
+	upstreamOperation: text('upstream_operation').notNull().default('*'),
+	adapter: text('adapter').notNull().default('passthrough'),
+	createdAt: timestamp('created_at', {
 		withTimezone: true,
-		mode: "string",
+		mode: 'string',
 	}).notNull(),
 });
 
 /** A route target belongs to at most one endpoint during the migration. */
 export const modelEndpointRoutesTable = gatewaySchema.table(
-	"model_endpoint_routes",
+	'model_endpoint_routes',
 	{
-		endpointId: text("endpoint_id")
+		endpointId: text('endpoint_id')
 			.notNull()
-			.references(() => modelEndpointsTable.id, { onDelete: "cascade" }),
-		routeTargetId: text("route_target_id")
+			.references(() => modelEndpointsTable.id, { onDelete: 'cascade' }),
+		routeTargetId: text('route_target_id')
 			.notNull()
-			.references(() => modelRoutesTable.id, { onDelete: "cascade" }),
-		createdAt: timestamp("created_at", {
+			.references(() => modelRoutesTable.id, { onDelete: 'cascade' }),
+		createdAt: timestamp('created_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
 		/** SHA-256 of the exact route/provider subject verified for this binding. */
-		subjectFingerprint: text("subject_fingerprint"),
+		subjectFingerprint: text('subject_fingerprint'),
 	},
 	(t) => [
 		primaryKey({ columns: [t.endpointId, t.routeTargetId] }),
-		uniqueIndex("uk_model_endpoint_routes_target").on(t.routeTargetId),
+		uniqueIndex('uk_model_endpoint_routes_target').on(t.routeTargetId),
 		check(
-			"model_endpoint_routes_subject_fingerprint_chk",
-			sql`${t.subjectFingerprint} IS NULL OR ${t.subjectFingerprint} ~ '^[0-9a-f]{64}$'`
+			'model_endpoint_routes_subject_fingerprint_chk',
+			sql`${t.subjectFingerprint} IS NULL OR ${t.subjectFingerprint} ~ '^[0-9a-f]{64}$'`,
 		),
-	]
+	],
 );
 
-export const apiKeyRequestLogsTable = gatewaySchema.table("api_key_request_logs", {
-	id: text("id").primaryKey(),
-	userId: text("user_id"),
-	apiKeyId: text("api_key_id"),
-	workspaceId: text("workspace_id").references(() => workspacesTable.id, {
-		onDelete: "set null",
+export const apiKeyRequestLogsTable = gatewaySchema.table('api_key_request_logs', {
+	id: text('id').primaryKey(),
+	userId: text('user_id'),
+	apiKeyId: text('api_key_id'),
+	workspaceId: text('workspace_id').references(() => workspacesTable.id, {
+		onDelete: 'set null',
 	}),
-	userEmail: text("user_email"),
-	modelId: text("model_id"),
-	providerId: text("provider_id"),
-	providerModelName: text("provider_model_name"),
-	modelName: text("model_name"),
-	providerName: text("provider_name"),
-	requestBody: text("request_body"),
-	upstreamRequestBody: text("upstream_request_body"),
-	requestProtocol: text("request_protocol"),
-	requestOperation: text("request_operation"),
-	upstreamProtocol: text("upstream_protocol").notNull().default("openai"),
-	upstreamOperation: text("upstream_operation"),
-	modelSurfaceId: text("model_surface_id"),
-	routePoolId: text("route_pool_id"),
-	routeTargetId: text("route_target_id"),
-	adapter: text("adapter"),
-	routeTrace: text("route_trace"),
-	inputTokens: integer("input_tokens").notNull().default(0),
-	outputTokens: integer("output_tokens").notNull().default(0),
-	cacheReadTokens: integer("cache_read_tokens").notNull().default(0),
-	cacheWriteTokens: integer("cache_write_tokens").notNull().default(0),
-	reasoningTokens: integer("reasoning_tokens").notNull().default(0),
-	totalTokens: integer("total_tokens").notNull().default(0),
-	nativeTokensPrompt: bigint("native_tokens_prompt", { mode: "number" }),
-	nativeTokensCompletion: bigint("native_tokens_completion", { mode: "number" }),
-	nativeTokensCached: bigint("native_tokens_cached", { mode: "number" }),
-	nativeTokensReasoning: bigint("native_tokens_reasoning", { mode: "number" }),
-	nativeTokensCompletionImages: bigint("native_tokens_completion_images", { mode: "number" }),
-	meteredCost: numeric("metered_cost", { precision: 18, scale: 6 })
-		.notNull()
-		.default("0"),
-	standardCost: numeric("standard_cost", { precision: 18, scale: 6 })
-		.notNull()
-		.default("0"),
-	chargedCost: numeric("charged_cost", { precision: 18, scale: 6 })
-		.notNull()
-		.default("0"),
+	userEmail: text('user_email'),
+	modelId: text('model_id'),
+	providerId: text('provider_id'),
+	providerModelName: text('provider_model_name'),
+	modelName: text('model_name'),
+	providerName: text('provider_name'),
+	requestBody: text('request_body'),
+	upstreamRequestBody: text('upstream_request_body'),
+	requestProtocol: text('request_protocol'),
+	requestOperation: text('request_operation'),
+	upstreamProtocol: text('upstream_protocol').notNull().default('openai'),
+	upstreamOperation: text('upstream_operation'),
+	modelSurfaceId: text('model_surface_id'),
+	routePoolId: text('route_pool_id'),
+	routeTargetId: text('route_target_id'),
+	adapter: text('adapter'),
+	routeTrace: text('route_trace'),
+	inputTokens: integer('input_tokens').notNull().default(0),
+	outputTokens: integer('output_tokens').notNull().default(0),
+	cacheReadTokens: integer('cache_read_tokens').notNull().default(0),
+	cacheWriteTokens: integer('cache_write_tokens').notNull().default(0),
+	reasoningTokens: integer('reasoning_tokens').notNull().default(0),
+	totalTokens: integer('total_tokens').notNull().default(0),
+	nativeTokensPrompt: bigint('native_tokens_prompt', { mode: 'number' }),
+	nativeTokensCompletion: bigint('native_tokens_completion', { mode: 'number' }),
+	nativeTokensCached: bigint('native_tokens_cached', { mode: 'number' }),
+	nativeTokensReasoning: bigint('native_tokens_reasoning', { mode: 'number' }),
+	nativeTokensCompletionImages: bigint('native_tokens_completion_images', { mode: 'number' }),
+	meteredCost: numeric('metered_cost', { precision: 18, scale: 6 }).notNull().default('0'),
+	standardCost: numeric('standard_cost', { precision: 18, scale: 6 }).notNull().default('0'),
+	chargedCost: numeric('charged_cost', { precision: 18, scale: 6 }).notNull().default('0'),
 	/** Guardrail/user budget debit in integer micro-units; NULL marks a pre-ledger row. */
-	budgetChargedMicros: bigint("budget_charged_micros", { mode: "number" }),
-	budgetAccountedAt: timestamp("budget_accounted_at", {
+	budgetChargedMicros: bigint('budget_charged_micros', { mode: 'number' }),
+	budgetAccountedAt: timestamp('budget_accounted_at', {
 		withTimezone: true,
-		mode: "string",
+		mode: 'string',
 	}),
-	routeGroup: text("route_group").notNull().default("default"),
-	status: text("status").notNull().default("success"),
-	latencyMs: integer("latency_ms"),
-	gatewayOverheadMs: integer("gateway_overhead_ms"),
-	upstreamResponseMs: integer("upstream_response_ms"),
-	finalUpstreamHeadersMs: integer("final_upstream_headers_ms"),
-	firstReasoningTokenMs: integer("first_reasoning_token_ms"),
-	firstTokenMs: integer("first_token_ms"),
-	streamDurationMs: integer("stream_duration_ms"),
-	upstreamAttemptCount: integer("upstream_attempt_count"),
-	upstreamFailoverCount: integer("upstream_failover_count"),
-	timingMetadata: text("timing_metadata"),
-	errorMessage: text("error_message"),
-	rawUsage: text("raw_usage"),
+	chargedWalletCost: numeric('charged_wallet_cost', { precision: 18, scale: 6 }).notNull().default('0'),
+	routeGroup: text('route_group').notNull().default('default'),
+	status: text('status').notNull().default('success'),
+	latencyMs: integer('latency_ms'),
+	gatewayOverheadMs: integer('gateway_overhead_ms'),
+	upstreamResponseMs: integer('upstream_response_ms'),
+	finalUpstreamHeadersMs: integer('final_upstream_headers_ms'),
+	firstReasoningTokenMs: integer('first_reasoning_token_ms'),
+	firstTokenMs: integer('first_token_ms'),
+	streamDurationMs: integer('stream_duration_ms'),
+	upstreamAttemptCount: integer('upstream_attempt_count'),
+	upstreamFailoverCount: integer('upstream_failover_count'),
+	timingMetadata: text('timing_metadata'),
+	errorMessage: text('error_message'),
+	rawUsage: text('raw_usage'),
 	/** 计费审计 JSON 字符串；结构见 `db/pricing-audit.ts` */
-	pricingAudit: text("pricing_audit"),
-	providerKeyId: text("provider_key_id"),
-	providerKeyLabel: text("provider_key_label"),
-	providerKeyFingerprint: text("provider_key_fingerprint"),
-	upstreamRequestId: text("upstream_request_id"),
-	upstreamMessageId: text("upstream_message_id"),
-	billingKind: text("billing_kind"),
-	inputImageCount: integer("input_image_count").notNull().default(0),
-	outputImageCount: integer("output_image_count").notNull().default(0),
-	audioDurationSeconds: real("audio_duration_seconds"),
-	audioCharacters: integer("audio_characters"),
-	sessionId: text("session_id"),
-	requestOrigin: text("request_origin"),
-	httpReferer: text("http_referer"),
-	userAgent: text("user_agent"),
-	responseStreamed: boolean("response_streamed"),
-	dataRegion: text("data_region"),
-	isByok: boolean("is_byok"),
-	chargedCostUsd: numeric("charged_cost_usd", { precision: 24, scale: 12 }),
-	upstreamInferenceCostUsd: numeric("upstream_inference_cost_usd", { precision: 24, scale: 12 }),
-	serviceTier: text("service_tier"),
-	finishReason: text("finish_reason"),
-	nativeFinishReason: text("native_finish_reason"),
-	providerResponses: text("provider_responses"),
-	createdAt: timestamp("created_at", {
+	pricingAudit: text('pricing_audit'),
+	providerKeyId: text('provider_key_id'),
+	providerKeyLabel: text('provider_key_label'),
+	providerKeyFingerprint: text('provider_key_fingerprint'),
+	upstreamRequestId: text('upstream_request_id'),
+	upstreamMessageId: text('upstream_message_id'),
+	billingKind: text('billing_kind'),
+	inputImageCount: integer('input_image_count').notNull().default(0),
+	outputImageCount: integer('output_image_count').notNull().default(0),
+	audioDurationSeconds: real('audio_duration_seconds'),
+	audioCharacters: integer('audio_characters'),
+	sessionId: text('session_id'),
+	requestOrigin: text('request_origin'),
+	httpReferer: text('http_referer'),
+	userAgent: text('user_agent'),
+	responseStreamed: boolean('response_streamed'),
+	dataRegion: text('data_region'),
+	isByok: boolean('is_byok'),
+	chargedCostUsd: numeric('charged_cost_usd', { precision: 24, scale: 12 }),
+	upstreamInferenceCostUsd: numeric('upstream_inference_cost_usd', { precision: 24, scale: 12 }),
+	serviceTier: text('service_tier'),
+	finishReason: text('finish_reason'),
+	nativeFinishReason: text('native_finish_reason'),
+	providerResponses: text('provider_responses'),
+	ingressHost: text('ingress_host'),
+	createdAt: timestamp('created_at', {
 		withTimezone: true,
-		mode: "string",
+		mode: 'string',
 	}).notNull(),
 });
 
 export const providerAttemptAvailabilityTable = gatewaySchema.table(
-	"provider_attempt_availability",
+	'provider_attempt_availability',
 	{
-		requestLogId: text("request_log_id").notNull().references(
-			() => apiKeyRequestLogsTable.id,
-			{ onDelete: "cascade" }
-		),
-		attemptIndex: integer("attempt_index").notNull(),
-		routeTargetId: text("route_target_id").notNull(),
-		providerId: text("provider_id").notNull(),
-		outcome: text("outcome").notNull(),
-		reason: text("reason").notNull(),
-		httpStatus: integer("http_status"),
-		observedAt: timestamp("observed_at", { withTimezone: true, mode: "string" }).notNull(),
+		requestLogId: text('request_log_id')
+			.notNull()
+			.references(() => apiKeyRequestLogsTable.id, { onDelete: 'cascade' }),
+		attemptIndex: integer('attempt_index').notNull(),
+		routeTargetId: text('route_target_id').notNull(),
+		providerId: text('provider_id').notNull(),
+		outcome: text('outcome').notNull(),
+		reason: text('reason').notNull(),
+		httpStatus: integer('http_status'),
+		observedAt: timestamp('observed_at', { withTimezone: true, mode: 'string' }).notNull(),
 	},
 	(t) => [
 		primaryKey({ columns: [t.requestLogId, t.attemptIndex] }),
-		index("idx_provider_attempt_availability_route_observed")
-			.on(t.routeTargetId, t.observedAt),
-		index("idx_provider_attempt_availability_observed").on(t.observedAt),
+		index('idx_provider_attempt_availability_route_observed').on(t.routeTargetId, t.observedAt),
+		index('idx_provider_attempt_availability_observed').on(t.observedAt),
+		check('provider_attempt_availability_attempt_index_chk', sql`${t.attemptIndex} BETWEEN 1 AND 128`),
+		check('provider_attempt_availability_outcome_chk', sql`${t.outcome} IN ('available', 'unavailable', 'excluded')`),
 		check(
-			"provider_attempt_availability_attempt_index_chk",
-			sql`${t.attemptIndex} BETWEEN 1 AND 128`
+			'provider_attempt_availability_reason_chk',
+			sql`${t.reason} IN ('accepted', 'provider_http_error', 'rate_limited', 'network_error', 'invalid_response', 'client_error', 'client_cancelled', 'unknown')`,
 		),
 		check(
-			"provider_attempt_availability_outcome_chk",
-			sql`${t.outcome} IN ('available', 'unavailable', 'excluded')`
+			'provider_attempt_availability_http_status_chk',
+			sql`${t.httpStatus} IS NULL OR ${t.httpStatus} BETWEEN 100 AND 599`,
 		),
-		check(
-			"provider_attempt_availability_reason_chk",
-			sql`${t.reason} IN ('accepted', 'provider_http_error', 'rate_limited', 'network_error', 'invalid_response', 'client_error', 'client_cancelled', 'unknown')`
-		),
-		check(
-			"provider_attempt_availability_http_status_chk",
-			sql`${t.httpStatus} IS NULL OR ${t.httpStatus} BETWEEN 100 AND 599`
-		),
-	]
+	],
 );
 
 export const generationFeedbackTable = gatewaySchema.table(
-	"generation_feedback",
+	'generation_feedback',
 	{
-		id: text("id").primaryKey(),
-		generationId: text("generation_id").notNull().references(
-			() => apiKeyRequestLogsTable.id,
-			{ onDelete: "cascade" }
-		),
-		workspaceId: text("workspace_id").notNull().references(
-			() => workspacesTable.id,
-			{ onDelete: "cascade" }
-		),
-		managementApiKeyId: text("management_api_key_id").notNull().references(
-			() => managementApiKeysTable.id,
-			{ onDelete: "cascade" }
-		),
-		accountType: text("account_type").notNull(),
-		personalOwnerUserId: text("personal_owner_user_id").references(
-			() => usersTable.id,
-			{ onDelete: "cascade" }
-		),
-		organizationId: text("organization_id").references(
-			() => organizationsTable.id,
-			{ onDelete: "cascade" }
-		),
-		category: text("category").notNull(),
-		comment: text("comment"),
-		createdAt: timestamp("created_at", { withTimezone: true, mode: "string" }).notNull(),
+		id: text('id').primaryKey(),
+		generationId: text('generation_id')
+			.notNull()
+			.references(() => apiKeyRequestLogsTable.id, { onDelete: 'cascade' }),
+		workspaceId: text('workspace_id')
+			.notNull()
+			.references(() => workspacesTable.id, { onDelete: 'cascade' }),
+		managementApiKeyId: text('management_api_key_id')
+			.notNull()
+			.references(() => managementApiKeysTable.id, { onDelete: 'cascade' }),
+		accountType: text('account_type').notNull(),
+		personalOwnerUserId: text('personal_owner_user_id').references(() => usersTable.id, { onDelete: 'cascade' }),
+		organizationId: text('organization_id').references(() => organizationsTable.id, { onDelete: 'cascade' }),
+		category: text('category').notNull(),
+		comment: text('comment'),
+		createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' }).notNull(),
 	},
 	(t) => [
-		index("idx_generation_feedback_generation_created").on(t.generationId, t.createdAt),
-		index("idx_generation_feedback_personal_created")
+		index('idx_generation_feedback_generation_created').on(t.generationId, t.createdAt),
+		index('idx_generation_feedback_personal_created')
 			.on(t.personalOwnerUserId, t.createdAt)
 			.where(sql`${t.personalOwnerUserId} IS NOT NULL`),
-		index("idx_generation_feedback_organization_created")
+		index('idx_generation_feedback_organization_created')
 			.on(t.organizationId, t.createdAt)
 			.where(sql`${t.organizationId} IS NOT NULL`),
-		check("generation_feedback_id_chk", sql`length(${t.id}) = 40 AND left(${t.id}, 4) = 'gfb_'`),
-		check("generation_feedback_category_chk", sql`${t.category} IN ('latency', 'incoherence', 'incorrect_response', 'formatting', 'billing', 'api_error', 'other')`),
-		check("generation_feedback_comment_chk", sql`${t.comment} IS NULL OR length(${t.comment}) <= 1000`),
+		check('generation_feedback_id_chk', sql`length(${t.id}) = 40 AND left(${t.id}, 4) = 'gfb_'`),
 		check(
-			"generation_feedback_account_owner_chk",
+			'generation_feedback_category_chk',
+			sql`${t.category} IN ('latency', 'incoherence', 'incorrect_response', 'formatting', 'billing', 'api_error', 'other')`,
+		),
+		check('generation_feedback_comment_chk', sql`${t.comment} IS NULL OR length(${t.comment}) <= 1000`),
+		check(
+			'generation_feedback_account_owner_chk',
 			sql`(
 			(${t.accountType} = 'personal' AND ${t.personalOwnerUserId} IS NOT NULL AND ${t.organizationId} IS NULL)
 			OR (${t.accountType} = 'organization' AND ${t.personalOwnerUserId} IS NULL AND ${t.organizationId} IS NOT NULL)
-			)`
+			)`,
 		),
-	]
+	],
 );
 
 /** 匿名公开排行专用的分片日汇总；公开请求不得回退扫描 api_key_request_logs。 */
 export const publicModelDailyStatsTable = gatewaySchema.table(
-	"public_model_daily_stats",
+	'public_model_daily_stats',
 	{
-		statDate: text("stat_date").notNull(),
-		modelId: text("model_id").notNull(),
-		shard: integer("shard").notNull(),
-		requestCount: bigint("request_count", { mode: "number" })
-			.notNull()
-			.default(0),
-		successCount: bigint("success_count", { mode: "number" })
-			.notNull()
-			.default(0),
-		errorCount: bigint("error_count", { mode: "number" }).notNull().default(0),
-		outputTokens: bigint("output_tokens", { mode: "number" })
-			.notNull()
-			.default(0),
-		totalTokens: bigint("total_tokens", { mode: "number" })
-			.notNull()
-			.default(0),
-		latencyTotalMs: bigint("latency_total_ms", { mode: "number" })
-			.notNull()
-			.default(0),
-		latencySampleCount: bigint("latency_sample_count", { mode: "number" })
-			.notNull()
-			.default(0),
-		updatedAt: timestamp("updated_at", {
+		statDate: text('stat_date').notNull(),
+		modelId: text('model_id').notNull(),
+		shard: integer('shard').notNull(),
+		requestCount: bigint('request_count', { mode: 'number' }).notNull().default(0),
+		successCount: bigint('success_count', { mode: 'number' }).notNull().default(0),
+		errorCount: bigint('error_count', { mode: 'number' }).notNull().default(0),
+		outputTokens: bigint('output_tokens', { mode: 'number' }).notNull().default(0),
+		totalTokens: bigint('total_tokens', { mode: 'number' }).notNull().default(0),
+		latencyTotalMs: bigint('latency_total_ms', { mode: 'number' }).notNull().default(0),
+		latencySampleCount: bigint('latency_sample_count', { mode: 'number' }).notNull().default(0),
+		updatedAt: timestamp('updated_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
 	},
 	(t) => [
-		uniqueIndex("uk_public_model_daily_stats").on(
-			t.statDate,
-			t.modelId,
-			t.shard
-		),
-		check("public_model_daily_stats_shard_chk", sql`shard >= 0 AND shard < 16`),
-	]
+		uniqueIndex('uk_public_model_daily_stats').on(t.statDate, t.modelId, t.shard),
+		check('public_model_daily_stats_shard_chk', sql`shard >= 0 AND shard < 16`),
+	],
 );
 
-export const systemConfigTable = gatewaySchema.table("system_config", {
-	key: text("key").primaryKey(),
-	value: text("value").notNull(),
-	description: text("description"),
-	revision: text("revision").notNull().default("legacy"),
-	updatedAt: timestamp("updated_at", {
+export const systemConfigTable = gatewaySchema.table('system_config', {
+	key: text('key').primaryKey(),
+	value: text('value').notNull(),
+	description: text('description'),
+	revision: text('revision').notNull().default('legacy'),
+	updatedAt: timestamp('updated_at', {
 		withTimezone: true,
-		mode: "string",
+		mode: 'string',
 	}).notNull(),
 });
 
 /** Metadata-only Tools history; intentionally has no parent foreign key. */
-export const configGroupAuditTable = gatewaySchema.table("config_group_audit", {
-	id: text("id").primaryKey(),
-	family: text("family").notNull(),
-	provider: text("provider"),
-	action: text("action").notNull(),
-	actorKind: text("actor_kind").notNull(),
-	actorId: text("actor_id").notNull(),
-	reason: text("reason").notNull(),
-	changedFieldsJson: text("changed_fields_json").notNull(),
-	activeBefore: text("active_before"),
-	activeAfter: text("active_after"),
-	credentialsJson: text("credentials_json").notNull(),
-	revisionBeforeJson: text("revision_before_json").notNull(),
-	revisionAfterJson: text("revision_after_json").notNull(),
-	source: text("source").notNull(),
-	createdAt: timestamp("created_at", { withTimezone: true, mode: "string" }).notNull(),
-}, (t) => [
-	index("idx_config_group_audit_family_created").on(t.family, t.createdAt.desc(), t.id.desc()),
-	check("config_group_audit_family_chk", sql`family IN ('web-search', 'web-fetch', 'web-deep-search', 'ai-detection')`),
-	check("config_group_audit_provider_chk", sql`provider IS NULL OR provider IN ('bocha', 'tavily', 'cleversee', 'tencent_wsa', 'firecrawl', 'jina', 'tencent_tms')`),
-	check("config_group_audit_active_before_chk", sql`active_before IS NULL OR active_before IN ('bocha', 'tavily', 'cleversee', 'tencent_wsa', 'firecrawl', 'jina', 'tencent_tms')`),
-	check("config_group_audit_active_after_chk", sql`active_after IS NULL OR active_after IN ('bocha', 'tavily', 'cleversee', 'tencent_wsa', 'firecrawl', 'jina', 'tencent_tms')`),
-	check("config_group_audit_action_chk", sql`action IN ('save', 'save_activate', 'activate', 'legacy_save', 'reveal')`),
-	check("config_group_audit_actor_kind_chk", sql`actor_kind IN ('console', 'admin_key')`),
-	check("config_group_audit_actor_bounds_chk", sql`char_length(actor_id) BETWEEN 1 AND CASE WHEN actor_kind = 'console' THEN 617 ELSE 600 END`),
-	check("config_group_audit_reason_bounds_chk", sql`char_length(reason) BETWEEN 1 AND 600`),
-	check("config_group_audit_source_chk", sql`source IN ('admin_api', 'legacy_admin')`),
-]);
+export const configGroupAuditTable = gatewaySchema.table(
+	'config_group_audit',
+	{
+		id: text('id').primaryKey(),
+		family: text('family').notNull(),
+		provider: text('provider'),
+		action: text('action').notNull(),
+		actorKind: text('actor_kind').notNull(),
+		actorId: text('actor_id').notNull(),
+		reason: text('reason').notNull(),
+		changedFieldsJson: text('changed_fields_json').notNull(),
+		activeBefore: text('active_before'),
+		activeAfter: text('active_after'),
+		credentialsJson: text('credentials_json').notNull(),
+		revisionBeforeJson: text('revision_before_json').notNull(),
+		revisionAfterJson: text('revision_after_json').notNull(),
+		source: text('source').notNull(),
+		createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' }).notNull(),
+	},
+	(t) => [
+		index('idx_config_group_audit_family_created').on(t.family, t.createdAt.desc(), t.id.desc()),
+		check(
+			'config_group_audit_family_chk',
+			sql`family IN ('web-search', 'web-fetch', 'web-deep-search', 'ai-detection')`,
+		),
+		check(
+			'config_group_audit_provider_chk',
+			sql`provider IS NULL OR provider IN ('bocha', 'tavily', 'cleversee', 'tencent_wsa', 'firecrawl', 'jina', 'tencent_tms')`,
+		),
+		check(
+			'config_group_audit_active_before_chk',
+			sql`active_before IS NULL OR active_before IN ('bocha', 'tavily', 'cleversee', 'tencent_wsa', 'firecrawl', 'jina', 'tencent_tms')`,
+		),
+		check(
+			'config_group_audit_active_after_chk',
+			sql`active_after IS NULL OR active_after IN ('bocha', 'tavily', 'cleversee', 'tencent_wsa', 'firecrawl', 'jina', 'tencent_tms')`,
+		),
+		check(
+			'config_group_audit_action_chk',
+			sql`action IN ('save', 'save_activate', 'activate', 'legacy_save', 'reveal')`,
+		),
+		check('config_group_audit_actor_kind_chk', sql`actor_kind IN ('console', 'admin_key')`),
+		check(
+			'config_group_audit_actor_bounds_chk',
+			sql`char_length(actor_id) BETWEEN 1 AND CASE WHEN actor_kind = 'console' THEN 617 ELSE 600 END`,
+		),
+		check('config_group_audit_reason_bounds_chk', sql`char_length(reason) BETWEEN 1 AND 600`),
+		check('config_group_audit_source_chk', sql`source IN ('admin_api', 'legacy_admin')`),
+	],
+);
 
 /** Seeded by migration; writers fail closed if the permanent row is absent. */
-export const systemConfigWriteMutexTable = gatewaySchema.table("system_config_write_mutex", {
-	id: integer("id").notNull().primaryKey(),
-}, () => [check("system_config_write_mutex_singleton_chk", sql`id = 1`)]);
+export const systemConfigWriteMutexTable = gatewaySchema.table(
+	'system_config_write_mutex',
+	{
+		id: integer('id').notNull().primaryKey(),
+	},
+	() => [check('system_config_write_mutex_singleton_chk', sql`id = 1`)],
+);
 
 /** OpenRouter-compatible request presets with immutable designated versions. */
 export const requestPresetsTable = gatewaySchema.table(
-	"request_presets",
+	'request_presets',
 	{
-		id: text("id").primaryKey(),
-		workspaceId: text("workspace_id")
+		id: text('id').primaryKey(),
+		workspaceId: text('workspace_id')
 			.notNull()
-			.references(() => workspacesTable.id, { onDelete: "cascade" }),
-		ownerUserId: text("owner_user_id")
+			.references(() => workspacesTable.id, { onDelete: 'cascade' }),
+		ownerUserId: text('owner_user_id')
 			.notNull()
-			.references(() => usersTable.id, { onDelete: "cascade" }),
-		slug: text("slug").notNull(),
-		name: text("name").notNull(),
-		description: text("description"),
-		visibility: text("visibility").notNull().default("private"),
-		status: text("status").notNull().default("active"),
-		designatedVersion: integer("designated_version").notNull().default(1),
-		latestVersion: integer("latest_version").notNull().default(1),
-		createdAt: timestamp("created_at", {
+			.references(() => usersTable.id, { onDelete: 'cascade' }),
+		slug: text('slug').notNull(),
+		name: text('name').notNull(),
+		description: text('description'),
+		visibility: text('visibility').notNull().default('private'),
+		status: text('status').notNull().default('active'),
+		designatedVersion: integer('designated_version').notNull().default(1),
+		latestVersion: integer('latest_version').notNull().default(1),
+		createdAt: timestamp('created_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
-		updatedAt: timestamp("updated_at", {
+		updatedAt: timestamp('updated_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
 	},
 	(t) => [
-		uniqueIndex("uk_request_presets_workspace_slug").on(t.workspaceId, t.slug),
+		uniqueIndex('uk_request_presets_workspace_slug').on(t.workspaceId, t.slug),
+		check('request_presets_visibility_chk', sql`${t.visibility} IN ('private', 'public')`),
+		check('request_presets_status_chk', sql`${t.status} IN ('active', 'archived')`),
 		check(
-			"request_presets_visibility_chk",
-			sql`${t.visibility} IN ('private', 'public')`
+			'request_presets_versions_chk',
+			sql`${t.designatedVersion} >= 1 AND ${t.latestVersion} >= ${t.designatedVersion}`,
 		),
-		check(
-			"request_presets_status_chk",
-			sql`${t.status} IN ('active', 'archived')`
-		),
-		check(
-			"request_presets_versions_chk",
-			sql`${t.designatedVersion} >= 1 AND ${t.latestVersion} >= ${t.designatedVersion}`
-		),
-	]
+	],
 );
 
 export const requestPresetVersionsTable = gatewaySchema.table(
-	"request_preset_versions",
+	'request_preset_versions',
 	{
-		id: text("id").primaryKey(),
-		presetId: text("preset_id")
+		id: text('id').primaryKey(),
+		presetId: text('preset_id')
 			.notNull()
-			.references(() => requestPresetsTable.id, { onDelete: "cascade" }),
-		version: integer("version").notNull(),
-		systemPrompt: text("system_prompt"),
-		configJson: text("config_json").notNull(),
-		createdByUserId: text("created_by_user_id").references(
-			() => usersTable.id,
-			{ onDelete: "set null" }
-		),
-		createdAt: timestamp("created_at", {
+			.references(() => requestPresetsTable.id, { onDelete: 'cascade' }),
+		version: integer('version').notNull(),
+		systemPrompt: text('system_prompt'),
+		configJson: text('config_json').notNull(),
+		createdByUserId: text('created_by_user_id').references(() => usersTable.id, { onDelete: 'set null' }),
+		createdAt: timestamp('created_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
 	},
-	(t) => [uniqueIndex("uk_request_preset_versions").on(t.presetId, t.version)]
+	(t) => [uniqueIndex('uk_request_preset_versions').on(t.presetId, t.version)],
 );
 
 export const guardrailsTable = gatewaySchema.table(
-	"guardrails",
+	'guardrails',
 	{
-		id: text("id").primaryKey(),
-		workspaceId: text("workspace_id")
+		id: text('id').primaryKey(),
+		workspaceId: text('workspace_id')
 			.notNull()
-			.references(() => workspacesTable.id, { onDelete: "cascade" }),
-		ownerUserId: text("owner_user_id")
+			.references(() => workspacesTable.id, { onDelete: 'cascade' }),
+		ownerUserId: text('owner_user_id')
 			.notNull()
-			.references(() => usersTable.id, { onDelete: "cascade" }),
-		name: text("name").notNull(),
-		description: text("description"),
-		status: text("status").notNull().default("active"),
-		isWorkspaceDefault: boolean("is_workspace_default").notNull().default(false),
-		isAccountDefault: boolean("is_account_default").notNull().default(false),
-		accountScopeKey: text("account_scope_key"),
-		designatedVersion: integer("designated_version").notNull().default(1),
-		latestVersion: integer("latest_version").notNull().default(1),
-		createdAt: timestamp("created_at", {
+			.references(() => usersTable.id, { onDelete: 'cascade' }),
+		name: text('name').notNull(),
+		description: text('description'),
+		status: text('status').notNull().default('active'),
+		isWorkspaceDefault: boolean('is_workspace_default').notNull().default(false),
+		isAccountDefault: boolean('is_account_default').notNull().default(false),
+		accountScopeKey: text('account_scope_key'),
+		designatedVersion: integer('designated_version').notNull().default(1),
+		latestVersion: integer('latest_version').notNull().default(1),
+		createdAt: timestamp('created_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
-		updatedAt: timestamp("updated_at", {
+		updatedAt: timestamp('updated_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
 	},
 	(t) => [
-		uniqueIndex("uk_guardrails_id_workspace").on(t.id, t.workspaceId),
-		uniqueIndex("uk_guardrails_workspace_default")
+		uniqueIndex('uk_guardrails_id_workspace').on(t.id, t.workspaceId),
+		uniqueIndex('uk_guardrails_workspace_default')
 			.on(t.workspaceId)
 			.where(sql`${t.isWorkspaceDefault}`),
-		uniqueIndex("uk_guardrails_account_default")
+		uniqueIndex('uk_guardrails_account_default')
 			.on(t.accountScopeKey)
 			.where(sql`${t.isAccountDefault}`),
-		check(
-			"guardrails_default_kind_chk",
-			sql`NOT (${t.isWorkspaceDefault} AND ${t.isAccountDefault})`
-		),
-		check(
-			"guardrails_account_scope_key_chk",
-			sql`${t.isAccountDefault} = (${t.accountScopeKey} IS NOT NULL)`
-		),
-		check("guardrails_status_chk", sql`${t.status} IN ('active', 'archived')`),
-		check(
-			"guardrails_versions_chk",
-			sql`${t.designatedVersion} >= 1 AND ${t.latestVersion} >= ${t.designatedVersion}`
-		),
-	]
+		check('guardrails_default_kind_chk', sql`NOT (${t.isWorkspaceDefault} AND ${t.isAccountDefault})`),
+		check('guardrails_account_scope_key_chk', sql`${t.isAccountDefault} = (${t.accountScopeKey} IS NOT NULL)`),
+		check('guardrails_status_chk', sql`${t.status} IN ('active', 'archived')`),
+		check('guardrails_versions_chk', sql`${t.designatedVersion} >= 1 AND ${t.latestVersion} >= ${t.designatedVersion}`),
+	],
 );
 
 export const guardrailVersionsTable = gatewaySchema.table(
-	"guardrail_versions",
+	'guardrail_versions',
 	{
-		id: text("id").primaryKey(),
-		guardrailId: text("guardrail_id")
+		id: text('id').primaryKey(),
+		guardrailId: text('guardrail_id')
 			.notNull()
-			.references(() => guardrailsTable.id, { onDelete: "cascade" }),
-		version: integer("version").notNull(),
-		configJson: text("config_json").notNull(),
-		createdByUserId: text("created_by_user_id").references(
-			() => usersTable.id,
-			{ onDelete: "set null" }
-		),
-		createdAt: timestamp("created_at", {
+			.references(() => guardrailsTable.id, { onDelete: 'cascade' }),
+		version: integer('version').notNull(),
+		configJson: text('config_json').notNull(),
+		createdByUserId: text('created_by_user_id').references(() => usersTable.id, { onDelete: 'set null' }),
+		createdAt: timestamp('created_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
 	},
-	(t) => [uniqueIndex("uk_guardrail_versions").on(t.guardrailId, t.version)]
+	(t) => [uniqueIndex('uk_guardrail_versions').on(t.guardrailId, t.version)],
 );
 
 export const guardrailAssignmentsTable = gatewaySchema.table(
-	"guardrail_assignments",
+	'guardrail_assignments',
 	{
-		id: text("id").primaryKey(),
-		workspaceId: text("workspace_id")
+		id: text('id').primaryKey(),
+		workspaceId: text('workspace_id')
 			.notNull()
-			.references(() => workspacesTable.id, { onDelete: "cascade" }),
-		guardrailId: text("guardrail_id")
+			.references(() => workspacesTable.id, { onDelete: 'cascade' }),
+		guardrailId: text('guardrail_id')
 			.notNull()
-			.references(() => guardrailsTable.id, { onDelete: "cascade" }),
-		scopeType: text("scope_type").notNull(),
-		scopeId: text("scope_id").notNull(),
-		createdByUserId: text("created_by_user_id").references(
-			() => usersTable.id,
-			{ onDelete: "set null" }
-		),
-		managementSource: text("management_source"),
-		assignedByUserId: text("assigned_by_user_id").references(
-			() => usersTable.id,
-			{ onDelete: "set null" }
-		),
-		createdAt: timestamp("created_at", {
+			.references(() => guardrailsTable.id, { onDelete: 'cascade' }),
+		scopeType: text('scope_type').notNull(),
+		scopeId: text('scope_id').notNull(),
+		createdByUserId: text('created_by_user_id').references(() => usersTable.id, { onDelete: 'set null' }),
+		managementSource: text('management_source'),
+		assignedByUserId: text('assigned_by_user_id').references(() => usersTable.id, { onDelete: 'set null' }),
+		createdAt: timestamp('created_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
 	},
 	(t) => [
-		uniqueIndex("uk_guardrail_assignments_workspace_scope").on(
-			t.workspaceId,
-			t.scopeType,
-			t.scopeId
-		),
-		index("idx_guardrail_assignments_assigned_by").on(t.assignedByUserId),
-		index("idx_guardrail_assignments_management_list")
+		uniqueIndex('uk_guardrail_assignments_workspace_scope').on(t.workspaceId, t.scopeType, t.scopeId),
+		index('idx_guardrail_assignments_assigned_by').on(t.assignedByUserId),
+		index('idx_guardrail_assignments_management_list')
 			.on(t.workspaceId, t.managementSource, t.createdAt, t.id)
 			.where(sql`${t.managementSource} IS NOT NULL`),
-		check(
-			"guardrail_assignments_scope_chk",
-			sql`${t.scopeType} IN ('user', 'api_key', 'workspace')`
-		),
-	]
+		check('guardrail_assignments_scope_chk', sql`${t.scopeType} IN ('user', 'api_key', 'workspace')`),
+	],
 );
 
 export const guardrailBudgetWindowsTable = gatewaySchema.table(
-	"guardrail_budget_windows",
+	'guardrail_budget_windows',
 	{
-		workspaceId: text("workspace_id")
+		workspaceId: text('workspace_id')
 			.notNull()
-			.references(() => workspacesTable.id, { onDelete: "cascade" }),
-		scopeType: text("scope_type").notNull(),
-		scopeId: text("scope_id").notNull(),
-		period: text("period").notNull(),
-		periodStart: timestamp("period_start", {
+			.references(() => workspacesTable.id, { onDelete: 'cascade' }),
+		scopeType: text('scope_type').notNull(),
+		scopeId: text('scope_id').notNull(),
+		period: text('period').notNull(),
+		periodStart: timestamp('period_start', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
-		periodEnd: timestamp("period_end", {
+		periodEnd: timestamp('period_end', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
-		unreservedMicros: bigint("unreserved_micros", { mode: "number" })
-			.notNull()
-			.default(0),
-		settledMicros: bigint("settled_micros", { mode: "number" })
-			.notNull()
-			.default(0),
-		reservedMicros: bigint("reserved_micros", { mode: "number" })
-			.notNull()
-			.default(0),
-		seedRequestId: text("seed_request_id"),
-		seededAt: timestamp("seeded_at", {
+		unreservedMicros: bigint('unreserved_micros', { mode: 'number' }).notNull().default(0),
+		settledMicros: bigint('settled_micros', { mode: 'number' }).notNull().default(0),
+		reservedMicros: bigint('reserved_micros', { mode: 'number' }).notNull().default(0),
+		seedRequestId: text('seed_request_id'),
+		seededAt: timestamp('seeded_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
-		updatedAt: timestamp("updated_at", {
+		updatedAt: timestamp('updated_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
 	},
 	(t) => [
 		primaryKey({
 			columns: [t.workspaceId, t.scopeType, t.scopeId, t.period, t.periodStart],
 		}),
+		check('guardrail_budget_windows_scope_chk', sql`${t.scopeType} IN ('user', 'api_key', 'workspace')`),
+		check('guardrail_budget_windows_period_chk', sql`${t.period} IN ('daily', 'weekly', 'monthly', 'lifetime')`),
 		check(
-			"guardrail_budget_windows_scope_chk",
-			sql`${t.scopeType} IN ('user', 'api_key', 'workspace')`
+			'guardrail_budget_windows_amount_chk',
+			sql`${t.unreservedMicros} >= 0 AND ${t.settledMicros} >= 0 AND ${t.reservedMicros} >= 0`,
 		),
-		check(
-			"guardrail_budget_windows_period_chk",
-			sql`${t.period} IN ('daily', 'weekly', 'monthly', 'lifetime')`
-		),
-		check(
-			"guardrail_budget_windows_amount_chk",
-			sql`${t.unreservedMicros} >= 0 AND ${t.settledMicros} >= 0 AND ${t.reservedMicros} >= 0`
-		),
-	]
+	],
 );
 
 export const guardrailBudgetReservationsTable = gatewaySchema.table(
-	"guardrail_budget_reservations",
+	'guardrail_budget_reservations',
 	{
-		id: text("id").primaryKey(),
-		workspaceId: text("workspace_id")
+		id: text('id').primaryKey(),
+		workspaceId: text('workspace_id')
 			.notNull()
-			.references(() => workspacesTable.id, { onDelete: "cascade" }),
-		requestId: text("request_id").notNull(),
-		assignmentId: text("assignment_id").notNull(),
-		guardrailId: text("guardrail_id").notNull(),
-		guardrailVersion: integer("guardrail_version").notNull(),
-		scopeType: text("scope_type").notNull(),
-		scopeId: text("scope_id").notNull(),
-		period: text("period").notNull(),
-		periodStart: timestamp("period_start", {
+			.references(() => workspacesTable.id, { onDelete: 'cascade' }),
+		requestId: text('request_id').notNull(),
+		assignmentId: text('assignment_id').notNull(),
+		guardrailId: text('guardrail_id').notNull(),
+		guardrailVersion: integer('guardrail_version').notNull(),
+		scopeType: text('scope_type').notNull(),
+		scopeId: text('scope_id').notNull(),
+		period: text('period').notNull(),
+		periodStart: timestamp('period_start', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
-		periodEnd: timestamp("period_end", {
+		periodEnd: timestamp('period_end', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
-		limitMicros: bigint("limit_micros", { mode: "number" }).notNull(),
-		reservedMicros: bigint("reserved_micros", { mode: "number" }).notNull(),
-		settledMicros: bigint("settled_micros", { mode: "number" })
-			.notNull()
-			.default(0),
-		settlementBasis: text("settlement_basis").notNull().default("charged"),
-		state: text("state").notNull().default("reserved"),
-		expiresAt: timestamp("expires_at", {
+		limitMicros: bigint('limit_micros', { mode: 'number' }).notNull(),
+		reservedMicros: bigint('reserved_micros', { mode: 'number' }).notNull(),
+		settledMicros: bigint('settled_micros', { mode: 'number' }).notNull().default(0),
+		settlementBasis: text('settlement_basis').notNull().default('charged'),
+		state: text('state').notNull().default('reserved'),
+		expiresAt: timestamp('expires_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
-		dispatchedAt: timestamp("dispatched_at", {
+		dispatchedAt: timestamp('dispatched_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}),
-		terminalAt: timestamp("terminal_at", {
+		terminalAt: timestamp('terminal_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}),
-		terminalReason: text("terminal_reason"),
-		createdAt: timestamp("created_at", {
+		terminalReason: text('terminal_reason'),
+		createdAt: timestamp('created_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
-		updatedAt: timestamp("updated_at", {
+		updatedAt: timestamp('updated_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
 	},
 	(t) => [
-		uniqueIndex("uk_guardrail_budget_reservation_request_assignment").on(
-			t.requestId,
-			t.assignmentId
+		uniqueIndex('uk_guardrail_budget_reservation_request_assignment').on(t.requestId, t.assignmentId),
+		check('guardrail_budget_reservations_scope_chk', sql`${t.scopeType} IN ('user', 'api_key')`),
+		check('guardrail_budget_reservations_period_chk', sql`${t.period} IN ('daily', 'weekly', 'monthly', 'lifetime')`),
+		check(
+			'guardrail_budget_reservations_amount_chk',
+			sql`${t.limitMicros} >= 0 AND ${t.reservedMicros} > 0 AND ${t.settledMicros} >= 0`,
 		),
 		check(
-			"guardrail_budget_reservations_scope_chk",
-			sql`${t.scopeType} IN ('user', 'api_key')`
+			'guardrail_budget_reservations_state_chk',
+			sql`${t.state} IN ('reserved', 'dispatched', 'settled', 'released', 'expired')`,
 		),
 		check(
-			"guardrail_budget_reservations_period_chk",
-			sql`${t.period} IN ('daily', 'weekly', 'monthly', 'lifetime')`
+			'guardrail_budget_reservations_settlement_basis_chk',
+			sql`${t.settlementBasis} IN ('charged', 'gateway_key_route')`,
 		),
-		check(
-			"guardrail_budget_reservations_amount_chk",
-			sql`${t.limitMicros} >= 0 AND ${t.reservedMicros} > 0 AND ${t.settledMicros} >= 0`
-		),
-		check(
-			"guardrail_budget_reservations_state_chk",
-			sql`${t.state} IN ('reserved', 'dispatched', 'settled', 'released', 'expired')`
-		),
-		check(
-			"guardrail_budget_reservations_settlement_basis_chk",
-			sql`${t.settlementBasis} IN ('charged', 'gateway_key_route')`
-		),
-	]
+	],
 );
 
 export const userBudgetReservationsTable = gatewaySchema.table(
-	"user_budget_reservations",
+	'user_budget_reservations',
 	{
-		requestId: text("request_id").primaryKey(),
-		userId: text("user_id").notNull(),
-		apiKeyId: text("api_key_id").notNull(),
-		budgetEpoch: bigint("budget_epoch", { mode: "number" }).notNull(),
-		limitMicros: bigint("limit_micros", { mode: "number" }).notNull(),
-		reservedMicros: bigint("reserved_micros", { mode: "number" }).notNull(),
-		settledMicros: bigint("settled_micros", { mode: "number" })
-			.notNull()
-			.default(0),
-		state: text("state").notNull().default("reserved"),
-		expiresAt: timestamp("expires_at", {
+		requestId: text('request_id').primaryKey(),
+		userId: text('user_id').notNull(),
+		apiKeyId: text('api_key_id').notNull(),
+		budgetEpoch: bigint('budget_epoch', { mode: 'number' }).notNull(),
+		limitMicros: bigint('limit_micros', { mode: 'number' }).notNull(),
+		reservedMicros: bigint('reserved_micros', { mode: 'number' }).notNull(),
+		settledMicros: bigint('settled_micros', { mode: 'number' }).notNull().default(0),
+		settledWalletMicros: bigint('settled_wallet_micros', { mode: 'number' }).notNull().default(0),
+		state: text('state').notNull().default('reserved'),
+		expiresAt: timestamp('expires_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
-		dispatchedAt: timestamp("dispatched_at", {
+		dispatchedAt: timestamp('dispatched_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}),
-		terminalAt: timestamp("terminal_at", {
+		terminalAt: timestamp('terminal_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}),
-		terminalReason: text("terminal_reason"),
-		createdAt: timestamp("created_at", {
+		terminalReason: text('terminal_reason'),
+		createdAt: timestamp('created_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
-		updatedAt: timestamp("updated_at", {
+		updatedAt: timestamp('updated_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
 	},
 	(t) => [
+		check('user_budget_reservations_epoch_chk', sql`${t.budgetEpoch} >= 0 AND ${t.budgetEpoch} <= 9007199254740991`),
 		check(
-			"user_budget_reservations_epoch_chk",
-			sql`${t.budgetEpoch} >= 0 AND ${t.budgetEpoch} <= 9007199254740991`
+			'user_budget_reservations_amount_chk',
+			sql`${t.limitMicros} >= 0 AND ${t.limitMicros} <= 9007199254740991 AND ${t.reservedMicros} > 0 AND ${t.reservedMicros} <= 9007199254740991 AND ${t.settledMicros} >= 0 AND ${t.settledMicros} <= 9007199254740991`,
 		),
 		check(
-			"user_budget_reservations_amount_chk",
-			sql`${t.limitMicros} >= 0 AND ${t.limitMicros} <= 9007199254740991 AND ${t.reservedMicros} > 0 AND ${t.reservedMicros} <= 9007199254740991 AND ${t.settledMicros} >= 0 AND ${t.settledMicros} <= 9007199254740991`
+			'user_budget_reservations_state_chk',
+			sql`${t.state} IN ('reserved', 'dispatched', 'settled', 'released', 'expired')`,
 		),
-		check(
-			"user_budget_reservations_state_chk",
-			sql`${t.state} IN ('reserved', 'dispatched', 'settled', 'released', 'expired')`
-		),
-		check(
-			"user_budget_reservations_range_chk",
-			sql`${t.expiresAt} > ${t.createdAt}`
-		),
-		check(
-			"user_budget_reservations_request_id_chk",
-			sql`length(${t.requestId}) BETWEEN 1 AND 128`
-		),
-		check(
-			"user_budget_reservations_user_id_chk",
-			sql`length(${t.userId}) BETWEEN 1 AND 512`
-		),
-		check(
-			"user_budget_reservations_api_key_id_chk",
-			sql`length(${t.apiKeyId}) BETWEEN 1 AND 512`
-		),
-	]
+		check('user_budget_reservations_range_chk', sql`${t.expiresAt} > ${t.createdAt}`),
+		check('user_budget_reservations_request_id_chk', sql`length(${t.requestId}) BETWEEN 1 AND 128`),
+		check('user_budget_reservations_user_id_chk', sql`length(${t.userId}) BETWEEN 1 AND 512`),
+		check('user_budget_reservations_api_key_id_chk', sql`length(${t.apiKeyId}) BETWEEN 1 AND 512`),
+	],
 );
 
 export const routeDataPoliciesTable = gatewaySchema.table(
-	"route_data_policies",
+	'route_data_policies',
 	{
-		routeTargetId: text("route_target_id")
+		routeTargetId: text('route_target_id')
 			.primaryKey()
-			.references(() => modelRoutesTable.id, { onDelete: "cascade" }),
-		subjectFingerprint: text("subject_fingerprint"),
-		retentionDays: integer("retention_days"),
-		trainingAllowed: boolean("training_allowed").notNull().default(true),
-		zdrSupported: boolean("zdr_supported").notNull().default(false),
-		evidenceUrl: text("evidence_url"),
-		verifiedBy: text("verified_by"),
-		verifiedAt: timestamp("verified_at", {
+			.references(() => modelRoutesTable.id, { onDelete: 'cascade' }),
+		subjectFingerprint: text('subject_fingerprint'),
+		retentionDays: integer('retention_days'),
+		trainingAllowed: boolean('training_allowed').notNull().default(true),
+		zdrSupported: boolean('zdr_supported').notNull().default(false),
+		evidenceUrl: text('evidence_url'),
+		verifiedBy: text('verified_by'),
+		verifiedAt: timestamp('verified_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}),
-		expiresAt: timestamp("expires_at", { withTimezone: true, mode: "string" }),
-		status: text("status").notNull().default("unknown"),
-		invalidatedAt: timestamp("invalidated_at", {
+		expiresAt: timestamp('expires_at', { withTimezone: true, mode: 'string' }),
+		status: text('status').notNull().default('unknown'),
+		invalidatedAt: timestamp('invalidated_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}),
-		invalidationReason: text("invalidation_reason"),
-		updatedAt: timestamp("updated_at", {
+		invalidationReason: text('invalidation_reason'),
+		updatedAt: timestamp('updated_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
 	},
 	(t) => [
+		check('route_data_policies_retention_chk', sql`${t.retentionDays} IS NULL OR ${t.retentionDays} >= 0`),
+		check('route_data_policies_status_chk', sql`${t.status} IN ('verified', 'expired', 'unknown')`),
 		check(
-			"route_data_policies_retention_chk",
-			sql`${t.retentionDays} IS NULL OR ${t.retentionDays} >= 0`
+			'route_data_policies_subject_fingerprint_chk',
+			sql`${t.subjectFingerprint} IS NULL OR ${t.subjectFingerprint} ~ '^[0-9a-f]{64}$'`,
 		),
-		check(
-			"route_data_policies_status_chk",
-			sql`${t.status} IN ('verified', 'expired', 'unknown')`
-		),
-		check(
-			"route_data_policies_subject_fingerprint_chk",
-			sql`${t.subjectFingerprint} IS NULL OR ${t.subjectFingerprint} ~ '^[0-9a-f]{64}$'`
-		),
-	]
+	],
 );
 
-export const routeDataPolicyAuditTable = gatewaySchema.table("route_data_policy_audit", {
-	id: text("id").primaryKey(),
-	routeTargetId: text("route_target_id").references(() => modelRoutesTable.id, {
-		onDelete: "set null",
+export const routeDataPolicyAuditTable = gatewaySchema.table('route_data_policy_audit', {
+	id: text('id').primaryKey(),
+	routeTargetId: text('route_target_id').references(() => modelRoutesTable.id, {
+		onDelete: 'set null',
 	}),
-	snapshotJson: text("snapshot_json").notNull(),
-	actorId: text("actor_id").notNull(),
-	createdAt: timestamp("created_at", {
+	snapshotJson: text('snapshot_json').notNull(),
+	actorId: text('actor_id').notNull(),
+	createdAt: timestamp('created_at', {
 		withTimezone: true,
-		mode: "string",
+		mode: 'string',
 	}).notNull(),
 });
 
 /** 用户维度审计：预算、资料等；扩展载荷见 `change_payload`。 */
-export const userAuditLogsTable = gatewaySchema.table("user_audit_logs", {
-	id: text("id").primaryKey(),
-	userId: text("user_id"),
-	apiKeyId: text("api_key_id"),
-	eventType: text("event_type").notNull(),
-	actorType: text("actor_type").notNull().default("system"),
-	requestLogId: text("request_log_id"),
-	changePayload: text("change_payload"),
-	beforeUserSnapshot: text("before_user_snapshot"),
-	afterUserSnapshot: text("after_user_snapshot"),
-	changedFields: text("changed_fields"),
-	correlationId: text("correlation_id"),
-	source: text("source"),
-	actorId: text("actor_id"),
-	reasonCode: text("reason_code"),
-	reasonText: text("reason_text"),
-	createdAt: timestamp("created_at", {
-		withTimezone: true,
-		mode: "string",
-	}).notNull(),
+export const userAuditLogsTable = gatewaySchema.table('user_audit_logs', {
+	id: text('id').primaryKey(),
+	userId: text('user_id'),
+	apiKeyId: text('api_key_id'),
+	eventType: text('event_type').notNull(),
+	actorType: text('actor_type').notNull().default('system'),
+	requestLogId: text('request_log_id'),
+	changePayload: text('change_payload'),
+	beforeUserSnapshot: text('before_user_snapshot'),
+	afterUserSnapshot: text('after_user_snapshot'),
+	changedFields: text('changed_fields'),
+	correlationId: text('correlation_id'),
+	source: text('source'),
+	actorId: text('actor_id'),
+	reasonCode: text('reason_code'),
+	reasonText: text('reason_text'),
+	dedupKey: text('dedup_key'),
+	createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' }).notNull(),
 });
 
-export const adminApiKeysTable = gatewaySchema.table("admin_api_keys", {
-	id: text("id").primaryKey(),
-	name: text("name").notNull().unique(),
-	description: text("description"),
-	secretKey: text("secret_key").notNull().unique(),
-	secretKeyHash: text("secret_key_hash"),
-	keyPrefix: text("key_prefix").notNull(),
-	permissionsJson: text("permissions_json").notNull().default("[]"),
-	status: text("status").notNull().default("active"),
-	lastUsedAt: timestamp("last_used_at", { withTimezone: true, mode: "string" }),
-	createdAt: timestamp("created_at", {
+export const adminApiKeysTable = gatewaySchema.table('admin_api_keys', {
+	id: text('id').primaryKey(),
+	name: text('name').notNull().unique(),
+	description: text('description'),
+	secretKey: text('secret_key').notNull().unique(),
+	secretKeyHash: text('secret_key_hash'),
+	keyPrefix: text('key_prefix').notNull(),
+	permissionsJson: text('permissions_json').notNull().default('[]'),
+	status: text('status').notNull().default('active'),
+	lastUsedAt: timestamp('last_used_at', { withTimezone: true, mode: 'string' }),
+	createdAt: timestamp('created_at', {
 		withTimezone: true,
-		mode: "string",
+		mode: 'string',
 	}).notNull(),
-	updatedAt: timestamp("updated_at", {
+	updatedAt: timestamp('updated_at', {
 		withTimezone: true,
-		mode: "string",
+		mode: 'string',
 	}).notNull(),
-	revokedAt: timestamp("revoked_at", { withTimezone: true, mode: "string" }),
+	revokedAt: timestamp('revoked_at', { withTimezone: true, mode: 'string' }),
 });
 
-export const adminAccessKeyAuditTable = gatewaySchema.table("admin_access_key_audit", {
-	id: text("id").primaryKey(),
-	keyId: text("key_id").notNull(),
-	action: text("action").notNull(),
-	changeMask: integer("change_mask").notNull(),
-	actorKind: text("actor_kind").notNull(),
-	actorId: text("actor_id").notNull(),
-	beforePermissionsJson: text("before_permissions_json"),
-	afterPermissionsJson: text("after_permissions_json"),
-	beforeStatus: text("before_status"),
-	afterStatus: text("after_status"),
-	createdAt: timestamp("created_at", { withTimezone: true, mode: "string" }).notNull(),
+export const adminAccessKeyAuditTable = gatewaySchema.table('admin_access_key_audit', {
+	id: text('id').primaryKey(),
+	keyId: text('key_id').notNull(),
+	action: text('action').notNull(),
+	changeMask: integer('change_mask').notNull(),
+	actorKind: text('actor_kind').notNull(),
+	actorId: text('actor_id').notNull(),
+	beforePermissionsJson: text('before_permissions_json'),
+	afterPermissionsJson: text('after_permissions_json'),
+	beforeStatus: text('before_status'),
+	afterStatus: text('after_status'),
+	createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' }).notNull(),
 });
 
-export const adminSharedKeyAuditTable = gatewaySchema.table("admin_shared_key_audit", {
-	id: text("id").primaryKey(), keyId: text("key_id").notNull(), action: text("action").notNull(),
-	changeMask: integer("change_mask").notNull(), actorKind: text("actor_kind").notNull(), actorId: text("actor_id").notNull(),
-	source: text("source").notNull(), reason: text("reason").notNull(), beforeStatus: text("before_status").notNull(),
-	beforeSellerPriority: integer("before_seller_priority").notNull(), beforeWeight: integer("before_weight").notNull(), beforeValidated: integer("before_validated").notNull(),
-	afterStatus: text("after_status"), afterSellerPriority: integer("after_seller_priority"), afterWeight: integer("after_weight"), afterValidated: integer("after_validated"),
-	beforeRevision: text("before_revision").notNull(), afterRevision: text("after_revision"), createdAt: timestamp("created_at", { withTimezone: true, mode: "string" }).notNull(),
-}, (t) => [index("idx_admin_shared_key_audit_key_created").on(t.keyId, t.createdAt, t.id)]);
+export const adminSharedKeyAuditTable = gatewaySchema.table(
+	'admin_shared_key_audit',
+	{
+		id: text('id').primaryKey(),
+		keyId: text('key_id').notNull(),
+		action: text('action').notNull(),
+		changeMask: integer('change_mask').notNull(),
+		actorKind: text('actor_kind').notNull(),
+		actorId: text('actor_id').notNull(),
+		source: text('source').notNull(),
+		reason: text('reason').notNull(),
+		beforeStatus: text('before_status').notNull(),
+		beforeSellerPriority: integer('before_seller_priority').notNull(),
+		beforeWeight: integer('before_weight').notNull(),
+		beforeValidated: integer('before_validated').notNull(),
+		afterStatus: text('after_status'),
+		afterSellerPriority: integer('after_seller_priority'),
+		afterWeight: integer('after_weight'),
+		afterValidated: integer('after_validated'),
+		beforeRevision: text('before_revision').notNull(),
+		afterRevision: text('after_revision'),
+		createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' }).notNull(),
+	},
+	(t) => [index('idx_admin_shared_key_audit_key_created').on(t.keyId, t.createdAt, t.id)],
+);
 
-export const adminSessionsTable = gatewaySchema.table("admin_sessions", {
-	tokenHash: text("token_hash").primaryKey(),
-	username: text("username").notNull(),
-	createdAt: timestamp("created_at", {
+export const adminSessionsTable = gatewaySchema.table('admin_sessions', {
+	tokenHash: text('token_hash').primaryKey(),
+	username: text('username').notNull(),
+	createdAt: timestamp('created_at', {
 		withTimezone: true,
-		mode: "string",
+		mode: 'string',
 	}).notNull(),
-	expiresAt: timestamp("expires_at", {
+	expiresAt: timestamp('expires_at', {
 		withTimezone: true,
-		mode: "string",
+		mode: 'string',
 	}).notNull(),
 });
 
 /** 用户门户会话（`user_session` Cookie），独立于 admin_sessions。 */
-export const portalSessionsTable = gatewaySchema.table("portal_sessions", {
-	tokenHash: text("token_hash").primaryKey(),
+export const portalSessionsTable = gatewaySchema.table('portal_sessions', {
+	tokenHash: text('token_hash').primaryKey(),
 	/** CinaAuth OIDC `sub` */
-	subject: text("subject").notNull(),
-	email: text("email").notNull(),
-	createdAt: timestamp("created_at", {
+	subject: text('subject').notNull(),
+	email: text('email').notNull(),
+	createdAt: timestamp('created_at', {
 		withTimezone: true,
-		mode: "string",
+		mode: 'string',
 	}).notNull(),
-	expiresAt: timestamp("expires_at", {
+	expiresAt: timestamp('expires_at', {
 		withTimezone: true,
-		mode: "string",
+		mode: 'string',
 	}).notNull(),
 });
 
 /** 卖家上架的个人上游 API Key（官方渠道白名单）。 */
 export const sharedKeysTable = gatewaySchema.table(
-	"shared_keys",
+	'shared_keys',
 	{
-		id: text("id").primaryKey(),
-		sellerUserId: text("seller_user_id")
+		id: text('id').primaryKey(),
+		sellerUserId: text('seller_user_id')
 			.notNull()
-			.references(() => usersTable.id, { onDelete: "cascade" }),
+			.references(() => usersTable.id, { onDelete: 'cascade' }),
 		/** openai | anthropic | zhipu | deepseek */
-		channelType: text("channel_type").notNull(),
-		apiKey: text("api_key").notNull(),
-		keyFingerprint: text("key_fingerprint").notNull(),
-		label: text("label"),
+		channelType: text('channel_type').notNull(),
+		apiKey: text('api_key').notNull(),
+		keyFingerprint: text('key_fingerprint').notNull(),
+		label: text('label'),
 		/** validating | active | paused | invalid | disabled */
-		status: text("status").notNull().default("validating"),
-		sellerPriority: integer("seller_priority").notNull().default(0),
-		weight: integer("weight").notNull().default(1),
-		inputPrice: numeric("input_price", { precision: 18, scale: 6 })
-			.notNull()
-			.default("0"),
-		outputPrice: numeric("output_price", { precision: 18, scale: 6 })
-			.notNull()
-			.default("0"),
-		cacheReadPrice: numeric("cache_read_price", { precision: 18, scale: 6 }),
-		cacheWritePrice: numeric("cache_write_price", { precision: 18, scale: 6 }),
-		validatedAt: timestamp("validated_at", {
+		status: text('status').notNull().default('validating'),
+		sellerPriority: integer('seller_priority').notNull().default(0),
+		weight: integer('weight').notNull().default(1),
+		inputPrice: numeric('input_price', { precision: 18, scale: 6 }).notNull().default('0'),
+		outputPrice: numeric('output_price', { precision: 18, scale: 6 }).notNull().default('0'),
+		cacheReadPrice: numeric('cache_read_price', { precision: 18, scale: 6 }),
+		cacheWritePrice: numeric('cache_write_price', { precision: 18, scale: 6 }),
+		validatedAt: timestamp('validated_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}),
-		lastUsedAt: timestamp("last_used_at", {
+		lastUsedAt: timestamp('last_used_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}),
-		lastFailureAt: timestamp("last_failure_at", {
+		lastFailureAt: timestamp('last_failure_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}),
-		failureReason: text("failure_reason"),
-		servedInputTokens: bigint("served_input_tokens", { mode: "number" })
-			.notNull()
-			.default(0),
-		servedOutputTokens: bigint("served_output_tokens", { mode: "number" })
-			.notNull()
-			.default(0),
-		earnedTotal: numeric("earned_total", { precision: 18, scale: 6 })
-			.notNull()
-			.default("0"),
-		createdAt: timestamp("created_at", {
+		failureReason: text('failure_reason'),
+		servedInputTokens: bigint('served_input_tokens', { mode: 'number' }).notNull().default(0),
+		servedOutputTokens: bigint('served_output_tokens', { mode: 'number' }).notNull().default(0),
+		earnedTotal: numeric('earned_total', { precision: 18, scale: 6 }).notNull().default('0'),
+		createdAt: timestamp('created_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
-		updatedAt: timestamp("updated_at", {
+		updatedAt: timestamp('updated_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
 	},
-	(t) => [
-		uniqueIndex("uk_shared_keys_seller_fingerprint").on(
-			t.sellerUserId,
-			t.keyFingerprint
-		),
-	]
+	(t) => [uniqueIndex('uk_shared_keys_seller_fingerprint').on(t.sellerUserId, t.keyFingerprint)],
 );
 
 /** 按请求结算的卖家收益流水；`request_log_id` 幂等。 */
 export const sharedKeyEarningsTable = gatewaySchema.table(
-	"shared_key_earnings",
+	'shared_key_earnings',
 	{
-		id: text("id").primaryKey(),
-		requestLogId: text("request_log_id").notNull(),
-		sharedKeyId: text("shared_key_id").notNull(),
-		sellerUserId: text("seller_user_id").notNull(),
-		inputTokens: integer("input_tokens").notNull().default(0),
-		outputTokens: integer("output_tokens").notNull().default(0),
-		cacheReadTokens: integer("cache_read_tokens").notNull().default(0),
-		cacheWriteTokens: integer("cache_write_tokens").notNull().default(0),
-		grossAmount: numeric("gross_amount", { precision: 18, scale: 6 })
-			.notNull()
-			.default("0"),
-		platformFee: numeric("platform_fee", { precision: 18, scale: 6 })
-			.notNull()
-			.default("0"),
-		netAmount: numeric("net_amount", { precision: 18, scale: 6 })
-			.notNull()
-			.default("0"),
-		currency: text("currency").notNull().default("USD"),
-		createdAt: timestamp("created_at", {
+		id: text('id').primaryKey(),
+		requestLogId: text('request_log_id').notNull(),
+		sharedKeyId: text('shared_key_id').notNull(),
+		sellerUserId: text('seller_user_id').notNull(),
+		inputTokens: integer('input_tokens').notNull().default(0),
+		outputTokens: integer('output_tokens').notNull().default(0),
+		cacheReadTokens: integer('cache_read_tokens').notNull().default(0),
+		cacheWriteTokens: integer('cache_write_tokens').notNull().default(0),
+		grossAmount: numeric('gross_amount', { precision: 18, scale: 6 }).notNull().default('0'),
+		platformFee: numeric('platform_fee', { precision: 18, scale: 6 }).notNull().default('0'),
+		netAmount: numeric('net_amount', { precision: 18, scale: 6 }).notNull().default('0'),
+		currency: text('currency').notNull().default('USD'),
+		createdAt: timestamp('created_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
 	},
-	(t) => [uniqueIndex("uk_shared_key_earnings_request_log").on(t.requestLogId)]
+	(t) => [uniqueIndex('uk_shared_key_earnings_request_log').on(t.requestLogId)],
 );
 
 /** 卖家账本（1:1 users）。 */
-export const userEarningsTable = gatewaySchema.table("user_earnings", {
-	userId: text("user_id")
+export const userEarningsTable = gatewaySchema.table('user_earnings', {
+	userId: text('user_id')
 		.primaryKey()
-		.references(() => usersTable.id, { onDelete: "cascade" }),
-	balance: numeric("balance", { precision: 18, scale: 6 })
-		.notNull()
-		.default("0"),
-	lockedAmount: numeric("locked_amount", { precision: 18, scale: 6 })
-		.notNull()
-		.default("0"),
-	lifetimeEarned: numeric("lifetime_earned", { precision: 18, scale: 6 })
-		.notNull()
-		.default("0"),
-	lifetimeWithdrawn: numeric("lifetime_withdrawn", { precision: 18, scale: 6 })
-		.notNull()
-		.default("0"),
-	contributionValue: numeric("contribution_value", { precision: 18, scale: 6 })
-		.notNull()
-		.default("0"),
+		.references(() => usersTable.id, { onDelete: 'cascade' }),
+	balance: numeric('balance', { precision: 18, scale: 6 }).notNull().default('0'),
+	lockedAmount: numeric('locked_amount', { precision: 18, scale: 6 }).notNull().default('0'),
+	lifetimeEarned: numeric('lifetime_earned', { precision: 18, scale: 6 }).notNull().default('0'),
+	lifetimeWithdrawn: numeric('lifetime_withdrawn', { precision: 18, scale: 6 }).notNull().default('0'),
+	contributionValue: numeric('contribution_value', { precision: 18, scale: 6 }).notNull().default('0'),
 	/** Canonical monetary state; NUMERIC columns above are compatibility projections. */
-	balanceMicros: bigint("balance_micros", { mode: "bigint" })
+	balanceMicros: bigint('balance_micros', { mode: 'bigint' })
 		.notNull()
 		.default(sql`0`),
-	lockedAmountMicros: bigint("locked_amount_micros", { mode: "bigint" })
+	lockedAmountMicros: bigint('locked_amount_micros', { mode: 'bigint' })
 		.notNull()
 		.default(sql`0`),
-	lifetimeEarnedMicros: bigint("lifetime_earned_micros", { mode: "bigint" })
+	lifetimeEarnedMicros: bigint('lifetime_earned_micros', { mode: 'bigint' })
 		.notNull()
 		.default(sql`0`),
-	lifetimeWithdrawnMicros: bigint("lifetime_withdrawn_micros", {
-		mode: "bigint",
+	lifetimeWithdrawnMicros: bigint('lifetime_withdrawn_micros', {
+		mode: 'bigint',
 	})
 		.notNull()
 		.default(sql`0`),
-	contributionValueMicros: bigint("contribution_value_micros", {
-		mode: "bigint",
+	contributionValueMicros: bigint('contribution_value_micros', {
+		mode: 'bigint',
 	})
 		.notNull()
 		.default(sql`0`),
-	walletAddress: text("wallet_address"),
-	walletVerifiedAt: timestamp("wallet_verified_at", {
+	walletAddress: text('wallet_address'),
+	walletVerifiedAt: timestamp('wallet_verified_at', {
 		withTimezone: true,
-		mode: "string",
+		mode: 'string',
 	}),
-	highestBadgeTier: integer("highest_badge_tier").notNull().default(0),
-	updatedAt: timestamp("updated_at", {
+	highestBadgeTier: integer('highest_badge_tier').notNull().default(0),
+	updatedAt: timestamp('updated_at', {
 		withTimezone: true,
-		mode: "string",
+		mode: 'string',
 	}).notNull(),
 });
 
 /** Append-only balance journal. Mutations are owned by database triggers. */
 export const portalLedgerEntriesTable = gatewaySchema.table(
-	"portal_ledger_entries",
+	'portal_ledger_entries',
 	{
-		id: text("id").primaryKey(),
-		userId: text("user_id")
+		id: text('id').primaryKey(),
+		userId: text('user_id')
 			.notNull()
-			.references(() => usersTable.id, { onDelete: "cascade" }),
-		kind: text("kind").notNull(),
-		amountMicros: bigint("amount_micros", { mode: "bigint" }).notNull(),
-		balanceAfterMicros: bigint("balance_after_micros", {
-			mode: "bigint",
+			.references(() => usersTable.id, { onDelete: 'cascade' }),
+		kind: text('kind').notNull(),
+		amountMicros: bigint('amount_micros', { mode: 'bigint' }).notNull(),
+		balanceAfterMicros: bigint('balance_after_micros', {
+			mode: 'bigint',
 		}).notNull(),
-		lockedAfterMicros: bigint("locked_after_micros", {
-			mode: "bigint",
+		lockedAfterMicros: bigint('locked_after_micros', {
+			mode: 'bigint',
 		}).notNull(),
-		referenceType: text("reference_type").notNull(),
-		referenceId: text("reference_id").notNull(),
-		createdAt: timestamp("created_at", {
+		referenceType: text('reference_type').notNull(),
+		referenceId: text('reference_id').notNull(),
+		createdAt: timestamp('created_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
 	},
-	(t) => [
-		uniqueIndex("portal_ledger_entries_reference_unique").on(
-			t.referenceType,
-			t.referenceId,
-			t.kind
-		),
-	]
+	(t) => [uniqueIndex('portal_ledger_entries_reference_unique').on(t.referenceType, t.referenceId, t.kind)],
 );
 
 /** 链上 CINA-C 自动提现单。 */
-export const withdrawalsTable = gatewaySchema.table("withdrawals", {
-	id: text("id").primaryKey(),
-	userId: text("user_id")
+export const withdrawalsTable = gatewaySchema.table('withdrawals', {
+	id: text('id').primaryKey(),
+	userId: text('user_id')
 		.notNull()
-		.references(() => usersTable.id, { onDelete: "cascade" }),
-	amount: numeric("amount", { precision: 18, scale: 6 }).notNull(),
-	fee: numeric("fee", { precision: 18, scale: 6 }).notNull().default("0"),
-	netAmount: numeric("net_amount", { precision: 18, scale: 6 }).notNull(),
-	amountMicros: bigint("amount_micros", { mode: "bigint" })
-		.notNull()
-		.default(sql`0`),
-	feeMicros: bigint("fee_micros", { mode: "bigint" })
+		.references(() => usersTable.id, { onDelete: 'cascade' }),
+	amount: numeric('amount', { precision: 18, scale: 6 }).notNull(),
+	fee: numeric('fee', { precision: 18, scale: 6 }).notNull().default('0'),
+	netAmount: numeric('net_amount', { precision: 18, scale: 6 }).notNull(),
+	amountMicros: bigint('amount_micros', { mode: 'bigint' })
 		.notNull()
 		.default(sql`0`),
-	netAmountMicros: bigint("net_amount_micros", { mode: "bigint" })
+	feeMicros: bigint('fee_micros', { mode: 'bigint' })
 		.notNull()
 		.default(sql`0`),
-	currency: text("currency").notNull().default("USD"),
-	walletAddress: text("wallet_address").notNull(),
+	netAmountMicros: bigint('net_amount_micros', { mode: 'bigint' })
+		.notNull()
+		.default(sql`0`),
+	currency: text('currency').notNull().default('USD'),
+	walletAddress: text('wallet_address').notNull(),
 	/** requested | processing | submitted | confirmed | failed */
-	status: text("status").notNull().default("requested"),
-	tokenAmount: numeric("token_amount", { precision: 18, scale: 6 }),
-	txHash: text("tx_hash"),
-	chainId: integer("chain_id"),
-	failureReason: text("failure_reason"),
-	createdAt: timestamp("created_at", {
+	status: text('status').notNull().default('requested'),
+	tokenAmount: numeric('token_amount', { precision: 18, scale: 6 }),
+	txHash: text('tx_hash'),
+	chainId: integer('chain_id'),
+	failureReason: text('failure_reason'),
+	createdAt: timestamp('created_at', {
 		withTimezone: true,
-		mode: "string",
+		mode: 'string',
 	}).notNull(),
-	updatedAt: timestamp("updated_at", {
+	updatedAt: timestamp('updated_at', {
 		withTimezone: true,
-		mode: "string",
+		mode: 'string',
 	}).notNull(),
-	confirmedAt: timestamp("confirmed_at", {
+	confirmedAt: timestamp('confirmed_at', {
 		withTimezone: true,
-		mode: "string",
+		mode: 'string',
 	}),
 });
 
 /** cinachain CinaBadge 位阶徽章铸造记录。 */
 export const nftMintsTable = gatewaySchema.table(
-	"nft_mints",
+	'nft_mints',
 	{
-		id: text("id").primaryKey(),
-		userId: text("user_id")
+		id: text('id').primaryKey(),
+		userId: text('user_id')
 			.notNull()
-			.references(() => usersTable.id, { onDelete: "cascade" }),
-		badgeTokenId: integer("badge_token_id").notNull(),
-		tierName: text("tier_name").notNull(),
-		walletAddress: text("wallet_address").notNull(),
+			.references(() => usersTable.id, { onDelete: 'cascade' }),
+		badgeTokenId: integer('badge_token_id').notNull(),
+		tierName: text('tier_name').notNull(),
+		walletAddress: text('wallet_address').notNull(),
 		/** pending | submitted | confirmed | failed */
-		status: text("status").notNull().default("pending"),
-		txHash: text("tx_hash"),
-		chainId: integer("chain_id"),
-		valueSnapshot: numeric("value_snapshot", { precision: 18, scale: 6 })
-			.notNull()
-			.default("0"),
-		failureReason: text("failure_reason"),
-		createdAt: timestamp("created_at", {
+		status: text('status').notNull().default('pending'),
+		txHash: text('tx_hash'),
+		chainId: integer('chain_id'),
+		valueSnapshot: numeric('value_snapshot', { precision: 18, scale: 6 }).notNull().default('0'),
+		failureReason: text('failure_reason'),
+		createdAt: timestamp('created_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
-		confirmedAt: timestamp("confirmed_at", {
+		confirmedAt: timestamp('confirmed_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}),
 	},
-	(t) => [uniqueIndex("uk_nft_mints_user_badge").on(t.userId, t.badgeTokenId)]
+	(t) => [uniqueIndex('uk_nft_mints_user_badge').on(t.userId, t.badgeTokenId)],
 );
 
 /** Signed transaction outbox used by the at-least-once chain queue consumer. */
 export const chainJobTransactionsTable = gatewaySchema.table(
-	"chain_job_transactions",
+	'chain_job_transactions',
 	{
-		jobKind: text("job_kind").notNull(),
-		jobId: text("job_id").notNull(),
-		txHash: text("tx_hash").notNull().unique(),
-		rawTransaction: text("raw_transaction").notNull(),
-		chainId: integer("chain_id").notNull(),
-		createdAt: timestamp("created_at", {
+		jobKind: text('job_kind').notNull(),
+		jobId: text('job_id').notNull(),
+		txHash: text('tx_hash').notNull().unique(),
+		rawTransaction: text('raw_transaction').notNull(),
+		chainId: integer('chain_id').notNull(),
+		createdAt: timestamp('created_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
-		broadcastAt: timestamp("broadcast_at", {
+		broadcastAt: timestamp('broadcast_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}),
 	},
-	(t) => [primaryKey({ columns: [t.jobKind, t.jobId] })]
+	(t) => [primaryKey({ columns: [t.jobKind, t.jobId] })],
 );
 
 /** Batch metadata only; request and response bodies stay in private R2 objects. */
 export const batchesTable = gatewaySchema.table(
-	"batches",
+	'batches',
 	{
-		id: text("id").primaryKey(),
-		accountId: text("account_id").notNull(),
-		workspaceId: text("workspace_id")
+		id: text('id').primaryKey(),
+		accountId: text('account_id').notNull(),
+		workspaceId: text('workspace_id')
 			.notNull()
-			.references(() => workspacesTable.id, { onDelete: "restrict" }),
-		userId: text("user_id")
+			.references(() => workspacesTable.id, { onDelete: 'restrict' }),
+		userId: text('user_id')
 			.notNull()
-			.references(() => usersTable.id, { onDelete: "restrict" }),
-		apiKeyHash: text("api_key_hash").notNull(),
-		endpoint: text("endpoint").notNull(),
-		modelId: text("model_id").notNull(),
-		routeGroup: text("route_group").notNull(),
-		status: text("status").notNull().default("validating"),
-		completionWindow: text("completion_window").notNull().default("24h"),
-		idempotencyKeyHash: text("idempotency_key_hash"),
-		inputObjectKey: text("input_object_key").notNull(),
-		inputSha256: text("input_sha256").notNull(),
-		inputBytes: integer("input_bytes").notNull(),
-		resultObjectKey: text("result_object_key"),
-		resultSha256: text("result_sha256"),
-		requestCount: integer("request_count").notNull(),
-		validationNextOrdinal: integer("validation_next_ordinal").notNull().default(0),
-		validationInputOffset: integer("validation_input_offset").notNull().default(0),
-		completedCount: integer("completed_count").notNull().default(0),
-		failedCount: integer("failed_count").notNull().default(0),
-		cancelledCount: integer("cancelled_count").notNull().default(0),
-		promptTokens: bigint("prompt_tokens", { mode: "number" }).notNull().default(0),
-		completionTokens: bigint("completion_tokens", { mode: "number" })
-			.notNull()
-			.default(0),
-		totalTokens: bigint("total_tokens", { mode: "number" }).notNull().default(0),
-		chargedCostMicros: bigint("charged_cost_micros", { mode: "number" })
-			.notNull()
-			.default(0),
-		byokRequestCount: integer("byok_request_count").notNull().default(0),
-		unknownCostCount: integer("unknown_cost_count").notNull().default(0),
-		createdAt: timestamp("created_at", { withTimezone: true, mode: "string" }).notNull(),
-		inProgressAt: timestamp("in_progress_at", { withTimezone: true, mode: "string" }),
-		finalizingAt: timestamp("finalizing_at", { withTimezone: true, mode: "string" }),
-		finalizedAt: timestamp("finalized_at", { withTimezone: true, mode: "string" }),
-		expiresAt: timestamp("expires_at", { withTimezone: true, mode: "string" }).notNull(),
-		retentionExpiresAt: timestamp("retention_expires_at", {
+			.references(() => usersTable.id, { onDelete: 'restrict' }),
+		apiKeyHash: text('api_key_hash').notNull(),
+		endpoint: text('endpoint').notNull(),
+		modelId: text('model_id').notNull(),
+		routeGroup: text('route_group').notNull(),
+		status: text('status').notNull().default('validating'),
+		completionWindow: text('completion_window').notNull().default('24h'),
+		idempotencyKeyHash: text('idempotency_key_hash'),
+		inputObjectKey: text('input_object_key').notNull(),
+		inputSha256: text('input_sha256').notNull(),
+		inputBytes: integer('input_bytes').notNull(),
+		resultObjectKey: text('result_object_key'),
+		resultSha256: text('result_sha256'),
+		requestCount: integer('request_count').notNull(),
+		validationNextOrdinal: integer('validation_next_ordinal').notNull().default(0),
+		validationInputOffset: integer('validation_input_offset').notNull().default(0),
+		completedCount: integer('completed_count').notNull().default(0),
+		failedCount: integer('failed_count').notNull().default(0),
+		cancelledCount: integer('cancelled_count').notNull().default(0),
+		promptTokens: bigint('prompt_tokens', { mode: 'number' }).notNull().default(0),
+		completionTokens: bigint('completion_tokens', { mode: 'number' }).notNull().default(0),
+		totalTokens: bigint('total_tokens', { mode: 'number' }).notNull().default(0),
+		chargedCostMicros: bigint('charged_cost_micros', { mode: 'number' }).notNull().default(0),
+		byokRequestCount: integer('byok_request_count').notNull().default(0),
+		unknownCostCount: integer('unknown_cost_count').notNull().default(0),
+		createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' }).notNull(),
+		inProgressAt: timestamp('in_progress_at', { withTimezone: true, mode: 'string' }),
+		finalizingAt: timestamp('finalizing_at', { withTimezone: true, mode: 'string' }),
+		finalizedAt: timestamp('finalized_at', { withTimezone: true, mode: 'string' }),
+		expiresAt: timestamp('expires_at', { withTimezone: true, mode: 'string' }).notNull(),
+		retentionExpiresAt: timestamp('retention_expires_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}).notNull(),
-		leaseOwner: text("lease_owner"),
-		leaseExpiresAt: timestamp("lease_expires_at", {
+		leaseOwner: text('lease_owner'),
+		leaseExpiresAt: timestamp('lease_expires_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}),
-		attemptCount: bigint("attempt_count", { mode: "number" }).notNull().default(0),
-		revision: bigint("revision", { mode: "number" }).notNull().default(0),
-		lastErrorCode: text("last_error_code"),
-		updatedAt: timestamp("updated_at", { withTimezone: true, mode: "string" }).notNull(),
+		attemptCount: bigint('attempt_count', { mode: 'number' }).notNull().default(0),
+		revision: bigint('revision', { mode: 'number' }).notNull().default(0),
+		lastErrorCode: text('last_error_code'),
+		updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'string' }).notNull(),
 	},
 	(t) => [
-		uniqueIndex("uk_batches_idempotency")
+		uniqueIndex('uk_batches_idempotency')
 			.on(t.workspaceId, t.apiKeyHash, t.idempotencyKeyHash)
 			.where(sql`idempotency_key_hash IS NOT NULL`),
-		index("idx_batches_workspace_created").on(t.workspaceId, t.createdAt, t.id),
-		index("idx_batches_status_lease").on(t.status, t.leaseExpiresAt),
-		index("idx_batches_retention").on(t.retentionExpiresAt),
+		index('idx_batches_workspace_created').on(t.workspaceId, t.createdAt, t.id),
+		index('idx_batches_status_lease').on(t.status, t.leaseExpiresAt),
+		index('idx_batches_retention').on(t.retentionExpiresAt),
 		check(
-			"batches_status_chk",
-			sql`${t.status} IN ('validating', 'in_progress', 'finalizing', 'completed', 'failed', 'expired', 'cancelling', 'cancelled')`
+			'batches_status_chk',
+			sql`${t.status} IN ('validating', 'in_progress', 'finalizing', 'completed', 'failed', 'expired', 'cancelling', 'cancelled')`,
 		),
 		check(
-			"batches_counts_chk",
-			sql`${t.requestCount} BETWEEN 1 AND 1000000 AND ${t.completedCount} + ${t.failedCount} + ${t.cancelledCount} <= ${t.requestCount}`
+			'batches_counts_chk',
+			sql`${t.requestCount} BETWEEN 1 AND 1000000 AND ${t.completedCount} + ${t.failedCount} + ${t.cancelledCount} <= ${t.requestCount}`,
 		),
 		check(
-			"batches_validation_checkpoint_chk",
-			sql`${t.inputBytes} BETWEEN 1 AND 52428800 AND ${t.validationNextOrdinal} BETWEEN 0 AND ${t.requestCount} AND ${t.validationInputOffset} BETWEEN 0 AND ${t.inputBytes}`
+			'batches_validation_checkpoint_chk',
+			sql`${t.inputBytes} BETWEEN 1 AND 52428800 AND ${t.validationNextOrdinal} BETWEEN 0 AND ${t.requestCount} AND ${t.validationInputOffset} BETWEEN 0 AND ${t.inputBytes}`,
 		),
-	]
+	],
 );
 
 /** Idempotent per-request ledger for an accepted batch. */
 export const batchItemsTable = gatewaySchema.table(
-	"batch_items",
+	'batch_items',
 	{
-		id: text("id").notNull().unique(),
-		batchId: text("batch_id")
+		id: text('id').notNull().unique(),
+		batchId: text('batch_id')
 			.notNull()
-			.references(() => batchesTable.id, { onDelete: "cascade" }),
-		ordinal: integer("ordinal").notNull(),
-		customId: text("custom_id").notNull(),
-		status: text("status").notNull().default("pending"),
-		attemptCount: bigint("attempt_count", { mode: "number" }).notNull().default(0),
-		startedAt: timestamp("started_at", { withTimezone: true, mode: "string" }),
-		dispatchStartedAt: timestamp("dispatch_started_at", {
+			.references(() => batchesTable.id, { onDelete: 'cascade' }),
+		ordinal: integer('ordinal').notNull(),
+		customId: text('custom_id').notNull(),
+		status: text('status').notNull().default('pending'),
+		attemptCount: bigint('attempt_count', { mode: 'number' }).notNull().default(0),
+		startedAt: timestamp('started_at', { withTimezone: true, mode: 'string' }),
+		dispatchStartedAt: timestamp('dispatch_started_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}),
-		completedAt: timestamp("completed_at", { withTimezone: true, mode: "string" }),
-		generationId: text("generation_id"),
-		reservationId: text("reservation_id"),
-		leaseOwner: text("lease_owner"),
-		leaseExpiresAt: timestamp("lease_expires_at", {
+		completedAt: timestamp('completed_at', { withTimezone: true, mode: 'string' }),
+		generationId: text('generation_id'),
+		reservationId: text('reservation_id'),
+		leaseOwner: text('lease_owner'),
+		leaseExpiresAt: timestamp('lease_expires_at', {
 			withTimezone: true,
-			mode: "string",
+			mode: 'string',
 		}),
-		requestStartOffset: integer("request_start_offset").notNull(),
-		requestEndOffset: integer("request_end_offset").notNull(),
-		requestSha256: text("request_sha256").notNull(),
-		resultObjectKey: text("result_object_key"),
-		resultSha256: text("result_sha256"),
-		errorCode: text("error_code"),
-		errorSummary: text("error_summary"),
-		revision: bigint("revision", { mode: "number" }).notNull().default(0),
-		createdAt: timestamp("created_at", { withTimezone: true, mode: "string" }).notNull(),
-		updatedAt: timestamp("updated_at", { withTimezone: true, mode: "string" }).notNull(),
+		requestStartOffset: integer('request_start_offset').notNull(),
+		requestEndOffset: integer('request_end_offset').notNull(),
+		requestSha256: text('request_sha256').notNull(),
+		resultObjectKey: text('result_object_key'),
+		resultSha256: text('result_sha256'),
+		errorCode: text('error_code'),
+		errorSummary: text('error_summary'),
+		revision: bigint('revision', { mode: 'number' }).notNull().default(0),
+		createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' }).notNull(),
+		updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'string' }).notNull(),
 	},
 	(t) => [
 		primaryKey({ columns: [t.batchId, t.ordinal] }),
-		uniqueIndex("uk_batch_items_custom").on(t.batchId, t.customId),
-		index("idx_batch_items_status_ordinal").on(t.batchId, t.status, t.ordinal),
+		uniqueIndex('uk_batch_items_custom').on(t.batchId, t.customId),
+		index('idx_batch_items_status_ordinal').on(t.batchId, t.status, t.ordinal),
+		check('batch_items_status_chk', sql`${t.status} IN ('pending', 'in_progress', 'completed', 'failed', 'cancelled')`),
 		check(
-			"batch_items_status_chk",
-			sql`${t.status} IN ('pending', 'in_progress', 'completed', 'failed', 'cancelled')`
+			'batch_items_request_range_chk',
+			sql`${t.requestStartOffset} BETWEEN 0 AND 52428799 AND ${t.requestEndOffset} BETWEEN 1 AND 52428800 AND ${t.requestEndOffset} > ${t.requestStartOffset} AND ${t.requestEndOffset} - ${t.requestStartOffset} <= 1048578`,
 		),
 		check(
-			"batch_items_request_range_chk",
-			sql`${t.requestStartOffset} BETWEEN 0 AND 52428799 AND ${t.requestEndOffset} BETWEEN 1 AND 52428800 AND ${t.requestEndOffset} > ${t.requestStartOffset} AND ${t.requestEndOffset} - ${t.requestStartOffset} <= 1048578`
+			'batch_items_lease_pair_chk',
+			sql`(${t.leaseOwner} IS NULL AND ${t.leaseExpiresAt} IS NULL) OR (${t.leaseOwner} IS NOT NULL AND length(${t.leaseOwner}) BETWEEN 1 AND 128 AND ${t.leaseExpiresAt} IS NOT NULL)`,
 		),
 		check(
-			"batch_items_lease_pair_chk",
-			sql`(${t.leaseOwner} IS NULL AND ${t.leaseExpiresAt} IS NULL) OR (${t.leaseOwner} IS NOT NULL AND length(${t.leaseOwner}) BETWEEN 1 AND 128 AND ${t.leaseExpiresAt} IS NOT NULL)`
+			'batch_items_dispatch_chk',
+			sql`(${t.dispatchStartedAt} IS NULL AND ${t.generationId} IS NULL AND ${t.reservationId} IS NULL) OR (${t.dispatchStartedAt} IS NOT NULL AND ${t.startedAt} IS NOT NULL AND ${t.generationId} IS NOT NULL AND length(${t.generationId}) BETWEEN 1 AND 512 AND ${t.reservationId} IS NOT NULL AND length(${t.reservationId}) BETWEEN 1 AND 512)`,
 		),
-		check(
-			"batch_items_dispatch_chk",
-			sql`(${t.dispatchStartedAt} IS NULL AND ${t.generationId} IS NULL AND ${t.reservationId} IS NULL) OR (${t.dispatchStartedAt} IS NOT NULL AND ${t.startedAt} IS NOT NULL AND ${t.generationId} IS NOT NULL AND length(${t.generationId}) BETWEEN 1 AND 512 AND ${t.reservationId} IS NOT NULL AND length(${t.reservationId}) BETWEEN 1 AND 512)`
-		),
-	]
+	],
 );
 
 export const pgCoreSchema = {

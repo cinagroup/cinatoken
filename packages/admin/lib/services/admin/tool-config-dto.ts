@@ -1,3 +1,4 @@
+import { parseToolCatalogPricing } from '@octafuse/core/lib/tool-pricing';
 import type { ConfigSnapshot, ConfigRevisionVector } from "@octafuse/core";
 import { hasAdminPermission, type AdminPrincipal } from "@/lib/admin-principal";
 import {
@@ -141,26 +142,9 @@ export function toolConfigEntryPrices(
 	entry: ToolConfigEntry,
 	family: ToolConfigFamily
 ): ToolConfigPrices {
-	const parsed: Partial<ToolConfigPrices & { cost: number }> = {};
-	for (const field of ["metered", "standard", "charged", "cost"] as const) {
-		if (
-			entry[field] !== undefined &&
-			entry[field] !== null &&
-			entry[field] !== ""
-		)
-			parsed[field] = toolConfigMoney(entry[field], true);
-	}
-	const fallback =
-		parsed.charged ??
-		parsed.cost ??
-		parsed.standard ??
-		parsed.metered ??
-		TOOL_CONFIG_DEFAULTS[family].price;
-	return {
-		metered: parsed.metered ?? fallback,
-		standard: parsed.standard ?? fallback,
-		charged: parsed.charged ?? parsed.cost ?? fallback,
-	};
+	const pricing = parseToolCatalogPricing(entry, TOOL_CONFIG_DEFAULTS[family].price, true);
+	if (!pricing) throw new TypeError('Invalid Tools pricing');
+	return { metered: pricing.metered, standard: pricing.standard, charged: pricing.charged };
 }
 function validateEntry(
 	entry: ToolConfigEntry,
@@ -180,8 +164,9 @@ function validateEntry(
 					"standard",
 					"charged",
 					"cost",
+					"pricing",
 			  ]
-			: ["apiKey", "metered", "standard", "charged", "cost"];
+			: ["apiKey", "metered", "standard", "charged", "cost", "pricing"];
 	if (Object.keys(entry).some((key) => !allowed.includes(key)))
 		return "unsupported_fields";
 	for (const field of credentialFields)

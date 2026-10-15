@@ -18,9 +18,10 @@ function route(protocol: 'openai' | 'anthropic' | 'gemini'): RouteResult {
 		upstreamProtocol: protocol,
 		upstreamOperation: protocol === 'anthropic' ? 'messages' : protocol === 'gemini' ? 'models.generate' : 'chat',
 		adapter: 'passthrough',
-		providerEndpoints: protocol === 'gemini'
-			? { gemini: { base: 'https://generativelanguage.googleapis.com/v1beta/models' } }
-			: { [protocol]: { base: 'https://provider.test/v1' } },
+		providerEndpoints:
+			protocol === 'gemini'
+				? { gemini: { base: 'https://generativelanguage.googleapis.com/v1beta/models' } }
+				: { [protocol]: { base: 'https://provider.test/v1' } },
 		providerApiKey: 'provider-secret',
 		providerSharedChannelType: null,
 		priceOverrideRaw: null,
@@ -36,10 +37,7 @@ function route(protocol: 'openai' | 'anthropic' | 'gemini'): RouteResult {
 	};
 }
 
-async function withFetch(
-	implementation: typeof fetch,
-	run: () => Promise<void>,
-): Promise<void> {
+async function withFetch(implementation: typeof fetch, run: () => Promise<void>): Promise<void> {
 	const original = globalThis.fetch;
 	globalThis.fetch = implementation;
 	try {
@@ -68,26 +66,37 @@ test('text drivers cross the admission boundary only after local preparation and
 
 			await dispatchOpenAiRoute(route('openai'), { messages: [] }, undefined, undefined, undefined, beforeFetch);
 			fetchCalls = 0;
-			await dispatchOpenAiResponsesRoute(route('openai'), { input: 'hi' }, undefined, undefined, undefined, beforeFetch);
+			await dispatchOpenAiResponsesRoute(
+				route('openai'),
+				{ input: 'hi' },
+				undefined,
+				undefined,
+				undefined,
+				beforeFetch,
+			);
 			fetchCalls = 0;
 			await dispatchAnthropicRoute(route('anthropic'), { messages: [] }, undefined, undefined, undefined, beforeFetch);
 			fetchCalls = 0;
-			await dispatchGeminiRoute(route('gemini'), {}, 'generateContent', '', undefined, undefined, undefined, beforeFetch);
+			await dispatchGeminiRoute(
+				route('gemini'),
+				{},
+				'generateContent',
+				'',
+				undefined,
+				undefined,
+				undefined,
+				beforeFetch,
+			);
 		},
 	);
 
-	assert.deepEqual(events, [
-		'admission', 'fetch',
-		'admission', 'fetch',
-		'admission', 'fetch',
-		'admission', 'fetch',
-	]);
+	assert.deepEqual(events, ['admission', 'fetch', 'admission', 'fetch', 'admission', 'fetch', 'admission', 'fetch']);
 });
 
 test('OpenAI Chat streaming forces terminal usage without discarding compatible stream options', async () => {
 	await withFetch(
 		(async (_input, init) => {
-			const body = await new Response(init?.body).json() as {
+			const body = (await new Response(init?.body).json()) as {
 				stream_options?: Record<string, unknown>;
 			};
 			assert.deepEqual(body.stream_options, {
@@ -113,7 +122,7 @@ test('verified service-tier selection overrides stale client or route defaults i
 	const bodies: Record<string, unknown>[] = [];
 	await withFetch(
 		(async (_input, init) => {
-			bodies.push(await new Response(init?.body).json() as Record<string, unknown>);
+			bodies.push((await new Response(init?.body).json()) as Record<string, unknown>);
 			return new Response('{}', { status: 400 });
 		}) as typeof fetch,
 		async () => {
@@ -134,14 +143,17 @@ test('verified service-tier selection overrides stale client or route defaults i
 		},
 	);
 
-	assert.deepEqual(bodies.map((body) => body.service_tier), ['flex', 'default']);
+	assert.deepEqual(
+		bodies.map((body) => body.service_tier),
+		['flex', 'default'],
+	);
 });
 
 test('verified text-speed capability controls egress and strips unsupported route defaults', async () => {
 	const bodies: Record<string, unknown>[] = [];
 	await withFetch(
 		(async (_input, init) => {
-			bodies.push(await new Response(init?.body).json() as Record<string, unknown>);
+			bodies.push((await new Response(init?.body).json()) as Record<string, unknown>);
 			return new Response('{}', { status: 400 });
 		}) as typeof fetch,
 		async () => {
@@ -180,8 +192,8 @@ test('text driver fetch rejection is marked as an unknown upstream outcome', asy
 				await assert.rejects(
 					call(),
 					(error: unknown) =>
-						error instanceof TypeError
-						&& (error as { upstreamOutcomeUnknown?: boolean }).upstreamOutcomeUnknown === true,
+						error instanceof TypeError &&
+						(error as { upstreamOutcomeUnknown?: boolean }).upstreamOutcomeUnknown === true,
 				);
 			}
 		},
@@ -203,18 +215,36 @@ test('pre-cancelled text requests do not cross or mark the admission boundary', 
 				admissionCalls += 1;
 			};
 			const calls = [
-				() => dispatchOpenAiRoute(
-					route('openai'), { messages: [] }, controller.signal,
-					undefined, undefined, beforeFetch, 'gen-pre-cancelled',
-				),
-				() => dispatchOpenAiResponsesRoute(
-					route('openai'), { input: 'hi' }, controller.signal,
-					undefined, undefined, beforeFetch, 'gen-pre-cancelled',
-				),
-				() => dispatchAnthropicRoute(
-					route('anthropic'), { messages: [] }, controller.signal,
-					undefined, undefined, beforeFetch, 'gen-pre-cancelled',
-				),
+				() =>
+					dispatchOpenAiRoute(
+						route('openai'),
+						{ messages: [] },
+						controller.signal,
+						undefined,
+						undefined,
+						beforeFetch,
+						'gen-pre-cancelled',
+					),
+				() =>
+					dispatchOpenAiResponsesRoute(
+						route('openai'),
+						{ input: 'hi' },
+						controller.signal,
+						undefined,
+						undefined,
+						beforeFetch,
+						'gen-pre-cancelled',
+					),
+				() =>
+					dispatchAnthropicRoute(
+						route('anthropic'),
+						{ messages: [] },
+						controller.signal,
+						undefined,
+						undefined,
+						beforeFetch,
+						'gen-pre-cancelled',
+					),
 			];
 			for (const call of calls) {
 				const result = await call();
@@ -240,18 +270,36 @@ test('text requests cancelled while admission is pending never reach fetch', asy
 		}) as typeof fetch,
 		async () => {
 			const calls = [
-				(signal: AbortSignal, beforeFetch: () => Promise<void>) => dispatchOpenAiRoute(
-					route('openai'), { messages: [] }, signal,
-					undefined, undefined, beforeFetch, 'gen-admission-cancelled-chat',
-				),
-				(signal: AbortSignal, beforeFetch: () => Promise<void>) => dispatchOpenAiResponsesRoute(
-					route('openai'), { input: 'hi' }, signal,
-					undefined, undefined, beforeFetch, 'gen-admission-cancelled-responses',
-				),
-				(signal: AbortSignal, beforeFetch: () => Promise<void>) => dispatchAnthropicRoute(
-					route('anthropic'), { messages: [] }, signal,
-					undefined, undefined, beforeFetch, 'gen-admission-cancelled-anthropic',
-				),
+				(signal: AbortSignal, beforeFetch: () => Promise<void>) =>
+					dispatchOpenAiRoute(
+						route('openai'),
+						{ messages: [] },
+						signal,
+						undefined,
+						undefined,
+						beforeFetch,
+						'gen-admission-cancelled-chat',
+					),
+				(signal: AbortSignal, beforeFetch: () => Promise<void>) =>
+					dispatchOpenAiResponsesRoute(
+						route('openai'),
+						{ input: 'hi' },
+						signal,
+						undefined,
+						undefined,
+						beforeFetch,
+						'gen-admission-cancelled-responses',
+					),
+				(signal: AbortSignal, beforeFetch: () => Promise<void>) =>
+					dispatchAnthropicRoute(
+						route('anthropic'),
+						{ messages: [] },
+						signal,
+						undefined,
+						undefined,
+						beforeFetch,
+						'gen-admission-cancelled-anthropic',
+					),
 			];
 
 			for (const call of calls) {
@@ -308,9 +356,11 @@ test('invalid local endpoint configuration never crosses the dispatch boundary',
 
 			const calls = [
 				() => dispatchOpenAiRoute(invalidOpenAi, { messages: [] }, undefined, undefined, undefined, beforeFetch),
-				() => dispatchOpenAiResponsesRoute(invalidOpenAi, { input: 'hi' }, undefined, undefined, undefined, beforeFetch),
+				() =>
+					dispatchOpenAiResponsesRoute(invalidOpenAi, { input: 'hi' }, undefined, undefined, undefined, beforeFetch),
 				() => dispatchAnthropicRoute(invalidAnthropic, { messages: [] }, undefined, undefined, undefined, beforeFetch),
-				() => dispatchGeminiRoute(invalidGemini, {}, 'generateContent', '', undefined, undefined, undefined, beforeFetch),
+				() =>
+					dispatchGeminiRoute(invalidGemini, {}, 'generateContent', '', undefined, undefined, undefined, beforeFetch),
 			];
 			for (const call of calls) {
 				await assert.rejects(call(), /valid URL|http\(s\)/i);

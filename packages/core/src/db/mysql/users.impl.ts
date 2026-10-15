@@ -3,6 +3,7 @@
  */
 import { and, asc, count, desc, eq, gt, isNotNull, isNull, like, lte, sql } from 'drizzle-orm';
 import type { UserRow } from '../../types';
+import { parseApiKeyRateLimit } from '../../lib/api-key-rate-limit';
 import { roundGatewayMoney } from '../../lib/money-precision';
 import type { MySqlDatabaseClient } from '../../storage/database-client';
 import type { UsersRepository } from '../../storage/gateway-repository-interfaces';
@@ -46,6 +47,12 @@ function userListOrderByClauses(sort: UserListSortField, order: UserListSortOrde
 	if (sort === 'budget_base') {
 		return [isAsc ? asc(myUsersTable.budgetBase) : desc(myUsersTable.budgetBase), tie];
 	}
+	if (sort === 'wallet_granted') {
+		return [isAsc ? asc(myUsersTable.walletGranted) : desc(myUsersTable.walletGranted), tie];
+	}
+	if (sort === 'wallet_spent') {
+		return [isAsc ? asc(myUsersTable.walletSpent) : desc(myUsersTable.walletSpent), tie];
+	}
 	return [isAsc ? asc(myUsersTable.createdAt) : desc(myUsersTable.createdAt)];
 }
 
@@ -59,8 +66,11 @@ function mapMyUserRow(r: {
 	budgetResetAt: string | null;
 	budgetEpoch: number;
 	budgetReservedMicros: number;
+	walletGranted: string;
+	walletSpent: string;
 	status: string;
 	metadata: string | null;
+	rateLimit: string | null;
 	chargedCostFactors: string | null;
 	externalSystem: string | null;
 	externalUserId: string | null;
@@ -77,8 +87,11 @@ function mapMyUserRow(r: {
 		budget_reset_at: r.budgetResetAt,
 		budget_epoch: Number(r.budgetEpoch),
 		budget_reserved_micros: Number(r.budgetReservedMicros),
+		wallet_granted: parseMoney(r.walletGranted),
+		wallet_spent: parseMoney(r.walletSpent),
 		status: r.status,
 		metadata: r.metadata,
+		rate_limit: parseApiKeyRateLimit(r.rateLimit),
 		charged_cost_factors: r.chargedCostFactors ?? null,
 		external_system: r.externalSystem,
 		external_user_id: r.externalUserId,
@@ -147,7 +160,10 @@ export function createMySqlUsersRepository(db: MySqlDatabaseClient): UsersReposi
 			const order = options?.order ?? DEFAULT_USER_LIST_ORDER;
 			let listQ = drizzle.select().from(myUsersTable);
 			if (whereExpr) listQ = listQ.where(whereExpr) as typeof listQ;
-			const rows = await listQ.orderBy(...userListOrderByClauses(sort, order)).limit(pageSize).offset(offset);
+			const rows = await listQ
+				.orderBy(...userListOrderByClauses(sort, order))
+				.limit(pageSize)
+				.offset(offset);
 			return { users: rows.map(mapMyUserRow), total };
 		},
 
@@ -249,9 +265,15 @@ export function createMySqlUsersRepository(db: MySqlDatabaseClient): UsersReposi
 			resetBudget: boolean = true,
 			metadata?: string | null,
 			budget_spent_override?: number | null,
-			budget_base?: number | null
+			budget_base?: number | null,
+			wallet_granted?: number | null,
+			wallet_spent?: number | null,
 		): Promise<boolean> {
-			const existing = await drizzle.select({ id: myUsersTable.id }).from(myUsersTable).where(eq(myUsersTable.id, id)).limit(1);
+			const existing = await drizzle
+				.select({ id: myUsersTable.id })
+				.from(myUsersTable)
+				.where(eq(myUsersTable.id, id))
+				.limit(1);
 			if (!existing[0]) return false;
 			const now = new Date().toISOString();
 			const baseSet: Record<string, unknown> = {
@@ -262,6 +284,12 @@ export function createMySqlUsersRepository(db: MySqlDatabaseClient): UsersReposi
 			};
 			if (budget_base !== undefined) {
 				baseSet.budgetBase = String(budget_base != null ? roundGatewayMoney(budget_base) : 0);
+			}
+			if (wallet_granted !== undefined) {
+				baseSet.walletGranted = String(roundGatewayMoney(wallet_granted ?? 0));
+			}
+			if (wallet_spent !== undefined) {
+				baseSet.walletSpent = String(roundGatewayMoney(wallet_spent ?? 0));
 			}
 			if (budget_spent_override !== undefined) {
 				await drizzle
@@ -300,15 +328,38 @@ export function createMySqlUsersRepository(db: MySqlDatabaseClient): UsersReposi
 		},
 
 		async updateUserStatus(id: string, status: string): Promise<boolean> {
-			const existing = await drizzle.select({ id: myUsersTable.id }).from(myUsersTable).where(eq(myUsersTable.id, id)).limit(1);
+			const existing = await drizzle
+				.select({ id: myUsersTable.id })
+				.from(myUsersTable)
+				.where(eq(myUsersTable.id, id))
+				.limit(1);
 			if (!existing[0]) return false;
 			const now = new Date().toISOString();
 			await drizzle.update(myUsersTable).set({ status, updatedAt: now }).where(eq(myUsersTable.id, id));
 			return true;
 		},
 
+		async updateUserRateLimit(id: string, rateLimitJson: string | null): Promise<boolean> {
+			const existing = await drizzle
+				.select({ id: myUsersTable.id })
+				.from(myUsersTable)
+				.where(eq(myUsersTable.id, id))
+				.limit(1);
+			if (!existing[0]) return false;
+			const now = new Date().toISOString();
+			await drizzle
+				.update(myUsersTable)
+				.set({ rateLimit: rateLimitJson, updatedAt: now })
+				.where(eq(myUsersTable.id, id));
+			return true;
+		},
+
 		async setUserMetadataById(id: string, metadataJson: string | null): Promise<boolean> {
-			const existing = await drizzle.select({ id: myUsersTable.id }).from(myUsersTable).where(eq(myUsersTable.id, id)).limit(1);
+			const existing = await drizzle
+				.select({ id: myUsersTable.id })
+				.from(myUsersTable)
+				.where(eq(myUsersTable.id, id))
+				.limit(1);
 			if (!existing[0]) return false;
 			const now = new Date().toISOString();
 			await drizzle.update(myUsersTable).set({ metadata: metadataJson, updatedAt: now }).where(eq(myUsersTable.id, id));
@@ -316,7 +367,11 @@ export function createMySqlUsersRepository(db: MySqlDatabaseClient): UsersReposi
 		},
 
 		async setUserChargedCostFactorsById(id: string, chargedCostFactorsJson: string | null): Promise<boolean> {
-			const existing = await drizzle.select({ id: myUsersTable.id }).from(myUsersTable).where(eq(myUsersTable.id, id)).limit(1);
+			const existing = await drizzle
+				.select({ id: myUsersTable.id })
+				.from(myUsersTable)
+				.where(eq(myUsersTable.id, id))
+				.limit(1);
 			if (!existing[0]) return false;
 			const now = new Date().toISOString();
 			await drizzle
@@ -327,7 +382,11 @@ export function createMySqlUsersRepository(db: MySqlDatabaseClient): UsersReposi
 		},
 
 		async setUserEmailById(id: string, email: string): Promise<boolean> {
-			const existing = await drizzle.select({ id: myUsersTable.id }).from(myUsersTable).where(eq(myUsersTable.id, id)).limit(1);
+			const existing = await drizzle
+				.select({ id: myUsersTable.id })
+				.from(myUsersTable)
+				.where(eq(myUsersTable.id, id))
+				.limit(1);
 			if (!existing[0]) return false;
 			const now = new Date().toISOString();
 			await drizzle.update(myUsersTable).set({ email, updatedAt: now }).where(eq(myUsersTable.id, id));
@@ -337,9 +396,13 @@ export function createMySqlUsersRepository(db: MySqlDatabaseClient): UsersReposi
 		async setUserExternalIdentityById(
 			id: string,
 			externalSystem: string | null,
-			externalUserId: string | null
+			externalUserId: string | null,
 		): Promise<boolean> {
-			const existing = await drizzle.select({ id: myUsersTable.id }).from(myUsersTable).where(eq(myUsersTable.id, id)).limit(1);
+			const existing = await drizzle
+				.select({ id: myUsersTable.id })
+				.from(myUsersTable)
+				.where(eq(myUsersTable.id, id))
+				.limit(1);
 			if (!existing[0]) return false;
 			const now = new Date().toISOString();
 			await drizzle
@@ -350,38 +413,43 @@ export function createMySqlUsersRepository(db: MySqlDatabaseClient): UsersReposi
 		},
 
 		async deleteUserHard(id: string): Promise<boolean> {
-			const [result] = await db.raw.execute(`DELETE FROM users
+			const [result] = await db.raw.execute(
+				`DELETE FROM users
 				WHERE id = ? AND NOT EXISTS (
 					SELECT 1 FROM guardrails guardrail
 					WHERE guardrail.owner_user_id = users.id
 						AND (guardrail.is_workspace_default = TRUE OR guardrail.is_account_default = TRUE)
-				)`, [id]);
+				)`,
+				[id],
+			);
 			return 'affectedRows' in result && Number(result.affectedRows) > 0;
 		},
 
-		async deleteUserHardWithAudit(
-			id: string,
-			audit: InsertUserAuditLogParams
-		): Promise<'deleted' | 'not_deleted'> {
+		async deleteUserHardWithAudit(id: string, audit: InsertUserAuditLogParams): Promise<'deleted' | 'not_deleted'> {
 			if (audit.userId !== id || audit.eventType !== 'user_deleted') {
 				throw new TypeError('User deletion audit must identify the deleted user');
 			}
 			try {
 				return await drizzle.transaction(async (tx) => {
-					const existing = await tx.select({ id: myUsersTable.id })
-						.from(myUsersTable).where(eq(myUsersTable.id, id)).for('update');
+					const existing = await tx
+						.select({ id: myUsersTable.id })
+						.from(myUsersTable)
+						.where(eq(myUsersTable.id, id))
+						.for('update');
 					if (existing.length === 0) return 'not_deleted' as const;
-					await tx.insert(myUserAuditLogsTable).values(
-						toUserAuditLogDrizzleInsert(audit, new Date().toISOString())
-					);
+					await tx.insert(myUserAuditLogsTable).values(toUserAuditLogDrizzleInsert(audit, new Date().toISOString()));
 					const [deleted] = await tx.execute(sql`DELETE FROM users
 						WHERE id = ${id} AND NOT EXISTS (
 							SELECT 1 FROM guardrails guardrail
 							WHERE guardrail.owner_user_id = users.id
 								AND (guardrail.is_workspace_default = TRUE OR guardrail.is_account_default = TRUE)
 						)`);
-					if (typeof deleted !== 'object' || deleted === null ||
-						!('affectedRows' in deleted) || Number(deleted.affectedRows) !== 1) {
+					if (
+						typeof deleted !== 'object' ||
+						deleted === null ||
+						!('affectedRows' in deleted) ||
+						Number(deleted.affectedRows) !== 1
+					) {
 						throw new UserDeleteDidNotMatchError();
 					}
 					return 'deleted' as const;

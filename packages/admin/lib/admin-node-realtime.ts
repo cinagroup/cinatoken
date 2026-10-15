@@ -1,0 +1,57 @@
+/**
+ * Admin Node 的原生 WebSocket 入口。
+ * Next App Router 无法完成 101 握手，因此实时调试请求必须在自定义 HTTP 入口拦截 Upgrade，
+ * 鉴权后直接交给 Hono，并注入 Node `ws` dispatch。
+ */
+import type { IncomingMessage } from 'node:http';
+import { authenticateAdminRequest } from './auth';
+import { handleGatewayApiError } from './api-error';
+import type { AdminBindings } from './admin-env';
+import { getAdminApp } from './admin-app';
+import { isSameOriginBrowserWrite, rewriteToInternalAdminPath } from './admin-request-rewrite';
+import { resolveAdminRequestRuntime } from './admin-request-runtime';
+import { verifyCinaAuthConsolePrincipal } from './cinaauth/principal';
+import { rejectRateLimitedAdminAuth } from './admin-auth-rate-limit';
+import {
+	createPlaygroundNodeRealtimeDispatch,
+	type NodeWebSocket,
+} from './playground-node-realtime';
+
+export function incomingMessageToFetchRequest(request: IncomingMessage): Request {
+	const protocol = (request.socket as { encrypted?: boolean }).encrypted ? 'https' : 'http';
+	const url = `${protocol}://${request.headers.host ?? '127.0.0.1'}${request.url ?? '/'}`;
+	const headers = new Headers();
+	for (const [key, value] of Object.entries(request.headers)) {
+		if (typeof value === 'string') headers.set(key, value);
+		else if (Array.isArray(value)) headers.set(key, value.join(', '));
+	}
+	if (!headers.has('upgrade')) headers.set('upgrade', 'websocket');
+	return new Request(url, { method: 'GET', headers });
+}
+
+/** 处理调试台 Node 实时 WebSocket：管理员会话鉴权后注入 `ws` 上游桥。 */
+export async function handleAdminNodeRealtimeUpgrade(
+	request: Request,
+	client: NodeWebSocket,
+): Promise<Response> {
+	try {
+		const { storage, bindings: runtimeBindings } = await resolveAdminRequestRuntime(request);
+		const authenticated = await authenticateAdminRequest(request, storage.repositories);
+		const principal = authenticated ? await verifyCinaAuthConsolePrincipal(request, authenticated, runtimeBindings) : null;
+		if (!principal) {
+			const limited = await rejectRateLimitedAdminAuth(request, runtimeBindings);
+			return limited ?? Response.json({ success: false, message: 'Unauthorized' }, { status: 401 });
+		}
+
+		const appBindings: AdminBindings = {
+			...runtimeBindings,
+			STORAGE_CONTEXT: storage,
+			ADMIN_PRINCIPAL: principal,
+			ADMIN_CSRF_SAME_ORIGIN: isSameOriginBrowserWrite(request),
+			NODE_PLAYGROUND_REALTIME_DISPATCH: createPlaygroundNodeRealtimeDispatch(client),
+		};
+		return getAdminApp().fetch(rewriteToInternalAdminPath(request), appBindings);
+	} catch (error) {
+		return handleGatewayApiError({ route: 'admin.realtime.node', error });
+	}
+}

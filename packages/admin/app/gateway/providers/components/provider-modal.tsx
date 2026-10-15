@@ -1,25 +1,25 @@
-"use client";
+'use client';
 
 import {
 	ChevronDownIcon,
 	ChevronRightIcon,
+	ClipboardDocumentIcon,
 	DocumentDuplicateIcon,
+	EyeIcon,
+	EyeSlashIcon,
 	TrashIcon,
-} from "@heroicons/react/24/outline";
-import { useTranslations } from "next-intl";
-import { useId, useState } from "react";
-import {
-	protocolFormHasOverrides,
-	protocolFormIsConfigured,
-} from "../provider-utils";
-import type { UpstreamProtocol } from "@octafuse/core/upstream-protocol";
-import type {
-	GatewayProvider,
-	ProtocolEndpointForm,
-	ProviderFormData,
-	ProviderProtocolSummary,
-} from "../types";
-import { ProviderProtocolIcon } from "./provider-protocol-icon";
+} from '@heroicons/react/24/outline';
+import { CheckIcon } from '@heroicons/react/24/solid';
+import { useTranslations, useLocale } from 'next-intl';
+import { useEffect, useId, useMemo, useState } from 'react';
+import { protocolFormHasOverrides, protocolFormIsConfigured } from '../provider-utils';
+import { listProviderKindChoices, resolveStoredProviderPresentation } from '@/lib/provider-import-preset';
+import { CUSTOM_PROVIDER_KIND } from '@/lib/provider-kind';
+import { VendorIcon } from '@/components/model-vendor-icon';
+import type { UpstreamProtocol } from '@octafuse/core/upstream-protocol';
+import type { GatewayProvider, ProtocolEndpointForm, ProviderFormData, ProviderProtocolSummary } from '../types';
+import { ProviderCatalogOutboundLink } from './provider-catalog-outbound-link';
+import { ProviderProtocolIcon } from './provider-protocol-icon';
 
 type ProviderModalProps = {
 	open: boolean;
@@ -37,28 +37,28 @@ type ProviderModalProps = {
 };
 
 const inputClass =
-	"w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500";
+	'w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500';
 
 const PROTOCOL_TABS: Array<{
 	key: UpstreamProtocol;
 	labelKey:
-		| "openaiOptional"
-		| "anthropicOptional"
-		| "geminiOptional"
-		| "dashscopeOptional";
+		| 'openaiOptional'
+		| 'anthropicOptional'
+		| 'geminiOptional'
+		| 'dashscopeOptional'
+		| 'minimaxOptional'
+		| 'volcengineOptional';
 }> = [
-	{ key: "openai", labelKey: "openaiOptional" },
-	{ key: "anthropic", labelKey: "anthropicOptional" },
-	{ key: "gemini", labelKey: "geminiOptional" },
-	{ key: "dashscope", labelKey: "dashscopeOptional" },
+	{ key: 'openai', labelKey: 'openaiOptional' },
+	{ key: 'anthropic', labelKey: 'anthropicOptional' },
+	{ key: 'gemini', labelKey: 'geminiOptional' },
+	{ key: 'dashscope', labelKey: 'dashscopeOptional' },
+	{ key: 'minimax', labelKey: 'minimaxOptional' },
+	{ key: 'volcengine', labelKey: 'volcengineOptional' },
 ];
 
 function firstConfiguredProtocol(formData: ProviderFormData): UpstreamProtocol {
-	return (
-		PROTOCOL_TABS.find(({ key }) =>
-			protocolFormIsConfigured(key, formData[key])
-		)?.key ?? "openai"
-	);
+	return PROTOCOL_TABS.find(({ key }) => protocolFormIsConfigured(key, formData[key]))?.key ?? 'openai';
 }
 
 type EndpointTabSelection = {
@@ -67,19 +67,31 @@ type EndpointTabSelection = {
 	duplicateSourceId: string | null;
 	tab: UpstreamProtocol;
 };
+type DashScopeOverrideField =
+	| 'images_generations_multimodal'
+	| 'audio_transcriptions'
+	| 'audio_transcriptions_multimodal'
+	| 'audio_transcriptions_tasks'
+	| 'audio_speech'
+	| 'audio_speech_multimodal'
+	| 'audio_realtime_inference'
+	| 'audio_realtime_session'
+	| 'audio_hotwords'
+	| 'audio_voices';
 
 function ProtocolFields(props: {
 	baseUrlLabel: string;
 	basePlaceholder: string;
 	baseHint?: string;
 	form: ProtocolEndpointForm;
-	protocol: ProviderProtocolSummary["key"];
+	protocol: ProviderProtocolSummary['key'];
 	advancedToggle: string;
 	advancedHint: string;
 	capLabels: {
 		chat: string;
 		responses: string;
 		imagesGenerations: string;
+		imagesGenerationsMultimodal: string;
 		imagesEdits: string;
 		audioTranscriptions: string;
 		audioTranscriptionsMultimodal: string;
@@ -94,6 +106,11 @@ function ProtocolFields(props: {
 		modelsGenerate: string;
 		legacyPerActionNotice: string;
 	};
+	dashscopeCapHints?: Record<DashScopeOverrideField, string>;
+	minimaxCapHint?: string;
+	minimaxSpeechHint?: string;
+	minimaxImageHint?: string;
+	volcengineImageHint?: string;
 	authLabels?: {
 		label: string;
 		auto: string;
@@ -112,20 +129,21 @@ function ProtocolFields(props: {
 		advancedToggle,
 		advancedHint,
 		capLabels,
+		dashscopeCapHints,
+		minimaxCapHint,
+		minimaxSpeechHint,
+		minimaxImageHint,
+		volcengineImageHint,
 		authLabels,
 		onChange,
 	} = props;
-	const [advancedOpen, setAdvancedOpen] = useState(() =>
-		protocolFormHasOverrides(protocol, form)
-	);
+	const [advancedOpen, setAdvancedOpen] = useState(() => protocolFormHasOverrides(protocol, form));
 	const overridesPanelId = useId();
 
 	return (
 		<div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
 			<div className="space-y-2">
-				<label className="mb-1 block text-xs font-medium text-gray-600">
-					{baseUrlLabel}
-				</label>
+				<label className="mb-1 block text-xs font-medium text-gray-600">{baseUrlLabel}</label>
 				<input
 					type="url"
 					value={form.base}
@@ -136,20 +154,15 @@ function ProtocolFields(props: {
 				/>
 				{baseHint ? <p className="text-xs text-gray-500">{baseHint}</p> : null}
 			</div>
-			{protocol === "gemini" && authLabels ? (
+			{protocol === 'gemini' && authLabels ? (
 				<div className="mt-3 space-y-2">
-					<label className="mb-1 block text-xs font-medium text-gray-600">
-						{authLabels.label}
-					</label>
+					<label className="mb-1 block text-xs font-medium text-gray-600">{authLabels.label}</label>
 					<select
 						value={form.auth}
 						onChange={(e) =>
 							onChange({
 								...form,
-								auth:
-									e.target.value === "query-key" || e.target.value === "bearer"
-										? e.target.value
-										: "auto",
+								auth: e.target.value === 'query-key' || e.target.value === 'bearer' ? e.target.value : 'auto',
 							})
 						}
 						className={inputClass}
@@ -178,73 +191,52 @@ function ProtocolFields(props: {
 					<span>{advancedToggle}</span>
 				</button>
 				{advancedOpen ? (
-					<div
-						id={overridesPanelId}
-						className="mt-2 space-y-3 rounded-md border border-gray-100 bg-gray-50/80 p-3"
-					>
+					<div id={overridesPanelId} className="mt-2 space-y-3 rounded-md border border-gray-100 bg-gray-50/80 p-3">
 						<p className="text-xs text-gray-500">{advancedHint}</p>
-						{protocol === "openai" ? (
+						{protocol === 'openai' ? (
 							<>
 								<div>
-									<label className="mb-1 block text-xs text-gray-600">
-										{capLabels.chat}
-									</label>
+									<label className="mb-1 block text-xs text-gray-600">{capLabels.chat}</label>
 									<input
 										type="url"
 										value={form.chat}
-										onChange={(e) =>
-											onChange({ ...form, chat: e.target.value })
-										}
+										onChange={(e) => onChange({ ...form, chat: e.target.value })}
 										className={inputClass}
 										autoComplete="off"
 									/>
 								</div>
 								<div>
-									<label className="mb-1 block text-xs text-gray-600">
-										{capLabels.responses}
-									</label>
+									<label className="mb-1 block text-xs text-gray-600">{capLabels.responses}</label>
 									<input
 										type="url"
 										value={form.responses}
-										onChange={(e) =>
-											onChange({ ...form, responses: e.target.value })
-										}
+										onChange={(e) => onChange({ ...form, responses: e.target.value })}
 										className={inputClass}
 										autoComplete="off"
 									/>
 								</div>
 								<div>
-									<label className="mb-1 block text-xs text-gray-600">
-										{capLabels.imagesGenerations}
-									</label>
+									<label className="mb-1 block text-xs text-gray-600">{capLabels.imagesGenerations}</label>
 									<input
 										type="url"
 										value={form.images_generations}
-										onChange={(e) =>
-											onChange({ ...form, images_generations: e.target.value })
-										}
+										onChange={(e) => onChange({ ...form, images_generations: e.target.value })}
 										className={inputClass}
 										autoComplete="off"
 									/>
 								</div>
 								<div>
-									<label className="mb-1 block text-xs text-gray-600">
-										{capLabels.imagesEdits}
-									</label>
+									<label className="mb-1 block text-xs text-gray-600">{capLabels.imagesEdits}</label>
 									<input
 										type="url"
 										value={form.images_edits}
-										onChange={(e) =>
-											onChange({ ...form, images_edits: e.target.value })
-										}
+										onChange={(e) => onChange({ ...form, images_edits: e.target.value })}
 										className={inputClass}
 										autoComplete="off"
 									/>
 								</div>
 								<div>
-									<label className="mb-1 block text-xs text-gray-600">
-										{capLabels.audioTranscriptions}
-									</label>
+									<label className="mb-1 block text-xs text-gray-600">{capLabels.audioTranscriptions}</label>
 									<input
 										type="url"
 										value={form.audio_transcriptions}
@@ -259,64 +251,49 @@ function ProtocolFields(props: {
 									/>
 								</div>
 								<div>
-									<label className="mb-1 block text-xs text-gray-600">
-										{capLabels.audioSpeech}
-									</label>
+									<label className="mb-1 block text-xs text-gray-600">{capLabels.audioSpeech}</label>
 									<input
 										type="url"
 										value={form.audio_speech}
-										onChange={(e) =>
-											onChange({ ...form, audio_speech: e.target.value })
-										}
+										onChange={(e) => onChange({ ...form, audio_speech: e.target.value })}
 										className={inputClass}
 										autoComplete="off"
 									/>
 								</div>
 							</>
 						) : null}
-						{protocol === "anthropic" ? (
+						{protocol === 'anthropic' ? (
 							<div>
-								<label className="mb-1 block text-xs text-gray-600">
-									{capLabels.messages}
-								</label>
+								<label className="mb-1 block text-xs text-gray-600">{capLabels.messages}</label>
 								<input
 									type="url"
 									value={form.messages}
-									onChange={(e) =>
-										onChange({ ...form, messages: e.target.value })
-									}
+									onChange={(e) => onChange({ ...form, messages: e.target.value })}
 									className={inputClass}
 									autoComplete="off"
 								/>
 							</div>
 						) : null}
-						{protocol === "gemini" ? (
+						{protocol === 'gemini' ? (
 							<>
 								{form.legacyPerAction ? (
 									<div className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
-										<p className="font-medium">
-											{capLabels.legacyPerActionNotice}
-										</p>
+										<p className="font-medium">{capLabels.legacyPerActionNotice}</p>
 										<ul className="mt-1 list-inside list-disc break-all">
 											{form.legacyPerAction.generateContent ? (
 												<li>
-													{"generateContent: "}
+													{'generateContent: '}
 													{form.legacyPerAction.generateContent}
 												</li>
 											) : null}
 											{form.legacyPerAction.streamGenerateContent ? (
-												<li>
-													streamGenerateContent:{" "}
-													{form.legacyPerAction.streamGenerateContent}
-												</li>
+												<li>streamGenerateContent: {form.legacyPerAction.streamGenerateContent}</li>
 											) : null}
 										</ul>
 									</div>
 								) : (
 									<div>
-										<label className="mb-1 block text-xs text-gray-600">
-											{capLabels.modelsGenerate}
-										</label>
+										<label className="mb-1 block text-xs text-gray-600">{capLabels.modelsGenerate}</label>
 										<input
 											type="url"
 											value={form.modelsGenerate}
@@ -335,46 +312,84 @@ function ProtocolFields(props: {
 								)}
 							</>
 						) : null}
-						{protocol === "dashscope" ? (
+						{protocol === 'minimax' ? (
+							<>
+								<div>
+									<label className="mb-1 block text-xs text-gray-600">{capLabels.audioTranscriptions}</label>
+									<input
+										type="url"
+										value={form.audio_transcriptions}
+										onChange={(e) => onChange({ ...form, audio_transcriptions: e.target.value })}
+										className={inputClass}
+										autoComplete="off"
+									/>
+									{minimaxCapHint ? <p className="mt-1 text-xs text-gray-500">{minimaxCapHint}</p> : null}
+								</div>
+								<div>
+									<label className="mb-1 block text-xs text-gray-600">{capLabels.audioSpeech}</label>
+									<input
+										type="url"
+										value={form.audio_speech}
+										onChange={(e) => onChange({ ...form, audio_speech: e.target.value })}
+										className={inputClass}
+										autoComplete="off"
+									/>
+									{minimaxSpeechHint ? <p className="mt-1 text-xs text-gray-500">{minimaxSpeechHint}</p> : null}
+								</div>
+								<div>
+									<label className="mb-1 block text-xs text-gray-600">{capLabels.imagesGenerations}</label>
+									<input
+										type="url"
+										value={form.images_generations}
+										onChange={(e) => onChange({ ...form, images_generations: e.target.value })}
+										className={inputClass}
+										autoComplete="off"
+									/>
+									{minimaxImageHint ? <p className="mt-1 text-xs text-gray-500">{minimaxImageHint}</p> : null}
+								</div>
+							</>
+						) : null}
+						{protocol === 'volcengine' ? (
+							<div>
+								<label className="mb-1 block text-xs text-gray-600">{capLabels.imagesGenerations}</label>
+								<input
+									type="url"
+									value={form.images_generations}
+									onChange={(e) => onChange({ ...form, images_generations: e.target.value })}
+									className={inputClass}
+									autoComplete="off"
+								/>
+								{volcengineImageHint ? <p className="mt-1 text-xs text-gray-500">{volcengineImageHint}</p> : null}
+							</div>
+						) : null}
+						{protocol === 'dashscope' ? (
 							<>
 								{(
 									[
-										["audio_transcriptions", capLabels.audioTranscriptions],
-										[
-											"audio_transcriptions_multimodal",
-											capLabels.audioTranscriptionsMultimodal,
-										],
-										[
-											"audio_transcriptions_tasks",
-											capLabels.audioTranscriptionsTasks,
-										],
-										["audio_speech", capLabels.audioSpeech],
-										[
-											"audio_speech_multimodal",
-											capLabels.audioSpeechMultimodal,
-										],
-										[
-											"audio_realtime_inference",
-											capLabels.audioRealtimeInference,
-										],
-										["audio_realtime_session", capLabels.audioRealtimeSession],
-										["audio_hotwords", capLabels.audioHotwords],
-										["audio_voices", capLabels.audioVoices],
+										['images_generations_multimodal', capLabels.imagesGenerationsMultimodal],
+										['audio_transcriptions', capLabels.audioTranscriptions],
+										['audio_transcriptions_multimodal', capLabels.audioTranscriptionsMultimodal],
+										['audio_transcriptions_tasks', capLabels.audioTranscriptionsTasks],
+										['audio_speech', capLabels.audioSpeech],
+										['audio_speech_multimodal', capLabels.audioSpeechMultimodal],
+										['audio_realtime_inference', capLabels.audioRealtimeInference],
+										['audio_realtime_session', capLabels.audioRealtimeSession],
+										['audio_hotwords', capLabels.audioHotwords],
+										['audio_voices', capLabels.audioVoices],
 									] as const
 								).map(([field, label]) => (
 									<div key={field}>
-										<label className="mb-1 block text-xs text-gray-600">
-											{label}
-										</label>
+										<label className="mb-1 block text-xs text-gray-600">{label}</label>
 										<input
 											type="url"
 											value={form[field]}
-											onChange={(e) =>
-												onChange({ ...form, [field]: e.target.value })
-											}
+											onChange={(e) => onChange({ ...form, [field]: e.target.value })}
 											className={inputClass}
 											autoComplete="off"
 										/>
+										{dashscopeCapHints?.[field] ? (
+											<p className="mt-1 text-xs text-gray-500">{dashscopeCapHints[field]}</p>
+										) : null}
 									</div>
 								))}
 							</>
@@ -402,23 +417,21 @@ export function ProviderModal(props: ProviderModalProps) {
 		onDuplicate,
 	} = props;
 
-	const t = useTranslations("providers.modal");
-	const tCommon = useTranslations("common");
+	const t = useTranslations('providers.modal');
+	const tKind = useTranslations('providers.kind');
+	const tCommon = useTranslations('common');
+	const locale = useLocale();
 	const titleId = useId();
 	const providerId = editingProvider?.id ?? null;
-	const [tabSelection, setTabSelection] = useState<EndpointTabSelection>(
-		() => ({
-			open,
-			providerId,
-			duplicateSourceId,
-			tab: open ? firstConfiguredProtocol(formData) : "openai",
-		})
-	);
+	const [tabSelection, setTabSelection] = useState<EndpointTabSelection>(() => ({
+		open,
+		providerId,
+		duplicateSourceId,
+		tab: open ? firstConfiguredProtocol(formData) : 'openai',
+	}));
 	if (
 		tabSelection.open !== open ||
-		(open &&
-			(tabSelection.providerId !== providerId ||
-				tabSelection.duplicateSourceId !== duplicateSourceId))
+		(open && (tabSelection.providerId !== providerId || tabSelection.duplicateSourceId !== duplicateSourceId))
 	) {
 		// Preserve the chosen tab while editing; reset only when a modal opens or its source changes.
 		setTabSelection({
@@ -429,28 +442,60 @@ export function ProviderModal(props: ProviderModalProps) {
 		});
 	}
 	const endpointTab = tabSelection.tab;
-	const setEndpointTab = (tab: UpstreamProtocol) =>
-		setTabSelection((current) => ({ ...current, tab }));
+	const setEndpointTab = (tab: UpstreamProtocol) => setTabSelection((current) => ({ ...current, tab }));
+	const [showApiKey, setShowApiKey] = useState(false);
+	const [apiKeyCopied, setApiKeyCopied] = useState(false);
+	const kindChoices = useMemo(() => {
+		const labelOf = (labels: { en: string; zh: string }) =>
+			locale.toLowerCase().startsWith('zh') ? labels.zh || labels.en : labels.en || labels.zh;
+		return listProviderKindChoices()
+			.map((choice) => ({ ...choice, label: labelOf(choice.labels) }))
+			.sort((a, b) => a.label.localeCompare(b.label, locale));
+	}, [locale]);
+	const selectedKind = kindChoices.find((choice) => choice.kind === formData.kind);
+	const showUnclassified = Boolean(editingProvider) && !String(editingProvider?.kind ?? '').trim();
+
+	useEffect(() => {
+		setShowApiKey(false);
+		setApiKeyCopied(false);
+	}, [open, editingProvider?.id, duplicateSourceId]);
 
 	if (!open) return null;
 
 	const capLabels = {
-		chat: t("capChat"),
-		responses: t("capResponses"),
-		imagesGenerations: t("capImagesGenerations"),
-		imagesEdits: t("capImagesEdits"),
-		audioTranscriptions: t("capAudioTranscriptions"),
-		audioTranscriptionsMultimodal: t("capAudioTranscriptionsMultimodal"),
-		audioTranscriptionsTasks: t("capAudioTranscriptionsTasks"),
-		audioSpeech: t("capAudioSpeech"),
-		audioSpeechMultimodal: t("capAudioSpeechMultimodal"),
-		audioRealtimeInference: t("capAudioRealtimeInference"),
-		audioRealtimeSession: t("capAudioRealtimeSession"),
-		audioHotwords: t("capAudioHotwords"),
-		audioVoices: t("capAudioVoices"),
-		messages: t("capMessages"),
-		modelsGenerate: t("capModelsGenerate"),
-		legacyPerActionNotice: t("legacyPerActionNotice"),
+		chat: t('capChat'),
+		responses: t('capResponses'),
+		imagesGenerations: t('capImagesGenerations'),
+		imagesGenerationsMultimodal: t('capImagesGenerationsMultimodal'),
+		imagesEdits: t('capImagesEdits'),
+		audioTranscriptions: t('capAudioTranscriptions'),
+		audioTranscriptionsMultimodal: t('capAudioTranscriptionsMultimodal'),
+		audioTranscriptionsTasks: t('capAudioTranscriptionsTasks'),
+		audioSpeech: t('capAudioSpeech'),
+		audioSpeechMultimodal: t('capAudioSpeechMultimodal'),
+		audioRealtimeInference: t('capAudioRealtimeInference'),
+		audioRealtimeSession: t('capAudioRealtimeSession'),
+		audioHotwords: t('capAudioHotwords'),
+		audioVoices: t('capAudioVoices'),
+		messages: t('capMessages'),
+		modelsGenerate: t('capModelsGenerate'),
+		legacyPerActionNotice: t('legacyPerActionNotice'),
+	};
+	const minimaxCapHint = t('capHintMiniMaxAudioTranscriptions');
+	const minimaxSpeechHint = t('capHintMiniMaxAudioSpeech');
+	const minimaxImageHint = t('capHintMiniMaxImagesGenerations');
+	const volcengineImageHint = t('capHintVolcengineImagesGenerations');
+	const dashscopeCapHints: Record<DashScopeOverrideField, string> = {
+		images_generations_multimodal: t('capHintImagesGenerationsMultimodal'),
+		audio_transcriptions: t('capHintAudioTranscriptions'),
+		audio_transcriptions_multimodal: t('capHintAudioTranscriptionsMultimodal'),
+		audio_transcriptions_tasks: t('capHintAudioTranscriptionsTasks'),
+		audio_speech: t('capHintAudioSpeech'),
+		audio_speech_multimodal: t('capHintAudioSpeechMultimodal'),
+		audio_realtime_inference: t('capHintAudioRealtimeInference'),
+		audio_realtime_session: t('capHintAudioRealtimeSession'),
+		audio_hotwords: t('capHintAudioHotwords'),
+		audio_voices: t('capHintAudioVoices'),
 	};
 
 	return (
@@ -471,12 +516,10 @@ export function ProviderModal(props: ProviderModalProps) {
 				<div className="flex shrink-0 items-center justify-between border-b px-6 py-4">
 					<div>
 						<h2 id={titleId} className="text-xl font-bold text-gray-900">
-							{editingProvider ? t("editTitle") : t("newTitle")}
+							{editingProvider ? t('editTitle') : t('newTitle')}
 						</h2>
 						{!editingProvider && duplicateSourceId && (
-							<p className="mt-1 text-xs text-gray-500">
-								{t("prefilledFrom", { id: duplicateSourceId })}
-							</p>
+							<p className="mt-1 text-xs text-gray-500">{t('prefilledFrom', { id: duplicateSourceId })}</p>
 						)}
 					</div>
 					<button
@@ -484,7 +527,7 @@ export function ProviderModal(props: ProviderModalProps) {
 						onClick={onClose}
 						className="text-gray-400 hover:text-gray-600"
 						disabled={isSaving || isDeleting}
-						aria-label={tCommon("close")}
+						aria-label={tCommon('close')}
 					>
 						×
 					</button>
@@ -492,84 +535,123 @@ export function ProviderModal(props: ProviderModalProps) {
 
 				<div className="min-h-0 flex-1 overflow-y-auto px-6 py-5">
 					{saveError && (
-						<div className="mb-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-600">
-							{saveError}
-						</div>
+						<div className="mb-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-600">{saveError}</div>
 					)}
 
 					<div className="space-y-8">
 						<section className="grid items-stretch gap-6 md:grid-cols-2">
 							<div className="space-y-3">
 								<div>
-									<h3 className="text-sm font-semibold text-gray-900">
-										{t("general")}
-									</h3>
-									<p className="mt-0.5 text-xs text-gray-500">
-										{t("generalHint")}
-									</p>
-								</div>
-								{!editingProvider && (
-									<div>
-										<label className="mb-1 block text-sm font-medium text-gray-700">
-											{t("id")}
-										</label>
-										<input
-											type="text"
-											value={formData.id}
-											onChange={(e) =>
-												onFormChange({ ...formData, id: e.target.value })
-											}
-											className={`${inputClass} font-mono`}
-											placeholder={t("idPlaceholder")}
-											autoComplete="off"
-										/>
-										<p className="mt-1 text-xs text-gray-500">{t("idHint")}</p>
-									</div>
-								)}
-								<div>
 									<label className="mb-1 block text-sm font-medium text-gray-700">
-										{t("nameRequired")}
+										{editingProvider ? t('kind') : t('kindRequired')}
 									</label>
+									<div className="flex items-center gap-2">
+										{formData.kind === CUSTOM_PROVIDER_KIND ? (
+											<VendorIcon vendor="other" iconKey="other" size="compact" />
+										) : selectedKind ? (
+											<VendorIcon vendor={selectedKind.vendorKey} iconKey={selectedKind.iconKey} size="compact" />
+										) : null}
+										<select
+											value={formData.kind}
+											onChange={(e) => onFormChange({ ...formData, kind: e.target.value })}
+											className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+											required={!editingProvider}
+										>
+											<option value="" disabled={!showUnclassified}>
+												{showUnclassified ? tKind('unclassified') : t('kindPlaceholder')}
+											</option>
+											<option value={CUSTOM_PROVIDER_KIND}>{tKind('custom')}</option>
+											{kindChoices.map((choice) => (
+												<option key={choice.kind} value={choice.kind}>
+													{choice.label}
+												</option>
+											))}
+										</select>
+									</div>
+									<p className="mt-1 text-xs text-gray-500">{t('kindHint')}</p>
+								</div>
+								<div>
+									<label className="mb-1 block text-sm font-medium text-gray-700">{t('nameRequired')}</label>
 									<input
 										type="text"
 										value={formData.name}
-										onChange={(e) =>
-											onFormChange({ ...formData, name: e.target.value })
-										}
+										onChange={(e) => onFormChange({ ...formData, name: e.target.value })}
 										className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-										placeholder={t("namePlaceholder")}
+										placeholder={t('namePlaceholder')}
 										autoComplete="off"
 										required
 									/>
 								</div>
 								<div>
-									<label className="mb-1 block text-sm font-medium text-gray-700">
-										{editingProvider
-											? t("apiKeyOptional")
-											: t("apiKeyRequired")}
-									</label>
-									<input
-										type="password"
-										value={formData.api_key}
-										onChange={(e) =>
-											onFormChange({ ...formData, api_key: e.target.value })
-										}
-										className={`${inputClass} font-mono`}
-										placeholder={
-											editingProvider
-												? t("apiKeyEditPlaceholder")
-												: t("apiKeyPlaceholder")
-										}
-										autoComplete="new-password"
-									/>
+									<div className="mb-1 flex items-center justify-between gap-2">
+										<label className="block text-sm font-medium text-gray-700">
+											{editingProvider ? t('apiKeyOptional') : t('apiKeyRequired')}
+										</label>
+										<ProviderCatalogOutboundLink
+											links={
+												resolveStoredProviderPresentation({
+													kind: formData.kind,
+													name: formData.name,
+													endpoints: editingProvider?.endpoints,
+												}).catalogLinks
+											}
+											className="inline-flex items-center gap-1 text-xs font-medium text-blue-700 hover:text-blue-800"
+										/>
+									</div>
+									<div className="relative">
+										<input
+											type={editingProvider && showApiKey ? 'text' : 'password'}
+											value={formData.api_key}
+											onChange={(e) => onFormChange({ ...formData, api_key: e.target.value })}
+											className={`${inputClass} font-mono ${editingProvider && formData.api_key ? 'pr-16' : ''}`}
+											placeholder={editingProvider ? t('apiKeyEditPlaceholder') : t('apiKeyPlaceholder')}
+											autoComplete="new-password"
+										/>
+										{editingProvider && formData.api_key ? (
+											<div className="absolute inset-y-0 right-1 flex items-center">
+												<button
+													type="button"
+													onClick={() => setShowApiKey((current) => !current)}
+													className="inline-flex h-7 w-7 items-center justify-center rounded-md text-gray-400 hover:bg-slate-100 hover:text-gray-700"
+													aria-pressed={showApiKey}
+													aria-label={showApiKey ? tCommon('hide') : tCommon('show')}
+													title={showApiKey ? tCommon('hide') : tCommon('show')}
+												>
+													{showApiKey ? (
+														<EyeSlashIcon className="h-4 w-4" aria-hidden />
+													) : (
+														<EyeIcon className="h-4 w-4" aria-hidden />
+													)}
+												</button>
+												<button
+													type="button"
+													onClick={() => {
+														const value = formData.api_key.trim();
+														if (!value || !navigator.clipboard?.writeText) return;
+														void navigator.clipboard.writeText(value).then(() => {
+															setApiKeyCopied(true);
+															window.setTimeout(() => setApiKeyCopied(false), 2000);
+														});
+													}}
+													className="inline-flex h-7 w-7 items-center justify-center rounded-md text-gray-400 hover:bg-slate-100 hover:text-gray-700"
+													aria-label={apiKeyCopied ? tCommon('copied') : tCommon('copy')}
+													title={apiKeyCopied ? tCommon('copied') : tCommon('copy')}
+												>
+													{apiKeyCopied ? (
+														<CheckIcon className="h-4 w-4 text-emerald-600" aria-hidden />
+													) : (
+														<ClipboardDocumentIcon className="h-4 w-4" aria-hidden />
+													)}
+												</button>
+											</div>
+										) : null}
+									</div>
 									<p className="mt-1 text-xs text-gray-500">
-										{editingProvider ? t("apiKeyEditHint") : t("apiKeyHint")}
+										{editingProvider ? t('apiKeyEditHint') : t('apiKeyHint')}
 									</p>
 								</div>
 								<div>
-									<label className="mb-1 block text-sm font-medium text-gray-700">
-										{t("sharedChannel")}
-									</label>
+									<label className="mb-1 block text-sm font-medium text-gray-700">{t('sharedChannel')}</label>
 									<select
 										value={formData.shared_channel_type}
 										onChange={(e) =>
@@ -580,37 +662,28 @@ export function ProviderModal(props: ProviderModalProps) {
 										}
 										className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
 									>
-										<option value="">{t("sharedChannelNone")}</option>
+										<option value="">{t('sharedChannelNone')}</option>
 										<option value="openai">OpenAI (ChatGPT)</option>
 										<option value="anthropic">Anthropic (Claude)</option>
 										<option value="zhipu">Zhipu GLM</option>
 										<option value="deepseek">DeepSeek</option>
 									</select>
-									<p className="mt-1 text-xs text-gray-500">
-										{t("sharedChannelHint")}
-									</p>
+									<p className="mt-1 text-xs text-gray-500">{t('sharedChannelHint')}</p>
 								</div>
 							</div>
 							<div className="flex min-h-0 flex-col">
 								<div>
-									<h3
-										id="provider-description-heading"
-										className="text-sm font-semibold text-gray-900"
-									>
-										{t("description")}
+									<h3 id="provider-description-heading" className="text-sm font-semibold text-gray-900">
+										{t('description')}
 									</h3>
-									<p className="mt-0.5 text-xs text-gray-500">
-										{t("descriptionHint")}
-									</p>
+									<p className="mt-0.5 text-xs text-gray-500">{t('descriptionHint')}</p>
 								</div>
 								<textarea
 									rows={3}
 									value={formData.description}
-									onChange={(e) =>
-										onFormChange({ ...formData, description: e.target.value })
-									}
+									onChange={(e) => onFormChange({ ...formData, description: e.target.value })}
 									className="mt-3 min-h-[7.5rem] w-full flex-1 resize-y rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-									placeholder={t("descriptionPlaceholder")}
+									placeholder={t('descriptionPlaceholder')}
 									autoComplete="off"
 									aria-labelledby="provider-description-heading"
 								/>
@@ -619,24 +692,17 @@ export function ProviderModal(props: ProviderModalProps) {
 
 						<section className="space-y-4 border-t border-gray-100 pt-6">
 							<div>
-								<h3 className="text-sm font-semibold text-gray-900">
-									{t("endpoints")}
-								</h3>
-								<p className="mt-0.5 text-xs text-gray-500">
-									{t("endpointsHint")}
-								</p>
+								<h3 className="text-sm font-semibold text-gray-900">{t('endpoints')}</h3>
+								<p className="mt-0.5 text-xs text-gray-500">{t('endpointsHint')}</p>
 							</div>
 							<div
 								className="flex flex-wrap gap-1 rounded-lg border border-gray-200 bg-slate-50 p-1"
 								role="tablist"
-								aria-label={t("endpointsTabsAria")}
+								aria-label={t('endpointsTabsAria')}
 							>
 								{PROTOCOL_TABS.map(({ key, labelKey }) => {
 									const selected = endpointTab === key;
-									const configured = protocolFormIsConfigured(
-										key,
-										formData[key]
-									);
+									const configured = protocolFormIsConfigured(key, formData[key]);
 									return (
 										<button
 											key={key}
@@ -648,8 +714,8 @@ export function ProviderModal(props: ProviderModalProps) {
 											onClick={() => setEndpointTab(key)}
 											className={`inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
 												selected
-													? "bg-white text-gray-900 shadow-sm ring-1 ring-gray-200"
-													: "text-gray-600 hover:bg-white/70 hover:text-gray-900"
+													? 'bg-white text-gray-900 shadow-sm ring-1 ring-gray-200'
+													: 'text-gray-600 hover:bg-white/70 hover:text-gray-900'
 											}`}
 										>
 											<span className="h-4 w-4 shrink-0">
@@ -659,8 +725,8 @@ export function ProviderModal(props: ProviderModalProps) {
 											{configured ? (
 												<span
 													className="h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-500"
-													title={t("configured")}
-													aria-label={t("configured")}
+													title={t('configured')}
+													aria-label={t('configured')}
 												/>
 											) : null}
 										</button>
@@ -672,69 +738,96 @@ export function ProviderModal(props: ProviderModalProps) {
 								id={`provider-endpoint-panel-${endpointTab}`}
 								aria-labelledby={`provider-endpoint-tab-${endpointTab}`}
 							>
-								{endpointTab === "openai" ? (
+								{endpointTab === 'openai' ? (
 									<ProtocolFields
-										baseUrlLabel={t("baseUrl")}
-										basePlaceholder={t("openaiPlaceholder")}
+										baseUrlLabel={t('baseUrl')}
+										basePlaceholder={t('openaiPlaceholder')}
 										form={formData.openai}
 										protocol="openai"
-										advancedToggle={t("advancedToggle")}
-										advancedHint={t("advancedHint")}
+										advancedToggle={t('advancedToggle')}
+										advancedHint={t('advancedHint')}
 										capLabels={{
 											...capLabels,
-											audioTranscriptions: t("capAudioTranscriptionsOpenai"),
-											audioSpeech: t("capAudioSpeechOpenai"),
+											audioTranscriptions: t('capAudioTranscriptionsOpenai'),
+											audioSpeech: t('capAudioSpeechOpenai'),
 										}}
 										onChange={(openai) => onFormChange({ ...formData, openai })}
 									/>
 								) : null}
-								{endpointTab === "anthropic" ? (
+								{endpointTab === 'anthropic' ? (
 									<ProtocolFields
-										baseUrlLabel={t("baseUrl")}
-										basePlaceholder={t("anthropicPlaceholder")}
+										baseUrlLabel={t('baseUrl')}
+										basePlaceholder={t('anthropicPlaceholder')}
 										form={formData.anthropic}
 										protocol="anthropic"
-										advancedToggle={t("advancedToggle")}
-										advancedHint={t("advancedHint")}
+										advancedToggle={t('advancedToggle')}
+										advancedHint={t('advancedHint')}
 										capLabels={capLabels}
-										onChange={(anthropic) =>
-											onFormChange({ ...formData, anthropic })
-										}
+										onChange={(anthropic) => onFormChange({ ...formData, anthropic })}
 									/>
 								) : null}
-								{endpointTab === "gemini" ? (
+								{endpointTab === 'gemini' ? (
 									<ProtocolFields
-										baseUrlLabel={t("baseUrl")}
-										basePlaceholder={t("geminiPlaceholder")}
-										baseHint={t("geminiHint")}
+										baseUrlLabel={t('baseUrl')}
+										basePlaceholder={t('geminiPlaceholder')}
+										baseHint={t('geminiHint')}
 										form={formData.gemini}
 										protocol="gemini"
-										advancedToggle={t("advancedToggle")}
-										advancedHint={t("advancedHintGemini")}
+										advancedToggle={t('advancedToggle')}
+										advancedHint={t('advancedHintGemini')}
 										capLabels={capLabels}
 										authLabels={{
-											label: t("geminiAuth"),
-											auto: t("geminiAuthAuto"),
-											queryKey: t("geminiAuthQueryKey"),
-											bearer: t("geminiAuthBearer"),
-											hint: t("geminiAuthHint"),
+											label: t('geminiAuth'),
+											auto: t('geminiAuthAuto'),
+											queryKey: t('geminiAuthQueryKey'),
+											bearer: t('geminiAuthBearer'),
+											hint: t('geminiAuthHint'),
 										}}
 										onChange={(gemini) => onFormChange({ ...formData, gemini })}
 									/>
 								) : null}
-								{endpointTab === "dashscope" ? (
+								{endpointTab === 'dashscope' ? (
 									<ProtocolFields
-										baseUrlLabel={t("baseUrl")}
-										basePlaceholder={t("dashscopePlaceholder")}
-										baseHint={t("dashscopeHint")}
+										baseUrlLabel={t('baseUrl')}
+										basePlaceholder={t('dashscopePlaceholder')}
+										baseHint={t('dashscopeHint')}
 										form={formData.dashscope}
 										protocol="dashscope"
-										advancedToggle={t("advancedToggle")}
-										advancedHint={t("advancedHint")}
+										advancedToggle={t('advancedToggle')}
+										advancedHint={t('advancedHintDashscope')}
 										capLabels={capLabels}
-										onChange={(dashscope) =>
-											onFormChange({ ...formData, dashscope })
-										}
+										dashscopeCapHints={dashscopeCapHints}
+										onChange={(dashscope) => onFormChange({ ...formData, dashscope })}
+									/>
+								) : null}
+								{endpointTab === 'minimax' ? (
+									<ProtocolFields
+										baseUrlLabel={t('baseUrl')}
+										basePlaceholder={t('minimaxPlaceholder')}
+										baseHint={t('minimaxHint')}
+										form={formData.minimax}
+										protocol="minimax"
+										advancedToggle={t('advancedToggle')}
+										advancedHint={t('advancedHintMinimax')}
+										capLabels={capLabels}
+										minimaxCapHint={minimaxCapHint}
+										minimaxSpeechHint={minimaxSpeechHint}
+										minimaxImageHint={minimaxImageHint}
+										onChange={(minimax) => onFormChange({ ...formData, minimax })}
+									/>
+								) : null}
+								{endpointTab === 'volcengine' ? (
+									<ProtocolFields
+										baseUrlLabel={t('baseUrl')}
+										basePlaceholder={t('volcenginePlaceholder')}
+										baseHint={t('volcengineHint')}
+										form={formData.volcengine}
+										protocol="volcengine"
+										advancedToggle={t('advancedToggle')}
+										advancedHint={t('advancedHintVolcengine')}
+										capLabels={capLabels}
+										volcengineImageHint={volcengineImageHint}
+										onChange={(volcengine) => onFormChange({ ...formData, volcengine })}
 									/>
 								) : null}
 							</div>
@@ -752,7 +845,7 @@ export function ProviderModal(props: ProviderModalProps) {
 								className="inline-flex items-center gap-1.5 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm font-medium text-red-700 hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-50"
 							>
 								<TrashIcon className="h-4 w-4" aria-hidden />
-								{isDeleting ? tCommon("deleting") : t("deleteProvider")}
+								{isDeleting ? tCommon('deleting') : t('deleteProvider')}
 							</button>
 						)}
 					</div>
@@ -763,7 +856,7 @@ export function ProviderModal(props: ProviderModalProps) {
 							className="rounded-md border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-50"
 							disabled={isSaving || isDeleting}
 						>
-							{tCommon("cancel")}
+							{tCommon('cancel')}
 						</button>
 						{editingProvider && (
 							<button
@@ -773,7 +866,7 @@ export function ProviderModal(props: ProviderModalProps) {
 								className="inline-flex items-center gap-1.5 rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
 							>
 								<DocumentDuplicateIcon className="h-4 w-4" aria-hidden />
-								{tCommon("duplicate")}
+								{tCommon('duplicate')}
 							</button>
 						)}
 						<button
@@ -782,11 +875,7 @@ export function ProviderModal(props: ProviderModalProps) {
 							disabled={isSaving || isDeleting}
 							className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
 						>
-							{isSaving
-								? tCommon("saving")
-								: editingProvider
-								? tCommon("save")
-								: tCommon("create")}
+							{isSaving ? tCommon('saving') : editingProvider ? tCommon('save') : tCommon('create')}
 						</button>
 					</div>
 				</div>

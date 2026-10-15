@@ -246,13 +246,14 @@ export function createMySqlModelEndpointsRepository(
 			return query<ModelEndpointDiscoveryRouteBindingRow>(
 				`SELECT mer.endpoint_id, mer.subject_fingerprint,
 					mr.id, mr.model_id, mr.provider_id,
-					mr.provider_model_name, mr.status, mr.route_group,
+					mr.provider_model_name, mr.status, mr.route_group, mr.price_override, mr.priority, mr.weight,
 					mr.custom_params, mr.routing_metadata,
 					mr.upstream_protocol, mr.upstream_operation, mr.adapter,
-					mr.route_pool_id, rp.status AS pool_status
+					mr.route_pool_id, rp.status AS pool_status, CASE WHEN ms.id IS NULL THEN NULL ELSE JSON_ARRAY(JSON_OBJECT('request_protocol', ms.request_protocol, 'request_operation', ms.request_operation, 'status', ms.status)) END AS surfaces
 				 FROM model_endpoint_routes mer
 				 JOIN model_routes mr ON mr.id = mer.route_target_id
 				 LEFT JOIN route_pools rp ON rp.id = mr.route_pool_id
+				 LEFT JOIN model_surfaces ms ON ms.id = rp.model_surface_id
 				 WHERE mer.endpoint_id IN (${ids.map(() => "?").join(",")})
 				 ORDER BY mer.endpoint_id, mr.id
 				 LIMIT ${MAX_MODEL_ENDPOINT_DISCOVERY_BINDING_RESULTS}`,

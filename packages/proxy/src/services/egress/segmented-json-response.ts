@@ -15,37 +15,55 @@ class TextParts {
 	private parts: JsonStringPage[] = [];
 	private page: string[] = [];
 	private pageLength = 0;
-	constructor(private readonly pageChars = JSON_TEXT_PAGE_CHARS, private compactPages = false) {}
-	setCompactPages(enabled: boolean): void { this.compactPages = enabled; }
+	constructor(
+		private readonly pageChars = JSON_TEXT_PAGE_CHARS,
+		private compactPages = false,
+	) {}
+	setCompactPages(enabled: boolean): void {
+		this.compactPages = enabled;
+	}
 	private finishPage(): void {
 		if (!this.pageLength) return;
 		// Join only a bounded page. Keeping ropes until output can retain both
 		// the decoded fragments and newly flattened copies throughout delivery.
 		const text = this.page.join('');
 		// Compact as each bounded page arrives, never after retaining a whole value.
-		this.parts.push(this.compactPages ? CompactJsonStringPage.from(text) : text); this.page = []; this.pageLength = 0;
+		this.parts.push(this.compactPages ? CompactJsonStringPage.from(text) : text);
+		this.page = [];
+		this.pageLength = 0;
 	}
 	append(text: string): void {
 		for (let start = 0; start < text.length;) {
 			const end = Math.min(text.length, start + this.pageChars - this.pageLength);
-			this.page.push(text.slice(start, end)); this.pageLength += end - start; start = end;
+			this.page.push(text.slice(start, end));
+			this.pageLength += end - start;
+			start = end;
 			if (this.pageLength === this.pageChars) this.finishPage();
 		}
 	}
 	take(): string {
 		this.finishPage();
-		const text = this.parts.map(decodeJsonStringPage).join(''); this.clear(); return text;
+		const text = this.parts.map(decodeJsonStringPage).join('');
+		this.clear();
+		return text;
 	}
 	takeString(retainPages: boolean): string | JsonStringPages {
 		if (!retainPages || this.parts.length === 0) return this.take();
 		this.finishPage();
-		const value = new JsonStringPages(this.parts); this.clear(); return value;
+		const value = new JsonStringPages(this.parts);
+		this.clear();
+		return value;
 	}
-	clear(): void { this.parts = []; this.page = []; this.pageLength = 0; }
+	clear(): void {
+		this.parts = [];
+		this.page = [];
+		this.pageLength = 0;
+	}
 }
 
 const isWhitespace = (code: number) => code === 32 || code === 9 || code === 10 || code === 13;
-const isPunctuation = (code: number) => code === 123 || code === 125 || code === 91 || code === 93 || code === 44 || code === 58;
+const isPunctuation = (code: number) =>
+	code === 123 || code === 125 || code === 91 || code === 93 || code === 44 || code === 58;
 const isDelimiter = (code: number) => isWhitespace(code) || isPunctuation(code) || code === 34;
 const invalid = () => new SyntaxError('Invalid JSON response');
 
@@ -78,9 +96,18 @@ class SegmentedJson {
 	private stringIsKey = false;
 	// Storage selection only. Full native skeleton parsing remains the grammar
 	// authority; structure admission bounds this stack before write() is called.
-	private storageScopes: Array<{ object: boolean; keyExpected: boolean; compact: boolean; uncompressedValue: boolean }> = [];
-	constructor(private readonly maxSourceBytes: number, private readonly retainStringPages: boolean,
-		private readonly nativeStringFields?: ReadonlySet<string>, private readonly uncompressedStringFields?: ReadonlySet<string>) {
+	private storageScopes: Array<{
+		object: boolean;
+		keyExpected: boolean;
+		compact: boolean;
+		uncompressedValue: boolean;
+	}> = [];
+	constructor(
+		private readonly maxSourceBytes: number,
+		private readonly retainStringPages: boolean,
+		private readonly nativeStringFields?: ReadonlySet<string>,
+		private readonly uncompressedStringFields?: ReadonlySet<string>,
+	) {
 		this.token = new TextParts(JSON_PARSE_STRING_PIECE_CHARS, retainStringPages);
 	}
 	private compactValue(): boolean {
@@ -88,31 +115,47 @@ class SegmentedJson {
 		return this.retainStringPages && (!scope || (scope.compact && !scope.uncompressedValue));
 	}
 	private uncompressedRootField(value: string | JsonStringPages): boolean {
-		for (const fields of [this.nativeStringFields, this.uncompressedStringFields]) for (const name of fields ?? []) {
-			if (name.length !== value.length) continue;
-			if (typeof value === 'string') { if (name === value) return true; continue; }
-			let offset = 0, matches = true;
-			for (const chunk of value.chunks()) { if (!name.startsWith(chunk, offset)) { matches = false; break; } offset += chunk.length; }
-			if (matches) return true;
-		}
+		for (const fields of [this.nativeStringFields, this.uncompressedStringFields])
+			for (const name of fields ?? []) {
+				if (name.length !== value.length) continue;
+				if (typeof value === 'string') {
+					if (name === value) return true;
+					continue;
+				}
+				let offset = 0,
+					matches = true;
+				for (const chunk of value.chunks()) {
+					if (!name.startsWith(chunk, offset)) {
+						matches = false;
+						break;
+					}
+					offset += chunk.length;
+				}
+				if (matches) return true;
+			}
 		return false;
 	}
 
 	private addToken(value: string | JsonStringPages | number | boolean | null, quoted: boolean): void {
-		const index = String(this.tokens.length); this.tokens.push(value);
+		const index = String(this.tokens.length);
+		this.tokens.push(value);
 		this.skeleton.append(quoted ? '"' + index + '"' : index);
-		this.whitespace = false; this.mode = 'normal';
+		this.whitespace = false;
+		this.mode = 'normal';
 	}
 	private flushStringPiece(): void {
 		if (!this.rawStringPiece) return;
 		const value: unknown = NEEDS_NATIVE_STRING_PARSE.test(this.rawStringPiece)
-			? JSON.parse('"' + this.rawStringPiece + '"') : this.rawStringPiece;
+			? JSON.parse('"' + this.rawStringPiece + '"')
+			: this.rawStringPiece;
 		if (typeof value !== 'string') throw invalid();
-		this.token.append(value); this.rawStringPiece = '';
+		this.token.append(value);
+		this.rawStringPiece = '';
 	}
 	private endScalar(): void {
 		if (!this.scalar) throw invalid();
-		this.addToken(this.scalar.finish(), false); this.scalar = undefined;
+		this.addToken(this.scalar.finish(), false);
+		this.scalar = undefined;
 	}
 
 	write(text: string): void {
@@ -130,19 +173,30 @@ class SegmentedJson {
 				while (i < text.length) {
 					const code = text.charCodeAt(i);
 					if (code === 34 && !this.escaped && !this.unicodeRemaining) {
-						this.rawStringPiece += text.slice(start, i); this.flushStringPiece();
+						this.rawStringPiece += text.slice(start, i);
+						this.flushStringPiece();
 						const token = this.token.takeString(this.retainStringPages);
 						if (this.stringIsKey && this.storageScopes.length === 1) {
 							this.storageScopes[0]!.uncompressedValue = this.uncompressedRootField(token);
 						}
-						this.addToken(token, true); i++; break;
+						this.addToken(token, true);
+						i++;
+						break;
 					}
 					if (this.unicodeRemaining) this.unicodeRemaining--;
-					else if (this.escaped) { this.escaped = false; if (code === 117) this.unicodeRemaining = 4; }
-					else if (code === 92) this.escaped = true;
+					else if (this.escaped) {
+						this.escaped = false;
+						if (code === 117) this.unicodeRemaining = 4;
+					} else if (code === 92) this.escaped = true;
 					i++;
-					if (this.rawStringPiece.length + i - start >= JSON_PARSE_STRING_PIECE_CHARS && !this.escaped && !this.unicodeRemaining) {
-						this.rawStringPiece += text.slice(start, i); this.flushStringPiece(); start = i;
+					if (
+						this.rawStringPiece.length + i - start >= JSON_PARSE_STRING_PIECE_CHARS &&
+						!this.escaped &&
+						!this.unicodeRemaining
+					) {
+						this.rawStringPiece += text.slice(start, i);
+						this.flushStringPiece();
+						start = i;
 					}
 				}
 				if (this.mode === 'string') this.rawStringPiece += text.slice(start, i);
@@ -151,24 +205,41 @@ class SegmentedJson {
 			const code = text.charCodeAt(i);
 			if (isWhitespace(code)) {
 				if (!this.whitespace) this.skeleton.append(' ');
-				this.whitespace = true; i++;
+				this.whitespace = true;
+				i++;
 			} else if (isPunctuation(code)) {
-				if (code === 123 || code === 91) this.storageScopes.push({ object: code === 123, keyExpected: code === 123,
-					compact: this.compactValue(), uncompressedValue: false });
+				if (code === 123 || code === 91)
+					this.storageScopes.push({
+						object: code === 123,
+						keyExpected: code === 123,
+						compact: this.compactValue(),
+						uncompressedValue: false,
+					});
 				else if (code === 125 || code === 93) this.storageScopes.pop();
 				else {
 					const scope = this.storageScopes.at(-1);
-					if (scope) { scope.keyExpected = code === 44 && scope.object; if (code === 44) scope.uncompressedValue = false; }
+					if (scope) {
+						scope.keyExpected = code === 44 && scope.object;
+						if (code === 44) scope.uncompressedValue = false;
+					}
 				}
-				this.skeleton.append(text[i]!); this.whitespace = false; i++;
+				this.skeleton.append(text[i]!);
+				this.whitespace = false;
+				i++;
 			} else if (code === 34) {
 				const scope = this.storageScopes.at(-1);
 				this.stringIsKey = scope?.object === true && scope.keyExpected;
 				// Keys and explicitly known native subtrees must not add packed bytes
 				// alongside the full decoded copies required by their legacy boundary.
 				this.token.setCompactPages(!this.stringIsKey && this.compactValue());
-				this.mode = 'string'; this.escaped = false; this.unicodeRemaining = 0; i++;
-			} else { this.mode = 'scalar'; this.scalar = new JsonScalar(Math.ceil(this.maxSourceBytes)); }
+				this.mode = 'string';
+				this.escaped = false;
+				this.unicodeRemaining = 0;
+				i++;
+			} else {
+				this.mode = 'scalar';
+				this.scalar = new JsonScalar(Math.ceil(this.maxSourceBytes));
+			}
 		}
 	}
 
@@ -179,7 +250,8 @@ class SegmentedJson {
 		const skeleton: unknown = JSON.parse(this.skeleton.take());
 		const consumeToken = (reference: string | number) => {
 			signal?.throwIfAborted();
-			const index = Number(reference), token = this.tokens[index];
+			const index = Number(reference),
+				token = this.tokens[index];
 			if (token === undefined) throw invalid();
 			// Every skeleton reference is unique. Transfer ownership now, not after
 			// the entire tree has been restored; native keys need not retain pages.
@@ -188,10 +260,19 @@ class SegmentedJson {
 		};
 		const discard = (value: unknown): void => {
 			signal?.throwIfAborted();
-			if (typeof value === 'string' || typeof value === 'number') { consumeToken(value); return; }
-			if (Array.isArray(value)) { for (const child of value) discard(child); return; }
+			if (typeof value === 'string' || typeof value === 'number') {
+				consumeToken(value);
+				return;
+			}
+			if (Array.isArray(value)) {
+				for (const child of value) discard(child);
+				return;
+			}
 			if (value === null || typeof value !== 'object') throw invalid();
-			for (const [reference, child] of Object.entries(value)) { consumeToken(reference); discard(child); }
+			for (const [reference, child] of Object.entries(value)) {
+				consumeToken(reference);
+				discard(child);
+			}
 		};
 		const restore = (value: unknown, retainPages = this.retainStringPages, root = true): unknown => {
 			signal?.throwIfAborted();
@@ -234,7 +315,11 @@ class SegmentedJson {
 	}
 
 	dispose(): void {
-		this.tokens = []; this.skeleton.clear(); this.token.clear(); this.rawStringPiece = ''; this.scalar = undefined;
+		this.tokens = [];
+		this.skeleton.clear();
+		this.token.clear();
+		this.rawStringPiece = '';
+		this.scalar = undefined;
 		this.storageScopes = [];
 	}
 }
@@ -245,7 +330,10 @@ class SegmentedJson {
  * or explicitly materialize the necessary subtree before crossing a legacy boundary.
  */
 export async function segmentedJsonResponseWithinLimit(
-	response: Response, maxBytes: number, limits: JsonStructureLimits, signal?: AbortSignal,
+	response: Response,
+	maxBytes: number,
+	limits: JsonStructureLimits,
+	signal?: AbortSignal,
 	options: {
 		retainStringPages?: boolean;
 		/** With paged values enabled, explicitly restore these root fields (whole subtrees) as native strings. */
@@ -254,29 +342,40 @@ export async function segmentedJsonResponseWithinLimit(
 		uncompressedStringFields?: readonly string[];
 	} = {},
 ): Promise<{ body: unknown; jsonValid: boolean }> {
-	const budget = new JsonStructureBudget(limits), parser = new SegmentedJson(
-		maxBytes,
-		options.retainStringPages === true,
-		options.nativeStringFields ? new Set(options.nativeStringFields) : undefined,
-		options.uncompressedStringFields ? new Set(options.uncompressedStringFields) : undefined,
-	);
-	let preview = '', seenText = false, valid = true;
+	const budget = new JsonStructureBudget(limits),
+		parser = new SegmentedJson(
+			maxBytes,
+			options.retainStringPages === true,
+			options.nativeStringFields ? new Set(options.nativeStringFields) : undefined,
+			options.uncompressedStringFields ? new Set(options.uncompressedStringFields) : undefined,
+		);
+	let preview = '',
+		seenText = false,
+		valid = true;
 	try {
-		await consumeResponseTextWithinLimit(response, maxBytes, text => {
-			budget.write(text); // Count duplicate/unknown tokens before any value allocation.
-			if (text) seenText = true;
-			if (preview.length < 500) preview += text.slice(0, 500 - preview.length);
-			if (!valid) return;
-			try { parser.write(text); }
-			catch (error) {
-				if (!(error instanceof SyntaxError)) throw error;
-				valid = false; parser.dispose();
-			}
-		}, signal);
+		await consumeResponseTextWithinLimit(
+			response,
+			maxBytes,
+			(text) => {
+				budget.write(text); // Count duplicate/unknown tokens before any value allocation.
+				if (text) seenText = true;
+				if (preview.length < 500) preview += text.slice(0, 500 - preview.length);
+				if (!valid) return;
+				try {
+					parser.write(text);
+				} catch (error) {
+					if (!(error instanceof SyntaxError)) throw error;
+					valid = false;
+					parser.dispose();
+				}
+			},
+			signal,
+		);
 		if (!seenText) return { body: null, jsonValid: true }; // Preserve empty-body material semantics.
 		if (valid) {
-			try { return { body: parser.finish(signal), jsonValid: true }; }
-			catch (error) {
+			try {
+				return { body: parser.finish(signal), jsonValid: true };
+			} catch (error) {
 				// A caller's cancellation reason can itself be a SyntaxError. Never
 				// reclassify a stopped restore as an invalid-JSON provider response.
 				signal?.throwIfAborted();
@@ -284,5 +383,7 @@ export async function segmentedJsonResponseWithinLimit(
 			}
 		}
 		return { body: { error: { message: preview || 'Invalid upstream JSON' } }, jsonValid: false };
-	} finally { parser.dispose(); }
+	} finally {
+		parser.dispose();
+	}
 }

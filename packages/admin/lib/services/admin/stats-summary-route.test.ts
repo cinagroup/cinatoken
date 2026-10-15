@@ -79,7 +79,8 @@ function fixture(permissions: AdminPermission[] | null) {
 				storageReads++;
 				return [sourceLog];
 			},
-			getRecentErrors: async () => {
+			getRequestLogs: async () => { storageReads++; return { logs: [sourceLog], total: 1 }; },
+ getRecentErrors: async () => {
 				storageReads++;
 				return [sourceLog];
 			},

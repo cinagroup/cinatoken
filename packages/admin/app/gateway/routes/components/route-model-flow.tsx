@@ -1,60 +1,42 @@
-"use client";
+'use client';
 
-import { useMemo, useState, type KeyboardEvent, type ReactNode } from "react";
+import { useMemo, useState, type KeyboardEvent } from 'react';
 import {
 	ArrowDownIcon,
 	ArrowLongRightIcon,
 	ChevronDownIcon,
 	ClipboardDocumentIcon,
-	ClockIcon,
 	ExclamationTriangleIcon,
 	PencilSquareIcon,
 	PlusIcon,
 	PowerIcon,
 	UsersIcon,
-} from "@heroicons/react/24/outline";
-import {
-	isAudioModel,
-	isAudioSpeechModel,
-	isImageGenerationModel,
-} from "@octafuse/core/db/model-modalities";
-import type { SharedScheduleWindow } from "@octafuse/core/db/pricing-schedule";
-import { useTranslations } from "next-intl";
-import { UpstreamProtocolBrandIcon } from "@/components/upstream-brand-logo";
-import { formatCompactTokens } from "@/lib/format-compact-tokens";
-import {
-	parseChargedFactorFromPriceOverride,
-	parseMeteredFactorFromPriceOverride,
-} from "@/lib/pricing-ui";
-import type { GatewayModel, GatewayProvider } from "@/lib/types";
-import { tagBadgeClass } from "../../models/model-utils";
-import { useStickySummary } from "../sticky-summary-store";
-import type { RouteModelGroup, RequestSurfaceGroup } from "../route-utils";
+} from '@heroicons/react/24/outline';
+import { isAudioModel, isAudioSpeechModel, isImageGenerationModel } from '@octafuse/core/db/model-modalities';
+import { providerKindDisplayLabel, routeProviderAccountLabel } from '@/lib/provider-kind';
+import { useLocale, useTranslations } from 'next-intl';
+import { InfoHintPopover } from '@/components/InfoHintPopover';
+import { UpstreamProtocolBrandIcon } from '@/components/upstream-brand-logo';
+import { formatCompactTokens } from '@/lib/format-compact-tokens';
+import type { GatewayModel, GatewayProvider } from '@/lib/types';
+import { tagBadgeClass } from '../../models/model-utils';
+import { useStickySummary } from '../sticky-summary-store';
+import type { RouteModelGroup, RequestSurfaceGroup } from '../route-utils';
 import {
 	compareRoutesWithinPriorityLayer,
-	factorChipClassForValue,
-	factorLevelForValue,
-	formatFactorMultiplier,
-	formatFactorMultiplierForChip,
-	formatScheduleRange,
-	formatSharedScheduleWindowsHint,
-	resolveRouteScheduleDisplay,
 	groupSectionsByRequestSurface,
-	hasBasePricingInversion,
 	parseModelTagsList,
 	protocolBadgeClass,
 	requestSurfacePath,
 	resolveEffectiveRouteStrategy,
+	routeHasCustomParamsForceOverride,
 	splitRoutesByProtocolAndRouteGroup,
-} from "../route-utils";
-import {
-	FACTOR_CHIP_BASE,
-	type RouteFlowDensity,
-	type RouteListRow,
-	type RouteProtocolGroupSection,
-} from "../types";
-import { FailoverRulesDialog } from "./failover-rules-dialog";
-import { ProviderStickyChip } from "./provider-sticky-chip";
+} from '../route-utils';
+import { type RouteFlowDensity, type RouteListRow, type RouteProtocolGroupSection } from '../types';
+import { FailoverRulesDialog } from './failover-rules-dialog';
+import { ProviderStickyChip } from './provider-sticky-chip';
+import { RouteStickyUsage } from './route-sticky-usage';
+import { RouteTargetPricing } from './route-target-pricing';
 
 const EMPTY_STICKY_COUNTS = new Map<string, number>();
 
@@ -72,18 +54,20 @@ type PriorityTierSummary = {
 
 function summarizePriorityTier(
 	routes: RouteListRow[],
-	providerMeta: Map<string, GatewayProvider>
+	providerMeta: Map<string, GatewayProvider>,
+	locale: string,
+	customLabel: string,
 ): PriorityTierSummary {
 	let activeCount = 0;
 	const previewItems: PriorityTierPreviewItem[] = [];
 
 	for (const route of routes) {
-		const enabled = route.status === "active";
+		const enabled = route.status === 'active';
 		if (enabled) activeCount += 1;
 		const provider = providerMeta.get(route.provider_id);
 		previewItems.push({
 			id: route.id,
-			name: route.provider_name || provider?.name || route.provider_id,
+			name: routeProviderAccountLabel(route, provider, locale, customLabel),
 			enabled,
 		});
 	}
@@ -104,7 +88,7 @@ type OpenStrategyDialog = (
 	poolId?: string | null,
 	poolStrategy?: string | null,
 	requestOperation?: string,
-	extras?: { priority?: number; poolTierStrategies?: string | null }
+	extras?: { priority?: number; poolTierStrategies?: string | null },
 ) => void;
 
 type OpenProviderStickyDialog = (
@@ -122,7 +106,7 @@ type OpenProviderStickyDialog = (
 		providerName: string;
 		priority: number;
 		weight: number;
-	}>
+	}>,
 ) => void;
 
 type Props = {
@@ -134,10 +118,7 @@ type Props = {
 	copiedModelId: string | null;
 	togglingId: string | null;
 	onCopyModelId: (modelId: string) => void;
-	onCreate: (
-		modelId: string,
-		preset?: { protocol?: string; operation?: string; group?: string }
-	) => void;
+	onCreate: (modelId: string, preset?: { protocol?: string; operation?: string; group?: string }) => void;
 	onEdit: (route: RouteListRow) => void;
 	onEditModel: (modelId: string) => void;
 	onToggleStatus: (route: RouteListRow) => void;
@@ -145,269 +126,135 @@ type Props = {
 	onOpenProviderStickyDialog: OpenProviderStickyDialog;
 };
 
-function ScheduleFactorChip({
-	label,
-	factor,
-}: {
-	label?: string;
-	factor: number;
-}) {
-	return (
-		<span className="inline-flex whitespace-nowrap rounded bg-white/80 px-1 py-px text-[10px] font-semibold tabular-nums text-sky-800 ring-1 ring-inset ring-sky-200/80">
-			{label
-				? `${label} ${formatFactorMultiplier(factor)}`
-				: formatFactorMultiplier(factor)}
-		</span>
-	);
-}
-
-function ScheduleWindowRow({
-	label,
-	range,
-	chips,
-}: {
-	label?: string;
-	range: string;
-	chips: ReactNode;
-}) {
-	return (
-		<span className="flex min-w-0 items-center justify-between gap-1">
-			<span className="flex min-w-0 items-center gap-1 text-[11px] leading-4 text-sky-900">
-				{label ? <span className="shrink-0 font-semibold">{label}</span> : null}
-				<span className="whitespace-nowrap tabular-nums">{range}</span>
-			</span>
-			<span className="flex shrink-0 items-center gap-1">{chips}</span>
-		</span>
-	);
-}
-
-function RouteTargetScheduleBody({
-	windows,
-	chargedLabel,
-	meteredLabel,
-}: {
-	windows: SharedScheduleWindow[];
-	chargedLabel: string;
-	meteredLabel: string;
-}) {
-	return (
-		<span className="min-w-0 flex-1 space-y-0.5">
-			{windows.map((window, index) => (
-				<ScheduleWindowRow
-					key={`${window.start}-${window.end}-${index}`}
-					range={formatScheduleRange(window.start, window.end)}
-					chips={
-						<>
-							<ScheduleFactorChip
-								label={chargedLabel}
-								factor={window.charged_factor}
-							/>
-							<ScheduleFactorChip
-								label={meteredLabel}
-								factor={window.metered_factor}
-							/>
-						</>
-					}
-				/>
-			))}
-		</span>
-	);
-}
-
 function RouteTarget({
 	route,
 	provider,
 	stickyBindingCount,
+	stickyEnabled,
+	stickyTotal,
 	togglingId,
 	onEdit,
 	onToggleStatus,
 }: {
 	route: RouteListRow;
 	provider: GatewayProvider | undefined;
-	stickyBindingCount: number;
+	stickyBindingCount: number | null;
+	stickyEnabled: boolean;
+	stickyTotal: number | null;
 	togglingId: string | null;
 	onEdit: (route: RouteListRow) => void;
 	onToggleStatus: (route: RouteListRow) => void;
 }) {
-	const t = useTranslations("routes.flow");
-	const tList = useTranslations("routes.listItem");
-	const charged = parseChargedFactorFromPriceOverride(route.price_override);
-	const metered = parseMeteredFactorFromPriceOverride(route.price_override);
-	const chargedValue =
-		charged != null && Number.isFinite(charged) ? charged : 1;
-	const meteredValue =
-		metered != null && Number.isFinite(metered) ? metered : 1;
-	const scheduleWindows = resolveRouteScheduleDisplay(route.price_override);
-	const scheduleHint = formatSharedScheduleWindowsHint(scheduleWindows);
-	const hasSchedule = Boolean(scheduleHint);
-	const scheduleTooltip = t("badgeScheduleTooltip", {
-		windows: scheduleHint || "",
-	});
-	const chargedLevel = factorLevelForValue(chargedValue);
-	const meteredLevel = factorLevelForValue(meteredValue);
-	const chargedStatus = tList(`factorStatus.charged.${chargedLevel}`);
-	const meteredStatus = tList(`factorStatus.metered.${meteredLevel}`);
-	const hasPricingInversion = hasBasePricingInversion(
-		chargedValue,
-		meteredValue
-	);
-	const enabled = route.status === "active";
-	const providerDisabled = provider?.status === "disabled";
+	const t = useTranslations('routes.flow');
+	const tList = useTranslations('routes.listItem');
+	const tKind = useTranslations('providers.kind');
+	const locale = useLocale();
+	const providerName = provider?.name?.trim() || (route.provider_name ?? '').trim() || route.provider_id;
+	const kindLabel = provider ? providerKindDisplayLabel(provider, locale, tKind('custom')) : null;
+	const showKind = Boolean(kindLabel && kindLabel.trim().toLowerCase() !== providerName.trim().toLowerCase());
+	const enabled = route.status === 'active';
+	const providerDisabled = provider?.status === 'disabled';
+	const available = enabled && !providerDisabled;
 
 	return (
 		<div
-			className={`w-full min-w-0 rounded-lg border shadow-sm transition hover:shadow-md sm:w-52 sm:max-w-full ${
-				enabled
-					? "border-emerald-300 bg-emerald-50/70 shadow-emerald-100/60 hover:border-emerald-400"
-					: "border-red-300 bg-red-50/70 shadow-red-100/60 hover:border-red-400"
+			className={`flex w-full min-w-0 flex-col overflow-hidden rounded-xl border border-l-4 [border-left-style:solid] transition sm:w-[18.5rem] sm:max-w-full ${
+				available
+					? 'border-emerald-200 border-l-emerald-500 bg-white shadow-sm hover:border-emerald-400 hover:shadow-md'
+					: 'border-dashed border-slate-300 border-l-slate-400 bg-slate-100/80 hover:border-slate-400'
 			}`}
 		>
-			<div className="flex items-start gap-2 p-2.5">
-				<button
-					type="button"
-					onClick={() => onToggleStatus(route)}
-					disabled={togglingId === route.id}
-					className={`mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full ring-1 ring-inset transition focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-wait disabled:opacity-50 ${
-						enabled
-							? "bg-emerald-600 text-white ring-emerald-600 hover:bg-emerald-700"
-							: "bg-red-500 text-white ring-red-500 hover:bg-red-600"
-					}`}
-					title={enabled ? tList("routeEnabled") : tList("routeDisabled")}
-					aria-label={enabled ? tList("routeEnabled") : tList("routeDisabled")}
-				>
-					<PowerIcon className="h-2.5 w-2.5" />
-				</button>
-				<div className="min-w-0 flex-1">
-					<div className="flex min-w-0 items-center gap-1.5">
-						<button
-							type="button"
-							onClick={() => onEdit(route)}
-							className="min-w-0 flex-1 truncate rounded text-left text-[11px] font-semibold text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-							title={t("editRoute")}
-						>
-							{route.provider_name || provider?.name || route.provider_id}
-						</button>
-						{stickyBindingCount > 0 ? (
-							<span
-								className="inline-flex shrink-0 items-center gap-0.5 rounded-md bg-orange-100 px-1.5 py-0.5 text-[10px] font-semibold tabular-nums text-orange-800 ring-1 ring-inset ring-orange-300"
-								title={t("stickyBoundUsersTooltip", {
-									count: stickyBindingCount,
-								})}
-								aria-label={t("stickyBoundUsersTooltip", {
-									count: stickyBindingCount,
-								})}
+			<div className="p-2.5">
+				<div className="flex items-start gap-2">
+					{providerDisabled && (
+						<span className="inline-flex shrink-0 pt-0.5">
+							<InfoHintPopover
+								label={t('providerDisabled')}
+								openOnHover
+								portal
+								align="start"
+								panelClassName="max-w-40"
+								icon={<ExclamationTriangleIcon className="h-3.5 w-3.5 text-amber-600" aria-hidden />}
 							>
-								<UsersIcon className="h-3 w-3 shrink-0" aria-hidden />
-								<span>{stickyBindingCount}</span>
-							</span>
-						) : null}
-					</div>
+								{t('providerDisabled')}
+							</InfoHintPopover>
+						</span>
+					)}
 					<button
 						type="button"
 						onClick={() => onEdit(route)}
-						className="mt-0.5 block w-full min-w-0 truncate rounded text-left font-mono text-[10px] text-gray-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-						title={t("editRoute")}
+						className="group min-w-0 flex-1 rounded text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+						title={t('editRoute')}
 					>
-						<span title={route.provider_model_name}>
-							{route.provider_model_name}
+						<span className="flex items-center gap-1.5">
+							<span
+								className={`min-w-0 truncate text-xs font-semibold ${available ? 'text-slate-900' : 'text-slate-600'}`}
+								title={providerName}
+							>
+								{providerName}
+							</span>
+							<PencilSquareIcon className="h-3 w-3 shrink-0 text-slate-400 group-hover:text-blue-600" aria-hidden />
+						</span>
+						<span
+							className="mt-1 block min-h-4 truncate text-[10px] leading-4 text-slate-500"
+							title={kindLabel ?? undefined}
+						>
+							{showKind ? kindLabel : null}
 						</span>
 					</button>
+					<RouteStickyUsage
+						enabled={stickyEnabled}
+						count={stickyBindingCount}
+						total={stickyTotal}
+						routeAvailable={available}
+					/>
 				</div>
-			</div>
-			{/* 上游端点暂不放在路由卡片里，避免把协议映射细节和基础状态信息混在一起。 */}
-			<div
-				className={`flex flex-wrap items-center justify-between gap-x-2 gap-y-1 border-t bg-white/55 px-2.5 py-1.5 ${
-					enabled ? "border-emerald-200" : "border-red-200"
-				}`}
-			>
-				<div className="flex min-w-0 flex-wrap items-center gap-1">
-					<span
-						className="rounded bg-violet-50 px-1.5 py-0.5 text-[10px] font-semibold text-violet-700 ring-1 ring-inset ring-violet-200"
-						title={t("badgeWeightTooltip", { value: route.weight ?? 1 })}
-						aria-label={t("badgeWeightTooltip", { value: route.weight ?? 1 })}
-					>
-						{`W${route.weight ?? 1}`}
-					</span>
-					{route.custom_params ? (
-						<span
-							className="rounded bg-gray-100 px-1.5 py-0.5 text-[10px] font-medium text-gray-600 ring-1 ring-inset ring-gray-200"
-							title={t("badgeParamsTooltip")}
-							aria-label={t("badgeParamsTooltip")}
-						>
-							P
-						</span>
-					) : null}
-					{providerDisabled ? (
-						<span className="inline-flex items-center gap-1 rounded bg-amber-50 px-1.5 py-0.5 text-[10px] font-semibold text-amber-700 ring-1 ring-inset ring-amber-200">
-							<ExclamationTriangleIcon className="h-3 w-3" />
-							{t("providerDisabled")}
-						</span>
-					) : null}
-				</div>
-				<div className="ml-auto flex items-center justify-end gap-1">
-					<span
-						className={factorChipClassForValue(chargedValue, "charged")}
-						title={t("badgeChargedTooltip", {
-							value: formatFactorMultiplier(chargedValue),
-							status: chargedStatus,
-						})}
-						aria-label={t("badgeChargedTooltip", {
-							value: formatFactorMultiplier(chargedValue),
-							status: chargedStatus,
-						})}
-					>
-						{`C ${formatFactorMultiplierForChip(chargedValue)}`}
-					</span>
-					<span
-						className={factorChipClassForValue(meteredValue, "metered")}
-						title={t("badgeMeteredTooltip", {
-							value: formatFactorMultiplier(meteredValue),
-							status: meteredStatus,
-						})}
-						aria-label={t("badgeMeteredTooltip", {
-							value: formatFactorMultiplier(meteredValue),
-							status: meteredStatus,
-						})}
-					>
-						{`M ${formatFactorMultiplierForChip(meteredValue)}`}
-					</span>
-					{hasPricingInversion ? (
-						<span
-							className={`${FACTOR_CHIP_BASE} w-auto bg-rose-100 text-rose-950 ring-rose-300/90`}
-							title={tList("baseInversionTooltip")}
-						>
-							{tList("baseInversionBadge")}
-						</span>
-					) : null}
-				</div>
-			</div>
-			{hasSchedule ? (
 				<button
 					type="button"
 					onClick={() => onEdit(route)}
-					className={`flex w-full items-start gap-1 rounded-b-lg border-t bg-sky-50/70 px-2.5 py-1.5 text-left hover:bg-sky-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500 ${
-						enabled ? "border-emerald-200" : "border-red-200"
-					}`}
-					title={scheduleTooltip}
-					aria-label={scheduleTooltip}
+					className={`mt-1.5 block w-full truncate rounded-md px-2 py-1 text-left font-mono text-[10px] leading-4 text-slate-600 hover:bg-slate-200/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${available ? 'bg-slate-50' : 'bg-white/80'}`}
+					title={route.provider_model_name}
+					aria-label={`${t('editRoute')}: ${route.provider_model_name}`}
 				>
-					<ClockIcon
-						className="mt-0.5 h-3 w-3 shrink-0 text-sky-600"
-						aria-hidden
-					/>
-					<RouteTargetScheduleBody
-						windows={scheduleWindows}
-						chargedLabel={t("chargedShort")}
-						meteredLabel={t("meteredShort")}
-					/>
+					{route.provider_model_name}
 				</button>
-			) : null}
+				<div className="mt-2 flex min-h-4 flex-wrap items-center gap-x-2 gap-y-1 text-[10px] leading-4">
+					<button
+						type="button"
+						onClick={() => onToggleStatus(route)}
+						disabled={togglingId === route.id}
+						aria-pressed={enabled}
+						className={`inline-flex items-center gap-1 rounded px-1.5 py-0.5 font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-wait disabled:opacity-50 ${enabled ? (providerDisabled ? 'bg-slate-200 text-slate-600 hover:bg-slate-300' : 'bg-emerald-100 text-emerald-800 hover:bg-emerald-200') : 'bg-slate-600 text-white hover:bg-slate-700'}`}
+						title={enabled ? tList('routeEnabled') : tList('routeDisabled')}
+						aria-label={enabled ? tList('routeEnabled') : tList('routeDisabled')}
+					>
+						<PowerIcon className="h-3 w-3" aria-hidden />
+						{enabled ? t('enabledShort') : t('disabledShort')}
+					</button>
+					<span className="tabular-nums text-slate-600" title={t('badgeWeightTooltip', { value: route.weight ?? 1 })}>
+						{t('targetWeight', { value: route.weight ?? 1 })}
+					</span>
+					{route.custom_params ? (
+						<span
+							className="rounded bg-slate-100 px-1.5 text-slate-500"
+							title={
+								routeHasCustomParamsForceOverride(route.custom_params)
+									? t('badgeParamsForceOverrideTooltip')
+									: t('badgeParamsTooltip')
+							}
+						>
+							{t('targetParams')}
+						</span>
+					) : null}
+				</div>
+			</div>
+			<RouteTargetPricing priceOverride={route.price_override} onEdit={() => onEdit(route)} />
 		</div>
 	);
 }
 
 const CONNECTOR_PLUS_BUTTON_CLASS =
-	"inline-flex h-5 w-5 items-center justify-center rounded-full bg-white text-slate-500 shadow-sm ring-1 ring-inset ring-slate-300 hover:bg-blue-50 hover:text-blue-600 hover:ring-blue-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500";
+	'inline-flex h-5 w-5 items-center justify-center rounded-full bg-white text-slate-500 shadow-sm ring-1 ring-inset ring-slate-300 hover:bg-blue-50 hover:text-blue-600 hover:ring-blue-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500';
 
 export function FlowConnectorAdd({
 	railClass,
@@ -421,10 +268,7 @@ export function FlowConnectorAdd({
 	return (
 		<>
 			<div className="pointer-events-none absolute right-0 top-1/2 hidden h-5 w-8 -translate-y-1/2 items-center justify-center xl:flex">
-				<span
-					className={`absolute inset-x-0 top-1/2 h-px ${railClass}`}
-					aria-hidden
-				/>
+				<span className={`absolute inset-x-0 top-1/2 h-px ${railClass}`} aria-hidden />
 				<span className="pointer-events-auto relative z-[1]">
 					<button
 						type="button"
@@ -453,11 +297,14 @@ export function FlowConnectorAdd({
 }
 
 function stickyTargetsFromSection(
-	section: RouteProtocolGroupSection<RouteListRow>
+	section: RouteProtocolGroupSection<RouteListRow>,
+	providerMeta: Map<string, GatewayProvider>,
+	locale: string,
+	customLabel: string,
 ) {
 	return section.routes.map((route) => ({
 		id: route.id,
-		providerName: route.provider_name || route.provider_id,
+		providerName: routeProviderAccountLabel(route, providerMeta.get(route.provider_id), locale, customLabel),
 		priority: route.priority,
 		weight: Number(route.weight ?? 1) || 1,
 	}));
@@ -466,7 +313,10 @@ function stickyTargetsFromSection(
 export function openSectionStickyDialog(
 	onOpen: OpenProviderStickyDialog,
 	card: RouteModelGroup,
-	section: RouteProtocolGroupSection<RouteListRow>
+	section: RouteProtocolGroupSection<RouteListRow>,
+	providerMeta: Map<string, GatewayProvider>,
+	locale: string,
+	customLabel: string,
 ) {
 	onOpen(
 		card.model_id,
@@ -478,7 +328,7 @@ export function openSectionStickyDialog(
 		section.poolId,
 		section.poolStickyEnabled,
 		section.poolStickyIdleTtlSeconds,
-		stickyTargetsFromSection(section)
+		stickyTargetsFromSection(section, providerMeta, locale, customLabel),
 	);
 }
 
@@ -500,22 +350,19 @@ export function RouteGroupNode({
 		onClick: () => void;
 	};
 }) {
-	const t = useTranslations("routes.flow");
-	const tCard = useTranslations("routes.card");
-	const requestedModelId =
-		routeGroup === "default" ? modelId : `${modelId}:${routeGroup}`;
-	const isDefaultGroup = routeGroup === "default";
+	const t = useTranslations('routes.flow');
+	const tCard = useTranslations('routes.card');
+	const requestedModelId = routeGroup === 'default' ? modelId : `${modelId}:${routeGroup}`;
+	const isDefaultGroup = routeGroup === 'default';
 	const copied = copiedModelId === requestedModelId;
 
 	return (
 		<div className="w-full min-w-0">
 			<div
 				className={`w-full min-w-0 rounded-lg border px-3 py-2.5 shadow-sm ${
-					isDefaultGroup
-						? "border-sky-200 bg-sky-50/75"
-						: "border-violet-200 bg-violet-50/75"
+					isDefaultGroup ? 'border-sky-200 bg-sky-50/75' : 'border-violet-200 bg-violet-50/75'
 				}`}
-				aria-label={t("routeMatchAria", {
+				aria-label={t('routeMatchAria', {
 					group: routeGroup,
 					model: requestedModelId,
 				})}
@@ -523,14 +370,14 @@ export function RouteGroupNode({
 				<div className="flex min-w-0 items-center gap-1.5">
 					<span
 						className={`shrink-0 text-[10px] font-semibold uppercase tracking-wider ${
-							isDefaultGroup ? "text-sky-700" : "text-violet-700"
+							isDefaultGroup ? 'text-sky-700' : 'text-violet-700'
 						}`}
 					>
-						{t("routeGroup")}
+						{t('routeGroup')}
 					</span>
 					<span
 						className={`min-w-0 truncate text-[11px] font-semibold ${
-							isDefaultGroup ? "text-sky-900" : "text-violet-900"
+							isDefaultGroup ? 'text-sky-900' : 'text-violet-900'
 						}`}
 					>
 						{routeGroup}
@@ -538,9 +385,7 @@ export function RouteGroupNode({
 				</div>
 				<div className="mt-1 flex min-w-0 items-center gap-0.5">
 					<span
-						className={`min-w-0 truncate font-mono text-[10px] ${
-							isDefaultGroup ? "text-sky-700" : "text-violet-700"
-						}`}
+						className={`min-w-0 truncate font-mono text-[10px] ${isDefaultGroup ? 'text-sky-700' : 'text-violet-700'}`}
 						title={`model=${requestedModelId}`}
 					>
 						model={requestedModelId}
@@ -550,16 +395,12 @@ export function RouteGroupNode({
 						onClick={() => void onCopyModelId(requestedModelId)}
 						className={`shrink-0 rounded p-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
 							copied
-								? "bg-emerald-50 text-emerald-600"
+								? 'bg-emerald-50 text-emerald-600'
 								: isDefaultGroup
-								? "text-sky-500 hover:bg-sky-100 hover:text-sky-800"
-								: "text-violet-500 hover:bg-violet-100 hover:text-violet-800"
+									? 'text-sky-500 hover:bg-sky-100 hover:text-sky-800'
+									: 'text-violet-500 hover:bg-violet-100 hover:text-violet-800'
 						}`}
-						title={
-							copied
-								? tCard("copiedModelId")
-								: tCard("copyModelId", { id: requestedModelId })
-						}
+						title={copied ? tCard('copiedModelId') : tCard('copyModelId', { id: requestedModelId })}
 					>
 						<ClipboardDocumentIcon className="h-3.5 w-3.5" />
 					</button>
@@ -583,28 +424,19 @@ export function RequestSurfaceNode({
 	surface,
 	modelId,
 }: {
-	surface: Pick<
-		RequestSurfaceGroup,
-		"protocol" | "protocolLabel" | "requestOperation"
-	>;
+	surface: Pick<RequestSurfaceGroup, 'protocol' | 'protocolLabel' | 'requestOperation'>;
 	modelId?: string;
 }) {
-	const t = useTranslations("routes.flow");
-	const surfacePath = requestSurfacePath(
-		surface.protocol,
-		surface.requestOperation,
-		modelId
-	);
+	const t = useTranslations('routes.flow');
+	const surfacePath = requestSurfacePath(surface.protocol, surface.requestOperation, modelId);
 
 	return (
 		<div className="w-full min-w-0 rounded-lg border border-blue-200 bg-blue-50/75 px-3 py-2.5 shadow-sm">
 			<div className="flex items-center justify-between gap-2">
-				<span className="text-[10px] font-semibold uppercase tracking-wider text-blue-600">
-					{t("requestNode")}
-				</span>
+				<span className="text-[10px] font-semibold uppercase tracking-wider text-blue-600">{t('requestNode')}</span>
 				<span
 					className={`inline-flex h-4 w-4 shrink-0 items-center justify-center rounded ring-1 ring-inset ${protocolBadgeClass(
-						surface.protocol
+						surface.protocol,
 					)}`}
 					title={surface.protocolLabel}
 					aria-label={surface.protocolLabel}
@@ -613,10 +445,7 @@ export function RequestSurfaceNode({
 				</span>
 			</div>
 			<div className="mt-1.5 min-w-0">
-				<span
-					className="block min-w-0 truncate font-mono text-[11px] font-semibold text-gray-800"
-					title={surfacePath}
-				>
+				<span className="block min-w-0 truncate font-mono text-[11px] font-semibold text-gray-800" title={surfacePath}>
 					{surfacePath}
 				</span>
 			</div>
@@ -626,32 +455,26 @@ export function RequestSurfaceNode({
 
 function strategyDisplayKey(strategy: string): string {
 	if (
-		strategy === "hash_affinity" ||
-		strategy === "weighted_random" ||
-		strategy === "weight_priority" ||
-		strategy === "weighted_round_robin"
+		strategy === 'hash_affinity' ||
+		strategy === 'weighted_random' ||
+		strategy === 'weight_priority' ||
+		strategy === 'weighted_round_robin'
 	) {
 		return strategy;
 	}
 	return strategy;
 }
 
-function FailoverConnector({
-	density,
-	onOpen,
-}: {
-	density: RouteFlowDensity;
-	onOpen: () => void;
-}) {
-	const t = useTranslations("routes.flow");
-	const isSummary = density === "summary";
+function FailoverConnector({ density, onOpen }: { density: RouteFlowDensity; onOpen: () => void }) {
+	const t = useTranslations('routes.flow');
+	const isSummary = density === 'summary';
 
 	return (
 		<div
 			className={
 				isSummary
-					? "flex shrink-0 items-center justify-center py-0.5"
-					: "flex shrink-0 items-center justify-center py-0.5 md:px-0.5 md:py-0"
+					? 'flex shrink-0 items-center justify-center py-0.5'
+					: 'flex shrink-0 items-center justify-center py-0.5 md:px-0.5 md:py-0'
 			}
 		>
 			<button
@@ -659,29 +482,21 @@ function FailoverConnector({
 				onClick={onOpen}
 				className={
 					isSummary
-						? "inline-flex items-center gap-1 rounded-md px-1.5 py-1 text-slate-500 transition hover:bg-blue-50 hover:text-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-						: "inline-flex items-center gap-1 rounded-md px-1.5 py-1 text-slate-500 transition hover:bg-blue-50 hover:text-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 md:flex-col md:gap-0.5"
+						? 'inline-flex items-center gap-1 rounded-md px-1.5 py-1 text-slate-500 transition hover:bg-blue-50 hover:text-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500'
+						: 'inline-flex items-center gap-1 rounded-md px-1.5 py-1 text-slate-500 transition hover:bg-blue-50 hover:text-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 md:flex-col md:gap-0.5'
 				}
-				title={t("failoverRules")}
-				aria-label={t("failoverRules")}
+				title={t('failoverRules')}
+				aria-label={t('failoverRules')}
 			>
 				{isSummary ? (
 					<ArrowDownIcon className="h-3.5 w-3.5 shrink-0" aria-hidden />
 				) : (
 					<>
-						<ArrowDownIcon
-							className="h-3.5 w-3.5 shrink-0 md:hidden"
-							aria-hidden
-						/>
-						<ArrowLongRightIcon
-							className="hidden h-4 w-4 shrink-0 md:block"
-							aria-hidden
-						/>
+						<ArrowDownIcon className="h-3.5 w-3.5 shrink-0 md:hidden" aria-hidden />
+						<ArrowLongRightIcon className="hidden h-4 w-4 shrink-0 md:block" aria-hidden />
 					</>
 				)}
-				<span className="text-[9px] font-semibold leading-none tracking-wide">
-					{t("failoverShort")}
-				</span>
+				<span className="text-[9px] font-semibold leading-none tracking-wide">{t('failoverShort')}</span>
 			</button>
 		</div>
 	);
@@ -700,6 +515,7 @@ function PriorityTierPanel({
 	providerMeta,
 	globalRouteStrategy,
 	stickyCountsByTarget,
+	stickyTotal,
 	togglingId,
 	onEdit,
 	onToggleStatus,
@@ -717,15 +533,18 @@ function PriorityTierPanel({
 	providerMeta: Map<string, GatewayProvider>;
 	globalRouteStrategy: string | null;
 	stickyCountsByTarget: Map<string, number>;
+	stickyTotal: number | null;
 	togglingId: string | null;
-	onEdit: Props["onEdit"];
-	onToggleStatus: Props["onToggleStatus"];
-	onOpenStrategyDialog: Props["onOpenStrategyDialog"];
+	onEdit: Props['onEdit'];
+	onToggleStatus: Props['onToggleStatus'];
+	onOpenStrategyDialog: Props['onOpenStrategyDialog'];
 }) {
-	const t = useTranslations("routes.flow");
-	const tStrategy = useTranslations("routes.strategy");
-	const isSummary = density === "summary";
-	const summary = summarizePriorityTier(routes, providerMeta);
+	const t = useTranslations('routes.flow');
+	const tStrategy = useTranslations('routes.strategy');
+	const tKind = useTranslations('providers.kind');
+	const locale = useLocale();
+	const isSummary = density === 'summary';
+	const summary = summarizePriorityTier(routes, providerMeta, locale, tKind('custom'));
 	const strategy = resolveEffectiveRouteStrategy({
 		poolStrategy: section.poolStrategy,
 		poolTierStrategies: section.poolTierStrategies,
@@ -738,87 +557,69 @@ function PriorityTierPanel({
 	});
 	const displayKey = strategyDisplayKey(strategy.strategy);
 	const displayName =
-		displayKey === "hash_affinity" ||
-		displayKey === "weighted_random" ||
-		displayKey === "weight_priority" ||
-		displayKey === "weighted_round_robin"
+		displayKey === 'hash_affinity' ||
+		displayKey === 'weighted_random' ||
+		displayKey === 'weight_priority' ||
+		displayKey === 'weighted_round_robin'
 			? tStrategy(`display.${displayKey}`)
 			: strategy.strategy;
 	const sourceLabel = t(`strategySource.${strategy.source}`);
 	const showDetails = !isSummary || expanded;
-	const layerLabel = layerIndex === 0 ? t("firstAttempt") : t("fallbackLayer");
+	const layerLabel = layerIndex === 0 ? t('firstAttempt') : t('fallbackLayer');
 
 	return (
-		<div
-			className={
-				isSummary
-					? "min-w-0 max-w-full rounded-lg border border-slate-200 bg-white/80 shadow-sm"
-					: "w-fit min-w-0 max-w-full rounded-lg border border-slate-200 bg-white/80 p-2.5 shadow-sm"
-			}
-		>
+		<div className={isSummary ? 'min-w-0 max-w-full' : 'w-fit min-w-0 max-w-full'}>
 			<div
 				className={
 					isSummary
 						? `flex min-w-0 cursor-pointer flex-wrap items-center gap-1.5 px-2.5 py-2 transition hover:bg-slate-50/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500 ${
-								showDetails ? "border-b border-slate-100" : ""
-						  }`
-						: "mb-2 flex min-w-0 flex-wrap items-center gap-1.5 border-b border-slate-100 pb-2"
+								showDetails ? 'border-b border-slate-100' : ''
+							}`
+						: 'mb-2 flex min-w-0 flex-wrap items-center gap-1.5 border-b border-slate-100 pb-2'
 				}
 				{...(isSummary
 					? {
-							role: "button" as const,
+							role: 'button' as const,
 							tabIndex: 0,
-							"aria-expanded": expanded,
-							"aria-label": expanded
-								? t("collapseTierAria", { priority })
-								: t("expandTierAria", { priority }),
-							title: expanded ? t("collapseTier") : t("expandTier"),
+							'aria-expanded': expanded,
+							'aria-label': expanded ? t('collapseTierAria', { priority }) : t('expandTierAria', { priority }),
+							title: expanded ? t('collapseTier') : t('expandTier'),
 							onClick: onToggleExpanded,
 							onKeyDown: (event: KeyboardEvent<HTMLDivElement>) => {
-								if (event.key === "Enter" || event.key === " ") {
+								if (event.key === 'Enter' || event.key === ' ') {
 									event.preventDefault();
 									onToggleExpanded();
 								}
 							},
-					  }
+						}
 					: {})}
 			>
 				{isSummary ? (
-					<span
-						className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded text-slate-500"
-						aria-hidden
-					>
-						<ChevronDownIcon
-							className={`h-3.5 w-3.5 transition-transform ${
-								expanded ? "" : "-rotate-90"
-							}`}
-						/>
+					<span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded text-slate-500" aria-hidden>
+						<ChevronDownIcon className={`h-3.5 w-3.5 transition-transform ${expanded ? '' : '-rotate-90'}`} />
 					</span>
 				) : null}
-				<span className="rounded bg-gray-800 px-1.5 py-0.5 text-[10px] font-bold text-white">
-					P{priority}
-				</span>
-				<span className="text-[10px] font-medium text-gray-500">
-					{layerLabel}
-				</span>
+				<span className="rounded bg-slate-200/70 px-1.5 py-0.5 text-[10px] font-bold text-slate-700">P{priority}</span>
+				<span className="text-[10px] font-medium text-gray-500">{layerLabel}</span>
 				{isSummary ? (
 					<span
 						className={`rounded-md px-1.5 py-0.5 text-[10px] font-semibold tabular-nums ring-1 ring-inset ${
 							summary.activeCount > 0
-								? "bg-emerald-50 text-emerald-700 ring-emerald-200"
-								: "bg-red-50 text-red-700 ring-red-200"
+								? 'bg-emerald-50 text-emerald-700 ring-emerald-200'
+								: 'bg-red-50 text-red-700 ring-red-200'
 						}`}
-						title={t("tierActiveTotal", {
+						title={t('tierActiveTotal', {
 							active: summary.activeCount,
 							total: summary.totalCount,
 						})}
 					>
-						{t("tierActiveTotal", {
+						{t('tierActiveTotal', {
 							active: summary.activeCount,
 							total: summary.totalCount,
 						})}
 					</span>
 				) : null}
+				<span className="h-px min-w-3 flex-1 bg-slate-200" aria-hidden />
 				<div
 					className="ml-auto flex min-w-0 flex-wrap items-center justify-end gap-1.5"
 					onClick={isSummary ? (event) => event.stopPropagation() : undefined}
@@ -839,11 +640,11 @@ function PriorityTierPanel({
 								{
 									priority,
 									poolTierStrategies: section.poolTierStrategies,
-								}
+								},
 							)
 						}
-						className="inline-flex max-w-full items-center gap-1 rounded-md bg-indigo-50 px-1.5 py-0.5 text-[10px] font-semibold text-indigo-700 ring-1 ring-inset ring-indigo-200 transition hover:bg-indigo-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-						title={t("tierStrategyEdit", {
+						className="inline-flex max-w-full items-center gap-1 rounded px-1 py-0.5 text-[10px] font-medium text-indigo-600 transition hover:bg-indigo-50 hover:text-indigo-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+						title={t('tierStrategyEdit', {
 							strategy: displayName,
 							source: sourceLabel,
 						})}
@@ -858,8 +659,8 @@ function PriorityTierPanel({
 				<button
 					type="button"
 					onClick={onToggleExpanded}
-					className="flex w-full min-w-0 flex-wrap items-center gap-1.5 px-2.5 py-2.5 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500"
-					aria-label={t("expandTierAria", { priority })}
+					className="flex w-full min-w-0 flex-wrap items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-2.5 text-left hover:border-slate-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500"
+					aria-label={t('expandTierAria', { priority })}
 				>
 					{summary.previewItems.map((item) => (
 						<span
@@ -867,49 +668,52 @@ function PriorityTierPanel({
 							className="inline-flex max-w-[12rem] items-center gap-1 truncate rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium text-slate-700 ring-1 ring-inset ring-slate-200"
 							title={
 								item.enabled
-									? t("tierPreviewEnabled", { name: item.name })
-									: t("tierPreviewDisabled", { name: item.name })
+									? t('tierPreviewEnabled', { name: item.name })
+									: t('tierPreviewDisabled', { name: item.name })
 							}
 						>
 							<span
-								className={`h-1.5 w-1.5 shrink-0 rounded-full ${
-									item.enabled ? "bg-emerald-500" : "bg-red-400"
-								}`}
+								className={`h-1.5 w-1.5 shrink-0 rounded-full ${item.enabled ? 'bg-emerald-500' : 'bg-red-400'}`}
 								aria-hidden
 							/>
 							<span className="min-w-0 truncate">{item.name}</span>
+							{section.poolStickyEnabled ? (
+								<span
+									className={`inline-flex shrink-0 items-center gap-1 border-l pl-1.5 tabular-nums ${(stickyCountsByTarget.get(item.id) ?? 0) > 0 ? 'border-indigo-200 text-indigo-700' : 'border-slate-300 text-slate-500'}`}
+									title={
+										stickyTotal == null
+											? t('stickyUsage.unavailable')
+											: t('stickyBoundUsersTooltip', { count: stickyCountsByTarget.get(item.id) ?? 0 })
+									}
+								>
+									<UsersIcon className="h-3 w-3" aria-hidden />
+									{stickyTotal == null ? '—' : (stickyCountsByTarget.get(item.id) ?? 0).toLocaleString(locale)}
+								</span>
+							) : null}
 						</span>
 					))}
 					{summary.previewItems.length === 0 ? (
-						<span className="text-[10px] text-gray-400">
-							{t("noProviders")}
-						</span>
+						<span className="text-[10px] text-gray-400">{t('noProviders')}</span>
 					) : null}
 				</button>
 			) : null}
 
 			{showDetails ? (
-				<div
-					className={`flex min-w-0 flex-wrap gap-2 ${
-						isSummary ? "px-2.5 pb-2.5 pt-2" : ""
-					}`}
-				>
+				<div className="flex min-w-0 flex-wrap gap-2 overflow-x-auto pb-0.5">
 					{routes.map((route) => (
 						<RouteTarget
 							key={route.id}
 							route={route}
 							provider={providerMeta.get(route.provider_id)}
-							stickyBindingCount={stickyCountsByTarget.get(route.id) ?? 0}
+							stickyBindingCount={stickyTotal == null ? null : (stickyCountsByTarget.get(route.id) ?? 0)}
+							stickyEnabled={section.poolStickyEnabled}
+							stickyTotal={stickyTotal}
 							togglingId={togglingId}
 							onEdit={onEdit}
 							onToggleStatus={onToggleStatus}
 						/>
 					))}
-					{routes.length === 0 ? (
-						<span className="text-[11px] text-gray-400">
-							{t("noProviders")}
-						</span>
-					) : null}
+					{routes.length === 0 ? <span className="text-[11px] text-gray-400">{t('noProviders')}</span> : null}
 				</div>
 			) : null}
 		</div>
@@ -924,9 +728,9 @@ type UpstreamPoolPanelProps = {
 	globalRouteStrategy: string | null;
 	density: RouteFlowDensity;
 	togglingId: string | null;
-	onEdit: Props["onEdit"];
-	onToggleStatus: Props["onToggleStatus"];
-	onOpenStrategyDialog: Props["onOpenStrategyDialog"];
+	onEdit: Props['onEdit'];
+	onToggleStatus: Props['onToggleStatus'];
+	onOpenStrategyDialog: Props['onOpenStrategyDialog'];
 };
 
 export function UpstreamPoolPanel({
@@ -941,7 +745,9 @@ export function UpstreamPoolPanel({
 	onToggleStatus,
 	onOpenStrategyDialog,
 }: UpstreamPoolPanelProps) {
-	const t = useTranslations("routes.flow");
+	const t = useTranslations('routes.flow');
+	const tKind = useTranslations('providers.kind');
+	const locale = useLocale();
 	const [failoverOpen, setFailoverOpen] = useState(false);
 	const priorityLayers = [
 		...section.routes.reduce((map, route) => {
@@ -954,69 +760,65 @@ export function UpstreamPoolPanel({
 		.sort(([a], [b]) => b - a)
 		.map(
 			([priority, routes]) =>
-				[priority, [...routes].sort(compareRoutesWithinPriorityLayer)] as const
+				[
+					priority,
+					[...routes].sort((a, b) =>
+						compareRoutesWithinPriorityLayer(a, b, {
+							providersById: providerMeta,
+							locale,
+							customKindLabel: tKind('custom'),
+						}),
+					),
+				] as const,
 		);
-	const highestPriority = priorityLayers[0]?.[0];
-	/** Explicit user overrides; missing keys mean "default" (highest priority expanded). */
-	const [tierExpandOverrides, setTierExpandOverrides] = useState<
-		Record<number, boolean>
-	>({});
+	/** Compact mode starts collapsed; keep per-tier expansion choices while switching views. */
+	const [tierExpandOverrides, setTierExpandOverrides] = useState<Record<number, boolean>>({});
 	const stickyPoolId = section.poolStickyEnabled ? section.poolId : null;
 	const stickySummary = useStickySummary(stickyPoolId);
 	const stickyCountsByTarget = useMemo(() => {
 		if (!stickyPoolId || !stickySummary) return EMPTY_STICKY_COUNTS;
-		return new Map(
-			stickySummary.targets.map((row) => [
-				row.route_target_id,
-				row.active_count,
-			])
-		);
+		return new Map(stickySummary.targets.map((row) => [row.route_target_id, row.active_count]));
 	}, [stickyPoolId, stickySummary]);
 
 	const isTierExpanded = (priority: number) => {
-		if (density !== "summary") return true;
+		if (density !== 'summary') return true;
 		if (Object.prototype.hasOwnProperty.call(tierExpandOverrides, priority)) {
 			return tierExpandOverrides[priority] === true;
 		}
-		return priority === highestPriority;
+		return false;
 	};
 
 	const togglePriority = (priority: number) => {
 		setTierExpandOverrides((prev) => {
-			const currently = Object.prototype.hasOwnProperty.call(prev, priority)
-				? prev[priority] === true
-				: priority === highestPriority;
+			const currently = Object.prototype.hasOwnProperty.call(prev, priority) ? prev[priority] === true : false;
 			return { ...prev, [priority]: !currently };
 		});
 	};
 
-	const isSummary = density === "summary";
+	const isSummary = density === 'summary';
 
 	return (
 		<>
 			<div
 				className={
 					isSummary
-						? "flex min-w-0 flex-col items-stretch gap-1"
-						: "flex min-w-0 flex-col items-stretch gap-3 md:flex-row md:flex-nowrap md:items-center md:overflow-x-auto"
+						? 'flex min-w-0 flex-col items-stretch gap-1'
+						: 'route-flow-scroll flex min-w-0 flex-col items-stretch gap-3 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500/50 md:flex-row md:flex-nowrap md:items-center md:overflow-x-auto md:pb-3'
 				}
-				aria-label={t("priorityLadderAria")}
+				role="region"
+				tabIndex={isSummary ? undefined : 0}
+				aria-label={t('priorityLadderAria')}
 			>
 				{priorityLayers.map(([priority, routes], layerIndex) => (
 					<div
 						key={priority}
 						className={
 							isSummary
-								? "flex min-w-0 flex-col items-stretch"
-								: "flex min-w-0 shrink-0 flex-col items-stretch gap-2 md:flex-row md:items-center"
+								? 'flex min-w-0 flex-col items-stretch'
+								: 'flex min-w-0 shrink-0 flex-col items-stretch gap-2 md:flex-row md:items-center'
 						}
 					>
-						{layerIndex > 0 ? (
-							<FailoverConnector
-								density={density}
-								onOpen={() => setFailoverOpen(true)}
-							/>
-						) : null}
+						{layerIndex > 0 ? <FailoverConnector density={density} onOpen={() => setFailoverOpen(true)} /> : null}
 						<PriorityTierPanel
 							priority={priority}
 							routes={routes}
@@ -1030,6 +832,7 @@ export function UpstreamPoolPanel({
 							providerMeta={providerMeta}
 							globalRouteStrategy={globalRouteStrategy}
 							stickyCountsByTarget={stickyCountsByTarget}
+							stickyTotal={stickySummary?.total_active ?? null}
 							togglingId={togglingId}
 							onEdit={onEdit}
 							onToggleStatus={onToggleStatus}
@@ -1038,10 +841,7 @@ export function UpstreamPoolPanel({
 					</div>
 				))}
 			</div>
-			<FailoverRulesDialog
-				open={failoverOpen}
-				onClose={() => setFailoverOpen(false)}
-			/>
+			<FailoverRulesDialog open={failoverOpen} onClose={() => setFailoverOpen(false)} />
 		</>
 	);
 }
@@ -1068,37 +868,29 @@ function FlowBranch({
 	branchCount: number;
 	copiedModelId: string | null;
 	onCopyModelId: (modelId: string) => void;
-	onCreate: Props["onCreate"];
-	onOpenProviderStickyDialog: Props["onOpenProviderStickyDialog"];
+	onCreate: Props['onCreate'];
+	onOpenProviderStickyDialog: Props['onOpenProviderStickyDialog'];
 }) {
-	const t = useTranslations("routes.flow");
-	const isSummary = density === "summary";
-	const isDefaultGroup = section.group === "default";
-	const groupRail = isDefaultGroup ? "bg-sky-300" : "bg-violet-300";
+	const t = useTranslations('routes.flow');
+	const tKind = useTranslations('providers.kind');
+	const locale = useLocale();
+	const isSummary = density === 'summary';
+	const isDefaultGroup = section.group === 'default';
+	const groupRail = isDefaultGroup ? 'bg-sky-300' : 'bg-violet-300';
 	const railClass =
-		branchIndex === 0
-			? "top-1/2 bottom-0"
-			: branchIndex === branchCount - 1
-			? "top-0 bottom-1/2"
-			: "inset-y-0";
+		branchIndex === 0 ? 'top-1/2 bottom-0' : branchIndex === branchCount - 1 ? 'top-0 bottom-1/2' : 'inset-y-0';
 
 	return (
 		<div className="relative py-3 xl:pl-4">
 			{branchCount > 1 ? (
-				<span
-					className={`absolute left-0 hidden w-px bg-blue-300 xl:block ${railClass}`}
-					aria-hidden
-				/>
+				<span className={`absolute left-0 hidden w-px bg-blue-300 xl:block ${railClass}`} aria-hidden />
 			) : null}
-			<span
-				className="absolute left-0 top-1/2 hidden h-px w-4 bg-blue-300 xl:block"
-				aria-hidden
-			/>
+			<span className="absolute left-0 top-1/2 hidden h-px w-4 bg-blue-300 xl:block" aria-hidden />
 			<div
 				className={
 					isSummary
-						? "grid min-w-0 gap-y-3 xl:grid-cols-[minmax(140px,200px)_minmax(320px,1fr)] xl:items-center"
-						: "grid min-w-0 gap-y-3 xl:grid-cols-[minmax(140px,200px)_minmax(420px,1fr)] xl:items-center"
+						? 'grid min-w-0 gap-y-3 xl:grid-cols-[minmax(140px,200px)_minmax(320px,1fr)] xl:items-center'
+						: 'grid min-w-0 gap-y-3 xl:grid-cols-[minmax(140px,200px)_minmax(420px,1fr)] xl:items-center'
 				}
 			>
 				<div className="relative flex min-w-0 flex-col justify-center xl:pr-8">
@@ -1115,13 +907,16 @@ function FlowBranch({
 								openSectionStickyDialog(
 									onOpenProviderStickyDialog,
 									card,
-									section
+									section,
+									providerMeta,
+									locale,
+									tKind('custom'),
 								),
 						}}
 					/>
 					<FlowConnectorAdd
 						railClass={groupRail}
-						label={t("addProvider")}
+						label={t('addProvider')}
 						onClick={() =>
 							onCreate(card.model_id, {
 								protocol: section.protocol,
@@ -1173,13 +968,13 @@ function FlowSection({
 	copiedModelId: string | null;
 	togglingId: string | null;
 	onCopyModelId: (modelId: string) => void;
-	onCreate: Props["onCreate"];
-	onEdit: Props["onEdit"];
-	onToggleStatus: Props["onToggleStatus"];
-	onOpenStrategyDialog: Props["onOpenStrategyDialog"];
-	onOpenProviderStickyDialog: Props["onOpenProviderStickyDialog"];
+	onCreate: Props['onCreate'];
+	onEdit: Props['onEdit'];
+	onToggleStatus: Props['onToggleStatus'];
+	onOpenStrategyDialog: Props['onOpenStrategyDialog'];
+	onOpenProviderStickyDialog: Props['onOpenProviderStickyDialog'];
 }) {
-	const t = useTranslations("routes.flow");
+	const t = useTranslations('routes.flow');
 
 	return (
 		<div className="bg-slate-50/70 px-3 sm:px-4">
@@ -1188,12 +983,12 @@ function FlowSection({
 					<RequestSurfaceNode surface={surface} modelId={card.model_id} />
 					<FlowConnectorAdd
 						railClass="bg-blue-300"
-						label={t("addRouteGroup")}
+						label={t('addRouteGroup')}
 						onClick={() =>
 							onCreate(card.model_id, {
 								protocol: surface.protocol,
 								operation: surface.requestOperation,
-								group: "",
+								group: '',
 							})
 						}
 					/>
@@ -1243,9 +1038,9 @@ export function RouteModelFlow(props: Props) {
 		onOpenStrategyDialog,
 		onOpenProviderStickyDialog,
 	} = props;
-	const t = useTranslations("routes.card");
-	const tFlow = useTranslations("routes.flow");
-	const tModelsCard = useTranslations("models.card");
+	const t = useTranslations('routes.card');
+	const tFlow = useTranslations('routes.flow');
+	const tModelsCard = useTranslations('models.card');
 	const isImage = meta ? isImageGenerationModel(meta) : false;
 	const isAudio = meta ? isAudioModel(meta) : false;
 	const isAudioSpeech = meta ? isAudioSpeechModel(meta) : false;
@@ -1253,10 +1048,10 @@ export function RouteModelFlow(props: Props) {
 	const maxOutput = formatCompactTokens(meta?.max_tokens);
 	// ASR 与 TTS 同属 Audio；必须按计费能力区分，避免 TTS 被标成按秒转写。
 	const stats = isAudio
-		? t(isAudioSpeech ? "audioSpeechModelHint" : "audioModelHint")
+		? t(isAudioSpeech ? 'audioSpeechModelHint' : 'audioModelHint')
 		: isImage
-		? t("imageModelHint")
-		: t("contextLine", { context, max: maxOutput });
+			? t('imageModelHint')
+			: t('contextLine', { context, max: maxOutput });
 	const tags = parseModelTagsList(meta);
 	const sections = splitRoutesByProtocolAndRouteGroup(card.groupRoutes);
 	const surfaceGroups = groupSectionsByRequestSurface(sections);
@@ -1279,14 +1074,10 @@ export function RouteModelFlow(props: Props) {
 								onClick={() => void onCopyModelId(card.model_id)}
 								className={`rounded-md p-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
 									copiedModelId === card.model_id
-										? "bg-emerald-50 text-emerald-600"
-										: "text-gray-400 hover:bg-gray-100 hover:text-gray-700"
+										? 'bg-emerald-50 text-emerald-600'
+										: 'text-gray-400 hover:bg-gray-100 hover:text-gray-700'
 								}`}
-								title={
-									copiedModelId === card.model_id
-										? t("copiedModelId")
-										: t("copyModelId", { id: card.model_id })
-								}
+								title={copiedModelId === card.model_id ? t('copiedModelId') : t('copyModelId', { id: card.model_id })}
 							>
 								<ClipboardDocumentIcon className="h-4 w-4" />
 							</button>
@@ -1294,33 +1085,24 @@ export function RouteModelFlow(props: Props) {
 								type="button"
 								onClick={() => onEditModel(card.model_id)}
 								className="rounded-md p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-								title={t("editModel", { title: card.title })}
+								title={t('editModel', { title: card.title })}
 							>
 								<PencilSquareIcon className="h-4 w-4" />
 							</button>
 						</div>
 					</div>
 					<div className="mt-1 flex min-w-0 flex-wrap items-center gap-2">
-						<span className="font-mono text-[11px] text-gray-500">
-							{card.model_id}
-						</span>
+						<span className="font-mono text-[11px] text-gray-500">{card.model_id}</span>
 						<span className="text-gray-300">·</span>
 						<span className="text-[11px] text-gray-500">{stats}</span>
 						{tags.length ? (
 							tags.slice(0, 4).map((tag) => (
-								<span
-									key={tag}
-									className={`rounded px-1.5 py-0.5 text-[10px] font-medium ${tagBadgeClass(
-										tag
-									)}`}
-								>
+								<span key={tag} className={`rounded px-1.5 py-0.5 text-[10px] font-medium ${tagBadgeClass(tag)}`}>
 									{tag}
 								</span>
 							))
 						) : (
-							<span className="text-[10px] text-gray-400">
-								{tModelsCard("noTags")}
-							</span>
+							<span className="text-[10px] text-gray-400">{tModelsCard('noTags')}</span>
 						)}
 					</div>
 				</div>
@@ -1331,16 +1113,16 @@ export function RouteModelFlow(props: Props) {
 						className="inline-flex items-center gap-1 rounded-md bg-blue-50 px-2 py-1 text-[11px] font-semibold text-blue-700 ring-1 ring-inset ring-blue-200 hover:bg-blue-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
 					>
 						<PlusIcon className="h-3.5 w-3.5" />
-						{tFlow("addRoute")}
+						{tFlow('addRoute')}
 					</button>
 					<span
 						className={`rounded-md px-2 py-0.5 text-[10px] font-semibold ring-1 ring-inset ${
 							card.activeCount > 0
-								? "bg-emerald-50 text-emerald-700 ring-emerald-200"
-								: "bg-red-50 text-red-700 ring-red-200"
+								? 'bg-emerald-50 text-emerald-700 ring-emerald-200'
+								: 'bg-red-50 text-red-700 ring-red-200'
 						}`}
 					>
-						{t("activeTotalRoutes", {
+						{t('activeTotalRoutes', {
 							active: card.activeCount,
 							total: card.groupRoutes.length,
 						})}
@@ -1371,7 +1153,7 @@ export function RouteModelFlow(props: Props) {
 					))
 				) : (
 					<div className="flex min-h-20 items-center justify-center py-5 text-sm font-medium text-gray-400">
-						{tFlow("noProviders")}
+						{tFlow('noProviders')}
 					</div>
 				)}
 			</div>

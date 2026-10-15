@@ -3,14 +3,26 @@ import { JsonStringPages, jsonStringChunks } from './json-string-pages';
 
 /** Number(string)'s unsigned binary/octal/hex integer with bounded rounding state. */
 function radixNumber(value: string | JsonStringPages, bitsPerDigit: number, checkActive?: () => void): number {
-	let position = 0, digits = 0, bits = 0, significand = 0, guard = 0, sticky = false;
+	let position = 0,
+		digits = 0,
+		bits = 0,
+		significand = 0,
+		guard = 0,
+		sticky = false;
 	const radix = 2 ** bitsPerDigit;
 	for (const chunk of jsonStringChunks(value)) {
 		for (let i = 0; i < chunk.length; i++) {
 			if (i % 8192 === 0) checkActive?.();
 			if (position++ < 2) continue;
-			const code = chunk.charCodeAt(i), digit = code >= 48 && code <= 57 ? code - 48
-				: code >= 65 && code <= 70 ? code - 55 : code >= 97 && code <= 102 ? code - 87 : -1;
+			const code = chunk.charCodeAt(i),
+				digit =
+					code >= 48 && code <= 57
+						? code - 48
+						: code >= 65 && code <= 70
+							? code - 55
+							: code >= 97 && code <= 102
+								? code - 87
+								: -1;
 			if (digit < 0 || digit >= radix) return NaN;
 			digits++;
 			if (bits > 1024) continue; // Still validate every later digit after overflow.
@@ -43,16 +55,33 @@ export function jsonStringNumber(value: string | JsonStringPages, checkActive?: 
 	checkActive?.();
 	if (text.length <= 1024) return Number(typeof text === 'string' ? text : text.materialize());
 	let prefix = '';
-	for (const chunk of jsonStringChunks(text)) { prefix += chunk.slice(0, 2 - prefix.length); if (prefix.length === 2) break; }
-	if (/^0[xob]$/i.test(prefix)) return radixNumber(text, prefix[1]!.toLowerCase() === 'x' ? 4 : prefix[1]!.toLowerCase() === 'o' ? 3 : 1, checkActive);
+	for (const chunk of jsonStringChunks(text)) {
+		prefix += chunk.slice(0, 2 - prefix.length);
+		if (prefix.length === 2) break;
+	}
+	if (/^0[xob]$/i.test(prefix))
+		return radixNumber(
+			text,
+			prefix[1]!.toLowerCase() === 'x' ? 4 : prefix[1]!.toLowerCase() === 'o' ? 3 : 1,
+			checkActive,
+		);
 	const scalar = new JsonScalar(text.length, true);
 	for (const chunk of jsonStringChunks(text)) {
 		for (let i = 0; i < chunk.length; i += 8192) {
 			checkActive?.();
-			try { scalar.write(chunk.slice(i, i + 8192)); }
-			catch (error) { if (error instanceof SyntaxError) return NaN; throw error; }
+			try {
+				scalar.write(chunk.slice(i, i + 8192));
+			} catch (error) {
+				if (error instanceof SyntaxError) return NaN;
+				throw error;
+			}
 		}
 	}
-	try { const result = scalar.finish(); return typeof result === 'number' ? result : NaN; }
-	catch (error) { if (error instanceof SyntaxError) return NaN; throw error; }
+	try {
+		const result = scalar.finish();
+		return typeof result === 'number' ? result : NaN;
+	} catch (error) {
+		if (error instanceof SyntaxError) return NaN;
+		throw error;
+	}
 }

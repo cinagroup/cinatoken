@@ -588,6 +588,7 @@ embeddingsRoutes.post('/', async (c) => {
 
 		return recordUsage(repos, {
 			api_key_id: apiKey.keyId,
+				ingress_host: apiKey.ingressHost,
 			workspace_id: apiKey.workspaceId,
 			request_log_id: requestId,
 			user_id: apiKey.userId,

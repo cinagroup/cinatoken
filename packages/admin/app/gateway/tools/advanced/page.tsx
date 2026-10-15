@@ -1,0 +1,1377 @@
+'use client';
+import dynamic from 'next/dynamic';
+const AtomicToolsConsole = dynamic(() => import('../LegacyToolsShell'), { ssr: false });
+
+import AdvancedEditorGate, { useAdvancedEditorRequest } from '@/components/routing-workbench/AdvancedEditorGate';
+import { useFeedback } from '@/components/feedback';
+
+/**
+ * Tools 配置：产品工具（`/v1/tools/*`）的 per-provider catalog + active；写入 `system_config`。
+ * UI：服务列表 + 居中弹窗编辑；须显式保存。
+ */
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
+import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+import { readApiJson } from '@/lib/api-json';
+import type { SystemConfigRow } from '@/lib/types';
+import { useBillingCurrency } from '@/lib/use-billing-currency';
+import {
+	DEFAULT_WEB_SEARCH_COST,
+	DEFAULT_WEB_SEARCH_PROVIDER,
+	getWebSearchProviderOptions,
+	WEB_SEARCH_ACTIVE_KEY,
+	WEB_SEARCH_API_KEY_KEY,
+	WEB_SEARCH_CATALOG_KEY,
+	WEB_SEARCH_COST_KEY,
+	WEB_SEARCH_PROVIDER_DOCS_URL,
+	WEB_SEARCH_PROVIDER_KEY,
+	WEB_SEARCH_PROVIDERS,
+	type WebSearchProvider,
+} from '@/lib/web-search-options';
+import {
+	DEFAULT_WEB_FETCH_COST,
+	DEFAULT_WEB_FETCH_PROVIDER,
+	getWebFetchProviderOptions,
+	WEB_FETCH_ACTIVE_KEY,
+	WEB_FETCH_API_KEY_KEY,
+	WEB_FETCH_CATALOG_KEY,
+	WEB_FETCH_COST_KEY,
+	WEB_FETCH_PROVIDER_DOCS_URL,
+	WEB_FETCH_PROVIDER_KEY,
+	WEB_FETCH_PROVIDERS,
+	type WebFetchProvider,
+} from '@/lib/web-fetch-options';
+import {
+	DEFAULT_WEB_DEEP_SEARCH_COST,
+	DEFAULT_WEB_DEEP_SEARCH_PROVIDER,
+	getWebDeepSearchProviderOptions,
+	WEB_DEEP_SEARCH_ACTIVE_KEY,
+	WEB_DEEP_SEARCH_CATALOG_KEY,
+	WEB_DEEP_SEARCH_PROVIDER_DOCS_URL,
+	WEB_DEEP_SEARCH_PROVIDERS,
+	type WebDeepSearchProvider,
+} from '@/lib/web-deep-search-options';
+import {
+	AI_DETECTION_ACTIVE_KEY,
+	AI_DETECTION_CATALOG_KEY,
+	AI_DETECTION_PROVIDER_DOCS_URL,
+	AI_DETECTION_PROVIDERS,
+	DEFAULT_AI_DETECTION_BILLING_UNIT_CHARS,
+	DEFAULT_AI_DETECTION_COST,
+	DEFAULT_AI_DETECTION_PROVIDER,
+	getAiDetectionCredentialFields,
+	getAiDetectionProviderOptions,
+	isAiDetectionImplementedProvider,
+	type AiDetectionCredentialField,
+	type AiDetectionProvider,
+} from '@/lib/ai-detection-options';
+import {
+	parseWebFetchCatalogLenient,
+	serializeWebFetchCatalog,
+	type WebFetchCatalog,
+} from '@octafuse/core/lib/web-fetch-system-config';
+import {
+	parseWebSearchCatalogLenient,
+	serializeWebSearchCatalog,
+	type WebSearchCatalog,
+} from '@octafuse/core/lib/web-search-system-config';
+import {
+	parseWebDeepSearchCatalogLenient,
+	serializeWebDeepSearchCatalog,
+	type WebDeepSearchCatalog,
+} from '@octafuse/core/lib/web-deep-search-system-config';
+import {
+	parseAiDetectionCatalogLenient,
+	serializeAiDetectionCatalog,
+	AI_DETECTION_PROVIDER_REQUIRED_CREDENTIALS,
+	type AiDetectionCatalog,
+	type AiDetectionCatalogEntry,
+} from '@octafuse/core/lib/ai-detection-system-config';
+import { type ToolCatalogPricingFields } from '@octafuse/core/lib/tool-pricing';
+import { restPricingDraftFromEntry, restPricingFieldsFromDraft, type RestToolPricingDraft } from '@/app/gateway/tools/tool-pricing-draft';
+import { WebSearchProviderGuideContent } from '@/app/gateway/tools/components/web-search-provider-guide-modal';
+import {
+	cloneDrafts,
+	resolveProviderCardActions,
+	resolveProviderCardStatus,
+	wouldClearSavedActiveCredentials,
+	type PriceTripleDraft,
+} from '@/app/gateway/tools/components/provider-card-state';
+import { RestToolPricingEditor } from '@/app/gateway/tools/components/rest-tool-pricing-editor';
+import { ToolProviderDrawer } from '@/app/gateway/tools/components/tool-provider-drawer';
+import { ToolProviderSaveActions } from '@/app/gateway/tools/components/tool-provider-picker';
+import { ToolProviderList } from '@/app/gateway/tools/components/tool-provider-list';
+
+type ProviderDraft = {
+	apiKey: string;
+} & RestToolPricingDraft;
+
+type AiDetectionProviderDraft = {
+	apiKey: string;
+	secretId: string;
+	secretKey: string;
+	email: string;
+	region: string;
+	bizType: string;
+	billingUnitChars: string;
+} & RestToolPricingDraft;
+
+function defaultPriceTriple(defaultCost: number): PriceTripleDraft {
+	const s = String(defaultCost);
+	return { metered: s, standard: s, charged: s };
+}
+
+function entryToDraftPrices(entry: ToolCatalogPricingFields): RestToolPricingDraft {
+	return restPricingDraftFromEntry(entry);
+}
+
+function emptySearchDrafts(): Record<WebSearchProvider, ProviderDraft> {
+	const out = {} as Record<WebSearchProvider, ProviderDraft>;
+	for (const p of WEB_SEARCH_PROVIDERS) {
+		out[p] = { apiKey: '', ...defaultPriceTriple(DEFAULT_WEB_SEARCH_COST) };
+	}
+	return out;
+}
+
+function emptyFetchDrafts(): Record<WebFetchProvider, ProviderDraft> {
+	const out = {} as Record<WebFetchProvider, ProviderDraft>;
+	for (const p of WEB_FETCH_PROVIDERS) {
+		out[p] = { apiKey: '', ...defaultPriceTriple(DEFAULT_WEB_FETCH_COST) };
+	}
+	return out;
+}
+
+function emptyDeepSearchDrafts(): Record<WebDeepSearchProvider, ProviderDraft> {
+	const out = {} as Record<WebDeepSearchProvider, ProviderDraft>;
+	for (const p of WEB_DEEP_SEARCH_PROVIDERS) {
+		out[p] = { apiKey: '', ...defaultPriceTriple(DEFAULT_WEB_DEEP_SEARCH_COST) };
+	}
+	return out;
+}
+
+function emptyAiDetectionDrafts(): Record<AiDetectionProvider, AiDetectionProviderDraft> {
+	const out = {} as Record<AiDetectionProvider, AiDetectionProviderDraft>;
+	for (const p of AI_DETECTION_PROVIDERS) {
+		out[p] = {
+			apiKey: '',
+			secretId: '',
+			secretKey: '',
+			email: '',
+			region: p === 'tencent_tms' ? 'ap-guangzhou' : '',
+			bizType: '',
+			...defaultPriceTriple(DEFAULT_AI_DETECTION_COST),
+			billingUnitChars: String(DEFAULT_AI_DETECTION_BILLING_UNIT_CHARS),
+		};
+	}
+	return out;
+}
+
+function draftToAiEntry(d: AiDetectionProviderDraft): AiDetectionCatalogEntry {
+	const prices = restPricingFieldsFromDraft(d);
+	if (!prices) throw new Error('Invalid tool pricing');
+	const entry: AiDetectionCatalogEntry = { ...prices };
+	const billing = Number(d.billingUnitChars.trim());
+	if (Number.isFinite(billing) && billing >= 1) {
+		entry.billingUnitChars = Math.floor(billing);
+	}
+	if (d.apiKey.trim()) entry.apiKey = d.apiKey.trim();
+	if (d.secretId.trim()) entry.secretId = d.secretId.trim();
+	if (d.secretKey.trim()) entry.secretKey = d.secretKey.trim();
+	if (d.email.trim()) entry.email = d.email.trim();
+	if (d.region.trim()) entry.region = d.region.trim();
+	if (d.bizType.trim()) entry.bizType = d.bizType.trim();
+	return entry;
+}
+
+function aiDraftHasRequiredCredentials(provider: AiDetectionProvider, d: AiDetectionProviderDraft): boolean {
+	if (!isAiDetectionImplementedProvider(provider)) {
+		return false;
+	}
+	return AI_DETECTION_PROVIDER_REQUIRED_CREDENTIALS[provider].every((field) => Boolean(d[field].trim()));
+}
+
+function syncWebSearchFromRows(rows: SystemConfigRow[]): {
+	active: WebSearchProvider;
+	drafts: Record<WebSearchProvider, ProviderDraft>;
+	savedActive: WebSearchProvider | null;
+} {
+	const drafts = emptySearchDrafts();
+	const catalogRaw = rows.find((r) => r.key === WEB_SEARCH_CATALOG_KEY)?.value ?? null;
+	const catalogPresent = catalogRaw != null && String(catalogRaw).trim().length > 0;
+
+	if (catalogPresent) {
+		const catalog = parseWebSearchCatalogLenient(catalogRaw) ?? {};
+		for (const p of WEB_SEARCH_PROVIDERS) {
+			const entry = catalog[p];
+			if (entry) {
+				drafts[p] = { apiKey: entry.apiKey, ...entryToDraftPrices(entry) };
+			}
+		}
+		const activeRaw =
+			rows
+				.find((r) => r.key === WEB_SEARCH_ACTIVE_KEY)
+				?.value?.trim()
+				.toLowerCase() ?? '';
+		const active = (WEB_SEARCH_PROVIDERS as readonly string[]).includes(activeRaw)
+			? (activeRaw as WebSearchProvider)
+			: DEFAULT_WEB_SEARCH_PROVIDER;
+		const savedActive = (WEB_SEARCH_PROVIDERS as readonly string[]).includes(activeRaw)
+			? (activeRaw as WebSearchProvider)
+			: null;
+		return { active, drafts, savedActive };
+	}
+
+	const providerRaw =
+		rows
+			.find((r) => r.key === WEB_SEARCH_PROVIDER_KEY)
+			?.value?.trim()
+			.toLowerCase() ?? '';
+	const provider = (WEB_SEARCH_PROVIDERS as readonly string[]).includes(providerRaw)
+		? (providerRaw as WebSearchProvider)
+		: DEFAULT_WEB_SEARCH_PROVIDER;
+	const apiKey = rows.find((r) => r.key === WEB_SEARCH_API_KEY_KEY)?.value ?? '';
+	const costRaw = rows.find((r) => r.key === WEB_SEARCH_COST_KEY)?.value?.trim() ?? '';
+	const legacyCost = costRaw || String(DEFAULT_WEB_SEARCH_COST);
+	drafts[provider] = {
+		apiKey,
+		metered: legacyCost,
+		standard: legacyCost,
+		charged: legacyCost,
+	};
+	return { active: provider, drafts, savedActive: null };
+}
+
+function syncWebFetchFromRows(rows: SystemConfigRow[]): {
+	active: WebFetchProvider;
+	drafts: Record<WebFetchProvider, ProviderDraft>;
+	savedActive: WebFetchProvider | null;
+} {
+	const drafts = emptyFetchDrafts();
+	const catalogRaw = rows.find((r) => r.key === WEB_FETCH_CATALOG_KEY)?.value ?? null;
+	const catalogPresent = catalogRaw != null && String(catalogRaw).trim().length > 0;
+
+	if (catalogPresent) {
+		const catalog = parseWebFetchCatalogLenient(catalogRaw) ?? {};
+		for (const p of WEB_FETCH_PROVIDERS) {
+			const entry = catalog[p];
+			if (entry) {
+				drafts[p] = { apiKey: entry.apiKey, ...entryToDraftPrices(entry) };
+			}
+		}
+		const activeRaw =
+			rows
+				.find((r) => r.key === WEB_FETCH_ACTIVE_KEY)
+				?.value?.trim()
+				.toLowerCase() ?? '';
+		const active = (WEB_FETCH_PROVIDERS as readonly string[]).includes(activeRaw)
+			? (activeRaw as WebFetchProvider)
+			: DEFAULT_WEB_FETCH_PROVIDER;
+		const savedActive = (WEB_FETCH_PROVIDERS as readonly string[]).includes(activeRaw)
+			? (activeRaw as WebFetchProvider)
+			: null;
+		return { active, drafts, savedActive };
+	}
+
+	const providerRaw =
+		rows
+			.find((r) => r.key === WEB_FETCH_PROVIDER_KEY)
+			?.value?.trim()
+			.toLowerCase() ?? '';
+	const provider = (WEB_FETCH_PROVIDERS as readonly string[]).includes(providerRaw)
+		? (providerRaw as WebFetchProvider)
+		: DEFAULT_WEB_FETCH_PROVIDER;
+	const apiKey = rows.find((r) => r.key === WEB_FETCH_API_KEY_KEY)?.value ?? '';
+	const costRaw = rows.find((r) => r.key === WEB_FETCH_COST_KEY)?.value?.trim() ?? '';
+	const legacyCost = costRaw || String(DEFAULT_WEB_FETCH_COST);
+	drafts[provider] = {
+		apiKey,
+		metered: legacyCost,
+		standard: legacyCost,
+		charged: legacyCost,
+	};
+	return { active: provider, drafts, savedActive: null };
+}
+
+function buildSearchCatalog(drafts: Record<WebSearchProvider, ProviderDraft>): WebSearchCatalog | null {
+	const catalog: WebSearchCatalog = {};
+	for (const p of WEB_SEARCH_PROVIDERS) {
+		const d = drafts[p];
+		if (!restPricingFieldsFromDraft(d)) {
+			return null;
+		}
+		catalog[p] = {
+			apiKey: d.apiKey.trim(),
+			...restPricingFieldsFromDraft(d)!,
+		};
+	}
+	return catalog;
+}
+
+function buildFetchCatalog(drafts: Record<WebFetchProvider, ProviderDraft>): WebFetchCatalog | null {
+	const catalog: WebFetchCatalog = {};
+	for (const p of WEB_FETCH_PROVIDERS) {
+		const d = drafts[p];
+		if (!restPricingFieldsFromDraft(d)) {
+			return null;
+		}
+		catalog[p] = {
+			apiKey: d.apiKey.trim(),
+			...restPricingFieldsFromDraft(d)!,
+		};
+	}
+	return catalog;
+}
+
+function syncWebDeepSearchFromRows(rows: SystemConfigRow[]): {
+	active: WebDeepSearchProvider;
+	drafts: Record<WebDeepSearchProvider, ProviderDraft>;
+	savedActive: WebDeepSearchProvider | null;
+} {
+	const drafts = emptyDeepSearchDrafts();
+	const catalogRaw = rows.find((r) => r.key === WEB_DEEP_SEARCH_CATALOG_KEY)?.value ?? null;
+	const catalogPresent = catalogRaw != null && String(catalogRaw).trim().length > 0;
+	if (catalogPresent) {
+		const catalog = parseWebDeepSearchCatalogLenient(catalogRaw) ?? {};
+		for (const p of WEB_DEEP_SEARCH_PROVIDERS) {
+			const entry = catalog[p];
+			if (entry) {
+				drafts[p] = { apiKey: entry.apiKey, ...entryToDraftPrices(entry) };
+			}
+		}
+		const activeRaw =
+			rows
+				.find((r) => r.key === WEB_DEEP_SEARCH_ACTIVE_KEY)
+				?.value?.trim()
+				.toLowerCase() ?? '';
+		const active = (WEB_DEEP_SEARCH_PROVIDERS as readonly string[]).includes(activeRaw)
+			? (activeRaw as WebDeepSearchProvider)
+			: DEFAULT_WEB_DEEP_SEARCH_PROVIDER;
+		const savedActive = (WEB_DEEP_SEARCH_PROVIDERS as readonly string[]).includes(activeRaw)
+			? (activeRaw as WebDeepSearchProvider)
+			: null;
+		return { active, drafts, savedActive };
+	}
+	return { active: DEFAULT_WEB_DEEP_SEARCH_PROVIDER, drafts, savedActive: null };
+}
+
+function buildDeepSearchCatalog(drafts: Record<WebDeepSearchProvider, ProviderDraft>): WebDeepSearchCatalog | null {
+	const catalog: WebDeepSearchCatalog = {};
+	for (const p of WEB_DEEP_SEARCH_PROVIDERS) {
+		const d = drafts[p];
+		if (!restPricingFieldsFromDraft(d)) {
+			return null;
+		}
+		catalog[p] = {
+			apiKey: d.apiKey.trim(),
+			...restPricingFieldsFromDraft(d)!,
+		};
+	}
+	return catalog;
+}
+
+function syncAiDetectionFromRows(rows: SystemConfigRow[]): {
+	active: AiDetectionProvider;
+	drafts: Record<AiDetectionProvider, AiDetectionProviderDraft>;
+	savedActive: AiDetectionProvider | null;
+} {
+	const drafts = emptyAiDetectionDrafts();
+	const catalogRaw = rows.find((r) => r.key === AI_DETECTION_CATALOG_KEY)?.value ?? null;
+	const catalogPresent = catalogRaw != null && String(catalogRaw).trim().length > 0;
+	if (catalogPresent) {
+		const catalog = parseAiDetectionCatalogLenient(catalogRaw) ?? {};
+		for (const p of AI_DETECTION_PROVIDERS) {
+			const entry = catalog[p];
+			if (entry) {
+				drafts[p] = {
+					apiKey: entry.apiKey ?? '',
+					secretId: entry.secretId ?? '',
+					secretKey: entry.secretKey ?? '',
+					email: entry.email ?? '',
+					region: entry.region ?? drafts[p].region,
+					bizType: entry.bizType ?? '',
+					...entryToDraftPrices(entry),
+					billingUnitChars: String(entry.billingUnitChars ?? DEFAULT_AI_DETECTION_BILLING_UNIT_CHARS),
+				};
+			}
+		}
+		const activeRaw =
+			rows
+				.find((r) => r.key === AI_DETECTION_ACTIVE_KEY)
+				?.value?.trim()
+				.toLowerCase() ?? '';
+		const active = (AI_DETECTION_PROVIDERS as readonly string[]).includes(activeRaw)
+			? (activeRaw as AiDetectionProvider)
+			: DEFAULT_AI_DETECTION_PROVIDER;
+		const savedActive = (AI_DETECTION_PROVIDERS as readonly string[]).includes(activeRaw)
+			? (activeRaw as AiDetectionProvider)
+			: null;
+		return { active, drafts, savedActive };
+	}
+	return { active: DEFAULT_AI_DETECTION_PROVIDER, drafts, savedActive: null };
+}
+
+function buildAiDetectionCatalog(
+	drafts: Record<AiDetectionProvider, AiDetectionProviderDraft>,
+): AiDetectionCatalog | null {
+	const catalog: AiDetectionCatalog = {};
+	for (const p of AI_DETECTION_PROVIDERS) {
+		const d = drafts[p];
+		if (!restPricingFieldsFromDraft(d)) {
+			return null;
+		}
+		const unitChars = Number(d.billingUnitChars.trim());
+		if (!d.billingUnitChars.trim() || !Number.isFinite(unitChars) || unitChars < 1 || !Number.isInteger(unitChars)) {
+			return null;
+		}
+		catalog[p] = draftToAiEntry(d);
+	}
+	return catalog;
+}
+
+
+type ToolCardKey = 'webSearch' | 'webFetch' | 'webDeepSearch' | 'aiDetection';
+type DrawerTarget = { tool: ToolCardKey; providerId: string };
+type CardFeedback = { kind: 'success' | 'error'; message: string };
+
+const AI_DETECTION_FIELD_I18N: Record<AiDetectionCredentialField, `aiDetection.fields.${AiDetectionCredentialField}`> =
+	{
+		apiKey: 'aiDetection.fields.apiKey',
+		secretId: 'aiDetection.fields.secretId',
+		secretKey: 'aiDetection.fields.secretKey',
+		email: 'aiDetection.fields.email',
+	};
+
+function CardSaveFeedback({ feedback }: { feedback?: CardFeedback }) {
+	if (!feedback) {
+		return null;
+	}
+	return (
+		<span
+			className={feedback.kind === 'success' ? 'text-sm text-green-700' : 'text-sm text-red-700'}
+			role={feedback.kind === 'success' ? 'status' : undefined}
+		>
+			{feedback.message}
+		</span>
+	);
+}
+
+function ApiKeyField({
+	value,
+	onChange,
+	placeholder,
+	secretsVisible,
+}: {
+	value: string;
+	onChange: (value: string) => void;
+	placeholder: string;
+	secretsVisible: boolean;
+}) {
+	return (
+		<input
+			type={secretsVisible ? 'text' : 'password'}
+			value={value}
+			onChange={(e) => onChange(e.target.value)}
+			placeholder={placeholder}
+			autoComplete="off"
+			spellCheck={false}
+			className="w-full min-w-0 rounded-md border border-gray-300 bg-white px-3 py-2 font-mono text-sm text-gray-900 shadow-sm"
+		/>
+	);
+}
+
+function GatewayToolsConfigPage() {
+	const t = useTranslations('tools');
+	const tPricing = useTranslations('toolPricing');
+	const tCommon = useTranslations('common');
+	const request = useAdvancedEditorRequest();
+	const { confirm } = useFeedback();
+	const versions = useRef<Record<string, string>>({});
+	const loadVersions = useCallback(async () => {
+		const response = await readApiJson<{ families: Array<{ family: string; version: string }> }>(await request('/api/admin/config/tools/overview'));
+		if (!response.success || !response.data) throw new Error(response.message || 'Tools versions unavailable');
+		versions.current = Object.fromEntries(response.data.families.map((family) => [family.family, family.version]));
+	}, [request]);
+	const putConfig = async (key: string, value: string): Promise<{ ok: boolean; message?: string }> => {
+		const family = key.startsWith('AI_DETECTION') ? 'ai-detection' : key.startsWith('WEB_DEEP_SEARCH') ? 'web-deep-search' : key.startsWith('WEB_FETCH') ? 'web-fetch' : 'web-search';
+		const version = versions.current[family];
+		if (!version) return { ok: false, message: tCommon('requestFailed') };
+		const commit = (acceptLoss: boolean) => request('/api/admin/config', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key, value, tools_version: version, reason: 'Console advanced Tools edit', accept_loss_pricing: acceptLoss }) }).then((response) => readApiJson(response));
+		let result = await commit(false);
+		if (!result.success && result.code === 'tools_loss_pricing_confirmation_required') {
+			if (await confirm({ title: tCommon('confirmLossPricing'), message: result.message || tCommon('confirmLossPricing'), danger: true })) result = await commit(true);
+		}
+		if (result.success) await loadVersions();
+		return { ok: result.success, message: result.message };
+	};
+
+	const { currency: billingCurrency } = useBillingCurrency();
+	const webSearchProviderOptions = getWebSearchProviderOptions((k) => t(k));
+	const webFetchProviderOptions = getWebFetchProviderOptions((k) => t(k));
+	const webDeepSearchProviderOptions = getWebDeepSearchProviderOptions((k) => t(k));
+	const aiDetectionProviderOptions = getAiDetectionProviderOptions((k) => t(k));
+
+	const [isLoading, setIsLoading] = useState(true);
+	const [cardFeedback, setCardFeedback] = useState<Partial<Record<ToolCardKey, CardFeedback>>>({});
+	const successTimersRef = useRef<Partial<Record<ToolCardKey, ReturnType<typeof setTimeout>>>>({});
+
+	const [webSearchSelected, setWebSearchSelected] = useState<WebSearchProvider>(DEFAULT_WEB_SEARCH_PROVIDER);
+	const [webSearchSavedActive, setWebSearchSavedActive] = useState<WebSearchProvider | null>(null);
+	const [webSearchDrafts, setWebSearchDrafts] = useState(emptySearchDrafts);
+	const [webSearchSavedDrafts, setWebSearchSavedDrafts] = useState(emptySearchDrafts);
+	const [webSearchSaving, setWebSearchSaving] = useState(false);
+	const [providerGuideOpen, setProviderGuideOpen] = useState(false);
+	const guideButtonRef = useRef<HTMLButtonElement>(null);
+
+	const [webFetchSelected, setWebFetchSelected] = useState<WebFetchProvider>(DEFAULT_WEB_FETCH_PROVIDER);
+	const [webFetchSavedActive, setWebFetchSavedActive] = useState<WebFetchProvider | null>(null);
+	const [webFetchDrafts, setWebFetchDrafts] = useState(emptyFetchDrafts);
+	const [webFetchSavedDrafts, setWebFetchSavedDrafts] = useState(emptyFetchDrafts);
+	const [webFetchSaving, setWebFetchSaving] = useState(false);
+
+	const [webDeepSearchSelected, setWebDeepSearchSelected] = useState<WebDeepSearchProvider>(
+		DEFAULT_WEB_DEEP_SEARCH_PROVIDER,
+	);
+	const [webDeepSearchSavedActive, setWebDeepSearchSavedActive] = useState<WebDeepSearchProvider | null>(null);
+	const [webDeepSearchDrafts, setWebDeepSearchDrafts] = useState(emptyDeepSearchDrafts);
+	const [webDeepSearchSavedDrafts, setWebDeepSearchSavedDrafts] = useState(emptyDeepSearchDrafts);
+	const [webDeepSearchSaving, setWebDeepSearchSaving] = useState(false);
+
+	const [aiDetectionSelected, setAiDetectionSelected] = useState<AiDetectionProvider>(DEFAULT_AI_DETECTION_PROVIDER);
+	const [aiDetectionSavedActive, setAiDetectionSavedActive] = useState<AiDetectionProvider | null>(null);
+	const [aiDetectionDrafts, setAiDetectionDrafts] = useState(emptyAiDetectionDrafts);
+	const [aiDetectionSavedDrafts, setAiDetectionSavedDrafts] = useState(emptyAiDetectionDrafts);
+	const [aiDetectionSaving, setAiDetectionSaving] = useState(false);
+
+	const [secretsVisible, setSecretsVisible] = useState(false);
+	const serviceSearchRef = useRef<HTMLInputElement>(null);
+	/** 服务详情弹窗：点击服务行打开；null 表示关闭 */
+	const [drawer, setDrawer] = useState<DrawerTarget | null>(null);
+
+	const clearCardSuccessTimer = useCallback((card: ToolCardKey) => {
+		const timer = successTimersRef.current[card];
+		if (timer != null) {
+			clearTimeout(timer);
+			delete successTimersRef.current[card];
+		}
+	}, []);
+
+	const setCardError = useCallback(
+		(card: ToolCardKey, message: string) => {
+			clearCardSuccessTimer(card);
+			setCardFeedback((prev) => ({ ...prev, [card]: { kind: 'error', message } }));
+		},
+		[clearCardSuccessTimer],
+	);
+
+	const flashCardSuccess = useCallback(
+		(card: ToolCardKey, message?: string) => {
+			clearCardSuccessTimer(card);
+			setCardFeedback((prev) => ({
+				...prev,
+				[card]: { kind: 'success', message: message ?? tCommon('configUpdated') },
+			}));
+			successTimersRef.current[card] = setTimeout(() => {
+				setCardFeedback((prev) => {
+					const next = { ...prev };
+					if (next[card]?.kind === 'success') {
+						delete next[card];
+					}
+					return next;
+				});
+				delete successTimersRef.current[card];
+			}, 2500);
+		},
+		[clearCardSuccessTimer, tCommon],
+	);
+
+	const clearCardFeedback = useCallback(
+		(card: ToolCardKey) => {
+			clearCardSuccessTimer(card);
+			setCardFeedback((prev) => {
+				const next = { ...prev };
+				delete next[card];
+				return next;
+			});
+		},
+		[clearCardSuccessTimer],
+	);
+
+	const fetchConfig = useCallback(async () => {
+		try {
+			setIsLoading(true);
+			await loadVersions();
+			const response = await request('/api/admin/config');
+			const data = await readApiJson<SystemConfigRow[]>(response);
+			if (data.success && Array.isArray(data.data)) {
+				const search = syncWebSearchFromRows(data.data);
+				setWebSearchSelected(search.active);
+				setWebSearchDrafts(search.drafts);
+				setWebSearchSavedDrafts(cloneDrafts(search.drafts));
+				setWebSearchSavedActive(search.savedActive);
+				const fetch = syncWebFetchFromRows(data.data);
+				setWebFetchSelected(fetch.active);
+				setWebFetchDrafts(fetch.drafts);
+				setWebFetchSavedDrafts(cloneDrafts(fetch.drafts));
+				setWebFetchSavedActive(fetch.savedActive);
+				const deep = syncWebDeepSearchFromRows(data.data);
+				setWebDeepSearchSelected(deep.active);
+				setWebDeepSearchDrafts(deep.drafts);
+				setWebDeepSearchSavedDrafts(cloneDrafts(deep.drafts));
+				setWebDeepSearchSavedActive(deep.savedActive);
+				const ai = syncAiDetectionFromRows(data.data);
+				setAiDetectionSelected(ai.active);
+				setAiDetectionDrafts(ai.drafts);
+				setAiDetectionSavedDrafts(cloneDrafts(ai.drafts));
+				setAiDetectionSavedActive(ai.savedActive);
+			}
+		} catch (error) {
+			console.error('Fetch tools config error:', error);
+		} finally {
+			setIsLoading(false);
+		}
+	}, []);
+
+	useEffect(() => {
+		void fetchConfig();
+	}, [fetchConfig]);
+
+	useEffect(() => {
+		const timers = successTimersRef.current;
+		return () => {
+			for (const timer of Object.values(timers)) {
+				if (timer != null) {
+					clearTimeout(timer);
+				}
+			}
+		};
+	}, []);
+
+	const saveWebSearch = async (activateSelected: boolean) => {
+		const catalog = buildSearchCatalog(webSearchDrafts);
+		if (!catalog) {
+			setCardError('webSearch', t('errors.invalidWebSearchCost'));
+			return;
+		}
+		if (activateSelected && !catalog[webSearchSelected]?.apiKey?.trim()) {
+			setCardError('webSearch', t('errors.noKeyCannotActivate'));
+			return;
+		}
+		if (
+			webSearchSavedActive &&
+			!catalog[webSearchSavedActive]?.apiKey?.trim() &&
+			!(activateSelected && webSearchSelected !== webSearchSavedActive)
+		) {
+			setCardError('webSearch', t('errors.switchActiveBeforeClearingKey'));
+			return;
+		}
+		if (
+			activateSelected &&
+			wouldClearSavedActiveCredentials({
+				savedActiveId: webSearchSavedActive,
+				nextActiveId: webSearchSelected,
+				hasCredentialsAfterSave: (id) => Boolean(catalog[id as WebSearchProvider]?.apiKey?.trim()),
+			})
+		) {
+			setCardError('webSearch', t('errors.switchActiveBeforeClearingKey'));
+			return;
+		}
+
+		clearCardFeedback('webSearch');
+		setWebSearchSaving(true);
+		try {
+			const catRes = await putConfig(WEB_SEARCH_CATALOG_KEY, serializeWebSearchCatalog(catalog));
+			if (!catRes.ok) {
+				setCardError('webSearch', catRes.message || tCommon('saveFailed'));
+				return;
+			}
+			if (activateSelected) {
+				const actRes = await putConfig(WEB_SEARCH_ACTIVE_KEY, webSearchSelected);
+				if (!actRes.ok) {
+					setCardError('webSearch', actRes.message || tCommon('saveFailed'));
+					return;
+				}
+				setWebSearchSavedActive(webSearchSelected);
+				flashCardSuccess('webSearch', actRes.message ?? catRes.message);
+			} else {
+				flashCardSuccess('webSearch', catRes.message);
+			}
+			setWebSearchSavedDrafts(cloneDrafts(webSearchDrafts));
+		} catch {
+			setCardError('webSearch', tCommon('requestFailed'));
+		} finally {
+			setWebSearchSaving(false);
+		}
+	};
+
+	const saveWebFetch = async (activateSelected: boolean) => {
+		const catalog = buildFetchCatalog(webFetchDrafts);
+		if (!catalog) {
+			setCardError('webFetch', t('errors.invalidWebFetchCost'));
+			return;
+		}
+		if (activateSelected && !catalog[webFetchSelected]?.apiKey?.trim()) {
+			setCardError('webFetch', t('errors.noKeyCannotActivate'));
+			return;
+		}
+		if (
+			webFetchSavedActive &&
+			!catalog[webFetchSavedActive]?.apiKey?.trim() &&
+			!(activateSelected && webFetchSelected !== webFetchSavedActive)
+		) {
+			setCardError('webFetch', t('errors.switchActiveBeforeClearingKey'));
+			return;
+		}
+
+		clearCardFeedback('webFetch');
+		setWebFetchSaving(true);
+		try {
+			const catRes = await putConfig(WEB_FETCH_CATALOG_KEY, serializeWebFetchCatalog(catalog));
+			if (!catRes.ok) {
+				setCardError('webFetch', catRes.message || tCommon('saveFailed'));
+				return;
+			}
+			if (activateSelected) {
+				const actRes = await putConfig(WEB_FETCH_ACTIVE_KEY, webFetchSelected);
+				if (!actRes.ok) {
+					setCardError('webFetch', actRes.message || tCommon('saveFailed'));
+					return;
+				}
+				setWebFetchSavedActive(webFetchSelected);
+				flashCardSuccess('webFetch', actRes.message ?? catRes.message);
+			} else {
+				flashCardSuccess('webFetch', catRes.message);
+			}
+			setWebFetchSavedDrafts(cloneDrafts(webFetchDrafts));
+		} catch {
+			setCardError('webFetch', tCommon('requestFailed'));
+		} finally {
+			setWebFetchSaving(false);
+		}
+	};
+
+	const saveWebDeepSearch = async (activateSelected: boolean) => {
+		const catalog = buildDeepSearchCatalog(webDeepSearchDrafts);
+		if (!catalog) {
+			setCardError('webDeepSearch', t('errors.invalidWebDeepSearchCost'));
+			return;
+		}
+		if (activateSelected && !catalog[webDeepSearchSelected]?.apiKey?.trim()) {
+			setCardError('webDeepSearch', t('errors.noKeyCannotActivate'));
+			return;
+		}
+		if (
+			webDeepSearchSavedActive &&
+			!catalog[webDeepSearchSavedActive]?.apiKey?.trim() &&
+			!(activateSelected && webDeepSearchSelected !== webDeepSearchSavedActive)
+		) {
+			setCardError('webDeepSearch', t('errors.switchActiveBeforeClearingKey'));
+			return;
+		}
+
+		clearCardFeedback('webDeepSearch');
+		setWebDeepSearchSaving(true);
+		try {
+			const catRes = await putConfig(WEB_DEEP_SEARCH_CATALOG_KEY, serializeWebDeepSearchCatalog(catalog));
+			if (!catRes.ok) {
+				setCardError('webDeepSearch', catRes.message || tCommon('saveFailed'));
+				return;
+			}
+			if (activateSelected) {
+				const actRes = await putConfig(WEB_DEEP_SEARCH_ACTIVE_KEY, webDeepSearchSelected);
+				if (!actRes.ok) {
+					setCardError('webDeepSearch', actRes.message || tCommon('saveFailed'));
+					return;
+				}
+				setWebDeepSearchSavedActive(webDeepSearchSelected);
+				flashCardSuccess('webDeepSearch', actRes.message ?? catRes.message);
+			} else {
+				flashCardSuccess('webDeepSearch', catRes.message);
+			}
+			setWebDeepSearchSavedDrafts(cloneDrafts(webDeepSearchDrafts));
+		} catch {
+			setCardError('webDeepSearch', tCommon('requestFailed'));
+		} finally {
+			setWebDeepSearchSaving(false);
+		}
+	};
+
+	const saveAiDetection = async (activateSelected: boolean) => {
+		const catalog = buildAiDetectionCatalog(aiDetectionDrafts);
+		if (!catalog) {
+			setCardError('aiDetection', t('errors.invalidAiDetectionCost'));
+			return;
+		}
+		if (activateSelected) {
+			if (!isAiDetectionImplementedProvider(aiDetectionSelected)) {
+				setCardError('aiDetection', t('errors.aiDetectionNotImplemented'));
+				return;
+			}
+			if (!aiDraftHasRequiredCredentials(aiDetectionSelected, aiDetectionDrafts[aiDetectionSelected])) {
+				setCardError('aiDetection', t('errors.noKeyCannotActivate'));
+				return;
+			}
+		}
+		if (
+			aiDetectionSavedActive &&
+			!aiDraftHasRequiredCredentials(aiDetectionSavedActive, aiDetectionDrafts[aiDetectionSavedActive]) &&
+			!(activateSelected && aiDetectionSelected !== aiDetectionSavedActive)
+		) {
+			setCardError('aiDetection', t('errors.switchActiveBeforeClearingKey'));
+			return;
+		}
+
+		clearCardFeedback('aiDetection');
+		setAiDetectionSaving(true);
+		try {
+			const catRes = await putConfig(AI_DETECTION_CATALOG_KEY, serializeAiDetectionCatalog(catalog));
+			if (!catRes.ok) {
+				setCardError('aiDetection', catRes.message || tCommon('saveFailed'));
+				return;
+			}
+			if (activateSelected) {
+				const actRes = await putConfig(AI_DETECTION_ACTIVE_KEY, aiDetectionSelected);
+				if (!actRes.ok) {
+					setCardError('aiDetection', actRes.message || tCommon('saveFailed'));
+					return;
+				}
+				setAiDetectionSavedActive(aiDetectionSelected);
+				flashCardSuccess('aiDetection', actRes.message ?? catRes.message);
+			} else {
+				flashCardSuccess('aiDetection', catRes.message);
+			}
+			setAiDetectionSavedDrafts(cloneDrafts(aiDetectionDrafts));
+		} catch {
+			setCardError('aiDetection', tCommon('requestFailed'));
+		} finally {
+			setAiDetectionSaving(false);
+		}
+	};
+
+	const webSearchDrawerSelected = drawer?.tool === 'webSearch' ? drawer.providerId : '';
+	const webFetchDrawerSelected = drawer?.tool === 'webFetch' ? drawer.providerId : '';
+	const webDeepSearchDrawerSelected = drawer?.tool === 'webDeepSearch' ? drawer.providerId : '';
+	const aiDetectionDrawerSelected = drawer?.tool === 'aiDetection' ? drawer.providerId : '';
+
+	const webSearchPickerItems = useMemo(
+		() =>
+			WEB_SEARCH_PROVIDERS.map((p) => ({
+				id: p,
+				label: webSearchProviderOptions.find((o) => o.value === p)?.label ?? p,
+				prices: webSearchDrafts[p],
+				status: resolveProviderCardStatus({
+					providerId: p,
+					selectedId: webSearchDrawerSelected,
+					savedActiveId: webSearchSavedActive,
+					isConfigured: webSearchDrafts[p].apiKey.trim().length > 0,
+					prices: webSearchDrafts[p],
+					draft: webSearchDrafts[p],
+					savedDraft: webSearchSavedDrafts[p],
+				}),
+			})),
+		[webSearchDrafts, webSearchDrawerSelected, webSearchProviderOptions, webSearchSavedActive, webSearchSavedDrafts],
+	);
+
+	const webFetchPickerItems = useMemo(
+		() =>
+			WEB_FETCH_PROVIDERS.map((p) => ({
+				id: p,
+				label: webFetchProviderOptions.find((o) => o.value === p)?.label ?? p,
+				prices: webFetchDrafts[p],
+				status: resolveProviderCardStatus({
+					providerId: p,
+					selectedId: webFetchDrawerSelected,
+					savedActiveId: webFetchSavedActive,
+					isConfigured: webFetchDrafts[p].apiKey.trim().length > 0,
+					prices: webFetchDrafts[p],
+					draft: webFetchDrafts[p],
+					savedDraft: webFetchSavedDrafts[p],
+				}),
+			})),
+		[webFetchDrafts, webFetchDrawerSelected, webFetchProviderOptions, webFetchSavedActive, webFetchSavedDrafts],
+	);
+
+	const webDeepSearchPickerItems = useMemo(
+		() =>
+			WEB_DEEP_SEARCH_PROVIDERS.map((p) => ({
+				id: p,
+				label: webDeepSearchProviderOptions.find((o) => o.value === p)?.label ?? p,
+				prices: webDeepSearchDrafts[p],
+				status: resolveProviderCardStatus({
+					providerId: p,
+					selectedId: webDeepSearchDrawerSelected,
+					savedActiveId: webDeepSearchSavedActive,
+					isConfigured: webDeepSearchDrafts[p].apiKey.trim().length > 0,
+					prices: webDeepSearchDrafts[p],
+					draft: webDeepSearchDrafts[p],
+					savedDraft: webDeepSearchSavedDrafts[p],
+				}),
+			})),
+		[
+			webDeepSearchDrafts,
+			webDeepSearchDrawerSelected,
+			webDeepSearchProviderOptions,
+			webDeepSearchSavedActive,
+			webDeepSearchSavedDrafts,
+		],
+	);
+
+	const aiDetectionPickerItems = useMemo(
+		() =>
+			AI_DETECTION_PROVIDERS.map((p) => ({
+				id: p,
+				label: aiDetectionProviderOptions.find((o) => o.value === p)?.label ?? p,
+				prices: aiDetectionDrafts[p],
+				status: resolveProviderCardStatus({
+					providerId: p,
+					selectedId: aiDetectionDrawerSelected,
+					savedActiveId: aiDetectionSavedActive,
+					isConfigured: aiDraftHasRequiredCredentials(p, aiDetectionDrafts[p]),
+					isImplemented: isAiDetectionImplementedProvider(p),
+					prices: aiDetectionDrafts[p],
+					draft: aiDetectionDrafts[p],
+					savedDraft: aiDetectionSavedDrafts[p],
+				}),
+			})),
+		[
+			aiDetectionDrafts,
+			aiDetectionDrawerSelected,
+			aiDetectionProviderOptions,
+			aiDetectionSavedActive,
+			aiDetectionSavedDrafts,
+		],
+	);
+
+	const openWebSearchDrawer = (id: string) => {
+		setSecretsVisible(false);
+		setProviderGuideOpen(false);
+		const p = id as WebSearchProvider;
+		setWebSearchSelected(p);
+		setDrawer({ tool: 'webSearch', providerId: p });
+	};
+	const openWebFetchDrawer = (id: string) => {
+		setSecretsVisible(false);
+		setProviderGuideOpen(false);
+		const p = id as WebFetchProvider;
+		setWebFetchSelected(p);
+		setDrawer({ tool: 'webFetch', providerId: p });
+	};
+	const openWebDeepSearchDrawer = (id: string) => {
+		setSecretsVisible(false);
+		setProviderGuideOpen(false);
+		const p = id as WebDeepSearchProvider;
+		setWebDeepSearchSelected(p);
+		setDrawer({ tool: 'webDeepSearch', providerId: p });
+	};
+	const openAiDetectionDrawer = (id: string) => {
+		setSecretsVisible(false);
+		setProviderGuideOpen(false);
+		const p = id as AiDetectionProvider;
+		setAiDetectionSelected(p);
+		setDrawer({ tool: 'aiDetection', providerId: p });
+	};
+	const closeDrawer = useCallback(() => {
+		setSecretsVisible(false);
+		setProviderGuideOpen(false);
+		setDrawer(null);
+	}, []);
+
+	const webSearchActions = resolveProviderCardActions({
+		catalogPricesValid: buildSearchCatalog(webSearchDrafts) != null,
+		selectedIsActive: webSearchSavedActive === webSearchSelected,
+		selectedConfigured: webSearchDrafts[webSearchSelected].apiKey.trim().length > 0,
+	});
+	const webFetchActions = resolveProviderCardActions({
+		catalogPricesValid: buildFetchCatalog(webFetchDrafts) != null,
+		selectedIsActive: webFetchSavedActive === webFetchSelected,
+		selectedConfigured: webFetchDrafts[webFetchSelected].apiKey.trim().length > 0,
+	});
+	const webDeepSearchActions = resolveProviderCardActions({
+		catalogPricesValid: buildDeepSearchCatalog(webDeepSearchDrafts) != null,
+		selectedIsActive: webDeepSearchSavedActive === webDeepSearchSelected,
+		selectedConfigured: webDeepSearchDrafts[webDeepSearchSelected].apiKey.trim().length > 0,
+	});
+	const aiDetectionActions = resolveProviderCardActions({
+		catalogPricesValid: buildAiDetectionCatalog(aiDetectionDrafts) != null,
+		selectedIsActive: aiDetectionSavedActive === aiDetectionSelected,
+		selectedConfigured: aiDraftHasRequiredCredentials(aiDetectionSelected, aiDetectionDrafts[aiDetectionSelected]),
+		selectedImplemented: isAiDetectionImplementedProvider(aiDetectionSelected),
+	});
+
+	if (isLoading) {
+		return (
+			<div className="flex h-full items-center justify-center">
+				<div className="text-gray-600">{tCommon('loading')}</div>
+			</div>
+		);
+	}
+
+	const webSearchSelectedLabel =
+		webSearchProviderOptions.find((o) => o.value === webSearchSelected)?.label ?? webSearchSelected;
+	const webFetchSelectedLabel =
+		webFetchProviderOptions.find((o) => o.value === webFetchSelected)?.label ?? webFetchSelected;
+	const webDeepSearchSelectedLabel =
+		webDeepSearchProviderOptions.find((o) => o.value === webDeepSearchSelected)?.label ?? webDeepSearchSelected;
+	const aiDetectionSelectedLabel =
+		aiDetectionProviderOptions.find((o) => o.value === aiDetectionSelected)?.label ?? aiDetectionSelected;
+	const aiFields = getAiDetectionCredentialFields(aiDetectionSelected);
+	const aiDraft = aiDetectionDrafts[aiDetectionSelected];
+
+	const currentDraft =
+		drawer?.tool === 'webSearch'
+			? webSearchDrafts[webSearchSelected]
+			: drawer?.tool === 'webFetch'
+				? webFetchDrafts[webFetchSelected]
+				: drawer?.tool === 'webDeepSearch'
+					? webDeepSearchDrafts[webDeepSearchSelected]
+					: drawer?.tool === 'aiDetection'
+						? aiDraft
+						: null;
+	const currentConfigured =
+		drawer?.tool === 'aiDetection'
+			? aiFields.every((field) => Boolean(aiDraft[field].trim()))
+			: Boolean(currentDraft?.apiKey.trim());
+	const aiUnitValid =
+		Boolean(aiDraft.billingUnitChars.trim()) &&
+		Number.isSafeInteger(Number(aiDraft.billingUnitChars)) &&
+		Number(aiDraft.billingUnitChars) > 0;
+	function updateAiDraft(patch: Partial<AiDetectionProviderDraft>) {
+		setAiDetectionDrafts((prev) => ({
+			...prev,
+			[aiDetectionSelected]: { ...prev[aiDetectionSelected], ...patch },
+		}));
+	}
+	function updateCurrentDraft(patch: Partial<ProviderDraft>) {
+		if (drawer?.tool === 'webSearch')
+			setWebSearchDrafts((prev) => ({
+				...prev,
+				[webSearchSelected]: { ...prev[webSearchSelected], ...patch },
+			}));
+		else if (drawer?.tool === 'webFetch')
+			setWebFetchDrafts((prev) => ({
+				...prev,
+				[webFetchSelected]: { ...prev[webFetchSelected], ...patch },
+			}));
+		else if (drawer?.tool === 'webDeepSearch')
+			setWebDeepSearchDrafts((prev) => ({
+				...prev,
+				[webDeepSearchSelected]: { ...prev[webDeepSearchSelected], ...patch },
+			}));
+		else if (drawer?.tool === 'aiDetection') updateAiDraft(patch);
+	}
+
+	const drawerBusy =
+		(drawer?.tool === 'webSearch' && webSearchSaving) ||
+		(drawer?.tool === 'webFetch' && webFetchSaving) ||
+		(drawer?.tool === 'webDeepSearch' && webDeepSearchSaving) ||
+		(drawer?.tool === 'aiDetection' && aiDetectionSaving);
+
+	const drawerTitle =
+		drawer?.tool === 'webSearch'
+			? t('providerCards.detailTitle', { name: webSearchSelectedLabel })
+			: drawer?.tool === 'webFetch'
+				? t('providerCards.detailTitle', { name: webFetchSelectedLabel })
+				: drawer?.tool === 'webDeepSearch'
+					? t('providerCards.detailTitle', { name: webDeepSearchSelectedLabel })
+					: drawer?.tool === 'aiDetection'
+						? t('providerCards.detailTitle', { name: aiDetectionSelectedLabel })
+						: '';
+
+	return (
+		<div className="min-w-0 p-4 sm:p-6 lg:p-8">
+			<div className="mb-4 flex flex-wrap items-start justify-between gap-4">
+				<div>
+					<h1 className="text-3xl font-bold text-gray-900">{t('config.title')}</h1>
+					<p className="mt-1 text-sm text-gray-500">{t('config.subtitle')}</p>
+				</div>
+				<div className="flex flex-wrap items-center gap-3">
+					<Link href="/gateway/tools/invocations" className="text-sm font-medium text-blue-600 hover:underline">
+						{t('config.viewInvocations')}
+					</Link>
+				</div>
+			</div>
+
+			<ToolProviderList
+				searchRef={serviceSearchRef}
+				currency={billingCurrency}
+				groups={[
+					{
+						id: 'web-search',
+						label: t('webSearch.title'),
+						unitLabel: t('serviceList.perRequest'),
+						items: webSearchPickerItems,
+						onSelect: openWebSearchDrawer,
+					},
+					{
+						id: 'web-fetch',
+						label: t('webFetch.title'),
+						unitLabel: t('serviceList.perRequest'),
+						items: webFetchPickerItems,
+						onSelect: openWebFetchDrawer,
+					},
+					{
+						id: 'web-deep-search',
+						label: t('webDeepSearch.title'),
+						unitLabel: t('serviceList.perRequest'),
+						items: webDeepSearchPickerItems,
+						onSelect: openWebDeepSearchDrawer,
+					},
+					{
+						id: 'ai-detection',
+						label: t('aiDetection.title'),
+						unitLabel: t('serviceList.perRequest'),
+						items: aiDetectionPickerItems.map((item) => ({
+							...item,
+							unitLabel: t('serviceList.perCharacters', {
+								count: aiDetectionDrafts[item.id as AiDetectionProvider].billingUnitChars.trim() || '—',
+							}),
+						})),
+						onSelect: openAiDetectionDrawer,
+					},
+				]}
+			/>
+
+			<ToolProviderDrawer
+				fallbackFocusRef={serviceSearchRef}
+				open={drawer != null}
+				title={drawerTitle}
+				subtitle={drawer ? t(`${drawer.tool}.title`) : undefined}
+				busy={Boolean(drawerBusy)}
+				onClose={closeDrawer}
+				docsHref={
+					drawer?.tool === 'webSearch'
+						? WEB_SEARCH_PROVIDER_DOCS_URL[webSearchSelected]
+						: drawer?.tool === 'webFetch'
+							? WEB_FETCH_PROVIDER_DOCS_URL[webFetchSelected]
+							: drawer?.tool === 'webDeepSearch'
+								? WEB_DEEP_SEARCH_PROVIDER_DOCS_URL[webDeepSearchSelected]
+								: drawer?.tool === 'aiDetection'
+									? AI_DETECTION_PROVIDER_DOCS_URL[aiDetectionSelected]
+									: undefined
+				}
+				docsLabel={
+					drawer?.tool === 'webSearch'
+						? t('webSearch.providerDocs')
+						: drawer?.tool === 'webFetch'
+							? t('webFetch.providerDocs')
+							: drawer?.tool === 'webDeepSearch'
+								? t('webDeepSearch.providerDocs')
+								: drawer?.tool === 'aiDetection'
+									? t('aiDetection.providerDocs')
+									: undefined
+				}
+				playgroundHref={
+					drawer?.tool === 'webSearch'
+						? `/gateway/playground?mode=tools&tool=web-search&provider=${encodeURIComponent(webSearchSelected)}`
+						: drawer?.tool === 'webFetch'
+							? `/gateway/playground?mode=tools&tool=web-fetch&provider=${encodeURIComponent(webFetchSelected)}`
+							: drawer?.tool === 'webDeepSearch'
+								? `/gateway/playground?mode=tools&tool=web-deep-search&provider=${encodeURIComponent(
+										webDeepSearchSelected,
+									)}`
+								: drawer?.tool === 'aiDetection' && isAiDetectionImplementedProvider(aiDetectionSelected)
+									? `/gateway/playground?mode=tools&tool=ai-detection&provider=${encodeURIComponent(
+											aiDetectionSelected,
+										)}`
+									: null
+				}
+				playgroundLabel={t('config.testInPlayground')}
+				footer={
+					providerGuideOpen ? (
+						<button
+							type="button"
+							onClick={() => {
+								setProviderGuideOpen(false);
+								requestAnimationFrame(() => guideButtonRef.current?.focus());
+							}}
+							className="rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800"
+						>
+							{t('serviceList.backToConfig')}
+						</button>
+					) : drawer?.tool === 'webSearch' ? (
+						<ToolProviderSaveActions
+							saving={webSearchSaving}
+							selectedIsActive={webSearchSavedActive === webSearchSelected}
+							canSaveConfig={webSearchActions.canSaveConfig}
+							canSaveAndActivate={webSearchActions.canSaveAndActivate}
+							onSaveConfig={() => void saveWebSearch(false)}
+							onSaveAndActivate={() => void saveWebSearch(true)}
+							feedback={<CardSaveFeedback feedback={cardFeedback.webSearch} />}
+						/>
+					) : drawer?.tool === 'webFetch' ? (
+						<ToolProviderSaveActions
+							saving={webFetchSaving}
+							selectedIsActive={webFetchSavedActive === webFetchSelected}
+							canSaveConfig={webFetchActions.canSaveConfig}
+							canSaveAndActivate={webFetchActions.canSaveAndActivate}
+							onSaveConfig={() => void saveWebFetch(false)}
+							onSaveAndActivate={() => void saveWebFetch(true)}
+							feedback={<CardSaveFeedback feedback={cardFeedback.webFetch} />}
+						/>
+					) : drawer?.tool === 'webDeepSearch' ? (
+						<ToolProviderSaveActions
+							saving={webDeepSearchSaving}
+							selectedIsActive={webDeepSearchSavedActive === webDeepSearchSelected}
+							canSaveConfig={webDeepSearchActions.canSaveConfig}
+							canSaveAndActivate={webDeepSearchActions.canSaveAndActivate}
+							onSaveConfig={() => void saveWebDeepSearch(false)}
+							onSaveAndActivate={() => void saveWebDeepSearch(true)}
+							feedback={<CardSaveFeedback feedback={cardFeedback.webDeepSearch} />}
+						/>
+					) : drawer?.tool === 'aiDetection' ? (
+						<ToolProviderSaveActions
+							saving={aiDetectionSaving}
+							selectedIsActive={aiDetectionSavedActive === aiDetectionSelected}
+							canSaveConfig={aiDetectionActions.canSaveConfig}
+							canSaveAndActivate={aiDetectionActions.canSaveAndActivate}
+							onSaveConfig={() => void saveAiDetection(false)}
+							onSaveAndActivate={() => void saveAiDetection(true)}
+							feedback={<CardSaveFeedback feedback={cardFeedback.aiDetection} />}
+						/>
+					) : null
+				}
+			>
+				{providerGuideOpen ? <WebSearchProviderGuideContent activeProvider={webSearchSelected} /> : null}
+				{!providerGuideOpen && drawer && currentDraft ? (
+					<div className="space-y-4">
+						<section aria-labelledby="rest-connection-heading">
+							<div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+								<h3 id="rest-connection-heading" className="text-sm font-semibold text-gray-900">
+									{t('serviceList.connection')}
+								</h3>
+								<div className="flex items-center gap-3">
+									<button
+										type="button"
+										onClick={() => setSecretsVisible((v) => !v)}
+										disabled={Boolean(drawerBusy)}
+										aria-pressed={secretsVisible}
+										className="inline-flex items-center gap-1 text-xs text-gray-500 hover:text-gray-900"
+									>
+										{secretsVisible ? <EyeSlashIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
+										{t(secretsVisible ? 'config.hideSecrets' : 'config.showSecrets')}
+									</button>
+									{drawer.tool === 'webSearch' ? (
+										<button
+											ref={guideButtonRef}
+											type="button"
+											disabled={Boolean(drawerBusy)}
+											onClick={() => {
+												setSecretsVisible(false);
+												setProviderGuideOpen(true);
+											}}
+											className="text-xs font-medium text-blue-600 hover:underline"
+										>
+											{t('webSearch.providerGuideLink')}
+										</button>
+									) : null}
+								</div>
+							</div>
+							{drawer.tool === 'aiDetection' ? (
+								<div className="grid gap-3 sm:grid-cols-2">
+									{aiFields.map((field) => (
+										<label key={field} className="block text-xs font-medium text-gray-600">
+											{t(AI_DETECTION_FIELD_I18N[field])}
+											<input
+												type={field === 'email' ? 'email' : secretsVisible ? 'text' : 'password'}
+												value={aiDraft[field]}
+												onChange={(e) => updateAiDraft({ [field]: e.target.value })}
+												placeholder={t(AI_DETECTION_FIELD_I18N[field])}
+												autoComplete="off"
+												spellCheck={false}
+												className="mt-1.5 w-full rounded-lg border border-gray-300 px-3 py-2 font-mono text-sm"
+											/>
+										</label>
+									))}
+									{aiDetectionSelected === 'tencent_tms' ? (
+										<>
+											<label className="block text-xs font-medium text-gray-600">
+												{t('aiDetection.fields.region')}
+												<input
+													type="text"
+													value={aiDraft.region}
+													onChange={(e) => updateAiDraft({ region: e.target.value })}
+													autoComplete="off"
+													spellCheck={false}
+													className="mt-1.5 w-full rounded-lg border border-gray-300 px-3 py-2 font-mono text-sm"
+												/>
+											</label>
+											<label className="block text-xs font-medium text-gray-600">
+												{t('aiDetection.fields.bizTypeOptional')}
+												<input
+													type="text"
+													value={aiDraft.bizType}
+													onChange={(e) => updateAiDraft({ bizType: e.target.value })}
+													autoComplete="off"
+													spellCheck={false}
+													className="mt-1.5 w-full rounded-lg border border-gray-300 px-3 py-2 font-mono text-sm"
+												/>
+											</label>
+										</>
+									) : null}
+								</div>
+							) : (
+								<label className="block text-xs font-medium text-gray-600">
+									{t(`${drawer.tool}.apiKey`)}
+									<div className="mt-1.5">
+										<ApiKeyField
+											value={currentDraft.apiKey}
+											onChange={(apiKey) => updateCurrentDraft({ apiKey })}
+											placeholder={t(`${drawer.tool}.apiKeyPlaceholder`)}
+											secretsVisible={secretsVisible}
+										/>
+									</div>
+								</label>
+							)}
+							{!currentConfigured ? (
+								<p className="mt-2 text-xs text-gray-500">{t('serviceList.credentialsRequired')}</p>
+							) : null}
+						</section>
+						<section aria-labelledby="rest-pricing-heading" className="border-t border-gray-200 pt-4">
+							<h3 id="rest-pricing-heading" className="mb-3 text-sm font-semibold text-gray-900">
+								{t('serviceList.pricing')}
+							</h3>
+							{drawer.tool === 'aiDetection' ? (
+								<div className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-2">
+									<label className="flex items-center gap-2 text-xs font-medium text-gray-600">
+										{t('aiDetection.billingUnitChars')}
+										<input
+											type="number"
+											min={1}
+											step={1}
+											required
+											value={aiDraft.billingUnitChars}
+											onChange={(e) => updateAiDraft({ billingUnitChars: e.target.value })}
+											aria-invalid={!aiUnitValid}
+											className="w-28 rounded-lg border border-gray-300 px-3 py-2 font-mono text-sm"
+										/>
+									</label>
+									<p className="text-xs text-gray-500">{t('aiDetection.billingUnitHint')}</p>
+									{!aiUnitValid ? (
+										<p role="status" className="w-full text-xs text-red-600">
+											{t('aiDetection.billingUnitInvalid')}
+										</p>
+									) : null}
+								</div>
+							) : null}
+							<RestToolPricingEditor
+								key={`${drawer.tool}-${drawer.providerId}`}
+								currency={billingCurrency}
+								value={currentDraft}
+								unitLabel={
+									drawer.tool === 'aiDetection'
+										? tPricing('charactersUnit', {
+												count: aiUnitValid ? Number(aiDraft.billingUnitChars) : '—',
+											})
+										: undefined
+								}
+								onChange={updateCurrentDraft}
+							/>
+						</section>
+					</div>
+				) : null}
+			</ToolProviderDrawer>
+		</div>
+	);
+}
+
+export default function AdvancedPage() { return <AdvancedEditorGate feature="tools"><AtomicToolsConsole /></AdvancedEditorGate>; }

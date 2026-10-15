@@ -67,7 +67,7 @@ function fixture(
 		email: "owner@example.test",
 		external_system: null,
 		external_user_id: null,
-		budget_max: 10,
+		wallet_granted: 0, wallet_spent: 0, rate_limit: null, budget_max: 10,
 		budget_base: 10,
 		budget_spent: 3,
 		budget_period: "none",

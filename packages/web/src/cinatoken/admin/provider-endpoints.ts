@@ -4,6 +4,8 @@ export const PROVIDER_PROTOCOLS = [
 	'anthropic',
 	'gemini',
 	'dashscope',
+	'minimax',
+	'volcengine',
 ] as const
 export type ProviderProtocol = (typeof PROVIDER_PROTOCOLS)[number]
 export const PROVIDER_CAPABILITIES = {
@@ -29,7 +31,10 @@ export const PROVIDER_CAPABILITIES = {
 		'audio.realtime.session',
 		'audio.hotwords',
 		'audio.voices',
+		'images.generations.multimodal',
 	],
+	minimax: ['audio.transcriptions', 'audio.speech', 'images.generations'],
+	volcengine: ['images.generations'],
 } as const
 export type ProviderCapability =
 	(typeof PROVIDER_CAPABILITIES)[ProviderProtocol][number]

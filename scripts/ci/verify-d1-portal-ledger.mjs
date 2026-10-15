@@ -11,9 +11,9 @@ database.exec('PRAGMA foreign_keys = ON');
 
 const migrationFiles = readdirSync(migrationsDirectory).filter((name) => name.endsWith('.sql')).sort();
 assert.equal(
-	migrationFiles.at(-1),
+	migrationFiles[76],
 	'0077_withdrawal_balance_update_guards.sql',
-	'D1 migration chain must end with guarded withdrawal settlement and refunds',
+	'D1 append-only history must retain guarded withdrawal settlement and refunds',
 );
 
 for (const file of migrationFiles) {

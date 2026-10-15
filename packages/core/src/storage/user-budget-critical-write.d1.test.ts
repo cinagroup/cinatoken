@@ -1,3 +1,4 @@
+import { applyWalletMigrationToBudgetFixture } from './test-support/wallet-fixture';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { DatabaseSync, type SQLInputValue } from 'node:sqlite';
@@ -11,7 +12,11 @@ import {
 } from '../db/d1/critical-writes.impl';
 import type { InsertRequestLogParams } from '../db/request-logs-types';
 import type { GuardrailBudgetIntent } from '../db/guardrail-budget-types';
-import { applyBudgetTransition, previewBudgetTransition, BudgetTransitionStalePreviewError } from '../services/budget-transition-service';
+import {
+	applyBudgetTransition,
+	previewBudgetTransition,
+	BudgetTransitionStalePreviewError,
+} from '../services/budget-transition-service';
 import type { D1DatabaseClient } from './database-client';
 import { createD1Repositories } from './repositories-d1';
 
@@ -63,8 +68,7 @@ function createD1Client(database: DatabaseSync, hooks: D1TestHooks = {}): D1Data
 			beforeBatch?.();
 			database.exec('BEGIN');
 			try {
-				const results = (statements as unknown as SqliteD1Statement[])
-					.map((statement) => statement.run());
+				const results = (statements as unknown as SqliteD1Statement[]).map((statement) => statement.run());
 				database.exec('COMMIT');
 				return results;
 			} catch (error) {
@@ -132,43 +136,72 @@ function setupDatabase(): DatabaseSync {
 			reason_text TEXT, created_at TEXT NOT NULL DEFAULT (datetime('now'))
 		);
 	`);
-	database.exec(readFileSync(fileURLToPath(new URL(
-		'../../migrations-d1/0039_guardrail_budget_reservations.sql', import.meta.url,
-	).href), 'utf8'));
+	database.exec(
+		readFileSync(
+			fileURLToPath(new URL('../../migrations-d1/0039_guardrail_budget_reservations.sql', import.meta.url).href),
+			'utf8',
+		),
+	);
 	database.exec(`
 		ALTER TABLE guardrail_budget_windows ADD COLUMN workspace_id TEXT NOT NULL DEFAULT 'personal:user-1';
 		ALTER TABLE guardrail_budget_reservations ADD COLUMN workspace_id TEXT NOT NULL DEFAULT 'personal:user-1';
 		ALTER TABLE guardrail_budget_reservations ADD COLUMN settlement_basis TEXT NOT NULL DEFAULT 'charged'
 			CHECK (settlement_basis IN ('charged', 'gateway_key_route'));
 	`);
-	database.exec(readFileSync(fileURLToPath(new URL(
-		'../../migrations-d1/0040_user_budget_reservations.sql', import.meta.url,
-	).href), 'utf8'));
-	database.exec(readFileSync(fileURLToPath(new URL(
-		'../../migrations-d1/0041_user_budget_spent_micros.sql', import.meta.url,
-	).href), 'utf8'));
-	database.exec(readFileSync(fileURLToPath(new URL(
-		'../../migrations-d1/0056_request_session_id.sql', import.meta.url,
-	).href), 'utf8'));
-	database.exec(readFileSync(fileURLToPath(new URL(
-		'../../migrations-d1/0061_provider_attempt_availability.sql', import.meta.url,
-	).href), 'utf8'));
-	database.exec(readFileSync(fileURLToPath(new URL(
-		'../../migrations-d1/0062_public_model_total_tokens.sql', import.meta.url,
-	).href), 'utf8'));
-	database.exec(readFileSync(fileURLToPath(new URL(
-		'../../migrations-d1/0063_generation_service_tier.sql', import.meta.url,
-	).href), 'utf8'));
+	database.exec(
+		readFileSync(
+			fileURLToPath(new URL('../../migrations-d1/0040_user_budget_reservations.sql', import.meta.url).href),
+			'utf8',
+		),
+	);
+	database.exec(
+		readFileSync(
+			fileURLToPath(new URL('../../migrations-d1/0041_user_budget_spent_micros.sql', import.meta.url).href),
+			'utf8',
+		),
+	);
+	database.exec(
+		readFileSync(
+			fileURLToPath(new URL('../../migrations-d1/0056_request_session_id.sql', import.meta.url).href),
+			'utf8',
+		),
+	);
+	database.exec(
+		readFileSync(
+			fileURLToPath(new URL('../../migrations-d1/0061_provider_attempt_availability.sql', import.meta.url).href),
+			'utf8',
+		),
+	);
+	database.exec(
+		readFileSync(
+			fileURLToPath(new URL('../../migrations-d1/0062_public_model_total_tokens.sql', import.meta.url).href),
+			'utf8',
+		),
+	);
+	database.exec(
+		readFileSync(
+			fileURLToPath(new URL('../../migrations-d1/0063_generation_service_tier.sql', import.meta.url).href),
+			'utf8',
+		),
+	);
+	applyWalletMigrationToBudgetFixture(database);
 	return database;
 }
 
 function insertUser(database: DatabaseSync, id = 'user-1'): void {
-	database.prepare(`INSERT INTO users (
+	database
+		.prepare(
+			`INSERT INTO users (
 		id, budget_max, budget_base, budget_spent, budget_period, budget_reset_at, updated_at
-	) VALUES (?, 1, 1, 0, 'monthly', '2026-09-29T00:00:00.000Z', ?)`)
+	) VALUES (?, 1, 1, 0, 'monthly', '2026-09-29T00:00:00.000Z', ?)`,
+		)
 		.run(id, '2026-08-29T00:00:00.000Z');
-	database.prepare(`INSERT OR IGNORE INTO api_keys (id, user_id, status)
-		VALUES ('key-1', ?, 'active')`).run(id);
+	database
+		.prepare(
+			`INSERT OR IGNORE INTO api_keys (id, user_id, status)
+		VALUES ('key-1', ?, 'active')`,
+		)
+		.run(id);
 }
 
 function requestLog(id: string, chargedCost: number): InsertRequestLogParams {
@@ -214,43 +247,48 @@ function requestLog(id: string, chargedCost: number): InsertRequestLogParams {
 		nativeFinishReason: 'end_turn',
 		httpReferer: 'https://app.example',
 		userAgent: 'CinaSDK/1.0',
-		providerResponses: [{
-			status: 200,
-			endpoint_id: 'route-1',
-			is_byok: false,
-			latency: 7,
-			model_permaslug: 'openai/test',
-			provider_name: 'Provider',
-			routed_service_tier: 'priority',
-		}],
-		providerAttempts: [{
-			attemptIndex: 1,
-			routeTargetId: 'route-1',
-			providerId: 'provider-1',
-			outcome: 'available',
-			reason: 'accepted',
-			httpStatus: 200,
-			observedAtIso: '2026-08-29T01:00:00.000Z',
-		}],
+		providerResponses: [
+			{
+				status: 200,
+				endpoint_id: 'route-1',
+				is_byok: false,
+				latency: 7,
+				model_permaslug: 'openai/test',
+				provider_name: 'Provider',
+				routed_service_tier: 'priority',
+			},
+		],
+		providerAttempts: [
+			{
+				attemptIndex: 1,
+				routeTargetId: 'route-1',
+				providerId: 'provider-1',
+				outcome: 'available',
+				reason: 'accepted',
+				httpStatus: 200,
+				observedAtIso: '2026-08-29T01:00:00.000Z',
+			},
+		],
 	};
 }
 
 async function reserveAndDispatch(client: D1DatabaseClient, requestId: string, micros: number): Promise<void> {
 	const budgets = createD1Repositories(client).userBudgets;
-	assert.equal((await budgets.reserve({
-		requestId,
-		userId: 'user-1',
-		apiKeyId: 'key-1',
-		expectedBudgetEpoch: 0,
-		reservedMicros: micros,
-		nowIso: '2026-08-29T01:00:00.000Z',
-		expiresAtIso: '2026-08-29T01:02:00.000Z',
-	})).status, 'reserved');
-	assert.equal(await budgets.markDispatched(
-		requestId,
-		'2026-08-29T01:00:01.000Z',
-		'2026-08-29T01:10:00.000Z',
-	), true);
+	assert.equal(
+		(
+			await budgets.reserve({
+				requestId,
+				userId: 'user-1',
+				apiKeyId: 'key-1',
+				expectedBudgetEpoch: 0,
+				reservedMicros: micros,
+				nowIso: '2026-08-29T01:00:00.000Z',
+				expiresAtIso: '2026-08-29T01:02:00.000Z',
+			})
+		).status,
+		'reserved',
+	);
+	assert.equal(await budgets.markDispatched(requestId, '2026-08-29T01:00:01.000Z', '2026-08-29T01:10:00.000Z'), true);
 }
 
 async function writeUsage(
@@ -289,8 +327,12 @@ function account(database: DatabaseSync): {
 	budget_epoch: number;
 	budget_reserved_micros: number;
 } {
-	const row = database.prepare(`SELECT budget_spent, budget_epoch, budget_reserved_micros
-		FROM users WHERE id = 'user-1'`).get() as {
+	const row = database
+		.prepare(
+			`SELECT budget_spent, budget_epoch, budget_reserved_micros
+		FROM users WHERE id = 'user-1'`,
+		)
+		.get() as {
 		budget_spent: number;
 		budget_epoch: number;
 		budget_reserved_micros: number;
@@ -298,12 +340,19 @@ function account(database: DatabaseSync): {
 	return { ...row };
 }
 
-function reservation(database: DatabaseSync, requestId: string): {
+function reservation(
+	database: DatabaseSync,
+	requestId: string,
+): {
 	state: string;
 	settled_micros: number;
 } {
-	const row = database.prepare(`SELECT state, settled_micros FROM user_budget_reservations
-		WHERE request_id = ?`).get(requestId) as { state: string; settled_micros: number };
+	const row = database
+		.prepare(
+			`SELECT state, settled_micros FROM user_budget_reservations
+		WHERE request_id = ?`,
+		)
+		.get(requestId) as { state: string; settled_micros: number };
 	return { ...row };
 }
 
@@ -325,39 +374,72 @@ test('D1 critical write atomically settles actual usage and replays without dupl
 			settled_micros: 250_000,
 		});
 		assert.equal(Number(database.prepare('SELECT COUNT(*) AS count FROM api_key_request_logs').get()?.count), 1);
-		assert.equal(Number(database.prepare('SELECT SUM(request_count) AS count FROM public_model_daily_stats').get()?.count), 1);
+		assert.equal(
+			Number(database.prepare('SELECT SUM(request_count) AS count FROM public_model_daily_stats').get()?.count),
+			1,
+		);
 		assert.equal(Number(database.prepare('SELECT COUNT(*) AS count FROM user_audit_logs').get()?.count), 1);
-		assert.deepEqual({ ...database.prepare(`SELECT service_tier, finish_reason, native_finish_reason,
+		assert.deepEqual(
+			{
+				...database
+					.prepare(
+						`SELECT service_tier, finish_reason, native_finish_reason,
 			http_referer, user_agent, native_tokens_prompt, native_tokens_completion,
 			native_tokens_cached, native_tokens_reasoning, native_tokens_completion_images,
 			provider_responses
-			FROM api_key_request_logs WHERE id = 'request-actual'`).get() }, {
-			service_tier: 'priority',
-			finish_reason: 'stop',
-			native_finish_reason: 'end_turn',
-			http_referer: 'https://app.example',
-			user_agent: 'CinaSDK/1.0',
-			native_tokens_prompt: 10,
-			native_tokens_completion: 10,
-			native_tokens_cached: 0,
-			native_tokens_reasoning: 0,
-			native_tokens_completion_images: null,
-			provider_responses: JSON.stringify(requestLog('request-actual', 0.25).providerResponses),
-		});
-		assert.deepEqual({ ...database.prepare(`SELECT route_target_id, outcome, reason, http_status
-			FROM provider_attempt_availability WHERE request_log_id = 'request-actual'`).get() }, {
-			route_target_id: 'route-1',
-			outcome: 'available',
-			reason: 'accepted',
-			http_status: 200,
-		});
+			FROM api_key_request_logs WHERE id = 'request-actual'`,
+					)
+					.get(),
+			},
+			{
+				service_tier: 'priority',
+				finish_reason: 'stop',
+				native_finish_reason: 'end_turn',
+				http_referer: 'https://app.example',
+				user_agent: 'CinaSDK/1.0',
+				native_tokens_prompt: 10,
+				native_tokens_completion: 10,
+				native_tokens_cached: 0,
+				native_tokens_reasoning: 0,
+				native_tokens_completion_images: null,
+				provider_responses: JSON.stringify(requestLog('request-actual', 0.25).providerResponses),
+			},
+		);
+		assert.deepEqual(
+			{
+				...database
+					.prepare(
+						`SELECT route_target_id, outcome, reason, http_status
+			FROM provider_attempt_availability WHERE request_log_id = 'request-actual'`,
+					)
+					.get(),
+			},
+			{
+				route_target_id: 'route-1',
+				outcome: 'available',
+				reason: 'accepted',
+				http_status: 200,
+			},
+		);
 
 		await writeUsage(client, 'request-actual', 0.25, 'actual');
 		assert.equal(Number(database.prepare('SELECT COUNT(*) AS count FROM api_key_request_logs').get()?.count), 1);
-		assert.equal(Number(database.prepare('SELECT SUM(request_count) AS count FROM public_model_daily_stats').get()?.count), 1);
+		assert.equal(
+			Number(database.prepare('SELECT SUM(request_count) AS count FROM public_model_daily_stats').get()?.count),
+			1,
+		);
 		assert.equal(Number(database.prepare('SELECT COUNT(*) AS count FROM user_audit_logs').get()?.count), 1);
-		assert.equal(Number(database.prepare(`SELECT COUNT(*) AS count
-			FROM provider_attempt_availability WHERE request_log_id = 'request-actual'`).get()?.count), 1);
+		assert.equal(
+			Number(
+				database
+					.prepare(
+						`SELECT COUNT(*) AS count
+			FROM provider_attempt_availability WHERE request_log_id = 'request-actual'`,
+					)
+					.get()?.count,
+			),
+			1,
+		);
 	} finally {
 		database.close();
 	}
@@ -375,8 +457,17 @@ test('D1 critical write charges the reserved ceiling when dispatched usage is un
 			state: 'expired',
 			settled_micros: 400_000,
 		});
-		assert.equal(Number(database.prepare(`SELECT budget_charged_micros
-			FROM api_key_request_logs WHERE id = 'request-unknown'`).get()?.budget_charged_micros), 0);
+		assert.equal(
+			Number(
+				database
+					.prepare(
+						`SELECT budget_charged_micros
+			FROM api_key_request_logs WHERE id = 'request-unknown'`,
+					)
+					.get()?.budget_charged_micros,
+			),
+			0,
+		);
 	} finally {
 		database.close();
 	}
@@ -389,9 +480,7 @@ test('D1 late actual reconciles a forfeited ceiling while old-epoch settlement c
 		const client = createD1Client(database);
 		const budgets = createD1Repositories(client).userBudgets;
 		await reserveAndDispatch(client, 'request-late', 400_000);
-		assert.equal(await budgets.forfeitDispatched(
-			'request-late', '2026-08-29T01:03:00.000Z', 'recovery_forfeit',
-		), 1);
+		assert.equal(await budgets.forfeitDispatched('request-late', '2026-08-29T01:03:00.000Z', 'recovery_forfeit'), 1);
 		assert.equal(account(database).budget_spent, 0.4);
 		await writeUsage(client, 'request-late', 0.25, 'actual');
 		assert.equal(account(database).budget_spent, 0.25);
@@ -401,8 +490,12 @@ test('D1 late actual reconciles a forfeited ceiling while old-epoch settlement c
 		});
 
 		await reserveAndDispatch(client, 'request-old-epoch', 300_000);
-		database.prepare(`UPDATE users SET budget_epoch = budget_epoch + 1,
-			budget_reserved_micros = 0, budget_spent = 0 WHERE id = 'user-1'`).run();
+		database
+			.prepare(
+				`UPDATE users SET budget_epoch = budget_epoch + 1,
+			budget_reserved_micros = 0, budget_spent = 0 WHERE id = 'user-1'`,
+			)
+			.run();
 		await writeUsage(client, 'request-old-epoch', 0.2, 'actual', true, {
 			beforeUserSnapshot: JSON.stringify({ budget_epoch: 0, budget_spent: 0 }),
 			afterUserSnapshot: JSON.stringify({ budget_epoch: 0, budget_spent: 0.2 }),
@@ -413,12 +506,21 @@ test('D1 late actual reconciles a forfeited ceiling while old-epoch settlement c
 			budget_epoch: 1,
 			budget_reserved_micros: 0,
 		});
-		assert.deepEqual({ ...database.prepare(`SELECT before_user_snapshot, after_user_snapshot, changed_fields
-			FROM user_audit_logs WHERE request_log_id = 'request-old-epoch'`).get() }, {
-			before_user_snapshot: null,
-			after_user_snapshot: null,
-			changed_fields: null,
-		});
+		assert.deepEqual(
+			{
+				...database
+					.prepare(
+						`SELECT before_user_snapshot, after_user_snapshot, changed_fields
+			FROM user_audit_logs WHERE request_log_id = 'request-old-epoch'`,
+					)
+					.get(),
+			},
+			{
+				before_user_snapshot: null,
+				after_user_snapshot: null,
+				changed_fields: null,
+			},
+		);
 	} finally {
 		database.close();
 	}
@@ -432,18 +534,35 @@ test('D1 actual settlement retries only once when expiry wins between reservatio
 		const client = createD1Client(database, hooks);
 		await reserveAndDispatch(client, 'request-expiry-race', 400_000);
 		hooks.beforeNextBatch = () => {
-			database.prepare(`UPDATE user_budget_reservations
+			database
+				.prepare(
+					`UPDATE user_budget_reservations
 				SET state = 'expired', settled_micros = reserved_micros,
 					terminal_at = ?, terminal_reason = 'test_concurrent_expiry', updated_at = ?
-				WHERE request_id = ? AND state = 'dispatched'`)
-				.run(
-					'2026-08-29T01:03:00.000Z',
-					'2026-08-29T01:03:00.000Z',
-					'request-expiry-race',
-				);
+				WHERE request_id = ? AND state = 'dispatched'`,
+				)
+				.run('2026-08-29T01:03:00.000Z', '2026-08-29T01:03:00.000Z', 'request-expiry-race');
 		};
 
-		await writeUsage(client, 'request-expiry-race', 0.25, 'actual');
+		await writeUsage(client, 'request-expiry-race', 0.25, 'actual', true, {
+			beforeUserSnapshot: JSON.stringify({ budget_epoch: 0, budget_spent: 0 }),
+			afterUserSnapshot: JSON.stringify({ budget_epoch: 0, budget_spent: 0.25 }),
+			changedFields: JSON.stringify(['budget_spent']),
+		});
+		assert.deepEqual(
+			{
+				...database
+					.prepare(
+						"SELECT before_user_snapshot, after_user_snapshot, changed_fields FROM user_audit_logs WHERE request_log_id = 'request-expiry-race'",
+					)
+					.get(),
+			},
+			{
+				before_user_snapshot: null,
+				after_user_snapshot: null,
+				changed_fields: null,
+			},
+		);
 
 		assert.deepEqual(account(database), {
 			budget_spent: 0.25,
@@ -455,7 +574,10 @@ test('D1 actual settlement retries only once when expiry wins between reservatio
 			settled_micros: 250_000,
 		});
 		assert.equal(Number(database.prepare('SELECT COUNT(*) AS count FROM api_key_request_logs').get()?.count), 1);
-		assert.equal(Number(database.prepare('SELECT SUM(request_count) AS count FROM public_model_daily_stats').get()?.count), 1);
+		assert.equal(
+			Number(database.prepare('SELECT SUM(request_count) AS count FROM public_model_daily_stats').get()?.count),
+			1,
+		);
 		assert.equal(Number(database.prepare('SELECT COUNT(*) AS count FROM user_audit_logs').get()?.count), 1);
 	} finally {
 		database.close();
@@ -514,10 +636,7 @@ test('D1 critical write fails closed on unsafe costs and reservation identity mi
 		insertUser(database);
 		const client = createD1Client(database);
 		await reserveAndDispatch(client, 'request-invalid', 400_000);
-		await assert.rejects(
-			writeUsage(client, 'request-invalid', Number.NaN, 'actual'),
-			/finite non-negative/,
-		);
+		await assert.rejects(writeUsage(client, 'request-invalid', Number.NaN, 'actual'), /finite non-negative/);
 		await assert.rejects(
 			writeUsage(client, 'request-invalid', Number.MAX_VALUE, 'actual'),
 			/safe ordinary-user micro-unit range/,
@@ -532,8 +651,12 @@ test('D1 critical write fails closed on unsafe costs and reservation identity mi
 				beforeSpent: 0,
 				chargedCost: 0.25,
 				audit: {
-					apiKeyId: 'key-1', eventType: 'usage_charge', actorType: 'system',
-					beforeSpent: 0, requestLogId: 'request-invalid-tier', source: 'gateway_usage',
+					apiKeyId: 'key-1',
+					eventType: 'usage_charge',
+					actorType: 'system',
+					beforeSpent: 0,
+					requestLogId: 'request-invalid-tier',
+					source: 'gateway_usage',
 				},
 			}),
 			/Generation service tier is invalid/,
@@ -541,27 +664,37 @@ test('D1 critical write fails closed on unsafe costs and reservation identity mi
 		for (const [requestId, mutate, expected] of [
 			[
 				'request-invalid-finish',
-				(log: InsertRequestLogParams) => { log.finishReason = 'unknown' as InsertRequestLogParams['finishReason']; },
+				(log: InsertRequestLogParams) => {
+					log.finishReason = 'unknown' as InsertRequestLogParams['finishReason'];
+				},
 				/Generation finish reason is invalid/,
 			],
 			[
 				'request-invalid-native-finish',
-				(log: InsertRequestLogParams) => { log.nativeFinishReason = 'bad\nreason'; },
+				(log: InsertRequestLogParams) => {
+					log.nativeFinishReason = 'bad\nreason';
+				},
 				/Generation native finish reason is invalid/,
 			],
 			[
 				'request-invalid-http-referer',
-				(log: InsertRequestLogParams) => { log.httpReferer = 'https://app.example/private'; },
+				(log: InsertRequestLogParams) => {
+					log.httpReferer = 'https://app.example/private';
+				},
 				/Generation HTTP referer must be a canonical/,
 			],
 			[
 				'request-invalid-user-agent',
-				(log: InsertRequestLogParams) => { log.userAgent = 'bad\nagent'; },
+				(log: InsertRequestLogParams) => {
+					log.userAgent = 'bad\nagent';
+				},
 				/Generation User-Agent is invalid/,
 			],
 			[
 				'request-invalid-native-token',
-				(log: InsertRequestLogParams) => { log.nativeTokensPrompt = -1; },
+				(log: InsertRequestLogParams) => {
+					log.nativeTokensPrompt = -1;
+				},
 				/Generation native prompt tokens must be a safe non-negative integer or null/,
 			],
 			[
@@ -582,8 +715,12 @@ test('D1 critical write fails closed on unsafe costs and reservation identity mi
 					beforeSpent: 0,
 					chargedCost: 0.25,
 					audit: {
-						apiKeyId: 'key-1', eventType: 'usage_charge', actorType: 'system',
-						beforeSpent: 0, requestLogId: requestId, source: 'gateway_usage',
+						apiKeyId: 'key-1',
+						eventType: 'usage_charge',
+						actorType: 'system',
+						beforeSpent: 0,
+						requestLogId: requestId,
+						source: 'gateway_usage',
 					},
 				}),
 				expected,
@@ -634,26 +771,27 @@ test('D1 direct plan updates bump epoch only when spent is reset or overridden',
 	try {
 		insertUser(database);
 		const repos = createD1Repositories(createD1Client(database));
-		assert.equal((await repos.userBudgets.reserve({
-			requestId: 'request-plan',
-			userId: 'user-1',
-			apiKeyId: 'key-1',
-			expectedBudgetEpoch: 0,
-			reservedMicros: 400_000,
-			nowIso: '2026-08-29T01:00:00.000Z',
-			expiresAtIso: '2026-08-29T01:10:00.000Z',
-		})).status, 'reserved');
-		assert.equal(await repos.users.updateUserPlan(
-			'user-1', 2, 'monthly', '2026-09-29T00:00:00.000Z', false,
-		), true);
+		assert.equal(
+			(
+				await repos.userBudgets.reserve({
+					requestId: 'request-plan',
+					userId: 'user-1',
+					apiKeyId: 'key-1',
+					expectedBudgetEpoch: 0,
+					reservedMicros: 400_000,
+					nowIso: '2026-08-29T01:00:00.000Z',
+					expiresAtIso: '2026-08-29T01:10:00.000Z',
+				})
+			).status,
+			'reserved',
+		);
+		assert.equal(await repos.users.updateUserPlan('user-1', 2, 'monthly', '2026-09-29T00:00:00.000Z', false), true);
 		assert.deepEqual(account(database), {
 			budget_spent: 0,
 			budget_epoch: 0,
 			budget_reserved_micros: 400_000,
 		});
-		assert.equal(await repos.users.updateUserPlan(
-			'user-1', 2, 'monthly', '2026-09-29T00:00:00.000Z', true,
-		), true);
+		assert.equal(await repos.users.updateUserPlan('user-1', 2, 'monthly', '2026-09-29T00:00:00.000Z', true), true);
 		assert.deepEqual(account(database), {
 			budget_spent: 0,
 			budget_epoch: 1,
@@ -670,15 +808,20 @@ test('D1 admin transition uses a full budget-input CAS and resets the generation
 		insertUser(database);
 		const client = createD1Client(database);
 		const repos = createD1Repositories(client);
-		assert.equal((await repos.userBudgets.reserve({
-			requestId: 'request-transition',
-			userId: 'user-1',
-			apiKeyId: 'key-1',
-			expectedBudgetEpoch: 0,
-			reservedMicros: 400_000,
-			nowIso: '2026-08-29T01:00:00.000Z',
-			expiresAtIso: '2026-08-29T01:10:00.000Z',
-		})).status, 'reserved');
+		assert.equal(
+			(
+				await repos.userBudgets.reserve({
+					requestId: 'request-transition',
+					userId: 'user-1',
+					apiKeyId: 'key-1',
+					expectedBudgetEpoch: 0,
+					reservedMicros: 400_000,
+					nowIso: '2026-08-29T01:00:00.000Z',
+					expiresAtIso: '2026-08-29T01:10:00.000Z',
+				})
+			).status,
+			'reserved',
+		);
 		const params = {
 			userId: 'user-1',
 			expectedBudgetMax: 1,
@@ -708,13 +851,19 @@ test('D1 admin transition uses a full budget-input CAS and resets the generation
 		};
 		database.prepare(`UPDATE users SET budget_period = 'weekly' WHERE id = 'user-1'`).run();
 		assert.equal(await applyUserBudgetTransitionWithAuditD1(client, params), false);
-		assert.equal(database.prepare(`SELECT budget_period FROM users WHERE id = 'user-1'`).get()?.budget_period, 'weekly');
+		assert.equal(
+			database.prepare(`SELECT budget_period FROM users WHERE id = 'user-1'`).get()?.budget_period,
+			'weekly',
+		);
 		assert.equal(Number(database.prepare('SELECT COUNT(*) AS count FROM user_audit_logs').get()?.count), 0);
 		database.prepare(`UPDATE users SET budget_period = 'monthly' WHERE id = 'user-1'`).run();
-		assert.equal(await applyUserBudgetTransitionWithAuditD1(client, {
-			...params,
-			expectedBudgetReservedMicros: 399_999,
-		}), false);
+		assert.equal(
+			await applyUserBudgetTransitionWithAuditD1(client, {
+				...params,
+				expectedBudgetReservedMicros: 399_999,
+			}),
+			false,
+		);
 		assert.equal(Number(database.prepare('SELECT COUNT(*) AS count FROM user_audit_logs').get()?.count), 0);
 		assert.equal(await applyUserBudgetTransitionWithAuditD1(client, params), true);
 		assert.deepEqual(account(database), {
@@ -735,8 +884,12 @@ test('D1 admin non-reset transition persists a due lazy reset before preserving 
 		const client = createD1Client(database);
 		const repos = createD1Repositories(client);
 		await reserveAndDispatch(client, 'request-due-transition', 400_000);
-		database.prepare(`UPDATE users SET budget_spent = 0.2,
-			budget_reset_at = '2000-01-01T00:00:00.000Z' WHERE id = 'user-1'`).run();
+		database
+			.prepare(
+				`UPDATE users SET budget_spent = 0.2,
+			budget_reset_at = '2000-01-01T00:00:00.000Z' WHERE id = 'user-1'`,
+			)
+			.run();
 
 		const result = await applyBudgetTransition(repos, 'user-1', {
 			target_budget_base: 1,
@@ -751,8 +904,12 @@ test('D1 admin non-reset transition persists a due lazy reset before preserving 
 			budget_reserved_micros: 0,
 		});
 		assert.equal(Number(database.prepare('SELECT COUNT(*) AS count FROM user_audit_logs').get()?.count), 2);
-		const lazyAudit = database.prepare(`SELECT after_user_snapshot, changed_fields
-			FROM user_audit_logs WHERE event_type = 'period_reset'`).get() as {
+		const lazyAudit = database
+			.prepare(
+				`SELECT after_user_snapshot, changed_fields
+			FROM user_audit_logs WHERE event_type = 'period_reset'`,
+			)
+			.get() as {
 			after_user_snapshot: string;
 			changed_fields: string;
 		};
@@ -785,14 +942,22 @@ test('D1 budget preview is read-only and stale confirmation cannot write an audi
 		assert.ok(preview);
 		assert.equal(preview.before.budget_epoch, 1);
 		assert.equal(Number(database.prepare('SELECT COUNT(*) AS count FROM user_audit_logs').get()?.count), 0);
-		assert.equal(Number(database.prepare('SELECT budget_epoch FROM users WHERE id = ?').get('user-1')?.budget_epoch), 0);
-		database.prepare("UPDATE users SET budget_spent = 0.25, budget_reset_at = '2030-01-01T00:00:00.000Z' WHERE id = ?").run('user-1');
+		assert.equal(
+			Number(database.prepare('SELECT budget_epoch FROM users WHERE id = ?').get('user-1')?.budget_epoch),
+			0,
+		);
+		database
+			.prepare("UPDATE users SET budget_spent = 0.25, budget_reset_at = '2030-01-01T00:00:00.000Z' WHERE id = ?")
+			.run('user-1');
 		await assert.rejects(
 			applyBudgetTransition(repos, 'user-1', { ...input, expected_before: preview.before }),
 			BudgetTransitionStalePreviewError,
 		);
 		assert.equal(Number(database.prepare('SELECT COUNT(*) AS count FROM user_audit_logs').get()?.count), 0);
-		assert.equal(Number(database.prepare('SELECT budget_spent FROM users WHERE id = ?').get('user-1')?.budget_spent), 0.25);
+		assert.equal(
+			Number(database.prepare('SELECT budget_spent FROM users WHERE id = ?').get('user-1')?.budget_spent),
+			0.25,
+		);
 	} finally {
 		database.close();
 	}
@@ -814,8 +979,14 @@ test('D1 stale transition rejects before a newly due lazy reset can write', asyn
 			BudgetTransitionStalePreviewError,
 		);
 		assert.equal(Number(database.prepare('SELECT COUNT(*) AS count FROM user_audit_logs').get()?.count), 0);
-		assert.equal(Number(database.prepare('SELECT budget_epoch FROM users WHERE id = ?').get('user-1')?.budget_epoch), 0);
-		assert.equal(String(database.prepare('SELECT budget_reset_at FROM users WHERE id = ?').get('user-1')?.budget_reset_at), '2000-01-01T00:00:00.000Z');
+		assert.equal(
+			Number(database.prepare('SELECT budget_epoch FROM users WHERE id = ?').get('user-1')?.budget_epoch),
+			0,
+		);
+		assert.equal(
+			String(database.prepare('SELECT budget_reset_at FROM users WHERE id = ?').get('user-1')?.budget_reset_at),
+			'2000-01-01T00:00:00.000Z',
+		);
 	} finally {
 		database.close();
 	}
@@ -826,8 +997,11 @@ test('D1 non-reset transition preserves authoritative micros above the REAL one-
 	try {
 		insertUser(database);
 		const startingMicros = 8_589_934_592_000_001;
-		database.prepare(`UPDATE users SET budget_max = ?, budget_base = ?,
-			budget_spent = ?, budget_spent_micros = ? WHERE id = 'user-1'`)
+		database
+			.prepare(
+				`UPDATE users SET budget_max = ?, budget_base = ?,
+			budget_spent = ?, budget_spent_micros = ? WHERE id = 'user-1'`,
+			)
 			.run(
 				Number.MAX_SAFE_INTEGER / 1_000_000,
 				Number.MAX_SAFE_INTEGER / 1_000_000,
@@ -839,36 +1013,45 @@ test('D1 non-reset transition preserves authoritative micros above the REAL one-
 		const before = await repos.users.getById('user-1');
 		assert.ok(before);
 
-		assert.equal(await applyUserBudgetTransitionWithAuditD1(client, {
-			userId: 'user-1',
-			expectedBudgetMax: before.budget_max,
-			expectedBudgetBase: before.budget_base,
-			expectedBudgetEpoch: before.budget_epoch,
-			expectedBudgetReservedMicros: before.budget_reserved_micros,
-			expectedBudgetSpent: before.budget_spent,
-			expectedBudgetPeriod: before.budget_period,
-			expectedBudgetResetAt: before.budget_reset_at,
-			budgetMax: before.budget_max,
-			budgetBase: before.budget_base,
-			budgetSpent: before.budget_spent,
-			budgetPeriod: before.budget_period,
-			budgetResetAt: before.budget_reset_at,
-			resetEpoch: false,
-			audit: {
-				id: crypto.randomUUID(),
-				userId: 'user-1',
-				apiKeyId: null,
-				eventType: 'admin_adjust',
-				actorType: 'admin',
-				actorId: 'master_key',
-				reasonCode: 'budget_transition',
-				reasonText: 'preserve exact large spend',
-				source: 'admin_budget_transition',
-			},
-		}), true);
 		assert.equal(
-			Number(database.prepare(`SELECT budget_spent_micros FROM users
-				WHERE id = 'user-1'`).get()?.budget_spent_micros),
+			await applyUserBudgetTransitionWithAuditD1(client, {
+				userId: 'user-1',
+				expectedBudgetMax: before.budget_max,
+				expectedBudgetBase: before.budget_base,
+				expectedBudgetEpoch: before.budget_epoch,
+				expectedBudgetReservedMicros: before.budget_reserved_micros,
+				expectedBudgetSpent: before.budget_spent,
+				expectedBudgetPeriod: before.budget_period,
+				expectedBudgetResetAt: before.budget_reset_at,
+				budgetMax: before.budget_max,
+				budgetBase: before.budget_base,
+				budgetSpent: before.budget_spent,
+				budgetPeriod: before.budget_period,
+				budgetResetAt: before.budget_reset_at,
+				resetEpoch: false,
+				audit: {
+					id: crypto.randomUUID(),
+					userId: 'user-1',
+					apiKeyId: null,
+					eventType: 'admin_adjust',
+					actorType: 'admin',
+					actorId: 'master_key',
+					reasonCode: 'budget_transition',
+					reasonText: 'preserve exact large spend',
+					source: 'admin_budget_transition',
+				},
+			}),
+			true,
+		);
+		assert.equal(
+			Number(
+				database
+					.prepare(
+						`SELECT budget_spent_micros FROM users
+				WHERE id = 'user-1'`,
+					)
+					.get()?.budget_spent_micros,
+			),
 			startingMicros,
 		);
 	} finally {
@@ -895,18 +1078,24 @@ test('D1 request transaction settles ordinary and Guardrail reservations togethe
 			periodEnd: '2026-08-30T00:00:00.000Z',
 			limitMicros: 1_000_000,
 		};
-		assert.deepEqual(await repos.guardrailBudgets.reserveMany({
-			requestId: 'request-combined',
-			intents: [intent],
-			reservedMicros: 400_000,
-			nowIso: '2026-08-29T01:00:00.000Z',
-			expiresAtIso: '2026-08-29T01:10:00.000Z',
-		}), { status: 'reserved', reservationCount: 1 });
-		assert.equal(await repos.guardrailBudgets.markDispatched(
-			'request-combined',
-			'2026-08-29T01:00:01.000Z',
-			'2026-08-29T01:10:00.000Z',
-		), true);
+		assert.deepEqual(
+			await repos.guardrailBudgets.reserveMany({
+				requestId: 'request-combined',
+				intents: [intent],
+				reservedMicros: 400_000,
+				nowIso: '2026-08-29T01:00:00.000Z',
+				expiresAtIso: '2026-08-29T01:10:00.000Z',
+			}),
+			{ status: 'reserved', reservationCount: 1 },
+		);
+		assert.equal(
+			await repos.guardrailBudgets.markDispatched(
+				'request-combined',
+				'2026-08-29T01:00:01.000Z',
+				'2026-08-29T01:10:00.000Z',
+			),
+			true,
+		);
 		await insertRequestUsageAndChargeTxD1(client, {
 			requestLog: requestLog('request-combined', 0.25),
 			shouldChargeBudget: true,
@@ -937,16 +1126,150 @@ test('D1 request transaction settles ordinary and Guardrail reservations togethe
 			state: 'settled',
 			settled_micros: 250_000,
 		});
-		assert.deepEqual({ ...database.prepare(`SELECT state, settled_micros
-			FROM guardrail_budget_reservations WHERE request_id = 'request-combined'`).get() }, {
-			state: 'settled',
-			settled_micros: 250_000,
+		assert.deepEqual(
+			{
+				...database
+					.prepare(
+						`SELECT state, settled_micros
+			FROM guardrail_budget_reservations WHERE request_id = 'request-combined'`,
+					)
+					.get(),
+			},
+			{
+				state: 'settled',
+				settled_micros: 250_000,
+			},
+		);
+		assert.deepEqual(
+			{
+				...database
+					.prepare(
+						`SELECT reserved_micros, settled_micros
+			FROM guardrail_budget_windows WHERE scope_type = 'user' AND scope_id = 'user-1'`,
+					)
+					.get(),
+			},
+			{
+				reserved_micros: 0,
+				settled_micros: 250_000,
+			},
+		);
+	} finally {
+		database.close();
+	}
+});
+
+test('D1 wallet and period settlement share one reservation and replay charges once', async () => {
+	const database = setupDatabase();
+	try {
+		insertUser(database);
+		database.exec("UPDATE users SET budget_spent = 0.8, wallet_granted = 2 WHERE id = 'user-1'");
+		const client = createD1Client(database);
+		await reserveAndDispatch(client, 'wallet-actual', 600_000);
+		await writeUsage(client, 'wallet-actual', 0.5, 'actual', true, {
+			beforeUserSnapshot: JSON.stringify({ budget_epoch: 0, budget_spent: 0.8, wallet_spent: 0 }),
+			afterUserSnapshot: JSON.stringify({ budget_epoch: 0, budget_spent: 1, wallet_spent: 0.3 }),
+			changedFields: JSON.stringify(['budget_spent', 'wallet_spent']),
 		});
-		assert.deepEqual({ ...database.prepare(`SELECT reserved_micros, settled_micros
-			FROM guardrail_budget_windows WHERE scope_type = 'user' AND scope_id = 'user-1'`).get() }, {
-			reserved_micros: 0,
-			settled_micros: 250_000,
+		await writeUsage(client, 'wallet-actual', 0.5, 'actual');
+		assert.deepEqual(
+			{
+				...database
+					.prepare("SELECT budget_spent_micros, wallet_spent, budget_reserved_micros FROM users WHERE id = 'user-1'")
+					.get(),
+			},
+			{ budget_spent_micros: 1_000_000, wallet_spent: 0.3, budget_reserved_micros: 0 },
+		);
+		assert.equal(
+			database
+				.prepare("SELECT settled_wallet_micros FROM user_budget_reservations WHERE request_id = 'wallet-actual'")
+				.get()?.settled_wallet_micros,
+			300_000,
+		);
+		assert.equal(
+			database.prepare("SELECT charged_wallet_cost FROM api_key_request_logs WHERE id = 'wallet-actual'").get()
+				?.charged_wallet_cost,
+			0.3,
+		);
+		const audit = database
+			.prepare(
+				"SELECT before_user_snapshot, after_user_snapshot, changed_fields FROM user_audit_logs WHERE request_log_id = 'wallet-actual'",
+			)
+			.get()!;
+		assert.equal(JSON.parse(String(audit.before_user_snapshot)).wallet_spent, 0);
+		assert.equal(JSON.parse(String(audit.after_user_snapshot)).wallet_spent, 0.3);
+		assert.deepEqual(JSON.parse(String(audit.changed_fields)), ['budget_spent', 'wallet_spent']);
+	} finally {
+		database.close();
+	}
+});
+
+test('D1 late actual refunds the permanent share of a conservative ceiling first', async () => {
+	const database = setupDatabase();
+	try {
+		insertUser(database);
+		database.exec("UPDATE users SET budget_spent = 0.8, wallet_granted = 2 WHERE id = 'user-1'");
+		const client = createD1Client(database);
+		await reserveAndDispatch(client, 'wallet-late', 600_000);
+		const budgets = createD1Repositories(client).userBudgets;
+		await budgets.forfeitDispatched('wallet-late', '2026-08-29T01:11:00.000Z', 'unknown');
+		assert.equal(database.prepare("SELECT wallet_spent FROM users WHERE id = 'user-1'").get()?.wallet_spent, 0.4);
+		await writeUsage(client, 'wallet-late', 0.1, 'actual', true, {
+			beforeUserSnapshot: JSON.stringify({ budget_epoch: 0, budget_spent: 1, wallet_spent: 0.4 }),
+			afterUserSnapshot: JSON.stringify({ budget_epoch: 0, budget_spent: 1, wallet_spent: 0.5 }),
+			changedFields: JSON.stringify(['wallet_spent']),
 		});
+		assert.deepEqual(
+			{ ...database.prepare("SELECT budget_spent_micros, wallet_spent FROM users WHERE id = 'user-1'").get() },
+			{ budget_spent_micros: 900_000, wallet_spent: 0 },
+		);
+		assert.equal(
+			database.prepare("SELECT charged_wallet_cost FROM api_key_request_logs WHERE id = 'wallet-late'").get()
+				?.charged_wallet_cost,
+			0,
+		);
+		assert.deepEqual(
+			{
+				...database
+					.prepare(
+						"SELECT request_log_id, before_user_snapshot, after_user_snapshot, changed_fields FROM user_audit_logs WHERE request_log_id = 'wallet-late'",
+					)
+					.get(),
+			},
+			{
+				request_log_id: 'wallet-late',
+				before_user_snapshot: null,
+				after_user_snapshot: null,
+				changed_fields: null,
+			},
+		);
+	} finally {
+		database.close();
+	}
+});
+
+test('D1 wallet ceiling refunds survive a period epoch reset', async () => {
+	const database = setupDatabase();
+	try {
+		insertUser(database);
+		database.exec("UPDATE users SET budget_spent = 0.8, wallet_granted = 2 WHERE id = 'user-1'");
+		const client = createD1Client(database);
+		await reserveAndDispatch(client, 'wallet-epoch', 600_000);
+		await createD1Repositories(client).userBudgets.forfeitDispatched(
+			'wallet-epoch',
+			'2026-08-29T01:11:00.000Z',
+			'unknown',
+		);
+		database.exec("UPDATE users SET budget_spent = 0, budget_epoch = 1 WHERE id = 'user-1'");
+		await writeUsage(client, 'wallet-epoch', 0.1, 'actual');
+		assert.deepEqual(
+			{
+				...database
+					.prepare("SELECT budget_spent_micros, wallet_spent, wallet_granted FROM users WHERE id = 'user-1'")
+					.get(),
+			},
+			{ budget_spent_micros: 0, wallet_spent: 0, wallet_granted: 2 },
+		);
 	} finally {
 		database.close();
 	}

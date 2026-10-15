@@ -371,7 +371,7 @@ describe('GET /catalog/models', () => {
 				const body = (await response.json()) as { billing_currency: string; data: unknown };
 				assert.equal(body.billing_currency, 'EUR');
 				const row = (Array.isArray(body.data) ? body.data[0] : body.data) as { pricing_profile: unknown };
-				assert.deepEqual(row.pricing_profile, expected);
+				assert.deepEqual(row.pricing_profile, { ...expected, schedule: [] });
 				assert.equal(JSON.stringify(body).includes('private-price-secret'), false);
 				assert.equal(JSON.stringify(body).includes('supplier_cost'), false);
 			}

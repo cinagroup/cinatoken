@@ -12,6 +12,7 @@ import {
 	existingUserBudgetReservationReplay,
 	userBudgetAccountIsStale,
 	userBudgetCapacity,
+	userBudgetSettlementPools,
 	userBudgetRecoveryLimit,
 	userBudgetReservationSnapshot,
 	validateReserveUserBudgetParams,
@@ -69,7 +70,7 @@ async function getReservation(
 ): Promise<UserBudgetReservationRow | null> {
 	const [rows] = await connection.query<Array<UserBudgetReservationRow & RowDataPacket>>(
 		`SELECT request_id, user_id, api_key_id, budget_epoch, limit_micros,
-			reserved_micros, settled_micros, state,
+			reserved_micros, settled_micros, settled_wallet_micros, state,
 			DATE_FORMAT(expires_at, '%Y-%m-%dT%H:%i:%s.%fZ') AS expires_at,
 			DATE_FORMAT(dispatched_at, '%Y-%m-%dT%H:%i:%s.%fZ') AS dispatched_at,
 			DATE_FORMAT(terminal_at, '%Y-%m-%dT%H:%i:%s.%fZ') AS terminal_at,
@@ -91,7 +92,7 @@ async function getAccount(
 	const [rows] = await connection.query<Array<UserBudgetAccountRow & RowDataPacket>>(`SELECT
 		id, budget_max, budget_spent, budget_period,
 		DATE_FORMAT(budget_reset_at, '%Y-%m-%dT%H:%i:%s.%fZ') AS budget_reset_at,
-		budget_epoch, budget_reserved_micros
+		budget_epoch, budget_reserved_micros, wallet_granted, wallet_spent
 		FROM users WHERE id = ?${forUpdate ? ' FOR UPDATE' : ''}`, [userId]);
 	return rows[0]
 		? { ...rows[0], budget_reset_at: timestampString(rows[0].budget_reset_at) }
@@ -167,9 +168,10 @@ async function updateCurrentEpochAccount(
 	row: UserBudgetReservationRow,
 	now: string,
 	settledMicros: number,
-): Promise<void> {
+): Promise<number> {
 	const account = await getAccount(connection, row.user_id, true);
-	if (!account || Number(account.budget_epoch) !== Number(row.budget_epoch)) return;
+	if (!account || Number(account.budget_epoch) !== Number(row.budget_epoch)) return 0;
+	const pools = userBudgetSettlementPools(account, 0, 0, settledMicros);
 	const reservedMicros = Number(row.reserved_micros);
 	if (Number(account.budget_reserved_micros) < reservedMicros) {
 		throw new Error('user_budget_reserved_counter_invariant');
@@ -177,16 +179,19 @@ async function updateCurrentEpochAccount(
 	const [updated] = await connection.execute<ResultSetHeader>(`UPDATE users
 		SET budget_reserved_micros = budget_reserved_micros - ?,
 			budget_spent = ROUND(GREATEST(budget_spent + (? / 1000000), 0), 6),
+			wallet_spent = ROUND(wallet_spent + (? / 1000000), 6),
 			updated_at = ?
 		WHERE id = ? AND budget_epoch = ? AND budget_reserved_micros >= ?`, [
 		reservedMicros,
-		settledMicros,
+		pools.periodDeltaMicros,
+		pools.walletDeltaMicros,
 		now,
 		row.user_id,
 		Number(row.budget_epoch),
 		reservedMicros,
 	]);
 	if (updated.affectedRows !== 1) throw new Error('user_budget_reserved_counter_invariant');
+	return pools.walletSettledMicros;
 }
 
 async function terminalize(
@@ -197,12 +202,13 @@ async function terminalize(
 	now: string,
 	reason: string,
 ): Promise<void> {
-	await updateCurrentEpochAccount(connection, row, now, settledMicros);
+	const walletMicros = await updateCurrentEpochAccount(connection, row, now, settledMicros);
 	const [updated] = await connection.execute<ResultSetHeader>(`UPDATE user_budget_reservations
-		SET state = ?, settled_micros = ?, terminal_at = ?, terminal_reason = ?, updated_at = ?
+		SET state = ?, settled_micros = ?, settled_wallet_micros = ?, terminal_at = ?, terminal_reason = ?, updated_at = ?
 		WHERE request_id = ? AND state = ?`, [
 		state,
 		settledMicros,
+		walletMicros,
 		now,
 		reason.slice(0, 128),
 		now,
@@ -258,7 +264,7 @@ export function createMySqlUserBudgetReservationsRepository(
 						SET budget_reserved_micros = budget_reserved_micros + ?, updated_at = ?
 						WHERE id = ? AND budget_epoch = ? AND budget_max IS NOT NULL
 							AND LEAST(
-								ROUND(GREATEST(budget_spent, 0) * 1000000),
+								ROUND(GREATEST(budget_spent + wallet_spent, 0) * 1000000),
 								?
 							) + budget_reserved_micros + ? <= ?`, [
 						params.reservedMicros,

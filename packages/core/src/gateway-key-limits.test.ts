@@ -8,6 +8,8 @@ import {
 import type { ApiKeyRow } from './types';
 
 const row: ApiKeyRow = {
+rate_limit: null,
+
 	id: 'key-1',
 	key: 'sk-preview',
 	user_id: 'user-1',

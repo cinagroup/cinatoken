@@ -1,208 +1,190 @@
-import assert from "node:assert/strict";
-import test from "node:test";
+import assert from 'node:assert/strict';
+import test from 'node:test';
 import {
 	hasAdminPermission,
 	normalizeAdminPermissions,
 	parseAdminPermissions,
 	type AdminPrincipal,
-} from "../../admin-principal";
-import { getAdminAuthorizationDecision } from "../../admin-permissions";
-import { prepareAdminConfigRows } from "../../admin-config-secrets";
-import {
-	authenticateAdminRequest,
-	generateAdminApiKey,
-	hashSessionToken,
-	timingSafeEqualSecret,
-} from "../../auth";
-import { handleGatewayApiError } from "../../api-error";
+} from '../../admin-principal';
+import { getAdminAuthorizationDecision } from '../../admin-permissions';
+import { prepareAdminConfigRows } from '../../admin-config-secrets';
+import { authenticateAdminRequest, generateAdminApiKey, hashSessionToken, timingSafeEqualSecret } from '../../auth';
+import { handleGatewayApiError } from '../../api-error';
 
 const routeWriter: AdminPrincipal = {
-	type: "api_key",
-	id: "admin_key:routes-bot",
-	keyId: "routes-bot",
-	permissions: ["routes.write"],
+	type: 'api_key',
+	id: 'admin_key:routes-bot',
+	keyId: 'routes-bot',
+	permissions: ['routes.write'],
 };
 
-test("write permission includes matching read but no unrelated permission", () => {
-	assert.equal(hasAdminPermission(routeWriter, "routes.read"), true);
-	assert.equal(hasAdminPermission(routeWriter, "routes.write"), true);
-	assert.equal(hasAdminPermission(routeWriter, "analytics.read"), false);
+test('write permission includes matching read but no unrelated permission', () => {
+	assert.equal(hasAdminPermission(routeWriter, 'routes.read'), true);
+	assert.equal(hasAdminPermission(routeWriter, 'routes.write'), true);
+	assert.equal(hasAdminPermission(routeWriter, 'analytics.read'), false);
 });
 
-test("star normalizes to the only stored permission and grants delegable permissions", () => {
-	assert.deepEqual(
-		normalizeAdminPermissions(["routes.read", "*", "logs.read"]),
-		["*"]
-	);
+test('star normalizes to the only stored permission and grants delegable permissions', () => {
+	assert.deepEqual(normalizeAdminPermissions(['routes.read', '*', 'logs.read']), ['*']);
 	const principal: AdminPrincipal = {
-		type: "api_key",
-		id: "admin_key:full",
-		keyId: "full",
-		permissions: ["*"],
+		type: 'api_key',
+		id: 'admin_key:full',
+		keyId: 'full',
+		permissions: ['*'],
 	};
-	assert.equal(hasAdminPermission(principal, "providers.secrets.read"), true);
-	assert.deepEqual(parseAdminPermissions('["*","unknown.permission"]'), ["*"]);
+	assert.equal(hasAdminPermission(principal, 'providers.secrets.read'), true);
+	assert.deepEqual(parseAdminPermissions('["*","unknown.permission"]'), ['*']);
 });
 
-test("permission matrix protects console-only surfaces and defaults to deny", () => {
-	assert.deepEqual(getAdminAuthorizationDecision("GET", "/admin/access-keys"), {
-		kind: "console_only",
+test('mcp write does not reveal upstream secrets', () => {
+	const writer: AdminPrincipal = {
+		type: 'api_key',
+		id: 'admin_key:mcp',
+		keyId: 'mcp',
+		permissions: ['mcp.write'],
+	};
+	assert.equal(hasAdminPermission(writer, 'mcp.read'), true);
+	assert.equal(hasAdminPermission(writer, 'mcp.secrets.read'), false);
+});
+
+test('permission matrix protects console-only surfaces and defaults to deny', () => {
+	assert.deepEqual(getAdminAuthorizationDecision('GET', '/admin/access-keys'), {
+		kind: 'console_only',
 	});
 	// Access Audit 已移除：该路径必须落入兜底 deny，不得被重新注册为可访问面
-	assert.deepEqual(
-		getAdminAuthorizationDecision("GET", "/admin/admin-audit-logs"),
-		{ kind: "deny" }
-	);
-	assert.deepEqual(
-		getAdminAuthorizationDecision("GET", "/admin/providers/p1/api-key"),
-		{
-			kind: "permission",
-			permission: "providers.secrets.read",
-		}
-	);
-	assert.deepEqual(
-		getAdminAuthorizationDecision("GET", "/admin/playground/realtime"),
-		{
-			kind: "permission",
-			permission: "playground.execute",
-		}
-	);
-	assert.deepEqual(getAdminAuthorizationDecision("GET", "/admin/presets"), {
-		kind: "permission",
-		permission: "presets.read",
+	assert.deepEqual(getAdminAuthorizationDecision('GET', '/admin/admin-audit-logs'), { kind: 'deny' });
+	assert.deepEqual(getAdminAuthorizationDecision('GET', '/admin/providers/p1/api-key'), {
+		kind: 'permission',
+		permission: 'providers.secrets.read',
 	});
-	assert.deepEqual(
-		getAdminAuthorizationDecision("PATCH", "/admin/presets/p1"),
-		{
-			kind: "permission",
-			permission: "presets.write",
-		}
-	);
-	assert.deepEqual(getAdminAuthorizationDecision("GET", "/admin/guardrails"), {
-		kind: "permission",
-		permission: "guardrails.read",
+	assert.deepEqual(getAdminAuthorizationDecision('GET', '/admin/providers/p1/quota'), {
+		kind: 'permission',
+		permission: 'providers.read',
 	});
-	assert.deepEqual(
-		getAdminAuthorizationDecision("PUT", "/admin/guardrails/g1/assignments"),
-		{
-			kind: "permission",
-			permission: "guardrails.write",
-		}
-	);
-	assert.deepEqual(
-		getAdminAuthorizationDecision("GET", "/admin/data-policies"),
-		{
-			kind: "permission",
-			permission: "routes.read",
-		}
-	);
-	assert.deepEqual(
-		getAdminAuthorizationDecision("PUT", "/admin/data-policies/route-1"),
-		{
-			kind: "permission",
-			permission: "routes.write",
-		}
-	);
-	assert.deepEqual(getAdminAuthorizationDecision("GET", "/admin/endpoints"), {
-		kind: "permission",
-		permission: "routes.read",
+	assert.deepEqual(getAdminAuthorizationDecision('GET', '/admin/playground/realtime'), {
+		kind: 'permission',
+		permission: 'playground.execute',
 	});
-	assert.deepEqual(
-		getAdminAuthorizationDecision(
-			"POST",
-			"/admin/endpoints/endpoint-1/routes/route-1"
-		),
-		{
-			kind: "permission",
-			permission: "routes.write",
-		}
-	);
-	assert.deepEqual(
-		getAdminAuthorizationDecision("GET", "/admin/users/u1/audit-logs"),
-		{
-			kind: "permission",
-			permission: "logs.read",
-		}
-	);
-	assert.deepEqual(
-		getAdminAuthorizationDecision("GET", "/admin/keys/k1/logs"),
-		{
-			kind: "permission",
-			permission: "logs.read",
-		}
-	);
-	assert.deepEqual(
-		getAdminAuthorizationDecision("GET", "/admin/not-registered"),
-		{ kind: "deny" }
-	);
+	assert.deepEqual(getAdminAuthorizationDecision('GET', '/admin/presets'), {
+		kind: 'permission',
+		permission: 'presets.read',
+	});
+	assert.deepEqual(getAdminAuthorizationDecision('PATCH', '/admin/presets/p1'), {
+		kind: 'permission',
+		permission: 'presets.write',
+	});
+	assert.deepEqual(getAdminAuthorizationDecision('GET', '/admin/guardrails'), {
+		kind: 'permission',
+		permission: 'guardrails.read',
+	});
+	assert.deepEqual(getAdminAuthorizationDecision('PUT', '/admin/guardrails/g1/assignments'), {
+		kind: 'permission',
+		permission: 'guardrails.write',
+	});
+	assert.deepEqual(getAdminAuthorizationDecision('GET', '/admin/data-policies'), {
+		kind: 'permission',
+		permission: 'routes.read',
+	});
+	assert.deepEqual(getAdminAuthorizationDecision('PUT', '/admin/data-policies/route-1'), {
+		kind: 'permission',
+		permission: 'routes.write',
+	});
+	assert.deepEqual(getAdminAuthorizationDecision('GET', '/admin/endpoints'), {
+		kind: 'permission',
+		permission: 'routes.read',
+	});
+	assert.deepEqual(getAdminAuthorizationDecision('POST', '/admin/endpoints/endpoint-1/routes/route-1'), {
+		kind: 'permission',
+		permission: 'routes.write',
+	});
+	assert.deepEqual(getAdminAuthorizationDecision('GET', '/admin/users/u1/display-discounts'), {
+		kind: 'permission',
+		permission: 'users.read',
+	});
+	assert.deepEqual(getAdminAuthorizationDecision('GET', '/admin/users/u1/audit-logs'), {
+		kind: 'permission',
+		permission: 'logs.read',
+	});
+	assert.deepEqual(getAdminAuthorizationDecision('GET', '/admin/keys/k1/logs'), {
+		kind: 'permission',
+		permission: 'logs.read',
+	});
+	assert.deepEqual(getAdminAuthorizationDecision('GET', '/admin/analytics/keys'), {
+		kind: 'permission',
+		permission: 'analytics.read',
+	});
+	assert.deepEqual(getAdminAuthorizationDecision('GET', '/admin/not-registered'), { kind: 'deny' });
+	assert.deepEqual(getAdminAuthorizationDecision('GET', '/admin/mcp-servers'), {
+		kind: 'permission',
+		permission: 'mcp.read',
+	});
+	assert.deepEqual(getAdminAuthorizationDecision('POST', '/admin/mcp-servers/server-1/sync'), {
+		kind: 'permission',
+		permission: 'mcp.write',
+	});
+	assert.deepEqual(getAdminAuthorizationDecision('GET', '/admin/mcp-servers/server-1/reveal'), {
+		kind: 'permission',
+		permission: 'mcp.secrets.read',
+	});
 });
 
-test("config masking removes legacy MASTER_KEY and recursively masks catalog credentials", () => {
+test('config masking removes legacy MASTER_KEY and recursively masks catalog credentials', () => {
 	const rows = prepareAdminConfigRows(
 		[
-			{ key: "MASTER_KEY", value: "legacy", description: null },
+			{ key: 'MASTER_KEY', value: 'legacy', description: null },
 			{
-				key: "ALERT_WEBHOOK_WECOM_URL",
-				value: "https://example.test/hook/secret",
+				key: 'ALERT_WEBHOOK_WECOM_URL',
+				value: 'https://example.test/hook/secret',
 				description: null,
 			},
 			{
-				key: "WEB_SEARCH_CATALOG",
+				key: 'WEB_SEARCH_CATALOG',
 				value: JSON.stringify({
-					tavily: { apiKey: "tvly-secret", metered: 1 },
+					tavily: { apiKey: 'tvly-secret', metered: 1 },
 				}),
 				description: null,
 			},
 		],
-		false
+		false,
 	);
 	assert.equal(
-		rows.some((row) => row.key === "MASTER_KEY"),
-		false
+		rows.some((row) => row.key === 'MASTER_KEY'),
+		false,
 	);
-	assert.equal(rows[0]?.value, "••••••••");
-	assert.equal(JSON.parse(rows[1]?.value ?? "{}").tavily.apiKey, "••••••••");
+	assert.equal(rows[0]?.value, '••••••••');
+	assert.equal(JSON.parse(rows[1]?.value ?? '{}').tavily.apiKey, '••••••••');
 });
 
-test("admin secrets and session hashes use expected formats", async () => {
+test('admin secrets and session hashes use expected formats', async () => {
 	const key = generateAdminApiKey();
 	assert.match(key, /^sk-admin-[0-9a-f]{64}$/);
-	assert.match(await hashSessionToken("session-token"), /^[0-9a-f]{64}$/);
-	assert.notEqual(
-		await hashSessionToken("session-token"),
-		await hashSessionToken("other-token")
-	);
-	assert.equal(
-		await timingSafeEqualSecret("admin-password", "admin-password"),
-		true
-	);
-	assert.equal(
-		await timingSafeEqualSecret("admin-password", "wrong-password"),
-		false
-	);
+	assert.match(await hashSessionToken('session-token'), /^[0-9a-f]{64}$/);
+	assert.notEqual(await hashSessionToken('session-token'), await hashSessionToken('other-token'));
+	assert.equal(await timingSafeEqualSecret('admin-password', 'admin-password'), true);
+	assert.equal(await timingSafeEqualSecret('admin-password', 'wrong-password'), false);
 });
 
-test("authentication resolves active named keys and persistent sessions", async () => {
-	const sessionToken = "valid-session";
+test('authentication resolves active named keys and persistent sessions', async () => {
+	const sessionToken = 'valid-session';
 	const expectedSessionHash = await hashSessionToken(sessionToken);
 	let touchedKeyId: string | null = null;
 	const repositories = {
 		adminAccess: {
 			getActiveApiKeyBySecret: async (secret: string) =>
-				secret === "active-secret"
+				secret === 'active-secret'
 					? {
-							id: "routes-bot",
-							name: "routes-bot",
+							id: 'routes-bot',
+							name: 'routes-bot',
 							description: null,
 							secretKey: secret,
-							keyPrefix: "active-secret",
+							keyPrefix: 'active-secret',
 							permissionsJson: '["routes.write"]',
-							status: "active" as const,
+							status: 'active' as const,
 							lastUsedAt: null,
-							createdAt: "2026-01-01T00:00:00.000Z",
-							updatedAt: "2026-01-01T00:00:00.000Z",
+							createdAt: '2026-01-01T00:00:00.000Z',
+							updatedAt: '2026-01-01T00:00:00.000Z',
 							revokedAt: null,
-					  }
+						}
 					: null,
 			touchApiKey: async (id: string) => {
 				touchedKeyId = id;
@@ -211,51 +193,51 @@ test("authentication resolves active named keys and persistent sessions", async 
 				tokenHash === expectedSessionHash
 					? {
 							tokenHash,
-							username: "admin",
-							createdAt: "2026-01-01T00:00:00.000Z",
-							expiresAt: "2027-01-01T00:00:00.000Z",
-					  }
+							username: 'admin',
+							createdAt: '2026-01-01T00:00:00.000Z',
+							expiresAt: '2027-01-01T00:00:00.000Z',
+						}
 					: null,
 		},
 	};
 
 	assert.deepEqual(
 		await authenticateAdminRequest(
-			new Request("https://admin.test/api/admin/routes", {
-				headers: { authorization: "Bearer active-secret" },
+			new Request('https://admin.test/api/admin/routes', {
+				headers: { authorization: 'Bearer active-secret' },
 			}),
-			repositories
+			repositories,
 		),
 		{
-			type: "api_key",
-			id: "admin_key:routes-bot",
-			keyId: "routes-bot",
-			permissions: ["routes.write"],
-		}
+			type: 'api_key',
+			id: 'admin_key:routes-bot',
+			keyId: 'routes-bot',
+			permissions: ['routes.write'],
+		},
 	);
-	assert.equal(touchedKeyId, "routes-bot");
+	assert.equal(touchedKeyId, 'routes-bot');
 	assert.deepEqual(
 		await authenticateAdminRequest(
-			new Request("https://admin.test/api/admin/routes", {
+			new Request('https://admin.test/api/admin/routes', {
 				headers: { cookie: `admin_session=${sessionToken}` },
 			}),
-			repositories
+			repositories,
 		),
-		{ type: "console", id: "console:admin", username: "admin" }
+		{ type: 'console', id: 'console:admin', username: 'admin' },
 	);
 	assert.equal(
 		await authenticateAdminRequest(
-			new Request("https://admin.test/api/admin/routes", {
-				headers: { authorization: "Bearer revoked-or-unknown" },
+			new Request('https://admin.test/api/admin/routes', {
+				headers: { authorization: 'Bearer revoked-or-unknown' },
 			}),
-			repositories
+			repositories,
 		),
-		null
+		null,
 	);
 });
 
-test("console authentication retries one transient session read and then succeeds", async () => {
-	const sessionToken = "transient-session";
+test('console authentication retries one transient session read and then succeeds', async () => {
+	const sessionToken = 'transient-session';
 	const expectedSessionHash = await hashSessionToken(sessionToken);
 	let attempts = 0;
 	const repositories = {
@@ -266,15 +248,15 @@ test("console authentication retries one transient session read and then succeed
 				assert.equal(tokenHash, expectedSessionHash);
 				attempts += 1;
 				if (attempts === 1) {
-					throw new Error("Failed query", {
-						cause: new Error("D1_ERROR: network connection lost"),
+					throw new Error('Failed query', {
+						cause: new Error('D1_ERROR: network connection lost'),
 					});
 				}
 				return {
 					tokenHash,
-					username: "admin",
-					createdAt: "2026-01-01T00:00:00.000Z",
-					expiresAt: "2027-01-01T00:00:00.000Z",
+					username: 'admin',
+					createdAt: '2026-01-01T00:00:00.000Z',
+					expiresAt: '2027-01-01T00:00:00.000Z',
 				};
 			},
 		},
@@ -282,17 +264,17 @@ test("console authentication retries one transient session read and then succeed
 
 	assert.deepEqual(
 		await authenticateAdminRequest(
-			new Request("https://admin.test/api/admin/routes", {
+			new Request('https://admin.test/api/admin/routes', {
 				headers: { cookie: `admin_session=${sessionToken}` },
 			}),
-			repositories
+			repositories,
 		),
-		{ type: "console", id: "console:admin", username: "admin" }
+		{ type: 'console', id: 'console:admin', username: 'admin' },
 	);
 	assert.equal(attempts, 2);
 });
 
-test("console authentication does not retry permanent session query errors", async () => {
+test('console authentication does not retry permanent session query errors', async () => {
 	let attempts = 0;
 	const repositories = {
 		adminAccess: {
@@ -300,39 +282,34 @@ test("console authentication does not retry permanent session query errors", asy
 			touchApiKey: async () => {},
 			getValidSession: async () => {
 				attempts += 1;
-				throw new Error("no such table: admin_sessions");
+				throw new Error('no such table: admin_sessions');
 			},
 		},
 	};
 
 	await assert.rejects(
 		authenticateAdminRequest(
-			new Request("https://admin.test/api/admin/routes", {
-				headers: { cookie: "admin_session=broken-session" },
+			new Request('https://admin.test/api/admin/routes', {
+				headers: { cookie: 'admin_session=broken-session' },
 			}),
-			repositories
+			repositories,
 		),
-		/no such table/
+		/no such table/,
 	);
 	assert.equal(attempts, 1);
 });
 
-test("gateway API error logging preserves causes while redacting database params", async () => {
-	const tokenHash = "a".repeat(64);
-	const cause = new Error(
-		`D1_ERROR: request failed for params: ${tokenHash},2026-09-04T00:00:00.000Z`
-	);
-	const error = new Error(
-		`Failed query\nparams: ${tokenHash},2026-09-04T00:00:00.000Z`,
-		{ cause }
-	);
+test('gateway API error logging preserves causes while redacting database params', async () => {
+	const tokenHash = 'a'.repeat(64);
+	const cause = new Error(`D1_ERROR: request failed for params: ${tokenHash},2026-09-04T00:00:00.000Z`);
+	const error = new Error(`Failed query\nparams: ${tokenHash},2026-09-04T00:00:00.000Z`, { cause });
 	const originalConsoleError = console.error;
 	let logged: unknown[] = [];
 	console.error = (...args: unknown[]) => {
 		logged = args;
 	};
 	try {
-		const response = handleGatewayApiError({ route: "admin.test", error });
+		const response = handleGatewayApiError({ route: 'admin.test', error });
 		assert.equal(response.status, 500);
 	} finally {
 		console.error = originalConsoleError;

@@ -31,7 +31,7 @@ Operator
 
 ## 版本基线
 
-当前仓库版本为 **cinatoken Gateway 2.3.0**，D1 迁移共 **21 个**（截至 `0021_route_strategy_display_ids.sql`）。跨版本升级必须按编号应用全部未执行迁移；从 1.11.x 升级先阅读 [2.0 升级指南](../migrations/single-provider-key-cutover.md)，从 2.2.0 升级 2.3.0 见 [迁移与切换索引](../README.md#迁移与切换)（0020 → 0021）。
+当前集成版本为 **CinaToken Gateway 2.14.0**。D1 迁移共 **81 个**（截至 `0081_mcp_servers.sql`）；新增 Wallet、限流、Provider kind 和 MCP 迁移追加在既有迁移之后。保留既有周期余额与预留账本，不执行上游 0027 的历史余额重新分配。升级顺序与三库迁移编号见 [运维索引](../README.md)。
 
 下列构建体积来自 2026-07-24 对 `1.10.2` 的历史实测，仅用于量级参考；当前部署应以本次终端输出为准：
 
@@ -43,7 +43,7 @@ Operator
 | `@opennextjs/cloudflare` | 1.19.4 |
 | 代理服务 gzip | 194.31 KiB |
 | 管理后台 gzip | 2925.55 KiB |
-| 当时 D1 migrations | 13 个全部成功（2.3.0 当前为 21 个） |
+| 当时 D1 migrations | 13 个全部成功（2.8.0 当前为 27 个） |
 
 Cloudflare Workers Free 的单 Worker gzip 上限为 3 MiB；管理后台实测低于该上限，但余量不大。部署时应检查自己终端中的 `Total Upload ... gzip`，不要只依赖本文的历史数值。限制以 [Cloudflare Workers Limits](https://developers.cloudflare.com/workers/platform/limits/#worker-size) 为准。若免费额度余量吃紧或流量上来，也推荐升级 [Workers Paid](https://developers.cloudflare.com/workers/platform/pricing/)（约 $5/月）——量大管饱，性价比极高。
 
@@ -508,9 +508,12 @@ curl -sS "$GATEWAY_URL/v1/tools/web-search" \
 先确保域名所在 zone 已加入同一个 Cloudflare 账号。编辑被 gitignore 的实例文件：
 
 ```env
-PROXY_CUSTOM_DOMAIN=api.example.com
+# 单个主机名，或逗号分隔多个（同一 Worker 多个入口）
+PROXY_CUSTOM_DOMAIN=api.example.com,relay.example.com
 ADMIN_CUSTOM_DOMAIN=admin.example.com
 ```
+
+`gen-wrangler` 按逗号拆分，为每个主机名写入一条 `custom_domain: true` 的 `routes`。代理服务代码无需改动。各主机名的 zone 必须在同一 Cloudflare 账号；部署时 Wrangler 会创建 DNS 记录并签发证书。
 
 重新部署：
 
@@ -518,7 +521,7 @@ ADMIN_CUSTOM_DOMAIN=admin.example.com
 npm run deploy:cloudflare -- production
 ```
 
-脚本会把域名写入生成的 `routes`。验证证书和 DNS 状态后再把下游变量切换为：
+脚本会把域名写入生成的 `routes`。验证证书和 DNS 状态后再把下游变量切换为（下游 `GATEWAY_URL` 仍指向你选定的主入口，不必列出全部主机名）：
 
 ```env
 GATEWAY_URL=https://api.example.com
@@ -526,6 +529,8 @@ GATEWAY_MASTER_URL=https://admin.example.com
 ```
 
 管理后台必须通过 HTTPS 对公网提供；还可按需通过 Cloudflare Access 增加一层访问控制。
+
+回滚：把变量改回单个主机名（或去掉多余项）后重新 `deploy:proxy` / `deploy:admin`。未再列出的 Custom Domain 会从该 Worker 解绑。
 
 ---
 
@@ -538,7 +543,7 @@ git pull --ff-only
 npm ci
 ```
 
-有新 D1 migration 时：
+若目标版本没有声明特殊上线顺序，有新 D1 migration 时：
 
 ```bash
 npm run deploy:cloudflare -- production --migrate
@@ -557,7 +562,16 @@ npm run deploy:cloudflare -- production --proxy-only
 npm run deploy:cloudflare -- production --admin-only
 ```
 
-推荐顺序是**先迁移，后部署依赖新 schema 的 Worker**。D1 migration 不会因为 Worker 重新部署而自动执行。
+默认顺序是**先迁移，后部署依赖新 schema 的 Worker**。D1 migration 不会因为 Worker 重新部署而自动执行；若目标版本的 Release 给出专用顺序，应以该版本说明为准。
+
+> **升级到 v2.8.0**：0027 会把原有剩余额度回填到永久额度，而 v2.8.0 Worker 会直接读取新列。请先备份 D1 并暂停请求及额度写入，再执行远程迁移，随后立即部署同为 v2.8.0 的 Proxy 与 Admin；禁止新旧版本混跑。最后让门户改用 `POST /api/admin/users/:id/wallet/credit`。
+
+```bash
+npm run deploy:cloudflare -- production --migrate-only
+npm run deploy:cloudflare -- production
+```
+
+迁移前建议先运行 [0027 只读审计脚本](../migrations/0027-user-wallet-credit-audit.d1.sql) 核对回填范围。迁移后检查用户的周期额度、永久额度以及请求日志中的 `charged_wallet_cost`。
 
 ---
 
@@ -634,7 +648,7 @@ npx wrangler secret put ADMIN_PASSWORD --name <admin-worker-name>
 
 ### 自定义域名部署失败
 
-先去掉 `PROXY_CUSTOM_DOMAIN` / `ADMIN_CUSTOM_DOMAIN`，用 `workers.dev` 验证。确认 zone 在同一账号、DNS 和证书可用后再绑定。
+先去掉 `PROXY_CUSTOM_DOMAIN` / `ADMIN_CUSTOM_DOMAIN`，用 `workers.dev` 验证。确认 **每一个** 主机名的 zone 都在同一账号、DNS 和证书可用后再绑定。逗号分隔列表里只要有一个 zone 不在本账号，整次 deploy 都会失败。
 
 ### 引导脚本中断后重试
 

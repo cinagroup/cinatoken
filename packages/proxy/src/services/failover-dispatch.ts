@@ -7,21 +7,21 @@
  */
 import { createResourceCompletionGroup, observeResourceCleanup } from './resource-completion';
 import type { GatewayRepositories, PreparationControl, RouteStrategyName, UpstreamProtocol } from '@octafuse/core';
-import { DEFAULT_ROUTE_STRATEGY, fingerprintProviderApiKey, preparationRead, RequestAuxiliaryAuthLimitError, type RequestAuxiliaryAuthBudget } from '@octafuse/core';
+import {
+	DEFAULT_ROUTE_STRATEGY,
+	fingerprintProviderApiKey,
+	preparationRead,
+	RequestAuxiliaryAuthLimitError,
+	type RequestAuxiliaryAuthBudget,
+} from '@octafuse/core';
+import { overlayClientHeadersOnRouteCustomParams } from '@octafuse/core/route-custom-params';
 import type { RoutePoolStickyRoutingConfig } from '@octafuse/core/db/route-pool-sticky-types';
 import type { RouteResult } from './model-router';
 import type { UsageFromStream } from './proxy';
 import { EMPTY_USAGE } from './proxy';
 import { buildRouteAttemptPlan } from './route-attempt-planner';
-import {
-	circuitKeyForRoute,
-	expandAttemptsWithSharedKeys,
-	parseSharedKeyId,
-} from './shared-key-pool';
-import {
-	expandAttemptsWithPrivateByok,
-	type PrivateByokRequestContext,
-} from './byok-key-pool';
+import { circuitKeyForRoute, expandAttemptsWithSharedKeys, parseSharedKeyId } from './shared-key-pool';
+import { expandAttemptsWithPrivateByok, type PrivateByokRequestContext } from './byok-key-pool';
 import {
 	getProviderCircuitRemainingMs,
 	markProviderFailure,
@@ -35,7 +35,7 @@ import {
 	type UpstreamFailureClassification,
 } from './upstream-failure-classifier';
 import type { RequestTimingAttempt, RequestTimingCollector } from './request-timing';
-import { GatewayErrorCode } from './gateway-error-codes';
+import { GatewayErrorCode, NO_AVAILABLE_ROUTE_MESSAGE } from './gateway-error-codes';
 import type { SharedKeyQuoteAttemptCapture, SharedKeyQuoteAttemptReference } from './shared-key-quote-attempt';
 import { gatewayErrorResponse, gatewayNestedErrorResponse } from './gateway-error-response';
 import { RequestBudgetAdmissionError } from './request-budget-admission';
@@ -86,7 +86,7 @@ function maybeScheduleStickyStaleGc(
 	session.mutations.push(
 		(control ? control.runOwnedMutation(removeStale) : removeStale()).catch((err) => {
 			console.warn('[Gateway Sticky] stale GC failed', err);
-		})
+		}),
 	);
 }
 
@@ -112,8 +112,14 @@ export type ProxyDispatchMeta = {
 	}>;
 	/** 仅 Images：上游 wait 被 abort 时由 driver 写入（见 openai-images-driver） */
 	imageAbortReason?: ImageDispatchAbortReason;
+	/** 仅 DashScope 生图：由上游 usage 推导的 per_image 档位（如 `1k` / `2k`） */
+	imageBillingSize?: string | null;
 	/** 仅 Audio transcriptions：计费时长（秒） */
 	audioDurationSeconds?: number | null;
+	/** TTS 透传：上游 `usage.characters`；缺失时不按输入长度补算。 */
+	audioCharacters?: number | null;
+	/** 生图透传：从原生 `output.choices` 数出的图片张数。 */
+	imageCount?: number | null;
 	/** 仅 Audio：duration 来源 */
 	audioDurationSource?: 'upstream' | 'media' | 'client' | 'estimated' | null;
 	/** 仅 Audio：上传文件字节数 */
@@ -130,6 +136,8 @@ export type ProxyDispatchMeta = {
 	gatewayGeneratedError?: boolean;
 	/** This attempt was denied before dispatch; earlier attempts may have been sent. */
 	admissionDeniedPreDispatch?: boolean;
+	/** 客户端额外字段命中受保护路径后被改回的点路径。 */
+	restoredUpstreamPaths?: string[];
 };
 
 type UnknownUpstreamOutcomeError = Error & {
@@ -263,6 +271,12 @@ export type FailoverDispatchOptions = {
 	crossModelCandidateFailover?: boolean;
 	/** Authenticated request scope used to select encrypted private provider keys. */
 	byok?: PrivateByokRequestContext | null;
+	/** Incoming user request headers; used to overlay route `custom_params.headers` when force override is off. */
+	inboundHeaders?: Headers;
+	/** 尚未收到非空 chunk 时的等待上限；未设则 driver 用代码默认。 */
+	firstChunkTimeoutMs?: number;
+	/** 已吐 chunk 后两次 chunk 之间的空闲上限；未设则 driver 用代码默认。 */
+	idleTimeoutMs?: number;
 };
 
 type DispatchFn = (
@@ -303,10 +317,14 @@ function emptyRoute(protocol: UpstreamProtocol): RouteResult {
 	};
 }
 
-function logProviderSwitchAlert(route: RouteResult, classification: UpstreamFailureClassification, status?: number): void {
+function logProviderSwitchAlert(
+	route: RouteResult,
+	classification: UpstreamFailureClassification,
+	status?: number,
+): void {
 	if (!classification.alertOnKeySwitch) return;
 	console.warn(
-		`[Gateway Proxy] provider auth issue, trying next provider providerId=${route.providerId} status=${status ?? 'fetch_error'}`
+		`[Gateway Proxy] provider auth issue, trying next provider providerId=${route.providerId} status=${status ?? 'fetch_error'}`,
 	);
 }
 
@@ -339,19 +357,18 @@ export async function failoverDispatch(
 	expectedProtocol: UpstreamProtocol | readonly UpstreamProtocol[],
 	dispatch: DispatchFn,
 	requestSignal?: AbortSignal,
-	options?: FailoverDispatchOptions
+	options?: FailoverDispatchOptions,
 ): Promise<ProxyFailoverResult> {
-	if (options?.stopAfterFirstGrantedDispatch === true && (
-		options.delegateBeforeUpstreamDispatchToDriver !== true
-		|| options.beforeUpstreamDispatch == null
-	)) {
+	if (
+		options?.stopAfterFirstGrantedDispatch === true &&
+		(options.delegateBeforeUpstreamDispatchToDriver !== true || options.beforeUpstreamDispatch == null)
+	) {
 		throw new TypeError('stopAfterFirstGrantedDispatch requires delegated durable admission');
 	}
 	if (options?.quoteAttemptCapture && options.delegateBeforeUpstreamDispatchToDriver !== true) {
 		throw new TypeError('Shared-key quote capture requires a delegated pre-fetch boundary');
 	}
-	if (options?.requirePreparedTextAttemptIdentity === true
-		&& options.delegateBeforeUpstreamDispatchToDriver !== true) {
+	if (options?.requirePreparedTextAttemptIdentity === true && options.delegateBeforeUpstreamDispatchToDriver !== true) {
 		throw new TypeError('Prepared text identity requires a delegated pre-fetch boundary');
 	}
 	const resources = createResourceCompletionGroup();
@@ -361,13 +378,22 @@ export async function failoverDispatch(
 		options?.registerResourceCompletion?.(resources.completion);
 		const ownedDispatch: DispatchFn = (...args) => {
 			const task = Promise.resolve().then(() => dispatch(...args));
-			resources.track(task.then(result => result.resourceCompletion ?? 'confirmed'));
+			resources.track(task.then((result) => result.resourceCompletion ?? 'confirmed'));
 			return task;
 		};
-		const result = await failoverDispatchWithDeadline(repos, routes, expectedProtocol, ownedDispatch, requestSignal, options,
-			completion => resources.track(observeResourceCleanup(() => completion)));
+		const result = await failoverDispatchWithDeadline(
+			repos,
+			routes,
+			expectedProtocol,
+			ownedDispatch,
+			requestSignal,
+			options,
+			(completion) => resources.track(observeResourceCleanup(() => completion)),
+		);
 		return { ...result, resourceCompletion: resources.completion };
-	} finally { resources.seal(); }
+	} finally {
+		resources.seal();
+	}
 }
 
 async function failoverDispatchWithDeadline(
@@ -383,13 +409,15 @@ async function failoverDispatchWithDeadline(
 		return failoverDispatchWithinDeadline(repos, routes, expectedProtocol, dispatch, requestSignal, options);
 	}
 	let ownsPreparation = true;
-	const deadline = createRequestDeadline(options.requestDeadlineAtMs, requestSignal, undefined, completion => {
+	const deadline = createRequestDeadline(options.requestDeadlineAtMs, requestSignal, undefined, (completion) => {
 		if (ownsPreparation) observePreparation?.(completion);
 	});
 	const dispatchBudget = options.dispatchBudget ?? createRequestDispatchBudget();
 	const execution: DeadlineExecution = {
 		deadline,
-		route: routes[0] ?? emptyRoute(Array.isArray(expectedProtocol) ? expectedProtocol[0]! : expectedProtocol as UpstreamProtocol),
+		route:
+			routes[0] ??
+			emptyRoute(Array.isArray(expectedProtocol) ? expectedProtocol[0]! : (expectedProtocol as UpstreamProtocol)),
 		quoteAttemptReference: null,
 		outcomeUnknown: false,
 		dispatchStarted: false,
@@ -402,8 +430,13 @@ async function failoverDispatchWithDeadline(
 	try {
 		deadline.throwIfStopped();
 		const result = await failoverDispatchWithinDeadline(
-			repos, routes, expectedProtocol, dispatch, deadline.signal,
-			{ ...options, dispatchBudget }, execution,
+			repos,
+			routes,
+			expectedProtocol,
+			dispatch,
+			deadline.signal,
+			{ ...options, dispatchBudget },
+			execution,
 		);
 		// Raw reads already registered remain owned after cancellation. Future
 		// response pulls belong to the driver, not this soon-to-be-sealed group.
@@ -420,13 +453,19 @@ async function failoverDispatchWithDeadline(
 				headers.delete('Content-Length');
 				headers.delete('Content-Encoding');
 				headers.delete('Transfer-Encoding');
-				response = new Response(result.response.status === 304 ? null : text, { status: result.response.status, statusText: result.response.statusText, headers });
+				response = new Response(result.response.status === 304 ? null : text, {
+					status: result.response.status,
+					statusText: result.response.statusText,
+					headers,
+				});
 			} catch (error) {
 				if (!(error instanceof UpstreamResponseBodyTooLargeError)) throw error;
 				response = gatewayErrorResponse({
-					status: 502, code: GatewayErrorCode.upstreamResponseTooLarge,
+					status: 502,
+					code: GatewayErrorCode.upstreamResponseTooLarge,
 					message: 'Upstream error response exceeded the gateway size limit',
-					skin: options.errorContext?.skin, requestId: options.errorContext?.requestId,
+					skin: options.errorContext?.skin,
+					requestId: options.errorContext?.requestId,
 				});
 				meta = { ...meta, gatewayGeneratedError: true };
 			}
@@ -440,8 +479,8 @@ async function failoverDispatchWithDeadline(
 			...result,
 			response,
 			usagePromise: result.usagePromise.then((usage) =>
-				deadline.signal.reason instanceof RequestExecutionStoppedError
-				&& deadline.signal.reason.reason === 'deadline_exceeded'
+				deadline.signal.reason instanceof RequestExecutionStoppedError &&
+				deadline.signal.reason.reason === 'deadline_exceeded'
 					? { ...usage, stream_error: usage.stream_error ?? 'Request deadline exceeded' }
 					: usage,
 			),
@@ -455,22 +494,38 @@ async function failoverDispatchWithDeadline(
 		// A later candidate can be selected for preparation before it claims a
 		// quote. If it never reached a claim or dispatch, settle the last quoted
 		// attempt instead of returning that unclaimed route with no reference.
-		const priorQuotedAttempt = !execution.quoteAttemptReference && !execution.dispatchStarted
-			? execution.priorQuotedAttempt : null;
+		const priorQuotedAttempt =
+			!execution.quoteAttemptReference && !execution.dispatchStarted ? execution.priorQuotedAttempt : null;
 		const selectedQuoteReference = execution.quoteAttemptReference ?? priorQuotedAttempt?.quoteAttemptReference;
 		console.warn(JSON.stringify({ message: 'request dispatch stopped', reason: error.reason }));
 		const status = error.reason === 'deadline_exceeded' ? 504 : 499;
-		const code = error.reason === 'deadline_exceeded' ? GatewayErrorCode.requestDeadlineExceeded : GatewayErrorCode.requestCancelled;
+		const code =
+			error.reason === 'deadline_exceeded'
+				? GatewayErrorCode.requestDeadlineExceeded
+				: GatewayErrorCode.requestCancelled;
 		return {
-			response: new Response(JSON.stringify(buildOpenRouterErrorBody({
-				skin: options.errorContext?.skin ?? 'chat', status, legacyCode: code,
-				requestId: options.errorContext?.requestId,
-				errorType: error.reason === 'deadline_exceeded' ? 'timeout' : 'provider_unavailable',
-				message: error.message,
-			})), { status, headers: { 'Content-Type': 'application/json; charset=UTF-8', 'Cache-Control': 'no-store', 'X-OctaFuse-Error-Code': code } }),
+			response: new Response(
+				JSON.stringify(
+					buildOpenRouterErrorBody({
+						skin: options.errorContext?.skin ?? 'chat',
+						status,
+						legacyCode: code,
+						requestId: options.errorContext?.requestId,
+						errorType: error.reason === 'deadline_exceeded' ? 'timeout' : 'provider_unavailable',
+						message: error.message,
+					}),
+				),
+				{
+					status,
+					headers: {
+						'Content-Type': 'application/json; charset=UTF-8',
+						'Cache-Control': 'no-store',
+						'X-OctaFuse-Error-Code': code,
+					},
+				},
+			),
 			usagePromise: priorQuotedAttempt?.usagePromise ?? execution.usagePromise,
-			...(selectedQuoteReference
-				? { quoteAttemptReference: selectedQuoteReference } : {}),
+			...(selectedQuoteReference ? { quoteAttemptReference: selectedQuoteReference } : {}),
 			upstreamRequestId: priorQuotedAttempt?.upstreamRequestId ?? execution.upstreamRequestId,
 			chosenRoute: priorQuotedAttempt?.route ?? execution.route,
 			circuitEvents: execution.circuitEvents,
@@ -480,7 +535,8 @@ async function failoverDispatchWithDeadline(
 			stickyMutationPromise: stickyMutationPromise(execution.stickySession ?? null),
 			suppressErrorAlert: true,
 			meta: {
-				gatewayGeneratedError: true, failoverForbidden: true,
+				gatewayGeneratedError: true,
+				failoverForbidden: true,
 				upstreamOutcomeUnknown: priorQuotedAttempt?.outcomeUnknown ?? execution.outcomeUnknown,
 				admissionDeniedPreDispatch: !(priorQuotedAttempt?.dispatchStarted ?? execution.dispatchStarted),
 			},
@@ -542,16 +598,20 @@ async function failoverDispatchWithinDeadline(
 			auxiliary_auth_limit: snapshot.auxiliaryAuth.limit,
 			auxiliary_auth_exchanges_started: snapshot.auxiliaryAuth.exchangesStarted,
 		};
-		console.warn(JSON.stringify({
-			message: 'request dispatch stopped',
-			reason,
-			...metadata,
-		}));
+		console.warn(
+			JSON.stringify({
+				message: 'request dispatch stopped',
+				reason,
+				...metadata,
+			}),
+		);
 		return {
 			response: gatewayErrorResponse({
 				status: 502,
 				code: auxiliaryAuthLimit ? GatewayErrorCode.auxiliaryAuthLimitExceeded : GatewayErrorCode.dispatchLimitExceeded,
-				message: auxiliaryAuthLimit ? 'Request auxiliary authentication limit reached' : 'Request upstream dispatch limit reached',
+				message: auxiliaryAuthLimit
+					? 'Request auxiliary authentication limit reached'
+					: 'Request upstream dispatch limit reached',
 				metadata,
 				skin: options?.errorContext?.skin,
 				requestId: options?.errorContext?.requestId,
@@ -566,24 +626,29 @@ async function failoverDispatchWithinDeadline(
 		};
 	};
 	timing?.markUpstreamDispatchStart();
-	const expectedProtocols = Array.isArray(expectedProtocol)
-		? expectedProtocol
-		: [expectedProtocol];
+	const expectedProtocols = Array.isArray(expectedProtocol) ? expectedProtocol : [expectedProtocol];
 	const fallbackProtocol = expectedProtocols[0]!;
-	const protocolRoutes = routes.filter((route) => {
-		if (expectedProtocols.includes(route.upstreamProtocol)) return true;
-		console.warn(
-			`[Gateway Proxy] unsupported protocol, skipping providerId=${route.providerId} protocol=${route.upstreamProtocol}`
-		);
-		return false;
-	});
+	const protocolRoutes = routes
+		.filter((route) => {
+			if (expectedProtocols.includes(route.upstreamProtocol)) return true;
+			console.warn(
+				`[Gateway Proxy] unsupported protocol, skipping providerId=${route.providerId} protocol=${route.upstreamProtocol}`,
+			);
+			return false;
+		})
+		.map((route) => {
+			const customParams = overlayClientHeadersOnRouteCustomParams(route.customParams, {
+				clientHeaders: options?.inboundHeaders,
+			});
+			return customParams === route.customParams ? route : { ...route, customParams };
+		});
 
 	if (protocolRoutes.length === 0) {
 		return {
 			response: gatewayErrorResponse({
-				status: 502,
+				status: 404,
 				code: GatewayErrorCode.noRoute,
-				message: 'No routes configured',
+				message: NO_AVAILABLE_ROUTE_MESSAGE,
 			}),
 			usagePromise: Promise.resolve(EMPTY_USAGE),
 			upstreamRequestId: null,
@@ -609,8 +674,7 @@ async function failoverDispatchWithinDeadline(
 	const tierStrategies = options?.tierStrategies ?? null;
 	const stickyConfig = options?.sticky ?? null;
 	const stickyRouteEligible = options?.stickyRouteEligible ?? null;
-	const routePoolId =
-		options?.routePoolId ?? protocolRoutes.find((r) => r.routePoolId)?.routePoolId ?? null;
+	const routePoolId = options?.routePoolId ?? protocolRoutes.find((r) => r.routePoolId)?.routePoolId ?? null;
 
 	const circuitEvents: GatewayCircuitAlertEvent[] = [];
 	if (execution) execution.circuitEvents = circuitEvents;
@@ -628,14 +692,12 @@ async function failoverDispatchWithinDeadline(
 	);
 	// 共享渠道 route 展开为「用户共享 key 固定序列 + provider 自有 key 兜底」；
 	// 共享 key 的熔断走复合键（见 circuitKeyForRoute），坏 key 不波及 provider。
-	const sharedAndPlatformAttempts = await read(() => expandAttemptsWithSharedKeys(repos, plan.attempts, preparationControl));
-	const credentialAttempts = await read(() => expandAttemptsWithPrivateByok(
-		repos,
-		plan.attempts,
-		sharedAndPlatformAttempts,
-		options?.byok,
-		preparationControl,
-	));
+	const sharedAndPlatformAttempts = await read(() =>
+		expandAttemptsWithSharedKeys(repos, plan.attempts, preparationControl),
+	);
+	const credentialAttempts = await read(() =>
+		expandAttemptsWithPrivateByok(repos, plan.attempts, sharedAndPlatformAttempts, options?.byok, preparationControl),
+	);
 	let earliestRetryAfterMs: number | null = null;
 	let skippedByCircuit = 0;
 	const availableAttempts = credentialAttempts.filter((route) => {
@@ -648,20 +710,21 @@ async function failoverDispatchWithinDeadline(
 		return false;
 	});
 	const availableTargetIds = new Set(availableAttempts.map((route) => route.targetId));
-	const stickyCandidates = stickyRouteEligible
-		? protocolRoutes.filter(stickyRouteEligible)
-		: protocolRoutes;
-	const { session: stickySession, stickyRoute } = stickyConfig?.enabled && stickyCandidates.length > 0
-		? await read(() => resolveStickySession(repos, {
-				routePoolId,
-				affinityKey,
-				config: stickyConfig,
-				candidates: stickyCandidates,
-				targetAvailable: (route) => availableTargetIds.has(route.targetId),
-				nowMs,
-				control: preparationControl,
-			}))
-		: { session: null, stickyRoute: null };
+	const stickyCandidates = stickyRouteEligible ? protocolRoutes.filter(stickyRouteEligible) : protocolRoutes;
+	const { session: stickySession, stickyRoute } =
+		stickyConfig?.enabled && stickyCandidates.length > 0
+			? await read(() =>
+					resolveStickySession(repos, {
+						routePoolId,
+						affinityKey,
+						config: stickyConfig,
+						candidates: stickyCandidates,
+						targetAvailable: (route) => availableTargetIds.has(route.targetId),
+						nowMs,
+						control: preparationControl,
+					}),
+				)
+			: { session: null, stickyRoute: null };
 	if (execution) execution.stickySession = stickySession;
 	const clearSticky = (): Promise<void> => {
 		if (!stickySession) return Promise.resolve();
@@ -719,10 +782,7 @@ async function failoverDispatchWithinDeadline(
 	if (execution) execution.attempts = dispatchAttempts;
 	const dispatchAttemptIndexByCandidate = new Map<number, number>();
 	const recordDispatchAttempt = (attempt: ProxyDispatchAttemptTrace): void => {
-		if (
-			options?.crossModelCandidateFailover === true
-			&& attempt.candidateIndex != null
-		) {
+		if (options?.crossModelCandidateFailover === true && attempt.candidateIndex != null) {
 			const existingIndex = dispatchAttemptIndexByCandidate.get(attempt.candidateIndex);
 			if (existingIndex != null) {
 				dispatchAttempts[existingIndex] = attempt;
@@ -778,7 +838,7 @@ async function failoverDispatchWithinDeadline(
 
 		if (getProviderCircuitRemainingMs(circuitKeyForRoute(route)) > 0) {
 			console.warn(
-				`[Gateway Proxy] provider cooling down mid-request, skipping providerId=${route.providerId} key=${route.providerKeyId ?? '-'}`
+				`[Gateway Proxy] provider cooling down mid-request, skipping providerId=${route.providerId} key=${route.providerKeyId ?? '-'}`,
 			);
 			continue;
 		}
@@ -791,10 +851,8 @@ async function failoverDispatchWithinDeadline(
 			// The next candidate was never claimed. A quoted request settles
 			// against its last claimed route if it already reached an upstream.
 			return finish({
-				...dispatchLimitResult(lastResponse && lastQuoteReference ? lastRoute : route,
-					circuitEvents),
-				...(lastResponse && lastQuoteReference
-					? { quoteAttemptReference: lastQuoteReference } : {}),
+				...dispatchLimitResult(lastResponse && lastQuoteReference ? lastRoute : route, circuitEvents),
+				...(lastResponse && lastQuoteReference ? { quoteAttemptReference: lastQuoteReference } : {}),
 			});
 		}
 		if (execution) {
@@ -803,13 +861,14 @@ async function failoverDispatchWithinDeadline(
 			void execution.response?.body?.cancel('provider_endpoint_failed').catch(() => undefined);
 			execution.priorQuotedAttempt = execution.quoteAttemptReference
 				? {
-					route: execution.route,
-					quoteAttemptReference: execution.quoteAttemptReference,
-					outcomeUnknown: execution.outcomeUnknown,
-					dispatchStarted: execution.dispatchStarted,
-					upstreamRequestId: execution.upstreamRequestId,
-					usagePromise: execution.usagePromise,
-				} : undefined;
+						route: execution.route,
+						quoteAttemptReference: execution.quoteAttemptReference,
+						outcomeUnknown: execution.outcomeUnknown,
+						dispatchStarted: execution.dispatchStarted,
+						upstreamRequestId: execution.upstreamRequestId,
+						usagePromise: execution.usagePromise,
+					}
+				: undefined;
 			execution.route = route;
 			execution.quoteAttemptReference = null;
 			execution.dispatchStarted = false;
@@ -818,15 +877,12 @@ async function failoverDispatchWithinDeadline(
 			execution.response = undefined;
 			execution.usagePromise = Promise.resolve(EMPTY_USAGE);
 		}
-		const isStickyAttempt =
-			Boolean(stickyRoute)
-			&& route.targetId === stickyRoute!.targetId
-			&& !stickyTargetAttempted;
+		const isStickyAttempt = Boolean(stickyRoute) && route.targetId === stickyRoute!.targetId && !stickyTargetAttempted;
 		if (
-			options?.crossModelCandidateFailover === true
-			&& lastDispatchedCandidateIndex != null
-			&& candidateIndex != null
-			&& candidateIndex !== lastDispatchedCandidateIndex
+			options?.crossModelCandidateFailover === true &&
+			lastDispatchedCandidateIndex != null &&
+			candidateIndex != null &&
+			candidateIndex !== lastDispatchedCandidateIndex
 		) {
 			timing?.markModelTransition();
 		}
@@ -836,10 +892,9 @@ async function failoverDispatchWithinDeadline(
 		lastTimingAttempt = timingAttempt;
 		const hasNextAttempt = attemptIndex < attempts.length - 1;
 		console.log(
-			`[Gateway Proxy] calling provider providerId=${route.providerId} model=${route.providerModelName}${isStickyAttempt ? ' sticky=1' : ''}`
+			`[Gateway Proxy] calling provider providerId=${route.providerId} model=${route.providerModelName}${isStickyAttempt ? ' sticky=1' : ''}`,
 		);
-		const delegateAdmissionBoundary =
-			options?.delegateBeforeUpstreamDispatchToDriver === true;
+		const delegateAdmissionBoundary = options?.delegateBeforeUpstreamDispatchToDriver === true;
 		// The callback owns credential-aware policy. Always invoke it for private
 		// BYOK too: it may no-op, reserve only the Gateway Key limit, or atomically
 		// extend that lease before a later shared/platform fallback.
@@ -884,15 +939,17 @@ async function failoverDispatchWithinDeadline(
 		};
 		const beforeFetch = delegateAdmissionBoundary
 			? async (preparedAttempt?: unknown): Promise<void> => {
-				try {
-					deadline?.throwIfStopped();
-					if (options?.requirePreparedTextAttemptIdentity === true
-						&& !preparedTextAttemptMatchesRoute(preparedAttempt, route)) {
-						throw new RequestBudgetAdmissionError({
-							code: GatewayErrorCode.permissionDenied,
-							message: 'Text dispatch identity could not be verified',
-						});
-					}
+					try {
+						deadline?.throwIfStopped();
+						if (
+							options?.requirePreparedTextAttemptIdentity === true &&
+							!preparedTextAttemptMatchesRoute(preparedAttempt, route)
+						) {
+							throw new RequestBudgetAdmissionError({
+								code: GatewayErrorCode.permissionDenied,
+								message: 'Text dispatch identity could not be verified',
+							});
+						}
 						if (options?.stopAfterFirstGrantedDispatch === true) {
 							if (singleGrantBoundaryEntered) {
 								throw new Error('Single-grant dispatch boundary was already entered');
@@ -906,8 +963,7 @@ async function failoverDispatchWithinDeadline(
 								if (execution) execution.quoteAttemptReference = claimed;
 								return claimed;
 							};
-							quoteReference = await (deadline
-								? deadline.runOwnedMutation(claimQuote) : claimQuote());
+							quoteReference = await (deadline ? deadline.runOwnedMutation(claimQuote) : claimQuote());
 						}
 						deadline?.throwIfStopped();
 						pendingAdmission = options?.beforeUpstreamDispatch?.(route, preparedAttempt);
@@ -920,7 +976,10 @@ async function failoverDispatchWithinDeadline(
 							options?.quoteAttemptCapture?.fetchBoundaryPermitted(quoteReference);
 							fetchBoundaryReached = true;
 						}
-						if (execution) { execution.outcomeUnknown = true; execution.dispatchStarted = true; }
+						if (execution) {
+							execution.outcomeUnknown = true;
+							execution.dispatchStarted = true;
+						}
 					} catch (error) {
 						admissionBoundaryFailed = true;
 						throw error;
@@ -942,13 +1001,26 @@ async function failoverDispatchWithinDeadline(
 			if (!beforeFetch) {
 				// Drivers not yet audited at fetch claim conservatively at entry.
 				dispatchBudget.consume();
-				if (execution) { execution.outcomeUnknown = true; execution.dispatchStarted = true; }
+				if (execution) {
+					execution.outcomeUnknown = true;
+					execution.dispatchStarted = true;
+				}
 				markStickyAttemptDispatched();
 			}
-			const run = () => dispatch(route, requestSignal, timing, timingAttempt, beforeFetch,
-				dispatchBudget.auxiliaryAuth, upstreamHeadersObserved);
+			const run = () =>
+				dispatch(
+					route,
+					requestSignal,
+					timing,
+					timingAttempt,
+					beforeFetch,
+					dispatchBudget.auxiliaryAuth,
+					upstreamHeadersObserved,
+				);
 			const dispatched = deadline
-				? await deadline.wait(run, (late) => { void late.response.body?.cancel('request_execution_stopped').catch(() => undefined); })
+				? await deadline.wait(run, (late) => {
+						void late.response.body?.cancel('request_execution_stopped').catch(() => undefined);
+					})
 				: await run();
 			response = dispatched.response;
 			usagePromise = dispatched.usagePromise;
@@ -972,10 +1044,13 @@ async function failoverDispatchWithinDeadline(
 				if (execution?.outcomeUnknown) {
 					timing?.markAttemptError(timingAttempt, err, { clientCancelled: err.reason === 'client_cancelled' });
 					recordDispatchAttempt({
-						candidateIndex, modelId: route.gatewayModelId ?? null,
+						candidateIndex,
+						modelId: route.gatewayModelId ?? null,
 						globalEndpointRank: route.gatewayGlobalEndpointRank ?? null,
-						routeTargetId: route.targetId, providerId: route.providerId,
-						status: null, outcome: 'fetch_error',
+						routeTargetId: route.targetId,
+						providerId: route.providerId,
+						status: null,
+						outcome: 'fetch_error',
 					});
 				}
 				timing?.markFinalAttempt(timingAttempt);
@@ -984,10 +1059,13 @@ async function failoverDispatchWithinDeadline(
 			if (err instanceof RequestDispatchLimitError) {
 				timing?.markFinalAttempt(timingAttempt);
 				return finish({
-					...dispatchLimitResult(quoteReference || !lastResponse || !lastQuoteReference
-						? route : lastRoute, circuitEvents),
+					...dispatchLimitResult(
+						quoteReference || !lastResponse || !lastQuoteReference ? route : lastRoute,
+						circuitEvents,
+					),
 					...(quoteReference || (lastResponse && lastQuoteReference)
-						? { quoteAttemptReference: quoteReference ?? lastQuoteReference } : {}),
+						? { quoteAttemptReference: quoteReference ?? lastQuoteReference }
+						: {}),
 				});
 			}
 			if (err instanceof RequestAuxiliaryAuthLimitError) {
@@ -995,11 +1073,14 @@ async function failoverDispatchWithinDeadline(
 				// provider fault. Do not trip circuits or continue outer model loops.
 				timing?.markFinalAttempt(timingAttempt);
 				return finish({
-					...dispatchLimitResult(quoteReference || !lastResponse || !lastQuoteReference
-						? route : lastRoute,
-						circuitEvents, true),
+					...dispatchLimitResult(
+						quoteReference || !lastResponse || !lastQuoteReference ? route : lastRoute,
+						circuitEvents,
+						true,
+					),
 					...(quoteReference || (lastResponse && lastQuoteReference)
-						? { quoteAttemptReference: quoteReference ?? lastQuoteReference } : {}),
+						? { quoteAttemptReference: quoteReference ?? lastQuoteReference }
+						: {}),
 				});
 			}
 			// Admission persistence is a local fail-closed error, not an upstream
@@ -1030,15 +1111,9 @@ async function failoverDispatchWithinDeadline(
 				clientCancelled: requestSignal?.aborted === true,
 			});
 			const errMessage = err instanceof Error ? err.message : String(err);
-			console.warn(
-				`[Gateway Proxy] fetch failed providerId=${route.providerId} error=${errMessage}`
-			);
+			console.warn(`[Gateway Proxy] fetch failed providerId=${route.providerId} error=${errMessage}`);
 			const fetchClassification = classifyUpstreamFetchFailure();
-			if (
-				stickySession &&
-				stickyAttemptDispatched &&
-				shouldInvalidateStickyBinding(fetchClassification)
-			) {
+			if (stickySession && stickyAttemptDispatched && shouldInvalidateStickyBinding(fetchClassification)) {
 				await clearSticky();
 				stickyAttemptCleared = true;
 			}
@@ -1050,8 +1125,8 @@ async function failoverDispatchWithinDeadline(
 				message: outcomeUnknown
 					? 'Upstream request outcome could not be confirmed; the request was not replayed'
 					: errMessage.trim()
-					? `Upstream request failed: ${errMessage.trim()}`
-					: 'Upstream request failed',
+						? `Upstream request failed: ${errMessage.trim()}`
+						: 'Upstream request failed',
 			});
 			lastRoute = route;
 			lastQuoteReference = quoteReference;
@@ -1104,24 +1179,24 @@ async function failoverDispatchWithinDeadline(
 			if (stickySession) {
 				const stickySuccessPolicy = options?.stickySuccessPolicy ?? null;
 				const routeEligible = stickyRouteEligible?.(route) ?? true;
-				const completedSuccess = stickySuccessPolicy == null
-					? null
-					: usagePromise.then(
-							(usage) =>
-								usage.cancelled !== true
-								&& !usage.stream_error,
-							() => false,
-						);
-				const bindReady = stickySuccessPolicy === 'cache_hit'
-					? usagePromise.then(
-							(usage) =>
-								usage.cancelled !== true
-								&& !usage.stream_error
-								&& Number.isSafeInteger(usage.cache_read_tokens)
-								&& usage.cache_read_tokens > 0,
-							() => false,
-						)
-					: completedSuccess;
+				const completedSuccess =
+					stickySuccessPolicy == null
+						? null
+						: usagePromise.then(
+								(usage) => usage.cancelled !== true && !usage.stream_error,
+								() => false,
+							);
+				const bindReady =
+					stickySuccessPolicy === 'cache_hit'
+						? usagePromise.then(
+								(usage) =>
+									usage.cancelled !== true &&
+									!usage.stream_error &&
+									Number.isSafeInteger(usage.cache_read_tokens) &&
+									usage.cache_read_tokens > 0,
+								() => false,
+							)
+						: completedSuccess;
 				if (stickyAttemptDispatched && stickySession.bindingToken) {
 					if (completedSuccess) {
 						scheduleStickyTouchAfter(repos, stickySession, completedSuccess);
@@ -1129,9 +1204,9 @@ async function failoverDispatchWithinDeadline(
 						scheduleStickyTouchIfNeeded(repos, stickySession);
 					}
 				} else if (
-					stickySession.lookup !== 'invalid_circuit'
-					&& !(stickySession.lookup === 'hit' && stickySession.attemptedTargetId == null)
-					&& routeEligible
+					stickySession.lookup !== 'invalid_circuit' &&
+					!(stickySession.lookup === 'hit' && stickySession.attemptedTargetId == null) &&
+					routeEligible
 				) {
 					// A primary BYOK route can legitimately succeed before a sticky
 					// target in the later shared/platform section. Preserve the valid
@@ -1140,9 +1215,7 @@ async function failoverDispatchWithinDeadline(
 					// tryBind would lose to CAS on a still-fresh row.
 					const bindOptions = {
 						rebound:
-							stickyAttemptCleared ||
-							stickySession.lookup === 'hit' ||
-							stickySession.lookup === 'invalid_target',
+							stickyAttemptCleared || stickySession.lookup === 'hit' || stickySession.lookup === 'invalid_target',
 					};
 					if (bindReady) {
 						scheduleStickyBindAfter(repos, stickySession, route, bindReady, bindOptions);
@@ -1167,7 +1240,8 @@ async function failoverDispatchWithinDeadline(
 		}
 		unknownOutcomeObserved ||= dispatchMeta?.upstreamOutcomeUnknown === true;
 		const stopAfterGrantedDispatch = options?.stopAfterFirstGrantedDispatch === true && durableAdmissionGranted;
-		const replayForbidden = dispatchMeta?.failoverForbidden === true || unknownOutcomeObserved || stopAfterGrantedDispatch;
+		const replayForbidden =
+			dispatchMeta?.failoverForbidden === true || unknownOutcomeObserved || stopAfterGrantedDispatch;
 		lastDispatchMeta = unknownOutcomeObserved
 			? {
 					...(dispatchMeta ?? {}),
@@ -1178,10 +1252,12 @@ async function failoverDispatchWithinDeadline(
 				? { ...(dispatchMeta ?? {}), failoverForbidden: true }
 				: dispatchMeta;
 
-		const classification: UpstreamFailureClassification = shouldFailImmediatelyForImageAbort(dispatchMeta)
-			|| dispatchMeta?.failoverForbidden === true || unknownOutcomeObserved
-			? { action: 'fail_immediately' }
-			: classifyUpstreamHttpFailure(response.status);
+		const classification: UpstreamFailureClassification =
+			shouldFailImmediatelyForImageAbort(dispatchMeta) ||
+			dispatchMeta?.failoverForbidden === true ||
+			unknownOutcomeObserved
+				? { action: 'fail_immediately' }
+				: classifyUpstreamHttpFailure(response.status);
 		const attemptTrace: ProxyDispatchAttemptTrace = {
 			candidateIndex,
 			modelId: route.gatewayModelId ?? null,
@@ -1224,10 +1300,10 @@ async function failoverDispatchWithinDeadline(
 
 		if (classification.action === 'fail_immediately') {
 			const mayContinueWithAnotherModel =
-				options?.crossModelCandidateFailover === true
-				&& candidateIndex != null
-				&& !replayForbidden
-				&& !shouldFailImmediatelyForImageAbort(dispatchMeta);
+				options?.crossModelCandidateFailover === true &&
+				candidateIndex != null &&
+				!replayForbidden &&
+				!shouldFailImmediatelyForImageAbort(dispatchMeta);
 			if (mayContinueWithAnotherModel) {
 				blockedCandidateIndexes.add(candidateIndex);
 				if (hasLaterEligibleAttempt(attemptIndex)) {
@@ -1242,9 +1318,7 @@ async function failoverDispatchWithinDeadline(
 			return finish({
 				response,
 				...(quoteReference ? { quoteAttemptReference: quoteReference } : {}),
-				usagePromise: replayForbidden
-					? usagePromise
-					: Promise.resolve(EMPTY_USAGE),
+				usagePromise: replayForbidden ? usagePromise : Promise.resolve(EMPTY_USAGE),
 				upstreamRequestId,
 				chosenRoute: route,
 				circuitEvents,
@@ -1262,24 +1336,21 @@ async function failoverDispatchWithinDeadline(
 					.markSharedKeyFailure(sharedKeyId, failureReason, new Date().toISOString())
 					.catch((err) => {
 						console.warn(
-							`[Gateway SharedKeys] disable failed keyId=${sharedKeyId} error=${err instanceof Error ? err.message : String(err)}`
+							`[Gateway SharedKeys] disable failed keyId=${sharedKeyId} error=${err instanceof Error ? err.message : String(err)}`,
 						);
 					});
 			}
 			const circuitResult = markProviderFailure(
 				circuitKeyForRoute(route),
 				classification.failureKind,
-				classification.failureKind === 'rate_limit'
-					? parseRetryAfterMs(response.headers.get('retry-after'))
-					: null
+				classification.failureKind === 'rate_limit' ? parseRetryAfterMs(response.headers.get('retry-after')) : null,
 			);
 			if (circuitResult.openedOrExtended) {
 				circuitEvents.push({
 					kind: 'provider',
 					providerId: route.providerId,
 					providerName: route.providerName,
-					keyFingerprint:
-						route.providerKeyFingerprint ?? fingerprintProviderApiKey(route.providerApiKey),
+					keyFingerprint: route.providerKeyFingerprint ?? fingerprintProviderApiKey(route.providerApiKey),
 					failureKind: circuitResult.failureKind,
 					openUntil: circuitResult.openUntil,
 					cooldownMs: circuitResult.cooldownMs,
@@ -1302,12 +1373,9 @@ async function failoverDispatchWithinDeadline(
 		}
 		if (hasNextAttempt) timing?.markAttemptFailover(timingAttempt);
 		console.warn(
-			`[Gateway Proxy] provider non-OK, trying next candidate providerId=${route.providerId} status=${response.status}`
+			`[Gateway Proxy] provider non-OK, trying next candidate providerId=${route.providerId} status=${response.status}`,
 		);
-		if (
-			options?.crossModelCandidateFailover === true
-			&& hasLaterEligibleAttempt(attemptIndex)
-		) {
+		if (options?.crossModelCandidateFailover === true && hasLaterEligibleAttempt(attemptIndex)) {
 			void response.body?.cancel('provider_endpoint_failed').catch(() => undefined);
 		}
 	}
@@ -1315,9 +1383,9 @@ async function failoverDispatchWithinDeadline(
 	if (!lastResponse) {
 		return finish({
 			response: gatewayErrorResponse({
-				status: 502,
+				status: 404,
 				code: GatewayErrorCode.noRoute,
-				message: 'No supported upstream protocol route available',
+				message: NO_AVAILABLE_ROUTE_MESSAGE,
 			}),
 			usagePromise: Promise.resolve(EMPTY_USAGE),
 			upstreamRequestId: null,

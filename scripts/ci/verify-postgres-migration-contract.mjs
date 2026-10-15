@@ -16,17 +16,17 @@ assert.deepEqual(
 	'PostgreSQL and D1 migrations through 0040 must remain aligned',
 );
 assert.deepEqual(
-	d1Migrations.slice(40, -9),
+	d1Migrations.slice(40, 68),
 	['0041_user_budget_spent_micros.sql', '0042_workspaces.sql', '0043_gateway_keys_workspace.sql', '0044_workspace_presets_guardrails.sql', '0045_route_routing_metadata.sql', '0046_route_data_policy_subject_fingerprint.sql', '0047_model_endpoints.sql', '0048_model_endpoint_route_subject_fingerprint.sql', '0049_model_endpoint_audio_capabilities.sql', '0050_model_endpoint_evidence_ledger.sql', '0051_management_api_keys.sql', '0052_gateway_key_expiry.sql', '0053_gateway_key_limits.sql', '0054_workspace_budgets.sql', '0055_generation_metadata_snapshots.sql', '0056_request_session_id.sql', '0057_generation_feedback.sql', '0058_guardrail_assignment_management_source.sql', '0059_workspace_default_guardrails.sql', '0060_account_default_guardrails.sql', '0061_provider_attempt_availability.sql', '0062_public_model_total_tokens.sql', '0063_generation_service_tier.sql', '0064_private_byok.sql', '0065_byok_always_use_for_provider.sql', '0066_guardrail_budget_settlement_basis.sql', '0067_workspace_budget_usage_index.sql', '0068_batch_jobs.sql'],
 	'D1 must retain its dedicated precision migration before Workspace and Gateway Key scope migrations',
 );
 assert.deepEqual(
-	postgresMigrations.slice(40, -8),
+	postgresMigrations.slice(40, 73),
 	['0041_workspaces.sql', '0042_gateway_keys_workspace.sql', '0043_workspace_presets_guardrails.sql', '0044_route_routing_metadata.sql', '0045_route_data_policy_subject_fingerprint.sql', '0046_model_endpoints.sql', '0047_model_endpoint_route_subject_fingerprint.sql', '0048_model_endpoint_audio_capabilities.sql', '0049_model_endpoint_evidence_ledger.sql', '0050_management_api_keys.sql', '0051_gateway_key_expiry.sql', '0052_gateway_key_limits.sql', '0053_workspace_budgets.sql', '0054_generation_metadata_snapshots.sql', '0055_request_session_id.sql', '0056_generation_feedback.sql', '0057_guardrail_assignment_management_source.sql', '0058_workspace_default_guardrails.sql', '0059_account_default_guardrails.sql', '0060_provider_attempt_availability.sql', '0061_public_model_total_tokens.sql', '0062_generation_service_tier.sql', '0063_private_byok.sql', '0064_byok_always_use_for_provider.sql', '0065_guardrail_budget_settlement_basis.sql', '0066_workspace_budget_usage_index.sql', '0067_batch_jobs.sql', '0068_function_schema_resolution.sql', '0069_recovery_dispatch_intents.sql', '0070_recovery_settlement_facts.sql', '0071_recovery_jobs.sql', '0072_recovery_commit_receipts.sql', '0073_recovery_api_key_workspace_lock.sql'],
 	'PostgreSQL must retain the baseline sequence and append recovery schema migrations in order',
 );
-assert.deepEqual(d1Migrations.slice(-9), ['0069_config_change_audit.sql', '0070_system_config_revision.sql', '0071_user_audit_export_order_index.sql', '0072_admin_access_key_audit.sql', '0073_shared_key_earnings_history_guard.sql', '0074_admin_shared_key_audit.sql', '0075_admin_shared_key_actor_bounds.sql', '0076_tools_config_group_audit.sql', '0077_withdrawal_balance_update_guards.sql']);
-assert.deepEqual(postgresMigrations.slice(-8), ['0074_config_change_audit.sql', '0075_system_config_revision.sql', '0076_user_audit_export_order_index.sql', '0077_admin_access_key_audit.sql', '0078_shared_key_earnings_history_guard.sql', '0079_admin_shared_key_audit.sql', '0080_admin_shared_key_actor_bounds.sql', '0081_tools_config_group_audit.sql']);
+assert.deepEqual(d1Migrations.slice(68, 77), ['0069_config_change_audit.sql', '0070_system_config_revision.sql', '0071_user_audit_export_order_index.sql', '0072_admin_access_key_audit.sql', '0073_shared_key_earnings_history_guard.sql', '0074_admin_shared_key_audit.sql', '0075_admin_shared_key_actor_bounds.sql', '0076_tools_config_group_audit.sql', '0077_withdrawal_balance_update_guards.sql']);
+assert.deepEqual(postgresMigrations.slice(73, 81), ['0074_config_change_audit.sql', '0075_system_config_revision.sql', '0076_user_audit_export_order_index.sql', '0077_admin_access_key_audit.sql', '0078_shared_key_earnings_history_guard.sql', '0079_admin_shared_key_audit.sql', '0080_admin_shared_key_actor_bounds.sql', '0081_tools_config_group_audit.sql']);
 const sharedActorBounds = read('packages/core/migrations-postgres/0080_admin_shared_key_actor_bounds.sql');
 assert.match(sharedActorBounds, /^SET LOCAL lock_timeout = '2s';$/mu);
 assert.match(sharedActorBounds, /ALTER TABLE cinatoken_gateway\.admin_shared_key_audit\s+DROP CONSTRAINT admin_shared_key_audit_actor_id_check,/u);
@@ -1041,3 +1041,6 @@ assert.match(runtimeGrants, /GRANT SELECT, INSERT ON TABLE \$\{GATEWAY_SCHEMA\}\
 assert.match(runtimeGrants, /GRANT SELECT, UPDATE \(id\) ON TABLE \$\{GATEWAY_SCHEMA\}\.system_config_write_mutex TO \$\{GATEWAY_RUNTIME_ROLE\}/u);
 assert.match(migrationTables, /ETL_TARGET_ONLY_TABLES = \["system_config_write_mutex"\]/u);
 assert.doesNotMatch(orderBlock, /system_config_write_mutex/u);
+
+assert.deepEqual(d1Migrations.slice(77), ['0078_user_wallet_credit.sql', '0079_key_rate_limit_and_ingress.sql', '0080_provider_kind.sql', '0081_mcp_servers.sql']);
+assert.deepEqual(postgresMigrations.slice(81), ['0082_user_wallet_credit.sql', '0083_key_rate_limit_and_ingress.sql', '0084_provider_kind.sql', '0085_mcp_servers.sql']);

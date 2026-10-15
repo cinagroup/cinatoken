@@ -1,11 +1,7 @@
 import { RequestExecutionStoppedError } from '@octafuse/core';
 import { RequestBodyTooLargeError } from '../bounded-request-body';
 
-export type BoundedJsonRequestFailureKind =
-	| 'invalid_json'
-	| 'invalid_request'
-	| 'payload_too_large'
-	| 'cancelled';
+export type BoundedJsonRequestFailureKind = 'invalid_json' | 'invalid_request' | 'payload_too_large' | 'cancelled';
 
 export class BoundedJsonRequestError extends Error {
 	constructor(
@@ -72,18 +68,12 @@ export async function readBoundedJsonObject(
 ): Promise<Record<string, unknown>> {
 	const mediaType = request.headers.get('content-type')?.split(';', 1)[0]?.trim().toLowerCase() ?? '';
 	if (mediaType !== 'application/json') {
-		throw new BoundedJsonRequestError(
-			'invalid_request',
-			`${params.label} must use Content-Type: application/json`,
-		);
+		throw new BoundedJsonRequestError('invalid_request', `${params.label} must use Content-Type: application/json`);
 	}
 	const declaredLength = declaredContentLength(request);
 	if (declaredLength != null && declaredLength > params.maxBytes) {
 		void request.body?.cancel('bounded_json_request_too_large').catch(() => undefined);
-		throw new BoundedJsonRequestError(
-			'payload_too_large',
-			`${params.label} must be at most ${params.maxBytes} bytes`,
-		);
+		throw new BoundedJsonRequestError('payload_too_large', `${params.label} must be at most ${params.maxBytes} bytes`);
 	}
 	if (!request.body) {
 		throw new BoundedJsonRequestError('invalid_json', 'Missing JSON body');

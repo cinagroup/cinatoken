@@ -4,13 +4,14 @@
  */
 import type {
 	ApiKeyBudgetAuditLogRow,
+	ApiKeyRateLimit,
 	GlobalApiKeyBudgetAuditLogRow,
 	RequestLogRow,
-} from "@octafuse/core";
-import type { ModelRouteJoinRow } from "@octafuse/core";
-import type { UpstreamProtocol } from "@octafuse/core/upstream-protocol";
+} from '@octafuse/core';
+import type { ModelRouteJoinRow } from '@octafuse/core';
+import type { UpstreamProtocol } from '@octafuse/core/upstream-protocol';
 
-export type BudgetPeriod = "none" | "daily" | "weekly" | "monthly";
+export type BudgetPeriod = 'none' | 'daily' | 'weekly' | 'monthly';
 
 export type JsonObject = Record<string, unknown>;
 export type AdminDataRow = Record<string, unknown>;
@@ -24,8 +25,11 @@ export type AdminUserCreateInput = {
 	budget_base?: number | null;
 	budget_period?: BudgetPeriod;
 	metadata?: unknown;
-	/** `{ "<models.id>": factor }`；null / {} 清空 */
-	charged_cost_factors?: Record<string, number> | null;
+	/**
+	 * `{ "<models.id>": factor | { "<route_group>" | "*": factor } }`。
+	 * 数字覆盖该模型全部分组；`null` / `{}` 清空。
+	 */
+	charged_cost_factors?: Record<string, number | Record<string, number>> | null;
 };
 
 export type AdminUserUpdateInput = {
@@ -47,8 +51,17 @@ export type AdminUserUpdateInput = {
 	 */
 	external_system?: string | null;
 	external_user_id?: string | null;
-	/** `{ "<models.id>": factor }`；null / {} 清空 */
-	charged_cost_factors?: Record<string, number> | null;
+	/**
+	 * `{ "<models.id>": factor | { "<route_group>" | "*": factor } }`。
+	 * 数字覆盖该模型全部分组；`null` / `{}` 清空。
+	 */
+	charged_cost_factors?: Record<string, number | Record<string, number>> | null;
+	/** 永久额度累计发放（绝对值运维修正） */
+	wallet_granted?: number | null;
+	/** 永久额度累计消耗（绝对值运维修正） */
+	wallet_spent?: number | null;
+	/** 用户层限流 JSON；`null` 表示该层不限。形状与 Key `rate_limit` 相同。 */
+	rate_limit?: ApiKeyRateLimit | null;
 };
 
 /** ---------- `/admin/users/:id/budget/transition` 请求体 ---------- */
@@ -56,7 +69,7 @@ export type AdminBudgetTransitionInput = {
 	target_budget_base: number;
 	budget_period: BudgetPeriod;
 	budget_reset_at?: string | null;
-	carryover_strategy?: "remaining_or_overage" | "none";
+	carryover_strategy?: 'remaining_or_overage' | 'none';
 	reset_spent?: boolean;
 	metadata?: Record<string, unknown>;
 	reason?: string;
@@ -100,6 +113,8 @@ export type AdminKeyUpdateInput = {
 	metadata_replace?: unknown;
 	status?: string;
 	name?: string | null;
+	/** null = unlimited; omit = unchanged */
+	rate_limit?: ApiKeyRateLimit | null;
 	reason?: string;
 };
 
@@ -107,6 +122,8 @@ export type AdminKeyUpdateInput = {
 export type AdminProviderMutationInput = {
 	id?: unknown;
 	name?: unknown;
+	/** 导入模板英文 `name`，或 `__custom__`。创建必填；PATCH 省略 = 不改，空串 = 尚未分类。 */
+	kind?: unknown;
 	/** `{ openai?: { base?, endpoints? }, … }` 对象或 JSON 字符串 */
 	endpoints?: unknown;
 	/** 创建必填；PATCH 时空串/省略 = 不改 */
@@ -129,6 +146,12 @@ export type AdminProviderImportCatalogItem = {
 	/** 序列化后的 endpoints JSON（可 null） */
 	endpoints: string | null;
 	description: string | null;
+	/** 官网 / 密钥页 / 可选邀请链接；不写入 providers 表。 */
+	links?: {
+		platform?: string;
+		api_keys?: string;
+		referral?: string;
+	};
 };
 
 /** `POST /admin/providers/import` 请求体：导入选中的 catalog 键（`GET .../catalog` 返回的 `id`）。 */
@@ -214,7 +237,7 @@ export type AdminStaticModelPresetCatalogItem = {
 	display_name: string | null;
 	vendor: string;
 	/** LLM / 文生图 / 语音转写（与列表页 Kind 一致）。 */
-	kind: "llm" | "image" | "audio";
+	kind: 'llm' | 'image' | 'audio';
 	context_window: number | null;
 	max_tokens: number | null;
 	/** English fallback used by non-localized Admin clients and on import. */
@@ -253,10 +276,23 @@ export type AdminModelsImportOutput = {
 export type AdminProviderRow = {
 	id: string;
 	name: string;
-	/** 由内置 Provider 预设名称 / Endpoint 动态推导，不持久化。 */
+	/** 由内置 Provider 预设名称 / Endpoint 动态推导，或在 `kind` 已设置时由模板决定。不单独落库。 */
 	vendor_key?: string;
-	/** 由内置 Provider 预设动态推导的产品级图标，不持久化。 */
+	/** 产品级图标。`kind` 已设置时来自对应模板，否则按 URL / 名称推断。不单独落库。 */
 	icon_key?: string;
+	/** 导入模板英文名、`__custom__`，或空字符串（尚未分类）。 */
+	kind?: string;
+	/** 已保存类型的中英文展示名。自定义与未分类时省略。 */
+	kind_labels?: {
+		en: string;
+		zh: string;
+	};
+	/** 由内置预设叠加的官网 / 密钥 / 邀请链接，不持久化。 */
+	catalog_links?: {
+		platform?: string;
+		api_keys?: string;
+		referral?: string;
+	};
 	endpoints: string | null;
 	/** 列表/详情为脱敏预览；明文仅经 `GET /:id/api-key` */
 	api_key?: string;
@@ -269,6 +305,8 @@ export type AdminProviderRow = {
 	routes_count?: number;
 	/** 其中 status=active 的数量 */
 	active_routes_count?: number;
+	/** 当前 `kind` 是否有额度适配器。不落库。 */
+	quota_supported?: boolean;
 	[key: string]: unknown;
 };
 
@@ -313,10 +351,14 @@ export type AdminKeyListItem = {
 	budget_spent: number;
 	budget_period: string;
 	budget_reset_at: string | null;
+	wallet_granted?: number;
+	wallet_spent?: number;
 	status: string;
 	metadata_preview: string | null;
 	metadata_unavailable: boolean;
 	profile_revision: string;
+	last_used_at?: string | null;
+	rate_limit?: ApiKeyRateLimit | null;
 	created_at: string;
 	updated_at: string;
 	[key: string]: unknown;
@@ -382,12 +424,17 @@ export type AdminKeyDetailOutput = {
 	budget_spent: number;
 	budget_period: string;
 	budget_reset_at: string | null;
+	wallet_granted?: number;
+	wallet_spent?: number;
+	wallet_balance?: number;
 	status: string;
 	metadata?: JsonObject;
 	metadata_raw: string | null;
 	metadata_unavailable: boolean;
 	metadata_preview: string | null;
 	profile_revision: string;
+	last_used_at?: string | null;
+	rate_limit?: ApiKeyRateLimit | null;
 	created_at: string;
 	updated_at: string;
 	spend: number;
@@ -414,7 +461,7 @@ export type AdminConfigRow = {
 /** Analytics pages may show occurrence summaries, not logs.read-only details. */
 export type AdminAnalyticsRecentLog = Pick<
 	RequestLogRow,
-	"id" | "model_id" | "provider_id" | "provider_name" | "status" | "created_at"
+	'id' | 'model_id' | 'provider_id' | 'provider_name' | 'status' | 'created_at'
 >;
 
 /** `GET /admin/stats` 仪表盘数据结构 */
@@ -479,7 +526,7 @@ export type AdminStatsOutput = {
 		avg_latency_ms: number | null;
 		cache_hit_rate: number;
 	}>;
-	granularity: "hour" | "day";
+	granularity: 'hour' | 'day';
 	recentLogs: AdminAnalyticsRecentLog[];
 	recentErrors: AdminAnalyticsRecentLog[];
 };
@@ -509,7 +556,12 @@ export type AdminModelAnalyticsRow = {
 	content_ttft_rate: number;
 	avg_upstream_response_ms: number | null;
 	tokens_per_second: number | null;
+	stream_tokens_per_second?: number | null;
+	stream_sample_count?: number;
 	failover_rate: number;
+	/** Requests with at least one failover; legacy failover_rate counts events per 100 requests. */
+	failover_request_count?: number;
+	failover_request_rate?: number;
 	avg_attempts: number | null;
 	avg_charged_per_request: number;
 };
@@ -544,7 +596,12 @@ export type AdminProviderAnalyticsRow = {
 	content_ttft_rate: number;
 	avg_upstream_response_ms: number | null;
 	tokens_per_second: number | null;
+	stream_tokens_per_second?: number | null;
+	stream_sample_count?: number;
 	failover_rate: number;
+	/** Requests with at least one failover; legacy failover_rate counts events per 100 requests. */
+	failover_request_count?: number;
+	failover_request_rate?: number;
 	avg_attempts: number | null;
 	avg_charged_per_request: number;
 };
@@ -566,9 +623,28 @@ export type AdminUserAnalyticsRow = {
 	last_active_at: unknown;
 	budget_max: number | null;
 	budget_spent: number;
+	wallet_granted?: number | null;
+	wallet_spent?: number | null;
 	budget_usage_rate: number | null;
+	success_count?: number;
 	success_rate: number;
 	error_count: number;
+};
+
+export type AdminKeyAnalyticsRow = {
+	api_key_id: string | null;
+	key_name: string | null;
+	request_count: number;
+	input_tokens: number;
+	output_tokens: number;
+	charged_cost: number;
+	metered_cost: number;
+	standard_cost: number;
+	distinct_models: number;
+	last_active_at: unknown;
+	success_count: number;
+	error_count: number;
+	success_rate: number;
 };
 
 export type AdminReliabilityProviderRow = {
@@ -581,6 +657,9 @@ export type AdminReliabilityProviderRow = {
 	avg_latency_ms: number | null;
 	avg_upstream_response_ms: number | null;
 	failover_rate: number;
+	/** Requests with at least one failover; legacy failover_rate counts events per 100 requests. */
+	failover_request_count?: number;
+	failover_request_rate?: number;
 	avg_attempts: number | null;
 	charged_cost: number;
 	metered_cost: number;
@@ -596,6 +675,9 @@ export type AdminReliabilityModelProviderRow = {
 	avg_latency_ms: number | null;
 	avg_upstream_response_ms: number | null;
 	failover_rate: number;
+	/** Requests with at least one failover; legacy failover_rate counts events per 100 requests. */
+	failover_request_count?: number;
+	failover_request_rate?: number;
 	avg_attempts: number | null;
 	charged_cost: number;
 	metered_cost: number;

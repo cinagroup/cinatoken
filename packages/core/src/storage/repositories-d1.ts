@@ -1,37 +1,36 @@
-import type { GatewayDatabaseClient } from "./database-client";
-import type { GatewayRepositories } from "./repositories-types";
-import { createD1AdminAnalyticsRepository } from "../db/d1/admin-analytics.impl";
-import { createD1BatchesRepository } from "../db/d1/batches.impl";
-import { createD1ApiKeysRepository } from "../db/d1/api-keys.impl";
-import { createD1ModelRoutesRepository } from "../db/d1/model-routes.impl";
-import { createD1ModelRoutingRepository } from "../db/d1/model-routing.impl";
-import { createD1ModelsRepository } from "../db/d1/models.impl";
-import { createD1ProvidersRepository } from "../db/d1/providers.impl";
-import { createD1RequestLogsRepository } from "../db/d1/request-logs.impl";
-import { createD1SystemConfigRepository } from "../db/d1/system-config.impl";
-import { createD1RoutePoolStickyBindingsRepository } from "../db/d1/route-pool-sticky-bindings.impl";
-import { createD1UserAuditLogsRepository } from "../db/d1/user-audit-logs.impl";
-import { createD1UsersRepository } from "../db/d1/users.impl";
-import { createD1AdminAccessRepository } from "../db/d1/admin-access.impl";
-import { createD1RequestPresetsRepository } from "../db/d1/request-presets.impl";
-import { createD1GuardrailsRepository } from "../db/d1/guardrails.impl";
-import { createD1GuardrailBudgetsRepository } from "../db/d1/guardrail-budgets.impl";
-import { createD1UserBudgetReservationsRepository } from "../db/d1/user-budget-reservations.impl";
-import { createD1RouteDataPoliciesRepository } from "../db/d1/route-data-policies.impl";
-import { createD1ModelEndpointsRepository } from "../db/d1/model-endpoints.impl";
-import { createManagementApiKeysRepository } from "./management-api-keys";
-import { createByokKeysRepository } from "./byok-keys";
+import type { GatewayDatabaseClient } from './database-client';
+import type { GatewayRepositories } from './repositories-types';
+import { createD1AdminAnalyticsRepository } from '../db/d1/admin-analytics.impl';
+import { createD1BatchesRepository } from '../db/d1/batches.impl';
+import { createD1ApiKeysRepository } from '../db/d1/api-keys.impl';
+import { createD1ModelRoutesRepository } from '../db/d1/model-routes.impl';
+import { createD1ModelRoutingRepository } from '../db/d1/model-routing.impl';
+import { createD1ModelsRepository } from '../db/d1/models.impl';
+import { createD1ProvidersRepository } from '../db/d1/providers.impl';
+import { createD1RequestLogsRepository } from '../db/d1/request-logs.impl';
+import { createD1SystemConfigRepository } from '../db/d1/system-config.impl';
+import { createD1RoutePoolStickyBindingsRepository } from '../db/d1/route-pool-sticky-bindings.impl';
+import { createD1UserAuditLogsRepository } from '../db/d1/user-audit-logs.impl';
+import { createD1UsersRepository } from '../db/d1/users.impl';
+import { createD1AdminAccessRepository } from '../db/d1/admin-access.impl';
+import { createD1RequestPresetsRepository } from '../db/d1/request-presets.impl';
+import { createD1GuardrailsRepository } from '../db/d1/guardrails.impl';
+import { createD1GuardrailBudgetsRepository } from '../db/d1/guardrail-budgets.impl';
+import { createD1UserBudgetReservationsRepository } from '../db/d1/user-budget-reservations.impl';
+import { createD1RouteDataPoliciesRepository } from '../db/d1/route-data-policies.impl';
+import { createD1ModelEndpointsRepository } from '../db/d1/model-endpoints.impl';
+import { createManagementApiKeysRepository } from './management-api-keys';
+import { createByokKeysRepository } from './byok-keys';
 import {
 	createD1PortalAccessRepository,
 	createD1PortalLedgerRepository,
 	createD1SharedKeysRepository,
-} from "../db/d1/portal-marketplace.impl";
+} from '../db/d1/portal-marketplace.impl';
+import { createD1McpServersRepository } from '../db/d1/mcp-servers.impl';
 
-export function createD1Repositories(
-	client: GatewayDatabaseClient
-): GatewayRepositories {
-	if (client.driver !== "d1") {
-		throw new Error("createD1Repositories: expected D1 client");
+export function createD1Repositories(client: GatewayDatabaseClient): GatewayRepositories {
+	if (client.driver !== 'd1') {
+		throw new Error('createD1Repositories: expected D1 client');
 	}
 	return {
 		client,
@@ -59,5 +58,6 @@ export function createD1Repositories(
 		portalAccess: createD1PortalAccessRepository(client),
 		sharedKeys: createD1SharedKeysRepository(client),
 		portalLedger: createD1PortalLedgerRepository(client),
+		mcpServers: createD1McpServersRepository(client),
 	};
 }

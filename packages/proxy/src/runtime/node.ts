@@ -14,9 +14,7 @@ import {
 import { createAdaptorServer } from '@hono/node-server';
 import { pathToFileURL } from 'node:url';
 import { createProxyApp, type ProxyAppOptions } from '../app';
-import {
-	createNodeWebSocketServer,
-} from './node-realtime';
+import { createNodeWebSocketServer } from './node-realtime';
 import { handleNodeRealtimeUpgrade } from './node-realtime-upgrade';
 import { createInMemoryPublicStatsRuntimeGuard } from '../services/public-stats-runtime-guard';
 import { createSharedStorageInitializer } from './shared-storage-initializer';
@@ -78,11 +76,7 @@ function redactDatabaseConnectionUrl(connectionString: string): string {
 	}
 }
 
-function printNodeStartupBanner(
-	port: number,
-	dbKind: 'postgres' | 'mysql',
-	redactedUrl: string
-): void {
+function printNodeStartupBanner(port: number, dbKind: 'postgres' | 'mysql', redactedUrl: string): void {
 	const base = `http://127.0.0.1:${port}`;
 	const dbDriver = process.env.DATABASE_DRIVER?.trim() || 'postgres（默认）';
 	const nodeEnv = process.env.NODE_ENV?.trim() ?? '（未设置）';
@@ -122,9 +116,7 @@ export async function startNodeServer(port = Number(process.env.PORT ?? 8787)): 
 		dbKind = cfg.driver === 'mysql' ? 'mysql' : 'postgres';
 		redactedUrl = redactDatabaseConnectionUrl(cfg.connectionString);
 	} catch (err) {
-		console.error(
-			'[Gateway Proxy Node] 启动前校验失败（请检查 DATABASE_URL、DATABASE_DRIVER=postgres|mysql 等）：'
-		);
+		console.error('[Gateway Proxy Node] 启动前校验失败（请检查 DATABASE_URL、DATABASE_DRIVER=postgres|mysql 等）：');
 		console.error(err);
 		process.exit(1);
 	}

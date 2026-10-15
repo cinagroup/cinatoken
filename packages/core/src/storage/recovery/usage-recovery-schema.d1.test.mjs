@@ -17,7 +17,7 @@ async function queued(db){const value=sample(0.25);await prepare(db,value);await
 
 test('reviewed sources reconstruct 24 exact objects including ALTERed receipt and 7 autoindexes',async t=>{
   const check=verifyRecoverySchemaArtifact();assert.equal(check.objects,24);assert.equal(check.definitionBytes,10072);
-  assert.equal(check.formalMigrations,77);assert.equal(readRecoveryMigrationSources().base.at(-1).name,'0077_withdrawal_balance_update_guards.sql');
+  assert.equal(check.formalMigrations,81);assert.equal(readRecoveryMigrationSources().base.at(-1).name,'0081_mcp_servers.sql');
   const db=fixture(t),before=db.sqlite.prepare('SELECT total_changes() AS n').get().n;let calls=0;
   db.hooks.beforeStatement=sql=>{assert.ok(schemaSQL(sql));calls++;};await assertUsageRecoverySchemaD1(db.binding);
   assert.equal(calls,1);assert.equal(db.sqlite.prepare('SELECT total_changes() AS n').get().n,before);

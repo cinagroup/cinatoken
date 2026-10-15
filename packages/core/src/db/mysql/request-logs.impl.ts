@@ -31,14 +31,17 @@ import {
 	normalizeRouteAvailabilityAggregate,
 	routeAvailabilityAggregateParams,
 } from '../provider-attempt-availability';
-import {
-	buildManagementAnalyticsQuery,
-	mapManagementAnalyticsResult,
-} from '../analytics-query';
+import { buildManagementAnalyticsQuery, mapManagementAnalyticsResult } from '../analytics-query';
 
 type MySqlGenerationRequestLogRow = Omit<GenerationRequestLogRow, 'created_at'> & {
 	created_at: string | Date;
 };
+import { appendModelIdPrefixCondition, appendProviderIdsCondition } from '../request-log-filters';
+import {
+	businessTimezoneOffsetSeconds,
+	mysqlTimeseriesBucketExpr,
+	timeseriesOffsetAnchor,
+} from '../request-timeseries-bucket';
 
 export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): RequestLogsRepository {
 	const pool = asMySqlPool(db.raw);
@@ -53,9 +56,7 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 			const connection = await pool.getConnection();
 			try {
 				await connection.query("SET time_zone = '+00:00'");
-				const [rows] = await connection.query<
-					(RowDataPacket & Record<string, unknown>)[]
-				>(built.sql, built.values);
+				const [rows] = await connection.query<(RowDataPacket & Record<string, unknown>)[]>(built.sql, built.values);
 				return mapManagementAnalyticsResult(rows, query);
 			} finally {
 				connection.release();
@@ -65,9 +66,7 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 		async insertGenerationFeedbackForManagementAccount(params): Promise<boolean> {
 			assertGenerationFeedbackInsertParams(params);
 			const personal = params.account.accountType === 'personal';
-			const ownerId = personal
-				? params.account.personalOwnerUserId!
-				: params.account.organizationId!;
+			const ownerId = personal ? params.account.personalOwnerUserId! : params.account.organizationId!;
 			const accountPredicate = personal
 				? `mk.account_type = 'personal'
 				   AND mk.personal_owner_user_id = ?
@@ -111,7 +110,8 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 
 		async getAdminRequestLogById(id): Promise<RequestLogRow | null> {
 			const [rows] = await pool.query<Array<Omit<RequestLogRow, 'created_at'> & { created_at: string | Date }>>(
-				adminRequestLogDetailSql('mysql'), [id],
+				adminRequestLogDetailSql('mysql'),
+				[id],
 			);
 			const row = rows[0];
 			return row ? { ...row, created_at: fromMySqlDateTime(row.created_at) } : null;
@@ -137,7 +137,7 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 				   AND rl.user_id = ?
 				   AND rl.workspace_id = ?
 				 LIMIT 1`,
-				[options.id, options.userId, options.workspaceId]
+				[options.id, options.userId, options.workspaceId],
 			);
 			const row = rows[0];
 			if (!row) return null;
@@ -149,7 +149,7 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 			apiKeyId: string,
 			page: number,
 			pageSize: number,
-			filter?: { excludeStatus?: string; includeStatuses?: string[] }
+			filter?: { excludeStatus?: string; includeStatuses?: string[] },
 		): Promise<{ logs: RequestLogRow[]; total: number }> {
 			const offset = (page - 1) * pageSize;
 			const include = filterAllowedRequestLogStatuses(filter?.includeStatuses);
@@ -158,13 +158,13 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 				const [countRows] = await pool.query<(RowDataPacket & { total: string | number })[]>(
 					`SELECT COUNT(*) AS total FROM api_key_request_logs
 					 WHERE api_key_id = ? AND status IN (${placeholders})`,
-					[apiKeyId, ...include]
+					[apiKeyId, ...include],
 				);
 				const [rows] = await pool.query<RequestLogRow[]>(
 					`SELECT * FROM api_key_request_logs
 					 WHERE api_key_id = ? AND status IN (${placeholders})
 					 ORDER BY created_at DESC LIMIT ? OFFSET ?`,
-					[apiKeyId, ...include, pageSize, offset]
+					[apiKeyId, ...include, pageSize, offset],
 				);
 				return {
 					logs: rows,
@@ -177,13 +177,13 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 				const [countRows] = await pool.query<(RowDataPacket & { total: string | number })[]>(
 					`SELECT COUNT(*) AS total FROM api_key_request_logs
 					 WHERE api_key_id = ? AND (status IS NULL OR status <> ?)`,
-					[apiKeyId, excludeStatus]
+					[apiKeyId, excludeStatus],
 				);
 				const [rows] = await pool.query<RequestLogRow[]>(
 					`SELECT * FROM api_key_request_logs
 					 WHERE api_key_id = ? AND (status IS NULL OR status <> ?)
 					 ORDER BY created_at DESC LIMIT ? OFFSET ?`,
-					[apiKeyId, excludeStatus, pageSize, offset]
+					[apiKeyId, excludeStatus, pageSize, offset],
 				);
 				return {
 					logs: rows,
@@ -193,11 +193,11 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 
 			const [countRows] = await pool.query<(RowDataPacket & { total: string | number })[]>(
 				'SELECT COUNT(*) AS total FROM api_key_request_logs WHERE api_key_id = ?',
-				[apiKeyId]
+				[apiKeyId],
 			);
 			const [rows] = await pool.query<RequestLogRow[]>(
 				'SELECT * FROM api_key_request_logs WHERE api_key_id = ? ORDER BY created_at DESC LIMIT ? OFFSET ?',
-				[apiKeyId, pageSize, offset]
+				[apiKeyId, pageSize, offset],
 			);
 			return {
 				logs: rows,
@@ -209,12 +209,15 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 			page?: number;
 			pageSize?: number;
 			workspaceId?: string;
+			id?: string;
 			apiKeyId?: string;
 			userId?: string;
 			userEmail?: string;
 			modelId?: string;
 			providerId?: string;
 			providerName?: string;
+			providerIds?: string[];
+			modelIdPrefix?: string;
 			routeGroup?: string;
 			protocol?: string;
 			status?: string;
@@ -232,6 +235,10 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 				bindValues.push(options.workspaceId);
 			}
 
+			if (options.id) {
+				conditions.push('rl.id = ?');
+				bindValues.push(options.id);
+			}
 			if (options.apiKeyId) {
 				conditions.push('rl.api_key_id = ?');
 				bindValues.push(options.apiKeyId);
@@ -256,6 +263,8 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 				conditions.push('rl.provider_name = ?');
 				bindValues.push(options.providerName);
 			}
+			appendProviderIdsCondition(conditions, bindValues, 'rl.provider_id', options.providerIds);
+			appendModelIdPrefixCondition(conditions, bindValues, 'rl.model_id', options.modelIdPrefix);
 			if (options.routeGroup) {
 				conditions.push('rl.route_group = ?');
 				bindValues.push(options.routeGroup);
@@ -280,7 +289,7 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 			const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
 			const [countRows] = await pool.query<(RowDataPacket & { total: string | number })[]>(
 				`SELECT COUNT(*) AS total FROM api_key_request_logs rl ${whereClause}`,
-				bindValues
+				bindValues,
 			);
 			const [rows] = await pool.query<RequestLogRow[]>(
 				`SELECT rl.*, u.external_system AS external_system
@@ -288,7 +297,7 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 				 LEFT JOIN users u ON u.id = rl.user_id
 				 ${whereClause}
 				 ORDER BY rl.created_at DESC LIMIT ? OFFSET ?`,
-				[...bindValues, pageSize, offset]
+				[...bindValues, pageSize, offset],
 			);
 			return {
 				logs: rows,
@@ -341,25 +350,15 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 					COALESCE(${sqlMoneyRound('SUM(metered_cost)')}, 0) AS metered_cost,
 					COALESCE(${sqlMoneyRound('SUM(standard_cost)')}, 0) AS standard_cost
 				 FROM api_key_request_logs WHERE ${conditions.join(' AND ')}`,
-				values
+				values,
 			);
 			return mapRequestStatsByRangeRow(rows[0] as Parameters<typeof mapRequestStatsByRangeRow>[0]);
 		},
 
 		async getRequestActivityGroups(options) {
 			const comparator = options.endExclusive ? '<' : '<=';
-			const conditions = [
-				`created_at >= ?`,
-				`created_at ${comparator} ?`,
-				'user_id = ?',
-				'workspace_id = ?',
-			];
-			const values: unknown[] = [
-				options.startDate,
-				options.endDate,
-				options.userId,
-				options.workspaceId,
-			];
+			const conditions = [`created_at >= ?`, `created_at ${comparator} ?`, 'user_id = ?', 'workspace_id = ?'];
+			const values: unknown[] = [options.startDate, options.endDate, options.userId, options.workspaceId];
 			if (options.apiKeyId) {
 				conditions.push('api_key_id = ?');
 				values.push(options.apiKeyId);
@@ -376,17 +375,12 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 				conditions.push('status = ?');
 				values.push(options.status);
 			}
-			const groupColumn = options.dimension === 'model'
-				? 'model_id'
-				: options.dimension === 'provider' ? 'provider_name' : 'api_key_id';
-			const groupName = options.dimension === 'model'
-				? "MAX(NULLIF(model_name, ''))"
-				: 'NULL';
+			const groupColumn =
+				options.dimension === 'model' ? 'model_id' : options.dimension === 'provider' ? 'provider_name' : 'api_key_id';
+			const groupName = options.dimension === 'model' ? "MAX(NULLIF(model_name, ''))" : 'NULL';
 			conditions.push(`${groupColumn} IS NOT NULL`, `${groupColumn} != ''`);
 			const parsedLimit = Number(options.limit);
-			const limit = Number.isFinite(parsedLimit)
-				? Math.min(25, Math.max(1, Math.trunc(parsedLimit)))
-				: 10;
+			const limit = Number.isFinite(parsedLimit) ? Math.min(25, Math.max(1, Math.trunc(parsedLimit))) : 10;
 			const [rows] = await pool.query<(RowDataPacket & Record<string, unknown>)[]>(
 				`SELECT
 					${groupColumn} AS group_id,
@@ -401,7 +395,7 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 				 GROUP BY ${groupColumn}
 				 ORDER BY charged_cost DESC, request_count DESC, group_id ASC
 				 LIMIT ?`,
-				[...values, limit]
+				[...values, limit],
 			);
 			return mapRequestActivityGroupRows(rows as Parameters<typeof mapRequestActivityGroupRows>[0]);
 		},
@@ -411,6 +405,7 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 			endDate: string;
 			endExclusive?: boolean;
 			granularity: 'hour' | 'day';
+			timeZone?: string;
 			userId?: string;
 			workspaceId?: string;
 			apiKeyId?: string;
@@ -418,13 +413,11 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 			providerName?: string;
 			status?: string;
 		}) {
-			const bucketExpr =
-				options.granularity === 'hour'
-					? "DATE_FORMAT(created_at, '%Y-%m-%d %H:00:00')"
-					: "DATE_FORMAT(created_at, '%Y-%m-%d')";
+			const bucketExpr = mysqlTimeseriesBucketExpr(options.granularity);
+			const offsetSeconds = businessTimezoneOffsetSeconds(options.timeZone ?? 'UTC', timeseriesOffsetAnchor(options.endDate));
 			const comparator = options.endExclusive ? '<' : '<=';
 			const conditions = [`created_at >= ?`, `created_at ${comparator} ?`];
-			const values: unknown[] = [options.startDate, options.endDate];
+			const values: unknown[] = [offsetSeconds, options.startDate, options.endDate];
 			for (const [column, value] of [
 				['user_id', options.userId],
 				['workspace_id', options.workspaceId],
@@ -447,7 +440,7 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 				 WHERE ${conditions.join(' AND ')}
 				 GROUP BY bucket
 				 ORDER BY bucket ASC`,
-				values
+				values,
 			);
 			return mapRequestTimeseriesRows(rows as Parameters<typeof mapRequestTimeseriesRows>[0]);
 		},
@@ -474,7 +467,7 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 				   AND user_email IN (${placeholders})
 				 GROUP BY bucket, user_email
 				 ORDER BY bucket ASC`,
-				[options.startDate, options.endDate, ...options.userEmails]
+				[options.startDate, options.endDate, ...options.userEmails],
 			);
 			return mapUserTokenTimeseriesRows(rows as Parameters<typeof mapUserTokenTimeseriesRows>[0]);
 		},
@@ -490,20 +483,23 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 					COALESCE(SUM(total_tokens), 0) AS total_tokens
 				 FROM api_key_request_logs
 				 WHERE created_at >= ? AND created_at <= ?`,
-				[startDate, endDate]
+				[startDate, endDate],
 			);
 			return mapThroughputSnapshot(rows[0] as Parameters<typeof mapThroughputSnapshot>[0]);
 		},
 
 		async getRecentLogs(limit: number): Promise<RequestLogRow[]> {
-			const [rows] = await pool.query<RequestLogRow[]>('SELECT * FROM api_key_request_logs ORDER BY created_at DESC LIMIT ?', [limit]);
+			const [rows] = await pool.query<RequestLogRow[]>(
+				'SELECT * FROM api_key_request_logs ORDER BY created_at DESC LIMIT ?',
+				[limit],
+			);
 			return rows;
 		},
 
 		async getRecentErrors(limit: number): Promise<RequestLogRow[]> {
 			const [rows] = await pool.query<RequestLogRow[]>(
 				`SELECT * FROM api_key_request_logs WHERE status = 'error' ORDER BY created_at DESC LIMIT ?`,
-				[limit]
+				[limit],
 			);
 			return rows;
 		},
@@ -513,10 +509,11 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 			const maxSamplesPerRoute = normalizeRoutePerformanceSamplesPerTarget(options.maxSamplesPerRoute);
 			if (maxSamplesPerRoute === 0) return [];
 			const sql = buildRecentRoutePerformanceSamplesSql('mysql', options.routeTargetIds.length);
-			const [rows] = await pool.query<(RowDataPacket & RoutePerformanceSample)[]>(
-				sql,
-				[...options.routeTargetIds, toMySqlDateTime(options.sinceIso), maxSamplesPerRoute]
-			);
+			const [rows] = await pool.query<(RowDataPacket & RoutePerformanceSample)[]>(sql, [
+				...options.routeTargetIds,
+				toMySqlDateTime(options.sinceIso),
+				maxSamplesPerRoute,
+			]);
 			return rows;
 		},
 
@@ -536,10 +533,11 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 		async deleteProviderAttemptAvailabilityBefore(options) {
 			assertProviderAttemptRetentionDeleteParams(options);
 			const cutoff = toMySqlDateTime(options.cutoffIso);
-			const [result] = await pool.execute<ResultSetHeader>(
-				buildProviderAttemptRetentionDeleteSql('mysql'),
-				[cutoff, cutoff, options.limit],
-			);
+			const [result] = await pool.execute<ResultSetHeader>(buildProviderAttemptRetentionDeleteSql('mysql'), [
+				cutoff,
+				cutoff,
+				options.limit,
+			]);
 			const deleted = Number(result.affectedRows ?? 0);
 			if (!Number.isSafeInteger(deleted) || deleted < 0 || deleted > options.limit) {
 				throw new TypeError('Provider attempt retention delete result is invalid');
@@ -547,13 +545,17 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 			return deleted;
 		},
 
-		async getDistinctActiveUsersCount(options: { startDate: string; endDate: string; endExclusive?: boolean }): Promise<number> {
+		async getDistinctActiveUsersCount(options: {
+			startDate: string;
+			endDate: string;
+			endExclusive?: boolean;
+		}): Promise<number> {
 			const comparator = options.endExclusive ? '<' : '<=';
 			const [rows] = await pool.query<(RowDataPacket & { active_users?: string | number })[]>(
 				`SELECT
 					COUNT(DISTINCT CASE WHEN user_email IS NOT NULL AND user_email != '' THEN user_email END) AS active_users
 				 FROM api_key_request_logs WHERE created_at >= ? AND created_at ${comparator} ?`,
-				[options.startDate, options.endDate]
+				[options.startDate, options.endDate],
 			);
 			return Number(rows[0]?.active_users ?? 0);
 		},

@@ -1,3 +1,4 @@
+import { userBudgetSettlementPools } from '../user-budget-reservation-utils';
 /**
  * Postgres：关键写路径（Drizzle 事务），供 `storage/critical-write-paths` 调度。
  */
@@ -26,6 +27,14 @@ import {
 	type UserBudgetSettlement,
 } from '../user-budget-reservation-types';
 import { toPublicModelDailyStatsDelta } from '../public-model-daily-stats';
+import type { GrantWalletCreditParams, GrantWalletCreditResult } from '../wallet-credit';
+import {
+	buildWalletCreditAuditRow,
+	mapStorageUserToRow,
+	walletCreditResult,
+	WalletCreditUserNotFoundError,
+} from '../wallet-credit';
+import type { UserBudgetSnapshot } from '../../storage/critical-write-paths';
 import {
 	userBudgetAuditToInsertRowForBudgetTx,
 	userBudgetAuditToInsertRowForCreateKey,
@@ -41,7 +50,9 @@ import {
 import type { PostgresDatabaseClient } from '../../storage/database-client';
 import { nowIso, parseMoney } from '../../storage/critical-write-paths-utils';
 import {
-	preparePostgresUsageRecovery, beginPostgresUsageRecovery, finishPostgresUsageRecovery,
+	preparePostgresUsageRecovery,
+	beginPostgresUsageRecovery,
+	finishPostgresUsageRecovery,
 	type PostgresUsageRecoveryInput,
 } from '../../storage/recovery/usage-settlement-transaction-postgres';
 import {
@@ -59,14 +70,16 @@ import {
 
 export async function getUserBudgetSnapshotPg(
 	client: PostgresDatabaseClient,
-	userId: string
-): Promise<{ budgetSpent: number; budgetMax: number | null; budgetPeriod: string | null; budgetResetAt: string | null } | null> {
+	userId: string,
+): Promise<UserBudgetSnapshot | null> {
 	const row = await client.drizzle
 		.select({
 			budgetSpent: pgUsersTable.budgetSpent,
 			budgetMax: pgUsersTable.budgetMax,
 			budgetPeriod: pgUsersTable.budgetPeriod,
 			budgetResetAt: pgUsersTable.budgetResetAt,
+			walletGranted: pgUsersTable.walletGranted,
+			walletSpent: pgUsersTable.walletSpent,
 		})
 		.from(pgUsersTable)
 		.where(eq(pgUsersTable.id, userId))
@@ -77,6 +90,8 @@ export async function getUserBudgetSnapshotPg(
 		budgetMax: row[0].budgetMax == null ? null : parseMoney(row[0].budgetMax),
 		budgetPeriod: row[0].budgetPeriod,
 		budgetResetAt: row[0].budgetResetAt,
+		walletGranted: parseMoney(row[0].walletGranted),
+		walletSpent: parseMoney(row[0].walletSpent),
 	};
 }
 
@@ -94,7 +109,7 @@ export async function createApiKeyWithAuditPg(
 	params: {
 		insert: InsertKeyParams;
 		audit: InsertUserBudgetAuditLogParams;
-	}
+	},
 ): Promise<void> {
 	const now = nowIso();
 	const auditRow = userBudgetAuditToInsertRowForCreateKey(params.insert.userId, params.audit);
@@ -136,14 +151,19 @@ export async function updateUserBudgetWithAuditTxPg(
 		budgetMax?: number | null;
 		apiKeyId: string | null;
 		audit: Omit<InsertUserBudgetAuditLogParams, 'id' | 'apiKeyId' | 'afterSpent' | 'afterBudgetResetAt'>;
-	}
+	},
 ): Promise<boolean> {
-	if (!Number.isSafeInteger(params.expectedBudgetEpoch) || params.expectedBudgetEpoch < 0
-		|| !Number.isSafeInteger(params.expectedBudgetReservedMicros) || params.expectedBudgetReservedMicros < 0
-		|| !Number.isFinite(params.expectedBudgetBase) || params.expectedBudgetBase < 0
-		|| !Number.isFinite(params.expectedBudgetSpent) || params.expectedBudgetSpent < 0
-		|| (params.expectedBudgetMax !== null
-			&& (!Number.isFinite(params.expectedBudgetMax) || params.expectedBudgetMax < 0))) {
+	if (
+		!Number.isSafeInteger(params.expectedBudgetEpoch) ||
+		params.expectedBudgetEpoch < 0 ||
+		!Number.isSafeInteger(params.expectedBudgetReservedMicros) ||
+		params.expectedBudgetReservedMicros < 0 ||
+		!Number.isFinite(params.expectedBudgetBase) ||
+		params.expectedBudgetBase < 0 ||
+		!Number.isFinite(params.expectedBudgetSpent) ||
+		params.expectedBudgetSpent < 0 ||
+		(params.expectedBudgetMax !== null && (!Number.isFinite(params.expectedBudgetMax) || params.expectedBudgetMax < 0))
+	) {
 		throw new Error('Invalid expected ordinary-user budget reset accounting values');
 	}
 	const nextSpent = roundGatewayMoney(params.budgetSpent);
@@ -153,7 +173,7 @@ export async function updateUserBudgetWithAuditTxPg(
 		params.apiKeyId,
 		nextSpent,
 		params.budgetResetAt,
-		params.audit
+		params.audit,
 	);
 	return client.drizzle.transaction(async (tx) => {
 		const updateSet: Record<string, unknown> = {
@@ -172,16 +192,16 @@ export async function updateUserBudgetWithAuditTxPg(
 			.where(
 				and(
 					eq(pgUsersTable.id, params.userId),
-					sql`${pgUsersTable.budgetMax} IS NOT DISTINCT FROM ${params.expectedBudgetMax == null
-						? null
-						: String(roundGatewayMoney(params.expectedBudgetMax))}`,
+					sql`${pgUsersTable.budgetMax} IS NOT DISTINCT FROM ${
+						params.expectedBudgetMax == null ? null : String(roundGatewayMoney(params.expectedBudgetMax))
+					}`,
 					eq(pgUsersTable.budgetBase, String(roundGatewayMoney(params.expectedBudgetBase))),
 					eq(pgUsersTable.budgetSpent, String(roundGatewayMoney(params.expectedBudgetSpent))),
 					eq(pgUsersTable.budgetPeriod, params.expectedBudgetPeriod),
 					sql`${pgUsersTable.budgetResetAt} IS NOT DISTINCT FROM ${params.expectedBudgetResetAt}`,
 					eq(pgUsersTable.budgetEpoch, params.expectedBudgetEpoch),
 					eq(pgUsersTable.budgetReservedMicros, params.expectedBudgetReservedMicros),
-				)
+				),
 			)
 			.returning({ id: pgUsersTable.id });
 		if (updated.length === 0) {
@@ -197,6 +217,10 @@ export async function applyUserBudgetTransitionWithAuditPg(
 	client: PostgresDatabaseClient,
 	params: {
 		userId: string;
+		expectedWalletGranted?: number;
+		expectedWalletSpent?: number;
+		walletGranted?: number;
+		walletSpent?: number;
 		expectedBudgetMax: number | null;
 		expectedBudgetBase: number;
 		expectedBudgetEpoch: number;
@@ -212,7 +236,7 @@ export async function applyUserBudgetTransitionWithAuditPg(
 		resetEpoch: boolean;
 		metadata?: string | null;
 		audit: InsertUserAuditLogParams;
-	}
+	},
 ): Promise<boolean> {
 	const now = nowIso();
 	let updated = false;
@@ -225,6 +249,8 @@ export async function applyUserBudgetTransitionWithAuditPg(
 			budgetResetAt: params.budgetResetAt,
 			updatedAt: now,
 		};
+		if (params.walletGranted !== undefined) updateSet.walletGranted = String(roundGatewayMoney(params.walletGranted));
+		if (params.walletSpent !== undefined) updateSet.walletSpent = String(roundGatewayMoney(params.walletSpent));
 		if (params.resetEpoch) {
 			updateSet.budgetEpoch = sql`${pgUsersTable.budgetEpoch} + 1`;
 			updateSet.budgetReservedMicros = 0;
@@ -235,18 +261,26 @@ export async function applyUserBudgetTransitionWithAuditPg(
 		const rows = await tx
 			.update(pgUsersTable)
 			.set(updateSet)
-			.where(and(
-				eq(pgUsersTable.id, params.userId),
-				sql`${pgUsersTable.budgetMax} IS NOT DISTINCT FROM ${params.expectedBudgetMax == null
-					? null
-					: String(roundGatewayMoney(params.expectedBudgetMax))}`,
-				eq(pgUsersTable.budgetBase, String(roundGatewayMoney(params.expectedBudgetBase))),
-				eq(pgUsersTable.budgetSpent, String(roundGatewayMoney(params.expectedBudgetSpent))),
-				eq(pgUsersTable.budgetPeriod, params.expectedBudgetPeriod),
-				sql`${pgUsersTable.budgetResetAt} IS NOT DISTINCT FROM ${params.expectedBudgetResetAt}`,
-				eq(pgUsersTable.budgetEpoch, params.expectedBudgetEpoch),
-				eq(pgUsersTable.budgetReservedMicros, params.expectedBudgetReservedMicros),
-			))
+			.where(
+				and(
+					eq(pgUsersTable.id, params.userId),
+					sql`${pgUsersTable.budgetMax} IS NOT DISTINCT FROM ${
+						params.expectedBudgetMax == null ? null : String(roundGatewayMoney(params.expectedBudgetMax))
+					}`,
+					eq(pgUsersTable.budgetBase, String(roundGatewayMoney(params.expectedBudgetBase))),
+					eq(pgUsersTable.budgetSpent, String(roundGatewayMoney(params.expectedBudgetSpent))),
+					eq(pgUsersTable.budgetPeriod, params.expectedBudgetPeriod),
+					sql`${pgUsersTable.budgetResetAt} IS NOT DISTINCT FROM ${params.expectedBudgetResetAt}`,
+					eq(pgUsersTable.budgetEpoch, params.expectedBudgetEpoch),
+					eq(pgUsersTable.budgetReservedMicros, params.expectedBudgetReservedMicros),
+					params.expectedWalletGranted === undefined
+						? undefined
+						: eq(pgUsersTable.walletGranted, String(roundGatewayMoney(params.expectedWalletGranted))),
+					params.expectedWalletSpent === undefined
+						? undefined
+						: eq(pgUsersTable.walletSpent, String(roundGatewayMoney(params.expectedWalletSpent))),
+				),
+			)
 			.returning({ id: pgUsersTable.id });
 		if (rows.length === 0) {
 			return;
@@ -279,19 +313,21 @@ function economicReplayLogMatches(
 	charged: number,
 	budgetChargedMicros: number,
 ): boolean {
-	return row.userId === requestLog.userId
-		&& row.apiKeyId === requestLog.apiKeyId
-		&& row.workspaceId === requestLog.workspaceId
-		&& row.providerKeyId === (requestLog.providerKeyId ?? null)
-		&& row.routeTargetId === (requestLog.routeTargetId ?? null)
-		&& row.routeTrace === (requestLog.routeTrace ?? null)
-		&& roundGatewayMoney(Number(row.chargedCost)) === charged
-		&& Number(row.budgetChargedMicros) === budgetChargedMicros
-		&& Number(row.inputTokens) === requestLog.inputTokens
-		&& Number(row.outputTokens) === requestLog.outputTokens
-		&& Number(row.cacheReadTokens) === requestLog.cacheReadTokens
-		&& Number(row.cacheWriteTokens) === requestLog.cacheWriteTokens
-		&& row.status === requestLog.status;
+	return (
+		row.userId === requestLog.userId &&
+		row.apiKeyId === requestLog.apiKeyId &&
+		row.workspaceId === requestLog.workspaceId &&
+		row.providerKeyId === (requestLog.providerKeyId ?? null) &&
+		row.routeTargetId === (requestLog.routeTargetId ?? null) &&
+		row.routeTrace === (requestLog.routeTrace ?? null) &&
+		roundGatewayMoney(Number(row.chargedCost)) === charged &&
+		Number(row.budgetChargedMicros) === budgetChargedMicros &&
+		Number(row.inputTokens) === requestLog.inputTokens &&
+		Number(row.outputTokens) === requestLog.outputTokens &&
+		Number(row.cacheReadTokens) === requestLog.cacheReadTokens &&
+		Number(row.cacheWriteTokens) === requestLog.cacheWriteTokens &&
+		row.status === requestLog.status
+	);
 }
 
 async function writeSharedKeyEconomicEvent(
@@ -301,23 +337,22 @@ async function writeSharedKeyEconomicEvent(
 	buyerDebitMicros: number | null,
 	mode: 'create' | 'verify',
 ): Promise<void> {
-	if (prepared.eventVersion === 2
-		&& (buyerDebitMicros === null || !isSafeUserBudgetMicros(buyerDebitMicros))) {
+	if (prepared.eventVersion === 2 && (buyerDebitMicros === null || !isSafeUserBudgetMicros(buyerDebitMicros))) {
 		throw new Error('Shared-key economic v2 buyer debit is unsafe');
 	}
-	const rows = prepared.eventVersion === 2
-		? await tx.execute(sql`SELECT
+	const rows =
+		prepared.eventVersion === 2
+			? await tx.execute(sql`SELECT
 			cinatoken_economic_outbox.write_shared_key_economic_event_v2(
 				${requestLogId}, ${prepared.buyerChargeBasis},
 				${prepared.buyerUsageCertainty}, ${buyerDebitMicros},
 				${prepared.attemptsJson}::jsonb, ${mode}) AS outcome`)
-		: await tx.execute(sql`SELECT
+			: await tx.execute(sql`SELECT
 			cinatoken_economic_outbox.write_shared_key_economic_event(
 				${requestLogId}, ${prepared.buyerChargeBasis},
 				${prepared.buyerUsageCertainty}, ${prepared.attemptsJson}::jsonb,
 				${mode}) AS outcome`);
-	if (!Array.isArray(rows) || rows.length !== 1
-		|| rows[0]?.outcome !== (mode === 'create' ? 'inserted' : 'verified')) {
+	if (!Array.isArray(rows) || rows.length !== 1 || rows[0]?.outcome !== (mode === 'create' ? 'inserted' : 'verified')) {
 		throw new Error('Shared-key economic producer did not confirm the transaction outcome');
 	}
 }
@@ -335,6 +370,7 @@ export async function insertRequestUsageAndChargeTxPg(
 		economicOutbox?: SharedKeyEconomicOutboxInput;
 		/** Review-only v371 buyer SQL path; no production caller enables it. */
 		legacyBuyerWindowedV371?: 'review-only';
+		chargedFromWallet?: number;
 		audit: Omit<InsertUserBudgetAuditLogParams, 'id' | 'afterSpent' | 'deltaSpent'>;
 	},
 	recoveryInput?: PostgresUsageRecoveryInput,
@@ -348,12 +384,16 @@ export async function insertRequestUsageAndChargeTxPg(
 	if (recovery) params = recovery.value.params;
 	assertGenerationSnapshotIsValid(params.requestLog);
 	assertProviderAttemptAvailabilityFacts(params.requestLog.providerAttempts);
-	if (params.guardrailBudgetSettlement?.requestId !== undefined
-		&& params.guardrailBudgetSettlement.requestId !== params.requestLog.id) {
+	if (
+		params.guardrailBudgetSettlement?.requestId !== undefined &&
+		params.guardrailBudgetSettlement.requestId !== params.requestLog.id
+	) {
 		throw new Error('Guardrail budget settlement requestId must match request log id');
 	}
-	if (params.userBudgetSettlement?.requestId !== undefined
-		&& params.userBudgetSettlement.requestId !== params.requestLog.id) {
+	if (
+		params.userBudgetSettlement?.requestId !== undefined &&
+		params.userBudgetSettlement.requestId !== params.requestLog.id
+	) {
 		throw new Error('Ordinary-user budget settlement requestId must match request log id');
 	}
 	if (params.requestLog.userId !== params.userId) {
@@ -362,75 +402,82 @@ export async function insertRequestUsageAndChargeTxPg(
 	if (!Number.isFinite(params.chargedCost) || params.chargedCost < 0) {
 		throw new Error('Charged cost must be a finite non-negative number');
 	}
-	if (!Number.isFinite(params.requestLog.chargedCost)
-		|| roundGatewayMoney(params.requestLog.chargedCost) !== roundGatewayMoney(params.chargedCost)) {
+	if (
+		!Number.isFinite(params.requestLog.chargedCost) ||
+		roundGatewayMoney(params.requestLog.chargedCost) !== roundGatewayMoney(params.chargedCost)
+	) {
 		throw new Error('Request log charged cost must match the budget settlement charge');
 	}
-	if (params.userBudgetSettlement
-		&& (
-			!['actual', 'reserved'].includes(params.userBudgetSettlement.mode)
-			|| typeof params.userBudgetSettlement.reason !== 'string'
-			|| params.userBudgetSettlement.reason.trim() === ''
-		)) {
+	if (
+		params.userBudgetSettlement &&
+		(!['actual', 'reserved'].includes(params.userBudgetSettlement.mode) ||
+			typeof params.userBudgetSettlement.reason !== 'string' ||
+			params.userBudgetSettlement.reason.trim() === '')
+	) {
 		throw new Error('Ordinary-user budget settlement mode and reason are required');
 	}
 	const charged = roundGatewayMoney(params.chargedCost);
-	if (!Number.isFinite(charged)
-		|| charged > userBudgetAmount(USER_BUDGET_MAX_SAFE_MICROS)) {
+	let fromWallet = 0;
+	if (!Number.isFinite(charged) || charged > userBudgetAmount(USER_BUDGET_MAX_SAFE_MICROS)) {
 		throw new Error('Charged cost exceeds the safe ordinary-user micro-unit range');
 	}
 	const budgetChargedMicros = params.shouldChargeBudget ? guardrailBudgetUnits(charged) : 0;
-	const economic = params.economicOutbox === undefined ? undefined
-		: prepareSharedKeyEconomicOutbox(
-			params.requestLog.id, budgetChargedMicros, params.economicOutbox);
+	const economic =
+		params.economicOutbox === undefined
+			? undefined
+			: prepareSharedKeyEconomicOutbox(params.requestLog.id, budgetChargedMicros, params.economicOutbox);
 	if (economic) {
 		// A v1 event copies the Guardrail charge and cannot represent a distinct
 		// ordinary-user reserved ceiling debit.
 		if (economic.eventVersion === 1 && params.userBudgetSettlement?.mode === 'reserved') {
 			throw new Error('Reserved ordinary-user settlement needs an explicit economic buyer debit');
 		}
-		if ((economic.buyerChargeBasis === 'reserved'
-				&& (economic.eventVersion !== 2 || params.userBudgetSettlement?.mode !== 'reserved'))
-			|| (params.userBudgetSettlement?.mode === 'reserved'
-				&& economic.buyerChargeBasis !== 'reserved')
-			|| (economic.buyerChargeBasis === 'none'
-				&& (params.userBudgetSettlement !== undefined
-					|| params.shouldChargeBudget || charged !== 0))
-			|| (economic.buyerChargeBasis === 'actual'
-				&& params.userBudgetSettlement === undefined && !params.shouldChargeBudget)
-			|| (economic.eventVersion === 2 && economic.buyerChargeBasis === 'actual'
-				&& !params.shouldChargeBudget && charged !== 0)) {
+		if (
+			(economic.buyerChargeBasis === 'reserved' &&
+				(economic.eventVersion !== 2 || params.userBudgetSettlement?.mode !== 'reserved')) ||
+			(params.userBudgetSettlement?.mode === 'reserved' && economic.buyerChargeBasis !== 'reserved') ||
+			(economic.buyerChargeBasis === 'none' &&
+				(params.userBudgetSettlement !== undefined || params.shouldChargeBudget || charged !== 0)) ||
+			(economic.buyerChargeBasis === 'actual' &&
+				params.userBudgetSettlement === undefined &&
+				!params.shouldChargeBudget) ||
+			(economic.eventVersion === 2 &&
+				economic.buyerChargeBasis === 'actual' &&
+				!params.shouldChargeBudget &&
+				charged !== 0)
+		) {
 			throw new Error('Shared-key economic buyer basis differs from critical-write settlement');
 		}
 	}
 	const standard = roundGatewayMoney(params.requestLog.standardCost);
-	if (!Number.isFinite(standard) || standard < 0
-		|| standard > userBudgetAmount(USER_BUDGET_MAX_SAFE_MICROS)) {
+	if (!Number.isFinite(standard) || standard < 0 || standard > userBudgetAmount(USER_BUDGET_MAX_SAFE_MICROS)) {
 		throw new Error('Standard cost exceeds the safe Guardrail budget micro-unit range');
 	}
 	const byokStandardMicros = guardrailBudgetUnits(standard);
 	const isByokRequest = params.requestLog.isByok === true;
 	const ordinaryActualMicros = params.shouldChargeBudget ? userBudgetUnits(charged) : 0;
-	if (params.legacyBuyerWindowedV371 !== undefined
-		&& params.legacyBuyerWindowedV371 !== 'review-only') {
+	if (params.legacyBuyerWindowedV371 !== undefined && params.legacyBuyerWindowedV371 !== 'review-only') {
 		throw new Error('Unknown legacy buyer windowed settlement opt-in');
 	}
 	const reviewWindowed = params.legacyBuyerWindowedV371 === 'review-only';
-	if (reviewWindowed && (recovery !== undefined
-		|| params.userBudgetSettlement?.requestId !== params.requestLog.id
-		|| params.userBudgetSettlement.mode !== 'actual'
-		|| params.guardrailBudgetSettlement?.requestId !== params.requestLog.id
-		|| params.guardrailBudgetSettlement.mode !== 'actual'
-		|| params.userBudgetSettlement.reason !== params.guardrailBudgetSettlement.reason
-		|| !params.shouldChargeBudget
-		|| params.requestLog.isByok !== false
-		|| params.requestLog.status !== 'success'
-		|| economic?.eventVersion !== 2
-		|| economic.buyerChargeBasis !== 'actual'
-		|| economic.buyerUsageCertainty !== 'actual'
-		|| budgetChargedMicros !== ordinaryActualMicros
-		|| params.audit.requestLogId !== params.requestLog.id
-		|| params.audit.apiKeyId !== params.requestLog.apiKeyId)) {
+	if (
+		reviewWindowed &&
+		(recovery !== undefined ||
+			params.userBudgetSettlement?.requestId !== params.requestLog.id ||
+			params.userBudgetSettlement.mode !== 'actual' ||
+			params.guardrailBudgetSettlement?.requestId !== params.requestLog.id ||
+			params.guardrailBudgetSettlement.mode !== 'actual' ||
+			params.userBudgetSettlement.reason !== params.guardrailBudgetSettlement.reason ||
+			!params.shouldChargeBudget ||
+			params.requestLog.isByok !== false ||
+			params.requestLog.status !== 'success' ||
+			economic?.eventVersion !== 2 ||
+			economic.buyerChargeBasis !== 'actual' ||
+			economic.buyerUsageCertainty !== 'actual' ||
+			budgetChargedMicros !== ordinaryActualMicros ||
+			params.audit.requestLogId !== params.requestLog.id ||
+			params.audit.apiKeyId !== params.requestLog.apiKeyId)
+	) {
 		throw new Error('Legacy buyer windowed settlement requires non-grant current-epoch actual/v2 facts');
 	}
 	const now = recovery?.recordedAtIso ?? nowIso();
@@ -450,110 +497,126 @@ export async function insertRequestUsageAndChargeTxPg(
 				requestWorkspaceId = params.requestLog.workspaceId;
 			}
 		} else {
-			requestWorkspaceId = (await tx
-				.select({ workspaceId: pgApiKeysTable.workspaceId })
-				.from(pgApiKeysTable)
-				.where(eq(pgApiKeysTable.id, params.requestLog.apiKeyId))
-				.for('update'))[0]?.workspaceId ?? null;
+			requestWorkspaceId =
+				(
+					await tx
+						.select({ workspaceId: pgApiKeysTable.workspaceId })
+						.from(pgApiKeysTable)
+						.where(eq(pgApiKeysTable.id, params.requestLog.apiKeyId))
+						.for('update')
+				)[0]?.workspaceId ?? null;
 		}
 		if (requestWorkspaceId === null || requestWorkspaceId !== params.requestLog.workspaceId) {
 			throw new Error('Request log Workspace snapshot does not match API key');
 		}
 		let ordinarySettlementMicros: number | null = null;
 		let ordinaryReservationEpoch: number | null = null;
+		let ordinaryReservationWasExpired = false;
+		let walletSettledMicros = 0;
+		let directPeriodMicros = ordinaryActualMicros;
 		let windowedAudit: Awaited<ReturnType<typeof readLegacyBuyerWindowedAuditV372>> | null = null;
 		if (params.userBudgetSettlement && !reviewWindowed) {
 			const settlement = params.userBudgetSettlement;
-			const reservations = await tx.select({
-				requestId: pgUserBudgetReservationsTable.requestId,
-				userId: pgUserBudgetReservationsTable.userId,
-				apiKeyId: pgUserBudgetReservationsTable.apiKeyId,
-				budgetEpoch: pgUserBudgetReservationsTable.budgetEpoch,
-				reservedMicros: pgUserBudgetReservationsTable.reservedMicros,
-				settledMicros: pgUserBudgetReservationsTable.settledMicros,
-				state: pgUserBudgetReservationsTable.state,
-			}).from(pgUserBudgetReservationsTable)
+			const reservations = await tx
+				.select({
+					requestId: pgUserBudgetReservationsTable.requestId,
+					userId: pgUserBudgetReservationsTable.userId,
+					apiKeyId: pgUserBudgetReservationsTable.apiKeyId,
+					budgetEpoch: pgUserBudgetReservationsTable.budgetEpoch,
+					reservedMicros: pgUserBudgetReservationsTable.reservedMicros,
+					settledMicros: pgUserBudgetReservationsTable.settledMicros,
+					settledWalletMicros: pgUserBudgetReservationsTable.settledWalletMicros,
+					state: pgUserBudgetReservationsTable.state,
+				})
+				.from(pgUserBudgetReservationsTable)
 				.where(eq(pgUserBudgetReservationsTable.requestId, settlement.requestId))
 				.for('update');
 			const reservation = reservations[0];
 			if (!reservation) {
 				throw new Error('Ordinary-user budget settlement has no matching reservation');
 			}
-			if (reservation.userId !== params.userId
-				|| reservation.userId !== params.requestLog.userId
-				|| reservation.apiKeyId !== params.requestLog.apiKeyId) {
+			if (
+				reservation.userId !== params.userId ||
+				reservation.userId !== params.requestLog.userId ||
+				reservation.apiKeyId !== params.requestLog.apiKeyId
+			) {
 				throw new Error('Ordinary-user budget settlement identity mismatch');
 			}
 			const reservedMicros = Number(reservation.reservedMicros);
 			const previousSettledMicros = Number(reservation.settledMicros);
+			walletSettledMicros = Number(reservation.settledWalletMicros ?? 0);
 			const reservationEpoch = Number(reservation.budgetEpoch);
 			ordinaryReservationEpoch = reservationEpoch;
-			if (!isSafeUserBudgetMicros(reservedMicros) || reservedMicros === 0
-				|| !isSafeUserBudgetMicros(previousSettledMicros)
-				|| !Number.isSafeInteger(reservationEpoch) || reservationEpoch < 0) {
+			ordinaryReservationWasExpired = reservation.state === 'expired';
+			if (
+				!isSafeUserBudgetMicros(reservedMicros) ||
+				reservedMicros === 0 ||
+				!isSafeUserBudgetMicros(previousSettledMicros) ||
+				!Number.isSafeInteger(reservationEpoch) ||
+				reservationEpoch < 0
+			) {
 				throw new Error('Ordinary-user budget reservation contains unsafe accounting values');
 			}
-			ordinarySettlementMicros = settlement.mode === 'reserved'
-				? reservedMicros
-				: ordinaryActualMicros;
+			ordinarySettlementMicros = settlement.mode === 'reserved' ? reservedMicros : ordinaryActualMicros;
 
 			if (recovery) {
 				// Recovery rejects any prior log; its least-privilege role needs only
 				// identity here, while ordinary replay retains its full comparisons.
-				const priorLogs = await tx.select({ id: pgRequestLogsTable.id })
+				const priorLogs = await tx
+					.select({ id: pgRequestLogsTable.id })
 					.from(pgRequestLogsTable)
 					.where(eq(pgRequestLogsTable.id, params.requestLog.id));
 				if (priorLogs.length !== 0) {
 					throw new Error('Legacy log cannot be adopted by a new settlement receipt');
 				}
 			}
-			const existingLogs = recovery ? [] : await tx.select({
-				id: pgRequestLogsTable.id,
-				userId: pgRequestLogsTable.userId,
-				apiKeyId: pgRequestLogsTable.apiKeyId,
-				workspaceId: pgRequestLogsTable.workspaceId,
-				providerKeyId: pgRequestLogsTable.providerKeyId,
-				routeTargetId: pgRequestLogsTable.routeTargetId,
-				routeTrace: pgRequestLogsTable.routeTrace,
-				chargedCost: pgRequestLogsTable.chargedCost,
-				budgetChargedMicros: pgRequestLogsTable.budgetChargedMicros,
-				inputTokens: pgRequestLogsTable.inputTokens,
-				outputTokens: pgRequestLogsTable.outputTokens,
-				cacheReadTokens: pgRequestLogsTable.cacheReadTokens,
-				cacheWriteTokens: pgRequestLogsTable.cacheWriteTokens,
-				status: pgRequestLogsTable.status,
-			}).from(pgRequestLogsTable)
-				.where(eq(pgRequestLogsTable.id, params.requestLog.id));
+			const existingLogs = recovery
+				? []
+				: await tx
+						.select({
+							id: pgRequestLogsTable.id,
+							userId: pgRequestLogsTable.userId,
+							apiKeyId: pgRequestLogsTable.apiKeyId,
+							workspaceId: pgRequestLogsTable.workspaceId,
+							providerKeyId: pgRequestLogsTable.providerKeyId,
+							routeTargetId: pgRequestLogsTable.routeTargetId,
+							routeTrace: pgRequestLogsTable.routeTrace,
+							chargedCost: pgRequestLogsTable.chargedCost,
+							budgetChargedMicros: pgRequestLogsTable.budgetChargedMicros,
+							inputTokens: pgRequestLogsTable.inputTokens,
+							outputTokens: pgRequestLogsTable.outputTokens,
+							cacheReadTokens: pgRequestLogsTable.cacheReadTokens,
+							cacheWriteTokens: pgRequestLogsTable.cacheWriteTokens,
+							status: pgRequestLogsTable.status,
+						})
+						.from(pgRequestLogsTable)
+						.where(eq(pgRequestLogsTable.id, params.requestLog.id));
 			// The reservation row above serializes settlements for this request ID in both
 			// paths. The append-only log has no UPDATE grant for either runtime role; its
 			// primary key still rejects a competing insert from another writer.
 			const existingLog = existingLogs[0];
 			const terminalMatches =
-				(settlement.mode === 'actual'
-					&& (
-						(reservation.state === 'settled' && previousSettledMicros === ordinarySettlementMicros)
-						|| (reservation.state === 'expired' && previousSettledMicros === ordinarySettlementMicros)
-					))
-				|| (settlement.mode === 'reserved'
-					&& reservation.state === 'expired'
-					&& previousSettledMicros === reservedMicros);
+				(settlement.mode === 'actual' &&
+					((reservation.state === 'settled' && previousSettledMicros === ordinarySettlementMicros) ||
+						(reservation.state === 'expired' && previousSettledMicros === ordinarySettlementMicros))) ||
+				(settlement.mode === 'reserved' && reservation.state === 'expired' && previousSettledMicros === reservedMicros);
 			if (existingLog) {
 				if (recovery) throw new Error('Legacy log cannot be adopted by a new settlement receipt');
-				if (!terminalMatches
-					|| existingLog.userId !== params.requestLog.userId
-					|| existingLog.apiKeyId !== params.requestLog.apiKeyId
-					|| existingLog.workspaceId !== params.requestLog.workspaceId
-					|| Number(existingLog.budgetChargedMicros) !== budgetChargedMicros
-					|| roundGatewayMoney(Number(existingLog.chargedCost)) !== charged) {
+				if (
+					!terminalMatches ||
+					existingLog.userId !== params.requestLog.userId ||
+					existingLog.apiKeyId !== params.requestLog.apiKeyId ||
+					existingLog.workspaceId !== params.requestLog.workspaceId ||
+					Number(existingLog.budgetChargedMicros) !== budgetChargedMicros ||
+					roundGatewayMoney(Number(existingLog.chargedCost)) !== charged
+				) {
 					throw new Error('Conflicting replay for ordinary-user budget settlement');
 				}
 				if (economic) {
-					if (!economicReplayLogMatches(existingLog, params.requestLog,
-						charged, budgetChargedMicros)) {
+					if (!economicReplayLogMatches(existingLog, params.requestLog, charged, budgetChargedMicros)) {
 						throw new Error('Conflicting shared-key economic buyer log replay');
 					}
-					await writeSharedKeyEconomicEvent(tx, params.requestLog.id, economic,
-						ordinarySettlementMicros, 'verify');
+					await writeSharedKeyEconomicEvent(tx, params.requestLog.id, economic, ordinarySettlementMicros, 'verify');
 				}
 				return;
 			}
@@ -572,73 +635,156 @@ export async function insertRequestUsageAndChargeTxPg(
 					}
 				} else if (previousSettledMicros === ordinarySettlementMicros) {
 				} else {
-					const accounts = await tx.select({
-						id: pgUsersTable.id,
-						budgetEpoch: pgUsersTable.budgetEpoch,
-					}).from(pgUsersTable).where(eq(pgUsersTable.id, reservation.userId)).for('update');
+					const accounts = await tx
+						.select({
+							id: pgUsersTable.id,
+							budgetEpoch: pgUsersTable.budgetEpoch,
+							budgetMax: pgUsersTable.budgetMax,
+							budgetSpent: pgUsersTable.budgetSpent,
+							walletSpent: pgUsersTable.walletSpent,
+						})
+						.from(pgUsersTable)
+						.where(eq(pgUsersTable.id, reservation.userId))
+						.for('update');
 					const account = accounts[0];
 					if (!account) throw new Error('Ordinary-user budget account is missing');
 					const reconciliationMicros = ordinarySettlementMicros - previousSettledMicros;
-					if (Number(account.budgetEpoch) === reservationEpoch && reconciliationMicros !== 0) {
-						const updated = await tx.update(pgUsersTable).set({
-							budgetSpent: sql`ROUND(GREATEST(${pgUsersTable.budgetSpent} + (${reconciliationMicros}::numeric / 1000000::numeric), 0::numeric), 6)`,
-							updatedAt: now,
-						}).where(and(
-							eq(pgUsersTable.id, reservation.userId),
-							eq(pgUsersTable.budgetEpoch, reservationEpoch),
-						)).returning({ id: pgUsersTable.id });
+					const pools = userBudgetSettlementPools(
+						{ budget_max: account.budgetMax, budget_spent: account.budgetSpent },
+						previousSettledMicros,
+						walletSettledMicros,
+						ordinarySettlementMicros,
+					);
+					const currentEpoch = Number(account.budgetEpoch) === reservationEpoch;
+					if (!currentEpoch) {
+						pools.periodDeltaMicros = 0;
+						pools.walletDeltaMicros = Math.min(0, pools.walletDeltaMicros);
+						pools.walletSettledMicros = walletSettledMicros + pools.walletDeltaMicros;
+					}
+					walletSettledMicros = pools.walletSettledMicros;
+					if (reconciliationMicros !== 0 && (currentEpoch || pools.walletDeltaMicros !== 0)) {
+						const updated = await tx
+							.update(pgUsersTable)
+							.set({
+								budgetSpent: sql`ROUND(GREATEST(${pgUsersTable.budgetSpent} + (${pools.periodDeltaMicros}::numeric / 1000000::numeric), 0::numeric), 6)`,
+								walletSpent: sql`ROUND(GREATEST(${pgUsersTable.walletSpent} + (${pools.walletDeltaMicros}::numeric / 1000000::numeric), 0::numeric), 6)`,
+								updatedAt: now,
+							})
+							.where(
+								and(eq(pgUsersTable.id, reservation.userId), eq(pgUsersTable.budgetEpoch, Number(account.budgetEpoch))),
+							)
+							.returning({ id: pgUsersTable.id });
 						if (updated.length !== 1) throw new Error('Ordinary-user late settlement account changed concurrently');
 					}
-					const updated = await tx.update(pgUserBudgetReservationsTable).set({
-						settledMicros: ordinarySettlementMicros,
-						terminalReason: settlement.reason.slice(0, 128),
-						updatedAt: now,
-					}).where(and(
-						eq(pgUserBudgetReservationsTable.requestId, settlement.requestId),
-						eq(pgUserBudgetReservationsTable.state, 'expired'),
-						eq(pgUserBudgetReservationsTable.settledMicros, previousSettledMicros),
-					)).returning({ requestId: pgUserBudgetReservationsTable.requestId });
+					const updated = await tx
+						.update(pgUserBudgetReservationsTable)
+						.set({
+							settledMicros: ordinarySettlementMicros,
+							settledWalletMicros: walletSettledMicros,
+							terminalReason: settlement.reason.slice(0, 128),
+							updatedAt: now,
+						})
+						.where(
+							and(
+								eq(pgUserBudgetReservationsTable.requestId, settlement.requestId),
+								eq(pgUserBudgetReservationsTable.state, 'expired'),
+								eq(pgUserBudgetReservationsTable.settledMicros, previousSettledMicros),
+							),
+						)
+						.returning({ requestId: pgUserBudgetReservationsTable.requestId });
 					if (updated.length !== 1) throw new Error('Ordinary-user late settlement reservation changed concurrently');
 				}
 			} else if (reservation.state === 'reserved' || reservation.state === 'dispatched') {
-				const accounts = await tx.select({
-					id: pgUsersTable.id,
-					budgetEpoch: pgUsersTable.budgetEpoch,
-					budgetReservedMicros: pgUsersTable.budgetReservedMicros,
-				}).from(pgUsersTable).where(eq(pgUsersTable.id, reservation.userId)).for('update');
+				const accounts = await tx
+					.select({
+						id: pgUsersTable.id,
+						budgetEpoch: pgUsersTable.budgetEpoch,
+						budgetMax: pgUsersTable.budgetMax,
+						budgetSpent: pgUsersTable.budgetSpent,
+						walletSpent: pgUsersTable.walletSpent,
+						budgetReservedMicros: pgUsersTable.budgetReservedMicros,
+					})
+					.from(pgUsersTable)
+					.where(eq(pgUsersTable.id, reservation.userId))
+					.for('update');
 				const account = accounts[0];
 				if (!account) throw new Error('Ordinary-user budget account is missing');
+				const pools =
+					Number(account.budgetEpoch) === reservationEpoch
+						? userBudgetSettlementPools(
+								{ budget_max: account.budgetMax, budget_spent: account.budgetSpent },
+								0,
+								0,
+								ordinarySettlementMicros,
+							)
+						: { periodDeltaMicros: 0, walletDeltaMicros: 0, walletSettledMicros: 0 };
+				walletSettledMicros = pools.walletSettledMicros;
 				if (Number(account.budgetEpoch) === reservationEpoch) {
 					const currentReservedMicros = Number(account.budgetReservedMicros);
 					if (!isSafeUserBudgetMicros(currentReservedMicros) || currentReservedMicros < reservedMicros) {
 						throw new Error('Ordinary-user reserved budget counter invariant violated');
 					}
-					const updated = await tx.update(pgUsersTable).set({
-						budgetReservedMicros: sql`${pgUsersTable.budgetReservedMicros} - ${reservedMicros}`,
-						budgetSpent: sql`ROUND(GREATEST(${pgUsersTable.budgetSpent} + (${ordinarySettlementMicros}::numeric / 1000000::numeric), 0::numeric), 6)`,
-						updatedAt: now,
-					}).where(and(
-						eq(pgUsersTable.id, reservation.userId),
-						eq(pgUsersTable.budgetEpoch, reservationEpoch),
-						sql`${pgUsersTable.budgetReservedMicros} >= ${reservedMicros}`,
-					)).returning({ id: pgUsersTable.id });
+					const updated = await tx
+						.update(pgUsersTable)
+						.set({
+							budgetReservedMicros: sql`${pgUsersTable.budgetReservedMicros} - ${reservedMicros}`,
+							budgetSpent: sql`ROUND(GREATEST(${pgUsersTable.budgetSpent} + (${pools.periodDeltaMicros}::numeric / 1000000::numeric), 0::numeric), 6)`,
+							walletSpent: sql`ROUND(GREATEST(${pgUsersTable.walletSpent} + (${pools.walletDeltaMicros}::numeric / 1000000::numeric), 0::numeric), 6)`,
+							updatedAt: now,
+						})
+						.where(
+							and(
+								eq(pgUsersTable.id, reservation.userId),
+								eq(pgUsersTable.budgetEpoch, reservationEpoch),
+								sql`${pgUsersTable.budgetReservedMicros} >= ${reservedMicros}`,
+							),
+						)
+						.returning({ id: pgUsersTable.id });
 					if (updated.length !== 1) throw new Error('Ordinary-user reserved budget counter invariant violated');
 				}
-				const updated = await tx.update(pgUserBudgetReservationsTable).set({
-					state: settlement.mode === 'reserved' ? 'expired' : 'settled',
-					settledMicros: ordinarySettlementMicros,
-					terminalAt: now,
-					terminalReason: settlement.reason.slice(0, 128),
-					updatedAt: now,
-				}).where(and(
-					eq(pgUserBudgetReservationsTable.requestId, settlement.requestId),
-					inArray(pgUserBudgetReservationsTable.state, ['reserved', 'dispatched']),
-				)).returning({ requestId: pgUserBudgetReservationsTable.requestId });
+				const updated = await tx
+					.update(pgUserBudgetReservationsTable)
+					.set({
+						state: settlement.mode === 'reserved' ? 'expired' : 'settled',
+						settledMicros: ordinarySettlementMicros,
+						settledWalletMicros: walletSettledMicros,
+						terminalAt: now,
+						terminalReason: settlement.reason.slice(0, 128),
+						updatedAt: now,
+					})
+					.where(
+						and(
+							eq(pgUserBudgetReservationsTable.requestId, settlement.requestId),
+							inArray(pgUserBudgetReservationsTable.state, ['reserved', 'dispatched']),
+						),
+					)
+					.returning({ requestId: pgUserBudgetReservationsTable.requestId });
 				if (updated.length !== 1) throw new Error('Ordinary-user budget settlement reservation changed concurrently');
 			} else {
 				throw new Error('Ordinary-user budget reservation has an invalid state');
 			}
 		}
+		if (!params.userBudgetSettlement && params.shouldChargeBudget) {
+			const accounts = await tx
+				.select({
+					budgetMax: pgUsersTable.budgetMax,
+					budgetSpent: pgUsersTable.budgetSpent,
+				})
+				.from(pgUsersTable)
+				.where(eq(pgUsersTable.id, params.userId))
+				.for('update');
+			if (!accounts[0]) throw new Error('Ordinary-user budget account is missing');
+			const pools = userBudgetSettlementPools(
+				{ budget_max: accounts[0].budgetMax, budget_spent: accounts[0].budgetSpent },
+				0,
+				0,
+				ordinaryActualMicros,
+			);
+			walletSettledMicros = pools.walletSettledMicros;
+			directPeriodMicros = pools.periodDeltaMicros;
+		}
+		fromWallet = userBudgetAmount(walletSettledMicros);
+
 		const logInsert = tx.insert(pgRequestLogsTable).values({
 			id: params.requestLog.id,
 			userId: params.requestLog.userId,
@@ -677,6 +823,7 @@ export async function insertRequestUsageAndChargeTxPg(
 			chargedCost: String(roundGatewayMoney(params.requestLog.chargedCost)),
 			budgetChargedMicros,
 			budgetAccountedAt: params.requestLog.budgetAccountedAt ?? null,
+			chargedWalletCost: String(fromWallet),
 			routeGroup: params.requestLog.routeGroup,
 			status: params.requestLog.status,
 			latencyMs: params.requestLog.latencyMs ?? null,
@@ -709,16 +856,17 @@ export async function insertRequestUsageAndChargeTxPg(
 			responseStreamed: params.requestLog.responseStreamed ?? null,
 			dataRegion: params.requestLog.dataRegion ?? null,
 			isByok: params.requestLog.isByok ?? null,
-			chargedCostUsd: params.requestLog.chargedCostUsd == null
-				? null
-				: String(roundGatewayMoney(params.requestLog.chargedCostUsd)),
-			upstreamInferenceCostUsd: params.requestLog.upstreamInferenceCostUsd == null
-				? null
-				: String(roundGatewayMoney(params.requestLog.upstreamInferenceCostUsd)),
+			chargedCostUsd:
+				params.requestLog.chargedCostUsd == null ? null : String(roundGatewayMoney(params.requestLog.chargedCostUsd)),
+			upstreamInferenceCostUsd:
+				params.requestLog.upstreamInferenceCostUsd == null
+					? null
+					: String(roundGatewayMoney(params.requestLog.upstreamInferenceCostUsd)),
 			serviceTier: params.requestLog.serviceTier ?? null,
 			finishReason: params.requestLog.finishReason ?? null,
 			nativeFinishReason: params.requestLog.nativeFinishReason ?? null,
 			providerResponses: serializeGenerationProviderResponses(params.requestLog.providerResponses),
+			ingressHost: params.requestLog.ingressHost ?? null,
 			createdAt: now,
 		});
 		if (economic) {
@@ -729,28 +877,30 @@ export async function insertRequestUsageAndChargeTxPg(
 				if (reviewWindowed) {
 					throw new Error('Legacy buyer windowed replay needs a committed terminal read protocol');
 				}
-				const existing = (await tx.select({
-					userId: pgRequestLogsTable.userId,
-					apiKeyId: pgRequestLogsTable.apiKeyId,
-					workspaceId: pgRequestLogsTable.workspaceId,
-					providerKeyId: pgRequestLogsTable.providerKeyId,
-					routeTargetId: pgRequestLogsTable.routeTargetId,
-					routeTrace: pgRequestLogsTable.routeTrace,
-					chargedCost: pgRequestLogsTable.chargedCost,
-					budgetChargedMicros: pgRequestLogsTable.budgetChargedMicros,
-					inputTokens: pgRequestLogsTable.inputTokens,
-					outputTokens: pgRequestLogsTable.outputTokens,
-					cacheReadTokens: pgRequestLogsTable.cacheReadTokens,
-					cacheWriteTokens: pgRequestLogsTable.cacheWriteTokens,
-					status: pgRequestLogsTable.status,
-				}).from(pgRequestLogsTable)
-					.where(eq(pgRequestLogsTable.id, params.requestLog.id)))[0];
-				if (!existing || !economicReplayLogMatches(existing,
-					params.requestLog, charged, budgetChargedMicros)) {
+				const existing = (
+					await tx
+						.select({
+							userId: pgRequestLogsTable.userId,
+							apiKeyId: pgRequestLogsTable.apiKeyId,
+							workspaceId: pgRequestLogsTable.workspaceId,
+							providerKeyId: pgRequestLogsTable.providerKeyId,
+							routeTargetId: pgRequestLogsTable.routeTargetId,
+							routeTrace: pgRequestLogsTable.routeTrace,
+							chargedCost: pgRequestLogsTable.chargedCost,
+							budgetChargedMicros: pgRequestLogsTable.budgetChargedMicros,
+							inputTokens: pgRequestLogsTable.inputTokens,
+							outputTokens: pgRequestLogsTable.outputTokens,
+							cacheReadTokens: pgRequestLogsTable.cacheReadTokens,
+							cacheWriteTokens: pgRequestLogsTable.cacheWriteTokens,
+							status: pgRequestLogsTable.status,
+						})
+						.from(pgRequestLogsTable)
+						.where(eq(pgRequestLogsTable.id, params.requestLog.id))
+				)[0];
+				if (!existing || !economicReplayLogMatches(existing, params.requestLog, charged, budgetChargedMicros)) {
 					throw new Error('Conflicting shared-key economic buyer log replay');
 				}
-				await writeSharedKeyEconomicEvent(tx, params.requestLog.id, economic,
-					ordinaryActualMicros, 'verify');
+				await writeSharedKeyEconomicEvent(tx, params.requestLog.id, economic, ordinaryActualMicros, 'verify');
 				return;
 			}
 			if (reviewWindowed) {
@@ -769,8 +919,13 @@ export async function insertRequestUsageAndChargeTxPg(
 				});
 				ordinarySettlementMicros = ordinaryActualMicros;
 			}
-			await writeSharedKeyEconomicEvent(tx, params.requestLog.id, economic,
-				ordinarySettlementMicros ?? ordinaryActualMicros, 'create');
+			await writeSharedKeyEconomicEvent(
+				tx,
+				params.requestLog.id,
+				economic,
+				ordinarySettlementMicros ?? ordinaryActualMicros,
+				'create',
+			);
 		} else {
 			await logInsert;
 		}
@@ -785,7 +940,7 @@ export async function insertRequestUsageAndChargeTxPg(
 					reason: attempt.reason,
 					httpStatus: attempt.httpStatus,
 					observedAt: attempt.observedAtIso,
-				}))
+				})),
 			);
 		}
 		await tx
@@ -824,34 +979,43 @@ export async function insertRequestUsageAndChargeTxPg(
 			await tx
 				.update(pgUsersTable)
 				.set({
-					budgetSpent: sql`${pgUsersTable.budgetSpent} + ${String(charged)}`,
+					budgetSpent: sql`${pgUsersTable.budgetSpent} + ${String(userBudgetAmount(directPeriodMicros))}`,
+					walletSpent: sql`${pgUsersTable.walletSpent} + ${String(fromWallet)}`,
 					updatedAt: now,
 				})
 				.where(eq(pgUsersTable.id, params.userId));
 		}
 		if (params.userBudgetSettlement || params.shouldChargeBudget) {
-			const auditedCharge = params.userBudgetSettlement
-				? userBudgetAmount(ordinarySettlementMicros ?? 0)
-				: charged;
-			const afterSpent = windowedAudit?.afterSpent
-				?? roundGatewayMoney(params.beforeSpent + auditedCharge);
+			const auditedCharge = params.userBudgetSettlement ? userBudgetAmount(ordinarySettlementMicros ?? 0) : charged;
+			const afterSpent = windowedAudit?.afterSpent ?? roundGatewayMoney(params.beforeSpent + auditedCharge);
 			let auditParams = reviewWindowed
-				? { ...params.audit,
-					beforeSpent: windowedAudit!.beforeSpent,
-					beforeUserSnapshot: windowedAudit!.beforeUserSnapshot,
-					afterUserSnapshot: windowedAudit!.afterUserSnapshot,
-					changedFields: windowedAudit!.changedFields }
+				? {
+						...params.audit,
+						beforeSpent: windowedAudit!.beforeSpent,
+						beforeUserSnapshot: windowedAudit!.beforeUserSnapshot,
+						afterUserSnapshot: windowedAudit!.afterUserSnapshot,
+						changedFields: windowedAudit!.changedFields,
+					}
 				: params.audit;
-			if (params.userBudgetSettlement && ordinaryReservationEpoch !== null
-				&& !reviewWindowed) {
-				const accounts = await tx.select({
-					budgetEpoch: pgUsersTable.budgetEpoch,
-				}).from(pgUsersTable)
+			if (params.userBudgetSettlement && ordinaryReservationEpoch !== null && !reviewWindowed) {
+				const accounts = await tx
+					.select({
+						budgetEpoch: pgUsersTable.budgetEpoch,
+						budgetMax: pgUsersTable.budgetMax,
+						budgetSpent: pgUsersTable.budgetSpent,
+						walletSpent: pgUsersTable.walletSpent,
+					})
+					.from(pgUsersTable)
 					.where(eq(pgUsersTable.id, params.userId))
 					.for('update');
 				const account = accounts[0];
 				if (!account) throw new Error('Ordinary-user budget account is missing');
-				if (Number(account.budgetEpoch) !== ordinaryReservationEpoch) {
+				// A late actual result can refund an already forfeited ceiling. Caller
+				// snapshots add a fresh charge and cannot prove the reconciliation delta.
+				if (
+					Number(account.budgetEpoch) !== ordinaryReservationEpoch ||
+					(ordinaryReservationWasExpired && params.userBudgetSettlement.mode === 'actual')
+				) {
 					auditParams = {
 						...params.audit,
 						beforeUserSnapshot: null,
@@ -860,49 +1024,56 @@ export async function insertRequestUsageAndChargeTxPg(
 					};
 				}
 			}
-			const auditRow = userBudgetAuditToInsertRowForUsageCharge(
-				params.userId,
-				afterSpent,
-				auditedCharge,
-				auditParams,
-			);
+			const auditRow = userBudgetAuditToInsertRowForUsageCharge(params.userId, afterSpent, auditedCharge, auditParams);
 			await tx.insert(pgUserAuditLogsTable).values(toUserAuditLogDrizzleInsert(auditRow, now));
 		}
 		if (params.guardrailBudgetSettlement && !reviewWindowed) {
 			const settlement = params.guardrailBudgetSettlement;
-			const existingReservations = await tx.select({
-				id: pgGuardrailBudgetReservationsTable.id,
-				assignmentId: pgGuardrailBudgetReservationsTable.assignmentId,
-				workspaceId: pgGuardrailBudgetReservationsTable.workspaceId,
-				scopeType: pgGuardrailBudgetReservationsTable.scopeType,
-				scopeId: pgGuardrailBudgetReservationsTable.scopeId,
-				period: pgGuardrailBudgetReservationsTable.period,
-				periodStart: pgGuardrailBudgetReservationsTable.periodStart,
-				settledMicros: pgGuardrailBudgetReservationsTable.settledMicros,
-				settlementBasis: pgGuardrailBudgetReservationsTable.settlementBasis,
-				state: pgGuardrailBudgetReservationsTable.state,
-			}).from(pgGuardrailBudgetReservationsTable).where(and(
-				eq(pgGuardrailBudgetReservationsTable.requestId, settlement.requestId),
-				inArray(pgGuardrailBudgetReservationsTable.state, ['reserved', 'dispatched', 'expired', 'released']),
-			)).for('update');
+			const existingReservations = await tx
+				.select({
+					id: pgGuardrailBudgetReservationsTable.id,
+					assignmentId: pgGuardrailBudgetReservationsTable.assignmentId,
+					workspaceId: pgGuardrailBudgetReservationsTable.workspaceId,
+					scopeType: pgGuardrailBudgetReservationsTable.scopeType,
+					scopeId: pgGuardrailBudgetReservationsTable.scopeId,
+					period: pgGuardrailBudgetReservationsTable.period,
+					periodStart: pgGuardrailBudgetReservationsTable.periodStart,
+					settledMicros: pgGuardrailBudgetReservationsTable.settledMicros,
+					settlementBasis: pgGuardrailBudgetReservationsTable.settlementBasis,
+					state: pgGuardrailBudgetReservationsTable.state,
+				})
+				.from(pgGuardrailBudgetReservationsTable)
+				.where(
+					and(
+						eq(pgGuardrailBudgetReservationsTable.requestId, settlement.requestId),
+						inArray(pgGuardrailBudgetReservationsTable.state, ['reserved', 'dispatched', 'expired', 'released']),
+					),
+				)
+				.for('update');
 			if (existingReservations.length === 0) {
 				throw new Error('Guardrail budget settlement has no matching reservation');
 			}
-			if (requestWorkspaceId == null
-				|| existingReservations.some((reservation) => reservation.workspaceId !== requestWorkspaceId)) {
+			if (
+				requestWorkspaceId == null ||
+				existingReservations.some((reservation) => reservation.workspaceId !== requestWorkspaceId)
+			) {
 				throw new Error('Guardrail budget settlement Workspace identity mismatch');
 			}
-			if (existingReservations.some((reservation) =>
-				reservation.settlementBasis === 'gateway_key_route'
-				&& (
-					reservation.scopeType !== 'api_key'
-					|| reservation.scopeId !== params.requestLog.apiKeyId
-					|| reservation.assignmentId !== `gateway-key-limit:${params.requestLog.apiKeyId}`
-				))) {
+			if (
+				existingReservations.some(
+					(reservation) =>
+						reservation.settlementBasis === 'gateway_key_route' &&
+						(reservation.scopeType !== 'api_key' ||
+							reservation.scopeId !== params.requestLog.apiKeyId ||
+							reservation.assignmentId !== `gateway-key-limit:${params.requestLog.apiKeyId}`),
+				)
+			) {
 				throw new Error('Route-selective settlement is not the authenticated Gateway key limit');
 			}
-			if (isByokRequest
-				&& existingReservations.some((reservation) => reservation.settlementBasis !== 'gateway_key_route')) {
+			if (
+				isByokRequest &&
+				existingReservations.some((reservation) => reservation.settlementBasis !== 'gateway_key_route')
+			) {
 				throw new Error('Private BYOK cannot settle non-key budget reservations');
 			}
 			const terminalState = settlement.mode === 'reserved' ? 'expired' : 'settled';
@@ -910,9 +1081,10 @@ export async function insertRequestUsageAndChargeTxPg(
 				.update(pgGuardrailBudgetReservationsTable)
 				.set({
 					state: terminalState,
-					settledMicros: settlement.mode === 'reserved'
-						? sql`${pgGuardrailBudgetReservationsTable.reservedMicros}`
-						: sql`CASE
+					settledMicros:
+						settlement.mode === 'reserved'
+							? sql`${pgGuardrailBudgetReservationsTable.reservedMicros}`
+							: sql`CASE
 							WHEN ${pgGuardrailBudgetReservationsTable.settlementBasis} = 'gateway_key_route'
 								AND ${isByokRequest} THEN ${byokStandardMicros}::bigint
 							ELSE ${budgetChargedMicros}::bigint
@@ -921,10 +1093,12 @@ export async function insertRequestUsageAndChargeTxPg(
 					terminalReason: settlement.reason.slice(0, 128),
 					updatedAt: now,
 				})
-				.where(and(
-					eq(pgGuardrailBudgetReservationsTable.requestId, settlement.requestId),
-					inArray(pgGuardrailBudgetReservationsTable.state, ['reserved', 'dispatched']),
-				))
+				.where(
+					and(
+						eq(pgGuardrailBudgetReservationsTable.requestId, settlement.requestId),
+						inArray(pgGuardrailBudgetReservationsTable.state, ['reserved', 'dispatched']),
+					),
+				)
 				.returning({
 					workspaceId: pgGuardrailBudgetReservationsTable.workspaceId,
 					scopeType: pgGuardrailBudgetReservationsTable.scopeType,
@@ -935,74 +1109,93 @@ export async function insertRequestUsageAndChargeTxPg(
 					settledMicros: pgGuardrailBudgetReservationsTable.settledMicros,
 				});
 			const orderedClaims = [...claimed].sort((left, right) =>
-				[
-					left.workspaceId,
-					left.scopeType,
-					left.scopeId,
-					left.period,
-					String(left.periodStart),
-				].join('\u0000').localeCompare([
-					right.workspaceId,
-					right.scopeType,
-					right.scopeId,
-					right.period,
-					String(right.periodStart),
-				].join('\u0000')),
+				[left.workspaceId, left.scopeType, left.scopeId, left.period, String(left.periodStart)]
+					.join('\u0000')
+					.localeCompare(
+						[right.workspaceId, right.scopeType, right.scopeId, right.period, String(right.periodStart)].join('\u0000'),
+					),
 			);
 			for (const reservation of orderedClaims) {
-				const updatedWindows = await tx.update(pgGuardrailBudgetWindowsTable).set({
-					reservedMicros: sql`${pgGuardrailBudgetWindowsTable.reservedMicros} - ${reservation.reservedMicros}`,
-					settledMicros: sql`${pgGuardrailBudgetWindowsTable.settledMicros} + ${reservation.settledMicros}`,
-					updatedAt: now,
-				}).where(and(
-					eq(pgGuardrailBudgetWindowsTable.workspaceId, reservation.workspaceId),
-					eq(pgGuardrailBudgetWindowsTable.scopeType, reservation.scopeType),
-					eq(pgGuardrailBudgetWindowsTable.scopeId, reservation.scopeId),
-					eq(pgGuardrailBudgetWindowsTable.period, reservation.period),
-					eq(pgGuardrailBudgetWindowsTable.periodStart, reservation.periodStart),
-				)).returning({ scopeType: pgGuardrailBudgetWindowsTable.scopeType });
+				const updatedWindows = await tx
+					.update(pgGuardrailBudgetWindowsTable)
+					.set({
+						reservedMicros: sql`${pgGuardrailBudgetWindowsTable.reservedMicros} - ${reservation.reservedMicros}`,
+						settledMicros: sql`${pgGuardrailBudgetWindowsTable.settledMicros} + ${reservation.settledMicros}`,
+						updatedAt: now,
+					})
+					.where(
+						and(
+							eq(pgGuardrailBudgetWindowsTable.workspaceId, reservation.workspaceId),
+							eq(pgGuardrailBudgetWindowsTable.scopeType, reservation.scopeType),
+							eq(pgGuardrailBudgetWindowsTable.scopeId, reservation.scopeId),
+							eq(pgGuardrailBudgetWindowsTable.period, reservation.period),
+							eq(pgGuardrailBudgetWindowsTable.periodStart, reservation.periodStart),
+						),
+					)
+					.returning({ scopeType: pgGuardrailBudgetWindowsTable.scopeType });
 				if (updatedWindows.length !== 1) throw new Error('Guardrail budget settlement window is missing');
 			}
 			if (settlement.mode === 'actual') {
 				const overruns = existingReservations
 					.filter((reservation) => reservation.state === 'expired')
 					.filter((reservation) => {
-						const actualMicros = reservation.settlementBasis === 'gateway_key_route' && isByokRequest
-							? byokStandardMicros
-							: budgetChargedMicros;
+						const actualMicros =
+							reservation.settlementBasis === 'gateway_key_route' && isByokRequest
+								? byokStandardMicros
+								: budgetChargedMicros;
 						return actualMicros > Number(reservation.settledMicros);
 					})
-					.sort((left, right) => [
-						left.workspaceId, left.scopeType, left.scopeId, left.period, String(left.periodStart),
-					].join('\u0000').localeCompare([
-						right.workspaceId, right.scopeType, right.scopeId, right.period, String(right.periodStart),
-					].join('\u0000')));
+					.sort((left, right) =>
+						[left.workspaceId, left.scopeType, left.scopeId, left.period, String(left.periodStart)]
+							.join('\u0000')
+							.localeCompare(
+								[right.workspaceId, right.scopeType, right.scopeId, right.period, String(right.periodStart)].join(
+									'\u0000',
+								),
+							),
+					);
 				for (const reservation of overruns) {
-					const actualMicros = reservation.settlementBasis === 'gateway_key_route' && isByokRequest
-						? byokStandardMicros
-						: budgetChargedMicros;
+					const actualMicros =
+						reservation.settlementBasis === 'gateway_key_route' && isByokRequest
+							? byokStandardMicros
+							: budgetChargedMicros;
 					const delta = actualMicros - Number(reservation.settledMicros);
-					const updatedReservations = await tx.update(pgGuardrailBudgetReservationsTable).set({
-						settledMicros: actualMicros,
-						terminalReason: 'late_actual_overrun',
-						updatedAt: now,
-					}).where(and(
-						eq(pgGuardrailBudgetReservationsTable.id, reservation.id),
-						eq(pgGuardrailBudgetReservationsTable.state, 'expired'),
-					)).returning({ id: pgGuardrailBudgetReservationsTable.id });
-					if (updatedReservations.length !== 1) throw new Error('Guardrail budget late settlement reservation changed concurrently');
-					const updatedWindows = await tx.update(pgGuardrailBudgetWindowsTable).set({
-						settledMicros: sql`${pgGuardrailBudgetWindowsTable.settledMicros} + ${delta}`,
-						updatedAt: now,
-					}).where(and(
-						eq(pgGuardrailBudgetWindowsTable.workspaceId, reservation.workspaceId),
-						eq(pgGuardrailBudgetWindowsTable.scopeType, reservation.scopeType),
-						eq(pgGuardrailBudgetWindowsTable.scopeId, reservation.scopeId),
-						eq(pgGuardrailBudgetWindowsTable.period, reservation.period),
-						eq(pgGuardrailBudgetWindowsTable.periodStart, reservation.periodStart),
-					)).returning({ scopeType: pgGuardrailBudgetWindowsTable.scopeType });
+					const updatedReservations = await tx
+						.update(pgGuardrailBudgetReservationsTable)
+						.set({
+							settledMicros: actualMicros,
+							terminalReason: 'late_actual_overrun',
+							updatedAt: now,
+						})
+						.where(
+							and(
+								eq(pgGuardrailBudgetReservationsTable.id, reservation.id),
+								eq(pgGuardrailBudgetReservationsTable.state, 'expired'),
+							),
+						)
+						.returning({ id: pgGuardrailBudgetReservationsTable.id });
+					if (updatedReservations.length !== 1)
+						throw new Error('Guardrail budget late settlement reservation changed concurrently');
+					const updatedWindows = await tx
+						.update(pgGuardrailBudgetWindowsTable)
+						.set({
+							settledMicros: sql`${pgGuardrailBudgetWindowsTable.settledMicros} + ${delta}`,
+							updatedAt: now,
+						})
+						.where(
+							and(
+								eq(pgGuardrailBudgetWindowsTable.workspaceId, reservation.workspaceId),
+								eq(pgGuardrailBudgetWindowsTable.scopeType, reservation.scopeType),
+								eq(pgGuardrailBudgetWindowsTable.scopeId, reservation.scopeId),
+								eq(pgGuardrailBudgetWindowsTable.period, reservation.period),
+								eq(pgGuardrailBudgetWindowsTable.periodStart, reservation.periodStart),
+							),
+						)
+						.returning({ scopeType: pgGuardrailBudgetWindowsTable.scopeType });
 					if (updatedWindows.length !== 1) throw new Error('Guardrail budget late settlement window is missing');
-					console.warn(`Guardrail budget estimate overrun reconciled request_id=${settlement.requestId} delta_micros=${delta}`);
+					console.warn(
+						`Guardrail budget estimate overrun reconciled request_id=${settlement.requestId} delta_micros=${delta}`,
+					);
 				}
 			}
 		}
@@ -1031,4 +1224,49 @@ export async function insertRequestUsageAndChargeTxPg(
 		}
 		if (recovery) await finishPostgresUsageRecovery(tx, recovery);
 	});
+}
+
+export async function grantWalletCreditWithAuditTxPg(
+	client: PostgresDatabaseClient,
+	params: GrantWalletCreditParams,
+): Promise<GrantWalletCreditResult> {
+	const rows = await client.drizzle.select().from(pgUsersTable).where(eq(pgUsersTable.id, params.userId)).limit(1);
+	if (!rows[0]) {
+		throw new WalletCreditUserNotFoundError(params.userId);
+	}
+	const auditId = crypto.randomUUID();
+	const { audit } = buildWalletCreditAuditRow(mapStorageUserToRow(rows[0]), params, auditId);
+	const amount = roundGatewayMoney(params.amount);
+	const now = nowIso();
+	let applied = false;
+	await client.drizzle.transaction(async (tx) => {
+		await tx.insert(pgUserAuditLogsTable).values(toUserAuditLogDrizzleInsert(audit, now)).onConflictDoNothing();
+		const updated = await tx
+			.update(pgUsersTable)
+			.set({
+				walletGranted: sql`${pgUsersTable.walletGranted} + ${String(amount)}`,
+				updatedAt: now,
+			})
+			.where(
+				and(
+					eq(pgUsersTable.id, params.userId),
+					sql`EXISTS (SELECT 1 FROM ${pgUserAuditLogsTable} WHERE ${pgUserAuditLogsTable.id} = ${auditId})`,
+				),
+			)
+			.returning({ id: pgUsersTable.id });
+		applied = updated.length > 0;
+	});
+	const after = await client.drizzle
+		.select({
+			walletGranted: pgUsersTable.walletGranted,
+			walletSpent: pgUsersTable.walletSpent,
+		})
+		.from(pgUsersTable)
+		.where(eq(pgUsersTable.id, params.userId))
+		.limit(1);
+	return walletCreditResult(
+		applied ? 'applied' : 'duplicate',
+		parseMoney(after[0]?.walletGranted),
+		parseMoney(after[0]?.walletSpent),
+	);
 }

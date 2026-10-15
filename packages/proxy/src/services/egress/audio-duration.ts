@@ -56,11 +56,7 @@ export function parseWavDurationSeconds(bytes: Uint8Array): number | null {
  * 最小 EBML VINT 读取（WebM/Matroska）。
  * @returns [value, bytesConsumed] or null
  */
-function readEbmlVint(
-	bytes: Uint8Array,
-	offset: number,
-	asLength: boolean
-): { value: number; size: number } | null {
+function readEbmlVint(bytes: Uint8Array, offset: number, asLength: boolean): { value: number; size: number } | null {
 	if (offset >= bytes.byteLength) return null;
 	const first = bytes[offset]!;
 	if (first === 0) return null;
@@ -118,8 +114,7 @@ export function parseWebmDurationSeconds(bytes: Uint8Array): number | null {
 		offset += len.size;
 		const payloadStart = offset;
 		const payloadLen = len.value;
-		const payloadEnd =
-			payloadLen < 0 ? end : Math.min(end, payloadStart + payloadLen);
+		const payloadEnd = payloadLen < 0 ? end : Math.min(end, payloadStart + payloadLen);
 
 		// Duration = 0x4489
 		if (id.size === 2 && bytes[idStart] === 0x44 && bytes[idStart + 1] === 0x89) {
@@ -129,12 +124,7 @@ export function parseWebmDurationSeconds(bytes: Uint8Array): number | null {
 			}
 		}
 		// TimecodeScale = 0x2AD7B1
-		if (
-			id.size === 3 &&
-			bytes[idStart] === 0x2a &&
-			bytes[idStart + 1] === 0xd7 &&
-			bytes[idStart + 2] === 0xb1
-		) {
+		if (id.size === 3 && bytes[idStart] === 0x2a && bytes[idStart + 1] === 0xd7 && bytes[idStart + 2] === 0xb1) {
 			let scale = 0;
 			for (let i = payloadStart; i < payloadEnd; i++) {
 				scale = scale * 256 + bytes[i]!;
@@ -177,10 +167,7 @@ export function parseWebmDurationSeconds(bytes: Uint8Array): number | null {
 	return isFinitePositive(seconds) ? seconds : null;
 }
 
-export function parseAudioFileDurationSeconds(
-	bytes: Uint8Array,
-	mimeType: string
-): number | null {
+export function parseAudioFileDurationSeconds(bytes: Uint8Array, mimeType: string): number | null {
 	const mime = (mimeType || '').trim().toLowerCase().split(';')[0] || '';
 	const wav = parseWavDurationSeconds(bytes);
 	if (wav != null) return wav;
@@ -200,10 +187,7 @@ export function parseAudioFileDurationSeconds(
  * 客户端上报时长校验：防极端作弊，同时接纳 MediaRecorder 墙钟时长。
  * 允许相对字节估算有较大偏差（webm 码率远高于 16kbps）。
  */
-export function acceptClientDurationSeconds(
-	clientSeconds: number,
-	fileBytes: number
-): number | null {
+export function acceptClientDurationSeconds(clientSeconds: number, fileBytes: number): number | null {
 	if (!isFinitePositive(clientSeconds)) return null;
 	if (clientSeconds < 0.2 || clientSeconds > MAX_AUDIO_DURATION_SECONDS) return null;
 	if (!Number.isFinite(fileBytes) || fileBytes <= 0) return null;

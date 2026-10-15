@@ -83,6 +83,10 @@ import migration0078 from '../../../packages/core/migrations-postgres/0078_share
 import migration0079 from '../../../packages/core/migrations-postgres/0079_admin_shared_key_audit.sql';
 import migration0080 from '../../../packages/core/migrations-postgres/0080_admin_shared_key_actor_bounds.sql';
 import migration0081 from '../../../packages/core/migrations-postgres/0081_tools_config_group_audit.sql';
+import migration0082 from '../../../packages/core/migrations-postgres/0082_user_wallet_credit.sql';
+import migration0083 from '../../../packages/core/migrations-postgres/0083_key_rate_limit_and_ingress.sql';
+import migration0084 from '../../../packages/core/migrations-postgres/0084_provider_kind.sql';
+import migration0085 from '../../../packages/core/migrations-postgres/0085_mcp_servers.sql';
 
 interface MigrationEnv {
 	MIGRATOR_HYPERDRIVE: { readonly connectionString: string };
@@ -172,6 +176,10 @@ const MIGRATIONS = [
 	['0079_admin_shared_key_audit.sql', migration0079],
 	['0080_admin_shared_key_actor_bounds.sql', migration0080],
 	['0081_tools_config_group_audit.sql', migration0081],
+	['0082_user_wallet_credit.sql', migration0082],
+	['0083_key_rate_limit_and_ingress.sql', migration0083],
+	['0084_provider_kind.sql', migration0084],
+	['0085_mcp_servers.sql', migration0085],
 ] as const;
 
 export default {

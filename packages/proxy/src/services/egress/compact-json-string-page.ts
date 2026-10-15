@@ -21,38 +21,50 @@ export class CompactJsonStringPage {
 			if (code < 0x80) this.#bytes[offset++] = code;
 			else if (code === 0xfffd) this.#bytes[offset++] = 0xff;
 			else if (code < 0x800) {
-				this.#bytes[offset++] = 0xc0 | (code >> 6); this.#bytes[offset++] = 0x80 | (code & 63);
+				this.#bytes[offset++] = 0xc0 | (code >> 6);
+				this.#bytes[offset++] = 0x80 | (code & 63);
 			} else {
 				const low = text.charCodeAt(i + 1);
 				if (code >= 0xd800 && code <= 0xdbff && low >= 0xdc00 && low <= 0xdfff) {
-					code = 0x10000 + ((code - 0xd800) << 10) + low - 0xdc00; i++;
+					code = 0x10000 + ((code - 0xd800) << 10) + low - 0xdc00;
+					i++;
 					this.#bytes[offset++] = 0xf0 | (code >> 18);
 					this.#bytes[offset++] = 0x80 | ((code >> 12) & 63);
 				} else this.#bytes[offset++] = 0xe0 | (code >> 12);
-				this.#bytes[offset++] = 0x80 | ((code >> 6) & 63); this.#bytes[offset++] = 0x80 | (code & 63);
+				this.#bytes[offset++] = 0x80 | ((code >> 6) & 63);
+				this.#bytes[offset++] = 0x80 | (code & 63);
 			}
 		}
 		Object.freeze(this);
 	}
 	static from(text: string): JsonStringPage {
-		if (typeof text !== 'string' || text.length > JSON_TEXT_PAGE_CHARS) throw new RangeError('Invalid JSON string page');
+		if (typeof text !== 'string' || text.length > JSON_TEXT_PAGE_CHARS)
+			throw new RangeError('Invalid JSON string page');
 		// Avoid objects/buffers for short tails and native one-byte alphabets.
 		if (text.length < 1024 || !/[^\u0000-\u00ff]/.test(text)) return text;
 		let bytes = 0;
 		for (let i = 0; i < text.length; i++) {
-			const code = text.charCodeAt(i), low = text.charCodeAt(i + 1);
+			const code = text.charCodeAt(i),
+				low = text.charCodeAt(i + 1);
 			if (code < 0x80 || code === 0xfffd) bytes++;
 			else if (code < 0x800) bytes += 2;
-			else if (code >= 0xd800 && code <= 0xdbff && low >= 0xdc00 && low <= 0xdfff) { bytes += 4; i++; }
-			else bytes += 3;
+			else if (code >= 0xd800 && code <= 0xdbff && low >= 0xdc00 && low <= 0xdfff) {
+				bytes += 4;
+				i++;
+			} else bytes += 3;
 		}
 		// Leave a margin for per-page object overhead; do not expand BMP/emoji text.
 		return bytes + 64 < text.length * 2 ? new CompactJsonStringPage(text, bytes) : text;
 	}
-	get length(): number { return this.#length; }
-	get byteLength(): number { return this.#bytes.length; }
+	get length(): number {
+		return this.#length;
+	}
+	get byteLength(): number {
+		return this.#bytes.length;
+	}
 	decode(): string {
-		const units = new Uint16Array(this.#length), bytes = this.#bytes;
+		const units = new Uint16Array(this.#length),
+			bytes = this.#bytes;
 		let offset = 0;
 		for (let i = 0; i < bytes.length;) {
 			const lead = bytes[i++]!;
@@ -61,16 +73,22 @@ export class CompactJsonStringPage {
 			else if (lead < 0xe0) units[offset++] = ((lead & 31) << 6) | (bytes[i++]! & 63);
 			else if (lead < 0xf0) units[offset++] = ((lead & 15) << 12) | ((bytes[i++]! & 63) << 6) | (bytes[i++]! & 63);
 			else {
-				const point = (((lead & 7) << 18) | ((bytes[i++]! & 63) << 12) | ((bytes[i++]! & 63) << 6) | (bytes[i++]! & 63)) - 0x10000;
-				units[offset++] = 0xd800 | (point >> 10); units[offset++] = 0xdc00 | (point & 1023);
+				const point =
+					(((lead & 7) << 18) | ((bytes[i++]! & 63) << 12) | ((bytes[i++]! & 63) << 6) | (bytes[i++]! & 63)) - 0x10000;
+				units[offset++] = 0xd800 | (point >> 10);
+				units[offset++] = 0xdc00 | (point & 1023);
 			}
 		}
 		const pieces: string[] = [];
 		for (let i = 0; i < units.length; i += 4096) pieces.push(String.fromCharCode(...units.subarray(i, i + 4096)));
 		return pieces.join('');
 	}
-	toJSON(): never { throw new TypeError('Compact JSON pages are internal only'); }
-	[Symbol.toPrimitive](): never { throw new TypeError('Compact JSON pages require explicit decoding'); }
+	toJSON(): never {
+		throw new TypeError('Compact JSON pages are internal only');
+	}
+	[Symbol.toPrimitive](): never {
+		throw new TypeError('Compact JSON pages require explicit decoding');
+	}
 }
 
-export const decodeJsonStringPage = (page: JsonStringPage): string => typeof page === 'string' ? page : page.decode();
+export const decodeJsonStringPage = (page: JsonStringPage): string => (typeof page === 'string' ? page : page.decode());

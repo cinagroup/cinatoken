@@ -18,7 +18,7 @@ const actorId = "admin-atomicity-probe";
 const user: UserRow = {
 	id: userId,
 	email: "atomicity@example.test",
-	budget_max: 10,
+	wallet_granted: 0, wallet_spent: 0, rate_limit: null, budget_max: 10,
 	budget_base: 10,
 	budget_spent: 3,
 	budget_period: "none",

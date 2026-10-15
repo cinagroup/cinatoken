@@ -3,34 +3,49 @@
  * 首期面向 GPT Image；Gateway 对外保持 OpenAI 形状，日志禁止写入 prompt 原文与 Base64。
  */
 import {
-	resolveProviderUpstreamSecret, resolveUpstreamEndpoint,
-	RequestAuxiliaryAuthLimitError, type RequestAuxiliaryAuthBudget, type ImageTokenUsage,
+	applyRouteExtraHeaders,
+	parseOpenAiImageUsage,
+	resolveProviderUpstreamSecret,
+	resolveUpstreamEndpoint,
+	RequestAuxiliaryAuthLimitError,
+	type RequestAuxiliaryAuthBudget,
+	type ImageTokenUsage,
 } from '@octafuse/core';
+import {
+	applyUpstreamExtraFields,
+	detachUpstreamExtraFields,
+	formExtraFieldText,
+	protectedUpstreamPathsForRoute,
+} from '@octafuse/core/upstream-extra-fields';
 import type { RouteResult } from '../model-router';
 import type { UsageFromStream } from '../proxy';
 import { EMPTY_USAGE } from '../proxy';
 import {
-	buildImageEditUpstreamFields, buildImageGenerationUpstreamBody, captureImageAttemptRouteFacts,
-	createPreparedImageEditAttempt, createPreparedImageGenerationAttempt, imageEditUpstreamFileMetadata,
+	buildImageEditUpstreamFields,
+	buildImageGenerationUpstreamBody,
+	composeImageGenerationUpstreamBody,
+	captureImageAttemptRouteFacts,
+	createPreparedImageEditAttempt,
+	createPreparedImageGenerationAttempt,
+	imageEditUpstreamFileMetadata,
 	type PreparedImageAttempt,
 } from '../image-attempt-context';
 import { extractUpstreamRequestId } from './upstream-request-id';
 import type { RequestTimingAttempt, RequestTimingCollector } from '../request-timing';
-import {
-	resolveResponseByteLimit,
-	UpstreamResponseBodyTooLargeError,
-} from './bounded-response-body';
-import {
-	sanitizeUpstreamUrlForLog,
-	upstreamErrorNameForLog,
-} from './upstream-observability';
+import { resolveResponseByteLimit, UpstreamResponseBodyTooLargeError } from './bounded-response-body';
+import { sanitizeUpstreamUrlForLog, upstreamErrorNameForLog } from './upstream-observability';
 import { buildOpenRouterErrorBody, sanitizePublicErrorMessage } from '../openrouter-error-protocol';
 import { createRequestDeadline, RequestExecutionStoppedError } from '../request-deadline';
 import { GatewayErrorCode } from '../gateway-error-codes';
 import type { MultipartFile } from '../streaming-multipart-body';
 import { createMultipartUploadBody } from './multipart-upload-body';
 import { createJsonUploadBody } from './json-upload-body';
-import { IMAGE_JSON_ADMISSION_LIMITS, IMAGE_JSON_STRUCTURE_LIMITS, JsonStructureBudget, JsonStructureLimitError } from '../json-structure-budget';
+import {
+	IMAGE_JSON_ADMISSION_LIMITS,
+	IMAGE_JSON_STRUCTURE_LIMITS,
+	JsonStructureBudget,
+	JsonStructureLimitError,
+} from '../json-structure-budget';
 import { streamJsonResponse } from './stream-json-body';
 import { segmentedJsonResponseWithinLimit } from './segmented-json-response';
 import { hasJsonStringContent, isJsonString, jsonStringChunks, JsonStringPages } from './json-string-pages';
@@ -45,7 +60,11 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 function validateImageUpstreamUrl(value: string): void {
 	let url: URL;
-	try { url = new URL(value); } catch { throw new Error('Invalid image upstream URL'); }
+	try {
+		url = new URL(value);
+	} catch {
+		throw new Error('Invalid image upstream URL');
+	}
 	if (url.protocol !== 'https:' && url.protocol !== 'http:') throw new Error('Image upstream must use HTTP(S)');
 }
 
@@ -64,7 +83,10 @@ function finiteNonNegativeInteger(value: unknown): number | null {
 	return number != null && Number.isSafeInteger(number) ? number : null;
 }
 
-function usageFromStreamFromImage(body: unknown, checkActive?: () => void): {
+function usageFromStreamFromImage(
+	body: unknown,
+	checkActive?: () => void,
+): {
 	usagePromise: Promise<UsageFromStream>;
 	imageUsage: ImageTokenUsage | null;
 } {
@@ -87,13 +109,16 @@ function usageFromStreamFromImage(body: unknown, checkActive?: () => void): {
 function inferImageMediaTypeFromBase64(value: string | JsonStringPages): string | null {
 	// Only infer bounded metadata. Never trim/replace the complete base64 string
 	// or duplicate an arbitrarily large data-URL MIME label into the response.
-	let rawPrefix = '', prefix = '', started = false;
+	let rawPrefix = '',
+		prefix = '',
+		started = false;
 	for (let chunk of jsonStringChunks(value)) {
 		if (!started) {
 			let first = 0;
 			while (first < chunk.length && /\s/.test(chunk[first]!)) first++;
 			if (first === chunk.length) continue;
-			chunk = chunk.slice(first); started = true;
+			chunk = chunk.slice(first);
+			started = true;
 		}
 		if (rawPrefix.length < 1024) rawPrefix += chunk.slice(0, 1024 - rawPrefix.length);
 		for (let i = 0; i < chunk.length && prefix.length < 684; i++) {
@@ -114,12 +139,12 @@ function inferImageMediaTypeFromBase64(value: string | JsonStringPages): string 
 			return 'image/png';
 		}
 		if (bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) return 'image/jpeg';
-		if (
-			decoded.slice(0, 4) === 'RIFF'
-			&& decoded.length >= 12
-			&& decoded.slice(8, 12) === 'WEBP'
-		) return 'image/webp';
-		const textPrefix = decoded.slice(0, 512).replace(/^\uFEFF/, '').trimStart().toLowerCase();
+		if (decoded.slice(0, 4) === 'RIFF' && decoded.length >= 12 && decoded.slice(8, 12) === 'WEBP') return 'image/webp';
+		const textPrefix = decoded
+			.slice(0, 512)
+			.replace(/^\uFEFF/, '')
+			.trimStart()
+			.toLowerCase();
 		if (textPrefix.startsWith('<svg') || (textPrefix.startsWith('<?xml') && textPrefix.includes('<svg'))) {
 			return 'image/svg+xml';
 		}
@@ -155,10 +180,7 @@ export function normalizeOpenRouterImageResponse(body: unknown): unknown {
 		normalized.data = body.data.map((item) => {
 			if (!isRecord(item)) return item;
 			const row: Record<string, unknown> = { ...item };
-			if (
-				isJsonString(row.b64_json)
-				&& !hasJsonStringContent(row.media_type)
-			) {
+			if (isJsonString(row.b64_json) && !hasJsonStringContent(row.media_type)) {
 				const mediaType = inferImageMediaTypeFromBase64(row.b64_json);
 				if (mediaType) row.media_type = mediaType;
 			}
@@ -180,19 +202,20 @@ function imageDispatchMeta(
 	body: unknown,
 	imageUsage: ImageTokenUsage | null,
 	imageAbortReason?: ImageDispatchAbortReason,
-	uncertainty?: { upstreamOutcomeUnknown?: boolean; responseBodyTooLarge?: boolean },
+	uncertainty?: { upstreamOutcomeUnknown?: boolean; responseBodyTooLarge?: boolean; restoredUpstreamPaths?: string[] },
 ): {
 	imageUsage: ImageTokenUsage | null;
 	parsedBody: unknown;
+	restoredUpstreamPaths?: string[];
 	imageAbortReason?: ImageDispatchAbortReason;
 	upstreamOutcomeUnknown?: boolean;
 	responseBodyTooLarge?: boolean;
 	failoverForbidden?: boolean;
 } {
-	const outcomeUnknown = uncertainty?.upstreamOutcomeUnknown === true
-		|| uncertainty?.responseBodyTooLarge === true;
+	const outcomeUnknown = uncertainty?.upstreamOutcomeUnknown === true || uncertainty?.responseBodyTooLarge === true;
 	return {
 		imageUsage,
+		restoredUpstreamPaths: uncertainty?.restoredUpstreamPaths,
 		parsedBody: body,
 		...(imageAbortReason ? { imageAbortReason } : {}),
 		...(outcomeUnknown ? { upstreamOutcomeUnknown: true, failoverForbidden: true } : {}),
@@ -202,10 +225,9 @@ function imageDispatchMeta(
 
 function resolveImageAbortReasonForMeta(
 	abortReason: ImageAbortReason,
-	requestSignal?: AbortSignal
+	requestSignal?: AbortSignal,
 ): ImageDispatchAbortReason | undefined {
-	const resolved: ImageAbortReason =
-		abortReason === 'none' && requestSignal?.aborted ? 'client_abort' : abortReason;
+	const resolved: ImageAbortReason = abortReason === 'none' && requestSignal?.aborted ? 'client_abort' : abortReason;
 	return resolved === 'client_abort' || resolved === 'gateway_timeout' ? resolved : undefined;
 }
 
@@ -242,8 +264,11 @@ export type OpenAiImageDispatchOptions = {
 export type ImageEditUpload = {
 	filename: string;
 	mimeType: string;
-} & ({ bytes: Uint8Array; blob?: never; upload?: never } | { blob: Blob; bytes?: never; upload?: never }
-	| { upload: MultipartFile; bytes?: never; blob?: never });
+} & (
+	| { bytes: Uint8Array; blob?: never; upload?: never }
+	| { blob: Blob; bytes?: never; upload?: never }
+	| { upload: MultipartFile; bytes?: never; blob?: never }
+);
 
 export type NormalizedImageEditRequest = {
 	prompt: string;
@@ -251,7 +276,7 @@ export type NormalizedImageEditRequest = {
 	size?: string;
 	quality?: string;
 	background?: string;
-	/** OpenAI edits 通常用 `image` / 多图 `image[]`；此处统一为数组 */
+	/** OpenAI edits：单图 `image`，多图 `image[]`；此处统一为数组 */
 	images: ImageEditUpload[];
 	/** 透传给上游的其余安全字段（不含 prompt / 文件） */
 	extra?: Record<string, unknown>;
@@ -259,24 +284,47 @@ export type NormalizedImageEditRequest = {
 	releaseAcceptedUpload?: () => void;
 };
 
+/** OpenAI `/images/edits` 禁止重复标量 `image`；多图必须用 `image[]`。 */
+export type OpenaiEditImageFormField = 'image' | 'image[]';
+
+export function openaiEditImageFormField(count: number): OpenaiEditImageFormField {
+	return count > 1 ? 'image[]' : 'image';
+}
+
+export function isOpenaiEditImageFormKey(key: string): boolean {
+	return key === 'image' || key === 'images' || key === 'image[]';
+}
+
+export function appendOpenaiEditImages(form: FormData, images: readonly ImageEditUpload[]): void {
+	const field = openaiEditImageFormField(images.length);
+	for (const img of images) {
+		if (!img.bytes && !img.blob) throw new TypeError('Paged image uploads require the owned streaming writer');
+		const blob = img.blob ?? new Blob([Uint8Array.from(img.bytes!)], { type: img.mimeType });
+		form.append(field, blob, img.filename || 'image.png');
+	}
+}
+
 type ImageAbortReason = 'none' | 'gateway_timeout' | 'client_abort';
 
-function withTimeoutSignal(
-	requestSignal: AbortSignal | undefined,
-	timeoutMs: number,
-	deadlineAtMs?: number,
-) {
+function withTimeoutSignal(requestSignal: AbortSignal | undefined, timeoutMs: number, deadlineAtMs?: number) {
 	const controller = new AbortController();
 	const owner = createRequestDeadline(Math.min(deadlineAtMs ?? Infinity, Date.now() + timeoutMs), controller.signal);
 	let reason: ImageAbortReason = 'none';
 	const getAbortReason = (): ImageAbortReason => {
-		if (owner.signal.reason instanceof RequestExecutionStoppedError
-			&& owner.signal.reason.reason === 'deadline_exceeded') return 'gateway_timeout';
+		if (
+			owner.signal.reason instanceof RequestExecutionStoppedError &&
+			owner.signal.reason.reason === 'deadline_exceeded'
+		)
+			return 'gateway_timeout';
 		return reason;
 	};
 	const onClientAbort = () => {
-		if (reason === 'none') reason = requestSignal?.reason instanceof RequestExecutionStoppedError
-			&& requestSignal.reason.reason === 'deadline_exceeded' ? 'gateway_timeout' : 'client_abort';
+		if (reason === 'none')
+			reason =
+				requestSignal?.reason instanceof RequestExecutionStoppedError &&
+				requestSignal.reason.reason === 'deadline_exceeded'
+					? 'gateway_timeout'
+					: 'client_abort';
 		controller.abort();
 	};
 	requestSignal?.addEventListener('abort', onClientAbort, { once: true });
@@ -300,7 +348,7 @@ function withTimeoutSignal(
 function imageAbortErrorPayload(
 	operation: 'generation' | 'edit',
 	abortReason: ImageAbortReason,
-	timeoutMs: number
+	timeoutMs: number,
 ): { message: string; abort_reason: string; timeout_ms: number } {
 	const kind = operation === 'generation' ? 'Image generation' : 'Image edit';
 	const message =
@@ -320,21 +368,39 @@ function imageAbortErrorPayload(
 function imageAbortResponse(reason: ImageDispatchAbortReason, message: string): Response {
 	const status = reason === 'client_abort' ? 499 : 504;
 	const code = reason === 'client_abort' ? GatewayErrorCode.requestCancelled : GatewayErrorCode.requestDeadlineExceeded;
-	return new Response(JSON.stringify(buildOpenRouterErrorBody({
-		skin: 'chat', status, legacyCode: code, message,
-		errorType: reason === 'client_abort' ? 'provider_unavailable' : 'timeout',
-		metadata: { abort_reason: reason, timeout_ms: IMAGE_GENERATION_TIMEOUT_MS },
-	})), { status, headers: { 'Content-Type': 'application/json; charset=UTF-8', 'Cache-Control': 'no-store', 'X-OctaFuse-Error-Code': code } });
+	return new Response(
+		JSON.stringify(
+			buildOpenRouterErrorBody({
+				skin: 'chat',
+				status,
+				legacyCode: code,
+				message,
+				errorType: reason === 'client_abort' ? 'provider_unavailable' : 'timeout',
+				metadata: { abort_reason: reason, timeout_ms: IMAGE_GENERATION_TIMEOUT_MS },
+			}),
+		),
+		{
+			status,
+			headers: {
+				'Content-Type': 'application/json; charset=UTF-8',
+				'Cache-Control': 'no-store',
+				'X-OctaFuse-Error-Code': code,
+			},
+		},
+	);
 }
 
 /** 校验并规范化 generation / edit 公共参数（`n` 接受 number 或数字字符串，如 multipart）。 */
-export function normalizeImageCommonParams(input: {
-	prompt: unknown;
-	n?: unknown;
-	size?: unknown;
-	quality?: unknown;
-	background?: unknown;
-}):
+export function normalizeImageCommonParams(
+	input: {
+		prompt: unknown;
+		n?: unknown;
+		size?: unknown;
+		quality?: unknown;
+		background?: unknown;
+	},
+	options?: { maxN?: number },
+):
 	| { ok: true; prompt: string; n: number; size?: string; quality?: string; background?: string }
 	| { ok: false; error: string } {
 	const prompt = typeof input.prompt === 'string' ? input.prompt.trim() : '';
@@ -345,12 +411,15 @@ export function normalizeImageCommonParams(input: {
 		return { ok: false, error: `prompt must be at most ${IMAGE_MAX_PROMPT_CHARS} characters` };
 	}
 
+	const maxN = options?.maxN != null && Number.isInteger(options.maxN) && options.maxN >= 1 ? options.maxN : 10;
 	let n = 1;
 	if (input.n !== undefined && input.n !== null && input.n !== '') {
-		const nRaw =
-			typeof input.n === 'string' && input.n.trim() !== '' ? Number(input.n) : input.n;
-		if (typeof nRaw !== 'number' || !Number.isSafeInteger(nRaw) || nRaw < 1 || nRaw > 10) {
-			return { ok: false, error: 'n must be an integer between 1 and 10' };
+		const nRaw = typeof input.n === 'string' && input.n.trim() !== '' ? Number(input.n) : input.n;
+		if (typeof nRaw !== 'number' || !Number.isSafeInteger(nRaw) || nRaw < 1 || nRaw > maxN) {
+			return {
+				ok: false,
+				error: maxN === 1 ? 'n must be 1' : `n must be an integer between 1 and ${maxN}`,
+			};
 		}
 		n = nRaw;
 	}
@@ -472,9 +541,7 @@ type ImageStreamSettlement = {
 };
 
 function safeImageStreamErrorCode(value: unknown): string {
-	return typeof value === 'string' && /^[a-z0-9_.-]{1,64}$/i.test(value)
-		? value
-		: 'server_error';
+	return typeof value === 'string' && /^[a-z0-9_.-]{1,64}$/i.test(value) ? value : 'server_error';
 }
 
 function sseFrame(payload: unknown): Uint8Array {
@@ -507,22 +574,23 @@ function validatedImageSse(
 	timing?: RequestTimingCollector | null,
 	requestId?: string | null,
 ): { response: Response; settlement: Promise<ImageStreamSettlement> } {
-	const publicRequestId = typeof requestId === 'string' && requestId.length <= 200
-		? sanitizePublicErrorMessage(requestId, '') : '';
+	const publicRequestId =
+		typeof requestId === 'string' && requestId.length <= 200 ? sanitizePublicErrorMessage(requestId, '') : '';
 	// Public retry guidance is deliberately separate from the existing financial
 	// capacity-uncertainty flag. An error/zero buyer charge never proves replay safe.
-	const errorFrame = (message: string, code = 'server_error', outcomeUnknown = true) => sseFrame({
-		type: 'error',
-		error: {
-			message: sanitizePublicErrorMessage(message, 'Image generation stream failed'),
-			code: safeImageStreamErrorCode(code),
-			metadata: {
-				retry_safe: false,
-				...(outcomeUnknown ? { outcome_unknown: true } : {}),
-				...(publicRequestId ? { request_id: publicRequestId } : {}),
+	const errorFrame = (message: string, code = 'server_error', outcomeUnknown = true) =>
+		sseFrame({
+			type: 'error',
+			error: {
+				message: sanitizePublicErrorMessage(message, 'Image generation stream failed'),
+				code: safeImageStreamErrorCode(code),
+				metadata: {
+					retry_safe: false,
+					...(outcomeUnknown ? { outcome_unknown: true } : {}),
+					...(publicRequestId ? { request_id: publicRequestId } : {}),
+				},
 			},
-		},
-	});
+		});
 	const upstreamBody = response.body;
 	if (!upstreamBody) {
 		lifecycle.clear();
@@ -537,10 +605,7 @@ function validatedImageSse(
 		});
 		return {
 			response: new Response(
-				new Blob([
-					new Uint8Array(errorFrame('Image generation stream had no response body')),
-					SSE_DONE_FRAME,
-				]).stream(),
+				new Blob([new Uint8Array(errorFrame('Image generation stream had no response body')), SSE_DONE_FRAME]).stream(),
 				{ status: 200, headers: { 'Content-Type': 'text/event-stream; charset=utf-8', 'Cache-Control': 'no-cache' } },
 			),
 			settlement,
@@ -603,8 +668,7 @@ function validatedImageSse(
 			errorMessage,
 			validImages: !failed && !cancelled && sawDone ? completedCount : 0,
 			imageUsage: !failed && !cancelled && sawDone ? imageUsage : null,
-			upstreamSupplierCostUsdTicks:
-				!failed && !cancelled && sawDone ? supplierCostTicks : null,
+			upstreamSupplierCostUsdTicks: !failed && !cancelled && sawDone ? supplierCostTicks : null,
 		});
 	};
 
@@ -629,12 +693,12 @@ function validatedImageSse(
 		settle(abortReason);
 	};
 
-	const hasAuthoritativeUsage = (): boolean => imageUsage != null && (
-		imageUsage.text_tokens > 0
-		|| imageUsage.image_input_tokens > 0
-		|| imageUsage.image_output_tokens > 0
-		|| imageUsage.total_tokens > 0
-	);
+	const hasAuthoritativeUsage = (): boolean =>
+		imageUsage != null &&
+		(imageUsage.text_tokens > 0 ||
+			imageUsage.image_input_tokens > 0 ||
+			imageUsage.image_output_tokens > 0 ||
+			imageUsage.total_tokens > 0);
 
 	const failAndStop = (message: string, code = 'server_error', outcomeUnknown = true): void => {
 		pushError(message, code, outcomeUnknown);
@@ -683,10 +747,13 @@ function validatedImageSse(
 			new JsonStructureBudget(IMAGE_JSON_ADMISSION_LIMITS).write(data);
 			parsed = JSON.parse(data);
 		} catch (error) {
-			if (error instanceof JsonStructureLimitError && error.dimension === 'property name characters') upstreamOutcomeUnknown = true;
-			failAndStop(error instanceof JsonStructureLimitError
-				? 'Image generation stream JSON exceeded the gateway structure limit'
-				: 'Image generation stream contained invalid JSON');
+			if (error instanceof JsonStructureLimitError && error.dimension === 'property name characters')
+				upstreamOutcomeUnknown = true;
+			failAndStop(
+				error instanceof JsonStructureLimitError
+					? 'Image generation stream JSON exceeded the gateway structure limit'
+					: 'Image generation stream contained invalid JSON',
+			);
 			return;
 		}
 		if (!isRecord(parsed) || typeof parsed.type !== 'string') {
@@ -701,11 +768,13 @@ function validatedImageSse(
 				return;
 			}
 			observedImageOutput = true;
-			output.push(sseFrame({
-				type: 'image_generation.partial_image',
-				partial_image_index: index,
-				b64_json: parsed.b64_json,
-			}));
+			output.push(
+				sseFrame({
+					type: 'image_generation.partial_image',
+					partial_image_index: index,
+					b64_json: parsed.b64_json,
+				}),
+			);
 			return;
 		}
 
@@ -731,8 +800,9 @@ function validatedImageSse(
 			const normalizedUsage = normalizeOpenRouterImageUsage(parsed.usage);
 			if (normalizedUsage) {
 				completed.usage = normalizedUsage;
-				try { imageUsage = parseImageUsageFromAnyShape({ usage: normalizedUsage }); }
-				catch (error) {
+				try {
+					imageUsage = parseImageUsageFromAnyShape({ usage: normalizedUsage });
+				} catch (error) {
 					if (!(error instanceof ImageUsageLimitError)) throw error;
 					upstreamOutcomeUnknown = true;
 					failAndStop(error.message, 'image_usage_too_large');
@@ -748,9 +818,8 @@ function validatedImageSse(
 
 		if (parsed.type === 'error') {
 			const upstreamError = isRecord(parsed.error) ? parsed.error : {};
-			const message = typeof upstreamError.message === 'string'
-				? upstreamError.message
-				: 'Image generation stream failed';
+			const message =
+				typeof upstreamError.message === 'string' ? upstreamError.message : 'Image generation stream failed';
 			// A well-formed provider error before any image output is an explicit
 			// failure, not a local loss of outcome. Omission is not a retry promise.
 			const explicitFailure = typeof upstreamError.message === 'string' && upstreamError.message.trim() !== '';
@@ -871,8 +940,7 @@ function validatedImageSse(
 				controller.enqueue(chunk);
 				if (chunk === queuedErrorFrame) errorEnqueued = true;
 				if (chunk === SSE_DONE_FRAME) doneEnqueued = true;
-			}
-			else if (sourceEnded) {
+			} else if (sourceEnded) {
 				downstreamClosed = true;
 				settle(terminalAbortReason);
 				releaseReader();
@@ -936,6 +1004,7 @@ export async function dispatchOpenAiImageGenerations(
 	usagePromise: Promise<UsageFromStream>;
 	upstreamRequestId: string | null;
 	meta: {
+		restoredUpstreamPaths?: string[];
 		imageUsage: ImageTokenUsage | null;
 		parsedBody: unknown;
 		imageStreamSettlement?: Promise<ImageStreamSettlement>;
@@ -954,51 +1023,78 @@ export async function dispatchOpenAiImageGenerations(
 	const attemptRouteFacts = captureImageAttemptRouteFacts(route, 'images.generations', url);
 	const upstreamLabel = sanitizeUpstreamUrlForLog(url);
 	// 与 chat/messages 一致：每条 failover 路由合并各自 custom_params，用户字段优先
-	const requestBody = buildImageGenerationUpstreamBody(route, body);
+	const applied = composeImageGenerationUpstreamBody(route, body);
+	const requestBody = applied.body;
 	const streamRequested = body.stream === true;
 	const requestedCount = typeof body.n === 'number' && Number.isSafeInteger(body.n) ? body.n : 1;
-	console.log(JSON.stringify({
-		event: 'gateway.images.upstream_start',
-		operation: 'generations',
-		upstream: upstreamLabel,
-		providerId: route.providerId,
-		routeTargetId: route.targetId,
-		providerModel: route.providerModelName,
-	}));
+	console.log(
+		JSON.stringify({
+			event: 'gateway.images.upstream_start',
+			operation: 'generations',
+			upstream: upstreamLabel,
+			providerId: route.providerId,
+			routeTargetId: route.targetId,
+			providerModel: route.providerModelName,
+		}),
+	);
 	const startedAt = Date.now();
 	const { signal, clear, getAbortReason, abortUpstream, wait, checkActive } = withTimeoutSignal(
 		requestSignal,
 		IMAGE_GENERATION_TIMEOUT_MS,
 		options.deadlineAtMs,
 	);
-	const responseByteLimit = resolveResponseByteLimit(
-		options.maxResponseBytes,
-		IMAGE_MAX_RESPONSE_BYTES,
-	);
+	const responseByteLimit = resolveResponseByteLimit(options.maxResponseBytes, IMAGE_MAX_RESPONSE_BYTES);
 	let dispatchStarted = false;
 	let upstreamStatus: number | null = null;
 	let observedUpstreamRequestId: string | null = null;
 	let streamOwnsLifecycle = false;
 	let admissionBoundaryFailed = false;
 	let uploadBody: ReturnType<typeof createJsonUploadBody> | undefined;
-	const finishOwned = () => { uploadBody?.dispose(); uploadBody = undefined; clear(); };
+	const finishOwned = () => {
+		uploadBody?.dispose();
+		uploadBody = undefined;
+		clear();
+	};
 	try {
 		if (signal.aborted) throw new DOMException('Aborted', 'AbortError');
 		const { secret } = await resolveProviderUpstreamSecret(route.providerApiKey, {
-			signal, auxiliaryAuth: options.auxiliaryAuth,
+			signal,
+			auxiliaryAuth: options.auxiliaryAuth,
 		});
 		uploadBody = createJsonUploadBody(requestBody, signal, checkActive);
 		const preparedAttempt = createPreparedImageGenerationAttempt(attemptRouteFacts, uploadBody.preparedSnapshot);
-		const headers = new Headers({ 'Content-Type': 'application/json', Authorization: `Bearer ${secret}` });
+		const headers = new Headers(
+			applyRouteExtraHeaders(
+				{ 'Content-Type': 'application/json', Authorization: `Bearer ${secret}` },
+				route.customParams,
+			),
+		);
 		headers.set('Content-Length', String(uploadBody.contentLength));
 		if (signal.aborted) throw new DOMException('Aborted', 'AbortError');
-		try { await beforeFetch?.(preparedAttempt); } catch (error) { admissionBoundaryFailed = true; throw error; }
+		try {
+			await beforeFetch?.(preparedAttempt);
+		} catch (error) {
+			admissionBoundaryFailed = true;
+			throw error;
+		}
 		if (signal.aborted) throw new DOMException('Aborted', 'AbortError');
-		const response = await wait(() => {
-			dispatchStarted = true;
-				const init = { method: 'POST', headers, body: uploadBody!.body, signal, redirect: 'manual' as const, duplex: 'half' as const };
-			return (options.fetchImpl ?? fetch)(url, init);
-		}, (late) => { void late.body?.cancel('image_request_stopped').catch(() => undefined); });
+		const response = await wait(
+			() => {
+				dispatchStarted = true;
+				const init = {
+					method: 'POST',
+					headers,
+					body: uploadBody!.body,
+					signal,
+					redirect: 'manual' as const,
+					duplex: 'half' as const,
+				};
+				return (options.fetchImpl ?? fetch)(url, init);
+			},
+			(late) => {
+				void late.body?.cancel('image_request_stopped').catch(() => undefined);
+			},
+		);
 		upstreamStatus = response.status;
 		timing?.markAttemptHeaders(attempt, response.status);
 		const upstreamRequestId = extractUpstreamRequestId(response.headers);
@@ -1032,14 +1128,14 @@ export async function dispatchOpenAiImageGenerations(
 			const usagePromise = stream.settlement.then((settlement): UsageFromStream => ({
 				...(settlement.imageUsage
 					? {
-						input_tokens: settlement.imageUsage.text_tokens,
-						output_tokens: settlement.imageUsage.image_output_tokens,
-						cache_read_tokens: settlement.imageUsage.cached_text_tokens,
-						cache_write_tokens: 0,
-						reasoning_tokens: 0,
-						total_tokens: settlement.imageUsage.total_tokens,
-						raw_usage: settlement.imageUsage.raw_usage,
-					}
+							input_tokens: settlement.imageUsage.text_tokens,
+							output_tokens: settlement.imageUsage.image_output_tokens,
+							cache_read_tokens: settlement.imageUsage.cached_text_tokens,
+							cache_write_tokens: 0,
+							reasoning_tokens: 0,
+							total_tokens: settlement.imageUsage.total_tokens,
+							raw_usage: settlement.imageUsage.raw_usage,
+						}
 					: EMPTY_USAGE),
 				...(settlement.cancelled ? { cancelled: true } : {}),
 				...(!settlement.completed && !settlement.cancelled
@@ -1061,32 +1157,29 @@ export async function dispatchOpenAiImageGenerations(
 		const material = await readJsonResponse(response, responseByteLimit, timing, signal);
 		// Early response headers may race a duplex upload. Stop any residual
 		// encoder only after the response is fully read, not at header arrival.
-		uploadBody.dispose(); uploadBody = undefined;
-		console.log(JSON.stringify({
-			event: 'gateway.images.upstream_complete',
-			operation: 'generations',
-			upstream: upstreamLabel,
-			providerId: route.providerId,
-			routeTargetId: route.targetId,
-			status: response.status,
-			elapsedMs: Date.now() - startedAt,
-		}));
-		const normalizedBody = response.ok
-			? normalizeOpenRouterImageResponse(material.body)
-			: material.body;
+		uploadBody.dispose();
+		uploadBody = undefined;
+		console.log(
+			JSON.stringify({
+				event: 'gateway.images.upstream_complete',
+				operation: 'generations',
+				upstream: upstreamLabel,
+				providerId: route.providerId,
+				routeTargetId: route.targetId,
+				status: response.status,
+				elapsedMs: Date.now() - startedAt,
+			}),
+		);
+		const normalizedBody = response.ok ? normalizeOpenRouterImageResponse(material.body) : material.body;
 		const { usagePromise, imageUsage } = usageFromStreamFromImage(normalizedBody, checkActive);
 		if (
-			response.ok
-			&& options.requireAuthoritativeUsage === true
-			&& (
-				imageUsage == null
-				|| (
-					imageUsage.text_tokens === 0
-					&& imageUsage.image_input_tokens === 0
-					&& imageUsage.image_output_tokens === 0
-					&& imageUsage.total_tokens === 0
-				)
-			)
+			response.ok &&
+			options.requireAuthoritativeUsage === true &&
+			(imageUsage == null ||
+				(imageUsage.text_tokens === 0 &&
+					imageUsage.image_input_tokens === 0 &&
+					imageUsage.image_output_tokens === 0 &&
+					imageUsage.total_tokens === 0))
 		) {
 			const errorBody = { error: { message: 'Image generation completed without authoritative usage' } };
 			return {
@@ -1099,19 +1192,26 @@ export async function dispatchOpenAiImageGenerations(
 				meta: imageDispatchMeta(errorBody, null, undefined, { upstreamOutcomeUnknown: true }),
 			};
 		}
-		const clientResponse = streamJsonResponse(normalizedBody, NORMALIZED_IMAGE_JSON_LIMITS, {
-			status: response.status, statusText: response.statusText,
-			headers: { 'Content-Type': 'application/json' },
-		}, { signal, checkActive, onFinished: clear });
+		const clientResponse = streamJsonResponse(
+			normalizedBody,
+			NORMALIZED_IMAGE_JSON_LIMITS,
+			{
+				status: response.status,
+				statusText: response.statusText,
+				headers: { 'Content-Type': 'application/json' },
+			},
+			{ signal, checkActive, onFinished: clear },
+		);
 		streamOwnsLifecycle = true;
 		return {
 			response: clientResponse,
 			usagePromise,
 			upstreamRequestId,
 			meta: imageDispatchMeta(normalizedBody, imageUsage, undefined, {
+				restoredUpstreamPaths: applied.restoredPaths,
 				upstreamOutcomeUnknown:
-					imageStatusMayHideAcceptedWork(response.status)
-					|| (response.ok && (!material.jsonValid || countValidImageResults(normalizedBody) === 0)),
+					imageStatusMayHideAcceptedWork(response.status) ||
+					(response.ok && (!material.jsonValid || countValidImageResults(normalizedBody) === 0)),
 			}),
 		};
 	} catch (err) {
@@ -1121,17 +1221,12 @@ export async function dispatchOpenAiImageGenerations(
 		timing?.markStreamComplete();
 		const abortReason = getAbortReason();
 		const aborted =
-			abortReason !== 'none' ||
-			requestSignal?.aborted ||
-			(err instanceof Error && err.name === 'AbortError');
-		const resolvedAbort =
-			abortReason === 'none' && requestSignal?.aborted ? 'client_abort' : abortReason;
-		const imageAbortReason = aborted
-			? resolveImageAbortReasonForMeta(resolvedAbort, requestSignal)
-			: undefined;
+			abortReason !== 'none' || requestSignal?.aborted || (err instanceof Error && err.name === 'AbortError');
+		const resolvedAbort = abortReason === 'none' && requestSignal?.aborted ? 'client_abort' : abortReason;
+		const imageAbortReason = aborted ? resolveImageAbortReasonForMeta(resolvedAbort, requestSignal) : undefined;
 		const explicitNonOk = upstreamStatus != null && (upstreamStatus < 200 || upstreamStatus >= 300);
-		const upstreamOutcomeUnknown = dispatchStarted
-			&& (!explicitNonOk || imageStatusMayHideAcceptedWork(upstreamStatus!));
+		const upstreamOutcomeUnknown =
+			dispatchStarted && (!explicitNonOk || imageStatusMayHideAcceptedWork(upstreamStatus!));
 		// This driver returns errors as responses, so the dispatcher's
 		// thrown-error path cannot record this attempt. Do not invent pre-send
 		// I/O or overwrite a supplier's already observed explicit rejection.
@@ -1142,45 +1237,47 @@ export async function dispatchOpenAiImageGenerations(
 			// failure so durable settlement can match the claimed dispatch.
 			timing?.markAttemptError(attempt, err);
 		}
-		const responseBodyTooLarge =
-			err instanceof UpstreamResponseBodyTooLargeError && upstreamOutcomeUnknown;
+		const responseBodyTooLarge = err instanceof UpstreamResponseBodyTooLargeError && upstreamOutcomeUnknown;
 		const error = aborted
 			? imageAbortErrorPayload('generation', resolvedAbort, IMAGE_GENERATION_TIMEOUT_MS)
 			: {
-					message: err instanceof ImageUsageLimitError || err instanceof JsonStructureLimitError ? err.message : 'Image generation upstream failed',
+					message:
+						err instanceof ImageUsageLimitError || err instanceof JsonStructureLimitError
+							? err.message
+							: 'Image generation upstream failed',
 				};
-		console.error(JSON.stringify({
-			event: 'gateway.images.upstream_error',
-			operation: 'generations',
-			upstream: upstreamLabel,
-			providerId: route.providerId,
-			routeTargetId: route.targetId,
-			abortReason,
-			elapsedMs: Date.now() - startedAt,
-			errorName: upstreamErrorNameForLog(err),
-		}));
+		console.error(
+			JSON.stringify({
+				event: 'gateway.images.upstream_error',
+				operation: 'generations',
+				upstream: upstreamLabel,
+				providerId: route.providerId,
+				routeTargetId: route.targetId,
+				abortReason,
+				elapsedMs: Date.now() - startedAt,
+				errorName: upstreamErrorNameForLog(err),
+			}),
+		);
 		const errorBody = { error };
 		const gatewayAbort = !explicitNonOk && imageAbortReason != null;
 		return {
-			response: gatewayAbort ? imageAbortResponse(imageAbortReason, error.message) : new Response(JSON.stringify(errorBody), {
-				status: explicitNonOk
-					? upstreamStatus!
-					: imageAbortReason === 'gateway_timeout'
-						? 504
-						: imageAbortReason === 'client_abort'
-							? 499
-							: 502,
-				headers: { 'Content-Type': 'application/json' },
-			}),
+			response: gatewayAbort
+				? imageAbortResponse(imageAbortReason, error.message)
+				: new Response(JSON.stringify(errorBody), {
+						status: explicitNonOk
+							? upstreamStatus!
+							: imageAbortReason === 'gateway_timeout'
+								? 504
+								: imageAbortReason === 'client_abort'
+									? 499
+									: 502,
+						headers: { 'Content-Type': 'application/json' },
+					}),
 			usagePromise: Promise.resolve(EMPTY_USAGE),
 			upstreamRequestId: observedUpstreamRequestId,
 			meta: {
-				...imageDispatchMeta(
-				errorBody,
-				null,
-				imageAbortReason,
-				{ upstreamOutcomeUnknown, responseBodyTooLarge },
-				),
+				restoredUpstreamPaths: applied.restoredPaths,
+				...imageDispatchMeta(errorBody, null, imageAbortReason, { upstreamOutcomeUnknown, responseBodyTooLarge }),
 				...(imageAbortReason ? { failoverForbidden: true } : {}),
 				...(!dispatchStarted ? { admissionDeniedPreDispatch: true } : {}),
 				...(gatewayAbort ? { gatewayGeneratedError: true } : {}),
@@ -1207,6 +1304,7 @@ export async function dispatchOpenAiImageEdits(
 	usagePromise: Promise<UsageFromStream>;
 	upstreamRequestId: string | null;
 	meta: {
+		restoredUpstreamPaths?: string[];
 		imageUsage: ImageTokenUsage | null;
 		parsedBody: unknown;
 		imageAbortReason?: ImageDispatchAbortReason;
@@ -1223,20 +1321,22 @@ export async function dispatchOpenAiImageEdits(
 	validateImageUpstreamUrl(url);
 	const attemptRouteFacts = captureImageAttemptRouteFacts(route, 'images.edits', url);
 	const upstreamLabel = sanitizeUpstreamUrlForLog(url);
-	console.log(JSON.stringify({
-		event: 'gateway.images.upstream_start',
-		operation: 'edits',
-		upstream: upstreamLabel,
-		providerId: route.providerId,
-		routeTargetId: route.targetId,
-		providerModel: route.providerModelName,
-	}));
+	console.log(
+		JSON.stringify({
+			event: 'gateway.images.upstream_start',
+			operation: 'edits',
+			upstream: upstreamLabel,
+			providerId: route.providerId,
+			routeTargetId: route.targetId,
+			providerModel: route.providerModelName,
+		}),
+	);
 	const form = new FormData();
 	// The digest and driver share the exact scalar-field projection.
 	const fields = buildImageEditUpstreamFields(route, edit);
 	for (const [key, value] of fields) form.append(key, value);
-	const pagedUpload = edit.images.some(img => img.upload !== undefined);
-	const files = edit.images.map(img => ({
+	const pagedUpload = edit.images.some((img) => img.upload !== undefined);
+	const files = edit.images.map((img) => ({
 		...imageEditUpstreamFileMetadata(img),
 		payload: img.upload ?? img.blob ?? new Blob(img.bytes ? [Uint8Array.from(img.bytes)] : [], { type: img.mimeType }),
 	}));
@@ -1256,16 +1356,15 @@ export async function dispatchOpenAiImageEdits(
 	);
 	let uploadBody: ReturnType<typeof createMultipartUploadBody> | undefined;
 	let streamOwnsLifecycle = false;
-	let uploadFinished = false, accepted = false, uploadReleased = false;
+	let uploadFinished = false,
+		accepted = false,
+		uploadReleased = false;
 	const releaseAcceptedUpload = () => {
 		if (!accepted || !uploadFinished || uploadReleased) return;
 		uploadReleased = true;
 		edit.releaseAcceptedUpload?.();
 	};
-	const responseByteLimit = resolveResponseByteLimit(
-		options.maxResponseBytes,
-		IMAGE_MAX_RESPONSE_BYTES,
-	);
+	const responseByteLimit = resolveResponseByteLimit(options.maxResponseBytes, IMAGE_MAX_RESPONSE_BYTES);
 	let dispatchStarted = false;
 	let upstreamStatus: number | null = null;
 	let observedUpstreamRequestId: string | null = null;
@@ -1273,23 +1372,43 @@ export async function dispatchOpenAiImageEdits(
 	try {
 		if (signal.aborted) throw new DOMException('Aborted', 'AbortError');
 		const { secret } = await resolveProviderUpstreamSecret(route.providerApiKey, {
-			signal, auxiliaryAuth: options.auxiliaryAuth,
+			signal,
+			auxiliaryAuth: options.auxiliaryAuth,
 		});
-		const headers = new Headers({ Authorization: `Bearer ${secret}` });
+		const headers = new Headers(applyRouteExtraHeaders({ Authorization: `Bearer ${secret}` }, route.customParams));
 		if (pagedUpload) {
-			uploadBody = createMultipartUploadBody(form, files, signal,
-				() => { uploadFinished = true; releaseAcceptedUpload(); });
+			uploadBody = createMultipartUploadBody(form, files, signal, () => {
+				uploadFinished = true;
+				releaseAcceptedUpload();
+			});
 			headers.set('Content-Type', uploadBody.contentType);
 			headers.set('Content-Length', String(uploadBody.contentLength));
 		}
 		if (signal.aborted) throw new DOMException('Aborted', 'AbortError');
-		try { await beforeFetch?.(preparedAttempt); } catch (error) { admissionBoundaryFailed = true; throw error; }
+		try {
+			await beforeFetch?.(preparedAttempt);
+		} catch (error) {
+			admissionBoundaryFailed = true;
+			throw error;
+		}
 		if (signal.aborted) throw new DOMException('Aborted', 'AbortError');
-		const response = await wait(() => {
-			dispatchStarted = true;
-			const init = { method: 'POST', headers, body: uploadBody?.body ?? form, signal, redirect: 'manual' as const, duplex: 'half' as const };
-			return (options.fetchImpl ?? fetch)(url, init);
-		}, (late) => { void late.body?.cancel('image_request_stopped').catch(() => undefined); });
+		const response = await wait(
+			() => {
+				dispatchStarted = true;
+				const init = {
+					method: 'POST',
+					headers,
+					body: uploadBody?.body ?? form,
+					signal,
+					redirect: 'manual' as const,
+					duplex: 'half' as const,
+				};
+				return (options.fetchImpl ?? fetch)(url, init);
+			},
+			(late) => {
+				void late.body?.cancel('image_request_stopped').catch(() => undefined);
+			},
+		);
 		upstreamStatus = response.status;
 		timing?.markAttemptHeaders(attempt, response.status);
 		const upstreamRequestId = extractUpstreamRequestId(response.headers);
@@ -1299,23 +1418,29 @@ export async function dispatchOpenAiImageEdits(
 		accepted = response.ok;
 		releaseAcceptedUpload();
 		const material = await readJsonResponse(response, responseByteLimit, timing, signal);
-		console.log(JSON.stringify({
-			event: 'gateway.images.upstream_complete',
-			operation: 'edits',
-			upstream: upstreamLabel,
-			providerId: route.providerId,
-			routeTargetId: route.targetId,
-			status: response.status,
-			elapsedMs: Date.now() - startedAt,
-		}));
-		const normalizedBody = response.ok
-			? normalizeOpenRouterImageResponse(material.body)
-			: material.body;
+		console.log(
+			JSON.stringify({
+				event: 'gateway.images.upstream_complete',
+				operation: 'edits',
+				upstream: upstreamLabel,
+				providerId: route.providerId,
+				routeTargetId: route.targetId,
+				status: response.status,
+				elapsedMs: Date.now() - startedAt,
+			}),
+		);
+		const normalizedBody = response.ok ? normalizeOpenRouterImageResponse(material.body) : material.body;
 		const { usagePromise, imageUsage } = usageFromStreamFromImage(normalizedBody, checkActive);
-		const clientResponse = streamJsonResponse(normalizedBody, NORMALIZED_IMAGE_JSON_LIMITS, {
-			status: response.status, statusText: response.statusText,
-			headers: { 'Content-Type': 'application/json' },
-		}, { signal, checkActive, onFinished: clear });
+		const clientResponse = streamJsonResponse(
+			normalizedBody,
+			NORMALIZED_IMAGE_JSON_LIMITS,
+			{
+				status: response.status,
+				statusText: response.statusText,
+				headers: { 'Content-Type': 'application/json' },
+			},
+			{ signal, checkActive, onFinished: clear },
+		);
 		streamOwnsLifecycle = true;
 		return {
 			response: clientResponse,
@@ -1323,8 +1448,8 @@ export async function dispatchOpenAiImageEdits(
 			upstreamRequestId,
 			meta: imageDispatchMeta(normalizedBody, imageUsage, undefined, {
 				upstreamOutcomeUnknown:
-					imageStatusMayHideAcceptedWork(response.status)
-					|| (response.ok && (!material.jsonValid || countValidImageResults(normalizedBody) === 0)),
+					imageStatusMayHideAcceptedWork(response.status) ||
+					(response.ok && (!material.jsonValid || countValidImageResults(normalizedBody) === 0)),
 			}),
 		};
 	} catch (err) {
@@ -1332,61 +1457,57 @@ export async function dispatchOpenAiImageEdits(
 		timing?.markStreamComplete();
 		const abortReason = getAbortReason();
 		const aborted =
-			abortReason !== 'none' ||
-			requestSignal?.aborted ||
-			(err instanceof Error && err.name === 'AbortError');
-		const resolvedAbort =
-			abortReason === 'none' && requestSignal?.aborted ? 'client_abort' : abortReason;
-		const imageAbortReason = aborted
-			? resolveImageAbortReasonForMeta(resolvedAbort, requestSignal)
-			: undefined;
+			abortReason !== 'none' || requestSignal?.aborted || (err instanceof Error && err.name === 'AbortError');
+		const resolvedAbort = abortReason === 'none' && requestSignal?.aborted ? 'client_abort' : abortReason;
+		const imageAbortReason = aborted ? resolveImageAbortReasonForMeta(resolvedAbort, requestSignal) : undefined;
 		const explicitNonOk = upstreamStatus != null && (upstreamStatus < 200 || upstreamStatus >= 300);
-		const upstreamOutcomeUnknown = dispatchStarted
-			&& (!explicitNonOk || imageStatusMayHideAcceptedWork(upstreamStatus!));
+		const upstreamOutcomeUnknown =
+			dispatchStarted && (!explicitNonOk || imageStatusMayHideAcceptedWork(upstreamStatus!));
 		if (dispatchStarted && !explicitNonOk && imageAbortReason === 'client_abort') {
 			timing?.markAttemptClientCancelled(attempt);
 		} else if (dispatchStarted && upstreamStatus === null) {
 			timing?.markAttemptError(attempt, err);
 		}
-		const responseBodyTooLarge =
-			err instanceof UpstreamResponseBodyTooLargeError && upstreamOutcomeUnknown;
+		const responseBodyTooLarge = err instanceof UpstreamResponseBodyTooLargeError && upstreamOutcomeUnknown;
 		const error = aborted
 			? imageAbortErrorPayload('edit', resolvedAbort, IMAGE_GENERATION_TIMEOUT_MS)
 			: {
-					message: err instanceof ImageUsageLimitError || err instanceof JsonStructureLimitError ? err.message : 'Image edit upstream failed',
+					message:
+						err instanceof ImageUsageLimitError || err instanceof JsonStructureLimitError
+							? err.message
+							: 'Image edit upstream failed',
 				};
-		console.error(JSON.stringify({
-			event: 'gateway.images.upstream_error',
-			operation: 'edits',
-			upstream: upstreamLabel,
-			providerId: route.providerId,
-			routeTargetId: route.targetId,
-			abortReason,
-			elapsedMs: Date.now() - startedAt,
-			errorName: upstreamErrorNameForLog(err),
-		}));
+		console.error(
+			JSON.stringify({
+				event: 'gateway.images.upstream_error',
+				operation: 'edits',
+				upstream: upstreamLabel,
+				providerId: route.providerId,
+				routeTargetId: route.targetId,
+				abortReason,
+				elapsedMs: Date.now() - startedAt,
+				errorName: upstreamErrorNameForLog(err),
+			}),
+		);
 		const errorBody = { error };
 		const gatewayAbort = !explicitNonOk && imageAbortReason != null;
 		return {
-			response: gatewayAbort ? imageAbortResponse(imageAbortReason, error.message) : new Response(JSON.stringify(errorBody), {
-				status: explicitNonOk
-					? upstreamStatus!
-					: imageAbortReason === 'gateway_timeout'
-						? 504
-						: imageAbortReason === 'client_abort'
-							? 499
-							: 502,
-				headers: { 'Content-Type': 'application/json' },
-			}),
+			response: gatewayAbort
+				? imageAbortResponse(imageAbortReason, error.message)
+				: new Response(JSON.stringify(errorBody), {
+						status: explicitNonOk
+							? upstreamStatus!
+							: imageAbortReason === 'gateway_timeout'
+								? 504
+								: imageAbortReason === 'client_abort'
+									? 499
+									: 502,
+						headers: { 'Content-Type': 'application/json' },
+					}),
 			usagePromise: Promise.resolve(EMPTY_USAGE),
 			upstreamRequestId: observedUpstreamRequestId,
 			meta: {
-				...imageDispatchMeta(
-				errorBody,
-				null,
-				imageAbortReason,
-				{ upstreamOutcomeUnknown, responseBodyTooLarge },
-				),
+				...imageDispatchMeta(errorBody, null, imageAbortReason, { upstreamOutcomeUnknown, responseBodyTooLarge }),
 				...(imageAbortReason ? { failoverForbidden: true } : {}),
 				...(!dispatchStarted ? { admissionDeniedPreDispatch: true } : {}),
 				...(gatewayAbort ? { gatewayGeneratedError: true } : {}),

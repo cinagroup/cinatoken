@@ -50,6 +50,9 @@ test("request-log user_id deep link uses the stored user identity instead of cur
 	assert.deepEqual(allowed.lastOptions(), {
 		page: 2,
 		pageSize: 20,
+ id: undefined,
+ providerIds: undefined,
+ modelIdPrefix: undefined,
 		apiKeyId: undefined,
 		userId: "user-42",
 		userEmail: undefined,

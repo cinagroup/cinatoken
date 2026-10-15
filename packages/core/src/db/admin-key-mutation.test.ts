@@ -5,6 +5,10 @@ import { userRowToSnapshot } from './user-audit-snapshot';
 
 test('MySQL/Postgres decimal locking reads match the same canonical user snapshot as getById', () => {
 	const expected = userRowToSnapshot({
+wallet_granted: 0,
+wallet_spent: 0,
+rate_limit: null,
+
 		id: 'u1', email: 'user@example.test',
 		budget_max: 10, budget_base: 10, budget_spent: 3,
 		budget_period: 'monthly', budget_reset_at: '2026-10-01T00:00:00.000Z',

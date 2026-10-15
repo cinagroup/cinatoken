@@ -15,10 +15,10 @@
 				"tiers": [
 					{
 						"upto": null,
-						"input_price": 2.5,
-						"output_price": 7.5,
-						"cache_read_price": 0.3125,
-						"cache_write_price": 3.125
+						"input_price": 2,
+						"output_price": 6,
+						"cache_read_price": 0.25,
+						"cache_write_price": 2.5
 					}
 				]
 			},
@@ -41,6 +41,190 @@
 		"released": "2026-08-01"
 	},
 	{
+		"id": "qwen3.8-max-prime",
+		"display_name": "Qwen3.8 Max Prime",
+		"description": "A high-throughput variant of Qwen3.8 Max optimized for faster inference. Supports both reasoning and non-reasoning modes with the same 1M context window.",
+		"i18n": {
+			"en": "A high-throughput variant of Qwen3.8 Max optimized for faster inference. Supports both reasoning and non-reasoning modes with the same 1M context window.",
+			"zh": "Qwen3.8 Max 优速版，推理速度更快。支持思考与非思考双模式，同样具备 1M 上下文窗口。"
+		},
+		"vendor": "aliyun",
+		"context_window": 1000000,
+		"max_tokens": 128000,
+		"pricing": {
+			"usd": {
+				"tiers": [
+					{
+						"upto": null,
+						"input_price": 4,
+						"output_price": 12,
+						"cache_read_price": null,
+						"cache_write_price": null
+					}
+				]
+			},
+			"cny": {
+				"tiers": [
+					{
+						"upto": null,
+						"input_price": 24,
+						"output_price": 72,
+						"cache_read_price": null,
+						"cache_write_price": null
+					}
+				]
+			}
+		},
+		"modalities": {
+			"input": [
+				"text",
+				"image",
+				"video"
+			],
+			"output": [
+				"text"
+			]
+		}
+	},
+	{
+		"id": "qwen3.8-2.4t-a95b",
+		"display_name": "Qwen3.8 2.4T-A95B",
+		"description": "A 2.4T-parameter open-source flagship for complex reasoning, coding, and knowledge work. Supports both reasoning and non-reasoning modes with a 1M context window.",
+		"i18n": {
+			"en": "A 2.4T-parameter open-source flagship for complex reasoning, coding, and knowledge work. Supports both reasoning and non-reasoning modes with a 1M context window.",
+			"zh": "2.4 万亿参数开源旗舰模型，面向复杂推理、编程与知识工作。支持思考与非思考双模式，具备 1M 上下文窗口。"
+		},
+		"vendor": "aliyun",
+		"context_window": 1000000,
+		"max_tokens": 131072,
+		"pricing": {
+			"usd": {
+				"tiers": [
+					{
+						"upto": null,
+						"input_price": 2,
+						"output_price": 6,
+						"cache_read_price": 0.25,
+						"cache_write_price": 2.5
+					}
+				]
+			},
+			"cny": {
+				"tiers": [
+					{
+						"upto": null,
+						"input_price": 12,
+						"output_price": 36,
+						"cache_read_price": 1.5,
+						"cache_write_price": 15
+					}
+				]
+			}
+		},
+		"modalities": {
+			"input": [
+				"text"
+			],
+			"output": [
+				"text"
+			]
+		},
+		"released": "2026-08-01"
+	},
+	{
+		"id": "qwen3.8-27b",
+		"display_name": "Qwen3.8 27B",
+		"description": "A 27B-parameter multimodal Qwen model for efficient reasoning, coding, and visual understanding. Supports both reasoning and non-reasoning modes with image and video input.",
+		"i18n": {
+			"en": "A 27B-parameter multimodal Qwen model for efficient reasoning, coding, and visual understanding. Supports both reasoning and non-reasoning modes with image and video input.",
+			"zh": "270 亿参数 Qwen 多模态模型，面向高效推理、编程与视觉理解。支持思考与非思考双模式，接受图像与视频输入。"
+		},
+		"vendor": "aliyun",
+		"context_window": 1000000,
+		"max_tokens": 131072,
+		"pricing": {
+			"usd": {
+				"tiers": [
+					{
+						"upto": null,
+						"input_price": 0.5,
+						"output_price": 2,
+						"cache_read_price": 0.1,
+						"cache_write_price": 0.625
+					}
+				]
+			},
+			"cny": {
+				"tiers": [
+					{
+						"upto": null,
+						"input_price": 3,
+						"output_price": 12,
+						"cache_read_price": 0.6,
+						"cache_write_price": 3.75
+					}
+				]
+			}
+		},
+		"modalities": {
+			"input": [
+				"text",
+				"image",
+				"video"
+			],
+			"output": [
+				"text"
+			]
+		}
+	},
+	{
+		"id": "qwen3.8-omni-flash",
+		"display_name": "Qwen3.8 Omni Flash",
+		"description": "A multimodal Qwen model for text, image, audio, and video understanding. Supports deep thinking with adjustable reasoning intensity for complex tasks.",
+		"i18n": {
+			"en": "A multimodal Qwen model for text, image, audio, and video understanding. Supports deep thinking with adjustable reasoning intensity for complex tasks.",
+			"zh": "Qwen 全模态模型，支持文本、图像、音频与视频理解。默认开启深度思考，可调节思考强度以适应复杂任务。"
+		},
+		"vendor": "aliyun",
+		"context_window": 1000000,
+		"max_tokens": 131072,
+		"pricing": {
+			"usd": {
+				"tiers": [
+					{
+						"upto": null,
+						"input_price": 0.13,
+						"output_price": 0.45,
+						"cache_read_price": 0.017,
+						"cache_write_price": null
+					}
+				]
+			},
+			"cny": {
+				"tiers": [
+					{
+						"upto": null,
+						"input_price": 0.8,
+						"output_price": 2.7,
+						"cache_read_price": 0.1,
+						"cache_write_price": null
+					}
+				]
+			}
+		},
+		"modalities": {
+			"input": [
+				"text",
+				"image",
+				"audio",
+				"video"
+			],
+			"output": [
+				"text"
+			]
+		}
+	},
+	{
 		"id": "qwen3.8-max-preview",
 		"display_name": "Qwen3.8 Max Preview",
 		"description": "A flagship Qwen preview for complex reasoning, coding, vision, and long-horizon agentic workloads. Preview channel for early access; production traffic should prefer qwen3.8-max.",
@@ -56,10 +240,10 @@
 				"tiers": [
 					{
 						"upto": null,
-						"input_price": 2.5,
-						"output_price": 7.5,
-						"cache_read_price": 0.3125,
-						"cache_write_price": 3.125
+						"input_price": 2,
+						"output_price": 6,
+						"cache_read_price": 0.25,
+						"cache_write_price": 2.5
 					}
 				]
 			},
@@ -80,6 +264,53 @@
 			"output": ["text"]
 		},
 		"released": "2026-07-19"
+	},
+	{
+		"id": "qwen3.8-flash",
+		"display_name": "Qwen3.8 Flash",
+		"description": "A fast multimodal Qwen3.8 model with a native 1M context window for coding, agents, documents, and visual understanding. Near-flagship quality at a fraction of Qwen3.8 Max cost, with image and video input.",
+		"i18n": {
+			"en": "A fast multimodal Qwen3.8 model with a native 1M context window for coding, agents, documents, and visual understanding. Near-flagship quality at a fraction of Qwen3.8 Max cost, with image and video input.",
+			"zh": "通义千问最新多模态 Flash 模型，兼具理解生成能力与响应速度。原生百万级上下文，适合编程辅助、智能体协作、超长文档与图文/长视频理解，以更低推理成本接近旗舰效果。"
+		},
+		"vendor": "aliyun",
+		"context_window": 1000000,
+		"max_tokens": 128000,
+		"pricing": {
+			"usd": {
+				"tiers": [
+					{
+						"upto": null,
+						"input_price": 0.15,
+						"output_price": 0.47,
+						"cache_read_price": 0.01875,
+						"cache_write_price": 0.234375
+					}
+				]
+			},
+			"cny": {
+				"tiers": [
+					{
+						"upto": null,
+						"input_price": 0.8,
+						"output_price": 2.7,
+						"cache_read_price": 0.1,
+						"cache_write_price": 1.25
+					}
+				]
+			}
+		},
+		"modalities": {
+			"input": [
+				"text",
+				"image",
+				"video"
+			],
+			"output": [
+				"text"
+			]
+		},
+		"released": "2026-08-26"
 	},
 	{
 		"id": "qwen3.7-plus",
@@ -193,24 +424,24 @@
 				"tiers": [
 					{
 						"upto": 32000,
-						"input_price": 0.04,
-						"output_price": 0.16,
-						"cache_read_price": 0.008,
-						"cache_write_price": 0.05
+						"input_price": 0.03,
+						"output_price": 0.13,
+						"cache_read_price": 0.006,
+						"cache_write_price": 0.0375
 					},
 					{
 						"upto": 256000,
-						"input_price": 0.12,
-						"output_price": 0.48,
-						"cache_read_price": 0.024,
-						"cache_write_price": 0.15
+						"input_price": 0.1,
+						"output_price": 0.4,
+						"cache_read_price": 0.02,
+						"cache_write_price": 0.125
 					},
 					{
 						"upto": null,
-						"input_price": 0.24,
-						"output_price": 0.96,
-						"cache_read_price": 0.048,
-						"cache_write_price": 0.3
+						"input_price": 0.2,
+						"output_price": 0.8,
+						"cache_read_price": 0.04,
+						"cache_write_price": 0.25
 					}
 				]
 			},
@@ -287,10 +518,10 @@
 					},
 					{
 						"upto": null,
-						"input_price": 4,
-						"output_price": 24,
-						"cache_read_price": 0.4,
-						"cache_write_price": 5
+						"input_price": 8,
+						"output_price": 48,
+						"cache_read_price": 0.8,
+						"cache_write_price": 10
 					}
 				]
 			}
@@ -335,17 +566,17 @@
 				"tiers": [
 					{
 						"upto": 128000,
-						"input_price": 3,
-						"output_price": 18,
-						"cache_read_price": 0.3,
-						"cache_write_price": 3
+						"input_price": 9,
+						"output_price": 54,
+						"cache_read_price": 0.9,
+						"cache_write_price": 11.25
 					},
 					{
 						"upto": null,
-						"input_price": 6,
-						"output_price": 36,
-						"cache_read_price": 0.6,
-						"cache_write_price": 6
+						"input_price": 15,
+						"output_price": 90,
+						"cache_read_price": 1.5,
+						"cache_write_price": 18.75
 					}
 				]
 			}
@@ -390,17 +621,17 @@
 				"tiers": [
 					{
 						"upto": 256000,
-						"input_price": 0.5,
-						"output_price": 1.5,
-						"cache_read_price": 0.05,
-						"cache_write_price": null
+						"input_price": 1.2,
+						"output_price": 7.2,
+						"cache_read_price": 0.12,
+						"cache_write_price": 1.5
 					},
 					{
 						"upto": null,
-						"input_price": 2,
-						"output_price": 8,
-						"cache_read_price": 0.2,
-						"cache_write_price": null
+						"input_price": 4.8,
+						"output_price": 28.8,
+						"cache_read_price": 0.48,
+						"cache_write_price": 6
 					}
 				]
 			}
@@ -443,6 +674,13 @@
 			},
 			"cny": {
 				"tiers": [
+					{
+						"upto": 128000,
+						"input_price": 0.8,
+						"output_price": 4.8,
+						"cache_read_price": 0.08,
+						"cache_write_price": 1
+					},
 					{
 						"upto": 256000,
 						"input_price": 2,
@@ -492,10 +730,24 @@
 			"cny": {
 				"tiers": [
 					{
+						"upto": 128000,
+						"input_price": 0.2,
+						"output_price": 2,
+						"cache_read_price": 0.02,
+						"cache_write_price": null
+					},
+					{
+						"upto": 256000,
+						"input_price": 0.8,
+						"output_price": 8,
+						"cache_read_price": 0.08,
+						"cache_write_price": null
+					},
+					{
 						"upto": null,
-						"input_price": 0.7,
-						"output_price": 2.8,
-						"cache_read_price": 0.07,
+						"input_price": 1.2,
+						"output_price": 12,
+						"cache_read_price": 0.12,
 						"cache_write_price": null
 					}
 				]
@@ -524,21 +776,21 @@
 					{
 						"upto": 32000,
 						"input_price": 0.2,
-						"output_price": 2,
+						"output_price": 1.6,
 						"cache_read_price": null,
 						"cache_write_price": null
 					},
 					{
 						"upto": 128000,
 						"input_price": 0.3,
-						"output_price": 3,
+						"output_price": 2.4,
 						"cache_read_price": null,
 						"cache_write_price": null
 					},
 					{
 						"upto": null,
 						"input_price": 0.6,
-						"output_price": 6,
+						"output_price": 4.8,
 						"cache_read_price": null,
 						"cache_write_price": null
 					}
@@ -593,7 +845,7 @@
 					{
 						"upto": null,
 						"input_price": 1.4,
-						"output_price": 8,
+						"output_price": 8.3,
 						"cache_read_price": null,
 						"cache_write_price": null
 					}
@@ -633,8 +885,8 @@
 				"tiers": [
 					{
 						"upto": null,
-						"input_price": 0.44,
-						"output_price": 2.66,
+						"input_price": 0.4,
+						"output_price": 2.2,
 						"cache_read_price": null,
 						"cache_write_price": null
 					}
@@ -671,7 +923,7 @@
 			"usd": {
 				"audio_billing_mode": "per_second",
 				"audio": {
-					"price_per_second": 0.000047142857,
+					"price_per_second": 0.00009,
 					"minimum_seconds": 1
 				}
 			},
@@ -701,7 +953,7 @@
 			"usd": {
 				"audio_billing_mode": "per_second",
 				"audio": {
-					"price_per_second": 0.000031428571,
+					"price_per_second": 0.000035,
 					"minimum_seconds": 1
 				}
 			},
@@ -731,7 +983,7 @@
 			"usd": {
 				"audio_billing_mode": "per_second",
 				"audio": {
-					"price_per_second": 0.000031428571,
+					"price_per_second": 0.000035,
 					"minimum_seconds": 1
 				}
 			},
@@ -761,7 +1013,7 @@
 			"usd": {
 				"audio_billing_mode": "per_second",
 				"audio": {
-					"price_per_second": 0.000047142857,
+					"price_per_second": 0.00009,
 					"minimum_seconds": 1
 				}
 			},
@@ -791,7 +1043,7 @@
 			"usd": {
 				"audio_billing_mode": "per_second",
 				"audio": {
-					"price_per_second": 0.000031428571,
+					"price_per_second": 0.000035,
 					"minimum_seconds": 1
 				}
 			},
@@ -821,7 +1073,7 @@
 			"usd": {
 				"audio_billing_mode": "per_second",
 				"audio": {
-					"price_per_second": 0.000031428571,
+					"price_per_second": 0.000035,
 					"minimum_seconds": 1
 				}
 			},
@@ -851,7 +1103,7 @@
 			"usd": {
 				"audio_billing_mode": "per_second",
 				"audio": {
-					"price_per_second": 0.000047142857,
+					"price_per_second": 0.00009,
 					"minimum_seconds": 1
 				}
 			},
@@ -881,7 +1133,7 @@
 			"usd": {
 				"audio_billing_mode": "per_second",
 				"audio": {
-					"price_per_second": 0.000031428571,
+					"price_per_second": 0.000035,
 					"minimum_seconds": 1
 				}
 			},
@@ -941,7 +1193,7 @@
 			"usd": {
 				"audio_billing_mode": "per_character",
 				"audio": {
-					"price_per_character": 0.0000142857143,
+					"price_per_character": 0.000015,
 					"minimum_characters": 0
 				}
 			},
@@ -1031,7 +1283,7 @@
 			"usd": {
 				"audio_billing_mode": "per_character",
 				"audio": {
-					"price_per_character": 0.0000142857143,
+					"price_per_character": 0.000013,
 					"minimum_characters": 0
 				}
 			},
@@ -1061,7 +1313,7 @@
 			"usd": {
 				"audio_billing_mode": "per_character",
 				"audio": {
-					"price_per_character": 0.0000285714286,
+					"price_per_character": 0.000026,
 					"minimum_characters": 0
 				}
 			},

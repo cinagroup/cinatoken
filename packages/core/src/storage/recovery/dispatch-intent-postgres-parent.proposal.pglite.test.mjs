@@ -58,7 +58,7 @@ test('parent-aware repository calls owner-only functions and gates grant on COMM
           version text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`);
       const files = readdirSync(migrations).filter(name => name.endsWith('.sql')).sort();
       assert.equal(files.length, 81);
-      assert.equal(files.at(-1), '0081_tools_config_group_audit.sql');
+      assert.equal(files.at(-1), '0085_mcp_servers.sql');
       for (const name of files) {
         await pg.transaction(async tx => {
           await tx.exec(readFileSync(new URL(name, migrations), 'utf8'));

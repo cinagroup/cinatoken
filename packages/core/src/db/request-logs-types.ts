@@ -62,6 +62,8 @@ export type InsertRequestLogParams = {
 	budgetChargedMicros?: number | null;
 	/** Request-start timestamp used to pin budget accounting across period boundaries. */
 	budgetAccountedAt?: string | null;
+	/** 本次从永久池扣掉的部分；缺省 0 */
+	chargedWalletCost?: number;
 	routeGroup: string;
 	status: 'success' | 'error' | 'incomplete' | 'cancelled';
 	latencyMs: number | null;
@@ -123,6 +125,8 @@ export type InsertRequestLogParams = {
 	providerResponses?: readonly GenerationProviderResponseSnapshot[] | null;
 	/** Credential-free per-upstream-attempt facts, committed atomically with this request log. */
 	providerAttempts?: readonly InsertProviderAttemptAvailability[];
+	/** 请求打到的入口 Host（只记录，不做准入） */
+	ingressHost?: string | null;
 };
 
 /**
@@ -170,9 +174,7 @@ export type GenerationRequestLogRow = {
 
 const GENERATION_DATA_REGIONS = new Set(['global', 'europe', 'us']);
 const GENERATION_SERVICE_TIERS = new Set(['default', 'flex', 'priority']);
-const GENERATION_FINISH_REASONS = new Set([
-	'tool_calls', 'stop', 'length', 'content_filter', 'error',
-]);
+const GENERATION_FINISH_REASONS = new Set(['tool_calls', 'stop', 'length', 'content_filter', 'error']);
 const GENERATION_CONTROL_CHAR_PATTERN = /[\u0000-\u001f\u007f-\u009f\u2028\u2029]/u;
 const GENERATION_PROVIDER_RESPONSE_KEYS = new Set([
 	'status',
@@ -186,11 +188,7 @@ const GENERATION_PROVIDER_RESPONSE_KEYS = new Set([
 ]);
 
 function assertGenerationNativeToken(value: unknown, label: string): void {
-	if (value != null && (
-		typeof value !== 'number'
-		|| !Number.isSafeInteger(value)
-		|| value < 0
-	)) {
+	if (value != null && (typeof value !== 'number' || !Number.isSafeInteger(value) || value < 0)) {
 		throw new TypeError(`Generation ${label} must be a safe non-negative integer or null`);
 	}
 }
@@ -201,10 +199,10 @@ function assertGenerationProviderResponseString(
 	maxLength = 200,
 ): asserts value is string {
 	if (
-		typeof value !== 'string'
-		|| value.length === 0
-		|| value.length > maxLength
-		|| GENERATION_CONTROL_CHAR_PATTERN.test(value)
+		typeof value !== 'string' ||
+		value.length === 0 ||
+		value.length > maxLength ||
+		GENERATION_CONTROL_CHAR_PATTERN.test(value)
 	) {
 		throw new TypeError(`Generation provider response ${label} is invalid`);
 	}
@@ -225,14 +223,13 @@ function assertGenerationProviderResponses(
 			throw new TypeError('Generation provider response contains an unsupported field');
 		}
 		if (
-			response.status !== null
-			&& (
-				typeof response.status !== 'number'
-				|| !Number.isSafeInteger(response.status)
-				|| response.status < 100
-				|| response.status > 599
-			)
-		) throw new TypeError('Generation provider response status is invalid');
+			response.status !== null &&
+			(typeof response.status !== 'number' ||
+				!Number.isSafeInteger(response.status) ||
+				response.status < 100 ||
+				response.status > 599)
+		)
+			throw new TypeError('Generation provider response status is invalid');
 		for (const [field, maxLength] of [
 			['endpoint_id', 200],
 			['id', 200],
@@ -246,21 +243,19 @@ function assertGenerationProviderResponses(
 		if (response.is_byok !== undefined && typeof response.is_byok !== 'boolean') {
 			throw new TypeError('Generation provider response BYOK flag is invalid');
 		}
-		if (response.latency !== undefined && (
-			typeof response.latency !== 'number'
-			|| !Number.isSafeInteger(response.latency)
-			|| response.latency < 0
-		)) throw new TypeError('Generation provider response latency is invalid');
 		if (
-			response.routed_service_tier !== undefined
-			&& response.routed_service_tier !== 'flex'
-			&& response.routed_service_tier !== 'priority'
-		) throw new TypeError('Generation provider response service tier is invalid');
+			response.latency !== undefined &&
+			(typeof response.latency !== 'number' || !Number.isSafeInteger(response.latency) || response.latency < 0)
+		)
+			throw new TypeError('Generation provider response latency is invalid');
+		if (
+			response.routed_service_tier !== undefined &&
+			response.routed_service_tier !== 'flex' &&
+			response.routed_service_tier !== 'priority'
+		)
+			throw new TypeError('Generation provider response service tier is invalid');
 	}
-	if (
-		new TextEncoder().encode(JSON.stringify(responses)).byteLength
-		> MAX_GENERATION_PROVIDER_RESPONSES_JSON_BYTES
-	) {
+	if (new TextEncoder().encode(JSON.stringify(responses)).byteLength > MAX_GENERATION_PROVIDER_RESPONSES_JSON_BYTES) {
 		throw new TypeError('Generation provider responses are too large');
 	}
 }
@@ -277,10 +272,8 @@ export function serializeGenerationProviderResponses(
 export function parseGenerationProviderResponses(
 	value: string | null | undefined,
 ): GenerationProviderResponseSnapshot[] | null {
-	if (
-		value == null
-		|| new TextEncoder().encode(value).byteLength > MAX_GENERATION_PROVIDER_RESPONSES_JSON_BYTES
-	) return null;
+	if (value == null || new TextEncoder().encode(value).byteLength > MAX_GENERATION_PROVIDER_RESPONSES_JSON_BYTES)
+		return null;
 	try {
 		const parsed: unknown = JSON.parse(value);
 		assertGenerationProviderResponses(parsed as GenerationProviderResponseSnapshot[]);
@@ -298,21 +291,21 @@ export function assertGenerationSnapshotIsValid(params: InsertRequestLogParams):
 		['native cached tokens', params.nativeTokensCached],
 		['native reasoning tokens', params.nativeTokensReasoning],
 		['native completion image tokens', params.nativeTokensCompletionImages],
-	] as const) assertGenerationNativeToken(value, label);
+	] as const)
+		assertGenerationNativeToken(value, label);
 	assertGenerationProviderResponses(params.providerResponses);
 	for (const [label, value] of [
 		['HTTP referer', params.httpReferer],
 		['User-Agent', params.userAgent],
 	] as const) {
 		if (
-			value != null
-			&& (
-				typeof value !== 'string'
-				|| value.length === 0
-				|| value.length > 512
-				|| GENERATION_CONTROL_CHAR_PATTERN.test(value)
-			)
-		) throw new TypeError(`Generation ${label} is invalid`);
+			value != null &&
+			(typeof value !== 'string' ||
+				value.length === 0 ||
+				value.length > 512 ||
+				GENERATION_CONTROL_CHAR_PATTERN.test(value))
+		)
+			throw new TypeError(`Generation ${label} is invalid`);
 	}
 	if (params.httpReferer != null) {
 		let referer: URL;
@@ -322,14 +315,15 @@ export function assertGenerationSnapshotIsValid(params: InsertRequestLogParams):
 			throw new TypeError('Generation HTTP referer is invalid');
 		}
 		if (
-			(referer.protocol !== 'https:' && referer.protocol !== 'http:')
-			|| referer.username !== ''
-			|| referer.password !== ''
-			|| referer.origin !== params.httpReferer
-			|| referer.pathname !== '/'
-			|| referer.search !== ''
-			|| referer.hash !== ''
-		) throw new TypeError('Generation HTTP referer must be a canonical credential-free HTTP(S) origin');
+			(referer.protocol !== 'https:' && referer.protocol !== 'http:') ||
+			referer.username !== '' ||
+			referer.password !== '' ||
+			referer.origin !== params.httpReferer ||
+			referer.pathname !== '/' ||
+			referer.search !== '' ||
+			referer.hash !== ''
+		)
+			throw new TypeError('Generation HTTP referer must be a canonical credential-free HTTP(S) origin');
 	}
 	if (params.serviceTier != null && !GENERATION_SERVICE_TIERS.has(params.serviceTier)) {
 		throw new TypeError('Generation service tier is invalid');
@@ -338,35 +332,25 @@ export function assertGenerationSnapshotIsValid(params: InsertRequestLogParams):
 		throw new TypeError('Generation finish reason is invalid');
 	}
 	if (
-		params.nativeFinishReason != null
-		&& (
-			typeof params.nativeFinishReason !== 'string'
-			|| params.nativeFinishReason.length === 0
-			|| params.nativeFinishReason.length > 128
-			|| GENERATION_CONTROL_CHAR_PATTERN.test(params.nativeFinishReason)
-		)
+		params.nativeFinishReason != null &&
+		(typeof params.nativeFinishReason !== 'string' ||
+			params.nativeFinishReason.length === 0 ||
+			params.nativeFinishReason.length > 128 ||
+			GENERATION_CONTROL_CHAR_PATTERN.test(params.nativeFinishReason))
 	) {
 		throw new TypeError('Generation native finish reason is invalid');
 	}
-	const sessionRoundTrip = params.sessionId == null
-		? null
-		: new TextDecoder().decode(new TextEncoder().encode(params.sessionId));
+	const sessionRoundTrip =
+		params.sessionId == null ? null : new TextDecoder().decode(new TextEncoder().encode(params.sessionId));
 	if (
-		params.sessionId != null
-		&& (
-			typeof params.sessionId !== 'string'
-			|| Array.from(params.sessionId).length > 256
-			|| sessionRoundTrip !== params.sessionId
-		)
+		params.sessionId != null &&
+		(typeof params.sessionId !== 'string' ||
+			Array.from(params.sessionId).length > 256 ||
+			sessionRoundTrip !== params.sessionId)
 	) {
 		throw new TypeError('Generation session id is invalid');
 	}
-	const required = [
-		params.requestOrigin,
-		params.dataRegion,
-		params.isByok,
-		params.chargedCostUsd,
-	];
+	const required = [params.requestOrigin, params.dataRegion, params.isByok, params.chargedCostUsd];
 	const hasSnapshot = required.some((value) => value != null);
 	if (!hasSnapshot) {
 		if (params.responseStreamed != null || params.upstreamInferenceCostUsd != null) {
@@ -388,13 +372,13 @@ export function assertGenerationSnapshotIsValid(params: InsertRequestLogParams):
 		throw new TypeError('Generation request origin is invalid');
 	}
 	if (
-		(origin.protocol !== 'https:' && origin.protocol !== 'http:')
-		|| origin.username !== ''
-		|| origin.password !== ''
-		|| origin.origin !== params.requestOrigin
-		|| origin.pathname !== '/'
-		|| origin.search !== ''
-		|| origin.hash !== ''
+		(origin.protocol !== 'https:' && origin.protocol !== 'http:') ||
+		origin.username !== '' ||
+		origin.password !== '' ||
+		origin.origin !== params.requestOrigin ||
+		origin.pathname !== '/' ||
+		origin.search !== '' ||
+		origin.hash !== ''
 	) {
 		throw new TypeError('Generation request origin must be a canonical credential-free HTTP(S) origin');
 	}

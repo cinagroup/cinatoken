@@ -10,9 +10,19 @@ import { withBufferedAudioResources } from './buffered-audio-resources';
 import { createOwnedJsonUploadBody } from './owned-json-upload-body';
 import { JsonStringPages, JSON_TEXT_PAGE_CHARS } from './json-string-pages';
 import { observeResourceCleanup, type ResourceCompletion } from '../resource-completion';
-import { audioRequestAbortResponse, createAudioRequestLifecycle, validateAudioUpstreamUrl, type AudioRequestLifecycleOptions } from './audio-request-lifecycle';
-import { responseTextWithinLimit, UpstreamResponseBodyTooLargeError as DashScopeResponseBodyTooLargeError } from './bounded-response-body';
+import {
+	audioRequestAbortResponse,
+	createAudioRequestLifecycle,
+	validateAudioUpstreamUrl,
+	type AudioRequestLifecycleOptions,
+} from './audio-request-lifecycle';
+import {
+	responseTextWithinLimit,
+	UpstreamResponseBodyTooLargeError as DashScopeResponseBodyTooLargeError,
+} from './bounded-response-body';
 import { fetchWithSafeRedirects } from '@octafuse/tool-engines/web-fetch';
+import { applyRouteExtraHeaders, routeCustomParamsBody } from '@octafuse/core';
+import { applyUpstreamExtraFields, protectedUpstreamPathsForRoute } from '@octafuse/core/upstream-extra-fields';
 import type { RouteResult } from '../model-router';
 import { EMPTY_USAGE, type UsageFromStream } from '../proxy';
 import type { RequestTimingAttempt, RequestTimingCollector } from '../request-timing';
@@ -71,8 +81,35 @@ type DashScopeAudioDispatchResult = {
 		failoverForbidden?: boolean;
 		gatewayGeneratedError?: boolean;
 		admissionDeniedPreDispatch?: boolean;
+		restoredUpstreamPaths?: string[];
 	};
 };
+
+const restoredUpstreamPathsKey = Symbol.for('octafuse.restoredUpstreamPaths');
+
+function mergeAsrExtras(
+	route: RouteResult,
+	req: NormalizedAudioTranscriptionRequest,
+	built: Record<string, unknown>,
+): Record<string, unknown> {
+	const applied = applyUpstreamExtraFields({
+		built,
+		customParams: null,
+		extras: req.extra,
+		protectedPaths: protectedUpstreamPathsForRoute(route),
+	});
+	Object.defineProperty(req, restoredUpstreamPathsKey, {
+		value: applied.restoredPaths,
+		enumerable: false,
+		configurable: true,
+	});
+	return applied.body;
+}
+
+function readRestoredUpstreamPaths(req: NormalizedAudioTranscriptionRequest): string[] | undefined {
+	const value = (req as object as Record<symbol, unknown>)[restoredUpstreamPathsKey];
+	return Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string') : undefined;
+}
 
 function asObject(value: unknown): Record<string, unknown> | null {
 	return value != null && typeof value === 'object' && !Array.isArray(value)
@@ -113,7 +150,8 @@ export function audioUploadToDataUrlPages(file: AudioUpload, checkActive: () => 
 	checkActive();
 	const prefix = audioDataUrlPrefix(file);
 	const pages: string[] = [];
-	for (let offset = 0; offset < prefix.length; offset += JSON_TEXT_PAGE_CHARS) pages.push(prefix.slice(offset, offset + JSON_TEXT_PAGE_CHARS));
+	for (let offset = 0; offset < prefix.length; offset += JSON_TEXT_PAGE_CHARS)
+		pages.push(prefix.slice(offset, offset + JSON_TEXT_PAGE_CHARS));
 	// Divisible by three: padding appears only on the final page.
 	for (let offset = 0; offset < file.bytes.length; offset += 0x6000) {
 		checkActive();
@@ -126,7 +164,7 @@ export function audioUploadToDataUrlPages(file: AudioUpload, checkActive: () => 
 type AudioDataUrlEncoder = (file: AudioUpload) => string | JsonStringPages;
 
 function normalizedAsrOptions(route: RouteResult, req: NormalizedAudioTranscriptionRequest): Record<string, unknown> {
-	const configured = route.customParams?.asr_options;
+	const configured = routeCustomParamsBody(route.customParams).asr_options;
 	if (configured != null && asObject(configured) == null) {
 		throw new Error('DashScope route custom_params.asr_options must be an object');
 	}
@@ -151,14 +189,14 @@ export function buildDashScopeSyncAsrBody(
 		role: 'user',
 		content: [{ audio: encodeAudio(req.file) }],
 	});
-	return {
+	return mergeAsrExtras(route, req, {
 		model: route.providerModelName,
 		input: { messages },
 		parameters: {
-			...(route.customParams ?? {}),
+			...routeCustomParamsBody(route.customParams),
 			asr_options: normalizedAsrOptions(route, req),
 		},
-	};
+	});
 }
 
 const QWEN_AUDIO_ASR_FILE_FORMATS = new Set([
@@ -220,18 +258,18 @@ export function buildDashScopeQwenAudioAsrBody(
 		input_audio: { data: encodeAudio(req.file) },
 	});
 	const parameters: Record<string, unknown> = {
-		...(route.customParams ?? {}),
+		...routeCustomParamsBody(route.customParams),
 		format: resolveDashScopeAudioFileFormat(req.file, 'Qwen-Audio ASR'),
 	};
 	const languageHints = normalizedLanguageHints(req.language);
 	if (languageHints) parameters.language_hints = languageHints;
-	return {
+	return mergeAsrExtras(route, req, {
 		model: route.providerModelName,
 		input: {
 			messages: [{ role: 'user', content }],
 		},
 		parameters,
-	};
+	});
 }
 
 const FUN_ASR_FILE_FORMATS = new Set([
@@ -272,7 +310,7 @@ export function buildDashScopeFunAsrBody(
 	if (req.prompt) {
 		throw new Error('DashScope Fun-ASR file API does not support the OpenAI prompt field');
 	}
-	return {
+	return mergeAsrExtras(route, req, {
 		model: route.providerModelName,
 		input: {
 			messages: [
@@ -283,11 +321,11 @@ export function buildDashScopeFunAsrBody(
 			],
 		},
 		parameters: {
-			...(route.customParams ?? {}),
+			...routeCustomParamsBody(route.customParams),
 			format: resolveDashScopeFunAsrFormat(req.file),
 		},
 		resources: [],
-	};
+	});
 }
 
 /**
@@ -299,9 +337,9 @@ export function buildDashScopeAsyncAsrBody(
 	fileUrl: string,
 	req: NormalizedAudioTranscriptionRequest,
 ): Record<string, unknown> {
-	const parameters = { ...(route.customParams ?? {}) };
+	const parameters = { ...routeCustomParamsBody(route.customParams) };
 	delete parameters.asr_options;
-	return {
+	return mergeAsrExtras(route, req, {
 		model: route.providerModelName,
 		input: {
 			file_urls: [fileUrl],
@@ -313,14 +351,14 @@ export function buildDashScopeAsyncAsrBody(
 								content: [{ type: 'input_text', text: req.prompt }],
 							},
 						],
-				  }
+					}
 				: {}),
 		},
 		parameters: {
 			...parameters,
 			...(req.language ? { language_hints: [req.language] } : {}),
 		},
-	};
+	});
 }
 
 function firstArrayObject(value: unknown): Record<string, unknown> | null {
@@ -343,7 +381,7 @@ export function normalizeDashScopeSyncAsrResult(body: unknown): Record<string, u
 		...(seconds != null ? { duration: seconds } : {}),
 		...(typeof annotation?.language === 'string' ? { language: annotation.language } : {}),
 		...(typeof annotation?.emotion === 'string' ? { emotion: annotation.emotion } : {}),
-		usage: seconds == null ? root?.usage ?? null : { type: 'duration', seconds },
+		usage: seconds == null ? (root?.usage ?? null) : { type: 'duration', seconds },
 		dashscope: body,
 	};
 }
@@ -367,13 +405,13 @@ function normalizeDashScopeDurationAsrResult(body: unknown): Record<string, unkn
 					channel: sentence.channel_id ?? 0,
 					...(Array.isArray(sentence.words) ? { words: sentence.words } : {}),
 				},
-		  ]
+			]
 		: [];
 	return {
 		text,
 		...(seconds != null ? { duration: seconds } : {}),
 		segments,
-		usage: seconds == null ? root?.usage ?? null : { type: 'duration', seconds },
+		usage: seconds == null ? (root?.usage ?? null) : { type: 'duration', seconds },
 		dashscope: body,
 	};
 }
@@ -418,8 +456,7 @@ export function normalizeDashScopeAsyncAsrResult(resultFile: unknown, taskBody: 
 	}
 	const task = asObject(taskBody);
 	const usage = asObject(task?.usage);
-	const seconds =
-		asFiniteNonNegativeNumber(usage?.seconds) ?? asFiniteNonNegativeNumber(usage?.duration);
+	const seconds = asFiniteNonNegativeNumber(usage?.seconds) ?? asFiniteNonNegativeNumber(usage?.duration);
 	return {
 		text: texts.join('\n'),
 		...(seconds != null ? { duration: seconds } : {}),
@@ -430,7 +467,12 @@ export function normalizeDashScopeAsyncAsrResult(resultFile: unknown, taskBody: 
 	};
 }
 
-async function parseJsonResponse(response: Response, maxBytes: number, signal: AbortSignal, trackResourceCompletion: (task: ResourceCompletion) => void): Promise<unknown> {
+async function parseJsonResponse(
+	response: Response,
+	maxBytes: number,
+	signal: AbortSignal,
+	trackResourceCompletion: (task: ResourceCompletion) => void,
+): Promise<unknown> {
 	const text = await responseTextWithinLimit(response, maxBytes, signal, undefined, trackResourceCompletion);
 	if (!text) return null;
 	try {
@@ -443,9 +485,9 @@ async function parseJsonResponse(response: Response, maxBytes: number, signal: A
 }
 
 function resolveDashScopeResponseLimit(options: DashScopeAsrDispatchOptions): number {
-	return typeof options.maxResponseBytes === 'number'
-		&& Number.isFinite(options.maxResponseBytes)
-		&& options.maxResponseBytes > 0
+	return typeof options.maxResponseBytes === 'number' &&
+		Number.isFinite(options.maxResponseBytes) &&
+		options.maxResponseBytes > 0
 		? Math.min(DASHSCOPE_MULTIMODAL_MAX_RESPONSE_BYTES, Math.floor(options.maxResponseBytes))
 		: DASHSCOPE_MULTIMODAL_MAX_RESPONSE_BYTES;
 }
@@ -463,7 +505,11 @@ function clientResult(
 	requestId: string | null,
 	metaOverrides: Pick<
 		DashScopeAudioDispatchResult['meta'],
-		'upstreamOutcomeUnknown' | 'responseBodyTooLarge' | 'failoverForbidden' | 'gatewayGeneratedError' | 'admissionDeniedPreDispatch'
+		| 'upstreamOutcomeUnknown'
+		| 'responseBodyTooLarge'
+		| 'failoverForbidden'
+		| 'gatewayGeneratedError'
+		| 'admissionDeniedPreDispatch'
 	> = {},
 ): DashScopeAudioDispatchResult {
 	const clientBody = upstreamResponse.ok
@@ -485,6 +531,7 @@ function clientResult(
 			audioFileBytes: fileBytes,
 			audioTokenUsage: null,
 			...metaOverrides,
+			restoredUpstreamPaths: readRestoredUpstreamPaths(req),
 		},
 	};
 }
@@ -508,7 +555,11 @@ function errorDispatchResult(
 	message: string,
 	metaOverrides: Pick<
 		DashScopeAudioDispatchResult['meta'],
-		'upstreamOutcomeUnknown' | 'responseBodyTooLarge' | 'failoverForbidden' | 'gatewayGeneratedError' | 'admissionDeniedPreDispatch'
+		| 'upstreamOutcomeUnknown'
+		| 'responseBodyTooLarge'
+		| 'failoverForbidden'
+		| 'gatewayGeneratedError'
+		| 'admissionDeniedPreDispatch'
 	> = {},
 ): DashScopeAudioDispatchResult {
 	const body = { error: { message } };
@@ -591,9 +642,9 @@ function invalidSuccessfulResult(
 /** 按显式 adapter 分发 Qwen3 / Qwen-Audio-3.0 / Fun-ASR 的同步文件调用。 */
 export function dispatchDashScopeSyncAsr(...args: Parameters<typeof dispatchDashScopeSyncAsrOwned>) {
 	const [route, req, signal, timing, attempt, options = {}] = args;
-	return withBufferedAudioResources(trackResourceCompletion => dispatchDashScopeSyncAsrOwned(
-		route, req, signal, timing, attempt, { ...options, trackResourceCompletion },
-	));
+	return withBufferedAudioResources((trackResourceCompletion) =>
+		dispatchDashScopeSyncAsrOwned(route, req, signal, timing, attempt, { ...options, trackResourceCompletion }),
+	);
 }
 
 async function dispatchDashScopeSyncAsrOwned(
@@ -620,25 +671,41 @@ async function dispatchDashScopeSyncAsrOwned(
 		providerId: route.providerId,
 	});
 	validateAudioUpstreamUrl(url);
-	const timeout = createAudioRequestLifecycle(requestSignal, Math.min(options.timeoutMs ?? AUDIO_TRANSCRIPTION_TIMEOUT_MS, AUDIO_TRANSCRIPTION_TIMEOUT_MS), options);
+	const timeout = createAudioRequestLifecycle(
+		requestSignal,
+		Math.min(options.timeoutMs ?? AUDIO_TRANSCRIPTION_TIMEOUT_MS, AUDIO_TRANSCRIPTION_TIMEOUT_MS),
+		options,
+	);
 	const responseByteLimit = resolveDashScopeResponseLimit(options);
 	let upstreamStatus: number | null = null;
 	let upload: ReturnType<typeof createOwnedJsonUploadBody> | undefined;
 	try {
 		if (timeout.signal.aborted) throw new DOMException('Aborted', 'AbortError');
-		upload = createOwnedJsonUploadBody(buildSyncAsrBody(family, route, req,
-			file => audioUploadToDataUrlPages(file, () => timeout.signal.throwIfAborted())), timeout.signal);
+		upload = createOwnedJsonUploadBody(
+			buildSyncAsrBody(family, route, req, (file) =>
+				audioUploadToDataUrlPages(file, () => timeout.signal.throwIfAborted()),
+			),
+			timeout.signal,
+		);
 		timeout.trackResourceCompletion(upload.resourceCompletion);
-		const { secret } = await resolveProviderUpstreamSecret(route.providerApiKey, { signal: timeout.signal, auxiliaryAuth: options.auxiliaryAuth });
+		const { secret } = await resolveProviderUpstreamSecret(route.providerApiKey, {
+			signal: timeout.signal,
+			auxiliaryAuth: options.auxiliaryAuth,
+		});
 		if (timeout.signal.aborted) throw new DOMException('Aborted', 'AbortError');
 		const init: RequestInit & { duplex: 'half' } = {
 			method: 'POST',
-			headers: new Headers({
-				Authorization: `Bearer ${secret}`,
-				'Content-Type': 'application/json',
-				'Content-Length': String(upload.contentLength),
-				...(family !== 'qwen3' ? { 'X-DashScope-SSE': 'disable' } : {}),
-			}),
+			headers: new Headers(
+				applyRouteExtraHeaders(
+					{
+						Authorization: `Bearer ${secret}`,
+						'Content-Type': 'application/json',
+						'Content-Length': String(upload.contentLength),
+						...(family !== 'qwen3' ? { 'X-DashScope-SSE': 'disable' } : {}),
+					},
+					route.customParams,
+				),
+			),
 			body: upload.body,
 			duplex: 'half',
 			signal: timeout.signal,
@@ -647,7 +714,12 @@ async function dispatchDashScopeSyncAsrOwned(
 		upstreamStatus = response.status;
 		timing?.markAttemptHeaders(attempt, response.status);
 		const headerRequestId = extractUpstreamRequestId(response.headers);
-		const upstreamBody = await parseJsonResponse(response, responseByteLimit, timeout.signal, timeout.trackResourceCompletion);
+		const upstreamBody = await parseJsonResponse(
+			response,
+			responseByteLimit,
+			timeout.signal,
+			timeout.trackResourceCompletion,
+		);
 		timing?.markStreamComplete();
 		if (!response.ok) {
 			return clientResult(
@@ -681,23 +753,23 @@ async function dispatchDashScopeSyncAsrOwned(
 		timing?.markStreamComplete();
 		const aborted = timeout.signal.aborted;
 		const explicitNonOk = upstreamStatus != null && (upstreamStatus < 200 || upstreamStatus >= 300);
-		const upstreamOutcomeUnknown = timeout.dispatchStarted
-			&& (!explicitNonOk || submitStatusMayHideAcceptedWork(upstreamStatus!));
+		const upstreamOutcomeUnknown =
+			timeout.dispatchStarted && (!explicitNonOk || submitStatusMayHideAcceptedWork(upstreamStatus!));
 		return errorDispatchResult(
 			req,
-			explicitNonOk ? upstreamStatus! : aborted ? ((timeout.getAbortReason() === 'gateway_timeout') ? 504 : 499) : 502,
+			explicitNonOk ? upstreamStatus! : aborted ? (timeout.getAbortReason() === 'gateway_timeout' ? 504 : 499) : 502,
 			aborted
-				? (timeout.getAbortReason() === 'gateway_timeout')
+				? timeout.getAbortReason() === 'gateway_timeout'
 					? 'DashScope synchronous ASR timed out'
 					: 'DashScope synchronous ASR was cancelled by the client'
 				: 'DashScope synchronous ASR failed',
 			{
-				...(upstreamOutcomeUnknown
-					? { upstreamOutcomeUnknown: true, failoverForbidden: true }
-					: {}),
+				...(upstreamOutcomeUnknown ? { upstreamOutcomeUnknown: true, failoverForbidden: true } : {}),
 				...(!timeout.dispatchStarted ? { admissionDeniedPreDispatch: true } : {}),
 				...(aborted ? { failoverForbidden: true } : {}),
-				...(aborted && (upstreamStatus == null || (upstreamStatus >= 200 && upstreamStatus < 300)) ? { gatewayGeneratedError: true } : {}),
+				...(aborted && (upstreamStatus == null || (upstreamStatus >= 200 && upstreamStatus < 300))
+					? { gatewayGeneratedError: true }
+					: {}),
 				...(error instanceof DashScopeResponseBodyTooLargeError && upstreamOutcomeUnknown
 					? { responseBodyTooLarge: true }
 					: {}),
@@ -733,9 +805,9 @@ async function waitForPoll(signal: AbortSignal, ms: number): Promise<void> {
 /** DashScope 异步文件任务：提交、轮询、下载结果后一次性返回 OpenAI transcription。 */
 export function dispatchDashScopeAsyncAsr(...args: Parameters<typeof dispatchDashScopeAsyncAsrOwned>) {
 	const [route, req, signal, timing, attempt, options = {}] = args;
-	return withBufferedAudioResources(trackResourceCompletion => dispatchDashScopeAsyncAsrOwned(
-		route, req, signal, timing, attempt, { ...options, trackResourceCompletion },
-	));
+	return withBufferedAudioResources((trackResourceCompletion) =>
+		dispatchDashScopeAsyncAsrOwned(route, req, signal, timing, attempt, { ...options, trackResourceCompletion }),
+	);
 }
 
 async function dispatchDashScopeAsyncAsrOwned(
@@ -753,7 +825,11 @@ async function dispatchDashScopeAsyncAsrOwned(
 			`provider.options for ${route.providerName} cannot be safely mapped to this DashScope ASR adapter`,
 		);
 	}
-	const timeout = createAudioRequestLifecycle(requestSignal, Math.min(options.timeoutMs ?? AUDIO_TRANSCRIPTION_TIMEOUT_MS, AUDIO_TRANSCRIPTION_TIMEOUT_MS), options);
+	const timeout = createAudioRequestLifecycle(
+		requestSignal,
+		Math.min(options.timeoutMs ?? AUDIO_TRANSCRIPTION_TIMEOUT_MS, AUDIO_TRANSCRIPTION_TIMEOUT_MS),
+		options,
+	);
 	const responseByteLimit = resolveDashScopeResponseLimit(options);
 	let submitAccepted = false;
 	let upstreamStatus: number | null = null;
@@ -770,16 +846,24 @@ async function dispatchDashScopeAsyncAsrOwned(
 		validateAudioUpstreamUrl(submitUrl);
 		upload = createOwnedJsonUploadBody(buildDashScopeAsyncAsrBody(route, fileUrl, req), timeout.signal);
 		timeout.trackResourceCompletion(upload.resourceCompletion);
-		const { secret } = await resolveProviderUpstreamSecret(route.providerApiKey, { signal: timeout.signal, auxiliaryAuth: options.auxiliaryAuth });
+		const { secret } = await resolveProviderUpstreamSecret(route.providerApiKey, {
+			signal: timeout.signal,
+			auxiliaryAuth: options.auxiliaryAuth,
+		});
 		if (timeout.signal.aborted) throw new DOMException('Aborted', 'AbortError');
 		const init: RequestInit & { duplex: 'half' } = {
 			method: 'POST',
-			headers: new Headers({
-				Authorization: `Bearer ${secret}`,
-				'Content-Type': 'application/json',
-				'X-DashScope-Async': 'enable',
-				'Content-Length': String(upload.contentLength),
-			}),
+			headers: new Headers(
+				applyRouteExtraHeaders(
+					{
+						Authorization: `Bearer ${secret}`,
+						'Content-Type': 'application/json',
+						'X-DashScope-Async': 'enable',
+						'Content-Length': String(upload.contentLength),
+					},
+					route.customParams,
+				),
+			),
 			body: upload.body,
 			duplex: 'half',
 			signal: timeout.signal,
@@ -789,14 +873,26 @@ async function dispatchDashScopeAsyncAsrOwned(
 		upstreamStatus = submitResponse.status;
 		timing?.markAttemptHeaders(attempt, submitResponse.status);
 		if (submitResponse.ok) submitAccepted = true;
-		const submitBody = await parseJsonResponse(submitResponse, responseByteLimit, timeout.signal, timeout.trackResourceCompletion);
+		const submitBody = await parseJsonResponse(
+			submitResponse,
+			responseByteLimit,
+			timeout.signal,
+			timeout.trackResourceCompletion,
+		);
 		const submitRequestId = extractUpstreamRequestId(submitResponse.headers) ?? bodyRequestId(submitBody);
 		if (!submitResponse.ok) {
 			timing?.markStreamComplete();
-			return clientResult(req, submitResponse, submitBody, req.file?.bytes.byteLength ?? 0, null, submitRequestId,
+			return clientResult(
+				req,
+				submitResponse,
+				submitBody,
+				req.file?.bytes.byteLength ?? 0,
+				null,
+				submitRequestId,
 				submitStatusMayHideAcceptedWork(submitResponse.status)
 					? { upstreamOutcomeUnknown: true, failoverForbidden: true }
-					: {});
+					: {},
+			);
 		}
 		const taskId = taskOutput(submitBody)?.task_id;
 		if (typeof taskId !== 'string' || !taskId.trim()) {
@@ -811,22 +907,22 @@ async function dispatchDashScopeAsyncAsrOwned(
 			await waitForPoll(timeout.signal, options.pollIntervalMs ?? DASHSCOPE_ASYNC_POLL_INTERVAL_MS);
 			const queryResponse = await timeout.fetch(queryUrl, {
 				method: 'GET',
-				headers: { Authorization: `Bearer ${secret}` },
+				headers: applyRouteExtraHeaders({ Authorization: `Bearer ${secret}` }, route.customParams),
 				signal: timeout.signal,
 			});
-			const queryBody = await parseJsonResponse(queryResponse, responseByteLimit, timeout.signal, timeout.trackResourceCompletion);
+			const queryBody = await parseJsonResponse(
+				queryResponse,
+				responseByteLimit,
+				timeout.signal,
+				timeout.trackResourceCompletion,
+			);
 			const requestId = extractUpstreamRequestId(queryResponse.headers) ?? bodyRequestId(queryBody) ?? submitRequestId;
 			if (!queryResponse.ok) {
 				timing?.markStreamComplete();
-				return clientResult(
-					req,
-					queryResponse,
-					queryBody,
-					req.file?.bytes.byteLength ?? 0,
-					null,
-					requestId,
-					{ upstreamOutcomeUnknown: true, failoverForbidden: true },
-				);
+				return clientResult(req, queryResponse, queryBody, req.file?.bytes.byteLength ?? 0, null, requestId, {
+					upstreamOutcomeUnknown: true,
+					failoverForbidden: true,
+				});
 			}
 			const output = taskOutput(queryBody);
 			if (!output) {
@@ -903,18 +999,18 @@ async function dispatchDashScopeAsyncAsrOwned(
 					await timeout.wait(() => cleanup);
 				},
 			});
-			const resultBody = await parseJsonResponse(resultResponse, responseByteLimit, timeout.signal, timeout.trackResourceCompletion);
+			const resultBody = await parseJsonResponse(
+				resultResponse,
+				responseByteLimit,
+				timeout.signal,
+				timeout.trackResourceCompletion,
+			);
 			if (!resultResponse.ok) {
 				timing?.markStreamComplete();
-				return clientResult(
-					req,
-					resultResponse,
-					resultBody,
-					req.file?.bytes.byteLength ?? 0,
-					null,
-					requestId,
-					{ upstreamOutcomeUnknown: true, failoverForbidden: true },
-				);
+				return clientResult(req, resultResponse, resultBody, req.file?.bytes.byteLength ?? 0, null, requestId, {
+					upstreamOutcomeUnknown: true,
+					failoverForbidden: true,
+				});
 			}
 			if (!Array.isArray(asObject(resultBody)?.transcripts)) {
 				timing?.markStreamComplete();
@@ -937,26 +1033,32 @@ async function dispatchDashScopeAsyncAsrOwned(
 		if (timeout.admissionFailed || error instanceof RequestAuxiliaryAuthLimitError) throw error;
 		timing?.markStreamComplete();
 		const aborted = timeout.signal.aborted;
-		const explicitSubmitNonOk = upstreamStatus != null
-			&& (upstreamStatus < 200 || upstreamStatus >= 300)
-			&& !submitAccepted;
-		const upstreamOutcomeUnknown = submitAccepted || (timeout.dispatchStarted
-			&& (!explicitSubmitNonOk || submitStatusMayHideAcceptedWork(upstreamStatus!)));
+		const explicitSubmitNonOk =
+			upstreamStatus != null && (upstreamStatus < 200 || upstreamStatus >= 300) && !submitAccepted;
+		const upstreamOutcomeUnknown =
+			submitAccepted ||
+			(timeout.dispatchStarted && (!explicitSubmitNonOk || submitStatusMayHideAcceptedWork(upstreamStatus!)));
 		return errorDispatchResult(
 			req,
-			explicitSubmitNonOk ? upstreamStatus! : aborted ? ((timeout.getAbortReason() === 'gateway_timeout') ? 504 : 499) : 502,
+			explicitSubmitNonOk
+				? upstreamStatus!
+				: aborted
+					? timeout.getAbortReason() === 'gateway_timeout'
+						? 504
+						: 499
+					: 502,
 			aborted
-				? (timeout.getAbortReason() === 'gateway_timeout')
+				? timeout.getAbortReason() === 'gateway_timeout'
 					? 'DashScope asynchronous ASR timed out'
 					: 'DashScope asynchronous ASR was cancelled by the client'
 				: 'DashScope asynchronous ASR failed',
 			{
-				...(upstreamOutcomeUnknown
-					? { upstreamOutcomeUnknown: true, failoverForbidden: true }
-					: {}),
+				...(upstreamOutcomeUnknown ? { upstreamOutcomeUnknown: true, failoverForbidden: true } : {}),
 				...(!timeout.dispatchStarted ? { admissionDeniedPreDispatch: true } : {}),
 				...(aborted ? { failoverForbidden: true } : {}),
-				...(aborted && (upstreamStatus == null || (upstreamStatus >= 200 && upstreamStatus < 300)) ? { gatewayGeneratedError: true } : {}),
+				...(aborted && (upstreamStatus == null || (upstreamStatus >= 200 && upstreamStatus < 300))
+					? { gatewayGeneratedError: true }
+					: {}),
 				...(error instanceof DashScopeResponseBodyTooLargeError && upstreamOutcomeUnknown
 					? { responseBodyTooLarge: true }
 					: {}),
@@ -983,11 +1085,16 @@ function isUsableMultimodalPassthroughResult(body: unknown): boolean {
 }
 
 /** 透传 DashScope 同步多模态 JSON：替换 model，返回原生响应，按 usage.duration/seconds 计费。 */
-export function dispatchDashScopeMultimodalPassthrough(...args: Parameters<typeof dispatchDashScopeMultimodalPassthroughOwned>) {
+export function dispatchDashScopeMultimodalPassthrough(
+	...args: Parameters<typeof dispatchDashScopeMultimodalPassthroughOwned>
+) {
 	const [route, body, signal, timing, attempt, options = {}] = args;
-	return withBufferedAudioResources(trackResourceCompletion => dispatchDashScopeMultimodalPassthroughOwned(
-		route, body, signal, timing, attempt, { ...options, trackResourceCompletion },
-	));
+	return withBufferedAudioResources((trackResourceCompletion) =>
+		dispatchDashScopeMultimodalPassthroughOwned(route, body, signal, timing, attempt, {
+			...options,
+			trackResourceCompletion,
+		}),
+	);
 }
 
 async function dispatchDashScopeMultimodalPassthroughOwned(
@@ -1006,28 +1113,41 @@ async function dispatchDashScopeMultimodalPassthroughOwned(
 		...body,
 		model: route.providerModelName,
 	};
-	const timeout = createAudioRequestLifecycle(requestSignal, Math.min(options.timeoutMs ?? AUDIO_TRANSCRIPTION_TIMEOUT_MS, AUDIO_TRANSCRIPTION_TIMEOUT_MS), options);
-	const responseByteLimit = typeof options.maxResponseBytes === 'number'
-		&& Number.isFinite(options.maxResponseBytes)
-		&& options.maxResponseBytes > 0
-		? Math.min(DASHSCOPE_MULTIMODAL_MAX_RESPONSE_BYTES, Math.floor(options.maxResponseBytes))
-		: DASHSCOPE_MULTIMODAL_MAX_RESPONSE_BYTES;
+	const timeout = createAudioRequestLifecycle(
+		requestSignal,
+		Math.min(options.timeoutMs ?? AUDIO_TRANSCRIPTION_TIMEOUT_MS, AUDIO_TRANSCRIPTION_TIMEOUT_MS),
+		options,
+	);
+	const responseByteLimit =
+		typeof options.maxResponseBytes === 'number' &&
+		Number.isFinite(options.maxResponseBytes) &&
+		options.maxResponseBytes > 0
+			? Math.min(DASHSCOPE_MULTIMODAL_MAX_RESPONSE_BYTES, Math.floor(options.maxResponseBytes))
+			: DASHSCOPE_MULTIMODAL_MAX_RESPONSE_BYTES;
 	let upstreamStatus: number | null = null;
 	let upload: ReturnType<typeof createOwnedJsonUploadBody> | undefined;
 	try {
 		if (timeout.signal.aborted) throw new DOMException('Aborted', 'AbortError');
 		upload = createOwnedJsonUploadBody(upstreamBody, timeout.signal);
 		timeout.trackResourceCompletion(upload.resourceCompletion);
-		const { secret } = await resolveProviderUpstreamSecret(route.providerApiKey, { signal: timeout.signal, auxiliaryAuth: options.auxiliaryAuth });
+		const { secret } = await resolveProviderUpstreamSecret(route.providerApiKey, {
+			signal: timeout.signal,
+			auxiliaryAuth: options.auxiliaryAuth,
+		});
 		if (timeout.signal.aborted) throw new DOMException('Aborted', 'AbortError');
 		const init: RequestInit & { duplex: 'half' } = {
 			method: 'POST',
-			headers: new Headers({
-				Authorization: `Bearer ${secret}`,
-				'Content-Type': 'application/json',
-				'X-DashScope-SSE': 'disable',
-				'Content-Length': String(upload.contentLength),
-			}),
+			headers: new Headers(
+				applyRouteExtraHeaders(
+					{
+						Authorization: `Bearer ${secret}`,
+						'Content-Type': 'application/json',
+						'X-DashScope-SSE': 'disable',
+						'Content-Length': String(upload.contentLength),
+					},
+					route.customParams,
+				),
+			),
 			body: upload.body,
 			duplex: 'half',
 			signal: timeout.signal,
@@ -1036,7 +1156,12 @@ async function dispatchDashScopeMultimodalPassthroughOwned(
 		upstreamStatus = response.status;
 		timing?.markAttemptHeaders(attempt, response.status);
 		const headerRequestId = extractUpstreamRequestId(response.headers);
-		const parsedBody = await parseJsonResponse(response, responseByteLimit, timeout.signal, timeout.trackResourceCompletion);
+		const parsedBody = await parseJsonResponse(
+			response,
+			responseByteLimit,
+			timeout.signal,
+			timeout.trackResourceCompletion,
+		);
 		timing?.markStreamComplete();
 		const requestId = headerRequestId ?? bodyRequestId(parsedBody);
 		if (response.ok && !isUsableMultimodalPassthroughResult(parsedBody)) {
@@ -1093,8 +1218,9 @@ async function dispatchDashScopeMultimodalPassthroughOwned(
 		if (error instanceof DashScopeResponseBodyTooLargeError) {
 			timing?.markStreamComplete();
 			const parsedBody = { error: { message: error.message } };
-			const upstreamOutcomeUnknown = (error.upstreamStatus >= 200 && error.upstreamStatus < 300)
-				|| submitStatusMayHideAcceptedWork(error.upstreamStatus);
+			const upstreamOutcomeUnknown =
+				(error.upstreamStatus >= 200 && error.upstreamStatus < 300) ||
+				submitStatusMayHideAcceptedWork(error.upstreamStatus);
 			return {
 				response: new Response(JSON.stringify(parsedBody), {
 					status: error.upstreamStatus,
@@ -1109,29 +1235,35 @@ async function dispatchDashScopeMultimodalPassthroughOwned(
 					audioFileBytes: 0,
 					audioTokenUsage: null,
 					responseBodyTooLarge: true,
-					...(upstreamOutcomeUnknown
-						? { upstreamOutcomeUnknown: true, failoverForbidden: true }
-						: {}),
+					...(upstreamOutcomeUnknown ? { upstreamOutcomeUnknown: true, failoverForbidden: true } : {}),
 				},
 			};
 		}
 		timing?.markStreamComplete();
 		const aborted = timeout.signal.aborted;
 		const explicitNonOk = upstreamStatus != null && (upstreamStatus < 200 || upstreamStatus >= 300);
-		const upstreamOutcomeUnknown = timeout.dispatchStarted
-			&& (!explicitNonOk || submitStatusMayHideAcceptedWork(upstreamStatus!));
+		const upstreamOutcomeUnknown =
+			timeout.dispatchStarted && (!explicitNonOk || submitStatusMayHideAcceptedWork(upstreamStatus!));
 		const gatewayAbort = aborted && !explicitNonOk;
 		const message = aborted
-			? (timeout.getAbortReason() === 'gateway_timeout')
+			? timeout.getAbortReason() === 'gateway_timeout'
 				? 'DashScope multimodal ASR timed out'
 				: 'DashScope multimodal ASR was cancelled by the client'
 			: 'DashScope multimodal ASR failed';
 		const parsedBody = { error: { message } };
 		return {
-			response: gatewayAbort ? audioRequestAbortResponse(timeout.getAbortReason() === 'gateway_timeout') : new Response(JSON.stringify(parsedBody), {
-				status: explicitNonOk ? upstreamStatus! : aborted ? ((timeout.getAbortReason() === 'gateway_timeout') ? 504 : 499) : 502,
-				headers: { 'Content-Type': 'application/json' },
-			}),
+			response: gatewayAbort
+				? audioRequestAbortResponse(timeout.getAbortReason() === 'gateway_timeout')
+				: new Response(JSON.stringify(parsedBody), {
+						status: explicitNonOk
+							? upstreamStatus!
+							: aborted
+								? timeout.getAbortReason() === 'gateway_timeout'
+									? 504
+									: 499
+								: 502,
+						headers: { 'Content-Type': 'application/json' },
+					}),
 			usagePromise: Promise.resolve(EMPTY_USAGE),
 			upstreamRequestId: null,
 			meta: {
@@ -1141,7 +1273,7 @@ async function dispatchDashScopeMultimodalPassthroughOwned(
 				audioFileBytes: 0,
 				audioTokenUsage: null,
 				upstreamOutcomeUnknown: upstreamOutcomeUnknown || undefined,
-				failoverForbidden: (upstreamOutcomeUnknown || aborted) || undefined,
+				failoverForbidden: upstreamOutcomeUnknown || aborted || undefined,
 				...(!timeout.dispatchStarted ? { admissionDeniedPreDispatch: true } : {}),
 				...(gatewayAbort ? { gatewayGeneratedError: true } : {}),
 			},

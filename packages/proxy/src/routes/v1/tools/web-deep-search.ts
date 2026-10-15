@@ -2,6 +2,7 @@
  * 用户路由：`POST /v1/tools/web-deep-search` — 搜+读一体；成功后按固定单价计入 budget_spent。
  */
 import { resolveWebDeepSearchConfig } from '@octafuse/core';
+import { toolFactorPricingAudit } from '@octafuse/core';
 import { Hono } from 'hono';
 import type { Env } from '../../../app';
 import { requireApiKey } from '../../../middleware/auth';
@@ -168,21 +169,18 @@ webDeepSearchRoutes.post('/', async (c) => {
 				budgetAccountedAt: requestStartedAt.toISOString(),
 				guardrailBudgetSettlement: guardrailBudgetReserved
 					? {
-						requestId: requestCorrelationId,
-						mode: settlement.mode,
-						reason: settlement.reason,
-					}
+							requestId: requestCorrelationId,
+							mode: settlement.mode,
+							reason: settlement.reason,
+						}
 					: undefined,
-				userBudgetSettlement: toolUserBudgetSettlement(
-					ordinaryBudgetLease,
-					settlement.mode,
-					settlement.reason,
-				),
+				userBudgetSettlement: toolUserBudgetSettlement(ordinaryBudgetLease, settlement.mode, settlement.reason),
 				apiKeyId: apiKey.keyId,
 				workspaceId: apiKey.workspaceId,
 				userId: apiKey.userId,
 				userEmail: apiKey.userEmail,
 				toolId: TOOL_ID,
+				ingressHost: apiKey.ingressHost,
 				toolProvider: provider,
 				meteredCost: 0,
 				standardCost: 0,
@@ -190,6 +188,7 @@ webDeepSearchRoutes.post('/', async (c) => {
 				pricingUnit: 'request',
 				billingUnits: 1,
 				unitPrices: { metered: unitMetered, standard: unitStandard, charged: unitCharged },
+				pricingAuditExtra: toolFactorPricingAudit(resolved.config.pricing),
 				latencyMs,
 				requestBody: JSON.stringify({ query, provider }),
 				requestBodyLoggingMode: c.get('requestBodyLoggingMode'),
@@ -241,17 +240,15 @@ webDeepSearchRoutes.post('/', async (c) => {
 			guardrailBudgetSettlement: guardrailBudgetReserved
 				? { requestId: requestCorrelationId, mode: 'actual', reason: 'tool_request_usage_settled' }
 				: undefined,
-			userBudgetSettlement: toolUserBudgetSettlement(
-				ordinaryBudgetLease,
-				'actual',
-				'tool_request_usage_settled',
-			),
+			userBudgetSettlement: toolUserBudgetSettlement(ordinaryBudgetLease, 'actual', 'tool_request_usage_settled'),
 			apiKeyId: apiKey.keyId,
 			workspaceId: apiKey.workspaceId,
 			userId: apiKey.userId,
 			userEmail: apiKey.userEmail,
 			toolId: TOOL_ID,
 			toolProvider: provider,
+			ingressHost: apiKey.ingressHost,
+			pricingAuditExtra: toolFactorPricingAudit(resolved.config.pricing),
 			meteredCost: unitMetered,
 			standardCost: unitStandard,
 			chargedCost: unitCharged,
@@ -263,14 +260,14 @@ webDeepSearchRoutes.post('/', async (c) => {
 			requestBodyLoggingMode: c.get('requestBodyLoggingMode'),
 			responseBody: guardedOutput.ok
 				? JSON.stringify({
-					result_count: guardedOutput.value.length,
-					results: guardedOutput.value.map((r) => ({
-						title: r.title,
-						url: r.url,
-						snippet: r.snippet?.slice(0, 240),
-						content_preview: r.content?.slice(0, 240),
-					})),
-				})
+						result_count: guardedOutput.value.length,
+						results: guardedOutput.value.map((r) => ({
+							title: r.title,
+							url: r.url,
+							snippet: r.snippet?.slice(0, 240),
+							content_preview: r.content?.slice(0, 240),
+						})),
+					})
 				: JSON.stringify({ guardrail_blocked: true }),
 			errorMessage: guardedOutput.ok ? null : 'Response blocked by output guardrail',
 			status: guardedOutput.ok ? 'success' : 'error',

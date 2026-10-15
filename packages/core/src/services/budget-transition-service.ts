@@ -33,7 +33,7 @@ export type BudgetTransitionParams = {
 	metadata?: Record<string, unknown>;
 	reason?: string;
 	/** Optional confirmation guard: a stale preview must never silently recalculate. */
-	expected_before?: BudgetTransitionSnapshot;
+	expected_before?: BudgetTransitionExpectedSnapshot;
 };
 
 export class BudgetTransitionStalePreviewError extends Error {
@@ -50,6 +50,8 @@ export class BudgetTransitionInvalidTargetError extends Error {
 	}
 }
 
+export type BudgetTransitionExpectedSnapshot = Omit<BudgetTransitionSnapshot, 'wallet_granted' | 'wallet_spent' | 'wallet_balance'> & Partial<Pick<BudgetTransitionSnapshot, 'wallet_granted' | 'wallet_spent' | 'wallet_balance'>>;
+
 export type BudgetTransitionSnapshot = {
 	budget_max: number | null;
 	budget_base: number;
@@ -58,6 +60,9 @@ export type BudgetTransitionSnapshot = {
 	budget_reset_at: string | null;
 	budget_epoch: number;
 	budget_reserved_micros: number;
+	wallet_granted: number;
+	wallet_spent: number;
+	wallet_balance: number;
 };
 
 export type BudgetTransitionPreview = {
@@ -72,12 +77,14 @@ function snapshotFromUserRow(row: UserRow): BudgetTransitionSnapshot {
 		row.budget_reset_at,
 		row.budget_spent,
 		row.budget_max,
-		row.budget_base
+		row.budget_base,
 	);
 	const due = budgetLazyResetNeedsPersist(
 		{ budget_spent: row.budget_spent, budget_reset_at: row.budget_reset_at, budget_max: row.budget_max },
 		{ budget_spent: lazy.budget_spent, budget_reset_at: lazy.budget_reset_at, budget_max: lazy.budget_max },
 	);
+	const walletGranted = roundGatewayMoney(Number(row.wallet_granted ?? 0));
+	const walletSpent = roundGatewayMoney(Number(row.wallet_spent ?? 0));
 	return {
 		budget_max: lazy.budget_max,
 		budget_base: roundGatewayMoney(Number(row.budget_base ?? 0)),
@@ -86,17 +93,25 @@ function snapshotFromUserRow(row: UserRow): BudgetTransitionSnapshot {
 		budget_reset_at: lazy.budget_reset_at,
 		budget_epoch: row.budget_epoch + (due ? 1 : 0),
 		budget_reserved_micros: due ? 0 : row.budget_reserved_micros,
+		wallet_granted: walletGranted,
+		wallet_spent: walletSpent,
+		wallet_balance: roundGatewayMoney(walletGranted - walletSpent),
 	};
 }
 
-function matchesExpectedBefore(actual: BudgetTransitionSnapshot, expected: BudgetTransitionSnapshot): boolean {
-	return actual.budget_max === expected.budget_max &&
+function matchesExpectedBefore(actual: BudgetTransitionSnapshot, expected: BudgetTransitionExpectedSnapshot): boolean {
+	return (
+		actual.budget_max === expected.budget_max &&
 		actual.budget_base === expected.budget_base &&
 		actual.budget_spent === expected.budget_spent &&
 		actual.budget_period === expected.budget_period &&
 		normalizeBudgetResetAt(actual.budget_reset_at) === normalizeBudgetResetAt(expected.budget_reset_at) &&
 		actual.budget_epoch === expected.budget_epoch &&
-		actual.budget_reserved_micros === expected.budget_reserved_micros;
+		actual.budget_reserved_micros === expected.budget_reserved_micros &&
+		(expected.wallet_granted === undefined || actual.wallet_granted === expected.wallet_granted) &&
+		(expected.wallet_spent === undefined || actual.wallet_spent === expected.wallet_spent) &&
+		(expected.wallet_balance === undefined || actual.wallet_balance === expected.wallet_balance)
+	);
 }
 
 function resolveBudgetResetAt(input: BudgetTransitionParams): string | null {
@@ -111,7 +126,7 @@ function resolveBudgetResetAt(input: BudgetTransitionParams): string | null {
 
 export function computeBudgetTransition(
 	before: BudgetTransitionSnapshot,
-	input: BudgetTransitionParams
+	input: BudgetTransitionParams,
 ): BudgetTransitionPreview {
 	const targetBase = roundGatewayMoney(input.target_budget_base);
 	const strategy = input.carryover_strategy ?? 'remaining_or_overage';
@@ -123,9 +138,7 @@ export function computeBudgetTransition(
 	}
 	const currentReserved = userBudgetAmount(before.budget_reserved_micros);
 	const carryover =
-		strategy === 'remaining_or_overage'
-			? roundGatewayMoney(currentMax - currentSpent - currentReserved)
-			: 0;
+		strategy === 'remaining_or_overage' ? roundGatewayMoney(currentMax - currentSpent - currentReserved) : 0;
 	const nextMax = roundGatewayMoney(targetBase + carryover);
 	if (!Number.isFinite(nextMax) || nextMax < 0) {
 		throw new BudgetTransitionInvalidTargetError();
@@ -143,6 +156,9 @@ export function computeBudgetTransition(
 			budget_reset_at: budgetResetAt,
 			budget_epoch: before.budget_epoch + (resetSpent ? 1 : 0),
 			budget_reserved_micros: resetSpent ? 0 : before.budget_reserved_micros,
+			wallet_granted: before.wallet_granted,
+			wallet_spent: before.wallet_spent,
+			wallet_balance: before.wallet_balance,
 		},
 		carryover,
 	};
@@ -150,14 +166,12 @@ export function computeBudgetTransition(
 
 function mergeMetadataJson(
 	row: UserRow,
-	metadataPatch: Record<string, unknown> | undefined
+	metadataPatch: Record<string, unknown> | undefined,
 ): string | null | undefined {
 	if (metadataPatch === undefined) {
 		return undefined;
 	}
-	const existing: Record<string, unknown> = row.metadata
-		? (JSON.parse(row.metadata) as Record<string, unknown>)
-		: {};
+	const existing: Record<string, unknown> = row.metadata ? (JSON.parse(row.metadata) as Record<string, unknown>) : {};
 	return JSON.stringify({ ...existing, ...metadataPatch });
 }
 
@@ -165,7 +179,7 @@ function mergeMetadataJson(
 export async function previewBudgetTransition(
 	repos: GatewayRepositories,
 	userId: string,
-	input: BudgetTransitionParams
+	input: BudgetTransitionParams,
 ): Promise<BudgetTransitionPreview | null> {
 	const row = await repos.users.getById(userId);
 	if (!row) return null;
@@ -204,18 +218,20 @@ async function applyBudgetTransitionAttempt(
 	if (input.expected_before && !matchesExpectedBefore(before, input.expected_before)) {
 		throw new BudgetTransitionStalePreviewError();
 	}
-	if (budgetLazyResetNeedsPersist(
-		{
-			budget_spent: row.budget_spent,
-			budget_reset_at: row.budget_reset_at,
-			budget_max: row.budget_max,
-		},
-		{
-			budget_spent: before.budget_spent,
-			budget_reset_at: before.budget_reset_at,
-			budget_max: before.budget_max,
-		},
-	)) {
+	if (
+		budgetLazyResetNeedsPersist(
+			{
+				budget_spent: row.budget_spent,
+				budget_reset_at: row.budget_reset_at,
+				budget_max: row.budget_max,
+			},
+			{
+				budget_spent: before.budget_spent,
+				budget_reset_at: before.budget_reset_at,
+				budget_max: before.budget_max,
+			},
+		)
+	) {
 		if (retriesRemaining > 0) {
 			return applyBudgetTransitionAttempt(repos, userId, input, actorId, retriesRemaining - 1);
 		}
@@ -241,11 +257,13 @@ async function applyBudgetTransitionAttempt(
 	};
 	const afterSnap = snapshotToJson(userRowToSnapshot(afterRowForSnap));
 	const changedFieldsJson = changedFieldsToJson(
-		computeChangedFields(userRowToSnapshot(row), userRowToSnapshot(afterRowForSnap))
+		computeChangedFields(userRowToSnapshot(row), userRowToSnapshot(afterRowForSnap)),
 	);
 
 	const ok = await applyUserBudgetTransitionWithAuditTx(repos, {
 		userId,
+		expectedWalletGranted: row.wallet_granted ?? 0,
+		expectedWalletSpent: row.wallet_spent ?? 0,
 		expectedBudgetMax: row.budget_max,
 		expectedBudgetBase: row.budget_base,
 		expectedBudgetEpoch: row.budget_epoch,

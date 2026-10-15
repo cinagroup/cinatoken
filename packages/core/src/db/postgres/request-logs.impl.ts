@@ -28,10 +28,9 @@ import {
 	normalizeRouteAvailabilityAggregate,
 	routeAvailabilityAggregateParams,
 } from '../provider-attempt-availability';
-import {
-	buildManagementAnalyticsQuery,
-	mapManagementAnalyticsResult,
-} from '../analytics-query';
+import { buildManagementAnalyticsQuery, mapManagementAnalyticsResult } from '../analytics-query';
+import { appendModelIdPrefixCondition, appendProviderIdsCondition } from '../request-log-filters';
+import { postgresTimeseriesBucketExpr } from '../request-timeseries-bucket';
 
 export function createPostgresRequestLogsRepository(db: PostgresDatabaseClient): RequestLogsRepository {
 	const pg = db.raw;
@@ -48,9 +47,7 @@ export function createPostgresRequestLogsRepository(db: PostgresDatabaseClient):
 		async insertGenerationFeedbackForManagementAccount(params): Promise<boolean> {
 			assertGenerationFeedbackInsertParams(params);
 			const personal = params.account.accountType === 'personal';
-			const ownerId = personal
-				? params.account.personalOwnerUserId!
-				: params.account.organizationId!;
+			const ownerId = personal ? params.account.personalOwnerUserId! : params.account.organizationId!;
 			const accountPredicate = personal
 				? `mk.account_type = 'personal'
 				   AND mk.personal_owner_user_id = $7
@@ -100,7 +97,7 @@ export function createPostgresRequestLogsRepository(db: PostgresDatabaseClient):
 
 		async getRequestLogByIdForOwner(options): Promise<GenerationRequestLogRow | null> {
 			const rows = (await pg.unsafe(
-			`SELECT rl.id, rl.request_operation, rl.status, rl.created_at::text AS created_at,
+				`SELECT rl.id, rl.request_operation, rl.status, rl.created_at::text AS created_at,
 			        rl.latency_ms, rl.final_upstream_headers_ms, rl.stream_duration_ms,
 			        rl.model_id, rl.provider_name,
 			        rl.input_tokens, rl.output_tokens, rl.cache_read_tokens,
@@ -118,7 +115,7 @@ export function createPostgresRequestLogsRepository(db: PostgresDatabaseClient):
 				   AND rl.user_id = $2
 				   AND rl.workspace_id = $3
 				 LIMIT 1`,
-				[options.id, options.userId, options.workspaceId]
+				[options.id, options.userId, options.workspaceId],
 			)) as GenerationRequestLogRow[];
 			return rows[0] ?? null;
 		},
@@ -127,7 +124,7 @@ export function createPostgresRequestLogsRepository(db: PostgresDatabaseClient):
 			apiKeyId: string,
 			page: number,
 			pageSize: number,
-			filter?: { excludeStatus?: string; includeStatuses?: string[] }
+			filter?: { excludeStatus?: string; includeStatuses?: string[] },
 		): Promise<{ logs: RequestLogRow[]; total: number }> {
 			const offset = (page - 1) * pageSize;
 			const include = filterAllowedRequestLogStatuses(filter?.includeStatuses);
@@ -173,12 +170,15 @@ export function createPostgresRequestLogsRepository(db: PostgresDatabaseClient):
 			page?: number;
 			pageSize?: number;
 			workspaceId?: string;
+			id?: string;
 			apiKeyId?: string;
 			userId?: string;
 			userEmail?: string;
 			modelId?: string;
 			providerId?: string;
 			providerName?: string;
+			providerIds?: string[];
+			modelIdPrefix?: string;
 			routeGroup?: string;
 			protocol?: string;
 			status?: string;
@@ -196,6 +196,10 @@ export function createPostgresRequestLogsRepository(db: PostgresDatabaseClient):
 				bindValues.push(options.workspaceId);
 			}
 
+			if (options.id) {
+				conditions.push('rl.id = ?');
+				bindValues.push(options.id);
+			}
 			if (options.apiKeyId) {
 				conditions.push('rl.api_key_id = ?');
 				bindValues.push(options.apiKeyId);
@@ -220,6 +224,8 @@ export function createPostgresRequestLogsRepository(db: PostgresDatabaseClient):
 				conditions.push('rl.provider_name = ?');
 				bindValues.push(options.providerName);
 			}
+			appendProviderIdsCondition(conditions, bindValues, 'rl.provider_id', options.providerIds);
+			appendModelIdPrefixCondition(conditions, bindValues, 'rl.model_id', options.modelIdPrefix);
 			if (options.routeGroup) {
 				conditions.push('rl.route_group = ?');
 				bindValues.push(options.routeGroup);
@@ -244,10 +250,9 @@ export function createPostgresRequestLogsRepository(db: PostgresDatabaseClient):
 			const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
 
 			const countSql = sqlitePlaceholdersToPg(`SELECT COUNT(*) as total FROM api_key_request_logs rl ${whereClause}`);
-			const countRows = (await pg.unsafe(
-				countSql,
-				bindValues as Parameters<typeof pg.unsafe>[1]
-			)) as { total: string | number }[];
+			const countRows = (await pg.unsafe(countSql, bindValues as Parameters<typeof pg.unsafe>[1])) as {
+				total: string | number;
+			}[];
 			const total = Number(countRows[0]?.total ?? 0);
 
 			const selectSql = sqlitePlaceholdersToPg(
@@ -255,12 +260,11 @@ export function createPostgresRequestLogsRepository(db: PostgresDatabaseClient):
 				 FROM api_key_request_logs rl
 				 LEFT JOIN users u ON u.id = rl.user_id
 				 ${whereClause}
-				 ORDER BY rl.created_at DESC LIMIT ? OFFSET ?`
+				 ORDER BY rl.created_at DESC LIMIT ? OFFSET ?`,
 			);
-			const dataRows = (await pg.unsafe(
-				selectSql,
-				[...bindValues, pageSize, offset] as Parameters<typeof pg.unsafe>[1]
-			)) as RequestLogRow[];
+			const dataRows = (await pg.unsafe(selectSql, [...bindValues, pageSize, offset] as Parameters<
+				typeof pg.unsafe
+			>[1])) as RequestLogRow[];
 			return { logs: dataRows, total };
 		},
 
@@ -322,18 +326,8 @@ export function createPostgresRequestLogsRepository(db: PostgresDatabaseClient):
 
 		async getRequestActivityGroups(options) {
 			const comparator = options.endExclusive ? '<' : '<=';
-			const values: unknown[] = [
-				options.startDate,
-				options.endDate,
-				options.userId,
-				options.workspaceId,
-			];
-			const conditions = [
-				`created_at >= $1`,
-				`created_at ${comparator} $2`,
-				'user_id = $3',
-				'workspace_id = $4',
-			];
+			const values: unknown[] = [options.startDate, options.endDate, options.userId, options.workspaceId];
+			const conditions = [`created_at >= $1`, `created_at ${comparator} $2`, 'user_id = $3', 'workspace_id = $4'];
 			if (options.apiKeyId) {
 				values.push(options.apiKeyId);
 				conditions.push(`api_key_id = $${values.length}`);
@@ -350,17 +344,12 @@ export function createPostgresRequestLogsRepository(db: PostgresDatabaseClient):
 				values.push(options.status);
 				conditions.push(`status = $${values.length}`);
 			}
-			const groupColumn = options.dimension === 'model'
-				? 'model_id'
-				: options.dimension === 'provider' ? 'provider_name' : 'api_key_id';
-			const groupName = options.dimension === 'model'
-				? "MAX(NULLIF(model_name, ''))"
-				: 'NULL::text';
+			const groupColumn =
+				options.dimension === 'model' ? 'model_id' : options.dimension === 'provider' ? 'provider_name' : 'api_key_id';
+			const groupName = options.dimension === 'model' ? "MAX(NULLIF(model_name, ''))" : 'NULL::text';
 			conditions.push(`${groupColumn} IS NOT NULL`, `${groupColumn} != ''`);
 			const parsedLimit = Number(options.limit);
-			const limit = Number.isFinite(parsedLimit)
-				? Math.min(25, Math.max(1, Math.trunc(parsedLimit)))
-				: 10;
+			const limit = Number.isFinite(parsedLimit) ? Math.min(25, Math.max(1, Math.trunc(parsedLimit))) : 10;
 			values.push(limit);
 			const q = `SELECT
 				${groupColumn} as group_id,
@@ -384,6 +373,7 @@ export function createPostgresRequestLogsRepository(db: PostgresDatabaseClient):
 			endDate: string;
 			endExclusive?: boolean;
 			granularity: 'hour' | 'day';
+			timeZone?: string;
 			userId?: string;
 			workspaceId?: string;
 			apiKeyId?: string;
@@ -391,12 +381,9 @@ export function createPostgresRequestLogsRepository(db: PostgresDatabaseClient):
 			providerName?: string;
 			status?: string;
 		}) {
-			const bucketExpr =
-				options.granularity === 'hour'
-					? "to_char(date_trunc('hour', created_at::timestamp), 'YYYY-MM-DD HH24:MI:SS')"
-					: "to_char(date_trunc('day', created_at::timestamp), 'YYYY-MM-DD')";
+			const bucketExpr = postgresTimeseriesBucketExpr(options.granularity, '$3');
 			const comparator = options.endExclusive ? '<' : '<=';
-			const values: unknown[] = [options.startDate, options.endDate];
+			const values: unknown[] = [options.startDate, options.endDate, options.timeZone ?? 'UTC'];
 			const conditions = [`created_at >= $1`, `created_at ${comparator} $2`];
 			for (const [column, value] of [
 				['user_id', options.userId],
@@ -450,7 +437,10 @@ export function createPostgresRequestLogsRepository(db: PostgresDatabaseClient):
 			   AND user_email IN (${emailParams})
 			 GROUP BY 1, user_email
 			 ORDER BY 1 ASC`;
-			const rows = (await pg.unsafe(q, [options.startDate, options.endDate, ...options.userEmails])) as Record<string, unknown>[];
+			const rows = (await pg.unsafe(q, [options.startDate, options.endDate, ...options.userEmails])) as Record<
+				string,
+				unknown
+			>[];
 			return mapUserTokenTimeseriesRows(rows);
 		},
 
@@ -469,13 +459,15 @@ export function createPostgresRequestLogsRepository(db: PostgresDatabaseClient):
 		},
 
 		async getRecentLogs(limit: number): Promise<RequestLogRow[]> {
-			return (await pg.unsafe('SELECT * FROM api_key_request_logs ORDER BY created_at DESC LIMIT $1', [limit])) as RequestLogRow[];
+			return (await pg.unsafe('SELECT * FROM api_key_request_logs ORDER BY created_at DESC LIMIT $1', [
+				limit,
+			])) as RequestLogRow[];
 		},
 
 		async getRecentErrors(limit: number): Promise<RequestLogRow[]> {
 			return (await pg.unsafe(
 				`SELECT * FROM api_key_request_logs WHERE status = 'error' ORDER BY created_at DESC LIMIT $1`,
-				[limit]
+				[limit],
 			)) as RequestLogRow[];
 		},
 
@@ -486,31 +478,25 @@ export function createPostgresRequestLogsRepository(db: PostgresDatabaseClient):
 			const sql = sqlitePlaceholdersToPg(
 				buildRecentRoutePerformanceSamplesSql('postgres', options.routeTargetIds.length),
 			);
-			return (await pg.unsafe(
-				sql,
-				[...options.routeTargetIds, options.sinceIso, maxSamplesPerRoute] as Parameters<typeof pg.unsafe>[1],
-			)) as RoutePerformanceSample[];
+			return (await pg.unsafe(sql, [...options.routeTargetIds, options.sinceIso, maxSamplesPerRoute] as Parameters<
+				typeof pg.unsafe
+			>[1])) as RoutePerformanceSample[];
 		},
 
 		async getRouteAvailabilityAggregates(options) {
 			if (options.routeTargetIds.length === 0) return [];
-			const sql = sqlitePlaceholdersToPg(
-				buildRouteAvailabilityAggregateSql('postgres', options.routeTargetIds.length),
-			);
-			const rows = await pg.unsafe(
+			const sql = sqlitePlaceholdersToPg(buildRouteAvailabilityAggregateSql('postgres', options.routeTargetIds.length));
+			const rows = (await pg.unsafe(
 				sql,
 				routeAvailabilityAggregateParams(options) as Parameters<typeof pg.unsafe>[1],
-			) as Record<string, unknown>[];
+			)) as Record<string, unknown>[];
 			return rows.map(normalizeRouteAvailabilityAggregate);
 		},
 
 		async deleteProviderAttemptAvailabilityBefore(options) {
 			assertProviderAttemptRetentionDeleteParams(options);
 			const sql = sqlitePlaceholdersToPg(buildProviderAttemptRetentionDeleteSql('postgres'));
-			const rows = await pg.unsafe<Array<{ deleted_count: string | number }>>(
-				sql,
-				[options.cutoffIso, options.limit],
-			);
+			const rows = await pg.unsafe<Array<{ deleted_count: string | number }>>(sql, [options.cutoffIso, options.limit]);
 			const deleted = Number(rows[0]?.deleted_count ?? 0);
 			if (!Number.isSafeInteger(deleted) || deleted < 0 || deleted > options.limit) {
 				throw new TypeError('Provider attempt retention delete result is invalid');
@@ -518,7 +504,11 @@ export function createPostgresRequestLogsRepository(db: PostgresDatabaseClient):
 			return deleted;
 		},
 
-		async getDistinctActiveUsersCount(options: { startDate: string; endDate: string; endExclusive?: boolean }): Promise<number> {
+		async getDistinctActiveUsersCount(options: {
+			startDate: string;
+			endDate: string;
+			endExclusive?: boolean;
+		}): Promise<number> {
 			const comparator = options.endExclusive ? '<' : '<=';
 			const q = `SELECT
 				COUNT(DISTINCT CASE WHEN user_email IS NOT NULL AND user_email != '' THEN user_email END)::bigint as active_users

@@ -4,11 +4,7 @@ import type { RouteResult } from '../model-router';
 import { dispatchAnthropicRoute } from './anthropic-driver';
 import { dispatchOpenAiRoute } from './openai-driver';
 import { dispatchOpenAiResponsesRoute } from './openai-responses-driver';
-import {
-	dispatchGeminiRoute,
-	GEMINI_POST_DISCONNECT_DRAIN_MS,
-	GEMINI_SSE_MAX_LINE_CHARS,
-} from './gemini-driver';
+import { dispatchGeminiRoute, GEMINI_POST_DISCONNECT_DRAIN_MS, GEMINI_SSE_MAX_LINE_CHARS } from './gemini-driver';
 
 type StreamDispatchResult = {
 	response: Response;
@@ -27,9 +23,10 @@ function route(protocol: 'openai' | 'anthropic' | 'gemini'): RouteResult {
 		upstreamProtocol: protocol,
 		upstreamOperation: protocol === 'anthropic' ? 'messages' : protocol === 'gemini' ? 'models.generate' : 'chat',
 		adapter: 'passthrough',
-		providerEndpoints: protocol === 'gemini'
-			? { gemini: { base: 'https://generativelanguage.googleapis.com/v1beta/models' } }
-			: { [protocol]: { base: 'https://provider.test/v1' } },
+		providerEndpoints:
+			protocol === 'gemini'
+				? { gemini: { base: 'https://generativelanguage.googleapis.com/v1beta/models' } }
+				: { [protocol]: { base: 'https://provider.test/v1' } },
 		providerApiKey: 'provider-secret',
 		providerSharedChannelType: null,
 		priceOverrideRaw: null,
@@ -74,7 +71,10 @@ async function assertPreAbortedSignalSettles(
 ): Promise<void> {
 	let fetches = 0;
 	await withMockFetch(
-		() => { fetches++; return new Response(responseBody, { headers: { 'Content-Type': 'text/event-stream' } }); },
+		() => {
+			fetches++;
+			return new Response(responseBody, { headers: { 'Content-Type': 'text/event-stream' } });
+		},
 		async () => {
 			const controller = new AbortController();
 			controller.abort();
@@ -96,7 +96,9 @@ describe('stream driver client-abort lifecycle', () => {
 			start(controller) {
 				controller.enqueue(new TextEncoder().encode(`data: ${'x'.repeat(GEMINI_SSE_MAX_LINE_CHARS + 1)}`));
 			},
-			cancel() { cancelled = true; },
+			cancel() {
+				cancelled = true;
+			},
 		});
 		await withMockFetch(
 			() => new Response(body, { headers: { 'Content-Type': 'text/event-stream' } }),
@@ -197,13 +199,7 @@ describe('stream driver client-abort lifecycle', () => {
 				responseId: 'gemini-aborted',
 				usageMetadata: { promptTokenCount: 2, candidatesTokenCount: 3, totalTokenCount: 5 },
 			})}\n\n`,
-			(signal) => dispatchGeminiRoute(
-				route('gemini'),
-				{},
-				'streamGenerateContent',
-				'',
-				signal,
-			),
+			(signal) => dispatchGeminiRoute(route('gemini'), {}, 'streamGenerateContent', '', signal),
 			0,
 		);
 	});
@@ -221,14 +217,15 @@ describe('stream driver client-abort lifecycle', () => {
 
 		for (const testCase of cases) {
 			await withMockFetch(
-				() => new Response(
-					new ReadableStream<Uint8Array>({
-						start(controller) {
-							controller.error(new Error('upstream stream interrupted'));
-						},
-					}),
-					{ status: 200, headers: { 'Content-Type': 'text/event-stream' } },
-				),
+				() =>
+					new Response(
+						new ReadableStream<Uint8Array>({
+							start(controller) {
+								controller.error(new Error('upstream stream interrupted'));
+							},
+						}),
+						{ status: 200, headers: { 'Content-Type': 'text/event-stream' } },
+					),
 				async () => {
 					const result = await testCase.dispatch();
 					const publicBody = await result.response.text();

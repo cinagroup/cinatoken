@@ -1,34 +1,33 @@
 /**
  * 管理后台聚合服务：仪表盘 KPI、全局请求日志列表、`system_config` 读写，以及模型/供应商/用户/可靠性分析 API 的数据装配。
  */
-import type { GatewayRepositories, RequestLogRow } from "@octafuse/core";
-import type { AdminPrincipal } from "@/lib/admin-principal";
+import type { GatewayRepositories, RequestLogRow } from '@octafuse/core';
+import type { AdminPrincipal } from '@/lib/admin-principal';
 import {
 	BILLING_CURRENCY_KEY,
 	tryParseGatewaySupportedBillingCurrencyInput,
-} from "@octafuse/core/lib/billing-currency";
+} from '@octafuse/core/lib/billing-currency';
 import {
 	DEFAULT_ROUTE_STRATEGY,
 	isRouteStrategyName,
 	ROUTE_STRATEGY_NAMES,
-} from "@octafuse/core/db/model-route-policy";
-import { ROUTE_STRATEGY_KEY } from "@octafuse/core/lib/route-strategy-system-config";
-import { badRequest } from "./errors";
+} from '@octafuse/core/db/model-route-policy';
+import { ROUTE_STRATEGY_KEY } from '@octafuse/core/lib/route-strategy-system-config';
 import {
-	toolConfigGenericFamily,
-	updateGenericToolConfig,
-} from "./tool-config-service";
-import {
-	clampAnalyticsRange,
-	rangeToDates,
-	resolveStatsDateRange,
-} from "./shared";
+	DEFAULT_USER_CHARGED_COST_FACTOR_MODE,
+	USER_CHARGED_COST_FACTOR_MODE_KEY,
+	USER_CHARGED_COST_FACTOR_MODES,
+	isUserChargedCostFactorMode,
+} from '@octafuse/core/lib/user-charged-cost-factor-mode';
+import { badRequest } from './errors';
+import { toolConfigGenericFamily, updateGenericToolConfig } from './tool-config-service';
+import { clampAnalyticsRange, rangeToDates, resolveStatsDateRange } from './shared';
 import {
 	getBusinessDayWindow,
 	getBusinessTimezone,
 	parseBusinessTimezoneInput,
-} from "@octafuse/core/lib/business-timezone";
-import { normalizeUpstreamProtocol } from "@octafuse/core/upstream-protocol";
+} from '@octafuse/core/lib/business-timezone';
+import { normalizeUpstreamProtocol } from '@octafuse/core/upstream-protocol';
 import type {
 	AdminConfigRow,
 	AdminConfigUpdateInput,
@@ -43,9 +42,11 @@ import type {
 	AdminAnalyticsRecentLog,
 	AdminStatsOutput,
 	AdminUserAnalyticsRow,
+	AdminKeyAnalyticsRow,
 	AdminGlobalBudgetAuditLogsOutput,
-} from "./types";
-import type { BudgetAuditLogQuery } from "./budget-audit-log-query";
+} from './types';
+import type { BudgetAuditLogQuery } from './budget-audit-log-query';
+import { resolveAdminUserId } from './users-service';
 
 function mapAnalyticsTtftFields(r: {
 	avg_first_reasoning_token_ms?: unknown;
@@ -57,17 +58,10 @@ function mapAnalyticsTtftFields(r: {
 }) {
 	return {
 		avg_first_reasoning_token_ms:
-			r.avg_first_reasoning_token_ms != null
-				? Number(r.avg_first_reasoning_token_ms)
-				: null,
-		avg_first_token_ms:
-			r.avg_first_token_ms != null ? Number(r.avg_first_token_ms) : null,
-		avg_effective_ttft_ms:
-			r.avg_effective_ttft_ms != null ? Number(r.avg_effective_ttft_ms) : null,
-		avg_reasoning_phase_ms:
-			r.avg_reasoning_phase_ms != null
-				? Number(r.avg_reasoning_phase_ms)
-				: null,
+			r.avg_first_reasoning_token_ms != null ? Number(r.avg_first_reasoning_token_ms) : null,
+		avg_first_token_ms: r.avg_first_token_ms != null ? Number(r.avg_first_token_ms) : null,
+		avg_effective_ttft_ms: r.avg_effective_ttft_ms != null ? Number(r.avg_effective_ttft_ms) : null,
+		avg_reasoning_phase_ms: r.avg_reasoning_phase_ms != null ? Number(r.avg_reasoning_phase_ms) : null,
 		reasoning_ttft_rate: Number(r.reasoning_ttft_rate ?? 0),
 		content_ttft_rate: Number(r.content_ttft_rate ?? 0),
 	};
@@ -77,10 +71,7 @@ function mapAnalyticsTtftFields(r: {
  * Prompt cache 命中率（%）。
  * 网关语义：`input_tokens = regular + cache_read + cache_write`，故分母用 `input_tokens`。
  */
-function computeCacheHitRate(
-	inputTokens: number,
-	cacheReadTokens: number
-): number {
+function computeCacheHitRate(inputTokens: number, cacheReadTokens: number): number {
 	return inputTokens > 0 ? (cacheReadTokens / inputTokens) * 100 : 0;
 }
 
@@ -93,46 +84,46 @@ export async function listAdminGlobalRequestLogsService(
 	input: {
 		page?: number | string;
 		page_size?: number | string;
+		id?: string;
 		api_key_id?: string;
 		user_id?: string;
 		user_email?: string;
 		model_id?: string;
 		provider_id?: string;
+		provider_ids?: string;
+		model_id_prefix?: string;
 		route_group?: string;
 		protocol?: string;
 		status?: string;
 		start_date?: string;
 		end_date?: string;
-	}
+	},
 ): Promise<AdminRequestLogsOutput> {
 	let protocol: string | undefined;
-	if (input.protocol != null && input.protocol.trim() !== "") {
+	if (input.protocol != null && input.protocol.trim() !== '') {
 		try {
 			protocol = normalizeUpstreamProtocol(input.protocol);
 		} catch (e) {
-			throw badRequest(e instanceof Error ? e.message : "Invalid protocol");
+			throw badRequest(e instanceof Error ? e.message : 'Invalid protocol');
 		}
 	}
-	const page = Math.max(1, Number.parseInt(String(input.page ?? "1"), 10));
-	const pageSize = Math.min(
-		100,
-		Math.max(1, Number.parseInt(String(input.page_size ?? "20"), 10))
-	);
+	const page = Math.max(1, Number.parseInt(String(input.page ?? '1'), 10));
+	const pageSize = Math.min(100, Math.max(1, Number.parseInt(String(input.page_size ?? '20'), 10)));
 	const userId = input.user_id?.trim();
-	if (
-		input.user_id &&
-		(!userId || userId.length > 600 || /\p{Cc}/u.test(userId))
-	) {
-		throw badRequest("Invalid user ID");
+	if (input.user_id && (!userId || userId.length > 600 || /\p{Cc}/u.test(userId))) {
+		throw badRequest('Invalid user ID');
 	}
 	const result = await repos.requestLogs.getRequestLogs({
 		page,
 		pageSize,
+		id: input.id?.trim() || undefined,
 		apiKeyId: input.api_key_id,
 		userId,
 		userEmail: input.user_email,
 		modelId: input.model_id,
 		providerId: input.provider_id,
+		providerIds: parseProviderIds(input.provider_ids),
+		modelIdPrefix: input.model_id_prefix?.trim() || undefined,
 		routeGroup: input.route_group,
 		protocol,
 		status: input.status,
@@ -142,12 +133,39 @@ export async function listAdminGlobalRequestLogsService(
 	return { ...result, page, page_size: pageSize };
 }
 
+const MAX_PROVIDER_IDS = 10;
+
+function parseProviderIds(raw: string | undefined): string[] | undefined {
+	if (raw == null || raw.trim() === '') return undefined;
+	const ids = [
+		...new Set(
+			raw
+				.split(',')
+				.map((value) => value.trim())
+				.filter((value) => value !== ''),
+		),
+	];
+	if (ids.length > MAX_PROVIDER_IDS) {
+		throw badRequest('provider_ids accepts at most 10 values');
+	}
+	return ids.length > 0 ? ids : undefined;
+}
+
+/** 多值过滤参数：可重复出现，也可在单个值里用逗号分隔；去空去重。 */
+function parseMultiValueFilter(input: string | string[] | undefined): string[] | undefined {
+	const values = (Array.isArray(input) ? input : input ? [input] : [])
+		.flatMap((value) => value.split(','))
+		.map((value) => value.trim())
+		.filter((value, index, all) => value !== '' && all.indexOf(value) === index);
+	return values.length > 0 ? values : undefined;
+}
+
 /**
  * 全局 `user_audit_logs` 分页（可选 api_key_id、user_email、event_type、actor_type、actor_id、actor_kind、时间窗）。
  */
 export async function listAdminGlobalBudgetAuditLogsService(
 	repos: GatewayRepositories,
-	query: BudgetAuditLogQuery
+	query: BudgetAuditLogQuery,
 ): Promise<AdminGlobalBudgetAuditLogsOutput> {
 	const result = await repos.userAuditLogs.getGlobalUserAuditLogs({
 		...query.filters,
@@ -157,20 +175,16 @@ export async function listAdminGlobalBudgetAuditLogsService(
 	return { ...result, page: query.page, page_size: query.pageSize };
 }
 
-export async function listAdminGlobalBudgetAuditLogFilterOptionsService(
-	repos: GatewayRepositories
-) {
+export async function listAdminGlobalBudgetAuditLogFilterOptionsService(repos: GatewayRepositories) {
 	return repos.userAuditLogs.getGlobalUserAuditLogFilterOptions();
 }
 
 /** 配置列表；空 value 转为 `''` 便于前端表单展示。 */
-export async function listAdminSystemConfigService(
-	repos: GatewayRepositories
-): Promise<AdminConfigRow[]> {
+export async function listAdminSystemConfigService(repos: GatewayRepositories): Promise<AdminConfigRow[]> {
 	const rows = await repos.systemConfig.listSystemConfigRows();
 	return rows.map((r) => ({
 		key: r.key,
-		value: r.value ?? "",
+		value: r.value ?? '',
 		description: r.description ?? null,
 	}));
 }
@@ -182,53 +196,48 @@ export async function listAdminSystemConfigService(
 export function updateAdminSystemConfigService(
 	repos: GatewayRepositories,
 	body: AdminConfigUpdateInput,
-	principal: AdminPrincipal
+	principal: AdminPrincipal,
 ): Promise<void>;
 export function updateAdminSystemConfigService(
 	repos: GatewayRepositories,
 	body: AdminConfigUpdateInput,
 	principal: AdminPrincipal,
-	expectedRevision: string | null
+	expectedRevision: string | null,
 ): Promise<{ committed: boolean; revision: string | null }>;
 export function updateAdminSystemConfigService(
 	repos: GatewayRepositories,
 	body: AdminConfigUpdateInput,
 	principal: AdminPrincipal,
 	expectedRevision: string | null | undefined,
-	options: { requireToolsVersion: boolean }
+	options: { requireToolsVersion: boolean },
 ): Promise<{ committed: boolean; revision: string | null }>;
 export async function updateAdminSystemConfigService(
 	repos: GatewayRepositories,
 	body: AdminConfigUpdateInput,
 	principal: AdminPrincipal,
 	expectedRevision?: string | null,
-	options?: { requireToolsVersion: boolean }
+	options?: { requireToolsVersion: boolean },
 ): Promise<void | { committed: boolean; revision: string | null }> {
-	if (typeof body.key !== "string" || body.key.trim() === "") {
-		throw badRequest("key is required");
+	if (typeof body.key !== 'string' || body.key.trim() === '') {
+		throw badRequest('key is required');
 	}
-	if (
-		body.value !== undefined &&
-		body.value !== null &&
-		typeof body.value !== "string"
-	) {
-		throw badRequest("value must be string");
+	if (body.value !== undefined && body.value !== null && typeof body.value !== 'string') {
+		throw badRequest('value must be string');
 	}
 	const key = body.key.trim();
-	if (key === "MASTER_KEY") {
-		throw badRequest("MASTER_KEY is removed; use Integration Keys");
+	if (key === 'MASTER_KEY') {
+		throw badRequest('MASTER_KEY is removed; use Integration Keys');
 	}
-	let value = body.value == null ? "" : String(body.value);
-	if (key === "BUSINESS_TIMEZONE") {
+	let value = body.value == null ? '' : String(body.value);
+	if (key === 'BUSINESS_TIMEZONE') {
 		const parsed = parseBusinessTimezoneInput(value);
-		if (!parsed)
-			throw badRequest("BUSINESS_TIMEZONE must be a valid IANA timezone");
+		if (!parsed) throw badRequest('BUSINESS_TIMEZONE must be a valid IANA timezone');
 		value = parsed;
 	}
 	if (key === BILLING_CURRENCY_KEY) {
 		const parsed = tryParseGatewaySupportedBillingCurrencyInput(value);
 		if (!parsed) {
-			throw badRequest("BILLING_CURRENCY must be USD or CNY");
+			throw badRequest('BILLING_CURRENCY must be USD or CNY');
 		}
 		value = parsed;
 	}
@@ -236,25 +245,52 @@ export async function updateAdminSystemConfigService(
 		const normalized = value.trim().toLowerCase();
 		if (!isRouteStrategyName(normalized)) {
 			throw badRequest(
-				`ROUTE_STRATEGY must be one of: ${ROUTE_STRATEGY_NAMES.join(
-					", "
-				)} (default ${DEFAULT_ROUTE_STRATEGY})`
+				`ROUTE_STRATEGY must be one of: ${ROUTE_STRATEGY_NAMES.join(', ')} (default ${DEFAULT_ROUTE_STRATEGY})`,
 			);
 		}
 		value = normalized;
 	}
+	if (key === USER_CHARGED_COST_FACTOR_MODE_KEY) {
+		const normalized = value.trim().toLowerCase();
+		if (!isUserChargedCostFactorMode(normalized)) {
+			throw badRequest(
+				`USER_CHARGED_COST_FACTOR_MODE must be one of: ${USER_CHARGED_COST_FACTOR_MODES.join(', ')} (default ${DEFAULT_USER_CHARGED_COST_FACTOR_MODE})`,
+			);
+		}
+		value = normalized;
+	}
+	if (key === 'STREAM_FIRST_EVENT_TIMEOUT_MS') {
+		const trimmed = value.trim();
+		if (trimmed && !/^\d+$/.test(trimmed)) {
+			throw badRequest('STREAM_FIRST_EVENT_TIMEOUT_MS must be a positive integer millisecond value or empty');
+		}
+		value = trimmed;
+	}
+	if (key === 'STREAM_FIRST_EVENT_TIMEOUT_ROUTE_GROUPS') {
+		const trimmed = value.trim();
+		if (trimmed && trimmed !== '*' && trimmed.toLowerCase() !== 'all') {
+			const groups = trimmed
+				.split(',')
+				.map((part) => part.trim())
+				.filter(Boolean);
+			if (groups.length === 0) {
+				throw badRequest(
+					'STREAM_FIRST_EVENT_TIMEOUT_ROUTE_GROUPS must be empty, *, all, or a comma-separated list of route groups',
+				);
+			}
+		}
+		value = trimmed;
+	}
 	const legacyToolKeys = new Set([
-		"WEB_SEARCH_PROVIDER",
-		"WEB_SEARCH_API_KEY",
-		"WEB_SEARCH_COST",
-		"WEB_FETCH_PROVIDER",
-		"WEB_FETCH_API_KEY",
-		"WEB_FETCH_COST",
+		'WEB_SEARCH_PROVIDER',
+		'WEB_SEARCH_API_KEY',
+		'WEB_SEARCH_COST',
+		'WEB_FETCH_PROVIDER',
+		'WEB_FETCH_API_KEY',
+		'WEB_FETCH_COST',
 	]);
 	if (legacyToolKeys.has(key)) {
-		throw badRequest(
-			`${key} is deprecated; use Tools → Configuration (WEB_*_ACTIVE / WEB_*_CATALOG) instead`
-		);
+		throw badRequest(`${key} is deprecated; use Tools → Configuration (WEB_*_ACTIVE / WEB_*_CATALOG) instead`);
 	}
 	if (toolConfigGenericFamily(key)) {
 		const result = await updateGenericToolConfig(
@@ -264,7 +300,7 @@ export async function updateAdminSystemConfigService(
 			{
 				requireVersion: options?.requireToolsVersion,
 				expectedRevision,
-			}
+			},
 		);
 		return expectedRevision !== undefined || options ? result : undefined;
 	}
@@ -273,7 +309,7 @@ export async function updateAdminSystemConfigService(
 		auditId: crypto.randomUUID(),
 		key,
 		value,
-		actorKind: principal.type === "console" ? "console" : "admin_key",
+		actorKind: principal.type === 'console' ? 'console' : 'admin_key',
 		actorId: principal.id,
 		nowIso: new Date().toISOString(),
 	} as const;
@@ -305,7 +341,7 @@ function analyticsRecentLog(row: RequestLogRow): AdminAnalyticsRecentLog {
  */
 export async function getAdminStatsService(
 	repos: GatewayRepositories,
-	input?: { range?: string; startDate?: string; endDate?: string }
+	input?: { range?: string; startDate?: string; endDate?: string },
 ): Promise<AdminStatsOutput> {
 	const { startDate, endDate, granularity } = resolveStatsDateRange({
 		range: input?.range,
@@ -313,8 +349,10 @@ export async function getAdminStatsService(
 		endDate: input?.endDate,
 	});
 	const businessTimeZone = await getBusinessTimezone(repos);
-	const { startUtcSql: dayStart, endExclusiveUtcSql: dayEndExclusive } =
-		getBusinessDayWindow(new Date(), businessTimeZone);
+	const { startUtcSql: dayStart, endExclusiveUtcSql: dayEndExclusive } = getBusinessDayWindow(
+		new Date(),
+		businessTimeZone,
+	);
 
 	const [
 		keysCount,
@@ -343,11 +381,7 @@ export async function getAdminStatsService(
 		repos.requestLogs.getThroughputLastMinute(),
 		repos.analytics.queryModelAnalytics({ start: startDate, end: endDate }),
 		repos.analytics.queryUserAnalytics({ start: startDate, end: endDate }),
-		repos.requestLogs.queryRequestTimeseries({
-			startDate,
-			endDate,
-			granularity,
-		}),
+		repos.requestLogs.queryRequestTimeseries({ startDate, endDate, granularity, timeZone: businessTimeZone }),
 	]);
 
 	const modelDistributionMap = new Map<
@@ -364,7 +398,7 @@ export async function getAdminStatsService(
 		}
 	>();
 	for (const row of modelRows) {
-		const modelId = String(row.model_id ?? "unknown");
+		const modelId = String(row.model_id ?? 'unknown');
 		const existing = modelDistributionMap.get(modelId) ?? {
 			model_id: modelId,
 			request_count: 0,
@@ -378,8 +412,7 @@ export async function getAdminStatsService(
 		existing.request_count += Number(row.request_count);
 		existing.input_tokens += Number(row.input_tokens);
 		existing.output_tokens += Number(row.output_tokens);
-		existing.total_tokens +=
-			Number(row.input_tokens) + Number(row.output_tokens);
+		existing.total_tokens += Number(row.input_tokens) + Number(row.output_tokens);
 		existing.charged_cost += Number(row.charged_cost);
 		existing.metered_cost += Number(row.metered_cost);
 		existing.standard_cost += Number(row.standard_cost);
@@ -413,25 +446,16 @@ export async function getAdminStatsService(
 		todayRequestsCount,
 		todayCost: todayStats.chargedCost,
 		todayTokens: todayStats.totalTokens,
-		errorRate:
-			todayRequestsCount > 0
-				? (todayStats.errorCount / todayRequestsCount) * 100
-				: 0,
+		errorRate: todayRequestsCount > 0 ? (todayStats.errorCount / todayRequestsCount) * 100 : 0,
 	};
 	const kpi = {
 		totalRequests: kpiStats.totalRequests,
-		successRate:
-			kpiStats.totalRequests > 0
-				? (kpiStats.successCount / kpiStats.totalRequests) * 100
-				: 0,
+		successRate: kpiStats.totalRequests > 0 ? (kpiStats.successCount / kpiStats.totalRequests) * 100 : 0,
 		totalCost: kpiStats.chargedCost,
 		meteredCost: kpiStats.meteredCost,
 		standardCost: kpiStats.standardCost,
 		activeUsers,
-		errorRate:
-			kpiStats.totalRequests > 0
-				? (kpiStats.errorCount / kpiStats.totalRequests) * 100
-				: 0,
+		errorRate: kpiStats.totalRequests > 0 ? (kpiStats.errorCount / kpiStats.totalRequests) * 100 : 0,
 		inputTokens: kpiStats.inputTokens,
 		outputTokens: kpiStats.outputTokens,
 		cacheReadTokens: kpiStats.cacheReadTokens,
@@ -477,25 +501,29 @@ export async function getModelAnalyticsService(
 		tag?: string;
 		provider_id?: string;
 		user_email?: string;
-	}
+		user_id?: string;
+		api_key_id?: string;
+	},
 ): Promise<AdminModelAnalyticsOutput> {
-	const { start, end } = clampAnalyticsRange(
-		input.start_date ?? undefined,
-		input.end_date ?? undefined
-	);
+	const { start, end } = clampAnalyticsRange(input.start_date ?? undefined, input.end_date ?? undefined);
 	const tagRaw = input.tag;
-	const hasTag = tagRaw != null && tagRaw.trim() !== "";
-	const tagValue = hasTag ? tagRaw.trim() : "";
+	const hasTag = tagRaw != null && tagRaw.trim() !== '';
+	const tagValue = hasTag ? tagRaw.trim() : '';
 	const providerIdRaw = input.provider_id;
-	const hasProviderId = providerIdRaw != null && providerIdRaw.trim() !== "";
+	const hasProviderId = providerIdRaw != null && providerIdRaw.trim() !== '';
 	const userEmailRaw = input.user_email;
-	const hasUserEmail = userEmailRaw != null && userEmailRaw.trim() !== "";
+	const hasUserEmail = userEmailRaw != null && userEmailRaw.trim() !== '';
+	const userIdRaw = input.user_id?.trim();
+	const apiKeyIdRaw = input.api_key_id?.trim();
+	const userId = userIdRaw ? await resolveAdminUserId(repos, userIdRaw) : undefined;
 	const rows = await repos.analytics.queryModelAnalytics({
 		start,
 		end,
 		tag: hasTag ? tagValue : undefined,
 		providerId: hasProviderId ? providerIdRaw.trim() : undefined,
 		userEmail: hasUserEmail ? userEmailRaw.trim() : undefined,
+		userId,
+		apiKeyId: apiKeyIdRaw || undefined,
 	});
 	const data = rows.map((r) => {
 		const reqCount = Number(r.request_count);
@@ -506,7 +534,7 @@ export async function getModelAnalyticsService(
 		const cacheWriteTokens = Number(r.cache_write_tokens ?? 0);
 		return {
 			model_id: r.model_id,
-			route_group: r.route_group ?? "default",
+			route_group: r.route_group ?? 'default',
 			request_count: reqCount,
 			charged_cost: chargedCost,
 			metered_cost: Number(r.metered_cost),
@@ -519,16 +547,15 @@ export async function getModelAnalyticsService(
 			success_count: successCount,
 			error_count: Number(r.error_count),
 			success_rate: reqCount > 0 ? (successCount / reqCount) * 100 : 0,
-			avg_latency_ms:
-				r.avg_latency_ms != null ? Number(r.avg_latency_ms) : null,
+			avg_latency_ms: r.avg_latency_ms != null ? Number(r.avg_latency_ms) : null,
 			...mapAnalyticsTtftFields(r),
-			avg_upstream_response_ms:
-				r.avg_upstream_response_ms != null
-					? Number(r.avg_upstream_response_ms)
-					: null,
-			tokens_per_second:
-				r.tokens_per_second != null ? Number(r.tokens_per_second) : null,
+			avg_upstream_response_ms: r.avg_upstream_response_ms != null ? Number(r.avg_upstream_response_ms) : null,
+			tokens_per_second: r.tokens_per_second != null ? Number(r.tokens_per_second) : null,
+			stream_tokens_per_second: r.stream_tokens_per_second != null ? Number(r.stream_tokens_per_second) : null,
+			stream_sample_count: Number(r.stream_sample_count ?? 0),
 			failover_rate: Number(r.failover_rate ?? 0),
+			failover_request_count: Number(r.failover_request_count ?? 0),
+			failover_request_rate: Number(r.failover_request_rate ?? 0),
 			avg_attempts: r.avg_attempts != null ? Number(r.avg_attempts) : null,
 			avg_charged_per_request: reqCount > 0 ? chargedCost / reqCount : 0,
 		};
@@ -549,19 +576,16 @@ export async function getProviderAnalyticsService(
 		tag?: string;
 		model_id?: string;
 		route_group?: string;
-	}
+	},
 ): Promise<AdminProviderAnalyticsOutput> {
-	const { start, end } = clampAnalyticsRange(
-		input.start_date ?? undefined,
-		input.end_date ?? undefined
-	);
+	const { start, end } = clampAnalyticsRange(input.start_date ?? undefined, input.end_date ?? undefined);
 	const tagRaw = input.tag;
-	const hasTag = tagRaw != null && tagRaw.trim() !== "";
-	const tagValue = hasTag ? tagRaw.trim() : "";
+	const hasTag = tagRaw != null && tagRaw.trim() !== '';
+	const tagValue = hasTag ? tagRaw.trim() : '';
 	const modelIdRaw = input.model_id;
-	const hasModelId = modelIdRaw != null && modelIdRaw.trim() !== "";
+	const hasModelId = modelIdRaw != null && modelIdRaw.trim() !== '';
 	const routeGroupRaw = input.route_group;
-	const hasRouteGroup = routeGroupRaw != null && routeGroupRaw.trim() !== "";
+	const hasRouteGroup = routeGroupRaw != null && routeGroupRaw.trim() !== '';
 	const rows = await repos.analytics.queryProviderAnalytics({
 		start,
 		end,
@@ -579,10 +603,7 @@ export async function getProviderAnalyticsService(
 		const nameRaw = r.provider_name;
 		return {
 			provider_id: r.provider_id,
-			provider_name:
-				nameRaw != null && String(nameRaw).trim() !== ""
-					? String(nameRaw)
-					: null,
+			provider_name: nameRaw != null && String(nameRaw).trim() !== '' ? String(nameRaw) : null,
 			request_count: reqCount,
 			charged_cost: chargedCost,
 			metered_cost: Number(r.metered_cost),
@@ -596,16 +617,15 @@ export async function getProviderAnalyticsService(
 			success_count: successCount,
 			error_count: Number(r.error_count),
 			success_rate: reqCount > 0 ? (successCount / reqCount) * 100 : 0,
-			avg_latency_ms:
-				r.avg_latency_ms != null ? Number(r.avg_latency_ms) : null,
+			avg_latency_ms: r.avg_latency_ms != null ? Number(r.avg_latency_ms) : null,
 			...mapAnalyticsTtftFields(r),
-			avg_upstream_response_ms:
-				r.avg_upstream_response_ms != null
-					? Number(r.avg_upstream_response_ms)
-					: null,
-			tokens_per_second:
-				r.tokens_per_second != null ? Number(r.tokens_per_second) : null,
+			avg_upstream_response_ms: r.avg_upstream_response_ms != null ? Number(r.avg_upstream_response_ms) : null,
+			tokens_per_second: r.tokens_per_second != null ? Number(r.tokens_per_second) : null,
+			stream_tokens_per_second: r.stream_tokens_per_second != null ? Number(r.stream_tokens_per_second) : null,
+			stream_sample_count: Number(r.stream_sample_count ?? 0),
 			failover_rate: Number(r.failover_rate ?? 0),
+			failover_request_count: Number(r.failover_request_count ?? 0),
+			failover_request_rate: Number(r.failover_request_rate ?? 0),
 			avg_attempts: r.avg_attempts != null ? Number(r.avg_attempts) : null,
 			avg_charged_per_request: reqCount > 0 ? chargedCost / reqCount : 0,
 		};
@@ -619,12 +639,9 @@ export async function getProviderAnalyticsService(
  */
 export async function getUserAnalyticsService(
 	repos: GatewayRepositories,
-	input: { start_date?: string; end_date?: string; email?: string }
+	input: { start_date?: string; end_date?: string; email?: string },
 ): Promise<AdminUserAnalyticsRow[]> {
-	const { start, end } = clampAnalyticsRange(
-		input.start_date ?? undefined,
-		input.end_date ?? undefined
-	);
+	const { start, end } = clampAnalyticsRange(input.start_date ?? undefined, input.end_date ?? undefined);
 	const rows = await repos.analytics.queryUserAnalytics({
 		start,
 		end,
@@ -635,6 +652,8 @@ export async function getUserAnalyticsService(
 		const successCount = Number(r.success_count);
 		const budgetMax = r.budget_max != null ? Number(r.budget_max) : null;
 		const budgetSpent = Number(r.budget_spent ?? 0);
+		const walletGranted = r.wallet_granted != null ? Number(r.wallet_granted) : 0;
+		const walletSpent = r.wallet_spent != null ? Number(r.wallet_spent) : 0;
 		return {
 			user_email: r.user_email,
 			request_count: reqCount,
@@ -647,10 +666,10 @@ export async function getUserAnalyticsService(
 			last_active_at: r.last_active_at,
 			budget_max: budgetMax,
 			budget_spent: budgetSpent,
-			budget_usage_rate:
-				budgetMax != null && budgetMax > 0
-					? (budgetSpent / budgetMax) * 100
-					: null,
+			wallet_granted: walletGranted,
+			wallet_spent: walletSpent,
+			success_count: successCount,
+			budget_usage_rate: budgetMax != null && budgetMax > 0 ? (budgetSpent / budgetMax) * 100 : null,
 			success_rate: reqCount > 0 ? (successCount / reqCount) * 100 : 0,
 			error_count: Number(r.error_count),
 		};
@@ -658,20 +677,52 @@ export async function getUserAnalyticsService(
 }
 
 /**
+ * 用户下按 API Key 聚合用量；`user_id` 必填（UUID 或 `ext:` 路由）。
+ */
+export async function getKeyAnalyticsService(
+	repos: GatewayRepositories,
+	input: { start_date?: string; end_date?: string; user_id?: string },
+): Promise<AdminKeyAnalyticsRow[]> {
+	const userIdRaw = input.user_id?.trim();
+	if (!userIdRaw) throw badRequest('user_id is required');
+	const userId = await resolveAdminUserId(repos, userIdRaw);
+	const { start, end } = clampAnalyticsRange(input.start_date ?? undefined, input.end_date ?? undefined);
+	const rows = await repos.analytics.queryKeyAnalytics({ start, end, userId });
+	return rows.map((r) => {
+		const reqCount = Number(r.request_count);
+		const successCount = Number(r.success_count);
+		return {
+			api_key_id: r.api_key_id,
+			key_name: r.key_name,
+			request_count: reqCount,
+			input_tokens: Number(r.input_tokens),
+			output_tokens: Number(r.output_tokens),
+			charged_cost: Number(r.charged_cost),
+			metered_cost: Number(r.metered_cost),
+			standard_cost: Number(r.standard_cost),
+			distinct_models: Number(r.distinct_models),
+			last_active_at: r.last_active_at,
+			success_count: successCount,
+			error_count: Number(r.error_count),
+			success_rate: reqCount > 0 ? (successCount / reqCount) * 100 : 0,
+		};
+	});
+}
+
+/**
  * 供应商可靠性 + 模型×供应商矩阵 + 最近错误日志片段。
  */
 export async function getReliabilityAnalyticsService(
 	repos: GatewayRepositories,
-	input: { start_date?: string; end_date?: string }
+	input: { start_date?: string; end_date?: string },
 ): Promise<AdminReliabilityAnalyticsOutput> {
-	const { start, end } = clampAnalyticsRange(
-		input.start_date ?? undefined,
-		input.end_date ?? undefined
-	);
+	const { start, end } = clampAnalyticsRange(input.start_date ?? undefined, input.end_date ?? undefined);
 	const [providers, modelProviders, recentErrors] = await Promise.all([
 		repos.analytics.queryProviderReliability({ start, end }),
 		repos.analytics.queryModelProviderReliability({ start, end }),
-		repos.requestLogs.getRecentErrors(10),
+		repos.requestLogs
+			.getRequestLogs({ page: 1, pageSize: 10, status: 'error', startDate: start, endDate: end })
+			.then((result) => result.logs),
 	]);
 
 	const providerRows = providers.map((r) => {
@@ -682,15 +733,12 @@ export async function getReliabilityAnalyticsService(
 			request_count: requestCount,
 			success_count: Number(r.success_count),
 			error_count: Number(r.error_count),
-			success_rate:
-				requestCount > 0 ? (Number(r.success_count) / requestCount) * 100 : 0,
-			avg_latency_ms:
-				r.avg_latency_ms != null ? Number(r.avg_latency_ms) : null,
-			avg_upstream_response_ms:
-				r.avg_upstream_response_ms != null
-					? Number(r.avg_upstream_response_ms)
-					: null,
+			success_rate: requestCount > 0 ? (Number(r.success_count) / requestCount) * 100 : 0,
+			avg_latency_ms: r.avg_latency_ms != null ? Number(r.avg_latency_ms) : null,
+			avg_upstream_response_ms: r.avg_upstream_response_ms != null ? Number(r.avg_upstream_response_ms) : null,
 			failover_rate: Number(r.failover_rate ?? 0),
+			failover_request_count: Number(r.failover_request_count ?? 0),
+			failover_request_rate: Number(r.failover_request_rate ?? 0),
 			avg_attempts: r.avg_attempts != null ? Number(r.avg_attempts) : null,
 			charged_cost: Number(r.charged_cost),
 			metered_cost: Number(r.metered_cost),
@@ -704,15 +752,12 @@ export async function getReliabilityAnalyticsService(
 			provider_id: r.provider_id,
 			provider_name: r.provider_name ?? null,
 			request_count: requestCount,
-			success_rate:
-				requestCount > 0 ? (Number(r.success_count) / requestCount) * 100 : 0,
-			avg_latency_ms:
-				r.avg_latency_ms != null ? Number(r.avg_latency_ms) : null,
-			avg_upstream_response_ms:
-				r.avg_upstream_response_ms != null
-					? Number(r.avg_upstream_response_ms)
-					: null,
+			success_rate: requestCount > 0 ? (Number(r.success_count) / requestCount) * 100 : 0,
+			avg_latency_ms: r.avg_latency_ms != null ? Number(r.avg_latency_ms) : null,
+			avg_upstream_response_ms: r.avg_upstream_response_ms != null ? Number(r.avg_upstream_response_ms) : null,
 			failover_rate: Number(r.failover_rate ?? 0),
+			failover_request_count: Number(r.failover_request_count ?? 0),
+			failover_request_rate: Number(r.failover_request_rate ?? 0),
 			avg_attempts: r.avg_attempts != null ? Number(r.avg_attempts) : null,
 			charged_cost: Number(r.charged_cost),
 			metered_cost: Number(r.metered_cost),

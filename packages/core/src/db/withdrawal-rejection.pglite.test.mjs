@@ -13,7 +13,7 @@ test('actual 81-migration PostgreSQL ledger accepts only unclaimed administrativ
   const ledger = createPostgresPortalLedgerRepository({...f.client,raw});
   try {
     assert.equal(f.migrations.length, 81);
-    assert.equal(f.migrations.at(-1), '0081_tools_config_group_audit.sql');
+    assert.equal(f.migrations.at(-1), '0085_mcp_servers.sql');
     async function setup(searchPath = 'pg_catalog, public, pg_temp, cinatoken_gateway') {
       const shadows = await f.reset(searchPath);
       await f.pg.exec(`DELETE FROM cinatoken_gateway.chain_job_transactions;

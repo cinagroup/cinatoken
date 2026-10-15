@@ -1,23 +1,10 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import type { RouteResult } from '../model-router';
-import {
-	dispatchAnthropicRoute,
-	MAX_ANTHROPIC_SSE_LINE_CHARS,
-} from './anthropic-driver';
-import {
-	dispatchOpenAiRoute,
-	MAX_OPENAI_SSE_LINE_CHARS,
-} from './openai-driver';
-import {
-	dispatchOpenAiResponsesRoute,
-	MAX_RESPONSES_SSE_LINE_CHARS,
-} from './openai-responses-driver';
-import {
-	BoundedSseEventFramer,
-	parseSseEventData,
-	rewriteSseEventData,
-} from './sse-data-line';
+import { dispatchAnthropicRoute, MAX_ANTHROPIC_SSE_LINE_CHARS } from './anthropic-driver';
+import { dispatchOpenAiRoute, MAX_OPENAI_SSE_LINE_CHARS } from './openai-driver';
+import { dispatchOpenAiResponsesRoute, MAX_RESPONSES_SSE_LINE_CHARS } from './openai-responses-driver';
+import { BoundedSseEventFramer, parseSseEventData, rewriteSseEventData } from './sse-data-line';
 
 function route(protocol: 'openai' | 'anthropic'): RouteResult {
 	return {
@@ -46,10 +33,11 @@ function route(protocol: 'openai' | 'anthropic'): RouteResult {
 
 async function withMockResponse<T>(body: BodyInit, run: () => Promise<T>): Promise<T> {
 	const originalFetch = globalThis.fetch;
-	globalThis.fetch = (async () => new Response(body, {
-		status: 200,
-		headers: { 'Content-Type': 'text/event-stream' },
-	})) as typeof fetch;
+	globalThis.fetch = (async () =>
+		new Response(body, {
+			status: 200,
+			headers: { 'Content-Type': 'text/event-stream' },
+		})) as typeof fetch;
 	try {
 		return await run();
 	} finally {
@@ -113,12 +101,14 @@ describe('OpenRouter text stream terminal contracts', () => {
 			id: 'chatcmpl-private',
 			object: 'chat.completion.chunk',
 			model: 'private/provider-model',
-			choices: [{
-				index: 0,
-				delta: {},
-				finish_reason: 'stop',
-				native_finish_reason: 'end_turn',
-			}],
+			choices: [
+				{
+					index: 0,
+					delta: {},
+					finish_reason: 'stop',
+					native_finish_reason: 'end_turn',
+				},
+			],
 		};
 		const usageFrame = {
 			object: 'chat.completion.chunk',
@@ -143,12 +133,14 @@ describe('OpenRouter text stream terminal contracts', () => {
 				const final = events.find((event) => event.usage != null)!;
 				assert.equal(final.id, 'gen-request-1');
 				assert.equal(final.model, 'public/model-a');
-				assert.deepEqual(final.choices, [{
-					index: 0,
-					delta: { content: '', role: 'assistant' },
-					finish_reason: 'stop',
-					native_finish_reason: 'end_turn',
-				}]);
+				assert.deepEqual(final.choices, [
+					{
+						index: 0,
+						delta: { content: '', role: 'assistant' },
+						finish_reason: 'stop',
+						native_finish_reason: 'end_turn',
+					},
+				]);
 				assert.ok(text.indexOf(JSON.stringify(final)) < text.indexOf('data: [DONE]'));
 				const usage = await result.usagePromise;
 				assert.equal(usage.total_tokens, 5);
@@ -173,11 +165,7 @@ describe('OpenRouter text stream terminal contracts', () => {
 			'data: [DONE]',
 			'',
 		].join('\r\n');
-		await withMockResponse(chunkedStream([
-			body.slice(0, 37),
-			body.slice(37, 121),
-			body.slice(121),
-		]), async () => {
+		await withMockResponse(chunkedStream([body.slice(0, 37), body.slice(37, 121), body.slice(121)]), async () => {
 			const result = await dispatchOpenAiRoute(
 				route('openai'),
 				{ stream: true },
@@ -218,8 +206,11 @@ describe('OpenRouter text stream terminal contracts', () => {
 				const text = await result.response.text();
 				const terminal = dataEvents(text).at(-1)!;
 				assert.equal(terminal.id, 'gen-request-error');
-				assert.equal((terminal.error as { metadata: { error_type: string } }).metadata.error_type, 'provider_unavailable');
-				assert.equal(((terminal.choices as Array<{ finish_reason: string }>)[0]!).finish_reason, 'error');
+				assert.equal(
+					(terminal.error as { metadata: { error_type: string } }).metadata.error_type,
+					'provider_unavailable',
+				);
+				assert.equal((terminal.choices as Array<{ finish_reason: string }>)[0]!.finish_reason, 'error');
 				assert.doesNotMatch(text, /must-not-leak/);
 				const streamError = (await result.usagePromise).stream_error ?? '';
 				assert.match(streamError, /stream|authorization/i);
@@ -288,11 +279,7 @@ describe('OpenRouter text stream terminal contracts', () => {
 			'data: [DONE]',
 			'',
 		].join('\r\n');
-		await withMockResponse(chunkedStream([
-			body.slice(0, 29),
-			body.slice(29, 187),
-			body.slice(187),
-		]), async () => {
+		await withMockResponse(chunkedStream([body.slice(0, 29), body.slice(29, 187), body.slice(187)]), async () => {
 			const result = await dispatchOpenAiResponsesRoute(route('openai'), { stream: true });
 			const text = await result.response.text();
 			const events = dataEvents(text);
@@ -403,11 +390,7 @@ describe('OpenRouter text stream terminal contracts', () => {
 			'data: }',
 			'',
 		].join('\r\n');
-		await withMockResponse(chunkedStream([
-			body.slice(0, 35),
-			body.slice(35, 153),
-			body.slice(153),
-		]), async () => {
+		await withMockResponse(chunkedStream([body.slice(0, 35), body.slice(35, 153), body.slice(153)]), async () => {
 			const result = await dispatchAnthropicRoute(route('anthropic'), { stream: true });
 			const text = await result.response.text();
 			const events = dataEvents(text);

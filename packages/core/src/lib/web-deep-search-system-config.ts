@@ -2,7 +2,7 @@
  * Agent Web Deep Search（`POST /v1/tools/web-deep-search`）的 `system_config` 键与解析。
  * 权威配置：`WEB_DEEP_SEARCH_ACTIVE` + `WEB_DEEP_SEARCH_CATALOG`（JSON）；无旧三键兼容。
  * 引擎为「搜 + 读」一体（Firecrawl Search / Jina Search），有别于普通 `web-search`。
- * Catalog 单价为三账本：metered / standard / charged（旧 `cost` 为 charged 别名）。
+ * Catalog 新价格存 pricing（标准价与倍率）；旧三账本单价及 `cost` 继续兼容读取。
  */
 
 import type { GatewayRepositories } from '../storage/repositories';
@@ -10,9 +10,10 @@ import type { ConfigSnapshot } from '../db/system-config-group-types';
 import { TOOL_CONFIG_FAMILY_KEYS, toolConfigValuesFromSnapshots } from '../db/system-config-group';
 import { roundGatewayMoney } from './money-precision';
 import {
-	normalizeToolUnitPrices,
+	parseToolCatalogPricing,
+	toolCatalogPricingForStorage,
+	type ToolCatalogPricingFields,
 	parseToolMoneyField,
-	toToolPricingFields,
 	type ToolUnitPrices,
 } from './tool-pricing';
 
@@ -34,6 +35,7 @@ export type WebDeepSearchCatalogEntry = {
 	metered: number;
 	standard: number;
 	charged: number;
+	pricing?: ToolCatalogPricingFields['pricing'];
 };
 
 export type WebDeepSearchCatalog = Partial<Record<WebDeepSearchProvider, WebDeepSearchCatalogEntry>>;
@@ -42,7 +44,9 @@ export function isWebDeepSearchProvider(value: string): value is WebDeepSearchPr
 	return (WEB_DEEP_SEARCH_PROVIDERS as readonly string[]).includes(value);
 }
 
-export function parseWebDeepSearchProviderInput(raw: string | null | undefined): WebDeepSearchProvider | null {
+export function parseWebDeepSearchProviderInput(
+	raw: string | null | undefined
+): WebDeepSearchProvider | null {
 	const v = raw?.trim().toLowerCase() ?? '';
 	if (!v) {
 		return null;
@@ -58,20 +62,17 @@ export function parseWebDeepSearchActiveInput(raw: string | null | undefined): W
 	return parseWebDeepSearchProviderInput(raw);
 }
 
-function parseEntry(
-	rec: Record<string, unknown>,
-	strict: boolean
-): WebDeepSearchCatalogEntry | null {
+function parseEntry(rec: Record<string, unknown>, strict: boolean): WebDeepSearchCatalogEntry | null {
 	if (typeof rec.apiKey !== 'string') {
 		return null;
 	}
-	const prices = normalizeToolUnitPrices(rec, DEFAULT_WEB_DEEP_SEARCH_COST, strict);
+	const prices = parseToolCatalogPricing(rec, DEFAULT_WEB_DEEP_SEARCH_COST, strict);
 	if (!prices) {
 		return null;
 	}
 	return {
 		apiKey: rec.apiKey.trim(),
-		...toToolPricingFields(prices),
+		...prices,
 	};
 }
 
@@ -108,7 +109,9 @@ export function parseWebDeepSearchCatalogInput(raw: string | null | undefined): 
 }
 
 /** 宽松解析（resolve / UI seed）。 */
-export function parseWebDeepSearchCatalogLenient(raw: string | null | undefined): WebDeepSearchCatalog | null {
+export function parseWebDeepSearchCatalogLenient(
+	raw: string | null | undefined
+): WebDeepSearchCatalog | null {
 	if (raw == null || !String(raw).trim()) {
 		return null;
 	}
@@ -137,19 +140,15 @@ export function parseWebDeepSearchCatalogLenient(raw: string | null | undefined)
 }
 
 export function serializeWebDeepSearchCatalog(catalog: WebDeepSearchCatalog): string {
-	const normalized: WebDeepSearchCatalog = {};
+	const normalized: Record<string, unknown> = {};
 	for (const [key, entry] of Object.entries(catalog) as [
 		WebDeepSearchProvider,
-		WebDeepSearchCatalogEntry | undefined,
+		WebDeepSearchCatalogEntry | undefined
 	][]) {
 		if (!entry) continue;
 		normalized[key] = {
 			apiKey: entry.apiKey,
-			...toToolPricingFields({
-				metered: entry.metered,
-				standard: entry.standard,
-				charged: entry.charged ?? entry.cost,
-			}),
+			...toolCatalogPricingForStorage(entry),
 		};
 	}
 	return JSON.stringify(normalized);
@@ -171,6 +170,7 @@ export type ResolvedWebDeepSearchConfig = {
 		cost: 'system_config' | 'default';
 		mode: 'catalog';
 	};
+	pricing?: ToolCatalogPricingFields['pricing'];
 };
 
 export type ResolveWebDeepSearchConfigResult =
@@ -264,6 +264,7 @@ export function resolveWebDeepSearchConfigFromSnapshots(snapshots: readonly Conf
 			apiKey,
 			cost: prices.charged,
 			...prices,
+			...(entry?.pricing ? { pricing: entry.pricing } : {}),
 			sources: {
 				provider: providerSource,
 				apiKey: 'system_config',

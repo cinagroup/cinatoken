@@ -1,30 +1,13 @@
 /**
  * Postgres：`api_keys`（预算在 `users`）。
  */
-import {
-	and,
-	asc,
-	count,
-	desc,
-	eq,
-	gt,
-	inArray,
-	isNotNull,
-	isNull,
-	like,
-	lte,
-	or,
-	sql,
-} from "drizzle-orm";
-import type { ApiKeyRow, ResolvedGatewayKeyRow } from "../../types";
-import { roundGatewayMoney } from "../../lib/money-precision";
-import type { PostgresDatabaseClient } from "../../storage/database-client";
-import {
-	hashLookupKey,
-	prepareGatewayApiKeyForStorage,
-	resolveGatewayApiKeyPreview,
-} from "../../lib/key-hash";
-import type { AdminKeyMutationWithAudit, ApiKeysRepository } from "../../storage/gateway-repository-interfaces";
+import { and, asc, count, desc, eq, gt, inArray, isNotNull, isNull, like, lte, or, sql } from 'drizzle-orm';
+import type { ApiKeyRow, ResolvedGatewayKeyRow } from '../../types';
+import { parseApiKeyRateLimit } from '../../lib/api-key-rate-limit';
+import { roundGatewayMoney } from '../../lib/money-precision';
+import type { PostgresDatabaseClient } from '../../storage/database-client';
+import { hashLookupKey, prepareGatewayApiKeyForStorage, resolveGatewayApiKeyPreview } from '../../lib/key-hash';
+import type { AdminKeyMutationWithAudit, ApiKeysRepository } from '../../storage/gateway-repository-interfaces';
 import {
 	apiKeysTable as pgApiKeysTable,
 	userAuditLogsTable as pgUserAuditLogsTable,
@@ -33,29 +16,29 @@ import {
 	usersTable as pgUsersTable,
 	workspaceMembershipsTable as pgWorkspaceMembershipsTable,
 	workspacesTable as pgWorkspacesTable,
-} from "../../storage/drizzle/schema.pg";
+} from '../../storage/drizzle/schema.pg';
 import type {
 	BudgetFilter,
 	InsertKeyParams,
 	ManagementGatewayKeyListParams,
 	ManagementGatewayKeyLookupParams,
 	ManagementGatewayKeyRow,
-} from "../api-keys-types";
-import { assertGatewayKeyLookupHash } from "../api-keys-types";
+} from '../api-keys-types';
+import { assertGatewayKeyLookupHash } from '../api-keys-types';
 import {
 	DEFAULT_API_KEY_LIST_ORDER,
 	DEFAULT_API_KEY_LIST_SORT,
 	type ApiKeyListSortField,
 	type ApiKeyListSortOrder,
-} from "../api-keys-list-sort";
-import type { AdminApiKeyListItem } from "../../storage/repository-dtos";
-import { parseMoney } from "../../storage/critical-write-paths-utils";
-import { normalizeGatewayKeyLimitReset } from "../../gateway-key-limits";
+} from '../api-keys-list-sort';
+import type { AdminApiKeyListItem } from '../../storage/repository-dtos';
+import { parseMoney } from '../../storage/critical-write-paths-utils';
+import { normalizeGatewayKeyLimitReset } from '../../gateway-key-limits';
 import { assertAdminKeyMutation, matchesAdminKeyProfile, matchesAdminUserAuditSnapshot } from '../admin-key-mutation';
 import { toUserAuditLogDrizzleInsert } from '../user-audit-drizzle-insert';
 
 function isDispatchIntentApiKeyDeleteRestriction(error: unknown): boolean {
-	if (typeof error !== "object" || error === null) return false;
+	if (typeof error !== 'object' || error === null) return false;
 	const pgError = error as {
 		code?: unknown;
 		constraint_name?: unknown;
@@ -65,34 +48,28 @@ function isDispatchIntentApiKeyDeleteRestriction(error: unknown): boolean {
 		table_name?: unknown;
 		table?: unknown;
 	};
-	const expectedConstraint = "request_dispatch_intents_api_key_id_fkey";
-	const matchesIfPresent = (value: unknown, expected: string) =>
-		value === undefined || value === expected;
+	const expectedConstraint = 'request_dispatch_intents_api_key_id_fkey';
+	const matchesIfPresent = (value: unknown, expected: string) => value === undefined || value === expected;
 	return (
-		(pgError.code === "23001" || pgError.code === "23503") &&
+		(pgError.code === '23001' || pgError.code === '23503') &&
 		(pgError.constraint_name === expectedConstraint || pgError.constraint === expectedConstraint) &&
 		matchesIfPresent(pgError.constraint_name, expectedConstraint) &&
 		matchesIfPresent(pgError.constraint, expectedConstraint) &&
-		matchesIfPresent(pgError.schema_name, "cinatoken_gateway") &&
-		matchesIfPresent(pgError.schema, "cinatoken_gateway") &&
-		matchesIfPresent(pgError.table_name, "request_dispatch_intents") &&
-		matchesIfPresent(pgError.table, "request_dispatch_intents")
+		matchesIfPresent(pgError.schema_name, 'cinatoken_gateway') &&
+		matchesIfPresent(pgError.schema, 'cinatoken_gateway') &&
+		matchesIfPresent(pgError.table_name, 'request_dispatch_intents') &&
+		matchesIfPresent(pgError.table, 'request_dispatch_intents')
 	);
 }
 
-function apiKeyListOrderBy(
-	sort: ApiKeyListSortField,
-	order: ApiKeyListSortOrder
-) {
-	const isAsc = order === "asc";
-	if (sort === "budget_reset_at") {
+function apiKeyListOrderBy(sort: ApiKeyListSortField, order: ApiKeyListSortOrder) {
+	const isAsc = order === 'asc';
+	if (sort === 'budget_reset_at') {
 		const col = pgUsersTable.budgetResetAt;
 		return isAsc ? sql`${col} ASC NULLS LAST` : sql`${col} DESC NULLS FIRST`;
 	}
-	if (sort === "budget_spent") {
-		return isAsc
-			? asc(pgUsersTable.budgetSpent)
-			: desc(pgUsersTable.budgetSpent);
+	if (sort === 'budget_spent') {
+		return isAsc ? asc(pgUsersTable.budgetSpent) : desc(pgUsersTable.budgetSpent);
 	}
 	return isAsc ? asc(pgApiKeysTable.createdAt) : desc(pgApiKeysTable.createdAt);
 }
@@ -112,6 +89,7 @@ function mapPgKeyRow(r: {
 	includeByokInLimit: boolean;
 	limitEpoch: number;
 	lastUsedAt: string | null;
+	rateLimit: string | null;
 	createdAt: string;
 	updatedAt: string;
 }): ApiKeyRow {
@@ -129,6 +107,8 @@ function mapPgKeyRow(r: {
 		include_byok_in_limit: r.includeByokInLimit,
 		limit_epoch: Number(r.limitEpoch),
 		last_used_at: r.lastUsedAt,
+		rate_limit: parseApiKeyRateLimit(r.rateLimit),
+		rate_limit_raw: r.rateLimit,
 		created_at: r.createdAt,
 		updated_at: r.updatedAt,
 	};
@@ -149,6 +129,7 @@ function mapPgResolvedRow(r: {
 	includeByokInLimit: boolean;
 	limitEpoch: number;
 	lastUsedAt: string | null;
+	rateLimit: string | null;
 	createdAt: string;
 	updatedAt: string;
 	userEmail: string | null;
@@ -161,6 +142,9 @@ function mapPgResolvedRow(r: {
 	budgetReservedMicros: number;
 	userMetadata: string | null;
 	userChargedCostFactors: string | null;
+	userRateLimit: string | null;
+	walletGranted: string;
+	walletSpent: string;
 }): ResolvedGatewayKeyRow {
 	const k = mapPgKeyRow(r);
 	return {
@@ -168,6 +152,7 @@ function mapPgResolvedRow(r: {
 		user_email: r.userEmail,
 		user_metadata: r.userMetadata,
 		user_charged_cost_factors: r.userChargedCostFactors ?? null,
+		user_rate_limit: parseApiKeyRateLimit(r.userRateLimit),
 		budget_max: r.budgetMax == null ? null : parseMoney(r.budgetMax),
 		budget_base: parseMoney(r.budgetBase),
 		budget_spent: parseMoney(r.budgetSpent),
@@ -175,6 +160,8 @@ function mapPgResolvedRow(r: {
 		budget_reset_at: r.budgetResetAt,
 		budget_epoch: Number(r.budgetEpoch),
 		budget_reserved_micros: Number(r.budgetReservedMicros),
+		wallet_granted: parseMoney(r.walletGranted),
+		wallet_spent: parseMoney(r.walletSpent),
 	};
 }
 
@@ -191,8 +178,12 @@ function mapPgAdminListRow(r: {
 	budget_spent: string;
 	budget_period: string;
 	budget_reset_at: string | null;
+	wallet_granted: string;
+	wallet_spent: string;
 	status: string;
 	metadata: string | null;
+	last_used_at: string | null;
+	rate_limit: string | null;
 	created_at: string;
 	updated_at: string;
 }): AdminApiKeyListItem {
@@ -203,15 +194,17 @@ function mapPgAdminListRow(r: {
 		workspace_id: r.workspace_id,
 		name: r.name,
 		user_email: r.user_email,
-		budget_max:
-			r.budget_max == null ? null : roundGatewayMoney(Number(r.budget_max)),
-		budget_base:
-			r.budget_base == null ? 0 : roundGatewayMoney(Number(r.budget_base)),
+		budget_max: r.budget_max == null ? null : roundGatewayMoney(Number(r.budget_max)),
+		budget_base: r.budget_base == null ? 0 : roundGatewayMoney(Number(r.budget_base)),
 		budget_spent: roundGatewayMoney(Number(r.budget_spent)),
 		budget_period: r.budget_period,
 		budget_reset_at: r.budget_reset_at,
+		wallet_granted: roundGatewayMoney(Number(r.wallet_granted ?? 0)),
+		wallet_spent: roundGatewayMoney(Number(r.wallet_spent ?? 0)),
 		status: r.status,
 		metadata: r.metadata,
+		last_used_at: r.last_used_at,
+		rate_limit: parseApiKeyRateLimit(r.rate_limit),
 		created_at: r.created_at,
 		updated_at: r.updated_at,
 	};
@@ -219,9 +212,18 @@ function mapPgAdminListRow(r: {
 
 type PgManagementGatewayKeyRow = Omit<
 	ManagementGatewayKeyRow,
-	"limit_micros" | "include_byok_in_limit" | "limit_epoch" | "limit_consumed_micros"
-	| "usage" | "usage_daily" | "usage_weekly" | "usage_monthly"
-	| "byok_usage" | "byok_usage_daily" | "byok_usage_weekly" | "byok_usage_monthly"
+	| 'limit_micros'
+	| 'include_byok_in_limit'
+	| 'limit_epoch'
+	| 'limit_consumed_micros'
+	| 'usage'
+	| 'usage_daily'
+	| 'usage_weekly'
+	| 'usage_monthly'
+	| 'byok_usage'
+	| 'byok_usage_daily'
+	| 'byok_usage_weekly'
+	| 'byok_usage_monthly'
 > & {
 	limit_micros: string | number | null;
 	include_byok_in_limit: boolean;
@@ -237,9 +239,7 @@ type PgManagementGatewayKeyRow = Omit<
 	byok_usage_monthly: string | number;
 };
 
-function mapPgManagementGatewayKeyRow(
-	row: PgManagementGatewayKeyRow
-): ManagementGatewayKeyRow {
+function mapPgManagementGatewayKeyRow(row: PgManagementGatewayKeyRow): ManagementGatewayKeyRow {
 	return {
 		...row,
 		limit_micros: row.limit_micros === null ? null : Number(row.limit_micros),
@@ -259,29 +259,21 @@ function mapPgManagementGatewayKeyRow(
 
 function pgManagementAccountPredicate(
 	params: ManagementGatewayKeyListParams | ManagementGatewayKeyLookupParams,
-	placeholder: number
+	placeholder: number,
 ): { sql: string; value: string } {
-	if (
-		params.accountType === "personal" &&
-		params.personalOwnerUserId &&
-		params.organizationId === null
-	) {
+	if (params.accountType === 'personal' && params.personalOwnerUserId && params.organizationId === null) {
 		return {
 			sql: `w.scope_type = 'personal' AND w.personal_owner_user_id = $${placeholder} AND w.organization_id IS NULL`,
 			value: params.personalOwnerUserId,
 		};
 	}
-	if (
-		params.accountType === "organization" &&
-		params.personalOwnerUserId === null &&
-		params.organizationId
-	) {
+	if (params.accountType === 'organization' && params.personalOwnerUserId === null && params.organizationId) {
 		return {
 			sql: `w.scope_type = 'organization' AND w.personal_owner_user_id IS NULL AND w.organization_id = $${placeholder}`,
 			value: params.organizationId,
 		};
 	}
-	throw new TypeError("management gateway key account scope is invalid");
+	throw new TypeError('management gateway key account scope is invalid');
 }
 
 const pgManagementUsageSelect = `
@@ -333,6 +325,7 @@ const resolvedCols = {
 	includeByokInLimit: pgApiKeysTable.includeByokInLimit,
 	limitEpoch: pgApiKeysTable.limitEpoch,
 	lastUsedAt: pgApiKeysTable.lastUsedAt,
+	rateLimit: pgApiKeysTable.rateLimit,
 	createdAt: pgApiKeysTable.createdAt,
 	updatedAt: pgApiKeysTable.updatedAt,
 	userEmail: pgUsersTable.email,
@@ -343,37 +336,28 @@ const resolvedCols = {
 	budgetResetAt: pgUsersTable.budgetResetAt,
 	budgetEpoch: pgUsersTable.budgetEpoch,
 	budgetReservedMicros: pgUsersTable.budgetReservedMicros,
+	walletGranted: pgUsersTable.walletGranted,
+	walletSpent: pgUsersTable.walletSpent,
 	userMetadata: pgUsersTable.metadata,
 	userChargedCostFactors: pgUsersTable.chargedCostFactors,
+	userRateLimit: pgUsersTable.rateLimit,
 } as const;
 
 const activeWorkspaceFilter = and(
-	eq(pgWorkspacesTable.status, "active"),
-	or(
-		isNull(pgApiKeysTable.expiresAt),
-		gt(pgApiKeysTable.expiresAt, sql`CURRENT_TIMESTAMP`)
-	),
-	or(
-		eq(pgWorkspacesTable.scopeType, "personal"),
-		inArray(pgOrganizationsTable.status, ["active", "pending"])
-	)
+	eq(pgWorkspacesTable.status, 'active'),
+	or(isNull(pgApiKeysTable.expiresAt), gt(pgApiKeysTable.expiresAt, sql`CURRENT_TIMESTAMP`)),
+	or(eq(pgWorkspacesTable.scopeType, 'personal'), inArray(pgOrganizationsTable.status, ['active', 'pending'])),
 );
 
 const activeGatewayAuthorizationFilter = and(
-	eq(pgWorkspacesTable.status, "active"),
+	eq(pgWorkspacesTable.status, 'active'),
+	or(isNull(pgApiKeysTable.expiresAt), gt(pgApiKeysTable.expiresAt, sql`CURRENT_TIMESTAMP`)),
 	or(
-		isNull(pgApiKeysTable.expiresAt),
-		gt(pgApiKeysTable.expiresAt, sql`CURRENT_TIMESTAMP`)
-	),
-	or(
+		and(eq(pgWorkspacesTable.scopeType, 'personal'), eq(pgWorkspacesTable.personalOwnerUserId, pgApiKeysTable.userId)),
 		and(
-			eq(pgWorkspacesTable.scopeType, "personal"),
-			eq(pgWorkspacesTable.personalOwnerUserId, pgApiKeysTable.userId)
-		),
-		and(
-			eq(pgWorkspacesTable.scopeType, "organization"),
-			inArray(pgOrganizationsTable.status, ["active", "pending"]),
-			eq(pgUsersTable.externalSystem, "cinaauth"),
+			eq(pgWorkspacesTable.scopeType, 'organization'),
+			inArray(pgOrganizationsTable.status, ['active', 'pending']),
+			eq(pgUsersTable.externalSystem, 'cinaauth'),
 			isNotNull(pgUsersTable.externalUserId),
 			sql<boolean>`EXISTS (
 				SELECT 1 FROM ${pgOrganizationMembershipsTable}
@@ -388,40 +372,30 @@ const activeGatewayAuthorizationFilter = and(
 					WHERE ${pgWorkspaceMembershipsTable.workspaceId} = ${pgWorkspacesTable.id}
 						AND ${pgWorkspaceMembershipsTable.subject} = ${pgUsersTable.externalUserId}
 						AND ${pgWorkspaceMembershipsTable.status} = 'active'
-				)`
-			)
-		)
-	)
+				)`,
+			),
+		),
+	),
 );
 
-export function createPostgresApiKeysRepository(
-	db: PostgresDatabaseClient
-): ApiKeysRepository {
+export function createPostgresApiKeysRepository(db: PostgresDatabaseClient): ApiKeysRepository {
 	const drizzle = db.drizzle;
 	const raw = db.raw;
-	const getActiveByLookupHash = async (
-		keyHash: string
-	): Promise<ResolvedGatewayKeyRow | null> => {
+	const getActiveByLookupHash = async (keyHash: string): Promise<ResolvedGatewayKeyRow | null> => {
 		assertGatewayKeyLookupHash(keyHash);
 		const rows = await drizzle
 			.select(resolvedCols)
 			.from(pgApiKeysTable)
 			.innerJoin(pgUsersTable, eq(pgApiKeysTable.userId, pgUsersTable.id))
-			.innerJoin(
-				pgWorkspacesTable,
-				eq(pgApiKeysTable.workspaceId, pgWorkspacesTable.id)
-			)
-			.leftJoin(
-				pgOrganizationsTable,
-				eq(pgWorkspacesTable.organizationId, pgOrganizationsTable.id)
-			)
+			.innerJoin(pgWorkspacesTable, eq(pgApiKeysTable.workspaceId, pgWorkspacesTable.id))
+			.leftJoin(pgOrganizationsTable, eq(pgWorkspacesTable.organizationId, pgOrganizationsTable.id))
 			.where(
 				and(
 					eq(pgApiKeysTable.keyHash, keyHash),
-					eq(pgApiKeysTable.status, "active"),
-					eq(pgUsersTable.status, "active"),
-					activeGatewayAuthorizationFilter
-				)
+					eq(pgApiKeysTable.status, 'active'),
+					eq(pgUsersTable.status, 'active'),
+					activeGatewayAuthorizationFilter,
+				),
 			)
 			.limit(1);
 		return rows[0] ? mapPgResolvedRow(rows[0]) : null;
@@ -432,22 +406,20 @@ export function createPostgresApiKeysRepository(
 				`${pgManagementUsageSelect}
 				WHERE k.id = $1 AND k.status = 'active' AND w.status = 'active'
 					AND (k.expires_at IS NULL OR k.expires_at > CURRENT_TIMESTAMP) LIMIT 1`,
-				[id]
+				[id],
 			);
 			return rows[0] ? mapPgManagementGatewayKeyRow(rows[0]) : null;
 		},
 
 		async listForManagement(params) {
 			const account = pgManagementAccountPredicate(params, 2);
-			const statusSql = params.includeDisabled
-				? ""
-				: " AND k.status = 'active'";
+			const statusSql = params.includeDisabled ? '' : " AND k.status = 'active'";
 			const rows = await raw.unsafe<PgManagementGatewayKeyRow[]>(
 				`${pgManagementUsageSelect}
 				WHERE k.workspace_id = $1 AND k.key_hash IS NOT NULL
 					AND w.status = 'active' AND ${account.sql}${statusSql}
 				ORDER BY k.created_at DESC, k.id DESC LIMIT 100 OFFSET $3`,
-				[params.workspaceId, account.value, params.offset]
+				[params.workspaceId, account.value, params.offset],
 			);
 			return rows.map(mapPgManagementGatewayKeyRow);
 		},
@@ -457,7 +429,7 @@ export function createPostgresApiKeysRepository(
 			const rows = await raw.unsafe<PgManagementGatewayKeyRow[]>(
 				`${pgManagementUsageSelect}
 				WHERE k.key_hash = $1 AND w.status = 'active' AND ${account.sql} LIMIT 1`,
-				[params.keyHash, account.value]
+				[params.keyHash, account.value],
 			);
 			return rows[0] ? mapPgManagementGatewayKeyRow(rows[0]) : null;
 		},
@@ -490,19 +462,19 @@ export function createPostgresApiKeysRepository(
 				limitChanged = true;
 			}
 			if (sets.length === 0) return false;
-			if (limitChanged) sets.push("limit_epoch = limit_epoch + 1");
-			sets.push("updated_at = CURRENT_TIMESTAMP");
+			if (limitChanged) sets.push('limit_epoch = limit_epoch + 1');
+			sets.push('updated_at = CURRENT_TIMESTAMP');
 			const hashPlaceholder = values.length + 1;
 			values.push(params.keyHash);
 			const account = pgManagementAccountPredicate(params, values.length + 1);
 			values.push(account.value);
 			const rows = await raw.unsafe<{ id: string }[]>(
-				`UPDATE cinatoken_gateway.api_keys SET ${sets.join(", ")}
+				`UPDATE cinatoken_gateway.api_keys SET ${sets.join(', ')}
 				WHERE key_hash = $${hashPlaceholder} AND EXISTS (
 					SELECT 1 FROM cinatoken_gateway.workspaces w WHERE w.id = api_keys.workspace_id
 						AND w.status = 'active' AND ${account.sql}
 				) RETURNING id`,
-				values as never[]
+				values as never[],
 			);
 			return rows.length === 1;
 		},
@@ -532,7 +504,7 @@ export function createPostgresApiKeysRepository(
 						SELECT 1 FROM cinatoken_gateway.api_key_request_logs request_log
 						WHERE request_log.api_key_id = api_keys.id
 					) RETURNING id`,
-					[params.keyHash, account.value]
+					[params.keyHash, account.value],
 				);
 			} catch (error) {
 				// 0069 adds an ON DELETE RESTRICT intent FK. Let the FK arbitrate races
@@ -548,41 +520,17 @@ export function createPostgresApiKeysRepository(
 			const byHash = await drizzle
 				.select()
 				.from(pgApiKeysTable)
-				.innerJoin(
-					pgWorkspacesTable,
-					eq(pgApiKeysTable.workspaceId, pgWorkspacesTable.id)
-				)
-				.leftJoin(
-					pgOrganizationsTable,
-					eq(pgWorkspacesTable.organizationId, pgOrganizationsTable.id)
-				)
-				.where(
-					and(
-						eq(pgApiKeysTable.keyHash, keyHash),
-						eq(pgApiKeysTable.status, "active"),
-						activeWorkspaceFilter
-					)
-				)
+				.innerJoin(pgWorkspacesTable, eq(pgApiKeysTable.workspaceId, pgWorkspacesTable.id))
+				.leftJoin(pgOrganizationsTable, eq(pgWorkspacesTable.organizationId, pgOrganizationsTable.id))
+				.where(and(eq(pgApiKeysTable.keyHash, keyHash), eq(pgApiKeysTable.status, 'active'), activeWorkspaceFilter))
 				.limit(1);
 			if (byHash[0]) return mapPgKeyRow(byHash[0].api_keys);
 			const legacy = await drizzle
 				.select()
 				.from(pgApiKeysTable)
-				.innerJoin(
-					pgWorkspacesTable,
-					eq(pgApiKeysTable.workspaceId, pgWorkspacesTable.id)
-				)
-				.leftJoin(
-					pgOrganizationsTable,
-					eq(pgWorkspacesTable.organizationId, pgOrganizationsTable.id)
-				)
-				.where(
-					and(
-						eq(pgApiKeysTable.key, key),
-						eq(pgApiKeysTable.status, "active"),
-						activeWorkspaceFilter
-					)
-				)
+				.innerJoin(pgWorkspacesTable, eq(pgApiKeysTable.workspaceId, pgWorkspacesTable.id))
+				.leftJoin(pgOrganizationsTable, eq(pgWorkspacesTable.organizationId, pgOrganizationsTable.id))
+				.where(and(eq(pgApiKeysTable.key, key), eq(pgApiKeysTable.status, 'active'), activeWorkspaceFilter))
 				.limit(1);
 			if (!legacy[0]) return null;
 			const legacyKey = legacy[0].api_keys;
@@ -594,9 +542,7 @@ export function createPostgresApiKeysRepository(
 					keyHash: prepared.keyHash,
 					keyPreview: prepared.keyPreview,
 				})
-				.where(
-					and(eq(pgApiKeysTable.id, legacyKey.id), eq(pgApiKeysTable.key, key))
-				);
+				.where(and(eq(pgApiKeysTable.id, legacyKey.id), eq(pgApiKeysTable.key, key)));
 			return mapPgKeyRow({
 				...legacyKey,
 				key: prepared.storageKey,
@@ -606,17 +552,9 @@ export function createPostgresApiKeysRepository(
 
 		async getApiKeyByKeyAnyStatus(key: string): Promise<ApiKeyRow | null> {
 			const keyHash = await hashLookupKey(key);
-			const byHash = await drizzle
-				.select()
-				.from(pgApiKeysTable)
-				.where(eq(pgApiKeysTable.keyHash, keyHash))
-				.limit(1);
+			const byHash = await drizzle.select().from(pgApiKeysTable).where(eq(pgApiKeysTable.keyHash, keyHash)).limit(1);
 			if (byHash[0]) return mapPgKeyRow(byHash[0]);
-			const legacy = await drizzle
-				.select()
-				.from(pgApiKeysTable)
-				.where(eq(pgApiKeysTable.key, key))
-				.limit(1);
+			const legacy = await drizzle.select().from(pgApiKeysTable).where(eq(pgApiKeysTable.key, key)).limit(1);
 			if (!legacy[0]) return null;
 			const prepared = await prepareGatewayApiKeyForStorage(key);
 			await drizzle
@@ -626,9 +564,7 @@ export function createPostgresApiKeysRepository(
 					keyHash: prepared.keyHash,
 					keyPreview: prepared.keyPreview,
 				})
-				.where(
-					and(eq(pgApiKeysTable.id, legacy[0].id), eq(pgApiKeysTable.key, key))
-				);
+				.where(and(eq(pgApiKeysTable.id, legacy[0].id), eq(pgApiKeysTable.key, key)));
 			return mapPgKeyRow({
 				...legacy[0],
 				key: prepared.storageKey,
@@ -637,17 +573,11 @@ export function createPostgresApiKeysRepository(
 		},
 
 		async getApiKeyById(id: string): Promise<ApiKeyRow | null> {
-			const rows = await drizzle
-				.select()
-				.from(pgApiKeysTable)
-				.where(eq(pgApiKeysTable.id, id))
-				.limit(1);
+			const rows = await drizzle.select().from(pgApiKeysTable).where(eq(pgApiKeysTable.id, id)).limit(1);
 			return rows[0] ? mapPgKeyRow(rows[0]) : null;
 		},
 
-		async getApiKeyWithUserByKey(
-			key: string
-		): Promise<ResolvedGatewayKeyRow | null> {
+		async getApiKeyWithUserByKey(key: string): Promise<ResolvedGatewayKeyRow | null> {
 			// 审计 M2-3：哈希优先查找；miss 回退明文（迁移窗口），命中即惰性回填。
 			const keyHash = await hashLookupKey(key);
 			const byHash = await getActiveByLookupHash(keyHash);
@@ -656,21 +586,15 @@ export function createPostgresApiKeysRepository(
 				.select(resolvedCols)
 				.from(pgApiKeysTable)
 				.innerJoin(pgUsersTable, eq(pgApiKeysTable.userId, pgUsersTable.id))
-				.innerJoin(
-					pgWorkspacesTable,
-					eq(pgApiKeysTable.workspaceId, pgWorkspacesTable.id)
-				)
-				.leftJoin(
-					pgOrganizationsTable,
-					eq(pgWorkspacesTable.organizationId, pgOrganizationsTable.id)
-				)
+				.innerJoin(pgWorkspacesTable, eq(pgApiKeysTable.workspaceId, pgWorkspacesTable.id))
+				.leftJoin(pgOrganizationsTable, eq(pgWorkspacesTable.organizationId, pgOrganizationsTable.id))
 				.where(
 					and(
 						eq(pgApiKeysTable.key, key),
-						eq(pgApiKeysTable.status, "active"),
-						eq(pgUsersTable.status, "active"),
-						activeGatewayAuthorizationFilter
-					)
+						eq(pgApiKeysTable.status, 'active'),
+						eq(pgUsersTable.status, 'active'),
+						activeGatewayAuthorizationFilter,
+					),
 				)
 				.limit(1);
 			if (rows[0]) {
@@ -682,9 +606,7 @@ export function createPostgresApiKeysRepository(
 						keyHash: prepared.keyHash,
 						keyPreview: prepared.keyPreview,
 					})
-					.where(
-						and(eq(pgApiKeysTable.id, rows[0].id), eq(pgApiKeysTable.key, key))
-					);
+					.where(and(eq(pgApiKeysTable.id, rows[0].id), eq(pgApiKeysTable.key, key)));
 				return mapPgResolvedRow({
 					...rows[0],
 					key: prepared.storageKey,
@@ -698,9 +620,7 @@ export function createPostgresApiKeysRepository(
 			return getActiveByLookupHash(keyHash);
 		},
 
-		async getApiKeyWithUserById(
-			id: string
-		): Promise<ResolvedGatewayKeyRow | null> {
+		async getApiKeyWithUserById(id: string): Promise<ResolvedGatewayKeyRow | null> {
 			const rows = await drizzle
 				.select(resolvedCols)
 				.from(pgApiKeysTable)
@@ -710,33 +630,21 @@ export function createPostgresApiKeysRepository(
 			return rows[0] ? mapPgResolvedRow(rows[0]) : null;
 		},
 
-		async listKeysByUserId(
-			userId: string,
-			options?: { status?: string }
-		): Promise<ApiKeyRow[]> {
+		async listKeysByUserId(userId: string, options?: { status?: string }): Promise<ApiKeyRow[]> {
 			const where = options?.status
-				? and(
-						eq(pgApiKeysTable.userId, userId),
-						eq(pgApiKeysTable.status, options.status)
-				  )
+				? and(eq(pgApiKeysTable.userId, userId), eq(pgApiKeysTable.status, options.status))
 				: eq(pgApiKeysTable.userId, userId);
-			const rows = await drizzle
-				.select()
-				.from(pgApiKeysTable)
-				.where(where)
-				.orderBy(pgApiKeysTable.createdAt);
+			const rows = await drizzle.select().from(pgApiKeysTable).where(where).orderBy(pgApiKeysTable.createdAt);
 			return rows.map(mapPgKeyRow);
 		},
 
 		async listKeysByWorkspaceId(
 			workspaceId: string,
-			options?: { status?: string; creatorUserId?: string }
+			options?: { status?: string; creatorUserId?: string },
 		): Promise<ApiKeyRow[]> {
 			const conditions = [eq(pgApiKeysTable.workspaceId, workspaceId)];
-			if (options?.creatorUserId)
-				conditions.push(eq(pgApiKeysTable.userId, options.creatorUserId));
-			if (options?.status)
-				conditions.push(eq(pgApiKeysTable.status, options.status));
+			if (options?.creatorUserId) conditions.push(eq(pgApiKeysTable.userId, options.creatorUserId));
+			if (options?.status) conditions.push(eq(pgApiKeysTable.status, options.status));
 			const rows = await drizzle
 				.select()
 				.from(pgApiKeysTable)
@@ -745,26 +653,18 @@ export function createPostgresApiKeysRepository(
 			return rows.map(mapPgKeyRow);
 		},
 
-		async getApiKeyByIdInWorkspace(
-			id: string,
-			workspaceId: string
-		): Promise<ApiKeyRow | null> {
+		async getApiKeyByIdInWorkspace(id: string, workspaceId: string): Promise<ApiKeyRow | null> {
 			const rows = await drizzle
 				.select()
 				.from(pgApiKeysTable)
-				.where(
-					and(
-						eq(pgApiKeysTable.id, id),
-						eq(pgApiKeysTable.workspaceId, workspaceId)
-					)
-				)
+				.where(and(eq(pgApiKeysTable.id, id), eq(pgApiKeysTable.workspaceId, workspaceId)))
 				.limit(1);
 			return rows[0] ? mapPgKeyRow(rows[0]) : null;
 		},
 
 		async insertApiKey(params: InsertKeyParams): Promise<void> {
 			const now = new Date().toISOString();
-			const status = params.status ?? "active";
+			const status = params.status ?? 'active';
 			const prepared = await prepareGatewayApiKeyForStorage(params.key);
 			await drizzle.insert(pgApiKeysTable).values({
 				id: params.id,
@@ -791,26 +691,18 @@ export function createPostgresApiKeysRepository(
 			const now = new Date().toISOString();
 			const updated = await drizzle
 				.update(pgApiKeysTable)
-				.set({ status: "revoked", updatedAt: now })
+				.set({ status: 'revoked', updatedAt: now })
 				.where(eq(pgApiKeysTable.id, id))
 				.returning({ id: pgApiKeysTable.id });
 			return updated.length > 0;
 		},
 
-		async revokeApiKeyInWorkspace(
-			id: string,
-			workspaceId: string,
-			creatorUserId?: string
-		): Promise<boolean> {
-			const conditions = [
-				eq(pgApiKeysTable.id, id),
-				eq(pgApiKeysTable.workspaceId, workspaceId),
-			];
-			if (creatorUserId)
-				conditions.push(eq(pgApiKeysTable.userId, creatorUserId));
+		async revokeApiKeyInWorkspace(id: string, workspaceId: string, creatorUserId?: string): Promise<boolean> {
+			const conditions = [eq(pgApiKeysTable.id, id), eq(pgApiKeysTable.workspaceId, workspaceId)];
+			if (creatorUserId) conditions.push(eq(pgApiKeysTable.userId, creatorUserId));
 			const updated = await drizzle
 				.update(pgApiKeysTable)
-				.set({ status: "revoked", updatedAt: new Date().toISOString() })
+				.set({ status: 'revoked', updatedAt: new Date().toISOString() })
 				.where(and(...conditions))
 				.returning({ id: pgApiKeysTable.id });
 			return updated.length > 0;
@@ -838,7 +730,7 @@ export function createPostgresApiKeysRepository(
 						WHERE api_key_id = api_keys.id
 					)
 				RETURNING id`,
-					[id]
+					[id],
 				);
 			} catch (error) {
 				if (isDispatchIntentApiKeyDeleteRestriction(error)) return false;
@@ -857,10 +749,7 @@ export function createPostgresApiKeysRepository(
 			return updated.length > 0;
 		},
 
-		async setApiKeyMetadataById(
-			id: string,
-			metadataJson: string | null
-		): Promise<boolean> {
+		async setApiKeyMetadataById(id: string, metadataJson: string | null): Promise<boolean> {
 			const now = new Date().toISOString();
 			const updated = await drizzle
 				.update(pgApiKeysTable)
@@ -870,9 +759,7 @@ export function createPostgresApiKeysRepository(
 			return updated.length > 0;
 		},
 
-		async scrubLegacyApiKeySecrets(
-			limit = 100
-		): Promise<{ scrubbed: number; remaining: number }> {
+		async scrubLegacyApiKeySecrets(limit = 100): Promise<{ scrubbed: number; remaining: number }> {
 			const batchSize = Math.min(1000, Math.max(1, Math.floor(limit)));
 			const rows = await drizzle
 				.select({ id: pgApiKeysTable.id, key: pgApiKeysTable.key })
@@ -891,9 +778,7 @@ export function createPostgresApiKeysRepository(
 						keyPreview: prepared.keyPreview,
 						updatedAt: new Date().toISOString(),
 					})
-					.where(
-						and(eq(pgApiKeysTable.id, row.id), eq(pgApiKeysTable.key, row.key))
-					)
+					.where(and(eq(pgApiKeysTable.id, row.id), eq(pgApiKeysTable.key, row.key)))
 					.returning({ id: pgApiKeysTable.id });
 				scrubbed += updated.length;
 			}
@@ -914,42 +799,73 @@ export function createPostgresApiKeysRepository(
 			return updated.length > 0;
 		},
 
-		async applyAdminKeyMutationWithAudit(input: AdminKeyMutationWithAudit): Promise<'applied' | 'conflict' | 'not_found'> {
+		async applyAdminKeyMutationWithAudit(
+			input: AdminKeyMutationWithAudit,
+		): Promise<'applied' | 'conflict' | 'not_found'> {
 			const mutation = assertAdminKeyMutation(input);
 			return drizzle.transaction(async (tx) => {
 				if (mutation.expectedUserSnapshot) {
-					const users = await tx.select().from(pgUsersTable)
-						.where(eq(pgUsersTable.id, mutation.expectedUserSnapshot.id)).limit(1).for('update');
+					const users = await tx
+						.select()
+						.from(pgUsersTable)
+						.where(eq(pgUsersTable.id, mutation.expectedUserSnapshot.id))
+						.limit(1)
+						.for('update');
 					if (!users[0]) return 'not_found' as const;
 					if (!matchesAdminUserAuditSnapshot(users[0], mutation.expectedUserSnapshot)) return 'conflict' as const;
 				}
-				const rows = await tx.select({
-					userId: pgApiKeysTable.userId,
-					workspaceId: pgApiKeysTable.workspaceId,
-					name: pgApiKeysTable.name,
-					status: pgApiKeysTable.status,
-					metadata: pgApiKeysTable.metadata,
-				}).from(pgApiKeysTable).where(eq(pgApiKeysTable.id, mutation.id)).for('update');
+				const rows = await tx
+					.select({
+						userId: pgApiKeysTable.userId,
+						workspaceId: pgApiKeysTable.workspaceId,
+						name: pgApiKeysTable.name,
+						status: pgApiKeysTable.status,
+						metadata: pgApiKeysTable.metadata,
+						rateLimit: pgApiKeysTable.rateLimit,
+					})
+					.from(pgApiKeysTable)
+					.where(eq(pgApiKeysTable.id, mutation.id))
+					.for('update');
 				const row = rows[0];
 				if (!row) return 'not_found' as const;
 				if (!matchesAdminKeyProfile(row, mutation.expected)) return 'conflict' as const;
 				const patch: {
-					name?: string | null; status?: string; metadata?: string | null; updatedAt: string;
+					name?: string | null;
+					status?: string;
+					metadata?: string | null;
+					rateLimit?: string | null;
+					updatedAt: string;
 				} = { updatedAt: new Date().toISOString() };
 				if (Object.prototype.hasOwnProperty.call(mutation.patch, 'name')) patch.name = mutation.patch.name ?? null;
 				if (Object.prototype.hasOwnProperty.call(mutation.patch, 'status')) patch.status = mutation.patch.status;
-				if (Object.prototype.hasOwnProperty.call(mutation.patch, 'metadata')) patch.metadata = mutation.patch.metadata ?? null;
-				const updated = await tx.update(pgApiKeysTable).set(patch)
-					.where(eq(pgApiKeysTable.id, mutation.id)).returning({ id: pgApiKeysTable.id });
+				if (Object.prototype.hasOwnProperty.call(mutation.patch, 'metadata'))
+					patch.metadata = mutation.patch.metadata ?? null;
+				if (Object.prototype.hasOwnProperty.call(mutation.patch, 'rateLimit')) patch.rateLimit = mutation.patch.rateLimit ?? null;
+				const updated = await tx
+					.update(pgApiKeysTable)
+					.set(patch)
+					.where(eq(pgApiKeysTable.id, mutation.id))
+					.returning({ id: pgApiKeysTable.id });
 				if (updated.length !== 1) throw new Error('Locked Admin Key disappeared before update');
 				if (mutation.audit) {
-					const inserted = await tx.insert(pgUserAuditLogsTable).values(
-						toUserAuditLogDrizzleInsert(mutation.audit, new Date().toISOString())
-					).returning({ id: pgUserAuditLogsTable.id });
+					const inserted = await tx
+						.insert(pgUserAuditLogsTable)
+						.values(toUserAuditLogDrizzleInsert(mutation.audit, new Date().toISOString()))
+						.returning({ id: pgUserAuditLogsTable.id });
 					if (inserted.length !== 1) throw new Error('Admin Key audit was not inserted');
 				}
 				return 'applied' as const;
 			});
+
+		},
+		async updateApiKeyRateLimit(id: string, rateLimitJson: string | null): Promise<boolean> {
+			const now = new Date().toISOString();
+			const updated = await drizzle
+				.update(pgApiKeysTable)
+				.set({ rateLimit: rateLimitJson, updatedAt: now })
+				.where(eq(pgApiKeysTable.id, id))
+				.returning({ id: pgApiKeysTable.id });
+			return updated.length > 0;
 		},
 
 		async getAllApiKeys(options?: {
@@ -975,21 +891,11 @@ export function createPostgresApiKeysRepository(
 			if (options?.workspaceId) {
 				conditions.push(eq(pgApiKeysTable.workspaceId, options.workspaceId));
 			}
-			if (options?.maxBudget === "positive") {
-				conditions.push(
-					and(
-						isNotNull(pgUsersTable.budgetMax),
-						gt(pgUsersTable.budgetMax, "0")
-					)!
-				);
-			} else if (options?.maxBudget === "zero_or_negative") {
-				conditions.push(
-					and(
-						isNotNull(pgUsersTable.budgetMax),
-						lte(pgUsersTable.budgetMax, "0")
-					)!
-				);
-			} else if (options?.maxBudget === "null") {
+			if (options?.maxBudget === 'positive') {
+				conditions.push(and(isNotNull(pgUsersTable.budgetMax), gt(pgUsersTable.budgetMax, '0'))!);
+			} else if (options?.maxBudget === 'zero_or_negative') {
+				conditions.push(and(isNotNull(pgUsersTable.budgetMax), lte(pgUsersTable.budgetMax, '0'))!);
+			} else if (options?.maxBudget === 'null') {
 				conditions.push(isNull(pgUsersTable.budgetMax));
 			}
 			const whereExpr = conditions.length > 0 ? and(...conditions) : undefined;
@@ -1015,8 +921,12 @@ export function createPostgresApiKeysRepository(
 					budget_spent: pgUsersTable.budgetSpent,
 					budget_period: pgUsersTable.budgetPeriod,
 					budget_reset_at: pgUsersTable.budgetResetAt,
+					wallet_granted: pgUsersTable.walletGranted,
+					wallet_spent: pgUsersTable.walletSpent,
 					status: pgApiKeysTable.status,
 					metadata: pgApiKeysTable.metadata,
+					last_used_at: pgApiKeysTable.lastUsedAt,
+					rate_limit: pgApiKeysTable.rateLimit,
 					created_at: pgApiKeysTable.createdAt,
 					updated_at: pgApiKeysTable.updatedAt,
 				})
@@ -1034,10 +944,7 @@ export function createPostgresApiKeysRepository(
 		},
 
 		async getActiveApiKeysCount(): Promise<number> {
-			const row = await drizzle
-				.select({ c: count() })
-				.from(pgApiKeysTable)
-				.where(eq(pgApiKeysTable.status, "active"));
+			const row = await drizzle.select({ c: count() }).from(pgApiKeysTable).where(eq(pgApiKeysTable.status, 'active'));
 			return Number(row[0]?.c ?? 0);
 		},
 

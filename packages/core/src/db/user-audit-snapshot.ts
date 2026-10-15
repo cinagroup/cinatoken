@@ -2,6 +2,7 @@
  * `users` 行审计快照：JSON 存 `user_audit_logs.before_user_snapshot` / `after_user_snapshot`。
  */
 import type { UserRow } from '../types';
+import { serializeApiKeyRateLimit } from '../lib/api-key-rate-limit';
 import { roundGatewayMoney } from '../lib/money-precision';
 
 /** 与 `users` 可对账字段对齐（不含 created_at/updated_at，避免噪声）。 */
@@ -15,8 +16,11 @@ export type UserAuditSnapshot = {
 	budget_reset_at: string | null;
 	budget_epoch: number;
 	budget_reserved_micros: number;
+	wallet_granted: number;
+	wallet_spent: number;
 	status: string;
 	metadata: string | null;
+	rate_limit: string | null;
 	charged_cost_factors: string | null;
 	external_system: string | null;
 	external_user_id: string | null;
@@ -33,8 +37,11 @@ export function userRowToSnapshot(row: UserRow): UserAuditSnapshot {
 		budget_reset_at: row.budget_reset_at,
 		budget_epoch: Number(row.budget_epoch),
 		budget_reserved_micros: Number(row.budget_reserved_micros),
+		wallet_granted: roundGatewayMoney(Number(row.wallet_granted ?? 0)),
+		wallet_spent: roundGatewayMoney(Number(row.wallet_spent ?? 0)),
 		status: row.status,
 		metadata: row.metadata,
+		rate_limit: serializeApiKeyRateLimit(row.rate_limit),
 		charged_cost_factors: row.charged_cost_factors,
 		external_system: row.external_system,
 		external_user_id: row.external_user_id,
@@ -62,8 +69,11 @@ export function computeChangedFields(before: UserAuditSnapshot, after: UserAudit
 		'budget_reset_at',
 		'budget_epoch',
 		'budget_reserved_micros',
+		'wallet_granted',
+		'wallet_spent',
 		'status',
 		'metadata',
+		'rate_limit',
 		'charged_cost_factors',
 		'external_system',
 		'external_user_id',
@@ -72,7 +82,13 @@ export function computeChangedFields(before: UserAuditSnapshot, after: UserAudit
 	for (const k of keys) {
 		const bv = before[k];
 		const av = after[k];
-		if (k === 'budget_max' || k === 'budget_base' || k === 'budget_spent') {
+		if (
+			k === 'budget_max' ||
+			k === 'budget_base' ||
+			k === 'budget_spent' ||
+			k === 'wallet_granted' ||
+			k === 'wallet_spent'
+		) {
 			const nb = typeof bv === 'number' ? bv : bv == null ? null : Number(bv);
 			const na = typeof av === 'number' ? av : av == null ? null : Number(av);
 			if (!moneyEqual(nb, na)) out.push(k);
@@ -99,14 +115,17 @@ export function snapshotWithOverrides(
 			| 'budget_reset_at'
 			| 'budget_epoch'
 			| 'budget_reserved_micros'
+			| 'wallet_granted'
+			| 'wallet_spent'
 			| 'status'
 			| 'metadata'
+			| 'rate_limit'
 			| 'charged_cost_factors'
 			| 'email'
 			| 'external_system'
 			| 'external_user_id'
 		>
-	>
+	>,
 ): UserAuditSnapshot {
 	return { ...base, ...patch };
 }
@@ -115,7 +134,7 @@ export function snapshotWithOverrides(
 export function buildUserAuditSnapshotsForLazyPeriodReset(
 	row: UserRow,
 	next: { budget_spent: number; budget_reset_at: string | null; budget_max: number | null },
-	maxChanged: boolean
+	maxChanged: boolean,
 ): { beforeUserSnapshot: string; afterUserSnapshot: string; changedFields: string | null } {
 	const before = userRowToSnapshot(row);
 	const after = snapshotWithOverrides(before, {

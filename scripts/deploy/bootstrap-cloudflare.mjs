@@ -11,8 +11,9 @@
  * Options:
  *   --instance <name>           Env file basename (default: interactive / "default")
  *   --prefix <prefix>           Worker/D1 name prefix (default: cinatoken)
- *   --proxy-domain <host>       Optional custom domain for Proxy
- *   --admin-domain <host>       Optional custom domain for Admin
+ *   --proxy-domain <hosts>      Optional Proxy custom domain(s), comma-separated
+ *   --admin-domain <hosts>      Optional Admin custom domain(s), comma-separated
+ *   --admin-password-env <VAR>  Read ADMIN_PASSWORD from that env var (non-interactive)
  *   --reuse-d1                  Fail if D1 name missing (do not create)
  *   --d1-id <uuid>              Use this D1 id (skip create/list match by name)
  *   --skip-secret               Stop after resources/migrations; provision secrets later
@@ -20,7 +21,7 @@
  *   --yes, -y                   Accept bootstrap defaults (migration still confirms on a TTY)
  *   --help, -h
  */
-import { existsSync } from "node:fs";
+import { existsSync } from 'node:fs';
 import {
 	assertWranglerLoggedIn,
 	ensureD1Database,
@@ -38,7 +39,8 @@ import {
 	putWorkerSecret,
 	runNpmWithEnv,
 	writeInstanceEnvFile,
-} from "./cf-deploy-lib.mjs";
+} from './cf-deploy-lib.mjs';
+import { parseCustomDomains, primaryCustomDomain } from './gen-wrangler.mjs';
 
 function usage() {
 	console.log(`Usage: npm run bootstrap:cloudflare -- [options]
@@ -49,8 +51,9 @@ Options:
   --instance <name>           cloudflare-worker/<name>.env (default: default)
   --prefix <prefix>           Names: <prefix>-proxy / -admin / D1 <prefix>
                               (default: cinatoken)
-  --proxy-domain <host>       Optional Proxy custom domain
-  --admin-domain <host>       Optional Admin custom domain
+  --proxy-domain <hosts>      Optional Proxy custom domain(s), comma-separated
+  --admin-domain <hosts>      Optional Admin custom domain(s), comma-separated
+  --admin-password-env <VAR>  Password from process.env[VAR] (no prompt)
   --reuse-d1                  Require existing D1 with that name
   --d1-id <uuid>              Use existing D1 id directly
   --skip-secret               Stop after resources/migrations; provision secrets later
@@ -78,42 +81,42 @@ function parseArgs(argv) {
 		const a = argv[i];
 		const next = () => {
 			const v = argv[++i];
-			if (!v || v.startsWith("-")) {
+			if (!v || v.startsWith('-')) {
 				throw new Error(`missing value for ${a}`);
 			}
 			return v;
 		};
 		switch (a) {
-			case "--help":
-			case "-h":
+			case '--help':
+			case '-h':
 				out.help = true;
 				break;
-			case "--yes":
-			case "-y":
+			case '--yes':
+			case '-y':
 				out.yes = true;
 				break;
-			case "--reuse-d1":
+			case '--reuse-d1':
 				out.reuseD1 = true;
 				break;
-			case "--skip-secret":
+			case '--skip-secret':
 				out.skipSecret = true;
 				break;
-			case "--batch-infra":
+			case '--batch-infra':
 				out.batchInfra = true;
 				break;
-			case "--instance":
+			case '--instance':
 				out.instance = next();
 				break;
-			case "--prefix":
+			case '--prefix':
 				out.prefix = next();
 				break;
-			case "--proxy-domain":
+			case '--proxy-domain':
 				out.proxyDomain = next();
 				break;
-			case "--admin-domain":
+			case '--admin-domain':
 				out.adminDomain = next();
 				break;
-			case "--d1-id":
+			case '--d1-id':
 				out.d1Id = next();
 				break;
 			default:
@@ -132,85 +135,64 @@ async function main() {
 
 	const interactive = process.stdin.isTTY && !args.yes;
 
-	let instance =
-		typeof args.instance === "string" ? args.instance : "";
+	let instance = typeof args.instance === 'string' ? args.instance : '';
 	if (!instance) {
-		instance = interactive
-			? await promptLine("Instance name (env file basename)", "default")
-			: "default";
+		instance = interactive ? await promptLine('Instance name (env file basename)', 'default') : 'default';
 	}
 
-	let prefix = typeof args.prefix === "string" ? args.prefix : "";
+	let prefix = typeof args.prefix === 'string' ? args.prefix : '';
 	if (!prefix) {
-		prefix = interactive
-			? await promptLine(
-					"Resource name prefix (Workers + D1)",
-					"cinatoken",
-				)
-			: "cinatoken";
+		prefix = interactive ? await promptLine('Resource name prefix (Workers + D1)', 'cinatoken') : 'cinatoken';
 	}
 
 	const baseNames = namesFromPrefix(prefix);
 	const requiredSecretNames = [
-		"SHARED_KEY_ENCRYPTION_SECRET",
-		"DEEPSEEK_API_KEY",
-		"CINATOKEN_OIDC_CLIENT_SECRET",
-		"CINATOKEN_OIDC_BRIDGE_SECRET",
-		"CINATOKEN_OIDC_TRANSACTION_SECRET",
-		"CINATOKEN_IDENTITY_EVENTS_SECRET",
-		"CINACHAIN_RPC_URL",
-		"CINACHAIN_MINTER_PRIVATE_KEY",
-		"CINABADGE_CONTRACT_ADDRESS",
-		"CINACREDIT_CONTRACT_ADDRESS",
+		'SHARED_KEY_ENCRYPTION_SECRET',
+		'DEEPSEEK_API_KEY',
+		'CINATOKEN_OIDC_CLIENT_SECRET',
+		'CINATOKEN_OIDC_BRIDGE_SECRET',
+		'CINATOKEN_OIDC_TRANSACTION_SECRET',
+		'CINATOKEN_IDENTITY_EVENTS_SECRET',
+		'CINACHAIN_RPC_URL',
+		'CINACHAIN_MINTER_PRIVATE_KEY',
+		'CINABADGE_CONTRACT_ADDRESS',
+		'CINACREDIT_CONTRACT_ADDRESS',
 	];
 	if (!args.skipSecret && !interactive) {
 		const missing = requiredSecretNames.filter((name) => !process.env[name]);
 		if (missing.length > 0) {
-			throw new Error(
-				`Non-interactive bootstrap requires secret values in process environment: ${missing.join(", ")}`,
-			);
+			throw new Error(`Non-interactive bootstrap requires secret values in process environment: ${missing.join(', ')}`);
 		}
 	}
 	assertWranglerLoggedIn();
-	let proxyDomain =
-		typeof args.proxyDomain === "string" ? args.proxyDomain : "";
-	let adminDomain =
-		typeof args.adminDomain === "string" ? args.adminDomain : "";
+	let proxyDomain = typeof args.proxyDomain === 'string' ? args.proxyDomain : '';
+	let adminDomain = typeof args.adminDomain === 'string' ? args.adminDomain : '';
 
 	if (interactive && !proxyDomain && !adminDomain) {
-		const wantDomain = await promptYesNo(
-			"Bind custom domains now? (usually skip; use workers.dev first)",
-			false,
-		);
+		const wantDomain = await promptYesNo('Bind custom domains now? (usually skip; use workers.dev first)', false);
 		if (wantDomain) {
-			proxyDomain = await promptLine("Proxy custom domain (empty to skip)", "");
-			adminDomain = await promptLine("Admin custom domain (empty to skip)", "");
+			proxyDomain = await promptLine('Proxy custom domain(s), comma-separated (empty to skip)', '');
+			adminDomain = await promptLine('Admin custom domain(s), comma-separated (empty to skip)', '');
 		}
 	}
 
 	const envPath = envPathForInstance(instance);
 	if (existsSync(envPath)) {
 		if (interactive) {
-			const overwrite = await promptYesNo(
-				`Env file already exists (${envPath}). Overwrite?`,
-				false,
-			);
+			const overwrite = await promptYesNo(`Env file already exists (${envPath}). Overwrite?`, false);
 			if (!overwrite) {
-				logError("Aborted. Use npm run deploy:cloudflare -- " + instance);
+				logError('Aborted. Use npm run deploy:cloudflare -- ' + instance);
 				process.exit(1);
 			}
 		} else if (!args.yes) {
-			logError(
-				`Env file already exists: ${envPath}. Pass --yes to overwrite, or pick another --instance.`,
-			);
+			logError(`Env file already exists: ${envPath}. Pass --yes to overwrite, or pick another --instance.`);
 			process.exit(1);
 		} else {
 			log(`Overwriting existing env: ${envPath}`);
 		}
 	}
 
-	let d1DatabaseId =
-		typeof args.d1Id === "string" ? args.d1Id : "";
+	let d1DatabaseId = typeof args.d1Id === 'string' ? args.d1Id : '';
 	if (!d1DatabaseId) {
 		d1DatabaseId = ensureD1Database(baseNames.d1DatabaseName, {
 			reuse: Boolean(args.reuseD1),
@@ -243,11 +225,11 @@ async function main() {
 		CHAIN_WORKER_NAME: names.chainWorkerName,
 		CHAIN_JOB_QUEUE_NAME: names.chainJobQueueName,
 		CHAIN_JOB_DLQ_NAME: names.chainJobDlqName,
-		BATCH_INFRA_ENABLED: names.batchInfraEnabled ? "true" : "false",
+		BATCH_INFRA_ENABLED: names.batchInfraEnabled ? 'true' : 'false',
 		BATCH_BUCKET_NAME: names.batchBucketName,
 		BATCH_QUEUE_NAME: names.batchQueueName,
 		BATCH_DLQ_NAME: names.batchDlqName,
-		CINACHAIN_CHAIN_ID: process.env.CINACHAIN_CHAIN_ID || "84532",
+		CINACHAIN_CHAIN_ID: process.env.CINACHAIN_CHAIN_ID || '84532',
 		D1_DATABASE_NAME: names.d1DatabaseName,
 		D1_DATABASE_ID: names.d1DatabaseId,
 		D1_MIGRATIONS_WORKER_NAME: names.d1MigrationsWorkerName,
@@ -260,25 +242,31 @@ async function main() {
 	}
 
 	const secretTargets = [
-		[names.proxyWorkerName, ["SHARED_KEY_ENCRYPTION_SECRET", "DEEPSEEK_API_KEY"]],
-		[names.adminWorkerName, [
-			"CINATOKEN_OIDC_CLIENT_SECRET",
-			"CINATOKEN_OIDC_BRIDGE_SECRET",
-			"CINATOKEN_OIDC_TRANSACTION_SECRET",
-			"CINATOKEN_IDENTITY_EVENTS_SECRET",
-			"SHARED_KEY_ENCRYPTION_SECRET",
-			"DEEPSEEK_API_KEY",
-		]],
-		[names.chainWorkerName, [
-			"CINACHAIN_RPC_URL",
-			"CINACHAIN_MINTER_PRIVATE_KEY",
-			"CINABADGE_CONTRACT_ADDRESS",
-			"CINACREDIT_CONTRACT_ADDRESS",
-		]],
+		[names.proxyWorkerName, ['SHARED_KEY_ENCRYPTION_SECRET', 'DEEPSEEK_API_KEY']],
+		[
+			names.adminWorkerName,
+			[
+				'CINATOKEN_OIDC_CLIENT_SECRET',
+				'CINATOKEN_OIDC_BRIDGE_SECRET',
+				'CINATOKEN_OIDC_TRANSACTION_SECRET',
+				'CINATOKEN_IDENTITY_EVENTS_SECRET',
+				'SHARED_KEY_ENCRYPTION_SECRET',
+				'DEEPSEEK_API_KEY',
+			],
+		],
+		[
+			names.chainWorkerName,
+			[
+				'CINACHAIN_RPC_URL',
+				'CINACHAIN_MINTER_PRIVATE_KEY',
+				'CINABADGE_CONTRACT_ADDRESS',
+				'CINACREDIT_CONTRACT_ADDRESS',
+			],
+		],
 	];
 	if (args.skipSecret) {
-		log("Resources are ready; deployment stopped before secret provisioning and migrations.");
-		log("Set the required Worker secrets, then run: npm run deploy:cloudflare -- " + instance);
+		log('Resources are ready; deployment stopped before secret provisioning and migrations.');
+		log('Set the required Worker secrets, then run: npm run deploy:cloudflare -- ' + instance);
 		return;
 	}
 	for (const [workerName, namesForWorker] of secretTargets) {
@@ -288,22 +276,40 @@ async function main() {
 		}
 	}
 
-	log("Applying remote D1 migrations after all required Worker secrets are present…");
-	runNpmWithEnv(vars, ["db:migrate:remote"]);
+	log('Applying remote D1 migrations after all required Worker secrets are present…');
+	runNpmWithEnv(vars, ['db:migrate:remote']);
 
-	log("Deploying Proxy Worker (usually under a minute)…");
-	runNpmWithEnv(vars, ["deploy:proxy"]);
-	log("Deploying isolated Chain Worker…");
-	runNpmWithEnv(vars, ["deploy:chain"]);
-	log("Deploying unified console Worker (OpenNext build)…");
-	runNpmWithEnv(vars, ["deploy:admin"]);
+	log('Deploying Proxy Worker (usually under a minute)…');
+	runNpmWithEnv(vars, ['deploy:proxy']);
+	log('Deploying isolated Chain Worker…');
+	runNpmWithEnv(vars, ['deploy:chain']);
+	log('Deploying unified console Worker (OpenNext build)…');
+	runNpmWithEnv(vars, ['deploy:admin']);
 
-	const proxyUrl = names.proxyCustomDomain
-		? `https://${names.proxyCustomDomain}`
-		: undefined;
-	const adminUrl = names.adminCustomDomain
-		? `https://${names.adminCustomDomain}`
-		: undefined;
+	if (!args.skipSecret) {
+		let password;
+		if (typeof args.adminPasswordEnv === 'string') {
+			password = process.env[args.adminPasswordEnv];
+			if (!password) {
+				logError(`Environment variable ${args.adminPasswordEnv} is empty or unset`);
+				process.exit(1);
+			}
+		} else if (!interactive && args.yes) {
+			log('Non-interactive (--yes) without --admin-password-env: skipping secret put. Set later with:');
+			log(`  npx wrangler secret put ADMIN_PASSWORD --name ${names.adminWorkerName}`);
+			password = undefined;
+			args.skipSecret = true;
+		}
+
+		if (!args.skipSecret) {
+			putAdminPasswordSecret(names.adminWorkerName, password);
+		}
+	}
+
+	const proxyPrimary = primaryCustomDomain(names.proxyCustomDomain);
+	const adminPrimary = primaryCustomDomain(names.adminCustomDomain);
+	const proxyUrl = proxyPrimary ? `https://${proxyPrimary}` : undefined;
+	const adminUrl = adminPrimary ? `https://${adminPrimary}` : undefined;
 
 	printDownstreamHints({
 		proxyUrl,
@@ -311,6 +317,15 @@ async function main() {
 		proxyWorkerName: names.proxyWorkerName,
 		adminWorkerName: names.adminWorkerName,
 	});
+
+	const extraProxy = parseCustomDomains(names.proxyCustomDomain).slice(1);
+	const extraAdmin = parseCustomDomains(names.adminCustomDomain).slice(1);
+	if (extraProxy.length) {
+		log(`Additional Proxy custom domains: ${extraProxy.join(', ')}`);
+	}
+	if (extraAdmin.length) {
+		log(`Additional Admin custom domains: ${extraAdmin.join(', ')}`);
+	}
 
 	log(`Bootstrap complete. Instance env: cloudflare-worker/${instance}.env`);
 	log(`Later deploys: npm run deploy:cloudflare -- ${instance} --migrate`);

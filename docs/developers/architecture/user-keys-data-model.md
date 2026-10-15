@@ -19,9 +19,12 @@ erDiagram
         numeric budget_spent
         text budget_period
         text budget_reset_at
+        numeric wallet_granted
+        numeric wallet_spent
         text status
         text metadata
-        text charged_cost_factors "JSON { models.id: factor }；空为 NULL"
+        text rate_limit "JSON; NULL=user pool unlimited; {rpm?: n}"
+        text charged_cost_factors "JSON { models.id: factor | { route_group|*: factor } }；空为 NULL"
         text external_system
         text external_user_id
         text created_at
@@ -38,6 +41,7 @@ erDiagram
         text status
         text metadata
         text last_used_at
+        text rate_limit "JSON; NULL=unlimited; {rpm?: n}"
         text created_at
         text updated_at
     }
@@ -58,6 +62,7 @@ erDiagram
         text reason_code
         text reason_text
         text request_log_id
+        text dedup_key "UNIQUE(user_id, dedup_key)；NULL 互不相等"
         text created_at
     }
 ```
@@ -71,21 +76,24 @@ erDiagram
 3. **`api_keys`**：不含任何 `budget_*` 或 `user_email`；列表/详情中的邮箱与预算来自 **`JOIN users`**。
    - 新 Key 的 `key_hash` 保存带算法前缀的 SHA-256 查找摘要，`key_preview` 保存安全预览；遗留 NOT NULL/UNIQUE `key` 列仅保存 `hashref:` 摘要引用。
    - 旧明文行在认证命中时在线清除；迁移后由受保护的维护接口分批清理其余行。任何列表或详情 API 都只返回预览。
+3b. **周期额度 / 永久额度**：`budget_*` 只表示当期周期额度（Budget）；`wallet_granted` / `wallet_spent` 表示永久额度（Wallet），余额为派生值 `wallet_balance = wallet_granted − wallet_spent`（不落列）。`budget_max IS NULL` 仍为无限。扣费先周期、后永久；加购走 `POST /api/admin/users/:id/wallet/credit`（`user_audit_logs.dedup_key = external_ref` 幂等）。
 4. **多把 active key**：同一 `user_id` 下允许多条 `status = 'active'` 的密钥；创建密钥**不**再按 user 幂等。
 5. **删除语义**：
    - 删除 **`users`**：`ON DELETE CASCADE` 删除其 **`api_keys`**；子表中若存在指向该用户的 FK，按迁移定义处理（`user_audit_logs.user_id` 为 **`ON DELETE SET NULL`**，审计行保留）。
    - 删除 **`api_keys`**：**不**级联删除请求日志；`api_key_request_logs.api_key_id` 为 **`ON DELETE SET NULL`**，`user_id` 保留以便按用户维度统计历史。
-6. **`charged_cost_factors`**：可选 JSON，键为目录 `models.id`，值为 ≥ 0 的用户计费倍率；`null` / `{}` 落库为 NULL。鉴权 JOIN 会带上该列。LLM / Images / Audio 在路由用户计费算完后再乘；智能体工具不应用。
+6. **`charged_cost_factors`**：可选 JSON，键为目录 `models.id`。值为 ≥ 0 的数字时覆盖该模型全部分组；值为对象时按路由组（Route group）匹配，键是分组名或 `"*"`（未单独配置的分组）。分组名 trim 后小写，仅含 `"*"` 时写入折叠成数字。`null` / `{}` 落库为 NULL。鉴权 JOIN 会带上该列。LLM / Images / Audio 在路由 Charged 有效倍率之后，按本次分组查找用户倍率，再按全局 `system_config.USER_CHARGED_COST_FACTOR_MODE`（`multiply` 叠乘 / `min` 取较小）合成最终用户费用；该分组未命中不改金额。智能体工具不应用。
+7. **`users.rate_limit` / `api_keys.rate_limit`**：形状相同的 JSON（当前仅 `rpm`）。用户层是该用户所有 Key 的合计窗口；Key 层是单把钥匙的额外帽子。两层都按**从当前时刻回溯 60 秒**独立计数（不是 UTC 自然分钟）。两层独立：不把用户配置复制到新建 Key，不要求 `key.rpm <= user.rpm`。`NULL` / 空 = 该层不限；`rpm: 0` 拒绝该层计次请求。同时设置时，单把 Key 的有效上限约为 `min(keyRpm, 用户池剩余)`。
 
 ## 请求日志与审计
 
 - **`api_key_request_logs`**：写入时带 **`user_id`**（与鉴权时解析的 user 一致）及快照 **`user_email`**，便于全局检索而无需每次 `JOIN`。
-- **`user_audit_logs`**：用户级审计（预算扣减、周期懒重置、管理端 patch、密钥生命周期等）；可选 **`api_key_id`** 归因「由哪把 key 触发」。详细语义见 [`../reference/user-audit-logs.md`](../reference/user-audit-logs.md)。
+- **`user_audit_logs`**：用户级审计（周期额度扣减、永久额度加额、周期懒重置、管理端 patch、密钥生命周期等）；可选 **`api_key_id`** 归因「由哪把 key 触发」。`dedup_key` 用于加额幂等。详细语义见 [`../reference/user-audit-logs.md`](../reference/user-audit-logs.md)。
 
 ## 关键读写路径（与实现对齐）
 
-- **鉴权**：`getApiKeyWithUserByKey` 单次 JOIN 读取 key + user 预算字段与 `charged_cost_factors`；周期懒重置走 **`updateUserBudgetWithAuditTx`**（Postgres/MySQL 带 `budget_reset_at` 条件更新以避免并发重复审计）。
-- **扣费**：`insertRequestUsageAndChargeTx` 在同一事务内 **`INSERT api_key_request_logs`** + **`UPDATE users SET budget_spent = budget_spent + Δ`**（SQL 侧原子累加）+ **`INSERT user_audit_logs`**（`usage_charge`）。
+- **鉴权**：`getApiKeyWithUserByKey` 单次 JOIN 读取 key + user 预算字段、`charged_cost_factors` 与 `users.rate_limit`；周期懒重置走 **`updateUserBudgetWithAuditTx`**（Postgres/MySQL 带 `budget_reset_at` 条件更新以避免并发重复审计）。鉴权后对 Key 窗口与用户合计窗口**双重执行**（先 Key 后 User；Key 已超限则不消耗用户窗口）。两层都是从当前时刻回溯 60 秒的滚动窗口。超限返回 `429` + `gateway.rate_limited`（不暴露是哪一层；`Retry-After` 取实际超限那一层）。`GET /v1/me` 与 `GET /v1/models` 两层都不计入。内存 store 的 subject 前缀为 `k:` / `u:`。计数与熔断一样是单 isolate / 单进程软状态。
+- **扣费**：`insertRequestUsageAndChargeTx` 在同一事务内 **`INSERT api_key_request_logs`**（含 `charged_wallet_cost`、`ingress_host`）+ **`UPDATE api_keys.last_used_at`** + **`UPDATE users SET budget_spent += Δ1, wallet_spent += Δ2`**（SQL 侧原子累加）+ **`INSERT user_audit_logs`**（`usage_charge`）。周期剩余不够时差额进永久池。
+- **加额**：`grantWalletCreditWithAuditTx` 在同一事务内插入 `event_type=wallet_credit` 审计（`dedup_key` 冲突则忽略），仅当新审计行真正落入时 `wallet_granted += amount`。
 
 ## 验证（三引擎 / Proxy）
 

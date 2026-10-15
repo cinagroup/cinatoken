@@ -73,15 +73,11 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
 }
 
 function nonNegativeSafeInteger(value: unknown): number | null {
-	return typeof value === 'number' && Number.isSafeInteger(value) && value >= 0
-		? value
-		: null;
+	return typeof value === 'number' && Number.isSafeInteger(value) && value >= 0 ? value : null;
 }
 
 function nonNegativeFiniteNumber(value: unknown): number | null {
-	return typeof value === 'number' && Number.isFinite(value) && value >= 0
-		? value
-		: null;
+	return typeof value === 'number' && Number.isFinite(value) && value >= 0 ? value : null;
 }
 
 /** Validate and normalize only the documented usage counters. */
@@ -143,11 +139,10 @@ function rerankRequestBodyForRoute(
 	if (typeof routed.query !== 'string' || !documents) {
 		throw new Error('Rerank route defaults produced an invalid query or documents batch');
 	}
-	if (routed.top_n !== undefined && (
-		typeof routed.top_n !== 'number'
-		|| !Number.isSafeInteger(routed.top_n)
-		|| routed.top_n < 1
-	)) {
+	if (
+		routed.top_n !== undefined &&
+		(typeof routed.top_n !== 'number' || !Number.isSafeInteger(routed.top_n) || routed.top_n < 1)
+	) {
 		throw new Error('Rerank route defaults produced an invalid top_n');
 	}
 	return {
@@ -195,7 +190,9 @@ async function normalizeSuccessfulRerankResponse(
 	const contentType = response.headers.get('Content-Type') ?? '';
 	if (!contentType.toLowerCase().includes('application/json')) {
 		const invalid = await cancelInvalidTextSuccessResponse(response, {
-			skin: 'chat', protocol: 'Rerank', requestId: publicCorrelationId,
+			skin: 'chat',
+			protocol: 'Rerank',
+			requestId: publicCorrelationId,
 		});
 		timing?.markStreamComplete();
 		return {
@@ -223,14 +220,15 @@ async function normalizeSuccessfulRerankResponse(
 	const documents = requestBody.documents;
 	const nativeId = object.id === undefined ? null : normalizeUpstreamId(object.id);
 	if (
-		!Array.isArray(documents)
-		|| documents.length === 0
-		|| typeof object.model !== 'string'
-		|| !object.model.trim()
-		|| !Array.isArray(object.results)
-		|| object.results.length > documents.length
-		|| (object.id !== undefined && nativeId == null)
-	) return invalidRerankSuccess(publicCorrelationId);
+		!Array.isArray(documents) ||
+		documents.length === 0 ||
+		typeof object.model !== 'string' ||
+		!object.model.trim() ||
+		!Array.isArray(object.results) ||
+		object.results.length > documents.length ||
+		(object.id !== undefined && nativeId == null)
+	)
+		return invalidRerankSuccess(publicCorrelationId);
 
 	const indexes = new Set<number>();
 	const results: Array<{
@@ -243,14 +241,15 @@ async function normalizeSuccessfulRerankResponse(
 		const index = item.index;
 		const score = item.relevance_score;
 		if (
-			typeof index !== 'number'
-			|| !Number.isSafeInteger(index)
-			|| index < 0
-			|| index >= documents.length
-			|| indexes.has(index)
-			|| typeof score !== 'number'
-			|| !Number.isFinite(score)
-		) return invalidRerankSuccess(publicCorrelationId);
+			typeof index !== 'number' ||
+			!Number.isSafeInteger(index) ||
+			index < 0 ||
+			index >= documents.length ||
+			indexes.has(index) ||
+			typeof score !== 'number' ||
+			!Number.isFinite(score)
+		)
+			return invalidRerankSuccess(publicCorrelationId);
 		const document = reconstructedDocument(documents[index]);
 		if (!document) return invalidRerankSuccess(publicCorrelationId);
 		indexes.add(index);
@@ -314,9 +313,10 @@ export async function dispatchOpenAiRerankRoute(
 	});
 	if (requestSignal?.aborted) return cancelledBeforeDispatch();
 	const requestBody = rerankRequestBodyForRoute(route, body, url);
-	return withOwnedJsonUpload(requestBody, requestSignal, async upload => {
+	return withOwnedJsonUpload(requestBody, requestSignal, async (upload) => {
 		const { secret } = await resolveProviderUpstreamSecret(route.providerApiKey, {
-			signal: requestSignal, auxiliaryAuth,
+			signal: requestSignal,
+			auxiliaryAuth,
 		});
 		const headers = {
 			'Content-Type': 'application/json',
@@ -331,7 +331,11 @@ export async function dispatchOpenAiRerankRoute(
 		let response: Response;
 		try {
 			const init: RequestInit & { duplex: 'half' } = {
-				method: 'POST', headers, body: upload.body, signal: requestSignal, duplex: 'half',
+				method: 'POST',
+				headers,
+				body: upload.body,
+				signal: requestSignal,
+				duplex: 'half',
 				redirect: 'manual',
 			};
 			response = await fetch(url, init);

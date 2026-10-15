@@ -1,3 +1,4 @@
+import { parsePlaygroundRouteDraft } from './playground-route-draft';
 import {
 	createRequestDeadline,
 	preparationRead,
@@ -160,9 +161,7 @@ export async function previewPlaygroundRequest(
 				truncated: request_body_json.includes('"__playground_truncated":true'),
 			};
 		}
-		const row = await preparationRead(owner, () =>
-			repos.routes.getModelRouteRowById(input.routeId)
-		);
+		const row = input.routeDraft !== undefined ? parsePlaygroundRouteDraft(input.routeDraft) : await preparationRead(owner, () => repos.routes.getModelRouteRowById(input.routeId ?? ''));
 		if (!row) throw notFound("Route not found");
 		const [provider, model] = await Promise.all([
 			preparationRead(owner, () =>

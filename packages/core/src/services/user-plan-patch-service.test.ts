@@ -10,6 +10,10 @@ import {
 
 function user(overrides: Partial<UserRow> = {}): UserRow {
 	return {
+wallet_granted: 0,
+wallet_spent: 0,
+rate_limit: null,
+
 		id: 'user-1',
 		email: 'user@example.com',
 		budget_max: 10,
@@ -48,6 +52,7 @@ test('exact plan PATCH submits full CAS inputs and the audit in one critical wri
 		applyTransition: async (_storage, params) => {
 			transitions.push(params);
 			current = {
+
 				...current,
 				budget_max: params.budgetMax,
 				budget_base: params.budgetBase,

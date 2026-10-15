@@ -146,7 +146,7 @@ export function createImageUsageRecoveryFactory(storage: StorageContext, config:
 				const u = data.imageUsage;
 				const counters = u ? { text_tokens:u.text_tokens,cached_text_tokens:u.cached_text_tokens,
 					image_input_tokens:u.image_input_tokens,cached_image_input_tokens:u.cached_image_input_tokens,
-					image_output_tokens:u.image_output_tokens,total_tokens:u.total_tokens } : null;
+					text_output_tokens: u.text_output_tokens ?? 0, image_output_tokens:u.image_output_tokens,total_tokens:u.total_tokens } : null;
 				const owned: RecordImageUsageParams = { ...structuredClone({ ...data,
 					requestBody:null,upstreamRequestBody:null,userEmail:null,
 					errorMessage:data.status === 'error' ? 'Image request failed' : null,
