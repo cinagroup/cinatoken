@@ -2,11 +2,12 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '../../../components/ui/button'
-import type {
-	PlaygroundContext,
-	PlaygroundKind,
-	PlaygroundRoute,
-	PlaygroundSearch,
+import {
+	PLAYGROUND_PROTOCOLS,
+	type PlaygroundContext,
+	type PlaygroundKind,
+	type PlaygroundRoute,
+	type PlaygroundSearch,
 } from './playground-contracts'
 import {
 	playgroundKinds,
@@ -166,11 +167,13 @@ export function PlaygroundSetup(props: {
 									<option value=''>
 										{t(prefix + 'placeholders.allProtocols')}
 									</option>
-									{['openai', 'anthropic', 'gemini', 'dashscope'].map(
-										(value) => (
-											<option key={value}>{value}</option>
-										)
-									)}
+									{[...PLAYGROUND_PROTOCOLS, 'unsupported'].map((value) => (
+										<option key={value} value={value}>
+											{value === 'unsupported'
+												? t(prefix + 'unsupportedProtocol')
+												: value}
+										</option>
+									))}
 								</select>
 							</label>
 							<label className='space-y-1 text-sm'>
@@ -188,7 +191,11 @@ export function PlaygroundSetup(props: {
 									)
 										.filter(Boolean)
 										.map((value) => (
-											<option key={value}>{value}</option>
+											<option key={value} value={value}>
+												{value === 'unsupported'
+													? t(prefix + 'unsupportedProtocol')
+													: value}
+											</option>
 										))}
 								</select>
 							</label>

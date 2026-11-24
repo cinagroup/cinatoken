@@ -15,6 +15,7 @@ export type AdminDomain =
 	| "guardrails"
 	| "data-policies";
 export type AdminDomainOperation =
+	| "sync"
 	| "create"
 	| "update"
 	| "delete"
@@ -33,20 +34,20 @@ export type AdminDomainOperation =
 /** Optional on legacy callers; any supplied precondition is strict even on reads/reveal. */
 export const adminDomainContract: MiddlewareHandler<AdminEnv> = async (
 	c,
-	next
+	next,
 ) => {
 	c.header("Cache-Control", "private, no-store");
 	try {
 		assertExpectedConsoleSubject(
 			c.get("principal"),
 			c.req.header(EXPECTED_CONSOLE_SUBJECT_HEADER),
-			false
+			false,
 		);
 	} catch (error) {
 		if (error instanceof ExpectedConsoleSubjectError)
 			return c.json(
 				{ success: false, code: error.code, message: error.message },
-				error.status
+				error.status,
 			);
 		throw error;
 	}
@@ -65,7 +66,7 @@ export const adminDomainContract: MiddlewareHandler<AdminEnv> = async (
 					code: "invalid_admin_resource_id",
 					message: "Invalid resource ID",
 				},
-				400
+				400,
 			);
 	await next();
 	c.header("Cache-Control", "private, no-store");
@@ -76,7 +77,7 @@ export function domainAcknowledgement(
 	domain: AdminDomain,
 	operation: AdminDomainOperation,
 	id?: string,
-	relatedId?: string
+	relatedId?: string,
 ) {
 	return {
 		domain,
@@ -90,7 +91,7 @@ export class ModelPolicyPreconditionError extends Error {
 	constructor(
 		public readonly status: 400 | 409 | 428,
 		public readonly code: string,
-		message: string
+		message: string,
 	) {
 		super(message);
 	}

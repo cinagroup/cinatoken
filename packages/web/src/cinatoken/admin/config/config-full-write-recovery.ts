@@ -8,6 +8,10 @@ import {
 
 export type ConfigPendingWrite = PendingConfigWrite
 
+function factorModeKey(key: string): boolean {
+	return key.endsWith(':full:factorMode')
+}
+
 const storagePrefix = 'cinatoken.admin.config.pending.v1:'
 
 function webhookChannelForKey(key: string): 'wecom' | 'feishu' | null {
@@ -25,14 +29,14 @@ function isWebhookWrite(
 	return pending.kind === 'webhook-replace' || pending.kind === 'webhook-clear'
 }
 
-/** Cross-reload webhook markers contain only identity, channel and action, never a URL. */
+/** Cross-reload markers contain only non-secret identity, action and mode; never a webhook URL. */
 export class AdminConfigFullWriteRecovery {
 	private readonly pending = new Map<string, ConfigPendingWrite>()
 	private readonly listeners = new Set<() => void>()
 	readonly maxScopes = 160
 	constructor(
 		private readonly storage: ConfigPendingStorage | null = browserSessionStorage(),
-		private readonly requireWebhookStorage = typeof window !== 'undefined'
+		private readonly requirePersistentStorage = typeof window !== 'undefined'
 	) {}
 
 	private storageKey(key: string): string {
@@ -44,7 +48,7 @@ export class AdminConfigFullWriteRecovery {
 		phase: 'mark' | 'settle' = 'mark'
 	): ConfigPendingWrite | null {
 		const channel = webhookChannelForKey(key)
-		if (!channel || !this.storage) return null
+		if ((!channel && !factorModeKey(key)) || !this.storage) return null
 		let raw: string | null
 		try {
 			raw = this.storage.getItem(this.storageKey(key))
@@ -55,6 +59,23 @@ export class AdminConfigFullWriteRecovery {
 		try {
 			const value: unknown = JSON.parse(raw)
 			if (
+				factorModeKey(key) &&
+				value &&
+				typeof value === 'object' &&
+				'kind' in value &&
+				value.kind === 'factorMode' &&
+				'value' in value &&
+				(value.value === 'multiply' || value.value === 'min') &&
+				'acknowledged' in value &&
+				typeof value.acknowledged === 'boolean'
+			)
+				return {
+					kind: 'factorMode',
+					value: value.value,
+					acknowledged: value.acknowledged,
+				}
+			if (
+				channel &&
 				value &&
 				typeof value === 'object' &&
 				'kind' in value &&
@@ -72,7 +93,9 @@ export class AdminConfigFullWriteRecovery {
 		} catch {
 			// An unreadable marker must not silently unlock a possibly completed write.
 		}
-		return { kind: 'webhook-replace', channel, acknowledged: false }
+		if (factorModeKey(key))
+			return { kind: 'factorMode', value: null, acknowledged: false }
+		return { kind: 'webhook-replace', channel: channel!, acknowledged: false }
 	}
 
 	private persist(
@@ -80,24 +103,39 @@ export class AdminConfigFullWriteRecovery {
 		pending: ConfigPendingWrite,
 		phase: 'mark' | 'settle' = 'mark'
 	): void {
-		if (!isWebhookWrite(pending)) return
+		if (!isWebhookWrite(pending) && pending.kind !== 'factorMode') return
 		const channel = webhookChannelForKey(key)
-		if (channel !== pending.channel && this.requireWebhookStorage)
+		if (
+			pending.kind === 'factorMode' &&
+			!factorModeKey(key) &&
+			this.requirePersistentStorage
+		)
+			throw new ConfigRecoveryPersistenceError(phase)
+		if (
+			isWebhookWrite(pending) &&
+			channel !== pending.channel &&
+			this.requirePersistentStorage
+		)
 			throw new ConfigRecoveryPersistenceError(phase)
 		if (!this.storage) {
-			if (this.requireWebhookStorage)
+			if (this.requirePersistentStorage)
 				throw new ConfigRecoveryPersistenceError(phase)
 			return
 		}
 		try {
-			this.storage.setItem(
-				this.storageKey(key),
-				JSON.stringify({
-					kind: pending.kind,
-					channel: pending.channel,
-					acknowledged: pending.acknowledged,
-				})
-			)
+			const metadata =
+				pending.kind === 'factorMode'
+					? {
+							kind: pending.kind,
+							value: pending.value,
+							acknowledged: pending.acknowledged,
+						}
+					: {
+							kind: pending.kind,
+							channel: pending.channel,
+							acknowledged: pending.acknowledged,
+						}
+			this.storage.setItem(this.storageKey(key), JSON.stringify(metadata))
 		} catch {
 			throw new ConfigRecoveryPersistenceError(phase)
 		}
@@ -114,6 +152,8 @@ export class AdminConfigFullWriteRecovery {
 		} catch (error) {
 			if (!(error instanceof ConfigRecoveryPersistenceError)) throw error
 			const channel = webhookChannelForKey(key)
+			if (factorModeKey(key))
+				return { kind: 'factorMode', value: null, acknowledged: false }
 			return channel
 				? { kind: 'webhook-replace', channel, acknowledged: false }
 				: null
@@ -143,7 +183,7 @@ export class AdminConfigFullWriteRecovery {
 		this.notify()
 	}
 	settle(key: string): void {
-		if (webhookChannelForKey(key) && this.storage) {
+		if ((webhookChannelForKey(key) || factorModeKey(key)) && this.storage) {
 			this.persisted(key, 'settle')
 			try {
 				this.storage.removeItem(this.storageKey(key))

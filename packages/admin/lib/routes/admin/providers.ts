@@ -48,7 +48,7 @@ adminProvidersRoutes.get("/", async (c) => {
 		const repos = c.get("repositories");
 		const data = await listProvidersService(repos);
 		return c.json(
-			normalizeApiTimeFields({ success: true, data, count: data.length })
+			normalizeApiTimeFields({ success: true, data, count: data.length }),
 		);
 	} catch (error) {
 		return handleAdminRouteError(c, error, "Failed to list providers");
@@ -72,7 +72,7 @@ adminProvidersRoutes.post("/", async (c) => {
 				message: "Provider created successfully",
 				acknowledgement: domainAcknowledgement("providers", "create", data.id),
 				data,
-			})
+			}),
 		);
 	} catch (error) {
 		return handleAdminRouteError(c, error, "Failed to create provider");
@@ -84,13 +84,13 @@ adminProvidersRoutes.get("/import/catalog", async (c) => {
 	try {
 		const data = listStaticProviderImportCatalogForAdmin();
 		return c.json(
-			normalizeApiTimeFields({ success: true, data, count: data.length })
+			normalizeApiTimeFields({ success: true, data, count: data.length }),
 		);
 	} catch (error) {
 		return handleAdminRouteError(
 			c,
 			error,
-			"Failed to list provider import catalog"
+			"Failed to list provider import catalog",
 		);
 	}
 });
@@ -126,7 +126,7 @@ adminProvidersRoutes.post("/import", async (c) => {
 				message: `Import finished (${parts.join(", ")}).`,
 				acknowledgement: domainAcknowledgement("providers", "import"),
 				data,
-			})
+			}),
 		);
 	} catch (error) {
 		return handleAdminRouteError(c, error, "Failed to import providers");
@@ -140,7 +140,11 @@ adminProvidersRoutes.get("/sync/diff", async (c) => {
 		const data = await getProviderSyncReportService(repos);
 		return c.json(normalizeApiTimeFields({ success: true, data }));
 	} catch (error) {
-		return handleAdminRouteError(c, error, "Failed to compute provider sync diff");
+		return handleAdminRouteError(
+			c,
+			error,
+			"Failed to compute provider sync diff",
+		);
 	}
 });
 
@@ -154,7 +158,11 @@ adminProvidersRoutes.post("/sync/apply", async (c) => {
 	}
 	try {
 		const repos = c.get("repositories");
-		const data = await applyProviderSyncService(repos, body, c.get('principal').id);
+		const data = await applyProviderSyncService(
+			repos,
+			body,
+			c.get("principal").id,
+		);
 		const parts = [`updated ${data.updated}`];
 		if (data.skipped) parts.push(`${data.skipped} skipped`);
 		if (data.failed.length) parts.push(`${data.failed.length} failed`);
@@ -163,7 +171,8 @@ adminProvidersRoutes.post("/sync/apply", async (c) => {
 				success: true,
 				message: `Sync finished (${parts.join(", ")}).`,
 				data,
-			})
+				acknowledgement: domainAcknowledgement("providers", "sync"),
+			}),
 		);
 	} catch (error) {
 		return handleAdminRouteError(c, error, "Failed to sync providers");
@@ -201,7 +210,7 @@ adminProvidersRoutes.post("/:id/dashscope/:resource", async (c) => {
 	if (resource !== "hotwords" && resource !== "voices") {
 		return c.json(
 			{ success: false, message: "Unsupported DashScope audio resource" },
-			404
+			404,
 		);
 	}
 	let body: unknown;
@@ -216,7 +225,7 @@ adminProvidersRoutes.post("/:id/dashscope/:resource", async (c) => {
 			repos,
 			providerId,
 			resource as DashScopeAudioResource,
-			body
+			body,
 		);
 		// Preserve the official native JSON/body. Only successful HTTP responses carry
 		// transport identity; vendor payload errors still require the vendor contract.
@@ -226,15 +235,15 @@ adminProvidersRoutes.post("/:id/dashscope/:resource", async (c) => {
 			response.headers.set(
 				"X-CinaToken-Acknowledgement",
 				JSON.stringify(
-					domainAcknowledgement("providers", "resource", providerId, resource)
-				)
+					domainAcknowledgement("providers", "resource", providerId, resource),
+				),
 			);
 		return response;
 	} catch (error) {
 		return handleAdminRouteError(
 			c,
 			error,
-			`Failed to manage DashScope ${resource}`
+			`Failed to manage DashScope ${resource}`,
 		);
 	}
 });

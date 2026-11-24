@@ -8,6 +8,10 @@ import {
 	reserveDomainAutomaticRecheck,
 	type AdminDomainSessionProps,
 } from '../use-domain-write-recovery'
+import type {
+	ProviderSyncItems,
+	ProviderSyncResult,
+} from './provider-compatibility'
 import {
 	providerAccessDenied,
 	providerInvalidResponse,
@@ -24,12 +28,15 @@ export type ProviderModal =
 	| { kind: 'editor'; mode: ProviderEditorMode; row?: AdminProvider }
 	| { kind: 'detail'; row: AdminProvider }
 	| { kind: 'import' }
+	| { kind: 'sync' }
 	| { kind: 'change'; row: AdminProvider; action: 'delete' | 'status' }
 type Task = {
 	run: (signal: AbortSignal) => Promise<void>
 	refresh?: boolean
+	notice?: boolean
 	close?: boolean
 	write?: boolean
+	retainEditorOnRejection?: boolean
 }
 export type ProviderManagerProps = AdminDomainSessionProps & {
 	api: ProvidersApi
@@ -58,6 +65,8 @@ export function useProvidersManager(props: ProviderManagerProps) {
 	const [importResult, setImportResult] = useState<ProviderImportResult | null>(
 		null
 	)
+	const [syncResult, setSyncResult] = useState<ProviderSyncResult | null>(null)
+	const [syncMigrated, setSyncMigrated] = useState(false)
 	const active = useRef(true)
 	const task = useRef<Task | null>(null)
 	const controller = useRef<AbortController | null>(null)
@@ -72,6 +81,8 @@ export function useProvidersManager(props: ProviderManagerProps) {
 			setRevoked(false)
 			setModal(null)
 			setImportResult(null)
+			setSyncResult(null)
+			setSyncMigrated(false)
 			setNotice(false)
 			mutation.reset()
 			void query.refetch()
@@ -103,6 +114,8 @@ export function useProvidersManager(props: ProviderManagerProps) {
 			setRevoked(true)
 			setModal(null)
 			setImportResult(null)
+			setSyncResult(null)
+			setSyncMigrated(false)
 			controller.current?.abort()
 			void client.cancelQueries({ queryKey: prefix })
 			client.removeQueries({ queryKey: prefix })
@@ -145,19 +158,32 @@ export function useProvidersManager(props: ProviderManagerProps) {
 				if (pending.write) binding.settleKnown('confirmed-2xx')
 				if (pending.close) setModal(null)
 				if (pending.refresh) {
-					setNotice(true)
+					setNotice(pending.notice !== false)
 					await client.invalidateQueries({ queryKey: prefix })
 				}
 			} catch (error) {
 				if (active.current) {
 					if (pending.write) {
-						setModal(null)
 						setImportResult(null)
+						setSyncResult(null)
+						setSyncMigrated(false)
+						let retainEditor = false
 						if (
 							error instanceof AdminDomainWriteError &&
 							error.code === 'rejected'
-						)
-							binding.settleKnown('definitive-rejection')
+						) {
+							try {
+								binding.settleKnown('definitive-rejection')
+								retainEditor =
+									Boolean(pending.retainEditorOnRejection) &&
+									!providerAccessDenied(error)
+							} catch (settlementError) {
+								setModal(null)
+								revoke(settlementError)
+								throw settlementError
+							}
+						}
+						if (!retainEditor) setModal(null)
 					}
 					revoke(error)
 				}
@@ -181,6 +207,7 @@ export function useProvidersManager(props: ProviderManagerProps) {
 		writeUnconfirmed
 	function queue(next: Task): void {
 		if (disabled || task.current) return
+		setNotice(false)
 		task.current = next
 		binding.resetDispatch()
 		void mutation.mutateAsync().catch(() => undefined)
@@ -189,6 +216,8 @@ export function useProvidersManager(props: ProviderManagerProps) {
 		if (disabled) return
 		mutation.reset()
 		setImportResult(null)
+		setSyncResult(null)
+		setSyncMigrated(false)
 		setNotice(false)
 		setModal(next)
 	}
@@ -196,6 +225,8 @@ export function useProvidersManager(props: ProviderManagerProps) {
 		if (!mutation.isPending) {
 			setModal(null)
 			setImportResult(null)
+			setSyncResult(null)
+			setSyncMigrated(false)
 			mutation.reset()
 		}
 	}
@@ -206,6 +237,7 @@ export function useProvidersManager(props: ProviderManagerProps) {
 			close: true,
 			refresh: true,
 			write: true,
+			retainEditorOnRejection: true,
 			run: async (signal) => {
 				try {
 					if (
@@ -229,6 +261,7 @@ export function useProvidersManager(props: ProviderManagerProps) {
 								name: values.name,
 								id: values.id.trim() || undefined,
 								api_key: input.api_key,
+								kind: input.kind,
 								description: input.description,
 								shared_channel_type: input.shared_channel_type,
 								endpoints: input.endpoints,
@@ -288,6 +321,35 @@ export function useProvidersManager(props: ProviderManagerProps) {
 			},
 		})
 	}
+	function syncProviders(items: ProviderSyncItems): void {
+		queue({
+			refresh: true,
+			notice: false,
+			write: true,
+			run: async (signal) => {
+				const result = await props.api.applyProviderSync(
+					items,
+					binding.writeOptions(signal)
+				)
+				if (active.current) setSyncResult(result)
+			},
+		})
+	}
+	function migrateProvider(id: string, kind: string): void {
+		queue({
+			refresh: true,
+			notice: false,
+			write: true,
+			run: async (signal) => {
+				await props.api.updateProvider(
+					id,
+					{ kind },
+					binding.writeOptions(signal)
+				)
+				if (active.current) setSyncMigrated(true)
+			},
+		})
+	}
 	async function retry(): Promise<void> {
 		if (hidden) {
 			await props.revalidate()
@@ -314,9 +376,26 @@ export function useProvidersManager(props: ProviderManagerProps) {
 		queue,
 		open,
 		close,
+		resumeEditor: () => {
+			if (
+				!disabled &&
+				modal?.kind === 'editor' &&
+				mutation.error instanceof AdminDomainWriteError &&
+				mutation.error.code === 'rejected'
+			)
+				mutation.reset()
+		},
 		save,
 		confirm,
 		importProviders,
+		syncResult,
+		syncMigrated,
+		syncProviders,
+		migrateProvider,
+		clearSyncResult: () => {
+			setSyncResult(null)
+			setSyncMigrated(false)
+		},
 		retry,
 		revoke,
 	}

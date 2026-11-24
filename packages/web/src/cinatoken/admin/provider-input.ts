@@ -10,8 +10,10 @@ import {
 	normalizeProviderEndpoints,
 	type ProviderEndpoints,
 } from './provider-endpoints'
+import { providerKindSchema } from './providers/provider-compatibility'
 
 const inputFields = {
+	kind: providerKindSchema.optional(),
 	name: z.string().trim().min(1).optional(),
 	description: z.string().nullable().optional(),
 	api_key: z.string().trim().optional(),
@@ -37,6 +39,7 @@ const cloneSchema = z
 	.strict()
 
 export type CreateProviderInput = {
+	kind?: string
 	id?: string
 	name: string
 	description?: string | null

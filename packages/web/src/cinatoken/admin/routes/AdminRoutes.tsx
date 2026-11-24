@@ -22,6 +22,7 @@ import { RoutePoolPolicyDialog } from './RoutePoolPolicyDialog'
 import { RouteStickyDialog } from './RouteStickyDialog'
 import type { RouteTargetAction } from './RouteTargetCard'
 import { RouteWorkspace } from './RouteWorkspace'
+import { RouteWriteFeedback } from './RouteWriteFeedback'
 import {
 	buildRoutePools,
 	emptyRouteFilters,
@@ -213,6 +214,7 @@ function AdminRoutesContent(props: AdminRoutesProps) {
 		manager.queue({
 			close: true,
 			authority: { kind: 'routes' },
+			retainPanelOnRejection: true,
 			run: async (signal) => {
 				if (row)
 					await props.api.updateRoute(
@@ -233,6 +235,7 @@ function AdminRoutesContent(props: AdminRoutesProps) {
 		manager.queue({
 			close: true,
 			authority: { kind: 'routes' },
+			retainPanelOnRejection: true,
 			run: (signal) =>
 				props.api.patchRoutePoolPolicy(
 					pool.id!,
@@ -268,6 +271,7 @@ function AdminRoutesContent(props: AdminRoutesProps) {
 		manager.queue({
 			close: true,
 			authority: { kind: 'model', id: currentPool.modelId },
+			retainPanelOnRejection: true,
 			run: async (signal) => {
 				let policy = expectedPolicy
 				try {
@@ -321,6 +325,9 @@ function AdminRoutesContent(props: AdminRoutesProps) {
 			},
 		})
 	}
+	let confirmTitle = 'disable'
+	if (manager.action === 'delete') confirmTitle = 'delete'
+	else if (manager.action === 'activate') confirmTitle = 'enable'
 	const noResults =
 		!filters.invalid &&
 		workspace.length === 0 &&
@@ -366,12 +373,16 @@ function AdminRoutesContent(props: AdminRoutesProps) {
 					{t(prefix + 'readonly')}
 				</p>
 			)}
-			{manager.writeUnconfirmed && (
+			{manager.writeUnconfirmed && !manager.mutation.isPending && (
 				<p
 					role='alert'
 					className='border-destructive text-destructive rounded-lg border p-3 text-sm'
 				>
-					{t(prefix + 'writeUnknown')}
+					{t(
+						manager.manualRecovery.status === 'unavailable'
+							? 'cinatoken.adminDomain.storageUnavailable'
+							: prefix + 'writeUnknown'
+					)}
 				</p>
 			)}
 			{manager.notice && (
@@ -379,12 +390,13 @@ function AdminRoutesContent(props: AdminRoutesProps) {
 					{t(prefix + 'saved')}
 				</p>
 			)}
+			{!manager.panel && <RouteWriteFeedback error={manager.mutation.error} />}
 			{manager.hidden && (
 				<p
 					role='alert'
 					className='border-destructive text-destructive rounded-lg border p-4 text-sm'
 				>
-					{t(routeErrorKey(manager.list.error))}
+					{t(routeErrorKey(manager.list.error ?? manager.unavailableError))}
 				</p>
 			)}
 			{!manager.hidden && manager.list.error != null && (
@@ -526,10 +538,15 @@ function AdminRoutesContent(props: AdminRoutesProps) {
 				/>
 			)}
 			<RouteFailoverHelp />
-			<AdminDomainRecoveryDialog recovery={manager.manualRecovery} />
+			<AdminDomainRecoveryDialog
+				recovery={manager.manualRecovery}
+				label={t(prefix + 'routeRecovery')}
+			/>
 			<AdminDomainRecoveryDialog
 				recovery={manager.modelManualRecovery}
+				label={t(prefix + 'modelRecovery')}
 				busy={Boolean(editingModel)}
+				busyReason='editor'
 			/>
 			{editingModel && !manager.hidden && !manager.readError && (
 				<ManagedModelEditor
@@ -559,8 +576,10 @@ function AdminRoutesContent(props: AdminRoutesProps) {
 					currency={verifiedContext?.billing_currency ?? null}
 					timezone={verifiedContext?.business_timezone ?? null}
 					pending={manager.mutation.isPending}
-					disabled={manager.disabled}
+					disabled={manager.disabled || manager.mutation.error != null}
 					error={manager.mutation.error}
+					canResume={manager.canResumePanel}
+					onResume={manager.resumePanel}
 					onSave={saveRoute}
 					onClose={manager.close}
 				/>
@@ -578,9 +597,11 @@ function AdminRoutesContent(props: AdminRoutesProps) {
 			{manager.panel === 'policy' && pool && (
 				<RoutePoolPolicyDialog
 					pool={pool}
-					disabled={manager.disabled}
+					disabled={manager.disabled || manager.mutation.error != null}
 					pending={manager.mutation.isPending}
 					error={manager.mutation.error}
+					canResume={manager.canResumePanel}
+					onResume={manager.resumePanel}
 					onSave={savePoolPolicy}
 					onClose={manager.close}
 				/>
@@ -589,9 +610,15 @@ function AdminRoutesContent(props: AdminRoutesProps) {
 				<RouteModelPolicyDialog
 					pool={pool}
 					model={modelOptions.find((row) => row.id === pool.modelId) ?? null}
-					disabled={manager.disabled}
+					disabled={
+						manager.disabled ||
+						manager.mutation.error != null ||
+						manager.modelWriteUnconfirmed
+					}
 					pending={manager.mutation.isPending}
 					error={manager.mutation.error}
+					canResume={manager.canResumePanel}
+					onResume={manager.resumePanel}
 					onSave={saveModelPolicy}
 					onClose={manager.close}
 				/>
@@ -602,9 +629,11 @@ function AdminRoutesContent(props: AdminRoutesProps) {
 					readOptions={manager.readOptions}
 					queryPrefix={manager.prefix}
 					pool={pool}
-					disabled={manager.disabled}
+					disabled={manager.disabled || manager.mutation.error != null}
 					pending={manager.mutation.isPending}
 					error={manager.mutation.error}
+					canResume={manager.canResumePanel}
+					onResume={manager.resumePanel}
 					onSave={savePoolPolicy}
 					onClear={(hash) => {
 						if (pool.id)
@@ -643,16 +672,7 @@ function AdminRoutesContent(props: AdminRoutesProps) {
 				>
 					<DialogContent showCloseButton={false}>
 						<DialogHeader>
-							<DialogTitle>
-								{t(
-									prefix +
-										(manager.action === 'delete'
-											? 'delete'
-											: manager.action === 'activate'
-												? 'enable'
-												: 'disable')
-								)}
-							</DialogTitle>
+							<DialogTitle>{t(prefix + confirmTitle)}</DialogTitle>
 							<DialogDescription>
 								{t(
 									prefix +
@@ -663,11 +683,7 @@ function AdminRoutesContent(props: AdminRoutesProps) {
 								)}
 							</DialogDescription>
 						</DialogHeader>
-						{manager.mutation.error != null && (
-							<p role='alert' className='text-destructive text-sm'>
-								{t(routeErrorKey(manager.mutation.error))}
-							</p>
-						)}
+						<RouteWriteFeedback error={manager.mutation.error} />
 						<DialogFooter>
 							<Button
 								type='button'

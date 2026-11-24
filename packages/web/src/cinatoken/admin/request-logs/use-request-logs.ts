@@ -178,15 +178,18 @@ export function useRequestLogs(props: RequestLogsProps) {
 	}, [props.search, displaySettled, timezone, anchor])
 	const requestKey = JSON.stringify([props.scopeKey, effectiveSearch, version])
 	useEffect(() => {
-		if (logsBlocked || !effectiveSearch) return
+		if (logsBlocked || !effectiveSearch || effectiveSearch.invalidFilter) return
 		const controller = new AbortController()
 		let alive = true
 		void api.requestLogs(effectiveSearch, { signal: controller.signal }).then(
 			(value) => {
-				if (alive) setPageState({ key: requestKey, value })
+				if (!alive) return
+				setErrorState(null)
+				setPageState({ key: requestKey, value })
 			},
 			(failure: unknown) => {
 				if (!alive) return
+				setPageState(null)
 				setErrorState({ key: requestKey, value: failure })
 				if (denied(failure)) block('logs')
 			}
@@ -207,6 +210,7 @@ export function useRequestLogs(props: RequestLogsProps) {
 		setVersion((value) => value + 1)
 	}
 	return {
+		invalidFilter: props.search.invalidFilter === true,
 		page,
 		loading: !page && !error && !logsBlocked,
 		error,

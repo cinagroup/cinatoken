@@ -32,8 +32,9 @@ const range = {
 	endUtc: '2026-09-28 08:00:00',
 }
 
-test('CSV retains all 16 legacy columns while neutralizing email formulas', () => {
-	assert.equal(userCsvColumns.length, 16)
+test('CSV retains 16 legacy columns before the additive wallet fields while neutralizing email formulas', () => {
+	assert.equal(userCsvColumns.length, 20)
+	assert.equal(userCsvColumns[15], 'range_end_utc')
 	assert.throws(() => userAnalyticsCsv([row], range, null))
 	const csv = userAnalyticsCsv([row], range, 'USD')
 	assert.ok(csv.startsWith('\uFEFF'))

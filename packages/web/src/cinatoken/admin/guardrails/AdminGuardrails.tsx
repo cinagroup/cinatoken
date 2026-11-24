@@ -11,16 +11,16 @@ import {
 	DialogTitle,
 } from '../../../components/ui/dialog'
 import { Input } from '../../../components/ui/input'
-import { Label } from '../../../components/ui/label'
 import { AdminDomainRecoveryDialog } from '../AdminDomainRecoveryDialog'
 import { AdminGuardrailPreview } from './AdminGuardrailPreview'
-import type {
-	AdminGuardrailScopeType,
-	AdminGuardrailSummary,
-} from './guardrails-contracts'
+import { GuardrailBindingForm } from './GuardrailBindingForm'
+import { GuardrailMetadataDialog } from './GuardrailMetadataDialog'
+import { GuardrailWriteFeedback } from './GuardrailWriteFeedback'
+import type { AdminGuardrailSummary } from './guardrails-contracts'
 import type { AdminGuardrailPreviewApi } from './preview-api'
 import {
 	useAdminGuardrailsManager,
+	type AdminGuardrailBindingDraft,
 	type AdminGuardrailChange,
 	type AdminGuardrailsManagerProps,
 } from './use-admin-guardrails-manager'
@@ -39,6 +39,7 @@ function GuardrailCard(props: {
 	row: AdminGuardrailSummary
 	canWrite: boolean
 	onDetails: () => void
+	onEdit: () => void
 	onChange: (change: AdminGuardrailChange) => void
 }) {
 	const { t } = useTranslation()
@@ -92,6 +93,16 @@ function GuardrailCard(props: {
 				>
 					{t(prefix + 'details')}
 				</Button>
+				{props.canWrite && (
+					<Button
+						type='button'
+						variant='outline'
+						aria-label={`${t(prefix + 'editMetadata')}: ${row.workspaceId} / ${row.name}`}
+						onClick={props.onEdit}
+					>
+						{t(prefix + 'editMetadata')}
+					</Button>
+				)}
 				{canArchive ? (
 					<Button
 						type='button'
@@ -113,12 +124,11 @@ function GuardrailCard(props: {
 
 function DetailsDialog(props: {
 	row: AdminGuardrailSummary
+	draft?: AdminGuardrailBindingDraft
 	manager: ReturnType<typeof useAdminGuardrailsManager>
 	language: string
 }) {
 	const { t } = useTranslation()
-	const [scopeType, setScopeType] = useState<AdminGuardrailScopeType>('user')
-	const [scopeId, setScopeId] = useState('')
 	const title = useRef<HTMLHeadingElement>(null)
 	const row = props.row
 	const manager = props.manager
@@ -196,6 +206,7 @@ function DetailsDialog(props: {
 											<Button
 												type='button'
 												variant='outline'
+												aria-label={`${t(prefix + 'selectVersion')}: ${row.workspaceId} / ${row.id} / v${version.version}`}
 												onClick={() =>
 													manager.stage(row, {
 														kind: 'designate',
@@ -218,49 +229,13 @@ function DetailsDialog(props: {
 							) : (
 								<>
 									{!manager.disabled && row.status === 'active' ? (
-										<div className='grid gap-2 rounded-lg border p-3 sm:grid-cols-[9rem_minmax(0,1fr)_auto] sm:items-end'>
-											<div className='space-y-1'>
-												<Label htmlFor='guardrail-scope-type'>
-													{t(prefix + 'scopeType')}
-												</Label>
-												<select
-													id='guardrail-scope-type'
-													className={selectClass}
-													value={scopeType}
-													onChange={(event) =>
-														setScopeType(
-															event.target.value as AdminGuardrailScopeType
-														)
-													}
-												>
-													<option value='user'>user</option>
-													<option value='api_key'>api_key</option>
-												</select>
-											</div>
-											<div className='space-y-1'>
-												<Label htmlFor='guardrail-scope-id'>
-													{t(prefix + 'scopeId')}
-												</Label>
-												<Input
-													id='guardrail-scope-id'
-													value={scopeId}
-													onChange={(event) => setScopeId(event.target.value)}
-												/>
-											</div>
-											<Button
-												type='button'
-												disabled={!scopeId.trim()}
-												onClick={() =>
-													manager.stage(row, {
-														kind: 'bind',
-														scopeType,
-														scopeId: scopeId.trim(),
-													})
-												}
-											>
-												{t(prefix + 'bind')}
-											</Button>
-										</div>
+										<GuardrailBindingForm
+											draft={props.draft}
+											disabled={manager.disabled}
+											onReview={(draft) =>
+												manager.stage(row, { kind: 'bind', ...draft })
+											}
+										/>
 									) : null}
 									{assignments.length === 0 ? (
 										<p className='text-muted-foreground text-sm'>
@@ -279,6 +254,7 @@ function DetailsDialog(props: {
 												<Button
 													type='button'
 													variant='outline'
+													aria-label={`${t(prefix + 'unbind')}: ${row.workspaceId} / ${assignment.scopeType}:${assignment.scopeId}`}
 													onClick={() =>
 														manager.stage(row, { kind: 'unbind', assignment })
 													}
@@ -305,6 +281,7 @@ function changeDescription(
 	change: AdminGuardrailChange,
 	t: (key: string) => string
 ): string {
+	if (change.kind === 'metadata') return t(prefix + 'editMetadata')
 	if (change.kind === 'designate')
 		return `${t(prefix + 'designated')}: v${change.version}`
 	if (change.kind === 'bind' || change.kind === 'unbind') {
@@ -393,14 +370,6 @@ export function AdminGuardrails(
 					{t(prefix + 'readonly')}
 				</p>
 			) : null}
-			{manager.revoked ? (
-				<p
-					role='alert'
-					className='text-destructive rounded-lg border p-3 text-sm'
-				>
-					{t(manager.errorKey(manager.error))}
-				</p>
-			) : null}
 			<AdminDomainRecoveryDialog
 				recovery={manager.manualRecovery}
 				busy={manager.saving}
@@ -418,24 +387,11 @@ export function AdminGuardrails(
 					{t(manager.errorKey(manager.list.error))}
 				</p>
 			) : null}
-			{manager.details.error && !manager.revoked ? (
-				<p
-					role='alert'
-					className='text-destructive rounded-lg border p-3 text-sm'
-				>
-					{t(manager.errorKey(manager.details.error))}
-				</p>
-			) : null}
-			{manager.reconciliationError && !manager.revoked ? (
-				<p role='alert' className='text-destructive text-sm'>
-					{t(manager.errorKey(manager.reconciliationError))}
-				</p>
-			) : null}
-			{manager.error && !manager.revoked && !manager.writeUnconfirmed ? (
-				<p role='alert' className='text-destructive text-sm'>
-					{t(manager.errorKey(manager.error))}
-				</p>
-			) : null}
+			{!panel && (
+				<GuardrailWriteFeedback
+					error={manager.error ?? manager.reconciliationError}
+				/>
+			)}
 			<div className='flex flex-wrap gap-2'>
 				<Input
 					className='min-w-0 flex-1 basis-56'
@@ -461,7 +417,7 @@ export function AdminGuardrails(
 					<option value='archived'>{t(prefix + 'archived')}</option>
 				</select>
 			</div>
-			{manager.list.isPending && !manager.list.error ? (
+			{manager.list.isFetching && !manager.revoked ? (
 				<p role='status' className='text-muted-foreground text-sm'>
 					{t(prefix + 'loading')}
 				</p>
@@ -486,6 +442,7 @@ export function AdminGuardrails(
 						row={row}
 						canWrite={!manager.disabled}
 						onDetails={() => manager.openDetails(row)}
+						onEdit={() => manager.openMetadata(row)}
 						onChange={(change) => manager.stage(row, change)}
 					/>
 				))}
@@ -515,10 +472,23 @@ export function AdminGuardrails(
 					</div>
 				</div>
 			) : null}
+			{panel?.kind === 'metadata' && (
+				<GuardrailMetadataDialog
+					key={panel.row.id}
+					row={panel.row}
+					patch={panel.patch}
+					disabled={manager.disabled}
+					onClose={manager.close}
+					onReview={(patch) =>
+						manager.stage(panel.row, { kind: 'metadata', patch })
+					}
+				/>
+			)}
 			{panel?.kind === 'details' ? (
 				<DetailsDialog
 					key={panel.row.id}
 					row={panel.row}
+					draft={panel.draft}
 					manager={manager}
 					language={i18n.resolvedLanguage ?? 'en'}
 				/>
@@ -550,21 +520,44 @@ export function AdminGuardrails(
 							<dd className='break-all'>{panel.row.ownerUserId}</dd>
 							<dt className='text-muted-foreground'>{t(prefix + 'name')}</dt>
 							<dd className='break-words'>{panel.row.name}</dd>
-							<dt className='text-muted-foreground'>{t(prefix + 'status')}</dt>
+							<dt className='text-muted-foreground'>
+								{t(prefix + 'operation')}
+							</dt>
 							<dd className='break-all'>
 								{changeDescription(panel.change, t)}
 							</dd>
 						</dl>
+						{panel.change.kind === 'metadata' && (
+							<div className='bg-muted/40 space-y-2 rounded-lg p-3 text-sm'>
+								<p className='break-words'>
+									{t(prefix + 'metadataName')}:{' '}
+									{panel.change.patch.name ?? panel.row.name}
+								</p>
+								<p className='break-words whitespace-pre-wrap'>
+									{t(prefix + 'description')}:{' '}
+									{(panel.change.patch.description === undefined
+										? panel.row.description
+										: panel.change.patch.description) || t(prefix + 'notSet')}
+								</p>
+							</div>
+						)}
 						{panel.change.kind === 'bind' ? (
 							<p className='rounded-lg border border-amber-500/40 bg-amber-500/10 p-3 text-sm'>
 								{t(prefix + 'bindWarning')}
 							</p>
 						) : null}
-						{manager.error ? (
-							<p role='alert' className='text-destructive text-sm'>
-								{t(manager.errorKey(manager.error))}
-							</p>
-						) : null}
+						<GuardrailWriteFeedback
+							error={manager.error}
+							canResume={manager.canResumeBinding || manager.canResumeMetadata}
+							resumeKind={
+								panel.change.kind === 'metadata' ? 'metadata' : 'binding'
+							}
+							onResume={
+								panel.change.kind === 'metadata'
+									? manager.resumeMetadata
+									: manager.resumeBinding
+							}
+						/>
 						<DialogFooter>
 							<Button
 								type='button'
@@ -577,7 +570,7 @@ export function AdminGuardrails(
 							<Button
 								type='button'
 								onClick={() => void manager.confirm()}
-								disabled={manager.disabled}
+								disabled={manager.disabled || manager.error != null}
 							>
 								{t(prefix + 'confirmAction')}
 							</Button>

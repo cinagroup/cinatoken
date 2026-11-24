@@ -18,7 +18,7 @@ import { EndpointAudioFields } from './EndpointAudioFields'
 import { EndpointIdentityFields } from './EndpointIdentityFields'
 import { EndpointImageFields } from './EndpointImageFields'
 import { EndpointTextFields } from './EndpointTextFields'
-import { endpointErrorKey } from './endpoint-errors'
+import { EndpointWriteFeedback } from './EndpointWriteFeedback'
 import {
 	endpointFormDefaults,
 	endpointFormInput,
@@ -36,6 +36,8 @@ export function EndpointEditorDialog(props: {
 	pending: boolean
 	disabled: boolean
 	error: unknown
+	canResume: boolean
+	onResume: () => void
 	onSave: (input: UpdateEndpointInput, row?: AdminEndpoint) => void
 	onClose: () => void
 }) {
@@ -76,7 +78,7 @@ export function EndpointEditorDialog(props: {
 				<form className='space-y-7' onSubmit={form.handleSubmit(submit)}>
 					<fieldset
 						className='space-y-7 disabled:opacity-60'
-						disabled={props.pending || props.disabled}
+						disabled={props.pending || props.disabled || props.error != null}
 					>
 						<EndpointIdentityFields
 							form={form}
@@ -140,7 +142,7 @@ export function EndpointEditorDialog(props: {
 							)}
 						</section>
 					</fieldset>
-					{(form.formState.errors.root || props.error != null) && (
+					{form.formState.errors.root && (
 						<div
 							role='alert'
 							className='text-destructive space-y-2 rounded-xl border p-3 text-sm'
@@ -155,14 +157,13 @@ export function EndpointEditorDialog(props: {
 									)}
 								</p>
 							)}
-							{props.error != null && (
-								<>
-									<p>{t(endpointErrorKey(props.error))}</p>
-									<p>{t(prefix + 'writeUnknown')}</p>
-								</>
-							)}
 						</div>
 					)}
+					<EndpointWriteFeedback
+						error={props.error}
+						canResume={props.canResume}
+						onResume={props.onResume}
+					/>
 					<div className='flex flex-wrap justify-end gap-2'>
 						<Button
 							type='button'

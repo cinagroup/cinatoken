@@ -35,6 +35,7 @@ import {
 	redactProviderResource,
 	type ProviderDashScopeResult,
 } from './provider-resource'
+import { createProviderCompatibilityApi } from './providers/provider-compatibility'
 
 /** Admin is console-scoped, never an account/workspace-owned resource. */
 export type ProviderRequestOptions = AdminDomainRequestOptions
@@ -118,6 +119,7 @@ export function createProvidersApi(transport: ProviderAdminTransport) {
 	}
 	return {
 		verifyAdminDomainSubject: bound.verifyAdminDomainSubject,
+		...createProviderCompatibilityApi({ send }),
 		provider,
 		createProvider,
 		providerList: async (
@@ -166,6 +168,7 @@ export function createProvidersApi(transport: ProviderAdminTransport) {
 			return createProvider(
 				{
 					name: checked.name,
+					kind: checked.kind ?? (source.kind?.trim() || '__custom__'),
 					id: checked.id,
 					api_key: checked.api_key,
 					description:

@@ -150,6 +150,29 @@ export function UserCreateDialog(props: {
 							</div>
 						</div>
 						<div className='space-y-2'>
+							<fieldset className='flex flex-col gap-3 border-t pt-4'>
+								<legend className='text-sm font-medium'>
+									{t(prefix + 'walletInitial')}
+								</legend>
+								<p className='text-muted-foreground text-xs'>
+									{t(prefix + 'walletInitialHint')}
+								</p>
+								<div className='grid gap-4 sm:grid-cols-2'>
+									{(['walletGranted', 'walletSpent'] as const).map((field) => (
+										<div key={field} className='flex flex-col gap-2'>
+											<Label htmlFor={'admin-user-' + field}>
+												{t(prefix + field)}
+											</Label>
+											<Input
+												id={'admin-user-' + field}
+												inputMode='decimal'
+												disabled={!props.currency}
+												{...form.register(field)}
+											/>
+										</div>
+									))}
+								</div>
+							</fieldset>
 							<Label htmlFor='admin-user-metadata'>
 								{t(prefix + 'metadataJson')}
 							</Label>

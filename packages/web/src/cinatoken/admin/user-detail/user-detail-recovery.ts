@@ -11,6 +11,7 @@ export type UserDetailDomain =
 	| 'logs'
 	| 'audits'
 	| 'models'
+	| 'factor-preview'
 	| 'display'
 	| 'user-write'
 	| 'key-write'

@@ -10,6 +10,23 @@ import {
 	ALERT_WEBHOOK_FEISHU_URL_KEY,
 	ALERT_WEBHOOK_WECOM_URL_KEY,
 } from "@octafuse/core/lib/alert-webhook-system-config";
+import {
+	isUserChargedCostFactorMode,
+	USER_CHARGED_COST_FACTOR_MODE_KEY,
+} from "@octafuse/core/lib/user-charged-cost-factor-mode";
+import {
+	STREAM_FIRST_EVENT_TIMEOUT_MS_KEY,
+	STREAM_FIRST_EVENT_TIMEOUT_ROUTE_GROUPS_KEY,
+	normalizeFirstEventTimeoutMsInput,
+	normalizeFirstEventTimeoutRouteGroupsInput,
+	timeoutMsConfigValue,
+	timeoutRouteGroupsConfigValue,
+} from "@octafuse/core/lib/stream-first-event-timeout-config";
+import {
+	assertExpectedConsoleSubject,
+	ExpectedConsoleSubjectError,
+	EXPECTED_CONSOLE_SUBJECT_HEADER,
+} from "@/lib/services/admin/expected-console-subject";
 import type { AdminEnv } from "@/lib/admin-env";
 import { hasAdminPermission } from "@/lib/admin-principal";
 import { updateAdminSystemConfigService } from "@/lib/services/admin/dashboard-service";
@@ -110,7 +127,7 @@ adminManagedConfigRoutes.put("/billing-currency", async (c) => {
 			repos,
 			{ key: BILLING_CURRENCY_KEY, value },
 			c.get("principal"),
-			precondition.kind === "match" ? precondition.revision : null
+			precondition.kind === "match" ? precondition.revision : null,
 		);
 		if (!result.committed) return configRevisionConflict(c);
 		return c.json({
@@ -143,7 +160,7 @@ adminManagedConfigRoutes.put("/route-strategy", async (c) => {
 			repos,
 			{ key: ROUTE_STRATEGY_KEY, value },
 			c.get("principal"),
-			precondition.kind === "match" ? precondition.revision : null
+			precondition.kind === "match" ? precondition.revision : null,
 		);
 		if (!result.committed) return configRevisionConflict(c);
 		return c.json({
@@ -160,6 +177,107 @@ adminManagedConfigRoutes.put("/route-strategy", async (c) => {
 		return c.json(writeFailed, 500);
 	}
 });
+
+adminManagedConfigRoutes.put("/user-charged-cost-factor-mode", async (c) => {
+	if (!canWrite(c))
+		return c.json({ success: false, message: "Forbidden" }, 403);
+	const precondition = configRevisionPrecondition(c);
+	if (precondition.kind === "absent" || precondition.kind === "invalid")
+		return configRevisionError(c, precondition.kind);
+	const raw = await readValueBody(c);
+	const value = raw?.trim().toLowerCase();
+	if (!value || !isUserChargedCostFactorMode(value))
+		return c.json(badInput, 400);
+	try {
+		assertExpectedConsoleSubject(
+			c.get("principal"),
+			c.req.header(EXPECTED_CONSOLE_SUBJECT_HEADER),
+			true,
+		);
+		const result = await updateAdminSystemConfigService(
+			c.get("repositories"),
+			{ key: USER_CHARGED_COST_FACTOR_MODE_KEY, value },
+			c.get("principal"),
+			precondition.kind === "match" ? precondition.revision : null,
+		);
+		if (!result.committed) return configRevisionConflict(c);
+		return c.json({
+			success: true,
+			data: {
+				userChargedCostFactorMode: {
+					value,
+					source: "configured",
+					revision: result.revision,
+				},
+			},
+		});
+	} catch (error) {
+		if (error instanceof ExpectedConsoleSubjectError)
+			return c.json(
+				{ success: false, code: error.code, message: error.message },
+				error.status,
+			);
+		return c.json(writeFailed, 500);
+	}
+});
+
+// Each key has its own revision and transaction. These are intentionally two independent saves.
+for (const setting of [
+	{
+		path: "/stream-first-event-timeout-ms",
+		key: STREAM_FIRST_EVENT_TIMEOUT_MS_KEY,
+		field: "streamFirstEventTimeoutMs",
+		normalize: normalizeFirstEventTimeoutMsInput,
+		project: timeoutMsConfigValue,
+	},
+	{
+		path: "/stream-first-event-timeout-route-groups",
+		key: STREAM_FIRST_EVENT_TIMEOUT_ROUTE_GROUPS_KEY,
+		field: "streamFirstEventTimeoutRouteGroups",
+		normalize: normalizeFirstEventTimeoutRouteGroupsInput,
+		project: timeoutRouteGroupsConfigValue,
+	},
+] as const) {
+	adminManagedConfigRoutes.put(setting.path, async (c) => {
+		if (!canWrite(c))
+			return c.json({ success: false, message: "Forbidden" }, 403);
+		const precondition = configRevisionPrecondition(c);
+		if (precondition.kind === "absent" || precondition.kind === "invalid")
+			return configRevisionError(c, precondition.kind);
+		const value = setting.normalize(await readValueBody(c));
+		if (value === null) return c.json(badInput, 400);
+		try {
+			assertExpectedConsoleSubject(
+				c.get("principal"),
+				c.req.header(EXPECTED_CONSOLE_SUBJECT_HEADER),
+				true,
+			);
+			const result = await updateAdminSystemConfigService(
+				c.get("repositories"),
+				{ key: setting.key, value },
+				c.get("principal"),
+				precondition.kind === "match" ? precondition.revision : null,
+			);
+			if (!result.committed) return configRevisionConflict(c);
+			return c.json({
+				success: true,
+				data: {
+					[setting.field]: {
+						...setting.project(value),
+						revision: result.revision,
+					},
+				},
+			});
+		} catch (error) {
+			if (error instanceof ExpectedConsoleSubjectError)
+				return c.json(
+					{ success: false, code: error.code, message: error.message },
+					error.status,
+				);
+			return c.json(writeFailed, 500);
+		}
+	});
+}
 
 adminManagedConfigRoutes.put("/webhooks/:channel", async (c) => {
 	if (!canWrite(c))
@@ -181,7 +299,7 @@ adminManagedConfigRoutes.put("/webhooks/:channel", async (c) => {
 			repos,
 			{ key, value },
 			c.get("principal"),
-			precondition.kind === "match" ? precondition.revision : null
+			precondition.kind === "match" ? precondition.revision : null,
 		);
 		if (!result.committed) return configRevisionConflict(c);
 		return c.json({
@@ -207,7 +325,7 @@ adminManagedConfigRoutes.delete("/webhooks/:channel", async (c) => {
 			repos,
 			{ key, value: "" },
 			c.get("principal"),
-			precondition.kind === "match" ? precondition.revision : null
+			precondition.kind === "match" ? precondition.revision : null,
 		);
 		if (!result.committed) return configRevisionConflict(c);
 		return c.json({

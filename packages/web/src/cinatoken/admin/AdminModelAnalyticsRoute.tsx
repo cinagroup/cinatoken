@@ -10,6 +10,8 @@ export function AdminModelAnalyticsRoute() {
 		<AdminModelAnalytics
 			key={console.scopeKey}
 			api={cinatokenAdminApi}
+			directoryApi={cinatokenAdminApi}
+			directorySubject={console.identity.subject}
 			scopeKey={console.scopeKey}
 			reconciliationKey={JSON.stringify([
 				console.identity.userId,

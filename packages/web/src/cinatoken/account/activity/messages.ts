@@ -1,4 +1,15 @@
 const en = {
+	periodBudget: 'Periodic allowance',
+	permanentBudget: 'Permanent credit',
+	walletGranted: 'Credit granted',
+	walletSpent: 'Credit spent',
+	walletRemaining: 'Permanent balance',
+	totalRemaining: 'Available balance',
+	walletDoesNotReset: 'Does not reset',
+	walletUnavailable:
+		'Permanent credit details are unavailable. The displayed balance covers the periodic allowance only.',
+	totalBudgetHint:
+		'Available balance includes both pools after spending and in-flight reservations. Prior overage also reduces the available balance.',
 	title: 'Activity',
 	subtitle: 'Understand your requests, usage and charges in this workspace.',
 	scope: 'Workspace: {{name}}',
@@ -155,6 +166,16 @@ const en = {
 	},
 }
 const zh: typeof en = {
+	periodBudget: '周期额度',
+	permanentBudget: '永久额度',
+	walletGranted: '累计发放',
+	walletSpent: '累计消费',
+	walletRemaining: '永久池余额',
+	totalRemaining: '总可用额度',
+	walletDoesNotReset: '不随周期重置',
+	walletUnavailable: '永久额度明细暂不可用。当前余额仅包含周期额度。',
+	totalBudgetHint:
+		'总可用额度包含周期和永久两池，已扣除消费与在途预留；历史超支也会抵扣可用额度。',
 	title: '使用记录',
 	subtitle: '了解此工作区的请求、用量和费用。',
 	scope: '工作区：{{name}}',
@@ -302,6 +323,17 @@ const zh: typeof en = {
 	},
 }
 const ja: typeof en = {
+	periodBudget: '期間クォータ',
+	permanentBudget: '永続クレジット',
+	walletGranted: '付与総額',
+	walletSpent: '使用総額',
+	walletRemaining: '永続残高',
+	totalRemaining: '利用可能残高',
+	walletDoesNotReset: '期間リセットなし',
+	walletUnavailable:
+		'永続クレジットの詳細は利用できません。表示残高は期間クォータのみです。',
+	totalBudgetHint:
+		'利用可能残高は両方の枠から使用額と処理中の予約額を差し引いた金額です。過去の超過分も差し引かれます。',
 	title: '利用履歴',
 	subtitle: 'このワークスペースのリクエスト、使用量、料金を確認します。',
 	scope: 'ワークスペース: {{name}}',
@@ -457,6 +489,17 @@ const ja: typeof en = {
 	},
 }
 const ko: typeof en = {
+	periodBudget: '주기 한도',
+	permanentBudget: '영구 크레딧',
+	walletGranted: '총 지급액',
+	walletSpent: '총 사용액',
+	walletRemaining: '영구 잔액',
+	totalRemaining: '사용 가능 잔액',
+	walletDoesNotReset: '주기 초기화 없음',
+	walletUnavailable:
+		'영구 크레딧 세부 정보를 사용할 수 없습니다. 표시된 잔액은 주기 한도만 포함합니다.',
+	totalBudgetHint:
+		'사용 가능 잔액은 두 한도에서 사용액과 처리 중 예약액을 차감한 금액입니다. 이전 초과 사용액도 차감됩니다.',
 	title: '사용 기록',
 	subtitle: '이 워크스페이스의 요청, 사용량 및 요금을 확인하세요.',
 	scope: '워크스페이스: {{name}}',

@@ -19,7 +19,9 @@ function fixture() {
 				updateItem: async (_id: string, patch: Record<string, unknown>) => {
 					updates.push(patch);
 				},
-				insertServer: async (input: Parameters<GatewayRepositories['mcpServers']['insertServer']>[0]) => {
+				insertServer: async (
+					input: Parameters<GatewayRepositories['mcpServers']['insertServer']>[0]
+				) => {
 					writes.push(input);
 				},
 			};
@@ -52,13 +54,18 @@ test('admin defaults new services to free request billing', async () => {
 });
 test('admin rejects unsupported modes and parameters as 400 before writes', async () => {
 	const { repos, writes } = fixture();
-	for (const patch of [{ unit: 'page' }, { terms: [{ kind: 'reported' }] }, { config: { credits: 2 } }]) {
+	for (const patch of [
+		{ unit: 'page' },
+		{ terms: [{ kind: 'reported' }] },
+		{ config: { credits: 2 } },
+	]) {
 		await assert.rejects(
 			createMcpServer(repos, {
 				...input,
 				pricing: { prices: { metered: 0, standard: 0, charged: 0 }, ...patch },
 			}),
-			(error) => isAdminServiceError(error) && error.status === 400 && /pricing\./.test(error.message)
+			(error) =>
+				isAdminServiceError(error) && error.status === 400 && /pricing\./.test(error.message)
 		);
 	}
 	assert.equal(writes.length, 0);
@@ -80,7 +87,9 @@ test('tool prices use the same factor envelope, and null restores inheritance', 
 	await setMcpItemPricing(repos, 'server', 'tool', { pricing: null });
 	assert.equal(updates[1].pricing, null);
 	await assert.rejects(
-		setMcpItemPricing(repos, 'server', 'tool', { pricing: { v: 2, standard: 0.02, meteredFactor: -1 } })
+		setMcpItemPricing(repos, 'server', 'tool', {
+			pricing: { v: 2, standard: 0.02, meteredFactor: -1 },
+		})
 	);
 	assert.equal(updates.length, 2);
 });
@@ -94,4 +103,65 @@ test('old independent prices are preserved through the admin API', async () => {
 	};
 	await createMcpServer(repos, { ...input, pricing });
 	assert.deepEqual(JSON.parse(writes[0].pricing), pricing);
+});
+
+test('catalog pricing distinguishes inheritance, valid overrides and invalid stored rules without exposing secrets', async () => {
+	const { getMcpServer } = await import('./mcp-servers-service');
+	const rule = {
+		v: 1,
+		unit: 'request',
+		prices: { standard: 0, charged: 0.02, metered: 0.01 },
+		config: {},
+	};
+	const base = {
+		id: 'server',
+		slug: 'qa-server',
+		name: 'QA',
+		description: null,
+		url: 'https://example.invalid/mcp?token=private-token',
+		authHeaders: '{"Authorization":"Bearer private-token"}',
+		status: 'active',
+		pricing: JSON.stringify(rule),
+		timeoutMs: 30_000,
+		maxResponseBytes: 1_048_576,
+		serverInfo: null,
+		lastSyncedAt: null,
+		lastSyncError: null,
+		lastSyncSummary: null,
+	};
+	const writes: string[] = [];
+	const repos = {
+		mcpServers: {
+			getServerById: async () => base,
+			listItems: async () =>
+				[null, JSON.stringify(rule), '{bad', ''].map((pricing, index) => ({
+					id: `item-${index}`,
+					serverId: 'server',
+					kind: 'tool',
+					upstreamKey: `tool-${index}`,
+					exposedName: `qa-server__tool-${index}`,
+					definition: '{}',
+					pendingDefinition: null,
+					pricing,
+					status: 'disabled',
+					reviewState: 'new',
+				})),
+			updateItem: async () => {
+				writes.push('item');
+			},
+		},
+	} as unknown as GatewayRepositories;
+	const result = await getMcpServer(repos, 'server');
+	assert.deepEqual(
+		result.items.map((item) => item.pricingState),
+		['inherit', 'override', 'invalid', 'invalid']
+	);
+	assert.deepEqual(
+		result.items.map((item) => item.pricing),
+		[null, rule, null, null]
+	);
+	assert.equal(JSON.stringify(result).includes('private-token'), false);
+	assert.equal('url' in result.server, false);
+	assert.equal('authHeaders' in result.server, false);
+	assert.deepEqual(writes, []);
 });

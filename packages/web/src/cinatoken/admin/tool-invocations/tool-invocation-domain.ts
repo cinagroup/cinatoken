@@ -6,6 +6,11 @@ import {
 	safeLogJson,
 	safeLogText,
 } from '../request-logs/request-log-domain'
+import {
+	isMcpServerSlug,
+	mcpInvocationIdentity,
+	MCP_INVOCATION_PROVIDER,
+} from './mcp-invocation-domain'
 
 export const tools = [
 	{ id: 'web-search', modelId: 'tool:web-search', label: 'webSearch' },
@@ -17,10 +22,19 @@ export const tools = [
 	},
 	{ id: 'ai-detection', modelId: 'tool:ai-detection', label: 'aiDetection' },
 ] as const
+export const TOOL_INVOCATION_PROVIDERS = [
+	'octafuse-mcp',
+	'octafuse-tools',
+] as const
+export type ToolInvocationSource = 'rest' | 'mcp' | 'all'
 export type ToolId = (typeof tools)[number]['id'] | ''
 export type ToolInvocationSearch = {
 	page: number
 	tool: ToolId
+	source?: ToolInvocationSource
+	server?: string
+	/** An invalid explicit filter must not silently widen the requested history. */
+	invalidFilter?: true
 	status: '' | 'success' | 'error'
 	start_date?: string
 	end_date?: string
@@ -49,10 +63,36 @@ export function validateToolInvocationSearch(
 	input: Record<string, unknown>
 ): ToolInvocationSearch {
 	const page = Number(input.page)
+	const source =
+		input.source === 'mcp' || input.source === 'all' ? input.source : 'rest'
+	const invalidSource =
+		input.source !== undefined &&
+		input.source !== '' &&
+		input.source !== 'rest' &&
+		input.source !== 'mcp' &&
+		input.source !== 'all'
+	const server = source === 'mcp' ? input.server : undefined
+	const validServer =
+		server === undefined ||
+		server === '' ||
+		(typeof server === 'string' && isMcpServerSlug(server))
 	return {
 		page:
 			Number.isSafeInteger(page) && page >= 1 && page <= 1_000_000 ? page : 1,
-		tool: toolById(input.tool)?.id ?? '',
+		tool: source === 'rest' ? (toolById(input.tool)?.id ?? '') : '',
+		source,
+		server:
+			source === 'mcp' && typeof server === 'string' && validServer
+				? server
+				: '',
+		...(invalidSource ||
+		!validServer ||
+		(source === 'all' &&
+			((input.tool !== undefined && input.tool !== '') ||
+				(input.server !== undefined && input.server !== ''))) ||
+		input.invalidFilter === true
+			? { invalidFilter: true as const }
+			: {}),
 		status:
 			input.status === 'success' || input.status === 'error'
 				? input.status
@@ -61,13 +101,71 @@ export function validateToolInvocationSearch(
 		end_date: cleanLogDate(input.end_date),
 	}
 }
+
+export function changeToolInvocationSource(
+	search: ToolInvocationSearch,
+	source: ToolInvocationSource
+): ToolInvocationSearch {
+	return validateToolInvocationSearch({
+		...search,
+		source,
+		tool: '',
+		server: '',
+		invalidFilter: undefined,
+		page: 1,
+	})
+}
+
+export function toolInvocationMatchesSearch(
+	log: {
+		provider_id?: string | null
+		model_id?: string | null
+		status: string
+	},
+	search: ToolInvocationSearch
+): boolean {
+	if (search.invalidFilter || (search.status && log.status !== search.status))
+		return false
+	if (search.source === 'all') {
+		return (
+			toolInvocationMatchesSearch(log, {
+				...search,
+				source: 'rest',
+				tool: '',
+				server: '',
+			}) ||
+			toolInvocationMatchesSearch(log, {
+				...search,
+				source: 'mcp',
+				tool: '',
+				server: '',
+			})
+		)
+	}
+	if (search.source === 'mcp') {
+		const identity = mcpInvocationIdentity(log.model_id)
+		return (
+			log.provider_id === MCP_INVOCATION_PROVIDER &&
+			identity !== null &&
+			(!search.server || identity.slug === search.server)
+		)
+	}
+	return (
+		log.provider_id === 'octafuse-tools' &&
+		!log.model_id?.startsWith('mcp:') &&
+		(!search.tool || log.model_id === `tool:${search.tool}`)
+	)
+}
 function paramsFor(search: ToolInvocationSearch): URLSearchParams {
 	const safe = validateToolInvocationSearch(
 		search as unknown as Record<string, unknown>
 	)
 	if (
+		safe.invalidFilter ||
 		safe.page !== search.page ||
 		safe.tool !== search.tool ||
+		safe.source !== (search.source ?? 'rest') ||
+		safe.server !== (search.server ?? '') ||
 		safe.status !== search.status ||
 		(search.start_date && safe.start_date !== search.start_date) ||
 		(search.end_date && safe.end_date !== search.end_date)
@@ -75,12 +173,27 @@ function paramsFor(search: ToolInvocationSearch): URLSearchParams {
 		throw new TypeError('Invalid tool-invocation search')
 	const params = new URLSearchParams()
 	const tool = toolById(safe.tool)
-	if (tool) params.set('model_id', tool.modelId)
+	if (safe.source === 'all') {
+		params.set('provider_ids', TOOL_INVOCATION_PROVIDERS.join(','))
+	} else if (safe.source === 'mcp') {
+		params.set('provider_id', MCP_INVOCATION_PROVIDER)
+		if (safe.server) params.set('model_id_prefix', `mcp:${safe.server}/`)
+	} else if (tool) params.set('model_id', tool.modelId)
 	else params.set('provider_id', 'octafuse-tools')
 	if (safe.status) params.set('status', safe.status)
 	if (safe.start_date) params.set('start_date', safe.start_date)
 	if (safe.end_date) params.set('end_date', safe.end_date)
 	return params
+}
+export function isToolInvocationSearchValid(
+	search: ToolInvocationSearch
+): boolean {
+	try {
+		paramsFor(search)
+		return true
+	} catch {
+		return false
+	}
 }
 export function toolInvocationsPath(search: ToolInvocationSearch): string {
 	const params = paramsFor(search)

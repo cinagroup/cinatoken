@@ -33,7 +33,8 @@ export type ModelKindFilter = (typeof MODEL_KIND_FILTERS)[number]
 export const DEFAULT_KIND_FILTER: ModelKindFilter = 'llm'
 export const DEFAULT_INVOKE_KIND: InvokeKind = 'llm'
 
-export type SimulatorProtocol = 'openai' | 'anthropic' | 'gemini' | 'dashscope'
+export type SimulatorProtocol =
+	'openai' | 'anthropic' | 'gemini' | 'dashscope' | 'minimax' | 'volcengine'
 export type GeminiContentAction = 'generateContent' | 'streamGenerateContent'
 export type AudioOperation = 'transcriptions' | 'speech'
 /** OpenAI LLM 公开入口：Chat Completions 或 Responses。 */
@@ -120,6 +121,8 @@ export function resolveRequestOperation(input: {
 				? 'audio.speech'
 				: 'audio.transcriptions'
 		case 'image':
+			if (input.protocol === 'dashscope') return 'images.generations.multimodal'
+			if (input.protocol === 'gemini') return 'models.generate'
 			return `images.${input.imageOperation === 'edits' ? 'edits' : 'generations'}`
 		case 'llm':
 			if (input.protocol === 'openai')
@@ -192,11 +195,20 @@ export function resolveProxyPathForModelInvoke(input: {
 		if (protocol === 'dashscope' && input.audioOperation !== 'speech') {
 			return DASHSCOPE_MULTIMODAL_GENERATION_PATH
 		}
+		if (protocol === 'minimax')
+			return input.audioOperation === 'speech'
+				? '/v1/minimax/t2a_v2'
+				: '/v1/minimax/speech_to_text'
 		return input.audioOperation === 'speech'
 			? '/v1/audio/speech'
 			: '/v1/audio/transcriptions'
 	}
 	if (input.kind === 'image') {
+		if (protocol === 'gemini')
+			return `/v1beta/models/${encodeURIComponent(input.geminiModelSegment || 'model')}:generateContent`
+		if (protocol === 'minimax') return '/v1/minimax/image_generation'
+		if (protocol === 'volcengine') return '/v1/volcengine/images/generations'
+		if (protocol === 'dashscope') return DASHSCOPE_MULTIMODAL_GENERATION_PATH
 		return input.imageOperation === 'edits'
 			? '/v1/images/edits'
 			: '/v1/images/generations'

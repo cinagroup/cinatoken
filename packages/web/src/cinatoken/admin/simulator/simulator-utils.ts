@@ -1,5 +1,7 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
 import {
+	MINIMAX_OPENAI_SPEECH_BODY_TEMPLATE,
+	MINIMAX_SPEECH_BODY_TEMPLATE,
 	AUDIO_SPEECH_BODY_TEMPLATE,
 	AUDIO_TRANSCRIPTIONS_BODY_TEMPLATE,
 	AUDIO_TRANSCRIPTIONS_FILE_URL_BODY_TEMPLATE,
@@ -10,6 +12,7 @@ import {
 	buildDashScopeRealtimeAsrTemplate,
 	buildDashScopeRealtimeTtsTemplate,
 	buildDashScopeSpeechBodyTemplate,
+	dashScopeTtsVoiceForModel,
 	isDashScopeRealtimeOperation,
 	type DashScopeRealtimeOperation,
 } from '../playground/browser-domain/dashscope-realtime-client'
@@ -19,17 +22,25 @@ import {
 	type GatewayToolDefinition,
 } from '../playground/browser-domain/gateway-tools'
 import {
-	IMAGE_EDITS_BODY_TEMPLATE,
-	IMAGE_GENERATIONS_BODY_TEMPLATE,
+	imageBodyTemplateFor,
 	type ImageOperation,
 } from '../playground/browser-domain/image-generations'
 import type {
+	InvokeKind,
 	AudioOperation,
 	GatewayToolId,
 	OpenaiLlmOperation,
 	SimulatorProtocol,
 } from '../playground/browser-domain/invoke-kind'
 import type { SimulatorGeminiAction } from './endpoint'
+import {
+	SIMULATOR_PROTOCOLS,
+	simulatorAdapterSupports,
+	DASHSCOPE_HTTP_AUDIO_OPERATIONS,
+	isSimulatorProtocol,
+	simulatorOperations,
+	canonicalSimulatorOperation,
+} from './simulator-capabilities'
 import type { AdminKeyListItem, AdminModelRow, RouteListRow } from './types'
 
 function canonicalizeRequestOperation(
@@ -78,6 +89,8 @@ export const BODY_TEMPLATES: Record<SimulatorProtocol, string> = {
   "contents": [{ "role": "user", "parts": [{ "text": "Hello" }] }]
 }`,
 	dashscope: '{}',
+	minimax: '{}',
+	volcengine: '{}',
 }
 
 /** OpenAI Responses：`input` + `store: false`，与调试台默认体对齐。 */
@@ -125,13 +138,32 @@ export function bodyTemplateForSelection(
 	toolId?: string | null,
 	realtimeOperation?: string | null,
 	providerModelName?: string | null,
-	llmOperation: OpenaiLlmOperation = 'chat'
+	llmOperation: OpenaiLlmOperation = 'chat',
+	adapter?: string | null,
+	modelId?: string | null
 ): string {
 	if (toolId) {
 		return bodyTemplateForTool(toolId)
 	}
+	if (audioOperation && protocol === 'minimax')
+		return audioOperation === 'speech'
+			? MINIMAX_SPEECH_BODY_TEMPLATE
+			: JSON.stringify({ model: '<auto>', language: 'auto' }, null, 2)
 	if (audioOperation && protocol === 'openai') {
-		if (audioOperation === 'speech' && providerModelName) {
+		if (
+			audioOperation === 'speech' &&
+			providerModelName &&
+			(adapter?.startsWith('dashscope-tts') ||
+				adapter === 'minimax-tts' ||
+				/cosyvoice|qwen.*tts|^speech-|^minimax-speech-/i.test(
+					providerModelName
+				))
+		) {
+			if (
+				adapter === 'minimax-tts' ||
+				/^speech-|^minimax-speech-/i.test(providerModelName)
+			)
+				return MINIMAX_OPENAI_SPEECH_BODY_TEMPLATE
 			// OpenAI surface 可能映射到 DashScope；模板音色必须匹配实际供应商模型。
 			return buildDashScopeSpeechBodyTemplate(providerModelName)
 		}
@@ -146,6 +178,46 @@ export function bodyTemplateForSelection(
 			: AUDIO_TRANSCRIPTIONS_BODY_TEMPLATE
 	}
 	if (audioOperation && protocol === 'dashscope') {
+		if (
+			realtimeOperation === 'audio.speech' ||
+			realtimeOperation === 'audio.speech.stream'
+		)
+			return JSON.stringify(
+				{
+					model: '<auto>',
+					input: {
+						text: '你好，欢迎使用 CinaToken Gateway。',
+						voice: dashScopeTtsVoiceForModel(providerModelName),
+						format: 'wav',
+						rate: 1,
+					},
+				},
+				null,
+				2
+			)
+		if (realtimeOperation === 'audio.speech.multimodal')
+			return JSON.stringify(
+				{
+					model: '<auto>',
+					input: {
+						text: '你好，欢迎使用 CinaToken Gateway。',
+						voice: 'Cherry',
+						language_type: 'Chinese',
+					},
+				},
+				null,
+				2
+			)
+		if (realtimeOperation === 'audio.transcriptions.async')
+			return JSON.stringify(
+				{
+					model: '<auto>',
+					input: { file_urls: ['https://example.com/sample.wav'] },
+					parameters: { channel_id: [0] },
+				},
+				null,
+				2
+			)
 		if (audioOperation === 'speech') {
 			return buildDashScopeRealtimeTtsTemplate(providerModelName)
 		}
@@ -158,11 +230,14 @@ export function bodyTemplateForSelection(
 				: undefined
 		)
 	}
-	if (isImageModel && protocol === 'openai') {
-		return imageOperation === 'edits'
-			? IMAGE_EDITS_BODY_TEMPLATE
-			: IMAGE_GENERATIONS_BODY_TEMPLATE
-	}
+	if (isImageModel)
+		return imageBodyTemplateFor({
+			protocol,
+			adapter,
+			modelId,
+			providerModelName,
+			operation: imageOperation,
+		})
 	if (protocol === 'openai' && llmOperation === 'responses') {
 		return OPENAI_RESPONSES_BODY_TEMPLATE
 	}
@@ -243,51 +318,21 @@ export function listDashScopeAudioClientOperations(
 	routeGroup: string,
 	audioOperation: AudioOperation
 ): readonly string[] {
-	const realtime = listDashScopeRealtimeOperations(
-		routes,
-		modelId,
-		routeGroup,
-		audioOperation
+	const prefix = `audio.${audioOperation}`
+	const allowed = [
+		...DASHSCOPE_HTTP_AUDIO_OPERATIONS,
+		...DASHSCOPE_REALTIME_OPERATIONS,
+	].filter((operation) => operation.startsWith(prefix))
+	return allowed.filter(
+		(operation) =>
+			filterMatchingActiveRoutes(
+				routes,
+				modelId,
+				routeGroup,
+				'dashscope',
+				operation
+			).length > 0
 	)
-	if (audioOperation !== 'transcriptions') return realtime
-	let hasMultimodal = false
-	for (const route of routes) {
-		if (
-			route.model_id !== modelId ||
-			String(route.status).toLowerCase() !== 'active' ||
-			!routeGroupMatchesSelection(route.route_group, routeGroup)
-		) {
-			continue
-		}
-		if (route.surfaces) {
-			try {
-				const surfaces = JSON.parse(route.surfaces) as Array<{
-					request_protocol?: string
-					request_operation?: string
-					status?: string
-				}>
-				for (const surface of surfaces) {
-					if (surface.status === 'disabled') continue
-					if (
-						surface.request_protocol === 'dashscope' &&
-						surface.request_operation === DASHSCOPE_HTTP_ASR_OPERATION
-					) {
-						hasMultimodal = true
-					}
-				}
-			} catch {
-				// ignore unreadable surfaces
-			}
-		}
-		if (
-			route.upstream_protocol === 'dashscope' &&
-			route.upstream_operation === DASHSCOPE_HTTP_ASR_OPERATION &&
-			route.adapter === 'passthrough'
-		) {
-			hasMultimodal = true
-		}
-	}
-	return hasMultimodal ? [DASHSCOPE_HTTP_ASR_OPERATION, ...realtime] : realtime
 }
 
 /** Matches Proxy `resolveModelRouting`: default group sends model id only, else `id:group`. */
@@ -362,12 +407,7 @@ export function routeGroupMatchesSelection(
 	return rg === sel
 }
 
-export const SIMULATOR_PROTOCOL_ORDER: readonly SimulatorProtocol[] = [
-	'openai',
-	'anthropic',
-	'gemini',
-	'dashscope',
-]
+export const SIMULATOR_PROTOCOL_ORDER = SIMULATOR_PROTOCOLS
 
 export type SimulatorClientSurfaceOptions = {
 	protocols: SimulatorProtocol[]
@@ -405,10 +445,6 @@ function parseRouteSurfaceEntries(
 	}
 }
 
-function isSimulatorProtocol(value: string): value is SimulatorProtocol {
-	return (SIMULATOR_PROTOCOL_ORDER as readonly string[]).includes(value)
-}
-
 function surfaceHasOperation(
 	operations: Set<string>,
 	...wanted: string[]
@@ -425,7 +461,9 @@ function surfaceHasOperation(
 export function listSupportedClientSurfaces(
 	routes: RouteListRow[],
 	modelId: string,
-	routeGroup: string
+	routeGroup: string,
+	kind?: InvokeKind,
+	selectedProtocol?: SimulatorProtocol
 ): SimulatorClientSurfaceOptions {
 	if (!modelId) return EMPTY_CLIENT_SURFACES
 
@@ -445,7 +483,13 @@ export function listSupportedClientSurfaces(
 				: [
 						{
 							request_protocol: route.upstream_protocol ?? 'openai',
-							request_operation: '*',
+							request_operation: [
+								'dashscope',
+								'minimax',
+								'volcengine',
+							].includes(route.upstream_protocol ?? '')
+								? (route.upstream_operation ?? '')
+								: '*',
 							status: 'active',
 						},
 					]
@@ -461,6 +505,16 @@ export function listSupportedClientSurfaces(
 				protocol,
 				String(surface.request_operation ?? '*').trim() || '*'
 			)
+			if (
+				kind &&
+				operation !== '*' &&
+				!simulatorOperations(kind, protocol).includes(
+					canonicalSimulatorOperation(protocol, operation)
+				)
+			)
+				continue
+			if (kind && simulatorOperations(kind, protocol).length === 0) continue
+			if (!simulatorAdapterSupports(route, protocol, operation)) continue
 			const bucket = operationsByProtocol.get(protocol) ?? new Set<string>()
 			bucket.add(operation)
 			operationsByProtocol.set(protocol, bucket)
@@ -487,9 +541,18 @@ export function listSupportedClientSurfaces(
 		: []
 
 	const imageOperations: ImageOperation[] = []
-	if (surfaceHasOperation(openaiOps, 'images.generations'))
+	const imageProtocol = selectedProtocol ?? 'openai'
+	const imageOps = operationsByProtocol.get(imageProtocol) ?? new Set<string>()
+	let generationOperation = 'images.generations'
+	if (imageProtocol === 'gemini') generationOperation = 'models.generate'
+	if (imageProtocol === 'dashscope')
+		generationOperation = 'images.generations.multimodal'
+	if (surfaceHasOperation(imageOps, generationOperation))
 		imageOperations.push('generations')
-	if (surfaceHasOperation(openaiOps, 'images.edits'))
+	if (
+		imageProtocol === 'openai' &&
+		surfaceHasOperation(openaiOps, 'images.edits')
+	)
 		imageOperations.push('edits')
 
 	return { protocols, openaiLlmOperations, geminiActions, imageOperations }
@@ -500,19 +563,36 @@ export function filterMatchingActiveRoutes(
 	modelId: string,
 	routeGroup: string,
 	requestProtocol?: string,
-	requestOperation?: string
+	requestOperation?: string,
+	kind?: InvokeKind
 ): RouteListRow[] {
 	if (!modelId) return []
+	if (
+		requestProtocol &&
+		(!isSimulatorProtocol(requestProtocol) ||
+			(kind &&
+				requestOperation &&
+				!simulatorOperations(kind, requestProtocol).includes(
+					canonicalSimulatorOperation(requestProtocol, requestOperation)
+				)))
+	)
+		return []
 	const matchesSurface = (route: RouteListRow): boolean => {
-		if (!requestProtocol || !requestOperation || !route.surfaces) return true
+		if (!requestProtocol || !requestOperation) return true
+		if (!simulatorAdapterSupports(route, requestProtocol, requestOperation))
+			return false
+		const legacyMatches = () =>
+			(route.upstream_protocol ?? 'openai') === requestProtocol &&
+			(!['dashscope', 'minimax', 'volcengine'].includes(requestProtocol) ||
+				route.upstream_operation === requestOperation)
+		if (!route.surfaces) return legacyMatches()
 		try {
 			const surfaces = JSON.parse(route.surfaces) as Array<{
 				request_protocol?: string
 				request_operation?: string
 				status?: string
 			}>
-			if (surfaces.length === 0)
-				return (route.upstream_protocol ?? 'openai') === requestProtocol
+			if (surfaces.length === 0) return legacyMatches()
 			return surfaces.some(
 				(surface) =>
 					surface.status !== 'disabled' &&
@@ -525,7 +605,7 @@ export function filterMatchingActiveRoutes(
 						surface.request_operation === '*')
 			)
 		} catch {
-			return true
+			return false
 		}
 	}
 	return routes
@@ -548,7 +628,9 @@ export function redactHeaders(
 ): Record<string, string> {
 	const out: Record<string, string> = {}
 	for (const [k, v] of Object.entries(headers)) {
-		out[k] = k.toLowerCase() === 'authorization' ? redactAuthHeader(v) : v
+		out[k] = /^(authorization|x-cinatoken-task-receipt)$/i.test(k)
+			? redactAuthHeader(v)
+			: v
 	}
 	return out
 }

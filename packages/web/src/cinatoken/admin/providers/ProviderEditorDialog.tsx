@@ -1,5 +1,6 @@
 import { useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { Button } from '../../../components/ui/button'
 import {
@@ -12,9 +13,12 @@ import {
 import { Input } from '../../../components/ui/input'
 import { Label } from '../../../components/ui/label'
 import { Textarea } from '../../../components/ui/textarea'
+import type { ProvidersApi, ProviderRequestOptions } from '../provider-api'
 import type { AdminProvider } from '../provider-contracts'
+import { ProviderCatalogOutboundLink } from './ProviderCatalogOutboundLink'
 import { ProviderEndpointFields } from './ProviderEndpointFields'
-import { providerErrorKey } from './provider-errors'
+import { ProviderKindField } from './ProviderKindField'
+import { providerAccessDenied, providerErrorKey } from './provider-errors'
 import {
 	endpointDrafts,
 	providerFormDefaults,
@@ -26,11 +30,15 @@ import {
 const prefix = 'cinatoken.adminProviders.'
 export function ProviderEditorDialog(props: {
 	mode: ProviderEditorMode
+	api: ProvidersApi
+	queryPrefix: readonly unknown[]
+	readOptions?: (signal?: AbortSignal) => ProviderRequestOptions
 	row?: AdminProvider
 	pending: boolean
 	disabled: boolean
 	error: unknown
 	onSave: (values: ProviderFormValues) => void
+	onResume: () => void
 	onClose: () => void
 }) {
 	const { t } = useTranslation()
@@ -42,6 +50,26 @@ export function ProviderEditorDialog(props: {
 		defaultValues: defaults,
 	})
 	const endpointMode = useWatch({ control: form.control, name: 'endpointMode' })
+	const kind = useWatch({ control: form.control, name: 'kind' })
+	const catalog = useQuery({
+		queryKey: [...props.queryPrefix, 'editor-catalog'],
+		queryFn: async ({ signal }) => {
+			try {
+				return await props.api.providerCatalog(
+					props.readOptions?.(signal) ?? { signal }
+				)
+			} catch (error) {
+				if (signal.aborted || providerAccessDenied(error)) throw error
+				return []
+			}
+		},
+		enabled: Boolean(kind && kind !== '__custom__'),
+		retry: false,
+	})
+	const matchingCatalog = catalog.data?.find((item) => item.name === kind)
+	const links =
+		matchingCatalog?.links ??
+		(kind === props.row?.kind ? props.row?.catalog_links : undefined)
 	const error = (name: keyof ProviderFormValues) => {
 		const message = form.formState.errors[name]?.message
 		return message ? (
@@ -76,6 +104,10 @@ export function ProviderEditorDialog(props: {
 						form.reset({
 							...values,
 							api_key: '',
+							endpointMode:
+								values.endpointMode === 'replace'
+									? 'keep'
+									: values.endpointMode,
 							endpoints: endpointDrafts(props.row?.endpoints ?? null),
 						})
 						props.onSave(checked)
@@ -109,6 +141,20 @@ export function ProviderEditorDialog(props: {
 								{error('id')}
 							</div>
 						</div>
+						<ProviderKindField
+							api={props.api}
+							queryPrefix={props.queryPrefix}
+							readOptions={props.readOptions}
+							value={form.watch('kind')}
+							disabled={props.pending || props.disabled}
+							onChange={(value) =>
+								form.setValue('kind', value, { shouldDirty: true })
+							}
+						/>
+						<ProviderCatalogOutboundLink
+							links={links}
+							providerName={matchingCatalog?.name ?? props.row?.name ?? kind}
+						/>
 						<div className='space-y-2'>
 							<Label htmlFor='provider-description'>
 								{t(prefix + 'description')}
@@ -211,7 +257,15 @@ export function ProviderEditorDialog(props: {
 					{props.error != null && (
 						<div role='alert' className='text-destructive space-y-2 text-sm'>
 							<p>{t(providerErrorKey(props.error))}</p>
-							<p>{t(prefix + 'writeUnknown')}</p>
+							<p>{t(prefix + 'rejectedDraftHint')}</p>
+							<Button
+								type='button'
+								variant='outline'
+								disabled={props.disabled}
+								onClick={props.onResume}
+							>
+								{t(prefix + 'resumeEditing')}
+							</Button>
 						</div>
 					)}
 					<div className='flex flex-wrap justify-end gap-2'>

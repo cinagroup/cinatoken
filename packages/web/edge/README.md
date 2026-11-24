@@ -87,6 +87,12 @@ browser screens through the Next bridge. Playground uses Console authorization
 for a single diagnostic target; Simulator independently invokes the Proxy with
 a verified original Gateway Key and its normal financial controls. These entry
 flags do not authorize calls or change billing behavior.
+`CINATOKEN_WEB_ADMIN_MCP_ENABLED` independently defaults to `false`. Literal
+`true` captures only GET/HEAD for `/admin/mcp` and `/admin/mcp/`, including their
+query strings. `/gateway/mcp` always retains the legacy Next page. MCP APIs,
+Proxy `/mcp` endpoints, write methods and adjacent paths remain with Admin or
+their existing Proxy entry. Returning the flag to `false` restores the Admin
+page fallback without affecting registered servers or catalog state.
 `/web-assets/*` maps to the build directory by stripping `/web-assets`; the shell
 is fetched explicitly as `/index.html`. There is no general SPA fallback.
 

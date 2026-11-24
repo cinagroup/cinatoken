@@ -1,8 +1,11 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
 import { Fragment, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Badge } from '@/components/ui/badge'
 import { formatAnalyticsMoney } from '../analytics/models/model-analytics-domain'
+import { RequestChargeSplit } from '../request-logs/RequestChargeSplit'
 import { ToolInvocationDetail } from './ToolInvocationDetail'
+import { isMcpInvocation, mcpInvocationSummary } from './mcp-invocation-domain'
 import type { ToolInvocationPage } from './tool-invocation-contracts'
 import {
 	toolEngine,
@@ -15,6 +18,7 @@ import {
 const prefix = 'cinatoken.adminToolInvocations.'
 const columns = [
 	'time',
+	'source',
 	'tool',
 	'provider',
 	'query',
@@ -70,7 +74,7 @@ export function ToolInvocationTable(props: {
 			tabIndex={0}
 			className='bg-card overflow-x-auto rounded-xl border'
 		>
-			<table className='w-full min-w-[1440px] text-left text-xs'>
+			<table className='w-full min-w-[1520px] text-left text-xs'>
 				<thead className='bg-muted/60 text-muted-foreground border-b'>
 					<tr>
 						{columns.map((key) => (
@@ -94,10 +98,16 @@ export function ToolInvocationTable(props: {
 				<tbody className='divide-y'>
 					{props.page.data.map((log) => {
 						const open = activeId === log.id
-						const query = toolRequestSummary(log.request_body).query
+						const mcp = isMcpInvocation(log) ? mcpInvocationSummary(log) : null
+						const query = mcp
+							? mcp.argumentSummary
+							: toolRequestSummary(log.request_body).query
 						const response = toolResponseSummary(log.raw_usage)
-						const engine = toolEngine(log)
+						const engine = mcp ? mcp.slug : toolEngine(log)
 						const tool = tools.find((part) => part.modelId === log.model_id)
+						let label = log.model_id || '—'
+						if (tool) label = t(prefix + `catalog.${tool.label}`)
+						if (mcp) label = mcp.label
 						const profit = log.charged_cost - log.metered_cost
 						const profitStyle = toolProfitPresentation(profit, props.currency)
 						const detailId = `tool-invocation-${log.id}`
@@ -124,11 +134,17 @@ export function ToolInvocationTable(props: {
 											{t(prefix + 'details')}
 										</button>
 									</td>
-									<td className='px-3 py-3 font-mono'>
-										{tool
-											? t(prefix + `catalog.${tool.label}`)
-											: log.model_id || '—'}
+									<td className='px-3 py-3'>
+										<Badge variant='secondary'>
+											{t(
+												prefix +
+													(mcp
+														? 'invocations.sourceMcp'
+														: 'invocations.sourceRest')
+											)}
+										</Badge>
 									</td>
+									<td className='px-3 py-3 font-mono'>{label}</td>
 									<td
 										className='max-w-44 truncate px-3 py-3 font-mono'
 										title={engine ?? undefined}
@@ -151,7 +167,7 @@ export function ToolInvocationTable(props: {
 										{log.status}
 									</td>
 									<td className='px-3 py-3 text-right font-mono'>
-										{log.model_id === 'tool:ai-detection'
+										{mcp || log.model_id === 'tool:ai-detection'
 											? '—'
 											: (response.resultCount ?? '—')}
 									</td>
@@ -170,6 +186,11 @@ export function ToolInvocationTable(props: {
 											props.locale,
 											6
 										) ?? '—'}
+										<RequestChargeSplit
+											log={log}
+											currency={props.currency}
+											compact
+										/>
 									</td>
 									<td className='px-3 py-3 text-right font-mono tabular-nums'>
 										{formatAnalyticsMoney(
@@ -197,8 +218,12 @@ export function ToolInvocationTable(props: {
 								</tr>
 								{open && (
 									<tr id={detailId} className='bg-muted/20'>
-										<td colSpan={12}>
-											<ToolInvocationDetail key={log.id} log={log} />
+										<td colSpan={13}>
+											<ToolInvocationDetail
+												key={log.id}
+												log={log}
+												currency={props.currency}
+											/>
 										</td>
 									</tr>
 								)}
@@ -208,7 +233,7 @@ export function ToolInvocationTable(props: {
 					{!props.page.data.length && (
 						<tr>
 							<td
-								colSpan={12}
+								colSpan={13}
 								className='text-muted-foreground p-8 text-center'
 							>
 								{t(prefix + 'invocations.empty')}

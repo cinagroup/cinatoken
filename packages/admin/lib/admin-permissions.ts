@@ -77,7 +77,11 @@ export function getAdminAuthorizationDecision(method: string, pathname: string):
 			? { kind: 'permission', permission: 'config.read' }
 			: { kind: 'deny' };
 	}
-	if (/^\/admin\/config\/(?:billing-currency|route-strategy)\/?$/u.test(pathname)) {
+	if (
+		/^\/admin\/config\/(?:billing-currency|route-strategy|user-charged-cost-factor-mode|stream-first-event-timeout-ms|stream-first-event-timeout-route-groups)\/?$/u.test(
+			pathname,
+		)
+	) {
 		return normalizedMethod === 'PUT' ? { kind: 'permission', permission: 'config.write' } : { kind: 'deny' };
 	}
 	if (/^\/admin\/config\/webhooks\/(?:wecom|feishu)\/?$/u.test(pathname)) {

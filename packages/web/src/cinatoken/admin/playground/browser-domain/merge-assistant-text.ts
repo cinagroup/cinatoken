@@ -4,7 +4,14 @@
  * 并将推理类字段与正文分列，便于区分。
  */
 
-export type PlaygroundProtocol = 'openai' | 'anthropic' | 'gemini' | 'dashscope'
+export type PlaygroundProtocol =
+	| 'openai'
+	| 'anthropic'
+	| 'gemini'
+	| 'dashscope'
+	| 'minimax'
+	| 'volcengine'
+	| 'unsupported'
 
 export type PlaygroundResponseParseMode = 'sse' | 'json' | 'ndjson' | 'text'
 
@@ -318,6 +325,19 @@ function mergeFromJsonObjectParts(
 	if (!o || typeof o !== 'object') {
 		return parts
 	}
+	if (protocol === 'unsupported' || protocol === 'volcengine') return parts
+	if (protocol === 'minimax') {
+		const object = o as Record<string, unknown>
+		const data =
+			object.data &&
+			typeof object.data === 'object' &&
+			!Array.isArray(object.data)
+				? (object.data as Record<string, unknown>)
+				: null
+		const text = object.text ?? data?.text
+		if (typeof text === 'string') parts.body = text
+		return parts
+	}
 	if (protocol === 'openai' || protocol === 'dashscope') {
 		const object = o as Record<string, unknown>
 		const responsesParts = extractOpenAiResponsesOutputParts(object)
@@ -441,6 +461,7 @@ export function mergeAssistantTextParts(
 		if (protocol === 'anthropic') {
 			return mergeAnthropicSseParts(raw)
 		}
+		if (protocol !== 'gemini') return emptyParts()
 		return mergeGeminiSseParts(raw)
 	}
 	if (mode === 'json') {

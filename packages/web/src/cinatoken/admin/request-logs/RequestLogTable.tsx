@@ -2,6 +2,7 @@
 import { Fragment } from 'react'
 import { useTranslation } from 'react-i18next'
 import { formatAnalyticsMoney } from '../analytics/models/model-analytics-domain'
+import { RequestChargeSplit } from './RequestChargeSplit'
 import { RequestLogDetail } from './RequestLogDetail'
 import type {
 	LogModelCatalog,
@@ -108,6 +109,15 @@ function RouteCell(props: {
 	)
 	return (
 		<div className='grid min-w-64 gap-1 text-xs'>
+			<div className='text-muted-foreground flex min-w-0 items-center gap-2'>
+				<span className='w-16 shrink-0'>{t(prefix + 'ingressHost')}</span>
+				<code
+					className='max-w-80 truncate'
+					title={safeLogText(log.ingress_host ?? '')}
+				>
+					{safeLogText(log.ingress_host ?? '') || '—'}
+				</code>
+			</div>
 			<div className='flex min-w-0 items-center gap-2'>
 				<span className='w-16 shrink-0 font-semibold text-blue-600 dark:text-blue-400'>
 					{t(prefix + 'route.inbound')}
@@ -356,6 +366,11 @@ export function RequestLogTable(props: {
 												)}
 											</small>
 										</div>
+										<RequestChargeSplit
+											log={log}
+											currency={props.currency}
+											compact
+										/>
 									</td>
 									<td
 										className={`px-3 py-3 align-top font-medium whitespace-nowrap ${profit && log.charged_cost - log.metered_cost < 0 ? 'text-destructive' : ''}`}
@@ -366,7 +381,7 @@ export function RequestLogTable(props: {
 								{open && (
 									<tr>
 										<td colSpan={7} id={`request-log-detail-${log.id}`}>
-											<RequestLogDetail log={log} />
+											<RequestLogDetail log={log} currency={props.currency} />
 										</td>
 									</tr>
 								)}

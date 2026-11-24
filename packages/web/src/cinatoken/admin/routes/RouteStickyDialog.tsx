@@ -12,6 +12,7 @@ import {
 	DialogTitle,
 } from '../../../components/ui/dialog'
 import { Input } from '../../../components/ui/input'
+import { RouteWriteFeedback } from './RouteWriteFeedback'
 import type { RoutePoolView } from './route-domain'
 import { routeErrorKey } from './route-errors'
 import { isRouteProtocol } from './route-options'
@@ -29,6 +30,8 @@ export function RouteStickyDialog(props: {
 	disabled: boolean
 	pending: boolean
 	error: unknown
+	canResume: boolean
+	onResume: () => void
 	onSave: (patch: RoutePoolPolicyPatch) => void
 	onClear: (hash: string) => void
 	onReset: () => void
@@ -169,11 +172,6 @@ export function RouteStickyDialog(props: {
 				{!poolId && (
 					<p role='alert' className='text-destructive text-sm'>
 						{t(prefix + 'noPool')}
-					</p>
-				)}
-				{props.error != null && (
-					<p role='alert' className='text-destructive text-sm'>
-						{t(routeErrorKey(props.error))}
 					</p>
 				)}
 				<label className='flex items-center gap-2 rounded-xl border p-3 text-sm'>
@@ -400,6 +398,11 @@ export function RouteStickyDialog(props: {
 						</DialogContent>
 					</Dialog>
 				)}
+				<RouteWriteFeedback
+					error={props.error}
+					canResume={props.canResume}
+					onResume={props.onResume}
+				/>
 				<DialogFooter>
 					<Button
 						type='button'

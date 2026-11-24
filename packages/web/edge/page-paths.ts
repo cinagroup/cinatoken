@@ -96,6 +96,7 @@ export const ADMIN_SIMULATOR_PAGE_PATHS = new Set([
 	'/admin/simulator',
 	'/admin/simulator/',
 ])
+export const ADMIN_MCP_PAGE_PATHS = new Set(['/admin/mcp', '/admin/mcp/'])
 
 export const ADMIN_CONFIG_TIMEZONE_PAGE_PATHS = new Set([
 	'/admin/config/timezone',

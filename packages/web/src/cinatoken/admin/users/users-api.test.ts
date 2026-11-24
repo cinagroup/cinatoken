@@ -245,3 +245,32 @@ test('unknown POST is never replayed or unlocked by a successful unrelated disab
 	)
 	assert.equal(calls.filter((call) => call.init.method === 'POST').length, 1)
 })
+
+test('user list retains a complete permanent ledger without assuming missing wallets are zero', async () => {
+	const { adminUserListRowSchema } = await import('./users-contracts')
+	assert.equal(adminUserListRowSchema.parse(row).wallet_balance, undefined)
+	const wallet = adminUserListRowSchema.parse({
+		...row,
+		wallet_granted: 1,
+		wallet_spent: 2,
+		wallet_balance: -1,
+		extra_secret: 'PRIVATE',
+	})
+	assert.equal(wallet.wallet_balance, -1)
+	assert.equal(JSON.stringify(wallet).includes('PRIVATE'), false)
+	assert.equal(
+		adminUserListRowSchema.safeParse({ ...row, wallet_granted: 1 }).success,
+		false
+	)
+})
+
+test('wallet sort choices remain exact server sort keys in public search', () => {
+	for (const sort of ['wallet_granted', 'wallet_spent']) {
+		const search = validateUsersSearch({ sort, order: 'asc' })
+		assert.equal(search.sort, sort)
+		const params = new URL(usersListPath(search), 'https://qa.invalid')
+			.searchParams
+		assert.equal(params.get('sort'), sort)
+		assert.equal(params.get('order'), 'asc')
+	}
+})

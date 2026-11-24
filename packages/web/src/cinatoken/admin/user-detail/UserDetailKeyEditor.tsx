@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
+import { RateLimitEditor } from '../gateway-keys/RateLimitEditor'
 import type { GatewayKeyDetail } from '../gateway-keys/gateway-key-contracts'
 import {
 	gatewayKeyEditFormSchema,
@@ -11,6 +12,7 @@ import {
 	type GatewayKeyEditForm,
 	type GatewayKeyPatch,
 } from '../gateway-keys/gateway-key-input'
+import { rateLimitRpmInput } from '../gateway-keys/rate-limit'
 import { safeLogJson } from '../request-logs/request-log-domain'
 
 const prefix = 'cinatoken.adminGatewayKeys.'
@@ -33,6 +35,8 @@ export function UserDetailKeyEditor(props: {
 			name: props.detail.name ?? '',
 			status: props.detail.status,
 			statusConfirmed: false,
+			rateLimitMode: 'unchanged',
+			rateLimitRpm: rateLimitRpmInput(props.detail.rate_limit),
 			metadataMode: 'unchanged',
 			metadata: '',
 			reason: '',
@@ -99,6 +103,20 @@ export function UserDetailKeyEditor(props: {
 					</span>
 				)}
 			</div>
+			<RateLimitEditor
+				current={props.detail.rate_limit}
+				layer='key'
+				mode={form.watch('rateLimitMode') ?? 'unchanged'}
+				rpm={form.watch('rateLimitRpm') ?? ''}
+				disabled={props.busy || !props.canWrite}
+				invalid={Boolean(form.formState.errors.rateLimitRpm)}
+				onMode={(value) =>
+					form.setValue('rateLimitMode', value, { shouldDirty: true })
+				}
+				onRpm={(value) =>
+					form.setValue('rateLimitRpm', value, { shouldDirty: true })
+				}
+			/>
 			<label className='block space-y-1 text-sm'>
 				<span>{t(prefix + 'status')}</span>
 				<select

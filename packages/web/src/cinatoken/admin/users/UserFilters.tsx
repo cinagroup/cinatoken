@@ -17,6 +17,8 @@ const sortLabels: Record<UsersSearch['sort'], string> = {
 	budget_max: 'sortMax',
 	budget_base: 'sortBase',
 	budget_reset_at: 'sortReset',
+	wallet_granted: 'walletGranted',
+	wallet_spent: 'walletSpent',
 }
 
 export function UserFilters(props: {

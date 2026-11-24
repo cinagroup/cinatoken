@@ -6,6 +6,8 @@ export const userSortSchema = z.enum([
 	'budget_max',
 	'budget_base',
 	'budget_reset_at',
+	'wallet_granted',
+	'wallet_spent',
 	'created_at',
 ])
 export const userOrderSchema = z.enum(['asc', 'desc'])

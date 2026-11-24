@@ -1,5 +1,5 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
-import { useRef, useState, type FormEvent } from 'react'
+import { useId, useRef, useState, type FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '../../../components/ui/button'
 import {
@@ -11,11 +11,11 @@ import {
 	DialogTitle,
 } from '../../../components/ui/dialog'
 import { Input } from '../../../components/ui/input'
+import { DataPolicyWriteFeedback } from './DataPolicyWriteFeedback'
 import type {
 	DataPolicyListRow,
 	DataPolicyUpsertInput,
 } from './data-policy-contracts'
-import { dataPolicyErrorKey } from './data-policy-errors'
 import {
 	buildDataPolicyInput,
 	draftFromDataPolicy,
@@ -31,17 +31,28 @@ export function DataPolicyEditorDialog(props: {
 	disabled: boolean
 	pending: boolean
 	error: unknown
+	canResume: boolean
+	onResume: () => void
 	onSave: (input: DataPolicyUpsertInput) => void
 	onClose: () => void
 }) {
 	const { t } = useTranslation()
+	const formId = useId()
 	const title = useRef<HTMLHeadingElement>(null)
 	const [draft, setDraft] = useState(() => draftFromDataPolicy(props.row))
 	const [review, setReview] = useState<DataPolicyUpsertInput | null>(null)
 	const [localError, setLocalError] = useState<string | null>(null)
+	const blocked = props.disabled || props.pending || props.error != null
+	function resume(): void {
+		if (!props.canResume) return
+		props.onResume()
+		setReview(null)
+		setLocalError(null)
+	}
 
 	function submit(event: FormEvent<HTMLFormElement>): void {
 		event.preventDefault()
+		if (blocked) return
 		setLocalError(null)
 		try {
 			setReview(buildDataPolicyInput(draft))
@@ -57,12 +68,11 @@ export function DataPolicyEditorDialog(props: {
 			} else setLocalError(prefix + 'invalidInput')
 		}
 	}
-	const errorKey = props.error ? dataPolicyErrorKey(props.error) : localError
 	return (
 		<Dialog
 			open
 			onOpenChange={(open) => {
-				if (!open) props.onClose()
+				if (!open && !props.pending) props.onClose()
 			}}
 		>
 			<DialogContent
@@ -122,23 +132,26 @@ export function DataPolicyEditorDialog(props: {
 								{t(prefix + 'verifiedWarning')}
 							</p>
 						) : null}
-						{errorKey ? (
-							<p role='alert' className='text-destructive'>
-								{t(errorKey)}
-							</p>
-						) : null}
+						<DataPolicyWriteFeedback
+							error={props.error}
+							canResume={props.canResume}
+							onResume={resume}
+						/>
 						<DialogFooter className='gap-2 sm:gap-0'>
 							<Button
 								type='button'
 								variant='outline'
 								disabled={props.pending}
-								onClick={() => setReview(null)}
+								onClick={() => {
+									if (props.error != null) props.onClose()
+									else setReview(null)
+								}}
 							>
-								{t(prefix + 'cancel')}
+								{t(prefix + (props.error != null ? 'close' : 'cancel'))}
 							</Button>
 							<Button
 								type='button'
-								disabled={props.disabled || props.pending}
+								disabled={blocked}
 								onClick={() => props.onSave(review)}
 							>
 								{t(prefix + 'save')}
@@ -152,6 +165,7 @@ export function DataPolicyEditorDialog(props: {
 							<select
 								className={selectClass}
 								value={draft.status}
+								disabled={blocked}
 								onChange={(event) =>
 									setDraft({
 										...draft,
@@ -165,18 +179,26 @@ export function DataPolicyEditorDialog(props: {
 							</select>
 						</label>
 						<label className='block space-y-1 text-sm'>
-							<span>{t(prefix + 'retention')}</span>
+							<span id={formId + '-retention-label'}>
+								{t(prefix + 'retention')}
+							</span>
 							<Input
+								aria-labelledby={formId + '-retention-label'}
+								aria-describedby={formId + '-retention-hint'}
 								type='number'
 								min={0}
 								max={36500}
 								step={1}
 								value={draft.retentionDays}
+								disabled={blocked}
 								onChange={(event) =>
 									setDraft({ ...draft, retentionDays: event.target.value })
 								}
 							/>
-							<span className='text-muted-foreground block text-xs'>
+							<span
+								id={formId + '-retention-hint'}
+								className='text-muted-foreground block text-xs'
+							>
 								{t(prefix + 'retentionHint')}
 							</span>
 						</label>
@@ -184,6 +206,7 @@ export function DataPolicyEditorDialog(props: {
 							<input
 								type='checkbox'
 								checked={draft.trainingAllowed}
+								disabled={blocked}
 								onChange={(event) =>
 									setDraft({ ...draft, trainingAllowed: event.target.checked })
 								}
@@ -194,6 +217,7 @@ export function DataPolicyEditorDialog(props: {
 							<input
 								type='checkbox'
 								checked={draft.zdrSupported}
+								disabled={blocked}
 								onChange={(event) =>
 									setDraft({ ...draft, zdrSupported: event.target.checked })
 								}
@@ -201,39 +225,58 @@ export function DataPolicyEditorDialog(props: {
 							<span>{t(prefix + 'zdr')}</span>
 						</label>
 						<label className='block space-y-1 text-sm'>
-							<span>{t(prefix + 'evidence')}</span>
+							<span id={formId + '-evidence-label'}>
+								{t(prefix + 'evidence')}
+							</span>
 							<Input
+								aria-labelledby={formId + '-evidence-label'}
+								aria-describedby={formId + '-evidence-hint'}
 								type='url'
 								autoComplete='url'
 								value={draft.evidenceUrl}
+								disabled={blocked}
 								onChange={(event) =>
 									setDraft({ ...draft, evidenceUrl: event.target.value })
 								}
 								placeholder='https://example.com/policy'
 							/>
-							<span className='text-muted-foreground block text-xs'>
+							<span
+								id={formId + '-evidence-hint'}
+								className='text-muted-foreground block text-xs'
+							>
 								{t(prefix + 'evidenceHint')}
 							</span>
 						</label>
 						<label className='block space-y-1 text-sm'>
-							<span>{t(prefix + 'expiry')}</span>
+							<span id={formId + '-expiry-label'}>{t(prefix + 'expiry')}</span>
 							<Input
+								aria-labelledby={formId + '-expiry-label'}
+								aria-describedby={formId + '-expiry-hint'}
 								type='datetime-local'
 								step={1}
 								value={draft.expiresLocal}
+								disabled={blocked}
 								onChange={(event) =>
 									setDraft({ ...draft, expiresLocal: event.target.value })
 								}
 							/>
-							<span className='text-muted-foreground block text-xs'>
+							<span
+								id={formId + '-expiry-hint'}
+								className='text-muted-foreground block text-xs'
+							>
 								{t(prefix + 'expiryHint')}
 							</span>
 						</label>
-						{errorKey ? (
+						{localError ? (
 							<p role='alert' className='text-destructive text-sm'>
-								{t(errorKey)}
+								{t(localError)}
 							</p>
 						) : null}
+						<DataPolicyWriteFeedback
+							error={props.error}
+							canResume={props.canResume}
+							onResume={resume}
+						/>
 						<DialogFooter className='gap-2 sm:gap-0'>
 							<Button
 								type='button'
@@ -243,7 +286,7 @@ export function DataPolicyEditorDialog(props: {
 							>
 								{t(prefix + 'cancel')}
 							</Button>
-							<Button type='submit' disabled={props.disabled || props.pending}>
+							<Button type='submit' disabled={blocked}>
 								{t(prefix + 'continue')}
 							</Button>
 						</DialogFooter>

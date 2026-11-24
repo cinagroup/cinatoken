@@ -1,5 +1,8 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
 import { z } from 'zod'
+import { rateLimitReadSchema } from '../gateway-keys/rate-limit'
+import { userChargedCostFactorsSchema } from '../user-charged-factors'
+import { completeUserWallet, userWalletFields } from '../user-wallet-contracts'
 
 export const userIdSchema = z
 	.string()
@@ -24,6 +27,7 @@ const timestamp = z
 export const adminUserListRowSchema = z
 	.object({
 		id: userIdSchema,
+		rate_limit: rateLimitReadSchema,
 		email: z.string().min(1).max(320),
 		external_system: z.string().max(600).nullable(),
 		external_user_id: z.string().max(600).nullable(),
@@ -32,11 +36,10 @@ export const adminUserListRowSchema = z
 		budget_spent: money,
 		budget_period: z.enum(['none', 'daily', 'weekly', 'monthly']),
 		budget_reset_at: timestamp.nullable(),
+		...userWalletFields,
 		status: z.string().min(1).max(80),
 		metadata: z.string().max(131_072).nullable(),
-		charged_cost_factors: z
-			.record(z.string().min(1).max(600), money.nonnegative())
-			.nullable(),
+		charged_cost_factors: userChargedCostFactorsSchema,
 		created_at: timestamp,
 		updated_at: timestamp,
 		active_keys_count: count,
@@ -47,6 +50,8 @@ export const adminUserListRowSchema = z
 			context.addIssue({ code: 'custom', message: 'Invalid key counts' })
 		if ((row.external_system === null) !== (row.external_user_id === null))
 			context.addIssue({ code: 'custom', message: 'Invalid external identity' })
+		if (!completeUserWallet(row))
+			context.addIssue({ code: 'custom', message: 'Incomplete wallet ledger' })
 	})
 export type AdminUserListRow = z.infer<typeof adminUserListRowSchema>
 

@@ -126,6 +126,7 @@ export function createD1AdminAnalyticsRepository(db: D1DatabaseClient): AdminAna
 				.prepare(
 					`SELECT
 				rl.user_email as user_email,
+				CASE WHEN COUNT(DISTINCT u.id) = 1 AND COUNT(u.id) = COUNT(*) THEN MIN(u.id) ELSE NULL END as user_id,
 				COUNT(*) as request_count,
 				COALESCE(SUM(rl.input_tokens), 0) as input_tokens,
 				COALESCE(SUM(rl.output_tokens), 0) as output_tokens,

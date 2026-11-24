@@ -68,3 +68,14 @@ test('all supported locales explain draft expiry, console-only wildcard and unkn
 			assert.equal(message.length > 0, true)
 	}
 })
+
+test('MCP permission selections preserve minimum scopes when creating an integration key', () => {
+	const selected = toggleAccessKeyPermission(['mcp.read'], 'mcp.write')
+	assert.deepEqual(
+		accessKeyDraft('MCP integration', '', selected).permissions,
+		['mcp.read', 'mcp.write']
+	)
+	assert.deepEqual(toggleAccessKeyPermission(['*'], 'mcp.secrets.read'), [
+		'mcp.secrets.read',
+	])
+})

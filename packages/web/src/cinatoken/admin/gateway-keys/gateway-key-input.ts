@@ -10,6 +10,7 @@ import {
 	GatewayKeyInputError,
 	parseGatewayKeyMetadata,
 } from './gateway-key-metadata'
+import { rateLimitPatch, type RateLimit } from './rate-limit'
 
 export {
 	GatewayKeyInputError,
@@ -100,11 +101,22 @@ export const gatewayKeyEditFormSchema = z
 		name: text.max(255),
 		status: gatewayKeyStatusSchema,
 		statusConfirmed: z.boolean(),
+		rateLimitMode: z.enum(['unchanged', 'unlimited', 'limited']).optional(),
+		rateLimitRpm: z.string().max(80).optional(),
 		metadataMode: z.enum(['unchanged', 'merge', 'replace']),
 		metadata: z.string().max(65_536),
 		reason: text.min(1),
 	})
 	.superRefine((draft, context) => {
+		try {
+			rateLimitPatch(undefined, draft.rateLimitMode, draft.rateLimitRpm)
+		} catch {
+			context.addIssue({
+				code: 'custom',
+				path: ['rateLimitRpm'],
+				message: 'rateLimitInvalid',
+			})
+		}
 		if (draft.metadataMode === 'unchanged') return
 		try {
 			if (
@@ -124,6 +136,7 @@ export const gatewayKeyEditFormSchema = z
 export type GatewayKeyEditForm = z.infer<typeof gatewayKeyEditFormSchema>
 export type GatewayKeyPatch = {
 	expected_revision: string
+	rate_limit?: RateLimit
 	name?: string | null
 	status?: 'active' | 'disabled' | 'revoked'
 	metadata?: Record<string, unknown>
@@ -151,6 +164,12 @@ export function gatewayKeyEditInput(
 		status: value.status,
 		reason: value.reason,
 	}
+	const rate = rateLimitPatch(
+		detail.rate_limit,
+		value.rateLimitMode,
+		value.rateLimitRpm
+	)
+	if (rate !== undefined) patch.rate_limit = rate
 	if (value.metadataMode === 'merge')
 		patch.metadata = parseGatewayKeyMetadata(value.metadata) ?? undefined
 	if (value.metadataMode === 'replace')

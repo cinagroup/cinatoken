@@ -4,8 +4,9 @@ import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { CinaTokenApiError } from '../../api'
+import { ReliabilityRangeControls } from '../reliability/ReliabilityRangeControls'
+import type { ReliabilityRange } from '../reliability/reliability-range'
 import { DashboardOverview } from './DashboardOverview'
-import { DashboardRangeControls } from './DashboardRangeControls'
 import { RecentPanel } from './DashboardRecent'
 import { TokenTrend } from './DashboardTrend'
 import { UsagePanels } from './DashboardUsage'
@@ -15,7 +16,6 @@ import {
 } from './dashboard-access-recovery'
 import type { AdminDashboardApi } from './dashboard-api'
 import { DashboardCurrencyUnavailableError } from './dashboard-contracts'
-import { dashboardRangePath, type DashboardRange } from './dashboard-range'
 
 const prefix = 'cinatoken.adminDashboard.'
 
@@ -40,9 +40,9 @@ export function AdminDashboard(props: AdminDashboardProps) {
 	const { t, i18n } = useTranslation()
 	const revalidate = props.revalidate
 	const locale = i18n.resolvedLanguage ?? 'en'
-	const [range, setRange] = useState<DashboardRange>({
-		kind: 'preset',
-		value: '1d',
+	const [range, setRange] = useState<ReliabilityRange>({
+		kind: 'calendar',
+		preset: 'today',
 	})
 	const [retryVersion, setRetryVersion] = useState(0)
 	const access = dashboardAccessRecovery(props.api)
@@ -62,10 +62,10 @@ export function AdminDashboard(props: AdminDashboardProps) {
 			'admin',
 			props.scopeKey,
 			'dashboard',
-			dashboardRangePath(range),
+			JSON.stringify(range),
 			retryVersion,
 		],
-		queryFn: ({ signal }) => props.api.dashboard(range, { signal }),
+		queryFn: ({ signal }) => props.api.dashboardWindow(range, { signal }),
 		enabled: !accessRevoked,
 		retry: false,
 		refetchOnWindowFocus: false,
@@ -88,6 +88,66 @@ export function AdminDashboard(props: AdminDashboardProps) {
 		access.settle(accessKey)
 	}
 
+	let content = <></>
+	if (accessRevoked || query.error) {
+		content = (
+			<section
+				role='alert'
+				className='border-destructive/40 bg-destructive/5 rounded-xl border p-5'
+			>
+				<p>{t(prefix + (accessRevoked ? 'accessDenied' : errorKey))}</p>
+				<Button
+					className='mt-4'
+					type='button'
+					variant='outline'
+					onClick={retry}
+				>
+					{t(prefix + 'retry')}
+				</Button>
+			</section>
+		)
+	} else if (query.isFetching) {
+		content = (
+			<p
+				role='status'
+				className='text-muted-foreground rounded-xl border p-8 text-center'
+			>
+				{t(prefix + 'loading')}
+			</p>
+		)
+	} else if (snapshot) {
+		content = (
+			<>
+				<DashboardOverview snapshot={snapshot} locale={locale} />
+				<TokenTrend
+					rows={snapshot.stats.timeseries}
+					granularity={snapshot.stats.granularity}
+					currency={snapshot.displayConfig.billingCurrency}
+					timezone={snapshot.displayConfig.businessTimezone}
+					locale={locale}
+				/>
+				<UsagePanels
+					stats={snapshot.stats}
+					currency={snapshot.displayConfig.billingCurrency}
+					locale={locale}
+				/>
+				<div className='grid gap-5 xl:grid-cols-2'>
+					<RecentPanel
+						rows={snapshot.stats.recentLogs}
+						kind='requests'
+						timezone={snapshot.displayConfig.businessTimezone}
+						locale={locale}
+					/>
+					<RecentPanel
+						rows={snapshot.stats.recentErrors}
+						kind='errors'
+						timezone={snapshot.displayConfig.businessTimezone}
+						locale={locale}
+					/>
+				</div>
+			</>
+		)
+	}
 	return (
 		<main className='min-w-0 space-y-6 pb-12'>
 			<header className='flex flex-wrap items-start justify-between gap-4'>
@@ -108,73 +168,14 @@ export function AdminDashboard(props: AdminDashboardProps) {
 					{t(prefix + 'refresh')}
 				</Button>
 			</header>
-			<DashboardRangeControls range={range} onChange={setRange} />
-			{accessRevoked ? (
-				<section
-					role='alert'
-					className='border-destructive/40 bg-destructive/5 rounded-xl border p-5'
-				>
-					<p>{t(prefix + 'accessDenied')}</p>
-					<Button
-						className='mt-4'
-						type='button'
-						variant='outline'
-						onClick={retry}
-					>
-						{t(prefix + 'retry')}
-					</Button>
-				</section>
-			) : query.isFetching ? (
-				<p
-					role='status'
-					className='text-muted-foreground rounded-xl border p-8 text-center'
-				>
-					{t(prefix + 'loading')}
-				</p>
-			) : query.error ? (
-				<section
-					role='alert'
-					className='border-destructive/40 bg-destructive/5 rounded-xl border p-5'
-				>
-					<p>{t(prefix + errorKey)}</p>
-					<Button
-						className='mt-4'
-						type='button'
-						variant='outline'
-						onClick={retry}
-					>
-						{t(prefix + 'retry')}
-					</Button>
-				</section>
-			) : snapshot ? (
-				<>
-					<DashboardOverview snapshot={snapshot} locale={locale} />
-					<TokenTrend
-						rows={snapshot.stats.timeseries}
-						timezone={snapshot.displayConfig.businessTimezone}
-						locale={locale}
-					/>
-					<UsagePanels
-						stats={snapshot.stats}
-						currency={snapshot.displayConfig.billingCurrency}
-						locale={locale}
-					/>
-					<div className='grid gap-5 xl:grid-cols-2'>
-						<RecentPanel
-							rows={snapshot.stats.recentLogs}
-							kind='requests'
-							timezone={snapshot.displayConfig.businessTimezone}
-							locale={locale}
-						/>
-						<RecentPanel
-							rows={snapshot.stats.recentErrors}
-							kind='errors'
-							timezone={snapshot.displayConfig.businessTimezone}
-							locale={locale}
-						/>
-					</div>
-				</>
-			) : null}
+			<ReliabilityRangeControls
+				key={`${snapshot?.rangeParams.startUtc ?? ''}/${snapshot?.rangeParams.endUtc ?? ''}/${snapshot?.displayConfig.businessTimezone ?? ''}`}
+				range={range}
+				rangeParams={snapshot?.rangeParams ?? null}
+				timezone={snapshot?.displayConfig.businessTimezone ?? null}
+				onChange={setRange}
+			/>
+			{content}
 		</main>
 	)
 }

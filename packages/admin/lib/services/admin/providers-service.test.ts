@@ -3,6 +3,7 @@ import { describe, it } from "node:test";
 import type { GatewayRepositories } from "@octafuse/core";
 import { listStaticProviderImportPresets } from "@/lib/provider-import-preset";
 import { importProvidersFromStaticPresetsService } from "./providers-service";
+import { applyProviderSyncService } from "./provider-sync-service";
 
 type InsertedProvider = {
 	id: string;
@@ -12,6 +13,70 @@ type InsertedProvider = {
 	sharedChannelType: string | null;
 	endpoints: string | null;
 };
+
+it("a failed sync item can retain an endpoint update when subsequent policy invalidation throws", async () => {
+	const original = JSON.stringify({
+		openai: { base: "https://old.example.invalid/v1" },
+	});
+	let storedEndpoints = original;
+	const events: string[] = [];
+	const updates: Array<Record<string, unknown>> = [];
+	const repos = {
+		providers: {
+			getProviderRowById: async () => ({
+				id: "sync-partial-provider",
+				name: "Existing provider",
+				kind: "DeepSeek",
+				description: null,
+				endpoints: storedEndpoints,
+			}),
+			updateProviderByPatch: async (
+				id: string,
+				patch: Record<string, unknown>,
+			) => {
+				assert.equal(id, "sync-partial-provider");
+				assert.equal(typeof patch.endpoints, "string");
+				events.push("provider.update");
+				updates.push({ ...patch });
+				storedEndpoints = String(patch.endpoints);
+				return 1;
+			},
+		},
+		routeDataPolicies: {
+			invalidateForProvider: async (id: string) => {
+				assert.equal(id, "sync-partial-provider");
+				assert.notEqual(storedEndpoints, original);
+				events.push("policy.invalidate");
+				throw new Error("Synthetic policy invalidation failure");
+			},
+		},
+	} as unknown as GatewayRepositories;
+	const result = await applyProviderSyncService(
+		repos,
+		{
+			items: [
+				{ provider_id: "sync-partial-provider", fields: ["endpoints.openai"] },
+			],
+		},
+		"console:sync-test",
+	);
+	assert.deepEqual(events, ["provider.update", "policy.invalidate"]);
+	assert.equal(updates.length, 1);
+	assert.deepEqual(Object.keys(updates[0]!), ["endpoints"]);
+	assert.match(storedEndpoints, /api\.deepseek\.com/u);
+	assert.deepEqual(result, {
+		updated: 0,
+		skipped: 0,
+		failed: [
+			{
+				provider_id: "sync-partial-provider",
+				message: "Synthetic policy invalidation failure",
+			},
+		],
+	});
+	// The batch reports a failed completion, not proof that the write never happened.
+	assert.notEqual(storedEndpoints, original);
+});
 
 function repositories(options: { existingIds?: readonly string[] } = {}): {
 	repositories: GatewayRepositories;
@@ -36,7 +101,7 @@ function repositories(options: { existingIds?: readonly string[] } = {}): {
 
 function deepSeekCatalogKey(): string {
 	const preset = listStaticProviderImportPresets().find(
-		(row) => row.name === "DeepSeek"
+		(row) => row.name === "DeepSeek",
 	);
 	assert.ok(preset);
 	return preset.catalog_key;
@@ -56,7 +121,7 @@ describe("managed Provider preset import", () => {
 				ids: [deepSeekCatalogKey()],
 				environmentApiKeys: { DEEPSEEK_API_KEY: " sk-runtime-secret " },
 				fetchImpl,
-			}
+			},
 		);
 
 		assert.deepEqual(result, {
@@ -79,7 +144,7 @@ describe("managed Provider preset import", () => {
 		assert.ok(requests[0]?.init?.signal instanceof AbortSignal);
 		assert.equal(
 			new Headers(requests[0]?.init?.headers).get("Authorization"),
-			"Bearer sk-runtime-secret"
+			"Bearer sk-runtime-secret",
 		);
 	});
 
@@ -107,7 +172,7 @@ describe("managed Provider preset import", () => {
 			fetchImpl: async () =>
 				Response.json(
 					{ error: { message: "Authentication failed" } },
-					{ status: 401 }
+					{ status: 401 },
 				),
 		});
 
@@ -141,7 +206,7 @@ describe("managed Provider preset import", () => {
 					requests += 1;
 					return Response.json({ object: "list", data: [] });
 				},
-			}
+			},
 		);
 
 		assert.equal(result.created, 0);

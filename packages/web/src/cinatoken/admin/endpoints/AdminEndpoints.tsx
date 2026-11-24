@@ -15,6 +15,7 @@ import { EndpointActionDialog } from './EndpointActionDialog'
 import { EndpointBootstrapDialog } from './EndpointBootstrapDialog'
 import { EndpointDetailDialog } from './EndpointDetailDialog'
 import { EndpointEditorDialog } from './EndpointEditorDialog'
+import { EndpointWriteFeedback } from './EndpointWriteFeedback'
 import { endpointErrorKey } from './endpoint-errors'
 import { endpointIsExpired } from './endpoint-form'
 import { filterEndpoints } from './endpoint-list'
@@ -176,16 +177,21 @@ function ScopedEndpoints(props: AdminEndpointsProps) {
 					{t(endpointErrorKey(manager.choices.error))}
 				</div>
 			)}
-			{manager.hidden && props.canWrite && (
-				<p role='alert' className='text-destructive text-sm'>
-					{t(prefix + 'accessDenied')}
-				</p>
-			)}
+			{manager.hidden &&
+				props.canWrite &&
+				!manager.list.error &&
+				!manager.choices.error &&
+				!manager.mutation.error && (
+					<p role='alert' className='text-destructive text-sm'>
+						{t(endpointErrorKey(manager.unavailableError))}
+					</p>
+				)}
 			{manager.notice && !manager.hidden && (
 				<p role='status' className='text-muted-foreground text-sm'>
 					{t(prefix + 'saved')}
 				</p>
 			)}
+			{!modal && <EndpointWriteFeedback error={manager.mutation.error} />}
 			{manager.writeUnconfirmed &&
 				!manager.mutation.isPending &&
 				!manager.hidden && (
@@ -193,7 +199,11 @@ function ScopedEndpoints(props: AdminEndpointsProps) {
 						role='alert'
 						className='text-destructive rounded-xl border p-4 text-sm'
 					>
-						{t(prefix + 'writeUnknown')}
+						{t(
+							manager.manualRecovery.status === 'unavailable'
+								? 'cinatoken.adminDomain.storageUnavailable'
+								: prefix + 'writeUnknown'
+						)}
 					</p>
 				)}
 			<div className='grid gap-3 sm:grid-cols-2 xl:grid-cols-4'>
@@ -289,7 +299,7 @@ function ScopedEndpoints(props: AdminEndpointsProps) {
 					{t(prefix + 'listLimit')}
 				</p>
 			)}
-			{manager.list.isPending && props.canWrite && (
+			{!manager.hidden && manager.list.isPending && props.canWrite && (
 				<p role='status'>{t(prefix + 'loading')}</p>
 			)}
 			{!manager.hidden && !manager.list.isPending && rows.length === 0 && (
@@ -340,6 +350,8 @@ function ScopedEndpoints(props: AdminEndpointsProps) {
 					pending={manager.mutation.isPending}
 					disabled={manager.disabled}
 					error={manager.mutation.error}
+					canResume={manager.canResumeEditor}
+					onResume={manager.resumeEditor}
 					onSave={manager.save}
 					onClose={manager.close}
 				/>
@@ -372,15 +384,14 @@ function ScopedEndpoints(props: AdminEndpointsProps) {
 					onClose={manager.close}
 					onConfirm={() => {
 						if (modal.action === 'delete') manager.deleteEndpoint(modal.row)
-						else
-							manager.changeStatus(
-								modal.row,
-								modal.action === 'publish'
-									? 'verified'
-									: modal.action === 'disable'
-										? 'disabled'
-										: 'draft'
-							)
+						else {
+							const status = {
+								publish: 'verified',
+								disable: 'disabled',
+								draft: 'draft',
+							} as const
+							manager.changeStatus(modal.row, status[modal.action])
+						}
 					}}
 				/>
 			)}

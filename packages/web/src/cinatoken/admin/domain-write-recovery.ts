@@ -14,6 +14,7 @@ export const ADMIN_WRITE_DOMAINS = [
 	'presets',
 	'guardrails',
 	'data-policies',
+	'mcp',
 ] as const
 export type AdminWriteDomain = (typeof ADMIN_WRITE_DOMAINS)[number]
 const markerSchema = z

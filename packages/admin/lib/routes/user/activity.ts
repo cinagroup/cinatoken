@@ -11,6 +11,8 @@ export const userActivityRoutes = new Hono<UserEnv>();
 
 function activityQuery(c: Context<UserEnv>): UserActivityQuery {
 	return {
+		include_wallet: c.req.query("include_wallet"),
+		include_charge_allocation: c.req.query("include_charge_allocation"),
 		range: c.req.query("range"),
 		page: c.req.query("page"),
 		page_size: c.req.query("page_size"),
@@ -27,7 +29,7 @@ userActivityRoutes.get("/", async (c) => {
 		c.get("repositories"),
 		c.get("principal").userId,
 		workspaceId,
-		activityQuery(c)
+		activityQuery(c),
 	);
 	if (!result)
 		return c.json({ success: false, message: "Account not found" }, 404);
@@ -41,7 +43,7 @@ userActivityRoutes.get("/export.csv", async (c) => {
 		c.get("repositories"),
 		c.get("principal").userId,
 		workspaceId,
-		activityQuery(c)
+		activityQuery(c),
 	);
 	if (!result)
 		return c.json({ success: false, message: "Account not found" }, 404);
@@ -50,6 +52,9 @@ userActivityRoutes.get("/export.csv", async (c) => {
 		"Cache-Control": "private, no-store",
 		"Content-Type": "text/csv; charset=utf-8",
 		"Content-Disposition": `attachment; filename="cinatoken-activity-${date}.csv"`,
+		...(result.includesChargeAllocation
+			? { "X-CinaToken-Charge-Allocation": "v1" }
+			: {}),
 		"X-CinaToken-Export-Count": String(result.rowCount),
 		"X-CinaToken-Export-Total": String(result.total),
 		"X-CinaToken-Export-Truncated": String(result.truncated),
@@ -64,7 +69,7 @@ userActivityRoutes.get("/:id", async (c) => {
 		c.get("repositories"),
 		c.get("principal").userId,
 		workspaceId,
-		c.req.param("id")
+		c.req.param("id"),
 	);
 	if (!result)
 		return c.json({ success: false, message: "Generation not found" }, 404);

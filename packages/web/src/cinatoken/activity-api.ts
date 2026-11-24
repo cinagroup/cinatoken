@@ -62,7 +62,7 @@ export function createActivityApi(transport: ActivityTransport) {
 				page_size: options.page_size,
 			})
 			const result = await transport.send(
-				`/api/user/activity?${queryString(query)}`,
+				`/api/user/activity?${queryString({ ...query, include_wallet: 'true', include_charge_allocation: 'true' })}`,
 				activityResponseSchema,
 				{},
 				options
@@ -111,7 +111,7 @@ export function createActivityApi(transport: ActivityTransport) {
 			activityWorkspaceIdSchema.parse(options.expectedWorkspaceId)
 			const query = activityFiltersSchema.parse(queryFilters(options))
 			const result = await transport.send(
-				`/api/user/activity/export.csv?${queryString(query)}`,
+				`/api/user/activity/export.csv?${queryString({ ...query, include_charge_allocation: 'true' })}`,
 				activityCsvExportSchema,
 				{ headers: { Accept: 'text/csv' } },
 				options,

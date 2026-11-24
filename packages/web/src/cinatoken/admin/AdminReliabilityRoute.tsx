@@ -10,6 +10,9 @@ export function AdminReliabilityRoute() {
 		<AdminReliability
 			key={console.scopeKey}
 			api={cinatokenAdminApi}
+			directoryApi={cinatokenAdminApi}
+			logsApi={cinatokenAdminApi}
+			subject={console.identity.subject}
 			scopeKey={console.scopeKey}
 			reconciliationKey={JSON.stringify([
 				console.identity.userId,

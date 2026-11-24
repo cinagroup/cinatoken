@@ -117,6 +117,7 @@ function fixture(
 			cloneProvider: 2,
 			deleteProvider: 1,
 			importProviders: 1,
+			applyProviderSync: 1,
 			manageProviderDashScope: 3,
 		}),
 		calls,
@@ -128,6 +129,88 @@ const invalid = (error: unknown) =>
 function body(call: Call): Record<string, unknown> {
 	return JSON.parse(String(call.init.body)) as Record<string, unknown>
 }
+
+test('provider sync uses exact batch path, Cookie scope and safe partial results', async () => {
+	const { api, calls } = fixture({
+		body: {
+			success: true,
+			data: {
+				updated: 1,
+				skipped: 1,
+				failed: [{ provider_id: 'third', message: 'PRIVATE-CREDENTIAL' }],
+			},
+		},
+	})
+	const result = await api.applyProviderSync([
+		{ provider_id: 'first', fields: ['description'] },
+		{ provider_id: 'second', fields: ['endpoints.openai'] },
+		{ provider_id: 'third', fields: ['endpoints.gemini'] },
+	])
+	assert.equal(calls[0]!.path, '/api/admin/providers/sync/apply')
+	assert.equal(calls[0]!.init.method, 'POST')
+	assert.equal(result.failed[0]!.message, 'Provider sync failed')
+	assert.equal(JSON.stringify(result).includes('PRIVATE'), false)
+	assert.deepEqual(body(calls[0]!), {
+		items: [
+			{ provider_id: 'first', fields: ['description'] },
+			{ provider_id: 'second', fields: ['endpoints.openai'] },
+			{ provider_id: 'third', fields: ['endpoints.gemini'] },
+		],
+	})
+})
+test('provider sync rejects contradictory or out-of-scope partial success inside the write boundary', async () => {
+	for (const data of [
+		{ updated: 0, skipped: 0, failed: [] },
+		{
+			updated: 0,
+			skipped: 0,
+			failed: [{ provider_id: 'other', message: 'PRIVATE' }],
+		},
+		{
+			updated: 1,
+			skipped: 0,
+			failed: [{ provider_id: 'first', message: 'PRIVATE' }],
+		},
+	]) {
+		const { api, calls } = fixture({ body: { success: true, data } })
+		await assert.rejects(
+			api.applyProviderSync([
+				{ provider_id: 'first', fields: ['description'] },
+			]),
+			(error) =>
+				error instanceof AdminDomainWriteError && error.code === 'unknown'
+		)
+		assert.equal(calls.length, 1)
+	}
+})
+test('provider quota queries only the encoded provider URL and validates typed snapshots', async () => {
+	const { api, calls } = fixture({
+		body: {
+			success: true,
+			data: {
+				adapter: 'deepseek',
+				checkedAt: '2026-10-18T00:00:00Z',
+				state: 'ok',
+				balances: [{ currency: 'CNY', total: 12.5 }],
+				windows: [],
+			},
+		},
+	})
+	const quota = await api.providerQuota('provider/one')
+	assert.equal(quota.balances[0]!.currency, 'CNY')
+	assert.equal(calls[0]!.path, '/api/admin/providers/provider%2Fone/quota')
+	assert.equal(calls[0]!.init.method, undefined)
+})
+test('provider clone preserves the authoritative source kind while keeping the new account disabled', async () => {
+	const { api, calls } = fixture((call) =>
+		call.init.method === 'POST'
+			? { body: { success: true, data: { id: 'copy' } } }
+			: { body: { success: true, data: { ...row, kind: 'DeepSeek' } } }
+	)
+	await api.cloneProvider(row.id, { name: 'Copy', api_key: 'new-secret' })
+	assert.equal(body(calls[1]!).kind, 'DeepSeek')
+	assert.equal(body(calls[1]!).status, 'disabled')
+})
 
 test('provider list projects only masked DTO fields and has no account/workspace request scope', async () => {
 	const { api, calls } = fixture({

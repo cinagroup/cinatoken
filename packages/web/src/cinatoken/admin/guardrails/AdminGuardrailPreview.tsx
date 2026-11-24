@@ -14,6 +14,10 @@ import {
 import { Input } from '../../../components/ui/input'
 import { Label } from '../../../components/ui/label'
 import { CinaTokenApiError } from '../../api'
+import {
+	formatGuardrailPreviewNumber,
+	formatGuardrailPreviewTime,
+} from '../../guardrail-preview-display'
 import { AdminDomainWriteError } from '../domain-write-recovery'
 import type {
 	AdminGuardrailPreviewApi,
@@ -131,11 +135,7 @@ export function AdminGuardrailPreviewEvidence(props: {
 	const text = (key: string) => t(namespace + key)
 	const locale = i18n.resolvedLanguage || 'en'
 	const number = (value: number | null) =>
-		value === null
-			? text('unknown')
-			: new Intl.NumberFormat(locale, { maximumFractionDigits: 6 }).format(
-					value
-				)
+		formatGuardrailPreviewNumber(value, locale, text('unknown'))
 	const range = (value: { minimum: number | null; maximum: number | null }) =>
 		value.minimum === null || value.maximum === null
 			? text('unknown')
@@ -154,6 +154,11 @@ export function AdminGuardrailPreviewEvidence(props: {
 	const preview: AdminGuardrailPreview = props.result.preview
 	const candidates = preview.routeCandidates
 	const evidence = candidates.plannerEvidence
+	const pricingTime = formatGuardrailPreviewTime(
+		evidence.pricing.evaluatedAt,
+		evidence.pricing.businessTimezone,
+		locale
+	)
 	return (
 		<div className='space-y-5' role='status'>
 			{candidates.truncated ? (
@@ -311,19 +316,23 @@ export function AdminGuardrailPreviewEvidence(props: {
 						completion: range(evidence.pricing.completionPerMillion),
 						request: range(evidence.pricing.request),
 						image: range(evidence.pricing.image),
-						timezone: evidence.pricing.businessTimezone,
+						timezone: pricingTime.usedFallback
+							? text('unknown')
+							: pricingTime.timezone,
 					})}
 				</p>
-				<p className='text-muted-foreground text-xs'>
+				<p className='text-muted-foreground text-xs break-words'>
 					{t(namespace + 'pricingAsOf', {
 						currency: preview.pricingCurrency,
-						time: new Intl.DateTimeFormat(locale, {
-							dateStyle: 'medium',
-							timeStyle: 'short',
-						}).format(new Date(evidence.pricing.evaluatedAt)),
-						timezone: evidence.pricing.businessTimezone,
+						time: pricingTime.time ?? text('unknown'),
+						timezone: pricingTime.timezone,
 					})}
 				</p>
+				{pricingTime.usedFallback && (
+					<p className='text-muted-foreground text-xs'>
+						{text('previewTimezoneFallback')}
+					</p>
+				)}
 				<ExclusionCounts
 					title={text('previewPlannerExclusions')}
 					reasons={evidence.excludedByReason}

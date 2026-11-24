@@ -20,6 +20,7 @@ import {
 	ADMIN_TOOLS_PAGE_PATHS,
 	ADMIN_PLAYGROUND_PAGE_PATHS,
 	ADMIN_SIMULATOR_PAGE_PATHS,
+	ADMIN_MCP_PAGE_PATHS,
 	ADMIN_WITHDRAWALS_PAGE_PATHS,
 	ADMIN_NFT_MINTS_PAGE_PATHS,
 	ADMIN_PRESETS_PAGE_PATHS,
@@ -62,6 +63,7 @@ export type WebEntryEnv = {
 	CINATOKEN_WEB_ADMIN_TOOLS_ENABLED?: string
 	CINATOKEN_WEB_ADMIN_PLAYGROUND_ENABLED?: string
 	CINATOKEN_WEB_ADMIN_SIMULATOR_ENABLED?: string
+	CINATOKEN_WEB_ADMIN_MCP_ENABLED?: string
 	CINATOKEN_WEB_ADMIN_WITHDRAWALS_ENABLED?: string
 	CINATOKEN_WEB_ADMIN_NFT_MINTS_ENABLED?: string
 	CINATOKEN_WEB_ADMIN_CONFIG_TIMEZONE_ENABLED?: string
@@ -281,6 +283,9 @@ export async function routeWebRequest(
 	const simulatorEnabled =
 		env.CINATOKEN_WEB_ADMIN_SIMULATOR_ENABLED === 'true' &&
 		ADMIN_SIMULATOR_PAGE_PATHS.has(url.pathname)
+	const mcpEnabled =
+		env.CINATOKEN_WEB_ADMIN_MCP_ENABLED === 'true' &&
+		ADMIN_MCP_PAGE_PATHS.has(url.pathname)
 	const withdrawalsEnabled =
 		env.CINATOKEN_WEB_ADMIN_WITHDRAWALS_ENABLED === 'true' &&
 		ADMIN_WITHDRAWALS_PAGE_PATHS.has(url.pathname)
@@ -325,6 +330,7 @@ export async function routeWebRequest(
 			toolsEnabled ||
 			playgroundEnabled ||
 			simulatorEnabled ||
+			mcpEnabled ||
 			withdrawalsEnabled ||
 			nftMintsEnabled ||
 			configTimezoneEnabled ||

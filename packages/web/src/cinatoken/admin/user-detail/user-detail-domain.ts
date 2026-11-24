@@ -1,5 +1,17 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
+import {
+	rateLimitPatch,
+	rateLimitRpmInput,
+	type RateLimitMode,
+} from '../gateway-keys/rate-limit'
+import {
+	chargedFactorsEqual,
+	normalizeChargedFactorRows,
+	type ChargedFactorRow,
+} from '../user-charged-factors'
 import type { UserDetail } from './user-detail-contracts'
+
+export type { ChargedFactorRow } from '../user-charged-factors'
 
 export class UserDetailInputError extends Error {
 	constructor() {
@@ -77,6 +89,9 @@ export function routeMatchesUser(routeId: string, user: UserDetail): boolean {
 
 export type UserDetailDraft = {
 	email: string
+	rateLimitMode?: RateLimitMode
+	rateLimitRpm?: string
+	rateLimitReason?: string
 	status: string
 	externalSystem: string
 	externalUserId: string
@@ -87,6 +102,9 @@ export type UserDetailDraft = {
 	budgetPeriod: 'none' | 'daily' | 'weekly' | 'monthly'
 	budgetResetAt: string
 	resetBudget: boolean
+	walletGranted: string
+	walletSpent: string
+	walletReason: string
 }
 
 function utcInput(value: string | null): string {
@@ -96,6 +114,9 @@ function utcInput(value: string | null): string {
 export function draftFromUser(user: UserDetail): UserDetailDraft {
 	return {
 		email: user.email,
+		rateLimitMode: 'unchanged',
+		rateLimitRpm: rateLimitRpmInput(user.rate_limit),
+		rateLimitReason: '',
 		status: user.status,
 		externalSystem: user.external_system ?? '',
 		externalUserId: user.external_user_id ?? '',
@@ -106,6 +127,11 @@ export function draftFromUser(user: UserDetail): UserDetailDraft {
 		budgetPeriod: user.budget_period,
 		budgetResetAt: utcInput(user.budget_reset_at),
 		resetBudget: false,
+		walletGranted:
+			user.wallet_granted === undefined ? '' : String(user.wallet_granted),
+		walletSpent:
+			user.wallet_spent === undefined ? '' : String(user.wallet_spent),
+		walletReason: '',
 	}
 }
 
@@ -153,6 +179,26 @@ export function buildUserDetailPatches(
 	)
 		throw new UserDetailInputError()
 	const profile: Record<string, unknown> = {}
+	let profileReason = 'gwui:user-profile'
+	try {
+		const rate = rateLimitPatch(
+			before.rate_limit,
+			draft.rateLimitMode,
+			draft.rateLimitRpm
+		)
+		if (rate !== undefined) {
+			profileReason = (draft.rateLimitReason ?? '').trim()
+			if (
+				!profileReason ||
+				profileReason.length > 256 ||
+				/\p{Cc}/u.test(profileReason)
+			)
+				throw new UserDetailInputError()
+			profile.rate_limit = rate
+		}
+	} catch {
+		throw new UserDetailInputError()
+	}
 	if (email !== before.email) profile.email = email
 	if (draft.status !== before.status) {
 		if (
@@ -214,39 +260,47 @@ export function buildUserDetailPatches(
 		budget.budget_reset_at = nextReset
 	if (Object.keys(budget).length > 0 || draft.resetBudget)
 		budget.reset_budget = draft.resetBudget
+	let reason = 'gwui:user-plan'
+	for (const [field, key] of [
+		['wallet_granted', 'walletGranted'],
+		['wallet_spent', 'walletSpent'],
+	] as const) {
+		const original = before[field]
+		const raw = draft[key].trim()
+		if (raw === (original === undefined ? '' : String(original))) continue
+		if (original === undefined) throw new UserDetailInputError()
+		const value = money(raw, false)
+		if (value !== original) budget[field] = value
+	}
+	if (
+		budget.wallet_granted !== undefined ||
+		budget.wallet_spent !== undefined
+	) {
+		reason = draft.walletReason.trim()
+		if (!reason || reason.length > 256 || /\p{Cc}/u.test(reason))
+			throw new UserDetailInputError()
+	}
 	return {
 		profile: Object.keys(profile).length
-			? { ...profile, reason: 'gwui:user-profile' }
+			? { ...profile, reason: profileReason }
 			: null,
-		budget: Object.keys(budget).length
-			? { ...budget, reason: 'gwui:user-plan' }
-			: null,
+		budget: Object.keys(budget).length ? { ...budget, reason } : null,
 	}
 }
 
-export type ChargedFactorRow = { modelId: string; factor: string }
 export function buildFactorPatch(
 	before: UserDetail['charged_cost_factors'],
 	rows: ChargedFactorRow[]
 ): Record<string, unknown> | null {
-	const next: Record<string, number> = {}
-	for (const row of rows) {
-		const id = row.modelId.trim()
-		if (!id || id.length > 600 || Object.hasOwn(next, id))
-			throw new UserDetailInputError()
-		const rawFactor = row.factor.trim()
-		if (!/^(?:0|[1-9]\d*)(?:\.\d+)?$/u.test(rawFactor))
-			throw new UserDetailInputError()
-		const factor = Number(rawFactor)
-		if (!Number.isFinite(factor) || factor > 1_000_000_000_000)
-			throw new UserDetailInputError()
-		next[id] = factor
-	}
-	const normalized = Object.keys(next).length ? next : null
-	if (JSON.stringify(normalized) === JSON.stringify(before)) return null
-	return {
-		charged_cost_factors: normalized,
-		reason: 'gwui:charged-cost-factors',
+	try {
+		const normalized = normalizeChargedFactorRows(rows)
+		if (chargedFactorsEqual(normalized, before)) return null
+		return {
+			charged_cost_factors: normalized,
+			reason: 'gwui:charged-cost-factors',
+		}
+	} catch {
+		throw new UserDetailInputError()
 	}
 }
 

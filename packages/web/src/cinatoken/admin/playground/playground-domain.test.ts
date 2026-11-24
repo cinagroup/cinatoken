@@ -319,7 +319,7 @@ test('DashScope synchronous ASR validates encoded data URL size while native Ope
 	context.routes[0] = fixtureRoute({
 		upstream_protocol: 'dashscope',
 		upstream_operation: 'audio.transcriptions.multimodal',
-		adapter: 'openai-audio-transcriptions-to-dashscope-multimodal',
+		adapter: 'dashscope-asr-qwen-file',
 	})
 	context.limits.dashscope_sync_data_url_bytes = 100
 	const audio = (size: number) =>

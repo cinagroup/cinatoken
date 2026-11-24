@@ -2,16 +2,22 @@
 import {
 	useCallback,
 	useEffect,
+	useId,
 	useMemo,
 	useState,
 	useSyncExternalStore,
 } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { CinaTokenApiError } from '../../../api'
+import type { ProvidersApi } from '../../provider-api'
 import {
 	resolveReliabilityRange,
 	type ReliabilityRange,
 } from '../../reliability/reliability-range'
+import {
+	analyticsQueryPrefix,
+	modelAnalyticsRowKey,
+} from './analytics-drilldowns'
 import {
 	modelAnalyticsAccessKey,
 	modelAnalyticsAccessRecovery,
@@ -20,9 +26,15 @@ import type {
 	AdminModelAnalyticsApi,
 	ModelAnalyticsFilters,
 } from './model-analytics-api'
-import type { ModelAnalyticsRow } from './model-analytics-contracts'
+import type {
+	ModelAnalyticsRow,
+	ModelProviderRow,
+} from './model-analytics-contracts'
+import { useAnalyticsDrilldowns } from './use-analytics-drilldowns'
 
 export type ModelAnalyticsProps = {
+	directoryApi?: Pick<ProvidersApi, 'providerList'>
+	directorySubject?: string
 	api: AdminModelAnalyticsApi
 	scopeKey: string
 	reconciliationKey: string
@@ -39,6 +51,7 @@ const denied = (error: unknown): boolean =>
 
 export function useModelAnalytics(props: ModelAnalyticsProps) {
 	const client = useQueryClient()
+	const instanceKey = useId()
 	const access = modelAnalyticsAccessRecovery(props.api)
 	const accessKey = modelAnalyticsAccessKey(props.reconciliationKey)
 	const revalidate = props.revalidate
@@ -48,11 +61,6 @@ export function useModelAnalytics(props: ModelAnalyticsProps) {
 	})
 	const [anchor, setAnchor] = useState(() => new Date())
 	const [filters, setFilters] = useState<ModelAnalyticsFilters>(emptyFilters)
-	const [expanded, setExpanded] = useState<{
-		modelId: string
-		routeGroup: string
-		context: string
-	} | null>(null)
 	const [retryVersion, setRetryVersion] = useState(0)
 	const blockedSnapshot = useCallback(
 		(domain: 'analytics' | 'display' | 'logs') =>
@@ -87,8 +95,15 @@ export function useModelAnalytics(props: ModelAnalyticsProps) {
 		logsSnapshot
 	)
 	const prefix = useMemo(
-		() => ['cinatoken', 'admin', props.scopeKey, 'modelAnalytics'] as const,
-		[props.scopeKey]
+		() =>
+			analyticsQueryPrefix({
+				scopeKey: props.scopeKey,
+				reconciliationKey: props.reconciliationKey,
+				api: props.api,
+				instanceKey,
+				domain: 'modelAnalytics',
+			}),
+		[props.scopeKey, props.reconciliationKey, props.api, instanceKey]
 	)
 	const displayQuery = useQuery({
 		queryKey: [...prefix, 'display', retryVersion],
@@ -144,44 +159,7 @@ export function useModelAnalytics(props: ModelAnalyticsProps) {
 		!analyticsBlocked && !mainQuery.isFetching && !mainQuery.error
 			? mainQuery.data
 			: undefined
-	const context = JSON.stringify([props.scopeKey, rangeParams, filters])
-	const active = expanded?.context === context ? expanded : null
-	const selectedRow = main?.rows.find(
-		(row) =>
-			row.model_id === active?.modelId && row.route_group === active.routeGroup
-	)
-	const detailQuery = useQuery({
-		queryKey: [
-			...prefix,
-			'providers',
-			context,
-			active?.modelId,
-			active?.routeGroup,
-			rangeParams,
-			selectedRow,
-			filters.tag,
-			retryVersion,
-		],
-		queryFn: ({ signal }) => {
-			if (!rangeParams || !selectedRow)
-				throw new TypeError('Analytics drilldown unavailable')
-			return props.api.modelProviders(
-				rangeParams.startUtc,
-				rangeParams.endUtc,
-				selectedRow,
-				filters.tag,
-				{ signal }
-			)
-		},
-		enabled: !analyticsBlocked && Boolean(main && selectedRow && rangeParams),
-		retry: false,
-		refetchOnWindowFocus: false,
-		gcTime: 0,
-	})
-	const detail =
-		!analyticsBlocked && !detailQuery.isFetching && !detailQuery.error
-			? detailQuery.data
-			: undefined
+	const context = JSON.stringify([prefix, rangeParams, filters, retryVersion])
 	const block = useCallback(
 		(domain: 'analytics' | 'display' | 'logs') => {
 			if (!access.block(accessKey, domain)) return
@@ -200,9 +178,31 @@ export function useModelAnalytics(props: ModelAnalyticsProps) {
 		},
 		[access, accessKey, client, prefix, revalidate]
 	)
+	const detailPrefix = useMemo(() => [...prefix, 'providers'], [prefix])
+	const onDetailDenied = useCallback(() => block('analytics'), [block])
+	const { details, toggleRow, collapseRows } = useAnalyticsDrilldowns<
+		ModelAnalyticsRow,
+		ModelProviderRow
+	>({
+		prefix: detailPrefix,
+		context,
+		enabled: !analyticsBlocked && Boolean(main && rangeParams),
+		rowKey: modelAnalyticsRowKey,
+		read: (row, signal) => {
+			if (!rangeParams) throw new TypeError('Analytics drilldown unavailable')
+			return props.api.modelProviders(
+				rangeParams.startUtc,
+				rangeParams.endUtc,
+				row,
+				filters.tag,
+				{ signal }
+			)
+		},
+		onDenied: onDetailDenied,
+	})
 	useEffect(() => {
-		if (denied(mainQuery.error) || denied(detailQuery.error)) block('analytics')
-	}, [block, mainQuery.error, detailQuery.error])
+		if (denied(mainQuery.error)) block('analytics')
+	}, [block, mainQuery.error])
 	useEffect(() => {
 		if (denied(displayQuery.error)) block('display')
 	}, [block, displayQuery.error])
@@ -210,23 +210,16 @@ export function useModelAnalytics(props: ModelAnalyticsProps) {
 		if (denied(logsQuery.error)) block('logs')
 	}, [block, logsQuery.error])
 	function selectRange(next: ReliabilityRange): void {
+		collapseRows()
 		setRange(next)
 		setAnchor(new Date())
 	}
 	function retry(): void {
+		collapseRows()
 		setAnchor(new Date())
 		setRetryVersion((version) => version + 1)
 		for (const domain of ['analytics', 'display', 'logs'] as const)
 			access.settle(accessKey, domain)
-	}
-	function toggleRow(row: ModelAnalyticsRow): void {
-		const same =
-			active?.modelId === row.model_id && active.routeGroup === row.route_group
-		setExpanded(
-			same
-				? null
-				: { modelId: row.model_id, routeGroup: row.route_group, context }
-		)
 	}
 	return {
 		range: effectiveRange,
@@ -236,17 +229,15 @@ export function useModelAnalytics(props: ModelAnalyticsProps) {
 		selectRange,
 		retry,
 		toggleRow,
+		collapseRows,
+		details,
 		mainQuery,
 		main,
-		detailQuery,
-		detail,
 		displayQuery,
 		display,
 		logsQuery,
 		analyticsBlocked,
 		displayBlocked,
 		logsBlocked,
-		active,
-		selectedRow,
 	}
 }

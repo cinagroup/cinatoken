@@ -10,8 +10,8 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from '../../../components/ui/dialog'
+import { RouteWriteFeedback } from './RouteWriteFeedback'
 import { routeStrategies, type RoutePoolView } from './route-domain'
-import { routeErrorKey } from './route-errors'
 import type { RoutePoolPolicyPatch } from './routes-contracts'
 
 const prefix = 'cinatoken.adminRoutes.'
@@ -46,6 +46,8 @@ export function RoutePoolPolicyDialog(props: {
 	disabled: boolean
 	pending: boolean
 	error: unknown
+	canResume: boolean
+	onResume: () => void
 	onSave: (patch: RoutePoolPolicyPatch) => void
 	onClose: () => void
 }) {
@@ -119,11 +121,6 @@ export function RoutePoolPolicyDialog(props: {
 						{t(prefix + 'invalidResponse')}
 					</p>
 				)}
-				{props.error != null && (
-					<p role='alert' className='text-destructive text-sm'>
-						{t(routeErrorKey(props.error))}
-					</p>
-				)}
 				<label className='space-y-1 text-sm'>
 					{t(prefix + 'strategy')}
 					<select
@@ -169,6 +166,11 @@ export function RoutePoolPolicyDialog(props: {
 				<p className='text-muted-foreground text-xs'>
 					{t(prefix + 'strategyHelp')}
 				</p>
+				<RouteWriteFeedback
+					error={props.error}
+					canResume={props.canResume}
+					onResume={props.onResume}
+				/>
 				<DialogFooter>
 					<Button
 						type='button'

@@ -2,6 +2,7 @@
 import { z } from 'zod'
 import { userIdSchema } from '../users/users-contracts'
 import { gatewayKeyMetadataReadable } from './gateway-key-metadata'
+import { rateLimitReadSchema } from './rate-limit'
 
 export const gatewayKeyRevisionSchema = z
 	.string()
@@ -42,6 +43,7 @@ const masked = z
 	})
 	.transform(() => 'sk-…' as const)
 const fields = {
+	rate_limit: rateLimitReadSchema,
 	id: gatewayKeyIdSchema,
 	key: masked,
 	user_id: ownerId,
@@ -62,6 +64,7 @@ const fields = {
 	budget_period: z.enum(['none', 'daily', 'weekly', 'monthly']),
 	budget_reset_at: instant.nullable(),
 	status: gatewayKeyStatusSchema,
+	last_used_at: instant.nullable().optional(),
 	created_at: instant,
 	updated_at: instant,
 	profile_revision: gatewayKeyRevisionSchema,

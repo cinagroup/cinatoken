@@ -5,6 +5,7 @@ import {
 	guardrailAssignmentResponseSchema,
 	guardrailAssignmentsResponseSchema,
 	guardrailCreateInputSchema,
+	guardrailVersionInputSchema,
 	guardrailEffectiveResponseSchema,
 	guardrailIdentifier,
 	guardrailListResponseSchema,
@@ -14,6 +15,7 @@ import {
 	type Guardrail,
 	type GuardrailAssignment,
 	type GuardrailInput,
+	type GuardrailVersionInput,
 	type GuardrailPatch,
 } from './guardrail-contracts'
 
@@ -203,13 +205,13 @@ export function createGuardrailsApi(transport: GuardrailTransport) {
 			write(null, '', guardrailCreateInputSchema.parse(input), 'POST', scope),
 		addGuardrailVersion: (
 			id: string,
-			input: GuardrailInput,
+			input: GuardrailVersionInput,
 			scope: GuardrailRequestOptions
 		) =>
 			write(
 				id,
 				'/versions',
-				guardrailCreateInputSchema.parse(input),
+				guardrailVersionInputSchema.parse(input),
 				'POST',
 				scope
 			),

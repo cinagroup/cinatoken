@@ -7,17 +7,21 @@ import {
 	useSyncExternalStore,
 } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { normalizeChargedFactorRows } from '../user-charged-factors'
 import {
 	userAccessDenied,
 	userWriteOutcomeUnknown,
 } from '../users/users-errors'
 import { useUserDetailKeys } from './use-user-detail-keys'
+import { useUserFactorWrite } from './use-user-factor-write'
+import { useWalletCredit } from './use-wallet-credit'
 import type { AdminUserDetailApi } from './user-detail-api'
 import type {
 	UserBudgetTransitionInput,
 	UserBudgetTransitionPreview,
 } from './user-detail-contracts'
 import {
+	UserDetailInputError,
 	buildFactorPatch,
 	buildUserDetailPatches,
 	type ChargedFactorRow,
@@ -29,6 +33,7 @@ import {
 	type UserDetailDomain,
 } from './user-detail-recovery'
 import { budgetTransitionRecovery } from './user-detail-transition-recovery'
+import { walletCreditRecovery } from './wallet-credit-recovery'
 
 export type UserDetailManagerProps = {
 	api: AdminUserDetailApi
@@ -73,6 +78,11 @@ export function useAdminUserDetail(props: UserDetailManagerProps) {
 	const logsBlocked = useDomainBlocked(access, identity, 'logs')
 	const auditsBlocked = useDomainBlocked(access, identity, 'audits')
 	const modelsBlocked = useDomainBlocked(access, identity, 'models')
+	const factorPreviewBlocked = useDomainBlocked(
+		access,
+		identity,
+		'factor-preview'
+	)
 	const displayBlocked = useDomainBlocked(access, identity, 'display')
 	const userWriteBlocked = useDomainBlocked(access, identity, 'user-write')
 	const keyWriteBlocked = useDomainBlocked(access, identity, 'key-write')
@@ -111,6 +121,28 @@ export function useAdminUserDetail(props: UserDetailManagerProps) {
 			? null
 			: (userQuery.data ?? null)
 	const userId = user?.id ?? ''
+	const walletStore = walletCreditRecovery()
+	const walletSnapshot = useCallback(
+		() => walletStore.status(identity, userId),
+		[walletStore, identity, userId]
+	)
+	const walletStatus = useSyncExternalStore(
+		walletStore.subscribe,
+		walletSnapshot,
+		() => 'unavailable' as const
+	)
+	const factorWriter = useUserFactorWrite({
+		api: props.api,
+		identity,
+		userId,
+		allowed: props.canWrite && Boolean(user) && !userWriteBlocked,
+		onFailure: (error) => recordWriteError(error, 'user-write'),
+		onRecovered: (current) => {
+			client.setQueryData([...userKey, retryVersion], current)
+			setUnknownWrite(false)
+			setWriteError(null)
+		},
+	})
 	const childKey = [
 		'cinatoken',
 		'admin',
@@ -286,6 +318,9 @@ export function useAdminUserDetail(props: UserDetailManagerProps) {
 				user.budget_spent,
 				user.budget_period,
 				user.budget_reset_at,
+				user.wallet_granted,
+				user.wallet_spent,
+				user.wallet_balance,
 			])
 		: null
 	const activeTransitionState =
@@ -311,7 +346,13 @@ export function useAdminUserDetail(props: UserDetailManagerProps) {
 		userId,
 		authorized: keyAccessValid,
 		canStart:
-			!busy && !unknownWrite && !transitionUnknown && !keysQuery.isFetching,
+			!busy &&
+			walletStatus === 'ready' &&
+			!unknownWrite &&
+			!transitionUnknown &&
+			!keysQuery.isFetching &&
+			factorWriter.recovery.status === 'ready' &&
+			!factorWriter.recovery.busy,
 		onError: (error) => recordWriteError(error, 'key-write'),
 		onInputError: setWriteError,
 		onStart: () => {
@@ -326,6 +367,7 @@ export function useAdminUserDetail(props: UserDetailManagerProps) {
 	const keyCreateUnknown = keyWriter.legacyPending
 	const canWriteUser =
 		props.canWrite &&
+		walletStatus === 'ready' &&
 		Boolean(user) &&
 		!userWriteBlocked &&
 		!busy &&
@@ -333,8 +375,24 @@ export function useAdminUserDetail(props: UserDetailManagerProps) {
 		!keyCreateUnknown &&
 		!transitionUnknown &&
 		!keyWriter.busy &&
-		!keyWriter.unknown
+		!keyWriter.unknown &&
+		factorWriter.recovery.status === 'ready' &&
+		!factorWriter.recovery.busy
 	const canWriteKeys = keyWriter.canWrite
+	const walletWriter = useWalletCredit({
+		api: props.api,
+		identity,
+		userId,
+		allowed: props.canWrite && Boolean(user) && !userWriteBlocked,
+		canStart: canWriteUser,
+		status: walletStatus,
+		onBusy: setBusy,
+		onDenied: () => {
+			if (access.block(access.key(identity, 'user-write')))
+				void props.revalidate().catch(() => undefined)
+		},
+		onSaved: refreshAfterWrite,
+	})
 
 	function recordWriteError(
 		error: unknown,
@@ -451,11 +509,16 @@ export function useAdminUserDetail(props: UserDetailManagerProps) {
 			setBusy(false)
 		}
 	}
-	async function saveFactors(rows: ChargedFactorRow[]): Promise<void> {
+	async function saveFactors(
+		rows: ChargedFactorRow[],
+		reason: string
+	): Promise<void> {
 		if (!user || !canWriteUser) return
 		setWriteError(null)
 		let patch: Record<string, unknown> | null
 		try {
+			if (!reason.trim() || reason.trim().length > 2000)
+				throw new UserDetailInputError()
 			patch = buildFactorPatch(user.charged_cost_factors, rows)
 		} catch (error) {
 			setWriteError(error)
@@ -464,7 +527,10 @@ export function useAdminUserDetail(props: UserDetailManagerProps) {
 		if (!patch) return
 		setBusy(true)
 		try {
-			const updated = await userPatch.mutateAsync(patch)
+			const updated = await factorWriter.save(
+				normalizeChargedFactorRows(rows),
+				reason.trim()
+			)
 			client.setQueryData([...userKey, retryVersion], updated)
 			setWriteNote('saved')
 			await refreshAfterWrite()
@@ -494,6 +560,7 @@ export function useAdminUserDetail(props: UserDetailManagerProps) {
 			'logs',
 			'audits',
 			'models',
+			'factor-preview',
 			'display',
 		] as const)
 			access.clear(access.key(identity, domain))
@@ -525,6 +592,7 @@ export function useAdminUserDetail(props: UserDetailManagerProps) {
 			keyWrite: keyWriteBlocked,
 		},
 		canWriteUser,
+		walletWriter,
 		canWriteKeys,
 		busy: busy || keyWriter.busy,
 		writeError,
@@ -547,6 +615,12 @@ export function useAdminUserDetail(props: UserDetailManagerProps) {
 		applyBudgetTransition,
 		invalidateBudgetTransition: () => setTransitionState(null),
 		saveFactors,
+		factorWriter,
+		factorPreviewBlocked,
+		factorPreviewDenied: () => {
+			if (access.block(access.key(identity, 'factor-preview')))
+				void revalidate().catch(() => undefined)
+		},
 		hardDeleteUser,
 		addKey: keyWriter.create,
 		setKeyStatus: keyWriter.status,

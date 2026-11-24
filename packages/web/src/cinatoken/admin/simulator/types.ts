@@ -6,6 +6,7 @@ export type AdminKeyListItem = GatewayKeyRow
 export type AdminModelRow = SimulatorModel
 export type RouteListRow = SimulatorRoute
 export type ResponseMeta = {
+	settlementBasis?: 'reserved' | null
 	status: number | null
 	latencyMs: string | null
 	requestUrl: string | null
@@ -14,7 +15,7 @@ export type ResponseMeta = {
 	outcome: 'running' | 'complete' | 'failed' | 'cancelled' | 'unknown'
 }
 export type WirePreview = {
-	method: 'POST' | 'WebSocket'
+	method: 'POST' | 'GET' | 'WebSocket'
 	url: string
 	headers: Record<string, string>
 	bodyText: string

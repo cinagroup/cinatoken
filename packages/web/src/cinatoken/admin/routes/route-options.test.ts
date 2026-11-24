@@ -3,6 +3,7 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { adminModelSchema } from '../model-contracts'
 import { adminProviderSchema } from '../provider-contracts'
+import { routeAdapterDescriptor } from './route-adapter-catalog'
 import { emptyRouteDraft } from './route-domain'
 import {
 	applyDashScopePreset,
@@ -73,7 +74,25 @@ test('request operations constrain image, embeddings, rerank, ASR, TTS and text 
 	])
 	assert.deepEqual(requestOperationsForModel(model('speech'), 'dashscope'), [
 		'audio.speech.realtime.inference',
+		'audio.speech',
+		'audio.speech.stream',
+		'audio.speech.multimodal',
+		'audio.speech.realtime.session',
 	])
+	assert.deepEqual(requestOperationsForModel(model('text'), 'dashscope'), [])
+	assert.deepEqual(requestOperationsForModel(model('text'), 'minimax'), [])
+	assert.equal(
+		requestOperationsForModel(model('transcription'), 'dashscope').includes(
+			'audio.transcriptions'
+		),
+		false
+	)
+	assert.equal(
+		requestOperationsForModel(model('transcription'), 'dashscope').includes(
+			'audio.transcriptions.async'
+		),
+		true
+	)
 	assert.equal(requestOperationsForModel(undefined, 'openai').length, 0)
 	assert.equal(
 		requestOperationsForModel(
@@ -83,6 +102,91 @@ test('request operations constrain image, embeddings, rerank, ASR, TTS and text 
 		).includes('audio.transcriptions.realtime.session'),
 		false
 	)
+})
+
+test('native TTS transport choices map to endpoint capabilities rather than operation names', () => {
+	const partial = {
+		...provider,
+		endpoints: JSON.stringify({
+			dashscope: {
+				endpoints: { 'audio.speech': 'https://example.invalid/speech' },
+			},
+		}),
+	}
+	assert.deepEqual(
+		upstreamOperationsForProviderModel(partial, model('speech'), 'dashscope'),
+		['audio.speech', 'audio.speech.stream']
+	)
+	const session = {
+		...provider,
+		endpoints: JSON.stringify({
+			dashscope: {
+				endpoints: {
+					'audio.realtime.session': 'wss://example.invalid/session',
+				},
+			},
+		}),
+	}
+	assert.deepEqual(
+		upstreamOperationsForProviderModel(session, model('speech'), 'dashscope'),
+		['audio.speech.realtime.session']
+	)
+	const transcription = model('transcription')
+	assert.equal(
+		requestOperationsForModel(
+			transcription,
+			'dashscope',
+			'qwen3-asr-flash-realtime'
+		).includes('audio.transcriptions.realtime.inference'),
+		false
+	)
+	assert.equal(
+		requestOperationsForModel(
+			transcription,
+			'dashscope',
+			'qwen3-asr-flash-realtime'
+		).includes('audio.transcriptions.realtime.session'),
+		true
+	)
+})
+
+test('native asynchronous ASR requires submission and task query endpoints together', () => {
+	for (const capabilities of [
+		['audio.transcriptions'],
+		['audio.transcriptions.tasks'],
+		['audio.transcriptions', 'audio.transcriptions.tasks'],
+	]) {
+		const partial = {
+			...provider,
+			endpoints: JSON.stringify({
+				dashscope: {
+					endpoints: Object.fromEntries(
+						capabilities.map((capability) => [
+							capability,
+							'https://example.invalid/' +
+								capability +
+								(capability === 'audio.transcriptions.tasks'
+									? '/{task_id}'
+									: ''),
+						])
+					),
+				},
+			}),
+		}
+		const draft = {
+			...emptyRouteDraft,
+			requestProtocol: 'dashscope',
+			requestOperation: 'audio.transcriptions.async',
+			upstreamProtocol: 'dashscope',
+			upstreamOperation: 'audio.transcriptions.async',
+			adapter: 'passthrough',
+			providerModelName: 'paraformer-v2',
+		}
+		assert.equal(
+			topologyAvailable(draft, model('transcription'), partial),
+			capabilities.length === 2
+		)
+	}
 })
 
 test('capability discovery fails closed for absent/redacted config and requires the complete async lifecycle', () => {
@@ -124,7 +228,7 @@ test('capability discovery fails closed for absent/redacted config and requires 
 	)
 })
 
-test('five presets preserve identity/pricing/custom fields and require both model and provider capabilities', () => {
+test('seven presets preserve identity/pricing/custom fields and require both model and provider capabilities', () => {
 	const original = {
 		...emptyRouteDraft,
 		modelId: 'model',
@@ -140,21 +244,23 @@ test('five presets preserve identity/pricing/custom fields and require both mode
 		'filetrans',
 		'nonrealtime',
 		'realtime',
+		'image-qwen',
+		'image-wan',
 	] as DashScopePreset[]) {
 		const draft = applyDashScopePreset(original, preset)
 		assert.equal(draft.customParams, original.customParams)
 		assert.equal(draft.priority, original.priority)
 		assert.equal(draft.chargedFactor, original.chargedFactor)
-		const modality = ['nonrealtime', 'realtime'].includes(preset)
-			? 'speech'
-			: 'transcription'
+		let modality = 'transcription'
+		if (['nonrealtime', 'realtime'].includes(preset)) modality = 'speech'
+		if (preset.startsWith('image-')) modality = 'image'
 		assert.equal(
 			topologyAvailable(draft, model(modality), provider),
 			true,
 			preset
 		)
 		assert.equal(
-			topologyAvailable(draft, model('image'), provider),
+			topologyAvailable(draft, model('text'), provider),
 			false,
 			preset
 		)
@@ -167,6 +273,53 @@ test('five presets preserve identity/pricing/custom fields and require both mode
 			preset
 		)
 	}
+})
+
+test('adapter guide resolves the full topology and modality without guessing legacy surfaces', () => {
+	const draft = {
+		...emptyRouteDraft,
+		requestProtocol: 'gemini',
+		requestOperation: 'models.generate',
+		upstreamProtocol: 'gemini',
+		upstreamOperation: 'models.generate',
+		adapter: 'passthrough',
+	}
+	assert.equal(
+		routeAdapterDescriptor(draft, model('image'))?.optionKey,
+		'passthrough:gemini:models.generate:image'
+	)
+	assert.equal(routeAdapterDescriptor(draft, model('text'))?.modelKind, 'llm')
+	assert.equal(
+		routeAdapterDescriptor({ ...draft, requestOperation: '*' }, model('image')),
+		null
+	)
+	assert.equal(
+		routeAdapterDescriptor({ ...draft, adapter: 'unknown' }, model('image')),
+		null
+	)
+	assert.equal(routeAdapterDescriptor(draft, undefined), null)
+	const image = routeAdapterDescriptor(
+		applyDashScopePreset(emptyRouteDraft, 'image-qwen'),
+		model('image')
+	)
+	assert.deepEqual(image?.protectedUpstreamPaths, ['parameters.n'])
+	assert.deepEqual(image?.extraBodyExample, {
+		parameters: { negative_prompt: 'blurry', seed: 42 },
+	})
+	assert.ok(image?.lossyFeatures?.includes('background'))
+	assert.equal(
+		routeAdapterDescriptor(
+			{
+				...draft,
+				requestProtocol: 'dashscope',
+				requestOperation: 'audio.transcriptions',
+				upstreamProtocol: 'dashscope',
+				upstreamOperation: 'audio.transcriptions',
+			},
+			model('transcription')
+		),
+		null
+	)
 })
 
 test('dependent choices reconcile together when model/provider modality changes', () => {

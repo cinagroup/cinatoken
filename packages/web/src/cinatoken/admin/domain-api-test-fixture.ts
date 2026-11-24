@@ -44,7 +44,10 @@ export function adminDomainFixtureAck(
 	if (method === 'DELETE') operation = 'delete'
 	let id: string | undefined = parts[4]
 	let related_id: string | undefined
-	if (pathname.endsWith('/designate')) operation = 'designate'
+	if (/^\/api\/admin\/(models|providers)\/sync\/apply$/.test(pathname)) {
+		operation = 'sync'
+		id = undefined
+	} else if (pathname.endsWith('/designate')) operation = 'designate'
 	else if (
 		domain === 'guardrails' &&
 		method === 'PUT' &&

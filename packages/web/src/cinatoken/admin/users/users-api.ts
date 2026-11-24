@@ -6,6 +6,11 @@ import {
 	usersCurrencyResponseSchema,
 	type AdminUserListResponse,
 } from './users-contracts'
+import {
+	projectUserDisplay,
+	usersDisplayResponseSchema,
+	type UserDisplay,
+} from './users-display'
 import { normalizeUserCreate, type UserCreateDraft } from './users-input'
 import { usersListPath, type UsersSearch } from './users-search'
 
@@ -27,6 +32,21 @@ export type UsersTransport = {
 
 export function createAdminUsersApi(transport: UsersTransport) {
 	return {
+		async userDisplay(options: UsersRequestOptions = {}): Promise<UserDisplay> {
+			try {
+				options.signal?.throwIfAborted()
+				const result = await transport.send(
+					'/api/admin/config/overview',
+					usersDisplayResponseSchema,
+					{},
+					options
+				)
+				options.signal?.throwIfAborted()
+				return projectUserDisplay(result.data)
+			} catch (error) {
+				throw transport.sanitizeError(error)
+			}
+		},
 		async userList(
 			search: UsersSearch,
 			options: UsersRequestOptions = {}

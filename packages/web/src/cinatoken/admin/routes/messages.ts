@@ -1,8 +1,11 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
+import { routeAdapterMessages } from './adapter-messages'
 import { routeFailoverMessages } from './failover-messages'
 import { routeWorkspaceMessages } from './workspace-messages'
 
 const strings = {
+	routeRecovery: ['Route changes', '路由更改', 'ルートの変更', '경로 변경'],
+	modelRecovery: ['Model changes', '模型更改', 'モデルの変更', '모델 변경'],
 	title: [
 		'Routing pools and targets',
 		'路由池与上游目标',
@@ -418,11 +421,24 @@ const strings = {
 		'서버에서 변경을 확인하고 새로 고쳤습니다.',
 	],
 	writeUnknown: [
-		'The write result is uncertain. No operation will be replayed. Refresh and reconcile before changing anything else.',
-		'写入结果不确定；不会自动重放。请刷新并核对后再操作。',
-		'書き込み結果が不明です。自動再実行はしません。更新して照合してから次の操作を行ってください。',
-		'쓰기 결과를 확인할 수 없습니다. 자동 재실행하지 않습니다. 새로 고침 및 확인 후 계속하세요.',
+		'The write result is unknown and further writes are locked. Review the unknown result before continuing; reloading alone does not unlock writes. The operation is never replayed.',
+		'写入结果未知，后续写入已锁定。请先核对未知结果；仅刷新不会解除保护，也不会重放原操作。',
+		'書き込み結果が不明なため、以降の書き込みをロックしました。結果を確認してください。再読み込みだけでは解除されず、操作も再実行しません。',
+		'쓰기 결과를 알 수 없어 이후 쓰기가 잠겼습니다. 먼저 알 수 없는 결과를 확인하세요. 새로 고침만으로 잠금이 해제되지 않으며 작업을 재실행하지 않습니다.',
 	],
+	writeRejected: [
+		'The server rejected this operation. Close the draft and review the latest server state before starting another operation.',
+		'服务器拒绝了此次操作。请关闭草稿，重新读取并核对最新状态后再操作。',
+		'サーバーが操作を拒否しました。下書きを閉じ、最新の状態を読み直して確認してから、次の操作を行ってください。',
+		'서버가 작업을 거부했습니다. 초안을 닫고 최신 서버 상태를 다시 읽어 확인한 뒤 다음 작업을 시작하세요.',
+	],
+	rejectedDraftHint: [
+		'The server rejected this change. Your draft is preserved. Continue editing to review and correct it before saving again.',
+		'服务器拒绝了此次更改，草稿已保留。请继续编辑，核对并修改后再次保存。',
+		'サーバーが変更を拒否しました。下書きは保持されています。編集を続けて内容を確認・修正してから再保存してください。',
+		'서버가 변경을 거부했습니다. 초안은 유지됩니다. 편집을 계속해 내용을 확인하고 수정한 뒤 다시 저장하세요.',
+	],
+	resumeEditing: ['Continue editing', '继续编辑', '編集を続ける', '편집 계속'],
 	accessDenied: [
 		'Console access changed. Verify your session again.',
 		'控制台权限已变更，请重新验证会话。',
@@ -492,21 +508,25 @@ export const routeMessages: Record<
 > = {
 	en: {
 		...language(0),
+		...routeAdapterMessages(0),
 		...routeWorkspaceMessages(0),
 		...routeFailoverMessages.en,
 	},
 	zh: {
 		...language(1),
+		...routeAdapterMessages(1),
 		...routeWorkspaceMessages(1),
 		...routeFailoverMessages.zh,
 	},
 	ja: {
 		...language(2),
+		...routeAdapterMessages(2),
 		...routeWorkspaceMessages(2),
 		...routeFailoverMessages.ja,
 	},
 	ko: {
 		...language(3),
+		...routeAdapterMessages(3),
 		...routeWorkspaceMessages(3),
 		...routeFailoverMessages.ko,
 	},

@@ -95,6 +95,85 @@ const success = (path: string) =>
 				},
 	})
 
+test('recent failure snippets must belong to the requested inclusive time window', async () => {
+	for (const created_at of [
+		'2026-09-27T23:59:59.999Z',
+		'2026-09-28T08:00:00.001Z',
+	]) {
+		const { api } = fixture(() =>
+			Response.json({
+				success: true,
+				data: {
+					providers: [provider],
+					modelProviders: [],
+					recentErrors: [{ ...recentError, created_at }],
+				},
+			})
+		)
+		await assert.rejects(
+			api.reliability(startUtc, endUtc),
+			(error: unknown) =>
+				error instanceof CinaTokenApiError && error.code === 'invalid-response'
+		)
+	}
+	for (const created_at of [
+		'2026-09-28T00:00:00.000Z',
+		'2026-09-28T08:00:00.000Z',
+	]) {
+		const { api } = fixture(() =>
+			Response.json({
+				success: true,
+				data: {
+					providers: [provider],
+					modelProviders: [],
+					recentErrors: [{ ...recentError, created_at }],
+				},
+			})
+		)
+		assert.equal(
+			(await api.reliability(startUtc, endUtc)).recentErrors[0].created_at,
+			created_at
+		)
+	}
+})
+
+test('request-level failover fields survive safe projection while unknown legacy pairs stay absent', async () => {
+	const { api } = fixture(() =>
+		Response.json({
+			success: true,
+			data: {
+				providers: [
+					{
+						...provider,
+						failover_request_count: 1,
+						failover_request_rate: 50,
+						private_notes: 'PRIVATE',
+					},
+				],
+				modelProviders: [
+					{
+						...modelProvider,
+						failover_request_count: 0,
+						failover_request_rate: 0,
+					},
+				],
+				recentErrors: [],
+			},
+		})
+	)
+	const result = await api.reliability(startUtc, endUtc)
+	assert.equal(result.providers[0].failover_request_count, 1)
+	assert.equal(result.providers[0].failover_request_rate, 50)
+	assert.equal(result.providers[0].failover_rate, 150)
+	assert.equal(result.modelProviders[0].failover_request_rate, 0)
+	assert.equal(JSON.stringify(result).includes('PRIVATE'), false)
+	assert.equal(
+		(await fixture(success).api.reliability(startUtc, endUtc)).providers[0]
+			.failover_request_rate,
+		undefined
+	)
+})
+
 test('reliability uses only same-origin Cookie reads and validates UTC range', async () => {
 	const { api, calls } = fixture(success)
 	const result = await api.reliability(startUtc, endUtc)

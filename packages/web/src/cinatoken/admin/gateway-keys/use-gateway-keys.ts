@@ -8,6 +8,7 @@ import {
 } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { CinaTokenApiError } from '../../api'
+import { useAdminListDisplay } from '../users/use-admin-list-display'
 import type { AdminUsersApi } from '../users/users-api'
 import type { AdminGatewayKeysApi } from './gateway-key-api'
 import { GatewayKeyInputError } from './gateway-key-input'
@@ -20,7 +21,7 @@ import {
 import type { GatewayKeySearch } from './gateway-key-search'
 
 export type GatewayKeysProps = {
-	api: AdminGatewayKeysApi & Pick<AdminUsersApi, 'userCurrency'>
+	api: AdminGatewayKeysApi & Pick<AdminUsersApi, 'userDisplay'>
 	scopeKey: string
 	reconciliationKey: string
 	canWrite: boolean
@@ -79,10 +80,12 @@ export function useGatewayKeys(props: GatewayKeysProps) {
 	)
 	const active = useRef(true)
 	const busyRef = useRef(false)
+	const refreshingRef = useRef(false)
 	const controller = useRef<AbortController | null>(null)
 	const actionRef = useRef<(() => Promise<unknown>) | null>(null)
 	const [writeError, setWriteError] = useState<string | null>(null)
 	const [saved, setSaved] = useState(false)
+	const [refreshing, setRefreshing] = useState(false)
 	const query = useQuery({
 		queryKey: [
 			'cinatoken',
@@ -97,19 +100,13 @@ export function useGatewayKeys(props: GatewayKeysProps) {
 		refetchOnWindowFocus: false,
 		gcTime: 0,
 	})
-	const currencyQuery = useQuery({
-		queryKey: [
-			'cinatoken',
-			'admin',
-			props.scopeKey,
-			'gateway-keys',
-			'currency',
-		],
-		queryFn: ({ signal }) => props.api.userCurrency({ signal }),
+	const displayState = useAdminListDisplay({
+		api: props.api,
+		scopeKey: props.scopeKey,
+		reconciliationKey: props.reconciliationKey,
+		domain: 'gateway-keys',
 		enabled: !blocked,
-		retry: false,
-		refetchOnWindowFocus: false,
-		gcTime: 0,
+		revalidate: props.revalidate,
 	})
 	const mutation = useMutation({
 		mutationKey: [
@@ -160,13 +157,14 @@ export function useGatewayKeys(props: GatewayKeysProps) {
 	const canWrite =
 		writeAuthorized &&
 		writeStatus === 'ready' &&
+		!refreshing &&
 		!query.isFetching &&
 		!query.error &&
 		!mutation.isPending
 	async function perform(
 		action: (signal: AbortSignal) => Promise<unknown>
 	): Promise<Outcome> {
-		if (!canWrite || busyRef.current) return 'rejected'
+		if (!canWrite || busyRef.current || refreshingRef.current) return 'rejected'
 		try {
 			stores.write.markPending(identity)
 		} catch (error) {
@@ -222,15 +220,39 @@ export function useGatewayKeys(props: GatewayKeysProps) {
 			mutation.reset()
 		}
 	}
+	async function refresh(): Promise<void> {
+		if (
+			refreshingRef.current ||
+			busyRef.current ||
+			blocked ||
+			readDenied ||
+			query.isFetching ||
+			displayState.query.isFetching
+		)
+			return
+		refreshingRef.current = true
+		setRefreshing(true)
+		try {
+			await Promise.allSettled([
+				query.refetch({ cancelRefetch: false }),
+				displayState.query.refetch({ cancelRefetch: false }),
+			])
+		} finally {
+			refreshingRef.current = false
+			if (active.current) setRefreshing(false)
+		}
+	}
 	return {
 		query,
 		blocked: blocked || readDenied,
 		canWrite,
 		busy: mutation.isPending,
-		currency:
-			!currencyQuery.isFetching && !currencyQuery.error
-				? (currencyQuery.data?.value ?? null)
-				: null,
+		display: displayState.display,
+		displayQuery: displayState.query,
+		timezone: displayState.display?.timezone ?? null,
+		currency: displayState.display?.currency ?? null,
+		refresh,
+		refreshing,
 		writeStatus,
 		deniedWrite,
 		writeError,

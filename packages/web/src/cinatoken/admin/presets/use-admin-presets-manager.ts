@@ -15,6 +15,7 @@ import {
 } from '../use-domain-write-recovery'
 import {
 	adminPresetAccessLost,
+	adminPresetCanResumeMetadata,
 	adminPresetErrorKey,
 	adminPresetReadFailed,
 	adminPresetWriteUncertain,
@@ -39,7 +40,11 @@ export type AdminPresetChange =
 	| { kind: 'archive' | 'restore' | 'public' | 'private' }
 	| { kind: 'designate'; version: number }
 export type AdminPresetPanel =
-	| { kind: 'metadata'; row: AdminPresetSummary }
+	| {
+			kind: 'metadata'
+			row: AdminPresetSummary
+			patch?: AdminPresetMetadataPatch
+	  }
 	| { kind: 'versions'; row: AdminPresetSummary }
 	| { kind: 'confirm'; row: AdminPresetSummary; change: AdminPresetChange }
 	| null
@@ -94,6 +99,7 @@ export function useAdminPresetsManager(props: AdminPresetsManagerProps) {
 	}
 	const active = useRef(true)
 	const writing = useRef(false)
+	const dispatchAllowed = useRef(false)
 	const controller = useRef<AbortController | null>(null)
 	const current = useRef(props)
 	useLayoutEffect(() => {
@@ -114,7 +120,11 @@ export function useAdminPresetsManager(props: AdminPresetsManagerProps) {
 		domain: 'presets',
 		enabled: props.canWrite,
 		verify: props.api.verifyAdminDomainSubject,
-		observe: props.api.listPresets,
+		observe: async (options) => {
+			const listing = await props.api.listPresetsContext(options)
+			if (!listing.canWrite) throw new AdminDomainWriteError('subject', 403)
+			return listing
+		},
 		onRecovered: recover,
 		onFailure: (failure) => revoke(failure),
 		isWriting: () => writing.current,
@@ -122,12 +132,27 @@ export function useAdminPresetsManager(props: AdminPresetsManagerProps) {
 	const writeUnconfirmed = binding.status !== 'ready'
 	const list = useQuery({
 		queryKey: [...prefix, 'list'],
-		queryFn: ({ signal }) => props.api.listPresets(binding.readOptions(signal)),
+		queryFn: ({ signal }) =>
+			props.api.listPresetsContext(binding.readOptions(signal)),
 		enabled: props.canWrite && !revoked,
 		retry: false,
 		staleTime: 0,
 		refetchOnWindowFocus: false,
 	})
+	const canWrite = props.canWrite && !list.error && list.data?.canWrite === true
+	useLayoutEffect(() => {
+		dispatchAllowed.current = canWrite && !list.isFetching
+	}, [canWrite, list.isFetching])
+	if (
+		list.data?.canWrite === false &&
+		!list.isFetching &&
+		!list.error &&
+		panel !== null &&
+		panel.kind !== 'versions'
+	) {
+		setPanel(null)
+		setVersionTargetId(null)
+	}
 	const versions = useQuery({
 		queryKey: [...prefix, 'versions', versionTargetId],
 		queryFn: ({ signal }) =>
@@ -185,14 +210,15 @@ export function useAdminPresetsManager(props: AdminPresetsManagerProps) {
 		}
 	}, [client, prefix, scope])
 	const hidden =
-		revoked ||
-		!props.canWrite ||
-		Boolean(list.error) ||
-		list.isFetching ||
-		Boolean(versions.error) ||
-		(writeUnconfirmed && !saving)
-	const rows = hidden ? [] : (list.data ?? [])
-	const disabled = hidden || writeUnconfirmed || saving
+		revoked || !props.canWrite || Boolean(list.error) || list.isFetching
+	const rows = hidden ? [] : (list.data?.rows ?? [])
+	const disabled = hidden || !canWrite || writeUnconfirmed || saving
+	const canResumeMetadata =
+		!disabled &&
+		panel?.kind === 'confirm' &&
+		panel.change.kind === 'metadata' &&
+		rows.some((row) => row === panel.row) &&
+		adminPresetCanResumeMetadata(error)
 	function clearDrafts(): void {
 		setPanel(null)
 		setVersionTargetId(null)
@@ -217,19 +243,32 @@ export function useAdminPresetsManager(props: AdminPresetsManagerProps) {
 		})
 	}
 	function openMetadata(row: AdminPresetSummary): void {
-		if (disabled || !rows.some((item) => item === row)) return
+		if (disabled || writing.current || !rows.some((item) => item === row))
+			return
 		setError(null)
 		setNotice(false)
 		setPanel({ kind: 'metadata', row })
 	}
 	function openVersions(row: AdminPresetSummary): void {
-		if (hidden || saving || !rows.some((item) => item === row)) return
+		if (
+			hidden ||
+			saving ||
+			writing.current ||
+			!rows.some((item) => item === row)
+		)
+			return
 		setError(null)
 		setVersionTargetId(row.id)
 		setPanel({ kind: 'versions', row })
 	}
 	function stage(row: AdminPresetSummary, change: AdminPresetChange): void {
-		if (disabled || !rows.some((item) => item === row)) return
+		if (
+			disabled ||
+			writing.current ||
+			error != null ||
+			!rows.some((item) => item === row)
+		)
+			return
 		if (
 			change.kind === 'designate' &&
 			(row.status !== 'active' ||
@@ -243,9 +282,21 @@ export function useAdminPresetsManager(props: AdminPresetsManagerProps) {
 	function close(): void {
 		if (!writing.current) clearDrafts()
 	}
+	function resumeMetadata(): void {
+		if (
+			!isCurrent() ||
+			!canResumeMetadata ||
+			panel?.kind !== 'confirm' ||
+			panel.change.kind !== 'metadata'
+		)
+			return
+		setPanel({ kind: 'metadata', row: panel.row, patch: panel.change.patch })
+		setError(null)
+	}
 	async function confirm(): Promise<void> {
 		if (
 			disabled ||
+			error != null ||
 			writing.current ||
 			!isCurrent() ||
 			binding.status !== 'ready' ||
@@ -259,6 +310,7 @@ export function useAdminPresetsManager(props: AdminPresetsManagerProps) {
 		writing.current = true
 		binding.resetDispatch()
 		setSaving(true)
+		setNotice(false)
 		setError(null)
 		setBlockedError(null)
 		try {
@@ -266,7 +318,7 @@ export function useAdminPresetsManager(props: AdminPresetsManagerProps) {
 			const options = {
 				...writeOptions,
 				onDispatch: (operation: string) => {
-					if (!isCurrent() || abort.signal.aborted)
+					if (!isCurrent() || abort.signal.aborted || !dispatchAllowed.current)
 						throw new AdminDomainWriteError('subject', 401)
 					writeOptions.onDispatch?.(operation)
 				},
@@ -307,7 +359,11 @@ export function useAdminPresetsManager(props: AdminPresetsManagerProps) {
 				}
 			}
 			setError(writeError)
-			if (adminPresetWriteUncertain(writeError)) {
+			if (
+				adminPresetWriteUncertain(writeError) ||
+				(writeError instanceof AdminDomainWriteError &&
+					writeError.code === 'subject')
+			) {
 				setPanel(null)
 				setVersionTargetId(null)
 			}
@@ -339,6 +395,9 @@ export function useAdminPresetsManager(props: AdminPresetsManagerProps) {
 		error,
 		reconciliationError: blockedError,
 		writeUnconfirmed,
+		canWrite,
+		canResumeMetadata,
+		resumeMetadata,
 		hidden,
 		revoked,
 		disabled,

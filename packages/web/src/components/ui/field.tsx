@@ -17,10 +17,11 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 For commercial licensing, please contact support@cinagroup.com
 */
 import { useMemo } from 'react'
+import type * as React from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
-import { cn } from '@/lib/utils'
-import { Label } from '@/components/ui/label'
-import { Separator } from '@/components/ui/separator'
+import { cn } from '../../lib/utils'
+import { Label } from './label'
+import { Separator } from './separator'
 
 function FieldSet({ className, ...props }: React.ComponentProps<'fieldset'>) {
 	return (

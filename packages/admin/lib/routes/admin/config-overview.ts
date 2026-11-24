@@ -14,6 +14,17 @@ import {
 	ALERT_WEBHOOK_FEISHU_URL_KEY,
 	ALERT_WEBHOOK_WECOM_URL_KEY,
 } from "@octafuse/core/lib/alert-webhook-system-config";
+import {
+	DEFAULT_USER_CHARGED_COST_FACTOR_MODE,
+	USER_CHARGED_COST_FACTOR_MODE_KEY,
+	isUserChargedCostFactorMode,
+} from "@octafuse/core/lib/user-charged-cost-factor-mode";
+import {
+	STREAM_FIRST_EVENT_TIMEOUT_MS_KEY,
+	STREAM_FIRST_EVENT_TIMEOUT_ROUTE_GROUPS_KEY,
+	timeoutMsConfigValue,
+	timeoutRouteGroupsConfigValue,
+} from "@octafuse/core/lib/stream-first-event-timeout-config";
 import type { AdminPrincipal } from "@/lib/admin-principal";
 import { hasAdminPermission } from "@/lib/admin-principal";
 
@@ -50,17 +61,35 @@ function routeStrategy(raw: string | null): {
 /** A fixed-key projection for browser state; raw webhook URLs never leave this function. */
 export async function loadAdminConfigOverview(
 	repos: GatewayRepositories,
-	principal: AdminPrincipal
+	principal: AdminPrincipal,
 ) {
-	const [timezoneRow, currencyRow, strategyRow, wecomRow, feishuRow] =
-		await Promise.all([
-			repos.systemConfig.getConfigSnapshot("BUSINESS_TIMEZONE"),
-			repos.systemConfig.getConfigSnapshot("BILLING_CURRENCY"),
-			repos.systemConfig.getConfigSnapshot(ROUTE_STRATEGY_KEY),
-			repos.systemConfig.getConfigSnapshot(ALERT_WEBHOOK_WECOM_URL_KEY),
-			repos.systemConfig.getConfigSnapshot(ALERT_WEBHOOK_FEISHU_URL_KEY),
-		]);
+	const [
+		timezoneRow,
+		currencyRow,
+		strategyRow,
+		wecomRow,
+		feishuRow,
+		factorModeRow,
+		timeoutMsRow,
+		timeoutGroupsRow,
+	] = await Promise.all([
+		repos.systemConfig.getConfigSnapshot("BUSINESS_TIMEZONE"),
+		repos.systemConfig.getConfigSnapshot("BILLING_CURRENCY"),
+		repos.systemConfig.getConfigSnapshot(ROUTE_STRATEGY_KEY),
+		repos.systemConfig.getConfigSnapshot(ALERT_WEBHOOK_WECOM_URL_KEY),
+		repos.systemConfig.getConfigSnapshot(ALERT_WEBHOOK_FEISHU_URL_KEY),
+		repos.systemConfig.getConfigSnapshot(USER_CHARGED_COST_FACTOR_MODE_KEY),
+		repos.systemConfig.getConfigSnapshot(STREAM_FIRST_EVENT_TIMEOUT_MS_KEY),
+		repos.systemConfig.getConfigSnapshot(
+			STREAM_FIRST_EVENT_TIMEOUT_ROUTE_GROUPS_KEY,
+		),
+	]);
 	const timezone = resolveBusinessTimezoneConfiguration(timezoneRow.value);
+	const modeRaw = (factorModeRow.value ?? "").trim().toLowerCase();
+	const modeValid = isUserChargedCostFactorMode(modeRaw);
+	let modeSource: ConfigSource = "configured";
+	if (!modeRaw) modeSource = "missing";
+	else if (!modeValid) modeSource = "invalid";
 	return {
 		businessTimezone: {
 			value: timezone.businessTimezone,
@@ -74,6 +103,19 @@ export async function loadAdminConfigOverview(
 		routeStrategy: {
 			...routeStrategy(strategyRow.value),
 			revision: strategyRow.revision,
+		},
+		userChargedCostFactorMode: {
+			value: modeValid ? modeRaw : DEFAULT_USER_CHARGED_COST_FACTOR_MODE,
+			source: modeSource,
+			revision: factorModeRow.revision,
+		},
+		streamFirstEventTimeoutMs: {
+			...timeoutMsConfigValue(timeoutMsRow.value),
+			revision: timeoutMsRow.revision,
+		},
+		streamFirstEventTimeoutRouteGroups: {
+			...timeoutRouteGroupsConfigValue(timeoutGroupsRow.value),
+			revision: timeoutGroupsRow.revision,
 		},
 		webhooks: {
 			wecom: {

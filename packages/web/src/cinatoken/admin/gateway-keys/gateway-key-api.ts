@@ -20,6 +20,7 @@ import {
 	gatewayKeysListPath,
 	type GatewayKeySearch,
 } from './gateway-key-search'
+import { rateLimitEquals, rateLimitWriteSchema } from './rate-limit'
 
 export function createAdminGatewayKeysApi(transport: UsersTransport) {
 	function path(id: string): string {
@@ -132,6 +133,9 @@ export function createAdminGatewayKeysApi(transport: UsersTransport) {
 			input: GatewayKeyPatch,
 			options: UsersRequestOptions = {}
 		): Promise<GatewayKeyRow> {
+			const rate = rateLimitWriteSchema.optional().safeParse(input.rate_limit)
+			if (!rate.success) transport.invalidResponse()
+			const expectedRate = rate.data
 			if (!gatewayKeyRevisionSchema.safeParse(input.expected_revision).success)
 				transport.invalidResponse()
 			try {
@@ -144,6 +148,8 @@ export function createAdminGatewayKeysApi(transport: UsersTransport) {
 				options.signal?.throwIfAborted()
 				ownership(result.data, expected)
 				if (
+					(expectedRate !== undefined &&
+						!rateLimitEquals(result.data.rate_limit, expectedRate)) ||
 					(input.name !== undefined && result.data.name !== input.name) ||
 					(input.status !== undefined && result.data.status !== input.status)
 				)

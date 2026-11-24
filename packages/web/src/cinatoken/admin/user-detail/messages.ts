@@ -1,5 +1,10 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
+import { factorCompatibilityStrings } from './factor-compatibility-messages'
+import { walletCreditStrings } from './wallet-credit-messages'
+
 const strings = {
+	...factorCompatibilityStrings,
+	...walletCreditStrings,
 	title: ['User detail', '用户详情', 'ユーザー詳細', '사용자 상세'],
 	back: ['Back to users', '返回用户列表', 'ユーザー一覧へ', '사용자 목록으로'],
 	refresh: ['Refresh', '刷新', '更新', '새로 고침'],
@@ -89,6 +94,44 @@ const strings = {
 	],
 	profile: ['Profile', '资料', 'プロフィール', '프로필'],
 	budget: ['Budget', '预算', '予算', '예산'],
+	wallet: ['Permanent wallet', '永久额度', '永久残高', '영구 한도'],
+	walletBalance: [
+		'Current wallet balance',
+		'当前永久余额',
+		'現在の永久残高',
+		'현재 영구 잔액',
+	],
+	walletGranted: ['Total granted', '累计发放', '累計付与額', '누적 지급액'],
+	walletSpent: [
+		'Total wallet spending',
+		'永久额度累计消费',
+		'永久残高の累計使用額',
+		'영구 한도 누적 사용액',
+	],
+	walletReason: [
+		'Reason for wallet correction',
+		'永久额度更正原因',
+		'永久残高の修正理由',
+		'영구 한도 수정 사유',
+	],
+	walletHint: [
+		'Permanent credit does not reset with the period. These cumulative values are for reconciliation; enter a reason when correcting them.',
+		'永久额度不随周期重置。累计值用于对账，更正时必须填写原因。',
+		'永久残高は期間更新でリセットされません。累計値の照合・修正には理由が必要です。',
+		'영구 한도는 주기마다 초기화되지 않습니다. 누적 값 대조 및 수정 시 사유를 입력하세요.',
+	],
+	walletUnavailable: [
+		'This server did not return a complete wallet ledger. Wallet editing is unavailable.',
+		'当前服务未返回完整永久额度明细，暂不可编辑。',
+		'サーバーから完全な永久残高明細を取得できず、編集できません。',
+		'서버에서 전체 영구 한도 내역을 반환하지 않아 편집할 수 없습니다.',
+	],
+	walletTransition: [
+		'Permanent credit is preserved by this period change.',
+		'本次周期切换保留永久额度。',
+		'この期間変更では永久残高を維持します。',
+		'이번 주기 변경은 영구 한도를 유지합니다.',
+	],
 	email: ['Email', '邮箱', 'メール', '이메일'],
 	status: ['Status', '状态', '状態', '상태'],
 	active: ['Active', '启用', '有効', '활성'],

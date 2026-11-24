@@ -106,3 +106,31 @@ test('key rows require immutable ownership and reject invalid timestamps before 
 		)
 	}
 })
+
+test('last usage keeps recorded instants, no record and legacy missing values distinct', () => {
+	for (const value of ['2026-10-23T16:00:00.000Z', '2026-10-23 16:00:00']) {
+		assert.equal(
+			userDetailKeySchema.parse({ ...row, last_used_at: value }).last_used_at,
+			'2026-10-23T16:00:00.000Z'
+		)
+	}
+	assert.equal(userDetailKeySchema.parse(row).last_used_at, null)
+	const { last_used_at: ignored, ...legacy } = row
+	assert.equal(ignored, null)
+	assert.equal(userDetailKeySchema.parse(legacy).last_used_at, undefined)
+})
+
+test('invalid last usage cannot masquerade as missing or fall back to creation', () => {
+	for (const value of [
+		'',
+		0,
+		'2026-02-30 16:00:00',
+		'2026-10-23T16:00:00+08:00',
+		'not-a-date',
+	]) {
+		assert.equal(
+			userDetailKeySchema.safeParse({ ...row, last_used_at: value }).success,
+			false
+		)
+	}
+})

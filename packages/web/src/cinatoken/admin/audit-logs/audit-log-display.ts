@@ -1,9 +1,11 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
+import { cleanLogDate, safeLogText } from '../request-logs/request-log-domain'
 import {
-	cleanLogDate,
-	safeLogJson,
-	safeLogText,
-} from '../request-logs/request-log-domain'
+	asLogJsonObject,
+	formatLogJson,
+	parseSafeLogJson,
+	type LogJsonValue,
+} from '../request-logs/safe-log-json'
 import type { AuditLog } from './audit-log-contracts'
 
 const budgetFields = new Set([
@@ -213,8 +215,24 @@ export type AuditDiff = {
 	before: string
 	after: string
 }
+function diffObject(
+	raw: string | null | undefined
+): Record<string, LogJsonValue> | null {
+	if (!raw?.trim()) return null
+	try {
+		return asLogJsonObject(parseSafeLogJson(raw))
+	} catch {
+		return null
+	}
+}
+function diffField(
+	object: Record<string, LogJsonValue> | null,
+	key: string
+): LogJsonValue | undefined {
+	return object && Object.hasOwn(object, key) ? object[key] : undefined
+}
 function displayValue(
-	value: unknown,
+	value: LogJsonValue | undefined,
 	field: string,
 	missing: string,
 	nullValue: string
@@ -223,21 +241,26 @@ function displayValue(
 	if (value === null) return nullValue
 	if (sensitiveField.test(field)) return '[redacted]'
 	if (typeof value === 'string') return safeLogText(value)
-	if (typeof value === 'number' || typeof value === 'boolean')
-		return String(value)
-	return safeLogJson(JSON.stringify(value)) ?? missing
+	return formatLogJson(value)
 }
 function addDiff(
 	rows: AuditDiff[],
 	group: AuditDiff['group'],
 	field: string,
-	before: unknown,
-	after: unknown,
+	before: LogJsonValue | undefined,
+	after: LogJsonValue | undefined,
 	missing: string,
 	nullValue: string
 ): void {
-	const b = displayValue(before, field, missing, nullValue)
-	const a = displayValue(after, field, missing, nullValue)
+	let b = displayValue(before, field, missing, nullValue)
+	let a = displayValue(after, field, missing, nullValue)
+	if (b === a && !sensitiveField.test(field)) {
+		// Preserve ordinary text, but make a type change visible when its labels collide.
+		if (typeof before === 'string' && typeof after !== 'string')
+			b = formatLogJson(before, false)
+		if (typeof after === 'string' && typeof before !== 'string')
+			a = formatLogJson(after, false)
+	}
 	if (b !== a) rows.push({ group, field, before: b, after: a })
 }
 export function auditDiffs(
@@ -245,12 +268,12 @@ export function auditDiffs(
 	missing: string,
 	nullValue: string
 ): AuditDiff[] {
-	const before = objectFromJson(item.before_user_snapshot)
-	const after = objectFromJson(item.after_user_snapshot)
-	const payload = objectFromJson(item.change_payload)
+	const before = diffObject(item.before_user_snapshot)
+	const after = diffObject(item.after_user_snapshot)
+	const payload = diffObject(item.change_payload)
 	let changed: unknown = null
 	try {
-		changed = item.changed_fields ? JSON.parse(item.changed_fields) : null
+		changed = item.changed_fields ? parseSafeLogJson(item.changed_fields) : null
 	} catch {
 		// Fall back to the key union for older audit rows.
 	}
@@ -272,8 +295,8 @@ export function auditDiffs(
 			rows,
 			'snapshot',
 			key,
-			before?.[key],
-			after?.[key],
+			diffField(before, key),
+			diffField(after, key),
 			missing,
 			nullValue
 		)
@@ -293,14 +316,17 @@ export function auditDiffs(
 				].includes(key)
 			)
 				continue
-			if (
-				value &&
-				typeof value === 'object' &&
-				!Array.isArray(value) &&
-				('from' in value || 'to' in value)
-			) {
-				const pair = value as Record<string, unknown>
-				addDiff(rows, 'payload', key, pair.from, pair.to, missing, nullValue)
+			const pair = asLogJsonObject(value)
+			if (pair && (Object.hasOwn(pair, 'from') || Object.hasOwn(pair, 'to'))) {
+				addDiff(
+					rows,
+					'payload',
+					key,
+					diffField(pair, 'from'),
+					diffField(pair, 'to'),
+					missing,
+					nullValue
+				)
 			} else if (
 				key.startsWith('before_') &&
 				Object.hasOwn(payload, `after_${key.slice(7)}`)

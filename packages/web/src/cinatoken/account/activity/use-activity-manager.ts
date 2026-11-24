@@ -20,6 +20,7 @@ export type ActivityAccessFailure =
 export type SelectedActivityGeneration = {
 	id: string
 	chargedCost: number
+	chargedWalletCost?: number | null
 	billingCurrency: string
 }
 type ExportNotice = { rowCount: number; total: number; truncated: boolean }
@@ -136,6 +137,11 @@ export function useActivityManager(scope: ActivityScope) {
 					setPage((current) => Math.min(current, data.pagination.totalPages))
 				}
 				if (event.action.type !== 'error') return
+				if (
+					queryClient.getQueryCache().find({ queryKey, exact: true }) ===
+					event.query
+				)
+					setSelected(null)
 				const failure = activityAccessFailure(event.query.state.error)
 				if (!failure) return
 				setBlocked(failure)
@@ -228,6 +234,7 @@ export function useActivityManager(scope: ActivityScope) {
 			setSelected({
 				id: row.id,
 				chargedCost: row.chargedCost,
+				chargedWalletCost: row.chargedWalletCost,
 				billingCurrency: query.data.billingCurrency,
 			})
 		},

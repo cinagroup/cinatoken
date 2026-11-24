@@ -29,6 +29,7 @@ export function GatewayKeyEditDialog(props: {
 	scopeKey: string
 	reconciliationKey: string
 	currency: 'USD' | 'CNY' | null
+	timezone: string | null
 	guardrailBlocked: boolean
 	onGuardrailDenied: () => void
 	busy: boolean
@@ -88,6 +89,7 @@ export function GatewayKeyEditDialog(props: {
 				})}
 				scopeKey={props.scopeKey}
 				currency={props.currency}
+				timezone={props.timezone}
 				guardrailBlocked={props.guardrailBlocked}
 				onGuardrailDenied={props.onGuardrailDenied}
 				busy={props.busy}

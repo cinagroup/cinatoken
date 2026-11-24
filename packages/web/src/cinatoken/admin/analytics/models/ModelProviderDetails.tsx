@@ -1,6 +1,8 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
+import { ProviderDimensionInfo } from '../providers/ProviderDimensionInfo'
+import type { AnalyticsProviderDirectory } from '../providers/analytics-provider-directory'
 import { ModelMetricCells } from './ModelMetricCells'
 import type {
 	ModelAnalyticsRow,
@@ -13,14 +15,19 @@ import {
 } from './model-analytics-domain'
 
 const prefix = 'cinatoken.adminModelAnalytics.'
-const detailKeys = modelSortKeys.filter(
-	(key) =>
-		key !== 'route_group' &&
-		key !== 'avg_upstream_response_ms' &&
-		key !== 'avg_attempts'
-)
+const detailKeys: string[] = [
+	...modelSortKeys.filter(
+		(key) =>
+			key !== 'route_group' &&
+			key !== 'avg_upstream_response_ms' &&
+			key !== 'avg_attempts'
+	),
+]
+detailKeys.splice(1, 0, 'provider_kind')
 
 export function ModelProviderDetails(props: {
+	directory?: AnalyticsProviderDirectory
+	colSpan?: number
 	row: ModelAnalyticsRow
 	range: { startUtc: string; endUtc: string }
 	detail: ModelProviderRow[] | undefined
@@ -36,7 +43,7 @@ export function ModelProviderDetails(props: {
 	if (props.error)
 		return (
 			<tr className='bg-primary/5'>
-				<td colSpan={17} className='p-4'>
+				<td colSpan={props.colSpan ?? modelSortKeys.length} className='p-4'>
 					<div role='alert' className='space-y-2'>
 						<p>{t(prefix + 'detailFailed')}</p>
 						<Button
@@ -54,7 +61,7 @@ export function ModelProviderDetails(props: {
 	if (props.loading || !props.detail)
 		return (
 			<tr className='bg-primary/5'>
-				<td colSpan={17} className='p-4'>
+				<td colSpan={props.colSpan ?? modelSortKeys.length} className='p-4'>
 					<p role='status'>{t(prefix + 'loadingProviders')}</p>
 				</td>
 			</tr>
@@ -62,16 +69,16 @@ export function ModelProviderDetails(props: {
 	if (props.detail.length === 0)
 		return (
 			<tr className='bg-primary/5'>
-				<td colSpan={17} className='p-4'>
+				<td colSpan={props.colSpan ?? modelSortKeys.length} className='p-4'>
 					<p>{t(prefix + 'noProviders')}</p>
 				</td>
 			</tr>
 		)
 	return (
 		<tr className='bg-primary/5'>
-			<td colSpan={17} className='p-4'>
-				<div className='bg-background overflow-x-auto rounded-lg border'>
-					<table className='w-full min-w-[1400px] text-left text-sm'>
+			<td colSpan={props.colSpan ?? modelSortKeys.length} className='p-4'>
+				<div className='bg-background w-0 min-w-full overflow-x-auto rounded-lg border'>
+					<table className='w-full min-w-[1700px] text-left text-sm'>
 						<thead className='bg-muted/60 text-muted-foreground border-b text-xs'>
 							<tr>
 								{detailKeys.map((key) => (
@@ -88,7 +95,7 @@ export function ModelProviderDetails(props: {
 						<tbody className='divide-y'>
 							{props.detail.map((provider) => (
 								<tr key={provider.provider_id}>
-									<td className='px-3 py-3 break-all'>
+									<td className='min-w-48 px-3 py-3 break-all'>
 										{props.logsAllowed ? (
 											<a
 												className='text-primary hover:underline'
@@ -99,6 +106,13 @@ export function ModelProviderDetails(props: {
 										) : (
 											(provider.provider_name ?? provider.provider_id)
 										)}
+									</td>
+									<td className='px-3 py-3'>
+										<ProviderDimensionInfo
+											providerId={provider.provider_id}
+											directory={props.directory}
+											locale={props.locale}
+										/>
 									</td>
 									<ModelMetricCells
 										row={provider}

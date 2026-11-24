@@ -6,6 +6,7 @@ import type { AdminPrincipal } from "@/lib/admin-principal";
 import { createAdminApp } from "@/lib/admin-app";
 import { protectAdminConfigResponse } from "@/lib/admin-config-cache";
 import { projectAdminRequestLogDetail } from "./request-log-detail-service";
+import { listAdminGlobalRequestLogsService } from "./dashboard-service";
 
 const row = (extra: Record<string, unknown> = {}): RequestLogRow =>
 	({
@@ -34,6 +35,7 @@ const row = (extra: Record<string, unknown> = {}): RequestLogRow =>
 		metered_cost: 0.01,
 		standard_cost: 0.02,
 		charged_cost: 0.03,
+		charged_wallet_cost: 0.02,
 		route_group: "shared-pool",
 		status: "success",
 		latency_ms: 100,
@@ -54,6 +56,7 @@ const row = (extra: Record<string, unknown> = {}): RequestLogRow =>
 		provider_key_fingerprint: "f".repeat(64),
 		upstream_request_id: "upstream-request-1",
 		upstream_message_id: "message-1",
+		ingress_host: "Gateway.Example.test:8443",
 		billing_kind: "tokens",
 		input_image_count: 0,
 		output_image_count: 0,
@@ -61,7 +64,7 @@ const row = (extra: Record<string, unknown> = {}): RequestLogRow =>
 		audio_characters: null,
 		created_at: "2026-09-30 01:02:03.123456+00",
 		...extra,
-	} as RequestLogRow);
+	}) as RequestLogRow;
 const named: AdminPrincipal = {
 	type: "api_key",
 	id: "admin_key:reader",
@@ -74,10 +77,15 @@ function fixture(
 		result?: RequestLogRow | null;
 		missing?: boolean;
 		fail?: boolean;
-	} = {}
+		failList?: boolean;
+	} = {},
 ) {
+	const failList = options.failList;
 	const reads: string[] = [];
 	let ordinaryReads = 0;
+	const listOptions: Array<
+		Parameters<GatewayRepositories["requestLogs"]["getRequestLogs"]>[0]
+	> = [];
 	const repositories = {
 		requestLogs: {
 			getAdminRequestLogById: options.missing
@@ -86,9 +94,15 @@ function fixture(
 						reads.push(id);
 						if (options.fail) throw new Error("private SQL sk-sensitive-value");
 						return options.result === undefined ? row() : options.result;
-				  },
-			getRequestLogs: async () => {
+					},
+			getRequestLogs: async (
+				options: Parameters<
+					GatewayRepositories["requestLogs"]["getRequestLogs"]
+				>[0],
+			) => {
+				listOptions.push(options);
 				ordinaryReads++;
+				if (failList) throw new Error("private SQL sk-sensitive-value");
 				return { logs: [], total: 0 };
 			},
 		},
@@ -96,15 +110,18 @@ function fixture(
 	const bindings = {
 		STORAGE_CONTEXT: { repositories },
 		ADMIN_PRINCIPAL:
-			options.principal === undefined ? named : options.principal ?? undefined,
+			options.principal === undefined
+				? named
+				: (options.principal ?? undefined),
 	} as unknown as AdminBindings;
 	return {
 		reads,
+		listOptions,
 		ordinaryReads: () => ordinaryReads,
 		request: (
 			path = "/admin/request-logs/request-1",
 			method = "GET",
-			body?: string
+			body?: string,
 		) =>
 			createAdminApp().request(
 				path,
@@ -118,9 +135,9 @@ function fixture(
 									"Content-Type": "application/json",
 									"Content-Length": String(Buffer.byteLength(body)),
 								},
-						  }),
+							}),
 				},
-				bindings
+				bindings,
 			),
 	};
 }
@@ -137,6 +154,8 @@ test("exact logs.read lookup returns a safe whitelist including Shared Key ID wi
 	assert.equal(data.id, "request-1");
 	assert.equal(data.provider_key_id, "sharedkey:key-1");
 	assert.equal(data.api_key_id, "gateway-key-1");
+	assert.equal(data.charged_wallet_cost, 0.02);
+	assert.equal(data.ingress_host, "Gateway.Example.test:8443");
 	assert.equal(data.created_at, "2026-09-30T01:02:03.123Z");
 	for (const field of [
 		"request_body",
@@ -200,20 +219,22 @@ test("future fields and free text secret patterns cannot leak through the detail
 			provider_name: "sk-sensitive-value",
 			model_name: "f".repeat(64),
 			upstream_request_id: "Bearer sk-secret",
+			ingress_host: "sk-sensitive-value",
 		}),
-		"request-1"
+		"request-1",
 	);
 	assert.ok(!Object.hasOwn(safe, "futureSecret"));
 	assert.ok(!Object.hasOwn(safe, "request_headers"));
 	assert.equal(safe.provider_name, "[redacted]");
 	assert.equal(safe.model_name, "[redacted]");
 	assert.equal(safe.upstream_request_id, "[redacted]");
+	assert.equal(safe.ingress_host, "[redacted]");
 });
 
 test("required counters/cost/calendar drift fails closed while safe SQL decimal costs are normalized", () => {
 	const projected = projectAdminRequestLogDetail(
 		row({ metered_cost: "0.010000", created_at: "2026-09-30 01:02:03" }),
-		"request-1"
+		"request-1",
 	);
 	assert.equal(projected.metered_cost, 0.01);
 	assert.equal(projected.created_at, "2026-09-30T01:02:03.000Z");
@@ -233,7 +254,7 @@ test("ordinary list semantics remain unchanged and new detail never interprets l
 	assert.equal(
 		(await f.request("/admin/request-logs?api_key_id=gateway-key-1&page=2"))
 			.status,
-		200
+		200,
 	);
 	assert.equal(f.ordinaryReads(), 1);
 	assert.equal(f.reads.length, 0);
@@ -247,7 +268,7 @@ test("request-log child preflight/body-limit/setup failures retain private no-st
 	const oversized = await f.request(
 		"/admin/request-logs/request-1",
 		"POST",
-		JSON.stringify({ value: "x".repeat(2 * 1024 * 1024) })
+		JSON.stringify({ value: "x".repeat(2 * 1024 * 1024) }),
 	);
 	assert.equal(oversized.status, 413);
 	assert.equal(oversized.headers.get("cache-control"), "private, no-store");
@@ -258,7 +279,7 @@ test("request-log child preflight/body-limit/setup failures retain private no-st
 		const failed = await createAdminApp().request(
 			"/admin/request-logs/request-1",
 			{},
-			{ DATABASE_DRIVER: "invalid" }
+			{ DATABASE_DRIVER: "invalid" },
 		);
 		assert.equal(failed.status, 500);
 		assert.equal(failed.headers.get("cache-control"), "private, no-store");
@@ -279,7 +300,7 @@ test("outer response classification includes all child failures and encoded path
 			const request = new Request(`https://admin.example.test${path}`);
 			const response = Response.json(
 				{ success: false },
-				{ status, headers: { "Cache-Control": "public, max-age=600" } }
+				{ status, headers: { "Cache-Control": "public, max-age=600" } },
 			);
 			assert.equal(protectAdminConfigResponse(request, response), response);
 			assert.equal(response.status, status);
@@ -294,8 +315,279 @@ test("outer response classification includes all child failures and encoded path
 	]) {
 		const response = protectAdminConfigResponse(
 			new Request(`https://admin.example.test${path}`),
-			new Response("", { headers: { "Cache-Control": "public" } })
+			new Response("", { headers: { "Cache-Control": "public" } }),
 		);
 		assert.equal(response.headers.get("cache-control"), "public");
 	}
+});
+
+test("ingress host list filtering preserves case, ports, MCP prefix and existing resource filters", async () => {
+	for (const host of ["Gateway.Example.test:8443", "[2001:db8::1]:8787"]) {
+		const f = fixture();
+		const query = new URLSearchParams({
+			ingress_host: ` ${host} `,
+			page: "2",
+			api_key_id: "key-1",
+			user_id: "user-1",
+			provider_id: "octafuse-mcp",
+			model_id_prefix: "mcp:qa/",
+		});
+		const response = await f.request("/admin/request-logs?" + query);
+		assert.equal(response.status, 200);
+		assert.equal(response.headers.get("cache-control"), "private, no-store");
+		assert.equal(f.listOptions[0].ingressHost, host);
+		assert.deepEqual(
+			(
+				(await response.json()) as {
+					applied_filters: { ingress_host: string; model_id_prefix: string };
+				}
+			).applied_filters,
+			{ ingress_host: host, model_id_prefix: "mcp:qa/" },
+		);
+		assert.equal(f.listOptions[0].providerId, "octafuse-mcp");
+		assert.equal(f.listOptions[0].modelIdPrefix, "mcp:qa/");
+		assert.equal(f.listOptions[0].userId, "user-1");
+		assert.equal(f.listOptions[0].apiKeyId, "key-1");
+		assert.equal(f.listOptions[0].page, 2);
+	}
+});
+
+test("invalid or repeated ingress host cannot silently broaden a list request", async () => {
+	for (const query of [
+		new URLSearchParams({ ingress_host: " " }).toString(),
+		new URLSearchParams({ ingress_host: "a\nb" }).toString(),
+		new URLSearchParams({ ingress_host: "x".repeat(256) }).toString(),
+		"ingress_host=a&ingress_host=b",
+	]) {
+		const f = fixture();
+		const response = await f.request("/admin/request-logs?" + query);
+		assert.equal(response.status, 400);
+		assert.equal(response.headers.get("cache-control"), "private, no-store");
+		assert.equal(f.ordinaryReads(), 0);
+	}
+});
+
+test("omitted and explicitly cleared ingress filters retain legacy list behavior", async () => {
+	for (const query of [
+		"",
+		"?ingress_host=",
+		"?model_id_prefix=",
+		"?ingress_host=&model_id_prefix=",
+	]) {
+		const f = fixture();
+		const response = await f.request("/admin/request-logs" + query);
+		assert.equal(response.status, 200);
+		assert.deepEqual(await response.json(), {
+			success: true,
+			data: [],
+			total: 0,
+			page: 1,
+			page_size: 20,
+		});
+		assert.equal(f.ordinaryReads(), 1);
+		assert.equal(f.listOptions[0].ingressHost, undefined);
+		assert.equal(f.listOptions[0].modelIdPrefix, undefined);
+	}
+});
+
+test("request detail keeps absent and null legacy host snapshots distinct", () => {
+	for (const ingress_host of [undefined, null]) {
+		const safe = projectAdminRequestLogDetail(
+			row({ ingress_host }),
+			"request-1",
+		);
+		assert.equal(safe.ingress_host, ingress_host);
+		assert.equal(Object.hasOwn(safe, "ingress_host"), ingress_host === null);
+	}
+});
+
+test("prefix-only reads acknowledge the normalized literal scope only after the repository succeeds", async () => {
+	for (const prefix of [
+		"mcp:Deep_Wiki%\\目录🧪/",
+		"x".repeat(600),
+		"x' OR 1=1 --",
+	]) {
+		const f = fixture();
+		const query = new URLSearchParams({ model_id_prefix: prefix });
+		const response = await f.request("/admin/request-logs?" + query);
+		assert.equal(response.status, 200);
+		assert.equal(f.listOptions[0].modelIdPrefix, prefix);
+		assert.deepEqual(await response.json(), {
+			success: true,
+			data: [],
+			total: 0,
+			page: 1,
+			page_size: 20,
+			applied_filters: { model_id_prefix: prefix },
+		});
+	}
+	const normalized = fixture();
+	const response = await normalized.request(
+		"/admin/request-logs?" +
+			new URLSearchParams({ model_id_prefix: " mcp:QA/ " }),
+	);
+	assert.equal(normalized.listOptions[0].modelIdPrefix, "mcp:QA/");
+	assert.deepEqual(
+		((await response.json()) as { applied_filters: unknown }).applied_filters,
+		{ model_id_prefix: "mcp:QA/" },
+	);
+	const originalError = console.error;
+	console.error = () => {};
+	try {
+		const failed = fixture({ failList: true });
+		const result = await failed.request(
+			"/admin/request-logs?model_id_prefix=mcp%3AQA%2F&ingress_host=Gateway.Example",
+		);
+		assert.equal(result.status, 500);
+		assert.equal(result.headers.get("cache-control"), "private, no-store");
+		const body = await result.text();
+		assert.ok(!body.includes("applied_filters"));
+		assert.ok(!body.includes("sk-sensitive-value"));
+	} finally {
+		console.error = originalError;
+	}
+});
+
+test("invalid or repeated model prefixes fail before storage rather than widening the query", async () => {
+	for (const query of [
+		...[" ", "a\nb", "x".repeat(601)].map((model_id_prefix) =>
+			new URLSearchParams({ model_id_prefix }).toString(),
+		),
+		"model_id_prefix=mcp:a/&model_id_prefix=mcp:b/",
+		"model_id_prefix=&model_id_prefix=mcp:a/",
+	]) {
+		const f = fixture();
+		const response = await f.request("/admin/request-logs?" + query);
+		assert.equal(response.status, 400);
+		assert.equal(response.headers.get("cache-control"), "private, no-store");
+		assert.equal(f.ordinaryReads(), 0);
+		assert.ok(!Object.hasOwn(await response.json(), "applied_filters"));
+	}
+});
+
+test("provider sets are normalized and acknowledged on empty pages alongside exact-provider and other scopes", async () => {
+	const f = fixture();
+	const query = new URLSearchParams({
+		provider_ids: " octafuse-tools,octafuse-mcp,,octafuse-tools ",
+		provider_id: "octafuse-mcp",
+		model_id_prefix: "mcp:qa/",
+		ingress_host: "Gateway.Example:8443",
+		page: "2",
+		page_size: "50",
+		user_id: "user-1",
+		api_key_id: "key-1",
+	});
+	const response = await f.request("/admin/request-logs?" + query);
+	assert.equal(response.status, 200);
+	assert.equal(response.headers.get("cache-control"), "private, no-store");
+	assert.deepEqual(f.listOptions[0].providerIds, [
+		"octafuse-mcp",
+		"octafuse-tools",
+	]);
+	assert.equal(f.listOptions[0].providerId, "octafuse-mcp");
+	assert.equal(f.listOptions[0].modelIdPrefix, "mcp:qa/");
+	assert.equal(f.listOptions[0].userId, "user-1");
+	assert.equal(f.listOptions[0].apiKeyId, "key-1");
+	assert.deepEqual(await response.json(), {
+		success: true,
+		data: [],
+		total: 0,
+		page: 2,
+		page_size: 50,
+		applied_filters: {
+			ingress_host: "Gateway.Example:8443",
+			model_id_prefix: "mcp:qa/",
+			provider_ids: ["octafuse-mcp", "octafuse-tools"],
+		},
+	});
+});
+
+test("invalid and repeated provider sets fail before storage and cannot broaden the query", async () => {
+	for (const query of [
+		...[
+			" ",
+			",,",
+			"a\nb",
+			"x".repeat(601),
+			",".repeat(6010),
+			Array.from({ length: 11 }, (_, index) => `p${index}`).join(","),
+		].map((provider_ids) => new URLSearchParams({ provider_ids }).toString()),
+		"provider_ids=a&provider_ids=b",
+		"provider_ids=&provider_ids=a",
+	]) {
+		const f = fixture();
+		const response = await f.request("/admin/request-logs?" + query);
+		assert.equal(response.status, 400);
+		assert.equal(response.headers.get("cache-control"), "private, no-store");
+		assert.equal(f.ordinaryReads(), 0);
+		assert.ok(!Object.hasOwn(await response.json(), "applied_filters"));
+	}
+});
+
+test("provider sets keep legacy omission compatible and permission/repository failures unacknowledged", async () => {
+	for (const suffix of ["", "?provider_ids="]) {
+		const f = fixture();
+		const response = await f.request("/admin/request-logs" + suffix);
+		assert.equal(response.status, 200);
+		assert.equal(f.listOptions[0].providerIds, undefined);
+		assert.ok(!Object.hasOwn(await response.json(), "applied_filters"));
+	}
+	for (const principal of [
+		null,
+		{ ...named, permissions: ["analytics.read"] } as AdminPrincipal,
+	]) {
+		const f = fixture({ principal });
+		const response = await f.request(
+			"/admin/request-logs?provider_ids=octafuse-mcp,octafuse-tools",
+		);
+		assert.equal(response.status, principal ? 403 : 401);
+		assert.equal(response.headers.get("cache-control"), "private, no-store");
+		assert.equal(f.ordinaryReads(), 0);
+		assert.ok(!Object.hasOwn(await response.json(), "applied_filters"));
+	}
+	const originalError = console.error;
+	console.error = () => {};
+	try {
+		const f = fixture({ failList: true });
+		const response = await f.request(
+			"/admin/request-logs?provider_ids=octafuse-mcp,octafuse-tools",
+		);
+		assert.equal(response.status, 500);
+		assert.equal(response.headers.get("cache-control"), "private, no-store");
+		const body = await response.text();
+		assert.ok(!body.includes("applied_filters"));
+		assert.ok(!body.includes("sk-sensitive-value"));
+	} finally {
+		console.error = originalError;
+	}
+});
+
+test("provider-set service rejects malformed raw input before reading, including ill-formed UTF16", async () => {
+	let reads = 0;
+	const repositories = {
+		requestLogs: {
+			getRequestLogs: async () => {
+				reads++;
+				return { logs: [], total: 0 };
+			},
+		},
+	} as unknown as GatewayRepositories;
+	for (const provider_ids of [
+		null,
+		123,
+		[],
+		{},
+		"\ud800",
+		"a,\udfff",
+		"a,\tb",
+	]) {
+		await assert.rejects(
+			listAdminGlobalRequestLogsService(repositories, {
+				provider_ids: provider_ids as string,
+			}),
+			(error: unknown) =>
+				error instanceof Error && error.message === "Invalid provider IDs",
+		);
+	}
+	assert.equal(reads, 0);
 });

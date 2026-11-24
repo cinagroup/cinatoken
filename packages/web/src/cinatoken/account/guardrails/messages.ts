@@ -150,6 +150,11 @@ const en = {
 	readonly: 'Read-only policy',
 	editMetadata: 'Edit name and description',
 	metadataSaved: 'Metadata saved',
+	metadataHint: 'Update details for {{name}}.',
+	metadataInvalid:
+		'Enter a name of 1–128 characters and a description of up to 1024 characters.',
+	defaultNameHint: 'Default rule names are fixed.',
+	noChanges: 'No changes to save.',
 	confirm: 'Confirm',
 	confirmChange: 'Confirm policy change',
 	confirmHint:
@@ -222,6 +227,8 @@ const en = {
 	noneSelected: 'Select a policy to inspect versions and assignments.',
 	pricingAsOf:
 		'Price evidence: {{currency}}, evaluated {{time}} ({{timezone}})',
+	previewTimezoneFallback:
+		'Business timezone is unavailable. Evaluation time is shown in UTC.',
 	unknown: 'Unknown',
 	reasons: 'Excluded routes by reason',
 	budgetSource: '{{name}} · {{period}} · {{limit}} {{currency}}',
@@ -378,6 +385,10 @@ const zh = {
 	readonly: '只读规则',
 	editMetadata: '编辑名称和描述',
 	metadataSaved: '信息已保存',
+	metadataHint: '更新 {{name}} 的规则信息。',
+	metadataInvalid: '名称应为 1–128 个字符，说明最多为 1024 个字符。',
+	defaultNameHint: '默认规则的名称不可修改。',
+	noChanges: '没有需要保存的修改。',
 	confirm: '确认',
 	confirmChange: '确认规则变更',
 	confirmHint:
@@ -446,6 +457,7 @@ const zh = {
 	confirmUnbind: '移除 {{scope}} 的绑定？',
 	noneSelected: '选择规则以查看版本和绑定。',
 	pricingAsOf: '价格证据：{{currency}}，评估于 {{time}}（{{timezone}}）',
+	previewTimezoneFallback: '业务时区不可用，评估时间以 UTC 显示。',
 	unknown: '未知',
 	reasons: '排除路由原因',
 	budgetSource: '{{name}} · {{period}} · {{limit}} {{currency}}',
@@ -609,6 +621,11 @@ const ja = {
 	readonly: '読み取り専用ポリシー',
 	editMetadata: '名前と説明を編集',
 	metadataSaved: '情報を保存しました',
+	metadataHint: '{{name}} の情報を更新します。',
+	metadataInvalid:
+		'名前は 1～128 文字、説明は 1024 文字以内で入力してください。',
+	defaultNameHint: '既定ルールの名前は変更できません。',
+	noChanges: '保存する変更はありません。',
 	confirm: '確認',
 	confirmChange: 'ポリシー変更の確認',
 	confirmHint:
@@ -680,6 +697,8 @@ const ja = {
 	confirmUnbind: '{{scope}} の割り当てを解除しますか？',
 	noneSelected: 'バージョンや割り当てを確認するポリシーを選択してください。',
 	pricingAsOf: '価格の証拠：{{currency}}、評価 {{time}}（{{timezone}}）',
+	previewTimezoneFallback:
+		'業務タイムゾーンを利用できないため、評価時刻を UTC で表示します。',
 	unknown: '不明',
 	reasons: 'ルート除外の理由',
 	budgetSource: '{{name}} · {{period}} · {{limit}} {{currency}}',
@@ -840,6 +859,10 @@ const ko = {
 	readonly: '읽기 전용 정책',
 	editMetadata: '이름과 설명 편집',
 	metadataSaved: '정보가 저장되었습니다',
+	metadataHint: '{{name}}의 규칙 정보를 수정합니다.',
+	metadataInvalid: '이름은 1~128자, 설명은 최대 1024자로 입력하세요.',
+	defaultNameHint: '기본 규칙 이름은 변경할 수 없습니다.',
+	noChanges: '저장할 변경 사항이 없습니다.',
 	confirm: '확인',
 	confirmChange: '정책 변경 확인',
 	confirmHint:
@@ -911,6 +934,8 @@ const ko = {
 	confirmUnbind: '{{scope}}의 연결을 해제할까요?',
 	noneSelected: '버전과 연결을 확인할 정책을 선택하세요.',
 	pricingAsOf: '가격 증거: {{currency}}, 평가 {{time}} ({{timezone}})',
+	previewTimezoneFallback:
+		'업무 시간대를 사용할 수 없어 평가 시간을 UTC로 표시합니다.',
 	unknown: '알 수 없음',
 	reasons: '경로 제외 이유',
 	budgetSource: '{{name}} · {{period}} · {{limit}} {{currency}}',

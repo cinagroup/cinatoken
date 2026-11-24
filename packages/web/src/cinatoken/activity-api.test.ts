@@ -183,7 +183,10 @@ test('Activity list preserves the real billing currency, main units and nullable
 	data.pagination.total = 1
 	const api = createCinaTokenApi(
 		transport((path, init) => {
-			assert.equal(path, '/api/user/activity?range=7d&page=1&page_size=20')
+			assert.equal(
+				path,
+				'/api/user/activity?range=7d&page=1&page_size=20&include_wallet=true&include_charge_allocation=true'
+			)
 			assert.equal(init.credentials, 'same-origin')
 			assert.equal(init.cache, 'no-store')
 			assert.equal(
@@ -216,6 +219,8 @@ test('all supported filters and pagination are encoded, with blank filters omitt
 				status: 'cancelled',
 				page: '3',
 				page_size: '100',
+				include_wallet: 'true',
+				include_charge_allocation: 'true',
 			})
 			const data = activityData()
 			data.range.id = '30d'
@@ -429,7 +434,7 @@ test('CSV exports use filter scope, omit pagination and retain BOM in the return
 		transport((path, init) => {
 			assert.equal(
 				path,
-				'/api/user/activity/export.csv?range=7d&model_id=openai%2Ftest'
+				'/api/user/activity/export.csv?range=7d&model_id=openai%2Ftest&include_charge_allocation=true'
 			)
 			assert.equal(new Headers(init.headers).get('Accept'), 'text/csv')
 			assert.equal(
@@ -610,4 +615,20 @@ test('CSV timeouts use the shared transport and never produce a downloadable res
 		api.exportActivityCsv({ ...options, timeoutMs: 1 }),
 		code('timeout')
 	)
+})
+
+test('Activity opts into wallet details while remaining compatible with a legacy response', async () => {
+	let path = ''
+	const api = createCinaTokenApi(
+		transport((url) => {
+			path = url
+			return Response.json({ success: true, data: activityData() })
+		})
+	)
+	const result = await api.activity(options)
+	assert.equal(
+		new URL(path, 'https://test.invalid').searchParams.get('include_wallet'),
+		'true'
+	)
+	assert.equal(result.budget.walletGranted, undefined)
 })

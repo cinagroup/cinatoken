@@ -1,9 +1,11 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
 import type { ModelProviderRow } from '../models/model-analytics-contracts'
 import type { SortDirection } from '../models/model-analytics-domain'
+import type { ProviderDimension } from './provider-dimensions'
 
 export const providerSortKeys = [
 	'provider_name',
+	'provider_kind',
 	'request_count',
 	'input_tokens',
 	'output_tokens',
@@ -17,7 +19,9 @@ export const providerSortKeys = [
 	'avg_effective_ttft_ms',
 	'avg_upstream_response_ms',
 	'tokens_per_second',
+	'stream_tokens_per_second',
 	'failover_rate',
+	'failover_request_rate',
 	'avg_attempts',
 ] as const
 export type ProviderSortKey = (typeof providerSortKeys)[number]
@@ -25,12 +29,27 @@ export type ProviderSortKey = (typeof providerSortKeys)[number]
 export function sortProviderRows(
 	rows: readonly ModelProviderRow[],
 	key: ProviderSortKey,
-	direction: SortDirection
+	direction: SortDirection,
+	dimensions?: ReadonlyMap<string, ProviderDimension>,
+	locale = 'en'
 ): ModelProviderRow[] {
 	const sign = direction === 'asc' ? 1 : -1
 	return rows
 		.map((row, index) => ({ row, index }))
 		.sort((a, b) => {
+			if (key === 'provider_kind') {
+				const left = dimensions?.get(a.row.provider_id)
+				const right = dimensions?.get(b.row.provider_id)
+				const leftKnown = left?.kind !== null && left?.kind !== undefined
+				const rightKnown = right?.kind !== null && right?.kind !== undefined
+				if (leftKnown !== rightKnown) return leftKnown ? -1 : 1
+				if (!leftKnown || !rightKnown) return a.index - b.index
+				const order =
+					left!.label.localeCompare(right!.label, locale, {
+						sensitivity: 'base',
+					}) || left!.key.localeCompare(right!.key)
+				return order === 0 ? a.index - b.index : order * sign
+			}
 			const left =
 				key === 'provider_name'
 					? (a.row.provider_name ?? a.row.provider_id)
@@ -40,10 +59,8 @@ export function sortProviderRows(
 					? (b.row.provider_name ?? b.row.provider_id)
 					: b.row[key]
 			if (left === null || left === undefined)
-				return right === null || right === undefined
-					? a.index - b.index
-					: sign * -1
-			if (right === null || right === undefined) return sign
+				return right === null || right === undefined ? a.index - b.index : 1
+			if (right === null || right === undefined) return -1
 			const order =
 				typeof left === 'number' && typeof right === 'number'
 					? left - right
@@ -121,6 +138,13 @@ export const providerCsvColumns = [
 	'avg_charged_per_request',
 	'range_start_utc',
 	'range_end_utc',
+	'stream_tokens_per_second',
+	'stream_sample_count',
+	'failover_request_count',
+	'failover_request_rate',
+	'provider_kind',
+	'provider_kind_label',
+	'provider_directory_status',
 ] as const
 
 function csvCell(value: string | number | null | undefined): string {
@@ -135,13 +159,18 @@ function csvCell(value: string | number | null | undefined): string {
 export function providerAnalyticsCsv(
 	rows: readonly ModelProviderRow[],
 	range: { startUtc: string; endUtc: string },
-	currency: 'USD' | 'CNY' | null
+	currency: 'USD' | 'CNY' | null,
+	dimensions?: ReadonlyMap<string, ProviderDimension>
 ): string {
 	if (!currency) throw new TypeError('Billing currency unavailable')
 	const lines = [providerCsvColumns.join(',')]
 	for (const row of rows) {
+		const dimension = dimensions?.get(row.provider_id)
 		const record: Record<string, string | number | null | undefined> = {
 			...row,
+			provider_kind: dimension?.kind,
+			provider_kind_label: dimension?.label,
+			provider_directory_status: dimension?.status ?? 'unavailable',
 			range_start_utc: range.startUtc,
 			range_end_utc: range.endUtc,
 		}

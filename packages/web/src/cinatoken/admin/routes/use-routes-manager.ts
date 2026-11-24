@@ -27,6 +27,7 @@ import {
 } from '../use-domain-write-recovery'
 import {
 	routeAccessDenied,
+	routeCanResumeEditor,
 	routeErrorStatus,
 	routeInvalidResponse,
 } from './route-errors'
@@ -63,6 +64,7 @@ type RouteTask = {
 	run: (signal: AbortSignal) => Promise<void>
 	authority: RouteWriteTarget
 	close?: boolean
+	retainPanelOnRejection?: boolean
 }
 
 export function routeErrorObserver(
@@ -95,6 +97,7 @@ export function useRoutesManager(
 		[props.scopeKey, props.canWrite]
 	)
 	const [revoked, setRevoked] = useState(false)
+	const [unavailableError, setUnavailableError] = useState<unknown>(null)
 	const [notice, setNotice] = useState(false)
 	const [panel, setPanel] = useState<
 		'editor' | 'detail' | 'policy' | 'sticky' | 'modelPolicy' | 'confirm' | null
@@ -184,9 +187,12 @@ export function useRoutesManager(
 	}
 	const revoke = useCallback(
 		(error: unknown, key?: readonly unknown[]) => {
-			onClearDrafts?.()
 			const resource = key?.[prefix.length]
-			if (resource !== undefined) {
+			if (
+				resource !== undefined ||
+				(error instanceof AdminDomainWriteError && error.code !== 'rejected')
+			) {
+				onClearDrafts?.()
 				setPanel(null)
 				setSelected(null)
 				setAction(null)
@@ -198,6 +204,7 @@ export function useRoutesManager(
 				routeErrorStatus(error) < 500
 			)
 				return
+			onClearDrafts?.()
 			const ancillary =
 				resource === 'models' ||
 				resource === 'providers' ||
@@ -211,6 +218,7 @@ export function useRoutesManager(
 				// routes.read remains valid; their failed query is the authority.
 				return
 			}
+			setUnavailableError(error)
 			setRevoked(true)
 			setPanel(null)
 			setSelected(null)
@@ -263,18 +271,34 @@ export function useRoutesManager(
 				setNotice(true)
 			} catch (error) {
 				if (active.current) {
-					revoke(error)
-					setPanel(null)
-					setSelected(null)
-					setAction(null)
+					let retainPanel = false
 					if (
 						error instanceof AdminDomainWriteError &&
 						error.code === 'rejected'
-					)
-						(pending.authority.kind === 'model'
-							? modelBinding
-							: binding
-						).settleKnown('definitive-rejection')
+					) {
+						try {
+							const owner =
+								pending.authority.kind === 'model' ? modelBinding : binding
+							owner.settleKnown('definitive-rejection')
+							retainPanel =
+								Boolean(pending.retainPanelOnRejection) &&
+								!routeAccessDenied(error)
+						} catch (settlementError) {
+							onClearDrafts?.()
+							setPanel(null)
+							setSelected(null)
+							setAction(null)
+							revoke(settlementError)
+							throw settlementError
+						}
+					}
+					if (!retainPanel) {
+						onClearDrafts?.()
+						setPanel(null)
+						setSelected(null)
+						setAction(null)
+					}
+					revoke(error)
 				}
 				throw error
 			} finally {
@@ -307,6 +331,7 @@ export function useRoutesManager(
 				: binding.status) !== 'ready'
 		)
 			return
+		setNotice(false)
 		task.current = next
 		const owner = next.authority.kind === 'model' ? modelBinding : binding
 		owner.resetDispatch()
@@ -347,6 +372,7 @@ export function useRoutesManager(
 		controller.current = null
 		task.current = null
 		setRevoked(false)
+		setUnavailableError(null)
 		setPanel(null)
 		setSelected(null)
 		setAction(null)
@@ -387,6 +413,14 @@ export function useRoutesManager(
 			revoke(error)
 		}
 	}
+	const canResumePanel =
+		!disabled &&
+		(panel !== 'modelPolicy' || modelBinding.status === 'ready') &&
+		['editor', 'policy', 'modelPolicy', 'sticky'].includes(panel ?? '') &&
+		routeCanResumeEditor(mutation.error)
+	function resumePanel(): void {
+		if (canResumePanel) mutation.reset()
+	}
 	return {
 		prefix,
 		list,
@@ -402,7 +436,10 @@ export function useRoutesManager(
 		duplicating,
 		rows: hidden || list.error ? [] : (list.data ?? []),
 		hidden,
+		unavailableError,
 		disabled,
+		canResumePanel,
+		resumePanel,
 		writeUnconfirmed,
 		modelWriteUnconfirmed: modelBinding.status !== 'ready',
 		manualRecovery: binding.manualRecovery,

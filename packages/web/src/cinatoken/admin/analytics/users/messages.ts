@@ -1,8 +1,12 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
 import { adminModelAnalyticsMessages } from '../models/messages'
+import { userAnalyticsComparisonMessages } from './comparison-messages'
+import { userAnalyticsCompatibilityMessages } from './compatibility-messages'
 
 const en = {
 	...adminModelAnalyticsMessages.en,
+	...userAnalyticsCompatibilityMessages.en,
+	...userAnalyticsComparisonMessages.en,
 	title: 'User analytics',
 	subtitle:
 		'Usage and cost grouped by request-log email for the selected range.',
@@ -35,6 +39,8 @@ const en = {
 }
 const zh: typeof en = {
 	...adminModelAnalyticsMessages.zh,
+	...userAnalyticsCompatibilityMessages.zh,
+	...userAnalyticsComparisonMessages.zh,
 	title: '用户分析',
 	subtitle: '按请求日志邮箱汇总所选时段的用量与成本。',
 	loading: '正在加载用户分析…',
@@ -65,6 +71,8 @@ const zh: typeof en = {
 }
 const ja: typeof en = {
 	...adminModelAnalyticsMessages.ja,
+	...userAnalyticsCompatibilityMessages.ja,
+	...userAnalyticsComparisonMessages.ja,
 	title: 'ユーザー分析',
 	subtitle:
 		'選択期間の使用量とコストをリクエストログのメールアドレス別に集計します。',
@@ -97,6 +105,8 @@ const ja: typeof en = {
 }
 const ko: typeof en = {
 	...adminModelAnalyticsMessages.ko,
+	...userAnalyticsCompatibilityMessages.ko,
+	...userAnalyticsComparisonMessages.ko,
 	title: '사용자 분석',
 	subtitle: '선택 기간의 사용량과 비용을 요청 로그 이메일별로 집계합니다.',
 	loading: '사용자 분석을 불러오는 중…',

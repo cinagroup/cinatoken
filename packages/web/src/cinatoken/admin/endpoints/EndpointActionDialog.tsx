@@ -10,7 +10,7 @@ import {
 	DialogTitle,
 } from '../../../components/ui/dialog'
 import type { AdminEndpoint } from '../endpoint-contracts'
-import { endpointErrorKey } from './endpoint-errors'
+import { EndpointWriteFeedback } from './EndpointWriteFeedback'
 
 const prefix = 'cinatoken.adminEndpoints.'
 
@@ -45,12 +45,7 @@ export function EndpointActionDialog(props: {
 						{t(prefix + 'publishRequirements')}
 					</p>
 				)}
-				{props.error != null && (
-					<div role='alert' className='text-destructive space-y-2 text-sm'>
-						<p>{t(endpointErrorKey(props.error))}</p>
-						<p>{t(prefix + 'writeUnknown')}</p>
-					</div>
-				)}
+				<EndpointWriteFeedback error={props.error} />
 				<DialogFooter>
 					<Button
 						type='button'

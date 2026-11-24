@@ -5,6 +5,7 @@ import {
 	isAudioTranscriptionModel,
 	isImageGenerationModel,
 } from '@octafuse/core/db/model-modalities'
+import { normalizeRequestLogProviderIds } from '@octafuse/core/db/request-log-filters'
 
 const count = z.number().int().nonnegative().safe()
 const finite = z.number().finite()
@@ -65,6 +66,7 @@ export const requestLogSchema = z.object({
 	provider_key_fingerprint: nullable,
 	upstream_request_id: nullable,
 	upstream_message_id: nullable,
+	ingress_host: z.string().max(255).nullable().optional(),
 	request_body: raw,
 	upstream_request_body: raw,
 	input_tokens: count,
@@ -76,6 +78,7 @@ export const requestLogSchema = z.object({
 	standard_cost: cost.optional(),
 	metered_cost: cost,
 	charged_cost: cost,
+	charged_wallet_cost: cost.nullable().optional(),
 	route_group: nullable,
 	status: small.min(1),
 	latency_ms: duration,
@@ -100,6 +103,50 @@ export const requestLogSchema = z.object({
 })
 export type RequestLog = z.infer<typeof requestLogSchema>
 
+function canonicalFilter(value: string): boolean {
+	if (value !== value.trim() || /\p{Cc}/u.test(value)) return false
+	try {
+		encodeURIComponent(value)
+		return true
+	} catch {
+		return false
+	}
+}
+/** The server echoes a canonical set, never text needing client normalization. */
+const providerIdsAcknowledgement = z
+	.array(z.string().min(1).max(600))
+	.min(1)
+	.max(10)
+	.refine((ids) => {
+		try {
+			const canonical = normalizeRequestLogProviderIds(ids.join(','))
+			return (
+				canonical?.length === ids.length &&
+				canonical.every((id, index) => id === ids[index])
+			)
+		} catch {
+			return false
+		}
+	})
+/** Optional on legacy unfiltered responses; each requested scope needs its own exact echo. */
+export const requestLogAppliedFiltersSchema = z
+	.object({
+		ingress_host: z.string().min(1).max(255).refine(canonicalFilter).optional(),
+		model_id_prefix: z
+			.string()
+			.min(1)
+			.max(600)
+			.refine(canonicalFilter)
+			.optional(),
+		provider_ids: providerIdsAcknowledgement.optional(),
+	})
+	.refine(
+		(value) =>
+			value.ingress_host !== undefined ||
+			value.model_id_prefix !== undefined ||
+			value.provider_ids !== undefined
+	)
+
 export const requestLogsResponseSchema = z
 	.object({
 		success: z.literal(true),
@@ -107,6 +154,9 @@ export const requestLogsResponseSchema = z
 		total: count,
 		page: count.positive(),
 		page_size: count.min(1).max(100),
+		// Optional for legacy unfiltered responses. Filtered reads require this
+		// acknowledgement as well as matching rows, including an empty page.
+		applied_filters: requestLogAppliedFiltersSchema.optional(),
 	})
 	.superRefine((value, context) => {
 		if (

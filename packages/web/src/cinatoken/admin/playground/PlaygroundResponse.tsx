@@ -6,6 +6,7 @@ import { playgroundCode } from './PlaygroundSetup'
 import {
 	imageRequestMetaFromBody,
 	parseImagesGenerationsResponse,
+	safeImagePreviewSource,
 } from './browser-domain/image-generations'
 import {
 	inferPlaygroundParseMode,
@@ -26,12 +27,6 @@ function parseRequest(text: string): Record<string, unknown> {
 	} catch {
 		return {}
 	}
-}
-function safeImage(src: string): boolean {
-	return (
-		/^https?:\/\//i.test(src) ||
-		/^data:image\/(png|jpeg|webp|gif);base64,/i.test(src)
-	)
 }
 export function PlaygroundResponse(props: {
 	result: PlaygroundResult | null
@@ -240,7 +235,7 @@ export function PlaygroundResponse(props: {
 								<h3 className='text-sm'>{t(prefix + 'imagePreview')}</h3>
 								<div className='grid gap-3 sm:grid-cols-2'>
 									{images.images
-										.filter((image) => safeImage(image.src))
+										.filter((image) => safeImagePreviewSource(image.src))
 										.map((image, index) => (
 											<figure
 												key={index}
@@ -290,7 +285,9 @@ export function PlaygroundResponse(props: {
 										{parts.body ||
 											(props.result.kind === 'tool' ||
 											props.result.kind === 'rerank' ||
-											mode === 'text'
+											mode === 'text' ||
+											props.result.kind === 'audio' ||
+											props.result.kind === 'image'
 												? raw
 												: t(prefix + 'cannotExtractBody'))}
 									</pre>

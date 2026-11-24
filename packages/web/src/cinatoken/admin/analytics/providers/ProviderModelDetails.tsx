@@ -7,7 +7,7 @@ import type {
 	ModelProviderRow,
 } from '../models/model-analytics-contracts'
 import { modelSortKeys, type TokenMode } from '../models/model-analytics-domain'
-import { providerLogHref } from './provider-analytics-domain'
+import { providerSortKeys, providerLogHref } from './provider-analytics-domain'
 
 const prefix = 'cinatoken.adminProviderAnalytics.'
 const detailKeys = modelSortKeys.filter(
@@ -15,6 +15,7 @@ const detailKeys = modelSortKeys.filter(
 )
 
 export function ProviderModelDetails(props: {
+	colSpan?: number
 	row: ModelProviderRow
 	range: { startUtc: string; endUtc: string }
 	tag: string
@@ -31,7 +32,7 @@ export function ProviderModelDetails(props: {
 	if (props.error)
 		return (
 			<tr className='bg-primary/5'>
-				<td colSpan={16} className='p-4'>
+				<td colSpan={props.colSpan ?? providerSortKeys.length} className='p-4'>
 					<div role='alert' className='space-y-2'>
 						<p>{t(prefix + 'detailFailed')}</p>
 						<Button
@@ -49,7 +50,7 @@ export function ProviderModelDetails(props: {
 	if (props.loading || !props.detail)
 		return (
 			<tr className='bg-primary/5'>
-				<td colSpan={16} className='p-4'>
+				<td colSpan={props.colSpan ?? providerSortKeys.length} className='p-4'>
 					<p role='status'>{t(prefix + 'loadingModels')}</p>
 				</td>
 			</tr>
@@ -57,21 +58,21 @@ export function ProviderModelDetails(props: {
 	if (props.detail.length === 0)
 		return (
 			<tr className='bg-primary/5'>
-				<td colSpan={16} className='p-4'>
+				<td colSpan={props.colSpan ?? providerSortKeys.length} className='p-4'>
 					<p>{t(prefix + 'noModels')}</p>
 				</td>
 			</tr>
 		)
 	return (
 		<tr className='bg-primary/5'>
-			<td colSpan={16} className='p-4'>
-				<div className='bg-background overflow-x-auto rounded-lg border'>
+			<td colSpan={props.colSpan ?? providerSortKeys.length} className='p-4'>
+				<div className='bg-background w-0 min-w-full overflow-x-auto rounded-lg border'>
 					{props.logsAllowed && props.tag && (
 						<p className='text-muted-foreground border-b px-3 py-2 text-xs'>
 							{t(prefix + 'logsUnfilteredTag')}
 						</p>
 					)}
-					<table className='w-full min-w-[1450px] text-left text-sm'>
+					<table className='w-full min-w-[1750px] text-left text-sm'>
 						<thead className='bg-muted/60 text-muted-foreground border-b text-xs'>
 							<tr>
 								{detailKeys.map((key) => (
@@ -88,7 +89,7 @@ export function ProviderModelDetails(props: {
 						<tbody className='divide-y'>
 							{props.detail.map((model) => (
 								<tr key={JSON.stringify([model.model_id, model.route_group])}>
-									<td className='px-3 py-3 break-all'>
+									<td className='min-w-48 px-3 py-3 break-all'>
 										{props.logsAllowed ? (
 											<a
 												className='text-primary hover:underline'

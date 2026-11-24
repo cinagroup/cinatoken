@@ -1,0 +1,26 @@
+/* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
+/** Literal SQL-decimal fixture shared by boundary tests and local browser QA. */
+export const requestChargeFixture = {
+	id: 'charge-split-qa',
+	user_id: 'qa-owner',
+	api_key_id: 'qa-key',
+	user_email: 'owner@example.test',
+	model_id: 'mcp:qa-server/search',
+	provider_id: 'octafuse-mcp',
+	request_protocol: 'openai',
+	request_operation: 'chat',
+	upstream_protocol: 'openai',
+	upstream_operation: 'chat',
+	route_group: 'default',
+	input_tokens: 1,
+	output_tokens: 2,
+	cache_read_tokens: 0,
+	cache_write_tokens: 0,
+	metered_cost: '0.100000',
+	standard_cost: '0.500000',
+	charged_cost: '0.300000',
+	charged_wallet_cost: '0.100000',
+	status: 'success',
+	latency_ms: 100,
+	created_at: '2026-10-18T02:05:06.000Z',
+} as const

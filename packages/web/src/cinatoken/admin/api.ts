@@ -13,6 +13,7 @@ import { AdminDomainWriteError } from './domain-write-recovery'
 import { createEndpointsApi } from './endpoint-api'
 import { createAdminGatewayKeysApi } from './gateway-keys/gateway-key-api'
 import { createAdminGuardrailsApi } from './guardrails/guardrails-api'
+import { createAdminMcpApi } from './mcp/mcp-api'
 import { createModelsApi } from './model-api'
 import { createAdminPresetsApi } from './presets/presets-api'
 import { createProvidersApi } from './provider-api'
@@ -68,6 +69,7 @@ export function createCinaTokenAdminApi(request: typeof fetch = fetch) {
 	return {
 		...createChainOperationsApi(request),
 		...createAdminToolsApi(request),
+		...createAdminMcpApi(resourceTransport),
 		...createAdminSharedKeysApi(request),
 		...createAdminAccessKeysApi(resourceTransport),
 		...createAdminGatewayKeysApi(resourceTransport),

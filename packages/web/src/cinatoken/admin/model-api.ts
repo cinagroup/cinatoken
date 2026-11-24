@@ -13,11 +13,17 @@ import {
 	modelListResponseSchema,
 	modelResponseSchema,
 	modelSuccessSchema,
+	modelSyncReportResponseSchema,
+	modelSyncItemsSchema,
+	modelSyncResponseSchema,
 	type AdminModel,
 	type ModelCatalog,
 	type ModelDetailContext,
 	type ModelImportResult,
 	type ModelListContext,
+	type ModelSyncItem,
+	type ModelSyncReport,
+	type ModelSyncResult,
 } from './model-contracts'
 import {
 	createModelInput,
@@ -97,6 +103,43 @@ export function createModelsApi(transport: ModelAdminTransport) {
 	}
 	return {
 		verifyAdminDomainSubject: bound.verifyAdminDomainSubject,
+		async modelSyncReport(
+			options: ModelRequestOptions = {}
+		): Promise<ModelSyncReport> {
+			return (
+				await send(
+					root + '/sync/diff',
+					modelSyncReportResponseSchema,
+					{},
+					options
+				)
+			).data
+		},
+		async applyModelSync(
+			items: ModelSyncItem[],
+			options: ModelRequestOptions = {}
+		): Promise<ModelSyncResult> {
+			const selected = modelSyncItemsSchema.parse(items)
+			const ids = new Set(selected.map((item) => item.model_id))
+			// Validate the actual per-batch ACK inside the transport so an invalid 2xx
+			// remains an unknown write and cannot clear the durable write marker.
+			const schema = modelSyncResponseSchema.refine(
+				({ data }) =>
+					data.updated + data.skipped + data.failed.length ===
+						selected.length &&
+					new Set(data.failed.map((item) => item.model_id)).size ===
+						data.failed.length &&
+					data.failed.every((item) => ids.has(item.model_id))
+			)
+			return (
+				await send(
+					root + '/sync/apply',
+					schema,
+					json('POST', { items: selected }),
+					options
+				)
+			).data
+		},
 		modelListContext,
 		modelContext,
 		modelList: async (

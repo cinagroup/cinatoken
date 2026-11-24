@@ -6,8 +6,17 @@ import type { GatewayRepositories } from '../storage/repositories';
 import type { BudgetPeriod } from '../types';
 import type { UserRow } from '../types';
 import { roundGatewayMoney } from '../lib/money-precision';
-import { grantWalletCreditWithAuditTx, updateUserBudgetWithAuditTx } from '../storage/critical-write-paths';
-import type { GrantWalletCreditParams, GrantWalletCreditResult } from '../db/wallet-credit';
+import {
+	grantWalletCreditWithAuditTx,
+	readWalletCreditReceiptFromStorage,
+	updateUserBudgetWithAuditTx,
+} from '../storage/critical-write-paths';
+import type {
+	GrantWalletCreditParams,
+	GrantWalletCreditResult,
+	ReadWalletCreditReceiptParams,
+	ReadWalletCreditReceiptResult,
+} from '../db/wallet-credit';
 import { userBudgetAuditToInsertRowFull } from '../db/user-budget-audit-mapper';
 import {
 	buildUserAuditSnapshotsForLazyPeriodReset,
@@ -633,4 +642,11 @@ export async function grantWalletCredit(
 	params: GrantWalletCreditParams,
 ): Promise<GrantWalletCreditResult> {
 	return grantWalletCreditWithAuditTx(repos, params);
+}
+
+export async function readWalletCreditReceipt(
+	repos: GatewayRepositories,
+	params: ReadWalletCreditReceiptParams,
+): Promise<ReadWalletCreditReceiptResult> {
+	return readWalletCreditReceiptFromStorage(repos, params);
 }

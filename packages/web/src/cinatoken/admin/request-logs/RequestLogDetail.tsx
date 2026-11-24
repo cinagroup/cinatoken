@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
+import { RequestChargeSplit } from './RequestChargeSplit'
 import type { RequestLog } from './request-log-contracts'
 import {
 	normalizeRouteGroup,
@@ -70,7 +71,10 @@ function timingDiagram(log: RequestLog): string {
 		`Failover switches  ${log.upstream_failover_count ?? '—'}`,
 	].join('\n')
 }
-export function RequestLogDetail(props: { log: RequestLog }) {
+export function RequestLogDetail(props: {
+	log: RequestLog
+	currency?: 'USD' | 'CNY' | null
+}) {
 	const { t } = useTranslation()
 	const [copied, setCopied] = useState<string | null>(null)
 	const [copyFailed, setCopyFailed] = useState(false)
@@ -102,6 +106,10 @@ export function RequestLogDetail(props: { log: RequestLog }) {
 		.join(' · ')
 	const identifiers = [
 		{
+			title: t(prefix + 'ingressHost'),
+			value: safeLogText(log.ingress_host ?? ''),
+		},
+		{
 			title: t(prefix + 'detail.upstreamMessageId'),
 			value: log.upstream_message_id,
 		},
@@ -112,6 +120,7 @@ export function RequestLogDetail(props: { log: RequestLog }) {
 	]
 	return (
 		<div className='space-y-4 p-3'>
+			<RequestChargeSplit log={log} currency={props.currency ?? null} />
 			<dl className='grid gap-3 sm:grid-cols-2 xl:grid-cols-4'>
 				<SummaryField label={t(prefix + 'detail.requestId')} value={log.id} />
 				<SummaryField

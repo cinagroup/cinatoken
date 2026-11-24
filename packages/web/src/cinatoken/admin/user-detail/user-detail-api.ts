@@ -1,7 +1,20 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
 import type { z } from 'zod'
+import {
+	ADMIN_DOMAIN_SUBJECT_HEADER,
+	type AdminDomainRequestOptions,
+} from '../domain-transport'
+import {
+	rateLimitEquals,
+	rateLimitWriteSchema,
+} from '../gateway-keys/rate-limit'
 import { createAdminReliabilityApi } from '../reliability/reliability-api'
 import type { ReliabilityDisplay } from '../reliability/reliability-contracts'
+import {
+	type UserChargedCostFactors,
+	chargedFactorsEqual,
+	userChargedCostFactorsSchema,
+} from '../user-charged-factors'
 import {
 	userDetailAuditsResponseSchema,
 	userDetailDeletedSchema,
@@ -21,6 +34,19 @@ import {
 } from './user-detail-contracts'
 import { routeMatchesUser, userDetailPath } from './user-detail-domain'
 import { createUserDetailKeyEditorApi } from './user-detail-key-api'
+import { createUserFactorReadApi } from './user-factor-preview'
+import { createUserWalletCreditApi } from './wallet-credit-api'
+
+function sameWalletBalance(
+	actual: number | undefined,
+	expected: number | undefined
+): boolean {
+	if (actual === expected) return true
+	if (actual === undefined || expected === undefined) return false
+	// Detail subtracts rounded counters; transition snapshots also round the difference.
+	// Compare the gateway's six-decimal money precision without treating binary drift as a failed write.
+	return actual.toFixed(6) === expected.toFixed(6)
+}
 
 function sameBudgetSnapshot(
 	actual: UserBudgetTransitionPreview['before'],
@@ -33,11 +59,14 @@ function sameBudgetSnapshot(
 		actual.budget_period === expected.budget_period &&
 		actual.budget_reset_at === expected.budget_reset_at &&
 		actual.budget_epoch === expected.budget_epoch &&
-		actual.budget_reserved_micros === expected.budget_reserved_micros
+		actual.budget_reserved_micros === expected.budget_reserved_micros &&
+		actual.wallet_granted === expected.wallet_granted &&
+		actual.wallet_spent === expected.wallet_spent &&
+		actual.wallet_balance === expected.wallet_balance
 	)
 }
 
-export type UserDetailOptions = { signal?: AbortSignal; timeoutMs?: number }
+export type UserDetailOptions = AdminDomainRequestOptions
 export type UserDetailTransport = {
 	send<T>(
 		path: string,
@@ -51,6 +80,7 @@ export type UserDetailTransport = {
 
 export function createAdminUserDetailApi(transport: UserDetailTransport) {
 	const display = createAdminReliabilityApi(transport).display
+	const factorReads = createUserFactorReadApi(transport)
 	async function send<T>(
 		path: string,
 		schema: z.ZodType<T>,
@@ -75,6 +105,59 @@ export function createAdminUserDetailApi(transport: UserDetailTransport) {
 	}
 	return {
 		...createUserDetailKeyEditorApi(transport),
+		...createUserWalletCreditApi(transport),
+		...factorReads,
+		async saveUserFactors(
+			routeId: string,
+			expectedUserId: string,
+			value: UserChargedCostFactors,
+			reason: string,
+			options: UserDetailOptions
+		): Promise<UserDetail> {
+			const factors = userChargedCostFactorsSchema.parse(value)
+			if (!reason.trim() || reason.trim().length > 2000)
+				transport.invalidResponse('Invalid reason')
+			const subject = await factorReads.verifyUserFactorSubject(options)
+			options.signal?.throwIfAborted()
+			options.onDispatch?.('charged-factors')
+			const init = body('PATCH', {
+				charged_cost_factors: factors,
+				reason: reason.trim(),
+			})
+			const result = await send(
+				userDetailPath(routeId),
+				userDetailResponseSchema,
+				{
+					...init,
+					headers: {
+						'Content-Type': 'application/json',
+						[ADMIN_DOMAIN_SUBJECT_HEADER]: subject,
+					},
+				},
+				options
+			)
+			if (
+				result.data.id !== expectedUserId ||
+				!chargedFactorsEqual(result.data.charged_cost_factors, factors)
+			)
+				transport.invalidResponse('Updated factors differ')
+			return result.data
+		},
+		async readUserFactorState(
+			id: string,
+			options: UserDetailOptions
+		): Promise<UserDetail> {
+			const subject = await factorReads.verifyUserFactorSubject(options)
+			const result = await send(
+				userDetailPath(id),
+				userDetailResponseSchema,
+				{ headers: { [ADMIN_DOMAIN_SUBJECT_HEADER]: subject } },
+				options
+			)
+			if (result.data.id !== id)
+				transport.invalidResponse('User identity differs')
+			return result.data
+		},
 		userDetailDisplay(
 			options: UserDetailOptions = {}
 		): Promise<ReliabilityDisplay> {
@@ -171,14 +254,34 @@ export function createAdminUserDetailApi(transport: UserDetailTransport) {
 			patch: Record<string, unknown>,
 			options: UserDetailOptions = {}
 		): Promise<UserDetail> {
+			const rate = rateLimitWriteSchema.optional().safeParse(patch.rate_limit)
+			if (!rate.success) transport.invalidResponse()
+			const expectedRate = rate.data
+			const factors = userChargedCostFactorsSchema
+				.optional()
+				.safeParse(patch.charged_cost_factors)
+			if (!factors.success) transport.invalidResponse()
 			const result = await send(
 				userDetailPath(routeId),
 				userDetailResponseSchema,
 				body('PATCH', patch),
 				options
 			)
+			if (
+				factors.data !== undefined &&
+				!chargedFactorsEqual(result.data.charged_cost_factors, factors.data)
+			)
+				transport.invalidResponse('Updated factors differ')
 			if (result.data.id !== expectedUserId)
 				transport.invalidResponse('Updated user identity differs')
+			if (
+				expectedRate !== undefined &&
+				!rateLimitEquals(result.data.rate_limit, expectedRate)
+			)
+				transport.invalidResponse('Updated rate limit differs')
+			for (const field of ['wallet_granted', 'wallet_spent'] as const)
+				if (patch[field] !== undefined && result.data[field] !== patch[field])
+					transport.invalidResponse('Updated wallet differs')
 			return result.data
 		},
 		async previewUserBudgetTransition(
@@ -215,6 +318,11 @@ export function createAdminUserDetailApi(transport: UserDetailTransport) {
 				transport.invalidResponse('Transition user identity differs')
 			if (!sameBudgetSnapshot(result.data.transition.before, preview.before))
 				transport.invalidResponse('Transition preview differs')
+			if (
+				!sameBudgetSnapshot(result.data.transition.after, preview.after) ||
+				result.data.transition.carryover !== preview.carryover
+			)
+				transport.invalidResponse('Reviewed transition result differs')
 			const after = result.data.transition.after
 			const updated = result.data.user
 			if (
@@ -222,7 +330,10 @@ export function createAdminUserDetailApi(transport: UserDetailTransport) {
 				updated.budget_base !== after.budget_base ||
 				updated.budget_spent !== after.budget_spent ||
 				updated.budget_period !== after.budget_period ||
-				updated.budget_reset_at !== after.budget_reset_at
+				updated.budget_reset_at !== after.budget_reset_at ||
+				updated.wallet_granted !== after.wallet_granted ||
+				updated.wallet_spent !== after.wallet_spent ||
+				!sameWalletBalance(updated.wallet_balance, after.wallet_balance)
 			)
 				transport.invalidResponse('Transition applied user differs')
 			return result.data.user

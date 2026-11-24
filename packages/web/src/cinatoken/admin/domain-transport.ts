@@ -41,6 +41,8 @@ function encodedSubject(options: AdminDomainRequestOptions): string {
 }
 function operation(path: string, method: string): string {
 	path = path.split('?')[0]!
+	if (/^\/api\/admin\/(models|providers)\/sync\/apply$/.test(path))
+		return 'sync'
 	if (path.endsWith('/designate')) return 'designate'
 	if (path.startsWith('/api/admin/guardrails/')) {
 		if (method === 'PUT' && path.endsWith('/assignments')) return 'bind'
@@ -67,7 +69,7 @@ function expectedAcknowledgement(
 	const op = operation(path, method)
 	let id: string | undefined
 	let related_id: string | undefined
-	if (!['import', 'bootstrap'].includes(op)) {
+	if (!['import', 'bootstrap', 'sync'].includes(op)) {
 		id = parts[0]
 		if (domain === 'routes' && parts[0] === 'pools') {
 			id = parts[1]

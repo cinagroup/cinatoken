@@ -2,7 +2,11 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { AdminDomainWriteError } from '../domain-write-recovery'
 import type { ModelsApi } from '../model-api'
-import type { ModelImportResult } from '../model-contracts'
+import type {
+	ModelImportResult,
+	ModelSyncItem,
+	ModelSyncResult,
+} from '../model-contracts'
 import type { CreateModelInput, UpdateModelInput } from '../model-input'
 import {
 	useDomainWriteRecovery,
@@ -20,7 +24,7 @@ import {
 } from './model-query-scope'
 
 export type ModelModal =
-	| { kind: 'create' | 'import' }
+	| { kind: 'create' | 'import' | 'sync' }
 	| { kind: 'edit' | 'detail' | 'delete'; id: string }
 export type ModelManagerProps = AdminDomainSessionProps & {
 	api: ModelsApi
@@ -32,7 +36,12 @@ export type ModelManagerProps = AdminDomainSessionProps & {
 	writeBlocked?: boolean
 	revalidate: () => Promise<void>
 }
-type Task = { run: (signal: AbortSignal) => Promise<void>; close: boolean }
+type Task = {
+	run: (signal: AbortSignal) => Promise<void>
+	close: boolean
+	notice?: boolean
+	editor?: boolean
+}
 export function useModelsManager(props: ModelManagerProps) {
 	const client = useQueryClient()
 	const prefix = useMemo(
@@ -45,9 +54,11 @@ export function useModelsManager(props: ModelManagerProps) {
 	const [revoked, setRevoked] = useState(false)
 	const [blockedError, setBlockedError] = useState<unknown>(null)
 	const [notice, setNotice] = useState(false)
+	const [editorAttempt, setEditorAttempt] = useState(false)
 	const [importResult, setImportResult] = useState<ModelImportResult | null>(
 		null
 	)
+	const [syncResult, setSyncResult] = useState<ModelSyncResult | null>(null)
 	const active = useRef(true)
 	const task = useRef<Task | null>(null)
 	const controller = useRef<AbortController | null>(null)
@@ -63,7 +74,9 @@ export function useModelsManager(props: ModelManagerProps) {
 			setBlockedError(null)
 			setModal(null)
 			setImportResult(null)
+			setSyncResult(null)
 			setNotice(false)
+			setEditorAttempt(false)
 			mutation.reset()
 			void query.refetch()
 		},
@@ -95,6 +108,7 @@ export function useModelsManager(props: ModelManagerProps) {
 			setBlockedError(error)
 			setModal(null)
 			setImportResult(null)
+			setSyncResult(null)
 			controller.current?.abort()
 			void client.cancelQueries({ queryKey: prefix })
 			client.removeQueries({ queryKey: prefix })
@@ -137,7 +151,7 @@ export function useModelsManager(props: ModelManagerProps) {
 				if (!active.current || abort.signal.aborted) return
 				binding.settleKnown('confirmed-2xx')
 				if (pending.close) setModal(null)
-				setNotice(true)
+				setNotice(pending.notice !== false)
 				await client.invalidateQueries({ queryKey: [...prefix, 'list'] })
 			} catch (error) {
 				if (active.current) {
@@ -145,6 +159,7 @@ export function useModelsManager(props: ModelManagerProps) {
 					if (modelWriteNeedsReconciliation(error)) {
 						setModal(null)
 						setImportResult(null)
+						setSyncResult(null)
 					} else if (
 						error instanceof AdminDomainWriteError &&
 						error.code === 'rejected'
@@ -172,27 +187,34 @@ export function useModelsManager(props: ModelManagerProps) {
 		writeUnknown
 	function queue(next: Task): void {
 		if (disabled || task.current || binding.status !== 'ready') return
+		setNotice(false)
+		setEditorAttempt(Boolean(next.editor))
 		task.current = next
 		binding.resetDispatch()
 		void mutation.mutateAsync().catch(() => undefined)
 	}
 	function open(next: ModelModal): void {
 		if (disabled) return
+		setEditorAttempt(false)
 		mutation.reset()
 		setImportResult(null)
+		setSyncResult(null)
 		setNotice(false)
 		setModal(next)
 	}
 	function close(): void {
 		if (!mutation.isPending) {
+			setEditorAttempt(false)
 			setModal(null)
 			setImportResult(null)
+			setSyncResult(null)
 			mutation.reset()
 		}
 	}
 	function save(input: CreateModelInput | UpdateModelInput, id?: string): void {
 		queue({
 			close: true,
+			editor: true,
 			run: async (signal) => {
 				if (id)
 					await props.api.updateModel(
@@ -227,12 +249,40 @@ export function useModelsManager(props: ModelManagerProps) {
 			},
 		})
 	}
+	function applyModelSync(items: ModelSyncItem[]): void {
+		queue({
+			close: false,
+			notice: false,
+			run: async (signal) => {
+				const result = await props.api.applyModelSync(
+					items,
+					binding.writeOptions(signal)
+				)
+				if (active.current && !signal.aborted) setSyncResult(result)
+			},
+		})
+	}
+	function clearSyncResult(): void {
+		if (mutation.isPending || writeUnknown) return
+		setSyncResult(null)
+		mutation.reset()
+	}
 	async function retry(): Promise<void> {
 		if (hidden) {
 			await props.revalidate()
 			return
 		}
 		await query.refetch()
+	}
+	const canResumeEditor =
+		!disabled &&
+		editorAttempt &&
+		mutation.error instanceof AdminDomainWriteError &&
+		mutation.error.code === 'rejected' &&
+		mutation.error.serverCode !== 'model_route_policy_conflict' &&
+		mutation.error.serverCode !== 'model_route_policy_precondition_required'
+	function resumeEditor(): void {
+		if (canResumeEditor) mutation.reset()
 	}
 	return {
 		prefix,
@@ -251,11 +301,16 @@ export function useModelsManager(props: ModelManagerProps) {
 		readOptions: binding.readOptions,
 		blockedError,
 		importResult,
+		syncResult,
 		open,
 		close,
+		canResumeEditor,
+		resumeEditor,
 		save,
 		remove,
 		importModels,
+		applyModelSync,
+		clearSyncResult,
 		retry,
 	}
 }

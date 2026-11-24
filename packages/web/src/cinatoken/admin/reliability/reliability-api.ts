@@ -108,6 +108,15 @@ export function createAdminReliabilityApi(transport: ReliabilityTransport) {
 					options
 				)
 				options.signal?.throwIfAborted()
+				const start = Date.parse(startUtc.replace(' ', 'T') + 'Z')
+				const end = Date.parse(endUtc.replace(' ', 'T') + 'Z')
+				if (
+					response.data.recentErrors.some((row) => {
+						const created = Date.parse(row.created_at)
+						return created < start || created > end
+					})
+				)
+					transport.invalidResponse()
 				return response.data
 			} catch (error) {
 				throw transport.sanitizeError(error)

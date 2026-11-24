@@ -14,6 +14,7 @@ import {
 } from '../domain-write-recovery'
 import { createDataPoliciesApi } from './data-policy-api'
 import { dataPolicyUpsertInputSchema } from './data-policy-contracts'
+import { dataPolicyCanResumeEditor } from './data-policy-errors'
 
 const routeId = 'route/one'
 const policy = {
@@ -333,6 +334,38 @@ test('permission, missing route, conflict and service failures preserve status w
 			error.code === 'business' &&
 			!error.message.includes('PRIVATE')
 	)
+})
+
+test('actual Cookie writes retain safe data policy precondition codes without exposing payloads or allowing inline repair', async () => {
+	for (const [status, code] of [
+		[400, 'invalid_data_policy_precondition'],
+		[428, 'data_policy_precondition_required'],
+		[409, 'route_data_policy_write_conflict'],
+	] as const) {
+		const { api, calls } = fixture(async () =>
+			Response.json(
+				{
+					success: false,
+					code,
+					message: 'PRIVATE policy details',
+					privateDraft: 'PRIVATE',
+				},
+				{ status }
+			)
+		)
+		await assert.rejects(
+			api.upsertDataPolicy(routeId, input),
+			(error) =>
+				error instanceof AdminDomainWriteError &&
+				error.code === 'rejected' &&
+				error.status === status &&
+				error.serverCode === code &&
+				!error.message.includes('PRIVATE') &&
+				!('privateDraft' in error) &&
+				!dataPolicyCanResumeEditor(error)
+		)
+		assert.equal(calls.length, 1)
+	}
 })
 
 test('caller cancellation and timeouts are terminal, including late injected responses', async () => {

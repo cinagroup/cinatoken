@@ -318,6 +318,42 @@ export function UserDetailBudgetTransition(props: {
 								{t(prefix + 'transitionEpoch')}: {preview.before.budget_epoch} →{' '}
 								{preview.after.budget_epoch}
 							</p>
+							{preview.before.wallet_granted !== undefined && (
+								<div className='flex flex-col gap-2 border-t pt-4'>
+									<h3 className='font-medium'>{t(prefix + 'wallet')}</h3>
+									<p className='text-muted-foreground text-xs'>
+										{t(prefix + 'walletTransition')}
+									</p>
+									<dl className='grid gap-3 sm:grid-cols-3'>
+										{(
+											[
+												['wallet_granted', 'walletGranted'],
+												['wallet_spent', 'walletSpent'],
+												['wallet_balance', 'walletBalance'],
+											] as const
+										).map(([field, label]) => (
+											<div key={field} className='min-w-0'>
+												<dt className='text-muted-foreground text-xs'>
+													{t(prefix + label)}
+												</dt>
+												<dd className='break-words tabular-nums'>
+													{formatUserDetailMoney(
+														preview.before[field] ?? null,
+														props.currency,
+														locale
+													)}{' '}
+													→{' '}
+													{formatUserDetailMoney(
+														preview.after[field] ?? null,
+														props.currency,
+														locale
+													)}
+												</dd>
+											</div>
+										))}
+									</dl>
+								</div>
+							)}
 							<label className='flex items-start gap-2 border-t pt-4'>
 								<input
 									type='checkbox'

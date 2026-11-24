@@ -11,7 +11,9 @@ import {
 	TableRow,
 } from '@/components/ui/table'
 import type { ActivityData, ActivityLog } from '../../activity-contracts'
+import { requestChargeAmount } from '../../admin/request-logs/request-charge-split'
 import { formatAccountDate } from '../key-display'
+import { ActivityChargeSplit } from './ActivityChargeSplit'
 import {
 	canOpenActivityGeneration,
 	formatActivityMoney,
@@ -170,7 +172,7 @@ export function ActivityRequestList(props: {
 										<div className='text-right'>
 											<p className='text-xs font-medium tabular-nums'>
 												{formatActivityMoney(
-													row.chargedCost,
+													requestChargeAmount(row.chargedCost) ?? null,
 													props.data.billingCurrency,
 													locale,
 													unknown
@@ -181,6 +183,11 @@ export function ActivityRequestList(props: {
 											</p>
 										</div>
 									</div>
+									<ActivityChargeSplit
+										log={row}
+										currency={props.data.billingCurrency}
+										compact
+									/>
 									{(row.protocol || row.operation) && (
 										<p className='text-muted-foreground text-xs break-all'>
 											{[row.protocol, row.operation]
@@ -250,7 +257,7 @@ export function ActivityRequestList(props: {
 											</TableCell>
 											<TableCell className='text-xs whitespace-nowrap tabular-nums'>
 												{formatActivityMoney(
-													row.chargedCost,
+													requestChargeAmount(row.chargedCost) ?? null,
 													props.data.billingCurrency,
 													locale,
 													unknown
@@ -258,6 +265,11 @@ export function ActivityRequestList(props: {
 												<p className='text-muted-foreground mt-1'>
 													{row.billingKind}
 												</p>
+												<ActivityChargeSplit
+													log={row}
+													currency={props.data.billingCurrency}
+													compact
+												/>
 											</TableCell>
 											<TableCell className='text-xs whitespace-nowrap tabular-nums'>
 												{latency(row.latencyMs)}

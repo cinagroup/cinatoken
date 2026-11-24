@@ -843,9 +843,82 @@ const simulatorAdditionalMessages = {
 		},
 	},
 } as const
+const nativeSimulatorMessages = {
+	en: {
+		nativeFileHint:
+			'Upload an audio file with native provider form fields. The exact multipart endpoint is shown in the request preview.',
+		nativeHttpHint:
+			'This native HTTP operation uses the provider JSON structure shown in the editor.',
+		bodyTooLarge: 'The JSON request must be at most 2 MiB.',
+		queryTask: 'Check task status',
+		asyncTaskId: 'Async task: {{id}}',
+		asyncTaskHint:
+			'The accepted task was settled using its reservation ceiling. Check status manually; the receipt remains in memory for this Key, account and Proxy until you leave or change credentials. No polling or retry runs automatically.',
+		realtimeOperation: 'DashScope operation',
+		realtimeTtsRejected:
+			'Realtime speech is unavailable because this Proxy does not support its billing lifecycle.',
+	},
+	zh: {
+		nativeFileHint:
+			'上传音频文件并填写供应商原生表单字段；请求预览会显示准确的 multipart 入口。',
+		nativeHttpHint: '此原生 HTTP 操作使用编辑器中显示的供应商 JSON 结构。',
+		bodyTooLarge: 'JSON 请求最多允许 2 MiB。',
+		queryTask: '查询任务状态',
+		asyncTaskId: '异步任务：{{id}}',
+		asyncTaskHint:
+			'已接受任务按预留上限结算。请手动查询状态；回执仅保存在当前密钥、账户与 Proxy 的页面内存中，离开或变更凭据后清除。不会自动轮询或重试。',
+		realtimeOperation: 'DashScope 操作',
+		realtimeTtsRejected:
+			'当前 Proxy 尚未支持实时语音合成的计费生命周期，无法发送。',
+	},
+	ja: {
+		nativeFileHint:
+			'音声ファイルとプロバイダー固有のフォーム項目を送信します。正確な multipart エンドポイントはプレビューに表示されます。',
+		nativeHttpHint:
+			'このネイティブ HTTP 操作では、エディターに示すプロバイダー固有の JSON を使用します。',
+		bodyTooLarge: 'JSON リクエストは 2 MiB 以下にしてください。',
+		queryTask: 'タスク状態を確認',
+		asyncTaskId: '非同期タスク: {{id}}',
+		asyncTaskHint:
+			'受理されたタスクは予約上限に基づいて精算されました。状態は手動で確認してください。レシートはこのキー、アカウント、Proxy のページメモリにのみ保持され、終了時や認証情報の変更時に消去されます。自動ポーリングや再試行は行いません。',
+		realtimeOperation: 'DashScope 操作',
+		realtimeTtsRejected:
+			'この Proxy はリアルタイム音声合成の課金処理に未対応のため送信できません。',
+	},
+	ko: {
+		nativeFileHint:
+			'오디오 파일과 공급자 원본 폼 필드를 보냅니다. 정확한 multipart 경로는 요청 미리보기에 표시됩니다.',
+		nativeHttpHint:
+			'이 네이티브 HTTP 작업은 편집기에 표시된 공급자 JSON 구조를 사용합니다.',
+		bodyTooLarge: 'JSON 요청은 최대 2 MiB까지 허용됩니다.',
+		queryTask: '작업 상태 확인',
+		asyncTaskId: '비동기 작업: {{id}}',
+		asyncTaskHint:
+			'수락된 작업은 예약 상한으로 정산되었습니다. 상태는 수동으로 확인하세요. 영수증은 현재 키, 계정, Proxy의 페이지 메모리에만 유지되며 페이지를 떠나거나 인증 정보가 바뀌면 삭제됩니다. 자동 폴링이나 재시도는 없습니다.',
+		realtimeOperation: 'DashScope 작업',
+		realtimeTtsRejected:
+			'현재 Proxy는 실시간 음성 합성의 과금 처리를 지원하지 않아 보낼 수 없습니다.',
+	},
+} as const
 export const adminSimulatorMessages = {
-	en: { ...simulatorLegacyMessages.en, ...simulatorAdditionalMessages.en },
-	zh: { ...simulatorLegacyMessages.zh, ...simulatorAdditionalMessages.zh },
-	ja: { ...simulatorLegacyMessages.ja, ...simulatorAdditionalMessages.ja },
-	ko: { ...simulatorLegacyMessages.ko, ...simulatorAdditionalMessages.ko },
+	en: {
+		...simulatorLegacyMessages.en,
+		...simulatorAdditionalMessages.en,
+		...nativeSimulatorMessages.en,
+	},
+	zh: {
+		...simulatorLegacyMessages.zh,
+		...simulatorAdditionalMessages.zh,
+		...nativeSimulatorMessages.zh,
+	},
+	ja: {
+		...simulatorLegacyMessages.ja,
+		...simulatorAdditionalMessages.ja,
+		...nativeSimulatorMessages.ja,
+	},
+	ko: {
+		...simulatorLegacyMessages.ko,
+		...simulatorAdditionalMessages.ko,
+		...nativeSimulatorMessages.ko,
+	},
 } as const

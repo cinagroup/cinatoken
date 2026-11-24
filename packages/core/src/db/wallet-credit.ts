@@ -13,7 +13,16 @@ import {
 import type { InsertUserAuditLogParams } from './user-audit-logs-types';
 import type { UserRow } from '../types';
 import type { WalletCreditKind } from '../services/wallet-balance';
-import { computeWalletBalance } from '../services/wallet-balance';
+import {
+	assertWalletCreditParams,
+	walletCreditAmount,
+	walletCreditMicros,
+	walletCreditSnapshot,
+	walletCreditStoredAmount,
+	type WalletCreditReceipt,
+	type WalletCreditSnapshot,
+} from './wallet-credit-receipt';
+export * from './wallet-credit-receipt';
 
 export class WalletCreditUserNotFoundError extends Error {
 	readonly userId: string;
@@ -56,8 +65,8 @@ export function mapStorageUserToRow(r: {
 		budget_reset_at: r.budgetResetAt,
 		budget_epoch: Number(r.budgetEpoch ?? 0),
 		budget_reserved_micros: Number(r.budgetReservedMicros ?? 0),
-		wallet_granted: roundGatewayMoney(Number(r.walletGranted ?? 0)),
-		wallet_spent: roundGatewayMoney(Number(r.walletSpent ?? 0)),
+		wallet_granted: walletCreditStoredAmount(r.walletGranted),
+		wallet_spent: walletCreditStoredAmount(r.walletSpent),
 		status: r.status,
 		metadata: r.metadata,
 		rate_limit: parseApiKeyRateLimit(r.rateLimit),
@@ -82,22 +91,42 @@ export type GrantWalletCreditParams = {
 
 export type GrantWalletCreditResult = {
 	status: 'applied' | 'duplicate';
+	/** Current counters observed in the result's transaction/read snapshot. */
 	walletGranted: number;
 	walletSpent: number;
 	walletBalance: number;
+	/** Immutable original operation, unaffected by later charges or credits. */
+	receipt: WalletCreditReceipt;
 };
 
 export function buildWalletCreditAuditRow(
 	row: UserRow,
 	params: GrantWalletCreditParams,
-	auditId: string
-): { audit: InsertUserAuditLogParams; afterGranted: number } {
-	const amount = roundGatewayMoney(params.amount);
-	const afterGranted = roundGatewayMoney(Number(row.wallet_granted ?? 0) + amount);
+	auditId: string,
+	creditedAt = new Date().toISOString(),
+): { audit: InsertUserAuditLogParams; afterGranted: number; receipt: WalletCreditReceipt } {
+	assertWalletCreditParams(params);
+	const amountMicros = walletCreditMicros(params.amount);
+	const amount = walletCreditAmount(amountMicros);
+	const beforeWallet = walletCreditSnapshot(row.wallet_granted, row.wallet_spent);
+	const afterGranted = walletCreditAmount(walletCreditMicros(beforeWallet.walletGranted) + amountMicros);
+	const afterWallet = walletCreditSnapshot(afterGranted, beforeWallet.walletSpent);
+	const receipt: WalletCreditReceipt = {
+		version: 1,
+		userId: params.userId,
+		externalRef: params.externalRef,
+		amountMicros,
+		kind: params.kind,
+		auditId,
+		creditedAt,
+		before: beforeWallet,
+		after: afterWallet,
+	};
 	const before = userRowToSnapshot(row);
 	const after = snapshotWithOverrides(before, { wallet_granted: afterGranted });
 	return {
 		afterGranted,
+		receipt,
 		audit: {
 			id: auditId,
 			userId: params.userId,
@@ -111,6 +140,7 @@ export function buildWalletCreditAuditRow(
 				amount,
 				kind: params.kind,
 				external_ref: params.externalRef,
+				receipt,
 			}),
 			beforeUserSnapshot: snapshotToJson(before),
 			afterUserSnapshot: snapshotToJson(after),
@@ -124,12 +154,19 @@ export function buildWalletCreditAuditRow(
 export function walletCreditResult(
 	status: 'applied' | 'duplicate',
 	walletGranted: number,
-	walletSpent: number
-): GrantWalletCreditResult {
+	walletSpent: number,
+): Omit<GrantWalletCreditResult, 'receipt'> {
 	return {
 		status,
-		walletGranted: roundGatewayMoney(walletGranted),
-		walletSpent: roundGatewayMoney(walletSpent),
-		walletBalance: computeWalletBalance(walletGranted, walletSpent),
+		...walletCreditSnapshot(walletGranted, walletSpent),
 	};
+}
+
+/** Preserve legacy current-counter fields; only receipt proves the original operation. */
+export function walletCreditReceiptResult(
+	status: 'applied' | 'duplicate',
+	receipt: WalletCreditReceipt,
+	current: WalletCreditSnapshot,
+): GrantWalletCreditResult {
+	return { status, ...walletCreditSnapshot(current.walletGranted, current.walletSpent), receipt };
 }

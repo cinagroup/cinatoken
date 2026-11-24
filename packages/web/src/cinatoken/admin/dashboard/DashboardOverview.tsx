@@ -33,10 +33,18 @@ export function DashboardOverview(props: {
 						{ currency: props.snapshot.displayConfig.billingCurrency }
 					)}
 				</span>
+				<span>
+					{t(prefix + 'throughput')}:{' '}
+					{t(prefix + 'rpmTpm', {
+						rpm: formatNumber(props.snapshot.stats.kpi.rpm, props.locale),
+						tpm: formatCompact(props.snapshot.stats.kpi.tpm, props.locale),
+					})}{' '}
+					· {t(prefix + 'lastMinute')}
+				</span>
 			</div>
 			<div className='space-y-3'>
 				<h2 className='text-muted-foreground text-sm font-semibold tracking-wide uppercase'>
-					{t(prefix + 'today')}
+					{t(prefix + 'currentAndToday')}
 				</h2>
 				<div className='grid gap-3 sm:grid-cols-2 xl:grid-cols-5'>
 					<KpiCard
@@ -133,7 +141,7 @@ export function DashboardOverview(props: {
 						label={t(prefix + 'errorRate')}
 						value={`${props.snapshot.stats.kpi.errorRate.toFixed(2)}%`}
 						emphasis={
-							props.snapshot.stats.kpi.errorRate > 5 ? 'danger' : 'normal'
+							props.snapshot.stats.kpi.errorRate >= 5 ? 'danger' : 'normal'
 						}
 					/>
 					<KpiCard
@@ -145,11 +153,39 @@ export function DashboardOverview(props: {
 						}
 					/>
 					<KpiCard
-						label={t(prefix + 'throughput')}
-						value={t(prefix + 'rpmTpm', {
-							rpm: formatNumber(props.snapshot.stats.kpi.rpm, props.locale),
-							tpm: formatCompact(props.snapshot.stats.kpi.tpm, props.locale),
+						label={t(prefix + 'totalTokens')}
+						value={formatNumber(
+							props.snapshot.stats.kpi.totalTokens,
+							props.locale
+						)}
+						hint={t(prefix + 'tokenBreakdown', {
+							input: formatNumber(
+								props.snapshot.stats.kpi.inputTokens,
+								props.locale
+							),
+							output: formatNumber(
+								props.snapshot.stats.kpi.outputTokens,
+								props.locale
+							),
+							cache: formatNumber(
+								props.snapshot.stats.kpi.cacheReadTokens,
+								props.locale
+							),
 						})}
+					/>
+					<KpiCard
+						label={t(prefix + 'averageCost')}
+						value={
+							props.snapshot.stats.kpi.totalRequests > 0
+								? formatMoney(
+										props.snapshot.stats.kpi.totalCost /
+											props.snapshot.stats.kpi.totalRequests,
+										props.snapshot.displayConfig.billingCurrency,
+										props.locale,
+										6
+									)
+								: '—'
+						}
 					/>
 				</div>
 			</div>

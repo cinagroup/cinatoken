@@ -1007,23 +1007,43 @@ const extras = {
 } as const
 export const playgroundMessages = {
 	en: {
+		unsupportedProtocol: 'Unsupported protocol',
+		unsupportedRoute:
+			"This route's protocol, operation or adapter is not supported by Playground. Choose a supported route.",
+		nativeMediaHint:
+			"The JSON template follows this route's native or conversion adapter. Native image references belong in JSON; uploaded edits require an OpenAI route.",
 		...legacyPlaygroundMessages.en,
 		...extras.en,
 		previewAuthDeferred:
 			'Authentication parameters are resolved when sending. The actual response metadata is authoritative.',
 	},
 	zh: {
+		unsupportedProtocol: '不支持的协议',
+		unsupportedRoute:
+			'此路由的协议、操作或适配器尚不受调试台支持，请选择受支持的路由。',
+		nativeMediaHint:
+			'JSON 模板与当前路由的原生接口或转换适配器一致。原生参考图请写在 JSON 中；上传图片编辑仅支持 OpenAI 路由。',
 		...legacyPlaygroundMessages.zh,
 		...extras.zh,
 		previewAuthDeferred: '认证参数在发送时解析。实际响应的请求元数据为准。',
 	},
 	ja: {
+		unsupportedProtocol: '未対応のプロトコル',
+		unsupportedRoute:
+			'このルートのプロトコル、操作、アダプターは調整台でサポートされていません。対応するルートを選択してください。',
+		nativeMediaHint:
+			'JSON テンプレートはルートのネイティブ API または変換アダプターに対応します。ネイティブの参照画像は JSON に指定し、編集画像のアップロードには OpenAI ルートを使用してください。',
 		...legacyPlaygroundMessages.ja,
 		...extras.ja,
 		previewAuthDeferred:
 			'認証パラメーターは送信時に解決されます。実際の応答メタデータを確認してください。',
 	},
 	ko: {
+		unsupportedProtocol: '지원되지 않는 프로토콜',
+		unsupportedRoute:
+			'이 경로의 프로토콜, 작업 또는 어댑터는 플레이그라운드에서 지원되지 않습니다. 지원되는 경로를 선택하세요.',
+		nativeMediaHint:
+			'JSON 템플릿은 경로의 기본 API 또는 변환 어댑터에 맞춰집니다. 기본 참조 이미지는 JSON에 입력하세요. 이미지 편집 업로드에는 OpenAI 경로가 필요합니다.',
 		...legacyPlaygroundMessages.ko,
 		...extras.ko,
 		previewAuthDeferred:

@@ -2,6 +2,8 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
+import { RequestChargeSplit } from '../request-logs/RequestChargeSplit'
+import { isMcpInvocation, mcpInvocationSummary } from './mcp-invocation-domain'
 import type { ToolInvocation } from './tool-invocation-contracts'
 import {
 	safeResultHref,
@@ -41,7 +43,10 @@ function RawPanel(props: {
 		</section>
 	)
 }
-export function ToolInvocationDetail(props: { log: ToolInvocation }) {
+export function ToolInvocationDetail(props: {
+	log: ToolInvocation
+	currency?: 'USD' | 'CNY' | null
+}) {
 	const { t, i18n } = useTranslation()
 	const [view, setView] = useState<'list' | 'json'>('list')
 	const [copied, setCopied] = useState<string | null>(null)
@@ -49,6 +54,10 @@ export function ToolInvocationDetail(props: { log: ToolInvocation }) {
 	const response = toolResponseSummary(props.log.raw_usage)
 	const responseDisplay = safeToolRaw(props.log.raw_usage)
 	const ai = props.log.model_id === 'tool:ai-detection'
+	const mcp = isMcpInvocation(props.log)
+		? mcpInvocationSummary(props.log)
+		: null
+	const responseView = mcp ? 'json' : view
 	async function copy(text: string, title: string): Promise<void> {
 		try {
 			await navigator.clipboard.writeText(text)
@@ -60,6 +69,29 @@ export function ToolInvocationDetail(props: { log: ToolInvocation }) {
 	}
 	return (
 		<div className='space-y-3 p-3 sm:p-4'>
+			<RequestChargeSplit log={props.log} currency={props.currency ?? null} />
+			{mcp ? (
+				<dl className='flex flex-wrap gap-x-6 gap-y-2 text-xs'>
+					<div>
+						<dt className='text-muted-foreground'>
+							{t(prefix + 'invocations.source')}
+						</dt>
+						<dd>MCP</dd>
+					</div>
+					<div>
+						<dt className='text-muted-foreground'>
+							{t(prefix + 'invocations.serverFilter')}
+						</dt>
+						<dd className='font-mono break-all'>{mcp.slug || '—'}</dd>
+					</div>
+					<div>
+						<dt className='text-muted-foreground'>
+							{t(prefix + 'invocations.toolFilter')}
+						</dt>
+						<dd className='font-mono break-all'>{mcp.tool || '—'}</dd>
+					</div>
+				</dl>
+			) : null}
 			{props.log.error_message && (
 				<p className='bg-destructive/10 text-destructive rounded-lg border p-3 text-xs break-all'>
 					{safeToolText(props.log.error_message)}
@@ -89,22 +121,24 @@ export function ToolInvocationDetail(props: { log: ToolInvocation }) {
 							aria-label={t(prefix + 'invocations.detail.responseFormat')}
 							className='flex items-center gap-1'
 						>
+							{!mcp ? (
+								<Button
+									type='button'
+									role='tab'
+									aria-selected={responseView === 'list'}
+									size='sm'
+									variant={view === 'list' ? 'default' : 'outline'}
+									onClick={() => setView('list')}
+								>
+									{t(prefix + 'invocations.detail.formatList')}
+								</Button>
+							) : null}
 							<Button
 								type='button'
 								role='tab'
-								aria-selected={view === 'list'}
+								aria-selected={responseView === 'json'}
 								size='sm'
-								variant={view === 'list' ? 'default' : 'outline'}
-								onClick={() => setView('list')}
-							>
-								{t(prefix + 'invocations.detail.formatList')}
-							</Button>
-							<Button
-								type='button'
-								role='tab'
-								aria-selected={view === 'json'}
-								size='sm'
-								variant={view === 'json' ? 'default' : 'outline'}
+								variant={responseView === 'json' ? 'default' : 'outline'}
 								onClick={() => setView('json')}
 							>
 								{t(prefix + 'invocations.detail.formatJson')}
@@ -131,7 +165,7 @@ export function ToolInvocationDetail(props: { log: ToolInvocation }) {
 							</Button>
 						</div>
 					</header>
-					{view === 'json' ? (
+					{responseView === 'json' ? (
 						<pre
 							role='tabpanel'
 							className='max-h-80 min-h-40 overflow-auto p-3 font-mono text-xs break-all whitespace-pre-wrap'

@@ -20,6 +20,7 @@ export function RequestLogTargetDialog(props: {
 	scopeKey: string
 	reconciliationKey: string
 	requestId: string
+	currency?: 'USD' | 'CNY' | null
 	onClose: () => void
 	onAccessLost: () => void
 }) {
@@ -65,7 +66,7 @@ export function RequestLogTargetDialog(props: {
 					· {log.input_tokens} / {log.output_tokens}{' '}
 					{t(prefix + 'usage.tokens')}
 				</p>
-				<RequestLogDetail log={log} />
+				<RequestLogDetail log={log} currency={props.currency ?? null} />
 			</div>
 		)
 	return (

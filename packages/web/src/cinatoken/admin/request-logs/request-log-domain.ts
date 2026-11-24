@@ -1,5 +1,18 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
-import { DASHSCOPE_MULTIMODAL_GENERATION_PATH } from '@octafuse/core/route-topology'
+import {
+	normalizeRequestLogIngressHost,
+	normalizeRequestLogModelIdPrefix,
+	normalizeRequestLogProviderIds,
+} from '@octafuse/core/db/request-log-filters'
+import {
+	DASHSCOPE_FILE_TRANSCRIPTION_PATH,
+	DASHSCOPE_MULTIMODAL_GENERATION_PATH,
+	DASHSCOPE_SPEECH_SYNTHESIZER_PATH,
+	MINIMAX_IMAGE_GENERATION_PATH,
+	MINIMAX_SPEECH_TO_TEXT_PATH,
+	MINIMAX_T2A_PATH,
+	VOLCENGINE_IMAGE_GENERATIONS_PATH,
+} from '@octafuse/core/route-topology'
 import type { RequestLog } from './request-log-contracts'
 import { requestLogIdSchema } from './request-log-target'
 
@@ -7,34 +20,53 @@ export type RequestLogSearch = {
 	page: number
 	status: string
 	model_id: string
+	model_id_prefix?: string
 	provider_id: string
+	provider_ids?: string
 	protocol: string
 	route_group: string
 	user_id: string
 	user_email: string
 	api_key_id: string
+	ingress_host?: string
 	start_date?: string
 	end_date?: string
 	/** Explicit detail target, never a list filter. */
 	request_id?: string
 	invalidTarget?: boolean
+	/** Invalid scoped input must never become an unfiltered request. */
+	invalidFilter?: boolean
+	invalidIngressHost?: boolean
+	invalidModelPrefix?: boolean
+	invalidProviderIds?: true
 }
 export const emptyRequestLogFilters: RequestLogSearch = {
 	page: 1,
 	status: '',
 	model_id: '',
+	model_id_prefix: '',
 	provider_id: '',
+	provider_ids: '',
 	protocol: '',
 	route_group: '',
 	user_id: '',
 	user_email: '',
 	api_key_id: '',
+	ingress_host: '',
 	start_date: '',
 	end_date: '',
 }
 const sqlUtc = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/u
 const isoUtc = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?Z$/u
-const protocols = new Set(['openai', 'anthropic', 'gemini', 'dashscope'])
+export const requestLogProtocols = [
+	'openai',
+	'anthropic',
+	'gemini',
+	'dashscope',
+	'minimax',
+	'volcengine',
+] as const
+const protocols = new Set<string>(requestLogProtocols)
 function clean(value: unknown, max: number): string {
 	return typeof value === 'string' &&
 		value.length <= max &&
@@ -73,6 +105,10 @@ export function validateRequestLogSearch(
 	const page = Number(input.page)
 	const protocol = clean(input.protocol, 80).toLowerCase()
 	const userId = clean(input.user_id, 600)
+	const modelPrefix =
+		normalizeRequestLogModelIdPrefix(input.model_id_prefix) ?? ''
+	const ingressHost = normalizeRequestLogIngressHost(input.ingress_host)
+	const providerIds = normalizeRequestLogProviderIds(input.provider_ids)
 	const requestId =
 		input.request_id === undefined || input.request_id === ''
 			? undefined
@@ -84,17 +120,21 @@ export function validateRequestLogSearch(
 			Number.isSafeInteger(page) && page >= 1 && page <= 1_000_000 ? page : 1,
 		status: clean(input.status, 80),
 		model_id: clean(input.model_id, 600),
+		model_id_prefix: modelPrefix,
 		provider_id: clean(input.provider_id, 600),
+		provider_ids: providerIds?.join(',') ?? '',
 		protocol: protocols.has(protocol) ? protocol : '',
 		route_group: clean(input.route_group, 600),
 		user_id: userId,
 		user_email: clean(input.user_email, 320),
 		api_key_id: clean(input.api_key_id, 600),
+		ingress_host: ingressHost ?? '',
 		start_date: cleanLogDate(input.start_date),
 		end_date: cleanLogDate(input.end_date),
 		...(requestId ? { request_id: requestId } : {}),
 	}
 }
+/** Keep invalid scope visible and unqueryable so the user can repair it in place. */
 export function validateRequestLogRouteSearch(
 	input: Record<string, unknown>
 ): RequestLogSearch {
@@ -107,10 +147,70 @@ export function validateRequestLogRouteSearch(
 			!requestLogIdSchema.safeParse(input.request_id).success
 		)
 			return { ...emptyRequestLogFilters, invalidTarget: true }
-		throw error
+		let ingressHost: string | undefined
+		let modelPrefix: string | undefined
+		let providerIds: string[] | undefined
+		let invalidIngressHost = false
+		let invalidModelPrefix = false
+		let invalidProviderIds = false
+		try {
+			ingressHost = normalizeRequestLogIngressHost(input.ingress_host)
+		} catch {
+			invalidIngressHost = true
+		}
+		try {
+			modelPrefix = normalizeRequestLogModelIdPrefix(input.model_id_prefix)
+		} catch {
+			invalidModelPrefix = true
+		}
+		try {
+			providerIds = normalizeRequestLogProviderIds(input.provider_ids)
+		} catch {
+			invalidProviderIds = true
+		}
+		if (!invalidIngressHost && !invalidModelPrefix && !invalidProviderIds)
+			throw error
+		// Retain one extra character so an overlong value stays invalid. A
+		// non-text URL value receives a visible invalid placeholder, never ''.
+		function invalidValue(value: unknown, max: number): string {
+			return typeof value === 'string' ? value.slice(0, max + 1) : ' '
+		}
+		return {
+			...validateRequestLogSearch({
+				...input,
+				ingress_host: undefined,
+				model_id_prefix: undefined,
+				provider_ids: undefined,
+			}),
+			ingress_host: invalidIngressHost
+				? invalidValue(input.ingress_host, 255)
+				: (ingressHost ?? ''),
+			model_id_prefix: invalidModelPrefix
+				? invalidValue(input.model_id_prefix, 600)
+				: (modelPrefix ?? ''),
+			provider_ids: invalidProviderIds
+				? invalidValue(input.provider_ids, 6009)
+				: (providerIds?.join(',') ?? ''),
+			invalidFilter: true,
+			...(invalidIngressHost ? { invalidIngressHost: true } : {}),
+			...(invalidModelPrefix ? { invalidModelPrefix: true } : {}),
+			...(invalidProviderIds ? { invalidProviderIds: true as const } : {}),
+		}
 	}
 }
+/** Revalidate all scopes: repairing one must not clear another scope's error. */
+export function updateRequestLogScopedFilter(
+	search: RequestLogSearch,
+	key: 'ingress_host' | 'model_id_prefix' | 'provider_ids',
+	value: string
+): RequestLogSearch {
+	return validateRequestLogRouteSearch({ ...search, [key]: value, page: 1 })
+}
 export function requestLogsPath(filters: RequestLogSearch): string {
+	if (filters.invalidFilter) throw new TypeError('Invalid request-log filter')
+	const ingressHost = normalizeRequestLogIngressHost(filters.ingress_host)
+	const modelPrefix = normalizeRequestLogModelIdPrefix(filters.model_id_prefix)
+	const providerIds = normalizeRequestLogProviderIds(filters.provider_ids)
 	if (
 		!Number.isSafeInteger(filters.page) ||
 		filters.page < 1 ||
@@ -121,6 +221,10 @@ export function requestLogsPath(filters: RequestLogSearch): string {
 		page: String(filters.page),
 		page_size: '50',
 	})
+	if (ingressHost !== undefined) params.set('ingress_host', ingressHost)
+	if (modelPrefix !== undefined) params.set('model_id_prefix', modelPrefix)
+	if (providerIds !== undefined)
+		params.set('provider_ids', providerIds.join(','))
 	for (const key of [
 		'status',
 		'model_id',
@@ -131,9 +235,9 @@ export function requestLogsPath(filters: RequestLogSearch): string {
 		'user_email',
 		'api_key_id',
 	] as const) {
-		const value = clean(filters[key], key === 'user_email' ? 320 : 600)
-		if (filters[key].trim() && !value)
-			throw new TypeError('Invalid request-log filter')
+		const raw = filters[key] ?? ''
+		const value = clean(raw, key === 'user_email' ? 320 : 600)
+		if (raw.trim() && !value) throw new TypeError('Invalid request-log filter')
 		if (key === 'protocol' && value && !protocols.has(value))
 			throw new TypeError('Invalid request-log protocol')
 		if (value) params.set(key, value)
@@ -174,17 +278,27 @@ export function requestLogProtocolPath(
 	if (p === 'dashscope') {
 		if (op.includes('.realtime.'))
 			return `/v1/dashscope/realtime?model={model}&operation=${encodeURIComponent(op)}`
-		if (
-			op === 'audio.speech' ||
-			op === 'audio.speech.stream' ||
-			op === 'audio.speech.multimodal'
-		)
-			return '/v1/audio/speech'
+		if (op === 'audio.speech' || op === 'audio.speech.stream')
+			return DASHSCOPE_SPEECH_SYNTHESIZER_PATH
 		if (op === 'audio.transcriptions') return '/v1/audio/transcriptions'
-		if (op === 'audio.transcriptions.multimodal')
+		if (
+			[
+				'audio.transcriptions.multimodal',
+				'audio.speech.multimodal',
+				'images.generations.multimodal',
+			].includes(op)
+		)
 			return DASHSCOPE_MULTIMODAL_GENERATION_PATH
-		if (op === 'audio.transcriptions.async') return '/v1/audio/transcriptions'
+		if (op === 'audio.transcriptions.async')
+			return DASHSCOPE_FILE_TRANSCRIPTION_PATH
 	}
+	if (p === 'minimax') {
+		if (op === 'audio.speech') return MINIMAX_T2A_PATH
+		if (op === 'audio.transcriptions') return MINIMAX_SPEECH_TO_TEXT_PATH
+		if (op === 'images.generations') return MINIMAX_IMAGE_GENERATION_PATH
+	}
+	if (p === 'volcengine' && op === 'images.generations')
+		return VOLCENGINE_IMAGE_GENERATIONS_PATH
 	return op === '*' ? '/*' : `/${op}`
 }
 export function requestLogTags(
@@ -193,7 +307,12 @@ export function requestLogTags(
 ): string[] {
 	const operation = `${log.request_operation ?? ''} ${log.upstream_operation ?? ''}`
 	let kind = 'llm'
-	if (log.provider_id === 'octafuse-tools' || log.model_id?.startsWith('tool:'))
+	if (
+		log.provider_id === 'octafuse-tools' ||
+		log.provider_id === 'octafuse-mcp' ||
+		log.model_id?.startsWith('tool:') ||
+		log.model_id?.startsWith('mcp:')
+	)
 		kind = 'tool'
 	else if (
 		log.billing_kind?.startsWith('image_') ||
@@ -290,84 +409,5 @@ export function logUsage(
 	return `${log.input_tokens} / ${log.output_tokens} ${labels.tokens}${cache}`
 }
 
-const sensitiveKey =
-	/(?:^|_)(?:authorization|api_key|secret|password|credential|cookie|bearer|access_token|refresh_token|session_token|messages|contents|prompt|input_text|image_url|audio_data)(?:_|$)|(?:^|_)token(?:_|$)/u
-export function isSensitiveLogKey(key: string): boolean {
-	return sensitiveKey.test(
-		key
-			.replace(/([a-z])([A-Z])/gu, '$1_$2')
-			.replace(/-/gu, '_')
-			.toLowerCase()
-	)
-}
-function redacted(value: unknown, depth: number): unknown {
-	if (depth > 16) return '[redacted: depth limit]'
-	if (Array.isArray(value))
-		return value.map((part) => redacted(part, depth + 1))
-	if (value && typeof value === 'object') {
-		return Object.fromEntries(
-			Object.entries(value).map(([key, part]) => {
-				return [
-					key,
-					isSensitiveLogKey(key) ? '[redacted]' : redacted(part, depth + 1),
-				]
-			})
-		)
-	}
-	if (typeof value === 'string') return safeLogText(value)
-	return value
-}
-export function safeLogText(value: string): string {
-	const credentialSafe = value
-		.replace(/Bearer\s+\S+|sk-[A-Za-z0-9_-]{12,}/giu, '[redacted]')
-		.replace(
-			/([?&])([^=&#\s"'\\]{1,128})=([^&#\s"'\\]+)/gu,
-			(all, delimiter: string, encodedKey: string) => {
-				let key: string
-				try {
-					key = decodeURIComponent(encodedKey.replace(/\+/gu, ' '))
-				} catch {
-					return `${delimiter}${encodedKey}=[redacted]`
-				}
-				return isSensitiveLogKey(key) || /^(?:key|auth)$/iu.test(key)
-					? `${delimiter}${encodedKey}=[redacted]`
-					: all
-			}
-		)
-	const field = /(["'])([A-Za-z][A-Za-z0-9_-]{0,127})\1\s*:\s*(["'])/gu
-	let result = ''
-	let cursor = 0
-	for (const match of credentialSafe.matchAll(field)) {
-		if (match.index < cursor || !isSensitiveLogKey(match[2])) continue
-		const valueStart = match.index + match[0].length
-		const quote = match[3]
-		let valueEnd = valueStart
-		while (valueEnd < credentialSafe.length) {
-			if (credentialSafe[valueEnd] === '\\') {
-				valueEnd += 2
-				continue
-			}
-			if (credentialSafe[valueEnd] === quote) break
-			valueEnd += 1
-		}
-		result += credentialSafe.slice(cursor, valueStart) + '[redacted]'
-		if (valueEnd < credentialSafe.length) {
-			result += quote
-			cursor = valueEnd + 1
-		} else {
-			cursor = credentialSafe.length
-		}
-	}
-	return result + credentialSafe.slice(cursor)
-}
-/** Malformed legacy fields have no safe structural boundary, so fail closed for display and copy. */
-export function safeLogJson(raw: string | null | undefined): string | null {
-	if (!raw?.trim()) return null
-	try {
-		return JSON.stringify(redacted(JSON.parse(raw) as unknown, 0), null, 2)
-	} catch {
-		return raw.includes('[truncated]')
-			? '[redacted: truncated log]'
-			: '[redacted: malformed log]'
-	}
-}
+export { isSensitiveLogKey, safeLogText } from './log-redaction'
+export { safeLogJson } from './safe-log-json'

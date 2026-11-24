@@ -7,10 +7,15 @@ import {
 	type DashScopeRealtimeOperation,
 } from '../playground/browser-domain/dashscope-realtime-client'
 import type { BuildSimulatorRequestResult } from './endpoint'
+import {
+	extractSimulatorAsyncTask,
+	type SimulatorAsyncTask,
+} from './simulator-async-task'
 import type { ResponseMeta } from './types'
 
 export const SIMULATOR_MAX_RESPONSE_BYTES = 64 * 1024 * 1024
 export type SimulatorTransportResult = {
+	task?: SimulatorAsyncTask
 	raw: string
 	audio: Blob | null
 	meta: ResponseMeta
@@ -52,8 +57,13 @@ function containsProxyError(raw: string): boolean {
 			if (!value || typeof value !== 'object' || Array.isArray(value))
 				return false
 			const object = value as Record<string, unknown>
+			const base = object.base_resp as Record<string, unknown> | undefined
+			const output = object.output as Record<string, unknown> | undefined
 			return (
 				!!object.error ||
+				!!object.code ||
+				(base?.status_code !== undefined && base.status_code !== 0) ||
+				output?.task_status === 'FAILED' ||
 				object.type === 'response.failed' ||
 				object.type === 'error'
 			)
@@ -70,7 +80,11 @@ export async function executeSimulatorHttp(input: {
 	signal: AbortSignal
 	onProgress: SimulatorProgress
 	fetch?: typeof fetch
+	captureAsyncTask?: boolean
 }): Promise<SimulatorTransportResult> {
+	const privateReceipt = input.request.headers['X-CinaToken-Task-Receipt'] ?? ''
+	const safeText = (value: string) =>
+		redact(redact(value, input.secret), privateReceipt)
 	const started = performance.now()
 	const result: SimulatorTransportResult = {
 		raw: '',
@@ -86,9 +100,12 @@ export async function executeSimulatorHttp(input: {
 	try {
 		input.signal.throwIfAborted()
 		const response = await (input.fetch ?? fetch)(input.request.url, {
-			method: 'POST',
+			method: input.request.method ?? 'POST',
 			headers: input.request.headers,
-			body: input.request.formData ?? input.request.bodyText,
+			body:
+				input.request.method === 'GET'
+					? undefined
+					: (input.request.formData ?? input.request.bodyText),
 			credentials: 'omit',
 			cache: 'no-store',
 			redirect: 'error',
@@ -103,11 +120,21 @@ export async function executeSimulatorHttp(input: {
 			status: response.status,
 			latencyMs: (performance.now() - started).toFixed(0),
 			contentType: response.headers.get('content-type')
-				? redact(response.headers.get('content-type') ?? '', input.secret)
+				? safeText(response.headers.get('content-type') ?? '')
 				: null,
-			generationId: response.headers.get('x-generation-id')
-				? redact(response.headers.get('x-generation-id') ?? '', input.secret)
-				: null,
+			settlementBasis:
+				response.headers.get('x-cinatoken-settlement-basis') === 'reserved'
+					? 'reserved'
+					: null,
+			generationId:
+				response.headers.get('x-cinatoken-request-id') ||
+				response.headers.get('x-generation-id')
+					? safeText(
+							response.headers.get('x-cinatoken-request-id') ??
+								response.headers.get('x-generation-id') ??
+								''
+						)
+					: null,
 		}
 		input.onProgress({ ...result, meta: { ...result.meta } })
 		const isAudio =
@@ -130,11 +157,12 @@ export async function executeSimulatorHttp(input: {
 				if (isAudio) chunks.push(new Uint8Array(chunk.value))
 				else {
 					result.raw += decoder.decode(chunk.value, { stream: true })
-					input.onProgress({
-						...result,
-						raw: redact(result.raw, input.secret),
-						meta: { ...result.meta },
-					})
+					if (!input.captureAsyncTask)
+						input.onProgress({
+							...result,
+							raw: safeText(result.raw),
+							meta: { ...result.meta },
+						})
 				}
 			}
 		}
@@ -142,14 +170,23 @@ export async function executeSimulatorHttp(input: {
 			result.audio = new Blob(chunks, {
 				type: result.meta.contentType ?? 'audio/mpeg',
 			})
-		else result.raw = redact(result.raw + decoder.decode(), input.secret)
-		result.meta.outcome =
-			response.ok && !containsProxyError(result.raw) ? 'complete' : 'failed'
+		else result.raw = safeText(result.raw + decoder.decode())
+		if (input.captureAsyncTask) {
+			const extracted = extractSimulatorAsyncTask(result.raw)
+			result.raw = extracted.raw
+			if (response.ok) result.task = extracted.task
+		}
+		if (!response.ok || containsProxyError(result.raw))
+			result.meta.outcome = 'failed'
+		else if (input.captureAsyncTask && !result.task)
+			result.meta.outcome = 'unknown'
+		else result.meta.outcome = 'complete'
 		completed = true
 	} catch {
 		// After dispatch, a network error or cancellation cannot establish that billing did not occur.
 		result.meta.outcome = input.signal.aborted ? 'cancelled' : 'unknown'
-		result.raw = redact(result.raw, input.secret)
+		result.raw = safeText(result.raw)
+		if (input.captureAsyncTask) result.raw = ''
 	} finally {
 		input.signal.removeEventListener('abort', cancelReader)
 		if (reader) {

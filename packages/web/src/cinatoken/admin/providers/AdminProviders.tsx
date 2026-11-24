@@ -8,6 +8,7 @@ import { ProviderDetailDialog } from './ProviderDetailDialog'
 import { ProviderEditorDialog } from './ProviderEditorDialog'
 import { ProviderImportDialog } from './ProviderImportDialog'
 import { ProviderList } from './ProviderList'
+import { ProviderSyncDialog } from './ProviderSyncDialog'
 import { providerErrorKey } from './provider-errors'
 import {
 	filterProviders,
@@ -108,6 +109,14 @@ function ScopedProviders(props: AdminProvidersProps) {
 						{t(prefix + 'import')}
 					</Button>
 					<Button
+						type='button'
+						variant='outline'
+						disabled={manager.disabled}
+						onClick={() => manager.open({ kind: 'sync' })}
+					>
+						{t(prefix + 'sync')}
+					</Button>
+					<Button
 						disabled={manager.disabled}
 						onClick={() => manager.open({ kind: 'editor', mode: 'create' })}
 					>
@@ -139,6 +148,14 @@ function ScopedProviders(props: AdminProvidersProps) {
 			{manager.notice && !manager.hidden && (
 				<p role='status' className='text-muted-foreground text-sm'>
 					{t(prefix + 'saved')}
+				</p>
+			)}
+			{manager.mutation.error && !modal && !manager.hidden && (
+				<p
+					role='alert'
+					className='text-destructive rounded-xl border p-4 text-sm'
+				>
+					{t(providerErrorKey(manager.mutation.error))}
 				</p>
 			)}
 			{manager.writeUnconfirmed && !manager.hidden && (
@@ -232,14 +249,34 @@ function ScopedProviders(props: AdminProvidersProps) {
 					</div>
 				</div>
 			)}
+			{modal?.kind === 'sync' && (
+				<ProviderSyncDialog
+					api={props.api}
+					queryPrefix={manager.prefix}
+					readOptions={manager.readOptions}
+					disabled={manager.disabled}
+					pending={manager.mutation.isPending}
+					error={manager.mutation.error}
+					result={manager.syncResult}
+					migrated={manager.syncMigrated}
+					onApply={manager.syncProviders}
+					onMigrate={manager.migrateProvider}
+					onFresh={manager.clearSyncResult}
+					onClose={manager.close}
+				/>
+			)}
 			{modal?.kind === 'editor' && (
 				<ProviderEditorDialog
+					api={props.api}
+					queryPrefix={manager.prefix}
+					readOptions={manager.readOptions}
 					mode={modal.mode}
 					row={modal.row}
 					pending={manager.mutation.isPending}
 					disabled={manager.disabled}
 					error={manager.mutation.error}
 					onSave={manager.save}
+					onResume={manager.resumeEditor}
 					onClose={manager.close}
 				/>
 			)}
@@ -274,6 +311,7 @@ function ScopedProviders(props: AdminProvidersProps) {
 					writeOptions={manager.writeOptions}
 					row={modal.row}
 					queryPrefix={manager.prefix}
+					onQuotaFailure={manager.revoke}
 					pending={manager.mutation.isPending}
 					disabled={manager.disabled}
 					error={manager.mutation.error}

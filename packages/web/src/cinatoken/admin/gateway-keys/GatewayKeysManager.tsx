@@ -119,6 +119,7 @@ export function GatewayKeysManager(props: {
 				rows={props.page.data}
 				capabilities={props.page.capabilities}
 				currency={manager.currency}
+				timezone={manager.timezone}
 				canWrite={manager.canWrite}
 				onEdit={openEdit}
 				onStatus={(row) => {
@@ -199,6 +200,7 @@ export function GatewayKeysManager(props: {
 					scopeKey={props.context.scopeKey}
 					reconciliationKey={props.context.reconciliationKey}
 					currency={manager.currency}
+					timezone={manager.timezone}
 					guardrailBlocked={manager.guardrailBlocked}
 					onGuardrailDenied={manager.invalidateGuardrail}
 					busy={manager.busy}

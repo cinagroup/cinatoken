@@ -18,7 +18,9 @@ import {
 	getUserActivityGenerationService,
 	listUserActivityService,
 	normalizeUserActivityQuery,
+	userBudgetOverview,
 	userActivityCsv,
+	sanitizeUserActivityLog,
 	type UserActivityLog,
 	type UserActivityRepositories,
 } from "./activity-service";
@@ -26,7 +28,10 @@ import {
 const USER: UserRow = {
 	id: "user-1",
 	email: "user@example.com",
-	wallet_granted: 0, wallet_spent: 0, rate_limit: null, budget_max: 10,
+	wallet_granted: 0,
+	wallet_spent: 0,
+	rate_limit: null,
+	budget_max: 10,
 	budget_base: 10,
 	budget_spent: 2,
 	budget_period: "monthly",
@@ -50,7 +55,8 @@ const KEY: ApiKeyRow = {
 	name: "Production",
 	status: "active",
 	metadata: null,
-	expires_at: null, rate_limit: null,
+	expires_at: null,
+	rate_limit: null,
 	limit_micros: null,
 	limit_reset: null,
 	include_byok_in_limit: false,
@@ -90,7 +96,9 @@ const LOG: RequestLogRow = {
 	total_tokens: 15,
 	metered_cost: 0.1,
 	standard_cost: 0.3,
-	charged_cost: 0.2, charged_wallet_cost: 0, ingress_host: null,
+	charged_cost: 0.2,
+	charged_wallet_cost: 0,
+	ingress_host: null,
 	route_group: "default",
 	status: "success",
 	latency_ms: 321,
@@ -198,7 +206,7 @@ const WORKSPACE_CONTEXT: WorkspaceContextProjection = {
 WORKSPACE_CONTEXT.workspaces.push(WORKSPACE_CONTEXT.currentWorkspace);
 
 function activityRepositories(
-	calls: Array<Record<string, unknown>>
+	calls: Array<Record<string, unknown>>,
 ): UserActivityRepositories {
 	return {
 		users: { getById: async () => USER },
@@ -309,7 +317,7 @@ test("Activity Generation detail is tenant-scoped and exposes only the shared sa
 		repos,
 		"user-1",
 		"personal:user-1",
-		"gen-owned_123"
+		"gen-owned_123",
 	);
 
 	assert.ok(output);
@@ -354,9 +362,9 @@ test("Activity Generation detail fails closed before or after the tenant lookup"
 			repos,
 			"user-1",
 			"personal:user-1",
-			"request-1"
+			"request-1",
 		),
-		null
+		null,
 	);
 	assert.equal(calls, 0);
 
@@ -365,9 +373,9 @@ test("Activity Generation detail fails closed before or after the tenant lookup"
 			repos,
 			"user-1",
 			"organization:other",
-			"gen-owned_123"
+			"gen-owned_123",
 		),
-		null
+		null,
 	);
 	assert.equal(calls, 1);
 });
@@ -383,7 +391,7 @@ test("Activity Generation detail remains available when a non-USD deployment has
 		repos,
 		"user-1",
 		"personal:user-1",
-		"gen-owned_123"
+		"gen-owned_123",
 	);
 	assert.ok(output);
 	assert.equal(output.total_cost, null);
@@ -416,7 +424,7 @@ test("Activity Generation route returns a no-store portal response without Gatew
 	assert.match(body, /"id":"gen-owned_123"/u);
 	assert.doesNotMatch(
 		body,
-		/request_body|route_trace|provider_key|pricing_audit|secret-provider/u
+		/request_body|route_trace|provider_key|pricing_audit|secret-provider/u,
 	);
 });
 
@@ -435,7 +443,7 @@ test("ordinary Activity forces user scope and returns only allowlisted log field
 			provider_name: "DeepSeek",
 			status: "success",
 		},
-		Date.parse("2026-08-30T12:00:00.000Z")
+		Date.parse("2026-08-30T12:00:00.000Z"),
 	);
 
 	assert.ok(output);
@@ -444,11 +452,11 @@ test("ordinary Activity forces user scope and returns only allowlisted log field
 	assert.equal(calls.length, 7);
 	assert.equal(
 		calls.every((call) => call.userId === "user-1"),
-		true
+		true,
 	);
 	assert.equal(
 		calls.every((call) => call.workspaceId === "personal:user-1"),
-		true
+		true,
 	);
 	assert.equal(calls.find((call) => call.kind === "logs")?.apiKeyId, "key-1");
 	for (const kind of [
@@ -466,7 +474,7 @@ test("ordinary Activity forces user scope and returns only allowlisted log field
 	}
 	assert.equal(
 		calls.find((entry) => entry.kind === "timeline")?.granularity,
-		"day"
+		"day",
 	);
 	assert.deepEqual(output.analytics, {
 		limit: 10,
@@ -585,7 +593,7 @@ test("Activity query bounds pagination and ignores unknown filters", () => {
 			modelId: undefined,
 			providerName: undefined,
 			status: undefined,
-		}
+		},
 	);
 });
 
@@ -608,7 +616,7 @@ test("Activity drops unsafe Provider display-name snapshots", async () => {
 						totalTokens: 15,
 						chargedCost: 0.2,
 					},
-			  ]
+				]
 			: originalGroups(options);
 	repos.requestLogs.queryRequestTimeseries = async () => [
 		{
@@ -640,7 +648,7 @@ test("Activity drops unsafe Provider display-name snapshots", async () => {
 		"user-1",
 		"personal:user-1",
 		{ range: "7d" },
-		Date.parse("2026-08-30T12:00:00.000Z")
+		Date.parse("2026-08-30T12:00:00.000Z"),
 	);
 
 	assert.ok(output);
@@ -668,16 +676,16 @@ test("CSV export is user-scoped, bounded, and neutralizes spreadsheet formulas",
 		"user-1",
 		"personal:user-1",
 		{ range: "7d", api_key_id: "key-1" },
-		Date.parse("2026-08-30T12:00:00.000Z")
+		Date.parse("2026-08-30T12:00:00.000Z"),
 	);
 	assert.ok(exported);
 	assert.equal(
 		calls.every((call) => call.userId === "user-1"),
-		true
+		true,
 	);
 	assert.equal(
 		calls.every((call) => call.workspaceId === "personal:user-1"),
-		true
+		true,
 	);
 	assert.equal(exported.rowCount, 1);
 	assert.equal(exported.truncated, false);
@@ -708,12 +716,12 @@ test("CSV export is user-scoped, bounded, and neutralizes spreadsheet formulas",
 	};
 	assert.match(
 		userActivityCsv([formulaRow]),
-		/"'=HYPERLINK\(""https:\/\/evil""\)"/u
+		/"'=HYPERLINK\(""https:\/\/evil""\)"/u,
 	);
 	assert.match(userActivityCsv([formulaRow]), /"'\+malicious-provider"/u);
 	assert.match(
 		userActivityCsv([formulaRow]),
-		/"input_image_count","output_image_count","audio_duration_seconds","audio_characters"/u
+		/"input_image_count","output_image_count","audio_duration_seconds","audio_characters"/u,
 	);
 });
 
@@ -737,7 +745,7 @@ test("CSV export keeps a stable page size so later offsets cannot overlap", asyn
 		"user-1",
 		"personal:user-1",
 		{ range: "7d" },
-		Date.parse("2026-08-30T12:00:00.000Z")
+		Date.parse("2026-08-30T12:00:00.000Z"),
 	);
 	assert.ok(exported);
 	assert.deepEqual(pageSizes, [100, 100]);
@@ -775,7 +783,7 @@ test("CSV route reports the authorized workspace even for an empty export", asyn
 	assert.equal(response.status, 200);
 	assert.equal(
 		response.headers.get("X-CinaToken-Workspace-Id"),
-		encodeURIComponent(workspaceId)
+		encodeURIComponent(workspaceId),
 	);
 	assert.equal(response.headers.get("X-CinaToken-Export-Count"), "0");
 	assert.equal(response.headers.get("X-CinaToken-Export-Total"), "0");
@@ -784,11 +792,11 @@ test("CSV route reports the authorized workspace even for an empty export", asyn
 	assert.equal(response.headers.get("cache-control"), "private, no-store");
 	assert.equal(
 		calls.every((call) => call.workspaceId === workspaceId),
-		true
+		true,
 	);
 	assert.doesNotMatch(
 		await response.text(),
-		/request_body|route_trace|provider_key|raw_usage|provider-secret/u
+		/request_body|route_trace|provider_key|raw_usage|provider-secret/u,
 	);
 });
 
@@ -814,4 +822,298 @@ test("a stale or malformed Activity CSV workspace precondition prevents reposito
 		assert.equal(response.status, status);
 	}
 	assert.deepEqual(calls, []);
+});
+
+test("Wallet budget extension combines both pools once, retaining prior debt and reservations", () => {
+	const account = { ...USER, wallet_granted: 20, wallet_spent: 3 };
+	assert.equal(
+		Object.hasOwn(userBudgetOverview(account), "walletGranted"),
+		false,
+	);
+	assert.equal(userBudgetOverview(account, true).totalRemaining, 24.75);
+	assert.equal(userBudgetOverview(account, true).walletRemaining, 17);
+	const overdrawn = {
+		...account,
+		budget_max: 1,
+		budget_spent: 6,
+		wallet_granted: 5,
+		wallet_spent: 0,
+		budget_reserved_micros: 0,
+	};
+	assert.equal(userBudgetOverview(overdrawn, true).totalRemaining, 0);
+	assert.equal(
+		userBudgetOverview({ ...overdrawn, wallet_granted: 7 }, true)
+			.totalRemaining,
+		2,
+	);
+	const reset = {
+		...account,
+		budget_spent: 0,
+		budget_epoch: 4,
+		budget_reserved_micros: 0,
+	};
+	assert.equal(userBudgetOverview(reset, true).walletRemaining, 17);
+	assert.equal(userBudgetOverview(reset, true).totalRemaining, 27);
+	const unlimited = userBudgetOverview({ ...account, budget_max: null }, true);
+	assert.equal(unlimited.status, "unlimited");
+	assert.equal(unlimited.totalRemaining, null);
+	assert.equal(unlimited.walletRemaining, 17);
+});
+
+test("Wallet overview keeps micro-unit precision and never invents an invalid balance", () => {
+	const tiny = {
+		...USER,
+		budget_max: 0.000003,
+		budget_spent: 0.000001,
+		wallet_granted: 0.000004,
+		wallet_spent: 0.000002,
+		budget_reserved_micros: 1,
+	};
+	assert.equal(userBudgetOverview(tiny, true).totalRemaining, 0.000003);
+	for (const invalid of [
+		NaN,
+		-1,
+		Infinity,
+		Number.MAX_SAFE_INTEGER,
+		undefined,
+	]) {
+		const overview = userBudgetOverview(
+			{ ...USER, wallet_granted: invalid } as UserRow,
+			true,
+		);
+		assert.equal(overview.status, "unavailable");
+		assert.equal(overview.totalRemaining, null);
+		assert.equal(overview.walletGranted, null);
+		assert.equal(overview.walletRemaining, null);
+	}
+	const overflow = userBudgetOverview(
+		{ ...USER, budget_max: 8_000_000_000, wallet_granted: 8_000_000_000 },
+		true,
+	);
+	assert.equal(overflow.status, "unavailable");
+	assert.equal(overflow.totalRemaining, null);
+});
+
+test("Activity route negotiates wallet details without breaking legacy clients or tenant scoping", async () => {
+	const calls: Array<Record<string, unknown>> = [];
+	const repos = activityRepositories(calls);
+	repos.users.getById = async () => ({
+		...USER,
+		wallet_granted: 20,
+		wallet_spent: 3,
+	});
+	const app = new Hono<UserEnv>();
+	app.use("*", async (c, next) => {
+		c.set("repositories", repos as unknown as GatewayRepositories);
+		c.set("principal", PRINCIPAL);
+		c.set("workspaceContext", WORKSPACE_CONTEXT);
+		await next();
+	});
+	app.route("/activity", userActivityRoutes);
+	for (const flag of [
+		"",
+		"?include_wallet=false",
+		"?include_wallet=TRUE",
+		"?include_wallet=true",
+	]) {
+		const response = await app.request("/activity" + flag);
+		assert.equal(response.status, 200);
+		assert.equal(response.headers.get("cache-control"), "private, no-store");
+		const body = (await response.json()) as {
+			data: { workspaceId: string; budget: Record<string, unknown> };
+		};
+		assert.equal(body.data.workspaceId, WORKSPACE_CONTEXT.currentWorkspace.id);
+		if (flag === "?include_wallet=true") {
+			assert.equal(body.data.budget.totalRemaining, 24.75);
+			assert.equal(body.data.budget.walletRemaining, 17);
+		} else
+			assert.equal(Object.hasOwn(body.data.budget, "walletGranted"), false);
+	}
+	assert.ok(
+		calls
+			.filter((call) => call.kind === "logs")
+			.every(
+				(call) =>
+					call.userId === USER.id &&
+					call.workspaceId === WORKSPACE_CONTEXT.currentWorkspace.id,
+			),
+	);
+});
+
+test("Activity recorded charge allocation is independent opt-in and strictly sanitizes only public money", async () => {
+	const names = new Map([[KEY.id, KEY.name]]);
+	const source = (changes: Record<string, unknown>) =>
+		({
+			...LOG,
+			charged_cost: 0.3,
+			charged_wallet_cost: 0.1,
+			...changes,
+		}) as unknown as RequestLogRow;
+	assert.equal(
+		Object.hasOwn(
+			sanitizeUserActivityLog(source({}), names),
+			"chargedWalletCost",
+		),
+		false,
+	);
+	for (const [raw, expected] of [
+		[0.1, 0.1],
+		["0.100000", 0.1],
+		[0, 0],
+		["0.000001", 0.000001],
+		[null, null],
+		["", null],
+		[true, null],
+		["bad", null],
+		["0." + "0".repeat(400) + "1", null],
+		[-1, null],
+		[Infinity, null],
+	] as const) {
+		const output = sanitizeUserActivityLog(
+			source({ charged_wallet_cost: raw }),
+			names,
+			true,
+		);
+		assert.equal(output.chargedWalletCost, expected);
+		assert.equal(JSON.stringify(output).includes("must never leave"), false);
+		assert.equal(Object.hasOwn(output, "provider_id"), false);
+	}
+	assert.equal(
+		Object.hasOwn(
+			sanitizeUserActivityLog(
+				source({ charged_wallet_cost: undefined }),
+				names,
+				true,
+			),
+			"chargedWalletCost",
+		),
+		false,
+	);
+	for (const charged_cost of [
+		null,
+		undefined,
+		"",
+		true,
+		"bad",
+		"0." + "0".repeat(400) + "1",
+		-1,
+		Infinity,
+	]) {
+		assert.equal(
+			sanitizeUserActivityLog(
+				source({ charged_cost, charged_wallet_cost: 0 }),
+				names,
+				true,
+			).chargedWalletCost,
+			null,
+		);
+	}
+	assert.equal(
+		normalizeUserActivityQuery({ include_charge_allocation: true })
+			.includeChargeAllocation,
+		undefined,
+	);
+	assert.equal(
+		normalizeUserActivityQuery({ include_charge_allocation: "true" })
+			.includeChargeAllocation,
+		true,
+	);
+});
+
+test("Activity allocation negotiation keeps legacy JSON/CSV stable and carries user/workspace/Key filters", async () => {
+	const calls: Array<Record<string, unknown>> = [];
+	const repos = activityRepositories(calls);
+	repos.requestLogs.getRequestLogs = async (options) => {
+		calls.push({ kind: "logs", ...options });
+		return {
+			logs: [{ ...LOG, charged_cost: 0.3, charged_wallet_cost: 0.1 }],
+			total: 1,
+		};
+	};
+	const app = new Hono<UserEnv>();
+	app.use("*", async (c, next) => {
+		c.set("repositories", repos as unknown as GatewayRepositories);
+		c.set("principal", PRINCIPAL);
+		c.set("workspaceContext", WORKSPACE_CONTEXT);
+		await next();
+	});
+	app.route("/activity", userActivityRoutes);
+	for (const flag of [
+		"",
+		"&include_wallet=true",
+		"&include_charge_allocation=false",
+		"&include_charge_allocation=TRUE",
+		"&include_charge_allocation=true",
+	]) {
+		const response = await app.request("/activity?api_key_id=key-1" + flag);
+		assert.equal(response.status, 200);
+		assert.equal(response.headers.get("cache-control"), "private, no-store");
+		const body = (await response.json()) as {
+			data: { workspaceId: string; logs: Array<Record<string, unknown>> };
+		};
+		const data = body.data;
+		assert.equal(data.workspaceId, WORKSPACE_CONTEXT.currentWorkspace.id);
+		if (flag === "&include_charge_allocation=true")
+			assert.equal(data.logs[0].chargedWalletCost, 0.1);
+		else assert.equal(Object.hasOwn(data.logs[0], "chargedWalletCost"), false);
+	}
+	for (const optIn of [false, true]) {
+		const response = await app.request(
+			"/activity/export.csv?api_key_id=key-1" +
+				(optIn ? "&include_charge_allocation=true" : ""),
+		);
+		assert.equal(response.status, 200);
+		assert.equal(
+			response.headers.get("X-CinaToken-Charge-Allocation"),
+			optIn ? "v1" : null,
+		);
+		const csv = await response.text();
+		assert.equal(csv.includes("charged_wallet_cost_cny"), optIn);
+		if (optIn) assert.match(csv, /"0.2","0.1"\r\n$/u);
+	}
+	assert.ok(
+		calls
+			.filter((x) => x.kind === "logs")
+			.every(
+				(x) =>
+					x.userId === USER.id &&
+					x.workspaceId === WORKSPACE_CONTEXT.currentWorkspace.id &&
+					x.apiKeyId === KEY.id,
+			),
+	);
+});
+
+test("Activity opt-in CSV preserves exact micro-units and leaves both allocation cells blank for unknown or inconsistent rows", () => {
+	const row = sanitizeUserActivityLog(
+		{ ...LOG, charged_cost: 0.3, charged_wallet_cost: 0.1 },
+		new Map(),
+		true,
+	);
+	const text = userActivityCsv(
+		[
+			row,
+			{ ...row, chargedCost: 0.000002, chargedWalletCost: 0.000001 },
+			{ ...row, chargedCost: 0, chargedWalletCost: 0 },
+			{ ...row, chargedWalletCost: null },
+			{ ...row, chargedWalletCost: undefined },
+			{ ...row, chargedWalletCost: 0.4 },
+			{ ...row, chargedCost: 1e-16, chargedWalletCost: 0 },
+			{ ...row, chargedCost: 9_000_000_000, chargedWalletCost: 0.000001 },
+		],
+		"CNY",
+		true,
+	);
+	const lines = text.split("\r\n");
+	assert.match(
+		lines[0],
+		/"charged_period_cost_cny","charged_wallet_cost_cny"$/u,
+	);
+	assert.match(lines[1], /"0.2","0.1"$/u);
+	assert.match(lines[2], /"0.000001","0.000001"$/u);
+	assert.match(lines[3], /"0","0"$/u);
+	for (const line of lines.slice(4, 9)) assert.match(line, /"",""$/u);
+	assert.equal(
+		userActivityCsv([row], "CNY").includes("charged_wallet_cost"),
+		false,
+	);
 });

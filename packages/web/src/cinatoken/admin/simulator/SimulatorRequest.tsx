@@ -1,5 +1,6 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
 import { useTranslation } from 'react-i18next'
+import { needsSimulatorAudioFile } from './simulator-selection'
 import {
 	listSupportedClientSurfaces,
 	codeBlockClass,
@@ -16,26 +17,28 @@ export function SimulatorRequest(props: { state: SimulatorState }) {
 	const surfaces = listSupportedClientSurfaces(
 		state.context?.routes ?? [],
 		selection.modelId,
-		selection.routeGroup
+		selection.routeGroup,
+		selection.kind,
+		selection.protocol
 	)
-	let protocols = surfaces.protocols
-	if (selection.kind === 'image')
-		protocols = protocols.filter((value) => value === 'openai')
-	if (selection.kind === 'audio')
-		protocols = protocols.filter(
-			(value) => value === 'openai' || value === 'dashscope'
-		)
+	const protocols = surfaces.protocols
 	const canUseMicrophone =
 		state.realtime && selection.audioOperation === 'transcriptions'
-	const isHttpMultimodal =
-		selection.protocol === 'dashscope' &&
-		selection.dashscopeOperation === 'audio.transcriptions.multimodal'
+	const isNativeHttp = selection.protocol !== 'openai' && !state.realtime
+	const needsAudio = needsSimulatorAudioFile(selection, null)
+	let imageHint = 'nativeHttpHint'
+	if (selection.protocol === 'openai')
+		imageHint =
+			selection.imageOperation === 'edits'
+				? 'imageEditsHint'
+				: 'imageGenerationsHint'
 	let audioHint = 'audioSpeechHint'
 	if (selection.audioOperation === 'transcriptions')
 		audioHint = state.realtime
 			? 'audioRealtimeDashScopeHint'
 			: 'audioTranscriptionsHint'
 	else if (state.realtime) audioHint = 'audioRealtimeSpeechHint'
+	if (isNativeHttp) audioHint = needsAudio ? 'nativeFileHint' : 'nativeHttpHint'
 	return (
 		<section className={panelClass} aria-labelledby='simulator-request'>
 			<div className='flex flex-wrap items-center justify-between gap-2'>
@@ -115,7 +118,7 @@ export function SimulatorRequest(props: { state: SimulatorState }) {
 							</p>
 						</>
 					)}
-					{selection.protocol === 'gemini' && (
+					{selection.protocol === 'gemini' && selection.kind === 'llm' && (
 						<>
 							<label className={labelClass} htmlFor='simulator-gemini-action'>
 								{t('cinatoken.adminSimulator.geminiAction')}
@@ -168,11 +171,7 @@ export function SimulatorRequest(props: { state: SimulatorState }) {
 						))}
 					</div>
 					<p className='text-muted-foreground text-xs'>
-						{t(
-							selection.imageOperation === 'edits'
-								? 'cinatoken.adminSimulator.imageEditsHint'
-								: 'cinatoken.adminSimulator.imageGenerationsHint'
-						)}
+						{t('cinatoken.adminSimulator.' + imageHint)}
 					</p>
 					{selection.imageOperation === 'edits' && (
 						<>
@@ -219,9 +218,9 @@ export function SimulatorRequest(props: { state: SimulatorState }) {
 					<p className='text-muted-foreground text-xs'>
 						{t('cinatoken.adminSimulator.' + audioHint)}
 					</p>
-					{isHttpMultimodal && (
+					{isNativeHttp && (
 						<p className='text-muted-foreground text-xs'>
-							{t('cinatoken.adminSimulator.multimodalHttpHint')}
+							{t('cinatoken.adminSimulator.nativeHttpHint')}
 						</p>
 					)}
 					{canUseMicrophone && (
@@ -249,54 +248,51 @@ export function SimulatorRequest(props: { state: SimulatorState }) {
 							</label>
 						</fieldset>
 					)}
-					{selection.audioOperation === 'transcriptions' &&
-						!state.usesMicrophone &&
-						!isHttpMultimodal && (
-							<>
-								<label className={labelClass} htmlFor='simulator-audio'>
-									{t('cinatoken.adminSimulator.audioFile')}
-								</label>
-								<input
-									id='simulator-audio'
-									key={
-										selection.modelId +
-										selection.protocol +
-										selection.dashscopeOperation
-									}
-									type='file'
-									accept='audio/*,.mp3,.wav,.m4a,.webm,.ogg,.flac,.pcm'
-									disabled={state.sending}
-									className={inputClass}
-									onChange={(event) =>
-										state.setAudioFile(event.target.files?.[0] ?? null)
-									}
-								/>
-								<p className='text-muted-foreground text-xs'>
-									{t(
-										state.realtime
-											? 'cinatoken.adminSimulator.audioRealtimeFileDashScopeHint'
-											: 'cinatoken.adminSimulator.audioFileHint'
-									)}
-								</p>
-								<p className='text-muted-foreground text-xs'>
-									{t('cinatoken.adminSimulator.audioLimit', {
-										bytes:
-											state.context?.limits.audio_file_bytes ??
-											25 * 1024 * 1024,
-									})}
-								</p>
-								{state.audioFile && (
-									<p className='text-muted-foreground text-xs'>
-										{state.audioFile.name} · {state.audioFile.size} B
-									</p>
+					{needsAudio && !state.usesMicrophone && (
+						<>
+							<label className={labelClass} htmlFor='simulator-audio'>
+								{t('cinatoken.adminSimulator.audioFile')}
+							</label>
+							<input
+								id='simulator-audio'
+								key={
+									selection.modelId +
+									selection.protocol +
+									selection.dashscopeOperation
+								}
+								type='file'
+								accept='audio/*,.mp3,.wav,.m4a,.webm,.ogg,.flac,.pcm'
+								disabled={state.sending}
+								className={inputClass}
+								onChange={(event) =>
+									state.setAudioFile(event.target.files?.[0] ?? null)
+								}
+							/>
+							<p className='text-muted-foreground text-xs'>
+								{t(
+									state.realtime
+										? 'cinatoken.adminSimulator.audioRealtimeFileDashScopeHint'
+										: 'cinatoken.adminSimulator.audioFileHint'
 								)}
-								{!state.audioValidation.ok && state.audioFile && (
-									<p role='alert' className='text-destructive text-sm'>
-										{t('cinatoken.adminSimulator.invalidAudio')}
-									</p>
-								)}
-							</>
-						)}
+							</p>
+							<p className='text-muted-foreground text-xs'>
+								{t('cinatoken.adminSimulator.audioLimit', {
+									bytes:
+										state.context?.limits.audio_file_bytes ?? 25 * 1024 * 1024,
+								})}
+							</p>
+							{state.audioFile && (
+								<p className='text-muted-foreground text-xs'>
+									{state.audioFile.name} · {state.audioFile.size} B
+								</p>
+							)}
+							{!state.audioValidation.ok && state.audioFile && (
+								<p role='alert' className='text-destructive text-sm'>
+									{t('cinatoken.adminSimulator.invalidAudio')}
+								</p>
+							)}
+						</>
+					)}
 					{selection.audioOperation === 'speech' &&
 						state.realtime &&
 						!state.context?.realtime_tts_supported && (

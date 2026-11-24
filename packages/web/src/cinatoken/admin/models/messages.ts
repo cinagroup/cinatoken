@@ -1,4 +1,14 @@
+import { modelSyncStrings } from './model-sync-messages'
+
 const strings = {
+	...modelSyncStrings,
+	resumeEditing: ['Resume editing', '继续编辑', '編集を続ける', '편집 계속'],
+	rejectedDraftHint: [
+		'The server rejected this change. Your draft is retained. Review the values before saving again.',
+		'服务器拒绝了此次更改，草稿已保留。请检查修改后再次保存。',
+		'サーバーが変更を拒否しました。下書きは保持されています。内容を確認してから再保存してください。',
+		'서버가 변경을 거부했습니다. 초안은 유지됩니다. 값을 확인한 후 다시 저장하세요.',
+	],
 	title: ['Models', '模型管理', 'モデル管理', '모델 관리'],
 	subtitle: [
 		'Manage model capabilities, pricing and catalog metadata.',
@@ -541,10 +551,10 @@ const strings = {
 		'변경 결과를 확인할 수 없어 양식을 닫았습니다. 새 작업 전에 새로 고침하여 서버 상태를 확인하세요. 이 요청은 자동으로 재전송되지 않습니다.',
 	],
 	conflict: [
-		'The model changed or already exists. Close this form, refresh and inspect the current model before retrying.',
-		'模型已变更或已存在。请关闭表单、刷新并核对当前模型后再重试。',
-		'モデルが変更されたか、すでに存在します。フォームを閉じて更新し、現在のモデルを確認してください。',
-		'모델이 변경되었거나 이미 존재합니다. 양식을 닫고 새로 고친 후 현재 모델을 확인하세요.',
+		'The model changed or already exists. Resolve the conflict before trying again.',
+		'模型已变更或已存在。请核对并解决冲突后重试。',
+		'モデルが変更されたか、すでに存在します。競合を確認して解消してから再試行してください。',
+		'모델이 변경되었거나 이미 존재합니다. 충돌을 확인하고 해결한 후 다시 시도하세요.',
 	],
 	notFound: [
 		'This model no longer exists. Close the dialog and refresh the list.',

@@ -1,6 +1,8 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
 import {
 	AUDIO_SPEECH_BODY_TEMPLATE,
+	MINIMAX_OPENAI_SPEECH_BODY_TEMPLATE,
+	MINIMAX_SPEECH_BODY_TEMPLATE,
 	AUDIO_TRANSCRIPTIONS_BODY_TEMPLATE,
 	AUDIO_TRANSCRIPTIONS_FILE_URL_BODY_TEMPLATE,
 	DASHSCOPE_MULTIMODAL_ASR_BODY_TEMPLATE,
@@ -9,11 +11,11 @@ import {
 	buildDashScopeRealtimeAsrTemplate,
 	buildDashScopeRealtimeTtsTemplate,
 	buildDashScopeSpeechBodyTemplate,
+	dashScopeTtsVoiceForModel,
 	isDashScopeRealtimeOperation,
 } from './browser-domain/dashscope-realtime-client'
 import {
-	IMAGE_EDITS_BODY_TEMPLATE,
-	IMAGE_GENERATIONS_BODY_TEMPLATE,
+	imageBodyTemplateFor,
 	type ImageOperation,
 } from './browser-domain/image-generations'
 import {
@@ -113,10 +115,56 @@ export function routeTemplate(
 					isDashScopeRealtimeOperation(operation) ? operation : undefined
 				)
 	if (kind === 'image')
-		return imageOperation === 'edits'
-			? IMAGE_EDITS_BODY_TEMPLATE
-			: IMAGE_GENERATIONS_BODY_TEMPLATE
+		return imageBodyTemplateFor({
+			protocol: route.upstream_protocol,
+			adapter: route.adapter,
+			modelId: route.model_id,
+			providerModelName: route.provider_model_name,
+			operation: imageOperation,
+		})
 	if (kind === 'audio') {
+		if (
+			route.upstream_protocol === 'dashscope' &&
+			operation === 'audio.speech' &&
+			(route.adapter ?? 'passthrough') === 'passthrough'
+		)
+			return JSON.stringify(
+				{
+					model: '<auto>',
+					input: {
+						text: '你好，欢迎使用 cinatoken Gateway。',
+						voice: dashScopeTtsVoiceForModel(route.provider_model_name),
+						format: 'wav',
+						rate: 1,
+					},
+				},
+				null,
+				2
+			)
+		if (route.upstream_protocol === 'minimax' && operation === 'audio.speech')
+			return route.adapter === 'minimax-tts'
+				? MINIMAX_OPENAI_SPEECH_BODY_TEMPLATE
+				: MINIMAX_SPEECH_BODY_TEMPLATE
+		if (
+			route.upstream_protocol === 'minimax' &&
+			operation === 'audio.transcriptions' &&
+			route.adapter === 'passthrough'
+		)
+			return JSON.stringify({ model: '<auto>', language: 'auto' }, null, 2)
+		if (
+			route.upstream_protocol === 'dashscope' &&
+			route.adapter === 'passthrough' &&
+			operation === 'audio.transcriptions.async'
+		)
+			return JSON.stringify(
+				{
+					model: '<auto>',
+					input: { file_urls: ['https://example.com/sample.wav'] },
+					parameters: { channel_id: [0] },
+				},
+				null,
+				2
+			)
 		if (operation.startsWith('audio.speech'))
 			return route.upstream_protocol === 'dashscope'
 				? buildDashScopeSpeechBodyTemplate(route.provider_model_name)
@@ -248,8 +296,8 @@ export function buildPlaygroundInput(
 	const allowed = supportedOperations(route, kind)
 	if (!allowed.includes(route.upstream_operation))
 		throw new PlaygroundInputFailure('operationUnsupported')
-	if (kind === 'image' && route.upstream_protocol !== 'openai')
-		throw new PlaygroundInputFailure('imageOpenaiOnly')
+	if (!playgroundRouteSupported(route, kind, imageOperation))
+		throw new PlaygroundInputFailure('operationUnsupported')
 	if (kind === 'rerank' && route.upstream_protocol !== 'openai')
 		throw new PlaygroundInputFailure('rerankOpenaiOnly')
 	if (isRealtimeRoute(route) && !context.realtime_supported && !preview)
@@ -317,7 +365,9 @@ export function buildPlaygroundInput(
 		routeId: route.id,
 		body: body as Record<string, unknown>,
 		...(kind === 'image' ? { imageOperation } : {}),
-		...(route.upstream_protocol === 'gemini' ? { geminiAction } : {}),
+		...(route.upstream_protocol === 'gemini'
+			? { geminiAction: kind === 'image' ? 'generateContent' : geminiAction }
+			: {}),
 	}
 }
 function validUploadName(name: string): boolean {
@@ -334,24 +384,105 @@ function validAudioUpload(file: File): boolean {
 				)))
 	)
 }
-function supportedOperations(
+export function supportedOperations(
 	route: PlaygroundRoute,
 	kind: PlaygroundKind
 ): string[] {
+	if (route.upstream_protocol === 'unsupported') return []
+	if (kind === 'rerank')
+		return route.upstream_protocol === 'openai' ? ['rerank', '*'] : []
+	if (kind === 'image') {
+		if (route.upstream_protocol === 'openai')
+			return ['images.generations', 'images.edits', '*']
+		if (route.upstream_protocol === 'gemini')
+			return [
+				'models.generate',
+				'generateContent',
+				'streamGenerateContent',
+				'chat',
+				'*',
+			]
+		if (route.upstream_protocol === 'dashscope')
+			return ['images.generations.multimodal']
+		if (
+			route.upstream_protocol === 'minimax' ||
+			route.upstream_protocol === 'volcengine'
+		)
+			return ['images.generations']
+		return []
+	}
+	if (kind === 'audio') {
+		if (
+			route.upstream_protocol === 'openai' ||
+			route.upstream_protocol === 'minimax'
+		)
+			return ['audio.transcriptions', 'audio.speech']
+		if (route.upstream_protocol === 'dashscope')
+			return [
+				'audio.transcriptions.multimodal',
+				'audio.transcriptions.async',
+				'audio.speech',
+				'audio.transcriptions.realtime.inference',
+				'audio.transcriptions.realtime.session',
+				'audio.speech.realtime.inference',
+			]
+		return []
+	}
+	if (route.upstream_protocol === 'openai') return ['chat', 'responses', '*']
 	if (route.upstream_protocol === 'anthropic') return ['messages', 'chat', '*']
 	if (route.upstream_protocol === 'gemini')
-		return ['models.generate', 'chat', '*']
-	if (route.upstream_protocol === 'dashscope')
 		return [
-			'audio.transcriptions.multimodal',
-			'audio.transcriptions.async',
-			'audio.speech',
-			'audio.transcriptions.realtime.inference',
-			'audio.transcriptions.realtime.session',
-			'audio.speech.realtime.inference',
+			'models.generate',
+			'generateContent',
+			'streamGenerateContent',
+			'chat',
+			'*',
 		]
-	if (kind === 'image') return ['images.generations', 'images.edits', '*']
-	if (kind === 'audio') return ['audio.transcriptions', 'audio.speech']
-	if (kind === 'rerank') return ['rerank', '*']
-	return ['chat', 'responses', '*']
+	return []
+}
+export function playgroundRouteSupported(
+	route: PlaygroundRoute,
+	kind: PlaygroundKind,
+	imageOperation: ImageOperation = 'generations'
+): boolean {
+	if (!supportedOperations(route, kind).includes(route.upstream_operation))
+		return false
+	const adapter = route.adapter ?? 'passthrough'
+	if (kind === 'image') {
+		// Uploaded edit files are implemented only by the OpenAI Playground boundary.
+		// Native image-to-image inputs remain available through their JSON fields.
+		if (imageOperation === 'edits' && route.upstream_protocol !== 'openai')
+			return false
+		const adapters: Record<string, readonly string[]> = {
+			openai: ['passthrough'],
+			gemini: ['passthrough', 'gemini-image'],
+			dashscope: ['passthrough', 'dashscope-image-qwen', 'dashscope-image-wan'],
+			minimax: ['passthrough', 'minimax-image'],
+			volcengine: ['passthrough', 'volcengine-image'],
+		}
+		return adapters[route.upstream_protocol]?.includes(adapter) === true
+	}
+	if (kind === 'audio' && route.upstream_protocol === 'minimax')
+		return (
+			adapter === 'passthrough' ||
+			(route.upstream_operation === 'audio.speech' &&
+				adapter === 'minimax-tts') ||
+			(route.upstream_operation === 'audio.transcriptions' &&
+				adapter === 'minimax-asr-file')
+		)
+	if (kind === 'audio' && route.upstream_protocol === 'dashscope') {
+		if (adapter === 'passthrough') return true
+		if (route.upstream_operation === 'audio.transcriptions.multimodal')
+			return [
+				'dashscope-asr-qwen-file',
+				'dashscope-asr-qwen-audio-file',
+				'dashscope-asr-fun-file',
+			].includes(adapter)
+		if (route.upstream_operation === 'audio.transcriptions.async')
+			return adapter === 'dashscope-asr-file-async'
+		if (route.upstream_operation === 'audio.speech')
+			return adapter === 'dashscope-tts-speech'
+		return false
+	}
+	return adapter === 'passthrough'
 }

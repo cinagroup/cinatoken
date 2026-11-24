@@ -6,6 +6,7 @@ import {
 	resolveReliabilityRange,
 	type ReliabilityRange,
 } from '../reliability/reliability-range'
+import { ToolInvocationSourceFilters } from './ToolInvocationSourceFilters'
 import { tools, type ToolInvocationSearch } from './tool-invocation-domain'
 
 const prefix = 'cinatoken.adminToolInvocations.'
@@ -50,6 +51,15 @@ export function ToolInvocationFilters(props: {
 	}
 	return (
 		<section aria-label={t(prefix + 'invocations.title')} className='space-y-4'>
+			<ToolInvocationSourceFilters
+				key={JSON.stringify([
+					props.search.source,
+					props.search.server,
+					props.search.invalidFilter,
+				])}
+				search={props.search}
+				onSearch={props.onSearch}
+			/>
 			<ReliabilityRangeControls
 				key={JSON.stringify([
 					props.timezone,
@@ -82,27 +92,29 @@ export function ToolInvocationFilters(props: {
 				</span>
 			</div>
 			<div className='bg-card flex flex-wrap items-end gap-4 rounded-xl border p-4'>
-				<label className='grid min-w-52 gap-1 text-sm'>
-					{t(prefix + 'invocations.toolFilter')}
-					<select
-						className='bg-background h-9 rounded-md border px-2'
-						value={props.search.tool}
-						onChange={(event) =>
-							props.onSearch({
-								...props.search,
-								tool: event.target.value as ToolInvocationSearch['tool'],
-								page: 1,
-							})
-						}
-					>
-						<option value=''>{t(prefix + 'invocations.allTools')}</option>
-						{tools.map((tool) => (
-							<option key={tool.id} value={tool.id}>
-								{t(prefix + `catalog.${tool.label}`)}
-							</option>
-						))}
-					</select>
-				</label>
+				{(props.search.source ?? 'rest') === 'rest' ? (
+					<label className='grid min-w-52 gap-1 text-sm'>
+						{t(prefix + 'invocations.toolFilter')}
+						<select
+							className='bg-background h-9 rounded-md border px-2'
+							value={props.search.tool}
+							onChange={(event) =>
+								props.onSearch({
+									...props.search,
+									tool: event.target.value as ToolInvocationSearch['tool'],
+									page: 1,
+								})
+							}
+						>
+							<option value=''>{t(prefix + 'invocations.allTools')}</option>
+							{tools.map((tool) => (
+								<option key={tool.id} value={tool.id}>
+									{t(prefix + `catalog.${tool.label}`)}
+								</option>
+							))}
+						</select>
+					</label>
+				) : null}
 				<label className='grid min-w-40 gap-1 text-sm'>
 					{t(prefix + 'invocations.status')}
 					<select

@@ -224,3 +224,51 @@ test('failed browser download cannot leave a Blob URL behind', () => {
 	assert.deepEqual(fixture.revoked, ['blob:fixture-1'])
 	assert.equal(fixture.callbacks.length, 0)
 })
+
+test('combined wallet balance counts holds once and preserves period debt', () => {
+	const data = {
+		status: 'finite',
+		budgetMax: 10,
+		budgetBase: 10,
+		budgetSpent: 2,
+		budgetReserved: 0.25,
+		budgetReservedMicros: 250000,
+		budgetRemaining: 7.75,
+		budgetPeriod: 'monthly',
+		budgetResetAt: null,
+		walletGranted: 20,
+		walletSpent: 3,
+		walletRemaining: 17,
+		totalRemaining: 24.75,
+	}
+	const budget = activityBudgetSchema.parse(data)
+	assert.equal(accountBudgetRemaining(budget), 24.75)
+	const debt = activityBudgetSchema.parse({
+		...data,
+		budgetMax: 1,
+		budgetSpent: 6,
+		budgetRemaining: 0,
+		walletGranted: 7,
+		walletSpent: 0,
+		walletRemaining: 7,
+		totalRemaining: 1.75,
+	})
+	assert.equal(accountBudgetRemaining(debt), 1.75)
+	for (const invalid of [
+		{ ...data, walletSpent: undefined },
+		{ ...data, walletGranted: null },
+		{ ...data, totalRemaining: null },
+		{ ...data, walletSpent: Number.MAX_SAFE_INTEGER },
+		{ ...data, status: 'unlimited', budgetMax: null, budgetRemaining: null },
+	])
+		assert.equal(activityBudgetSchema.safeParse(invalid).success, false)
+	const unavailable = activityBudgetSchema.parse({
+		...data,
+		status: 'unavailable',
+		budgetRemaining: null,
+		walletGranted: null,
+		walletRemaining: null,
+		totalRemaining: null,
+	})
+	assert.equal(accountBudgetRemaining(unavailable), null)
+})

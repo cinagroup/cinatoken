@@ -23,6 +23,7 @@ export const requestLogDetailSchema = requestLogSchema
 		workspace_id: z.string().max(2000).nullable().optional(),
 		metered_cost: z.number().finite(),
 		charged_cost: z.number().finite(),
+		charged_wallet_cost: z.number().finite().nullable().optional(),
 		standard_cost: z.number().finite().optional(),
 		reasoning_tokens: z
 			.number()
@@ -77,6 +78,7 @@ export const requestLogDetailSchema = requestLogSchema
 			'route_group',
 			'upstream_request_id',
 			'upstream_message_id',
+			'ingress_host',
 			'billing_kind',
 			'status',
 		] as const) {

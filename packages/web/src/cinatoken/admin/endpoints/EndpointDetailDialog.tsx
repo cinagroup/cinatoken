@@ -12,6 +12,7 @@ import {
 import type { EndpointRequestOptions, EndpointsApi } from '../endpoint-api'
 import type { AdminEndpoint, EndpointChoices } from '../endpoint-contracts'
 import { EndpointEvidenceView } from './EndpointEvidenceView'
+import { EndpointWriteFeedback } from './EndpointWriteFeedback'
 import { endpointErrorKey } from './endpoint-errors'
 import { endpointIsExpired } from './endpoint-form'
 
@@ -317,12 +318,7 @@ export function EndpointDetailDialog(props: {
 						</div>
 					</div>
 				)}
-				{props.error != null && (
-					<div role='alert' className='text-destructive space-y-2 text-sm'>
-						<p>{t(endpointErrorKey(props.error))}</p>
-						<p>{t(prefix + 'writeUnknown')}</p>
-					</div>
-				)}
+				<EndpointWriteFeedback error={props.error} />
 				<div className='flex justify-end'>
 					<Button
 						type='button'

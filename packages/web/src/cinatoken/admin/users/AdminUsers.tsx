@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
+import { AdminListTimezone } from './AdminListTimezone'
 import { UserCreateDialog } from './UserCreateDialog'
 import { UserFilters } from './UserFilters'
 import { UserList } from './UserList'
@@ -54,7 +55,9 @@ export function AdminUsers(props: {
 						type='button'
 						variant='outline'
 						onClick={manager.retry}
-						disabled={manager.query.isFetching}
+						disabled={
+							manager.query.isFetching || manager.displayQuery.isFetching
+						}
 					>
 						{t(prefix + 'refresh')}
 					</Button>
@@ -67,6 +70,7 @@ export function AdminUsers(props: {
 					</Button>
 				</div>
 			</header>
+			<AdminListTimezone display={manager.display} />
 			<UserFilters
 				key={JSON.stringify([
 					props.search.email,
@@ -120,34 +124,51 @@ export function AdminUsers(props: {
 					)}
 				</p>
 			)}
-			{manager.readBlocked ? (
+			{manager.readBlocked && (
 				<section
 					role='alert'
 					className='border-destructive/40 bg-destructive/5 rounded-xl border p-5 text-sm'
 				>
 					{t(prefix + 'accessDenied')}
 				</section>
-			) : manager.query.isFetching ? (
+			)}
+			{!manager.readBlocked && manager.query.isFetching && (
 				<p
 					role='status'
 					className='text-muted-foreground rounded-xl border p-8 text-center'
 				>
 					{t(prefix + 'loading')}
 				</p>
-			) : manager.query.error ? (
-				<section
-					role='alert'
-					className='border-destructive/40 bg-destructive/5 rounded-xl border p-5 text-sm'
-				>
-					{t(prefix + userReadErrorKey(manager.query.error))}
-				</section>
-			) : rows.length === 0 ? (
-				<p className='text-muted-foreground rounded-xl border p-8 text-center'>
-					{t(prefix + 'empty')}
-				</p>
-			) : (
-				<UserList rows={rows} currency={manager.currency} locale={locale} />
 			)}
+			{!manager.readBlocked &&
+				!manager.query.isFetching &&
+				Boolean(manager.query.error) && (
+					<section
+						role='alert'
+						className='border-destructive/40 bg-destructive/5 rounded-xl border p-5 text-sm'
+					>
+						{t(prefix + userReadErrorKey(manager.query.error))}
+					</section>
+				)}
+			{!manager.readBlocked &&
+				!manager.query.isFetching &&
+				!manager.query.error &&
+				rows.length === 0 && (
+					<p className='text-muted-foreground rounded-xl border p-8 text-center'>
+						{t(prefix + 'empty')}
+					</p>
+				)}
+			{!manager.readBlocked &&
+				!manager.query.isFetching &&
+				!manager.query.error &&
+				rows.length > 0 && (
+					<UserList
+						rows={rows}
+						currency={manager.currency}
+						timezone={manager.timezone}
+						locale={locale}
+					/>
+				)}
 			{page && !manager.query.error && !manager.readBlocked && (
 				<footer className='flex flex-wrap items-center justify-between gap-3 text-sm'>
 					<p className='text-muted-foreground'>

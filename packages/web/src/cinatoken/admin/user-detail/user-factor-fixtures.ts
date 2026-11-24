@@ -1,0 +1,90 @@
+/* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
+export const factorFixtureUser = {
+	id: 'f2b74bc0-32f3-4613-aea7-96f723d08e12',
+	email: 'person@example.test',
+	external_system: null,
+	external_user_id: null,
+	budget_max: 10,
+	budget_base: 10,
+	budget_spent: 2,
+	budget_period: 'monthly',
+	budget_reset_at: '2030-01-01T00:00:00.000Z',
+	rate_limit: { rpm: 120 },
+	wallet_granted: 20,
+	wallet_spent: 3,
+	wallet_balance: 17,
+	status: 'active',
+	metadata: null,
+	charged_cost_factors: {
+		'vendor/model': { '*': 0.8, vip: 0.5 },
+		'image/model': 1,
+	},
+	created_at: '2026-10-01T00:00:00.000Z',
+	updated_at: '2026-10-01T00:00:00.000Z',
+}
+export const factorFixturePreview = {
+	object: 'list',
+	data: [
+		{
+			id: 'vendor/model',
+			object: 'model',
+			owned_by: 'octafuse',
+			model_info: {
+				display_name: 'QA model',
+				vendor: 'other',
+				tags: [],
+				route_groups: ['default'],
+				discounts: {
+					default: {
+						timezone: 'UTC',
+						kind: 'schedule',
+						schedule_mode: 'multiply',
+						route: { priority: 10, weight: 1 },
+						current: {
+							catalog_factor: 1,
+							route_factor: 0.4,
+							composite_factor: 0.4,
+						},
+						windows: [
+							{
+								start: '00:00',
+								end: '06:00',
+								days: [1, 2, 3, 4, 5],
+								catalog_factor: 0.5,
+								route_factor: 0.4,
+								composite_factor: 0.2,
+							},
+						],
+						provider_factor: {
+							base: 0.5,
+							effective: 0.5,
+							active: true,
+							starts_at: null,
+							expires_at: null,
+						},
+					},
+				},
+				context_window: 128000,
+				max_tokens: 8192,
+				pricing_profile: {
+					tiers: [{ upto: null, label: null, input_price: 1, output_price: 4 }],
+					schedule: [],
+				},
+				input_price: 1,
+				output_price: 4,
+				input_modalities: ['text'],
+				output_modalities: ['text'],
+				description: null,
+				released_at: null,
+			},
+		},
+	],
+	preview: {
+		user_charged_factor_mode: 'min',
+		route_groups: ['default', 'free'],
+		kind: 'llm',
+		model: null,
+		truncated: false,
+		limit: 40,
+	},
+}

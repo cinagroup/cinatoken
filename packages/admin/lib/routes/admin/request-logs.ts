@@ -6,6 +6,7 @@ import type { AdminEnv } from '@/lib/admin-env';
 import { requireAdminPrincipal } from '@/lib/middleware/admin-auth';
 import { listAdminGlobalRequestLogsService } from '@/lib/services/admin/dashboard-service';
 import { getAdminRequestLogDetailService } from '@/lib/services/admin/request-log-detail-service';
+import { badRequest } from '@/lib/services/admin/errors';
 import { handleAdminRouteError } from './error-response';
 import { normalizeApiTimeFields } from '@octafuse/core/lib/time-format';
 export const adminRequestLogsRoutes = new Hono<AdminEnv>();
@@ -16,10 +17,19 @@ adminRequestLogsRoutes.use('*', async (c, next) => {
 });
 adminRequestLogsRoutes.use('*', requireAdminPrincipal);
 
-/** 查询参数与 `listAdminGlobalRequestLogsService` 一致：page、page_size、id、api_key_id、user_email、model_id、provider_id、provider_ids、model_id_prefix、route_group、protocol、status、start_date、end_date。 */
+/** 查询参数与 `listAdminGlobalRequestLogsService` 一致：page、page_size、id、api_key_id、user_email、ingress_host、model_id、provider_id、provider_ids、model_id_prefix、route_group、protocol、status、start_date、end_date。 */
 adminRequestLogsRoutes.get('/', async (c) => {
 	try {
 		const repos = c.get('repositories');
+		if ((c.req.queries('ingress_host')?.length ?? 0) > 1) {
+			throw badRequest('ingress_host accepts one value');
+		}
+		if ((c.req.queries('model_id_prefix')?.length ?? 0) > 1) {
+			throw badRequest('model_id_prefix accepts one value');
+		}
+		if ((c.req.queries('provider_ids')?.length ?? 0) > 1) {
+			throw badRequest('provider_ids accepts one comma-separated value');
+		}
 		const result = await listAdminGlobalRequestLogsService(repos, {
 			page: c.req.query('page') ?? undefined,
 			page_size: c.req.query('page_size') ?? undefined,
@@ -27,6 +37,7 @@ adminRequestLogsRoutes.get('/', async (c) => {
 			api_key_id: c.req.query('api_key_id') ?? undefined,
 			user_id: c.req.query('user_id') ?? undefined,
 			user_email: c.req.query('user_email') ?? undefined,
+			ingress_host: c.req.query('ingress_host') ?? undefined,
 			model_id: c.req.query('model_id') ?? undefined,
 			provider_id: c.req.query('provider_id') ?? undefined,
 			provider_ids: c.req.query('provider_ids') ?? undefined,
@@ -44,6 +55,7 @@ adminRequestLogsRoutes.get('/', async (c) => {
 				total: result.total,
 				page: result.page,
 				page_size: result.page_size,
+				...(result.applied_filters === undefined ? {} : { applied_filters: result.applied_filters }),
 			}),
 		);
 	} catch (error) {

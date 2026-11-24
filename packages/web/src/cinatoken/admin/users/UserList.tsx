@@ -1,5 +1,7 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
 import { useTranslation } from 'react-i18next'
+import { RateLimitSummary } from '../gateway-keys/RateLimitEditor'
+import { formatUserDetailTime } from '../user-detail/user-detail-format'
 import type { AdminUserListRow } from './users-contracts'
 
 const prefix = 'cinatoken.adminUsers.'
@@ -23,40 +25,29 @@ function formatAmount(
 	}).format(value)
 }
 
-function formatUtc(value: string, locale: string): string {
-	return (
-		new Intl.DateTimeFormat(locale, {
-			timeZone: 'UTC',
-			year: 'numeric',
-			month: '2-digit',
-			day: '2-digit',
-			hour: '2-digit',
-			minute: '2-digit',
-			hourCycle: 'h23',
-		}).format(new Date(value)) + ' UTC'
-	)
-}
-
 type RowProps = {
 	row: AdminUserListRow
 	currency: 'USD' | 'CNY' | null
+	timezone?: string | null
 	locale: string
 }
 
-function UserBudget(props: RowProps) {
+function UserAmounts(props: RowProps) {
 	const { t } = useTranslation()
 	if (!props.currency)
 		return (
-			<span className='text-muted-foreground'>
-				{t(prefix + 'amountUnavailable')}
-			</span>
+			<p className='text-muted-foreground'>{t(prefix + 'amountUnavailable')}</p>
 		)
 	const max =
 		props.row.budget_max === null
 			? t(prefix + 'noLimit')
 			: formatAmount(props.row.budget_max, props.currency, props.locale)
+	const walletSpent =
+		props.row.wallet_spent === undefined
+			? t(prefix + 'amountUnavailable')
+			: formatAmount(props.row.wallet_spent, props.currency, props.locale)
 	return (
-		<div className='space-y-1 text-xs'>
+		<>
 			<p>
 				{t(prefix + 'spent')}:{' '}
 				{formatAmount(props.row.budget_spent, props.currency, props.locale)}
@@ -66,13 +57,42 @@ function UserBudget(props: RowProps) {
 			<p className='text-muted-foreground'>
 				{t(prefix + 'base')}:{' '}
 				{formatAmount(props.row.budget_base, props.currency, props.locale)}
-				{' · '}
+			</p>
+			{props.row.wallet_balance === undefined ? (
+				<p className='text-muted-foreground'>
+					{t(prefix + 'walletUnavailable')}
+				</p>
+			) : (
+				<p className='border-t pt-1'>
+					{t(prefix + 'walletBalance')}:{' '}
+					{formatAmount(props.row.wallet_balance, props.currency, props.locale)}
+					<span className='text-muted-foreground'>
+						{' '}
+						· {t(prefix + 'walletSpent')}: {walletSpent}
+					</span>
+				</p>
+			)}
+		</>
+	)
+}
+
+function UserBudget(props: RowProps) {
+	const { t } = useTranslation()
+	return (
+		<div className='space-y-1 text-xs'>
+			<UserAmounts {...props} />
+			<p className='text-muted-foreground'>
+				{t(prefix + 'period')}:{' '}
 				{t(prefix + periodLabels[props.row.budget_period])}
 			</p>
 			{props.row.budget_reset_at && (
 				<p className='text-muted-foreground'>
 					{t(prefix + 'resetAt')}:{' '}
-					{formatUtc(props.row.budget_reset_at, props.locale)}
+					{formatUserDetailTime(
+						props.row.budget_reset_at,
+						props.locale,
+						props.timezone ?? null
+					)}
 				</p>
 			)}
 		</div>
@@ -83,6 +103,7 @@ function UserExtras(props: RowProps) {
 	const { t } = useTranslation()
 	return (
 		<div className='space-y-1 text-xs'>
+			<RateLimitSummary value={props.row.rate_limit} layer='user' />
 			{props.row.metadata && (
 				<details>
 					<summary className='cursor-pointer'>{t(prefix + 'metadata')}</summary>
@@ -149,7 +170,11 @@ function MobileUserRow(props: RowProps) {
 					total: props.row.keys_count,
 				})}
 				{' · '}
-				{formatUtc(props.row.created_at, props.locale)}
+				{formatUserDetailTime(
+					props.row.created_at,
+					props.locale,
+					props.timezone ?? null
+				)}
 			</p>
 			<UserExtras {...props} />
 		</article>
@@ -190,7 +215,11 @@ function DesktopUserRow(props: RowProps) {
 				})}
 			</td>
 			<td className='px-4 py-3 align-top text-xs whitespace-nowrap'>
-				{formatUtc(props.row.created_at, props.locale)}
+				{formatUserDetailTime(
+					props.row.created_at,
+					props.locale,
+					props.timezone ?? null
+				)}
 			</td>
 			<td className='max-w-32 px-4 py-3 align-top'>
 				<UserExtras {...props} />
@@ -202,6 +231,7 @@ function DesktopUserRow(props: RowProps) {
 export function UserList(props: {
 	rows: AdminUserListRow[]
 	currency: 'USD' | 'CNY' | null
+	timezone?: string | null
 	locale: string
 }) {
 	const { t } = useTranslation()
@@ -213,6 +243,7 @@ export function UserList(props: {
 						key={row.id}
 						row={row}
 						currency={props.currency}
+						timezone={props.timezone}
 						locale={props.locale}
 					/>
 				))}
@@ -235,6 +266,7 @@ export function UserList(props: {
 								key={row.id}
 								row={row}
 								currency={props.currency}
+								timezone={props.timezone}
 								locale={props.locale}
 							/>
 						))}

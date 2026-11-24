@@ -4,12 +4,15 @@ import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { CinaTokenApiError } from '../../../api'
 import { ReliabilityRangeControls } from '../../reliability/ReliabilityRangeControls'
+import { AnalyticsDrilldownControls } from '../models/AnalyticsDrilldownControls'
 import { ModelAnalyticsSummary } from '../models/ModelAnalyticsSummary'
 import {
 	type SortDirection,
 	type TokenMode,
 } from '../models/model-analytics-domain'
+import { UserAnalyticsControls } from './UserAnalyticsControls'
 import { UserAnalyticsFilters } from './UserAnalyticsFilters'
+import { UserAnalyticsInsights } from './UserAnalyticsInsights'
 import { UserAnalyticsTable } from './UserAnalyticsTable'
 import { useUserAnalytics, type UserAnalyticsProps } from './use-user-analytics'
 import {
@@ -18,6 +21,12 @@ import {
 	userCostTotals,
 	type UserSortKey,
 } from './user-analytics-domain'
+import { summarizeUserAnalyticsRows } from './user-analytics-insights'
+import {
+	filterUserAnalyticsRows,
+	userVisibleColumns,
+	type UserAnalyticsView,
+} from './user-analytics-view'
 
 const prefix = 'cinatoken.adminUserAnalytics.'
 function errorKey(error: unknown): string {
@@ -32,21 +41,27 @@ export function AdminUserAnalytics(props: UserAnalyticsProps) {
 	const { t, i18n } = useTranslation()
 	const locale = i18n.resolvedLanguage ?? 'en'
 	const state = useUserAnalytics(props)
+	const [view, setView] = useState<UserAnalyticsView>('overview')
+	const [search, setSearch] = useState('')
 	const [sortKey, setSortKey] = useState<UserSortKey>('request_count')
 	const [sortDirection, setSortDirection] = useState<SortDirection>('desc')
 	const [tokenMode, setTokenMode] = useState<TokenMode>('compact')
 	const currency = state.display?.currency ?? null
 	const timezone = state.display?.timezone ?? null
 	const rows = useMemo(
-		() => sortUserRows(state.main ?? [], sortKey, sortDirection),
-		[state.main, sortKey, sortDirection]
+		() =>
+			sortUserRows(
+				filterUserAnalyticsRows(state.main ?? [], search),
+				sortKey,
+				sortDirection
+			),
+		[state.main, search, sortKey, sortDirection]
 	)
+	const insights = useMemo(() => summarizeUserAnalyticsRows(rows), [rows])
 	const totals = useMemo(() => userCostTotals(rows), [rows])
 	const configFailed = state.displayBlocked || Boolean(state.displayQuery.error)
 	const analyticsFailed =
 		state.analyticsBlocked || Boolean(state.mainQuery.error)
-	const detailFailed =
-		state.analyticsBlocked || Boolean(state.detailQuery.error)
 	const logsAllowed =
 		!state.logsBlocked &&
 		!state.logsQuery.isFetching &&
@@ -58,6 +73,13 @@ export function AdminUserAnalytics(props: UserAnalyticsProps) {
 		else {
 			setSortKey(key)
 			setSortDirection('desc')
+		}
+	}
+	function selectView(next: UserAnalyticsView): void {
+		setView(next)
+		if (!userVisibleColumns(next).includes(sortKey)) {
+			setSortKey('user_email')
+			setSortDirection('asc')
 		}
 	}
 	function download(): void {
@@ -115,6 +137,17 @@ export function AdminUserAnalytics(props: UserAnalyticsProps) {
 	} else {
 		content = (
 			<section className='space-y-3'>
+				<UserAnalyticsControls
+					view={view}
+					onView={selectView}
+					search={search}
+					onSearch={(value) => {
+						state.collapseRows()
+						setSearch(value)
+					}}
+					count={rows.length}
+					total={state.main.length}
+				/>
 				<ModelAnalyticsSummary
 					currency={currency}
 					locale={locale}
@@ -126,13 +159,23 @@ export function AdminUserAnalytics(props: UserAnalyticsProps) {
 					}
 					onExport={download}
 				/>
+				<UserAnalyticsInsights
+					summary={insights}
+					currency={currency}
+					locale={locale}
+				/>
+				<AnalyticsDrilldownControls
+					count={state.details.size}
+					onCollapse={state.collapseRows}
+				/>
 				<UserAnalyticsTable
 					rows={rows}
 					range={state.rangeParams}
-					active={state.active}
-					detail={state.detail}
-					detailLoading={state.detailQuery.isFetching}
-					detailError={detailFailed}
+					view={view}
+					details={state.details}
+					emptyMessage={t(
+						prefix + (search.trim() ? 'viewNoMatches' : 'noData')
+					)}
 					logsAllowed={logsAllowed}
 					currency={currency}
 					timezone={timezone}
@@ -142,7 +185,6 @@ export function AdminUserAnalytics(props: UserAnalyticsProps) {
 					sortDirection={sortDirection}
 					onSort={sort}
 					onToggle={state.toggleRow}
-					onRetry={state.retry}
 				/>
 			</section>
 		)
@@ -225,7 +267,7 @@ export function AdminUserAnalytics(props: UserAnalyticsProps) {
 				</p>
 			)}
 			<p className='text-muted-foreground text-sm'>
-				{t(prefix + 'budgetScope')}
+				{t(prefix + 'budgetScope')} {t(prefix + 'walletScope')}
 			</p>
 			{content}
 		</main>

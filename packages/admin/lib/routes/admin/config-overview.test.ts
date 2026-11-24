@@ -23,19 +23,22 @@ const CONFIG_KEYS = [
 	"BUSINESS_TIMEZONE",
 	"BILLING_CURRENCY",
 	"ROUTE_STRATEGY",
+	"USER_CHARGED_COST_FACTOR_MODE",
+	"STREAM_FIRST_EVENT_TIMEOUT_MS",
+	"STREAM_FIRST_EVENT_TIMEOUT_ROUTE_GROUPS",
 	"ALERT_WEBHOOK_WECOM_URL",
 	"ALERT_WEBHOOK_FEISHU_URL",
 ].sort();
 
 function fixture(
 	values: Record<string, string | null | Error>,
-	principal: AdminPrincipal | null = consolePrincipal
+	principal: AdminPrincipal | null = consolePrincipal,
 ) {
 	const reads: string[] = [];
 	const repositories = {
 		systemConfig: {
 			async getConfigSnapshot(
-				key: string
+				key: string,
 			): Promise<{ value: string | null; revision: string | null }> {
 				reads.push(key);
 				const value = values[key] ?? null;
@@ -58,13 +61,14 @@ function fixture(
 	return { app, reads };
 }
 
-test("overview reads exactly five keys and returns only safe values and webhook presence", async () => {
+test("overview reads exactly eight keys and returns only safe values and webhook presence", async () => {
 	const secretWecom = "https://wecom.example.test/hook?key=private-wecom-token";
 	const secretFeishu = "https://feishu.example.test/hook/private-feishu-token";
 	const { app, reads } = fixture({
 		BUSINESS_TIMEZONE: " Asia/Singapore ",
 		BILLING_CURRENCY: " cny ",
 		ROUTE_STRATEGY: " WEIGHTED_RANDOM ",
+		USER_CHARGED_COST_FACTOR_MODE: " MIN ",
 		ALERT_WEBHOOK_WECOM_URL: secretWecom,
 		ALERT_WEBHOOK_FEISHU_URL: "  ",
 		UNRELATED_SECRET: secretFeishu,
@@ -90,6 +94,21 @@ test("overview reads exactly five keys and returns only safe values and webhook 
 				value: "weighted_random",
 				source: "configured",
 				revision: "legacy",
+			},
+			userChargedCostFactorMode: {
+				value: "min",
+				source: "configured",
+				revision: "legacy",
+			},
+			streamFirstEventTimeoutMs: {
+				value: "",
+				source: "missing",
+				revision: null,
+			},
+			streamFirstEventTimeoutRouteGroups: {
+				value: "",
+				source: "missing",
+				revision: null,
 			},
 			webhooks: {
 				wecom: { configured: true, revision: "legacy" },
@@ -181,21 +200,21 @@ test("overview distinguishes legacy, missing, invalid and unsupported settings w
 test("overview requires config.read and reports independent write and secret-reveal capabilities", async () => {
 	assert.deepEqual(
 		getAdminAuthorizationDecision("GET", "/admin/config/overview"),
-		{ kind: "permission", permission: "config.read" }
+		{ kind: "permission", permission: "config.read" },
 	);
 	assert.deepEqual(
 		getAdminAuthorizationDecision("HEAD", "/admin/config/overview"),
-		{ kind: "permission", permission: "config.read" }
+		{ kind: "permission", permission: "config.read" },
 	);
 	for (const method of ["POST", "PUT", "PATCH", "DELETE"]) {
 		assert.deepEqual(
 			getAdminAuthorizationDecision(method, "/admin/config/overview"),
-			{ kind: "deny" }
+			{ kind: "deny" },
 		);
 	}
 	assert.deepEqual(
 		getAdminAuthorizationDecision("GET", "/admin/config/overview-extra"),
-		{ kind: "deny" }
+		{ kind: "deny" },
 	);
 	const reader = fixture({}, apiKey(["config.read"]));
 	const readResponse = await reader.app.request("/admin/config/overview");
@@ -230,17 +249,17 @@ test("overview requires config.read and reports independent write and secret-rev
 	assert.equal(deniedResponse.status, 403);
 	assert.equal(
 		deniedResponse.headers.get("cache-control"),
-		"private, no-store"
+		"private, no-store",
 	);
 	assert.deepEqual(denied.reads, []);
 	const unauthenticated = fixture({}, null);
 	const unauthorizedResponse = await unauthenticated.app.request(
-		"/admin/config/overview"
+		"/admin/config/overview",
 	);
 	assert.equal(unauthorizedResponse.status, 401);
 	assert.equal(
 		unauthorizedResponse.headers.get("cache-control"),
-		"private, no-store"
+		"private, no-store",
 	);
 	assert.deepEqual(unauthenticated.reads, []);
 });
@@ -256,4 +275,99 @@ test("failure of any projected configuration key returns private generic 500 wit
 			message: "Failed to get config overview",
 		});
 	}
+});
+
+test("factor mode overview distinguishes configured, missing and invalid using the runtime multiply fallback", async () => {
+	for (const [raw, value, source, revision] of [
+		[null, "multiply", "missing", null],
+		["", "multiply", "missing", "legacy"],
+		["unknown", "multiply", "invalid", "legacy"],
+		[" MIN ", "min", "configured", "legacy"],
+		["multiply", "multiply", "configured", "legacy"],
+	] as const) {
+		const { app } = fixture({ USER_CHARGED_COST_FACTOR_MODE: raw });
+		const response = await app.request("/admin/config/overview");
+		assert.equal(response.status, 200);
+		const body = (await response.json()) as {
+			data: { userChargedCostFactorMode: unknown };
+		};
+		assert.deepEqual(body.data.userChargedCostFactorMode, {
+			value,
+			source,
+			revision,
+		});
+	}
+});
+
+test("timeout overview preserves historical raw strings, reports validity and never reads unrelated secrets", async () => {
+	for (const [raw, source] of [
+		[null, "missing"],
+		[" ", "missing"],
+		[" 0010 ", "configured"],
+		["10ms", "invalid"],
+		["1e3", "invalid"],
+		["2147483648", "invalid"],
+	] as const) {
+		const { app, reads } = fixture({
+			STREAM_FIRST_EVENT_TIMEOUT_MS: raw,
+			STREAM_FIRST_EVENT_TIMEOUT_ROUTE_GROUPS: " *, VIP, vip,,all ",
+			UNRELATED_SECRET: "never-project-this-secret",
+		});
+		const response = await app.request("/admin/config/overview");
+		assert.equal(response.status, 200);
+		const body = (await response.json()) as { data: Record<string, unknown> };
+		assert.deepEqual(body.data.streamFirstEventTimeoutMs, {
+			value: raw ?? "",
+			source,
+			revision: raw === null ? null : "legacy",
+		});
+		assert.deepEqual(body.data.streamFirstEventTimeoutRouteGroups, {
+			value: " *, VIP, vip,,all ",
+			source: "configured",
+			revision: "legacy",
+		});
+		assert.deepEqual(reads.sort(), CONFIG_KEYS);
+		assert.equal(
+			JSON.stringify(body).includes("never-project-this-secret"),
+			false,
+		);
+	}
+});
+
+test("overview binds supplied expected Console subjects before reading while retaining headerless legacy reads", async () => {
+	const subject = "fixture/原文";
+	const principal: AdminPrincipal = {
+		type: "console",
+		id: `console:cinaauth:${subject}`,
+		username: `cinaauth:${subject}`,
+	};
+	for (const [header, expectedStatus] of [
+		[undefined, 200],
+		[encodeURIComponent(subject), 200],
+		[encodeURIComponent("another-subject"), 403],
+		["", 400],
+		["%", 400],
+		["%66ixture", 400],
+	] as const) {
+		const f = fixture({}, principal);
+		const headers =
+			header === undefined
+				? undefined
+				: { "X-CinaToken-Expected-Console-Subject": header };
+		const response = await f.app.request("/admin/config/overview", { headers });
+		assert.equal(response.status, expectedStatus);
+		assert.equal(response.headers.get("cache-control"), "private, no-store");
+		assert.equal(f.reads.length, expectedStatus === 200 ? 8 : 0);
+		if (expectedStatus !== 200)
+			assert.equal((await response.text()).includes(subject), false);
+	}
+	const api = fixture({}, apiKey(["config.read"]));
+	const response = await api.app.request("/admin/config/overview", {
+		headers: {
+			"X-CinaToken-Expected-Console-Subject": encodeURIComponent(subject),
+		},
+	});
+	assert.equal(response.status, 400);
+	assert.deepEqual(api.reads, []);
+	assert.equal((await api.app.request("/admin/config/overview")).status, 200);
 });

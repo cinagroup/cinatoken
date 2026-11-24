@@ -45,8 +45,25 @@ function ScopedGuardrails(props: {
 	const editingRow = editor?.row
 		? snapshot?.guardrails.find((row) => row.id === editor.row?.id)
 		: undefined
+	const readAuthorityLost = Boolean(manager.blocked) || manager.list.isError
+	const editorTargetChanged = Boolean(
+		editor?.row &&
+		snapshot &&
+		(!editingRow?.canEdit ||
+			editingRow.workspaceId !== editor.row.workspaceId ||
+			editingRow.ownerUserId !== editor.row.ownerUserId ||
+			editingRow.isWorkspaceDefault !== editor.row.isWorkspaceDefault ||
+			editingRow.isAccountDefault !== editor.row.isAccountDefault ||
+			editingRow.accountScopeKey !== editor.row.accountScopeKey)
+	)
+	if (editor && (readAuthorityLost || editorTargetChanged)) setEditor(null)
+	if (confirmation && readAuthorityLost) setConfirmation(null)
 	const visibleEditor =
-		editor && canInspect && (!editor.row || editingRow?.canEdit)
+		editor &&
+		!readAuthorityLost &&
+		!editorTargetChanged &&
+		canInspect &&
+		(!editor.row || editingRow?.canEdit)
 	function confirm(action: GuardrailAction, label: string) {
 		setConfirmation({ action, label })
 	}
@@ -111,7 +128,7 @@ function ScopedGuardrails(props: {
 			) : null}
 			{manager.notice ? (
 				<p role='status' className='bg-muted rounded-lg border p-3 text-sm'>
-					{text('success')}
+					{text(manager.notice)}
 				</p>
 			) : null}
 			{manager.error ? (

@@ -14,16 +14,28 @@ import type { AdminDomainRecoveryController } from './use-domain-write-recovery'
 const prefix = 'cinatoken.adminDomain.'
 export function AdminDomainRecoveryDialog(props: {
 	recovery: AdminDomainRecoveryController
+	label?: string
 	busy?: boolean
+	/** An open embedded editor can own recovery without a write still running. */
+	busyReason?: 'editor'
 }) {
 	const { t } = useTranslation()
 	if (props.recovery.status === 'ready') return null
 	let stateMessage = 'unknown'
 	if (props.recovery.status === 'unavailable')
 		stateMessage = 'storageUnavailable'
-	else if (props.busy || props.recovery.busy) stateMessage = 'writing'
+	else if (props.busy || props.recovery.busy) {
+		stateMessage = 'writing'
+		if (props.busyReason === 'editor' && !props.recovery.busy)
+			stateMessage = 'editorOpen'
+	}
 	return (
-		<div className='space-y-3 rounded-xl border p-4'>
+		<div
+			className='space-y-3 rounded-xl border p-4'
+			role={props.label ? 'region' : undefined}
+			aria-label={props.label}
+		>
+			{props.label && <h2 className='font-medium'>{props.label}</h2>}
 			<p role='alert'>{t(prefix + stateMessage)}</p>
 			{props.recovery.error && !props.recovery.open && (
 				<p role='alert' className='text-destructive'>
@@ -43,11 +55,16 @@ export function AdminDomainRecoveryDialog(props: {
 			>
 				{t(prefix + 'review')}
 			</Button>
-			{props.recovery.open && <RecoveryDialog recovery={props.recovery} />}
+			{props.recovery.open && (
+				<RecoveryDialog recovery={props.recovery} label={props.label} />
+			)}
 		</div>
 	)
 }
-function RecoveryDialog(props: { recovery: AdminDomainRecoveryController }) {
+function RecoveryDialog(props: {
+	recovery: AdminDomainRecoveryController
+	label?: string
+}) {
 	const { t } = useTranslation()
 	const title = useRef<HTMLHeadingElement>(null)
 	const [external, setExternal] = useState(false)
@@ -67,6 +84,7 @@ function RecoveryDialog(props: { recovery: AdminDomainRecoveryController }) {
 				<DialogHeader>
 					<DialogTitle ref={title} tabIndex={-1}>
 						{t(prefix + 'review')}
+						{props.label && <> · {props.label}</>}
 					</DialogTitle>
 					<DialogDescription>{t(prefix + 'reviewHint')}</DialogDescription>
 				</DialogHeader>

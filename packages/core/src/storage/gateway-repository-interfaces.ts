@@ -893,13 +893,15 @@ export interface RequestLogsRepository {
 		apiKeyId?: string;
 		userId?: string;
 		userEmail?: string;
+		/** Exact public ingress Host snapshot, including optional port. */
+		ingressHost?: string;
 		modelId?: string;
 		providerId?: string;
 		/** Public provider display-name snapshot captured on the request log. */
 		providerName?: string;
 		/** Match any of these `provider_id` values. Combined with `providerId` when both are set. */
 		providerIds?: string[];
-		/** `model_id` prefix match. `%`, `_`, and `\` in the prefix are escaped. */
+		/** Case-sensitive literal `model_id` startsWith; `%`, `_`, and `\` are ordinary characters. */
 		modelIdPrefix?: string;
 		routeGroup?: string;
 		protocol?: string;

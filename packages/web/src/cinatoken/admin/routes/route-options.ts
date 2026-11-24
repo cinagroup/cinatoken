@@ -1,5 +1,13 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
 import {
+	getAdapterByPresetIntent,
+	requestOperationsFromRegistry,
+	upstreamOperationsFromRegistry,
+	requiredCapabilitiesForUpstreamOperation,
+	type AdapterModelKind,
+	type AdapterPresetIntent,
+} from '@octafuse/core/adapters/registry'
+import {
 	isAudioSpeechModel,
 	isAudioTranscriptionModel,
 	isEmbeddingModel,
@@ -22,7 +30,6 @@ import {
 import {
 	routeAdapters,
 	draftFromRoute,
-	routeOperations,
 	routeProtocols,
 	type RouteDraft,
 	type RouteRow,
@@ -32,49 +39,40 @@ export function isRouteProtocol(value: string): value is UpstreamProtocol {
 	return (routeProtocols as readonly string[]).includes(value)
 }
 
-/** Public operations follow the model modality; an unknown model cannot authorize a new topology. */
+export function routeModelKind(
+	model: AdminModel | undefined
+): AdapterModelKind | null {
+	if (!model) return null
+	if (isImageGenerationModel(model)) return 'image'
+	if (isAudioTranscriptionModel(model)) return 'audio.transcription'
+	if (isAudioSpeechModel(model)) return 'audio.speech'
+	if (isTextLlmModel(model)) return 'llm'
+	return null
+}
+function filterRealtimeOperations(
+	operations: readonly string[],
+	providerModelName: string
+): readonly string[] {
+	return operations.filter((operation) =>
+		isDashScopeRealtimeAsrModelOperationCompatible(providerModelName, operation)
+	)
+}
+/** The registry owns selectable public operations; display-only legacy paths stay read-only. */
 export function requestOperationsForModel(
 	model: AdminModel | undefined,
 	protocol: string,
 	providerModelName = ''
 ): readonly string[] {
 	if (!model || !isRouteProtocol(protocol)) return []
-	if (isImageGenerationModel(model)) {
-		if (protocol === 'openai') return ['images.generations', 'images.edits']
-		if (protocol === 'minimax' || protocol === 'volcengine') return ['images.generations']
-		if (protocol === 'dashscope') return ['images.generations.multimodal']
-		if (protocol === 'gemini') return ['models.generate']
-		return []
-	}
 	if (isEmbeddingModel(model))
 		return protocol === 'openai' ? ['embeddings'] : []
 	if (isRerankModel(model)) return protocol === 'openai' ? ['rerank'] : []
-	if (isAudioTranscriptionModel(model)) {
-		if (protocol === 'openai' || protocol === 'minimax') return ['audio.transcriptions']
-		if (protocol !== 'dashscope') return []
-		const realtime = [
-			'audio.transcriptions.realtime.inference',
-			'audio.transcriptions.realtime.session',
-		]
-		return [
-			'audio.transcriptions.multimodal',
-			...realtime.filter(
-				(operation) =>
-					!providerModelName.trim() ||
-					isDashScopeRealtimeAsrModelOperationCompatible(
-						providerModelName,
-						operation
-					)
-			),
-		]
-	}
-	if (isAudioSpeechModel(model)) {
-		if (protocol === 'openai' || protocol === 'minimax') return ['audio.speech']
-		return protocol === 'dashscope' ? ['audio.speech.realtime.inference'] : []
-	}
-	if (isTextLlmModel(model) && protocol === 'openai')
-		return ['chat', 'responses']
-	return routeOperations(protocol)
+	const kind = routeModelKind(model)
+	if (!kind) return []
+	const operations = requestOperationsFromRegistry(protocol, kind)
+	return kind === 'audio.transcription' && protocol === 'dashscope'
+		? filterRealtimeOperations(operations, providerModelName)
+		: operations
 }
 
 /** Provider endpoints are already validated/redacted by the browser DTO. Never infer capabilities from a redacted config. */
@@ -120,40 +118,21 @@ export function upstreamOperationsForProviderModel(
 	protocol: string,
 	providerModelName = ''
 ): readonly string[] {
-	if (!model) return []
+	if (!model || !isRouteProtocol(protocol)) return []
 	const capabilities = new Set(
 		configuredProviderCapabilities(provider, protocol)
 	)
-	if (isAudioTranscriptionModel(model) && protocol === 'dashscope') {
-		const result: string[] = []
-		if (capabilities.has('audio.transcriptions.multimodal'))
-			result.push('audio.transcriptions.multimodal')
-		if (
-			capabilities.has('audio.transcriptions') &&
-			capabilities.has('audio.transcriptions.tasks')
-		)
-			result.push('audio.transcriptions.async')
-		for (const [capability, operation] of [
-			['audio.realtime.inference', 'audio.transcriptions.realtime.inference'],
-			['audio.realtime.session', 'audio.transcriptions.realtime.session'],
-		]) {
-			if (
-				capabilities.has(capability!) &&
-				isDashScopeRealtimeAsrModelOperationCompatible(
-					providerModelName,
-					operation!
+	const kind = routeModelKind(model)
+	if (kind && kind !== 'llm') {
+		const operations = upstreamOperationsFromRegistry(protocol, kind).filter(
+			(operation) =>
+				requiredCapabilitiesForUpstreamOperation(protocol, operation).every(
+					(capability) => capabilities.has(capability)
 				)
-			)
-				result.push(operation!)
-		}
-		return result
-	}
-	if (isAudioSpeechModel(model) && protocol === 'dashscope') {
-		const result: string[] = []
-		if (capabilities.has('audio.speech')) result.push('audio.speech')
-		if (capabilities.has('audio.realtime.inference'))
-			result.push('audio.speech.realtime.inference')
-		return result
+		)
+		return kind === 'audio.transcription' && protocol === 'dashscope'
+			? filterRealtimeOperations(operations, providerModelName)
+			: operations
 	}
 	return requestOperationsForModel(model, protocol, providerModelName).filter(
 		(operation) => capabilities.has(operation)
@@ -179,42 +158,27 @@ export function compatibleAdaptersForDraft(
 	)
 }
 
+function registryPreset(intent: AdapterPresetIntent): Partial<RouteDraft> {
+	const descriptor = getAdapterByPresetIntent(intent)
+	const operation = descriptor?.upstream.operations[0]
+	if (!descriptor || !operation)
+		throw new Error('Route preset metadata is unavailable')
+	return {
+		requestProtocol: descriptor.request.protocol,
+		requestOperation: descriptor.request.operation,
+		upstreamProtocol: descriptor.upstream.protocol,
+		upstreamOperation: operation,
+		adapter: descriptor.id,
+	}
+}
 export const dashScopePresets = {
-	'flash-convert': {
-		requestProtocol: 'openai',
-		requestOperation: 'audio.transcriptions',
-		upstreamProtocol: 'dashscope',
-		upstreamOperation: 'audio.transcriptions.multimodal',
-		adapter: 'dashscope-asr-qwen-audio-file',
-	},
-	'flash-passthrough': {
-		requestProtocol: 'dashscope',
-		requestOperation: 'audio.transcriptions.multimodal',
-		upstreamProtocol: 'dashscope',
-		upstreamOperation: 'audio.transcriptions.multimodal',
-		adapter: 'passthrough',
-	},
-	filetrans: {
-		requestProtocol: 'openai',
-		requestOperation: 'audio.transcriptions',
-		upstreamProtocol: 'dashscope',
-		upstreamOperation: 'audio.transcriptions.async',
-		adapter: 'dashscope-asr-file-async',
-	},
-	nonrealtime: {
-		requestProtocol: 'openai',
-		requestOperation: 'audio.speech',
-		upstreamProtocol: 'dashscope',
-		upstreamOperation: 'audio.speech',
-		adapter: 'dashscope-tts-speech',
-	},
-	realtime: {
-		requestProtocol: 'dashscope',
-		requestOperation: 'audio.speech.realtime.inference',
-		upstreamProtocol: 'dashscope',
-		upstreamOperation: 'audio.speech.realtime.inference',
-		adapter: 'passthrough',
-	},
+	'flash-convert': registryPreset('dashscope-asr-flash-convert'),
+	'flash-passthrough': registryPreset('dashscope-asr-flash-passthrough'),
+	filetrans: registryPreset('dashscope-asr-filetrans'),
+	nonrealtime: registryPreset('dashscope-tts-nonrealtime'),
+	realtime: registryPreset('dashscope-tts-realtime'),
+	'image-qwen': registryPreset('dashscope-image-qwen'),
+	'image-wan': registryPreset('dashscope-image-wan'),
 } satisfies Record<string, Partial<RouteDraft>>
 export type DashScopePreset = keyof typeof dashScopePresets
 

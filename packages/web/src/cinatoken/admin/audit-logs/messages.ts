@@ -4,7 +4,7 @@ export const adminAuditLogMessages = {
 		close: 'Close',
 		title: 'Audit Logs',
 		subtitle:
-			'User audit trail (user_audit_logs) — spent / budget_max are derived from before/after user snapshots; legacy / extra JSON from change_payload is appended below when present (no separate Metadata column).',
+			'Review who changed a user’s access, period budget or permanent wallet allowance. Compare recorded before and after values, and open details for the full history.',
 		empty: 'No audit logs match the filters.',
 		filters: {
 			eventType: 'Event type',
@@ -37,6 +37,7 @@ export const adminAuditLogMessages = {
 		},
 		totalRecords: 'Total: {{count}} records',
 		table: {
+			wallet: 'Permanent allowance / Wallet',
 			time: 'Time',
 			event: 'Event',
 			actor: 'Actor',
@@ -105,6 +106,17 @@ export const adminAuditLogMessages = {
 		filtersTitle: 'Audit log filters',
 		copy: 'Copy',
 		copied: 'Copied',
+		copyFailed: 'Copy failed. Select the text to copy it manually.',
+		wallet: {
+			granted: 'Granted',
+			spent: 'Spent',
+			balance: 'Balance',
+			before: 'Before',
+			after: 'After',
+			missing: 'Not recorded',
+			invalid: 'Invalid historical value',
+			hidden: 'Amount unavailable',
+		},
 		rawPayload: 'Change payload',
 		beforeSnapshot: 'Before snapshot',
 		afterSnapshot: 'After snapshot',
@@ -117,7 +129,7 @@ export const adminAuditLogMessages = {
 		close: '关闭',
 		title: '审计日志',
 		subtitle:
-			'用户审计追踪（user_audit_logs）— spent / budget_max 由前后用户快照推导；存在时会在下方追加 change_payload 中的遗留 / 额外 JSON（无独立 Metadata 列）。',
+			'查看谁变更了用户权限、周期预算或永久额度，对照记录中的前后数值，并展开详情追溯完整变化。',
 		empty: '没有符合筛选条件的审计日志。',
 		filters: {
 			eventType: '事件类型',
@@ -150,6 +162,7 @@ export const adminAuditLogMessages = {
 		},
 		totalRecords: '总计：{{count}} 条记录',
 		table: {
+			wallet: '永久额度 / 钱包',
 			time: '时间',
 			event: '事件',
 			actor: '操作者',
@@ -217,6 +230,17 @@ export const adminAuditLogMessages = {
 		filtersTitle: '审计日志筛选',
 		copy: '复制',
 		copied: '已复制',
+		copyFailed: '复制失败，请手动选择文本。',
+		wallet: {
+			granted: '累计发放',
+			spent: '累计消耗',
+			balance: '余额',
+			before: '变更前',
+			after: '变更后',
+			missing: '未记录',
+			invalid: '历史数值无效',
+			hidden: '金额不可用',
+		},
 		rawPayload: '变更载荷',
 		beforeSnapshot: '变更前快照',
 		afterSnapshot: '变更后快照',
@@ -229,7 +253,7 @@ export const adminAuditLogMessages = {
 		close: '閉じる',
 		title: '監査ログ',
 		subtitle:
-			'ユーザー監査証跡（user_audit_logs）— spent / budget_max は変更前後のユーザースナップショットから算出されます。change_payload に旧形式 / 追加の JSON がある場合は下部に追記されます（独立した Metadata 列はありません）。',
+			'ユーザーのアクセス権、期間予算、永続利用枠を誰が変更したか確認します。記録された変更前後の値を比較し、詳細で変更内容を確認できます。',
 		empty: 'フィルターに一致する監査ログはありません。',
 		filters: {
 			eventType: 'イベント種別',
@@ -262,6 +286,7 @@ export const adminAuditLogMessages = {
 		},
 		totalRecords: '合計：{{count}} 件',
 		table: {
+			wallet: '永続利用枠 / ウォレット',
 			time: '時刻',
 			event: 'イベント',
 			actor: '実行者',
@@ -333,6 +358,18 @@ export const adminAuditLogMessages = {
 		filtersTitle: '監査ログのフィルター',
 		copy: 'コピー',
 		copied: 'コピーしました',
+		copyFailed:
+			'コピーできませんでした。テキストを選択して手動でコピーしてください。',
+		wallet: {
+			granted: '付与累計',
+			spent: '使用累計',
+			balance: '残高',
+			before: '変更前',
+			after: '変更後',
+			missing: '記録なし',
+			invalid: '過去の値が無効',
+			hidden: '金額を確認できません',
+		},
 		rawPayload: '変更ペイロード',
 		beforeSnapshot: '変更前スナップショット',
 		afterSnapshot: '変更後スナップショット',
@@ -345,7 +382,7 @@ export const adminAuditLogMessages = {
 		close: '닫기',
 		title: '감사 로그',
 		subtitle:
-			'사용자 감사 기록(user_audit_logs) — spent / budget_max는 변경 전후 사용자 Snapshot에서 계산됩니다. change_payload에 레거시 / 추가 JSON이 있으면 아래에 함께 표시되며 별도의 Metadata 열은 없습니다.',
+			'사용자 접근 권한, 기간 예산 또는 영구 한도를 누가 변경했는지 확인합니다. 기록된 변경 전후 값을 비교하고 세부 정보에서 전체 변경 내용을 확인하세요.',
 		empty: '필터와 일치하는 감사 로그가 없습니다.',
 		filters: {
 			eventType: '이벤트 유형',
@@ -378,6 +415,7 @@ export const adminAuditLogMessages = {
 		},
 		totalRecords: '전체: 레코드 {{count}}건',
 		table: {
+			wallet: '영구 한도 / 지갑',
 			time: '시간',
 			event: '이벤트',
 			actor: '작업자',
@@ -448,6 +486,17 @@ export const adminAuditLogMessages = {
 		filtersTitle: '감사 로그 필터',
 		copy: '복사',
 		copied: '복사됨',
+		copyFailed: '복사하지 못했습니다. 텍스트를 직접 선택하여 복사하세요.',
+		wallet: {
+			granted: '누적 지급',
+			spent: '누적 사용',
+			balance: '잔액',
+			before: '변경 전',
+			after: '변경 후',
+			missing: '기록 없음',
+			invalid: '과거 값이 유효하지 않음',
+			hidden: '금액 확인 불가',
+		},
 		rawPayload: '변경 페이로드',
 		beforeSnapshot: '변경 전 스냅샷',
 		afterSnapshot: '변경 후 스냅샷',

@@ -224,10 +224,29 @@ const strings = {
 		'정책을 저장했습니다.',
 	],
 	writeUnknown: [
-		'Write outcome is unconfirmed. Refresh the target list and audit before another change; the write will not be repeated automatically.',
-		'写入结果尚未确认。再次修改前须刷新目标列表与审计；不会自动重试写入。',
-		'書き込み結果は未確認です。再変更する前に一覧と監査履歴を更新してください。書き込みは自動再試行されません。',
-		'쓰기 결과를 확인할 수 없습니다. 다시 변경하기 전에 대상 목록과 감사 기록을 새로 고치세요. 쓰기는 자동 재시도하지 않습니다.',
+		'The write result is unknown and further writes are locked. Check the target list and audit, then review the unknown result before continuing. Reloading alone does not unlock writes or replay the operation.',
+		'写入结果未知，后续写入已锁定。请核对目标列表与审计，再核对未知结果后继续。仅刷新不会解锁或重放原操作。',
+		'書き込み結果が不明なため、以降の書き込みをロックしました。一覧と監査履歴を確認し、不明な結果を確認してから続けてください。再読み込みだけでは解除も再実行もしません。',
+		'쓰기 결과를 알 수 없어 이후 쓰기가 잠겼습니다. 대상 목록과 감사 기록을 확인한 뒤 알 수 없는 결과를 검토하세요. 새로 고침만으로 잠금을 해제하거나 작업을 재실행하지 않습니다.',
+	],
+	writeRejected: [
+		'The server rejected this operation. Close the draft, refresh the target list, and review the latest policy before starting another change.',
+		'服务器拒绝了此次操作。请关闭草稿，刷新目标列表并核对最新政策后再修改。',
+		'サーバーが操作を拒否しました。下書きを閉じて一覧を更新し、最新のポリシーを確認してから変更してください。',
+		'서버가 작업을 거부했습니다. 초안을 닫고 대상 목록을 새로 고친 뒤 최신 정책을 확인하고 변경하세요.',
+	],
+	rejectedDraftHint: [
+		'The server rejected this change. Your draft is preserved. Continue editing, correct the fields, and review the change again before saving.',
+		'服务器拒绝了此次更改，草稿已保留。请继续编辑、修正字段，再核对变更后保存。',
+		'サーバーが変更を拒否しました。下書きは保持されています。編集を続けて項目を修正し、変更を再確認してから保存してください。',
+		'서버가 변경을 거부했습니다. 초안은 유지됩니다. 편집을 계속해 항목을 수정하고 변경 내용을 다시 검토한 뒤 저장하세요.',
+	],
+	resumeEditing: ['Continue editing', '继续编辑', '編集を続ける', '편집 계속'],
+	precondition: [
+		'The policy version could not be verified. Close this draft, refresh the target list, and review it again.',
+		'无法验证政策版本。请关闭此草稿，刷新目标列表后重新核对。',
+		'ポリシーのバージョンを確認できません。下書きを閉じ、一覧を更新して再確認してください。',
+		'정책 버전을 확인할 수 없습니다. 초안을 닫고 대상 목록을 새로 고친 뒤 다시 검토하세요.',
 	],
 	accessDenied: [
 		'Console access was denied. Verify access again.',
@@ -260,10 +279,10 @@ const strings = {
 		'이 경로 대상은 더 이상 존재하지 않습니다.',
 	],
 	conflict: [
-		'The route or provider changed. Refresh before editing.',
-		'路由或供应商已变化，请刷新后再编辑。',
-		'ルートまたはプロバイダーが変更されました。更新してから編集してください。',
-		'경로나 공급자가 변경되었습니다. 새로 고친 후 편집하세요.',
+		'The policy, route or provider changed. Close this draft and refresh before editing again.',
+		'政策、路由或供应商已变化。请关闭此草稿，刷新后再编辑。',
+		'ポリシー、ルート、またはプロバイダーが変更されました。下書きを閉じて更新してから再編集してください。',
+		'정책, 경로 또는 공급자가 변경되었습니다. 초안을 닫고 새로 고친 뒤 다시 편집하세요.',
 	],
 	retentionError: [
 		'Retention must be a whole number from 0 to 36500.',

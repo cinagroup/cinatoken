@@ -7,7 +7,10 @@ import {
 	gatewayKeyOwnerIdSchema,
 } from '../gateway-keys/gateway-key-contracts'
 import { parseGatewayKeyMetadata } from '../gateway-keys/gateway-key-metadata'
+import { rateLimitReadSchema } from '../gateway-keys/rate-limit'
 import { requestLogSchema } from '../request-logs/request-log-contracts'
+import { userChargedCostFactorsSchema } from '../user-charged-factors'
+import { completeUserWallet, userWalletFields } from '../user-wallet-contracts'
 import { userIdSchema } from '../users/users-contracts'
 
 const count = z.number().int().nonnegative().safe()
@@ -28,6 +31,7 @@ const metadata = z.record(z.string().max(600), z.unknown()).nullable()
 export const userDetailSchema = z
 	.object({
 		id: userIdSchema,
+		rate_limit: rateLimitReadSchema,
 		email: z.email().max(320),
 		external_system: shortText.nullable(),
 		external_user_id: shortText.nullable(),
@@ -36,11 +40,10 @@ export const userDetailSchema = z
 		budget_spent: money,
 		budget_period: z.enum(['none', 'daily', 'weekly', 'monthly']),
 		budget_reset_at: timestamp.nullable(),
+		...userWalletFields,
 		status: shortText.min(1),
 		metadata,
-		charged_cost_factors: z
-			.record(userIdSchema, z.number().finite().nonnegative())
-			.nullable(),
+		charged_cost_factors: userChargedCostFactorsSchema,
 		created_at: timestamp,
 		updated_at: timestamp,
 	})
@@ -48,6 +51,7 @@ export const userDetailSchema = z
 		(user) =>
 			(user.external_system === null) === (user.external_user_id === null)
 	)
+	.refine(completeUserWallet, 'Incomplete wallet ledger')
 export type UserDetail = z.infer<typeof userDetailSchema>
 
 export const userDetailResponseSchema = z.object({
@@ -74,12 +78,13 @@ export const userDetailKeySchema = z
 		user_id: gatewayKeyOwnerIdSchema,
 		workspace_id: gatewayKeyOwnerIdSchema,
 		name: shortText.nullable(),
+		rate_limit: rateLimitReadSchema,
 		status: shortText.min(1),
 		metadata: z.unknown().optional(),
 		metadata_raw: z.unknown().optional(),
 		metadata_preview: z.string().max(1024).nullable().optional(),
 		metadata_unavailable: z.boolean().optional(),
-		last_used_at: gatewayKeyDetailSchema.shape.created_at.nullable(),
+		last_used_at: gatewayKeyDetailSchema.shape.last_used_at,
 		created_at: gatewayKeyDetailSchema.shape.created_at,
 		updated_at: gatewayKeyDetailSchema.shape.updated_at,
 	})
@@ -114,6 +119,7 @@ export const userDetailKeySchema = z
 			user_id: row.user_id,
 			workspace_id: row.workspace_id,
 			name: row.name,
+			...(row.rate_limit === undefined ? {} : { rate_limit: row.rate_limit }),
 			status: row.status,
 			metadata_preview: summary,
 			metadata_unavailable: unavailable,
@@ -174,20 +180,31 @@ export type UserDetailModel = z.infer<
 	typeof userDetailModelsResponseSchema
 >['data'][number]
 
-export const userBudgetTransitionSnapshotSchema = z.object({
-	budget_max: money.nullable(),
-	budget_base: money,
-	budget_spent: money,
-	budget_period: z.enum(['none', 'daily', 'weekly', 'monthly']),
-	budget_reset_at: timestamp.nullable(),
-	budget_epoch: count,
-	budget_reserved_micros: count,
-})
-export const userBudgetTransitionPreviewSchema = z.object({
-	before: userBudgetTransitionSnapshotSchema,
-	after: userBudgetTransitionSnapshotSchema,
-	carryover: z.number().finite(),
-})
+export const userBudgetTransitionSnapshotSchema = z
+	.object({
+		budget_max: money.nullable(),
+		budget_base: money,
+		budget_spent: money,
+		budget_period: z.enum(['none', 'daily', 'weekly', 'monthly']),
+		budget_reset_at: timestamp.nullable(),
+		budget_epoch: count,
+		budget_reserved_micros: count,
+		...userWalletFields,
+	})
+	.refine(completeUserWallet, 'Incomplete wallet snapshot')
+export const userBudgetTransitionPreviewSchema = z
+	.object({
+		before: userBudgetTransitionSnapshotSchema,
+		after: userBudgetTransitionSnapshotSchema,
+		carryover: z.number().finite(),
+	})
+	.refine(
+		(preview) =>
+			preview.before.wallet_granted === preview.after.wallet_granted &&
+			preview.before.wallet_spent === preview.after.wallet_spent &&
+			preview.before.wallet_balance === preview.after.wallet_balance,
+		'Period transitions must preserve the permanent wallet'
+	)
 export type UserBudgetTransitionPreview = z.infer<
 	typeof userBudgetTransitionPreviewSchema
 >
