@@ -10,6 +10,10 @@ import {
 	type OpenaiLlmOperation,
 	type SimulatorProtocol,
 } from '../playground/browser-domain/invoke-kind'
+import {
+	dashScopeHttpPath,
+	supportedSimulatorOperation,
+} from './simulator-capabilities'
 
 /**
  * Build Proxy-facing requests from the browser: URL, headers, and JSON body per protocol
@@ -68,6 +72,7 @@ export type BuildSimulatorRequestInput = {
 }
 
 export type BuildSimulatorRequestResult = {
+	method?: 'POST' | 'GET'
 	url: string
 	headers: Record<string, string>
 	/** JSON.stringify result (empty string when `formData` is set) */
@@ -76,6 +81,34 @@ export type BuildSimulatorRequestResult = {
 	formData?: FormData
 	/** Human-readable summary for wire preview when body is multipart. */
 	multipartSummary?: string
+}
+
+export function buildSimulatorTaskQuery(input: {
+	baseUrl: string
+	taskId: string
+	modelForRouting: string
+	receipt: string
+	apiKey: string
+}): BuildSimulatorRequestResult {
+	if (
+		!/^[A-Za-z0-9_-]{1,600}$/u.test(input.taskId) ||
+		input.receipt.length > 8192 ||
+		!/^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/u.test(input.receipt)
+	)
+		throw new TypeError('Invalid task query')
+	const url = new URL(
+		`${stripTrailingSlash(input.baseUrl.trim())}/v1/dashscope/tasks/${encodeURIComponent(input.taskId)}`
+	)
+	url.searchParams.set('model', input.modelForRouting)
+	return {
+		method: 'GET',
+		url: url.href,
+		headers: {
+			Authorization: bearerHeader(input.apiKey),
+			'X-CinaToken-Task-Receipt': input.receipt,
+		},
+		bodyText: '',
+	}
 }
 
 /** 构造 DashScope 原生实时入口的浏览器 WebSocket URL（鉴权在子协议中完成）。 */
@@ -143,7 +176,10 @@ function appendOptionalFormField(
 		if (t !== '') fd.append(key, t)
 		return
 	}
-	if (typeof value === 'number' && Number.isFinite(value)) {
+	if (
+		typeof value === 'boolean' ||
+		(typeof value === 'number' && Number.isFinite(value))
+	) {
 		fd.append(key, String(value))
 	}
 }
@@ -157,6 +193,23 @@ export function buildSimulatorRequest(
 	const base = stripTrailingSlash(input.baseUrl.trim())
 	const auth = bearerHeader(input.apiKey)
 	const kind = resolveKind(input)
+	if (
+		kind === 'image' &&
+		input.imageOperation === 'edits' &&
+		input.protocol !== 'openai'
+	)
+		throw new TypeError(
+			'Native image edits use JSON references, not multipart edits'
+		)
+	const operation =
+		input.protocol === 'dashscope' && kind === 'audio'
+			? (input.dashscopeRequestOperation ?? '')
+			: resolveSimulatorOperation(input, kind)
+	if (
+		kind !== 'tool' &&
+		!supportedSimulatorOperation(kind, input.protocol, operation)
+	)
+		throw new TypeError('Unsupported simulator operation')
 
 	if (kind === 'tool') {
 		const toolId = parseGatewayToolId(input.toolId)
@@ -221,11 +274,13 @@ export function buildSimulatorRequest(
 					typeof input.body.file_url === 'string'
 						? input.body.file_url.trim()
 						: ''
-				const fileSummary = fileUrl
-					? `file_url: ${fileUrl}`
-					: !file
-						? 'file: (none selected yet — required before Send)'
-						: [`file:`, ...fileLines.map((l) => `  - ${l}`)].join('\n')
+				let fileSummary = 'file: (none selected yet — required before Send)'
+				if (file)
+					fileSummary = [
+						'file:',
+						...fileLines.map((line) => `  - ${line}`),
+					].join('\n')
+				if (fileUrl) fileSummary = `file_url: ${fileUrl}`
 				const path = resolveProxyPathForModelInvoke({
 					kind: 'audio',
 					protocol: 'openai',
@@ -257,7 +312,11 @@ export function buildSimulatorRequest(
 				appendOptionalFormField(fd, 'background', input.body.background)
 				const fileLines: string[] = []
 				for (const file of files) {
-					fd.append('image', file, file.name || 'image.png')
+					fd.append(
+						files.length > 1 ? 'image[]' : 'image',
+						file,
+						file.name || 'image.png'
+					)
 					fileLines.push(`${file.name || 'image.png'} (${file.size} bytes)`)
 				}
 				const fieldParts = ['model', 'prompt']
@@ -323,7 +382,7 @@ export function buildSimulatorRequest(
 		}
 		case 'gemini': {
 			const action: SimulatorGeminiAction =
-				input.geminiAction === 'generateContent'
+				kind === 'image' || input.geminiAction === 'generateContent'
 					? 'generateContent'
 					: 'streamGenerateContent'
 			const path = resolveProxyPathForModelInvoke({
@@ -343,14 +402,38 @@ export function buildSimulatorRequest(
 				bodyText: JSON.stringify(input.body),
 			}
 		}
-		case 'dashscope': {
+		case 'volcengine': {
+			if (kind !== 'image') {
+				throw new Error(
+					'Volcengine simulator currently supports image generation only'
+				)
+			}
+			const path = resolveProxyPathForModelInvoke({
+				kind: 'image',
+				protocol: 'volcengine',
+				imageOperation: 'generations',
+			})
+			const merged = { ...input.body, model: input.modelForRouting }
+			return {
+				url: `${base}${path}`,
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: auth,
+				},
+				bodyText: JSON.stringify(merged),
+			}
+		}
+		case 'minimax': {
 			if (
-				input.dashscopeRequestOperation === 'audio.transcriptions.multimodal'
+				kind === 'image' ||
+				(kind === 'audio' &&
+					(input.audioOperation ?? 'transcriptions') === 'speech')
 			) {
 				const path = resolveProxyPathForModelInvoke({
-					kind: 'audio',
-					protocol: 'dashscope',
-					audioOperation: 'transcriptions',
+					kind: kind === 'image' ? 'image' : 'audio',
+					protocol: 'minimax',
+					audioOperation: kind === 'audio' ? 'speech' : undefined,
+					imageOperation: kind === 'image' ? 'generations' : undefined,
 				})
 				const merged = { ...input.body, model: input.modelForRouting }
 				return {
@@ -362,13 +445,98 @@ export function buildSimulatorRequest(
 					bodyText: JSON.stringify(merged),
 				}
 			}
-			throw new Error(
-				'DashScope realtime requests must use the WebSocket simulator path'
-			)
+			if (kind !== 'audio') {
+				throw new Error(
+					'MiniMax simulator supports file transcriptions, speech, and image generation'
+				)
+			}
+			const file = input.audioFile ?? null
+			const fd = new FormData()
+			fd.append('model', input.modelForRouting)
+			const skip = new Set(['model', 'file', 'audio', 'file_name', 'filename'])
+			const fieldParts = ['model', 'file']
+			for (const [key, value] of Object.entries(input.body)) {
+				if (skip.has(key)) continue
+				appendOptionalFormField(fd, key, value)
+				if (value != null && String(value).trim() !== '') fieldParts.push(key)
+			}
+			const fileLines: string[] = []
+			if (file) {
+				fd.append('file', file, file.name || 'audio.wav')
+				fileLines.push(`${file.name || 'audio.wav'} (${file.size} bytes)`)
+			}
+			const fileSummary = !file
+				? 'file: (none selected yet — required before Send)'
+				: [`file:`, ...fileLines.map((line) => `  - ${line}`)].join('\n')
+			const path = resolveProxyPathForModelInvoke({
+				kind: 'audio',
+				protocol: 'minimax',
+				audioOperation: 'transcriptions',
+			})
+			return {
+				url: `${base}${path}`,
+				headers: {
+					Authorization: auth,
+				},
+				bodyText: '',
+				formData: fd,
+				multipartSummary: [
+					`multipart/form-data fields: ${fieldParts.join(', ')}`,
+					fileSummary,
+					'language is forwarded as the MiniMax language header',
+				].join('\n'),
+			}
+		}
+		case 'dashscope': {
+			const operation =
+				kind === 'image'
+					? 'images.generations.multimodal'
+					: input.dashscopeRequestOperation
+			if (!operation || operation.includes('.realtime.')) {
+				throw new Error(
+					'DashScope realtime requests must use the WebSocket simulator path'
+				)
+			}
+			const path = dashScopeHttpPath(operation)
+			const headers: Record<string, string> = {
+				'Content-Type': 'application/json',
+				Authorization: auth,
+			}
+			if (operation === 'audio.speech.stream')
+				headers['X-DashScope-SSE'] = 'enable'
+			if (operation === 'audio.transcriptions.async')
+				headers['X-DashScope-Async'] = 'enable'
+			const merged = { ...input.body, model: input.modelForRouting }
+			return {
+				url: `${base}${path}`,
+				headers,
+				bodyText: JSON.stringify(merged),
+			}
 		}
 		default: {
 			const _exhaustive: never = input.protocol
 			throw new Error(`Unsupported protocol: ${String(_exhaustive)}`)
 		}
 	}
+}
+
+function resolveSimulatorOperation(
+	input: BuildSimulatorRequestInput,
+	kind: InvokeKind
+): string {
+	if (kind === 'image') {
+		if (input.protocol === 'dashscope') return 'images.generations.multimodal'
+		if (input.protocol === 'gemini') return 'models.generate'
+		return resolveImageOperation(input) === 'edits'
+			? 'images.edits'
+			: 'images.generations'
+	}
+	if (kind === 'audio')
+		return input.audioOperation === 'speech'
+			? 'audio.speech'
+			: 'audio.transcriptions'
+	if (input.protocol === 'openai')
+		return input.llmOperation === 'responses' ? 'responses' : 'chat'
+	if (input.protocol === 'anthropic') return 'messages'
+	return 'models.generate'
 }

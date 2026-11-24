@@ -1,4 +1,6 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
+import { streamTimeoutStrings } from './stream-timeout-messages'
+
 const strings = {
 	title: [
 		'Business timezone and configuration',
@@ -200,10 +202,100 @@ export const configTimezoneMessages = {
 const fullStrings = {
 	title: ['Global configuration', '全局配置', '全体設定', '전역 설정'],
 	subtitle: [
-		'Manage the business timezone, billing currency, route strategy and error webhooks.',
-		'管理业务时区、计费币种、路由策略和错误告警 Webhook。',
-		'業務タイムゾーン、請求通貨、ルート戦略、エラー通知 Webhook を管理します。',
-		'업무 시간대, 결제 통화, 라우팅 전략 및 오류 웹훅을 관리합니다.',
+		'Manage the business timezone, billing currency, user billing factors, route strategy and error webhooks.',
+		'管理业务时区、计费币种、用户计费因子、路由策略和错误告警 Webhook。',
+		'業務タイムゾーン、請求通貨、ユーザー請求係数、ルート戦略、エラー通知 Webhook を管理します。',
+		'업무 시간대, 결제 통화, 사용자 청구 계수, 라우팅 전략 및 오류 웹훅을 관리합니다.',
+	],
+	factorMode: [
+		'User billing factor mode',
+		'用户计费因子合成模式',
+		'ユーザー請求係数の合成方式',
+		'사용자 청구 계수 결합 방식',
+	],
+	factorModeHint: [
+		'Choose how user overrides combine with effective route factors relative to official prices.',
+		'选择用户覆盖因子如何与相对官方价格的有效路由因子合成。',
+		'公式価格に対する実効ルート係数とユーザー上書き係数の合成方法を選択します。',
+		'공식 가격 대비 유효 라우트 계수와 사용자 재정의 계수의 결합 방식을 선택하세요.',
+	],
+	factorMultiply: [
+		'multiply — multiply factors',
+		'multiply — 相乘',
+		'multiply — 係数を乗算',
+		'multiply — 계수 곱하기',
+	],
+	factorMin: [
+		'min — use the smaller factor',
+		'min — 取较小因子',
+		'min — 小さい係数を使用',
+		'min — 더 작은 계수 사용',
+	],
+	factorMultiplyHint: [
+		'multiply: route factor × user factor. A route factor of 0.8 and user factor of 0.9 produce 0.72 of the official price.',
+		'multiply：路由因子 × 用户因子。路由因子 0.8、用户因子 0.9 时，结果为官方价的 0.72 倍。',
+		'multiply：ルート係数 × ユーザー係数。0.8 と 0.9 なら公式価格の 0.72 倍です。',
+		'multiply: 라우트 계수 × 사용자 계수입니다. 0.8과 0.9이면 공식 가격의 0.72배가 됩니다.',
+	],
+	factorMinHint: [
+		'min: use the smaller of the route and user factors. For 0.8 and 0.9, the result is 0.8 of the official price.',
+		'min：取路由因子和用户因子中的较小值。0.8 和 0.9 的结果为官方价的 0.8 倍。',
+		'min：ルート係数とユーザー係数の小さい方を採用します。0.8 と 0.9 なら公式価格の 0.8 倍です。',
+		'min: 라우트와 사용자 계수 중 작은 값을 사용합니다. 0.8과 0.9이면 공식 가격의 0.8배입니다.',
+	],
+	factorModeScope: [
+		'This global setting affects future billing with user overrides; without an override, route billing is unchanged. Gateway caches can take up to 30 seconds to refresh.',
+		'此全局设置影响已配置用户覆盖因子的后续计费；未配置覆盖时沿用路由计费。网关缓存最长约 30 秒后更新。',
+		'この全体設定はユーザー上書き係数がある今後の請求に適用されます。上書きがない場合はルート請求を維持します。ゲートウェイのキャッシュ更新には最大約30秒かかります。',
+		'이 전역 설정은 사용자 재정의가 있는 이후 청구에 적용됩니다. 재정의가 없으면 기존 라우트 청구를 유지합니다. 게이트웨이 캐시 갱신에는 최대 약 30초가 걸립니다.',
+	],
+	factorModePending: [
+		'The factor mode change remains unconfirmed because this service did not return its snapshot. Keep the setting locked until a compatible server can be checked.',
+		'服务未返回因子模式快照，修改结果仍未确认。在可核查兼容服务端前，此设置继续锁定。',
+		'サービスから係数方式のスナップショットが返されず、変更結果は未確認です。対応サーバーを確認できるまでロックを維持します。',
+		'서비스가 계수 방식 스냅샷을 반환하지 않아 변경 결과가 미확인입니다. 호환 서버를 확인할 때까지 잠금을 유지합니다.',
+	],
+	factorModeUnavailable: [
+		'This service does not provide the factor mode snapshot. Updating it requires a compatible server.',
+		'当前服务未提供因子模式快照，需兼容的服务端才能修改。',
+		'このサービスは係数方式のスナップショットを提供しません。変更には対応サーバーが必要です。',
+		'이 서비스는 계수 방식 스냅샷을 제공하지 않습니다. 변경하려면 호환 서버가 필요합니다.',
+	],
+	selectFactorMode: [
+		'New billing factor mode',
+		'新计费因子模式',
+		'新しい請求係数方式',
+		'새 청구 계수 방식',
+	],
+	factorModeDirty: [
+		'Not saved to the current configuration.',
+		'尚未保存到当前配置。',
+		'現在の設定には未保存です。',
+		'현재 설정에 저장되지 않았습니다.',
+	],
+	factorModeClean: [
+		'Matches the saved configuration.',
+		'与已保存配置一致。',
+		'保存済みの設定と一致しています。',
+		'저장된 설정과 일치합니다.',
+	],
+	saveFactorMode: [
+		'Save factor mode',
+		'保存因子模式',
+		'係数方式を保存',
+		'계수 방식 저장',
+	],
+	discardFactorMode: [
+		'Discard mode change',
+		'撤销模式修改',
+		'方式の変更を破棄',
+		'방식 변경 취소',
+	],
+	confirmFactorMode: [
+		'Change the global factor mode for future user billing? Review both formulas before confirming.',
+		'确认修改后续用户计费的全局因子合成模式？请核对两种公式后再确认。',
+		'今後のユーザー請求の全体係数方式を変更しますか？両方の計算式を確認してください。',
+		'이후 사용자 청구의 전역 계수 방식을 변경할까요? 두 계산식을 검토한 뒤 확인하세요.',
 	],
 	saveCurrency: ['Save currency', '保存币种', '通貨を保存', '통화 저장'],
 	saveStrategy: ['Save strategy', '保存策略', '戦略を保存', '전략 저장'],
@@ -452,7 +544,9 @@ function fullLanguage(
 	return {
 		...base,
 		...Object.fromEntries(
-			Object.entries(fullStrings).map(([key, values]) => [key, values[index]!])
+			Object.entries({ ...fullStrings, ...streamTimeoutStrings }).map(
+				([key, values]) => [key, values[index]!]
+			)
 		),
 	}
 }

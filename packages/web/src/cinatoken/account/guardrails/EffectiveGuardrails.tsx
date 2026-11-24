@@ -4,6 +4,10 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import type { GuardrailTrace } from '../../guardrail-contracts'
+import {
+	formatGuardrailPreviewNumber,
+	formatGuardrailPreviewTime,
+} from '../../guardrail-preview-display'
 import type { GuardrailsManager } from './use-guardrails-manager'
 
 const privacyReason: Record<string, string> = {
@@ -105,12 +109,16 @@ export function EffectiveGuardrails(props: { manager: GuardrailsManager }) {
 			: []
 	const display = (values: readonly string[] | null) =>
 		values === null ? text('unrestricted') : values.join(', ') || text('none')
+	const locale = i18n.resolvedLanguage || 'en'
 	const number = (value: number | null) =>
-		value === null
-			? text('unknown')
-			: new Intl.NumberFormat(i18n.resolvedLanguage, {
-					maximumFractionDigits: 6,
-				}).format(value)
+		formatGuardrailPreviewNumber(value, locale, text('unknown'))
+	const pricingTime = evidence
+		? formatGuardrailPreviewTime(
+				evidence.pricing.evaluatedAt,
+				evidence.pricing.businessTimezone,
+				locale
+			)
+		: null
 	const range = (value: { minimum: number | null; maximum: number | null }) =>
 		value.minimum === null || value.maximum === null
 			? text('unknown')
@@ -402,20 +410,24 @@ export function EffectiveGuardrails(props: { manager: GuardrailsManager }) {
 											completion: range(evidence.pricing.completionPerMillion),
 											request: range(evidence.pricing.request),
 											image: range(evidence.pricing.image),
-											timezone: evidence.pricing.businessTimezone,
+											timezone: pricingTime?.usedFallback
+												? text('unknown')
+												: pricingTime?.timezone,
 										}
 									)}
 								</p>
-								<p className='text-muted-foreground text-xs'>
+								<p className='text-muted-foreground text-xs break-words'>
 									{t('cinatoken.account.guardrails.pricingAsOf', {
 										currency: preview.pricingCurrency,
-										time: new Intl.DateTimeFormat(i18n.resolvedLanguage, {
-											dateStyle: 'medium',
-											timeStyle: 'short',
-										}).format(new Date(evidence.pricing.evaluatedAt)),
-										timezone: evidence.pricing.businessTimezone,
+										time: pricingTime?.time ?? text('unknown'),
+										timezone: pricingTime?.timezone,
 									})}
 								</p>
+								{pricingTime?.usedFallback && (
+									<p className='text-muted-foreground text-xs'>
+										{text('previewTimezoneFallback')}
+									</p>
+								)}
 							</div>
 							<Exclusions
 								reasons={evidence.excludedByReason}

@@ -545,3 +545,64 @@ test('metadata rejects scalar, pollution, depth, nonfinite, excessive fields and
 		})
 	)
 })
+
+test('RPM PATCH confirms exact zero, positive and unlimited values without dropping revision or reason', async () => {
+	for (const rate_limit of [null, { rpm: 0 }, { rpm: 120 }]) {
+		const { api, calls } = fixture(() =>
+			Response.json({ success: true, data: { ...wireRow, rate_limit } })
+		)
+		const patch = {
+			expected_revision: revision,
+			rate_limit,
+			reason: 'Review key rate cap',
+		}
+		const saved = await api.patchGatewayKey(row, patch)
+		assert.deepEqual(saved.rate_limit, rate_limit)
+		assert.deepEqual(JSON.parse(String(calls[0].init.body)), patch)
+		assert.equal(calls[0].init.method, 'PATCH')
+	}
+})
+test('RPM PATCH rejects missing or differing acknowledgements and invalid inputs before dispatch', async () => {
+	for (const rate_limit of [undefined, null, { rpm: 1 }]) {
+		const { api } = fixture(() =>
+			Response.json({ success: true, data: { ...wireRow, rate_limit } })
+		)
+		await assert.rejects(
+			api.patchGatewayKey(row, {
+				expected_revision: revision,
+				rate_limit: { rpm: 0 },
+				reason: 'Block metered calls',
+			}),
+			(error) =>
+				error instanceof CinaTokenApiError && error.code === 'invalid-response'
+		)
+	}
+	const { api, calls } = fixture(() =>
+		Response.json({ success: true, data: wireRow })
+	)
+	await assert.rejects(
+		api.patchGatewayKey(row, {
+			expected_revision: revision,
+			rate_limit: { rpm: 0.5 },
+			reason: 'Invalid',
+		})
+	)
+	assert.equal(calls.length, 0)
+})
+test('RPM ACK is bound to the dispatched value even if the caller mutates its patch while awaiting the server', async () => {
+	const patch = {
+		expected_revision: revision,
+		rate_limit: { rpm: 0 },
+		reason: 'Stop calls',
+	}
+	const { api } = fixture(() => {
+		patch.rate_limit.rpm = 99
+		return Response.json({
+			success: true,
+			data: { ...wireRow, rate_limit: { rpm: 0 } },
+		})
+	})
+	assert.deepEqual((await api.patchGatewayKey(row, patch)).rate_limit, {
+		rpm: 0,
+	})
+})

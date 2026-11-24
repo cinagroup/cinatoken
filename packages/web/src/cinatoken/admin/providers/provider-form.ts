@@ -37,6 +37,8 @@ const prefix = 'cinatoken.adminProviders.'
 export const providerFormSchema = z
 	.object({
 		mode: z.enum(['create', 'edit', 'clone']),
+		kind: z.string().max(255),
+		originalKind: z.string().max(255),
 		blockedEndpoints: z.boolean(),
 		id: z
 			.string()
@@ -144,6 +146,8 @@ export function providerFormDefaults(
 ): ProviderFormValues {
 	return {
 		mode,
+		kind: row?.kind ?? (mode === 'create' ? '__custom__' : ''),
+		originalKind: row?.kind ?? '',
 		blockedEndpoints: Boolean(row && row.endpointsState !== 'available'),
 		id: mode === 'edit' ? (row?.id ?? '') : '',
 		name: row?.name ?? '',
@@ -168,6 +172,11 @@ export function providerFormInput(
 		status: parsed.status,
 		shared_channel_type: parsed.shared_channel_type || null,
 	}
+	if (
+		parsed.kind &&
+		(parsed.mode !== 'edit' || parsed.kind !== parsed.originalKind)
+	)
+		result.kind = parsed.kind
 	if (parsed.api_key.trim()) result.api_key = parsed.api_key
 	if (parsed.endpointMode === 'clear') result.endpoints = null
 	if (parsed.endpointMode === 'replace')
@@ -211,6 +220,7 @@ export function filterProviders(
 						row.id,
 						row.name,
 						row.vendor_key,
+						row.kind ?? '',
 						row.description ?? '',
 						...providerEndpointSearchTerms(row),
 					].some((value) => value.toLowerCase().includes(q))) &&

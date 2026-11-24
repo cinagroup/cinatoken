@@ -12,6 +12,7 @@ import {
 	adminGuardrailDeleteAssignmentResponseSchema,
 	adminGuardrailDesignationSchema,
 	adminGuardrailIdSchema,
+	adminGuardrailMetadataPatchSchema,
 	adminGuardrailScopeSchema,
 	adminGuardrailStatusSchema,
 	adminGuardrailSummariesResponseSchema,
@@ -19,6 +20,7 @@ import {
 	adminGuardrailVersionSummariesResponseSchema,
 	type AdminGuardrailAssignment,
 	type AdminGuardrailList,
+	type AdminGuardrailMetadataPatch,
 	type AdminGuardrailScopeType,
 	type AdminGuardrailSummary,
 	type AdminGuardrailVersionSummary,
@@ -123,6 +125,37 @@ export function createAdminGuardrailsApi(transport: AdminGuardrailsTransport) {
 					result.data.length
 			)
 				transport.invalidResponse('Guardrail assignments differ')
+			return result.data
+		},
+		async patchGuardrailMetadata(
+			row: AdminGuardrailSummary,
+			patch: AdminGuardrailMetadataPatch,
+			options: AdminGuardrailsRequestOptions = {}
+		): Promise<AdminGuardrailSummary> {
+			const fields = checked(adminGuardrailMetadataPatchSchema, patch)
+			if (
+				(row.isWorkspaceDefault || row.isAccountDefault) &&
+				fields.name !== undefined
+			)
+				transport.invalidResponse('Default Guardrail name is immutable')
+			const result = await send(
+				guardrailPath(row.id) + '?view=summary',
+				adminGuardrailSummaryResponseSchema,
+				json('PATCH', fields),
+				options
+			)
+			if (
+				result.data.id !== row.id ||
+				result.data.workspaceId !== row.workspaceId ||
+				result.data.ownerUserId !== row.ownerUserId ||
+				result.data.isWorkspaceDefault !== row.isWorkspaceDefault ||
+				result.data.isAccountDefault !== row.isAccountDefault ||
+				result.data.accountScopeKey !== row.accountScopeKey ||
+				(fields.name !== undefined && result.data.name !== fields.name) ||
+				(fields.description !== undefined &&
+					result.data.description !== fields.description)
+			)
+				throw new AdminDomainWriteError('unknown', 200)
 			return result.data
 		},
 		async setGuardrailStatus(

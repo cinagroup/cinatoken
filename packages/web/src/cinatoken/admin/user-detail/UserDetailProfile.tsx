@@ -2,6 +2,8 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
+import { RateLimitEditor } from '../gateway-keys/RateLimitEditor'
+import { UserDetailWalletFields } from './UserDetailWalletFields'
 import type { UserDetail } from './user-detail-contracts'
 import { draftFromUser, type UserDetailDraft } from './user-detail-domain'
 
@@ -91,6 +93,18 @@ export function UserDetailProfile(props: {
 				{field('externalSystem', t(prefix + 'externalSystem'))}
 				{field('externalUserId', t(prefix + 'externalId'))}
 			</div>
+			<RateLimitEditor
+				current={props.user.rate_limit}
+				layer='user'
+				mode={draft.rateLimitMode ?? 'unchanged'}
+				rpm={draft.rateLimitRpm ?? ''}
+				disabled={!props.canWrite || props.busy}
+				onMode={(value) => update('rateLimitMode', value)}
+				onRpm={(value) => update('rateLimitRpm', value)}
+				reason={draft.rateLimitReason ?? ''}
+				onReason={(value) => update('rateLimitReason', value)}
+			/>
+
 			<label className='block space-y-1 text-sm'>
 				<span>{t(prefix + 'metadata')}</span>
 				<textarea
@@ -161,6 +175,15 @@ export function UserDetailProfile(props: {
 				>
 					{t(prefix + 'currencyUnavailable')}
 				</p>
+			)}
+			{props.currency && (
+				<UserDetailWalletFields
+					user={props.user}
+					currency={props.currency}
+					draft={draft}
+					canWrite={props.canWrite && !props.busy}
+					onChange={update}
+				/>
 			)}
 			<div className='flex flex-wrap justify-between gap-3 border-t pt-4'>
 				<Button

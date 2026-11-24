@@ -569,3 +569,66 @@ test('policy schema covers seven deterministic filters and rejects unsupported, 
 	for (const config of invalid)
 		assert.equal(guardrailConfigSchema.safeParse(config).success, false)
 })
+
+test('metadata PATCH retains sparse fields, normalized values and explicit clearing', async () => {
+	for (const [input, expected] of [
+		[{ description: ' Updated notes ' }, { description: 'Updated notes' }],
+		[{ name: ' Renamed ' }, { name: 'Renamed' }],
+		[{ description: null }, { description: null }],
+		[{ status: 'active' }, { status: 'active' }],
+	] as const) {
+		const f = fixture({
+			success: true,
+			...context,
+			data: { ...row, ...expected },
+		})
+		await f.api.patchGuardrail(row.id, input, scope)
+		assert.equal(f.calls[0].path, '/api/user/guardrails/policy-1')
+		assert.equal(f.calls[0].init.method, 'PATCH')
+		assert.deepEqual(JSON.parse(String(f.calls[0].init.body)), expected)
+	}
+})
+
+test('version POST supports config-only and sparse metadata without replacing unrequested server fields', async () => {
+	const config = { require_zdr: true }
+	for (const input of [{ config }, { config, description: null }]) {
+		const updated = {
+			...row,
+			name: 'Concurrent server name',
+			description: null,
+			config,
+			latestVersion: 3,
+			designatedVersion: 3,
+		}
+		const f = fixture({ success: true, ...context, data: updated }, 201)
+		const value = await f.api.addGuardrailVersion(row.id, input, scope)
+		assert.equal(value.data?.name, 'Concurrent server name')
+		assert.equal(f.calls[0].path, '/api/user/guardrails/policy-1/versions')
+		assert.equal(f.calls[0].init.method, 'POST')
+		assert.deepEqual(JSON.parse(String(f.calls[0].init.body)), input)
+	}
+})
+
+test('empty effective patches and invalid version/create inputs fail before any request', () => {
+	const f = fixture({ success: true, ...context, data: row })
+	for (const input of [
+		{},
+		{ name: undefined },
+		{ description: undefined },
+		{ status: undefined },
+		{ config: {} },
+		{ ownerUserId: 'other' },
+	])
+		assert.throws(() => f.api.patchGuardrail(row.id, input as never, scope))
+	for (const input of [
+		{},
+		{ config: undefined },
+		{ config: { unknown: true } },
+		{ config: {}, status: 'active' },
+	])
+		assert.throws(() =>
+			f.api.addGuardrailVersion(row.id, input as never, scope)
+		)
+	assert.throws(() => f.api.createGuardrail({ config: {} } as never, scope))
+	assert.equal(f.calls.length, 0)
+})

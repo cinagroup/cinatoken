@@ -168,6 +168,157 @@ export const modelImportResponseSchema = z.object({
 	data: modelImportResultSchema,
 })
 
+export const modelSyncScalarKeys = [
+	'display_name',
+	'vendor',
+	'context_window',
+	'max_tokens',
+	'description',
+	'released_at',
+	'input_modalities',
+	'output_modalities',
+] as const
+export const modelSyncFieldKeySchema = z.enum([
+	...modelSyncScalarKeys,
+	'pricing_profile',
+])
+export type ModelSyncFieldKey = z.infer<typeof modelSyncFieldKeySchema>
+const syncText = z.string().max(1_000_000)
+const syncScalarFieldSchema = z
+	.object({
+		key: z.enum(modelSyncScalarKeys),
+		status: z.enum(['added', 'changed']),
+		current: syncText.nullable(),
+		official: syncText.min(1),
+		default_apply: z.literal(true),
+	})
+	.strict()
+	.refine((field) => (field.status === 'added') === (field.current === null))
+const syncPricingRowSchema = z
+	.object({
+		path: z.string().min(1).max(2_000),
+		status: z.enum(['added', 'changed', 'removed']),
+		current: syncText.nullable(),
+		official: syncText.nullable(),
+	})
+	.strict()
+	.refine((row) => {
+		if (row.status === 'added')
+			return row.current === null && row.official !== null
+		if (row.status === 'removed')
+			return row.current !== null && row.official === null
+		return row.current !== null && row.official !== null
+	})
+const syncPricingFieldSchema = z
+	.object({
+		key: z.literal('pricing_profile'),
+		status: z.literal('changed'),
+		rows: z.array(syncPricingRowSchema).min(1).max(10_000),
+		default_apply: z.literal(false),
+	})
+	.strict()
+	.refine(
+		(field) =>
+			new Set(field.rows.map((row) => row.path)).size === field.rows.length
+	)
+export const modelSyncFieldSchema = z.union([
+	syncScalarFieldSchema,
+	syncPricingFieldSchema,
+])
+export type ModelSyncField = z.infer<typeof modelSyncFieldSchema>
+export const modelSyncEntrySchema = z
+	.object({
+		model_id: modelIdentitySchema,
+		display_name: z.string().max(10_000).nullable(),
+		kind: z.enum(['llm', 'image', 'audio']),
+		routes_count: count,
+		active_routes_count: count,
+		fields: z.array(modelSyncFieldSchema).min(1).max(9),
+	})
+	.strict()
+	.refine(
+		(model) =>
+			model.active_routes_count <= model.routes_count &&
+			new Set(model.fields.map((field) => field.key)).size ===
+				model.fields.length
+	)
+export type ModelSyncEntry = z.infer<typeof modelSyncEntrySchema>
+export const modelSyncReportSchema = z
+	.object({
+		billing_currency: modelBillingCurrencySchema,
+		groups: z
+			.array(
+				z
+					.object({
+						vendor: z.string().min(1).max(600),
+						vendor_label: z.string().min(1).max(2_000),
+						models: z.array(modelSyncEntrySchema).min(1).max(10_000),
+					})
+					.strict()
+			)
+			.max(1_000),
+		models_with_diff: count.max(10_000),
+	})
+	.strict()
+	.refine((report) => {
+		const models = report.groups.flatMap((group) => group.models)
+		return (
+			models.length === report.models_with_diff &&
+			new Set(models.map((model) => model.model_id)).size === models.length &&
+			new Set(report.groups.map((group) => group.vendor)).size ===
+				report.groups.length
+		)
+	})
+export type ModelSyncReport = z.infer<typeof modelSyncReportSchema>
+export const modelSyncReportResponseSchema = z.object({
+	success: z.literal(true),
+	data: modelSyncReportSchema,
+})
+export const modelSyncItemsSchema = z
+	.array(
+		z
+			.object({
+				model_id: modelIdentitySchema,
+				fields: z
+					.array(modelSyncFieldKeySchema)
+					.min(1)
+					.max(9)
+					.refine((fields) => new Set(fields).size === fields.length),
+			})
+			.strict()
+	)
+	.min(1)
+	.max(10_000)
+	.refine(
+		(items) => new Set(items.map((item) => item.model_id)).size === items.length
+	)
+export type ModelSyncItem = z.infer<typeof modelSyncItemsSchema>[number]
+export const modelSyncResultSchema = z
+	.object({
+		updated: count,
+		skipped: count,
+		failed: z
+			.array(
+				z
+					.object({
+						model_id: modelIdentitySchema,
+						// Database/provider error text can contain private values. Never retain it.
+						message: z
+							.string()
+							.max(100_000)
+							.transform(() => 'Model sync failed'),
+					})
+					.strict()
+			)
+			.max(10_000),
+	})
+	.strict()
+export type ModelSyncResult = z.infer<typeof modelSyncResultSchema>
+export const modelSyncResponseSchema = z.object({
+	success: z.literal(true),
+	data: modelSyncResultSchema,
+})
+
 export const MODEL_OPERATION_PERMISSIONS = {
 	read: 'models.read',
 	write: 'models.write',

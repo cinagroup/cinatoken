@@ -1,5 +1,8 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
+import { useState } from 'react'
+import { Link } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
+import { Button } from '@/components/ui/button'
 import type {
 	DashboardDisplayConfig,
 	DashboardStats,
@@ -7,117 +10,127 @@ import type {
 import { formatMoney, formatNumber } from './dashboard-format'
 
 const prefix = 'cinatoken.adminDashboard.'
-
 export function UsagePanels(props: {
 	stats: DashboardStats
 	currency: DashboardDisplayConfig['billingCurrency']
 	locale: string
 }) {
 	const { t } = useTranslation()
+	const [view, setView] = useState<'models' | 'users'>('models')
+	const models = view === 'models'
+	const rows = models
+		? props.stats.modelDistribution.map((row) => ({
+				...row,
+				name: row.model_id,
+			}))
+		: props.stats.topUsers.map((row) => ({ ...row, name: row.user_email }))
 	const maximum = Math.max(
-		1,
-		...props.stats.modelDistribution.map((row) => row.request_count)
+		0,
+		...rows.map((row) => (models ? row.request_count : row.charged_cost))
 	)
 	return (
-		<div className='grid gap-5 xl:grid-cols-2'>
-			<section
-				className='bg-card min-w-0 rounded-xl border p-4 shadow-sm sm:p-5'
-				aria-labelledby='dashboard-models-title'
-			>
-				<h2 id='dashboard-models-title' className='text-lg font-semibold'>
-					{t(prefix + 'modelDistribution')}
+		<section
+			className='bg-card min-w-0 rounded-xl border p-4 shadow-sm sm:p-5'
+			aria-labelledby='dashboard-usage-title'
+		>
+			<div className='flex flex-wrap items-center justify-between gap-3'>
+				<h2 id='dashboard-usage-title' className='text-lg font-semibold'>
+					{t(prefix + (models ? 'modelDistribution' : 'topUsers'))}
 				</h2>
-				{props.stats.modelDistribution.length === 0 ? (
-					<p className='text-muted-foreground py-8 text-sm'>
-						{t(prefix + 'noModels')}
-					</p>
-				) : (
-					<ol className='mt-4 space-y-4'>
-						{props.stats.modelDistribution.map((row) => (
-							<li key={row.model_id} className='min-w-0'>
-								<div className='flex items-baseline justify-between gap-3 text-sm'>
-									<span
-										className='min-w-0 truncate font-medium'
-										title={row.model_id}
+				<div
+					className='flex gap-2'
+					role='group'
+					aria-label={t(prefix + 'usageView')}
+				>
+					<Button
+						size='sm'
+						variant={models ? 'default' : 'outline'}
+						aria-pressed={models}
+						onClick={() => setView('models')}
+					>
+						{t(prefix + 'model')}
+					</Button>
+					<Button
+						size='sm'
+						variant={models ? 'outline' : 'default'}
+						aria-pressed={!models}
+						onClick={() => setView('users')}
+					>
+						{t(prefix + 'user')}
+					</Button>
+				</div>
+			</div>
+			<p className='text-muted-foreground mt-2 text-xs'>
+				{t(prefix + (models ? 'rankRequests' : 'rankCost'))}
+			</p>
+			{rows.length === 0 ? (
+				<p className='text-muted-foreground py-8 text-sm'>
+					{t(prefix + (models ? 'noModels' : 'noUsers'))}
+				</p>
+			) : (
+				<div className='mt-4 overflow-x-auto'>
+					<table className='w-full text-left text-sm'>
+						<thead className='text-muted-foreground border-b text-xs'>
+							<tr>
+								<th scope='col' className='min-w-36 p-2 whitespace-nowrap'>
+									{t(prefix + (models ? 'model' : 'user'))}
+								</th>
+								{['requests', 'tokens', 'cost'].map((key) => (
+									<th
+										key={key}
+										scope='col'
+										className='p-2 text-right whitespace-nowrap'
 									>
-										{row.model_id}
-									</span>
-									<span className='shrink-0 tabular-nums'>
-										{formatNumber(row.request_count, props.locale)}
-									</span>
-								</div>
-								<div
-									className='bg-muted mt-1 h-2 overflow-hidden rounded-full'
-									aria-hidden='true'
-								>
-									<div
-										className='h-full rounded-full bg-blue-600'
-										style={{
-											width: `${row.request_count === 0 ? 0 : Math.max(2, (row.request_count / maximum) * 100)}%`,
-										}}
-									/>
-								</div>
-								<p className='text-muted-foreground mt-1 text-xs'>
-									{formatMoney(row.charged_cost, props.currency, props.locale)}
-								</p>
-							</li>
-						))}
-					</ol>
-				)}
-			</section>
-			<section
-				className='bg-card min-w-0 rounded-xl border p-4 shadow-sm sm:p-5'
-				aria-labelledby='dashboard-users-title'
-			>
-				<h2 id='dashboard-users-title' className='text-lg font-semibold'>
-					{t(prefix + 'topUsers')}
-				</h2>
-				{props.stats.topUsers.length === 0 ? (
-					<p className='text-muted-foreground py-8 text-sm'>
-						{t(prefix + 'noUsers')}
-					</p>
-				) : (
-					<div className='mt-4 overflow-x-auto'>
-						<table className='w-full text-left text-sm'>
-							<thead className='text-muted-foreground border-b text-xs'>
-								<tr>
-									<th scope='col' className='pr-3 pb-2 font-medium'>
-										{t(prefix + 'user')}
+										{t(prefix + key)}
 									</th>
-									<th scope='col' className='pr-3 pb-2 text-right font-medium'>
-										{t(prefix + 'requests')}
-									</th>
-									<th scope='col' className='pb-2 text-right font-medium'>
-										{t(prefix + 'cost')}
-									</th>
-								</tr>
-							</thead>
-							<tbody>
-								{props.stats.topUsers.map((row) => (
-									<tr key={row.user_email} className='border-b last:border-0'>
-										<th
-											scope='row'
-											className='max-w-44 py-2 pr-3 font-normal break-all'
-										>
-											{row.user_email}
-										</th>
-										<td className='py-2 pr-3 text-right tabular-nums'>
-											{formatNumber(row.request_count, props.locale)}
-										</td>
-										<td className='py-2 text-right tabular-nums'>
-											{formatMoney(
-												row.charged_cost,
-												props.currency,
-												props.locale
-											)}
-										</td>
-									</tr>
 								))}
-							</tbody>
-						</table>
-					</div>
-				)}
-			</section>
-		</div>
+							</tr>
+						</thead>
+						<tbody>
+							{rows.map((row) => (
+								<tr key={row.name} className='border-b last:border-0'>
+									<th
+										scope='row'
+										className='max-w-80 p-2 font-normal break-all'
+									>
+										{row.name}
+										<div
+											className='bg-muted mt-2 h-1 rounded'
+											aria-hidden='true'
+										>
+											<div
+												className='h-full rounded bg-blue-600'
+												style={{
+													width: `${maximum > 0 ? Math.max(0, ((models ? row.request_count : row.charged_cost) / maximum) * 100) : 0}%`,
+												}}
+											/>
+										</div>
+									</th>
+									<td className='p-2 text-right whitespace-nowrap tabular-nums'>
+										{formatNumber(row.request_count, props.locale)}
+									</td>
+									<td className='p-2 text-right whitespace-nowrap tabular-nums'>
+										{formatNumber(row.total_tokens, props.locale)}
+									</td>
+									<td className='p-2 text-right whitespace-nowrap tabular-nums'>
+										{formatMoney(
+											row.charged_cost,
+											props.currency,
+											props.locale
+										)}
+									</td>
+								</tr>
+							))}
+						</tbody>
+					</table>
+				</div>
+			)}
+			<Link
+				to={models ? '/admin/analytics/models' : '/admin/analytics/users'}
+				className='text-primary mt-4 inline-flex py-2 text-sm underline underline-offset-4'
+			>
+				{t(prefix + 'viewAnalytics')}
+			</Link>
+		</section>
 	)
 }

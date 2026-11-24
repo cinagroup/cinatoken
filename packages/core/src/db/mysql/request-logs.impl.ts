@@ -36,7 +36,7 @@ import { buildManagementAnalyticsQuery, mapManagementAnalyticsResult } from '../
 type MySqlGenerationRequestLogRow = Omit<GenerationRequestLogRow, 'created_at'> & {
 	created_at: string | Date;
 };
-import { appendModelIdPrefixCondition, appendProviderIdsCondition } from '../request-log-filters';
+import { appendModelIdPrefixCondition, appendProviderIdsCondition, normalizeRequestLogIngressHost } from '../request-log-filters';
 import {
 	businessTimezoneOffsetSeconds,
 	mysqlTimeseriesBucketExpr,
@@ -213,6 +213,7 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 			apiKeyId?: string;
 			userId?: string;
 			userEmail?: string;
+			ingressHost?: string;
 			modelId?: string;
 			providerId?: string;
 			providerName?: string;
@@ -224,6 +225,7 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 			startDate?: string;
 			endDate?: string;
 		}): Promise<{ logs: RequestLogRow[]; total: number }> {
+			const ingressHost = normalizeRequestLogIngressHost(options.ingressHost);
 			const page = options.page || 1;
 			const pageSize = Math.min(options.pageSize || 20, 100);
 			const offset = (page - 1) * pageSize;
@@ -251,6 +253,11 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 				conditions.push('rl.user_email = ?');
 				bindValues.push(options.userEmail);
 			}
+			if (ingressHost !== undefined) {
+				conditions.push('BINARY rl.ingress_host = BINARY ?');
+				bindValues.push(ingressHost);
+			}
+
 			if (options.modelId) {
 				conditions.push('rl.model_id = ?');
 				bindValues.push(options.modelId);
@@ -264,7 +271,7 @@ export function createMySqlRequestLogsRepository(db: MySqlDatabaseClient): Reque
 				bindValues.push(options.providerName);
 			}
 			appendProviderIdsCondition(conditions, bindValues, 'rl.provider_id', options.providerIds);
-			appendModelIdPrefixCondition(conditions, bindValues, 'rl.model_id', options.modelIdPrefix);
+			appendModelIdPrefixCondition(conditions, bindValues, 'rl.model_id', options.modelIdPrefix, 'mysql');
 			if (options.routeGroup) {
 				conditions.push('rl.route_group = ?');
 				bindValues.push(options.routeGroup);

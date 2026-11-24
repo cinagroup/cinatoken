@@ -1,5 +1,60 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
 const strings = {
+	timezoneConfigured: [
+		'Business timezone: {{timezone}}',
+		'业务时区：{{timezone}}',
+		'業務タイムゾーン: {{timezone}}',
+		'업무 시간대: {{timezone}}',
+	],
+	timezoneLegacy: [
+		'Business timezone: {{timezone}} (legacy setting)',
+		'业务时区：{{timezone}}（历史配置）',
+		'業務タイムゾーン: {{timezone}}（従来の設定）',
+		'업무 시간대: {{timezone}} (기존 설정)',
+	],
+	timezoneFallback: [
+		'Business timezone: UTC (server fallback)',
+		'业务时区：UTC（服务端回退）',
+		'業務タイムゾーン: UTC（サーバーの既定値）',
+		'업무 시간대: UTC (서버 기본값)',
+	],
+	timezoneUnavailable: [
+		'Business timezone unavailable; times use UTC. Refresh to retry.',
+		'业务时区无法确认，时间暂以 UTC 显示；可刷新重试。',
+		'業務タイムゾーンを確認できないため UTC で表示しています。更新して再試行してください。',
+		'업무 시간대를 확인할 수 없어 UTC로 표시합니다. 새로 고쳐 다시 시도하세요.',
+	],
+	walletBalance: ['Permanent balance', '永久余额', '永久残高', '영구 잔액'],
+	walletGranted: [
+		'Wallet credit granted',
+		'永久额度累计发放',
+		'永久残高の累計付与額',
+		'영구 한도 누적 지급액',
+	],
+	walletInitial: [
+		'Initial permanent wallet',
+		'初始永久额度',
+		'初期永久残高',
+		'초기 영구 한도',
+	],
+	walletInitialHint: [
+		'Leave empty to use the server defaults. Permanent credit does not reset with the period.',
+		'留空使用服务端默认值。永久额度不随周期重置。',
+		'空欄はサーバーの既定値を使います。永久残高は期間更新でリセットされません。',
+		'비워 두면 서버 기본값을 사용합니다. 영구 한도는 주기마다 초기화되지 않습니다.',
+	],
+	walletSpent: [
+		'Wallet spending',
+		'永久消费',
+		'永久残高の使用額',
+		'영구 사용액',
+	],
+	walletUnavailable: [
+		'Wallet unavailable',
+		'永久额度明细不可用',
+		'永久残高を取得できません',
+		'영구 한도 내역 없음',
+	],
 	title: [
 		'Gateway users',
 		'网关用户',

@@ -38,6 +38,8 @@ export function ModelEditorDialog(props: {
 	disabled: boolean
 	error: unknown
 	onSave: (input: CreateModelInput | UpdateModelInput, id?: string) => void
+	canResume: boolean
+	onResume: () => void
 	onClose: () => void
 }) {
 	const { t } = useTranslation()
@@ -330,9 +332,21 @@ export function ModelEditorDialog(props: {
 						</p>
 					)}
 					{props.error !== null && (
-						<p role='alert' className='text-destructive'>
-							{t(modelErrorKey(props.error))}
-						</p>
+						<div role='alert' className='text-destructive space-y-2'>
+							<p>{t(modelErrorKey(props.error))}</p>
+							{props.canResume && (
+								<>
+									<p>{t(prefix + 'rejectedDraftHint')}</p>
+									<Button
+										type='button'
+										variant='outline'
+										onClick={props.onResume}
+									>
+										{t(prefix + 'resumeEditing')}
+									</Button>
+								</>
+							)}
+						</div>
 					)}
 					<div className='flex flex-wrap justify-end gap-2'>
 						<Button

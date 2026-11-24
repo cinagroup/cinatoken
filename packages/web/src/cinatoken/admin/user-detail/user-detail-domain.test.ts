@@ -133,3 +133,61 @@ test('invalid datetime and factors are rejected; factors do not alter budget', (
 	assert.equal(createKeyMetadata('{"tag":"safe"}'), '{"tag":"safe"}')
 	assert.throws(() => createKeyMetadata('[]'))
 })
+
+test('wallet corrections send only edited counters, require a reason, and never imply a period reset', () => {
+	const walletUser = userDetailSchema.parse({
+		...user,
+		wallet_granted: 10,
+		wallet_spent: 2,
+		wallet_balance: 8,
+	})
+	const draft = draftFromUser(walletUser)
+	draft.email = 'new@example.test'
+	assert.equal(buildUserDetailPatches(walletUser, draft).budget, null)
+	draft.walletGranted = '15'
+	assert.throws(() => buildUserDetailPatches(walletUser, draft))
+	draft.walletReason = '  Reconcile approved credit  '
+	assert.deepEqual(buildUserDetailPatches(walletUser, draft).budget, {
+		wallet_granted: 15,
+		reason: 'Reconcile approved credit',
+	})
+	draft.walletGranted = '10'
+	draft.walletSpent = '0'
+	assert.deepEqual(buildUserDetailPatches(walletUser, draft).budget, {
+		wallet_spent: 0,
+		reason: 'Reconcile approved credit',
+	})
+	for (const invalid of ['', '-1', '1.0000001', 'NaN', 'Infinity']) {
+		draft.walletSpent = invalid
+		assert.throws(() => buildUserDetailPatches(walletUser, draft))
+	}
+	draft.walletSpent = '2'
+	draft.walletGranted = '15'
+	draft.walletReason = 'hidden\nreason'
+	assert.throws(() => buildUserDetailPatches(walletUser, draft))
+	const legacy = draftFromUser(user)
+	legacy.walletGranted = '0'
+	legacy.walletReason = 'Do not fabricate a missing ledger'
+	assert.throws(() => buildUserDetailPatches(user, legacy))
+})
+
+test('wallet DTOs preserve signed historical balance and reject incomplete ledger extensions', () => {
+	assert.equal(user.wallet_granted, undefined)
+	const parsed = userDetailSchema.parse({
+		...user,
+		wallet_granted: 1,
+		wallet_spent: 2,
+		wallet_balance: -1,
+	})
+	assert.equal(parsed.wallet_balance, -1)
+	for (const invalid of [
+		{ wallet_granted: 1 },
+		{ wallet_granted: 1, wallet_spent: 0 },
+		{ wallet_granted: -1, wallet_spent: 0, wallet_balance: -1 },
+		{ wallet_granted: 1, wallet_spent: Infinity, wallet_balance: 0 },
+	])
+		assert.equal(
+			userDetailSchema.safeParse({ ...user, ...invalid }).success,
+			false
+		)
+})

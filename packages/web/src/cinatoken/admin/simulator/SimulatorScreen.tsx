@@ -93,6 +93,11 @@ function SimulatorContent(props: SimulatorScreenProps) {
 					<SimulatorRequest state={state} />
 					<SimulatorResponse
 						response={state.response}
+						taskId={state.taskId}
+						onQueryTask={() => void state.queryTask()}
+						queryDisabled={
+							state.sending || !state.verified || !state.keyEnabled
+						}
 						canReadLogs={
 							props.session.canReadLogs !== false &&
 							!!state.context?.capabilities.can_read_logs

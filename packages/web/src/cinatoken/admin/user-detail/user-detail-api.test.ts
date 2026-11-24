@@ -649,3 +649,230 @@ test('unavailable editor metadata permits name-only editing and cannot generate 
 		})
 	)
 })
+
+test('reviewed wallet state survives transition preconditions and must match every acknowledgment', async () => {
+	const before = {
+		budget_max: 10,
+		budget_base: 10,
+		budget_spent: 1,
+		budget_period: 'monthly' as const,
+		budget_reset_at: '2030-01-01T00:00:00.000Z',
+		budget_epoch: 4,
+		budget_reserved_micros: 0,
+		wallet_granted: 20,
+		wallet_spent: 3,
+		wallet_balance: 17,
+	}
+	const after = { ...before, budget_max: 19, budget_epoch: 5, budget_spent: 0 }
+	const preview = { before, after, carryover: 9 }
+	const input = {
+		target_budget_base: 10,
+		budget_period: 'monthly' as const,
+		carryover_strategy: 'remaining_or_overage' as const,
+		reset_spent: true,
+		reason: 'test',
+	}
+	let reply: unknown = { transition: preview, user: { ...user, ...after } }
+	const { api, calls } = fixture((call) =>
+		Response.json({
+			success: true,
+			data: call.path.endsWith('/preview') ? preview : reply,
+		})
+	)
+	const reviewed = await api.previewUserBudgetTransition(userId, input)
+	assert.equal(reviewed.before.wallet_balance, 17)
+	await api.applyUserBudgetTransition(userId, userId, input, reviewed)
+	assert.deepEqual(
+		JSON.parse(String(calls[1]?.init.body)).expected_before,
+		before
+	)
+	for (const changed of [
+		{
+			transition: {
+				...preview,
+				before: { ...before, wallet_spent: 4, wallet_balance: 16 },
+				after: { ...after, wallet_spent: 4, wallet_balance: 16 },
+			},
+			user: { ...user, ...after },
+		},
+		{
+			transition: { ...preview, after: { ...after, budget_max: 99 } },
+			user: { ...user, ...after, budget_max: 99 },
+		},
+		{ transition: { ...preview, carryover: 10 }, user: { ...user, ...after } },
+		{ transition: preview, user: { ...user, ...after, wallet_balance: 16 } },
+	]) {
+		reply = changed
+		await assert.rejects(
+			api.applyUserBudgetTransition(userId, userId, input, reviewed)
+		)
+	}
+})
+
+test('wallet PATCH acknowledgments must include the requested counter and preserve server balance', async () => {
+	let amount = 15
+	const { api } = fixture(() =>
+		Response.json({
+			success: true,
+			data: {
+				...user,
+				wallet_granted: amount,
+				wallet_spent: 2,
+				wallet_balance: amount - 2,
+			},
+		})
+	)
+	assert.equal(
+		(
+			await api.patchUserDetail(userId, userId, {
+				wallet_granted: 15,
+				reason: 'reconcile',
+			})
+		).wallet_balance,
+		13
+	)
+	amount = 14
+	await assert.rejects(
+		api.patchUserDetail(userId, userId, {
+			wallet_granted: 15,
+			reason: 'reconcile',
+		})
+	)
+})
+
+test('transition acknowledgments tolerate binary balance subtraction while rejecting a changed micro-unit', async () => {
+	const before = {
+		budget_max: 10,
+		budget_base: 10,
+		budget_spent: 1,
+		budget_period: 'monthly' as const,
+		budget_reset_at: '2030-01-01T00:00:00.000Z',
+		budget_epoch: 4,
+		budget_reserved_micros: 0,
+		wallet_granted: 0.3,
+		wallet_spent: 0.1,
+		wallet_balance: 0.2,
+	}
+	const after = { ...before, budget_max: 19, budget_epoch: 5, budget_spent: 0 }
+	const preview = { before, after, carryover: 9 }
+	let balance = 0.3 - 0.1
+	const { api } = fixture(() =>
+		Response.json({
+			success: true,
+			data: {
+				transition: preview,
+				user: { ...user, ...after, wallet_balance: balance },
+			},
+		})
+	)
+	const input = {
+		target_budget_base: 10,
+		budget_period: 'monthly' as const,
+		carryover_strategy: 'remaining_or_overage' as const,
+		reset_spent: true,
+		reason: 'test',
+	}
+	assert.equal(
+		(await api.applyUserBudgetTransition(userId, userId, input, preview))
+			.wallet_balance,
+		0.3 - 0.1
+	)
+	balance = 0.200001
+	await assert.rejects(
+		api.applyUserBudgetTransition(userId, userId, input, preview)
+	)
+})
+
+test('user RPM edits confirm the exact returned limit and preserve reasons without budget or wallet fields', async () => {
+	for (const rate_limit of [null, { rpm: 0 }, { rpm: 50 }]) {
+		const { api, calls } = fixture(() =>
+			Response.json({ success: true, data: { ...user, rate_limit } })
+		)
+		const patch = { rate_limit, reason: 'Reviewed shared RPM pool' }
+		const saved = await api.patchUserDetail(userId, userId, patch)
+		assert.deepEqual(saved.rate_limit, rate_limit)
+		assert.deepEqual(JSON.parse(String(calls[0].init.body)), patch)
+	}
+})
+test('user RPM ignores no missing ACK and rejects invalid limits before issuing a request', async () => {
+	for (const rate_limit of [undefined, null, { rpm: 1 }]) {
+		const { api } = fixture(() =>
+			Response.json({ success: true, data: { ...user, rate_limit } })
+		)
+		await assert.rejects(
+			api.patchUserDetail(userId, userId, {
+				rate_limit: { rpm: 0 },
+				reason: 'Block',
+			}),
+			(error) =>
+				error instanceof CinaTokenApiError && error.code === 'invalid-response'
+		)
+	}
+	const { api, calls } = fixture(() =>
+		Response.json({ success: true, data: user })
+	)
+	for (const rate_limit of [
+		{ rpm: -1 },
+		{ rpm: 0.5 },
+		{ rpm: Number.MAX_SAFE_INTEGER + 1 },
+		{ rpm: 1, unknown: 2 },
+	])
+		await assert.rejects(
+			api.patchUserDetail(userId, userId, { rate_limit, reason: 'Invalid' })
+		)
+	assert.equal(calls.length, 0)
+})
+test('an unrelated user patch remains compatible with legacy responses lacking rate-limit fields', async () => {
+	const { api, calls } = fixture(() =>
+		Response.json({
+			success: true,
+			data: { ...user, email: 'new@example.test' },
+		})
+	)
+	const saved = await api.patchUserDetail(userId, userId, {
+		email: 'new@example.test',
+		reason: 'Profile only',
+	})
+	assert.equal(saved.rate_limit, undefined)
+	assert.deepEqual(JSON.parse(String(calls[0].init.body)), {
+		email: 'new@example.test',
+		reason: 'Profile only',
+	})
+})
+test('user-detail Key RPM editor uses global key revision/ownership checks and requires the actual limit in its ACK', async () => {
+	const wire = {
+		id: 'rpm-key',
+		key: 'sk-…',
+		user_id: userId,
+		workspace_id: 'personal:' + userId,
+		name: 'RPM key',
+		user_email: user.email,
+		status: 'active',
+		budget_max: 10,
+		budget_base: 10,
+		budget_spent: 1,
+		budget_period: 'none',
+		budget_reset_at: null,
+		profile_revision: 'sha256:' + 'a'.repeat(64),
+		created_at: user.created_at,
+		updated_at: user.updated_at,
+		last_used_at: null,
+		metadata_preview: null,
+		metadata_unavailable: false,
+	}
+	const owner = userDetailKeySchema.parse(wire)
+	for (const returned of [undefined, null, { rpm: 1 }, { rpm: 0 }]) {
+		const { api, calls } = fixture(() =>
+			Response.json({ success: true, data: { ...wire, rate_limit: returned } })
+		)
+		const patch = {
+			expected_revision: wire.profile_revision,
+			rate_limit: { rpm: 0 },
+			reason: 'Stop metered calls',
+		}
+		if (returned?.rpm === 0) await api.saveUserDetailKeyEdit(owner, patch)
+		else await assert.rejects(api.saveUserDetailKeyEdit(owner, patch))
+		assert.equal(calls[0].path, '/api/admin/keys/rpm-key')
+		assert.deepEqual(JSON.parse(String(calls[0].init.body)), patch)
+	}
+})

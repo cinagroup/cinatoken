@@ -1,4 +1,6 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
+import { AdminDomainWriteError } from '../domain-write-recovery'
+
 const prefix = 'cinatoken.adminEndpoints.'
 
 export function endpointErrorStatus(error: unknown): number {
@@ -39,11 +41,39 @@ export function endpointWriteNeedsReconciliation(error: unknown): boolean {
 }
 
 export function endpointErrorKey(error: unknown): string {
+	if (error instanceof AdminDomainWriteError) {
+		if (error.code === 'storage')
+			return 'cinatoken.adminDomain.storageUnavailable'
+		if (error.code === 'subject') return prefix + 'accessDenied'
+	}
 	if (endpointAccessDenied(error)) return prefix + 'accessDenied'
 	if (endpointInvalidResponse(error)) return prefix + 'invalidResponse'
 	const status = endpointErrorStatus(error)
 	if (status === 409) return prefix + 'conflict'
-	if (status === 400 || status === 413) return prefix + 'invalidInput'
+	if (status === 400 || status === 413 || status === 422)
+		return prefix + 'invalidInput'
 	if (status === 404) return prefix + 'notFound'
 	return prefix + 'requestFailed'
+}
+
+/** Only field rejections and a new draft's duplicate tuple can be repaired in place. */
+export function endpointCanResumeEditor(
+	error: unknown,
+	creating: boolean
+): boolean {
+	return (
+		error instanceof AdminDomainWriteError &&
+		error.code === 'rejected' &&
+		error.serverCode === null &&
+		([400, 413, 422].includes(error.status) ||
+			(creating && error.status === 409))
+	)
+}
+
+export function endpointWriteHintKey(error: unknown): string | null {
+	if (!(error instanceof AdminDomainWriteError)) return null
+	if (error.code === 'unknown') return prefix + 'writeUnknown'
+	if (error.code === 'rejected' && !endpointAccessDenied(error))
+		return prefix + 'writeRejected'
+	return null
 }

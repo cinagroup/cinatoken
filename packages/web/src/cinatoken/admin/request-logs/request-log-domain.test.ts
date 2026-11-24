@@ -15,6 +15,8 @@ import {
 	safeLogJson,
 	safeLogText,
 	validateRequestLogSearch,
+	validateRequestLogRouteSearch,
+	updateRequestLogScopedFilter,
 } from './request-log-domain'
 
 const row = {
@@ -284,4 +286,440 @@ test('route, trace and multimodal usage match log semantics', () => {
 		}),
 		['image', 'realtime', 'reasoning', 'failover']
 	)
+})
+
+test('MCP model-prefix deep links remain scoped through route validation and API serialization', () => {
+	const filters = validateRequestLogSearch({
+		provider_id: 'octafuse-mcp',
+		model_id_prefix: 'mcp:qa-server/',
+		status: 'success',
+	})
+	const url = new URL(requestLogsPath(filters), 'https://example.test')
+	assert.equal(filters.model_id_prefix, 'mcp:qa-server/')
+	assert.equal(url.searchParams.get('model_id_prefix'), 'mcp:qa-server/')
+	assert.equal(url.searchParams.get('provider_id'), 'octafuse-mcp')
+	assert.equal(url.searchParams.get('status'), 'success')
+	assert.equal(url.searchParams.has('model_id'), false)
+	for (const invalid of ['mcp:qa\nserver/', 'x'.repeat(601), ['mcp:qa/']]) {
+		assert.throws(() => validateRequestLogSearch({ model_id_prefix: invalid }))
+		assert.throws(() =>
+			requestLogsPath({ ...filters, model_id_prefix: invalid as string })
+		)
+	}
+})
+
+test('native media protocols retain filters and show actual Proxy entry paths', () => {
+	for (const [protocol, operation, path] of [
+		['minimax', 'audio.speech', '/v1/minimax/t2a_v2'],
+		['minimax', 'audio.transcriptions', '/v1/minimax/speech_to_text'],
+		['minimax', 'images.generations', '/v1/minimax/image_generation'],
+		['volcengine', 'images.generations', '/v1/volcengine/images/generations'],
+		[
+			'dashscope',
+			'audio.speech',
+			'/v1/dashscope/services/audio/tts/SpeechSynthesizer',
+		],
+		[
+			'dashscope',
+			'audio.speech.multimodal',
+			'/v1/dashscope/services/aigc/multimodal-generation/generation',
+		],
+		[
+			'dashscope',
+			'audio.transcriptions.async',
+			'/v1/dashscope/services/audio/asr/transcription',
+		],
+	]) {
+		const filters = validateRequestLogSearch({ protocol })
+		assert.equal(filters.protocol, protocol)
+		assert.equal(
+			new URL(
+				requestLogsPath(filters),
+				'https://example.test'
+			).searchParams.get('protocol'),
+			protocol
+		)
+		assert.equal(requestLogProtocolPath(protocol, operation), path)
+	}
+})
+
+test('ingress host deep links preserve stored case and port alongside MCP, identity, dates and pagination', () => {
+	for (const ingress_host of [
+		'Gateway.Example.test:8443',
+		'[2001:db8::1]:8787',
+		'x'.repeat(255),
+	]) {
+		const filters = validateRequestLogSearch({
+			ingress_host,
+			page: 3,
+			provider_id: 'octafuse-mcp',
+			model_id_prefix: 'mcp:qa/',
+			user_id: 'user-1',
+			api_key_id: 'key-1',
+			protocol: 'minimax',
+			start_date: '2026-10-18',
+		})
+		const params = new URL(requestLogsPath(filters), 'https://example.test')
+			.searchParams
+		assert.equal(filters.ingress_host, ingress_host)
+		assert.equal(params.get('ingress_host'), ingress_host)
+		assert.equal(params.get('model_id_prefix'), 'mcp:qa/')
+		assert.equal(params.get('provider_id'), 'octafuse-mcp')
+		assert.equal(params.get('api_key_id'), 'key-1')
+		assert.equal(params.get('user_id'), 'user-1')
+		assert.equal(params.get('protocol'), 'minimax')
+		assert.equal(params.get('page'), '3')
+		assert.equal(params.get('start_date'), '2026-10-18')
+	}
+	for (const ingress_host of [undefined, ''])
+		assert.equal(
+			new URL(
+				requestLogsPath(validateRequestLogSearch({ ingress_host })),
+				'https://example.test'
+			).searchParams.has('ingress_host'),
+			false
+		)
+	assert.equal(
+		validateRequestLogSearch({ ingress_host: ' Edge.Test:8080 ' }).ingress_host,
+		'Edge.Test:8080'
+	)
+})
+
+test('invalid ingress URL filters remain blocked and cannot serialize to an expanded query', () => {
+	for (const ingress_host of [
+		' ',
+		'a\nb',
+		'x'.repeat(256),
+		null,
+		0,
+		['a', 'b'],
+	]) {
+		assert.throws(() => validateRequestLogSearch({ ingress_host }))
+		const search = validateRequestLogRouteSearch({
+			ingress_host,
+			provider_id: 'octafuse-mcp',
+			model_id_prefix: 'mcp:qa/',
+		})
+		assert.equal(search.invalidFilter, true)
+		assert.equal(
+			validateRequestLogRouteSearch({ ...search, status: 'error' })
+				.invalidFilter,
+			true
+		)
+		assert.equal(search.provider_id, 'octafuse-mcp')
+		assert.equal(search.model_id_prefix, 'mcp:qa/')
+		assert.throws(() => requestLogsPath(search))
+		assert.throws(() =>
+			requestLogsPath({
+				...validateRequestLogSearch({}),
+				ingress_host: ingress_host as string,
+			})
+		)
+	}
+})
+
+test('host snapshots are bounded nullable optional text and do not invalidate legacy logs', () => {
+	for (const ingress_host of [
+		undefined,
+		null,
+		'Gateway.Example.test:8443',
+		'[2001:db8::1]:8787',
+	]) {
+		const data = requestLogsResponseSchema.parse({
+			success: true,
+			data: [{ ...row, ingress_host }],
+			total: 1,
+			page: 1,
+			page_size: 50,
+		}).data[0]
+		assert.equal(data.ingress_host, ingress_host)
+	}
+	for (const ingress_host of [42, {}, 'x'.repeat(256)])
+		assert.equal(
+			requestLogsResponseSchema.safeParse({
+				success: true,
+				data: [{ ...row, ingress_host }],
+				total: 1,
+				page: 1,
+				page_size: 50,
+			}).success,
+			false
+		)
+})
+
+test('model prefix normalization preserves literal Unicode and rejects malformed encoding before building a request', () => {
+	for (const model_id_prefix of [
+		'\ud800',
+		'\udfff',
+		' ',
+		'a\nb',
+		'x'.repeat(601),
+	]) {
+		assert.throws(() => validateRequestLogSearch({ model_id_prefix }))
+		assert.throws(() =>
+			requestLogsPath({ ...validateRequestLogSearch({}), model_id_prefix })
+		)
+	}
+	const prefix = 'mcp:模型%_\\Case/'
+	const search = validateRequestLogSearch({
+		model_id_prefix: ' ' + prefix + ' ',
+	})
+	assert.equal(search.model_id_prefix, prefix)
+	assert.equal(
+		new URL(requestLogsPath(search), 'https://example.test').searchParams.get(
+			'model_id_prefix'
+		),
+		prefix
+	)
+})
+
+test('invalid prefix URLs remain editable, scoped and unqueryable until explicitly repaired or cleared', () => {
+	const scope = {
+		provider_id: 'octafuse-mcp',
+		user_id: 'user-1',
+		api_key_id: 'key-1',
+		status: 'success',
+		start_date: '2026-10-18',
+		end_date: '2026-10-19',
+		ingress_host: 'Gateway.Test:8443',
+		page: 3,
+	}
+	for (const model_id_prefix of [
+		' ',
+		'a\nb',
+		'x'.repeat(601),
+		'\ud800',
+		null,
+		['mcp:a/'],
+	]) {
+		const search = validateRequestLogRouteSearch({ ...scope, model_id_prefix })
+		assert.equal(search.invalidFilter, true)
+		assert.equal(search.invalidModelPrefix, true)
+		assert.equal(search.invalidIngressHost, undefined)
+		assert.ok(search.model_id_prefix)
+		assert.equal(search.provider_id, scope.provider_id)
+		assert.equal(search.user_id, scope.user_id)
+		assert.equal(search.api_key_id, scope.api_key_id)
+		assert.equal(search.ingress_host, scope.ingress_host)
+		assert.equal(search.start_date, scope.start_date)
+		assert.equal(search.end_date, scope.end_date)
+		assert.throws(() => requestLogsPath(search))
+		const changedStatus = validateRequestLogRouteSearch({
+			...search,
+			status: 'error',
+		})
+		assert.equal(changedStatus.invalidModelPrefix, true)
+		assert.throws(() => requestLogsPath(changedStatus))
+		for (const prefix of ['mcp:Fixed_%/', '']) {
+			const repaired = updateRequestLogScopedFilter(
+				search,
+				'model_id_prefix',
+				prefix
+			)
+			assert.equal(repaired.invalidFilter, undefined)
+			assert.equal(repaired.invalidModelPrefix, undefined)
+			assert.equal(repaired.page, 1)
+			const params = new URL(requestLogsPath(repaired), 'https://example.test')
+				.searchParams
+			assert.equal(params.get('model_id_prefix'), prefix || null)
+			assert.equal(params.get('ingress_host'), scope.ingress_host)
+			assert.equal(params.get('provider_id'), scope.provider_id)
+			assert.equal(params.get('api_key_id'), scope.api_key_id)
+		}
+	}
+})
+
+test('combined host and prefix errors survive repairing the other field and never broaden a query', () => {
+	const search = validateRequestLogRouteSearch({
+		provider_id: 'octafuse-mcp',
+		ingress_host: ' ',
+		model_id_prefix: ' ',
+		page: 3,
+	})
+	assert.equal(search.invalidIngressHost, true)
+	assert.equal(search.invalidModelPrefix, true)
+	assert.throws(() => requestLogsPath(search))
+	const hostFirst = updateRequestLogScopedFilter(
+		search,
+		'ingress_host',
+		'Fixed.Gateway:8443'
+	)
+	assert.equal(hostFirst.invalidFilter, true)
+	assert.equal(hostFirst.invalidIngressHost, undefined)
+	assert.equal(hostFirst.invalidModelPrefix, true)
+	assert.equal(hostFirst.model_id_prefix, ' ')
+	assert.throws(() => requestLogsPath(hostFirst))
+	const prefixFirst = updateRequestLogScopedFilter(
+		search,
+		'model_id_prefix',
+		'mcp:Fixed/'
+	)
+	assert.equal(prefixFirst.invalidFilter, true)
+	assert.equal(prefixFirst.invalidIngressHost, true)
+	assert.equal(prefixFirst.invalidModelPrefix, undefined)
+	assert.equal(prefixFirst.ingress_host, ' ')
+	assert.throws(() => requestLogsPath(prefixFirst))
+	for (const fixed of [
+		updateRequestLogScopedFilter(hostFirst, 'model_id_prefix', ''),
+		updateRequestLogScopedFilter(prefixFirst, 'ingress_host', ''),
+	]) {
+		assert.equal(fixed.invalidFilter, undefined)
+		assert.equal(fixed.provider_id, 'octafuse-mcp')
+		assert.doesNotThrow(() => requestLogsPath(fixed))
+	}
+})
+
+test('provider set URLs canonicalize literal IDs while retaining the exact-provider intersection', () => {
+	const search = validateRequestLogSearch({
+		provider_ids: ' z,目录🧪,A,,z ',
+		provider_id: 'z',
+		page: 3,
+		ingress_host: 'Gateway.Test:8443',
+		model_id_prefix: 'mcp:qa/',
+	})
+	assert.equal(search.provider_ids, 'A,z,目录🧪')
+	const params = new URL(requestLogsPath(search), 'https://example.test')
+		.searchParams
+	assert.equal(params.get('provider_ids'), search.provider_ids)
+	assert.equal(params.get('provider_id'), 'z')
+	assert.equal(params.get('ingress_host'), search.ingress_host)
+	assert.equal(params.get('model_id_prefix'), search.model_id_prefix)
+	assert.equal(params.get('page'), '3')
+	for (const provider_ids of [undefined, '']) {
+		const legacy = validateRequestLogSearch({ provider_ids })
+		assert.equal(legacy.provider_ids, '')
+		assert.equal(
+			new URL(requestLogsPath(legacy), 'https://example.test').searchParams.has(
+				'provider_ids'
+			),
+			false
+		)
+	}
+})
+
+test('invalid provider set URLs remain editable, scoped and unqueryable until repaired', () => {
+	for (const provider_ids of [
+		null,
+		0,
+		[],
+		['p'],
+		{},
+		' ',
+		', ,',
+		'a\nb',
+		'\ud800',
+		'x'.repeat(601),
+		'x'.repeat(6010),
+		Array.from({ length: 11 }, (_, i) => `p${i}`).join(','),
+	]) {
+		assert.throws(() => validateRequestLogSearch({ provider_ids }))
+		const search = validateRequestLogRouteSearch({
+			provider_ids,
+			user_id: 'u',
+			api_key_id: 'k',
+			provider_id: 'p',
+			ingress_host: 'Gateway.Test',
+			model_id_prefix: 'mcp:q/',
+			page: 3,
+		})
+		assert.equal(search.invalidProviderIds, true)
+		assert.equal(search.invalidFilter, true)
+		assert.ok(search.provider_ids)
+		assert.equal(search.user_id, 'u')
+		assert.equal(search.api_key_id, 'k')
+		assert.equal(search.provider_id, 'p')
+		assert.equal(search.ingress_host, 'Gateway.Test')
+		assert.equal(search.model_id_prefix, 'mcp:q/')
+		assert.throws(() => requestLogsPath(search))
+		assert.throws(() =>
+			requestLogsPath({
+				...validateRequestLogSearch({}),
+				provider_ids: provider_ids as string,
+			})
+		)
+		const next = validateRequestLogRouteSearch({ ...search, status: 'error' })
+		assert.equal(next.invalidProviderIds, true)
+		assert.throws(() => requestLogsPath(next))
+		for (const value of ['', ' p2,p1,p2 ']) {
+			const fixed = updateRequestLogScopedFilter(search, 'provider_ids', value)
+			assert.equal(fixed.invalidProviderIds, undefined)
+			assert.equal(fixed.invalidFilter, undefined)
+			assert.equal(fixed.page, 1)
+			assert.equal(fixed.provider_ids, value ? 'p1,p2' : '')
+			assert.equal(fixed.provider_id, 'p')
+			assert.doesNotThrow(() => requestLogsPath(fixed))
+		}
+	}
+})
+
+test('all three scoped errors survive independent repairs in every order', () => {
+	const orders = [
+		['ingress_host', 'model_id_prefix', 'provider_ids'],
+		['ingress_host', 'provider_ids', 'model_id_prefix'],
+		['model_id_prefix', 'ingress_host', 'provider_ids'],
+		['model_id_prefix', 'provider_ids', 'ingress_host'],
+		['provider_ids', 'ingress_host', 'model_id_prefix'],
+		['provider_ids', 'model_id_prefix', 'ingress_host'],
+	] as const
+	const flags = {
+		ingress_host: 'invalidIngressHost',
+		model_id_prefix: 'invalidModelPrefix',
+		provider_ids: 'invalidProviderIds',
+	} as const
+	for (const order of orders) {
+		let search = validateRequestLogRouteSearch({
+			ingress_host: ' ',
+			model_id_prefix: ' ',
+			provider_ids: ', ,',
+			provider_id: 'p',
+			page: 3,
+		})
+		for (const [index, key] of order.entries()) {
+			assert.equal(search[flags[key]], true)
+			search = updateRequestLogScopedFilter(search, key, '')
+			assert.equal(search[flags[key]], undefined)
+			assert.equal(search.provider_id, 'p')
+			assert.equal(search.page, 1)
+			if (index < 2) {
+				assert.equal(search.invalidFilter, true)
+				assert.throws(() => requestLogsPath(search))
+			} else {
+				assert.equal(search.invalidFilter, undefined)
+				assert.doesNotThrow(() => requestLogsPath(search))
+			}
+		}
+	}
+})
+
+test('provider scope ACK is an optional canonical array, never coerced or normalized from malformed replies', () => {
+	const base = { success: true, data: [], total: 0, page: 1, page_size: 50 }
+	for (const provider_ids of [
+		[],
+		null,
+		'a,b',
+		[''],
+		['a', 'a'],
+		['b', 'a'],
+		[' a'],
+		['a,b'],
+		['a\nb'],
+		['\ud800'],
+		['x'.repeat(601)],
+		Array.from({ length: 11 }, (_, i) => `p${i}`),
+	])
+		assert.equal(
+			requestLogsResponseSchema.safeParse({
+				...base,
+				applied_filters: { provider_ids },
+			}).success,
+			false
+		)
+	assert.deepEqual(
+		requestLogsResponseSchema.parse({
+			...base,
+			applied_filters: { provider_ids: ['A', 'a', '目录🧪'], secret: 'drop' },
+		}).applied_filters,
+		{ provider_ids: ['A', 'a', '目录🧪'] }
+	)
+	assert.equal(requestLogsResponseSchema.safeParse(base).success, true)
 })

@@ -26,6 +26,7 @@ import { adminDomainMessages } from './admin/domain-messages'
 import { endpointMessages } from './admin/endpoints/messages'
 import { adminGatewayKeyMessages } from './admin/gateway-keys/messages'
 import { adminGuardrailMessages } from './admin/guardrails/messages'
+import { adminMcpMessages } from './admin/mcp/messages'
 import { consoleMessages } from './admin/messages'
 import { adminModelsMessages } from './admin/models/messages'
 import { playgroundMessages } from './admin/playground/playground-messages'
@@ -115,6 +116,8 @@ void i18n
 								adminSharedKeyMessages[
 									locale as keyof typeof adminSharedKeyMessages
 								],
+							adminMcp:
+								adminMcpMessages[locale as keyof typeof adminMcpMessages],
 							adminTools:
 								adminToolMessages[locale as keyof typeof adminToolMessages],
 							admin: {

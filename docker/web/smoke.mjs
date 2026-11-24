@@ -79,6 +79,8 @@ const container = docker([
 	"--env",
 	"CINATOKEN_WEB_ADMIN_SIMULATOR_ENABLED=true",
 	"--env",
+	"CINATOKEN_WEB_ADMIN_MCP_ENABLED=true",
+	"--env",
 	"CINATOKEN_WEB_ADMIN_WITHDRAWALS_ENABLED=true",
 	"--env",
 	"CINATOKEN_WEB_ADMIN_NFT_MINTS_ENABLED=true",
@@ -146,6 +148,7 @@ try {
 		"/admin/tools",
 		"/admin/playground",
 		"/admin/simulator",
+		"/admin/mcp",
 		"/admin/withdrawals",
 		"/admin/nft-mints",
 	].flatMap((path) => [path, `${path}/`]);

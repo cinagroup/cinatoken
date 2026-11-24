@@ -84,6 +84,7 @@ function fixture(
 	return {
 		api: bindAdminDomainFixtureApi(api, {
 			listPresets: 0,
+			listPresetsContext: 0,
 			listPresetVersions: 1,
 			patchPreset: 2,
 			designatePreset: 2,
@@ -98,6 +99,32 @@ const invalid = (error: unknown): boolean =>
 	(error instanceof AdminDomainWriteError &&
 		error.code === 'unknown' &&
 		error.status === 200)
+
+test('preset listing preserves explicit write capability while missing capability remains readable and cannot grant writes', async () => {
+	for (const canWrite of [true, false, undefined]) {
+		const { api, calls } = fixture(() =>
+			Response.json({
+				success: true,
+				data: [{ ...summary, systemPrompt: privateText }],
+				count: 1,
+				...(canWrite === undefined ? {} : { canWrite }),
+			})
+		)
+		const listing = await api.listPresetsContext()
+		assert.equal(listing.canWrite, canWrite === true)
+		assert.equal(listing.rows.length, 1)
+		assert.equal(JSON.stringify(listing).includes(privateText), false)
+		assert.deepEqual(await api.listPresets(), listing.rows)
+		assert.equal(calls.length, 2)
+	}
+	for (const canWrite of ['true', 1, null])
+		await assert.rejects(
+			fixture(() =>
+				Response.json({ success: true, data: [summary], count: 1, canWrite })
+			).api.listPresetsContext(),
+			invalid
+		)
+})
 
 test('summary list strips legacy prompt/config and uses same-origin Cookie transport only', async () => {
 	const { api, calls } = fixture(() =>

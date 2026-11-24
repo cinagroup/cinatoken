@@ -4,11 +4,21 @@ import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { CinaTokenApiError } from '../../../api'
 import { ReliabilityRangeControls } from '../../reliability/ReliabilityRangeControls'
+import { ProviderDirectoryControls } from '../providers/ProviderDirectoryControls'
+import { useAnalyticsProviderDirectory } from '../providers/use-analytics-provider-directory'
+import { AnalyticsDrilldownControls } from './AnalyticsDrilldownControls'
+import { AnalyticsInsights } from './AnalyticsInsights'
+import { AnalyticsViewControls } from './AnalyticsViewControls'
 import { ModelAnalyticsFilterControls } from './ModelAnalyticsFilters'
 import { ModelAnalyticsSummary } from './ModelAnalyticsSummary'
 import { ModelAnalyticsTable } from './ModelAnalyticsTable'
+import { summarizeAnalyticsRows } from './analytics-insights'
 import {
-	modelCostTotals,
+	analyticsColumnVisible,
+	filterModelAnalyticsRows,
+	type AnalyticsView,
+} from './analytics-view'
+import {
 	modelAnalyticsCsv,
 	sortModelRows,
 	type ModelSortKey,
@@ -33,21 +43,39 @@ export function AdminModelAnalytics(props: ModelAnalyticsProps) {
 	const { t, i18n } = useTranslation()
 	const locale = i18n.resolvedLanguage ?? 'en'
 	const state = useModelAnalytics(props)
+	const directoryState = useAnalyticsProviderDirectory({
+		api: props.directoryApi,
+		subject: props.directorySubject,
+		scopeKey: props.scopeKey,
+		reconciliationKey: props.reconciliationKey,
+		revalidate: props.revalidate,
+		enabled: !state.analyticsBlocked,
+	})
+	function retryAll(): void {
+		state.retry()
+		directoryState.retry()
+	}
+
 	const [sortKey, setSortKey] = useState<ModelSortKey>('model_id')
 	const [sortDirection, setSortDirection] = useState<SortDirection>('asc')
 	const [tokenMode, setTokenMode] = useState<TokenMode>('compact')
+	const [view, setView] = useState<AnalyticsView>('overview')
+	const [search, setSearch] = useState('')
 	const currency = state.display?.currency ?? null
 	const timezone = state.display?.timezone ?? null
 	const rows = useMemo(
-		() => sortModelRows(state.main?.rows ?? [], sortKey, sortDirection),
-		[state.main?.rows, sortKey, sortDirection]
+		() =>
+			sortModelRows(
+				filterModelAnalyticsRows(state.main?.rows ?? [], search),
+				sortKey,
+				sortDirection
+			),
+		[state.main?.rows, search, sortKey, sortDirection]
 	)
-	const totals = useMemo(() => modelCostTotals(rows), [rows])
+	const totals = useMemo(() => summarizeAnalyticsRows(rows), [rows])
 	const configFailed = state.displayBlocked || Boolean(state.displayQuery.error)
 	const analyticsFailed =
 		state.analyticsBlocked || Boolean(state.mainQuery.error)
-	const detailFailed =
-		state.analyticsBlocked || Boolean(state.detailQuery.error)
 	const logsAllowed =
 		!state.logsBlocked &&
 		!state.logsQuery.isFetching &&
@@ -60,6 +88,17 @@ export function AdminModelAnalytics(props: ModelAnalyticsProps) {
 			setSortKey(key)
 			setSortDirection('desc')
 		}
+	}
+	function selectView(next: AnalyticsView): void {
+		setView(next)
+		if (!analyticsColumnVisible(sortKey, next)) {
+			setSortKey('model_id')
+			setSortDirection('asc')
+		}
+	}
+	function searchRows(value: string): void {
+		setSearch(value)
+		state.collapseRows()
 	}
 	function download(): void {
 		if (
@@ -98,7 +137,7 @@ export function AdminModelAnalytics(props: ModelAnalyticsProps) {
 					className='mt-4'
 					type='button'
 					variant='outline'
-					onClick={state.retry}
+					onClick={retryAll}
 				>
 					{t(prefix + 'retry')}
 				</Button>
@@ -116,6 +155,20 @@ export function AdminModelAnalytics(props: ModelAnalyticsProps) {
 	} else {
 		content = (
 			<section className='space-y-3'>
+				<ProviderDirectoryControls
+					directory={directoryState.directory}
+					isFetching={directoryState.isFetching}
+					onRetry={directoryState.retry}
+				/>
+				<AnalyticsViewControls
+					view={view}
+					onView={selectView}
+					search={search}
+					onSearch={searchRows}
+					count={rows.length}
+					total={state.main.rows.length}
+					scope='models'
+				/>
 				<ModelAnalyticsSummary
 					currency={currency}
 					locale={locale}
@@ -127,13 +180,23 @@ export function AdminModelAnalytics(props: ModelAnalyticsProps) {
 					}
 					onExport={download}
 				/>
+				<AnalyticsInsights
+					summary={totals}
+					currency={currency}
+					locale={locale}
+					scope='models'
+				/>
+				<AnalyticsDrilldownControls
+					count={state.details.size}
+					onCollapse={state.collapseRows}
+				/>
 				<ModelAnalyticsTable
+					directory={directoryState.directory}
+					view={view}
+					emptyMessage={search.trim() ? t(prefix + 'viewNoMatches') : undefined}
 					rows={rows}
 					range={state.rangeParams}
-					active={state.active}
-					detail={state.detail}
-					detailLoading={state.detailQuery.isFetching}
-					detailError={detailFailed}
+					details={state.details}
 					logsAllowed={logsAllowed}
 					currency={currency}
 					locale={locale}
@@ -142,7 +205,6 @@ export function AdminModelAnalytics(props: ModelAnalyticsProps) {
 					sortDirection={sortDirection}
 					onSort={sort}
 					onToggle={state.toggleRow}
-					onRetry={state.retry}
 				/>
 			</section>
 		)
@@ -161,7 +223,7 @@ export function AdminModelAnalytics(props: ModelAnalyticsProps) {
 				<Button
 					type='button'
 					variant='outline'
-					onClick={state.retry}
+					onClick={retryAll}
 					disabled={state.mainQuery.isFetching || state.displayQuery.isFetching}
 				>
 					{t(prefix + 'refresh')}

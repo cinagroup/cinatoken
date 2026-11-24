@@ -54,7 +54,9 @@ export const modelSortKeys = [
 	'avg_effective_ttft_ms',
 	'avg_upstream_response_ms',
 	'tokens_per_second',
+	'stream_tokens_per_second',
 	'failover_rate',
+	'failover_request_rate',
 	'avg_attempts',
 ] as const
 export type ModelSortKey = (typeof modelSortKeys)[number]
@@ -73,10 +75,8 @@ export function sortModelRows(
 			const left = a.row[key]
 			const right = b.row[key]
 			if (left === null || left === undefined)
-				return right === null || right === undefined
-					? a.index - b.index
-					: sign * -1
-			if (right === null || right === undefined) return sign
+				return right === null || right === undefined ? a.index - b.index : 1
+			if (right === null || right === undefined) return -1
 			const order =
 				typeof left === 'number' && typeof right === 'number'
 					? left - right
@@ -164,6 +164,10 @@ export const modelCsvColumns = [
 	'avg_charged_per_request',
 	'range_start_utc',
 	'range_end_utc',
+	'stream_tokens_per_second',
+	'stream_sample_count',
+	'failover_request_count',
+	'failover_request_rate',
 ] as const
 
 function csvCell(value: string | number | null | undefined): string {

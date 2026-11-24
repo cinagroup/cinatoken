@@ -297,6 +297,39 @@ test('status-only update preserves partial PATCH and topology requires explicit 
 	assert.equal(calls[1]!.init.method, 'DELETE')
 })
 
+test('native DashScope routes preserve protocol, operation and passthrough identity on the wire', async () => {
+	for (const operation of [
+		'audio.speech',
+		'audio.speech.stream',
+		'audio.speech.multimodal',
+		'audio.speech.realtime.session',
+		'audio.transcriptions.async',
+	]) {
+		const { api, calls } = fixture(() => ok({ id: base.id }))
+		await api.createRoute({
+			model_id: base.model_id,
+			provider_id: base.provider_id,
+			provider_model_name: base.provider_model_name,
+			request_protocol: 'dashscope',
+			request_operation: operation,
+			upstream_protocol: 'dashscope',
+			upstream_operation: operation,
+			adapter: 'passthrough',
+		})
+		assert.deepEqual(JSON.parse(String(calls[0]!.init.body)), {
+			model_id: base.model_id,
+			provider_id: base.provider_id,
+			provider_model_name: base.provider_model_name,
+			request_protocol: 'dashscope',
+			request_operation: operation,
+			upstream_protocol: 'dashscope',
+			upstream_operation: operation,
+			adapter: 'passthrough',
+		})
+		assert.equal(calls[0]!.init.credentials, 'same-origin')
+	}
+})
+
 test('pool policy, sticky summary/lookup/clear/reset use exact paths and typed outcomes', async () => {
 	const hash = 'a'.repeat(64)
 	const { api, calls } = fixture(async (call) => {

@@ -72,6 +72,8 @@ export function ManagedModelEditor(props: ManagedModelEditorProps) {
 			disabled={manager.disabled}
 			error={manager.mutation.error}
 			onSave={manager.save}
+			canResume={manager.canResumeEditor}
+			onResume={manager.resumeEditor}
 			onDelete={manager.remove}
 			onClose={props.onClose}
 		/>

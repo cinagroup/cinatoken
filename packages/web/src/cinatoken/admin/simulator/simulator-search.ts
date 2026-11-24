@@ -14,7 +14,16 @@ export const simulatorSearchSchema = z.object({
 	kind: z.enum(['llm', 'image', 'audio', 'tool']).optional(),
 	model_id: text.optional(),
 	route_group: text.optional(),
-	protocol: z.enum(['openai', 'anthropic', 'gemini', 'dashscope']).optional(),
+	protocol: z
+		.enum([
+			'openai',
+			'anthropic',
+			'gemini',
+			'dashscope',
+			'minimax',
+			'volcengine',
+		])
+		.optional(),
 	tool: z
 		.enum(['web-search', 'web-fetch', 'web-deep-search', 'ai-detection'])
 		.optional(),

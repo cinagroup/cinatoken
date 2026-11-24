@@ -1,6 +1,9 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Alert, AlertDescription } from '../../../components/ui/alert'
+import { Button } from '../../../components/ui/button'
+import { safeAudioPreviewUrl } from './simulator-native-audio'
 import { simulatorResponseView, snapshotLogsHref } from './simulator-response'
 import { codeBlockClass, panelClass } from './simulator-utils'
 import type { SimulatorResponse as ResponseValue } from './use-simulator'
@@ -49,6 +52,9 @@ function SimulatorAudio(props: { blob: Blob }) {
 export function SimulatorResponse(props: {
 	response: ResponseValue | null
 	canReadLogs: boolean
+	taskId?: string | null
+	onQueryTask?: () => void
+	queryDisabled?: boolean
 }) {
 	const { t } = useTranslation()
 	const [tab, setTab] = useState<'merged' | 'raw'>('merged')
@@ -94,6 +100,27 @@ export function SimulatorResponse(props: {
 					</div>
 				)}
 			</div>
+			{props.taskId && (
+				<Alert>
+					<AlertDescription>
+						<div className='flex flex-col gap-2'>
+							<p>{t('cinatoken.adminSimulator.asyncTaskHint')}</p>
+							<p className='break-all'>
+								{t('cinatoken.adminSimulator.asyncTaskId', {
+									id: props.taskId,
+								})}
+							</p>
+							<Button
+								variant='outline'
+								disabled={props.queryDisabled}
+								onClick={props.onQueryTask}
+							>
+								{t('cinatoken.adminSimulator.queryTask')}
+							</Button>
+						</div>
+					</AlertDescription>
+				</Alert>
+			)}
 			{!response || !view ? (
 				<p className='text-muted-foreground text-sm'>
 					{t('cinatoken.adminSimulator.emptyResponseHint')}
@@ -205,6 +232,16 @@ export function SimulatorResponse(props: {
 								</div>
 							)}
 							{response.audio && <SimulatorAudio blob={response.audio} />}
+							{!response.audio && safeAudioPreviewUrl(response.audioUrl) && (
+								<audio
+									controls
+									className='w-full'
+									src={safeAudioPreviewUrl(response.audioUrl) ?? undefined}
+									preload='none'
+									crossOrigin='anonymous'
+									aria-label={t('cinatoken.adminSimulator.audioPreview')}
+								/>
+							)}
 							{!response.audio && view.images.length === 0 && (
 								<div className='space-y-3'>
 									<div>

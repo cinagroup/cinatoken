@@ -11,10 +11,12 @@ import {
 } from '@/components/ui/dialog'
 import { Skeleton } from '@/components/ui/skeleton'
 import type { ActivityGeneration } from '../../activity-contracts'
+import { requestChargeAmount } from '../../admin/request-logs/request-charge-split'
 import { cinatokenApi, CinaTokenApiError } from '../../api'
 import { useCinaTokenSession } from '../../session-context'
 import { requiresSessionRevalidation } from '../account-access'
 import { formatAccountDate } from '../key-display'
+import { ActivityChargeSplit } from './ActivityChargeSplit'
 import { formatActivityMoney } from './activity-format'
 import {
 	activityErrorKey,
@@ -145,7 +147,7 @@ function GenerationData(props: {
 					</dt>
 					<dd className='mt-1 text-sm'>
 						{formatActivityMoney(
-							props.selected.chargedCost,
+							requestChargeAmount(props.selected.chargedCost) ?? null,
 							props.selected.billingCurrency,
 							locale,
 							unknown
@@ -170,6 +172,10 @@ function GenerationData(props: {
 					value={bool(data.is_byok)}
 				/>
 			</DetailSection>
+			<ActivityChargeSplit
+				log={props.selected}
+				currency={props.selected.billingCurrency}
+			/>
 			<DetailSection title='cinatoken.account.activity.context'>
 				{(
 					[

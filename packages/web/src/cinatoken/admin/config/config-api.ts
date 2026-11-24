@@ -1,11 +1,16 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
-import type { z } from 'zod'
+import { z } from 'zod'
+import { CinaTokenApiError } from '../../api'
+import { authCheckSchema, portalMeSchema } from '../../contracts'
 import {
 	adminConfigOverviewResponseSchema,
 	adminTimezoneWriteResponseSchema,
 	billingCurrencyWrite,
 	billingCurrencyWriteResponseSchema,
 	configRevisionSchema,
+	userChargedCostFactorMode,
+	factorModeWriteResponseSchema,
+	type AdminConfigFactorMode,
 	normalizeBusinessTimezoneWrite,
 	normalizeWebhookWrite,
 	routeStrategyName,
@@ -20,10 +25,13 @@ import {
 	type AdminConfigRevision,
 	type AdminConfigWebhookChannel,
 } from './config-contracts'
+import { createStreamTimeoutApi } from './config-stream-timeout-api'
 
 export type AdminConfigRequestOptions = {
 	signal?: AbortSignal
 	timeoutMs?: number
+	expectedConsoleSubject?: string
+	expectedUserId?: string
 }
 export type AdminConfigTransport = {
 	send<T>(
@@ -34,6 +42,12 @@ export type AdminConfigTransport = {
 	): Promise<T>
 	invalidResponse(): never
 	sanitizeError(error: unknown): Error
+}
+
+class ConfigSubjectError extends CinaTokenApiError {
+	constructor() {
+		super('Console identity could not be verified', 401, 'http')
+	}
 }
 
 /** Browser Console Cookie transport; never calls the secret-bearing generic GET. */
@@ -55,7 +69,59 @@ export function createAdminConfigApi(transport: AdminConfigTransport) {
 			transport.invalidResponse()
 		return { 'If-Match': `"${expectedRevision}"` }
 	}
+	async function verifyFactorModeSubject(
+		options: AdminConfigRequestOptions
+	): Promise<string> {
+		try {
+			const subject = options.expectedConsoleSubject
+			if (
+				!subject ||
+				subject.length > 600 ||
+				subject !== subject.trim() ||
+				/[\p{Cc}\p{Cf}]/u.test(subject) ||
+				!options.expectedUserId
+			)
+				throw new ConfigSubjectError()
+			const header = encodeURIComponent(subject)
+			options.signal?.throwIfAborted()
+			const check = await transport.send(
+				'/api/auth/check',
+				authCheckSchema,
+				{},
+				requestOptions(options)
+			)
+			options.signal?.throwIfAborted()
+			if (
+				!check.authenticated ||
+				check.verification !== 'verified' ||
+				check.principalType !== 'console' ||
+				check.subject !== subject
+			)
+				throw new ConfigSubjectError()
+			const me = await transport.send(
+				'/api/user/me',
+				z.object({ success: z.literal(true), data: portalMeSchema }),
+				{},
+				requestOptions(options)
+			)
+			options.signal?.throwIfAborted()
+			if (
+				!me.data.isAdmin ||
+				me.data.userId !== options.expectedUserId ||
+				me.data.subject !== subject
+			)
+				throw new ConfigSubjectError()
+			return header
+		} catch {
+			throw new ConfigSubjectError()
+		}
+	}
 	return {
+		...createStreamTimeoutApi(
+			transport,
+			verifyFactorModeSubject,
+			revisionHeaders
+		),
 		async configOverview(
 			options: AdminConfigRequestOptions = {}
 		): Promise<AdminConfigOverview> {
@@ -158,6 +224,44 @@ export function createAdminConfigApi(transport: AdminConfigTransport) {
 				if (result.data.routeStrategy.value !== value)
 					transport.invalidResponse()
 				return result.data.routeStrategy
+			} catch (error) {
+				throw transport.sanitizeError(error)
+			}
+		},
+		async updateUserChargedCostFactorMode(
+			value: AdminConfigFactorMode,
+			expectedRevision: AdminConfigRevision,
+			options: AdminConfigRequestOptions = {}
+		): Promise<NonNullable<AdminConfigOverview['userChargedCostFactorMode']>> {
+			if (!userChargedCostFactorMode.safeParse(value).success)
+				transport.invalidResponse()
+			const revisions = revisionHeaders(expectedRevision)
+			try {
+				const subject = await verifyFactorModeSubject(options)
+				options.signal?.throwIfAborted()
+				const result = await transport.send(
+					'/api/admin/config/user-charged-cost-factor-mode',
+					factorModeWriteResponseSchema,
+					{
+						method: 'PUT',
+						headers: {
+							'Content-Type': 'application/json',
+							...revisions,
+							'X-CinaToken-Expected-Console-Subject': subject,
+						},
+						body: JSON.stringify({ value }),
+					},
+					requestOptions(options)
+				)
+				options.signal?.throwIfAborted()
+				const field = result.data.userChargedCostFactorMode
+				if (
+					field.value !== value ||
+					field.revision === expectedRevision ||
+					field.revision === 'legacy'
+				)
+					transport.invalidResponse()
+				return field
 			} catch (error) {
 				throw transport.sanitizeError(error)
 			}

@@ -16,6 +16,8 @@ export type UserCreateDraft = {
 	budgetBase: string
 	budgetPeriod: 'none' | 'daily' | 'weekly' | 'monthly'
 	metadata: string
+	walletGranted?: string
+	walletSpent?: string
 }
 
 export const emptyUserCreateDraft: UserCreateDraft = {
@@ -26,6 +28,8 @@ export const emptyUserCreateDraft: UserCreateDraft = {
 	budgetBase: '',
 	budgetPeriod: 'none',
 	metadata: '',
+	walletGranted: '',
+	walletSpent: '',
 }
 
 export const userCreateDraftSchema = z.strictObject({
@@ -36,6 +40,8 @@ export const userCreateDraftSchema = z.strictObject({
 	budgetBase: z.string().max(80),
 	budgetPeriod: z.enum(['none', 'daily', 'weekly', 'monthly']),
 	metadata: z.string().max(16_384),
+	walletGranted: z.string().max(80).optional(),
+	walletSpent: z.string().max(80).optional(),
 })
 
 const amount = z.number().finite().nonnegative().max(1_000_000_000_000)
@@ -47,6 +53,8 @@ const createBodySchema = z
 		budget_max: amount.nullable(),
 		budget_base: amount.optional(),
 		budget_period: z.enum(['none', 'daily', 'weekly', 'monthly']),
+		wallet_granted: amount.optional(),
+		wallet_spent: amount.optional(),
 		metadata: z.record(z.string(), z.unknown()).optional(),
 	})
 	.refine(
@@ -79,6 +87,8 @@ export function normalizeUserCreate(draft: UserCreateDraft): UserCreateInput {
 	}
 	const budgetMax = parseAmount(draft.budgetMax)
 	const budgetBase = parseAmount(draft.budgetBase)
+	const walletGranted = parseAmount(draft.walletGranted ?? '')
+	const walletSpent = parseAmount(draft.walletSpent ?? '')
 	const candidate = {
 		email: draft.email.trim(),
 		external_system: draft.externalSystem.trim() || null,
@@ -86,6 +96,8 @@ export function normalizeUserCreate(draft: UserCreateDraft): UserCreateInput {
 		budget_max: budgetMax ?? null,
 		budget_period: draft.budgetPeriod,
 		...(budgetBase === undefined ? {} : { budget_base: budgetBase }),
+		...(walletGranted === undefined ? {} : { wallet_granted: walletGranted }),
+		...(walletSpent === undefined ? {} : { wallet_spent: walletSpent }),
 		...(metadata === undefined ? {} : { metadata }),
 	}
 	const checked = createBodySchema.safeParse(candidate)

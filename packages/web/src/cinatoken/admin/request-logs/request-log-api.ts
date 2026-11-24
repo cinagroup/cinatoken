@@ -1,5 +1,6 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
 import type { z } from 'zod'
+import { normalizeRequestLogProviderIds } from '@octafuse/core/db/request-log-filters'
 import { createAdminReliabilityApi } from '../reliability/reliability-api'
 import type { ReliabilityDisplay } from '../reliability/reliability-contracts'
 import {
@@ -73,13 +74,51 @@ export function createAdminRequestLogsApi(transport: RequestLogTransport) {
 			search: RequestLogSearch,
 			options: RequestLogOptions = {}
 		): Promise<RequestLogPage> {
-			const value = await send(
-				requestLogsPath(search),
-				requestLogsResponseSchema,
-				options
-			)
-			if (value.page !== search.page || value.page_size !== 50)
+			// Freeze the expected scope before dispatch; callers can replace or edit
+			// their search object while the transport is awaiting the response.
+			const expected = { ...search }
+			const path = requestLogsPath(expected)
+			const providerIds = normalizeRequestLogProviderIds(expected.provider_ids)
+			const providerId = expected.provider_id.trim()
+			const host = expected.ingress_host?.trim()
+			const prefix = expected.model_id_prefix?.trim()
+			const value = await send(path, requestLogsResponseSchema, options)
+			if (value.page !== expected.page || value.page_size !== 50)
 				transport.invalidResponse('Request-log page differs')
+			if (host && value.applied_filters?.ingress_host !== host)
+				transport.invalidResponse('Request-log ingress filter is unconfirmed')
+			if (host && value.data.some((log) => log.ingress_host !== host))
+				transport.invalidResponse('Request-log ingress host differs')
+			if (prefix && value.applied_filters?.model_id_prefix !== prefix)
+				transport.invalidResponse('Request-log model prefix is unconfirmed')
+			if (
+				prefix &&
+				value.data.some(
+					(log) =>
+						!log.model_id?.startsWith(prefix) ||
+						(providerId && log.provider_id !== providerId)
+				)
+			)
+				transport.invalidResponse('Request-log model prefix differs')
+			if (providerIds) {
+				const acknowledged = value.applied_filters?.provider_ids
+				if (
+					acknowledged?.length !== providerIds.length ||
+					providerIds.some((id, index) => acknowledged?.[index] !== id)
+				)
+					transport.invalidResponse(
+						'Request-log provider filter is unconfirmed'
+					)
+				if (
+					value.data.some(
+						(log) =>
+							!log.provider_id ||
+							!providerIds.includes(log.provider_id) ||
+							(providerId && log.provider_id !== providerId)
+					)
+				)
+					transport.invalidResponse('Request-log providers differ')
+			}
 			return {
 				data: value.data,
 				total: value.total,

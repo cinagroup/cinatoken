@@ -1,5 +1,22 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
 const en = {
+	rateLimit: 'RPM limit',
+	rateLimitUpdate: 'Update RPM limit',
+	rateLimitUnknown: 'Unavailable from this response',
+	rateLimitUnlimited: 'No limit at this layer',
+	rateLimitValue: '{{rpm}} requests / minute',
+	rateLimitMode_unchanged: 'Leave unchanged',
+	rateLimitMode_unlimited: 'Remove this layer’s limit',
+	rateLimitMode_limited: 'Set an RPM limit',
+	rateLimitUserHint:
+		'This user pool is shared by all of the user’s keys. Key limits apply independently.',
+	rateLimitKeyHint:
+		'This limit applies to this key. The user’s shared limit also applies.',
+	rateLimitHint:
+		'A rolling 60-second window. Zero blocks metered calls. Enter a whole number from 0 to 9007199254740991; removing this layer’s limit does not remove other limits.',
+	rateLimitInvalid:
+		'Enter a non-negative whole number within the safe integer range.',
+
 	title: 'Gateway keys',
 	subtitle:
 		'Manage user-owned Gateway keys. Budgets belong to their users; existing secrets cannot be revealed.',
@@ -28,6 +45,10 @@ const en = {
 	metadata: 'Metadata',
 	created: 'Created',
 	updated: 'Updated',
+	lastUsed: 'Last used',
+	noUsageRecorded: 'No usage recorded',
+	lastUsedUnavailable: 'Last-used time unavailable',
+	timestamps: 'Times',
 	actions: 'Actions',
 	status: 'Status',
 	active: 'Active',
@@ -126,6 +147,20 @@ const en = {
 	saved: 'The Gateway-key change was confirmed.',
 }
 const zh: typeof en = {
+	rateLimit: 'RPM 限制',
+	rateLimitUpdate: '更新 RPM 限制',
+	rateLimitUnknown: '此响应未提供可用限速值',
+	rateLimitUnlimited: '该层不限速',
+	rateLimitValue: '每分钟 {{rpm}} 次请求',
+	rateLimitMode_unchanged: '保持不变',
+	rateLimitMode_unlimited: '移除此层限制',
+	rateLimitMode_limited: '设置 RPM 限制',
+	rateLimitUserHint: '用户共享池覆盖该用户的所有密钥；密钥自身限制独立生效。',
+	rateLimitKeyHint: '限制当前密钥；用户共享池的限制同时生效。',
+	rateLimitHint:
+		'采用滚动 60 秒窗口。0 会禁止计量调用。请输入 0 至 9007199254740991 的整数；移除此层限制不会移除其他限制。',
+	rateLimitInvalid: '请输入安全整数范围内的非负整数。',
+
 	title: '网关密钥',
 	subtitle: '管理归属用户的网关密钥。预算归属用户，现有密钥无法揭示明文。',
 	create: '创建密钥',
@@ -153,6 +188,10 @@ const zh: typeof en = {
 	metadata: '元数据',
 	created: '创建时间',
 	updated: '更新时间',
+	lastUsed: '最后使用时间',
+	noUsageRecorded: '暂无使用记录',
+	lastUsedUnavailable: '最后使用时间不可用',
+	timestamps: '时间',
 	actions: '操作',
 	status: '状态',
 	active: '启用',
@@ -243,6 +282,22 @@ const zh: typeof en = {
 	saved: '网关密钥更改已确认。',
 }
 const ja: typeof en = {
+	rateLimit: 'RPM 制限',
+	rateLimitUpdate: 'RPM 制限の変更',
+	rateLimitUnknown: 'この応答には利用可能な制限値がありません',
+	rateLimitUnlimited: 'この階層は無制限',
+	rateLimitValue: '毎分 {{rpm}} リクエスト',
+	rateLimitMode_unchanged: '変更しない',
+	rateLimitMode_unlimited: 'この階層の制限を解除',
+	rateLimitMode_limited: 'RPM 制限を設定',
+	rateLimitUserHint:
+		'ユーザー枠は全キーで共有されます。キーの制限も独立して適用されます。',
+	rateLimitKeyHint:
+		'このキーに適用されます。ユーザー共有枠の制限も適用されます。',
+	rateLimitHint:
+		'直近60秒の移動窓です。0 は計量対象の呼び出しを禁止します。0～9007199254740991 の整数を入力してください。他の階層の制限は解除されません。',
+	rateLimitInvalid: '安全な整数範囲内の非負整数を入力してください。',
+
 	title: 'ゲートウェイキー',
 	subtitle:
 		'ユーザーが所有するゲートウェイキーを管理します。予算はユーザーに属し、既存キーの秘密値は表示できません。',
@@ -271,6 +326,10 @@ const ja: typeof en = {
 	metadata: 'メタデータ',
 	created: '作成日時',
 	updated: '更新日時',
+	lastUsed: '最終使用日時',
+	noUsageRecorded: '使用記録なし',
+	lastUsedUnavailable: '最終使用日時を取得できません',
+	timestamps: '日時',
 	actions: '操作',
 	status: '状態',
 	active: '有効',
@@ -368,6 +427,21 @@ const ja: typeof en = {
 	saved: 'ゲートウェイキーの変更を確認しました。',
 }
 const ko: typeof en = {
+	rateLimit: 'RPM 제한',
+	rateLimitUpdate: 'RPM 제한 변경',
+	rateLimitUnknown: '이 응답에는 사용할 수 있는 제한 값이 없습니다',
+	rateLimitUnlimited: '이 계층은 제한 없음',
+	rateLimitValue: '분당 {{rpm}}회 요청',
+	rateLimitMode_unchanged: '변경하지 않음',
+	rateLimitMode_unlimited: '이 계층의 제한 해제',
+	rateLimitMode_limited: 'RPM 제한 설정',
+	rateLimitUserHint:
+		'사용자 한도는 모든 키가 공유합니다. 키 제한도 독립적으로 적용됩니다.',
+	rateLimitKeyHint: '이 키에 적용됩니다. 사용자 공유 한도도 함께 적용됩니다.',
+	rateLimitHint:
+		'최근 60초 이동 창을 사용합니다. 0은 계량 호출을 차단합니다. 0~9007199254740991의 정수를 입력하세요. 다른 계층의 제한은 해제되지 않습니다.',
+	rateLimitInvalid: '안전한 정수 범위의 0 이상 정수를 입력하세요.',
+
 	title: '게이트웨이 키',
 	subtitle:
 		'사용자가 소유한 게이트웨이 키를 관리합니다. 예산은 사용자에게 속하며 기존 비밀 키는 표시할 수 없습니다.',
@@ -396,6 +470,10 @@ const ko: typeof en = {
 	metadata: '메타데이터',
 	created: '생성 시각',
 	updated: '수정 시각',
+	lastUsed: '마지막 사용 시각',
+	noUsageRecorded: '사용 기록 없음',
+	lastUsedUnavailable: '마지막 사용 시각을 확인할 수 없습니다',
+	timestamps: '시간',
 	actions: '작업',
 	status: '상태',
 	active: '활성',

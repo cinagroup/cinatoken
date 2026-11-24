@@ -15,6 +15,45 @@ import {
 
 const subject = 'cinauth:subject/漢字'
 const identity = { expectedConsoleSubject: subject, expectedUserId: 'user-a' }
+
+test('catalog sync has its own batch acknowledgement and never accepts create/import or resource IDs', async () => {
+	for (const domain of ['models', 'providers'] as const) {
+		for (const acknowledgement of [
+			{ domain, operation: 'sync' },
+			{ domain, operation: 'create', id: 'sync' },
+			{ domain, operation: 'import' },
+			{ domain, operation: 'sync', id: 'sync' },
+			undefined,
+		]) {
+			const { api, calls } = fixture(
+				() => Response.json({ success: true, acknowledgement }),
+				{},
+				domain
+			)
+			const dispatched: string[] = []
+			const write = () =>
+				api.send(
+					`/api/admin/${domain}/sync/apply`,
+					z.object({ success: z.literal(true) }),
+					{ method: 'POST', body: '{}' },
+					{ ...identity, onDispatch: (op) => dispatched.push(op) }
+				)
+			if (acknowledgement?.operation === 'sync' && !('id' in acknowledgement))
+				await write()
+			else
+				await assert.rejects(
+					write,
+					(error) =>
+						error instanceof AdminDomainWriteError && error.code === 'unknown'
+				)
+			assert.deepEqual(dispatched, ['sync'])
+			assert.equal(
+				calls.filter((call) => call.init.method === 'POST').length,
+				1
+			)
+		}
+	}
+})
 function fixture(
 	reply: (path: string, init: RequestInit) => Response | Promise<Response>,
 	changed: Partial<{ subject: string; userId: string; isAdmin: boolean }> = {},

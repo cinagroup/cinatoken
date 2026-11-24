@@ -2,6 +2,7 @@
 import {
 	useCallback,
 	useEffect,
+	useId,
 	useMemo,
 	useState,
 	useSyncExternalStore,
@@ -12,12 +13,13 @@ import {
 	resolveReliabilityRange,
 	type ReliabilityRange,
 } from '../../reliability/reliability-range'
+import { analyticsQueryPrefix } from '../models/analytics-drilldowns'
 import {
 	modelAnalyticsAccessKey,
 	modelAnalyticsAccessRecovery,
 } from '../models/model-analytics-access'
+import { useUserAnalyticsDrilldowns } from './use-user-analytics-drilldowns'
 import type { AdminUserAnalyticsApi } from './user-analytics-api'
-import type { UserAnalyticsRow } from './user-analytics-contracts'
 
 export type UserAnalyticsProps = {
 	api: AdminUserAnalyticsApi
@@ -31,6 +33,7 @@ const denied = (error: unknown): boolean =>
 
 export function useUserAnalytics(props: UserAnalyticsProps) {
 	const client = useQueryClient()
+	const instanceKey = useId()
 	const access = modelAnalyticsAccessRecovery(props.api)
 	const accessKey = `userAnalytics:${modelAnalyticsAccessKey(props.reconciliationKey)}`
 	const revalidate = props.revalidate
@@ -40,10 +43,6 @@ export function useUserAnalytics(props: UserAnalyticsProps) {
 	})
 	const [anchor, setAnchor] = useState(() => new Date())
 	const [email, setEmail] = useState('')
-	const [expanded, setExpanded] = useState<{
-		email: string
-		context: string
-	} | null>(null)
 	const [retryVersion, setRetryVersion] = useState(0)
 	const blockedSnapshot = useCallback(
 		(domain: 'analytics' | 'display' | 'logs') =>
@@ -78,8 +77,15 @@ export function useUserAnalytics(props: UserAnalyticsProps) {
 		logsSnapshot
 	)
 	const prefix = useMemo(
-		() => ['cinatoken', 'admin', props.scopeKey, 'userAnalytics'] as const,
-		[props.scopeKey]
+		() =>
+			analyticsQueryPrefix({
+				scopeKey: props.scopeKey,
+				reconciliationKey: props.reconciliationKey,
+				api: props.api,
+				instanceKey,
+				domain: 'userAnalytics',
+			}),
+		[props.scopeKey, props.reconciliationKey, props.api, instanceKey]
 	)
 	const displayQuery = useQuery({
 		queryKey: [...prefix, 'display', retryVersion],
@@ -135,49 +141,13 @@ export function useUserAnalytics(props: UserAnalyticsProps) {
 		!analyticsBlocked && !mainQuery.isFetching && !mainQuery.error
 			? mainQuery.data
 			: undefined
-	const context = JSON.stringify([props.scopeKey, rangeParams, email])
-	const active = expanded?.context === context ? expanded : null
-	const selectedRow: UserAnalyticsRow | undefined = main?.find(
-		(row) => row.user_email === active?.email
-	)
-	const detailQuery = useQuery({
-		queryKey: [
-			...prefix,
-			'models',
-			context,
-			active?.email,
-			rangeParams,
-			selectedRow,
-			retryVersion,
-		],
-		queryFn: ({ signal }) => {
-			if (!rangeParams || !selectedRow)
-				throw new TypeError('Analytics drilldown unavailable')
-			return props.api.userModels(
-				rangeParams.startUtc,
-				rangeParams.endUtc,
-				selectedRow.user_email,
-				{ signal }
-			)
-		},
-		enabled: !analyticsBlocked && Boolean(main && selectedRow && rangeParams),
-		retry: false,
-		refetchOnWindowFocus: false,
-		gcTime: 0,
-	})
-	const detail =
-		!analyticsBlocked && !detailQuery.isFetching && !detailQuery.error
-			? detailQuery.data
-			: undefined
 	const block = useCallback(
 		(domain: 'analytics' | 'display' | 'logs') => {
 			if (!access.block(accessKey, domain)) return
-			const domains =
-				domain === 'analytics'
-					? ['users', 'models']
-					: domain === 'display'
-						? ['display']
-						: ['logsAccess']
+			let domains = ['logsAccess']
+			if (domain === 'analytics')
+				domains = ['users', 'models', 'keys', 'keyModels']
+			else if (domain === 'display') domains = ['display']
 			for (const item of domains) {
 				const queryKey = [...prefix, item]
 				void client.cancelQueries({ queryKey })
@@ -187,50 +157,86 @@ export function useUserAnalytics(props: UserAnalyticsProps) {
 		},
 		[access, accessKey, client, prefix, revalidate]
 	)
+	const context = JSON.stringify([prefix, rangeParams, email, retryVersion])
+	const onDenied = useCallback(() => block('analytics'), [block])
+	const drilldowns = useUserAnalyticsDrilldowns({
+		prefix,
+		context,
+		enabled: !analyticsBlocked && Boolean(main && rangeParams),
+		readModels: (row, signal) => {
+			if (!rangeParams) throw new TypeError('Analytics range unavailable')
+			return props.api.userModels(
+				rangeParams.startUtc,
+				rangeParams.endUtc,
+				row.user_email,
+				{ signal }
+			)
+		},
+		readKeys: (row, signal) => {
+			if (!rangeParams || !row.user_id)
+				throw new TypeError('Exact user unavailable')
+			return props.api.userKeys(
+				rangeParams.startUtc,
+				rangeParams.endUtc,
+				row.user_id,
+				{ signal }
+			)
+		},
+		readKeyModels: (row, id, signal) => {
+			if (!rangeParams || !row.user_id)
+				throw new TypeError('Exact user unavailable')
+			return props.api.userKeyModels(
+				rangeParams.startUtc,
+				rangeParams.endUtc,
+				row.user_id,
+				id,
+				{ signal }
+			)
+		},
+		onDenied,
+	})
 	useEffect(() => {
-		if (denied(mainQuery.error) || denied(detailQuery.error)) block('analytics')
-	}, [block, mainQuery.error, detailQuery.error])
+		if (denied(mainQuery.error)) block('analytics')
+	}, [block, mainQuery.error])
 	useEffect(() => {
 		if (denied(displayQuery.error)) block('display')
 	}, [block, displayQuery.error])
 	useEffect(() => {
 		if (denied(logsQuery.error)) block('logs')
 	}, [block, logsQuery.error])
+	function selectEmail(next: string): void {
+		if (next !== email) drilldowns.collapseRows()
+		setEmail(next)
+	}
 	function selectRange(next: ReliabilityRange): void {
+		drilldowns.collapseRows()
 		setRange(next)
 		setAnchor(new Date())
 	}
 	function retry(): void {
+		drilldowns.collapseRows()
 		setAnchor(new Date())
 		setRetryVersion((version) => version + 1)
 		for (const domain of ['analytics', 'display', 'logs'] as const)
 			access.settle(accessKey, domain)
 	}
-	function toggleRow(row: UserAnalyticsRow): void {
-		setExpanded(
-			active?.email === row.user_email
-				? null
-				: { email: row.user_email, context }
-		)
-	}
 	return {
 		range: effectiveRange,
 		rangeParams,
 		email,
-		setEmail,
+		setEmail: selectEmail,
 		selectRange,
 		retry,
-		toggleRow,
+		toggleRow: drilldowns.toggleRow,
+		collapseRows: drilldowns.collapseRows,
+		details: drilldowns.details,
 		mainQuery,
 		main,
-		detailQuery,
-		detail,
 		displayQuery,
 		display,
 		logsQuery,
 		analyticsBlocked,
 		displayBlocked,
 		logsBlocked,
-		active,
 	}
 }

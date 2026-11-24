@@ -1,17 +1,28 @@
 /**
- * 流式首个 SSE 事件超时（灰度）：收到 2xx headers 后若上游长时间不吐第一个 chunk，
+ * 流式首个 body chunk 超时（灰度）：收到 2xx headers 后若上游长时间不吐第一个 chunk，
  * 可在换路由前把本次 attempt 判为瞬时失败。默认关闭。
  *
  * 作用于文本流式入口：Chat Completions、Responses、Anthropic Messages、Gemini `streamGenerateContent`。
  * Images / Audio / Realtime / Tools 不走此开关。
  *
- * `system_config.STREAM_FIRST_EVENT_TIMEOUT_MS`：正整数毫秒；空 / 0 / 非法 = 关闭。
+ * `system_config.STREAM_FIRST_EVENT_TIMEOUT_MS`：新写入为 0–2147483647 的整数毫秒或空串。
+ * 历史读取保留 parseInt 语义；空 / 非正数 / 不可解析值关闭。心跳 chunk 也满足保护。
  * `system_config.STREAM_FIRST_EVENT_TIMEOUT_ROUTE_GROUPS`：逗号分隔路由组；
  * 超时开启且该键为空时只作用于 `default`（`@default` 灰度）；`*` / `all` 作用于全部。
  */
 
-export const STREAM_FIRST_EVENT_TIMEOUT_MS_KEY = 'STREAM_FIRST_EVENT_TIMEOUT_MS';
-export const STREAM_FIRST_EVENT_TIMEOUT_ROUTE_GROUPS_KEY = 'STREAM_FIRST_EVENT_TIMEOUT_ROUTE_GROUPS';
+import {
+	STREAM_FIRST_EVENT_TIMEOUT_MS_KEY,
+	STREAM_FIRST_EVENT_TIMEOUT_ROUTE_GROUPS_KEY,
+	parseFirstEventTimeoutMs,
+	parseFirstEventTimeoutRouteGroups,
+} from '@octafuse/core/lib/stream-first-event-timeout-config';
+export {
+	STREAM_FIRST_EVENT_TIMEOUT_MS_KEY,
+	STREAM_FIRST_EVENT_TIMEOUT_ROUTE_GROUPS_KEY,
+	parseFirstEventTimeoutMs,
+	parseFirstEventTimeoutRouteGroups,
+} from '@octafuse/core/lib/stream-first-event-timeout-config';
 
 const CACHE_TTL_MS = 30_000;
 
@@ -25,25 +36,6 @@ let cache: CacheEntry | null = null;
 
 export function resetStreamFirstEventTimeoutCacheForTests(): void {
 	cache = null;
-}
-
-export function parseFirstEventTimeoutMs(raw: string | null | undefined): number {
-	const s = (raw ?? '').trim();
-	if (!s) return 0;
-	const n = Number.parseInt(s, 10);
-	if (!Number.isFinite(n) || n <= 0) return 0;
-	return n;
-}
-
-export function parseFirstEventTimeoutRouteGroups(raw: string | null | undefined): string[] | '*' {
-	const s = (raw ?? '').trim();
-	if (!s) return ['default'];
-	if (s === '*' || s.toLowerCase() === 'all') return '*';
-	const groups = s
-		.split(',')
-		.map((part) => part.trim())
-		.filter(Boolean);
-	return groups.length > 0 ? groups : ['default'];
 }
 
 export function resolveFirstEventTimeoutMs(timeoutMs: number, groups: string[] | '*', routeGroup: string): number {

@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { RequestLogFilters } from './RequestLogFilters'
 import { RequestLogTargetDialog } from './RequestLogTargetDialog'
 import { RequestLogsContent } from './RequestLogsContent'
+import type { RequestLogSearch } from './request-log-domain'
 import { useRequestLogs, type RequestLogsProps } from './use-request-logs'
 
 const prefix = 'cinatoken.adminRequestLogs.'
@@ -21,27 +22,39 @@ export function AdminRequestLogs(props: RequestLogsProps) {
 		? Math.max(1, Math.ceil(state.page.total / 50))
 		: 1
 	function turnPage(page: number): void {
-		props.onSearch({ ...props.search, page })
+		changeSearch({ ...props.search, page })
+	}
+	function changeSearch(next: RequestLogSearch): void {
+		setExpanded(null)
+		props.onSearch(next)
+	}
+	function retry(): void {
+		setExpanded(null)
+		state.retry()
 	}
 	return (
 		<main className='min-w-0 space-y-5'>
-			{props.search.request_id && !state.logsBlocked && !state.error && (
-				<RequestLogTargetDialog
-					key={JSON.stringify([
-						props.scopeKey,
-						props.reconciliationKey,
-						props.search.request_id,
-					])}
-					api={props.api}
-					scopeKey={props.scopeKey}
-					reconciliationKey={props.reconciliationKey}
-					requestId={props.search.request_id}
-					onAccessLost={state.invalidateLogs}
-					onClose={() =>
-						props.onSearch({ ...props.search, request_id: undefined })
-					}
-				/>
-			)}
+			{props.search.request_id &&
+				!state.invalidFilter &&
+				!state.logsBlocked &&
+				!state.error && (
+					<RequestLogTargetDialog
+						key={JSON.stringify([
+							props.scopeKey,
+							props.reconciliationKey,
+							props.search.request_id,
+						])}
+						api={props.api}
+						scopeKey={props.scopeKey}
+						reconciliationKey={props.reconciliationKey}
+						requestId={props.search.request_id}
+						currency={state.currency}
+						onAccessLost={state.invalidateLogs}
+						onClose={() =>
+							changeSearch({ ...props.search, request_id: undefined })
+						}
+					/>
+				)}
 			<header className='flex flex-wrap items-start justify-between gap-3'>
 				<div>
 					<h1 className='text-2xl font-semibold'>{t(prefix + 'title')}</h1>
@@ -49,7 +62,7 @@ export function AdminRequestLogs(props: RequestLogsProps) {
 						{t(prefix + 'subtitle')}
 					</p>
 				</div>
-				<Button type='button' variant='outline' onClick={state.retry}>
+				<Button type='button' variant='outline' onClick={retry}>
 					{t(prefix + 'refresh')}
 				</Button>
 			</header>
@@ -61,7 +74,7 @@ export function AdminRequestLogs(props: RequestLogsProps) {
 				providers={state.providers}
 				routes={state.routes}
 				catalogSettled={state.catalogSettled}
-				onSearch={props.onSearch}
+				onSearch={changeSearch}
 			/>
 			<div className='flex flex-wrap items-center justify-between gap-2 text-sm'>
 				<p>
@@ -112,7 +125,8 @@ export function AdminRequestLogs(props: RequestLogsProps) {
 				</span>
 			</div>
 			<RequestLogsContent
-				state={state}
+				search={props.search}
+				state={{ ...state, retry }}
 				expanded={activeId}
 				onExpand={(id) => setExpanded(activeId === id ? null : { id, context })}
 			/>

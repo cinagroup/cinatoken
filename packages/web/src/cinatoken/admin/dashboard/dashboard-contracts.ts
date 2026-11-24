@@ -1,5 +1,6 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
 import { z } from 'zod'
+import { bucketCoordinate } from './dashboard-trend'
 
 const count = z.number().int().nonnegative().finite()
 const amount = z.number().finite()
@@ -10,10 +11,10 @@ const isoUtc = z
 	.string()
 	.regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?Z$/)
 	.refine((value) => Number.isFinite(Date.parse(value)))
-const bucketUtc = z
+const businessBucket = z
 	.string()
 	.regex(/^\d{4}-\d{2}-\d{2}(?: \d{2}:\d{2}:\d{2})?$/)
-	.refine((value) => Number.isFinite(Date.parse(value.replace(' ', 'T') + 'Z')))
+	.refine((value) => Number.isFinite(bucketCoordinate(value)))
 
 const recentSummary = z.strictObject({
 	id: shortText,
@@ -47,7 +48,7 @@ const topUser = z.strictObject({
 })
 
 const timeseriesBucket = z.strictObject({
-	bucket: bucketUtc,
+	bucket: businessBucket,
 	request_count: count,
 	input_tokens: count,
 	output_tokens: count,
@@ -90,7 +91,12 @@ export const dashboardStatsSchema = z.strictObject({
 	}),
 	modelDistribution: z.array(distribution).max(10),
 	topUsers: z.array(topUser).max(12),
-	timeseries: z.array(timeseriesBucket).max(200),
+	timeseries: z
+		.array(timeseriesBucket)
+		.max(200)
+		.refine(
+			(rows) => new Set(rows.map((row) => row.bucket)).size === rows.length
+		),
 	granularity: z.enum(['hour', 'day']),
 	recentLogs: z.array(recentSummary).max(5),
 	recentErrors: z.array(recentSummary).max(5),

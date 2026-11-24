@@ -1,4 +1,14 @@
+import { providerCatalogLinkMessages } from './catalog-link-messages'
+import { providerCompatibilityMessages } from './compatibility-messages'
+
 const strings = {
+	resumeEditing: ['Resume editing', '继续编辑', '編集を続ける', '편집 계속'],
+	rejectedDraftHint: [
+		'The server rejected the change. Your other fields are retained; re-enter the credential and review endpoint changes before saving again.',
+		'服务器拒绝了此次更改。其他字段已保留；再次保存前请重新输入凭据并检查端点更改。',
+		'サーバーが変更を拒否しました。他の項目は保持されています。再保存する前に認証情報を再入力し、エンドポイントの変更を確認してください。',
+		'서버가 변경을 거부했습니다. 다른 필드는 유지됩니다. 다시 저장하기 전에 인증 정보를 다시 입력하고 엔드포인트 변경을 확인하세요.',
+	],
 	credentialValue: [
 		'Stored credential',
 		'已存储凭据',
@@ -301,10 +311,10 @@ const strings = {
 		'공급자 응답을 검증할 수 없습니다. 새로 고침하세요.',
 	],
 	conflict: [
-		'The ID or name conflicts, or routes still reference this provider. Reload and resolve the conflict before retrying.',
-		'ID 或名称冲突，或仍有路由引用此供应商。请重新加载并解决冲突后再试。',
-		'ID・名前の重複、またはルートの参照があります。再読み込みして競合を解消してください。',
-		'ID나 이름이 충돌하거나 경로가 공급자를 참조합니다. 새로 고침 후 충돌을 해결하세요.',
+		'The ID or name conflicts, or routes still reference this provider. Resolve the conflict before trying again.',
+		'ID 或名称冲突，或仍有路由引用此供应商。请核对并解决冲突后重试。',
+		'ID・名前の重複、またはルートの参照があります。競合を確認して解消してから再試行してください。',
+		'ID나 이름이 충돌하거나 경로가 공급자를 참조합니다. 충돌을 확인하고 해결한 후 다시 시도하세요.',
 	],
 	notFound: [
 		'This provider no longer exists. Reload the list.',
@@ -503,9 +513,28 @@ function language(index: number): Record<string, string> {
 		Object.entries(strings).map(([key, values]) => [key, values[index]])
 	)
 }
-export const providerMessages = {
-	en: language(0),
-	zh: language(1),
-	ja: language(2),
-	ko: language(3),
+export const providerMessages: Record<
+	'en' | 'zh' | 'ja' | 'ko',
+	Record<string, string>
+> = {
+	en: {
+		...language(0),
+		...providerCompatibilityMessages(0),
+		...providerCatalogLinkMessages.en,
+	},
+	zh: {
+		...language(1),
+		...providerCompatibilityMessages(1),
+		...providerCatalogLinkMessages.zh,
+	},
+	ja: {
+		...language(2),
+		...providerCompatibilityMessages(2),
+		...providerCatalogLinkMessages.ja,
+	},
+	ko: {
+		...language(3),
+		...providerCompatibilityMessages(3),
+		...providerCatalogLinkMessages.ko,
+	},
 }

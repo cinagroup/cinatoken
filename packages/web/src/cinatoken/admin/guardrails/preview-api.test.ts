@@ -5,7 +5,9 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { I18nextProvider } from 'react-i18next'
+import { EffectiveGuardrails } from '../../account/guardrails/EffectiveGuardrails'
 import { guardrailMessages } from '../../account/guardrails/messages'
+import type { GuardrailsManager } from '../../account/guardrails/use-guardrails-manager'
 import { CinaTokenApiError } from '../../api'
 import { bindAdminDomainFixtureApi } from '../domain-api-test-fixture'
 import { AdminDomainWriteError } from '../domain-write-recovery'
@@ -334,7 +336,8 @@ test('abort remains authoritative if an injected request ignores its signal', as
 
 async function render(
 	locale: keyof typeof guardrailMessages,
-	result?: AdminGuardrailPreviewResult
+	result?: AdminGuardrailPreviewResult,
+	account = false
 ): Promise<string> {
 	// Shared UI primitives use the classic JSX transform in the Node test runner.
 	Object.assign(globalThis, { React })
@@ -350,23 +353,37 @@ async function render(
 			])
 		),
 	})
+	let content: React.ReactNode = result
+		? React.createElement(AdminGuardrailPreviewEvidence, { result })
+		: React.createElement(AdminGuardrailPreview, {
+				api: fixture(() => Response.json(success)).api,
+				scopeKey: 'verified-console',
+				canRead: true,
+				readOptions: (signal?: AbortSignal) => ({
+					signal,
+					expectedConsoleSubject: 'fixture-subject',
+					expectedUserId: 'fixture-user',
+				}),
+			})
+	if (account && result?.kind === 'ready')
+		content = React.createElement(EffectiveGuardrails, {
+			manager: {
+				blocked: null,
+				preview: {
+					data: { success: true, data: result.preview },
+					isError: false,
+					isPending: false,
+					isFetching: false,
+				},
+				keys: { data: undefined },
+				canUseKeys: false,
+				keySelectionAllowed: false,
+				pending: false,
+				refresh: async () => {},
+			} as unknown as GuardrailsManager,
+		})
 	return renderToStaticMarkup(
-		React.createElement(
-			I18nextProvider,
-			{ i18n },
-			result
-				? React.createElement(AdminGuardrailPreviewEvidence, { result })
-				: React.createElement(AdminGuardrailPreview, {
-						api: fixture(() => Response.json(success)).api,
-						scopeKey: 'verified-console',
-						canRead: true,
-						readOptions: (signal?: AbortSignal) => ({
-							signal,
-							expectedConsoleSubject: 'fixture-subject',
-							expectedUserId: 'fixture-user',
-						}),
-					})
-		)
+		React.createElement(I18nextProvider, { i18n }, content)
 	)
 }
 
@@ -409,4 +426,80 @@ test('four-language Admin preview form and rich evidence render currencies, trac
 	assert.ok(conflictHtml.includes(guardrailMessages.en.previewConflict))
 	assert.ok(conflictHtml.includes('Policy'))
 	assert.equal(conflictHtml.includes(secret), false)
+})
+
+test('account and Admin previews retain tiny prices, real zero, precision and business-zone times in four locales', async () => {
+	const original = await fixture(() =>
+		Response.json(success)
+	).api.previewGuardrail(target)
+	assert.ok(original.kind === 'ready')
+	const data = structuredClone(original.preview)
+	data.routeCandidates.plannerEvidence.pricing.promptPerMillion = {
+		minimum: 1e-12,
+		maximum: 2.5e-12,
+	}
+	data.routeCandidates.plannerEvidence.pricing.completionPerMillion = {
+		minimum: 0,
+		maximum: 0,
+	}
+	data.routeCandidates.plannerEvidence.pricing.image = {
+		minimum: 1.23456789,
+		maximum: 1.23456789,
+	}
+	data.effective.budgets[0].limit = 1e-12
+	const projected = await fixture(() =>
+		Response.json({ success: true, data })
+	).api.previewGuardrail(target)
+	for (const locale of ['en', 'zh', 'ja', 'ko'] as const) {
+		for (const account of [false, true]) {
+			const html = await render(locale, projected, account)
+			assert.ok(html.includes('1E-12–2.5E-12'))
+			assert.ok(html.includes('0–0'))
+			assert.ok(html.includes('1.23456789'))
+			assert.match(html, /08(?::|時|시)/u, locale + ' / account=' + account)
+			assert.ok(html.includes('GMT+8'))
+			assert.ok(html.includes('EUR'))
+			assert.ok(html.includes('USD'))
+			assert.equal(
+				html.includes(guardrailMessages[locale].previewTimezoneFallback),
+				false
+			)
+		}
+	}
+})
+
+test('both preview surfaces distinguish explicit UTC fallback from an unverified evaluation instant', async () => {
+	const original = await fixture(() =>
+		Response.json(success)
+	).api.previewGuardrail(target)
+	assert.ok(original.kind === 'ready')
+	const data = structuredClone(original.preview)
+	data.routeCandidates.plannerEvidence.pricing.businessTimezone = 'Invalid/Zone'
+	const fallback = await fixture(() =>
+		Response.json({ success: true, data })
+	).api.previewGuardrail(target)
+	for (const locale of ['en', 'zh', 'ja', 'ko'] as const) {
+		for (const account of [false, true]) {
+			const html = await render(locale, fallback, account)
+			assert.ok(
+				html.includes(guardrailMessages[locale].previewTimezoneFallback)
+			)
+			assert.ok(html.includes('UTC'))
+			assert.equal(html.includes('Invalid/Zone'), false)
+		}
+	}
+	data.routeCandidates.plannerEvidence.pricing.businessTimezone = 'UTC'
+	data.routeCandidates.plannerEvidence.pricing.evaluatedAt =
+		'2026-09-28T00:00:00'
+	const unavailable = await fixture(() =>
+		Response.json({ success: true, data })
+	).api.previewGuardrail(target)
+	for (const account of [false, true]) {
+		const html = await render('en', unavailable, account)
+		assert.ok(html.includes('evaluated Unknown (UTC)'))
+		assert.equal(
+			html.includes(guardrailMessages.en.previewTimezoneFallback),
+			false
+		)
+	}
 })

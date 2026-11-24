@@ -2,17 +2,21 @@
 import {
 	useCallback,
 	useEffect,
+	useId,
 	useMemo,
 	useState,
 	useSyncExternalStore,
 } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { CinaTokenApiError } from '../../api'
+import type { AdminModelAnalyticsApi } from '../analytics/models/model-analytics-api'
+import type { ProvidersApi } from '../provider-api'
 import {
 	reliabilityAccessIdentityKey,
 	reliabilityAccessRecovery,
 } from './reliability-access-recovery'
 import type { AdminReliabilityApi } from './reliability-api'
+import { reliabilityQueryPrefix } from './reliability-domain'
 import {
 	resolveReliabilityRange,
 	type ReliabilityRange,
@@ -23,6 +27,9 @@ export type AdminReliabilityProps = {
 	scopeKey: string
 	reconciliationKey: string
 	revalidate: () => Promise<void>
+	directoryApi?: Pick<ProvidersApi, 'providerList'>
+	subject?: string
+	logsApi?: Pick<AdminModelAnalyticsApi, 'modelAnalyticsLogsAccess'>
 }
 
 function isDenied(error: unknown): boolean {
@@ -34,6 +41,7 @@ function isDenied(error: unknown): boolean {
 
 export function useAdminReliability(props: AdminReliabilityProps) {
 	const client = useQueryClient()
+	const instance = useId()
 	const access = reliabilityAccessRecovery(props.api)
 	const accessKey = reliabilityAccessIdentityKey(props.reconciliationKey)
 	const revalidate = props.revalidate
@@ -51,6 +59,10 @@ export function useAdminReliability(props: AdminReliabilityProps) {
 		() => access.getSnapshot(accessKey, 'display'),
 		[access, accessKey]
 	)
+	const logsSnapshot = useCallback(
+		() => access.getSnapshot(accessKey, 'logs'),
+		[access, accessKey]
+	)
 	const analyticsBlocked = useSyncExternalStore(
 		access.subscribe,
 		analyticsSnapshot,
@@ -61,22 +73,54 @@ export function useAdminReliability(props: AdminReliabilityProps) {
 		displaySnapshot,
 		displaySnapshot
 	)
+	const logsBlocked = useSyncExternalStore(
+		access.subscribe,
+		logsSnapshot,
+		logsSnapshot
+	)
+	const prefix = useMemo(
+		() =>
+			reliabilityQueryPrefix(
+				props.scopeKey,
+				props.reconciliationKey,
+				props.api,
+				instance
+			),
+		[props.scopeKey, props.reconciliationKey, props.api, instance]
+	)
 	const analyticsKey = useMemo(
+		() => [...prefix, 'analytics'] as const,
+		[prefix]
+	)
+	const displayKey = useMemo(() => [...prefix, 'display'] as const, [prefix])
+	const logsKey = useMemo(
 		() =>
 			[
-				'cinatoken',
-				'admin',
-				props.scopeKey,
-				'reliability',
-				'analytics',
+				...reliabilityQueryPrefix(
+					props.scopeKey,
+					props.reconciliationKey,
+					props.logsApi ?? props.api,
+					instance
+				),
+				'logs',
 			] as const,
-		[props.scopeKey]
+		[
+			props.scopeKey,
+			props.reconciliationKey,
+			props.logsApi,
+			props.api,
+			instance,
+		]
 	)
-	const displayKey = useMemo(
-		() =>
-			['cinatoken', 'admin', props.scopeKey, 'reliability', 'display'] as const,
-		[props.scopeKey]
-	)
+	const logsQuery = useQuery({
+		queryKey: [...logsKey, retryVersion],
+		queryFn: ({ signal }) =>
+			props.logsApi?.modelAnalyticsLogsAccess({ signal }) ?? false,
+		enabled: Boolean(props.logsApi) && !logsBlocked && !analyticsBlocked,
+		retry: false,
+		refetchOnWindowFocus: false,
+		gcTime: 0,
+	})
 	const displayQuery = useQuery({
 		queryKey: [...displayKey, retryVersion],
 		queryFn: ({ signal }) => props.api.display({ signal }),
@@ -131,6 +175,12 @@ export function useAdminReliability(props: AdminReliabilityProps) {
 		client.removeQueries({ queryKey: displayKey })
 		void revalidate().catch(() => undefined)
 	}, [access, accessKey, client, displayKey, displayQuery.error, revalidate])
+	useEffect(() => {
+		if (!isDenied(logsQuery.error) || !access.block(accessKey, 'logs')) return
+		void client.cancelQueries({ queryKey: logsKey })
+		client.removeQueries({ queryKey: logsKey })
+		void revalidate().catch(() => undefined)
+	}, [access, accessKey, client, logsKey, logsQuery.error, revalidate])
 	function selectRange(next: ReliabilityRange): void {
 		setRange(next)
 		setAnchor(new Date())
@@ -141,6 +191,7 @@ export function useAdminReliability(props: AdminReliabilityProps) {
 		setRetryVersion((version) => version + 1)
 		access.settle(accessKey, 'analytics')
 		access.settle(accessKey, 'display')
+		access.settle(accessKey, 'logs')
 	}
 
 	const snapshot =
@@ -152,6 +203,13 @@ export function useAdminReliability(props: AdminReliabilityProps) {
 		selectRange,
 		rangeParams,
 		analyticsQuery,
+		logsQuery,
+		logsAllowed:
+			!analyticsBlocked &&
+			!logsBlocked &&
+			!logsQuery.error &&
+			!logsQuery.isFetching &&
+			logsQuery.data === true,
 		displayQuery,
 		snapshot,
 		display,

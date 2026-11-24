@@ -20,6 +20,8 @@ import type {
 } from '../provider-contracts'
 import { normalizeProviderEndpoints } from '../provider-endpoints'
 import type { ProviderDashScopeResult } from '../provider-resource'
+import { ProviderCatalogOutboundLink } from './ProviderCatalogOutboundLink'
+import { ProviderQuotaPanel } from './ProviderQuotaPanel'
 import { ProviderResourceForm } from './ProviderResourceForm'
 import { providerErrorKey } from './provider-errors'
 
@@ -29,6 +31,7 @@ export function ProviderDetailDialog(props: {
 	row: AdminProvider
 	queryPrefix: readonly unknown[]
 	pending: boolean
+	onQuotaFailure?: (error: unknown) => void
 	disabled: boolean
 	error: unknown
 	readOptions?: (signal?: AbortSignal) => AdminDomainRequestOptions
@@ -54,8 +57,10 @@ export function ProviderDetailDialog(props: {
 		refetchOnWindowFocus: false,
 	})
 	const [secret, setSecret] = useState<string | null>(null)
-	const [copied, setCopied] = useState(false)
-	const [copyFailed, setCopyFailed] = useState(false)
+	const [copyState, setCopyState] = useState<'idle' | 'copied' | 'failed'>(
+		'idle'
+	)
+	const copyGeneration = useRef(0)
 	const [response, setResponse] = useState<ProviderDashScopeResult | null>(null)
 	const live = useRef(true)
 	useEffect(() => {
@@ -77,20 +82,24 @@ export function ProviderDetailDialog(props: {
 				await props.api.verifyAdminDomainSubject(options)
 				const value = await props.api.revealProviderKey(props.row.id, options)
 				if (live.current && !signal.aborted) {
+					copyGeneration.current++
 					setSecret(value)
-					setCopied(false)
-					setCopyFailed(false)
+					setCopyState('idle')
 				}
 			},
 		})
 	}
 	async function copy(): Promise<void> {
 		if (!secret) return
+		const generation = ++copyGeneration.current
+		setCopyState('idle')
 		try {
 			await navigator.clipboard.writeText(secret)
-			if (live.current) setCopied(true)
+			if (live.current && copyGeneration.current === generation)
+				setCopyState('copied')
 		} catch {
-			if (live.current) setCopyFailed(true)
+			if (live.current && copyGeneration.current === generation)
+				setCopyState('failed')
 		}
 	}
 	function resource(
@@ -144,6 +153,10 @@ export function ProviderDetailDialog(props: {
 				)}
 				{row && (
 					<div className='space-y-4'>
+						<ProviderCatalogOutboundLink
+							links={row.catalog_links}
+							providerName={row.name}
+						/>
 						<dl className='grid gap-3 text-sm sm:grid-cols-2'>
 							<div>
 								<dt className='text-muted-foreground'>{t(prefix + 'name')}</dt>
@@ -166,6 +179,28 @@ export function ProviderDetailDialog(props: {
 								<dd className='font-mono break-all'>{row.api_key}</dd>
 							</div>
 						</dl>
+						{row.kind && (
+							<p className='text-sm'>
+								{t(prefix + 'kind')}: {row.kind}
+							</p>
+						)}
+						{row.quota_supported === true &&
+							!row.has_pending_key &&
+							row.api_key !== '(empty)' && (
+								<ProviderQuotaPanel
+									key={JSON.stringify([
+										row.id,
+										row.kind,
+										row.endpoints,
+										row.api_key,
+									])}
+									api={props.api}
+									id={row.id}
+									onFailure={props.onQuotaFailure}
+									disabled={disabled || props.pending}
+									readOptions={props.readOptions}
+								/>
+							)}
 						<p className='text-muted-foreground text-sm'>
 							{t(prefix + 'routes', {
 								active: row.active_routes_count,
@@ -241,20 +276,21 @@ export function ProviderDetailDialog(props: {
 											disabled={disabled || !secret}
 											onClick={() => void copy()}
 										>
-											{t(prefix + (copied ? 'copied' : 'copy'))}
+											{t(prefix + (copyState === 'copied' ? 'copied' : 'copy'))}
 										</Button>
 										<Button
 											variant='outline'
 											onClick={() => {
+												copyGeneration.current++
 												setSecret(null)
-												setCopied(false)
+												setCopyState('idle')
 												setResponse(null)
 											}}
 										>
 											{t(prefix + 'clearSecret')}
 										</Button>
 									</div>
-									{copyFailed && (
+									{copyState === 'failed' && (
 										<p role='alert' className='text-destructive text-sm'>
 											{t(prefix + 'copyFailed')}
 										</p>

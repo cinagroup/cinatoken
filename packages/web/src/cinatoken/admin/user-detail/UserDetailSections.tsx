@@ -1,10 +1,12 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
 import { useTranslation } from 'react-i18next'
+import { AdminDomainRecoveryDialog } from '../AdminDomainRecoveryDialog'
 import { UserDetailBudgetTransition } from './UserDetailBudgetTransition'
 import { UserDetailFactors } from './UserDetailFactors'
 import { UserDetailKeys } from './UserDetailKeys'
 import { UserDetailProfile } from './UserDetailProfile'
 import { UserDetailRecent } from './UserDetailRecent'
+import { UserDetailWalletCredit } from './UserDetailWalletCredit'
 import type { useAdminUserDetail } from './use-user-detail'
 import type { AdminUserDetailApi } from './user-detail-api'
 import type { UserDetail } from './user-detail-contracts'
@@ -59,8 +61,12 @@ export function UserDetailSections(props: {
 				key={JSON.stringify([
 					user.id,
 					user.updated_at,
+					user.rate_limit,
 					user.budget_spent,
 					user.budget_max,
+					user.wallet_granted,
+					user.wallet_spent,
+					user.wallet_balance,
 				])}
 				user={user}
 				currency={manager.currency}
@@ -93,6 +99,12 @@ export function UserDetailSections(props: {
 				onReadDenied={manager.keyReadDenied}
 				onSave={manager.keyWriter.save}
 			/>
+			<UserDetailWalletCredit
+				userId={user.id}
+				currency={manager.currency}
+				timezone={manager.timezone}
+				writer={manager.walletWriter}
+			/>
 			<UserDetailBudgetTransition
 				key={JSON.stringify([
 					user.id,
@@ -101,6 +113,9 @@ export function UserDetailSections(props: {
 					user.budget_spent,
 					user.budget_period,
 					user.budget_reset_at,
+					user.wallet_granted,
+					user.wallet_spent,
+					user.wallet_balance,
 				])}
 				user={user}
 				currency={manager.currency}
@@ -115,6 +130,10 @@ export function UserDetailSections(props: {
 				onApply={manager.applyBudgetTransition}
 				onInvalidate={manager.invalidateBudgetTransition}
 			/>
+			<AdminDomainRecoveryDialog
+				recovery={manager.factorWriter.recovery}
+				busy={manager.busy}
+			/>
 			<UserDetailFactors
 				key={JSON.stringify([
 					user.id,
@@ -126,6 +145,10 @@ export function UserDetailSections(props: {
 				modelsDenied={manager.blocked.models}
 				canWrite={manager.canWriteUser}
 				busy={manager.busy}
+				api={props.api}
+				options={manager.factorWriter.options}
+				previewDenied={manager.factorPreviewBlocked}
+				onPreviewDenied={manager.factorPreviewDenied}
 				onSave={manager.saveFactors}
 			/>
 			<UserDetailRecent

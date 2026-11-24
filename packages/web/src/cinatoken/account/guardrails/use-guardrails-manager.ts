@@ -9,6 +9,7 @@ import type { GuardrailsApi } from '../../guardrail-api'
 import type {
 	Guardrail,
 	GuardrailInput,
+	GuardrailVersionInput,
 	GuardrailPatch,
 } from '../../guardrail-contracts'
 import { useCinaTokenSession } from '../../session-context'
@@ -28,7 +29,7 @@ export type GuardrailScope = {
 }
 export type GuardrailAction =
 	| { type: 'create'; input: GuardrailInput }
-	| { type: 'version'; id: string; input: GuardrailInput }
+	| { type: 'version'; id: string; input: GuardrailVersionInput }
 	| { type: 'metadata'; id: string; input: GuardrailPatch }
 	| { type: 'archive' | 'restore'; id: string }
 	| { type: 'designate'; id: string; version: number }
@@ -84,7 +85,9 @@ export function useGuardrailsManager(
 	const [apiKeyId, setApiKeyId] = useState<string | null>(null)
 	const [pending, setPending] = useState(false)
 	const [error, setError] = useState<unknown>(null)
-	const [notice, setNotice] = useState(false)
+	const [notice, setNotice] = useState<
+		false | 'success' | 'saved' | 'metadataSaved'
+	>(false)
 	const [blocked, setBlocked] = useState<string | null>(null)
 	const [keysDenied, setKeysDenied] = useState(false)
 	const options = useMemo(
@@ -257,7 +260,11 @@ export function useGuardrailsManager(
 					break
 			}
 			if (!active.current || current.signal.aborted) return false
-			setNotice(true)
+			let noticeKey: 'success' | 'saved' | 'metadataSaved' = 'success'
+			if (action.type === 'metadata') noticeKey = 'metadataSaved'
+			else if (action.type === 'create' || action.type === 'version')
+				noticeKey = 'saved'
+			setNotice(noticeKey)
 			return true
 		} catch (failure) {
 			if (!active.current || current.signal.aborted) return false

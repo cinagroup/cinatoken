@@ -15,13 +15,14 @@ export function formatCompact(value: number, locale: string): string {
 export function formatMoney(
 	value: number,
 	currency: DashboardDisplayConfig['billingCurrency'],
-	locale: string
+	locale: string,
+	maximumFractionDigits = 4
 ): string {
 	return new Intl.NumberFormat(locale, {
 		style: 'currency',
 		currency,
 		minimumFractionDigits: 2,
-		maximumFractionDigits: 4,
+		maximumFractionDigits,
 	}).format(value)
 }
 

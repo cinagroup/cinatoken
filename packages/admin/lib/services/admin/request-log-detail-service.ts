@@ -25,6 +25,7 @@ const textFields = [
 	"route_group",
 	"upstream_request_id",
 	"upstream_message_id",
+	"ingress_host",
 	"billing_kind",
 ] as const;
 const countFields = [
@@ -54,6 +55,7 @@ export type SafeAdminRequestLogDetail = {
 	cache_write_tokens: number;
 	metered_cost: number;
 	charged_cost: number;
+	charged_wallet_cost?: number | null;
 	status: string;
 	created_at: string;
 	standard_cost?: number;
@@ -107,7 +109,7 @@ function createdAt(value: unknown): string {
 	if (
 		typeof value !== "string" ||
 		!/^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?(?:Z|[+-]\d{2}(?::?\d{2})?)?$/u.test(
-			value
+			value,
 		)
 	)
 		malformed();
@@ -129,7 +131,7 @@ function createdAt(value: unknown): string {
 /** Explicit projection: body, traces, raw error/usage, pricing, headers and fingerprints never leave this endpoint. */
 export function projectAdminRequestLogDetail(
 	row: RequestLogRow,
-	expectedId: string
+	expectedId: string,
 ): SafeAdminRequestLogDetail {
 	if (row.id !== expectedId) malformed();
 	const source = row as unknown as Record<string, unknown>;
@@ -152,6 +154,10 @@ export function projectAdminRequestLogDetail(
 	};
 	if (source.standard_cost !== undefined)
 		result.standard_cost = numeric(source.standard_cost);
+	if (source.charged_wallet_cost !== undefined)
+		result.charged_wallet_cost = source.charged_wallet_cost === null
+			? null
+			: numeric(source.charged_wallet_cost);
 	for (const field of textFields) {
 		const value = source[field];
 		if (value === undefined) continue;
@@ -189,7 +195,7 @@ export async function getAdminRequestLogDetailService(
 	repos: GatewayRepositories,
 	principal: AdminPrincipal,
 	rawId: string,
-	url: string
+	url: string,
 ): Promise<SafeAdminRequestLogDetail> {
 	if (!principal || !hasAdminPermission(principal, "logs.read"))
 		throw new AdminServiceError(403, "Forbidden");
@@ -200,7 +206,7 @@ export async function getAdminRequestLogDetailService(
 	if (typeof read !== "function")
 		throw new AdminServiceError(
 			503,
-			"Exact request log storage is unavailable"
+			"Exact request log storage is unavailable",
 		);
 	const row = await read.call(repos.requestLogs, id);
 	if (!row) throw notFound("Request log not found");

@@ -3,11 +3,13 @@ import {
 	useCallback,
 	useEffect,
 	useMemo,
+	useRef,
 	useState,
 	useSyncExternalStore,
 } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { CinaTokenApiError } from '../../api'
+import { useAdminListDisplay } from './use-admin-list-display'
 import {
 	usersAccessIdentityKey,
 	usersAccessRecovery,
@@ -78,14 +80,16 @@ export function useAdminUsers(props: AdminUsersManagerProps) {
 		refetchOnWindowFocus: false,
 		gcTime: 0,
 	})
-	const currencyQuery = useQuery({
-		queryKey: ['cinatoken', 'admin', props.scopeKey, 'users', 'currency'],
-		queryFn: ({ signal }) => props.api.userCurrency({ signal }),
+	const displayManager = useAdminListDisplay({
+		api: props.api,
+		scopeKey: props.scopeKey,
+		reconciliationKey: props.reconciliationKey,
+		domain: 'users',
 		enabled: !readBlocked,
-		retry: false,
-		refetchOnWindowFocus: false,
-		gcTime: 0,
+		revalidate: props.revalidate,
 	})
+	const currencyQuery = displayManager.query
+	const retrying = useRef(false)
 	const denied = userAccessDenied(query.error)
 	useEffect(() => {
 		if (!denied) return
@@ -170,21 +174,24 @@ export function useAdminUsers(props: AdminUsersManagerProps) {
 	}
 
 	function retry(): void {
+		if (retrying.current || query.isFetching || currencyQuery.isFetching) return
+		retrying.current = true
 		access.settleRead(accessKey)
 		access.settleWrite(accessKey)
 		setRetryVersion((version) => version + 1)
-		void currencyQuery.refetch()
+		void currencyQuery.refetch().finally(() => {
+			retrying.current = false
+		})
 	}
-
-	const currencyContext =
-		!currencyQuery.isFetching && !currencyQuery.error
-			? (currencyQuery.data ?? null)
-			: null
-	const currency = currencyContext?.value ?? null
+	const display = displayManager.display
+	const currency = display?.currency ?? null
 	return {
 		query,
 		currency,
-		currencySource: currencyContext?.source ?? null,
+		currencySource: display?.currencySource ?? null,
+		display,
+		timezone: display?.timezone ?? null,
+		displayQuery: currencyQuery,
 		writeSafetyUnavailable: write.isStorageUnavailable(accessKey),
 		readBlocked,
 		writeBlocked,

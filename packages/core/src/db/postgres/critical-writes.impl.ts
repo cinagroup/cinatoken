@@ -27,11 +27,23 @@ import {
 	type UserBudgetSettlement,
 } from '../user-budget-reservation-types';
 import { toPublicModelDailyStatsDelta } from '../public-model-daily-stats';
-import type { GrantWalletCreditParams, GrantWalletCreditResult } from '../wallet-credit';
+import type {
+	GrantWalletCreditParams,
+	GrantWalletCreditResult,
+	ReadWalletCreditReceiptParams,
+	ReadWalletCreditReceiptResult,
+} from '../wallet-credit';
 import {
 	buildWalletCreditAuditRow,
 	mapStorageUserToRow,
-	walletCreditResult,
+	walletCreditReceiptResult,
+	walletCreditStoredAmount,
+	walletCreditSnapshot,
+	assertWalletCreditParams,
+	assertWalletCreditReference,
+	readWalletCreditAuditReceipt,
+	requireMatchingWalletCreditReceipt,
+	WalletCreditConcurrentMutationError,
 	WalletCreditUserNotFoundError,
 } from '../wallet-credit';
 import type { UserBudgetSnapshot } from '../../storage/critical-write-paths';
@@ -41,6 +53,7 @@ import {
 	userBudgetAuditToInsertRowForUsageCharge,
 } from '../user-budget-audit-mapper';
 import { toUserAuditLogDrizzleInsert } from '../user-audit-drizzle-insert';
+import { snapshotToJson, userRowToSnapshot } from '../user-audit-snapshot';
 import { roundGatewayMoney } from '../../lib/money-precision';
 import {
 	beginLegacyBuyerWindowedTransactionV372,
@@ -1226,47 +1239,84 @@ export async function insertRequestUsageAndChargeTxPg(
 	});
 }
 
+export async function readWalletCreditReceiptPg(
+	client: PostgresDatabaseClient,
+	params: ReadWalletCreditReceiptParams,
+): Promise<ReadWalletCreditReceiptResult> {
+	assertWalletCreditReference(params.externalRef);
+	const rows = await client.drizzle
+		.select()
+		.from(pgUserAuditLogsTable)
+		.where(and(eq(pgUserAuditLogsTable.userId, params.userId), eq(pgUserAuditLogsTable.dedupKey, params.externalRef)))
+		.limit(1);
+	return readWalletCreditAuditReceipt(rows[0], params);
+}
+
 export async function grantWalletCreditWithAuditTxPg(
 	client: PostgresDatabaseClient,
 	params: GrantWalletCreditParams,
 ): Promise<GrantWalletCreditResult> {
-	const rows = await client.drizzle.select().from(pgUsersTable).where(eq(pgUsersTable.id, params.userId)).limit(1);
-	if (!rows[0]) {
-		throw new WalletCreditUserNotFoundError(params.userId);
-	}
-	const auditId = crypto.randomUUID();
-	const { audit } = buildWalletCreditAuditRow(mapStorageUserToRow(rows[0]), params, auditId);
-	const amount = roundGatewayMoney(params.amount);
-	const now = nowIso();
-	let applied = false;
-	await client.drizzle.transaction(async (tx) => {
-		await tx.insert(pgUserAuditLogsTable).values(toUserAuditLogDrizzleInsert(audit, now)).onConflictDoNothing();
+	assertWalletCreditParams(params);
+	return client.drizzle.transaction(async (tx) => {
+		// Lock before reading either the balances or the dedup record. All wallet credit
+		// callers use this same lock order, including an exact replay under MySQL RR.
+		const users = await tx.select().from(pgUsersTable).where(eq(pgUsersTable.id, params.userId)).limit(1).for('update');
+		if (!users[0]) throw new WalletCreditUserNotFoundError(params.userId);
+		const existing = await tx
+			.select()
+			.from(pgUserAuditLogsTable)
+			.where(and(eq(pgUserAuditLogsTable.userId, params.userId), eq(pgUserAuditLogsTable.dedupKey, params.externalRef)))
+			.limit(1)
+			.for('update');
+		if (existing[0])
+			return walletCreditReceiptResult(
+				'duplicate',
+				requireMatchingWalletCreditReceipt(readWalletCreditAuditReceipt(existing[0], params), params),
+				walletCreditSnapshot(
+					walletCreditStoredAmount(users[0].walletGranted),
+					walletCreditStoredAmount(users[0].walletSpent),
+				),
+			);
+		const auditId = crypto.randomUUID(),
+			now = nowIso();
+		const { audit, afterGranted, receipt } = buildWalletCreditAuditRow(
+			mapStorageUserToRow(users[0]),
+			params,
+			auditId,
+			now,
+		);
+		// A normal INSERT must fail/roll back on all unexpected constraint errors.
+		await tx.insert(pgUserAuditLogsTable).values(toUserAuditLogDrizzleInsert(audit, now));
 		const updated = await tx
 			.update(pgUsersTable)
-			.set({
-				walletGranted: sql`${pgUsersTable.walletGranted} + ${String(amount)}`,
-				updatedAt: now,
-			})
-			.where(
-				and(
-					eq(pgUsersTable.id, params.userId),
-					sql`EXISTS (SELECT 1 FROM ${pgUserAuditLogsTable} WHERE ${pgUserAuditLogsTable.id} = ${auditId})`,
-				),
-			)
+			.set({ walletGranted: String(afterGranted), updatedAt: now })
+			.where(eq(pgUsersTable.id, params.userId))
 			.returning({ id: pgUsersTable.id });
-		applied = updated.length > 0;
+		if (updated.length !== 1) throw new WalletCreditConcurrentMutationError();
+		// AFTER triggers may perform additional writes not reflected by RETURNING.
+		// Read and validate the final row before committing either money or receipt.
+		const actual = await tx
+			.select()
+			.from(pgUsersTable)
+			.where(eq(pgUsersTable.id, params.userId))
+			.limit(1)
+			.for('update');
+		if (
+			actual.length !== 1 ||
+			walletCreditStoredAmount(actual[0].walletGranted) !== receipt.after.walletGranted ||
+			walletCreditStoredAmount(actual[0].walletSpent) !== receipt.after.walletSpent ||
+			snapshotToJson(userRowToSnapshot(mapStorageUserToRow(actual[0]))) !== audit.afterUserSnapshot
+		)
+			throw new WalletCreditConcurrentMutationError();
+		const stored = await tx.select().from(pgUserAuditLogsTable).where(eq(pgUserAuditLogsTable.id, auditId)).limit(1);
+		const verified = requireMatchingWalletCreditReceipt(readWalletCreditAuditReceipt(stored[0], params), params);
+		return walletCreditReceiptResult(
+			'applied',
+			verified,
+			walletCreditSnapshot(
+				walletCreditStoredAmount(actual[0].walletGranted),
+				walletCreditStoredAmount(actual[0].walletSpent),
+			),
+		);
 	});
-	const after = await client.drizzle
-		.select({
-			walletGranted: pgUsersTable.walletGranted,
-			walletSpent: pgUsersTable.walletSpent,
-		})
-		.from(pgUsersTable)
-		.where(eq(pgUsersTable.id, params.userId))
-		.limit(1);
-	return walletCreditResult(
-		applied ? 'applied' : 'duplicate',
-		parseMoney(after[0]?.walletGranted),
-		parseMoney(after[0]?.walletSpent),
-	);
 }

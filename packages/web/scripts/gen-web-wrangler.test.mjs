@@ -18,7 +18,7 @@ test('trusted Proxy origins become a validated canonical Worker variable without
 		Object.entries(config.vars).filter(
 			([name, value]) => name.endsWith('_ENABLED') && value === 'false'
 		).length,
-		29
+		30
 	)
 	assert.deepEqual(config.routes, [])
 	assert.deepEqual(config.services, [
@@ -64,7 +64,7 @@ test('Web config defaults to disabled rollout and has no public route assignment
 	const flags = Object.entries(config.vars).filter(([name]) =>
 		name.endsWith('_ENABLED')
 	)
-	assert.equal(flags.length, 29)
+	assert.equal(flags.length, 30)
 	assert.ok(flags.every(([, value]) => value === 'false'))
 	assert.equal(config.vars.CINATOKEN_WEB_PROXY_ORIGINS, '')
 	assert.equal(config.vars.CINATOKEN_WEB_ACCOUNT_ENABLED, 'false')
@@ -99,6 +99,7 @@ test('Web config defaults to disabled rollout and has no public route assignment
 	assert.equal(config.vars.CINATOKEN_WEB_ADMIN_TOOLS_ENABLED, 'false')
 	assert.equal(config.vars.CINATOKEN_WEB_ADMIN_PLAYGROUND_ENABLED, 'false')
 	assert.equal(config.vars.CINATOKEN_WEB_ADMIN_SIMULATOR_ENABLED, 'false')
+	assert.equal(config.vars.CINATOKEN_WEB_ADMIN_MCP_ENABLED, 'false')
 	assert.equal(config.workers_dev, false)
 	assert.deepEqual(config.routes, [])
 	assert.equal(config.assets.run_worker_first, true)
@@ -185,6 +186,7 @@ test('invalid flags and URL-like binding names fail generation', () => {
 		'CINATOKEN_WEB_ADMIN_TOOLS_ENABLED',
 		'CINATOKEN_WEB_ADMIN_PLAYGROUND_ENABLED',
 		'CINATOKEN_WEB_ADMIN_SIMULATOR_ENABLED',
+		'CINATOKEN_WEB_ADMIN_MCP_ENABLED',
 		'CINATOKEN_WEB_ADMIN_WITHDRAWALS_ENABLED',
 		'CINATOKEN_WEB_ADMIN_NFT_MINTS_ENABLED',
 	]) {
@@ -338,6 +340,7 @@ for (const flag of [
 	'CINATOKEN_WEB_ADMIN_TOOLS_ENABLED',
 	'CINATOKEN_WEB_ADMIN_PLAYGROUND_ENABLED',
 	'CINATOKEN_WEB_ADMIN_SIMULATOR_ENABLED',
+	'CINATOKEN_WEB_ADMIN_MCP_ENABLED',
 	'CINATOKEN_WEB_ADMIN_WITHDRAWALS_ENABLED',
 	'CINATOKEN_WEB_ADMIN_NFT_MINTS_ENABLED',
 ]) {
@@ -365,6 +368,7 @@ for (const flag of [
 			'CINATOKEN_WEB_ADMIN_TOOLS_ENABLED',
 			'CINATOKEN_WEB_ADMIN_PLAYGROUND_ENABLED',
 			'CINATOKEN_WEB_ADMIN_SIMULATOR_ENABLED',
+			'CINATOKEN_WEB_ADMIN_MCP_ENABLED',
 			'CINATOKEN_WEB_ADMIN_WITHDRAWALS_ENABLED',
 			'CINATOKEN_WEB_ADMIN_NFT_MINTS_ENABLED',
 		]) {

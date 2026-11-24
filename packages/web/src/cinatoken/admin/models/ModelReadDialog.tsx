@@ -145,6 +145,8 @@ export function ModelReadDialog(props: {
 	disabled: boolean
 	error: unknown
 	onSave: (input: CreateModelInput | UpdateModelInput, id?: string) => void
+	canResume: boolean
+	onResume: () => void
 	onDelete: (id: string) => void
 	onClose: () => void
 }) {
@@ -172,6 +174,8 @@ export function ModelReadDialog(props: {
 				disabled={props.disabled}
 				error={props.error}
 				onSave={props.onSave}
+				canResume={props.canResume}
+				onResume={props.onResume}
 				onClose={props.onClose}
 			/>
 		)

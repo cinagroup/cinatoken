@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { CinaTokenApiError } from '../../api'
 import type { AdminGuardrailPreviewApi } from '../guardrails/preview-api'
+import { AdminListTimezone } from '../users/AdminListTimezone'
 import { GatewayKeysFilters } from './GatewayKeysFilters'
 import { GatewayKeysManager } from './GatewayKeysManager'
 import type { GatewayKeySearch } from './gateway-key-search'
@@ -83,12 +84,19 @@ function GatewayKeysSession(props: Props) {
 				<Button
 					type='button'
 					variant='outline'
-					disabled={manager.query.isFetching || manager.busy || manager.blocked}
-					onClick={() => void manager.query.refetch()}
+					disabled={
+						manager.refreshing ||
+						manager.query.isFetching ||
+						manager.displayQuery.isFetching ||
+						manager.busy ||
+						manager.blocked
+					}
+					onClick={() => void manager.refresh()}
 				>
 					{t(prefix + 'refresh')}
 				</Button>
 			</header>
+			<AdminListTimezone display={manager.display} />
 			<GatewayKeysFilters
 				key={JSON.stringify(props.search)}
 				search={props.search}

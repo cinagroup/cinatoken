@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import {
+	loadFirstEventTimeoutConfig,
+	resetStreamFirstEventTimeoutCacheForTests,
 	parseFirstEventTimeoutMs,
 	parseFirstEventTimeoutRouteGroups,
 	peekFirstStreamChunk,
@@ -124,6 +126,66 @@ describe('first-event timeout cleanup ownership', () => {
 		} finally {
 			if (timer) clearTimeout(timer);
 			acknowledge?.();
+		}
+	});
+});
+
+describe('shared stream timeout configuration', () => {
+	it('preserves legacy parse behavior, literal mixed wildcards and per-isolate 30 second caching', async (t) => {
+		let now = 1_000_000;
+		t.mock.method(Date, 'now', () => now);
+		resetStreamFirstEventTimeoutCacheForTests();
+		let timeout = '1e3';
+		let groups = '*, VIP, vip';
+		const reads: string[] = [];
+		const repos = {
+			systemConfig: {
+				async getConfig(key: string) {
+					reads.push(key);
+					return key === 'STREAM_FIRST_EVENT_TIMEOUT_MS' ? timeout : groups;
+				},
+			},
+		};
+		try {
+			const first = await loadFirstEventTimeoutConfig(repos);
+			assert.deepEqual(first, { timeoutMs: 1, groups: ['*', 'VIP', 'vip'] });
+			assert.equal(resolveFirstEventTimeoutMs(first.timeoutMs, first.groups, 'other'), 0);
+			assert.equal(resolveFirstEventTimeoutMs(first.timeoutMs, first.groups, 'VIP'), 1);
+			timeout = '30000';
+			groups = 'ALL';
+			now += 29_999;
+			assert.deepEqual(await loadFirstEventTimeoutConfig(repos), first);
+			assert.equal(reads.length, 2);
+			now += 1;
+			assert.deepEqual(await loadFirstEventTimeoutConfig(repos), { timeoutMs: 30000, groups: '*' });
+			assert.equal(reads.length, 4);
+		} finally {
+			resetStreamFirstEventTimeoutCacheForTests();
+		}
+	});
+
+	it('a configuration read failure disables this protection and a heartbeat chunk satisfies it', async () => {
+		resetStreamFirstEventTimeoutCacheForTests();
+		try {
+			assert.deepEqual(
+				await loadFirstEventTimeoutConfig({
+					systemConfig: {
+						async getConfig() {
+							throw new Error('unavailable');
+						},
+					},
+				}),
+				{ timeoutMs: 0, groups: ['default'] },
+			);
+			const response = new Response(': heartbeat\n\n', {
+				status: 200,
+				headers: { 'content-type': 'text/event-stream' },
+			});
+			const result = await peekResponseFirstEvent(response, 1000, 'fixture');
+			assert.equal(result.timedOut, false);
+			assert.equal(await result.response.text(), ': heartbeat\n\n');
+		} finally {
+			resetStreamFirstEventTimeoutCacheForTests();
 		}
 	});
 });

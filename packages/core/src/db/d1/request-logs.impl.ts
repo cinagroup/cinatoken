@@ -38,7 +38,7 @@ import {
 	routeAvailabilityAggregateParams,
 } from '../provider-attempt-availability';
 import { buildManagementAnalyticsQuery, mapManagementAnalyticsResult } from '../analytics-query';
-import { appendModelIdPrefixCondition, appendProviderIdsCondition } from '../request-log-filters';
+import { appendModelIdPrefixCondition, appendProviderIdsCondition, normalizeRequestLogIngressHost } from '../request-log-filters';
 import {
 	sqliteBusinessTimezoneModifier,
 	sqliteTimeseriesBucketExpr,
@@ -287,6 +287,7 @@ export function createD1RequestLogsRepository(db: D1DatabaseClient): RequestLogs
 			apiKeyId?: string;
 			userId?: string;
 			userEmail?: string;
+			ingressHost?: string;
 			modelId?: string;
 			providerId?: string;
 			providerName?: string;
@@ -298,6 +299,7 @@ export function createD1RequestLogsRepository(db: D1DatabaseClient): RequestLogs
 			startDate?: string;
 			endDate?: string;
 		}): Promise<{ logs: RequestLogRow[]; total: number }> {
+			const ingressHost = normalizeRequestLogIngressHost(options.ingressHost);
 			const page = options.page || 1;
 			const pageSize = Math.min(options.pageSize || 20, 100);
 			const offset = (page - 1) * pageSize;
@@ -331,6 +333,12 @@ export function createD1RequestLogsRepository(db: D1DatabaseClient): RequestLogs
 				conditionsRl.push('rl.user_email = ?');
 				bindValues.push(options.userEmail);
 			}
+			if (ingressHost !== undefined) {
+				conditions.push('ingress_host = ?');
+				conditionsRl.push('rl.ingress_host = ?');
+				bindValues.push(ingressHost);
+			}
+
 			if (options.modelId) {
 				conditions.push('model_id = ?');
 				conditionsRl.push('rl.model_id = ?');

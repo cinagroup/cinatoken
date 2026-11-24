@@ -1,5 +1,9 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
 import { z } from 'zod'
+import {
+	timeoutMsConfigValue,
+	timeoutRouteGroupsConfigValue,
+} from '@octafuse/core/lib/stream-first-event-timeout-config'
 
 const source = z.enum(['configured', 'missing', 'invalid'])
 const timezoneSource = source.or(z.literal('legacy'))
@@ -11,6 +15,8 @@ export const routeStrategyName = z.enum([
 	'weighted_round_robin',
 ])
 export type AdminConfigRouteStrategy = z.infer<typeof routeStrategyName>
+export const userChargedCostFactorMode = z.enum(['multiply', 'min'])
+export type AdminConfigFactorMode = z.infer<typeof userChargedCostFactorMode>
 export const webhookChannel = z.enum(['wecom', 'feishu'])
 export type AdminConfigWebhookChannel = z.infer<typeof webhookChannel>
 export const billingCurrencyWrite = z.enum(['USD', 'CNY'])
@@ -22,6 +28,67 @@ export const configRevisionSchema = z
 		/^(?:legacy|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/i
 	)
 export type AdminConfigRevision = z.infer<typeof configRevisionSchema> | null
+
+export const factorModeConfigurationSchema = z
+	.object({
+		value: userChargedCostFactorMode,
+		source,
+		revision: configRevisionSchema.nullable(),
+	})
+	.superRefine((field, context) => {
+		if (field.source !== 'configured' && field.value !== 'multiply')
+			context.addIssue({
+				code: 'custom',
+				message: 'Invalid factor mode fallback',
+			})
+		if (field.source === 'configured' && field.revision === null)
+			context.addIssue({
+				code: 'custom',
+				message: 'Missing factor mode revision',
+			})
+	})
+
+export function streamTimeoutConfigurationSchema(
+	project: typeof timeoutMsConfigValue
+) {
+	return z
+		.object({
+			value: z.string(),
+			source,
+			revision: configRevisionSchema.nullable(),
+		})
+		.superRefine((field, context) => {
+			if (
+				project(field.value).source !== field.source ||
+				(field.revision === null && field.value !== '')
+			)
+				context.addIssue({
+					code: 'custom',
+					message: 'Invalid stream timeout snapshot',
+				})
+		})
+}
+export const streamTimeoutMsConfigurationSchema =
+	streamTimeoutConfigurationSchema(timeoutMsConfigValue)
+export const streamTimeoutGroupsConfigurationSchema =
+	streamTimeoutConfigurationSchema(timeoutRouteGroupsConfigValue)
+function optionalStreamTimeoutCapability(
+	schema: typeof streamTimeoutMsConfigurationSchema
+) {
+	return z.preprocess((value) => {
+		if (
+			value &&
+			typeof value === 'object' &&
+			!Array.isArray(value) &&
+			!Object.hasOwn(value, 'revision')
+		)
+			return undefined
+		return value
+	}, schema.optional())
+}
+export type StreamTimeoutConfiguration = z.infer<
+	typeof streamTimeoutMsConfigurationSchema
+>
 
 /** All objects strip unknown fields, including accidental raw secret additions. */
 export const adminConfigOverviewSchema = z.object({
@@ -88,6 +155,14 @@ export const adminConfigOverviewSchema = z.object({
 			if (field.source !== 'configured' && field.value !== 'hash_affinity')
 				context.addIssue({ code: 'custom', message: 'Invalid route fallback' })
 		}),
+	// Absent on legacy services; never infer an editable value from absence.
+	userChargedCostFactorMode: factorModeConfigurationSchema.optional(),
+	streamFirstEventTimeoutMs: optionalStreamTimeoutCapability(
+		streamTimeoutMsConfigurationSchema
+	),
+	streamFirstEventTimeoutRouteGroups: optionalStreamTimeoutCapability(
+		streamTimeoutGroupsConfigurationSchema
+	),
 	webhooks: z.object({
 		wecom: z.object({
 			configured: z.boolean(),
@@ -126,6 +201,16 @@ export const routeStrategyWriteResponseSchema = z.object({
 	data: z.object({
 		routeStrategy: z.object({
 			value: routeStrategyName,
+			source: z.literal('configured'),
+			revision: configRevisionSchema,
+		}),
+	}),
+})
+export const factorModeWriteResponseSchema = z.object({
+	success: z.literal(true),
+	data: z.object({
+		userChargedCostFactorMode: z.object({
+			value: userChargedCostFactorMode,
 			source: z.literal('configured'),
 			revision: configRevisionSchema,
 		}),

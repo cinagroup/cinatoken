@@ -1,6 +1,8 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
+import { GatewayKeyLastUsed } from '../gateway-keys/GatewayKeyLastUsed'
+import { RateLimitSummary } from '../gateway-keys/RateLimitEditor'
 import type { UserDetailKey } from './user-detail-contracts'
 import { formatUserDetailTime } from './user-detail-format'
 
@@ -21,14 +23,16 @@ export function UserDetailKeysTable(props: {
 			<table className='w-full min-w-[730px] text-left text-sm'>
 				<thead>
 					<tr className='border-b text-xs'>
-						<th className='p-2'>{t(prefix + 'keyName')}</th>
-						<th className='p-2'>{t(prefix + 'keyPreview')}</th>
-						<th className='p-2'>{t(prefix + 'status')}</th>
-						<th className='p-2'>
+						<th className='p-2 whitespace-nowrap'>{t(prefix + 'keyName')}</th>
+						<th className='p-2 whitespace-nowrap'>
+							{t(prefix + 'keyPreview')}
+						</th>
+						<th className='p-2 whitespace-nowrap'>{t(prefix + 'status')}</th>
+						<th className='p-2 whitespace-nowrap'>
 							{t(prefix + 'time', { timezone: props.timezone ?? 'UTC' })}
 						</th>
-						<th className='p-2'>{t(prefix + 'metadata')}</th>
-						<th className='p-2'>—</th>
+						<th className='p-2 whitespace-nowrap'>{t(prefix + 'metadata')}</th>
+						<th className='p-2 whitespace-nowrap'>—</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -47,18 +51,35 @@ export function UserDetailKeysTable(props: {
 							<tr key={row.id} className='border-b align-top'>
 								<td className='p-2'>
 									<span>{row.name ?? '—'}</span>
+									<RateLimitSummary value={row.rate_limit} layer='key' />
 									<code className='text-muted-foreground block text-xs break-all'>
 										{row.id}
 									</code>
 								</td>
 								<td className='p-2 font-mono text-xs'>{row.key}</td>
-								<td className='p-2'>{status}</td>
+								<td className='p-2 whitespace-nowrap'>{status}</td>
 								<td className='p-2 text-xs whitespace-nowrap'>
-									{formatUserDetailTime(
-										row.last_used_at ?? row.created_at,
-										i18n.resolvedLanguage ?? 'en',
-										props.timezone
-									)}
+									<dl className='space-y-1'>
+										<dt className='text-muted-foreground'>
+											{t(keyPrefix + 'created')}
+										</dt>
+										<dd>
+											{formatUserDetailTime(
+												row.created_at,
+												i18n.resolvedLanguage ?? 'en',
+												props.timezone
+											)}
+										</dd>
+										<dt className='text-muted-foreground'>
+											{t(keyPrefix + 'lastUsed')}
+										</dt>
+										<dd>
+											<GatewayKeyLastUsed
+												value={row.last_used_at}
+												timezone={props.timezone}
+											/>
+										</dd>
+									</dl>
 								</td>
 								<td className='p-2'>{summary}</td>
 								<td className='p-2'>

@@ -1,6 +1,7 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
 import type {
 	AdminConfigBillingCurrency,
+	AdminConfigFactorMode,
 	AdminConfigOverview,
 	AdminConfigRouteStrategy,
 	AdminConfigWebhookChannel,
@@ -12,6 +13,11 @@ export type PendingConfigWrite =
 	| {
 			kind: 'currency'
 			value: AdminConfigBillingCurrency
+			acknowledged: boolean
+	  }
+	| {
+			kind: 'factorMode'
+			value: AdminConfigFactorMode | null
 			acknowledged: boolean
 	  }
 	| { kind: 'strategy'; value: AdminConfigRouteStrategy; acknowledged: boolean }
@@ -36,6 +42,13 @@ export function reconcileConfigWrite(
 	verifiedMatch?: boolean,
 	candidateAvailable = true
 ): ConfigReconciliation {
+	if (pending.kind === 'factorMode') {
+		const field = overview.userChargedCostFactorMode
+		if (!field) return 'requires-verification'
+		return field.source === 'configured' && field.value === pending.value
+			? 'matches'
+			: 'differs'
+	}
 	if (pending.kind === 'webhook-replace') {
 		if (verifiedMatch === true) return 'matches'
 		if (verifiedMatch === false) return 'differs'

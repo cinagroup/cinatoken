@@ -20,6 +20,9 @@ export function RecentPanel(props: {
 			aria-label={title}
 		>
 			<h2 className='text-lg font-semibold'>{title}</h2>
+			<p className='text-muted-foreground mt-2 text-xs'>
+				{t(prefix + 'recentScope')}
+			</p>
 			{props.rows.length === 0 ? (
 				<p className='text-muted-foreground py-8 text-sm'>
 					{t(prefix + (isError ? 'noErrors' : 'noRequests'))}

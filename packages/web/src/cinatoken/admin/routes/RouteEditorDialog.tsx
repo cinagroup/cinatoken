@@ -14,7 +14,9 @@ import { Input } from '../../../components/ui/input'
 import { Textarea } from '../../../components/ui/textarea'
 import type { AdminModel } from '../model-contracts'
 import type { AdminProvider } from '../provider-contracts'
+import { RouteAdapterPreview } from './RouteAdapterPreview'
 import { RoutePricingFields } from './RoutePricingFields'
+import { RouteWriteFeedback } from './RouteWriteFeedback'
 import {
 	buildRouteMutation,
 	draftFromRoute,
@@ -24,7 +26,6 @@ import {
 	routeProtocols,
 	type RouteDraft,
 } from './route-domain'
-import { routeErrorKey } from './route-errors'
 import {
 	applyDashScopePreset,
 	compatibleAdaptersForDraft,
@@ -59,6 +60,8 @@ export function RouteEditorDialog(props: {
 	pending: boolean
 	disabled: boolean
 	error: unknown
+	canResume: boolean
+	onResume: () => void
 	onSave: (
 		input: CreateRouteInput | UpdateRouteInput,
 		row: AdminRoute | null
@@ -74,6 +77,9 @@ export function RouteEditorDialog(props: {
 	)
 	const [localError, setLocalError] = useState(false)
 	const editing = props.row !== null && !props.duplicate
+	let editorTitle = 'create'
+	if (editing) editorTitle = 'edit'
+	else if (props.duplicate) editorTitle = 'duplicate'
 	const surfaceAmbiguous =
 		editing &&
 		props.row !== null &&
@@ -185,10 +191,7 @@ export function RouteEditorDialog(props: {
 			>
 				<DialogHeader>
 					<DialogTitle ref={title} tabIndex={-1}>
-						{t(
-							prefix +
-								(editing ? 'edit' : props.duplicate ? 'duplicate' : 'create')
-						)}
+						{t(prefix + editorTitle)}
 					</DialogTitle>
 					<DialogDescription>{t(prefix + 'createHint')}</DialogDescription>
 				</DialogHeader>
@@ -198,13 +201,6 @@ export function RouteEditorDialog(props: {
 						className='text-muted-foreground rounded-lg border p-3 text-sm'
 					>
 						{t(prefix + 'legacySurface')}
-					</p>
-				)}
-				{(localError || props.error != null) && (
-					<p role='alert' className='text-destructive text-sm'>
-						{localError
-							? t(prefix + 'invalidInput')
-							: t(routeErrorKey(props.error))}
 					</p>
 				)}
 				<div className='grid gap-4 sm:grid-cols-2'>
@@ -423,6 +419,7 @@ export function RouteEditorDialog(props: {
 							</select>
 						</label>
 					</div>
+					<RouteAdapterPreview draft={draft} model={selectedModel} />
 				</section>
 				<div className='grid gap-3 sm:grid-cols-2'>
 					<label className='space-y-1 text-sm'>
@@ -481,6 +478,16 @@ export function RouteEditorDialog(props: {
 						</label>
 					</div>
 				</details>
+				{localError && (
+					<p role='alert' className='text-destructive text-sm'>
+						{t(prefix + 'invalidInput')}
+					</p>
+				)}
+				<RouteWriteFeedback
+					error={props.error}
+					canResume={props.canResume}
+					onResume={props.onResume}
+				/>
 				<DialogFooter>
 					<Button
 						type='button'

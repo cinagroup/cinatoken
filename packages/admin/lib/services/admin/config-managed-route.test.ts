@@ -37,7 +37,7 @@ function fixture(
 		failWrite?: boolean;
 		failRead?: boolean;
 		requireRevision?: string;
-	} = {}
+	} = {},
 ) {
 	const values = new Map(Object.entries(options.initial ?? {}));
 	const revisions = new Map([...values.keys()].map((key) => [key, "legacy"]));
@@ -70,7 +70,7 @@ function fixture(
 				revisions.set(input.key, revision);
 			},
 			async upsertSystemConfigValueWithAuditIfRevision(
-				input: SystemConfigAuditWrite & { expectedRevision: string | null }
+				input: SystemConfigAuditWrite & { expectedRevision: string | null },
 			) {
 				if (options.failWrite) throw new Error(`private storage error: ${url}`);
 				if ((revisions.get(input.key) ?? null) !== input.expectedRevision) {
@@ -115,7 +115,7 @@ function fixture(
 		});
 		return protectAdminConfigResponse(
 			new Request(`https://test.example/api${path}`),
-			result
+			result,
 		);
 	};
 	return { request, reads, writes, auditWrites, values, revisions };
@@ -136,6 +136,9 @@ test("outer cache policy covers new config routes even on early errors without c
 	for (const path of [
 		"/api/admin/config/billing-currency",
 		"/api/admin/config/route-strategy/",
+		"/api/admin/config/user-charged-cost-factor-mode",
+		"/api/admin/config/stream-first-event-timeout-ms",
+		"/api/admin/config/stream-first-event-timeout-route-groups",
 		"/api/admin/config/webhooks/wecom",
 		"/api/admin/config/webhooks/feishu/",
 		"/api/admin/config/webhooks/wecom/reveal",
@@ -144,12 +147,12 @@ test("outer cache policy covers new config routes even on early errors without c
 		for (const status of [401, 403, 500]) {
 			const response = protectAdminConfigResponse(
 				new Request(`https://test.example${path}`),
-				Response.json({ success: false }, { status })
+				Response.json({ success: false }, { status }),
 			);
 			assert.equal(
 				response.headers.get("cache-control"),
 				"private, no-store",
-				path
+				path,
 			);
 		}
 	}
@@ -160,7 +163,7 @@ test("outer cache policy covers new config routes even on early errors without c
 	]) {
 		const response = protectAdminConfigResponse(
 			new Request(`https://test.example${path}`),
-			Response.json({ success: false }, { status: 403 })
+			Response.json({ success: false }, { status: 403 }),
 		);
 		assert.equal(response.headers.get("cache-control"), null, path);
 	}
@@ -177,7 +180,7 @@ test("revision preconditions accept only quoted opaque revisions or missing-row 
 	});
 	assert.deepEqual(
 		parseConfigRevisionPrecondition({ ifMatch: `"${firstRevision}"` }),
-		{ kind: "match", revision: firstRevision }
+		{ kind: "match", revision: firstRevision },
 	);
 	for (const headers of [
 		{ ifMatch: "*" },
@@ -195,6 +198,7 @@ test("managed routes enforce exact methods and independent write/reveal permissi
 	for (const [method, path, permission] of [
 		["PUT", "/admin/config/billing-currency", "config.write"],
 		["PUT", "/admin/config/route-strategy", "config.write"],
+		["PUT", "/admin/config/user-charged-cost-factor-mode", "config.write"],
 		["PUT", "/admin/config/webhooks/wecom", "config.write"],
 		["DELETE", "/admin/config/webhooks/feishu", "config.write"],
 		["GET", "/admin/config/webhooks/wecom/reveal", "config.secrets.read"],
@@ -207,6 +211,8 @@ test("managed routes enforce exact methods and independent write/reveal permissi
 	}
 	for (const [method, path] of [
 		["GET", "/admin/config/billing-currency"],
+		["GET", "/admin/config/user-charged-cost-factor-mode"],
+		["POST", "/admin/config/user-charged-cost-factor-mode"],
 		["POST", "/admin/config/webhooks/wecom"],
 		["GET", "/admin/config/webhooks/wecom/verify"],
 		["POST", "/admin/config/webhooks/wecom/reveal"],
@@ -221,35 +227,35 @@ test("managed routes enforce exact methods and independent write/reveal permissi
 	assert.equal(
 		(await reader.request("/admin/config/billing-currency", jsonPut("USD")))
 			.status,
-		403
+		403,
 	);
 	assert.equal(
 		(await reader.request("/admin/config/webhooks/wecom/reveal")).status,
-		403
+		403,
 	);
 	assert.deepEqual(reader.writes, []);
 	assert.deepEqual(reader.reads, []);
 	const secretOnly = fixture({ principal: apiKey(["config.secrets.read"]) });
 	const revealDenied = await secretOnly.request(
-		"/admin/config/webhooks/wecom/reveal"
+		"/admin/config/webhooks/wecom/reveal",
 	);
 	assert.equal(revealDenied.status, 403);
 	assert.equal(revealDenied.headers.get("cache-control"), "private, no-store");
 	assert.deepEqual(secretOnly.reads, []);
 	const writer = fixture({ principal: apiKey(["config.write"]) });
 	const writerRevealDenied = await writer.request(
-		"/admin/config/webhooks/wecom/reveal"
+		"/admin/config/webhooks/wecom/reveal",
 	);
 	assert.equal(writerRevealDenied.status, 403);
 	assert.deepEqual(writer.reads, []);
 	const anonymous = fixture({ principal: null });
 	const anonymousResponse = await anonymous.request(
-		"/admin/config/webhooks/wecom/reveal"
+		"/admin/config/webhooks/wecom/reveal",
 	);
 	assert.equal(anonymousResponse.status, 401);
 	assert.equal(
 		anonymousResponse.headers.get("cache-control"),
-		"private, no-store"
+		"private, no-store",
 	);
 });
 
@@ -269,7 +275,7 @@ test("legacy generic and fixed-key writes require and carry the actual Admin pri
 	assert.equal(
 		(await keyFixture.request("/admin/config/billing-currency", jsonPut("CNY")))
 			.status,
-		200
+		200,
 	);
 	assert.deepEqual(
 		keyFixture.auditWrites.map(({ key, actorKind, actorId }) => ({
@@ -288,7 +294,7 @@ test("legacy generic and fixed-key writes require and carry the actual Admin pri
 				actorKind: "admin_key",
 				actorId: keyPrincipal.id,
 			},
-		]
+		],
 	);
 	for (const write of keyFixture.auditWrites) {
 		assert.match(write.auditId, /^[0-9a-f-]{36}$/u);
@@ -303,14 +309,14 @@ test("legacy generic and fixed-key writes require and carry the actual Admin pri
 	assert.equal(
 		(await consoleFixture.request("/admin/config/webhooks/wecom", jsonPut(url)))
 			.status,
-		200
+		200,
 	);
 	assert.deepEqual(
 		consoleFixture.auditWrites.map(({ actorKind, actorId }) => ({
 			actorKind,
 			actorId,
 		})),
-		[{ actorKind: "console", actorId: consolePrincipal.id }]
+		[{ actorKind: "console", actorId: consolePrincipal.id }],
 	);
 });
 
@@ -318,7 +324,7 @@ test("billing currency and route strategy write fixed keys, normalize and verify
 	const f = fixture();
 	const currency = await f.request(
 		"/admin/config/billing-currency",
-		jsonPut(" cny ")
+		jsonPut(" cny "),
 	);
 	assert.equal(currency.status, 200);
 	assert.equal(currency.headers.get("cache-control"), "private, no-store");
@@ -334,7 +340,7 @@ test("billing currency and route strategy write fixed keys, normalize and verify
 	});
 	const strategy = await f.request(
 		"/admin/config/route-strategy",
-		jsonPut(" WEIGHTED_RANDOM ")
+		jsonPut(" WEIGHTED_RANDOM "),
 	);
 	assert.equal(strategy.status, 200);
 	assert.deepEqual(await strategy.json(), {
@@ -383,7 +389,7 @@ test("each webhook replaces or clears independently and ordinary write responses
 	});
 	const replace = await f.request(
 		"/admin/config/webhooks/wecom",
-		jsonPut(` ${url} `, "legacy")
+		jsonPut(` ${url} `, "legacy"),
 	);
 	assert.equal(replace.status, 200);
 	assert.equal(replace.headers.get("cache-control"), "private, no-store");
@@ -410,7 +416,7 @@ test("each webhook replaces or clears independently and ordinary write responses
 		"https://open.feishu.cn/open-apis/bot/v2/hook/private-feishu-token";
 	const feishu = await f.request(
 		"/admin/config/webhooks/feishu",
-		jsonPut(feishuUrl, "legacy")
+		jsonPut(feishuUrl, "legacy"),
 	);
 	assert.equal(feishu.status, 200);
 	assert.deepEqual(await feishu.json(), {
@@ -444,7 +450,7 @@ test("webhook replacement rejects insecure, malformed and oversized inputs befor
 	]) {
 		const response = await f.request(
 			"/admin/config/webhooks/wecom",
-			jsonPut(candidate)
+			jsonPut(candidate),
 		);
 		assert.equal(response.status, 400);
 		assert.equal(response.headers.get("cache-control"), "private, no-store");
@@ -490,7 +496,7 @@ test("explicit reveal and read-only verify require both permissions and never ec
 			method: "POST",
 			headers: { "content-type": "application/json" },
 			body: JSON.stringify({ value: "https://127.0.0.1/private" }),
-		}
+		},
 	);
 	assert.equal(invalidCandidate.status, 400);
 	assert.equal((await invalidCandidate.text()).includes("127.0.0.1"), false);
@@ -507,7 +513,7 @@ test("explicit reveal and read-only verify require both permissions and never ec
 				body: JSON.stringify({ value: url }),
 			})
 		).status,
-		403
+		403,
 	);
 	assert.deepEqual(writer.reads, []);
 });
@@ -522,7 +528,7 @@ test("managed writes require a revision and reject stale revisions without an au
 	assert.equal(missing.status, 428);
 	assert.equal(
 		((await missing.json()) as { code: string }).code,
-		"config_precondition_required"
+		"config_precondition_required",
 	);
 	const malformed = await f.request("/admin/config/webhooks/wecom", {
 		method: "PUT",
@@ -532,16 +538,16 @@ test("managed writes require a revision and reject stale revisions without an au
 	assert.equal(malformed.status, 400);
 	assert.equal(
 		((await malformed.json()) as { code: string }).code,
-		"config_precondition_invalid"
+		"config_precondition_invalid",
 	);
 	const first = await f.request(
 		"/admin/config/webhooks/wecom",
-		jsonPut(url, "legacy")
+		jsonPut(url, "legacy"),
 	);
 	assert.equal(first.status, 200);
 	const stale = await f.request(
 		"/admin/config/webhooks/wecom",
-		jsonPut(otherUrl, "legacy")
+		jsonPut(otherUrl, "legacy"),
 	);
 	assert.equal(stale.status, 412);
 	assert.equal(stale.headers.get("cache-control"), "private, no-store");
@@ -568,7 +574,7 @@ test("generic endpoint supports conditional Web writes while legacy writes keep 
 	assert.equal(first.status, 200);
 	assert.equal(
 		((await first.json()) as { revision: string }).revision,
-		firstRevision
+		firstRevision,
 	);
 	const stale = await f.request("/admin/config", {
 		method: "PUT",
@@ -586,12 +592,13 @@ test("generic endpoint supports conditional Web writes while legacy writes keep 
 	assert.equal(f.revisions.get("BUSINESS_TIMEZONE"), secondRevision);
 });
 
-test("enabled legacy guard rejects unconditional writes to all five Web-managed keys without an audit", async () => {
+test("enabled legacy guard rejects unconditional writes to all six Web-managed keys without an audit", async () => {
 	const f = fixture({ requireRevision: "true" });
 	for (const [key, value] of [
 		["BUSINESS_TIMEZONE", "Asia/Singapore"],
 		["BILLING_CURRENCY", "CNY"],
 		["ROUTE_STRATEGY", "weighted_random"],
+		["USER_CHARGED_COST_FACTOR_MODE", "min"],
 		["ALERT_WEBHOOK_WECOM_URL", url],
 		[
 			"ALERT_WEBHOOK_FEISHU_URL",
@@ -607,12 +614,12 @@ test("enabled legacy guard rejects unconditional writes to all five Web-managed 
 		assert.equal(
 			response.headers.get("cache-control"),
 			"private, no-store",
-			key
+			key,
 		);
 		assert.equal(
 			((await response.json()) as { code: string }).code,
 			"config_precondition_required",
-			key
+			key,
 		);
 	}
 	assert.deepEqual(f.writes, []);
@@ -643,7 +650,7 @@ test("enabled legacy guard preserves conditional CAS and exact opt-in", async ()
 	assert.equal(first.status, 200);
 	assert.equal(
 		((await first.json()) as { revision: string }).revision,
-		firstRevision
+		firstRevision,
 	);
 	const stale = await f.request("/admin/config", {
 		method: "PUT",
@@ -662,7 +669,7 @@ test("enabled legacy guard preserves conditional CAS and exact opt-in", async ()
 	assert.equal(second.status, 200);
 	assert.equal(
 		((await second.json()) as { revision: string }).revision,
-		secondRevision
+		secondRevision,
 	);
 	assert.equal(f.auditWrites.length, 2);
 	for (const requireRevision of [undefined, "false", "TRUE", "1"]) {
@@ -676,7 +683,7 @@ test("enabled legacy guard preserves conditional CAS and exact opt-in", async ()
 				})
 			).status,
 			200,
-			String(requireRevision)
+			String(requireRevision),
 		);
 		assert.equal(legacy.auditWrites.length, 1);
 	}
@@ -686,7 +693,7 @@ test("storage errors never claim success or leak webhook URLs", async () => {
 	const f = fixture({ failWrite: true });
 	const response = await f.request(
 		"/admin/config/webhooks/wecom",
-		jsonPut(url)
+		jsonPut(url),
 	);
 	assert.equal(response.status, 500);
 	assert.equal(response.headers.get("cache-control"), "private, no-store");
@@ -694,4 +701,281 @@ test("storage errors never claim success or leak webhook URLs", async () => {
 	assert.equal(body.includes(url), false);
 	assert.equal(body.includes("private storage error"), false);
 	assert.deepEqual(f.writes, []);
+});
+
+test("factor mode writes require config.write and exact value, use audited CAS and reject stale snapshots", async () => {
+	const path = "/admin/config/user-charged-cost-factor-mode";
+	const f = fixture();
+	const created = await f.request(path, jsonPut(" MIN "));
+	assert.equal(created.status, 200);
+	assert.deepEqual(await created.json(), {
+		success: true,
+		data: {
+			userChargedCostFactorMode: {
+				value: "min",
+				source: "configured",
+				revision: firstRevision,
+			},
+		},
+	});
+	assert.deepEqual(f.writes, [
+		{ key: "USER_CHARGED_COST_FACTOR_MODE", value: "min" },
+	]);
+	assert.equal(f.auditWrites[0]?.actorId, "admin_key:fixture");
+	const stale = await f.request(path, jsonPut("multiply", "legacy"));
+	assert.equal(stale.status, 412);
+	assert.equal(f.writes.length, 1);
+	assert.equal(
+		(await f.request(path, jsonPut("multiply", firstRevision))).status,
+		200,
+	);
+	assert.equal(f.values.get("USER_CHARGED_COST_FACTOR_MODE"), "multiply");
+	assert.equal(
+		f.revisions.get("USER_CHARGED_COST_FACTOR_MODE"),
+		secondRevision,
+	);
+	const reader = fixture({ principal: apiKey(["config.read"]) });
+	assert.equal((await reader.request(path, jsonPut("min"))).status, 403);
+	assert.deepEqual(reader.writes, []);
+	const missing = await f.request(path, {
+		method: "PUT",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify({ value: "min" }),
+	});
+	assert.equal(missing.status, 428);
+	for (const body of [
+		{ value: "unknown" },
+		{ value: null },
+		{ value: 0 },
+		{ value: "min", extra: "private" },
+	]) {
+		const invalid = await f.request(path, {
+			...jsonPut("min", secondRevision),
+			body: JSON.stringify(body),
+		});
+		assert.equal(invalid.status, 400);
+	}
+	assert.equal(f.writes.length, 2);
+});
+
+test("factor mode binds Console writes to the expected subject while generic legacy mode remains compatible", async () => {
+	const path = "/admin/config/user-charged-cost-factor-mode";
+	const f = fixture({
+		principal: {
+			type: "console",
+			id: "console:cinaauth:fixture-subject",
+			username: "cinaauth:fixture-subject",
+		},
+	});
+	assert.equal((await f.request(path, jsonPut("min"))).status, 428);
+	const send = (subject: string) => {
+		const init = jsonPut("min");
+		return f.request(path, {
+			...init,
+			headers: {
+				...init.headers,
+				"X-CinaToken-Expected-Console-Subject": encodeURIComponent(subject),
+			},
+		});
+	};
+	assert.equal((await send("other-subject")).status, 403);
+	assert.deepEqual(f.writes, []);
+	assert.equal((await send("fixture-subject")).status, 200);
+	assert.equal(f.auditWrites[0]?.actorKind, "console");
+	const legacy = fixture();
+	const response = await legacy.request("/admin/config", {
+		method: "PUT",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify({
+			key: "USER_CHARGED_COST_FACTOR_MODE",
+			value: " MULTIPLY ",
+		}),
+	});
+	assert.equal(response.status, 200);
+	assert.deepEqual(legacy.writes, [
+		{ key: "USER_CHARGED_COST_FACTOR_MODE", value: "multiply" },
+	]);
+});
+
+const timeoutSettings = [
+	{
+		suffix: "stream-first-event-timeout-ms",
+		key: "STREAM_FIRST_EVENT_TIMEOUT_MS",
+		field: "streamFirstEventTimeoutMs",
+		raw: " 0010 ",
+		value: "0010",
+	},
+	{
+		suffix: "stream-first-event-timeout-route-groups",
+		key: "STREAM_FIRST_EVENT_TIMEOUT_ROUTE_GROUPS",
+		field: "streamFirstEventTimeoutRouteGroups",
+		raw: " *, VIP, vip,,all ",
+		value: "*, VIP, vip,,all",
+	},
+] as const;
+
+test("timeout dedicated routes enforce permissions and independent audited revisions with exact acknowledged values", async () => {
+	const f = fixture();
+	for (const [index, setting] of timeoutSettings.entries()) {
+		const path = `/admin/config/${setting.suffix}`;
+		assert.deepEqual(getAdminAuthorizationDecision("PUT", path), {
+			kind: "permission",
+			permission: "config.write",
+		});
+		for (const method of ["GET", "POST", "DELETE", "PATCH"])
+			assert.deepEqual(getAdminAuthorizationDecision(method, path), {
+				kind: "deny",
+			});
+		assert.deepEqual(getAdminAuthorizationDecision("PUT", `${path}-extra`), {
+			kind: "deny",
+		});
+		const response = await f.request(path, jsonPut(setting.raw));
+		assert.equal(response.status, 200);
+		assert.equal(response.headers.get("cache-control"), "private, no-store");
+		assert.deepEqual(await response.json(), {
+			success: true,
+			data: {
+				[setting.field]: {
+					value: setting.value,
+					source: "configured",
+					revision: [firstRevision, secondRevision][index],
+				},
+			},
+		});
+		assert.equal(f.auditWrites[index]?.key, setting.key);
+		assert.equal(f.auditWrites[index]?.actorId, "admin_key:fixture");
+		assert.equal((await f.request(path, jsonPut("0", "legacy"))).status, 412);
+		const reader = fixture({ principal: apiKey(["config.read"]) });
+		assert.equal(
+			(await reader.request(path, jsonPut(setting.raw))).status,
+			403,
+		);
+		assert.deepEqual(reader.writes, []);
+	}
+	assert.equal(f.writes.length, 2);
+	for (const setting of timeoutSettings) {
+		const response = await f.request(
+			`/admin/config/${setting.suffix}`,
+			jsonPut(" ", f.revisions.get(setting.key)!),
+		);
+		assert.equal(response.status, 200);
+		const data = (await response.json()) as {
+			data: Record<string, { value: string; source: string }>;
+		};
+		assert.equal(data.data[setting.field]?.value, "");
+		assert.equal(data.data[setting.field]?.source, "missing");
+	}
+});
+
+test("timeout writes reject invalid payloads and missing conditions before any database mutation", async () => {
+	for (const setting of timeoutSettings) {
+		const f = fixture();
+		const path = `/admin/config/${setting.suffix}`;
+		assert.equal(
+			(
+				await f.request(path, {
+					method: "PUT",
+					headers: { "content-type": "application/json" },
+					body: JSON.stringify({ value: setting.raw }),
+				})
+			).status,
+			428,
+		);
+		const invalidValues = setting.suffix.endsWith("-ms")
+			? ["10ms", "1e3", "1.1", "-1", "2147483648", "9007199254740993"]
+			: [",,", "x".repeat(4097), "\ud800", "vip,\udfff"];
+		for (const value of [...invalidValues, null, 0, [], {}])
+			assert.equal((await f.request(path, jsonPut(value))).status, 400);
+		for (const body of [
+			{ value: setting.raw, extra: true },
+			{ key: setting.key, value: setting.raw },
+			[],
+		]) {
+			assert.equal(
+				(
+					await f.request(path, {
+						...jsonPut(setting.raw),
+						body: JSON.stringify(body),
+					})
+				).status,
+				400,
+			);
+		}
+		assert.deepEqual(f.writes, []);
+		assert.deepEqual(f.auditWrites, []);
+		assert.deepEqual(f.reads, []);
+	}
+});
+
+test("timeout Console writes require the exact expected subject and do not leak storage failures", async () => {
+	for (const setting of timeoutSettings) {
+		const path = `/admin/config/${setting.suffix}`;
+		const f = fixture({
+			principal: {
+				type: "console",
+				id: "console:cinaauth:fixture-subject",
+				username: "cinaauth:fixture-subject",
+			},
+		});
+		assert.equal((await f.request(path, jsonPut(setting.raw))).status, 428);
+		const init = jsonPut(setting.raw);
+		for (const subject of ["other-subject", "fixture-subject"]) {
+			const response = await f.request(path, {
+				...init,
+				headers: {
+					...init.headers,
+					"X-CinaToken-Expected-Console-Subject": encodeURIComponent(subject),
+				},
+			});
+			assert.equal(response.status, subject === "fixture-subject" ? 200 : 403);
+		}
+		assert.equal(f.writes.length, 1);
+		assert.equal(f.auditWrites[0]?.actorId, "console:cinaauth:fixture-subject");
+		const failed = fixture({ failWrite: true });
+		const response = await failed.request(path, jsonPut(setting.raw));
+		assert.equal(response.status, 500);
+		assert.equal(response.headers.get("cache-control"), "private, no-store");
+		assert.deepEqual(await response.json(), {
+			success: false,
+			message: "Failed to update configuration",
+		});
+	}
+});
+
+test("legacy generic timeout writers share input validation and can opt into required revision protection", async () => {
+	for (const setting of timeoutSettings) {
+		const body = { key: setting.key, value: setting.raw };
+		const init = {
+			method: "PUT",
+			headers: { "content-type": "application/json" },
+			body: JSON.stringify(body),
+		};
+		const legacy = fixture();
+		assert.equal((await legacy.request("/admin/config", init)).status, 200);
+		assert.deepEqual(legacy.writes, [
+			{ key: setting.key, value: setting.value },
+		]);
+		const guarded = fixture({ requireRevision: "true" });
+		assert.equal((await guarded.request("/admin/config", init)).status, 428);
+		assert.deepEqual(guarded.writes, []);
+		const response = await guarded.request("/admin/config", {
+			...init,
+			headers: { ...init.headers, "If-None-Match": "*" },
+		});
+		assert.equal(response.status, 200);
+		assert.deepEqual(guarded.writes, [
+			{ key: setting.key, value: setting.value },
+		]);
+		const invalidValue = setting.suffix.endsWith("-ms") ? "2147483648" : ",,";
+		assert.equal(
+			(
+				await legacy.request("/admin/config", {
+					...init,
+					body: JSON.stringify({ ...body, value: invalidValue }),
+				})
+			).status,
+			400,
+		);
+		assert.equal(legacy.writes.length, 1);
+	}
 });

@@ -152,12 +152,19 @@ export async function getMcpServer(repos: GatewayRepositories, id: string) {
 	const items = await repos.mcpServers.listItems(id);
 	return {
 		server: stripSecrets(server),
-		items: items.map((item) => ({
-			...item,
-			pricing: item.pricing ? storedPricing(item.pricing) : null,
-			definition: safeJson(item.definition),
-			pendingDefinition: item.pendingDefinition ? safeJson(item.pendingDefinition) : null,
-		})),
+		items: items.map((item) => {
+			const pricing = item.pricing === null ? null : storedPricing(item.pricing);
+			let pricingState: 'inherit' | 'override' | 'invalid' = 'invalid';
+			if (item.pricing === null) pricingState = 'inherit';
+			else if (pricing) pricingState = 'override';
+			return {
+				...item,
+				pricing,
+				pricingState,
+				definition: safeJson(item.definition),
+				pendingDefinition: item.pendingDefinition ? safeJson(item.pendingDefinition) : null,
+			};
+		}),
 	};
 }
 

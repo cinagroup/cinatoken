@@ -11,12 +11,12 @@ import {
 	DialogTitle,
 } from '../../../components/ui/dialog'
 import type { AdminModel } from '../model-contracts'
+import { RouteWriteFeedback } from './RouteWriteFeedback'
 import {
 	modelPolicyStrategy,
 	routeStrategies,
 	type RoutePoolView,
 } from './route-domain'
-import { routeErrorKey } from './route-errors'
 
 const prefix = 'cinatoken.adminRoutes.'
 const labels: Record<string, string> = {
@@ -33,6 +33,8 @@ export function RouteModelPolicyDialog(props: {
 	disabled: boolean
 	pending: boolean
 	error: unknown
+	canResume: boolean
+	onResume: () => void
 	onSave: (
 		protocol: string | null,
 		operation: string | null,
@@ -89,7 +91,7 @@ export function RouteModelPolicyDialog(props: {
 			<DialogContent
 				initialFocus={title}
 				showCloseButton={false}
-				className='sm:max-w-xl'
+				className='max-h-[90vh] overflow-y-auto sm:max-w-xl'
 			>
 				<DialogHeader>
 					<DialogTitle ref={title} tabIndex={-1}>
@@ -103,11 +105,6 @@ export function RouteModelPolicyDialog(props: {
 				<p className='text-muted-foreground text-sm'>
 					{t(prefix + 'modelPolicyHelp')}
 				</p>
-				{props.error != null && (
-					<p role='alert' className='text-destructive text-sm'>
-						{t(routeErrorKey(props.error))}
-					</p>
-				)}
 				<label className='space-y-1 text-sm'>
 					{t(prefix + 'protocolRule')}
 					{options(protocol, setProtocol)}
@@ -118,6 +115,11 @@ export function RouteModelPolicyDialog(props: {
 						{options(operation, setOperation)}
 					</label>
 				)}
+				<RouteWriteFeedback
+					error={props.error}
+					canResume={props.canResume}
+					onResume={props.onResume}
+				/>
 				<DialogFooter>
 					<Button
 						type='button'

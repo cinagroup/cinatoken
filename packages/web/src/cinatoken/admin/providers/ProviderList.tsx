@@ -56,7 +56,7 @@ export function ProviderList(props: {
 					</CardHeader>
 					<CardContent className='space-y-4'>
 						<div className='flex flex-wrap gap-2'>
-							<Badge variant='outline'>{row.vendor_key}</Badge>
+							<Badge variant='outline'>{row.kind || row.vendor_key}</Badge>
 							{row.has_pending_key && (
 								<Badge variant='outline'>{t(prefix + 'pending')}</Badge>
 							)}

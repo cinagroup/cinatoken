@@ -1,5 +1,11 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
 const strings = {
+	editorOpen: [
+		'An editor is open. Finish or close it before reviewing the result here.',
+		'编辑器仍处于打开状态。请先在其中完成操作或关闭编辑器，再从此处核对结果。',
+		'エディターが開いています。操作を完了するかエディターを閉じてから、ここで結果を確認してください。',
+		'편집기가 열려 있습니다. 작업을 완료하거나 편집기를 닫은 후 여기에서 결과를 확인하세요.',
+	],
 	writing: [
 		'A write is in progress. Recovery is available only after it finishes.',
 		'写入正在执行，结束后才能核对恢复。',

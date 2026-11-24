@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { CinaTokenApiError } from '../../api'
 import { RequestLogTable } from './RequestLogTable'
+import type { RequestLogSearch } from './request-log-domain'
 import type { useRequestLogs } from './use-request-logs'
 
 const prefix = 'cinatoken.adminRequestLogs.'
@@ -15,10 +16,27 @@ function errorKey(error: unknown): string {
 }
 export function RequestLogsContent(props: {
 	state: ReturnType<typeof useRequestLogs>
+	search?: RequestLogSearch
 	expanded: string | null
 	onExpand: (id: string) => void
 }) {
 	const { t, i18n } = useTranslation()
+	const search = props.search ?? props.state.effectiveSearch
+	const invalidPrefix = search?.invalidModelPrefix === true
+	const invalidProviders = search?.invalidProviderIds === true
+	const invalidHost =
+		search?.invalidIngressHost === true || (!invalidPrefix && !invalidProviders)
+	if (props.state.invalidFilter)
+		return (
+			<section
+				role='alert'
+				className='border-destructive/40 bg-destructive/5 rounded-xl border p-5'
+			>
+				{invalidHost && <p>{t(prefix + 'invalidFilter')}</p>}
+				{invalidPrefix && <p>{t(prefix + 'invalidModelPrefixFilter')}</p>}
+				{invalidProviders && <p>{t(prefix + 'invalidProviderIdsFilter')}</p>}
+			</section>
+		)
 	if (props.state.logsBlocked || props.state.error)
 		return (
 			<section

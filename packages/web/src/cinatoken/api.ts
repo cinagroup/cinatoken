@@ -41,11 +41,18 @@ type PublicServerErrorCode =
 	| 'user_mismatch'
 	| 'invalid_user_precondition'
 	| 'invalid_workspace_precondition'
+	| 'invalid_console_subject_precondition'
+	| 'console_subject_required'
+	| 'console_subject_mismatch'
+	| 'invalid_admin_resource_id'
 	| 'shared_key_earning_history_immutable'
 	| 'withdrawal_quote_changed'
 	| 'withdrawal_dispatch_unconfirmed'
 	| 'model_route_policy_conflict'
 	| 'model_route_policy_precondition_required'
+	| 'invalid_data_policy_precondition'
+	| 'data_policy_precondition_required'
+	| 'route_data_policy_write_conflict'
 
 function publicServerCode(value: unknown): PublicServerErrorCode | null {
 	if (typeof value !== 'object' || value === null || !('code' in value))
@@ -55,11 +62,18 @@ function publicServerCode(value: unknown): PublicServerErrorCode | null {
 		value.code === 'user_mismatch' ||
 		value.code === 'invalid_user_precondition' ||
 		value.code === 'invalid_workspace_precondition' ||
+		value.code === 'invalid_console_subject_precondition' ||
+		value.code === 'console_subject_required' ||
+		value.code === 'console_subject_mismatch' ||
+		value.code === 'invalid_admin_resource_id' ||
 		value.code === 'shared_key_earning_history_immutable' ||
 		value.code === 'withdrawal_quote_changed' ||
 		value.code === 'withdrawal_dispatch_unconfirmed' ||
 		value.code === 'model_route_policy_conflict' ||
-		value.code === 'model_route_policy_precondition_required'
+		value.code === 'model_route_policy_precondition_required' ||
+		value.code === 'invalid_data_policy_precondition' ||
+		value.code === 'data_policy_precondition_required' ||
+		value.code === 'route_data_policy_write_conflict'
 	)
 		return value.code
 	return null

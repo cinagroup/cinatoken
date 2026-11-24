@@ -10,6 +10,7 @@ import { validateChainOperationsSearch } from './admin/chain-operations/chain-op
 import { validateDataPolicySearch } from './admin/data-policies/data-policy-search'
 import { validateEndpointSearch } from './admin/endpoint-search'
 import { validateGatewayKeyRouteSearch } from './admin/gateway-keys/gateway-key-search'
+import { validateMcpSearch } from './admin/mcp/mcp-domain'
 import { validateModelSearch } from './admin/model-search'
 import { validatePlaygroundSearch } from './admin/playground/playground-contracts'
 import { validateProviderSearch } from './admin/provider-search'
@@ -326,6 +327,15 @@ const adminSimulatorRoute = createRoute({
 		'AdminSimulatorRoute'
 	),
 })
+const adminMcpRoute = createRoute({
+	getParentRoute: () => adminRoute,
+	path: '/mcp',
+	validateSearch: validateMcpSearch,
+	component: lazyRouteComponent(
+		() => import('./admin/AdminMcpRoute'),
+		'AdminMcpRoute'
+	),
+})
 const adminToolInvocationsRoute = createRoute({
 	getParentRoute: () => adminRoute,
 	path: '/tools/invocations',
@@ -461,6 +471,7 @@ export const router = createRouter({
 			adminSharedKeysRoute,
 			adminWithdrawalsRoute,
 			adminNftMintsRoute,
+			adminMcpRoute,
 			adminToolInvocationsRoute,
 			adminToolsRoute,
 			adminPlaygroundRoute,

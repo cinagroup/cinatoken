@@ -132,10 +132,10 @@ const strings = {
 		'엔드포인트 응답을 검증할 수 없습니다. 새로 고침하세요.',
 	],
 	conflict: [
-		'Endpoint or route state changed. Reload, review the latest state, then retry deliberately.',
-		'入口或路由状态已变化。请重新加载、核对最新状态后再操作。',
-		'エンドポイントまたはルートが変更されました。再読み込みして状態を確認してください。',
-		'엔드포인트 또는 경로 상태가 변경되었습니다. 새로 고침해 확인하세요.',
+		'This model, provider and tag may already exist, or the endpoint or route state changed. Review and resolve the conflict before retrying.',
+		'此模型、供应商和标签组合可能已存在，或入口／路由状态已变化。请核对并解决冲突后再试。',
+		'モデル・プロバイダー・タグの組み合わせが既に存在するか、エンドポイントまたはルートが変更されています。競合を確認して解消してください。',
+		'모델, 공급자, 태그 조합이 이미 있거나 엔드포인트 또는 경로가 변경되었습니다. 충돌을 확인하고 해결하세요.',
 	],
 	invalidInput: [
 		'Check endpoint fields and capability evidence before retrying.',
@@ -156,11 +156,24 @@ const strings = {
 		'엔드포인트 요청을 완료할 수 없습니다.',
 	],
 	writeUnknown: [
-		'The write result is unconfirmed. Reload the server state before another write; do not repeat this operation blindly.',
-		'写入结果尚未确认。再次写入前请重新加载服务端状态，不要盲目重试。',
-		'書き込み結果が未確認です。再操作する前にサーバーの状態を読み込み直してください。',
-		'쓰기 결과를 확인할 수 없습니다. 다시 쓰기 전에 서버 상태를 새로 고침하세요.',
+		'The write result is unknown and further writes are locked. Review the unknown result before continuing; reloading alone does not unlock writes.',
+		'写入结果未知，后续写入已锁定。请先核对未知结果；仅刷新页面不会解除写保护。',
+		'書き込み結果が不明なため、以降の書き込みをロックしました。結果を確認してください。再読み込みだけでは解除されません。',
+		'쓰기 결과를 알 수 없어 이후 쓰기가 잠겼습니다. 먼저 알 수 없는 결과를 확인하세요. 새로 고침만으로 잠금이 해제되지 않습니다.',
 	],
+	writeRejected: [
+		'The server rejected this operation. Review the latest server state before starting another operation.',
+		'服务器拒绝了此次操作。请重新读取并核对最新状态后再操作。',
+		'サーバーが操作を拒否しました。最新の状態を読み直して確認してから、次の操作を行ってください。',
+		'서버가 작업을 거부했습니다. 최신 서버 상태를 다시 읽고 확인한 뒤 다음 작업을 시작하세요.',
+	],
+	rejectedDraftHint: [
+		'The server rejected this change. Your draft is preserved. Continue editing to review and correct it before saving again.',
+		'服务器拒绝了此次更改，草稿已保留。请继续编辑，核对并修改后再次保存。',
+		'サーバーが変更を拒否しました。下書きは保持されています。編集を続けて内容を確認・修正してから再保存してください。',
+		'서버가 변경을 거부했습니다. 초안은 유지됩니다. 편집을 계속해 내용을 확인하고 수정한 뒤 다시 저장하세요.',
+	],
+	resumeEditing: ['Continue editing', '继续编辑', '編集を続ける', '편집 계속'],
 	saved: [
 		'Server rows have been refreshed to confirm the current state.',
 		'已重新加载服务端数据确认当前状态。',

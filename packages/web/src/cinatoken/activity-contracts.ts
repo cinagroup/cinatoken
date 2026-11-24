@@ -6,6 +6,9 @@ const nullableText = z.string().nullable()
 const identifier = z.string().min(1)
 const currency = z.string().regex(/^[A-Z]{3}$/u)
 
+// Keep authoritative main-unit balances; rescaling can lose a micro-unit near the safe-integer limit.
+const walletAmount = amount.max(Number.MAX_SAFE_INTEGER / 1_000_000)
+
 function hasNoControls(value: string): boolean {
 	return Array.from(value).every((character) => {
 		const code = character.charCodeAt(0)
@@ -96,6 +99,7 @@ export const activityLogSchema = z
 		outputTokens: count,
 		totalTokens: count,
 		chargedCost: amount,
+		chargedWalletCost: amount.nullable().optional(),
 		latencyMs: amount.nullable(),
 		billingKind: nullableText,
 		inputImageCount: count,
@@ -118,9 +122,32 @@ export const activityBudgetSchema = z
 		budgetRemaining: amount.nullable(),
 		budgetPeriod: z.string(),
 		budgetResetAt: timestamp.nullable(),
+		walletGranted: walletAmount.nullable().optional(),
+		walletSpent: walletAmount.nullable().optional(),
+		walletRemaining: walletAmount.nullable().optional(),
+		totalRemaining: walletAmount.nullable().optional(),
 	})
 	.strict()
 	.refine((value) => {
+		const extension = [
+			value.walletGranted,
+			value.walletSpent,
+			value.walletRemaining,
+			value.totalRemaining,
+		]
+		const hasWallet = extension.some((field) => field !== undefined)
+		if (hasWallet) {
+			if (extension.some((field) => field === undefined)) return false
+			if (
+				value.status !== 'unavailable' &&
+				extension.slice(0, 3).some((field) => field === null)
+			)
+				return false
+			if (value.status === 'finite' && value.totalRemaining === null)
+				return false
+			if (value.status !== 'finite' && value.totalRemaining !== null)
+				return false
+		}
 		if (
 			value.budgetReserved !==
 			(value.budgetReservedMicros === null

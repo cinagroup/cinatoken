@@ -3,7 +3,7 @@ import { userBudgetSettlementPools } from '../user-budget-reservation-utils';
  * MySQL：关键写路径（Drizzle 事务），供 `storage/critical-write-paths` 调度。
  */
 import type { ResultSetHeader } from 'mysql2/promise';
-import { and, eq, inArray, sql } from 'drizzle-orm';
+import { and, eq, getTableColumns, inArray, sql } from 'drizzle-orm';
 import type { InsertUserAuditLogParams } from '../user-audit-logs-types';
 import type { InsertUserBudgetAuditLogParams } from '../user-budget-audit-params';
 import type { InsertKeyParams } from '../api-keys-types';
@@ -23,11 +23,23 @@ import {
 	type UserBudgetSettlement,
 } from '../user-budget-reservation-types';
 import { toPublicModelDailyStatsDelta } from '../public-model-daily-stats';
-import type { GrantWalletCreditParams, GrantWalletCreditResult } from '../wallet-credit';
+import type {
+	GrantWalletCreditParams,
+	GrantWalletCreditResult,
+	ReadWalletCreditReceiptParams,
+	ReadWalletCreditReceiptResult,
+} from '../wallet-credit';
 import {
 	buildWalletCreditAuditRow,
 	mapStorageUserToRow,
-	walletCreditResult,
+	walletCreditReceiptResult,
+	walletCreditStoredAmount,
+	walletCreditSnapshot,
+	assertWalletCreditParams,
+	assertWalletCreditReference,
+	readWalletCreditAuditReceipt,
+	requireMatchingWalletCreditReceipt,
+	WalletCreditConcurrentMutationError,
 	WalletCreditUserNotFoundError,
 } from '../wallet-credit';
 import type { UserBudgetSnapshot } from '../../storage/critical-write-paths';
@@ -37,6 +49,7 @@ import {
 	userBudgetAuditToInsertRowForUsageCharge,
 } from '../user-budget-audit-mapper';
 import { toUserAuditLogDrizzleInsert } from '../user-audit-drizzle-insert';
+import { snapshotToJson, userRowToSnapshot } from '../user-audit-snapshot';
 import { roundGatewayMoney } from '../../lib/money-precision';
 import type { MySqlDatabaseClient } from '../../storage/database-client';
 import { nowIso, parseMoney } from '../../storage/critical-write-paths-utils';
@@ -933,49 +946,95 @@ export async function insertRequestUsageAndChargeTxMy(
 	});
 }
 
+// UNIX_TIMESTAMP reads a TIMESTAMP as an absolute instant, independently of
+// pooled session time_zone. Never infer UTC from mysql2's zone-less string.
+const walletCreditAuditProjectionMy = {
+	...getTableColumns(myUserAuditLogsTable),
+	createdAtUnixMicros: sql<string>`CAST(UNIX_TIMESTAMP(${myUserAuditLogsTable.createdAt}) * 1000000 AS CHAR)`,
+};
+
+export async function readWalletCreditReceiptMy(
+	client: MySqlDatabaseClient,
+	params: ReadWalletCreditReceiptParams,
+): Promise<ReadWalletCreditReceiptResult> {
+	assertWalletCreditReference(params.externalRef);
+	const rows = await client.drizzle
+		.select(walletCreditAuditProjectionMy)
+		.from(myUserAuditLogsTable)
+		.where(and(eq(myUserAuditLogsTable.userId, params.userId), eq(myUserAuditLogsTable.dedupKey, params.externalRef)))
+		.limit(1);
+	return readWalletCreditAuditReceipt(rows[0], params);
+}
+
 export async function grantWalletCreditWithAuditTxMy(
 	client: MySqlDatabaseClient,
 	params: GrantWalletCreditParams,
 ): Promise<GrantWalletCreditResult> {
-	const rows = await client.drizzle.select().from(myUsersTable).where(eq(myUsersTable.id, params.userId)).limit(1);
-	if (!rows[0]) {
-		throw new WalletCreditUserNotFoundError(params.userId);
-	}
-	const auditId = crypto.randomUUID();
-	const { audit } = buildWalletCreditAuditRow(mapStorageUserToRow(rows[0]), params, auditId);
-	const amount = roundGatewayMoney(params.amount);
-	const now = nowIso();
-	const values = toUserAuditLogDrizzleInsert(audit, now);
-	let applied = false;
-	await client.drizzle.transaction(async (tx) => {
-		await tx
-			.insert(myUserAuditLogsTable)
-			.values(values)
-			.onDuplicateKeyUpdate({
-				set: { id: sql`id` },
-			});
+	assertWalletCreditParams(params);
+	return client.drizzle.transaction(async (tx) => {
+		// Lock before reading either the balances or the dedup record. All wallet credit
+		// callers use this same lock order, including an exact replay under MySQL RR.
+		const users = await tx.select().from(myUsersTable).where(eq(myUsersTable.id, params.userId)).limit(1).for('update');
+		if (!users[0]) throw new WalletCreditUserNotFoundError(params.userId);
+		const existing = await tx
+			.select(walletCreditAuditProjectionMy)
+			.from(myUserAuditLogsTable)
+			.where(and(eq(myUserAuditLogsTable.userId, params.userId), eq(myUserAuditLogsTable.dedupKey, params.externalRef)))
+			.limit(1)
+			.for('update');
+		if (existing[0])
+			return walletCreditReceiptResult(
+				'duplicate',
+				requireMatchingWalletCreditReceipt(readWalletCreditAuditReceipt(existing[0], params), params),
+				walletCreditSnapshot(
+					walletCreditStoredAmount(users[0].walletGranted),
+					walletCreditStoredAmount(users[0].walletSpent),
+				),
+			);
+		const auditId = crypto.randomUUID(),
+			now = nowIso();
+		const epochMillis = Date.parse(now);
+		const epochSeconds = `${Math.floor(epochMillis / 1000)}.${String(epochMillis % 1000).padStart(3, '0')}`;
+		const mysqlNow = sql`FROM_UNIXTIME(${epochSeconds})`;
+		const { audit, afterGranted, receipt } = buildWalletCreditAuditRow(
+			mapStorageUserToRow(users[0]),
+			params,
+			auditId,
+			now,
+		);
+		// A normal INSERT must fail/roll back on all unexpected constraint errors.
+		await tx.insert(myUserAuditLogsTable).values({ ...toUserAuditLogDrizzleInsert(audit, now), createdAt: mysqlNow });
 		const [header] = (await tx
 			.update(myUsersTable)
-			.set({
-				walletGranted: sql`${myUsersTable.walletGranted} + ${String(amount)}`,
-				updatedAt: now,
-			})
-			.where(
-				and(eq(myUsersTable.id, params.userId), sql`EXISTS (SELECT 1 FROM user_audit_logs WHERE id = ${auditId})`),
-			)) as unknown as [ResultSetHeader, unknown];
-		applied = Boolean(header?.affectedRows);
+			.set({ walletGranted: String(afterGranted), updatedAt: mysqlNow })
+			.where(eq(myUsersTable.id, params.userId))) as unknown as [ResultSetHeader, unknown];
+		if (header?.affectedRows !== 1) throw new WalletCreditConcurrentMutationError();
+		const actual = await tx
+			.select()
+			.from(myUsersTable)
+			.where(eq(myUsersTable.id, params.userId))
+			.limit(1)
+			.for('update');
+		if (
+			actual.length !== 1 ||
+			walletCreditStoredAmount(actual[0].walletGranted) !== receipt.after.walletGranted ||
+			walletCreditStoredAmount(actual[0].walletSpent) !== receipt.after.walletSpent ||
+			snapshotToJson(userRowToSnapshot(mapStorageUserToRow(actual[0]))) !== audit.afterUserSnapshot
+		)
+			throw new WalletCreditConcurrentMutationError();
+		const stored = await tx
+			.select(walletCreditAuditProjectionMy)
+			.from(myUserAuditLogsTable)
+			.where(eq(myUserAuditLogsTable.id, auditId))
+			.limit(1);
+		const verified = requireMatchingWalletCreditReceipt(readWalletCreditAuditReceipt(stored[0], params), params);
+		return walletCreditReceiptResult(
+			'applied',
+			verified,
+			walletCreditSnapshot(
+				walletCreditStoredAmount(actual[0].walletGranted),
+				walletCreditStoredAmount(actual[0].walletSpent),
+			),
+		);
 	});
-	const after = await client.drizzle
-		.select({
-			walletGranted: myUsersTable.walletGranted,
-			walletSpent: myUsersTable.walletSpent,
-		})
-		.from(myUsersTable)
-		.where(eq(myUsersTable.id, params.userId))
-		.limit(1);
-	return walletCreditResult(
-		applied ? 'applied' : 'duplicate',
-		parseMoney(after[0]?.walletGranted),
-		parseMoney(after[0]?.walletSpent),
-	);
 }

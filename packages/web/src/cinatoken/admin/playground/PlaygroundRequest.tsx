@@ -1,5 +1,6 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
 import { useTranslation } from 'react-i18next'
+import { Alert, AlertDescription } from '../../../components/ui/alert'
 import { Button } from '../../../components/ui/button'
 import { playgroundCode, playgroundControl } from './PlaygroundSetup'
 import type { ImageOperation } from './browser-domain/image-generations'
@@ -20,6 +21,7 @@ import {
 	isRealtimeRoute,
 	llmFamily,
 	needsAudioFile,
+	playgroundRouteSupported,
 	playgroundPrefix as prefix,
 } from './playground-domain'
 import type { PlaygroundResult } from './use-playground-run'
@@ -55,6 +57,10 @@ export function PlaygroundRequest(props: PlaygroundRequestProps) {
 		asr =
 			props.route?.upstream_operation.startsWith('audio.transcriptions') ??
 			false
+	const supported =
+		props.kind === 'tool' ||
+		(!!props.route &&
+			playgroundRouteSupported(props.route, props.kind, props.imageOperation))
 	const hint = props.route
 		? `${props.route.model_id} ${props.route.provider_model_name}`.toLowerCase()
 		: ''
@@ -73,6 +79,11 @@ export function PlaygroundRequest(props: PlaygroundRequestProps) {
 				? 'audioTranscriptionsDashScopeHint'
 				: 'audioTranscriptionsHint'
 	if (realtime) audioHint = 'audioRealtimeDashScopeHint'
+	if (props.route?.upstream_protocol === 'minimax')
+		audioHint = 'nativeMediaHint'
+	let imageHint =
+		props.imageOperation === 'edits' ? 'imageEditsHint' : 'imageGenerationsHint'
+	if (props.route?.upstream_protocol !== 'openai') imageHint = 'nativeMediaHint'
 	return (
 		<section className='min-w-0 space-y-4 rounded-xl border p-4'>
 			<div className='flex flex-wrap items-center justify-between gap-2'>
@@ -89,7 +100,7 @@ export function PlaygroundRequest(props: PlaygroundRequestProps) {
 					<Button
 						size='sm'
 						variant='outline'
-						disabled={props.busy}
+						disabled={props.busy || !supported}
 						onClick={props.onPreview}
 					>
 						{t(prefix + 'preview')}
@@ -97,7 +108,9 @@ export function PlaygroundRequest(props: PlaygroundRequestProps) {
 					<Button
 						size='sm'
 						disabled={
-							props.busy || (realtime && !props.context.realtime_supported)
+							props.busy ||
+							!supported ||
+							(realtime && !props.context.realtime_supported)
 						}
 						onClick={props.onSend}
 					>
@@ -145,12 +158,24 @@ export function PlaygroundRequest(props: PlaygroundRequestProps) {
 					) : null}
 				</div>
 			) : null}
+			{props.route && !supported ? (
+				<Alert variant='destructive'>
+					<AlertDescription>{t(prefix + 'unsupportedRoute')}</AlertDescription>
+				</Alert>
+			) : null}
+			{props.route &&
+			props.kind !== 'llm' &&
+			props.route.upstream_protocol !== 'openai' ? (
+				<p className='text-muted-foreground text-xs'>
+					{t(prefix + 'nativeMediaHint')}
+				</p>
+			) : null}
 			{props.dirty ? (
 				<p role='status' className='text-muted-foreground text-sm'>
 					{t(prefix + 'bodyDirtyHintLlm')}
 				</p>
 			) : null}
-			{props.route?.upstream_protocol === 'gemini' ? (
+			{props.kind === 'llm' && props.route?.upstream_protocol === 'gemini' ? (
 				<label className='block space-y-1 text-sm'>
 					<span>{t(prefix + 'geminiAction')}</span>
 					<select
@@ -182,6 +207,10 @@ export function PlaygroundRequest(props: PlaygroundRequestProps) {
 									type='radio'
 									name='playground-image-operation'
 									checked={props.imageOperation === operation}
+									disabled={
+										operation === 'edits' &&
+										props.route?.upstream_protocol !== 'openai'
+									}
 									onChange={() => props.onImageOperation(operation)}
 								/>
 								{operation}
@@ -189,14 +218,10 @@ export function PlaygroundRequest(props: PlaygroundRequestProps) {
 						))}
 					</fieldset>
 					<p className='text-muted-foreground text-xs'>
-						{t(
-							prefix +
-								(props.imageOperation === 'edits'
-									? 'imageEditsHint'
-									: 'imageGenerationsHint')
-						)}
+						{t(prefix + imageHint)}
 					</p>
-					{props.imageOperation === 'edits' ? (
+					{props.imageOperation === 'edits' &&
+					props.route?.upstream_protocol === 'openai' ? (
 						<label className='block space-y-1 text-sm'>
 							<span>{t(prefix + 'referenceImages')}</span>
 							<input

@@ -1,31 +1,29 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
 import { Fragment } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { ModelAnalyticsRow } from '../models/model-analytics-contracts'
 import {
-	formatAnalyticsMoney,
-	formatTokens,
 	type SortDirection,
 	type TokenMode,
 } from '../models/model-analytics-domain'
+import { UserKeyDetails } from './UserKeyDetails'
+import { UserMetricCells } from './UserMetricCells'
 import { UserModelDetails } from './UserModelDetails'
 import type { UserAnalyticsRow } from './user-analytics-contracts'
+import { userLogHref, type UserSortKey } from './user-analytics-domain'
+import type { UserAnalyticsDetailState } from './user-analytics-drilldowns'
 import {
-	formatLastActive,
-	userLogHref,
-	userSortKeys,
-	type UserSortKey,
-} from './user-analytics-domain'
+	userVisibleColumns,
+	type UserAnalyticsView,
+} from './user-analytics-view'
 
 const prefix = 'cinatoken.adminUserAnalytics.'
 
 export function UserAnalyticsTable(props: {
 	rows: UserAnalyticsRow[]
 	range: { startUtc: string; endUtc: string }
-	active: { email: string } | null
-	detail: ModelAnalyticsRow[] | undefined
-	detailLoading: boolean
-	detailError: boolean
+	details: ReadonlyMap<string, UserAnalyticsDetailState>
+	view: UserAnalyticsView
+	emptyMessage?: string
 	logsAllowed: boolean
 	currency: 'USD' | 'CNY' | null
 	timezone: string | null
@@ -34,16 +32,11 @@ export function UserAnalyticsTable(props: {
 	sortKey: UserSortKey
 	sortDirection: SortDirection
 	onSort: (key: UserSortKey) => void
-	onToggle: (row: UserAnalyticsRow) => void
-	onRetry: () => void
+	onToggle: (row: UserAnalyticsRow, kind?: 'models' | 'keys') => void
 }) {
 	const { t } = useTranslation()
-	function money(value: number | undefined): string {
-		return (
-			formatAnalyticsMoney(value, props.currency, props.locale) ??
-			(props.currency ? '—' : t(prefix + 'hidden'))
-		)
-	}
+	const columns = userVisibleColumns(props.view)
+
 	return (
 		<div
 			className='bg-card overflow-x-auto rounded-xl border'
@@ -51,10 +44,12 @@ export function UserAnalyticsTable(props: {
 			aria-label={t(prefix + 'table')}
 			tabIndex={0}
 		>
-			<table className='w-full min-w-[1400px] text-left text-sm'>
+			<table
+				className={`w-full text-left text-sm ${props.view === 'all' ? 'min-w-[1400px]' : 'min-w-[800px]'}`}
+			>
 				<thead className='bg-muted/60 text-muted-foreground border-b text-xs'>
 					<tr>
-						{userSortKeys.map((key) => {
+						{columns.map((key) => {
 							let order: 'ascending' | 'descending' | undefined
 							let arrow = ''
 							if (props.sortKey === key) {
@@ -83,22 +78,22 @@ export function UserAnalyticsTable(props: {
 				</thead>
 				<tbody className='divide-y'>
 					{props.rows.map((row) => {
-						const expanded = props.active?.email === row.user_email
+						const detail = props.details.get(row.user_email)
+						const expanded = Boolean(detail)
 						const budgetRate = row.budget_usage_rate
 						const critical = budgetRate !== null && budgetRate >= 100
 						const high = budgetRate !== null && budgetRate >= 80
-						const budgetClass = critical
-							? 'font-semibold text-red-700 dark:text-red-400'
-							: high
-								? 'font-medium text-amber-700 dark:text-amber-400'
-								: ''
-						const rowClass = expanded
-							? 'bg-primary/5'
-							: critical
-								? 'bg-red-500/5 hover:bg-red-500/10'
-								: high
-									? 'bg-amber-500/5 hover:bg-amber-500/10'
-									: 'hover:bg-muted/30'
+						let budgetClass = '',
+							rowClass = 'hover:bg-muted/30'
+						if (high) {
+							budgetClass = 'font-medium text-amber-700 dark:text-amber-400'
+							rowClass = 'bg-amber-500/5 hover:bg-amber-500/10'
+						}
+						if (critical) {
+							budgetClass = 'font-semibold text-red-700 dark:text-red-400'
+							rowClass = 'bg-red-500/5 hover:bg-red-500/10'
+						}
+						if (expanded) rowClass = 'bg-primary/5'
 						return (
 							<Fragment key={row.user_email}>
 								<tr className={rowClass}>
@@ -107,11 +102,31 @@ export function UserAnalyticsTable(props: {
 											<button
 												type='button'
 												className='text-primary text-left font-medium break-all hover:underline'
-												aria-expanded={expanded}
+												aria-expanded={detail?.kind === 'models'}
+												aria-label={t(prefix + 'toggleUserModels', {
+													email: row.user_email,
+												})}
 												onClick={() => props.onToggle(row)}
 											>
-												{expanded ? '▾' : '▸'} {row.user_email}
+												{detail?.kind === 'models' ? '▾' : '▸'} {row.user_email}
 											</button>
+											<button
+												type='button'
+												className='text-primary disabled:text-muted-foreground text-xs underline disabled:no-underline'
+												disabled={!row.user_id}
+												aria-expanded={detail?.kind === 'keys'}
+												aria-label={t(prefix + 'toggleUserKeys', {
+													email: row.user_email,
+												})}
+												onClick={() => props.onToggle(row, 'keys')}
+											>
+												{t(prefix + 'viewKeys')}
+											</button>
+											{!row.user_id && (
+												<span className='text-muted-foreground text-xs'>
+													{t(prefix + 'keysUnavailable')}
+												</span>
+											)}
 											{props.logsAllowed && (
 												<a
 													className='text-muted-foreground hover:text-primary text-xs underline'
@@ -125,67 +140,47 @@ export function UserAnalyticsTable(props: {
 											)}
 										</div>
 									</td>
-									<td className='px-3 py-3 tabular-nums'>
-										{new Intl.NumberFormat(props.locale).format(
-											row.request_count
-										)}
-									</td>
-									<td className='px-3 py-3 tabular-nums'>
-										{formatTokens(
-											row.input_tokens,
-											props.tokenMode,
-											props.locale
-										)}
-									</td>
-									<td className='px-3 py-3 tabular-nums'>
-										{formatTokens(
-											row.output_tokens,
-											props.tokenMode,
-											props.locale
-										)}
-									</td>
-									<td className='px-3 py-3 tabular-nums'>
-										{money(row.standard_cost)}
-									</td>
-									<td className='px-3 py-3 tabular-nums'>
-										{money(row.charged_cost)}
-									</td>
-									<td className='px-3 py-3 tabular-nums'>
-										{money(row.metered_cost)}
-									</td>
-									<td className='px-3 py-3 tabular-nums'>
-										{new Intl.NumberFormat(props.locale).format(
-											row.distinct_models
-										)}
-									</td>
-									<td className='px-3 py-3 whitespace-nowrap'>
-										{formatLastActive(
-											row.last_active_at,
-											props.timezone,
-											props.locale
-										) ?? '—'}
-									</td>
-									<td className={`px-3 py-3 tabular-nums ${budgetClass}`}>
-										{budgetRate === null
-											? t(prefix + 'noBudgetRate')
-											: `${budgetRate.toFixed(1)}%`}
-									</td>
-									<td className='px-3 py-3 tabular-nums'>
-										{row.success_rate.toFixed(1)}%
-									</td>
+									<UserMetricCells
+										row={row}
+										columns={columns}
+										currency={props.currency}
+										timezone={props.timezone}
+										locale={props.locale}
+										tokenMode={props.tokenMode}
+										budgetClass={budgetClass}
+									/>
 								</tr>
-								{expanded && (
+								{detail?.kind === 'models' && (
 									<UserModelDetails
+										colSpan={columns.length}
 										row={row}
 										range={props.range}
-										detail={props.detail}
-										loading={props.detailLoading}
-										error={props.detailError}
+										detail={detail.state.rows}
+										loading={detail.state.loading}
+										error={detail.state.error}
 										logsAllowed={props.logsAllowed}
 										currency={props.currency}
 										locale={props.locale}
 										tokenMode={props.tokenMode}
-										onRetry={props.onRetry}
+										onRetry={detail.state.retry}
+									/>
+								)}
+								{detail?.kind === 'keys' && (
+									<UserKeyDetails
+										colSpan={columns.length}
+										row={row}
+										range={props.range}
+										keys={detail.state.rows}
+										loading={detail.state.loading}
+										error={detail.state.error}
+										models={detail.keyModels}
+										logsAllowed={props.logsAllowed}
+										currency={props.currency}
+										timezone={props.timezone}
+										locale={props.locale}
+										tokenMode={props.tokenMode}
+										onToggleKey={detail.toggleKey}
+										onRetry={detail.state.retry}
 									/>
 								)}
 							</Fragment>
@@ -195,7 +190,7 @@ export function UserAnalyticsTable(props: {
 			</table>
 			{props.rows.length === 0 && (
 				<p className='text-muted-foreground p-8 text-center'>
-					{t(prefix + 'noData')}
+					{props.emptyMessage ?? t(prefix + 'noData')}
 				</p>
 			)}
 		</div>

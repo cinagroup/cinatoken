@@ -6,6 +6,7 @@ import {
 	isDashScopeRealtimeOperation,
 	openDashScopeRealtimeClient,
 } from './browser-domain/dashscope-realtime-client'
+import { miniMaxSpeechAudioBlob } from './browser-domain/native-media'
 import { buildPlaygroundSubjectProtocols } from './browser-domain/playground-subject'
 import { RunOwner, type OwnedRun } from './browser-domain/run-owner'
 import { PlaygroundError, type PlaygroundApi } from './playground-api'
@@ -15,6 +16,7 @@ import type {
 	PlaygroundResponseMeta,
 	PlaygroundRoute,
 	PlaygroundUploads,
+	PlaygroundProtocol,
 } from './playground-contracts'
 import { PlaygroundInputFailure } from './playground-domain'
 
@@ -31,7 +33,7 @@ export type PlaygroundResult = {
 	meta: PlaygroundResponseMeta | null
 	audio: Blob | null
 	requestBody: string
-	protocol: 'openai' | 'anthropic' | 'gemini' | 'dashscope'
+	protocol: PlaygroundProtocol | 'unsupported'
 	kind: 'llm' | 'image' | 'audio' | 'rerank' | 'tool'
 }
 export function playgroundErrorKey(error: unknown): string {
@@ -187,11 +189,20 @@ export function usePlaygroundRun(
 			// Fresh permission/context read is abortable; the execute endpoint also checks the expected Console subject.
 			const fresh = await api.context(run.controller.signal)
 			if (!owner.owns(run) || !mounted.current) return
-			if (
-				'routeId' in envelope &&
-				!fresh.routes.some((route) => route.id === envelope.routeId)
-			)
-				throw new PlaygroundError('access')
+			if ('routeId' in envelope) {
+				const selected = fresh.routes.find(
+					(route) => route.id === envelope.routeId
+				)
+				if (!selected) throw new PlaygroundError('access')
+				if (
+					!input.route ||
+					selected.upstream_protocol === 'unsupported' ||
+					selected.upstream_protocol !== input.route?.upstream_protocol ||
+					selected.upstream_operation !== input.route.upstream_operation ||
+					selected.adapter !== input.route.adapter
+				)
+					throw new PlaygroundInputFailure('operationUnsupported')
+			}
 			setResult(initial)
 			const operation = input.route?.upstream_operation ?? ''
 			if (
@@ -297,7 +308,15 @@ export function usePlaygroundRun(
 				},
 			})
 			if (owner.owns(run) && mounted.current) {
-				setResult({ ...initial, ...value })
+				const nativeAudio =
+					input.kind === 'audio' &&
+					input.route?.upstream_protocol === 'minimax' &&
+					input.route.upstream_operation === 'audio.speech' &&
+					value.meta.status >= 200 &&
+					value.meta.status < 300
+						? miniMaxSpeechAudioBlob(value.raw)
+						: null
+				setResult({ ...initial, ...value, audio: value.audio ?? nativeAudio })
 				setBusy(false)
 				owner.finish(run)
 			}

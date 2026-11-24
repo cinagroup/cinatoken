@@ -10,7 +10,26 @@ const text = z.string().max(4_000)
 const id = text
 	.min(1)
 	.refine((value) => value.trim() === value && !/\p{Cc}/u.test(value))
-const protocol = z.enum(['openai', 'anthropic', 'gemini', 'dashscope'])
+export const PLAYGROUND_PROTOCOLS = [
+	'openai',
+	'anthropic',
+	'gemini',
+	'dashscope',
+	'minimax',
+	'volcengine',
+] as const
+export const playgroundProtocolSchema = z.enum(PLAYGROUND_PROTOCOLS)
+export type PlaygroundProtocol = z.infer<typeof playgroundProtocolSchema>
+// Preserve the rest of the catalog when a future protocol is present. It remains
+// visible as unsupported and cannot enter execution or a protocol-specific parser.
+const protocol = z
+	.string()
+	.min(1)
+	.max(200)
+	.transform((value) => {
+		const parsed = playgroundProtocolSchema.safeParse(value)
+		return parsed.success ? parsed.data : ('unsupported' as const)
+	})
 const positive = z.number().int().positive().safe()
 export const playgroundRouteSchema = z.object({
 	id,

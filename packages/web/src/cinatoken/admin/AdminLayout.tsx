@@ -13,6 +13,7 @@ const sections = [
 			['endpoints', '/admin/endpoints'],
 			['routes', '/admin/routes'],
 			['tools', '/admin/tools'],
+			['mcpServers', '/admin/mcp'],
 		],
 	},
 	{

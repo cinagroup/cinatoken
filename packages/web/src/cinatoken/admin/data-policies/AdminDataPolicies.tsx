@@ -6,6 +6,7 @@ import { Input } from '../../../components/ui/input'
 import { AdminDomainRecoveryDialog } from '../AdminDomainRecoveryDialog'
 import { DataPolicyAuditDialog } from './DataPolicyAuditDialog'
 import { DataPolicyEditorDialog } from './DataPolicyEditorDialog'
+import { DataPolicyWriteFeedback } from './DataPolicyWriteFeedback'
 import type { DataPolicyListRow } from './data-policy-contracts'
 import { dataPolicyErrorKey } from './data-policy-errors'
 import {
@@ -247,11 +248,9 @@ function DataPolicySession(props: AdminDataPoliciesProps) {
 					{t(dataPolicyErrorKey(manager.list.error))}
 				</p>
 			) : null}
-			{manager.mutation.error && !manager.panel && !manager.hidden ? (
-				<p role='alert' className='text-destructive text-sm'>
-					{t(dataPolicyErrorKey(manager.mutation.error))}
-				</p>
-			) : null}
+			{!manager.panel && (
+				<DataPolicyWriteFeedback error={manager.mutation.error} />
+			)}
 			<div className='grid min-w-0 gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(160px,220px)]'>
 				<label className='block min-w-0 space-y-1 text-sm'>
 					<span>{t(prefix + 'search')}</span>
@@ -318,6 +317,8 @@ function DataPolicySession(props: AdminDataPoliciesProps) {
 					disabled={manager.disabled}
 					pending={manager.mutation.isPending}
 					error={manager.mutation.error}
+					canResume={manager.canResumeEditor}
+					onResume={manager.resumeEditor}
 					onSave={(input) =>
 						manager.save(manager.panel!.row.route_target_id, input)
 					}

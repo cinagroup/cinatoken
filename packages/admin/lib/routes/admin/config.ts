@@ -41,6 +41,11 @@ import {
 	ALERT_WEBHOOK_FEISHU_URL_KEY,
 	ALERT_WEBHOOK_WECOM_URL_KEY,
 } from "@octafuse/core/lib/alert-webhook-system-config";
+import { USER_CHARGED_COST_FACTOR_MODE_KEY } from "@octafuse/core/lib/user-charged-cost-factor-mode";
+import {
+	STREAM_FIRST_EVENT_TIMEOUT_MS_KEY,
+	STREAM_FIRST_EVENT_TIMEOUT_ROUTE_GROUPS_KEY,
+} from "@octafuse/core/lib/stream-first-event-timeout-config";
 export const adminConfigRoutes = new Hono<AdminEnv>();
 
 /** Keep legacy writes available during staging, then enforce CAS before Web Config is exposed. */
@@ -48,12 +53,15 @@ const WEB_MANAGED_CONFIG_KEYS = new Set([
 	"BUSINESS_TIMEZONE",
 	BILLING_CURRENCY_KEY,
 	ROUTE_STRATEGY_KEY,
+	USER_CHARGED_COST_FACTOR_MODE_KEY,
+	STREAM_FIRST_EVENT_TIMEOUT_MS_KEY,
+	STREAM_FIRST_EVENT_TIMEOUT_ROUTE_GROUPS_KEY,
 	ALERT_WEBHOOK_WECOM_URL_KEY,
 	ALERT_WEBHOOK_FEISHU_URL_KEY,
 ]);
 /** Tools secrets are available only through the version-bound, audited reveal endpoint. */
 const TOOLS_BULK_MASK_KEYS = new Set<string>(
-	TOOL_CONFIG_OVERVIEW_KEYS.filter((key) => key !== BILLING_CURRENCY_KEY)
+	TOOL_CONFIG_OVERVIEW_KEYS.filter((key) => key !== BILLING_CURRENCY_KEY),
 );
 
 adminConfigRoutes.use("*", async (c, next) => {
@@ -72,18 +80,27 @@ adminConfigRoutes.get("/overview", async (c) => {
 				message: "Forbidden",
 				required_permission: "config.read",
 			},
-			403
+			403,
 		);
 	}
 	try {
+		assertExpectedConsoleSubject(
+			principal,
+			c.req.header(EXPECTED_CONSOLE_SUBJECT_HEADER),
+		);
 		return c.json({
 			success: true,
 			data: await loadAdminConfigOverview(c.get("repositories"), principal),
 		});
-	} catch {
+	} catch (error) {
+		if (error instanceof ExpectedConsoleSubjectError)
+			return c.json(
+				{ success: false, code: error.code, message: error.message },
+				error.status,
+			);
 		return c.json(
 			{ success: false, message: "Failed to get config overview" },
-			500
+			500,
 		);
 	}
 });
@@ -99,9 +116,9 @@ adminConfigRoutes.get("/", async (c) => {
 			(await listAdminSystemConfigService(repos)).map((row) =>
 				TOOLS_BULK_MASK_KEYS.has(row.key)
 					? { key: row.key, value: MASKED_ADMIN_SECRET, description: null }
-					: row
+					: row,
 			),
-			hasAdminPermission(c.get("principal"), "config.secrets.read")
+			hasAdminPermission(c.get("principal"), "config.secrets.read"),
 		);
 		return c.json({ success: true, data });
 	} catch (error) {
@@ -124,19 +141,19 @@ adminConfigRoutes.put("/", async (c) => {
 			body = exactObject(
 				toolConfigJson(raw),
 				["key", "value", "tools_version", "reason", "accept_loss_pricing"],
-				["key", "value"]
+				["key", "value"],
 			) as AdminConfigUpdateInput;
 			assertExpectedConsoleSubject(
 				c.get("principal"),
 				c.req.header(EXPECTED_CONSOLE_SUBJECT_HEADER),
-				c.env.CINATOKEN_ADMIN_TOOLS_REQUIRE_VERSION === "true"
+				c.env.CINATOKEN_ADMIN_TOOLS_REQUIRE_VERSION === "true",
 			);
 		}
 	} catch (error) {
 		if (error instanceof Error && error.name === "BodyLimitError")
 			return c.json(
 				{ success: false, message: "Request body is too large" },
-				413
+				413,
 			);
 		if (
 			error instanceof ToolConfigError ||
@@ -144,7 +161,7 @@ adminConfigRoutes.put("/", async (c) => {
 		)
 			return c.json(
 				{ success: false, code: error.code, message: error.message },
-				error.status
+				error.status,
 			);
 		return c.json({ success: false, message: "Invalid JSON body" }, 400);
 	}
@@ -168,12 +185,12 @@ adminConfigRoutes.put("/", async (c) => {
 				precondition.kind === "absent"
 					? undefined
 					: precondition.kind === "match"
-					? precondition.revision
-					: null,
+						? precondition.revision
+						: null,
 				{
 					requireToolsVersion:
 						c.env.CINATOKEN_ADMIN_TOOLS_REQUIRE_VERSION === "true",
-				}
+				},
 			);
 			return c.json({
 				success: true,
@@ -189,7 +206,7 @@ adminConfigRoutes.put("/", async (c) => {
 			repos,
 			body,
 			c.get("principal"),
-			precondition.kind === "match" ? precondition.revision : null
+			precondition.kind === "match" ? precondition.revision : null,
 		);
 		if (!result.committed) return configRevisionConflict(c);
 		return c.json({
@@ -201,7 +218,7 @@ adminConfigRoutes.put("/", async (c) => {
 		if (error instanceof ToolConfigError)
 			return c.json(
 				{ success: false, code: error.code, message: error.message },
-				error.status
+				error.status,
 			);
 		if (
 			typeof body?.key === "string" &&
@@ -213,7 +230,7 @@ adminConfigRoutes.put("/", async (c) => {
 					code: "tools_operation_failed",
 					message: "Tools configuration operation failed",
 				},
-				500
+				500,
 			);
 		return handleAdminRouteError(c, error, "Failed to update config");
 	}

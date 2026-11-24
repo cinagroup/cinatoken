@@ -1,6 +1,7 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
 import {
 	imageRequestMetaFromBody,
+	safeImagePreviewSource,
 	parseImagesGenerationsResponse,
 } from '../playground/browser-domain/image-generations'
 import {
@@ -19,22 +20,8 @@ import {
 } from './simulator-utils'
 import type { SimulatorResponse, SimulatorSnapshot } from './use-simulator'
 
-export function safeImageSource(src: string): boolean {
-	if (
-		/^data:image\/(?:png|jpeg|webp|gif);base64,[A-Za-z0-9+/=\r\n]+$/u.test(src)
-	)
-		return true
-	try {
-		const url = new URL(src)
-		return (
-			(url.protocol === 'https:' || url.protocol === 'http:') &&
-			!url.username &&
-			!url.password
-		)
-	} catch {
-		return false
-	}
-}
+export { safeImagePreviewSource as safeImageSource } from '../playground/browser-domain/image-generations'
+
 export function snapshotLogsHref(snapshot: SimulatorSnapshot): string {
 	if (snapshot.selection.kind === 'tool')
 		return buildToolsInvocationsHref({ toolId: snapshot.selection.toolId })
@@ -78,7 +65,9 @@ export function simulatorResponseView(response: SimulatorResponse) {
 					imageRequestMetaFromBody(response.snapshot.requestBody)
 				)
 			: { images: [], usageHint: null }
-	const images = imageResult.images.filter((item) => safeImageSource(item.src))
+	const images = imageResult.images.filter((item) =>
+		safeImagePreviewSource(item.src)
+	)
 	const budgetError =
 		response.meta.status === 402 ||
 		/(?:budget_exceeded|budget exceeded|insufficient_(?:credits|balance)|key_budget|user_budget|workspace_budget)/i.test(

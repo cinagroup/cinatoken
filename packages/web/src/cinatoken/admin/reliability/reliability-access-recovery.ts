@@ -1,13 +1,14 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
 import { configAccessIdentityKey } from '../config/config-access-recovery'
 
-type Domain = 'analytics' | 'display'
+type Domain = 'analytics' | 'display' | 'logs'
 
 /** A denied read stays blocked across Console rechecks and route remounts. */
 export class ReliabilityAccessRecovery {
 	private readonly blocked = {
 		analytics: new Set<string>(),
 		display: new Set<string>(),
+		logs: new Set<string>(),
 	}
 	private readonly listeners = new Set<() => void>()
 	readonly maxIdentities = 32

@@ -1,6 +1,33 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
+import { requestChargeSplitMessages } from './charge-split-messages'
+
 export const adminRequestLogMessages = {
 	en: {
+		...requestChargeSplitMessages.en,
+		providerIds: 'Provider set',
+		applyProviderIds: 'Apply provider set',
+		clearProviderIds: 'Clear provider set',
+		providerIdsHint:
+			'Comma-separated IDs, up to 10. Matches any member; a single provider filter narrows this set. Apply to update the results.',
+		invalidProviderIds:
+			'Enter 1–10 comma-separated provider IDs (up to 600 characters each), without control characters or invalid Unicode; leave empty to remove this filter.',
+		invalidProviderIdsFilter:
+			'The provider set is invalid. No logs have been requested. Correct it or clear this filter.',
+
+		modelPrefixHint:
+			'Literal, case-sensitive prefix. %, _ and backslashes are ordinary characters. Leave empty to include all models.',
+		invalidModelPrefix:
+			'Enter up to 600 characters without control characters or invalid Unicode, or leave empty.',
+		invalidModelPrefixFilter:
+			'The model ID prefix filter is invalid. No logs have been requested. Correct it or clear the filters.',
+		ingressHost: 'Ingress host',
+		applyIngressHost: 'Apply host',
+		ingressHostHint:
+			'Exact stored Host, including port and letter case. Leave empty to include all hosts.',
+		invalidIngressHost:
+			'Enter up to 255 characters without control characters, or leave empty.',
+		invalidFilter:
+			'The ingress host filter is invalid. No logs have been requested. Correct it or clear the filters.',
 		targetTitle: 'Request detail',
 		targetHint:
 			'This request is read by its exact ID, independently of the list filters. Sensitive raw fields are unavailable.',
@@ -172,6 +199,7 @@ export const adminRequestLogMessages = {
 		searchHint: 'Email and IDs are exact matches.',
 		unknownCatalog: 'Not in catalog',
 		modelId: 'Model ID',
+		modelIdPrefix: 'Model ID prefix',
 		providerId: 'Provider ID',
 		routeGroup: 'Route group',
 		idCopy: 'Copy identifier',
@@ -184,6 +212,29 @@ export const adminRequestLogMessages = {
 		},
 	},
 	zh: {
+		...requestChargeSplitMessages.zh,
+		providerIds: '供应商集合',
+		applyProviderIds: '应用供应商集合',
+		clearProviderIds: '清除供应商集合',
+		providerIdsHint:
+			'使用英文逗号分隔，最多 10 个 ID。匹配集合中任一供应商；单个供应商筛选会进一步缩小范围。应用后更新结果。',
+		invalidProviderIds:
+			'请输入 1–10 个逗号分隔的供应商 ID，每个最多 600 个字符，不含控制字符或无效 Unicode；留空移除此条件。',
+		invalidProviderIdsFilter:
+			'供应商集合无效，尚未请求日志。请修正或清除此条件。',
+
+		modelPrefixHint:
+			'按字面精确匹配前缀，区分大小写；%、_ 和反斜杠均为普通字符。留空表示全部模型。',
+		invalidModelPrefix:
+			'请输入最多 600 个字符，不含控制字符或无效 Unicode，或留空。',
+		invalidModelPrefixFilter:
+			'模型 ID 前缀筛选无效，未请求日志。请修正或清除筛选。',
+		ingressHost: '入口主机',
+		applyIngressHost: '应用主机',
+		ingressHostHint:
+			'精确匹配已保存的 Host，包括端口和大小写。留空表示全部主机。',
+		invalidIngressHost: '请输入最多 255 个字符，不含控制字符，或留空。',
+		invalidFilter: '入口主机筛选无效，未请求日志。请修正或清除筛选。',
 		targetTitle: '请求详情',
 		targetHint:
 			'按准确请求 ID 独立读取，不受列表筛选影响。敏感原始字段不可用。',
@@ -348,6 +399,7 @@ export const adminRequestLogMessages = {
 		searchHint: '邮箱与 ID 均为精确匹配。',
 		unknownCatalog: '不在目录中',
 		modelId: '模型 ID',
+		modelIdPrefix: '模型 ID 前缀',
 		providerId: '供应商 ID',
 		routeGroup: '路由组',
 		idCopy: '复制标识',
@@ -360,6 +412,31 @@ export const adminRequestLogMessages = {
 		},
 	},
 	ja: {
+		...requestChargeSplitMessages.ja,
+		providerIds: 'プロバイダー集合',
+		applyProviderIds: '集合を適用',
+		clearProviderIds: '集合をクリア',
+		providerIdsHint:
+			'IDをカンマで区切り、最大10件。集合内のいずれかに一致します。単一プロバイダーフィルターはさらに絞り込みます。適用すると結果を更新します。',
+		invalidProviderIds:
+			'カンマ区切りのIDを1〜10件、各600文字以内で入力してください。制御文字や無効なUnicodeは使えません。空欄で条件を解除します。',
+		invalidProviderIdsFilter:
+			'プロバイダー集合が無効です。ログは要求していません。修正するか、この条件をクリアしてください。',
+
+		modelPrefixHint:
+			'大文字・小文字を区別するリテラルの接頭辞です。%、_、バックスラッシュは通常の文字です。空欄はすべてのモデルです。',
+		invalidModelPrefix:
+			'制御文字や無効な Unicode を含まない 600 文字以内で入力するか、空欄にしてください。',
+		invalidModelPrefixFilter:
+			'モデル ID の接頭辞が無効です。ログは取得していません。条件を修正するか消去してください。',
+		ingressHost: '入口ホスト',
+		applyIngressHost: 'ホストを適用',
+		ingressHostHint:
+			'保存された Host（ポートと大文字・小文字を含む）に完全一致します。空欄はすべてのホストです。',
+		invalidIngressHost:
+			'制御文字を含まない 255 文字以内で入力するか、空欄にしてください。',
+		invalidFilter:
+			'入口ホストの条件が無効です。ログは取得していません。条件を修正するか消去してください。',
 		targetTitle: 'リクエスト詳細',
 		targetHint:
 			'正確な ID で、一覧の条件と独立して読み込みます。機密の生データは表示されません。',
@@ -535,6 +612,7 @@ export const adminRequestLogMessages = {
 		searchHint: 'メールと ID は完全一致です。',
 		unknownCatalog: 'カタログにありません',
 		modelId: 'モデル ID',
+		modelIdPrefix: 'モデル ID プレフィックス',
 		providerId: 'プロバイダー ID',
 		routeGroup: 'ルートグループ',
 		idCopy: '識別子をコピー',
@@ -547,6 +625,30 @@ export const adminRequestLogMessages = {
 		},
 	},
 	ko: {
+		...requestChargeSplitMessages.ko,
+		providerIds: '공급자 집합',
+		applyProviderIds: '공급자 집합 적용',
+		clearProviderIds: '공급자 집합 지우기',
+		providerIdsHint:
+			'쉼표로 구분한 ID를 최대 10개 입력합니다. 집합의 공급자 중 하나와 일치하며 단일 공급자 필터는 범위를 더 좁힙니다. 적용하면 결과가 갱신됩니다.',
+		invalidProviderIds:
+			'제어 문자나 잘못된 Unicode 없이 쉼표로 구분한 ID 1~10개를 입력하세요. 각 ID는 최대 600자이며 비워 두면 조건이 해제됩니다.',
+		invalidProviderIdsFilter:
+			'공급자 집합이 잘못되어 로그를 요청하지 않았습니다. 수정하거나 이 조건을 지우세요.',
+
+		modelPrefixHint:
+			'대소문자를 구분하는 리터럴 접두사입니다. %, _, 역슬래시는 일반 문자입니다. 비워 두면 모든 모델을 포함합니다.',
+		invalidModelPrefix:
+			'제어 문자나 잘못된 Unicode 없이 최대 600자를 입력하거나 비워 두세요.',
+		invalidModelPrefixFilter:
+			'모델 ID 접두사 필터가 잘못되어 로그를 요청하지 않았습니다. 수정하거나 필터를 지우세요.',
+		ingressHost: '진입 호스트',
+		applyIngressHost: '호스트 적용',
+		ingressHostHint:
+			'저장된 Host의 포트와 대소문자까지 정확히 일치합니다. 비워 두면 모든 호스트를 포함합니다.',
+		invalidIngressHost: '제어 문자 없이 최대 255자를 입력하거나 비워 두세요.',
+		invalidFilter:
+			'진입 호스트 필터가 잘못되어 로그를 요청하지 않았습니다. 수정하거나 필터를 지우세요.',
 		targetTitle: '요청 상세',
 		targetHint:
 			'목록 필터와 별개로 정확한 ID를 읽습니다. 민감한 원본 필드는 제공되지 않습니다.',
@@ -719,6 +821,7 @@ export const adminRequestLogMessages = {
 		searchHint: '이메일과 ID는 정확히 일치해야 합니다.',
 		unknownCatalog: '카탈로그에 없음',
 		modelId: '모델 ID',
+		modelIdPrefix: '모델 ID 접두사',
 		providerId: '공급자 ID',
 		routeGroup: '경로 그룹',
 		idCopy: '식별자 복사',

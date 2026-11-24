@@ -20,6 +20,7 @@ import {
 } from '../use-domain-write-recovery'
 import {
 	endpointAccessDenied,
+	endpointCanResumeEditor,
 	endpointInvalidResponse,
 } from './endpoint-errors'
 import { observeEndpointFailures } from './endpoint-query-scope'
@@ -38,6 +39,7 @@ type Task = {
 	run: (signal: AbortSignal) => Promise<void>
 	close?: boolean
 	refresh?: boolean
+	retainEditorOnRejection?: boolean
 }
 
 export type EndpointManagerProps = AdminDomainSessionProps & {
@@ -76,6 +78,7 @@ export function useEndpointsManager(
 	}, [filters.model, filters.provider, filters.status])
 	const [modal, setModal] = useState<EndpointModal | null>(null)
 	const [revoked, setRevoked] = useState(false)
+	const [unavailableError, setUnavailableError] = useState<unknown>(null)
 	const [notice, setNotice] = useState(false)
 	const [bootstrapResult, setBootstrapResult] =
 		useState<EndpointBootstrapResult | null>(null)
@@ -94,6 +97,7 @@ export function useEndpointsManager(
 		},
 		onRecovered: () => {
 			setRevoked(false)
+			setUnavailableError(null)
 			setModal(null)
 			setBootstrapResult(null)
 			setNotice(false)
@@ -132,6 +136,7 @@ export function useEndpointsManager(
 				)
 			)
 				return
+			setUnavailableError(error)
 			setRevoked(true)
 			setModal(null)
 			setBootstrapResult(null)
@@ -189,14 +194,25 @@ export function useEndpointsManager(
 				setNotice(true)
 			} catch (error) {
 				if (active.current) {
-					revoke(error)
-					setModal(null)
 					setBootstrapResult(null)
+					let retainEditor = false
 					if (
 						error instanceof AdminDomainWriteError &&
 						error.code === 'rejected'
-					)
-						binding.settleKnown('definitive-rejection')
+					) {
+						try {
+							binding.settleKnown('definitive-rejection')
+							retainEditor =
+								Boolean(pending.retainEditorOnRejection) &&
+								!endpointAccessDenied(error)
+						} catch (settlementError) {
+							setModal(null)
+							revoke(settlementError)
+							throw settlementError
+						}
+					}
+					if (!retainEditor) setModal(null)
+					revoke(error)
 				}
 				throw error
 			} finally {
@@ -222,6 +238,7 @@ export function useEndpointsManager(
 		writeUnconfirmed
 	function queue(next: Task): void {
 		if (disabled || task.current || binding.status !== 'ready') return
+		setNotice(false)
 		task.current = next
 		binding.resetDispatch()
 		void mutation.mutateAsync().catch(() => undefined)
@@ -243,6 +260,7 @@ export function useEndpointsManager(
 		queue({
 			close: true,
 			refresh: true,
+			retainEditorOnRejection: true,
 			run: async (signal) => {
 				if (row)
 					await props.api.updateEndpoint(
@@ -322,6 +340,13 @@ export function useEndpointsManager(
 		}
 		await Promise.all([list.refetch(), choices.refetch()])
 	}
+	const canResumeEditor =
+		!disabled &&
+		modal?.kind === 'editor' &&
+		endpointCanResumeEditor(mutation.error, !modal.row)
+	function resumeEditor(): void {
+		if (canResumeEditor) mutation.reset()
+	}
 	return {
 		prefix,
 		list,
@@ -330,6 +355,7 @@ export function useEndpointsManager(
 		modal: hidden ? null : modal,
 		rows: hidden || list.error ? [] : (list.data ?? []),
 		hidden,
+		unavailableError,
 		disabled,
 		writeUnconfirmed,
 		manualRecovery: binding.manualRecovery,
@@ -339,6 +365,8 @@ export function useEndpointsManager(
 		writeOptions: binding.writeOptions,
 		notice,
 		bootstrapResult,
+		canResumeEditor,
+		resumeEditor,
 		queue,
 		open,
 		close,

@@ -1,7 +1,11 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
+import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { CinaTokenApiError } from '../../api'
+import { useAnalyticsProviderDirectory } from '../analytics/providers/use-analytics-provider-directory'
+import { ReliabilityDirectoryStatus } from './ReliabilityDirectoryStatus'
+import { ReliabilityInsights } from './ReliabilityInsights'
 import { ReliabilityRangeControls } from './ReliabilityRangeControls'
 import { ReliabilityRecentErrors } from './ReliabilityRecentErrors'
 import { ReliabilityTables } from './ReliabilityTables'
@@ -24,6 +28,14 @@ export function AdminReliability(props: AdminReliabilityProps) {
 	const { t, i18n } = useTranslation()
 	const locale = i18n.resolvedLanguage ?? 'en'
 	const state = useAdminReliability(props)
+	const providerDirectory = useAnalyticsProviderDirectory({
+		api: props.directoryApi,
+		subject: props.subject,
+		scopeKey: props.scopeKey,
+		reconciliationKey: props.reconciliationKey,
+		revalidate: props.revalidate,
+		enabled: !state.analyticsBlocked && !state.analyticsQuery.error,
+	})
 	const timezone = state.display?.timezone ?? null
 	const currency = state.display?.currency ?? null
 	const configFailed = state.displayBlocked || Boolean(state.displayQuery.error)
@@ -37,6 +49,79 @@ export function AdminReliability(props: AdminReliabilityProps) {
 	const loading = !analyticsFailed && !state.snapshot
 	const showTimezoneFallback =
 		state.display && state.display.timezoneSource !== 'configured'
+
+	let content: ReactNode = null
+	if (analyticsFailed)
+		content = (
+			<section
+				role='alert'
+				className='border-destructive/40 bg-destructive/5 rounded-xl border p-5'
+			>
+				<p>
+					{t(
+						prefix +
+							(state.analyticsBlocked
+								? 'accessDenied'
+								: analyticsErrorKey(state.analyticsQuery.error))
+					)}
+				</p>
+				<Button
+					className='mt-4'
+					type='button'
+					variant='outline'
+					onClick={state.retry}
+				>
+					{t(prefix + 'retry')}
+				</Button>
+			</section>
+		)
+	else if (loading)
+		content = (
+			<p
+				role='status'
+				className='text-muted-foreground rounded-xl border p-8 text-center'
+			>
+				{t(prefix + 'loading')}
+			</p>
+		)
+	else if (state.snapshot)
+		content = (
+			<>
+				<ReliabilityInsights
+					rows={state.snapshot.providers}
+					currency={currency}
+					locale={locale}
+				/>
+				<ReliabilityDirectoryStatus
+					directory={providerDirectory.directory}
+					retry={providerDirectory.retry}
+					loading={providerDirectory.isFetching}
+					canRetry={Boolean(props.directoryApi && props.subject)}
+				/>
+				{!state.logsAllowed && (
+					<p className='text-muted-foreground text-xs'>
+						{t(prefix + 'logsUnavailable')}
+					</p>
+				)}
+				<ReliabilityTables
+					providers={state.snapshot.providers}
+					modelProviders={state.snapshot.modelProviders}
+					currency={currency}
+					locale={locale}
+					directory={providerDirectory.directory}
+					range={state.rangeParams ?? undefined}
+					logsAllowed={state.logsAllowed}
+				/>
+				<ReliabilityRecentErrors
+					rows={state.snapshot.recentErrors}
+					timezone={timezone}
+					locale={locale}
+					directory={providerDirectory.directory}
+					range={state.rangeParams ?? undefined}
+					logsAllowed={state.logsAllowed}
+				/>
+			</>
+		)
 
 	return (
 		<main className='min-w-0 space-y-6 pb-12'>
@@ -112,50 +197,7 @@ export function AdminReliability(props: AdminReliabilityProps) {
 					{t(prefix + 'currencyUnavailable')}
 				</p>
 			)}
-			{analyticsFailed ? (
-				<section
-					role='alert'
-					className='border-destructive/40 bg-destructive/5 rounded-xl border p-5'
-				>
-					<p>
-						{t(
-							prefix +
-								(state.analyticsBlocked
-									? 'accessDenied'
-									: analyticsErrorKey(state.analyticsQuery.error))
-						)}
-					</p>
-					<Button
-						className='mt-4'
-						type='button'
-						variant='outline'
-						onClick={state.retry}
-					>
-						{t(prefix + 'retry')}
-					</Button>
-				</section>
-			) : loading ? (
-				<p
-					role='status'
-					className='text-muted-foreground rounded-xl border p-8 text-center'
-				>
-					{t(prefix + 'loading')}
-				</p>
-			) : state.snapshot ? (
-				<>
-					<ReliabilityTables
-						providers={state.snapshot.providers}
-						modelProviders={state.snapshot.modelProviders}
-						currency={currency}
-						locale={locale}
-					/>
-					<ReliabilityRecentErrors
-						rows={state.snapshot.recentErrors}
-						timezone={timezone}
-						locale={locale}
-					/>
-				</>
-			) : null}
+			{content}
 		</main>
 	)
 }

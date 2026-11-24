@@ -3,12 +3,18 @@ import type { InsertUserBudgetAuditLogParams } from '../db/user-budget-audit-par
 import type { InsertKeyParams } from '../db/api-keys-types';
 import type { InsertRequestLogParams } from '../db/request-logs-types';
 import type { SharedKeyEconomicOutboxInput } from '../db/shared-key-economic-outbox-types';
-import type { GrantWalletCreditParams, GrantWalletCreditResult } from '../db/wallet-credit';
+import type {
+	GrantWalletCreditParams,
+	GrantWalletCreditResult,
+	ReadWalletCreditReceiptParams,
+	ReadWalletCreditReceiptResult,
+} from '../db/wallet-credit';
 import {
 	createApiKeyWithAuditD1,
 	getSystemConfigValueD1,
 	getUserBudgetSnapshotD1,
 	grantWalletCreditWithAuditTxD1,
+	readWalletCreditReceiptD1,
 	insertRequestUsageAndChargeTxD1,
 	updateUserBudgetWithAuditTxD1,
 	applyUserBudgetTransitionWithAuditD1,
@@ -18,6 +24,7 @@ import {
 	getSystemConfigValueMy,
 	getUserBudgetSnapshotMy,
 	grantWalletCreditWithAuditTxMy,
+	readWalletCreditReceiptMy,
 	insertRequestUsageAndChargeTxMy,
 	updateUserBudgetWithAuditTxMy,
 	applyUserBudgetTransitionWithAuditMy,
@@ -27,6 +34,7 @@ import {
 	getSystemConfigValuePg,
 	getUserBudgetSnapshotPg,
 	grantWalletCreditWithAuditTxPg,
+	readWalletCreditReceiptPg,
 	insertRequestUsageAndChargeTxPg,
 	updateUserBudgetWithAuditTxPg,
 	applyUserBudgetTransitionWithAuditPg,
@@ -256,4 +264,15 @@ export async function grantWalletCreditWithAuditTx(
 		return grantWalletCreditWithAuditTxMy(client, params);
 	}
 	return grantWalletCreditWithAuditTxPg(client, params);
+}
+
+/** An absent record is not proof that an earlier dispatched write cannot still commit. */
+export async function readWalletCreditReceiptFromStorage(
+	storage: StorageRef,
+	params: ReadWalletCreditReceiptParams,
+): Promise<ReadWalletCreditReceiptResult> {
+	const client = resolveDatabaseClient(storage);
+	if (client.driver === 'd1') return readWalletCreditReceiptD1(client, params);
+	if (client.driver === 'mysql') return readWalletCreditReceiptMy(client, params);
+	return readWalletCreditReceiptPg(client, params);
 }

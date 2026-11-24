@@ -49,7 +49,7 @@ Web 管理入口使用服务器 Cookie 会话，不内置集成 Bearer Key。`GE
 
 - **计费币种**：`system_config.BILLING_CURRENCY` 仅允许 **`USD`** 或 **`CNY`**（各库的 **`0002_seed.sql`** 默认 `USD`），与 `pricing_profile` / Key 预算数值单位一致；`GET /v1/me` 返回 `billing_currency`（见用户接口文档）。**`PUT /admin/config`** 写入该键时由服务端白名单校验。
 - **全局路由策略**：`system_config.ROUTE_STRATEGY`（默认 `hash_affinity`；四选一，见 [route-strategies.md](../reference/route-strategies.md)）。**`PUT /admin/config`** 白名单校验；Route Pool / 模型级配置可覆盖。
-- **用户计费倍率合成**：`system_config.USER_CHARGED_COST_FACTOR_MODE`（默认 `multiply`；另允许 `min`）。控制 `users.charged_cost_factors` 如何与路由 Charged 有效倍率合成最终用户费用。**`PUT /admin/config`** 白名单校验；Proxy 进程内缓存约 30s。
+- **用户计费倍率合成**：`system_config.USER_CHARGED_COST_FACTOR_MODE`（默认 `multiply`；另允许 `min`）。控制 `users.charged_cost_factors` 如何与路由 Charged 有效倍率合成最终用户费用。**`PUT /admin/config`** 保留白名单兼容；Web 使用带版本条件和身份前置的专用 `PUT /admin/config/user-charged-cost-factor-mode`。Proxy 进程内缓存约 30s。
 - **Proxy 错误告警（可选）**：`ALERT_WEBHOOK_WECOM_URL`、`ALERT_WEBHOOK_FEISHU_URL` 存**完整**群机器人 Webhook URL（含 query `key` / hook id）。**未配置或值为空则不告警**。Proxy 在 **`api_key_request_logs.status = error`** 且用量写入成功后，分别向已配置的 URL 发送一条**按错误类型归类**的文本摘要（企业微信 `msgtype=text`、飞书 `msg_type=text`）：首行含类别与优先级（如上游超时、供应商鉴权、限流、5xx、敏感内容拦截、请求/模型错误、路由配置），并分组展示影响用户、路由/协议、供应商、原始 `error_message`、处理建议与发生时间（UTC+8）；发送失败只打日志，不影响请求。键名常量见 `@octafuse/core` 导出 `ALERT_WEBHOOK_WECOM_URL_KEY` / `ALERT_WEBHOOK_FEISHU_URL_KEY`。
 
 ### `/admin/keys` 统一响应格式
@@ -114,17 +114,17 @@ Web 管理入口使用服务器 Cookie 会话，不内置集成 Bearer Key。`GE
 | `/admin/keys/:id/verify-secret` | POST | `user_keys.read`；比较所选不可变 Key 与输入的原始秘密，只返回 id/owner/workspace/verified，不恢复或生成秘密 | Web / Next Simulator |
 | `/admin/stats` | GET | 多表聚合（含 `api_key_request_logs`、`api_keys` 等） | Admin UI |
 | `/admin/config` | GET, PUT | `system_config`（含 `ROUTE_STRATEGY`） | Admin UI |
-| `/admin/config/overview` | GET | 五个指定设置键的非秘密只读投影 | Web Admin UI |
+| `/admin/config/overview` | GET | 八个指定设置键的非秘密只读投影 | Web Admin UI |
 | `/admin/config/tools/overview`、`/:family/providers/:provider/detail`、`/:family/audit` | GET | 四族安全配置投影与 group 审计 | Web / Next Tools UI |
 | `/admin/config/tools/:family/providers/:provider/save`、`/reveal` | POST | 完整 family 版本原子配置 / 强制审计单字段揭示 | Web / Next Tools UI |
-| `/admin/config/billing-currency`、`/admin/config/route-strategy` | PUT | Web 专用固定键条件写入，返回新版本 | Web Admin UI |
+| `/admin/config/billing-currency`、`/admin/config/route-strategy`、`/admin/config/user-charged-cost-factor-mode`、`/admin/config/stream-first-event-timeout-ms`、`/admin/config/stream-first-event-timeout-route-groups` | PUT | Web 专用固定键条件写入，返回新版本 | Web Admin UI |
 | `/admin/config/webhooks/:channel` | PUT, DELETE | `wecom`/`feishu` 独立条件替换/清除，只返回启用状态与新版本 | Web Admin UI |
 | `/admin/config/webhooks/:channel/reveal`、`/verify` | GET, POST | 显式揭示单个 URL / 按候选值只读核对 | Web Admin UI |
 | `/admin/access-keys`、`/:id`、`/:id/secret`、`/:id/rotate`、`/:id/revoke`、`/:id/audit` | GET, POST, PATCH | `admin_api_keys` + `admin_access_key_audit`；仅 Console Session，同源写请求；生命周期/reveal 原子审计 | Admin UI |
 | `/admin/mcp-servers` | GET, POST | `mcp_servers`（列表脱敏 URL 与鉴权头） | Admin UI |
 | `/admin/mcp-servers/:id` | GET, PATCH, DELETE | `mcp_servers`（`pricing` 为服务默认按次价格） | Admin UI |
 | `/admin/mcp-servers/:id/reveal` | GET | 明文 URL 与鉴权头；需要 `mcp.secrets.read` | Admin UI |
-| `/admin/mcp-servers/:id/test` | POST | 只执行上游 `initialize` | Admin UI |
+| `/admin/mcp-servers/:id/test` | POST | 执行上游 `initialize` 与三类目录读取，返回连接信息及数量，不保存目录 | Admin UI |
 | `/admin/mcp-servers/:id/sync` | POST | 拉取目录并返回新增、变更、移除差异；新条目默认停用 | Admin UI |
 | `/admin/mcp-servers/:id/items/status` | POST | 批量 `enabled` / `disabled` | Admin UI |
 | `/admin/mcp-servers/:id/items/:itemId` | PATCH | `{ pricing }` 设置工具按次价格（`v=2`、`unit=request`、`standard`、`chargedFactor`、`meteredFactor`、空 `config`；兼容 v1 独立单价），整组替换服务价格；`null` 恢复服务默认价格 | Admin UI |
@@ -145,6 +145,16 @@ Web 管理入口使用服务器 Cookie 会话，不内置集成 Bearer Key。`GE
 `POST /admin/playground` 的 `routeId`、`routeDraft`、`toolId` 三选一。路由编辑器「快速测试」使用 `routeDraft`，包含 `model_id`、`provider_id`、`provider_model_name`、`request_protocol`、`request_operation`、`upstream_protocol`、`upstream_operation`、`adapter` 与可选的 `custom_params`（JSON 对象或字符串）；`body` 为测试请求对象。草稿只在本次请求中生效，不创建或更新路由，供应商端点与密钥仍从服务端读取。响应、流式输出及 `x-playground-*` 调试头与 `routeId` 模式一致；实时 WebSocket 仍使用已保存的 `routeId`。
 
 说明：**GlobalLogs**（`/admin/request-logs`）与 **KeyScopedLogs**（`/admin/keys/:id/logs`）互补；**UserScopedLogs**（`/admin/users/:id/logs`）按 `user_id` 拉全量请求历史。**全局审计列表**（`/admin/budget-audit-logs`，表为 **`user_audit_logs`**）记录预算与用户/密钥生命周期事件，与请求日志正交。各类审计行何时产生（含高频 `usage_charge`）见 [`../reference/user-audit-logs.md`](../reference/user-audit-logs.md)。**数据模型总览**见 [`../architecture/user-keys-data-model.md`](../architecture/user-keys-data-model.md)。
+
+Web 工具调用记录缺省查询 REST 工具；旧链接 `?source=mcp&server=<slug>` 切换为 `provider_id=octafuse-mcp` 和 `model_id_prefix=mcp:<slug>/`。Server 筛选无需读取当前 MCP 目录，已删除服务的历史仍可查询。进入请求日志时保留同一 Provider 和模型前缀，列表校验该范围，不把错误来源的数据当作筛选结果；切回 REST 会清除 MCP Server 条件。Web 导航中的 MCP 服务器使用 `/admin/mcp`；Web 页面灰度开关 `CINATOKEN_WEB_ADMIN_MCP_ENABLED` 默认关闭，只接管该路径及尾斜杠的 GET/HEAD。`/gateway/mcp` 保留原管理页入口。
+
+Web MCP 管理使用同源 Cookie 会话与精确 Console subject，不在浏览器内置集成凭据。列表返回每个服务的 `enabledCount` / `pendingCount`；详情的 `server` 不含这两个计数字段，条目数组位于 `items`。详情条目新增只读 `pricingState`：`inherit` 表示数据库价格为 `null`，`override` 表示有效独立规则，`invalid` 表示非空存储规则无法解析。该扩展不修改数据库；旧响应缺少来源且价格为 `null` 时，Web 显示来源未知，不推断为继承价格。无效规则不显示成零价或默认价。
+
+编辑连接时，`url` 留空会省略该字段，保留原 URL；不得把 `urlMasked` 回写。省略 `authHeaders` 保留整组，提供对象替换键集合；已有同名键的空字符串保留其秘密，空对象清除全部。普通编辑保留 v1 独立 standard/charged/metered 单价，仅显式切换才改为 v2 价格和倍率。`mcp.write` 不授予 reveal 权限。秘密仅在显式 reveal 后短暂显示，离开服务或切换身份即清除。
+
+Web 支持粘贴远程 HTTP(S) URL 或 MCP 客户端 JSON 配置，不执行 stdio、SSE 或 OAuth 登录配置。客户端目录测试仅允许 `initialize`、`tools/list`、`prompts/list`、`resources/list`，发送前核验所选原始 Gateway Key 及其用户/工作区归属，再确认 Console subject。Proxy 目标源须符合既有 `CINATOKEN_WEB_PROXY_ORIGINS` 的 CSP 白名单及 Proxy CORS 配置。请求为无 Cookie 的 POST `/mcp` 或 `/mcp/:slug`；校验 JSON-RPC ID、方法对应结果和协议版本，界面保留脱敏响应，复制 curl 使用占位凭据。客户端测试不执行工具。
+
+写入仅按各 MCP 端点的实际 ACK 判断结果，不虚构通用 ACK。同步可能部分写入后返回失败，此时保持待核对标记，刷新或重进页面均不自动重发；用户核对后再显式解锁。前端接受变更前重读待发布定义，发现变化则要求重新审核；该检查不替代服务端并发控制。
 
 ### 与 Proxy `GET /catalog/models` 的区别 {#admin-vs-proxy-catalog}
 
@@ -223,13 +233,23 @@ Query 与 `/v1/models` 对齐：
 | `kind` | `llm` | `llm` \| `image` \| `audio` \| `all` |
 | `model` | 空 | 按模型 ID 或展示名包含匹配；空则按目录顺序返回 |
 
+Web 详情中可显式加载这一预览并按模型、类型和分组筛选；未保存的倍率草稿不会送到该 GET，也不会参与结果。过滤变化、失败或权限拒绝清除旧快照；只保留模型/价格/分时的安全投影，不展示任意 metadata。分组候选另按 `routes.read` 显式读取并只保留 model/group，候选权限不足不阻止编辑已有值。
+
 单次最多 40 条。响应 `{ success, data: { object: "list", data, preview } }`。`data.data[]` 的 `model_info.discounts` 与 `/v1/models` 相同；`preview` 含 `user_charged_factor_mode`、实际采用的 `route_groups` / `kind`，以及是否 `truncated`。不含 `inbound`。
 
 ### `PATCH /admin/users/:id`
 
 更新邮箱、预算计划、`status`、`metadata`（合并或 `metadata_replace`）、外部身份对、`charged_cost_factors`（对象或 `null`，校验规则与创建相同）、`wallet_granted` / `wallet_spent`（永久额度绝对值，运维修正）、`rate_limit`（用户层 JSON，与 Key 同形状；`null` 表示该层不限）等。仅改用户计费倍率时，审计 `reason_code` 为 `admin_patch_charged_cost_factors`；仅改用户限流时为 `admin_patch_rate_limit`；仅改永久额度绝对值时为 `admin_patch_wallet`（周期额度同时变化时仍为 `admin_patch_budget`）。**密钥级字段不可在此修改**（密钥 `rate_limit` 走 `PATCH /admin/keys/:id`）。加购增量请用下方 **`wallet/credit`**，不要把金额加进 `budget_max`。
 
+Web 计费倍率编辑保留数字与按分组对象，具体分组优先于 `*`；分组 trim 后小写，重复模型/分组不能提交，0 与极小非零数保持原值，单独 `*` 与数字作等价核对。保存需要非空原因，只发送 `charged_cost_factors` 和 `reason`，不回写预算、钱包或限流。成功详情必须返回相同的规范化因子；结果无法确认时按 Console 身份和目标用户保留持久标记，刷新不重发。人工核对当前用户与两次新鲜身份后可确认解锁；旧 generation 不能清除新操作标记。
+
+用户路由接受可选的 `X-CinaToken-Expected-Console-Subject`，提供时严格检查；未携带头的现有 Console/API Key 调用及 `ext:` 外部身份语法保留。Web 因子保存和新预览读取均携带该前置条件。
+
+Web 用户管理只提交本次实际修改的永久额度计数，要求非空更正原因，并限制为非负、最多六位小数；单独更正永久额度不触发周期重置。列表与详情使用服务端的 `wallet_balance`，保留历史负余额。旧服务端未返回完整 `wallet_granted` / `wallet_spent` / `wallet_balance` 时显示不可用并禁用更正，不以零填充。创建用户时两个计数留空会省略字段，显式填零则保留零。
+
 `users.rate_limit` 是该用户**所有 Key 合计**的共享池，不会复制到新建 Key，也不要求 `key.rpm <= user.rpm`。只限制某一把钥匙时，只写该 Key 的 `rate_limit`，用户层保持 `null`。Key 层与 User 层的 `rpm` 都是从当前时刻回溯 60 秒的滚动窗口，不是 UTC 自然分钟。
+
+Web 用户详情与网关 Key 编辑器提供保持不变、移除此层限制（`null`）、设置 RPM 三种操作，区分用户共享池与 Key 独立上限。`0` 是有效限制，禁止计量调用；前端接受非负安全整数并要求审计原因。缺失或无法识别的旧响应显示不可用，普通资料编辑不回写 RPM；显式修改后核对确认响应中的限速值。Key 写入继续携带 `expected_revision`。现有用户/Key 创建与账户 Key API 不接受该字段，Web 不向这些接口附加 RPM。
 
 用于**绝对值**设置、运维修正、取消/到期回收等不依赖当前预算快照的变更。若需基于当前 `budget_max/budget_spent` 计算结转并原子写入，请使用下方 **`budget/transition`**。
 
@@ -250,7 +270,7 @@ Query 与 `/v1/models` 对齐：
 
 `remaining_or_overage` 计算：`carryover = (budget_max ?? 0) - budget_spent - budget_reserved_micros / 1_000_000`，`next_budget_max = target_budget_base + carryover`（`carryover` 可为负，表示超额抵扣）。若新上限会低于零，预览和应用均返回 400。
 
-响应：`{ success, data: { before, after, carryover } }`，其中 `before/after` 含 `budget_max`、`budget_base`、`budget_spent`、`budget_period`、`budget_reset_at`、`budget_epoch`、`budget_reserved_micros`。预览只计算已到期周期的有效状态，不写库；`carryover` 会扣除预留额。
+响应：`{ success, data: { before, after, carryover } }`，其中 `before/after` 含 `budget_max`、`budget_base`、`budget_spent`、`budget_period`、`budget_reset_at`、`budget_epoch`、`budget_reserved_micros`，新版还含完整的 `wallet_granted`、`wallet_spent`、`wallet_balance`。预览只计算已到期周期的有效状态，不写库；`carryover` 会扣除预留额，永久额度前后保持相同。Web 将完整钱包快照一并回传和核对；刷新后钱包变化会使旧预览失效，提交回执还须匹配已确认的前后快照和最终用户数据。
 
 ### `POST /admin/users/:id/budget/transition`
 
@@ -264,12 +284,42 @@ Query 与 `/v1/models` 对齐：
 
 | 字段 | 必填 | 说明 |
 |------|------|------|
-| `amount` | 是 | 非零数字；负值用于退款扣回 |
+| `amount` | 是 | 非零 JSON number，须可精确表示为安全整数微单位（最多六位小数）；不接受字符串、布尔值或隐式舍入。保留有符号增减，最终累计发放额不可为负 |
 | `kind` | 是 | `topup` \| `signup_bonus` \| `admin_adjust` \| `refund` |
-| `external_ref` | 是 | 写入 `user_audit_logs.dedup_key`；同一用户同一引用重放不重复加额 |
-| `reason` | 否 | 审计 `reason_text` |
+| `external_ref` | 是 | 写入原始 `user_audit_logs.dedup_key`；1–255 个 Unicode 字符，拒绝空白引用、控制/格式字符及非法 UTF-16。旧 POST 继续去除首尾空白 |
+| `reason` | 否 | 审计 `reason_text`，最多 2000 个字符，拒绝控制/格式字符 |
 
-响应：`{ success, data: { status: "applied" \| "duplicate", walletGranted, walletSpent, walletBalance } }`。加额流水用现有 `GET /admin/budget-audit-logs?user_id=&event_type=wallet_credit`，不另建端点。
+响应保留 `{ success, status, data: { status: "applied" \| "duplicate", walletGranted, walletSpent, walletBalance, receipt } }`。三个原有钱包字段仍是本次事务/查询快照中的**当前钱包值**，不能当作该订单的历史入账证明；新增 `receipt` 才是原订单的不可变快照。完整流水继续使用 `GET /admin/budget-audit-logs?user_id=&event_type=wallet_credit`。
+
+同一用户、字面引用、金额微单位和类型一致时返回 `duplicate`，不再加额，且回执仍属于第一次提交；金额或类型不同返回 409。MySQL 的既有排序规则若匹配到另一字面引用，也返回 409，不伪装成重复成功。旧记录缺少可验证回执时拒绝再次加额；当前余额不能补造原订单的证明。新写不改去重键编码、不新增迁移。
+
+### `POST /admin/users/:id/wallet/credit/verified`
+
+Web 使用的 v1 加额入口。请求字段同上，额外**必须**携带 `require_receipt_version: 1`，拒绝未知字段。该入口按字面引用处理；Web 表单先去除首尾空白。权限为 `users.write`；Console 调用必须携带 `X-CinaToken-Expected-Console-Subject` 并与当前认证主体一致，命名 Admin Key 继续由自身权限授权。返回原有钱包字段和严格 v1 `receipt`：
+
+```json
+{
+  "version": 1,
+  "userId": "f2b74bc0-32f3-4613-aea7-96f723d08e12",
+  "externalRef": "ORDER-20261018-001",
+  "amountMicros": 5000001,
+  "kind": "topup",
+  "auditId": "d2b74bc0-32f3-4613-aea7-96f723d08e12",
+  "creditedAt": "2026-10-18T00:00:00.000Z",
+  "before": { "walletGranted": 20, "walletSpent": 3, "walletBalance": 17 },
+  "after": { "walletGranted": 25.000001, "walletSpent": 3, "walletBalance": 22.000001 }
+}
+```
+
+金额与钱包快照按主单位和微单位双向核对。快照描述该订单提交时的状态，后续消费或其他加额不会改变它；币种仍遵循网关当前计费配置，本回执不新增历史汇率或币种换算。三个数据库分别使用 D1 完整原始读集 CAS＋批内提交守卫、PostgreSQL/MySQL 同事务锁行与最终快照重读，使审计与钱包更新一起提交或回滚。旧 D1 REAL 仅允许严格 ULP 范围内的已存浮点尾数规范化；新输入和 SQL DECIMAL 字符串仍要求精确微单位。
+
+### `GET /admin/users/:id/wallet/credit/receipt?external_ref=…`
+
+按用户和**唯一一个完整字面引用**精确查询，要求 `users.read`，使用 `private, no-store`。响应为 `{ success: true, data: { version: 1, status: "recorded", receipt } }`，或不含回执的 `status: "not_found" | "legacy_unverified"`。`legacy_unverified` 表示存在历史/损坏证据但无法确认 v1 回执；查询不写账本。
+
+`not_found` 只表示本次读取未发现回执，不能证明先前写入未提交：请求仍可能在途，或读取尚未看到新提交。Web 先核验 Console/Portal 绑定，再用此接口确认版本能力，随后调用独立 `/verified` 写入口，避免滚动升级时旧实例静默接受旧写路径。未知版本、旧接口、错误用户/引用/金额/类型或不自洽快照均不能确认成功。
+
+Web 在派发前将已冻结的用户、引用、金额、类型、说明及代次保存到本标签页的 sessionStorage；存储失败则不派发。超时、取消、5xx、网络失败或无效 ACK 保留未知锁，刷新和作用域版本更新不会清除。查询 `not_found` 不解锁；用户明确核对后只能重试相同冻结订单，不能自动换引用或重放。后续重试被拒绝也不能否定最初未知请求。只有匹配本代次的可验证回执，或首次派发的明确拒绝，才能释放对应标记。主体或目标用户改变时，其他主体的订单不展示、不用于恢复。
 
 ### `DELETE /admin/users/:id`
 
@@ -742,6 +792,10 @@ curl "http://localhost:8789/api/admin/keys/uuid-here/logs?page=1&page_size=10" \
 | GET / POST | `/admin/providers/sync/diff`、`/sync/apply` | 与官方模板同步：`diff` 只读；`apply` 逐字段写入官方值。差异只在管理员手动检查时计算，列表接口不带 |
 | GET / POST | `/admin/providers/import/catalog`、`/import` | 静态模板导入（占位 key，须手动替换）。写入 `kind =` 模板英文名；仅同一 `kind` 下同名才追加 `(2)` 后缀 |
 
+Web 列表与编辑保留服务端 `kind`，新建和复制可显式选择类型；普通编辑不回写未改的类型，复制仍要求新凭据且保持禁用。官方差异按字段手动选择，端点按整个协议替换，默认不选；旧类型迁移仅 PATCH `{kind}`，建议类型不会自动应用。`POST /admin/providers/sync/apply` 成功处理批次时另含顶层 `acknowledgement: { domain: "providers", operation: "sync" }`，不含 `id`；`data` 为 `{updated, skipped, failed:[{provider_id,message}]}`。失败可能发生在配置已持久化之后，不能断言零写入。Web 分开显示逐项未完成及可能部分应用的提示并隐藏原始错误文本，已知结果须重新检查再应用；缺失/错误 ACK 或结果计数不符保持未知写锁。服务端应用时重算当前官方值，未提供差异版本条件写入。
+
+Web 额度只在支持的已配置账号详情中显式查询，不自动刷新或轮询；新查询清除上次快照。显示原币种、有符号余额和供应商原单位，缺失计数显示不可用，不换算为网关币种或补零。
+
 `GET /admin/providers/:id/quota` 的 `data` 是归一化快照，不保存。请求发往与该 `kind` 默认域名同一注册域的 https origin；保存的 Endpoint 若换了注册域，则回退默认 origin。
 
 ```json
@@ -835,8 +889,11 @@ curl "http://localhost:8789/api/admin/keys/uuid-here/logs?page=1&page_size=10" \
 
 `CINATOKEN_ADMIN_MODELS_REQUIRE_ROUTE_POLICY_PRECONDITION` 默认关闭，仅精确 `true` 时 route_policy 写缺前置返回 428 `model_route_policy_precondition_required`。无前置旧客户端在开关关闭时保留原行为。上线须先升级所有 Admin 实例及客户端、排空旧无条件写端，再启此服务保护，随后启独立 Web 入口；旧实例仍可覆盖新条件写，不能仅启页面即宣称消除所有竞争。无需新增迁移；D1 当前正式模型 schema、Postgres schema/表权限及 MySQL 原生事务/隔离、真实两连接竞争和审计仍独立验收。本次模型前置写没有新增治理审计，不把既有字段更新扩大宣称为全域审计保证。
 
-- **`/admin/models`**：CRUD；`PATCH` 可写 **`route_policy`**（TEXT JSON 或 `null` 清空）。含 **`GET /admin/models/import/catalog`** 与 **`POST /admin/models/import`**。Image 路由使用 OpenAI 协议；Audio 路由支持 OpenAI 与 DashScope，按 operation / adapter 校验。
+- **`/admin/models`**：CRUD；`PATCH` 可写 **`route_policy`**（TEXT JSON 或 `null` 清空）。含 **`GET /admin/models/import/catalog`** 与 **`POST /admin/models/import`**。Image / Audio 路由按 Core 适配器注册表区分可选请求入口、上游 operation 和显式转换 adapter，具体组合仍由服务端校验。
 - **`/admin/routes`**：REST `GET/POST`、`GET/PATCH/DELETE /:id`；列表支持 `?model_id=&provider_id=`。创建时校验 provider 对该协议是否配置了 `endpoints` base 或任一 capability，并创建或复用对应 Request Surface / Route Pool。
+
+Web 路由编辑器直接使用 Core 注册表推导操作：DashScope 原生 TTS 包含 HTTP、SSE、多模态与两类实时会话，ASR 包含原生异步文件转写；异步选项须同时具备提交与任务查询端点。仅展示用途的旧 `dashscope + audio.transcriptions` 不作为新入口。编辑器提供 Qwen / Wan 图像转换预设、所选适配器调用路径、上游能力、受保护字段和 `extra_body` 示例；OpenAI 异步 ASR 转换由网关等待上游结果，原生 DashScope 接口则返回任务并由客户端携带回执查询。配置脱敏时不推测新路由拓扑；未改变拓扑的旧目标仍可作其他局部编辑。
+
 - **`GET /admin/routes/context`**：要求 `routes.read` 与 `config.read`，返回 `{ "success": true, "data": { "global_route_strategy": "hash_affinity", "billing_currency": "USD", "business_timezone": "UTC" } }` 形状；实际值按当前系统配置归一，示例值不是固定常量。缺省/无效策略采用 Core 默认 `hash_affinity`，币种按当前网关规则归一并保留有效遗留 `EUR`，时区按 IANA/UTC 归一。任何配置读取失败返回 500，不伪造默认值；全部响应用 `Cache-Control: private, no-store`。此接口不返回完整配置、秘密、模型 `route_policy` 或供应商数据；后两者仍由各自权限保护的 API 提供。
   - **`priority`**：层（Proxy 按 **DESC** 硬序）。
   - **`weight`**：同层权重，整数 **≥ 1**（默认 1）；非法 → **400**。
@@ -943,9 +1000,11 @@ OpenAI-compatible TTS 还可在同一 v1 JSON 中声明请求形状证据。`spe
 
 - 所有context/preview/verify-secret成功及错误响应均为private,no-store；SSE另保留no-transform。Playground需playground.execute，安全context中的价格/参数详情另按read授权；Simulator context同时需models.read与routes.read，Key目录和日志各独立授权。
 - Playground沿用POST /admin/playground：JSON含routeId或toolId/provider与body，geminiAction/imageOperation按操作显式提供。preview为POST /admin/playground/preview的2MiB JSON，同目标与body，可附uploadManifest（images数组与audio的name/type/size），只预览元数据，不传二进制。Tools不接受uploadManifest或multipart；preview不读取凭据、交换OAuth或发上游，自动Gemini认证返回execution-only/deferred提示，执行时才确定最终认证。
+- Web Playground 目录兼容 openai / anthropic / gemini / dashscope / minimax / volcengine；未知协议保留为不可执行路由，不使其余目录失效。模板按模型类型、操作和 Adapter 选择：原生 MiniMax / Volcengine 生图使用各自 JSON，转换 Adapter 使用 OpenAI 字段；非 OpenAI 图像路由不提供 multipart edits。支持原生图片 URL/base64 与完整 SSE 事件预览，MiniMax TTS 的 hex 音频可播放，流式最终完整音频不会与增量重复拼接。发送前重新核验路由的协议、操作和 Adapter，未知组合不回退为 Chat。
 - Routes调用可用multipart：单值routeId/body（JSON文本）、可选geminiAction/imageOperation，重复image图片文件与单个file音频文件；拒绝未知/重复文本字段及multipart preview。每图20MiB、最多5图，audio25MiB；Node合计100MiB/encoded multipart104MiB，CF32/36MiB；按实际字节流限幅并处理取消/deadline，虚假Content-Length不能绕过。DashScope同步转写另限10MiB编码body。
 - 现有HTTP客户端不强制新增Playground主体头；提供X-CinaToken-Expected-Console-Subject时严格核对规范encodeURIComponent编码。新浏览器始终提供；实时浏览器使用cinatoken-playground与cinatoken-playground-subject.BASE64URL(encodeURIComponent(subject))子协议，subject不入query/上游。CF保留原生101及固定诊断子协议，Node返回501，不伪装升级成功。
 - Simulator POST /admin/keys/:id/verify-secret仅接受不可变ID与body {secret}，query/掩码/hash引用/额外字段拒绝；Console必须提供当前规范subject头。只比较所选记录与原始秘密的哈希，返回id/user_id/workspace_id/verified，不揭示/生成/修改Key，也不表示disabled/expired/budget等Proxy准入成功。原始秘密仅当前运行内存；每次Send重新核验主体与绑定后，独立Proxy HTTP transport以该Key请求（credentials:omit/redirect:error），不附Console Cookie/Admin主体头或自动重试。原生WS使用Gateway Key子协议，不添加Admin认证/主体头；浏览器会自动携带同源匹配Cookie，无法设置fetch的omit选项。
+- Web Simulator 按协议、操作与 Adapter 匹配六协议原生/转换入口，区分 HTTP 与实时操作；未知目录项仅禁用自身。原生 MiniMax 语音支持 hex/SSE 音频预览，原生图片与 DashScope HTTP 音频使用各自模板。DashScope 异步转写提交后仅在当前页面内存保存任务 receipt，手动查询前重新核验主体、Key/owner/workspace 和 Proxy；不轮询或自动重发。查询以 `X-CinaToken-Task-Receipt` 请求头携带 receipt，URL、显示的请求快照和浏览器持久存储不包含秘密。Proxy CORS 允许该请求头，并公开 `X-CinaToken-Settlement-Basis` / `X-CinaToken-Request-Id` 诊断头；不公开 receipt 响应头。提交结果无法确认有效 receipt 时显示未知结果，不视为可安全重试。
 - Simulator context币种无config.read或未配置/非法/读取失败均为null。Playground在playground.execute授权下读取币种，缺失/非法为null，读取异常使context返回502；其服务端解析Tools catalog推导configured状态，不把凭据返回浏览器。Simulator只投影audio_operation，不返回pricing_profile。原始上游结果与脱敏、有界metadata分别展示，usage不是账本结算；Playground不写Gateway账本/请求日志/failover，上游自身仍可能收费，Simulator的Proxy计费/日志/实时TTS财务守卫沿用原行为。
 
 ### `models.route_policy`（`PATCH /admin/models/:id`）
@@ -970,8 +1029,9 @@ OpenAI-compatible TTS 还可在同一 v1 JSON 中声明请求形状证据。`spe
 
 - **用途**：静态目录（`packages/admin/lib/model-presets/*.json`）更新后，让已导入的 `models` 行与官方值对齐。差异只在管理员点「检查官方更新」时计算，`GET /admin/models` 列表不带差异信息。
 - **比对范围**：按 `models.id` 与目录项一一对应，字段为 `display_name`、`vendor`、`context_window`、`max_tokens`、`description`、`released_at`、`input_modalities`、`output_modalities`、`pricing_profile`。目录未给出（null）的字段不报差异，不会建议清空；模态不看顺序；价格按 `BILLING_CURRENCY` 选 `usd` / `cny` 分支，按叶子路径（如 `tiers[0].input_price`）展示新增 / 变更 / 仅本地有。
-- **默认选择**：普通字段默认「采用官方」；`pricing_profile` 直接影响计费，默认「保留当前」，需管理员核对后再选。「保留当前」不落库，下次检查仍会显示。
-- **应用**：请求体 `{ "items": [{ "model_id": "...", "fields": ["description", "pricing_profile"] }] }`。服务端重新计算差异，只处理确实存在差异的所选字段，经 `updateModelService` 写入（路由价格覆盖的时段对齐照常执行）；不写 `tags`、`metadata`、`route_policy`，不碰路由。响应 `{ updated, skipped, failed: [{ model_id, message }] }`，单个模型失败不影响其它。
+- **选择提示**：差异响应中普通字段的 `default_apply` 为采用官方的建议，`pricing_profile` 为 false。Web 为全部字段默认不选；可批量选中筛选范围内的元数据，价格需逐项选择并额外确认计费影响。「保留当前」不落库，下次检查仍会显示。
+- **应用**：请求体 `{ "items": [{ "model_id": "...", "fields": ["description", "pricing_profile"] }] }`。服务端重新计算差异，只处理确实存在差异的所选字段，经 `updateModelService` 写入（路由价格覆盖的时段对齐照常执行）；不写 `tags`、`metadata`、`route_policy`，不碰路由。响应 `{ updated, skipped, failed: [{ model_id, message }] }`，单个模型失败不影响其它；失败可能发生在持久化后的后续步骤，不能据此断言零写入，应核查当前状态。
+- **写入确认**：成功处理批次的响应另含顶层 `acknowledgement: { domain: "models", operation: "sync" }`，不含资源 `id`；`data` 保留逐项更新、跳过与失败数量，不能将批次已处理等同于每项成功。Web 校验计数与失败 ID 范围，已知结果要求手动重新获取差异后才能再次应用；错误或缺失 ACK 进入现有未知写入保护，不自动重放。服务端在应用时重算目录值和币种，不提供差异版本/CAS 保证。
 - **权限**：与其它 Admin 路由相同，后台 Session，或具有 `models.read` / `models.write` 的 `Authorization: Bearer <ADMIN_API_KEY>`。
 
 ### `GET /admin/models/import/catalog`
@@ -1187,7 +1247,7 @@ curl -sS "$GATEWAY_URL/v1/images/generations" \
 
 ### `GET /admin/config/overview`
 
-要求 `config.read`，仅按键读取 `BUSINESS_TIMEZONE`、`BILLING_CURRENCY`、`ROUTE_STRATEGY`、`ALERT_WEBHOOK_WECOM_URL`、`ALERT_WEBHOOK_FEISHU_URL`。不枚举完整配置表，不返回 Webhook URL、其他配置键或原始非法值。示例：
+要求 `config.read`，仅按键读取 `BUSINESS_TIMEZONE`、`BILLING_CURRENCY`、`ROUTE_STRATEGY`、`USER_CHARGED_COST_FACTOR_MODE`、`STREAM_FIRST_EVENT_TIMEOUT_MS`、`STREAM_FIRST_EVENT_TIMEOUT_ROUTE_GROUPS`、`ALERT_WEBHOOK_WECOM_URL`、`ALERT_WEBHOOK_FEISHU_URL`。不枚举完整配置表，不返回 Webhook URL 或其他配置键。两个首数据超时键保留历史原始字符串供核对，其余设置沿用既有安全规范化。示例：
 
 ```json
 {
@@ -1196,6 +1256,9 @@ curl -sS "$GATEWAY_URL/v1/images/generations" \
     "businessTimezone": { "value": "Asia/Singapore", "source": "configured", "revision": "legacy" },
     "billingCurrency": { "value": "USD", "source": "configured", "revision": "legacy" },
     "routeStrategy": { "value": "hash_affinity", "source": "configured", "revision": "legacy" },
+    "userChargedCostFactorMode": { "value": "multiply", "source": "configured", "revision": "legacy" },
+    "streamFirstEventTimeoutMs": { "value": "30000", "source": "configured", "revision": "legacy" },
+    "streamFirstEventTimeoutRouteGroups": { "value": "default,VIP", "source": "configured", "revision": "legacy" },
     "webhooks": { "wecom": { "configured": true, "revision": "legacy" }, "feishu": { "configured": false, "revision": null } },
     "canWrite": true,
     "canReveal": false
@@ -1203,7 +1266,11 @@ curl -sS "$GATEWAY_URL/v1/images/generations" \
 }
 ```
 
-`businessTimezone.source` 为 `configured`、`legacy`、`missing` 或 `invalid`，语义与专用时区 GET 相同。`billingCurrency.source` 为 `configured`（USD/CNY）、`unsupported`（有效三字母遗留值，例如 EUR，`value` 保留 EUR）、`missing` 或 `invalid`（后两者的有效值按现行网关规则为 USD）。`routeStrategy.source` 为 `configured`、`missing` 或 `invalid`，后两者的有效值为 `hash_affinity`。Webhook 的 `configured` 与 Proxy 的非空 trim 判断一致。每个 `revision` 是该键行的不含秘密版本号：无行时为 `null`，迁移前旧行初始为 `legacy`，成功写入后变为新的 UUID；空字符串配置仍是有行，版本不为 `null`。`canWrite` 表示当前主体持有 `config.write`；`canReveal` 表示持有 `config.secrets.read` 的权限，**此接口不会揭示秘密**。
+`businessTimezone.source` 为 `configured`、`legacy`、`missing` 或 `invalid`，语义与专用时区 GET 相同。`billingCurrency.source` 为 `configured`（USD/CNY）、`unsupported`（有效三字母遗留值，例如 EUR，`value` 保留 EUR）、`missing` 或 `invalid`（后两者的有效值按现行网关规则为 USD）。`routeStrategy.source` 为 `configured`、`missing` 或 `invalid`，后两者的有效值为 `hash_affinity`。`userChargedCostFactorMode` 的 `value` 为 `multiply` 或 `min`，`source` 为 `configured`、`missing` 或 `invalid`；后两者按 Core 默认值 `multiply`，不回显非法原值。旧版本服务缺此字段时 Web 显示不可用且只禁用这一项。Webhook 的 `configured` 与 Proxy 的非空 trim 判断一致。每个 `revision` 是该键行的不含秘密版本号：无行时为 `null`，迁移前旧行初始为 `legacy`，成功写入后变为新的 UUID；空字符串配置仍是有行，版本不为 `null`。`canWrite` 表示当前主体持有 `config.write`；`canReveal` 表示持有 `config.secrets.read` 的权限，**此接口不会揭示秘密**。
+
+`streamFirstEventTimeoutMs` 和 `streamFirstEventTimeoutRouteGroups` 均为 `{value:string,source:"configured"|"missing"|"invalid",revision:string|null}`。`value` 保留数据库原始字符串，SQL null 显示为空串；trim 后为空的 `source` 为 `missing`，非空但不满足当前新写入校验为 `invalid`。`invalid` 不代表运行时关闭，例如旧值 `10ms` 当前仍按 10 毫秒、`1e3` 按 1 毫秒解析；Web 展示原值及解析结果并要求显式编辑，不在读取时规范化写回。旧服务缺任一字段或版本时，只禁用对应控件，不改用全表 GET。
+
+此 GET 支持可选 `X-CinaToken-Expected-Console-Subject` 条件；一旦提供，就在读库前校验规范编码和当前可信 Console subject，非法或 API Key 携带该头返回 400，主体不符返回 403。旧无头调用保持兼容。Web 首数据超时的未知结果核对在重新验证身份后携带此头，避免校验与读取之间切换身份后错误解除原主体的待核对状态。
 
 任何指定键读取失败均返回通用 500，不伪造默认配置或泄露存储错误；未认证/缺少 `config.read` 返回 401/403。成功和错误响应均为 `Cache-Control: private, no-store`。该安全投影可用于普通 Web Query 缓存；原有完整配置 GET 不能替代它。
 
@@ -1215,16 +1282,25 @@ curl -sS "$GATEWAY_URL/v1/images/generations" \
 |------|------|--------------|------|
 | `PUT /admin/config/billing-currency` | `{ "value": "USD" }` 或 `CNY` | `{ "billingCurrency": { "value": "USD", "source": "configured", "revision": "新 UUID" } }` | `config.write` |
 | `PUT /admin/config/route-strategy` | `{ "value": "hash_affinity" }` 等现有四策略之一 | `{ "routeStrategy": { "value": "hash_affinity", "source": "configured", "revision": "新 UUID" } }` | `config.write` |
+| `PUT /admin/config/user-charged-cost-factor-mode` | `{ "value": "multiply" }` 或 `min` | `{ "userChargedCostFactorMode": { "value": "min", "source": "configured", "revision": "新 UUID" } }` | `config.write` |
+| `PUT /admin/config/stream-first-event-timeout-ms` | `{ "value": "30000" }`，空串或整数文本 0–2147483647 | `{ "streamFirstEventTimeoutMs": { "value": "30000", "source": "configured", "revision": "新 UUID" } }` | `config.write` |
+| `PUT /admin/config/stream-first-event-timeout-route-groups` | `{ "value": "default,VIP" }`，最多 4096 个 UTF-16 单元 | `{ "streamFirstEventTimeoutRouteGroups": { "value": "default,VIP", "source": "configured", "revision": "新 UUID" } }` | `config.write` |
 | `PUT /admin/config/webhooks/:channel` | `{ "value": "https://..." }` | `{ "webhook": { "configured": true, "revision": "新 UUID" } }` | `config.write` |
 | `DELETE /admin/config/webhooks/:channel` | 无请求体 | `{ "webhook": { "configured": false, "revision": "新 UUID" } }` | `config.write` |
 | `GET /admin/config/webhooks/:channel/reveal` | 无请求体 | `{ "channel": "wecom", "value": "完整 URL 或空串" }` | 同时持有 `config.read` 和 `config.secrets.read` |
 | `POST /admin/config/webhooks/:channel/verify` | `{ "value": "待核对 URL" }` | `{ "channel": "wecom", "matched": true, "configured": true }` | 同时持有 `config.read` 和 `config.secrets.read` |
 
+倍率模式专用写入的 Console 请求必须携带 `X-CinaToken-Expected-Console-Subject`（值为当前 subject 的一次规范 URL 编码）；缺失、非法或不匹配在写库前拒绝。Web 在写入前重新读取 `/api/auth/check` 和 `/api/user/me`，核验 Console subject、用户 ID 与管理员关联。全局模式影响未来请求，缓存传播最多约 30 秒；相乘模式按路由有效倍率 × 用户倍率，取较小值模式取二者最小值。无用户覆盖时路由计费保持原义。模式草稿须确认后保存，缺失/错误响应保留持久未知标记；只有显式重新读取兼容服务的当前快照后才核对解锁，不自动重发。
+
+两个首数据超时专用 PUT 与倍率模式一样要求 Console 的规范 expected-subject 请求头，API Key 仍按 `config.write` 授权。只接受单字段 `{value:string}`；移除首尾空格后存储，空串响应 `source:"missing"`，但版本仍为新 UUID。毫秒新写入拒绝指数、后缀、分数、负数及超出 32 位 timer 范围的值；`0` 和空串均关闭。组列表不降低大小写、不要求成员当前存在、不重新排序；空串仅选中 `default`，只有整个 trim 后字符串 `*` 或大小写不敏感的 `all` 代表全部，`*,VIP` 是两个字面组名。非空纯逗号列表、超过 4096 单元或含未配对 UTF-16 代理项（无法在 UTF-8 数据库中原样保存）的新值返回 400，历史原值仍按原 Proxy 规则读取。通用 PUT 使用相同新值校验。
+
+每项独立保存、独立版本和持久未知状态，两个保存不是一个原子操作。成功 ACK 只证明单键配置与审计提交；Proxy 每个实例约 30 秒缓存且分别读取两个键，因此不承诺两个键同时生效或立刻生效。保护从上游 2xx headers 后等待第一个 body chunk 开始，心跳 chunk 也会满足；它不是首 token、完整 SSE 事件、流空闲超时或总请求期限，只覆盖 Chat/Responses/Messages/Gemini 文本流入口，不覆盖 Images/Audio/Realtime/MCP/Tools，也不保证换路由成功。新写入上限避免 Node/Web timer 溢出；超上限历史值继续原运行时语义，界面提示风险而不猜测实际触发延迟。
+
 `:channel` 只能为 `wecom` 或 `feishu`。新替换入口只接受长度不超过 2048 的 HTTPS URL，且 WeCom 主机须精确为 `qyapi.weixin.qq.com`、飞书主机须精确为 `open.feishu.cn`；不接受非默认端口、URL 凭据、片段或控制字符。首尾空格可去除后存储。`verify` 的非空候选也受相同校验；空串可核对清除。历史遗留 URL 只可通过显式 `reveal` 读取。旧通用 `PUT /admin/config` 为兼容现有调用未增加此 URL 限制，仍可写任意非空 Webhook 值，应按原有高权限接口管理。
 
 条件写入在数据库内比较版本，成功响应表示配置与审计已原子提交，无写后重读竞争窗口。412 是确定未提交；存储失败或 HTTP 请求结果未知仍须保持未确认状态，不能自动重放写入，也不能以 overview 的 `configured: true` 判定“替换成功”：同时持有秘密读取权限者可显式调用只读 `verify` 对照候选 URL；仅有写权限者须保留未确认状态。`PUT/DELETE` 的响应、错误与服务端错误日志都不包含 Webhook URL。`verify` 只返回布尔对照结果，不返回或记录候选 URL；`reveal` 应仅在用户明确操作后调用，其明文响应不得进入普通 Query 缓存、持久存储或日志。上述所有端点（含提前结束的认证/权限/存储错误）均使用 `Cache-Control: private, no-store`。
 
-旧通用 `PUT /admin/config` 与上述固定键写入均在同一事务内更新 `system_config` 并追加一条 `config_change_audit`。通用 PUT 可选用同样条件并在成功时返回顶层 `revision`；默认关闭的服务端开关 `CINATOKEN_ADMIN_CONFIG_REQUIRE_REVISION` 不启用时，旧无条件调用仍会成功并更新版本。所有 Admin 实例设为精确 `true` 后，通用 PUT 对 `BUSINESS_TIMEZONE`、`BILLING_CURRENCY`、`ROUTE_STRATEGY` 和两个 Webhook 键缺少条件即返回 428，不读写配置或审计；Tools八个catalog/active键另受下述独立完整版本合同管理，其他键维持兼容。部署必须先完成数据库迁移、发布并排空旧 Admin 实例，再启用此开关，最后开启 Web Config 入口；未排空的旧实例仍可能接受无条件写，已打开的旧 Next 配置页将收到 428，应迁往 Web。审计只存 UUID、已知配置键（旧接口写入的任意非白名单键统一记为 `[nonstandard]`）、Webhook 通道、`set`/`clear` 动作、`console`/`admin_key` 主体类型与 ID、`committed` 结果及时间；不存配置值、URL、请求体或可复原指纹。审计表只记录已提交的变更：输入拒绝、版本冲突及数据库失败的尝试不入表。部署时必须依序应用 Core 的 D1 `0069`→`0070`、MySQL `0065`→`0066`、Postgres `0074`→`0075` 迁移，再发布新 Admin；未迁移数据库上的配置写入会失败并回滚，不能降级为无审计写入。该单键审计表尚无查询API；Tools使用独立group审计及下述查询接口。
+旧通用 `PUT /admin/config` 与上述固定键写入均在同一事务内更新 `system_config` 并追加一条 `config_change_audit`。通用 PUT 可选用同样条件并在成功时返回顶层 `revision`；默认关闭的服务端开关 `CINATOKEN_ADMIN_CONFIG_REQUIRE_REVISION` 不启用时，旧无条件调用仍会成功并更新版本。所有 Admin 实例设为精确 `true` 后，通用 PUT 对 `BUSINESS_TIMEZONE`、`BILLING_CURRENCY`、`ROUTE_STRATEGY`、`USER_CHARGED_COST_FACTOR_MODE`、两个 `STREAM_FIRST_EVENT_TIMEOUT_*` 键和两个 Webhook 键缺少条件即返回 428，不读写配置或审计；Tools八个catalog/active键另受下述独立完整版本合同管理，其他键维持兼容。部署必须先完成数据库迁移、发布并排空旧 Admin 实例，再启用此开关，最后开启 Web Config 入口；未排空的旧实例仍可能接受无条件写，已打开的旧 Next 配置页将收到 428，应迁往 Web。审计只存 UUID、已知配置键（旧接口写入的任意非白名单键统一记为 `[nonstandard]`）、Webhook 通道、`set`/`clear` 动作、`console`/`admin_key` 主体类型与 ID、`committed` 结果及时间；不存配置值、URL、请求体或可复原指纹。审计表只记录已提交的变更：输入拒绝、版本冲突及数据库失败的尝试不入表。部署时必须依序应用 Core 的 D1 `0069`→`0070`、MySQL `0065`→`0066`、Postgres `0074`→`0075` 迁移，再发布新 Admin；未迁移数据库上的配置写入会失败并回滚，不能降级为无审计写入。该单键审计表尚无查询API；Tools使用独立group审计及下述查询接口。
 
 ### `PUT /admin/config`
 
@@ -1325,6 +1401,18 @@ curl -sS "$GATEWAY_URL/v1/tools/ai-detection" \
 
 全库 `api_key_request_logs` 筛选分页（与按 Key 的 `/admin/keys/:id/logs` 互补）。
 
+新增可选 `ingress_host`：对实存 Host 快照精确匹配，保留大小写、端口和 IPv6 方括号，不按 URL/DNS 重写。首尾空白可去除，最长255字符；非字符串、控制字符、仅空白或重复同名参数在查询前返回400。省略或空字符串表示不筛选。三库计数和列表使用相同绑定条件，MySQL 显式二进制比较，不受默认大小写不敏感排序规则扩大；与 provider_id、model_id_prefix、用户/Key/工作区和时间条件按 AND 组合。列表及安全详情响应可返回 nullable/optional ingress_host，旧数据缺失不伪造主机。非空主机条件完成实际仓储读取后，响应追加 `applied_filters: { ingress_host: "规范化后的条件" }`；省略或清空主机时不新增 `ingress_host` 成员；主机、模型前缀和供应商集合三者都未筛选时才省略整个 `applied_filters` 对象，保持旧响应形状。Web 仅显式应用草稿，保留其他筛选；无效 URL 不读日志，带筛选时必须同时收到精确匹配的服务端确认和逐行主机匹配，否则拒绝旧结果。这也覆盖第一页碰巧全部匹配但 total 含其他主机、以及空页无法逐行核对的旧服务端。筛选、分页和显式刷新关闭旧展开；恢复曾用条件时不自动重开详情。
+
+`model_id_prefix` 现在同样要求完整范围确认：规范化时只去首尾空白，最长600，拒绝控制字符、非法UTF-16、非字符串、纯空白和重复query；空字符串或省略不筛选。D1 使用 SUBSTR/BINARY，MySQL 使用二进制 LEFT/字节长度，PostgreSQL 使用字符 LEFT 与 C 排序规则，count/list 均双绑定相同前缀，保持大小写、Unicode、`%`、`_` 和反斜杠的字面语义。仓储读取成功后 `applied_filters` 按实际非空条件包含 `ingress_host`、`model_id_prefix` 和/或 `provider_ids`；三者都未筛选时不返回该对象。Web 请求日志及按Server筛选的MCP调用记录必须有精确前缀确认，且仍核对每条记录；50条可见行碰巧匹配或空页缺确认均不能报告筛选成功。确认只说明已应用该条件，不保证分页和计数同一事务快照。 Web无效Host、模型前缀或供应商集合URL保留其他筛选并停用日志读取；字段显示对应错误，可直接修正或清除。多项同时非法时分别保留错误，修正一项不会误清其他项。
+
+`provider_ids` 是逗号分隔的供应商 ID 集合。共享规范化规则依次去除每项首尾空白、去除空项、去重，再按 JavaScript 字符串顺序排序；保留 ID 的大小写和字面内容，不查询当前供应商目录。规范化后至少1个、最多10个不同 ID，每项最长600；解码后的原始参数字符串最长6009，包含分隔逗号及空白，长度均按 UTF-16 代码单元计。省略或精确空字符串表示不筛选；非空但只有空白/逗号、超长、超过10个不同 ID、控制字符、非法UTF-16或非字符串输入均在仓储读取前返回400。重复同名 `provider_ids` query 参数也返回400，即使其中一个为空；多个 ID 应放在同一个参数内。
+
+集合内按任一成员匹配，集合与单个 `provider_id` 以及其他条件按 AND 组合：同时传 `provider_id=p1&provider_ids=p1,p2` 只匹配 p1，传 `provider_id=p3&provider_ids=p1,p2` 得到空结果，不覆盖或移除原条件。仓储读取成功后，响应以字符串数组回显规范化集合，例如 `applied_filters: { provider_ids: ["octafuse-mcp", "octafuse-tools"] }`；与主机/前缀同时筛选时在同一对象中分别确认。Web 请求日志和工具调用“全部来源”必须收到与请求集合逐项完全一致的有序、无重复数组，即使 `data` 为空也必须确认；缺失、乱序、错误类型、少项或多项均拒绝，同时仍核对每行供应商属于集合及单个供应商交集。未请求集合时不要求新增 `provider_ids` 回显，保留旧的无集合请求/响应兼容；使用集合的旧后端若缺少确认则不能报告筛选成功。确认不保证 count/list 属于同一事务快照。
+
+Web 工具调用 `source=all` 使用固定集合 `octafuse-mcp,octafuse-tools` 的一次服务端分页查询，进入请求日志保留该集合、日期和状态。来源切换清除不适用的工具/Server 条件并回到第一页。普通日志集合输入仅在显式应用后更新查询；清除集合只移除该条件，不清除其他范围。
+
+列表可包含 `charged_wallet_cost`（数据库decimal字符串或有限数值）。Web 保留缺失/null为未知；永久池分量非负且不超过总收费、金额可按安全微单位表示时，才计算周期分量 `charged_cost - charged_wallet_cost`。零、极小非零值和分量都按至多6位小数展示，过小/非微单位/不一致金额不伪装为零或负周期分量。请求日志与工具/MCP记录的列表和详情使用相同规则，币种必须来自已确认配置；这表示本次请求记录的收费分配，不代表账户余额或预算扣款成功确认。
+
 | 查询参数 | 说明 |
 |----------|------|
 | `page` | 默认 `1` |
@@ -1333,8 +1421,9 @@ curl -sS "$GATEWAY_URL/v1/tools/ai-detection" \
 | `user_email` | 精确匹配 |
 | `model_id` | 精确匹配 |
 | `provider_id` | 精确匹配 |
-| `provider_ids` | 逗号分隔，最多 10 个，匹配其中任一 `provider_id` |
-| `model_id_prefix` | `model_id` 前缀；`%`、`_` 和 `\` 按字面量匹配 |
+| `ingress_host` | 实存入口 Host 精确匹配，大小写与端口保留；最长255 |
+| `provider_ids` | 逗号分隔，trim/去空/去重/排序后最多10个；每项最长600，原串最长6009；与单个 `provider_id` 按交集匹配，成功响应回显集合 |
+| `model_id_prefix` | 大小写敏感的 `model_id` 字面前缀，最长600；`%`、`_` 和 `\` 为普通字符 |
 | `route_group` | 精确匹配 |
 | `status` | 精确匹配 |
 | `start_date` / `end_date` | 过滤 `created_at`（UTC，格式：`YYYY-MM-DD HH:mm:ss`） |
@@ -1344,6 +1433,8 @@ curl -sS "$GATEWAY_URL/v1/tools/ai-detection" \
 ### `GET /admin/request-logs/:id`
 
 该接口供显式详情与收益候选核对使用，要求 `logs.read`。它不从列表第一页推测结果，不支持未知或重复 query；非法 ID 返回 `400`、不存在返回 `404`。返回 `{ success:true, data:{...} }` 的安全白名单，只包含已核验的身份/模型/协议、Token、金额、状态和时间字段；不返回请求正文、上游正文、原始 usage/计价审计、headers、凭据指纹或错误原文。内外层全部响应（含认证、setup/限流及错误早退）均为 `private,no-store`。旧列表接口的查询和授权保持原合同，不能把 `api_key_id` 当作 request ID。
+
+安全详情新增可选 nullable `charged_wallet_cost`；三库有界SQL显式选择该金额字段，服务将合法SQL decimal转成JSON number。省略和null保持各自原义，非法数字返回失败，不加载或放开原始计价审计/正文。独立详情沿当前已核验币种展示收费分配。
 
 ### Shared Keys 治理与收益审核
 
@@ -1418,7 +1509,9 @@ revision 绑定归属/渠道/凭据身份、治理状态/验证时间/标签/优
 | `stream_sample_count` | `status = success` 且 `stream_duration_ms > 0` 的样本数 |
 | `stream_tokens_per_second` | 仅在上述样本上计算 `SUM(output_tokens) * 1000 / SUM(stream_duration_ms)`；无样本为 `null` |
 
-`failover_rate` 仍是转移事件数 / 请求数 × 100，可能超过 100%。`tokens_per_second` 仍按全部有流式时长的请求聚合。新接入方应使用上表中的请求占比和流式样本字段。D1、Postgres 与 MySQL 口径一致。
+`failover_rate` 仍是转移事件数 / 请求数 × 100，可能超过 100%。`tokens_per_second` 保留旧公式：全部输出 Token 总数 × 1000 / 全部流时长总和；分子未限定为成功且正流时长的同一组请求，因此不能作为新流式速度的替代值。新接入方应使用上表中的请求占比和流式样本字段。D1、Postgres 与 MySQL 口径一致。
+
+活跃 Web 的模型/供应商主表、相互下钻及用户/Key模型明细接入上述四字段。兼容旧实例时，两对字段分别允许同时缺失，显示“未提供”，不从旧指标推算；只出现半对或不合法的计数/值使该响应无效。流式样本数必须为非负安全整数且不超过成功请求数，零样本对应 `null`，有样本允许速度为零。故障转移请求数不得超过请求总数，比例限0–100%；零计数要求零比例，全部请求都转移时要求100%，其他比例保留数据库精度。新主表排序将缺失/无样本值在两种方向下均置后；样本数与转移请求数紧邻指标显示，计算口径可通过键盘展开。模型/供应商 CSV 保留原28列顺序，末尾追加 `stream_tokens_per_second,stream_sample_count,failover_request_count,failover_request_rate`，未提供或 `null` 写为空，真实零值写为0。
 
 ### `GET /admin/analytics/providers`
 
@@ -1437,7 +1530,9 @@ revision 绑定归属/渠道/凭据身份、治理状态/验证时间/标签/优
 | `start_date` / `end_date` | 同上 |
 | `email` | 可选，`user_email` **模糊**匹配（`LIKE %...%`） |
 
-`data` 另含 `success_count`（`status = success` 的请求数）。`budget_*` 与 `wallet_*` 是账户当前值，不是所选区间的历史余额。用户按日志中的 `user_email` 聚合。
+`data` 另含 `success_count`（`status = success` 的请求数）。用户按日志中的 `user_email` 聚合；`budget_*` 与 `wallet_granted` / `wallet_spent` 是关联用户当前值的各列最大值，不是所选区间的历史余额，也不保证来自唯一账号。未关联的永久额度列保留 `null`，不伪造 0。
+
+新增兼容字段 `user_id: string | null`：仅当该邮箱组在当前区间内的**每条日志**都关联同一现存用户时返回其 ID；共享邮箱、多账号或任意未关联日志均返回 `null`，不按邮箱反查或任意选一个账号。Web 展示原始永久额度累计值，仅在有这一唯一 ID 且两列完整时计算有符号余额，保留六位微额；旧响应缺字段显示不可用。CSV 保留原16列并追加 user_id、wallet_granted、wallet_spent、wallet_balance。
 
 ### `GET /admin/analytics/keys`
 
@@ -1449,6 +1544,8 @@ revision 绑定归属/渠道/凭据身份、治理状态/验证时间/标签/优
 | `user_id` | **必填**；用户 UUID 或 `ext:` 路由 |
 
 `data` 每行：`api_key_id`、`key_name`、`request_count`、`input_tokens`、`output_tokens`、`charged_cost`、`metered_cost`、`standard_cost`、`distinct_models`、`last_active_at`、`success_count`、`error_count`、`success_rate`。
+
+Web 用户分析可显式展开已唯一确认账号的 Key 用量，再展开指定 Key 的模型/路由分组；后者以 `user_id` **且** `api_key_id` 查询 models 分析，日志链接保留二者及所选 UTC 范围。该范围覆盖账号在区间内的所有历史日志邮箱，区别于原邮箱模型展开；未使用 Key 保留0，null历史桶无单 Key 链接，取消等其他状态不计入 error_count。邮箱/区间/目标切换取消旧读取，权限拒绝清除新增私有视图且不自动重试；显示配置或 logs.read 不可用不扩大 analytics.read 权限。
 
 ### `GET /admin/analytics/reliability`
 

@@ -12,6 +12,7 @@ import type {
 import { safeLogJson } from '../request-logs/request-log-domain'
 import { GatewayKeyLinks } from './GatewayKeyLinks'
 import { GatewayKeyProfile } from './GatewayKeyProfile'
+import { RateLimitEditor } from './RateLimitEditor'
 import type {
 	GatewayKeyDetail,
 	GatewayKeyRow,
@@ -23,6 +24,7 @@ import {
 	type GatewayKeyPatch,
 	type GatewayKeyEditForm,
 } from './gateway-key-input'
+import { rateLimitRpmInput } from './rate-limit'
 
 const prefix = 'cinatoken.adminGatewayKeys.'
 const inputClass = 'bg-background w-full rounded-md border px-3 py-2 text-sm'
@@ -34,6 +36,7 @@ export function GatewayKeyEditor(props: {
 	previewReadOptions: (signal?: AbortSignal) => AdminGuardrailPreviewOptions
 	scopeKey: string
 	currency: 'USD' | 'CNY' | null
+	timezone: string | null
 	guardrailBlocked: boolean
 	onGuardrailDenied: () => void
 	busy: boolean
@@ -50,6 +53,8 @@ export function GatewayKeyEditor(props: {
 			name: props.detail.name ?? '',
 			status: props.detail.status,
 			statusConfirmed: false,
+			rateLimitMode: 'unchanged',
+			rateLimitRpm: rateLimitRpmInput(props.detail.rate_limit),
 			metadataMode: 'unchanged',
 			metadata: '',
 			reason: '',
@@ -67,7 +72,11 @@ export function GatewayKeyEditor(props: {
 	}
 	return (
 		<div className='space-y-5'>
-			<GatewayKeyProfile detail={props.detail} currency={props.currency} />
+			<GatewayKeyProfile
+				detail={props.detail}
+				currency={props.currency}
+				timezone={props.timezone}
+			/>
 			<GatewayKeyLinks row={props.row} capabilities={props.capabilities} />
 			<form className='space-y-4' onSubmit={form.handleSubmit(submit)}>
 				{props.error && (
@@ -100,6 +109,20 @@ export function GatewayKeyEditor(props: {
 						</span>
 					)}
 				</div>
+				<RateLimitEditor
+					current={props.detail.rate_limit}
+					layer='key'
+					mode={form.watch('rateLimitMode') ?? 'unchanged'}
+					rpm={form.watch('rateLimitRpm') ?? ''}
+					disabled={props.busy || !props.canWrite}
+					invalid={Boolean(form.formState.errors.rateLimitRpm)}
+					onMode={(value) =>
+						form.setValue('rateLimitMode', value, { shouldDirty: true })
+					}
+					onRpm={(value) =>
+						form.setValue('rateLimitRpm', value, { shouldDirty: true })
+					}
+				/>
 				<label className='block space-y-1 text-sm'>
 					<span>{t(prefix + 'status')}</span>
 					<select

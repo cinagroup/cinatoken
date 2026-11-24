@@ -22,7 +22,10 @@ export function formatActivityMoney(
 }
 
 export function accountBudgetRemaining(budget: ActivityBudget): number | null {
-	return budget.status === 'finite' ? budget.budgetRemaining : null
+	if (budget.status !== 'finite') return null
+	return budget.totalRemaining === undefined
+		? budget.budgetRemaining
+		: budget.totalRemaining
 }
 
 export function activityMetricValue(

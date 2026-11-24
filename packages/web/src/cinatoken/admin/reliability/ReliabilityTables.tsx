@@ -1,16 +1,27 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
+import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
+import type { AnalyticsProviderDirectory } from '../analytics/providers/analytics-provider-directory'
 import { formatMoney, formatNumber } from '../dashboard/dashboard-format'
+import {
+	ReliabilityProviderAccount,
+	ReliabilityProviderKind,
+} from './ReliabilityProviderIdentity'
 import type {
 	ModelProviderReliability,
 	ProviderReliability,
 	ReliabilityDisplay,
 } from './reliability-contracts'
+import {
+	groupReliabilityModels,
+	reliabilityErrorLogHref,
+} from './reliability-domain'
 
 const prefix = 'cinatoken.adminReliability.'
 const columns = [
 	'avgLatency',
 	'avgUpstream',
+	'failoverRequestRate',
 	'failoverRate',
 	'avgAttempts',
 	'standardCost',
@@ -19,12 +30,22 @@ const columns = [
 ] as const
 
 type SharedRow = ProviderReliability | ModelProviderReliability
+const unavailableDirectory: AnalyticsProviderDirectory = {
+	status: 'unavailable',
+}
+type Context = {
+	directory?: AnalyticsProviderDirectory
+	range?: { startUtc: string; endUtc: string }
+	logsAllowed?: boolean
+}
 
-function ReliabilityCells(props: {
-	row: SharedRow
-	currency: ReliabilityDisplay['currency']
-	locale: string
-}) {
+function ReliabilityCells(
+	props: Context & {
+		row: SharedRow
+		currency: ReliabilityDisplay['currency']
+		locale: string
+	}
+) {
 	const { t } = useTranslation()
 	function money(value: number | undefined): string {
 		if (!props.currency) return t(prefix + 'amountUnavailable')
@@ -36,6 +57,22 @@ function ReliabilityCells(props: {
 			? t(prefix + 'noValue')
 			: `${formatNumber(Math.round(value), props.locale)} ms`
 	}
+	function errors(): ReactNode {
+		if (!('error_count' in props.row)) return null
+		const count = formatNumber(props.row.error_count, props.locale)
+		if (!props.logsAllowed || !props.range) return count
+		return (
+			<a
+				href={reliabilityErrorLogHref(props.range, props.row.provider_id)}
+				className='text-primary underline'
+				aria-label={t(prefix + 'providerErrors', {
+					provider: props.row.provider_id,
+				})}
+			>
+				{count}
+			</a>
+		)
+	}
 	return (
 		<>
 			<td className='px-4 py-3 tabular-nums'>
@@ -45,9 +82,7 @@ function ReliabilityCells(props: {
 				{props.row.success_rate.toFixed(1)}%
 			</td>
 			{'error_count' in props.row && (
-				<td className='px-4 py-3 tabular-nums'>
-					{formatNumber(props.row.error_count, props.locale)}
-				</td>
+				<td className='px-4 py-3 tabular-nums'>{errors()}</td>
 			)}
 			<td className='px-4 py-3 tabular-nums'>
 				{latency(props.row.avg_latency_ms)}
@@ -56,7 +91,23 @@ function ReliabilityCells(props: {
 				{latency(props.row.avg_upstream_response_ms)}
 			</td>
 			<td className='px-4 py-3 tabular-nums'>
-				{props.row.failover_rate.toFixed(1)}%
+				{props.row.failover_request_rate === undefined
+					? t(prefix + 'noValue')
+					: `${props.row.failover_request_rate.toFixed(1)}%`}
+				<span className='text-muted-foreground mt-1 block text-xs'>
+					{props.row.failover_request_count === undefined
+						? t(prefix + 'failoverUnknown')
+						: t(prefix + 'failoverCount', {
+								count: formatNumber(
+									props.row.failover_request_count,
+									props.locale
+								),
+								total: formatNumber(props.row.request_count, props.locale),
+							})}
+				</span>
+			</td>
+			<td className='px-4 py-3 tabular-nums'>
+				{formatNumber(props.row.failover_rate, props.locale)}
 			</td>
 			<td className='px-4 py-3 tabular-nums'>
 				{props.row.avg_attempts === null
@@ -76,12 +127,14 @@ function ReliabilityCells(props: {
 	)
 }
 
-function ReliabilityTable(props: {
-	kind: 'providers' | 'modelProviders'
-	rows: ProviderReliability[] | ModelProviderReliability[]
-	currency: ReliabilityDisplay['currency']
-	locale: string
-}) {
+function ReliabilityTable(
+	props: Context & {
+		kind: 'providers' | 'modelProviders'
+		rows: ProviderReliability[] | ModelProviderReliability[]
+		currency: ReliabilityDisplay['currency']
+		locale: string
+	}
+) {
 	const { t } = useTranslation()
 	const isModel = props.kind === 'modelProviders'
 	return (
@@ -89,6 +142,7 @@ function ReliabilityTable(props: {
 			<h2 className='text-lg font-semibold'>{t(prefix + props.kind)}</h2>
 			<div className='bg-card overflow-x-auto rounded-xl border'>
 				<table className='w-full min-w-max text-left text-sm'>
+					<caption className='sr-only'>{t(prefix + props.kind)}</caption>
 					<thead className='bg-muted/60 text-muted-foreground text-xs'>
 						<tr>
 							{isModel && (
@@ -96,6 +150,9 @@ function ReliabilityTable(props: {
 									{t(prefix + 'model')}
 								</th>
 							)}
+							<th scope='col' className='px-4 py-3'>
+								{t(prefix + 'providerKind')}
+							</th>
 							<th scope='col' className='px-4 py-3'>
 								{t(prefix + 'provider')}
 							</th>
@@ -122,7 +179,10 @@ function ReliabilityTable(props: {
 							<tr
 								key={
 									isModel
-										? `${(row as ModelProviderReliability).model_id}:${row.provider_id}`
+										? JSON.stringify([
+												(row as ModelProviderReliability).model_id,
+												row.provider_id,
+											])
 										: row.provider_id
 								}
 								className='hover:bg-muted/30'
@@ -135,13 +195,26 @@ function ReliabilityTable(props: {
 										{(row as ModelProviderReliability).model_id}
 									</th>
 								)}
-								<td className='max-w-56 px-4 py-3 font-medium break-all'>
-									{row.provider_name || row.provider_id}
+								<td className='max-w-56 px-4 py-3'>
+									<ReliabilityProviderKind
+										id={row.provider_id}
+										directory={props.directory ?? unavailableDirectory}
+										locale={props.locale}
+									/>
+								</td>
+								<td className='max-w-56 px-4 py-3'>
+									<ReliabilityProviderAccount
+										id={row.provider_id}
+										name={row.provider_name}
+										directory={props.directory ?? unavailableDirectory}
+									/>
 								</td>
 								<ReliabilityCells
 									row={row}
 									currency={props.currency}
 									locale={props.locale}
+									range={props.range}
+									logsAllowed={props.logsAllowed}
 								/>
 							</tr>
 						))}
@@ -157,12 +230,14 @@ function ReliabilityTable(props: {
 	)
 }
 
-export function ReliabilityTables(props: {
-	providers: ProviderReliability[]
-	modelProviders: ModelProviderReliability[]
-	currency: ReliabilityDisplay['currency']
-	locale: string
-}) {
+export function ReliabilityTables(
+	props: Context & {
+		providers: ProviderReliability[]
+		modelProviders: ModelProviderReliability[]
+		currency: ReliabilityDisplay['currency']
+		locale: string
+	}
+) {
 	return (
 		<>
 			<ReliabilityTable
@@ -170,12 +245,18 @@ export function ReliabilityTables(props: {
 				rows={props.providers}
 				currency={props.currency}
 				locale={props.locale}
+				directory={props.directory}
+				range={props.range}
+				logsAllowed={props.logsAllowed}
 			/>
 			<ReliabilityTable
 				kind='modelProviders'
-				rows={props.modelProviders}
+				rows={groupReliabilityModels(props.modelProviders)}
 				currency={props.currency}
 				locale={props.locale}
+				directory={props.directory}
+				range={props.range}
+				logsAllowed={props.logsAllowed}
 			/>
 		</>
 	)

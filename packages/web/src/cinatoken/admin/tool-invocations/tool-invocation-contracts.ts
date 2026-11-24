@@ -1,6 +1,9 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
 import { z } from 'zod'
-import { requestLogSchema } from '../request-logs/request-log-contracts'
+import {
+	requestLogAppliedFiltersSchema,
+	requestLogSchema,
+} from '../request-logs/request-log-contracts'
 
 /** Project only fields required by Tool Invocations; other request-log columns are discarded. */
 export const toolInvocationSchema = requestLogSchema.pick({
@@ -15,6 +18,7 @@ export const toolInvocationSchema = requestLogSchema.pick({
 	status: true,
 	standard_cost: true,
 	charged_cost: true,
+	charged_wallet_cost: true,
 	metered_cost: true,
 	latency_ms: true,
 	error_message: true,
@@ -29,6 +33,7 @@ export const toolInvocationsResponseSchema = z
 		total: count,
 		page: count.positive(),
 		page_size: count.min(1).max(100),
+		applied_filters: requestLogAppliedFiltersSchema.optional(),
 	})
 	.superRefine((value, context) => {
 		if (

@@ -29,6 +29,11 @@ const metrics = {
 	content_ttft_rate: rate,
 	avg_upstream_response_ms: nullableDuration,
 	tokens_per_second: finite.nonnegative().nullable(),
+	// Additive pairs stay absent for older services; absence never means zero.
+	stream_tokens_per_second: finite.nonnegative().nullable().optional(),
+	stream_sample_count: count.optional(),
+	failover_request_count: count.optional(),
+	failover_request_rate: rate.optional(),
 	// This is SUM(failover_count)/request_count, and can exceed 100%.
 	failover_rate: finite.nonnegative(),
 	avg_attempts: nullableDuration,
@@ -40,6 +45,42 @@ const countsAgree = (row: {
 	error_count: number
 }) => row.success_count + row.error_count <= row.request_count
 
+function qualityMetricsAgree(row: {
+	request_count: number
+	success_count: number
+	stream_tokens_per_second?: number | null
+	stream_sample_count?: number
+	failover_request_count?: number
+	failover_request_rate?: number
+}): boolean {
+	if (
+		(row.stream_sample_count === undefined) !==
+		(row.stream_tokens_per_second === undefined)
+	)
+		return false
+	if (row.stream_sample_count !== undefined) {
+		if (row.stream_sample_count > row.success_count) return false
+		// The same successful, positive-duration cohort supplies count and TPS.
+		if (
+			(row.stream_sample_count === 0) !==
+			(row.stream_tokens_per_second === null)
+		)
+			return false
+	}
+	if (
+		(row.failover_request_count === undefined) !==
+		(row.failover_request_rate === undefined)
+	)
+		return false
+	if (row.failover_request_count === undefined) return true
+	if (row.failover_request_count > row.request_count) return false
+	if (row.failover_request_count === 0) return row.failover_request_rate === 0
+	if (row.failover_request_count === row.request_count)
+		return row.failover_request_rate === 100
+	// Keep the server's ratio precision; SQL drivers may round nonzero fractions.
+	return true
+}
+
 export const modelAnalyticsRowSchema = z
 	.object({
 		model_id: id,
@@ -47,6 +88,7 @@ export const modelAnalyticsRowSchema = z
 		...metrics,
 	})
 	.refine(countsAgree)
+	.refine(qualityMetricsAgree, 'Inconsistent analytics quality metrics')
 export type ModelAnalyticsRow = z.infer<typeof modelAnalyticsRowSchema>
 
 export const modelProviderRowSchema = z
@@ -57,6 +99,7 @@ export const modelProviderRowSchema = z
 		...metrics,
 	})
 	.refine(countsAgree)
+	.refine(qualityMetricsAgree, 'Inconsistent analytics quality metrics')
 export type ModelProviderRow = z.infer<typeof modelProviderRowSchema>
 
 export const modelAnalyticsResponseSchema = z

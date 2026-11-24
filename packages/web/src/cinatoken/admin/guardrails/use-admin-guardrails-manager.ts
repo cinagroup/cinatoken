@@ -17,12 +17,17 @@ import type { AdminGuardrailsApi } from './guardrails-api'
 import type {
 	AdminGuardrailAssignment,
 	AdminGuardrailList,
+	AdminGuardrailMetadataPatch,
 	AdminGuardrailScopeType,
 	AdminGuardrailSummary,
 } from './guardrails-contracts'
 import {
 	adminGuardrailAccessLost,
+	adminGuardrailCanResumeBinding,
+	adminGuardrailCanResumeMetadata,
 	adminGuardrailErrorKey,
+	adminGuardrailReadFailed,
+	adminGuardrailWriteUncertain,
 } from './guardrails-errors'
 
 export type AdminGuardrailsManagerProps = {
@@ -34,13 +39,27 @@ export type AdminGuardrailsManagerProps = {
 	canWrite: boolean
 	revalidate: () => Promise<void>
 }
+export type AdminGuardrailBindingDraft = {
+	scopeType: AdminGuardrailScopeType
+	scopeId: string
+}
 export type AdminGuardrailChange =
 	| { kind: 'archive' | 'restore' }
+	| { kind: 'metadata'; patch: AdminGuardrailMetadataPatch }
 	| { kind: 'designate'; version: number }
-	| { kind: 'bind'; scopeType: AdminGuardrailScopeType; scopeId: string }
+	| ({ kind: 'bind' } & AdminGuardrailBindingDraft)
 	| { kind: 'unbind'; assignment: AdminGuardrailAssignment }
 export type AdminGuardrailPanel =
-	| { kind: 'details'; row: AdminGuardrailSummary }
+	| {
+			kind: 'metadata'
+			row: AdminGuardrailSummary
+			patch?: AdminGuardrailMetadataPatch
+	  }
+	| {
+			kind: 'details'
+			row: AdminGuardrailSummary
+			draft?: AdminGuardrailBindingDraft
+	  }
 	| {
 			kind: 'confirm'
 			row: AdminGuardrailSummary
@@ -102,6 +121,7 @@ export function useAdminGuardrailsManager(props: AdminGuardrailsManagerProps) {
 	const current = useRef(props)
 	const controller = useRef<AbortController | null>(null)
 	const writing = useRef(false)
+	const dispatchAuthority = useRef<AdminGuardrailList | null>(null)
 	useLayoutEffect(() => {
 		current.current = props
 	}, [props])
@@ -140,9 +160,11 @@ export function useAdminGuardrailsManager(props: AdminGuardrailsManagerProps) {
 			setReconciliationError(null)
 			const resetting = client.resetQueries({ queryKey: prefix })
 			setRevoked(false)
-			void resetting.then(() => {
-				if (isCurrentScope() && !client.getQueryState(listKey)?.error)
-					void list.refetch()
+			void (async () => {
+				await resetting
+				if (isCurrentScope()) await list.refetch()
+			})().catch((failure) => {
+				if (isCurrentScope()) revoke(failure)
 			})
 		},
 		onFailure: (failure) => revoke(failure),
@@ -180,19 +202,13 @@ export function useAdminGuardrailsManager(props: AdminGuardrailsManagerProps) {
 	})
 	const revoke = useCallback(
 		(readError: unknown): void => {
-			const failed =
-				adminGuardrailAccessLost(readError) ||
-				(typeof readError === 'object' &&
-					readError !== null &&
-					'status' in readError &&
-					Number(readError.status) >= 500)
-			if (!failed || !isCurrentScope()) return
+			if (!adminGuardrailReadFailed(readError) || !isCurrentScope()) return
 			setRevoked(true)
 			setPanel(null)
 			setTarget(null)
 			setNotice(false)
-			setError(readError)
-			setReconciliationError(null)
+			setError(null)
+			setReconciliationError(readError)
 			controller.current?.abort()
 			void client.cancelQueries({ queryKey: prefix })
 			client.removeQueries({ queryKey: prefix })
@@ -227,24 +243,65 @@ export function useAdminGuardrailsManager(props: AdminGuardrailsManagerProps) {
 			client.removeQueries({ queryKey: prefix })
 		}
 	}, [client, prefix, scope])
-	const hidden =
-		revoked ||
-		Boolean(list.error) ||
-		list.isFetching ||
-		Boolean(details.error) ||
-		(writeUnconfirmed && !saving)
+	const hidden = revoked || Boolean(list.error) || list.isFetching
 	const rows = hidden ? [] : (list.data?.rows ?? [])
-	const canWrite = props.canWrite && list.data?.canWrite === true
+	const canWrite = props.canWrite && !list.error && list.data?.canWrite === true
 	const disabled = hidden || writeUnconfirmed || !canWrite || saving
+	useLayoutEffect(() => {
+		dispatchAuthority.current = canWrite && !hidden ? (list.data ?? null) : null
+	}, [canWrite, hidden, list.data])
+	if (
+		panel !== null &&
+		!saving &&
+		!list.isFetching &&
+		!list.error &&
+		list.data &&
+		(!list.data.rows.some((row) => row === panel.row) ||
+			(panel.kind !== 'details' && !canWrite) ||
+			(panel.kind === 'confirm' && panel.authority !== list.data))
+	) {
+		setPanel(null)
+		setTarget(null)
+	}
+	const canResumeBinding =
+		!disabled &&
+		panel?.kind === 'confirm' &&
+		panel.change.kind === 'bind' &&
+		panel.authority === list.data &&
+		rows.some((row) => row === panel.row) &&
+		target === panel.row &&
+		Boolean(details.data) &&
+		!details.error &&
+		!details.isFetching &&
+		panel.row.status === 'active' &&
+		!panel.row.isWorkspaceDefault &&
+		!panel.row.isAccountDefault &&
+		adminGuardrailCanResumeBinding(error)
+	const canResumeMetadata =
+		!disabled &&
+		panel?.kind === 'confirm' &&
+		panel.change.kind === 'metadata' &&
+		panel.authority === list.data &&
+		rows.some((row) => row === panel.row) &&
+		adminGuardrailCanResumeMetadata(error)
+	function openMetadata(row: AdminGuardrailSummary): void {
+		if (disabled || writing.current || !rows.some((value) => value === row))
+			return
+		setError(null)
+		setNotice(false)
+		setTarget(null)
+		setPanel({ kind: 'metadata', row })
+	}
 	function openDetails(row: AdminGuardrailSummary): void {
 		if (
 			hidden ||
-			!rows.some(
-				(value) => value.id === row.id && value.workspaceId === row.workspaceId
-			)
+			saving ||
+			writing.current ||
+			!rows.some((value) => value === row)
 		)
 			return
 		setError(null)
+		setNotice(false)
 		setTarget(row)
 		setPanel({ kind: 'details', row })
 	}
@@ -254,9 +311,9 @@ export function useAdminGuardrailsManager(props: AdminGuardrailsManagerProps) {
 	): void {
 		if (
 			disabled ||
-			!rows.some(
-				(value) => value.id === row.id && value.workspaceId === row.workspaceId
-			)
+			writing.current ||
+			(panel?.kind === 'confirm' && error != null) ||
+			!rows.some((value) => value === row)
 		)
 			return
 		if (
@@ -264,18 +321,38 @@ export function useAdminGuardrailsManager(props: AdminGuardrailsManagerProps) {
 			(row.isWorkspaceDefault || row.isAccountDefault)
 		)
 			return
+		if (
+			change.kind === 'metadata' &&
+			(row.isWorkspaceDefault || row.isAccountDefault) &&
+			change.patch.name !== undefined
+		)
+			return
 		if (change.kind === 'designate' && row.status !== 'active') return
 		if (
-			change.kind === 'bind' &&
-			(row.status !== 'active' ||
-				row.isWorkspaceDefault ||
-				row.isAccountDefault)
+			(change.kind === 'bind' || change.kind === 'unbind') &&
+			(row.isWorkspaceDefault || row.isAccountDefault)
+		)
+			return
+		if (change.kind === 'bind' && row.status !== 'active') return
+		if (
+			(change.kind === 'bind' ||
+				change.kind === 'unbind' ||
+				change.kind === 'designate') &&
+			(target !== row || !details.data || details.error || details.isFetching)
+		)
+			return
+		if (
+			change.kind === 'designate' &&
+			!details.data?.versions.some(
+				(version) => version.version === change.version
+			)
 		)
 			return
 		if (
 			change.kind === 'unbind' &&
 			(change.assignment.workspaceId !== row.workspaceId ||
-				change.assignment.guardrailId !== row.id)
+				change.assignment.guardrailId !== row.id ||
+				!details.data?.assignments.some((value) => value === change.assignment))
 		)
 			return
 		if (!list.data) return
@@ -284,14 +361,44 @@ export function useAdminGuardrailsManager(props: AdminGuardrailsManagerProps) {
 		setPanel({ kind: 'confirm', row, change, authority: list.data })
 	}
 	function close(): void {
-		if (saving) return
+		if (writing.current) return
 		setPanel(null)
 		setTarget(null)
+	}
+	function resumeBinding(): void {
+		if (
+			!isCurrentScope() ||
+			!canResumeBinding ||
+			panel?.kind !== 'confirm' ||
+			panel.change.kind !== 'bind'
+		)
+			return
+		setPanel({
+			kind: 'details',
+			row: panel.row,
+			draft: {
+				scopeType: panel.change.scopeType,
+				scopeId: panel.change.scopeId,
+			},
+		})
+		setError(null)
+	}
+	function resumeMetadata(): void {
+		if (
+			!isCurrentScope() ||
+			!canResumeMetadata ||
+			panel?.kind !== 'confirm' ||
+			panel.change.kind !== 'metadata'
+		)
+			return
+		setTarget(null)
+		setPanel({ kind: 'metadata', row: panel.row, patch: panel.change.patch })
 		setError(null)
 	}
 	async function confirm(): Promise<void> {
 		if (
 			disabled ||
+			error != null ||
 			writing.current ||
 			binding.status !== 'ready' ||
 			panel?.kind !== 'confirm' ||
@@ -299,12 +406,13 @@ export function useAdminGuardrailsManager(props: AdminGuardrailsManagerProps) {
 			!isCurrentScope()
 		)
 			return
-		const { row, change } = panel
+		const { row, change, authority } = panel
 		const abort = new AbortController()
 		controller.current = abort
 		writing.current = true
 		binding.resetDispatch()
 		setSaving(true)
+		setNotice(false)
 		setError(null)
 		setReconciliationError(null)
 		try {
@@ -314,13 +422,16 @@ export function useAdminGuardrailsManager(props: AdminGuardrailsManagerProps) {
 				if (
 					!isCurrentScope() ||
 					abort.signal.aborted ||
-					!current.current.canWrite
+					!current.current.canWrite ||
+					dispatchAuthority.current !== authority
 				)
 					throw new AdminDomainWriteError('subject', 401)
 				markDispatch?.(operation)
 			}
 			let removed = true
-			if (change.kind === 'archive' || change.kind === 'restore')
+			if (change.kind === 'metadata')
+				await props.api.patchGuardrailMetadata(row, change.patch, options)
+			else if (change.kind === 'archive' || change.kind === 'restore')
 				await props.api.setGuardrailStatus(
 					row,
 					change.kind === 'archive' ? 'archived' : 'active',
@@ -353,25 +464,24 @@ export function useAdminGuardrailsManager(props: AdminGuardrailsManagerProps) {
 			setNotice(removed)
 			setError(removed ? null : { status: 409 })
 			await client.invalidateQueries({ queryKey: listKey })
-		} catch (writeError) {
+		} catch (failure) {
 			if (!isCurrentScope() || abort.signal.aborted) return
+			let writeError = failure
 			if (
-				writeError instanceof AdminDomainWriteError &&
-				writeError.code === 'rejected'
+				failure instanceof AdminDomainWriteError &&
+				failure.code === 'rejected'
 			) {
 				try {
 					binding.settleKnown('definitive-rejection')
 				} catch (settleError) {
-					setError(settleError)
-					setPanel(null)
-					setTarget(null)
-					return
+					writeError = settleError
 				}
 			}
 			setError(writeError)
 			if (
-				writeError instanceof AdminDomainWriteError &&
-				(writeError.code === 'unknown' || writeError.code === 'storage')
+				adminGuardrailWriteUncertain(writeError) ||
+				(writeError instanceof AdminDomainWriteError &&
+					writeError.code === 'subject')
 			) {
 				setPanel(null)
 				setTarget(null)
@@ -415,10 +525,15 @@ export function useAdminGuardrailsManager(props: AdminGuardrailsManagerProps) {
 		revoked,
 		disabled,
 		canWrite,
+		canResumeBinding,
+		resumeBinding,
+		canResumeMetadata,
+		resumeMetadata,
 		saving,
 		manualRecovery: binding.manualRecovery,
 		readOptions: binding.readOptions,
 		openDetails,
+		openMetadata,
 		stage,
 		close,
 		confirm,

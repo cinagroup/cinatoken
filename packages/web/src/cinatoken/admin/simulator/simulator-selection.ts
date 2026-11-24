@@ -12,6 +12,10 @@ import {
 	type GeminiContentAction,
 } from '../playground/browser-domain/invoke-kind'
 import { modalities } from '../playground/browser-domain/model-modalities'
+import {
+	isSimulatorProtocol,
+	supportedSimulatorOperation,
+} from './simulator-capabilities'
 import type { SimulatorContext, SimulatorModel } from './simulator-contracts'
 import {
 	bodyTemplateForSelection,
@@ -72,8 +76,7 @@ export function readPreference(key: string): string {
 	}
 }
 function protocol(value: string | undefined): SimulatorProtocol {
-	if (value === 'anthropic' || value === 'gemini' || value === 'dashscope')
-		return value
+	if (value && isSimulatorProtocol(value)) return value
 	return 'openai'
 }
 export function initialSelection(search?: SimulatorSearch): SimulatorSelection {
@@ -204,15 +207,11 @@ export function reconcileSelection(
 	const surfaces = listSupportedClientSurfaces(
 		context.routes,
 		model.id,
-		next.routeGroup
+		next.routeGroup,
+		next.kind,
+		next.protocol
 	)
-	let protocols = surfaces.protocols
-	if (next.kind === 'image')
-		protocols = protocols.filter((item) => item === 'openai')
-	if (next.kind === 'audio')
-		protocols = protocols.filter(
-			(item) => item === 'openai' || item === 'dashscope'
-		)
+	const protocols = surfaces.protocols
 	if (!protocols.includes(next.protocol))
 		next.protocol = protocols[0] ?? 'openai'
 	if (
@@ -221,11 +220,17 @@ export function reconcileSelection(
 		!surfaces.openaiLlmOperations.includes(next.llmOperation)
 	)
 		next.llmOperation = surfaces.openaiLlmOperations[0] ?? 'chat'
-	if (
-		next.kind === 'image' &&
-		!surfaces.imageOperations.includes(next.imageOperation)
-	)
-		next.imageOperation = surfaces.imageOperations[0] ?? 'generations'
+	if (next.kind === 'image') {
+		const imageOperations = listSupportedClientSurfaces(
+			context.routes,
+			model.id,
+			next.routeGroup,
+			next.kind,
+			next.protocol
+		).imageOperations
+		if (!imageOperations.includes(next.imageOperation))
+			next.imageOperation = imageOperations[0] ?? 'generations'
+	}
 	const operations = listDashScopeAudioClientOperations(
 		context.routes,
 		model.id,
@@ -256,11 +261,10 @@ export function selectionTemplate(
 		selection.modelId,
 		selection.routeGroup,
 		selection.protocol,
-		requestOperation(selection) ?? undefined
+		requestOperation(selection) ?? undefined,
+		selection.kind
 	)
-	const dashscope = candidates.find(
-		(route) => route.upstream_protocol === 'dashscope'
-	)
+	const candidate = candidates[0]
 	let operation = selection.dashscopeOperation
 	if (
 		selection.protocol === 'openai' &&
@@ -276,8 +280,10 @@ export function selectionTemplate(
 		selection.kind === 'audio' ? selection.audioOperation : null,
 		selection.kind === 'tool' ? selection.toolId : undefined,
 		operation,
-		dashscope?.provider_model_name,
-		selection.llmOperation
+		candidate?.provider_model_name,
+		selection.llmOperation,
+		candidate?.adapter,
+		selection.modelId
 	)
 }
 export function routingString(selection: SimulatorSelection): string {
@@ -299,7 +305,7 @@ export function isRealtimeSelection(selection: SimulatorSelection): boolean {
 	return (
 		selection.kind === 'audio' &&
 		selection.protocol === 'dashscope' &&
-		selection.dashscopeOperation !== 'audio.transcriptions.multimodal'
+		isDashScopeRealtimeOperationName(selection.dashscopeOperation)
 	)
 }
 /** LLM model/group/Gemini URL changes keep an edited body; protocol and wire-format changes replace its template. */
@@ -315,4 +321,40 @@ export function selectionNeedsNewTemplate(
 		return true
 	if (next.kind === 'tool') return previous.toolId !== next.toolId
 	return next.kind === 'image' || next.kind === 'audio'
+}
+
+function isDashScopeRealtimeOperationName(operation: string): boolean {
+	return operation.includes('.realtime.')
+}
+
+export function supportedSelection(selection: SimulatorSelection): boolean {
+	const operation = requestOperation(selection)
+	return (
+		selection.kind === 'tool' ||
+		(!!operation &&
+			supportedSimulatorOperation(
+				selection.kind,
+				selection.protocol,
+				operation
+			))
+	)
+}
+
+export function needsSimulatorAudioFile(
+	selection: SimulatorSelection,
+	body: Record<string, unknown> | null
+): boolean {
+	if (
+		selection.kind !== 'audio' ||
+		selection.audioOperation !== 'transcriptions'
+	)
+		return false
+	if (selection.protocol === 'dashscope') return isRealtimeSelection(selection)
+	if (
+		selection.protocol === 'openai' &&
+		typeof body?.file_url === 'string' &&
+		body.file_url.trim()
+	)
+		return false
+	return selection.protocol === 'openai' || selection.protocol === 'minimax'
 }

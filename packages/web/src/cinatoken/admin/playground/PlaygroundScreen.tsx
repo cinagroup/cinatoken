@@ -24,6 +24,7 @@ import {
 	llmSample,
 	playgroundPrefix as prefix,
 	routeKind,
+	playgroundRouteSupported,
 	selectionTemplate,
 } from './playground-domain'
 import {
@@ -150,12 +151,14 @@ function PlaygroundContent(
 		provider: props.search.provider || (tool?.providers[0]?.provider ?? ''),
 	}
 	const selectedKind = route ? routeKind(props.context, route) : kind
+	const effectiveImageOperation =
+		route?.upstream_protocol === 'openai' ? imageOperation : 'generations'
 	const key = JSON.stringify([
 		search.mode,
 		search.routeId,
 		search.tool,
 		search.provider,
-		imageOperation,
+		effectiveImageOperation,
 		geminiAction,
 		audioInput,
 	])
@@ -169,7 +172,7 @@ function PlaygroundContent(
 					tool: props.search.tool,
 					provider: props.search.provider,
 				},
-				imageOperation
+				effectiveImageOperation
 			),
 		[
 			props.context,
@@ -177,7 +180,7 @@ function PlaygroundContent(
 			props.search.routeId,
 			props.search.tool,
 			props.search.provider,
-			imageOperation,
+			effectiveImageOperation,
 		]
 	)
 	const [editor, setEditor] = useState(() => ({
@@ -208,7 +211,9 @@ function PlaygroundContent(
 	function changeKind(value: PlaygroundKind) {
 		setKind(value)
 		const first = props.context.routes.find(
-			(row) => routeKind(props.context, row) === value
+			(row) =>
+				routeKind(props.context, row) === value &&
+				playgroundRouteSupported(row, value)
 		)
 		select({ ...search, routeId: first?.id ?? '' })
 	}
@@ -225,7 +230,7 @@ function PlaygroundContent(
 				props.context,
 				search,
 				editor.body,
-				imageOperation,
+				effectiveImageOperation,
 				geminiAction,
 				uploads,
 				audioInput,
@@ -294,7 +299,7 @@ function PlaygroundContent(
 							body={editor.body}
 							busy={run.busy}
 							dirty={editor.retained}
-							imageOperation={imageOperation}
+							imageOperation={effectiveImageOperation}
 							geminiAction={geminiAction}
 							audioInput={audioInput}
 							uploads={uploads}

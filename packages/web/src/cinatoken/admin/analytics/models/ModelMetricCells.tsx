@@ -1,5 +1,10 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
 import { useTranslation } from 'react-i18next'
+import {
+	StreamSpeedValue,
+	FailoverRequestValue,
+} from './AnalyticsQualityMetrics'
+import { analyticsColumnVisible, type AnalyticsView } from './analytics-view'
 import type {
 	ModelAnalyticsRow,
 	ModelProviderRow,
@@ -46,6 +51,7 @@ function TtftCell(props: { row: MetricRow }) {
 export function ModelMetricCells(props: {
 	row: MetricRow
 	kind: 'main' | 'detail'
+	view?: AnalyticsView
 	currency: 'USD' | 'CNY' | null
 	locale: string
 	tokenMode: TokenMode
@@ -62,59 +68,106 @@ export function ModelMetricCells(props: {
 	}
 	return (
 		<>
-			<td className='px-3 py-3 tabular-nums'>
-				{new Intl.NumberFormat(props.locale).format(props.row.request_count)}
-			</td>
-			<td className='px-3 py-3 tabular-nums'>
-				{formatTokens(props.row.input_tokens, props.tokenMode, props.locale)}
-			</td>
-			<td className='px-3 py-3 tabular-nums'>
-				{formatTokens(props.row.output_tokens, props.tokenMode, props.locale)}
-			</td>
-			<td className='px-3 py-3 tabular-nums'>
-				{props.row.cache_hit_rate.toFixed(1)}%
-			</td>
-			<td className='px-3 py-3 tabular-nums'>
-				{money(props.row.standard_cost)}
-			</td>
-			<td className='px-3 py-3 tabular-nums'>
-				{money(props.row.charged_cost)}
-			</td>
-			<td className='px-3 py-3 tabular-nums'>
-				{money(props.row.metered_cost)}
-			</td>
-			<td className='px-3 py-3 tabular-nums'>
-				{money(props.row.avg_charged_per_request, 6)}
-			</td>
-			<td className='px-3 py-3 tabular-nums'>
-				{props.row.success_rate.toFixed(1)}%
-			</td>
-			<td className='px-3 py-3 tabular-nums'>
-				{latency(props.row.avg_latency_ms)}
-			</td>
-			<td className='px-3 py-3'>
-				<TtftCell row={props.row} />
-			</td>
-			{props.kind === 'main' && (
+			{analyticsColumnVisible('request_count', props.view ?? 'all') && (
 				<td className='px-3 py-3 tabular-nums'>
-					{latency(props.row.avg_upstream_response_ms)}
+					{new Intl.NumberFormat(props.locale).format(props.row.request_count)}
 				</td>
 			)}
-			<td className='px-3 py-3 tabular-nums'>
-				{props.row.tokens_per_second === null
-					? '—'
-					: props.row.tokens_per_second.toFixed(1)}
-			</td>
-			<td className='px-3 py-3 tabular-nums'>
-				{props.row.failover_rate.toFixed(1)}%
-			</td>
-			{props.kind === 'main' && (
+			{analyticsColumnVisible('input_tokens', props.view ?? 'all') && (
 				<td className='px-3 py-3 tabular-nums'>
-					{props.row.avg_attempts === null
+					{formatTokens(props.row.input_tokens, props.tokenMode, props.locale)}
+				</td>
+			)}
+			{analyticsColumnVisible('output_tokens', props.view ?? 'all') && (
+				<td className='px-3 py-3 tabular-nums'>
+					{formatTokens(props.row.output_tokens, props.tokenMode, props.locale)}
+				</td>
+			)}
+			{analyticsColumnVisible('cache_hit_rate', props.view ?? 'all') && (
+				<td className='px-3 py-3 tabular-nums'>
+					{props.row.cache_hit_rate.toFixed(1)}%
+				</td>
+			)}
+			{analyticsColumnVisible('standard_cost', props.view ?? 'all') && (
+				<td className='px-3 py-3 tabular-nums'>
+					{money(props.row.standard_cost)}
+				</td>
+			)}
+			{analyticsColumnVisible('charged_cost', props.view ?? 'all') && (
+				<td className='px-3 py-3 tabular-nums'>
+					{money(props.row.charged_cost)}
+				</td>
+			)}
+			{analyticsColumnVisible('metered_cost', props.view ?? 'all') && (
+				<td className='px-3 py-3 tabular-nums'>
+					{money(props.row.metered_cost)}
+				</td>
+			)}
+			{analyticsColumnVisible(
+				'avg_charged_per_request',
+				props.view ?? 'all'
+			) && (
+				<td className='px-3 py-3 tabular-nums'>
+					{money(props.row.avg_charged_per_request, 6)}
+				</td>
+			)}
+			{analyticsColumnVisible('success_rate', props.view ?? 'all') && (
+				<td className='px-3 py-3 tabular-nums'>
+					{props.row.success_rate.toFixed(1)}%
+				</td>
+			)}
+			{analyticsColumnVisible('avg_latency_ms', props.view ?? 'all') && (
+				<td className='px-3 py-3 tabular-nums'>
+					{latency(props.row.avg_latency_ms)}
+				</td>
+			)}
+			{analyticsColumnVisible('avg_effective_ttft_ms', props.view ?? 'all') && (
+				<td className='px-3 py-3'>
+					<TtftCell row={props.row} />
+				</td>
+			)}
+			{props.kind === 'main' &&
+				analyticsColumnVisible(
+					'avg_upstream_response_ms',
+					props.view ?? 'all'
+				) && (
+					<td className='px-3 py-3 tabular-nums'>
+						{latency(props.row.avg_upstream_response_ms)}
+					</td>
+				)}
+			{analyticsColumnVisible('tokens_per_second', props.view ?? 'all') && (
+				<td className='px-3 py-3 tabular-nums'>
+					{props.row.tokens_per_second === null
 						? '—'
-						: props.row.avg_attempts.toFixed(2)}
+						: props.row.tokens_per_second.toFixed(1)}
 				</td>
 			)}
+			{analyticsColumnVisible(
+				'stream_tokens_per_second',
+				props.view ?? 'all'
+			) && (
+				<td className='px-3 py-3'>
+					<StreamSpeedValue row={props.row} locale={props.locale} />
+				</td>
+			)}
+			{analyticsColumnVisible('failover_rate', props.view ?? 'all') && (
+				<td className='px-3 py-3 tabular-nums'>
+					{props.row.failover_rate.toFixed(1)}%
+				</td>
+			)}
+			{analyticsColumnVisible('failover_request_rate', props.view ?? 'all') && (
+				<td className='px-3 py-3'>
+					<FailoverRequestValue row={props.row} locale={props.locale} />
+				</td>
+			)}
+			{props.kind === 'main' &&
+				analyticsColumnVisible('avg_attempts', props.view ?? 'all') && (
+					<td className='px-3 py-3 tabular-nums'>
+						{props.row.avg_attempts === null
+							? '—'
+							: props.row.avg_attempts.toFixed(2)}
+					</td>
+				)}
 		</>
 	)
 }

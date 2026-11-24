@@ -136,6 +136,10 @@ test('invalid and duplicate aggregate rows fail closed instead of showing ambigu
 		[row, row],
 		[{ ...row, failover_rate: -1 }],
 		[{ ...row, success_count: 3 }],
+		[{ ...row, stream_sample_count: 1 }],
+		[{ ...row, stream_sample_count: 0, stream_tokens_per_second: 0 }],
+		[{ ...row, failover_request_count: 3, failover_request_rate: 100 }],
+		[{ ...row, failover_request_count: 1, failover_request_rate: 101 }],
 	]) {
 		const { api } = fixture(() =>
 			Response.json({ success: true, data, tags: [] })
@@ -221,5 +225,47 @@ test('range and filter validation reject malformed or over-180-day requests', ()
 			'https://example.test'
 		).searchParams.get('model_id'),
 		'a/b'
+	)
+})
+
+test('model and provider drilldown retain new quality pairs without replacing legacy metrics', async () => {
+	const quality = {
+		stream_tokens_per_second: 12.5,
+		stream_sample_count: 1,
+		failover_request_count: 1,
+		failover_request_rate: 50,
+	}
+	const { api } = fixture((path) =>
+		Response.json({
+			success: true,
+			data: [
+				{ ...(path.includes('/providers?') ? provider : row), ...quality },
+			],
+			tags: [],
+		})
+	)
+	const main = await api.modelAnalytics(start, end, {
+		tag: '',
+		providerId: '',
+		userEmail: '',
+	})
+	const nested = await api.modelProviders(start, end, row, '')
+	for (const result of [main.rows[0]!, nested[0]!]) {
+		for (const key of Object.keys(quality) as Array<keyof typeof quality>)
+			assert.equal(result[key], quality[key])
+		assert.equal(result.tokens_per_second, 30)
+		assert.equal(result.failover_rate, 150)
+	}
+	const malformed = fixture(() =>
+		Response.json({
+			success: true,
+			data: [{ ...provider, failover_request_rate: 50 }],
+			tags: [],
+		})
+	)
+	await assert.rejects(
+		malformed.api.modelProviders(start, end, row, ''),
+		(error: unknown) =>
+			error instanceof CinaTokenApiError && error.code === 'invalid-response'
 	)
 })

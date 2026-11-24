@@ -1,4 +1,5 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -7,6 +8,9 @@ import {
 	resolveReliabilityRange,
 	type ReliabilityRange,
 } from '../reliability/reliability-range'
+import { RequestLogIngressFilter } from './RequestLogIngressFilter'
+import { RequestLogPrefixFilter } from './RequestLogPrefixFilter'
+import { RequestLogProviderSetFilter } from './RequestLogProviderSetFilter'
 import type {
 	LogModelCatalog,
 	LogProviderCatalog,
@@ -15,11 +19,11 @@ import type {
 import {
 	emptyRequestLogFilters,
 	normalizeRouteGroup,
+	requestLogProtocols as protocols,
 	type RequestLogSearch,
 } from './request-log-domain'
 
 const prefix = 'cinatoken.adminRequestLogs.'
-const protocols = ['openai', 'anthropic', 'gemini', 'dashscope'] as const
 const statuses = ['success', 'error', 'incomplete', 'cancelled'] as const
 function rangeFor(
 	search: RequestLogSearch,
@@ -46,6 +50,7 @@ export function RequestLogFilters(props: {
 	onSearch: (next: RequestLogSearch) => void
 }) {
 	const { t } = useTranslation()
+	const [providerSetReset, setProviderSetReset] = useState(0)
 	const range = rangeFor(props.search, props.timezone)
 	const currentRange =
 		props.effectiveSearch?.start_date && props.effectiveSearch.end_date
@@ -94,6 +99,14 @@ export function RequestLogFilters(props: {
 				</p>
 			)}
 			<div className='bg-card grid gap-3 rounded-xl border p-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
+				<RequestLogIngressFilter
+					key={JSON.stringify([
+						props.search.ingress_host,
+						props.search.invalidFilter,
+					])}
+					search={props.search}
+					onSearch={props.onSearch}
+				/>
 				<label className='grid gap-1 text-sm'>
 					{t(prefix + 'requestStatus')}
 					<select
@@ -159,6 +172,19 @@ export function RequestLogFilters(props: {
 						))}
 					</datalist>
 				</label>
+				<RequestLogProviderSetFilter
+					key={JSON.stringify([
+						props.search.provider_ids,
+						props.search.invalidProviderIds,
+						providerSetReset,
+					])}
+					search={props.search}
+					onSearch={props.onSearch}
+				/>
+				<RequestLogPrefixFilter
+					search={props.search}
+					onSearch={props.onSearch}
+				/>
 				<label className='grid gap-1 text-sm'>
 					{t(prefix + 'providerId')}
 					<Input
@@ -227,7 +253,10 @@ export function RequestLogFilters(props: {
 					<Button
 						type='button'
 						variant='outline'
-						onClick={() => props.onSearch(emptyRequestLogFilters)}
+						onClick={() => {
+							setProviderSetReset((version) => version + 1)
+							props.onSearch(emptyRequestLogFilters)
+						}}
 					>
 						{t(prefix + 'clearFilters')}
 					</Button>

@@ -38,6 +38,10 @@ export const adminPresetSummarySchema = z
 	})
 	.refine((value) => value.designatedVersion <= value.latestVersion)
 export type AdminPresetSummary = z.infer<typeof adminPresetSummarySchema>
+export type AdminPresetListing = {
+	rows: AdminPresetSummary[]
+	canWrite: boolean
+}
 
 export const adminPresetVersionSummarySchema = z.object({
 	id: adminPresetIdSchema,
@@ -53,6 +57,7 @@ export const adminPresetSummariesResponseSchema = z.object({
 	success: z.literal(true),
 	data: z.array(adminPresetSummarySchema),
 	count: z.number().int().safe().nonnegative(),
+	canWrite: z.boolean().optional(),
 })
 export const adminPresetVersionSummariesResponseSchema = z.object({
 	success: z.literal(true),

@@ -210,6 +210,14 @@ export const guardrailCreateInputSchema = z
 		config: guardrailConfigSchema,
 	})
 	.strict()
+/** Existing version endpoint preserves omitted metadata fields. */
+export const guardrailVersionInputSchema = z
+	.object({
+		name: name.optional(),
+		description: z.string().trim().max(1024).nullable().optional(),
+		config: guardrailConfigSchema,
+	})
+	.strict()
 export const guardrailPatchInputSchema = z
 	.object({
 		name: name.optional(),
@@ -217,7 +225,12 @@ export const guardrailPatchInputSchema = z
 		status: z.enum(['active', 'archived']).optional(),
 	})
 	.strict()
-	.refine((value) => Object.keys(value).length > 0)
+	.refine(
+		(value) =>
+			value.name !== undefined ||
+			value.description !== undefined ||
+			value.status !== undefined
+	)
 
 const scopeType = z.enum(['account', 'workspace', 'user', 'api_key'])
 export const guardrailTraceSchema = z.array(
@@ -373,6 +386,7 @@ export type GuardrailContext = z.infer<
 	typeof guardrailListResponseSchema
 >['data']
 export type GuardrailInput = z.input<typeof guardrailCreateInputSchema>
+export type GuardrailVersionInput = z.input<typeof guardrailVersionInputSchema>
 export type GuardrailPatch = z.input<typeof guardrailPatchInputSchema>
 export type GuardrailPreview = z.infer<
 	typeof guardrailEffectiveSuccessSchema

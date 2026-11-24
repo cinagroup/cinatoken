@@ -192,6 +192,8 @@ export interface PublicModelAnalyticsRow {
 /** 分析：按用户邮箱聚合。 */
 export interface UserAnalyticsRow {
 	user_email: string;
+	/** Only present when every log in the email group joins the same existing user. */
+	user_id?: string | null;
 	request_count: number;
 	input_tokens: number;
 	output_tokens: number;

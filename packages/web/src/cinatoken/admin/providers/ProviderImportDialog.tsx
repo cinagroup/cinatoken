@@ -11,12 +11,52 @@ import {
 } from '../../../components/ui/dialog'
 import { Input } from '../../../components/ui/input'
 import type { ProvidersApi, ProviderRequestOptions } from '../provider-api'
-import type { ProviderImportResult } from '../provider-contracts'
+import type {
+	ProviderCatalogItem,
+	ProviderImportResult,
+} from '../provider-contracts'
+import { ProviderCatalogOutboundLink } from './ProviderCatalogOutboundLink'
 import { ProviderEndpointPreview } from './ProviderEndpointPreview'
 import { providerEndpointSearchTerms } from './provider-endpoint-summary'
 import { providerErrorKey } from './provider-errors'
 
 const prefix = 'cinatoken.adminProviders.'
+export function ProviderImportCatalogItem(props: {
+	row: ProviderCatalogItem
+	selected: boolean
+	disabled: boolean
+	onSelected: (selected: boolean) => void
+}) {
+	return (
+		<div className='min-w-0 space-y-3 rounded-xl border p-4'>
+			<label className='flex cursor-pointer items-start gap-3'>
+				<input
+					type='checkbox'
+					checked={props.selected}
+					disabled={props.disabled}
+					onChange={(event) => props.onSelected(event.target.checked)}
+					className='mt-1'
+				/>
+				<span className='min-w-0 space-y-1'>
+					<span className='block font-medium break-words'>
+						{props.row.name}
+					</span>
+					<span className='text-muted-foreground block text-xs break-words'>
+						{props.row.description}
+					</span>
+					<span className='text-muted-foreground block text-xs'>
+						{props.row.protocols.join(' · ')}
+					</span>
+					<ProviderEndpointPreview source={props.row} />
+				</span>
+			</label>
+			<ProviderCatalogOutboundLink
+				links={props.row.links}
+				providerName={props.row.name}
+			/>
+		</div>
+	)
+}
 export function ProviderImportDialog(props: {
 	api: ProvidersApi
 	readOptions: (signal?: AbortSignal) => ProviderRequestOptions
@@ -111,36 +151,17 @@ export function ProviderImportDialog(props: {
 				</div>
 				<div className='grid gap-3 sm:grid-cols-2'>
 					{rows.map((row) => (
-						<label
+						<ProviderImportCatalogItem
 							key={row.id}
-							className='flex min-w-0 cursor-pointer items-start gap-3 rounded-xl border p-4'
-						>
-							<input
-								type='checkbox'
-								checked={selected.includes(row.id)}
-								disabled={disabled}
-								onChange={(event) =>
-									setSelected((old) =>
-										event.target.checked
-											? [...old, row.id]
-											: old.filter((id) => id !== row.id)
-									)
-								}
-								className='mt-1'
-							/>
-							<span className='min-w-0 space-y-1'>
-								<span className='block font-medium break-words'>
-									{row.name}
-								</span>
-								<span className='text-muted-foreground block text-xs break-words'>
-									{row.description}
-								</span>
-								<span className='text-muted-foreground block text-xs'>
-									{row.protocols.join(' · ')}
-								</span>
-								<ProviderEndpointPreview source={row} />
-							</span>
-						</label>
+							row={row}
+							selected={selected.includes(row.id)}
+							disabled={disabled}
+							onSelected={(checked) =>
+								setSelected((old) =>
+									checked ? [...old, row.id] : old.filter((id) => id !== row.id)
+								)
+							}
+						/>
 					))}
 				</div>
 				{!query.isPending && !query.error && rows.length === 0 && (

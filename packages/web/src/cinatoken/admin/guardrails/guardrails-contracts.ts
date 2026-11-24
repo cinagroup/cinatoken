@@ -100,6 +100,22 @@ export const adminGuardrailDeleteAssignmentResponseSchema = z.object({
 })
 
 export const adminGuardrailStatusSchema = z.enum(['active', 'archived'])
+/** Metadata only: ownership, defaults, status and version content are separate operations. */
+export const adminGuardrailMetadataPatchSchema = z
+	.object({
+		name: z.string().trim().min(1).max(128).optional(),
+		description: z
+			.union([z.string().trim().max(1024), z.null()])
+			.transform((value) => value || null)
+			.optional(),
+	})
+	.strict()
+	.refine(
+		(value) => value.name !== undefined || value.description !== undefined
+	)
+export type AdminGuardrailMetadataPatch = z.input<
+	typeof adminGuardrailMetadataPatchSchema
+>
 export const adminGuardrailDesignationSchema = versionNumber
 export const adminGuardrailScopeSchema = z.object({
 	scopeType: z.enum(['user', 'api_key']),

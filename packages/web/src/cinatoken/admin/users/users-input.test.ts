@@ -34,3 +34,26 @@ test('create validates external pair, money precision and JSON before sending', 
 	])
 		assert.throws(() => normalizeUserCreate(draft), UserInputError)
 })
+
+test('initial wallet values preserve explicit zero and use defaults only for empty fields', () => {
+	const draft = {
+		...emptyUserCreateDraft,
+		email: 'person@example.test',
+		walletGranted: '5.123456',
+		walletSpent: '0',
+	}
+	const result = normalizeUserCreate(draft)
+	assert.equal(result.wallet_granted, 5.123456)
+	assert.equal(result.wallet_spent, 0)
+	const legacy = normalizeUserCreate({
+		...draft,
+		walletGranted: '',
+		walletSpent: '',
+	})
+	assert.equal(Object.hasOwn(legacy, 'wallet_granted'), false)
+	assert.equal(Object.hasOwn(legacy, 'wallet_spent'), false)
+	for (const invalid of ['-1', '1.0000001', 'NaN'])
+		assert.throws(() =>
+			normalizeUserCreate({ ...draft, walletGranted: invalid })
+		)
+})

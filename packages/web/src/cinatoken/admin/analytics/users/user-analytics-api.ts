@@ -15,6 +15,12 @@ import {
 	userAnalyticsResponseSchema,
 	type UserAnalyticsRow,
 } from './user-analytics-contracts'
+import {
+	userKeyAnalyticsResponseSchema,
+	userKeysPath,
+	userKeyModelsPath,
+	type UserKeyAnalyticsRow,
+} from './user-key-analytics'
 
 function cleanEmail(value: string): string {
 	const trimmed = value.trim()
@@ -75,6 +81,49 @@ export function createAdminUserAnalyticsApi(
 				const response = await transport.send(
 					path,
 					userAnalyticsResponseSchema,
+					{},
+					options
+				)
+				options.signal?.throwIfAborted()
+				return response.data
+			} catch (error) {
+				throw transport.sanitizeError(error)
+			}
+		},
+		async userKeys(
+			startUtc: string,
+			endUtc: string,
+			userId: string,
+			options: ModelAnalyticsOptions = {}
+		): Promise<UserKeyAnalyticsRow[]> {
+			const path = userKeysPath(startUtc, endUtc, userId)
+			try {
+				options.signal?.throwIfAborted()
+				const response = await transport.send(
+					path,
+					userKeyAnalyticsResponseSchema,
+					{},
+					options
+				)
+				options.signal?.throwIfAborted()
+				return response.data
+			} catch (error) {
+				throw transport.sanitizeError(error)
+			}
+		},
+		async userKeyModels(
+			startUtc: string,
+			endUtc: string,
+			userId: string,
+			apiKeyId: string,
+			options: ModelAnalyticsOptions = {}
+		): Promise<ModelAnalyticsRow[]> {
+			const path = userKeyModelsPath(startUtc, endUtc, userId, apiKeyId)
+			try {
+				options.signal?.throwIfAborted()
+				const response = await transport.send(
+					path,
+					modelAnalyticsResponseSchema,
 					{},
 					options
 				)

@@ -1,5 +1,8 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
+import { reliabilityFeatureMessages } from './reliability-feature-messages'
+
 const strings = {
+	...reliabilityFeatureMessages,
 	title: [
 		'Gateway reliability',
 		'网关可靠性',
@@ -148,10 +151,10 @@ const strings = {
 		'평균 업스트림 응답',
 	],
 	failoverRate: [
-		'Failover rate',
-		'故障转移率',
-		'フェイルオーバー率',
-		'장애 조치율',
+		'Failover events / 100 requests',
+		'每百请求故障转移事件数',
+		'100 リクエスト当たりの切り替え回数',
+		'요청 100개당 장애 조치 이벤트',
 	],
 	avgAttempts: [
 		'Avg attempts',
@@ -171,16 +174,16 @@ const strings = {
 	],
 	noValue: ['—', '—', '—', '—'],
 	recentErrors: [
-		'Recent failed requests',
-		'近期失败请求',
-		'最近の失敗リクエスト',
-		'최근 실패한 요청',
+		'Failed requests in this range',
+		'此时间范围内的失败请求',
+		'選択期間の失敗リクエスト',
+		'선택 기간의 실패 요청',
 	],
 	recentIndependent: [
-		'Latest failures across all times; independent of the selected range.',
-		'全时段最新失败记录，不受所选时间范围筛选。',
-		'選択期間に関係なく、全期間の最新失敗を表示します。',
-		'선택한 기간과 관계없이 전체 기간의 최근 실패를 표시합니다.',
+		'Up to 10 latest failed requests in the selected time range. Log links keep this range.',
+		'所选时间范围内最新的最多 10 条失败请求；日志链接保留此范围。',
+		'選択期間の最新の失敗リクエストを最大 10 件表示します。ログのリンクも同じ期間を保持します。',
+		'선택 기간의 최근 실패 요청을 최대 10개 표시합니다. 로그 링크에도 같은 기간을 유지합니다.',
 	],
 	viewAllErrors: [
 		'View request logs',
@@ -197,10 +200,10 @@ const strings = {
 	],
 	requestFailed: ['Request failed', '请求失败', 'リクエスト失敗', '요청 실패'],
 	noRecentErrors: [
-		'No recent failures.',
-		'近期无失败请求。',
-		'最近の失敗はありません。',
-		'최근 실패한 요청이 없습니다.',
+		'No failed requests in this range.',
+		'此时间范围内无失败请求。',
+		'選択期間に失敗リクエストはありません。',
+		'선택 기간에 실패 요청이 없습니다.',
 	],
 } as const
 

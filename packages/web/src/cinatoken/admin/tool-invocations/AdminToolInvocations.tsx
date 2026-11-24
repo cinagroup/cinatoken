@@ -4,7 +4,11 @@ import { Button } from '@/components/ui/button'
 import { CinaTokenApiError } from '../../api'
 import { ToolInvocationFilters } from './ToolInvocationFilters'
 import { ToolInvocationTable } from './ToolInvocationTable'
-import { toolRequestLogsHref } from './tool-invocation-domain'
+import {
+	changeToolInvocationSource,
+	isToolInvocationSearchValid,
+	toolRequestLogsHref,
+} from './tool-invocation-domain'
 import {
 	useToolInvocations,
 	type ToolInvocationsProps,
@@ -18,6 +22,15 @@ function errorKey(error: unknown): string {
 	}
 	return 'readFailed'
 }
+function readErrorKey(
+	invalidFilter: boolean,
+	logsBlocked: boolean,
+	error: unknown
+): string {
+	if (invalidFilter) return 'invalidFilter'
+	if (logsBlocked) return 'accessDenied'
+	return errorKey(error)
+}
 export function AdminToolInvocations(props: ToolInvocationsProps) {
 	const { t, i18n } = useTranslation()
 	const state = useToolInvocations(props)
@@ -25,9 +38,11 @@ export function AdminToolInvocations(props: ToolInvocationsProps) {
 		? Math.max(1, Math.ceil(state.page.total / 50))
 		: 1
 	const context = JSON.stringify([props.scopeKey, state.effectiveSearch])
-	const requestLogsHref = state.effectiveSearch
-		? toolRequestLogsHref(state.effectiveSearch)
-		: null
+	const invalidSearch = !isToolInvocationSearchValid(props.search)
+	const requestLogsHref =
+		state.effectiveSearch && !invalidSearch
+			? toolRequestLogsHref(state.effectiveSearch)
+			: null
 	return (
 		<main className='min-w-0 space-y-5'>
 			<header className='flex flex-wrap items-start justify-between gap-4'>
@@ -41,11 +56,24 @@ export function AdminToolInvocations(props: ToolInvocationsProps) {
 				</div>
 				<div className='flex flex-wrap items-center gap-3 text-sm'>
 					<a
-						href='/admin/tools'
+						href={props.search.source === 'mcp' ? '/admin/mcp' : '/admin/tools'}
 						className='text-primary underline-offset-2 hover:underline'
 					>
-						{t(prefix + 'invocations.configureTools')}
+						{t(
+							prefix +
+								(props.search.source === 'mcp'
+									? 'invocations.configureMcp'
+									: 'invocations.configureTools')
+						)}
 					</a>
+					{props.search.source === 'all' && (
+						<a
+							href='/admin/mcp'
+							className='text-primary underline-offset-2 hover:underline'
+						>
+							{t(prefix + 'invocations.configureMcp')}
+						</a>
+					)}
 					{requestLogsHref ? (
 						<a
 							href={requestLogsHref}
@@ -82,7 +110,7 @@ export function AdminToolInvocations(props: ToolInvocationsProps) {
 					<span>{t(prefix + 'timezoneFallback')}</span>
 				)}
 			</div>
-			{state.logsBlocked || state.error ? (
+			{invalidSearch || state.logsBlocked || state.error ? (
 				<section
 					role='alert'
 					className='border-destructive/40 bg-destructive/5 rounded-xl border p-5'
@@ -90,16 +118,20 @@ export function AdminToolInvocations(props: ToolInvocationsProps) {
 					<p>
 						{t(
 							prefix +
-								(state.logsBlocked ? 'accessDenied' : errorKey(state.error))
+								readErrorKey(invalidSearch, state.logsBlocked, state.error)
 						)}
 					</p>
 					<Button
 						type='button'
 						variant='outline'
 						className='mt-3'
-						onClick={state.retry}
+						onClick={() => {
+							if (invalidSearch)
+								props.onSearch(changeToolInvocationSource(props.search, 'rest'))
+							else state.retry()
+						}}
 					>
-						{t(prefix + 'retry')}
+						{t(prefix + (invalidSearch ? 'resetFilters' : 'retry'))}
 					</Button>
 				</section>
 			) : state.page ? (

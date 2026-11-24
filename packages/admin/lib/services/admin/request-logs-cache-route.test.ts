@@ -56,6 +56,7 @@ test("request-log user_id deep link uses the stored user identity instead of cur
 		apiKeyId: undefined,
 		userId: "user-42",
 		userEmail: undefined,
+		ingressHost: undefined,
 		modelId: undefined,
 		providerId: undefined,
 		routeGroup: undefined,

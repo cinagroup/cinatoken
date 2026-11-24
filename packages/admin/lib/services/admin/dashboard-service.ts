@@ -19,7 +19,18 @@ import {
 	USER_CHARGED_COST_FACTOR_MODES,
 	isUserChargedCostFactorMode,
 } from '@octafuse/core/lib/user-charged-cost-factor-mode';
+import {
+	STREAM_FIRST_EVENT_TIMEOUT_MS_KEY,
+	STREAM_FIRST_EVENT_TIMEOUT_ROUTE_GROUPS_KEY,
+	normalizeFirstEventTimeoutMsInput,
+	normalizeFirstEventTimeoutRouteGroupsInput,
+} from '@octafuse/core/lib/stream-first-event-timeout-config';
 import { badRequest } from './errors';
+import {
+	normalizeRequestLogIngressHost,
+	normalizeRequestLogModelIdPrefix,
+	normalizeRequestLogProviderIds,
+} from '@octafuse/core/db/request-log-filters';
 import { toolConfigGenericFamily, updateGenericToolConfig } from './tool-config-service';
 import { clampAnalyticsRange, rangeToDates, resolveStatsDateRange } from './shared';
 import {
@@ -92,6 +103,7 @@ export async function listAdminGlobalRequestLogsService(
 		provider_id?: string;
 		provider_ids?: string;
 		model_id_prefix?: string;
+		ingress_host?: string;
 		route_group?: string;
 		protocol?: string;
 		status?: string;
@@ -113,6 +125,24 @@ export async function listAdminGlobalRequestLogsService(
 	if (input.user_id && (!userId || userId.length > 600 || /\p{Cc}/u.test(userId))) {
 		throw badRequest('Invalid user ID');
 	}
+	let ingressHost: string | undefined;
+	try {
+		ingressHost = normalizeRequestLogIngressHost(input.ingress_host);
+	} catch {
+		throw badRequest('Invalid ingress host');
+	}
+	let modelIdPrefix: string | undefined;
+	try {
+		modelIdPrefix = normalizeRequestLogModelIdPrefix(input.model_id_prefix);
+	} catch {
+		throw badRequest('Invalid model prefix');
+	}
+	let providerIds: string[] | undefined;
+	try {
+		providerIds = normalizeRequestLogProviderIds(input.provider_ids);
+	} catch {
+		throw badRequest('Invalid provider IDs');
+	}
 	const result = await repos.requestLogs.getRequestLogs({
 		page,
 		pageSize,
@@ -122,33 +152,26 @@ export async function listAdminGlobalRequestLogsService(
 		userEmail: input.user_email,
 		modelId: input.model_id,
 		providerId: input.provider_id,
-		providerIds: parseProviderIds(input.provider_ids),
-		modelIdPrefix: input.model_id_prefix?.trim() || undefined,
+		providerIds,
+		modelIdPrefix,
+		ingressHost,
 		routeGroup: input.route_group,
 		protocol,
 		status: input.status,
 		startDate: input.start_date,
 		endDate: input.end_date,
 	});
-	return { ...result, page, page_size: pageSize };
-}
-
-const MAX_PROVIDER_IDS = 10;
-
-function parseProviderIds(raw: string | undefined): string[] | undefined {
-	if (raw == null || raw.trim() === '') return undefined;
-	const ids = [
-		...new Set(
-			raw
-				.split(',')
-				.map((value) => value.trim())
-				.filter((value) => value !== ''),
-		),
-	];
-	if (ids.length > MAX_PROVIDER_IDS) {
-		throw badRequest('provider_ids accepts at most 10 values');
-	}
-	return ids.length > 0 ? ids : undefined;
+	const appliedFilters = {
+		...(ingressHost === undefined ? {} : { ingress_host: ingressHost }),
+		...(modelIdPrefix === undefined ? {} : { model_id_prefix: modelIdPrefix }),
+		...(providerIds === undefined ? {} : { provider_ids: providerIds }),
+	};
+	return {
+		...result,
+		page,
+		page_size: pageSize,
+		...(Object.keys(appliedFilters).length ? { applied_filters: appliedFilters } : {}),
+	};
 }
 
 /** 多值过滤参数：可重复出现，也可在单个值里用逗号分隔；去空去重。 */
@@ -259,27 +282,21 @@ export async function updateAdminSystemConfigService(
 		}
 		value = normalized;
 	}
-	if (key === 'STREAM_FIRST_EVENT_TIMEOUT_MS') {
-		const trimmed = value.trim();
-		if (trimmed && !/^\d+$/.test(trimmed)) {
-			throw badRequest('STREAM_FIRST_EVENT_TIMEOUT_MS must be a positive integer millisecond value or empty');
+	if (key === STREAM_FIRST_EVENT_TIMEOUT_MS_KEY) {
+		const normalized = normalizeFirstEventTimeoutMsInput(value);
+		if (normalized === null) {
+			throw badRequest('STREAM_FIRST_EVENT_TIMEOUT_MS must be empty or an integer from 0 to 2147483647 milliseconds');
 		}
-		value = trimmed;
+		value = normalized;
 	}
-	if (key === 'STREAM_FIRST_EVENT_TIMEOUT_ROUTE_GROUPS') {
-		const trimmed = value.trim();
-		if (trimmed && trimmed !== '*' && trimmed.toLowerCase() !== 'all') {
-			const groups = trimmed
-				.split(',')
-				.map((part) => part.trim())
-				.filter(Boolean);
-			if (groups.length === 0) {
-				throw badRequest(
-					'STREAM_FIRST_EVENT_TIMEOUT_ROUTE_GROUPS must be empty, *, all, or a comma-separated list of route groups',
-				);
-			}
+	if (key === STREAM_FIRST_EVENT_TIMEOUT_ROUTE_GROUPS_KEY) {
+		const normalized = normalizeFirstEventTimeoutRouteGroupsInput(value);
+		if (normalized === null) {
+			throw badRequest(
+				'STREAM_FIRST_EVENT_TIMEOUT_ROUTE_GROUPS must be empty, *, all, or a comma-separated group list up to 4096 characters',
+			);
 		}
-		value = trimmed;
+		value = normalized;
 	}
 	const legacyToolKeys = new Set([
 		'WEB_SEARCH_PROVIDER',
@@ -652,10 +669,11 @@ export async function getUserAnalyticsService(
 		const successCount = Number(r.success_count);
 		const budgetMax = r.budget_max != null ? Number(r.budget_max) : null;
 		const budgetSpent = Number(r.budget_spent ?? 0);
-		const walletGranted = r.wallet_granted != null ? Number(r.wallet_granted) : 0;
-		const walletSpent = r.wallet_spent != null ? Number(r.wallet_spent) : 0;
+		const walletGranted = r.wallet_granted != null ? Number(r.wallet_granted) : null;
+		const walletSpent = r.wallet_spent != null ? Number(r.wallet_spent) : null;
 		return {
 			user_email: r.user_email,
+			user_id: r.user_id ?? null,
 			request_count: reqCount,
 			input_tokens: Number(r.input_tokens),
 			output_tokens: Number(r.output_tokens),

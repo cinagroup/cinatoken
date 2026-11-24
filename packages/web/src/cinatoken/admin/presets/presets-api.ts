@@ -14,6 +14,7 @@ import {
 	adminPresetSummaryResponseSchema,
 	adminPresetVersionSummariesResponseSchema,
 	type AdminPresetMetadataPatch,
+	type AdminPresetListing,
 	type AdminPresetSummary,
 	type AdminPresetVersionSummary,
 } from './presets-contracts'
@@ -76,25 +77,29 @@ export function createAdminPresetsApi(transport: AdminPresetsTransport) {
 			throw transport.sanitizeError(error)
 		}
 	}
+	async function listPresetsContext(
+		options: AdminPresetsRequestOptions = {}
+	): Promise<AdminPresetListing> {
+		const result = await send(
+			root + '/summaries',
+			adminPresetSummariesResponseSchema,
+			{},
+			options
+		)
+		if (
+			result.count !== result.data.length ||
+			new Set(result.data.map((row) => row.id)).size !== result.data.length
+		)
+			transport.invalidResponse('Preset collection count or identities differ')
+		return { rows: result.data, canWrite: result.canWrite === true }
+	}
 	return {
 		verifyAdminDomainSubject: bound.verifyAdminDomainSubject,
+		listPresetsContext,
 		async listPresets(
 			options: AdminPresetsRequestOptions = {}
 		): Promise<AdminPresetSummary[]> {
-			const result = await send(
-				root + '/summaries',
-				adminPresetSummariesResponseSchema,
-				{},
-				options
-			)
-			if (
-				result.count !== result.data.length ||
-				new Set(result.data.map((row) => row.id)).size !== result.data.length
-			)
-				transport.invalidResponse(
-					'Preset collection count or identities differ'
-				)
-			return result.data
+			return (await listPresetsContext(options)).rows
 		},
 		async listPresetVersions(
 			id: string,

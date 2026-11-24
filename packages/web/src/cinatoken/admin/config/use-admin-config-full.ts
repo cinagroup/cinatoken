@@ -7,7 +7,12 @@ import {
 	useState,
 	useSyncExternalStore,
 } from 'react'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import {
+	useIsMutating,
+	useMutation,
+	useQuery,
+	useQueryClient,
+} from '@tanstack/react-query'
 import {
 	adminConfigAccessRecovery,
 	configAccessIdentityKey,
@@ -15,6 +20,8 @@ import {
 import type { AdminConfigApi } from './config-api'
 import {
 	billingCurrencyWrite,
+	userChargedCostFactorMode,
+	type AdminConfigFactorMode,
 	normalizeBusinessTimezoneWrite,
 	normalizeWebhookWrite,
 	routeStrategyName,
@@ -29,6 +36,7 @@ import {
 	configInvalidResponse,
 	configWriteUncertain,
 } from './config-errors'
+import { configFactorModeIdentity } from './config-factor-mode'
 import { configFullErrorKey } from './config-full-errors'
 import {
 	reconcileConfigWrite,
@@ -38,10 +46,15 @@ import { adminConfigFullWriteRecovery } from './config-full-write-recovery'
 import { adminConfigWriteRecovery } from './config-write-recovery'
 
 export type ConfigField =
-	'timezone' | 'currency' | 'strategy' | AdminConfigWebhookChannel
+	| 'timezone'
+	| 'currency'
+	| 'strategy'
+	| 'factorMode'
+	| AdminConfigWebhookChannel
 export type ConfigIntent =
 	| { field: 'timezone'; kind: 'timezone'; value: string }
 	| { field: 'currency'; kind: 'currency'; value: AdminConfigBillingCurrency }
+	| { field: 'factorMode'; kind: 'factorMode'; value: AdminConfigFactorMode }
 	| { field: 'strategy'; kind: 'strategy'; value: AdminConfigRouteStrategy }
 	| {
 			field: AdminConfigWebhookChannel
@@ -64,6 +77,7 @@ const fields: ConfigField[] = [
 	'timezone',
 	'currency',
 	'strategy',
+	'factorMode',
 	'wecom',
 	'feishu',
 ]
@@ -73,6 +87,8 @@ function pendingFromIntent(chosen: ConfigIntent): PendingConfigWrite {
 		return { kind: 'timezone', value: chosen.value, acknowledged: false }
 	if (chosen.kind === 'currency')
 		return { kind: 'currency', value: chosen.value, acknowledged: false }
+	if (chosen.kind === 'factorMode')
+		return { kind: 'factorMode', value: chosen.value, acknowledged: false }
 	if (chosen.kind === 'strategy')
 		return { kind: 'strategy', value: chosen.value, acknowledged: false }
 	return { kind: chosen.kind, channel: chosen.field, acknowledged: false }
@@ -85,22 +101,27 @@ function revisionFor(
 	if (field === 'timezone') return data.businessTimezone.revision
 	if (field === 'currency') return data.billingCurrency.revision
 	if (field === 'strategy') return data.routeStrategy.revision
+	if (field === 'factorMode')
+		return data.userChargedCostFactorMode?.revision ?? null
 	return data.webhooks[field].revision
 }
 
 export function useAdminConfigFull(props: AdminConfigFullProps) {
 	const client = useQueryClient()
 	const accessKey = configAccessIdentityKey(props.reconciliationKey)
+	const modeIdentity = configFactorModeIdentity(props.reconciliationKey)
 	const queryKey = useMemo(
 		() => ['cinatoken', 'admin', props.scopeKey, 'config-overview'] as const,
 		[props.scopeKey]
 	)
+	const streamBusy =
+		useIsMutating({ mutationKey: [...queryKey, 'stream-timeout'] }) > 0
 	const keys = useMemo(
 		() =>
 			Object.fromEntries(
 				fields.map((field) => [
 					field,
-					field === 'wecom' || field === 'feishu'
+					field === 'wecom' || field === 'feishu' || field === 'factorMode'
 						? `${accessKey}:full:${field}`
 						: `${props.reconciliationKey}:full:${field}`,
 				])
@@ -130,6 +151,11 @@ export function useAdminConfigFull(props: AdminConfigFullProps) {
 		() => recovery.getSnapshot(keys.strategy),
 		() => recovery.getSnapshot(keys.strategy)
 	)
+	const factorModeLocked = useSyncExternalStore(
+		recovery.subscribe,
+		() => recovery.getSnapshot(keys.factorMode),
+		() => recovery.getSnapshot(keys.factorMode)
+	)
 	const wecomLocked = useSyncExternalStore(
 		recovery.subscribe,
 		() => recovery.getSnapshot(keys.wecom),
@@ -144,6 +170,7 @@ export function useAdminConfigFull(props: AdminConfigFullProps) {
 		timezone: timezoneLocked,
 		currency: currencyLocked,
 		strategy: strategyLocked,
+		factorMode: factorModeLocked,
 		wecom: wecomLocked,
 		feishu: feishuLocked,
 	}
@@ -152,6 +179,8 @@ export function useAdminConfigFull(props: AdminConfigFullProps) {
 		useState<AdminConfigBillingCurrency | null>(null)
 	const [strategyDraft, setStrategyDraft] =
 		useState<AdminConfigRouteStrategy | null>(null)
+	const [factorModeDraft, setFactorModeDraft] =
+		useState<AdminConfigFactorMode | null>(null)
 	const [webhookDraft, setWebhookDraft] = useState<
 		Record<AdminConfigWebhookChannel, string>
 	>({ wecom: '', feishu: '' })
@@ -358,6 +387,16 @@ export function useAdminConfigFull(props: AdminConfigFullProps) {
 							signal: abort.signal,
 						}
 					)
+				if (chosen.kind === 'factorMode') {
+					await props.api.updateUserChargedCostFactorMode(
+						chosen.value,
+						chosen.expectedRevision,
+						{
+							signal: abort.signal,
+							...modeIdentity,
+						}
+					)
+				}
 				if (chosen.kind === 'webhook-clear')
 					await props.api.clearWebhook(chosen.field, chosen.expectedRevision, {
 						signal: abort.signal,
@@ -399,8 +438,13 @@ export function useAdminConfigFull(props: AdminConfigFullProps) {
 							)
 						: 'differs'
 					if (decision === 'requires-verification') {
-						setReconciled((prior) => ({ ...prior, [field]: true }))
-						setStatusKey('cinatoken.adminConfigFull.refreshPending')
+						if (field === 'wecom' || field === 'feishu')
+							setReconciled((prior) => ({ ...prior, [field]: true }))
+						setStatusKey(
+							field === 'factorMode'
+								? 'cinatoken.adminConfigFull.factorModePending'
+								: 'cinatoken.adminConfigFull.refreshPending'
+						)
 						return
 					}
 					settle(field)
@@ -441,6 +485,8 @@ export function useAdminConfigFull(props: AdminConfigFullProps) {
 	})
 
 	async function refresh(): Promise<void> {
+		if (client.isMutating({ mutationKey: [...queryKey, 'stream-timeout'] }))
+			return
 		if (refreshing || mutation.isPending || revealing || verifying) return
 		setRefreshing(true)
 		setStatusKey(null)
@@ -454,6 +500,7 @@ export function useAdminConfigFull(props: AdminConfigFullProps) {
 			let matched = false
 			let differed = false
 			let awaitingVerification = false
+			let awaitingMode = false
 			for (const field of fields) {
 				const isTimezonePending =
 					field === 'timezone' && timezoneRecovery.getSnapshot(accessKey)
@@ -472,6 +519,7 @@ export function useAdminConfigFull(props: AdminConfigFullProps) {
 				)
 				if (decision === 'requires-verification') {
 					awaitingVerification = true
+					if (field === 'factorMode') awaitingMode = true
 					if (field === 'wecom' || field === 'feishu')
 						setReconciled((prior) => ({ ...prior, [field]: true }))
 					continue
@@ -486,7 +534,11 @@ export function useAdminConfigFull(props: AdminConfigFullProps) {
 			}
 			if (differed) setStatusKey('cinatoken.adminConfigFull.currentDiffers')
 			else if (awaitingVerification)
-				setStatusKey('cinatoken.adminConfigFull.refreshPending')
+				setStatusKey(
+					awaitingMode
+						? 'cinatoken.adminConfigFull.factorModePending'
+						: 'cinatoken.adminConfigFull.refreshPending'
+				)
 			else if (matched) setStatusKey('cinatoken.adminConfigFull.currentMatches')
 			else setStatusKey('cinatoken.adminConfigFull.refreshed')
 		} catch (error) {
@@ -497,11 +549,15 @@ export function useAdminConfigFull(props: AdminConfigFullProps) {
 	}
 
 	function askConfirmation(action: ConfigIntent): void {
+		if (client.isMutating({ mutationKey: [...queryKey, 'stream-timeout'] }))
+			return
 		if (
 			!data ||
 			!props.canWrite ||
 			!data.canWrite ||
 			locked[action.field] ||
+			(action.field === 'factorMode' &&
+				(!data.userChargedCostFactorMode || !modeIdentity)) ||
 			mutation.isPending ||
 			refreshing ||
 			revealing ||
@@ -509,6 +565,11 @@ export function useAdminConfigFull(props: AdminConfigFullProps) {
 		)
 			return
 		try {
+			if (
+				action.kind === 'factorMode' &&
+				!userChargedCostFactorMode.safeParse(action.value).success
+			)
+				return
 			if (action.kind === 'timezone')
 				action.value = normalizeBusinessTimezoneWrite(action.value)
 			if (
@@ -535,6 +596,8 @@ export function useAdminConfigFull(props: AdminConfigFullProps) {
 	}
 
 	function confirm(): void {
+		if (client.isMutating({ mutationKey: [...queryKey, 'stream-timeout'] }))
+			return
 		const chosen = confirmation
 		if (
 			!chosen ||
@@ -542,6 +605,8 @@ export function useAdminConfigFull(props: AdminConfigFullProps) {
 			!props.canWrite ||
 			!data.canWrite ||
 			locked[chosen.field] ||
+			(chosen.field === 'factorMode' &&
+				(!data.userChargedCostFactorMode || !modeIdentity)) ||
 			mutation.isPending ||
 			refreshing
 		)
@@ -723,8 +788,11 @@ export function useAdminConfigFull(props: AdminConfigFullProps) {
 	const canEdit = (field: ConfigField): boolean =>
 		Boolean(
 			data?.canWrite &&
+			(field !== 'factorMode' ||
+				Boolean(data.userChargedCostFactorMode && modeIdentity)) &&
 			props.canWrite &&
 			!locked[field] &&
+			!streamBusy &&
 			!refreshing &&
 			!mutation.isPending &&
 			!revealing &&
@@ -732,6 +800,7 @@ export function useAdminConfigFull(props: AdminConfigFullProps) {
 		)
 	return {
 		data,
+		streamBusy,
 		overview,
 		locked,
 		recovery,
@@ -745,6 +814,8 @@ export function useAdminConfigFull(props: AdminConfigFullProps) {
 		setCurrencyDraft,
 		strategyDraft,
 		setStrategyDraft,
+		factorModeDraft,
+		setFactorModeDraft,
 		webhookDraft,
 		setWebhookDraft,
 		editingWebhook,

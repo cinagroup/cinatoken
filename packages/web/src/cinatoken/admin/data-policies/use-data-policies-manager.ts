@@ -21,6 +21,7 @@ import type {
 } from './data-policy-contracts'
 import {
 	dataPolicyAccessDenied,
+	dataPolicyCanResumeEditor,
 	dataPolicyErrorKey,
 	dataPolicyErrorStatus,
 	dataPolicyInvalidResponse,
@@ -192,7 +193,12 @@ export function useDataPoliciesManager(props: DataPoliciesManagerProps) {
 							failure = settlementError
 						}
 					}
-					if (dataPolicyWriteUncertain(failure)) setPanel(null)
+					if (
+						dataPolicyWriteUncertain(failure) ||
+						(failure instanceof AdminDomainWriteError &&
+							failure.code === 'subject')
+					)
+						setPanel(null)
 					revoke(failure)
 				}
 				throw failure
@@ -233,6 +239,10 @@ export function useDataPoliciesManager(props: DataPoliciesManagerProps) {
 		list.isFetching ||
 		mutation.isPending ||
 		writeUnconfirmed
+	const canResumeEditor =
+		!disabled &&
+		panel?.kind === 'editor' &&
+		dataPolicyCanResumeEditor(mutation.error)
 	function open(next: Panel): void {
 		if (hidden || list.error || list.isFetching) return
 		if (
@@ -255,6 +265,7 @@ export function useDataPoliciesManager(props: DataPoliciesManagerProps) {
 		if (
 			!isCurrent() ||
 			disabled ||
+			mutation.error !== null ||
 			task.current ||
 			binding.status !== 'ready' ||
 			panel?.kind !== 'editor' ||
@@ -262,9 +273,13 @@ export function useDataPoliciesManager(props: DataPoliciesManagerProps) {
 		)
 			return
 		// Bind to the row originally reviewed; a background read cannot advance its precondition.
+		setNotice(false)
 		task.current = { row: panel.row, input }
 		binding.resetDispatch()
 		void mutation.mutateAsync().catch(() => undefined)
+	}
+	function resumeEditor(): void {
+		if (isCurrent() && canResumeEditor) mutation.reset()
 	}
 	async function retry(): Promise<void> {
 		if (hidden) {
@@ -288,6 +303,8 @@ export function useDataPoliciesManager(props: DataPoliciesManagerProps) {
 		writeUnconfirmed,
 		hidden,
 		disabled,
+		canResumeEditor,
+		resumeEditor,
 		manualRecovery: binding.manualRecovery,
 		readOptions: binding.readOptions,
 		open,

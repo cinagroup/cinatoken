@@ -52,3 +52,22 @@ it('reliability errors use the selected range and retain the response envelope',
   assert.deepEqual(result.recentErrors, logs);
   assert.deepEqual(calls, [{ page: 1, pageSize: 10, status: 'error', startDate: start, endDate: end }]);
 });
+
+it('user snapshots preserve a proven target and nullable wallets without inventing unknown balances', async () => {
+  const { getUserAnalyticsService, getKeyAnalyticsService } = await import('./dashboard-service');
+  const id = 'f2b74bc0-32f3-4613-aea7-96f723d08e12';
+  const calls: unknown[] = [];
+  const repos = { analytics: {
+    queryUserAnalytics: async () => [
+      {...raw, user_id:id, user_email:'same@example.test', budget_max:10, budget_spent:2, wallet_granted:1, wallet_spent:3},
+      {...raw, user_id:null, user_email:'gone@example.test', budget_max:null, budget_spent:null, wallet_granted:null, wallet_spent:null},
+    ],
+    queryKeyAnalytics: async (options:unknown) => { calls.push(options); return [{...raw,api_key_id:null,key_name:null,last_active_at:null}]; },
+  }, users: {getById:async (value:string)=>value===id?{id}:null} } as unknown as GatewayRepositories;
+  const users=await getUserAnalyticsService(repos,{start_date:start,end_date:end});
+  assert.equal(users[0]?.user_id,id); assert.equal(users[0]?.wallet_spent,3);
+  assert.equal(users[1]?.user_id,null); assert.equal(users[1]?.wallet_granted,null); assert.equal(users[1]?.wallet_spent,null);
+  const keys=await getKeyAnalyticsService(repos,{start_date:start,end_date:end,user_id:id});
+  assert.equal(keys[0]?.api_key_id,null); assert.equal(keys[0]?.key_name,null);
+  assert.deepEqual(calls,[{start,end,userId:id}]);
+});

@@ -1,9 +1,10 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button } from '@/components/ui/button'
-import { safeLogJson, safeLogText } from '../request-logs/request-log-domain'
-import type { AuditLog, AuditLogPage } from './audit-log-contracts'
+import { safeLogText } from '../request-logs/request-log-domain'
+import { AuditLogDetailDialog } from './AuditLogDetailDialog'
+import { AuditWalletSummary } from './AuditWalletSummary'
+import type { AuditLogPage } from './audit-log-contracts'
 import {
 	auditDiffs,
 	auditDisplay,
@@ -58,146 +59,6 @@ function AuditText(props: {
 		? auditTime(props.field.value, props.timezone, props.locale)
 		: safeLogText(props.field.value)
 }
-function RawPanel(props: { title: string; raw: string | null | undefined }) {
-	const { t } = useTranslation()
-	const [copied, setCopied] = useState(false)
-	const safe = safeLogJson(props.raw)
-	if (!safe) return null
-	return (
-		<section className='min-w-0 rounded-lg border p-3'>
-			<div className='mb-2 flex items-center justify-between gap-2'>
-				<h3 className='text-sm font-medium'>{props.title}</h3>
-				<Button
-					type='button'
-					variant='outline'
-					size='sm'
-					onClick={() => {
-						void navigator.clipboard.writeText(safe).then(
-							() => setCopied(true),
-							() => setCopied(false)
-						)
-					}}
-				>
-					{t(prefix + (copied ? 'copied' : 'copy'))}
-				</Button>
-			</div>
-			<pre className='bg-muted max-h-60 overflow-auto rounded-md p-3 text-xs break-all whitespace-pre-wrap'>
-				{safe}
-			</pre>
-		</section>
-	)
-}
-function AuditDetail(props: {
-	log: AuditLog
-	timezone: string | null
-	locale: string
-	onClose: () => void
-}) {
-	const { t } = useTranslation()
-	const diffs = auditDiffs(
-		props.log,
-		t(prefix + 'missingSnapshot'),
-		t(prefix + 'nullValue')
-	)
-	return (
-		<div
-			className='fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-3 sm:p-5'
-			role='presentation'
-			onClick={props.onClose}
-		>
-			<div
-				role='dialog'
-				aria-modal='true'
-				aria-labelledby='audit-change-detail-title'
-				className='bg-card flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-xl border shadow-2xl'
-				onClick={(event) => event.stopPropagation()}
-			>
-				<div className='flex items-start justify-between gap-3 border-b p-4 sm:p-5'>
-					<div className='min-w-0'>
-						<h2
-							id='audit-change-detail-title'
-							className='text-lg font-semibold'
-						>
-							{t(prefix + 'labels.changeDetailTitle')}
-						</h2>
-						<p className='text-muted-foreground mt-1 flex flex-wrap gap-2 text-xs'>
-							<span className='font-mono'>{props.log.event_type}</span>
-							<span>
-								{auditTime(props.log.created_at, props.timezone, props.locale)}
-							</span>
-							<span>{props.log.user_email ?? '—'}</span>
-						</p>
-					</div>
-					<Button type='button' variant='outline' onClick={props.onClose}>
-						{t(prefix + 'close')}
-					</Button>
-				</div>
-				<div className='space-y-4 overflow-y-auto p-4 sm:p-5'>
-					{diffs.length ? (
-						diffs.map((row, index) => (
-							<div
-								key={`${row.group}-${row.field}-${index}`}
-								className='rounded-lg border p-3'
-							>
-								<div className='mb-2 flex flex-wrap items-center gap-2 text-sm'>
-									<span className='bg-muted rounded px-2 py-0.5 text-xs'>
-										{t(
-											prefix +
-												(row.group === 'snapshot'
-													? 'labels.userSnapshot'
-													: 'labels.extraJson')
-										)}
-									</span>
-									<span className='font-mono font-medium break-all'>
-										{row.field}
-									</span>
-								</div>
-								<div className='grid gap-3 sm:grid-cols-2'>
-									<div className='min-w-0'>
-										<p className='text-muted-foreground mb-1 text-xs'>
-											{t(prefix + 'labels.originalValue')}
-										</p>
-										<pre className='max-h-48 overflow-auto rounded bg-amber-500/10 p-3 text-xs break-all whitespace-pre-wrap'>
-											{row.before}
-										</pre>
-									</div>
-									<div className='min-w-0'>
-										<p className='text-muted-foreground mb-1 text-xs'>
-											{t(prefix + 'labels.changedValue')}
-										</p>
-										<pre className='max-h-48 overflow-auto rounded bg-sky-500/10 p-3 text-xs break-all whitespace-pre-wrap'>
-											{row.after}
-										</pre>
-									</div>
-								</div>
-							</div>
-						))
-					) : (
-						<p className='text-muted-foreground text-sm'>
-							{t(prefix + 'labels.noChangeDetail')}
-						</p>
-					)}
-					<RawPanel
-						title={t(prefix + 'beforeSnapshot')}
-						raw={props.log.before_user_snapshot}
-					/>
-					<RawPanel
-						title={t(prefix + 'afterSnapshot')}
-						raw={props.log.after_user_snapshot}
-					/>
-					<RawPanel
-						title={t(prefix + 'changedFields')}
-						raw={props.log.changed_fields}
-					/>
-					<RawPanel
-						title={t(prefix + 'rawPayload')}
-						raw={props.log.change_payload}
-					/>
-				</div>
-			</div>
-		</div>
-	)
-}
 export function AuditLogTable(props: {
 	page: AuditLogPage
 	currency: string | null
@@ -206,6 +67,7 @@ export function AuditLogTable(props: {
 	context: string
 }) {
 	const { t } = useTranslation()
+	const returnFocus = useRef<HTMLButtonElement>(null)
 	const [detail, setDetail] = useState<{ id: string; context: string } | null>(
 		null
 	)
@@ -220,12 +82,14 @@ export function AuditLogTable(props: {
 		'identity',
 		'spend',
 		'budgetPlan',
+		'wallet',
 		'userChangeDetail',
 	] as const
 	return (
 		<>
-			<div className='bg-card max-h-[calc(100vh-16rem)] overflow-auto rounded-xl border'>
-				<table className='w-full min-w-[1140px] text-left text-sm'>
+			<div className='bg-card relative max-h-[calc(100vh-16rem)] overflow-auto rounded-xl border'>
+				<table className='w-full min-w-[1360px] text-left text-sm'>
+					<caption className='sr-only'>{t(prefix + 'title')}</caption>
 					<thead className='bg-muted/80 sticky top-0 z-10'>
 						<tr>
 							{headings.map((key) => (
@@ -243,7 +107,7 @@ export function AuditLogTable(props: {
 						{props.page.data.length === 0 ? (
 							<tr>
 								<td
-									colSpan={7}
+									colSpan={headings.length}
 									className='text-muted-foreground p-8 text-center'
 								>
 									{t(prefix + 'empty')}
@@ -462,6 +326,13 @@ export function AuditLogTable(props: {
 												/>
 											</div>
 										</td>
+										<td className='min-w-64 px-3 py-3 text-xs'>
+											<AuditWalletSummary
+												log={log}
+												currency={props.currency}
+												locale={props.locale}
+											/>
+										</td>
 										<td className='max-w-72 min-w-52 px-3 py-3 text-xs'>
 											{diffs.slice(0, 3).map((row, index) => (
 												<div
@@ -480,9 +351,10 @@ export function AuditLogTable(props: {
 												<button
 													type='button'
 													className='text-primary mt-1 underline-offset-2 hover:underline'
-													onClick={() =>
+													onClick={(event) => {
+														returnFocus.current = event.currentTarget
 														setDetail({ id: log.id, context: props.context })
-													}
+													}}
 												>
 													{t(prefix + 'labels.viewChangeDetail')}
 												</button>
@@ -496,8 +368,10 @@ export function AuditLogTable(props: {
 				</table>
 			</div>
 			{activeLog && (
-				<AuditDetail
+				<AuditLogDetailDialog
 					log={activeLog}
+					currency={props.currency}
+					returnFocus={returnFocus}
 					timezone={props.timezone}
 					locale={props.locale}
 					onClose={() => setDetail(null)}

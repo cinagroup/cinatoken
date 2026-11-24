@@ -32,12 +32,7 @@ export const simulatorRouteSchema = z.object({
 		.array(
 			z.object({
 				id: identifier,
-				request_protocol: z.enum([
-					'openai',
-					'anthropic',
-					'gemini',
-					'dashscope',
-				]),
+				request_protocol: z.string().max(600),
 				request_operation: z.string(),
 				status: z.string(),
 			})

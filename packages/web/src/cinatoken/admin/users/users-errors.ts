@@ -1,16 +1,20 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
 import { CinaTokenApiError } from '../../api'
+import { AdminDomainWriteError } from '../domain-write-recovery'
 import { UserInputError } from './users-input'
 import { UsersWritePersistenceError } from './users-write-recovery'
 
 export function userAccessDenied(error: unknown): boolean {
 	return (
-		error instanceof CinaTokenApiError &&
+		(error instanceof CinaTokenApiError ||
+			error instanceof AdminDomainWriteError) &&
 		(error.status === 401 || error.status === 403)
 	)
 }
 
 export function userWriteOutcomeUnknown(error: unknown): boolean {
+	if (error instanceof AdminDomainWriteError && error.code === 'subject')
+		return false
 	if (!(error instanceof CinaTokenApiError)) return true
 	return (
 		error.status === 0 ||

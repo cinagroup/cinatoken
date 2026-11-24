@@ -13,7 +13,7 @@
 | 当前实施状态、最近待办与下一批顺序 | [第 0 节](#0-当前进度与维护规则) |
 | 架构、服务职责、路由和兼容决策 | [第 1 节](#1-实现决策与边界) |
 | 库存、上游来源及许可核对 | [第 2 节](#2-可复核库存与来源) |
-| 44 个路由组与嵌入能力的页面/API/权限矩阵 | 第 3 节 |
+| 45 个路由组与嵌入能力的页面/API/权限矩阵 | 第 3 节 |
 | P0–P8 的完整任务和 G0–G8 验收门槛 | 第 4 节 |
 | 各批次命令、构建、浏览器和验收局限 | [第 5 节](#5-证据与状态记录) |
 | 持续更新的变更记录 | [第 6 节](#6-更新记录) |
@@ -22,7 +22,13 @@
 
 ## 0. 当前进度与维护规则
 
-最近更新：2026-10-07。完整范围为 **44 个页面路由组（公开 8、账户 10、管理 26）**，并包含工作区切换、预算、四类密钥、钱包及管理收益补偿等嵌入能力。
+当前续批（2026-11-11，ACC-14，账户编辑）：旧包已确认普通元数据会提交未改名称、无变化仍 PATCH；两类默认描述／版本原本可用。已接稀疏元数据与版本请求、初始表单基线和权限失效草稿清理，完整静态与浏览器验证待执行。完整范围及勾选状态保持。
+
+上一续批（2026-11-11，ACC-14 / ADM-25，有效预览显示）：已修复账户／管理预览微额显示为零和业务时区错标。共享精度、显式业务时区及 UTC 降级说明通过六项检查、2263 单测和同包两入口 24 浏览器场景；旧包 4 个问题诊断独立复现。完整范围与原勾选状态保持，真实联调及发布待验，见末尾有效预览章节。
+
+上一续批（2026-11-11，NEXT-39 / ADM-25，元数据）：已补齐当前 Guardrails 普通规则名称／描述及默认规则描述编辑、稀疏 PATCH 和重新核对恢复。完整六项检查、2255 单测、同包元数据 30＋原 Guardrails 42 浏览器场景通过；旧包 2 个缺口诊断独立复现。证据与边界见末尾元数据章节。完整 102／45／55／211 范围与 55 已勾选／156 待验保持，真实联调／发布待验，未提交／推送／部署。
+
+最近更新：2026-11-11。完整范围为 **45 个页面路由组（公开 8、账户 10、管理 27）**，并包含工作区切换、预算、四类密钥、钱包及管理收益补偿等嵌入能力。
 
 文档范围：按“将 checklist 整理成一个 md 文件，推进实施随时更新”的要求维护本文。完整清单为 **102 项主任务（99 项 P0–P8 任务、3 项来源任务）**，配套 G0–G8 验收门槛、页面/API/权限矩阵及批次记录；实施使用原任务 ID 持续更新，不另建主清单。
 
@@ -36,7 +42,41 @@
 
 此前推进（5.96历史）：3494私有偏好/四语安全route已100%发布，c5314d77/c7c90b4c；本地1624、CI37/2302exactGit、匿名本地/Linux各15、source PublicShell24和真实compiled Windows/Linux各2通过。新生产HTTP原13/19actual1，offline按primary18/19；current源码30s下载失败、真实登录无session继续。f9公开SSR早期偏好修复和严格CSP已发布（5.93–5.94）；生产桌面Chrome .98真实后退/前进BFCache恢复通过（5.95），原Document/DOM/controller/nonce保留。20次下载采集离线重放及独立复核完成，仅反映当前本地操作；旧30s HTTP与60s源码下载实际失败、性能根因未证保持。离页cookie/媒体变化、移动及恢复后原生输入/监听器等完整BFCache验收继续。原102主任务8完成/94待、211任务55完成/156待及54矩阵/G0–G8/E00–E08未变；生产OAuth固定关联写入仍待具体批准，真实身份/已有专用测试工作区/密钥未验收。产品SSE transport PASS/minimal source.cancel FAIL及原strict8/7/1保持。
 
-当前推进：5.97的8源文件1d776d6b已提交推送并100%发布，CI1628/37steps/2304exactGit与本地compiled15/focused4、生产匿名Chrome2通过。公开system媒体2项是真BFCache，私有Cookie2项为独立自然重载；旧生产4Cookie strictFAIL与2latefavicon缺证保留。新生产HTTP18/19 actual1，源码30s部分下载失败；真实CinaAuth/已有专用工作区/密钥与完整102/211/54/G/E要求继续。
+当前合并兼容批次（2026-10-23，5.98）：在 main 合并 origin/origin 后继续补齐功能与接口兼容。账户/用户双额度、六协议与异步转写、MCP权限和管理、用户/Key RPM、路由注册表、Models/Provider同步与额度、用户倍率及全局multiply/min、各类收费分配/版本化CSV、钱包幂等加额、流式超时配置、分析质量指标及工具全部来源/供应商集合已落盘。模型/供应商分析已补四视图、本地搜索、请求结果/加权成功率/收费差额摘要；供应商类型筛选、搜索/排序/35列CSV和模型下钻类型提示已接入，独立目录失败不阻断基础用量；模型/供应商多行同时展开已恢复；上一续批补齐用户分析四视图、本地邮箱搜索、精确次数六项汇总、多用户/多Key独立下钻与重试，保留钱包快照和精确账号范围，筛选及身份/权限变化清除过期明细。该用户分析续批完整Web **2020/2020**、同一构建Chrome **34/34**，均无跳过；Web/Edge类型、完整Web lint、333文件格式及三目标构建通过。此前模型/供应商多行Web1998/Chrome48、目录Web1982/Chrome26、摘要Web1952/Chrome22、视图搜索Web1942/Chrome22、工具来源Web1930/Core目标23/Admin目标18/Chrome26等证据独立保留；本批复用现有API，未新增真实数据库证明。当前45路由组/55矩阵行，102主任务及211勾选项55完成/156待办不变；本批未提交/推送/部署，真实数据库、身份/Proxy联调与发布门槛继续。
+
+上一续批（2026-10-23，5.98）：仪表盘补齐四趋势、业务时间范围、模型/用户用量与精确金额，可靠性补齐精确汇总、请求级故障转移兼容、供应商目录及保留范围的错误日志入口。最终Web **2045/2045**、同一最新生产构建Chrome **40/40**（仪表盘19、可靠性21），Web/Edge类型、完整lint、363文件格式及三目标构建通过，30张四语手机/桌面截图复核通过。2559输入及产物对应同一源码；前期失败/布局问题原样保留。本地固定接口与模拟身份验证，真实身份/服务/数据库及发布门槛继续；完整102/45/55/211范围及原勾选不变，未提交/推送/部署。
+
+上一续批（2026-10-23，5.98）：全局及用户最近审计统一完整表格，补齐钱包前后快照、六位小数摘要、缺失/非法/零值区分和键盘详情弹窗，保留 29 列预算 CSV。Web **2063/2063**、同一生产构建 Chrome **24/24**、types/完整 lint/372 文件格式/三目标构建通过，20 张最终截图复核，2566 输入及产物绑定。本地模拟接口/身份验证；真实身份/服务/数据库及发布门槛继续，102/45/55/211 范围及勾选不变，未提交/推送/部署。
+
+上一续批（2026-10-23，5.98）：用户列表及全局网关密钥列表/详情按业务时区显示，独立保留币种与时区的有效字段，配置失败可显式刷新恢复；币种不可用时保留周期与重置时间。Web **2080/2080**、同一生产构建 Chrome **43/43**、Web/Edge 类型、完整 lint、387 文件格式及三目标构建通过，27 张最终截图复核，2573 输入及产物绑定。本地模拟接口/身份验证；完整 102/45/55/211 范围及勾选不变，未提交/推送/部署，真实身份/服务/数据库及发布门槛继续。
+
+上一续批（2026-10-23，5.98）：全局密钥列表/详情与用户详情密钥列表补齐最后使用时间，明确区分记录时间、暂无记录及旧接口缺字段；创建时间独立显示，沿用业务时区和 UTC 降级。Web **2097/2097**、同一生产构建 Chrome **26/26**、Web/Edge 类型、完整 lint、392 文件格式及三目标构建通过，15 张截图复核，2577 输入绑定。本地模拟接口/身份验证；102/45/55/211 范围及勾选保持，未提交/推送/部署，真实身份/服务/数据库与发布门槛继续。
+
+上一续批（2026-10-23，5.98）：请求日志、全局/用户审计详情和 MCP 参数摘要保留原始 JSON 数字词法，展示/复制不再损失大整数与小数末位；审计保留相邻数值和类型变化，既有脱敏、损坏/截断遮蔽继续。Web **2117/2117**、同一生产构建 Chrome **23/23**、Web/Edge 类型、完整 lint、397 文件格式及三目标构建通过，21 张截图复核，2581 输入绑定。本地模拟接口/身份验证；102/45/55/211 范围及勾选保持，未提交/推送/部署，真实身份/服务/数据库与发布门槛继续。
+
+上一续批（2026-10-23，5.98）：集成密钥最后使用时间遵循已验证业务时区，未确认配置明确回退 UTC；四语“从未使用”保持。手动刷新协同重读列表/配置，创建及轮换后的列表重读独立执行，配置加载/失败不丢失一次性密钥。Web **2122/2122**、同一生产构建 Chrome **28/28**、Web/Edge 类型、完整 lint、400 文件格式及三目标构建通过，7 张截图复核，2583 输入绑定。本地模拟接口/身份验证；102/45/55/211 范围及勾选保持，未提交/推送/部署，真实身份/服务/数据库与发布门槛继续。
+
+上一续批（2026-10-23，5.98）：MCP 管理补齐四项概览、五类筛选数量、已脱敏连接地址搜索和全部 MCP 调用入口。启用条目仅汇总启用服务器，待审核条目覆盖所有服务器；统计精确累加，刷新/失败不显示旧汇总。Web **2132/2132**、同一生产构建 Chrome **22/22**、Web/Edge 类型、完整 lint、404 文件格式及三目标构建通过，10 张截图复核，2587 输入绑定。本地模拟接口/身份验证；102/45/55/211 范围及勾选保持，未提交/推送/部署，真实身份/服务/数据库与发布门槛继续。
+
+上一续批（2026-10-24，5.98）：MCP 目录恢复跨页启用当前类型的全部新条目，客户端测试补齐本地搜索、逐项说明/JSON 和每页最多 50 条结果。部分确认及未知结果继续锁定写入，初始化/错误响应自动显示原始 JSON。Web **2146/2146**、同一生产构建 Chrome **26/26**、Web/Edge 类型、完整 lint、408 文件格式及三目标构建通过，16 张截图复核，2591 输入绑定。本地模拟接口/身份验证；102/45/55/211 范围及勾选保持，未提交/推送/部署，真实身份/服务/数据库与发布门槛继续。
+
+上一续批（2026-10-24，5.98）：MCP 列表/详情补齐最近同步尝试时间，兼容 ISO/SQL 历史值并区分无记录与不可解析；沿用业务时区及明确 UTC 降级，时区/币种独立校验。Web **2163/2163**、同一生产构建 Chrome **29/29**、Web/Edge 类型、完整 lint、412 文件格式及三目标构建通过，14 张截图复核，2595 输入绑定。本地模拟接口/身份验证；102/45/55/211 范围及勾选保持，未提交/推送/部署，真实身份/服务/数据库与发布门槛继续。
+
+上一续批（2026-10-24，5.98）：MCP 列表/详情/工具补齐标准、实收、计量三价及每请求单位，保留 v1 独立金额、v2 倍率和六位微额；管理目录独立搜索完整脱敏标题/描述，列表与目录补齐匹配数、空态及清除筛选。Web **2179/2179**、同一生产构建 Chrome **24/24**、Web/Edge 类型、完整 lint、415 文件格式及三目标构建通过，17 张截图复核，2598 输入绑定。102/45/55/211 范围及勾选保持，真实联调/发布继续，未提交/推送/部署。
+
+上一续批（2026-10-24，5.98）：MCP 目录与发布确认弹窗补齐当前/待发布标题和说明对照、独立展开、8192 字符显示上限与四语空值提示，提交前复核条目标识/状态及两份完整定义。Web **2193/2193**、同一生产构建 Chrome **28/28**、Web/Edge 类型、完整 lint、420 文件格式与三目标构建通过，20 张截图复核，2603 输入绑定。102/45/55/211 范围及勾选保持，真实联调/发布继续，未提交/推送/部署。
+
+上一续批（2026-10-24，5.98）：MCP 只读客户端补齐 HTTP 状态、耗时、受限响应头、脱敏正文与复制，明确区分 HTTP/协议/网络/超时错误；同步失败重新读取最新尝试状态，清除旧测试结果并保留未知写入锁。Web **2216/2216**、同一生产构建 Chrome **28/28**、Web/Edge 类型、完整 lint、427 文件格式与三目标构建通过，15 张截图复核，2610 输入绑定。102/45/55/211 范围及勾选保持，真实联调/发布继续，未提交/推送/部署。
+
+上一续批（2026-11-11，5.98）：Endpoints 明确拒绝后的结构化草稿恢复、操作错误反馈与控制台前置错误码兼容完成本地验收。最终 12 文件版本 Web 2235/2235、完整六项检查、同一生产构建 Chrome 22/22 与 12 张截图直接复核通过；source SHA 9fded6f0924687d890f1d2f5f17076bcd404689f7662aa84e6e887c18ab5d0e4，2617 输入绑定。真实服务／发布和完整迁移仍待验，未增加完成勾选，未提交／推送／部署。
+
+本轮最新续批（2026-11-11，5.98）：Data Policies 补齐明确拒绝后的两阶段草稿修复、旧确认提交门控、政策／主体版本冲突反馈和三个安全前置错误码传输。10 文件、2619 输入绑定 source SHA `a8c76c3ec69a555d220fa34f393413391310f4849713cb11b0cd3b392417ad64`；Web 2243/2243、六项静态检查、同构建 Chrome 26/26 首轮通过、15 张截图直接复核。原始两份指纹及毫秒到期时间保持，未提交／推送／部署或跨聊天发送消息；完整迁移和真实联调仍待完成。
+
+上一续批（2026-11-11，5.98）：Routes 保存恢复、操作错误反馈和路由／模型独立恢复标识完成主工作区本地验收。12 文件、2618 输入绑定 source SHA `0c796a2e672309fe28bf78a8904b2e694bd34f17329b59a9ab741ce9a4690d73`；Web 2239/2239、完整六项检查、同一生产构建 Chrome 32/32 和 15 张截图直接复核通过。临时浏览器脚本的定位／准备步骤失败完整保留，最终运行独立全量通过。真实服务／发布和完整迁移仍待验，未增加完成勾选，未提交／推送／部署。
+
+上一续批（2026-11-11，5.98）：供应商／模型明确拒绝后的草稿恢复、复制竞态与目录安全链接完成本地验收。最终 Web 2231/2231、六项检查、Chrome 24/24 与 15 张截图复核通过；21 文件和 2615 构建输入绑定 source SHA 34a9ef98ca6bcc7ff8ed4eafe9683b7506eadd9a8feb16abd464bfc4c19628f0，未提交／推送／部署，完整范围保持。
+
+此前推进：5.97的8源文件1d776d6b已提交推送并100%发布，CI1628/37steps/2304exactGit与本地compiled15/focused4、生产匿名Chrome2通过。公开system媒体2项是真BFCache，私有Cookie2项为独立自然重载；旧生产4Cookie strictFAIL与2latefavicon缺证保留。新生产HTTP18/19 actual1，源码30s部分下载失败；真实CinaAuth/已有专用工作区/密钥与完整102/211/54/G/E要求继续。
 
 上一批状态：NEXT-41四语公开署名修复与NEXT-13 B1五个活跃文件修复完成本地验收（5.54）。新P66 Web1401/1401、完整Web/Edge types及Web lint/format、三目标build/freeze/gen0；同一492产物真实Node HTTP45、Node compiled Worker77、Chrome JS32/真正NoJS36通过，68HTML实际footer英文原文/lang=en/译文/链接均通过。Admin源组件Chrome19/相关unit26/保留合同AST22、完整types与目标lint/format0；全量lint实际67E9W→58E5W，仍未全量通过。本地来源946文件tree/修复前1795观察已补，不能当上游导入ref/日期。P65原24/32缺英文、修前测试40失败与其他历史失败完整保留；workerd产品/最小例0xc0000005、WSL E_ACCESSDENIED，0原生case获验。29入口false、未部署；下一步NEXT-13 B2/B3按真实行为清理及来源/真实身份/三库/目录/链/LinuxCI/双平台/发布回滚，完整102主任务/54矩阵/G0–G8/E00–E08未提前完成。
 
@@ -123,12 +163,12 @@ P48为2026-09-30历史Web候选（仅证明原冻结范围）：protocol-07 与�
 | NEXT-06 | P6-09、P6-10 | 现有 Next SSR 的 SEO 小切片本地验证，完整迁移待验收 | Next 初始 HTML、真实目录 404 与临时 503 分流、canonical/分享卡片、robots、动态 sitemap 在本地 fixture 11/11；现有 Cookie 语言无稳定语言 URL，未生成 hreflang。Web 公开页 SSR 替换、真实目录、缓存失效和部署仍待验收 |
 | NEXT-07 | P7-01–12、P8-01、P8-10 | P52本地QA已核，真实发布证据待办 | P52 `local-p52-playground-simulator-20261001044500`，157文件（98 current/59 retained），manifest/source1369/compiled448与实际响应bytes匹配，26关闭开关与dry-run0；actualNext FH0AsZx7fAkxgZkJKxt56。previous仅本地P51资源保留，currentReleaseId=null，未发布；真实Linux CI/CF/Docker/TLS/灰度/回滚继续待验（5.44） |
 | NEXT-08 | P5-01、P5-03–11 | Endpoints 本地候选 fixture 通过，管理全域待验收 | Endpoints SDK、结构化表单/UI 已接共享 Console Cookie transport、Router 和 i18n；Worker/Nginx 独立默认关闭开关 25 项契约、恢复锁领域测试与候选浏览器 16/16 通过。真实授权/数据库/部署及其余管理页面和收益补偿继续逐域验收 |
-| NEXT-09 | P5-03、P5-11 | Routes 本地候选 fixture 通过，待真实联调 | 拓扑/摘要、目标 CRUD、池/模型策略、Sticky 和分时价格、独立默认关闭入口已接入；P10 候选浏览器 25/25（5.11）。须以真实 Console `routes`/`models`/`config` 权限、数据库、Proxy 行为、审计及双平台发布验收 |
-| NEXT-10 | P5-08、P5-10、P5-11 | Data Policies 本地候选 fixture 通过，待真实联调 | 现有列表含未配置目标，PUT 可 upsert 并审计；按 `routes.read/write` 展示/写入，验证有效状态、指纹失效、未知写后的列表+审计核对。Web SDK/UI、四语、独立默认关闭入口已接入；修正模型 ID 和本地时间显示后的 P12 不可变候选浏览器 18/18、dry-run 通过（5.13）。真实 Console/数据库/Proxy 与双平台部署待验；配置页与 Presets 各有独立未完成验收（5.14–5.15） |
+| NEXT-09 | P5-03、P5-11 | Routes 本地候选 fixture 通过，待真实联调 | 拓扑/摘要、目标 CRUD、池/模型策略、Sticky 和分时价格、独立默认关闭入口已接入；P10 候选浏览器 25/25（5.11）；2026-11-11 主工作区保存恢复续批 Web 2239/2239、Chrome 32/32 与 15 张截图复核通过（5.98）。须以真实 Console `routes`/`models`/`config` 权限、数据库、Proxy 行为、审计及双平台发布验收 |
+| NEXT-10 | P5-08、P5-10、P5-11 | Data Policies 本地候选 fixture 通过，待真实联调 | 现有列表含未配置目标，PUT 可 upsert 并审计；按 `routes.read/write` 展示/写入，验证有效状态、指纹失效、未知写后的列表+审计核对。Web SDK/UI、四语、独立默认关闭入口已接入；修正模型 ID 和本地时间显示后的 P12 不可变候选浏览器 18/18、dry-run 通过（5.13）；2026-11-11 保存恢复续批 Web 2243/2243、同构建 Chrome 26/26 首轮通过、15 张截图复核（5.98）。真实 Console/数据库/Proxy 与双平台部署待验；配置页与 Presets 各有独立未完成验收（5.14–5.15） |
 | NEXT-11 | P5-08、P3-09、P5-11 | 业务时区服务端前置已落地，Web 接管与真实验收待办 | 通用 `PUT /api/admin/config` 已使用共享 IANA/UTC 严格写入校验；窄 `GET /api/admin/business-timezone` 返回 `configured/legacy/missing/invalid` 来源，旧有效别名/偏移保留读取，缺失或非法旧值标源并回退 UTC。配置与时区响应设为私有不缓存；完整配置列表仍可能含授权秘密，不能直接进入普通 Web Query 缓存。Web 配置页须保留旧页其他能力，并补真实计费日界、DST、权限及部署验收（5.14） |
 | NEXT-12 | P5-08、P5-10、P5-11 | Presets 本地候选 fixture 通过，待真实联调 | Admin 新增无提示词/配置的列表与版本摘要，兼容旧 API；Web SDK/UI、四语与独立默认关闭入口完成。P13 候选浏览器 15/15、Web 530/530、Admin 571/571 与构建通过（5.15）。仍须补全部边界 fixture、真实 CinaAuth/三数据库/Proxy 与双平台验收；不把工作区内公开误称全站公开 |
 | NEXT-13 | P1、P8-01 | J6 完整Admin格式本地通过，完整工程门槛待验 | 剩余497件TS355/TSX142，133test/364非test；3320236→3379236 B，Root完整有界AST及独立双AST497通过，1128原评论、指令关系与7427属性runtime值保持；21原JSXText逐节点表达式保留18直接parents children，不合并字符串。其他154/保护23原字节不变，Next selector增量497/Web生产0。完整格式651pass/0warning/parse0，七CLI和审计0；fresh Admin types/lint、主unit1008＋5/30、Web1582、新Next I8i…构建/冻结0；旧新各8实际React＋10HTTP、6采样PNG对同字节（5.69）。所有默认候选拒绝、检查失败、Temp备份335和产物1983缺件/精确恢复保留，原因未知。格式绿不代表G1或完整迁移完成；真实身份/原生三库/链/Node22 LinuxCI/双平台/发布回滚继续，未部署，目标active。 |
-| NEXT-14 | P5-08、P5-10、P5-11 | Guardrails P18 候选 fixture 23/23，真实三库并发与联调待办 | Admin 安全摘要、三库绑定 CAS 与条件解绑、本地 Web Cookie SDK/列表/版本/绑定及有效预览、独立默认关闭入口已接入。P15 修复失效/跨工作区 Key 的 404 提示；`local-p18-20260928073458` 浏览器回归 23/23，覆盖 active Key 成功、404 无变更、写请求白名单及原 P14 权限/恢复/四语场景（5.18）。Core/Admin 源码另补绑定写入时的 active Key 原子检查/行锁和私有 409，定向 Core 52/52、Admin 25/25；真实 MySQL/Postgres 并发、Proxy、平台验收仍待完成；旧原始配置 API 仍供旧页面，不进入普通 Web Query 缓存 |
+| NEXT-14 | P5-08、P5-10、P5-11 | Guardrails P18 候选 fixture 23/23，真实三库并发与联调待办 | Admin 安全摘要、三库绑定 CAS 与条件解绑、本地 Web Cookie SDK/列表/版本/绑定及有效预览、独立默认关闭入口已接入。P15 修复失效/跨工作区 Key 的 404 提示；`local-p18-20260928073458` 浏览器回归 23/23，覆盖 active Key 成功、404 无变更、写请求白名单及原 P14 权限/恢复/四语场景（5.18）。Core/Admin 源码另补绑定写入时的 active Key 原子检查/行锁和私有 409，定向 Core 52/52、Admin 25/25；真实 MySQL/Postgres 并发、Proxy、平台验收仍待完成；旧原始配置 API 仍供旧页面，不进入普通 Web Query 缓存；2026-11-11 当前元数据入口已补，六项检查／2255 单测／元数据30＋原Guardrails42同包浏览器通过；真实完整能力仍待联调，见末尾元数据章节 |
 | NEXT-15 | P5-08、P3-09、P5-10/11 | P18 Config 整页 21/21、时区子页 13/13 本地 fixture；旧写保护源码通过，真实服务/审计/平台待办 | 五键非秘密概览、币种/策略窄写、两 webhook 独立替换/清除/显式揭示/候选核验、四语页面及独立默认关闭入口已接入。P14 时区子页 12/12；P15/P16 为历史局部证据，P17 单标签 20/20。P18 五键增加不含秘密版本号和三库条件事务写入；同一候选双预开标签模拟 503 已提交后旧版本的时区、币种、Webhook 再写均 412、只有首写提交，Config 整页 21/21、时区子页 13/13。新增默认关闭的 Admin `CINATOKEN_ADMIN_CONFIG_REQUIRE_REVISION`：精确 `true` 时五键旧通用无条件 PUT 返回 428，条件写继续 CAS，其他键兼容；定向路由 13/13、Wrangler 生成 16/16 和 Admin 类型检查通过。须先迁移并排空旧 Admin 实例，再启用服务端保护，最后开启 Web Config；旧 Next 页会收到 428。仍须真实三库双连接/审计、计费/DST、身份/Proxy、平台验收；旧通用任意 webhook URL 为兼容风险 |
 | NEXT-16 | P1、P8-01 | 根级类型检查本机通过，Linux CI 已接入但待实际运行 | Proxy Worker Env 全局类型隔离、cutover `.mjs` 结构化声明和可空结果运行时校验已补，脚本型根 `tsconfig` 关闭无产物检查中继承的声明输出；`npx tsc -p tsconfig.json --noEmit --pretty false` 退出 0，Proxy 220/220、v402 76/76 本地回归通过。`proxy-dispatch-safety.yml` 的 `config-cutover-contracts` job 已接入同命令，仍须 Linux Node 22 托管 CI 复验；真实 PostgreSQL cutover 另列数据库验收，不由类型检查证明 |
 | NEXT-17 | P5-10、P7、P8-03 | 配置审计切库源码与离线契约通过，真实全量演练待办 | `config_change_audit` 已加入 D1→Postgres 原生 CLI/Worker 共用 ETL 顺序及 ID 冲突键，源表预检、目标全量清空/复制与行数对账因此覆盖审计历史；两条对账路径按批在受控进程内逐键比较 `system_config` 的值和版本，以及审计 ID/全部非秘密元数据，仅报告不匹配数量，不回显配置内容。复制前另核 D1 0070、PG 0075 账本及源/目标列，失败即停止；离线 6/6、迁移合同与根级类型检查通过，Linux CI 工作流已接入但尚未运行。C03 手册 0068/0073 为历史专项合同；新 Config 放量前仍须以隔离真实库完成全量复制、配置值/审计/版本对账、权限/回滚演练及当前链尾复审，未通过不得切流或开启 Config 开关 |
@@ -153,7 +193,7 @@ P48为2026-09-30历史Web候选（仅证明原冻结范围）：protocol-07 与�
 | NEXT-36 | P3-01/02/07/08、P5-07/09/10/11、P7、P8 | 完整源码与P53本地验收通过；真实验收待办 | Web1008/Admin894/Core主798＋1skip、两构建0，金融83/83与实际Hono故障6/6；提现各48、NFT28/29全流程通过，严格主体/私有缓存/未知锁/不重放及同Screen桥已接。P53 3020源/897compiled/187asset、28入口全关闭为历史；原详情首屏焦点P3已用新P54本地修复，真实链/三库/身份/账本/平台待验（5.45） |
 | NEXT-37 | P3-08、P8-08/12、ADM-22/23、全矩阵 | P54焦点本地验收通过，整目标继续 | 共享Details初焦点h2；Web1008/1008、Root类型/lint/格式/两构建/dry-run0；四入口48/48、300次首屏标题正确、744实际static bytes/3020源/897编译后核，Root8图与服务关闭。首轮33同步断言失败/4组guard诊断保留；NEXT-38已完成P58声明本地范围，完整真实门槛继续（5.46–5.47） |
 | NEXT-38 | P3-08、P5-02/03/10/11、ADM-02–05 | P58本地三域270/270、Routes126unique与已发写切scope8/8通过，真实验收待办 | 完整工作台/共享Editor/四旧Next桥及写入底座已接；Root1062/type/two builds/dry-run0、3063源/883编译/252资产/28false执行后核无漂移。保留首124/126和12pending原ledger，独立重验及strict收尾后accepted126/pending0；新增8验证真实浏览器写取消/原gen锁/人工恢复且无重放，API均fixture，真实门槛继续（5.47）。 |
-| NEXT-39 | P1、P3-08、P5-08/10/11、ADM-24–26、P7、P8 | 三域源码及P59完整340unique本地验收通过，真实门槛待办 | 保留已有版本/指定/元数据/归档、Guardrail绑定/解绑和有效预览、DataPolicy证据及审计；写前fresh身份、provided主体/早退private/精确ACK、持久unknown与人工恢复及三旧Next同Screen桥。DataPolicy添加当前Route/Provider与前态policy条件原子提交。新冻结与三域340unique完整本地浏览器已验；真实三库/身份/平台未验，不勾选整域（5.48）。 |
+| NEXT-39 | P1、P3-08、P5-08/10/11、ADM-24–26、P7、P8 | 三域源码及P59完整340unique本地验收通过，真实门槛待办 | 保留已有版本/指定/元数据/归档、Guardrail绑定/解绑和有效预览、DataPolicy证据及审计；写前fresh身份、provided主体/早退private/精确ACK、持久unknown与人工恢复及三旧Next同Screen桥。DataPolicy添加当前Route/Provider与前态policy条件原子提交。新冻结与三域340unique完整本地浏览器已验；真实三库/身份/平台未验，不勾选整域（5.48）。；2026-11-11 当前元数据入口已补，六项检查／2255 单测／元数据30＋原Guardrails42同包浏览器通过；真实完整能力仍待联调，见末尾元数据章节 |
 | NEXT-40 | P1、P2、P3-01/02/11、P6-01–10、P7、P8、PUB-01–08、AUTH-01/02 | P65公开SSR/无JS/Auth本地切片通过，真实门槛待办 | 历次真实失败保留；P65 Web1364/HTTP45/WorkerNode77/Chrome32/无JS36/popup20/private7及实际React取消10+API1通过，482产物/source无漂移。额外Auth边界16及跨源COOP4通过，真实身份/目录、LinuxCI/双平台/回滚继续（5.50–5.53）。 |
 | NEXT-41 | P0-06、SRC-01/02/03、P1-08、P6、P7 | S1/S2/S3当前与P67历史对应源码本地通过，完整来源/发布待验 | P67原2281/18034906 B归档4201812 B及external原manifestSHA/三target v2/原TTL绑定，新P69复用P68 compiled；121原current hashed映射=119已current+2新补，326 inherited保持unknown。全Web1561/full lintformat0、源码HTTP16/Chrome8/下载16，scope及失败见5.61；上游ref/日期/归属、旧版本完整源码与原生平台仍缺，SRC/G0/G1不勾选。 |
 | NEXT-42 | P2-04/05/09/13、P3-02/06/07/09、P4-01/09、P8-04/05/06 | 账户身份前置与Next包装层本地通过，真实门槛待验 | 5.62账户62调用绑定、43源STOP、Web1582/P70三target/Chrome10为原冻结证据。B1新3源STOP、新正式17含Admin主1008、完整types/lint0；先Portal/expected-user再Admin/IdP/workspace/domain，跨subject不提升Portal能力。新Next lDwh…真实HTTP45/45、独立构造观测2/2，缓存头/错误/Unicode/合法POST及两logout通过（5.63）。 IdP/组织权限/SQLite-D1/Queue均受控，未代替真实CinaAuth、原生三库/链、旧实例升级/同源双平台及发布验收；实际P66/29false、未部署，完整门槛保持。 |
@@ -254,6 +294,8 @@ rg -n 'Routes\.(get|post|put|patch|delete)\(' packages/admin/lib/routes/user pac
 
 ## 3. 页面 / API / 权限 / 迁移矩阵
 
+当前矩阵共 **55 行（公开 8、认证 4、账户能力 15、管理能力 28）**，对应上述 45 个页面路由组。认证入口、嵌入能力及同一领域的增量子页不另计独立路由组；ADM-27 保留为内嵌收益审核，新增 MCP 页面记为 ADM-28。
+
 分类：**复用**表示可保留视觉组件，**重写**表示身份、数据或领域交互需按 cinatoken 契约实现，**新增**表示 Web 没有对应领域页面，**暂不支持**表示当前 cinatoken 没有相应业务契约。复用不表示原 API 可以直接调用。每行的完成证据需填入第 5 节验收记录；当前均待验收。
 
 ### 3.1 公开发现与认证
@@ -288,13 +330,13 @@ rg -n 'Routes\.(get|post|put|patch|delete)\(' packages/admin/lib/routes/user pac
 | ACC-05 | `/account/keys` 共享上游密钥（Shared Keys） | `shared-keys`、`/channels`、`PATCH/DELETE /:id`、`POST /:id/revalidate` | `shared_keys.manage`；卖家本人、渠道规则 | 新增领域交互；脱敏、指纹、价格/权重、验证/暂停/恢复/重新验证、删除历史约束。 |
 | ACC-06 | `/account/byok` | `GET/POST /api/user/byok`、`POST /reorder`、`GET/PATCH/DELETE /:id` | 当前个人 owner 或权威组织管理员角色 | 新增；BYOK 与共享市场密钥分开，提供优先顺序、凭据状态、分页与受控编辑。 |
 | ACC-07 | 工作区预算（嵌入管理组件） | `GET /api/user/workspace-budgets`、`PUT/DELETE /:interval` | 已授权工作区可读；owner/admin/权威组织管理员可管理 | 新增；使用 API 当前预算单位及金额精度，展示已消费、预留、剩余和周期边界。 |
-| ACC-08 | `/account/activity` | `/api/user/activity`、`/:id`、`/export.csv` | 本人及服务端当前作用域 | 复用日志表格、重写筛选/分页/详情/导出；保留脱敏、真实计费与 generation 详情。 |
+| ACC-08 | `/account/activity` | `/api/user/activity`、`/:id`、`/export.csv` | 本人及服务端当前作用域 | 复用日志表格、重写筛选/分页/详情/导出；保留脱敏、真实计费与 generation 详情。收费分配独立opt-in，列表/详情/版本化CSV兼容旧响应及未知值。 |
 | ACC-09 | `/account/earnings` | `/api/user/earnings`、`/summary` | `earnings.read`；本人账本 | 新增；余额、锁定、累计、分页和账本状态核对，不能复用充值 quota 模型。 |
 | ACC-10 | `/account/withdraw` 钱包（Wallet） | `GET /api/user/wallet`、`POST /challenge`、`POST /verify` | `wallet.manage`；本人、签名挑战 | 新增；钱包绑定/变更沿用挑战与签名验证。旧 `POST /wallet` 不是绕过签名的绑定入口。 |
 | ACC-11 | `/account/withdraw` 提现（Withdrawals） | `GET/POST /api/user/withdrawals`、`earnings/summary` | `withdrawals.manage`；本人及后端余额/状态规则 | 新增；申请、锁定金额、状态、失败重试与重复提交按服务端契约。 |
 | ACC-12 | `/account/nft` | `GET /api/user/nft/tiers`、`POST /mint`、`GET /mints` | `nft.read`；本人资格和铸造限制 | 新增；资格、进度、申请、状态及不可用状态。 |
 | ACC-13 | `/account/presets` | `presets`、`/:id/versions`、`PATCH/DELETE /:id`、`POST /:id/designate` | 后端个人/工作区归属 | 新增；版本、归档、指定版本与应用的完整操作。 |
-| ACC-14 | `/account/guardrails` | `guardrails`、`/effective`、版本/指派/指定/元数据/删除接口 | 后端工作区、个人/API Key 所有权；管理员托管不可覆盖 | 新增；规则版本、指派、有效规则预览及冲突处理。 |
+| ACC-14 | `/account/guardrails` | `guardrails`、`/effective`、版本/指派/指定/元数据/删除接口 | 后端工作区、个人/API Key 所有权；管理员托管不可覆盖 | 新增；规则版本、指派、有效规则预览及冲突处理。  2026-11-11 两入口有效预览精度与业务时区显示已补本地验收（2263 单测／24 浏览器），真实联调仍待。 |
 | ACC-15 | `/account/settings` | 当前网关 Key、钱包及身份入口 | 账户能力、本人 | 重写；保留现有可用操作，身份设置遵循 CinaAuth 职责，避免重复账户系统。 |
 
 ### 3.3 管理后台
@@ -303,33 +345,34 @@ rg -n 'Routes\.(get|post|put|patch|delete)\(' packages/admin/lib/routes/user pac
 
 | ID | 当前页面（目标前缀 `/admin`） | API | API 权限 | 处理与验收重点 |
 | --- | --- | --- | --- | --- |
-| ADM-01 | `/dashboard` → `/admin` | `/api/admin/stats`、分析及业务时区 | `analytics.read`；`config.read` | 复用仪表盘，重写计费、使用、可靠性与真实统计。 |
+| ADM-01 | `/dashboard` → `/admin` | `/api/admin/stats`、分析及业务时区 | `analytics.read`；`config.read` | 四趋势、业务日历/自定义范围、Token/费用及模型/用户用量已补齐本地兼容验收（5.98）；真实统计联调待验。 |
 | ADM-02 | `/gateway/providers` → `/providers` | `providers`、`/import/catalog`、`/import`、`/:id`、`/:id/dashscope/:resource` | `providers.read/write`；取原密钥需 `providers.secrets.read` | 四协议/capability/凭据/CRUD/模板与DashScope原生资源保留；NEXT-38搜索、安全模板预览/逐项skip、持久恢复及旧Next共享Screen已接。P58三域270包含该域完整业务/恢复/四语布局及原挂载恢复；新增已发写切subject/permission两entry通过。真实身份/数据库/供应商/平台仍待，见5.47。 |
 | ADM-03 | `/gateway/models` → `/models` | `models`、`/import/catalog`、`/import`、`/:id` | `models.read/write` | 全字段/kind/模态/多类定价/Top Provider/PATCH三态/级联删除保留；完整Editor/已安装禁选/容量预览/?edit/Models持久锁/旧Next共享Screen/raw policy条件写已接。P58三域270及Routes126覆盖声明流程，Vendor20实际fixture写验证原值保留与明确修改；新增已发写切scope两entry通过。真实身份/三库/平台继续，见5.47。 |
 | ADM-04 | `/gateway/endpoints` → `/endpoints` | `endpoints`、`/:id`、`/bootstrap/deepseek`、`/:id/routes/:routeTargetId` | `routes.read/write` | 完整字段/价格/结构化能力/证据到期/显式verify发布/DeepSeek/关联及route fingerprint守卫保留；持久未知锁/fresh主体/私有早退/旧Next共享Screen已接。P58三域270包含两入口完整业务、权限失败、恢复及四语布局；新增已发写切scope两entry通过。真实身份/三库/Proxy/平台仍待，见5.47。 |
 | ADM-05 | `/gateway/routes` → `/routes` | `routes`、`/pools/:poolId`、sticky summary/lookup/delete/reset | `routes.read/write` | 完整过滤/overview/byModel/未路由模型/上下文新建/全ModelEditor/优先层与effective来源/Sticky刷新/八条只读failover/五DashScope预设及持久锁/raw policy原子合同已接。P58原102＋18恢复＋6Vendor共126unique已有通过证据，原失败及12pending保留、strict重验后accepted pending0；另已发写切scope两entry通过。真实门槛继续，见5.47。 |
-| ADM-06 | `/gateway/users` → `/users` | `users`、预算 transition preview/apply | `users.read/write` | 复用表格，重写身份、外部系统映射、预算与访问控制。 |
-| ADM-07 | `/gateway/users/:id` → `/users/:id` | `users/:id`、`/keys`、`/logs`、`/audit-logs` | 用户 `users.*`；Key `user_keys.*`；日志 `logs.read` | 新增/重写详情、Key、预算迁移及可审计变更。 |
-| ADM-08 | `/gateway/keys` → `/keys` | `keys`、`/:id`、`/:id/logs` | `user_keys.read/write`；日志 `logs.read` | 复用表格，重写所有者、工作区、模型/路由访问、预算、撤销语义。 |
+| ADM-06 | `/gateway/users` → `/users` | `users`、预算 transition preview/apply | `users.read/write` | 用户列表业务时区、币种独立降级与周期/重置时间保留已本地验证（5.98）；身份、外部映射、预算写入及真实服务验收继续。 |
+| ADM-07 | `/gateway/users/:id` → `/users/:id` | `users/:id`、`/keys`、`/logs`、`/audit-logs`、`/wallet/credit/verified`、`/wallet/credit/receipt` | 用户 `users.*`；Key `user_keys.*`；日志 `logs.read` | 用户/Key/预算迁移及可审计更正；Key 创建/最后使用三态及旧接口兼容已本地验证；最近请求收费分配及完整钱包/预算审计详情；新增按订单引用加额、v1回执和持久未知恢复。读拒权/失败隐藏旧数据，未知订单不自动解锁。 |
+| ADM-08 | `/gateway/keys` → `/keys` | `keys`、`/:id`、`/:id/logs` | `user_keys.read/write`；日志 `logs.read` | 列表/详情业务时区、配置恢复及最后使用三态已本地验证（5.98）；所有者/访问、撤销语义及真实服务验收继续。 |
 | ADM-09 | `/gateway/playground` → `/playground` | 安全context/preview/multipart、完整共享Screen与旧Next桥；后端92/UI43、P52 Web14/62+Next14/63通过 | `playground.execute`；价格/参数详情另按对应read授权 | 单目标、四协议/图片/音频/实时、26模板与十引擎保留；不经Gateway账本/日志/failover，上游仍可能收费。本地fixture完整通过，真实联调待验（5.44）。 |
 | ADM-10 | `/gateway/simulator` → `/simulator` | 安全context、非揭示verify-secret与共享Screen/旧Next；API8/UI32，P52两入口各20、原生WS各5通过 | `models.read`、`routes.read`；Key需`user_keys.read`，日志需`logs.read`；实际推理Key独立授权 | 每次Send新鲜核验主体与Key，原始秘密只在内存；全部协议/多模态/工具/真实请求快照和停止保留。本地协议fixture不是实际Proxy/计费/平台证明（5.44）。 |
 | ADM-11 | `/gateway/tools` → `/admin/tools` | 专用`/api/admin/config/tools`安全summary/detail/save/reveal/audit已实现；groupCAS/mutex/原子审计，旧generic八键协调/六legacy写拒绝 | `config.read/write`；揭示另需`config.secrets.read`；Console调用需精确当前subject前置，具名Bearer按权限授权 | 四类10引擎、三价/币种/凭据/腾讯字段/说明/链接与未知结果人工恢复已接；P49 Web/新Next各53/53、跨入口2/2本地fixture通过，独立默认关闭入口，真实三库/身份/Proxy/平台待验（NEXT-33/5.42）。旧页无disable或endpoint编辑，不添加虚构接口。 |
-| ADM-12 | `/gateway/tools/invocations` → `/tools/invocations` | `request-logs` 工具筛选 | `logs.read` | 新增工具调用记录（Tools → Invocations），分页、详情和脱敏。 |
-| ADM-13 | `/gateway/analytics/models` → `/analytics/models` | `analytics/models` | `analytics.read` | 复用图表，重写日期、标签、供应商/用户筛选、单位与业务时区。 |
-| ADM-14 | `/gateway/analytics/providers` → `/analytics/providers` | `analytics/providers` | `analytics.read` | 复用图表，模型/路由组/标签筛选和供应商指标。 |
-| ADM-15 | `/gateway/analytics/users` → `/analytics/users` | `analytics/users` | `analytics.read` | 复用图表，用户筛选与真实预算/使用指标。 |
-| ADM-16 | `/gateway/analytics/reliability` → `/analytics/reliability` | `analytics/reliability` | `analytics.read` | 新增/重写成功率、错误和延迟样本口径。 |
-| ADM-17 | `/gateway/request-logs` → `/request-logs` | `request-logs`、过滤/详情/导出等已有子路由 | `logs.read` | 复用表格、重写 route trace、尝试、协议、脱敏与日志边界。 |
-| ADM-18 | `/gateway/audit-logs` → `/audit-logs` | `budget-audit-logs`、`/filters`、导出 | `logs.read` | 新增预算审计，操作者、变更前后、原因、筛选/分页/导出。 |
-| ADM-19 | `/gateway/config` → `/config` | `config`、`business-timezone` | `config.read/write`；秘密 `config.secrets.read` | 重写，保留币种、业务时区、日志配置、市场/链配置与秘密的读写规则。 |
-| ADM-20 | `/gateway/admin-api-keys` → `/admin/admin-api-keys`（Next rewrite） | `access-keys`、`/:id`、`/secret`、`/rotate`、`/revoke` | `console_only`，不允许集成 Bearer 替代浏览器会话 | 新增集成密钥（Integration Keys），最小权限、轮换/撤销、访问审计与现有受控秘密读取。 |
+| ADM-12 | `/gateway/tools/invocations` → `/tools/invocations` | `request-logs` 工具筛选 | `logs.read` | 工具调用记录（Tools → Invocations）含REST/MCP/全部来源、统一服务端分页、详情及脱敏；全部来源保留供应商集合下钻，集合与Server前缀查询必须收到精确范围确认，列表/详情兼容请求收费两池分配，MCP 摘要及原始 JSON 展示/复制保留数字精度（5.98）。 |
+| ADM-13 | `/gateway/analytics/models` → `/analytics/models` | `analytics/models` | `analytics.read` | 复用图表，重写日期、标签、供应商/用户筛选、单位与业务时区。5.98续批补齐四种视图、模型/路由组本地搜索及合计/CSV一致性，并补齐请求结果/加权成功率/收费差额摘要及下钻供应商当前类型/目录状态；恢复多模型/路由组同时展开、独立加载/重试与全部收起；本地验收通过，真实联调待验。 |
+| ADM-14 | `/gateway/analytics/providers` → `/analytics/providers` | `analytics/providers` | `analytics.read` | 复用图表，模型/路由组/标签筛选和供应商指标。5.98续批补齐四种视图、供应商名称/ID/类型本地搜索、类型筛选/排序及合计/35列CSV一致性，并补齐请求结果/加权成功率/收费差额摘要与独立目录状态；恢复多供应商同时展开、独立加载/重试与全部收起；本地验收通过，真实联调待验。 |
+| ADM-15 | `/gateway/analytics/users` → `/analytics/users` | `analytics/users`、`/keys`、精确user/Key的`/models` | `analytics.read`；日志链接另验`logs.read` | 用户/时区/成本、预算与永久额度快照；唯一账号才提供余额和Key→模型下钻，未使用/已删除历史区分、20列CSV与四语；续批补齐概览/成本/预算/全部四视图、字面本地搜索、精确请求结果汇总及多用户/多Key并发与独立重试（5.98）。 |
+| ADM-16 | `/gateway/analytics/reliability` → `/analytics/reliability` | `analytics/reliability`、安全配置概览、供应商目录与日志权限探测 | `analytics.read`；目录增强另验`providers.read`、日志入口另验`logs.read`，金额/业务日历依赖`config.read` | 精确汇总、请求级转移兼容、目录身份及保留范围的错误下钻已补齐本地验收（5.98）；真实权限/数据库待验。 |
+| ADM-17 | `/gateway/request-logs` → `/request-logs` | `request-logs`、过滤/详情/导出等已有子路由 | `logs.read` | route trace、尝试、协议、脱敏与日志边界；显式ingress_host精确筛选及安全详情、模型字面前缀与供应商集合精确确认/独立修复、三库绑定条件与旧快照兼容，以及请求收费两池分配；原始 JSON 展示/复制保留数字精度（5.98）。 |
+| ADM-18 | `/gateway/audit-logs` → `/audit-logs` | `budget-audit-logs`、`/filters`、导出 | `logs.read` | 预算及钱包前后快照、精确数字/类型差异和脱敏 JSON 详情、筛选/分页/既有预算 CSV 已补齐本地兼容（5.98）；真实身份/旧行待验。 |
+| ADM-19 | `/gateway/config` → `/config` | `config`、`business-timezone`、`config/stream-first-event-timeout-ms`、`config/stream-first-event-timeout-route-groups` | `config.read/write`；秘密 `config.secrets.read` | 重写，保留币种、业务时区、日志配置、市场/链配置与秘密的读写规则。 |
+| ADM-20 | `/gateway/admin-api-keys` → `/admin/admin-api-keys`（Next rewrite） | `access-keys`、`/:id`、`/secret`、`/rotate`、`/revoke` | `console_only`，不允许集成 Bearer 替代浏览器会话 | 新增集成密钥（Integration Keys），最小权限、轮换/撤销、访问审计与现有受控秘密读取。 最后使用时间与业务时区及刷新状态兼容已补齐本地验证（5.98）。 |
 | ADM-21 | `/gateway/shared-keys` → Web `/admin/shared-keys` | `shared-keys/overview`、`GET /:id/detail`、`PATCH/DELETE /:id`、`GET /:id/audit` | `providers.read/write`；链接另验 users/logs 能力 | 完整治理与人工恢复/严格审计/617actor的protocol-07和P48浏览器通过；恢复状态只到paused。旧Next P47仅原构建24/24；真实身份/三库/原生并发及部署待验（5.36）。 |
 | ADM-22 | `/gateway/withdrawals` → Web `/admin/withdrawals` | `withdrawals`、`/process`、`/:id/reject` | `users.read/write`；新Web每写fresh＋expected subject，旧headerless兼容 | P53完整双入口各48/48本地fixture；全状态/行currency/chain/详情/理由/确认/未知锁。拒绝原子确认尚未claim，processing/广播人工核对；金融83/83与Hono故障6/6，真实三库/链/身份/平台与账本待验（5.45）。 |
 | ADM-23 | `/gateway/nft-mints` → Web `/admin/nft-mints` | `nft-mints`、`/process` | `users.read/write`；新Web每写fresh＋expected subject，旧headerless兼容 | P53完整Web28/旧Next29本地fixture及全asset bytes通过；五状态/贡献快照/安全chain链接/未知锁，process只入队。P53的390px详情标题P3已用新P54四入口48/48焦点本地修复（5.46），不追认旧包修复；真实资格/链/数据库/身份/平台待验（5.45）。 |
 | ADM-24 | `/gateway/presets` → `/presets` | `presets` 及版本/指定/归档等子路由 | `presets.read/write` | 新增预设管理，版本与现有配置应用规则。 |
-| ADM-25 | `/gateway/guardrails` → `/guardrails` | `guardrails`、`/effective`、版本/指派/指定/元数据接口 | `guardrails.read/write` | 新增防护规则（Guardrails），保留管理员托管及有效规则预览。 |
+| ADM-25 | `/gateway/guardrails` → `/guardrails` | `guardrails`、`/effective`、版本/指派/指定/元数据接口 | `guardrails.read/write` | 防护规则托管与有效预览；本轮普通规则名称／描述及默认规则描述编辑已完成本地六项检查和同包72场景，真实联调及整域验收待办。  2026-11-11 两入口有效预览精度与业务时区显示已补本地验收（2263 单测／24 浏览器），真实联调仍待。 |
 | ADM-26 | `/gateway/data-policies` → `/data-policies` | `data-policies` 及已有子路由 | `routes.read/write` | 新增数据策略（Data Policies），按当前 Route/Provider 主体绑定、有效状态、失效原因和追加审计实现。 |
 | ADM-27 | Web Shared Keys 内嵌历史收益审核（无独立补偿页面） | `POST /api/admin/earnings/rederive`；`GET /api/admin/request-logs/:id` 深链 | `users.write`；日志另验 `logs.read` | P48复验范围/候选/扫描完整性/精确request ID/409及未知申请同范围只读发现和人工确认；不重放旧申请、不写账、不入队、不宣称补偿成功。真实经济证据/身份/数据库/平台待验（5.36）。 |
+| ADM-28 | Web `/admin/mcp`；`/gateway/mcp` 保留旧 Next 页面 | `mcp-servers` CRUD、`/:id/reveal`、`/:id/test`、`/:id/sync`、`/:id/items/status`、`PATCH /:id/items/:itemId`、`/:id/items/:itemId/accept`；Proxy `/mcp[/slug]` 只读客户端 | `mcp.read` / `mcp.write`；显式揭示另需 `mcp.secrets.read`；Web 入口需 `admin.console` | 连接配置、URL/JSON 导入、鉴权头三态、Server/Tool v1/v2 定价、tools/resources/prompts 同步/定义审核/启停与四种只读客户端方法已接入；补齐四项全目录概览、五类服务器筛选数量、已脱敏 URL 搜索和全部/单服务器调用入口；条目总数精确累加，刷新/失败不复用旧汇总。秘密仅存内存，身份/目标变化取消请求，未知写入人工核对且不重放。独立开关默认 false，仅接管 `/admin/mcp` 及尾斜杠；本地证据见 5.98，真实身份/服务/数据库/平台仍待验。 本轮补齐当前类型全部新条目跨页启用及客户端结果本地搜索、逐项说明/JSON、全组 50 条分页（5.98），本地验收通过；真实服务验收继续。 最近同步尝试补齐四语业务时区、ISO/SQL 兼容及无记录/不可解析状态；配置摘要失败独立降级 UTC，迟到响应不覆盖新身份/刷新，普通配置成功不解除未知写锁（5.98）。 列表/详情/工具补齐三价、请求单位、六位微额与实收低于计量提示；目录完整脱敏 title/description 独立检索及两级匹配数/空态/清除筛选已通过本地验收（5.98）。 目录与发布确认补齐当前/待发布标题说明对照、独立有界展开、四语空值/格式提示及提交前双定义/身份/状态复核，完整 JSON 仍可查看（5.98）；后端原子版本条件仍待后续联调。 只读客户端补齐 HTTP/耗时/响应头和有界脱敏正文复制、分层错误提示；同步失败只读刷新最新状态，重新测试/同步清除旧结果，未知写入锁保持（5.98）。 |
 
 表中相对 API 名均以 `/api/admin/` 为前缀。管理集成密钥目前具有受控秘密读取和轮换接口，不能将用户 Gateway Key 的“一次性返回”规则直接套到全部密钥类型；各类秘密按现有独立契约展示，避免自动获取或在普通列表缓存全文。
 
@@ -431,14 +474,14 @@ rg -n 'Routes\.(get|post|put|patch|delete)\(' packages/admin/lib/routes/user pac
 
 ### P5：管理后台全量迁移
 
-- [ ] P5-01：ADM-01–27 每行获得实现与验收证据；不得以 generic JSON 编辑页替代完整领域交互。
+- [ ] P5-01：ADM-01–28 每行获得实现与验收证据；不得以 generic JSON 编辑页替代完整领域交互。
 - [ ] P5-02：供应商、模型、模板导入、协议/资源诊断、凭据状态、能力与公开发布流程完整。NEXT-38只读复核已有完整基础业务，查证搜索/模板预览/已安装容量/上下文编辑及四域恢复缺口，按5.47完整补齐；不将旧局部候选当整域证明。
-- [ ] P5-03：请求入口、路由池、上游目标与拓扑/摘要视图完整；策略、优先级、权重、粘性、故障转移和 adapter 可管理。NEXT-38按5.47恢复旧工作台全部交互及Routes/Models共享Screen/域锁，八条failover是只读规则；旧CRUD不重建，未实现方案不勾选。
+- [ ] P5-03：请求入口、路由池、上游目标与拓扑/摘要视图完整；策略、优先级、权重、粘性、故障转移和 adapter 可管理。NEXT-38按5.47恢复旧工作台全部交互及Routes/Models共享Screen/域锁，八条failover是只读规则；旧CRUD不重建，未实现方案不勾选。 2026-11-11 Endpoints 草稿恢复、操作反馈和控制台前置错误码兼容完成本地验收（2235/2235、Chrome 22/22，5.98）；Routes 12 文件已按基线检查应用主工作区，六项静态（2239/2239）和同构建 Chrome 32/32、15 张截图复核通过；整域与真实门槛仍未完成。
 - [ ] P5-04：用户/外部系统、Key、预算迁移预览/执行、模型访问和用户详情完整。
 - [ ] P5-05：请求日志、route trace、预算审计、工具调用记录、导出及全部分析维度完整。
 - [ ] P5-06：工具配置、Playground、Simulator与现有文本/图片/音频/实时/工具协议能力完整。Tools历史P49两入口各53/53（5.42）；NEXT-35完整共享Screen/API/Router/四语/旧Next已接，最终Web971/Admin878与构建0，P52 Playground28场景125检查、Simulator各20、原生WS各5及零漂移通过。本地阶段完成；真实协议/服务/财务/平台与其余整域验收继续（5.44），不提前勾选。
 - [ ] P5-07：管理集成 Key、共享密钥治理、收益补偿、提现处理及 NFT 操作完整。NEXT-36两域完整Web/同Screen旧Next已接；P53提现各48、NFT28/29及实际asset bytes/最终后核通过（5.45）。安全金融83/83、D1实际运行时守卫及Hono故障6/6只属本地；真实三库/链/账本/身份/平台、MySQLjournal模型及其余整域继续待验，不提前勾选。
-- [ ] P5-08：系统配置、业务时区、数据策略、预设和防护规则完整；秘密权限及配置写回保持现有边界。
+- [ ] P5-08：系统配置、业务时区、数据策略、预设和防护规则完整；秘密权限及配置写回保持现有边界。 2026-11-11 Data Policies 两阶段拒绝恢复、旧确认提交门控和前置码兼容完成本地验收（2243/2243、Chrome 26/26、15 张截图，5.98），真实联调与发布仍未完成。
 - [ ] P5-09：定价保持目录价、供应成本、用户价、分时倍率和缓存/多模态单位；展示/编辑结果与服务器计算一致。Tools三价/币种一致快照、Proxy定向2/2及同候选十引擎保存通过本地合同（5.42）；5.45提现逐行currency/六位精度及NFT账本来源USD快照已接与本地验证，不替代真实账本/Proxy计费或全域定价验收。
 - [ ] P5-10：危险/批量操作显示真实影响、确认和审计结果，失败/冲突可恢复。Shared CAS/原子审计/长actor见5.36，Tools groupCAS/持久未知锁见5.42；5.45全局队列影响确认、原子拒绝ACK、跨入口未知锁、双fresh身份＋观察＋generation CAS人工核对不重放已接与本地验证。全部管理域和真实三库/账本/审计验收继续待办。
 - [ ] P5-11：管理员入口、菜单和按钮按能力展示，接口每次实时授权；权限撤销或服务不可验证时不能继续执行。P48 Shared见5.36，P49 Tools见5.42；5.45两域users.read/write、每次fresh主体、403隐藏/取消/未知锁与跨框架身份变化已本地验证。旧headerless兼容无新增主体绑定；完整管理权限与真实身份验收仍待完成。
@@ -1640,6 +1683,8 @@ Routes critical首50为49pass1fail、1155checks/1022实际static，旧Next ja390
 
 ### 5.48 NEXT-39 政策管理三域完整共享迁移与完整Core类型入口（2026-10-01，P59声明本地范围通过，真实验收待办）
 
+2026-11-11 当前复核补注：本节 P59 为历史声明；当前共享 Guardrails Screen 和 SDK 缺少 name／description 编辑，不能用历史元数据通过声明证明当前完整能力。本轮按现有 Admin PATCH 合同补齐，并重新形成当前源码验证证据。
+
 本批延续“继续实施”目标和同一主清单。NEXT-38/P58声明的本地验证已完成，但新源码改动后不再沿用其冻结哈希、构建或浏览器结果证明当前源码。P58原失败、重验、网络分类和关闭本任务服务记录保持不可变。完整102主任务、54矩阵、G0–G8与E00–E08不缩小；28个Web入口保持false，未部署、未调用真实身份/上游/数据库迁移。
 
 批次开始时按实际源码复核后，本批范围是ADM-24 Presets、ADM-25 Guardrails、ADM-26 Data Policies的完整管理能力与三旧Next共用页面。现有Web页面不是零实现；待补的是共享主体/响应合同、持久未知写锁和人工恢复、旧Next分叉、DataPolicy条件证据绑定，以及Guardrail元数据和安全审计详情的等价显示。
@@ -2628,6 +2673,432 @@ Windows Chrome在同一最终源码的本机编译HTTP产物和f9 Linux冻结编
 
 直接证据见[本地验证索引](evidence/2026-10-07-layout-attribution-and-preference-restoration/local-validation.json)，原生产before、首观察器失败和所有定向修前失败按原字节保留；本SHA发布、全部原失败及实际收据见[发布索引](evidence/2026-10-07-layout-attribution-and-preference-restoration/publication.json)、[物理ZIP索引](evidence/2026-10-07-layout-attribution-and-preference-restoration/index.json)与同目录raw-evidence.zip；未改变历史5.94–5.96原字节。
 
+### 5.98 合并后的功能与接口兼容（2026-10-16–18）
+
+本批以 `4b3434ff`（合并 `origin/origin`）为基础，按用户选择的“补齐功能与接口兼容”推进。此节记录本地源码和实际验证范围，不替代原 44 路由组、全部嵌入能力和 G0–G8 / E00–E08 验收，也不声明新候选已部署。
+
+| 对应任务 | 合并后的缺口与修复 | 当前证据 |
+| --- | --- | --- |
+| P4 使用记录 / NEXT-29 钱包 | Activity 以精确 `include_wallet=true` 扩展四个钱包字段，旧客户端响应不变；Web 区分周期额度、永久额度、总可用和一次预占，缺失数据不显示假零 | 追加本轮用户管理/Simulator 源码前，后端 Activity 14/14、完整 Web 1643/1643、Web/Edge/Admin types、lint/format/build 通过；本地 Chrome 桌面1440×1000/手机390×844的13场景通过 |
+| NEXT-35 Playground | 目录支持六协议及未来协议局部降级，原生/转换模板按操作和 Adapter 分流；图片 URL/base64/完整 SSE 与 MiniMax hex 音频预览；修复 DashScope 原生 TTS 模板 | 上述同一轮测试和13场景包括原生图片、语音、预览/发送及未知协议隔离；使用模拟 API，未代替真实供应商、身份或账本验收 |
+| NEXT-30 集成密钥 | 补齐 mcp.read / mcp.write / mcp.secrets.read，列表和编辑保留最小权限，不自动授予 `*` | 上述完整测试及浏览器编辑/取消通过 |
+| ADM-06/07 / NEXT-29 用户管理 | 接入钱包列表、初始值、人工更正和服务端有符号余额；差量更正要求原因；预算切换完整保留钱包快照并验证确认结果，刷新钱包后旧预览失效 | 完整 Web 1690/1690（skip0）包含初始值/排序/四语UI；生产构建本地 Chrome 钱包10场景通过，含有原因的差量更正、普通资料编辑不回写、同updated_at钱包刷新使预览失效、周期切换、旧响应与创建/排序 |
+| NEXT-35 Simulator | 补齐新协议目录和原生多模态请求、模板、媒体预览，异步转写提交与内存 receipt/显式查询；Proxy CORS允许receipt请求头并公开非敏感诊断头 | 完整 Web 1690/1690、Activity/CORS后端16/16；Chrome Simulator9场景通过：原生音频/图片预览、receipt内存与手动GET、原请求ID、凭据改变清任务、未知协议隔离和旧OpenAI发送；不自动轮询或重发 |
+| 合并新增管理能力 / MCP | 恢复四语导航至 `/gateway/mcp` 原管理页；Web 调用记录新增 REST/MCP 来源与 Server 筛选，请求日志保留 `provider_id` + `model_id_prefix`，补齐原生协议筛选和路径展示 | Chrome MCP8场景通过，含脱敏JSON详情、筛选变更清旧详情、无效Server不发请求、请求日志保留前缀、原生协议选择、REST切换和手机布局；edge fallback回归在完整单测中通过。此前仅恢复入口，续批 Web 管理与独立默认关闭开关见下述记录 |
+
+前一批最终 Web/Admin/Edge/Proxy 类型检查、Web 全量 lint、89 个 Web 改动文件格式检查和 Web 生产构建通过；Chrome 为桌面1440×1000/手机390×844，本批27场景均完成页面身份/非空/无overlay/无页面横向溢出与交互检查，console error/warning均0。Browser插件不可用，采用现有Playwright与系统Chrome；代表截图已目视检查。首次Admin检查的2处共享UI导入错误已改为相对路径并复验通过。首轮新增MCP测试1689/1690（固定工具名长度256、实际254）保留，修正为长度上限/前缀/省略号与最多3项键值边界后完整1690/1690通过，未改生产逻辑凑长度。浏览器首轮隐藏响应式元素/折叠详情/Raw视图及隐式select标签定位失败已保留；修正临时QA定位与视图切换后重跑通过，未放宽产品行为。证据保存在本机可视化目录 `web-wallet-simulator-mcp-2026-10-16/qa-summary.json` 及同目录日志/六张截图。
+
+MCP 后续范围已只读核对：列表/连接 CRUD、显式 reveal、连接测试、目录同步与定义审核、三类条目启停、v1/v2 Server/Tool 定价、配置导入及用户 Key 客户端目录测试。`mcp.write` 不隐含 `mcp.secrets.read`；URL 留空省略，鉴权头省略保留、提供对象替换键集合、同名空值保留旧秘密。后续已接入本地 Web MCP 页面（见下述续批），旧页保持可达，不新增不存在的 `/advanced` 链接。
+
+续批 MCP 管理源码：`/admin/mcp` 懒加载路由与四语导航，连接 CRUD/显式 reveal/测试、三类目录同步与审核、分页筛选/启停、Server/Tool v1/v2 定价、URL/JSON 配置导入和原始 Gateway Key 只读客户端测试。新开关 `CINATOKEN_WEB_ADMIN_MCP_ENABLED` 默认 false，仅接管精确新页面 GET/HEAD，`/gateway/mcp` 与所有 API/Proxy 路径继续原有分流。详情条目新增兼容只读 `pricingState`，区分继承、有效覆盖和无效存储；旧响应无来源时不推断继承。身份/服务切换清内存秘密并取消请求；未知写入保留通用恢复标记，不自动重发。此续批已完成下述本地验证；不等于真实服务、数据库/身份或平台部署验收。
+
+续批最终验证：Web 全量 **1750/1750（skip0）**，含 55 项 MCP 数据/传输/UI 新测试；Web/Edge/Admin 类型、后端 50/50（MCP 定价来源/权限/导入/导航、Activity 和 CORS）、Web 全量 lint、126 个改动文件格式检查与生产构建通过。所有重验证均使用仓库共享串行验证锁。新 MCP 页面懒加载，未新增依赖或公开浏览器环境变量。
+
+同一最终生产构建在本地 Chrome 完成 **32/32** 个 fixture 场景（桌面1440×1000、手机390×844）：脱敏列表与默认范围、仅修改名字时省略 URL/鉴权头/v1价格、明确权限拒绝、测试/同步/审核、工具启停、v1覆盖与恢复继承、显式 reveal/隐藏/60秒清除/权限拒绝、三类目录、四种只读客户端方法与服务范围、分组/JSON视图、ID不匹配拒绝、取消、Proxy/Key/subject变化清凭据及取消旧请求、从无效目标导入创建、确认删除返回列表、部分同步失败跨刷新保持锁定、手动核对解锁不重放、三种非英语手机页面。32场景均通过页面身份、非空、无框架overlay、无页面横向溢出检查；未解释 console error/warn 为0，另单独保留人为注入的两次403和一次400网络诊断。Browser插件不可用，使用已有Playwright与系统Chrome；代表桌面/手机截图已目视核对。
+
+首轮1750项中1748通过，2处 Wrangler 默认开关总数断言仍为29；新增MCP后实际30，修正精确数量并保留MCP明确默认false断言后复验通过。首轮 lint 的 effect 内状态重置、render读取ref及1条cleanup警告已用条件状态重置/稳定清理回调/预览编号状态修复，未关闭规则；1处工具调用页格式已修。浏览器发现并修复了 RHF 未订阅 isDirty 导致取消时跳过草稿确认、删除成功后无谓重读已删除详情；延迟详情测试同时覆盖了客户端初始目标范围竞态修复。语言首轮失败源于临时QA初始化脚本每次导航重置英文，已改为界面切换并验证导航后保持语言。失败日志、截图与最终结果保存在本机可视化目录 `web-mcp-management-2026-10-16/`，以 `qa-summary.json` 为入口；此目录不是发布候选或真实平台验收记录。
+
+RPM / 路由续批：Web 用户列表、用户详情、全局 Key 及用户详情 Key 接入现有 `rate_limit`。用户共享池与 Key 独立上限分开展示，`null` / `{}` 表示该层不限速，`{rpm:0}` 保留禁止计量调用语义；缺失、非法或未知响应显示不可用。保持不变时省略字段，显式修改要求原因和非负安全整数；用户只提交 profile 差量，Key 保留 `expected_revision`。修改确认响应须返回相同限速值，缺失或不一致不能报告成功。创建及账户 Key API 不支持 RPM，未添加虚假写字段；周期预算、钱包更正和状态确认逻辑保留。
+
+路由编辑器改为直接使用 Core 适配器注册表，补齐 DashScope 原生 TTS HTTP / SSE / 多模态 / realtime session 与异步 ASR，后者必须具备提交和 tasks 两个端点；LLM 不再误选原生音频操作，仅展示用的旧 ASR operation 不作为新请求入口。新增 Qwen / Wan 生图转换预设，展示客户端路径、处理方式、所需端点、不支持字段、网关管理字段及可复制 `extra_body`。原生异步查询指引包含必需的 `?model=`；OpenAI filetrans 转换明确由网关等待上游任务，客户端无需查询原生任务。未知适配器不猜测指引；模型名规则不匹配仅提示；供应商配置脱敏阻止新拓扑，已有目标仍可改优先级等局部字段。
+
+本续批新增 24 项 Web 回归，最终完整 Web **1774/1774（skip0）**、用户/Key/Core 限流后端契约 **45/45**、最终 Web/Edge/Admin types、全量 lint、148 个改动文件格式检查与生产构建通过。生产 Chrome fixture **24/24**（桌面1440×1000、手机390×844）：四种新增原生 TTS 精确保存、原生异步入口/指引、Qwen/Wan 示例复制与同请求面共享池实际渲染、不完整/脱敏供应商保护及旧目标局部编辑、用户 RPM 原因/0/null/非法安全整数/旧响应普通编辑、用户详情 Key 显式 uncached详情和全局 Key CAS、手机及四语展示、错误 RPM ACK 后刷新前后 Save/撤销/墓碑按钮锁定且无重放。全部通过身份/非空/无overlay/无页面横向溢出检查，console error/warn与意外请求均0；Browser插件不可用，使用已有Playwright与系统Chrome。代表截图已目视检查。
+
+首次路由窄测试17/19的两个失败是夹具缺少 tasks URL 的 `{task_id}` 和隔离 i18next 未沿用应用转义配置；修正夹具后19/19。交叉审阅发现原生任务指引遗漏必需的 model query，已修复生产文案路径并重做最终 Web 全量/类型/lint/格式/构建。浏览器初次标签精确定位、审计原因作用域及补齐真实 pool 后 sticky summary 夹具路径404均完整保留，未忽略资源错误；修正临时QA后全部24场景重跑0。夹具已按实际服务收窄用户Key列表投影、显式 GET 编辑详情、更新限速相关 revision hash，并验证同池Qwen/Wan两目标渲染及写锁。证据入口为本机可视化目录 `web-rpm-route-compat-2026-10-16/qa-summary.json`；所有重验证使用共享串行锁。
+
+Models / Provider 续批（2026-10-18）：Web Models 接入官方目录 diff/apply，按厂商、类型和搜索筛选、分页查看标量与价格叶子差异；全部字段默认不选，筛选范围元数据可批量选择，价格整段替换须逐项选择并额外确认计费影响。Provider 保留权威 `kind`、标签与 `quota_supported`，创建/编辑/复制可选择类型，普通编辑省略未改类型，复制要求新凭据且保持禁用。官方差异按描述与整个协议端点明确选择，移除字段默认不选；旧类型建议只作提示，迁移只 PATCH `{kind}`。查询结果在进入缓存前清除端点 URL 中的凭据；合法长描述截断展示，特殊原型名称 ID 使用 Map / Set，避免隐式继承选择。
+
+两类 apply 成功响应新增兼容的批次 ACK `{domain, operation:"sync"}`，不含资源 ID；Web 校验各项合计与失败 ID 范围，分开展示部分成功/全部失败，不展示原始错误文本或无依据的通用“保存成功”。失败可能发生在已持久化后的缓存失效等步骤，因此提示可能已部分应用，不能将 failed 解释为零写入。已知结果要求手动重新获取差异，错误/缺失 ACK 或结果不一致沿用未知写锁，不自动重放。服务端应用时重算当前官方值和币种，不提供 diff revision / CAS 保证，界面已明确此语义。
+
+Provider quota 仅在已配置且支持的账号详情显式查询，不自动请求/轮询；新查询清旧快照，原币种、有符号余额、极小非零数与窗口单位保持原义，缺失值显示不可用。权限失败撤回私有视图，离开页面取消请求。共享 Field / NativeSelect / Separator 使用相对导入，Field 显式采用 Web React 类型，兼容仍嵌入这些页面的旧 Admin 编译边界。
+
+本续批最终 Web **1803/1803（skip0）**、相关后端 **75/75**、Web/Edge/Admin types、全量 Web lint、185 个改动文件格式检查与生产构建通过。新增后端回归沿真实同步与更新服务调用，确认持久化已成功后策略失效抛错会返回逐项 failed；前端文案不再保证零写入。首次 Admin types 的共享控件别名/React 18–19 类型边界和首次 lint 的测试重复导入均已修复，原失败日志保留，未压制规则或扩大 tsconfig 范围。
+
+Models / Provider 续批同一生产产物 Chrome fixture **20/20**（桌面1440×1000、手机390×844）：Models 默认不选、文本安全渲染、筛选元数据批量同步/部分失败、价格显式确认与精确 payload；Provider 显式原币种额度、极小正负数/缺失值、失败清旧快照、占位密钥禁查、普通编辑/复制保留 kind、端点脱敏与部分同步、仅 kind 迁移、全失败无通用保存提示、四语手机及两域错误 ACK 跨刷新保留锁且无重放。全部通过页面身份/非空/无overlay/页面横向溢出与弹窗视口边界检查，未解释 console error/warn 与意外请求均0；另保留一次明确注入的 quota HTTP400 网络诊断。Browser 插件不可用，使用既有 Playwright 与系统 Chrome。代表桌面和手机截图已目视核对；早期尺寸改变后尚未稳定的截图保留为历史，最终 QA 等布局稳定再断言弹窗边界并截取确认按钮。
+
+证据入口为本机可视化目录 `web-catalog-provider-compat-2026-10-18/qa-summary.json`，包含初始/修复后/最终命令、请求与写入轨迹、源码及 dist 哈希清单和截图。所有重型验证经共享串行锁；没有新增依赖、迁移或部署开关。此续批不改变原全量任务/门槛完成状态。
+
+用户倍率 / 全局模式续批（2026-10-18）：Web 用户列表和详情兼容 `charged_cost_factors` 的模型标量与路由分组对象，具体分组优先于 `*`，仅有通配符时与标量按同义比较。编辑器保留未改模型与回退值，支持零和极小值，拒绝规范化后重复的模型/分组；显式加载路由建议并清除返回对象中的私密字段。保存要求原因，仅 PATCH 倍率与原因，并验证同一用户及规范化后的完整倍率结果，保留钱包、周期预算和 RPM 现有行为。
+
+新增显式用户价格预览 GET `/api/admin/users/:id/models`，使用已保存的用户倍率、当前路由和全局模式，不发送推理请求或要求 Gateway Key；默认 llm / default,free / 40条，支持模型与分组筛选。响应校验筛选回显、唯一模型、完整 Core 价格结构与排程/供应商折扣投影，不保留任意元数据。未保存草稿提示预览仍采用服务端值；修改筛选、开始新请求或失败会清除旧结果。权限拒绝清视图并在 Console 复核后继续保留拒绝状态，不自动重试。表格以15位有效数字消除二进制浮点尾数，极小非零值使用科学记数，title和展开详情保留原始值。
+
+全局配置补齐 `USER_CHARGED_COST_FACTOR_MODE` 的 multiply / min 概览、四语说明、草稿撤销、确认与专用条件 PUT。概览缺失/非法存储明确返回 multiply 回退来源；旧服务缺少快照时仅停用此设置，其他配置仍可用。新增固定键 CAS 与审计原子写入，Console 新端点必须绑定预期 subject，命名 API Key 保持 config.write 权限语义；旧通用 PUT 兼容。Web 模式/倍率写入及显式读取均先复核当前身份，用户路由支持可选 subject 前置且保留 headerless/ext 旧调用。网关缓存最长约30秒，界面说明模式只影响后续计费。
+
+倍率未知结果按稳定 Console 身份和目标用户持久保存代次标记，不保存倍率草稿、原因、邮箱或秘密。错误确认、刷新取消后的迟到响应、重载和权限变化均不能解锁或自动重发；人工核对需两项明确确认、最新身份与当前用户状态，以及同一代次检查。旧恢复不会移除新的标记。全局模式沿用配置恢复，错误确认跨重载保持锁定；缺少新模式快照的旧接口不能解除未知状态，仅显式刷新观察权威状态后恢复。
+
+本续批最终完整 Web **1830/1830（skip0）**、相关 Admin 契约 **95/95**、Core **41/41**，Web/Edge/Admin types、全量 Web lint、209 个改动文件格式检查与生产构建通过。最后数字展示修正后重跑了 Web 类型/完整测试/lint/格式/构建；Edge/Admin 类型与 Admin/Core 契约在此前同批通过，后续仅改 Web 预览格式，不重写旧结果。所有重型验证均使用共享串行锁。
+
+最终同一生产构建 Chrome fixture **27/27**（桌面1440×1000、手机390×844）覆盖结构化倍率列表/详情、显式分组建议与已保存价格预览、具体分组/通配符/零值/重复拒绝/撤销、有效位与原值保留、筛选回显错误清旧数据、全局模式确认与精确 CAS、旧服务快照兼容、未知结果跨重载锁定和两确认人工核对、已发出 PATCH 刷新取消与迟到响应丢弃、三种非英语手机界面、全局412冲突/错误ACK及显式核对、预览403后拒绝状态保留。每个场景均核对页面身份、非空、无框架overlay、无页面横向溢出，弹窗另核对视口边界；未解释 console error/warn与意外请求均0，另保存明确注入的403/412网络诊断。Browser插件不可用，采用既有Playwright与系统Chrome；代表桌面/手机截图已目视检查。
+
+首次 Admin types 的测试对象联合类型、Web1828/1829的按钮disabled正则与源码变动期间构建保护失败原样保留；类型注解和准确HTML属性正则修正后静态/完整检查通过。浏览器首轮双响应式同邮箱定位，以及后续旧成功提示导致下一次保存断言抢跑均为临时QA问题；改用可访问链接定位、等待该次PATCH响应和编辑器重置后重跑27/27，未改写失败或为此放宽产品行为。数字浮点尾数为截图发现的实际展示问题，已修正并增加零/极小值/多语言/原值保留验证。
+
+证据入口为本机可视化目录 `web-user-factor-mode-compat-2026-10-18/qa-summary.json`，含全部初始/后续失败、最终命令退出码、请求/写入记录、代表截图及改动源码/产物字节快照与SHA清单。最新浏览器成功取自 `browser-latest-results.json`；`post-display-results.json` 的旧浏览器失败保留，不能单独解读为最终全绿。没有新增依赖、数据库迁移或部署开关，本续批不改变原全量验收状态。
+
+测试环境为本地生产构建与受控接口响应；真实供应商、CinaAuth、原生数据库/账本/链、平台发布及原有失败与门槛继续按实际证据推进。本批尚未提交、推送或部署。下一已识别兼容缺口为用户分析钱包/Key下钻与请求日志 `ingress_host`，本续批不声明其已接入。
+
+用户分析 / 入口主机续批（2026-10-18，ADM-15/17）：用户分析接入合并后已有的永久额度累计授予/消费。三库原查询按日志邮箱分组并分别取关联账号各列最大值，不能据邮箱任意选账号。新增只读 `user_id`：只有区间内全部日志均关联同一现存用户才返回 ID，共享/失联或部分未关联均为 null；服务保留未关联钱包 null。Web 展示 MAX 原值，只有唯一 ID 和完整两列才计算有符号六位余额，不合成多账号余额；旧响应缺扩展仍可读取。CSV 原16列顺序保留并追加四个账号/钱包字段，缺失余额留空，邮箱公式中和继续生效。
+
+新增显式用户 Key 下钻，再按 Key 展开模型/路由组与日志链接。两级读取和链接同时保留精确 user_id、api_key_id 及所选 UTC 区间，Key范围覆盖该账号的所有历史日志邮箱，与原邮箱模型展开区分；无唯一ID时按钮停用并解释，不能按当前邮箱猜用户。现有未用Key显示0，null历史桶不提供单Key链接；成功/错误/其他结果各自显示，取消不冒充错误。切换行、Key、邮箱或区间取消旧读取并清旧详情；显式刷新也关闭下钻，即使时钟和UTC区间未变化，往返同一邮箱不会复活旧Key/模型读取。权限拒绝清新查询缓存，拒绝状态保留到显式重试，配置与日志授权继续独立。
+
+入口主机原已由Proxy保存但未作为Admin/Core查询条件，现贯通 Web URL/显式草稿 Apply或Enter → Admin验证 → 三库 count/list 绑定等值条件，并补安全详情字段。保留实存大小写、端口与IPv6，不按DNS或URL猜规范值；MySQL显式BINARY比较。最长255、控制字符/仅空白/超长/重复参数拒绝查询，空字符串明确清除且保留其他筛选。无效URL停止日志读取；非空条件必须有服务端实际完成读取后返回的 `applied_filters.ingress_host` 精确确认，且返回行均须匹配。缺少确认的同主机首页或空页也拒绝，避免旧服务忽略筛选但局部行碰巧通过。筛选/分页/刷新明确关闭展开，往返条件不复活旧详情；成功/失败读取清对侧旧状态，防止往返条件复活旧错误或结果。列表/展开/独立详情以脱敏纯文本展示或复制，null/缺失兼容旧日志，不作为外链。
+
+本续批最终完整 Web **1846/1846（skip0）**、相关 Admin 契约 **22/22**、Core **30/30**，最新 Web/Edge/Admin types、全量 Web lint、233 个 Web/docker 改动文件格式与生产构建通过，所有重验证均经共享串行锁。最终2468项构建输入前后 SHA256 均为 `97723e7de540a2e7e9179e9ba5788d52580a4e39c11daa669b3751faa2ce689d`，浏览器/Node/Worker build-contract 同属 `0e65fc3f-a459-424d-b50c-074f0360466e`，不是拿旧产物代表新源码。
+
+同一生产构建 Chrome fixture **46/46**（用户分析19/请求日志27，桌面1440×1000、手机390×844）：钱包负余额/极小值/歧义或失联账号/旧缺字段与CSV；显式Key→模型→精确日志范围、未用Key和null历史桶、切换/取消晚到/重复Key或非法模型、固定时钟刷新与邮箱往返不自动复活下钻、四语手机及三类独立权限；Host草稿不读/Apply/Enter、原筛选与大小写/端口/IPv6、行缺失或不一致、50行碰巧匹配及空页但缺确认、无效URL/草稿、清除、往返/分页/刷新关闭展开、失败条件修正后恢复和独立详情/纯文本复制。每场景检查页面身份、非空、无框架overlay、无页面横向溢出及对应交互，未解释console error/warn与意外请求均0；人为注入的403网络诊断单独保留。Browser插件不可用，采用已有Playwright与系统Chrome；代表桌面/手机图已目视，复制使用内存clipboard夹具。
+
+初轮lint依赖缺少显式user_id已补齐，未压制规则。浏览器早期Deleted-Key文本与嵌套main定位失败，以及最终刷新响应已到但表头尚未渲染的等待抢跑均保留原脚本/日志/截图；修正临时定位或等待后重跑，未改产品逻辑凑通过。实际发现并修复邮箱/Host往返与相同区间刷新复活旧下钻，以及日志同条件旧错误/结果复活。首个最终组合命令仍为actual1（分析11场景后等待失败），不能写组合命令全绿；静态/构建全部actual0、日志27 actual0原样保留，分析最终19 actual0取自独立SHA绑定的 `analytics-browser-latest-results.json`。
+
+证据入口为本机可视化目录 `web-analytics-ingress-compat-2026-10-18/qa-summary.json`，含所有初轮/后续失败、实际命令退出码、请求轨迹、源码及完整浏览器/Node/Worker产物和构建输入快照。源码不新增依赖、数据库迁移、页面路由组或部署开关；45路由组/55矩阵行、原102主任务及211任务55完成/156待保持。受控SQLite/契约覆盖不等于原生MySQL/PostgreSQL排序规则、权限、并发或财务端到端验收；Host ACK也不保证count/list同一事务快照。真实身份、数据库、账本与平台门槛保持待验，本地变更尚未提交、推送或部署。
+
+下批已只读识别的相邻缺口：Core 请求记录已有 `charged_wallet_cost`，Web 列表DTO与安全详情仍未接入周期/永久两池扣款分量；`model_id_prefix` 目前只逐行核对，旧服务器忽略条件而整页碰巧匹配或空页时仍缺总数范围确认，可按本批Host合同补齐。上述两项不计入本批已完成功能。
+
+收费分配 / 模型前缀续批（2026-10-18，ADM-12/17）：请求日志、REST工具与MCP调用记录新增永久池收费分量，三库安全详情显式投影并将decimal规范成number，不放开原始审计/正文。旧字段缺失或null保留未知；仅完整、非负、一致且可按安全微单位表示的金额才计算周期分量，总收费减永久池分量不出现浮点尾数。真实零与微单位保留，正数舍入至零、负数、超总额或不安全金额不制造已知分配。页面说明是请求记录的收费分配，不是账户余额或预算扣款证明；列表、展开与独立详情均使用已确认币种，配置不可读时金额隐藏，四语文案保持一致。
+
+模型前缀不再依赖SQL LIKE：三库按大小写敏感字面 startsWith 比较，Unicode、非BMP、百分号、下划线、反斜杠和引号都作为普通内容双绑定，count/list条件相同。Admin仅在规范条件已完成仓储读取后返回对应前缀确认，可与Host确认并存；无条件响应形状保持旧合同。Web请求日志与按Server筛选的MCP调用记录同时要求精确ACK和行匹配，空页或50行碰巧匹配不能替代总数范围确认。Web路径构造复用Core规范化，非法UTF-16不经URLSearchParams悄悄换成另一前缀。 无效前缀不抛到路由错误页，而是保留其他scope、显示关联字段错误并停用日志读取；Host和prefix双错逐项修正，修好一个仍不能自动放宽另一个。
+
+本续批最终完整Web **1861/1861（skip0）**，相关Admin **26/26**、Core **37/37**；Web/Edge/Admin类型、完整Web lint、241文件格式与生产构建退出0。同一最新本地产物Chrome **53/53**：收费分配21、前缀/筛选恢复32，桌面1440×1000及四语手机390×844通过，无意外控制台/页面异常或页面横向溢出；预期配置403已单独记录。构建前后和补测2474个完整输入一致，source SHA `1c20a64d92186592043433281f6fa6a2f5dc000b207faf8019befd0c5cfbfdeb`，Browser/Node/Worker的build ID均为 `ac1874b6-e969-42fe-9bbd-561c4c974fb6`。静态检查没有因浏览器脚本修正而重算成另一轮结果。
+
+另在自建 `/tmp/ctpg-prefix-*` 私有Unix socket、禁用TCP的最小合成schema，使用PostgreSQL **16.14**及postgres.js **3.4.9**执行原仓储SQL **15/15**；覆盖字面大小写、Unicode/非BMP/组合字符、通配符普通字符、注入样式字面量、组合条件、count/list/分页/空页、非法条件零SQL以及详情NUMERIC金额和UTC时间。测试驱动已关闭、自有PG正常exit0，socket及pidfile已消失。此证据仅证明该最小schema上的真实解析器/驱动/查询行为；MySQL仍为离线适配合同，不代表完整迁移、角色、连接池/并发、真实账户账本或部署验收。
+
+失败历史保留：最初Admin类型fixture将数据库decimal字符串写入严格number行类型，以及后端/Core启动器误指不存在的tsconfig，修正后完整重跑7条检查通过；首轮完整静态/构建/收费21均成功，前缀脚本28个成功后因两个嵌套main的定位器不唯一停止，修正脚本后独立32/32；原生PG首轮仅元数据查询不兼容PG16、0场景，改读pg_database.datcollate后独立15/15。原始actual1回执未改写，分别以 `initial-retry-results.json`、`prefix-browser-latest-results.json`、`native-command-retry-results.json` 作为对应权威记录，所有旧脚本/日志/截图递归保留。证据目录：`/home/cina/.codex/visualizations/2026/10/15/01a13d58-e8f9-71f2-8d5c-34e63089f768/web-charge-prefix-compat-2026-10-18/`；包含当前源码/完整输入/三目标产物、独立报告、命令和SHA清单。两个临时预览进程均已由各自启动器停止。
+
+下一相邻缺口已只读确认：账户活动（含Key筛选）安全DTO仍只返回总收费，管理员用户详情最近请求虽已有字段但UI尚未展示分配；需沿用旧响应兼容、已确认币种与未知值语义继续接入。不增加依赖、数据库迁移、页面路由组或部署开关；本批仍为main上的未提交本地变更，102主任务、45路由组/55矩阵行及211勾选项55完成/156待办和全量门槛状态保持。
+
+账户活动 / 用户最近请求续批（2026-10-18，ACC-08/ADM-07）：独立 `include_charge_allocation=true` 使账户日志白名单可返回 `chargedWalletCost`，与余额扩展相互独立；未开启时严格旧JSON形状保持。原始decimal、null与缺失经过有限非负规范化，周期分配与永久分配共用Core纯微单位函数，并严格验证高额差值转回number后仍保留原微单位；请求日志原导入路径保留重导出。CSV纯序列化也独立抽出Core小模块，避免Web验证引入整套Admin/Core依赖。账户桌面表格/手机卡片及Generation抽屉沿用已核验列表收费快照和币种，不扩大Generation原最小投影。管理员用户详情最近请求复用同一分配组件，配置币种未知时隐藏金额、日志拒权/失败优先于旧rows。
+
+账户CSV显式扩展保留旧20列并追加周期/永久分量和 `X-CinaToken-Charge-Allocation: v1`；未知分配两格为空，已知0保留0；Web同时验证版本、结构及与总收费的一致性，兼容旧20列服务，继续用户/Workspace/Key范围、1000上限及公式转义。新UI列表错误隐藏旧结果，错误/刷新/作用域切换的详情与下载边界按实际浏览器结果补记。
+
+本续批最终静态验证：完整Web **1872/1872**、相关Admin **33/33**、Core **30/30**，均无跳过；Web/Edge/Admin类型、完整Web lint、251文件格式、Admin/Core修改域格式和生产构建十条命令均退出0。高额差值往返回归已进入这轮完整测试。2480个完整输入构建前后相同，source SHA `3969788bacbb916056e70df8a126ddd240ee559470ac67f64558d7a4010b6610`，Browser/Node/Worker的build ID均为 `0a3c8636-73ab-418e-b51b-865538c05d84`。同产物Chrome **54/54**（用户最近请求19/账户活动35）通过，桌面1440×1000及四语手机390×844均无页面横向溢出。实际GET-only受控Portal/Admin API覆盖USD/CNY及已核验EUR、旧字段missing/null、零/微单位/高额不精确差值、精确Key过滤、Generation原最小投影与已核验列表快照、新旧CSV实际7次下载及拒绝不一致/错误版本/错误计数/跨Workspace，后台真实查询刷新遇畸形字段或403时旧抽屉/收费行清除。无意外API/页面/控制台异常；10项有意403/409诊断单列，不能当作真实认证或财务验收。原生数据库未在本续批重跑，未改SQL/DDL；Core30为有界离线合同。
+
+原失败保留：首轮Web测试跨包导入Admin服务使前端类型扫描宽Core并导致运行期导出不兼容，Admin新测试缺显式JSON类型；抽出纯序列化模块及补类型后第二轮十项通过。独立复核再发现高额整数差转回主单位丢1微单位，补严格往返守卫后最终十项1872/33/30全绿。浏览器首轮9场景后因极小金额fixture转指数形式字符串被正确拒绝；第二轮44及第三轮48后分别因两个同名Refresh按钮定位歧义停止。修正夹具/两个账户操作区定位器；按已安装query-core的window可见性监听修正受控后台事件，并把截图滚动至收费分配区域，最终54/54。`validation-attempt-1/2` 和 `browser-attempt-1/2/3` 递归保留旧脚本、真实回执、日志、失败DOM/图片及下载。权威记录为当前 `validation-results.json` 与 `browser-command-results.json`，实际最终浏览器脚本SHA `5a0d8cb2150366f4dfe976c6bf9936724edcd0f9b23bc12a8e5b739c97f16508`；补测输入重核与三合同同SHA，四个自有临时预览均已退出。
+
+证据目录：`/home/cina/.codex/visualizations/2026/10/15/01a13d58-e8f9-71f2-8d5c-34e63089f768/web-activity-charge-compat-2026-10-18/`。保存完整变更源码（含较早未提交工作）、2480输入和Browser/Node/Worker产物、浏览器夹具/实际下载/截图、失败历史及两遍原字节核验；本地受控前端与有界合同不代表真实CinaAuth、完整账本、三库并发/迁移、旧Next/CI/双平台或部署。
+
+该收费分配切片结束时记录的下一缺口是钱包按订单引用幂等加额（后续实现见下）：已有后端POST但Web仅绝对值更正；旧duplicate/当前余额无法确认原金额与类型，需先补规范微单位/有界引用/提交内快照和绑定回执，再接独立表单与持久未知结果恢复。首事件超时配置两键也尚缺活跃Web控件，另列后续。当前未新增依赖/迁移/路由组/入口开关，未提交、推送或部署；原102主任务/45路由组/55矩阵行、211勾选项55完成/156待办和全量门槛状态保持。
+
+
+**钱包按订单引用加额续批（2026-10-18，ADM-07 / P5-04/05）**
+
+保留现有钱包绝对值更正，另接四类有符号增量加额表单、订单引用、说明及提交确认；桌面/四语手机显示已核验的订单回执。原十进制文本先用BigInt计算微单位，再与Number双向校验，拒绝大额小数转Number时静默多/少1微单位；同一提交快照在首次await前冻结，并同时用于实际POST和sessionStorage代次标记。API先核验Console/Portal主体与服务端v1读取能力，再调用独立 `/wallet/credit/verified`，旧实例不会静默接到旧POST。精确同引用/金额/类型返回原回执，不再加额；异载荷、字面排序碰撞或不可验证历史记录拒绝写入。旧POST及三个当前钱包字段保持兼容，订单提交快照只来自独立receipt，不从当前余额推断。
+
+Core复用现有审计表及原始dedup key，没有DDL。D1原始完整读集CAS、同batch SQL提交守卫和JOIN单查询回执/当前钱包；PG/My在同tx锁用户及引用，写后重读完整行并在提交前核对审计/最终快照。旧D1已存REAL仅按严格ULP界限规范浮点尾数，新amount和DECIMAL字符串不放宽。已可能提交后缺失/损坏ACK均保持未知，只有可证明零写入才报CAS冲突。新的只读GET按用户与完整字面引用查询，返回 recorded / not_found / legacy_unverified，私有不缓存且权限沿用users.read（users.write按现有规则隐含read）。
+
+Web派发前持久保存冻结订单和generation。超时/网络失败/取消/5xx/无效ACK不清锁；刷新、scopeVersion更新、晚返回或另一个主体不能清除或接管原标记。not_found不证明未提交；只读核对后，用户显式确认才能用同一引用和载荷重试，重试409也不能否定原未知请求。精确回执匹配本代次才恢复后续写入；无法保存/移除标记时保持禁写。旧钱包更正、预算/倍率及Key写入与未知订单共用禁写条件。
+
+最终有效检查：完整Web **1892/1892**、相关Admin服务＋真实Hono/迁移SQLite路由 **9/9**、Core **54/54**（纯合约、真实SQLite D1 batch、MySQL离线Drizzle适配、PGlite完整迁移），隔离原生PostgreSQL **9/9**（真实不同连接的同/异引用并发、锁等待完整快照、约束/BEFORE/AFTER触发器回滚），全部skip0。Web/Edge/Admin/Core类型、Core Node入口构建、完整Web lint、261文件格式、Admin默认与Core既有tabs/singleQuote/120列格式及Web生产构建13组的最新有效回执均0。修复仅测试/检查入口的两项采用定向重跑，其他已通过检查未无意义重复；不是13项全量重新执行。2495完整Web构建输入在初始/构建后/最终浏览器及当前均为 source SHA `9db3129d30240bdf18c9d5da106232e0061b9199da7a9307b4ef9a2d880516e4`，Browser/Node/Worker build ID均 `8f241a87-1749-42af-9508-7524d440c7dd`。
+
+同产物最终Chrome **20/20**：1440×1000桌面及390×844四语手机、USD/CNY及未知币种禁写、确认后改金额须重确认、精确微单位/大额失真拒绝、已存在/冲突/legacy/旧读写实例、POST后503/断网/缺失回执保存订单且刷新后核验、not_found持续锁定、失败重试不清原锁及显式同单重试、错误回执身份、403后范围复验及禁写、存储失败、fresh主体不一致零派发、原主体订单隔离。最终errors与unexpected均空；有意HTTP/模拟网络诊断单列。浏览器仅拦截本地合成GET/POST，不访问真实财务API。最终脚本SHA `8102e811581d2cc82ccb99803ae315bc07231d5b22295d1f0c31feec2a1448a9`；第四轮进一步等待fresh主体复验真实结束及拒绝/卸载状态，避免把暂时busy误当拒绝。桌面与中文手机回执截图直接检查可读，所有自有预览/Chrome均退出。
+
+原失败完整保留：早期Web lint异常变量赋值；独立复核补原文本BigInt与hook冻结快照；首轮Core52/53因MySQL错误被Drizzle包装、原断言只匹配外层而失败，修断言后仍检查已提交/ACK丢失的只读恢复。Admin Node20类型不能扫描Node24 SQLite夹具，路由测试改成独立mjs；首轮mjs命名导入CJS失败，改default后8/9又暴露夹具误以users.write不能读，按现有权限规则补允许write读取及无users权限拒绝。初始格式检查误用Core默认选项，随后用Core既有风格独立验证，未无关重排Core。validation-attempt-1/2保留旧回执、失败日志，early/backend检查原件保留；最终只有Admin测试及格式检查定向替换有效回执且生产输入不变。浏览器第一轮选择框精确label含option导致定位失败；第二轮15场景后等待已在403复验重挂载时消失的局部错误文案失败，改验实际持续禁写；第三轮20通过及第四轮加强等待后的20通过分别保存，browser-attempt-1/2/3保留原脚本、回执/日志/失败DOM和截图。
+
+验收边界：MySQL只有Drizzle/mysql2调用面＋SQLite离线适配，未验证真实utf8mb4_unicode_ci的大小写/重音/组合Unicode/尾空格/255字符、InnoDB多连接RR与旧writer交错、DECIMAL/affectedRows/SQL mode、TIMESTAMP/会话时区/DST、真实COMMIT网络ACK或原生触发器。D1是本地SQLite仿batch，未调远端D1或证明真实多Worker争用、SDK meta/JSON失败语义、读副本/session一致性或中断后继续提交；not_found不因此获得强否定含义。原生PG是自有最小隔离schema与真实驱动，不替代生产完整schema/权限/迁移、真实CinaAuth/门户账本/资金验收、Linux CI、双平台及发布。没有新增依赖/迁移/页面路由组/开关，没有提交、推送或部署。
+
+证据目录：`/home/cina/.codex/visualizations/2026/10/15/01a13d58-e8f9-71f2-8d5c-34e63089f768/web-wallet-credit-compat-2026-10-18/`。当前实现闭合这处前端/API缺口，原102主任务/45路由组/55矩阵行、211勾选项55完成/156待办及全量门槛保持。该批结束时的下一缺口为 `STREAM_FIRST_EVENT_TIMEOUT_MS` / `STREAM_FIRST_EVENT_TIMEOUT_ROUTE_GROUPS`；后续接入见下。
+
+**流式首段数据超时续批（2026-10-23，ADM-19 / P5-08）**
+
+活跃 Web `/admin/config` 新增等待毫秒数与路由组两个独立表单。共享 Core 解析器保留历史原始字符串和 Proxy 的 `parseInt` 行为：旧 `10ms` 为10毫秒、`1e3` 为1毫秒；超范围值明确提示实际延迟依赖运行环境。新写入只接受空串或0–2147483647整数文本，空串/0关闭。路由组留空仅default，整个值为 `*` 或不区分大小写的 `all` 才匹配全部；其他列表按逗号分割、区分组名大小写，`*,vip` 是两个字面组名。新列表最多4096个UTF-16单元、拒绝无成员列表和不完整代理项；不强制当前组成员资格，不改历史原值。
+
+安全overview固定键投影由六键扩至八键；两字段可选，旧实例缺字段/版本仅禁用该项，其他配置继续可用。新固定PUT复用原单键CAS/审计事务、权限及私有不缓存；通用写入的revision开关覆盖两新键。每次保存重新核验Console/Portal主体，PUT要求主体条件，核对GET验证可选主体条件；旧无头GET保持兼容。两个设置分别提交，不能视作原子配置组。文案准确限定成功响应头之后的文本流首chunk，心跳计入，不代表首token/空闲/全请求时限或故障转移保证；代理实例缓存约30秒，保存回执只确认数据库状态。
+
+Web使用React Hook Form＋Zod、独立脏值/放弃/确认状态，并保留开始编辑时的版本；刷新不会以新版本覆盖待提交草稿的旧前提。保存前将非秘密值、字段、旧版本和UUID代次写入sessionStorage并读回核验。5xx、网络错误、取消、损坏ACK及未知404/409保持待核对，不自动重放。核对时只有有效新版本才能封闭旧CAS请求；相同值但旧版本、UUID大小写变化、旧实例缺能力都不解除锁定。新版本的值匹配/不同分别提示；另一主体或晚返回代次不能清理原记录。存储失败禁写；核对失败保留旧显示但禁用编辑，成功核对权限变化同步移除写控件。保存期间完整页面刷新/其他配置提交会等待，避免旧overview覆盖新回执。
+
+最终验证：完整Web1904/1904、Web/Edge类型、完整lint、270文件格式和生产构建六项检查均exit0；后端Core20/20、Admin追加主体条件后26/26、Proxy13/13、Core/Admin/Proxy完整类型、Core构建及后端定向格式通过，全部零跳过。所有重型检查通过共享串行锁执行。生产产物Chrome fixture 20/20，覆盖独立保存/确认重置/保留另一项草稿、旧接口降级、刷新后的旧版本412、503/断连/坏ACK后重载核对且不重放、409与旧版本继续锁定、存储失败、权限撤销、坏读取禁编辑、空值、主体切换；英语桌面1440×1000及中/日/韩手机390×844无横向溢出，四张截图已检查。Browser插件未提供，采用现有Playwright与系统Chrome；本地临时preview由当前runner停止并等待退出，未终止其他任务。
+
+初轮lint暴露render中传递ref的提交写法，改为事件回调；初次浏览器检查发现RHF惰性订阅导致首次有效编辑的保存按钮仍禁用，改为无条件订阅isValid，并复验无效转有效、放弃后重编及确认。后续脚本因既有双main定位失败，改为body范围；另补大小写LEGACY与同一UUID不能作为新版本的回归。原始失败、三轮历史静态检查与两轮浏览器记录均独立保留，最终完整检查重新运行，没有用中间通过结果覆盖失败历史。
+
+最终2506个输入前后SHA-256为 `217b12e079d188a65f8979505874bba0962e6a6c2c46f0bf4b4323444c7d51b4`，SPA/Node/Worker三个build-contract共享buildId `31d988bc-7d1d-43eb-b1e4-3162efb337ae`；浏览器执行前后核验同一源码/产物，16个后端文件最终哈希复核无漂移。证据、脚本/夹具、截图、源输入、产物及未提交diff归档至 `/home/cina/.codex/visualizations/2026/10/15/01a13d58-e8f9-71f2-8d5c-34e63089f768/web-stream-timeout-compat-2026-10-23`，以该目录archive-state/manifest记录完成状态与逐文件哈希。此前钱包批次的原生PG证据不作为本批证明。
+
+验证边界：Admin采用真实Hono/服务/权限逻辑及Map仓库/注入主体；Core审计测试为Node SQLite D1适配、SQL记录替身或翻译后的SQLite事务；Proxy采用Node Streams/计时器和模拟配置。尚未证明原生PG/MySQL、远端D1锁/并发、真实Console、真实供应商或Worker多实例缓存。本批无迁移、新依赖、页面路由组或入口开关，不提交/推送/部署。完整102主任务/45路由组/55矩阵及211勾选项55完成/156待办保持。
+
+当时下一处只读核对发现：模型/供应商分析的Web共享合同会丢弃 `stream_tokens_per_second`、`stream_sample_count`、`failover_request_count`、`failover_request_rate`，后端及旧Next已提供。后续应补兼容可选字段、主表/下钻/用户Key模型明细、排序/CSV和四语口径；流式TPS仅使用成功且正流时长的同一组样本，请求级故障转移率0–100%，现有事件级rate可能超过100%，不可混同。本缺口实施及验证见以下续批。
+
+**模型/供应商分析质量指标续批（2026-10-23，ADM-13/ADM-14 / P5-05）**
+
+共享模型/供应商合同接入后端已有 `stream_tokens_per_second` / `stream_sample_count`、`failover_request_count` / `failover_request_rate`。两对分别可选以兼容旧实例，半对/非有限/越界或样本与速度矛盾则拒绝该响应；无样本为null，真实有样本但无输出可为0。请求级占比保持0–100%，旧事件级failover_rate允许超过100%，保留数据库比例精度。未改变SQL、服务端接口或鉴权；三个数据库查询均引用同一Core SQL的结论来自源码复核，不替代原生执行。
+
+模型/供应商主表、相互下钻及用户/Key模型明细显示流式速度、样本数、请求级转移占比和请求数；四语区分“未提供”“无实测流式样本”和实测0，并保留旧TPS与事件率。主表新增两指标双向稳定排序，未知/null始终置后；旧可空指标也统一此行为。CSV前28列保持不动，四字段追加于末尾，未知与null为空，零为0。表格列数和展开colSpan绑定实际列集合。模型/供应商主表的指标说明可通过键盘展开，放在水平滚动区域之外，手机滚动到最右仍可读取。用户/Key说明移出其明细表内层滚动区，但仍随用户/Key父表的外层滚动，不宣称在所有祖先滚动下固定。没有新增依赖或后台写入。
+
+最终完整Web1917/1917（新增13个test，零跳过）、Web/Edge类型、完整Web lint、287文件格式及SPA/Node/Worker生产构建六项检查均exit0；全部重型命令经共享串行锁。首轮静态与Chrome22场景均通过，随后截图复核发现说明随水平滚动离开视野；调整三处布局后重新完成同范围静态检查和Chrome22/22，首轮日志/截图/输入绑定及三份旧源码保留在attempt-1。浏览器覆盖两类主表新旧指标与0/null/缺失、两方向排序、CSV下载/列序/空值、双向下钻/列数、旧实例、坏主表刷新清除旧值与导出、坏下钻、两对能力独立缺失、403权限撤销、用户及精确Key下钻，四语手机390×844和英语桌面1440×1000通过。手机新增最右水平滚动后说明仍位于视口、键盘可展开与页面无横向溢出的检查。无非预期控制台/请求错误。
+
+Browser插件未提供，使用现有Playwright与系统Chrome155；本地同源preview由runner关闭并等待退出。最终2510输入SHA-256为 `4ccc9d64cd96e862ed46acee58d56102d66ac9bfcc70778d3760b5d860194555`，三个目标build-contract共享buildId `ebaba005-ae10-473f-90a4-4e7a07fadbc4`；浏览器前后同一源码及产物无漂移。18文件独立复核及布局复核均保存逐文件哈希和明确限制。证据、脚本/夹具、CSV、截图、源输入、构建产物和未提交diff归档至 `/home/cina/.codex/visualizations/2026/10/15/01a13d58-e8f9-71f2-8d5c-34e63089f768/web-analytics-quality-compat-2026-10-23`，完成状态及文件哈希以archive-state/manifest为准。
+
+验证边界：浏览器为本地生产SPA、模拟同源Cookie身份及固定接口数据；验证SDK/状态/组件/CSV行为，不证明真实Console、真实数据库/供应商或部署后查询性能。既有完整102主任务/45路由组/55矩阵及211勾选项55完成/156待办保持。本批未提交、推送或部署。
+
+后续只读核对发现旧Next工具调用日志的“全部来源”入口传递 `provider_ids=octafuse-tools,octafuse-mcp`，三库及Admin已支持；活跃Web工具来源仍限定rest/mcp，普通日志合同也丢弃provider_ids。下一切片应同时补来源集合与日志下钻的URL/参数保留，并明确集合和单provider参数的优先级。模型/供应商分析的概览/成本/性能/全部视图预设也是旧页面已具备的待补功能。
+
+**工具全部来源与供应商集合续批（2026-10-23，ADM-12/ADM-17）**
+
+工具调用新增 `source=all`，默认仍为REST。全部来源使用规范化集合 `provider_ids=octafuse-mcp,octafuse-tools` 的单次服务器查询，沿用服务器total/page，不在浏览器合并两个分页。切换来源清除工具/Server条件、回到第一页，保留日期/状态；按行保留REST/MCP身份及MCP原有参数脱敏。进入请求日志保留集合和日期/状态。普通日志新增四语集合表单，显式应用草稿、独立清除集合，并说明与单个供应商按交集匹配；全局清除同步重置未应用草稿和字段错误。
+
+Core共享规范化接受一个逗号字符串，去空项/首尾空白、去重并排序，最多10个不同ID、每项600、原串6009 UTF-16单元；保留大小写和字面内容。省略/精确空串不筛选，纯空白/逗号、控制字符、非法UTF-16、非字符串、超限及重复query在读取前拒绝。Admin完成仓储读取后回显 `applied_filters.provider_ids`。Web对集合要求有序无重复的精确确认，即使空页也必须有回显；再核对每条记录的集合成员和单个供应商交集。缺确认/错集合/乱序/坏类型不能把旧实例忽略条件的结果当作筛选成功。读取前冻结请求范围，迟到响应不得覆盖新来源。Host、模型前缀、集合三个无效条件分别保留与修复，修正一个不会误清其余错误。沿用三库现有IN条件及AND组合，没有SQL/迁移变更；确认不保证count/list同一事务快照。
+
+最终完整Web1930/1930（新增13个test，零跳过），Web/Edge types、完整Web lint、289个修改/新增TS/TSX/MJS文件格式、SPA/Node/Worker构建六项均exit0。Core bundle、目标request-log-filters23/23、Admin目标request-log-detail-route18/18及Core/Admin完整types五项均exit0。所有重型命令经共享串行锁。首轮静态检查为1929通过/1失败，原因是SSR测试误要求RHF挂载后才填入的默认值出现在静态HTML；修正为四语文案/控件断言，实际初值由浏览器核对。独立24文件复核发现全局清除未应用草稿残留，添加显式reset version并重新通过六项检查；两处源码前后版本与首次日志保留在static-attempt-1。
+
+最终同一生产SPA Chrome26/26：默认REST、全部混合记录/详情脱敏、单查询统一总数与翻页、来源切换保留日期状态并清空工具/Server、跨页面前进后退/刷新、集合下钻/显式应用/交集/独立清除/全局重置、非法URL不请求及修复、多无效条件独立修复、工具及普通日志缺失/少项/乱序/空数组ACK清除旧值并重试、空页确认、越界记录、旧单来源兼容、403及迟到响应均通过。四语390×844手机的来源按钮和集合Enter提交、无页面横向溢出通过；英语桌面1440×1000及四语共10张代表截图分别由root和独立agent目视，无新增控件遮挡。浏览器脚本前四轮定位/日期表达、原有replace搜索导航下的历史假设、空表等待问题均保留于browser-attempt-1至4；修正脚本后同一源码重跑26项全部通过，无非预期控制台/请求错误。
+
+Browser插件未提供，使用现有Playwright与系统Chrome155；同源本地preview由runner发送SIGTERM并等待退出，最终PID已不存在。2512输入SHA-256为 `b7b0d8fdb1f239a3b6c797254b69561bedf068cb32990eb08fb812f9eeae3f0a`；三个目标共享buildId `c1c5d2c4-e6df-4648-9281-56462735e778`，静态与浏览器前后无源码漂移。后端11交付文件前后哈希一致，独立24文件review及两文件修复review保留。脚本/夹具、全部命令日志、截图、源码、构建输出和未提交diff归档至 `/home/cina/.codex/visualizations/2026/10/15/01a13d58-e8f9-71f2-8d5c-34e63089f768/web-tool-sources-compat-2026-10-23`，完成状态及逐文件哈希以archive-state/manifest为准。
+
+验证边界：浏览器使用本地生产SPA与固定接口/模拟身份；Admin目标测试为真实Hono路由和受控仓库，Core三库查询测试使用SQLite适配器执行生产查询谓词，不证明原生PostgreSQL/MySQL/远端D1、真实身份、部署或线上性能。完整102主任务/45路由组/55矩阵及211勾选项55完成/156待办保持。本批未提交、推送或部署。当时下一已知功能缺口为模型/供应商分析的概览/成本/性能/全部视图预设，实施见以下续批。
+
+**模型/供应商分析视图与本地搜索续批（2026-10-23，ADM-13/ADM-14）**
+
+两页新增概览/成本/性能/全部四种视图，默认概览与旧Next一致。模型主表分别显示7/10/10/19列，供应商主表6/9/9/18列，表头和单元格由同一列可见性规则驱动。切换视图后，仍可见的排序保持方向，被隐藏的排序回到身份列升序。下钻继续显示完整16/17列指标，成功/加载/错误/空态的colSpan与当前主表同步；明细独立水平滚动，避免把概览主表撑宽。
+
+本地搜索对模型ID/路由组或供应商名称/ID进行去首尾空格、不区分大小写的匹配，显示匹配数/已加载数，提供独立清除和四语范围说明；不额外请求接口。同一筛选及排序结果供主表、既有成本合计和CSV使用，CSV在所有视图保留原32列。无匹配与所选时段无记录分别提示，空结果导出保留表头。修改搜索关闭当前展开明细，迟到响应不重开；清除搜索也不恢复旧展开。显式刷新/重试保留当前视图和搜索，页面重新加载恢复默认。未知币种继续隐藏金额/禁用导出，质量指标缺失保持原有兼容口径；没有修改API、SQL、鉴权、依赖或CSV字段定义。
+
+最终完整Web1942/1942（新增12个test，零失败/取消/跳过）、Web/Edge类型、完整Web lint、297个修改/新增TS/TSX/MJS文件格式及SPA/Node/Worker生产构建六项均首次exit0，全部重型命令使用共享串行锁。独立复核14个交付源码文件及9个参考文件，无阻断问题；保存逐文件哈希。
+
+同一生产SPA Chrome22/22通过：两类页面四种视图的列序、排序保留/回退、完整列CSV、无额外读取；搜索计数、合计、CSV排序/精确Token、无匹配、清除、详情关闭；全部视图下钻/动态colSpan和主表宽度保持；加载中搜索与迟到响应、坏下钻、旧实例/未知币种、显式刷新保留选择、坏主表清除及重试、403清除、真正空页；四语390×844手机键盘切换、搜索、内层滚动和页面无横向溢出。初次浏览器脚本将原有金额格式误写为固定四位小数（预期$4.0000，实际$4.00），仅修正夹具断言；原失败脚本、日志、截图及绑定保留于browser-attempt-1，产品源码未变，最终22项全绿。除预期模拟403外，无非预期控制台/请求错误。root目视5张桌面/中文手机图，独立agent目视6张英/日/韩手机图，11张代表截图未见新增控件遮挡或重叠。
+
+Browser插件未提供，使用现有Playwright与系统Chrome155.0.8059.39，本地预览为 `http://127.0.0.1:38179`，桌面1440×1000。预览进程由runner发送SIGTERM并等待结束，PID已不存在；浏览器命令exit0，不将预览的null exitCode写作0。2518输入SHA-256为 `a567f4381e1f32012d184a88cfe9b7340f792cbb088c4ba0a6d99fc159726dd4`，三个目标共享buildId `89e2fd52-8a11-4a88-a5dc-77dc934f76a1`；静态及浏览器前后源码/产物无漂移。脚本/夹具、命令日志、截图、14个交付文件、完整构建输入/输出、本文与未提交diff归档至 `/home/cina/.codex/visualizations/2026/10/15/01a13d58-e8f9-71f2-8d5c-34e63089f768/web-analytics-views-compat-2026-10-23`，完成状态与逐文件哈希以archive-state/manifest为准。
+
+验证边界：浏览器使用本地生产SPA、固定API响应和模拟Console身份，不证明真实Admin服务、真实身份、原生PG/MySQL/远端D1、部署或线上性能。完整102主任务/45路由组/55矩阵及211勾选项55完成/156待办保持。本批未提交、推送或部署。当时下一已确认功能缺口为旧Next已有的请求结果分布、按请求数加权成功率及收费/计费差额摘要，实施见以下续批。
+
+**模型/供应商分析请求结果与收费差额摘要续批（2026-10-23，ADM-13/ADM-14）**
+
+两页增加当前匹配行的请求数、成功率、失败数、实收减计量成本四项摘要，成功/失败/其他结果分布和可键盘展开的四语统计口径。基于合同已验证的success_count/error_count直接合计；成功率为SUM(success_count)/SUM(request_count)，不平均各行百分比。其他为请求数减成功与失败数，保留取消等剩余已记录结果。空匹配、无记录或零请求行均显示无请求，不伪造0%成功率；实际有请求但零成功仍显示0%。模型范围按模型/路由组分组，供应商归属于日志最终供应商，不把此前尝试重复计为样本；这些说明由三库现有查询源码复核支持。
+
+摘要与原成本合计条、表格、CSV共用服务器筛选后再经本地搜索的同一rows集合；视图切换不改变汇总范围。统一聚合保留任一standard_cost缺失时整项未知，不按0补齐。收费差额允许为负，说明其为记录实收减计量成本、并非净利润，标准费用不参与计算。未知币种只隐藏金额，保留请求统计与原有禁用导出；USD/CNY使用现有locale格式。刷新期间不展示旧摘要，坏响应或权限撤销清除摘要，重试恢复后重新计算并保留当前搜索。既有用户分析的成本条保持原调用方式；本批没有新增API、SQL、鉴权、依赖或CSV列。
+
+最终完整Web1952/1952（新增7个聚合与3个组件test，零失败/取消/跳过）、Web/Edge类型、完整Web lint、302个修改/新增TS/TSX/MJS文件格式和SPA/Node/Worker构建六项首次全部exit0，重型命令均经共享串行锁。独立只读复核8个交付源码和27个参考文件，未发现阻断问题，哈希与验证前后源码一致。
+
+同一生产SPA Chrome22/22：两页分别验证不等样本量加权（120请求/93成功/13失败/14其他=77.5%）、成本差额与CSV原数值、定义键盘展开、四视图不增加API读取；本地搜索负差额（4−7=−3）、零请求行、无匹配及清除；服务端tag筛选与本地搜索交集；挂起刷新清除旧值、更新后差额/CSV、坏响应/重试/403；旧质量字段与未知币种、CNY、服务器空页；四语390×844手机的2×2摘要布局、金额/标签无溢出及Space展开/收起定义。除预期403诊断外，无非预期控制台/请求错误。首轮5场景后失败因脚本错误假设32列CSV包含币种列，产品CSV原本不含该列；只修正脚本核对金额原值及原字段定义，保留首轮脚本/日志/PNG/DOM/构建绑定于browser-attempt-1，未改产品源码。root目视5张桌面/中文手机图、独立agent目视6张英/日/韩手机图，11张代表图无新增控件遮挡。
+
+Browser插件未提供，使用现有Playwright与Chrome155.0.8059.39，本地同源预览为 `http://127.0.0.1:33791`、桌面1440×1000。最终浏览器命令exit0；预览由runner发送SIGTERM并等待结束，PID已不存在，预览null exitCode未写作0。2523输入SHA-256为 `b890820f2b07b942ff9d8b677f7d5e0390c86ab24bf517965b1d61cd0e77497c`，三目标共享buildId `8fb9b214-7cf7-4a80-965b-8eb3b96207d0`，静态及浏览器前后无源码/产物漂移。源码、本文、脚本/夹具、日志/截图/CSV、完整输入/输出和未提交diff归档至 `/home/cina/.codex/visualizations/2026/10/15/01a13d58-e8f9-71f2-8d5c-34e63089f768/web-analytics-insights-compat-2026-10-23`；以archive-state/manifest为完成状态和逐文件哈希依据。
+
+验证边界：固定API数据和模拟Console身份验证当前生产SPA的聚合、状态和交互，不证明真实Admin服务/身份、原生PG/MySQL/远端D1、线上数据一致性或部署。完整102主任务/45路由组/55矩阵与211勾选项55完成/156待办保持。本批未提交、推送或部署。该阶段识别的下一缺口为供应商类型筛选及目录状态兼容，已在下述续批实施并记录独立证据；本段1952/22结果仅覆盖当时摘要版本。当前三库已优先供应商最新名称，不将别名回退重复列为缺口。
+
+**模型/供应商分析类型与当前目录兼容续批（2026-10-23，ADM-13/ADM-14）**
+
+供应商分析接入当前类型列、按类型筛选、类型名称本地搜索与排序；与名称/ID搜索取交集，表格、成本合计、请求摘要和CSV共用同一排序后的行集合。未知类型始终排在类型排序末尾，按类型排序可跨视图保留，类型切换关闭旧明细。供应商CSV保留原32列及数值口径，末尾追加provider_kind、provider_kind_label、provider_directory_status至35列，并继续防CSV公式注入；模型CSV仍为32列。模型展开供应商明细新增类型和目录状态，17列完整指标保持对齐；两页四视图主表均为7/10/10/19列。中英日韩文案同步，手机类型选择框独占一行，展开明细保留独立横向滚动及供应商名称最小列宽。
+
+目录独立复用现有GET /api/admin/providers及providerList完整列表校验，保留providers.read与analytics.read的权限边界；响应count不符、重复ID、字段非法、网络/HTTP错误均视为目录不可用。只有成功完整目录确实缺失某ID才显示“当前目录中不存在”，不会据此声称已删除；目录中缺少kind显示“未分类”，不从名称或标签推断类型。octafuse-tools / octafuse-mcp单独显示网关REST工具/MCP虚拟供应商。类型是当前目录分类，不代表历史请求发生时的类型；日/韩当前类型标签复用目录英文值，其余状态说明由四语本地文案提供。
+
+查询发送expected Console subject并携带AbortSignal，缓存只保存id/name/kind/kind_labels的独立投影，不保留API key、端点或原始错误。scope、身份/复核版本、API实例及每个页面hook实例分别隔离；卸载、切页或身份变化取消并清除自身查询，迟到响应不能恢复旧类型。StrictMode重复setup/cleanup可恢复本实例查询，页面交接不会取消另一个页面的新读取。真实401错误对稳定身份至多触发一次自动复核，403仅影响目录。目录刷新时清除旧类型显示；目录失败仍保留基础分析，名称/ID搜索继续有效。已选非虚拟类型无法核实时保留选择，并暂不展示不可靠的结果/合计/CSV，提示显式重试或清除；不隐式扩大筛选或伪造零匹配。虚拟类型无需目录即可筛选。
+
+最终完整Web1982/1982（较上一续批新增30个test，零失败/取消/跳过）、Web/Edge类型、完整Web lint、316个修改/新增TS/TSX/MJS文件格式和SPA/Node/Worker构建六项全部exit0。26个本批源码独立复核，哈希与最终验证版本匹配。首轮静态检查的9个失败来自7处目录测试fixture将endpoints误设为对象、两处旧列断言；另有一个冗余赋值lint错误和组件文件混合导出hook警告，均已修复，首轮源码/日志保留于static-attempt-1。第二轮静态与Chrome26场景通过后，实际截图发现模型明细名称列过窄、日文手机类型框被按钮挤压；该版保存于visual-attempt-1，随后修复布局，重跑全部六项和浏览器，不将中间通过结果作为最终版本证据。
+
+最终同一生产SPA Chrome26/26，218个同源只读API请求，无非预期控制台或请求错误：覆盖类型/状态、四视图列对齐、类型与搜索交集、摘要与35列CSV、排序、完整空目录、坏count/重复ID/非法字段/503/403降级、已选筛选在刷新/拒绝后阻断与恢复/清除、目录401有界重检、身份切换迟到响应、跨路由实例取消隔离；模型下钻目录成功/失败/空及重试，模型CSV原32列；两页四语390×844手机，类型选择框宽度、键盘使用、独立横向滚动且页面无横向溢出。root目视5张桌面/中文手机图，独立agent复核6张英/日/韩手机图及模型桌面图，最终选择框和名称列可读、无新增遮挡。原生select菜单在截屏前显式关闭，避免把自动化残留菜单当作产品布局。
+
+Browser插件未提供，使用现有Playwright与Chrome155.0.8059.39，本地预览为http://127.0.0.1:43545，桌面1440×1000。浏览器命令exit0；预览进程由runner发送SIGTERM并等待结束，null exitCode未写作0。2533输入SHA-256为 `74c09828daf29bc68780a01ae5bd69a3fc254471c9f18facf8a8ef38766b6ab1`，三目标共享buildId `f17870e3-4b56-491e-befb-984498ef7067`，最终静态/浏览器前后无源码漂移。源码、本文、脚本/夹具、失败/中间版证据、最终日志/截图/CSV、完整输入/输出及未提交diff归档至 `/home/cina/.codex/visualizations/2026/10/15/01a13d58-e8f9-71f2-8d5c-34e63089f768/web-provider-directory-compat-2026-10-23`；以archive-state/manifest为完成状态与逐文件哈希依据。
+
+验证边界：本批复用现有API，没有新增后端端点、数据库迁移或依赖；Chrome使用固定接口数据和模拟Console身份，仅证明当前Web产物的交互与兼容行为，不等于真实Admin服务/身份、PG/MySQL/远端D1、线上数据或部署验收。完整102主任务/45路由组/55矩阵、211勾选项55完成/156待办保持；本批未提交、推送或部署，真实联调与剩余功能迁移继续。
+
+**2026-10-23 续批：模型/供应商分析多行明细兼容（ADM-13/14，5.98）**
+
+旧 Admin 模型页与供应商页分别用 Set 保留多个展开项；Web 原先只有单条 active/detail 状态，打开下一行会丢失上一行，无法保留多对象对比。本批恢复两页多行同时展开，以模型 ID＋路由组或供应商 ID 区分行；重名供应商与同模型不同路由组不会串用明细。每行独立加载、空态、失败与重试，关闭或重试一行不影响其他行，排序/切换四视图不额外请求明细。新增已展开数量和全部收起，中/英/日/韩文与唯一可访问名称同步；供应商下钻模型名称列设置最小宽度，避免日语宽表头挤压名称。
+
+共享 useQueries 状态以身份/核验版本、页面实例、筛选上下文和行重试代次隔离；收起、筛选、日期、刷新及身份变化使旧请求失效，迟到成功/拒绝响应不能覆盖重开后的数据。当前明细 401/403 清除可见数据并沿用领域权限锁与显式恢复。现有两条 GET 明细端点、时间/tag 口径和日志权限继续使用；没有新增后端接口。展开数据不混入主表合计/CSV，模型 32 列与供应商 35 列合同保持。
+
+新增 13 项状态/查询并发与取消测试、3 项表格/四语控件测试。最终完整 Web **1998/1998**，失败/取消/跳过均 0；Web/Edge 类型、完整 Web lint、322 文件格式与 SPA/Node/Worker 三目标生产构建均 exit0，所有重检查通过共享串行锁执行。首次静态检查只有新增测试重复 import 导致 lint exit1；合并 import 后重验，原记录保存在 static-attempt-1。首轮浏览器通过 31 场景，第 32 场景的辅助函数在 403 正确清表后等待已移除的展开按钮而超时，browser-attempt-1 原日志/DOM/截图保留；改为直接点击后断言拒绝状态。
+
+最终同一产物 Chrome **48/48**：保留目录/类型的 26 场景，新增两页各 7 个多行并发、成功/503/非法响应、独立重试、收起重开迟到响应、搜索/tag/类型/刷新清除、403 有界恢复与身份切换场景，再加四语两页 8 个手机键盘场景。检查多行展开后的排序/视图不增加请求、CSV不重复纳入明细、原生筛选与独立横向滚动、页面无横向溢出；无未预期请求或页面异常。首次 48/48 的目视复核仍发现日文供应商模型名称被挤成四行，visual-attempt-1 保存当时源码、构建、截图和诊断；加宽后重新执行全部静态及 48 场景。root 最终目视两页桌面和中文手机共 4 图，独立 agent 复核英/日/韩两页共 6 图，已展开数量、全部收起及两组明细可读，无新增遮挡。
+
+浏览器使用现有 Playwright 和 Chrome 155.0.8059.39（Browser 插件未提供），本地预览 http://127.0.0.1:36557，桌面 1440×1000、手机 390×844。命令 exit0；runner 发送 SIGTERM 并等待自有预览进程退出。2539 构建输入 SHA-256 为 `3931de83d5be21b1cd0df9de3f9c25c24aebde32a00d728aef2340d1f778d825`，三目标共享 buildId `2d003c36-1aac-4a97-a488-5318040d1fc8`；最终静态与浏览器前后输入完全一致。15 份源码、本文、完整构建输入/输出、脚本/夹具、历史失败/视觉诊断、最终日志/截图/CSV 与工作区 diff 归档至 `/home/cina/.codex/visualizations/2026/10/15/01a13d58-e8f9-71f2-8d5c-34e63089f768/web-analytics-drilldowns-compat-2026-10-23`，以 archive-state 与 manifest 的完成状态/哈希为依据。
+
+本批为固定接口数据和模拟 Console 身份下的本地 Web 验证；真实 Admin/身份、三数据库、线上数据与部署仍待验收。完整 102 主任务/45 路由组/55 矩阵行及 211 勾选项（55 完成/156 待办）保持，本批未提交、推送或部署。
+
+**2026-10-23 续批：用户分析视图、汇总与多级并发明细（ADM-15，5.98）**
+
+对照旧 Admin 用户分析页，确认其实际提供概览/成本/预算/全部四视图、本地邮箱搜索、六项汇总及多个邮箱同时展开；Web 原先仅有固定全列表、服务端邮箱筛选和单个展开项。本批恢复四视图与字面、忽略大小写的本地搜索，保留显式 Apply 的服务器邮箱筛选。已匹配行同时决定合计、汇总和20列CSV，明细不重复计入；预算视图保留授予/花费/有条件余额、预算占用及最近活动。视图切换保留可见列排序，隐藏排序列时改为邮箱升序；零匹配明确提示修改/清除本地搜索，不误称该时段没有用量。
+
+六卡显示请求数、汇总成功率、错误数、实收、计量成本与差额。现有后端已提供 success_count，Web 现在可选严格接收，校验安全整数、请求结果总数和成功率一致性；只有所有匹配行都报告成功数时才汇总精确成功/其他次数及按总请求加权成功率。旧接口省略该字段仍可读取，其成功相关汇总显示未知，不由百分比倒算次数。保留币种不可验证时金额/导出隐藏、无样本及标准成本缺失语义；当前预算/钱包快照与所选时段用量、邮箱组与精确账号范围有明确说明。
+
+多个用户可以同时查看模型或Key用量，同用户切换面板仅替换自己的明细；一个用户下可同时展开多个Key的模型明细。每个用户面板/Key分别加载、空态、失败与重试，不再通过全页刷新处理局部失败。选中Key必须存在于当前已验证列表，null删除历史没有动作；不同用户即使Key名称或ID相同也按邮箱+精确user_id+Key ID隔离。子查询绑定父代次，收起、替换、搜索、时间窗、刷新、权限和身份变化取消旧请求，旧回调和迟到响应不能复活新范围。任一当前明细401/403仍锁定分析域并有界重检，配置和日志权限独立。沿用现有用户、Key、模型三个GET接口及精确日志链接，没有增加端点、数据库迁移或依赖。
+
+新增18项父子状态/查询观察者/汇总合同测试及4项视图/搜索/四语表格测试。最终完整Web **2020/2020**（失败/取消/跳过0），Web/Edge类型、完整Web lint、333文件格式和SPA/Node/Worker三目标构建均exit0，重检查均经共享串行锁。首轮Web类型因既有测试迁移后的Map字面类型过宽失败，单测2019/2020因英文&的SSR转义断言失败，lint有类型导入错误与3个查询数组展开警告；修正类型、断言、type import及逐组读取查询状态后重验，static-attempt-1原日志/20源码保留。独立审查指出的空态文案和不可见列排序也已修复并纳入浏览器场景。第二轮六项全过记录在static-attempt-2；之后按仓库规范将成功率显示的嵌套三元改为提前返回函数，再按最终源码复验。浏览器夹具补强非空精确账号、时间窗传递和迟到请求实际结算断言，避免缺参或未结算请求造成误通过。
+
+最终同一生产构建Chrome **34/34**，覆盖钱包负值/微单位/歧义账号/旧字段、四视图列对齐、隐藏/可见排序、字面搜索和CSV、精确/旧缺计数/非法计数、服务端显式邮箱筛选、并发用户和同ID Key隔离、成功/503/非法响应/局部重试、父子收起/替换与迟到响应、本地搜索/服务器筛选/固定时钟刷新/时间窗清除、三层403及显式恢复、同页面focus身份切换、重复Key拒绝、独立logs/config权限和四语390px手机键盘操作。无未预期请求、页面错误或页面横向溢出；接口夹具为同源GET，不带Bearer或Cookie秘密。首轮浏览器在前2项通过后被测试选择器阻断：主表请求数表头与嵌套表同名表头同时匹配；限定到主表thead后复验，browser-attempt-1保留原脚本、日志及失败截图。第二轮Chrome34项全过后，实际截图发现桌面Key ID列过窄；增加192px最小列宽并加入宽度断言，同时让Key范围说明在手机视口内自动换行；加入说明边界断言，补拍四语手机Key模型明细后按最终源码重新验证。static-attempt-3及browser-attempt-2保留修正前的通过记录与截图。第三轮Chrome34项通过；补拍嵌套明细时浏览器自动横移父表，截图左侧少量裁切，修正capture复位横向位置后在同一构建重拍并复验，browser-attempt-3保留修正前通过记录。实际截图复核与各命令退出码保存在归档报告。
+
+浏览器为现有Playwright与Chrome 155.0.8059.39（Browser插件未提供），本地预览http://127.0.0.1:39175；桌面1440×1000、手机390×844，固定浏览器时钟为2026-10-23T08:00:00Z。runner终止并等待自有预览进程退出。2550构建输入SHA-256为 `b08b8b6cad2b90264fe82c7580543a59d10120cd1ef42c2c185cf1758c656cee`，三目标共享buildId `9e6fa694-6bea-4d18-bb82-02dca4bf537d`，最终静态/浏览器前后输入相同。20源码、本文、完整输入/输出、失败与最终验证日志/脚本/截图/CSV及工作区diff归档至 `/home/cina/.codex/visualizations/2026/10/15/01a13d58-e8f9-71f2-8d5c-34e63089f768/web-user-analytics-compat-2026-10-23`，以archive-state/manifest完成状态和哈希为依据。
+
+本批使用固定接口和模拟Console身份，未验证真实Admin、CinaAuth、三数据库、线上数据或发布。完整102主任务/45路由组/55矩阵行及211勾选项55完成/156待办保持；本批未提交、推送或部署。
+
+**2026-10-23 续批：仪表盘趋势与可靠性判断/下钻（ADM-01、ADM-16，5.98）**
+
+仪表盘恢复请求数、Token、费用、延迟四种趋势及缓存读取序列，补齐模型/用户切换、Token用量列与分析入口。业务时区时间桶直接按墙钟显示，不再追加UTC再转换导致二次偏移；时间间隔决定横轴位置，缺失桶/延迟保留断线，单点仍显示标记，负费用保留零参考线。原生时间桶选择器同时支持键盘/手机查看精确值，趋势明细表可展开。范围新增今天/本周/本月及业务时区自定义输入；每次请求先验证安全配置，再解析一个固定UTC窗口，查询按所选范围和刷新版本隔离，取消并隐藏过期结果，刷新只移动滚动/日历窗口。保留原dashboard API兼容入口与配置/币种失效时隐藏全部统计内容的既有约束；非法/重复桶拒绝显示。汇总增加总Token与最多六位小数的单次平均费用，吞吐明确最近一分钟，近期请求明确不受筛选范围限制。
+
+可靠性页恢复六项汇总、成功/失败/其他精确次数及统计定义，按供应商行计算，不重复叠加模型×供应商明细。请求级故障转移count/rate成对接收；旧事件率可超过100，缺少新字段时显示未知，不由旧事件率推算。旧成功率由服务层JS同式计算；SQL直接返回的请求级转移率容许MySQL十进制舍入，中间比例容差为0.0001个百分点，0和100端点严格相等。供应商类型和当前名称来自已验证目录；目录不可用或账号缺失时回退到统计/日志返回的名称或ID，不推定历史类型。目录403或返回条数与count不符等不完整响应不冒充删除；日志权限独立探测，403隐藏深链而不撤销分析权限，401仍触发身份重新验证。供应商错误数与全部错误入口均保留当前start/end，供应商入口附精确provider_id；近期错误实际遵循当前窗口，拒绝窗口外响应，修正原说明。四语言、分域失权与显式重试、身份/晚到响应隔离保持。
+
+最终完整Web **2045/2045**（fail/cancel/skip均0），Web/Edge类型、完整Web lint、**363文件**格式检查及三目标生产构建通过。最新同构建Chrome **40/40**（仪表盘19、可靠性21），覆盖四语手机/键盘、四趋势/零值/负值/空样本、业务日历/自定义/刷新、旧新failover、目录与日志独立403、非法响应、失效重试及范围/身份晚到响应隔离；无控制台错误或意外请求。30张最终截图逐张复核：修复仪表盘表头逐字换行、可靠性短模型名列过窄，并将独立最近一分钟吞吐移出所选范围八项卡片，表格继续在内部横向滚动。最终 **2559** 个完整构建输入在验证前后及浏览器前后保持一致，source SHA `c870bf3eb7b056b510f608e7f9ab138b178ad1babd49d53aaaaa8924626c2e35`、三目标buildId `316d2a04-d607-4e6d-8e0f-4ec7340d7d74` 一致。
+
+首轮重复导入lint失败、首轮浏览器严格定位器失败、以及40场景通过后人工发现的旧布局问题，分别保留在 `static-attempt-1`、`browser-attempt-1`、`visual-attempt-1`；修复前证据不替代最终结果。30个本批源文件、最终构建输入/产物、命令回执、审查与截图归档于 [web-observability-compat-2026-10-23](/home/cina/.codex/visualizations/2026/10/15/01a13d58-e8f9-71f2-8d5c-34e63089f768/web-observability-compat-2026-10-23)。
+
+固定接口与模拟Console身份的本地验证不代表真实Admin、CinaAuth、三数据库或线上发布通过。完整102主任务/45路由组/55矩阵行及211勾选项（55完成/156待办）保持，本批未提交、推送或部署。
+
+**2026-10-23 续批：钱包审计与用户最近审计详情（ADM-18 / ADM-07）**
+
+合并后的旧 Admin 审计已有钱包列，而 Web 全局表仍为七列，用户详情仅有简化审计摘要。本轮统一复用完整审计表，增加累计入账、累计扣款和余额的前后钱包快照，并恢复用户页预算周期、操作者、完整字段变更及脱敏 JSON 详情。钱包摘要从原始数字 token 解析整数微单位，保留六位小数与负余额；旧快照缺字段、null、非法值和真实零分别处理，不用另一侧快照补齐历史数据。未知显示币种隐藏金额。精确处理范围为钱包摘要；既有通用 JSON 美化/差异中的 Number 序列化路径保持原实现，极大原始数字的通用原文视图精度仍应后续统一处理。此历史待办已在下方“原始 JSON 精度与审计差异”续批补齐并本地验证，预算汇总 DTO 数值不在该修复范围。
+
+浏览器首轮发现钱包 before/after 的屏幕阅读器隐藏文本越过滚动容器，1440px 视口的页面宽度达到 1627px；局部定位探针确认后给表格滚动容器补 relative，修复前页面、诊断和旧源码/构建保留，最终结果以修复后同一构建为准。
+
+详情改用现有 Dialog 焦点管理，标题固定、内容独立滚动，支持键盘关闭和回焦，复制失败提供四语反馈。用户最近审计继续遵守独立权限和加载边界。服务端 API 无变更，原有 29 列预算 CSV 保留；没有宣称 CSV 已含钱包金额或原始 JSON。
+
+最终完整 Web **2063/2063**，Web/Edge 类型、完整 Web lint、**372 文件**格式及三目标生产构建通过。同一生产构建 Chrome **24/24**，覆盖真实零/缺失/非法/大额微单位、两个审计入口、复制成功脱敏/失败提示、焦点约束/关闭回焦、既有 CSV 查询及逐字节下载、403/503/非法响应恢复、币种未知、晚到筛选与身份响应隔离，以及四语手机布局。20 张最终桌面和四语手机截图逐张复核。**2566** 个完整构建输入在验证前后、浏览器前后保持一致，source SHA `8cc8b363551b6e4bdd111def6f92a2b946c893b206321af50f9ebc0219c3d795`、三目标 buildId `2710d28f-9504-40cb-9771-384698245912` 一致。
+
+10 个本批源文件、构建输入/产物、实际命令回执、审查及截图归档于 [web-audit-compat-2026-10-23](/home/cina/.codex/visualizations/2026/10/15/01a13d58-e8f9-71f2-8d5c-34e63089f768/web-audit-compat-2026-10-23)。夹具生成最初的 CommonJS 导入问题已修正并记录；执行中的失败如有，随修复前证据保留，不能替代最终验证。
+
+上述为本地生产包配合固定 API / 模拟身份的兼容验收；真实身份、服务、三库旧行、部署与发布门槛仍待验收。完整 102 主任务、45 路由组、55 矩阵行和 211 勾选项（55 完成 / 156 待办）不变，本批未提交、推送或部署。下一已发现缺口：用户及全局 Key 列表业务时区与旧版显示对齐。
+
+**2026-10-23 续批：用户与全局网关密钥业务时区（ADM-06 / ADM-08）**
+
+用户列表及全局网关密钥列表/详情原固定 UTC，跨日和夏令时显示会偏离旧 Admin 的业务时区。本轮复用已有配置安全字段与时区格式化工具，一次 overview 请求分别校验时区和币种；旧 userCurrency 合同保留。旧响应缺时区、非法 IANA 或 source/value 不一致时只将时区标记为未核验，合法币种保留；不支持/非法币种不影响已核验时间。明确区分配置 UTC、历史配置、服务端 UTC 回退与读取失败临时 UTC。用户币种未知时隐藏金额，继续显示预算周期和已知重置时间；创建金额保护保持。API 查询、UTC 记录、排序及 mutation/CAS/秘密处理不变。
+
+共享查询按 scope、完整身份/epoch、API 实例、域和挂载实例隔离，加载/失败清旧显示；401 对同一主体最多触发一次自动重核，403 不锁主列表。用户刷新保留原权限恢复机制；网关密钥刷新同时重读列表和配置，并保留既有主读取权限阻断。代码同步 ref 守卫和按钮 loading 禁用避免重复刷新；浏览器验证的是在途按钮禁用时重复点击不产生额外请求，不将其替代独立 hook 并发测试。
+
+最终完整 Web **2080/2080（无跳过）**，Web/Edge 类型、完整 lint、**387 文件**格式和三目标构建通过。同一生产包 Chrome **43/43**，涵盖新加坡跨日、纽约 DST、四类 UTC 来源、旧/畸形配置、独立403/503与重试、币种未知、在途刷新、401有界重核、主域拒绝、身份切换关闭旧详情与迟到成功/503隔离，以及四语手机布局。27 张最终截图逐张复核；原手机列表首屏仅覆盖顶部，经同一构建额外 8 个视觉场景补齐用户卡片及 Key 预算/创建时间区域，原截图和补拍回执均保留。2573 完整构建输入验证前后及浏览器前后无漂移，source SHA `e99050d0ab290b580970c495b282a658ea547b9228a9edd85ad49f5710e134ca`、三目标 buildId `06e8b89a-14e0-4c8f-8e21-5a6e1251348c` 一致。
+
+首轮静态与浏览器均通过，但手机补拍发现中/日/韩元数据表头过窄而换为多行；给表头补 whitespace-nowrap 后重新执行全部六项检查及两组浏览器。修复前 19 源文件、生产产物、实际检查回执与 27 张截图保存在 before-header-fix。最终 19 个源码文件、构建输入/产物、命令回执、独立审查和截图归档于 [web-list-timezone-compat-2026-10-23](/home/cina/.codex/visualizations/2026/10/15/01a13d58-e8f9-71f2-8d5c-34e63089f768/web-list-timezone-compat-2026-10-23)。验证基于本地生产包、固定接口和模拟 Console 身份；真实 Admin/CinaAuth/三库与发布门槛继续。完整 102 主任务、45 路由组、55 矩阵行及 211 勾选项（55 完成/156 待办）保持，未提交、推送或部署。下一确认缺口：Key API 已有 last_used_at，但 Web 合同及详情缺少最后使用信息；null 应作为没有可用使用记录，而非保证从未使用，后端不支持此字段排序。
+
+**2026-10-23 续批：网关密钥最后使用时间（ADM-07 / ADM-08）**
+
+Admin Key 列表/详情已返回 last_used_at，Web 全局读取合同此前丢弃该字段，用户详情还用 created_at 替代空的最后使用时间。本轮将最后使用字段接入既有严格 UTC/SQL 时间解析器：合法时间正规化、null 显示“暂无使用记录”、旧接口遗漏显示“最后使用时间不可用”，非法已提供字段仍走读取失败。三处页面分别标明创建/最后使用时间，复用业务时区及显式 UTC 降级；四语文案和两个表格的单行表头保持一致。null 不解释为保证从未使用，未声称验证后端写入时效。
+
+该字段仅作观测展示；无新增 endpoint、排序选项、请求参数、PATCH 字段或 profile_revision 依赖。共享详情及 mutation ACK 合同保留新字段，同时接受旧 ACK 缺字段；原所有者/工作区/ID 与 CAS 核对保持。用户旧格式输入继续只保留脱敏密钥及安全元数据摘要。新增 17 项测试覆盖 UTC/SQL 正规化、缺失/空/非法区分、读写回执兼容、请求正文不包含观测时间、四语 SSR、跨日和春秋 DST。
+
+最终完整 Web **2097/2097（无跳过）**，Web/Edge 类型、完整 lint、**392 文件**格式及三目标构建通过。同一生产包 Chrome **26/26**，覆盖全局/用户列表三态、全局详情三态、DST/配置拒权 UTC、403/503/非法字段拒收、允许边界内恢复（全局拒权保持刷新禁用，仅新主体恢复）、更新使用时间、主体切换关闭旧详情、四语手机时间区域与详情。15 张截图逐张复核；2577 输入在静态检查及浏览器前后无漂移，source SHA `0763c4a972d71d98b1648d7afb10610ded46e17b003546a4c5d08784811249f4`，三目标 buildId `ea8059e3-a842-4e55-964c-ba44de7177b0` 一致。
+
+11 个源码文件、前后差异、完整构建输入/产物、命令回执、独立审查及截图归档于 [web-key-usage-compat-2026-10-23](/home/cina/.codex/visualizations/2026/10/15/01a13d58-e8f9-71f2-8d5c-34e63089f768/web-key-usage-compat-2026-10-23)。初次浏览器夹具误将完整密钥放入全局已脱敏字段，被现有合同正确拒绝，修正夹具后重验；首轮六项静态检查和 26 个浏览器场景全部通过，但截图显示用户密钥状态的中/日/韩文字被挤成两行；仅为状态单元格补 nowrap，并添加浏览器文字高度断言后重跑完整流程。首轮源码/产物/回执/15张截图保存在 before-status-nowrap。验证使用本地生产产物、固定接口和模拟 Console 身份，真实 Admin/CinaAuth、数据库观测写入与发布仍待验。完整 102 主任务、45 路由组、55 矩阵行及 211 勾选项（55 完成/156 待办）保持，未提交、推送或部署。
+
+**2026-10-23 续批：原始 JSON 精度与审计差异（ADM-07 / ADM-12 / ADM-17 / ADM-18）**
+
+通用日志 JSON 原先经原生 JSON.parse/JSON.stringify 美化，9007199254740993 会显示成 9007199254740992；审计还可能将两个不同数字判断为相同，MCP 摘要则会再次解析已美化文本。本轮统一采用保留数字 token 的安全树：原始 JSON 先通过原生语法校验，再提取未加引号的数字词法，按既有键/文本规则脱敏，按原有 16 层边界裁剪并安全序列化。大整数、高精度小数、末尾零、指数和负零保持原形式，数值字符串保持字符串；重复键沿用原生最后值语义，内部数字对象不能由用户 JSON 伪造。
+
+请求日志列表展开、审计详情和工具调用的原始 JSON 展示/复制统一受益；审计差异与 MCP 参数摘要直接消费安全树，不再把数字转回 Number。审计能区分相邻大整数、末位小数差异，以及数字 1 与字符串“1”等类型变化；仅在显示碰撞时为字符串补引号。字段选择、预算字段排除和普通文本展示保持；MCP 保留前三项参数、每项值 80 字符和名称长度限制。脱敏函数原样移至独立模块，旧导入路径重导出，敏感数字值同样遮蔽；损坏或截断数据继续只显示对应遮蔽标记。
+
+浏览器还发现手机 MCP 筛选表单在剩余窄列中收缩，内部最小宽度输入框撑出页面；本轮让小屏表单独占一行、桌面保留弹性排列，并对四语手机输入框和提交按钮增加视口边界断言。
+
+本批无 API/数据库变更。精度保证仅适用于仍以原始 JSON 字符串返回的数据，不恢复已在服务端或 DTO 中转成 Number 的精度；既有预算概览 auditDisplay、金额统计和 CSV 行为不变。普通请求日志的安全单条 endpoint 主动剔除原始字段，浏览器验证明确通过列表行展开完成；工具调用使用 /admin/tools/invocations?source=mcp 并核对 provider_id 筛选。
+
+新增 20 项回归测试。最终完整 Web **2117/2117（无跳过）**，Web/Edge 类型、完整 lint、**397 文件**格式及三目标构建通过；同一生产包 Chrome **23/23**，覆盖全局/用户审计、请求日志展示/复制、MCP 参数/请求/响应、四语手机、损坏/截断遮蔽、剪贴板拒绝及审计键盘回焦。21 张截图逐张复核；2581 输入在静态检查及浏览器前后无漂移，source SHA `59df2ec791f2ec08ee176822eb6a75ed57b40118e58a3d756e5b2b2a3424adf9`，三目标 buildId `d3bc9f6d-2282-4ce5-b392-217cd4e2329a` 一致。
+
+首轮定向 47 项中 46 项通过，新增 MCP 嵌套夹具缺少根对象闭合括号，被解析器正确拒收；仅补齐夹具后进入完整验证，失败摘要及当时测试文件保留。第一轮六项静态验证和浏览器前六场景通过，随后 MCP 英文手机宽度断言发现上述布局问题；仅修正一行响应式 class 后重跑完整流程，首轮产物、命令和截图保存在 before-mobile-source-wrap。第二轮完整静态及 23 个浏览器场景通过；截图复核后，仅调整浏览器取景的表格横向位置，再以同一生产包重跑浏览器，清晰展示手机请求正文。原 23/23 回执与截图保存在 before-request-capture-alignment，产品源码未再变化。9 个源码文件、逐批差异、完整构建输入/产物、命令回执、独立审查及截图归档于 [web-json-precision-compat-2026-10-23](/home/cina/.codex/visualizations/2026/10/15/01a13d58-e8f9-71f2-8d5c-34e63089f768/web-json-precision-compat-2026-10-23)。Browser plugin not available，使用已安装 Playwright/Chrome 验证本地生产产物、固定接口和模拟 Console 身份；真实 Admin/CinaAuth、数据库与跨浏览器验收继续。完整 102 主任务、45 路由组、55 矩阵行及 211 勾选项（55 完成/156 待办）保持，未提交、推送或部署。
+
+**2026-10-23 续批：集成密钥业务时区与刷新状态（ADM-20）**
+
+旧 Admin 集成密钥页通过 useGatewayDateTime 使用业务时区，Web 的最后使用时间仍调用未指定 timeZone 的 toLocaleString，导致操作员浏览器所在地改变日期/时刻。本轮复用安全配置摘要投影和共享列表显示 hook，以 access-keys 域隔离 scope、身份、API 与组件缓存；使用现有四语业务时区状态及统一时间格式器，明确附带时区。null 继续显示本地化“从未使用”，真实 epoch 和 UTC/SQL 时间契约保持。配置缺失、非法或 403/503 时使用显式 UTC；有效时区不依赖币种是否可识别，来源 configured/legacy/server fallback 分别呈现。
+
+手动刷新以同步引用去重，同时重读列表和配置，禁用重复触发；创建、编辑或轮换确认后的列表刷新使用独立回调，配置读取尚未结束也会执行，并可替代写入之前的旧列表读取。Manager 不因配置加载、失败或成功重新挂载，因此草稿、显式揭示和已保存一次性密钥沿用既有生命周期。真正列表拒权或身份切换仍移除编辑器和秘密；配置 401 沿用按主体有界的身份复验，配置成功不能解除未知写入锁。本批无 API、数据库、密钥格式、权限模型或秘密存储变更。
+
+新增 5 项回归测试（四语/null/日期边界/UTC/DST 与真实 QueryClient 缓存隔离）。完整 Web **2122/2122（无跳过）**，Web/Edge 类型、完整 lint、**400 文件**格式和三目标构建通过。同一生产包 Chrome **28/28**，浏览器设为 America/Los_Angeles，验证业务时区独立显示、四语 390px、配置错误恢复、重复刷新、迟到响应/身份隔离、配置 401 有界复验、配置未返回时创建/轮换以及写入后的新列表读取、未知写锁保持。7 张截图复核；页面身份、非空内容、错误覆盖层、控制台、交互及页面宽度检查均通过。2583 构建输入前后无漂移，source SHA `2f8c41b10dc2c208b07aa6f7f4d8c0135082eba6df459eab922ff314b5fa0080`，三目标 buildId `aa90856c-3657-4e0e-bd4c-fbc688ae4cb9` 一致。
+
+6 个本批源码文件、基线差异、检查命令、完整构建输入/产物、独立代码审查与截图归档于 [web-access-key-timezone-compat-2026-10-23](/home/cina/.codex/visualizations/2026/10/15/01a13d58-e8f9-71f2-8d5c-34e63089f768/web-access-key-timezone-compat-2026-10-23)。Browser plugin not available，使用已安装 Playwright/Chrome、本地生产预览、固定接口和模拟 Console 身份，写操作仅发生在浏览器测试夹具中。真实 Admin/CinaAuth、数据库、密钥真实调用及跨浏览器验收继续；完整 102 主任务、45 路由组、55 矩阵行及 211 勾选项（55 完成/156 待办）保持，未提交、推送或部署。
+
+**2026-10-23 续批：MCP 概览、筛选计数与调用入口（ADM-28）**
+
+旧 Admin MCP 页面已有四项概览、带计数的状态筛选和已脱敏连接地址搜索，Web 本轮恢复对应交互。概览显示服务器总数、已启用目录条目、待审核目录条目和同步失败服务器数。已启用条目仅纳入 active 服务器，待审核条目涵盖所有服务器；每条 API 计数仍遵守非负安全整数合同，合计前转换 BigInt，四语数字显示不因累计超过 Number 安全范围丢失末位。同步失败仅依据错误存在状态计数，不展示上游错误原文。
+
+五类筛选显示全部/启用/停用/有待审核条目/同步失败的服务器数量；待审核服务器数与概览的条目数分别计算。概览和筛选数量使用完整已加载目录，不受本地搜索与分页影响。搜索增加现有 urlMasked 字段，沿用名称、标识和描述搜索，不读取连接秘密。页头入口指向 source=mcp 的全部调用记录，详情原有入口保留服务器 slug。概览只在成功读取的列表页面显示；真实空目录显示零，加载、刷新、读取失败和详情/非法目标不显示旧概览。未新增接口、后端、依赖或部署开关。
+
+新增 10 项回归测试，完整 Web **2132/2132（无跳过）**，Web/Edge 类型、完整 lint、**404 文件**格式和三目标构建通过。同一生产包 Chrome **22/22**，验证四语 390px、桌面浅/深色、五类筛选、脱敏地址搜索及组合筛选、空目录与无匹配的不同统计、初次加载/刷新/403/503/非法响应恢复、配置失败独立显示、身份变化后的迟到成功/失败隔离、全部及单服务器调用入口、分页与大整数精确显示。工具日志夹具按现有合同回显 model_id_prefix，并等待成功空态排除错误页。10 张截图复核；页面身份、非空内容、框架错误覆盖层、控制台、交互及页面宽度检查均通过。2587 构建输入前后无漂移，source SHA `d7f570a86df32106841644f22d2fb2f5f3f99bcd1466bebacacd9e1f12127538`，三目标 buildId `82e914b3-6204-49cd-b841-22c0c73ac710` 一致。
+
+浏览器前两次分别因脚本将路由规范化空 server 参数误判为 null，以及未区分列表和客户端测试的同名分页按钮而中止；产品源码未变。两次脚本/回执/截图保存在 before-empty-server-query-normalization 与 before-pagination-locator-scope；限定正确导航和空参数语义后，同一生产包 22/22 通过。
+
+9 个本批源码文件、基线差异、检查命令、完整构建输入/产物、独立代码/QA 审查与截图归档于 [web-mcp-overview-compat-2026-10-23](/home/cina/.codex/visualizations/2026/10/15/01a13d58-e8f9-71f2-8d5c-34e63089f768/web-mcp-overview-compat-2026-10-23)。Browser plugin not available，使用已安装 Playwright/Chrome、本地生产预览、固定接口和模拟 Console 身份。真实 Admin/CinaAuth/MCP 服务、数据库与跨浏览器验收继续；完整 102 主任务、45 路由组、55 矩阵行及 211 勾选项（55 完成/156 待办）保持，未提交、推送或部署。
+
+**2026-10-24 续批：MCP 新条目批量启用与客户端目录浏览（ADM-28）**
+
+旧 Admin 允许在未手动选择时启用当前类型的全部新发现条目，Web 原先只能逐页选择。本轮按完整已加载目录提取当前 kind、reviewState=new、status=disabled 的唯一 ID，跨搜索、状态筛选和分页提交；按钮数量与说明明确范围，手动选择后隐藏该按钮。其他类型、已启用、已审核、变更待审及已移除条目不进入批量列表。继续复用既有身份核验、同步防重、精确 updated 数量确认与持久未知写入恢复；403 明确拒绝可显式重试，503 或部分 2xx 确认保持锁，普通刷新不能解锁。
+
+客户端测试的分组结果增加已知服务器名称与 slug、名称/URI、标题、说明和 MIME 展示；长说明可展开，每条 JSON 沿用既有脱敏与延迟展开。搜索覆盖全部已返回条目的服务器名称/slug、标识、标题和说明，大小写不敏感并忽略首尾空白，不额外发送接口请求。全组共用每页最多 50 条的预算，单服务器大目录同样分页；搜索重置页码，新响应重置搜索/页码。空目录与搜索无匹配分别提示；initialize 或错误响应无目录数组时自动展示原始 JSON。请求快照提供 method/slug，既有取消、秘密与身份生命周期保持。本批无后端、API、依赖或权限变更。
+
+新增 14 项回归测试，完整 Web **2146/2146（无跳过）**，Web/Edge 类型、完整 lint、**408 文件**格式及三目标构建通过。同一生产包 Chrome **26/26**，覆盖跨页/无匹配批量、手选与类型边界、防重、明确失败重试、未知/部分确认锁；客户端工具/提示词/资源搜索、长说明与脱敏 JSON、单组/多组分页、原始响应降级、空态、新响应重置、已完成响应在身份切换后清除、scoped 请求归组，以及四语 390px、桌面浅/深色。16 张截图复核，手机场景执行长说明展开点击并检查页面宽度；截图对应搜索结果，完整说明的展开/收起及 JSON 由独立桌面场景验证。页面身份、非空内容、错误覆盖层、控制台、交互及页面宽度均通过。2591 输入在静态检查和浏览器前后无漂移，source SHA `969f10c097150e10bed167ed9f42aaf243c302a7612c5746f0c0b9b41e10f447`，三目标 buildId `6a10b024-93f1-4b0e-9c2a-45631809b6e3` 一致。
+
+9 个本批源码文件、基线差异、检查命令、完整构建输入/产物、独立代码/QA 审查和截图归档于 [web-mcp-catalog-workflow-compat-2026-10-23](/home/cina/.codex/visualizations/2026/10/15/01a13d58-e8f9-71f2-8d5c-34e63089f768/web-mcp-catalog-workflow-compat-2026-10-23)。Browser plugin not available，使用已安装 Playwright/Chrome、本地生产预览、固定接口和模拟 Console 身份，所有写入仅在测试夹具中执行。真实 Admin/CinaAuth/MCP 服务、数据库、跨浏览器和在途客户端响应切身份的本轮专项验收仍未覆盖；完整 102 主任务、45 路由组、55 矩阵行及 211 勾选项（55 完成/156 待办）保持，未提交、推送或部署。
+
+**2026-10-24 续批：MCP 最近同步尝试时间与业务时区（ADM-28）**
+
+MCP 列表原先没有同步时间，详情直接显示接口原字符串。本轮共用四语时间组件：有效时间按已验证业务时区显示，null 显示无同步记录，非法历史值显示时间不可用。成功和失败同步均会持久化 lastSyncedAt，因此统一标注“最近同步尝试”，不将失败时间误称成功时间。显式带时区的 ISO 与历史 SQL UTC 秒/小数秒兼容；校验真实日历后生成语义化 time[datetime]，SQL 最多六位小数归一至 JavaScript 毫秒，界面仍显示秒。过长/不可解析值仅影响本行时间，原服务端 DTO 长度与列表可用性保持。
+
+复用安全 config/overview 摘要，单次读取后分别投影币种与时区，不读取完整配置。合法币种不受坏时区影响，合法时区不受未知币种影响；legacy 与服务器 UTC 回退来源保留。摘要缺失/403/503/坏响应时显示明确 UTC 降级，列表和客户端继续工作；401 每个主体有界复验。刷新立即遮蔽旧配置，迟到响应不能覆盖新刷新或身份；正常配置到达不清空编辑草稿、客户端已完成结果及原始 Key，不解除未知写锁。同步成功后刷新列表/详情/配置；同步失败后手动刷新可见新尝试时间与通用错误，未知写锁继续保留。未增加后端、数据库、依赖、接口端点或部署开关。
+
+新增 17 项回归测试，完整 Web **2163/2163（无跳过）**，Web/Edge 类型、完整 lint、**412 文件**格式及三目标构建通过。同一生产包 Chrome **29/29**，浏览器时区设 America/Los_Angeles，覆盖 Shanghai 跨日、New York 春秋 DST、ISO/SQL/null/非法时间、配置与币种独立兼容、显式刷新恢复、在途配置的刷新/身份隔离、401 有界复验、配置到达时草稿与客户端结果保持、成功/失败同步时间、未知写锁，以及四语 390px 和桌面浅/深色。14 张截图复核；手机图聚焦有效时间卡片，无记录/非法时间通过 DOM 断言，四语 SSR 另有覆盖。页面身份、非空内容、框架错误覆盖层、控制台、交互与页面宽度均通过。2595 输入静态/浏览器前后无漂移，source SHA `3cc55c7f61217b37da96395a5af8e893ac6a0bad35c0e9810dad001a057817ca`，三目标 buildId `cea4793c-df34-4f3e-87f0-b9a904ce1c97` 一致。
+
+第一轮完整 Web 类型检查发现新增测试回调的解构参数缺少 Call 类型标注，已修复并保留 before-test-callback-type 的失败日志、源码与冻结清单；最终全部静态检查重跑通过。浏览器预检修正 modal 打开时背景状态定位，最终浏览器执行记录以归档为准。
+
+11 个本批源码文件、基线差异、检查命令、完整构建输入/产物、独立代码/QA 审查及截图归档于 [web-mcp-sync-time-compat-2026-10-24](/home/cina/.codex/visualizations/2026/10/15/01a13d58-e8f9-71f2-8d5c-34e63089f768/web-mcp-sync-time-compat-2026-10-24)。Browser plugin not available，使用已安装 Playwright/Chrome、本地生产预览、固定接口和模拟 Console 身份，写入仅执行于测试夹具。真实 Admin/CinaAuth/MCP 服务、数据库、跨浏览器及在途 RPC 身份切换仍未作为本轮验收；完整 102 主任务、45 路由组、55 矩阵行、211 勾选项（55 完成/156 待办）保持，未提交、推送或部署。
+
+**2026-10-24 续批：MCP 三价展示与管理目录检索（ADM-28）**
+
+服务器列表、默认定价详情及工具有效定价复用 Core 解析后的标准/实收/计量三价，显示每请求单位与已验证币种；v2 详情保留两种原倍率，v1 标准价为零时仍保留另外两项独立金额。六位账本精度的微额不会因两位格式化显示为零，真实零、无效规则、缺失币种与历史未知来源分别处理。实收严格低于计量时提供四语提示，不推断净利润或已发生损失。服务器列表直接使用现有 currency 状态，没有新增配置请求，定价写入表单函数与基线逐字节相同。
+
+管理目录以 upstreamKey/exposedName 及顶层 title/description 分别检索，两个文字字段完整脱敏后搜索，显示截断不再限制搜索范围；不搜索嵌套或待发布定义，也不以原秘密作为命中来源。原 kind/status/removed 边界、40 条分页及跨页启用全部新增范围保持。服务器列表与目录新增匹配/已加载总数、真空与无匹配区分，以及各自清除筛选入口；清除保留其他路由字段并回到第一页，搜索/筛选/翻页/清除不增加 API 或 Proxy RPC，切换筛选清除过期选择。目录分母为当前类型全部已加载项，包括已移除项，类型按钮及默认匹配仍排除已移除项。长说明展开与当前/待发布文本对照仍为独立后续差异，本轮未宣称补齐。
+
+新增 16 项回归测试，完整 Web **2179/2179（无跳过）**，Web/Edge 类型、完整 lint、**415 文件**格式和三目标构建通过。同一生产包 Chrome **24/24**，使用 23 台服务器和 85 个目录条目夹具：三页目录搜索、title/description 独立命中、空描述标题、8192 字符之后目标、脱敏秘密不可检索、kind/待审/移除交集、列表 20 条分页与目录 40 条分页、精确匹配总数、清除恢复、选择清空及全量新增操作均有交互断言。价格覆盖 v1/v2、Core 舍入、六位微额/零、继承/覆盖/无效/历史未知、CNY/USD 与配置错误；未知写入时金额仍可见且写操作保持锁定，身份变化拒绝迟到币种并清除已完成客户端结果与原 Key，拒权列表不能被价格摘要恢复。四语 390px、桌面及深色共 17 张截图复核。页面身份、非空、框架错误层、控制台与横向宽度检查通过。
+
+首轮浏览器在“第二页→搜索/状态筛选→清除”发现旧分页复活，修复服务器与目录分页 key 切换时持久重置，并同步丢弃过期选择；原失败日志、7 个已通过场景、截图与源码保存在 before-page-key-reset。修复后的六项静态检查与本轮浏览器场景重新执行，最终通过结果以归档为准。
+
+2598 个输入静态与浏览器前后无漂移，source SHA `0bb0bfd5d419910e9682ba99288b5e07d4a08a967100bcf89ea2ca65d0444441`；三目标 buildId `e18cfb74-27a0-40b3-8d5e-b202ee04bfc0` 一致。本批 11 个源码文件、基线差异、验证脚本/日志、输入/产物、独立审查与截图归档于 [web-mcp-pricing-search-compat-2026-10-24](/home/cina/.codex/visualizations/2026/10/15/01a13d58-e8f9-71f2-8d5c-34e63089f768/web-mcp-pricing-search-compat-2026-10-24)。Browser plugin not available，使用安装的 Playwright/Chrome、本地生产预览、模拟 API 与 Console 身份；所有写入仅发生于测试夹具。未验证真实 Admin/CinaAuth/MCP/数据库、跨浏览器或在途 RPC 身份切换；完整 102 主任务、45 路由组、55 矩阵行及 211 勾选项（55 完成/156 待办）保持，未提交、推送或部署。
+
+**2026-10-24 续批：MCP 定义对照与审核快照复核（ADM-28）**
+
+目录卡片与接受变更确认弹窗复用当前/待发布定义对照。标题与说明独立读取顶层自有字符串字段，区分未提供、空白和无效格式；保持 React 转义并在截断前脱敏，折叠预览最多 160 个 Unicode 字符、两行，展开最多 8192 个 Unicode 字符，超出部分明确提示显示截断。两字段独立展开，控件使用唯一 aria-controls、aria-expanded；定义引用或角色标签变更时持久清空展开状态，返回旧内容不恢复旧展开。短内容无硬截行，移动端长无空格文本可换行。四语齐备，原有价格和目录筛选能力保留。
+
+待发布文本不再只藏在 JSON 内；相同说明并不等于相同定义，页面明确要求同时核对两份 JSON。JSON 继续按原有边界延迟脱敏展示。确认弹窗直接呈现本次选择的快照，桌面两栏、窄屏单栏并可滚动。仅 changed、存在 pendingDefinition 且未移除条目提供接受入口。提交前沿用已绑定身份的最新详情请求，额外核对 id/serverId/kind/upstreamKey/exposedName/status 与完整 current/pending 定义，任一相关变化均要求刷新复核；无关 syncedAt 不阻止提交。比较采用完整 JSON 序列化的保守匹配，可能要求复核键顺序变化，不把预览文字或引用相等当成业务内容相等。
+
+新增 14 项回归测试，完整 Web **2193/2193（无跳过）**，Web/Edge 类型、完整 lint、**420 文件**格式及三目标构建通过。同一生产构建 Chrome **28/28**，具体交互、失败修正及逐图复核以归档 browser-results、visual-review、源码审查为准；共 20 张截图，覆盖桌面、四语窄屏与确认弹窗。路由身份、非空、错误层、控制台、交互与截图六类验收通过，模拟 503 的预期资源错误单独记录。原有 use-mcp-admin Hook 依赖 warning 保留，lint 为零错误。Browser plugin not available，使用安装的 Playwright/Chrome、本地生产预览与模拟 API；原文/秘密夹具只用于本地断言，未调用真实写入端点。
+
+验证历史：初次集成遗漏三组 typed 字典展开，在采集输入前修正并保留旧快照；首轮静态发现弹窗 children 类型与 Base UI 不一致，以及旧价格测试误收集新增说明 dd，均修复后重跑六项通过，原失败记录保留。首轮浏览器 28 项通过，视觉复核发现手机待发布截图未带入底部按钮，仅调整取景及控件边界断言后重跑 28 项通过，产品源码未再变化。
+
+2603 个输入在静态与浏览器验证前后无漂移，source SHA `5df48c2acee3ad707381346f4785e87f88d61980862e4cb1c3bf1c99225c1239`；三目标 buildId `fea9bf48-87fa-4185-85d5-4a5cc137c491` 一致。本批 12 个源码文件、基线差异、验证脚本/日志、输入/产物、审查与截图归档于 [web-mcp-definition-review-compat-2026-10-24](/home/cina/.codex/visualizations/2026/10/15/01a13d58-e8f9-71f2-8d5c-34e63089f768/web-mcp-definition-review-compat-2026-10-24)。预检 GET 与接受 POST 之间仍存在竞争窗口，后端端点尚无版本条件原子提交，本轮不宣称消除此窗口；真实 Admin/CinaAuth/MCP/数据库与跨浏览器仍未验证。完整 102 主任务、45 路由组、55 矩阵行、211 勾选项（55 完成/156 待办）保持，未提交、推送或部署。
+
+**2026-10-24 续批：MCP 客户端诊断与操作结果更新（ADM-28）**
+
+只读客户端增加统一诊断区：显示实际 HTTP 状态（未收到响应时明确标识）、耗时、浏览器暴露且白名单允许的响应头，以及完整读取后生成的脱敏正文。JSON 美化显示；普通文本与 HTML 通过 React 转义显示；空正文、无法安全显示和截断分别提供四语提示。正文显示最多 262144 个 Unicode 字符，允许响应头单值最多 2048 字符；复制仅使用当前显示的脱敏正文，截断时不复制隐藏尾部，未完整读取或无法安全展示时禁用复制。重复复制以最后一次操作决定反馈，身份、请求或组件失效后旧复制回调不能覆盖新结果。经过校验的完整目录仍支持分组、搜索及分页，显示上限不减少已解析条目。
+
+传输保持原有字节、节点、深度及条目限制。先完成读取、严格 UTF-8 解码和脱敏，再生成可显示正文；读取失败、超限、中止或超时均丢弃局部正文，只保留已收到的 HTTP 元数据。白名单排除认证、Cookie、会话和任意扩展响应头；原始 Gateway secret、JSON 敏感字段、转义或编码回显在截断前处理，无法可靠展示的 JSON 片段不输出。HTTP 错误、JSON-RPC 错误、协议不匹配、网络失败与超时分别提示，HTTP 错误中的看似有效目录不能显示为成功。保留原有身份和 generation 校验、取消/迟到清理、凭据不随 Cookie 发送及重定向拒绝策略。
+
+再次发起连接测试或同步立即清除旧测试/同步摘要。同步失败关闭确认弹窗，执行只读刷新以显示最近尝试时间与错误标识；刷新失败明确显示读取失败，不恢复旧成功提示。后端可能已写入同步失败状态，400/502 等未知写入结果仍保持恢复锁，只读刷新不视为操作成功、不解除锁且不重放写入。连接测试不触发无关目录刷新。本轮未修改后端写入语义。
+
+完整 Web **2216/2216（无跳过）**，Web/Edge 类型、完整 lint、**427 文件**格式及三目标构建通过。生产构建 Chrome **28/28**，覆盖成功、401/403/429/502、RPC 错误、空/错误 ID/畸形 JSON、UTF-8 失败、显示上限和完整目录搜索、复制失败/乱序、取消、真实 30 秒超时、网络失败、身份与输入变更、同步及连接测试失败。桌面 1440×1000、四语手机 390×844 和暗色共 15 张截图逐张复核；页面身份、非空、无框架错误层、控制台、交互及截图检查通过，故意注入的资源错误单独记录。原有 use-mcp-admin Hook 依赖 warning 保留，lint 零错误。Browser plugin not available，使用已安装 Playwright/Chrome、本地生产预览及合成 Admin/MCP 接口；没有真实密钥或真实写入。
+
+验证前的独立审查修正了测试密钥前缀和 disabled 属性断言（避免把 Tailwind 类名当作禁用属性），并修正复制乱序反馈和截断提示精度。保留共享锁等待时的取消记录与类型检查刚启动后的中断记录；首轮静态中单测和构建通过，但 lint 检出 effect 内同步 setState 和正则多余转义，修复后重新执行全部六项；首轮日志保留。首轮浏览器 28 项通过，截图复核后仅调整两张操作失败截图取景，并增加错误/恢复提示及服务器卡片可见边界断言，使用同一构建再次验收；最终验证历史以原始日志为准。
+
+2610 个输入在静态与浏览器验证前后无漂移，source SHA `ba72967a7b984c0a62bfd7fcf5c6c11d3fabcdd451d2ce9cd363ecee5ffb1fc8`；三目标 buildId `7d1b9632-5ae4-42a8-976f-55a58fee95ce` 一致。本批 14 个源码文件、基线差异、完整输入/产物、脚本/日志、审查和截图归档于 [web-mcp-diagnostics-compat-2026-10-24](/home/cina/.codex/visualizations/2026/10/15/01a13d58-e8f9-71f2-8d5c-34e63089f768/web-mcp-diagnostics-compat-2026-10-24)。浏览器验证使用受控接口，真实 Admin/CinaAuth/MCP/数据库与跨浏览器仍未验证。完整 102 主任务、45 路由组、55 矩阵行、211 勾选项（55 完成/156 待办）保持，未提交、推送或部署。
+
+**2026-11-11 续批：供应商／模型保存恢复与目录链接（本地验收通过）**
+
+供应商编辑器在服务端明确拒绝且本地写入标记成功结算后保留非敏感字段，提供显式继续编辑入口；重新输入凭据并复核端点后才能再次提交。未知结果或权限失效沿用关闭、清理与领域写保护。非编辑操作的错误在弹窗关闭后显示于页面，发起下一操作时清除旧成功提示。凭据复制改为单一反馈状态与请求代次，清除、重新揭示或卸载后忽略迟到反馈。
+
+目录合同保留可选安全 HTTPS 官网、API Key 控制台和邀请链接；导入链接位于复选框标签之外，详情和编辑器复用相同链接组件，四语言文案齐备。编辑器辅助目录读取的普通故障仅降级链接，401/403 仍撤销访问；链接优先级与 sponsored/noopener/noreferrer 语义沿用旧页面。
+
+模型创建、编辑与路由页嵌入的共享模型编辑器增加同样的显式继续编辑入口，保留表单与价格草稿。恢复资格由最近一次实际编辑写入标记、明确拒绝错误类型及领域 ready 状态共同决定，不依赖外部入口是否使用内部 modal 状态；非编辑操作、权限失效、未知结果及存储故障不提供恢复入口。恢复仅清除错误反馈，不触发网络请求、不重放写入或自动更新 expected_route_policy；再次保存仍使用原有乐观并发前置条件，策略冲突继续要求刷新核对。新操作同步清除旧成功提示。
+
+后续核对补齐恢复提示：普通 ID／字段冲突提示核对并解决冲突；模型策略变更和缺失原始前置条件继续要求关闭旧草稿、显式重新读取并核对，不提供原地继续编辑。外层恢复面板区分“编辑器仍打开”与真实写入执行中，按钮的占用保护保持不变；存储故障与实际在途写入仍优先显示各自状态。新增四语言和状态优先级 UI 回归测试，完整 Web 测试数为 2231。
+
+验证历史：首轮 2226 项单测中 2219 通过、7 项目录链接测试失败，Web 类型失败，Edge 类型、lint、432 文件格式及三目标构建通过。修正文案字典类型推断、正常 `#/api-key` 路由与凭据片段的区分后，第二轮六项静态全部通过（2226/2226、无跳过），source SHA ae484b41468cab55278a61305521bf27b1e64213f391a7f896071bac10c9580d，buildId 06bb76d2-6dd9-4de1-9647-ad319466c985。首轮浏览器的 403 夹具同时返回拒绝与重新确认管理员有效，已拆分验证真实失效和重新确认有效两种情况；源码另移除多余的 ref 清理自增，继续由存活标记屏蔽卸载后的复制反馈。
+
+第三轮候选六项静态再次通过（2226/2226），source SHA dacbd5663891a5a963003a0eba61ae6cd8ac0c0db976155a1763058391b6c990，三目标 buildId fdab2058-7489-4d95-9344-ce10e042775b。修正隐藏 option 定位及“入口必须禁用”的错误测试假设后，同构建 24/24 浏览器通过，验证了未知模型写入跨关闭、刷新、重新打开仍锁定，未重放写入。视觉复核发现普通冲突文案与继续编辑入口、父级忙碌提示与实际状态不一致，已按前段修正，并补充策略冲突／缺失前置条件必须显式重新读取的完整流程。此前 17 文件候选仅保留为历史记录，原始失败、脚本修正和通过记录均保留。
+
+最终 21 文件版本重新完成全部六项检查：Web／Edge 类型通过，2231/2231 单测通过（0 失败、0 跳过），lint 无错误且保留 MCP 文件既有 1 条依赖警告，439 文件格式检查与三目标生产构建通过。2615 个构建输入在静态与浏览器验证前后无漂移，source SHA `34a9ef98ca6bcc7ff8ed4eafe9683b7506eadd9a8feb16abd464bfc4c19628f0`，三目标 buildId 均为 `05cff808-ee9d-4730-8c84-1bbdc7467a3e`。
+
+同一最终构建浏览器 24/24 通过，控制台／页面错误为 0；覆盖供应商创建／编辑／复制的明确拒绝恢复、删除冲突、复制反馈竞态、可选目录故障与安全外链、模型价格草稿、策略 409／428 后显式重新读取、路由页嵌入编辑器及未知结果跨刷新写保护。15 张截图全部直接目视复核，页面身份、非空内容、遮罩关闭、交互边界及横向溢出检查通过。环境为 Chrome 155.0.8059.39、1440×1000／390×844、en／zh／ja／ko 与韩语暗色；Browser plugin not available，使用 Playwright。生产预览 `http://127.0.0.1:37567` 已停止；接口与已验证 Console 身份均为受控模拟。
+
+21 个源码文件、基线补丁、完整输入与产物、审查、脚本、历史日志和截图归档于 [web-provider-recovery-2026-11-11](/home/cina/.codex/visualizations/2026/10/15/01a13d58-e8f9-71f2-8d5c-34e63089f768/web-provider-recovery-2026-11-11)，状态为 local-validation-complete。真实 Admin／CinaAuth／数据库、其他浏览器及部署仍未验证；原完整 102 主任务、45 路由组、55 矩阵行与 211 勾选项（55 完成／156 待办）保持，完整目标尚未完成，未提交、推送或部署。
+
+**2026-11-11 续批：Endpoints 草稿恢复与操作错误反馈（本地验收通过）**
+
+核对当前共享 Endpoints Screen、Web 领域传输与 Admin 服务后确认：原实现会在所有写入失败时关闭弹窗并丢失保存草稿，页面不保留 mutation 错误，各弹窗也一律显示“结果未知”。本批在实际 `AdminDomainWriteError(rejected)` 且原写入标记成功结算后保留编辑器；仅字段 400／413／422 与新建入口 409 重复组合允许显式继续编辑。已有入口 409、404／405／412／428 或带服务端错误码的前置失败不提供原地恢复，要求显式重新读取；权限失效、未知结果、主体或存储失败关闭旧草稿并保持相应保护。继续编辑只清理错误状态，不发请求、不重放或自动更新基线。
+
+共享写入反馈区分明确拒绝、未知结果、主体及存储不可用；创建／编辑、详情、发布／删除确认、DeepSeek 初始化与页面采用同一解释。弹窗关闭后页面保留具体错误，新操作清除旧成功提示；网络不可验证时不再一律声称权限失效。四语言同步，移除所改状态操作处的嵌套三元表达式。纯逻辑回归覆盖拒绝类型、创建／编辑冲突差异、前置码以及未知／存储／权限解释；浏览器计划覆盖 22 场景，包括结构化价格与证据草稿、显式重试、刷新后的未知锁、失败的标记结算、发布／删除／关联／初始化及手机四语／暗色。
+
+相邻 Routes 工作台的只读核对另发现同类待办：统一 catch 会关闭 panel 并清理 selected/action，而 mutation 错误仅在这些 panel 内展示；连续内联操作也未在 queue 时清除旧成功提示。已按 P5-03／P5-10 保存当前两文件指纹与下一步合同核对要求；此为独立副本实施前的历史发现；后续主工作区应用和浏览器验收见文末。后续必须区分 route／pool／sticky 与 model authority，保留模型策略前置条件和未知锁，不能把本批 Endpoints 证据用于该域。 进一步核对确认实际 `RouteWriteTarget` 为 routes／model ID／sticky pool ID 三类；`revoke` 会在分类错误前调用父级 `clearDrafts`，因此仅保留 panel 并不能保留策略表单。模型保存须继续提交打开时原始 `expected_route_policy`；普通 route／pool 字段拒绝为 400，资源缺失为 404，恢复与重新读取须按原 authority 分别验证。
+
+12 文件源码、基线、完整输入／产物及验证记录归档于 [web-endpoint-recovery-2026-11-11](/home/cina/.codex/visualizations/2026/10/15/01a13d58-e8f9-71f2-8d5c-34e63089f768/web-endpoint-recovery-2026-11-11)。首版 2617 输入的 source SHA `2933cc51d7ab58b66e9c96be9940168f2d8cfb09689ea6fa5d4129d63e5ed338` 六项静态检查通过：2234/2234 单测（0 失败／跳过）、Web／Edge 类型、lint 0 错误（既有 MCP 依赖警告 1 条）、449 文件格式与三目标 buildId `da7d11c7-8744-4925-b1ce-1c0108cbfa9e`。首项浏览器因测试夹具遗漏必填 USD 币种而被严格 DTO 拒绝，未通过；已保留原始脚本、日志、源码、产物及失败图，修正币种／完整价格并在启动浏览器前校验真实 DTO。失败图另揭示真实问题：读取撤销后仍显示“加载中”；已在页面加入 hidden 状态门控，新增读取失败不显示加载及显式刷新恢复的回归场景。读取加载提示修正后的第二版 source SHA 为 `b44b5c34d539ebcf65ca819e58b2c980a4fcbd19bf0ac9bb85134a4a2123e5d4`，六项静态再次通过（2234/2234、449 文件格式、三目标 buildId `f588a57c-2951-410f-bc6f-75dde39d5e72`）；浏览器前六个流程通过，第七项揭示真实传输缺口：Cookie transport 未保留已定义的控制台前置条件码，导致 400 前置失败被当作普通字段错误提供继续编辑。已在公开错误码白名单补齐 `invalid_console_subject_precondition`、`console_subject_required`、`console_subject_mismatch` 和 `invalid_admin_resource_id`，仍丢弃任意未知错误码及额外字段；增加实际 Cookie transport 回归覆盖四码／状态、隐私投影和不重试。两轮原始失败、源码、日志与产物均保留。最终候选为 12 文件、2617 输入，source SHA `9fded6f0924687d890f1d2f5f17076bcd404689f7662aa84e6e887c18ab5d0e4`。完整六项重新通过：Web／Edge 类型、2235/2235 单测（0 失败／跳过）、lint 0 错误且保留既有 MCP 依赖警告 1 条、451 文件格式与三目标生产构建；三目标 buildId `723101f7-1ce4-4643-9f03-394f6d9664f5` 一致，静态与浏览器前后输入无漂移。最终源码首轮浏览器 18 项通过后，因在途测试仍按旧 Save 文案定位而失败；仅修正临时脚本为实际 Saving 文案，用同一构建再验 22/22 全部通过，不重复静态检查或更换源码。所有失败与对应脚本记录保留。
+
+最终 Chrome 155.0.8059.39／Playwright 覆盖 en 桌面 1440×1000、zh／ja／ko 手机 390×844及韩语暗色；22 项均通过，应用／页面错误为 0，页面身份、非空、无框架遮罩、交互、横向溢出与 12 张截图直接目视核对通过。受控 API 和模拟已验证 Console 身份，生产预览 `http://127.0.0.1:36761` 已停止；Browser plugin not available。归档状态为 local-validation-complete。按用户选择未发送跨聊天协调消息。真实身份、数据库、Proxy、其他浏览器和部署仍待验。完整 102 主任务、45 路由组、55 矩阵行与 211 勾选项（55 完成／156 待办）保持，未提交、推送或部署。
+
+**2026-11-11 续批：Routes 保存恢复与操作错误反馈（独立副本历史候选；主工作区进展见文末）**
+
+为保持已排队的 Endpoints 验证候选冻结，在 `/tmp/cinatoken-route-recovery-worktree-20261111` 创建 `codex/web-route-recovery-20261111` 工作副本，以主工作区 2617 个输入逐字节同步并核对相同基线指纹。外部依赖复用现有安装，工作区包链接指向该副本，未修改原 node_modules。仅在副本修改 10 个 Routes 文件，当前候选 2618 输入的 source SHA 为 `692b1c72944937b3ac97892c798229d6b3f14c255d6b44050ac9fa34388b1c29`；创建时主工作区为 `2933cc51d7ab58b66e9c96be9940168f2d8cfb09689ea6fa5d4129d63e5ed338`。随后 Endpoints 修正读取失败的加载提示，主工作区变为 `b44b5c34d539ebcf65ca819e58b2c980a4fcbd19bf0ac9bb85134a4a2123e5d4`；本轮副本静态检查仍对应原基线；随后控制台前置错误码传输又修正 `api.ts`／`api.test.ts`，主工作区变为 `9fded6f0924687d890f1d2f5f17076bcd404689f7662aa84e6e887c18ab5d0e4`。应用 Routes 前须同步这三个非 Routes 文件并重验，不能沿用旧副本的 2237 结论证明新主工作区；新增三个 Routes 单测后，最新主工作区预期为 2238。
+
+新增可保留编辑 panel 的操作标记，实际明确拒绝后由原 routes／models authority 成功结算标记，再保留普通目标、池策略、Sticky 配置或模型策略草稿及父级 pool；其他结果继续清理草稿和取消请求。仅无服务端前置码的 400／413／422 允许显式继续编辑；409／404／412／428、模型策略冲突或缺少原始前置条件必须关闭旧草稿并显式重新读取。继续编辑仅重置错误反馈，不发网络请求、不重放、不改变打开时捕获的 `expected_route_policy`。删除、状态和 Sticky 清除／重置不保留旧确认，关闭后由页面显示具体错误；新的实际排队操作清除旧成功提示。
+
+四个编辑弹窗与页面复用写入反馈，区分拒绝、未知、权限和存储故障；错误与继续编辑入口放在操作区，四语言同步。模型策略弹窗增加有界滚动，所改标题移除嵌套三元。新增三项纯逻辑回归，源码审查及 scoped diff 检查通过；原基线候选六项静态检查通过：Web／Edge 类型、2237/2237 单测（0 失败／跳过）、lint 0 错误且保留既有 MCP 依赖警告 1 条、456 文件格式及三目标构建；2618 个输入前后无漂移，三目标 buildId `4be79ba3-c3be-4467-aa30-b5842e783c30`，source SHA `692b1c72944937b3ac97892c798229d6b3f14c255d6b44050ac9fa34388b1c29`。该静态结果仅属于副本原基线；同步主工作区 Endpoints 加载提示修正及浏览器流程仍须实际验证。场景要求覆盖三类 authority、四编辑器、保留价格／自定义参数、策略前置条件、未知锁跨刷新、标记结算失败、权限／主体、连续 Sticky 操作与四语手机／暗色。
+
+10 文件基线、可审查补丁、冻结输入清单、审查、依赖链接和验证会话记录归档于 [web-routes-recovery-2026-11-11](/home/cina/.codex/visualizations/2026/10/15/01a13d58-e8f9-71f2-8d5c-34e63089f768/web-routes-recovery-2026-11-11)，状态为 candidate-static-validation-complete。须先完成主工作区 Endpoints 验收，再核对基线并仅应用这 10 个 Routes 文件，最后验证实际主工作区与同一产物；若主工作区输入变化，先同步重审并重新验证，不沿用旧候选证明。尚未合入、提交、推送、部署或通过真实 Admin／CinaAuth／数据库／Proxy／平台验收。完整 102 主任务、45 路由组、55 矩阵行及 211 勾选项（55 完成／156 待办）保持。
+
 ## 6. 更新记录
 
 | 日期 | 更新内容 | 对应范围 | 验证与下一步 |
@@ -2889,3 +3360,144 @@ Windows Chrome在同一最终源码的本机编译HTTP产物和f9 Linux冻结编
 2026-10-07：5.97本地8源文件完成共享页脚归属及pageshow/未知Cookie恢复边界；private5/public11、最终format/lint/build0、compiled15及focused4通过。较早完整1628时点另记，生产before2PASS/4FAIL、latefavicon2缺证和首observer失败保留；候选提交/CI/部署继续，102/211/54/G/E原状态保持。
 
 2026-10-07：5.97最终1d776d6b按Linux CI37585679508/1628/37steps/2304exactGit发布到独立Web100%（5b6499d7/f6ce2c9f）；171资产/35server/7源码，前后Route/绑定/原AdminProxy核对0。生产匿名Chrome2/2，HTTP18/19 actual1、source30s 3546112/4263077B失败；focused计数纠正266/264、所有原失败及完整102/211/54/G/E范围保持。
+
+2026-10-16：推进合并后功能/API兼容（5.98）。账户双额度、Playground、集成密钥、用户管理钱包、Simulator六协议/异步任务、MCP导航与日志筛选已接入；最终本地1690Web/16后端/本批27浏览器通过，类型/lint/format/build通过。MCP完整Web管理仍待接入，全部原门槛不提前完成，未提交/推送/部署新候选。
+
+2026-10-18：合并兼容续批补齐 Models 官方目录同步、Provider 类型/同步/旧类型迁移与显式额度；补批次 sync ACK 与可能部分应用提示，修复共享 UI 编译边界（P5、5.98）。Web1803、后端75、最新生产 Chrome20及 types/lint/format/build通过；本地未提交，真实服务/身份/数据库与发布/全量门槛继续待验收。
+
+2026-10-18：5.98续批补齐用户模型/分组倍率、已保存价格预览及全局multiply/min固定键CAS。最终Web1830/Admin95/Core41、Chrome27和types/lint/209格式/build通过；未知锁跨刷新/取消/代次核对、旧接口及四语手机复验，原失败递归保留。当前路由45/矩阵55已补MCP编号，102主任务/原验收状态保持；本地未提交，用户分析钱包/Key下钻与ingress_host等下一缺口继续。
+
+2026-10-18：5.98续批补齐用户分析钱包/精确Key下钻及入口Host筛选；上一固定切片Web1846/Admin22/Core30、Chrome46与233格式/build通过，证据独立保留。
+
+2026-10-18：5.98本续批接入请求日志及工具/MCP记录收费分配、字面模型前缀和精确ACK、可恢复非法筛选。最终Web1861/Admin26/Core37、Chrome53和隔离原生PG15通过，types/lint/241格式/build0，2474输入及三目标合同绑定；初始类型/配置、浏览器定位器和PG元数据失败原样保留。真实身份/账本/完整数据库与部署门槛继续，102主任务/45路由/55矩阵及原勾选状态保持，本地未提交。
+
+2026-10-18：5.98续批补齐账户活动/Generation列表快照与管理员用户最近请求收费分配；独立opt-in JSON及版本化CSV保留旧合同，Core纯序列化/微单位逻辑复用，高额差值须往返保真，后台失败清除旧详情。最终Web1872/Admin33/Core30、Chrome54、三处types/完整lint/251格式及build通过，2480输入和三目标合同一致；初始跨包/类型及3轮QA脚本失败完整保留。本地未提交/推送/部署，102/45/55及原勾选状态保持，下一钱包幂等加额需先补可核验回执。
+
+2026-10-18：5.98续批接入钱包按订单引用加额、严格v1回执、精确查询及持久未知结果恢复，旧余额修正与旧POST/current字段兼容。完整Web1892/Admin9/Core54、隔离原生PG9及Chrome20通过，四处types/lint/261格式/build等13组有效检查全0，2495输入/三目标合同一致。早期类型/错误包装/夹具权限/格式选项及浏览器定位/等待失败保留；native MySQL/远端D1与真实身份/财务/部署仍待验收。102/45/55及211原勾选状态保持，本地未提交/推送/部署，下一首事件超时配置两键继续。
+
+2026-10-23：5.98续批补齐流式首段数据超时/路由组两键的安全投影、主体绑定CAS、四语Web及可持久核对的未知写状态。最终Web1904/Admin26/Core20/Proxy13、Chrome20及五处types/完整Web lint/270格式/build通过，2506输入和三目标合同一致。修复首次编辑RHF有效性订阅、核对失败编辑锁与大小写旧版本；初始lint及两轮浏览器失败保留。真实数据库/身份/Proxy与发布仍待验收，102/45/55和211原勾选状态保持，本批未提交/推送/部署；下一模型/供应商分析的流式TPS与请求级故障转移指标继续。
+
+2026-10-23：5.98续批补齐模型/供应商流式速度与请求级转移指标，兼容旧实例、用户/Key模型下钻、双向未知值置后排序和32列追加CSV。最终Web1917、Chrome22、Web/Edge types/完整lint/287格式及三目标build全0，2510输入与合同一致。截图后修复主表说明随水平滚动移出视口，首轮1917/22及三份旧源码保留；真实身份/数据库/供应商与发布未验收，102/45/55和211原勾选保持。本批未提交/推送/部署；下一工具调用“全部来源”与provider_ids日志下钻继续。
+
+2026-10-23：5.98续批恢复模型/供应商多行明细并发、独立重试、全部收起和身份/筛选失效隔离，修复日文手机明细名称列过窄。最终Web1998、Chrome48、Web/Edge类型/完整lint/322格式及三目标构建通过；首次lint、浏览器辅助等待失败与初版视觉问题均保留。15源码/2539输入精确绑定并归档，真实服务/数据库/身份与发布继续，原102/45/55/211范围和勾选保持。
+
+2026-10-23：5.98续批恢复用户分析四视图、本地搜索/六项精确汇总、多用户与多Key明细对比、独立重试和父子失效隔离，保留20列CSV及钱包/精确账号口径。最终Web2020、Chrome34、types/完整lint/333格式/三目标构建通过，2550输入与合同绑定；首轮类型/SSR断言/lint问题保留，真实身份/服务/数据库和发布仍待验，102/45/55/211原范围及勾选不变。
+
+2026-10-23：5.98续批补齐仪表盘四趋势/业务时间范围/用量与可靠性精确汇总、故障转移兼容、供应商目录及错误日志下钻。最终Web2045、Chrome40、types/完整lint/363格式/三目标构建通过，2559输入一致，30张最终截图目视通过；首轮lint/浏览器及旧布局问题完整保留。真实身份/服务/数据库和发布继续待验，102/45/55/211原范围及勾选不变，未提交/推送/部署。
+
+2026-10-23：5.98续批统一全局/用户最近审计，补齐钱包前后快照与精确微单位摘要、完整字段/脱敏详情及焦点管理。Web2063/Chrome24、types/完整lint/372格式/三目标构建通过，2566输入与合同绑定，20张最终截图复核。29列预算CSV兼容保持；通用JSON数值精度、真实身份/服务/数据库及发布继续，102/45/55/211原范围及勾选不变，本批未提交/推送/部署。
+
+2026-10-23：5.98续批完成用户/全局Key业务时区、配置独立降级及刷新恢复，币种未知保留周期/重置时间。Web2080/Chrome43、types/完整lint/387格式/三目标构建通过，2573输入绑定，27张截图复核；真实身份/服务/数据库及发布继续，102/45/55/211原范围和勾选不变，未提交/推送/部署。
+
+2026-10-23：5.98续批补齐全局/用户密钥最后使用三态与旧接口兼容，创建时间独立展示。Web2097/Chrome26、types/完整lint/392格式/三目标构建通过，2577输入绑定，15张截图复核；真实身份/服务/数据库与发布继续，102/45/55/211原范围及勾选不变，未提交/推送/部署。
+
+2026-10-23：5.98续批保留通用日志JSON数字词法、审计精确/类型差异及MCP摘要，展示与复制沿用脱敏。Web2117/Chrome23、types/完整lint/397格式/三目标构建通过，2581输入绑定，21张截图复核；预算DTO/CSV不变，真实身份/服务/数据库与发布继续，102/45/55/211原范围及勾选不变，未提交/推送/部署。
+
+2026-10-23：5.98续批补齐集成密钥业务时区/UTC回退及刷新状态兼容；Web2122/Chrome28、类型/完整lint/400格式/三目标构建通过，2583输入绑定、7张截图复核。配置读取不阻断成功写后列表刷新，不解除未知写锁；102/45/55/211原范围及勾选不变，真实联调/发布继续，未提交/推送/部署。
+
+2026-10-23：5.98续批补齐 MCP 概览、筛选计数、脱敏 URL 搜索和全局调用入口；Web2132/Chrome22、类型/完整lint/404格式/三目标构建通过，2587输入绑定、10张截图复核。刷新/失败与旧身份响应不复用旧统计，102/45/55/211原范围及勾选不变，真实联调/发布继续，未提交/推送/部署。
+
+2026-10-24：5.98续批补齐 MCP 当前类型新条目跨页启用及客户端搜索/逐项说明/JSON/50条分页，保留精确确认与未知写锁。Web2146/Chrome26、类型/完整lint/408格式/三目标构建通过，2591输入绑定、16张截图复核；102/45/55/211范围及勾选不变，真实联调/发布继续，未提交/推送/部署。
+
+2026-10-24：5.98续批补齐 MCP 最近同步尝试时间、ISO/SQL 兼容、四语业务时区及独立配置降级，保留身份隔离与未知写锁。Web2163/Chrome29、类型/完整lint/412格式/三目标构建通过，2595输入绑定、14张截图复核；102/45/55/211范围及勾选不变，真实联调/发布继续，未提交/推送/部署。
+
+2026-10-24：5.98续批补齐 MCP 三价/请求单位/低于计量提示，以及完整脱敏目录检索、匹配数/空态/清除筛选。Web2179/Chrome24、类型/完整lint/415格式/三目标构建通过，2598输入绑定、17张截图复核；102/45/55/211范围及勾选保持，真实联调/发布继续，未提交/推送/部署。
+
+2026-10-24：5.98续批补齐 MCP 当前/待发布文本对照、长文本展开与审核快照复核。Web2193/Chrome28、类型/完整lint/420格式/三目标构建通过，2603输入绑定、20张截图复核；102/45/55/211范围及勾选保持，真实联调/发布继续，未提交/推送/部署。
+
+2026-10-24：5.98续批补齐 MCP 客户端诊断与脱敏复制、同步失败状态刷新及旧测试结果清理。Web2216/Chrome28、类型/完整lint/427格式/三目标构建通过，2610输入绑定、15张截图复核；102/45/55/211范围及勾选保持，真实联调/发布继续，未提交/推送/部署。
+
+
+### Routes 主工作区恢复验收（2026-11-11）
+
+已同步 Endpoints 验收后的 `AdminEndpoints.tsx`、`api.ts` 和 `api.test.ts`，核对基线后将独立 Routes 候选的 10 个文件应用主工作区。随后补上共享恢复组件的可选资源标识及四语 SSR 回归：路由和模型同时存在未知结果时，以独立可见标题、可访问命名区域和弹窗标题区分两个恢复入口。既有单域调用保持兼容。最终共 12 个选定源文件，2618 个输入绑定 source SHA `0c796a2e672309fe28bf78a8904b2e694bd34f17329b59a9ab741ce9a4690d73`；buildId `0aebd493-6edc-4d70-a589-aca1c5e45d55` 在浏览器、Node 与 Worker 产物中一致。
+
+可修复的明确字段拒绝保留路由目标、Pool 策略、模型策略和 Sticky 配置草稿；继续编辑只重置反馈，不发请求、不重放或更新打开时的原始模型策略基线。状态／模型策略版本冲突仍要求关闭并显式重新读取；未知写、权限／主体变化及存储故障保留相应保护。删除、启停、Sticky 清除／重置关闭弹窗后仍显示错误，新操作清除旧成功提示。两个域的未知锁经刷新仍分别保留，手动核对只解除被选中的域，不重放写入。
+
+完整六项检查通过：Web／Edge 类型、Web 2239/2239 单测（0 失败／跳过）、lint 0 错误（既有 MCP 依赖警告 1 条）、458 文件格式及三目标生产构建。最终同构建 Chrome 155.0.8059.39 浏览器 32/32 全部通过，相关页面异常 0；桌面 1440×1000 英文、390×844 中／日／韩手机及韩文暗色共 15 张截图逐张直接检查。恢复后的截图含重新读取期间的临时禁用，脚本另核对解锁后可用。模拟身份／同源接口，Browser plugin not available，使用 Playwright；预览 `http://127.0.0.1:42583` 已停止。
+
+原主工作区运行通过类型和 2238 单测后，因新增资源标识而停止（session 13213，exit 143），随后重跑完整六项（session 81484，exit 0）。五轮临时浏览器脚本失败分别涉及原生标签匹配、未知结果后缺少显式刷新、辅助权限就绪判断、中文标签前缀歧义和文本域内容；均保留原始脚本、请求、DOM／截图及构建绑定，未以历史局部结果代替最终验收。仅修正临时脚本，产品源码未再变动；最终全量运行 session 5272、exit 0。独立静态快照见 [web-routes-primary-static-2026-11-11](/home/cina/.codex/visualizations/2026/10/15/01a13d58-e8f9-71f2-8d5c-34e63089f768/web-routes-primary-static-2026-11-11)，完整最终证据见 [web-routes-primary-recovery-2026-11-11](/home/cina/.codex/visualizations/2026/10/15/01a13d58-e8f9-71f2-8d5c-34e63089f768/web-routes-primary-recovery-2026-11-11)。
+
+没有提交、推送、部署或跨聊天发送消息。完整范围仍为 102 主任务、45 路由组、55 矩阵行、211 个检查项（55 已勾选、156 待验）；真实身份、数据库、Proxy、审计和双平台发布仍待验收，本续批不将整域或完整目标标为完成。
+
+
+### Data Policies 保存恢复（2026-11-11）
+
+从已验收 Routes 的主工作区 source SHA `0c796a2e672309fe28bf78a8904b2e694bd34f17329b59a9ab741ce9a4690d73` 核对现有两阶段确认、Cookie transport 与 Admin PUT 指纹前置合同后，确认旧确认在明确拒绝后仍可重复提交，且政策的三个安全前置码会被共享传输丢弃。现已在 10 个文件中补齐显式草稿修复、反馈和接口兼容，最终 2619 输入 source SHA `a8c76c3ec69a555d220fa34f393413391310f4849713cb11b0cd3b392417ad64`。
+
+仅实际 `AdminDomainWriteError(rejected)` 的无编码字段 400／413／422，在原领域标记成功结算且写入权限仍可用时允许继续编辑。继续编辑只清除错误并返回保留表单，不发送请求、不重放、不替换打开时的目标、主体和政策指纹。用户修正后须重新核对，才可显式再次保存；确认页与管理器均阻止直接重复提交错误确认。政策／路由／供应商冲突、404／405／412／428 和带编码的前置失败禁用旧确认，并提示关闭、刷新后新建草稿。服务器主体或政策指纹改变后，浏览器用例核对新草稿使用新读取值，旧草稿不会自动更新前置条件。
+
+共享 Cookie transport 仅新增 `invalid_data_policy_precondition`、`data_policy_precondition_required` 和 `route_data_policy_write_conflict` 白名单；仍不保留未知码、原始服务端消息或额外字段。三个错误码在通用 Cookie transport 和实际绑定 Data Policies API 的回归中验证。写入反馈区分明确拒绝、未知结果、存储不可用和主体变化；未知／存储／主体失败关闭草稿并保留适当保护，页面继续显示实际错误。新的操作清除旧成功提示。四语同步，保留天数、证据与到期时间字段使用独立的可访问名称和说明。
+
+完整六项检查通过：Web／Edge 类型、Web 2243/2243 单测（0 失败／跳过）、lint 0 错误（既有 MCP 依赖警告 1 条）、466 文件格式及三目标生产构建。浏览器、Node、Worker 产物 buildId `641cfef7-bb02-44da-9b04-d25e4457d5b4` 相同；静态与浏览器前后输入无漂移。静态 session 4706、浏览器 session 37908 均 exit 0，26 场景首轮全部通过，相关页面异常 0；15 张截图逐张直接检查。环境为 Chrome 155.0.8059.39、1440×1000 英文桌面与 390×844 中／日／韩手机及韩文暗色，UTC 浏览器时区，模拟身份与同源接口。Browser plugin not available，使用 Playwright；预览 `http://127.0.0.1:33145` 已停止。
+
+浏览器覆盖已配置／未配置政策、显式空政策版本、保留完整字段与毫秒到期时间、修复后的本地证据校验、两种指纹冲突、400／428 安全前置码、Console 前置失败、404、2xx ACK／语义不符、403 与重新确认权限、主体变化前零业务写入、旧服务缺少指纹时只读、存储读取／结算失败、在途确认以及旧成功提示清理。未知写入后先显式读取目标审计，再手动核对并双重确认恢复；刷新、审计读取及审计 403 均不清除未知标记，也不重放原写入。手机确认页的日期和证据 URL 在窄列换行，内容完整、控制可达。
+
+源码／基线、补丁、完整输入／产物、检查日志、浏览器请求和截图归档于 [web-data-policy-recovery-2026-11-11](/home/cina/.codex/visualizations/2026/10/15/01a13d58-e8f9-71f2-8d5c-34e63089f768/web-data-policy-recovery-2026-11-11)。没有提交、推送、部署或跨聊天消息。完整范围保持 102 主任务、45 路由组、55 矩阵行、211 检查项（55 已勾选、156 待验）；真实身份、三数据库、Proxy、审计落库与双平台发布仍待完成，本地续批不等于整域或完整目标完成。
+
+
+### Presets 能力与保存恢复（2026-11-11）
+
+从已验收 Data Policies 的 source SHA `a8c76c3ec69a555d220fa34f393413391310f4849713cb11b0cd3b392417ad64` 核对当前 Router → AdminPolicyWorkbench → Presets 共享页面及服务端摘要合同后，在 9 个文件中补齐接口能力、保存恢复与读取反馈。最终 2621 输入 source SHA `55d740b07598373c521c1d0579ff4c87ea56e72a6623434d9038346e31562cc6`，浏览器／Node／Worker 共用 buildId `2dfe1315-1d5f-44c2-86f3-533d1ca5a24e`，静态与浏览器前后输入无漂移。旧包采用已封存的 Data Policies 产物，两个独立诊断用例实际复现 canWrite 被忽略和拒绝后旧确认仍可重复提交；旧包结果仅作为缺陷诊断，不计入修复验收。
+
+新的 listPresetsContext 显式投影服务端 canWrite，旧 listPresets 数组接口保持兼容。缺少标志时可读但不授予写能力，标志类型错误时隐藏未验证数据；显式刷新后可更新能力。只读用户可查看预设和脱敏版本摘要，元数据、状态、可见性和版本指定均服从该能力，业务请求发送前再次核对。能力丢失清除写入面板，保留版本阅读；未知结果的手动核对也必须重新读到写能力，才可解除标记。版本 404 在弹窗内反馈并可重试，不再隐藏整页；严重读取失败仍隐藏不可信状态，避免显示永久加载。
+
+仅实际 AdminDomainWriteError(rejected) 的无编码 400／413／422，在原标记成功结算且能力仍允许时提供元数据“继续编辑”。恢复原已核对的名称、描述（区分 null 与未修改）及可见性，保留原 authority row，不发请求、不重放、不改工作区／拥有者／slug 校验依据；修正后必须重新核对再显式保存。确认按钮和管理器均阻止直接重交错误确认；状态／可见性／指定版本操作、404／409 与带编码的 Console 前置失败不能作为字段修复。接口没有新增元数据版本 CAS，本次只保持既有响应范围校验。未知写入刷新后仍锁定，允许读取目标版本；双重手动确认不重放原写入。存储、结算和主体失败保留保护并移除旧草稿，新操作清除旧成功提示。四语反馈同步。
+
+最终完整六项通过：Web／Edge 类型、Web 2247/2247 单测（0 失败／跳过）、lint 0 错误（既有 MCP 依赖警告 1 条）、475 文件格式及三目标生产构建。首轮同数单测通过，但新增同步 effect 状态清理触发真实 lint 错误；该轮随后自行完成，未发送终止信号。已保留首轮源码哈希、完整日志和补丁，改为有条件的渲染期状态调整后重新运行完整检查。同源码的 session 24353 完成六项静态检查后，首个浏览器运行通过 20 个当前场景，随后直接标记断言误读 localStorage，而实际标记位于 sessionStorage；页面仍正确保留未知写锁。已封存该次脚本、请求、DOM／截图和构建绑定，仅修正临时观察点，再以 session 23023（exit 0）重跑完整浏览器验收，最终 33/33 当前包场景及相关页面异常 0，另有旧包诊断 2/2。全部 16 张当前包和 2 张旧包截图逐张直接检查。
+
+环境为 Chrome 155.0.8059.39、1440×1000 英文桌面与 390×844 中／日／韩手机（韩文暗色）、UTC 浏览器时区、模拟身份和同源接口。Browser plugin not available，使用 Playwright。当前包预览 `http://127.0.0.1:42049`、旧包预览 `http://127.0.0.1:43235` 均已停止。证据见 [web-presets-capability-recovery-2026-11-11](/home/cina/.codex/visualizations/2026/10/15/01a13d58-e8f9-71f2-8d5c-34e63089f768/web-presets-capability-recovery-2026-11-11)。等待共享锁期间仅记录 Guardrails 的后续静态疑点，没有修改该域。
+
+没有提交、推送、部署或跨聊天消息。完整范围仍为 102 主任务、45 路由组、55 矩阵行、211 检查项（55 已勾选、156 待验）；真实身份、数据库、Proxy、审计与双平台发布仍待完成，本地续批不等于完整目标完成。
+
+
+### Guardrails 绑定与详情恢复（2026-11-11）
+
+从已验收 Presets 的 source SHA 55d740b07598373c521c1d0579ff4c87ea56e72a6623434d9038346e31562cc6，核对 Router → AdminGuardrailsRoute → 共享 Guardrails 页面及 Admin 摘要、版本、绑定、条件解绑和指定版本合同后，在 7 个文件中补齐恢复与反馈。最终 2623 输入 source SHA 15746793edb3d7bc5537f68447a9f2aa0bda8e299bd7a4071811b7c0279a67d7，浏览器／Node／Worker 共用 buildId 3a921d1c-2599-421d-a399-a80687d8c45b；静态与浏览器前后输入无漂移。已封存的 Presets 旧包以三个独立诊断复现：绑定拒绝后旧确认仍可重复提交且无修复入口、详情 404 隐藏弹窗及主列表、未知写锁挡住目标详情。旧包诊断不计入修复验收。
+
+绑定修复仅接受实际 AdminDomainWriteError(rejected) 的无编码 400／413／422，并要求原标记成功结算、当前能力及原列表 authority／选中行仍有效、详情已读取且不是默认规则。恢复原目标类型和规范化 ID，不发请求、不重放、不替换工作区、拥有者或原 authority；修正后仍须重新核对绑定替换警告，才可显式保存。新表单用既有 scope schema 做本地校验，关联可访问名称与错误说明，类型选项支持四语。按钮和管理器均阻止错误确认直接重交；冲突、缺失目标、编码前置失败、归档／恢复／指定版本／解绑不走字段修复。读取能力变化或旧 authority 失效清除写草稿，业务发送前再次核对。
+
+详情非致命 404 保留弹窗、错误和 Retry，不再隐藏整个主列表；两个详情 GET 作为整体显示，缺少任一部分时不展示写控件。未知结果或存储保护下仍可读取摘要、版本与绑定，写操作继续锁定；严重／无效读取隐藏不可信状态并提供显式重新验证入口，避免永久加载。无效数据与真实 Console 主体变化分开；后者最多自动重新验证一次。反馈如实区分拒绝、未知、存储和主体失败，关闭确认后保留页面反馈，新意图清除旧错误和成功提示。手动核对仍要求新读取的写能力及两项人工确认，不重放原请求。
+
+SDK 请求格式未改：状态 PATCH 和指定版本 POST 保留 summary 与精确 ACK；绑定 PUT 仍只发送 scope_type／scope_id，检查返回范围及 ACK related_id；条件 DELETE 保留 workspace_id 和 expected_guardrail_id。当前后端的条件解绑失败为 409；浏览器另核对旧实例合法 200 removed:false 的兼容路径为已知未变更冲突，而非成功或未知。默认工作区／账户规则不可归档、显式绑定或解绑，仍可按既有规则指定版本。没有新增数据库字段或版本 CAS。
+
+最终六项检查通过：Web／Edge 类型、Web 2250/2250 单测（0 失败／跳过）、lint 0 错误（既有 MCP 依赖警告 1 条）、482 文件格式与三目标构建。当前包 Chrome 155.0.8059.39 浏览器 42/42 场景通过，相关页面异常 0；旧包诊断 3/3 复现。全部 18 张当前截图及 3 张旧包截图逐张直接检查。异常尝试目录：无；最终状态以同源码完整成功运行及构建绑定为准。
+
+浏览器覆盖用户／Gateway Key 修复、规范化及 Unicode ID、本地非法 ID、冲突与默认状态变化、前置码、四种写操作及 ACK、条件解绑、两类详情 404／严重读取／外工作区响应、只读和能力变化、写后 403、主体变化前零业务请求、存储读取／结算失败、在途确认及旧成功提示清理。未知结果场景模拟绑定已提交后返回 502：刷新和详情核对均保留原 generation，读到已提交绑定后仅双重手动确认可解锁；详情 403 或新读取的只读能力也不清除标记。两工作区同名规则及相同 scope ID 用于核对目标隔离。
+
+环境为 1440×1000 英文桌面、390×844 中／日／韩手机（韩文暗色）、UTC 浏览器时区、模拟身份及同源接口。Browser plugin not available，使用 Playwright。当前包预览 http://127.0.0.1:34483、旧包 http://127.0.0.1:44765 均已停止。证据见 [web-guardrails-recovery-2026-11-11](/home/cina/.codex/visualizations/2026/10/15/01a13d58-e8f9-71f2-8d5c-34e63089f768/web-guardrails-recovery-2026-11-11)。完整范围保持 102 主任务、45 路由组、55 矩阵行、211 检查项（55 已勾选、156 待验）；真实身份、数据库、Proxy、审计与双平台发布仍待完成。本地续批不等于整域或完整目标完成，未提交、推送、部署或发送跨聊天消息。
+
+
+### Guardrails 元数据编辑（2026-11-11）
+
+关联 NEXT-39／NEXT-14、P5-08／10／11、ADM-25。当前源码核对发现共享 Guardrails Screen 和 Web SDK 缺少后端既有名称／描述 PATCH，旧 P59 的完整能力声明不能代替当前实现证明。本批在 9 个文件中补回元数据编辑。旧 source 15746793edb3d7bc5537f68447a9f2aa0bda8e299bd7a4071811b7c0279a67d7 生产包以两个独立诊断复现普通规则无编辑入口和默认规则无描述编辑路径；诊断不计为修复验收。
+
+普通及归档规则可改名称／描述，工作区和账户默认规则名称保持只读，仅允许编辑描述。编辑器展示工作区与拥有者，提交前再显式核对变更。仅发送发生修改的字段：名称去首尾空格、非空且最多 128 字符；描述去首尾空格、最多 1024 字符，清空显式传 null。未改旧长字段不参与提交或阻碍其他字段修改；没有变更不能进入确认。四语文案、字段标签、默认约束说明、长名称换行及多行描述安全展示同步接入。
+
+新增 SDK PATCH 只接受 name／description，拒绝空或 undefined-only 及多余字段，默认规则任何名称 patch 在网络前拒绝。保留既有 summary 路径、Cookie 会话、写前主体复核和精确 update ACK；响应须保留规则／工作区／拥有者／默认身份并确认已请求字段，不投影 raw config。缺失或错误 ACK、范围或已改值不符均按未知结果保护；没有新增数据库字段、元数据 revision 或 CAS，不把未请求的状态／版本变化虚构为版本前置条件。
+
+400／413／422 无编码的真实拒绝，在原持久标记成功结算、能力和原列表 authority／行仍有效时，可恢复已核对的稀疏草稿（包括 null 清空）。恢复不读取、不写入、不更换原目标，必须重新核对再显式提交；冲突、缺失目标和编码 Console 前置失败不提供直接修复，错误确认不能重复发送。权限／主体变化丢弃旧草稿。未知结果刷新后保留同一 generation，摘要与详情仍可读，只能在新读取写能力并完成两项人工确认后解锁，不重放原 PATCH。
+
+最终 source SHA 0548cf61ad2f2c578794ef5bf18a37d1a1b6e122259c20063e018d96c376a944，2624 输入；浏览器／Node／Worker buildId 037f3cda-8584-415e-a7b4-1b2c1ae295dc。六项完整检查通过：Web／Edge 类型、2255/2255 单测（0 失败／跳过）、lint 0 错误（既有 MCP 依赖警告 1 条）、486 文件格式及三目标构建。Chrome 155.0.8059.39 在同一新构建上元数据 30/30、原 Guardrails 42/42 回归通过，共 72 场景，相关页面异常 0。旧包 2/2 诊断复现；全部 13 张当前及 2 张旧包截图逐张直接检查。原 42 场景本轮只做交互与健康断言，不另行截图。首轮六项检查和 72 场景已通过，但直接检查截图发现元数据失败复用了含对象 ID 的绑定提示；四语改成通用输入校验提示后重新执行完整六项及 72 场景，首轮源码、完整输入／产物、回执和 15 张截图原样保留。失败／修正尝试：01-before-feedback-wording，保留原始回执，以最后同源码完整成功运行与构建绑定为准。
+
+新场景覆盖普通和两类默认规则、归档规则、旧长字段、空名称、本地无变更、Unicode／引号／多行、清空与稀疏 PATCH、三类可修复拒绝、409／404、编码前置、只读及能力变化、写后 403 和主体变化前零业务请求、在途防重、旧提示清理、缺失／错误 ACK、响应范围与值不符、存储读取／结算失败。模拟已提交元数据后返回 502，跨刷新及详情读取保留同一标记，人工核对后读回实际新值且仅一次原业务请求。原绑定／版本／默认规则 42 场景均在新构建重跑，不以旧验收代替。
+
+环境为 http://127.0.0.1:35683/admin/guardrails，1440×1000 英文桌面、390×844 中／日／韩手机（韩文暗色）、UTC、模拟 Console 与同源接口；旧预览 http://127.0.0.1:34073。Browser plugin not available，使用 Playwright，两预览已停止。证据见 [web-guardrails-metadata-2026-11-11](/home/cina/.codex/visualizations/2026/10/15/01a13d58-e8f9-71f2-8d5c-34e63089f768/web-guardrails-metadata-2026-11-11)。完整 102 主任务／45 路由组／55 矩阵行／211 检查项（55 已勾选、156 待验）保持，真实身份、数据库、Proxy、审计与双平台发布继续待验。本地续批不等于完整目标完成，未提交、推送、部署或发送跨聊天消息。
+
+### Guardrails 有效预览精度与时区（2026-11-11）
+
+关联 ACC-14／ADM-25、P3-04／11、NEXT-14／39。从当前 source 0548cf61ad2f2c578794ef5bf18a37d1a1b6e122259c20063e018d96c376a944 核对账户端与管理端 effective 预览、同源 SDK 和共享响应合同，发现两处均以六位小数展示价格／预算，极小非零值会显示为 0；价格评估时间使用浏览器时区，却标注响应中的业务时区。已封存旧包用四个独立诊断在两个入口分别复现两类问题，不计入修复验收。
+
+六个文件中接入共享显示 helper。数值沿用服务端既有预算币种和 USD 定价单位，不做换算；一般小数保留 15 位有效数字以消除浮点尾数，安全整数保留至 16 位，微小／大幅值采用科学记数，保留 MAX_SAFE_INTEGER 容量边界。null／非法数与真实零明确区分。两个入口的预算、价格范围、容量与性能显示一致，没有新增接口、响应字段、查询参数、写入或恢复行为。
+
+价格评估时间仅使用可确认的带偏移 ISO 或历史 SQL UTC，按响应中的业务时区转换并显示实际 UTC 偏移；跨日及夏令时重叠的两个瞬间不再混淆。非法时区不伪装业务时区，价格业务时区显示未知，时间明确使用 UTC 并附四语降级说明；无时区的歧义时间或非法日历日期显示未知，不猜测浏览器本地时区，其他有效证据继续可读。
+
+最终 2626 个构建输入 source SHA 81a1d7a85d20b899988bfebb1e8359790a6067b71dce50d1cb3e93a2aa42c5c7，浏览器／Node／Worker 共用 buildId 9dee376c-5cd8-438e-8485-74627977d9d0，静态与浏览器前后无输入漂移。六项检查通过：Web／Edge 类型、Web 2263/2263 单测（0 失败／跳过）、完整 lint（0 错误、既有 MCP Hook 依赖警告 1 条）、492 文件格式与三目标构建。新增六个数字／时间测试及两个双界面四语渲染测试，覆盖微额／零／未知、浮点尾数、精确安全整数、跨日、两个夏令时重叠、ISO 偏移／SQL UTC、非法时区与不可确认时间。
+
+同一生产包 Chrome 155.0.8059.39 两入口 24/24 浏览器场景通过：精确价格／预算、真实零与未知范围、显式刷新后的新值、大数、浏览器东京与业务洛杉矶跨日、纽约两个重叠偏移、ISO／SQL 同瞬间、UTC 降级、歧义时间、失败清除旧证据及显式重试、409 冲突层证据、两入口中／日／韩手机（韩文暗色）。全部业务请求为 GET、业务写入 0，相关控制台异常 0。旧包 4/4 诊断复现；全部 12 张当前及 2 张旧包截图逐张直接检查。首轮 Web／Edge 类型、lint、格式及构建通过；单测 2262 通过／1 失败，四语渲染断言错误要求日／韩使用英文冒号。原始非零回执、源码、输入及产物保留；修正断言以识别当地时分秒标记，生产代码未改，随后完整重验。随后浏览器首个旧包 setup 因外壳与 Admin 嵌套 main 定位不唯一停止（0 完成场景），旧预览已停止；临时脚本改为实际唯一 #main-content，不改产品或断言标准，同一已通过六项检查的新构建单独重跑浏览器。异常／修正尝试：01-locale-time-assertion, 02-baseline-main-locator；实际非零结果及修正均保留，以最后同源码成功运行绑定为准。
+
+浏览器使用 Playwright（Browser plugin not available），桌面 1440×1000／手机 390×844，UTC／Asia/Tokyo／America/Los_Angeles 浏览器时区，模拟 Console／账户身份与同源 API。当前 http://127.0.0.1:33193 及旧 http://127.0.0.1:44597 预览均停止。证据见 [web-guardrail-preview-display-2026-11-11](/home/cina/.codex/visualizations/2026/10/15/01a13d58-e8f9-71f2-8d5c-34e63089f768/web-guardrail-preview-display-2026-11-11)。完整 102 主任务／45 路由组／55 矩阵行／211 检查项（55 已勾选、156 待验）保持，真实身份、数据库、Proxy、审计与双平台发布继续待验。未提交、推送、部署或跨聊天发送消息，完整目标继续。
+
+### 账户 Guardrails 稀疏编辑 WIP（2026-11-11）
+
+关联 ACC-14、P3-04、P4-09。9 源文件，source SHA 99c8121f7351d74246c632bbaeb07be6be8eec2bcc41d9b3a9b5b35497413f3b，2628 输入；预期 Web 2273 单测、当前 28 浏览器场景、旧包 3 问题诊断，另保留六流程初步观察。元数据／版本初始基线、字段省略与 null 清空及权限／默认身份失效待完整验收。账户未知写的持久保护属于后续仍未完成的恢复要求；没有新增字段 CAS，不提前勾选整域。证据目录 /tmp/cinatoken-account-guardrails-editor-20261111；未提交、推送、部署或跨聊天发送消息。

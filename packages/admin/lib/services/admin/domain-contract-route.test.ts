@@ -17,7 +17,7 @@ const named = (
 		"providers.write",
 		"models.write",
 		"routes.write",
-	]
+	],
 ): AdminPrincipal => ({
 	type: "api_key",
 	id: "admin_key:synthetic",
@@ -36,7 +36,7 @@ function fixture(
 		unavailable?: boolean;
 		providerId?: string;
 		modelId?: string;
-	} = {}
+	} = {},
 ) {
 	const calls: { kind: string; args: unknown[] }[] = [];
 	const call =
@@ -56,11 +56,15 @@ function fixture(
 			: { id: options.wrongId ? "wrong-resource" : id, ...extra };
 	const repositories = {
 		client: { driver: "d1", raw: {} },
+		users: {
+			getByExternalPair: call("user.external", null),
+			getById: call("user.read", null),
+		},
 		models: {
 			insertModel: call("model.insert", undefined),
 			getModelDetailWithRouteCounts: call(
 				"model.read",
-				row(options.modelId ?? "model-1", { route_policy: null, tags: "[]" })
+				row(options.modelId ?? "model-1", { route_policy: null, tags: "[]" }),
 			),
 			updateModelByPatch: call("model.legacy", 1),
 			replaceModelTags: call("model.tags", undefined),
@@ -78,11 +82,11 @@ function fixture(
 					endpoints: JSON.stringify({
 						dashscope: { base: "https://synthetic-provider.invalid/api/v1" },
 					}),
-				})
+				}),
 			),
 			getProviderRowById: call(
 				"provider.read",
-				row(options.providerId ?? "provider-1")
+				row(options.providerId ?? "provider-1"),
 			),
 			getProviderApiKeyPlaintext: call("provider.reveal", {
 				api_key: "synthetic-only",
@@ -98,7 +102,7 @@ function fixture(
 					model_id: "model-1",
 					provider_id: "provider-1",
 					route_pool_id: null,
-				})
+				}),
 			),
 			deleteModelRouteById: call("route.delete", 1),
 			listModelRoutesWithJoins: call("route.list", []),
@@ -114,7 +118,7 @@ function fixture(
 					provider_id: "provider-1",
 					status: "draft",
 					updated_at: "2026-10-01T00:00:00Z",
-				})
+				}),
 			),
 			delete: call("endpoint.delete", 1),
 			linkRoute: call("endpoint.link", !options.stale),
@@ -129,7 +133,7 @@ function fixture(
 		ADMIN_PRINCIPAL:
 			options.principal === undefined
 				? consolePrincipal()
-				: options.principal ?? undefined,
+				: (options.principal ?? undefined),
 		CINATOKEN_ADMIN_MODELS_REQUIRE_ROUTE_POLICY_PRECONDITION:
 			options.requirePolicy,
 	} as unknown as AdminBindings;
@@ -139,7 +143,7 @@ function fixture(
 			path: string,
 			method = "GET",
 			body?: unknown,
-			headers: Record<string, string> = {}
+			headers: Record<string, string> = {},
 		) =>
 			app.fetch(
 				new Request(`https://test.invalid/admin/${path}`, {
@@ -152,12 +156,12 @@ function fixture(
 					},
 					...(body === undefined ? {} : { body: JSON.stringify(body) }),
 				}),
-				bindings
+				bindings,
 			),
 		raw: (path: string, init: RequestInit) =>
 			app.fetch(
 				new Request(`https://test.invalid/admin/${path}`, init),
-				bindings
+				bindings,
 			),
 	};
 }
@@ -176,6 +180,37 @@ const privateResponse = (response: Response, status: number) => {
 	assert.equal(response.status, status);
 	assert.equal(response.headers.get("Cache-Control"), "private, no-store");
 };
+
+for (const domain of ["models", "providers"] as const) {
+	test(`${domain} real Hono sync returns additive batch ACK for a confirmed skipped selection`, async () => {
+		const f = fixture();
+		const input =
+			domain === "models"
+				? { model_id: "model-1", fields: ["description"] }
+				: { provider_id: "provider-1", fields: ["description"] };
+		const response = await f.request(
+			`${domain}/sync/apply`,
+			"POST",
+			{ items: [input] },
+			{ [EXPECTED_CONSOLE_SUBJECT_HEADER]: encodeURIComponent("operator%one") },
+		);
+		privateResponse(response, 200);
+		const body = (await response.json()) as {
+			success: boolean;
+			acknowledgement: unknown;
+			data: unknown;
+		};
+		assert.equal(body.success, true);
+		assert.deepEqual(body.acknowledgement, { domain, operation: "sync" });
+		assert.deepEqual(body.data, { updated: 0, skipped: 1, failed: [] });
+		assert.equal(
+			f.calls.some(
+				(call) => call.kind.endsWith(".update") || call.kind === "model.legacy",
+			),
+			false,
+		);
+	});
+}
 
 for (const domain of [
 	...domains,
@@ -200,7 +235,7 @@ for (const domain of [
 				},
 				body: "{}",
 			}),
-			413
+			413,
 		);
 		assert.equal(large.calls.length, 0);
 	});
@@ -232,7 +267,7 @@ for (const domain of [
 			await f.request(`${domain}/missing`, "GET", undefined, {
 				[EXPECTED_CONSOLE_SUBJECT_HEADER]: "operator%25one",
 			}),
-			400
+			400,
 		);
 		assert.equal(f.calls.length, 0);
 	});
@@ -278,7 +313,7 @@ for (const domain of [
 			assert.equal((await json(response)).acknowledgement, undefined);
 			assert.equal(
 				f.calls.some((call) => call.kind.endsWith(".delete")),
-				false
+				false,
 			);
 		}
 	});
@@ -298,7 +333,7 @@ test("model CAS actual Hono: null/raw read-set and all fields/tags pass once to 
 				display_name: "New",
 				tags: ["a"],
 			},
-			{ [EXPECTED_CONSOLE_SUBJECT_HEADER]: "operator%25one" }
+			{ [EXPECTED_CONSOLE_SUBJECT_HEADER]: "operator%25one" },
 		);
 		privateResponse(response, 200);
 		assert.deepEqual((await json(response)).acknowledgement, {
@@ -340,7 +375,7 @@ test("model CAS actual Hono: conflict/malformed/missing-required input never fal
 	privateResponse(missing, 428);
 	assert.equal(
 		(await json(missing)).code,
-		"model_route_policy_precondition_required"
+		"model_route_policy_precondition_required",
 	);
 	assert.equal(required.calls.length, 0);
 	for (const expected of [{}, [], 3, true]) {
@@ -352,7 +387,7 @@ test("model CAS actual Hono: conflict/malformed/missing-required input never fal
 		privateResponse(response, 400);
 		assert.equal(
 			(await json(response)).code,
-			"invalid_model_route_policy_precondition"
+			"invalid_model_route_policy_precondition",
 		);
 		assert.equal(f.calls.length, 0);
 	}
@@ -366,7 +401,7 @@ test("model CAS actual Hono: guard default off keeps legacy writes; existing no-
 		privateResponse(response, 200);
 		assert.deepEqual(
 			f.calls.map((c) => c.kind),
-			["model.read", "model.legacy"]
+			["model.read", "model.legacy"],
 		);
 	}
 	const noop = fixture();
@@ -380,7 +415,7 @@ test("provider reveal provided stale subject cannot read a secret; legacy read r
 		await f.request("providers/provider-1/api-key", "GET", undefined, {
 			[EXPECTED_CONSOLE_SUBJECT_HEADER]: "other",
 		}),
-		403
+		403,
 	);
 	assert.equal(f.calls.length, 0);
 	const old = fixture();
@@ -402,7 +437,7 @@ test("pool policy and sticky ACK identify exact pool/hash; a known missing bindi
 	const hash = "a".repeat(64);
 	const cleared = await f.request(
 		`routes/pools/pool-1/sticky/bindings/${hash}`,
-		"DELETE"
+		"DELETE",
 	);
 	privateResponse(cleared, 200);
 	assert.deepEqual(await json(cleared), {
@@ -432,7 +467,7 @@ test("endpoint link/unlink ACK bind both endpoint and target; conflict has no AC
 		const f = fixture();
 		const response = await f.request(
 			"endpoints/endpoint-1/routes/route-1",
-			method
+			method,
 		);
 		privateResponse(response, status);
 		assert.deepEqual((await json(response)).acknowledgement, {
@@ -445,7 +480,7 @@ test("endpoint link/unlink ACK bind both endpoint and target; conflict has no AC
 	const f = fixture({ stale: true });
 	const response = await f.request(
 		"endpoints/endpoint-1/routes/route-1",
-		"POST"
+		"POST",
 	);
 	privateResponse(response, 409);
 	assert.equal((await json(response)).acknowledgement, undefined);
@@ -457,12 +492,12 @@ test("four domains outer BFF cache classifier protects actual/encoded early resp
 				`/api/admin/${domain}`,
 				`/api/admin/${domain}/child`,
 				`/api/admin/%${domain.charCodeAt(0).toString(16)}${domain.slice(
-					1
+					1,
 				)}/child`,
 			]) {
 				const response = protectAdminConfigResponse(
 					new Request(`https://test.invalid${path}`),
-					Response.json({ success: false }, { status })
+					Response.json({ success: false }, { status }),
 				);
 				privateResponse(response, status);
 			}
@@ -500,9 +535,9 @@ test("DashScope resource preserves official body and binds ACK header to provide
 			});
 			return Response.json(
 				{ request_id: "synthetic", output: { items: [] } },
-				{ status: upstreamStatus }
+				{ status: upstreamStatus },
 			);
-		}
+		},
 	);
 	const f = fixture();
 	const denied = await f.request(
@@ -511,7 +546,7 @@ test("DashScope resource preserves official body and binds ACK header to provide
 		native,
 		{
 			[EXPECTED_CONSOLE_SUBJECT_HEADER]: "other",
-		}
+		},
 	);
 	privateResponse(denied, 403);
 	assert.equal(requests.length, 0);
@@ -521,9 +556,9 @@ test("DashScope resource preserves official body and binds ACK header to provide
 		await wrong.request(
 			"providers/provider-1/dashscope/hotwords",
 			"POST",
-			native
+			native,
 		),
-		404
+		404,
 	);
 	assert.equal(requests.length, 0);
 	for (const status of [200, 429]) {
@@ -534,7 +569,7 @@ test("DashScope resource preserves official body and binds ACK header to provide
 			native,
 			{
 				[EXPECTED_CONSOLE_SUBJECT_HEADER]: "operator%25one",
-			}
+			},
 		);
 		privateResponse(response, status);
 		assert.deepEqual(await json(response), {
@@ -551,8 +586,8 @@ test("DashScope resource preserves official body and binds ACK header to provide
 						operation: "resource",
 						id: "provider-1",
 						related_id: "hotwords",
-				  }
-				: null
+					}
+				: null,
 		);
 	}
 });
@@ -578,7 +613,7 @@ test("shared domain middleware does not shorten legacy 600-character Provider/Mo
 		const f = fixture({ providerId: id, modelId: id });
 		const response = await f.request(
 			`${domain}/${encodeURIComponent(id)}`,
-			"DELETE"
+			"DELETE",
 		);
 		privateResponse(response, 200);
 		assert.deepEqual((await json(response)).acknowledgement, {
@@ -608,7 +643,7 @@ test("Provider/Model create actual Hono: normalized URL dot IDs reject before re
 									tiers: [{ upto: null, input_price: 1, output_price: 2 }],
 								},
 								tags: ["synthetic"],
-						  };
+							};
 				const response = await f.request(domain, "POST", body);
 				privateResponse(response, 400);
 				assert.equal((await json(response)).acknowledgement, undefined);
@@ -632,7 +667,7 @@ test("Provider/Model create actual Hono: ordinary slash, Unicode and existing ID
 								tiers: [{ upto: null, input_price: 1, output_price: 2 }],
 							},
 							tags: ["synthetic"],
-					  };
+						};
 			const response = await f.request(domain, "POST", body);
 			privateResponse(response, 200);
 			assert.deepEqual((await json(response)).acknowledgement, {
@@ -643,18 +678,61 @@ test("Provider/Model create actual Hono: ordinary slash, Unicode and existing ID
 			const inserted = f.calls.find(
 				(call) =>
 					call.kind ===
-					`${domain === "providers" ? "provider" : "model"}.insert`
+					`${domain === "providers" ? "provider" : "model"}.insert`,
 			);
 			assert.equal((inserted?.args[0] as { id: string }).id, id);
 			assert.equal(
 				f.calls.filter((call) => call.kind.endsWith(".insert")).length,
-				1
+				1,
 			);
 			if (domain === "models")
 				assert.deepEqual(
 					f.calls.find((call) => call.kind === "model.tags")?.args,
-					[id, ["synthetic"]]
+					[id, ["synthetic"]],
 				);
 		}
+	}
+});
+
+test("users factor/preview routes reject supplied stale or malformed Console subject before business access", async () => {
+	for (const path of [
+		"users/user-1",
+		"users/user-1/models",
+		"users/user-1/display-discounts",
+	]) {
+		for (const header of ["stale", "%not-canonical"]) {
+			const instance = fixture();
+			const response = await instance.request(
+				path,
+				path.endsWith("user-1") ? "PATCH" : "GET",
+				path.endsWith("user-1")
+					? {
+							charged_cost_factors: { "model-1": { "*": 0.8, vip: 0.5 } },
+							reason: "test",
+						}
+					: undefined,
+				{ [EXPECTED_CONSOLE_SUBJECT_HEADER]: header },
+			);
+			privateResponse(response, header === "stale" ? 403 : 400);
+			assert.deepEqual(instance.calls, []);
+		}
+	}
+});
+
+test("users optional subject contract preserves legacy external unit-separator identities", async () => {
+	const cases: Record<string, string>[] = [
+		{},
+		{ [EXPECTED_CONSOLE_SUBJECT_HEADER]: encodeURIComponent("operator%one") },
+	];
+	for (const headers of cases) {
+		const instance = fixture();
+		const response = await instance.request(
+			"users/ext:erp%1Fabc",
+			"GET",
+			undefined,
+			headers,
+		);
+		privateResponse(response, 404);
+		assert.equal(instance.calls[0]?.kind, "user.external");
 	}
 });

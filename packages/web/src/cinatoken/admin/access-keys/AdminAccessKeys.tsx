@@ -5,13 +5,18 @@ import {
 	useRef,
 	useState,
 	useSyncExternalStore,
+	type JSX,
 } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { CinaTokenApiError } from '../../api'
+import { AdminListTimezone } from '../users/AdminListTimezone'
+import { useAdminListDisplay } from '../users/use-admin-list-display'
+import type { AdminUsersApi } from '../users/users-api'
 import { AccessKeyEditor, type AccessKeyEditorMode } from './AccessKeyEditor'
+import { AccessKeyLastUsed } from './AccessKeyLastUsed'
 import type { AdminAccessKeysApi } from './access-key-api'
 import {
 	ACCESS_KEY_DEFAULT_PERMISSIONS,
@@ -35,7 +40,7 @@ const secretLifetimeMs = 60_000
 const draftLifetimeMs = 5 * 60_000
 
 export type AccessKeysProps = {
-	api: AdminAccessKeysApi
+	api: AdminAccessKeysApi & Pick<AdminUsersApi, 'userDisplay'>
 	scopeKey: string
 	reconciliationKey: string
 	canWrite: boolean
@@ -72,12 +77,6 @@ function writeErrorKey(error: unknown): string {
 	return 'writeFailed'
 }
 
-function dateText(value: string | null, locale: string, never: string): string {
-	if (!value) return never
-	const date = new Date(value)
-	return Number.isNaN(date.getTime()) ? value : date.toLocaleString(locale)
-}
-
 export function AdminAccessKeys(props: AccessKeysProps) {
 	const { t } = useTranslation()
 	const access = accessKeyAccessRecovery(props.api)
@@ -105,6 +104,94 @@ export function AdminAccessKeys(props: AccessKeysProps) {
 			void revalidate().catch(() => undefined)
 	}, [access, props.reconciliationKey, revalidate])
 	const deniedView = blocked || queryDenied
+	const displayState = useAdminListDisplay({
+		api: props.api,
+		scopeKey: props.scopeKey,
+		reconciliationKey: props.reconciliationKey,
+		domain: 'access-keys',
+		enabled: !deniedView,
+		revalidate,
+	})
+	const active = useRef(true)
+	const refreshingRef = useRef(false)
+	const [refreshing, setRefreshing] = useState(false)
+	useEffect(() => {
+		active.current = true
+		return () => {
+			active.current = false
+		}
+	}, [])
+	const refreshDisabled =
+		deniedView ||
+		refreshing ||
+		query.isFetching ||
+		displayState.query.isFetching
+	async function refresh(): Promise<void> {
+		if (refreshingRef.current || refreshDisabled) return
+		refreshingRef.current = true
+		setRefreshing(true)
+		try {
+			await Promise.allSettled([
+				query.refetch({ cancelRefetch: false }),
+				displayState.query.refetch({ cancelRefetch: false }),
+			])
+		} finally {
+			refreshingRef.current = false
+			if (active.current) setRefreshing(false)
+		}
+	}
+	let content: JSX.Element
+	if (deniedView)
+		content = (
+			<p role='alert' className='border-destructive/40 rounded-xl border p-5'>
+				{t(prefix + 'accessDenied')}
+			</p>
+		)
+	else if (query.error) {
+		const message =
+			query.error instanceof CinaTokenApiError &&
+			query.error.code === 'invalid-response'
+				? 'invalidResponse'
+				: 'readFailed'
+		content = (
+			<div role='alert' className='border-destructive/40 rounded-xl border p-5'>
+				<p>{t(prefix + message)}</p>
+				<Button
+					type='button'
+					variant='outline'
+					className='mt-3'
+					disabled={refreshDisabled}
+					onClick={() => void refresh()}
+				>
+					{t(prefix + 'refresh')}
+				</Button>
+			</div>
+		)
+	} else if (query.data)
+		content = (
+			<AccessKeyManager
+				key={JSON.stringify([
+					props.scopeKey,
+					props.reconciliationKey,
+					props.canWrite,
+				])}
+				api={props.api}
+				rows={query.data}
+				reconciliationKey={props.reconciliationKey}
+				canWrite={props.canWrite}
+				onDenied={onDenied}
+				onRefresh={() => void refresh()}
+				onWriteRefresh={() => void query.refetch()}
+				refreshDisabled={refreshDisabled}
+				timezone={displayState.display?.timezone ?? null}
+			/>
+		)
+	else
+		content = (
+			<p role='status' className='text-muted-foreground py-12 text-center'>
+				{t(prefix + 'loading')}
+			</p>
+		)
 	return (
 		<main className='min-w-0 space-y-5'>
 			<header>
@@ -116,52 +203,8 @@ export function AdminAccessKeys(props: AccessKeysProps) {
 					{t(prefix + 'consoleOnly')}
 				</p>
 			</header>
-			{deniedView ? (
-				<p role='alert' className='border-destructive/40 rounded-xl border p-5'>
-					{t(prefix + 'accessDenied')}
-				</p>
-			) : query.error ? (
-				<div
-					role='alert'
-					className='border-destructive/40 rounded-xl border p-5'
-				>
-					<p>
-						{t(
-							prefix +
-								(query.error instanceof CinaTokenApiError &&
-								query.error.code === 'invalid-response'
-									? 'invalidResponse'
-									: 'readFailed')
-						)}
-					</p>
-					<Button
-						type='button'
-						variant='outline'
-						className='mt-3'
-						onClick={() => void query.refetch()}
-					>
-						{t(prefix + 'refresh')}
-					</Button>
-				</div>
-			) : query.data ? (
-				<AccessKeyManager
-					key={JSON.stringify([
-						props.scopeKey,
-						props.reconciliationKey,
-						props.canWrite,
-					])}
-					api={props.api}
-					rows={query.data}
-					reconciliationKey={props.reconciliationKey}
-					canWrite={props.canWrite}
-					onDenied={onDenied}
-					onRefresh={() => void query.refetch()}
-				/>
-			) : (
-				<p role='status' className='text-muted-foreground py-12 text-center'>
-					{t(prefix + 'loading')}
-				</p>
-			)}
+			{!deniedView && <AdminListTimezone display={displayState.display} />}
+			{content}
 		</main>
 	)
 }
@@ -173,10 +216,13 @@ type ManagerProps = {
 	canWrite: boolean
 	onDenied: () => void
 	onRefresh: () => void
+	onWriteRefresh: () => void
+	refreshDisabled: boolean
+	timezone: string | null
 }
 
 function AccessKeyManager(props: ManagerProps) {
-	const { t, i18n } = useTranslation()
+	const { t } = useTranslation()
 	const writeRecovery = accessKeyWriteRecovery(props.api)
 	const writeSnapshot = useCallback(
 		() => writeRecovery.status(props.reconciliationKey),
@@ -360,7 +406,7 @@ function AccessKeyManager(props: ManagerProps) {
 				setDraftSecret(null)
 				setConfirmStatus(null)
 				setSavedSecret(secretAfterSave)
-				props.onRefresh()
+				props.onWriteRefresh()
 			}
 		} catch (error) {
 			let failure = error
@@ -424,7 +470,12 @@ function AccessKeyManager(props: ManagerProps) {
 					{props.rows.length} {t(prefix + 'title').toLowerCase()}
 				</p>
 				<div className='flex flex-wrap gap-2'>
-					<Button type='button' variant='outline' onClick={props.onRefresh}>
+					<Button
+						type='button'
+						variant='outline'
+						disabled={busy || props.refreshDisabled}
+						onClick={props.onRefresh}
+					>
 						{t(prefix + 'refresh')}
 					</Button>
 					<Button type='button' disabled={!canWrite} onClick={openCreate}>
@@ -520,14 +571,10 @@ function AccessKeyManager(props: ManagerProps) {
 									</code>
 								))}
 							</div>
-							<p className='text-muted-foreground text-xs'>
-								{t(prefix + 'lastUsed')}:{' '}
-								{dateText(
-									key.last_used_at,
-									i18n.resolvedLanguage || 'en',
-									t(prefix + 'never')
-								)}
-							</p>
+							<AccessKeyLastUsed
+								value={key.last_used_at}
+								timezone={props.timezone}
+							/>
 							<div className='flex flex-wrap gap-2'>
 								<Button
 									type='button'

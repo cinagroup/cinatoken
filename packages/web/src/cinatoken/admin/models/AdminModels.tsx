@@ -7,6 +7,7 @@ import { ModelEditorDialog } from './ModelEditorDialog'
 import { ModelImportDialog } from './ModelImportDialog'
 import { ModelPricePreview } from './ModelPricePreview'
 import { ModelReadDialog } from './ModelReadDialog'
+import { ModelSyncDialog } from './ModelSyncDialog'
 import { modelErrorKey } from './model-errors'
 import {
 	DEFAULT_MODEL_FILTERS,
@@ -130,6 +131,13 @@ function ScopedModels(props: AdminModelsProps) {
 					</p>
 				</div>
 				<div className='flex flex-wrap gap-2'>
+					<Button
+						variant='outline'
+						disabled={manager.disabled}
+						onClick={() => manager.open({ kind: 'sync' })}
+					>
+						{t(prefix + 'syncTitle')}
+					</Button>
 					<Button
 						variant='outline'
 						disabled={manager.query.isFetching || manager.mutation.isPending}
@@ -355,6 +363,8 @@ function ScopedModels(props: AdminModelsProps) {
 					disabled={manager.disabled}
 					error={manager.mutation.error}
 					onSave={manager.save}
+					canResume={manager.canResumeEditor}
+					onResume={manager.resumeEditor}
 					onClose={manager.close}
 				/>
 			)}
@@ -370,7 +380,23 @@ function ScopedModels(props: AdminModelsProps) {
 					disabled={manager.disabled}
 					error={manager.mutation.error}
 					onSave={manager.save}
+					canResume={manager.canResumeEditor}
+					onResume={manager.resumeEditor}
 					onDelete={manager.remove}
+					onClose={manager.close}
+				/>
+			)}
+			{modal?.kind === 'sync' && (
+				<ModelSyncDialog
+					api={props.api}
+					readOptions={manager.readOptions}
+					prefix={manager.prefix}
+					pending={manager.mutation.isPending}
+					disabled={manager.disabled}
+					error={manager.mutation.error}
+					result={manager.syncResult}
+					onApply={manager.applyModelSync}
+					onRecheck={manager.clearSyncResult}
 					onClose={manager.close}
 				/>
 			)}

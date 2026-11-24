@@ -149,6 +149,11 @@ map "${CINATOKEN_WEB_ADMIN_SIMULATOR_ENABLED}:$request_method:$request_uri" $web
     "~^true:(GET|HEAD):/admin/simulator/?([?].*)?$" 1;
 }
 
+map "${CINATOKEN_WEB_ADMIN_MCP_ENABLED}:$request_method:$request_uri" $web_admin_mcp_shell {
+    default 0;
+    "~^true:(GET|HEAD):/admin/mcp/?([?].*)?$" 1;
+}
+
 map "${CINATOKEN_WEB_ADMIN_WITHDRAWALS_ENABLED}:$request_method:$request_uri" $web_admin_withdrawals_shell {
     default 0;
     "~^true:(GET|HEAD):/admin/withdrawals/?([?].*)?$" 1;
@@ -240,6 +245,7 @@ server {
         if ($web_admin_tools_shell = 1) { return 418; }
         if ($web_admin_playground_shell = 1) { return 418; }
         if ($web_admin_simulator_shell = 1) { return 418; }
+        if ($web_admin_mcp_shell = 1) { return 418; }
         if ($web_admin_withdrawals_shell = 1) { return 418; }
         if ($web_admin_nft_mints_shell = 1) { return 418; }
         include /etc/nginx/web-admin-proxy.conf;

@@ -160,9 +160,9 @@ test('D1 redacts nonstandard legacy config keys and derives clear without storin
 	}
 });
 
-test('audit preserves only known config keys, including five Web keys and tool catalogs', () => {
+test('audit preserves only known config keys, including six Web keys and tool catalogs', () => {
 	for (const key of [
-		'BUSINESS_TIMEZONE', 'BILLING_CURRENCY', 'ROUTE_STRATEGY',
+		'BUSINESS_TIMEZONE', 'BILLING_CURRENCY', 'ROUTE_STRATEGY', 'USER_CHARGED_COST_FACTOR_MODE',
 		'ALERT_WEBHOOK_WECOM_URL', 'ALERT_WEBHOOK_FEISHU_URL',
 		'WEB_SEARCH_CATALOG', 'WEB_FETCH_CATALOG', 'WEB_DEEP_SEARCH_CATALOG', 'AI_DETECTION_CATALOG',
 		'SHARED_KEY_COMMISSION_RATE',

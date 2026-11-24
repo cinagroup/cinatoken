@@ -15,6 +15,7 @@ import type { AdminToolInvocationsApi } from './tool-invocation-api'
 import type { ToolInvocationPage } from './tool-invocation-contracts'
 import {
 	defaultToolInvocationSearch,
+	isToolInvocationSearchValid,
 	type ToolInvocationSearch,
 } from './tool-invocation-domain'
 
@@ -107,6 +108,7 @@ export function useToolInvocations(props: ToolInvocationsProps) {
 		display && display.timezoneSource !== 'invalid' ? display.timezone : null
 	const currency = display?.currency ?? null
 	const effectiveSearch = useMemo(() => {
+		if (!isToolInvocationSearchValid(props.search)) return null
 		if (
 			props.search.start_date !== undefined ||
 			props.search.end_date !== undefined

@@ -4,12 +4,14 @@ import {
 	formatUserDetailMoney,
 	formatUserDetailTime,
 } from '../user-detail/user-detail-format'
+import { GatewayKeyLastUsed } from './GatewayKeyLastUsed'
 import type { GatewayKeyDetail } from './gateway-key-contracts'
 
 const prefix = 'cinatoken.adminGatewayKeys.'
 export function GatewayKeyProfile(props: {
 	detail: GatewayKeyDetail
 	currency: 'USD' | 'CNY' | null
+	timezone: string | null
 }) {
 	const { t, i18n } = useTranslation()
 	let budget = t(prefix + 'currencyUnavailable')
@@ -62,7 +64,7 @@ export function GatewayKeyProfile(props: {
 				{formatUserDetailTime(
 					props.detail.budget_reset_at,
 					i18n.resolvedLanguage || 'en',
-					'UTC'
+					props.timezone
 				)}
 			</dd>
 			<dt>{t(prefix + 'created')}</dt>
@@ -70,7 +72,7 @@ export function GatewayKeyProfile(props: {
 				{formatUserDetailTime(
 					props.detail.created_at,
 					i18n.resolvedLanguage || 'en',
-					'UTC'
+					props.timezone
 				)}
 			</dd>
 			<dt>{t(prefix + 'updated')}</dt>
@@ -78,8 +80,15 @@ export function GatewayKeyProfile(props: {
 				{formatUserDetailTime(
 					props.detail.updated_at,
 					i18n.resolvedLanguage || 'en',
-					'UTC'
+					props.timezone
 				)}
+			</dd>
+			<dt>{t(prefix + 'lastUsed')}</dt>
+			<dd>
+				<GatewayKeyLastUsed
+					value={props.detail.last_used_at}
+					timezone={props.timezone}
+				/>
 			</dd>
 		</dl>
 	)

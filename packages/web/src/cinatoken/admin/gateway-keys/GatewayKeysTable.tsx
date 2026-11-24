@@ -6,7 +6,9 @@ import {
 	formatUserDetailMoney,
 	formatUserDetailTime,
 } from '../user-detail/user-detail-format'
+import { GatewayKeyLastUsed } from './GatewayKeyLastUsed'
 import { GatewayKeyLinks } from './GatewayKeyLinks'
+import { RateLimitSummary } from './RateLimitEditor'
 import type {
 	GatewayKeyRow,
 	GatewayKeysCapabilities,
@@ -17,6 +19,7 @@ export function GatewayKeysTable(props: {
 	rows: GatewayKeyRow[]
 	capabilities: GatewayKeysCapabilities
 	currency: 'USD' | 'CNY' | null
+	timezone: string | null
 	canWrite: boolean
 	onEdit: (row: GatewayKeyRow) => void
 	onStatus: (row: GatewayKeyRow) => void
@@ -55,10 +58,10 @@ export function GatewayKeysTable(props: {
 								'name',
 								'budget',
 								'metadata',
-								'created',
+								'timestamps',
 								'actions',
 							].map((column) => (
-								<th key={column} className='p-3'>
+								<th key={column} className='p-3 whitespace-nowrap'>
 									{t(prefix + column)}
 								</th>
 							))}
@@ -116,6 +119,7 @@ export function GatewayKeysTable(props: {
 									</td>
 									<td className='max-w-44 p-3 break-words'>
 										{row.name ?? '—'}
+										<RateLimitSummary value={row.rate_limit} layer='key' />
 									</td>
 									<td className='p-3'>
 										<p className='whitespace-nowrap tabular-nums'>{budget}</p>
@@ -140,14 +144,38 @@ export function GatewayKeysTable(props: {
 												{formatUserDetailTime(
 													row.budget_reset_at,
 													locale,
-													'UTC'
+													props.timezone
 												)}
 											</p>
 										)}
 									</td>
 									<td className='p-3 text-xs'>{metadata}</td>
 									<td className='p-3 text-xs whitespace-nowrap'>
-										{formatUserDetailTime(row.created_at, locale, 'UTC')}
+										<dl className='space-y-2'>
+											<div>
+												<dt className='text-muted-foreground'>
+													{t(prefix + 'created')}
+												</dt>
+												<dd>
+													{formatUserDetailTime(
+														row.created_at,
+														locale,
+														props.timezone
+													)}
+												</dd>
+											</div>
+											<div>
+												<dt className='text-muted-foreground'>
+													{t(prefix + 'lastUsed')}
+												</dt>
+												<dd>
+													<GatewayKeyLastUsed
+														value={row.last_used_at}
+														timezone={props.timezone}
+													/>
+												</dd>
+											</div>
+										</dl>
 									</td>
 									<td className='max-w-64 space-y-3 p-3'>
 										<GatewayKeyLinks

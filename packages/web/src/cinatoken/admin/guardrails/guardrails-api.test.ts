@@ -16,6 +16,7 @@ import {
 import { createAdminGuardrailsApi } from './guardrails-api'
 import type {
 	AdminGuardrailAssignment,
+	AdminGuardrailMetadataPatch,
 	AdminGuardrailSummary,
 } from './guardrails-contracts'
 import { AdminGuardrailWriteRecovery } from './guardrails-write-recovery'
@@ -98,6 +99,7 @@ function fixture(
 		listGuardrailVersions: 1,
 		listGuardrailAssignments: 1,
 		setGuardrailStatus: 2,
+		patchGuardrailMetadata: 2,
 		designateGuardrail: 2,
 		bindGuardrail: 3,
 		unbindGuardrail: 2,
@@ -109,6 +111,172 @@ const invalid = (error: unknown): boolean =>
 	error instanceof CinaTokenApiError && error.code === 'invalid-response'
 const unknownWrite = (error: unknown): boolean =>
 	error instanceof AdminDomainWriteError && error.code === 'unknown'
+
+test('metadata uses a narrowed normalized PATCH with summary projection and exact acknowledgement', async () => {
+	const f = fixture(() =>
+		Response.json({
+			success: true,
+			data: { ...row, name: 'Renamed', description: null, config: privateText },
+		})
+	)
+	const result = await f.api.patchGuardrailMetadata(row, {
+		name: '  Renamed  ',
+		description: '  ',
+	})
+	assert.deepEqual(result, { ...row, name: 'Renamed', description: null })
+	assert.equal(JSON.stringify(result).includes(privateText), false)
+	assert.equal(f.calls.length, 1)
+	assert.equal(
+		f.calls[0]?.path,
+		'/api/admin/guardrails/guardrail%2Fone?view=summary'
+	)
+	assert.equal(f.calls[0]?.init.method, 'PATCH')
+	assert.deepEqual(JSON.parse(String(f.calls[0]?.init.body)), {
+		name: 'Renamed',
+		description: null,
+	})
+	assert.equal(
+		new Headers(f.calls[0]?.init.headers).get(
+			'X-CinaToken-Expected-Console-Subject'
+		),
+		'fixture-subject'
+	)
+})
+
+test('invalid metadata and any default-name patch are rejected before identity or business requests', async () => {
+	const f = fixture(() => {
+		throw new Error('Must not dispatch')
+	})
+	for (const input of [
+		{},
+		{ name: undefined },
+		{ description: undefined },
+		{ name: undefined, description: undefined },
+		{ name: '' },
+		{ name: ' ' },
+		{ name: 'x'.repeat(129) },
+		{ description: 'x'.repeat(1025) },
+		{ status: 'archived' },
+		{ workspaceId: 'other' },
+		{ ownerUserId: 'other' },
+		{ isWorkspaceDefault: true },
+		{ designatedVersion: 3 },
+		{ config: {} },
+	])
+		await assert.rejects(
+			f.api.patchGuardrailMetadata(row, input as AdminGuardrailMetadataPatch)
+		)
+	for (const kind of ['isWorkspaceDefault', 'isAccountDefault'])
+		for (const name of [row.name, 'Renamed'])
+			await assert.rejects(
+				f.api.patchGuardrailMetadata({ ...row, [kind]: true }, { name }),
+				invalid
+			)
+	assert.equal(f.allCalls.length, 0)
+})
+
+test('sparse metadata keeps legacy unchanged fields and permits default descriptions only', async () => {
+	const legacy = {
+		...row,
+		name: 'N'.repeat(200),
+		description: 'D'.repeat(2000),
+	}
+	const f = fixture((call) =>
+		Response.json({
+			success: true,
+			data: { ...legacy, ...JSON.parse(String(call.init.body)) },
+		})
+	)
+	assert.equal(
+		(await f.api.patchGuardrailMetadata(legacy, { name: 'New' })).description,
+		legacy.description
+	)
+	assert.deepEqual(JSON.parse(String(f.calls[0]?.init.body)), { name: 'New' })
+	assert.equal(
+		(await f.api.patchGuardrailMetadata(legacy, { description: null })).name,
+		legacy.name
+	)
+	assert.deepEqual(JSON.parse(String(f.calls[1]?.init.body)), {
+		description: null,
+	})
+	for (const kind of ['isWorkspaceDefault', 'isAccountDefault']) {
+		const selected = { ...row, [kind]: true }
+		const defaults = fixture(() =>
+			Response.json({
+				success: true,
+				data: { ...selected, description: 'Notes' },
+			})
+		)
+		await defaults.api.patchGuardrailMetadata(selected, {
+			description: 'Notes',
+		})
+		assert.deepEqual(JSON.parse(String(defaults.calls[0]?.init.body)), {
+			description: 'Notes',
+		})
+	}
+})
+
+test('metadata successful responses must retain identity/defaults and confirm every requested value', async () => {
+	const expected = { ...row, name: 'Renamed', description: 'Notes' }
+	for (const data of [
+		{ ...expected, id: 'other' },
+		{ ...expected, workspaceId: 'other' },
+		{ ...expected, ownerUserId: 'other' },
+		{ ...expected, isWorkspaceDefault: true },
+		{ ...expected, isAccountDefault: true },
+		{ ...expected, accountScopeKey: 'other' },
+		{ ...expected, name: 'Wrong' },
+		{ ...expected, description: null },
+	]) {
+		const f = fixture(() => Response.json({ success: true, data }))
+		await assert.rejects(
+			f.api.patchGuardrailMetadata(row, {
+				name: 'Renamed',
+				description: 'Notes',
+			}),
+			unknownWrite
+		)
+		assert.equal(f.calls.length, 1)
+	}
+})
+
+test('metadata missing ACK and uncertain outcomes cannot masquerade as success or replay', async () => {
+	for (const acknowledgement of [
+		undefined,
+		{ domain: 'guardrails', operation: 'update', id: 'other' },
+		{ domain: 'guardrails', operation: 'designate', id: row.id },
+	]) {
+		const f = fixture(
+			() =>
+				Response.json({
+					success: true,
+					data: { ...row, description: 'Notes' },
+				}),
+			{ ack: (_call, body) => ({ ...(body as object), acknowledgement }) }
+		)
+		await assert.rejects(
+			f.api.patchGuardrailMetadata(row, { description: 'Notes' }),
+			unknownWrite
+		)
+		assert.equal(f.calls.length, 1)
+	}
+	for (const [status, code] of [
+		[400, 'rejected'],
+		[502, 'unknown'],
+	] as const) {
+		const f = fixture(() =>
+			Response.json({ success: false, message: privateText }, { status })
+		)
+		await assert.rejects(
+			f.api.patchGuardrailMetadata(row, { description: null }),
+			(error) =>
+				error instanceof AdminDomainWriteError &&
+				error.code === code &&
+				!error.message.includes(privateText)
+		)
+		assert.equal(f.calls.length, 1)
+	}
+})
 
 test('Guardrail summaries strip raw configs and use same-origin Console Cookie only', async () => {
 	const { api, calls } = fixture(() =>

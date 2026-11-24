@@ -14,6 +14,7 @@ import { Input } from '../../../components/ui/input'
 import { Label } from '../../../components/ui/label'
 import { Textarea } from '../../../components/ui/textarea'
 import { AdminDomainRecoveryDialog } from '../AdminDomainRecoveryDialog'
+import { PresetWriteFeedback } from './PresetWriteFeedback'
 import type {
 	AdminPresetMetadataPatch,
 	AdminPresetSummary,
@@ -129,15 +130,21 @@ function PresetCard(props: {
 
 function MetadataDialog(props: {
 	row: AdminPresetSummary
+	initialPatch?: AdminPresetMetadataPatch
+	disabled: boolean
 	onSave: (patch: AdminPresetMetadataPatch) => void
 	onClose: () => void
 }) {
 	const { t } = useTranslation()
 	const title = useRef<HTMLHeadingElement>(null)
-	const [name, setName] = useState(props.row.name)
-	const [description, setDescription] = useState(props.row.description ?? '')
+	const [name, setName] = useState(props.initialPatch?.name ?? props.row.name)
+	const initialDescription =
+		props.initialPatch?.description === undefined
+			? props.row.description
+			: props.initialPatch.description
+	const [description, setDescription] = useState(initialDescription ?? '')
 	const [visibility, setVisibility] = useState<'private' | 'public'>(
-		props.row.visibility
+		props.initialPatch?.visibility ?? props.row.visibility
 	)
 	const [validation, setValidation] = useState<string | null>(null)
 	const changed =
@@ -146,6 +153,7 @@ function MetadataDialog(props: {
 		visibility !== props.row.visibility
 	function submit(event: FormEvent<HTMLFormElement>): void {
 		event.preventDefault()
+		if (props.disabled) return
 		const cleanName = name.trim()
 		const cleanDescription = description.trim()
 		if (name !== props.row.name && (!cleanName || cleanName.length > 128))
@@ -193,6 +201,7 @@ function MetadataDialog(props: {
 							id='admin-preset-name'
 							maxLength={128}
 							value={name}
+							disabled={props.disabled}
 							onChange={(event) => setName(event.target.value)}
 						/>
 					</div>
@@ -205,6 +214,7 @@ function MetadataDialog(props: {
 							rows={4}
 							maxLength={1024}
 							value={description}
+							disabled={props.disabled}
 							onChange={(event) => setDescription(event.target.value)}
 						/>
 					</div>
@@ -216,6 +226,7 @@ function MetadataDialog(props: {
 							id='admin-preset-visibility'
 							className={selectClass}
 							value={visibility}
+							disabled={props.disabled}
 							onChange={(event) =>
 								setVisibility(event.target.value as 'private' | 'public')
 							}
@@ -233,7 +244,7 @@ function MetadataDialog(props: {
 						<Button type='button' variant='outline' onClick={props.onClose}>
 							{t(prefix + 'cancel')}
 						</Button>
-						<Button type='submit' disabled={!changed}>
+						<Button type='submit' disabled={props.disabled || !changed}>
 							{t(prefix + 'save')}
 						</Button>
 					</DialogFooter>
@@ -325,7 +336,7 @@ export function AdminPresets(props: AdminPresetsManagerProps) {
 				<p className='text-muted-foreground text-sm'>
 					{t(prefix + 'count', {
 						shown: filtered.length,
-						total: manager.hidden ? 0 : (manager.list.data?.length ?? 0),
+						total: manager.hidden ? 0 : (manager.list.data?.rows.length ?? 0),
 					})}
 				</p>
 				<Button
@@ -336,17 +347,9 @@ export function AdminPresets(props: AdminPresetsManagerProps) {
 					{t(prefix + (manager.revoked ? 'verifyAccess' : 'refresh'))}
 				</Button>
 			</div>
-			{!props.canWrite ? (
+			{!manager.canWrite ? (
 				<p className='rounded-lg border p-3 text-sm'>
 					{t(prefix + 'readonly')}
-				</p>
-			) : null}
-			{manager.revoked ? (
-				<p
-					role='alert'
-					className='text-destructive rounded-lg border p-3 text-sm'
-				>
-					{t(manager.errorKey(manager.reconciliationError))}
 				</p>
 			) : null}
 			<AdminDomainRecoveryDialog
@@ -366,11 +369,11 @@ export function AdminPresets(props: AdminPresetsManagerProps) {
 					{t(manager.errorKey(manager.list.error))}
 				</p>
 			) : null}
-			{manager.reconciliationError && !manager.revoked ? (
-				<p role='alert' className='text-destructive text-sm'>
-					{t(manager.errorKey(manager.reconciliationError))}
-				</p>
-			) : null}
+			{!panel && (
+				<PresetWriteFeedback
+					error={manager.error ?? manager.reconciliationError}
+				/>
+			)}
 			<div className='flex flex-col gap-3 sm:flex-row sm:flex-wrap'>
 				<Input
 					className='sm:min-w-64 sm:flex-1'
@@ -400,19 +403,19 @@ export function AdminPresets(props: AdminPresetsManagerProps) {
 					<option value='public'>{t(prefix + 'public')}</option>
 				</select>
 			</div>
-			{manager.list.isPending && !manager.list.error ? (
+			{manager.list.isFetching && !manager.revoked ? (
 				<p role='status' className='text-muted-foreground text-sm'>
 					{t(prefix + 'loading')}
 				</p>
 			) : null}
-			{!manager.hidden && manager.list.data?.length === 0 ? (
+			{!manager.hidden && manager.list.data?.rows.length === 0 ? (
 				<p className='rounded-xl border border-dashed p-8 text-center text-sm'>
 					{t(prefix + 'empty')}
 				</p>
 			) : null}
 			{!manager.hidden &&
 			manager.list.data &&
-			manager.list.data.length > 0 &&
+			manager.list.data.rows.length > 0 &&
 			filtered.length === 0 ? (
 				<p className='rounded-xl border border-dashed p-8 text-center text-sm'>
 					{t(prefix + 'noMatches')}
@@ -459,6 +462,8 @@ export function AdminPresets(props: AdminPresetsManagerProps) {
 				<MetadataDialog
 					key={panel.row.id}
 					row={panel.row}
+					initialPatch={panel.patch}
+					disabled={manager.disabled}
 					onClose={manager.close}
 					onSave={(patch) =>
 						manager.stage(panel.row, { kind: 'metadata', patch })
@@ -538,7 +543,8 @@ export function AdminPresets(props: AdminPresetsManagerProps) {
 													i18n.resolvedLanguage ?? 'en'
 												)}
 											</p>
-											{props.canWrite &&
+											{manager.canWrite &&
+											!manager.writeUnconfirmed &&
 											panel.row.status === 'active' &&
 											version.version !== panel.row.designatedVersion ? (
 												<Button
@@ -617,11 +623,11 @@ export function AdminPresets(props: AdminPresetsManagerProps) {
 								</p>
 							</div>
 						) : null}
-						{manager.error ? (
-							<p role='alert' className='text-destructive text-sm'>
-								{t(manager.errorKey(manager.error))}
-							</p>
-						) : null}
+						<PresetWriteFeedback
+							error={manager.error}
+							canResume={manager.canResumeMetadata}
+							onResume={manager.resumeMetadata}
+						/>
 						<DialogFooter>
 							<Button
 								type='button'
@@ -633,7 +639,7 @@ export function AdminPresets(props: AdminPresetsManagerProps) {
 							</Button>
 							<Button
 								type='button'
-								disabled={manager.disabled}
+								disabled={manager.disabled || manager.error != null}
 								onClick={() => void manager.confirm()}
 							>
 								{t(prefix + 'confirmAction')}

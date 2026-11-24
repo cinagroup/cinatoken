@@ -276,3 +276,81 @@ test('all dashboard message dictionaries share complete keys', () => {
 			assert.ok(value.trim())
 	}
 })
+
+test('calendar resolves one business-zone window before stats', async () => {
+	const { api, calls } = fixture(success)
+	const result = await api.dashboardWindow(
+		{ kind: 'calendar', preset: 'today' },
+		{},
+		new Date('2026-10-23T02:13:45Z')
+	)
+	assert.deepEqual(result.rangeParams, {
+		startUtc: '2026-10-22 16:00:00',
+		endUtc: '2026-10-23 02:13:45',
+	})
+	assert.equal(calls[0]?.path, '/api/admin/config/overview')
+	const params = new URL(calls[1]!.path, 'https://example.test').searchParams
+	assert.equal(params.get('start_date'), result.rangeParams.startUtc)
+	assert.equal(params.get('end_date'), result.rangeParams.endUtc)
+	assert.equal(params.has('range'), false)
+})
+
+test('custom seconds are retained and invalid ranges never request stats', async () => {
+	const { api, calls } = fixture(success)
+	const range = {
+		kind: 'custom' as const,
+		startUtc: '2026-10-20 04:23:01',
+		endUtc: '2026-10-20 05:23:02',
+	}
+	const result = await api.dashboardWindow(range)
+	assert.equal(result.rangeParams.startUtc, range.startUtc)
+	assert.equal(result.rangeParams.endUtc, range.endUtc)
+	for (const invalid of [
+		{ ...range, endUtc: range.startUtc },
+		{ ...range, startUtc: '2026-02-30 00:00:00' },
+		{ ...range, startUtc: '2025-01-01 00:00:00' },
+	]) {
+		const before = calls.length
+		await assert.rejects(api.dashboardWindow(invalid))
+		assert.equal(calls.length, before + 1)
+	}
+})
+
+test('config denial and aborted overview prevent the window stats request', async () => {
+	for (const status of [401, 403, 500]) {
+		const { api, calls } = fixture(() =>
+			Response.json({ error: 'denied' }, { status })
+		)
+		await assert.rejects(
+			api.dashboardWindow({ kind: 'calendar', preset: 'today' })
+		)
+		assert.equal(calls.length, 1)
+	}
+	const controller = new AbortController()
+	const { api, calls } = fixture((path) => {
+		controller.abort()
+		return success(path)
+	})
+	await assert.rejects(
+		api.dashboardWindow(
+			{ kind: 'rolling', preset: '1h' },
+			{ signal: controller.signal }
+		)
+	)
+	assert.equal(calls.length, 1)
+})
+
+test('invalid and duplicate business buckets are rejected', async () => {
+	for (const timeseries of [
+		[{ ...stats.timeseries[0], bucket: '2026-02-30 00:00:00' }],
+		[stats.timeseries[0], stats.timeseries[0]],
+	]) {
+		const { api } = fixture((path) =>
+			Response.json({
+				success: true,
+				data: path.includes('/config/') ? overview : { ...stats, timeseries },
+			})
+		)
+		await assert.rejects(api.dashboardWindow({ kind: 'rolling', preset: '1h' }))
+	}
+})

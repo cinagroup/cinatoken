@@ -182,3 +182,27 @@ test('request detail retains status-only failures and discards responses arrivin
 	)
 	assert.equal(late.calls.length, 1)
 })
+
+test('exact detail retains host snapshots while old detail responses with no host remain readable', async () => {
+	for (const ingress_host of [undefined, null, 'Gateway.Example.test:8443']) {
+		const f = fixture(() =>
+			Response.json({ success: true, data: { ...row, ingress_host } })
+		)
+		assert.equal(
+			(await f.api.requestLogById('request-1')).ingress_host,
+			ingress_host
+		)
+		assert.equal(f.calls.length, 1)
+	}
+	const invalid = fixture(() =>
+		Response.json({
+			success: true,
+			data: { ...row, ingress_host: 'x'.repeat(256) },
+		})
+	)
+	await assert.rejects(
+		invalid.api.requestLogById('request-1'),
+		(error: unknown) =>
+			error instanceof CinaTokenApiError && error.code === 'invalid-response'
+	)
+})

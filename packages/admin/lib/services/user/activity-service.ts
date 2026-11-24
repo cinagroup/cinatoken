@@ -17,6 +17,11 @@ import {
 	normalizeBillingCurrencyCode,
 } from "@octafuse/core/lib/billing-currency";
 
+import {
+	serializeUserActivityCsv,
+	type ActivityCsvRow,
+} from "@octafuse/core/lib/activity-csv";
+
 const ACTIVITY_RANGES = {
 	"7d": 7,
 	"30d": 30,
@@ -49,6 +54,8 @@ export type UserActivityRepositories = {
 };
 
 export type UserActivityQuery = {
+	include_wallet?: unknown;
+	include_charge_allocation?: unknown;
 	range?: unknown;
 	page?: unknown;
 	page_size?: unknown;
@@ -59,6 +66,8 @@ export type UserActivityQuery = {
 };
 
 export type NormalizedUserActivityQuery = {
+	includeWallet?: boolean;
+	includeChargeAllocation?: boolean;
 	range: UserActivityRange;
 	page: number;
 	pageSize: number;
@@ -68,28 +77,7 @@ export type NormalizedUserActivityQuery = {
 	status?: string;
 };
 
-export type UserActivityLog = {
-	id: string;
-	apiKeyId: string | null;
-	apiKeyName: string | null;
-	modelId: string | null;
-	modelName: string | null;
-	providerName: string | null;
-	protocol: string | null;
-	operation: string | null;
-	status: string;
-	inputTokens: number;
-	outputTokens: number;
-	totalTokens: number;
-	chargedCost: number;
-	latencyMs: number | null;
-	billingKind: string | null;
-	inputImageCount: number;
-	outputImageCount: number;
-	audioDurationSeconds: number | null;
-	audioCharacters: number | null;
-	createdAt: string;
-};
+export type UserActivityLog = ActivityCsvRow;
 
 export type UserBudgetOverview = {
 	status: "finite" | "unlimited" | "unavailable";
@@ -101,6 +89,10 @@ export type UserBudgetOverview = {
 	budgetRemaining: number | null;
 	budgetPeriod: string;
 	budgetResetAt: string | null;
+	walletGranted?: number | null;
+	walletSpent?: number | null;
+	walletRemaining?: number | null;
+	totalRemaining?: number | null;
 };
 
 export type UserActivityGroup = {
@@ -159,7 +151,7 @@ function boundedInteger(
 	value: unknown,
 	fallback: number,
 	minimum: number,
-	maximum: number
+	maximum: number,
 ): number {
 	const parsed = Number.parseInt(String(value ?? ""), 10);
 	return Number.isFinite(parsed)
@@ -169,7 +161,7 @@ function boundedInteger(
 
 function boundedFilter(
 	value: unknown,
-	maximumLength: number
+	maximumLength: number,
 ): string | undefined {
 	if (typeof value !== "string") return undefined;
 	const normalized = value.trim();
@@ -181,7 +173,7 @@ function boundedFilter(
 }
 
 export function normalizeUserActivityQuery(
-	input: UserActivityQuery
+	input: UserActivityQuery,
 ): NormalizedUserActivityQuery {
 	const range =
 		typeof input.range === "string" && input.range in ACTIVITY_RANGES
@@ -189,6 +181,10 @@ export function normalizeUserActivityQuery(
 			: "7d";
 	const statusCandidate = boundedFilter(input.status, 32);
 	return {
+		...(input.include_wallet === "true" ? { includeWallet: true } : {}),
+		...(input.include_charge_allocation === "true"
+			? { includeChargeAllocation: true }
+			: {}),
 		range,
 		page: boundedInteger(input.page, 1, 1, 100_000),
 		pageSize: boundedInteger(input.page_size, 20, 1, 100),
@@ -204,12 +200,12 @@ export function normalizeUserActivityQuery(
 
 function activityWindow(
 	range: UserActivityRange,
-	nowMs: number
+	nowMs: number,
 ): { startAt: string; endAt: string } {
 	const safeNowMs = Number.isFinite(nowMs) ? nowMs : Date.now();
 	return {
 		startAt: new Date(
-			safeNowMs - ACTIVITY_RANGES[range] * 24 * 60 * 60 * 1_000
+			safeNowMs - ACTIVITY_RANGES[range] * 24 * 60 * 60 * 1_000,
 		).toISOString(),
 		endAt: new Date(safeNowMs).toISOString(),
 	};
@@ -220,7 +216,7 @@ function nonnegativeFinite(value: unknown): number | null {
 	return Number.isFinite(parsed) && parsed >= 0 ? parsed : null;
 }
 
-export function userBudgetOverview(user: UserRow): UserBudgetOverview {
+function periodBudgetOverview(user: UserRow): UserBudgetOverview {
 	const budgetSpent = nonnegativeFinite(user.budget_spent);
 	const budgetBase = nonnegativeFinite(user.budget_base);
 	const reservedMicros = Number(user.budget_reserved_micros);
@@ -275,6 +271,59 @@ export function userBudgetOverview(user: UserRow): UserBudgetOverview {
 	};
 }
 
+/** Wallet details are opt-in so existing strict Activity clients keep their response shape. */
+export function userBudgetOverview(
+	user: UserRow,
+	includeWallet = false,
+): UserBudgetOverview {
+	const period = periodBudgetOverview(user);
+	if (!includeWallet) return period;
+	const micros = (value: unknown): number | null => {
+		if (typeof value !== "number" || !Number.isFinite(value) || value < 0)
+			return null;
+		const result = Math.round(value * 1_000_000);
+		return Number.isSafeInteger(result) ? result : null;
+	};
+	const granted = micros(user.wallet_granted);
+	const spent = micros(user.wallet_spent);
+	const walletValid = granted !== null && spent !== null;
+	const walletRemaining = walletValid
+		? Math.max(0, granted - spent) / 1_000_000
+		: null;
+	let totalRemaining: number | null = null;
+	let status = walletValid ? period.status : ("unavailable" as const);
+	if (status === "finite") {
+		const limit = micros(period.budgetMax);
+		const periodSpent = micros(period.budgetSpent);
+		if (
+			limit === null ||
+			periodSpent === null ||
+			!walletValid ||
+			period.budgetReservedMicros === null
+		) {
+			status = "unavailable";
+		} else {
+			// Preserve historical overage: do not clamp each pool before combining them.
+			const combinedLimit = limit + granted;
+			const combinedSpent = periodSpent + spent;
+			const available =
+				combinedLimit - combinedSpent - period.budgetReservedMicros;
+			if ([combinedLimit, combinedSpent, available].every(Number.isSafeInteger))
+				totalRemaining = Math.max(0, available) / 1_000_000;
+			else status = "unavailable";
+		}
+	}
+	return {
+		...period,
+		status,
+		budgetRemaining: status === "unavailable" ? null : period.budgetRemaining,
+		walletGranted: granted === null ? null : granted / 1_000_000,
+		walletSpent: spent === null ? null : spent / 1_000_000,
+		walletRemaining,
+		totalRemaining,
+	};
+}
+
 function safeCount(value: unknown): number {
 	const parsed = Number(value);
 	return Number.isSafeInteger(parsed) && parsed >= 0 ? parsed : 0;
@@ -287,7 +336,7 @@ function safeAmount(value: unknown): number {
 
 function safePublicSnapshot(
 	value: unknown,
-	maximumLength: number
+	maximumLength: number,
 ): string | null {
 	if (typeof value !== "string") return null;
 	const normalized = value.trim();
@@ -300,7 +349,7 @@ function safePublicSnapshot(
 
 function normalizeActivityBucket(
 	value: unknown,
-	granularity: "hour" | "day"
+	granularity: "hour" | "day",
 ): string | null {
 	if (typeof value !== "string") return null;
 	const normalized =
@@ -309,8 +358,8 @@ function normalizeActivityBucket(
 				? `${value.replace(" ", "T")}.000Z`
 				: null
 			: /^\d{4}-\d{2}-\d{2}$/u.test(value)
-			? `${value}T00:00:00.000Z`
-			: null;
+				? `${value}T00:00:00.000Z`
+				: null;
 	if (!normalized) return null;
 	const timestamp = Date.parse(normalized);
 	if (!Number.isFinite(timestamp)) return null;
@@ -320,7 +369,7 @@ function normalizeActivityBucket(
 
 function sanitizeUserActivityTimeline(
 	rows: RequestTimeseriesRow[],
-	granularity: "hour" | "day"
+	granularity: "hour" | "day",
 ): UserActivityTimelinePoint[] {
 	return rows.slice(0, 200).flatMap((row) => {
 		const bucket = normalizeActivityBucket(row.bucket, granularity);
@@ -348,7 +397,7 @@ function keyNameMap(keys: ApiKeyRow[]): Map<string, string | null> {
 
 function sanitizeUserActivityGroup(
 	row: RequestActivityGroupRow,
-	nameOverride?: string | null
+	nameOverride?: string | null,
 ): UserActivityGroup {
 	return {
 		id: row.id,
@@ -361,15 +410,29 @@ function sanitizeUserActivityGroup(
 	};
 }
 
+/** Strict stored decimals only: null/blank/booleans must not turn into zero. */
+function recordedCharge(value: unknown): number | null {
+	if (
+		typeof value !== "number" &&
+		(typeof value !== "string" || !/^(?:0|[1-9]\d*)(?:\.\d+)?$/u.test(value))
+	)
+		return null;
+	const parsed = Number(value);
+	if (parsed === 0 && typeof value === "string" && /[1-9]/u.test(value))
+		return null;
+	return Number.isFinite(parsed) && parsed >= 0 ? parsed : null;
+}
+
 export function sanitizeUserActivityLog(
 	row: RequestLogRow,
-	ownedKeyNames: ReadonlyMap<string, string | null>
+	ownedKeyNames: ReadonlyMap<string, string | null>,
+	includeChargeAllocation = false,
 ): UserActivityLog {
 	const apiKeyId = row.api_key_id ?? null;
 	return {
 		id: row.id,
 		apiKeyId,
-		apiKeyName: apiKeyId ? ownedKeyNames.get(apiKeyId) ?? null : null,
+		apiKeyName: apiKeyId ? (ownedKeyNames.get(apiKeyId) ?? null) : null,
 		modelId: row.model_id ?? null,
 		modelName: row.model_name ?? null,
 		providerName: safePublicSnapshot(row.provider_name, 200),
@@ -380,6 +443,14 @@ export function sanitizeUserActivityLog(
 		outputTokens: safeCount(row.output_tokens),
 		totalTokens: safeCount(row.total_tokens),
 		chargedCost: safeAmount(row.charged_cost),
+		...(includeChargeAllocation && row.charged_wallet_cost !== undefined
+			? {
+					chargedWalletCost:
+						recordedCharge(row.charged_cost) === null
+							? null
+							: recordedCharge(row.charged_wallet_cost),
+				}
+			: {}),
 		latencyMs:
 			row.latency_ms == null ? null : nonnegativeFinite(row.latency_ms),
 		billingKind: row.billing_kind ?? null,
@@ -401,7 +472,7 @@ function requestLogOptions(
 	query: NormalizedUserActivityQuery,
 	window: { startAt: string; endAt: string },
 	page: number = query.page,
-	pageSize: number = query.pageSize
+	pageSize: number = query.pageSize,
 ) {
 	return {
 		page,
@@ -421,7 +492,7 @@ function activityAggregateOptions(
 	userId: string,
 	workspaceId: string,
 	query: NormalizedUserActivityQuery,
-	window: { startAt: string; endAt: string }
+	window: { startAt: string; endAt: string },
 ) {
 	return {
 		startDate: window.startAt,
@@ -441,7 +512,7 @@ export async function listUserActivityService(
 	userId: string,
 	workspaceId: string,
 	input: UserActivityQuery,
-	nowMs: number = Date.now()
+	nowMs: number = Date.now(),
 ): Promise<UserActivityOutput | null> {
 	const query = normalizeUserActivityQuery(input);
 	const window = activityWindow(query.range, nowMs);
@@ -450,7 +521,7 @@ export async function listUserActivityService(
 		userId,
 		workspaceId,
 		query,
-		window
+		window,
 	);
 	const [
 		user,
@@ -467,7 +538,7 @@ export async function listUserActivityService(
 		repos.apiKeys.listKeysByWorkspaceId(workspaceId, { creatorUserId: userId }),
 		repos.systemConfig.getConfig(BILLING_CURRENCY_KEY),
 		repos.requestLogs.getRequestLogs(
-			requestLogOptions(userId, workspaceId, query, window)
+			requestLogOptions(userId, workspaceId, query, window),
 		),
 		repos.requestLogs.getRequestStatsByRange(aggregateOptions),
 		repos.requestLogs.getRequestActivityGroups({
@@ -496,13 +567,13 @@ export async function listUserActivityService(
 		workspaceId,
 		billingCurrency: normalizeBillingCurrencyCode(billingCurrency),
 		range: { id: query.range, ...window },
-		budget: userBudgetOverview(user),
+		budget: userBudgetOverview(user, query.includeWallet),
 		summary,
 		analytics: {
 			limit: ACTIVITY_GROUP_LIMIT,
 			models: modelGroups.map((row) => sanitizeUserActivityGroup(row)),
 			apiKeys: apiKeyGroups.map((row) =>
-				sanitizeUserActivityGroup(row, names.get(row.id) ?? null)
+				sanitizeUserActivityGroup(row, names.get(row.id) ?? null),
 			),
 			providers: providerGroups.flatMap((row) => {
 				const providerName = safePublicSnapshot(row.id, 200);
@@ -510,9 +581,9 @@ export async function listUserActivityService(
 					? [
 							sanitizeUserActivityGroup(
 								{ ...row, id: providerName },
-								providerName
+								providerName,
 							),
-					  ]
+						]
 					: [];
 			}),
 		},
@@ -525,7 +596,9 @@ export async function listUserActivityService(
 			name: key.name,
 			status: key.status,
 		})),
-		logs: pageResult.logs.map((row) => sanitizeUserActivityLog(row, names)),
+		logs: pageResult.logs.map((row) =>
+			sanitizeUserActivityLog(row, names, query.includeChargeAllocation),
+		),
 		pagination: {
 			page: query.page,
 			pageSize: query.pageSize,
@@ -543,7 +616,7 @@ export async function getUserActivityGenerationService(
 	repos: UserActivityRepositories,
 	userId: string,
 	workspaceId: string,
-	id: string
+	id: string,
 ): Promise<PortalGenerationMetadataData | null> {
 	if (!GENERATION_ID_PATTERN.test(id)) return null;
 	const row = await repos.requestLogs.getRequestLogByIdForOwner({
@@ -556,62 +629,22 @@ export async function getUserActivityGenerationService(
 	return data?.workspace_id === workspaceId ? data : null;
 }
 
-function csvCell(value: string | number | null): string {
-	let text = value == null ? "" : String(value);
-	if (/^[=+\-@]/u.test(text)) text = `'${text}`;
-	return `"${text.replaceAll('"', '""')}"`;
-}
-
-export function userActivityCsv(
-	rows: UserActivityLog[],
-	billingCurrency: string = "USD"
-): string {
-	const normalizedCurrency =
-		normalizeBillingCurrencyCode(billingCurrency).toLowerCase();
-	const columns: Array<
-		[string, (row: UserActivityLog) => string | number | null]
-	> = [
-		["time", (row) => row.createdAt],
-		["request_id", (row) => row.id],
-		["api_key_id", (row) => row.apiKeyId],
-		["api_key_name", (row) => row.apiKeyName],
-		["model_id", (row) => row.modelId],
-		["model_name", (row) => row.modelName],
-		["provider_name", (row) => row.providerName],
-		["protocol", (row) => row.protocol],
-		["operation", (row) => row.operation],
-		["status", (row) => row.status],
-		["input_tokens", (row) => row.inputTokens],
-		["output_tokens", (row) => row.outputTokens],
-		["total_tokens", (row) => row.totalTokens],
-		["input_image_count", (row) => row.inputImageCount],
-		["output_image_count", (row) => row.outputImageCount],
-		["audio_duration_seconds", (row) => row.audioDurationSeconds],
-		["audio_characters", (row) => row.audioCharacters],
-		[`charged_cost_${normalizedCurrency}`, (row) => row.chargedCost],
-		["latency_ms", (row) => row.latencyMs],
-		["billing_kind", (row) => row.billingKind],
-	];
-	return `\uFEFF${[
-		columns.map(([name]) => csvCell(name)).join(","),
-		...rows.map((row) =>
-			columns.map(([, read]) => csvCell(read(row))).join(",")
-		),
-	].join("\r\n")}\r\n`;
-}
+/** Preserve the existing service export while sharing only the bounded pure CSV serializer. */
+export const userActivityCsv = serializeUserActivityCsv;
 
 export async function exportUserActivityCsvService(
 	repos: UserActivityRepositories,
 	userId: string,
 	workspaceId: string,
 	input: UserActivityQuery,
-	nowMs: number = Date.now()
+	nowMs: number = Date.now(),
 ): Promise<{
 	csv: string;
 	rowCount: number;
 	total: number;
 	truncated: boolean;
 	billingCurrency: string;
+	includesChargeAllocation: boolean;
 } | null> {
 	const query = {
 		...normalizeUserActivityQuery(input),
@@ -624,7 +657,7 @@ export async function exportUserActivityCsvService(
 		repos.apiKeys.listKeysByWorkspaceId(workspaceId, { creatorUserId: userId }),
 		repos.systemConfig.getConfig(BILLING_CURRENCY_KEY),
 		repos.requestLogs.getRequestLogs(
-			requestLogOptions(userId, workspaceId, query, window, 1, 100)
+			requestLogOptions(userId, workspaceId, query, window, 1, 100),
 		),
 	]);
 	if (!user) return null;
@@ -632,7 +665,7 @@ export async function exportUserActivityCsvService(
 	const targetCount = Math.min(firstPage.total, EXPORT_ROW_LIMIT);
 	for (let page = 2; rawRows.length < targetCount; page += 1) {
 		const next = await repos.requestLogs.getRequestLogs(
-			requestLogOptions(userId, workspaceId, query, window, page, 100)
+			requestLogOptions(userId, workspaceId, query, window, page, 100),
 		);
 		if (next.logs.length === 0) break;
 		rawRows.push(...next.logs);
@@ -640,10 +673,13 @@ export async function exportUserActivityCsvService(
 	const names = keyNameMap(keys);
 	const rows = rawRows
 		.slice(0, EXPORT_ROW_LIMIT)
-		.map((row) => sanitizeUserActivityLog(row, names));
+		.map((row) =>
+			sanitizeUserActivityLog(row, names, query.includeChargeAllocation),
+		);
 	const billingCurrency = normalizeBillingCurrencyCode(billingCurrencyRaw);
 	return {
-		csv: userActivityCsv(rows, billingCurrency),
+		csv: userActivityCsv(rows, billingCurrency, query.includeChargeAllocation),
+		includesChargeAllocation: query.includeChargeAllocation === true,
 		rowCount: rows.length,
 		total: firstPage.total,
 		truncated: firstPage.total > rows.length,

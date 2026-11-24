@@ -51,6 +51,9 @@ test('public namespaces, fixed locales, stable redirects and private fallback ar
 		'/api/admin/keys',
 		'/account',
 		'/admin',
+		'/admin/mcp',
+		'/gateway/mcp',
+		'/api/admin/mcp-servers',
 		'/gateway/models',
 		'/web-assets/a.js',
 	])

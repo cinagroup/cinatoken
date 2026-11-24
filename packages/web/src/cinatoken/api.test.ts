@@ -149,6 +149,61 @@ test('withdrawal recovery codes remain allowlisted without retaining arbitrary e
 	}
 })
 
+test('Console and policy precondition codes survive Cookie transport without retaining arbitrary codes or fields', async () => {
+	for (const [serverCode, status, expected] of [
+		[
+			'invalid_console_subject_precondition',
+			400,
+			'invalid_console_subject_precondition',
+		],
+		['console_subject_required', 428, 'console_subject_required'],
+		['console_subject_mismatch', 403, 'console_subject_mismatch'],
+		['invalid_admin_resource_id', 400, 'invalid_admin_resource_id'],
+		[
+			'invalid_data_policy_precondition',
+			400,
+			'invalid_data_policy_precondition',
+		],
+		[
+			'data_policy_precondition_required',
+			428,
+			'data_policy_precondition_required',
+		],
+		[
+			'route_data_policy_write_conflict',
+			409,
+			'route_data_policy_write_conflict',
+		],
+		['private-unknown-code', 400, null],
+	] as const) {
+		let calls = 0
+		const api = createCinaTokenApi(
+			transport(async () => {
+				calls++
+				return response(
+					{
+						success: false,
+						code: serverCode,
+						message: 'Rejected',
+						privateDraft: 'not-retained',
+					},
+					status
+				)
+			})
+		)
+		await assert.rejects(
+			api.me(),
+			(error) =>
+				error instanceof CinaTokenApiError &&
+				error.code === 'http' &&
+				error.status === status &&
+				error.serverCode === expected &&
+				!('privateDraft' in error)
+		)
+		assert.equal(calls, 1)
+	}
+})
+
 const walletScope = {
 	expectedWorkspaceId: 'ws-1',
 	expectedUserId: 'u1',

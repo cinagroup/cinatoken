@@ -28,7 +28,7 @@ function ScopedActivity(props: {
 	const query = manager.query
 	const blocked = manager.accessFailure !== null
 	const disabled = blocked || query.isFetching || manager.exportCsv.isPending
-	const data = blocked ? undefined : query.data
+	const data = blocked || query.isError ? undefined : query.data
 	let accessMessage = 'cinatoken.account.activity.noAccess'
 	if (manager.accessFailure === 'user')
 		accessMessage = 'cinatoken.account.sessionChanged'
@@ -178,7 +178,7 @@ function ScopedActivity(props: {
 					/>
 				</>
 			)}
-			{manager.selected && !blocked && (
+			{manager.selected && !blocked && !query.isError && (
 				<ActivityGenerationDialog
 					key={manager.selected.id}
 					scope={props.scope}

@@ -4,6 +4,7 @@ import {
 	providerEndpointsHaveCredentials,
 	PROVIDER_PROTOCOLS,
 } from './provider-endpoints'
+import { providerCatalogLinksSchema } from './providers/provider-catalog-links'
 
 export const providerIdentitySchema = z
 	.string()
@@ -66,6 +67,12 @@ const safeEndpoints = z
 export const adminProviderSchema = z
 	.object({
 		id: providerIdentitySchema,
+		kind: z.string().max(255).optional(),
+		kind_labels: z
+			.object({ en: z.string().max(255), zh: z.string().max(255) })
+			.optional(),
+		quota_supported: z.boolean().optional(),
+		catalog_links: providerCatalogLinksSchema.optional(),
 		name: z.string().min(1),
 		vendor_key: z.string(),
 		icon_key: z.string(),
@@ -118,6 +125,7 @@ export const providerCatalogItemSchema = z
 		vendor_key: z.string(),
 		icon_key: z.string(),
 		vendor_label: z.string(),
+		links: providerCatalogLinksSchema.optional(),
 		protocols: z.array(z.enum(PROVIDER_PROTOCOLS)),
 		endpoints: safeEndpoints,
 		description: z.string().nullable(),

@@ -7,6 +7,10 @@ import {
 	type GatewayKeyDetail,
 } from '../gateway-keys/gateway-key-contracts'
 import type { GatewayKeyPatch } from '../gateway-keys/gateway-key-input'
+import {
+	rateLimitEquals,
+	rateLimitWriteSchema,
+} from '../gateway-keys/rate-limit'
 import type { UserDetailOptions, UserDetailTransport } from './user-detail-api'
 import type { UserDetailKey } from './user-detail-contracts'
 
@@ -52,6 +56,9 @@ export function createUserDetailKeyEditorApi(transport: UserDetailTransport) {
 			patch: GatewayKeyPatch,
 			options: UserDetailOptions = {}
 		): Promise<void> {
+			const rate = rateLimitWriteSchema.optional().safeParse(patch.rate_limit)
+			if (!rate.success) transport.invalidResponse()
+			const expectedRate = rate.data
 			if (!gatewayKeyRevisionSchema.safeParse(patch.expected_revision).success)
 				transport.invalidResponse()
 			try {
@@ -69,6 +76,8 @@ export function createUserDetailKeyEditorApi(transport: UserDetailTransport) {
 				options.signal?.throwIfAborted()
 				ownership(result.data, expected)
 				if (
+					(expectedRate !== undefined &&
+						!rateLimitEquals(result.data.rate_limit, expectedRate)) ||
 					(patch.name !== undefined && result.data.name !== patch.name) ||
 					(patch.status !== undefined && result.data.status !== patch.status)
 				)

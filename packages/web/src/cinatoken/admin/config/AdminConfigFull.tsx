@@ -2,6 +2,8 @@
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { FactorModeCard } from './FactorModeCard'
+import { StreamTimeoutCard } from './StreamTimeoutCard'
 import type { AdminConfigWebhookChannel } from './config-contracts'
 import {
 	useAdminConfigFull,
@@ -244,6 +246,8 @@ export function AdminConfigFull(props: AdminConfigFullProps) {
 	}
 
 	let confirmText = t(prefix + 'confirmOther')
+	if (state.confirmation?.kind === 'factorMode')
+		confirmText = t(prefix + 'confirmFactorMode')
 	if (state.confirmation?.kind === 'currency')
 		confirmText = t(prefix + 'confirmCurrency')
 	if (state.confirmation?.kind === 'webhook-replace')
@@ -279,6 +283,7 @@ export function AdminConfigFull(props: AdminConfigFullProps) {
 				variant='outline'
 				onClick={() => void state.refresh()}
 				disabled={
+					state.streamBusy ||
 					state.refreshing ||
 					state.mutation.isPending ||
 					state.revealing !== null ||
@@ -479,6 +484,45 @@ export function AdminConfigFull(props: AdminConfigFullProps) {
 								</div>
 							) : null}
 						</section>
+						<FactorModeCard
+							field={data.userChargedCostFactorMode}
+							draft={state.factorModeDraft}
+							canWrite={canWrite}
+							canEdit={state.canEdit('factorMode')}
+							locked={state.locked.factorMode}
+							onChange={state.setFactorModeDraft}
+							onDiscard={() => state.setFactorModeDraft(null)}
+							onSave={(value) =>
+								state.askConfirmation({
+									field: 'factorMode',
+									kind: 'factorMode',
+									value,
+								})
+							}
+						/>
+						{(
+							[
+								'streamFirstEventTimeoutMs',
+								'streamFirstEventTimeoutRouteGroups',
+							] as const
+						).map((field) => (
+							<StreamTimeoutCard
+								key={field}
+								api={props.api}
+								scopeKey={props.scopeKey}
+								reconciliationKey={props.reconciliationKey}
+								field={field}
+								configuration={data[field]}
+								canWrite={canWrite}
+								revalidate={props.revalidate}
+								disabled={
+									state.refreshing ||
+									state.mutation.isPending ||
+									state.revealing !== null ||
+									state.verifying !== null
+								}
+							/>
+						))}
 						{webhookCard('wecom')}
 						{webhookCard('feishu')}
 					</div>

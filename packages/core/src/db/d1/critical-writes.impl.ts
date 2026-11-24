@@ -2,16 +2,29 @@
  * D1：关键写路径（batch / 原始 SQL），供 `storage/critical-write-paths` 调度。
  */
 import type { D1PreparedStatement } from '@cloudflare/workers-types';
-import { eq } from 'drizzle-orm';
+import { eq, getTableColumns } from 'drizzle-orm';
 import type { InsertUserAuditLogParams } from '../user-audit-logs-types';
 import { assertAndFinalizeUserAuditInsert } from '../user-audit-catalog';
 import type { InsertUserBudgetAuditLogParams } from '../user-budget-audit-params';
-import { buildInsertOrIgnoreUserAuditLogStatement, buildInsertUserAuditLogStatement } from './user-audit-logs.impl';
-import type { GrantWalletCreditParams, GrantWalletCreditResult } from '../wallet-credit';
+import { buildInsertUserAuditLogStatement } from './user-audit-logs.impl';
+import type {
+	GrantWalletCreditParams,
+	GrantWalletCreditResult,
+	ReadWalletCreditReceiptParams,
+	ReadWalletCreditReceiptResult,
+	WalletCreditAuditRecord,
+} from '../wallet-credit';
 import {
 	buildWalletCreditAuditRow,
 	mapStorageUserToRow,
-	walletCreditResult,
+	walletCreditReceiptResult,
+	walletCreditStoredD1Amount,
+	walletCreditSnapshot,
+	assertWalletCreditParams,
+	assertWalletCreditReference,
+	readWalletCreditAuditReceipt,
+	requireMatchingWalletCreditReceipt,
+	WalletCreditConcurrentMutationError,
 	WalletCreditUserNotFoundError,
 } from '../wallet-credit';
 import type { UserBudgetSnapshot } from '../../storage/critical-write-paths';
@@ -1048,38 +1061,162 @@ async function insertRequestUsageAndChargeTxD1Attempt(
 	}
 }
 
+const walletCreditAuditSelectD1 = `SELECT id, user_id AS userId, event_type AS eventType,
+ dedup_key AS dedupKey, change_payload AS changePayload, before_user_snapshot AS beforeUserSnapshot,
+ after_user_snapshot AS afterUserSnapshot, created_at AS createdAt FROM user_audit_logs WHERE user_id = ? AND dedup_key = ?`;
+
+type CurrentWalletCreditAuditD1 = WalletCreditAuditRecord & {
+	currentWalletGranted: number;
+	currentWalletSpent: number;
+};
+// One SELECT observes both the immutable receipt and current counters from the
+// same SQLite snapshot; never combine a pre-read wallet with a later receipt.
+const walletCreditCurrentSelectD1 = `SELECT receipt.*, u.wallet_granted AS currentWalletGranted,
+ u.wallet_spent AS currentWalletSpent FROM (${walletCreditAuditSelectD1}) AS receipt
+ JOIN users AS u ON u.id = receipt.userId`;
+
+function currentWalletCreditSnapshotD1(row: CurrentWalletCreditAuditD1) {
+	return walletCreditSnapshot(
+		walletCreditStoredD1Amount(row.currentWalletGranted),
+		walletCreditStoredD1Amount(row.currentWalletSpent),
+	);
+}
+
+export async function readWalletCreditReceiptD1(
+	client: D1DatabaseClient,
+	params: ReadWalletCreditReceiptParams,
+): Promise<ReadWalletCreditReceiptResult> {
+	assertWalletCreditReference(params.externalRef);
+	const row = await client.raw
+		.prepare(walletCreditAuditSelectD1)
+		.bind(params.userId, params.externalRef)
+		.first<WalletCreditAuditRecord>();
+	return readWalletCreditAuditReceipt(row ?? undefined, params);
+}
+
 export async function grantWalletCreditWithAuditTxD1(
 	client: D1DatabaseClient,
 	params: GrantWalletCreditParams,
 ): Promise<GrantWalletCreditResult> {
+	assertWalletCreditParams(params);
 	const rows = await client.drizzle.select().from(d1UsersTable).where(eq(d1UsersTable.id, params.userId)).limit(1);
-	if (!rows[0]) {
-		throw new WalletCreditUserNotFoundError(params.userId);
-	}
-	const auditId = crypto.randomUUID();
-	const { audit } = buildWalletCreditAuditRow(mapStorageUserToRow(rows[0]), params, auditId);
-	const amount = roundGatewayMoney(params.amount);
-	const results = await client.raw.batch([
-		buildInsertOrIgnoreUserAuditLogStatement(client.raw, audit),
+	const row = rows[0];
+	if (!row) throw new WalletCreditUserNotFoundError(params.userId);
+	const existing = await client.raw
+		.prepare(walletCreditCurrentSelectD1)
+		.bind(params.userId, params.externalRef)
+		.first<CurrentWalletCreditAuditD1>();
+	if (existing)
+		return walletCreditReceiptResult(
+			'duplicate',
+			requireMatchingWalletCreditReceipt(readWalletCreditAuditReceipt(existing, params), params),
+			currentWalletCreditSnapshotD1(existing),
+		);
+	const auditId = crypto.randomUUID(),
+		now = nowIso();
+	const { audit, afterGranted } = buildWalletCreditAuditRow(
+		mapStorageUserToRow({
+			...row,
+			walletGranted: walletCreditStoredD1Amount(row.walletGranted),
+			walletSpent: walletCreditStoredD1Amount(row.walletSpent),
+		}),
+		params,
+		auditId,
+		now,
+	);
+	const p = assertAndFinalizeUserAuditInsert(audit);
+	// Compare the full raw read set, including authoritative period micros and raw
+	// JSON. A canonicalized snapshot or second-resolution timestamp alone is not CAS.
+	const columns = Object.entries(getTableColumns(d1UsersTable));
+	const where = columns.map(([, column]) => `"${column.name}" IS ?`).join(' AND ');
+	const observed = columns.map(([key]) => row[key as keyof typeof row]);
+	const after = columns.map(([key]) =>
+		key === 'walletGranted' ? afterGranted : key === 'updatedAt' ? now : row[key as keyof typeof row],
+	);
+	const results = await client.raw.batch<CurrentWalletCreditAuditD1>([
 		client.raw
 			.prepare(
-				`UPDATE users SET wallet_granted = wallet_granted + ?, updated_at = datetime('now')
-				 WHERE id = ? AND EXISTS (SELECT 1 FROM user_audit_logs WHERE id = ?)`,
+				`INSERT INTO user_audit_logs (
+   id,user_id,event_type,actor_type,change_payload,before_user_snapshot,after_user_snapshot,changed_fields,
+   correlation_id,source,actor_id,reason_code,reason_text,dedup_key,created_at
+  ) SELECT ?,?,?,?,?,?,?,?,?,?,?,?,?,?,? FROM users WHERE ${where}
+  ON CONFLICT(user_id,dedup_key) DO NOTHING`,
 			)
-			.bind(amount, params.userId, auditId),
+			.bind(
+				p.id,
+				p.userId,
+				p.eventType,
+				p.actorType,
+				p.changePayload ?? null,
+				p.beforeUserSnapshot ?? null,
+				p.afterUserSnapshot ?? null,
+				p.changedFields ?? null,
+				p.correlationId ?? null,
+				p.source ?? null,
+				p.actorId ?? null,
+				p.reasonCode ?? null,
+				p.reasonText ?? null,
+				p.dedupKey ?? null,
+				now,
+				...observed,
+			),
+		client.raw
+			.prepare(
+				`UPDATE users SET wallet_granted = ?, updated_at = ? WHERE ${where}
+   AND EXISTS (SELECT 1 FROM user_audit_logs WHERE id = ? AND user_id = ?)`,
+			)
+			.bind(afterGranted, now, ...observed, auditId, params.userId),
+		// This SQL failure rolls the entire batch back if a trigger ignores/rewrites
+		// the update. A JavaScript assertion after batch COMMIT cannot provide this.
+		client.raw
+			.prepare(
+				`SELECT CASE WHEN EXISTS (SELECT 1 FROM user_audit_logs WHERE id = ? AND user_id = ?)
+   AND (changes() != 1 OR NOT EXISTS (SELECT 1 FROM users WHERE ${where})
+    OR NOT EXISTS (SELECT 1 FROM user_audit_logs WHERE id = ? AND user_id = ?
+     AND event_type = 'wallet_credit' AND dedup_key IS ? AND change_payload IS ?
+     AND before_user_snapshot IS ? AND after_user_snapshot IS ? AND created_at IS ?))
+   THEN json('wallet_credit_commit_guard_failure') ELSE 1 END AS wallet_credit_commit_guard`,
+			)
+			.bind(
+				auditId,
+				params.userId,
+				...after,
+				auditId,
+				params.userId,
+				params.externalRef,
+				p.changePayload ?? null,
+				p.beforeUserSnapshot ?? null,
+				p.afterUserSnapshot ?? null,
+				now,
+			),
+		client.raw.prepare(walletCreditCurrentSelectD1).bind(params.userId, params.externalRef),
 	]);
-	const applied = (results[1]?.meta?.changes ?? 0) > 0;
-	const after = await client.drizzle
-		.select({
-			walletGranted: d1UsersTable.walletGranted,
-			walletSpent: d1UsersTable.walletSpent,
-		})
-		.from(d1UsersTable)
-		.where(eq(d1UsersTable.id, params.userId))
-		.limit(1);
-	return walletCreditResult(
-		applied ? 'applied' : 'duplicate',
-		parseMoney(after[0]?.walletGranted),
-		parseMoney(after[0]?.walletSpent),
-	);
+	// A response is received AFTER the batch may have committed. Missing/malformed
+	// acknowledgements are unknown outcomes, never evidence of a zero-write conflict.
+	const inserted = results[0]?.meta?.changes;
+	const updated = results[1]?.meta?.changes;
+	if (
+		results.length !== 4 ||
+		results.some((result) => result.success !== true) ||
+		(inserted !== 0 && inserted !== 1) ||
+		updated !== inserted ||
+		!Array.isArray(results[3]?.results)
+	)
+		throw new Error('Wallet credit batch acknowledgement is unverified');
+	const stored = results[3].results[0];
+	if (inserted === 0) {
+		if (!stored) throw new WalletCreditConcurrentMutationError();
+		return walletCreditReceiptResult(
+			'duplicate',
+			requireMatchingWalletCreditReceipt(readWalletCreditAuditReceipt(stored, params), params),
+			currentWalletCreditSnapshotD1(stored),
+		);
+	}
+	try {
+		if (!stored || stored.id !== auditId) throw new Error('Missing wallet credit receipt');
+		const receipt = requireMatchingWalletCreditReceipt(readWalletCreditAuditReceipt(stored, params), params);
+		return walletCreditReceiptResult('applied', receipt, currentWalletCreditSnapshotD1(stored));
+	} catch (cause) {
+		throw new Error('Committed wallet credit receipt could not be verified', { cause });
+	}
 }

@@ -1,3 +1,4 @@
+import { requestChargeSplit } from '../../../core/src/lib/request-charge-allocation'
 import type { ActivityCsvExport } from './activity-contracts'
 
 export const ACTIVITY_EXPORT_WORKSPACE_HEADER = 'X-CinaToken-Workspace-Id'
@@ -98,6 +99,8 @@ export async function readActivityCsvResponse(
 	if (blob.size > ACTIVITY_EXPORT_MAX_BYTES) invalid()
 	const bytes = await blob.arrayBuffer()
 	const rows = csvRows(new TextDecoder('utf-8', { fatal: true }).decode(bytes))
+	const allocation = response.headers.get('X-CinaToken-Charge-Allocation')
+	if (allocation !== null && allocation !== 'v1') invalid()
 	const columns = [
 		'time',
 		'request_id',
@@ -120,6 +123,11 @@ export async function readActivityCsvResponse(
 		'latency_ms',
 		'billing_kind',
 	]
+	if (allocation === 'v1')
+		columns.push(
+			`charged_period_cost_${billingCurrency.toLowerCase()}`,
+			`charged_wallet_cost_${billingCurrency.toLowerCase()}`
+		)
 	if (
 		rows.length !== rowCount + 1 ||
 		rows[0].length !== columns.length ||
@@ -136,6 +144,27 @@ export async function readActivityCsvResponse(
 			)
 	)
 		invalid()
+	if (allocation === 'v1') {
+		const readAmount = (text: string, storedTotal = false): number => {
+			const pattern = storedTotal
+				? /^(?:0|[1-9]\d*)(?:\.\d+)?$/u
+				: /^(?:0|[1-9]\d*)(?:\.\d{1,6})?$/u
+			if (!pattern.test(text)) invalid()
+			const value = Number(text)
+			if (value === 0 && /[1-9]/u.test(text)) invalid()
+			return value
+		}
+		for (const row of rows.slice(1)) {
+			const [period, wallet] = row.slice(-2)
+			if (period === '' && wallet === '') continue
+			const split = requestChargeSplit({
+				charged_cost: readAmount(row[17], true),
+				charged_wallet_cost: readAmount(wallet),
+			})
+			if (split.status !== 'known' || split.period !== readAmount(period))
+				invalid()
+		}
+	}
 	return {
 		blob,
 		filename: matched[1],

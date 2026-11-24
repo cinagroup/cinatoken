@@ -1,5 +1,16 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
+import { analyticsDirectoryMessages } from '../providers/directory-messages'
+import { analyticsDrilldownMessages } from './drilldown-messages'
+import { analyticsInsightsMessages } from './insights-messages'
+import { analyticsQualityMessages } from './quality-messages'
+import { analyticsViewMessages } from './view-messages'
+
 const en = {
+	...analyticsDirectoryMessages.en,
+	...analyticsDrilldownMessages.en,
+	...analyticsInsightsMessages.en,
+	...analyticsQualityMessages.en,
+	...analyticsViewMessages.en,
 	title: 'Model analytics',
 	subtitle:
 		'Usage, cost, latency and provider drilldown for the selected range.',
@@ -53,8 +64,8 @@ const en = {
 	avg_latency_ms: 'Latency',
 	avg_effective_ttft_ms: 'TTFT',
 	avg_upstream_response_ms: 'Upstream',
-	tokens_per_second: 'Tokens/s',
-	failover_rate: 'Failovers',
+	tokens_per_second: 'Tokens/s (legacy)',
+	failover_rate: 'Failover events (%)',
 	avg_attempts: 'Attempts',
 	ttftReasoning: 'First reasoning token',
 	ttftContent: 'First content token',
@@ -64,6 +75,11 @@ const en = {
 	contentRate: 'Content TTFT rate',
 }
 const zh: typeof en = {
+	...analyticsDirectoryMessages.zh,
+	...analyticsDrilldownMessages.zh,
+	...analyticsInsightsMessages.zh,
+	...analyticsQualityMessages.zh,
+	...analyticsViewMessages.zh,
 	title: '模型分析',
 	subtitle: '查看所选时段的用量、成本、延迟和供应商明细。',
 	refresh: '刷新',
@@ -114,8 +130,8 @@ const zh: typeof en = {
 	avg_latency_ms: '延迟',
 	avg_effective_ttft_ms: '首 Token 时间',
 	avg_upstream_response_ms: '上游响应',
-	tokens_per_second: 'Token/秒',
-	failover_rate: '故障转移率',
+	tokens_per_second: 'Token/秒（旧版）',
+	failover_rate: '故障转移事件率',
 	avg_attempts: '尝试次数',
 	ttftReasoning: '首推理 Token',
 	ttftContent: '首内容 Token',
@@ -125,6 +141,11 @@ const zh: typeof en = {
 	contentRate: '内容首 Token 比率',
 }
 const ja: typeof en = {
+	...analyticsDirectoryMessages.ja,
+	...analyticsDrilldownMessages.ja,
+	...analyticsInsightsMessages.ja,
+	...analyticsQualityMessages.ja,
+	...analyticsViewMessages.ja,
 	title: 'モデル分析',
 	subtitle: '選択期間の使用量、コスト、遅延、プロバイダー内訳を表示します。',
 	refresh: '更新',
@@ -177,8 +198,8 @@ const ja: typeof en = {
 	avg_latency_ms: '遅延',
 	avg_effective_ttft_ms: 'TTFT',
 	avg_upstream_response_ms: '上流応答',
-	tokens_per_second: 'トークン/秒',
-	failover_rate: 'フェイルオーバー率',
+	tokens_per_second: 'トークン/秒（従来）',
+	failover_rate: 'フェイルオーバーイベント率',
 	avg_attempts: '試行回数',
 	ttftReasoning: '最初の推論トークン',
 	ttftContent: '最初の本文トークン',
@@ -188,6 +209,11 @@ const ja: typeof en = {
 	contentRate: '本文 TTFT 率',
 }
 const ko: typeof en = {
+	...analyticsDirectoryMessages.ko,
+	...analyticsDrilldownMessages.ko,
+	...analyticsInsightsMessages.ko,
+	...analyticsQualityMessages.ko,
+	...analyticsViewMessages.ko,
 	title: '모델 분석',
 	subtitle:
 		'선택 기간의 사용량, 비용, 지연 시간과 공급자 세부 정보를 확인합니다.',
@@ -241,8 +267,8 @@ const ko: typeof en = {
 	avg_latency_ms: '지연 시간',
 	avg_effective_ttft_ms: 'TTFT',
 	avg_upstream_response_ms: '업스트림 응답',
-	tokens_per_second: '토큰/초',
-	failover_rate: '장애 조치율',
+	tokens_per_second: '토큰/초 (기존)',
+	failover_rate: '장애 조치 이벤트 비율',
 	avg_attempts: '시도 횟수',
 	ttftReasoning: '첫 추론 토큰',
 	ttftContent: '첫 내용 토큰',

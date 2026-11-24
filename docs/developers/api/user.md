@@ -187,8 +187,15 @@ DELETE /api/user/workspace-budgets/:interval
 | `api_key_id` | 最长 128 字符 | 可选 Gateway Key 精确筛选 |
 | `model_id` | 最长 256 字符 | 可选模型 ID 精确筛选 |
 | `provider_name` | 最长 200 字符且不含控制字符 | 可选公开 Provider 展示名精确筛选 |
+| `include_charge_allocation` | 仅精确 `true` 开启 | 独立扩展列表收费分配或版本化CSV；省略时保留旧形状 |
 
 服务端始终从 CinaAuth 会话主体和逐请求复验的当前 Workspace 同时写入 `user_id` 与 Workspace 查询条件；Workspace 通过不可变请求日志快照和所关联 Gateway Key 的服务端归属解析。客户端传入其他用户或其他 Workspace 的 Key ID 只会得到空结果。模型、Key、Provider 分组及时序分别由一条有界聚合查询完成，不加载明细或形成 N+1；Key 名称只从当前用户在当前 Workspace 可见的 Key 集合映射，Provider 分组只使用请求时公开名称快照。时序 bucket 由服务端规范化为 UTC ISO 时间，非法日期和非有限数值不会直接进入门户响应。列表响应采用字段白名单，不返回 Provider/Route 内部标识、上游地址或请求正文、错误详情、密钥指纹、上游请求 ID、pricing audit 等运维信息。
+
+`GET /api/user/activity` 可带 `include_wallet=true`，在 `budget` 内追加 `walletGranted`、`walletSpent`、`walletRemaining`、`totalRemaining`（均为当前计费币种的主单位）。总可用额按两池原始余额合并后扣除全部在途预留，历史周期超支不会被清零；无限额度的 `totalRemaining` 为 `null`，不可验证的余额标记为 `unavailable`。永久池余额不会随周期重置，也不重复扣除预留。该扩展仅显式开启时返回，保留旧客户端的严格响应形状；Web 请求扩展并兼容旧服务，缺失永久额度时明确提示，不按零余额展示。该余额扩展不改变 CSV 与 Generation 详情形状；收费分配另按下方独立开关协商。
+
+`GET /api/user/activity` 和 `/export.csv` 可独立带 `include_charge_allocation=true`。只有精确的字符串 `true` 开启此扩展，与 `include_wallet` 的账户余额扩展相互独立。JSON明细在有已存字段时追加可选 `chargedWalletCost: number | null`，从数据库decimal严格规范为计费主单位有限非负number；缺失不补零，空白/布尔/非法值保留未知。原有运维字段白名单和服务端用户、Workspace、Key组合条件保持。新Web主动请求并兼容旧响应；列表桌面表格、手机卡片及Generation抽屉显示周期分量（总收费减永久池分量）和永久池分量。分配来自已核验列表快照，Generation接口本身仍沿用最小安全投影。两项金额必须可用安全微单位表示、非负且永久池不超总额，且相减后转回主单位须保留原微单位，否则不计算分量。真实零和0.000001保留，极小正数不伪装为零；此信息表示请求记录的收费分配，不是账户余额或预算扣款证明。列表刷新失败时隐藏旧收费结果，权限或作用域改变仍关闭详情与下载。
+
+扩展CSV保持原20列顺序，并在最后追加 `charged_period_cost_<currency>` 和 `charged_wallet_cost_<currency>`，其中币种后缀与已核验计费币种一致。服务端仅在开启扩展时返回 `X-CinaToken-Charge-Allocation: v1`；缺失或不一致分配的两格都为空，已知0写0。新Web按版本确认列数/列名并核对分配与总收费一致，未知版本、无确认额外列、部分空分量、非法金额或不一致结果拒绝下载；无版本头的旧20列CSV仍兼容。未开启扩展的JSON/CSV形状不变，既有1000行限制、逐页相同作用域、BOM/引号转义及表格公式防护继续适用。
 
 `GET /api/user/activity/:generation_id` 使用门户会话而非 Gateway Key，但复用 `/api/v1/generation` 的同一最小权限数据库投影和 core 安全净化规则。查询在 SQL 层同时绑定精确 Generation ID、会话用户和当前 Workspace，并在服务层再次核对不可变 Workspace 快照；非法 ID、跨租户记录和缺少 identity/origin/region/BYOK 证据的旧记录统一返回 404。非美元部署无法真实生成 OpenRouter 的 USD `total_cost` 时，门户仍返回详情并将该字段保留为 `null`，页面费用则使用 Activity 已核验的当前计费币种数值。响应为 `Cache-Control: private, no-store`，仍不包含请求/响应正文、内部路由、凭据或错误诊断。
 

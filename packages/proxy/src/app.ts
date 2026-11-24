@@ -335,10 +335,19 @@ export function createProxyApp(resolveStorage: StorageResolver, options?: ProxyA
 				'language',
 				'X-DashScope-SSE',
 				'X-DashScope-Async',
+				'X-CinaToken-Task-Receipt',
 				'MCP-Protocol-Version',
 				'Mcp-Session-Id',
 			],
-			exposeHeaders: ['X-Generation-Id', 'Retry-After', 'X-OctaFuse-Request-Id', 'X-OctaFuse-Error-Code', 'Mcp-Session-Id'],
+			exposeHeaders: [
+				'X-Generation-Id',
+				'Retry-After',
+				'X-OctaFuse-Request-Id',
+				'X-OctaFuse-Error-Code',
+				'Mcp-Session-Id',
+				'X-CinaToken-Settlement-Basis',
+				'X-CinaToken-Request-Id',
+			],
 		}),
 	);
 

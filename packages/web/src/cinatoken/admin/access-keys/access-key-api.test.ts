@@ -336,3 +336,13 @@ test('server failures are sanitized and a late aborted secret reply is discarded
 			error instanceof CinaTokenApiError && error.code === 'cancelled'
 	)
 })
+
+test('MCP-scoped integration keys remain readable without silently granting extra permissions', async () => {
+	const permissions = ['mcp.read', 'mcp.write', 'mcp.secrets.read']
+	const { api } = fixture(() =>
+		Response.json({ success: true, data: [{ ...publicRow, permissions }] })
+	)
+	const rows = await api.listAccessKeys()
+	assert.deepEqual(rows[0]?.permissions, permissions)
+	assert.equal(rows[0]?.permissions.includes('*'), false)
+})

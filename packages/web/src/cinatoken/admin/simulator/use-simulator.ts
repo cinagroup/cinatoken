@@ -7,9 +7,11 @@ import type { GatewayKeyRow } from '../gateway-keys/gateway-key-contracts'
 import { validateAudioTranscriptionFile } from '../playground/browser-domain/audio-transcriptions'
 import { isDashScopeRealtimeOperation } from '../playground/browser-domain/dashscope-realtime-client'
 import { validateEditImageFiles } from '../playground/browser-domain/image-generations'
+import { miniMaxSpeechAudioBlob } from '../playground/browser-domain/native-media'
 import { RunOwner } from '../playground/browser-domain/run-owner'
 import {
 	buildSimulatorRequest,
+	buildSimulatorTaskQuery,
 	buildSimulatorDashScopeRealtimeUrl,
 	type BuildSimulatorRequestInput,
 } from './endpoint'
@@ -17,8 +19,12 @@ import {
 	isOriginalGatewaySecret,
 	type SimulatorAdminApi,
 } from './simulator-api'
+import type { SimulatorAsyncTask } from './simulator-async-task'
+import { dashScopeSpeechPreview } from './simulator-native-audio'
 import {
 	initialSelection,
+	needsSimulatorAudioFile,
+	supportedSelection,
 	isRealtimeSelection,
 	parseSimulatorBody,
 	readPreference,
@@ -65,7 +71,8 @@ export type SimulatorSnapshot = {
 	wire: WirePreview
 	requestBody: Record<string, unknown>
 }
-export type SimulatorResponse = SimulatorTransportResult & {
+export type SimulatorResponse = Omit<SimulatorTransportResult, 'task'> & {
+	audioUrl?: string | null
 	snapshot: SimulatorSnapshot
 }
 export function useSimulator(props: {
@@ -108,6 +115,12 @@ export function useSimulator(props: {
 	const [sending, setSending] = useState(false)
 	const [response, setResponse] = useState<SimulatorResponse | null>(null)
 	const [bodyError, setBodyError] = useState(false)
+	const [taskId, setTaskId] = useState<string | null>(null)
+	const taskOwner = useRef<{
+		task: SimulatorAsyncTask
+		binding: SecretBinding
+		snapshot: SimulatorSnapshot
+	} | null>(null)
 	const [owner] = useState(() => new RunOwner())
 	const binding = useRef<SecretBinding | null>(null)
 	const verification = useRef<{
@@ -165,6 +178,8 @@ export function useSimulator(props: {
 		refetchOnWindowFocus: false,
 	})
 	function clearSecret(): void {
+		taskOwner.current = null
+		setTaskId(null)
 		verification.current?.controller.abort()
 		verification.current = null
 		binding.current = null
@@ -176,6 +191,7 @@ export function useSimulator(props: {
 	useEffect(() => {
 		return () => {
 			owner.cancel()
+			taskOwner.current = null
 			verification.current?.controller.abort()
 			verification.current = null
 			binding.current = null
@@ -183,11 +199,13 @@ export function useSimulator(props: {
 	}, [owner])
 	useEffect(() => {
 		owner.cancel()
+		taskOwner.current = null
 		verification.current?.controller.abort()
 		verification.current = null
 		binding.current = null
 		// eslint-disable-next-line react-hooks/set-state-in-effect -- A committed identity/access change must synchronously erase credential and result UI.
 		setSecretDraftState('')
+		setTaskId(null)
 		setVerified(false)
 		setVerifying(false)
 		setSecretError(false)
@@ -247,6 +265,8 @@ export function useSimulator(props: {
 				fresh.workspace_id !== selected.workspace_id ||
 				fresh.status !== 'active')
 		) {
+			taskOwner.current = null
+			setTaskId(null)
 			verification.current?.controller.abort()
 			binding.current = null
 			setSecretDraftState('')
@@ -258,11 +278,13 @@ export function useSimulator(props: {
 	useEffect(() => {
 		if (!keyEnabled && context) {
 			owner.cancel()
+			taskOwner.current = null
 			verification.current?.controller.abort()
 			verification.current = null
 			binding.current = null
 			// eslint-disable-next-line react-hooks/set-state-in-effect -- External context permission loss must immediately erase the in-memory credential UI.
 			setSecretDraftState('')
+			setTaskId(null)
 			setVerified(false)
 			setVerifying(false)
 			setSending(false)
@@ -387,7 +409,8 @@ export function useSimulator(props: {
 		selection.modelId,
 		selection.routeGroup,
 		selection.protocol,
-		requestOperation(selection) ?? undefined
+		requestOperation(selection) ?? undefined,
+		selection.kind
 	)
 	const realtime = isRealtimeSelection(selection)
 	const usesMicrophone =
@@ -416,8 +439,8 @@ export function useSimulator(props: {
 		blockReason = 'readyNeedModel'
 	else if (selection.kind !== 'tool' && routes.length === 0)
 		blockReason = 'supportedSurfacesEmpty'
-	else if (selection.kind === 'image' && selection.protocol !== 'openai')
-		blockReason = 'readyNeedOpenaiForImage'
+	else if (!supportedSelection(selection))
+		blockReason = 'supportedSurfacesEmpty'
 	else if (
 		selection.kind === 'image' &&
 		selection.imageOperation === 'edits' &&
@@ -431,27 +454,22 @@ export function useSimulator(props: {
 	)
 		blockReason = 'realtimeUnavailable'
 	else if (
-		selection.kind === 'audio' &&
-		selection.protocol !== 'openai' &&
-		selection.protocol !== 'dashscope'
+		realtime &&
+		selection.audioOperation === 'speech' &&
+		!context?.realtime_tts_supported
 	)
-		blockReason = 'protocolLockedAudio'
+		blockReason = 'realtimeTtsRejected'
 	else if (
-		selection.kind === 'audio' &&
-		selection.audioOperation === 'transcriptions' &&
+		needsSimulatorAudioFile(selection, parsedBody) &&
 		!usesMicrophone &&
-		!(
-			selection.protocol === 'dashscope' &&
-			selection.dashscopeOperation === 'audio.transcriptions.multimodal'
-		) &&
-		!(
-			selection.protocol === 'openai' &&
-			typeof parsedBody?.file_url === 'string' &&
-			parsedBody.file_url.trim()
-		) &&
 		!audioValidation.ok
 	)
 		blockReason = 'audioFileRequired'
+	else if (
+		bodyText.length > 2 * 1024 * 1024 ||
+		new TextEncoder().encode(bodyText).byteLength > 2 * 1024 * 1024
+	)
+		blockReason = 'bodyTooLarge'
 	else if (!parsedBody) blockReason = 'errBodyMustBeObject'
 	function requestInput(
 		secret: string,
@@ -543,6 +561,8 @@ export function useSimulator(props: {
 		const input = requestInput(verifiedBinding.secret, parsedBody)
 		if (!input) return
 		const run = owner.start()
+		taskOwner.current = null
+		setTaskId(null)
 		const snapshot: SimulatorSnapshot = {
 			keyId: selectedKey.id,
 			ownerId: selectedKey.user_id,
@@ -605,6 +625,36 @@ export function useSimulator(props: {
 				binding.current !== verifiedBinding
 			)
 				return
+			const freshContext = await props.api.context({
+				signal: run.controller.signal,
+			})
+			if (
+				!owner.owns(run) ||
+				binding.current !== verifiedBinding ||
+				scope.current !== currentScope ||
+				!permission.current
+			)
+				return
+			if (
+				!freshContext.capabilities.can_read_keys ||
+				(selection.kind !== 'tool' &&
+					filterMatchingActiveRoutes(
+						freshContext.routes,
+						selection.modelId,
+						selection.routeGroup,
+						selection.protocol,
+						requestOperation(selection) ?? undefined,
+						selection.kind
+					).length === 0)
+			)
+				throw new TypeError('Surface is no longer available')
+			if (
+				realtime &&
+				(!freshContext.realtime_supported ||
+					(selection.audioOperation === 'speech' &&
+						!freshContext.realtime_tts_supported))
+			)
+				throw new TypeError('Realtime is no longer available')
 			let result: SimulatorTransportResult
 			if (
 				realtime &&
@@ -626,6 +676,10 @@ export function useSimulator(props: {
 					secret: verifiedBinding.secret,
 					signal: run.controller.signal,
 					onProgress: update,
+					captureAsyncTask:
+						selection.kind === 'audio' &&
+						selection.protocol === 'dashscope' &&
+						selection.dashscopeOperation === 'audio.transcriptions.async',
 				})
 			}
 			if (
@@ -633,7 +687,16 @@ export function useSimulator(props: {
 				scope.current === currentScope &&
 				permission.current
 			) {
-				setResponse({ ...result, snapshot })
+				if (result.task) {
+					taskOwner.current = {
+						task: result.task,
+						binding: verifiedBinding,
+						snapshot,
+					}
+					setTaskId(result.task.id)
+				}
+				const { task: _privateTask, ...safeResult } = result
+				setResponse(withNativeAudio({ ...safeResult, snapshot }))
 				setSending(false)
 				owner.finish(run)
 			}
@@ -649,8 +712,78 @@ export function useSimulator(props: {
 			}
 		}
 	}
+	async function queryTask(): Promise<void> {
+		const task = taskOwner.current
+		const key = selectedKey
+		if (
+			sending ||
+			!task ||
+			!key ||
+			!keyEnabled ||
+			!verified ||
+			binding.current !== task.binding ||
+			scope.current !== task.binding.scope ||
+			!permission.current
+		)
+			return
+		const run = owner.start()
+		setSending(true)
+		const request = buildSimulatorTaskQuery({
+			baseUrl: task.binding.proxy,
+			taskId: task.task.id,
+			modelForRouting: routingString(task.snapshot.selection),
+			receipt: task.task.receipt,
+			apiKey: task.binding.secret,
+		})
+		const snapshot: SimulatorSnapshot = {
+			...task.snapshot,
+			wire: {
+				method: 'GET',
+				url: request.url,
+				headers: redactHeaders(request.headers),
+				bodyText: '',
+			},
+		}
+		const owns = () =>
+			owner.owns(run) &&
+			taskOwner.current === task &&
+			binding.current === task.binding &&
+			scope.current === task.binding.scope &&
+			permission.current
+		try {
+			await props.api.verifySecret(
+				key,
+				task.binding.secret,
+				props.session.subject,
+				{ signal: run.controller.signal }
+			)
+			if (!owns()) return
+			const result = await executeSimulatorHttp({
+				request,
+				secret: task.binding.secret,
+				signal: run.controller.signal,
+				onProgress: (value) => {
+					if (owns()) setResponse({ ...value, snapshot })
+				},
+			})
+			if (owns()) setResponse({ ...result, snapshot })
+		} catch {
+			if (owns()) {
+				clearSecret()
+				setSecretError(true)
+			}
+		} finally {
+			if (owner.owns(run)) {
+				setSending(false)
+				owner.finish(run)
+			}
+		}
+	}
+
 	return {
 		selection,
+		taskId,
+		queryTask,
 		changeSelection,
 		proxyBaseUrl,
 		changeProxy,
@@ -710,3 +843,24 @@ export function useSimulator(props: {
 	}
 }
 export type SimulatorState = ReturnType<typeof useSimulator>
+
+function withNativeAudio(response: SimulatorResponse): SimulatorResponse {
+	if (
+		response.snapshot.selection.kind !== 'audio' ||
+		response.snapshot.selection.audioOperation !== 'speech' ||
+		response.meta.outcome !== 'complete' ||
+		response.audio
+	)
+		return response
+	const protocol = response.snapshot.selection.protocol
+	if (protocol === 'minimax')
+		return { ...response, audio: miniMaxSpeechAudioBlob(response.raw) }
+	if (protocol === 'dashscope') {
+		const preview = dashScopeSpeechPreview(
+			response.raw,
+			response.snapshot.requestBody
+		)
+		return { ...response, audio: preview.audio, audioUrl: preview.url }
+	}
+	return response
+}

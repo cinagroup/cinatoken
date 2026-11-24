@@ -445,6 +445,8 @@ export type AdminKeyDetailOutput = {
 export type AdminRequestLogListItem = RequestLogRow;
 
 export type AdminRequestLogsOutput = {
+	/** Acknowledges nonempty scopes only after the filtered repository read succeeds. */
+	applied_filters?: { ingress_host?: string; model_id_prefix?: string; provider_ids?: string[] };
 	logs: AdminRequestLogListItem[];
 	total: number;
 	page: number;
@@ -613,6 +615,8 @@ export type AdminProviderAnalyticsOutput = {
 
 export type AdminUserAnalyticsRow = {
 	user_email: unknown;
+	/** Null for ambiguous, unjoined or legacy email groups. */
+	user_id?: string | null;
 	request_count: number;
 	input_tokens: number;
 	output_tokens: number;

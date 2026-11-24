@@ -14,7 +14,7 @@ const utcIso = z.string().refine((value) => {
 })
 // The route normally normalizes D1 SQL timestamps; accept only the canonical
 // UTC-seconds legacy shape as a defensive fallback, then store ISO in Query.
-const lastActive = z
+export const userAnalyticsLastActive = z
 	.union([
 		utcIso,
 		z
@@ -27,6 +27,7 @@ const lastActive = z
 
 export const userAnalyticsRowSchema = z
 	.object({
+		user_id: z.string().uuid().nullable().optional(),
 		user_email: z
 			.string()
 			.min(1)
@@ -42,12 +43,15 @@ export const userAnalyticsRowSchema = z
 		charged_cost: finite,
 		metered_cost: finite,
 		distinct_models: count,
-		last_active_at: lastActive,
+		last_active_at: userAnalyticsLastActive,
 		budget_max: finite.nullable(),
 		budget_spent: finite,
+		wallet_granted: finite.nonnegative().nullable().optional(),
+		wallet_spent: finite.nonnegative().nullable().optional(),
 		// Current joined-user budget snapshot, not a selected-range spend.
 		budget_usage_rate: finite.nonnegative().nullable(),
 		success_rate: finite.min(0).max(100),
+		success_count: count.optional(),
 		error_count: count,
 	})
 	.refine(
@@ -58,6 +62,15 @@ export const userAnalyticsRowSchema = z
 				? row.budget_usage_rate !== null
 				: row.budget_usage_rate === null)
 	)
+	.refine((row) => {
+		if (row.success_count === undefined) return true
+		const rate =
+			row.request_count > 0 ? (row.success_count / row.request_count) * 100 : 0
+		return (
+			row.success_count + row.error_count <= row.request_count &&
+			Math.abs(row.success_rate - rate) <= 1e-9
+		)
+	})
 export type UserAnalyticsRow = z.infer<typeof userAnalyticsRowSchema>
 
 export const userAnalyticsResponseSchema = z
