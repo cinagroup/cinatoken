@@ -3504,7 +3504,7 @@ SDK 请求格式未改：状态 PATCH 和指定版本 POST 保留 summary 与精
 
 ### 2026-11-23 提交、合并、部署与清理
 
-用户明确要求提交、合并、部署和清理。原 575 个待提交文件已先保存补丁、未跟踪文件包及逐文件摘要；兼容功能经 [PR #5](https://github.com/cinagroup/cinatoken/pull/5) 合入 `2dae758bd46018ee168ad12a788bc2dd9145bd3f`，保留远端 Singapore 数据库绑定修正。发布控制修正为 `04538c9338351eff992a04203553e8ff5efc07be`，仅涉及四个 CI／Lint 基线文件，没有改动应用运行源码。已清理两个合并后的本地临时分支、失效工作树记录、远端基线比较分支，并取消 37 个已被 main 验证替代的本次 PR 排队任务；原始证据与回滚版本保留，没有跨聊天发送消息。
+用户明确要求提交、合并、部署和清理。原 575 个待提交文件已先保存补丁、未跟踪文件包及逐文件摘要；兼容功能经 [PR #5](https://github.com/cinagroup/cinatoken/pull/5) 合入 `2dae758bd46018ee168ad12a788bc2dd9145bd3f`，保留远端 Singapore 数据库绑定修正。发布控制修正为 `04538c9338351eff992a04203553e8ff5efc07be`，仅涉及四个 CI／Lint 基线文件，没有改动应用运行源码。已清理两个合并后的本地临时分支、失效工作树记录、远端基线比较分支，并对 37 个已被 main 验证替代的本次 PR 任务发起取消（33 项受理，4 项返回 409；最终均已结束）；原始证据与回滚版本保留，没有跨聊天发送消息。
 
 [Web CI 45325775144](https://github.com/cinagroup/cinatoken/actions/runs/45325775144) 与 [发布控制修正 CI 45331139739](https://github.com/cinagroup/cinatoken/actions/runs/45331139739) 两作业均成功，含 Web 2273 单测、格式／类型／Lint、三目标构建和 Docker/Nginx／SSR 检查。实际使用前一运行的不可变产物：2628 个源码输入逐字节匹配 main Git blob，source SHA `99c8121f7351d74246c632bbaeb07be6be8eec2bcc41d9b3a9b5b35497413f3b`，buildId `2ce9dcee-f352-4a0b-bf52-4cbb920b0225`；后续四个发布控制文件不属于该输入集合，原候选包保持不变。`production-20261123-2dae758bd460` 包共 210 资产，包含 144 当前与 66 保留文件，两份对应源码包，旧资源保留期 90 天；manifest SHA `b7b5dc4cc4b82272a549b8cfa25907adb02b561bc687c81994766ad05832f09b`。
 
