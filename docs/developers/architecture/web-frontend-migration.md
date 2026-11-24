@@ -4,7 +4,7 @@
 
 目标是以 `packages/web` 的 React、Rsbuild 与现有 UI 基础作为 cinatoken 前端，覆盖公开发现、账户中心及管理后台的全部现有能力。首个交付切片是认证、工作区和网关密钥闭环；切片通过不代表整个迁移完成。
 
-**可行性结论：可行。** `packages/web` 已作为独立 `cinatoken-web` 部署，并接管生产主入口与公开SSR。当前1d776d6b版本为100%流量，新增账户/管理偏好存储拒绝容错及四语安全路由状态；本地、Linux CI、匿名偏好和受控路由/真实编译dist验证通过（5.96），本次生产相关只读验收仍按实际结果推进。Admin继续提供认证、用户/管理API、BFF与兼容旧路由。真实CinaAuth/已有专用工作区/密钥尚未验收，完整业务、数据库、双平台、取消与旧页退役继续按原门槛推进。 5.97共享页脚归属与偏好恢复边界已按同SHA成功CI发布；生产匿名Chrome2/2及HTTP18/19，当前源码30s下载失败继续保留，完整范围见5.97。
+**可行性结论：可行。** `packages/web` 继续作为独立 `cinatoken-web` 承接生产主入口与公开 SSR。2026-11-23 已完成本次兼容改动的提交、合并和 Cloudflare Web/Admin/Proxy 发布，三个服务均为 `04538c93` 标签、100% 流量；Web version `60a5bc09-30cb-420e-bdd9-2f434ed1fdaf`，详情与真实验证边界见末尾发布收口记录。原有 29 个开启的页面开关、路由、数据库及服务绑定保持，新增 MCP 页面开关为 false。完整身份、资金、原生数据库、双平台及旧页面退役验收继续按原门槛推进。
 
 本文同时保存方案、checklist 和进度，不另建会分叉的实施清单。按以下入口阅读：
 
@@ -22,7 +22,7 @@
 
 ## 0. 当前进度与维护规则
 
-当前续批（2026-11-11，ACC-14，账户编辑）：旧包已确认普通元数据会提交未改名称、无变化仍 PATCH；两类默认描述／版本原本可用。已接稀疏元数据与版本请求、初始表单基线和权限失效草稿清理，完整静态与浏览器验证待执行。完整范围及勾选状态保持。
+当前续批（2026-11-23，发布收口）：兼容改动已经 PR #5 合入 main 并部署 Web/Admin/Proxy；账户 Guardrails 稀疏编辑在实际 CI 冻结包上补验 14/14，Web 2273 单测、发布 CI 和生产匿名 Chrome 2/2 通过。HTTP 原始严格检查为 24/25，剩余源码索引 HTML 仅有已确认的 Cloudflare 统计脚本注入。完整范围和 211 项原勾选状态保持，详见末尾。
 
 上一续批（2026-11-11，ACC-14 / ADM-25，有效预览显示）：已修复账户／管理预览微额显示为零和业务时区错标。共享精度、显式业务时区及 UTC 降级说明通过六项检查、2263 单测和同包两入口 24 浏览器场景；旧包 4 个问题诊断独立复现。完整范围与原勾选状态保持，真实联调及发布待验，见末尾有效预览章节。
 
@@ -34,7 +34,7 @@
 
 上次发布（2026-10-05，历史）：`cinatoken.com/*` 继续由独立 `cinatoken-web` 承接，当前源码 `c13a64b9c3b2c90adcf736910ea408868d7854f1`、version `2a0a2777-d3b1-47f0-a0a7-88e701b4d2d9`、deployment `fd24618f-121e-4640-9edf-f15d243a6d75`、100%流量、29页面开关启用；资源Route保留，Workers.dev/Preview关闭。同SHA Linux CI37312669228两个job/36步骤全部success，冻结产物与2289 Git输入/18195586 B精确匹配。实际部署由已验证的3847955＋bdc1bfcf bridge与新CI产物合成，137资产/35服务端文件，三档对应源码可下载；GET23/HEAD6、认证转发GET3、4个HTML no-transform与资源组合137/137通过，首轮超时及定向重试均保留。Admin/Proxy仍为34c742d1。本SHA原v2两轮25/23页超时、新v3 31/45页及三交互后actual1，完整严格浏览器未通过；5.72的3847955严格45/45及交互结果仅保留为历史。当前资源保留修复见5.73，首轮遥测冲突/配置403见5.71。真实登录/资金/链、完整G0–G8和旧页退役仍待验收。
 
-当前发布（2026-10-07，5.97）：独立 `cinatoken-web` 源码 `1d776d6b394d7a6ef2e813f5914aa041fbe266f6`、version `5b6499d7-e89d-4daa-9d63-6670a6fb9716`、deployment `f6ce2c9f-101c-4e44-9c4a-1766a54b1ced`、100%流量；同SHA Linux CI37585679508两job/37步骤全部success、Web1628/1628 skip0，2304完整输入与Git原字节一致。激活包171资产/35服务端文件/7源码包；前后3Route/29true/33binding/service/origins/预览关闭读回0，Admin/Proxy版本与34c742d1不变。生产匿名Chrome2/2及HTTP18/19，当前源码30s只下载3546112/4263077B，实际FAIL保留；5.96与更早发布段均作为历史。
+上次发布（2026-10-07，5.97，历史）：独立 `cinatoken-web` 源码 `1d776d6b394d7a6ef2e813f5914aa041fbe266f6`、version `5b6499d7-e89d-4daa-9d63-6670a6fb9716`、deployment `f6ce2c9f-101c-4e44-9c4a-1766a54b1ced`、100%流量；同SHA Linux CI37585679508两job/37步骤全部success、Web1628/1628 skip0，2304完整输入与Git原字节一致。激活包171资产/35服务端文件/7源码包；前后3Route/29true/33binding/service/origins/预览关闭读回0，Admin/Proxy版本与34c742d1不变。生产匿名Chrome2/2及HTTP18/19，当前源码30s只下载3546112/4263077B，实际FAIL保留；5.96与更早发布段均作为历史。
 
 上次发布（2026-10-07，5.96历史）：独立 `cinatoken-web` 源码 `3494dca3fd14f8433ede2679fcb54916256a9113`，version `c5314d77-ba0d-4f7e-9b38-f8241e2d4424`、deployment `c7c90b4c-aa1e-4fbc-a0f5-0a988423a1a4`、100%流量；同SHA Linux CI37573558229两job/37步骤全部success，2302输入与Git blob原字节一致。激活保留包168资产/35服务端文件/6源码包，Linux与Windows构建合同分别保存。真实上传/切流及发布后只读三Route、29true、完整33绑定名称/类型、服务/origins与预览关闭读回0，Admin/Proxy部署与34c742d1源码保持；相关生产HTTP/匿名账户结果与局限见5.96，不改历史30s/60s失败或完整门禁。下方2026-10-06原发布段按原字节保留为历史。
 
@@ -3498,6 +3498,22 @@ SDK 请求格式未改：状态 PATCH 和指定版本 POST 保留 summary 与精
 
 浏览器使用 Playwright（Browser plugin not available），桌面 1440×1000／手机 390×844，UTC／Asia/Tokyo／America/Los_Angeles 浏览器时区，模拟 Console／账户身份与同源 API。当前 http://127.0.0.1:33193 及旧 http://127.0.0.1:44597 预览均停止。证据见 [web-guardrail-preview-display-2026-11-11](/home/cina/.codex/visualizations/2026/10/15/01a13d58-e8f9-71f2-8d5c-34e63089f768/web-guardrail-preview-display-2026-11-11)。完整 102 主任务／45 路由组／55 矩阵行／211 检查项（55 已勾选、156 待验）保持，真实身份、数据库、Proxy、审计与双平台发布继续待验。未提交、推送、部署或跨聊天发送消息，完整目标继续。
 
-### 账户 Guardrails 稀疏编辑 WIP（2026-11-11）
+### 账户 Guardrails 稀疏编辑初稿（2026-11-11，补验见下方发布收口）
 
 关联 ACC-14、P3-04、P4-09。9 源文件，source SHA 99c8121f7351d74246c632bbaeb07be6be8eec2bcc41d9b3a9b5b35497413f3b，2628 输入；预期 Web 2273 单测、当前 28 浏览器场景、旧包 3 问题诊断，另保留六流程初步观察。元数据／版本初始基线、字段省略与 null 清空及权限／默认身份失效待完整验收。账户未知写的持久保护属于后续仍未完成的恢复要求；没有新增字段 CAS，不提前勾选整域。证据目录 /tmp/cinatoken-account-guardrails-editor-20261111；未提交、推送、部署或跨聊天发送消息。
+
+### 2026-11-23 提交、合并、部署与清理
+
+用户明确要求提交、合并、部署和清理。原 575 个待提交文件已先保存补丁、未跟踪文件包及逐文件摘要；兼容功能经 [PR #5](https://github.com/cinagroup/cinatoken/pull/5) 合入 `2dae758bd46018ee168ad12a788bc2dd9145bd3f`，保留远端 Singapore 数据库绑定修正。发布控制修正为 `04538c9338351eff992a04203553e8ff5efc07be`，仅涉及四个 CI／Lint 基线文件，没有改动应用运行源码。已清理两个合并后的本地临时分支、失效工作树记录、远端基线比较分支，并取消 37 个已被 main 验证替代的本次 PR 排队任务；原始证据与回滚版本保留，没有跨聊天发送消息。
+
+[Web CI 45325775144](https://github.com/cinagroup/cinatoken/actions/runs/45325775144) 与 [发布控制修正 CI 45331139739](https://github.com/cinagroup/cinatoken/actions/runs/45331139739) 两作业均成功，含 Web 2273 单测、格式／类型／Lint、三目标构建和 Docker/Nginx／SSR 检查。实际使用前一运行的不可变产物：2628 个源码输入逐字节匹配 main Git blob，source SHA `99c8121f7351d74246c632bbaeb07be6be8eec2bcc41d9b3a9b5b35497413f3b`，buildId `2ce9dcee-f352-4a0b-bf52-4cbb920b0225`；后续四个发布控制文件不属于该输入集合，原候选包保持不变。`production-20261123-2dae758bd460` 包共 210 资产，包含 144 当前与 66 保留文件，两份对应源码包，旧资源保留期 90 天；manifest SHA `b7b5dc4cc4b82272a549b8cfa25907adb02b561bc687c81994766ad05832f09b`。
+
+原账户编辑 WIP 的预期 28 场景／旧包 3 诊断不追补为通过。本次独立重验实际 CI 候选包的 14/14 场景：元数据无变化不发请求、描述／名称稀疏 PATCH、null 清空、config-only 新版本、两类默认名称保护、后台列表读取保留初始草稿基线、权限及列表错误清除草稿、400 后显式修正，以及中／日／韩 390×844 手机（韩文暗色）。8 张最终截图直接检查，模拟身份和同源 API，无生产业务写入。临时观察脚本的网络事件竞态、弹窗动画中间帧均独立保留并修正。账户未知写的跨刷新持久保护、同字段并发 CAS 仍未新增，整域不提前勾选。
+
+首次后端部署在旧 Next 页面 Lint 阶段失败，未执行上传。8 个错误文件均逐字节等于原始 main `d0c559d3`；发布门禁仍执行完整 ESLint，只容许固定文件 SHA 和错误指纹多重集中的 56 条既有错误，修改文件或新增错误会失败，5 项门禁测试通过。普通 `npm run lint -w @octafuse/admin` 仍会报告这些错误，50 条警告也保留。另以原始 main 独立重验，根级 10 项类型错误、dispatch 12 项类型错误及原生 PG financial-consumer 的 outcome_unknown 与本批相同，隔离清理契约也在原 main 失败；这些已知失败未声称修复或通过。
+
+[后端部署 45331975410](https://github.com/cinagroup/cinatoken/actions/runs/45331975410) 成功，Core 主套件 1248、Proxy 主套件 4952、Admin 主套件 1363 均通过；本地钱包补充 54＋9 项、Admin 完整 1363 项通过。Cloudflare 最终读回：Web version `60a5bc09-30cb-420e-bdd9-2f434ed1fdaf`／deployment `b1bba725-23e8-4499-a4f8-e09809527b6f`，Admin version `1791bb01-22b1-4aef-aa1c-79c3a6f448c3`／deployment `92849a86-1960-4714-922e-001ecba3258a`，Proxy version `d7e12ac0-40be-4d48-b857-d2ad69951294`／deployment `749f693d-4199-44dd-9ee4-743783e9c17f`；三个版本标签均为 `04538c93`，100% 流量。Web 原 33、Admin 29、Proxy 14 个绑定原值保持，Hyperdrive 与数据库绑定不变，三条正式路由不变，Web workers.dev 和预览关闭，MCP 新开关 false。未执行数据库迁移或 Chain Worker 发布。
+
+生产匿名 Chrome 155.0.8059.39 桌面 1440×1000 的首页→`/en/models` 导航和手机 390×844 的中文切换 2/2 通过，页面身份／非空／无框架遮罩／无未解释控制台异常／无横向溢出及截图均验证。当前生产目录为 0 个已发布模型，只验其明确空状态和导航，不代表真实模型调用。HTTP 严格检查原始结果 24/25，当前及保留源码压缩包和关键新旧资产原字节／摘要一致；源码索引 HTML 额外含一个 367 字节 Cloudflare Web Analytics 模块，去除该唯一新增片段后与冻结模板完全一致，不改写原失败为原始字节一致。通用 HTTP 客户端的早期 403、浏览器首轮漏识别 `/en/models` 和脚本错误猜测目录路径均保留；正常浏览器和标准 User-Agent 的相关探测结果如上述。
+
+证据目录：[release-2026-11-23](/home/cina/.codex/visualizations/2026/10/15/01a13d58-e8f9-71f2-8d5c-34e63089f768/release-2026-11-23)。已完成本次提交、合并与 Cloudflare 发布；完整 102 主任务／45 路由组／55 矩阵行／211 检查项（55 已勾选、156 待验）保持，真实登录、资金／链／原生数据库、跨刷新未知写恢复、双平台与旧页面退役继续待验。本轮完整前端迁移目标不标为完成。
