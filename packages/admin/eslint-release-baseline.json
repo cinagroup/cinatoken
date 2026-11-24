@@ -1,0 +1,111 @@
+{
+  "version": 1,
+  "baselineRef": "d0c559d390921c6aee227c38b4057f728e5935c8",
+  "description": "Eight byte-identical original-main legacy files. Full ESLint still runs. Changed files and new diagnostics cannot use these exceptions. Ordinary lint remains strict.",
+  "files": [
+    {
+      "path": "app/dashboard/page.tsx",
+      "sha256": "573f91e71dee8864c43ca1c4c10deae817b0fec9eef5ed00c9c3a51247a5aa41",
+      "fingerprints": [
+        "1daaed41d34a0da4b096a968ab1bded5028129a0d988351016037780d3fd90cf"
+      ]
+    },
+    {
+      "path": "app/gateway/analytics/reliability/page.tsx",
+      "sha256": "f6c642b72d5ed350241019de24c2f747363726d5d6d5a98def291e33afb01325",
+      "fingerprints": [
+        "9d4ae73e90828d8e5012c7a2c3ccfe92d9146614cbdd017547e5c525039f9956"
+      ]
+    },
+    {
+      "path": "app/gateway/mcp/use-mcp-catalog-test.ts",
+      "sha256": "2241fa27a07e609e2bd868fdfebe3393a74400b421bd5aad0c4141e11c1fc3b5",
+      "fingerprints": [
+        "976a003832ee752ff29bf98f8728c66cccc42abd2c7e41dfc49a2daa8195903a",
+        "7773c8d22e9308fc4c10b5fb0ce1bc49f1d33cd7324db1a7f1e2456314a7cbac"
+      ]
+    },
+    {
+      "path": "app/gateway/mcp/use-mcp-servers-state.ts",
+      "sha256": "77c81971f8e00f9da8e41c9e30d6b7873486408a116ace3109e5d0949feb92db",
+      "fingerprints": [
+        "66593e75bfc98521a4acdb7fa5d519116f62359456fb5407c99320918dde5208",
+        "d4999b3b9757310ce7182eddbe56b117044821cca556b0d285b3016288821093"
+      ]
+    },
+    {
+      "path": "app/gateway/providers/components/provider-modal.tsx",
+      "sha256": "1b6df5b3733aa90678db965b9643833f9216177a0ba4b581599a514dac3e0db5",
+      "fingerprints": [
+        "bd6e1f9fc081a7a82093cffafed2eb90f5b175ecc235da7cf069d380aa1499f3"
+      ]
+    },
+    {
+      "path": "app/gateway/routes/use-routes-page-state.ts",
+      "sha256": "bf25976302d16ff447b0168b3ba61a82bf63fd3284cf47666b599d2c74ea1c73",
+      "fingerprints": [
+        "27d3b1556707a66547c216367c69fb04d0780f7081949ea149fd3a25db279a09"
+      ]
+    },
+    {
+      "path": "app/gateway/tools/advanced/page.tsx",
+      "sha256": "31083ae9e174859a5d1faabad5623b68f22b97e57d720b288e256a9dca12a9cc",
+      "fingerprints": [
+        "68393691251c993d539b81e9227d26750fd67f173c4b74dc93ee437dc004324a"
+      ]
+    },
+    {
+      "path": "app/gateway/users/[id]/page.tsx",
+      "sha256": "f0ef691caf2818bb18360879f31b5fa2156fd6d34dfbb1a858c0dc328447b334",
+      "fingerprints": [
+        "34a2f8b6909baae300279a9ed701c269e9101d267c9c4514d97a956083140f9c",
+        "34a2f8b6909baae300279a9ed701c269e9101d267c9c4514d97a956083140f9c",
+        "34a2f8b6909baae300279a9ed701c269e9101d267c9c4514d97a956083140f9c",
+        "d3098dfa92d1fc422b6ed4a206dcb39300f7534b2ce39ce82d2db9d90113740f",
+        "3f9927150c41ad83f93471a3f51e5ee0ab30efa7977e0958cda51ae651440249",
+        "b1e488a662fc290253eaee2c8e0c2f66afac47c277154e45d03088178c411381",
+        "b1e488a662fc290253eaee2c8e0c2f66afac47c277154e45d03088178c411381",
+        "b1e488a662fc290253eaee2c8e0c2f66afac47c277154e45d03088178c411381",
+        "53b3b785038952e68d4b6bbf4d0707d106a10acdb15c6a3e5c19ee054d995149",
+        "fd4d19c02cd4f9a994c79c876cb1cd0b1b948f29e06cedff284a801010aea61a",
+        "f35a266594abb9b67506c86840b8e3223f5e7b1bc4f3c93a064766736c35e6ff",
+        "f35a266594abb9b67506c86840b8e3223f5e7b1bc4f3c93a064766736c35e6ff",
+        "f35a266594abb9b67506c86840b8e3223f5e7b1bc4f3c93a064766736c35e6ff",
+        "b88c7223f343604f48d2f3d2a669e012f7c1eb9eb101d61473a624dc57536f45",
+        "93348f30e9203c83442c6e579deb8d5a6f412c2bdeaffcdb1896e4b0f68a93c7",
+        "ee6a978588b46a734485af9c353ed09fc3a0d9e9cecd8ead133f388fdb9f59dc",
+        "15b7f12f2fffcf8d6325f6af46cf31346add31b8305721b744b2882b4902d054",
+        "15b7f12f2fffcf8d6325f6af46cf31346add31b8305721b744b2882b4902d054",
+        "b358a08002a3e4ac8dc6a129e5fbe9d6def84886a06512baaf740c9892d2a3dc",
+        "88ff835352cb7b0390f97a2e6f31158a958a15475ac6400612510650f7e6cfdc",
+        "88ff835352cb7b0390f97a2e6f31158a958a15475ac6400612510650f7e6cfdc",
+        "88ff835352cb7b0390f97a2e6f31158a958a15475ac6400612510650f7e6cfdc",
+        "88e7658ad087d6a4945211064513d2abded6778427604451617b935fbd23eafa",
+        "2db7c25e22f75055a325bb877727e9d3c2010b7d590a3e1f73ae5a5e9e7b9f47",
+        "78f96a6df30d962f845f8e1e73127e35a4266a226c396817e1fce74a9efafd17",
+        "5e89e4346ae3f9741323967bdade657486fe25d96c5bae3fb8241440af3ec6a0",
+        "10d8935788d453e1aa6686f01814c5687ff0befb4e0b20b218caa8c4a5dc9452",
+        "fcc551310af9f887399940eebf56790d4aa182f24f0552633586a7b7cf14ae23",
+        "bb47f57e0d0bb524892619286eda3e49c5c4af7a4ad3403487b9e8603116cb06",
+        "0400fa16f2e05b0e2ca376c8eaa41743fd68e4c1295c702856ab280e58d48ee1",
+        "0400fa16f2e05b0e2ca376c8eaa41743fd68e4c1295c702856ab280e58d48ee1",
+        "0400fa16f2e05b0e2ca376c8eaa41743fd68e4c1295c702856ab280e58d48ee1",
+        "1f09b6bce471369fb897379e4edf7dde61bd0668182a28bc2b85187a7398099e",
+        "1f09b6bce471369fb897379e4edf7dde61bd0668182a28bc2b85187a7398099e",
+        "68d675f9af0b1c7cc6015429d6b691bfa9b61b8544864aebdf541724bf31eed1",
+        "68d675f9af0b1c7cc6015429d6b691bfa9b61b8544864aebdf541724bf31eed1",
+        "deb6993e6fa08a84fe4eb51da19a130ef80c7691f90ca76b9707c7fc333fb4f6",
+        "deb6993e6fa08a84fe4eb51da19a130ef80c7691f90ca76b9707c7fc333fb4f6",
+        "5c8fb50d4fb9cc2367cc94f063763799b00f6e38e91799836a625b34a7e1ea7b",
+        "5c8fb50d4fb9cc2367cc94f063763799b00f6e38e91799836a625b34a7e1ea7b",
+        "be59d053526cf2268ff7695d55d3bc1834d5a10b3d5ea3b58745d4cf12bccd7c",
+        "be59d053526cf2268ff7695d55d3bc1834d5a10b3d5ea3b58745d4cf12bccd7c",
+        "be59d053526cf2268ff7695d55d3bc1834d5a10b3d5ea3b58745d4cf12bccd7c",
+        "be59d053526cf2268ff7695d55d3bc1834d5a10b3d5ea3b58745d4cf12bccd7c",
+        "8b59e352da05704b3007d6fa4e87430b92fd6e17e28e41ff635c8dbdd8595311",
+        "7a897908c046bb68975da4a9ee1cc8d70191ae5c2d6814807bad5ad54cee8ba6",
+        "7a897908c046bb68975da4a9ee1cc8d70191ae5c2d6814807bad5ad54cee8ba6"
+      ]
+    }
+  ]
+}

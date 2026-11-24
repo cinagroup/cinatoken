@@ -83,7 +83,8 @@ jobs:
           npm run test:unit -w @octafuse/core
           npm run typecheck -w @octafuse/proxy
           npm run test:unit -w @octafuse/proxy
-          npm run lint -w @octafuse/admin
+          node --test packages/admin/scripts/lint-release.test.mjs
+          node packages/admin/scripts/lint-release.mjs
           npm run test:unit -w @octafuse/admin
 
       - name: Validate Proxy Worker bundle
