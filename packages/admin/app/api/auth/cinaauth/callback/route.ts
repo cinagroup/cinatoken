@@ -42,6 +42,12 @@ type UserInfoResponse = {
 	email?: string | null;
 };
 
+type CallbackStage =
+	| "configuration" | "transaction" | "discovery" | "token_exchange"
+	| "userinfo" | "storage" | "portal_user" | "memberships" | "earnings"
+	| "expired_sessions" | "portal_session" | "admin_bridge" | "admin_session"
+	| "completion";
+
 const clearTransactionCookie = (
 	request: NextRequest,
 	response: NextResponse,
@@ -110,8 +116,10 @@ async function completePortalLogin(
 	request: NextRequest,
 	accessToken: string,
 	subject: string,
-	transaction: CinatokenOidcTransaction
+	transaction: CinatokenOidcTransaction,
+	reportStage: (stage: CallbackStage) => void
 ): Promise<NextResponse> {
+	reportStage("userinfo");
 	const config = getCinaAuthConfig(request);
 	const userinfoRequest = new Request(
 		`${config.issuer}/api/auth/oauth2/userinfo`,
@@ -133,16 +141,22 @@ async function completePortalLogin(
 	}
 	const email = userinfo.email?.trim() || `${subject}@cinaauth.invalid`;
 
+	reportStage("storage");
 	const { storage } = await resolveAdminRequestRuntime(request);
 	const { repositories } = storage;
+	reportStage("portal_user");
 	const userId = await upsertPortalUser(repositories.users, subject, email);
+	reportStage("memberships");
 	await linkOrganizationMembershipsToUser(repositories.client, subject, userId);
+	reportStage("earnings");
 	await repositories.portalLedger.ensureUserEarnings(userId);
 
 	const sessionToken = generateSessionToken();
 	const now = new Date();
 	const expiresAt = new Date(now.getTime() + PORTAL_SESSION_TTL_MS);
+	reportStage("expired_sessions");
 	await repositories.portalAccess.deleteExpiredSessions(now.toISOString());
+	reportStage("portal_session");
 	await repositories.portalAccess.insertSession({
 		tokenHash: await hashSessionToken(sessionToken),
 		subject,
@@ -151,6 +165,7 @@ async function completePortalLogin(
 		expiresAt: expiresAt.toISOString(),
 	});
 
+	reportStage("completion");
 	const response = complete(transaction, config.appOrigin);
 	clearTransactionCookie(request, response, transaction);
 	response.cookies.set(CINATOKEN_SESSION_COOKIE, sessionToken, {
@@ -169,9 +184,11 @@ async function completePortalLogin(
 /** Completes OIDC, checks the live CinaAuth role, and creates a local console session. */
 export async function GET(request: NextRequest): Promise<NextResponse> {
 	let transaction: CinatokenOidcTransaction | null = null;
+	let stage: CallbackStage = "configuration";
 	try {
 		const config = getCinaAuthConfig(request);
 		const secrets = getCinaAuthSecrets(request);
+		stage = "transaction";
 		transaction = await readCinaAuthCallbackTransaction(
 			request.cookies,
 			request.nextUrl.searchParams.get("state"),
@@ -179,10 +196,12 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 		);
 		if (!transaction) return fail(request, "invalid_transaction");
 
+		stage = "discovery";
 		const authorizationServer = await discoverCinaAuthAuthorizationServer(
 			config,
 			request
 		);
+		stage = "token_exchange";
 		const tokens = await exchangeCinaAuthAuthorizationCode({
 			server: authorizationServer,
 			config,
@@ -197,10 +216,12 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 				request,
 				tokens.accessToken,
 				tokens.subject,
-				transaction
+				transaction,
+				(value) => { stage = value; }
 			);
 		}
 
+		stage = "admin_bridge";
 		const bridgeRequest = new Request(
 			`${config.issuer}/api/auth/cinatoken-oidc/session`,
 			{
@@ -238,20 +259,25 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 		const now = new Date();
 		const expiresAt = new Date(now.getTime() + 8 * 60 * 60 * 1000);
 		const username = cinaAuthSessionUsername(tokens.subject);
+		stage = "storage";
 		const { storage } = await resolveAdminRequestRuntime(request);
 		const email =
 			body.user.email?.trim() || `${tokens.subject}@cinaauth.invalid`;
+		stage = "portal_user";
 		const userId = await upsertPortalUser(
 			storage.repositories.users,
 			tokens.subject,
 			email
 		);
+		stage = "memberships";
 		await linkOrganizationMembershipsToUser(
 			storage.repositories.client,
 			tokens.subject,
 			userId
 		);
+		stage = "earnings";
 		await storage.repositories.portalLedger.ensureUserEarnings(userId);
+		stage = "expired_sessions";
 		await Promise.all([
 			storage.repositories.adminAccess.deleteExpiredSessions(now.toISOString()),
 			storage.repositories.portalAccess.deleteExpiredSessions(
@@ -259,12 +285,14 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 			),
 		]);
 		const tokenHash = await hashSessionToken(sessionToken);
+		stage = "admin_session";
 		await storage.repositories.adminAccess.insertSession({
 			tokenHash,
 			username,
 			createdAt: now.toISOString(),
 			expiresAt: expiresAt.toISOString(),
 		});
+		stage = "portal_session";
 		await storage.repositories.portalAccess.insertSession({
 			tokenHash,
 			subject: tokens.subject,
@@ -273,6 +301,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 			expiresAt: expiresAt.toISOString(),
 		});
 
+		stage = "completion";
 		const response = complete(transaction, config.appOrigin);
 		clearTransactionCookie(request, response, transaction);
 		response.cookies.set(CINATOKEN_SESSION_COOKIE, sessionToken, {
@@ -292,6 +321,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 			JSON.stringify({
 				level: "error",
 				message: "cinatoken.oidc_callback_failed",
+				stage,
 				...getCinaAuthOidcFailureDetails(error),
 			})
 		);

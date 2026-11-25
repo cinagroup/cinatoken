@@ -57,6 +57,8 @@ class SessionWire {
 	idToken: string | null = null;
 	readonly diagnostics: string[] = [];
 	readonly upstreamPaths: string[] = [];
+	readonly callbackDiagnostics: string[] = [];
+	queryFailure?: RegExp;
 	constructor(
 		readonly subject: string,
 		readonly usernameWidth = 264,
@@ -72,6 +74,9 @@ class SessionWire {
 			.replace(/\s+/gu, " ")
 			.trim();
 		this.statements.push({ sql, values: [...values] });
+		if (this.queryFailure?.test(sql)) {
+			throw Object.assign(new Error("PRIVATE_SQL_EMAIL_TOKEN"), { code: "42501" });
+		}
 		if (/^insert into `admin_sessions`/iu.test(sql)) {
 			const columns = /\(([^)]+)\) values/iu
 				.exec(sql)?.[1]
@@ -389,7 +394,9 @@ describe("standard OIDC subject across callback, MySQL session wire and live ver
 		}));
 		mock.method(console, "log", () => undefined);
 		mock.method(console, "warn", () => undefined);
-		mock.method(console, "error", () => undefined);
+		mock.method(console, "error", (message: unknown) => {
+			wire?.callbackDiagnostics.push(String(message));
+		});
 	});
 	after(() => {
 		mock.restoreAll();
@@ -545,6 +552,30 @@ describe("standard OIDC subject across callback, MySQL session wire and live ver
 			);
 			if (failure === "signature")
 				assert.ok(fixture.upstreamPaths.includes("/jwks"));
+		});
+	}
+
+	for (const [stage, queryFailure] of [
+		["portal_user", /from `users`/u],
+		["memberships", /^UPDATE organization_memberships /u],
+		["portal_session", /^INSERT INTO portal_sessions /u],
+	] as const) {
+		it(`identifies ${stage} persistence failures without leaking details or issuing a session`, async () => {
+			const fixture = new SessionWire("PrivateSubject");
+			fixture.queryFailure = queryFailure;
+			const requestId = crypto.randomUUID();
+			const completed = await callback(fixture, { intent: "portal", requestId });
+			const html = await completed.text();
+			assertPopupResult(completed.headers, html, {
+				type: "cinatoken:cinaauth-popup-complete", requestId,
+				ok: false, error: "oidc_failed",
+			});
+			assert.equal(completed.cookies.has("cinatoken_session"), false);
+			assert.deepEqual(fixture.callbackDiagnostics.map((value) => JSON.parse(value)), [{
+				level: "error", message: "cinatoken.oidc_callback_failed", stage,
+				category: "database", code: "42501", status: null,
+			}]);
+			assert.doesNotMatch(html + fixture.callbackDiagnostics.join(""), /PRIVATE_SQL_EMAIL_TOKEN|PrivateSubject/);
 		});
 	}
 

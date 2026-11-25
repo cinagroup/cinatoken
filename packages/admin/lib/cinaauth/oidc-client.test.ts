@@ -1,7 +1,34 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import * as oauth from "oauth4webapi";
-import { createCinaAuthAuthorizationUrl } from "./oidc-client";
+import {
+	createCinaAuthAuthorizationUrl,
+	getCinaAuthOidcFailureDetails,
+} from "./oidc-client";
+
+describe("CinaAuth callback diagnostics", () => {
+	it("retains only a nested SQLSTATE without SQL, identity or credentials", () => {
+		const cause = Object.assign(new Error("private SQL and credentials"), {
+			code: "42501",
+			detail: "private email and token",
+		});
+		assert.deepEqual(
+			getCinaAuthOidcFailureDetails(new Error("private query", { cause })),
+			{ category: "database", code: "42501", status: null }
+		);
+	});
+
+	it("rejects arbitrary codes and terminates cyclic causes", () => {
+		const error = Object.assign(new Error("private"), {
+			code: "private-token",
+			cause: undefined as unknown,
+		});
+		error.cause = error;
+		assert.deepEqual(getCinaAuthOidcFailureDetails(error), {
+			category: "runtime", code: "Error", status: null,
+		});
+	});
+});
 
 describe("CinaAuth authorization request", () => {
 	it("uses exact redirect, resource, S256 PKCE, state, nonce, and scopes", async () => {

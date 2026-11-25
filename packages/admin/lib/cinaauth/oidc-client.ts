@@ -34,6 +34,23 @@ export const getCinaAuthOidcFailureDetails = (error: unknown) => {
 		};
 	}
 	if (error instanceof Error) {
+		// Drizzle wraps driver errors. Keep only a SQLSTATE, never the query,
+		// parameters, raw message or cause (which may contain credentials).
+		const seen = new Set<unknown>();
+		let current: unknown = error;
+		for (let depth = 0; depth < 6; depth++) {
+			if (!current || typeof current !== "object" || seen.has(current)) break;
+			seen.add(current);
+			try {
+				if ("code" in current && typeof current.code === "string" &&
+					/^[0-9A-Z]{5}$/u.test(current.code)) {
+					return { category: "database", code: current.code, status: null };
+				}
+				current = "cause" in current ? current.cause : undefined;
+			} catch {
+				break;
+			}
+		}
 		return { category: "runtime", code: error.name, status: null };
 	}
 	return { category: "unknown", code: "unknown", status: null };
