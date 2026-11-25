@@ -108,7 +108,9 @@
 			"deploymentDocs": "デプロイドキュメントを見る"
 		},
 		"footer": {
-			"description": "AI ケイパビリティゲートウェイと運用コントロールプレーン"
+			"description": "AI ケイパビリティゲートウェイと運用コントロールプレーン",
+			"sourceDownload": "フロントエンドのソース",
+			"license": "オープンソースの表記"
 		}
 	},
 	"publicNav": {

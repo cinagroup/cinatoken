@@ -1,109 +1,91 @@
 /* Copyright (C) 2023-2026 CinaGroup. SPDX-License-Identifier: AGPL-3.0-or-later */
-import {
-	ChartNoAxesCombined,
-	Cloud,
-	Code,
-	KeyRound,
-	Link,
-	ListFilter,
-	ShieldCheck,
-} from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import type { LoginOptions } from '../../auth-popup-contract'
-import { PublicAuthAccessLink } from '../auth/PublicAuthAccessLink'
 import { PUBLIC_DOCS_URL } from './home-links'
 
 const capabilities = [
-	{ key: 'protocols', Icon: Code },
-	{ key: 'routing', Icon: ListFilter },
-	{ key: 'budgets', Icon: ShieldCheck },
-	{ key: 'observability', Icon: ChartNoAxesCombined },
+	'protocols',
+	'routing',
+	'budgets',
+	'observability',
 ] as const
-const steps = [
-	{ key: 'providers', Icon: Cloud },
-	{ key: 'routes', Icon: Link },
-	{ key: 'keys', Icon: KeyRound },
-	{ key: 'observe', Icon: ChartNoAxesCombined },
+const steps = ['providers', 'routes', 'keys', 'observe'] as const
+const deployments = [
+	['cloudflare', 'Cloudflare Workers + D1'],
+	['docker', 'Docker + Postgres / MySQL'],
 ] as const
-const surfaces = [
-	'/v1/chat/completions',
-	'/v1/responses',
-	'/v1/images/*',
-	'/v1/audio/*',
-	'/v1/tools/*',
-]
-const consoleAccess: LoginOptions = {
-	intent: 'admin',
-	callbackPath: '/dashboard',
-}
 
 export function HomeProductSections() {
 	const { t } = useTranslation()
 	return (
-		<div className='mt-16 space-y-16 sm:space-y-24'>
-			<section id='features' className='scroll-mt-24 space-y-6 border-t pt-12'>
-				<h2 className='text-3xl font-semibold tracking-tight'>
-					{t('cinatoken.home.features.title')}
-				</h2>
-				<p className='text-muted-foreground max-w-3xl leading-7'>
-					{t('cinatoken.home.features.description')}
-				</p>
-				<div className='bg-muted/40 flex flex-wrap gap-3 rounded-lg border p-4'>
-					{surfaces.map((surface) => (
-						<code key={surface} className='text-xs break-all'>
-							{surface}
-						</code>
-					))}
+		<div className='space-y-12 py-12 sm:space-y-16 sm:py-16'>
+			<section
+				id='features'
+				className='grid scroll-mt-8 gap-6 md:grid-cols-[1fr_3fr] md:gap-12'
+			>
+				<div>
+					<h2 className='text-2xl font-semibold tracking-tight'>
+						{t('cinatoken.home.features.title')}
+					</h2>
+					<p className='text-muted-foreground mt-3 text-sm leading-6'>
+						{t('cinatoken.home.features.description')}
+					</p>
+					<nav
+						aria-label={t('cinatoken.home.nav.label')}
+						className='text-muted-foreground mt-5 flex flex-wrap gap-5 text-sm'
+					>
+						{(['features', 'architecture', 'deployment'] as const).map(
+							(section) => (
+								<a
+									key={section}
+									href={`#${section}`}
+									className='hover:text-foreground focus-visible:outline-ring rounded-sm underline underline-offset-4'
+								>
+									{t(`cinatoken.home.nav.${section}`)}
+								</a>
+							)
+						)}
+					</nav>
 				</div>
-				<div className='grid gap-5 sm:grid-cols-2 lg:grid-cols-4'>
-					{capabilities.map((capability) => (
-						<article
-							key={capability.key}
-							className='bg-card space-y-4 rounded-xl border p-5'
+				<dl className='divide-y border-y'>
+					{capabilities.map((key) => (
+						<div
+							key={key}
+							className='grid gap-2 py-5 sm:grid-cols-[10rem_1fr] sm:gap-5'
 						>
-							<capability.Icon
-								aria-hidden='true'
-								className='text-muted-foreground size-6'
-							/>
-							<h3 className='text-lg font-semibold'>
-								{t(`cinatoken.home.features.items.${capability.key}.title`)}
-							</h3>
-							<p className='text-muted-foreground text-sm leading-6'>
-								{t(
-									`cinatoken.home.features.items.${capability.key}.description`
-								)}
-							</p>
-							<p className='text-muted-foreground text-xs leading-5'>
-								{t(`cinatoken.home.features.items.${capability.key}.detail`)}
-							</p>
-						</article>
+							<dt className='text-sm font-medium'>
+								{t(`cinatoken.home.features.items.${key}.title`)}
+							</dt>
+							<dd className='text-muted-foreground text-sm leading-6'>
+								{t(`cinatoken.home.features.items.${key}.description`)}
+							</dd>
+						</div>
 					))}
-				</div>
+				</dl>
 			</section>
 			<section
 				id='architecture'
-				className='scroll-mt-24 space-y-8 border-t pt-12'
+				className='grid scroll-mt-8 gap-6 md:grid-cols-[1fr_3fr] md:gap-12'
 			>
-				<h2 className='text-3xl font-semibold tracking-tight'>
+				<h2 className='text-2xl font-semibold tracking-tight'>
 					{t('cinatoken.home.steps.title')}
 				</h2>
-				<ol className='grid gap-5 sm:grid-cols-2 lg:grid-cols-4'>
-					{steps.map((step, index) => (
-						<li key={step.key} className='space-y-4 rounded-xl border p-5'>
-							<div className='flex items-center justify-between gap-3'>
-								<span className='text-primary flex size-9 items-center justify-center rounded-full border text-sm font-semibold'>
-									{index + 1}
-								</span>
-								<step.Icon
-									aria-hidden='true'
-									className='text-muted-foreground size-6'
-								/>
-							</div>
-							<h3 className='text-lg font-semibold'>
-								{t(`cinatoken.home.steps.items.${step.key}.title`)}
+				<ol className='divide-y border-y'>
+					{steps.map((key, index) => (
+						<li
+							key={key}
+							className='grid grid-cols-[1.5rem_1fr] items-baseline gap-x-3 gap-y-2 py-5 sm:grid-cols-[1.5rem_9rem_1fr] sm:gap-x-5'
+						>
+							<span
+								aria-hidden='true'
+								className='text-muted-foreground font-mono text-xs'
+							>
+								{String(index + 1).padStart(2, '0')}
+							</span>
+							<h3 className='text-sm font-medium'>
+								{t(`cinatoken.home.steps.items.${key}.title`)}
 							</h3>
-							<p className='text-muted-foreground text-sm leading-6'>
-								{t(`cinatoken.home.steps.items.${step.key}.description`)}
+							<p className='text-muted-foreground col-start-2 text-sm leading-6 sm:col-start-auto'>
+								{t(`cinatoken.home.steps.items.${key}.description`)}
 							</p>
 						</li>
 					))}
@@ -111,61 +93,33 @@ export function HomeProductSections() {
 			</section>
 			<section
 				id='deployment'
-				className='scroll-mt-24 space-y-8 border-t pt-12'
+				className='grid scroll-mt-8 gap-6 md:grid-cols-[1fr_3fr] md:gap-12'
 			>
-				<h2 className='text-3xl font-semibold tracking-tight'>
+				<h2 className='text-2xl font-semibold tracking-tight'>
 					{t('cinatoken.home.deployment.title')}
 				</h2>
-				<div className='grid gap-5 md:grid-cols-2'>
-					{(
-						[
-							['cloudflare', 'Cloudflare Workers + D1'],
-							['docker', 'Docker + Postgres / MySQL'],
-						] as const
-					).map(([key, title]) => (
+				<div className='divide-y border-y'>
+					{deployments.map(([key, title]) => (
 						<article
 							key={key}
-							className='bg-card space-y-4 rounded-xl border p-6'
+							className='grid gap-3 py-5 sm:grid-cols-[14rem_1fr] sm:gap-5'
 						>
-							<h3 className='text-xl font-semibold'>{title}</h3>
-							<p className='text-muted-foreground text-sm leading-7'>
-								{t(`cinatoken.home.deployment.${key}`)}
-							</p>
-							<a
-								href={PUBLIC_DOCS_URL}
-								target='_blank'
-								rel='noopener noreferrer'
-								className='text-primary inline-block text-sm font-medium underline underline-offset-4'
-							>
-								{t('cinatoken.home.cta.deploymentDocs')}
-							</a>
+							<h3 className='text-sm font-medium'>{title}</h3>
+							<div className='space-y-3 text-sm leading-6'>
+								<p className='text-muted-foreground'>
+									{t(`cinatoken.home.deployment.${key}`)}
+								</p>
+								<a
+									href={PUBLIC_DOCS_URL}
+									target='_blank'
+									rel='noopener noreferrer'
+									className='hover:text-muted-foreground focus-visible:outline-ring rounded-sm underline underline-offset-4'
+								>
+									{t('cinatoken.home.deployment.docs')}
+								</a>
+							</div>
 						</article>
 					))}
-				</div>
-			</section>
-			<section className='space-y-5 rounded-2xl border p-8 text-center sm:p-12'>
-				<h2 className='text-3xl font-semibold tracking-tight'>
-					{t('cinatoken.home.cta.title')}
-				</h2>
-				<p className='text-muted-foreground mx-auto max-w-2xl leading-7'>
-					{t('cinatoken.home.cta.description')}
-				</p>
-				<div className='flex flex-wrap justify-center gap-3'>
-					<PublicAuthAccessLink
-						options={consoleAccess}
-						href='/dashboard'
-						className='bg-primary text-primary-foreground rounded-lg px-5 py-3 text-sm font-medium'
-					>
-						{t('cinatoken.home.cta.console')}
-					</PublicAuthAccessLink>
-					<a
-						href={PUBLIC_DOCS_URL}
-						target='_blank'
-						rel='noopener noreferrer'
-						className='rounded-lg border px-5 py-3 text-sm font-medium'
-					>
-						{t('cinatoken.home.cta.deploymentDocs')}
-					</a>
 				</div>
 			</section>
 		</div>

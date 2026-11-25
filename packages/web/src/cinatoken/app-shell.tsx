@@ -3,7 +3,8 @@ import { Link, Outlet, useRouterState } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '@/context/theme-provider'
 import { Button } from '@/components/ui/button'
-import { FrontendAttribution } from './public/FrontendAttribution'
+import { BrandLogo } from './brand-logo'
+import { FrontendLinks } from './public/FrontendLinks'
 import { useCinaTokenSession } from './session-context'
 import { SessionGate } from './session-gate'
 
@@ -76,10 +77,7 @@ export function ApplicationShell() {
 						href='/'
 						className='flex items-center gap-2 font-semibold tracking-tight'
 					>
-						<span className='bg-primary text-primary-foreground flex size-8 items-center justify-center rounded-lg'>
-							C
-						</span>
-						CinaToken
+						<BrandLogo />
 					</a>
 					<nav
 						aria-label={t('cinatoken.shell.primaryNavigation')}
@@ -185,7 +183,7 @@ export function ApplicationShell() {
 			<footer className='text-muted-foreground border-t px-4 py-5 text-center text-xs leading-6'>
 				<span>CinaToken · {t('cinatoken.shell.gateway')}</span>
 				<br />
-				<FrontendAttribution originalProjectLabel='New API' />
+				<FrontendLinks />
 			</footer>
 		</div>
 	)

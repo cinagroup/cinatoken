@@ -3,7 +3,8 @@ import { useEffect } from 'react'
 import { Outlet, useRouterState } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import type { LoginOptions } from '../../auth-popup-contract'
-import { FrontendAttribution } from '../FrontendAttribution'
+import { BrandLogo } from '../../brand-logo'
+import { FrontendLinks } from '../FrontendLinks'
 import { PublicAuthAccessLink } from '../auth/PublicAuthAccessLink'
 import { PublicAuthStatus } from '../auth/PublicAuthStatus'
 import { PUBLIC_LOCALES, usePublicLocation } from './public-location'
@@ -14,7 +15,7 @@ function PublicThemeControl() {
 		<label className='text-sm'>
 			<span className='sr-only'>{t('cinatoken.shell.theme')}</span>
 			<select
-				className='bg-background h-8 rounded-lg border px-2 text-sm'
+				className='bg-background h-8 rounded-[6px] border px-2 text-sm'
 				data-cinatoken-public-preference='theme'
 				defaultValue='system'
 			>
@@ -53,20 +54,17 @@ export function PublicShell() {
 		<div className='min-h-svh'>
 			<a
 				href='#main-content'
-				className='bg-primary text-primary-foreground sr-only rounded-md px-4 py-2 focus:not-sr-only focus:fixed focus:z-50'
+				className='bg-primary text-primary-foreground sr-only rounded-[6px] px-4 py-2 focus:not-sr-only focus:fixed focus:z-50'
 			>
 				{t('cinatoken.shell.skipToContent')}
 			</a>
 			<header className='bg-background/95 border-b'>
-				<div className='mx-auto flex max-w-7xl flex-wrap items-center gap-4 px-4 py-4 sm:px-6'>
+				<div className='mx-auto flex max-w-[1200px] flex-wrap items-center gap-4 px-4 py-4 sm:px-6'>
 					<a
 						href={location.href('/')}
 						className='flex items-center gap-2 font-semibold tracking-tight'
 					>
-						<span className='bg-primary text-primary-foreground flex size-8 items-center justify-center rounded-lg'>
-							C
-						</span>
-						CinaToken
+						<BrandLogo />
 					</a>
 					<nav
 						aria-label={t('cinatoken.shell.primaryNavigation')}
@@ -90,7 +88,7 @@ export function PublicShell() {
 						<label className='text-sm'>
 							<span className='sr-only'>{t('cinatoken.shell.language')}</span>
 							<select
-								className='bg-background h-8 max-w-28 rounded-lg border px-2 text-sm'
+								className='bg-background h-8 max-w-28 rounded-[6px] border px-2 text-sm'
 								data-cinatoken-public-preference='locale'
 								defaultValue={location.locale}
 							>
@@ -104,9 +102,9 @@ export function PublicShell() {
 						<PublicThemeControl />
 						<PublicAuthAccessLink
 							options={accountAccess}
-							className='bg-primary text-primary-foreground rounded-lg px-3 py-2 text-sm'
+							className='hover:bg-muted focus-visible:outline-ring rounded-[6px] border px-3 py-2 text-sm'
 						>
-							{t('cinatoken.shell.signIn')}
+							{t('cinatoken.home.nav.signIn')}
 						</PublicAuthAccessLink>
 					</div>
 				</div>
@@ -122,7 +120,7 @@ export function PublicShell() {
 				<footer className='text-muted-foreground border-t px-4 py-5 text-center text-xs leading-6'>
 					<span>CinaToken · {t('cinatoken.shell.gateway')}</span>
 					<br />
-					<FrontendAttribution originalProjectLabel='New API' />
+					<FrontendLinks />
 				</footer>
 			)}
 		</div>

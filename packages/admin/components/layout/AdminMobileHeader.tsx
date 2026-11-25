@@ -44,11 +44,8 @@ export default function AdminMobileHeader() {
 						alt={tBrand("logoAlt")}
 						width={30}
 						height={30}
-						className="h-[30px] w-[30px] rounded-lg"
+						className="h-[30px] w-[30px]"
 					/>
-					<span className="truncate text-sm font-semibold">
-						{tBrand("wordmark")}
-					</span>
 				</Link>
 				<ConsoleThemeToggle />
 			</header>

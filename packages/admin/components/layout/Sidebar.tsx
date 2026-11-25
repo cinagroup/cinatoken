@@ -107,10 +107,9 @@ export default function Sidebar({
 							width={38}
 							height={38}
 							priority
-							className="h-[38px] w-[38px] shrink-0 rounded-md"
+							className="h-[38px] w-[38px] shrink-0"
 						/>
 						<span className="min-w-0">
-							<span className="block truncate text-lg font-bold tracking-tight">{tBrand('wordmark')}</span>
 							<span className="console-muted block truncate text-[11px] font-medium uppercase tracking-wider">
 								{tBrand('sidebarSubtitle')}
 							</span>

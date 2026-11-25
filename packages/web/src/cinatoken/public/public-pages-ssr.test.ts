@@ -27,10 +27,10 @@ import {
 	validateBenchmarkSearch,
 } from './catalog-view-model'
 import {
-	PUBLIC_DOCS_URL,
-	PUBLIC_FRONTEND_ORIGIN_URL,
-	PUBLIC_GITHUB_URL,
-} from './home/home-links'
+	FRONTEND_NOTICE_URL,
+	FRONTEND_SOURCE_DOWNLOAD_URL,
+} from './frontend-attribution'
+import { PUBLIC_DOCS_URL, PUBLIC_GITHUB_URL } from './home/home-links'
 import { publicHomeMessages } from './home/home-messages'
 import { publicMessages } from './messages'
 import { createPublicI18n } from './ssr/public-i18n'
@@ -184,7 +184,7 @@ function seedModels(client: QueryClient) {
 }
 
 for (const locale of PUBLIC_LOCALES) {
-	test(`home ${locale}: initial HTML retains discovery, product sections, demo, private entries and attribution`, () => {
+	test(`home ${locale}: initial HTML retains discovery, product sections, demo, private entries and source/notice links`, () => {
 		const html = render(locale, element(HomePage))
 		for (const path of [
 			'/models',
@@ -203,33 +203,19 @@ for (const locale of PUBLIC_LOCALES) {
 			assert.ok(html.includes(`id="${section}"`))
 			assert.ok(html.includes(`href="#${section}"`))
 		}
-		for (const link of [
-			PUBLIC_DOCS_URL,
-			PUBLIC_GITHUB_URL,
-			PUBLIC_FRONTEND_ORIGIN_URL,
-		])
+		for (const link of [PUBLIC_DOCS_URL, PUBLIC_GITHUB_URL])
 			assert.ok(html.includes(`href="${link}"`))
 		assert.equal((html.match(/role="tab"/g) ?? []).length, 4)
 		assert.ok(html.includes(publicHomeMessages[locale].demo.illustration))
-		assert.ok(html.includes(publicHomeMessages[locale].attribution.statement))
 		const footers = html.match(/<footer(?:\s[^>]*)?>[\s\S]*?<\/footer>/g) ?? []
 		assert.equal(footers.length, 1)
-		assert.ok(
-			footers[0]!.includes(
-				'Frontend design and development by New API contributors.'
-			),
-			'NOTICE.frontend English attribution must remain in the visible footer'
-		)
-		assert.match(
+		assert.doesNotMatch(
 			footers[0]!,
-			/<span lang="en">Frontend design and development by New API contributors\.<\/span>/
+			/New API|QuantumNous|new-api|Frontend design and development/
 		)
-		assert.equal(
-			footers[0]!.split(
-				'Frontend design and development by New API contributors.'
-			).length - 1,
-			1
-		)
+		for (const link of [FRONTEND_SOURCE_DOWNLOAD_URL, FRONTEND_NOTICE_URL])
+			assert.ok(footers[0]!.includes(`href="${link}"`))
+
 		assert.doesNotMatch(html, /238 ms|200 OK|cinatoken\.home\./)
 	})
 	test(`models ${locale}: initial HTML obeys the full restored filters and view instead of rendering defaults`, () => {

@@ -333,11 +333,10 @@ export default async function PublicHome() {
 								alt=""
 								width={32}
 								height={32}
-								className="h-8 w-8 rounded-lg"
+								className="h-8 w-8"
 								aria-hidden
 							/>
 							<div>
-								<p className="home-text font-medium">cinatoken</p>
 								<p className="home-faint mt-0.5 text-xs">
 									{t("footer.description")}
 								</p>
