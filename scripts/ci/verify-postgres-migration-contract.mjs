@@ -1044,7 +1044,12 @@ assert.match(hyperdriveAccessProbe, /column_update_other/u);
 assert.match(hyperdriveAccessProbe, /has_column_privilege\(current_user, 'cinatoken_gateway\.system_config_write_mutex', 'id', 'UPDATE'\)/u);
 assert.match(runtimeGrants, /GRANT SELECT, INSERT ON TABLE \$\{GATEWAY_SCHEMA\}\.config_group_audit TO \$\{GATEWAY_RUNTIME_ROLE\}/u);
 assert.match(runtimeGrants, /GRANT SELECT, UPDATE \(id\) ON TABLE \$\{GATEWAY_SCHEMA\}\.system_config_write_mutex TO \$\{GATEWAY_RUNTIME_ROLE\}/u);
-assert.match(migrationTables, /ETL_TARGET_ONLY_TABLES = \[['"]system_config_write_mutex['"]\]/u);
+const targetOnlyList = /ETL_TARGET_ONLY_TABLES = \[([\s\S]*?)\]/u.exec(migrationTables);
+assert.ok(targetOnlyList, 'The explicit target-only ETL exclusion list must exist');
+assert.deepEqual([...targetOnlyList[1].matchAll(/['"]([^'"]+)['"]/gu)].map((match) => match[1]), [
+  'system_config_write_mutex', 'request_dispatch_intents', 'request_usage_settlements',
+  'request_usage_settlement_outbox', 'request_usage_recovery_jobs', 'request_usage_commit_receipts',
+]);
 assert.doesNotMatch(orderBlock, /system_config_write_mutex/u);
 
 assert.deepEqual(d1Migrations.slice(77), ['0078_user_wallet_credit.sql', '0079_key_rate_limit_and_ingress.sql', '0080_provider_kind.sql', '0081_mcp_servers.sql','0086_catalog_notes.sql','0087_split_audio_adapter_families.sql','0088_request_log_provider_index.sql','0089_sticky_binding_affinity_key.sql','0090_oauth_access_tokens.sql','0091_oauth_authorization_server.sql','0092_oauth_client_credentials.sql','0093_provider_custom_params.sql','0094_tools_deepseek_audit.sql']);

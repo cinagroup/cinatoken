@@ -14,6 +14,7 @@
  * 运行时的 close-code / 计费记账修复。
  */
 import { readFileSync } from 'node:fs';
+import type { RawData } from 'ws';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
@@ -107,7 +108,7 @@ async function main(): Promise<void> {
 	});
 	const taskStarted = new Promise<void>((resolve, reject) => {
 		const timer = setTimeout(() => reject(new Error('timed out waiting for task-started')), 15_000);
-		const onMessage = (raw: WebSocket.RawData, isBinary: boolean) => {
+		const onMessage = (raw: RawData, isBinary: boolean) => {
 			if (isBinary || typeof raw !== 'string' && !Buffer.isBuffer(raw)) return;
 			const text = typeof raw === 'string' ? raw : raw.toString();
 			let msg: DashScopeEvent;

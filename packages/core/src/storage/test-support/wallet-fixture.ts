@@ -4,6 +4,9 @@ import { DatabaseSync } from 'node:sqlite';
 
 /** Upgrade focused legacy reservation fixtures with the actual appended wallet migration. */
 export function applyWalletMigrationToBudgetFixture(database: DatabaseSync): void {
+	const keyColumns = database.prepare('PRAGMA table_info(api_keys)').all();
+	if (keyColumns.length && !keyColumns.some((column) => column.name === 'last_used_at'))
+		database.exec('ALTER TABLE api_keys ADD COLUMN last_used_at TEXT');
 	applyOAuthLogFixtureColumn(database);
 	database.exec(`CREATE TABLE IF NOT EXISTS user_audit_logs (id TEXT PRIMARY KEY, user_id TEXT);
  CREATE TABLE IF NOT EXISTS api_key_request_logs (id TEXT PRIMARY KEY, user_id TEXT, budget_charged_micros INTEGER NOT NULL DEFAULT 0);`);
