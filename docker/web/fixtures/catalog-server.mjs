@@ -135,7 +135,7 @@ export function createCatalogFixtureServer() {
 				...(status === 503 ? { "retry-after": "17" } : {}),
 			});
 			outgoing.end(
-				incoming.method === "HEAD" ? undefined : JSON.stringify(value)
+				incoming.method === "HEAD" ? undefined : JSON.stringify(value),
 			);
 		};
 		if (

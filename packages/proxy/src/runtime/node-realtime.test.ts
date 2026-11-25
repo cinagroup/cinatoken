@@ -364,17 +364,17 @@ describe('Node DashScope realtime adapter', () => {
 			}),
 			false,
 		);
-		assert.equal(typeof holder.(upstream as FakeSocket | null)!.sent[0], 'string');
-		assert.equal(JSON.parse(String(holder.(upstream as FakeSocket | null)!.sent[0])).payload.model, 'fun-asr-realtime-v2');
+		assert.equal(typeof holder.upstream!.sent[0], 'string');
+		assert.equal(JSON.parse(String(holder.upstream!.sent[0])).payload.model, 'fun-asr-realtime-v2');
 
-		holder.(upstream as FakeSocket | null)!.emitUpstreamMessage(
+		holder.upstream!.emitUpstreamMessage(
 			JSON.stringify({
 				header: { event: 'task-finished', task_id: 'task-1' },
 				payload: { usage: { duration: 1.5 } },
 			}),
 			false,
 		);
-		holder.(upstream as FakeSocket | null)!.emitClose();
+		holder.upstream!.emitClose();
 		const usage = await result.usagePromise;
 		assert.equal(usage.audio_duration_seconds, 1.5);
 	});
@@ -392,11 +392,11 @@ describe('Node DashScope realtime adapter', () => {
 			route(),
 			'audio.transcriptions.realtime.inference',
 		);
-		holder.(upstream as FakeSocket | null)!.emitUpstreamMessage('{"header":{"event":"task-started"}}', false);
+		holder.upstream!.emitUpstreamMessage('{"header":{"event":"task-started"}}', false);
 		const usage = await result.usagePromise;
 		assert.match(usage.stream_error ?? '', /backpressure/i);
 		assert.equal(client.readyState, 3);
-		assert.equal(holder.(upstream as FakeSocket | null)!.readyState, 3);
+		assert.equal(holder.upstream!.readyState, 3);
 	});
 
 	it('bills verified Qwen session PCM when the terminal event omits usage', async () => {
@@ -447,8 +447,8 @@ describe('Node DashScope realtime adapter', () => {
 			}),
 			false,
 		);
-		holder.(upstream as FakeSocket | null)!.emitUpstreamMessage(JSON.stringify({ type: 'session.finished' }), false);
-		holder.(upstream as FakeSocket | null)!.emitClose();
+		holder.upstream!.emitUpstreamMessage(JSON.stringify({ type: 'session.finished' }), false);
+		holder.upstream!.emitClose();
 
 		const usage = await result.usagePromise;
 		assert.equal(usage.audio_duration_seconds, 1);
