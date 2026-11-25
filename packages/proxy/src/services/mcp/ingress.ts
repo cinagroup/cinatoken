@@ -25,7 +25,9 @@ export function readMcpIngress(request: Request, register?: (task: ResourceCompl
 		try {
 			const text = await responseTextWithinLimit(owned.response, MAX_MCP_BODY_BYTES, deadline.signal);
 			try {
-				return JSON.parse(text) as unknown;
+				const parsed:unknown=JSON.parse(text);
+    if(Array.isArray(parsed))throw new McpIngressError(400,'MCP JSON-RPC batches are not supported');
+    return parsed;
 			} catch {
 				throw new McpIngressError(400, 'Invalid MCP JSON body');
 			}
@@ -48,6 +50,6 @@ export function mcpIngressErrorResponse(error: unknown): Response {
 	const message = error instanceof McpIngressError ? error.message : 'Invalid MCP JSON body';
 	return Response.json(
 		{ jsonrpc: '2.0', id: null, error: { code: -32700, message } },
-		{ status, headers: { 'Cache-Control': 'no-store' } },
+		{ status, headers: { 'Cache-Control': 'no-store',...(status===400 ? {'X-OctaFuse-Error-Code':'gateway.invalid_request'}:{}) } },
 	);
 }

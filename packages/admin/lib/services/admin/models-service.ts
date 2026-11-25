@@ -1,5 +1,6 @@
+import { catalogNotePatch as coreCatalogNotePatch, catalogNoteValue } from '@octafuse/core/db/catalog-note-compat';
 /**
- * 管理后台 `models` + `model_tags`：列表/详情（含路由计数）、创建、部分更新、级联删除、静态目录导入。
+ * 管理后台 `models` + `model_tags`：列表/详情（含路由计数）、创建、部分更新、无路由删除、静态目录导入。
  */
 import type { GatewayRepositories } from '@octafuse/core';
 import { normalizeModelRoutePolicyInput } from '@octafuse/core/db/model-route-policy';
@@ -12,14 +13,25 @@ import {
 	isRerankModel,
 } from '@octafuse/core/db/model-modalities';
 import {
+	resolveModelKind,
+	validateModelKindConsistency,
+	type ModelKind,
+	type ModelKindFields,
+} from '@octafuse/core/db/model-kind';
+import {
 	BILLING_CURRENCY_KEY,
 	normalizeBillingCurrencyCode,
 	tryParseGatewaySupportedBillingCurrencyInput,
 	type GatewaySupportedBillingCurrency,
 } from '@octafuse/core/lib/billing-currency';
 import { getGatewayCurrencySymbol } from '@/lib/format-gateway-currency';
-import { listStaticModelPresets, pickPresetPricingRawForBillingCurrency } from '@/lib/model-preset';
-import { badRequest, notFound } from './errors';
+import {
+	getStaticModelPresetRetired,
+	getStaticModelCatalogCopy,
+	listStaticModelPresets,
+	pickPresetPricingRawForBillingCurrency,
+} from '@/lib/model-preset';
+import { badRequest, conflict, notFound } from './errors';
 import { ModelPolicyPreconditionError } from './domain-contract';
 import { coerceModelPricingProfileInput } from './pricing-input';
 import { normalizeModelVendorInput, parseTagsJson } from './shared';
@@ -88,7 +100,11 @@ function buildTokenPricingPreview(
 		const imageInCache = formatPriceForPreview(tierObj.image_input_cache_price);
 		const upto = tierObj.upto;
 		const rangeLabel = typeof upto === 'number' && Number.isFinite(upto) ? `<=${upto}` : 'all tokens';
-		const parts = [`text-in ${inPrice ?? '—'}`, `text-out ${outPrice ?? '—'}`, `cache-read ${cacheReadPrice ?? '—'}`];
+		const parts = [
+			`text-in ${inPrice ?? '—'}`,
+			`text-out ${outPrice ?? '—'}`,
+			`cache-read ${cacheReadPrice ?? '—'}`,
+		];
 		if (cacheWritePrice != null) {
 			parts.push(`cache-write ${cacheWritePrice}`);
 		}
@@ -106,8 +122,8 @@ function buildTokenPricingPreview(
 	const label = hasImageToken
 		? `${money(firstIn)} / ${money(firstImageIn)} / ${money(firstImageOut)} /M`
 		: firstIn != null || firstOut != null
-			? `${money(firstIn)} / ${money(firstOut)} /M`
-			: `${tiers.length} tier(s)`;
+		? `${money(firstIn)} / ${money(firstOut)} /M`
+		: `${tiers.length} tier(s)`;
 	return { label, detail: lines.join('\n') };
 }
 
@@ -173,7 +189,7 @@ function buildPerCharacterAudioPricingPreview(
 /** 按 `BILLING_CURRENCY` 选用的目录价分支：Audio / Image / LLM 档位摘要。 */
 function buildCatalogPricingPreview(
 	rawPricing: unknown,
-	_kind: 'llm' | 'image' | 'audio',
+	_kind: ModelKind,
 	billing: GatewaySupportedBillingCurrency,
 ): CatalogPricingPreview {
 	if (!rawPricing || typeof rawPricing !== 'object' || Array.isArray(rawPricing)) {
@@ -191,12 +207,22 @@ function buildCatalogPricingPreview(
 	);
 }
 
+/** 计费模式与模态互相矛盾时拒绝保存（规则见 `docs/developers/reference/model-kinds.md`）。 */
+function assertModelKindConsistent(fields: ModelKindFields): void {
+	const problem = validateModelKindConsistency(fields);
+	if (problem) throw badRequest(problem);
+}
+
 /** 全部模型列表，`tags` 从 JSON 字符串解析为数组。 */
 export async function listModelsService(repos: GatewayRepositories): Promise<AdminModelRow[]> {
 	const rows = await repos.models.listModelsWithRouteCounts();
 	return rows.map((m) => ({
 		...m,
+ note: catalogNoteValue(m),
+ description: catalogNoteValue(m),
 		tags: parseTagsJson(m.tags as string | null),
+		retired_at: getStaticModelPresetRetired(m.id),
+		catalog_i18n: getStaticModelCatalogCopy(m.id),
 	})) as AdminModelRow[];
 }
 
@@ -230,22 +256,21 @@ export async function createModelService(
 	const outputModalities =
 		body.output_modalities !== undefined ? coerceModelOutputModalitiesInput(body.output_modalities) : null;
 	const releasedAt = body.released_at !== undefined ? coerceModelReleasedAtInput(body.released_at) : null;
-	const isImage = isImageGenerationModel({
+	const kindFields: ModelKindFields = {
+		input_modalities: inputModalities,
 		output_modalities: outputModalities,
 		pricing_profile: pricingProfile,
-	});
-	const isAudio = isAudioModel({
-		output_modalities: outputModalities,
-		pricing_profile: pricingProfile,
-	});
+	};
+	assertModelKindConsistent(kindFields);
+	// 非 LLM（文生图 / ASR / TTS / 向量）无 max output tokens；context_window 保持调用方传入
 	const isRerank = isRerankModel({ output_modalities: outputModalities });
-	const skipContextDefault = isImage || isAudio;
+	const skipContextDefault = resolveModelKind(kindFields) !== 'llm';
 	const skipMaxTokenDefault = skipContextDefault || isRerank;
 	const maxTokens = skipMaxTokenDefault
 		? body.max_tokens == null
 			? null
 			: Number(body.max_tokens)
-		: (body.max_tokens ?? 8192);
+		: body.max_tokens ?? 8192;
 	const contextWindow = skipContextDefault
 		? body.context_window == null
 			? null
@@ -259,7 +284,7 @@ export async function createModelService(
 		contextWindow,
 		maxTokens,
 		pricingProfile,
-		description: body.description,
+		note: catalogNotePatch(body).note,
 		metadata: body.metadata,
 		inputModalities,
 		outputModalities,
@@ -281,7 +306,11 @@ export async function getModelService(repos: GatewayRepositories, id: string): P
 	if (!model) throw notFound('Model not found');
 	return {
 		...model,
+ note: catalogNoteValue(model),
+ description: catalogNoteValue(model),
 		tags: parseTagsJson(model.tags as string | null),
+		retired_at: getStaticModelPresetRetired(model.id),
+		catalog_i18n: getStaticModelCatalogCopy(model.id),
 	} as AdminModelRow;
 }
 
@@ -313,7 +342,7 @@ export async function updateModelService(
 			'model_route_policy_precondition_required',
 			'A model route policy precondition is required',
 		);
-	const rest = { ...restRaw } as Record<string, unknown>;
+	const rest = catalogNotePatch(restRaw);
 	if ('vendor' in rest && rest.vendor !== undefined) {
 		rest.vendor = normalizeModelVendorInput(rest.vendor);
 	}
@@ -322,7 +351,9 @@ export async function updateModelService(
 	}
 	if ('route_policy' in rest && rest.route_policy !== undefined) {
 		try {
-			rest.route_policy = normalizeModelRoutePolicyInput(rest.route_policy == null ? null : String(rest.route_policy));
+			rest.route_policy = normalizeModelRoutePolicyInput(
+				rest.route_policy == null ? null : String(rest.route_policy),
+			);
 		} catch (err) {
 			throw badRequest(err instanceof Error ? err.message : 'Invalid route_policy');
 		}
@@ -332,12 +363,26 @@ export async function updateModelService(
 			? await repos.modelRouting.getModelById(id)
 			: null;
 	const coerced = applyModelMutationCoercion(rest);
+	if ('input_modalities' in coerced || 'output_modalities' in coerced || 'pricing_profile' in coerced) {
+		const current = await repos.models.getModelDetailWithRouteCounts(id);
+		if (current) {
+			const pick = (key: 'input_modalities' | 'output_modalities' | 'pricing_profile') =>
+				key in coerced
+					? (coerced[key] as string | null | undefined)
+					: (current[key] as string | null | undefined);
+			assertModelKindConsistent({
+				input_modalities: pick('input_modalities'),
+				output_modalities: pick('output_modalities'),
+				pricing_profile: pick('pricing_profile'),
+			});
+		}
+	}
 	if (hasExpected || coerced.pricing_profile !== undefined) {
 		if (!hasExpected && !pricingBefore) throw notFound('Model not found');
 		const matched = await repos.models.updateModelWithPolicyPrecondition(
 			id,
 			coerced,
-			hasExpected ? (expected_route_policy as string | null) : (pricingBefore!.route_policy ?? null),
+			hasExpected ? (expected_route_policy as string | null) : pricingBefore!.route_policy ?? null,
 			tags === undefined ? undefined : Array.isArray(tags) ? tags.map((tag) => String(tag)) : [],
 		);
 		if (!matched)
@@ -360,12 +405,20 @@ export async function updateModelService(
 	}
 }
 
-/** 级联删除模型及其路由、标签。 */
+/** Require all routes, including disabled ones, to be removed explicitly before deleting a model. */
 export async function deleteModelService(repos: GatewayRepositories, id: string): Promise<void> {
-	const existing = await repos.models.getModelDetailWithRouteCounts(id);
-	if (!existing || existing.id !== id) throw notFound('Model not found');
-	const changes = await repos.models.deleteModelCascade(id);
-	if (!changes) throw notFound('Model not found');
+ const current=await repos.models.getModelDetailWithRouteCounts(id);
+ if(!current || current.id !== id)throw notFound('Model not found');
+	const routes = await repos.routes.listModelRoutesWithJoins({ modelId: id });
+	if (routes.length)
+		throw conflict(`Cannot delete model: ${routes.length} route(s) still reference it. Delete those routes first.`);
+	// The condition is checked again in the DELETE statement to cover concurrent route creation.
+	const changes = await repos.models.deleteModelIfUnrouted(id);
+	if (!changes) {
+		if (await repos.models.getModelDetailWithRouteCounts(id))
+			throw conflict('Cannot delete model: routes still reference it. Refresh the routes and try again.');
+		throw notFound('Model not found');
+	}
 }
 
 /**
@@ -388,15 +441,11 @@ export function listStaticModelPresetCatalogForAdmin(
 			}
 			const pricingProfileJson =
 				pricingRaw != null && typeof pricingRaw === 'object' ? JSON.stringify(pricingRaw) : null;
-			const kindFields = {
+			const kind: AdminStaticModelPresetCatalogItem['kind'] = resolveModelKind({
+				input_modalities: p.modalities?.input ?? null,
 				output_modalities: p.modalities?.output ?? null,
 				pricing_profile: pricingProfileJson,
-			};
-			const kind: AdminStaticModelPresetCatalogItem['kind'] = isImageGenerationModel(kindFields)
-				? 'image'
-				: isAudioModel(kindFields)
-					? 'audio'
-					: 'llm';
+			});
 			const pricing = buildCatalogPricingPreview(pricingRaw, kind, billing);
 			return {
 				id,
@@ -407,8 +456,11 @@ export function listStaticModelPresetCatalogForAdmin(
 				max_tokens: p.max_tokens ?? null,
 				description: p.description ?? null,
 				i18n: p.i18n ?? null,
+				released: p.released ?? null,
+				retired: p.retired ?? null,
 				tier_count: tierCount,
 				pricing_label: pricing.label,
+				pricing_available: pricingRaw != null && typeof pricingRaw === 'object',
 				pricing_preview: pricing.detail,
 			};
 		})
@@ -480,24 +532,25 @@ export async function importModelsFromStaticPresetsService(
 				throw badRequest(`Static preset "${id}": missing or invalid pricing for ${billingUsed}`);
 			}
 
-			const presetIsImage = isImageGenerationModel({
-				output_modalities: preset.modalities?.output ?? null,
-				pricing_profile: pricingProfile,
-			});
+			const presetIsImage =
+				resolveModelKind({
+					input_modalities: preset.modalities?.input ?? null,
+					output_modalities: preset.modalities?.output ?? null,
+					pricing_profile: pricingProfile,
+				}) === 'image';
 			const body: AdminModelMutationInput = {
 				id,
 				display_name: preset.display_name ?? null,
 				vendor: normalizeModelVendorInput(preset.vendor),
 				context_window: preset.context_window ?? null,
 				// Preserve null for image presets; LLM presets still default in createModelService
-				max_tokens: presetIsImage ? (preset.max_tokens ?? null) : (preset.max_tokens ?? 8192),
+				max_tokens: presetIsImage ? preset.max_tokens ?? null : preset.max_tokens ?? 8192,
 				pricing_profile: pricingProfile,
 				// Tags are operator-managed after import; presets do not seed model_tags.
 				tags: [],
 				input_modalities: preset.modalities?.input ?? null,
 				output_modalities: preset.modalities?.output ?? null,
 				released_at: preset.released ?? null,
-				description: preset.description ?? preset.i18n?.en ?? null,
 			};
 
 			await createModelService(repos, body);
@@ -515,4 +568,8 @@ export async function importModelsFromStaticPresetsService(
 		skipped_existing,
 		failed,
 	};
+}
+
+function catalogNotePatch(input:Record<string,unknown>):Record<string,unknown> {
+ try{return coreCatalogNotePatch(input);}catch(error){throw badRequest(error instanceof Error?error.message:'Invalid catalog note');}
 }

@@ -16,7 +16,7 @@ import {
 } from './mcp-types';
 
 export function useMcpServersState() {
-const editorFetch = useAdvancedEditorRequest();
+	const editorFetch = useAdvancedEditorRequest();
 
 	const t = useTranslations('mcp');
 	const tCommon = useTranslations('common');
@@ -40,39 +40,50 @@ const editorFetch = useAdvancedEditorRequest();
 	const detailRequest = useRef(0);
 	const listRequest = useRef(0);
 
+	const [detailScope, setDetailScope] = useState(selectedId);
+	if (detailScope !== selectedId) {
+		setDetailScope(selectedId);
+		setDetailLoading(Boolean(selectedId));
+		setDetailError(false);
+	}
 	const loadList = useCallback(async () => {
 		const request = ++listRequest.current;
-		setListLoading(true);
-		try {
-			const response = await readApiJson<ServerSummary[]>(await editorFetch('/api/admin/mcp-servers'));
-			if (request !== listRequest.current) return;
-			if (!response.success || !response.data) throw new Error(response.message || t('loadFailed'));
-			setServers(response.data);
-			setListError(false);
-		} catch {
-			if (request === listRequest.current) setListError(true);
-		} finally {
-			if (request === listRequest.current) setListLoading(false);
-		}
-	}, [t]);
+
+		return editorFetch('/api/admin/mcp-servers')
+			.then((response) => readApiJson<ServerSummary[]>(response))
+			.then(async (response) => {
+				if (request !== listRequest.current) return;
+				if (!response.success || !response.data) throw new Error(response.message || t('loadFailed'));
+				setServers(response.data);
+				setListError(false);
+			})
+			.catch(() => {
+				if (request === listRequest.current) setListError(true);
+			})
+			.finally(() => {
+				if (request === listRequest.current) setListLoading(false);
+			});
+	}, [t, editorFetch]);
 
 	const loadDetail = useCallback(
 		async (id: string) => {
 			const request = ++detailRequest.current;
-			setDetailLoading(true);
-			setDetailError(false);
-			try {
-				const response = await readApiJson<ServerDetail>(await editorFetch(`/api/admin/mcp-servers/${id}`));
-				if (request !== detailRequest.current || selected.current !== id) return;
-				if (!response.success || !response.data) throw new Error(response.message || t('loadFailed'));
-				setDetail(response.data);
-			} catch {
-				if (request === detailRequest.current && selected.current === id) setDetailError(true);
-			} finally {
-				if (request === detailRequest.current) setDetailLoading(false);
-			}
+
+			return editorFetch(`/api/admin/mcp-servers/${id}`)
+				.then((response) => readApiJson<ServerDetail>(response))
+				.then(async (response) => {
+					if (request !== detailRequest.current || selected.current !== id) return;
+					if (!response.success || !response.data) throw new Error(response.message || t('loadFailed'));
+					setDetail(response.data);
+				})
+				.catch(() => {
+					if (request === detailRequest.current && selected.current === id) setDetailError(true);
+				})
+				.finally(() => {
+					if (request === detailRequest.current) setDetailLoading(false);
+				});
 		},
-		[t]
+		[t, editorFetch],
 	);
 
 	useEffect(() => {
@@ -86,10 +97,11 @@ const editorFetch = useAdvancedEditorRequest();
 			++detailRequest.current;
 			++listRequest.current;
 		},
-		[]
+		[],
 	);
 
-	function selectServer(id: string | null) {
+	const selectServer = useCallback((id: string | null) => {
+		if (selected.current === id) return;
 		selected.current = id;
 		++detailRequest.current;
 		setSelectedId(id);
@@ -99,7 +111,7 @@ const editorFetch = useAdvancedEditorRequest();
 		setDetailError(false);
 		setDetailLoading(id != null);
 		setTab('tool');
-	}
+	}, []);
 
 	function openCreate() {
 		setForm({ ...EMPTY_FORM, headers: [{ key: '', value: '' }] });
@@ -137,8 +149,8 @@ const editorFetch = useAdvancedEditorRequest();
 				error instanceof TypeError
 					? tCommon('networkError')
 					: error instanceof Error
-					? error.message
-					: fallback
+						? error.message
+						: fallback,
 			);
 			return false;
 		} finally {
@@ -154,7 +166,7 @@ const editorFetch = useAdvancedEditorRequest();
 				...(body === undefined
 					? {}
 					: { headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }),
-			})
+			}),
 		);
 		if (!response.success) throw new Error(response.message || t('actionFailed'));
 		return response.data;
@@ -173,7 +185,7 @@ const editorFetch = useAdvancedEditorRequest();
 				const pricing = pricingRuleFromDraft(form.pricing);
 				if (!pricing.ok) throw new Error(pricingErrorText(pricing.error));
 				const authHeaders = Object.fromEntries(
-					form.headers.filter((row) => row.key.trim()).map((row) => [row.key.trim(), row.value])
+					form.headers.filter((row) => row.key.trim()).map((row) => [row.key.trim(), row.value]),
 				);
 				const body = {
 					name: form.name.trim(),
@@ -204,7 +216,7 @@ const editorFetch = useAdvancedEditorRequest();
 					notify('success', t('saved'));
 				}
 			},
-			t('saveFailed')
+			t('saveFailed'),
 		);
 	}
 
@@ -224,10 +236,10 @@ const editorFetch = useAdvancedEditorRequest();
 						added: result.added.length,
 						changed: result.changed.length,
 						removed: result.removed.length,
-					})
+					}),
 				);
 			} finally {
-				// A failed sync is persisted upstream; surface that error in the list and drawer too.
+				// A failed sync is persisted upstream; surface that error in the directory and workspace too.
 				await refresh(id);
 			}
 		});
@@ -269,7 +281,9 @@ const editorFetch = useAdvancedEditorRequest();
 			ids.length > 1 &&
 			!(await confirm({
 				title: t(status === 'enabled' ? 'batchEnableTitle' : 'batchDisableTitle'),
-				message: t('batchStatusConfirm', { count: ids.length }),
+				message: t(status === 'enabled' ? 'batchEnableConfirm' : 'batchDisableConfirm', {
+					count: ids.length,
+				}),
 				confirmLabel: t(status === 'enabled' ? 'enable' : 'disable'),
 			}))
 		)
@@ -282,12 +296,32 @@ const editorFetch = useAdvancedEditorRequest();
 	}
 
 	async function accept(itemId: string) {
-		if (!selectedId) return;
+		if (!selectedId) return false;
 		const id = selectedId;
 		return perform(`accept:${itemId}`, async () => {
 			await mutate(`/${id}/items/${itemId}/accept`, 'POST');
 			await refresh(id);
 			notify('success', t('accepted'));
+		});
+	}
+
+	/** Accepts several pending definition changes in one request; `confirmFirst` asks once for the whole batch. */
+	async function acceptMany(ids: string[], options: { confirmFirst?: boolean } = {}) {
+		if (!selectedId || !ids.length) return false;
+		const id = selectedId;
+		if (
+			options.confirmFirst &&
+			!(await confirm({
+				title: t('acceptAllTitle'),
+				message: t('acceptAllConfirm', { count: ids.length }),
+				confirmLabel: t('accept'),
+			}))
+		)
+			return false;
+		return perform('accept:batch', async () => {
+			const result = (await mutate(`/${id}/items/accept`, 'POST', { ids })) as { accepted: number };
+			await refresh(id);
+			notify('success', t('acceptedMany', { count: result.accepted }));
 		});
 	}
 
@@ -315,7 +349,7 @@ const editorFetch = useAdvancedEditorRequest();
 		const id = selectedId;
 		return perform('reveal', async () => {
 			const response = await readApiJson<{ url: string; authHeaders: Record<string, string> }>(
-				await editorFetch(`/api/admin/mcp-servers/${id}/reveal`)
+				await editorFetch(`/api/admin/mcp-servers/${id}/reveal`),
 			);
 			if (!response.success || !response.data) throw new Error(response.message || t('revealFailed'));
 			if (selected.current === id) setRevealed(response.data);
@@ -370,6 +404,7 @@ const editorFetch = useAdvancedEditorRequest();
 		sync,
 		test,
 		accept,
+		acceptMany,
 		toggleServer,
 		setItemStatus,
 		savePricing,

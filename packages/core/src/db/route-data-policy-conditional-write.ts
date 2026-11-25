@@ -86,6 +86,7 @@ export function policySubjectCondition(expected: RouteDataPolicyWritePreconditio
 		['pr.endpoints', provider.endpoints ?? null],
 		['pr.api_key', provider.api_key ?? null],
 		['pr.shared_channel_type', provider.shared_channel_type ?? null],
+  ['pr.custom_params',provider.custom_params ?? null],
 	];
 	return {
 		sql: entries.map(([column], index) => equal(driver, column, start + index)).join(' AND '),

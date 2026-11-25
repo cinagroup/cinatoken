@@ -221,6 +221,7 @@ export const PROXY_RUNTIME_VAR_KEYS = [
 	'STREAM_FIRST_CHUNK_TIMEOUT_MS',
 	'STREAM_IDLE_TIMEOUT_MS',
 	'USAGE_SAFETY_TIMEOUT_MS',
+	'STREAM_HEADERS_TIMEOUT_MS',
 ];
 
 /**
@@ -322,7 +323,7 @@ function applyBatchInfrastructure(config, names) {
 						...consumer,
 						queue: names.batchQueueName,
 						dead_letter_queue: names.batchDlqName,
-					},
+				  },
 		),
 	};
 	vars.BATCH_QUEUE_DLQ = names.batchDlqName;
@@ -367,6 +368,11 @@ function generateProxy(names) {
 	writeJson('packages/proxy/wrangler.jsonc', config);
 }
 
+export function collectAdminRuntimeVars(env = process.env) {
+	const proxyUrl = env.GATEWAY_PROXY_URL?.trim();
+	return proxyUrl ? { GATEWAY_PROXY_URL: proxyUrl } : undefined;
+}
+
 function generateAdmin(names) {
 	const base = readBase('packages/admin/wrangler.base.jsonc');
 	const organizationAdminRoles = trimEnv('CINAAUTH_ORGANIZATION_ADMIN_ROLES');
@@ -402,7 +408,9 @@ function generateAdmin(names) {
 				},
 				vars: adminVars,
 				services: base.services.map((service) =>
-					service.binding === 'CINATOKEN_PROXY_SERVICE' ? { ...service, service: names.proxyWorkerName } : service,
+					service.binding === 'CINATOKEN_PROXY_SERVICE'
+						? { ...service, service: names.proxyWorkerName }
+						: service,
 				),
 			},
 			names,
@@ -416,6 +424,9 @@ function generateAdmin(names) {
 	} else if (!Array.isArray(base.routes) || base.routes.length === 0) {
 		delete config.routes;
 	}
+
+	const runtimeVars = collectAdminRuntimeVars();
+	if (runtimeVars) config.vars = { ...base.vars, ...runtimeVars };
 
 	writeJson('packages/admin/wrangler.jsonc', config);
 }
@@ -440,7 +451,7 @@ function generateChain(names) {
 								...consumer,
 								queue: names.chainJobQueueName,
 								dead_letter_queue: names.chainJobDlqName,
-							},
+						  },
 				),
 				producers: (base.queues.producers ?? []).map((producer) => ({
 					...producer,
@@ -549,7 +560,7 @@ function validateSharedKeyUsageRepairHyperdriveBinding(names) {
 			? [
 					['DISPATCH_HYPERDRIVE_ID', names.dispatchHyperdriveId],
 					['FACT_HYPERDRIVE_ID', names.factHyperdriveId],
-				]
+			  ]
 			: []),
 	];
 	const canonicalId = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;

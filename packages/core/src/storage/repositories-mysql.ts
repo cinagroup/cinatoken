@@ -27,6 +27,8 @@ import {
 	createMySqlSharedKeysRepository,
 } from '../db/mysql/portal-marketplace.impl';
 import { createMySqlMcpServersRepository } from '../db/mysql/mcp-servers.impl';
+import { createMySqlOAuthAccessTokensRepository } from '../db/mysql/oauth-access-tokens.impl';
+import { createMySqlOAuthServerRepository } from '../db/mysql/oauth-server.impl';
 
 export function createMySqlRepositories(client: GatewayDatabaseClient): GatewayRepositories {
 	if (client.driver !== 'mysql') {
@@ -59,5 +61,7 @@ export function createMySqlRepositories(client: GatewayDatabaseClient): GatewayR
 		sharedKeys: createMySqlSharedKeysRepository(client),
 		portalLedger: createMySqlPortalLedgerRepository(client),
 		mcpServers: createMySqlMcpServersRepository(client),
+		oauthAccessTokens: createMySqlOAuthAccessTokensRepository(client),
+		oauthServer: createMySqlOAuthServerRepository(client),
 	};
 }

@@ -61,7 +61,8 @@ test('D1 request logging batches the raw log and public rollup atomically even w
 		},
 	});
 
-	assert.equal(batch.length, 2);
+	assert.equal(batch.length, 3);
+ assert.match(batch[2]!.sqlText,/last_used_at/);
 	assert.match(batch[0]!.sqlText, /INSERT INTO api_key_request_logs/);
 	assert.match(batch[0]!.sqlText, /budget_charged_micros/);
 	assert.equal((batch[0]!.sqlText.match(/\?/g) ?? []).length, batch[0]!.bindValues.length);
@@ -73,7 +74,7 @@ test('D1 request logging batches the raw log and public rollup atomically even w
 	assert.match(batch[1]!.sqlText, /total_tokens = total_tokens \+ excluded\.total_tokens/);
 	assert.match(batch[1]!.sqlText, /ON CONFLICT\(stat_date, model_id, shard\) DO UPDATE/);
 	assert.equal(batch[1]!.bindValues[7], 3);
-	assert.equal(batch[0]!.bindValues.at(-1), batch[1]!.bindValues.at(-1));
+	assert.equal(batch[0]!.bindValues[requestLogColumns.indexOf('created_at')], batch[1]!.bindValues.at(-1));
 });
 
 test('D1 request logging settles an unknown Guardrail charge in the same batch', async () => {
@@ -121,8 +122,9 @@ test('D1 request logging settles an unknown Guardrail charge in the same batch',
 		},
 	});
 
-	assert.equal(batch.length, 3);
-	assert.match(batch[2]!.sqlText, /state = 'expired'/);
-	assert.match(batch[2]!.sqlText, /settled_micros = reserved_micros/);
-	assert.equal(batch[2]!.bindValues.at(-1), 'request-1');
+	assert.equal(batch.length, 4);
+ assert.match(batch[2]!.sqlText,/last_used_at/);
+	assert.match(batch[3]!.sqlText, /state = 'expired'/);
+	assert.match(batch[3]!.sqlText, /settled_micros = reserved_micros/);
+	assert.equal(batch[3]!.bindValues.at(-1), 'request-1');
 });

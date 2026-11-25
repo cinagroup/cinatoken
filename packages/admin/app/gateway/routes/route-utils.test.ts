@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { describe, it } from 'node:test';
+import { readRouteCatalogFilters, writeRouteCatalogFilters } from './route-filter-query';
 import { fileURLToPath } from 'node:url';
 import type { GatewayModel, GatewayModelRoute, GatewayProvider } from '@/lib/types';
 import {
@@ -11,6 +12,7 @@ import {
 	applyDashScopeTtsRoutePreset,
 	alignRouteScheduleWindowsToCatalog,
 	composeCustomParamsJson,
+	isRouteConfigurationAvailable,
 	buildFormDataFromRoute,
 	buildRouteSavePayload,
 	buildRoutePriceOverride,
@@ -35,6 +37,7 @@ import {
 	scheduleWindowShapeKey,
 	hasBasePricingInversion,
 	parseCustomParamsForm,
+	summarizeRouteCustomParams,
 	requestOperationsForModel,
 	resolveAdapterOptionKey,
 	requestLogProtocolPath,
@@ -59,7 +62,7 @@ function model(overrides: Partial<GatewayModel> = {}): GatewayModel {
 		context_window: 128_000,
 		max_tokens: 4096,
 		tags: '[]',
-		description: null,
+		note: null, description: null,
 		metadata: null,
 		created_at: '',
 		...overrides,
@@ -71,7 +74,7 @@ function provider(endpoints: object): GatewayProvider {
 		id: 'provider-1',
 		name: 'Provider 1',
 		endpoints: JSON.stringify(endpoints),
-		description: null,
+		note: null, description: null,
 		created_at: '',
 	};
 }
@@ -98,10 +101,10 @@ describe('request surface path', () => {
 		assert.equal(requestSurfacePath('openai', 'rerank', 'rerank-model'), '/v1/rerank');
 	});
 
-	it('shows the shared DashScope realtime WebSocket entry with routing parameters', () => {
+	it('shows the official-style DashScope realtime WebSocket entries', () => {
 		assert.equal(
 			requestSurfacePath('dashscope', 'audio.transcriptions.realtime.inference', 'my fun/asr'),
-			'/v1/dashscope/realtime?model=my%20fun%2Fasr&operation=audio.transcriptions.realtime.inference',
+			'/dashscope/api-ws/v1/inference',
 		);
 	});
 
@@ -112,31 +115,31 @@ describe('request surface path', () => {
 		);
 		assert.equal(
 			requestSurfacePath('dashscope', 'audio.transcriptions.realtime.inference'),
-			`/v1/dashscope/realtime?model=${SURFACE_PATH_MODEL_PLACEHOLDER}&operation=audio.transcriptions.realtime.inference`,
+			'/dashscope/api-ws/v1/inference',
 		);
 	});
 
 	it('maps DashScope HTTP audio operations to native passthrough endpoints', () => {
 		assert.equal(
 			requestSurfacePath('dashscope', 'audio.speech', 'cosyvoice-v2'),
-			'/v1/dashscope/services/audio/tts/SpeechSynthesizer',
+			'/dashscope/api/v1/services/audio/tts/SpeechSynthesizer',
 		);
 		assert.equal(
 			requestSurfacePath('dashscope', 'audio.speech.multimodal'),
-			'/v1/dashscope/services/aigc/multimodal-generation/generation',
+			'/dashscope/api/v1/services/aigc/multimodal-generation/generation',
 		);
 		assert.equal(requestSurfacePath('dashscope', 'audio.transcriptions'), '/v1/audio/transcriptions');
 		assert.equal(
 			requestSurfacePath('dashscope', 'audio.transcriptions.async'),
-			'/v1/dashscope/services/audio/asr/transcription',
+			'/dashscope/api/v1/services/audio/asr/transcription',
 		);
 		assert.equal(
 			requestSurfacePath('dashscope', 'audio.transcriptions.multimodal'),
-			'/v1/dashscope/services/aigc/multimodal-generation/generation',
+			'/dashscope/api/v1/services/aigc/multimodal-generation/generation',
 		);
 		assert.equal(
 			requestSurfacePath('dashscope', 'images.generations.multimodal'),
-			'/v1/dashscope/services/aigc/multimodal-generation/generation',
+			'/dashscope/api/v1/services/aigc/multimodal-generation/generation',
 		);
 	});
 
@@ -146,7 +149,7 @@ describe('request surface path', () => {
 		assert.equal(requestLogProtocolPath('openai', 'chat'), '/v1/chat/completions');
 		assert.equal(
 			requestLogProtocolPath('dashscope', 'audio.speech'),
-			'/v1/dashscope/services/audio/tts/SpeechSynthesizer',
+			'/dashscope/api/v1/services/audio/tts/SpeechSynthesizer',
 		);
 	});
 });
@@ -214,11 +217,13 @@ describe('route form capability filters', () => {
 		assert.equal(passthrough.adapter, 'passthrough');
 		const filetrans = applyDashScopeAsrRoutePreset(EMPTY_ROUTE_FORM, 'filetrans');
 		assert.equal(filetrans.upstream_operation, 'audio.transcriptions.async');
-		assert.equal(filetrans.adapter, 'dashscope-asr-file-async');
+		assert.equal(filetrans.adapter, 'dashscope-asr-qwen-audio-file-async');
 	});
 
 	it('wires qwen-audio-3.0-asr-flash on Token Plan to convert and passthrough, not filetrans', () => {
-		const qwenTokenPlan = listStaticProviderImportPresets().find((row) => row.name === 'Qwen AI Platform (Token Plan)');
+		const qwenTokenPlan = listStaticProviderImportPresets().find(
+			(row) => row.name === 'Qwen AI Platform (Token Plan)',
+		);
 		assert.ok(qwenTokenPlan);
 		const asr = model({
 			id: 'qwen-audio-3.0-asr-flash',
@@ -293,7 +298,9 @@ describe('route form capability filters', () => {
 			output_modalities: '["image"]',
 		});
 		assert.deepEqual(requestOperationsForModel(imageModel, 'openai'), ['images.generations', 'images.edits']);
-		assert.deepEqual(requestOperationsForModel(imageModel, 'gemini', 'gemini-3.1-flash-image'), ['models.generate']);
+		assert.deepEqual(requestOperationsForModel(imageModel, 'gemini', 'gemini-3.1-flash-image'), [
+			'models.generate',
+		]);
 		assert.equal(
 			resolveAdapterOptionKey(
 				{
@@ -322,6 +329,36 @@ describe('route form capability filters', () => {
 			),
 			'passthrough:gemini:models.generate',
 		);
+		assert.equal(
+			resolveAdapterOptionKey(
+				{
+					...EMPTY_ROUTE_FORM,
+					adapter: 'passthrough',
+					request_protocol: 'dashscope',
+					request_operation: 'audio.speech',
+					upstream_protocol: 'dashscope',
+					upstream_operation: 'audio.speech',
+				},
+				'tts',
+				'qwen-audio-3.1-tts-flash',
+			),
+			'passthrough:dashscope:audio.speech:qwen-audio',
+		);
+		assert.equal(
+			resolveAdapterOptionKey(
+				{
+					...EMPTY_ROUTE_FORM,
+					adapter: 'passthrough',
+					request_protocol: 'dashscope',
+					request_operation: 'audio.speech',
+					upstream_protocol: 'dashscope',
+					upstream_operation: 'audio.speech',
+				},
+				'tts',
+				'cosyvoice-v3-flash',
+			),
+			'passthrough:dashscope:audio.speech:cosyvoice',
+		);
 		const geminiOptions = listAdapterOptionsForModel(
 			imageModel,
 			provider({ gemini: { base: 'https://generativelanguage.googleapis.com/v1beta/models' } }),
@@ -330,7 +367,8 @@ describe('route form capability filters', () => {
 		assert.equal(
 			geminiOptions.options.some(
 				(option) =>
-					option.descriptor.optionKey === 'passthrough:gemini:models.generate:image' && option.modelMatch === 'match',
+					option.descriptor.optionKey === 'passthrough:gemini:models.generate:image' &&
+					option.modelMatch === 'match',
 			),
 			true,
 		);
@@ -423,7 +461,11 @@ describe('route form capability filters', () => {
 				'dashscope',
 				'fun-asr-realtime',
 			),
-			['audio.transcriptions.multimodal', 'audio.transcriptions.realtime.inference', 'audio.transcriptions.async'],
+			[
+				'audio.transcriptions.multimodal',
+				'audio.transcriptions.realtime.inference',
+				'audio.transcriptions.async',
+			],
 		);
 		assert.deepEqual(
 			requestOperationsForModel(
@@ -602,7 +644,12 @@ describe('route form capability filters', () => {
 				upstream_protocol: 'dashscope',
 				upstream_operation: 'audio.transcriptions.async',
 			}),
-			['dashscope-asr-file-async'],
+			[
+				'dashscope-asr-qwen-file-async',
+				'dashscope-asr-qwen-audio-file-async',
+				'dashscope-asr-fun-async',
+				'dashscope-asr-paraformer-async',
+			],
 		);
 		assert.deepEqual(
 			compatibleAdaptersForRoute({
@@ -636,7 +683,7 @@ describe('route form capability filters', () => {
 			' · openai/audio.transcriptions → dashscope/audio.transcriptions.multimodal',
 		);
 
-		const asyncAsr = getAdapterByOptionKey('dashscope-asr-file-async');
+		const asyncAsr = getAdapterByOptionKey('dashscope-asr-qwen-audio-file-async');
 		assert.ok(asyncAsr);
 		assert.equal(
 			adapterOptionMappingSuffix(asyncAsr),
@@ -686,12 +733,14 @@ describe('route form capability filters', () => {
 		assert.equal(listed.modelUnrecognized, false);
 		assert.deepEqual(visibleAdapterKeys(listed), [
 			'dashscope-asr-qwen-file',
-			'passthrough:dashscope:audio.transcriptions.multimodal',
+			'passthrough:dashscope:audio.transcriptions.multimodal:qwen3',
 		]);
 	});
 
 	it('filters Token Plan TTS adapters to CosyVoice and Qwen-Audio families', () => {
-		const qwenTokenPlan = listStaticProviderImportPresets().find((row) => row.name === 'Qwen AI Platform (Token Plan)');
+		const qwenTokenPlan = listStaticProviderImportPresets().find(
+			(row) => row.name === 'Qwen AI Platform (Token Plan)',
+		);
 		assert.ok(qwenTokenPlan);
 		const tts = model({
 			id: 'qwen-audio-3.0-tts-plus',
@@ -703,13 +752,14 @@ describe('route form capability filters', () => {
 		const listed = listAdapterOptionsForModel(tts, provider(qwenTokenPlan.endpoints), 'qwen-audio-3.0-tts-plus');
 		assert.equal(listed.modelUnrecognized, false);
 		assert.equal(
-			listed.options.find((option) => option.descriptor.optionKey === 'passthrough:openai:audio.speech')?.available,
+			listed.options.find((option) => option.descriptor.optionKey === 'passthrough:openai:audio.speech')
+				?.available,
 			false,
 		);
 		assert.deepEqual(visibleAdapterKeys(listed), [
-			'dashscope-tts-speech',
-			'passthrough:dashscope:audio.speech',
-			'passthrough:dashscope:audio.speech.stream',
+			'dashscope-tts-qwen-audio',
+			'passthrough:dashscope:audio.speech.stream:qwen-audio',
+			'passthrough:dashscope:audio.speech:qwen-audio',
 		]);
 	});
 
@@ -781,13 +831,23 @@ describe('route form capability filters', () => {
 		const listed = listAdapterOptionsForModel(asr, dashscope, 'brand-new-asr');
 		assert.equal(listed.modelUnrecognized, true);
 		assert.deepEqual(visibleAdapterKeys(listed), [
-			'dashscope-asr-file-async',
+			'dashscope-asr-fun-async',
 			'dashscope-asr-fun-file',
+			'dashscope-asr-paraformer-async',
 			'dashscope-asr-qwen-audio-file',
+			'dashscope-asr-qwen-audio-file-async',
 			'dashscope-asr-qwen-file',
-			'passthrough:dashscope:audio.transcriptions.async',
-			'passthrough:dashscope:audio.transcriptions.multimodal',
-			'passthrough:dashscope:audio.transcriptions.realtime.inference',
+			'dashscope-asr-qwen-file-async',
+			'passthrough:dashscope:audio.transcriptions.async:fun',
+			'passthrough:dashscope:audio.transcriptions.async:paraformer',
+			'passthrough:dashscope:audio.transcriptions.async:qwen-audio',
+			'passthrough:dashscope:audio.transcriptions.async:qwen3',
+			'passthrough:dashscope:audio.transcriptions.multimodal:fun',
+			'passthrough:dashscope:audio.transcriptions.multimodal:qwen-audio',
+			'passthrough:dashscope:audio.transcriptions.multimodal:qwen3',
+			'passthrough:dashscope:audio.transcriptions.realtime.inference:fun',
+			'passthrough:dashscope:audio.transcriptions.realtime.inference:paraformer',
+			'passthrough:dashscope:audio.transcriptions.realtime.inference:qwen-audio',
 			'passthrough:dashscope:audio.transcriptions.realtime.session',
 		]);
 
@@ -1106,8 +1166,22 @@ describe('buildFormDataFromRoute / buildRouteSavePayload schedule', () => {
 			[],
 		);
 		assert.deepEqual(form.schedule_windows, [
-			{ start: '09:00', end: '12:00', charged_factor: '0.6', metered_factor: '2', provider_factor: '1', days: [] },
-			{ start: '12:00', end: '18:00', charged_factor: '1.2', metered_factor: '2', provider_factor: '1', days: [] },
+			{
+				start: '09:00',
+				end: '12:00',
+				charged_factor: '0.6',
+				metered_factor: '2',
+				provider_factor: '1',
+				days: [],
+			},
+			{
+				start: '12:00',
+				end: '18:00',
+				charged_factor: '1.2',
+				metered_factor: '2',
+				provider_factor: '1',
+				days: [],
+			},
 		]);
 	});
 
@@ -1327,12 +1401,18 @@ describe('buildFormDataFromRoute / buildRouteSavePayload schedule', () => {
 		const form = buildFormDataFromRoute(route({ price_override: String(payload.price_override) }), []);
 		assert.equal(form.provider_factor, '0.5');
 		assert.equal(form.provider_factor_expires_at, '2026-11-01T00:00:00.000Z');
-		assert.equal(providerFactorTiming(String(payload.price_override), new Date('2026-10-15T00:00:00.000Z')), 'active');
+		assert.equal(
+			providerFactorTiming(String(payload.price_override), new Date('2026-10-15T00:00:00.000Z')),
+			'active',
+		);
 		assert.equal(
 			providerFactorTiming(String(payload.price_override), new Date('2026-09-01T00:00:00.000Z')),
 			'scheduled',
 		);
-		assert.equal(providerFactorTiming(String(payload.price_override), new Date('2026-11-01T00:00:00.000Z')), 'expired');
+		assert.equal(
+			providerFactorTiming(String(payload.price_override), new Date('2026-11-01T00:00:00.000Z')),
+			'expired',
+		);
 		assert.equal(providerFactorTiming(JSON.stringify({ charged_factor: 1 })), null);
 	});
 
@@ -1357,7 +1437,14 @@ describe('buildFormDataFromRoute / buildRouteSavePayload schedule', () => {
 				{ start: '13:00', end: '14:00', charged_factor: '3', metered_factor: '3', days: [] },
 			]),
 			[
-				{ start: '00:30', end: '08:30', days: [], charged_factor: '0.8', metered_factor: '0.9', provider_factor: '1' },
+				{
+					start: '00:30',
+					end: '08:30',
+					days: [],
+					charged_factor: '0.8',
+					metered_factor: '0.9',
+					provider_factor: '1',
+				},
 				{
 					start: '09:00',
 					end: '12:00',
@@ -1384,7 +1471,14 @@ describe('buildFormDataFromRoute / buildRouteSavePayload schedule', () => {
 			[catalogModel],
 		);
 		assert.deepEqual(form.schedule_windows, [
-			{ start: '00:30', end: '08:30', days: [], charged_factor: '0.7', metered_factor: '0.6', provider_factor: '1' },
+			{
+				start: '00:30',
+				end: '08:30',
+				days: [],
+				charged_factor: '0.7',
+				metered_factor: '0.6',
+				provider_factor: '1',
+			},
 			{
 				start: '09:00',
 				end: '12:00',
@@ -1634,8 +1728,6 @@ describe('route workspace search', () => {
 			{ ...provider({}), id: 'p1', name: '谷仓' },
 			{ ...provider({}), id: 'p2', name: 'Backup' },
 		],
-		filterVendor: '',
-		filterProviderId: '',
 		filterRouteGroup: '',
 		filterStatus: '',
 	};
@@ -1754,7 +1846,9 @@ describe('provider validity form round trip', () => {
 			() =>
 				buildRoutePriceOverride({
 					...EMPTY_ROUTE_FORM,
-					schedule_windows: [{ ...window, provider_validity: { starts_at: '2026-11-01', expires_at: '2026-10-01' } }],
+					schedule_windows: [
+						{ ...window, provider_validity: { starts_at: '2026-11-01', expires_at: '2026-10-01' } },
+					],
 				}),
 			/earlier than end/,
 		);
@@ -1894,7 +1988,10 @@ describe('buildOpenAiAdapterCallSample', () => {
 		assert.match(asr ?? '', /client\.audio\.transcriptions\.create\(/);
 		assert.match(asr ?? '', /"timestamp_level": "sentence"/);
 
-		assert.equal(buildOpenAiAdapterCallSample(getAdapterByOptionKey('passthrough:openai:images.generations')!), null);
+		assert.equal(
+			buildOpenAiAdapterCallSample(getAdapterByOptionKey('passthrough:openai:images.generations')!),
+			null,
+		);
 	});
 	it('uses the client model and group, escaping user-supplied text', () => {
 		const sample = buildOpenAiAdapterCallSample(getAdapterByOptionKey('dashscope-image-qwen')!, 'my"model:free');
@@ -1902,10 +1999,180 @@ describe('buildOpenAiAdapterCallSample', () => {
 		assert.equal(sample?.includes('your-model'), false);
 	});
 	it('submits a public URL as multipart for asynchronous transcription', () => {
-		const sample = buildOpenAiAdapterCallSample(getAdapterByOptionKey('dashscope-asr-file-async')!, 'asr:free');
+		const sample = buildOpenAiAdapterCallSample(
+			getAdapterByOptionKey('dashscope-asr-qwen-audio-file-async')!,
+			'asr:free',
+		);
 		assert.match(sample ?? '', /httpx\.post\(/);
 		assert.match(sample ?? '', /"model": \(None, "asr:free"\)/);
 		assert.match(sample ?? '', /"file_url": \(None, "https:\/\/example\.com\/audio\.mp3"\)/);
 		assert.equal(sample?.includes('file=open'), false);
+	});
+});
+
+describe('route custom params indicators', () => {
+	it('recognizes headers and body in both envelope and legacy formats', () => {
+		for (const raw of [
+			'{"headers":{"X-Example":"demo"},"body":{"temperature":0}}',
+			'{"headers":{"X-Example":"demo"},"temperature":0}',
+		]) {
+			assert.deepEqual(summarizeRouteCustomParams(raw), {
+				headers: true,
+				body: true,
+				forceOverrideHeaders: false,
+				forceOverrideBody: false,
+			});
+		}
+		assert.equal(summarizeRouteCustomParams('{"headers":{"X-Example":""}}').headers, true);
+		assert.equal(summarizeRouteCustomParams('{"headers":{"X-Example":"demo"}}').body, false);
+		assert.equal(summarizeRouteCustomParams('{"body":{"stream":false}}').headers, false);
+		assert.equal(summarizeRouteCustomParams('{"body":{"stream":false}}').body, true);
+	});
+
+	it('ignores empty, invalid and metadata-only configurations', () => {
+		for (const raw of [
+			null,
+			'',
+			'{}',
+			'[]',
+			'null',
+			'42',
+			'invalid',
+			'{"headers":{},"body":{}}',
+			'{"force_override":{"headers":true,"body":true}}',
+		]) {
+			const summary = summarizeRouteCustomParams(raw);
+			assert.equal(summary.headers, false);
+			assert.equal(summary.body, false);
+		}
+	});
+
+	it('keeps force override hints specific to each side', () => {
+		assert.deepEqual(
+			summarizeRouteCustomParams(
+				'{"headers":{"X-Example":"demo"},"body":{"temperature":0},"force_override":{"headers":true,"body":false}}',
+			),
+			{
+				headers: true,
+				body: true,
+				forceOverrideHeaders: true,
+				forceOverrideBody: false,
+			},
+		);
+	});
+});
+
+describe('route configuration availability', () => {
+	it('requires an enabled route and a provider that is not disabled', () => {
+		assert.equal(isRouteConfigurationAvailable({ status: 'active' }, { status: 'active' }), true);
+		assert.equal(isRouteConfigurationAvailable({ status: 'active' }, { status: 'disabled' }), false);
+		assert.equal(isRouteConfigurationAvailable({ status: 'disabled' }, { status: 'active' }), false);
+		assert.equal(isRouteConfigurationAvailable({ status: 'disabled' }, { status: 'disabled' }), false);
+		assert.equal(isRouteConfigurationAvailable({ status: 'active' }, undefined), true);
+	});
+});
+
+describe('route catalog grouped filters', () => {
+	const models = [
+		model({ id: 'm1', vendor: 'openai' }),
+		model({ id: 'm2', vendor: 'openai' }),
+		model({ id: 'm3', vendor: 'anthropic' }),
+		model({ id: 'm4', vendor: 'google' }),
+	];
+	const base = {
+		models,
+		modelMeta: new Map(models.map((m) => [m.id, m])),
+		providers: [
+			{ ...provider({}), id: 'p1', kind: 'OpenAI' },
+			{ ...provider({}), id: 'p2', kind: 'OpenAI' },
+			{ ...provider({}), id: 'p3', kind: undefined },
+		],
+		routes: [
+			route({ id: 'r1', model_id: 'm1', provider_id: 'p1' }),
+			route({ id: 'r2', model_id: 'm1', provider_id: 'p3' }),
+			route({ id: 'r3', model_id: 'm2', provider_id: 'p2' }),
+			route({ id: 'r4', model_id: 'm3', provider_id: 'p3' }),
+		],
+		filterRouteGroup: '',
+		filterStatus: '',
+	};
+	it('unions model vendors and individual models while retaining unrouted models', () => {
+		const groups = buildRoutesByModel({ ...base, filterModels: { groups: ['openai'], items: ['m4'] } });
+		assert.deepEqual(groups.map((g) => g.model_id).sort(), ['m1', 'm2', 'm4']);
+		assert.equal(groups.find((g) => g.model_id === 'm1')?.groupRoutes.length, 2);
+		assert.equal(groups.find((g) => g.model_id === 'm4')?.groupRoutes.length, 0);
+		assert.deepEqual(
+			buildRoutesByModel({ ...base, filterModels: { groups: [], items: ['m1', 'm3'] } })
+				.map((g) => g.model_id)
+				.sort(),
+			['m1', 'm3'],
+		);
+	});
+	it('unions provider types and individual providers, hiding models without matching routes', () => {
+		const groups = buildRoutesByModel({ ...base, filterProviders: { groups: ['OpenAI'], items: ['p3'] } });
+		assert.deepEqual(groups.flatMap((g) => g.groupRoutes.map((r) => r.id)).sort(), ['r1', 'r2', 'r3', 'r4']);
+		assert.ok(!groups.some((g) => g.model_id === 'm4'));
+		assert.deepEqual(
+			buildRoutesByModel({ ...base, filterProviders: { groups: ['__unclassified__'], items: [] } })
+				.flatMap((g) => g.groupRoutes.map((r) => r.id))
+				.sort(),
+			['r2', 'r4'],
+		);
+	});
+	it('intersects model and provider selections with the other route filters', () => {
+		const groups = buildRoutesByModel({
+			...base,
+			filterModels: { groups: ['openai'], items: [] },
+			filterProviders: { groups: [], items: ['p3'] },
+			filterStatus: 'active',
+		});
+		assert.deepEqual(
+			groups.map((g) => g.model_id),
+			['m1'],
+		);
+		assert.deepEqual(
+			groups[0].groupRoutes.map((r) => r.id),
+			['r2'],
+		);
+		assert.equal(buildRoutesByModel({ ...base, filterModels: { groups: [], items: ['deleted-model'] } }).length, 0);
+		assert.equal(
+			buildRoutesByModel({ ...base, filterProviders: { groups: [], items: ['deleted-provider'] } }).length,
+			0,
+		);
+	});
+	it('restores legacy vendor, model and provider links without broadening a provider ID', () => {
+		const filters = readRouteCatalogFilters(
+			new URLSearchParams('vendor=OpenAI&model_id=m3&provider_kind=OpenAI&provider_id=p2'),
+		);
+		assert.deepEqual(filters.models, { groups: ['openai'], items: ['m3'] });
+		assert.deepEqual(filters.providers, { groups: [], items: ['p2'] });
+		assert.deepEqual(readRouteCatalogFilters(new URLSearchParams('provider_kind=__unclassified__')).providers, {
+			groups: ['__unclassified__'],
+			items: [],
+		});
+	});
+	it('round-trips grouped selections and special IDs, removing obsolete filter aliases', () => {
+		const models = { groups: ['openai', 'anthropic'], items: ['model/with+space'] };
+		const providers = { groups: ['OpenAI', '__unclassified__'], items: ['provider+1'] };
+		const params = writeRouteCatalogFilters(
+			new URLSearchParams('vendor=google&provider_id=old&status=active'),
+			models,
+			providers,
+		);
+		assert.equal(params.get('vendor'), null);
+		assert.equal(params.get('provider_id'), null);
+		assert.equal(params.get('status'), 'active');
+		assert.deepEqual(readRouteCatalogFilters(new URLSearchParams(params.toString())), { models, providers });
+		writeRouteCatalogFilters(params, { groups: [], items: [] }, { groups: [], items: [] });
+		assert.equal(params.toString(), 'status=active');
+	});
+	it('prefers canonical filters, deduplicates values and allows explicit empty selections', () => {
+		const filters = readRouteCatalogFilters(
+			new URLSearchParams(
+				'vendor=google&model_vendors=OpenAI,openai&model_ids=m1,m1&provider_kind=OpenAI&provider_id=p1&provider_ids=&provider_kinds=',
+			),
+		);
+		assert.deepEqual(filters.models, { groups: ['openai'], items: ['m1'] });
+		assert.deepEqual(filters.providers, { groups: [], items: [] });
 	});
 });

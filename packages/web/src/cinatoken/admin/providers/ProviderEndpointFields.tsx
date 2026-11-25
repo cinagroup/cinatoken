@@ -19,6 +19,7 @@ const names = {
 	dashscope: 'DashScope',
 	minimax: 'MiniMax',
 	volcengine: 'Volcengine',
+	elevenlabs: 'ElevenLabs',
 }
 export function ProviderEndpointFields(props: {
 	register: UseFormRegister<ProviderFormValues>

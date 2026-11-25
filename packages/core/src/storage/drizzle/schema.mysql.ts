@@ -398,7 +398,11 @@ export const providersTable = mysqlTable(
 		apiKey: text('api_key').notNull().default(''),
 		/** `active` | `disabled` */
 		status: varchar('status', { length: COL.STATUS }).notNull().default('active'),
-		description: text('description'),
+		/** Operator note. Catalog introductions are resolved from static presets. */
+		note: text('note'),
+	description: text('description'),
+		/** JSON: `{ "<protocol>": { headers?, body? } }`，按协议分组的默认 custom_params，无 force_override。 */
+		customParams: text('custom_params'),
 		sharedChannelType: text('shared_channel_type'),
 		createdAt: timestamp('created_at', { fsp: 6, mode: 'string' }).notNull(),
 	},
@@ -413,6 +417,8 @@ export const modelsTable = mysqlTable('models', {
 	/** Chat completion max output tokens; NULL for image-generation models. */
 	maxTokens: int('max_tokens').default(8192),
 	pricingProfile: text('pricing_profile'),
+	/** Operator note. Catalog introductions are resolved from static presets. */
+	note: text('note'),
 	description: text('description'),
 	metadata: text('metadata'),
 	inputModalities: text('input_modalities'),
@@ -517,6 +523,7 @@ export const routePoolStickyBindingsTable = mysqlTable('route_pool_sticky_bindin
 	expiresAt: timestamp('expires_at', { fsp: 6, mode: 'string' }).notNull(),
 	createdAt: timestamp('created_at', { fsp: 6, mode: 'string' }).notNull(),
 	updatedAt: timestamp('updated_at', { fsp: 6, mode: 'string' }).notNull(),
+	affinityKey: varchar('affinity_key', { length: 512 }),
 });
 
 export const modelSurfacesTable = mysqlTable('model_surfaces', {
@@ -584,6 +591,8 @@ export const apiKeyRequestLogsTable = mysqlTable('api_key_request_logs', {
 	workspaceId: varchar('workspace_id', { length: COL.WORKSPACE_ID }).references(() => workspacesTable.id, {
 		onDelete: 'set null',
 	}),
+	/** 访问令牌调用（OAuth）：此时 api_key_id 为空 */
+	oauthAccessTokenId: varchar('oauth_access_token_id', { length: COL.ID }),
 	userEmail: varchar('user_email', { length: COL.EMAIL }),
 	modelId: varchar('model_id', { length: COL.ID }),
 	providerId: varchar('provider_id', { length: COL.ID }),
@@ -684,7 +693,10 @@ export const providerAttemptAvailabilityTable = mysqlTable(
 		index('idx_provider_attempt_availability_route_observed').on(t.routeTargetId, t.observedAt),
 		index('idx_provider_attempt_availability_observed').on(t.observedAt),
 		check('provider_attempt_availability_attempt_index_chk', sql`${t.attemptIndex} BETWEEN 1 AND 128`),
-		check('provider_attempt_availability_outcome_chk', sql`${t.outcome} IN ('available', 'unavailable', 'excluded')`),
+		check(
+			'provider_attempt_availability_outcome_chk',
+			sql`${t.outcome} IN ('available', 'unavailable', 'excluded')`,
+		),
 		check(
 			'provider_attempt_availability_reason_chk',
 			sql`${t.reason} IN ('accepted', 'provider_http_error', 'rate_limited', 'network_error', 'invalid_response', 'client_error', 'client_cancelled', 'unknown')`,
@@ -710,9 +722,12 @@ export const generationFeedbackTable = mysqlTable(
 			.notNull()
 			.references(() => managementApiKeysTable.id, { onDelete: 'cascade' }),
 		accountType: varchar('account_type', { length: COL.STATUS }).notNull(),
-		personalOwnerUserId: varchar('personal_owner_user_id', { length: COL.USER_ID }).references(() => usersTable.id, {
-			onDelete: 'cascade',
-		}),
+		personalOwnerUserId: varchar('personal_owner_user_id', { length: COL.USER_ID }).references(
+			() => usersTable.id,
+			{
+				onDelete: 'cascade',
+			},
+		),
 		organizationId: varchar('organization_id', { length: 255 }).references(() => organizationsTable.id, {
 			onDelete: 'cascade',
 		}),
@@ -912,13 +927,19 @@ export const guardrailsTable = mysqlTable(
 		uniqueIndex('uk_guardrails_id_workspace').on(t.id, t.workspaceKey),
 		uniqueIndex('uk_guardrails_workspace_default').on(t.workspaceDefaultKey),
 		uniqueIndex('uk_guardrails_account_default').on(t.accountScopeKey),
-		check('guardrails_default_kind_chk', sql`NOT (${t.isWorkspaceDefault} = TRUE AND ${t.isAccountDefault} = TRUE)`),
+		check(
+			'guardrails_default_kind_chk',
+			sql`NOT (${t.isWorkspaceDefault} = TRUE AND ${t.isAccountDefault} = TRUE)`,
+		),
 		check(
 			'guardrails_account_scope_key_chk',
 			sql`(${t.isAccountDefault} = TRUE AND ${t.accountScopeKey} IS NOT NULL) OR (${t.isAccountDefault} = FALSE AND ${t.accountScopeKey} IS NULL)`,
 		),
 		check('guardrails_status_chk', sql`${t.status} IN ('active', 'archived')`),
-		check('guardrails_versions_chk', sql`${t.designatedVersion} >= 1 AND ${t.latestVersion} >= ${t.designatedVersion}`),
+		check(
+			'guardrails_versions_chk',
+			sql`${t.designatedVersion} >= 1 AND ${t.latestVersion} >= ${t.designatedVersion}`,
+		),
 	],
 );
 
@@ -1033,7 +1054,10 @@ export const guardrailBudgetReservationsTable = mysqlTable(
 	(t) => [
 		uniqueIndex('uk_guardrail_budget_reservation_request_assignment').on(t.requestId, t.assignmentId),
 		check('guardrail_budget_reservations_scope_chk', sql`${t.scopeType} IN ('user', 'api_key')`),
-		check('guardrail_budget_reservations_period_chk', sql`${t.period} IN ('daily', 'weekly', 'monthly', 'lifetime')`),
+		check(
+			'guardrail_budget_reservations_period_chk',
+			sql`${t.period} IN ('daily', 'weekly', 'monthly', 'lifetime')`,
+		),
 		check(
 			'guardrail_budget_reservations_amount_chk',
 			sql`${t.limitMicros} >= 0 AND ${t.reservedMicros} > 0 AND ${t.settledMicros} >= 0`,
@@ -1069,7 +1093,10 @@ export const userBudgetReservationsTable = mysqlTable(
 		updatedAt: datetime('updated_at', { fsp: 6, mode: 'string' }).notNull(),
 	},
 	(t) => [
-		check('user_budget_reservations_epoch_chk', sql`${t.budgetEpoch} >= 0 AND ${t.budgetEpoch} <= 9007199254740991`),
+		check(
+			'user_budget_reservations_epoch_chk',
+			sql`${t.budgetEpoch} >= 0 AND ${t.budgetEpoch} <= 9007199254740991`,
+		),
 		check(
 			'user_budget_reservations_amount_chk',
 			sql`${t.limitMicros} >= 0 AND ${t.limitMicros} <= 9007199254740991 AND ${t.reservedMicros} > 0 AND ${t.reservedMicros} <= 9007199254740991 AND ${t.settledMicros} >= 0 AND ${t.settledMicros} <= 9007199254740991`,
@@ -1450,7 +1477,10 @@ export const batchItemsTable = mysqlTable(
 		primaryKey({ columns: [t.batchId, t.ordinal] }),
 		uniqueIndex('uk_batch_items_custom').on(t.batchId, t.customId),
 		index('idx_batch_items_status_ordinal').on(t.batchId, t.status, t.ordinal),
-		check('batch_items_status_chk', sql`${t.status} IN ('pending', 'in_progress', 'completed', 'failed', 'cancelled')`),
+		check(
+			'batch_items_status_chk',
+			sql`${t.status} IN ('pending', 'in_progress', 'completed', 'failed', 'cancelled')`,
+		),
 		check(
 			'batch_items_request_range_chk',
 			sql`${t.requestStartOffset} BETWEEN 0 AND 52428799 AND ${t.requestEndOffset} BETWEEN 1 AND 52428800 AND ${t.requestEndOffset} > ${t.requestStartOffset} AND ${t.requestEndOffset} - ${t.requestStartOffset} <= 1048578`,

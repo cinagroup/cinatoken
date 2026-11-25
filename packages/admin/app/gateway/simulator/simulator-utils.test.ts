@@ -11,6 +11,7 @@ import {
 	bodyTemplateForSelection,
 	buildModelRoutingString,
 	buildRequestLogsHref,
+	buildToolRequestLogsHref,
 	filterMatchingActiveRoutes,
 	isBodyDirty,
 	listDashScopeAudioClientOperations,
@@ -368,7 +369,15 @@ describe('simulator-utils', () => {
 			}),
 			'/admin/request-logs?api_key_id=k1&model_id=m1&route_group=vip&protocol=openai',
 		);
-		assert.equal(buildRequestLogsHref({ routeGroup: 'default' }), '/admin/request-logs');
+		assert.equal(buildRequestLogsHref({ routeGroup: 'default' }), '/admin/request-logs?route_group=default');
+	});
+
+	it('buildToolRequestLogsHref scopes request logs to REST tool calls', () => {
+		assert.equal(
+			buildToolRequestLogsHref({ apiKeyId: 'k1', toolId: 'web-search' }),
+			'/admin/request-logs?kinds=tool%3Aweb-search&api_key_id=k1',
+		);
+		assert.equal(buildToolRequestLogsHref(), '/admin/request-logs?kinds=tool');
 	});
 
 	it('isBodyDirty detects edits', () => {
@@ -396,7 +405,16 @@ describe('simulator-utils', () => {
 
 	it('bodyTemplateForSelection uses OpenAI Responses template', () => {
 		assert.equal(
-			bodyTemplateForSelection('openai', false, 'generations', null, undefined, undefined, undefined, 'responses'),
+			bodyTemplateForSelection(
+				'openai',
+				false,
+				'generations',
+				null,
+				undefined,
+				undefined,
+				undefined,
+				'responses',
+			),
 			OPENAI_RESPONSES_BODY_TEMPLATE,
 		);
 		assert.equal(
@@ -433,7 +451,9 @@ describe('simulator-utils', () => {
 		const unknown = JSON.parse(bodyTemplateForSelection('openai', true)) as { size?: string; n?: number };
 		assert.equal(unknown.size, undefined);
 		assert.equal(unknown.n, 1);
-		const gptEdits = JSON.parse(bodyTemplateForSelection('openai', true, 'edits', null, null, null, 'gpt-image-2')) as {
+		const gptEdits = JSON.parse(
+			bodyTemplateForSelection('openai', true, 'edits', null, null, null, 'gpt-image-2'),
+		) as {
 			prompt?: string;
 			size?: string;
 			quality?: string;
@@ -491,13 +511,29 @@ describe('simulator-utils', () => {
 		assert.equal(bodyTemplateForSelection('openai', false, 'generations', 'speech'), AUDIO_SPEECH_BODY_TEMPLATE);
 		assert.equal(
 			JSON.parse(
-				bodyTemplateForSelection('openai', false, 'generations', 'speech', undefined, undefined, 'cosyvoice-v2'),
+				bodyTemplateForSelection(
+					'openai',
+					false,
+					'generations',
+					'speech',
+					undefined,
+					undefined,
+					'cosyvoice-v2',
+				),
 			).voice,
 			'longxiaochun_v2',
 		);
 		assert.equal(
 			isBodyDirty(
-				bodyTemplateForSelection('openai', false, 'generations', 'speech', undefined, undefined, 'cosyvoice-v2'),
+				bodyTemplateForSelection(
+					'openai',
+					false,
+					'generations',
+					'speech',
+					undefined,
+					undefined,
+					'cosyvoice-v2',
+				),
 				'openai',
 				false,
 				'generations',
@@ -510,7 +546,15 @@ describe('simulator-utils', () => {
 		);
 		assert.equal(JSON.parse(AUDIO_SPEECH_BODY_TEMPLATE).response_format, 'wav');
 		assert.equal(
-			bodyTemplateForSelection('openai', false, 'generations', 'speech', undefined, undefined, 'speech-2.8-turbo'),
+			bodyTemplateForSelection(
+				'openai',
+				false,
+				'generations',
+				'speech',
+				undefined,
+				undefined,
+				'speech-2.8-turbo',
+			),
 			MINIMAX_OPENAI_SPEECH_BODY_TEMPLATE,
 		);
 		const minimax = JSON.parse(
@@ -533,7 +577,10 @@ describe('simulator-utils', () => {
 	});
 
 	it('mergeAssistantTextParts extracts transcription and DashScope audio text', () => {
-		assert.deepEqual(mergeAssistantTextParts('{"text":"hello"}', 'openai', 'json'), { reasoning: '', body: 'hello' });
+		assert.deepEqual(mergeAssistantTextParts('{"text":"hello"}', 'openai', 'json'), {
+			reasoning: '',
+			body: 'hello',
+		});
 		assert.deepEqual(mergeAssistantTextParts('{"output":{"text":"你好"}}', 'openai', 'json'), {
 			reasoning: '',
 			body: '你好',
@@ -610,5 +657,46 @@ describe('simulator-utils', () => {
 
 	it('tryParseUsageSummary displays DashScope audio duration', () => {
 		assert.equal(tryParseUsageSummary('{"usage":{"duration":4}}', 'dashscope'), 'duration: 4s');
+	});
+});
+
+describe('realtime template identity', () => {
+	it('ignores generated task ids while retaining meaningful request edits', () => {
+		const operation = 'audio.transcriptions.realtime.inference';
+		const template = bodyTemplateForSelection(
+			'dashscope',
+			false,
+			'generations',
+			'transcriptions',
+			undefined,
+			operation,
+		);
+		const body = JSON.parse(template);
+		body.header.task_id = 'another-generated-task';
+		assert.equal(
+			isBodyDirty(
+				JSON.stringify(body),
+				'dashscope',
+				false,
+				'generations',
+				'transcriptions',
+				undefined,
+				operation,
+			),
+			false,
+		);
+		body.payload.parameters.sample_rate = 8000;
+		assert.equal(
+			isBodyDirty(
+				JSON.stringify(body),
+				'dashscope',
+				false,
+				'generations',
+				'transcriptions',
+				undefined,
+				operation,
+			),
+			true,
+		);
 	});
 });

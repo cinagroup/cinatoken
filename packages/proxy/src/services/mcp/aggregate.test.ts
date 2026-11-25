@@ -1,3 +1,5 @@
+
+import type { McpCaller } from '../../middleware/mcp-auth';
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import { perCallMcpPricingRule, serializeMcpPricingRule, type McpCallableItem } from '@octafuse/core';
@@ -455,3 +457,16 @@ it('fails closed before upstream or ledger writes when MCP policy admission is u
 	assert.equal(calls, 0);
 	assert.equal(charges, 0);
 });
+
+
+const caller: McpCaller = {
+	userId: 'user',
+	userEmail: null,
+	budgetMax: 10,
+	budgetSpent: 0,
+	walletGranted: 0,
+	walletSpent: 0,
+	apiKeyId: 'key',
+	oauthAccessTokenId: null,
+	ingressHost: null,
+};

@@ -424,8 +424,8 @@ async function fixture(
 			for (const statement of statements) {
 				assert.ok(statement instanceof Statement);
 				assert.match(statement.sql, paid
-					? /^\s*(?:INSERT\s+INTO\s+(api_key_request_logs|public_model_daily_stats|provider_attempt_availability|user_audit_logs)|UPDATE\s+(users|user_budget_reservations|guardrail_budget_windows))/i
-					: /^\s*INSERT\s+INTO\s+(api_key_request_logs|public_model_daily_stats|provider_attempt_availability)/i);
+					? /^\s*(?:INSERT\s+INTO\s+(api_key_request_logs|public_model_daily_stats|provider_attempt_availability|user_audit_logs)|UPDATE\s+(users|user_budget_reservations|guardrail_budget_windows)|UPDATE\s+api_keys\s+SET\s+last_used_at\s*=\s*\?\s+WHERE\s+id\s*=\s*\?\s*$)/i
+					: /^\s*(?:INSERT\s+INTO\s+(api_key_request_logs|public_model_daily_stats|provider_attempt_availability)|UPDATE\s+api_keys\s+SET\s+last_used_at\s*=\s*\?\s+WHERE\s+id\s*=\s*\?\s*$)/i);
 				writes.push({ sql: statement.sql, values: statement.values });
 			}
 			batches += 1;
@@ -464,7 +464,7 @@ async function fixture(
 		priority: 1, status: 'active', route_group: 'default', weight: 1, price_override: null,
 		custom_params: null, upstream_protocol: protocol, upstream_operation: upstreamOperation,
 		adapter: speech ? ttsVariant === 'openai' ? 'passthrough' : ttsVariant === 'speech' ? 'dashscope-tts-speech' : ttsVariant === 'qwen' ? 'dashscope-tts-qwen' : 'dashscope-tts-minimax'
-			: audio && asrVariant === 'sync' ? 'dashscope-asr-qwen-file' : audio && asrVariant === 'async' ? 'dashscope-asr-file-async' : 'passthrough', routing_metadata: null,
+			: audio && asrVariant === 'sync' ? 'dashscope-asr-qwen-file' : audio && asrVariant === 'async' ? 'dashscope-asr-qwen-audio-file-async' : 'passthrough', routing_metadata: null,
 	})));
 	const providers: ProviderRow[] = routeRows.map((route, index) => ({
 		id: route.provider_id, name: route.provider_id, api_key: typeof providerCredential === 'function' ? providerCredential(index) : providerCredential,

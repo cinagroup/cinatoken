@@ -8,7 +8,7 @@ import {
 	WEB_DEEP_SEARCH_CATALOG_KEY,
 	WEB_DEEP_SEARCH_PROVIDERS,
 	type WebDeepSearchProvider,
-} from "@octafuse/core/lib/web-deep-search-system-config";
+} from '@octafuse/core/lib/web-deep-search-system-config';
 
 export {
 	DEFAULT_WEB_DEEP_SEARCH_COST,
@@ -24,19 +24,16 @@ export type WebDeepSearchProviderOption = {
 	label: string;
 };
 
-export const WEB_DEEP_SEARCH_PROVIDER_DOCS_URL: Record<
-	WebDeepSearchProvider,
-	string
-> = {
-	firecrawl: "https://docs.firecrawl.dev/features/search",
-	jina: "https://jina.ai/reader/",
+export const WEB_DEEP_SEARCH_PROVIDER_DOCS_URL: Record<WebDeepSearchProvider, string> = {
+	firecrawl: 'https://docs.firecrawl.dev/features/search',
+	jina: 'https://jina.ai/reader/',
+	deepseek: 'https://api-docs.deepseek.com/guides/search',
 };
 
-type WebDeepSearchProviderLabelKey =
-	`webDeepSearch.providers.${WebDeepSearchProvider}`;
+type WebDeepSearchProviderLabelKey = `webDeepSearch.providers.${WebDeepSearchProvider}`;
 
 export function getWebDeepSearchProviderOptions(
-	t: (key: WebDeepSearchProviderLabelKey) => string
+	t: (key: WebDeepSearchProviderLabelKey) => string,
 ): ReadonlyArray<WebDeepSearchProviderOption> {
 	return WEB_DEEP_SEARCH_PROVIDERS.map((value) => ({
 		value,

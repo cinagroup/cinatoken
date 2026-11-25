@@ -2,6 +2,7 @@
 
 import { useId, useState } from 'react';
 import { ArrowPathIcon, EyeIcon, EyeSlashIcon, ClipboardDocumentIcon } from '@heroicons/react/24/outline';
+import { ProxyConnectionHint } from '@/components/proxy-connection-hint';
 import { useTranslations } from 'next-intl';
 import type { ServerSummary } from '../mcp-types';
 import {
@@ -15,7 +16,7 @@ import { useMcpCatalogTest, type McpCatalogTestResponse } from '../use-mcp-catal
 import { McpDialog } from './mcp-dialog';
 
 const INPUT =
-	'mt-1.5 block w-full min-w-0 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:bg-gray-100';
+	'mt-1.5 block w-full min-w-0 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 focus:border-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-100 disabled:bg-gray-100';
 const BUTTON =
 	'inline-flex items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50';
 const CODE =
@@ -27,9 +28,7 @@ function CatalogDescription({ text }: { text: string }) {
 	return (
 		<div>
 			<p
-				className={`whitespace-pre-wrap break-words text-sm leading-6 text-gray-500 ${
-					expanded ? '' : 'line-clamp-2'
-				}`}
+				className={`whitespace-pre-wrap break-words text-sm leading-6 text-gray-500 ${expanded ? '' : 'line-clamp-2'}`}
 			>
 				{text}
 			</p>
@@ -80,12 +79,7 @@ function CatalogGroups({
 		<div className="space-y-3">
 			<label className="block text-xs font-medium text-gray-600">
 				{t('search')}
-				<input
-					type="search"
-					value={search}
-					onChange={(event) => setSearch(event.target.value)}
-					className={INPUT}
-				/>
+				<input type="search" value={search} onChange={(event) => setSearch(event.target.value)} className={INPUT} />
 			</label>
 			{!entries.length ? (
 				<p
@@ -100,20 +94,17 @@ function CatalogGroups({
 				</p>
 			) : null}
 			{visible.map((group) => (
-				<section
-					key={group.slug ?? '__unidentified__'}
-					className="overflow-hidden rounded-xl border border-gray-200"
-				>
+				<section key={group.slug ?? '__unidentified__'} className="overflow-hidden rounded-xl border border-gray-200">
 					<div className="flex flex-wrap items-center gap-2 border-b border-gray-200 bg-gray-50 px-4 py-3">
-						<h3 className="text-sm font-semibold text-gray-900">
+						<h3 className="text-sm font-medium text-gray-900">
 							{servers.find((s) => s.slug === group.slug)?.name ?? group.slug ?? t('unknownService')}
 						</h3>
-						{group.slug ? (
-							<code className="rounded bg-white px-2 py-0.5 text-xs text-gray-500">{group.slug}</code>
+						{group.slug && servers.find((s) => s.slug === group.slug)?.name !== group.slug ? (
+							<code className="rounded bg-white px-2 py-0.5 text-xs text-gray-500">
+								{group.slug}
+							</code>
 						) : null}
-						<span className="ml-auto text-xs text-gray-500">
-							{t('itemCount', { count: group.entries.length })}
-						</span>
+						<span className="ml-auto text-xs text-gray-500">{t('itemCount', { count: group.entries.length })}</span>
 					</div>
 					<div className="divide-y divide-gray-100">
 						{group.entries.map((entry, index) => (
@@ -133,9 +124,7 @@ function CatalogGroups({
 									<code className="text-xs text-gray-500">{entry.mimeType}</code>
 								) : null}
 								<details>
-									<summary className="cursor-pointer text-xs font-medium text-blue-600">
-										{t('entryJson')}
-									</summary>
+									<summary className="cursor-pointer text-xs font-medium text-gray-800">{t('entryJson')}</summary>
 									<pre className={`${CODE} mt-2`}>{JSON.stringify(entry, null, 2)}</pre>
 								</details>
 							</div>
@@ -205,7 +194,9 @@ export function McpCatalogTestModal({
 							disabled={state.sending || state.loadingKey}
 							className="inline-flex items-center gap-2 rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 disabled:opacity-50"
 						>
-							{state.sending ? <ArrowPathIcon aria-hidden="true" className="h-4 w-4 animate-spin" /> : null}
+							{state.sending ? (
+								<ArrowPathIcon aria-hidden="true" className="h-4 w-4 animate-spin" />
+							) : null}
 							{state.sending ? t('sending') : t('send')}
 						</button>
 					</div>
@@ -232,15 +223,19 @@ export function McpCatalogTestModal({
 									value={state.baseUrl}
 									placeholder="https://proxy.example.com"
 									onChange={(event) => state.setBaseUrl(event.target.value)}
+									onBlur={state.proxyConnection.commit}
 									className={INPUT}
 								/>
-								<span
-									id={`${formId}-proxy-hint`}
-									className="mt-1.5 block text-xs font-normal leading-5 text-gray-500"
-								>
+								<span id={`${formId}-proxy-hint`} className="mt-1.5 block text-xs font-normal leading-5 text-gray-500">
 									{t('proxyHint')}
 								</span>
 							</label>
+							<ProxyConnectionHint
+								source={state.proxyConnection.source}
+								canReset={state.proxyConnection.canReset}
+								onReset={state.resetBaseUrl}
+								disabled={state.sending}
+							/>
 							<div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
 								<label className="block text-sm font-medium text-gray-700">
 									{t('scope')}
@@ -253,7 +248,7 @@ export function McpCatalogTestModal({
 										<option value="">{t('allServices')}</option>
 										{servers.map((server) => (
 											<option key={server.id} value={server.slug}>
-												{server.name} ({server.slug}){server.status !== 'active' ? ` · ${t('disabled')}` : ''}
+												{server.name}{server.name !== server.slug ? ` (${server.slug})` : ''}{server.status !== 'active' ? ` · ${t('disabled')}` : ''}
 											</option>
 										))}
 									</select>
@@ -307,14 +302,11 @@ export function McpCatalogTestModal({
 							</div>
 							<details
 								onToggle={(event) => {
-									if (event.currentTarget.open && !state.keysLoaded && !state.loadingKeys)
-										void state.loadKeys();
+									if (event.currentTarget.open && !state.keysLoaded && !state.loadingKeys) void state.loadKeys();
 								}}
 								className="rounded-lg border border-gray-200 p-3"
 							>
-								<summary className="cursor-pointer text-xs font-medium text-gray-700">
-									{t('existingKey')}
-								</summary>
+								<summary className="cursor-pointer text-xs font-medium text-gray-700">{t('existingKey')}</summary>
 								<div className="mt-3 space-y-3">
 									<div className="flex items-end gap-2">
 										<label className="min-w-0 flex-1 text-xs text-gray-600">
@@ -393,11 +385,7 @@ export function McpCatalogTestModal({
 								{'\n\n'}
 								{state.request.bodyText}
 							</pre>
-							<button
-								type="button"
-								onClick={() => void copy(mcpRequestCurl(state.request))}
-								className={BUTTON}
-							>
+							<button type="button" onClick={() => void copy(mcpRequestCurl(state.request))} className={BUTTON}>
 								<ClipboardDocumentIcon aria-hidden="true" className="h-4 w-4" />
 								{t('copyCurl')}
 							</button>
@@ -407,7 +395,7 @@ export function McpCatalogTestModal({
 				</div>
 				<div className="min-w-0 space-y-3 rounded-xl border border-gray-200 p-4">
 					<div className="flex flex-wrap items-center justify-between gap-2">
-						<h3 className="text-sm font-semibold text-gray-900">{t('response')}</h3>
+						<h3 className="text-sm font-medium text-gray-900">{t('response')}</h3>
 						<div role="group" aria-label={t('view')} className="inline-flex rounded-lg bg-gray-100 p-1">
 							<button
 								type="button"
@@ -459,7 +447,7 @@ export function McpCatalogTestModal({
 								<button
 									type="button"
 									onClick={() => void copy(raw)}
-									className="ml-auto inline-flex items-center gap-1 font-medium text-blue-600"
+									className="ml-auto inline-flex items-center gap-1 font-medium text-gray-800"
 								>
 									<ClipboardDocumentIcon aria-hidden="true" className="h-4 w-4" />
 									{t('copyResponse')}
@@ -474,9 +462,7 @@ export function McpCatalogTestModal({
 								<CatalogGroups key={response.receivedAt} response={response} servers={servers} />
 							)}
 							<details>
-								<summary className="cursor-pointer text-xs font-medium text-gray-500">
-									{t('responseHeaders')}
-								</summary>
+								<summary className="cursor-pointer text-xs font-medium text-gray-500">{t('responseHeaders')}</summary>
 								<pre className={`${CODE} mt-2`}>{JSON.stringify(response.headers, null, 2)}</pre>
 							</details>
 						</>

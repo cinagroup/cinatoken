@@ -1,3 +1,5 @@
+import { MODEL_KINDS } from '@octafuse/core/db/model-kind';
+import { normalizeLegacyKindParam } from '@/lib/invoke-kind';
 import type { GatewayModel, GatewayModelRoute, GatewayProvider } from '@/lib/types';
 import type { UpstreamProtocol } from '@/lib/upstream-protocol';
 
@@ -6,8 +8,10 @@ export type RouteListRow = GatewayModelRoute & {
 	provider_name?: string;
 };
 
-/** Per-model card density: topology shows full provider cards; summary collapses priority tiers. */
-export type RouteFlowDensity = 'summary' | 'topology';
+export type RouteEditorTab = 'mapping' | 'request' | 'pricing' | 'test';
+
+/** Provider presentation: topology cards or vertical provider rows. */
+export type RouteFlowDensity = 'topology' | 'list';
 
 /** Workspace layout: overview = all models on one surface flow; byModel = per-model topology. */
 export type RouteWorkspaceView = 'overview' | 'byModel';
@@ -34,7 +38,17 @@ export type RouteProtocolGroupSection<T> = {
 	routes: T[];
 };
 
+export type ProviderStickyIdentity = {
+	accountName: string;
+	kindLabel: string | null;
+	vendorKey?: string | null;
+	iconKey?: string | null;
+};
+
 export type ProviderStickyDialogTarget = {
+	identity?: ProviderStickyIdentity;
+	/** Whether both the route and its Provider are enabled. */
+	enabled?: boolean;
 	id: string;
 	providerName: string;
 	priority: number;
@@ -42,6 +56,8 @@ export type ProviderStickyDialogTarget = {
 };
 
 export type ProviderStickyDialogState = {
+	/** Open the bindings tab with this route target selected. */
+	initialTargetId?: string;
 	modelId: string;
 	modelTitle: string;
 	protocol: string;
@@ -63,6 +79,27 @@ export type StickyBindingsSummary = {
 		share: number;
 		last_updated_at: string | null;
 	}>;
+};
+
+export type StickyBindingListItem = {
+	affinity_hash: string;
+	/** null: 迁移 0034 之前写入、尚未被续期补全的旧绑定。 */
+	user_id: string | null;
+	email: string | null;
+	model_id: string | null;
+	route_group: string | null;
+	protocol: string | null;
+	route_target_id: string;
+	expires_at: string;
+	remaining_seconds: number;
+	updated_at: string | null;
+};
+
+export type StickyBindingsList = {
+	items: StickyBindingListItem[];
+	total: number;
+	page: number;
+	page_size: number;
 };
 
 export type StickyBindingLookup = {
@@ -178,13 +215,13 @@ export type RoutesPageData = {
 };
 
 /** 路由页独立的模型类型筛选；`all` 不改变模型管理页的筛选语义。 */
-export const ROUTE_KIND_FILTERS = ['all', 'llm', 'image', 'audio', 'rerank'] as const;
+export const ROUTE_KIND_FILTERS = ['all', ...MODEL_KINDS, 'audio'] as const;
 export type RouteKindFilter = (typeof ROUTE_KIND_FILTERS)[number];
 export const DEFAULT_ROUTE_KIND_FILTER: RouteKindFilter = 'all';
 
 export function parseRouteKindFilterParam(value: string | null): RouteKindFilter {
 	if (value == null || value.trim() === '') return DEFAULT_ROUTE_KIND_FILTER;
-	const normalized = value.trim().toLowerCase();
+	const normalized = normalizeLegacyKindParam(value.trim().toLowerCase());
 	return (ROUTE_KIND_FILTERS as readonly string[]).includes(normalized)
 		? (normalized as RouteKindFilter)
 		: DEFAULT_ROUTE_KIND_FILTER;
@@ -222,23 +259,24 @@ export const PROTOCOL_DISPLAY_LABEL: Record<string, string> = {
 	dashscope: 'DashScope',
 	minimax: 'MiniMax',
 	volcengine: 'Volcengine',
+	elevenlabs: 'ElevenLabs',
 };
 
 export const ROUTE_GROUP_CARD_BADGE_CLASS = 'bg-slate-100 text-slate-700 ring-1 ring-inset ring-slate-200';
 
 export const FACTOR_CHIP_BASE =
-	'inline-flex w-auto shrink-0 whitespace-nowrap rounded-md px-1.5 py-0 text-[10px] font-semibold font-mono tabular-nums leading-4 ring-1 ring-inset';
+	'inline-flex w-auto shrink-0 whitespace-nowrap rounded-md px-1.5 py-0 text-xs font-medium font-mono tabular-nums leading-4 ring-1 ring-inset';
 
 export const routePricePanelShell: Record<'neutral' | 'charged' | 'metered' | 'provider', string> = {
 	neutral: 'rounded-lg border border-gray-300/90 bg-gray-50/90 p-4 shadow-sm ring-1 ring-gray-200/50',
-	charged: 'rounded-lg border border-blue-200/90 bg-blue-50/45 p-4 shadow-sm ring-1 ring-blue-100/60',
+	charged: 'rounded-lg border border-gray-200/90 bg-gray-50/45 p-4 shadow-sm ring-1 ring-gray-100/60',
 	metered: 'rounded-lg border border-emerald-200/90 bg-emerald-50/40 p-4 shadow-sm ring-1 ring-emerald-100/60',
 	provider: 'rounded-lg border border-violet-200/90 bg-violet-50/40 p-4 shadow-sm ring-1 ring-violet-100/60',
 };
 
 export const routePricePanelHeaderBorder: Record<'neutral' | 'charged' | 'metered' | 'provider', string> = {
 	neutral: 'border-b border-gray-200/90',
-	charged: 'border-b border-blue-200/80',
+	charged: 'border-b border-gray-200/80',
 	metered: 'border-b border-emerald-200/80',
 	provider: 'border-b border-violet-200/80',
 };

@@ -36,7 +36,7 @@ export const settlementId: Check = value => typeof value === 'string' && /^[A-Za
 const digest: Check = value => typeof value === 'string' && /^[a-f0-9]{64}$/.test(value);
 const uuid: Check = value => typeof value === 'string' && /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/.test(value);
 const iso: Check = value => typeof value === 'string' && value.length === 24 && Number.isFinite(Date.parse(value)) && new Date(value).toISOString() === value;
-const protocol = oneOf('openai', 'anthropic', 'gemini', 'dashscope', 'minimax', 'volcengine');
+const protocol = oneOf('openai', 'anthropic', 'gemini', 'dashscope', 'minimax', 'volcengine', 'elevenlabs');
 function shape(value: unknown, fields: Record<string, Check>): boolean {
 	if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
 	return Object.keys(value).every(key => Object.hasOwn(fields, key))
@@ -55,7 +55,7 @@ const responseFields = {
 } satisfies Shape<GenerationProviderResponseSnapshot>;
 // All fields must be explicitly handled when the critical-write DTO grows.
 const logFields = {
-	id: settlementId, userId: settlementId, apiKeyId: settlementId, workspaceId: settlementId,
+	id: settlementId, userId: settlementId, apiKeyId: settlementId, workspaceId: settlementId, oauthAccessTokenId: maybe(settlementId),
 	userEmail: nullable(text), modelId: text, providerId: text, providerModelName: nullable(text),
 	modelName: nullable(text), providerName: nullable(text), requestBody: nil, upstreamRequestBody: nil,
 	requestProtocol: protocol, upstreamProtocol: protocol, requestOperation: oneOf('images.generations', 'images.edits'),

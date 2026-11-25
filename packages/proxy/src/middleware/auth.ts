@@ -1,3 +1,5 @@
+
+import { isOAuthAccessTokenValue } from '@octafuse/core';
 /**
  * 用户 API 鉴权中间件：从多种客户端约定位置提取 sk，校验后写入 `c.set('apiKey', …)`。
  * 预算在「大部分路由」上于此拦截；`/v1/chat/completions` 等在具体路由内结合模型 free 通道再判断。
@@ -14,6 +16,7 @@ import { hashLookupKey } from '@octafuse/core';
 import { assertTextRequestActive, waitForTextRequestRead } from './text-request-lifecycle';
 import { readMcpIngress, mcpIngressErrorResponse } from '../services/mcp/ingress';
 import { scheduleResourceCompletion } from '../runtime/schedule-resource-completion';
+import { isRealtimeUpgradePath } from '@octafuse/core/realtime-protocol';
 import { isDashScopeRealtimePath } from '../services/dashscope-realtime-path';
 import {
 	consumeRateLimitLayers,
@@ -28,6 +31,7 @@ import {
 export type ApiKeyContext = {
 	/** `api_keys.id` */
 	keyId: string;
+	oauthAccessTokenId?: string | null;
 	/** Lowercase SHA-256 hex used only for BYOK allowlist matching. */
 	apiKeyHash: string;
 	userId: string;
@@ -72,7 +76,7 @@ export function isAnthropicMessagesPath(path: string): boolean {
  * 按路径兼容多 SDK：`Authorization: Bearer`、Anthropic `x-api-key`、Gemini 查询参数 `key` 或 `x-goog-api-key`。
  * @returns 明文 sk 或 null
  */
-function extractApiKey(c: {
+export function extractApiKey(c: {
 	req: {
 		header: (name: string) => string | undefined;
 		path: string;
@@ -80,18 +84,19 @@ function extractApiKey(c: {
 	};
 }): string | null {
 	const auth = c.req.header('Authorization');
-	const bearer = auth?.startsWith('Bearer ') ? auth.slice(7).trim() : '';
+	const bearer = /^Bearer[ \t]+(.+)$/i.exec(auth ?? '')?.[1]?.trim() ?? '';
 	if (bearer) {
 		return bearer;
 	}
 
 	// 浏览器 WebSocket 无法自定义 Authorization；实时入口从协商子协议读取 Key。
-	if (isDashScopeRealtimePath(c.req.path)) {
+	if (isRealtimeUpgradePath(c.req.path) || isDashScopeRealtimePath(c.req.path)) {
 		const realtimeAuth = parseDashScopeRealtimeAuthProtocol(c.req.header('Sec-WebSocket-Protocol'));
 		if (realtimeAuth) return realtimeAuth.apiKey;
 	}
 
 	const path = c.req.path;
+ if(path.startsWith('/elevenlabs/')){const key=c.req.header('xi-api-key')?.trim();if(key)return key;}
 
 	// Anthropic SDK commonly sends x-api-key. Also cover legacy SoloEnt Agent paths.
 	if (isAnthropicMessagesPath(path)) {
@@ -125,7 +130,7 @@ function extractApiKey(c: {
  * 超限返回 429，未超限返回 null（走常规 401）；限速器缺失/故障时静默跳过。 */
 export async function throttleAuthFailure(c: Context<Env>): Promise<Response | null> {
 	assertTextRequestActive(c);
-	const limiter = c.env.AUTH_RATE_LIMITER ?? c.env.RATE_LIMITER;
+	const limiter = c.env?.AUTH_RATE_LIMITER ?? c.env?.RATE_LIMITER;
 	if (!limiter) return null;
 	const ip = c.req.header('CF-Connecting-IP') ?? 'unknown';
 	try {
@@ -170,6 +175,8 @@ export const requireApiKey = createMiddleware<Env>(async (c, next) => {
 	}
 
 	const repos = c.get('repositories');
+ if(isOAuthAccessTokenValue(key)) return gatewayErrorJson(c,{status:403,code:GatewayErrorCode.scopeDenied,message:'OAuth access tokens can only access MCP endpoints'});
+
 	const authResult = await authenticateApiKey(repos, key, c.get('textRequestLifecycle')?.deadline);
 	if (!authResult) {
 		// Never log any substring of a credential. Even a prefix/suffix preview is
@@ -235,7 +242,7 @@ export const requireApiKey = createMiddleware<Env>(async (c, next) => {
 		c.req.method === 'POST' && (c.req.path.endsWith('/audio/transcriptions') || c.req.path.endsWith('/audio/speech'));
 	const isDashScopeMultimodalRoute =
 		c.req.method === 'POST' && c.req.path.endsWith('/dashscope/services/aigc/multimodal-generation/generation');
-	const isRealtimeRoute = c.req.method === 'GET' && isDashScopeRealtimePath(c.req.path);
+	const isRealtimeRoute = c.req.method === 'GET' && (isRealtimeUpgradePath(c.req.path) || isDashScopeRealtimePath(c.req.path));
 	const isToolsPricingRoute = c.req.method === 'GET' && /\/tools\/pricing\/?$/.test(c.req.path);
 	const isMcpRoute = c.req.path === '/mcp' || c.req.path.startsWith('/mcp/');
 	let mcpMethod: string | null = null;
@@ -317,3 +324,33 @@ export const requireApiKey = createMiddleware<Env>(async (c, next) => {
 	});
 	await next();
 });
+
+
+/** 日志中脱敏展示密钥前缀。 */
+export function maskKey(_key: string): string {
+	return '***';
+}
+
+
+/**
+ * MCP 清单请求不占 RPM。只在 JSON-RPC `tools/call` 时计数。
+ * `batch=true` 表示请求体是 JSON-RPC 数组：底层 SDK 会逐条执行，而这里只能看到一个对象，
+ * 调用方必须拒绝，否则一个请求可以绕过 RPM 执行多次 `tools/call`。
+ */
+export async function readJsonRpcMethod(c: {
+  req: { method: string; raw: Request };
+}): Promise<{ method: string | null; batch: boolean }> {
+  if (c.req.method !== 'POST') {
+    return { method: null, batch: false };
+  }
+  try {
+    const text = await c.req.raw.clone().text();
+    if (!text) return { method: null, batch: false };
+    const body = JSON.parse(text) as unknown;
+    if (Array.isArray(body)) return { method: null, batch: true };
+    const method = (body as { method?: unknown } | null)?.method;
+    return { method: typeof method === 'string' ? method : null, batch: false };
+  } catch {
+    return { method: null, batch: false };
+  }
+}

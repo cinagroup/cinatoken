@@ -11,7 +11,8 @@ export function normalizeProtocol(p: string): PlaygroundProtocol {
 		v === 'openai' ||
 		v === 'dashscope' ||
 		v === 'minimax' ||
-		v === 'volcengine'
+		v === 'volcengine' ||
+		v === 'elevenlabs'
 	)
 		return v;
 	return 'openai';

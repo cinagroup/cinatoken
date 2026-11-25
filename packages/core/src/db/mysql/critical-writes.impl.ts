@@ -161,7 +161,8 @@ export async function updateUserBudgetWithAuditTxMy(
 		params.expectedBudgetBase < 0 ||
 		!Number.isFinite(params.expectedBudgetSpent) ||
 		params.expectedBudgetSpent < 0 ||
-		(params.expectedBudgetMax !== null && (!Number.isFinite(params.expectedBudgetMax) || params.expectedBudgetMax < 0))
+		(params.expectedBudgetMax !== null &&
+			(!Number.isFinite(params.expectedBudgetMax) || params.expectedBudgetMax < 0))
 	) {
 		throw new Error('Invalid expected ordinary-user budget reset accounting values');
 	}
@@ -247,7 +248,8 @@ export async function applyUserBudgetTransitionWithAuditMy(
 			budgetResetAt: params.budgetResetAt,
 			updatedAt: now,
 		};
-		if (params.walletGranted !== undefined) updateSet.walletGranted = String(roundGatewayMoney(params.walletGranted));
+		if (params.walletGranted !== undefined)
+			updateSet.walletGranted = String(roundGatewayMoney(params.walletGranted));
 		if (params.walletSpent !== undefined) updateSet.walletSpent = String(roundGatewayMoney(params.walletSpent));
 		if (params.resetEpoch) {
 			updateSet.budgetEpoch = sql`${myUsersTable.budgetEpoch} + 1`;
@@ -352,13 +354,15 @@ export async function insertRequestUsageAndChargeTxMy(
 	const now = nowIso();
 	const guardrailNow = toMySqlDateTime(now);
 	const delta = toPublicModelDailyStatsDelta(params.requestLog, now);
+	const requiredApiKeyId = params.requestLog.apiKeyId;
+	if (!requiredApiKeyId) throw new Error('Request accounting requires a tenant-bound Gateway key');
 	await client.drizzle.transaction(async (tx) => {
 		const requestWorkspaceId =
 			(
 				await tx
 					.select({ workspaceId: myApiKeysTable.workspaceId })
 					.from(myApiKeysTable)
-					.where(eq(myApiKeysTable.id, params.requestLog.apiKeyId))
+					.where(eq(myApiKeysTable.id, requiredApiKeyId))
 					.for('update')
 			)[0]?.workspaceId ?? null;
 		if (requestWorkspaceId === null || requestWorkspaceId !== params.requestLog.workspaceId) {
@@ -430,7 +434,9 @@ export async function insertRequestUsageAndChargeTxMy(
 				(settlement.mode === 'actual' &&
 					((reservation.state === 'settled' && previousSettledMicros === ordinarySettlementMicros) ||
 						(reservation.state === 'expired' && previousSettledMicros === ordinarySettlementMicros))) ||
-				(settlement.mode === 'reserved' && reservation.state === 'expired' && previousSettledMicros === reservedMicros);
+				(settlement.mode === 'reserved' &&
+					reservation.state === 'expired' &&
+					previousSettledMicros === reservedMicros);
 			if (existingLog) {
 				if (
 					!terminalMatches ||
@@ -494,7 +500,10 @@ export async function insertRequestUsageAndChargeTxMy(
 								updatedAt: guardrailNow,
 							})
 							.where(
-								and(eq(myUsersTable.id, reservation.userId), eq(myUsersTable.budgetEpoch, Number(account.budgetEpoch))),
+								and(
+									eq(myUsersTable.id, reservation.userId),
+									eq(myUsersTable.budgetEpoch, Number(account.budgetEpoch)),
+								),
 							)) as unknown as [ResultSetHeader, unknown];
 						if (updated.affectedRows !== 1)
 							throw new Error('Ordinary-user late settlement account changed concurrently');
@@ -539,7 +548,7 @@ export async function insertRequestUsageAndChargeTxMy(
 								0,
 								0,
 								ordinarySettlementMicros,
-							)
+						  )
 						: { periodDeltaMicros: 0, walletDeltaMicros: 0, walletSettledMicros: 0 };
 				walletSettledMicros = pools.walletSettledMicros;
 				if (Number(account.budgetEpoch) === reservationEpoch) {
@@ -562,7 +571,8 @@ export async function insertRequestUsageAndChargeTxMy(
 								sql`${myUsersTable.budgetReservedMicros} >= ${reservedMicros}`,
 							),
 						)) as unknown as [ResultSetHeader, unknown];
-					if (updated.affectedRows !== 1) throw new Error('Ordinary-user reserved budget counter invariant violated');
+					if (updated.affectedRows !== 1)
+						throw new Error('Ordinary-user reserved budget counter invariant violated');
 				}
 				const [updated] = (await tx
 					.update(myUserBudgetReservationsTable)
@@ -677,11 +687,14 @@ export async function insertRequestUsageAndChargeTxMy(
 			requestOrigin: params.requestLog.requestOrigin ?? null,
 			httpReferer: params.requestLog.httpReferer ?? null,
 			userAgent: params.requestLog.userAgent ?? null,
-			responseStreamed: params.requestLog.responseStreamed == null ? null : Number(params.requestLog.responseStreamed),
+			responseStreamed:
+				params.requestLog.responseStreamed == null ? null : Number(params.requestLog.responseStreamed),
 			dataRegion: params.requestLog.dataRegion ?? null,
 			isByok: params.requestLog.isByok == null ? null : Number(params.requestLog.isByok),
 			chargedCostUsd:
-				params.requestLog.chargedCostUsd == null ? null : String(roundGatewayMoney(params.requestLog.chargedCostUsd)),
+				params.requestLog.chargedCostUsd == null
+					? null
+					: String(roundGatewayMoney(params.requestLog.chargedCostUsd)),
 			upstreamInferenceCostUsd:
 				params.requestLog.upstreamInferenceCostUsd == null
 					? null
@@ -691,8 +704,12 @@ export async function insertRequestUsageAndChargeTxMy(
 			nativeFinishReason: params.requestLog.nativeFinishReason ?? null,
 			providerResponses: serializeGenerationProviderResponses(params.requestLog.providerResponses),
 			ingressHost: params.requestLog.ingressHost ?? null,
+			oauthAccessTokenId: params.requestLog.oauthAccessTokenId ?? null,
 			createdAt: now,
 		});
+		if (params.requestLog.apiKeyId) {
+			await tx.update(myApiKeysTable).set({ lastUsedAt: now }).where(eq(myApiKeysTable.id, params.requestLog.apiKeyId));
+		}
 		if ((params.requestLog.providerAttempts?.length ?? 0) > 0) {
 			await tx.insert(myProviderAttemptAvailabilityTable).values(
 				params.requestLog.providerAttempts!.map((attempt) => ({
@@ -745,7 +762,9 @@ export async function insertRequestUsageAndChargeTxMy(
 				.where(eq(myUsersTable.id, params.userId));
 		}
 		if (params.userBudgetSettlement || params.shouldChargeBudget) {
-			const auditedCharge = params.userBudgetSettlement ? userBudgetAmount(ordinarySettlementMicros ?? 0) : charged;
+			const auditedCharge = params.userBudgetSettlement
+				? userBudgetAmount(ordinarySettlementMicros ?? 0)
+				: charged;
 			const afterSpent = roundGatewayMoney(params.beforeSpent + auditedCharge - fromWallet);
 			let auditParams = params.audit;
 			if (params.userBudgetSettlement && ordinaryReservationEpoch !== null) {
@@ -775,7 +794,12 @@ export async function insertRequestUsageAndChargeTxMy(
 					};
 				}
 			}
-			const auditRow = userBudgetAuditToInsertRowForUsageCharge(params.userId, afterSpent, auditedCharge, auditParams);
+			const auditRow = userBudgetAuditToInsertRowForUsageCharge(
+				params.userId,
+				afterSpent,
+				auditedCharge,
+				auditParams,
+			);
 			await tx.insert(myUserAuditLogsTable).values(toUserAuditLogDrizzleInsert(auditRow, now));
 		}
 		if (params.guardrailBudgetSettlement) {
@@ -798,7 +822,12 @@ export async function insertRequestUsageAndChargeTxMy(
 				.where(
 					and(
 						eq(myGuardrailBudgetReservationsTable.requestId, settlement.requestId),
-						inArray(myGuardrailBudgetReservationsTable.state, ['reserved', 'dispatched', 'expired', 'released']),
+						inArray(myGuardrailBudgetReservationsTable.state, [
+							'reserved',
+							'dispatched',
+							'expired',
+							'released',
+						]),
 					),
 				)
 				.for('update');
@@ -822,14 +851,23 @@ export async function insertRequestUsageAndChargeTxMy(
 			) {
 				throw new Error('Route-selective settlement is not the authenticated Gateway key limit');
 			}
-			if (isByokRequest && reservations.some((reservation) => reservation.settlementBasis !== 'gateway_key_route')) {
+			if (
+				isByokRequest &&
+				reservations.some((reservation) => reservation.settlementBasis !== 'gateway_key_route')
+			) {
 				throw new Error('Private BYOK cannot settle non-key budget reservations');
 			}
 			const orderedReservations = [...reservations].sort((left, right) =>
 				[left.workspaceId, left.scopeType, left.scopeId, left.period, String(left.periodStart)]
 					.join('\u0000')
 					.localeCompare(
-						[right.workspaceId, right.scopeType, right.scopeId, right.period, String(right.periodStart)].join('\u0000'),
+						[
+							right.workspaceId,
+							right.scopeType,
+							right.scopeId,
+							right.period,
+							String(right.periodStart),
+						].join('\u0000'),
 					),
 			);
 			for (const reservation of orderedReservations) {
@@ -873,7 +911,8 @@ export async function insertRequestUsageAndChargeTxMy(
 								eq(myGuardrailBudgetWindowsTable.periodStart, reservation.periodStart),
 							),
 						)) as unknown as [ResultSetHeader, unknown];
-					if (windowUpdate.affectedRows !== 1) throw new Error('Guardrail budget late settlement window is missing');
+					if (windowUpdate.affectedRows !== 1)
+						throw new Error('Guardrail budget late settlement window is missing');
 					console.warn('[guardrail-budget] reconciled late actual usage above an expired reservation', {
 						requestId: settlement.requestId,
 						reservationId: reservation.id,
@@ -881,7 +920,8 @@ export async function insertRequestUsageAndChargeTxMy(
 					});
 					continue;
 				}
-				const settledMicros = settlement.mode === 'reserved' ? Number(reservation.reservedMicros) : actualMicros;
+				const settledMicros =
+					settlement.mode === 'reserved' ? Number(reservation.reservedMicros) : actualMicros;
 				const [reservationUpdate] = (await tx
 					.update(myGuardrailBudgetReservationsTable)
 					.set({
@@ -961,7 +1001,9 @@ export async function readWalletCreditReceiptMy(
 	const rows = await client.drizzle
 		.select(walletCreditAuditProjectionMy)
 		.from(myUserAuditLogsTable)
-		.where(and(eq(myUserAuditLogsTable.userId, params.userId), eq(myUserAuditLogsTable.dedupKey, params.externalRef)))
+		.where(
+			and(eq(myUserAuditLogsTable.userId, params.userId), eq(myUserAuditLogsTable.dedupKey, params.externalRef)),
+		)
 		.limit(1);
 	return readWalletCreditAuditReceipt(rows[0], params);
 }
@@ -974,12 +1016,22 @@ export async function grantWalletCreditWithAuditTxMy(
 	return client.drizzle.transaction(async (tx) => {
 		// Lock before reading either the balances or the dedup record. All wallet credit
 		// callers use this same lock order, including an exact replay under MySQL RR.
-		const users = await tx.select().from(myUsersTable).where(eq(myUsersTable.id, params.userId)).limit(1).for('update');
+		const users = await tx
+			.select()
+			.from(myUsersTable)
+			.where(eq(myUsersTable.id, params.userId))
+			.limit(1)
+			.for('update');
 		if (!users[0]) throw new WalletCreditUserNotFoundError(params.userId);
 		const existing = await tx
 			.select(walletCreditAuditProjectionMy)
 			.from(myUserAuditLogsTable)
-			.where(and(eq(myUserAuditLogsTable.userId, params.userId), eq(myUserAuditLogsTable.dedupKey, params.externalRef)))
+			.where(
+				and(
+					eq(myUserAuditLogsTable.userId, params.userId),
+					eq(myUserAuditLogsTable.dedupKey, params.externalRef),
+				),
+			)
 			.limit(1)
 			.for('update');
 		if (existing[0])
@@ -1003,7 +1055,9 @@ export async function grantWalletCreditWithAuditTxMy(
 			now,
 		);
 		// A normal INSERT must fail/roll back on all unexpected constraint errors.
-		await tx.insert(myUserAuditLogsTable).values({ ...toUserAuditLogDrizzleInsert(audit, now), createdAt: mysqlNow });
+		await tx
+			.insert(myUserAuditLogsTable)
+			.values({ ...toUserAuditLogDrizzleInsert(audit, now), createdAt: mysqlNow });
 		const [header] = (await tx
 			.update(myUsersTable)
 			.set({ walletGranted: String(afterGranted), updatedAt: mysqlNow })

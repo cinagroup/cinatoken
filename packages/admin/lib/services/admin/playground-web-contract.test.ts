@@ -174,7 +174,7 @@ function fixture(operation = "chat", modalities: string[] = ["text"]) {
 const rejected = (status: number) => (error: unknown) =>
 	error instanceof AdminServiceError && error.status === status;
 
-test("execute-only context projects selection metadata, all ten engines and no credentials, config, prices or raw parameters", async () => {
+test("execute-only context projects selection metadata, all thirteen engines and no credentials, config, prices or raw parameters", async () => {
 	const f = fixture();
 	const response = await f.request("/admin/playground/context");
 	assert.equal(response.status, 200);
@@ -192,7 +192,7 @@ test("execute-only context projects selection metadata, all ten engines and no c
 	assert.equal(data.routes[0].price_override_preview, null);
 	assert.equal(
 		data.tools.reduce((sum, family) => sum + family.providers.length, 0),
-		10
+		13
 	);
 	assert.equal(
 		data.tools[0].providers.find((item) => item.provider === "tavily")

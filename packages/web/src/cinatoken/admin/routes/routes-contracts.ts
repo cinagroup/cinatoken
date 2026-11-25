@@ -29,6 +29,7 @@ export const routeProtocolSchema = z.enum([
 	'dashscope',
 	'minimax',
 	'volcengine',
+	'elevenlabs',
 ])
 export const routeStrategySchema = z.enum([
 	'hash_affinity',

@@ -1,3 +1,12 @@
+import {requestParameterSourcesForLog} from '../../services/request-log-shared';
+
+import { describeChatOutcome } from '../../services/accounting';
+
+import {
+	parseJsonModelBody,
+	runProxyPipeline,
+	type AuthedEnv,
+} from '../../services/proxy-pipeline';
 import { summarizeMessagesShapeForLog } from '../../services/request-log-messages-shape';
 
 /**
@@ -1060,6 +1069,7 @@ export async function handleChatCompletion(c: Context<ChatEnv>, mode: ChatReques
 						provider_name: chosenRoute.providerName,
 						request_body: requestBodyForLog,
 						upstream_request_body: upstreamRequestBodyForLog,
+ request_parameter_sources:requestParameterSourcesForLog(chosenRoute,upstreamBody,upstreamRequestBodyForLog,c.req.raw.headers),
 						request_body_logging_mode: c.get('requestBodyLoggingMode'),
 						request_origin: new URL(c.req.url).origin,
 						...generationRequestLogContext(c.req.raw.headers),

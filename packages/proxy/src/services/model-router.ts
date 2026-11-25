@@ -33,6 +33,7 @@ import {
 	type RouteRoutingMetadata,
 	verifiedEndpointMatchesLegacyRoutingMetadata,
 } from '@octafuse/core';
+import { resolveCustomParamsLayers } from '@octafuse/core/provider-custom-params';
 import { selectActiveRouteRows } from './route-selection';
 
 export interface RouteResult {
@@ -121,6 +122,7 @@ export interface RouteResult {
 		default_load_balance?: boolean;
 		provider_recently_degraded?: boolean;
 	};
+	customParamsLayers?: ReturnType<typeof resolveCustomParamsLayers>;
 	routeGroup: string;
 	/** `model_routes.priority`；同层按 route strategy 排序 */
 	routePriority: number;
@@ -132,19 +134,6 @@ export interface RouteResult {
 	providerKeyFingerprint?: string | null;
 }
 
-function parseJsonObject(raw: string | null | undefined): Record<string, unknown> | null {
-	if (!raw) return null;
-	try {
-		const parsed = JSON.parse(raw) as unknown;
-		if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
-			return parsed as Record<string, unknown>;
-		}
-	} catch {
-		// ignored by caller
-	}
-	return null;
-}
-
 function routeRowToResult(
 	route: ModelRouteRow,
 	provider: ProviderRow,
@@ -153,11 +142,16 @@ function routeRowToResult(
 ): RouteResult {
 	const protocol = normalizeUpstreamProtocol(route.upstream_protocol);
 	const providerEndpoints = parseProviderEndpoints(provider);
-	const customParams = parseJsonObject(route.custom_params);
 	const routingMetadata = parseRouteRoutingMetadata(route.routing_metadata);
-	if (route.custom_params && !customParams) {
-		console.warn(`[Gateway Router] ignored invalid custom_params JSON routeId=${route.id} modelId=${route.model_id}`);
-	}
+	/**
+	 * Provider 默认值（按 protocol 筛选）+ Route 值合成为一份有效参数。两侧 JSON 解析均安全降级，
+	 * 一行脏数据不会让异常冒泡——尤其是 Provider 一侧，坏数据绝不能影响它名下所有 Route。
+	 */
+	const customParamsLayers = resolveCustomParamsLayers(provider.custom_params, route.custom_params, protocol, {
+		providerId: provider.id,
+		routeId: route.id,
+		modelId: route.model_id,
+	});
 
 	const routeGroup =
 		typeof route.route_group === 'string' && route.route_group.trim() !== '' ? route.route_group : 'default';
@@ -182,7 +176,8 @@ function routeRowToResult(
 		priceOverrideRaw: route.price_override,
 		routeMeteredProfileJson: extractMeteredProfileFromPriceOverrideJson(route.price_override),
 		routeChargedProfileJson: extractChargedProfileFromPriceOverrideJson(route.price_override),
-		customParams,
+		customParams: customParamsLayers.effective,
+		customParamsLayers,
 		routingMetadata,
 		routeGroup,
 		routePriority: route.priority,
@@ -261,7 +256,7 @@ export async function resolveRoutesForSurface(
 		: selectActiveRouteRows(
 				await preparationRead(control, () => repos.modelRouting.getModelRoutesByModelId(params.modelId)),
 				params.routeGroup,
-			);
+		  );
 	const routes = (await resolveRouteResultsFromRows(repos, rows, control))
 		.map((route) => ({
 			...route,
@@ -276,7 +271,14 @@ export async function resolveRoutesForSurface(
 					operation: params.requestOperation,
 				}),
 		)
-		.map(route => ({ ...route, upstreamOperation: effectiveUpstreamOperation(route.upstreamOperation, params.requestOperation, route.adapter) }));
+		.map((route) => ({
+			...route,
+			upstreamOperation: effectiveUpstreamOperation(
+				route.upstreamOperation,
+				params.requestOperation,
+				route.adapter,
+			),
+		}));
 	return { surface, routes };
 }
 

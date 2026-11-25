@@ -122,7 +122,7 @@ async function fixture(t: TestContext, operation: Operation, credential = 'synth
 		batch: async <T>(statements: D1PreparedStatement[]): Promise<D1Result<T>[]> => {
 			for (const statement of statements) {
 				assert.ok(statement instanceof Statement);
-				assert.match(statement.sql, /^\s*INSERT\s+INTO\s+(api_key_request_logs|public_model_daily_stats|provider_attempt_availability)/i);
+				assert.match(statement.sql, /^\s*(?:INSERT\s+INTO\s+(api_key_request_logs|public_model_daily_stats|provider_attempt_availability)|UPDATE\s+api_keys\s+SET\s+last_used_at\s*=\s*\?\s+WHERE\s+id\s*=\s*\?\s*$)/i);
 			}
 			batches++; return statements.map(() => result<T>());
 		},

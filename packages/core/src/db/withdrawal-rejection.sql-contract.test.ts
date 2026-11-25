@@ -165,7 +165,7 @@ test('Postgres inconsistent RETURNING identity never acknowledges rejection', as
 test('formal MySQL 0075 and Drizzle declare the required signed outbox barrier; this is a schema contract, not native DDL proof', () => {
 	const directory = new URL('../../migrations-mysql/', import.meta.url);
 	const names = readdirSync(directory).filter((name) => name.endsWith('.sql')).sort();
-	assert.equal(names.length, 79);
+	assert.equal(names.length, 88);
 	assert.equal(names[74], '0075_chain_job_transactions.sql');
 	assert.equal(names.slice(0, 74).some((name) => /CREATE TABLE(?: IF NOT EXISTS)? chain_job_transactions/u.test(
 		readFileSync(new URL(name, directory), 'utf8'))), false, 'the previous MySQL schema really lacked this barrier');

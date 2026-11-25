@@ -7,9 +7,9 @@ export const TOOL_CONFIG_FAMILIES = [
 ] as const;
 export type ToolConfigFamily = (typeof TOOL_CONFIG_FAMILIES)[number];
 export const TOOL_CONFIG_PROVIDERS = {
-	"web-search": ["bocha", "tavily", "cleversee", "tencent_wsa"],
-	"web-fetch": ["firecrawl", "tavily", "jina"],
-	"web-deep-search": ["firecrawl", "jina"],
+	"web-search": ["bocha", "tavily", "cleversee", "tencent_wsa", "deepseek"],
+	"web-fetch": ["firecrawl", "tavily", "jina", "deepseek"],
+	"web-deep-search": ["firecrawl", "jina", "deepseek"],
 	"ai-detection": ["tencent_tms"],
 } as const;
 export type ToolConfigProvider =

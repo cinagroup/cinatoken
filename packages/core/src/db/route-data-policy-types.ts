@@ -10,7 +10,7 @@ export type RouteDataPolicyWritePrecondition = {
 			ModelRouteRow,
 			'id' | 'provider_id' | 'provider_model_name' | 'upstream_protocol' | 'upstream_operation' | 'adapter' | 'custom_params'
 		>;
-		provider: Pick<ProviderRow, 'id' | 'endpoints' | 'api_key' | 'shared_channel_type'>;
+		provider: Pick<ProviderRow, 'id' | 'endpoints' | 'api_key' | 'shared_channel_type'> & Pick<Partial<ProviderRow>,'custom_params'>;
 	};
 	/** Explicit null means the policy did not exist. This is current-value CAS, not a historical revision. */
 	priorPolicy: RouteDataPolicyRow | null;

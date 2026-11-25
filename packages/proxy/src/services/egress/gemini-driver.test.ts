@@ -1,3 +1,4 @@
+
 import assert from 'node:assert/strict';
 import { afterEach, describe, it, mock } from 'node:test';
 import type { RouteResult } from '../model-router';
@@ -168,5 +169,98 @@ describe('dispatchGeminiRoute upstream trace ids', () => {
 		const usage = await result.usagePromise;
 		assert.equal(usage.upstreamMessageId, 'gemini-msg-2');
 		assert.equal(usage.upstreamBodyRequestId, 'proxy-req-2');
+	});
+});
+
+
+// 用 node:test 的 mock 替代原 vitest 的 vi.fn / vi.stubGlobal。
+const originalFetch = globalThis.fetch;
+
+const vi = {
+	fn: <T extends (...args: never[]) => unknown>(impl: T) => mock.fn(impl),
+	stubGlobal: (_name: 'fetch', value: unknown) => {
+		globalThis.fetch = value as typeof fetch;
+	},
+	unstubAllGlobals: () => {
+		globalThis.fetch = originalFetch;
+	},
+};
+
+
+describe('dispatchGeminiRoute invalid thought signature retry', () => {
+	afterEach(() => {
+		vi.unstubAllGlobals();
+	});
+
+	const historyBody = {
+		contents: [
+			{ role: 'user', parts: [{ text: 'hi' }] },
+			{
+				role: 'model',
+				parts: [{ functionCall: { name: 'read_files', args: {} }, thoughtSignature: 'foreign-sig' }],
+			},
+			{ role: 'user', parts: [{ functionResponse: { name: 'read_files', response: {} } }] },
+		],
+	};
+	const invalidSignatureBody = JSON.stringify({
+		error: { code: 400, message: 'Invalid thought signature.', status: 'INVALID_ARGUMENT' },
+	});
+	const okBody = JSON.stringify({
+		usageMetadata: { promptTokenCount: 1, candidatesTokenCount: 1, totalTokenCount: 2 },
+	});
+
+	it('requires a fresh quoted attempt before retrying a rejected thought signature', async () => {
+		let n = 0;
+		const fetchMock = vi.fn(async () => {
+			n += 1;
+			return n === 1
+				? new Response(invalidSignatureBody, { status: 400, headers: { 'Content-Type': 'application/json' } })
+				: new Response(okBody, { status: 200, headers: { 'Content-Type': 'application/json' } });
+		});
+		vi.stubGlobal('fetch', fetchMock);
+
+		const result = await dispatchGeminiRoute(minimalRoute({}), historyBody, 'generateContent', '');
+
+  assert.equal(fetchMock.mock.calls.length,1);
+  assert.equal(result.response.status,400);
+  assert.match(await result.response.text(),/Invalid thought signature/);
+ });
+
+	it('does not retry for unrelated 400 errors', async () => {
+		const fetchMock = vi.fn(
+			async () => new Response(JSON.stringify({ error: { message: 'bad request' } }), { status: 400 })
+		);
+		vi.stubGlobal('fetch', fetchMock);
+
+		const result = await dispatchGeminiRoute(minimalRoute({}), historyBody, 'generateContent', '');
+
+		assert.equal(fetchMock.mock.calls.length, 1);
+		assert.equal(result.response.status, 400);
+	});
+
+	it('does not retry when the request carries no signature', async () => {
+		const fetchMock = vi.fn(async () => new Response(invalidSignatureBody, { status: 400 }));
+		vi.stubGlobal('fetch', fetchMock);
+
+		const result = await dispatchGeminiRoute(
+			minimalRoute({}),
+			{ contents: [{ role: 'user', parts: [{ text: 'hi' }] }] },
+			'generateContent',
+			''
+		);
+
+		assert.equal(fetchMock.mock.calls.length, 1);
+		assert.equal(result.response.status, 400);
+		assert.match(await result.response.text(), /Invalid thought signature/);
+	});
+
+	it('does not retry repeatedly rejected signatures inside a driver attempt', async () => {
+		const fetchMock = vi.fn(async () => new Response(invalidSignatureBody, { status: 400 }));
+		vi.stubGlobal('fetch', fetchMock);
+
+		const result = await dispatchGeminiRoute(minimalRoute({}), historyBody, 'generateContent', '');
+
+		assert.equal(fetchMock.mock.calls.length, 1);
+		assert.equal(result.response.status, 400);
 	});
 });

@@ -1,4 +1,5 @@
 # AGENTS.md — `@octafuse/admin` (cinatoken)
+仓库级约定见 [../../AGENTS.md](../../AGENTS.md)。本文件只写管理后台这个包。
 
 ## Overview
 

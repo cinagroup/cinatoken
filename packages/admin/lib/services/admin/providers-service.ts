@@ -1,3 +1,4 @@
+import { catalogNotePatch as coreCatalogNotePatch, catalogNoteValue } from '@octafuse/core/db/catalog-note-compat';
 /** 管理后台 `providers` CRUD：单键 `api_key` + `status`，`endpoints` JSON 校验与持久化。 */
 import type { GatewayRepositories } from '@octafuse/core';
 import {
@@ -11,6 +12,7 @@ import {
 	validateAndNormalizeProviderEndpoints,
 	type ProviderEndpointsMap,
 } from '@octafuse/core/provider-endpoints';
+import { parseAndNormalizeProviderCustomParams } from '@octafuse/core/provider-custom-params';
 import {
 	isPendingProviderImportApiKey,
 	maskProviderApiKeyForAdmin,
@@ -19,6 +21,7 @@ import {
 import { getProviderQuotaAdapter } from '@octafuse/core/provider-quota';
 import {
 	isKnownProviderKind,
+	providerImportStoredFields,
 	resolveStoredProviderPresentation,
 	listStaticProviderImportPresets,
 } from '@/lib/provider-import-preset';
@@ -81,6 +84,21 @@ function resolveEndpointsFromMutation(body: AdminProviderMutationInput): string 
 	return serializeProviderEndpoints(map);
 }
 
+/**
+ * 解析 + 校验 `custom_params`（按协议分组的默认 headers/body，无 `force_override`）。
+ * `undefined`/`null`/空对象一律视为未配置，返回 `null`；非法头名、受保护头、非法协议 key、超长，统一转 400。
+ */
+function resolveCustomParamsFromMutation(body: AdminProviderMutationInput): string | null {
+	if (body.custom_params === undefined || body.custom_params === null) {
+		return null;
+	}
+	try {
+		return parseAndNormalizeProviderCustomParams(body.custom_params);
+	} catch (e) {
+		throw badRequest(e instanceof Error ? e.message : 'Invalid custom_params');
+	}
+}
+
 function normalizeProviderStatus(raw: unknown): 'active' | 'disabled' {
 	if (raw === 'disabled') return 'disabled';
 	if (raw === 'active' || raw === undefined || raw === null || raw === '') return 'active';
@@ -139,8 +157,11 @@ function enrichProviderRow(provider: AdminProviderRow): AdminProviderRow {
 	const presentation = resolveStoredProviderPresentation(provider);
 	return {
 		...provider,
+ note: catalogNoteValue(provider),
+ description: catalogNoteValue(provider),
 		kind: String(provider.kind ?? ''),
 		kind_labels: presentation.kindLabels ?? undefined,
+		kind_descriptions: presentation.kindDescriptions ?? undefined,
 		vendor_key: presentation.vendorKey,
 		icon_key: presentation.iconKey,
 		catalog_links: presentation.catalogLinks ?? undefined,
@@ -182,6 +203,7 @@ export async function createProviderService(
 	}
 
 	const endpointsJson = resolveEndpointsFromMutation(body);
+	const customParamsJson = resolveCustomParamsFromMutation(body);
 	const status = normalizeProviderStatus(body.status);
 	const kind = normalizeProviderKind(body.kind ?? '__custom__', true);
 
@@ -197,9 +219,10 @@ export async function createProviderService(
 			kind,
 			sharedChannelType,
 			endpoints: endpointsJson,
-			description: body.description,
+			note: catalogNotePatch(body).note,
 			apiKey,
 			status,
+			customParams: customParamsJson,
 		}),
 	);
 
@@ -226,7 +249,7 @@ export async function revealProviderApiKeyService(
 }
 
 /**
- * PATCH 供应商；`api_key` 空串/未传 = 不改；写 `endpoints`（权威）。
+ * PATCH 供应商；`api_key` 未传 = 不改，显式空串/null = 清空；写 `endpoints`（权威）。
  */
 export async function updateProviderService(
 	repos: GatewayRepositories,
@@ -247,20 +270,20 @@ export async function updateProviderService(
 	if (body.kind !== undefined) {
 		patch.kind = normalizeProviderKind(body.kind, false);
 	}
-	if (body.description !== undefined) {
-		patch.description = body.description;
-	}
+	if (body.note !== undefined || body.description !== undefined) {
+ Object.assign(patch, catalogNotePatch({note:body.note,description:body.description}));
+ }
 	if ('endpoints' in body) {
 		patch.endpoints = resolveEndpointsFromMutation(body);
+	}
+	if ('custom_params' in body) {
+		patch.custom_params = resolveCustomParamsFromMutation(body);
 	}
 	if (body.status !== undefined) {
 		patch.status = normalizeProviderStatus(body.status);
 	}
 	if (body.api_key !== undefined) {
-		const apiKey = String(body.api_key ?? '').trim();
-		if (apiKey) {
-			patch.api_key = apiKey;
-		}
+		patch.api_key = String(body.api_key ?? '').trim();
 	}
 	if (body.shared_channel_type !== undefined) {
 		patch.shared_channel_type = normalizeSharedChannelType(body.shared_channel_type);
@@ -314,12 +337,13 @@ export async function deleteProviderService(repos: GatewayRepositories, id: stri
  * 与非敏感 `env:NAME` 引用；只有固定官方端点验证 Secret 成功才启用。
  * 从 `lib/provider-import-presets.json` 按 **catalog 键**导入 Provider：
  * 写入占位 `PROVIDER_IMPORT_PENDING_API_KEY`，须在 Admin 中替换为真实密钥。
- * `kind` 写成模板英文名；同一类型下同名才追加 `(2)` 后缀。
+ * `kind` 写成模板英文名；显示名按 `locale` 取目录文案（中文 / 英文）。同一类型下同名才追加 `(2)` 后缀。介绍不入库。
  */
 export async function importProvidersFromStaticPresetsService(
 	repos: GatewayRepositories,
 	input: {
 		ids: string[];
+		locale?: string | null;
 		environmentApiKeys?: Readonly<Record<string, string | undefined>>;
 		fetchImpl?: typeof fetch;
 	},
@@ -347,14 +371,15 @@ export async function importProvidersFromStaticPresetsService(
 				throw badRequest(`Unknown static preset catalog key: ${catalogKey}`);
 			}
 
-			const baseName = String(preset.name ?? '').trim();
-			if (!baseName) {
+			const stored = providerImportStoredFields(preset, input.locale);
+			if (!stored.kind) {
 				throw badRequest(`Static preset catalog key "${catalogKey}": missing name`);
 			}
 			const managed = preset.managed_environment_key;
 			if (
 				managed &&
-				(managed.provider_id !== DEEPSEEK_OFFICIAL_PROVIDER_ID || managed.env_name !== DEEPSEEK_API_KEY_ENV_NAME)
+				(managed.provider_id !== DEEPSEEK_OFFICIAL_PROVIDER_ID ||
+					managed.env_name !== DEEPSEEK_API_KEY_ENV_NAME)
 			) {
 				throw badRequest(`Static preset catalog key "${catalogKey}": unsupported managed environment key`);
 			}
@@ -365,7 +390,7 @@ export async function importProvidersFromStaticPresetsService(
 
 			let name: string;
 			try {
-				name = suggestUniqueProviderImportName(baseName, baseName, existingNameKindKeys);
+				name = suggestUniqueProviderImportName(stored.name, stored.kind, existingNameKindKeys);
 			} catch (error) {
 				throw badRequest(error instanceof Error ? error.message : 'Unable to allocate unique provider name');
 			}
@@ -380,14 +405,13 @@ export async function importProvidersFromStaticPresetsService(
 			await createProviderService(repos, {
 				id: managed?.provider_id,
 				name,
-				kind: baseName,
+				kind: stored.kind,
 				endpoints: preset.endpoints,
-				description: preset.description ?? null,
 				api_key: apiKey,
 				status,
 			});
 
-			existingNameKindKeys.add(providerNameKindKey(name, baseName));
+			existingNameKindKeys.add(providerNameKindKey(name, stored.kind));
 			created++;
 		} catch (e) {
 			const message = e instanceof Error ? e.message : String(e);
@@ -401,4 +425,8 @@ export async function importProvidersFromStaticPresetsService(
 		skipped_existing: skippedExisting,
 		failed,
 	};
+}
+
+function catalogNotePatch(input:Record<string,unknown>):Record<string,unknown> {
+ try{return coreCatalogNotePatch(input);}catch(error){throw badRequest(error instanceof Error?error.message:'Invalid catalog note');}
 }

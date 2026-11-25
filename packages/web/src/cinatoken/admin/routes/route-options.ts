@@ -44,8 +44,8 @@ export function routeModelKind(
 ): AdapterModelKind | null {
 	if (!model) return null
 	if (isImageGenerationModel(model)) return 'image'
-	if (isAudioTranscriptionModel(model)) return 'audio.transcription'
-	if (isAudioSpeechModel(model)) return 'audio.speech'
+	if (isAudioTranscriptionModel(model)) return 'asr'
+	if (isAudioSpeechModel(model)) return 'tts'
 	if (isTextLlmModel(model)) return 'llm'
 	return null
 }
@@ -65,12 +65,16 @@ export function requestOperationsForModel(
 ): readonly string[] {
 	if (!model || !isRouteProtocol(protocol)) return []
 	if (isEmbeddingModel(model))
-		return protocol === 'openai' ? ['embeddings'] : []
+		return protocol === 'openai'
+			? ['embeddings']
+			: protocol === 'gemini'
+				? ['models.embed']
+				: []
 	if (isRerankModel(model)) return protocol === 'openai' ? ['rerank'] : []
 	const kind = routeModelKind(model)
 	if (!kind) return []
 	const operations = requestOperationsFromRegistry(protocol, kind)
-	return kind === 'audio.transcription' && protocol === 'dashscope'
+	return kind === 'asr' && protocol === 'dashscope'
 		? filterRealtimeOperations(operations, providerModelName)
 		: operations
 }
@@ -130,7 +134,7 @@ export function upstreamOperationsForProviderModel(
 					(capability) => capabilities.has(capability)
 				)
 		)
-		return kind === 'audio.transcription' && protocol === 'dashscope'
+		return kind === 'asr' && protocol === 'dashscope'
 			? filterRealtimeOperations(operations, providerModelName)
 			: operations
 	}

@@ -22,6 +22,7 @@ import {
 } from './bounded-response-body';
 import { fetchWithSafeRedirects } from '@octafuse/tool-engines/web-fetch';
 import { applyRouteExtraHeaders, routeCustomParamsBody } from '@octafuse/core';
+import { parseOpenAiAudioTokenUsage, type AudioTokenUsage } from '@octafuse/core';
 import { applyUpstreamExtraFields, protectedUpstreamPathsForRoute } from '@octafuse/core/upstream-extra-fields';
 import type { RouteResult } from '../model-router';
 import { EMPTY_USAGE, type UsageFromStream } from '../proxy';
@@ -75,7 +76,7 @@ type DashScopeAudioDispatchResult = {
 		audioDurationSeconds: number | null;
 		audioDurationSource: AudioDurationSource | null;
 		audioFileBytes: number;
-		audioTokenUsage: null;
+		audioTokenUsage: AudioTokenUsage | null;
 		upstreamOutcomeUnknown?: boolean;
 		responseBodyTooLarge?: boolean;
 		failoverForbidden?: boolean;
@@ -155,7 +156,9 @@ export function audioUploadToDataUrlPages(file: AudioUpload, checkActive: () => 
 	// Divisible by three: padding appears only on the final page.
 	for (let offset = 0; offset < file.bytes.length; offset += 0x6000) {
 		checkActive();
-		pages.push(btoa(String.fromCharCode(...file.bytes.subarray(offset, Math.min(offset + 0x6000, file.bytes.length)))));
+		pages.push(
+			btoa(String.fromCharCode(...file.bytes.subarray(offset, Math.min(offset + 0x6000, file.bytes.length)))),
+		);
 	}
 	checkActive();
 	return new JsonStringPages(pages);
@@ -351,7 +354,7 @@ export function buildDashScopeAsyncAsrBody(
 								content: [{ type: 'input_text', text: req.prompt }],
 							},
 						],
-					}
+				  }
 				: {}),
 		},
 		parameters: {
@@ -381,7 +384,7 @@ export function normalizeDashScopeSyncAsrResult(body: unknown): Record<string, u
 		...(seconds != null ? { duration: seconds } : {}),
 		...(typeof annotation?.language === 'string' ? { language: annotation.language } : {}),
 		...(typeof annotation?.emotion === 'string' ? { emotion: annotation.emotion } : {}),
-		usage: seconds == null ? (root?.usage ?? null) : { type: 'duration', seconds },
+		usage: seconds == null ? root?.usage ?? null : { type: 'duration', seconds },
 		dashscope: body,
 	};
 }
@@ -391,7 +394,8 @@ function normalizeDashScopeDurationAsrResult(body: unknown): Record<string, unkn
 	const root = asObject(body);
 	const output = asObject(root?.output);
 	const sentence = asObject(output?.sentence);
-	const text = typeof output?.text === 'string' ? output.text : typeof sentence?.text === 'string' ? sentence.text : '';
+	const text =
+		typeof output?.text === 'string' ? output.text : typeof sentence?.text === 'string' ? sentence.text : '';
 	const seconds = asFiniteNonNegativeNumber(asObject(root?.usage)?.duration);
 	const beginMs = asFiniteNonNegativeNumber(sentence?.begin_time);
 	const endMs = asFiniteNonNegativeNumber(sentence?.end_time);
@@ -405,13 +409,13 @@ function normalizeDashScopeDurationAsrResult(body: unknown): Record<string, unkn
 					channel: sentence.channel_id ?? 0,
 					...(Array.isArray(sentence.words) ? { words: sentence.words } : {}),
 				},
-			]
+		  ]
 		: [];
 	return {
 		text,
 		...(seconds != null ? { duration: seconds } : {}),
 		segments,
-		usage: seconds == null ? (root?.usage ?? null) : { type: 'duration', seconds },
+		usage: seconds == null ? root?.usage ?? null : { type: 'duration', seconds },
 		dashscope: body,
 	};
 }
@@ -511,6 +515,7 @@ function clientResult(
 		| 'gatewayGeneratedError'
 		| 'admissionDeniedPreDispatch'
 	> = {},
+	tokenUsage: AudioTokenUsage | null = null,
 ): DashScopeAudioDispatchResult {
 	const clientBody = upstreamResponse.ok
 		? reshapeTranscriptionForClient(parsedBody, req.clientResponseFormat)
@@ -529,7 +534,7 @@ function clientResult(
 			audioDurationSeconds: duration?.seconds ?? null,
 			audioDurationSource: duration?.source ?? null,
 			audioFileBytes: fileBytes,
-			audioTokenUsage: null,
+			audioTokenUsage: tokenUsage,
 			...metaOverrides,
 			restoredUpstreamPaths: readRestoredUpstreamPaths(req),
 		},
@@ -747,6 +752,8 @@ async function dispatchDashScopeSyncAsrOwned(
 			req.file.bytes.byteLength,
 			resolveDashScopeDuration(req, seconds),
 			requestId,
+			{},
+			parseOpenAiAudioTokenUsage(upstreamBody),
 		);
 	} catch (error) {
 		if (timeout.admissionFailed || error instanceof RequestAuxiliaryAuthLimitError) throw error;
@@ -757,7 +764,13 @@ async function dispatchDashScopeSyncAsrOwned(
 			timeout.dispatchStarted && (!explicitNonOk || submitStatusMayHideAcceptedWork(upstreamStatus!));
 		return errorDispatchResult(
 			req,
-			explicitNonOk ? upstreamStatus! : aborted ? (timeout.getAbortReason() === 'gateway_timeout' ? 504 : 499) : 502,
+			explicitNonOk
+				? upstreamStatus!
+				: aborted
+				? timeout.getAbortReason() === 'gateway_timeout'
+					? 504
+					: 499
+				: 502,
 			aborted
 				? timeout.getAbortReason() === 'gateway_timeout'
 					? 'DashScope synchronous ASR timed out'
@@ -916,7 +929,8 @@ async function dispatchDashScopeAsyncAsrOwned(
 				timeout.signal,
 				timeout.trackResourceCompletion,
 			);
-			const requestId = extractUpstreamRequestId(queryResponse.headers) ?? bodyRequestId(queryBody) ?? submitRequestId;
+			const requestId =
+				extractUpstreamRequestId(queryResponse.headers) ?? bodyRequestId(queryBody) ?? submitRequestId;
 			if (!queryResponse.ok) {
 				timing?.markStreamComplete();
 				return clientResult(req, queryResponse, queryBody, req.file?.bytes.byteLength ?? 0, null, requestId, {
@@ -1026,6 +1040,8 @@ async function dispatchDashScopeAsyncAsrOwned(
 				req.file?.bytes.byteLength ?? 0,
 				resolveDashScopeDuration(req, seconds),
 				requestId,
+				{},
+				parseOpenAiAudioTokenUsage(queryBody) ?? parseOpenAiAudioTokenUsage(resultBody),
 			);
 		}
 		throw new Error('DashScope ASR task query limit reached');
@@ -1043,10 +1059,10 @@ async function dispatchDashScopeAsyncAsrOwned(
 			explicitSubmitNonOk
 				? upstreamStatus!
 				: aborted
-					? timeout.getAbortReason() === 'gateway_timeout'
-						? 504
-						: 499
-					: 502,
+				? timeout.getAbortReason() === 'gateway_timeout'
+					? 504
+					: 499
+				: 502,
 			aborted
 				? timeout.getAbortReason() === 'gateway_timeout'
 					? 'DashScope asynchronous ASR timed out'
@@ -1185,6 +1201,7 @@ async function dispatchDashScopeMultimodalPassthroughOwned(
 			};
 		}
 		const seconds = response.ok ? extractDashScopeMultimodalDurationSeconds(parsedBody) : null;
+		const tokenUsage = response.ok ? parseOpenAiAudioTokenUsage(parsedBody) : null;
 		const duration =
 			seconds == null
 				? null
@@ -1193,7 +1210,7 @@ async function dispatchDashScopeMultimodalPassthroughOwned(
 						fileBytes: 0,
 						mimeType: 'application/octet-stream',
 						clientSeconds: null,
-					});
+				  });
 		return {
 			response: new Response(JSON.stringify(parsedBody), {
 				status: response.status,
@@ -1207,7 +1224,7 @@ async function dispatchDashScopeMultimodalPassthroughOwned(
 				audioDurationSeconds: duration?.seconds ?? null,
 				audioDurationSource: duration?.source ?? null,
 				audioFileBytes: 0,
-				audioTokenUsage: null,
+				audioTokenUsage: tokenUsage,
 				...(submitStatusMayHideAcceptedWork(response.status)
 					? { upstreamOutcomeUnknown: true, failoverForbidden: true }
 					: {}),
@@ -1258,12 +1275,12 @@ async function dispatchDashScopeMultimodalPassthroughOwned(
 						status: explicitNonOk
 							? upstreamStatus!
 							: aborted
-								? timeout.getAbortReason() === 'gateway_timeout'
-									? 504
-									: 499
-								: 502,
+							? timeout.getAbortReason() === 'gateway_timeout'
+								? 504
+								: 499
+							: 502,
 						headers: { 'Content-Type': 'application/json' },
-					}),
+				  }),
 			usagePromise: Promise.resolve(EMPTY_USAGE),
 			upstreamRequestId: null,
 			meta: {

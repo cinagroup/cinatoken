@@ -1,9 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {
-	providerAttemptAvailabilityForHttpStatus,
-	RequestTimingCollector,
-} from './request-timing';
+import { providerAttemptAvailabilityForHttpStatus, RequestTimingCollector } from './request-timing';
 import type { RouteResult } from './model-router';
 
 function route(overrides: Partial<RouteResult> = {}): RouteResult {
@@ -42,16 +39,22 @@ test('RequestTimingCollector snapshots stable timing metrics and attempt metadat
 	timing.markGatewayComplete();
 	timing.markGatewayComplete();
 
-	const first = timing.startAttempt(route());
+	const first = timing.startAttempt(route({ targetId: 'target-a' }));
 	timing.markAttemptHeaders(first, 429);
+	timing.markAttemptFailure(first, {
+		error: 'HTTP 429: slow down',
+		failureKind: 'rate_limit',
+	});
 	timing.markAttemptFailover(first);
 	timing.markModelFallback();
 
-	const second = timing.startAttempt(route({
-		providerId: 'provider-b',
-		providerName: 'Provider B',
-		providerKeyId: 'byok:key-b',
-	}));
+	const second = timing.startAttempt(
+		route({
+			providerId: 'provider-b',
+			providerName: 'Provider B',
+			providerKeyId: 'byok:key-b',
+		}),
+	);
 	timing.markAttemptHeaders(second, 200);
 	timing.markFinalAttempt(second);
 	timing.markFirstByte();
@@ -76,36 +79,50 @@ test('RequestTimingCollector snapshots stable timing metrics and attempt metadat
 		first_byte_ms?: number;
 		first_event_ms?: number;
 		model_fallback_count?: number;
-		attempts?: Array<{ provider_id: string; status: number; selected: boolean }>;
+		attempts?: Array<{
+			provider_id: string;
+			target_id: string | null;
+			status: number;
+			error: string | null;
+			failure_kind: string | null;
+			selected: boolean;
+		}>;
 	};
 	assert.equal(typeof metadata.first_byte_ms, 'number');
 	assert.equal(typeof metadata.first_event_ms, 'number');
 	assert.equal(metadata.model_fallback_count, 1);
 	assert.equal(metadata.attempts?.length, 2);
 	assert.equal(metadata.attempts?.[0]?.status, 429);
+	assert.equal(metadata.attempts?.[0]?.target_id, 'target-a');
+	assert.equal(metadata.attempts?.[0]?.error, 'HTTP 429: slow down');
+	assert.equal(metadata.attempts?.[0]?.failure_kind, 'rate_limit');
 	assert.equal(metadata.attempts?.[1]?.provider_id, 'provider-b');
 	assert.equal(metadata.attempts?.[1]?.selected, true);
+	assert.equal(metadata.attempts?.[1]?.failure_kind, null);
 	for (const fact of snapshot.providerAttempts) {
 		assert.equal(Number.isFinite(Date.parse(fact.observedAtIso)), true);
 	}
-	assert.deepEqual(snapshot.providerAttempts.map(({ observedAtIso: _observedAtIso, ...fact }) => fact), [
-		{
-			attemptIndex: 1,
-			routeTargetId: 'route-a',
-			providerId: 'provider-a',
-			outcome: 'excluded',
-			reason: 'rate_limited',
-			httpStatus: 429,
-		},
-		{
-			attemptIndex: 2,
-			routeTargetId: 'route-a',
-			providerId: 'provider-b',
-			outcome: 'available',
-			reason: 'accepted',
-			httpStatus: 200,
-		},
-	]);
+	assert.deepEqual(
+		snapshot.providerAttempts.map(({ observedAtIso: _observedAtIso, ...fact }) => fact),
+		[
+			{
+				attemptIndex: 1,
+				routeTargetId: 'target-a',
+				providerId: 'provider-a',
+				outcome: 'excluded',
+				reason: 'rate_limited',
+				httpStatus: 429,
+			},
+			{
+				attemptIndex: 2,
+				routeTargetId: 'route-a',
+				providerId: 'provider-b',
+				outcome: 'available',
+				reason: 'accepted',
+				httpStatus: 200,
+			},
+		],
+	);
 	assert.equal(snapshot.providerResponses?.length, 2);
 	assert.deepEqual(
 		snapshot.providerResponses?.map(({ latency, ...response }) => ({
@@ -115,7 +132,7 @@ test('RequestTimingCollector snapshots stable timing metrics and attempt metadat
 		[
 			{
 				status: 429,
-				endpoint_id: 'route-a',
+				endpoint_id: 'target-a',
 				is_byok: false,
 				model_permaslug: 'public/model-a',
 				provider_name: 'Provider A',
@@ -152,19 +169,24 @@ test('RequestTimingCollector snapshots stable timing metrics and attempt metadat
 
 test('provider attempt availability excludes caller errors and cancellations', () => {
 	assert.deepEqual(providerAttemptAvailabilityForHttpStatus(200), {
-		outcome: 'available', reason: 'accepted',
+		outcome: 'available',
+		reason: 'accepted',
 	});
 	assert.deepEqual(providerAttemptAvailabilityForHttpStatus(503), {
-		outcome: 'unavailable', reason: 'provider_http_error',
+		outcome: 'unavailable',
+		reason: 'provider_http_error',
 	});
 	assert.deepEqual(providerAttemptAvailabilityForHttpStatus(403), {
-		outcome: 'excluded', reason: 'client_error',
+		outcome: 'excluded',
+		reason: 'client_error',
 	});
 	assert.deepEqual(providerAttemptAvailabilityForHttpStatus(429), {
-		outcome: 'excluded', reason: 'rate_limited',
+		outcome: 'excluded',
+		reason: 'rate_limited',
 	});
 	assert.deepEqual(providerAttemptAvailabilityForHttpStatus(422), {
-		outcome: 'excluded', reason: 'client_error',
+		outcome: 'excluded',
+		reason: 'client_error',
 	});
 	const timing = new RequestTimingCollector();
 	const cancelled = timing.startAttempt(route());
@@ -186,10 +208,12 @@ test('provider attempt availability excludes caller errors and cancellations', (
 test('provider response snapshots fail closed when the bounded attempt limit is exceeded', () => {
 	const timing = new RequestTimingCollector();
 	for (let index = 0; index < 33; index += 1) {
-		const attempt = timing.startAttempt(route({
-			targetId: `route-${index}`,
-			providerName: `Provider ${index}`,
-		}));
+		const attempt = timing.startAttempt(
+			route({
+				targetId: `route-${index}`,
+				providerName: `Provider ${index}`,
+			}),
+		);
 		timing.markAttemptHeaders(attempt, 503);
 	}
 
@@ -204,9 +228,7 @@ test('provider attempt availability uses the latest composite response without r
 	timing.markAttemptHeaders(attempt, 503);
 	assert.equal(attempt.status, 202);
 	assert.equal(attempt.headers_ms, firstHeadersMs);
-	assert.deepEqual((({ observedAtIso: _observedAtIso, ...value }) => value)(
-		timing.snapshot().providerAttempts[0]!,
-	), {
+	assert.deepEqual((({ observedAtIso: _observedAtIso, ...value }) => value)(timing.snapshot().providerAttempts[0]!), {
 		attemptIndex: 1,
 		routeTargetId: 'route-a',
 		providerId: 'provider-a',
@@ -225,16 +247,17 @@ test('selected accepted attempts are refined by terminal protocol evidence', () 
 	invalid.markAttemptHeaders(invalidAttempt, 200);
 	invalid.markFinalAttempt(invalidAttempt);
 	invalid.finalizeSelectedAttemptAvailability({ invalidResponse: true });
-	assert.deepEqual((({ observedAtIso: _observedAtIso, ...value }) => value)(
-		invalid.snapshot().providerAttempts[0]!,
-	), {
-		attemptIndex: 1,
-		routeTargetId: 'route-a',
-		providerId: 'provider-a',
-		outcome: 'unavailable',
-		reason: 'invalid_response',
-		httpStatus: 200,
-	});
+	assert.deepEqual(
+		(({ observedAtIso: _observedAtIso, ...value }) => value)(invalid.snapshot().providerAttempts[0]!),
+		{
+			attemptIndex: 1,
+			routeTargetId: 'route-a',
+			providerId: 'provider-a',
+			outcome: 'unavailable',
+			reason: 'invalid_response',
+			httpStatus: 200,
+		},
+	);
 
 	const cancelled = new RequestTimingCollector();
 	const cancelledAttempt = cancelled.startAttempt(route());

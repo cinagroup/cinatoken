@@ -149,7 +149,7 @@ describe('resolveUpstreamEndpoint', () => {
 					},
 				},
 			},
-			{ model: 'gemini-2.0-flash', action: 'generateContent' }
+			{ model: 'gemini-2.0-flash', action: 'generateContent' },
 		);
 		assert.equal(url, 'https://x.example/models/gemini-2.0-flash:generateContent');
 	});
@@ -166,7 +166,7 @@ describe('resolveUpstreamEndpoint', () => {
 					},
 				},
 			},
-			{ model: 'gemini-2.0-flash', action: 'streamGenerateContent' }
+			{ model: 'gemini-2.0-flash', action: 'streamGenerateContent' },
 		);
 		assert.equal(url, 'https://family.example/models/gemini-2.0-flash:streamGenerateContent');
 	});
@@ -176,12 +176,9 @@ describe('resolveUpstreamEndpoint', () => {
 			'gemini',
 			'models.generate',
 			{ gemini: { base: 'https://generativelanguage.googleapis.com/v1beta/models' } },
-			{ model: 'gemini-2.0-flash', action: 'generateContent' }
+			{ model: 'gemini-2.0-flash', action: 'generateContent' },
 		);
-		assert.equal(
-			url,
-			'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent'
-		);
+		assert.equal(url, 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent');
 	});
 
 	it('derives DashScope HTTP and WebSocket audio endpoints from one API base', () => {
@@ -192,29 +189,29 @@ describe('resolveUpstreamEndpoint', () => {
 		};
 		assert.equal(
 			resolveUpstreamEndpoint('dashscope', 'audio.transcriptions.multimodal', endpoints),
-			'https://workspace.cn-beijing.maas.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation'
+			'https://workspace.cn-beijing.maas.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation',
 		);
 		assert.equal(
 			resolveUpstreamEndpoint('dashscope', 'audio.transcriptions', endpoints),
-			'https://workspace.cn-beijing.maas.aliyuncs.com/api/v1/services/audio/asr/transcription'
+			'https://workspace.cn-beijing.maas.aliyuncs.com/api/v1/services/audio/asr/transcription',
 		);
 		assert.equal(
 			resolveUpstreamEndpoint('dashscope', 'audio.transcriptions.tasks', endpoints, {
 				taskId: 'task/1',
 			}),
-			'https://workspace.cn-beijing.maas.aliyuncs.com/api/v1/tasks/task%2F1'
+			'https://workspace.cn-beijing.maas.aliyuncs.com/api/v1/tasks/task%2F1',
 		);
 		assert.equal(
 			resolveUpstreamEndpoint('dashscope', 'audio.realtime.inference', endpoints),
-			'wss://workspace.cn-beijing.maas.aliyuncs.com/api-ws/v1/inference'
+			'wss://workspace.cn-beijing.maas.aliyuncs.com/api-ws/v1/inference',
 		);
 		assert.equal(
 			resolveUpstreamEndpoint('dashscope', 'audio.realtime.session', endpoints),
-			'wss://workspace.cn-beijing.maas.aliyuncs.com/api-ws/v1/realtime'
+			'wss://workspace.cn-beijing.maas.aliyuncs.com/api-ws/v1/realtime',
 		);
 		assert.equal(
 			resolveUpstreamEndpoint('dashscope', 'images.generations.multimodal', endpoints),
-			'https://workspace.cn-beijing.maas.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation'
+			'https://workspace.cn-beijing.maas.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation',
 		);
 	});
 
@@ -229,11 +226,9 @@ describe('resolveUpstreamEndpoint', () => {
 		};
 		assert.equal(
 			resolveUpstreamEndpoint('dashscope', 'audio.transcriptions.multimodal', endpoints),
-			'https://token-plan.maas.qianwenaiapi.com/api/v1/services/aigc/multimodal-generation/generation'
+			'https://token-plan.maas.qianwenaiapi.com/api/v1/services/aigc/multimodal-generation/generation',
 		);
-		assert.deepEqual(listConfiguredCapabilities(endpoints, 'dashscope'), [
-			'audio.transcriptions.multimodal',
-		]);
+		assert.deepEqual(listConfiguredCapabilities(endpoints, 'dashscope'), ['audio.transcriptions.multimodal']);
 	});
 });
 
@@ -245,76 +240,54 @@ describe('providerSupportsUpstreamProtocol', () => {
 					openai: { endpoints: { chat: 'https://v.example/chat' } },
 				},
 			}),
-			true
+			true,
 		);
 	});
 });
 
 describe('Provider operation endpoint requirements', () => {
 	it('maps DashScope composite and alias operations to the exact driver endpoints', () => {
+		assert.deepEqual(requiredProviderEndpointCapabilitiesForOperation('dashscope', 'audio.transcriptions.async'), [
+			'audio.transcriptions',
+			'audio.transcriptions.tasks',
+		]);
 		assert.deepEqual(
-			requiredProviderEndpointCapabilitiesForOperation(
-				'dashscope',
-				'audio.transcriptions.async'
-			),
-			['audio.transcriptions', 'audio.transcriptions.tasks']
+			requiredProviderEndpointCapabilitiesForOperation('dashscope', 'audio.transcriptions.realtime.inference'),
+			['audio.realtime.inference'],
 		);
 		assert.deepEqual(
-			requiredProviderEndpointCapabilitiesForOperation(
-				'dashscope',
-				'audio.transcriptions.realtime.inference'
-			),
-			['audio.realtime.inference']
+			requiredProviderEndpointCapabilitiesForOperation('dashscope', 'audio.transcriptions.realtime.session'),
+			['audio.realtime.session'],
+		);
+		assert.deepEqual(requiredProviderEndpointCapabilitiesForOperation('dashscope', 'audio.speech.stream'), [
+			'audio.speech',
+		]);
+		assert.deepEqual(
+			requiredProviderEndpointCapabilitiesForOperation('dashscope', 'audio.speech.realtime.inference'),
+			['audio.realtime.inference'],
 		);
 		assert.deepEqual(
-			requiredProviderEndpointCapabilitiesForOperation(
-				'dashscope',
-				'audio.transcriptions.realtime.session'
-			),
-			['audio.realtime.session']
-		);
-		assert.deepEqual(
-			requiredProviderEndpointCapabilitiesForOperation(
-				'dashscope',
-				'audio.speech.stream'
-			),
-			['audio.speech']
-		);
-		assert.deepEqual(
-			requiredProviderEndpointCapabilitiesForOperation(
-				'dashscope',
-				'audio.speech.realtime.inference'
-			),
-			['audio.realtime.inference']
-		);
-		assert.deepEqual(
-			requiredProviderEndpointCapabilitiesForOperation(
-				'dashscope',
-				'audio.speech.realtime.session'
-			),
-			['audio.realtime.session']
+			requiredProviderEndpointCapabilitiesForOperation('dashscope', 'audio.speech.realtime.session'),
+			['audio.realtime.session'],
 		);
 	});
 
 	it('requires all routable capabilities for a legacy wildcard without requiring resource-only endpoints', () => {
-		assert.deepEqual(
-			requiredProviderEndpointCapabilitiesForOperation('dashscope', '*'),
-			[
-				'audio.transcriptions',
-				'audio.transcriptions.multimodal',
-				'audio.transcriptions.tasks',
-				'audio.realtime.inference',
-				'audio.realtime.session',
-				'audio.speech',
-				'audio.speech.multimodal',
-				'images.generations.multimodal',
-			]
-		);
+		assert.deepEqual(requiredProviderEndpointCapabilitiesForOperation('dashscope', '*'), [
+			'audio.transcriptions',
+			'audio.transcriptions.multimodal',
+			'audio.transcriptions.tasks',
+			'audio.realtime.inference',
+			'audio.realtime.session',
+			'audio.speech',
+			'audio.speech.multimodal',
+			'images.generations.multimodal',
+		]);
 		assert.equal(
 			providerSupportsUpstreamOperation('dashscope', '*', {
 				endpoints: { dashscope: { base: 'https://dashscope.example/api/v1' } },
 			}),
-			true
+			true,
 		);
 	});
 
@@ -325,7 +298,7 @@ describe('Provider operation endpoint requirements', () => {
 					openai: { endpoints: { embeddings: 'https://vendor.example/embeddings' } },
 				},
 			}),
-			false
+			false,
 		);
 		assert.equal(
 			providerSupportsUpstreamOperation('dashscope', 'audio.transcriptions.async', {
@@ -337,7 +310,7 @@ describe('Provider operation endpoint requirements', () => {
 					},
 				},
 			}),
-			false
+			false,
 		);
 		assert.equal(
 			providerSupportsUpstreamOperation('dashscope', 'audio.transcriptions.async', {
@@ -350,7 +323,7 @@ describe('Provider operation endpoint requirements', () => {
 					},
 				},
 			}),
-			true
+			true,
 		);
 	});
 
@@ -364,15 +337,12 @@ describe('Provider operation endpoint requirements', () => {
 				},
 			},
 		};
-		assert.equal(
-			providerSupportsUpstreamOperation('gemini', 'generateContent', provider),
-			true
-		);
+		assert.equal(providerSupportsUpstreamOperation('gemini', 'generateContent', provider), true);
 		assert.equal(
 			providerSupportsUpstreamOperation('openai', 'not-a-real-operation', {
 				endpoints: { openai: { base: 'https://vendor.example/v1' } },
 			}),
-			false
+			false,
 		);
 	});
 });
@@ -388,7 +358,7 @@ describe('validateAndNormalizeProviderEndpoints', () => {
 						},
 					},
 				}),
-			/must include \{model\}/
+			/must include \{model\}/,
 		);
 	});
 
@@ -400,10 +370,7 @@ describe('validateAndNormalizeProviderEndpoints', () => {
 				},
 			},
 		});
-		assert.equal(
-			map.gemini?.endpoints?.generateContent,
-			'https://x.example/models/{model}:generateContent'
-		);
+		assert.equal(map.gemini?.endpoints?.generateContent, 'https://x.example/models/{model}:generateContent');
 	});
 
 	it('rejects models.generate template without {action}', () => {
@@ -416,7 +383,7 @@ describe('validateAndNormalizeProviderEndpoints', () => {
 						},
 					},
 				}),
-			/must include \{action\}/
+			/must include \{action\}/,
 		);
 	});
 
@@ -433,7 +400,7 @@ describe('validateAndNormalizeProviderEndpoints', () => {
 				validateAndNormalizeProviderEndpoints({
 					openai: { base: 'https://api.openai.com/v1', auth: 'bearer' },
 				}),
-			/only supported on gemini/
+			/only supported on gemini/,
 		);
 		assert.throws(
 			() =>
@@ -443,7 +410,7 @@ describe('validateAndNormalizeProviderEndpoints', () => {
 						auth: 'header',
 					},
 				}),
-			/must be "query-key" or "bearer"/
+			/must be "query-key" or "bearer"/,
 		);
 	});
 
@@ -457,7 +424,7 @@ describe('validateAndNormalizeProviderEndpoints', () => {
 		});
 		assert.equal(
 			normalized.dashscope?.endpoints?.['audio.realtime.inference'],
-			'wss://workspace.example/api-ws/v1/inference'
+			'wss://workspace.example/api-ws/v1/inference',
 		);
 		assert.throws(
 			() =>
@@ -466,20 +433,23 @@ describe('validateAndNormalizeProviderEndpoints', () => {
 						endpoints: { 'audio.speech': 'wss://workspace.example/tts' },
 					},
 				}),
-			/must be http\(s\)/
+			/must be http\(s\)/,
 		);
 	});
 });
 
 describe('listConfiguredCapabilities', () => {
 	it('returns all protocol capabilities when base is set', () => {
-		assert.deepEqual(
-			listConfiguredCapabilities(
-				{ openai: { base: 'https://api.openai.com/v1' } },
-				'openai'
-			),
-			['chat', 'responses', 'embeddings', 'rerank', 'images.generations', 'images.edits', 'audio.transcriptions', 'audio.speech']
-		);
+		assert.deepEqual(listConfiguredCapabilities({ openai: { base: 'https://api.openai.com/v1' } }, 'openai'), [
+			'chat',
+			'responses',
+			'embeddings',
+			'rerank',
+			'images.generations',
+			'images.edits',
+			'audio.transcriptions',
+			'audio.speech',
+		]);
 	});
 
 	it('returns only explicit overrides when base is absent', () => {
@@ -490,9 +460,9 @@ describe('listConfiguredCapabilities', () => {
 						endpoints: { chat: 'https://vendor.example/chat' },
 					},
 				},
-				'openai'
+				'openai',
 			),
-			['chat']
+			['chat'],
 		);
 	});
 
@@ -505,9 +475,18 @@ describe('listConfiguredCapabilities', () => {
 						endpoints: { chat: 'https://vendor.example/chat' },
 					},
 				},
-				'openai'
+				'openai',
 			),
-			['chat', 'responses', 'embeddings', 'rerank', 'images.generations', 'images.edits', 'audio.transcriptions', 'audio.speech']
+			[
+				'chat',
+				'responses',
+				'embeddings',
+				'rerank',
+				'images.generations',
+				'images.edits',
+				'audio.transcriptions',
+				'audio.speech',
+			],
 		);
 	});
 
@@ -525,9 +504,9 @@ describe('listConfiguredCapabilities', () => {
 						},
 					},
 				},
-				'gemini'
+				'gemini',
 			),
-			['models.generate']
+			['models.generate'],
 		);
 	});
 
@@ -537,15 +516,15 @@ describe('listConfiguredCapabilities', () => {
 		};
 		assert.equal(
 			resolveUpstreamEndpoint('minimax', 'audio.transcriptions', endpoints),
-			'https://api.minimaxi.com/v1/speech_to_text'
+			'https://api.minimaxi.com/v1/speech_to_text',
 		);
 		assert.equal(
 			resolveUpstreamEndpoint('minimax', 'audio.speech', endpoints),
-			'https://api.minimaxi.com/v1/t2a_v2'
+			'https://api.minimaxi.com/v1/t2a_v2',
 		);
 		assert.equal(
 			resolveUpstreamEndpoint('minimax', 'images.generations', endpoints),
-			'https://api.minimaxi.com/v1/image_generation'
+			'https://api.minimaxi.com/v1/image_generation',
 		);
 		assert.deepEqual(listConfiguredCapabilities(endpoints, 'minimax'), [
 			'audio.transcriptions',
@@ -554,13 +533,100 @@ describe('listConfiguredCapabilities', () => {
 		]);
 	});
 
+	it('derives ElevenLabs endpoints from the API base and fills voice_id', () => {
+		const endpoints = { elevenlabs: { base: 'https://api.elevenlabs.io/v1' } };
+		assert.equal(
+			resolveUpstreamEndpoint('elevenlabs', 'audio.transcriptions', endpoints),
+			'https://api.elevenlabs.io/v1/speech-to-text',
+		);
+		assert.equal(
+			resolveUpstreamEndpoint('elevenlabs', 'audio.speech', endpoints, { voiceId: 'abc 1' }),
+			'https://api.elevenlabs.io/v1/text-to-speech/abc%201',
+		);
+		assert.throws(() => resolveUpstreamEndpoint('elevenlabs', 'audio.speech', endpoints));
+		assert.deepEqual(listConfiguredCapabilities(endpoints, 'elevenlabs'), [
+			'audio.transcriptions',
+			'audio.transcriptions.realtime',
+			'audio.speech',
+			'audio.speech.realtime',
+		]);
+	});
+
+	it('derives ElevenLabs WebSocket endpoints from the API base', () => {
+		const endpoints = { elevenlabs: { base: 'https://api.elevenlabs.io/v1' } };
+		assert.equal(
+			resolveUpstreamEndpoint('elevenlabs', 'audio.transcriptions.realtime', endpoints),
+			'wss://api.elevenlabs.io/v1/speech-to-text/realtime',
+		);
+		assert.equal(
+			resolveUpstreamEndpoint('elevenlabs', 'audio.speech.realtime', endpoints, { voiceId: 'abc 1' }),
+			'wss://api.elevenlabs.io/v1/text-to-speech/abc%201/stream-input',
+		);
+		assert.throws(() => resolveUpstreamEndpoint('elevenlabs', 'audio.speech.realtime', endpoints));
+	});
+
+	it('validates explicit ElevenLabs realtime templates', () => {
+		assert.throws(() =>
+			validateAndNormalizeProviderEndpoints({
+				elevenlabs: {
+					endpoints: {
+						'audio.speech.realtime': 'wss://api.elevenlabs.io/v1/text-to-speech/x/stream-input',
+					},
+				},
+			}),
+		);
+		assert.throws(() =>
+			validateAndNormalizeProviderEndpoints({
+				elevenlabs: {
+					endpoints: {
+						'audio.transcriptions.realtime': 'https://api.elevenlabs.io/v1/speech-to-text/realtime',
+					},
+				},
+			}),
+		);
+		const ok = validateAndNormalizeProviderEndpoints({
+			elevenlabs: {
+				endpoints: {
+					'audio.speech.realtime':
+						'wss://api.eu.residency.elevenlabs.io/v1/text-to-speech/{voice_id}/stream-input',
+					'audio.transcriptions.realtime': 'wss://api.eu.residency.elevenlabs.io/v1/speech-to-text/realtime',
+				},
+			},
+		});
+		assert.equal(
+			resolveUpstreamEndpoint('elevenlabs', 'audio.speech.realtime', ok, { voiceId: 'v1' }),
+			'wss://api.eu.residency.elevenlabs.io/v1/text-to-speech/v1/stream-input',
+		);
+	});
+
+	it('requires {voice_id} in an explicit ElevenLabs speech template', () => {
+		assert.throws(() =>
+			validateAndNormalizeProviderEndpoints({
+				elevenlabs: {
+					endpoints: { 'audio.speech': 'https://api.eu.residency.elevenlabs.io/v1/text-to-speech' },
+				},
+			}),
+		);
+		const ok = validateAndNormalizeProviderEndpoints({
+			elevenlabs: {
+				endpoints: {
+					'audio.speech': 'https://api.eu.residency.elevenlabs.io/v1/text-to-speech/{voice_id}',
+				},
+			},
+		});
+		assert.equal(
+			resolveUpstreamEndpoint('elevenlabs', 'audio.speech', ok, { voiceId: 'v1' }),
+			'https://api.eu.residency.elevenlabs.io/v1/text-to-speech/v1',
+		);
+	});
+
 	it('derives Volcengine images/generations from the Ark API base', () => {
 		const endpoints = {
 			volcengine: { base: 'https://ark.cn-beijing.volces.com/api/v3' },
 		};
 		assert.equal(
 			resolveUpstreamEndpoint('volcengine', 'images.generations', endpoints),
-			'https://ark.cn-beijing.volces.com/api/v3/images/generations'
+			'https://ark.cn-beijing.volces.com/api/v3/images/generations',
 		);
 		assert.deepEqual(listConfiguredCapabilities(endpoints, 'volcengine'), ['images.generations']);
 	});
@@ -575,7 +641,7 @@ describe('listConfiguredCapabilities', () => {
 					},
 				},
 			}),
-			'https://ark.ap-southeast.bytepluses.com/api/v3/images/generations'
+			'https://ark.ap-southeast.bytepluses.com/api/v3/images/generations',
 		);
 	});
 
@@ -589,16 +655,13 @@ describe('listConfiguredCapabilities', () => {
 					},
 				},
 			}),
-			'https://api.minimax.io/v1/speech_to_text'
+			'https://api.minimax.io/v1/speech_to_text',
 		);
 	});
 
 	it('lists every DashScope capability when its API base is configured', () => {
 		assert.deepEqual(
-			listConfiguredCapabilities(
-				{ dashscope: { base: 'https://dashscope.aliyuncs.com/api/v1' } },
-				'dashscope'
-			),
+			listConfiguredCapabilities({ dashscope: { base: 'https://dashscope.aliyuncs.com/api/v1' } }, 'dashscope'),
 			[
 				'audio.transcriptions',
 				'audio.transcriptions.multimodal',
@@ -610,7 +673,79 @@ describe('listConfiguredCapabilities', () => {
 				'audio.hotwords',
 				'audio.voices',
 				'images.generations.multimodal',
-			]
+			],
+		);
+	});
+});
+
+describe('embeddings capabilities', () => {
+	it('derives OpenAI embeddings URL from base and honors overrides', () => {
+		assert.equal(
+			resolveUpstreamEndpoint('openai', 'embeddings', { openai: { base: 'https://api.openai.com/v1' } }),
+			'https://api.openai.com/v1/embeddings',
+		);
+		assert.equal(
+			resolveUpstreamEndpoint('openai', 'embeddings', {
+				openai: { endpoints: { embeddings: 'https://x.example/emb' } },
+			}),
+			'https://x.example/emb',
+		);
+		assert.ok(
+			listConfiguredCapabilities({ openai: { base: 'https://api.openai.com/v1' } }, 'openai').includes(
+				'embeddings',
+			),
+		);
+	});
+
+	it('derives Gemini embed URL per action and rejects missing action', () => {
+		const map = { gemini: { base: 'https://generativelanguage.googleapis.com/v1beta/models' } };
+		assert.equal(
+			resolveUpstreamEndpoint('gemini', 'models.embed', map, {
+				model: 'gemini-embedding-001',
+				action: 'embedContent',
+			}),
+			'https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent',
+		);
+		assert.equal(
+			resolveUpstreamEndpoint('gemini', 'models.embed', map, {
+				model: 'gemini-embedding-001',
+				action: 'batchEmbedContents',
+			}),
+			'https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:batchEmbedContents',
+		);
+		assert.throws(() => resolveUpstreamEndpoint('gemini', 'models.embed', map, { model: 'm' }), /requires action/);
+		assert.equal(
+			resolveUpstreamEndpoint(
+				'gemini',
+				'models.embed',
+				{ gemini: { endpoints: { 'models.embed': 'https://e.example/models/{model}:{action}' } } },
+				{ model: 'm', action: 'embedContent' },
+			),
+			'https://e.example/models/m:embedContent',
+		);
+	});
+
+	it('lists models.embed for base and for template-only gemini config', () => {
+		assert.deepEqual(
+			listConfiguredCapabilities({ gemini: { base: 'https://x.example/v1beta/models' } }, 'gemini'),
+			['models.generate', 'models.embed'],
+		);
+		assert.deepEqual(
+			listConfiguredCapabilities(
+				{ gemini: { endpoints: { 'models.embed': 'https://e.example/{model}:{action}' } } },
+				'gemini',
+			),
+			['models.embed'],
+		);
+	});
+
+	it('validates gemini embed template placeholders', () => {
+		assert.throws(
+			() =>
+				validateAndNormalizeProviderEndpoints({
+					gemini: { endpoints: { 'models.embed': 'https://e.example/{model}:embedContent' } },
+				}),
+			/\{action\}/,
 		);
 	});
 });

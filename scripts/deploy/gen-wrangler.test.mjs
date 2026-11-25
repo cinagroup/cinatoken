@@ -633,6 +633,7 @@ import {
 	parseCustomDomains,
 	primaryCustomDomain,
 	collectProxyRuntimeVars,
+	collectAdminRuntimeVars,
 } from './gen-wrangler.mjs';
 
 test('parseCustomDomains splits comma-separated hosts', () => {
@@ -693,5 +694,14 @@ test('collectProxyRuntimeVars keeps trimmed positive overrides', () => {
 			STREAM_FIRST_CHUNK_TIMEOUT_MS: '180000',
 			STREAM_IDLE_TIMEOUT_MS: '80000',
 		},
+	);
+});
+
+test('Admin runtime vars expose only the public Proxy address', () => {
+	assert.equal(collectAdminRuntimeVars({}), undefined);
+	assert.equal(collectAdminRuntimeVars({ GATEWAY_PROXY_URL: '  ' }), undefined);
+	assert.deepEqual(
+		collectAdminRuntimeVars({ GATEWAY_PROXY_URL: ' https://gateway.example/prefix/ ', ADMIN_PASSWORD: 'private' }),
+		{ GATEWAY_PROXY_URL: 'https://gateway.example/prefix/' },
 	);
 });

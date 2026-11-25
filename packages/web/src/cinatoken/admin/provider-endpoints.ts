@@ -6,6 +6,7 @@ export const PROVIDER_PROTOCOLS = [
 	'dashscope',
 	'minimax',
 	'volcengine',
+	'elevenlabs',
 ] as const
 export type ProviderProtocol = (typeof PROVIDER_PROTOCOLS)[number]
 export const PROVIDER_CAPABILITIES = {
@@ -20,7 +21,14 @@ export const PROVIDER_CAPABILITIES = {
 		'audio.speech',
 	],
 	anthropic: ['messages'],
-	gemini: ['models.generate', 'generateContent', 'streamGenerateContent'],
+	gemini: [
+		'models.generate',
+		'generateContent',
+		'streamGenerateContent',
+		'models.embed',
+		'embedContent',
+		'batchEmbedContents',
+	],
 	dashscope: [
 		'audio.transcriptions',
 		'audio.transcriptions.multimodal',
@@ -35,6 +43,12 @@ export const PROVIDER_CAPABILITIES = {
 	],
 	minimax: ['audio.transcriptions', 'audio.speech', 'images.generations'],
 	volcengine: ['images.generations'],
+	elevenlabs: [
+		'audio.speech',
+		'audio.transcriptions',
+		'audio.speech.realtime',
+		'audio.transcriptions.realtime',
+	],
 } as const
 export type ProviderCapability =
 	(typeof PROVIDER_CAPABILITIES)[ProviderProtocol][number]

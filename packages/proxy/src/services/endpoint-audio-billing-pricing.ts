@@ -176,12 +176,14 @@ function operationAllowsMeter(
 			return meter === 'duration' || meter === 'tokens';
 		case 'audio.transcriptions.multimodal':
 		case 'audio.transcriptions.async':
+  case 'audio.transcriptions.realtime':
 		case 'audio.transcriptions.realtime.inference':
 		case 'audio.transcriptions.realtime.session':
 			return meter === 'duration';
 		case 'audio.speech':
 		case 'audio.speech.stream':
 		case 'audio.speech.multimodal':
+  case 'audio.speech.realtime':
 		case 'audio.speech.realtime.inference':
 			return meter === 'characters';
 	}

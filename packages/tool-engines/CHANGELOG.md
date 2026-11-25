@@ -1,5 +1,279 @@
 # @octafuse/tool-engines
 
+## 2.20.0
+
+### Minor Changes
+
+- [#293](https://github.com/OctaFuse/octafuse-gateway/pull/293) [`6549f16`](https://github.com/OctaFuse/octafuse-gateway/commit/6549f16613430408f66848409aecb6790eaad027) Thanks [@dyc87112](https://github.com/dyc87112)! - OctaFuse Gateway v2.20.0 让 Gateway 自己成为 MCP 的 OAuth 授权服务器：把 Gateway 的 MCP 服务对外提供时，用户不用填 Key，直接用你业务系统的账号登录授权即可访问，授权状态也不再需要业务系统保存。Web Search、Web Fetch、Web Deep Search 三个 REST 工具新增 DeepSeek 引擎。请求日志合并了原来的「调用记录」，并支持按类型、模型、供应商多选筛选。管理后台的仪表盘、MCP 服务、REST 服务等页面继续打磨，目录补上 Gemini 4 Hydrogen、Gemini 4 Carbon、Qwen4 Max Preview 和 MiniMax H3 Image。本版有一条必须先执行的新增迁移 0036，只新增表和可空列，默认不改变现有行为。
+
+  ### Proxy
+
+  - **内置 OAuth 授权服务器**：设置 `MCP_OAUTH_ISSUER` 后，Gateway 直接为 MCP 客户端提供授权：元数据发现（RFC 8414）、客户端动态注册（RFC 7591）、授权、令牌（含刷新令牌轮换与重放检测）、撤销，以及内置的 API Key 确认页。业务系统只需提供登录与同意页（填 `MCP_OAUTH_CONSENT_URL`），并用带 `oauth.consent` 权限的集成密钥把用户的同意或拒绝回传给 Gateway；不填则使用内置确认页。清空 `MCP_OAUTH_ISSUER` 立即回到外部授权服务器模式，默认行为不变。切换步骤见[迁移说明](docs/operators/migrations/0036-oauth-authorization-server.md)。
+  - **DeepSeek 工具引擎**：Web Search、Web Fetch、Web Deep Search 新增 `deepseek` 引擎，对接 DeepSeek 独立 Search / Fetch API。在管理后台「REST 服务」页为对应工具配置 DeepSeek 供应商、填入 API Key 并保存，再在「使用状态」列启用即可，对外接口与计费方式不变；Deep Search 通过 `need_content` 一次请求取到正文。DeepSeek 的查询词最长 128 个字符，超出部分由 Gateway 截断；域名白名单 / 黑名单在能放进查询词时以 `site:` / `-site:` 下发，放不下则多取结果后本地过滤。上游刊例价为每千次成功请求 $0.75，请在计费规则中自行设置标准价与倍率；Gateway 对空结果仍按次计费。
+
+  ### Admin
+
+  - **MCP 服务 · OAuth 应用与授权**：OAuth 卡片支持内置 / 外部 / 关闭三种模式。新增「应用」目录：客户端按回调地址（及可选的名称关键字）归属应用，按应用汇总用户数、实例数与授权，支持启停、编辑、删除和整应用撤销，并提供 ChatGPT、Claude、Codex、豆包、WorkBuddy 预设；旧授权显示为「未归属」，授权列表新增「可续期」状态。Admin API 新增 `/api/admin/oauth/*` 与权限 `oauth.read`、`oauth.write`、`oauth.consent`（同意页只需最后一项）。
+  - **MCP 服务 · 工作区与客户端接入**：服务目录与详情分栏，保留目录审核、批量启停、计费与连接测试；客户端接入按 API Key 与 OAuth 2.0 分类，集中展示范围选择、配置示例与授权管理，接入文档直接展开。OAuth 关闭时仅展示状态与配置。服务、视图和接入范围随地址恢复，兼容旧链接。
+  - **MCP 服务与 REST 服务 · 计费规则**：两者统一为行式布局，标准价、用户倍率、供应倍率各占一行，右侧即时显示单位和计算后的用户收费、供应成本。
+  - **REST 服务**：按生效概要、供应商与计费、接入文档三个区域组织。接入文档集中展示统一 URL、参数、响应和可复制的 cURL，并提供通用、OpenAI Responses / Chat Completions、Anthropic Messages 的 Agent 工具定义格式。供应商列表在使用状态列单选切换，配置弹窗仅编辑与保存；未保存修改或缺少凭证时禁止启用，切换影响提示更明确。
+  - **请求日志 · 合并调用记录**：「调用记录」并入「请求日志」，侧栏新增「日志」分组收纳请求日志与审计日志。工具调用行直接显示工具名、引擎与查询摘要。原 `/gateway/tools/invocations` 地址带着原有筛选跳转到请求日志，REST 服务、MCP 服务与模拟器的入口同步指向新位置。
+  - **请求日志 · 类型、模型与供应商筛选**：三个筛选都改为两级多选，勾选项取并集。类型分模型（LLM、图像、ASR、TTS、向量）与工具（各 REST 工具、各 MCP 服务）；模型按厂商分组，供应商按类型分组，可勾选整组或其中几个，面板内可搜索，选中项逐项列出并可单独移除。筛选之间联动：只选某几类模型时模型筛选只列这几类，范围里只有工具调用时模型、供应商、协议、路由组不可用。`GET /api/admin/request-logs` 新增 `kinds`（如 `kinds=model:image,tool:web-search,mcp:docs`）、`model_ids`、`model_vendors`、`provider_kinds` 参数，`provider_ids` 上限由 10 个放宽到 30 个。
+  - **请求日志 · 详情与展示**：工具调用详情按调用概览、请求、响应、记账展示：REST 工具列出引擎、请求参数与结果，MCP 工具列出服务、上游工具、调用参数与返回内容块；失败时顶部给出错误原文与排查方向，可直接打开对应工具配置或 MCP 服务。请求与响应区域统一使用右上角「预览 / 原始数据」切换，保留原始数据复制。用量与状态展示更清晰：LLM 按非缓存输入展示，图片区分参考图与生成图，音频按秒或字符展示，倍率格式统一。支持可选的自动刷新（10 秒、30 秒、1 分钟、5 分钟），新日志滑入并高亮，阅读列表时先提示新日志。
+  - **仪表盘**：补充费用关系、首响应与请求耗时 P95、故障转移、异常供应商及错误构成；支持等长时段对比、带时间范围的日志下钻和实时吞吐（RPM、TPM）。默认关闭的自动刷新让指标、趋势、排行和近期活动同步更新，数字平滑过渡；排行与近期活动各展示 6 条，完整记录通过分析与日志入口查看。
+  - **模型与路由**：模型编辑弹窗按基础、定价、路由、元数据组织；定价表修复控件对齐与档位文案，音频 Token 模式完整展示全部档位，切换计费模式保留未保存草稿。金额与倍率统一样式：金额保留币种与精度，倍率使用独立标识，计费计算本身不变。路由页移除重复入口，筛选按宽度分级展开。
+  - **导航、模拟器与接入地址**：导航统一使用「模型」「工具」，调试台与模拟器归入「测试」分组。模拟器顶部按模型与工具切换，切换保留连接与密钥并清除旧响应。Admin 新增运行时变量 `GATEWAY_PROXY_URL`，REST 文档、模拟器及 MCP 接入共用默认 Proxy 地址，支持浏览器覆盖与恢复默认，兼容旧地址；Docker 与 Worker 部署模板同步。
+  - **筛选、刷新与登录页**：用户、API Keys、请求日志及审计日志按内容区宽度展开常用条件，缩放保留已选项与键盘焦点。路由粘性与维护状态使用统一的定时刷新控件，默认关闭，手动开启后记住频率。管理登录页重新排版，补充密码显隐、错误提示与登录进度，适配手机与四种语言。
+
+  ### 目录与供应商
+
+  - **Gemini 4 Hydrogen**：新增 `gemini-4-hydrogen`（2026-11-12）。上下文 1M，同步最大输出 64K，输入含文本、图像、音频、视频和文件。输入 $1.50 / 输出 $7.50 / 每百万 Token（整个 1M 窗口统一），隐式缓存读取 $0.075；思考档位 low、medium、high、xhigh，默认 high。人民币价为美元刊例 ×7 的占位价；官方未公布退役日期。
+  - **Gemini 4 Carbon**：新增 `gemini-4-carbon`（2026-11-10）。上下文 1M，同步最大输出 64K。按 Standard 刊例价记录（输入 $4 / 输出 $20，隐式缓存读取 $0.20）；官方限时折扣请在路由计价配置中设置供应商折扣。思考档位 low、medium、high，默认 medium，不能关闭。
+  - **Qwen4 Max Preview**：新增 `qwen4-max-preview`（2026-11-11）。上下文 1M，最大输出约 393K，输入含文本、图像和视频。仅在 Token Plan 订阅提供，官方尚未公布刊例价，价格暂按 `qwen3.8-max` 对齐，正式版发布后更新；`retired` 记 2026-11-26。
+  - **MiniMax H3 Image**：新增 `minimax-h3-image` 与 `minimax-h3-image-highspeed`（2026-11-10），按官方 Token 刊例计费。国际区标准版文本输入 $2.3、图像输入 $1.5、图像输出 $3.8；高速版 $2.3 / $3 / $7.6（每百万 Token）。中国区按官方人民币：标准版 ¥15 / ¥10 / ¥25，高速版 ¥15 / ¥20 / ¥50。官方限时折扣不写入目录价格。路由的上游模型名分别填 `MiniMax-H3-Image` 与 `MiniMax-H3-Image-Highspeed`。
+  - **GPT Image 2 退役日期**：`gpt-image-2` 写上 OpenAI 公布的停服日 2027-02-10，不影响路由与计费。
+
+  以上目录更新不会自动覆盖已导入的模型，也不会自动挂路由。
+
+  ### 运维
+
+  - **Node 运行时安全修复**：升级 `@hono/node-server` 至 2.1.8，修复请求路径反斜杠解析及异步 WebSocket 升级期间连接重置的漏洞，并统一直接与 MCP SDK 间接依赖版本。
+
+  ### 升级说明
+
+  - **数据库迁移**：必须应用 **0036**（内置 OAuth 授权服务器），先于同版本 Proxy 与 Admin 执行；D1、Postgres、MySQL 都有对应迁移，只新增表和可空列，步骤见[迁移说明](docs/operators/migrations/0036-oauth-authorization-server.md)。
+  - **配置变更**：新增 `MCP_OAUTH_ISSUER` 与可选的 `MCP_OAUTH_CONSENT_URL`，`MCP_OAUTH_ISSUER` 为空时行为与升级前一致；新增可选的 Admin 运行时环境变量 `GATEWAY_PROXY_URL`。
+  - **兼容性**：`/gateway/tools/invocations` 跳转到请求日志并保留筛选。`GET /api/admin/request-logs` 新增的参数都是可选的，原有参数照常可用。调用 `/api/admin/oauth/*` 的集成密钥需要授予 `oauth.read`、`oauth.write` 或 `oauth.consent`。DeepSeek 引擎对空结果仍按次计费，启用前请先设置计费规则。
+  - **切换到内置授权服务器**：升级后默认不启用。每个部署区需单独完成门户同意页、应用预设、集成密钥和反向代理转发后再切换；切换后旧授权会在访问令牌过期后失效，用户需要重新授权。
+  - **建议操作**：先执行 0036，再把 proxy / admin / migrate 三镜像更新到同一版本后滚动重启。升级后抽查请求日志的新筛选、工具调用详情和 MCP 服务页。
+
+### Patch Changes
+
+- Updated dependencies [[`6549f16`](https://github.com/OctaFuse/octafuse-gateway/commit/6549f16613430408f66848409aecb6790eaad027)]:
+  - @octafuse/core@2.20.0
+
+## 2.19.0
+
+### Minor Changes
+
+- [#280](https://github.com/OctaFuse/octafuse-gateway/pull/280) [`d4afa8a`](https://github.com/OctaFuse/octafuse-gateway/commit/d4afa8a6f4bb463b5636dcafc6e0e938bd23fcd4) Thanks [@dyc87112](https://github.com/dyc87112)! - OctaFuse Gateway v2.19.0 重做了管理后台的界面与交互：统一视觉风格，重新组织路由、模型、供应商、日志、用户与 REST / MCP 服务等页面，并修复一批查询与跳转问题。目录补上 Claude Fable 5.2、智谱 GLM-5V-Turbo、混元 HY4 和 GPT Image 2.6，更新腾讯云 TokenHub 模板，并校正若干模型的上下文与退役日期。本版没有数据库迁移；Proxy 与 Core 只有 Qwen-Audio 语音合成适配器匹配和 Command Code 额度查询两处改动。
+
+  ### Admin
+
+  - **界面与交互**：统一浅灰工作区、白色面板和黑色主操作，优化标题、筛选、表格及状态层次，功能区充分利用可用宽度。编辑、详情、导入、定价和确认弹窗统一布局与键盘焦点，适配窄屏、四种语言及减少动态效果。登录页与导航统一使用蓝青色 Octafuse 标识，补齐标签页与触控图标。
+  - **导航与配置**：语言切换移至右上角文档入口左侧，侧栏底部仅保留版本；集成密钥归入「系统」，权限按资源分组。配置按基础设置、路由与计费、通知、维护模式分区，旧维护地址和 OAuth 地址分别跳转至对应设置与 MCP 授权区。
+  - **维护设置**：改为状态条与铺满可用宽度的单列表单，集中展示时长、提示文案和影响范围；维护中可查看预计恢复时间、预览客户端提示、延长或结束维护。预计时长须为正整分钟，且不会自动结束维护；状态独立加载，切换标签保留草稿。
+  - **仪表盘与分析**：概览卡片同排等高，补充输入、输出及缓存读取 Token 汇总；无请求时成功率显示「待统计」。模型、供应商、用户用量及可靠性页面突出摘要和明细，时间范围随地址恢复；用量下钻保留筛选，历史活动标明时间口径并按请求 ID 定位日志。
+  - **供应商与模型**：导入和新建集中到标题区，精简状态、协议、类型及价格展示；供应商按账号、协议、凭证和关联路由组织信息，模型支持名称、ID、厂商及标签搜索。协议端点、价格和关联路由可直接打开对应设置。目录更新入口统一为「同步」，先比对再确认应用，结果集中展示，移除重复状态；模型导入合并名称与 ID，向量模型仅显示输入单价，未配置的定时定价默认收起。
+  - **路由**：按模型区分请求入口、路由组、供应商与费用对比，启停状态及供应商停用原因归入账号信息；低频筛选、倍率、路径和粘性刷新偏好收进弹窗。配置可用性按当前筛选计算，与实时健康明确区分；图像和语音单位按实际计费配置展示，保留拓扑优先级与故障切换语义。
+  - **调试台与模拟器**：整理连接、目标、请求和响应布局，详情、密钥筛选及实际请求按需打开。目标列表支持键盘选择，发送期间锁定模拟器连接与目标；切换目标或工具时清除旧结果。图像编辑路由默认使用 `edits`，媒体请求支持套用模板，模拟器保留真实计费与日志提示。
+  - **用户与 API Keys**：列表聚焦身份、状态、额度和配置，用户完整 ID 移入详情。新建密钥支持搜索已有用户，保留手填 ID 与外部身份匹配；密钥默认掩码展示，额度直达用户计费设置。用户表单按需展开可选项，补齐邮箱、身份、额度及 JSON 校验，详情减少重复汇总并提供密钥与使用记录跳转。
+  - **请求与审计日志**：常用筛选与高级条件分层，时间选择支持业务时区、单边范围及不限时间。请求列表突出结果、模型、用户、用量、耗时与费用，金额后保留计费和成本倍率；详情保留上游尝试、请求体变化、毛利和记账审计。审计列表展示事件、身份和额度变动摘要，详情查看前后值及原始快照；保留多选筛选与默认排除逐次扣费，增加扣费快捷范围和关联记录跳转。
+  - **REST 与 MCP 服务**：精简筛选、凭证、地址及计费展示，保留金额倍率，接入说明按需打开。REST 配置集中连接、计费、测试与启用操作，支持还原修改，保存仅提交当前服务。MCP 详情按目录、连接、审核及管理组织，可直接打开当前服务的接入指南；返回页面时恢复客户端分区与授权展开状态。
+
+  ### 问题修复
+
+  - **查询与跳转**：修复日志默认日期、清空时间后重载及历史错误下钻的时间边界，避免过期查询覆盖当前结果；修复调用记录查询覆盖、MCP 下钻范围丢失及历史身份筛选，模拟器默认路由组的日志跳转显式使用 `default`。
+  - **状态与错误处理**：修复维护轮询覆盖写入结果、模拟器自动生成的 `task_id` 被误判为手动编辑；密钥筛选保留当前选择。REST 与 MCP 加载失败提供重试或错误反馈，OAuth 配置加载成功前禁止写入。
+  - **日志兼容性**：上游 HTML 错误在列表收敛为摘要，完整内容保留在请求详情；审计详情兼容缺失快照及非对象扩展数据。
+  - **控件与弹窗**：统一下拉箭头的居中与右侧留白，移除重复箭头；补齐折叠说明的键盘导航、用户活动详情的关闭及滚动布局，可靠性指标避免单位断行，表单补齐未保存草稿退出确认。
+
+  ### 目录与供应商
+
+  - **Claude Fable 5.2**：新增 `claude-fable-5-2`（2026-11-09），上下文 1M、同步最大输出 128K，输入支持文本、图片与文件。标准刊例价为输入 $8、输出 $40、5 分钟缓存写入 $10、缓存读取 $0.20 / 百万 tokens；不含 Fast 模式（$16 / $80）与 Batch 半价。人民币价为美元刊例 ×7 的占位价。不写入退役日期（官方只给出不早于 2027-11-09 的下限）。已导入的模型不会被覆盖，导入也不会自动挂路由。
+  - **智谱 GLM-5V-Turbo**：新增 `glm-5v-turbo`，上下文 200K、最大输出 128K，输入为文本、图像、视频与文件，输出文本；官方注明不支持同时理解文件、视频和图像。人民币刊例取自 BigModel「视觉理解」表：输入长度 [0, 32K) 为输入 ¥5、输出 ¥22、缓存命中 ¥1.2 / 百万 tokens，≥32K 为 ¥7 / ¥26 / ¥1.8；缓存存储限时免费，不写入刊例。Z.AI 定价页没有该模型的美元刊例，目录不写 `pricing.usd`，也不借用 `glm-5-turbo` 的美元价。
+  - **Gemini 2.5 退役日期**：`gemini-2.5-pro` 与 `gemini-2.5-flash` 写上 Gemini API 公布的停服日 2026-12-01，该日起请求分别自动改路由到 `gemini-3.8-flash` 与 `gemini-3.5-flash-lite`；`gemini-2.5-flash-lite` 官网未公布停服日，不写 `retired`。`gemini-4-argon` 与 `gemini-3.8-flash` 的最大输出仍为 64000。只记官方停服日，不影响路由与计费。
+  - **腾讯云 TokenHub 模板**：按量模板改用广州 `tokenhub.tencentmaas.com`，支持 Chat、Responses、Embeddings 和 Anthropic Messages；个人版 Token Plan 使用 `/plan/v3` 与 `/plan/anthropic`，补充 Responses。通用套餐与 Hy 套餐共用地址及 `sk-tp-` Key；英文类型名不变，新加坡站 `tokenhub-intl.tencentmaas.com` 需单独配置。
+  - **混元 HY4**：新增 `hy4` 正式版（2026-11-04），上下文 1M、最大输出 64K，支持文本与图片输入；TokenHub 原生支持 Chat、Responses、Anthropic Messages。刊例价沿用 `hy4-preview`：每百万 Token 输入 ¥6、输出 ¥18、缓存命中 ¥0.3（美元 $0.834 / $2.501 / $0.042）。2026-12-31 前的 TokenHub 五折活动不计入目录价格。
+  - **GPT Image 2.6**：新增 `gpt-image-2.6-flare` 与 `gpt-image-2.6-sunburst`（2026-11-04）。刊例价沿用 GPT Image 2.5：文本输入 $5、缓存 $1.25，文本输出不计费；图像输入 $8、缓存 $2、输出 $30，均按百万 Token；人民币价为美元 ×7 的占位价。仅支持 Images API，不可作为 Responses 或 Chat Completions 的主模型。
+  - **Command Code 额度**：补充月度包含额度，优先读取 `monthlyCreditsGranted`，缺失时按本账期已消耗额度与剩余额推算；重置时间取订阅周期结束。订阅或用量查询失败不影响余额、5 小时及每周窗口展示。
+  - **退役日期**：补充 `gpt-image-1.5`、`gpt-image-1-mini` 的官方停服日 2026-12-01，以及 `qwen3.5-plus` 的 2027-01-19；不将渠道套餐下线或“不早于”日期记为正式退役。
+  - **上下文修正**：MiniMax M2.5、M2.7、M2.7 Highspeed 的上下文与最大输出统一为 200000；`hy4-preview`、豆包 Seed 2.1 Pro / Lite（260915）及 MiMo V2 Pro、V2.5 Pro、V2.5 的上下文统一为 1000000，按 K = 1000、M = 1000000 记录。MiniMax M3 与 M3.1 Flash 的 1M / 512K 保持不变。
+
+  以上目录与模板更新不会自动覆盖已导入的模型或供应商。
+
+  ### Core
+
+  - **Qwen-Audio 语音合成**：`dashscope-tts-qwen-audio` 及 DashScope `audio.speech` / `audio.speech.stream` 透传均支持 `qwen-audio-3.1-tts-next` 与 `qwen-audio-3.1-tts-plus`，预设计费不变。
+
+  ### 文档
+
+  - **OpenAI 生图文档**：补充 2.6 的 `complexity`、`svg` / `gif` 与 GIF 帧参数；作为客户端额外字段转发，不写入路由默认值。`edits` 的 markup 文件暂不转发。
+
+  ### 升级说明
+
+  - **数据库迁移**：无。自 v2.18.0 以来 `packages/core` 的迁移目录没有新增文件，D1、Postgres、MySQL 均不需要执行迁移。
+  - **配置变更**：无新增或改名的环境变量与 `system_config` 键。
+  - **兼容性**：管理后台的维护页与 OAuth 配置入口合并到新的「配置」和「MCP 服务」分区，旧地址会跳转到对应位置。已导入的模型与供应商不会被新目录覆盖；Claude Fable 5.2、GLM-5V-Turbo、混元 HY4、GPT Image 2.6 需手工导入并配置路由。`gemini-2.5-pro` 与 `gemini-2.5-flash` 在 2026-12-01 起由 Google 自动改路由，请提前检查相关路由。
+  - **建议操作**：更新 proxy / admin / migrate 三镜像到同一版本后滚动重启。升级后抽查路由、请求日志、调试台和模拟器，确认新界面下的筛选与跳转符合预期。
+
+### Patch Changes
+
+- Updated dependencies [[`d4afa8a`](https://github.com/OctaFuse/octafuse-gateway/commit/d4afa8a6f4bb463b5636dcafc6e0e938bd23fcd4)]:
+  - @octafuse/core@2.19.0
+
+## 2.18.0
+
+### Minor Changes
+
+- [#267](https://github.com/OctaFuse/octafuse-gateway/pull/267) [`471dbb0`](https://github.com/OctaFuse/octafuse-gateway/commit/471dbb02f57eab0c68572f7230834169004a7fbd) Thanks [@dyc87112](https://github.com/dyc87112)! - OctaFuse Gateway v2.18.0 让第三方 MCP 客户端使用独立的 OAuth 访问令牌，并可以在后台查看和解绑路由粘性绑定。流式超时不再把上游的注释心跳当成有效输出。目录补上 GPT-6.1 Terra 和百度云模型服务 V2 的导入模板。
+
+  ### Proxy
+
+  - **MCP OAuth**：新增 `GET /.well-known/oauth-protected-resource`，以及 `/mcp`、`/mcp/{slug}` 后缀形式。`/mcp*` 的 401 带 `WWW-Authenticate: Bearer resource_metadata="…"`。授权服务器地址来自 `system_config.MCP_OAUTH_AUTHORIZATION_SERVER`；未配置时不暴露元数据，401 行为不变。维护模式下元数据仍可读取。
+  - **OAuth 访问令牌**：第三方 MCP 凭证存入 `oauth_access_tokens`，前缀 `oat_`，只存哈希，默认 1 小时过期，只能访问 `/mcp` 与 `/mcp/*`。用于其它入口返回 403 `gateway.scope_denied`。过期或撤销后 `/mcp*` 返回 401，并带 `error="invalid_token"`。请求日志里 `api_key_id` 为空，`oauth_access_token_id` 指向令牌，按令牌所属用户扣费。`sk-` Key 在 `/mcp*` 的行为不变。
+  - **MCP 请求**：`/mcp*` 拒绝 JSON-RPC 批量数组，返回 400 `gateway.invalid_request`。`tools/call` 遇到空 202、缺少 `result`、响应 id 不符，或工具结果不符合 MCP 结构时，按上游失败处理且不扣费。`resources/templates/list` 返回空列表。
+  - **流式超时**：首包、空闲和首事件计时只认带内容的 SSE 事件，注释心跳和空行不再续命。`STREAM_FIRST_EVENT_TIMEOUT_MS` 未配置或为空时为 60 秒，配成 `0` 关闭。`STREAM_FIRST_EVENT_TIMEOUT_ROUTE_GROUPS` 为空时作用于全部路由组。后面还有未熔断候选时，首事件超时以 524 换路由；最后一个候选改由首包超时兜底。`STREAM_HEADERS_TIMEOUT_MS` 默认 60 秒：等不到上游响应头就换下一个候选；最后一个候选至少等满首包上限，全部失败返回 504。
+  - **Gemini 签名**：Gemini 原生入口收到 `Invalid thought signature` 的 400 时，清洗历史签名并对同一上游重试一次。没有可处理签名或其他 400 保持原有行为。
+  - **故障转移日志**：补充候选序号、Provider、上游目标、失败类别、熔断状态和错误摘要。`timing_metadata.attempts` 增加 `target_id`、`failure_kind` 和 HTTP 失败摘要。客户端错误响应不变。
+
+  ### Admin
+
+  - **OAuth 访问令牌**：`/api/admin/oauth-access-tokens*` 支持签发、轮换、筛选、按应用统计、撤销和清理。入口在「MCP 服务」页的折叠区，以及用户详情 API Keys 页签下方。请求日志身份栏显示「OAuth 应用：名称」。权限沿用 `user_keys.read` / `user_keys.write`。
+  - **授权登录**：「MCP 服务」页可开关 OAuth，并保存 `MCP_OAUTH_AUTHORIZATION_SERVER`。空字符串表示关闭；其余必须是 https 源，本机开发允许 http localhost。接入指南可切换到 OAuth，给出免 Key 的登录步骤，并提示授权服务器是否已配置。
+  - **粘性绑定**：「Provider 粘性」分为配置、分布、明细、其他。有效期提供 1 小时（默认）、2 小时、6 小时和自定义。`GET /api/admin/routes/pools/:poolId/sticky/bindings` 列出有效绑定，可按 Provider、邮箱或用户 ID 筛选，并逐条解绑。点击粘性数字直接打开对应 Provider 的明细。批量失效只作用于本路由池，粘性开关和有效期不变。
+  - **路由列表**：按可用宽度使用上下或左右分区。宽屏保留名称、模型、配置摘要的层级，状态、权重、粘性和参数分开排列。
+  - **目录与模板**：新增 `gpt-6.1-terra`。Standard 短上下文为每百万 token 输入 $1、输出 $5，缓存读取 $0.05、30 分钟缓存写入 $1.25；输入超过 272K 时整单按长上下文计价（输入 $2、输出 $7.5，缓存读取 $0.10、30 分钟缓存写入 $2.50）。人民币价为美元刊例 ×7 的占位价。新增百度云模型服务 V2 的广州、新加坡、加利福尼亚、法兰克福模板。广州只含对话。其余三地另含图片和 Gemini 文本、生图。不含向量、音频和视频。与百度千帆分开，地域 Key 不能混用。已导入的模型和供应商不会被覆盖。
+
+  ### 运维
+
+  - **生产依赖**：Next.js、OpenNext、Hono、Zod 与 MySQL 驱动等生产依赖已升级。Admin 镜像不再复制已不安装的 `denque`。
+
+  ### 升级说明
+
+  - **数据库迁移**：必须应用 **0034** 和 **0035**。0034 为 `route_pool_sticky_bindings` 增加可空列 `affinity_key`。0035 新增表 `oauth_access_tokens`，并为 `api_key_request_logs` 增加可空列 `oauth_access_token_id`。D1、Postgres、MySQL 语义一致。详见 `docs/operators/migrations/0034-sticky-binding-affinity-key.md` 与 `docs/operators/migrations/0035-oauth-access-tokens.md`。
+  - **发布顺序**：先备份。执行 0034，再执行 0035，然后滚动更新同版本 Proxy 与 Admin。0034 未执行时，新版粘性写入会失败；请求仍会路由，但这次不记录绑定。0035 未执行时，新版请求日志写入会失败。旧版 Proxy / Admin 可以配合已迁移的库。
+  - **兼容性**：`MCP_OAUTH_AUTHORIZATION_SERVER` 默认未配置，OAuth 发现保持关闭。`sk-` 仍可访问 `/mcp*`。`/mcp*` 不再接受 JSON-RPC 批量数组。流式首事件超时在路由组配置为空时作用于全部路由组；只在 `default` 组灰度过的部署，升级后范围会扩大。配成 `0` 可关闭首事件超时。
+  - **旧绑定**：已有有效绑定继续使用。用户信息在后续成功调用续期时补全，补全前显示为「未记录用户」，不需要回填。
+  - **配置不自动改写**：已导入的模型价格和供应商不会被新目录覆盖。GPT-6.1 Terra 与百度云模板需要手工导入并配置路由。
+  - **建议操作**：升级后确认 0034、0035 已应用。需要第三方 MCP 登录时再填写授权服务器，并抽查一条粘性绑定明细。
+
+### Patch Changes
+
+- Updated dependencies [[`471dbb0`](https://github.com/OctaFuse/octafuse-gateway/commit/471dbb02f57eab0c68572f7230834169004a7fbd)]:
+  - @octafuse/core@2.18.0
+
+## 2.17.0
+
+### Minor Changes
+
+- [#247](https://github.com/OctaFuse/octafuse-gateway/pull/247) [`158764c`](https://github.com/OctaFuse/octafuse-gateway/commit/158764cf3c66650f7c2d2755dc20235e756cfc80) Thanks [@dyc87112](https://github.com/dyc87112)! - OctaFuse Gateway v2.17.0 可以在维护窗口拒绝新的推理请求，并按供应商、模型、用户等维度汇总请求日志。DashScope 语音转换路由按系列拆开。目录补上 Kimi K3.1 Pro、Qwen-Audio 3.1 和网宿导入模板。D1 迁到 Postgres 的切换工具可以在当前表结构上跑完。
+
+  ### Proxy
+
+  - **维护模式**：开启后，推理入口返回 503，错误码 `gateway.maintenance`，带 `Retry-After` 和 `X-OctaFuse-Maintenance: 1`。拒绝发生在鉴权之前，不写请求日志、不扣费、不占 RPM。`/health` 仍返回 200，并附 `maintenance: true`。模型列表、`/v1/me`、`/catalog` 等只读接口照常。错误体随入口协议给出。各 Proxy 进程缓存 5 秒，读配置失败时放行。见 `docs/operators/maintenance-mode.md`。
+  - **向量响应头**：`POST /v1/embeddings`、Gemini embed，以及上游非 2xx 错误体，在重新封装时去掉 `Content-Encoding`、`Content-Length`、`Transfer-Encoding` 和 `Connection`。聊天等非流式 JSON 响应同样处理，避免把已解压的正文再当成 gzip。
+  - **DashScope 语音适配器**：CosyVoice 仍用 `dashscope-tts-speech`。Qwen-Audio 3.0 / 3.1 语音合成改用 `dashscope-tts-qwen-audio`。异步文件转写拆成 Qwen3、Qwen-Audio、Fun-ASR、Paraformer 四个转换适配器。透传仍是 `passthrough`。
+  - **Qwen-Audio 3.1 用量**：同步识别、文件转写、inference 实时识别和 SpeechSynthesizer 读取上游 token 用量。`qwen-audio-3.1-realtime-plus` 与 `qwen-audio-3.1-tts-next` 仍未接入。
+
+  ### Admin
+
+  - **维护模式**：后台「系统 → 维护模式」和 `GET` / `PUT /api/admin/maintenance`。可选同时冻结 Admin 写接口（默认开启；维护开关、集成密钥、调试台除外）。权限为 `maintenance.read` / `maintenance.write`，不包含在 `config.*` 里。状态存 `system_config.MAINTENANCE_MODE`。维护期间所有页面顶部显示红色横幅。
+  - **请求日志汇总**：新增 `GET /api/admin/request-logs/summary`。可按 `provider`、`model`、`user`、`provider_key`、`route_group`、`status` 任意组合汇总请求条数、Token 和金额。区间为半开毫秒区间。无筛选时不得超过 31 天。老版本没有这个路径，调用方收到 404 应回退到分页明细。
+  - **MySQL 前缀筛选**：请求日志列表带 `model_id_prefix` 时，不再把 `ESCAPE` 子句当成未闭合字符串。
+  - **路由时段价格**：计费规则里每个文本模型时段都可以展开本时段价格明细，包括「全部时段」和未命中窗口时的「其他时段」。
+  - **可靠性与用户用量**：供应商质量和按模型对比供应商增加有效首 Token 列。展开用户后的模型明细增加缓存命中率、首 Token 和平均上游，并去掉平均计费/请求。
+  - **路由列表**：按可用宽度切换表格、左右分栏和紧凑纵向布局。供应商表格最大宽度 1280px。请求入口可以在完整路径和单行省略之间切换，并记住选择。
+  - **目录与模板**：新增 `kimi-k3.1-pro`、`kimi-k3.1-pro-highspeed`、Qwen-Audio 3.1 五个预设、`qwen-image-2.1-turbo`，以及网宿 AI 网关导入模板。Kimi K3 补上 5 分钟缓存写入价。`kimi-k2.5` 标为 2026-08-31 退役，只影响展示和筛选。MiniMax M3 改为官网标准现价。`minimax-m3.1-flash` 替换预览条目。上下文和最大输出按 K=1000、M=1000000 写入。已导入的模型和供应商不会被覆盖。
+
+  ### 运维
+
+  - **D1 → Postgres 切换工具**：`scripts/db/cutover/` 能在当前表结构上迁移、对账。补上 `search_path`、漏迁的表，以及时间戳按 UTC 解释。新增只读 `--check`、日志尾部 `--since`、删除 Postgres 中 D1 已不存在的行的 `--prune`。无 schema 迁移。已在非 UTC 机器上迁移过的数据需要重新同步。见 `docs/operators/migrations/d1-postgres-cutover.md`。
+
+  ### 升级说明
+
+  - **数据库迁移**：必须应用 **0032** 和 **0033**。0032 改写能对上系列的 DashScope 语音转换路由；对不上的 `dashscope-asr-file-async` 留在库里，直到改成新适配器才重新可用。0033 只加请求日志索引 `(provider_id, created_at)`。D1、Postgres、MySQL 语义一致。详见 `docs/operators/migrations/0032-dashscope-audio-adapters.md` 与 `docs/operators/migrations/0033-request-log-provider-index.md`。
+  - **发布顺序**：先备份。执行 0032，再执行 0033，然后滚动更新同版本 Proxy 与 Admin。0032 之后，旧进程不认识新的适配器名。0033 不改列，新旧版本都能读写；Postgres 大表可在低峰先手工 `CREATE INDEX CONCURRENTLY` 同名索引。
+  - **兼容性**：维护模式默认关闭。公开推理接口在开启后返回 503。向量和部分 JSON 响应不再带上游的压缩和长度头。请求日志汇总是新路径。
+  - **配置不自动改写**：已导入的模型价格、Kimi K2.5 路由和 MiniMax M3.1 预览行不会被新目录覆盖。新模型与网宿模板需要手工导入或改路由上的上游模型名。
+  - **建议操作**：升级后确认 DashScope 语音路由的适配器已经拆开，抽查一条请求日志汇总，并在需要冻结写入时先打开维护模式。若之前用非 UTC 机器跑过 D1 → Postgres 迁移，重新同步时间戳。
+
+### Patch Changes
+
+- Updated dependencies [[`158764c`](https://github.com/OctaFuse/octafuse-gateway/commit/158764cf3c66650f7c2d2755dc20235e756cfc80)]:
+  - @octafuse/core@2.17.0
+
+## 2.16.0
+
+### Minor Changes
+
+- [#231](https://github.com/OctaFuse/octafuse-gateway/pull/231) [`897eea6`](https://github.com/OctaFuse/octafuse-gateway/commit/897eea661a9d267fc3d5493349dc29140410a53b) Thanks [@dyc87112](https://github.com/dyc87112)! - OctaFuse Gateway v2.16.0 重点接入 ElevenLabs 语音（文件与实时），并把 DashScope、MiniMax、火山方舟的原生路径对齐官方 SDK。管理后台可以按列表管理供应商、模型和路由；模型与供应商介绍改为静态目录，库内原介绍列改为运营备注。
+
+  ### Proxy
+
+  - **ElevenLabs 文本转语音与语音转写**：新增 `elevenlabs` 协议。原生透传 `POST /elevenlabs/v1/text-to-speech/{voice_id}`（含 `/stream`、`/with-timestamps`、`/stream/with-timestamps`）和 `POST /elevenlabs/v1/speech-to-text`，额外接受 `xi-api-key`。OpenAI 兼容入口由 `elevenlabs-tts`、`elevenlabs-asr-file` 转换。合成按字符、转写按秒计费；`quota_exceeded` 改写为 402，并发或系统忙改写为 429。不含音色管理、配音、音效和音乐。详见 `docs/developers/architecture/elevenlabs-audio.md`。
+  - **ElevenLabs 实时 WebSocket**：新增 `GET /elevenlabs/v1/text-to-speech/{voice_id}/stream-input` 与 `GET /elevenlabs/v1/speech-to-text/realtime`。升级前完成鉴权、模型类型、余额和选路由。用量由网关估算（合成按字符，转写按音频字节折算秒数），`usage_source` 标为 `estimated`。只做会话前余额检查。
+  - **厂商原生路径对齐官方**：DashScope、MiniMax、火山方舟改为 `/{厂商}` 加官方路径。DashScope WebSocket 拆成 `/dashscope/api-ws/v1/inference` 与 `/dashscope/api-ws/v1/realtime?model=`。旧路径 `/v1/dashscope/*`、`/v1/minimax/*`、`/v1/volcengine/*` 及旧实时入口保留为过渡别名。协议与计费不变。
+  - **402 故障转移**：上游 402 与 401、403 一样切换下一供应商，熔断 5 分钟并告警。MiniMax `1008` 与 ElevenLabs `quota_exceeded` 走这条路。最后一个候选仍返回 402。
+  - **流空闲超时对下游可见**：超过空闲或首包阈值时写入协议原生错误事件（`code` 为 `stream_idle_timeout`），不再干净关流。阈值、记账与请求日志不变。
+  - **Node 实时连接**：握手同包到达的上游首帧先缓冲再回放；校验失败的 WebSocket 升级先恢复读取再发关闭帧，客户端立即收到原因。
+
+  ### Admin
+
+  - **列表与弹窗**：供应商、模型、路由默认使用列表，可切回卡片。供应商和模型弹窗可搜索并单条或批量删除关联路由，清空引用后才能删除；后端拒绝仍有路由的模型删除。供应商密钥默认显示首尾，清空并保存会移除密钥，省略字段保持不变。端点分为全能力（只填 Base）与部分能力（多选后逐行填写）。
+  - **路由展示**：可用配置用绿色侧条和「可用」标记；自定义参数单独成列；倍率可在「实际倍率」和「原始倍率」之间切换。这些只影响展示。
+  - **模型现役 / 退役**：按静态目录可选 `retired` 日期筛选和展示，不落库，不影响路由与计费。导入弹窗默认只显示现役。
+  - **介绍与备注**：迁移 0031 把 `models.description`、`providers.description` 改名为 `note`（已有内容保留为运营备注）。导入和同步不再把目录介绍写入数据库。`GET /v1/models` 与 `GET /catalog/models` 不再返回 `description`，也不返回备注。
+  - **界面语言**：日语和韩语补齐侧边栏、模型目录介绍和供应商模板名称。导入按当前界面语言写入名称；已经导入的记录不会被改写。
+  - **额度查询**：ElevenLabs 查询官方订阅 credits；Command Code 查询 `GET /alpha/billing/credits`。Command Code 模板补上 Responses。
+  - **目录与模板**：新增 Open Design、金山云星流（国内与国际）、MiniMax M3.1 Flash Preview；豆包 Seed 目录更新。超算互联网、金山云、Command Code、Open Design 使用官方图形标志。缺少当前币种价格的目录行不可导入。Grok 三个模型补上按美元 ×7 的人民币占位价。
+
+  ### 升级说明
+
+  - **数据库迁移**：必须应用 **0031**（`models.description`、`providers.description` 改名为 `note`，已有内容保留；D1、Postgres、MySQL 语义一致）。详见 `docs/operators/migrations/0031-catalog-notes.md`。
+  - **发布顺序**：先备份，用 v2.16.0 migrate 镜像或对应脚本执行 0031，再滚动更新同版本 Proxy 与 Admin。先更新应用、后改列名时，读写 `note` 会失败。
+  - **兼容性**：公开模型接口不再返回 `description`。厂商旧路径仍可用，但是过渡别名。流空闲超时现在会向下游写错误事件。管理后台保存供应商时，显式空密钥会清空密钥。
+  - **配置不自动改写**：ElevenLabs、Open Design、金山云星流需要手工导入或填写端点。已导入的供应商和模型不会被模板覆盖。MiniMax M3.1 Flash Preview 的价格是 M3 刊例占位，且上游目前只接受 M Plan 或 MiniMax Code 的订阅 Key。若干新增人民币价是美元 ×7 占位，不是官方人民币刊例。
+  - **建议操作**：迁移后抽查一条 ElevenLabs 合成或转写、一条厂商原生路径，并确认模型与供应商备注还在、公开接口不再带介绍字段。
+
+### Patch Changes
+
+- Updated dependencies [[`897eea6`](https://github.com/OctaFuse/octafuse-gateway/commit/897eea661a9d267fc3d5493349dc29140410a53b)]:
+  - @octafuse/core@2.16.0
+
+## 2.15.0
+
+### Minor Changes
+
+- [#217](https://github.com/OctaFuse/octafuse-gateway/pull/217) [`0d19dd8`](https://github.com/OctaFuse/octafuse-gateway/commit/0d19dd822f54b491e1271b90f73fe7c9149164d5) Thanks [@dyc87112](https://github.com/dyc87112)! - OctaFuse Gateway v2.15.0 重点新增 MCP 聚合入口与向量 Embeddings 支持。管理员可以接入远程 MCP 服务，通过 `/mcp` 向 Agent 提供统一工具目录并按调用计费；OpenAI 与 Gemini 向量请求现在可以走同一套路由、故障转移和记账。模型与供应商页新增与官方目录 / 模板的手动同步，ASR / TTS 模型类型也被拆分得更清晰。
+
+  ### Proxy
+
+  - **模型列表按 ASR / TTS 过滤**：`GET /v1/models` 的 `kind` 新增 `asr`（语音识别）与 `tts`（语音合成），`kind=audio` 保留为两者的兼容别名。音频入口（MiniMax T2A、DashScope 语音合成与文件转写）会分别提示「模型类型不符」与「缺少音频计费」。无需数据库迁移。
+  - **向量 Embeddings**：新增 OpenAI 兼容 `POST /v1/embeddings`，以及 Gemini 原生 `POST /v1beta/models/{model}:embedContent` / `:batchEmbedContents`，均走现有路由池、故障转移、限流与记账，请求体原样透传（Gemini batch 会改写每个 `requests[].model`）。向量模型以 `output_modalities` 含 `embedding` 标识，仅按输入 token 计费（OpenAI `usage.prompt_tokens`，缺失回退 `total_tokens`；Gemini `usageMetadata.promptTokenCount`），上游无 usage 时不计费。默认 `GET /v1/models` 不含向量模型，新增 `kind=embedding`。供应商新增 `embeddings`（OpenAI）与 `models.embed`（Gemini）端点能力。无需数据库迁移。关闭 #113。
+  - **MCP 聚合入口**：`POST /mcp` 把管理员接入的远程 MCP 服务聚合成一个无会话 Streamable HTTP 服务，`POST /mcp/{slug}` 只暴露单个服务。工具、提示词和资源清单来自已审核快照；只有 `tools/call` 计入三本账和请求日志（`provider_id=octafuse-mcp`）。当前计费收敛为 request：每次成功工具调用固定计 1 单元，支持标准价 × 用户/供应倍率，用户倍率为 0 时免费；调用前检查余额，上游失败不扣费。计费 JSON 保留版本、模式、标准价、倍率和模式配置，后续扩展模式无需数据库迁移。`GET /v1/tools/pricing` 增加已启用 MCP 工具的 `mcp` 段，含计费单元与单价。
+  - **请求追踪**：聊天、消息和 Responses 的响应返回 `X-OctaFuse-Request-Id`，与请求日志主键一致，成功和失败都会带上。请求日志额外记录消息结构摘要（按角色汇总字段名和 content part 类型），不记录消息正文。
+
+  ### Admin
+
+  - **模型类型拆分 ASR / TTS，判定规则收敛**：Models、Routes、调试台、模拟器的 Kind 由「音频」拆成「语音识别（ASR）」与「语音合成（TTS）」，新建 / 编辑模型直接选这两项，不再有二级「音频能力」开关；旧链接的 `?kind=audio` 落到 ASR。Kind 的判定统一为 `resolveModelKind`（有效的音频计费模式优先，其次按模态签名兜底，全模态 LLM 仍判为 LLM），Admin 与 Proxy 不再各写一套。保存模型时若计费模式与模态互相矛盾（如 TTS 但输出不含 `audio`）会被拒绝。判定规则见 `docs/developers/reference/model-kinds.md`。无需数据库迁移。
+  - **向量模型支持**：模型、路由、供应商、调试台、模拟器、请求日志均新增 `embedding` 类型。模型表单只保留输入价；供应商可覆盖 `embeddings` 与 `models.embed` 端点；调试台与路由快速测试提供 OpenAI / Gemini 向量请求模板，并展示向量个数、维度和用量。静态目录新增 OpenAI（`text-embedding-3-small` / `-large` / `ada-002`）、Google（`gemini-embedding-2` 文本输入价）和阿里云（`qwen3.7-text-embedding`、`text-embedding-v4`）预设；人民币价除阿里云外为美元 × 7 的占位换算。供应商导入模板中，官方文档确认提供 OpenAI 兼容 embeddings 的供应商补上了 `openai.endpoints.embeddings`：火山方舟、阿里云百炼（国内 / 国际）、腾讯混元、百度千帆、智谱 GLM、Google Gemini、Mistral、SambaNova、Together、Fireworks、DeepInfra、Novita、Cohere、NVIDIA NIM、OpenRouter、Vercel AI Gateway、SiliconFlow（国内 / 国际）、Ollama；官方不支持或未核实的（Z.AI 国际站、BytePlus、MiniMax、Qwen AI Platform 等）未写入。全能力的 OpenAI Base（OpenAI、Azure OpenAI、ZenMux）和 Gemini Base 模板会自动派生向量端点。
+  - **Gemini 4 Argon 目录**：静态目录新增 `gemini-4-argon`。价格按 2026-12-01 起的 Standard 刊例写入（输入 $4 / 输出 $20 / 每百万 Token，缓存读取 $0.20），不含 2026-11-30 前的入门价。上下文与长解码上限为 1,048,576 Token，同步默认输出 65,536 Token 写在介绍中。输入含文本、图像、音频、视频和 PDF。只支持隐式缓存，缓存写入价留空。`gemini-4-barium` 没有官方刊例，未入库。人民币价仍是美元 × 7 的占位换算。
+  - **模型与官方目录同步**：模型页右上角的「检查官方更新」按钮手动触发检查（不会自动运行），结果以 toast 和按钮旁的状态文字显示；有差异时顶部出现提示条，对应模型卡片出现「有官方更新」图标。「与官方目录同步」面板按厂商分组，逐项并排对比显示名称、厂商、上下文窗口、最大输出、介绍、发布日期、输入输出模态和价格（价格按当前计费币种的官方目录价逐项对比），每一项可选「采用官方」或「保留当前」，可单个模型同步或批量同步。官方目录未给出的字段不会被清空；价格影响计费，默认保留，应用前显示涉及的启用路由数。标签、元数据、路由及路由价格覆盖不会被修改，无需数据库迁移。
+  - **Azure OpenAI 导入模板**：官方 Base 改为 OpenAI v1 路径 `https://YOUR_RESOURCE_NAME.openai.azure.com/openai/v1`。Foundry 控制台的 `https://YOUR_RESOURCE_NAME.services.ai.azure.com/openai/v1` 视为同一模板。仍使用不带 `/v1` 的旧地址会提示更新；采用官方时保留已填写的资源名和当前主机。
+  - **供应商与官方同步**：供应商页右上角的「检查官方更新」按钮手动触发检查（不会自动运行），结果以 toast 和按钮旁的状态文字显示；有差异时顶部出现提示条，卡片和筛选栏同步出现「有官方更新」标记。「与官方同步」面板按供应商类型分组，逐项并排对比介绍与各协议端点（新增、变更、仅本地有），每一项可选「采用官方」或「保留当前」，可单个账号同步或批量同步，应用前显示涉及的启用路由数。模板里的部署占位符换成实际值后不再提示更新（Vertex 的 `YOUR_PROJECT_ID` 与默认区域 `global`、Azure OpenAI 的 `YOUR_RESOURCE_NAME`），采用官方时保留已填写的项目、资源名和区域。官方模板改名或下线后遗留的旧类型会单独列出，可迁移到新类型。API Key、启用状态和供应商名称不会被修改，无需数据库迁移。
+  - **Tools 导航**：原「配置」改为 REST 服务，MCP 服务紧随其后，调用记录同时包含 REST 服务与 MCP 服务的调用，并可按来源和服务筛选。
+  - **REST 服务**：REST 服务页改为服务列表，可按名称、标识或工具类型搜索，并按工具类型和状态筛选；每行显示配置状态与计费方式，点击后在弹窗中完成接入、启用、计费设置和测试。计费与 MCP 共用标准价、用户倍率和供应倍率，使用紧凑的收费方式切换、倍率输入和价格预览；搜索类按请求计费，AI 检测按可配置的字符单元计费；用户倍率为 0 时免费并记录供应成本。旧价格兼容，新规则存入现有 JSON，无需数据库迁移。
+  - **MCP 服务**：可接入远程 MCP、测试连接、同步目录、审核新增和说明变更、启停条目，并为服务或单个工具设置计费规则（统一的标准价与倍率编辑器，即时展示单次收费与供应成本；价格设置集中在计费规则中）。上游地址和鉴权头默认脱敏。服务列表支持搜索、状态筛选与刷新，目录列同时显示已启用数量和上次同步时间，同步失败以红色标出；服务详情按目录管理与连接设置分区，目录条目可按类型、状态和关键字筛选，并可批量启用 / 停用，新增条目默认停用、审核后再启用。创建与编辑弹窗分为连接设置与高级设置，已有认证头留空保留原值，关闭未保存的表单会先确认。请求日志可按 MCP 调用筛选。
+  - **MCP 配置导入**：新建或编辑服务时，可粘贴远程地址或常见客户端 JSON，自动填入地址和静态请求头。计费规则与超时仍在表单里确认。本地进程、旧版 SSE 和 OAuth 不会被导入。
+  - **MCP 接入指南**：MCP 服务页新增「接入指南」按钮，弹窗内填写 Proxy 地址并选择全部服务或单个服务，即可复制 Cursor、VS Code、Claude Code、Codex 的配置和 curl 验证命令。示例只含 `<YOUR_API_KEY>` 占位符，Proxy 地址与「对外目录测试」共用。
+  - **MCP 对外目录测试**：MCP 服务页新增「对外目录测试」弹窗，填写 Proxy 地址与用户 API Key（可按邮箱筛选并选择已有 Key）后，实际请求 Proxy 的 `/mcp` 或 `/mcp/{slug}`，查看 Agent 实际获得的目录与响应结构；支持原始 JSON 与按服务分组两种视图，可复制响应和 cURL（复制的命令使用 Key 占位符）。仅查询目录和协议能力，不执行工具调用。
+  - **请求日志**：可按请求 ID 精确筛选，用来从客户端错误直接定位到对应日志。
+  - **仪表盘**：「需要关注」和「近期请求」的时间显示完整的年月日和时分秒（按业务时区），跨天的记录不会再被误认成今天；修复切到 Token 页签时曲线和 Y 轴不显示、图表空白的问题，输入、输出和缓存读取三条曲线能正常绘制。
+  - **界面一致性**：模型、路由、供应商、请求日志、审计日志、用户、Playground 与 Simulator 的筛选区统一使用同一套分段、下拉、文本输入和平铺选项控件，筛选行为不变；模型、REST 服务与 MCP 的单价标签和价格预览改用币种符号加单位（如 `¥/1M`），不再显示 `CNY/1M` 这类币种代码，不影响计费。
+
+  ### 升级说明
+
+  - **数据库迁移**：必须应用 **0030**（`mcp_servers`、`mcp_server_items` 两张表，D1、Postgres、MySQL 脚本语义一致），详见 `docs/operators/migrations/0030-mcp-servers.md`。其余变更无需新增迁移或必填配置。
+  - **发布顺序**：建议先备份数据库，使用 v2.15.0 migrate 镜像或对应脚本执行 0030，再滚动更新同版本 Proxy 与 Admin。新 Proxy 在表缺失时，`GET /v1/tools/pricing` 的 `mcp` 字段返回空数组；回退时可保留这两张表。
+  - **兼容性**：`GET /v1/models?kind=audio` 保留为 `asr` 与 `tts` 的兼容别名；默认模型列表不包含向量模型；现有 Chat / Responses / Messages / Gemini 路由与鉴权方式不变。
+  - **建议操作**：部署后在 MCP 服务页接入上游、同步目录并逐条启用，用「对外目录测试」验证 `/mcp`；抽查 `POST /v1/embeddings`、模型 / 供应商「检查官方更新」，并冒烟既有主要路由。
+
+### Patch Changes
+
+- Updated dependencies [[`0d19dd8`](https://github.com/OctaFuse/octafuse-gateway/commit/0d19dd822f54b491e1271b90f73fe7c9149164d5)]:
+  - @octafuse/core@2.15.0
+
 ## 2.14.0
 
 ### Minor Changes

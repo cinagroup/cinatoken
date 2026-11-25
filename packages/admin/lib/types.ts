@@ -1,3 +1,4 @@
+import type { DashboardOverview, DashboardOverviewWindow } from '@octafuse/core';
 /**
  * Gateway Admin 与 Worker 代理 JSON 对齐的 TypeScript 类型（字段名与 API 一致）。
  * 行内英文注释便于与网关迁移、列名对照；业务含义以 octafuse 为准。
@@ -142,10 +143,12 @@ export interface GatewayProvider {
 	name: string;
 	/** 导入模板英文名、`__custom__`，或空字符串（尚未分类）。 */
 	kind?: string;
-	/** 已保存类型的中英文展示名。自定义与未分类时省略。 */
+	/** 已保存类型的中、英、日、韩展示名。自定义与未分类时省略。 */
 	kind_labels?: {
 		en: string;
 		zh: string;
+		ja?: string;
+		ko?: string;
 	};
 	/** 未设置 kind 时按预设 / Endpoint 推导；已设置 kind 时由模板决定。不单独写入 providers 表。 */
 	vendor_key?: string;
@@ -159,6 +162,8 @@ export interface GatewayProvider {
 	};
 	/** 协议端点 JSON；见 `providers.endpoints` */
 	endpoints?: string | null;
+	/** 按上游协议分组的默认 custom_params（headers/body），无 force_override；见 `providers.custom_params` */
+	custom_params?: string | null;
 	/** 脱敏预览；明文仅经 `GET /admin/providers/:id/api-key` */
 	api_key?: string;
 	/** `active` | `disabled` */
@@ -166,6 +171,15 @@ export interface GatewayProvider {
 	/** 非空 = 接受用户共享密钥池注入的官方渠道（openai/anthropic/zhipu/deepseek） */
 	shared_channel_type?: string | null;
 	description: string | null;
+	/** 运营备注。类型介绍见 `kind_descriptions`。 */
+	note: string | null;
+	/** 已保存类型的中、英、日、韩介绍。自定义、未分类或模板没有介绍时省略。 */
+	kind_descriptions?: {
+		en: string;
+		zh: string;
+		ja?: string;
+		ko?: string;
+	};
 	created_at: string;
 	has_pending_key?: boolean;
 	/** `model_routes` 引用该 provider 的总数 */
@@ -181,6 +195,7 @@ export interface GatewayProvider {
 }
 
 export interface GatewayModel {
+ description?: string | null;
 	id: string;
 	display_name: string | null;
 	/** Vendor / manufacturer (e.g. Anthropic, OpenAI). Default stored value: other */
@@ -196,9 +211,14 @@ export interface GatewayModel {
 	output_modalities?: string | null;
 	/** Model release date `YYYY-MM-DD` */
 	released_at?: string | null;
+	/** Vendor retirement date `YYYY-MM-DD` from the static catalog (not stored in DB); null = still offered */
+	retired_at?: string | null;
 	/** JSON array string from json_group_array(model_tags.tag) */
 	tags: string;
-	description: string | null;
+	/** 运营备注。目录介绍见 `catalog_i18n`。 */
+	note: string | null;
+	/** 静态目录中、英、日、韩介绍。自建模型为 null。 */
+	catalog_i18n?: { en: string; zh: string; ja: string; ko: string } | null;
 	metadata: string | null;
 	/** 路由策略 JSON（`strategy` + `rules`）；null=回退全局 ROUTE_STRATEGY */
 	route_policy?: string | null;
@@ -250,6 +270,11 @@ export interface GatewayRequestLog {
 	id: string;
 	user_id?: string | null;
 	api_key_id: string | null;
+	/** 走 OAuth 访问令牌（MCP）的调用：令牌 id（此时 api_key_id 为空） */
+	oauth_access_token_id?: string | null;
+	/** 授权应用名；令牌记录被清理后缺省 */
+	oauth_access_token_name?: string | null;
+	oauth_access_token_client_id?: string | null;
 	user_email: string | null;
 	/** 用户所属外部系统；全局日志接口通过 user_id 关联 users。 */
 	external_system?: string | null;
@@ -345,6 +370,7 @@ export interface AnalyticsRecentLog {
 }
 
 export interface DashboardStats {
+	operations?: DashboardOverview & { window: DashboardOverviewWindow };
 	gateway: {
 		activeKeysCount: number;
 		keysTotal: number;
@@ -535,6 +561,12 @@ export interface ProviderReliabilityRow extends AnalyticsRowCosts {
 	error_count: number;
 	success_rate: number;
 	avg_latency_ms: number | null;
+	avg_first_reasoning_token_ms: number | null;
+	avg_first_token_ms: number | null;
+	avg_effective_ttft_ms: number | null;
+	avg_reasoning_phase_ms: number | null;
+	reasoning_ttft_rate: number;
+	content_ttft_rate: number;
 	avg_upstream_response_ms: number | null;
 	failover_rate: number;
 	/** Requests with at least one failover; legacy failover_rate counts events per 100 requests. */
@@ -551,6 +583,12 @@ export interface ModelProviderRow extends AnalyticsRowCosts {
 	request_count: number;
 	success_rate: number;
 	avg_latency_ms: number | null;
+	avg_first_reasoning_token_ms: number | null;
+	avg_first_token_ms: number | null;
+	avg_effective_ttft_ms: number | null;
+	avg_reasoning_phase_ms: number | null;
+	reasoning_ttft_rate: number;
+	content_ttft_rate: number;
 	avg_upstream_response_ms: number | null;
 	failover_rate: number;
 	/** Requests with at least one failover; legacy failover_rate counts events per 100 requests. */

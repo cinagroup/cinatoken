@@ -28,6 +28,7 @@ export type DescribedOutcome = {
 export type ProxyEndpointAccounting<TBody> = {
 	requestBodyForLog: (body: TBody) => string | null;
 	upstreamWireBodyForLog: (route: RouteResult, body: TBody) => string | null;
+	requestBodyForSources?: (body: TBody) => Record<string, unknown>;
 	describeOutcome: (input: DescribeOutcomeInput<TBody>) => DescribedOutcome;
 };
 
@@ -62,6 +63,8 @@ export function defaultDescribeOutcome<TBody>(
 
 export const describeChatOutcome = defaultDescribeOutcome;
 export const describeMessagesOutcome = defaultDescribeOutcome;
+/** Embeddings（OpenAI / Gemini 原生）：只有输入 token，没有输出；解读口径同默认。 */
+export const describeEmbeddingsOutcome = defaultDescribeOutcome;
 
 /** Responses：incomplete / HTTP 回退优先采用 `usage.stream_error`。 */
 export function describeResponsesOutcome<TBody>(

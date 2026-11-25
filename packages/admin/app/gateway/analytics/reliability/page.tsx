@@ -1,5 +1,7 @@
 'use client';
 
+import { AdminPageTitle } from '@/components/admin-page-title';
+
 /**
  * 可靠性：按供应商 / 模型×供应商 矩阵与近期错误片段；聚合自 `api_key_request_logs`。
  */
@@ -7,8 +9,11 @@ import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
 import { AnalyticsInsights, AnalyticsLoadError } from '@/components/AnalyticsInsights';
+import { AnalyticsTtftCell } from '@/components/AnalyticsTtftCell';
 import { useAnalyticsRange } from '@/lib/use-analytics-range';
-import { GatewayTimeRangePicker } from '@/components/GatewayTimeRangePicker';
+import { AnalyticsRangeControl } from '@/components/AnalyticsRangeControl';
+import { dashboardErrorSummary } from '@/components/dashboard/dashboard-presentation';
+import { ShieldCheckIcon } from '@heroicons/react/24/outline';
 import { useAnalyticsProviderKind } from '@/components/AnalyticsProviderKind';
 import { ProviderAccountLines } from '@/components/ProviderAccountLines';
 import { readApiJson } from '@/lib/api-json';
@@ -30,6 +35,7 @@ type ReliabilityPayload = {
 export default function ReliabilityPage() {
 	const t = useTranslations('analytics.reliability');
 	const tA = useTranslations('analytics');
+	const tDashboard = useTranslations('dashboard');
 	const tCommon = useTranslations('common');
 	const [rangeValue, setRangeValue] = useAnalyticsRange();
 	const [loadError, setLoadError] = useState(false);
@@ -72,7 +78,10 @@ export default function ReliabilityPage() {
 
 	const providerKind = useAnalyticsProviderKind(liveProviders);
 
-	const providerIdentity = (providerId: string | null | undefined, snapshotName: string | null | undefined) => {
+	const providerIdentity = (
+		providerId: string | null | undefined,
+		snapshotName: string | null | undefined,
+	) => {
 		const id = providerId?.trim() ?? '';
 		const live = id ? liveProviders.get(id) : undefined;
 		return providerAccountIdentity(live, locale, tKind('custom'), snapshotName?.trim() || id || '—');
@@ -86,7 +95,6 @@ export default function ReliabilityPage() {
 
 	useEffect(() => {
 		const controller = new AbortController();
-		setLoadError(false);
 		void (async () => {
 			try {
 				const response = await fetch(request.url, {
@@ -95,6 +103,7 @@ export default function ReliabilityPage() {
 				const data = await readApiJson<ReliabilityPayload>(response);
 				if (controller.signal.aborted) return;
 				if (data.success && data.data) {
+					setLoadError(false);
 					setResult({
 						request,
 						providers: data.data.providers ?? [],
@@ -137,13 +146,13 @@ export default function ReliabilityPage() {
 	const formatDate = (s: string) => formatDateTime(s);
 
 	return (
-		<div className="min-w-0 p-4 sm:p-6 lg:p-8">
-			<div className="mb-6">
-				<h1 className="text-3xl font-bold text-gray-900">{t('title')}</h1>
-				<p className="text-sm text-gray-500 mt-1">{t('subtitle')}</p>
-			</div>
-			<div className="mb-4 w-full min-w-0 rounded-xl border border-gray-200 bg-white p-3 sm:p-4">
-				<GatewayTimeRangePicker value={rangeValue} onChange={setRangeValue} />
+		<div className="admin-content-workspace content-tone-analytics min-w-0 p-4 sm:p-6 lg:p-8">
+			<div className="mb-6 flex flex-wrap items-start justify-between gap-4">
+				<div>
+					<AdminPageTitle>{t('title')}</AdminPageTitle>
+					<p className="text-sm text-gray-500 mt-1">{t('subtitle')}</p>
+				</div>
+				<AnalyticsRangeControl value={rangeValue} onChange={setRangeValue} />
 			</div>
 
 			{loadError && <AnalyticsLoadError onRetry={() => setRefresh((n) => n + 1)} />}
@@ -152,37 +161,43 @@ export default function ReliabilityPage() {
 			)}
 			{/* Provider table */}
 			<div className="mb-8">
-				<h2 className="text-lg font-semibold text-gray-900 mb-4">{t('providerQuality')}</h2>
-				<div className="bg-white rounded-lg shadow-md overflow-hidden">
+				<h2 className="admin-section-title flex items-center gap-2 text-base font-medium text-gray-900 mb-3">
+					<ShieldCheckIcon className="h-4 w-4 text-gray-400" aria-hidden="true" />
+					{t('providerQuality')}
+				</h2>
+				<div className="admin-content-panel admin-table-surface overflow-hidden rounded-xl border border-gray-200 bg-white">
 					<div className="overflow-x-auto">
-						<table className="admin-data-table min-w-full divide-y divide-gray-200">
+						<table className="admin-reliability-table admin-data-table min-w-full divide-y divide-gray-200">
 							<thead className="bg-gray-50">
 								<tr>
-									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 normal-case tracking-normal">
 										{tA('columns.providerKind')}
 									</th>
-									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 normal-case tracking-normal">
 										{tA('columns.providerAccount')}
 									</th>
-									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 normal-case tracking-normal">
 										{tA('columns.requests')}
 									</th>
-									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 normal-case tracking-normal">
 										{tA('columns.successRate')}
 									</th>
-									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 normal-case tracking-normal">
 										{tA('columns.errors')}
 									</th>
-									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 normal-case tracking-normal">
 										{tA('columns.avgLatencyMs')}
 									</th>
-									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 normal-case tracking-normal">
+										{tA('columns.ttft')}
+									</th>
+									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 normal-case tracking-normal">
 										{tA('columns.avgUpstreamMs')}
 									</th>
-									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 normal-case tracking-normal">
 										{tA('insights.failoverShare')}
 									</th>
-									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 normal-case tracking-normal">
 										{tA('columns.avgAttempts')}
 									</th>
 								</tr>
@@ -195,13 +210,18 @@ export default function ReliabilityPage() {
 										</td>
 										<td className="px-4 py-3 text-sm">
 											<ProviderAccountLines
-												identity={{ ...providerIdentity(p.provider_id, p.provider_name), kind: null }}
+												identity={{
+													...providerIdentity(p.provider_id, p.provider_name),
+													kind: null,
+												}}
 												badge={deletedProviderBadge(p.provider_id)}
 											/>
 										</td>
 										<td className="px-4 py-3 text-sm text-gray-600">{p.request_count.toLocaleString()}</td>
 										<td className="px-4 py-3 text-sm">
-											<span className={successRateClassName(p.success_rate)}>{p.success_rate.toFixed(1)}%</span>
+											<span className={successRateClassName(p.success_rate)}>
+												{p.success_rate.toFixed(1)}%
+											</span>
 										</td>
 										<td className="px-4 py-3 text-sm">
 											<Link className="text-red-600 hover:underline" href={errorLogHref(p.provider_id)}>
@@ -210,6 +230,9 @@ export default function ReliabilityPage() {
 										</td>
 										<td className="px-4 py-3 text-sm text-gray-600 tabular-nums">
 											{p.avg_latency_ms != null ? formatLatencyMs(p.avg_latency_ms) : tCommon('noData')}
+										</td>
+										<td className="px-4 py-3 text-sm">
+											<AnalyticsTtftCell metrics={p} noDataLabel={tCommon('noData')} />
 										</td>
 										<td className="px-4 py-3 text-sm text-gray-600 tabular-nums">
 											{p.avg_upstream_response_ms != null
@@ -234,38 +257,43 @@ export default function ReliabilityPage() {
 			</div>
 
 			{/* Model–provider breakdown */}
-			<div className="mb-8">
-				<h2 className="text-lg font-semibold text-gray-900 mb-4">{t('perModelComparison')}</h2>
-				<div className="bg-white rounded-lg shadow-md overflow-hidden">
+			<details className="admin-content-panel mb-6 rounded-xl border border-gray-200 bg-white p-4">
+				<summary className="cursor-pointer text-sm font-medium text-gray-900">
+					{t('perModelComparison')}
+				</summary>
+				<div className="admin-content-panel admin-table-surface mt-4 overflow-hidden rounded-xl border border-gray-200 bg-white">
 					<div className="overflow-x-auto">
-						<table className="admin-data-table min-w-full divide-y divide-gray-200">
+						<table className="admin-reliability-table admin-data-table min-w-full divide-y divide-gray-200">
 							<thead className="bg-gray-50">
 								<tr>
-									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 normal-case tracking-normal">
 										{tA('columns.model')}
 									</th>
-									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 normal-case tracking-normal">
 										{tA('columns.providerKind')}
 									</th>
-									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 normal-case tracking-normal">
 										{tA('columns.providerAccount')}
 									</th>
-									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 normal-case tracking-normal">
 										{tA('columns.requests')}
 									</th>
-									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 normal-case tracking-normal">
 										{tA('columns.successRate')}
 									</th>
-									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 normal-case tracking-normal">
 										{tA('columns.avgLatencyMs')}
 									</th>
-									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 normal-case tracking-normal">
+										{tA('columns.ttft')}
+									</th>
+									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 normal-case tracking-normal">
 										{tA('columns.avgUpstreamMs')}
 									</th>
-									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 normal-case tracking-normal">
 										{tA('insights.failoverShare')}
 									</th>
-									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 normal-case tracking-normal">
 										{tA('columns.avgAttempts')}
 									</th>
 								</tr>
@@ -280,17 +308,25 @@ export default function ReliabilityPage() {
 											</td>
 											<td className="px-4 py-3 text-sm">
 												<ProviderAccountLines
-													identity={{ ...providerIdentity(r.provider_id, r.provider_name), kind: null }}
+													identity={{
+														...providerIdentity(r.provider_id, r.provider_name),
+														kind: null,
+													}}
 													nameClassName="font-normal text-gray-700"
 													badge={deletedProviderBadge(r.provider_id)}
 												/>
 											</td>
 											<td className="px-4 py-3 text-sm text-gray-600">{r.request_count.toLocaleString()}</td>
 											<td className="px-4 py-3 text-sm">
-												<span className={successRateClassName(r.success_rate)}>{r.success_rate.toFixed(1)}%</span>
+												<span className={successRateClassName(r.success_rate)}>
+													{r.success_rate.toFixed(1)}%
+												</span>
 											</td>
 											<td className="px-4 py-3 text-sm text-gray-600 tabular-nums">
 												{r.avg_latency_ms != null ? formatLatencyMs(r.avg_latency_ms) : tCommon('noData')}
+											</td>
+											<td className="px-4 py-3 text-sm">
+												<AnalyticsTtftCell metrics={r} noDataLabel={tCommon('noData')} />
 											</td>
 											<td className="px-4 py-3 text-sm text-gray-600 tabular-nums">
 												{r.avg_upstream_response_ms != null
@@ -313,34 +349,34 @@ export default function ReliabilityPage() {
 						<div className="text-center py-8 text-gray-500">{tA('noData')}</div>
 					)}
 				</div>
-			</div>
+			</details>
 
 			{/* {tA('insights.rangeErrors')} */}
 			<div>
-				<h2 className="text-lg font-semibold text-gray-900 mb-4 flex flex-wrap items-center justify-between gap-2">
+				<h2 className="flex items-center gap-2 text-base font-medium text-gray-900 mb-3 flex-wrap justify-between">
 					{tA('insights.rangeErrors')}
-					<Link href={errorLogHref()} className="text-sm text-blue-600 hover:underline">
+					<Link href={errorLogHref()} className="text-sm text-gray-800 hover:underline">
 						{t('viewAllErrors')}
 					</Link>
 				</h2>
-				<div className="bg-white rounded-lg shadow-md overflow-hidden">
+				<div className="admin-content-panel admin-table-surface overflow-hidden rounded-xl border border-gray-200 bg-white">
 					<div className="overflow-x-auto">
-						<table className="admin-data-table min-w-full divide-y divide-gray-200">
+						<table className="admin-reliability-table admin-data-table min-w-full divide-y divide-gray-200">
 							<thead className="bg-gray-50">
 								<tr>
-									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 normal-case tracking-normal">
 										{tCommon('time')}
 									</th>
-									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 normal-case tracking-normal">
 										{tA('columns.model')}
 									</th>
-									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 normal-case tracking-normal">
 										{tA('columns.providerKind')}
 									</th>
-									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 normal-case tracking-normal">
 										{tA('columns.providerAccount')}
 									</th>
-									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 normal-case tracking-normal">
 										{tA('columns.errors')}
 									</th>
 								</tr>
@@ -348,7 +384,14 @@ export default function ReliabilityPage() {
 							<tbody className="bg-white divide-y divide-gray-200">
 								{recentErrors.map((log) => (
 									<tr key={log.id} className="hover:bg-gray-50">
-										<td className="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">{formatDate(log.created_at)}</td>
+										<td className="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">
+											<Link
+												href={`/gateway/request-logs?id=${encodeURIComponent(log.id)}&start_date=&end_date=`}
+												className="rounded hover:text-gray-950 hover:underline"
+											>
+												{formatDate(log.created_at)}
+											</Link>
+										</td>
 										<td className="px-4 py-3 text-sm">
 											<div className="truncate text-gray-900">{log.model_id ?? '—'}</div>
 										</td>
@@ -357,12 +400,17 @@ export default function ReliabilityPage() {
 										</td>
 										<td className="px-4 py-3 text-sm">
 											<ProviderAccountLines
-												identity={{ ...providerIdentity(log.provider_id, log.provider_name), kind: null }}
+												identity={{
+													...providerIdentity(log.provider_id, log.provider_name),
+													kind: null,
+												}}
 												nameClassName="text-xs font-normal text-gray-500"
 												badge={deletedProviderBadge(log.provider_id)}
 											/>
 										</td>
-										<td className="px-4 py-3 text-sm text-red-600 truncate max-w-xs">{tCommon('requestFailed')}</td>
+										<td className="px-4 py-3 text-sm text-red-600 truncate max-w-xs">
+											{tCommon('requestFailed')}
+										</td>
 									</tr>
 								))}
 							</tbody>

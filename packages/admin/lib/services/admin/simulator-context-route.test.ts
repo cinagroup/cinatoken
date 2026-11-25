@@ -232,7 +232,7 @@ test("context rejects queries and methods, returns a bodyless private HEAD", asy
 		(await subject.request("/admin/simulator/context", "POST")).status,
 		403
 	);
-	assert.equal(subject.reads.length, 0);
+	assert.deepEqual(subject.reads, ["MAINTENANCE_MODE"]);
 	const response = await subject.request("/admin/simulator/context", "HEAD");
 	assert.equal(response.status, 200);
 	assert.equal(await response.text(), "");

@@ -69,7 +69,7 @@ function fixture(
 			updateModelByPatch: call("model.legacy", 1),
 			replaceModelTags: call("model.tags", undefined),
 			updateModelWithPolicyPrecondition: call("model.cas", !options.stale),
-			deleteModelCascade: call("model.delete", 1),
+			deleteModelIfUnrouted: call("model.delete", options.absent ? 0 : 1),
 			listModelsWithRouteCounts: call("model.list", []),
 		},
 		providers: {
@@ -341,8 +341,8 @@ test("model CAS actual Hono: null/raw read-set and all fields/tags pass once to 
 			operation: "update",
 			id: "model-1",
 		});
-		assert.equal(f.calls.length, 1);
-		assert.deepEqual(f.calls[0], {
+		assert.deepEqual(f.calls.map(call=>call.kind), ["model.read","model.cas"]);
+		assert.deepEqual(f.calls[1], {
 			kind: "model.cas",
 			args: [
 				"model-1",
@@ -350,6 +350,7 @@ test("model CAS actual Hono: null/raw read-set and all fields/tags pass once to 
 					route_policy: null,
 					pricing_profile: null,
 					description: null,
+     note: null,
 					display_name: "New",
 				},
 				expected,

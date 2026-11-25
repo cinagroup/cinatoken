@@ -103,6 +103,8 @@ export function UpstreamProtocolBrandIcon({
 			? t("minimax")
 			: p === "volcengine"
 			? t("volcengine")
+			: p === "elevenlabs"
+			? t("elevenlabs")
 			: t("protocolUnknown", { protocol });
 	const iconCls = size === "compact" ? "h-3.5 w-3.5" : "h-4 w-4";
 
@@ -176,9 +178,24 @@ export function UpstreamProtocolBrandIcon({
 			</span>
 		);
 	}
+	if (p === "elevenlabs") {
+		return (
+			<span className="inline-flex" title={label}>
+				<img
+					src={vendorIconAssets.elevenlabs}
+					alt=""
+					width={24}
+					height={24}
+					className={`${iconCls} shrink-0 block max-w-none`}
+					draggable={false}
+				/>
+				<span className="sr-only">{label}</span>
+			</span>
+		);
+	}
 	return (
 		<span
-			className="inline-flex min-h-[1rem] items-center justify-center rounded border border-amber-200 bg-amber-50 px-1 text-[9px] font-mono uppercase text-amber-900"
+			className="inline-flex min-h-[1rem] items-center justify-center rounded border border-amber-200 bg-amber-50 px-1 text-xs font-mono normal-case text-amber-900"
 			title={protocol}
 		>
 			{protocol.slice(0, 6)}

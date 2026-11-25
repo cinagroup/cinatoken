@@ -290,7 +290,10 @@ export const managementApiKeysTable = sqliteTable(
 		index('idx_management_api_keys_personal_created').on(t.personalOwnerUserId, t.createdAt),
 		index('idx_management_api_keys_organization_created').on(t.organizationId, t.createdAt),
 		index('idx_management_api_keys_status_expiry').on(t.status, t.expiresAt),
-		check('management_api_keys_hash_chk', sql`length(${t.keyHash}) = 71 AND substr(${t.keyHash}, 1, 7) = 'sha256:'`),
+		check(
+			'management_api_keys_hash_chk',
+			sql`length(${t.keyHash}) = 71 AND substr(${t.keyHash}, 1, 7) = 'sha256:'`,
+		),
 		check('management_api_keys_name_chk', sql`length(${t.name}) BETWEEN 1 AND 128`),
 		check('management_api_keys_status_chk', sql`${t.status} IN ('active', 'revoked')`),
 		check('management_api_keys_account_type_chk', sql`${t.accountType} IN ('personal', 'organization')`),
@@ -318,7 +321,9 @@ export const byokKeysTable = sqliteTable(
 		disabled: integer('disabled', { mode: 'boolean' }).notNull().default(false),
 		isFallback: integer('is_fallback', { mode: 'boolean' }).notNull().default(false),
 		alwaysUseForProvider: integer('always_use_for_provider', { mode: 'boolean' }).notNull().default(false),
-		alwaysUseForMatchingModels: integer('always_use_for_matching_models', { mode: 'boolean' }).notNull().default(false),
+		alwaysUseForMatchingModels: integer('always_use_for_matching_models', { mode: 'boolean' })
+			.notNull()
+			.default(false),
 		sortOrder: integer('sort_order').notNull(),
 		allowedModelsJson: text('allowed_models_json'),
 		allowedUserIdsJson: text('allowed_user_ids_json'),
@@ -365,7 +370,11 @@ export const providersTable = sqliteTable(
 		apiKey: text('api_key').notNull().default(''),
 		/** `active` | `disabled` */
 		status: text('status').notNull().default('active'),
-		description: text('description'),
+		/** Operator note. Catalog introductions are resolved from static presets. */
+		note: text('note'),
+	description: text('description'),
+		/** JSON: `{ "<protocol>": { headers?, body? } }`，按协议分组的默认 custom_params，无 force_override。 */
+		customParams: text('custom_params'),
 		sharedChannelType: text('shared_channel_type'),
 		createdAt: text('created_at')
 			.notNull()
@@ -383,6 +392,8 @@ export const modelsTable = sqliteTable('models', {
 	maxTokens: integer('max_tokens').default(8192),
 	/** JSON：统一阶梯/固定价（`models` 列价真源）。 */
 	pricingProfile: text('pricing_profile'),
+	/** Operator note. Catalog introductions are resolved from static presets. */
+	note: text('note'),
 	description: text('description'),
 	metadata: text('metadata'),
 	inputModalities: text('input_modalities'),
@@ -494,6 +505,7 @@ export const routePoolStickyBindingsTable = sqliteTable('route_pool_sticky_bindi
 	updatedAt: text('updated_at')
 		.notNull()
 		.default(sql`CURRENT_TIMESTAMP`),
+	affinityKey: text('affinity_key'),
 });
 
 export const modelSurfacesTable = sqliteTable('model_surfaces', {
@@ -567,6 +579,8 @@ export const apiKeyRequestLogsTable = sqliteTable('api_key_request_logs', {
 	workspaceId: text('workspace_id').references(() => workspacesTable.id, {
 		onDelete: 'set null',
 	}),
+	/** 访问令牌调用（OAuth）：此时 api_key_id 为空 */
+	oauthAccessTokenId: text('oauth_access_token_id'),
 	userEmail: text('user_email'),
 	modelId: text('model_id'),
 	providerId: text('provider_id'),
@@ -666,7 +680,10 @@ export const providerAttemptAvailabilityTable = sqliteTable(
 		index('idx_provider_attempt_availability_route_observed').on(t.routeTargetId, t.observedAt),
 		index('idx_provider_attempt_availability_observed').on(t.observedAt),
 		check('provider_attempt_availability_attempt_index_chk', sql`${t.attemptIndex} BETWEEN 1 AND 128`),
-		check('provider_attempt_availability_outcome_chk', sql`${t.outcome} IN ('available', 'unavailable', 'excluded')`),
+		check(
+			'provider_attempt_availability_outcome_chk',
+			sql`${t.outcome} IN ('available', 'unavailable', 'excluded')`,
+		),
 		check(
 			'provider_attempt_availability_reason_chk',
 			sql`${t.reason} IN ('accepted', 'provider_http_error', 'rate_limited', 'network_error', 'invalid_response', 'client_error', 'client_cancelled', 'unknown')`,
@@ -1010,7 +1027,10 @@ export const guardrailBudgetReservationsTable = sqliteTable(
 	(t) => [
 		uniqueIndex('uk_guardrail_budget_reservation_request_assignment').on(t.requestId, t.assignmentId),
 		check('guardrail_budget_reservations_scope_chk', sql`${t.scopeType} IN ('user', 'api_key', 'workspace')`),
-		check('guardrail_budget_reservations_period_chk', sql`${t.period} IN ('daily', 'weekly', 'monthly', 'lifetime')`),
+		check(
+			'guardrail_budget_reservations_period_chk',
+			sql`${t.period} IN ('daily', 'weekly', 'monthly', 'lifetime')`,
+		),
 		check(
 			'guardrail_budget_reservations_amount_chk',
 			sql`${t.limitMicros} >= 0 AND ${t.reservedMicros} > 0 AND ${t.settledMicros} >= 0`,
@@ -1046,7 +1066,10 @@ export const userBudgetReservationsTable = sqliteTable(
 		updatedAt: text('updated_at').notNull(),
 	},
 	(t) => [
-		check('user_budget_reservations_epoch_chk', sql`${t.budgetEpoch} >= 0 AND ${t.budgetEpoch} <= 9007199254740991`),
+		check(
+			'user_budget_reservations_epoch_chk',
+			sql`${t.budgetEpoch} >= 0 AND ${t.budgetEpoch} <= 9007199254740991`,
+		),
 		check(
 			'user_budget_reservations_amount_chk',
 			sql`${t.limitMicros} >= 0 AND ${t.limitMicros} <= 9007199254740991 AND ${t.reservedMicros} > 0 AND ${t.reservedMicros} <= 9007199254740991 AND ${t.settledMicros} >= 0 AND ${t.settledMicros} <= 9007199254740991`,
@@ -1425,7 +1448,10 @@ export const batchItemsTable = sqliteTable(
 		primaryKey({ columns: [t.batchId, t.ordinal] }),
 		uniqueIndex('uk_batch_items_custom').on(t.batchId, t.customId),
 		index('idx_batch_items_status_ordinal').on(t.batchId, t.status, t.ordinal),
-		check('batch_items_status_chk', sql`${t.status} IN ('pending', 'in_progress', 'completed', 'failed', 'cancelled')`),
+		check(
+			'batch_items_status_chk',
+			sql`${t.status} IN ('pending', 'in_progress', 'completed', 'failed', 'cancelled')`,
+		),
 		check(
 			'batch_items_request_range_chk',
 			sql`${t.requestStartOffset} BETWEEN 0 AND 52428799 AND ${t.requestEndOffset} BETWEEN 1 AND 52428800 AND ${t.requestEndOffset} > ${t.requestStartOffset} AND ${t.requestEndOffset} - ${t.requestStartOffset} <= 1048578`,

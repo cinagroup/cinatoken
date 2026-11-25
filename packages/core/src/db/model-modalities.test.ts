@@ -141,3 +141,19 @@ describe('audio model kind', () => {
 		assert.equal(isTextLlmModel(transcription), false);
 	});
 });
+
+describe('embedding model kind', () => {
+	it('detects embedding output and excludes it from other kinds', () => {
+		const m = {
+			input_modalities: ['text'],
+			output_modalities: ['embedding'],
+			pricing_profile: zeroTierProfile,
+		};
+		assert.equal(isEmbeddingModel(m), true);
+		assert.equal(isTextLlmModel(m), false);
+		assert.equal(isImageGenerationModel(m), false);
+		assert.equal(isAudioModel(m), false);
+		assert.equal(isEmbeddingModel({ output_modalities: ['text'] }), false);
+		assert.equal(isEmbeddingModel({}), false);
+	});
+});

@@ -1,14 +1,16 @@
+import type { DashboardOverview, DashboardOverviewWindow } from '@octafuse/core';
 /**
  * 管理后台 API 的请求/响应 TypeScript 类型（与 Hono 路由 JSON 契约对应）。
  * 下列按路由分组用注释隔开，便于检索。
  */
+import type { ModelKind } from '@octafuse/core/db/model-kind';
 import type {
 	ApiKeyBudgetAuditLogRow,
 	ApiKeyRateLimit,
 	GlobalApiKeyBudgetAuditLogRow,
 	RequestLogRow,
 } from '@octafuse/core';
-import type { ModelRouteJoinRow } from '@octafuse/core';
+import type { ModelRouteJoinRow, RequestLogSummaryRow } from '@octafuse/core';
 import type { UpstreamProtocol } from '@octafuse/core/upstream-protocol';
 
 export type BudgetPeriod = 'none' | 'daily' | 'weekly' | 'monthly';
@@ -126,11 +128,17 @@ export type AdminProviderMutationInput = {
 	kind?: unknown;
 	/** `{ openai?: { base?, endpoints? }, … }` 对象或 JSON 字符串 */
 	endpoints?: unknown;
-	/** 创建必填；PATCH 时空串/省略 = 不改 */
+	/** 创建必填；PATCH 省略 = 不改，空串/null = 清空 */
 	api_key?: unknown;
 	/** `active` | `disabled` */
 	status?: unknown;
-	description?: unknown;
+	/** 运营备注。空串或 null 清空。 */
+	note?: unknown;
+	/**
+	 * 按上游协议分组的默认 `custom_params`：`{ "<protocol>": { headers?, body? } }` 对象或 JSON 字符串，
+	 * 无 `force_override`（该字段仍只属于 Route）。创建省略 = 不配置；PATCH 省略 = 不改，`null` = 清空。
+	 */
+	custom_params?: unknown;
 	[key: string]: unknown;
 };
 
@@ -145,7 +153,15 @@ export type AdminProviderImportCatalogItem = {
 	protocols: UpstreamProtocol[];
 	/** 序列化后的 endpoints JSON（可 null） */
 	endpoints: string | null;
+	/** 缺本地化摘要时导入列表回退展示的运维说明。不写入数据库。 */
 	description: string | null;
+	/** 导入列表与入库显示名。按界面语言取 `en` / `zh` / `ja` / `ko`。 */
+	labels?: {
+		en: { name: string; description: string };
+		zh: { name: string; description: string };
+		ja: { name: string; description: string };
+		ko: { name: string; description: string };
+	};
 	/** 官网 / 密钥页 / 可选邀请链接；不写入 providers 表。 */
 	links?: {
 		platform?: string;
@@ -157,6 +173,8 @@ export type AdminProviderImportCatalogItem = {
 /** `POST /admin/providers/import` 请求体：导入选中的 catalog 键（`GET .../catalog` 返回的 `id`）。 */
 export type AdminProvidersImportBody = {
 	ids: string[];
+	/** 当前界面语言。`zh` / `ja` / `ko` 用对应目录名称，其余用英文。缺省按英文。 */
+	locale?: string;
 };
 
 /** `POST /admin/providers/import`：从静态模板创建 `providers` 行。托管环境凭据模板使用固定 Provider id 并幂等跳过。 */
@@ -183,7 +201,8 @@ export type AdminModelMutationInput = {
 	 * 空字符串 / null 表示清除（PATCH 时）。
 	 */
 	pricing_profile?: unknown;
-	description?: unknown;
+	/** 运营备注。空串或 null 清空。 */
+	note?: unknown;
 	metadata?: unknown;
 	tags?: unknown;
 	[key: string]: unknown;
@@ -237,20 +256,28 @@ export type AdminStaticModelPresetCatalogItem = {
 	display_name: string | null;
 	vendor: string;
 	/** LLM / 文生图 / 语音转写（与列表页 Kind 一致）。 */
-	kind: 'llm' | 'image' | 'audio';
+	kind: ModelKind;
 	context_window: number | null;
 	max_tokens: number | null;
-	/** English fallback used by non-localized Admin clients and on import. */
+	/** English catalog summary, shown when `i18n.en` is absent. Not stored. */
 	description: string | null;
-	/** Localized catalog summaries; currently aligned with Website locales. */
+	/** Localized catalog introductions. Admin displays these; they are not stored. */
 	i18n: {
 		en: string;
 		zh: string;
+		ja: string;
+		ko: string;
 	} | null;
+	/** Model release date `YYYY-MM-DD`. */
+	released: string | null;
+	/** Vendor retirement date `YYYY-MM-DD`; null = still offered. */
+	retired: string | null;
 	/** 当前计费币种对应目录价分支的档位数 */
 	tier_count: number;
 	/** 表格短文案（如 `¥12 / ¥36 /M` 或 `$2 / $8 /M`）。 */
 	pricing_label: string | null;
+	/** 当前计费币种的目录价分支是否存在；不存在时无法导入（例如只有 USD 刊例价的海外模型在 CNY 网关下）。 */
+	pricing_available: boolean;
 	/** 悬停详情：token 档位行（单位与 `BILLING_CURRENCY` 一致）。 */
 	pricing_preview: string | null;
 };
@@ -274,6 +301,7 @@ export type AdminModelsImportOutput = {
 
 /** ---------- 列表/详情行（与 D1 + JOIN 列对齐） ---------- */
 export type AdminProviderRow = {
+ description?: string | null;
 	id: string;
 	name: string;
 	/** 由内置 Provider 预设名称 / Endpoint 动态推导，或在 `kind` 已设置时由模板决定。不单独落库。 */
@@ -282,10 +310,12 @@ export type AdminProviderRow = {
 	icon_key?: string;
 	/** 导入模板英文名、`__custom__`，或空字符串（尚未分类）。 */
 	kind?: string;
-	/** 已保存类型的中英文展示名。自定义与未分类时省略。 */
+	/** 已保存类型的中、英、日、韩展示名。自定义与未分类时省略。 */
 	kind_labels?: {
 		en: string;
 		zh: string;
+		ja?: string;
+		ko?: string;
 	};
 	/** 由内置预设叠加的官网 / 密钥 / 邀请链接，不持久化。 */
 	catalog_links?: {
@@ -294,11 +324,24 @@ export type AdminProviderRow = {
 		referral?: string;
 	};
 	endpoints: string | null;
+	/**
+	 * 按上游协议分组的默认 `custom_params`（headers/body），无 `force_override`；原样返回已规范化的信封，
+	 * 不含明文密钥（本来就不涉及，Provider 参数不含密钥字段）。
+	 */
+	custom_params?: string | null;
 	/** 列表/详情为脱敏预览；明文仅经 `GET /:id/api-key` */
 	api_key?: string;
 	/** `active` | `disabled` */
 	status?: string;
-	description: string | null;
+	/** 运营备注。类型介绍见 `kind_descriptions`。 */
+	note: string | null;
+	/** 已保存类型的中、英、日、韩介绍。自定义、未分类或模板没有介绍时省略。 */
+	kind_descriptions?: {
+		en: string;
+		zh: string;
+		ja?: string;
+		ko?: string;
+	};
 	created_at: string;
 	has_pending_key?: boolean;
 	/** `model_routes` 引用该 provider 的总数 */
@@ -320,7 +363,12 @@ export type AdminModelRow = {
 	input_modalities: string | null;
 	output_modalities: string | null;
 	released_at: string | null;
-	description: string | null;
+	/** 厂商退役日期 `YYYY-MM-DD`，由内置静态目录按 id 匹配得出（不落库）；null=仍在提供或目录无此模型 */
+	retired_at?: string | null;
+	/** 运营备注。目录介绍见 `catalog_i18n`。 */
+	note: string | null;
+	/** 静态目录中、英、日、韩介绍。自建模型为 null。 */
+	catalog_i18n?: { en: string; zh: string; ja: string; ko: string } | null;
 	metadata: string | null;
 	/** 路由策略 JSON（`strategy` + `rules`）；null=回退全局 ROUTE_STRATEGY */
 	route_policy?: string | null;
@@ -453,6 +501,17 @@ export type AdminRequestLogsOutput = {
 	page_size: number;
 };
 
+/** `GET /admin/request-logs/summary` 的输出。 */
+export type AdminRequestLogSummaryOutput = {
+	start: string;
+	end: string;
+	/** 规范化后的分组维度，逗号分隔，按固定顺序（provider、model、user、provider_key、route_group、status）。 */
+	group_by: string;
+	groups: RequestLogSummaryRow[];
+	/** 仅显式分页（传了 `limit`）时可能为 true。 */
+	has_more: boolean;
+};
+
 /** `GET /admin/config` 单行 */
 export type AdminConfigRow = {
 	key: string;
@@ -468,6 +527,7 @@ export type AdminAnalyticsRecentLog = Pick<
 
 /** `GET /admin/stats` 仪表盘数据结构 */
 export type AdminStatsOutput = {
+	operations: DashboardOverview & { window: DashboardOverviewWindow };
 	gateway: {
 		activeKeysCount: number;
 		keysTotal: number;
@@ -659,6 +719,12 @@ export type AdminReliabilityProviderRow = {
 	error_count: number;
 	success_rate: number;
 	avg_latency_ms: number | null;
+	avg_first_reasoning_token_ms: number | null;
+	avg_first_token_ms: number | null;
+	avg_effective_ttft_ms: number | null;
+	avg_reasoning_phase_ms: number | null;
+	reasoning_ttft_rate: number;
+	content_ttft_rate: number;
 	avg_upstream_response_ms: number | null;
 	failover_rate: number;
 	/** Requests with at least one failover; legacy failover_rate counts events per 100 requests. */
@@ -677,6 +743,12 @@ export type AdminReliabilityModelProviderRow = {
 	request_count: number;
 	success_rate: number;
 	avg_latency_ms: number | null;
+	avg_first_reasoning_token_ms: number | null;
+	avg_first_token_ms: number | null;
+	avg_effective_ttft_ms: number | null;
+	avg_reasoning_phase_ms: number | null;
+	reasoning_ttft_rate: number;
+	content_ttft_rate: number;
 	avg_upstream_response_ms: number | null;
 	failover_rate: number;
 	/** Requests with at least one failover; legacy failover_rate counts events per 100 requests. */

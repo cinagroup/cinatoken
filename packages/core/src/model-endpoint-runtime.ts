@@ -43,6 +43,9 @@ type EndpointFactKind = "text" | "image" | "audio";
 const ENDPOINT_FACT_KIND_BY_OPERATION = {
 	chat: "text",
 	responses: "text",
+	"models.embed": "text",
+	"audio.transcriptions.realtime": "audio",
+	"audio.speech.realtime": "audio",
 	embeddings: "text",
 	rerank: "text",
 	"images.generations": "image",

@@ -264,7 +264,8 @@ export async function updateUserBudgetWithAuditTxD1(
 		params.expectedBudgetBase < 0 ||
 		!Number.isFinite(params.expectedBudgetSpent) ||
 		params.expectedBudgetSpent < 0 ||
-		(params.expectedBudgetMax !== null && (!Number.isFinite(params.expectedBudgetMax) || params.expectedBudgetMax < 0))
+		(params.expectedBudgetMax !== null &&
+			(!Number.isFinite(params.expectedBudgetMax) || params.expectedBudgetMax < 0))
 	) {
 		throw new Error('Invalid expected ordinary-user budget reset accounting values');
 	}
@@ -626,7 +627,8 @@ async function insertRequestUsageAndChargeTxD1Attempt(
 		) {
 			throw new Error('Ordinary-user budget reservation contains unsafe accounting values');
 		}
-		ordinarySettlementMicros = params.userBudgetSettlement.mode === 'reserved' ? reservedMicros : ordinaryActualMicros;
+		ordinarySettlementMicros =
+			params.userBudgetSettlement.mode === 'reserved' ? reservedMicros : ordinaryActualMicros;
 		const terminalMatches =
 			(params.userBudgetSettlement.mode === 'actual' &&
 				((ordinaryReservation.state === 'settled' && previousSettledMicros === ordinarySettlementMicros) ||
@@ -740,6 +742,9 @@ async function insertRequestUsageAndChargeTxD1Attempt(
 						.bind(params.requestLog.id, recovery.payloadSha256, recordedAt),
 		);
 	}
+	if (params.requestLog.apiKeyId) {
+		statements.push(client.raw.prepare('UPDATE api_keys SET last_used_at = ? WHERE id = ?').bind(recordedAt, params.requestLog.apiKeyId));
+	}
 	for (const attempt of params.requestLog.providerAttempts ?? []) {
 		statements.push(
 			client.raw
@@ -802,7 +807,11 @@ async function insertRequestUsageAndChargeTxD1Attempt(
 			);
 		}
 		const expectedTerminalState =
-			settlement.mode === 'reserved' ? 'expired' : ordinaryReservation.state === 'expired' ? 'expired' : 'settled';
+			settlement.mode === 'reserved'
+				? 'expired'
+				: ordinaryReservation.state === 'expired'
+				? 'expired'
+				: 'settled';
 		// CHECK(state) converts a stale/non-matching transition into a batch rollback.
 		statements.push(
 			client.raw
@@ -839,7 +848,12 @@ async function insertRequestUsageAndChargeTxD1Attempt(
 	if (params.userBudgetSettlement || params.shouldChargeBudget) {
 		const auditedCharge = params.userBudgetSettlement ? userBudgetAmount(ordinarySettlementMicros ?? 0) : charged;
 		const afterSpent = roundGatewayMoney(params.beforeSpent + auditedCharge);
-		const auditRow = userBudgetAuditToInsertRowForUsageCharge(params.userId, afterSpent, auditedCharge, params.audit);
+		const auditRow = userBudgetAuditToInsertRowForUsageCharge(
+			params.userId,
+			afterSpent,
+			auditedCharge,
+			params.audit,
+		);
 		statements.push(
 			params.userBudgetSettlement
 				? buildEpochAwareUsageAuditLogStatement(
@@ -847,7 +861,7 @@ async function insertRequestUsageAndChargeTxD1Attempt(
 						auditRow,
 						params.userBudgetSettlement.requestId,
 						params.userBudgetSettlement.mode,
-					)
+				  )
 				: buildInsertUserAuditLogStatement(client.raw, auditRow),
 		);
 	}
@@ -1041,7 +1055,8 @@ async function insertRequestUsageAndChargeTxD1Attempt(
 			) {
 				return;
 			}
-			const initiallyActive = ordinaryReservation?.state === 'reserved' || ordinaryReservation?.state === 'dispatched';
+			const initiallyActive =
+				ordinaryReservation?.state === 'reserved' || ordinaryReservation?.state === 'dispatched';
 			if (
 				allowLateActualExpiryRetry &&
 				params.userBudgetSettlement.mode === 'actual' &&

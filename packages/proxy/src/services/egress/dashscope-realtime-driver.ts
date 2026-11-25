@@ -1,3 +1,11 @@
+
+import {
+	createRealtimeSocket,
+	type RealtimeFrameData,
+	type RealtimeSocket,
+} from "./dashscope-realtime-socket";
+
+import type { DeferredRealtimeRuntime } from "./dashscope-realtime-session";
 /**
  * DashScope 原生实时音频 WebSocket 驱动：
  * - inference：Fun-ASR / Paraformer / CosyVoice / Sambert 的 run-task 生命周期。
@@ -921,4 +929,136 @@ export async function dispatchDashScopeRealtime(
 	} finally {
 		connection.dispose();
 	}
+}
+
+
+type WorkersUpstreamOpened = { upstream: WebSocket; requestId: string | null };
+
+type WorkersUpstreamRejected = { response: Response; requestId: string | null };
+
+
+/** 第一步：建立（含 Upgrade 握手）上游 WebSocket，还不涉及下游。 */
+async function openWorkersUpstream(
+	route: RouteResult,
+	operation: DashScopeRealtimeOperation,
+	requestSignal: AbortSignal | undefined,
+	timing: RequestTimingCollector | null | undefined,
+	attempt: RequestTimingAttempt | undefined,
+	options: Pick<DashScopeRealtimeDispatchOptions, "fetchImpl">
+): Promise<WorkersUpstreamOpened | WorkersUpstreamRejected> {
+	const capability = realtimeCapability(operation);
+	const endpoint = resolveUpstreamEndpoint(
+		"dashscope",
+		capability,
+		route.providerEndpoints,
+		{
+			providerId: route.providerId,
+		}
+	);
+	const url = outboundWebSocketFetchUrl(endpoint);
+	if (isSessionOperation(operation))
+		url.searchParams.set("model", route.providerModelName);
+
+	const { secret } = await resolveProviderUpstreamSecret(route.providerApiKey);
+	const upstreamResponse = await (options.fetchImpl ?? fetch)(url.toString(), {
+		headers: applyRouteExtraHeaders(
+			{
+				Authorization: `Bearer ${secret}`,
+				Upgrade: "websocket",
+			},
+			route.customParams,
+		),
+		signal: requestSignal,
+	});
+	timing?.markAttemptHeaders(attempt, upstreamResponse.status);
+	const requestId = extractUpstreamRequestId(upstreamResponse.headers);
+	const upstream = upstreamResponse.webSocket;
+	if (upstreamResponse.status !== 101 || !upstream) {
+		return { response: upstreamResponse, requestId };
+	}
+	return { upstream, requestId };
+}
+
+
+function workersUnavailableResponse(): ProxyDispatchResult {
+	return {
+		response: new Response(
+			JSON.stringify({
+				error: {
+					message: "DashScope realtime requires the Cloudflare Workers runtime",
+				},
+			}),
+			{ status: 501, headers: { "Content-Type": "application/json" } }
+		),
+		usagePromise: Promise.resolve(EMPTY_USAGE),
+		upstreamRequestId: null,
+	};
+}
+
+
+/** 把 Workers `WebSocket` 包成运行时无关的 `RealtimeSocket`（会先 accept）。 */
+export function wrapWorkersWebSocket(
+	socket: WebSocket,
+	options: { upstream: boolean }
+): RealtimeSocket {
+	if (options.upstream) socket.binaryType = "arraybuffer";
+	socket.accept({ allowHalfOpen: true });
+	return createRealtimeSocket({
+		send: (data) => socket.send(data as string | ArrayBuffer),
+		close: (code, reason) => closeSocket(socket, code ?? 1000, reason ?? ""),
+		subscribe: (handlers) => {
+			socket.addEventListener("message", (event) =>
+				handlers.message(event.data as RealtimeFrameData)
+			);
+			socket.addEventListener("close", (event) =>
+				handlers.close(event.code, event.reason)
+			);
+			socket.addEventListener("error", () => handlers.error());
+		},
+	});
+}
+
+
+/**
+ * inference 新入口用：创建 WebSocketPair 并立刻接受下游，上游等第一帧 run-task 后再连。
+ * 不在 Workers 运行时（没有 `WebSocketPair`）返回 null。
+ */
+export function createWorkersDeferredRealtime(
+	options: Pick<DashScopeRealtimeDispatchOptions, "fetchImpl" | "responseProtocol"> = {}
+): { runtime: DeferredRealtimeRuntime; response: Response } | null {
+	if (typeof WebSocketPair === "undefined") return null;
+	const pair = new WebSocketPair();
+	const clientEnd = pair[0];
+	const serverEnd = pair[1];
+	const runtime: DeferredRealtimeRuntime = {
+		client: wrapWorkersWebSocket(serverEnd, { upstream: false }),
+		connectUpstream: async (route, operation, signal, timing, attempt) => {
+			const opened = await openWorkersUpstream(
+				route,
+				operation,
+				signal,
+				timing,
+				attempt,
+				options
+			);
+			if ("response" in opened) return opened;
+			return {
+				socket: wrapWorkersWebSocket(opened.upstream, { upstream: true }),
+				requestId: opened.requestId,
+			};
+		},
+	};
+	return {
+		runtime,
+		response: new Response(null, {
+			status: 101,
+			webSocket: clientEnd,
+			headers: {
+				"X-Octafuse-Realtime-Protocol": "dashscope",
+				...(options.responseProtocol
+					? { "Sec-WebSocket-Protocol": options.responseProtocol }
+					: {}),
+			},
+		}),
+	};
 }

@@ -6,15 +6,13 @@ import { scheduleResourceCompletion } from '../runtime/schedule-resource-complet
  * Stateless Streamable HTTP: no session id, GET is 405.
  */
 import { Hono } from 'hono';
-import type { Env } from '../app';
-import { requireApiKey, type ApiKeyContext } from '../middleware/auth';
+import { requireMcpCaller, type McpCaller, type McpEnv } from '../middleware/mcp-auth';
 import { handleMcpAggregateRequest, mcpAggregateDeps } from '../services/mcp/aggregate';
-
-type McpEnv = Env & { Variables: { apiKey: ApiKeyContext } };
 
 export const mcpRoutes = new Hono<McpEnv>();
 
-mcpRoutes.use('*', requireApiKey);
+mcpRoutes.use('*', requireMcpCaller);
+mcpRoutes.on(['GET','DELETE'],'*',c=>c.json({jsonrpc:'2.0',id:null,error:{code:-32000,message:'Method not allowed'}},405,{Allow:'POST'}));
 
 async function serve(c: Context<McpEnv>) {
 	const slug = c.req.param('slug')?.trim() || null;
@@ -27,7 +25,8 @@ async function serve(c: Context<McpEnv>) {
 			},
 		);
 	}
-	const apiKey = c.get('apiKey') as ApiKeyContext;
+	const apiKey = c.get('apiKey');
+	if (!apiKey) throw new Error('Missing authenticated MCP actor');
 	const repos = c.get('repositories') as Parameters<typeof mcpAggregateDeps>[0];
 	return handleMcpAggregateRequest(c.req.raw, {
 		apiKey,

@@ -64,6 +64,7 @@ const NAV_ICONS: Record<AdminNavNameKey, React.ComponentType<{ className?: strin
 	withdrawals: BanknotesIcon,
 	nftMints: SparklesIcon,
 	config: Cog6ToothIcon,
+	maintenance: Cog6ToothIcon,
 };
 
 export default function Sidebar({

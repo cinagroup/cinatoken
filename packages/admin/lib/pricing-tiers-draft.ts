@@ -1,8 +1,9 @@
 /**
  * 管理 UI：`pricing_profile` 的 `{ tiers }` 表单行与 JSON 序列化（与 `@octafuse/core` 解析一致）。
  * Image 双模式：`image_billing_mode` token / per_image + 可选 `image` 块。
- * Audio 三模式：ASR per_second/token，TTS per_character。
+ * Audio 计费：ASR 为 per_second 或 token；TTS 为 per_character 或 token。
  */
+import type { ModelKind } from '@octafuse/core/db/model-kind';
 import {
 	parsePricingProfile,
 	profileHasAudioPerCharacterPricing,
@@ -50,7 +51,7 @@ export type AudioPricingDraftState = {
 	tiers: PricingTierDraftRow[];
 };
 
-/** 新建 Audio 模型默认价（per_second；对齐 openai-audio.json whisper USD：0.0001 / 最低 1 秒）。 */
+/** 新建 Audio 模型默认价（per_second；对齐 openai-audio-asr.json whisper USD：0.0001 / 最低 1 秒）。 */
 export function createDefaultAudioPricingDraft(): AudioPricingDraftState {
 	return {
 		mode: 'per_second',
@@ -109,6 +110,21 @@ export function createEmptyTierRow(): PricingTierDraftRow {
 }
 
 /** 新建模型时的默认一档（可改） */
+/** 新建向量模型的默认档：仅 input 单价（output / cache 留空 → 0）。 */
+export function createDefaultEmbeddingTierRow(): PricingTierDraftRow {
+	return {
+		id: nextRowId(),
+		upto: DRAFT_UPTO_OPEN_SENTINEL,
+		input_price: '0.1',
+		output_price: '',
+		cache_read_price: '',
+		cache_write_price: '',
+		image_input_price: '',
+		image_input_cache_price: '',
+		image_output_price: '',
+	};
+}
+
 export function createDefaultNewModelTierRow(): PricingTierDraftRow {
 	return {
 		id: nextRowId(),
@@ -174,6 +190,43 @@ export function createDefaultAudioCharacterPricingDraft(): AudioPricingDraftStat
 		minimum_characters: '0',
 		tiers: [],
 	};
+}
+
+/** Switching the visible billing mode must not discard another mode's unsaved prices or tiers. */
+export function switchAudioPricingDraftMode(
+	draft: AudioPricingDraftState,
+	mode: AudioBillingModeDraft,
+): AudioPricingDraftState {
+	if (mode === draft.mode) return draft;
+	if (mode === 'token') {
+		return {
+			...draft,
+			mode,
+			tiers: draft.tiers.length ? draft.tiers : createDefaultAudioTokenPricingDraft().tiers,
+		};
+	}
+	if (mode === 'per_second') {
+		const defaults = createDefaultAudioPricingDraft();
+		return {
+			...draft,
+			mode,
+			price_per_second: draft.price_per_second.trim() ? draft.price_per_second : defaults.price_per_second,
+			minimum_seconds: draft.minimum_seconds.trim() ? draft.minimum_seconds : defaults.minimum_seconds,
+		};
+	}
+	return {
+		...draft,
+		mode,
+		minimum_characters: draft.minimum_characters.trim() ? draft.minimum_characters : '0',
+	};
+}
+
+/** Keep token drafts when temporarily viewing per-image pricing. */
+export function imagePricingRowsForMode(
+	rows: PricingTierDraftRow[],
+	mode: ImageBillingModeDraft,
+): PricingTierDraftRow[] {
+	return mode === 'token' && rows.length === 0 ? [createDefaultImageTokenTierRow()] : rows;
 }
 
 export function createDefaultImagePerImageDraft(): ImagePerImageDraft {
@@ -471,7 +524,7 @@ export function serializeAudioPricingDraft(draft: AudioPricingDraftState): Seria
 	}
 	if (draft.mode === 'per_character') {
 		const pricePerCharacter = Number(draft.price_per_character.trim());
-		if (!Number.isFinite(pricePerCharacter) || pricePerCharacter < 0) {
+		if (!draft.price_per_character.trim() || !Number.isFinite(pricePerCharacter) || pricePerCharacter < 0) {
 			return {
 				ok: false,
 				error: 'Audio price_per_character must be a finite number ≥ 0',
@@ -502,7 +555,7 @@ export function serializeAudioPricingDraft(draft: AudioPricingDraftState): Seria
 	}
 
 	const pricePerSecond = Number(draft.price_per_second.trim());
-	if (!Number.isFinite(pricePerSecond) || pricePerSecond < 0) {
+	if (!draft.price_per_second.trim() || !Number.isFinite(pricePerSecond) || pricePerSecond < 0) {
 		return {
 			ok: false,
 			error: 'Audio price_per_second must be a finite number ≥ 0',
@@ -620,7 +673,7 @@ export function formatPricingProfilePreview(
 					mode: imageDraft.mode,
 					tiers: rows,
 					perImage: imageDraft.perImage,
-				})
+			  })
 			: serializeDraftRowsToProfileJson(rows);
 	if (!res.ok) {
 		return `// ${res.error}`;
@@ -665,14 +718,18 @@ export function serializeCatalogScheduleDraft(
 		if (startM == null || startM === 24 * 60 || endM == null || startM === endM) {
 			return {
 				ok: false,
-				error: `Catalog schedule window ${i + 1}: start must be HH:mm, end may also be 24:00, duration must be non-zero`,
+				error: `Catalog schedule window ${
+					i + 1
+				}: start must be HH:mm, end may also be 24:00, duration must be non-zero`,
 			};
 		}
 		const factor = Number(row.factor.trim());
 		if (!Number.isFinite(factor) || factor < 0) {
 			return { ok: false, error: `Catalog schedule window ${i + 1}: factor must be a number ≥ 0` };
 		}
-		const days = [...new Set(row.days.filter((d) => Number.isInteger(d) && d >= 1 && d <= 7))].sort((a, b) => a - b);
+		const days = [...new Set(row.days.filter((d) => Number.isInteger(d) && d >= 1 && d <= 7))].sort(
+			(a, b) => a - b,
+		);
 		const window: DailyScheduleWindow = { start, end, factor };
 		if (days.length > 0 && days.length < 7) {
 			window.days = days;
@@ -719,18 +776,18 @@ export function attachCatalogScheduleToProfileJson(
 
 /** 模型弹窗只读预览：标准价 + 时段倍率，形状与保存到 `pricing_profile` 的 JSON 一致。 */
 export function formatCatalogPricingProfilePreview(input: {
-	kind: 'llm' | 'image' | 'audio';
+	kind: ModelKind;
 	rows: PricingTierDraftRow[];
 	imageDraft?: ImagePricingDraftState;
 	audioDraft?: AudioPricingDraftState;
 	schedule?: CatalogScheduleFormWindow[];
 }): { ok: boolean; text: string } {
 	const tierJson =
-		input.kind === 'audio' && input.audioDraft
+		(input.kind === 'asr' || input.kind === 'tts') && input.audioDraft
 			? serializeAudioPricingDraft(input.audioDraft)
 			: input.kind === 'image' && input.imageDraft
-				? serializeImagePricingDraft(input.imageDraft)
-				: serializeDraftRowsToProfileJson(input.rows);
+			? serializeImagePricingDraft(input.imageDraft)
+			: serializeDraftRowsToProfileJson(input.rows);
 	if (!tierJson.ok) {
 		return { ok: false, text: `// ${tierJson.error}` };
 	}

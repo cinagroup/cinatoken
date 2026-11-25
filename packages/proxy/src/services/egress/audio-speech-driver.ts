@@ -1,3 +1,4 @@
+import {buildElevenLabsTtsRequestFromOpenAi} from '@octafuse/core/elevenlabs-openai';
 /**
  * OpenAI `/audio/speech` 与 DashScope TTS 的协议驱动。
  * DashScope 统一使用 SSE 上游，以便边转发音频边读取最终真实 usage；不会用输入长度伪造最终用量。
@@ -94,7 +95,7 @@ async function withSpeechResources(
 	}
 }
 
-type DashScopeTtsKind = 'speech' | 'qwen' | 'minimax';
+type DashScopeTtsKind = 'speech' | 'qwen-audio' | 'qwen' | 'minimax';
 
 type ParsedTtsEvent = {
 	audioBase64: string | null;
@@ -285,7 +286,10 @@ function validateMiniMaxNestedOptions(
 		return false;
 
 	if (options.voice_setting !== undefined) {
-		if (!isObject(options.voice_setting) || !hasOnlyFields(options.voice_setting, new Set(['vol', 'pitch', 'emotion'])))
+		if (
+			!isObject(options.voice_setting) ||
+			!hasOnlyFields(options.voice_setting, new Set(['vol', 'pitch', 'emotion']))
+		)
 			return false;
 		if (
 			options.voice_setting.vol !== undefined &&
@@ -294,12 +298,14 @@ function validateMiniMaxNestedOptions(
 			return false;
 		if (
 			options.voice_setting.pitch !== undefined &&
-			(!Number.isInteger(options.voice_setting.pitch) || !finiteNumberInRange(options.voice_setting.pitch, -12, 12))
+			(!Number.isInteger(options.voice_setting.pitch) ||
+				!finiteNumberInRange(options.voice_setting.pitch, -12, 12))
 		)
 			return false;
 		if (
 			options.voice_setting.emotion !== undefined &&
-			(typeof options.voice_setting.emotion !== 'string' || !MINIMAX_TTS_EMOTIONS.has(options.voice_setting.emotion))
+			(typeof options.voice_setting.emotion !== 'string' ||
+				!MINIMAX_TTS_EMOTIONS.has(options.voice_setting.emotion))
 		)
 			return false;
 	}
@@ -321,7 +327,10 @@ function validateMiniMaxNestedOptions(
 				request.responseFormat !== 'mp3')
 		)
 			return false;
-		if (options.audio_setting.channel !== undefined && !integerInSet(options.audio_setting.channel, new Set([1, 2])))
+		if (
+			options.audio_setting.channel !== undefined &&
+			!integerInSet(options.audio_setting.channel, new Set([1, 2]))
+		)
 			return false;
 		if (
 			options.audio_setting.force_cbr !== undefined &&
@@ -352,7 +361,8 @@ function validateMiniMaxNestedOptions(
 			return false;
 		for (const field of ['pitch', 'intensity', 'timbre'] as const) {
 			const value = options.voice_modify[field];
-			if (value !== undefined && (!Number.isInteger(value) || !finiteNumberInRange(value, -100, 100))) return false;
+			if (value !== undefined && (!Number.isInteger(value) || !finiteNumberInRange(value, -100, 100)))
+				return false;
 		}
 		if (
 			options.voice_modify.sound_effects !== undefined &&
@@ -415,7 +425,9 @@ function buildStreamingOpenAiSpeechBody(
 	}
 	const marker = `__cinatoken_speech_audio_${crypto.randomUUID()}__`;
 	const serializedReferences = parts.map((part) =>
-		part.type === 'text' ? { type: 'text', text: part.text } : { type: 'input_audio', input_audio: { data: marker } },
+		part.type === 'text'
+			? { type: 'text', text: part.text }
+			: { type: 'input_audio', input_audio: { data: marker } },
 	);
 	const serialized = JSON.stringify({ ...body, input_references: serializedReferences });
 	const quotedMarker = JSON.stringify(marker);
@@ -663,7 +675,8 @@ function parseDashScopeTtsEvent(value: unknown, kind: DashScopeTtsKind): ParsedT
 		const baseResponse = isObject(output.base_resp) ? output.base_resp : null;
 		const statusCode = baseResponse ? finiteInteger(baseResponse.status_code) : null;
 		if (statusCode != null && statusCode !== 0) {
-			error = typeof baseResponse?.status_msg === 'string' ? baseResponse.status_msg : `MiniMax status ${statusCode}`;
+			error =
+				typeof baseResponse?.status_msg === 'string' ? baseResponse.status_msg : `MiniMax status ${statusCode}`;
 		}
 		const data = isObject(output.data) ? output.data : null;
 		const hex = data && typeof data.audio === 'string' ? data.audio : '';
@@ -765,7 +778,8 @@ function dashScopeStreamResponse(options: {
 							);
 						}
 						if (event.terminal) {
-							if (!emittedAudio) throw new SpeechProtocolError('DashScope TTS completed without audio data');
+							if (!emittedAudio)
+								throw new SpeechProtocolError('DashScope TTS completed without audio data');
 							if (options.request.streamFormat === 'sse') controller.enqueue(speechDoneEvent(usage));
 							owned.complete();
 							return;
@@ -828,20 +842,34 @@ async function firstDashScopeEvents(
 	}
 }
 
-function validateDashScopeRequest(kind: DashScopeTtsKind, request: NormalizedAudioSpeechRequest): string | null {
+function validateCosyVoiceSpeech(request: NormalizedAudioSpeechRequest): string | null {
 	if (request.inputReferences) {
 		return 'DashScope TTS adapters do not support OpenRouter stateless voice cloning';
 	}
 	if (!request.voice) return 'DashScope TTS adapters require an explicit voice';
-	if (kind === 'speech') {
-		if (!['mp3', 'opus', 'wav', 'pcm'].includes(request.responseFormat)) {
-			return `DashScope SpeechSynthesizer does not support response_format=${request.responseFormat}`;
-		}
-		if (request.speed < 0.5 || request.speed > 2) {
-			return 'DashScope SpeechSynthesizer speed must be between 0.5 and 2.0';
-		}
-		return null;
+	if (!['mp3', 'opus', 'wav', 'pcm'].includes(request.responseFormat)) {
+		return `DashScope SpeechSynthesizer does not support response_format=${request.responseFormat}`;
 	}
+	if (request.speed < 0.5 || request.speed > 2) {
+		return 'DashScope SpeechSynthesizer speed must be between 0.5 and 2.0';
+	}
+	return null;
+}
+
+/** 与 CosyVoice 今天的 SpeechSynthesizer 字段相同，但单独维护，避免改一边带上另一边。 */
+function validateQwenAudioSpeech(request: NormalizedAudioSpeechRequest): string | null {
+	if (!['mp3', 'opus', 'wav', 'pcm'].includes(request.responseFormat)) {
+		return `DashScope Qwen-Audio TTS does not support response_format=${request.responseFormat}`;
+	}
+	if (request.speed < 0.5 || request.speed > 2) {
+		return 'DashScope Qwen-Audio TTS speed must be between 0.5 and 2.0';
+	}
+	return null;
+}
+
+function validateDashScopeRequest(kind: DashScopeTtsKind, request: NormalizedAudioSpeechRequest): string | null {
+	if (kind === 'speech') return validateCosyVoiceSpeech(request);
+	if (kind === 'qwen-audio') return validateQwenAudioSpeech(request);
 	if (kind === 'qwen') {
 		if (request.responseFormat !== 'wav') return 'DashScope Qwen-TTS only returns wav audio';
 		return null;
@@ -883,15 +911,22 @@ export function audioSpeechRouteCanDispatch(
 		}
 		return request.voice != null || speechCapabilities?.supports_default_voice === true;
 	}
+ if(route.upstreamProtocol==='elevenlabs' && route.adapter==='elevenlabs-tts'){
+  if(request.inputReferences?.length)return false;
+  try{buildElevenLabsTtsRequestFromOpenAi({model:'validation',text:request.input,voiceId:request.voice ?? '',responseFormat:request.responseFormat,speed:request.speed,stream:request.streamFormat==='sse',instructions:request.instructions});return true;}catch{return false;}
+ }
 	if (route.upstreamProtocol !== 'dashscope') return false;
 	if (route.adapter === 'dashscope-tts-speech') {
 		return (
-			validateDashScopeRequest('speech', request) === null && validateDashScopeProviderOptions('speech', route, request)
+			validateDashScopeRequest('speech', request) === null &&
+			validateDashScopeProviderOptions('speech', route, request)
 		);
 	}
+ if(route.adapter==='dashscope-tts-qwen-audio')return validateDashScopeRequest('qwen-audio',request)===null && validateDashScopeProviderOptions('speech',route,request);
 	if (route.adapter === 'dashscope-tts-qwen') {
 		return (
-			validateDashScopeRequest('qwen', request) === null && validateDashScopeProviderOptions('qwen', route, request)
+			validateDashScopeRequest('qwen', request) === null &&
+			validateDashScopeProviderOptions('qwen', route, request)
 		);
 	}
 	if (route.adapter === 'dashscope-tts-minimax') {
@@ -911,7 +946,7 @@ function buildDashScopeTtsBase(
 ): Record<string, unknown> {
 	const voice = requiredVoiceId(request.voice);
 	const providerOptions = resolveAudioProviderOptionsForRoute(request.providerOptions, route);
-	if (kind === 'speech') {
+	if (kind === 'speech' || kind === 'qwen-audio') {
 		return {
 			model: route.providerModelName,
 			input: {
@@ -1052,7 +1087,7 @@ async function dispatchDashScopeTts(
 				upstreamRequestId: null,
 			};
 		}
-		const capability = kind === 'speech' ? 'audio.speech' : 'audio.speech.multimodal';
+		const capability = kind === 'speech' || kind === 'qwen-audio' ? 'audio.speech' : 'audio.speech.multimodal';
 		const url = resolveUpstreamEndpoint('dashscope', capability, route.providerEndpoints, {
 			providerId: route.providerId,
 		});
@@ -1360,6 +1395,17 @@ export async function dispatchOpenAiAudioSpeech(
 			streamedUpload?.stop();
 		}
 	});
+}
+
+export function dispatchDashScopeQwenAudioSpeech(
+	route: RouteResult,
+	request: NormalizedAudioSpeechRequest,
+	requestSignal?: AbortSignal,
+	timing?: RequestTimingCollector | null,
+	attempt?: RequestTimingAttempt,
+	options?: AudioSpeechDispatchOptions,
+): Promise<SpeechDispatchResult> {
+	return dispatchDashScopeTts(route, request, 'qwen-audio', requestSignal, timing, attempt, options);
 }
 
 export function dispatchDashScopeSpeechSynthesizer(

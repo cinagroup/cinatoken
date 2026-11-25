@@ -86,7 +86,7 @@ function fixture(
 	const listOptions: Array<
 		Parameters<GatewayRepositories["requestLogs"]["getRequestLogs"]>[0]
 	> = [];
-	const repositories = {
+	const repositories = {client:{driver:"d1"},
 		requestLogs: {
 			getAdminRequestLogById: options.missing
 				? undefined

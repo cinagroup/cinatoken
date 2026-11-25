@@ -1,20 +1,25 @@
 import {
 	AUDIO_SPEECH_BODY_TEMPLATE,
 	AUDIO_TRANSCRIPTIONS_BODY_TEMPLATE,
+	ELEVENLABS_OPENAI_SPEECH_BODY_TEMPLATE,
+	ELEVENLABS_SPEECH_BODY_TEMPLATE,
+	ELEVENLABS_TRANSCRIPTIONS_BODY_TEMPLATE,
 	MINIMAX_OPENAI_SPEECH_BODY_TEMPLATE,
 	MINIMAX_SPEECH_BODY_TEMPLATE,
 	AUDIO_TRANSCRIPTIONS_FILE_URL_BODY_TEMPLATE,
 	DASHSCOPE_MULTIMODAL_ASR_BODY_TEMPLATE,
-	isAudioRouteModel,
 } from '@/lib/audio-transcriptions';
 import { isAudioTranscriptionModel, isRerankModel, type ModelKindFields } from '@octafuse/core/db/model-modalities';
+import { embeddingBodyTemplateFor } from '@/lib/embeddings';
+import { isDashScopeAsyncFileAdapter } from '@octafuse/core/adapters/registry';
+import { resolveModelKind } from '@octafuse/core/db/model-kind';
 import {
 	extraHeadersFromCustomParams,
 	mergeRouteRequestBody,
 	mergeUpstreamHeaders,
 	splitRouteCustomParams,
 } from '@octafuse/core/route-custom-params';
-import { imageBodyTemplateFor, isImageRouteModel, type ImageOperation } from '@/lib/image-generations';
+import { imageBodyTemplateFor, type ImageOperation } from '@/lib/image-generations';
 import {
 	DASHSCOPE_ASYNC_TRANSCRIPTION_BODY_TEMPLATE,
 	DASHSCOPE_MULTIMODAL_SPEECH_BODY_TEMPLATE,
@@ -25,12 +30,18 @@ import {
 	isDashScopeRealtimeOperation,
 } from '@/lib/dashscope-realtime-client';
 import {
+	buildElevenLabsRealtimeTemplate,
+	isElevenLabsRealtimeOperation,
+	prepareElevenLabsRealtimeRequest,
+} from '@/lib/elevenlabs-realtime-client';
+import {
 	loadPlaygroundSampleBody,
 	PLAYGROUND_LLM_SAMPLE_IDS,
 	type PlaygroundLlmFamily,
 	type PlaygroundLlmSampleId,
 } from '@/lib/playground/samples';
 import { normalizeProtocol } from '@/lib/playground/usage-parsing';
+import type { ModelKindFilter } from '@/lib/invoke-kind';
 import type { AdminModelRow } from '@/lib/services/admin/types';
 import type { PlaygroundModelKind, RouteListRow } from './types';
 
@@ -44,10 +55,19 @@ export {
 	type PlaygroundLlmSampleId,
 } from '@/lib/playground/samples';
 
+/** Start from the selected upstream operation, so an edits route cannot silently become generation. */
+export function defaultImageOperationForRoute(
+	route: Pick<RouteListRow, 'upstream_protocol' | 'upstream_operation'>,
+): ImageOperation {
+	return normalizeProtocol(route.upstream_protocol) === 'openai' && route.upstream_operation === 'images.edits'
+		? 'edits'
+		: 'generations';
+}
+
 export const inputClass =
-	'w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white';
-export const labelClass = 'block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1';
-export const panelClass = 'rounded-xl border border-gray-200/80 bg-white p-4 shadow-sm space-y-3';
+	'min-h-10 w-full min-w-0 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-100';
+export const labelClass = 'block text-xs font-medium text-gray-500 normal-case tracking-normal mb-1';
+export const panelClass = 'admin-editor-panel rounded-xl border border-gray-200 bg-white p-4 space-y-4';
 export const codeBlockClass =
 	'p-3 text-xs overflow-x-auto whitespace-pre-wrap bg-gray-50 border border-gray-200 rounded-md font-mono text-gray-900';
 export const routeJsonPreClass = `${codeBlockClass} max-h-40 overflow-y-auto`;
@@ -98,12 +118,8 @@ export const RERANK_BODY_TEMPLATE = JSON.stringify(
 	2,
 );
 
-export function resolveRouteModelKind(m: AdminModelRow | undefined): PlaygroundModelKind {
-	if (!m) return 'llm';
-	if (isRerankModel(m)) return 'rerank';
-	if (isAudioRouteModel(m)) return 'audio';
-	if (isImageRouteModel(m)) return 'image';
-	return 'llm';
+export function resolveRouteModelKind(m: AdminModelRow | undefined): ModelKindFilter {
+	return m ? resolveModelKind(m) : 'llm';
 }
 
 export function isRouteActive(status: string): boolean {
@@ -191,6 +207,11 @@ export function typicalPlaygroundDriverHeaders(protocol?: string | null): Record
 				'Content-Type': 'application/json',
 				Authorization: 'Bearer ••••••••',
 			};
+		case 'elevenlabs':
+			return {
+				'Content-Type': 'application/json',
+				'xi-api-key': '••••••••',
+			};
 		default:
 			return {
 				'Content-Type': 'application/json',
@@ -233,11 +254,70 @@ export function previewPlaygroundOutboundHeaderRows(input: {
 
 export type PlaygroundMergedBodyPreview = { status: 'invalid' } | { status: 'preview'; json: string };
 
-/** 与 Proxy / Playground 服务端相同：custom_params 与用户体深度合并。 */
+function realtimeEventName(event: JsonObject): string {
+	const header = event.header;
+	if (isPlainJsonObject(header)) {
+		if (typeof header.action === 'string') return header.action;
+		if (typeof header.event === 'string') return header.event;
+	}
+	return typeof event.type === 'string' ? event.type : '';
+}
+
+/**
+ * 实时（WebSocket）路由的「上游请求体」预览，规则与 Playground 服务端
+ * `rewritePlaygroundRealtimeClientMessage` 一致：
+ * - ElevenLabs：模型在 URL 的 `model_id`，帧原样转发；预览展示 query、路径 voice_id、首帧与文本帧。
+ * - DashScope：只有 `run-task`（inference）与 `session.update`（session）会合并 custom_params；
+ *   `run-task` 的模型写在 `payload.model`，`session.update` 的模型在 URL 里，帧内不写。
+ * 返回 null 表示该 operation 不是实时路由，应走普通合并预览。
+ */
+function previewPlaygroundRealtimeBody(input: {
+	upstreamOperation: string;
+	userBody: JsonObject;
+	customParams?: string | null;
+	providerModelName?: string | null;
+}): PlaygroundMergedBodyPreview | null {
+	const operation = input.upstreamOperation;
+	const model = input.providerModelName?.trim() ?? '';
+	if (isElevenLabsRealtimeOperation(operation)) {
+		try {
+			const prepared = prepareElevenLabsRealtimeRequest(operation, input.userBody);
+			const preview: JsonObject = {
+				query: model ? { ...prepared.query, model_id: model } : prepared.query,
+			};
+			if (prepared.voiceId) preview.voice_id = prepared.voiceId;
+			if (prepared.initFrame) preview.first_frame = prepared.initFrame as JsonObject;
+			if (prepared.text != null) preview.text = prepared.text;
+			return { status: 'preview', json: JSON.stringify(preview, null, 2) };
+		} catch {
+			// voice_id / text 缺失等：按「请求体无效」提示，而不是展示误导性的合并体。
+			return { status: 'invalid' };
+		}
+	}
+	if (isDashScopeRealtimeOperation(operation)) {
+		const name = realtimeEventName(input.userBody);
+		const shouldMerge =
+			(operation.endsWith('.inference') && name === 'run-task') ||
+			(operation.endsWith('.session') && name === 'session.update');
+		if (!shouldMerge) return { status: 'preview', json: JSON.stringify(input.userBody, null, 2) };
+		const merged: JsonObject = {
+			...mergeRouteRequestBody(parseCustomParamsObject(input.customParams), input.userBody),
+		};
+		if (name === 'run-task') {
+			const payload = isPlainJsonObject(merged.payload) ? merged.payload : {};
+			merged.payload = model ? { ...payload, model } : payload;
+		}
+		return { status: 'preview', json: JSON.stringify(merged, null, 2) };
+	}
+	return null;
+}
+
+/** 与 Proxy / Playground 服务端相同：custom_params 与用户体深度合并（实时路由见 `previewPlaygroundRealtimeBody`）。 */
 export function previewPlaygroundMergedBody(input: {
 	bodyText: string;
 	customParams?: string | null;
 	upstreamProtocol?: string | null;
+	upstreamOperation?: string | null;
 	providerModelName?: string | null;
 }): PlaygroundMergedBodyPreview {
 	let userBody: unknown;
@@ -248,6 +328,16 @@ export function previewPlaygroundMergedBody(input: {
 	}
 	if (!isPlainJsonObject(userBody)) {
 		return { status: 'invalid' };
+	}
+
+	if (input.upstreamOperation) {
+		const realtime = previewPlaygroundRealtimeBody({
+			upstreamOperation: input.upstreamOperation,
+			userBody,
+			customParams: input.customParams,
+			providerModelName: input.providerModelName,
+		});
+		if (realtime) return realtime;
 	}
 
 	const customParams = parseCustomParamsObject(input.customParams);
@@ -290,11 +380,16 @@ export function templateForRoute(
 	imageOperation: ImageOperation = 'generations',
 ): string {
 	const proto = normalizeProtocol(route.upstream_protocol);
-	const isImage = model ? isImageRouteModel(model) : false;
-	const isAudio = model ? isAudioRouteModel(model) : false;
-	const isRerank = model ? isRerankModel(model) : false;
-	const isAudioTranscription = isAudioTranscriptionModel(model ?? {});
-	const isAudioHttp = proto === 'openai' || proto === 'dashscope' || proto === 'minimax';
+	const kind = model ? resolveModelKind(model) : 'llm';
+	const isImage = kind === 'image';
+	const isEmbedding = kind === 'embedding';
+	if (isEmbedding && (proto === 'openai' || proto === 'gemini')) {
+		return embeddingBodyTemplateFor({ protocol: proto });
+	}
+	const isAudio = kind === 'asr' || kind === 'tts';
+	const isAudioTranscription = kind === 'asr';
+	const isAudioHttp = proto === 'openai' || proto === 'dashscope' || proto === 'minimax' || proto === 'elevenlabs';
+	const isRerank = kind === 'rerank';
 	const realtime = isAudio && proto === 'dashscope' && isDashScopeRealtimeOperation(route.upstream_operation ?? '');
 	if (realtime) {
 		return route.upstream_operation?.startsWith('audio.speech.')
@@ -303,10 +398,15 @@ export function templateForRoute(
 					route.upstream_operation && isDashScopeRealtimeOperation(route.upstream_operation)
 						? route.upstream_operation
 						: undefined,
-				);
+			  );
+	}
+	if (isAudio && proto === 'elevenlabs' && isElevenLabsRealtimeOperation(route.upstream_operation)) {
+		return buildElevenLabsRealtimeTemplate(route.upstream_operation);
 	}
 	if (isAudio && isAudioHttp) {
 		if (isAudioTranscription) {
+			if (proto === 'elevenlabs' && route.adapter === 'passthrough')
+				return ELEVENLABS_TRANSCRIPTIONS_BODY_TEMPLATE;
 			if (
 				proto === 'dashscope' &&
 				route.adapter === 'passthrough' &&
@@ -314,7 +414,10 @@ export function templateForRoute(
 			) {
 				return DASHSCOPE_ASYNC_TRANSCRIPTION_BODY_TEMPLATE;
 			}
-			if (route.adapter === 'dashscope-asr-file-async' || route.upstream_operation === 'audio.transcriptions.async') {
+			if (
+				isDashScopeAsyncFileAdapter(route.adapter ?? '') ||
+				route.upstream_operation === 'audio.transcriptions.async'
+			) {
 				return AUDIO_TRANSCRIPTIONS_FILE_URL_BODY_TEMPLATE;
 			}
 			if (proto === 'dashscope' && route.adapter === 'passthrough') {
@@ -323,7 +426,8 @@ export function templateForRoute(
 			return AUDIO_TRANSCRIPTIONS_BODY_TEMPLATE;
 		}
 		if (proto === 'dashscope' && route.adapter === 'passthrough') {
-			if (route.upstream_operation === 'audio.speech.multimodal') return DASHSCOPE_MULTIMODAL_SPEECH_BODY_TEMPLATE;
+			if (route.upstream_operation === 'audio.speech.multimodal')
+				return DASHSCOPE_MULTIMODAL_SPEECH_BODY_TEMPLATE;
 			if (route.upstream_operation === 'audio.speech' || route.upstream_operation === 'audio.speech.stream') {
 				return buildDashScopeNativeSpeechBodyTemplate(route.provider_model_name);
 			}
@@ -331,13 +435,22 @@ export function templateForRoute(
 		if (proto === 'dashscope' && route.upstream_operation === 'audio.speech') {
 			return buildDashScopeSpeechBodyTemplate(route.provider_model_name);
 		}
+		if (proto === 'elevenlabs') {
+			return route.adapter === 'elevenlabs-tts'
+				? ELEVENLABS_OPENAI_SPEECH_BODY_TEMPLATE
+				: ELEVENLABS_SPEECH_BODY_TEMPLATE;
+		}
 		if (proto === 'minimax' && route.adapter === 'minimax-tts') return MINIMAX_OPENAI_SPEECH_BODY_TEMPLATE;
 		if (proto === 'minimax') return MINIMAX_SPEECH_BODY_TEMPLATE;
 		return AUDIO_SPEECH_BODY_TEMPLATE;
 	}
 	if (
 		isImage &&
-		(proto === 'openai' || proto === 'dashscope' || proto === 'minimax' || proto === 'volcengine' || proto === 'gemini')
+		(proto === 'openai' ||
+			proto === 'dashscope' ||
+			proto === 'minimax' ||
+			proto === 'volcengine' ||
+			proto === 'gemini')
 	) {
 		return imageBodyTemplateFor({
 			protocol: proto,
@@ -382,9 +495,9 @@ export function resolvePlaygroundLlmFamily(route: RouteListRow | null | undefine
 
 export function playgroundLlmFamilyForRoute(
 	route: RouteListRow | null | undefined,
-	opts: { isImage?: boolean; isAudio?: boolean; isRerank?: boolean } = {},
+	opts: { isImage?: boolean; isAudio?: boolean; isRerank?: boolean; isEmbedding?: boolean } = {},
 ): PlaygroundLlmFamily | null {
-	if (opts.isImage || opts.isAudio || opts.isRerank) return null;
+	if (opts.isImage || opts.isAudio || opts.isRerank || opts.isEmbedding) return null;
 	return resolvePlaygroundLlmFamily(route);
 }
 

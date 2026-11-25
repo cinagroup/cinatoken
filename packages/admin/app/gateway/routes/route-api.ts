@@ -14,6 +14,7 @@ import type {
 	RouteListRow,
 	RoutesPageData,
 	StickyBindingLookup,
+	StickyBindingsList,
 	StickyBindingsSummary,
 } from "./types";
 
@@ -180,6 +181,25 @@ export async function fetchStickyBindingsSummary(
 		success: false,
 		message: data.message || "Failed to load sticky bindings summary",
 	};
+}
+
+export async function fetchStickyBindingsList(params: {
+	poolId: string;
+	page: number;
+	pageSize: number;
+	routeTargetId?: string;
+}): Promise<{ success: true; data: StickyBindingsList } | { success: false; message: string }> {
+	const qs = new URLSearchParams({
+		page: String(params.page),
+		page_size: String(params.pageSize),
+	});
+	if (params.routeTargetId) qs.set('route_target_id', params.routeTargetId);
+	const response = await fetch(
+		`/api/admin/routes/pools/${encodeURIComponent(params.poolId)}/sticky/bindings?${qs}`
+	);
+	const data = await readApiJson<StickyBindingsList>(response);
+	if (data.success && data.data) return { success: true, data: data.data };
+	return { success: false, message: data.message || 'Failed to load sticky bindings' };
 }
 
 export async function lookupStickyBinding(params: {

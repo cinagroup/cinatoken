@@ -1,3 +1,4 @@
+import { catalogNotePatch, catalogNoteValue } from '../catalog-note-compat';
 /**
  * Postgres：`providers` 表（Drizzle）。
  */
@@ -21,7 +22,9 @@ function mapPgProviderRow(r: {
 	endpoints: string | null;
 	apiKey: string;
 	status: string;
-	description: string | null;
+	note: string | null;
+ description?: string | null;
+	customParams: string | null;
 	sharedChannelType?: string | null;
 	createdAt: string;
 }): ProviderRow {
@@ -32,7 +35,9 @@ function mapPgProviderRow(r: {
 		endpoints: r.endpoints,
 		api_key: r.apiKey,
 		status: r.status,
-		description: r.description,
+		note: r.note,
+ description: catalogNoteValue(r),
+		custom_params: r.customParams,
 		shared_channel_type: r.sharedChannelType ?? null,
 		created_at: r.createdAt,
 	};
@@ -51,14 +56,16 @@ export function createPostgresProvidersRepository(db: PostgresDatabaseClient): P
 					endpoints: string | null;
 					api_key: string;
 					status: string;
-					description: string | null;
+					note: string | null;
+ description?: string | null;
+					custom_params: string | null;
 					shared_channel_type: string | null;
 					created_at: string;
 					routes_count: number;
 					active_routes_count: number;
 				}>
 			>`
-			SELECT p.id, p.name, p.kind, p.endpoints, p.api_key, p.status, p.description, p.shared_channel_type, p.created_at::text,
+			SELECT p.id, p.name, p.kind, p.endpoints, p.api_key, p.status, p.description, p.note, p.custom_params, p.shared_channel_type, p.created_at::text,
 				(SELECT COUNT(*)::int FROM model_routes WHERE provider_id = p.id) AS routes_count,
 				(SELECT COUNT(*)::int FROM model_routes WHERE provider_id = p.id AND status = 'active') AS active_routes_count
 			FROM providers p ORDER BY p.created_at DESC
@@ -70,7 +77,9 @@ export function createPostgresProvidersRepository(db: PostgresDatabaseClient): P
 				endpoints: r.endpoints,
 				api_key: r.api_key,
 				status: r.status,
-				description: r.description,
+				note: r.note,
+ description: catalogNoteValue(r),
+				custom_params: r.custom_params,
 				shared_channel_type: r.shared_channel_type,
 				created_at: r.created_at,
 				routes_count: Number(r.routes_count ?? 0),
@@ -106,10 +115,12 @@ export function createPostgresProvidersRepository(db: PostgresDatabaseClient): P
 			name: string;
 			kind?: string;
 			endpoints: string | null;
-			description: unknown;
+			note?: unknown;
+			description?: unknown;
 			apiKey?: string;
 			status?: string;
 			sharedChannelType?: string | null;
+			customParams?: string | null;
 		}): Promise<void> {
 			const now = new Date().toISOString();
 			await drizzle.insert(pgProvidersTable).values({
@@ -119,13 +130,16 @@ export function createPostgresProvidersRepository(db: PostgresDatabaseClient): P
 				endpoints: params.endpoints,
 				apiKey: params.apiKey ?? '',
 				status: params.status ?? 'active',
-				description: params.description == null ? null : String(params.description),
+				description: params.description == null ? (params.note == null ? null : String(params.note)) : String(params.description),
 				sharedChannelType: params.sharedChannelType ?? null,
+				note: params.note == null ? (params.description == null ? null : String(params.description)) : String(params.note),
+				customParams: params.customParams ?? null,
 				createdAt: now,
 			});
 		},
 
 		async updateProviderByPatch(id: string, body: Record<string, unknown>): Promise<number> {
+ body = catalogNotePatch(body);
 			const set: Record<string, unknown> = {};
 			for (const [key, value] of Object.entries(body)) {
 				if (key === 'id' || value === undefined) continue;
@@ -164,14 +178,16 @@ export function createPostgresProvidersRepository(db: PostgresDatabaseClient): P
 					endpoints: string | null;
 					api_key: string;
 					status: string;
-					description: string | null;
+					note: string | null;
+ description?: string | null;
+					custom_params: string | null;
 					shared_channel_type: string | null;
 					created_at: string;
 					routes_count: number;
 					active_routes_count: number;
 				}>
 			>`
-			SELECT p.id, p.name, p.kind, p.endpoints, p.api_key, p.status, p.description, p.shared_channel_type, p.created_at::text,
+			SELECT p.id, p.name, p.kind, p.endpoints, p.api_key, p.status, p.description, p.note, p.custom_params, p.shared_channel_type, p.created_at::text,
 				(SELECT COUNT(*)::int FROM model_routes WHERE provider_id = p.id) AS routes_count,
 				(SELECT COUNT(*)::int FROM model_routes WHERE provider_id = p.id AND status = 'active') AS active_routes_count
 			FROM providers p WHERE p.id = ${id}
@@ -185,7 +201,9 @@ export function createPostgresProvidersRepository(db: PostgresDatabaseClient): P
 				endpoints: r.endpoints,
 				api_key: r.api_key,
 				status: r.status,
-				description: r.description,
+				note: r.note,
+ description: catalogNoteValue(r),
+				custom_params: r.custom_params,
 				shared_channel_type: r.shared_channel_type,
 				created_at: r.created_at,
 				routes_count: Number(r.routes_count ?? 0),

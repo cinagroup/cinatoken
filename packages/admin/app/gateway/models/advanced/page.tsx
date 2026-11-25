@@ -1,17 +1,19 @@
 'use client';
-
 import AdvancedEditorGate from '@/components/routing-workbench/AdvancedEditorGate';
+
+import { AdminPageTitle } from '@/components/admin-page-title';
 
 /**
  * 模型目录：CRUD、标签、定价字段；数据来自 `/api/admin/models`。
- * 页面筛选条 Kind（All | LLM | Image | Audio）+ Vendor；下方卡片网格（与 Providers 同密度）；`?kind=` / `?vendor=` 持久化（`useSearchParams` + Suspense）。
+ * 页面筛选条 Kind（All | LLM | Image | ASR | TTS | Embedding）+ Lifecycle（All | Active | Retired）+ Vendor；下方支持卡片与列表切换；`?kind=` / `?vendor=` / `?lifecycle=` 持久化（`useSearchParams` + Suspense）。
  * `?edit=<model_id>` 可从 Routes 等入口深链直接打开编辑弹窗（消费后从 URL 清除）。
  */
-import { Suspense } from 'react';
+import { Suspense, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useModelsPageState } from '@/app/gateway/models/use-models-page-state';
-import { ModelAddCard } from '@/app/gateway/models/components/model-add-card';
-import { ModelCard } from '@/app/gateway/models/components/model-card';
+import { ArrowDownTrayIcon, PlusIcon } from '@heroicons/react/24/outline';
+import { useCatalogView } from '@/app/gateway/components/use-catalog-view';
+import { MODEL_LIST_COLUMNS, ModelCard } from '@/app/gateway/models/components/model-card';
 import { ModelFilterSidebar } from '@/app/gateway/models/components/model-filter-sidebar';
 import { ModelImportModal } from '@/app/gateway/models/components/model-import-modal';
 import { ModelModal } from '@/app/gateway/models/components/model-modal';
@@ -23,9 +25,12 @@ import { normalizeModelVendorInput } from '@/lib/model-vendor';
 
 function ModelsContent() {
 	const t = useTranslations('models');
-	const tBrand = useTranslations('brand');
 	const tCommon = useTranslations('common');
 	const state = useModelsPageState();
+	const [initialTab, setInitialTab] = useState<'basic' | 'pricing' | 'routes'>(
+		'basic'
+	);
+	const [view, setView] = useCatalogView('octafuse.admin.models.view');
 	const sync = useModelSync({
 		onChanged: state.reloadModelsQuietly,
 		onReport: state.setOfficialReport,
@@ -33,7 +38,7 @@ function ModelsContent() {
 
 	if (state.isLoading) {
 		return (
-			<div className="flex h-full min-h-full items-center justify-center bg-gray-100/90">
+			<div className="flex h-full min-h-full items-center justify-center bg-gray-50">
 				<div className="text-gray-600">{tCommon('loading')}</div>
 			</div>
 		);
@@ -47,18 +52,44 @@ function ModelsContent() {
 		: t('createTitleVendor', { vendor: state.activeVendorTitle });
 
 	return (
-		<div className="min-h-full min-w-0 overflow-x-hidden bg-gray-100/90 p-4 pb-6 sm:p-6 lg:p-8">
-			<div className="mb-5 flex flex-wrap items-start justify-between gap-3 sm:mb-6">
+		<div className="admin-content-workspace content-tone-inference min-h-full min-w-0 overflow-x-hidden bg-gray-50 p-4 pb-6 sm:p-6 lg:p-8">
+			<div className="mb-6 flex flex-wrap items-start justify-between gap-3">
 				<div className="min-w-0">
-					<h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">{t('title')}</h1>
-					<p className="mt-1 text-sm text-gray-500">{t('subtitle', { product: tBrand('product') })}</p>
+					<AdminPageTitle>
+						{t('title')}
+					</AdminPageTitle>
+					<p className="mt-1 text-sm text-gray-500">{t('overviewSubtitle')}</p>
 				</div>
-				<ModelSyncCheckButton
-					checking={sync.checking}
-					lastCheckedAt={sync.lastCheckedAt}
-					hasUpdates={officialUpdateCount > 0}
-					onCheck={() => void sync.check()}
-				/>
+				<div className="flex flex-wrap items-start gap-2">
+					<ModelSyncCheckButton
+						checking={sync.loading || sync.checking}
+						onCheck={() => sync.openSync()}
+					/>
+					<button
+						type="button"
+						disabled={state.importSubmitting}
+						onClick={state.openImportCatalogModal}
+						className="inline-flex h-9 items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 text-xs font-medium text-gray-700 hover:bg-gray-100 disabled:opacity-50"
+					>
+						<ArrowDownTrayIcon className="h-4 w-4" aria-hidden />
+						{tCommon('import')}
+					</button>
+					<button
+						type="button"
+						title={createTitle}
+						onClick={() => {
+							setInitialTab('basic');
+							state.handleCreate(
+								state.isAllVendors ? undefined : state.activeVendorKey,
+								state.selectedKind === 'all' || state.selectedKind === 'audio' ? 'llm' : state.selectedKind
+							);
+						}}
+						className="inline-flex h-9 items-center gap-2 rounded-lg admin-primary px-4 text-xs font-medium text-white"
+					>
+						<PlusIcon className="h-4 w-4" aria-hidden />
+						{t('addCard.title')}
+					</button>
+				</div>
 			</div>
 
 			<ModelSyncBanner
@@ -68,6 +99,11 @@ function ModelsContent() {
 			/>
 
 			<ModelFilterSidebar
+				view={view}
+				search={state.modelSearch}
+				onSearchChange={state.setModelSearch}
+				onViewChange={setView}
+				filteredCount={state.selectedVendorItems.length}
 				modelCount={state.models.length}
 				hasActiveFilter={state.hasActiveFilter}
 				isAllVendors={state.isAllVendors}
@@ -75,44 +111,88 @@ function ModelsContent() {
 				modelsByVendor={state.modelsByVendor}
 				selectedKind={state.selectedKind}
 				kindCounts={state.kindCounts}
+				kindAllCount={state.lifecycleFilteredCount}
+				selectedLifecycle={state.selectedLifecycle}
+				lifecycleCounts={state.lifecycleCounts}
+				onSelectLifecycle={state.setSelectedLifecycle}
 				onSelectVendor={state.setSelectedVendor}
 				onSelectKind={state.setSelectedKind}
 				onClearFilter={state.clearFilters}
 			/>
 
-			<div className="admin-catalog-grid">
-				<ModelAddCard
-					importSubmitting={state.importSubmitting}
-					createTitle={createTitle}
-					onImport={state.openImportCatalogModal}
-					onCreate={() => {
-						state.handleCreate(
-							state.isAllVendors ? undefined : state.activeVendorKey,
-							state.selectedKind === 'image' ? 'image' : state.selectedKind === 'audio' ? 'audio' : 'llm',
-						);
-					}}
-				/>
-				{state.selectedVendorItems.map((model) => (
-					<ModelCard
-						key={model.id}
-						model={model}
-						billingCurrency={state.billingCurrency}
-						onEdit={state.handleEdit}
-						onReviewOfficialUpdate={(m) => sync.openSync(normalizeModelVendorInput(m.vendor))}
-					/>
-				))}
+			<div
+				className={
+					view === 'list'
+						? 'admin-collection-canvas overflow-hidden rounded-2xl'
+						: 'admin-collection-canvas admin-catalog-grid'
+				}
+			>
+				{view === 'list' && (
+					<div
+						className={`hidden gap-4 px-4 pb-3 pt-1 text-xs font-medium text-slate-500 xl:grid ${MODEL_LIST_COLUMNS}`}
+						aria-hidden
+					>
+						<span>{t('list.model')}</span>
+						<span>{t('list.kindAndSpecs')}</span>
+						<span>{t('list.pricing')}</span>
+						<span>{t('list.routes')}</span>
+						<span />
+					</div>
+				)}
+				<div
+					className={view === 'list' ? 'admin-model-list' : 'contents'}
+					role={view === 'list' ? 'list' : undefined}
+					aria-label={view === 'list' ? t('title') : undefined}
+				>
+					{state.selectedVendorItems.map((model) => (
+						<ModelCard
+							key={model.id}
+							view={view}
+							model={model}
+							billingCurrency={state.billingCurrency}
+							onEdit={(model) => {
+								setInitialTab('basic');
+								void state.handleEdit(model);
+							}}
+							onViewPricing={(model) => {
+								setInitialTab('pricing');
+								void state.handleEdit(model);
+							}}
+							onViewRoutes={(model) => {
+								setInitialTab('routes');
+								void state.handleEdit(model);
+							}}
+							onReviewOfficialUpdate={(m) =>
+								sync.openSync(normalizeModelVendorInput(m.vendor))
+							}
+						/>
+					))}
+					{view === 'list' && state.selectedVendorItems.length === 0 ? (
+						<div
+							role="listitem"
+							className="p-8 text-center text-sm text-slate-500"
+						>
+							<p>{t('empty')}</p>
+							<p className="mt-1 text-xs text-slate-400">{t(state.hasActiveFilter ? 'emptyFilterHint' : 'emptyHint')}</p>
+						</div>
+					) : null}
+				</div>
 			</div>
-			{state.selectedVendorItems.length === 0 && state.hasActiveFilter ? (
+			{view === 'cards' && state.selectedVendorItems.length === 0 ? (
 				<p className="mt-4 text-center text-sm text-gray-500">
 					{t('empty')}
-					<span className="mt-1 block text-xs text-gray-400">{t('emptyHint')}</span>
+					<span className="mt-1 block text-xs text-gray-400">
+						{t(state.hasActiveFilter ? 'emptyFilterHint' : 'emptyHint')}
+					</span>
 				</p>
 			) : null}
 
 			<ModelSyncModal sync={sync} />
 
 			<ModelModal
+				onRoutesChanged={state.reloadModelsQuietly}
 				open={state.showModal}
+				initialTab={initialTab}
 				editingModel={state.editingModel}
 				duplicateSourceModelId={state.duplicateSourceModelId}
 				formData={state.formData}
@@ -151,6 +231,9 @@ function ModelsContent() {
 				catalogSearch={state.importCatalogSearch}
 				catalogKind={state.importCatalogKind}
 				kindCounts={state.importCatalogKindCounts}
+				catalogLifecycle={state.importCatalogLifecycle}
+				lifecycleCounts={state.importCatalogLifecycleCounts}
+				onCatalogLifecycleChange={state.setImportCatalogLifecycle}
 				catalogLoading={state.importCatalogLoading}
 				catalogError={state.importCatalogError}
 				selected={state.importSelected}
@@ -178,7 +261,7 @@ function GatewayModelsPage() {
 	return (
 		<Suspense
 			fallback={
-				<div className="flex h-full min-h-full items-center justify-center bg-gray-100/90">
+				<div className="flex h-full min-h-full items-center justify-center bg-gray-50">
 					<div className="text-gray-600">{tCommon('loading')}</div>
 				</div>
 			}
@@ -188,4 +271,4 @@ function GatewayModelsPage() {
 	);
 }
 
-export default function AdvancedPage() { return <AdvancedEditorGate feature="models"><GatewayModelsPage /></AdvancedEditorGate>; }
+export default function AdvancedPage() {return <AdvancedEditorGate feature="models"><GatewayModelsPage/></AdvancedEditorGate>;}

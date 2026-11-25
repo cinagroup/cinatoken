@@ -1,14 +1,112 @@
 [
 	{
+		"id": "hy4-flash",
+		"display_name": "Hy4 flash",
+		"description": "Tencent's most cost-efficient Hy model (224B total parameters including 64B Engram parameters, 12B active) for high-frequency, large-scale daily work such as deep search, document processing, slide generation, simple frontend work, and Computer Use. It inherits Hy4's visual understanding and agent abilities, with a 1M context window and about 64K max output. Thinking is on by default (reasoning_effort high; thinking can be turned off). Supports function calling, structured outputs, caching, and OpenAI Chat Completions, Responses, and Anthropic Messages protocols. For long-horizon software engineering and other complex tasks, prefer Hy4. Prices are list prices, not the limited-time 50% TokenHub discount.",
+		"i18n": {
+			"en": "Tencent's most cost-efficient Hy model (224B total parameters including 64B Engram parameters, 12B active) for high-frequency, large-scale daily work such as deep search, document processing, slide generation, simple frontend work, and Computer Use. It inherits Hy4's visual understanding and agent abilities, with a 1M context window and about 64K max output. Thinking is on by default (reasoning_effort high; thinking can be turned off). Supports function calling, structured outputs, caching, and OpenAI Chat Completions, Responses, and Anthropic Messages protocols. For long-horizon software engineering and other complex tasks, prefer Hy4. Prices are list prices, not the limited-time 50% TokenHub discount.",
+			"zh": "腾讯混元迄今性价比最高的 Hy 模型（总参数 224B，其中 64B 为 Engram 参数，激活参数 12B），适合深度搜索、文档处理、PPT 生成、简单前端展示、Computer Use 等高频、规模化的日常工作。沿用 Hy4 的视觉理解与 Agent 能力，上下文 1M，最大输出约 64K。默认开启深度思考（reasoning_effort 为 high，可关闭）。支持 Function Calling、结构化输出、缓存，兼容 OpenAI Chat Completions、Responses 与 Anthropic Messages 协议。长程软件工程等复杂任务建议使用 Hy4。价格为刊例价，未计入 TokenHub 的限时 5 折。",
+			"ja": "Tencent の Hy モデルの中で最もコスト効率の高いモデル（総パラメータ 224B、うち 64B は Engram パラメータ、アクティブ 12B）で、ディープ検索、文書処理、スライド作成、簡単なフロントエンド、Computer Use など、頻度が高く大規模な日常業務に向きます。Hy4 の画像理解とエージェント能力を引き継ぎ、コンテキストは 1M、最大出力は約 64K です。思考は既定でオン（reasoning_effort は high、オフにも可）。Function Calling、構造化出力、キャッシュに対応し、OpenAI Chat Completions、Responses、Anthropic Messages プロトコルと互換です。長く続くソフトウェア開発など難しいタスクには Hy4 をおすすめします。価格は定価で、TokenHub の期間限定 50% オフは含みません。",
+			"ko": "Tencent Hy 모델 중 비용 효율이 가장 높은 모델(총 파라미터 224B, 그중 64B는 Engram 파라미터, 활성 12B)로, 딥 서치, 문서 처리, 슬라이드 생성, 간단한 프런트엔드, Computer Use 같은 빈도가 높고 규모가 큰 일상 업무에 적합합니다. Hy4의 이미지 이해와 에이전트 능력을 이어받았고 컨텍스트는 1M, 최대 출력은 약 64K입니다. 사고는 기본으로 켜져 있고(reasoning_effort는 high, 끌 수 있음), Function Calling, 구조화 출력, 캐시를 지원하며 OpenAI Chat Completions, Responses, Anthropic Messages 프로토콜과 호환됩니다. 길게 이어지는 소프트웨어 엔지니어링 같은 복잡한 작업에는 Hy4를 권장합니다. 가격은 정가이며 TokenHub의 기간 한정 50% 할인은 반영하지 않았습니다."
+		},
+		"vendor": "tencent",
+		"context_window": 1000000,
+		"max_tokens": 64000,
+		"pricing": {
+			"usd": {
+				"tiers": [
+					{
+						"upto": null,
+						"input_price": 0.07,
+						"output_price": 0.281,
+						"cache_read_price": 0.003,
+						"cache_write_price": null
+					}
+				]
+			},
+			"cny": {
+				"tiers": [
+					{
+						"upto": null,
+						"input_price": 0.5,
+						"output_price": 2,
+						"cache_read_price": 0.02,
+						"cache_write_price": null
+					}
+				]
+			}
+		},
+		"modalities": {
+			"input": [
+				"text",
+				"image"
+			],
+			"output": [
+				"text"
+			]
+		},
+		"released": "2026-11-16"
+	},
+	{
+		"id": "hy4",
+		"display_name": "Hy4",
+		"description": "Tencent's flagship Hy4 general-availability model, a broad upgrade over Hy4 preview with stronger agentic capabilities and better results on long-horizon, real-world productivity tasks. Hy4 adds visual understanding for the first time and offers a 1M context window for agentic, coding, and productivity workloads.",
+		"i18n": {
+			"en": "Tencent's flagship Hy4 general-availability model, a broad upgrade over Hy4 preview with stronger agentic capabilities and better results on long-horizon, real-world productivity tasks. Hy4 adds visual understanding for the first time and offers a 1M context window for agentic, coding, and productivity workloads.",
+			"zh": "腾讯混元 Hy4 正式版，相比 Hy4 preview 全面大幅提升，尤其强化 Agent 能力与长程、真实生产力任务表现，并首次引入图片理解。上下文 1M，面向 Agent、Coding 与生产力场景。",
+			"ja": "Tencent の Hy4 正式版で、Hy4 preview から全体に大きく強化されています。特にエージェントの力と、長く続く実務タスクでの成果が上がり、画像理解も初めて加わりました。コンテキストは 1M で、エージェント、コーディング、実務向けです。",
+			"ko": "Tencent의 Hy4 정식 버전으로, Hy4 preview보다 전반적으로 크게 좋아졌습니다. 특히 에이전트 능력과 길게 이어지는 실무 작업 성과가 올랐고, 이미지 이해가 처음 추가됐습니다. 컨텍스트는 1M이며 에이전트, 코딩, 실무에 맞춰져 있습니다."
+		},
+		"vendor": "tencent",
+		"context_window": 1000000,
+		"max_tokens": 64000,
+		"pricing": {
+			"usd": {
+				"tiers": [
+					{
+						"upto": null,
+						"input_price": 0.834,
+						"output_price": 2.501,
+						"cache_read_price": 0.042,
+						"cache_write_price": null
+					}
+				]
+			},
+			"cny": {
+				"tiers": [
+					{
+						"upto": null,
+						"input_price": 6,
+						"output_price": 18,
+						"cache_read_price": 0.3,
+						"cache_write_price": null
+					}
+				]
+			}
+		},
+		"modalities": {
+			"input": [
+				"text",
+				"image"
+			],
+			"output": [
+				"text"
+			]
+		},
+		"released": "2026-11-04"
+	},
+	{
 		"id": "hy4-preview",
 		"display_name": "Hy4 preview",
 		"description": "Tencent's next-generation productivity model with significantly enhanced Agent and complex task execution capabilities. Hy4 preview features 770B total parameters with 49B active parameters and is optimized for agentic, coding, and productivity scenarios, with stronger capabilities in understanding, planning, tool use, and sustained execution for complex tasks.",
 		"i18n": {
 			"en": "Tencent's next-generation productivity model with significantly enhanced Agent and complex task execution capabilities. Hy4 preview features 770B total parameters with 49B active parameters and is optimized for agentic, coding, and productivity scenarios, with stronger capabilities in understanding, planning, tool use, and sustained execution for complex tasks.",
-			"zh": "腾讯新一代生产力模型，Agent 与复杂任务执行能力全面升级。Hy4 preview 总参数 770B、激活参数 49B，面向 Agent、Coding 与生产力场景优化，强化复杂任务中的理解、规划、工具调用与持续执行能力。"
+			"zh": "腾讯新一代生产力模型，Agent 与复杂任务执行能力全面升级。Hy4 preview 总参数 770B、激活参数 49B，面向 Agent、Coding 与生产力场景优化，强化复杂任务中的理解、规划、工具调用与持续执行能力。",
+			"ja": "Tencent の次世代の実務モデルで、エージェントと難しいタスクの実行が大きく上がっています。Hy4 preview は総パラメータ 770B、アクティブパラメータ 49B です。エージェント、コーディング、実務向けに、難しい仕事での理解、計画、ツール呼び出し、途中で止まらない実行を強めています。",
+			"ko": "Tencent의 차세대 실무 모델로, 에이전트와 어려운 작업 실행이 크게 올라갔습니다. Hy4 preview는 총 파라미터 770B, 활성 파라미터 49B입니다. 에이전트, 코딩, 실무에 맞춰, 어려운 일에서의 이해, 계획, 도구 호출, 중간에 끊기지 않는 실행을 강화했습니다."
 		},
 		"vendor": "tencent",
-		"context_window": 1024000,
+		"context_window": 1000000,
 		"max_tokens": 64000,
 		"pricing": {
 			"usd": {
@@ -42,7 +140,8 @@
 				"text"
 			]
 		},
-		"released": "2026-08-28"
+		"released": "2026-08-28",
+		"retired": "2026-12-07"
 	},
 	{
 		"id": "hy3",
@@ -50,7 +149,9 @@
 		"description": "A Tencent mixture-of-experts model for configurable reasoning and production agents. Configurable reasoning effort lets production systems trade latency for depth across agentic workloads.",
 		"i18n": {
 			"en": "A Tencent mixture-of-experts model for configurable reasoning and production agents. Configurable reasoning effort lets production systems trade latency for depth across agentic workloads.",
-			"zh": "面向可调节推理与生产级 Agent 的腾讯混合专家模型。可配置的推理强度让生产系统在 Agent 任务中灵活权衡延迟与推理深度。"
+			"zh": "面向可调节推理与生产级 Agent 的腾讯混合专家模型。可配置的推理强度让生产系统在 Agent 任务中灵活权衡延迟与推理深度。",
+			"ja": "推論の強さを調整でき、本番のエージェント向けの Tencent 混合エキスパートです。推論の強さを設定できるので、エージェント作業でレイテンシと深さのバランスを取れます。",
+			"ko": "추론 강도를 조절할 수 있고, 프로덕션 에이전트용 Tencent 혼합 전문가입니다. 추론 강도를 설정할 수 있어, 에이전트 작업에서 지연과 깊이의 균형을 맞출 수 있습니다."
 		},
 		"vendor": "tencent",
 		"context_window": 256000,
@@ -91,7 +192,9 @@
 		"description": "A high-efficiency Tencent preview model for agent workflows and production evaluation. The preview offers configurable reasoning levels for efficient evaluation and deployment of agent workflows.",
 		"i18n": {
 			"en": "A high-efficiency Tencent preview model for agent workflows and production evaluation. The preview offers configurable reasoning levels for efficient evaluation and deployment of agent workflows.",
-			"zh": "面向 Agent 工作流与生产评估的高效率腾讯预览模型。预览版提供可配置推理等级，便于高效评估和部署 Agent 工作流。"
+			"zh": "面向 Agent 工作流与生产评估的高效率腾讯预览模型。预览版提供可配置推理等级，便于高效评估和部署 Agent 工作流。",
+			"ja": "エージェントの流れと本番前の評価向けの、効率のよい Tencent プレビューです。推論レベルを設定でき、エージェントの評価と展開を効率よく進められます。",
+			"ko": "에이전트 흐름과 프로덕션 전 평가용으로 효율 좋은 Tencent 프리뷰입니다. 추론 단계를 설정할 수 있어, 에이전트 평가와 배포를 효율적으로 진행할 수 있습니다."
 		},
 		"vendor": "tencent",
 		"context_window": 256000,
@@ -138,6 +241,7 @@
 			"input": ["text"],
 			"output": ["text"]
 		},
-		"released": "2026-04-23"
+		"released": "2026-04-23",
+		"retired": "2026-08-31"
 	}
 ]

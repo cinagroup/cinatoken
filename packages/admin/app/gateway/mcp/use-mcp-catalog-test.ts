@@ -2,12 +2,11 @@
 import { useAdvancedEditorRequest } from '@/components/routing-workbench/AdvancedEditorGate';
 
 import { useEffect, useRef, useState } from 'react';
+import { useProxyBaseUrlInput } from '@/components/proxy-connection-provider';
 import { useTranslations } from 'next-intl';
 import { readApiJson } from '@/lib/api-json';
 import type { AdminKeyListItem } from '@/lib/services/admin/types';
 import {
-	MCP_CATALOG_PROXY_STORAGE,
-	SIMULATOR_PROXY_STORAGE,
 	buildMcpCatalogRequest,
 	mcpProxyBaseUrl,
 	normalizeMcpApiKey,
@@ -29,10 +28,12 @@ export type McpCatalogTestResponse = {
 };
 
 export function useMcpCatalogTest(initialSlug: string) {
-const editorFetch = useAdvancedEditorRequest();
+	const editorFetch = useAdvancedEditorRequest();
 
 	const t = useTranslations('mcp.catalogTest');
-	const [baseUrl, setBaseUrl] = useState('');
+	const proxyConnection = useProxyBaseUrlInput();
+	const baseUrl = proxyConnection.value;
+	const setBaseUrl = proxyConnection.setValue;
 	const [slug, setSlug] = useState(initialSlug);
 	const [method, setMethod] = useState<McpCatalogMethod>('tools/list');
 	const [protocolVersion, setProtocolVersion] = useState('2025-06-18');
@@ -43,7 +44,7 @@ const editorFetch = useAdvancedEditorRequest();
 	const [response, setResponse] = useState<McpCatalogTestResponse | null>(null);
 	const [sentRequest, setSentRequest] = useState<McpCatalogRequest | null>(null);
 	const [view, setView] = useState<'raw' | 'grouped'>('raw');
-	const requestId = useRef(0);
+	const [requestId, setRequestId] = useState(0);
 	const activeRequest = useRef<AbortController | null>(null);
 	const keyRequest = useRef<AbortController | null>(null);
 	const keysRequest = useRef<AbortController | null>(null);
@@ -56,19 +57,6 @@ const editorFetch = useAdvancedEditorRequest();
 	const [loadingKey, setLoadingKey] = useState(false);
 
 	useEffect(() => {
-		let saved: string | null = null;
-		try {
-			saved =
-				localStorage.getItem(MCP_CATALOG_PROXY_STORAGE) || localStorage.getItem(SIMULATOR_PROXY_STORAGE);
-		} catch {
-			/* Storage can be unavailable in private contexts. */
-		}
-		if (saved && mcpProxyBaseUrl(saved)) setBaseUrl(saved);
-		else if (['localhost', '127.0.0.1', '[::1]'].includes(window.location.hostname)) {
-			const local = new URL(window.location.origin);
-			local.port = '8787';
-			setBaseUrl(local.origin);
-		}
 		return () => {
 			activeRequest.current?.abort();
 			activeRequest.current = null;
@@ -101,7 +89,7 @@ const editorFetch = useAdvancedEditorRequest();
 			const params = new URLSearchParams({ page: '1', page_size: '100' });
 			if (keyFilter.trim()) params.set('email', keyFilter.trim());
 			const result = await readApiJson<AdminKeyListItem[]>(
-				await editorFetch(`/api/admin/keys?${params}`, { signal: controller.signal })
+				await editorFetch(`/api/admin/keys?${params}`, { signal: controller.signal }),
 			);
 			if (controller.signal.aborted) return;
 			if (!result.success || !Array.isArray(result.data)) throw new Error(result.message || t('keysFailed'));
@@ -126,7 +114,7 @@ const editorFetch = useAdvancedEditorRequest();
 		if (!id) return;
 		try {
 			const result = await readApiJson<{ key: string }>(
-				await editorFetch(`/api/admin/keys/${encodeURIComponent(id)}`, { signal: controller.signal })
+				await editorFetch(`/api/admin/keys/${encodeURIComponent(id)}`, { signal: controller.signal }),
 			);
 			if (controller.signal.aborted) return;
 			if (!result.success || !result.data?.key) throw new Error(result.message || t('keysFailed'));
@@ -156,9 +144,20 @@ const editorFetch = useAdvancedEditorRequest();
 		activeRequest.current = controller;
 		if (selectedKeyId) {
 			try {
-				const verified = await readApiJson(await editorFetch(`/api/admin/keys/${encodeURIComponent(selectedKeyId)}/verify-secret`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ secret: key }), signal: controller.signal }));
+				const verified = await readApiJson(
+					await editorFetch(`/api/admin/keys/${encodeURIComponent(selectedKeyId)}/verify-secret`, {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify({ secret: key }),
+						signal: controller.signal,
+					}),
+				);
 				if (!verified.success) throw new Error(verified.message || t('keyRequired'));
-			} catch (cause) { activeRequest.current = null; setError(cause instanceof Error ? cause.message : t('keyRequired')); return; }
+			} catch (cause) {
+				activeRequest.current = null;
+				setError(cause instanceof Error ? cause.message : t('keyRequired'));
+				return;
+			}
 		}
 
 		const request = buildMcpCatalogRequest({
@@ -167,17 +166,14 @@ const editorFetch = useAdvancedEditorRequest();
 			method,
 			protocolVersion,
 			apiKey: key,
-			id: ++requestId.current,
+			id: requestId + 1,
 		});
+		setRequestId(requestId + 1);
 		setSentRequest(redactMcpRequest(request));
 		setResponse(null);
 		setError(null);
 		setSending(true);
-		try {
-			localStorage.setItem(MCP_CATALOG_PROXY_STORAGE, base);
-		} catch {
-			/* Only the URL is persisted. */
-		}
+		proxyConnection.commit();
 		const started = performance.now();
 		const timer = setTimeout(() => controller.abort('timeout'), 30_000);
 		try {
@@ -212,7 +208,7 @@ const editorFetch = useAdvancedEditorRequest();
 			setError(
 				controller.signal.aborted
 					? t(controller.signal.reason === 'timeout' ? 'timeout' : 'cancelled')
-					: t('networkError')
+					: t('networkError'),
 			);
 		} finally {
 			clearTimeout(timer);
@@ -229,9 +225,14 @@ const editorFetch = useAdvancedEditorRequest();
 		method,
 		protocolVersion,
 		apiKey: '',
-		id: requestId.current + 1,
+		id: requestId + 1,
 	});
 	return {
+		proxyConnection,
+		resetBaseUrl: () => {
+			proxyConnection.reset();
+			invalidate();
+		},
 		baseUrl,
 		setBaseUrl: (value: string) => {
 			setBaseUrl(value);

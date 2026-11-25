@@ -1,3 +1,4 @@
+import {oauthActorKeyHash} from '../oauth-actor-key-hash';
 /**
  * D1：`api_keys` 表实现（预算在 `users`）。
  */
@@ -451,7 +452,11 @@ export function createD1ApiKeysRepository(db: D1DatabaseClient): ApiKeysReposito
 			});
 		},
 
-		async getApiKeyById(id: string): Promise<ApiKeyRow | null> {
+		async getOAuthActorKeyLookupHash(input) {
+ const row=await raw.prepare('SELECT id,user_id,workspace_id,status,metadata,key_hash FROM api_keys WHERE id = ? AND user_id = ? AND workspace_id = ? AND status = ?').bind(input.id,input.userId,input.workspaceId,'active').first<{id:string;user_id:string;workspace_id:string;status:string;metadata:string|null;key_hash:string|null}>();
+ return oauthActorKeyHash(row,input);
+ },
+ async getApiKeyById(id: string): Promise<ApiKeyRow | null> {
 			const row = await raw.prepare('SELECT * FROM api_keys WHERE id = ?').bind(id).first<KeySqlRow>();
 			return row ? mapKeyRow(row) : null;
 		},

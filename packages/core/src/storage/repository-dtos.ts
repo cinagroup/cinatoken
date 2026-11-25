@@ -39,7 +39,9 @@ export interface ModelWithRouteCountsRow {
 	pricing_profile: string | null;
 	/** `json_group_array` 结果 */
 	tags: string;
-	description: string | null;
+	/** 运营备注。目录介绍由静态预设按语言解析，不入库。 */
+	note?: string | null;
+	description?: string | null;
 	metadata: string | null;
 	input_modalities: string | null;
 	output_modalities: string | null;
@@ -133,7 +135,9 @@ export interface ProviderAdminRow {
 	api_key?: string;
 	/** `active` | `disabled` */
 	status?: string;
-	description: string | null;
+	/** 运营备注。类型介绍由静态模板按语言解析，不入库。 */
+	note?: string | null;
+	description?: string | null;
 	/** 非空时该 provider 接受对应用户共享密钥池注入（openai/anthropic/zhipu/deepseek）。 */
 	shared_channel_type?: string | null;
 	created_at: string;
@@ -141,6 +145,8 @@ export interface ProviderAdminRow {
 	routes_count?: number;
 	/** 其中 `status = active` 的数量。 */
 	active_routes_count?: number;
+	/** 按上游协议分组的默认 `custom_params`（headers/body），无 `force_override`；见 `@octafuse/core/provider-custom-params`。 */
+	custom_params?: string | null;
 }
 
 /** 分析：按模型 + 路由组聚合。 */
@@ -326,6 +332,12 @@ export interface ProviderReliabilityRow {
 	success_count: number;
 	error_count: number;
 	avg_latency_ms: number | null;
+	avg_first_reasoning_token_ms: number | null;
+	avg_first_token_ms: number | null;
+	avg_effective_ttft_ms: number | null;
+	avg_reasoning_phase_ms: number | null;
+	reasoning_ttft_rate: number;
+	content_ttft_rate: number;
 	avg_upstream_response_ms: number | null;
 	failover_rate: number;
 	/** Requests with at least one failover; legacy failover_rate counts events per 100 requests. */
@@ -345,6 +357,12 @@ export interface ModelProviderReliabilityRow {
 	request_count: number;
 	success_count: number;
 	avg_latency_ms: number | null;
+	avg_first_reasoning_token_ms: number | null;
+	avg_first_token_ms: number | null;
+	avg_effective_ttft_ms: number | null;
+	avg_reasoning_phase_ms: number | null;
+	reasoning_ttft_rate: number;
+	content_ttft_rate: number;
 	avg_upstream_response_ms: number | null;
 	failover_rate: number;
 	/** Requests with at least one failover; legacy failover_rate counts events per 100 requests. */
@@ -354,4 +372,40 @@ export interface ModelProviderReliabilityRow {
 	charged_cost: number;
 	metered_cost: number;
 	standard_cost: number;
+}
+
+/** Dashboard aggregates over all matching logs, never the recent-activity sample. */
+export interface DashboardPeriodMetrics {
+	requests: number;
+	success: number;
+	errors: number;
+	incomplete: number;
+	cancelled: number;
+	charged: number;
+	metered: number;
+	standard: number;
+	errorCost: number;
+	failoverRequests: number;
+	failoverSamples: number;
+	attemptsSamples: number;
+	avgAttempts: number | null;
+	ttftSamples: number;
+	ttftP50: number | null;
+	ttftP95: number | null;
+	latencySamples: number;
+	latencyP50: number | null;
+	latencyP95: number | null;
+}
+export type DashboardErrorCategory = 'rate_limit' | 'timeout' | 'auth' | 'upstream' | 'request' | 'other';
+export interface DashboardOverview {
+	current: DashboardPeriodMetrics;
+	previous: DashboardPeriodMetrics;
+	providers: Array<{ id: string; name: string | null; requests: number; errors: number; affectedUsers: number }>;
+	errorCategories: Array<{ category: DashboardErrorCategory; count: number }>;
+}
+export interface DashboardOverviewWindow {
+	startDate: string;
+	endDate: string;
+	previousStart: string;
+	previousEnd: string;
 }

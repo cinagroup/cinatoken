@@ -1,3 +1,4 @@
+import { catalogNotePatch, catalogNoteValue } from '../catalog-note-compat';
 /**
  * MySQL：`providers` 表（Drizzle + mysql2）。
  */
@@ -12,12 +13,12 @@ import type { ProviderAdminRow } from '../../storage/repository-dtos';
 import { PROVIDER_PATCH_COLS } from '../patch-allowlists';
 import { asMySqlPool } from './mysql2-compat';
 
-const PROVIDER_LIST_WITH_ROUTE_COUNTS_SQL = `SELECT p.id, p.name, p.kind, p.endpoints, p.api_key, p.status, p.description, p.shared_channel_type, p.created_at,
+const PROVIDER_LIST_WITH_ROUTE_COUNTS_SQL = `SELECT p.id, p.name, p.kind, p.endpoints, p.api_key, p.status, p.description, p.note, p.custom_params, p.shared_channel_type, p.created_at,
 		(SELECT COUNT(*) FROM model_routes WHERE provider_id = p.id) AS routes_count,
 		(SELECT COUNT(*) FROM model_routes WHERE provider_id = p.id AND status = 'active') AS active_routes_count
 	FROM providers p ORDER BY p.created_at DESC`;
 
-const PROVIDER_DETAIL_WITH_ROUTE_COUNTS_SQL = `SELECT p.id, p.name, p.kind, p.endpoints, p.api_key, p.status, p.description, p.shared_channel_type, p.created_at,
+const PROVIDER_DETAIL_WITH_ROUTE_COUNTS_SQL = `SELECT p.id, p.name, p.kind, p.endpoints, p.api_key, p.status, p.description, p.note, p.custom_params, p.shared_channel_type, p.created_at,
 		(SELECT COUNT(*) FROM model_routes WHERE provider_id = p.id) AS routes_count,
 		(SELECT COUNT(*) FROM model_routes WHERE provider_id = p.id AND status = 'active') AS active_routes_count
 	FROM providers p WHERE p.id = ?`;
@@ -29,7 +30,9 @@ function mapMyProviderRow(r: {
 	endpoints: string | null;
 	apiKey: string;
 	status: string;
-	description: string | null;
+	note: string | null;
+ description?: string | null;
+	customParams: string | null;
 	sharedChannelType?: string | null;
 	createdAt: string;
 }): ProviderRow {
@@ -40,7 +43,9 @@ function mapMyProviderRow(r: {
 		endpoints: r.endpoints,
 		api_key: r.apiKey,
 		status: r.status,
-		description: r.description,
+		note: r.note,
+ description: catalogNoteValue(r),
+		custom_params: r.customParams,
 		shared_channel_type: r.sharedChannelType ?? null,
 		created_at: r.createdAt,
 	};
@@ -60,7 +65,9 @@ export function createMySqlProvidersRepository(db: MySqlDatabaseClient): Provide
 					endpoints: string | null;
 					api_key: string;
 					status: string;
-					description: string | null;
+					note: string | null;
+ description?: string | null;
+					custom_params: string | null;
 					shared_channel_type: string | null;
 					created_at: string;
 					routes_count: number;
@@ -74,7 +81,9 @@ export function createMySqlProvidersRepository(db: MySqlDatabaseClient): Provide
 				endpoints: r.endpoints,
 				api_key: r.api_key,
 				status: r.status,
-				description: r.description,
+				note: r.note,
+ description: catalogNoteValue(r),
+				custom_params: r.custom_params,
 				shared_channel_type: r.shared_channel_type,
 				created_at: r.created_at,
 				routes_count: Number(r.routes_count ?? 0),
@@ -110,10 +119,12 @@ export function createMySqlProvidersRepository(db: MySqlDatabaseClient): Provide
 			name: string;
 			kind?: string;
 			endpoints: string | null;
-			description: unknown;
+			note?: unknown;
+			description?: unknown;
 			apiKey?: string;
 			status?: string;
 			sharedChannelType?: string | null;
+			customParams?: string | null;
 		}): Promise<void> {
 			const now = new Date().toISOString();
 			await drizzle.insert(myProvidersTable).values({
@@ -123,13 +134,16 @@ export function createMySqlProvidersRepository(db: MySqlDatabaseClient): Provide
 				endpoints: params.endpoints,
 				apiKey: params.apiKey ?? '',
 				status: params.status ?? 'active',
-				description: params.description == null ? null : String(params.description),
+				description: params.description == null ? (params.note == null ? null : String(params.note)) : String(params.description),
 				sharedChannelType: params.sharedChannelType ?? null,
+				note: params.note == null ? (params.description == null ? null : String(params.description)) : String(params.note),
+				customParams: params.customParams ?? null,
 				createdAt: now,
 			});
 		},
 
 		async updateProviderByPatch(id: string, body: Record<string, unknown>): Promise<number> {
+ body = catalogNotePatch(body);
 			const patch: string[] = [];
 			const bindValues: unknown[] = [];
 			for (const [key, value] of Object.entries(body)) {
@@ -139,10 +153,10 @@ export function createMySqlProvidersRepository(db: MySqlDatabaseClient): Provide
 				bindValues.push(value);
 			}
 			if (patch.length === 0) return 0;
-			const [result] = await pool.execute<ResultSetHeader>(`UPDATE providers SET ${patch.join(', ')} WHERE id = ?`, [
-				...bindValues,
-				id,
-			]);
+			const [result] = await pool.execute<ResultSetHeader>(
+				`UPDATE providers SET ${patch.join(', ')} WHERE id = ?`,
+				[...bindValues, id],
+			);
 			return result.affectedRows;
 		},
 
@@ -165,7 +179,9 @@ export function createMySqlProvidersRepository(db: MySqlDatabaseClient): Provide
 					endpoints: string | null;
 					api_key: string;
 					status: string;
-					description: string | null;
+					note: string | null;
+ description?: string | null;
+					custom_params: string | null;
 					shared_channel_type: string | null;
 					created_at: string;
 					routes_count: number;
@@ -181,7 +197,9 @@ export function createMySqlProvidersRepository(db: MySqlDatabaseClient): Provide
 				endpoints: r.endpoints,
 				api_key: r.api_key,
 				status: r.status,
-				description: r.description,
+				note: r.note,
+ description: catalogNoteValue(r),
+				custom_params: r.custom_params,
 				shared_channel_type: r.shared_channel_type,
 				created_at: r.created_at,
 				routes_count: Number(r.routes_count ?? 0),

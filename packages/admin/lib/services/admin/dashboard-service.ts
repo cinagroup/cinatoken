@@ -1,12 +1,30 @@
+import { dashboardOverviewWindow } from './dashboard-window';
+import { DASHBOARD_ACTIVITY_LIMIT } from '@/lib/dashboard-constants';
 /**
  * 管理后台聚合服务：仪表盘 KPI、全局请求日志列表、`system_config` 读写，以及模型/供应商/用户/可靠性分析 API 的数据装配。
  */
 import type { GatewayRepositories, RequestLogRow } from '@octafuse/core';
 import type { AdminPrincipal } from '@/lib/admin-principal';
+import type { RequestLogSummaryDimension, RequestLogSummaryRow } from '@octafuse/core';
+import { resolveModelKind } from '@octafuse/core/db/model-kind';
+import type { RequestLogMatchGroup } from '@octafuse/core/db/request-log-filters';
+import { UNCLASSIFIED_PROVIDER_KIND_FILTER } from '@/lib/provider-kind';
+import { MAX_REQUEST_LOG_FILTER_IDS, MAX_REQUEST_LOG_KINDS, parseRequestLogKinds } from '@/lib/request-log-kind';
+import { requestLogKindMatchGroups, requestLogKindsNeedCatalog } from './request-log-kind-filter';
 import {
 	BILLING_CURRENCY_KEY,
 	tryParseGatewaySupportedBillingCurrencyInput,
 } from '@octafuse/core/lib/billing-currency';
+import { MAINTENANCE_MODE_KEY } from '@octafuse/core/lib/maintenance-mode';
+import {
+	MCP_OAUTH_AUTHORIZATION_SERVER_KEY,
+	MCP_OAUTH_CIMD_ENABLED_KEY,
+	MCP_OAUTH_CONSENT_URL_KEY,
+	MCP_OAUTH_ISSUER_KEY,
+	normalizeMcpOAuthAuthorizationServer,
+	normalizeMcpOAuthConsentUrl,
+	normalizeMcpOAuthIssuer,
+} from '@octafuse/core/lib/mcp-oauth-system-config';
 import {
 	DEFAULT_ROUTE_STRATEGY,
 	isRouteStrategyName,
@@ -49,6 +67,7 @@ import type {
 	AdminReliabilityAnalyticsOutput,
 	AdminReliabilityModelProviderRow,
 	AdminReliabilityProviderRow,
+	AdminRequestLogSummaryOutput,
 	AdminRequestLogsOutput,
 	AdminAnalyticsRecentLog,
 	AdminStatsOutput,
@@ -102,6 +121,13 @@ export async function listAdminGlobalRequestLogsService(
 		model_id?: string;
 		provider_id?: string;
 		provider_ids?: string;
+		/** 供应商类型，逗号分隔；`__unclassified__` 表示未分类。与 `provider_ids` 取并集。 */
+		provider_kinds?: string;
+		model_ids?: string;
+		/** 模型厂商 key，逗号分隔。与 `model_ids` 取并集。 */
+		model_vendors?: string;
+		/** 类型多选，见 `lib/request-log-kind.ts`。 */
+		kinds?: string;
 		model_id_prefix?: string;
 		ingress_host?: string;
 		route_group?: string;
@@ -143,6 +169,23 @@ export async function listAdminGlobalRequestLogsService(
 	} catch {
 		throw badRequest('Invalid provider IDs');
 	}
+	const providerKinds = parseIdList(input.provider_kinds, 'provider_kinds', MAX_REQUEST_LOG_FILTER_GROUPS)?.map(
+		(kind) => (kind === UNCLASSIFIED_PROVIDER_KIND_FILTER ? '' : kind),
+	);
+	const modelIds = parseIdList(input.model_ids, 'model_ids', MAX_REQUEST_LOG_FILTER_IDS);
+	const modelVendors = parseIdList(input.model_vendors, 'model_vendors', MAX_REQUEST_LOG_FILTER_GROUPS)?.map(
+		(vendor) => vendor.toLowerCase(),
+	);
+	const kindFilter = await resolveRequestLogKindFilter(repos, input.kinds);
+	// D1 单条语句最多 100 个绑定参数，给分页、时间和其余单值筛选留出余量。
+	const listBinds =
+		kindFilter.binds +
+		[providerIds, providerKinds, modelIds, modelVendors].reduce((sum, list) => sum + (list?.length ?? 0), 0);
+	if (repos.client.driver === 'd1' && listBinds > MAX_D1_REQUEST_LOG_LIST_BINDS) {
+		throw badRequest(
+			`Too many filter values for D1: kinds, model_ids, model_vendors, provider_ids and provider_kinds (plus non-LLM catalog models when filtering by model kind) add up to ${listBinds}, limit ${MAX_D1_REQUEST_LOG_LIST_BINDS}`,
+		);
+	}
 	const result = await repos.requestLogs.getRequestLogs({
 		page,
 		pageSize,
@@ -155,6 +198,10 @@ export async function listAdminGlobalRequestLogsService(
 		providerIds,
 		modelIdPrefix,
 		ingressHost,
+		providerKinds,
+		modelIds,
+		modelVendors,
+		anyOf: kindFilter.groups,
 		routeGroup: input.route_group,
 		protocol,
 		status: input.status,
@@ -166,11 +213,221 @@ export async function listAdminGlobalRequestLogsService(
 		...(modelIdPrefix === undefined ? {} : { model_id_prefix: modelIdPrefix }),
 		...(providerIds === undefined ? {} : { provider_ids: providerIds }),
 	};
+	// 走 OAuth 访问令牌的日志没有 api_key_id；补上授权应用名（令牌已被清理时只剩 id）。
+	const tokenIds = result.logs
+		.map((log) => (log as { oauth_access_token_id?: string | null }).oauth_access_token_id)
+		.filter((id): id is string => typeof id === 'string' && id !== '');
+	let logs = result.logs;
+	if (tokenIds.length > 0) {
+		const names = new Map((await repos.oauthAccessTokens.getNamesByIds(tokenIds)).map((row) => [row.id, row]));
+		logs = result.logs.map((log) => {
+			const id = (log as { oauth_access_token_id?: string | null }).oauth_access_token_id;
+			const hit = id ? names.get(id) : undefined;
+			return hit
+				? { ...log, oauth_access_token_name: hit.client_name, oauth_access_token_client_id: hit.client_id }
+				: log;
+		});
+	}
+	return { ...result, logs, page, page_size: pageSize, ...(Object.keys(appliedFilters).length ? {applied_filters: appliedFilters} : {}) };
+}
+
+const ISO_INSTANT_RE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?(?:Z|[+-]\d{2}:\d{2})$/;
+
+function parseIsoInstant(raw: string | undefined, name: string): string {
+	const value = raw?.trim() ?? '';
+	if (!ISO_INSTANT_RE.test(value) || Number.isNaN(Date.parse(value))) {
+		throw badRequest(`${name} must be an ISO 8601 timestamp with timezone, e.g. 2026-10-20T10:00:00.000Z`);
+	}
+	return new Date(value).toISOString();
+}
+
+/** 汇总分组维度的规范顺序；`group_by` 里的书写顺序无关，响应统一按此顺序回显。 */
+const SUMMARY_DIMENSION_ORDER: readonly RequestLogSummaryDimension[] = [
+	'provider',
+	'model',
+	'user',
+	'provider_key',
+	'route_group',
+	'status',
+];
+
+/** 默认模式（不传 `limit`）单次最多返回的分组数；超出直接报错，不静默截断。 */
+export const REQUEST_LOG_SUMMARY_MAX_GROUPS = 1000;
+/** 显式分页（传了 `limit`）时每页最多的分组数。 */
+export const REQUEST_LOG_SUMMARY_MAX_PAGE_SIZE = 5000;
+/** 没有任何筛选条件时允许汇总的最长区间，避免对全表无界聚合。 */
+export const REQUEST_LOG_SUMMARY_UNFILTERED_MAX_DAYS = 31;
+
+/** 逗号分隔的维度列表 → 去重、校验、按规范顺序排列。 */
+function parseSummaryGroupBy(raw: string | undefined): RequestLogSummaryDimension[] {
+	const parts = (raw ?? '')
+		.split(',')
+		.map((value) => value.trim())
+		.filter((value) => value !== '');
+	if (parts.length === 0) return ['provider'];
+	const allowed = new Set<string>(SUMMARY_DIMENSION_ORDER);
+	for (const part of parts) {
+		if (!allowed.has(part)) {
+			throw badRequest(`group_by must be a comma-separated list of: ${SUMMARY_DIMENSION_ORDER.join(', ')}`);
+		}
+	}
+	if (new Set(parts).size !== parts.length) throw badRequest('group_by must not contain duplicates');
+	return SUMMARY_DIMENSION_ORDER.filter((dimension) => parts.includes(dimension));
+}
+
+function parseNonNegativeInt(raw: string | undefined, name: string): number | undefined {
+	const value = raw?.trim() ?? '';
+	if (value === '') return undefined;
+	if (!/^\d+$/.test(value)) throw badRequest(`${name} must be a non-negative integer`);
+	return Number.parseInt(value, 10);
+}
+
+function zeroSummaryMetrics(): Omit<RequestLogSummaryRow, 'provider_id'> {
 	return {
-		...result,
-		page,
-		page_size: pageSize,
-		...(Object.keys(appliedFilters).length ? { applied_filters: appliedFilters } : {}),
+		request_count: 0,
+		success_count: 0,
+		error_count: 0,
+		incomplete_count: 0,
+		cancelled_count: 0,
+		input_tokens: 0,
+		output_tokens: 0,
+		cache_read_tokens: 0,
+		cache_write_tokens: 0,
+		reasoning_tokens: 0,
+		total_tokens: 0,
+		standard_cost: '0.000000',
+		metered_cost: '0.000000',
+		charged_cost: '0.000000',
+		charged_wallet_cost: '0.000000',
+		error_metered_cost: '0.000000',
+		error_charged_cost: '0.000000',
+	};
+}
+
+/**
+ * 请求日志汇总（门户对账、成本监控等精确核对场景）。
+ * 区间为半开 `[start, end)`，精度到毫秒；所有状态的日志都计入，与明细分页口径一致。
+ * 金额为 6 位小数十进制字符串。没有任何筛选条件时区间不得超过 31 天。
+ * 仅在 `group_by=provider`、传了 `provider_ids` 且未显式分页时，请求的每个 Provider 都有一行，没有日志的记 0。
+ * 分页：不传 `limit` 时一次返回全部分组，超过 1000 组报错；传 `limit`（≤5000）后按分组键排序分页，
+ * 用 `has_more` 判断是否还有下一页，`offset` 必须配合 `limit`。
+ */
+export async function getRequestLogSummaryService(
+	repos: GatewayRepositories,
+	input: {
+		group_by?: string;
+		provider_ids?: string;
+		model_id?: string;
+		model_id_prefix?: string;
+		route_group?: string;
+		status?: string;
+		start?: string;
+		end?: string;
+		include_labels?: string;
+		limit?: string;
+		offset?: string;
+	},
+): Promise<AdminRequestLogSummaryOutput> {
+	const groupBy = parseSummaryGroupBy(input.group_by);
+	const providerIds = parseProviderIds(input.provider_ids);
+	const modelId = input.model_id?.trim() || undefined;
+	const modelIdPrefix = input.model_id_prefix?.trim() || undefined;
+	const routeGroup = input.route_group?.trim() || undefined;
+	const status = input.status?.trim() || undefined;
+	const start = parseIsoInstant(input.start, 'start');
+	const end = parseIsoInstant(input.end, 'end');
+	if (Date.parse(start) >= Date.parse(end)) throw badRequest('start must be earlier than end');
+	const filtered = !!(providerIds || modelId || modelIdPrefix || routeGroup || status);
+	if (!filtered && Date.parse(end) - Date.parse(start) > REQUEST_LOG_SUMMARY_UNFILTERED_MAX_DAYS * 86_400_000) {
+		throw badRequest(
+			`without provider_ids, model_id, model_id_prefix, route_group or status the range must not exceed ${REQUEST_LOG_SUMMARY_UNFILTERED_MAX_DAYS} days`,
+		);
+	}
+	const includeLabels = ['1', 'true'].includes((input.include_labels ?? '').trim().toLowerCase());
+
+	const pageLimit = parseNonNegativeInt(input.limit, 'limit');
+	const offset = parseNonNegativeInt(input.offset, 'offset');
+	if (pageLimit !== undefined && (pageLimit < 1 || pageLimit > REQUEST_LOG_SUMMARY_MAX_PAGE_SIZE)) {
+		throw badRequest(`limit must be between 1 and ${REQUEST_LOG_SUMMARY_MAX_PAGE_SIZE}`);
+	}
+	if (offset !== undefined && pageLimit === undefined) throw badRequest('offset requires limit');
+	const paginated = pageLimit !== undefined;
+	const fetchLimit = (paginated ? pageLimit : REQUEST_LOG_SUMMARY_MAX_GROUPS) + 1;
+
+	const rows = await repos.requestLogs.getRequestLogSummary({
+		groupBy,
+		startDate: start,
+		endDate: end,
+		providerIds,
+		modelId,
+		modelIdPrefix,
+		routeGroup,
+		status,
+		includeLabels,
+		limit: fetchLimit,
+		offset: offset ?? 0,
+	});
+	const exceeded = rows.length >= fetchLimit;
+	if (exceeded && !paginated) {
+		throw badRequest(
+			`summary has more than ${REQUEST_LOG_SUMMARY_MAX_GROUPS} groups, narrow the filters, choose a coarser group_by, or paginate with limit/offset`,
+		);
+	}
+	let groups = exceeded ? rows.slice(0, fetchLimit - 1) : rows;
+	if (!paginated && groupBy.length === 1 && groupBy[0] === 'provider' && providerIds) {
+		const byId = new Map(rows.map((row) => [row.provider_id, row]));
+		groups = providerIds.map((id) => byId.get(id) ?? { provider_id: id, ...zeroSummaryMetrics() });
+	}
+	return { start, end, group_by: groupBy.join(','), groups, has_more: paginated && exceeded };
+}
+
+const MAX_PROVIDER_IDS = 10;
+/** 请求日志列表的 `model_vendors` / `provider_kinds` 最多带多少项。一项只占一个绑定参数，放得比 id 宽。 */
+const MAX_REQUEST_LOG_FILTER_GROUPS = 100;
+const MAX_D1_REQUEST_LOG_LIST_BINDS = 85;
+
+function parseIdList(raw: string | undefined, name: string, max: number): string[] | undefined {
+	if (raw == null || raw.trim() === '') return undefined;
+	const ids = [
+		...new Set(
+			raw
+				.split(',')
+				.map((value) => value.trim())
+				.filter((value) => value !== ''),
+		),
+	];
+	if (ids.length > max) {
+		throw badRequest(`${name} accepts at most ${max} values`);
+	}
+	return ids.length > 0 ? ids : undefined;
+}
+
+function parseProviderIds(raw: string | undefined): string[] | undefined {
+	return parseIdList(raw, 'provider_ids', MAX_PROVIDER_IDS);
+}
+
+/**
+ * `kinds` 参数 → 仓储的「任一组命中」条件。只有按模型类型筛选时才读模型目录。
+ * `binds` 是这些条件大约占用的绑定参数个数：每个类型项一个，按模型类型筛选时每个非 LLM 目录模型再占一个。
+ */
+async function resolveRequestLogKindFilter(
+	repos: GatewayRepositories,
+	raw: string | undefined,
+): Promise<{ groups: RequestLogMatchGroup[] | undefined; binds: number }> {
+	if (raw == null || raw.trim() === '') return { groups: undefined, binds: 0 };
+	const { kinds, invalid } = parseRequestLogKinds(raw);
+	if (invalid.length > 0) {
+		throw badRequest(`Unknown kinds value: ${invalid[0]}`);
+	}
+	if (kinds.length > MAX_REQUEST_LOG_KINDS) {
+		throw badRequest(`kinds accepts at most ${MAX_REQUEST_LOG_KINDS} values`);
+	}
+	const catalog = requestLogKindsNeedCatalog(kinds)
+		? (await repos.models.listModelsWithRouteCounts()).map((row) => ({ id: row.id, kind: resolveModelKind(row) }))
+		: [];
+	return {
+		groups: requestLogKindMatchGroups(kinds, catalog),
+		binds: kinds.length + catalog.filter((model) => model.kind !== 'llm').length,
 	};
 }
 
@@ -251,6 +508,9 @@ export async function updateAdminSystemConfigService(
 	if (key === 'MASTER_KEY') {
 		throw badRequest('MASTER_KEY is removed; use Integration Keys');
 	}
+	if (key === MAINTENANCE_MODE_KEY) {
+		throw badRequest('MAINTENANCE_MODE is managed via PUT /api/admin/maintenance');
+	}
 	let value = body.value == null ? '' : String(body.value);
 	if (key === 'BUSINESS_TIMEZONE') {
 		const parsed = parseBusinessTimezoneInput(value);
@@ -263,6 +523,40 @@ export async function updateAdminSystemConfigService(
 			throw badRequest('BILLING_CURRENCY must be USD or CNY');
 		}
 		value = parsed;
+	}
+	if (key === MCP_OAUTH_AUTHORIZATION_SERVER_KEY) {
+		const normalized = normalizeMcpOAuthAuthorizationServer(value);
+		if (normalized === null) {
+			throw badRequest(
+				'MCP_OAUTH_AUTHORIZATION_SERVER must be an https origin (http allowed for localhost), or empty to disable',
+			);
+		}
+		value = normalized;
+	}
+	if (key === MCP_OAUTH_ISSUER_KEY) {
+		const normalized = normalizeMcpOAuthIssuer(value);
+		if (normalized === null) {
+			throw badRequest(
+				'MCP_OAUTH_ISSUER must be an https origin (http allowed for localhost), or empty to disable',
+			);
+		}
+		value = normalized;
+	}
+	if (key === MCP_OAUTH_CIMD_ENABLED_KEY) {
+		const normalized = value.trim().toLowerCase();
+		if (!['', 'true', 'false', '1', '0'].includes(normalized)) {
+			throw badRequest('MCP_OAUTH_CIMD_ENABLED must be true, false or empty');
+		}
+		value = normalized === 'true' || normalized === '1' ? 'true' : '';
+	}
+	if (key === MCP_OAUTH_CONSENT_URL_KEY) {
+		const normalized = normalizeMcpOAuthConsentUrl(value);
+		if (normalized === null) {
+			throw badRequest(
+				'MCP_OAUTH_CONSENT_URL must be an https URL without credentials or fragment (http allowed for localhost), or empty',
+			);
+		}
+		value = normalized;
 	}
 	if (key === ROUTE_STRATEGY_KEY) {
 		const normalized = value.trim().toLowerCase();
@@ -277,7 +571,9 @@ export async function updateAdminSystemConfigService(
 		const normalized = value.trim().toLowerCase();
 		if (!isUserChargedCostFactorMode(normalized)) {
 			throw badRequest(
-				`USER_CHARGED_COST_FACTOR_MODE must be one of: ${USER_CHARGED_COST_FACTOR_MODES.join(', ')} (default ${DEFAULT_USER_CHARGED_COST_FACTOR_MODE})`,
+				`USER_CHARGED_COST_FACTOR_MODE must be one of: ${USER_CHARGED_COST_FACTOR_MODES.join(
+					', ',
+				)} (default ${DEFAULT_USER_CHARGED_COST_FACTOR_MODE})`,
 			);
 		}
 		value = normalized;
@@ -285,7 +581,9 @@ export async function updateAdminSystemConfigService(
 	if (key === STREAM_FIRST_EVENT_TIMEOUT_MS_KEY) {
 		const normalized = normalizeFirstEventTimeoutMsInput(value);
 		if (normalized === null) {
-			throw badRequest('STREAM_FIRST_EVENT_TIMEOUT_MS must be empty or an integer from 0 to 2147483647 milliseconds');
+			throw badRequest(
+				'STREAM_FIRST_EVENT_TIMEOUT_MS must be empty or an integer from 0 to 2147483647 milliseconds',
+			);
 		}
 		value = normalized;
 	}
@@ -358,7 +656,7 @@ function analyticsRecentLog(row: RequestLogRow): AdminAnalyticsRecentLog {
  */
 export async function getAdminStatsService(
 	repos: GatewayRepositories,
-	input?: { range?: string; startDate?: string; endDate?: string },
+	input?: { range?: string; startDate?: string; endDate?: string; preset?: string },
 ): Promise<AdminStatsOutput> {
 	const { startDate, endDate, granularity } = resolveStatsDateRange({
 		range: input?.range,
@@ -371,7 +669,9 @@ export async function getAdminStatsService(
 		businessTimeZone,
 	);
 
+	const overviewWindow = dashboardOverviewWindow(startDate, endDate, businessTimeZone, input?.preset);
 	const [
+		overview,
 		keysCount,
 		accountsCount,
 		todayStats,
@@ -384,6 +684,7 @@ export async function getAdminStatsService(
 		userRows,
 		timeseries,
 	] = await Promise.all([
+		repos.requestLogs.getDashboardOverview(overviewWindow),
 		repos.apiKeys.getApiKeysCount(),
 		repos.users.getUsersCount(),
 		repos.requestLogs.getRequestStatsByRange({
@@ -391,8 +692,8 @@ export async function getAdminStatsService(
 			endDate: dayEndExclusive,
 			endExclusive: true,
 		}),
-		repos.requestLogs.getRecentLogs(5),
-		repos.requestLogs.getRecentErrors(5),
+		repos.requestLogs.getRecentLogs(DASHBOARD_ACTIVITY_LIMIT),
+		repos.requestLogs.getRecentErrors(DASHBOARD_ACTIVITY_LIMIT),
 		repos.requestLogs.getRequestStatsByRange({ startDate, endDate }),
 		repos.requestLogs.getDistinctActiveUsersCount({ startDate, endDate }),
 		repos.requestLogs.getThroughputLastMinute(),
@@ -466,13 +767,13 @@ export async function getAdminStatsService(
 		errorRate: todayRequestsCount > 0 ? (todayStats.errorCount / todayRequestsCount) * 100 : 0,
 	};
 	const kpi = {
-		totalRequests: kpiStats.totalRequests,
-		successRate: kpiStats.totalRequests > 0 ? (kpiStats.successCount / kpiStats.totalRequests) * 100 : 0,
-		totalCost: kpiStats.chargedCost,
-		meteredCost: kpiStats.meteredCost,
-		standardCost: kpiStats.standardCost,
+		totalRequests: overview.current.requests,
+		successRate: overview.current.requests > 0 ? (overview.current.success / overview.current.requests) * 100 : 0,
+		totalCost: overview.current.charged,
+		meteredCost: overview.current.metered,
+		standardCost: overview.current.standard,
 		activeUsers,
-		errorRate: kpiStats.totalRequests > 0 ? (kpiStats.errorCount / kpiStats.totalRequests) * 100 : 0,
+		errorRate: overview.current.requests > 0 ? (overview.current.errors / overview.current.requests) * 100 : 0,
 		inputTokens: kpiStats.inputTokens,
 		outputTokens: kpiStats.outputTokens,
 		cacheReadTokens: kpiStats.cacheReadTokens,
@@ -484,6 +785,7 @@ export async function getAdminStatsService(
 	};
 
 	return {
+		operations: { ...overview, window: overviewWindow },
 		gateway: gatewayStats,
 		kpi,
 		modelDistribution,
@@ -753,6 +1055,7 @@ export async function getReliabilityAnalyticsService(
 			error_count: Number(r.error_count),
 			success_rate: requestCount > 0 ? (Number(r.success_count) / requestCount) * 100 : 0,
 			avg_latency_ms: r.avg_latency_ms != null ? Number(r.avg_latency_ms) : null,
+			...mapAnalyticsTtftFields(r),
 			avg_upstream_response_ms: r.avg_upstream_response_ms != null ? Number(r.avg_upstream_response_ms) : null,
 			failover_rate: Number(r.failover_rate ?? 0),
 			failover_request_count: Number(r.failover_request_count ?? 0),
@@ -772,6 +1075,7 @@ export async function getReliabilityAnalyticsService(
 			request_count: requestCount,
 			success_rate: requestCount > 0 ? (Number(r.success_count) / requestCount) * 100 : 0,
 			avg_latency_ms: r.avg_latency_ms != null ? Number(r.avg_latency_ms) : null,
+			...mapAnalyticsTtftFields(r),
 			avg_upstream_response_ms: r.avg_upstream_response_ms != null ? Number(r.avg_upstream_response_ms) : null,
 			failover_rate: Number(r.failover_rate ?? 0),
 			failover_request_count: Number(r.failover_request_count ?? 0),

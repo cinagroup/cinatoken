@@ -1,4 +1,9 @@
-import { parseRouteBaseFactors, parseRoutePricingSchedule, resolveEffectiveRouteFactor, lookupUserChargedCostFactor } from '@octafuse/core';
+import {
+	parseRouteBaseFactors,
+	parseRoutePricingSchedule,
+	resolveEffectiveRouteFactor,
+	lookupUserChargedCostFactor,
+} from '@octafuse/core';
 import type { UsageFromStream } from './proxy';
 /**
  * 用量与计费：按百万 token 单价计算 `metered_cost`（供应成本）、`standard_cost`（目录标准成本）、`charged_cost`（用户预算）。
@@ -262,7 +267,8 @@ export async function prepareSharedKeyEconomicUsageHandoff(
 	}
 	if (
 		handoff.economicOutcomes.some(
-			(outcome, index) => handoff.quoteAttempts[index] !== selectedReference && outcome.usageCertainty !== 'unknown',
+			(outcome, index) =>
+				handoff.quoteAttempts[index] !== selectedReference && outcome.usageCertainty !== 'unknown',
 		)
 	) {
 		throw new Error('Earlier shared-key attempt has unowned usage facts');
@@ -271,8 +277,8 @@ export async function prepareSharedKeyEconomicUsageHandoff(
 		input.ordinarySettlement?.unknownCost === true
 			? 'reserved'
 			: input.shouldChargeBudget || input.ordinarySettlement !== undefined
-				? 'actual'
-				: 'none';
+			? 'actual'
+			: 'none';
 	if (hasPotentiallyBillableUnknownSharedKeyAttempt(handoff) && basis !== 'reserved') {
 		throw new Error('Potentially billable unknown shared-key attempt requires reserved buyer debit');
 	}
@@ -301,7 +307,9 @@ export async function prepareSharedKeyEconomicUsageHandoff(
 				throw new Error('Actual buyer usage has no matching selected provider fact');
 			}
 			const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(rawUsage));
-			const evidenceSha256 = Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, '0')).join('');
+			const evidenceSha256 = Array.from(new Uint8Array(digest), (byte) =>
+				byte.toString(16).padStart(2, '0'),
+			).join('');
 			if (selectedOutcome.evidenceSha256 !== evidenceSha256) {
 				throw new Error('Actual buyer usage digest differs from selected provider fact');
 			}
@@ -403,6 +411,7 @@ export async function recordUsage(
 		provider_name?: string | null;
 		request_body?: string | null;
 		upstream_request_body?: string | null;
+		request_parameter_sources?: import('@octafuse/core/request-parameter-sources').RequestParameterSources;
 		request_body_logging_mode?: RequestBodyLoggingMode;
 		/** Canonical origin from the inbound request URL; never a Referer or full path. */
 		request_origin?: string | null;
@@ -539,19 +548,19 @@ export async function recordUsage(
 		: resolveSupplierBillingPrices({
 				basisInputTokens: basis,
 				modelPricingProfileJson: params.model_pricing_profile ?? null,
-			});
+		  });
 	const legacyStandard = endpointResolved
 		? null
 		: resolveStandardBillingPrices({
 				basisInputTokens: basis,
 				modelPricingProfileJson: params.model_pricing_profile ?? null,
-			});
+		  });
 	const legacyCharged = endpointResolved
 		? null
 		: resolveChargedBillingPrices({
 				basisInputTokens: basis,
 				modelPricingProfileJson: params.model_pricing_profile ?? null,
-			});
+		  });
 	const auditSide = (
 		prices: BillingPriceSnapshot,
 		source: 'model_x_factor' | 'model',
@@ -659,7 +668,7 @@ export async function recordUsage(
 							standard: roundGatewayMoney(standardRequestCost),
 							user_charge: roundGatewayMoney(chargedRequestCost),
 						},
-					}
+				  }
 				: {}),
 		}),
 		userChargedFactor,
@@ -697,7 +706,17 @@ export async function recordUsage(
 		nativeFinishReason: params.usage.native_finish_reason ?? null,
 	});
 	console.log(
-		`[Gateway Usage] recordUsage model_id=${params.model_id} request_protocol=${params.request_protocol} status=${params.status} route_group=${params.route_group} input_tokens=${params.usage.input_tokens} output_tokens=${params.usage.output_tokens} reasoning_tokens=${params.usage.reasoning_tokens} metered=${supplierCostR} standard=${standardCostR} charged=${chargedCost} is_byok=${isByok ? 1 : 0} charged_eff=${chargedResolved.audit.effective_factor} user_charged_factor=${userChargedFactor ?? 'none'} metered_eff=${supplierResolved.audit.effective_factor}`,
+		`[Gateway Usage] recordUsage model_id=${params.model_id} request_protocol=${params.request_protocol} status=${
+			params.status
+		} route_group=${params.route_group} input_tokens=${params.usage.input_tokens} output_tokens=${
+			params.usage.output_tokens
+		} reasoning_tokens=${
+			params.usage.reasoning_tokens
+		} metered=${supplierCostR} standard=${standardCostR} charged=${chargedCost} is_byok=${
+			isByok ? 1 : 0
+		} charged_eff=${chargedResolved.audit.effective_factor} user_charged_factor=${
+			userChargedFactor ?? 'none'
+		} metered_eff=${supplierResolved.audit.effective_factor}`,
 	);
 	const id = params.request_log_id ?? params.requestLogId ?? crypto.randomUUID();
 	const shouldChargeBudget = billingCommitted && chargedCost > 0;
@@ -705,16 +724,19 @@ export async function recordUsage(
 	const userSnapshot =
 		shouldChargeBudget || hasOrdinaryBudgetSettlement ? await getUserBudgetSnapshot(repos, params.user_id) : null;
 	const beforeSpent = userSnapshot?.budgetSpent ?? 0;
-	const userRow = shouldChargeBudget || hasOrdinaryBudgetSettlement ? await repos.users.getById(params.user_id) : null;
+	const userRow =
+		shouldChargeBudget || hasOrdinaryBudgetSettlement ? await repos.users.getById(params.user_id) : null;
 	const ordinarySettlement = params.ordinary_budget_settlement
 		? {
 				...params.ordinary_budget_settlement,
 				unknownCost:
 					(params.shared_key_economic_handoff !== undefined &&
 						hasPotentiallyBillableUnknownSharedKeyAttempt(params.shared_key_economic_handoff.handoff)) ||
-					privateByokSettlementMode(isByok, params.ordinary_budget_settlement.unknownCost ? 'reserved' : 'actual') ===
-						'reserved',
-			}
+					privateByokSettlementMode(
+						isByok,
+						params.ordinary_budget_settlement.unknownCost ? 'reserved' : 'actual',
+					) === 'reserved',
+		  }
 		: undefined;
 	const economicOutbox =
 		params.shared_key_economic_handoff === undefined
@@ -728,7 +750,7 @@ export async function recordUsage(
 					chargedCost,
 					ordinarySettlement,
 					economic: params.shared_key_economic_handoff,
-				});
+			  });
 	const ordinaryAuditTransition = ordinaryBudgetAuditSnapshotTransition({
 		settlement: ordinarySettlement,
 		currentBudgetEpoch: userRow == null ? null : Number(userRow.budget_epoch),
@@ -748,7 +770,7 @@ export async function recordUsage(
 						budget_spent: afterSpentVal,
 						wallet_spent: roundGatewayMoney(Number(userRow.wallet_spent ?? 0) + split.fromWallet),
 						budget_reserved_micros: ordinaryAuditTransition.afterReservedMicros,
-					});
+				  });
 		usageSnaps = {
 			before: snapshotToJson(beforeS),
 			after: snapshotToJson(afterS),
@@ -786,12 +808,16 @@ export async function recordUsage(
 				pool: params.route_pool_id ?? null,
 				target: params.route_target_id ?? null,
 				...(params.shared_key_economic_handoff?.selectedReference
-					? { selected_shared_quote_attempt_id: params.shared_key_economic_handoff.selectedReference.attemptId }
+					? {
+							selected_shared_quote_attempt_id:
+								params.shared_key_economic_handoff.selectedReference.attemptId,
+					  }
 					: {}),
 				...(params.gemini_wire_action ? { gemini: { action: params.gemini_wire_action } } : {}),
 				...(params.sticky_trace ? { sticky: params.sticky_trace } : {}),
 				...(params.model_fallback_trace ? { model_fallback: params.model_fallback_trace } : {}),
 				...(params.provider_routing_trace ? { provider_routing: params.provider_routing_trace } : {}),
+				...(params.request_parameter_sources ? { request_sources: params.request_parameter_sources } : {}),
 			}),
 			inputTokens: params.usage.input_tokens,
 			outputTokens: params.usage.output_tokens,
@@ -844,9 +870,9 @@ export async function recordUsage(
 					reason: params.guardrail_budget_settlement.unknownCost
 						? 'usage_unavailable_after_dispatch'
 						: isByok
-							? 'private_byok_list_price_settled'
-							: 'request_usage_settled',
-				}
+						? 'private_byok_list_price_settled'
+						: 'request_usage_settled',
+			  }
 			: undefined,
 		userBudgetSettlement: ordinaryBudgetSettlementForCriticalWrite(ordinarySettlement),
 		economicOutbox,
@@ -894,7 +920,10 @@ export async function recordUsage(
 			upstreamRequestId: params.upstream_request_id ?? null,
 			circuitEvents: params.circuit_events,
 		}).catch((err: unknown) => {
-			console.warn('[Gateway Alert] webhook dispatch failed', err instanceof Error ? (err.stack ?? err.message) : err);
+			console.warn(
+				'[Gateway Alert] webhook dispatch failed',
+				err instanceof Error ? err.stack ?? err.message : err,
+			);
 		});
 	}
 

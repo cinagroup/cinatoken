@@ -1,3 +1,4 @@
+import { audioTokenUsageFromCounts, roundGatewayMoney } from '@octafuse/core';
 import assert from 'node:assert/strict';
 import { beforeEach, describe, it } from 'node:test';
 import type { GatewayRepositories, VerifiedModelEndpointSnapshot } from '@octafuse/core';
@@ -1297,5 +1298,39 @@ describe('provider_factor on audio routes', () => {
 		assert.equal(costs.standardCost, 0.005);
 		assert.equal(costs.chargedCost, 0.005);
 		assert.ok(Math.abs(costs.meteredCost - 0.0034) < 1e-9);
+	});
+});
+
+
+describe('TTS token billing', () => {
+	const TOKEN_PROFILE = JSON.stringify({
+		audio_billing_mode: 'token',
+		tiers: [{ upto: null, input_price: 1.5, output_price: 12 }],
+	});
+
+	it('charges upstream input/output tokens at per-million prices', async () => {
+		const costs = await estimateAudioSpeechCosts(mockRepos(), {
+			modelPricingProfileJson: TOKEN_PROFILE,
+			tokenUsage: audioTokenUsageFromCounts({ input_tokens: 100, output_tokens: 2000 }),
+		});
+		assert.equal(costs.billingKind, 'audio_tokens');
+		assert.equal(costs.standardCost, roundGatewayMoney((100 * 1.5 + 2000 * 12) / 1_000_000));
+		assert.equal(costs.logTokens.inputTokens, 100);
+		assert.equal(costs.logTokens.outputTokens, 2000);
+	});
+
+	it('does not charge when upstream returned no token usage', async () => {
+		const costs = await estimateAudioSpeechCosts(mockRepos(), { modelPricingProfileJson: TOKEN_PROFILE });
+		assert.equal(costs.chargedCost, 0);
+		assert.match(costs.pricingAuditJson, /missing_upstream_token_usage/);
+	});
+
+	it('budget precheck is non-zero and uses the most expensive route', async () => {
+		const costs = await estimateAudioSpeechBudgetPrecheck(
+			mockRepos(),
+			{ modelPricingProfileJson: TOKEN_PROFILE, inputCharacters: 100 },
+			[JSON.stringify({ charged_factor: 1 }), JSON.stringify({ charged_factor: 3 })]
+		);
+		assert.equal(costs.chargedCost, roundGatewayMoney(3 * (100 * 1.5 + 600 * 12) / 1_000_000));
 	});
 });

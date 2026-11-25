@@ -5,10 +5,11 @@ import {
 } from '../../services/native-media-request-context';
 /**
  * MiniMax 同步语音合成透传。
- * `POST /v1/minimax/t2a_v2`
+ * `POST /minimax/v1/t2a_v2`
  * 非流式 JSON 与 `stream: true` 的 SSE 共用 `audio.speech`。
  */
-import { isAudioSpeechModel, type GatewayRepositories } from '@octafuse/core';
+import type { GatewayRepositories } from '@octafuse/core';
+import { audioModelGuardMessage } from './audio-model-guard';
 import { Hono } from 'hono';
 import type { Context } from 'hono';
 import type { Env } from '../../app';
@@ -73,11 +74,12 @@ miniMaxT2aRoutes.post('/', async (c) => {
 			message: `Model not found: ${rawModelId.slice(0, 200)}`,
 		});
 	}
-	if (!isAudioSpeechModel(preview.model)) {
+	const guardMessage = audioModelGuardMessage(preview.model, 'tts', 'MiniMax speech passthrough');
+	if (guardMessage) {
 		return gatewayErrorJson(c, {
 			status: 400,
 			code: GatewayErrorCode.invalidRequest,
-			message: 'MiniMax speech passthrough requires a speech model',
+			message: guardMessage,
 		});
 	}
 	return forwardMiniMaxSpeech(c, repos, apiKey, preview, requestBody, start, timing);

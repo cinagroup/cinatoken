@@ -1,3 +1,11 @@
+
+import { describeEmbeddingsOutcome } from '../../services/accounting';
+
+import {
+	parseJsonModelBody,
+	runProxyPipeline,
+	type AuthedEnv,
+} from '../../services/proxy-pipeline';
 /** OpenAI/OpenRouter-compatible embeddings ingress and model discovery. */
 import {
 	isEmbeddingModel,
@@ -662,3 +670,32 @@ embeddingsRoutes.post('/', async (c) => {
 
 	return response;
 });
+
+
+/** 去掉 `input` 原文，只保留条数与其余参数（dimensions / encoding_format 等）。 */
+export function embeddingsBodyRedactedForLog(body: Record<string, unknown>): Record<string, unknown> {
+	const out: Record<string, unknown> = {};
+	for (const [k, v] of Object.entries(body)) {
+		if (k === 'input') continue;
+		out[k] = v;
+	}
+	const input = body.input;
+	if (Array.isArray(input)) {
+		out._input_count = input.length;
+	} else if (input != null) {
+		out._input_count = 1;
+	}
+	return out;
+}
+
+
+function embeddingsRequestBodyForLog(body: Record<string, unknown>): string | null {
+	return finalizeRequestLogJson(embeddingsBodyRedactedForLog(body));
+}
+
+
+function embeddingsUpstreamWireBodyForLog(route: RouteResult, body: Record<string, unknown>): string | null {
+	const merged = buildRouteRequestBody(route, body);
+	const wire = { ...merged, model: route.providerModelName };
+	return finalizeRequestLogJson(embeddingsBodyRedactedForLog(wire));
+}

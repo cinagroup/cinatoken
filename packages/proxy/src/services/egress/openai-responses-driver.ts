@@ -1,3 +1,9 @@
+
+import { sanitizeRewrappedHeaders } from './response-headers';
+import { peekResponseFirstEvent } from '../stream-first-event-timeout';
+
+import { fetchUntilHeaders, type UpstreamHeadersTimeoutOptions } from './upstream-fetch-timeout';
+import { STREAM_IDLE_TIMEOUT_CODE, STREAM_IDLE_TIMEOUT_MESSAGE } from './stream-idle-timeout';
 import { prepareTextStreamStart, combineTextStreamResources } from './text-stream-start';
 import { applyRouteExtraHeaders } from '@octafuse/core';
 import type { ResourceCompletion, ResourceCompletionOutcome } from '../resource-completion';
@@ -949,3 +955,9 @@ export async function dispatchOpenAiResponsesRoute(
 		};
 	});
 }
+
+
+const POST_DISCONNECT_DRAIN_MS = 90_000;
+
+
+const decoder = new TextDecoder();

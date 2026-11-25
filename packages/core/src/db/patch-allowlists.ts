@@ -5,9 +5,12 @@
  */
 
 export const PROVIDER_PATCH_COLS = new Set([
-	'name', 'kind',
+	'name',
+	'kind',
 	'endpoints',
 	'description',
+	'note',
+	'custom_params',
 	'api_key',
 	'status',
 	'shared_channel_type',
@@ -20,6 +23,7 @@ export const MODEL_PATCH_COLS = new Set([
 	'max_tokens',
 	'pricing_profile',
 	'description',
+	'note',
 	'metadata',
 	'input_modalities',
 	'output_modalities',

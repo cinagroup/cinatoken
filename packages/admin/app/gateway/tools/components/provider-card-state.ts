@@ -24,7 +24,7 @@ export type ProviderCardStatusFlags = {
 };
 
 export type ProviderCardActionFlags = {
-	/** 全 catalog 价格合法时可保存配置 */
+	/** 待保存的 catalog 价格合法时可保存配置 */
 	canSaveConfig: boolean;
 	/** 当前选中可「保存并启用」 */
 	canSaveAndActivate: boolean;
@@ -39,9 +39,7 @@ export function parseDraftMoney(raw: string): number | null {
 
 export function draftPricesOk(d: PriceTripleDraft): boolean {
 	return (
-		parseDraftMoney(d.metered) != null &&
-		parseDraftMoney(d.standard) != null &&
-		parseDraftMoney(d.charged) != null
+		parseDraftMoney(d.metered) != null && parseDraftMoney(d.standard) != null && parseDraftMoney(d.charged) != null
 	);
 }
 
@@ -114,12 +112,9 @@ export function resolveProviderCardActions(input: {
 }): ProviderCardActionFlags {
 	const selectedImplemented = input.selectedImplemented !== false;
 	return {
-		canSaveConfig: input.catalogPricesValid,
+		canSaveConfig: input.catalogPricesValid && (!input.selectedIsActive || input.selectedConfigured),
 		canSaveAndActivate:
-			input.catalogPricesValid &&
-			!input.selectedIsActive &&
-			selectedImplemented &&
-			input.selectedConfigured,
+			input.catalogPricesValid && !input.selectedIsActive && selectedImplemented && input.selectedConfigured,
 	};
 }
 
@@ -175,9 +170,7 @@ export type CompactStatusBadgeKind =
  * 紧凑徽章优先级：Active → 未保存 → 不可用/缺凭证 → 亏损。
  * 正常「已配置」用状态点表示，不出现在此列表。
  */
-export function resolveCompactStatusBadges(
-	status: ProviderCardStatusFlags
-): CompactStatusBadgeKind[] {
+export function resolveCompactStatusBadges(status: ProviderCardStatusFlags): CompactStatusBadgeKind[] {
 	const badges: CompactStatusBadgeKind[] = [];
 	if (status.isActive) {
 		badges.push("active");
@@ -199,4 +192,18 @@ export function resolveCompactStatusBadges(
 /** 已实现且有凭证、非 Active 时显示「已配置」状态点。 */
 export function showConfiguredDot(status: ProviderCardStatusFlags): boolean {
 	return status.isImplemented && status.isConfigured && !status.isActive;
+}
+
+/** A provider dialog saves only its own draft; other providers keep their saved values. */
+export function draftsForProviderSave<T extends Record<string, unknown>>(saved: T, drafts: T, selected: keyof T): T {
+	return cloneDrafts({ ...saved, [selected]: drafts[selected] });
+}
+
+/** Zero standard prices and invalid drafts have no meaningful price multiplier. */
+export function priceMultiplier(amount: string, standard: string): number | null {
+	const numerator = parseDraftMoney(amount);
+	const denominator = parseDraftMoney(standard);
+	if (numerator == null || denominator == null || denominator === 0) return null;
+	const ratio = numerator / denominator;
+	return Number.isFinite(ratio) ? ratio : null;
 }

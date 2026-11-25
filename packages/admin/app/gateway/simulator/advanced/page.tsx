@@ -1,6 +1,8 @@
 'use client';
-
 import AdvancedEditorGate from '@/components/routing-workbench/AdvancedEditorGate';
+
+import { AdminPageTitle } from '@/components/admin-page-title';
+import { ModelToolModeSwitch } from '@/components/model-tool-mode-switch';
 
 /**
  * Browser-side simulator: calls the Proxy directly (user-provided Base URL) with a real API key,
@@ -19,17 +21,17 @@ function SimulatorPage() {
 	const tBrand = useTranslations('brand');
 	const tCommon = useTranslations('common');
 	const s = useSimulatorPageState();
-	const llm = !s.isToolKind && !s.selectedModelIsImage && !s.selectedModelIsAudio;
+	const llm = !s.isToolKind && !s.selectedModelIsImage && !s.selectedModelIsAudio && !s.selectedModelIsEmbedding;
 	const llmFamily = llm
 		? s.protocol === 'openai'
 			? s.openaiLlmOperation === 'responses'
 				? 'openai_responses'
 				: 'openai_chat'
 			: s.protocol === 'anthropic'
-				? 'anthropic'
-				: s.protocol === 'gemini'
-					? 'gemini'
-					: null
+			? 'anthropic'
+			: s.protocol === 'gemini'
+			? 'gemini'
+			: null
 		: null;
 
 	if (s.loadingCatalog) {
@@ -41,15 +43,28 @@ function SimulatorPage() {
 	}
 
 	return (
-		<div className="flex min-h-0 min-w-0 flex-col overflow-x-hidden bg-gray-100/90 p-4 sm:p-6 lg:p-8 xl:h-dvh xl:overflow-hidden">
-			<div className="mb-4 shrink-0 sm:mb-5">
-				<h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">{t('title')}</h1>
-				<p className="mt-1 max-w-3xl text-sm text-gray-500">
-					{t('subtitle', { product: tBrand('product') })}
-					<span className="text-gray-400"> · </span>
-					{t('usageNote')} <PricingInfoHint kind="simulator" align="start" />
-				</p>
+		<div className="admin-content-workspace content-tone-inference flex min-h-0 min-w-0 flex-col overflow-x-hidden bg-gray-50 p-4 sm:p-6 lg:p-8 xl:h-full xl:overflow-hidden">
+			<div className="mb-6 flex shrink-0 flex-wrap items-start justify-between gap-4">
+				<div className="min-w-0">
+					<AdminPageTitle>{t('title')}</AdminPageTitle>
+					<p className="mt-1 max-w-3xl text-sm text-gray-500">
+						{t(s.isToolKind ? 'toolsSubtitle' : 'subtitle', {
+							product: tBrand('product'),
+						})}
+					</p>
+				</div>
+				<ModelToolModeSwitch
+					value={s.isToolKind ? 'tools' : 'models'}
+					onChange={s.setSimulatorMode}
+					disabled={s.sending}
+				/>
 			</div>
+
+			<p className="mb-4 flex shrink-0 items-center gap-1.5 text-xs text-gray-500">
+				<span className="h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500" aria-hidden />
+				{t('usageNote')}
+				<PricingInfoHint kind="simulator" align="start" />
+			</p>
 
 			{s.catalogError ? (
 				<div className="mb-4 max-w-3xl rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-600">
@@ -57,9 +72,11 @@ function SimulatorPage() {
 				</div>
 			) : null}
 
-			<div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl border border-gray-200/80 bg-white/70 shadow-sm ring-1 ring-black/[0.02]">
+			<div className="flex min-h-0 flex-1 flex-col gap-4">
 				<SimulatorSetupPanel
+					disabled={s.sending}
 					proxyBaseUrl={s.proxyBaseUrl}
+					proxyConnection={s.proxyConnection}
 					onProxyBaseUrlChange={s.setProxyBaseUrl}
 					filterKeyEmail={s.filterKeyEmail}
 					onFilterKeyEmailChange={s.setFilterKeyEmail}
@@ -74,9 +91,10 @@ function SimulatorPage() {
 					revealLoading={s.revealLoading}
 					revealError={s.revealError}
 				/>
-				<div className="flex min-h-0 min-w-0 flex-1 flex-col xl:flex-row xl:items-stretch">
-					<aside className="flex w-full min-w-0 shrink-0 flex-col border-b border-gray-200/80 bg-slate-50/80 p-4 xl:min-h-0 xl:w-[360px] 2xl:w-[380px] xl:overflow-hidden xl:border-b-0 xl:border-r">
+				<div className="flex min-h-0 min-w-0 flex-1 flex-col gap-4 xl:flex-row xl:items-stretch">
+					<aside className="flex w-full min-w-0 shrink-0 flex-col xl:min-h-0 xl:w-72 2xl:w-80 xl:overflow-hidden">
 						<SimulatorRoutingPanel
+							disabled={s.sending}
 							filterKind={s.filterKind}
 							protocol={s.protocol}
 							onFilterKindChange={s.setFilterKind}
@@ -94,7 +112,7 @@ function SimulatorPage() {
 							routeGroup={s.routeGroup}
 							onRouteGroupChange={s.setRouteGroup}
 							routeGroupsForModel={s.routeGroupsForModel}
-							realtimeOperation={s.selectedDashScopeRealtimeOperation}
+							realtimeOperation={s.selectedRealtimeOperation}
 							realtimeOperationOptions={s.realtimeOperationOptions}
 							onRealtimeOperationChange={s.setDashScopeRealtimeOperation}
 							selectedModelIsAudio={s.selectedModelIsAudio}
@@ -104,14 +122,8 @@ function SimulatorPage() {
 						/>
 					</aside>
 
-					<section
-						className={
-							llm
-								? 'grid min-h-0 min-w-0 flex-1 auto-rows-[650px] grid-cols-1 gap-4 bg-slate-100/70 p-4 sm:p-5 xl:grid-cols-2 xl:grid-rows-[minmax(0,1fr)] xl:overflow-hidden'
-								: 'flex min-h-0 min-w-0 flex-1 flex-col gap-4 overflow-hidden bg-slate-100/70 p-4 sm:p-5'
-						}
-					>
-						<div className={llm ? 'flex min-h-0 min-w-0 flex-col' : 'min-h-0 flex-[3] overflow-y-auto'}>
+					<section className="grid min-h-0 min-w-0 flex-1 grid-cols-1 gap-4 xl:grid-cols-2 xl:grid-rows-[minmax(0,1fr)]">
+						<div className="flex min-h-0 min-w-0 flex-col">
 							<SimulatorRequestPanel
 								llmFamily={llmFamily}
 								modelHint={s.selectedModelId}
@@ -132,8 +144,8 @@ function SimulatorPage() {
 								infoHint={s.infoHint}
 								bodyError={s.bodyError}
 								displayWire={s.displayWire}
-								wireOpen={s.wireOpen}
-								onWireOpenChange={s.setWireOpen}
+								requestLogId={s.wireSent ? s.responseMeta?.requestLogId : null}
+								selectedKeyId={s.selectedKeyId}
 								sending={s.sending}
 								canSend={s.canSend}
 								sendBlockedHint={s.sendBlockedHint}
@@ -153,25 +165,31 @@ function SimulatorPage() {
 								onEditFilesChange={s.setEditFiles}
 								showAudioTranscriptions={
 									s.selectedAudioOperation === 'transcriptions' &&
-									(s.protocol === 'openai' || s.protocol === 'dashscope' || s.protocol === 'minimax')
+									(s.protocol === 'openai' ||
+										s.protocol === 'dashscope' ||
+										s.protocol === 'minimax' ||
+										s.protocol === 'elevenlabs')
 								}
 								showAudioRealtimeMicrophone={s.selectedCanUseMicrophone}
 								audioInputMode={s.audioInputMode}
 								onAudioInputModeChange={s.setAudioInputMode}
 								showAudioSpeech={
 									s.selectedAudioOperation === 'speech' &&
-									(s.protocol === 'openai' || s.protocol === 'dashscope' || s.protocol === 'minimax')
+									(s.protocol === 'openai' ||
+										s.protocol === 'dashscope' ||
+										s.protocol === 'minimax' ||
+										s.protocol === 'elevenlabs')
 								}
 								showAudioRealtime={
-									s.protocol === 'dashscope' &&
 									s.selectedAudioOperation != null &&
-									(s.selectedDashScopeRealtimeOperation?.includes('.realtime.') ?? false)
+									((s.protocol === 'dashscope' && (s.selectedRealtimeOperation?.includes('@/app/gateway/simulator/.realtime.') ?? false)) ||
+										s.selectedElevenLabsRealtimeOperation != null)
 								}
 								audioFile={s.audioFile}
 								onAudioFileChange={s.setAudioFile}
 							/>
 						</div>
-						<div className={llm ? 'flex min-h-0 min-w-0 flex-col' : 'min-h-0 flex-[2] overflow-y-auto'}>
+						<div className="flex min-h-0 min-w-0 flex-col">
 							<SimulatorResponsePanel
 								llm={llm}
 								responsePreview={s.responsePreview}
@@ -203,4 +221,4 @@ function SimulatorPage() {
 	);
 }
 
-export default function AdvancedPage() { return <AdvancedEditorGate feature="simulator"><SimulatorPage /></AdvancedEditorGate>; }
+export default function AdvancedPage() {return <AdvancedEditorGate feature="simulator"><SimulatorPage/></AdvancedEditorGate>;}

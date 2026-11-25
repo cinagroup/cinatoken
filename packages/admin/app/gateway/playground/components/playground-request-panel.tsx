@@ -1,7 +1,9 @@
 'use client';
+import { AdminContentMark } from '@/components/admin-content-mark';
 
+import { AdminInspector } from '@/components/admin-inspector';
 import { useMemo } from 'react';
-import { PaperAirplaneIcon, StopIcon } from '@heroicons/react/24/outline';
+import { PaperAirplaneIcon, StopIcon, ArrowUpTrayIcon } from '@heroicons/react/24/outline';
 import { useTranslations } from 'next-intl';
 import { RequestTargetUrl } from '@/components/request-target-url';
 import { validateAudioTranscriptionFile } from '@/lib/audio-transcriptions';
@@ -23,10 +25,16 @@ import {
 import type { GeminiAction, RouteListRow } from '../types';
 
 import { LlmRequestEditor } from '@/components/model-test/llm-request-editor';
+import {
+	PlaygroundInspectionBody,
+	PlaygroundInspectionHeaders,
+	usePlaygroundRequestInspection,
+} from './playground-request-inspection';
 
 type Props = {
 	llm: boolean;
 	onApplyLlmBody: (text: string) => void;
+	onResetTemplate: () => void;
 	bodyText: string;
 	onBodyTextChange: (v: string) => void;
 	bodyDirtyHint: boolean;
@@ -41,12 +49,16 @@ type Props = {
 	requestTargetMissing: string | null;
 	selected: RouteListRow | null;
 	selectedUsesDashScopeRealtime: boolean;
+	selectedUsesElevenLabsRealtime: boolean;
+	/** DashScope 或 ElevenLabs 的 WebSocket 实时路由。 */
+	selectedUsesRealtime: boolean;
 	imageSendBlocked: boolean;
 	selectedImageUsesDashScope: boolean;
 	audioSendBlocked: boolean;
 	selectedIsImage: boolean;
 	selectedIsAudio: boolean;
 	selectedIsRerank: boolean;
+	selectedIsEmbedding: boolean;
 	selectedIsAudioTranscription: boolean;
 	selectedAudioUsesDashScope: boolean;
 	selectedCanUseMicrophone: boolean;
@@ -63,11 +75,13 @@ type Props = {
 	onGeminiActionChange: (action: GeminiAction) => void;
 	lastSentWireBody: string | null;
 	lastSentWireHeaders: Record<string, string> | null;
+	lastSentRequestSources: string | null;
 };
 
 export function PlaygroundRequestPanel({
 	llm,
 	onApplyLlmBody,
+	onResetTemplate,
 	bodyText,
 	onBodyTextChange,
 	bodyDirtyHint,
@@ -82,12 +96,15 @@ export function PlaygroundRequestPanel({
 	requestTargetMissing,
 	selected,
 	selectedUsesDashScopeRealtime,
+	selectedUsesElevenLabsRealtime,
+	selectedUsesRealtime,
 	imageSendBlocked,
 	selectedImageUsesDashScope,
 	audioSendBlocked,
 	selectedIsImage,
 	selectedIsAudio,
 	selectedIsRerank,
+	selectedIsEmbedding,
 	selectedIsAudioTranscription,
 	selectedAudioUsesDashScope,
 	selectedCanUseMicrophone,
@@ -104,15 +121,28 @@ export function PlaygroundRequestPanel({
 	onGeminiActionChange,
 	lastSentWireBody,
 	lastSentWireHeaders,
+	lastSentRequestSources,
 }: Props) {
 	const t = useTranslations('playground');
 	const tCommon = useTranslations('common');
+	const inspection = usePlaygroundRequestInspection({
+		routeId: llm ? selected?.id ?? null : null,
+		bodyText,
+		geminiAction,
+		sentBody: lastSentWireBody,
+		sentHeaders: lastSentWireHeaders,
+		sentSources: lastSentRequestSources,
+	});
 	const showGemini =
-		normalizeProtocol(selected?.upstream_protocol ?? 'openai') === 'gemini' && !selectedIsImage && !selectedIsAudio;
+		normalizeProtocol(selected?.upstream_protocol ?? 'openai') === 'gemini' &&
+		!selectedIsImage &&
+		!selectedIsEmbedding &&
+		!selectedIsAudio;
 	const llmFamily = playgroundLlmFamilyForRoute(selected, {
 		isImage: selectedIsImage,
 		isAudio: selectedIsAudio,
 		isRerank: selectedIsRerank,
+		isEmbedding: selectedIsEmbedding,
 	});
 	const llmSample = llmFamily
 		? matchPlaygroundLlmSample(llmFamily, bodyText, playgroundModelHintFromRoute(selected))
@@ -123,9 +153,16 @@ export function PlaygroundRequestPanel({
 				bodyText,
 				customParams: selected?.custom_params,
 				upstreamProtocol: selected?.upstream_protocol,
+				upstreamOperation: selected?.upstream_operation,
 				providerModelName: selected?.provider_model_name,
 			}),
-		[bodyText, selected?.custom_params, selected?.upstream_protocol, selected?.provider_model_name],
+		[
+			bodyText,
+			selected?.custom_params,
+			selected?.upstream_protocol,
+			selected?.upstream_operation,
+			selected?.provider_model_name,
+		],
 	);
 	const routeHeaderRows = useMemo(
 		() =>
@@ -140,17 +177,17 @@ export function PlaygroundRequestPanel({
 	const actualBodyHint = lastSentWireBody
 		? t('sentBodyHint')
 		: mergedPreview.status === 'invalid'
-			? t('sentBodyInvalidJson')
-			: splitPlaygroundCustomParams(selected?.custom_params).forceOverrideBody
-				? t('sentBodyPreviewHintForceOverride')
-				: t('sentBodyPreviewHint');
+		? t('sentBodyInvalidJson')
+		: splitPlaygroundCustomParams(selected?.custom_params).forceOverrideBody
+		? t('sentBodyPreviewHintForceOverride')
+		: t('sentBodyPreviewHint');
 	const headerHint = lastSentWireHeaders ? t('sentHeadersHintSent') : t('sentHeadersHint');
 	const sampleLabel = (id: PlaygroundLlmSampleId) =>
 		id === 'connectivity'
 			? t('templateConnectivity')
 			: id === 'tools'
-				? t('templateToolStream')
-				: t('templateReasoning');
+			? t('templateToolStream')
+			: t('templateReasoning');
 	const llmSampleSwitcher = llmFamily ? (
 		<div
 			className="inline-flex rounded-md border border-slate-300 bg-slate-100 p-0.5"
@@ -170,7 +207,7 @@ export function PlaygroundRequestPanel({
 						aria-pressed={active}
 						className={
 							active
-								? 'rounded px-2.5 py-1 text-xs font-semibold bg-slate-800 text-white disabled:cursor-not-allowed disabled:opacity-40'
+								? 'rounded px-2.5 py-1 text-xs font-medium bg-slate-800 text-white disabled:cursor-not-allowed disabled:opacity-40'
 								: 'rounded px-2.5 py-1 text-xs font-medium text-slate-600 hover:bg-white hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-40'
 						}
 					>
@@ -184,13 +221,16 @@ export function PlaygroundRequestPanel({
 	if (llm)
 		return (
 			<LlmRequestEditor
+				headingMark={<AdminContentMark icon={ArrowUpTrayIcon} compact />}
 				family={llmFamily}
 				modelHint={`${selected?.model_id ?? ''} ${selected?.provider_model_name ?? ''}`.toLowerCase()}
 				bodyText={bodyText}
 				onChange={onBodyTextChange}
 				onApplySample={onApplyLlmBody}
 				geminiStreaming={geminiAction === 'streamGenerateContent'}
-				onGeminiStreamingChange={(stream) => onGeminiActionChange(stream ? 'streamGenerateContent' : 'generateContent')}
+				onGeminiStreamingChange={(stream) =>
+					onGeminiActionChange(stream ? 'streamGenerateContent' : 'generateContent')
+				}
 				sending={sending}
 				canSend={canSend}
 				onSend={onSend}
@@ -199,27 +239,57 @@ export function PlaygroundRequestPanel({
 				error={bodyError}
 				notice={bodyDirtyHint ? t('bodyDirtyHintLlm') : null}
 				url={requestTargetUrl}
-				actualBody={selected ? actualBodyJson : tCommon('selectRouteFirst')}
-				sent={Boolean(lastSentWireBody)}
-				headers={
-					selected ? (
-						<div className="space-y-1 font-mono text-xs">
-							{routeHeaderRows.map((row) => (
-								<p key={row.name} className={row.source === 'custom_params' ? 'break-all text-amber-800' : 'break-all'}>
-									{row.name}: {row.value}
-								</p>
-							))}
-						</div>
-					) : null
-				}
+				inlineInspection={{
+					headers: <PlaygroundInspectionHeaders inspection={inspection} />,
+					body: <PlaygroundInspectionBody inspection={inspection} />,
+				}}
 			/>
 		);
 
 	return (
-		<section className="flex min-h-0 flex-1 flex-col space-y-3 overflow-y-auto rounded-xl border border-gray-200/80 bg-white p-4 shadow-sm">
+		<section className="admin-editor-panel admin-content-panel flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto rounded-xl border border-gray-200 bg-white p-4">
 			<div className="flex flex-wrap items-center justify-between gap-2">
-				<h2 className="text-sm font-semibold text-gray-900">{t('requestBody')}</h2>
+				<h2 className="flex items-center gap-2 text-sm font-medium text-gray-900">
+					<AdminContentMark icon={ArrowUpTrayIcon} compact />
+					{t('requestBody')}
+				</h2>
 				<div className="flex flex-wrap items-center gap-2">
+					<AdminInspector
+						label={t('actualRequest')}
+						hint={lastSentWireBody ? t('sentBodySourceSent') : t('sentBodySourcePreview')}
+						disabled={!selected}
+					>
+						<p className="break-all font-mono text-xs text-gray-500">
+							{selectedUsesRealtime ? 'WebSocket' : 'POST'} {requestTargetUrl}
+						</p>
+						<div>
+							<h3 className="mb-2 text-xs font-medium text-gray-600" title={headerHint}>
+								{t('sentHeaders')}
+							</h3>
+							<div className="space-y-2 rounded-lg bg-gray-50 p-4">
+								{routeHeaderRows.length ? (
+									routeHeaderRows.map((row) => (
+										<p
+											key={row.name}
+											className={`break-all font-mono text-xs ${
+												row.source === 'custom_params' ? 'text-amber-800' : 'text-gray-600'
+											}`}
+										>
+											{row.name}: {row.value}
+										</p>
+									))
+								) : (
+									<p className="text-xs text-gray-400">{t('sentHeadersEmpty')}</p>
+								)}
+							</div>
+						</div>
+						<div>
+							<h3 className="mb-2 text-xs font-medium text-gray-600" title={actualBodyHint}>
+								{t('sentBody')}
+							</h3>
+							<pre className={`${codeBlockClass} leading-6`}>{actualBodyJson ?? '—'}</pre>
+						</div>
+					</AdminInspector>
 					{sending ? (
 						<button
 							type="button"
@@ -235,7 +305,7 @@ export function PlaygroundRequestPanel({
 							onClick={onSend}
 							disabled={!canSend}
 							title={sendBlockedHint ?? undefined}
-							className="inline-flex items-center justify-center gap-1.5 rounded-md bg-blue-600 px-3.5 py-1.5 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+							className="inline-flex items-center justify-center gap-1.5 rounded-md admin-primary px-3.5 py-1.5 text-sm font-medium text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 disabled:cursor-not-allowed disabled:opacity-50"
 						>
 							<PaperAirplaneIcon className="h-4 w-4" />
 							{tCommon('send')}
@@ -266,7 +336,7 @@ export function PlaygroundRequestPanel({
 			<div className="space-y-1">
 				<RequestTargetUrl
 					label={t('requestTargetUrl')}
-					method={selectedUsesDashScopeRealtime ? 'WebSocket' : undefined}
+					method={selectedUsesRealtime ? 'WebSocket' : undefined}
 					url={requestTargetUrl}
 					emptyHint={
 						requestTargetMissing
@@ -275,8 +345,8 @@ export function PlaygroundRequestPanel({
 					}
 				/>
 				{selected ? (
-					<p className="text-[11px] text-gray-400">
-						{t(selectedUsesDashScopeRealtime ? 'requestTargetUrlRealtimeHint' : 'requestTargetUrlHint')}
+					<p className="text-xs text-gray-400">
+						{t(selectedUsesRealtime ? 'requestTargetUrlRealtimeHint' : 'requestTargetUrlHint')}
 					</p>
 				) : null}
 			</div>
@@ -285,21 +355,33 @@ export function PlaygroundRequestPanel({
 				<div className="space-y-2">
 					<p className="text-xs text-gray-500">
 						{t(
-							selectedUsesDashScopeRealtime
+							selectedUsesElevenLabsRealtime
+								? selectedIsAudioTranscription
+									? 'audioRealtimeElevenLabsAsrHint'
+									: 'audioRealtimeElevenLabsTtsHint'
+								: selectedUsesDashScopeRealtime
 								? 'audioRealtimeDashScopeHint'
+								: selected?.adapter === 'elevenlabs-tts'
+								? 'audioSpeechElevenLabsOpenAiHint'
+								: selected?.upstream_protocol === 'elevenlabs' && selectedIsAudioTranscription
+								? 'audioTranscriptionsElevenLabsHint'
+								: selected?.upstream_protocol === 'elevenlabs'
+								? 'audioSpeechElevenLabsHint'
 								: selected?.adapter === 'minimax-tts'
-									? 'audioSpeechMiniMaxOpenAiHint'
-									: selected?.upstream_protocol === 'minimax' && !selectedIsAudioTranscription
-										? 'audioSpeechMiniMaxHint'
-										: selected?.adapter === 'passthrough' && selectedAudioUsesDashScope && !selectedIsAudioTranscription
-											? 'audioSpeechPassthroughHint'
-											: selectedAudioUsesDashScope
-												? selectedIsAudioTranscription
-													? 'audioTranscriptionsDashScopeHint'
-													: 'audioSpeechHint'
-												: selectedIsAudioTranscription
-													? 'audioTranscriptionsHint'
-													: 'audioSpeechHint',
+								? 'audioSpeechMiniMaxOpenAiHint'
+								: selected?.upstream_protocol === 'minimax' && !selectedIsAudioTranscription
+								? 'audioSpeechMiniMaxHint'
+								: selected?.adapter === 'passthrough' &&
+								  selectedAudioUsesDashScope &&
+								  !selectedIsAudioTranscription
+								? 'audioSpeechPassthroughHint'
+								: selectedAudioUsesDashScope
+								? selectedIsAudioTranscription
+									? 'audioTranscriptionsDashScopeHint'
+									: 'audioSpeechHint'
+								: selectedIsAudioTranscription
+								? 'audioTranscriptionsHint'
+								: 'audioSpeechHint',
 						)}
 					</p>
 					{selectedCanUseMicrophone ? (
@@ -310,7 +392,7 @@ export function PlaygroundRequestPanel({
 								<input
 									type="radio"
 									name="playgroundAudioInput"
-									className="text-blue-600 focus:ring-blue-500"
+									className="text-gray-800 focus:ring-gray-500"
 									checked={audioInputMode === 'file'}
 									onChange={() => onAudioInputModeChange('file')}
 									disabled={sending}
@@ -321,7 +403,7 @@ export function PlaygroundRequestPanel({
 								<input
 									type="radio"
 									name="playgroundAudioInput"
-									className="text-blue-600 focus:ring-blue-500"
+									className="text-gray-800 focus:ring-gray-500"
 									checked={audioInputMode === 'microphone'}
 									onChange={() => onAudioInputModeChange('microphone')}
 									disabled={sending}
@@ -337,16 +419,18 @@ export function PlaygroundRequestPanel({
 								type="file"
 								accept="audio/*,.mp3,.wav,.m4a,.webm,.ogg,.flac,.pcm"
 								disabled={sending}
-								className={`${inputClass} file:mr-3 file:rounded file:border-0 file:bg-blue-50 file:px-2 file:py-1 file:text-xs file:font-medium file:text-blue-700`}
+								className={`${inputClass} file:mr-3 file:rounded file:border-0 file:bg-gray-50 file:px-2 file:py-1 file:text-xs file:font-medium file:text-gray-800`}
 								onChange={(e) => onAudioFileChange(e.target.files?.[0] ?? null)}
 							/>
-							<p className="mt-1 text-[11px] text-gray-400">
+							<p className="mt-1 text-xs text-gray-400">
 								{t(
-									selectedUsesDashScopeRealtime
+									selectedUsesElevenLabsRealtime
+										? 'audioRealtimeFileElevenLabsHint'
+										: selectedUsesDashScopeRealtime
 										? 'audioRealtimeFileDashScopeHint'
 										: selectedAudioUsesDashScope
-											? 'audioFileDashScopeHint'
-											: 'audioFileHint',
+										? 'audioFileDashScopeHint'
+										: 'audioFileHint',
 								)}
 							</p>
 							{!audioFile ? (
@@ -383,7 +467,11 @@ export function PlaygroundRequestPanel({
 						<p className="text-xs text-gray-500">{t('imageGeminiHint')}</p>
 					) : selectedImageUsesDashScope ? (
 						<p className="text-xs text-gray-500">
-							{t(selected?.adapter === 'passthrough' ? 'imageDashScopePassthroughHint' : 'imageDashScopeHint')}
+							{t(
+								selected?.adapter === 'passthrough'
+									? 'imageDashScopePassthroughHint'
+									: 'imageDashScopeHint',
+							)}
 						</p>
 					) : (
 						<>
@@ -394,7 +482,7 @@ export function PlaygroundRequestPanel({
 									<input
 										type="radio"
 										name="playgroundImageOperation"
-										className="text-blue-600 focus:ring-blue-500"
+										className="text-gray-800 focus:ring-gray-500"
 										checked={imageOperation === 'generations'}
 										onChange={() => onImageOperationChange('generations')}
 										disabled={sending}
@@ -405,7 +493,7 @@ export function PlaygroundRequestPanel({
 									<input
 										type="radio"
 										name="playgroundImageOperation"
-										className="text-blue-600 focus:ring-blue-500"
+										className="text-gray-800 focus:ring-gray-500"
 										checked={imageOperation === 'edits'}
 										onChange={() => onImageOperationChange('edits')}
 										disabled={sending}
@@ -418,7 +506,9 @@ export function PlaygroundRequestPanel({
 							</p>
 						</>
 					)}
-					{imageOperation === 'edits' && !selectedImageUsesDashScope && selected?.upstream_protocol !== 'minimax' ? (
+					{imageOperation === 'edits' &&
+					!selectedImageUsesDashScope &&
+					selected?.upstream_protocol !== 'minimax' ? (
 						<div>
 							<label className={labelClass}>{t('referenceImages')}</label>
 							<input
@@ -426,18 +516,18 @@ export function PlaygroundRequestPanel({
 								accept="image/png,image/jpeg,image/webp,image/*"
 								multiple
 								disabled={sending}
-								className={`${inputClass} file:mr-3 file:rounded file:border-0 file:bg-blue-50 file:px-2 file:py-1 file:text-xs file:font-medium file:text-blue-700`}
+								className={`${inputClass} file:mr-3 file:rounded file:border-0 file:bg-gray-50 file:px-2 file:py-1 file:text-xs file:font-medium file:text-gray-800`}
 								onChange={(e) => {
 									const list = e.target.files ? Array.from(e.target.files) : [];
 									onEditFilesChange(list.slice(0, IMAGE_MAX_REFERENCE_COUNT));
 								}}
 							/>
-							<p className="mt-1 text-[11px] text-gray-400">
+							<p className="mt-1 text-xs text-gray-400">
 								{t('referenceImagesHint', { max: IMAGE_MAX_REFERENCE_COUNT })}
 								{editFiles.length > 0
 									? ` · ${t('referenceImagesSelected', {
 											count: editFiles.length,
-										})}`
+									  })}`
 									: ''}
 							</p>
 							{editFiles.length === 0 ? (
@@ -471,7 +561,7 @@ export function PlaygroundRequestPanel({
 						<input
 							type="radio"
 							name="geminiAction"
-							className="text-blue-600 focus:ring-blue-500"
+							className="text-gray-800 focus:ring-gray-500"
 							checked={geminiAction === 'generateContent'}
 							onChange={() => onGeminiActionChange('generateContent')}
 						/>
@@ -481,7 +571,7 @@ export function PlaygroundRequestPanel({
 						<input
 							type="radio"
 							name="geminiAction"
-							className="text-blue-600 focus:ring-blue-500"
+							className="text-gray-800 focus:ring-gray-500"
 							checked={geminiAction === 'streamGenerateContent'}
 							onChange={() => onGeminiActionChange('streamGenerateContent')}
 						/>
@@ -490,74 +580,30 @@ export function PlaygroundRequestPanel({
 				</fieldset>
 			) : null}
 
-			<div className="flex min-h-0 flex-1 flex-col gap-3">
-				<div className="shrink-0">
-					<div className="mb-1 flex items-center justify-between gap-2">
-						<label className="text-xs font-medium uppercase tracking-wider text-gray-500" title={headerHint}>
-							{t('sentHeaders')}
-						</label>
-						{lastSentWireBody ? (
-							<span className="text-[11px] font-medium text-emerald-700">{t('sentBodySourceSent')}</span>
-						) : mergedPreview.status === 'preview' ? (
-							<span className="text-[11px] font-medium text-slate-500">{t('sentBodySourcePreview')}</span>
-						) : null}
-					</div>
-					<div className={`${codeBlockClass} max-h-36 overflow-y-auto p-0`}>
-						{routeHeaderRows.length === 0 ? (
-							<p className="px-3 py-2 text-gray-400">{t('sentHeadersEmpty')}</p>
-						) : (
-							<ul className="divide-y divide-gray-100">
-								{routeHeaderRows.map((row) => {
-									const fromCustom = row.source === 'custom_params';
-									return (
-										<li
-											key={`${row.source}:${row.name}`}
-											className={`grid grid-cols-1 gap-0.5 px-3 py-1.5 sm:grid-cols-[minmax(8rem,16rem)_minmax(0,1fr)_auto] sm:items-baseline sm:gap-3 ${
-												fromCustom ? 'bg-amber-50' : ''
-											}`}
-										>
-											<span className="truncate font-mono text-xs font-semibold text-gray-800" title={row.name}>
-												{row.name}
-											</span>
-											<span className="min-w-0 break-all font-mono text-xs text-gray-700" title={row.value}>
-												{row.value}
-											</span>
-											<span
-												className={`w-fit shrink-0 rounded px-1.5 py-0.5 text-[10px] font-semibold ${
-													fromCustom ? 'bg-amber-100 text-amber-900' : 'bg-slate-100 text-slate-600'
-												}`}
-											>
-												{fromCustom ? t('sentHeadersSourceCustomParams') : t('sentHeadersSourceProvider')}
-											</span>
-										</li>
-									);
-								})}
-							</ul>
-						)}
-					</div>
+			<div className="flex min-h-0 flex-1 flex-col gap-2">
+				<div className="flex items-center justify-between gap-2">
+					<label htmlFor="playground-media-body" className={labelClass}>
+						{t('inputBody')}
+					</label>
+					{llmSampleSwitcher}
+					<button
+						type="button"
+						disabled={sending || !selected}
+						onClick={onResetTemplate}
+						className="shrink-0 rounded-lg px-2 py-1.5 text-xs text-gray-500 hover:bg-gray-100 disabled:opacity-50"
+					>
+						{t('applyTemplate')}
+					</button>
 				</div>
-
-				<div className="grid min-h-0 flex-1 grid-cols-1 gap-3 xl:grid-cols-2 xl:items-stretch">
-					<div className="flex min-h-0 min-w-0 flex-col">
-						<div className="mb-1 flex items-center justify-between gap-2">
-							<label className="text-xs font-medium uppercase tracking-wider text-gray-500">{t('inputBody')}</label>
-							{llmSampleSwitcher}
-						</div>
-						<textarea
-							value={bodyText}
-							onChange={(e) => onBodyTextChange(e.target.value)}
-							rows={12}
-							className={`${inputClass} min-h-[180px] flex-1 font-mono text-sm`}
-							spellCheck={false}
-						/>
-					</div>
-					<div className="flex min-h-0 min-w-0 flex-col">
-						<label className="mb-1 text-xs font-medium uppercase tracking-wider text-gray-500" title={actualBodyHint}>
-							{t('sentBody')}
-						</label>
-						<pre className={`${codeBlockClass} min-h-[180px] flex-1 overflow-y-auto`}>{actualBodyJson ?? '—'}</pre>
-					</div>
-				</div>
+				<textarea
+					id="playground-media-body"
+					value={bodyText}
+					onChange={(event) => onBodyTextChange(event.target.value)}
+					rows={12}
+					disabled={sending}
+					spellCheck={false}
+					className={`${inputClass} min-h-[280px] flex-1 resize-y font-mono text-xs leading-6 xl:resize-none`}
+				/>
 			</div>
 
 			{bodyError ? (

@@ -4,6 +4,7 @@
 import { responseTextWithinLimit, UpstreamResponseBodyTooLargeError } from './egress/bounded-response-body';
 import { GatewayErrorCode } from './gateway-error-codes';
 import { gatewayErrorResponse } from './gateway-error-response';
+import { sanitizeRewrappedHeaders } from './egress/response-headers';
 import { withUpstreamErrorCodeHeader } from './upstream-error-code';
 import type { OpenRouterErrorSkin } from './openrouter-error-protocol';
 

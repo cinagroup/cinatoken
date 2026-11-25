@@ -6,7 +6,7 @@ import type { GatewayRepositories } from "@octafuse/core";
 import { createAdminApp } from "@/lib/admin-app";
 import type { AdminBindings } from "@/lib/admin-env";
 import type { AdminPrincipal } from "@/lib/admin-principal";
-import { dispatchPlaygroundDashScopeRealtime } from "./playground-realtime-service";
+import { connectPlaygroundElevenLabsRealtime, dispatchPlaygroundDashScopeRealtime } from "./playground-realtime-service";
 import { AdminServiceError } from "./errors";
 
 const nativeResponse = globalThis.Response;
@@ -334,4 +334,22 @@ test("Console realtime rejects cross-site Origin and changed subject before prep
 	);
 	assert.equal(response.status, 501);
 	assert.equal(f.reads(), 0);
+});
+
+
+test('ElevenLabs uses the owned bridge, strips client credentials and closes oversized frames', async () => {
+ const h=workerHarness();
+ globalThis.fetch=async(_url,init)=>{
+  assert.equal(init?.redirect,'manual');
+  assert.equal(new Headers(init?.headers).get('xi-api-key'),'synthetic-secret');
+  return h.upgraded();
+ };
+ const result=await connectPlaygroundElevenLabsRealtime({upstreamProtocol:'elevenlabs',upstreamOperation:'audio.speech.realtime',modelKind:'tts',isAudioModel:true,providerId:'provider',providerApiKey:'synthetic-secret',providerModelName:'voice-model',providerEndpoints:{elevenlabs:{base:'https://provider.example.invalid/v1'}},customParams:null} as Parameters<typeof connectPlaygroundElevenLabsRealtime>[0], 'audio.speech.realtime', {voiceId:'voice_1',query:{api_key:'browser-secret',model_id:'wrong'}});
+ assert.equal(result.response.status,101);
+ h.server.message(JSON.stringify({text:'hello',xi_api_key:'browser-secret',Authorization:'private',model_id:'wrong'}));
+ assert.deepEqual(JSON.parse(String(h.upstream.sent[0])),{text:'hello'});
+ h.server.message('x'.repeat(1024*1024+1));
+ assert.equal(h.upstream.sent.length,1);
+ assert.equal(h.server.readyState,3);
+ assert.equal(h.upstream.readyState,3);
 });

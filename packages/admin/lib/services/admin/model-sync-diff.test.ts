@@ -12,7 +12,6 @@ const preset = {
 	vendor: 'openai',
 	context_window: 128000,
 	max_tokens: 8192,
-	description: 'Official text',
 	released: '2026-01-01',
 	input_modalities: ['text', 'image'],
 	output_modalities: ['text'],
@@ -24,7 +23,6 @@ const synced = {
 	vendor: 'openai',
 	context_window: 128000,
 	max_tokens: 8192,
-	description: 'Official text',
 	released_at: '2026-01-01',
 	input_modalities: JSON.stringify(['image', 'text']),
 	output_modalities: JSON.stringify(['text']),
@@ -38,7 +36,7 @@ describe('diffModelAgainstPreset', () => {
 
 	it('reports changed and added scalar fields with default_apply', () => {
 		const fields = diffModelAgainstPreset(
-			{ ...synced, display_name: 'Old', context_window: 64000, description: null },
+			{ ...synced, display_name: 'Old', context_window: 64000 },
 			preset
 		);
 		assert.deepEqual(
@@ -46,7 +44,6 @@ describe('diffModelAgainstPreset', () => {
 			[
 				['display_name', 'changed'],
 				['context_window', 'changed'],
-				['description', 'added'],
 			]
 		);
 		assert.ok(fields.every((f) => f.default_apply));
@@ -100,24 +97,22 @@ describe('diffModelAgainstPreset', () => {
 				vendor: row.vendor ?? null,
 				context_window: row.context_window ?? null,
 				max_tokens: row.max_tokens ?? 8192,
-				description: row.description ?? row.i18n?.en ?? null,
 				released_at: row.released ?? null,
 				input_modalities: row.modalities ? JSON.stringify(row.modalities.input) : null,
 				output_modalities: row.modalities ? JSON.stringify(row.modalities.output) : null,
 				pricing_profile: pricingProfile,
 			};
-			const fields = diffModelAgainstPreset(model, {
+			const official = {
 				display_name: row.display_name ?? null,
 				vendor: row.vendor ?? null,
 				context_window: row.context_window ?? null,
 				max_tokens: row.max_tokens ?? null,
-				description: row.description ?? row.i18n?.en ?? null,
 				released: row.released ?? null,
 				input_modalities: row.modalities?.input ?? null,
 				output_modalities: row.modalities?.output ?? null,
 				pricing_profile: pricingProfile,
-			});
-			assert.deepEqual(fields, [], row.id);
+			};
+			assert.deepEqual(diffModelAgainstPreset(model, official), [], row.id);
 		}
 	});
 });
@@ -144,6 +139,6 @@ describe('buildModelSyncPatch', () => {
 
 	it('ignores unknown keys, protected fields and keys that no longer differ', () => {
 		assert.deepEqual(buildModelSyncPatch(synced, preset, ['display_name', 'pricing_profile']), {});
-		assert.deepEqual(buildModelSyncPatch(drifted, preset, ['tags', 'metadata', 'route_policy', 'id']), {});
+		assert.deepEqual(buildModelSyncPatch(drifted, preset, ['tags', 'metadata', 'route_policy', 'note', 'id']), {});
 	});
 });

@@ -324,11 +324,44 @@ describe('dispatchOpenAiRoute', () => {
 		const result = await dispatchOpenAiRoute(openaiRoute(), { stream: true }, undefined, null, undefined, {
 			idleTimeoutMs: 40,
 		});
-		const [usage] = await Promise.all([result.usagePromise, result.response.text()]);
+		const [usage, text] = await Promise.all([result.usagePromise, result.response.text()]);
 		assert.equal(usage.input_tokens, 4);
 		assert.equal(usage.output_tokens, 1);
 		assert.equal(usage.upstreamMessageId, 'chatcmpl-idle');
 		assert.equal(usage.stream_error, 'Stream idle timeout');
+		assert.match(text,/Upstream provider stream interrupted/);
+  assert.match(text,/provider_unavailable/);
+  assert.equal(text.includes('[DONE]'),false);
+	});
+
+	it('does not write the idle error frame after the client disconnected', async () => {
+		const encoder = new TextEncoder();
+		const stream = new ReadableStream<Uint8Array>({
+			start(controller) {
+				controller.enqueue(
+					encoder.encode(
+						`data: ${JSON.stringify({
+							id: 'chatcmpl-gone',
+							choices: [{ delta: { content: 'hel' }, finish_reason: null }],
+						})}\n`
+					)
+				);
+			},
+			cancel() {},
+		});
+		mock.method(globalThis, 'fetch', async () =>
+			new Response(stream, {
+				status: 200,
+				headers: { 'Content-Type': 'text/event-stream' },
+			})
+		);
+		const controller = new AbortController();
+		const result = await dispatchOpenAiRoute(openaiRoute(), { stream: true }, controller.signal, null, undefined, {
+			idleTimeoutMs: 60,
+		});
+		setTimeout(() => controller.abort(), 10);
+		const [, text] = await Promise.all([result.usagePromise, result.response.text()]);
+		assert.ok(!text.includes('stream_idle_timeout'), text);
 	});
 
 	it('waits longer for the first SSE chunk than for later idle gaps', async () => {

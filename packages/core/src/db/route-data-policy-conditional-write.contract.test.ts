@@ -71,14 +71,14 @@ function fixture(driver: 'd1' | 'postgres' | 'mysql') {
 			: undefined;
 	const sqlite = d1?.sqlite ?? new DatabaseSync(':memory:');
 	sqlite.exec(`PRAGMA foreign_keys=ON;
-		CREATE TABLE providers(id TEXT COLLATE NOCASE PRIMARY KEY,name TEXT,endpoints TEXT,api_key TEXT,shared_channel_type TEXT);
+		CREATE TABLE providers(id TEXT COLLATE NOCASE PRIMARY KEY,name TEXT,endpoints TEXT,api_key TEXT,shared_channel_type TEXT,custom_params TEXT);
 		CREATE TABLE model_routes(id TEXT COLLATE NOCASE PRIMARY KEY,provider_id TEXT,provider_model_name TEXT,upstream_protocol TEXT,upstream_operation TEXT,adapter TEXT,custom_params TEXT,model_id TEXT,route_group TEXT,created_at TEXT);
 		CREATE TABLE route_data_policies(route_target_id TEXT COLLATE NOCASE PRIMARY KEY REFERENCES model_routes(id),subject_fingerprint TEXT,retention_days INTEGER,training_allowed INTEGER,zdr_supported INTEGER,evidence_url TEXT,verified_by TEXT,verified_at TEXT,expires_at TEXT,status TEXT,invalidated_at TEXT,invalidation_reason TEXT,updated_at TEXT);
 		CREATE TABLE route_data_policy_audit(id TEXT PRIMARY KEY,route_target_id TEXT REFERENCES model_routes(id),snapshot_json TEXT,actor_id TEXT,created_at TEXT);`);
 	sqlite
-		.prepare('INSERT INTO providers VALUES(?,?,?,?,?)')
+		.prepare('INSERT INTO providers(id,name,endpoints,api_key,shared_channel_type) VALUES(?,?,?,?,?)')
 		.run(trust.provider.id, 'Provider', trust.provider.endpoints!, trust.provider.api_key!, null);
-	sqlite.prepare('INSERT INTO providers VALUES(?,?,?,?,?)').run('Provider-B', 'Other', '{}', 'synthetic-other', null);
+	sqlite.prepare('INSERT INTO providers(id,name,endpoints,api_key,shared_channel_type) VALUES(?,?,?,?,?)').run('Provider-B', 'Other', '{}', 'synthetic-other', null);
 	sqlite
 		.prepare('INSERT INTO model_routes VALUES(?,?,?,?,?,?,?,?,?,?)')
 		.run(...(Object.values(trust.route) as SQLInputValue[]), 'Model', null, instant);
@@ -257,6 +257,7 @@ for (const driver of ['d1', 'postgres', 'mysql'] as const) {
 		['providers', 'endpoints', '{"openai":"https://different.example.invalid"}'],
 		['providers', 'api_key', 'synthetic-different'],
 		['providers', 'shared_channel_type', 'shared'],
+  ['providers','custom_params','{"openai":{"body":{"enable_search":true}}}'],
 	];
 	for (const [table, column, value] of drift)
 		test(`${driver}: commit rejects exact subject read-set drift ${table}.${column}`, async () => {

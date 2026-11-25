@@ -5,11 +5,9 @@ import { createHash } from 'node:crypto';
 import type { ByokRuntimeKeyRow, GatewayRepositories, SharedKeyRow } from '@octafuse/core';
 import type { RouteResult } from './model-router';
 import { EMPTY_USAGE, proxyChatCompletions, proxyDashScopeMultimodalPassthrough } from './proxy';
-import {
-	failoverDispatch,
-	isSuccessfulDispatchResponse,
-	markUpstreamOutcomeUnknown,
-} from './failover-dispatch';
+import { failoverDispatch, isSuccessfulDispatchResponse, markUpstreamOutcomeUnknown } from './failover-dispatch';
+import { textStreamDispatchOptions } from './proxy';
+import { UPSTREAM_HEADERS_TIMEOUT_MESSAGE_PREFIX } from './egress/upstream-fetch-timeout';
 import { RequestTimingCollector } from './request-timing';
 import {
 	isProviderCircuitOpen,
@@ -17,11 +15,12 @@ import {
 	resetProviderCircuitStateForTests,
 } from './provider-circuit-breaker';
 import { resetSharedKeyPoolStateForTests } from './shared-key-pool';
+import { createRouteAwareBudgetAdmission, RequestBudgetAdmissionError } from './request-budget-admission';
 import {
-	createRouteAwareBudgetAdmission,
-	RequestBudgetAdmissionError,
-} from './request-budget-admission';
-import { captureTextRouteIdentity, createPreparedTextAttempt, preparedTextAttemptMatchesRoute } from './egress/prepared-text-attempt';
+	captureTextRouteIdentity,
+	createPreparedTextAttempt,
+	preparedTextAttemptMatchesRoute,
+} from './egress/prepared-text-attempt';
 
 function makeRoute(providerId: string, overrides: Partial<RouteResult> = {}): RouteResult {
 	return {
@@ -112,7 +111,7 @@ describe('dispatch success response', () => {
 				status: 101,
 				webSocket: {},
 			} as Response),
-			true
+			true,
 		);
 	});
 });
@@ -149,10 +148,7 @@ describe('failoverDispatch — private BYOK credentials', () => {
 				markSharedKeyFailure: mock.fn(),
 			},
 			byokKeys: {
-				listActiveForRequest: async () => [
-					makeByokKey('primary-1'),
-					makeByokKey('fallback-1', true),
-				],
+				listActiveForRequest: async () => [makeByokKey('primary-1'), makeByokKey('fallback-1', true)],
 			},
 		} as unknown as GatewayRepositories;
 		const seen: string[] = [];
@@ -175,11 +171,7 @@ describe('failoverDispatch — private BYOK credentials', () => {
 			{ ...defaultOptions, byok: byokContext },
 		);
 
-		assert.deepEqual(seen, [
-			'byok:primary-1',
-			'sharedkey:shared-1',
-			'provider-1',
-		]);
+		assert.deepEqual(seen, ['byok:primary-1', 'sharedkey:shared-1', 'provider-1']);
 		assert.equal(result.response.status, 502);
 		assert.equal(result.response.headers.get('X-OctaFuse-Error-Code'), 'gateway.dispatch_limit_exceeded');
 		assert.equal(result.meta?.failoverForbidden, true);
@@ -259,9 +251,10 @@ describe('failoverDispatch — private BYOK credentials', () => {
 			status: 'blocked',
 			remainingMicros: 0,
 		}));
-		const guardrailReserve = mock.fn<GatewayRepositories['guardrailBudgets']['reserveMany']>(
-			async () => ({ status: 'blocked', assignmentId: 'assignment-1' }),
-		);
+		const guardrailReserve = mock.fn<GatewayRepositories['guardrailBudgets']['reserveMany']>(async () => ({
+			status: 'blocked',
+			assignmentId: 'assignment-1',
+		}));
 		const repos = {
 			byokKeys: {
 				listActiveForRequest: async () => [makeByokKey('zero-fee-1')],
@@ -328,9 +321,10 @@ describe('failoverDispatch — private BYOK credentials', () => {
 			status: 'blocked',
 			remainingMicros: 0,
 		}));
-		const guardrailReserve = mock.fn<GatewayRepositories['guardrailBudgets']['reserveMany']>(
-			async () => ({ status: 'reserved', reservationCount: 0 }),
-		);
+		const guardrailReserve = mock.fn<GatewayRepositories['guardrailBudgets']['reserveMany']>(async () => ({
+			status: 'reserved',
+			reservationCount: 0,
+		}));
 		const repos = {
 			byokKeys: {
 				listActiveForRequest: async () => [makeByokKey('fallback-denied-1')],
@@ -464,10 +458,7 @@ describe('failoverDispatch — private BYOK credentials', () => {
 		markProviderFailure('provider-1#byok:key-1', 'rate_limit', 60_000);
 		const repos = {
 			byokKeys: {
-				listActiveForRequest: async () => [
-					makeByokKey('key-1'),
-					makeByokKey('key-2'),
-				],
+				listActiveForRequest: async () => [makeByokKey('key-1'), makeByokKey('key-2')],
 			},
 		} as unknown as GatewayRepositories;
 		const seen: string[] = [];
@@ -525,21 +516,14 @@ describe('failoverDispatch — private BYOK credentials', () => {
 		markProviderFailure('provider-1#byok:fallback-1', 'rate_limit', 60_000);
 		const repos = {
 			byokKeys: {
-				listActiveForRequest: async () => [
-					makeByokKey('primary-1'),
-					makeByokKey('fallback-1', true),
-				],
+				listActiveForRequest: async () => [makeByokKey('primary-1'), makeByokKey('fallback-1', true)],
 			},
 		} as unknown as GatewayRepositories;
 		const dispatch = mock.fn();
-		const result = await failoverDispatch(
-			repos,
-			[makeByokRoute()],
-			'openai',
-			dispatch,
-			undefined,
-			{ ...defaultOptions, byok: byokContext },
-		);
+		const result = await failoverDispatch(repos, [makeByokRoute()], 'openai', dispatch, undefined, {
+			...defaultOptions,
+			byok: byokContext,
+		});
 
 		assert.equal(dispatch.mock.callCount(), 0);
 		assert.equal(result.response.status, 429);
@@ -553,10 +537,7 @@ describe('final-attempt Guardrail outcome metadata', () => {
 		let calls = 0;
 		const result = await failoverDispatch(
 			emptyRepos,
-			[
-				makeRoute('accepted-first', { routePriority: 2 }),
-				makeRoute('must-not-run', { routePriority: 1 }),
-			],
+			[makeRoute('accepted-first', { routePriority: 2 }), makeRoute('must-not-run', { routePriority: 1 })],
 			'openai',
 			async () => {
 				calls += 1;
@@ -607,9 +588,14 @@ describe('final-attempt Guardrail outcome metadata', () => {
 						const url = String(input);
 						attempted.push(url.includes('unknown-first.example') ? 'unknown-first' : 'success-second');
 						if (url.includes('unknown-first.example')) throw new TypeError('connection reset');
-						return new Response(JSON.stringify({
-							request_id: 'req-success', output: { text: 'ok' }, usage: { seconds: 4 },
-						}), { status: 200 });
+						return new Response(
+							JSON.stringify({
+								request_id: 'req-success',
+								output: { text: 'ok' },
+								usage: { seconds: 4 },
+							}),
+							{ status: 200 },
+						);
 					},
 				},
 			},
@@ -668,10 +654,7 @@ describe('final-attempt Guardrail outcome metadata', () => {
 		let calls = 0;
 		const recovered = await failoverDispatch(
 			emptyRepos,
-			[
-				makeRoute('throws-first', { routePriority: 2 }),
-				makeRoute('succeeds-second', { routePriority: 1 }),
-			],
+			[makeRoute('throws-first', { routePriority: 2 }), makeRoute('succeeds-second', { routePriority: 1 })],
 			'openai',
 			async () => {
 				calls += 1;
@@ -733,10 +716,9 @@ describe('failoverDispatch — partition none request-level chain', () => {
 			async (route) => {
 				seen.push(route.targetId);
 				return {
-					response: new Response(
-						route.targetId === 'm1-b' ? 'ok' : 'unavailable',
-						{ status: route.targetId === 'm1-b' ? 200 : 503 },
-					),
+					response: new Response(route.targetId === 'm1-b' ? 'ok' : 'unavailable', {
+						status: route.targetId === 'm1-b' ? 200 : 503,
+					}),
 					usagePromise: Promise.resolve(EMPTY_USAGE),
 					upstreamRequestId: null,
 				};
@@ -776,9 +758,7 @@ describe('failoverDispatch — partition none request-level chain', () => {
 			'openai',
 			async (route) => {
 				seen.push(route.targetId);
-				const status = route.targetId === 'm2-a'
-					? 400
-					: route.targetId === 'm1-b' ? 200 : 503;
+				const status = route.targetId === 'm2-a' ? 400 : route.targetId === 'm1-b' ? 200 : 503;
 				return {
 					response: Response.json(
 						status === 200 ? { ok: true } : { error: { message: `failed ${route.targetId}` } },
@@ -805,10 +785,7 @@ describe('failoverDispatch — partition none request-level chain', () => {
 		const calls: string[] = [];
 		const result = await failoverDispatch(
 			emptyRepos,
-			[
-				globalRoute('m2-accepted', 1, 'm2', 2, 1),
-				globalRoute('m1-must-not-run', 0, 'm1', 1, 2),
-			],
+			[globalRoute('m2-accepted', 1, 'm2', 2, 1), globalRoute('m1-must-not-run', 0, 'm1', 1, 2)],
 			'openai',
 			async (route) => {
 				calls.push(route.targetId);
@@ -832,10 +809,7 @@ describe('failoverDispatch — partition none request-level chain', () => {
 	it('stops the global chain on the first thrown unknown model outcome', async () => {
 		const result = await failoverDispatch(
 			emptyRepos,
-			[
-				globalRoute('m2-unknown', 1, 'm2', 2, 1),
-				globalRoute('m1-success', 0, 'm1', 1, 2),
-			],
+			[globalRoute('m2-unknown', 1, 'm2', 2, 1), globalRoute('m1-success', 0, 'm1', 1, 2)],
 			'openai',
 			async (route) => {
 				if (route.targetId === 'm2-unknown') {
@@ -905,12 +879,7 @@ describe('failoverDispatch — partition none request-level chain', () => {
 			],
 			'openai',
 			async (route) => {
-				seen.push([
-					route.targetId,
-					route.providerKeyId,
-					route.gatewayCandidateIndex,
-					route.gatewayModelId,
-				]);
+				seen.push([route.targetId, route.providerKeyId, route.gatewayCandidateIndex, route.gatewayModelId]);
 				const success = route.targetId === 'm1-direct';
 				return {
 					response: new Response(success ? 'ok' : 'unavailable', { status: success ? 200 : 503 }),
@@ -935,12 +904,9 @@ describe('failoverDispatch — partition none request-level chain', () => {
 				attempt.candidateIndex,
 				attempt.globalEndpointRank,
 			]),
-			[
-				['m2-shared', 1, 1],
-			],
+			[['m2-shared', 1, 1]],
 		);
 	});
-
 });
 
 describe('failoverDispatch — all providers unavailable', () => {
@@ -1005,7 +971,7 @@ describe('failoverDispatch — all providers unavailable', () => {
 			['openai', 'dashscope'],
 			dispatch,
 			undefined,
-			defaultOptions
+			defaultOptions,
 		);
 
 		assert.equal(dispatch.mock.callCount(), 1);
@@ -1113,19 +1079,12 @@ describe('failoverDispatch — pre-dispatch admission boundary', () => {
 		const admissionError = new Error('ordinary budget dispatch persistence failed');
 
 		await assert.rejects(
-			failoverDispatch(
-				emptyRepos,
-				[makeRoute('p1')],
-				'openai',
-				dispatch,
-				undefined,
-				{
-					...defaultOptions,
-					beforeUpstreamDispatch: async () => {
-						throw admissionError;
-					},
+			failoverDispatch(emptyRepos, [makeRoute('p1')], 'openai', dispatch, undefined, {
+				...defaultOptions,
+				beforeUpstreamDispatch: async () => {
+					throw admissionError;
 				},
-			),
+			}),
 			(error: unknown) => error === admissionError,
 		);
 		assert.equal(dispatch.mock.callCount(), 0);
@@ -1171,25 +1130,34 @@ describe('failoverDispatch — pre-dispatch admission boundary', () => {
 				'openai',
 				async (selected, _signal, _timing, _attempt, beforeFetch) => {
 					const preparedRoute = mode === 'stale' ? makeRoute('other') : selected;
-					const prepared = mode !== 'missing' ? createPreparedTextAttempt({
-						routeIdentity: captureTextRouteIdentity(preparedRoute),
-						url: 'https://example.com/v1/chat/completions',
-						method: 'POST', headers: { Authorization: 'Bearer sk-other' },
-						outboundBodySha256: createHash('sha256').update('{}').digest('hex'),
-						outboundBodyBytes: 2,
-					}) : undefined;
+					const prepared =
+						mode !== 'missing'
+							? createPreparedTextAttempt({
+									routeIdentity: captureTextRouteIdentity(preparedRoute),
+									url: 'https://example.com/v1/chat/completions',
+									method: 'POST',
+									headers: { Authorization: 'Bearer sk-other' },
+									outboundBodySha256: createHash('sha256').update('{}').digest('hex'),
+									outboundBodyBytes: 2,
+							  })
+							: undefined;
 					if (mode === 'mutated') selected.providerApiKey = 'rotated-after-prepare';
 					await beforeFetch?.(mode === 'unfrozen' ? { ...prepared } : prepared);
 					fetches += 1;
-					return { response: new Response('unexpected', { status: 200 }),
-						usagePromise: Promise.resolve(EMPTY_USAGE), upstreamRequestId: null };
+					return {
+						response: new Response('unexpected', { status: 200 }),
+						usagePromise: Promise.resolve(EMPTY_USAGE),
+						upstreamRequestId: null,
+					};
 				},
 				undefined,
 				{
 					...defaultOptions,
 					delegateBeforeUpstreamDispatchToDriver: true,
 					requirePreparedTextAttemptIdentity: true,
-					beforeUpstreamDispatch: async () => { grants += 1; },
+					beforeUpstreamDispatch: async () => {
+						grants += 1;
+					},
 				},
 			);
 			assert.equal(result.response.status, 403);
@@ -1204,10 +1172,7 @@ describe('failoverDispatch — pre-dispatch admission boundary', () => {
 		let calls = 0;
 		const result = await failoverDispatch(
 			emptyRepos,
-			[
-				makeRoute('bad-local', { routePriority: 2 }),
-				makeRoute('good', { routePriority: 1 }),
-			],
+			[makeRoute('bad-local', { routePriority: 2 }), makeRoute('good', { routePriority: 1 })],
 			'openai',
 			async (_route, _signal, _timing, _attempt, beforeFetch) => {
 				calls += 1;
@@ -1241,10 +1206,7 @@ describe('failoverDispatch — pre-dispatch admission boundary', () => {
 		await assert.rejects(
 			failoverDispatch(
 				emptyRepos,
-				[
-					makeRoute('p1', { routePriority: 2 }),
-					makeRoute('p2', { routePriority: 1 }),
-				],
+				[makeRoute('p1', { routePriority: 2 }), makeRoute('p2', { routePriority: 1 })],
 				'openai',
 				async (_route, _signal, _timing, _attempt, beforeFetch) => {
 					events.push('prepare');
@@ -1317,7 +1279,10 @@ describe('failoverDispatch — opt-in durable single claim', () => {
 		let grants = 0;
 		let sends = 0;
 		await assert.rejects(
-			failoverDispatch(emptyRepos, routes, 'openai',
+			failoverDispatch(
+				emptyRepos,
+				routes,
+				'openai',
 				async (_route, _signal, _timing, _attempt, beforeFetch) => {
 					await beforeFetch?.();
 					await beforeFetch?.();
@@ -1327,12 +1292,17 @@ describe('failoverDispatch — opt-in durable single claim', () => {
 						usagePromise: Promise.resolve(EMPTY_USAGE),
 						upstreamRequestId: null,
 					};
-				}, undefined, {
+				},
+				undefined,
+				{
 					...defaultOptions,
 					delegateBeforeUpstreamDispatchToDriver: true,
 					stopAfterFirstGrantedDispatch: true,
-					beforeUpstreamDispatch: async () => { grants += 1; },
-				}),
+					beforeUpstreamDispatch: async () => {
+						grants += 1;
+					},
+				},
+			),
 			/Single-grant dispatch boundary was already entered/,
 		);
 		assert.equal(grants, 1);
@@ -1349,29 +1319,35 @@ describe('failoverDispatch — opt-in durable single claim', () => {
 			response.end('{"error":"upstream unavailable"}');
 		});
 		try {
-			await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve));
+			await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
 			const address = server.address();
 			assert.ok(address && typeof address !== 'string');
 			const upstream = { openai: { base: `http://127.0.0.1:${address.port}/v1` } };
-			const result = await proxyChatCompletions(emptyRepos, [
-				makeRoute('physical-first', { routePriority: 2, providerEndpoints: upstream }),
-				makeRoute('physical-second', { routePriority: 1, providerEndpoints: upstream }),
-			], { model: 'model-x', messages: [{ role: 'user', content: 'hello' }] }, undefined, {
-				...defaultOptions,
-				stopAfterFirstGrantedDispatch: true,
-				requirePreparedTextAttemptIdentity: true,
-				beforeUpstreamDispatch: async (selected, prepared) => {
-					assert.equal(preparedTextAttemptMatchesRoute(prepared, selected), true);
-					grants += 1;
+			const result = await proxyChatCompletions(
+				emptyRepos,
+				[
+					makeRoute('physical-first', { routePriority: 2, providerEndpoints: upstream }),
+					makeRoute('physical-second', { routePriority: 1, providerEndpoints: upstream }),
+				],
+				{ model: 'model-x', messages: [{ role: 'user', content: 'hello' }] },
+				undefined,
+				{
+					...defaultOptions,
+					stopAfterFirstGrantedDispatch: true,
+					requirePreparedTextAttemptIdentity: true,
+					beforeUpstreamDispatch: async (selected, prepared) => {
+						assert.equal(preparedTextAttemptMatchesRoute(prepared, selected), true);
+						grants += 1;
+					},
 				},
-			});
+			);
 			assert.equal(result.response.status, 503);
 			assert.equal(result.chosenRoute.providerId, 'physical-first');
 			assert.equal(grants, 1);
 			assert.equal(sends, 1);
 		} finally {
 			server.closeAllConnections();
-			await new Promise<void>(resolve => server.close(() => resolve()));
+			await new Promise<void>((resolve) => server.close(() => resolve()));
 		}
 	});
 
@@ -1398,7 +1374,9 @@ describe('failoverDispatch — opt-in durable single claim', () => {
 				...defaultOptions,
 				delegateBeforeUpstreamDispatchToDriver: true,
 				stopAfterFirstGrantedDispatch: true,
-				beforeUpstreamDispatch: async () => { grants += 1; },
+				beforeUpstreamDispatch: async () => {
+					grants += 1;
+				},
 			},
 		);
 
@@ -1426,7 +1404,9 @@ describe('failoverDispatch — opt-in durable single claim', () => {
 				dispatches += 1;
 				await beforeFetch?.();
 				return {
-					response: new Response(dispatches === 1 ? 'failure' : 'ok', { status: dispatches === 1 ? 503 : 200 }),
+					response: new Response(dispatches === 1 ? 'failure' : 'ok', {
+						status: dispatches === 1 ? 503 : 200,
+					}),
 					usagePromise: Promise.resolve(EMPTY_USAGE),
 					upstreamRequestId: null,
 				};
@@ -1435,7 +1415,9 @@ describe('failoverDispatch — opt-in durable single claim', () => {
 			{
 				...defaultOptions,
 				delegateBeforeUpstreamDispatchToDriver: true,
-				beforeUpstreamDispatch: async () => { grants += 1; },
+				beforeUpstreamDispatch: async () => {
+					grants += 1;
+				},
 			},
 		);
 
@@ -1473,7 +1455,9 @@ describe('failoverDispatch — opt-in durable single claim', () => {
 				...defaultOptions,
 				delegateBeforeUpstreamDispatchToDriver: true,
 				stopAfterFirstGrantedDispatch: true,
-				beforeUpstreamDispatch: async () => { grants += 1; },
+				beforeUpstreamDispatch: async () => {
+					grants += 1;
+				},
 			},
 		);
 
@@ -1540,28 +1524,27 @@ describe('failoverDispatch — opt-in durable single claim', () => {
 describe('failoverDispatch — cross-model timing handoff', () => {
 	it('does not select a failed model final provider when outer model fallback continues', async () => {
 		const timing = new RequestTimingCollector();
-		const dispatch = mock.fn(async (
-			_route: RouteResult,
-			_signal?: AbortSignal,
-			collector?: RequestTimingCollector | null,
-			attempt?: Parameters<RequestTimingCollector['markAttemptHeaders']>[0]
-		) => {
-			collector?.markAttemptHeaders(attempt, 503);
-			return {
-				response: new Response('unavailable', { status: 503 }),
-				usagePromise: Promise.resolve(EMPTY_USAGE),
-				upstreamRequestId: null,
-			};
-		});
-
-		const result = await failoverDispatch(
-			emptyRepos,
-			[makeRoute('p1')],
-			'openai',
-			dispatch,
-			undefined,
-			{ ...defaultOptions, timing, deferFinalAttempt: true }
+		const dispatch = mock.fn(
+			async (
+				_route: RouteResult,
+				_signal?: AbortSignal,
+				collector?: RequestTimingCollector | null,
+				attempt?: Parameters<RequestTimingCollector['markAttemptHeaders']>[0],
+			) => {
+				collector?.markAttemptHeaders(attempt, 503);
+				return {
+					response: new Response('unavailable', { status: 503 }),
+					usagePromise: Promise.resolve(EMPTY_USAGE),
+					upstreamRequestId: null,
+				};
+			},
 		);
+
+		const result = await failoverDispatch(emptyRepos, [makeRoute('p1')], 'openai', dispatch, undefined, {
+			...defaultOptions,
+			timing,
+			deferFinalAttempt: true,
+		});
 
 		assert.equal(result.response.status, 503);
 		const snapshot = timing.snapshot();
@@ -1581,7 +1564,7 @@ describe('failoverDispatch — image abort (no failover)', () => {
 				JSON.stringify({
 					error: { message: 'cancelled', abort_reason: 'client_abort' },
 				}),
-				{ status: 504 }
+				{ status: 504 },
 			),
 			usagePromise: Promise.resolve(EMPTY_USAGE),
 			upstreamRequestId: null,
@@ -1602,7 +1585,7 @@ describe('failoverDispatch — image abort (no failover)', () => {
 				JSON.stringify({
 					error: { message: 'timeout', abort_reason: 'gateway_timeout' },
 				}),
-				{ status: 504 }
+				{ status: 504 },
 			),
 			usagePromise: Promise.resolve(EMPTY_USAGE),
 			upstreamRequestId: null,
@@ -1825,6 +1808,90 @@ describe('failoverDispatch — soft server failures', () => {
 	});
 });
 
+describe('failoverDispatch — attempt context', () => {
+	it('reports canFailover=false once every remaining candidate is cooling down', async () => {
+		const seen: Array<[string, boolean | undefined]> = [];
+		const dispatch = mock.fn(
+			async (
+				route: RouteResult,
+				_signal?: AbortSignal,
+				_timing?: RequestTimingCollector | null,
+				_attempt?: unknown,
+    _beforeFetch?:unknown,_auxiliaryAuth?:unknown,_observed?:unknown,
+				context?: { canFailover: boolean },
+			) => {
+				seen.push([route.targetId, context?.canFailover]);
+				return {
+					response:
+						route.providerId === 'p1'
+							? new Response('rate limited', { status: 429, headers: { 'Retry-After': '30' } })
+							: new Response('error', { status: 503 }),
+					usagePromise: Promise.resolve(EMPTY_USAGE),
+					upstreamRequestId: null,
+				};
+			},
+		);
+		// t1 的 429 让 p1 熔断，t2 之后只剩同 provider 的 t3
+		const routes = [
+			makeRoute('p1', { targetId: 't1', routePriority: 30 }),
+			makeRoute('p2', { targetId: 't2', routePriority: 20 }),
+			makeRoute('p1', { targetId: 't3', routePriority: 10 }),
+		];
+
+		await failoverDispatch(emptyRepos, routes, 'openai', dispatch, undefined, defaultOptions);
+
+		assert.deepEqual(seen, [
+			['t1', true],
+			['t2', false],
+		]);
+	});
+
+	it('maps an upstream headers timeout to failure kind timeout and 504', async () => {
+		const timing = new RequestTimingCollector();
+		const dispatch = mock.fn(async () => {
+			throw new Error(`${UPSTREAM_HEADERS_TIMEOUT_MESSAGE_PREFIX} after 60000ms`);
+		});
+
+		const result = await failoverDispatch(emptyRepos, [makeRoute('p1')], 'openai', dispatch, undefined, {
+			...defaultOptions,
+			timing,
+		});
+
+		assert.equal(result.response.status, 504);
+		const metadata = JSON.parse(timing.snapshot().timingMetadata ?? '{}') as {
+			attempts?: Array<{ failure_kind: string | null }>;
+		};
+		assert.equal(metadata.attempts?.[0]?.failure_kind, 'timeout');
+		assert.equal(isProviderCircuitOpen('p1'), false);
+	});
+});
+
+describe('textStreamDispatchOptions', () => {
+	const firstEvent = { timeoutMs: 60_000, groups: '*' as const };
+	const options = { firstChunkTimeoutMs: 120_000, idleTimeoutMs: 90_000, headersTimeoutMs: 60_000 };
+
+	it('keeps fast-fail timeouts while another candidate is available', () => {
+		const resolved = textStreamDispatchOptions(firstEvent, 'default', options);
+		assert.equal(resolved.firstEventTimeoutMs, 60_000);
+		assert.equal(resolved.firstChunkTimeoutMs, 120_000);
+	});
+
+	it('retains the configured first-byte deadline for the last candidate', () => {
+		const resolved = textStreamDispatchOptions(firstEvent, 'default', options);
+		assert.equal(resolved.firstEventTimeoutMs, 60_000);
+		assert.equal(resolved.firstChunkTimeoutMs, 120_000);
+	});
+
+	it('leaves the headers wait unlimited when it is not configured', () => {
+		const resolved = textStreamDispatchOptions(
+			firstEvent,
+			'default',
+			{ firstChunkTimeoutMs: 120_000 },
+		);
+		assert.equal(resolved.idleTimeoutMs, undefined);
+	});
+});
+
 describe('failoverDispatch — provider sticky', () => {
 	const stickyRepoExtras = {
 		deleteStaleBefore: mock.fn(async () => 0),
@@ -1944,9 +2011,7 @@ describe('failoverDispatch — provider sticky', () => {
 			},
 		);
 
-		assert.deepEqual(seen, [
-			{ targetId: 'byok-target', keyId: 'byok:preempt-sticky-1' },
-		]);
+		assert.deepEqual(seen, [{ targetId: 'byok-target', keyId: 'byok:preempt-sticky-1' }]);
 		assert.equal(result.chosenRoute.targetId, 'byok-target');
 		assert.deepEqual(await result.stickyTrace!(), {
 			lookup: 'hit',
@@ -2080,7 +2145,7 @@ describe('failoverDispatch — provider sticky', () => {
 				...defaultOptions,
 				routePoolId: 'pool-1',
 				sticky: { enabled: true, idleTtlSeconds: 3600, epoch: 3 },
-			}
+			},
 		);
 		const trace = await result.stickyTrace!();
 		assert.equal(trace.lookup, 'miss');
@@ -2172,8 +2237,11 @@ describe('failoverDispatch — provider sticky', () => {
 			const hitRepos = {
 				routePoolSticky: {
 					getBinding: async () => ({
-						route_pool_id: 'pool-1', affinity_hash: 'x', route_target_id: 't1',
-						binding_token: 'token', pool_epoch: 0,
+						route_pool_id: 'pool-1',
+						affinity_hash: 'x',
+						route_target_id: 't1',
+						binding_token: 'token',
+						pool_epoch: 0,
 						expires_at: new Date(now + 300_000).toISOString(),
 					}),
 					tryBind,
@@ -2205,7 +2273,10 @@ describe('failoverDispatch — provider sticky', () => {
 	});
 
 	it('binds implicit affinity only after a cache hit on an eligible route', async () => {
-		for (const [cacheReadTokens, expectedBinds] of [[0, 0], [24, 1]] as const) {
+		for (const [cacheReadTokens, expectedBinds] of [
+			[0, 0],
+			[24, 1],
+		] as const) {
 			const tryBind = mock.fn(async () => true);
 			const repos = {
 				routePoolSticky: {
@@ -2245,8 +2316,11 @@ describe('failoverDispatch — provider sticky', () => {
 		const repos = {
 			routePoolSticky: {
 				getBinding: async () => ({
-					route_pool_id: 'pool-1', affinity_hash: 'x', route_target_id: 'eligible-target',
-					binding_token: 'token', pool_epoch: 0,
+					route_pool_id: 'pool-1',
+					affinity_hash: 'x',
+					route_target_id: 'eligible-target',
+					binding_token: 'token',
+					pool_epoch: 0,
 					expires_at: new Date(now + 300_000).toISOString(),
 				}),
 				tryBind: mock.fn(),
@@ -2311,7 +2385,9 @@ describe('failoverDispatch — provider sticky', () => {
 		assert.equal(getBinding.mock.callCount(), 0);
 		assert.equal(tryBind.mock.callCount(), 0);
 		assert.deepEqual(await result.stickyTrace!(), {
-			lookup: 'disabled', attempted_target: null, result: 'unchanged',
+			lookup: 'disabled',
+			attempted_target: null,
+			result: 'unchanged',
 		});
 	});
 
@@ -2341,7 +2417,7 @@ describe('failoverDispatch — provider sticky', () => {
 				...defaultOptions,
 				routePoolId: 'pool-1',
 				sticky: { enabled: true, idleTtlSeconds: 3600, epoch: 0 },
-			}
+			},
 		);
 		const trace = await result.stickyTrace!();
 		assert.equal(trace.lookup, 'miss');
@@ -2387,7 +2463,7 @@ describe('failoverDispatch — provider sticky', () => {
 				...defaultOptions,
 				routePoolId: 'pool-1',
 				sticky: { enabled: true, idleTtlSeconds: 3600, epoch: 0 },
-			}
+			},
 		);
 		assert.equal(result.response.status, 200);
 		assert.equal(result.chosenRoute.targetId, 'other-target');
@@ -2436,7 +2512,7 @@ describe('failoverDispatch — provider sticky', () => {
 				...defaultOptions,
 				routePoolId: 'pool-1',
 				sticky: { enabled: true, idleTtlSeconds: 3600, epoch: 0 },
-			}
+			},
 		);
 
 		assert.equal(dispatch.mock.callCount(), 0);
@@ -2445,5 +2521,172 @@ describe('failoverDispatch — provider sticky', () => {
 		const trace = await result.stickyTrace!();
 		assert.equal(trace.lookup, 'invalid_circuit');
 		resetProviderCircuitStateForTests();
+	});
+});
+
+function captureWarns(): { warns: string[]; restore: () => void } {
+	const warns: string[] = [];
+	const original = console.warn;
+	console.warn = (...args: unknown[]) => {
+		warns.push(args.map((part) => String(part)).join(' '));
+	};
+	return {
+		warns,
+		restore: () => {
+			console.warn = original;
+		},
+	};
+}
+
+describe('failoverDispatch — failover logs', () => {
+	it('logs the upstream error and the next provider, and keeps the failed body readable', async () => {
+		const timing = new RequestTimingCollector();
+		const dispatch = mock.fn(async (route: RouteResult) => {
+			if (route.providerId === 'p1') {
+				return {
+					response: new Response(JSON.stringify({ error: { message: 'rate limit exceeded for model-x' } }), {
+						status: 429,
+						headers: { 'content-type': 'application/json' },
+					}),
+					usagePromise: Promise.resolve(EMPTY_USAGE),
+					upstreamRequestId: null,
+				};
+			}
+			return {
+				response: new Response('ok', { status: 200 }),
+				usagePromise: Promise.resolve(EMPTY_USAGE),
+				upstreamRequestId: null,
+			};
+		});
+		const logs = captureWarns();
+		try {
+			const result = await failoverDispatch(
+				emptyRepos,
+				[makeRoute('p1', { providerName: 'Alpha' }), makeRoute('p2', { providerName: 'Beta' })],
+				'openai',
+				dispatch,
+				undefined,
+				{ ...defaultOptions, timing },
+			);
+			assert.equal(result.response.status, 200);
+			assert.equal(result.chosenRoute.providerId, 'p2');
+		} finally {
+			logs.restore();
+		}
+
+		const failover = logs.warns.find((line) => line.includes('trying next candidate'));
+		assert.ok(failover, logs.warns.join('\n'));
+  assert.match(failover!,/providerId=p1/);
+  assert.match(failover!,/status=429/);
+  assert.doesNotMatch(logs.warns.join(' '),/rate limit exceeded for model-x|model=|key=/);
+
+	});
+
+	it('logs auth failures once, with the upstream message and no second non-OK line', async () => {
+		const dispatch = mock.fn(async (route: RouteResult) => {
+			if (route.providerId === 'p1') {
+				return {
+					response: new Response(JSON.stringify({ error: { message: 'invalid api key' } }), {
+						status: 401,
+						headers: { 'content-type': 'application/json' },
+					}),
+					usagePromise: Promise.resolve(EMPTY_USAGE),
+					upstreamRequestId: null,
+				};
+			}
+			return {
+				response: new Response('ok', { status: 200 }),
+				usagePromise: Promise.resolve(EMPTY_USAGE),
+				upstreamRequestId: null,
+			};
+		});
+		const logs = captureWarns();
+		try {
+			const result = await failoverDispatch(
+				emptyRepos,
+				[makeRoute('p1'), makeRoute('p2')],
+				'openai',
+				dispatch,
+				undefined,
+				defaultOptions,
+			);
+			assert.equal(result.response.status, 200);
+		} finally {
+			logs.restore();
+		}
+
+		const auth = logs.warns.filter((line) => line.includes('provider auth issue'));
+		assert.equal(auth.length, 1);
+		assert.match(auth[0]!, /trying next provider/);
+		assert.match(auth[0]!, /status=401/);
+		assert.doesNotMatch(auth[0]!,/invalid api key/);
+		assert.equal(logs.warns.filter(line=>line.includes('provider non-OK')).length,1);
+  assert.doesNotMatch(logs.warns.join(' '),/invalid api key/);
+	});
+
+	it('logs fetch failures with the next candidate and does not say a next hop exists on the last one', async () => {
+		const dispatch = mock.fn(async (route: RouteResult) => {
+			if (route.providerId === 'p1') throw new Error('connect ECONNREFUSED 10.0.0.8:443');
+			return {
+				response: new Response('upstream down', {
+					status: 503,
+					headers: { 'content-type': 'text/plain' },
+				}),
+				usagePromise: Promise.resolve(EMPTY_USAGE),
+				upstreamRequestId: null,
+			};
+		});
+		const logs = captureWarns();
+		try {
+			const result = await failoverDispatch(
+				emptyRepos,
+				[makeRoute('p1', { providerName: 'Alpha' }), makeRoute('p2', { providerName: 'Beta' })],
+				'openai',
+				dispatch,
+				undefined,
+				defaultOptions,
+			);
+			assert.equal(result.response.status, 503);
+			const body = await result.response.text();
+			assert.equal(body, 'upstream down');
+		} finally {
+			logs.restore();
+		}
+
+		const fetchLine = logs.warns.find((line) => line.includes('fetch failed'));
+		assert.ok(fetchLine);
+  assert.match(fetchLine!,/providerId=p1/);
+  assert.doesNotMatch(logs.warns.join(' '),/ECONNREFUSED|10\.0\.0\.8|upstream down/);
+
+	});
+
+	it('does not log a failover hop when the failure must stop immediately', async () => {
+		const dispatch = mock.fn(async () => ({
+			response: new Response(JSON.stringify({ error: { message: 'bad request' } }), {
+				status: 400,
+				headers: { 'content-type': 'application/json' },
+			}),
+			usagePromise: Promise.resolve(EMPTY_USAGE),
+			upstreamRequestId: null,
+		}));
+		const logs = captureWarns();
+		try {
+			const result = await failoverDispatch(
+				emptyRepos,
+				[makeRoute('p1'), makeRoute('p2')],
+				'openai',
+				dispatch,
+				undefined,
+				defaultOptions,
+			);
+			assert.equal(result.response.status, 400);
+			assert.equal(dispatch.mock.callCount(), 1);
+		} finally {
+			logs.restore();
+		}
+		assert.equal(
+			logs.warns.filter((line) => line.includes('trying next') || line.includes('no remaining candidate')).length,
+			0,
+		);
 	});
 });

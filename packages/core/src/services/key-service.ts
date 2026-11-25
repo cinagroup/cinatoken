@@ -49,8 +49,10 @@ export async function createKey(
 		actor_id?: string | null;
 		actor_type?: ApiKeyBudgetAuditActorType;
 		now?: Date;
-	}
+	},
+	internalOAuthKeyId?: string,
 ): Promise<{ key: string; key_id: string; workspace_id: string }> {
+	if (internalOAuthKeyId !== undefined && !/^oauth:[a-zA-Z0-9._:-]{1,150}$/.test(internalOAuthKeyId)) throw new TypeError('Invalid internal OAuth key id');
 	const u = await repos.users.getById(params.user_id);
 	if (!u) {
 		throw new Error('createKey: user not found');
@@ -74,7 +76,7 @@ export async function createKey(
 		throw new TypeError('createKey: include_byok_in_limit must be a boolean');
 	}
 	const limitReset = normalizeGatewayKeyLimitReset(params.limit_reset);
-	const id = generateId();
+	const id = internalOAuthKeyId ?? generateId();
 	const key = generateKey();
 
 	const insertParams: InsertKeyParams = {

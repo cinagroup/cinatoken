@@ -133,7 +133,7 @@ test("D1 model-endpoint repository provides bounded CRUD and route linking", asy
 				endpoints TEXT,
 				api_key TEXT NOT NULL DEFAULT '',
 				status TEXT NOT NULL DEFAULT 'active',
-				description TEXT,
+				description TEXT, note TEXT, custom_params TEXT,
 				shared_channel_type TEXT, kind TEXT NOT NULL DEFAULT '',
 				created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 			);

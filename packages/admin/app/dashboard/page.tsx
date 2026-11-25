@@ -1,478 +1,123 @@
 'use client';
 
-/**
- * 网关总览：围绕「流量、稳定性、响应、费用」组织首屏，弱化配置数量与重复的今日口径。
- */
-import { useState, useEffect, useMemo, useCallback, type ReactNode } from 'react';
+import { AdminPageTitle } from '@/components/admin-page-title';
+
+/** Overview: selected-window metrics and trends, live access snapshot, global recent activity. */
+import { useCallback, useMemo, useState, type ComponentType, type ReactNode } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import {
-	ArrowPathIcon,
-	BanknotesIcon,
-	BoltIcon,
-	CheckCircleIcon,
-	ChevronRightIcon,
-	ClockIcon,
-	ExclamationTriangleIcon,
-	KeyIcon,
-	QueueListIcon,
-	UserGroupIcon,
-} from '@heroicons/react/24/outline';
-import { GatewayTimeRangePicker } from '@/components/GatewayTimeRangePicker';
+import { ArrowUpRightIcon, ArrowsRightLeftIcon, BanknotesIcon, BoltIcon, ClockIcon, ShieldCheckIcon } from '@heroicons/react/24/outline';
+import { DashboardRangeControl } from '@/components/dashboard/DashboardRangeControl';
+import { DashboardCosts, DashboardOperations } from '@/components/dashboard/DashboardOperations';
+import { dashboardPeriodChange } from '@/components/dashboard/dashboard-comparison';
+import { DashboardActivity } from '@/components/dashboard/DashboardActivity';
 import { DashboardModelDistributionChart } from '@/components/dashboard/DashboardModelDistributionChart';
+import { DashboardTokenSummary } from '@/components/dashboard/DashboardTokenSummary';
 import { DashboardTokenTrendChart } from '@/components/dashboard/DashboardTokenTrendChart';
-import { formatGatewayRangeSummary, isRollingPreset } from '@/lib/analytics-range';
-import { readApiJson } from '@/lib/api-json';
+import { dashboardLogsHref } from '@/components/dashboard/dashboard-links';
+import { createRangeValue, formatGatewayRangeSummary, type GatewayTimeRangeValue } from '@/lib/analytics-range';
 import { formatCompactTokens } from '@/lib/format-compact-tokens';
 import { formatGatewayMoneyCode } from '@/lib/format-gateway-currency';
-import type { DashboardStats, GatewayRequestLog, AnalyticsRecentLog } from '@/lib/types';
 import { useBillingCurrency } from '@/lib/use-billing-currency';
 import { useAnalyticsRange } from '@/lib/use-analytics-range';
+import { AutoRefreshControl } from '@/components/AutoRefreshControl';
+import { DASHBOARD_REFRESH_INTERVAL_OPTIONS, dashboardRefreshPreference } from '@/lib/auto-refresh-preference';
+import { useDashboardSnapshot } from '@/components/dashboard/use-dashboard-snapshot';
+import { DashboardNumber } from '@/components/dashboard/DashboardNumber';
+import { InfoHintPopover } from '@/components/InfoHintPopover';
 import { useGatewayDateTime } from '@/lib/use-gateway-datetime';
-import { DataLoadError } from '@/components/DataLoadError';
 
-function formatLatency(ms: number | null | undefined): string {
-	if (ms == null || !Number.isFinite(ms)) return '—';
-	if (ms >= 1000) return `${(ms / 1000).toFixed(2)}s`;
-	return `${Math.round(ms)}ms`;
-}
-
-function dashboardLogModelLabel(log: AnalyticsRecentLog & Partial<GatewayRequestLog>, unknown: string): string {
-	return log.model_name?.trim() || log.model_id?.trim() || unknown;
-}
-
-function dashboardLogProviderLabel(log: AnalyticsRecentLog & Partial<GatewayRequestLog>): string {
-	return log.provider_name?.trim() || log.provider_id?.trim() || '';
-}
-
-function dashboardLogModelTitle(log: AnalyticsRecentLog & Partial<GatewayRequestLog>): string | undefined {
-	const name = log.model_name?.trim();
-	const id = log.model_id?.trim();
-	if (name && id && name !== id) return `${name} (${id})`;
-	return name || id || undefined;
-}
-
-function dashboardLogProviderTitle(log: AnalyticsRecentLog & Partial<GatewayRequestLog>): string | undefined {
-	const name = log.provider_name?.trim();
-	const id = log.provider_id?.trim();
-	if (name && id && name !== id) return `${name} (${id})`;
-	return name || id || undefined;
-}
-
-function MetricCard({
-	icon,
-	label,
-	value,
-	footer,
-	tone = 'blue',
-}: {
-	icon: ReactNode;
-	label: string;
-	value: string;
-	footer: ReactNode;
-	tone?: 'blue' | 'emerald' | 'amber' | 'violet';
+function Metric({ icon: Icon, tone, label, value, format, scope, change, hint, children }: {
+  icon: ComponentType<{ className?: string }>; tone: string; label: string;
+  value: number | null | undefined; format: (value: number) => string; scope: string;
+  change?: { label: string; hint: string; tone: string } | null; hint?: string; children?: ReactNode;
 }) {
-	const toneClasses = {
-		blue: 'bg-blue-50 text-blue-700 ring-blue-100',
-		emerald: 'bg-emerald-50 text-emerald-700 ring-emerald-100',
-		amber: 'bg-amber-50 text-amber-700 ring-amber-100',
-		violet: 'bg-violet-50 text-violet-700 ring-violet-100',
-	};
-
-	return (
-		<div className="rounded-2xl border border-gray-200/80 bg-white p-5 shadow-sm">
-			<div className="flex items-start justify-between gap-4">
-				<div className="min-w-0">
-					<p className="text-sm font-medium text-gray-500">{label}</p>
-					<p className="mt-2 truncate text-3xl font-semibold tracking-tight text-gray-950 tabular-nums">{value}</p>
-				</div>
-				<div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ring-1 ${toneClasses[tone]}`}>
-					{icon}
-				</div>
-			</div>
-			<div className="mt-4 min-h-5 text-xs leading-5 text-gray-500">{footer}</div>
-		</div>
-	);
-}
-
-function RequestRow({
-	log,
-	formatDateTime,
-	unknown,
-}: {
-	log: AnalyticsRecentLog & Partial<GatewayRequestLog>;
-	formatDateTime: (value: string | null | undefined) => string;
-	unknown: string;
-}) {
-	const success = log.status === 'success';
-	return (
-		<div className="grid grid-cols-1 items-center gap-1 sm:grid-cols-[minmax(0,1fr)_auto] sm:gap-4 border-b border-gray-100 py-3 last:border-0">
-			<div className="min-w-0">
-				<div className="flex min-w-0 items-center gap-2">
-					<span className={`h-2 w-2 shrink-0 rounded-full ${success ? 'bg-emerald-500' : 'bg-red-500'}`} aria-hidden />
-					<span className="truncate text-sm font-medium text-gray-900" title={dashboardLogModelTitle(log)}>
-						{dashboardLogModelLabel(log, unknown)}
-					</span>
-					<span
-						className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium ${success ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'}`}
-					>
-						{log.status}
-					</span>
-				</div>
-				<p className="mt-1 truncate pl-4 text-xs text-gray-500" title={dashboardLogProviderTitle(log)}>
-					{dashboardLogProviderLabel(log) || unknown}
-				</p>
-			</div>
-			<time className="whitespace-nowrap text-xs text-gray-400">{formatDateTime(log.created_at)}</time>
-		</div>
-	);
+  return <div className="admin-content-panel min-w-0 rounded-xl border border-gray-200 bg-white p-4 sm:p-5">
+    <div className="flex min-h-8 items-center gap-2"><span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ${tone}`}><Icon className="h-4 w-4" aria-hidden="true" /></span><span className="flex min-w-0 flex-1 items-center gap-1 text-xs leading-4 text-gray-600"><span className="min-w-0">{label}</span>{hint && <InfoHintPopover label={label} openOnHover openOnFocus portal align="start"><p className="leading-6">{hint}</p></InfoHintPopover>}</span>
+      {change && <span title={change.hint} aria-label={change.hint} className={`hidden max-w-[45%] shrink-0 truncate rounded px-1.5 py-0.5 font-mono text-[10px] sm:inline-flex tabular-nums ${change.tone}`}>{change.label}</span>}
+    </div>
+    <p title={value == null ? undefined : format(value)} className="mt-3 truncate font-mono text-[28px] font-medium leading-tight tabular-nums text-gray-950 sm:text-3xl"><DashboardNumber value={value} format={format} scope={scope} /></p>
+    {change && <div className="mt-1 sm:hidden"><span title={change.hint} aria-label={change.hint} className={`inline-flex rounded px-1.5 py-0.5 font-mono text-[10px] tabular-nums ${change.tone}`}>{change.label}</span></div>}
+    {children && <div className="mt-2 text-xs leading-5 text-gray-500">{children}</div>}
+  </div>;
 }
 
 export default function DashboardPage() {
-	const t = useTranslations('dashboard');
-	const tBrand = useTranslations('brand');
-	const tCommon = useTranslations('common');
-	const tTimeRange = useTranslations('timeRange');
-	const [rangeValue, setRangeValue] = useAnalyticsRange();
-	const [reloadRevision, setReloadRevision] = useState(0);
-	const request = useMemo(() => {
-		const params = new URLSearchParams();
-		if (rangeValue.start_date) params.set('start_date', rangeValue.start_date);
-		if (rangeValue.end_date) params.set('end_date', rangeValue.end_date);
-		// 仅滚动预设走 `range=`；日历快捷与自定义只传绝对起止，避免后端未知 preset 回落默认窗
-		if (isRollingPreset(rangeValue.preset)) params.set('range', rangeValue.preset);
-		return { url: `/api/admin/stats?${params.toString()}`, reloadRevision };
-	}, [rangeValue, reloadRevision]);
-	const [result, setResult] = useState<{
-		request: typeof request | null;
-		stats: DashboardStats | null;
-		loadFailed: boolean;
-	}>({ request: null, stats: null, loadFailed: false });
-	const isLoading = result.request !== request;
-	// Never label a previous range's totals with a newly selected range.
-	const stats = isLoading ? null : result.stats;
-	const loadFailed = !isLoading && result.loadFailed;
-	const { currency: billingCurrency } = useBillingCurrency();
-	const { businessTimezone, formatDateTime } = useGatewayDateTime();
+  const t = useTranslations('dashboard');
+  const c = useTranslations('common');
+  const op = useTranslations('dashboard.operations');
+  const tr = useTranslations('timeRange');
+  const review = useTranslations('dashboard.review');
+  const [range, setRange] = useAnalyticsRange(true);
+  const [rangeOpen, setRangeOpen] = useState(false);
+  const { currency } = useBillingCurrency();
+  const { businessTimezone, formatTime, formatDateTime } = useGatewayDateTime();
+  const pausedHint = rangeOpen ? t('liveRefresh.pausedDialog') : range.preset === 'custom' ? t('liveRefresh.pausedRange') : undefined;
+  const { snapshot, loading, loadError, intervalMs, controls } = useDashboardSnapshot(range, businessTimezone, Boolean(pausedHint));
+  const stats = snapshot?.data;
+  const operations = stats?.operations;
+  const baseline = operations?.previous;
+  const loadedRange = snapshot?.range ?? range;
+  const scope = snapshot?.scope ?? 'initial';
+  const rangeLabel = (value: GatewayTimeRangeValue) => formatGatewayRangeSummary(value, p => t(`rangeLabels.${p}`), tr('custom'), businessTimezone);
+  const selectedRangeLabel = rangeLabel(range);
+  const loadedRangeLabel = rangeLabel(loadedRange);
+  const errorsHref = useMemo(() => dashboardLogsHref(loadedRange, { status: 'error' }), [loadedRange]);
+  const kpi = stats?.kpi;
+  const hasMetrics = kpi != null;
+  const count = kpi?.totalRequests ?? 0;
+  const hasTraffic = hasMetrics && count > 0;
+  const errorRate = kpi?.errorRate ?? 0;
+  const formatLatency = (value: number) => value >= 1000 ? `${(value / 1000).toFixed(2)}s` : `${Math.round(value)}ms`;
+  const formatCount = (value: number) => Math.round(value).toLocaleString();
+  const comparisonHint = operations ? `${op('comparisonHint')} ${formatDateTime(operations.window.previousStart)} → ${formatDateTime(operations.window.previousEnd)}` : '';
+  const change = (value: number | null | undefined, before: number | null | undefined, kind: 'count' | 'rate' | 'latency' | 'money') => {
+    const result = dashboardPeriodChange(value,before,kind);
+    if (!result) return null;
+    const label = result.unit === 'new' ? op('newActivity') : `${result.delta > 0 ? '+' : '−'}${result.unit === 'points' ? t('liveRefresh.points',{value:result.value.toFixed(1)}) : `${result.value.toFixed(1)}%`}`;
+    const better = kind === 'rate' ? result.delta > 0 : kind === 'latency' ? result.delta < 0 : null;
+    return { label, hint: comparisonHint, tone: better === true ? 'bg-emerald-50 text-emerald-700' : better === false ? 'bg-amber-50 text-amber-700' : 'bg-gray-100 text-gray-600' };
+  };
+  const exploreWeek = useCallback(() => setRange(createRangeValue('7d', businessTimezone)), [setRange, businessTimezone]);
+  const retry = () => void controls.refreshNow();
 
-	const rangeLabel = useMemo(
-		() =>
-			formatGatewayRangeSummary(
-				rangeValue,
-				(preset) => t(`rangeLabels.${preset}`),
-				tTimeRange('custom'),
-				businessTimezone,
-			),
-		[rangeValue, t, tTimeRange, businessTimezone],
-	);
+  return <div className="admin-content-workspace content-tone-inference min-h-full min-w-0 space-y-5 p-4 sm:space-y-6 sm:p-6 lg:p-8" aria-busy={loading}>
+    <header className="flex flex-wrap items-start justify-between gap-4">
+      <div><AdminPageTitle>{t('title')}</AdminPageTitle><p className="mt-1 text-sm text-gray-500">{t('overviewSubtitle')}</p></div>
+      <div className="flex min-w-0 max-w-full flex-wrap items-center gap-2">
+        <DashboardRangeControl value={range} label={selectedRangeLabel} timeZone={businessTimezone} onChange={setRange} onOpenChange={setRangeOpen} />
+        <AutoRefreshControl {...controls} intervalMs={intervalMs} intervalOptions={DASHBOARD_REFRESH_INTERVAL_OPTIONS}
+          onIntervalChange={dashboardRefreshPreference.write} refresh={controls.refreshNow} pausedHint={pausedHint} disabled={loading}
+          label={t('liveRefresh.refreshLabel')} refreshLabel={t('refresh')} lastUpdatedAt={snapshot?.updatedAt ?? controls.lastUpdatedAt} />
+      </div>
+    </header>
+    {loadError && <div role="alert" className="flex items-center justify-between gap-4 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800"><span>{t('loadError')}</span><button type="button" onClick={retry} className="shrink-0 underline underline-offset-2">{t('retry')}</button></div>}
+    <section aria-label={t('overview')}>
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-2 text-xs"><div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-gray-500">{loading ? <span>{c('loading')}</span> : loadedRangeLabel !== selectedRangeLabel ? <span>{loadedRangeLabel}</span> : null}{operations && <span title={comparisonHint} className="cursor-help underline decoration-dotted underline-offset-4">{op(loadedRange.preset === 'today' ? 'compareYesterday' : 'comparePrevious')}</span>}
 
-	const fetchStats = useCallback(() => setReloadRevision((current) => current + 1), []);
-
-	useEffect(() => {
-		const controller = new AbortController();
-		void (async () => {
-			try {
-				const response = await fetch(request.url, {
-					cache: 'no-store',
-					signal: controller.signal,
-				});
-				const data = await readApiJson<DashboardStats>(response);
-				if (!response.ok || !data.success || data.data == null) throw new Error('Statistics unavailable');
-				if (!controller.signal.aborted) setResult({ request, stats: data.data, loadFailed: false });
-			} catch {
-				if (!controller.signal.aborted) setResult({ request, stats: null, loadFailed: true });
-			}
-		})();
-		return () => controller.abort();
-	}, [request]);
-
-	useEffect(() => {
-		void fetchStats();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [rangeValue.start_date, rangeValue.end_date]);
-
-	if (isLoading && !stats) {
-		return (
-			<div className="flex h-full items-center justify-center">
-				<div className="flex items-center gap-2 text-sm text-gray-500">
-					<ArrowPathIcon className="h-4 w-4 animate-spin" />
-					{tCommon('loading')}
-				</div>
-			</div>
-		);
-	}
-
-	if (loadFailed || !stats) {
-		return (
-			<div className="p-4 sm:p-8">
-				<DataLoadError onRetry={() => void fetchStats()} />
-			</div>
-		);
-	}
-
-	const kpi = stats?.kpi;
-	const gateway = stats?.gateway;
-	const totalRequests = kpi?.totalRequests ?? 0;
-	const totalCost = kpi?.totalCost ?? 0;
-	const errorRate = kpi?.errorRate ?? 0;
-	const estimatedErrors = Math.round((totalRequests * errorRate) / 100);
-	const successRate = kpi?.successRate ?? 0;
-	const statusTone = totalRequests === 0 ? 'idle' : errorRate >= 5 ? 'critical' : errorRate >= 1 ? 'watch' : 'healthy';
-	const statusClasses = {
-		idle: 'bg-gray-100 text-gray-600 ring-gray-200',
-		healthy: 'bg-emerald-50 text-emerald-700 ring-emerald-200',
-		watch: 'bg-amber-50 text-amber-700 ring-amber-200',
-		critical: 'bg-red-50 text-red-700 ring-red-200',
-	};
-
-	return (
-		<div className="min-h-full min-w-0 overflow-x-hidden bg-gray-100/90 p-4 pb-6 sm:p-6 lg:p-8">
-			<header className="flex flex-wrap items-start justify-between gap-4">
-				<div>
-					<div className="flex flex-wrap items-center gap-3">
-						<h1 className="text-2xl font-semibold tracking-tight text-gray-950 sm:text-3xl">{t('title')}</h1>
-						<span
-							className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ring-1 ring-inset ${statusClasses[statusTone]}`}
-						>
-							<span className="h-1.5 w-1.5 rounded-full bg-current" aria-hidden />
-							{t(`status.${statusTone}`)}
-						</span>
-					</div>
-					<p className="mt-1.5 text-sm text-gray-500">{t('subtitle', { product: tBrand('product') })}</p>
-				</div>
-				<div className="flex items-center gap-3">
-					<div className="hidden items-center gap-3 rounded-xl border border-gray-200 bg-white px-3 py-2 text-xs text-gray-500 shadow-sm sm:flex">
-						<span className="inline-flex items-center gap-1.5 font-medium text-gray-700">
-							<BoltIcon className="h-4 w-4 text-amber-500" />
-							{t('live')}
-						</span>
-						<span>
-							<strong className="font-semibold text-gray-900 tabular-nums">{kpi?.rpm?.toLocaleString() ?? 0}</strong>{' '}
-							RPM
-						</span>
-						<span>
-							<strong className="font-semibold text-gray-900 tabular-nums">{formatCompactTokens(kpi?.tpm ?? 0)}</strong>{' '}
-							TPM
-						</span>
-					</div>
-					<button
-						type="button"
-						onClick={() => void fetchStats()}
-						disabled={isLoading}
-						aria-label={t('refresh')}
-						className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-600 shadow-sm transition hover:border-gray-300 hover:bg-gray-50 disabled:opacity-60"
-					>
-						<ArrowPathIcon className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
-					</button>
-				</div>
-			</header>
-
-			<div className="mt-6 rounded-2xl border border-gray-200/80 bg-white p-4 shadow-sm">
-				<GatewayTimeRangePicker value={rangeValue} onChange={setRangeValue} label={t('analysisWindow')} />
-			</div>
-
-			{loadFailed ? (
-				<div className="mt-4 flex items-center justify-between gap-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-					<span>{t('loadError')}</span>
-					<button
-						type="button"
-						onClick={() => void fetchStats()}
-						className="shrink-0 font-medium underline underline-offset-2"
-					>
-						{t('retry')}
-					</button>
-				</div>
-			) : null}
-
-			<section className="mt-6" aria-labelledby="overview-heading">
-				<div className="mb-3 flex items-end justify-between gap-4">
-					<div>
-						<h2 id="overview-heading" className="text-sm font-semibold text-gray-900">
-							{t('overview')}
-						</h2>
-						<p className="mt-0.5 text-xs text-gray-500">{rangeLabel}</p>
-					</div>
-					<div className="flex items-center gap-3 text-xs text-gray-500 sm:hidden">
-						<span>{kpi?.rpm?.toLocaleString() ?? 0} RPM</span>
-						<span>{formatCompactTokens(kpi?.tpm ?? 0)} TPM</span>
-					</div>
-				</div>
-				<div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,14rem),1fr))] gap-4">
-					<MetricCard
-						icon={<QueueListIcon className="h-5 w-5" />}
-						label={t('requests')}
-						value={totalRequests.toLocaleString()}
-						footer={
-							<span>
-								{t('requestContext', {
-									users: kpi?.activeUsers ?? 0,
-									tokens: formatCompactTokens(kpi?.totalTokens ?? 0),
-								})}
-							</span>
-						}
-					/>
-					<MetricCard
-						icon={<CheckCircleIcon className="h-5 w-5" />}
-						label={t('successRate')}
-						value={`${successRate.toFixed(1)}%`}
-						footer={
-							<Link
-								href="/admin/request-logs?status=error"
-								className="inline-flex items-center gap-1 text-gray-500 transition hover:text-blue-700"
-							>
-								{t('errorContext', { count: estimatedErrors, rate: errorRate.toFixed(2) })}
-								<ChevronRightIcon className="h-3 w-3" />
-							</Link>
-						}
-						tone="emerald"
-					/>
-					<MetricCard
-						icon={<ClockIcon className="h-5 w-5" />}
-						label={t('avgLatency')}
-						value={formatLatency(kpi?.avgLatencyMs)}
-						footer={
-							<Link
-								href="/admin/analytics/reliability"
-								className="inline-flex items-center gap-1 transition hover:text-blue-700"
-							>
-								{t('inspectReliability')}
-								<ChevronRightIcon className="h-3 w-3" />
-							</Link>
-						}
-						tone="amber"
-					/>
-					<MetricCard
-						icon={<BanknotesIcon className="h-5 w-5" />}
-						label={t('chargedCost')}
-						value={formatGatewayMoneyCode(totalCost, billingCurrency, 4)}
-						footer={
-							<span>
-								{t('avgRequestCost', {
-									amount: formatGatewayMoneyCode(totalRequests > 0 ? totalCost / totalRequests : 0, billingCurrency, 6),
-								})}
-							</span>
-						}
-						tone="violet"
-					/>
-				</div>
-			</section>
-
-			<section className="mt-6">
-				<DashboardTokenTrendChart
-					timeseries={stats?.timeseries ?? []}
-					granularity={stats?.granularity ?? 'hour'}
-					billingCurrency={billingCurrency}
-					businessTimezone={businessTimezone}
-				/>
-			</section>
-
-			<div className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1.55fr)_minmax(20rem,0.8fr)]">
-				<DashboardModelDistributionChart
-					modelDistribution={stats?.modelDistribution ?? []}
-					topUsers={stats?.topUsers ?? []}
-					billingCurrency={billingCurrency}
-				/>
-
-				<div className="grid content-start gap-6">
-					<section className="rounded-2xl border border-gray-200/80 bg-white p-5 shadow-sm">
-						<div>
-							<h2 className="text-base font-semibold text-gray-950">{t('gatewayAccess')}</h2>
-							<p className="mt-1 text-xs text-gray-500">{t('gatewayAccessHint')}</p>
-						</div>
-						<div className="mt-4 grid grid-cols-2 gap-3">
-							<Link
-								href="/admin/keys"
-								className="group rounded-xl bg-gray-50 p-4 ring-1 ring-inset ring-gray-100 transition hover:bg-blue-50 hover:ring-blue-100"
-							>
-								<KeyIcon className="h-5 w-5 text-gray-400 transition group-hover:text-blue-600" />
-								<p className="mt-3 text-2xl font-semibold text-gray-950 tabular-nums">
-									{gateway?.keysActive ?? 0}
-									<span className="text-sm font-normal text-gray-400"> / {gateway?.keysTotal ?? 0}</span>
-								</p>
-								<p className="mt-1 text-xs text-gray-500">{t('activeKeys')}</p>
-							</Link>
-							<Link
-								href="/admin/users"
-								className="group rounded-xl bg-gray-50 p-4 ring-1 ring-inset ring-gray-100 transition hover:bg-blue-50 hover:ring-blue-100"
-							>
-								<UserGroupIcon className="h-5 w-5 text-gray-400 transition group-hover:text-blue-600" />
-								<p className="mt-3 text-2xl font-semibold text-gray-950 tabular-nums">
-									{gateway?.accountsActive ?? 0}
-									<span className="text-sm font-normal text-gray-400"> / {gateway?.accountsTotal ?? 0}</span>
-								</p>
-								<p className="mt-1 text-xs text-gray-500">{t('activeAccounts')}</p>
-							</Link>
-						</div>
-					</section>
-
-					<section className="rounded-2xl border border-gray-200/80 bg-white p-5 shadow-sm">
-						<div className="flex items-center justify-between gap-4">
-							<div className="flex items-center gap-2">
-								<ExclamationTriangleIcon className="h-5 w-5 text-amber-500" />
-								<h2 className="text-base font-semibold text-gray-950">{t('needsAttention')}</h2>
-							</div>
-							<Link
-								href="/admin/request-logs?status=error"
-								className="text-xs font-medium text-blue-700 hover:underline"
-							>
-								{tCommon('viewAll')}
-							</Link>
-						</div>
-						{stats?.recentErrors && stats.recentErrors.length > 0 ? (
-							<div className="mt-3">
-								{stats.recentErrors.slice(0, 3).map((log) => {
-									const providerLabel = dashboardLogProviderLabel(log);
-									return (
-										<div key={log.id} className="border-b border-gray-100 py-3 last:border-0">
-											<div className="flex items-start justify-between gap-3">
-												<p className="truncate text-sm font-medium text-gray-900" title={dashboardLogModelTitle(log)}>
-													{dashboardLogModelLabel(log, tCommon('unknown'))}
-												</p>
-												<time className="shrink-0 text-[11px] text-gray-400">{formatDateTime(log.created_at)}</time>
-											</div>
-											<p className="mt-1 line-clamp-2 text-xs leading-5 text-red-600">{tCommon('requestFailed')}</p>
-											{providerLabel ? (
-												<p className="mt-1 text-[11px] text-gray-400" title={dashboardLogProviderTitle(log)}>
-													{providerLabel}
-												</p>
-											) : null}
-										</div>
-									);
-								})}
-							</div>
-						) : (
-							<div className="mt-4 rounded-xl bg-emerald-50 px-4 py-5 text-center text-sm text-emerald-700">
-								{t('noRecentErrors')}
-							</div>
-						)}
-					</section>
-				</div>
-			</div>
-
-			<section className="mt-6 rounded-2xl border border-gray-200/80 bg-white p-5 shadow-sm sm:p-6">
-				<div className="flex items-center justify-between gap-4">
-					<div>
-						<h2 className="text-base font-semibold text-gray-950">{t('recentRequests')}</h2>
-						<p className="mt-1 text-xs text-gray-500">{t('recentRequestsHint')}</p>
-					</div>
-					<Link
-						href="/admin/request-logs"
-						className="inline-flex items-center gap-1 text-sm font-medium text-blue-700 hover:underline"
-					>
-						{tCommon('viewAll')}
-						<ChevronRightIcon className="h-4 w-4" />
-					</Link>
-				</div>
-				{stats?.recentLogs && stats.recentLogs.length > 0 ? (
-					<div className="mt-3">
-						{stats.recentLogs.map((log) => (
-							<RequestRow key={log.id} log={log} formatDateTime={formatDateTime} unknown={tCommon('unknown')} />
-						))}
-					</div>
-				) : (
-					<div className="py-10 text-center text-sm text-gray-500">{tCommon('noRecentRequests')}</div>
-				)}
-			</section>
-		</div>
-	);
+        {snapshot && <span role="status">{t('liveRefresh.updatedAt', { time: formatTime(new Date(snapshot.updatedAt).toISOString()) })}</span>}
+      </div></div>
+      <div className="admin-summary-canvas grid grid-cols-2 gap-3 lg:grid-cols-3 lg:gap-4 2xl:grid-cols-6">
+        <Metric icon={ArrowsRightLeftIcon} tone="bg-blue-50 text-blue-700" label={t('requests')} scope={scope} value={hasMetrics ? count : null} format={formatCount} change={change(count, baseline?.requests, 'count')}>{hasMetrics ? <span className="flex flex-wrap gap-x-2"><span className="whitespace-nowrap">{op('activeUsers',{count:kpi.activeUsers})}</span><span className="whitespace-nowrap">{formatCompactTokens(kpi.totalTokens ?? 0)} Token</span></span> : '—'}</Metric>
+        <Metric icon={ShieldCheckIcon} tone="bg-emerald-50 text-emerald-700" label={t('successRate')} scope={scope} value={hasTraffic ? kpi!.successRate : null} format={value => `${value.toFixed(1)}%`} change={change(hasTraffic ? kpi?.successRate : null, baseline && baseline.requests > 0 ? baseline.success / baseline.requests * 100 : null, 'rate')}>{hasTraffic && errorRate > 0 ? <Link href={errorsHref} className="inline-flex items-center gap-1 hover:text-gray-950"><span className="flex min-w-0 flex-wrap gap-x-2"><span className="whitespace-nowrap">{op('errorCount',{count:operations?.current.errors ?? Math.round(count*errorRate/100)})}</span></span><ArrowUpRightIcon className="h-3 w-3 shrink-0" aria-hidden /></Link> : hasTraffic ? null : hasMetrics ? t('waitingForRequests') : '—'}</Metric>
+        <Metric icon={BoltIcon} tone="bg-cyan-50 text-cyan-700" label={op('ttftP95')} hint={op('ttftHint')} scope={scope} value={operations?.current.ttftP95} format={formatLatency} change={change(operations?.current.ttftP95, baseline?.ttftP95, 'latency')}>{(operations?.current.ttftSamples ?? 0) > 0 ? <Link href={dashboardLogsHref(loadedRange,{status:'success'})} className="inline-flex max-w-full items-center gap-1 hover:text-gray-950">{operations ? <span className="flex min-w-0 flex-wrap gap-x-2"><span className="whitespace-nowrap">{op('median',{value:operations.current.ttftP50 == null ? '—' : formatLatency(operations.current.ttftP50)})}</span><span className="whitespace-nowrap">{op('sampleCount',{count:operations.current.ttftSamples})}</span></span> : '—'}<ArrowUpRightIcon className="h-3 w-3 shrink-0" aria-hidden /></Link> : <span>{operations ? review('noTimingSamples') : '—'}</span>}</Metric>
+        <Metric icon={ClockIcon} tone="bg-amber-50 text-amber-700" label={op('latencyP95')} hint={op('latencyHint')} scope={scope} value={operations?.current.latencyP95} format={formatLatency} change={change(operations?.current.latencyP95, baseline?.latencyP95, 'latency')}>{(operations?.current.latencySamples ?? 0) > 0 ? <Link href={dashboardLogsHref(loadedRange,{status:'success'})} className="inline-flex max-w-full items-center gap-1 hover:text-gray-950">{operations ? <span className="flex min-w-0 flex-wrap gap-x-2"><span className="whitespace-nowrap">{op('median',{value:operations.current.latencyP50 == null ? '—' : formatLatency(operations.current.latencyP50)})}</span><span className="whitespace-nowrap">{op('sampleCount',{count:operations.current.latencySamples})}</span></span> : '—'}<ArrowUpRightIcon className="h-3 w-3 shrink-0" aria-hidden /></Link> : <span>{operations ? review('noTimingSamples') : '—'}</span>}</Metric>
+        <Metric icon={BanknotesIcon} tone="bg-violet-50 text-violet-700" label={t('chargedCost')} scope={scope} value={hasMetrics ? kpi?.totalCost : null} format={value => formatGatewayMoneyCode(value, currency, 4)} change={change(kpi?.totalCost, baseline?.charged, 'money')}>{hasTraffic ? t('avgRequestCost', { amount: formatGatewayMoneyCode(kpi!.totalCost / count, currency, 6) }) : hasMetrics ? t('noCharges') : '—'}</Metric>
+        <Metric icon={BanknotesIcon} tone="bg-orange-50 text-orange-700" label={op('metered')} scope={scope} value={operations?.current.metered} format={value => formatGatewayMoneyCode(value,currency,4)} change={change(operations?.current.metered,baseline?.metered,'money')} />
+      </div>
+    </section>
+    <div className={`grid min-w-0 items-stretch gap-5 ${hasTraffic ? 'xl:grid-cols-[minmax(0,1fr)_320px]' : ''}`}>
+      <DashboardTokenTrendChart timeseries={stats?.timeseries ?? []} granularity={stats?.granularity ?? 'hour'} billingCurrency={currency} businessTimezone={businessTimezone} onExplore={range.preset === '7d' ? undefined : exploreWeek}
+        throughput={hasMetrics ? {rpm:kpi.rpm ?? 0,tpm:kpi.tpm ?? 0,scope} : undefined} />
+      {hasTraffic && <div className="grid min-w-0 content-start gap-5 sm:grid-cols-2 xl:grid-cols-1">
+        {operations && <DashboardCosts operations={operations} range={loadedRange} currency={currency} scope={scope} />}
+        <DashboardTokenSummary kpi={kpi} rangeLabel={loadedRangeLabel} scope={scope} />
+      </div>}
+    </div>
+    {operations && hasTraffic && <DashboardOperations operations={operations} range={loadedRange} />}
+    <div className={`grid min-w-0 items-stretch gap-5 ${hasTraffic ? 'xl:grid-cols-2' : ''}`}>
+      {hasTraffic && <DashboardModelDistributionChart motionScope={scope} modelDistribution={stats?.modelDistribution ?? []} topUsers={stats?.topUsers ?? []} billingCurrency={currency} range={loadedRange} rangeLabel={loadedRangeLabel} />}
+      <DashboardActivity billingCurrency={currency} logs={stats?.recentLogs ?? []} errors={stats?.recentErrors ?? []} />
+    </div>
+  </div>;
 }

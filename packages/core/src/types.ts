@@ -126,7 +126,7 @@ export interface ProviderRow {
 	 */
 	kind?: string | null;
 	/**
-	 * 协议端点 JSON（权威）：`{ openai?: { base?, endpoints? }, anthropic?, gemini?, dashscope?, minimax? }`。
+	 * 协议端点 JSON（权威）：`{ openai?: { base?, endpoints? }, anthropic?, gemini?, dashscope?, minimax?, volcengine?, elevenlabs? }`。
 	 * 见 `parseProviderEndpoints` / `resolveUpstreamEndpoint`。
 	 */
 	endpoints?: string | null;
@@ -134,10 +134,17 @@ export interface ProviderRow {
 	api_key?: string;
 	/** `active` | `disabled`；disabled 不参与调度。 */
 	status?: ProviderStatus | string;
-	description: string | null;
+	/** 运营备注。类型介绍由静态模板按语言解析，不入库。 */
+	note?: string | null;
+	description?: string | null;
 	/** 非空时该 provider 接受对应用户共享密钥池注入（openai/anthropic/zhipu/deepseek）。 */
 	shared_channel_type?: string | null;
 	created_at: string;
+	/**
+	 * 按上游协议分组的默认 `custom_params`（headers/body），无 `force_override`；Route 级可覆盖。
+	 * 见 `@octafuse/core/provider-custom-params` 的 `resolveEffectiveCustomParams`。
+	 */
+	custom_params?: string | null;
 }
 
 /** `models` 查询结果；`tags` / `route_groups` 多为 `json_group_array` 生成的 JSON 字符串。 */
@@ -155,7 +162,9 @@ export interface ModelRow {
 	tags: string;
 	/** active `model_routes` 的 `route_group` 去重 JSON 数组（部分查询可能无此列） */
 	route_groups?: string | null;
-	description: string | null;
+	/** 运营备注。目录介绍由静态预设按语言解析，不入库。 */
+	note?: string | null;
+	description?: string | null;
 	metadata: string | null;
 	/** JSON array string, e.g. `["text","image"]` */
 	input_modalities: string | null;
@@ -284,6 +293,8 @@ export interface RequestLogRow {
 	audio_characters: number | null;
 	/** 请求打到的入口 Host（只记录，不做准入） */
 	ingress_host: string | null;
+	/** 走访问令牌时的令牌 id（用户 Key 请求为 null） */
+	oauth_access_token_id?: string | null;
 	created_at: string;
 }
 

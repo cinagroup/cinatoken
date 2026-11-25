@@ -10,6 +10,7 @@ export const toolProviderSchema = z.enum([
 	'tavily',
 	'cleversee',
 	'tencent_wsa',
+	'deepseek',
 	'firecrawl',
 	'jina',
 	'tencent_tms',
@@ -135,7 +136,17 @@ export function validToolConfiguration(
 	)
 }
 const familySummary = toolFamilyStateSchema
-	.and(z.object({ providers: z.array(toolProviderSummarySchema).max(4) }))
+	.and(
+		z.object({
+			providers: z
+				.array(toolProviderSummarySchema)
+				.max(
+					Math.max(
+						...Object.values(toolProviders).map((providers) => providers.length)
+					)
+				),
+		})
+	)
 	.refine(
 		(value) =>
 			value.providers.length === toolProviders[value.family].length &&

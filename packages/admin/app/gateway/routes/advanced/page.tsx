@@ -1,6 +1,8 @@
 'use client';
-
 import AdvancedEditorGate from '@/components/routing-workbench/AdvancedEditorGate';
+
+import { AdminPageTitle } from '@/components/admin-page-title';
+import '@/app/gateway/routes/routes-workspace.css';
 
 /**
  * 模型路由：`model_routes` CRUD、协议与 route_group、URL 查询参数驱动列表筛选（`useSearchParams` + Suspense）。
@@ -16,10 +18,15 @@ import { RouteModal } from '@/app/gateway/routes/components/route-modal';
 import { ProviderStickyDialog } from '@/app/gateway/routes/components/provider-sticky-dialog';
 import { RoutePolicyDialog } from '@/app/gateway/routes/components/route-policy-dialog';
 import { RouteVendorGroup } from '@/app/gateway/routes/components/route-vendor-group';
+import { useRouteModelLayout } from '@/app/gateway/routes/use-route-display-preferences';
+import { useCatalogView } from '@/app/gateway/components/use-catalog-view';
 import { RouteWorkspaceHeader } from '@/app/gateway/routes/components/route-workspace-header';
 import { RouteSurfaceCatalog, UnroutedModelsPanel } from '@/app/gateway/routes/components/route-surface-catalog';
 import { buildRouteSurfaceCatalog } from '@/app/gateway/routes/route-utils';
-import { readStickyRefreshInterval, subscribeStickyRefreshInterval } from '@/app/gateway/routes/sticky-refresh-preference';
+import {
+	readStickyRefreshInterval,
+	subscribeStickyRefreshInterval,
+} from '@/app/gateway/routes/sticky-refresh-preference';
 import { StickySummaryProvider, useStickyRefreshControls } from '@/app/gateway/routes/sticky-summary-store';
 import { parseRouteWorkspaceView, type RouteFlowDensity, type RouteWorkspaceView } from '@/app/gateway/routes/types';
 
@@ -36,14 +43,6 @@ function readStoredWorkspaceView(): RouteWorkspaceView {
 	}
 }
 
-function readStoredRouteDensity(): RouteFlowDensity {
-	try {
-		return window.localStorage.getItem(ROUTE_DETAIL_STORAGE_KEY) === 'summary' ? 'summary' : 'topology';
-	} catch {
-		return 'topology';
-	}
-}
-
 function subscribeFlowDensity(onStoreChange: () => void) {
 	window.addEventListener('storage', onStoreChange);
 	window.addEventListener(FLOW_DENSITY_EVENT, onStoreChange);
@@ -56,23 +55,23 @@ function subscribeFlowDensity(onStoreChange: () => void) {
 function RoutesContent() {
 	const t = useTranslations('routes');
 	const tCommon = useTranslations('common');
-	const tf = useTranslations('filter');
-	const density = useSyncExternalStore(subscribeFlowDensity, readStoredRouteDensity, () => 'topology' as const);
+	const [modelLayout, setModelLayout] = useRouteModelLayout();
+	const [catalogView, setCatalogView] = useCatalogView(ROUTE_DETAIL_STORAGE_KEY, 'topology');
+	const density: RouteFlowDensity = catalogView === 'cards' ? 'topology' : 'list';
 	const setDensity = useCallback((next: RouteFlowDensity) => {
-		try {
-			window.localStorage.setItem(ROUTE_DETAIL_STORAGE_KEY, next);
-		} catch {
-			// Storage may be unavailable in private browsing.
-		}
-		window.dispatchEvent(new Event(FLOW_DENSITY_EVENT));
-	}, []);
+		setCatalogView(next === 'topology' ? 'cards' : 'list');
+	}, [setCatalogView]);
 	const state = useRoutesPageState();
 	const { invalidate } = useStickyRefreshControls();
-	const workspaceView = useSyncExternalStore(subscribeFlowDensity, readStoredWorkspaceView, () => 'byModel' as const);
+	const workspaceView = useSyncExternalStore(
+		subscribeFlowDensity,
+		readStoredWorkspaceView,
+		() => 'byModel' as const
+	);
 	const stickyRefreshIntervalMs = useSyncExternalStore(
 		subscribeStickyRefreshInterval,
 		readStickyRefreshInterval,
-		() => 'off' as const,
+		() => 'off' as const
 	);
 	const saveProviderSticky = state.handleSaveProviderSticky;
 	const stickyDialogPoolId = state.stickyDialog?.poolId;
@@ -106,38 +105,20 @@ function RoutesContent() {
 
 	if (state.isLoading) {
 		return (
-			<div className="flex min-h-full items-center justify-center bg-gray-100/90">
+			<div className="flex min-h-full items-center justify-center bg-gray-50">
 				<div className="text-gray-600">{tCommon('loading')}</div>
 			</div>
 		);
 	}
 
 	return (
-		<div className="min-h-full min-w-0 overflow-x-hidden bg-gray-100/90 p-4 pb-6 sm:p-6 lg:p-8">
-			<div className="mb-5 flex flex-wrap items-center justify-between gap-4">
+		<div className="routes-design-workspace min-h-full min-w-0 overflow-x-hidden bg-gray-50 p-4 pb-6 sm:p-6 lg:p-8">
+			<div className="mb-6 flex flex-wrap items-start justify-between gap-4">
 				<div>
-					<h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">{t('title')}</h1>
+					<AdminPageTitle>{t('title')}</AdminPageTitle>
 					<p className="mt-1 text-sm text-gray-500">{t('subtitle')}</p>
-					<div className="mt-3 flex flex-wrap items-center gap-3 text-xs tabular-nums text-slate-500">
-						<span>{tf('modelsAndRoutes', { models: state.models.length, routes: state.routes.length })}</span>
-						<span className="inline-flex items-center gap-1.5">
-							<span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-							{tCommon('active')} {state.statusCounts.active}
-						</span>
-						<span className="inline-flex items-center gap-1.5">
-							<span className="h-1.5 w-1.5 rounded-full bg-slate-400" />
-							{tCommon('inactive')} {state.statusCounts.inactive}
-						</span>
-					</div>
 				</div>
-				<button
-					type="button"
-					onClick={() => state.handleCreate()}
-					className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus-visible:outline-blue-500"
-				>
-					<PlusIcon className="h-4 w-4" aria-hidden />
-					{t('flow.addRoute')}
-				</button>
+				<button type="button" onClick={() => state.handleCreate()} className="inline-flex items-center h-9 gap-2 rounded-lg admin-primary px-4 text-xs font-medium text-white hover:bg-gray-800 focus-visible:outline-gray-500"><PlusIcon className="h-4 w-4" aria-hidden />{t('flow.addRoute')}</button>
 			</div>
 
 			<RouteFilterSidebar
@@ -146,32 +127,28 @@ function RoutesContent() {
 				filterStatus={state.filterStatus}
 				filterKind={state.filterKind}
 				filterRouteGroup={state.filterRouteGroup}
-				filterVendor={state.filterVendor}
-				filterProviderId={state.filterProviderId}
-				filterProviderKind={state.filterProviderKind}
-				providerKindFilterOptions={state.providerKindFilterOptions}
+				filterModels={state.filterModels}
+				filterProviders={state.filterProviders}
+				modelGroups={state.modelFilterGroups}
+				providerGroups={state.providerFilterGroups}
 				statusCounts={state.statusCounts}
 				kindCounts={state.kindCounts}
 				routeGroupFilterOptions={state.routeGroupFilterOptions}
 				routeGroupCounts={state.routeGroupCounts}
-				vendorFilterOptions={state.vendorFilterOptions}
-				providers={state.filterProviders}
-				providerRouteCounts={state.providerRouteCounts}
 				onFilterStatusChange={state.setFilterStatus}
 				onFilterKindChange={state.setFilterKind}
 				onFilterRouteGroupChange={state.setFilterRouteGroup}
-				onFilterVendorChange={state.setFilterVendor}
-				onFilterProviderIdChange={state.setFilterProviderId}
-				onFilterProviderKindChange={state.setFilterProviderKind}
+				onModelsChange={state.setFilterModels}
+				onProvidersChange={state.setFilterProviders}
 				onClearAllFilters={state.clearAllFilters}
 			/>
 
 			<section className="min-w-0">
 				<RouteWorkspaceHeader
-					visibleModelCount={state.visibleModelCount}
-					visibleRouteCount={state.visibleRouteCount}
 					density={density}
 					onDensityChange={setDensity}
+					modelLayout={modelLayout}
+					onModelLayoutChange={setModelLayout}
 					view={workspaceView}
 					onViewChange={handleWorkspaceViewChange}
 					stickyRefreshIntervalMs={stickyRefreshIntervalMs}
@@ -192,7 +169,7 @@ function RoutesContent() {
 									<button
 										type="button"
 										onClick={state.clearAllFilters}
-										className="font-medium text-blue-600 hover:text-blue-800 focus:outline-none focus-visible:underline"
+										className="font-medium text-gray-800 hover:text-gray-900 focus:outline-none focus-visible:underline"
 									>
 										{tCommon('clearAllFilters')}
 									</button>
@@ -211,7 +188,9 @@ function RoutesContent() {
 							onCopyModelId={state.copyModelId}
 							onCreate={state.handleCreate}
 							onEdit={state.handleEdit}
-							onEditModel={(modelId) => void state.modelEdit.openEditById(modelId)}
+							onEditModel={(modelId) =>
+								void state.modelEdit.openEditById(modelId)
+							}
 							onToggleStatus={state.handleToggleStatus}
 							onOpenStrategyDialog={state.handleOpenStrategyDialog}
 							onOpenProviderStickyDialog={state.handleOpenProviderStickyDialog}
@@ -219,28 +198,33 @@ function RoutesContent() {
 					) : (
 						<div className="space-y-6">
 							<div className={state.filterVendor ? '' : 'space-y-8'}>
-								{byModelLayout.vendorGroups.map(({ vendor, cards, showHeader }, vendorGroupIdx) => (
-									<RouteVendorGroup
-										key={vendor}
-										vendor={vendor}
-										cards={cards}
-										showHeader={showHeader}
-										vendorGroupIdx={vendorGroupIdx}
-										modelMeta={state.modelMeta}
-										providerMeta={state.providerMeta}
-										globalRouteStrategy={state.globalRouteStrategy}
-										density={density}
-										copiedModelId={state.copiedModelId}
-										togglingId={state.togglingId}
-										onCopyModelId={state.copyModelId}
-										onCreate={state.handleCreate}
-										onEdit={state.handleEdit}
-										onEditModel={(modelId) => void state.modelEdit.openEditById(modelId)}
-										onToggleStatus={state.handleToggleStatus}
-										onOpenStrategyDialog={state.handleOpenStrategyDialog}
-										onOpenProviderStickyDialog={state.handleOpenProviderStickyDialog}
-									/>
-								))}
+								{byModelLayout.vendorGroups.map(
+									({ vendor, cards, showHeader }, vendorGroupIdx) => (
+										<RouteVendorGroup
+											key={vendor}
+											vendor={vendor}
+											cards={cards}
+											showHeader={showHeader}
+											vendorGroupIdx={vendorGroupIdx}
+											modelLayout={modelLayout}
+											modelMeta={state.modelMeta}
+											providerMeta={state.providerMeta}
+											globalRouteStrategy={state.globalRouteStrategy}
+											density={density}
+											copiedModelId={state.copiedModelId}
+											togglingId={state.togglingId}
+											onCopyModelId={state.copyModelId}
+											onCreate={state.handleCreate}
+											onEdit={state.handleEdit}
+											onEditModel={(modelId) =>
+												void state.modelEdit.openEditById(modelId)
+											}
+											onToggleStatus={state.handleToggleStatus}
+											onOpenStrategyDialog={state.handleOpenStrategyDialog}
+											onOpenProviderStickyDialog={state.handleOpenProviderStickyDialog}
+										/>
+									)
+								)}
 							</div>
 						</div>
 					)}
@@ -249,6 +233,7 @@ function RoutesContent() {
 
 			<RouteModal
 				open={state.showModal}
+				initialTab={state.routeInitialTab}
 				editingRoute={state.editingRoute}
 				duplicateSourceRouteId={state.duplicateSourceRouteId}
 				formData={state.formData}
@@ -275,6 +260,7 @@ function RoutesContent() {
 			/>
 
 			<ModelModal
+				onRoutesChanged={state.modelEdit.handleRoutesChanged}
 				open={state.modelEdit.showModal}
 				editingModel={state.modelEdit.editingModel}
 				duplicateSourceModelId={state.modelEdit.duplicateSourceModelId}
@@ -338,7 +324,7 @@ function RoutesPageWithStickyStore() {
 	const stickyRefreshIntervalMs = useSyncExternalStore(
 		subscribeStickyRefreshInterval,
 		readStickyRefreshInterval,
-		() => 'off' as const,
+		() => 'off' as const
 	);
 
 	return (
@@ -354,7 +340,7 @@ function GatewayRoutesPage() {
 	return (
 		<Suspense
 			fallback={
-				<div className="flex min-h-full items-center justify-center bg-gray-100/90">
+				<div className="flex min-h-full items-center justify-center bg-gray-50">
 					<div className="text-gray-600">{tCommon('loading')}</div>
 				</div>
 			}
@@ -364,4 +350,4 @@ function GatewayRoutesPage() {
 	);
 }
 
-export default function AdvancedPage() { return <AdvancedEditorGate feature="routes"><GatewayRoutesPage /></AdvancedEditorGate>; }
+export default function AdvancedPage() {return <AdvancedEditorGate feature="routes"><GatewayRoutesPage/></AdvancedEditorGate>;}

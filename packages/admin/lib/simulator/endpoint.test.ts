@@ -1,6 +1,11 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { buildSimulatorRequest } from "./endpoint";
+import {
+	buildSimulatorDashScopeRealtimeUrl,
+	buildSimulatorElevenLabsRealtimeUrl,
+	buildSimulatorRequest,
+	withDashScopeRunTaskModel,
+} from "./endpoint";
 
 describe("buildSimulatorRequest tools", () => {
 	it("builds /v1/tools/{id} for kind=tool", () => {
@@ -200,7 +205,7 @@ describe("buildSimulatorRequest openai", () => {
 	it("builds MiniMax speech_to_text passthrough multipart", () => {
 		const result = buildSimulatorRequest({
 			baseUrl: "https://gateway.example.com",
-			kind: "audio",
+			kind: "asr",
 			protocol: "minimax",
 			modelForRouting: "minimax-asr-1.0",
 			body: { language: "zh", response_format: "verbose_json" },
@@ -208,23 +213,23 @@ describe("buildSimulatorRequest openai", () => {
 			audioOperation: "transcriptions",
 			audioFile: null,
 		});
-		assert.equal(result.url, "https://gateway.example.com/v1/minimax/speech_to_text");
+		assert.equal(result.url, "https://gateway.example.com/minimax/v1/speech_to_text");
 		assert.equal(result.formData?.get("model"), "minimax-asr-1.0");
 		assert.equal(result.formData?.get("language"), "zh");
 		assert.equal(result.formData?.get("response_format"), "verbose_json");
 	});
 
-	it("builds MiniMax speech JSON for /v1/minimax/t2a_v2", () => {
+	it("builds MiniMax speech JSON for /minimax/v1/t2a_v2", () => {
 		const result = buildSimulatorRequest({
 			baseUrl: "https://gateway.example.com",
-			kind: "audio",
+			kind: "tts",
 			protocol: "minimax",
 			modelForRouting: "minimax-speech-2.8-turbo",
 			body: { text: "你好", stream: false },
 			apiKey: "sk-test",
 			audioOperation: "speech",
 		});
-		assert.equal(result.url, "https://gateway.example.com/v1/minimax/t2a_v2");
+		assert.equal(result.url, "https://gateway.example.com/minimax/v1/t2a_v2");
 		assert.equal(result.headers["Content-Type"], "application/json");
 		assert.equal(result.formData, undefined);
 		assert.deepEqual(JSON.parse(result.bodyText), {
@@ -234,7 +239,51 @@ describe("buildSimulatorRequest openai", () => {
 		});
 	});
 
-	it("builds MiniMax image JSON for /v1/minimax/image_generation", () => {
+	it("builds ElevenLabs native speech path, query, and model_id", () => {
+		const result = buildSimulatorRequest({
+			baseUrl: "https://gateway.example.com",
+			kind: "tts",
+			protocol: "elevenlabs",
+			modelForRouting: "elevenlabs-flash-v2.5",
+			body: {
+				voice_id: "JBFqnCBsd6RMkjVDRZzb",
+				variant: "stream",
+				output_format: "mp3_44100_128",
+				model_id: "<auto>",
+				text: "hello",
+			},
+			apiKey: "sk-test",
+			audioOperation: "speech",
+		});
+		assert.equal(
+			result.url,
+			"https://gateway.example.com/elevenlabs/v1/text-to-speech/JBFqnCBsd6RMkjVDRZzb/stream?output_format=mp3_44100_128"
+		);
+		assert.deepEqual(JSON.parse(result.bodyText), {
+			model_id: "elevenlabs-flash-v2.5",
+			text: "hello",
+		});
+	});
+
+	it("builds ElevenLabs native transcription multipart", () => {
+		const file = new File(["x"], "a.wav", { type: "audio/wav" });
+		const result = buildSimulatorRequest({
+			baseUrl: "https://gateway.example.com",
+			kind: "asr",
+			protocol: "elevenlabs",
+			modelForRouting: "elevenlabs-scribe-v2",
+			body: { diarize: true, language_code: "zh" },
+			apiKey: "sk-test",
+			audioOperation: "transcriptions",
+			audioFile: file,
+		});
+		assert.equal(result.url, "https://gateway.example.com/elevenlabs/v1/speech-to-text");
+		assert.equal(result.formData?.get("model_id"), "elevenlabs-scribe-v2");
+		assert.equal(result.formData?.get("diarize"), "true");
+		assert.equal(result.formData?.get("language_code"), "zh");
+	});
+
+	it("builds MiniMax image JSON for /minimax/v1/image_generation", () => {
 		const result = buildSimulatorRequest({
 			baseUrl: "https://gateway.example.com",
 			kind: "image",
@@ -244,12 +293,12 @@ describe("buildSimulatorRequest openai", () => {
 			apiKey: "sk-test",
 			imageOperation: "generations",
 		});
-		assert.equal(result.url, "https://gateway.example.com/v1/minimax/image_generation");
+		assert.equal(result.url, "https://gateway.example.com/minimax/v1/image_generation");
 		assert.equal(JSON.parse(result.bodyText).model, "minimax-image-01");
 		assert.equal(JSON.parse(result.bodyText).prompt, "a lantern");
 	});
 
-	it("builds Volcengine image JSON for /v1/volcengine/images/generations", () => {
+	it("builds Volcengine image JSON for /volcengine/api/v3/images/generations", () => {
 		const result = buildSimulatorRequest({
 			baseUrl: "https://gateway.example.com",
 			kind: "image",
@@ -259,7 +308,7 @@ describe("buildSimulatorRequest openai", () => {
 			apiKey: "sk-test",
 			imageOperation: "generations",
 		});
-		assert.equal(result.url, "https://gateway.example.com/v1/volcengine/images/generations");
+		assert.equal(result.url, "https://gateway.example.com/volcengine/api/v3/images/generations");
 		assert.equal(result.headers["Content-Type"], "application/json");
 		assert.deepEqual(JSON.parse(result.bodyText), {
 			model: "doubao-seedream-5-0",
@@ -272,7 +321,7 @@ describe("buildSimulatorRequest openai", () => {
 	it("builds DashScope multimodal HTTP transcriptions", () => {
 		const result = buildSimulatorRequest({
 			baseUrl: "https://gateway.example.com",
-			kind: "audio",
+			kind: "asr",
 			protocol: "dashscope",
 			modelForRouting: "qwen-audio-3.0-asr-flash",
 			body: { input: { messages: [] }, parameters: { format: "wav" } },
@@ -282,7 +331,7 @@ describe("buildSimulatorRequest openai", () => {
 		});
 		assert.equal(
 			result.url,
-			"https://gateway.example.com/v1/dashscope/services/aigc/multimodal-generation/generation"
+			"https://gateway.example.com/dashscope/api/v1/services/aigc/multimodal-generation/generation"
 		);
 		assert.equal(JSON.parse(result.bodyText).model, "qwen-audio-3.0-asr-flash");
 	});
@@ -290,7 +339,7 @@ describe("buildSimulatorRequest openai", () => {
 	it("builds JSON for audio/speech", () => {
 		const result = buildSimulatorRequest({
 			baseUrl: "https://gateway.example.com",
-			kind: "audio",
+			kind: "tts",
 			protocol: "openai",
 			modelForRouting: "qwen-tts:default",
 			body: { input: "hello", voice: "Cherry", response_format: "mp3" },
@@ -353,5 +402,85 @@ describe("buildSimulatorRequest gemini", () => {
 		});
 		const u = new URL(result.url);
 		assert.equal(u.searchParams.has("alt"), false);
+	});
+});
+
+describe("DashScope realtime simulator URL", () => {
+	it("uses the official inference path without query parameters", () => {
+		assert.equal(
+			buildSimulatorDashScopeRealtimeUrl({
+				baseUrl: "https://gateway.example.com/",
+				modelForRouting: "fun-asr-realtime",
+				operation: "audio.transcriptions.realtime.inference",
+			}),
+			"wss://gateway.example.com/dashscope/api-ws/v1/inference"
+		);
+	});
+
+	it("uses the official session path with ?model= only", () => {
+		assert.equal(
+			buildSimulatorDashScopeRealtimeUrl({
+				baseUrl: "http://localhost:8787",
+				modelForRouting: "qwen3-asr-flash-realtime",
+				operation: "audio.transcriptions.realtime.session",
+			}),
+			"ws://localhost:8787/dashscope/api-ws/v1/realtime?model=qwen3-asr-flash-realtime"
+		);
+	});
+
+	it("writes the Gateway model into run-task for inference only", () => {
+		const runTask = {
+			header: { action: "run-task", task_id: "t1" },
+			payload: { task: "asr", model: "<auto>", parameters: { format: "pcm" } },
+		};
+		assert.deepEqual(
+			withDashScopeRunTaskModel(runTask, "audio.transcriptions.realtime.inference", "fun-asr-realtime:cn"),
+			{
+				header: { action: "run-task", task_id: "t1" },
+				payload: { task: "asr", model: "fun-asr-realtime:cn", parameters: { format: "pcm" } },
+			}
+		);
+		const session = { type: "session.update", session: {} };
+		assert.equal(
+			withDashScopeRunTaskModel(session, "audio.transcriptions.realtime.session", "qwen3"),
+			session
+		);
+	});
+});
+
+describe("buildSimulatorElevenLabsRealtimeUrl", () => {
+	it("builds the realtime STT URL with routed model_id", () => {
+		const url = buildSimulatorElevenLabsRealtimeUrl({
+			baseUrl: "https://gateway.example.com/",
+			modelForRouting: "elevenlabs-scribe-v2",
+			operation: "audio.transcriptions.realtime",
+			query: { audio_format: "pcm_16000", model_id: "ignored" },
+		});
+		const parsed = new URL(url);
+		assert.equal(parsed.protocol, "wss:");
+		assert.equal(parsed.pathname, "/elevenlabs/v1/speech-to-text/realtime");
+		assert.equal(parsed.searchParams.get("audio_format"), "pcm_16000");
+		assert.equal(parsed.searchParams.get("model_id"), "elevenlabs-scribe-v2");
+	});
+
+	it("builds the realtime TTS stream-input URL and requires a voice id", () => {
+		const url = buildSimulatorElevenLabsRealtimeUrl({
+			baseUrl: "http://localhost:8787",
+			modelForRouting: "elevenlabs-flash-v2.5",
+			operation: "audio.speech.realtime",
+			voiceId: "JBFqnCBsd6RMkjVDRZzb",
+			query: { output_format: "mp3_44100_128" },
+		});
+		const parsed = new URL(url);
+		assert.equal(parsed.protocol, "ws:");
+		assert.equal(parsed.pathname, "/elevenlabs/v1/text-to-speech/JBFqnCBsd6RMkjVDRZzb/stream-input");
+		assert.equal(parsed.searchParams.get("output_format"), "mp3_44100_128");
+		assert.throws(() =>
+			buildSimulatorElevenLabsRealtimeUrl({
+				baseUrl: "http://localhost:8787",
+				modelForRouting: "m",
+				operation: "audio.speech.realtime",
+			})
+		);
 	});
 });

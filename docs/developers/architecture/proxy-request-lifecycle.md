@@ -77,7 +77,7 @@ flowchart TB
 | 代理入口 | `services/proxy.ts` | 三协议（及 Images / Audio）统一调用 `failoverDispatch` |
 | 故障转移 | `services/failover-dispatch.ts` | 编排 attempt、逐供应商打上游、熔断与 429 全忙 |
 | 调度计划 | `services/route-attempt-planner.ts` | `buildRouteAttemptPlan`：priority 硬序 + 层内策略排序 + 跳过熔断供应商 |
-| 供应商熔断 | `services/provider-circuit-breaker.ts` | 按 `providers.id`：429 / 401 / 403 / 5xx |
+| 供应商熔断 | `services/provider-circuit-breaker.ts` | 按 `providers.id`：429 / 401 / 402 / 403 / 5xx |
 | 失败分类 | `services/upstream-failure-classifier.ts` | 决定 retry（换供应商）vs fail_immediately |
 | User+model 熔断 | `services/user-model-circuit-*.ts` | 敏感 / 普通 400 共用短递增（user+model）；code 区分 |
 | 错误码 | `services/gateway-error-codes.ts` / `gateway-error-response.ts` | `gateway.*` / `circuit.*` / `upstream.*` + `X-OctaFuse-Error-Code` |
@@ -207,7 +207,7 @@ sequenceDiagram
 | 失败类别 | 触发 | 冷却 |
 |----------|------|------|
 | `rate_limit` | 上游 **429** | 优先 `Retry-After`（封顶 15min）；否则连续 429 递增：**5s → 15s → 30s → 60s（封顶）** |
-| `auth` | **401 / 403** | 固定 **5min** + 告警日志 |
+| `auth` | **401 / 402 / 403**（402 为上游余额 / 额度用尽） | 固定 **5min** + 告警日志 |
 | `server` | 普通 **5xx** | 连续 **3** 次后短熔断 **10s** |
 
 - **524** 与 **fetch 抛错**：仅同次请求内故障转移，**不**写入跨请求熔断。
@@ -251,7 +251,7 @@ sequenceDiagram
 | 首个 attempt 2xx | 成功返回 | 上游 2xx + stream |
 | 上游 429 | 熔断该供应商，换下一 route | 若后续成功 → 2xx；全失败 → 最后上游 429 |
 | 上游普通 5xx | 累计；连续 3 次后 10s 熔断，换供应商 | 最后上游 5xx 或后续成功 |
-| 上游 401/403 | 5min 熔断 + warn 日志，换供应商 | 最后上游响应或后续成功 |
+| 上游 401/402/403 | 5min 熔断 + warn 日志，换供应商 | 最后上游响应或后续成功 |
 | 上游 400（敏感） | fail_immediately + user+model 粗粒度熔断 | 透传 400；响应头 `upstream.content_filter` |
 | 上游 400（其他） | fail_immediately；chat/messages/gemini → user+model 短递增熔断；**images/audio 不记 `client_error`** | 透传 400；响应头 `upstream.invalid_request` |
 | 上游 404 等 | **fail_immediately**，不重试 | 直接透传该 4xx |
@@ -299,11 +299,17 @@ sequenceDiagram
 
 | 日志片段 | 含义 |
 |----------|------|
-| `calling provider providerId=...` | 开始 attempt |
-| `provider non-OK, trying next candidate ... status=...` | 可重试失败，换供应商 |
-| `fetch failed ... error=...` | 网络/fetch 异常 |
-| `provider auth issue, trying next provider ...` | 401/403 告警 |
+| `calling provider ... providerId=... target=...` | 开始一次上游尝试。`candidate=i/n` 是本次计划中的序号 |
+| `provider non-OK, trying next candidate ...` | 可重试的 HTTP 失败，后面还有候选。含状态、`kind`、错误摘要、下一个供应商和上游目标 |
+| `provider non-OK, no remaining candidate ...` | 同上，但是最后一个候选 |
+| `fetch failed, trying next candidate ...` | 网络或 `fetch` 异常。`circuit=none`，不写跨请求熔断 |
+| `provider auth or quota issue, trying next provider ...` | 401/402/403。同一行带上游错误摘要，不再另打一条 `non-OK` |
+| `provider cooling down mid-request, skipping ...` | 本请求里刚熔断的供应商，后续目标不再打。含 `remainingMs` |
 | `recordUsage failed ...` | 后台记账失败 |
+
+故障转移行里的 `kind` 为 `rate_limit`（429）、`auth`（401/402/403）、`server`（普通 5xx）、`timeout`（524）或 `fetch`。`circuit=open cooldownMs=...` 表示这次失败打开或延长了熔断；`circuit=closed` 表示记了失败但窗口还没打开（普通 5xx 要连续 3 次）；`circuit=none` 表示这次不写熔断。`reason` 是上游错误体里的一行摘要，网络失败时是异常信息。
+
+同一次请求的各次尝试也写入请求日志 `timing_metadata.attempts`：`target_id`、`status`、`error`、`failure_kind`。成功的那次 `selected=true`，`error` 仍为空。
 
 ### 6.2 用量日志字段
 

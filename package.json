@@ -1,6 +1,6 @@
 {
 	"name": "cinatoken",
-	"version": "2.14.0",
+	"version": "2.20.0",
 	"private": true,
 	"repository": {
 		"type": "git",
@@ -8,7 +8,6 @@
 	},
 	"type": "module",
 	"workspaces": [
-		".",
 		"packages/core",
 		"packages/tool-engines",
 		"packages/proxy",
@@ -66,19 +65,34 @@
 		"test:mysql-migration": "node scripts/ci/verify-mysql-migration-contract.mjs",
 		"test:endpoint-backfill-plan": "tsx --test scripts/db/model-endpoints/*.test.ts",
 		"test:postgres-role-provisioning": "tsx --test scripts/db/cutover/postgres-role-provisioning.test.ts scripts/db/cutover/diagnostic-auth.test.ts scripts/db/cutover/preflight-d1-source.test.ts scripts/db/cutover/hyperdrive-bootstrap-worker.test.ts",
-		"test:unit": "npm run test:deploy && npm run test:docs && npm run test:d1-portal-ledger && npm run test:postgres-migration && npm run test:mysql-migration && npm run test:endpoint-backfill-plan && npm run test:public-catalog-readiness:contract && npm run test:postgres-role-provisioning && npm run test:unit -w @octafuse/core && npm run test:unit -w @octafuse/tool-engines && npm run test:unit -w @octafuse/proxy && npm run test:unit -w @octafuse/admin && npm run test:unit -w @cinatoken/chain-worker && npm run test:web",
+		"test:unit": "npm run test:deploy && npm run test:docs && npm run test:d1-portal-ledger && npm run test:postgres-migration && npm run test:mysql-migration && npm run test:endpoint-backfill-plan && npm run test:public-catalog-readiness:contract && npm run test:postgres-role-provisioning && npm run test:unit -w @octafuse/core && npm run test:unit -w @octafuse/tool-engines && npm run test:unit -w @octafuse/proxy && npm run test:unit -w @octafuse/admin && npm run test:unit -w @cinatoken/chain-worker && npm run test:web && npm run test:db-scripts && npm run test:critical-writes",
 		"test:public-catalog-boundary": "tsx --tsconfig packages/admin/tsconfig.json --test packages/proxy/src/routes/catalog-public-boundary.test.ts",
 		"typecheck:admin": "npm run typecheck -w @octafuse/admin",
 		"docs:image-models": "node scripts/docs/gen-image-models.mjs",
-		"test:docs": "node --test scripts/docs/*.test.mjs"
+		"test:docs": "node --test scripts/docs/*.test.mjs",
+		"test:db-scripts": "tsx --test scripts/db/lib/*.test.ts",
+		"typecheck": "npm run typecheck -w @octafuse/core && npm run typecheck -w @octafuse/tool-engines && npm run typecheck -w @octafuse/proxy && npm run typecheck:admin",
+		"test:critical-writes": "tsx --test scripts/smoke/test-critical-write-paths.ts scripts/smoke/*.test.ts"
 	},
 	"devDependencies": {
 		"@changesets/changelog-github": "^0.5.1",
 		"@changesets/cli": "^2.29.8",
 		"@types/node": "^25.5.0",
 		"dotenv-cli": "^11.0.0",
-		"tsx": "^4.21.0",
+		"tsx": "^4.23.15",
 		"typescript": "^5.7.2",
-		"wrangler": "^4.127.1"
+		"wrangler": "^4.156.0",
+		"prettier": "^3.8.3",
+		"react": "19.3.1",
+		"react-dom": "19.3.1"
+	},
+	"overrides": {
+		"@opennextjs/cloudflare": {
+			"glob": "^14.0.2"
+		},
+		"@node-minify/core": {
+			"glob": "^14.0.2"
+		},
+		"minimist": "1.2.8"
 	}
 }

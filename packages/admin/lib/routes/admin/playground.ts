@@ -1,3 +1,7 @@
+import { previewPlaygroundUpstream } from '@/lib/services/admin/playground-service';
+import { dispatchPlaygroundRealtime, PLAYGROUND_REALTIME_OPERATIONS } from '@/lib/services/admin/playground-realtime-service';
+
+import { PLAYGROUND_REQUEST_SOURCES_HEADER } from '@/lib/playground/request-sources';
 /**
  * 管理路由：`/admin/playground` — 管理员试调用。
  * - routeId / routeDraft 分支：直连单条路由（已保存或草稿）的上游（不计费、不写 logs、无 failover）
@@ -141,7 +145,7 @@ adminPlaygroundRoutes.get('/realtime', async (c) => {
 	const routeId = c.req.query('routeId')?.trim() ?? '';
 	const operation = c.req.query('operation')?.trim() ?? '';
 	if (!routeId) return c.json({ success: false as const, message: 'routeId is required' }, 400);
-	if (!(PLAYGROUND_DASHSCOPE_REALTIME_OPERATIONS as readonly string[]).includes(operation)) {
+	if (!(PLAYGROUND_REALTIME_OPERATIONS as readonly string[]).includes(operation)) {
 		return c.json(
 			{
 				success: false as const,
@@ -151,9 +155,9 @@ adminPlaygroundRoutes.get('/realtime', async (c) => {
 		);
 	}
 	try {
-		const result = await dispatchPlaygroundDashScopeRealtime(
+		const result = await dispatchPlaygroundRealtime(
 			c.get('repositories'),
-			{ routeId, operation },
+			{ routeId, operation, elevenLabs:{voiceId:c.req.query('voiceId'),query:Object.fromEntries(new URL(c.req.url).searchParams.entries())} },
 			c.env.NODE_PLAYGROUND_REALTIME_DISPATCH ? undefined : c.req.raw.signal,
 			{ nodeDispatch: c.env.NODE_PLAYGROUND_REALTIME_DISPATCH },
 		);
@@ -189,6 +193,8 @@ type PlaygroundPostBody = {
 	geminiAction?: unknown;
 	imageOperation?: unknown;
 	uploadManifest?: unknown;
+ includeRequestSources?: unknown;
+ preview?: unknown;
 };
 
 async function readInvocation(request: Request, preview: boolean) {
@@ -214,6 +220,8 @@ async function readInvocation(request: Request, preview: boolean) {
 	const routeId = typeof parsed.routeId === 'string' ? parsed.routeId.trim() : '';
 	const toolId = typeof parsed.toolId === 'string' ? parsed.toolId.trim() : '';
 	const hasDraft = parsed.routeDraft !== undefined;
+ if (parsed.preview !== undefined && typeof parsed.preview !== 'boolean') throw badRequest('preview must be a boolean');
+ if (parsed.preview === true && (!routeId || toolId || hasDraft || uploads)) throw badRequest('Request inspection requires a saved route');
 	if ([Boolean(routeId), Boolean(toolId), hasDraft].filter(Boolean).length !== 1)
 		throw badRequest('Provide exactly one of routeId, routeDraft, or toolId');
 	if (toolId && (uploads || parsed.uploadManifest != null)) throw badRequest('Tool invocations do not accept uploads');
@@ -230,6 +238,8 @@ async function readInvocation(request: Request, preview: boolean) {
 	if (!preview && parsed.uploadManifest != null) throw badRequest('Upload manifest is only accepted for preview');
 	return {
 		routeId,
+ includeRequestSources:parsed.includeRequestSources === true,
+ inspection:parsed.preview === true,
 		routeDraft: parsed.routeDraft,
 		toolId,
 		provider: typeof parsed.provider === 'string' ? parsed.provider.trim() : '',
@@ -256,6 +266,7 @@ adminPlaygroundRoutes.post('/preview', async (c) => {
 adminPlaygroundRoutes.post('/', async (c) => {
 	try {
 		const input = await readInvocation(c.req.raw, false);
+  if(input.inspection)return c.json({success:true,data:await previewPlaygroundUpstream(c.get('repositories'),input,c.req.raw.signal)});
 		const result = input.toolId
 			? await invokePlaygroundTool(c.get('repositories'), input, c.req.raw.signal)
 			: await invokePlaygroundUpstream(c.get('repositories'), input, c.req.raw.signal);
@@ -285,6 +296,7 @@ adminPlaygroundRoutes.post('/', async (c) => {
 				(response.status >= 400 ? 'unknown' : 'response-received'),
 		);
 		headers.set('x-playground-request-headers', encodePlaygroundRequestHeadersHeader(upstreamWireHeaders));
+ if('requestSourceCodes' in result && typeof result.requestSourceCodes === 'string')headers.set(PLAYGROUND_REQUEST_SOURCES_HEADER,result.requestSourceCodes);
 
 		return new Response(response.body, {
 			status: response.status,

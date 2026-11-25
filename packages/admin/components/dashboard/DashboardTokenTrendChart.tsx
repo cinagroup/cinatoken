@@ -1,12 +1,15 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { memo, useMemo, useState } from 'react';
+import { BoltIcon, ChartBarIcon } from '@heroicons/react/24/outline';
 import { useTranslations } from 'next-intl';
 import { Area, CartesianGrid, ComposedChart, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { formatCompactTokens } from '@/lib/format-compact-tokens';
 import { formatGatewayMoneyCode } from '@/lib/format-gateway-currency';
 import type { DashboardTimeseriesRow } from '@/lib/types';
+import { useReducedDashboardMotion } from './use-reduced-dashboard-motion';
 import { formatDashboardBucketLabel } from './format-dashboard-bucket';
+import { DashboardNumber } from './DashboardNumber';
 
 type TrendView = 'requests' | 'tokens' | 'cost' | 'latency';
 
@@ -15,15 +18,21 @@ export type DashboardTokenTrendChartProps = {
 	granularity: 'hour' | 'day';
 	billingCurrency: string;
 	businessTimezone: string;
+	onExplore?: () => void;
+	throughput?: { rpm: number; tpm: number; scope: string };
 };
 
-export function DashboardTokenTrendChart({
+export const DashboardTokenTrendChart = memo(function DashboardTokenTrendChart({
 	timeseries,
 	granularity,
 	billingCurrency,
 	businessTimezone,
+	onExplore,
+	throughput,
 }: DashboardTokenTrendChartProps) {
 	const t = useTranslations('dashboard');
+	const review = useTranslations('dashboard.review');
+	const reducedMotion = useReducedDashboardMotion();
 	const [view, setView] = useState<TrendView>('requests');
 
 	const chartData = useMemo(
@@ -50,19 +59,78 @@ export function DashboardTokenTrendChart({
 	const tabs: TrendView[] = ['requests', 'tokens', 'cost', 'latency'];
 
 	return (
-		<div className="rounded-2xl border border-gray-200/80 bg-white p-5 shadow-sm sm:p-6">
-			<div className="flex flex-wrap items-start justify-between gap-4">
-				<div>
-					<h2 className="text-base font-semibold text-gray-950">{t('trafficTrend')}</h2>
-					<p className="mt-1 text-xs text-gray-500">{t(`trendHints.${view}`)}</p>
+		<div className="admin-content-panel dashboard-trend-panel flex min-w-0 flex-col rounded-xl border border-gray-200 bg-white p-5 sm:p-6">
+			<div className="dashboard-trend-header">
+				<div className="dashboard-trend-title flex min-w-0 flex-wrap items-center gap-x-6 gap-y-3">
+					<h2 className="admin-section-title flex shrink-0 items-center gap-2 text-sm font-medium text-gray-950">
+						<ChartBarIcon className="h-4 w-4 text-gray-500" aria-hidden />
+						{t('trafficTrend')}
+					</h2>
+					{throughput && (
+						<div
+							className="dashboard-trend-throughput flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1 text-gray-500"
+							title={review('throughputHint')}
+						>
+							<p className="flex shrink-0 items-center gap-1 whitespace-nowrap text-xs">
+								<BoltIcon className="h-3 w-3" aria-hidden />
+								{review('lastMinute')}
+							</p>
+							<dl className="flex flex-wrap items-baseline gap-x-4 gap-y-1" aria-label={t('throughput')}>
+								{[
+									{
+										label: 'RPM',
+										hint: review('rpmHint'),
+										value: throughput.rpm,
+										format: (value: number) => Math.round(value).toLocaleString(),
+									},
+									{
+										label: 'TPM',
+										hint: review('tpmHint'),
+										value: throughput.tpm,
+										format: (value: number) => formatCompactTokens(Math.round(value)),
+									},
+								].map((metric) => (
+									<div
+										key={metric.label}
+										className="inline-flex items-baseline gap-1.5 whitespace-nowrap"
+									>
+										<dt className="order-2 text-xs">
+											<abbr className="cursor-help no-underline" title={metric.hint}>
+												{metric.label}
+											</abbr>
+										</dt>
+										<dd
+											className={`order-1 font-mono text-lg font-medium leading-6 tabular-nums ${
+												metric.value > 0 ? 'text-gray-950' : 'text-gray-600'
+											}`}
+											title={Math.round(metric.value).toLocaleString()}
+										>
+											<DashboardNumber
+												value={metric.value}
+												format={metric.format}
+												scope={throughput.scope}
+											/>
+										</dd>
+									</div>
+								))}
+							</dl>
+						</div>
+					)}
 				</div>
-				<div className="inline-flex max-w-full overflow-x-auto rounded-xl bg-gray-100 p-1">
+				<div
+					role="group"
+					aria-label={t('trafficTrend')}
+					className="dashboard-trend-tabs inline-flex max-w-full overflow-x-auto rounded-lg bg-gray-100 p-1"
+				>
 					{tabs.map((tab) => (
 						<button
 							key={tab}
 							type="button"
 							onClick={() => setView(tab)}
-							className={`whitespace-nowrap rounded-lg px-3 py-1.5 text-xs font-medium transition ${view === tab ? 'bg-white text-gray-950 shadow-sm' : 'text-gray-500 hover:text-gray-900'}`}
+							aria-pressed={view === tab}
+							className={`whitespace-nowrap rounded-lg px-3 py-1.5 text-xs font-medium transition ${
+								view === tab ? 'bg-white text-gray-950 shadow-sm' : 'text-gray-500 hover:text-gray-900'
+							}`}
 						>
 							{t(`trendTabs.${tab}`)}
 						</button>
@@ -71,111 +139,169 @@ export function DashboardTokenTrendChart({
 			</div>
 
 			{chartData.length === 0 ? (
-				<div className="py-16 text-center text-sm text-gray-500">{t('noChartData')}</div>
+				<div className="flex min-h-64 flex-1 flex-col items-center justify-center gap-3 py-8 text-center">
+					<span className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+						<ChartBarIcon className="h-5 w-5" aria-hidden />
+					</span>
+					<p className="text-sm text-gray-600">{t('noChartData')}</p>
+					{onExplore && (
+						<button
+							type="button"
+							className="rounded-lg px-3 py-2 text-xs text-blue-700 hover:bg-blue-50"
+							onClick={onExplore}
+						>
+							{t('exploreWeek')}
+						</button>
+					)}
+				</div>
 			) : (
-				<div className="mt-5 h-72">
-					<ResponsiveContainer width="100%" height="100%">
-						<ComposedChart key={view} data={chartData} margin={{ left: 0, right: 8, top: 8, bottom: 0 }}>
-							<defs>
-								<linearGradient id="dashboardBlue" x1="0" y1="0" x2="0" y2="1">
-									<stop offset="0%" stopColor="#2563eb" stopOpacity={0.24} />
-									<stop offset="100%" stopColor="#2563eb" stopOpacity={0.02} />
-								</linearGradient>
-								<linearGradient id="dashboardViolet" x1="0" y1="0" x2="0" y2="1">
-									<stop offset="0%" stopColor="#7c3aed" stopOpacity={0.22} />
-									<stop offset="100%" stopColor="#7c3aed" stopOpacity={0.02} />
-								</linearGradient>
-							</defs>
-							<CartesianGrid vertical={false} stroke="#eef2f7" />
-							<XAxis
-								dataKey="bucket"
-								axisLine={false}
-								tickLine={false}
-								tick={{ fontSize: 11, fill: '#9ca3af' }}
-								interval="preserveStartEnd"
-								dy={8}
-							/>
-							<YAxis
-								axisLine={false}
-								tickLine={false}
-								tickFormatter={valueFormatter}
-								width={64}
-								tick={{ fontSize: 11, fill: '#9ca3af' }}
-							/>
-							<Tooltip
-								contentStyle={{
-									borderRadius: 12,
-									borderColor: '#e5e7eb',
-									boxShadow: '0 10px 30px rgba(15, 23, 42, 0.08)',
-									fontSize: 12,
-								}}
-								formatter={(value: number, name: string) => [valueFormatter(value), name]}
-							/>
-							{view === 'requests' ? (
-								<Area
-									type="monotone"
-									dataKey="requests"
-									name={t('trendTabs.requests')}
-									stroke="#2563eb"
-									fill="url(#dashboardBlue)"
-									strokeWidth={2}
-								/>
-							) : null}
-							{view === 'cost' ? (
-								<Area
-									type="monotone"
-									dataKey="cost"
-									name={t('trendTabs.cost')}
-									stroke="#7c3aed"
-									fill="url(#dashboardViolet)"
-									strokeWidth={2}
-								/>
-							) : null}
-							{view === 'latency' ? (
-								<Area
-									type="monotone"
-									dataKey="latency"
-									name={t('trendTabs.latency')}
-									stroke="#d97706"
-									fill="#fef3c7"
-									strokeWidth={2}
-									connectNulls
-								/>
-							) : null}
-							{view === 'tokens' ? (
-								<Line
-									type="monotone"
-									dataKey="input_tokens"
-									name={t('inputTokens')}
-									stroke="#2563eb"
-									dot={false}
-									strokeWidth={2}
-								/>
-							) : null}
-							{view === 'tokens' ? (
-								<Line
-									type="monotone"
-									dataKey="output_tokens"
-									name={t('outputTokens')}
-									stroke="#0d9488"
-									dot={false}
-									strokeWidth={2}
-								/>
-							) : null}
-							{view === 'tokens' ? (
-								<Line
-									type="monotone"
-									dataKey="cache_read_tokens"
-									name={t('cacheReadTokens')}
-									stroke="#d97706"
-									dot={false}
-									strokeWidth={2}
-								/>
-							) : null}
-						</ComposedChart>
-					</ResponsiveContainer>
+				<div className="mt-5 flex flex-1 flex-col">
+					{view === 'tokens' && (
+						<div className="mb-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500">
+							{[
+								{ label: t('inputTokens'), color: '#2563eb' },
+								{ label: t('outputTokens'), color: '#0d9488' },
+								{ label: t('cacheReadTokens'), color: '#d97706' },
+							].map((item) => (
+								<span key={item.label} className="inline-flex items-center gap-1.5">
+									<span
+										className="h-1.5 w-1.5 rounded-full"
+										style={{ backgroundColor: item.color }}
+										aria-hidden
+									/>
+									{item.label}
+								</span>
+							))}
+						</div>
+					)}
+					<div className="relative min-h-64 flex-1 overflow-hidden sm:min-h-72">
+						<div className="absolute inset-0">
+							<ResponsiveContainer width="100%" height="100%">
+								<ComposedChart
+									key={view}
+									data={chartData}
+									margin={{ left: 0, right: 8, top: 8, bottom: 0 }}
+								>
+									<defs>
+										<linearGradient id="dashboardBlue" x1="0" y1="0" x2="0" y2="1">
+											<stop offset="0%" stopColor="#2563eb" stopOpacity={0.12} />
+											<stop offset="100%" stopColor="#2563eb" stopOpacity={0.02} />
+										</linearGradient>
+										<linearGradient id="dashboardCost" x1="0" y1="0" x2="0" y2="1">
+											<stop offset="0%" stopColor="#3f3f46" stopOpacity={0.08} />
+											<stop offset="100%" stopColor="#3f3f46" stopOpacity={0.02} />
+										</linearGradient>
+									</defs>
+									<CartesianGrid vertical={false} stroke="#f0f0f1" />
+									<XAxis
+										dataKey="bucket"
+										axisLine={false}
+										tickLine={false}
+										tick={{ fontSize: 12, fill: '#71717a', fontFamily: 'monospace' }}
+										interval="preserveStartEnd"
+										dy={8}
+									/>
+									<YAxis
+										axisLine={false}
+										tickLine={false}
+										tickFormatter={valueFormatter}
+										width={64}
+										tick={{ fontSize: 12, fill: '#71717a', fontFamily: 'monospace' }}
+									/>
+									<Tooltip
+										contentStyle={{
+											borderRadius: 12,
+											borderColor: '#e4e4e7',
+											boxShadow: '0 4px 16px rgba(0, 0, 0, 0.06)',
+											fontSize: 12,
+										}}
+										formatter={(value: number, name: string) => [valueFormatter(value), name]}
+									/>
+									{view === 'requests' ? (
+										<Area
+											isAnimationActive={!reducedMotion}
+											animationDuration={450}
+											animationEasing="ease-out"
+											type="monotone"
+											dataKey="requests"
+											name={t('trendTabs.requests')}
+											stroke="#2563eb"
+											fill="url(#dashboardBlue)"
+											strokeWidth={2}
+										/>
+									) : null}
+									{view === 'cost' ? (
+										<Area
+											isAnimationActive={!reducedMotion}
+											animationDuration={450}
+											animationEasing="ease-out"
+											type="monotone"
+											dataKey="cost"
+											name={t('trendTabs.cost')}
+											stroke="#3f3f46"
+											fill="url(#dashboardCost)"
+											strokeWidth={2}
+										/>
+									) : null}
+									{view === 'latency' ? (
+										<Area
+											isAnimationActive={!reducedMotion}
+											animationDuration={450}
+											animationEasing="ease-out"
+											type="monotone"
+											dataKey="latency"
+											name={t('trendTabs.latency')}
+											stroke="#52525b"
+											fill="#f4f4f5"
+											strokeWidth={2}
+											connectNulls
+										/>
+									) : null}
+									{view === 'tokens' ? (
+										<Line
+											isAnimationActive={!reducedMotion}
+											animationDuration={450}
+											animationEasing="ease-out"
+											type="monotone"
+											dataKey="input_tokens"
+											name={t('inputTokens')}
+											stroke="#2563eb"
+											dot={false}
+											strokeWidth={2}
+										/>
+									) : null}
+									{view === 'tokens' ? (
+										<Line
+											isAnimationActive={!reducedMotion}
+											animationDuration={450}
+											animationEasing="ease-out"
+											type="monotone"
+											dataKey="output_tokens"
+											name={t('outputTokens')}
+											stroke="#0d9488"
+											dot={false}
+											strokeWidth={2}
+										/>
+									) : null}
+									{view === 'tokens' ? (
+										<Line
+											isAnimationActive={!reducedMotion}
+											animationDuration={450}
+											animationEasing="ease-out"
+											type="monotone"
+											dataKey="cache_read_tokens"
+											name={t('cacheReadTokens')}
+											stroke="#d97706"
+											dot={false}
+											strokeWidth={2}
+										/>
+									) : null}
+								</ComposedChart>
+							</ResponsiveContainer>
+						</div>
+					</div>
 				</div>
 			)}
 		</div>
 	);
-}
+});

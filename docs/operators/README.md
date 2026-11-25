@@ -16,6 +16,8 @@
 
 | 场景 | 文档 |
 |------|------|
+| 维护窗口里让推理请求收到友好的 503（数据迁移前冻结写入） | [maintenance-mode.md](./maintenance-mode.md) |
+| 从 D1 切到 Postgres：照着执行的操作手册（命令可直接复制） | [migrations/d1-postgres-cutover-runbook.md](./migrations/d1-postgres-cutover-runbook.md) |
 | D1 与 Postgres 之间 ETL、对账和切换 | [migrations/d1-postgres-cutover.md](./migrations/d1-postgres-cutover.md) |
 | 1.11.x → 2.0：单键 Provider + 路由拓扑（迁移 0015 / 0016） | [migrations/single-provider-key-cutover.md](./migrations/single-provider-key-cutover.md) |
 | 2.1.2 → 2.2.0：Gemini operation 收敛（迁移 0017） | [migrations/gemini-models-generate-cutover.md](./migrations/gemini-models-generate-cutover.md) |
@@ -26,6 +28,14 @@
 | 2.3.0 → 2.4.0：音频字符、具名 Admin Key 与审计索引（迁移 0022–0025） | [2.4.0 发布说明](../releases/2.4.0.md#升级说明) |
 | 2.6.0 → 2.7.0：用户级模型计费倍率（迁移 0026） | [2.7.0 发布说明](../releases/2.7.0.md#升级说明) |
 | 2.7.0 → 2.8.0：周期额度与永久额度拆分（迁移 0027） | [2.8.0 发布说明](../releases/2.8.0.md#升级说明) · [0027 迁移说明](./migrations/0027-user-wallet-credit.md) |
+| 2.14.0 → 2.15.0：MCP 服务与目录快照（迁移 0030） | [migrations/0030-mcp-servers.md](./migrations/0030-mcp-servers.md) |
+| 2.15.0 → 2.16.0：介绍改为静态目录，库内列改为备注（迁移 0031） | [migrations/0031-catalog-notes.md](./migrations/0031-catalog-notes.md) |
+| 2.16.0 → 2.17.0：DashScope 语音适配器按系列拆分（迁移 0032） | [migrations/0032-dashscope-audio-adapters.md](./migrations/0032-dashscope-audio-adapters.md) |
+| 2.16.0 → 2.17.0：请求日志按 Provider 与时间检索（迁移 0033） | [migrations/0033-request-log-provider-index.md](./migrations/0033-request-log-provider-index.md) |
+| 2.17.0 → 2.18.0：粘性绑定记录明文 affinity_key（迁移 0034，须先于 Proxy 执行） | [migrations/0034-sticky-binding-affinity-key.md](./migrations/0034-sticky-binding-affinity-key.md) |
+| 2.17.0 → 2.18.0：OAuth 访问令牌独立成表 `oauth_access_tokens`（迁移 0035，须先于 Proxy / Admin 执行） | [migrations/0035-oauth-access-tokens.md](./migrations/0035-oauth-access-tokens.md) |
+| 内置 OAuth 授权服务器：应用目录、动态注册、刷新令牌（迁移 0036，须先于 Proxy / Admin 执行；切换步骤见文内） | [migrations/0036-oauth-authorization-server.md](./migrations/0036-oauth-authorization-server.md) |
+| OAuth 机密客户端、手工客户端与客户端元数据文档（迁移 0037，须先于 Proxy / Admin 执行） | [migrations/0037-oauth-client-credentials.md](./migrations/0037-oauth-client-credentials.md) |
 | User audit 兼容导出移除说明 | [migrations/user-audit-legacy-exports.md](./migrations/user-audit-legacy-exports.md) |
 
 升级到 **2.3.0** 时应在同一维护窗口内按 **0020 → 0021 → 同版本 Proxy / Admin 部署**执行；0021 无旧策略 ID 别名，禁止新旧版本混跑。

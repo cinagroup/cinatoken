@@ -1,3 +1,8 @@
+
+import type { IncomingMessage } from 'node:http';
+
+import { isRealtimeUpgradePath } from '@octafuse/core/realtime-protocol';
+import { createNodeDashScopeDeferredRuntime, createNodeDashScopeRealtimeDispatch, createNodeElevenLabsRealtimeDispatch, type NodeWebSocket } from './node-realtime';
 import {
 	createMySqlStorageContext,
 	createPostgresStorageContext,
@@ -145,4 +150,18 @@ if (import.meta.url === pathToFileURL(process.argv[1]!).href) {
 		console.error(err);
 		process.exit(1);
 	});
+}
+
+
+let nodeStoragePromise: Promise<StorageContext> | null = null;
+
+
+/**
+ * 路由拒绝了已接受的升级：先恢复读取再关闭。升级后下游处于暂停读状态，
+ * 不恢复的话收不到对端的 Close 回包，关闭握手要等到 ws 的 30 秒超时才结束。
+ */
+function closeRejectedUpgrade(client: NodeWebSocket, code: number, message: string): void {
+	if (client.readyState === 3) return;
+	client.resume();
+	client.close(code, message.slice(0, 123));
 }

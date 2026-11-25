@@ -1,8 +1,12 @@
+import { normalizeProxyBaseUrl } from '@/lib/proxy-base-url';
 import { canonicalizeRequestOperation, isRouteAdapterCompatible } from '@octafuse/core/route-topology';
 import { normalizeUpstreamProtocol } from '@octafuse/core/upstream-protocol';
 import {
 	AUDIO_SPEECH_BODY_TEMPLATE,
 	AUDIO_TRANSCRIPTIONS_BODY_TEMPLATE,
+	ELEVENLABS_OPENAI_SPEECH_BODY_TEMPLATE,
+	ELEVENLABS_SPEECH_BODY_TEMPLATE,
+	ELEVENLABS_TRANSCRIPTIONS_BODY_TEMPLATE,
 	MINIMAX_OPENAI_SPEECH_BODY_TEMPLATE,
 	MINIMAX_SPEECH_BODY_TEMPLATE,
 	AUDIO_TRANSCRIPTIONS_FILE_URL_BODY_TEMPLATE,
@@ -11,6 +15,7 @@ import {
 import { VOLCENGINE_IMAGE_BODY_TEMPLATE, imageBodyTemplateFor, type ImageOperation } from '@/lib/image-generations';
 import { GATEWAY_TOOLS, findGatewayToolById, type GatewayToolDefinition } from '@/lib/gateway-tools';
 import type { AudioOperation, GatewayToolId, OpenaiLlmOperation, SimulatorProtocol } from '@/lib/invoke-kind';
+import { invocationLogQuery } from '@/lib/request-log-kind';
 import type { SimulatorGeminiAction } from '@/lib/simulator/endpoint';
 import {
 	DASHSCOPE_ASYNC_TRANSCRIPTION_BODY_TEMPLATE,
@@ -23,23 +28,24 @@ import {
 	isDashScopeRealtimeOperation,
 	type DashScopeRealtimeOperation,
 } from '@/lib/dashscope-realtime-client';
+import { buildElevenLabsRealtimeTemplate, isElevenLabsRealtimeOperation } from '@/lib/elevenlabs-realtime-client';
 import type { AdminKeyListItem, AdminModelRow, RouteListRow } from './types';
 
-export const LS_PROXY = 'octafuse.simulator.proxyBaseUrl';
 export const LS_PROTOCOL = 'octafuse.simulator.protocol';
 export const LS_OPENAI_LLM_OPERATION = 'octafuse.simulator.openaiLlmOperation';
 export const LS_MODEL_ID = 'octafuse.simulator.modelId';
 export const LS_ROUTE_GROUP = 'octafuse.simulator.routeGroup';
 export const LS_KEY_ID = 'octafuse.simulator.keyId';
 export const LS_INVOKE_KIND = 'octafuse.simulator.invokeKind';
+export const LS_MODEL_KIND = 'octafuse.simulator.modelKind';
 export const LS_TOOL_ID = 'octafuse.simulator.toolId';
 
 export const KEYS_PAGE_SIZE = 200;
 
 export const inputClass =
-	'w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white';
-export const labelClass = 'block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1';
-export const panelClass = 'rounded-xl border border-gray-200/80 bg-white p-4 shadow-sm space-y-3';
+	'min-h-10 w-full min-w-0 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-100';
+export const labelClass = 'block text-xs font-medium text-gray-500 normal-case tracking-normal mb-1';
+export const panelClass = 'admin-editor-panel rounded-xl border border-gray-200 bg-white p-4 space-y-4';
 export const codeBlockClass =
 	'p-3 text-xs overflow-x-auto whitespace-pre-wrap bg-gray-50 border border-gray-200 rounded-md font-mono text-gray-900';
 
@@ -62,6 +68,7 @@ export const BODY_TEMPLATES: Record<SimulatorProtocol, string> = {
 }`,
 	dashscope: '{}',
 	minimax: AUDIO_TRANSCRIPTIONS_BODY_TEMPLATE,
+	elevenlabs: ELEVENLABS_TRANSCRIPTIONS_BODY_TEMPLATE,
 	volcengine: VOLCENGINE_IMAGE_BODY_TEMPLATE,
 };
 
@@ -117,6 +124,7 @@ export function bodyTemplateForSelection(
 	if (audioOperation && protocol === 'openai') {
 		if (audioOperation === 'speech' && providerModelName) {
 			if (/^speech-/i.test(providerModelName.trim())) return MINIMAX_OPENAI_SPEECH_BODY_TEMPLATE;
+			if (/^eleven_/i.test(providerModelName.trim())) return ELEVENLABS_OPENAI_SPEECH_BODY_TEMPLATE;
 			// OpenAI surface 可能映射到 DashScope；模板音色必须匹配实际供应商模型。
 			return buildDashScopeSpeechBodyTemplate(providerModelName);
 		}
@@ -127,6 +135,12 @@ export function bodyTemplateForSelection(
 	}
 	if (audioOperation && protocol === 'minimax') {
 		return audioOperation === 'speech' ? MINIMAX_SPEECH_BODY_TEMPLATE : AUDIO_TRANSCRIPTIONS_BODY_TEMPLATE;
+	}
+	if (audioOperation && protocol === 'elevenlabs') {
+		if (realtimeOperation && isElevenLabsRealtimeOperation(realtimeOperation)) {
+			return buildElevenLabsRealtimeTemplate(realtimeOperation);
+		}
+		return audioOperation === 'speech' ? ELEVENLABS_SPEECH_BODY_TEMPLATE : ELEVENLABS_TRANSCRIPTIONS_BODY_TEMPLATE;
 	}
 	if (audioOperation && protocol === 'dashscope') {
 		if (realtimeOperation === 'audio.speech' || realtimeOperation === 'audio.speech.stream') {
@@ -228,6 +242,24 @@ const DASHSCOPE_HTTP_AUDIO_OPERATIONS = [
 	'audio.speech.multimodal',
 ] as const;
 
+/** 模拟器可选的 ElevenLabs 音频入口：HTTP 透传 + 实时 WSS（按路由 surface 是否命中决定）。 */
+export function listElevenLabsAudioClientOperations(
+	routes: RouteListRow[],
+	modelId: string,
+	routeGroup: string,
+	audioOperation: AudioOperation,
+): readonly string[] {
+	const httpOperation = audioOperation === 'speech' ? 'audio.speech' : 'audio.transcriptions';
+	const realtimeOperation = audioOperation === 'speech' ? 'audio.speech.realtime' : 'audio.transcriptions.realtime';
+	const found: string[] = [];
+	for (const operation of [httpOperation, realtimeOperation]) {
+		if (filterMatchingActiveRoutes(routes, modelId, routeGroup, 'elevenlabs', operation).length > 0) {
+			found.push(operation);
+		}
+	}
+	return found;
+}
+
 /** 模拟器可选的 DashScope 音频入口：HTTP 透传 + 实时 WSS。 */
 export function listDashScopeAudioClientOperations(
 	routes: RouteListRow[],
@@ -311,23 +343,32 @@ export function isBodyDirty(
 	adapter?: string | null,
 	modelId?: string | null,
 ): boolean {
-	return (
-		normalizeBodyWhitespace(bodyText) !==
-		normalizeBodyWhitespace(
-			bodyTemplateForSelection(
-				protocol,
-				isImageModel,
-				imageOperation,
-				audioOperation,
-				toolId,
-				realtimeOperation,
-				providerModelName,
-				llmOperation,
-				adapter,
-				modelId,
-			),
-		)
+	const template = bodyTemplateForSelection(
+		protocol,
+		isImageModel,
+		imageOperation,
+		audioOperation,
+		toolId,
+		realtimeOperation,
+		providerModelName,
+		llmOperation,
+		adapter,
+		modelId,
 	);
+	const comparable = (text: string) => {
+		if (protocol === 'dashscope' && realtimeOperation && isDashScopeRealtimeOperation(realtimeOperation)) {
+			try {
+				const body = JSON.parse(text);
+				if (body?.header && typeof body.header === 'object' && !Array.isArray(body.header))
+					delete body.header.task_id;
+				return JSON.stringify(body);
+			} catch {
+				/* Invalid drafts still differ from the valid template. */
+			}
+		}
+		return normalizeBodyWhitespace(text);
+	};
+	return comparable(bodyText) !== comparable(template);
 }
 
 /** Effective route_group for matching: empty / default → routes with empty or "default" group. */
@@ -347,6 +388,7 @@ export const SIMULATOR_PROTOCOL_ORDER: readonly SimulatorProtocol[] = [
 	'dashscope',
 	'minimax',
 	'volcengine',
+	'elevenlabs',
 ];
 
 export type SimulatorClientSurfaceOptions = {
@@ -419,14 +461,17 @@ export function listSupportedClientSurfaces(
 							request_operation: '*',
 							status: 'active',
 						},
-					];
+				  ];
 		for (const surface of entries) {
 			if (surface.status === 'disabled') continue;
 			const protocol = String(surface.request_protocol ?? route.upstream_protocol ?? '')
 				.trim()
 				.toLowerCase();
 			if (!isSimulatorProtocol(protocol)) continue;
-			const operation = canonicalizeRequestOperation(protocol, String(surface.request_operation ?? '*').trim() || '*');
+			const operation = canonicalizeRequestOperation(
+				protocol,
+				String(surface.request_operation ?? '*').trim() || '*',
+			);
 			const bucket = operationsByProtocol.get(protocol) ?? new Set<string>();
 			bucket.add(operation);
 			operationsByProtocol.set(protocol, bucket);
@@ -539,7 +584,7 @@ export function buildRequestLogsHref(opts: {
 	if (opts.apiKeyId) sp.set('api_key_id', opts.apiKeyId);
 	if (opts.modelId) sp.set('model_id', opts.modelId);
 	const rg = opts.routeGroup?.trim();
-	if (rg && rg !== 'default') sp.set('route_group', rg);
+	if (rg) sp.set('route_group', rg);
 	if (opts.protocol) sp.set('protocol', opts.protocol);
 	const q = sp.toString();
 	return q ? `/admin/request-logs?${q}` : '/admin/request-logs';
@@ -554,6 +599,13 @@ export function buildToolsInvocationsHref(opts?: { toolId?: string }): string {
 	return q ? `/admin/tools/invocations?${q}` : '/admin/tools/invocations';
 }
 
+/** 工具调用也记在请求日志里：按 REST 工具（可选具体工具）和所用 API Key 筛选。 */
+export function buildToolRequestLogsHref(opts: { apiKeyId?: string; toolId?: string } = {}): string {
+	const sp = invocationLogQuery({ source: 'rest', tool: opts.toolId });
+	if (opts.apiKeyId) sp.set('api_key_id', opts.apiKeyId);
+	return `/admin/request-logs?${sp}`;
+}
+
 export function listGatewayTools(): readonly GatewayToolDefinition[] {
 	return GATEWAY_TOOLS;
 }
@@ -563,15 +615,8 @@ export function tryParseProxyBaseUrl(
 ): { ok: true; base: string } | { ok: false; reason: 'empty' | 'invalid' } {
 	const trimmed = raw.trim();
 	if (!trimmed) return { ok: false, reason: 'empty' };
-	try {
-		const u = new URL(trimmed);
-		if (u.protocol !== 'http:' && u.protocol !== 'https:') {
-			return { ok: false, reason: 'invalid' };
-		}
-		return { ok: true, base: trimmed.replace(/\/+$/, '') };
-	} catch {
-		return { ok: false, reason: 'invalid' };
-	}
+	const base = normalizeProxyBaseUrl(trimmed);
+	return base ? { ok: true, base } : { ok: false, reason: 'invalid' };
 }
 
 export function prettyJsonBody(bodyText: string): string {

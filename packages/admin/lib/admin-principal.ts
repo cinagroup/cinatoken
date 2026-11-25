@@ -23,6 +23,11 @@ export const ADMIN_PERMISSIONS = [
 	'mcp.read',
 	'mcp.write',
 	'mcp.secrets.read',
+	'maintenance.read',
+	'maintenance.write',
+	'oauth.read',
+	'oauth.write',
+	'oauth.consent',
 	'*',
 ] as const;
 

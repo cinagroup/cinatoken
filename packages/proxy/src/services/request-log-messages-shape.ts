@@ -6,6 +6,7 @@
 const MAX_LABEL_CHARS = 64;
 
 export type MessagesShapeForLog = {
+	// 索引签名必须容纳可选的 content_types（TS2411），所以带 undefined。
 	[role: string]: string[] | Record<string, string[]> | undefined;
 	content_types?: Record<string, string[]>;
 };

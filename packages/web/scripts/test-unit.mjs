@@ -32,7 +32,14 @@ const tests = [
 if (!tests.length) throw new Error('No cinatoken Web contract tests found')
 const result = spawnSync(
 	process.execPath,
-	['--import', 'tsx', '--test', ...tests],
+	[
+		'--import',
+		'tsx',
+		'--test',
+		'--test-concurrency=1',
+		'--test-timeout=60000',
+		...tests,
+	],
 	{
 		stdio: 'inherit',
 		// JSX settings must also cover lazily imported UI components outside cinatoken.
