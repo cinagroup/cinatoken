@@ -215,7 +215,7 @@ function PrivateAuthWrapper({ children, pathname }: Props & { pathname: string }
 								width={52}
 								height={52}
 								priority
-								className="h-[52px] w-[52px] shrink-0 rounded-lg"
+								className="h-[52px] w-[52px] shrink-0"
 							/>
 							<div className="min-w-0 flex-1">
 								<h1 className="text-xl font-bold leading-tight text-gray-800 sm:text-2xl">{tBrand('loginHeading')}</h1>

@@ -264,7 +264,7 @@ export default function PortalGate({ children }: Props) {
 								width={52}
 								height={52}
 								priority
-								className="h-[52px] w-[52px] shrink-0 rounded-lg"
+								className="h-[52px] w-[52px] shrink-0"
 							/>
 							<div className="min-w-0 flex-1">
 								<h1 className="text-xl font-bold leading-tight text-gray-800 sm:text-2xl">
@@ -343,10 +343,9 @@ export default function PortalGate({ children }: Props) {
 							alt={tBrand("logoAlt")}
 							width={36}
 							height={36}
-							className="h-9 w-9 rounded-xl"
+							className="h-9 w-9"
 						/>
 						<div className="min-w-0">
-							<div className="truncate text-sm font-semibold">CinaToken</div>
 							<div className="console-muted truncate text-xs">
 								{t("portalTitle")}
 							</div>
@@ -420,10 +419,9 @@ export default function PortalGate({ children }: Props) {
 									alt={tBrand("logoAlt")}
 									width={32}
 									height={32}
-									className="h-8 w-8 rounded-lg"
+									className="h-8 w-8"
 								/>
 								<div className="min-w-0">
-									<div className="text-sm font-semibold">CinaToken</div>
 									<div className="console-muted truncate text-xs">
 										{me.email}
 									</div>

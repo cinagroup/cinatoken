@@ -108,7 +108,9 @@
 			"deploymentDocs": "배포 문서 보기"
 		},
 		"footer": {
-			"description": "AI 기능 게이트웨이 및 운영 제어 플레인"
+			"description": "AI 기능 게이트웨이 및 운영 제어 플레인",
+			"sourceDownload": "프런트엔드 소스",
+			"license": "오픈소스 고지"
 		}
 	},
 	"publicNav": {

@@ -108,7 +108,9 @@
 			"deploymentDocs": "View deployment docs"
 		},
 		"footer": {
-			"description": "AI capability gateway and operations control plane"
+			"description": "AI capability gateway and operations control plane",
+			"sourceDownload": "Frontend source",
+			"license": "Open-source notices"
 		}
 	},
 	"publicNav": {

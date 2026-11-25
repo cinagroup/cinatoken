@@ -6,8 +6,10 @@ import test from 'node:test'
 import { renderToReadableStream } from 'react-dom/server.edge'
 import { createPublicCatalogApi, PublicCatalogError } from '../catalog-api'
 import { validateStatsSearch } from '../catalog-search'
-import { FRONTEND_SOURCE_DOWNLOAD_URL } from '../frontend-attribution'
-import { PUBLIC_FRONTEND_ORIGIN_URL } from '../home/home-links'
+import {
+	FRONTEND_NOTICE_URL,
+	FRONTEND_SOURCE_DOWNLOAD_URL,
+} from '../frontend-attribution'
 import { publicHomeMessages } from '../home/home-messages'
 import { publicMessages } from '../messages'
 import { PublicApplication } from './public-application'
@@ -172,7 +174,7 @@ for (const locale of ['en', 'zh', 'ja', 'ko'] as const) {
 		'/benchmarks?range=90d',
 		'/missing',
 	]) {
-		test(`NOTICE English attribution stays visible in the single ${locale} footer: ${path || 'home'}`, async () => {
+		test(`source and notice links remain in the single ${locale} footer without the upstream statement: ${path || 'home'}`, async () => {
 			const app = requestApp(path, locale)
 			try {
 				const prepared = await preparePublicRequest(app)
@@ -182,41 +184,20 @@ for (const locale of ['en', 'zh', 'ja', 'ko'] as const) {
 					html.match(/<footer(?:\s[^>]*)?>[\s\S]*?<\/footer>/g) ?? []
 				assert.equal(footers.length, 1)
 				const footer = footers[0]!
-				assert.ok(
-					footer.includes(
-						'Frontend design and development by New API contributors.'
-					),
-					'English NOTICE text cannot be replaced by a translation'
-				)
-				assert.match(
+				assert.doesNotMatch(
 					footer,
-					/<span lang="en">Frontend design and development by New API contributors\.<\/span>/
+					/New API|QuantumNous|new-api|Frontend design and development/
 				)
-				assert.equal(
-					footer.split(
-						'Frontend design and development by New API contributors.'
-					).length - 1,
-					1
-				)
+				for (const link of [
+					FRONTEND_SOURCE_DOWNLOAD_URL,
+					FRONTEND_NOTICE_URL,
+				]) {
+					assert.equal(footer.split(`href="${link}"`).length - 1, 1)
+				}
 				assert.ok(
-					footer.includes(publicHomeMessages[locale].attribution.statement)
+					footer.includes(publicHomeMessages[locale].footer.sourceDownload)
 				)
-				assert.equal(
-					(
-						footer.match(
-							/href="https:\/\/github\.com\/QuantumNous\/new-api"/g
-						) ?? []
-					).length,
-					1
-				)
-				assert.ok(footer.includes(`href="${PUBLIC_FRONTEND_ORIGIN_URL}"`))
-				assert.equal(
-					footer.split(`href="${FRONTEND_SOURCE_DOWNLOAD_URL}"`).length - 1,
-					1
-				)
-				assert.ok(
-					footer.includes(publicHomeMessages[locale].attribution.sourceDownload)
-				)
+				assert.ok(footer.includes(publicHomeMessages[locale].footer.license))
 			} finally {
 				app.dispose()
 			}

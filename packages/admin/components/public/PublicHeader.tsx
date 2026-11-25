@@ -28,11 +28,8 @@ export default function PublicHeader() {
 						width={36}
 						height={36}
 						priority
-						className="h-8 w-8 rounded-lg sm:h-9 sm:w-9"
+						className="h-8 w-8 sm:h-9 sm:w-9"
 					/>
-					<span className="home-text hidden truncate text-lg font-semibold tracking-[-0.035em] sm:inline sm:text-xl">
-						{tBrand("wordmark")}
-					</span>
 				</Link>
 
 				<nav

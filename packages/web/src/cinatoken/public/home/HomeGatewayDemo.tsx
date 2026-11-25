@@ -59,11 +59,11 @@ export function HomeGatewayDemo() {
 		tabs.current[next]?.focus()
 	}
 	return (
-		<section className='bg-card mt-10 min-w-0 overflow-hidden rounded-2xl border'>
+		<section className='bg-background min-w-0 overflow-hidden rounded-[6px] border'>
 			<div
 				role='tablist'
 				aria-label={t('cinatoken.home.demo.tabsLabel')}
-				className='bg-muted/40 flex gap-1 overflow-x-auto border-b px-3'
+				className='flex gap-1 overflow-x-auto border-b px-2'
 			>
 				{examples.map((item, index) => (
 					<button
@@ -77,7 +77,7 @@ export function HomeGatewayDemo() {
 						aria-controls={`${id}-panel`}
 						aria-selected={active === index}
 						tabIndex={active === index ? 0 : -1}
-						className='hover:bg-muted focus-visible:ring-ring rounded-sm px-4 py-3 text-sm font-medium outline-none focus-visible:ring-2 aria-selected:underline aria-selected:underline-offset-8'
+						className='hover:bg-muted focus-visible:ring-ring aria-selected:text-foreground text-muted-foreground rounded-sm px-4 py-3 text-sm font-medium outline-none focus-visible:ring-2 aria-selected:underline aria-selected:underline-offset-8'
 						onClick={() => setActive(index)}
 						onKeyDown={(event) => {
 							if (event.key === 'ArrowRight') {
@@ -110,19 +110,19 @@ export function HomeGatewayDemo() {
 				className='min-w-0 outline-none'
 			>
 				<p className='min-w-0 overflow-x-auto border-b p-4 font-mono text-xs'>
-					POST https://api.cinatoken.com{example.endpoint}
+					POST {example.endpoint}
 				</p>
-				<div className='grid min-w-0 md:grid-cols-2'>
-					<div className='min-w-0 space-y-3 border-b p-5 md:border-r md:border-b-0'>
-						<h2 className='text-muted-foreground text-xs font-semibold uppercase'>
+				<div className='grid min-w-0 sm:grid-cols-2'>
+					<div className='min-w-0 space-y-3 border-b p-4 sm:border-r sm:border-b-0'>
+						<h2 className='text-muted-foreground text-xs font-medium'>
 							{t('cinatoken.home.demo.request')}
 						</h2>
 						<pre className='max-w-full overflow-x-auto text-xs leading-6'>
 							<code>{JSON.stringify(request, null, 2)}</code>
 						</pre>
 					</div>
-					<div className='min-w-0 space-y-3 p-5'>
-						<h2 className='text-muted-foreground text-xs font-semibold uppercase'>
+					<div className='min-w-0 space-y-3 p-4'>
+						<h2 className='text-muted-foreground text-xs font-medium'>
 							{t('cinatoken.home.demo.response')}
 						</h2>
 						<pre className='max-w-full overflow-x-auto text-xs leading-6'>

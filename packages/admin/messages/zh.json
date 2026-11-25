@@ -108,7 +108,9 @@
 			"deploymentDocs": "查看部署文档"
 		},
 		"footer": {
-			"description": "AI 能力网关与运营控制面"
+			"description": "AI 能力网关与运营控制面",
+			"sourceDownload": "前端源码",
+			"license": "开源许可"
 		}
 	},
 	"publicNav": {
