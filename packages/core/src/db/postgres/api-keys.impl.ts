@@ -574,7 +574,7 @@ export function createPostgresApiKeysRepository(db: PostgresDatabaseClient): Api
 		},
 
 		async getOAuthActorKeyLookupHash(input) {
- const rows=await db.raw<Array<{id:string;user_id:string;workspace_id:string;status:string;metadata:string|null;key_hash:string|null}>>`SELECT id,user_id,workspace_id,status,metadata,key_hash FROM api_keys WHERE id = ${input.id} AND user_id = ${input.userId} AND workspace_id = ${input.workspaceId} AND status = 'active'`;
+ const rows=await db.raw<Array<{id:string;user_id:string;workspace_id:string;status:string;metadata:string|null;key_hash:string|null}>>`SELECT id,user_id,workspace_id,status,metadata,key_hash FROM cinatoken_gateway.api_keys WHERE id = ${input.id} AND user_id = ${input.userId} AND workspace_id = ${input.workspaceId} AND status = 'active'`;
  return oauthActorKeyHash(rows[0],input);
  },
  async getApiKeyById(id: string): Promise<ApiKeyRow | null> {
