@@ -21,6 +21,8 @@ import type { RouteResult } from "../model-router";
 import { EMPTY_USAGE, type UsageFromStream } from "../proxy";
 import type { RequestTimingAttempt, RequestTimingCollector } from "../request-timing";
 import {
+	attachedWorkerSocket,
+	type WorkersWebSocketPair,
 	normalizeWebSocketCloseCode,
 	outboundWebSocketFetchUrl,
 	wrapWorkersWebSocket,
@@ -455,7 +457,8 @@ export async function dispatchElevenLabsRealtime(
 	if (options.nodeDispatch) {
 		return options.nodeDispatch(route, params, requestSignal, timing, attempt, options.beforeUpstreamDispatch);
 	}
-	if (typeof WebSocketPair === "undefined") return workersUnavailableResponse();
+	const Pair = (globalThis as typeof globalThis & { WebSocketPair?: new () => WorkersWebSocketPair }).WebSocketPair;
+	if (!Pair) return workersUnavailableResponse();
 
  const connection=createRealtimeConnectionLifecycle(requestSignal,{});
  try {
@@ -470,17 +473,18 @@ export async function dispatchElevenLabsRealtime(
    redirect:"manual",
 		}
  ), late=>{
-  if(late.webSocket){try{late.webSocket.accept();late.webSocket.close(1000,'Connection stopped');}catch{}}
+  const socket=attachedWorkerSocket(late);
+  if(socket){try{socket.accept();socket.close(1000,'Connection stopped');}catch{}}
   void late.body?.cancel('connection_stopped').catch(()=>{});
  });
 	timing?.markAttemptHeaders(attempt, upstreamResponse.status);
 	const requestId = extractUpstreamRequestId(upstreamResponse.headers);
-	const upstreamSocket = upstreamResponse.webSocket;
+	const upstreamSocket = attachedWorkerSocket(upstreamResponse);
 	if (upstreamResponse.status !== 101 || !upstreamSocket) {
 		return await connection.wait(()=>elevenLabsRealtimeRejectedResult(upstreamResponse,requestId,connection.signal));
 	}
 
-	const pair = new WebSocketPair();
+	const pair = new Pair();
 	const clientEnd = pair[0];
 	const serverEnd = pair[1];
 	const usagePromise = bridgeElevenLabsRealtime({
@@ -493,16 +497,15 @@ export async function dispatchElevenLabsRealtime(
 		timing,
 	});
 	return {
-		response: new Response(null, {
+		response: new Response(null, Object.assign({ webSocket: clientEnd }, {
 			status: 101,
-			webSocket: clientEnd,
 			headers: {
 				"X-Octafuse-Realtime-Protocol": "elevenlabs",
 				...(options.responseProtocol
 					? { "Sec-WebSocket-Protocol": options.responseProtocol }
 					: {}),
 			},
-		}),
+		})),
 		usagePromise,
 		upstreamRequestId: requestId,
 	};

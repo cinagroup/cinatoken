@@ -34,9 +34,9 @@ import type {
 	CloseEvent as WorkersCloseEvent,
 } from '@cloudflare/workers-types';
 
-type WorkersWebSocketPair = { 0: WorkersWebSocket; 1: WorkersWebSocket };
+export type WorkersWebSocketPair = { 0: WorkersWebSocket; 1: WorkersWebSocket };
 
-function attachedWorkerSocket(response: Response): WorkersWebSocket | null {
+export function attachedWorkerSocket(response: Response): WorkersWebSocket | null {
 	if (!('webSocket' in response)) return null;
 	const socket = response.webSocket;
 	return socket !== null && typeof socket === 'object' && 'accept' in socket && typeof socket.accept === 'function'
@@ -932,7 +932,7 @@ export async function dispatchDashScopeRealtime(
 }
 
 
-type WorkersUpstreamOpened = { upstream: WebSocket; requestId: string | null };
+type WorkersUpstreamOpened = { upstream: WorkersWebSocket; requestId: string | null };
 
 type WorkersUpstreamRejected = { response: Response; requestId: string | null };
 
@@ -972,7 +972,7 @@ async function openWorkersUpstream(
 	});
 	timing?.markAttemptHeaders(attempt, upstreamResponse.status);
 	const requestId = extractUpstreamRequestId(upstreamResponse.headers);
-	const upstream = upstreamResponse.webSocket;
+	const upstream = attachedWorkerSocket(upstreamResponse);
 	if (upstreamResponse.status !== 101 || !upstream) {
 		return { response: upstreamResponse, requestId };
 	}
@@ -998,7 +998,7 @@ function workersUnavailableResponse(): ProxyDispatchResult {
 
 /** 把 Workers `WebSocket` 包成运行时无关的 `RealtimeSocket`（会先 accept）。 */
 export function wrapWorkersWebSocket(
-	socket: WebSocket,
+	socket: WorkersWebSocket,
 	options: { upstream: boolean }
 ): RealtimeSocket {
 	if (options.upstream) socket.binaryType = "arraybuffer";
@@ -1026,8 +1026,9 @@ export function wrapWorkersWebSocket(
 export function createWorkersDeferredRealtime(
 	options: Pick<DashScopeRealtimeDispatchOptions, "fetchImpl" | "responseProtocol"> = {}
 ): { runtime: DeferredRealtimeRuntime; response: Response } | null {
-	if (typeof WebSocketPair === "undefined") return null;
-	const pair = new WebSocketPair();
+	const Pair = (globalThis as typeof globalThis & { WebSocketPair?: new () => WorkersWebSocketPair }).WebSocketPair;
+	if (!Pair) return null;
+	const pair = new Pair();
 	const clientEnd = pair[0];
 	const serverEnd = pair[1];
 	const runtime: DeferredRealtimeRuntime = {
@@ -1050,15 +1051,14 @@ export function createWorkersDeferredRealtime(
 	};
 	return {
 		runtime,
-		response: new Response(null, {
+		response: new Response(null, Object.assign({ webSocket: clientEnd }, {
 			status: 101,
-			webSocket: clientEnd,
 			headers: {
 				"X-Octafuse-Realtime-Protocol": "dashscope",
 				...(options.responseProtocol
 					? { "Sec-WebSocket-Protocol": options.responseProtocol }
 					: {}),
 			},
-		}),
+		})),
 	};
 }

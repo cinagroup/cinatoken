@@ -157,11 +157,11 @@ describe('D1 → Postgres ETL 表注册表', () => {
 				await db.exec(readFileSync(join(CORE, 'migrations-postgres', file), 'utf8'));
 			for (const table of ETL_TABLES) {
 				const result = await db.query<{ name: string }>(
-					`SELECT a.attname AS name FROM pg_index i JOIN LATERAL unnest(i.indkey) WITH ORDINALITY AS k(attnum,position) ON true JOIN pg_attribute a ON a.attrelid=i.indrelid AND a.attnum=k.attnum WHERE i.indisprimary AND i.indrelid=('cinatoken_gateway.' || $1)::regclass ORDER BY k.position`,
+					`SELECT a.attname AS name FROM pg_index i JOIN LATERAL unnest(i.indkey) WITH ORDINALITY AS k(attnum,position) ON true JOIN pg_attribute a ON a.attrelid=i.indrelid AND a.attnum=k.attnum WHERE (i.indisprimary OR (i.indisunique AND NOT EXISTS (SELECT 1 FROM pg_index p WHERE p.indrelid=i.indrelid AND p.indisprimary))) AND i.indrelid=('cinatoken_gateway.' || $1)::regclass ORDER BY k.position`,
 					[table.name],
 				);
 				assert.deepEqual(
-					[...TABLE_CONFLICT_KEYS[table.name]],
+					[...TABLE_CONFLICT_KEYS[table.name as keyof typeof TABLE_CONFLICT_KEYS]],
 					result.rows.map((row) => row.name),
 					table.name,
 				);

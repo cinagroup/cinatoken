@@ -364,17 +364,17 @@ describe('Node DashScope realtime adapter', () => {
 			}),
 			false,
 		);
-		assert.equal(typeof holder.upstream!.sent[0], 'string');
-		assert.equal(JSON.parse(String(holder.upstream!.sent[0])).payload.model, 'fun-asr-realtime-v2');
+		assert.equal(typeof holder.(upstream as FakeSocket | null)!.sent[0], 'string');
+		assert.equal(JSON.parse(String(holder.(upstream as FakeSocket | null)!.sent[0])).payload.model, 'fun-asr-realtime-v2');
 
-		holder.upstream!.emitUpstreamMessage(
+		holder.(upstream as FakeSocket | null)!.emitUpstreamMessage(
 			JSON.stringify({
 				header: { event: 'task-finished', task_id: 'task-1' },
 				payload: { usage: { duration: 1.5 } },
 			}),
 			false,
 		);
-		holder.upstream!.emitClose();
+		holder.(upstream as FakeSocket | null)!.emitClose();
 		const usage = await result.usagePromise;
 		assert.equal(usage.audio_duration_seconds, 1.5);
 	});
@@ -392,11 +392,11 @@ describe('Node DashScope realtime adapter', () => {
 			route(),
 			'audio.transcriptions.realtime.inference',
 		);
-		holder.upstream!.emitUpstreamMessage('{"header":{"event":"task-started"}}', false);
+		holder.(upstream as FakeSocket | null)!.emitUpstreamMessage('{"header":{"event":"task-started"}}', false);
 		const usage = await result.usagePromise;
 		assert.match(usage.stream_error ?? '', /backpressure/i);
 		assert.equal(client.readyState, 3);
-		assert.equal(holder.upstream!.readyState, 3);
+		assert.equal(holder.(upstream as FakeSocket | null)!.readyState, 3);
 	});
 
 	it('bills verified Qwen session PCM when the terminal event omits usage', async () => {
@@ -447,8 +447,8 @@ describe('Node DashScope realtime adapter', () => {
 			}),
 			false,
 		);
-		holder.upstream!.emitUpstreamMessage(JSON.stringify({ type: 'session.finished' }), false);
-		holder.upstream!.emitClose();
+		holder.(upstream as FakeSocket | null)!.emitUpstreamMessage(JSON.stringify({ type: 'session.finished' }), false);
+		holder.(upstream as FakeSocket | null)!.emitClose();
 
 		const usage = await result.usagePromise;
 		assert.equal(usage.audio_duration_seconds, 1);
@@ -470,7 +470,7 @@ describe('Node DashScope realtime adapter', () => {
 		const result = await resultPromise;
 		assert.ok(upstream);
 
-		upstream!.emitUpstreamMessage(
+		(upstream as FakeSocket | null)!.emitUpstreamMessage(
 			JSON.stringify({
 				header: { event: 'task-finished', task_id: 'task-1' },
 				payload: { usage: { duration: 1.5 } },
@@ -480,7 +480,7 @@ describe('Node DashScope realtime adapter', () => {
 		assert.doesNotThrow(() => client.emitPeerClose(1005));
 		const usage = await result.usagePromise;
 		assert.equal(usage.audio_duration_seconds, 1.5);
-		assert.equal(upstream!.closeCodes[0], 1000);
+		assert.equal((upstream as FakeSocket | null)!.closeCodes[0], 1000);
 	});
 
 	it('forwards messages queued while the client socket is paused', async () => {
@@ -509,10 +509,10 @@ describe('Node DashScope realtime adapter', () => {
 		await resultPromise;
 		assert.ok(upstream);
 
-		assert.equal(upstream!.sent.length, 0);
+		assert.equal((upstream as FakeSocket | null)!.sent.length, 0);
 		client.resume();
-		assert.equal(typeof upstream!.sent[0], 'string');
-		assert.equal(JSON.parse(String(upstream!.sent[0])).payload.model, 'fun-asr-realtime-v2');
+		assert.equal(typeof (upstream as FakeSocket | null)!.sent[0], 'string');
+		assert.equal(JSON.parse(String((upstream as FakeSocket | null)!.sent[0])).payload.model, 'fun-asr-realtime-v2');
 	});
 });
 
@@ -545,7 +545,7 @@ describe('Node DashScope deferred realtime runtime', () => {
 
 		const upstreamFrames: Array<string | ArrayBuffer | Uint8Array> = [];
 		opened.socket.onMessage((data) => upstreamFrames.push(data));
-		upstream!.emitUpstreamMessage(JSON.stringify({ header: { event: 'task-started' } }), false);
+		(upstream as FakeSocket | null)!.emitUpstreamMessage(JSON.stringify({ header: { event: 'task-started' } }), false);
 		assert.equal(typeof upstreamFrames[0], 'string');
 
 		runtime.client.send(JSON.stringify({ header: { event: 'task-started' } }));
@@ -571,7 +571,7 @@ describe('Node DashScope deferred realtime runtime', () => {
 		await new Promise<void>((resolve) => setImmediate(resolve));
 		controller.abort();
 		await assert.rejects(pending, {name: 'RequestExecutionStoppedError'});
-		assert.equal(upstream!.closeCodes[0], 1000);
+		assert.equal((upstream as FakeSocket | null)!.closeCodes[0], 1000);
 	});
 });
 
@@ -618,13 +618,13 @@ describe('Node ElevenLabs realtime adapter', () => {
 
 		client.emitMessage(JSON.stringify({ text: ' ', xi_api_key: 'sk-client' }), false);
 		client.emitMessage(JSON.stringify({ text: 'Hello' }), false);
-		assert.equal(upstream!.sent.length, 2);
-		assert.ok(!String(upstream!.sent[0]).includes('sk-client'));
+		assert.equal((upstream as FakeSocket | null)!.sent.length, 2);
+		assert.ok(!String((upstream as FakeSocket | null)!.sent[0]).includes('sk-client'));
 
-		upstream!.emitUpstreamMessage(JSON.stringify({ audio: 'AAAA' }), false);
-		upstream!.emitUpstreamMessage(JSON.stringify({ isFinal: true }), false);
+		(upstream as FakeSocket | null)!.emitUpstreamMessage(JSON.stringify({ audio: 'AAAA' }), false);
+		(upstream as FakeSocket | null)!.emitUpstreamMessage(JSON.stringify({ isFinal: true }), false);
 		assert.equal(client.sent.length, 2);
-		upstream!.emitClose();
+		(upstream as FakeSocket | null)!.emitClose();
 		const usage = await result.usagePromise;
 		assert.equal(usage.audio_characters, 5);
 		assert.equal(usage.stream_error, undefined);
@@ -642,9 +642,9 @@ describe('Node ElevenLabs realtime adapter', () => {
 		} as unknown as NodeWebSocketConstructor;
 		const dispatch = createNodeElevenLabsRealtimeDispatch(client, WebSocketCtor);
 		await dispatch(elevenRoute(), { operation: 'audio.speech.realtime', voiceId: 'voice_1', query: {} });
-		assert.equal(upstream!.sent.length, 0);
+		assert.equal((upstream as FakeSocket | null)!.sent.length, 0);
 		client.resume();
-		assert.equal(upstream!.sent.length, 1);
+		assert.equal((upstream as FakeSocket | null)!.sent.length, 1);
 	});
 
 	it('forwards an upstream first frame sent in the same tick as open (session_started)', async () => {

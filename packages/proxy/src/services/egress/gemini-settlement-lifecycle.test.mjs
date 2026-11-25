@@ -46,7 +46,10 @@ test(`Gemini malformed SSE records failure without cleanup ACK: ${ack}`,{timeout
   const usage=await within(result.usagePromise);
   assert.ok(usage.stream_error);assert.notEqual(usage.cancelled,true);assert.equal(usage.raw_usage,null);
   assert.equal(cancels,1);assert.equal(source.locked,true);
-  assert.equal(await within(result.response.text()),'');
+  const body = await within(result.response.text());
+  assert.deepEqual(body.trim().split('\n').map(line => JSON.parse(line.slice(6))),
+    [{error:{code:502,status:'UNAVAILABLE',message:'Upstream provider stream interrupted'}}]);
+  assert.ok(!body.includes('synthetic cleanup rejection'));
   if(ack==='resolve')gate.resolve();else gate.reject(Error('synthetic cleanup rejection'));
   await flush();assert.equal(source.locked,false);assert.equal(cancels,1);
 });

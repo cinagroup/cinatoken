@@ -137,7 +137,12 @@ export const ETL_SOURCE_ONLY_TABLES = ['shared_key_earning_history_anchors'] as 
 /** SQLite persists booleans as 0/1 while PostgreSQL requires true/false. */
 export const TABLE_BOOLEAN_COLUMNS: Partial<Record<EtlTableName, readonly string[]>> = {
 	api_keys: ['include_byok_in_limit'],
-	byok_keys: ['disabled', 'is_fallback', 'always_use_for_provider', 'always_use_for_matching_models'],
+	byok_keys: [
+		'disabled',
+		'is_fallback',
+		'always_use_for_provider',
+		'always_use_for_matching_models',
+	],
 	workspaces: ['is_default'],
 	model_endpoints: ['supports_implicit_caching', 'supports_voice_cloning'],
 	route_pools: ['sticky_enabled'],

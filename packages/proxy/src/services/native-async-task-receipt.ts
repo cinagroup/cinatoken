@@ -98,7 +98,7 @@ export async function verifyNativeAsyncTaskReceipt(
 		const signature = decode(parts[1]!);
 		if (
 			signature.byteLength !== 32 ||
-			!(await crypto.subtle.verify('HMAC', await key(secret), signature, new TextEncoder().encode(DOMAIN + parts[0]!)))
+			!(await crypto.subtle.verify('HMAC', await key(secret), new Uint8Array(signature), new TextEncoder().encode(DOMAIN + parts[0]!)))
 		)
 			return null;
 		const receipt: unknown = JSON.parse(new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(payload));

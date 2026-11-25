@@ -72,7 +72,8 @@
 		"test:docs": "node --test scripts/docs/*.test.mjs",
 		"test:db-scripts": "tsx --test scripts/db/lib/*.test.ts",
 		"typecheck": "npm run typecheck -w @octafuse/core && npm run typecheck -w @octafuse/tool-engines && npm run typecheck -w @octafuse/proxy && npm run typecheck:admin",
-		"test:critical-writes": "tsx --test scripts/smoke/test-critical-write-paths.ts scripts/smoke/*.test.ts"
+		"test:critical-writes": "tsx --test scripts/smoke/test-critical-write-paths.ts scripts/smoke/*.test.ts",
+		"pretest:deploy": "npm run build:node-index -w @octafuse/core"
 	},
 	"devDependencies": {
 		"@changesets/changelog-github": "^0.5.1",
@@ -84,7 +85,8 @@
 		"wrangler": "^4.156.0",
 		"prettier": "^3.8.3",
 		"react": "19.3.1",
-		"react-dom": "19.3.1"
+		"react-dom": "19.3.1",
+		"@types/ws": "^8.18.1"
 	},
 	"overrides": {
 		"@opennextjs/cloudflare": {

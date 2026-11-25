@@ -66,11 +66,15 @@ class Statement {
 }
 
 /** No network or mocked SQL success. An explicit test-owned path supports restart tests. */
-export function createSqliteD1(hooks: SqliteD1Hooks = {}, options: { filename?: string; applyMigrations?: boolean } = {}) {
+export function createSqliteD1(hooks: SqliteD1Hooks = {}, options: { filename?: string; applyMigrations?: boolean; lastMigration?: string } = {}) {
 	const sqlite = new DatabaseSync(options.filename ?? ':memory:');
 	sqlite.exec('PRAGMA foreign_keys = ON');
 	const migrations = new URL('../../../core/migrations-d1/', import.meta.url);
-	const files = readdirSync(migrations).filter(file => file.endsWith('.sql')).sort();
+	const allFiles = readdirSync(migrations).filter(file => file.endsWith('.sql')).sort();
+	if (options.lastMigration && !allFiles.includes(options.lastMigration)) {
+		sqlite.close(); throw new Error('Unknown historical fixture migration');
+	}
+	const files = allFiles.filter(file => !options.lastMigration || file <= options.lastMigration);
 	try {
 		if (options.applyMigrations !== false) {
 			for (const file of files) sqlite.exec(readFileSync(new URL(file, migrations), 'utf8'));

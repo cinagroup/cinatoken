@@ -244,8 +244,9 @@ export async function runStorageConcurrentChargeSmoke(): Promise<void> {
 	});
 	const crossRow = await repos.users.getById(crossUser.id);
 	if (!crossRow) throw new Error('cross-pool user missing');
-	const k3 = await createKey(repos, { user_id: crossUser.id, name: 'c3', provision_reason: tag });
-	const k4 = await createKey(repos, { user_id: crossUser.id, name: 'c4', provision_reason: tag });
+	const crossWorkspaceId = defaultWorkspaceId('personal', crossUser.id);
+	const k3 = await createKey(repos, { user_id: crossUser.id, workspace_id: crossWorkspaceId, name: 'c3', provision_reason: tag });
+	const k4 = await createKey(repos, { user_id: crossUser.id, workspace_id: crossWorkspaceId, name: 'c4', provision_reason: tag });
 	const periodCharge = 0.1;
 	const walletCharge = 0.08;
 	const log3 = crypto.randomUUID();
@@ -256,6 +257,7 @@ export async function runStorageConcurrentChargeSmoke(): Promise<void> {
 			requestLog: buildRequestLog({
 				id: log3,
 				userId: crossUser.id,
+				workspaceId: crossWorkspaceId,
 				apiKeyId: k3.key_id,
 				charged: periodCharge,
 			}),
@@ -270,6 +272,7 @@ export async function runStorageConcurrentChargeSmoke(): Promise<void> {
 			requestLog: buildRequestLog({
 				id: log4,
 				userId: crossUser.id,
+				workspaceId: crossWorkspaceId,
 				apiKeyId: k4.key_id,
 				charged: walletCharge,
 			}),
